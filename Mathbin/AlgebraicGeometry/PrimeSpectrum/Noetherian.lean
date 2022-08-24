@@ -20,7 +20,7 @@ variable (R : Type u) [CommRingₓ R] [IsNoetherianRing R]
 
 variable {A : Type u} [CommRingₓ A] [IsDomain A] [IsNoetherianRing A]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (z «expr ∉ » M)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (z «expr ∉ » M)
 /-- In a noetherian ring, every ideal contains a product of prime ideals
 ([samuel, § 3.3, Lemma 3])-/
 theorem exists_prime_spectrum_prod_le (I : Ideal R) :
@@ -29,7 +29,7 @@ theorem exists_prime_spectrum_prod_le (I : Ideal R) :
   by_cases' h_prM : M.is_prime
   · use {⟨M, h_prM⟩}
     rw [Multiset.map_singleton, Multiset.prod_singleton, Subtype.coe_mk]
-    exact le_rfl
+    exact le_rflₓ
     
   by_cases' htop : M = ⊤
   · rw [htop]
@@ -52,7 +52,7 @@ theorem exists_prime_spectrum_prod_le (I : Ideal R) :
   apply sup_le (show span R {x} * M ≤ M from Ideal.mul_le_left)
   rwa [span_mul_span, Set.singleton_mul_singleton, span_singleton_le_iff_mem]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (z «expr ∉ » M)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (z «expr ∉ » M)
 /-- In a noetherian integral domain which is not a field, every non-zero ideal contains a non-zero
   product of prime ideals; in a field, the whole ring is a non-zero ideal containing only 0 as
   product or prime ideals ([samuel, § 3.3, Lemma 3]) -/
@@ -75,7 +75,7 @@ theorem exists_prime_spectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) 
   by_cases' h_prM : M.is_prime
   · use ({⟨M, h_prM⟩} : Multiset (PrimeSpectrum A))
     rw [Multiset.map_singleton, Multiset.prod_singleton, Subtype.coe_mk]
-    exact ⟨le_rfl, h_nzM⟩
+    exact ⟨le_rflₓ, h_nzM⟩
     
   obtain ⟨x, hx, y, hy, h_xy⟩ := (ideal.not_is_prime_iff.mp h_prM).resolve_left h_topM
   have lt_add : ∀ (z) (_ : z ∉ M), M < M + span A {z} := by

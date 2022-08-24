@@ -115,7 +115,7 @@ theorem int_valuation_le_one (x : R) : v.intValuationDef x ≤ 1 := by
 theorem int_valuation_lt_one_iff_dvd (r : R) : v.intValuationDef r < 1 ↔ v.asIdeal ∣ Ideal.span {r} := by
   rw [int_valuation_def]
   split_ifs with hr
-  · simpa [← hr] using WithZero.zero_lt_coe _
+  · simpa [hr] using WithZero.zero_lt_coe _
     
   · rw [← WithZero.coe_one, ← of_add_zero, WithZero.coe_lt_coe, of_add_lt, neg_lt_zero, ← Int.coe_nat_zero,
       Int.coe_nat_lt, zero_lt_iff]
@@ -158,7 +158,7 @@ theorem IntValuation.map_one' : v.intValuationDef 1 = 1 := by
 
 /-- The `v`-adic valuation of a product equals the product of the valuations. -/
 theorem IntValuation.map_mul' (x y : R) : v.intValuationDef (x * y) = v.intValuationDef x * v.intValuationDef y := by
-  simp only [← int_valuation_def]
+  simp only [int_valuation_def]
   by_cases' hx : x = 0
   · rw [hx, zero_mul, if_pos (Eq.refl _), zero_mul]
     

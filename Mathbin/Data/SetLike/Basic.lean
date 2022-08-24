@@ -95,7 +95,7 @@ include i
 instance : CoeTₓ A (Set B) :=
   ⟨SetLike.Coe⟩
 
-instance (priority := 100) : HasMem B A :=
+instance (priority := 100) : Membership B A :=
   ⟨fun x p => x ∈ (p : Set B)⟩
 
 -- `dangerous_instance` does not know that `B` is used only as an `out_param`
@@ -114,7 +114,7 @@ variable {p q}
 protected theorem exists {q : p → Prop} : (∃ x, q x) ↔ ∃ x ∈ p, q ⟨x, ‹_›⟩ :=
   SetCoe.exists
 
-protected theorem forall {q : p → Prop} : (∀ x, q x) ↔ ∀, ∀ x ∈ p, ∀, q ⟨x, ‹_›⟩ :=
+protected theorem forall {q : p → Prop} : (∀ x, q x) ↔ ∀ x ∈ p, q ⟨x, ‹_›⟩ :=
   SetCoe.forall
 
 theorem coe_injective : Function.Injective (coe : A → Set B) := fun x y h => SetLike.coe_injective' h

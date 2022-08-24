@@ -84,7 +84,7 @@ theorem irreducible_iff_uniformizer (ϖ : R) : Irreducible ϖ ↔ maximalIdeal R
       hab
     have h3 := eq_zero_of_mul_eq_self_right _ hab.symm
     · apply not_a_field R
-      simp [← h, ← h3]
+      simp [h, h3]
       
     · exact fun hh => h2 (is_unit_of_dvd_one ϖ ⟨_, hh.symm⟩)
       ⟩
@@ -175,9 +175,9 @@ theorem unique_irreducible ⦃p q : R⦄ (hp : Irreducible p) (hq : Irreducible 
       revert H n
       exact by
         decide
-    simpa only [← not_irreducible_one, ← pow_zeroₓ] using this
+    simpa only [not_irreducible_one, pow_zeroₓ] using this
     
-  · simpa only [← pow_oneₓ] using hn.symm
+  · simpa only [pow_oneₓ] using hn.symm
     
   · obtain ⟨n, rfl⟩ : ∃ k, n = 1 + k + 1 := Nat.exists_eq_add_of_lt H
     rw [pow_succₓ] at this
@@ -207,13 +207,13 @@ theorem to_unique_factorization_monoid : UniqueFactorizationMonoid R :=
       intro a b h
       by_cases' ha : a = 0
       · rw [ha]
-        simp only [← true_orₓ, ← dvd_zero]
+        simp only [true_orₓ, dvd_zero]
         
       obtain ⟨m, u, rfl⟩ := spec.2 ha
       rw [mul_assoc, mul_left_commₓ, IsUnit.dvd_mul_left _ _ _ (Units.is_unit _)] at h
       rw [IsUnit.dvd_mul_right (Units.is_unit _)]
       by_cases' hm : m = 0
-      · simp only [← hm, ← one_mulₓ, ← pow_zeroₓ] at h⊢
+      · simp only [hm, one_mulₓ, pow_zeroₓ] at h⊢
         right
         exact h
         
@@ -241,7 +241,7 @@ theorem of_ufd_of_unique_irreducible [UniqueFactorizationMonoid R] (h₁ : ∃ p
   congr 1
   symm
   rw [Multiset.eq_repeat]
-  simp only [← true_andₓ, ← and_imp, ← Multiset.card_map, ← eq_self_iff_true, ← Multiset.mem_map, ← exists_imp_distrib]
+  simp only [true_andₓ, and_imp, Multiset.card_map, eq_self_iff_true, Multiset.mem_map, exists_imp_distrib]
   rintro _ q hq rfl
   rw [Associates.mk_eq_mk_iff_associated]
   apply h₂ (hfx.1 _ hq) hp
@@ -256,27 +256,27 @@ theorem aux_pid_of_ufd_of_unique_irreducible (R : Type u) [CommRingₓ R] [IsDom
   by_cases' I0 : I = ⊥
   · rw [I0]
     use 0
-    simp only [← Set.singleton_zero, ← Submodule.span_zero]
+    simp only [Set.singleton_zero, Submodule.span_zero]
     
   obtain ⟨x, hxI, hx0⟩ : ∃ x ∈ I, x ≠ (0 : R) := I.ne_bot_iff.mp I0
   obtain ⟨p, hp, H⟩ := has_unit_mul_pow_irreducible_factorization.of_ufd_of_unique_irreducible h₁ h₂
   have ex : ∃ n : ℕ, p ^ n ∈ I := by
     obtain ⟨n, u, rfl⟩ := H hx0
     refine' ⟨n, _⟩
-    simpa only [← Units.mul_inv_cancel_right] using I.mul_mem_right (↑u⁻¹) hxI
+    simpa only [Units.mul_inv_cancel_right] using I.mul_mem_right (↑u⁻¹) hxI
   constructor
   use p ^ Nat.findₓ ex
   show I = Ideal.span _
   apply le_antisymmₓ
   · intro r hr
     by_cases' hr0 : r = 0
-    · simp only [← hr0, ← Submodule.zero_mem]
+    · simp only [hr0, Submodule.zero_mem]
       
     obtain ⟨n, u, rfl⟩ := H hr0
-    simp only [← mem_span_singleton, ← Units.is_unit, ← IsUnit.dvd_mul_right]
+    simp only [mem_span_singleton, Units.is_unit, IsUnit.dvd_mul_right]
     apply pow_dvd_pow
     apply Nat.find_min'ₓ
-    simpa only [← Units.mul_inv_cancel_right] using I.mul_mem_right (↑u⁻¹) hr
+    simpa only [Units.mul_inv_cancel_right] using I.mul_mem_right (↑u⁻¹) hr
     
   · erw [Submodule.span_singleton_le_iff_mem]
     exact Nat.find_specₓ ex
@@ -335,7 +335,7 @@ theorem associated_pow_irreducible {x : R} (hx : x ≠ 0) {ϖ : R} (hirr : Irred
   rw [← H, ← Associates.prod_mk, Associates.mk_pow, ← Multiset.prod_repeat]
   congr 1
   rw [Multiset.eq_repeat]
-  simp only [← true_andₓ, ← and_imp, ← Multiset.card_map, ← eq_self_iff_true, ← Multiset.mem_map, ← exists_imp_distrib]
+  simp only [true_andₓ, and_imp, Multiset.card_map, eq_self_iff_true, Multiset.mem_map, exists_imp_distrib]
   rintro _ _ _ rfl
   rw [Associates.mk_eq_mk_iff_associated]
   refine' associated_of_irreducible _ _ hirr
@@ -367,10 +367,10 @@ theorem unit_mul_pow_congr_pow {p q : R} (hp : Irreducible p) (hq : Irreducible 
   have key : Associated (Multiset.repeat p m).Prod (Multiset.repeat q n).Prod := by
     rw [Multiset.prod_repeat, Multiset.prod_repeat, Associated]
     refine' ⟨u * v⁻¹, _⟩
-    simp only [← Units.coe_mul]
+    simp only [Units.coe_mul]
     rw [mul_left_commₓ, ← mul_assoc, h, mul_right_commₓ, Units.mul_inv, one_mulₓ]
   have := Multiset.card_eq_card_of_rel (UniqueFactorizationMonoid.factors_unique _ _ key)
-  · simpa only [← Multiset.card_repeat]
+  · simpa only [Multiset.card_repeat]
     
   all_goals
     intro x hx
@@ -419,7 +419,7 @@ theorem add_val_one : addVal R 1 = 0 :=
 
 @[simp]
 theorem add_val_uniformizer {ϖ : R} (hϖ : Irreducible ϖ) : addVal R ϖ = 1 := by
-  simpa only [← one_mulₓ, ← eq_self_iff_true, ← Units.coe_one, ← pow_oneₓ, ← forall_true_left, ← Nat.cast_oneₓ] using
+  simpa only [one_mulₓ, eq_self_iff_true, Units.coe_one, pow_oneₓ, forall_true_left, Nat.cast_oneₓ] using
     add_val_def ϖ 1 hϖ 1
 
 @[simp]
@@ -470,8 +470,8 @@ end
 instance (R : Type _) [CommRingₓ R] [IsDomain R] [DiscreteValuationRing R] :
     IsHausdorff (maximalIdeal R) R where haus' := fun x hx => by
     obtain ⟨ϖ, hϖ⟩ := exists_irreducible R
-    simp only [Ideal.one_eq_top, ← smul_eq_mul, ← mul_oneₓ, ← Smodeq.zero, ← hϖ.maximal_ideal_eq, ←
-      Ideal.span_singleton_pow, ← Ideal.mem_span_singleton, add_val_le_iff_dvd, ← hϖ.add_val_pow] at hx
+    simp only [← Ideal.one_eq_top, smul_eq_mul, mul_oneₓ, Smodeq.zero, hϖ.maximal_ideal_eq, Ideal.span_singleton_pow,
+      Ideal.mem_span_singleton, ← add_val_le_iff_dvd, hϖ.add_val_pow] at hx
     rwa [← add_val_eq_top_iff, PartEnat.eq_top_iff_forall_le]
 
 end DiscreteValuationRing

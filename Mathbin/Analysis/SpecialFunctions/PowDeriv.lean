@@ -32,12 +32,12 @@ theorem has_strict_fderiv_at_cpow {p : ℂ × ℂ} (hp : 0 < p.1.re ∨ p.1.im �
   by
   have A : p.1 ≠ 0 := by
     intro h
-    simpa [← h, ← lt_irreflₓ] using hp
+    simpa [h, lt_irreflₓ] using hp
   have : (fun x : ℂ × ℂ => x.1 ^ x.2) =ᶠ[𝓝 p] fun x => exp (log x.1 * x.2) :=
     ((is_open_ne.preimage continuous_fst).eventually_mem A).mono fun p hp => cpow_def_of_ne_zero hp _
   rw [cpow_sub _ _ A, cpow_one, mul_div_left_comm, mul_smul, mul_smul, ← smul_add]
   refine' HasStrictFderivAt.congr_of_eventually_eq _ this.symm
-  simpa only [← cpow_def_of_ne_zero A, ← div_eq_mul_inv, ← mul_smul, ← add_commₓ] using
+  simpa only [cpow_def_of_ne_zero A, div_eq_mul_inv, mul_smul, add_commₓ] using
     ((has_strict_fderiv_at_fst.clog hp).mul has_strict_fderiv_at_snd).cexp
 
 theorem has_strict_fderiv_at_cpow' {x y : ℂ} (hp : 0 < x.re ∨ x.im ≠ 0) :
@@ -53,7 +53,7 @@ theorem has_strict_deriv_at_const_cpow {x y : ℂ} (h : x ≠ 0 ∨ y ≠ 0) :
     refine' (has_strict_deriv_at_const _ 0).congr_of_eventually_eq _
     exact (is_open_ne.eventually_mem h).mono fun y hy => (zero_cpow hy).symm
     
-  · simpa only [← cpow_def_of_ne_zero hx, ← mul_oneₓ] using ((has_strict_deriv_at_id y).const_mul (log x)).cexp
+  · simpa only [cpow_def_of_ne_zero hx, mul_oneₓ] using ((has_strict_deriv_at_id y).const_mul (log x)).cexp
     
 
 theorem has_fderiv_at_cpow {p : ℂ × ℂ} (hp : 0 < p.1.re ∨ p.1.im ≠ 0) :
@@ -128,14 +128,13 @@ private theorem aux :
         1 =
       g x * f x ^ (g x - 1) * f' + f x ^ g x * log (f x) * g' :=
   by
-  simp only [← Algebra.id.smul_eq_mul, ← one_mulₓ, ← ContinuousLinearMap.one_apply, ←
-    ContinuousLinearMap.smul_right_apply, ← ContinuousLinearMap.add_apply, ← Pi.smul_apply, ←
-    ContinuousLinearMap.coe_smul']
+  simp only [Algebra.id.smul_eq_mul, one_mulₓ, ContinuousLinearMap.one_apply, ContinuousLinearMap.smul_right_apply,
+    ContinuousLinearMap.add_apply, Pi.smul_apply, ContinuousLinearMap.coe_smul']
 
 theorem HasStrictDerivAt.cpow (hf : HasStrictDerivAt f f' x) (hg : HasStrictDerivAt g g' x)
     (h0 : 0 < (f x).re ∨ (f x).im ≠ 0) :
     HasStrictDerivAt (fun x => f x ^ g x) (g x * f x ^ (g x - 1) * f' + f x ^ g x * log (f x) * g') x := by
-  simpa only [← aux] using (hf.cpow hg h0).HasStrictDerivAt
+  simpa only [aux] using (hf.cpow hg h0).HasStrictDerivAt
 
 theorem HasStrictDerivAt.const_cpow (hf : HasStrictDerivAt f f' x) (h : c ≠ 0 ∨ f x ≠ 0) :
     HasStrictDerivAt (fun x => c ^ f x) (c ^ f x * log c * f') x :=
@@ -143,8 +142,7 @@ theorem HasStrictDerivAt.const_cpow (hf : HasStrictDerivAt f f' x) (h : c ≠ 0 
 
 theorem Complex.has_strict_deriv_at_cpow_const (h : 0 < x.re ∨ x.im ≠ 0) :
     HasStrictDerivAt (fun z : ℂ => z ^ c) (c * x ^ (c - 1)) x := by
-  simpa only [← mul_zero, ← add_zeroₓ, ← mul_oneₓ] using
-    (has_strict_deriv_at_id x).cpow (has_strict_deriv_at_const x c) h
+  simpa only [mul_zero, add_zeroₓ, mul_oneₓ] using (has_strict_deriv_at_id x).cpow (has_strict_deriv_at_const x c) h
 
 theorem HasStrictDerivAt.cpow_const (hf : HasStrictDerivAt f f' x) (h0 : 0 < (f x).re ∨ (f x).im ≠ 0) :
     HasStrictDerivAt (fun x => f x ^ c) (c * f x ^ (c - 1) * f') x :=
@@ -152,7 +150,7 @@ theorem HasStrictDerivAt.cpow_const (hf : HasStrictDerivAt f f' x) (h0 : 0 < (f 
 
 theorem HasDerivAt.cpow (hf : HasDerivAt f f' x) (hg : HasDerivAt g g' x) (h0 : 0 < (f x).re ∨ (f x).im ≠ 0) :
     HasDerivAt (fun x => f x ^ g x) (g x * f x ^ (g x - 1) * f' + f x ^ g x * log (f x) * g') x := by
-  simpa only [← aux] using (hf.has_fderiv_at.cpow hg h0).HasDerivAt
+  simpa only [aux] using (hf.has_fderiv_at.cpow hg h0).HasDerivAt
 
 theorem HasDerivAt.const_cpow (hf : HasDerivAt f f' x) (h0 : c ≠ 0 ∨ f x ≠ 0) :
     HasDerivAt (fun x => c ^ f x) (c ^ f x * log c * f') x :=
@@ -165,7 +163,7 @@ theorem HasDerivAt.cpow_const (hf : HasDerivAt f f' x) (h0 : 0 < (f x).re ∨ (f
 theorem HasDerivWithinAt.cpow (hf : HasDerivWithinAt f f' s x) (hg : HasDerivWithinAt g g' s x)
     (h0 : 0 < (f x).re ∨ (f x).im ≠ 0) :
     HasDerivWithinAt (fun x => f x ^ g x) (g x * f x ^ (g x - 1) * f' + f x ^ g x * log (f x) * g') s x := by
-  simpa only [← aux] using (hf.has_fderiv_within_at.cpow hg h0).HasDerivWithinAt
+  simpa only [aux] using (hf.has_fderiv_within_at.cpow hg h0).HasDerivWithinAt
 
 theorem HasDerivWithinAt.const_cpow (hf : HasDerivWithinAt f f' s x) (h0 : c ≠ 0 ∨ f x ≠ 0) :
     HasDerivWithinAt (fun x => c ^ f x) (c ^ f x * log c * f') s x :=
@@ -224,13 +222,13 @@ theorem cont_diff_at_rpow_of_ne (p : ℝ × ℝ) (hp : p.1 ≠ 0) {n : WithTop �
       ((continuous_at_fst.eventually (lt_mem_nhds hpos)).mono fun p hp => rpow_def_of_pos hp _)]
 
 theorem differentiable_at_rpow_of_ne (p : ℝ × ℝ) (hp : p.1 ≠ 0) : DifferentiableAt ℝ (fun p : ℝ × ℝ => p.1 ^ p.2) p :=
-  (cont_diff_at_rpow_of_ne p hp).DifferentiableAt le_rfl
+  (cont_diff_at_rpow_of_ne p hp).DifferentiableAt le_rflₓ
 
 theorem _root_.has_strict_deriv_at.rpow {f g : ℝ → ℝ} {f' g' : ℝ} (hf : HasStrictDerivAt f f' x)
     (hg : HasStrictDerivAt g g' x) (h : 0 < f x) :
     HasStrictDerivAt (fun x => f x ^ g x) (f' * g x * f x ^ (g x - 1) + g' * f x ^ g x * log (f x)) x := by
   convert (has_strict_fderiv_at_rpow_of_pos ((fun x => (f x, g x)) x) h).comp_has_strict_deriv_at _ (hf.prod hg) using 1
-  simp [← mul_assoc, ← mul_comm, ← mul_left_commₓ]
+  simp [mul_assoc, mul_comm, mul_left_commₓ]
 
 theorem has_strict_deriv_at_rpow_const_of_ne {x : ℝ} (hx : x ≠ 0) (p : ℝ) :
     HasStrictDerivAt (fun x => x ^ p) (p * x ^ (p - 1)) x := by
@@ -313,7 +311,7 @@ theorem has_strict_deriv_at_rpow_const {x p : ℝ} (hx : x ≠ 0 ∨ 1 ≤ p) :
     (cont_diff_at_rpow_const
       (by
         rwa [Nat.cast_oneₓ]))
-    (has_deriv_at_rpow_const hx) le_rfl
+    (has_deriv_at_rpow_const hx) le_rflₓ
 
 end Real
 
@@ -346,7 +344,7 @@ theorem DifferentiableAt.rpow (hf : DifferentiableAt ℝ f x) (hg : Differentiab
     DifferentiableAt ℝ (fun x => f x ^ g x) x :=
   (differentiable_at_rpow_of_ne (f x, g x) h).comp x (hf.Prod hg)
 
-theorem DifferentiableOn.rpow (hf : DifferentiableOn ℝ f s) (hg : DifferentiableOn ℝ g s) (h : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
+theorem DifferentiableOn.rpow (hf : DifferentiableOn ℝ f s) (hg : DifferentiableOn ℝ g s) (h : ∀ x ∈ s, f x ≠ 0) :
     DifferentiableOn ℝ (fun x => f x ^ g x) s := fun x hx => (hf x hx).rpow (hg x hx) (h x hx)
 
 theorem Differentiable.rpow (hf : Differentiable ℝ f) (hg : Differentiable ℝ g) (h : ∀ x, f x ≠ 0) :
@@ -373,7 +371,7 @@ theorem DifferentiableAt.rpow_const (hf : DifferentiableAt ℝ f x) (h : f x ≠
     DifferentiableAt ℝ (fun x => f x ^ p) x :=
   (hf.HasFderivAt.rpow_const h).DifferentiableAt
 
-theorem DifferentiableOn.rpow_const (hf : DifferentiableOn ℝ f s) (h : ∀, ∀ x ∈ s, ∀, f x ≠ 0 ∨ 1 ≤ p) :
+theorem DifferentiableOn.rpow_const (hf : DifferentiableOn ℝ f s) (h : ∀ x ∈ s, f x ≠ 0 ∨ 1 ≤ p) :
     DifferentiableOn ℝ (fun x => f x ^ p) s := fun x hx => (hf x hx).rpow_const (h x hx)
 
 theorem Differentiable.rpow_const (hf : Differentiable ℝ f) (h : ∀ x, f x ≠ 0 ∨ 1 ≤ p) :
@@ -399,7 +397,7 @@ theorem ContDiffAt.rpow (hf : ContDiffAt ℝ n f x) (hg : ContDiffAt ℝ n g x) 
     ContDiffAt ℝ n (fun x => f x ^ g x) x :=
   (cont_diff_at_rpow_of_ne (f x, g x) h).comp x (hf.Prod hg)
 
-theorem ContDiffOn.rpow (hf : ContDiffOn ℝ n f s) (hg : ContDiffOn ℝ n g s) (h : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
+theorem ContDiffOn.rpow (hf : ContDiffOn ℝ n f s) (hg : ContDiffOn ℝ n g s) (h : ∀ x ∈ s, f x ≠ 0) :
     ContDiffOn ℝ n (fun x => f x ^ g x) s := fun x hx => (hf x hx).rpow (hg x hx) (h x hx)
 
 theorem ContDiff.rpow (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) (h : ∀ x, f x ≠ 0) :
@@ -413,7 +411,7 @@ theorem ContDiffWithinAt.rpow_const_of_ne (hf : ContDiffWithinAt ℝ n f s x) (h
 theorem ContDiffAt.rpow_const_of_ne (hf : ContDiffAt ℝ n f x) (h : f x ≠ 0) : ContDiffAt ℝ n (fun x => f x ^ p) x :=
   hf.rpow cont_diff_at_const h
 
-theorem ContDiffOn.rpow_const_of_ne (hf : ContDiffOn ℝ n f s) (h : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
+theorem ContDiffOn.rpow_const_of_ne (hf : ContDiffOn ℝ n f s) (h : ∀ x ∈ s, f x ≠ 0) :
     ContDiffOn ℝ n (fun x => f x ^ p) s := fun x hx => (hf x hx).rpow_const_of_ne (h x hx)
 
 theorem ContDiff.rpow_const_of_ne (hf : ContDiff ℝ n f) (h : ∀ x, f x ≠ 0) : ContDiff ℝ n fun x => f x ^ p :=
@@ -489,7 +487,7 @@ theorem tendsto_one_plus_div_rpow_exp (t : ℝ) : Tendsto (fun x : ℝ => (1 + t
   refine' (eventually_ge_of_tendsto_gt h₁ h₂).mono fun x hx => _
   have hx' : 0 < 1 + t / x := by
     linarith
-  simp [← mul_comm x, ← exp_mul, ← exp_log hx']
+  simp [mul_comm x, exp_mul, exp_log hx']
 
 /-- The function `(1 + t/x) ^ x` tends to `exp t` at `+∞` for naturals `x`. -/
 theorem tendsto_one_plus_div_pow_exp (t : ℝ) : Tendsto (fun x : ℕ => (1 + t / (x : ℝ)) ^ x) atTop (𝓝 (Real.exp t)) :=

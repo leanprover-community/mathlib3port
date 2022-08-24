@@ -51,7 +51,7 @@ theorem find.induction {p : Rbnode α → Prop} (lt) [DecidableRel lt] (t x) (h�
 
 theorem find_correct {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWeakOrder α lt] :
     ∀ {lo hi} (hs : IsSearchable lt t lo hi), Mem lt x t ↔ ∃ y, find lt t x = some y ∧ x ≈[lt]y := by
-  apply find.induction lt t x <;> intros <;> simp only [← mem, ← find, *]
+  apply find.induction lt t x <;> intros <;> simp only [mem, find, *]
   · simp
     
   iterate 2 
@@ -67,9 +67,9 @@ theorem find_correct {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWeakOrder
           contradiction
           
         · have hyx : lift lt (some y) (some x) := (range hs_hs₂ hm).1
-          simp [← lift] at hyx
+          simp [lift] at hyx
           have hxy : lt x y := by
-            simp [← cmpUsing] at h
+            simp [cmpUsing] at h
             assumption
           exact absurd (trans_of lt hxy hyx) (irrefl_of lt x)
           
@@ -80,16 +80,16 @@ theorem find_correct {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWeakOrder
         
       
     · simp at h
-      simp [← h, ← StrictWeakOrder.Equiv]
+      simp [h, StrictWeakOrder.Equiv]
       
     · cases hs
       apply Iff.intro
       · intro hm
         cases_type* or.1
         · have hxy : lift lt (some x) (some y) := (range hs_hs₁ hm).2
-          simp [← lift] at hxy
+          simp [lift] at hxy
           have hyx : lt y x := by
-            simp [← cmpUsing] at h
+            simp [cmpUsing] at h
             exact h.2
           exact absurd (trans_of lt hxy hyx) (irrefl_of lt x)
           
@@ -108,16 +108,16 @@ theorem find_correct {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWeakOrder
       
 
 theorem mem_of_mem_exact {lt} [IsIrrefl α lt] {x t} : MemExact x t → Mem lt x t := by
-  induction t <;> simp [← mem_exact, ← mem, ← false_implies_iff] <;> intro h
+  induction t <;> simp [mem_exact, mem, false_implies_iff] <;> intro h
   all_goals
     cases_type* or.1
-    simp [← t_ih_lchild h]
-    simp [← h, ← irrefl_of lt t_val]
-    simp [← t_ih_rchild h]
+    simp [t_ih_lchild h]
+    simp [h, irrefl_of lt t_val]
+    simp [t_ih_rchild h]
 
 theorem find_correct_exact {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWeakOrder α lt] :
     ∀ {lo hi} (hs : IsSearchable lt t lo hi), MemExact x t ↔ find lt t x = some x := by
-  apply find.induction lt t x <;> intros <;> simp only [← mem_exact, ← find, *]
+  apply find.induction lt t x <;> intros <;> simp only [mem_exact, find, *]
   iterate 2 
     · cases hs
       apply Iff.intro
@@ -130,9 +130,9 @@ theorem find_correct_exact {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWea
           exact absurd h (irrefl y)
           
         · have hyx : lift lt (some y) (some x) := (range hs_hs₂ (mem_of_mem_exact hm)).1
-          simp [← lift] at hyx
+          simp [lift] at hyx
           have hxy : lt x y := by
-            simp [← cmpUsing] at h
+            simp [cmpUsing] at h
             assumption
           exact absurd (trans_of lt hxy hyx) (irrefl_of lt x)
           
@@ -148,13 +148,13 @@ theorem find_correct_exact {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWea
       · intro hm
         cases_type* or.1
         · have hxy : lift lt (some x) (some y) := (range hs_hs₁ (mem_of_mem_exact hm)).2
-          simp [← lift] at hxy
+          simp [lift] at hxy
           exact absurd hxy h.1
           
         · subst hm
           
         · have hyx : lift lt (some y) (some x) := (range hs_hs₂ (mem_of_mem_exact hm)).1
-          simp [← lift] at hyx
+          simp [lift] at hyx
           exact absurd hyx h.2
           
         
@@ -167,9 +167,9 @@ theorem find_correct_exact {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWea
       · intro hm
         cases_type* or.1
         · have hxy : lift lt (some x) (some y) := (range hs_hs₁ (mem_of_mem_exact hm)).2
-          simp [← lift] at hxy
+          simp [lift] at hxy
           have hyx : lt y x := by
-            simp [← cmpUsing] at h
+            simp [cmpUsing] at h
             exact h.2
           exact absurd (trans_of lt hxy hyx) (irrefl_of lt x)
           
@@ -189,7 +189,7 @@ theorem find_correct_exact {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWea
 
 theorem eqv_of_find_some {t : Rbnode α} {lt x y} [DecidableRel lt] :
     ∀ {lo hi} (hs : IsSearchable lt t lo hi) (he : find lt t x = some y), x ≈[lt]y := by
-  apply find.induction lt t x <;> intros <;> simp_all only [← mem, ← find]
+  apply find.induction lt t x <;> intros <;> simp_all only [mem, find]
   iterate 2 
     · cases hs
       exact ih hs_hs₁ rfl
@@ -204,19 +204,19 @@ theorem eqv_of_find_some {t : Rbnode α} {lt x y} [DecidableRel lt] :
 
 theorem find_eq_find_of_eqv {lt a b} [DecidableRel lt] [IsStrictWeakOrder α lt] {t : Rbnode α} :
     ∀ {lo hi} (hs : IsSearchable lt t lo hi) (heqv : a ≈[lt]b), find lt t a = find lt t b := by
-  apply find.induction lt t a <;> intros <;> simp_all [← mem, ← find, ← StrictWeakOrder.Equiv, ← true_implies_iff]
+  apply find.induction lt t a <;> intros <;> simp_all [mem, find, StrictWeakOrder.Equiv, true_implies_iff]
   iterate 2 
     · have : lt b y := lt_of_incomp_of_lt heqv.swap h
-      simp [← cmpUsing, ← find, *]
+      simp [cmpUsing, find, *]
       cases hs
       apply ih hs_hs₁
       
     · have := incomp_trans_of lt heqv.swap h
-      simp [← cmpUsing, ← find, *]
+      simp [cmpUsing, find, *]
       
     · have := lt_of_lt_of_incomp h heqv
       have := not_lt_of_lt this
-      simp [← cmpUsing, ← find, *]
+      simp [cmpUsing, find, *]
       cases hs
       apply ih hs_hs₂
       

@@ -103,11 +103,11 @@ theorem Functor.left_derived_map_eq (F : C ⥤ D) [F.Additive] (n : ℕ) {X Y : 
       (F.leftDerivedObjIso n P).Hom ≫
         (homologyFunctor D _ n).map ((F.mapHomologicalComplex _).map g) ≫ (F.leftDerivedObjIso n Q).inv :=
   by
-  dsimp' only [← functor.left_derived, ← functor.left_derived_obj_iso]
+  dsimp' only [functor.left_derived, functor.left_derived_obj_iso]
   dsimp'
-  simp only [← category.comp_id, ← category.id_comp]
+  simp only [category.comp_id, category.id_comp]
   rw [← homology_functor_map, HomotopyCategory.homology_functor_map_factors]
-  simp only [functor.map_comp]
+  simp only [← functor.map_comp]
   congr 1
   apply HomotopyCategory.eq_of_homotopy
   apply functor.map_homotopy
@@ -116,7 +116,7 @@ theorem Functor.left_derived_map_eq (F : C ⥤ D) [F.Additive] (n : ℕ) {X Y : 
   apply ProjectiveResolution.lift_homotopy f
   · simp
     
-  · simp [← w]
+  · simp [w]
     
 
 /-- The natural transformation between left-derived functors induced by a natural transformation. -/
@@ -129,14 +129,14 @@ def NatTrans.leftDerived {F G : C ⥤ D} [F.Additive] [G.Additive] (α : F ⟶ G
 @[simp]
 theorem NatTrans.left_derived_id (F : C ⥤ D) [F.Additive] (n : ℕ) :
     NatTrans.leftDerived (𝟙 F) n = 𝟙 (F.leftDerived n) := by
-  simp [← nat_trans.left_derived]
+  simp [nat_trans.left_derived]
   rfl
 
 -- The `simp_nf` linter times out here, so we disable it.
 @[simp, nolint simp_nf]
 theorem NatTrans.left_derived_comp {F G H : C ⥤ D} [F.Additive] [G.Additive] [H.Additive] (α : F ⟶ G) (β : G ⟶ H)
     (n : ℕ) : NatTrans.leftDerived (α ≫ β) n = NatTrans.leftDerived α n ≫ NatTrans.leftDerived β n := by
-  simp [← nat_trans.left_derived]
+  simp [nat_trans.left_derived]
 
 /-- A component of the natural transformation between left-derived functors can be computed
 using a chosen projective resolution.
@@ -149,13 +149,13 @@ theorem NatTrans.left_derived_eq {F G : C ⥤ D} [F.Additive] [G.Additive] (α :
           (G.leftDerivedObjIso n P).inv :=
   by
   symm
-  dsimp' [← nat_trans.left_derived, ← functor.left_derived_obj_iso]
-  simp only [← category.comp_id, ← category.id_comp]
+  dsimp' [nat_trans.left_derived, functor.left_derived_obj_iso]
+  simp only [category.comp_id, category.id_comp]
   rw [← homology_functor_map, HomotopyCategory.homology_functor_map_factors]
-  simp only [functor.map_comp]
+  simp only [← functor.map_comp]
   congr 1
   apply HomotopyCategory.eq_of_homotopy
-  simp only [← nat_trans.map_homological_complex_naturality_assoc, functor.map_comp]
+  simp only [nat_trans.map_homological_complex_naturality_assoc, ← functor.map_comp]
   apply Homotopy.compLeftId
   rw [← Functor.map_id]
   apply functor.map_homotopy

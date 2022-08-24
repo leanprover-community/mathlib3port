@@ -181,7 +181,7 @@ theorem liouville_number_rat_initial_terms {m : ℕ} (hm : 0 < m) (k : ℕ) :
         show k.succ * k ! - k ! = (k.succ - 1) * k ! by
           rw [tsub_mul, one_mulₓ],
         Nat.succ_sub_one, add_mulₓ, one_mulₓ, pow_addₓ]
-      simp [← mul_assoc]
+      simp [mul_assoc]
       
     refine' mul_ne_zero_iff.mpr ⟨_, _⟩
     all_goals

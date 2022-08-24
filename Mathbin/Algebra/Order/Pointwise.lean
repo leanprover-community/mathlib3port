@@ -145,7 +145,7 @@ include hr
 
 theorem smul_Ioo : r • Ioo a b = Ioo (r • a) (r • b) := by
   ext x
-  simp only [← mem_smul_set, ← smul_eq_mul, ← mem_Ioo]
+  simp only [mem_smul_set, smul_eq_mul, mem_Ioo]
   constructor
   · rintro ⟨a, ⟨a_h_left_left, a_h_left_right⟩, rfl⟩
     constructor
@@ -160,7 +160,7 @@ theorem smul_Ioo : r • Ioo a b = Ioo (r • a) (r • b) := by
 
 theorem smul_Icc : r • Icc a b = Icc (r • a) (r • b) := by
   ext x
-  simp only [← mem_smul_set, ← smul_eq_mul, ← mem_Icc]
+  simp only [mem_smul_set, smul_eq_mul, mem_Icc]
   constructor
   · rintro ⟨a, ⟨a_h_left_left, a_h_left_right⟩, rfl⟩
     constructor
@@ -175,7 +175,7 @@ theorem smul_Icc : r • Icc a b = Icc (r • a) (r • b) := by
 
 theorem smul_Ico : r • Ico a b = Ico (r • a) (r • b) := by
   ext x
-  simp only [← mem_smul_set, ← smul_eq_mul, ← mem_Ico]
+  simp only [mem_smul_set, smul_eq_mul, mem_Ico]
   constructor
   · rintro ⟨a, ⟨a_h_left_left, a_h_left_right⟩, rfl⟩
     constructor
@@ -190,7 +190,7 @@ theorem smul_Ico : r • Ico a b = Ico (r • a) (r • b) := by
 
 theorem smul_Ioc : r • Ioc a b = Ioc (r • a) (r • b) := by
   ext x
-  simp only [← mem_smul_set, ← smul_eq_mul, ← mem_Ioc]
+  simp only [mem_smul_set, smul_eq_mul, mem_Ioc]
   constructor
   · rintro ⟨a, ⟨a_h_left_left, a_h_left_right⟩, rfl⟩
     constructor
@@ -205,7 +205,7 @@ theorem smul_Ioc : r • Ioc a b = Ioc (r • a) (r • b) := by
 
 theorem smul_Ioi : r • Ioi a = Ioi (r • a) := by
   ext x
-  simp only [← mem_smul_set, ← smul_eq_mul, ← mem_Ioi]
+  simp only [mem_smul_set, smul_eq_mul, mem_Ioi]
   constructor
   · rintro ⟨a_w, a_h_left, rfl⟩
     exact (mul_lt_mul_left hr).mpr a_h_left
@@ -219,7 +219,7 @@ theorem smul_Ioi : r • Ioi a = Ioi (r • a) := by
 
 theorem smul_Iio : r • Iio a = Iio (r • a) := by
   ext x
-  simp only [← mem_smul_set, ← smul_eq_mul, ← mem_Iio]
+  simp only [mem_smul_set, smul_eq_mul, mem_Iio]
   constructor
   · rintro ⟨a_w, a_h_left, rfl⟩
     exact (mul_lt_mul_left hr).mpr a_h_left
@@ -233,7 +233,7 @@ theorem smul_Iio : r • Iio a = Iio (r • a) := by
 
 theorem smul_Ici : r • Ici a = Ici (r • a) := by
   ext x
-  simp only [← mem_smul_set, ← smul_eq_mul, ← mem_Ioi]
+  simp only [mem_smul_set, smul_eq_mul, mem_Ioi]
   constructor
   · rintro ⟨a_w, a_h_left, rfl⟩
     exact (mul_le_mul_left hr).mpr a_h_left
@@ -247,7 +247,7 @@ theorem smul_Ici : r • Ici a = Ici (r • a) := by
 
 theorem smul_Iic : r • Iic a = Iic (r • a) := by
   ext x
-  simp only [← mem_smul_set, ← smul_eq_mul, ← mem_Iio]
+  simp only [mem_smul_set, smul_eq_mul, mem_Iio]
   constructor
   · rintro ⟨a_w, a_h_left, rfl⟩
     exact (mul_le_mul_left hr).mpr a_h_left

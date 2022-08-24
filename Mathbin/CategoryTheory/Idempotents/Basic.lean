@@ -76,7 +76,7 @@ theorem is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent :
               · intro m hm
                 rw [fork.ι_of_ι] at hm
                 rw [← hm]
-                simp only [hm, ← assoc, ← h₁]
+                simp only [← hm, assoc, h₁]
                 exact (comp_id m).symm
                  }⟩
     
@@ -105,7 +105,7 @@ variable {C}
 /-- In a preadditive category, when `p : X ⟶ X` is idempotent,
 then `𝟙 X - p` is also idempotent. -/
 theorem idem_of_id_sub_idem [Preadditive C] {X : C} (p : X ⟶ X) (hp : p ≫ p = p) : (𝟙 _ - p) ≫ (𝟙 _ - p) = 𝟙 _ - p := by
-  simp only [← comp_sub, ← sub_comp, ← id_comp, ← comp_id, ← hp, ← sub_self, ← sub_zero]
+  simp only [comp_sub, sub_comp, id_comp, comp_id, hp, sub_self, sub_zero]
 
 variable (C)
 
@@ -157,7 +157,7 @@ theorem split_iff_of_iso {X X' : C} (φ : X ≅ X') (p : X ⟶ X) (p' : X' ⟶ X
     rw [← comp_id p, ← φ.hom_inv_id]
     slice_rhs 2 3 => rw [hpp']
     slice_rhs 1 2 => erw [φ.inv_hom_id]
-    simpa only [← id_comp]
+    simpa only [id_comp]
     
 
 theorem Equivalence.is_idempotent_complete {D : Type _} [Category D] (ε : C ≌ D) (h : IsIdempotentComplete C) :
@@ -178,7 +178,7 @@ theorem Equivalence.is_idempotent_complete {D : Type _} [Category D] (ε : C ≌
   constructor
   · rw [← ε.functor.map_comp, h₁, ε.functor.map_id]
     
-  · simpa only [ε.functor.map_comp, ← h₂, ← equivalence.fun_inv_map]
+  · simpa only [← ε.functor.map_comp, h₂, equivalence.fun_inv_map]
     
 
 /-- If `C` and `D` are equivalent categories, that `C` is idempotent complete iff `D` is. -/
@@ -200,9 +200,9 @@ theorem is_idempotent_complete_of_is_idempotent_complete_opposite (h : IsIdempot
     ⟨Y, i, e, ⟨h₁, h₂⟩⟩
   use Y.unop, e.unop, i.unop
   constructor
-  · simpa only [unop_comp, ← h₁]
+  · simpa only [← unop_comp, h₁]
     
-  · simpa only [unop_comp, ← h₂]
+  · simpa only [← unop_comp, h₂]
     
 
 theorem is_idempotent_complete_iff_opposite : IsIdempotentComplete Cᵒᵖ ↔ IsIdempotentComplete C := by

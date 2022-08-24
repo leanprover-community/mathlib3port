@@ -145,7 +145,7 @@ def gnpowRec : ∀ (n : ℕ) {i}, A i → A (n • i)
 theorem gnpow_rec_zero (a : GradedMonoid A) : GradedMonoid.mk _ (gnpowRec 0 a.snd) = 1 :=
   Sigma.ext (zero_nsmul _) (heq_of_cast_eq _ rfl).symm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic used to autofill `graded_monoid.gmonoid.gnpow_zero'` when the default
 `graded_monoid.gmonoid.gnpow_rec` is used. -/
 unsafe def apply_gnpow_rec_zero_tac : tactic Unit :=
@@ -156,7 +156,7 @@ theorem gnpow_rec_succ (n : ℕ) (a : GradedMonoid A) :
     (GradedMonoid.mk _ <| gnpowRec n.succ a.snd) = a * ⟨_, gnpowRec n a.snd⟩ :=
   Sigma.ext (succ_nsmul _ _) (heq_of_cast_eq _ rfl).symm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic used to autofill `graded_monoid.gmonoid.gnpow_succ'` when the default
 `graded_monoid.gmonoid.gnpow_rec` is used. -/
 unsafe def apply_gnpow_rec_succ_tac : tactic Unit :=
@@ -336,7 +336,7 @@ theorem List.dprod_index_eq_map_sum (l : List α) (fι : α → ι) : l.dprodInd
   induction l
   · simp
     
-  · simp [← l_ih]
+  · simp [l_ih]
     
 
 /-- A dependent product for graded monoids represented by the indexed family of types `A i`.
@@ -364,7 +364,7 @@ theorem GradedMonoid.mk_list_dprod (l : List α) (fι : α → ι) (fA : ∀ a, 
   · simp
     rfl
     
-  · simp [l_ih, ← GradedMonoid.mk_mul_mk, ← List.prod_cons]
+  · simp [← l_ih, GradedMonoid.mk_mul_mk, List.prod_cons]
     rfl
     
 
@@ -480,7 +480,7 @@ theorem pow_mem_graded (n : ℕ) {r : R} {i : ι} (h : r ∈ A i) : r ^ n ∈ A 
     exact mul_mem_graded n_ih h
     
 
-theorem list_prod_map_mem_graded {ι'} (l : List ι') (i : ι' → ι) (r : ι' → R) (h : ∀, ∀ j ∈ l, ∀, r j ∈ A (i j)) :
+theorem list_prod_map_mem_graded {ι'} (l : List ι') (i : ι' → ι) (r : ι' → R) (h : ∀ j ∈ l, r j ∈ A (i j)) :
     (l.map r).Prod ∈ A (l.map i).Sum := by
   induction l
   · rw [List.map_nil, List.map_nil, List.prod_nil, List.sum_nil]

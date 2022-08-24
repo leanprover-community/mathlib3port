@@ -74,7 +74,7 @@ private theorem poly_binom_aux3 (f : R[X]) (x y : R) :
         f.Sum fun e a => a * (polyBinomAux1 x y e a).val * y ^ 2 :=
   by
   rw [poly_binom_aux2]
-  simp [← left_distrib, ← sum_add, ← mul_assoc]
+  simp [left_distrib, sum_add, mul_assoc]
 
 /-- A polynomial `f` evaluated at `x + y` can be expressed as
 the evaluation of `f` at `x`, plus `y` times the (polynomial) derivative of `f` at `x`,
@@ -93,7 +93,7 @@ def binomExpansion (f : R[X]) (x y : R) :
   · exact finset.sum_mul.symm
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr «expr * »(x, hz)], ["with"], { normalization_tactic := `[ring_exp [] []] }]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr * »(x, hz)], ["with"], { normalization_tactic := `[ring_exp [] []] }]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args
 /-- `x^n - y^n` can be expressed as `z * (x - y)` for some `z` in the ring.
 -/
 def powSubPowFactor (x y : R) : ∀ i : ℕ, { z : R // x ^ i - y ^ i = z * (x - y) }
@@ -107,7 +107,7 @@ def powSubPowFactor (x y : R) : ∀ i : ℕ, { z : R // x ^ i - y ^ i = z * (x -
     cases' @pow_sub_pow_factor (k + 1) with z hz
     exists z * x + y ^ (k + 1)
     trace
-      "./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr «expr * »(x, hz)], [\"with\"], { normalization_tactic := `[ring_exp [] []] }]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr * »(x, hz)], [\"with\"], { normalization_tactic := `[ring_exp [] []] }]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args"
 
 /-- For any polynomial `f`, `f.eval x - f.eval y` can be expressed as `z * (x - y)`
 for some `z` in the ring.
@@ -115,7 +115,7 @@ for some `z` in the ring.
 def evalSubFactor (f : R[X]) (x y : R) : { z : R // f.eval x - f.eval y = z * (x - y) } := by
   refine' ⟨f.sum fun i r => r * (pow_sub_pow_factor x y i).val, _⟩
   delta' eval eval₂
-  simp only [← Sum, Finset.sum_sub_distrib, ← Finset.sum_mul]
+  simp only [Sum, ← Finset.sum_sub_distrib, Finset.sum_mul]
   dsimp'
   congr with i r
   rw [mul_assoc, ← (pow_sub_pow_factor x y _).Prop, mul_sub]

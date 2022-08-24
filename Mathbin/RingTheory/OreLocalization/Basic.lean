@@ -54,7 +54,7 @@ def oreEqv : Setoidₓ (R × S) where
     · rintro ⟨r, s⟩
       use 1
       use 1
-      simp [← Submonoid.one_mem]
+      simp [Submonoid.one_mem]
       
     · rintro ⟨r, s⟩ ⟨r', s'⟩ ⟨u, v, hru, hsu⟩
       rcases ore_condition (s : R) s' with ⟨r₂, s₂, h₁⟩
@@ -66,19 +66,19 @@ def oreEqv : Setoidₓ (R × S) where
       rcases ore_left_cancel (v * r₃) (s₂ * s₃) s this with ⟨w, hw⟩
       use s₂ * s₃ * w
       use u * r₃ * w
-      constructor <;> simp only [← Submonoid.coe_mul]
+      constructor <;> simp only [Submonoid.coe_mul]
       · assoc_rw [hru, ← hw]
-        simp [← mul_assoc]
+        simp [mul_assoc]
         
       · assoc_rw [hsu, ← hw]
-        simp [← mul_assoc]
+        simp [mul_assoc]
         
       
     · rintro ⟨r₁, s₁⟩ ⟨r₂, s₂⟩ ⟨r₃, s₃⟩ ⟨u, v, hur₁, hs₁u⟩ ⟨u', v', hur₂, hs₂u⟩
       rcases ore_condition v' u with ⟨r', s', h⟩
       use u' * s'
       use v * r'
-      constructor <;> simp only [← Submonoid.coe_mul]
+      constructor <;> simp only [Submonoid.coe_mul]
       · assoc_rw [hur₂, h, hur₁, mul_assoc]
         
       · assoc_rw [hs₂u, h, hs₁u, mul_assoc]
@@ -142,19 +142,19 @@ protected theorem eq_of_num_factor_eq {r r' r₁ r₂ : R} {s t : S} (h : r * t 
   calc
     r₁ * r * r₂ /ₒ s = r₁ * r * r₂ * t' /ₒ (s * t') := OreLocalization.expand _ _ t' _
     _ = r₁ * r * (r₂ * t') /ₒ (s * t') := by
-      simp [mul_assoc]
+      simp [← mul_assoc]
     _ = r₁ * r * (t * r₂') /ₒ (s * t') := by
       rw [hr₂]
     _ = r₁ * (r * t) * r₂' /ₒ (s * t') := by
-      simp [mul_assoc]
+      simp [← mul_assoc]
     _ = r₁ * (r' * t) * r₂' /ₒ (s * t') := by
       rw [h]
     _ = r₁ * r' * (t * r₂') /ₒ (s * t') := by
-      simp [mul_assoc]
+      simp [← mul_assoc]
     _ = r₁ * r' * (r₂ * t') /ₒ (s * t') := by
       rw [hr₂]
     _ = r₁ * r' * r₂ * t' /ₒ (s * t') := by
-      simp [mul_assoc]
+      simp [← mul_assoc]
     _ = r₁ * r' * r₂ /ₒ s := by
       symm <;> apply OreLocalization.expand
     
@@ -173,7 +173,7 @@ def liftExpand {C : Sort _} (P : R → S → C)
       exact SetLike.coe_mem (s₂ * u)
     replace hs₂ : s₂ * u = ⟨(s₁ : R) * v, s₁vS⟩
     · ext
-      simp [← hs₂]
+      simp [hs₂]
       
     rw [hP r₁ v s₁ s₁vS,
       hP r₂ u s₂
@@ -182,7 +182,7 @@ def liftExpand {C : Sort _} (P : R → S → C)
           rw [hs₂]
           assumption),
       hr₂]
-    simpa [hs₂]
+    simpa [← hs₂]
 
 @[simp]
 theorem lift_expand_of {C : Sort _} {P : R → S → C}
@@ -199,8 +199,8 @@ def lift₂Expand {C : Sort _} (P : R → S → R → S → C)
     R[S⁻¹] → R[S⁻¹] → C :=
   (liftExpand fun r₁ s₁ =>
       (liftExpand (P r₁ s₁)) fun r₂ t₂ s₂ ht₂ => by
-        simp [←
-          hP r₁ 1 s₁
+        simp
+          [hP r₁ 1 s₁
             (by
               simp )
             r₂ t₂ s₂ ht₂])
@@ -226,7 +226,7 @@ private def mul' (r₁ : R) (s₁ : S) (r₂ : R) (s₂ : S) : R[S⁻¹] :=
 
 private theorem mul'_char (r₁ r₂ : R) (s₁ s₂ : S) (u : S) (v : R) (huv : r₂ * (u : R) = s₁ * v) :
     mul' r₁ s₁ r₂ s₂ = r₁ * v /ₒ (s₂ * u) := by
-  simp only [← mul']
+  simp only [mul']
   have h₀ := ore_eq r₂ s₁
   set v₀ := ore_num r₂ s₁
   set u₀ := ore_denom r₂ s₁
@@ -245,13 +245,13 @@ private theorem mul'_char (r₁ r₂ : R) (s₁ s₂ : S) (u : S) (v : R) (huv :
   rw [ore_div_eq_iff]
   use s₃ * s₄
   use r₃ * s₄
-  simp only [← Submonoid.coe_mul]
+  simp only [Submonoid.coe_mul]
   constructor
   · assoc_rw [← hs₄]
-    simp only [← mul_assoc]
+    simp only [mul_assoc]
     
   · assoc_rw [h₃]
-    simp only [← mul_assoc]
+    simp only [mul_assoc]
     
 
 /-- The multiplication on the Ore localization of monoids. -/
@@ -263,10 +263,10 @@ protected def mul : R[S⁻¹] → R[S⁻¹] → R[S⁻¹] :=
     rcases ore_condition (↑s₂ * r₁') ⟨s₂ * p, hp⟩ with ⟨p', s_star, h₂⟩
     dsimp'  at h₂
     rcases ore_condition r (s₂' * s_star) with ⟨p_flat, s_flat, h₃⟩
-    simp only [← S.coe_mul] at h₃
+    simp only [S.coe_mul] at h₃
     have : r₁ * r * s_flat = s₂ * p * (p' * p_flat) := by
       rw [← mul_assoc, ← h₂, ← h₁, mul_assoc, h₃]
-      simp only [← mul_assoc]
+      simp only [mul_assoc]
     rw [mul'_char (r₂ * p) (r₁ * r) ⟨↑s₂ * p, hp⟩ ⟨↑s₁ * r, hr⟩ _ _ this]
     clear this
     have hsssp : ↑s₁ * ↑s₂' * ↑s_star * p_flat ∈ S := by
@@ -274,13 +274,13 @@ protected def mul : R[S⁻¹] → R[S⁻¹] → R[S⁻¹] :=
       exact S.mul_mem hr (SetLike.coe_mem s_flat)
     have : (⟨↑s₁ * r, hr⟩ : S) * s_flat = ⟨s₁ * s₂' * s_star * p_flat, hsssp⟩ := by
       ext
-      simp only [← SetLike.coe_mk, ← Submonoid.coe_mul]
+      simp only [SetLike.coe_mk, Submonoid.coe_mul]
       rw [mul_assoc, h₃, ← mul_assoc, ← mul_assoc]
     rw [this]
     clear this
     rcases ore_left_cancel (p * p') (r₁' * ↑s_star) s₂
         (by
-          simp [mul_assoc, ← h₂]) with
+          simp [← mul_assoc, h₂]) with
       ⟨s₂'', h₂''⟩
     rw [← mul_assoc, mul_assoc r₂, OreLocalization.eq_of_num_factor_eq h₂'']
     norm_cast  at hsssp⊢
@@ -329,14 +329,14 @@ protected theorem div_eq_one {s : S} : (s : R) /ₒ s = 1 := by
 
 protected theorem one_mul (x : R[S⁻¹]) : 1 * x = x := by
   induction' x using OreLocalization.ind with r s
-  simp [← OreLocalization.one_def, ←
+  simp [OreLocalization.one_def,
     ore_div_mul_char (1 : R) r (1 : S) s r 1
       (by
         simp )]
 
 protected theorem mul_one (x : R[S⁻¹]) : x * 1 = x := by
   induction' x using OreLocalization.ind with r s
-  simp [← OreLocalization.one_def, ←
+  simp [OreLocalization.one_def,
     ore_div_mul_char r 1 s 1 1 s
       (by
         simp )]
@@ -355,7 +355,7 @@ protected theorem mul_assoc (x y z : R[S⁻¹]) : x * y * z = x * (y * z) := by
   rw
     [ore_div_mul_char (r₁ * ra) r₃ (s₂ * sa) s₃ rc (sb * sc)
       (by
-        simp only [← Submonoid.coe_mul]
+        simp only [Submonoid.coe_mul]
         assoc_rw [hb, hc])]
   rw [mul_assoc, ← mul_assoc s₃]
   symm
@@ -368,37 +368,37 @@ instance : Monoidₓ R[S⁻¹] :=
     mul_one := OreLocalization.mul_one, mul_assoc := OreLocalization.mul_assoc }
 
 protected theorem mul_inv (s s' : S) : (s : R) /ₒ s' * (s' /ₒ s) = 1 := by
-  simp [←
-    ore_div_mul_char (s : R) s' s' s 1 1
+  simp
+    [ore_div_mul_char (s : R) s' s' s 1 1
       (by
         simp )]
 
 @[simp]
 protected theorem mul_one_div {r : R} {s t : S} : r /ₒ s * (1 /ₒ t) = r /ₒ (t * s) := by
-  simp [←
-    ore_div_mul_char r 1 s t 1 s
+  simp
+    [ore_div_mul_char r 1 s t 1 s
       (by
         simp )]
 
 @[simp]
 protected theorem mul_cancel {r : R} {s t : S} : r /ₒ s * (s /ₒ t) = r /ₒ t := by
-  simp [←
-    ore_div_mul_char r s s t 1 1
+  simp
+    [ore_div_mul_char r s s t 1 1
       (by
         simp )]
 
 @[simp]
 protected theorem mul_cancel' {r₁ r₂ : R} {s t : S} : r₁ /ₒ s * (s * r₂ /ₒ t) = r₁ * r₂ /ₒ t := by
-  simp [←
-    ore_div_mul_char r₁ (s * r₂) s t r₂ 1
+  simp
+    [ore_div_mul_char r₁ (s * r₂) s t r₂ 1
       (by
         simp )]
 
 @[simp]
 theorem div_one_mul {p r : R} {s : S} : r /ₒ 1 * (p /ₒ s) = r * p /ₒ s := by
   --TODO use coercion r ↦ r /ₒ 1
-  simp [←
-    ore_div_mul_char r p 1 s p 1
+  simp
+    [ore_div_mul_char r p 1 s p 1
       (by
         simp )]
 
@@ -438,11 +438,11 @@ def universalMulHom : R[S⁻¹] →* T where
   toFun := fun x =>
     (x.liftExpand fun r s => f r * ((fS s)⁻¹ : Units T)) fun r t s ht => by
       have : (fS ⟨s * t, ht⟩ : T) = fS s * f t := by
-        simp only [hf, ← SetLike.coe_mk, ← MonoidHom.map_mul]
+        simp only [← hf, SetLike.coe_mk, MonoidHom.map_mul]
       conv_rhs =>
         rw [MonoidHom.map_mul, ← mul_oneₓ (f r), ← Units.coe_one, ←
           mul_left_invₓ (fS s)]rw [Units.coe_mul, ← mul_assoc, mul_assoc _ ↑(fS s), ← this, mul_assoc]
-      simp only [← mul_oneₓ, ← Units.mul_inv]
+      simp only [mul_oneₓ, Units.mul_inv]
   map_one' := by
     rw [OreLocalization.one_def, lift_expand_of] <;> simp
   map_mul' := fun x y => by
@@ -462,7 +462,7 @@ theorem universal_mul_hom_apply {r : R} {s : S} : universalMulHom f fS hf (r /�
   rfl
 
 theorem universal_mul_hom_commutes {r : R} : universalMulHom f fS hf (numeratorHom r) = f r := by
-  simp [← numerator_hom_apply, ← universal_mul_hom_apply]
+  simp [numerator_hom_apply, universal_mul_hom_apply]
 
 /-- The universal morphism `universal_mul_hom` is unique. -/
 theorem universal_mul_hom_unique (φ : R[S⁻¹] →* T) (huniv : ∀ r : R, φ (numeratorHom r) = f r) :
@@ -485,7 +485,7 @@ theorem ore_div_mul_ore_div_comm {r₁ r₂ : R} {s₁ s₂ : S} : r₁ /ₒ s�
   rw
     [ore_div_mul_char r₁ r₂ s₁ s₂ r₂ s₁
       (by
-        simp [← mul_comm]),
+        simp [mul_comm]),
     mul_comm s₂]
 
 instance : CommMonoidₓ R[S⁻¹] :=
@@ -526,7 +526,7 @@ protected def localizationMap : S.LocalizationMap R[S⁻¹] where
       rw [numerator_hom_apply, numerator_hom_apply, ore_div_eq_iff]
       use s
       use s
-      simp [← h, ← one_mulₓ]
+      simp [h, one_mulₓ]
       
 
 /-- If `R` is commutative, Ore localization and monoid localization are isomorphic. -/
@@ -544,7 +544,7 @@ private def add'' (r₁ : R) (s₁ : S) (r₂ : R) (s₂ : S) : R[S⁻¹] :=
 
 private theorem add''_char (r₁ : R) (s₁ : S) (r₂ : R) (s₂ : S) (rb : R) (sb : S) (hb : (s₁ : R) * sb = (s₂ : R) * rb) :
     add'' r₁ s₁ r₂ s₂ = (r₁ * sb + r₂ * rb) /ₒ (s₁ * sb) := by
-  simp only [← add'']
+  simp only [add'']
   have ha := ore_eq (s₁ : R) s₂
   set! ra := ore_num (s₁ : R) s₂ with h
   rw [← h] at *
@@ -564,7 +564,7 @@ private theorem add''_char (r₁ : R) (s₁ : S) (r₂ : R) (s₂ : S) (rb : R) 
   rw [ore_div_eq_iff]
   use sc * sd
   use rc * sd
-  constructor <;> simp only [← Submonoid.coe_mul]
+  constructor <;> simp only [Submonoid.coe_mul]
   · noncomm_ring
     assoc_rw [hd, hc]
     noncomm_ring
@@ -589,11 +589,11 @@ private def add' (r₂ : R) (s₂ : S) : R[S⁻¹] → R[S⁻¹] :=
     dsimp'  at *
     rw [add''_char _ _ _ _ rc sc hc]
     have : ↑s₁ * ↑(sb * sd) = ↑s₂ * (rc * rd) := by
-      simp only [← Submonoid.coe_mul]
+      simp only [Submonoid.coe_mul]
       assoc_rw [hb', hd, hc]
       noncomm_ring
     rw [add''_char _ _ _ _ (rc * rd : R) (sb * sd : S) this]
-    simp only [← Submonoid.coe_mul]
+    simp only [Submonoid.coe_mul]
     assoc_rw [hb, hd]
     rw [← mul_assoc, ← add_mulₓ, ore_div_eq_iff]
     use 1
@@ -601,12 +601,12 @@ private def add' (r₂ : R) (s₂ : S) : R[S⁻¹] → R[S⁻¹] :=
     constructor
     · simp
       
-    · simp only [← mul_oneₓ, ← Submonoid.coe_one, ← Submonoid.coe_mul] at this⊢
+    · simp only [mul_oneₓ, Submonoid.coe_one, Submonoid.coe_mul] at this⊢
       assoc_rw [hc, this]
       
 
 private theorem add'_comm (r₁ r₂ : R) (s₁ s₂ : S) : add' r₁ s₁ (r₂ /ₒ s₂) = add' r₂ s₂ (r₁ /ₒ s₁) := by
-  simp only [← add', ← ore_div, ← add'', ← Quotientₓ.lift_mk, ← Quotientₓ.eq]
+  simp only [add', ore_div, add'', Quotientₓ.lift_mk, Quotientₓ.eq]
   have hb := ore_eq (↑s₂) s₁
   set rb := ore_num (↑s₂) s₁ with h
   -- r~~
@@ -651,7 +651,7 @@ private def add : R[S⁻¹] → R[S⁻¹] → R[S⁻¹] := fun x =>
       induction' x using OreLocalization.ind with r₃ s₃
       dsimp'
       rw [add'_comm, add'_comm r₂]
-      simp [← (· /ₒ ·), ← Quotientₓ.sound hyz])
+      simp [(· /ₒ ·), Quotientₓ.sound hyz])
 
 instance : Add R[S⁻¹] :=
   ⟨add⟩
@@ -674,8 +674,8 @@ def oreDivAddChar' (r r' : R) (s s' : S) :
 
 @[simp]
 theorem add_ore_div {r r' : R} {s : S} : r /ₒ s + r' /ₒ s = (r + r') /ₒ s := by
-  simp [←
-    ore_div_add_char s s 1 1
+  simp
+    [ore_div_add_char s s 1 1
       (by
         simp )]
 
@@ -783,7 +783,7 @@ protected theorem left_distrib (x y z : R[S⁻¹]) : x * (y + z) = x * y + x * z
     apply SetLike.coe_mem
   rw [OreLocalization.expand _ _ _ hs₃rasb]
   have ha' : ↑(s₂ * sa * sb) = ↑s₃ * (ra * sb) := by
-    simp [← ha, mul_assoc]
+    simp [ha, ← mul_assoc]
   rw [← Subtype.coe_eq_of_eq_mk ha']
   rcases ore_div_mul_char' r₁ (r₃ * (ra * sb)) s₁ (s₂ * sa * sb) with ⟨rc, sc, hc, hc'⟩
   rw [hc']
@@ -795,7 +795,7 @@ protected theorem left_distrib (x y z : R[S⁻¹]) : x * (y + z) = x * y + x * z
   conv_lhs =>
     congr skip congr rw [add_mulₓ, S.coe_mul, ← mul_assoc, hb, ← mul_assoc, mul_assoc r₃, hc, mul_assoc, ← mul_addₓ]
   rw [OreLocalization.mul_cancel']
-  simp only [← mul_oneₓ, ← Submonoid.coe_mul, ← mul_addₓ, mul_assoc]
+  simp only [mul_oneₓ, Submonoid.coe_mul, mul_addₓ, ← mul_assoc]
 
 theorem right_distrib (x y z : R[S⁻¹]) : (x + y) * z = x * z + y * z := by
   induction' x using OreLocalization.ind with r₁ s₁
@@ -813,7 +813,7 @@ theorem right_distrib (x y z : R[S⁻¹]) : (x + y) * z = x * z + y * z := by
   rw [← Subtype.coe_eq_of_eq_mk ha]
   repeat'
     rw [ore_div_mul_ore_div]
-  simp only [← add_mulₓ, ← add_ore_div]
+  simp only [add_mulₓ, add_ore_div]
 
 instance : Semiringₓ R[S⁻¹] :=
   { OreLocalization.addCommMonoid, OreLocalization.monoid with zero_mul := OreLocalization.zero_mul,
@@ -843,11 +843,10 @@ def universalHom : R[S⁻¹] →+* T :=
       rcases ore_div_add_char' r₁ r₂ s₁ s₂ with ⟨r₃, s₃, h₃, h₃'⟩
       rw [h₃']
       clear h₃'
-      simp only [← universal_mul_hom_apply, ← RingHom.coe_monoid_hom, ← RingHom.to_monoid_hom_eq_coe, ←
-        MonoidHom.to_fun_eq_coe]
-      simp only [← mul_inv_rev, ← MonoidHom.map_mul, ← RingHom.map_add, ← RingHom.map_mul, ← Units.coe_mul]
+      simp only [universal_mul_hom_apply, RingHom.coe_monoid_hom, RingHom.to_monoid_hom_eq_coe, MonoidHom.to_fun_eq_coe]
+      simp only [mul_inv_rev, MonoidHom.map_mul, RingHom.map_add, RingHom.map_mul, Units.coe_mul]
       rw [add_mulₓ, ← mul_assoc, mul_assoc (f r₁), hf, ← Units.coe_mul]
-      simp only [← mul_oneₓ, ← mul_right_invₓ, ← Units.coe_one]
+      simp only [mul_oneₓ, mul_right_invₓ, Units.coe_one]
       congr 1
       rw [mul_assoc]
       congr 1
@@ -868,7 +867,7 @@ theorem universal_hom_apply {r : R} {s : S} : universalHom f fS hf (r /ₒ s) = 
   rfl
 
 theorem universal_hom_commutes {r : R} : universalHom f fS hf (numeratorHom r) = f r := by
-  simp [← numerator_hom_apply, ← universal_hom_apply]
+  simp [numerator_hom_apply, universal_hom_apply]
 
 theorem universal_hom_unique (φ : R[S⁻¹] →+* T) (huniv : ∀ r : R, φ (numeratorHom r) = f r) :
     φ = universalHom f fS hf :=
@@ -905,7 +904,7 @@ open nonZeroDivisors
 theorem numerator_hom_inj (hS : S ≤ R⁰) : Function.Injective (numeratorHom : R → R[S⁻¹]) := fun r₁ r₂ h => by
   rw [numerator_hom_apply, numerator_hom_apply, ore_div_eq_iff] at h
   rcases h with ⟨u, v, h₁, h₂⟩
-  simp only [← S.coe_one, ← one_mulₓ] at h₂
+  simp only [S.coe_one, one_mulₓ] at h₂
   rwa [← h₂, mul_cancel_right_mem_non_zero_divisor (hS (SetLike.coe_mem u)), eq_comm] at h₁
 
 theorem nontrivial_of_non_zero_divisors [Nontrivial R] (hS : S ≤ R⁰) : Nontrivial R[S⁻¹] :=
@@ -939,14 +938,14 @@ protected def inv : R[R⁰⁻¹] → R[R⁰⁻¹] :=
     (by
       intro r t s hst
       by_cases' hr : r = 0
-      · simp [← hr]
+      · simp [hr]
         
       · by_cases' ht : t = 0
         · exfalso
           apply nonZeroDivisors.coe_ne_zero ⟨_, hst⟩
-          simp [← ht, ← mul_zero]
+          simp [ht, mul_zero]
           
-        · simp only [← hr, ← ht, ← SetLike.coe_mk, ← dif_neg, ← not_false_iff, ← or_selfₓ, ← mul_eq_zero]
+        · simp only [hr, ht, SetLike.coe_mk, dif_neg, not_false_iff, or_selfₓ, mul_eq_zero]
           apply OreLocalization.expand
           
         )
@@ -965,9 +964,9 @@ protected theorem mul_inv_cancel (x : R[R⁰⁻¹]) (h : x ≠ 0) : x * x⁻¹ =
   by_cases' hr : r = 0
   · exfalso
     apply h
-    simp [← hr]
+    simp [hr]
     
-  · simp [← hr]
+  · simp [hr]
     apply OreLocalization.div_eq_one'
     
 

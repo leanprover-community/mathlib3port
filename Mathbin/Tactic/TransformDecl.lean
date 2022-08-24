@@ -9,14 +9,14 @@ namespace Tactic
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `copy_attribute' attr_name src tgt p d_name` copy (user) attribute `attr_name` from
    `src` to `tgt` if it is defined for `src`; unlike `copy_attribute` the primed version also copies
    the parameter of the user attribute, in the user attribute case. Make it persistent if `p` is
    `tt`; if `p` is `none`, the copied attribute is made persistent iff it is persistent on `src`  -/
 unsafe def copy_attribute' (attr_name : Name) (src : Name) (tgt : Name) (p : Option Bool := none) : tactic Unit := do
   get_decl tgt <|>
-      "./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   -- if the source doesn't have the attribute we do not error and simply return
         mwhen
         (succeeds (has_attribute attr_name src)) <|
@@ -73,7 +73,7 @@ unsafe def additive_test (f : Name → Option Name) (replace_all : Bool) (ignore
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- transform the declaration `src` and all declarations `pre._proof_i` occurring in `src`
 using the dictionary `f`.
 `replace_all`, `trace`, `ignore` and `reorder` are configuration options.
@@ -87,7 +87,7 @@ unsafe def transform_decl_with_prefix_fun_aux (f : Name → Option Name) (replac
     ← return (src = pre ∨ src.is_internal : Bool) |
     if (f src).isSome then skip
       else
-        "./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   let env ← get_env
   let-- we find the additive name of `src`
   tgt := src.mapPrefix fun n => if n = pre then some tgt_pre else none

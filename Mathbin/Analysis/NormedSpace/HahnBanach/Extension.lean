@@ -40,7 +40,7 @@ theorem exists_extension_norm_eq (p : Subspace ℝ E) (f : p →L[ℝ] ℝ) :
     ∃ g : E →L[ℝ] ℝ, (∀ x : p, g x = f x) ∧ ∥g∥ = ∥f∥ := by
   rcases exists_extension_of_le_sublinear ⟨p, f⟩ (fun x => ∥f∥ * ∥x∥)
       (fun c hc x => by
-        simp only [← norm_smul c x, ← Real.norm_eq_abs, ← abs_of_pos hc, ← mul_left_commₓ])
+        simp only [norm_smul c x, Real.norm_eq_abs, abs_of_pos hc, mul_left_commₓ])
       (fun x y => _) fun x => le_transₓ (le_abs_self _) (f.le_op_norm _) with
     ⟨g, g_eq, g_le⟩
   set g' := g.mk_continuous ∥f∥ fun x => abs_le.2 ⟨neg_le.1 <| g.map_neg x ▸ norm_neg x ▸ g_le (-x), g_le x⟩
@@ -52,7 +52,7 @@ theorem exists_extension_norm_eq (p : Subspace ℝ E) (f : p →L[ℝ] ℝ) :
       apply g'.le_op_norm
       
     
-  · simp only [mul_addₓ]
+  · simp only [← mul_addₓ]
     exact mul_le_mul_of_nonneg_left (norm_add_le x y) (norm_nonneg f)
     
 
@@ -88,13 +88,12 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
       rfl
     rw [this]
     apply ext
-    · simp only [← add_zeroₓ, ← Algebra.id.smul_eq_mul, ← I_re, ← of_real_im, ← AddMonoidHom.map_add, ← zero_sub, ←
-        I_im', ← zero_mul, ← of_real_re, ← eq_self_iff_true, ← sub_zero, ← mul_neg, ← of_real_neg, ← mul_re, ← mul_zero,
-        ← sub_neg_eq_add, ← ContinuousLinearMap.map_smul]
-      
-    · simp only [← Algebra.id.smul_eq_mul, ← I_re, ← of_real_im, ← AddMonoidHom.map_add, ← zero_sub, ← I_im', ←
-        zero_mul, ← of_real_re, ← mul_neg, ← mul_im, ← zero_addₓ, ← of_real_neg, ← mul_re, ← sub_neg_eq_add, ←
+    · simp only [add_zeroₓ, Algebra.id.smul_eq_mul, I_re, of_real_im, AddMonoidHom.map_add, zero_sub, I_im', zero_mul,
+        of_real_re, eq_self_iff_true, sub_zero, mul_neg, of_real_neg, mul_re, mul_zero, sub_neg_eq_add,
         ContinuousLinearMap.map_smul]
+      
+    · simp only [Algebra.id.smul_eq_mul, I_re, of_real_im, AddMonoidHom.map_add, zero_sub, I_im', zero_mul, of_real_re,
+        mul_neg, mul_im, zero_addₓ, of_real_neg, mul_re, sub_neg_eq_add, ContinuousLinearMap.map_smul]
       
   -- And we derive the equality of the norms by bounding on both sides.
   refine' ⟨h, le_antisymmₓ _ _⟩
@@ -150,7 +149,7 @@ theorem exists_dual_vector' [Nontrivial E] (x : E) : ∃ g : E →L[𝕜] 𝕜, 
   · obtain ⟨y, hy⟩ := exists_ne (0 : E)
     obtain ⟨g, hg⟩ : ∃ g : E →L[𝕜] 𝕜, ∥g∥ = 1 ∧ g y = ∥y∥ := exists_dual_vector 𝕜 y hy
     refine' ⟨g, hg.left, _⟩
-    simp [← hx]
+    simp [hx]
     
   · exact exists_dual_vector 𝕜 x hx
     
@@ -164,7 +163,7 @@ theorem exists_dual_vector'' (x : E) : ∃ g : E →L[𝕜] 𝕜, ∥g∥ ≤ 1 
       ⟨0, by
         simp , _⟩
     symm
-    simp [← hx]
+    simp [hx]
     
   · rcases exists_dual_vector 𝕜 x hx with ⟨g, g_norm, g_eq⟩
     exact ⟨g, g_norm.le, g_eq⟩

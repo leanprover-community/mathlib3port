@@ -65,19 +65,19 @@ def assocLeft : HolorIndex (ds₁ ++ (ds₂ ++ ds₃)) → HolorIndex (ds₁ ++ 
 theorem take_take : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assocRight.take = t.take.take
   | ⟨is, h⟩ =>
     Subtype.eq <| by
-      simp [← assoc_right, ← take, ← cast_type, ← List.take_take, ← Nat.le_add_rightₓ, ← min_eq_leftₓ]
+      simp [assoc_right, take, cast_type, List.take_take, Nat.le_add_rightₓ, min_eq_leftₓ]
 
 theorem drop_take : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assocRight.drop.take = t.take.drop
   | ⟨is, h⟩ =>
     Subtype.eq
       (by
-        simp [← assoc_right, ← take, ← drop, ← cast_type, ← List.drop_take])
+        simp [assoc_right, take, drop, cast_type, List.drop_take])
 
 theorem drop_drop : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assocRight.drop.drop = t.drop
   | ⟨is, h⟩ =>
     Subtype.eq
       (by
-        simp [← add_commₓ, ← assoc_right, ← drop, ← cast_type, ← List.drop_drop])
+        simp [add_commₓ, assoc_right, drop, cast_type, List.drop_drop])
 
 end HolorIndex
 
@@ -169,7 +169,7 @@ theorem mul_assoc0 [Semigroupₓ α] (x : Holor α ds₁) (y : Holor α ds₂) (
 
 theorem mul_assoc [Semigroupₓ α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₃) :
     HEq (mul (mul x y) z) (mul x (mul y z)) := by
-  simp [← cast_heq, ← mul_assoc0, ← assoc_left]
+  simp [cast_heq, mul_assoc0, assoc_left]
 
 theorem mul_left_distrib [Distribₓ α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₂) :
     x ⊗ (y + z) = x ⊗ y + x ⊗ z :=
@@ -188,7 +188,7 @@ theorem mul_zero {α : Type} [Ringₓ α] (x : Holor α ds₁) : x ⊗ (0 : Holo
   funext fun t => mul_zero (x (HolorIndex.take t))
 
 theorem mul_scalar_mul [Monoidₓ α] (x : Holor α []) (y : Holor α ds) : x ⊗ y = x ⟨[], Forall₂.nil⟩ • y := by
-  simp [← mul, ← HasSmul.smul, ← HolorIndex.take, ← HolorIndex.drop]
+  simp [mul, HasSmul.smul, HolorIndex.take, HolorIndex.drop]
 
 -- holor slices
 /-- A slice is a subholor consisting of all entries with initial index i. -/
@@ -230,14 +230,14 @@ theorem slice_unit_vec_mul [Ringₓ α] {i : ℕ} {j : ℕ} (hid : i < d) (x : H
     slice (unitVec d j ⊗ x) i hid = if i = j then x else 0 :=
   funext fun t : HolorIndex ds =>
     if h : i = j then by
-      simp [← slice, ← mul, ← HolorIndex.take, ← unit_vec, ← HolorIndex.drop, ← h]
+      simp [slice, mul, HolorIndex.take, unit_vec, HolorIndex.drop, h]
     else by
-      simp [← slice, ← mul, ← HolorIndex.take, ← unit_vec, ← HolorIndex.drop, ← h] <;> rfl
+      simp [slice, mul, HolorIndex.take, unit_vec, HolorIndex.drop, h] <;> rfl
 
 theorem slice_add [Add α] (i : ℕ) (hid : i < d) (x : Holor α (d :: ds)) (y : Holor α (d :: ds)) :
     slice x i hid + slice y i hid = slice (x + y) i hid :=
   funext fun t => by
-    simp [← slice, ← (· + ·)]
+    simp [slice, (· + ·)]
 
 theorem slice_zero [Zero α] (i : ℕ) (hid : i < d) : slice (0 : Holor α (d :: ds)) i hid = 0 :=
   rfl
@@ -246,7 +246,7 @@ theorem slice_sum [AddCommMonoidₓ α] {β : Type} (i : ℕ) (hid : i < d) (s :
     (∑ x in s, slice (f x) i hid) = slice (∑ x in s, f x) i hid := by
   letI := Classical.decEq β
   refine' Finset.induction_on s _ _
-  · simp [← slice_zero]
+  · simp [slice_zero]
     
   · intro _ _ h_not_in ih
     rw [Finset.sum_insert h_not_in, ih, slice_add, Finset.sum_insert h_not_in]
@@ -260,14 +260,14 @@ theorem sum_unit_vec_mul_slice [Ringₓ α] (x : Holor α (d :: ds)) :
   apply slice_eq _ _ _
   ext i hid
   rw [← slice_sum]
-  simp only [← slice_unit_vec_mul hid]
+  simp only [slice_unit_vec_mul hid]
   rw [Finset.sum_eq_single (Subtype.mk i <| Finset.mem_range.2 hid)]
   · simp
     
   · intro (b : { x // x ∈ Finset.range d })(hb : b ∈ (Finset.range d).attach)(hbi : b ≠ ⟨i, _⟩)
     have hbi' : i ≠ b := by
-      simpa only [← Ne.def, ← Subtype.ext_iff, ← Subtype.coe_mk] using hbi.symm
-    simp [← hbi']
+      simpa only [Ne.def, Subtype.ext_iff, Subtype.coe_mk] using hbi.symm
+    simp [hbi']
     
   · intro (hid' : Subtype.mk i _ ∉ Finset.attach (Finset.range d))
     exfalso
@@ -298,9 +298,9 @@ theorem cprank_max_1 [Monoidₓ α] [AddMonoidₓ α] {x : Holor α ds} (h : Cpr
 theorem cprank_max_add [Monoidₓ α] [AddMonoidₓ α] :
     ∀ {m : ℕ} {n : ℕ} {x : Holor α ds} {y : Holor α ds}, CprankMax m x → CprankMax n y → CprankMax (m + n) (x + y)
   | 0, n, x, y, cprank_max.zero, hy => by
-    simp [← hy]
+    simp [hy]
   | m + 1, n, _, y, cprank_max.succ k x₁ x₂ hx₁ hx₂, hy => by
-    simp only [← add_commₓ, ← add_assocₓ]
+    simp only [add_commₓ, add_assocₓ]
     apply cprank_max.succ
     · assumption
       
@@ -309,7 +309,7 @@ theorem cprank_max_add [Monoidₓ α] [AddMonoidₓ α] :
 
 theorem cprank_max_mul [Ringₓ α] : ∀ (n : ℕ) (x : Holor α [d]) (y : Holor α ds), CprankMax n y → CprankMax n (x ⊗ y)
   | 0, x, _, cprank_max.zero => by
-    simp [← mul_zero x, ← cprank_max.zero]
+    simp [mul_zero x, cprank_max.zero]
   | n + 1, x, _, cprank_max.succ k y₁ y₂ hy₁ hy₂ => by
     rw [mul_left_distrib]
     rw [Nat.add_comm]
@@ -320,20 +320,20 @@ theorem cprank_max_mul [Ringₓ α] : ∀ (n : ℕ) (x : Holor α [d]) (y : Holo
       
 
 theorem cprank_max_sum [Ringₓ α] {β} {n : ℕ} (s : Finset β) (f : β → Holor α ds) :
-    (∀, ∀ x ∈ s, ∀, CprankMax n (f x)) → CprankMax (s.card * n) (∑ x in s, f x) :=
+    (∀ x ∈ s, CprankMax n (f x)) → CprankMax (s.card * n) (∑ x in s, f x) :=
   letI := Classical.decEq β
   Finset.induction_on s
     (by
-      simp [← cprank_max.zero])
+      simp [cprank_max.zero])
     (by
       intro x s(h_x_notin_s : x ∉ s)ih h_cprank
-      simp only [← Finset.sum_insert h_x_notin_s, ← Finset.card_insert_of_not_mem h_x_notin_s]
+      simp only [Finset.sum_insert h_x_notin_s, Finset.card_insert_of_not_mem h_x_notin_s]
       rw [Nat.right_distrib]
-      simp only [← Nat.one_mul, ← Nat.add_comm]
+      simp only [Nat.one_mul, Nat.add_comm]
       have ih' : cprank_max (Finset.card s * n) (∑ x in s, f x) := by
         apply ih
         intro (x : β)(h_x_in_s : x ∈ s)
-        simp only [← h_cprank, ← Finset.mem_insert_of_mem, ← h_x_in_s]
+        simp only [h_cprank, Finset.mem_insert_of_mem, h_x_in_s]
       exact cprank_max_add (h_cprank x (Finset.mem_insert_self x s)) ih')
 
 theorem cprank_max_upper_bound [Ringₓ α] : ∀ {ds}, ∀ x : Holor α ds, CprankMax ds.Prod x
@@ -343,7 +343,7 @@ theorem cprank_max_upper_bound [Ringₓ α] : ∀ {ds}, ∀ x : Holor α ds, Cpr
       ∀ i : { x // x ∈ Finset.range d }, CprankMax ds.Prod (unitVec d i.1 ⊗ slice x i.1 (mem_range.1 i.2)) := fun i =>
       cprank_max_mul _ _ _ (cprank_max_upper_bound (slice x i.1 (mem_range.1 i.2)))
     have h_dds_prod : (List.cons d ds).Prod = Finset.card (Finset.range d) * Prod ds := by
-      simp [← Finset.card_range]
+      simp [Finset.card_range]
     have :
       CprankMax (Finset.card (Finset.attach (Finset.range d)) * Prod ds)
         (∑ i in Finset.attach (Finset.range d), unitVec d i.val ⊗ slice x i.val (mem_range.1 i.2)) :=

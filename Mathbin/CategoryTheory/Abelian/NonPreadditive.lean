@@ -72,7 +72,7 @@ class NonPreadditiveAbelian extends HasZeroMorphisms C, NormalMonoCategory C, No
   [HasFiniteProducts : HasFiniteProducts C]
   [HasFiniteCoproducts : HasFiniteCoproducts C]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option default_priority
+-- ./././Mathport/Syntax/Translate/Basic.lean:335:40: warning: unsupported option default_priority
 set_option default_priority 100
 
 attribute [instance] non_preadditive_abelian.has_zero_object
@@ -122,7 +122,7 @@ instance : Epi (Abelian.factorThruImage f) :=
       f ≫ h = (p ≫ i) ≫ h := (abelian.image.fac f).symm ▸ rfl
       _ = ((t ≫ kernel.ι g) ≫ i) ≫ h := ht ▸ rfl
       _ = t ≫ u ≫ h := by
-        simp only [← category.assoc] <;> conv_lhs => congr skip rw [← category.assoc]
+        simp only [category.assoc] <;> conv_lhs => congr skip rw [← category.assoc]
       _ = t ≫ 0 := hu.w ▸ rfl
       _ = 0 := has_zero_morphisms.comp_zero _ _
       
@@ -164,7 +164,7 @@ instance : Mono (Abelian.factorThruCoimage f) :=
       h ≫ f = h ≫ p ≫ i := (abelian.coimage.fac f).symm ▸ rfl
       _ = h ≫ p ≫ cokernel.π g ≫ t := ht ▸ rfl
       _ = h ≫ u ≫ t := by
-        simp only [← category.assoc] <;> conv_lhs => congr skip rw [← category.assoc]
+        simp only [category.assoc] <;> conv_lhs => congr skip rw [← category.assoc]
       _ = 0 ≫ t := by
         rw [← category.assoc, hu.w]
       _ = 0 := zero_comp
@@ -365,7 +365,7 @@ theorem sub_self {X Y : C} (a : X ⟶ Y) : a - a = 0 := by
   rw [sub_def, ← category.comp_id a, ← prod.comp_lift, category.assoc, diag_σ, comp_zero]
 
 theorem lift_sub_lift {X Y : C} (a b c d : X ⟶ Y) : prod.lift a b - prod.lift c d = prod.lift (a - c) (b - d) := by
-  simp only [← sub_def]
+  simp only [sub_def]
   ext
   · rw [category.assoc, σ_comp, prod.lift_map_assoc, prod.lift_fst, prod.lift_fst, prod.lift_fst]
     

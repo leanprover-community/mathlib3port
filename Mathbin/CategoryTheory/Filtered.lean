@@ -221,7 +221,7 @@ theorem sup_exists :
       · rw
           [@w' _ _ mX mY f'
             (by
-              simpa [← hf ∘ Eq.symm] using mf')]
+              simpa [hf ∘ Eq.symm] using mf')]
         
       
     · rw [@w' _ _ mX' mY' f' _]
@@ -276,10 +276,9 @@ theorem cocone_nonempty (F : J ⥤ C) : Nonempty (Cocone F) := by
           _⟩⟩⟩
   intro j j' g
   dsimp'
-  simp only [← category.comp_id]
+  simp only [category.comp_id]
   apply w
-  simp only [← Finset.mem_univ, ← Finset.mem_bUnion, ← exists_and_distrib_left, ← exists_prop_of_true, ←
-    Finset.mem_image]
+  simp only [Finset.mem_univ, Finset.mem_bUnion, exists_and_distrib_left, exists_prop_of_true, Finset.mem_image]
   exact
     ⟨j, rfl, j', g, by
       simp ⟩
@@ -352,16 +351,16 @@ noncomputable def coeq₃Hom {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : j₂ ⟶ 
       coeqHom (coeqHom f g ≫ leftToMax (coeq f g) (coeq g h)) (coeqHom g h ≫ rightToMax (coeq f g) (coeq g h))
 
 theorem coeq₃_condition₁ {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : f ≫ coeq₃Hom f g h = g ≫ coeq₃Hom f g h := by
-  dsimp' [← coeq₃_hom]
+  dsimp' [coeq₃_hom]
   slice_lhs 1 2 => rw [coeq_condition f g]
-  simp only [← category.assoc]
+  simp only [category.assoc]
 
 theorem coeq₃_condition₂ {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : g ≫ coeq₃Hom f g h = h ≫ coeq₃Hom f g h := by
-  dsimp' [← coeq₃_hom]
+  dsimp' [coeq₃_hom]
   slice_lhs 2 4 => rw [← category.assoc, coeq_condition _ _]
   slice_rhs 2 4 => rw [← category.assoc, coeq_condition _ _]
   slice_lhs 1 3 => rw [← category.assoc, coeq_condition _ _]
-  simp only [← category.assoc]
+  simp only [category.assoc]
 
 theorem coeq₃_condition₃ {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : f ≫ coeq₃Hom f g h = h ≫ coeq₃Hom f g h :=
   Eq.trans (coeq₃_condition₁ f g h) (coeq₃_condition₂ f g h)
@@ -394,11 +393,11 @@ theorem bowtie {j₁ j₂ k₁ k₂ : C} (f₁ : j₁ ⟶ k₁) (g₁ : j₁ ⟶
   fconstructor
   · slice_lhs 1 3 => rw [← category.assoc, coeq_condition]
     slice_lhs 3 5 => rw [← category.assoc, coeq_condition]
-    simp only [← category.assoc]
+    simp only [category.assoc]
     
   · slice_lhs 3 5 => rw [← category.assoc, coeq_condition]
     slice_lhs 1 3 => rw [← category.assoc, coeq_condition]
-    simp only [← category.assoc]
+    simp only [category.assoc]
     
 
 /-- Given a "tulip" of morphisms
@@ -436,15 +435,15 @@ theorem tulip {j₁ j₂ j₃ k₁ k₂ l : C} (f₁ : j₁ ⟶ k₁) (f₂ : j�
   fconstructor
   slice_lhs 1 3 => rw [← category.assoc, coeq_condition]
   slice_lhs 3 6 => rw [← category.assoc, coeq₃_condition₁]
-  simp only [← category.assoc]
+  simp only [category.assoc]
   fconstructor
   slice_lhs 3 6 => rw [← category.assoc, coeq₃_condition₁]
   slice_lhs 1 3 => rw [← category.assoc, coeq_condition]
   slice_rhs 3 6 => rw [← category.assoc, ← coeq₃_condition₂]
-  simp only [← category.assoc]
+  simp only [category.assoc]
   slice_rhs 3 6 => rw [← category.assoc, coeq₃_condition₂]
   slice_rhs 1 3 => rw [← category.assoc, ← coeq_condition]
-  simp only [← category.assoc]
+  simp only [category.assoc]
 
 end SpecialShapes
 
@@ -612,7 +611,7 @@ theorem inf_exists :
       · rw
           [@w' _ _ mX mY f'
             (by
-              simpa [← hf ∘ Eq.symm] using mf')]
+              simpa [hf ∘ Eq.symm] using mf')]
         
       
     · rw [@w' _ _ mX' mY' f' _]
@@ -667,11 +666,10 @@ theorem cone_nonempty (F : J ⥤ C) : Nonempty (Cone F) := by
           _⟩⟩⟩
   intro j j' g
   dsimp'
-  simp only [← category.id_comp]
+  simp only [category.id_comp]
   symm
   apply w
-  simp only [← Finset.mem_univ, ← Finset.mem_bUnion, ← exists_and_distrib_left, ← exists_prop_of_true, ←
-    Finset.mem_image]
+  simp only [Finset.mem_univ, Finset.mem_bUnion, exists_and_distrib_left, exists_prop_of_true, Finset.mem_image]
   exact
     ⟨j, rfl, j', g, by
       simp ⟩

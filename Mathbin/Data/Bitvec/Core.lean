@@ -275,7 +275,7 @@ attribute [local simp] Nat.zero_add Nat.add_zero Nat.one_mul Nat.mul_one Nat.zer
 theorem to_nat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
     Bitvec.toNat (xs++ₜb ::ᵥ nil) = Bitvec.toNat xs * 2 + Bitvec.toNat (b ::ᵥ nil) := by
   cases' xs with xs P
-  simp [← bits_to_nat_to_list]
+  simp [bits_to_nat_to_list]
   clear P
   unfold bits_to_nat List.foldlₓ
   -- generalize the accumulator of foldl
@@ -286,23 +286,23 @@ theorem to_nat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
   induction' xs with x xs generalizing x
   · simp
     unfold List.foldlₓ add_lsb
-    simp [← Nat.mul_succ]
+    simp [Nat.mul_succ]
     
   · simp
     apply xs_ih
     
 
 theorem bits_to_nat_to_bool (n : ℕ) : Bitvec.toNat (toBool (n % 2 = 1) ::ᵥ nil) = n % 2 := by
-  simp [← bits_to_nat_to_list]
+  simp [bits_to_nat_to_list]
   unfold bits_to_nat add_lsb List.foldlₓ cond
-  simp [← cond_to_bool_mod_two]
+  simp [cond_to_bool_mod_two]
 
 theorem of_nat_succ {k n : ℕ} : Bitvec.ofNat (succ k) n = Bitvec.ofNat k (n / 2)++ₜtoBool (n % 2 = 1) ::ᵥ nil :=
   rfl
 
 theorem to_nat_of_nat {k n : ℕ} : Bitvec.toNat (Bitvec.ofNat k n) = n % 2 ^ k := by
   induction' k with k ih generalizing n
-  · simp [← Nat.mod_oneₓ]
+  · simp [Nat.mod_oneₓ]
     rfl
     
   · rw [of_nat_succ, to_nat_append, ih, bits_to_nat_to_bool, mod_pow_succ, Nat.mul_comm]

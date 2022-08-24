@@ -192,11 +192,11 @@ noncomputable def sndPiMap : ∏ I.left ⟶ ∏ I.right :=
 
 @[simp, reassoc]
 theorem fst_pi_map_π (b) : I.fstPiMap ≫ Pi.π I.right b = Pi.π I.left _ ≫ I.fst b := by
-  simp [← fst_pi_map]
+  simp [fst_pi_map]
 
 @[simp, reassoc]
 theorem snd_pi_map_π (b) : I.sndPiMap ≫ Pi.π I.right b = Pi.π I.left _ ≫ I.snd b := by
-  simp [← snd_pi_map]
+  simp [snd_pi_map]
 
 /-- Taking the multiequalizer over the multicospan index is equivalent to taking the equalizer over
 the two morphsims `∏ I.left ⇉ ∏ I.right`. This is the diagram of the latter.
@@ -257,11 +257,11 @@ noncomputable def sndSigmaMap : ∐ I.left ⟶ ∐ I.right :=
 
 @[simp, reassoc]
 theorem ι_fst_sigma_map (b) : Sigma.ι I.left b ≫ I.fstSigmaMap = I.fst b ≫ Sigma.ι I.right _ := by
-  simp [← fst_sigma_map]
+  simp [fst_sigma_map]
 
 @[simp, reassoc]
 theorem ι_snd_sigma_map (b) : Sigma.ι I.left b ≫ I.sndSigmaMap = I.snd b ≫ Sigma.ι I.right _ := by
-  simp [← snd_sigma_map]
+  simp [snd_sigma_map]
 
 /-- Taking the multicoequalizer over the multispan index is equivalent to taking the coequalizer over
 the two morphsims `∐ I.left ⇉ ∐ I.right`. This is the diagram of the latter.
@@ -358,11 +358,11 @@ def IsLimit.mk (lift : ∀ E : Multifork I, E.x ⟶ K.x) (fac : ∀ (E : Multifo
 
 variable [HasProduct I.left] [HasProduct I.right]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]
 @[simp, reassoc]
 theorem pi_condition : Pi.lift K.ι ≫ I.fstPiMap = Pi.lift K.ι ≫ I.sndPiMap := by
   ext
-  trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `discrete_cases #[]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]"
   simp
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
@@ -445,8 +445,8 @@ noncomputable def toPiForkFunctor : Multifork I ⥤ Fork I.fstPiMap I.sndPiMap w
           simp
           
         · ext
-          simp only [← multifork.to_pi_fork_π_app_one, ← multifork.pi_condition, ← category.assoc]
-          dsimp' [← snd_pi_map]
+          simp only [multifork.to_pi_fork_π_app_one, multifork.pi_condition, category.assoc]
+          dsimp' [snd_pi_map]
           simp
            }
 
@@ -472,7 +472,7 @@ noncomputable def multiforkEquivPiFork : Multifork I ≌ Fork I.fstPiMap I.sndPi
       (fun K =>
         Cones.ext (Iso.refl _)
           (by
-            rintro (_ | _) <;> dsimp' <;> simp [fork.app_one_eq_ι_comp_left, -fork.app_one_eq_ι_comp_left]))
+            rintro (_ | _) <;> dsimp' <;> simp [← fork.app_one_eq_ι_comp_left, -fork.app_one_eq_ι_comp_left]))
       fun K₁ K₂ f => by
       ext
       simp
@@ -561,11 +561,11 @@ def IsColimit.mk (desc : ∀ E : Multicofork I, K.x ⟶ E.x) (fac : ∀ (E : Mul
 
 variable [HasCoproduct I.left] [HasCoproduct I.right]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]
 @[simp, reassoc]
 theorem sigma_condition : I.fstSigmaMap ≫ Sigma.desc K.π = I.sndSigmaMap ≫ Sigma.desc K.π := by
   ext
-  trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `discrete_cases #[]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]"
   simp
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
@@ -608,7 +608,7 @@ noncomputable def ofSigmaCofork (c : Cofork I.fstSigmaMap I.sndSigmaMap) : Multi
         }
         · change _ ≫ _ ≫ _ = (_ ≫ _) ≫ _
           dsimp'
-          simp only [← cofork.condition, ← category.comp_id]
+          simp only [cofork.condition, category.comp_id]
           rw [← I.ι_fst_sigma_map_assoc, c.condition]
           
         · change _ ≫ _ ≫ _ = (_ ≫ _) ≫ 𝟙 _
@@ -673,7 +673,7 @@ noncomputable def multicoforkEquivSigmaCofork : Multicofork I ≌ Cofork I.fstSi
           (by
             ext ⟨j⟩
             dsimp'
-            simp only [← category.comp_id, ← colimit.ι_desc, ← cofan.mk_ι_app]
+            simp only [category.comp_id, colimit.ι_desc, cofan.mk_ι_app]
             rfl))
       fun K₁ K₂ f => by
       ext

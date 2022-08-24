@@ -61,10 +61,10 @@ variable {α : Type _} [TopologicalSpace α] [CommSemiringₓ R] [TopologicalSpa
 theorem aeval_continuous_map_apply (g : R[X]) (f : C(α, R)) (x : α) : ((Polynomial.aeval f) g) x = g.eval (f x) := by
   apply Polynomial.induction_on' g
   · intro p q hp hq
-    simp [← hp, ← hq]
+    simp [hp, hq]
     
   · intro n a
-    simp [← Pi.pow_apply]
+    simp [Pi.pow_apply]
     
 
 end
@@ -97,7 +97,7 @@ def toContinuousMapAlgHom : R[X] →ₐ[R] C(R, R) where
   commutes' := by
     intros
     ext
-    simp [← Algebra.algebra_map_eq_smul_one]
+    simp [Algebra.algebra_map_eq_smul_one]
 
 /-- The algebra map from `polynomial R` to continuous functions `C(X, R)`, for any subset `X` of `R`.
 -/
@@ -121,7 +121,7 @@ def toContinuousMapOnAlgHom (X : Set R) : R[X] →ₐ[R] C(X, R) where
   commutes' := by
     intros
     ext
-    simp [← Algebra.algebra_map_eq_smul_one]
+    simp [Algebra.algebra_map_eq_smul_one]
 
 end
 
@@ -141,7 +141,7 @@ def polynomialFunctions (X : Set R) : Subalgebra R C(X, R) :=
 theorem polynomial_functions_coe (X : Set R) :
     (polynomialFunctions X : Set C(X, R)) = Set.Range (Polynomial.toContinuousMapOnAlgHom X) := by
   ext
-  simp [← polynomialFunctions]
+  simp [polynomialFunctions]
 
 -- TODO:
 -- if `f : R → R` is an affine equivalence, then pulling back along `f`
@@ -151,7 +151,7 @@ theorem polynomial_functions_separates_points (X : Set R) : (polynomialFunctions
   -- We use `polynomial.X`, then clean up.
   refine' ⟨_, ⟨⟨_, ⟨⟨Polynomial.x, ⟨Algebra.mem_top, rfl⟩⟩, rfl⟩⟩, _⟩⟩
   dsimp'
-  simp only [← Polynomial.eval_X]
+  simp only [Polynomial.eval_X]
   exact fun h' => h (Subtype.ext h')
 
 open UnitInterval
@@ -174,18 +174,18 @@ theorem polynomialFunctions.comap_comp_right_alg_hom_Icc_homeo_I (a b : ℝ) (h 
     · simp
       
     · ext x
-      simp only [← neg_mul, ← RingHom.map_neg, ← RingHom.map_mul, ← AlgHom.coe_to_ring_hom, ← Polynomial.eval_X, ←
-        Polynomial.eval_neg, ← Polynomial.eval_C, ← Polynomial.eval_smul, ← smul_eq_mul, ← Polynomial.eval_mul, ←
-        Polynomial.eval_add, ← Polynomial.coe_aeval_eq_eval, ← Polynomial.eval_comp, ←
-        Polynomial.to_continuous_map_on_alg_hom_apply, ← Polynomial.to_continuous_map_on_apply, ←
+      simp only [neg_mul, RingHom.map_neg, RingHom.map_mul, AlgHom.coe_to_ring_hom, Polynomial.eval_X,
+        Polynomial.eval_neg, Polynomial.eval_C, Polynomial.eval_smul, smul_eq_mul, Polynomial.eval_mul,
+        Polynomial.eval_add, Polynomial.coe_aeval_eq_eval, Polynomial.eval_comp,
+        Polynomial.to_continuous_map_on_alg_hom_apply, Polynomial.to_continuous_map_on_apply,
         Polynomial.to_continuous_map_apply]
       convert w ⟨_, _⟩ <;> clear w
       · -- why does `comm_ring.add` appear here!?
         change x = (iccHomeoI a b h).symm ⟨_ + _, _⟩
         ext
-        simp only [← Icc_homeo_I_symm_apply_coe, ← Subtype.coe_mk]
+        simp only [Icc_homeo_I_symm_apply_coe, Subtype.coe_mk]
         replace h : b - a ≠ 0 := sub_ne_zero_of_ne h.ne.symm
-        simp only [← mul_addₓ]
+        simp only [mul_addₓ]
         field_simp
         ring
         
@@ -209,7 +209,7 @@ theorem polynomialFunctions.comap_comp_right_alg_hom_Icc_homeo_I (a b : ℝ) (h 
     · simp
       
     · ext x
-      simp [← mul_comm]
+      simp [mul_comm]
       
     
 

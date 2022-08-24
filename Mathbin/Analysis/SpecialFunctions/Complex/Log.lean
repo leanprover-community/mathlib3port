@@ -28,16 +28,16 @@ noncomputable def log (x : ℂ) : ℂ :=
   x.abs.log + arg x * I
 
 theorem log_re (x : ℂ) : x.log.re = x.abs.log := by
-  simp [← log]
+  simp [log]
 
 theorem log_im (x : ℂ) : x.log.im = x.arg := by
-  simp [← log]
+  simp [log]
 
 theorem neg_pi_lt_log_im (x : ℂ) : -π < (log x).im := by
-  simp only [← log_im, ← neg_pi_lt_arg]
+  simp only [log_im, neg_pi_lt_arg]
 
 theorem log_im_le_pi (x : ℂ) : (log x).im ≤ π := by
-  simp only [← log_im, ← arg_le_pi]
+  simp only [log_im, arg_le_pi]
 
 theorem exp_log {x : ℂ} (hx : x ≠ 0) : exp (log x) = x := by
   rw [log, exp_add_mul_I, ← of_real_sin, sin_arg, ← of_real_cos, cos_arg hx, ← of_real_exp, Real.exp_log (abs_pos.2 hx),
@@ -67,27 +67,27 @@ theorem of_real_log {x : ℝ} (hx : 0 ≤ x) : (x.log : ℂ) = log x :=
       rw [of_real_im, log_im, arg_of_real_of_nonneg hx])
 
 theorem log_of_real_re (x : ℝ) : (log (x : ℂ)).re = Real.log x := by
-  simp [← log_re]
+  simp [log_re]
 
 @[simp]
 theorem log_zero : log 0 = 0 := by
-  simp [← log]
+  simp [log]
 
 @[simp]
 theorem log_one : log 1 = 0 := by
-  simp [← log]
+  simp [log]
 
 theorem log_neg_one : log (-1) = π * I := by
-  simp [← log]
+  simp [log]
 
 theorem log_I : log i = π / 2 * I := by
-  simp [← log]
+  simp [log]
 
 theorem log_neg_I : log (-I) = -(π / 2) * I := by
-  simp [← log]
+  simp [log]
 
 theorem two_pi_I_ne_zero : (2 * π * I : ℂ) ≠ 0 := by
-  norm_num[← Real.pi_ne_zero, ← I_ne_zero]
+  norm_num[Real.pi_ne_zero, I_ne_zero]
 
 theorem exp_eq_one_iff {x : ℂ} : exp x = 1 ↔ ∃ n : ℤ, x = n * (2 * π * I) := by
   constructor
@@ -96,7 +96,7 @@ theorem exp_eq_one_iff {x : ℂ} : exp x = 1 ↔ ∃ n : ℤ, x = n * (2 * π * 
     use -n
     rw [Int.cast_neg, neg_mul, eq_neg_iff_add_eq_zero]
     have : (x + n * (2 * π * I)).im ∈ Ioc (-π) π := by
-      simpa [← two_mul, ← mul_addₓ] using hn
+      simpa [two_mul, mul_addₓ] using hn
     rw [← log_exp this.1 this.2, exp_periodic.int_mul n, h, log_one]
     
   · rintro ⟨n, rfl⟩
@@ -107,7 +107,7 @@ theorem exp_eq_exp_iff_exp_sub_eq_one {x y : ℂ} : exp x = exp y ↔ exp (x - y
   rw [exp_sub, div_eq_one_iff_eq (exp_ne_zero _)]
 
 theorem exp_eq_exp_iff_exists_int {x y : ℂ} : exp x = exp y ↔ ∃ n : ℤ, x = y + n * (2 * π * I) := by
-  simp only [← exp_eq_exp_iff_exp_sub_eq_one, ← exp_eq_one_iff, ← sub_eq_iff_eq_add']
+  simp only [exp_eq_exp_iff_exp_sub_eq_one, exp_eq_one_iff, sub_eq_iff_eq_add']
 
 @[simp]
 theorem countable_preimage_exp {s : Set ℂ} : (exp ⁻¹' s).Countable ↔ s.Countable := by
@@ -119,11 +119,11 @@ theorem countable_preimage_exp {s : Set ℂ} : (exp ⁻¹' s).Countable ↔ s.Co
   · rw [← bUnion_preimage_singleton]
     refine' hs.bUnion fun z hz => _
     rcases em (∃ w, exp w = z) with (⟨w, rfl⟩ | hne)
-    · simp only [← preimage, ← mem_singleton_iff, ← exp_eq_exp_iff_exists_int, ← set_of_exists]
+    · simp only [preimage, mem_singleton_iff, exp_eq_exp_iff_exists_int, set_of_exists]
       exact countable_Union fun m => countable_singleton _
       
     · push_neg  at hne
-      simp [← preimage, ← hne]
+      simp [preimage, hne]
       
     
 
@@ -136,7 +136,7 @@ theorem tendsto_log_nhds_within_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.r
       (((continuous_of_real.tendsto _).comp <| tendsto_arg_nhds_within_im_neg_of_re_neg_of_im_zero hre him).mul
         tendsto_const_nhds)
   convert this
-  · simp [← sub_eq_add_neg]
+  · simp [sub_eq_add_neg]
     
   · lift z to ℝ using him
     simpa using hre.ne
@@ -156,7 +156,7 @@ theorem continuous_within_at_log_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0)
 
 theorem tendsto_log_nhds_within_im_nonneg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (him : z.im = 0) :
     Tendsto log (𝓝[{ z : ℂ | 0 ≤ z.im }] z) (𝓝 <| Real.log (abs z) + π * I) := by
-  simpa only [← log, ← arg_eq_pi_iff.2 ⟨hre, him⟩] using (continuous_within_at_log_of_re_neg_of_im_zero hre him).Tendsto
+  simpa only [log, arg_eq_pi_iff.2 ⟨hre, him⟩] using (continuous_within_at_log_of_re_neg_of_im_zero hre him).Tendsto
 
 @[simp]
 theorem map_exp_comap_re_at_bot : map exp (comap re atBot) = 𝓝[≠] 0 := by
@@ -204,9 +204,8 @@ theorem ContinuousWithinAt.clog {f : α → ℂ} {s : Set α} {x : α} (h₁ : C
     (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : ContinuousWithinAt (fun t => log (f t)) s x :=
   h₁.clog h₂
 
-theorem ContinuousOn.clog {f : α → ℂ} {s : Set α} (h₁ : ContinuousOn f s)
-    (h₂ : ∀, ∀ x ∈ s, ∀, 0 < (f x).re ∨ (f x).im ≠ 0) : ContinuousOn (fun t => log (f t)) s := fun x hx =>
-  (h₁ x hx).clog (h₂ x hx)
+theorem ContinuousOn.clog {f : α → ℂ} {s : Set α} (h₁ : ContinuousOn f s) (h₂ : ∀ x ∈ s, 0 < (f x).re ∨ (f x).im ≠ 0) :
+    ContinuousOn (fun t => log (f t)) s := fun x hx => (h₁ x hx).clog (h₂ x hx)
 
 theorem Continuous.clog {f : α → ℂ} (h₁ : Continuous f) (h₂ : ∀ x, 0 < (f x).re ∨ (f x).im ≠ 0) :
     Continuous fun t => log (f t) :=

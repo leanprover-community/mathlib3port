@@ -60,8 +60,8 @@ theorem attach_bound_apply_coe (f : C(X, ℝ)) (x : X) : ((attachBound f) x : �
 theorem polynomial_comp_attach_bound (A : Subalgebra ℝ C(X, ℝ)) (f : A) (g : Polynomial ℝ) :
     (g.toContinuousMapOn (Set.Icc (-∥f∥) ∥f∥)).comp (f : C(X, ℝ)).attachBound = Polynomial.aeval f g := by
   ext
-  simp only [← ContinuousMap.coe_comp, ← Function.comp_app, ← ContinuousMap.attach_bound_apply_coe, ←
-    Polynomial.to_continuous_map_on_apply, ← Polynomial.aeval_subalgebra_coe, ← Polynomial.aeval_continuous_map_apply, ←
+  simp only [ContinuousMap.coe_comp, Function.comp_app, ContinuousMap.attach_bound_apply_coe,
+    Polynomial.to_continuous_map_on_apply, Polynomial.aeval_subalgebra_coe, Polynomial.aeval_continuous_map_apply,
     Polynomial.to_continuous_map_apply]
 
 /-- Given a continuous function `f` in a subalgebra of `C(X, ℝ)`, postcomposing by a polynomial
@@ -93,7 +93,7 @@ theorem comp_attach_bound_mem_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) (p 
       frequently_mem_polynomials
   -- but need to show that those pullbacks are actually in `A`.
   rintro _ ⟨g, ⟨-, rfl⟩⟩
-  simp only [← SetLike.mem_coe, ← AlgHom.coe_to_ring_hom, ← comp_right_continuous_map_apply, ←
+  simp only [SetLike.mem_coe, AlgHom.coe_to_ring_hom, comp_right_continuous_map_apply,
     Polynomial.to_continuous_map_on_alg_hom_apply]
   apply polynomial_comp_attach_bound_mem
 
@@ -146,8 +146,8 @@ theorem sup_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (
 
 open TopologicalSpace
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (f g «expr ∈ » L)
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (f g «expr ∈ » L)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (f g «expr ∈ » L)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (f g «expr ∈ » L)
 -- Here's the fun part of Stone-Weierstrass!
 theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
     (inf_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f⊓g ∈ L) (sup_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f⊔g ∈ L)
@@ -156,7 +156,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   apply eq_top_iff.mpr
   rintro f -
   refine' Filter.Frequently.mem_closure ((Filter.HasBasis.frequently_iff Metric.nhds_basis_ball).mpr fun ε pos => _)
-  simp only [← exists_prop, ← Metric.mem_ball]
+  simp only [exists_prop, Metric.mem_ball]
   -- It will be helpful to assume `X` is nonempty later,
   -- so we get that out of the way here.
   by_cases' nX : Nonempty X
@@ -170,7 +170,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
     and finally using compactness to produce the desired function `h`
     as a maximum over finitely many `x` of a minimum over finitely many `y` of the `g x y`.
     -/
-  dsimp' [← Set.SeparatesPointsStrongly]  at sep
+  dsimp' [Set.SeparatesPointsStrongly]  at sep
   let g : X → X → L := fun x y => (sep f x y).some
   have w₁ : ∀ x y, g x y x = f x := fun x y => (sep f x y).some_spec.1
   have w₂ : ∀ x y, g x y y = f y := fun x y => (sep f x y).some_spec.2
@@ -203,13 +203,13 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   have lt_h : ∀ x z, f z - ε < h x z := by
     intro x z
     obtain ⟨y, ym, zm⟩ := Set.exists_set_mem_of_union_eq_top _ _ (ys_w x) z
-    dsimp' [← h]
-    simp only [← coe_fn_coe_base', ← Subtype.coe_mk, ← sup'_coe, ← Finset.sup'_apply, ← Finset.lt_sup'_iff]
+    dsimp' [h]
+    simp only [coe_fn_coe_base', Subtype.coe_mk, sup'_coe, Finset.sup'_apply, Finset.lt_sup'_iff]
     exact ⟨y, ym, zm⟩
   have h_eq : ∀ x, h x x = f x := by
     intro x
-    simp only [← coe_fn_coe_base'] at w₁
-    simp [← coe_fn_coe_base', ← w₁]
+    simp only [coe_fn_coe_base'] at w₁
+    simp [coe_fn_coe_base', w₁]
   -- For each `x`, we define `W x` to be `{z | h x z < f z + ε}`,
   let W : ∀ x, Set X := fun x => { z | h x z < f z + ε }
   -- This is still a neighbourhood of `x`.
@@ -218,7 +218,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
     refine' IsOpen.mem_nhds _ _
     · apply is_open_lt <;> continuity
       
-    · dsimp' only [← W, ← Set.mem_set_of_eq]
+    · dsimp' only [W, Set.mem_set_of_eq]
       rw [h_eq]
       exact lt_add_of_pos_right _ Pos
       
@@ -240,14 +240,14 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   rw
     [show ∀ a b ε : ℝ, dist a b < ε ↔ a < b + ε ∧ b - ε < a by
       intros
-      simp only [Metric.mem_ball, ← Real.ball_eq_Ioo, ← Set.mem_Ioo, ← and_comm]]
+      simp only [← Metric.mem_ball, Real.ball_eq_Ioo, Set.mem_Ioo, and_comm]]
   fconstructor
-  · dsimp' [← k]
-    simp only [← Finset.inf'_lt_iff, ← ContinuousMap.inf'_apply]
+  · dsimp' [k]
+    simp only [Finset.inf'_lt_iff, ContinuousMap.inf'_apply]
     exact Set.exists_set_mem_of_union_eq_top _ _ xs_w z
     
-  · dsimp' [← k]
-    simp only [← Finset.lt_inf'_iff, ← ContinuousMap.inf'_apply]
+  · dsimp' [k]
+    simp only [Finset.lt_inf'_iff, ContinuousMap.inf'_apply]
     intro x xm
     apply lt_h
     
@@ -400,7 +400,7 @@ theorem ContinuousMap.subalgebra_is_R_or_C_topological_closure_eq_top_of_separat
   -- And this, of course, is just `f`
   ext
   apply Eq.symm
-  simp [← I, ← mul_comm IsROrC.i _]
+  simp [I, mul_comm IsROrC.i _]
 
 end IsROrC
 

@@ -39,8 +39,8 @@ theorem ToTopObj.ext {x : SimplexCategory} (f g : x.ToTopObj) : (f : x → ℝ�
 /-- A morphism in `simplex_category` induces a map on the associated topological spaces. -/
 def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.ToTopObj → y.ToTopObj := fun g =>
   ⟨fun i => ∑ j in Finset.univ.filter fun k => f k = i, g j, by
-    dsimp' [← to_Top_obj]
-    simp only [← Finset.filter_congr_decidable, ← Finset.sum_congr]
+    dsimp' [to_Top_obj]
+    simp only [Finset.filter_congr_decidable, Finset.sum_congr]
     rw [← Finset.sum_bUnion]
     convert g.2
     · rw [Finset.eq_univ_iff_forall]
@@ -53,7 +53,7 @@ def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.ToTopObj → y.ToTopObj :
       
     · intro i hi j hj h e he
       apply h
-      simp only [← true_andₓ, ← Finset.inf_eq_inter, ← Finset.mem_univ, ← Finset.mem_filter, ← Finset.mem_inter] at he
+      simp only [true_andₓ, Finset.inf_eq_inter, Finset.mem_univ, Finset.mem_filter, Finset.mem_inter] at he
       rw [← he.1, ← he.2]
       ⟩
 
@@ -77,7 +77,7 @@ def toTop : SimplexCategory ⥤ Top where
     intro x
     ext f i : 3
     change (finset.univ.filter fun k => k = i).Sum _ = _
-    simp [← Finset.sum_filter]
+    simp [Finset.sum_filter]
   map_comp' := by
     intro x y z f g
     ext h i : 3
@@ -94,7 +94,7 @@ def toTop : SimplexCategory ⥤ Top where
       
     · intro j hj k hk h e he
       apply h
-      simp only [← true_andₓ, ← Finset.inf_eq_inter, ← Finset.mem_univ, ← Finset.mem_filter, ← Finset.mem_inter] at he
+      simp only [true_andₓ, Finset.inf_eq_inter, Finset.mem_univ, Finset.mem_filter, Finset.mem_inter] at he
       rw [← he.1, ← he.2]
       
 

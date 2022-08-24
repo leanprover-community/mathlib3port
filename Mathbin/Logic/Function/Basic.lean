@@ -194,7 +194,7 @@ protected theorem Surjective.right_cancellable (hf : Surjective f) {g₁ g₂ : 
 
 theorem surjective_of_right_cancellable_Prop (h : ∀ g₁ g₂ : β → Prop, g₁ ∘ f = g₂ ∘ f → g₁ = g₂) : Surjective f := by
   specialize h (fun _ => True) (fun y => ∃ x, f x = y) (funext fun x => _)
-  · simp only [← (· ∘ ·), ← exists_apply_eq_applyₓ]
+  · simp only [(· ∘ ·), exists_apply_eq_applyₓ]
     
   · intro y
     have : True = ∃ x, f x = y := congr_fun h y
@@ -255,7 +255,7 @@ theorem not_surjective_Type {α : Type u} (f : α → Type max u v) : ¬Surjecti
   have hg : injective g := by
     intro s t h
     suffices cast hU (g s).2 = cast hU (g t).2 by
-      simp only [← cast_cast, ← cast_eq] at this
+      simp only [cast_cast, cast_eq] at this
       assumption
     · congr
       assumption
@@ -374,7 +374,7 @@ attribute [local instance] Classical.propDecidable
 noncomputable def invFun (f : α → β) : β → α := fun y => if h : ∃ x, f x = y then h.some else Classical.arbitrary α
 
 theorem inv_fun_eqₓ (h : ∃ a, f a = b) : f (invFun f b) = b := by
-  simp only [← inv_fun, ← dif_pos h, ← h.some_spec]
+  simp only [inv_fun, dif_pos h, h.some_spec]
 
 theorem inv_fun_negₓ (h : ¬∃ a, f a = b) : invFun f b = Classical.choice ‹_› :=
   dif_neg h
@@ -482,23 +482,23 @@ theorem update_injective (f : ∀ a, β a) (a' : α) : Injective (update f a') :
 theorem update_noteq {a a' : α} (h : a ≠ a') (v : β a') (f : ∀ a, β a) : update f a' v a = f a :=
   dif_neg h
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem forall_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
     (∀ x, p x (update f a b x)) ↔ p a b ∧ ∀ (x) (_ : x ≠ a), p x (f x) := by
   rw [← and_forall_ne a, update_same]
   simp (config := { contextual := true })
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem exists_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
     (∃ x, p x (update f a b x)) ↔ p a b ∨ ∃ (x : _)(_ : x ≠ a), p x (f x) := by
   rw [← not_forall_not, forall_update_iff f fun a b => ¬p a b]
-  simp [← not_and_distrib]
+  simp [not_and_distrib]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem update_eq_iff {a : α} {b : β a} {f g : ∀ a, β a} : update f a b = g ↔ b = g a ∧ ∀ (x) (_ : x ≠ a), f x = g x :=
   funext_iffₓ.trans <| forall_update_iff _ fun x y => y = g x
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem eq_update_iff {a : α} {b : β a} {f g : ∀ a, β a} : g = update f a b ↔ g a = b ∧ ∀ (x) (_ : x ≠ a), g x = f x :=
   funext_iffₓ.trans <| forall_update_iff _ fun x y => g x = y
 
@@ -530,7 +530,7 @@ theorem apply_update {ι : Sort _} [DecidableEq ι] {α β : ι → Sort _} (f :
   · subst j
     simp
     
-  · simp [← h]
+  · simp [h]
     
 
 theorem apply_update₂ {ι : Sort _} [DecidableEq ι] {α β γ : ι → Sort _} (f : ∀ i, α i → β i → γ i) (g : ∀ i, α i)
@@ -540,7 +540,7 @@ theorem apply_update₂ {ι : Sort _} [DecidableEq ι] {α β γ : ι → Sort _
   · subst j
     simp
     
-  · simp [← h]
+  · simp [h]
     
 
 theorem comp_update {α' : Sort _} {β : Sort _} (f : α' → β) (g : α → α') (i : α) (v : α') :
@@ -550,18 +550,18 @@ theorem comp_update {α' : Sort _} {β : Sort _} (f : α' → β) (g : α → α
 theorem update_comm {α} [DecidableEq α] {β : α → Sort _} {a b : α} (h : a ≠ b) (v : β a) (w : β b) (f : ∀ a, β a) :
     update (update f a v) b w = update (update f b w) a v := by
   funext c
-  simp only [← update]
+  simp only [update]
   by_cases' h₁ : c = b <;>
     by_cases' h₂ : c = a <;>
       try
-        simp [← h₁, ← h₂]
+        simp [h₁, h₂]
   cases h (h₂.symm.trans h₁)
 
 @[simp]
 theorem update_idem {α} [DecidableEq α] {β : α → Sort _} {a : α} (v w : β a) (f : ∀ a, β a) :
     update (update f a v) a w = update f a w := by
   funext b
-  by_cases' b = a <;> simp [← update, ← h]
+  by_cases' b = a <;> simp [update, h]
 
 end Update
 
@@ -589,12 +589,12 @@ theorem extend_defₓ (f : α → β) (g : α → γ) (e' : β → γ) (b : β) 
 
 @[simp]
 theorem extend_applyₓ (hf : Injective f) (g : α → γ) (e' : β → γ) (a : α) : extendₓ f g e' (f a) = g a := by
-  simp only [← extend_def, ← dif_pos, ← exists_apply_eq_applyₓ]
+  simp only [extend_def, dif_pos, exists_apply_eq_applyₓ]
   exact congr_arg g (hf <| Classical.some_spec (exists_apply_eq_applyₓ f a))
 
 @[simp]
 theorem extend_apply' (g : α → γ) (e' : β → γ) (b : β) (hb : ¬∃ a, f a = b) : extendₓ f g e' b = e' b := by
-  simp [← Function.extend_defₓ, ← hb]
+  simp [Function.extend_defₓ, hb]
 
 theorem apply_extend {δ} (hf : Injective f) (F : γ → δ) (g : α → γ) (e' : β → γ) (b : β) :
     F (extendₓ f g e' b) = extendₓ f (F ∘ g) (F ∘ e') b := by
@@ -610,7 +610,7 @@ theorem extend_injective (hf : Injective f) (e' : β → γ) : Injective fun g =
   intro g₁ g₂ hg
   refine' funext fun x => _
   have H := congr_fun hg (f x)
-  simp only [← hf, ← extend_apply] at H
+  simp only [hf, extend_apply] at H
   exact H
 
 @[simp]
@@ -626,7 +626,7 @@ theorem Injective.surjective_comp_right [Nonempty γ] (hf : Injective f) : Surje
 theorem Bijective.comp_right (hf : Bijective f) : Bijective fun g : β → γ => g ∘ f :=
   ⟨hf.Surjective.injective_comp_right, fun g =>
     ⟨g ∘ surjInv hf.Surjective, by
-      simp only [← comp.assoc g _ f, ← (left_inverse_surj_inv hf).comp_eq_id, ← comp.right_id]⟩⟩
+      simp only [comp.assoc g _ f, (left_inverse_surj_inv hf).comp_eq_id, comp.right_id]⟩⟩
 
 end Extend
 
@@ -677,7 +677,7 @@ class HasUncurry (α : Type _) (β : outParam (Type _)) (γ : outParam (Type _))
   uncurry : α → β → γ
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident has_uncurry.uncurry]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident has_uncurry.uncurry]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- mathport name: «expr↿ »
 notation:arg "↿" x:arg => HasUncurry.uncurry x
 

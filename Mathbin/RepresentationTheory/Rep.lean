@@ -30,7 +30,7 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1406:31: unsupported: @[derive] abbrev
+-- ./././Mathport/Syntax/Translate/Command.lean:276:31: unsupported: @[derive] abbrev
 /-- The category of `k`-linear representations of a monoid `G`. -/
 abbrev Rep (k G : Type u) [Ringₓ k] [Monoidₓ G] :=
   Action (ModuleCat.{u} k) (Mon.of G)
@@ -107,14 +107,14 @@ theorem to_Module_monoid_algebra_map_aux {k G : Type _} [CommRingₓ k] [Monoid�
     f ((((MonoidAlgebra.lift k G (V →ₗ[k] V)) ρ) r) x) = (((MonoidAlgebra.lift k G (W →ₗ[k] W)) σ) r) (f x) := by
   apply MonoidAlgebra.induction_on r
   · intro g
-    simp only [← one_smul, ← MonoidAlgebra.lift_single, ← MonoidAlgebra.of_apply]
+    simp only [one_smul, MonoidAlgebra.lift_single, MonoidAlgebra.of_apply]
     exact LinearMap.congr_fun (w g) x
     
   · intro g h gw hw
-    simp only [← map_add, ← add_left_injₓ, ← LinearMap.add_apply, ← hw, ← gw]
+    simp only [map_add, add_left_injₓ, LinearMap.add_apply, hw, gw]
     
   · intro r g w
-    simp only [← AlgHom.map_smul, ← w, ← RingHom.id_apply, ← LinearMap.smul_apply, ← LinearMap.map_smulₛₗ]
+    simp only [AlgHom.map_smul, w, RingHom.id_apply, LinearMap.smul_apply, LinearMap.map_smulₛₗ]
     
 
 /-- Auxilliary definition for `to_Module_monoid_algebra`. -/
@@ -147,12 +147,12 @@ theorem of_Module_monoid_algebra_obj_ρ (M : ModuleCat.{u} (MonoidAlgebra k G)) 
 /-- Auxilliary definition for `equivalence_Module_monoid_algebra`. -/
 def counitIsoAddEquiv {M : ModuleCat.{u} (MonoidAlgebra k G)} :
     (of_Module_monoid_algebra ⋙ to_Module_monoid_algebra).obj M ≃+ M := by
-  dsimp' [← of_Module_monoid_algebra, ← to_Module_monoid_algebra]
+  dsimp' [of_Module_monoid_algebra, to_Module_monoid_algebra]
   refine' (Representation.ofModule k G ↥M).asModuleEquiv.trans (RestrictScalars.addEquiv _ _ _)
 
 /-- Auxilliary definition for `equivalence_Module_monoid_algebra`. -/
 def unitIsoAddEquiv {V : Rep k G} : V ≃+ (to_Module_monoid_algebra ⋙ of_Module_monoid_algebra).obj V := by
-  dsimp' [← of_Module_monoid_algebra, ← to_Module_monoid_algebra]
+  dsimp' [of_Module_monoid_algebra, to_Module_monoid_algebra]
   refine' V.ρ.as_module_equiv.symm.trans _
   exact (RestrictScalars.addEquiv _ _ _).symm
 
@@ -162,15 +162,15 @@ def counitIso (M : ModuleCat.{u} (MonoidAlgebra k G)) :
   LinearEquiv.toModuleIso'
     { counitIsoAddEquiv with
       map_smul' := fun r x => by
-        dsimp' [← counit_iso_add_equiv]
+        dsimp' [counit_iso_add_equiv]
         simp }
 
 theorem unit_iso_comm (V : Rep k G) (g : G) (x : V) :
     unitIsoAddEquiv ((V.ρ g).toFun x) =
       ((ofModuleMonoidAlgebra.obj (toModuleMonoidAlgebra.obj V)).ρ g).toFun (unitIsoAddEquiv x) :=
   by
-  dsimp' [← unit_iso_add_equiv, ← of_Module_monoid_algebra, ← to_Module_monoid_algebra]
-  simp only [← AddEquiv.apply_eq_iff_eq, ← AddEquiv.apply_symm_apply, ← Representation.as_module_equiv_symm_map_rho, ←
+  dsimp' [unit_iso_add_equiv, of_Module_monoid_algebra, to_Module_monoid_algebra]
+  simp only [AddEquiv.apply_eq_iff_eq, AddEquiv.apply_symm_apply, Representation.as_module_equiv_symm_map_rho,
     Representation.of_module_as_module_act]
 
 /-- Auxilliary definition for `equivalence_Module_monoid_algebra`. -/
@@ -179,8 +179,8 @@ def unitIso (V : Rep k G) : V ≅ (to_Module_monoid_algebra ⋙ of_Module_monoid
     (LinearEquiv.toModuleIso'
       { unitIsoAddEquiv with
         map_smul' := fun r x => by
-          dsimp' [← unit_iso_add_equiv]
-          simp only [← Representation.as_module_equiv_symm_map_smul, ←
+          dsimp' [unit_iso_add_equiv]
+          simp only [Representation.as_module_equiv_symm_map_smul,
             RestrictScalars.add_equiv_symm_map_algebra_map_smul] })
     fun g => by
     ext

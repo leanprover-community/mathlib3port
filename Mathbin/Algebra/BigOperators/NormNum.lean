@@ -149,17 +149,17 @@ unsafe def eval_multiset : expr → tactic (List expr × expr)
   | e@(quote.1 (@Zero.zero (Multiset _) _)) => do
     let eq ← mk_eq_refl e
     pure ([], Eq)
-  | e@(quote.1 HasEmptyc.emptyc) => do
+  | e@(quote.1 EmptyCollection.emptyCollection) => do
     let eq ← mk_eq_refl e
     pure ([], Eq)
-  | e@(quote.1 (HasSingleton.singleton (%%ₓx))) => do
+  | e@(quote.1 (Singleton.singleton (%%ₓx))) => do
     let eq ← mk_eq_refl e
     pure ([x], Eq)
   | e@(quote.1 (Multiset.cons (%%ₓx) (%%ₓxs))) => do
     let (xs, xs_eq) ← eval_multiset xs
     let eq ← i_to_expr (pquote.1 (Multiset.cons_congr (%%ₓx) (%%ₓxs_eq)))
     pure (x :: xs, Eq)
-  | e@(quote.1 (@HasInsert.insert Multiset.hasInsert (%%ₓx) (%%ₓxs))) => do
+  | e@(quote.1 (@Insert.insert Multiset.hasInsert (%%ₓx) (%%ₓxs))) => do
     let (xs, xs_eq) ← eval_multiset xs
     let eq ← i_to_expr (pquote.1 (Multiset.cons_congr (%%ₓx) (%%ₓxs_eq)))
     pure (x :: xs, Eq)
@@ -187,16 +187,16 @@ theorem Finset.insert_eq_coe_list_of_mem {α : Type _} [DecidableEq α] (x : α)
     (h : x ∈ xs') (nd_xs : xs'.Nodup) (hxs' : xs = Finset.mk (↑xs') (Multiset.coe_nodup.mpr nd_xs)) :
     insert x xs = Finset.mk (↑xs') (Multiset.coe_nodup.mpr nd_xs) := by
   have h : x ∈ xs := by
-    simpa [← hxs'] using h
+    simpa [hxs'] using h
   rw [Finset.insert_eq_of_mem h, hxs']
 
 theorem Finset.insert_eq_coe_list_cons {α : Type _} [DecidableEq α] (x : α) (xs : Finset α) {xs' : List α} (h : x ∉ xs')
     (nd_xs : xs'.Nodup) (nd_xxs : (x :: xs').Nodup) (hxs' : xs = Finset.mk (↑xs') (Multiset.coe_nodup.mpr nd_xs)) :
     insert x xs = Finset.mk (↑(x :: xs')) (Multiset.coe_nodup.mpr nd_xxs) := by
   have h : x ∉ xs := by
-    simpa [← hxs'] using h
+    simpa [hxs'] using h
   rw [← Finset.val_inj, Finset.insert_val_of_not_mem h, hxs']
-  simp only [← Multiset.cons_coe]
+  simp only [Multiset.cons_coe]
 
 /-- Convert an expression denoting a finset to a list of elements,
 a proof that this list is equal to the original finset,
@@ -214,15 +214,15 @@ unsafe def eval_finset (decide_eq : expr → expr → tactic (Bool × expr)) : e
     let (val', Eq) ← eval_multiset val
     let eq' ← i_to_expr (pquote.1 (Finset.mk_congr (%%ₓEq) _ _))
     pure (val', eq', nd)
-  | e@(quote.1 HasEmptyc.emptyc) => do
+  | e@(quote.1 EmptyCollection.emptyCollection) => do
     let eq ← mk_eq_refl e
     let nd ← i_to_expr (pquote.1 List.nodup_nil)
     pure ([], Eq, nd)
-  | e@(quote.1 (HasSingleton.singleton (%%ₓx))) => do
+  | e@(quote.1 (Singleton.singleton (%%ₓx))) => do
     let eq ← mk_eq_refl e
     let nd ← i_to_expr (pquote.1 (List.nodup_singleton (%%ₓx)))
     pure ([x], Eq, nd)
-  | quote.1 (@HasInsert.insert (@Finset.hasInsert (%%ₓdec)) (%%ₓx) (%%ₓxs)) => do
+  | quote.1 (@Insert.insert (@Finset.hasInsert (%%ₓdec)) (%%ₓx) (%%ₓxs)) => do
     let (exs, xs_eq, xs_nd) ← eval_finset xs
     let (is_mem, mem_pf) ← list.decide_mem decide_eq x exs
     if is_mem then do

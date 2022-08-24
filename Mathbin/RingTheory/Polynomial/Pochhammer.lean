@@ -49,7 +49,7 @@ theorem pochhammer_zero : pochhammer S 0 = 1 :=
 
 @[simp]
 theorem pochhammer_one : pochhammer S 1 = X := by
-  simp [← pochhammer]
+  simp [pochhammer]
 
 theorem pochhammer_succ_left (n : ℕ) : pochhammer S (n + 1) = X * (pochhammer S n).comp (X + 1) := by
   rw [pochhammer]
@@ -63,7 +63,7 @@ theorem pochhammer_map (f : S →+* T) (n : ℕ) : (pochhammer S n).map f = poch
   induction' n with n ih
   · simp
     
-  · simp [← ih, ← pochhammer_succ_left, ← map_comp]
+  · simp [ih, pochhammer_succ_left, map_comp]
     
 
 end
@@ -77,7 +77,7 @@ theorem pochhammer_eval_zero {n : ℕ} : (pochhammer S n).eval 0 = if n = 0 then
   cases n
   · simp
     
-  · simp [← X_mul, ← Nat.succ_ne_zero, ← pochhammer_succ_left]
+  · simp [X_mul, Nat.succ_ne_zero, pochhammer_succ_left]
     
 
 theorem pochhammer_zero_eval_zero : (pochhammer S 0).eval 0 = 1 := by
@@ -85,13 +85,12 @@ theorem pochhammer_zero_eval_zero : (pochhammer S 0).eval 0 = 1 := by
 
 @[simp]
 theorem pochhammer_ne_zero_eval_zero {n : ℕ} (h : n ≠ 0) : (pochhammer S n).eval 0 = 0 := by
-  simp [← pochhammer_eval_zero, ← h]
+  simp [pochhammer_eval_zero, h]
 
 theorem pochhammer_succ_right (n : ℕ) : pochhammer S (n + 1) = pochhammer S n * (X + n) := by
   suffices h : pochhammer ℕ (n + 1) = pochhammer ℕ n * (X + n)
   · apply_fun Polynomial.map (algebraMap ℕ S)  at h
-    simpa only [← pochhammer_map, ← Polynomial.map_mul, ← Polynomial.map_add, ← map_X, ← Polynomial.map_nat_cast] using
-      h
+    simpa only [pochhammer_map, Polynomial.map_mul, Polynomial.map_add, map_X, Polynomial.map_nat_cast] using h
     
   induction' n with n ih
   · simp
@@ -109,7 +108,7 @@ theorem pochhammer_succ_eval {S : Type _} [Semiringₓ S] (n : ℕ) (k : S) :
 theorem pochhammer_succ_comp_X_add_one (n : ℕ) :
     (pochhammer S (n + 1)).comp (X + 1) = pochhammer S (n + 1) + (n + 1) • (pochhammer S n).comp (X + 1) := by
   suffices (pochhammer ℕ (n + 1)).comp (X + 1) = pochhammer ℕ (n + 1) + (n + 1) * (pochhammer ℕ n).comp (X + 1) by
-    simpa [← map_comp] using congr_arg (Polynomial.map (Nat.castRingHom S)) this
+    simpa [map_comp] using congr_arg (Polynomial.map (Nat.castRingHom S)) this
   nth_rw 1[pochhammer_succ_left]
   rw [← add_mulₓ, pochhammer_succ_right ℕ n, mul_comp, mul_comm, add_comp, X_comp, nat_cast_comp, add_commₓ ↑n, ←
     add_assocₓ]
@@ -153,7 +152,7 @@ variable {S : Type _} [OrderedSemiring S] [Nontrivial S]
 
 theorem pochhammer_pos (n : ℕ) (s : S) (h : 0 < s) : 0 < (pochhammer S n).eval s := by
   induction' n with n ih
-  · simp only [← Nat.nat_zero_eq_zero, ← pochhammer_zero, ← eval_one]
+  · simp only [Nat.nat_zero_eq_zero, pochhammer_zero, eval_one]
     exact zero_lt_one
     
   · rw [pochhammer_succ_right, mul_addₓ, eval_add, ← Nat.cast_comm, eval_nat_cast_mul, eval_mul_X, Nat.cast_comm, ←
@@ -181,12 +180,12 @@ theorem pochhammer_nat_eval_succ (r : ℕ) :
     ∀ n : ℕ, n * (pochhammer ℕ r).eval (n + 1) = (n + r) * (pochhammer ℕ r).eval n
   | 0 => by
     by_cases' h : r = 0
-    · simp only [← h, ← zero_mul, ← zero_addₓ]
+    · simp only [h, zero_mul, zero_addₓ]
       
-    · simp only [← pochhammer_eval_zero, ← zero_mul, ← if_neg h, ← mul_zero]
+    · simp only [pochhammer_eval_zero, zero_mul, if_neg h, mul_zero]
       
   | k + 1 => by
-    simp only [← pochhammer_nat_eq_asc_factorial, ← Nat.succ_asc_factorial, ← add_right_commₓ]
+    simp only [pochhammer_nat_eq_asc_factorial, Nat.succ_asc_factorial, add_right_commₓ]
 
 theorem pochhammer_eval_succ (r n : ℕ) :
     (n : S) * (pochhammer S r).eval (n + 1 : S) = (n + r) * (pochhammer S r).eval n := by

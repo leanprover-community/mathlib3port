@@ -32,7 +32,7 @@ For the explicit construction of free groups, see `group_theory/free_group`.
 
 universe u
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`MulEquiv] []
+-- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`MulEquiv] []
 /-- `is_free_group G` means that `G` isomorphic to a free group. -/
 class IsFreeGroup (G : Type u) [Groupₓ G] where
   Generators : Type u
@@ -97,7 +97,7 @@ group extends in a unique way to a homomorphism from `G`.
 Note that since `is_free_group.lift` is expressed as a bijection, it already
 expresses the universal property.  -/
 theorem unique_lift (f : Generators G → H) : ∃! F : G →* H, ∀ a, F (of a) = f a := by
-  simpa only [← Function.funext_iffₓ] using lift.symm.bijective.exists_unique f
+  simpa only [Function.funext_iffₓ] using lift.symm.bijective.exists_unique f
 
 /-- If a group satisfies the universal property of a free group, then it is a free group, where
 the universal property is expressed as in `is_free_group.lift` and its properties. -/
@@ -109,14 +109,13 @@ def ofLift {G : Type u} [Groupₓ G] (X : Type u) (of : X → G) (lift : ∀ {H 
       (by
         apply FreeGroup.ext_hom
         intro x
-        simp only [← MonoidHom.coe_comp, ← Function.comp_app, ← MonoidHom.id_apply, ← FreeGroup.lift.of, ← lift_of])
+        simp only [MonoidHom.coe_comp, Function.comp_app, MonoidHom.id_apply, FreeGroup.lift.of, lift_of])
       (by
         let lift_symm_of : ∀ {H : Type u} [Groupₓ H], ∀ (f : G →* H) (a), lift.symm f a = f (of a) := by
-          intro H _ f a <;> simp [lift_of (lift.symm f)]
+          intro H _ f a <;> simp [← lift_of (lift.symm f)]
         apply lift.symm.injective
         ext x
-        simp only [← MonoidHom.coe_comp, ← Function.comp_app, ← MonoidHom.id_apply, ← FreeGroup.lift.of, ← lift_of, ←
-          lift_symm_of])
+        simp only [MonoidHom.coe_comp, Function.comp_app, MonoidHom.id_apply, FreeGroup.lift.of, lift_of, lift_symm_of])
 
 /-- If a group satisfies the universal property of a free group, then it is a free group, where
 the universal property is expressed as in `is_free_group.unique_lift`.  -/

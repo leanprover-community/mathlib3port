@@ -66,17 +66,17 @@ class AddEquivClass (F A B : Type _) [Add A] [Add B] extends EquivLike F A B whe
   map_add : ∀ (f : F) (a b), f (a + b) = f a + f b
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_equiv.to_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_equiv.to_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_equiv.to_add_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_equiv.to_add_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `mul_equiv α β` is the type of an equiv `α ≃ β` which preserves multiplication. -/
 @[ancestor Equivₓ MulHom, to_additive]
 structure MulEquiv (M N : Type _) [Mul M] [Mul N] extends M ≃ N, M →ₙ* N
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident mul_equiv.to_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident mul_equiv.to_equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident mul_equiv.to_mul_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident mul_equiv.to_mul_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `mul_equiv_class F A B` states that `F` is a type of multiplication-preserving morphisms.
 You should extend this class when you extend `mul_equiv`. -/
 @[to_additive]
@@ -664,9 +664,9 @@ protected def divLeft (a : G) : G ≃ G where
   toFun := fun b => a / b
   invFun := fun b => b⁻¹ * a
   left_inv := fun b => by
-    simp [← div_eq_mul_inv]
+    simp [div_eq_mul_inv]
   right_inv := fun b => by
-    simp [← div_eq_mul_inv]
+    simp [div_eq_mul_inv]
 
 @[to_additive]
 theorem div_left_eq_inv_trans_mul_left (a : G) : Equivₓ.divLeft a = (Equivₓ.inv G).trans (Equivₓ.mulLeft a) :=
@@ -678,9 +678,9 @@ protected def divRight (a : G) : G ≃ G where
   toFun := fun b => b / a
   invFun := fun b => b * a
   left_inv := fun b => by
-    simp [← div_eq_mul_inv]
+    simp [div_eq_mul_inv]
   right_inv := fun b => by
-    simp [← div_eq_mul_inv]
+    simp [div_eq_mul_inv]
 
 @[to_additive]
 theorem div_right_eq_mul_right_inv (a : G) : Equivₓ.divRight a = Equivₓ.mulRight a⁻¹ :=

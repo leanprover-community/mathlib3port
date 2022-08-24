@@ -31,21 +31,21 @@ has a limit in `s` (formally, it satisfies `f ≤ 𝓝 x` for some `x ∈ s`). -
 def IsComplete (s : Set α) :=
   ∀ f, Cauchy f → f ≤ 𝓟 s → ∃ x ∈ s, f ≤ 𝓝 x
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x y «expr ∈ » t)
 theorem Filter.HasBasis.cauchy_iff {ι} {p : ι → Prop} {s : ι → Set (α × α)} (h : (𝓤 α).HasBasis p s) {f : Filter α} :
     Cauchy f ↔ NeBot f ∧ ∀ i, p i → ∃ t ∈ f, ∀ (x y) (_ : x ∈ t) (_ : y ∈ t), (x, y) ∈ s i :=
   and_congr Iff.rfl <|
     (f.basis_sets.prod_self.le_basis_iff h).trans <| by
-      simp only [← subset_def, ← Prod.forall, ← mem_prod_eq, ← and_imp, ← id, ← ball_mem_comm]
+      simp only [subset_def, Prod.forall, mem_prod_eq, and_imp, id, ball_mem_comm]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x y «expr ∈ » t)
 theorem cauchy_iff' {f : Filter α} :
-    Cauchy f ↔ NeBot f ∧ ∀, ∀ s ∈ 𝓤 α, ∀, ∃ t ∈ f, ∀ (x y) (_ : x ∈ t) (_ : y ∈ t), (x, y) ∈ s :=
+    Cauchy f ↔ NeBot f ∧ ∀ s ∈ 𝓤 α, ∃ t ∈ f, ∀ (x y) (_ : x ∈ t) (_ : y ∈ t), (x, y) ∈ s :=
   (𝓤 α).basis_sets.cauchy_iff
 
-theorem cauchy_iff {f : Filter α} : Cauchy f ↔ NeBot f ∧ ∀, ∀ s ∈ 𝓤 α, ∀, ∃ t ∈ f, t ×ˢ t ⊆ s :=
+theorem cauchy_iff {f : Filter α} : Cauchy f ↔ NeBot f ∧ ∀ s ∈ 𝓤 α, ∃ t ∈ f, t ×ˢ t ⊆ s :=
   cauchy_iff'.trans <| by
-    simp only [← subset_def, ← Prod.forall, ← mem_prod_eq, ← and_imp, ← id, ← ball_mem_comm]
+    simp only [subset_def, Prod.forall, mem_prod_eq, and_imp, id, ball_mem_comm]
 
 theorem Cauchy.ultrafilter_of {l : Filter α} (h : Cauchy l) : Cauchy (@Ultrafilter.of _ l h.1 : Filter α) := by
   haveI := h.1
@@ -79,7 +79,7 @@ theorem Filter.Tendsto.cauchy_map {l : Filter β} [NeBot l] {f : β → α} {a :
 theorem Cauchy.prod [UniformSpace β] {f : Filter α} {g : Filter β} (hf : Cauchy f) (hg : Cauchy g) : Cauchy (f ×ᶠ g) :=
   by
   refine' ⟨hf.1.Prod hg.1, _⟩
-  simp only [← uniformity_prod, ← le_inf_iff, map_le_iff_le_comap, prod_map_map_eq]
+  simp only [uniformity_prod, le_inf_iff, ← map_le_iff_le_comap, ← prod_map_map_eq]
   exact ⟨le_transₓ (prod_mono tendsto_fst tendsto_fst) hf.2, le_transₓ (prod_mono tendsto_snd tendsto_snd) hg.2⟩
 
 /-- The common part of the proofs of `le_nhds_of_cauchy_adhp` and
@@ -87,7 +87,7 @@ theorem Cauchy.prod [UniformSpace β] {f : Filter α} {g : Filter β} (hf : Cauc
 one can choose a set `t ∈ f` of diameter `s` such that it contains a point `y`
 with `(x, y) ∈ s`, then `f` converges to `x`. -/
 theorem le_nhds_of_cauchy_adhp_aux {f : Filter α} {x : α}
-    (adhs : ∀, ∀ s ∈ 𝓤 α, ∀, ∃ t ∈ f, t ×ˢ t ⊆ s ∧ ∃ y, (x, y) ∈ s ∧ y ∈ t) : f ≤ 𝓝 x := by
+    (adhs : ∀ s ∈ 𝓤 α, ∃ t ∈ f, t ×ˢ t ⊆ s ∧ ∃ y, (x, y) ∈ s ∧ y ∈ t) : f ≤ 𝓝 x := by
   -- Consider a neighborhood `s` of `x`
   intro s hs
   -- Take an entourage twice smaller than `s`
@@ -142,7 +142,7 @@ def CauchySeq [SemilatticeSup β] (u : β → α) :=
 
 theorem CauchySeq.tendsto_uniformity [SemilatticeSup β] {u : β → α} (h : CauchySeq u) :
     Tendsto (Prod.map u u) atTop (𝓤 α) := by
-  simpa only [← tendsto, ← prod_map_map_eq', ← prod_at_top_at_top_eq] using h.right
+  simpa only [tendsto, prod_map_map_eq', prod_at_top_at_top_eq] using h.right
 
 theorem CauchySeq.nonempty [SemilatticeSup β] {u : β → α} (hu : CauchySeq u) : Nonempty β :=
   @nonempty_of_ne_bot _ _ <| (map_ne_bot_iff _).1 hu.1
@@ -152,7 +152,7 @@ theorem CauchySeq.mem_entourage {β : Type _} [SemilatticeSup β] {u : β → α
   haveI := h.nonempty
   have := h.tendsto_uniformity
   rw [← prod_at_top_at_top_eq] at this
-  simpa [← maps_to] using at_top_basis.prod_self.tendsto_left_iff.1 this V hV
+  simpa [maps_to] using at_top_basis.prod_self.tendsto_left_iff.1 this V hV
 
 theorem Filter.Tendsto.cauchy_seq [SemilatticeSup β] [Nonempty β] {f : β → α} {x} (hx : Tendsto f atTop (𝓝 x)) :
     CauchySeq f :=
@@ -164,7 +164,7 @@ theorem cauchy_seq_const [SemilatticeSup β] [Nonempty β] (x : α) : CauchySeq 
 theorem cauchy_seq_iff_tendsto [Nonempty β] [SemilatticeSup β] {u : β → α} :
     CauchySeq u ↔ Tendsto (Prod.map u u) atTop (𝓤 α) :=
   cauchy_map_iff'.trans <| by
-    simp only [← prod_at_top_at_top_eq, ← Prod.map_def]
+    simp only [prod_at_top_at_top_eq, Prod.map_def]
 
 theorem CauchySeq.comp_tendsto {γ} [SemilatticeSup β] [SemilatticeSup γ] [Nonempty γ] {f : β → α} (hf : CauchySeq f)
     {g : γ → β} (hg : Tendsto g atTop atTop) : CauchySeq (f ∘ g) :=
@@ -178,7 +178,7 @@ theorem Function.Bijective.cauchy_seq_comp_iff {f : ℕ → ℕ} (hf : Bijective
     CauchySeq (u ∘ f) ↔ CauchySeq u := by
   refine' ⟨fun H => _, fun H => H.comp_injective hf.injective⟩
   lift f to ℕ ≃ ℕ using hf
-  simpa only [← (· ∘ ·), ← f.apply_symm_apply] using H.comp_injective f.symm.injective
+  simpa only [(· ∘ ·), f.apply_symm_apply] using H.comp_injective f.symm.injective
 
 theorem CauchySeq.subseq_subseq_mem {V : ℕ → Set (α × α)} (hV : ∀ n, V n ∈ 𝓤 α) {u : ℕ → α} (hu : CauchySeq u)
     {f g : ℕ → ℕ} (hf : Tendsto f atTop atTop) (hg : Tendsto g atTop atTop) :
@@ -186,21 +186,20 @@ theorem CauchySeq.subseq_subseq_mem {V : ℕ → Set (α × α)} (hV : ∀ n, V 
   rw [cauchy_seq_iff_tendsto] at hu
   exact ((hu.comp <| hf.prod_at_top hg).comp tendsto_at_top_diagonal).subseq_mem hV
 
-theorem cauchy_seq_iff' {u : ℕ → α} : CauchySeq u ↔ ∀, ∀ V ∈ 𝓤 α, ∀, ∀ᶠ k in at_top, k ∈ Prod.map u u ⁻¹' V := by
-  simpa only [← cauchy_seq_iff_tendsto]
+theorem cauchy_seq_iff' {u : ℕ → α} : CauchySeq u ↔ ∀ V ∈ 𝓤 α, ∀ᶠ k in at_top, k ∈ Prod.map u u ⁻¹' V := by
+  simpa only [cauchy_seq_iff_tendsto]
 
-theorem cauchy_seq_iff {u : ℕ → α} : CauchySeq u ↔ ∀, ∀ V ∈ 𝓤 α, ∀, ∃ N, ∀, ∀ k ≥ N, ∀, ∀, ∀ l ≥ N, ∀, (u k, u l) ∈ V :=
-  by
-  simp [← cauchy_seq_iff', ← Filter.eventually_at_top_prod_self', ← prod_map]
+theorem cauchy_seq_iff {u : ℕ → α} : CauchySeq u ↔ ∀ V ∈ 𝓤 α, ∃ N, ∀ k ≥ N, ∀ l ≥ N, (u k, u l) ∈ V := by
+  simp [cauchy_seq_iff', Filter.eventually_at_top_prod_self', prod_map]
 
 theorem CauchySeq.prod_map {γ δ} [UniformSpace β] [SemilatticeSup γ] [SemilatticeSup δ] {u : γ → α} {v : δ → β}
     (hu : CauchySeq u) (hv : CauchySeq v) : CauchySeq (Prod.map u v) := by
-  simpa only [← CauchySeq, ← prod_map_map_eq', ← prod_at_top_at_top_eq] using hu.prod hv
+  simpa only [CauchySeq, prod_map_map_eq', prod_at_top_at_top_eq] using hu.prod hv
 
 theorem CauchySeq.prod {γ} [UniformSpace β] [SemilatticeSup γ] {u : γ → α} {v : γ → β} (hu : CauchySeq u)
     (hv : CauchySeq v) : CauchySeq fun x => (u x, v x) := by
   haveI := hu.nonempty
-  exact (hu.prod hv).mono (tendsto.prod_mk le_rfl le_rfl)
+  exact (hu.prod hv).mono (tendsto.prod_mk le_rflₓ le_rflₓ)
 
 theorem CauchySeq.eventually_eventually [SemilatticeSup β] {u : β → α} (hu : CauchySeq u) {V : Set (α × α)}
     (hV : V ∈ 𝓤 α) : ∀ᶠ k in at_top, ∀ᶠ l in at_top, (u k, u l) ∈ V :=
@@ -212,12 +211,12 @@ theorem UniformContinuous.comp_cauchy_seq {γ} [UniformSpace β] [SemilatticeSup
 
 theorem CauchySeq.subseq_mem {V : ℕ → Set (α × α)} (hV : ∀ n, V n ∈ 𝓤 α) {u : ℕ → α} (hu : CauchySeq u) :
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ n, (u <| φ (n + 1), u <| φ n) ∈ V n := by
-  have : ∀ n, ∃ N, ∀, ∀ k ≥ N, ∀, ∀, ∀ l ≥ k, ∀, (u l, u k) ∈ V n := by
+  have : ∀ n, ∃ N, ∀ k ≥ N, ∀ l ≥ k, (u l, u k) ∈ V n := by
     intro n
     rw [cauchy_seq_iff] at hu
     rcases hu _ (hV n) with ⟨N, H⟩
     exact ⟨N, fun k hk l hl => H _ (le_transₓ hk hl) _ hk⟩
-  obtain ⟨φ : ℕ → ℕ, φ_extr : StrictMono φ, hφ : ∀ n, ∀, ∀ l ≥ φ n, ∀, (u l, u <| φ n) ∈ V n⟩ :=
+  obtain ⟨φ : ℕ → ℕ, φ_extr : StrictMono φ, hφ : ∀ n, ∀ l ≥ φ n, (u l, u <| φ n) ∈ V n⟩ :=
     extraction_forall_of_eventually' this
   exact ⟨φ, φ_extr, fun n => hφ _ _ (φ_extr <| lt_add_one n).le⟩
 
@@ -233,7 +232,7 @@ theorem tendsto_nhds_of_cauchy_seq_of_subseq [SemilatticeSup β] {u : β → α}
     {p : Filter ι} [NeBot p] (hf : Tendsto f p atTop) {a : α} (ha : Tendsto (u ∘ f) p (𝓝 a)) : Tendsto u atTop (𝓝 a) :=
   le_nhds_of_cauchy_adhp hu (map_cluster_pt_of_comp hf ha)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (m n «expr ≥ » N)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (m n «expr ≥ » N)
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem Filter.HasBasis.cauchy_seq_iff {γ} [Nonempty β] [SemilatticeSup β] {u : β → α} {p : γ → Prop}
@@ -241,13 +240,13 @@ theorem Filter.HasBasis.cauchy_seq_iff {γ} [Nonempty β] [SemilatticeSup β] {u
     CauchySeq u ↔ ∀ i, p i → ∃ N, ∀ (m n) (_ : m ≥ N) (_ : n ≥ N), (u m, u n) ∈ s i := by
   rw [cauchy_seq_iff_tendsto, ← prod_at_top_at_top_eq]
   refine' (at_top_basis.prod_self.tendsto_iff h).trans _
-  simp only [← exists_prop, ← true_andₓ, ← maps_to, ← preimage, ← subset_def, ← Prod.forall, ← mem_prod_eq, ←
-    mem_set_of_eq, ← mem_Ici, ← and_imp, ← Prod.map, ← ge_iff_le, ← @forall_swap (_ ≤ _) β]
+  simp only [exists_prop, true_andₓ, maps_to, preimage, subset_def, Prod.forall, mem_prod_eq, mem_set_of_eq, mem_Ici,
+    and_imp, Prod.map, ge_iff_leₓ, @forall_swap (_ ≤ _) β]
 
 theorem Filter.HasBasis.cauchy_seq_iff' {γ} [Nonempty β] [SemilatticeSup β] {u : β → α} {p : γ → Prop}
-    {s : γ → Set (α × α)} (H : (𝓤 α).HasBasis p s) : CauchySeq u ↔ ∀ i, p i → ∃ N, ∀, ∀ n ≥ N, ∀, (u n, u N) ∈ s i := by
+    {s : γ → Set (α × α)} (H : (𝓤 α).HasBasis p s) : CauchySeq u ↔ ∀ i, p i → ∃ N, ∀ n ≥ N, (u n, u N) ∈ s i := by
   refine' H.cauchy_seq_iff.trans ⟨fun h i hi => _, fun h i hi => _⟩
-  · exact (h i hi).imp fun N hN n hn => hN n hn N le_rfl
+  · exact (h i hi).imp fun N hN n hn => hN n hn N le_rflₓ
     
   · rcases comp_symm_of_uniformity (H.mem_of_mem hi) with ⟨t, ht, ht', hts⟩
     rcases H.mem_iff.1 ht with ⟨j, hj, hjt⟩
@@ -258,9 +257,8 @@ theorem Filter.HasBasis.cauchy_seq_iff' {γ} [Nonempty β] [SemilatticeSup β] {
       
     
 
-theorem cauchy_seq_of_controlled [SemilatticeSup β] [Nonempty β] (U : β → Set (α × α))
-    (hU : ∀, ∀ s ∈ 𝓤 α, ∀, ∃ n, U n ⊆ s) {f : β → α} (hf : ∀ {N m n : β}, N ≤ m → N ≤ n → (f m, f n) ∈ U N) :
-    CauchySeq f :=
+theorem cauchy_seq_of_controlled [SemilatticeSup β] [Nonempty β] (U : β → Set (α × α)) (hU : ∀ s ∈ 𝓤 α, ∃ n, U n ⊆ s)
+    {f : β → α} (hf : ∀ {N m n : β}, N ≤ m → N ≤ n → (f m, f n) ∈ U N) : CauchySeq f :=
   cauchy_seq_iff_tendsto.2
     (by
       intro s hs
@@ -283,17 +281,17 @@ theorem is_complete_iff_ultrafilter {s : Set α} :
 theorem is_complete_iff_ultrafilter' {s : Set α} :
     IsComplete s ↔ ∀ l : Ultrafilter α, Cauchy (l : Filter α) → s ∈ l → ∃ x ∈ s, ↑l ≤ 𝓝 x :=
   is_complete_iff_ultrafilter.trans <| by
-    simp only [← le_principal_iff, ← Ultrafilter.mem_coe]
+    simp only [le_principal_iff, Ultrafilter.mem_coe]
 
 protected theorem IsComplete.union {s t : Set α} (hs : IsComplete s) (ht : IsComplete t) : IsComplete (s ∪ t) := by
-  simp only [← is_complete_iff_ultrafilter', ← Ultrafilter.union_mem_iff, ← or_imp_distrib] at *
+  simp only [is_complete_iff_ultrafilter', Ultrafilter.union_mem_iff, or_imp_distrib] at *
   exact fun l hl =>
     ⟨fun hsl => (hs l hl hsl).imp fun x hx => ⟨Or.inl hx.fst, hx.snd⟩, fun htl =>
       (ht l hl htl).imp fun x hx => ⟨Or.inr hx.fst, hx.snd⟩⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » S)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » S)
 theorem is_complete_Union_separated {ι : Sort _} {s : ι → Set α} (hs : ∀ i, IsComplete (s i)) {U : Set (α × α)}
-    (hU : U ∈ 𝓤 α) (hd : ∀ (i j : ι), ∀ x ∈ s i, ∀, ∀ y ∈ s j, ∀, (x, y) ∈ U → i = j) : IsComplete (⋃ i, s i) := by
+    (hU : U ∈ 𝓤 α) (hd : ∀ (i j : ι), ∀ x ∈ s i, ∀ y ∈ s j, (x, y) ∈ U → i = j) : IsComplete (⋃ i, s i) := by
   set S := ⋃ i, s i
   intro l hl hls
   rw [le_principal_iff] at hls
@@ -348,7 +346,7 @@ theorem complete_space_iff_is_complete_univ : CompleteSpace α ↔ IsComplete (U
 
 theorem complete_space_iff_ultrafilter :
     CompleteSpace α ↔ ∀ l : Ultrafilter α, Cauchy (l : Filter α) → ∃ x : α, ↑l ≤ 𝓝 x := by
-  simp [← complete_space_iff_is_complete_univ, ← is_complete_iff_ultrafilter]
+  simp [complete_space_iff_is_complete_univ, is_complete_iff_ultrafilter]
 
 theorem cauchy_iff_exists_le_nhds [CompleteSpace α] {l : Filter α} [NeBot l] : Cauchy l ↔ ∃ x, l ≤ 𝓝 x :=
   ⟨CompleteSpace.complete, fun ⟨x, hx⟩ => cauchy_nhds.mono hx⟩
@@ -369,7 +367,7 @@ theorem cauchy_seq_tendsto_of_is_complete [SemilatticeSup β] {K : Set α} (h₁
     le_principal_iff.2 <|
       mem_map_iff_exists_image.2
         ⟨Univ, univ_mem, by
-          simp only [← image_univ]
+          simp only [image_univ]
           rintro _ ⟨n, rfl⟩
           exact h₂ n⟩
 
@@ -387,9 +385,9 @@ theorem IsClosed.is_complete [CompleteSpace α] {s : Set α} (h : IsClosed s) : 
 /-- A set `s` is totally bounded if for every entourage `d` there is a finite
   set of points `t` such that every element of `s` is `d`-near to some element of `t`. -/
 def TotallyBounded (s : Set α) : Prop :=
-  ∀, ∀ d ∈ 𝓤 α, ∀, ∃ t : Set α, t.Finite ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ d }
+  ∀ d ∈ 𝓤 α, ∃ t : Set α, t.Finite ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ d }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem TotallyBounded.exists_subset {s : Set α} (hs : TotallyBounded s) {U : Set (α × α)} (hU : U ∈ 𝓤 α) :
     ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ U } := by
   rcases comp_symm_of_uniformity hU with ⟨r, hr, rs, rU⟩
@@ -410,9 +408,9 @@ theorem TotallyBounded.exists_subset {s : Set α} (hs : TotallyBounded s) {U : S
     exact ⟨z, rU <| mem_comp_rel.2 ⟨y, xy, rs (hfr z)⟩⟩
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem totally_bounded_iff_subset {s : Set α} :
-    TotallyBounded s ↔ ∀, ∀ d ∈ 𝓤 α, ∀, ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ d } :=
+    TotallyBounded s ↔ ∀ d ∈ 𝓤 α, ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ d } :=
   ⟨fun H d hd => H.exists_subset hd, fun H d hd =>
     let ⟨t, _, ht⟩ := H d hd
     ⟨t, ht⟩⟩
@@ -422,9 +420,9 @@ theorem Filter.HasBasis.totally_bounded_iff {ι} {p : ι → Prop} {U : ι → S
   H.forall_iff fun U V hUV h => h.imp fun t ht => ⟨ht.1, ht.2.trans <| Union₂_mono fun x hx y hy => hUV hy⟩
 
 theorem totally_bounded_of_forall_symm {s : Set α}
-    (h : ∀, ∀ V ∈ 𝓤 α, ∀, SymmetricRel V → ∃ t : Set α, Set.Finite t ∧ s ⊆ ⋃ y ∈ t, Ball y V) : TotallyBounded s :=
+    (h : ∀ V ∈ 𝓤 α, SymmetricRel V → ∃ t : Set α, Set.Finite t ∧ s ⊆ ⋃ y ∈ t, Ball y V) : TotallyBounded s :=
   UniformSpace.has_basis_symmetric.totally_bounded_iff.2 fun V hV => by
-    simpa only [← ball_eq_of_symmetry hV.2] using h V hV.1 hV.2
+    simpa only [ball_eq_of_symmetry hV.2] using h V hV.1 hV.2
 
 theorem totally_bounded_subset {s₁ s₂ : Set α} (hs : s₁ ⊆ s₂) (h : TotallyBounded s₂) : TotallyBounded s₁ := fun d hd =>
   let ⟨t, ht₁, ht₂⟩ := h d hd
@@ -445,8 +443,8 @@ theorem TotallyBounded.image [UniformSpace β] {f : α → β} {s : Set α} (hs 
   have : { p : α × α | (f p.1, f p.2) ∈ t } ∈ 𝓤 α := hf ht
   let ⟨c, hfc, hct⟩ := hs _ this
   ⟨f '' c, hfc.Image f, by
-    simp [← image_subset_iff]
-    simp [← subset_def] at hct
+    simp [image_subset_iff]
+    simp [subset_def] at hct
     intro x hx
     simp
     exact hct x hx⟩
@@ -479,7 +477,7 @@ theorem totally_bounded_iff_filter {s : Set α} : TotallyBounded s ↔ ∀ f, Ne
         exact principal_mono.2 (diff_subset_diff_right <| bUnion_subset_bUnion_left h)
         
       · intro t
-        simpa [← nonempty_diff] using hd_cover t t.finite_to_set
+        simpa [nonempty_diff] using hd_cover t t.finite_to_set
         
     have : f ≤ 𝓟 s :=
       infi_le_of_le ∅
@@ -491,12 +489,12 @@ theorem totally_bounded_iff_filter {s : Set α} : TotallyBounded s ↔ ∀ f, Ne
     rcases hc.1.nonempty_of_mem this with ⟨y, hym, hys⟩
     set ys := ⋃ y' ∈ ({y} : Finset α), { x | (x, y') ∈ d }
     have : m ⊆ ys := by
-      simpa [← ys] using fun x hx => hmd (mk_mem_prod hx hym)
-    have : c ≤ 𝓟 (s \ ys) := hcf.trans (infi_le_of_le {y} le_rfl)
+      simpa [ys] using fun x hx => hmd (mk_mem_prod hx hym)
+    have : c ≤ 𝓟 (s \ ys) := hcf.trans (infi_le_of_le {y} le_rflₓ)
     refine' hc.1.Ne (empty_mem_iff_bot.mp _)
     filter_upwards [le_principal_iff.1 this, hm]
     refine' fun x hx hxm => hx.2 _
-    simpa [← ys] using hmd (mk_mem_prod hxm hym)
+    simpa [ys] using hmd (mk_mem_prod hxm hym)
     
 
 theorem totally_bounded_iff_ultrafilter {s : Set α} :
@@ -547,8 +545,7 @@ that this is a Cauchy sequence. If this sequence converges to some `a`, then `f 
 
 namespace SequentiallyComplete
 
-variable {f : Filter α} (hf : Cauchy f) {U : ℕ → Set (α × α)} (U_mem : ∀ n, U n ∈ 𝓤 α)
-  (U_le : ∀, ∀ s ∈ 𝓤 α, ∀, ∃ n, U n ⊆ s)
+variable {f : Filter α} (hf : Cauchy f) {U : ℕ → Set (α × α)} (U_mem : ∀ n, U n ∈ 𝓤 α) (U_le : ∀ s ∈ 𝓤 α, ∃ n, U n ⊆ s)
 
 open Set Finset
 
@@ -658,12 +655,12 @@ theorem second_countable_of_separable [SeparableSpace α] : SecondCountableTopol
   choose ht_mem hto hts using hto
   refine' ⟨⟨⋃ x ∈ s, range fun k => ball x (t k), hsc.bUnion fun x hx => countable_range _, _⟩⟩
   refine' (is_topological_basis_of_open_of_nhds _ _).eq_generate_from
-  · simp only [← mem_Union₂, ← mem_range]
+  · simp only [mem_Union₂, mem_range]
     rintro _ ⟨x, hxs, k, rfl⟩
     exact is_open_ball x (hto k)
     
   · intro x V hxV hVo
-    simp only [← mem_Union₂, ← mem_range, ← exists_prop]
+    simp only [mem_Union₂, mem_range, exists_prop]
     rcases UniformSpace.mem_nhds_iff.1 (IsOpen.mem_nhds hVo hxV) with ⟨U, hU, hUV⟩
     rcases comp_symm_of_uniformity hU with ⟨U', hU', hsymm, hUU'⟩
     rcases h_basis.to_has_basis.mem_iff.1 hU' with ⟨k, -, hk⟩

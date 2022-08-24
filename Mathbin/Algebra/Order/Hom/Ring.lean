@@ -44,7 +44,7 @@ structure OrderRingHom (α β : Type _) [NonAssocSemiringₓ α] [Preorderₓ α
   monotone' : Monotone to_fun
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident order_ring_hom.to_ring_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident order_ring_hom.to_ring_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- mathport name: «expr →+*o »
 infixl:25 " →+*o " => OrderRingHom
 

@@ -85,7 +85,7 @@ def adicCompletion : Submodule R (∀ n : ℕ, M ⧸ (I ^ n • ⊤ : Submodule 
         liftq _ (mkq _)
             (by
               rw [ker_mkq]
-              exact smul_mono (Ideal.pow_le_pow h) le_rfl)
+              exact smul_mono (Ideal.pow_le_pow h) le_rflₓ)
             (f n) =
           f m }
   zero_mem' := fun m n hmn => by
@@ -99,7 +99,7 @@ namespace IsHausdorff
 
 instance bot : IsHausdorff (⊥ : Ideal R) M :=
   ⟨fun x hx => by
-    simpa only [← pow_oneₓ ⊥, ← bot_smul, ← Smodeq.bot] using hx 1⟩
+    simpa only [pow_oneₓ ⊥, bot_smul, Smodeq.bot] using hx 1⟩
 
 variable {M}
 
@@ -143,7 +143,7 @@ instance : IsHausdorff I (Hausdorffification I M) :=
       (Quotient.mk_eq_zero _).2 <|
         (mem_infi _).2 fun n => by
           have := comap_map_mkq (⨅ n : ℕ, I ^ n • ⊤ : Submodule R M) (I ^ n • ⊤)
-          simp only [← sup_of_le_right (infi_le (fun n => (I ^ n • ⊤ : Submodule R M)) n)] at this
+          simp only [sup_of_le_right (infi_le (fun n => (I ^ n • ⊤ : Submodule R M)) n)] at this
           rw [← this, map_smul'', mem_comap, map_top, range_mkq, ← Smodeq.zero]
           exact hx n⟩
 
@@ -160,7 +160,7 @@ def lift (f : M →ₗ[R] N) : Hausdorffification I M →ₗ[R] N :=
         le_infi fun n =>
           le_transₓ (map_mono <| infi_le _ n) <| by
             rw [map_smul'']
-            exact smul_mono le_rfl le_top
+            exact smul_mono le_rflₓ le_top
 
 theorem lift_of (f : M →ₗ[R] N) (x : M) : lift I f (of I M x) = f x :=
   rfl
@@ -278,7 +278,7 @@ theorem le_jacobson_bot [IsAdicComplete I R] : I ≤ (⊥ : Ideal R).jacobson :=
   let f : ℕ → R := fun n => ∑ i in range n, (x * y) ^ i
   have hf : ∀ m n, m ≤ n → f m ≡ f n [SMOD I ^ m • (⊤ : Submodule R R)] := by
     intro m n h
-    simp only [← f, ← Algebra.id.smul_eq_mul, ← Ideal.mul_top, ← Smodeq.sub_mem]
+    simp only [f, Algebra.id.smul_eq_mul, Ideal.mul_top, Smodeq.sub_mem]
     rw [← add_tsub_cancel_of_le h, Finset.sum_range_add, ← sub_sub, sub_self, zero_sub, neg_mem_iff]
     apply Submodule.sum_mem
     intro n hn
@@ -297,9 +297,9 @@ theorem le_jacobson_bot [IsAdicComplete I R] : I ≤ (⊥ : Ideal R).jacobson :=
       convert Ideal.sub_mem _ this (Ideal.mul_mem_left _ (1 + -(x * y)) hL) using 1
       ring
     cases n
-    · simp only [← Ideal.one_eq_top, ← pow_zeroₓ]
+    · simp only [Ideal.one_eq_top, pow_zeroₓ]
       
-    · dsimp' [← f]
+    · dsimp' [f]
       rw [← neg_sub _ (1 : R), neg_mul, mul_geom_sum, neg_sub, sub_sub, add_commₓ, ← sub_sub, sub_self, zero_sub,
         neg_mem_iff, mul_powₓ]
       exact Ideal.mul_mem_right _ (I ^ _) (Ideal.pow_mem_pow hx _)

@@ -49,16 +49,16 @@ theorem IsLowerSet.member_subfamily_subset_non_member_subfamily (h : IsLowerSet 
 
 /-- **Harris-Kleitman inequality**: Any two lower sets of finsets correlate. -/
 theorem IsLowerSet.le_card_inter_finset' (h𝒜 : IsLowerSet (𝒜 : Set (Finset α))) (hℬ : IsLowerSet (ℬ : Set (Finset α)))
-    (h𝒜s : ∀, ∀ t ∈ 𝒜, ∀, t ⊆ s) (hℬs : ∀, ∀ t ∈ ℬ, ∀, t ⊆ s) : 𝒜.card * ℬ.card ≤ 2 ^ s.card * (𝒜 ∩ ℬ).card := by
+    (h𝒜s : ∀ t ∈ 𝒜, t ⊆ s) (hℬs : ∀ t ∈ ℬ, t ⊆ s) : 𝒜.card * ℬ.card ≤ 2 ^ s.card * (𝒜 ∩ ℬ).card := by
   induction' s using Finset.induction with a s hs ih generalizing 𝒜 ℬ
   · simp_rw [subset_empty, ← subset_singleton_iff', subset_singleton_iff] at h𝒜s hℬs
     obtain rfl | rfl := h𝒜s
-    · simp only [← card_empty, ← empty_inter, ← mul_zero, ← zero_mul]
+    · simp only [card_empty, empty_inter, mul_zero, zero_mul]
       
     obtain rfl | rfl := hℬs
-    · simp only [← card_empty, ← inter_empty, ← mul_zero, ← zero_mul]
+    · simp only [card_empty, inter_empty, mul_zero, zero_mul]
       
-    · simp only [← card_empty, ← pow_zeroₓ, ← inter_singleton_of_mem, ← mem_singleton, ← card_singleton]
+    · simp only [card_empty, pow_zeroₓ, inter_singleton_of_mem, mem_singleton, card_singleton]
       
     
   rw [card_insert_of_not_mem hs, ← card_member_subfamily_add_card_non_member_subfamily a 𝒜, ←
@@ -71,11 +71,11 @@ theorem IsLowerSet.le_card_inter_finset' (h𝒜 : IsLowerSet (𝒜 : Set (Finset
           _).trans
       _
   rw [← two_mul, pow_succₓ, mul_assoc]
-  have h₀ : ∀ 𝒞 : Finset (Finset α), (∀, ∀ t ∈ 𝒞, ∀, t ⊆ insert a s) → ∀, ∀ t ∈ 𝒞.nonMemberSubfamily a, ∀, t ⊆ s := by
+  have h₀ : ∀ 𝒞 : Finset (Finset α), (∀ t ∈ 𝒞, t ⊆ insert a s) → ∀ t ∈ 𝒞.nonMemberSubfamily a, t ⊆ s := by
     rintro 𝒞 h𝒞 t ht
     rw [mem_non_member_subfamily] at ht
     exact (subset_insert_iff_of_not_mem ht.2).1 (h𝒞 _ ht.1)
-  have h₁ : ∀ 𝒞 : Finset (Finset α), (∀, ∀ t ∈ 𝒞, ∀, t ⊆ insert a s) → ∀, ∀ t ∈ 𝒞.memberSubfamily a, ∀, t ⊆ s := by
+  have h₁ : ∀ 𝒞 : Finset (Finset α), (∀ t ∈ 𝒞, t ⊆ insert a s) → ∀ t ∈ 𝒞.memberSubfamily a, t ⊆ s := by
     rintro 𝒞 h𝒞 t ht
     rw [mem_member_subfamily] at ht
     exact (subset_insert_iff_of_not_mem ht.2).1 ((subset_insert _ _).trans <| h𝒞 _ ht.1)

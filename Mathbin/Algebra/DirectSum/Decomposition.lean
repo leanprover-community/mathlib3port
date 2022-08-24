@@ -105,7 +105,7 @@ theorem decompose_of_mem_same {x : M} {i : ι} (hx : x ∈ ℳ i) : (decompose �
   rw [decompose_of_mem _ hx, DirectSum.of_eq_same, Subtype.coe_mk]
 
 theorem decompose_of_mem_ne {x : M} {i j : ι} (hx : x ∈ ℳ i) (hij : i ≠ j) : (decompose ℳ x j : M) = 0 := by
-  rw [decompose_of_mem _ hx, DirectSum.of_eq_of_ne _ _ _ _ hij, AddSubmonoidClass.coe_zero]
+  rw [decompose_of_mem _ hx, DirectSum.of_eq_of_ne _ _ _ _ hij, ZeroMemClass.coe_zero]
 
 /-- If `M` is graded by `ι` with degree `i` component `ℳ i`, then it is isomorphic as
 an additive monoid to a direct sum of components. -/

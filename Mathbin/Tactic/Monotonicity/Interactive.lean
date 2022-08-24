@@ -298,7 +298,7 @@ unsafe instance has_to_tactic_format_mono_law :
 unsafe def mk_rel (ctx : ac_mono_ctx_ne) (f : expr → expr) : expr :=
   ctx.to_rel (f ctx.left) (f ctx.right)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `xs₁
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `xs₁
 unsafe def mk_congr_args (fn : expr) (xs₀ xs₁ : List expr) (l r : expr) : tactic expr := do
   let p ← mk_app `eq [fn.mk_app <| xs₀ ++ l :: xs₁, fn.mk_app <| xs₀ ++ r :: xs₁]
   Prod.snd <$>
@@ -519,10 +519,10 @@ unsafe def mono (many : parse (tk "*")?) (dir : parse side)
 add_tactic_doc
   { Name := "mono", category := DocCategory.tactic, declNames := [`tactic.interactive.mono], tags := ["monotonicity"] }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `g
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `g
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 /-- transforms a goal of the form `f x ≼ f y` into `x ≤ y` using lemmas
 marked as `monotonic`.
 

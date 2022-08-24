@@ -270,7 +270,7 @@ def shiftFunctorAdd (m n : ℤ) : shiftFunctor C (m + n) ≅ shiftFunctor C m �
     simp_rw [category.assoc, obj_μ_inv_app, μ_inv_hom_app_assoc, functor.map_comp, obj_μ_app, category.assoc,
       μ_naturality_assoc, μ_inv_hom_app_assoc, obj_μ_inv_app, category.assoc, μ_naturalityₗ_assoc, μ_inv_hom_app_assoc,
       μ_inv_naturalityᵣ_assoc]
-    simp only [← eq_to_hom_map, ← eq_to_hom_app, ← eq_to_iso.hom, ← eq_to_hom_trans_assoc, ← eq_to_iso.inv]
+    simp only [eq_to_hom_map, eq_to_hom_app, eq_to_iso.hom, eq_to_hom_trans_assoc, eq_to_iso.inv]
     
   · intro X Y f
     ext

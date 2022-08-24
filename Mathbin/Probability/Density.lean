@@ -87,7 +87,7 @@ def pdf {m : MeasurableSpace Ω} (X : Ω → E) (ℙ : Measure Ω)
 
 theorem pdf_undef {m : MeasurableSpace Ω} {ℙ : Measure Ω} {μ : Measure E} {X : Ω → E} (h : ¬HasPdf X ℙ μ) :
     pdf X ℙ μ = 0 := by
-  simp only [← pdf, ← dif_neg h]
+  simp only [pdf, dif_neg h]
 
 theorem has_pdf_of_pdf_ne_zero {m : MeasurableSpace Ω} {ℙ : Measure Ω} {μ : Measure E} {X : Ω → E} (h : pdf X ℙ μ ≠ 0) :
     HasPdf X ℙ μ := by
@@ -224,7 +224,7 @@ theorem to_quasi_measure_preserving {X : Ω → E} [HasPdf X ℙ μ] : QuasiMeas
 theorem have_lebesgue_decomposition_of_has_pdf {X : Ω → E} [hX' : HasPdf X ℙ μ] :
     (map X ℙ).HaveLebesgueDecomposition μ :=
   ⟨⟨⟨0, pdf X ℙ μ⟩, by
-      simp only [← zero_addₓ, ← measurable_pdf X ℙ μ, ← true_andₓ, ← mutually_singular.zero_left, ←
+      simp only [zero_addₓ, measurable_pdf X ℙ μ, true_andₓ, mutually_singular.zero_left,
         map_eq_with_density_pdf X ℙ μ]⟩⟩
 
 theorem has_pdf_iff {X : Ω → E} : HasPdf X ℙ μ ↔ Measurable X ∧ (map X ℙ).HaveLebesgueDecomposition μ ∧ map X ℙ ≪ μ :=
@@ -242,7 +242,7 @@ theorem has_pdf_iff {X : Ω → E} : HasPdf X ℙ μ ↔ Measurable X ∧ (map X
 theorem has_pdf_iff_of_measurable {X : Ω → E} (hX : Measurable X) :
     HasPdf X ℙ μ ↔ (map X ℙ).HaveLebesgueDecomposition μ ∧ map X ℙ ≪ μ := by
   rw [has_pdf_iff]
-  simp only [← hX, ← true_andₓ]
+  simp only [hX, true_andₓ]
 
 section
 
@@ -335,7 +335,7 @@ theorem has_pdf {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure Ω} {μ :
         have heq : Function.Support ((μ s)⁻¹ • (1 : E → ℝ≥0∞)) = Set.Univ := by
           ext x
           rw [Function.mem_support]
-          simp [← hnt]
+          simp [hnt]
         rw [HEq, Set.inter_univ] at this
         exact hns this
       exact Set.indicator_ae_eq_zero hu.symm)
@@ -351,15 +351,15 @@ theorem measure_preimage {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure 
   haveI := hu.has_pdf hns hnt
   rw [← measure.map_apply (has_pdf.measurable X ℙ μ) hA, map_eq_set_lintegral_pdf X ℙ μ hA,
     lintegral_congr_ae hu.restrict]
-  simp only [← hms, ← hA, ← lintegral_indicator, ← Pi.smul_apply, ← Pi.one_apply, ← Algebra.id.smul_eq_mul, ← mul_oneₓ,
-    ← lintegral_const, ← restrict_apply', ← Set.univ_inter]
+  simp only [hms, hA, lintegral_indicator, Pi.smul_apply, Pi.one_apply, Algebra.id.smul_eq_mul, mul_oneₓ,
+    lintegral_const, restrict_apply', Set.univ_inter]
   rw [Ennreal.div_eq_inv_mul]
 
 theorem is_probability_measure {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure Ω} {μ : Measure E} {s : Set E}
     (hns : μ s ≠ 0) (hnt : μ s ≠ ∞) (hms : MeasurableSet s) (hu : IsUniform X s ℙ μ) : IsProbabilityMeasure ℙ :=
   ⟨by
     have : X ⁻¹' Set.Univ = Set.Univ := by
-      simp only [← Set.preimage_univ]
+      simp only [Set.preimage_univ]
     rw [← this, hu.measure_preimage hns hnt hms MeasurableSet.univ, Set.inter_univ, Ennreal.div_self hns hnt]⟩
 
 variable {X : Ω → ℝ} {s : Set ℝ} (hms : MeasurableSet s) (hns : volume s ≠ 0)
@@ -371,7 +371,7 @@ theorem mul_pdf_integrable [IsFiniteMeasure ℙ] (hcs : IsCompact s) (huX : IsUn
   by_cases' hsupp : volume s = ∞
   · have : pdf X ℙ =ᵐ[volume] 0 := by
       refine' ae_eq_trans huX _
-      simp [← hsupp]
+      simp [hsupp]
     refine' integrable.congr (integrable_zero _ _ _) _
     rw
       [(by
@@ -383,8 +383,7 @@ theorem mul_pdf_integrable [IsFiniteMeasure ℙ] (hcs : IsCompact s) (huX : IsUn
   set ind := (volume s)⁻¹ • (1 : ℝ → ℝ≥0∞) with hind
   have : ∀ x, ↑∥x∥₊ * s.indicator ind x = s.indicator (fun x => ∥x∥₊ * ind x) x := fun x =>
     (s.indicator_mul_right (fun x => ↑∥x∥₊) ind).symm
-  simp only [← this, ← lintegral_indicator _ hms, ← hind, ← mul_oneₓ, ← Algebra.id.smul_eq_mul, ← Pi.one_apply, ←
-    Pi.smul_apply]
+  simp only [this, lintegral_indicator _ hms, hind, mul_oneₓ, Algebra.id.smul_eq_mul, Pi.one_apply, Pi.smul_apply]
   rw [lintegral_mul_const _ measurable_nnnorm.coe_nnreal_ennreal]
   · refine'
       (Ennreal.mul_lt_top (set_lintegral_lt_top_of_is_compact hsupp hcs continuous_nnnorm).Ne
@@ -408,9 +407,9 @@ theorem integral_eq (hnt : volume s ≠ ∞) (huX : IsUniform X s ℙ) : (∫ x,
     by
     refine' fun x => congr_arg ((· * ·) x) _
     by_cases' hx : x ∈ s
-    · simp [← Set.indicator_of_mem hx]
+    · simp [Set.indicator_of_mem hx]
       
-    · simp [← Set.indicator_of_not_mem hx]
+    · simp [Set.indicator_of_not_mem hx]
       
   simp_rw [this, ← s.indicator_mul_right fun x => x, integral_indicator hms]
   change (∫ x in s, x * (volume s)⁻¹.toReal • 1 ∂volume) = _

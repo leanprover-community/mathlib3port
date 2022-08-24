@@ -214,7 +214,7 @@ def trans {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homotopy f₁
               continuity)).ContinuousOn
         _
     rintro x hx
-    norm_num[← hx]
+    norm_num[hx]
   map_zero_left' := fun x => by
     norm_num
   map_one_left' := fun x => by
@@ -233,22 +233,22 @@ theorem trans_apply {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Hom
 theorem symm_trans {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homotopy f₁ f₂) :
     (F.trans G).symm = G.symm.trans F.symm := by
   ext x
-  simp only [← symm_apply, ← trans_apply]
+  simp only [symm_apply, trans_apply]
   split_ifs with h₁ h₂
   · change (x.1 : ℝ) ≤ _ at h₂
     change (1 : ℝ) - x.1 ≤ _ at h₁
     have ht : (x.1 : ℝ) = 1 / 2 := by
       linarith
-    norm_num[← ht]
+    norm_num[ht]
     
   · congr 2
     apply Subtype.ext
-    simp only [← UnitInterval.coe_symm_eq, ← Subtype.coe_mk]
+    simp only [UnitInterval.coe_symm_eq, Subtype.coe_mk]
     linarith
     
   · congr 2
     apply Subtype.ext
-    simp only [← UnitInterval.coe_symm_eq, ← Subtype.coe_mk]
+    simp only [UnitInterval.coe_symm_eq, Subtype.coe_mk]
     linarith
     
   · change ¬(x.1 : ℝ) ≤ _ at h
@@ -263,9 +263,9 @@ theorem symm_trans {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homo
 def cast {f₀ f₁ g₀ g₁ : C(X, Y)} (F : Homotopy f₀ f₁) (h₀ : f₀ = g₀) (h₁ : f₁ = g₁) : Homotopy g₀ g₁ where
   toFun := F
   map_zero_left' := by
-    simp [h₀]
+    simp [← h₀]
   map_one_left' := by
-    simp [h₁]
+    simp [← h₁]
 
 /-- If we have a `homotopy f₀ f₁` and a `homotopy g₀ g₁`, then we can compose them and get a
 `homotopy (g₀.comp f₀) (g₁.comp f₁)`.
@@ -416,7 +416,7 @@ by putting the first homotopy on `[0, 1/2]` and the second on `[1/2, 1]`.
 def trans {f₀ f₁ f₂ : C(X, Y)} (F : HomotopyWith f₀ f₁ P) (G : HomotopyWith f₁ f₂ P) : HomotopyWith f₀ f₂ P :=
   { F.toHomotopy.trans G.toHomotopy with
     prop' := fun t => by
-      simp only [← homotopy.trans]
+      simp only [homotopy.trans]
       change P ⟨fun _ => ite ((t : ℝ) ≤ _) _ _, _⟩
       split_ifs
       · exact F.extend_prop _
@@ -469,7 +469,7 @@ end HomotopicWith
 /-- A `homotopy_rel f₀ f₁ S` is a homotopy between `f₀` and `f₁` which is fixed on the points in `S`.
 -/
 abbrev HomotopyRel (f₀ f₁ : C(X, Y)) (S : Set X) :=
-  HomotopyWith f₀ f₁ fun f => ∀, ∀ x ∈ S, ∀, f x = f₀ x ∧ f x = f₁ x
+  HomotopyWith f₀ f₁ fun f => ∀ x ∈ S, f x = f₀ x ∧ f x = f₁ x
 
 namespace HomotopyRel
 
@@ -504,7 +504,7 @@ def refl (f : C(X, Y)) (S : Set X) : HomotopyRel f f S :=
 def symm (F : HomotopyRel f₀ f₁ S) : HomotopyRel f₁ f₀ S :=
   { HomotopyWith.symm F with
     prop' := fun t x hx => by
-      simp [← F.eq_snd _ hx, ← F.fst_eq_snd hx] }
+      simp [F.eq_snd _ hx, F.fst_eq_snd hx] }
 
 @[simp]
 theorem symm_symm (F : HomotopyRel f₀ f₁ S) : F.symm.symm = F :=
@@ -517,12 +517,12 @@ def trans (F : HomotopyRel f₀ f₁ S) (G : HomotopyRel f₁ f₂ S) : Homotopy
   { Homotopy.trans F.toHomotopy G.toHomotopy with
     prop' := fun t => by
       intro x hx
-      simp only [← homotopy.trans]
+      simp only [homotopy.trans]
       change (⟨fun _ => ite ((t : ℝ) ≤ _) _ _, _⟩ : C(X, Y)) _ = _ ∧ _ = _
       split_ifs
-      · simp [← (homotopy_with.extend_prop F (2 * t) x hx).1, ← F.fst_eq_snd hx, ← G.fst_eq_snd hx]
+      · simp [(homotopy_with.extend_prop F (2 * t) x hx).1, F.fst_eq_snd hx, G.fst_eq_snd hx]
         
-      · simp [← (homotopy_with.extend_prop G (2 * t - 1) x hx).1, ← F.fst_eq_snd hx, ← G.fst_eq_snd hx]
+      · simp [(homotopy_with.extend_prop G (2 * t - 1) x hx).1, F.fst_eq_snd hx, G.fst_eq_snd hx]
          }
 
 theorem trans_apply (F : HomotopyRel f₀ f₁ S) (G : HomotopyRel f₁ f₂ S) (x : I × X) :
@@ -540,7 +540,7 @@ theorem symm_trans (F : HomotopyRel f₀ f₁ S) (G : HomotopyRel f₁ f₂ S) :
 def cast {f₀ f₁ g₀ g₁ : C(X, Y)} (F : HomotopyRel f₀ f₁ S) (h₀ : f₀ = g₀) (h₁ : f₁ = g₁) : HomotopyRel g₀ g₁ S :=
   { Homotopy.cast F.toHomotopy h₀ h₁ with
     prop' := fun t x hx => by
-      simpa [h₀, h₁] using F.prop t x hx }
+      simpa [← h₀, ← h₁] using F.prop t x hx }
 
 end HomotopyRel
 

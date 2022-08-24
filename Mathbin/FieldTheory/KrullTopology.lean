@@ -256,7 +256,7 @@ theorem krull_topology_totally_disconnected {K L : Type _} [Field K] [Field L] [
       ⟨1, E.fixing_subgroup.one_mem', by
         simp ⟩,
       _⟩
-  simp only [← mem_left_coset_iff, ← SetLike.mem_coe, ← IntermediateField.mem_fixing_subgroup_iff, ← not_forall]
+  simp only [mem_left_coset_iff, SetLike.mem_coe, IntermediateField.mem_fixing_subgroup_iff, not_forall]
   exact ⟨x, IntermediateField.mem_adjoin_simple_self K x, hx⟩
 
 end TotallyDisconnected

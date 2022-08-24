@@ -55,7 +55,7 @@ protected theorem trans : a ≡ b [ZMOD n] → b ≡ c [ZMOD n] → a ≡ c [ZMO
 end Modeq
 
 theorem coe_nat_modeq_iff {a b n : ℕ} : a ≡ b [ZMOD n] ↔ a ≡ b [MOD n] := by
-  unfold modeq Nat.Modeq <;> rw [← Int.coe_nat_eq_coe_nat_iff] <;> simp [← coe_nat_mod]
+  unfold modeq Nat.Modeq <;> rw [← Int.coe_nat_eq_coe_nat_iff] <;> simp [coe_nat_mod]
 
 theorem modeq_zero_iff_dvd : a ≡ 0 [ZMOD n] ↔ n ∣ a := by
   rw [modeq, zero_mod, dvd_iff_mod_eq_zero]
@@ -67,7 +67,11 @@ theorem _root_.has_dvd.dvd.zero_modeq_int (h : n ∣ a) : 0 ≡ a [ZMOD n] :=
   h.modeq_zero_int.symm
 
 theorem modeq_iff_dvd : a ≡ b [ZMOD n] ↔ n ∣ b - a := by
-  rw [modeq, eq_comm] <;> simp [← mod_eq_mod_iff_mod_sub_eq_zero, ← dvd_iff_mod_eq_zero, -EuclideanDomain.mod_eq_zero]
+  rw [modeq, eq_comm] <;> simp [mod_eq_mod_iff_mod_sub_eq_zero, dvd_iff_mod_eq_zero, -EuclideanDomain.mod_eq_zero]
+
+theorem modeq_iff_add_fac {a b n : ℤ} : a ≡ b [ZMOD n] ↔ ∃ t, b = a + n * t := by
+  rw [modeq_iff_dvd]
+  exact exists_congr fun t => sub_eq_iff_eq_add'
 
 theorem Modeq.dvd : a ≡ b [ZMOD n] → n ∣ b - a :=
   modeq_iff_dvd.1
@@ -86,9 +90,9 @@ protected theorem modeq_of_dvd (d : m ∣ n) (h : a ≡ b [ZMOD n]) : a ≡ b [Z
 protected theorem mul_left' (hc : 0 ≤ c) (h : a ≡ b [ZMOD n]) : c * a ≡ c * b [ZMOD c * n] :=
   Or.cases_on hc.lt_or_eq
     (fun hc => by
-      unfold modeq <;> simp [← mul_mod_mul_of_pos hc, ← show _ = _ from h])
+      unfold modeq <;> simp [mul_mod_mul_of_pos hc, show _ = _ from h])
     fun hc => by
-    simp [← hc.symm]
+    simp [hc.symm]
 
 protected theorem mul_right' (hc : 0 ≤ c) (h : a ≡ b [ZMOD n]) : a * c ≡ b * c [ZMOD n * c] := by
   rw [mul_comm a, mul_comm b, mul_comm n] <;> exact h.mul_left' hc
@@ -189,6 +193,9 @@ theorem modeq_add_fac {a b n : ℤ} (c : ℤ) (ha : a ≡ b [ZMOD n]) : a + n * 
       rw [add_zeroₓ]
     
 
+theorem modeq_add_fac_self {a t n : ℤ} : a + n * t ≡ a [ZMOD n] :=
+  modeq_add_fac _ Modeq.rfl
+
 theorem mod_coprime {a b : ℕ} (hab : Nat.Coprime a b) : ∃ y : ℤ, a * y ≡ 1 [ZMOD b] :=
   ⟨Nat.gcdA a b,
     have hgcd : Nat.gcdₓ a b = 1 := Nat.Coprime.gcd_eq_one hab
@@ -203,7 +210,7 @@ theorem exists_unique_equiv (a : ℤ) {b : ℤ} (hb : 0 < b) : ∃ z : ℤ, 0 �
   ⟨a % b, mod_nonneg _ (ne_of_gtₓ hb), by
     have : a % b < abs b := mod_lt _ (ne_of_gtₓ hb)
     rwa [abs_of_pos hb] at this, by
-    simp [← modeq]⟩
+    simp [modeq]⟩
 
 theorem exists_unique_equiv_nat (a : ℤ) {b : ℤ} (hb : 0 < b) : ∃ z : ℕ, ↑z < b ∧ ↑z ≡ a [ZMOD b] :=
   let ⟨z, hz1, hz2, hz3⟩ := exists_unique_equiv a hb

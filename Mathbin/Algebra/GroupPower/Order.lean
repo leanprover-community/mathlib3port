@@ -99,15 +99,15 @@ theorem pow_le_one_iff {x : M} {n : ℕ} (hn : n ≠ 0) : x ^ n ≤ 1 ↔ x ≤ 
 
 @[to_additive nsmul_pos_iff]
 theorem one_lt_pow_iff {x : M} {n : ℕ} (hn : n ≠ 0) : 1 < x ^ n ↔ 1 < x :=
-  lt_iff_lt_of_le_iff_le (pow_le_one_iff hn)
+  lt_iff_lt_of_le_iff_leₓ (pow_le_one_iff hn)
 
 @[to_additive]
 theorem pow_lt_one_iff {x : M} {n : ℕ} (hn : n ≠ 0) : x ^ n < 1 ↔ x < 1 :=
-  lt_iff_lt_of_le_iff_le (one_le_pow_iff hn)
+  lt_iff_lt_of_le_iff_leₓ (one_le_pow_iff hn)
 
 @[to_additive]
 theorem pow_eq_one_iff {x : M} {n : ℕ} (hn : n ≠ 0) : x ^ n = 1 ↔ x = 1 := by
-  simp only [← le_antisymm_iffₓ, ← pow_le_one_iff hn, ← one_le_pow_iff hn]
+  simp only [le_antisymm_iffₓ, pow_le_one_iff hn, one_le_pow_iff hn]
 
 variable [CovariantClass M M (· * ·) (· < ·)] {a : M} {m n : ℕ}
 
@@ -155,7 +155,7 @@ theorem zero_pow_le_one : ∀ n : ℕ, (0 : R) ^ n ≤ 1
 theorem pow_add_pow_le (hx : 0 ≤ x) (hy : 0 ≤ y) (hn : n ≠ 0) : x ^ n + y ^ n ≤ (x + y) ^ n := by
   rcases Nat.exists_eq_succ_of_ne_zero hn with ⟨k, rfl⟩
   induction' k with k ih
-  · simp only [← pow_oneₓ]
+  · simp only [pow_oneₓ]
     
   let n := k.succ
   have h1 := add_nonneg (mul_nonneg hx (pow_nonneg hy n)) (mul_nonneg hy (pow_nonneg hx n))
@@ -176,7 +176,7 @@ theorem pow_lt_pow_of_lt_left (Hxy : x < y) (Hxpos : 0 ≤ x) (Hnpos : 0 < n) : 
   cases lt_or_eq_of_leₓ Hxpos
   · rw [← tsub_add_cancel_of_le (Nat.succ_le_of_ltₓ Hnpos)]
     induction n - 1
-    · simpa only [← pow_oneₓ]
+    · simpa only [pow_oneₓ]
       
     rw [pow_addₓ, pow_addₓ, Nat.succ_eq_add_one, pow_oneₓ, pow_oneₓ]
     apply mul_lt_mul ih (le_of_ltₓ Hxy) h (le_of_ltₓ (pow_pos (lt_transₓ h Hxy) _))
@@ -199,7 +199,7 @@ theorem one_le_pow_of_one_le (H : 1 ≤ a) : ∀ n : ℕ, 1 ≤ a ^ n
     rw [pow_zeroₓ]
   | n + 1 => by
     rw [pow_succₓ]
-    simpa only [← mul_oneₓ] using mul_le_mul H (one_le_pow_of_one_le n) zero_le_one (le_transₓ zero_le_one H)
+    simpa only [mul_oneₓ] using mul_le_mul H (one_le_pow_of_one_le n) zero_le_one (le_transₓ zero_le_one H)
 
 theorem pow_mono (h : 1 ≤ a) : Monotone fun n : ℕ => a ^ n :=
   monotone_nat_of_le_succ fun n => by
@@ -210,12 +210,12 @@ theorem pow_le_pow (ha : 1 ≤ a) (h : n ≤ m) : a ^ n ≤ a ^ m :=
   pow_mono ha h
 
 theorem le_self_pow (ha : 1 ≤ a) (h : 1 ≤ m) : a ≤ a ^ m :=
-  Eq.trans_le (pow_oneₓ a).symm (pow_le_pow ha h)
+  Eq.trans_leₓ (pow_oneₓ a).symm (pow_le_pow ha h)
 
 theorem strict_mono_pow (h : 1 < a) : StrictMono fun n : ℕ => a ^ n :=
   have : 0 < a := zero_le_one.trans_lt h
   strict_mono_nat_of_lt_succ fun n => by
-    simpa only [← one_mulₓ, ← pow_succₓ] using mul_lt_mul h (le_reflₓ (a ^ n)) (pow_pos this _) this.le
+    simpa only [one_mulₓ, pow_succₓ] using mul_lt_mul h (le_reflₓ (a ^ n)) (pow_pos this _) this.le
 
 theorem pow_lt_pow (h : 1 < a) (h2 : n < m) : a ^ n < a ^ m :=
   strict_mono_pow h h2
@@ -228,7 +228,7 @@ theorem pow_le_pow_iff (h : 1 < a) : a ^ n ≤ a ^ m ↔ n ≤ m :=
 
 theorem strict_anti_pow (h₀ : 0 < a) (h₁ : a < 1) : StrictAnti fun n : ℕ => a ^ n :=
   strict_anti_nat_of_succ_lt fun n => by
-    simpa only [← pow_succₓ, ← one_mulₓ] using mul_lt_mul h₁ le_rfl (pow_pos h₀ n) zero_le_one
+    simpa only [pow_succₓ, one_mulₓ] using mul_lt_mul h₁ le_rflₓ (pow_pos h₀ n) zero_le_one
 
 theorem pow_lt_pow_iff_of_lt_one (h₀ : 0 < a) (h₁ : a < 1) : a ^ m < a ^ n ↔ n < m :=
   (strict_anti_pow h₀ h₁).lt_iff_lt
@@ -290,10 +290,10 @@ theorem one_le_pow_iff_of_nonneg {a : R} (ha : 0 ≤ a) {n : ℕ} (hn : n ≠ 0)
   exact mt fun h => pow_lt_one ha h hn
 
 theorem one_lt_pow_iff_of_nonneg {a : R} (ha : 0 ≤ a) {n : ℕ} (hn : n ≠ 0) : 1 < a ^ n ↔ 1 < a :=
-  lt_iff_lt_of_le_iff_le (pow_le_one_iff_of_nonneg ha hn)
+  lt_iff_lt_of_le_iff_leₓ (pow_le_one_iff_of_nonneg ha hn)
 
 theorem pow_lt_one_iff_of_nonneg {a : R} (ha : 0 ≤ a) {n : ℕ} (hn : n ≠ 0) : a ^ n < 1 ↔ a < 1 :=
-  lt_iff_lt_of_le_iff_le (one_le_pow_iff_of_nonneg ha hn)
+  lt_iff_lt_of_le_iff_leₓ (one_le_pow_iff_of_nonneg ha hn)
 
 theorem sq_le_one_iff {a : R} (ha : 0 ≤ a) : a ^ 2 ≤ 1 ↔ a ≤ 1 :=
   pow_le_one_iff_of_nonneg ha (Nat.succ_ne_zero _)
@@ -315,7 +315,7 @@ theorem lt_of_pow_lt_pow {a b : R} (n : ℕ) (hb : 0 ≤ b) (h : a ^ n < b ^ n) 
   lt_of_not_geₓ fun hn => not_lt_of_geₓ (pow_le_pow_of_le_left hb hn _) h
 
 theorem le_of_pow_le_pow {a b : R} (n : ℕ) (hb : 0 ≤ b) (hn : 0 < n) (h : a ^ n ≤ b ^ n) : a ≤ b :=
-  le_of_not_ltₓ fun h1 => not_le_of_lt (pow_lt_pow_of_lt_left h1 hb hn) h
+  le_of_not_ltₓ fun h1 => not_le_of_ltₓ (pow_lt_pow_of_lt_left h1 hb hn) h
 
 @[simp]
 theorem sq_eq_sq {a b : R} (ha : 0 ≤ a) (hb : 0 ≤ b) : a ^ 2 = b ^ 2 ↔ a = b :=
@@ -368,19 +368,19 @@ theorem sq_pos_iff (a : R) : 0 < a ^ 2 ↔ a ≠ 0 :=
 variable {x y : R}
 
 theorem sq_abs (x : R) : abs x ^ 2 = x ^ 2 := by
-  simpa only [← sq] using abs_mul_abs_self x
+  simpa only [sq] using abs_mul_abs_self x
 
 theorem abs_sq (x : R) : abs (x ^ 2) = x ^ 2 := by
-  simpa only [← sq] using abs_mul_self x
+  simpa only [sq] using abs_mul_self x
 
 theorem sq_lt_sq : x ^ 2 < y ^ 2 ↔ abs x < abs y := by
-  simpa only [← sq_abs] using (@strict_mono_on_pow R _ _ two_pos).lt_iff_lt (abs_nonneg x) (abs_nonneg y)
+  simpa only [sq_abs] using (@strict_mono_on_pow R _ _ two_pos).lt_iff_lt (abs_nonneg x) (abs_nonneg y)
 
 theorem sq_lt_sq' (h1 : -y < x) (h2 : x < y) : x ^ 2 < y ^ 2 :=
   sq_lt_sq.2 (lt_of_lt_of_leₓ (abs_lt.2 ⟨h1, h2⟩) (le_abs_self _))
 
 theorem sq_le_sq : x ^ 2 ≤ y ^ 2 ↔ abs x ≤ abs y := by
-  simpa only [← sq_abs] using (@strict_mono_on_pow R _ _ two_pos).le_iff_le (abs_nonneg x) (abs_nonneg y)
+  simpa only [sq_abs] using (@strict_mono_on_pow R _ _ two_pos).le_iff_le (abs_nonneg x) (abs_nonneg y)
 
 theorem sq_le_sq' (h1 : -y ≤ x) (h2 : x ≤ y) : x ^ 2 ≤ y ^ 2 :=
   sq_le_sq.2 (le_transₓ (abs_le.mpr ⟨h1, h2⟩) (le_abs_self _))
@@ -398,23 +398,23 @@ theorem abs_le_of_sq_le_sq' (h : x ^ 2 ≤ y ^ 2) (hy : 0 ≤ y) : -y ≤ x ∧ 
   abs_le.mp <| abs_le_of_sq_le_sq h hy
 
 theorem sq_eq_sq_iff_abs_eq_abs (x y : R) : x ^ 2 = y ^ 2 ↔ abs x = abs y := by
-  simp only [← le_antisymm_iffₓ, ← sq_le_sq]
+  simp only [le_antisymm_iffₓ, sq_le_sq]
 
 @[simp]
 theorem sq_le_one_iff_abs_le_one (x : R) : x ^ 2 ≤ 1 ↔ abs x ≤ 1 := by
-  simpa only [← one_pow, ← abs_one] using @sq_le_sq _ _ x 1
+  simpa only [one_pow, abs_one] using @sq_le_sq _ _ x 1
 
 @[simp]
 theorem sq_lt_one_iff_abs_lt_one (x : R) : x ^ 2 < 1 ↔ abs x < 1 := by
-  simpa only [← one_pow, ← abs_one] using @sq_lt_sq _ _ x 1
+  simpa only [one_pow, abs_one] using @sq_lt_sq _ _ x 1
 
 @[simp]
 theorem one_le_sq_iff_one_le_abs (x : R) : 1 ≤ x ^ 2 ↔ 1 ≤ abs x := by
-  simpa only [← one_pow, ← abs_one] using @sq_le_sq _ _ 1 x
+  simpa only [one_pow, abs_one] using @sq_le_sq _ _ 1 x
 
 @[simp]
 theorem one_lt_sq_iff_one_lt_abs (x : R) : 1 < x ^ 2 ↔ 1 < abs x := by
-  simpa only [← one_pow, ← abs_one] using @sq_lt_sq _ _ 1 x
+  simpa only [one_pow, abs_one] using @sq_lt_sq _ _ 1 x
 
 theorem pow_four_le_pow_two_of_pow_two_le {x y : R} (h : x ^ 2 ≤ y) : x ^ 4 ≤ y ^ 2 :=
   (pow_mulₓ x 2 2).symm ▸ pow_le_pow_of_le_left (sq_nonneg x) h 2

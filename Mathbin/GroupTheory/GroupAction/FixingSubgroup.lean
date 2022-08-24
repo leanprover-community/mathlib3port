@@ -51,7 +51,7 @@ def fixingSubmonoid (s : Set α) : Submonoid M where
   mul_mem' := fun x y hx hy z => by
     rw [mul_smul, hy z, hx z]
 
-theorem mem_fixing_submonoid_iff {s : Set α} {m : M} : m ∈ fixingSubmonoid M s ↔ ∀, ∀ y ∈ s, ∀, m • y = y :=
+theorem mem_fixing_submonoid_iff {s : Set α} {m : M} : m ∈ fixingSubmonoid M s ↔ ∀ y ∈ s, m • y = y :=
   ⟨fun hg y hy => hg ⟨y, hy⟩, fun h ⟨y, hy⟩ => h y hy⟩
 
 variable (α)
@@ -101,7 +101,7 @@ def fixingSubgroup (s : Set α) : Subgroup M :=
     inv_mem' := fun _ hx z => by
       rw [inv_smul_eq_iff, hx z] }
 
-theorem mem_fixing_subgroup_iff {s : Set α} {m : M} : m ∈ fixingSubgroup M s ↔ ∀, ∀ y ∈ s, ∀, m • y = y :=
+theorem mem_fixing_subgroup_iff {s : Set α} {m : M} : m ∈ fixingSubgroup M s ↔ ∀ y ∈ s, m • y = y :=
   ⟨fun hg y hy => hg ⟨y, hy⟩, fun h ⟨y, hy⟩ => h y hy⟩
 
 variable (α)

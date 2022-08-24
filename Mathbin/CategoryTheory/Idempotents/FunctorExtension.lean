@@ -47,10 +47,10 @@ namespace FunctorExtension₁
 def obj (F : C ⥤ Karoubi D) : Karoubi C ⥤ Karoubi D where
   obj := fun P =>
     ⟨(F.obj P.x).x, (F.map P.p).f, by
-      simpa only [← F.map_comp, ← hom_ext] using F.congr_map P.idem⟩
+      simpa only [F.map_comp, hom_ext] using F.congr_map P.idem⟩
   map := fun P Q f =>
     ⟨(F.map f.f).f, by
-      simpa only [← F.map_comp, ← hom_ext] using F.congr_map f.comm⟩
+      simpa only [F.map_comp, hom_ext] using F.congr_map f.comm⟩
 
 /-- Extension of a natural transformation `φ` between functors
 `C ⥤ karoubi D` to a natural transformation between the
@@ -62,16 +62,16 @@ def map {F G : C ⥤ Karoubi D} (φ : F ⟶ G) : obj F ⟶ obj G where
       comm := by
         have h := φ.naturality P.p
         have h' := F.congr_map P.idem
-        simp only [← hom_ext, ← karoubi.comp, ← F.map_comp] at h h'
-        simp only [← obj_obj_p, ← assoc, h]
+        simp only [hom_ext, karoubi.comp, F.map_comp] at h h'
+        simp only [obj_obj_p, assoc, ← h]
         slice_rhs 1 3 => rw [h', h'] }
   naturality' := fun P Q f => by
     ext
-    dsimp' [← obj]
+    dsimp' [obj]
     have h := φ.naturality f.f
     have h' := F.congr_map (comp_p f)
     have h'' := F.congr_map (p_comp f)
-    simp only [← hom_ext, ← functor.map_comp, ← comp] at h h' h''⊢
+    simp only [hom_ext, functor.map_comp, comp] at h h' h''⊢
     slice_rhs 2 3 => rw [← h]
     slice_lhs 1 2 => rw [h']
     slice_rhs 1 2 => rw [h'']
@@ -90,13 +90,13 @@ def functorExtension₁ : (C ⥤ Karoubi D) ⥤ Karoubi C ⥤ Karoubi D where
     exact comp_p (F.map P.p)
   map_comp' := fun F G H φ φ' => by
     ext P
-    simp only [← comp, ← functor_extension₁.map_app_f, ← nat_trans.comp_app, ← assoc]
+    simp only [comp, functor_extension₁.map_app_f, nat_trans.comp_app, assoc]
     have h := φ.naturality P.p
     have h' := F.congr_map P.idem
-    simp only [← hom_ext, ← comp, ← F.map_comp] at h h'
+    simp only [hom_ext, comp, F.map_comp] at h h'
     slice_rhs 2 3 => rw [← h]
     slice_rhs 1 2 => rw [h']
-    simp only [← assoc]
+    simp only [assoc]
 
 theorem functor_extension₁_comp_whiskering_left_to_karoubi :
     functorExtension₁ C D ⋙ (whiskeringLeft C (Karoubi C) (Karoubi D)).obj (toKaroubi C) = 𝟭 _ := by
@@ -114,17 +114,16 @@ theorem functor_extension₁_comp_whiskering_left_to_karoubi :
     · intro X Y f
       ext
       dsimp'
-      simp only [← comp_id, ← eq_to_hom_f, ← eq_to_hom_refl, ← comp_p, ← functor_extension₁.obj_obj_p, ←
-        to_karoubi_obj_p, ← comp]
+      simp only [comp_id, eq_to_hom_f, eq_to_hom_refl, comp_p, functor_extension₁.obj_obj_p, to_karoubi_obj_p, comp]
       dsimp'
-      simp only [← Functor.map_id, ← id_eq, ← p_comp]
+      simp only [Functor.map_id, id_eq, p_comp]
       
     
   · intro F G φ
     ext X
     dsimp'
-    simp only [← eq_to_hom_app, ← F.map_id, ← karoubi.comp, ← eq_to_hom_f, ← id_eq, ← p_comp, ← eq_to_hom_refl, ←
-      comp_id, ← comp_p, ← functor_extension₁.obj_obj_p, ← to_karoubi_obj_p, ← F.map_id X]
+    simp only [eq_to_hom_app, F.map_id, karoubi.comp, eq_to_hom_f, id_eq, p_comp, eq_to_hom_refl, comp_id, comp_p,
+      functor_extension₁.obj_obj_p, to_karoubi_obj_p, F.map_id X]
     
 
 end Idempotents

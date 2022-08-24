@@ -156,11 +156,11 @@ def LocallyFiniteOrder.ofIcc (α : Type _) [PartialOrderₓ α] [DecidableEq α]
     finsetIoc := fun a b => (finset_Icc a b).filter fun x => a ≠ x,
     finsetIoo := fun a b => (finset_Icc a b).filter fun x => a ≠ x ∧ x ≠ b, finset_mem_Icc := mem_Icc,
     finset_mem_Ico := fun a b x => by
-      rw [Finset.mem_filter, mem_Icc, and_assoc, lt_iff_le_and_ne],
+      rw [Finset.mem_filter, mem_Icc, and_assoc, lt_iff_le_and_neₓ],
     finset_mem_Ioc := fun a b x => by
-      rw [Finset.mem_filter, mem_Icc, And.right_comm, lt_iff_le_and_ne],
+      rw [Finset.mem_filter, mem_Icc, And.right_comm, lt_iff_le_and_neₓ],
     finset_mem_Ioo := fun a b x => by
-      rw [Finset.mem_filter, mem_Icc, and_and_and_comm, lt_iff_le_and_ne, lt_iff_le_and_ne] }
+      rw [Finset.mem_filter, mem_Icc, and_and_and_comm, lt_iff_le_and_neₓ, lt_iff_le_and_neₓ] }
 
 /-- A constructor from a definition of `finset.Iic` alone, the other ones being derived by removing
 the ends. As opposed to `locally_finite_order_top.of_Ici`, this one requires `decidable_rel (≤)` but
@@ -178,7 +178,7 @@ def LocallyFiniteOrderTop.ofIci (α : Type _) [PartialOrderₓ α] [DecidableEq 
     (mem_Ici : ∀ a x, x ∈ finset_Ici a ↔ a ≤ x) : LocallyFiniteOrderTop α :=
   { finsetIci, finsetIoi := fun a => (finset_Ici a).filter fun x => a ≠ x, finset_mem_Ici := mem_Ici,
     finset_mem_Ioi := fun a x => by
-      rw [mem_filter, mem_Ici, lt_iff_le_and_ne] }
+      rw [mem_filter, mem_Ici, lt_iff_le_and_neₓ] }
 
 /-- A constructor from a definition of `finset.Iic` alone, the other ones being derived by removing
 the ends. As opposed to `locally_finite_order.of_Icc`, this one requires `decidable_rel (≤)` but
@@ -196,7 +196,7 @@ def LocallyFiniteOrderTop.ofIic (α : Type _) [PartialOrderₓ α] [DecidableEq 
     (mem_Iic : ∀ a x, x ∈ finset_Iic a ↔ x ≤ a) : LocallyFiniteOrderBot α :=
   { finsetIic, finsetIio := fun a => (finset_Iic a).filter fun x => x ≠ a, finset_mem_Iic := mem_Iic,
     finset_mem_Iio := fun a x => by
-      rw [mem_filter, mem_Iic, lt_iff_le_and_ne] }
+      rw [mem_filter, mem_Iic, lt_iff_le_and_neₓ] }
 
 variable {α β : Type _}
 
@@ -609,13 +609,13 @@ def Fintype.toLocallyFiniteOrder [Fintype α] [@DecidableRel α (· < ·)] [@Dec
   finsetIoc := fun a b => (Set.Ioc a b).toFinset
   finsetIoo := fun a b => (Set.Ioo a b).toFinset
   finset_mem_Icc := fun a b x => by
-    simp only [← Set.mem_to_finset, ← Set.mem_Icc]
+    simp only [Set.mem_to_finset, Set.mem_Icc]
   finset_mem_Ico := fun a b x => by
-    simp only [← Set.mem_to_finset, ← Set.mem_Ico]
+    simp only [Set.mem_to_finset, Set.mem_Ico]
   finset_mem_Ioc := fun a b x => by
-    simp only [← Set.mem_to_finset, ← Set.mem_Ioc]
+    simp only [Set.mem_to_finset, Set.mem_Ioc]
   finset_mem_Ioo := fun a b x => by
-    simp only [← Set.mem_to_finset, ← Set.mem_Ioo]
+    simp only [Set.mem_to_finset, Set.mem_Ioo]
 
 instance : Subsingleton (LocallyFiniteOrder α) :=
   Subsingleton.intro fun h₀ h₁ => by
@@ -872,46 +872,46 @@ instance : LocallyFiniteOrder (WithTop α) where
     | ⊤, ⊤, x => mem_singleton.trans (le_antisymm_iffₓ.trans <| and_comm _ _)
     | ⊤, (b : α), x => iff_of_false (not_mem_empty _) fun h => (h.1.trans h.2).not_lt <| coe_lt_top _
     | (a : α), ⊤, ⊤ => by
-      simp [← WithTop.LocallyFiniteOrder._match1]
+      simp [WithTop.LocallyFiniteOrder._match1]
     | (a : α), ⊤, (x : α) => by
-      simp [← WithTop.LocallyFiniteOrder._match1, ← coe_eq_coe]
+      simp [WithTop.LocallyFiniteOrder._match1, coe_eq_coe]
     | (a : α), (b : α), ⊤ => by
-      simp [← WithTop.LocallyFiniteOrder._match1]
+      simp [WithTop.LocallyFiniteOrder._match1]
     | (a : α), (b : α), (x : α) => by
-      simp [← WithTop.LocallyFiniteOrder._match1, ← coe_eq_coe]
+      simp [WithTop.LocallyFiniteOrder._match1, coe_eq_coe]
   finset_mem_Ico := fun a b x =>
     match a, b, x with
     | ⊤, b, x => iff_of_false (not_mem_empty _) fun h => not_top_lt <| h.1.trans_lt h.2
     | (a : α), ⊤, ⊤ => by
-      simp [← WithTop.LocallyFiniteOrder._match2]
+      simp [WithTop.LocallyFiniteOrder._match2]
     | (a : α), ⊤, (x : α) => by
-      simp [← WithTop.LocallyFiniteOrder._match2, ← coe_eq_coe, ← coe_lt_top]
+      simp [WithTop.LocallyFiniteOrder._match2, coe_eq_coe, coe_lt_top]
     | (a : α), (b : α), ⊤ => by
-      simp [← WithTop.LocallyFiniteOrder._match2]
+      simp [WithTop.LocallyFiniteOrder._match2]
     | (a : α), (b : α), (x : α) => by
-      simp [← WithTop.LocallyFiniteOrder._match2, ← coe_eq_coe, ← coe_lt_coe]
+      simp [WithTop.LocallyFiniteOrder._match2, coe_eq_coe, coe_lt_coe]
   finset_mem_Ioc := fun a b x =>
     match a, b, x with
     | ⊤, b, x => iff_of_false (not_mem_empty _) fun h => not_top_lt <| h.1.trans_le h.2
     | (a : α), ⊤, ⊤ => by
-      simp [← WithTop.LocallyFiniteOrder._match3, ← coe_lt_top]
+      simp [WithTop.LocallyFiniteOrder._match3, coe_lt_top]
     | (a : α), ⊤, (x : α) => by
-      simp [← WithTop.LocallyFiniteOrder._match3, ← coe_eq_coe, ← coe_lt_coe]
+      simp [WithTop.LocallyFiniteOrder._match3, coe_eq_coe, coe_lt_coe]
     | (a : α), (b : α), ⊤ => by
-      simp [← WithTop.LocallyFiniteOrder._match3]
+      simp [WithTop.LocallyFiniteOrder._match3]
     | (a : α), (b : α), (x : α) => by
-      simp [← WithTop.LocallyFiniteOrder._match3, ← coe_eq_coe, ← coe_lt_coe]
+      simp [WithTop.LocallyFiniteOrder._match3, coe_eq_coe, coe_lt_coe]
   finset_mem_Ioo := fun a b x =>
     match a, b, x with
     | ⊤, b, x => iff_of_false (not_mem_empty _) fun h => not_top_lt <| h.1.trans h.2
     | (a : α), ⊤, ⊤ => by
-      simp [← WithTop.LocallyFiniteOrder._match4, ← coe_lt_top]
+      simp [WithTop.LocallyFiniteOrder._match4, coe_lt_top]
     | (a : α), ⊤, (x : α) => by
-      simp [← WithTop.LocallyFiniteOrder._match4, ← coe_eq_coe, ← coe_lt_coe, ← coe_lt_top]
+      simp [WithTop.LocallyFiniteOrder._match4, coe_eq_coe, coe_lt_coe, coe_lt_top]
     | (a : α), (b : α), ⊤ => by
-      simp [← WithTop.LocallyFiniteOrder._match4]
+      simp [WithTop.LocallyFiniteOrder._match4]
     | (a : α), (b : α), (x : α) => by
-      simp [← WithTop.LocallyFiniteOrder._match4, ← coe_eq_coe, ← coe_lt_coe]
+      simp [WithTop.LocallyFiniteOrder._match4, coe_eq_coe, coe_lt_coe]
 
 variable (a b : α)
 

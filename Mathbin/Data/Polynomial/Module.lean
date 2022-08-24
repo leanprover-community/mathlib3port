@@ -98,15 +98,15 @@ instance (M : Type u) [AddCommGroupₓ M] [Module R M] : IsScalarTower R R[X] (P
 @[simp]
 theorem monomial_smul_single (i : ℕ) (r : R) (j : ℕ) (m : M) : monomial i r • single R j m = single R (i + j) (r • m) :=
   by
-  simp only [← LinearMap.mul_apply, ← Polynomial.aeval_monomial, ← LinearMap.pow_apply, ← Module.algebra_map_End_apply,
-    ← module_polynomial_of_endo_smul_def]
+  simp only [LinearMap.mul_apply, Polynomial.aeval_monomial, LinearMap.pow_apply, Module.algebra_map_End_apply,
+    module_polynomial_of_endo_smul_def]
   induction i generalizing r j m
-  · simp [← single]
+  · simp [single]
     
   · rw [Function.iterate_succ, Function.comp_app, Nat.succ_eq_add_one, add_assocₓ, ← i_ih]
     congr 2
     ext a
-    dsimp' [← single]
+    dsimp' [single]
     rw [Finsupp.map_domain_single, Nat.succ_eq_one_add]
     
 
@@ -114,9 +114,9 @@ theorem monomial_smul_single (i : ℕ) (r : R) (j : ℕ) (m : M) : monomial i r 
 theorem monomial_smul_apply (i : ℕ) (r : R) (g : PolynomialModule R M) (n : ℕ) :
     (monomial i r • g) n = ite (i ≤ n) (r • g (n - i)) 0 := by
   induction' g using PolynomialModule.induction_linear with p q hp hq
-  · simp only [← smul_zero, ← Finsupp.zero_apply, ← if_t_t]
+  · simp only [smul_zero, Finsupp.zero_apply, if_t_t]
     
-  · simp only [← smul_add, ← Finsupp.add_apply, ← hp, ← hq]
+  · simp only [smul_add, Finsupp.add_apply, hp, hq]
     split_ifs
     exacts[rfl, zero_addₓ 0]
     
@@ -160,10 +160,10 @@ theorem smul_apply (f : R[X]) (g : PolynomialModule R M) (n : ℕ) :
     rw [coeff_add, add_smul]
     
   · rw [Finset.Nat.sum_antidiagonal_eq_sum_range_succ fun i j => (monomial f_n f_a).coeff i • g j, monomial_smul_apply]
-    dsimp' [← monomial]
+    dsimp' [monomial]
     simp_rw [Finsupp.single_smul, Finsupp.single_apply]
     rw [Finset.sum_ite_eq]
-    simp [← Nat.lt_succ_iffₓ]
+    simp [Nat.lt_succ_iffₓ]
     
 
 /-- `polynomial R R` is isomorphic to `R[X]` as an `R[X]` module. -/
@@ -171,7 +171,7 @@ noncomputable def equivPolynomialSelf : PolynomialModule R R ≃ₗ[R[X]] R[X] :
   { (Polynomial.toFinsuppIso R).symm with
     map_smul' := fun r x => by
       induction' r using Polynomial.induction_on' with _ _ _ _ n p
-      · simp_all only [← add_smul, ← map_add, ← RingEquiv.to_fun_eq_coe]
+      · simp_all only [add_smul, map_add, RingEquiv.to_fun_eq_coe]
         
       · ext i
         dsimp'

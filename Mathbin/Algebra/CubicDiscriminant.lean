@@ -67,10 +67,10 @@ section Coeff
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 private theorem coeffs :
-    (∀, ∀ n > 3, ∀, P.toPoly.coeff n = 0) ∧
+    (∀ n > 3, P.toPoly.coeff n = 0) ∧
       P.toPoly.coeff 3 = P.a ∧ P.toPoly.coeff 2 = P.b ∧ P.toPoly.coeff 1 = P.c ∧ P.toPoly.coeff 0 = P.d :=
   by
-  simp only [← to_poly, ← coeff_add, ← coeff_C, ← coeff_C_mul_X, ← coeff_C_mul_X_pow]
+  simp only [to_poly, coeff_add, coeff_C, coeff_C_mul_X, coeff_C_mul_X_pow]
   norm_num
   intro n hn
   repeat'
@@ -170,9 +170,9 @@ def equiv : Cubic R ≃ { p : R[X] // p.degree ≤ 3 } where
   toFun := fun P => ⟨P.toPoly, degree_cubic_le⟩
   invFun := fun f => ⟨coeff f 3, coeff f 2, coeff f 1, coeff f 0⟩
   left_inv := fun P => by
-    ext <;> simp only [← Subtype.coe_mk, ← coeffs]
+    ext <;> simp only [Subtype.coe_mk, coeffs]
   right_inv := fun f => by
-    ext (_ | _ | _ | _ | n) <;> simp only [← Subtype.coe_mk, ← coeffs]
+    ext (_ | _ | _ | _ | n) <;> simp only [Subtype.coe_mk, coeffs]
     have h3 : 3 < n + 4 := by
       linarith only
     rw [coeff_gt_three _ h3, (degree_le_iff_coeff_zero (f : R[X]) 3).mp f.2 _ <| with_bot.coe_lt_coe.mpr h3]
@@ -218,7 +218,7 @@ def map (φ : R →+* S) (P : Cubic R) : Cubic S :=
   ⟨φ P.a, φ P.b, φ P.c, φ P.d⟩
 
 theorem map_to_poly : (map φ P).toPoly = Polynomial.map φ P.toPoly := by
-  simp only [← map, ← to_poly, ← map_C, ← map_X, ← Polynomial.map_add, ← Polynomial.map_mul, ← Polynomial.map_pow]
+  simp only [map, to_poly, map_C, map_X, Polynomial.map_add, Polynomial.map_mul, Polynomial.map_pow]
 
 end Map
 
@@ -245,7 +245,7 @@ theorem map_roots [IsDomain S] : (map φ P).roots = (Polynomial.map φ P.toPoly)
 theorem mem_roots_iff [IsDomain R] (h0 : P.toPoly ≠ 0) (x : R) :
     x ∈ P.roots ↔ P.a * x ^ 3 + P.b * x ^ 2 + P.c * x + P.d = 0 := by
   rw [roots, mem_roots h0, is_root, to_poly]
-  simp only [← eval_C, ← eval_X, ← eval_add, ← eval_mul, ← eval_pow]
+  simp only [eval_C, eval_X, eval_add, eval_mul, eval_pow]
 
 theorem card_roots_le [IsDomain R] [DecidableEq R] : P.roots.toFinset.card ≤ 3 := by
   apply (to_finset_card_le P.to_poly.roots).trans
@@ -269,7 +269,7 @@ variable {P : Cubic F} [Field F] [Field K] {φ : F →+* K} {x y z : K}
 section Split
 
 theorem splits_iff_card_roots (ha : P.a ≠ 0) : Splits φ P.toPoly ↔ (map φ P).roots.card = 3 := by
-  replace ha : (map φ P).a ≠ 0 := (RingHom.map_ne_zero φ).mpr ha
+  replace ha : (map φ P).a ≠ 0 := (_root_.map_ne_zero φ).mpr ha
   nth_rw_lhs 0[← RingHom.id_comp φ]
   rw [roots, ← splits_map_iff, ← map_to_poly, splits_iff_card_roots, ←
     ((degree_eq_iff_nat_degree_eq <| ne_zero_of_a_ne_zero ha).mp <| degree ha : _ = 3)]
@@ -293,7 +293,7 @@ theorem eq_sum_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) 
   any_goals {
   }
   rw [eq_prod_three_roots ha h3, to_poly]
-  simp only [← C_neg, ← C_add, ← C_mul]
+  simp only [C_neg, C_add, C_mul]
   ring1
 
 theorem b_eq_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) : φ P.b = φ P.a * -(x + y + z) := by
@@ -319,24 +319,22 @@ def disc {R : Type _} [Ringₓ R] (P : Cubic R) : R :=
 
 theorem disc_eq_prod_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) :
     φ P.disc = (φ P.a * φ P.a * (x - y) * (x - z) * (y - z)) ^ 2 := by
-  simp only [← disc, ← RingHom.map_add, ← RingHom.map_sub, ← RingHom.map_mul, ← map_pow]
-  simp only [← RingHom.map_one, ← map_bit0, ← map_bit1]
+  simp only [disc, RingHom.map_add, RingHom.map_sub, RingHom.map_mul, map_pow]
+  simp only [RingHom.map_one, map_bit0, map_bit1]
   rw [b_eq_three_roots ha h3, c_eq_three_roots ha h3, d_eq_three_roots ha h3]
   ring1
 
 theorem disc_ne_zero_iff_roots_ne (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) :
     P.disc ≠ 0 ↔ x ≠ y ∧ x ≠ z ∧ y ≠ z := by
-  rw [← RingHom.map_ne_zero φ, disc_eq_prod_three_roots ha h3, pow_two]
-  simp only [← mul_ne_zero_iff, ← sub_ne_zero]
-  rw [RingHom.map_ne_zero]
-  tauto
+  rw [← _root_.map_ne_zero φ, disc_eq_prod_three_roots ha h3, pow_two]
+  simp_rw [mul_ne_zero_iff, sub_ne_zero, _root_.map_ne_zero, and_selfₓ, and_iff_right ha, and_assoc]
 
 theorem disc_ne_zero_iff_roots_nodup (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) :
     P.disc ≠ 0 ↔ (map φ P).roots.Nodup := by
   rw [disc_ne_zero_iff_roots_ne ha h3, h3]
   change _ ↔ (x ::ₘ y ::ₘ {z}).Nodup
   rw [nodup_cons, nodup_cons, mem_cons, mem_singleton, mem_singleton]
-  simp only [← nodup_singleton]
+  simp only [nodup_singleton]
   tauto
 
 theorem card_roots_of_disc_ne_zero [DecidableEq K] (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) (hd : P.disc ≠ 0) :

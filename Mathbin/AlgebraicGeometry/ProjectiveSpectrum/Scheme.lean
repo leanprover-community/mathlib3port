@@ -127,14 +127,14 @@ def degreeZeroPart {f : A} {m : ℕ} (f_deg : f ∈ 𝒜 m) : Subring (Away f) w
           ⟨⟨a.1 * b.1, (mul_addₓ m n n').symm ▸ mul_mem a.2 b.2⟩, by
             rw [mk_mul]
             congr 1
-            simp only [← pow_addₓ]
+            simp only [pow_addₓ]
             rfl⟩⟩
   one_mem' :=
     ⟨0, ⟨1, (mul_zero m).symm ▸ one_mem⟩, by
       symm
       rw [Subtype.coe_mk]
       convert ← mk_self 1
-      simp only [← pow_zeroₓ]
+      simp only [pow_zeroₓ]
       rfl⟩
   add_mem' := fun _ _ ⟨n, ⟨a, h⟩⟩ ⟨n', ⟨b, h'⟩⟩ =>
     h.symm ▸
@@ -156,7 +156,7 @@ def degreeZeroPart {f : A} {m : ℕ} (f_deg : f ∈ 𝒜 m) : Subring (Away f) w
             by
             rw [add_mk]
             congr 1
-            simp only [← pow_addₓ]
+            simp only [pow_addₓ]
             rfl⟩⟩
   zero_mem' := ⟨0, ⟨0, (mk_zero _).symm⟩⟩
   neg_mem' := fun x ⟨n, ⟨a, h⟩⟩ => h.symm ▸ ⟨n, ⟨-a, neg_mk _ _⟩⟩
@@ -224,7 +224,7 @@ theorem mem_carrier_iff (z : A⁰_f_deg) :
   Iff.rfl
 
 theorem MemCarrier.clear_denominator [DecidableEq (Away f)] {z : A⁰_f_deg} (hz : z ∈ carrier f_deg x) :
-    ∃ (c : algebraMap A (Away f) '' x.1.asHomogeneousIdeal →₀ Away f)(N : ℕ)(acd : ∀, ∀ y ∈ c.Support.Image c, ∀, A),
+    ∃ (c : algebraMap A (Away f) '' x.1.asHomogeneousIdeal →₀ Away f)(N : ℕ)(acd : ∀ y ∈ c.Support.Image c, A),
       f ^ N • ↑z =
         algebraMap A (Away f)
           (∑ i in c.Support.attach, acd (c i) (Finset.mem_image.mpr ⟨i, ⟨i.2, rfl⟩⟩) * Classical.some i.1.2) :=
@@ -269,7 +269,7 @@ theorem carrier_ne_top : carrier f_deg x ≠ ⊤ := by
   obtain ⟨c, N, acd, eq1⟩ := mem_carrier.clear_denominator _ x ((Ideal.eq_top_iff_one _).mp eq_top)
   rw [Algebra.smul_def, Subring.coe_one, mul_oneₓ] at eq1
   change Localization.mk (f ^ N) 1 = mk (∑ _, _) 1 at eq1
-  simp only [← mk_eq_mk', ← IsLocalization.eq] at eq1
+  simp only [mk_eq_mk', IsLocalization.eq] at eq1
   rcases eq1 with ⟨⟨_, ⟨M, rfl⟩⟩, eq1⟩
   erw [mul_oneₓ, mul_oneₓ] at eq1
   change f ^ _ * f ^ _ = _ * f ^ _ at eq1
@@ -292,10 +292,10 @@ def toFun (x : Proj.T| pbo f) : Spec.T A⁰_f_deg :=
     induction' x2 using Localization.induction_on with data_x2
     rcases data_x1, data_x2 with ⟨⟨a1, _, ⟨n1, rfl⟩⟩, ⟨a2, _, ⟨n2, rfl⟩⟩⟩
     rcases mem_carrier.clear_denominator f_deg x hx12 with ⟨c, N, acd, eq1⟩
-    simp only [← degree_zero_part.coe_mul, ← Algebra.smul_def] at eq1
+    simp only [degree_zero_part.coe_mul, Algebra.smul_def] at eq1
     change Localization.mk (f ^ N) 1 * (mk _ _ * mk _ _) = mk (∑ _, _) _ at eq1
-    simp only [← Localization.mk_mul, ← one_mulₓ] at eq1
-    simp only [← mk_eq_mk', ← IsLocalization.eq] at eq1
+    simp only [Localization.mk_mul, one_mulₓ] at eq1
+    simp only [mk_eq_mk', IsLocalization.eq] at eq1
     rcases eq1 with ⟨⟨_, ⟨M, rfl⟩⟩, eq1⟩
     rw [Submonoid.coe_one, mul_oneₓ] at eq1
     change _ * _ * f ^ _ = _ * (f ^ _ * f ^ _) * f ^ _ at eq1
@@ -304,15 +304,15 @@ def toFun (x : Proj.T| pbo f) : Spec.T A⁰_f_deg :=
     rcases x.1.IsPrime.mem_or_mem h1 with (h1 | h2)
     · left
       rw [mem_carrier_iff]
-      simp only [←
-        show (mk a1 ⟨f ^ n1, _⟩ : away f) = mk a1 1 * mk 1 ⟨f ^ n1, ⟨n1, rfl⟩⟩ by
+      simp only
+        [show (mk a1 ⟨f ^ n1, _⟩ : away f) = mk a1 1 * mk 1 ⟨f ^ n1, ⟨n1, rfl⟩⟩ by
           rw [Localization.mk_mul, mul_oneₓ, one_mulₓ]]
       exact Ideal.mul_mem_right _ _ (Ideal.subset_span ⟨_, h1, rfl⟩)
       
     · right
       rw [mem_carrier_iff]
-      simp only [←
-        show (mk a2 ⟨f ^ n2, _⟩ : away f) = mk a2 1 * mk 1 ⟨f ^ n2, ⟨n2, rfl⟩⟩ by
+      simp only
+        [show (mk a2 ⟨f ^ n2, _⟩ : away f) = mk a2 1 * mk 1 ⟨f ^ n2, ⟨n2, rfl⟩⟩ by
           rw [Localization.mk_mul, mul_oneₓ, one_mulₓ]]
       exact Ideal.mul_mem_right _ _ (Ideal.subset_span ⟨_, h2, rfl⟩)
       
@@ -345,8 +345,8 @@ theorem preimage_eq (a : A) (n : ℕ) (a_mem_degree_zero : (mk a ⟨f ^ n, ⟨n,
     intro a_mem_y
     apply hy
     rw [to_fun, mem_carrier_iff]
-    simp only [←
-      show (mk a ⟨f ^ n, ⟨_, rfl⟩⟩ : away f) = mk 1 ⟨f ^ n, ⟨_, rfl⟩⟩ * mk a 1 by
+    simp only
+      [show (mk a ⟨f ^ n, ⟨_, rfl⟩⟩ : away f) = mk 1 ⟨f ^ n, ⟨_, rfl⟩⟩ * mk a 1 by
         rw [mk_mul, one_mulₓ, mul_oneₓ]]
     exact Ideal.mul_mem_left _ _ (Ideal.subset_span ⟨_, a_mem_y, rfl⟩)
     
@@ -361,7 +361,7 @@ theorem preimage_eq (a : A) (n : ℕ) (a_mem_degree_zero : (mk a ⟨f ^ n, ⟨n,
     rw [mk_mul, one_mulₓ, mk_eq_mk', IsLocalization.eq] at eq1
     rcases eq1 with ⟨⟨_, ⟨M, rfl⟩⟩, eq1⟩
     rw [Submonoid.coe_one, mul_oneₓ] at eq1
-    simp only [← Subtype.coe_mk] at eq1
+    simp only [Subtype.coe_mk] at eq1
     rcases y.1.IsPrime.mem_or_mem (show a * f ^ N * f ^ M ∈ _ from _) with (H1 | H3)
     rcases y.1.IsPrime.mem_or_mem H1 with (H1 | H2)
     · exact hy2 H1
@@ -396,7 +396,7 @@ def toSpec {f : A} (m : ℕ) (f_deg : f ∈ 𝒜 m) : (Proj.T| pbo f) ⟶ Spec.T
     erw [to_Spec.preimage_eq]
     refine' is_open_induced_iff.mpr ⟨(pbo f).1⊓(pbo a).1, IsOpen.inter (pbo f).2 (pbo a).2, _⟩
     ext z
-    constructor <;> intro hz <;> simpa [← Set.mem_preimage]
+    constructor <;> intro hz <;> simpa [Set.mem_preimage]
 
 end
 

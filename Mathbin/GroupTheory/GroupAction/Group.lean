@@ -42,7 +42,7 @@ def MulAction.toPerm (a : α) : Equivₓ.Perm β :=
   ⟨fun x => a • x, fun x => a⁻¹ • x, inv_smul_smul a, smul_inv_smul a⟩
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_action.to_perm]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_action.to_perm]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `mul_action.to_perm` is injective on faithful actions. -/
 @[to_additive "`add_action.to_perm` is injective on faithful actions."]
 theorem MulAction.to_perm_injective [HasFaithfulSmul α β] : Function.Injective (MulAction.toPerm : α → Equivₓ.Perm β) :=
@@ -96,7 +96,7 @@ theorem smul_inv [Groupₓ β] [SmulCommClass α β β] [IsScalarTower α β β]
 
 theorem smul_zpow [Groupₓ β] [SmulCommClass α β β] [IsScalarTower α β β] (c : α) (x : β) (p : ℤ) :
     (c • x) ^ p = c ^ p • x ^ p := by
-  cases p <;> simp [← smul_pow, ← smul_inv]
+  cases p <;> simp [smul_pow, smul_inv]
 
 @[simp]
 theorem Commute.smul_right_iff [Mul β] [SmulCommClass α β β] [IsScalarTower α β β] {a b : β} (r : α) :
@@ -253,10 +253,10 @@ def arrowAction {G A B : Type _} [DivisionMonoid G] [MulAction G A] : MulAction 
   smul := fun g F a => F (g⁻¹ • a)
   one_smul := by
     intro
-    simp only [← inv_one, ← one_smul]
+    simp only [inv_one, one_smul]
   mul_smul := by
     intros
-    simp only [← mul_smul, ← mul_inv_rev]
+    simp only [mul_smul, mul_inv_rev]
 
 attribute [local instance] arrowAction
 

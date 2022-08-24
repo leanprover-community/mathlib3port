@@ -84,7 +84,7 @@ variable [NormedSpace ℝ E]
 theorem StrictConvexSpace.of_strict_convex_closed_unit_ball [LinearMap.CompatibleSmul E E 𝕜 ℝ]
     (h : StrictConvex 𝕜 (ClosedBall (0 : E) 1)) : StrictConvexSpace 𝕜 E :=
   ⟨fun r hr => by
-    simpa only [← smul_closed_unit_ball_of_nonneg hr.le] using h.smul r⟩
+    simpa only [smul_closed_unit_ball_of_nonneg hr.le] using h.smul r⟩
 
 /-- If `∥x + y∥ = ∥x∥ + ∥y∥` implies that `x y : E` are in the same ray, then `E` is a strictly
 convex space. -/
@@ -107,10 +107,10 @@ theorem StrictConvexSpace.of_norm_add (h : ∀ x y : E, ∥x + y∥ = ∥x∥ + 
   calc
     ∥a • x + b • y∥ < ∥a • x∥ + ∥b • y∥ := (norm_add_le _ _).lt_of_ne fun H => hne _
     _ = 1 := by
-      simpa only [← norm_smul, ← hx₁, ← hy₁, ← mul_oneₓ, ← ha', ← hb']
+      simpa only [norm_smul, hx₁, hy₁, mul_oneₓ, ha', hb']
     
-  simpa only [← norm_smul, ← hx₁, ← hy₁, ← ha', ← hb', ← mul_oneₓ, ← smul_comm a, ← smul_right_inj ha.ne', ←
-    smul_right_inj hb.ne'] using (h _ _ H).norm_smul_eq.symm
+  simpa only [norm_smul, hx₁, hy₁, ha', hb', mul_oneₓ, smul_comm a, smul_right_inj ha.ne', smul_right_inj hb.ne'] using
+    (h _ _ H).norm_smul_eq.symm
 
 theorem StrictConvexSpace.of_norm_add_lt_aux {a b c d : ℝ} (ha : 0 < a) (hab : a + b = 1) (hc : 0 < c) (hd : 0 < d)
     (hcd : c + d = 1) (hca : c ≤ a) {x y : E} (hy : ∥y∥ ≤ 1) (hxy : ∥a • x + b • y∥ < 1) : ∥c • x + d • y∥ < 1 := by
@@ -166,7 +166,7 @@ theorem combo_mem_ball_of_ne (hx : x ∈ ClosedBall z r) (hy : y ∈ ClosedBall 
   · rw [closed_ball_zero, mem_singleton_iff] at hx hy
     exact (hne (hx.trans hy.symm)).elim
     
-  · simp only [interior_closed_ball _ hr] at hx hy⊢
+  · simp only [← interior_closed_ball _ hr] at hx hy⊢
     exact strict_convex_closed_ball ℝ z r hx hy hne ha hb hab
     
 
@@ -180,13 +180,13 @@ theorem open_segment_subset_ball_of_ne (hx : x ∈ ClosedBall z r) (hy : y ∈ C
 and `y` with positive coefficients has norm strictly less than `r`. -/
 theorem norm_combo_lt_of_ne (hx : ∥x∥ ≤ r) (hy : ∥y∥ ≤ r) (hne : x ≠ y) (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1) :
     ∥a • x + b • y∥ < r := by
-  simp only [mem_ball_zero_iff, mem_closed_ball_zero_iff] at hx hy⊢
+  simp only [← mem_ball_zero_iff, ← mem_closed_ball_zero_iff] at hx hy⊢
   exact combo_mem_ball_of_ne hx hy hne ha hb hab
 
 /-- In a strictly convex space, if `x` and `y` are not in the same ray, then `∥x + y∥ < ∥x∥ +
 ∥y∥`. -/
 theorem norm_add_lt_of_not_same_ray (h : ¬SameRay ℝ x y) : ∥x + y∥ < ∥x∥ + ∥y∥ := by
-  simp only [← same_ray_iff_inv_norm_smul_eq, ← not_or_distrib, Ne.def] at h
+  simp only [same_ray_iff_inv_norm_smul_eq, not_or_distrib, ← Ne.def] at h
   rcases h with ⟨hx, hy, hne⟩
   rw [← norm_pos_iff] at hx hy
   have hxy : 0 < ∥x∥ + ∥y∥ := add_pos hx hy
@@ -232,7 +232,7 @@ theorem not_same_ray_iff_abs_lt_norm_sub : ¬SameRay ℝ x y ↔ abs (∥x∥ - 
 /-- In a strictly convex space, the triangle inequality turns into an equality if and only if the
 middle point belongs to the segment joining two other points. -/
 theorem dist_add_dist_eq_iff : dist x y + dist y z = dist x z ↔ y ∈ [x -[ℝ] z] := by
-  simp only [← mem_segment_iff_same_ray, ← same_ray_iff_norm_add, ← dist_eq_norm', ← sub_add_sub_cancel', ← eq_comm]
+  simp only [mem_segment_iff_same_ray, same_ray_iff_norm_add, dist_eq_norm', sub_add_sub_cancel', eq_comm]
 
 theorem norm_midpoint_lt_iff (h : ∥x∥ = ∥y∥) : ∥(1 / 2 : ℝ) • (x + y)∥ < ∥x∥ ↔ x ≠ y := by
   rw [norm_smul, Real.norm_of_nonneg (one_div_nonneg.2 zero_le_two), ← inv_eq_one_div, ← div_eq_inv_mul,
@@ -289,7 +289,7 @@ noncomputable def affineIsometryOfStrictConvexSpace {f : PF → PE} (hi : Isomet
           )
       hi.Continuous with
     norm_map := fun x => by
-      simp [← AffineMap.ofMapMidpoint, dist_eq_norm_vsub E, ← hi.dist_eq] }
+      simp [AffineMap.ofMapMidpoint, ← dist_eq_norm_vsub E, hi.dist_eq] }
 
 @[simp]
 theorem coe_affine_isometry_of_strict_convex_space {f : PF → PE} (hi : Isometry f) :

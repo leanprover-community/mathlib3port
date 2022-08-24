@@ -190,7 +190,7 @@ noncomputable def Basis.smul {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R 
 @[simp]
 theorem Basis.smul_repr {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) (x ij) :
     (b.smul c).repr x ij = b.repr (c.repr x ij.2) ij.1 := by
-  simp [← Basis.smul]
+  simp [Basis.smul]
 
 theorem Basis.smul_repr_mk {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) (x i j) :
     (b.smul c).repr x (i, j) = b.repr (c.repr x j) i :=
@@ -205,9 +205,9 @@ theorem Basis.smul_apply {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (
   rw [Basis.smul_repr, LinearEquiv.map_smul, Basis.repr_self, Finsupp.smul_apply, Finsupp.single_apply]
   dsimp' only
   split_ifs with hi
-  · simp [← hi, ← Finsupp.single_apply]
+  · simp [hi, Finsupp.single_apply]
     
-  · simp [← hi]
+  · simp [hi]
     
 
 end Semiringₓ
@@ -247,8 +247,7 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
   simp_rw [eq_top_iff', mem_span_finset] at this
   choose f hf
   let s : Finset B := Finset.image₂ f (x ∪ y * y) y
-  have hxy : ∀, ∀ xi ∈ x, ∀, xi ∈ span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) :=
-    fun xi hxi =>
+  have hxy : ∀ xi ∈ x, xi ∈ span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) := fun xi hxi =>
     hf xi ▸
       sum_mem fun yj hyj =>
         smul_mem (span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C))

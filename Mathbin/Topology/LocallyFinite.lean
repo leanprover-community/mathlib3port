@@ -72,13 +72,13 @@ protected theorem closure (hf : LocallyFinite f) : LocallyFinite fun i => Closur
   exact (hi.mono (closure_inter_open' is_open_interior)).of_closure.mono (inter_subset_inter_right _ interior_subset)
 
 theorem is_closed_Union (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)) : IsClosed (⋃ i, f i) := by
-  simp only [is_open_compl_iff, ← compl_Union, ← is_open_iff_mem_nhds, ← mem_Inter]
+  simp only [← is_open_compl_iff, compl_Union, is_open_iff_mem_nhds, mem_Inter]
   intro a ha
   replace ha : ∀ i, f iᶜ ∈ 𝓝 a := fun i => (hc i).is_open_compl.mem_nhds (ha i)
   rcases hf a with ⟨t, h_nhds, h_fin⟩
   have : (t ∩ ⋂ i ∈ { i | (f i ∩ t).Nonempty }, f iᶜ) ∈ 𝓝 a := inter_mem h_nhds ((bInter_mem h_fin).2 fun i _ => ha i)
   filter_upwards [this]
-  simp only [← mem_inter_eq, ← mem_Inter]
+  simp only [mem_inter_eq, mem_Inter]
   rintro b ⟨hbt, hn⟩ i hfb
   exact hn i ⟨b, hfb, hbt⟩ hfb
 
@@ -107,9 +107,9 @@ theorem exists_forall_eventually_eq_prod {π : X → Sort _} {f : ℕ → ∀ x 
     ∃ F : ∀ x : X, π x, ∀ x, ∀ᶠ p : ℕ × X in at_top ×ᶠ 𝓝 x, f p.1 p.2 = F p.2 := by
   choose U hUx hU using hf
   choose N hN using fun x => (hU x).BddAbove
-  replace hN : ∀ (x), ∀ n > N x, ∀, ∀ y ∈ U x, ∀, f (n + 1) y = f n y
+  replace hN : ∀ (x), ∀ n > N x, ∀ y ∈ U x, f (n + 1) y = f n y
   exact fun x n hn y hy => by_contra fun hne => hn.lt.not_le <| hN x ⟨y, hne, hy⟩
-  replace hN : ∀ (x), ∀ n ≥ N x + 1, ∀, ∀ y ∈ U x, ∀, f n y = f (N x + 1) y
+  replace hN : ∀ (x), ∀ n ≥ N x + 1, ∀ y ∈ U x, f n y = f (N x + 1) y
   exact fun x n hn y hy => Nat.le_induction rfl (fun k hle => (hN x _ hle _ hy).trans) n hn
   refine' ⟨fun x => f (N x + 1) x, fun x => _⟩
   filter_upwards [Filter.prod_mem_prod (eventually_gt_at_top (N x)) (hUx x)]

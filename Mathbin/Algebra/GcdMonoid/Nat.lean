@@ -27,7 +27,7 @@ theorem coprime_of_div_gcd (s : Finset ℕ) {x : ℕ} (hx : x ∈ s) (hnz : x �
   intro p hp hdvd
   haveI : Fact p.prime := ⟨hp⟩
   rw [dvd_gcd_iff] at hdvd
-  replace hdvd : ∀, ∀ b ∈ s, ∀, s.gcd id * p ∣ b
+  replace hdvd : ∀ b ∈ s, s.gcd id * p ∣ b
   · intro b hb
     specialize hdvd b hb
     rwa [Nat.dvd_div_iff] at hdvd

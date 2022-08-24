@@ -34,7 +34,7 @@ open UniqueFactorizationMonoid
 torsion submodules, where `I = ∏ i, p i ^ e i` is its unique decomposition in prime ideals.-/
 theorem is_internal_prime_power_torsion_of_is_torsion_by_ideal {I : Ideal R} (hI : I ≠ ⊥)
     (hM : Module.IsTorsionBySet R M I) :
-    ∃ (P : Finset <| Ideal R)(_ : DecidableEq P)(_ : ∀, ∀ p ∈ P, ∀, Prime p)(e : P → ℕ),
+    ∃ (P : Finset <| Ideal R)(_ : DecidableEq P)(_ : ∀ p ∈ P, Prime p)(e : P → ℕ),
       DirectSum.IsInternal fun p : P => torsion_by_set R M (p ^ e p : Ideal R) :=
   by
   classical
@@ -72,7 +72,7 @@ theorem is_internal_prime_power_torsion_of_is_torsion_by_ideal {I : Ideal R} (hI
 /-- A finitely generated torsion module over a Dedekind domain is an internal direct sum of its
 `p i ^ e i`-torsion submodules for some prime ideals `p i` and numbers `e i`.-/
 theorem is_internal_prime_power_torsion [Module.Finite R M] (hM : Module.IsTorsion R M) :
-    ∃ (P : Finset <| Ideal R)(_ : DecidableEq P)(_ : ∀, ∀ p ∈ P, ∀, Prime p)(e : P → ℕ),
+    ∃ (P : Finset <| Ideal R)(_ : DecidableEq P)(_ : ∀ p ∈ P, Prime p)(e : P → ℕ),
       DirectSum.IsInternal fun p : P => torsion_by_set R M (p ^ e p : Ideal R) :=
   by
   obtain ⟨I, hI, hM'⟩ := is_torsion_by_ideal_of_finite_of_is_torsion hM

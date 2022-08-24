@@ -34,12 +34,16 @@ structure ContinuousMap (α β : Type _) [TopologicalSpace α] [TopologicalSpace
 -- mathport name: «exprC( , )»
 notation "C(" α ", " β ")" => ContinuousMap α β
 
+section
+
 /-- `continuous_map_class F α β` states that `F` is a type of continuous maps.
 
 You should extend this class when you extend `continuous_map`. -/
 class ContinuousMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α] [TopologicalSpace β] extends
   FunLike F α fun _ => β where
   map_continuous (f : F) : Continuous f
+
+end
 
 export ContinuousMapClass (map_continuous)
 

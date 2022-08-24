@@ -53,14 +53,14 @@ variable (𝕜 : Type _) {E : Type _} [NormedLinearOrderedField 𝕜] [NormedAdd
 /-- A set `B` is exposed with respect to `A` iff it maximizes some functional over `A` (and contains
 all points maximizing it). Written `is_exposed 𝕜 A B`. -/
 def IsExposed (A B : Set E) : Prop :=
-  B.Nonempty → ∃ l : E →L[𝕜] 𝕜, B = { x ∈ A | ∀, ∀ y ∈ A, ∀, l y ≤ l x }
+  B.Nonempty → ∃ l : E →L[𝕜] 𝕜, B = { x ∈ A | ∀ y ∈ A, l y ≤ l x }
 
 variable {𝕜}
 
 /-- A useful way to build exposed sets from intersecting `A` with halfspaces (modelled by an
 inequality with a functional). -/
 def ContinuousLinearMap.ToExposed (l : E →L[𝕜] 𝕜) (A : Set E) : Set E :=
-  { x ∈ A | ∀, ∀ y ∈ A, ∀, l y ≤ l x }
+  { x ∈ A | ∀ y ∈ A, l y ≤ l x }
 
 theorem ContinuousLinearMap.ToExposed.is_exposed : IsExposed 𝕜 A (l.ToExposed A) := fun h => ⟨l, rfl⟩
 
@@ -125,8 +125,7 @@ protected theorem inter (hB : IsExposed 𝕜 A B) (hC : IsExposed 𝕜 A C) : Is
   · exact (add_le_add_iff_left (l₁ x)).1 (le_transₓ (add_le_add (hwB.2 x hxA) (hwC.2 y hy)) (hx w hwB.1))
     
 
-theorem sInter {F : Finset (Set E)} (hF : F.Nonempty) (hAF : ∀, ∀ B ∈ F, ∀, IsExposed 𝕜 A B) : IsExposed 𝕜 A (⋂₀ F) :=
-  by
+theorem sInter {F : Finset (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F, IsExposed 𝕜 A B) : IsExposed 𝕜 A (⋂₀ F) := by
   revert hF F
   refine' Finset.induction _ _
   · rintro h
@@ -172,7 +171,7 @@ protected theorem convex (hAB : IsExposed 𝕜 A B) (hA : Convex 𝕜 A) : Conve
   · exact convex_empty
     
   obtain ⟨l, rfl⟩ := hAB hB
-  exact fun x₁ x₂ hx₁ hx₂ a b ha hb hab =>
+  exact fun x₁ hx₁ x₂ hx₂ a b ha hb hab =>
     ⟨hA hx₁.1 hx₂.1 ha hb hab, fun y hy =>
       ((l.to_linear_map.concave_on convex_univ).convex_ge _ ⟨mem_univ _, hx₁.2 y hy⟩ ⟨mem_univ _, hx₂.2 y hy⟩ ha hb
           hab).2⟩
@@ -191,12 +190,11 @@ variable (𝕜)
 /-- A point is exposed with respect to `A` iff there exists an hyperplane whose intersection with
 `A` is exactly that point. -/
 def Set.ExposedPoints (A : Set E) : Set E :=
-  { x ∈ A | ∃ l : E →L[𝕜] 𝕜, ∀, ∀ y ∈ A, ∀, l y ≤ l x ∧ (l x ≤ l y → y = x) }
+  { x ∈ A | ∃ l : E →L[𝕜] 𝕜, ∀ y ∈ A, l y ≤ l x ∧ (l x ≤ l y → y = x) }
 
 variable {𝕜}
 
-theorem exposed_point_def :
-    x ∈ A.ExposedPoints 𝕜 ↔ x ∈ A ∧ ∃ l : E →L[𝕜] 𝕜, ∀, ∀ y ∈ A, ∀, l y ≤ l x ∧ (l x ≤ l y → y = x) :=
+theorem exposed_point_def : x ∈ A.ExposedPoints 𝕜 ↔ x ∈ A ∧ ∃ l : E →L[𝕜] 𝕜, ∀ y ∈ A, l y ≤ l x ∧ (l x ≤ l y → y = x) :=
   Iff.rfl
 
 theorem exposed_points_subset : A.ExposedPoints 𝕜 ⊆ A := fun x hx => hx.1

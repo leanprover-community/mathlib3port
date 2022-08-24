@@ -173,7 +173,7 @@ instance [Preorderₓ α] [Preorderₓ β] [TopologicalSpace α] [TopologicalSpa
 instance {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] [∀ i, TopologicalSpace (α i)]
     [∀ i, SupConvergenceClass (α i)] : SupConvergenceClass (∀ i, α i) := by
   refine' ⟨fun f s h => _⟩
-  simp only [← is_lub_pi, range_restrict] at h
+  simp only [is_lub_pi, ← range_restrict] at h
   exact tendsto_pi_nhds.2 fun i => tendsto_at_top_is_lub ((monotone_eval _).restrict _) (h i)
 
 instance {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] [∀ i, TopologicalSpace (α i)]
@@ -267,7 +267,7 @@ theorem supr_eq_supr_subseq_of_monotone {ι₁ ι₂ α : Type _} [Preorderₓ �
   le_antisymmₓ
     (supr_mono' fun i =>
       exists_imp_exists (fun j (hj : i ≤ φ j) => hf hj) (hφ.Eventually <| eventually_ge_at_top i).exists)
-    (supr_mono' fun i => ⟨φ i, le_rfl⟩)
+    (supr_mono' fun i => ⟨φ i, le_rflₓ⟩)
 
 theorem infi_eq_infi_subseq_of_monotone {ι₁ ι₂ α : Type _} [Preorderₓ ι₂] [CompleteLattice α] {l : Filter ι₁} [l.ne_bot]
     {f : ι₂ → α} {φ : ι₁ → ι₂} (hf : Monotone f) (hφ : Tendsto φ l atBot) : (⨅ i, f i) = ⨅ i, f (φ i) :=

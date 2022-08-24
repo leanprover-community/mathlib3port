@@ -82,10 +82,10 @@ protected def Function.Injective.smulWithZero (f : ZeroHom M' M) (hf : Function.
   smul := (· • ·)
   zero_smul := fun a =>
     hf <| by
-      simp [← smul]
+      simp [smul]
   smul_zero := fun a =>
     hf <| by
-      simp [← smul]
+      simp [smul]
 
 /-- Pushforward a `smul_with_zero` structure along a surjective zero-preserving homomorphism.
 See note [reducible non-instances]. -/
@@ -95,9 +95,9 @@ protected def Function.Surjective.smulWithZero (f : ZeroHom M M') (hf : Function
   smul := (· • ·)
   zero_smul := fun m => by
     rcases hf m with ⟨x, rfl⟩
-    simp [smul]
+    simp [← smul]
   smul_zero := fun c => by
-    simp only [f.map_zero, smul, ← smul_zero']
+    simp only [← f.map_zero, ← smul, smul_zero']
 
 variable (M)
 
@@ -168,7 +168,7 @@ variable (M)
 def MulActionWithZero.compHom (f : R' →*₀ R) : MulActionWithZero R' M :=
   { SmulWithZero.compHom M f.toZeroHom with smul := (· • ·) ∘ f,
     mul_smul := fun r s m => by
-      simp [← mul_smul],
+      simp [mul_smul],
     one_smul := fun m => by
       simp }
 
@@ -180,10 +180,10 @@ variable {α β : Type _} [GroupWithZeroₓ α] [GroupWithZeroₓ β] [MulAction
 
 theorem smul_inv₀ [SmulCommClass α β β] [IsScalarTower α β β] (c : α) (x : β) : (c • x)⁻¹ = c⁻¹ • x⁻¹ := by
   obtain rfl | hc := eq_or_ne c 0
-  · simp only [← inv_zero, ← zero_smul]
+  · simp only [inv_zero, zero_smul]
     
   obtain rfl | hx := eq_or_ne x 0
-  · simp only [← inv_zero, ← smul_zero']
+  · simp only [inv_zero, smul_zero']
     
   · refine' inv_eq_of_mul_eq_one_left _
     rw [smul_mul_smul, inv_mul_cancel hc, inv_mul_cancel hx, one_smul]

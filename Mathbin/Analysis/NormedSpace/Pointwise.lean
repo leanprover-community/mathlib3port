@@ -29,7 +29,7 @@ theorem smul_ball {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • Ball x r =
   ext y
   rw [mem_smul_set_iff_inv_smul_mem₀ hc]
   conv_lhs => rw [← inv_smul_smul₀ hc x]
-  simp [div_eq_inv_mul, ← div_lt_iff (norm_pos_iff.2 hc), ← mul_comm _ r, ← dist_smul]
+  simp [← div_eq_inv_mul, div_lt_iff (norm_pos_iff.2 hc), mul_comm _ r, dist_smul]
 
 theorem smul_unit_ball {c : 𝕜} (hc : c ≠ 0) : c • Ball (0 : E) (1 : ℝ) = Ball (0 : E) ∥c∥ := by
   rw [smul_ball hc, smul_zero, mul_oneₓ]
@@ -38,13 +38,13 @@ theorem smul_sphere' {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • Sphere 
   ext y
   rw [mem_smul_set_iff_inv_smul_mem₀ hc]
   conv_lhs => rw [← inv_smul_smul₀ hc x]
-  simp only [← mem_sphere, ← dist_smul, ← norm_inv, div_eq_inv_mul, ← div_eq_iff (norm_pos_iff.2 hc).ne', ← mul_comm r]
+  simp only [mem_sphere, dist_smul, norm_inv, ← div_eq_inv_mul, div_eq_iff (norm_pos_iff.2 hc).ne', mul_comm r]
 
 theorem smul_closed_ball' {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • ClosedBall x r = ClosedBall (c • x) (∥c∥ * r) := by
-  simp only [ball_union_sphere, ← Set.smul_set_union, ← smul_ball hc, ← smul_sphere' hc]
+  simp only [← ball_union_sphere, Set.smul_set_union, smul_ball hc, smul_sphere' hc]
 
 theorem Metric.Bounded.smul {s : Set E} (hs : Bounded s) (c : 𝕜) : Bounded (c • s) := by
-  obtain ⟨R, hR⟩ : ∃ R : ℝ, ∀, ∀ x ∈ s, ∀, ∥x∥ ≤ R := hs.exists_norm_le
+  obtain ⟨R, hR⟩ : ∃ R : ℝ, ∀ x ∈ s, ∥x∥ ≤ R := hs.exists_norm_le
   refine' bounded_iff_exists_norm_le.2 ⟨∥c∥ * R, _⟩
   intro z hz
   obtain ⟨y, ys, rfl⟩ : ∃ y : E, y ∈ s ∧ c • y = z := mem_smul_set.1 hz
@@ -61,10 +61,10 @@ theorem eventually_singleton_add_smul_subset {x : E} {s : Set E} (hs : Bounded s
   obtain ⟨R, Rpos, hR⟩ : ∃ R : ℝ, 0 < R ∧ s ⊆ closed_ball 0 R := hs.subset_ball_lt 0 0
   have : Metric.ClosedBall (0 : 𝕜) (ε / R) ∈ 𝓝 (0 : 𝕜) := closed_ball_mem_nhds _ (div_pos εpos Rpos)
   filter_upwards [this] with r hr
-  simp only [← image_add_left, ← singleton_add]
+  simp only [image_add_left, singleton_add]
   intro y hy
   obtain ⟨z, zs, hz⟩ : ∃ z : E, z ∈ s ∧ r • z = -x + y := by
-    simpa [← mem_smul_set] using hy
+    simpa [mem_smul_set] using hy
   have I : ∥r • z∥ ≤ ε :=
     calc
       ∥r • z∥ = ∥r∥ * ∥z∥ := norm_smul _ _
@@ -72,12 +72,12 @@ theorem eventually_singleton_add_smul_subset {x : E} {s : Set E} (hs : Bounded s
         mul_le_mul (mem_closed_ball_zero_iff.1 hr) (mem_closed_ball_zero_iff.1 (hR zs)) (norm_nonneg _)
           (div_pos εpos Rpos).le
       _ = ε := by
-        field_simp [← Rpos.ne']
+        field_simp [Rpos.ne']
       
   have : y = x + r • z := by
-    simp only [← hz, ← add_neg_cancel_left]
+    simp only [hz, add_neg_cancel_left]
   apply hε
-  simpa only [← this, ← dist_eq_norm, ← add_sub_cancel', ← mem_closed_ball] using I
+  simpa only [this, dist_eq_norm, add_sub_cancel', mem_closed_ball] using I
 
 variable [NormedSpace ℝ E] {x y z : E} {δ ε : ℝ}
 
@@ -92,7 +92,7 @@ theorem exists_dist_eq (x z : E) {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (hab 
   use a • x + b • z
   nth_rw 0[← one_smul ℝ x]
   nth_rw 3[← one_smul ℝ z]
-  simp [← dist_eq_norm, hab, ← add_smul, smul_sub, ← norm_smul_of_nonneg, ← ha, ← hb]
+  simp [dist_eq_norm, ← hab, add_smul, ← smul_sub, norm_smul_of_nonneg, ha, hb]
 
 theorem exists_dist_le_le (hδ : 0 ≤ δ) (hε : 0 ≤ ε) (h : dist x z ≤ ε + δ) : ∃ y, dist x y ≤ δ ∧ dist y z ≤ ε := by
   obtain rfl | hε' := hε.eq_or_lt
@@ -124,10 +124,10 @@ theorem exists_dist_lt_le (hδ : 0 < δ) (hε : 0 ≤ ε) (h : dist x z < ε + �
   obtain ⟨y, yz, xy⟩ :=
     exists_dist_le_lt hε hδ
       (show dist z x < δ + ε by
-        simpa only [← dist_comm, ← add_commₓ] using h)
+        simpa only [dist_comm, add_commₓ] using h)
   exact
     ⟨y, by
-      simp [← dist_comm x y, ← dist_comm y z, *]⟩
+      simp [dist_comm x y, dist_comm y z, *]⟩
 
 -- This is also true for `ℚ`-normed spaces
 theorem exists_dist_lt_lt (hδ : 0 < δ) (hε : 0 < ε) (h : dist x z < ε + δ) : ∃ y, dist x y < δ ∧ dist y z < ε := by
@@ -180,7 +180,7 @@ theorem inf_edist_thickening (hδ : 0 < δ) (s : Set E) (x : E) :
     
   refine' (tsub_le_iff_right.2 inf_edist_le_inf_edist_thickening_add).antisymm' _
   refine' le_sub_of_add_le_right of_real_ne_top _
-  refine' le_inf_edist.2 fun z hz => le_of_forall_lt' fun r h => _
+  refine' le_inf_edist.2 fun z hz => le_of_forall_lt'ₓ fun r h => _
   cases r
   · exact add_lt_top.2 ⟨lt_top_iff_ne_top.2 <| inf_edist_ne_top ⟨z, self_subset_thickening hδ _ hz⟩, of_real_lt_top⟩
     
@@ -196,7 +196,7 @@ theorem inf_edist_thickening (hδ : 0 < δ) (s : Set E) (x : E) :
           inf_edist_lt_iff.2 ⟨_, mem_thickening_iff.2 ⟨_, hz, hyz⟩, edist_lt_of_real.2 hxy⟩).trans_le
       _
   rw [← of_real_add hr.le hδ.le, sub_add_cancel, of_real_coe_nnreal]
-  exact le_rfl
+  exact le_rflₓ
 
 @[simp]
 theorem thickening_thickening (hε : 0 < ε) (hδ : 0 < δ) (s : Set E) :
@@ -218,7 +218,7 @@ theorem cthickening_thickening (hε : 0 ≤ ε) (hδ : 0 < δ) (s : Set E) :
 -- Note: `interior (cthickening δ s) ≠ thickening δ s` in general
 @[simp]
 theorem closure_thickening (hδ : 0 < δ) (s : Set E) : Closure (Thickening δ s) = Cthickening δ s := by
-  rw [← cthickening_zero, cthickening_thickening le_rfl hδ, zero_addₓ]
+  rw [← cthickening_zero, cthickening_thickening le_rflₓ hδ, zero_addₓ]
   infer_instance
 
 @[simp]
@@ -305,7 +305,7 @@ variable [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 theorem smul_closed_ball (c : 𝕜) (x : E) {r : ℝ} (hr : 0 ≤ r) : c • ClosedBall x r = ClosedBall (c • x) (∥c∥ * r) := by
   rcases eq_or_ne c 0 with (rfl | hc)
-  · simp [← hr, ← zero_smul_set, ← Set.singleton_zero, nonempty_closed_ball]
+  · simp [hr, zero_smul_set, Set.singleton_zero, ← nonempty_closed_ball]
     
   · exact smul_closed_ball' hc x r
     
@@ -328,13 +328,13 @@ theorem NormedSpace.sphere_nonempty [Nontrivial E] {x : E} {r : ℝ} : (Sphere x
   refine'
     ⟨fun h => nonempty_closed_ball.1 (h.mono sphere_subset_closed_ball), fun hr => ⟨r • ∥y - x∥⁻¹ • (y - x) + x, _⟩⟩
   have : ∥y - x∥ ≠ 0 := by
-    simpa [← sub_eq_zero]
-  simp [← norm_smul, ← this, ← Real.norm_of_nonneg hr]
+    simpa [sub_eq_zero]
+  simp [norm_smul, this, Real.norm_of_nonneg hr]
 
 theorem smul_sphere [Nontrivial E] (c : 𝕜) (x : E) {r : ℝ} (hr : 0 ≤ r) : c • Sphere x r = Sphere (c • x) (∥c∥ * r) :=
   by
   rcases eq_or_ne c 0 with (rfl | hc)
-  · simp [← zero_smul_set, ← Set.singleton_zero, ← hr]
+  · simp [zero_smul_set, Set.singleton_zero, hr]
     
   · exact smul_sphere' hc x r
     

@@ -47,10 +47,10 @@ def monoidHomSlashAction {β : Type _} {G : Type _} {H : Type _} {α : Type _} {
     apply SlashAction.mul_zero k (h g)
   one_mul := by
     intro k a
-    simp only [← map_one]
+    simp only [map_one]
     apply SlashAction.one_mul
   right_action := by
-    simp only [← map_mul]
+    simp only [map_mul]
     intro k g gg a
     apply SlashAction.right_action
   smul_action := by
@@ -79,9 +79,9 @@ theorem slash_right_action (k : ℤ) (A B : GL(2, ℝ)⁺) (f : ℍ → ℂ) : (
   have e3 : (A * B) • x = A • B • x := by
     convert UpperHalfPlane.mul_smul' A B x
   rw [e3]
-  simp only [← UpperHalfPlane.num, ← UpperHalfPlane.denom, ← of_real_mul, ← Subgroup.coe_mul, ← coe_coe, ←
-    UpperHalfPlane.coe_smul, ← Units.coe_mul, ← Matrix.mul_eq_mul, ← Matrix.det_mul, ← UpperHalfPlane.smulAux, ←
-    UpperHalfPlane.smulAux', ← Subtype.coe_mk] at *
+  simp only [UpperHalfPlane.num, UpperHalfPlane.denom, of_real_mul, Subgroup.coe_mul, coe_coe, UpperHalfPlane.coe_smul,
+    Units.coe_mul, Matrix.mul_eq_mul, Matrix.det_mul, UpperHalfPlane.smulAux, UpperHalfPlane.smulAux',
+    Subtype.coe_mk] at *
   field_simp
   have :
     (((↑(↑A : GL (Finₓ 2) ℝ) : Matrix (Finₓ 2) (Finₓ 2) ℝ).det : ℂ) *
@@ -94,9 +94,9 @@ theorem slash_right_action (k : ℤ) (A B : GL(2, ℝ)⁺) (f : ℍ → ℂ) : (
   simp_rw [this, ← mul_assoc, ← mul_zpow]
 
 theorem slash_add (k : ℤ) (A : GL(2, ℝ)⁺) (f g : ℍ → ℂ) : (f + g) ∣[k]A = f ∣[k]A + g ∣[k]A := by
-  simp only [← slash, ← Pi.add_apply, ← Matrix.GeneralLinearGroup.coe_det_apply, ← Subtype.val_eq_coe, ← coe_coe]
+  simp only [slash, Pi.add_apply, Matrix.GeneralLinearGroup.coe_det_apply, Subtype.val_eq_coe, coe_coe]
   ext1
-  simp only [← Pi.add_apply]
+  simp only [Pi.add_apply]
   ring
 
 theorem slash_mul_one (k : ℤ) (f : ℍ → ℂ) : f ∣[k]1 = f := by
@@ -107,8 +107,8 @@ theorem slash_mul_one (k : ℤ) (f : ℍ → ℂ) : f ∣[k]1 = f := by
 theorem smul_slash (k : ℤ) (A : GL(2, ℝ)⁺) (f : ℍ → ℂ) (c : ℂ) : (c • f) ∣[k]A = c • f ∣[k]A := by
   ext1
   simp_rw [slash]
-  simp only [← slash, ← Algebra.id.smul_eq_mul, ← Matrix.GeneralLinearGroup.coe_det_apply, ← Pi.smul_apply, ←
-    Subtype.val_eq_coe, ← coe_coe]
+  simp only [slash, Algebra.id.smul_eq_mul, Matrix.GeneralLinearGroup.coe_det_apply, Pi.smul_apply, Subtype.val_eq_coe,
+    coe_coe]
   ring
 
 instance : SlashAction ℤ GL(2, ℝ)⁺ (ℍ → ℂ) ℂ where
@@ -116,7 +116,7 @@ instance : SlashAction ℤ GL(2, ℝ)⁺ (ℍ → ℂ) ℂ where
   mul_zero := by
     intro k g
     rw [slash]
-    simp only [← Pi.zero_apply, ← zero_mul]
+    simp only [Pi.zero_apply, zero_mul]
     rfl
   one_mul := by
     apply slash_mul_one

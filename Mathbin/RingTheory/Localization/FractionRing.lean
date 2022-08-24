@@ -46,14 +46,14 @@ instance Rat.is_fraction_ring : IsFractionRing ℤ ℚ where
   map_units := by
     rintro ⟨x, hx⟩
     rw [mem_non_zero_divisors_iff_ne_zero] at hx
-    simpa only [← RingHom.eq_int_cast, ← is_unit_iff_ne_zero, ← Int.cast_eq_zero, ← Ne.def, ← Subtype.coe_mk] using hx
+    simpa only [eq_int_cast, is_unit_iff_ne_zero, Int.cast_eq_zero, Ne.def, Subtype.coe_mk] using hx
   surj := by
     rintro ⟨n, d, hd, h⟩
     refine' ⟨⟨n, ⟨d, _⟩⟩, Rat.mul_denom_eq_num⟩
     rwa [mem_non_zero_divisors_iff_ne_zero, Int.coe_nat_ne_zero_iff_pos]
   eq_iff_exists := by
     intro x y
-    rw [RingHom.eq_int_cast, RingHom.eq_int_cast, Int.cast_inj]
+    rw [eq_int_cast, eq_int_cast, Int.cast_inj]
     refine'
       ⟨by
         rintro rfl
@@ -89,7 +89,7 @@ variable {R K}
 
 protected theorem to_map_ne_zero_of_mem_non_zero_divisors [Nontrivial R] {x : R} (hx : x ∈ nonZeroDivisors R) :
     algebraMap R K x ≠ 0 :=
-  IsLocalization.to_map_ne_zero_of_mem_non_zero_divisors _ le_rfl hx
+  IsLocalization.to_map_ne_zero_of_mem_non_zero_divisors _ le_rflₓ hx
 
 variable (A)
 
@@ -193,7 +193,7 @@ and an injective ring hom `g : A →+* L` where `L` is a field,
 field hom induced from `K` to `L` maps `f x / f y` to `g x / g y` for all
 `x : A, y ∈ non_zero_divisors A`. -/
 theorem lift_mk' (hg : Injective g) (x) (y : nonZeroDivisors A) : lift hg (mk' K x y) = g x / g y := by
-  simp only [← mk'_eq_div, ← map_div₀, ← lift_algebra_map]
+  simp only [mk'_eq_div, map_div₀, lift_algebra_map]
 
 /-- Given integral domains `A, B` with fields of fractions `K`, `L`
 and an injective ring hom `j : A →+* B`, we get a field hom
@@ -225,12 +225,12 @@ theorem is_fraction_ring_iff_of_base_ring_equiv (h : R ≃+* P) :
   convert is_localization_iff_of_base_ring_equiv _ _ h
   ext x
   erw [Submonoid.map_equiv_eq_comap_symm]
-  simp only [← MulEquiv.coe_to_monoid_hom, ← RingEquiv.to_mul_equiv_eq_coe, ← Submonoid.mem_comap]
+  simp only [MulEquiv.coe_to_monoid_hom, RingEquiv.to_mul_equiv_eq_coe, Submonoid.mem_comap]
   constructor
   · rintro hx z (hz : z * h.symm x = 0)
     rw [← h.map_eq_zero_iff]
     apply hx
-    simpa only [← h.map_zero, ← h.apply_symm_apply, ← h.map_mul] using congr_arg h hz
+    simpa only [h.map_zero, h.apply_symm_apply, h.map_mul] using congr_arg h hz
     
   · rintro (hx : h.symm x ∈ _) z hz
     rw [← h.symm.map_eq_zero_iff]
@@ -265,7 +265,7 @@ instance unique [Subsingleton R] : Unique (FractionRing R) :=
   Localization.unique
 
 instance [Nontrivial R] : Nontrivial (FractionRing R) :=
-  ⟨⟨(algebraMap R _) 0, (algebraMap _ _) 1, fun H => zero_ne_one (IsLocalization.injective _ le_rfl H)⟩⟩
+  ⟨⟨(algebraMap R _) 0, (algebraMap _ _) 1, fun H => zero_ne_one (IsLocalization.injective _ le_rflₓ H)⟩⟩
 
 variable {A}
 

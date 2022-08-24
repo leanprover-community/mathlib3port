@@ -131,7 +131,7 @@ theorem specializes_iff_closure_subset : x ⤳ y ↔ Closure ({y} : Set X) ⊆ C
 alias specializes_iff_closure_subset ↔ Specializes.closure_subset _
 
 theorem specializes_rfl : x ⤳ x :=
-  le_rfl
+  le_rflₓ
 
 @[refl]
 theorem specializes_refl (x : X) : x ⤳ x :=
@@ -156,7 +156,7 @@ theorem Specializes.map (h : x ⤳ y) (hf : Continuous f) : f x ⤳ f y :=
   h.map_of_continuous_at hf.ContinuousAt
 
 theorem Inducing.specializes_iff (hf : Inducing f) : f x ⤳ f y ↔ x ⤳ y := by
-  simp only [← specializes_iff_mem_closure, ← hf.closure_eq_preimage_closure_image, ← image_singleton, ← mem_preimage]
+  simp only [specializes_iff_mem_closure, hf.closure_eq_preimage_closure_image, image_singleton, mem_preimage]
 
 theorem subtype_specializes_iff {p : X → Prop} (x y : Subtype p) : x ⤳ y ↔ (x : X) ⤳ y :=
   inducing_coe.specializes_iff.symm
@@ -210,26 +210,26 @@ theorem Specializes.antisymm (h₁ : x ⤳ y) (h₂ : y ⤳ x) : x ~ y :=
   le_antisymmₓ h₁ h₂
 
 theorem inseparable_iff_forall_open : (x ~ y) ↔ ∀ s : Set X, IsOpen s → (x ∈ s ↔ y ∈ s) := by
-  simp only [← inseparable_iff_specializes_and, ← specializes_iff_forall_open, forall_and_distrib, iff_def, ← Iff.comm]
+  simp only [inseparable_iff_specializes_and, specializes_iff_forall_open, ← forall_and_distrib, ← iff_def, Iff.comm]
 
 theorem not_inseparable_iff_exists_open : ¬(x ~ y) ↔ ∃ s : Set X, IsOpen s ∧ Xorₓ (x ∈ s) (y ∈ s) := by
-  simp [← inseparable_iff_forall_open, xor_iff_not_iff]
+  simp [inseparable_iff_forall_open, ← xor_iff_not_iff]
 
 theorem inseparable_iff_forall_closed : (x ~ y) ↔ ∀ s : Set X, IsClosed s → (x ∈ s ↔ y ∈ s) := by
-  simp only [← inseparable_iff_specializes_and, ← specializes_iff_forall_closed, forall_and_distrib, iff_def]
+  simp only [inseparable_iff_specializes_and, specializes_iff_forall_closed, ← forall_and_distrib, ← iff_def]
 
 theorem inseparable_iff_mem_closure : (x ~ y) ↔ x ∈ Closure ({y} : Set X) ∧ y ∈ Closure ({x} : Set X) :=
   inseparable_iff_specializes_and.trans <| by
-    simp only [← specializes_iff_mem_closure, ← and_comm]
+    simp only [specializes_iff_mem_closure, and_comm]
 
 theorem inseparable_iff_closure_eq : (x ~ y) ↔ Closure ({x} : Set X) = Closure {y} := by
-  simp only [← inseparable_iff_specializes_and, ← specializes_iff_closure_subset, subset_antisymm_iff, ← eq_comm]
+  simp only [inseparable_iff_specializes_and, specializes_iff_closure_subset, ← subset_antisymm_iff, eq_comm]
 
 theorem inseparable_of_nhds_within_eq (hx : x ∈ s) (hy : y ∈ s) (h : 𝓝[s] x = 𝓝[s] y) : x ~ y :=
   (specializes_of_nhds_within h.le hx).antisymm (specializes_of_nhds_within h.Ge hy)
 
 theorem Inducing.inseparable_iff (hf : Inducing f) : (f x ~ f y) ↔ (x ~ y) := by
-  simp only [← inseparable_iff_specializes_and, ← hf.specializes_iff]
+  simp only [inseparable_iff_specializes_and, hf.specializes_iff]
 
 theorem subtype_inseparable_iff {p : X → Prop} (x y : Subtype p) : (x ~ y) ↔ ((x : X) ~ y) :=
   inducing_coe.inseparable_iff.symm

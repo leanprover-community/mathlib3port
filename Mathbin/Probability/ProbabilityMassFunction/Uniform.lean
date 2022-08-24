@@ -40,14 +40,14 @@ def uniformOfFinset (s : Finset α) (hs : s.Nonempty) : Pmf α :=
       calc
         (∑ a : α in s, ite (a ∈ s) (s.card : ℝ≥0 )⁻¹ 0) = ∑ a : α in s, (s.card : ℝ≥0 )⁻¹ :=
           Finset.sum_congr rfl fun x hx => by
-            simp [← hx]
+            simp [hx]
         _ = s.card • (s.card : ℝ≥0 )⁻¹ := Finset.sum_const _
         _ = (s.card : ℝ≥0 ) * (s.card : ℝ≥0 )⁻¹ := by
           rw [nsmul_eq_mul]
         _ = 1 := div_self (Nat.cast_ne_zero.2 <| Finset.card_ne_zero_of_mem hx)
         )
     fun x hx => by
-    simp only [← hx, ← if_false]
+    simp only [hx, if_false]
 
 variable {s : Finset α} (hs : s.Nonempty) {a : α}
 
@@ -56,17 +56,17 @@ theorem uniform_of_finset_apply (a : α) : uniformOfFinset s hs a = if a ∈ s t
   rfl
 
 theorem uniform_of_finset_apply_of_mem (ha : a ∈ s) : uniformOfFinset s hs a = s.card⁻¹ := by
-  simp [← ha]
+  simp [ha]
 
 theorem uniform_of_finset_apply_of_not_mem (ha : a ∉ s) : uniformOfFinset s hs a = 0 := by
-  simp [← ha]
+  simp [ha]
 
 @[simp]
 theorem support_uniform_of_finset : (uniformOfFinset s hs).Support = s :=
   Set.ext
     (by
       let ⟨a, ha⟩ := hs
-      simp [← mem_support_iff, ← Finset.ne_empty_of_mem ha])
+      simp [mem_support_iff, Finset.ne_empty_of_mem ha])
 
 theorem mem_support_uniform_of_finset_iff (a : α) : a ∈ (uniformOfFinset s hs).Support ↔ a ∈ s := by
   simp
@@ -84,23 +84,23 @@ theorem to_outer_measure_uniform_of_finset_apply :
     _ = ↑(∑' x, if x ∈ s ∧ x ∈ t then (s.card : ℝ≥0 )⁻¹ else 0) := by
       refine' Ennreal.coe_eq_coe.2 <| tsum_congr fun x => _
       by_cases' hxt : x ∈ t
-      · by_cases' hxs : x ∈ s <;> simp [← hxt, ← hxs]
+      · by_cases' hxs : x ∈ s <;> simp [hxt, hxs]
         
-      · simp [← hxt]
+      · simp [hxt]
         
     _ = ↑(∑ x in s.filter (· ∈ t), if x ∈ s ∧ x ∈ t then (s.card : ℝ≥0 )⁻¹ else 0) := by
       refine' Ennreal.coe_eq_coe.2 (tsum_eq_sum fun x hx => _)
       have : ¬(x ∈ s ∧ x ∈ t) := fun h => hx (Finset.mem_filter.2 h)
-      simp [← this]
+      simp [this]
     _ = ↑(∑ x in s.filter (· ∈ t), (s.card : ℝ≥0 )⁻¹) :=
       Ennreal.coe_eq_coe.2
         ((Finset.sum_congr rfl) fun x hx => by
           let this : x ∈ s ∧ x ∈ t := by
             simpa using hx
-          simp [← this])
+          simp [this])
     _ = (s.filter (· ∈ t)).card / s.card := by
       let this : (s.card : ℝ≥0 ) ≠ 0 := Nat.cast_ne_zero.2 (hs.recOn fun _ => Finset.card_ne_zero_of_mem)
-      simp [← div_eq_mul_inv, ← Ennreal.coe_inv this]
+      simp [div_eq_mul_inv, Ennreal.coe_inv this]
     
 
 @[simp]
@@ -122,12 +122,12 @@ variable [Fintype α] [Nonempty α]
 
 @[simp]
 theorem uniform_of_fintype_apply (a : α) : uniformOfFintype α a = (Fintype.card α)⁻¹ := by
-  simpa only [← uniform_of_fintype, ← Finset.mem_univ, ← if_true, ← uniform_of_finset_apply]
+  simpa only [uniform_of_fintype, Finset.mem_univ, if_true, uniform_of_finset_apply]
 
 @[simp]
 theorem support_uniform_of_fintype (α : Type _) [Fintype α] [Nonempty α] : (uniformOfFintype α).Support = ⊤ :=
   Set.ext fun x => by
-    simpa [← mem_support_iff] using Fintype.card_ne_zero
+    simpa [mem_support_iff] using Fintype.card_ne_zero
 
 theorem mem_support_uniform_of_fintype (a : α) : a ∈ (uniformOfFintype α).Support := by
   simp
@@ -138,11 +138,11 @@ variable (s : Set α)
 
 theorem to_outer_measure_uniform_of_fintype_apply :
     (uniformOfFintype α).toOuterMeasure s = Fintype.card s / Fintype.card α := by
-  simpa [← uniform_of_fintype]
+  simpa [uniform_of_fintype]
 
 theorem to_measure_uniform_of_fintype_apply [MeasurableSpace α] (hs : MeasurableSet s) :
     (uniformOfFintype α).toMeasure s = Fintype.card s / Fintype.card α := by
-  simpa [← uniform_of_fintype, ← hs]
+  simpa [uniform_of_fintype, hs]
 
 end Measureₓ
 
@@ -155,9 +155,9 @@ section OfMultiset
 def ofMultiset (s : Multiset α) (hs : s ≠ 0) : Pmf α :=
   ⟨fun a => s.count a / s.card, by
     have : (∑ a in s.toFinset, (s.count a : ℝ) / s.card) = 1 := by
-      simp only [← div_eq_inv_mul, Finset.mul_sum, Nat.cast_sum, ← Multiset.to_finset_sum_count_eq]
+      simp only [div_eq_inv_mul, ← Finset.mul_sum, ← Nat.cast_sum, Multiset.to_finset_sum_count_eq]
       rw [inv_mul_cancel]
-      simp [← hs]
+      simp [hs]
     have : (∑ a in s.toFinset, (s.count a : ℝ≥0 ) / s.card) = 1 := by
       rw [← Nnreal.eq_iff, Nnreal.coe_one, ← this, Nnreal.coe_sum] <;> simp
     rw [← this]
@@ -174,7 +174,7 @@ theorem of_multiset_apply (a : α) : ofMultiset s hs a = s.count a / s.card :=
 theorem support_of_multiset : (ofMultiset s hs).Support = s.toFinset :=
   Set.ext
     (by
-      simp [← mem_support_iff, ← hs])
+      simp [mem_support_iff, hs])
 
 theorem mem_support_of_multiset_iff (a : α) : a ∈ (ofMultiset s hs).Support ↔ a ∈ s.toFinset := by
   simp
@@ -193,10 +193,10 @@ theorem to_outer_measure_of_multiset_apply :
   refine' tsum_congr fun x => _
   by_cases' hx : x ∈ t
   · have : (Multiset.card s : ℝ≥0 ) ≠ 0 := by
-      simp [← hs]
-    simp [← Set.indicatorₓ, ← hx, ← div_eq_mul_inv, ← Ennreal.coe_inv this]
+      simp [hs]
+    simp [Set.indicatorₓ, hx, div_eq_mul_inv, Ennreal.coe_inv this]
     
-  · simp [← hx]
+  · simp [hx]
     
 
 @[simp]

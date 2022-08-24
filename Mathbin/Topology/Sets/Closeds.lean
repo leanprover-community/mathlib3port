@@ -123,31 +123,31 @@ theorem coe_finset_inf (f : ι → Closeds α) (s : Finset ι) : (↑(s.inf f) :
 
 theorem infi_def {ι} (s : ι → Closeds α) : (⨅ i, s i) = ⟨⋂ i, s i, is_closed_Inter fun i => (s i).2⟩ := by
   ext
-  simp only [← infi, ← coe_Inf, ← bInter_range]
+  simp only [infi, coe_Inf, bInter_range]
   rfl
 
 @[simp]
 theorem infi_mk {ι} (s : ι → Set α) (h : ∀ i, IsClosed (s i)) :
     (⨅ i, ⟨s i, h i⟩ : Closeds α) = ⟨⋂ i, s i, is_closed_Inter h⟩ := by
-  simp [← infi_def]
+  simp [infi_def]
 
 @[simp, norm_cast]
 theorem coe_infi {ι} (s : ι → Closeds α) : ((⨅ i, s i : Closeds α) : Set α) = ⋂ i, s i := by
-  simp [← infi_def]
+  simp [infi_def]
 
 @[simp]
 theorem mem_infi {ι} {x : α} {s : ι → Closeds α} : x ∈ infi s ↔ ∀ i, x ∈ s i := by
-  simp [SetLike.mem_coe]
+  simp [← SetLike.mem_coe]
 
 @[simp]
-theorem mem_Inf {S : Set (Closeds α)} {x : α} : x ∈ inf S ↔ ∀, ∀ s ∈ S, ∀, x ∈ s := by
+theorem mem_Inf {S : Set (Closeds α)} {x : α} : x ∈ inf S ↔ ∀ s ∈ S, x ∈ s := by
   simp_rw [Inf_eq_infi, mem_infi]
 
 instance : Coframe (Closeds α) :=
   { Closeds.completeLattice with inf := inf,
     infi_sup_le_sup_Inf := fun a s =>
       (SetLike.coe_injective <| by
-          simp only [← coe_sup, ← coe_infi, ← coe_Inf, ← Set.union_Inter₂]).le }
+          simp only [coe_sup, coe_infi, coe_Inf, Set.union_Inter₂]).le }
 
 end Closeds
 
@@ -218,7 +218,7 @@ instance : HasTop (Clopens α) :=
 instance : HasBot (Clopens α) :=
   ⟨⟨⊥, is_clopen_empty⟩⟩
 
-instance : HasSdiff (Clopens α) :=
+instance : Sdiff (Clopens α) :=
   ⟨fun s t => ⟨s \ t, s.clopen.diff t.clopen⟩⟩
 
 instance : HasCompl (Clopens α) :=

@@ -56,7 +56,7 @@ instance unit_is_iso_of_L_fully_faithful [Full L] [Faithful L] : IsIso (Adjuncti
             simp , by
             ext x f
             dsimp'
-            simp only [← adjunction.hom_equiv_counit, ← preimage_comp, ← preimage_map, ← category.assoc]
+            simp only [adjunction.hom_equiv_counit, preimage_comp, preimage_map, category.assoc]
             rw [← h.unit_naturality]
             simp ⟩⟩⟩
 
@@ -76,7 +76,7 @@ instance counit_is_iso_of_R_fully_faithful [Full R] [Faithful R] : IsIso (Adjunc
               simp , by
               ext x f
               dsimp'
-              simp only [← adjunction.hom_equiv_unit, ← preimage_comp, ← preimage_map]
+              simp only [adjunction.hom_equiv_unit, preimage_comp, preimage_map]
               rw [← h.counit_naturality]
               simp ⟩⟩⟩
 
@@ -179,7 +179,7 @@ def Adjunction.restrictFullyFaithful (iC : C ⥤ C') (iD : D ⥤ D') {L' : C' �
       hom_equiv_naturality_right' := fun X Y' Y f g => by
         apply iC.map_injective
         suffices : R'.map (iD.map g) ≫ comm2.hom.app Y = comm2.hom.app Y' ≫ iC.map (R.map g)
-        simp [← this]
+        simp [this]
         apply comm2.hom.naturality g }
 
 end CategoryTheory

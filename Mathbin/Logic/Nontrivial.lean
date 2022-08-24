@@ -67,7 +67,7 @@ theorem nontrivial_iff_exists_ne (x : α) : Nontrivial α ↔ ∃ y, y ≠ x :=
 
 theorem Subtype.nontrivial_iff_exists_ne (p : α → Prop) (x : Subtype p) :
     Nontrivial (Subtype p) ↔ ∃ (y : α)(hy : p y), y ≠ x := by
-  simp only [← nontrivial_iff_exists_ne x, ← Subtype.exists, ← Ne.def, ← Subtype.ext_iff, ← Subtype.coe_mk]
+  simp only [nontrivial_iff_exists_ne x, Subtype.exists, Ne.def, Subtype.ext_iff, Subtype.coe_mk]
 
 instance : Nontrivial Prop :=
   ⟨⟨True, False, true_ne_false⟩⟩
@@ -200,7 +200,7 @@ unsafe def nontriviality_by_elim (α : expr) (lems : interactive.parse simp_arg_
       fail f! "Could not prove goal assuming `subsingleton {α}`"
   reset_instance_cache
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 /-- Tries to generate a `nontrivial α` instance using `nontrivial_of_ne` or `nontrivial_of_lt`
 and local hypotheses.
 -/

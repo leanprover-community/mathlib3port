@@ -29,7 +29,7 @@ def algebra' (h : m ∣ n) : Algebra (Zmod n) R :=
       show (a * r : R) = r * a by
         rcases Zmod.int_cast_surjective a with ⟨k, rfl⟩
         show Zmod.castHom h R k * r = r * Zmod.castHom h R k
-        rw [RingHom.map_int_cast]
+        rw [map_int_cast]
         exact Commute.cast_int_left r k,
     smul_def' := fun a r => rfl }
 

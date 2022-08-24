@@ -149,7 +149,7 @@ def toΓSpecCBasicOpens :
   app := fun r => X.toΓSpecCApp r.unop
   naturality' := fun r s f => by
     apply (structure_sheaf.to_basic_open_epi (Γ.obj (op X)) r.unop).1
-    simp only [category.assoc]
+    simp only [← category.assoc]
     erw [X.to_Γ_Spec_c_app_spec r.unop]
     convert X.to_Γ_Spec_c_app_spec s.unop
     symm
@@ -245,7 +245,7 @@ def identityToΓSpec : 𝟭 LocallyRingedSpace.{u} ⟶ Γ.rightOp ⋙ Spec.to_Lo
     symm
     apply LocallyRingedSpace.comp_ring_hom_ext
     · ext1 x
-      dsimp' [← Spec.Top_map, ← LocallyRingedSpace.to_Γ_Spec_fun]
+      dsimp' [Spec.Top_map, LocallyRingedSpace.to_Γ_Spec_fun]
       rw [← Subtype.val_eq_coe, ← LocalRing.comap_closed_point (PresheafedSpace.stalk_map _ x), ←
         PrimeSpectrum.comap_comp_apply, ← PrimeSpectrum.comap_comp_apply]
       congr 2
@@ -307,7 +307,7 @@ def adjunction : Scheme.Γ.rightOp ⊣ Scheme.Spec :=
 
 theorem adjunction_hom_equiv_apply {X : Scheme} {R : CommRingₓₓᵒᵖ} (f : (op <| Scheme.Γ.obj <| op X) ⟶ R) :
     ΓSpec.adjunction.homEquiv X R f = locallyRingedSpaceAdjunction.homEquiv X.1 R f := by
-  dsimp' [← adjunction, ← adjunction.restrict_fully_faithful]
+  dsimp' [adjunction, adjunction.restrict_fully_faithful]
   simp
 
 theorem adjunction_hom_equiv (X : Scheme) (R : CommRingₓₓᵒᵖ) :
@@ -353,7 +353,7 @@ theorem adjunction_unit_app_app_top (X : Scheme) :
   have := congr_app Γ_Spec.adjunction.left_triangle X
   dsimp'  at this
   rw [← is_iso.eq_comp_inv] at this
-  simp only [← Γ_Spec.LocallyRingedSpace_adjunction_counit, ← nat_trans.op_app, ← category.id_comp, ←
+  simp only [Γ_Spec.LocallyRingedSpace_adjunction_counit, nat_trans.op_app, category.id_comp,
     Γ_Spec.adjunction_counit_app] at this
   rw [← op_inv, nat_iso.inv_inv_app, quiver.hom.op_inj.eq_iff] at this
   exact this

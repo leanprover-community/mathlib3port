@@ -271,13 +271,13 @@ variable {R A B}
 def prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : A →ₙₐ[R] B × C where
   toFun := Pi.prod f g
   map_zero' := by
-    simp only [← Pi.prod, ← Prod.zero_eq_mk, ← map_zero]
+    simp only [Pi.prod, Prod.zero_eq_mk, map_zero]
   map_add' := fun x y => by
-    simp only [← Pi.prod, ← Prod.mk_add_mk, ← map_add]
+    simp only [Pi.prod, Prod.mk_add_mk, map_add]
   map_mul' := fun x y => by
-    simp only [← Pi.prod, ← Prod.mk_mul_mk, ← map_mul]
+    simp only [Pi.prod, Prod.mk_mul_mk, map_mul]
   map_smul' := fun c x => by
-    simp only [← Pi.prod, ← Prod.smul_mk, ← map_smul, ← RingHom.id_apply]
+    simp only [Pi.prod, Prod.smul_mk, map_smul, RingHom.id_apply]
 
 theorem coe_prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : ⇑(f.Prod g) = Pi.prod f g :=
   rfl

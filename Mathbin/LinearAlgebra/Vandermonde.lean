@@ -57,22 +57,22 @@ theorem vandermonde_cons {n : ℕ} (v0 : R) (v : Finₓ n → R) :
       (by
         simp )
       (fun j => _) j
-  simp [← pow_succₓ]
+  simp [pow_succₓ]
 
 theorem vandermonde_succ {n : ℕ} (v : Finₓ n.succ → R) :
     vandermonde v =
       Finₓ.cons (fun j => v 0 ^ (j : ℕ)) fun i => Finₓ.cons 1 fun j => v i.succ * vandermonde (Finₓ.tail v) i j :=
   by
   conv_lhs => rw [← Finₓ.cons_self_tail v, vandermonde_cons]
-  simp only [← Finₓ.tail]
+  simp only [Finₓ.tail]
 
 theorem vandermonde_mul_vandermonde_transpose {n : ℕ} (v w : Finₓ n → R) (i j) :
     (vandermonde v ⬝ (vandermonde w)ᵀ) i j = ∑ k : Finₓ n, (v i * w j) ^ (k : ℕ) := by
-  simp only [← vandermonde_apply, ← Matrix.mul_apply, ← Matrix.transpose_apply, ← mul_powₓ]
+  simp only [vandermonde_apply, Matrix.mul_apply, Matrix.transpose_apply, mul_powₓ]
 
 theorem vandermonde_transpose_mul_vandermonde {n : ℕ} (v : Finₓ n → R) (i j) :
     ((vandermonde v)ᵀ ⬝ vandermonde v) i j = ∑ k : Finₓ n, v k ^ (i + j : ℕ) := by
-  simp only [← vandermonde_apply, ← Matrix.mul_apply, ← Matrix.transpose_apply, ← pow_addₓ]
+  simp only [vandermonde_apply, Matrix.mul_apply, Matrix.transpose_apply, pow_addₓ]
 
 theorem det_vandermonde {n : ℕ} (v : Finₓ n → R) : det (vandermonde v) = ∏ i : Finₓ n, ∏ j in ioi i, v j - v i := by
   unfold vandermonde
@@ -91,7 +91,7 @@ theorem det_vandermonde {n : ℕ} (v : Finₓ n → R) : det (vandermonde v) = �
             Matrix.vecCons (v 0 ^ (j.succ : ℕ)) (fun i : Finₓ n => v (Finₓ.succ i) ^ (j.succ : ℕ) - v 0 ^ (j.succ : ℕ))
               (Finₓ.succAbove 0 i)) :=
       by
-      simp_rw [det_succ_column_zero, Finₓ.sum_univ_succ, of_apply, Matrix.cons_val_zero, minor, of_apply,
+      simp_rw [det_succ_column_zero, Finₓ.sum_univ_succ, of_apply, Matrix.cons_val_zero, submatrix, of_apply,
         Matrix.cons_val_succ, Finₓ.coe_zero, pow_zeroₓ, one_mulₓ, sub_self, mul_zero, zero_mul, Finset.sum_const_zero,
         add_zeroₓ]
     _ =
@@ -123,14 +123,14 @@ theorem det_vandermonde {n : ℕ} (v : Finₓ n → R) : det (vandermonde v) = �
     ring
     
   · cases n
-    · simp only [← det_eq_one_of_card_eq_zero (Fintype.card_fin 0)]
+    · simp only [det_eq_one_of_card_eq_zero (Fintype.card_fin 0)]
       
     apply det_eq_of_forall_col_eq_smul_add_pred fun i => v 0
     · intro j
       simp
       
     · intro i j
-      simp only [← smul_eq_mul, ← Pi.add_apply, ← Finₓ.coe_succ, ← Finₓ.coe_cast_succ, ← Pi.smul_apply]
+      simp only [smul_eq_mul, Pi.add_apply, Finₓ.coe_succ, Finₓ.coe_cast_succ, Pi.smul_apply]
       rw [Finset.sum_range_succ, add_commₓ, tsub_self, pow_zeroₓ, mul_oneₓ, Finset.mul_sum]
       congr 1
       refine' Finset.sum_congr rfl fun i' hi' => _
@@ -142,17 +142,17 @@ theorem det_vandermonde {n : ℕ} (v : Finₓ n → R) : det (vandermonde v) = �
 theorem det_vandermonde_eq_zero_iff [IsDomain R] {n : ℕ} {v : Finₓ n → R} :
     det (vandermonde v) = 0 ↔ ∃ i j : Finₓ n, v i = v j ∧ i ≠ j := by
   constructor
-  · simp only [← det_vandermonde v, ← Finset.prod_eq_zero_iff, ← sub_eq_zero, ← forall_exists_index]
+  · simp only [det_vandermonde v, Finset.prod_eq_zero_iff, sub_eq_zero, forall_exists_index]
     exact fun i _ j h₁ h₂ => ⟨j, i, h₂, (mem_Ioi.mp h₁).ne'⟩
     
-  · simp only [← Ne.def, ← forall_exists_index, ← and_imp]
+  · simp only [Ne.def, forall_exists_index, and_imp]
     refine' fun i j h₁ h₂ => Matrix.det_zero_of_row_eq h₂ (funext fun k => _)
     rw [vandermonde_apply, vandermonde_apply, h₁]
     
 
 theorem det_vandermonde_ne_zero_iff [IsDomain R] {n : ℕ} {v : Finₓ n → R} :
     det (vandermonde v) ≠ 0 ↔ Function.Injective v := by
-  simpa only [← det_vandermonde_eq_zero_iff, ← Ne.def, ← not_exists, ← not_and, ← not_not]
+  simpa only [det_vandermonde_eq_zero_iff, Ne.def, not_exists, not_and, not_not]
 
 theorem eq_zero_of_forall_index_sum_pow_mul_eq_zero {R : Type _} [CommRingₓ R] [IsDomain R] {n : ℕ} {f v : Finₓ n → R}
     (hf : Function.Injective f) (hfv : ∀ j, (∑ i : Finₓ n, f j ^ (i : ℕ) * v i) = 0) : v = 0 :=

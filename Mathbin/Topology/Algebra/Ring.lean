@@ -211,10 +211,10 @@ theorem TopologicalRing.of_add_group_of_nhds_zero [TopologicalAddGroup R]
     by
     convert this using 1
     · ext
-      simp only [← comp_app, ← mul_addₓ, ← add_mulₓ]
+      simp only [comp_app, mul_addₓ, add_mulₓ]
       abel
       
-    · simp only [← add_commₓ]
+    · simp only [add_commₓ]
       
   refine' tendsto_map.comp (hadd.comp (tendsto.prod_mk _ hmul))
   exact hadd.comp (((hmul_right y₀).comp tendsto_fst).prod_mk ((hmul_left x₀).comp tendsto_snd))

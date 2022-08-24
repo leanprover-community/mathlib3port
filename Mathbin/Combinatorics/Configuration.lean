@@ -39,7 +39,7 @@ namespace Configuration
 
 universe u
 
-variable (P L : Type u) [HasMem P L]
+variable (P L : Type u) [Membership P L]
 
 /-- A type synonym. -/
 def Dual :=
@@ -54,8 +54,8 @@ instance [Finite P] : Finite (Dual P) :=
 instance [this : Fintype P] : Fintype (Dual P) :=
   this
 
-instance : HasMem (Dual L) (Dual P) :=
-  ⟨Function.swap (HasMem.Mem : P → L → Prop)⟩
+instance : Membership (Dual L) (Dual P) :=
+  ⟨Function.swap (Membership.Mem : P → L → Prop)⟩
 
 /-- A configuration is nondegenerate if:
   1) there does not exist a line that passes through all of the points,
@@ -138,7 +138,7 @@ theorem Nondegenerate.exists_injective_of_card_le [Nondegenerate P L] [Fintype P
     exact (eq_or_eq (hp₁ l₁ hl₁) (hp₂ l₁ hl₁) (hp₁ l₂ hl₂) (hp₂ l₂ hl₂)).resolve_right hl₃
   by_cases' hs₃ : sᶜ.card = 0
   · rw [hs₃, Nat.le_zero_iffₓ]
-    rw [Finset.card_compl, tsub_eq_zero_iff_le, LE.le.le_iff_eq (Finset.card_le_univ _), eq_comm,
+    rw [Finset.card_compl, tsub_eq_zero_iff_le, LE.le.le_iff_eqₓ (Finset.card_le_univ _), eq_comm,
       Finset.card_eq_iff_eq_univ] at hs₃⊢
     rw [hs₃]
     rw [Finset.eq_univ_iff_forall] at hs₃⊢
@@ -167,7 +167,7 @@ variable (P L)
 theorem sum_line_count_eq_sum_point_count [Fintype P] [Fintype L] :
     (∑ p : P, lineCount L p) = ∑ l : L, pointCount P l := by
   classical
-  simp only [← line_count, ← point_count, ← Nat.card_eq_fintype_card, Fintype.card_sigma]
+  simp only [line_count, point_count, Nat.card_eq_fintype_card, ← Fintype.card_sigma]
   apply Fintype.card_congr
   calc
     (Σp, { l : L // p ∈ l }) ≃ { x : P × L // x.1 ∈ x.2 } := (Equivₓ.subtypeProdEquivSigmaSubtype (· ∈ ·)).symm
@@ -220,7 +220,7 @@ theorem HasLines.card_le [HasLines P L] [Fintype P] [Fintype L] : Fintype.card P
     refine'
       Finset.sum_lt_sum_of_subset (finset.univ.image f).subset_univ (Finset.mem_univ p) _ _ fun p hp₁ hp₂ =>
         zero_le (line_count L p)
-    · simpa only [← Finset.mem_image, ← exists_prop, ← Finset.mem_univ, ← true_andₓ]
+    · simpa only [Finset.mem_image, exists_prop, Finset.mem_univ, true_andₓ]
       
     · rw [line_count, Nat.card_eq_fintype_card, Fintype.card_pos_iff]
       obtain ⟨l, hl⟩ := @exists_line P L _ _ p
@@ -240,7 +240,7 @@ theorem HasLines.exists_bijective_of_card_eq [HasLines P L] [Fintype P] [Fintype
     (h : Fintype.card P = Fintype.card L) :
     ∃ f : L → P, Function.Bijective f ∧ ∀ l, pointCount P l = lineCount L (f l) := by
   classical
-  obtain ⟨f, hf1, hf2⟩ := nondegenerate.exists_injective_of_card_le (ge_of_eq h)
+  obtain ⟨f, hf1, hf2⟩ := nondegenerate.exists_injective_of_card_le (ge_of_eqₓ h)
   have hf3 := (Fintype.bijective_iff_injective_and_card f).mpr ⟨hf1, h.symm⟩
   refine'
     ⟨f, hf3, fun l =>
@@ -383,7 +383,7 @@ theorem line_count_eq_line_count [Finite P] [Finite L] (p q : P) : lineCount L p
     exact (this p).trans (this q).symm
   refine' fun p => or_not.elim (fun h₂ => _) fun h₂ => (has_lines.line_count_eq_point_count h h₂).trans hl₂
   refine' or_not.elim (fun h₃ => _) fun h₃ => (has_lines.line_count_eq_point_count h h₃).trans hl₃
-  rwa [(eq_or_eq h₂ h₂₂ h₃ h₂₃).resolve_right fun h => h₃₃ ((congr_arg (HasMem.Mem p₃) h).mp h₃₂)]
+  rwa [(eq_or_eq h₂ h₂₂ h₃ h₂₃).resolve_right fun h => h₃₃ ((congr_arg (Membership.Mem p₃) h).mp h₃₂)]
 
 variable (P) {L}
 
@@ -435,12 +435,12 @@ theorem one_lt_order [Finite P] [Finite L] : 1 < order P L := by
 variable {P} (L)
 
 theorem two_lt_line_count [Finite P] [Finite L] (p : P) : 2 < lineCount L p := by
-  simpa only [← line_count_eq L p, ← Nat.succ_lt_succ_iff] using one_lt_order P L
+  simpa only [line_count_eq L p, Nat.succ_lt_succ_iff] using one_lt_order P L
 
 variable (P) {L}
 
 theorem two_lt_point_count [Finite P] [Finite L] (l : L) : 2 < pointCount P l := by
-  simpa only [← point_count_eq P l, ← Nat.succ_lt_succ_iff] using one_lt_order P L
+  simpa only [point_count_eq P l, Nat.succ_lt_succ_iff] using one_lt_order P L
 
 variable (P) (L)
 

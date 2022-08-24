@@ -81,7 +81,7 @@ theorem le_def {K₁ K₂ : Pretopology C} : K₁ ≤ K₂ ↔ (K₁ : ∀ X : C
 variable (C)
 
 instance : PartialOrderₓ (Pretopology C) :=
-  { Pretopology.hasLe with le_refl := fun K => le_def.mpr le_rfl,
+  { Pretopology.hasLe with le_refl := fun K => le_def.mpr le_rflₓ,
     le_trans := fun K₁ K₂ K₃ h₁₂ h₂₃ => le_def.mpr (le_transₓ h₁₂ h₂₃),
     le_antisymm := fun K₁ K₂ h₁₂ h₂₁ => Pretopology.ext _ _ (le_antisymmₓ h₁₂ h₂₁) }
 
@@ -154,7 +154,7 @@ def gi : GaloisInsertion (toGrothendieck C) (ofGrothendieck C) where
       apply J.superset_covering _ (h _ hR)
       rwa [sieve.gi_generate.gc]
       
-  le_l_u := fun J X S hS => ⟨S, J.superset_covering S.le_generate hS, le_rfl⟩
+  le_l_u := fun J X S hS => ⟨S, J.superset_covering S.le_generate hS, le_rflₓ⟩
   choice := fun x hx => toGrothendieck C x
   choice_eq := fun _ _ => rfl
 

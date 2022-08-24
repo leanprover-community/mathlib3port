@@ -65,7 +65,7 @@ instance : CharP (GaloisField p n) p :=
       infer_instance)
 
 instance : Fintype (GaloisField p n) := by
-  dsimp' only [← GaloisField]
+  dsimp' only [GaloisField]
   exact FiniteDimensional.fintypeOfFintype (Zmod p) (GaloisField p n)
 
 theorem finrank {n} (h : n ≠ 0) : FiniteDimensional.finrank (Zmod p) (GaloisField p n) = n := by
@@ -94,32 +94,31 @@ theorem finrank {n} (h : n ≠ 0) : FiniteDimensional.finrank (Zmod p) (GaloisFi
   cases hp
   apply Subring.closure_induction hx <;> clear! x <;> simp_rw [mem_root_set aux]
   · rintro x (⟨r, rfl⟩ | hx)
-    · simp only [← aeval_X_pow, ← aeval_X, ← AlgHom.map_sub]
+    · simp only [aeval_X_pow, aeval_X, AlgHom.map_sub]
       rw [← map_pow, Zmod.pow_card_pow, sub_self]
       
-    · dsimp' only [← GaloisField]  at hx
+    · dsimp' only [GaloisField]  at hx
       rwa [mem_root_set aux] at hx
       
     
-  · dsimp' only [← g_poly]
+  · dsimp' only [g_poly]
     rw [← coeff_zero_eq_aeval_zero']
-    simp only [← coeff_X_pow, ← coeff_X_zero, ← sub_zero, ← RingHom.map_eq_zero, ← ite_eq_right_iff, ← one_ne_zero, ←
-      coeff_sub]
+    simp only [coeff_X_pow, coeff_X_zero, sub_zero, _root_.map_eq_zero, ite_eq_right_iff, one_ne_zero, coeff_sub]
     intro hn
     exact Nat.not_lt_zeroₓ 1 (pow_eq_zero hn.symm ▸ hp)
     
   · simp
     
-  · simp only [← aeval_X_pow, ← aeval_X, ← AlgHom.map_sub, ← add_pow_char_pow, ← sub_eq_zero]
+  · simp only [aeval_X_pow, aeval_X, AlgHom.map_sub, add_pow_char_pow, sub_eq_zero]
     intro x y hx hy
     rw [hx, hy]
     
   · intro x hx
-    simp only [← sub_eq_zero, ← aeval_X_pow, ← aeval_X, ← AlgHom.map_sub, ← sub_neg_eq_add] at *
+    simp only [sub_eq_zero, aeval_X_pow, aeval_X, AlgHom.map_sub, sub_neg_eq_add] at *
     rw [neg_pow, hx, CharP.neg_one_pow_char_pow]
     simp
     
-  · simp only [← aeval_X_pow, ← aeval_X, ← AlgHom.map_sub, ← mul_powₓ, ← sub_eq_zero]
+  · simp only [aeval_X_pow, aeval_X, AlgHom.map_sub, mul_powₓ, sub_eq_zero]
     intro x y hx hy
     rw [hx, hy]
     
@@ -156,7 +155,8 @@ theorem splits_X_pow_card_sub_X : Splits (algebraMap (Zmod p) K) (X ^ Fintype.ca
 theorem is_splitting_field_of_card_eq (h : Fintype.card K = p ^ n) : IsSplittingField (Zmod p) K (X ^ p ^ n - X) :=
   h ▸ FiniteField.HasSub.Sub.Polynomial.is_splitting_field K (Zmod p)
 
-instance (priority := 100) {K K' : Type _} [Field K] [Field K'] [Fintype K'] [Algebra K K'] : IsGalois K K' := by
+instance (priority := 100) {K K' : Type _} [Field K] [Field K'] [Finite K'] [Algebra K K'] : IsGalois K K' := by
+  cases nonempty_fintype K'
   obtain ⟨p, hp⟩ := CharP.exists K
   haveI : CharP K p := hp
   haveI : CharP K' p := char_p_of_injective_algebra_map' K K' p

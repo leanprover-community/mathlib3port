@@ -224,7 +224,7 @@ theorem _root_.order_iso.pnat_iso_nat_symm_apply : ⇑OrderIso.pnatIsoNat.symm =
 instance (priority := 10) : CovariantClass ℕ+ ℕ+ (· + ·) (· ≤ ·) :=
   ⟨by
     rintro ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩
-    simp [Pnat.coe_le_coe]⟩
+    simp [← Pnat.coe_le_coe]⟩
 
 @[simp]
 theorem ne_zero (n : ℕ+) : (n : ℕ) ≠ 0 :=
@@ -259,7 +259,7 @@ theorem one_le (n : ℕ+) : (1 : ℕ+) ≤ n :=
 
 @[simp]
 theorem not_lt_one (n : ℕ+) : ¬n < 1 :=
-  not_lt_of_le n.one_le
+  not_lt_of_leₓ n.one_le
 
 instance : OrderBot ℕ+ where
   bot := 1
@@ -512,7 +512,7 @@ theorem div_add_mod' (m k : ℕ+) : (div m k * k + mod m k : ℕ) = m := by
   exact div_add_mod _ _
 
 theorem mod_coe (m k : ℕ+) : (mod m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0) (k : ℕ) ((m : ℕ) % (k : ℕ)) := by
-  dsimp' [← mod, ← mod_div]
+  dsimp' [mod, mod_div]
   cases (m : ℕ) % (k : ℕ)
   · rw [if_pos rfl]
     rfl
@@ -523,7 +523,7 @@ theorem mod_coe (m k : ℕ+) : (mod m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0)
 
 theorem div_coe (m k : ℕ+) : (div m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0) ((m : ℕ) / (k : ℕ)).pred ((m : ℕ) / (k : ℕ)) :=
   by
-  dsimp' [← div, ← mod_div]
+  dsimp' [div, mod_div]
   cases (m : ℕ) % (k : ℕ)
   · rw [if_pos rfl]
     rfl

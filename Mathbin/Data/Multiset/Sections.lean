@@ -21,7 +21,7 @@ which can be put in bijection with `s`, so each element is an member of the corr
 -/
 def sections (s : Multiset (Multiset α)) : Multiset (Multiset α) :=
   Multiset.recOn s {0} (fun s _ c => s.bind fun a => c.map (Multiset.cons a)) fun a₀ a₁ s pi => by
-    simp [← map_bind, ← bind_bind a₀ a₁, ← cons_swap]
+    simp [map_bind, bind_bind a₀ a₁, cons_swap]
 
 @[simp]
 theorem sections_zero : sections (0 : Multiset (Multiset α)) = {0} :=
@@ -40,7 +40,7 @@ theorem coe_sections :
   | a :: l => by
     simp
     rw [← cons_coe, sections_cons, bind_map_comm, coe_sections l]
-    simp [← List.sections, ← (· ∘ ·), ← List.bind]
+    simp [List.sections, (· ∘ ·), List.bind]
 
 @[simp]
 theorem sections_add (s t : Multiset (Multiset α)) :
@@ -49,14 +49,14 @@ theorem sections_add (s t : Multiset (Multiset α)) :
     (by
       simp )
     fun a s ih => by
-    simp [← ih, ← bind_assoc, ← map_bind, ← bind_map, -add_commₓ]
+    simp [ih, bind_assoc, map_bind, bind_map, -add_commₓ]
 
 theorem mem_sections {s : Multiset (Multiset α)} : ∀ {a}, a ∈ sections s ↔ s.Rel (fun s a => a ∈ s) a :=
   Multiset.induction_on s
     (by
       simp )
     fun a s ih a' => by
-    simp [← ih, ← rel_cons_left, -exists_and_distrib_left, ← exists_and_distrib_left.symm, ← eq_comm]
+    simp [ih, rel_cons_left, -exists_and_distrib_left, exists_and_distrib_left.symm, eq_comm]
 
 theorem card_sections {s : Multiset (Multiset α)} : card (sections s) = prod (s.map card) :=
   Multiset.induction_on s
@@ -70,7 +70,7 @@ theorem prod_map_sum [CommSemiringₓ α] {s : Multiset (Multiset α)} : prod (s
     (by
       simp )
     fun a s ih => by
-    simp [← ih, ← map_bind, ← sum_map_mul_left, ← sum_map_mul_right]
+    simp [ih, map_bind, sum_map_mul_left, sum_map_mul_right]
 
 end Sections
 

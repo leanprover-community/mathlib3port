@@ -73,7 +73,7 @@ instance : Coe (Pfilter P) (Set P) :=
   ⟨fun F => F.dual.Carrier⟩
 
 /-- For the notation `x ∈ F`. -/
-instance : HasMem P (Pfilter P) :=
+instance : Membership P (Pfilter P) :=
   ⟨fun x F => x ∈ (F : Set P)⟩
 
 @[simp]

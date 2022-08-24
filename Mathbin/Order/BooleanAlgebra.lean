@@ -72,7 +72,7 @@ Some of the lemmas in this section are from:
 -/
 
 
-export HasSdiff (sdiff)
+export Sdiff (sdiff)
 
 /-- A generalized Boolean algebra is a distributive lattice with `⊥` and a relative complement
 operation `\` (called `sdiff`, after "set difference") satisfying `(a ⊓ b) ⊔ (a \ b) = a` and
@@ -80,7 +80,7 @@ operation `\` (called `sdiff`, after "set difference") satisfying `(a ⊓ b) ⊔
 
 This is a generalization of Boolean algebras which applies to `finset α` for arbitrary
 (not-necessarily-`fintype`) `α`. -/
-class GeneralizedBooleanAlgebra (α : Type u) extends DistribLattice α, HasSdiff α, HasBot α where
+class GeneralizedBooleanAlgebra (α : Type u) extends DistribLattice α, Sdiff α, HasBot α where
   sup_inf_sdiff : ∀ a b : α, a⊓b⊔a \ b = a
   inf_inf_sdiff : ∀ a b : α, a⊓b⊓a \ b = ⊥
 
@@ -423,13 +423,13 @@ theorem sdiff_lt (hx : y ≤ x) (hy : y ≠ ⊥) : x \ y < x := by
 theorem sdiff_le_sdiff_left (h : z ≤ x) : w \ x ≤ w \ z :=
   le_of_inf_le_sup_le
     (calc
-      w \ x⊓(w⊓z) ≤ w \ x⊓(w⊓x) := inf_le_inf le_rfl (inf_le_inf le_rfl h)
+      w \ x⊓(w⊓z) ≤ w \ x⊓(w⊓x) := inf_le_inf le_rflₓ (inf_le_inf le_rflₓ h)
       _ = ⊥ := by
         rw [inf_comm, inf_inf_sdiff]
       _ ≤ w \ z⊓(w⊓z) := bot_le
       )
     (calc
-      w \ x⊔w⊓z ≤ w \ x⊔w⊓x := sup_le_sup le_rfl (inf_le_inf le_rfl h)
+      w \ x⊔w⊓z ≤ w \ x⊔w⊓x := sup_le_sup le_rflₓ (inf_le_inf le_rflₓ h)
       _ ≤ w := by
         rw [sup_comm, sup_inf_sdiff]
       _ = w \ z⊔w⊓z := by
@@ -472,7 +472,7 @@ theorem sdiff_sdiff_le : x \ (x \ y) ≤ y :=
 
 theorem sdiff_triangle (x y z : α) : x \ z ≤ x \ y⊔y \ z := by
   rw [sdiff_le_iff, sup_left_comm, ← sdiff_le_iff]
-  exact sdiff_sdiff_le.trans (sdiff_le_iff.1 le_rfl)
+  exact sdiff_sdiff_le.trans (sdiff_le_iff.1 le_rflₓ)
 
 @[simp]
 theorem le_sdiff_iff : x ≤ y \ x ↔ x = ⊥ :=
@@ -789,7 +789,7 @@ to be present at define-time, the `extends` mechanism does not work with them.
 Instead, we extend using the underlying `has_bot` and `has_top` data typeclasses, and replicate the
 order axioms of those classes here. A "forgetful" instance back to `bounded_order` is provided.
 -/
-class BooleanAlgebra (α : Type u) extends DistribLattice α, HasCompl α, HasSdiff α, HasTop α, HasBot α where
+class BooleanAlgebra (α : Type u) extends DistribLattice α, HasCompl α, Sdiff α, HasTop α, HasBot α where
   inf_compl_le_bot : ∀ x : α, x⊓xᶜ ≤ ⊥
   top_le_sup_compl : ∀ x : α, ⊤ ≤ x⊔xᶜ
   le_top : ∀ a : α, a ≤ ⊤
@@ -927,10 +927,10 @@ theorem compl_le_compl_iff_le : yᶜ ≤ xᶜ ↔ x ≤ y :=
     have h := compl_le_compl h <;> simp at h <;> assumption, compl_le_compl⟩
 
 theorem le_compl_of_le_compl (h : y ≤ xᶜ) : x ≤ yᶜ := by
-  simpa only [← compl_compl] using compl_le_compl h
+  simpa only [compl_compl] using compl_le_compl h
 
 theorem compl_le_of_compl_le (h : yᶜ ≤ x) : xᶜ ≤ y := by
-  simpa only [← compl_compl] using compl_le_compl h
+  simpa only [compl_compl] using compl_le_compl h
 
 theorem le_compl_iff_le_compl : y ≤ xᶜ ↔ x ≤ yᶜ :=
   ⟨le_compl_of_le_compl, le_compl_of_le_compl⟩
@@ -1042,7 +1042,7 @@ section lift
 -- See note [reducible non-instances]
 /-- Pullback a `generalized_boolean_algebra` along an injection. -/
 @[reducible]
-protected def Function.Injective.generalizedBooleanAlgebra [HasSup α] [HasInf α] [HasBot α] [HasSdiff α]
+protected def Function.Injective.generalizedBooleanAlgebra [HasSup α] [HasInf α] [HasBot α] [Sdiff α]
     [GeneralizedBooleanAlgebra β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b)
     (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) (map_bot : f ⊥ = ⊥) (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) :
     GeneralizedBooleanAlgebra α :=
@@ -1072,7 +1072,7 @@ protected def Function.Injective.generalizedBooleanAlgebra [HasSup α] [HasInf �
 -- See note [reducible non-instances]
 /-- Pullback a `boolean_algebra` along an injection. -/
 @[reducible]
-protected def Function.Injective.booleanAlgebra [HasSup α] [HasInf α] [HasTop α] [HasBot α] [HasCompl α] [HasSdiff α]
+protected def Function.Injective.booleanAlgebra [HasSup α] [HasInf α] [HasTop α] [HasBot α] [HasCompl α] [Sdiff α]
     [BooleanAlgebra β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b)
     (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) (map_compl : ∀ a, f (aᶜ) = f aᶜ)
     (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) : BooleanAlgebra α :=

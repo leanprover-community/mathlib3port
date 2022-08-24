@@ -101,8 +101,7 @@ theorem coe_mk (a : α) (b h₁ h₂) : ↑(Units.mk a b h₁ h₂) = a :=
 @[ext, to_additive]
 theorem ext : Function.Injective (coe : αˣ → α)
   | ⟨v, i₁, vi₁, iv₁⟩, ⟨v', i₂, vi₂, iv₂⟩, e => by
-    change v = v' at e <;>
-      subst v' <;> congr <;> simpa only [← iv₂, ← vi₁, ← one_mulₓ, ← mul_oneₓ] using mul_assoc i₂ v i₁
+    change v = v' at e <;> subst v' <;> congr <;> simpa only [iv₂, vi₁, one_mulₓ, mul_oneₓ] using mul_assoc i₂ v i₁
 
 @[norm_cast, to_additive]
 theorem eq_iff {a b : αˣ} : (a : α) = b ↔ a = b :=
@@ -217,12 +216,12 @@ theorem inv_mul_cancel_right (a : α) (b : αˣ) : a * ↑b⁻¹ * b = a := by
 @[simp, to_additive]
 theorem mul_right_inj (a : αˣ) {b c : α} : (a : α) * b = a * c ↔ b = c :=
   ⟨fun h => by
-    simpa only [← inv_mul_cancel_leftₓ] using congr_arg ((· * ·) ↑(a⁻¹ : αˣ)) h, congr_arg _⟩
+    simpa only [inv_mul_cancel_leftₓ] using congr_arg ((· * ·) ↑(a⁻¹ : αˣ)) h, congr_arg _⟩
 
 @[simp, to_additive]
 theorem mul_left_inj (a : αˣ) {b c : α} : b * a = c * a ↔ b = c :=
   ⟨fun h => by
-    simpa only [← mul_inv_cancel_rightₓ] using congr_arg (· * ↑(a⁻¹ : αˣ)) h, congr_arg _⟩
+    simpa only [mul_inv_cancel_rightₓ] using congr_arg (· * ↑(a⁻¹ : αˣ)) h, congr_arg _⟩
 
 @[to_additive]
 theorem eq_mul_inv_iff_mul_eq {a b : α} : a = b * ↑c⁻¹ ↔ a * c = b :=
@@ -355,7 +354,7 @@ theorem divp_left_inj (u : αˣ) {a b : α} : a /ₚ u = b /ₚ u ↔ a = b :=
 
 @[field_simps]
 theorem divp_divp_eq_divp_mul (x : α) (u₁ u₂ : αˣ) : x /ₚ u₁ /ₚ u₂ = x /ₚ (u₂ * u₁) := by
-  simp only [← divp, ← mul_inv_rev, ← Units.coe_mul, ← mul_assoc]
+  simp only [divp, mul_inv_rev, Units.coe_mul, mul_assoc]
 
 @[field_simps]
 theorem divp_eq_iff_mul_eq {x : α} {u : αˣ} {y : α} : x /ₚ u = y ↔ y * u = x :=
@@ -483,7 +482,7 @@ theorem is_unit_iff_exists_inv [CommMonoidₓ M] {a : M} : IsUnit a ↔ ∃ b, a
 
 @[to_additive]
 theorem is_unit_iff_exists_inv' [CommMonoidₓ M] {a : M} : IsUnit a ↔ ∃ b, b * a = 1 := by
-  simp [← is_unit_iff_exists_inv, ← mul_comm]
+  simp [is_unit_iff_exists_inv, mul_comm]
 
 @[to_additive]
 theorem IsUnit.mul [Monoidₓ M] {x y : M} : IsUnit x → IsUnit y → IsUnit (x * y) := by
@@ -548,7 +547,7 @@ theorem IsUnit.coe_inv_mul [Monoidₓ M] {a : M} (h : IsUnit a) : ↑h.Unit⁻¹
 @[simp, to_additive]
 theorem IsUnit.mul_coe_inv [Monoidₓ M] {a : M} (h : IsUnit a) : a * ↑h.Unit⁻¹ = 1 := by
   convert Units.mul_inv _
-  simp [← h.unit_spec]
+  simp [h.unit_spec]
 
 /-- `is_unit x` is decidable if we can decide if `x` comes from `Mˣ`. -/
 instance [Monoidₓ M] (x : M) [h : Decidable (∃ u : Mˣ, ↑u = x)] : Decidable (IsUnit x) :=

@@ -133,13 +133,13 @@ def prev (c : ComplexShape ι) (j : ι) : ι :=
 
 theorem next_eq' (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.next i = j := by
   apply c.next_eq _ h
-  dsimp' only [← next]
+  dsimp' only [next]
   rw [dif_pos]
   exact Exists.some_spec ⟨j, h⟩
 
 theorem prev_eq' (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.prev j = i := by
   apply c.prev_eq _ h
-  dsimp' only [← prev]
+  dsimp' only [prev]
   rw [dif_pos]
   exact Exists.some_spec ⟨i, h⟩
 

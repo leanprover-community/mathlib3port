@@ -72,7 +72,7 @@ theorem mono (h : μ₁ ⊥ₘ ν₁) (hμ : μ₂ ≤ μ₁) (hν : ν₂ ≤ �
 
 @[simp]
 theorem sum_left {ι : Type _} [Encodable ι] {μ : ι → Measure α} : sum μ ⊥ₘ ν ↔ ∀ i, μ i ⊥ₘ ν := by
-  refine' ⟨fun h i => h.mono (le_sum _ _) le_rfl, fun H => _⟩
+  refine' ⟨fun h i => h.mono (le_sum _ _) le_rflₓ, fun H => _⟩
   choose s hsm hsμ hsν using H
   refine' ⟨⋂ i, s i, MeasurableSet.Inter hsm, _, _⟩
   · rw [sum_apply _ (MeasurableSet.Inter hsm), Ennreal.tsum_eq_zero]

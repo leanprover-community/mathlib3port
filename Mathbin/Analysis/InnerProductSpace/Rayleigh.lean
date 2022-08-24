@@ -55,13 +55,13 @@ local notation "rayleigh_quotient" => fun x : E => T.reApplyInnerSelf x / ∥(x 
 
 theorem rayleigh_smul (x : E) {c : 𝕜} (hc : c ≠ 0) : rayleigh_quotient (c • x) = rayleigh_quotient x := by
   by_cases' hx : x = 0
-  · simp [← hx]
+  · simp [hx]
     
   have : ∥c∥ ≠ 0 := by
-    simp [← hc]
+    simp [hc]
   have : ∥x∥ ≠ 0 := by
-    simp [← hx]
-  field_simp [← norm_smul, ← T.re_apply_inner_self_smul]
+    simp [hx]
+  field_simp [norm_smul, T.re_apply_inner_self_smul]
   ring
 
 theorem image_rayleigh_eq_image_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
@@ -70,12 +70,12 @@ theorem image_rayleigh_eq_image_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
   constructor
   · rintro ⟨x, hx : x ≠ 0, hxT⟩
     have : ∥x∥ ≠ 0 := by
-      simp [← hx]
+      simp [hx]
     let c : 𝕜 := ↑∥x∥⁻¹ * r
     have : c ≠ 0 := by
-      simp [← c, ← hx, ← hr.ne']
+      simp [c, hx, hr.ne']
     refine' ⟨c • x, _, _⟩
-    · field_simp [← norm_smul, ← IsROrC.norm_eq_abs, ← abs_of_nonneg hr.le]
+    · field_simp [norm_smul, IsROrC.norm_eq_abs, abs_of_nonneg hr.le]
       
     · rw [T.rayleigh_smul x this]
       exact hxT
@@ -88,12 +88,12 @@ theorem image_rayleigh_eq_image_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
 theorem supr_rayleigh_eq_supr_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
     (⨆ x : { x : E // x ≠ 0 }, rayleigh_quotient x) = ⨆ x : Sphere (0 : E) r, rayleigh_quotient x :=
   show (⨆ x : ({0} : Set E)ᶜ, rayleigh_quotient x) = _ by
-    simp only [← @csupr_set _ _ _ _ rayleigh_quotient, ← T.image_rayleigh_eq_image_rayleigh_sphere hr]
+    simp only [← @Sup_image' _ _ _ _ rayleigh_quotient, T.image_rayleigh_eq_image_rayleigh_sphere hr]
 
 theorem infi_rayleigh_eq_infi_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
     (⨅ x : { x : E // x ≠ 0 }, rayleigh_quotient x) = ⨅ x : Sphere (0 : E) r, rayleigh_quotient x :=
   show (⨅ x : ({0} : Set E)ᶜ, rayleigh_quotient x) = _ by
-    simp only [← @cinfi_set _ _ _ _ rayleigh_quotient, ← T.image_rayleigh_eq_image_rayleigh_sphere hr]
+    simp only [← @Inf_image' _ _ _ _ rayleigh_quotient, T.image_rayleigh_eq_image_rayleigh_sphere hr]
 
 end ContinuousLinearMap
 
@@ -108,7 +108,7 @@ theorem _root_.linear_map.is_symmetric.has_strict_fderiv_at_re_apply_inner_self 
     HasStrictFderivAt T.reApplyInnerSelf (bit0 (innerSL (T x₀) : F →L[ℝ] ℝ)) x₀ := by
   convert T.has_strict_fderiv_at.inner (has_strict_fderiv_at_id x₀)
   ext y
-  simp [← _root_.bit0, ← hT.apply_clm x₀ y, ← real_inner_comm x₀]
+  simp [_root_.bit0, hT.apply_clm x₀ y, real_inner_comm x₀]
 
 variable [CompleteSpace F] {T : F →L[ℝ] F}
 
@@ -121,7 +121,7 @@ theorem linearly_dependent_of_is_local_extr_on (hT : IsSelfAdjoint T) {x₀ : F}
   have H : IsLocalExtrOn T.re_apply_inner_self { x : F | ∥x∥ ^ 2 = ∥x₀∥ ^ 2 } x₀ := by
     convert hextr
     ext x
-    simp [← dist_eq_norm]
+    simp [dist_eq_norm]
   -- find Lagrange multipliers for the function `T.re_apply_inner_self` and the
   -- hypersurface-defining function `λ x, ∥x∥ ^ 2`
   obtain ⟨a, b, h₁, h₂⟩ :=
@@ -129,35 +129,35 @@ theorem linearly_dependent_of_is_local_extr_on (hT : IsSelfAdjoint T) {x₀ : F}
       (hT.is_symmetric.has_strict_fderiv_at_re_apply_inner_self x₀)
   refine' ⟨a, b, h₁, _⟩
   apply (InnerProductSpace.toDualMap ℝ F).Injective
-  simp only [← LinearIsometry.map_add, ← LinearIsometry.map_smul, ← LinearIsometry.map_zero]
+  simp only [LinearIsometry.map_add, LinearIsometry.map_smul, LinearIsometry.map_zero]
   change a • innerSL x₀ + b • innerSL (T x₀) = 0
   apply smul_right_injective (F →L[ℝ] ℝ) (two_ne_zero : (2 : ℝ) ≠ 0)
-  simpa only [← _root_.bit0, ← add_smul, ← smul_add, ← one_smul, ← add_zeroₓ] using h₂
+  simpa only [_root_.bit0, add_smul, smul_add, one_smul, add_zeroₓ] using h₂
 
 theorem eq_smul_self_of_is_local_extr_on_real (hT : IsSelfAdjoint T) {x₀ : F}
     (hextr : IsLocalExtrOn T.reApplyInnerSelf (Sphere (0 : F) ∥x₀∥) x₀) : T x₀ = rayleigh_quotient x₀ • x₀ := by
   obtain ⟨a, b, h₁, h₂⟩ := hT.linearly_dependent_of_is_local_extr_on hextr
   by_cases' hx₀ : x₀ = 0
-  · simp [← hx₀]
+  · simp [hx₀]
     
   by_cases' hb : b = 0
   · have : a ≠ 0 := by
-      simpa [← hb] using h₁
+      simpa [hb] using h₁
     refine' absurd _ hx₀
     apply smul_right_injective F this
-    simpa [← hb] using h₂
+    simpa [hb] using h₂
     
   let c : ℝ := -b⁻¹ * a
   have hc : T x₀ = c • x₀ := by
     have : b * (b⁻¹ * a) = a := by
-      field_simp [← mul_comm]
+      field_simp [mul_comm]
     apply smul_right_injective F hb
-    simp [← c, ← eq_neg_of_add_eq_zero_left h₂, mul_smul, ← this]
+    simp [c, eq_neg_of_add_eq_zero_left h₂, ← mul_smul, this]
   convert hc
   have : ∥x₀∥ ≠ 0 := by
-    simp [← hx₀]
+    simp [hx₀]
   field_simp
-  simpa [← inner_smul_left, ← real_inner_self_eq_norm_mul_norm, ← sq] using congr_arg (fun x => ⟪x, x₀⟫_ℝ) hc
+  simpa [inner_smul_left, real_inner_self_eq_norm_mul_norm, sq] using congr_arg (fun x => ⟪x, x₀⟫_ℝ) hc
 
 end Real
 
@@ -192,7 +192,7 @@ theorem has_eigenvector_of_is_max_on (hT : IsSelfAdjoint T) {x₀ : E} (hx₀ : 
     HasEigenvector (T : E →ₗ[𝕜] E) (↑(⨆ x : { x : E // x ≠ 0 }, rayleigh_quotient x)) x₀ := by
   convert hT.has_eigenvector_of_is_local_extr_on hx₀ (Or.inr hextr.localize)
   have hx₀' : 0 < ∥x₀∥ := by
-    simp [← hx₀]
+    simp [hx₀]
   have hx₀'' : x₀ ∈ sphere (0 : E) ∥x₀∥ := by
     simp
   rw [T.supr_rayleigh_eq_supr_rayleigh_sphere hx₀']
@@ -212,7 +212,7 @@ theorem has_eigenvector_of_is_min_on (hT : IsSelfAdjoint T) {x₀ : E} (hx₀ : 
     HasEigenvector (T : E →ₗ[𝕜] E) (↑(⨅ x : { x : E // x ≠ 0 }, rayleigh_quotient x)) x₀ := by
   convert hT.has_eigenvector_of_is_local_extr_on hx₀ (Or.inl hextr.localize)
   have hx₀' : 0 < ∥x₀∥ := by
-    simp [← hx₀]
+    simp [hx₀]
   have hx₀'' : x₀ ∈ sphere (0 : E) ∥x₀∥ := by
     simp
   rw [T.infi_rayleigh_eq_infi_rayleigh_sphere hx₀']
@@ -254,11 +254,11 @@ theorem has_eigenvalue_supr_of_finite_dimensional (hT : T.IsSymmetric) :
   have hx₀ : ∥x₀∥ = ∥x∥ := by
     simpa using hx₀'
   have : IsMaxOn T'.val.re_apply_inner_self (sphere 0 ∥x₀∥) x₀ := by
-    simpa only [hx₀] using hTx₀
+    simpa only [← hx₀] using hTx₀
   have hx₀_ne : x₀ ≠ 0 := by
     have : ∥x₀∥ ≠ 0 := by
-      simp only [← hx₀, ← norm_eq_zero, ← hx, ← Ne.def, ← not_false_iff]
-    simpa [norm_eq_zero, ← Ne.def]
+      simp only [hx₀, norm_eq_zero, hx, Ne.def, not_false_iff]
+    simpa [← norm_eq_zero, Ne.def]
   exact has_eigenvalue_of_has_eigenvector (T'.prop.has_eigenvector_of_is_max_on hx₀_ne this)
 
 /-- The infimum of the Rayleigh quotient of a symmetric operator `T` on a nontrivial
@@ -277,11 +277,11 @@ theorem has_eigenvalue_infi_of_finite_dimensional (hT : T.IsSymmetric) :
   have hx₀ : ∥x₀∥ = ∥x∥ := by
     simpa using hx₀'
   have : IsMinOn T'.val.re_apply_inner_self (sphere 0 ∥x₀∥) x₀ := by
-    simpa only [hx₀] using hTx₀
+    simpa only [← hx₀] using hTx₀
   have hx₀_ne : x₀ ≠ 0 := by
     have : ∥x₀∥ ≠ 0 := by
-      simp only [← hx₀, ← norm_eq_zero, ← hx, ← Ne.def, ← not_false_iff]
-    simpa [norm_eq_zero, ← Ne.def]
+      simp only [hx₀, norm_eq_zero, hx, Ne.def, not_false_iff]
+    simpa [← norm_eq_zero, Ne.def]
   exact has_eigenvalue_of_has_eigenvector (T'.prop.has_eigenvector_of_is_min_on hx₀_ne this)
 
 omit _i

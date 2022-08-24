@@ -57,13 +57,13 @@ theorem of_arrow {f g : Arrow C} (h : f ⟶ g) : CommSq f.Hom h.left h.right g.H
 /-- The commutative square in the opposite category associated to a commutative square. -/
 theorem op (p : CommSq f g h i) : CommSq i.op h.op g.op f.op :=
   ⟨by
-    simp only [op_comp, ← p.w]⟩
+    simp only [← op_comp, p.w]⟩
 
 /-- The commutative square associated to a commutative square in the opposite category. -/
 theorem unop {W X Y Z : Cᵒᵖ} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z} (p : CommSq f g h i) :
     CommSq i.unop h.unop g.unop f.unop :=
   ⟨by
-    simp only [unop_comp, ← p.w]⟩
+    simp only [← unop_comp, p.w]⟩
 
 end CommSq
 
@@ -147,12 +147,12 @@ end LiftStruct
 instance subsingleton_lift_struct_of_epi (sq : CommSq f i p g) [Epi i] : Subsingleton (LiftStruct sq) :=
   ⟨fun l₁ l₂ => by
     ext
-    simp only [cancel_epi i, ← lift_struct.fac_left]⟩
+    simp only [← cancel_epi i, lift_struct.fac_left]⟩
 
 instance subsingleton_lift_struct_of_mono (sq : CommSq f i p g) [Mono p] : Subsingleton (LiftStruct sq) :=
   ⟨fun l₁ l₂ => by
     ext
-    simp only [cancel_mono p, ← lift_struct.fac_right]⟩
+    simp only [← cancel_mono p, lift_struct.fac_right]⟩
 
 variable (sq : CommSq f i p g)
 

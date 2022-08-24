@@ -263,7 +263,7 @@ instance (r : α → α → Prop) [IsWellOrder α r] : IsEmpty (r ≺i r) :=
 /-- Composition of a principal segment with an initial segment, as a principal segment -/
 def ltLe (f : r ≺i s) (g : s ≼i t) : r ≺i t :=
   ⟨@RelEmbedding.trans _ _ _ r s t f g, g f.top, fun a => by
-    simp only [← g.init_iff, ← f.down', ← exists_and_distrib_left.symm, ← exists_swap, ← RelEmbedding.trans_apply, ←
+    simp only [g.init_iff, f.down', exists_and_distrib_left.symm, exists_swap, RelEmbedding.trans_apply,
         exists_eq_right'] <;>
       rfl⟩
 
@@ -292,10 +292,10 @@ theorem trans_top [IsTrans γ t] (f : r ≺i s) (g : s ≺i t) : (f.trans g).top
 def equivLt (f : r ≃r s) (g : s ≺i t) : r ≺i t :=
   ⟨@RelEmbedding.trans _ _ _ r s t f g, g.top, fun c =>
     suffices (∃ a : β, g a = c) ↔ ∃ a : α, g (f a) = c by
-      simpa [← g.down]
+      simpa [g.down]
     ⟨fun ⟨b, h⟩ =>
       ⟨f.symm b, by
-        simp only [← h, ← RelIso.apply_symm_apply, ← RelIso.coe_coe_fn]⟩,
+        simp only [h, RelIso.apply_symm_apply, RelIso.coe_coe_fn]⟩,
       fun ⟨a, h⟩ => ⟨f a, h⟩⟩⟩
 
 /-- Composition of a principal segment with an order isomorphism, as a principal segment -/
@@ -324,7 +324,7 @@ instance [IsWellOrder β s] : Subsingleton (r ≺i s) :=
       rfl
     have et : f.top = g.top := by
       refine' extensional_of_trichotomous_of_irrefl s fun x => _
-      simp only [← f.down, ← g.down, ← ef, ← coe_fn_to_rel_embedding]
+      simp only [f.down, g.down, ef, coe_fn_to_rel_embedding]
     cases f
     cases g
     have := RelEmbedding.coe_fn_injective ef <;> congr⟩
@@ -366,7 +366,7 @@ theorem cod_restrict_top (p) (f : r ≺i s) (H H₂) : (codRestrict p f H H₂).
 def ofIsEmpty (r : α → α → Prop) [IsEmpty α] {b : β} (H : ∀ b', ¬s b' b) : r ≺i s :=
   { RelEmbedding.ofIsEmpty r s with top := b,
     down' := by
-      simp [← H] }
+      simp [H] }
 
 @[simp]
 theorem of_is_empty_top (r : α → α → Prop) [IsEmpty α] {b : β} (H : ∀ b', ¬s b' b) : (ofIsEmpty r H).top = b :=
@@ -410,9 +410,9 @@ theorem InitialSeg.le_lt_apply [IsWellOrder β s] [IsTrans γ t] (f : r ≼i s) 
     (f.leLt g) a = g (f a) := by
   delta' InitialSeg.leLt
   cases' h : f.lt_or_eq with f' f'
-  · simp only [← PrincipalSeg.trans_apply, ← f.lt_or_eq_apply_left]
+  · simp only [PrincipalSeg.trans_apply, f.lt_or_eq_apply_left]
     
-  · simp only [← PrincipalSeg.equiv_lt_apply, ← f.lt_or_eq_apply_right]
+  · simp only [PrincipalSeg.equiv_lt_apply, f.lt_or_eq_apply_right]
     
 
 namespace RelEmbedding

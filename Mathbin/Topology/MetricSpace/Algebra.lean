@@ -91,7 +91,7 @@ instance Real.has_lipschitz_add :
     ⟨2, by
       rw [lipschitz_with_iff_dist_le_mul]
       intro p q
-      simp only [← Real.dist_eq, ← Prod.dist_eq, ← Prod.fst_sub, ← Prod.snd_sub, ← Nnreal.coe_one, ← Nnreal.coe_bit0]
+      simp only [Real.dist_eq, Prod.dist_eq, Prod.fst_sub, Prod.snd_sub, Nnreal.coe_one, Nnreal.coe_bit0]
       convert le_transₓ (abs_add (p.1 - q.1) (p.2 - q.2)) _ using 2
       · abel
         
@@ -174,9 +174,9 @@ instance (priority := 100) HasBoundedSmul.has_continuous_smul :
 -- here so that it is available earlier in the hierarchy
 instance Real.has_bounded_smul : HasBoundedSmul ℝ ℝ where
   dist_smul_pair' := fun x y₁ y₂ => by
-    simpa [← Real.dist_eq, ← mul_sub] using (abs_mul x (y₁ - y₂)).le
+    simpa [Real.dist_eq, mul_sub] using (abs_mul x (y₁ - y₂)).le
   dist_pair_smul' := fun x₁ x₂ y => by
-    simpa [← Real.dist_eq, ← sub_mul] using (abs_mul (x₁ - x₂) y).le
+    simpa [Real.dist_eq, sub_mul] using (abs_mul (x₁ - x₂) y).le
 
 instance Nnreal.has_bounded_smul : HasBoundedSmul ℝ≥0 ℝ≥0 where
   dist_smul_pair' := fun x y₁ y₂ => by
@@ -188,11 +188,11 @@ instance Nnreal.has_bounded_smul : HasBoundedSmul ℝ≥0 ℝ≥0 where
 instance HasBoundedSmul.op [HasSmul αᵐᵒᵖ β] [IsCentralScalar α β] : HasBoundedSmul αᵐᵒᵖ β where
   dist_smul_pair' :=
     MulOpposite.rec fun x y₁ y₂ => by
-      simpa only [← op_smul_eq_smul] using dist_smul_pair x y₁ y₂
+      simpa only [op_smul_eq_smul] using dist_smul_pair x y₁ y₂
   dist_pair_smul' :=
     MulOpposite.rec fun x₁ =>
       MulOpposite.rec fun x₂ y => by
-        simpa only [← op_smul_eq_smul] using dist_pair_smul x₁ x₂ y
+        simpa only [op_smul_eq_smul] using dist_pair_smul x₁ x₂ y
 
 end HasBoundedSmul
 

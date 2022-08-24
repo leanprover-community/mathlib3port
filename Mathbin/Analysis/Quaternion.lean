@@ -49,12 +49,12 @@ instance : InnerProductSpace ℝ ℍ :=
   InnerProductSpace.ofCore
     { inner := HasInner.inner,
       conj_sym := fun x y => by
-        simp [← inner_def, ← mul_comm],
+        simp [inner_def, mul_comm],
       nonneg_re := fun x => norm_sq_nonneg, definite := fun x => norm_sq_eq_zero.1,
       add_left := fun x y z => by
-        simp only [← inner_def, ← add_mulₓ, ← add_re],
+        simp only [inner_def, add_mulₓ, add_re],
       smul_left := fun x y r => by
-        simp [← inner_def] }
+        simp [inner_def] }
 
 theorem norm_sq_eq_norm_sq (a : ℍ) : normSq a = ∥a∥ * ∥a∥ := by
   rw [← inner_self, real_inner_self_eq_norm_mul_norm]
@@ -74,7 +74,7 @@ theorem nnnorm_coe (a : ℝ) : ∥(a : ℍ)∥₊ = ∥a∥₊ :=
 noncomputable instance : NormedDivisionRing ℍ where
   dist_eq := fun _ _ => rfl
   norm_mul' := fun a b => by
-    simp only [← norm_eq_sqrt_real_inner, ← inner_self, ← norm_sq.map_mul]
+    simp only [norm_eq_sqrt_real_inner, inner_self, norm_sq.map_mul]
     exact Real.sqrt_mul norm_sq_nonneg _
 
 noncomputable instance : NormedAlgebra ℝ ℍ where

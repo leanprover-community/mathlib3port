@@ -117,7 +117,7 @@ theorem Algebra.ext {S : Type u} {A : Type v} [CommSemiringₓ S] [Semiringₓ A
           r • x) :
     h1 = h2 :=
   (Algebra.algebra_ext _ _) fun r => by
-    simpa only [← @Algebra.smul_def _ _ _ _ h1, ← @Algebra.smul_def _ _ _ _ h2, ← mul_oneₓ] using h r 1
+    simpa only [@Algebra.smul_def _ _ _ _ h1, @Algebra.smul_def _ _ _ _ h2, mul_oneₓ] using h r 1
 
 /-- In a tower, the canonical map from the middle element to the top element is an
 algebra homomorphism over the bottom element. -/

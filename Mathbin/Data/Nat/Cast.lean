@@ -22,9 +22,9 @@ the natural numbers into an additive monoid with a one (`nat.cast`).
 -/
 
 
-namespace Nat
+variable {α β : Type _}
 
-variable {α : Type _}
+namespace Nat
 
 /-- `coe : ℕ → α` as an `add_monoid_hom`. -/
 def castAddMonoidHom (α : Type _) [AddMonoidWithOneₓ α] : ℕ →+ α where
@@ -38,7 +38,7 @@ theorem coe_cast_add_monoid_hom [AddMonoidWithOneₓ α] : (castAddMonoidHom α 
 
 @[simp, norm_cast]
 theorem cast_mulₓ [NonAssocSemiringₓ α] (m n : ℕ) : ((m * n : ℕ) : α) = m * n := by
-  induction n <;> simp [← mul_succ, ← mul_addₓ, *]
+  induction n <;> simp [mul_succ, mul_addₓ, *]
 
 /-- `coe : ℕ → α` as a `ring_hom` -/
 def castRingHom (α : Type _) [NonAssocSemiringₓ α] : ℕ →+* α :=
@@ -130,7 +130,7 @@ end Nat
 
 namespace Prod
 
-variable {α : Type _} {β : Type _} [AddMonoidWithOneₓ α] [AddMonoidWithOneₓ β]
+variable [AddMonoidWithOneₓ α] [AddMonoidWithOneₓ β]
 
 instance : AddMonoidWithOneₓ (α × β) :=
   { Prod.addMonoid, Prod.hasOne with natCast := fun n => (n, n),
@@ -154,9 +154,9 @@ variable {A B F : Type _} [AddMonoidWithOneₓ B]
 theorem ext_nat' [AddMonoidₓ A] [AddMonoidHomClass F ℕ A] (f g : F) (h : f 1 = g 1) : f = g :=
   FunLike.ext f g <| by
     apply Nat.rec
-    · simp only [← Nat.nat_zero_eq_zero, ← map_zero]
+    · simp only [Nat.nat_zero_eq_zero, map_zero]
       
-    simp (config := { contextual := true })[← Nat.succ_eq_add_one, ← h]
+    simp (config := { contextual := true })[Nat.succ_eq_add_one, h]
 
 @[ext]
 theorem AddMonoidHom.ext_nat [AddMonoidₓ A] : ∀ {f g : ℕ →+ A}, ∀ h : f 1 = g 1, f = g :=
@@ -211,13 +211,13 @@ theorem map_nat_cast [RingHomClass F R S] (f : F) : ∀ n : ℕ, f (n : R) = n :
 
 theorem ext_nat [RingHomClass F ℕ R] (f g : F) : f = g :=
   ext_nat' f g <| by
-    simp only [← map_one]
+    simp only [map_one]
 
 end RingHomClass
 
 namespace RingHom
 
-/-- This is primed to match `ring_hom.eq_int_cast'`. -/
+/-- This is primed to match `eq_int_cast'`. -/
 theorem eq_nat_cast' {R} [NonAssocSemiringₓ R] (f : ℕ →+* R) : f = Nat.castRingHom R :=
   RingHom.ext <| eq_nat_cast f
 
@@ -242,7 +242,7 @@ instance Nat.uniqueRingHom {R : Type _} [NonAssocSemiringₓ R] : Unique (ℕ �
 
 namespace MulOpposite
 
-variable {α : Type _} [AddMonoidWithOneₓ α]
+variable [AddMonoidWithOneₓ α]
 
 @[simp, norm_cast]
 theorem op_nat_cast (n : ℕ) : op (n : α) = n :=
@@ -256,39 +256,20 @@ end MulOpposite
 
 namespace WithTop
 
-variable {α : Type _}
-
 variable [AddMonoidWithOneₓ α]
-
-@[simp, norm_cast]
-theorem coe_nat : ∀ n : ℕ, ((n : α) : WithTop α) = n
-  | 0 => rfl
-  | n + 1 => by
-    push_cast
-    rw [coe_nat n]
-
-@[simp]
-theorem nat_ne_top (n : Nat) : (n : WithTop α) ≠ ⊤ := by
-  rw [← coe_nat n]
-  apply coe_ne_top
-
-@[simp]
-theorem top_ne_nat (n : Nat) : (⊤ : WithTop α) ≠ n := by
-  rw [← coe_nat n]
-  apply top_ne_coe
 
 theorem add_one_le_of_lt {i n : WithTop ℕ} (h : i < n) : i + 1 ≤ n := by
   cases n
   · exact le_top
     
   cases i
-  · exact (not_le_of_lt h le_top).elim
+  · exact (not_le_of_ltₓ h le_top).elim
     
   exact WithTop.coe_le_coe.2 (WithTop.coe_lt_coe.1 h)
 
 theorem one_le_iff_pos {n : WithTop ℕ} : 1 ≤ n ↔ 0 < n :=
   ⟨lt_of_lt_of_leₓ (coe_lt_coe.mpr zero_lt_one), fun h => by
-    simpa only [← zero_addₓ] using add_one_le_of_lt h⟩
+    simpa only [zero_addₓ] using add_one_le_of_lt h⟩
 
 @[elabAsElim]
 theorem nat_induction {P : WithTop ℕ → Prop} (a : WithTop ℕ) (h0 : P 0) (hsuc : ∀ n : ℕ, P n → P n.succ)
@@ -304,18 +285,18 @@ end WithTop
 
 namespace Pi
 
-variable {α : Type _} {β : α → Type _} [∀ a, HasNatCast (β a)]
+variable {π : α → Type _} [∀ a, HasNatCast (π a)]
 
-instance : HasNatCast (∀ a, β a) := by
+instance : HasNatCast (∀ a, π a) := by
   refine_struct { .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-theorem nat_apply (n : ℕ) (a : α) : (n : ∀ a, β a) a = n :=
+theorem nat_apply (n : ℕ) (a : α) : (n : ∀ a, π a) a = n :=
   rfl
 
 @[simp]
-theorem coe_nat (n : ℕ) : (n : ∀ a, β a) = fun _ => n :=
+theorem coe_nat (n : ℕ) : (n : ∀ a, π a) = fun _ => n :=
   rfl
 
 end Pi
@@ -325,12 +306,54 @@ theorem Sum.elim_nat_cast_nat_cast {α β γ : Type _} [HasNatCast γ] (n : ℕ)
 
 namespace Pi
 
-variable {α : Type _} {β : α → Type _} [∀ a, AddMonoidWithOneₓ (β a)]
+variable {π : α → Type _} [∀ a, AddMonoidWithOneₓ (π a)]
 
-instance : AddMonoidWithOneₓ (∀ a, β a) := by
+instance : AddMonoidWithOneₓ (∀ a, π a) := by
   refine_struct { .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 end Pi
+
+/-! ### Order dual -/
+
+
+open OrderDual
+
+instance [h : HasNatCast α] : HasNatCast αᵒᵈ :=
+  h
+
+instance [h : AddMonoidWithOneₓ α] : AddMonoidWithOneₓ αᵒᵈ :=
+  h
+
+instance [h : AddCommMonoidWithOne α] : AddCommMonoidWithOne αᵒᵈ :=
+  h
+
+@[simp]
+theorem to_dual_nat_cast [HasNatCast α] (n : ℕ) : toDual (n : α) = n :=
+  rfl
+
+@[simp]
+theorem of_dual_nat_cast [HasNatCast α] (n : ℕ) : (ofDual n : α) = n :=
+  rfl
+
+/-! ### Lexicographic order -/
+
+
+instance [h : HasNatCast α] : HasNatCast (Lex α) :=
+  h
+
+instance [h : AddMonoidWithOneₓ α] : AddMonoidWithOneₓ (Lex α) :=
+  h
+
+instance [h : AddCommMonoidWithOne α] : AddCommMonoidWithOne (Lex α) :=
+  h
+
+@[simp]
+theorem to_lex_nat_cast [HasNatCast α] (n : ℕ) : toLex (n : α) = n :=
+  rfl
+
+@[simp]
+theorem of_lex_nat_cast [HasNatCast α] (n : ℕ) : (ofLex n : α) = n :=
+  rfl
 

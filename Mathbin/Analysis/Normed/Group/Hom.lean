@@ -138,14 +138,14 @@ theorem bound : ∃ C, 0 < C ∧ ∀ x, ∥f x∥ ≤ C * ∥x∥ :=
 
 theorem antilipschitz_of_norm_ge {K : ℝ≥0 } (h : ∀ x, ∥x∥ ≤ K * ∥f x∥) : AntilipschitzWith K f :=
   AntilipschitzWith.of_le_mul_dist fun x y => by
-    simpa only [← dist_eq_norm, ← map_sub] using h (x - y)
+    simpa only [dist_eq_norm, map_sub] using h (x - y)
 
 /-- A normed group hom is surjective on the subgroup `K` with constant `C` if every element
 `x` of `K` has a preimage whose norm is bounded above by `C*∥x∥`. This is a more
 abstract version of `f` having a right inverse defined on `K` with operator norm
 at most `C`. -/
 def SurjectiveOnWith (f : NormedAddGroupHom V₁ V₂) (K : AddSubgroup V₂) (C : ℝ) : Prop :=
-  ∀, ∀ h ∈ K, ∀, ∃ g, f g = h ∧ ∥g∥ ≤ C * ∥h∥
+  ∀ h ∈ K, ∃ g, f g = h ∧ ∥g∥ ≤ C * ∥h∥
 
 theorem SurjectiveOnWith.mono {f : NormedAddGroupHom V₁ V₂} {K : AddSubgroup V₂} {C C' : ℝ} (h : f.SurjectiveOnWith K C)
     (H : C ≤ C') : f.SurjectiveOnWith K C' := by
@@ -153,7 +153,7 @@ theorem SurjectiveOnWith.mono {f : NormedAddGroupHom V₁ V₂} {K : AddSubgroup
   rcases h k k_in with ⟨g, rfl, hg⟩
   use g, rfl
   by_cases' Hg : ∥f g∥ = 0
-  · simpa [← Hg] using hg
+  · simpa [Hg] using hg
     
   · exact hg.trans ((mul_le_mul_right <| (Ne.symm Hg).le_iff_lt.mp (norm_nonneg _)).mpr H)
     
@@ -237,14 +237,14 @@ theorem op_norm_le_bound {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ x, ∥f x∥ ≤ M 
   cInf_le bounds_bdd_below ⟨hMp, hM⟩
 
 theorem op_norm_eq_of_bounds {M : ℝ} (M_nonneg : 0 ≤ M) (h_above : ∀ x, ∥f x∥ ≤ M * ∥x∥)
-    (h_below : ∀, ∀ N ≥ 0, ∀, (∀ x, ∥f x∥ ≤ N * ∥x∥) → M ≤ N) : ∥f∥ = M :=
+    (h_below : ∀ N ≥ 0, (∀ x, ∥f x∥ ≤ N * ∥x∥) → M ≤ N) : ∥f∥ = M :=
   le_antisymmₓ (f.op_norm_le_bound M_nonneg h_above)
     ((le_cInf_iff NormedAddGroupHom.bounds_bdd_below ⟨M, M_nonneg, h_above⟩).mpr fun N ⟨N_nonneg, hN⟩ =>
       h_below N N_nonneg hN)
 
 theorem op_norm_le_of_lipschitz {f : NormedAddGroupHom V₁ V₂} {K : ℝ≥0 } (hf : LipschitzWith K f) : ∥f∥ ≤ K :=
   (f.op_norm_le_bound K.2) fun x => by
-    simpa only [← dist_zero_right, ← map_zero] using hf.dist_le_mul x 0
+    simpa only [dist_zero_right, map_zero] using hf.dist_le_mul x 0
 
 /-- If a bounded group homomorphism map is constructed from a group homomorphism via the constructor
 `mk_normed_add_group_hom`, then its norm is bounded by the bound given to the constructor if it is
@@ -314,7 +314,7 @@ instance : Inhabited (NormedAddGroupHom V₁ V₂) :=
 theorem op_norm_zero : ∥(0 : NormedAddGroupHom V₁ V₂)∥ = 0 :=
   le_antisymmₓ
     (cInf_le bounds_bdd_below
-      ⟨ge_of_eq rfl, fun _ =>
+      ⟨ge_of_eqₓ rfl, fun _ =>
         le_of_eqₓ
           (by
             rw [zero_mul]
@@ -357,7 +357,7 @@ variable (V)
 def id : NormedAddGroupHom V V :=
   (AddMonoidHom.id V).mkNormedAddGroupHom 1
     (by
-      simp [← le_reflₓ])
+      simp [le_reflₓ])
 
 /-- The norm of the identity is at most `1`. It is in fact `1`, except when the norm of every
 element vanishes, where it is `0`. (Since we are working with seminorms this can happen even if the
@@ -390,7 +390,7 @@ theorem coe_id : (NormedAddGroupHom.id V : V → V) = (id : V → V) :=
 instance : Neg (NormedAddGroupHom V₁ V₂) :=
   ⟨fun f =>
     (-f.toAddMonoidHom).mkNormedAddGroupHom ∥f∥ fun v => by
-      simp [← le_op_norm f v]⟩
+      simp [le_op_norm f v]⟩
 
 -- see Note [addition on function coercions]
 @[simp]
@@ -402,7 +402,7 @@ theorem neg_apply (f : NormedAddGroupHom V₁ V₂) (v : V₁) : (-f : NormedAdd
   rfl
 
 theorem op_norm_neg (f : NormedAddGroupHom V₁ V₂) : ∥-f∥ = ∥f∥ := by
-  simp only [← norm_def, ← coe_neg, ← norm_neg, ← Pi.neg_apply]
+  simp only [norm_def, coe_neg, norm_neg, Pi.neg_apply]
 
 /-! ### Subtraction of normed group homs -/
 
@@ -412,7 +412,7 @@ instance : Sub (NormedAddGroupHom V₁ V₂) :=
   ⟨fun f g =>
     { f.toAddMonoidHom - g.toAddMonoidHom with
       bound' := by
-        simp only [← AddMonoidHom.sub_apply, ← AddMonoidHom.to_fun_eq_coe, ← sub_eq_add_neg]
+        simp only [AddMonoidHom.sub_apply, AddMonoidHom.to_fun_eq_coe, sub_eq_add_neg]
         exact (f + -g).bound' }⟩
 
 -- see Note [addition on function coercions]
@@ -536,7 +536,7 @@ theorem coe_sum {ι : Type _} (s : Finset ι) (f : ι → NormedAddGroupHom V₁
 
 theorem sum_apply {ι : Type _} (s : Finset ι) (f : ι → NormedAddGroupHom V₁ V₂) (v : V₁) :
     (∑ i in s, f i) v = ∑ i in s, f i v := by
-  simp only [← coe_sum, ← Finset.sum_apply]
+  simp only [coe_sum, Finset.sum_apply]
 
 /-! ### Module structure on normed group homs -/
 
@@ -587,8 +587,7 @@ def compHom : NormedAddGroupHom V₂ V₃ →+ NormedAddGroupHom V₁ V₂ →+ 
     (by
       intros
       ext
-      simp only [← comp_apply, ← Pi.add_apply, ← Function.comp_app, ← AddMonoidHom.add_apply, ← AddMonoidHom.mk'_apply,
-        ← coe_add])
+      simp only [comp_apply, Pi.add_apply, Function.comp_app, AddMonoidHom.add_apply, AddMonoidHom.mk'_apply, coe_add])
 
 @[simp]
 theorem comp_zero (f : NormedAddGroupHom V₂ V₃) : f.comp (0 : NormedAddGroupHom V₁ V₂) = 0 := by
@@ -656,7 +655,7 @@ def ker.lift (h : g.comp f = 0) : NormedAddGroupHom V₁ g.ker where
       rw [h]
       rfl⟩
   map_add' := fun v w => by
-    simp only [← map_add]
+    simp only [map_add]
     rfl
   bound' := f.bound'
 
@@ -668,7 +667,7 @@ theorem ker.incl_comp_lift (h : g.comp f = 0) : (incl g.ker).comp (ker.lift f g 
 @[simp]
 theorem ker_zero : (0 : NormedAddGroupHom V₁ V₂).ker = ⊤ := by
   ext
-  simp [← mem_ker]
+  simp [mem_ker]
 
 theorem coe_ker : (f.ker : Set V₁) = (f : V₁ → V₂) ⁻¹' {0} :=
   rfl
@@ -712,7 +711,7 @@ theorem incl_range (s : AddSubgroup V₁) : (incl s).range = s := by
 
 @[simp]
 theorem range_comp_incl_top : (f.comp (incl (⊤ : AddSubgroup V₁))).range = f.range := by
-  simpa [← comp_range, ← incl_range, AddMonoidHom.range_eq_map]
+  simpa [comp_range, incl_range, ← AddMonoidHom.range_eq_map]
 
 end Range
 
@@ -727,7 +726,7 @@ namespace NormNoninc
 theorem norm_noninc_iff_norm_le_one : f.NormNoninc ↔ ∥f∥ ≤ 1 := by
   refine' ⟨fun h => _, fun h => fun v => _⟩
   · refine' op_norm_le_bound _ zero_le_one fun v => _
-    simpa [← one_mulₓ] using h v
+    simpa [one_mulₓ] using h v
     
   · simpa using le_of_op_norm_le f h v
     
@@ -735,7 +734,7 @@ theorem norm_noninc_iff_norm_le_one : f.NormNoninc ↔ ∥f∥ ≤ 1 := by
 theorem zero : (0 : NormedAddGroupHom V₁ V₂).NormNoninc := fun v => by
   simp
 
-theorem id : (id V).NormNoninc := fun v => le_rfl
+theorem id : (id V).NormNoninc := fun v => le_rflₓ
 
 theorem comp {g : NormedAddGroupHom V₂ V₃} {f : NormedAddGroupHom V₁ V₂} (hg : g.NormNoninc) (hf : f.NormNoninc) :
     (g.comp f).NormNoninc := fun v => (hg (f v)).trans (hf v)
@@ -800,7 +799,7 @@ def lift (φ : NormedAddGroupHom V₁ V) (h : f.comp φ = g.comp φ) : NormedAdd
         rw [NormedAddGroupHom.sub_apply, sub_eq_zero, ← comp_apply, h, comp_apply]⟩
   map_add' := fun v₁ v₂ => by
     ext
-    simp only [← map_add, ← AddSubgroup.coe_add, ← Subtype.coe_mk]
+    simp only [map_add, AddSubgroup.coe_add, Subtype.coe_mk]
   bound' := by
     obtain ⟨C, C_pos, hC⟩ := φ.bound
     exact ⟨C, hC⟩
@@ -829,8 +828,8 @@ def liftEquiv : { φ : NormedAddGroupHom V₁ V // f.comp φ = g.comp φ } ≃ N
 def map (φ : NormedAddGroupHom V₁ V₂) (ψ : NormedAddGroupHom W₁ W₂) (hf : ψ.comp f₁ = f₂.comp φ)
     (hg : ψ.comp g₁ = g₂.comp φ) : NormedAddGroupHom (f₁.equalizer g₁) (f₂.equalizer g₂) :=
   lift (φ.comp <| ι _ _) <| by
-    simp only [comp_assoc, hf, hg]
-    simp only [← comp_assoc, ← comp_ι_eq]
+    simp only [← comp_assoc, ← hf, ← hg]
+    simp only [comp_assoc, comp_ι_eq]
 
 variable {φ : NormedAddGroupHom V₁ V₂} {ψ : NormedAddGroupHom W₁ W₂}
 
@@ -856,7 +855,7 @@ theorem map_comp_map (hf : ψ.comp f₁ = f₂.comp φ) (hg : ψ.comp g₁ = g�
   ext
   rfl
 
-theorem ι_norm_noninc : (ι f g).NormNoninc := fun v => le_rfl
+theorem ι_norm_noninc : (ι f g).NormNoninc := fun v => le_rflₓ
 
 /-- The lifting of a norm nonincreasing morphism is norm nonincreasing. -/
 theorem lift_norm_noninc (φ : NormedAddGroupHom V₁ V) (h : f.comp φ = g.comp φ) (hφ : φ.NormNoninc) :
@@ -910,7 +909,7 @@ theorem controlled_closure_of_complete {f : NormedAddGroupHom G H} {K : AddSubgr
   set b : ℕ → ℝ := fun i => (1 / 2) ^ i * (ε * ∥h∥ / 2) / C
   have b_pos : ∀ i, 0 < b i := by
     intro i
-    field_simp [← b, ← hC]
+    field_simp [b, hC]
     exact
       div_pos (mul_pos hε (norm_pos_iff.mpr hyp_h))
         (mul_pos
@@ -919,7 +918,7 @@ theorem controlled_closure_of_complete {f : NormedAddGroupHom G H} {K : AddSubgr
           hC)
   obtain
     ⟨v : ℕ → H, lim_v : tendsto (fun n : ℕ => ∑ k in range (n + 1), v k) at_top (𝓝 h), v_in : ∀ n, v n ∈ K, hv₀ :
-      ∥v 0 - h∥ < b 0, hv : ∀, ∀ n > 0, ∀, ∥v n∥ < b n⟩ :=
+      ∥v 0 - h∥ < b 0, hv : ∀ n > 0, ∥v n∥ < b n⟩ :=
     controlled_sum_of_mem_closure h_in b_pos
   /- The controlled surjectivity assumption on `f` allows to build preimages `u n` for all
     elements `v n` of the `v` sequence.-/
@@ -939,7 +938,7 @@ theorem controlled_closure_of_complete {f : NormedAddGroupHom G H} {K : AddSubgr
       ∥u n∥ ≤ C * ∥v n∥ := hnorm_u n
       _ ≤ C * b n := mul_le_mul_of_nonneg_left (hv _ <| nat.succ_le_iff.mp hn).le hC.le
       _ = (1 / 2) ^ n * (ε * ∥h∥ / 2) := by
-        simp [← b, ← mul_div_cancel' _ hC.ne.symm]
+        simp [b, mul_div_cancel' _ hC.ne.symm]
       _ = ε * ∥h∥ / 2 * (1 / 2) ^ n := mul_comm _ _
       
   -- We now show that the limit `g` of `s` is the desired preimage.
@@ -948,7 +947,7 @@ theorem controlled_closure_of_complete {f : NormedAddGroupHom G H} {K : AddSubgr
   · -- We indeed get a preimage. First note:
     have : f ∘ s = fun n => ∑ k in range (n + 1), v k := by
       ext n
-      simp [← map_sum, ← hu]
+      simp [map_sum, hu]
     /- In the above equality, the left-hand-side converges to `f g` by continuity of `f` and
            definition of `g` while the right-hand-side converges to `h` by construction of `v` so
            `g` is indeed a preimage of `h`. -/
@@ -975,7 +974,7 @@ theorem controlled_closure_of_complete {f : NormedAddGroupHom G H} {K : AddSubgr
     have : (∑ k in range (n + 1), C * b k) ≤ ε * ∥h∥ :=
       calc
         (∑ k in range (n + 1), C * b k) = (∑ k in range (n + 1), (1 / 2) ^ k) * (ε * ∥h∥ / 2) := by
-          simp only [← b, ← mul_div_cancel' _ hC.ne.symm, sum_mul]
+          simp only [b, mul_div_cancel' _ hC.ne.symm, ← sum_mul]
         _ ≤ 2 * (ε * ∥h∥ / 2) :=
           mul_le_mul_of_nonneg_right (sum_geometric_two_le _)
             (by
@@ -1006,7 +1005,7 @@ This is useful in particular if `j` is the inclusion of a normed group into its 
 theorem controlled_closure_range_of_complete {f : NormedAddGroupHom G H} {K : Type _} [SeminormedAddCommGroup K]
     {j : NormedAddGroupHom K H} (hj : ∀ x, ∥j x∥ = ∥x∥) {C ε : ℝ} (hC : 0 < C) (hε : 0 < ε)
     (hyp : ∀ k, ∃ g, f g = j k ∧ ∥g∥ ≤ C * ∥k∥) : f.SurjectiveOnWith j.range.topologicalClosure (C + ε) := by
-  replace hyp : ∀, ∀ h ∈ j.range, ∀, ∃ g, f g = h ∧ ∥g∥ ≤ C * ∥h∥
+  replace hyp : ∀ h ∈ j.range, ∃ g, f g = h ∧ ∥g∥ ≤ C * ∥h∥
   · intro h h_in
     rcases(j.mem_range _).mp h_in with ⟨k, rfl⟩
     rw [hj]

@@ -618,12 +618,12 @@ end Conv.Interactive
 -- TODO: move this elsewhere?
 @[norm_cast]
 theorem ite_cast {α β} [HasLiftT α β] {c : Prop} [Decidable c] {a b : α} : ↑(ite c a b) = ite c (↑a : β) (↑b : β) := by
-  by_cases' h : c <;> simp [← h]
+  by_cases' h : c <;> simp [h]
 
 @[norm_cast]
 theorem dite_cast {α β} [HasLiftT α β] {c : Prop} [Decidable c] {a : c → α} {b : ¬c → α} :
     ↑(dite c a b) = dite c (fun h => (↑(a h) : β)) fun h => (↑(b h) : β) := by
-  by_cases' h : c <;> simp [← h]
+  by_cases' h : c <;> simp [h]
 
 add_hint_tactic norm_cast  at *
 

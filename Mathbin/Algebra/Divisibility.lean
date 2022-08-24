@@ -156,7 +156,7 @@ theorem dvd_of_mul_left_dvd (h : a * b ∣ c) : b ∣ c :=
   Dvd.elim h fun d ceq =>
     Dvd.intro (a * d)
       (by
-        simp [← ceq])
+        simp [ceq])
 
 end CommSemigroupₓ
 
@@ -333,7 +333,7 @@ theorem is_unit_iff_forall_dvd {x : α} : IsUnit x ↔ ∀ y, x ∣ y :=
 theorem is_unit_of_dvd_unit {x y : α} (xy : x ∣ y) (hu : IsUnit y) : IsUnit x :=
   is_unit_iff_dvd_one.2 <| xy.trans <| is_unit_iff_dvd_one.1 hu
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a «expr ∣ » 1)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (a «expr ∣ » 1)
 theorem is_unit_of_dvd_one : ∀ (a) (_ : a ∣ 1), IsUnit (a : α)
   | a, ⟨b, Eq⟩ => ⟨Units.mkOfMulEqOne a b Eq.symm, rfl⟩
 
@@ -367,7 +367,7 @@ end CommMonoidWithZero
 theorem dvd_and_not_dvd_iff [CancelCommMonoidWithZero α] {x y : α} : x ∣ y ∧ ¬y ∣ x ↔ DvdNotUnit x y :=
   ⟨fun ⟨⟨d, hd⟩, hyx⟩ =>
     ⟨fun hx0 => by
-      simpa [← hx0] using hyx,
+      simpa [hx0] using hyx,
       ⟨d,
         mt is_unit_iff_dvd_one.1 fun ⟨e, he⟩ =>
           hyx
@@ -380,7 +380,7 @@ theorem dvd_and_not_dvd_iff [CancelCommMonoidWithZero α] {x y : α} : x ∣ y �
         (is_unit_of_dvd_one _
           ⟨e,
             mul_left_cancel₀ hx0 <| by
-              conv => lhs rw [he, hdx] <;> simp [← mul_assoc]⟩)⟩⟩
+              conv => lhs rw [he, hdx] <;> simp [mul_assoc]⟩)⟩⟩
 
 section MonoidWithZeroₓ
 

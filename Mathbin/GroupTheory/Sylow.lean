@@ -88,7 +88,7 @@ variable {K : Type _} [Groupₓ K] (ϕ : K →* G) {N : Subgroup G}
 def comapOfKerIsPGroup (hϕ : IsPGroup p ϕ.ker) (h : ↑P ≤ ϕ.range) : Sylow p K :=
   { P.1.comap ϕ with is_p_group' := P.2.comap_of_ker_is_p_group ϕ hϕ,
     is_maximal' := fun Q hQ hle => by
-      rw [← P.3 (hQ.map ϕ) (le_transₓ (ge_of_eq (map_comap_eq_self h)) (map_mono hle))]
+      rw [← P.3 (hQ.map ϕ) (le_transₓ (ge_of_eqₓ (map_comap_eq_self h)) (map_mono hle))]
       exact (comap_map_eq_self ((P.1.ker_le_comap ϕ).trans hle)).symm }
 
 @[simp]
@@ -109,7 +109,7 @@ theorem coe_comap_of_injective (hϕ : Function.Injective ϕ) (h : ↑P ≤ ϕ.ra
 def subtype (h : ↑P ≤ N) : Sylow p N :=
   P.comap_of_injective N.Subtype Subtype.coe_injective
     (by
-      simp [← h])
+      simp [h])
 
 @[simp]
 theorem coe_subtype (h : ↑P ≤ N) : ↑(P.Subtype h) = Subgroup.comap N.Subtype ↑P :=
@@ -163,7 +163,7 @@ noncomputable def Sylow.fintypeOfKerIsPGroup {H : Type _} [Groupₓ H] {f : H �
   Fintype.ofInjective g fun P Q h =>
     Sylow.ext
       (by
-        simp only [hg, ← h])
+        simp only [← hg, h])
 
 /-- If `f : H →* G` is injective, then `fintype (sylow p G)` implies `fintype (sylow p H)`. -/
 noncomputable def Sylow.fintypeOfInjective {H : Type _} [Groupₓ H] {f : H →* G} (hf : Function.Injective f)
@@ -224,7 +224,7 @@ theorem Sylow.smul_eq_iff_mem_normalizer {g : G} {P : Sylow p G} : g • P = P �
           fun hh => ⟨(MulAut.conj g)⁻¹ h, hh, MulAut.apply_inv_self G (MulAut.conj g) h⟩⟩
 
 theorem Sylow.smul_eq_of_normal {g : G} {P : Sylow p G} [h : (P : Subgroup G).Normal] : g • P = P := by
-  simp only [← Sylow.smul_eq_iff_mem_normalizer, ← normalizer_eq_top.mpr h, ← mem_top]
+  simp only [Sylow.smul_eq_iff_mem_normalizer, normalizer_eq_top.mpr h, mem_top]
 
 theorem Subgroup.sylow_mem_fixed_points_iff (H : Subgroup G) {P : Sylow p G} :
     P ∈ FixedPoints H (Sylow p G) ↔ H ≤ (P : Subgroup G).normalizer := by
@@ -250,7 +250,7 @@ instance [hp : Fact p.Prime] [Finite (Sylow p G)] : IsPretransitive G (Sylow p G
       calc
         S ∈ fixed_points R (orbit G P) ↔ S.1 ∈ fixed_points R (Sylow p G) := forall_congrₓ fun a => Subtype.ext_iff
         _ ↔ R.1 ≤ S := R.2.sylow_mem_fixed_points_iff
-        _ ↔ S.1.1 = R := ⟨fun h => R.3 S.1.2 h, ge_of_eq⟩
+        _ ↔ S.1.1 = R := ⟨fun h => R.3 S.1.2 h, ge_of_eqₓ⟩
         
     suffices Set.Nonempty (fixed_points Q (orbit G P)) by
       exact Exists.elim this fun R hR => (congr_arg _ (Sylow.ext (H.mp hR))).mp R.2
@@ -276,14 +276,14 @@ theorem card_sylow_modeq_one [Fact p.Prime] [Fintype (Sylow p G)] : card (Sylow 
     Set.ext fun Q : Sylow p G =>
       calc
         Q ∈ fixed_points P (Sylow p G) ↔ P.1 ≤ Q := P.2.sylow_mem_fixed_points_iff
-        _ ↔ Q.1 = P.1 := ⟨P.3 Q.2, ge_of_eq⟩
+        _ ↔ Q.1 = P.1 := ⟨P.3 Q.2, ge_of_eqₓ⟩
         _ ↔ Q ∈ {P} := sylow.ext_iff.symm.trans set.mem_singleton_iff.symm
         
   have : Fintype (fixed_points P.1 (Sylow p G)) := by
     rw [this]
     infer_instance
   have : card (fixed_points P.1 (Sylow p G)) = 1 := by
-    simp [← this]
+    simp [this]
   exact
     (P.2.card_modeq_card_fixed_points (Sylow p G)).trans
       (by
@@ -423,7 +423,7 @@ theorem mem_fixed_points_mul_left_cosets_iff_mem_normalizer {H : Subgroup G} [Fi
           inv_mem_iff.1 <|
             (hx _).2 <|
               (mul_mem_cancel_left (inv_mem hb₁)).1 <| by
-                rw [hx] at hb₂ <;> simpa [← mul_inv_rev, ← mul_assoc] using hb₂)⟩
+                rw [hx] at hb₂ <;> simpa [mul_inv_rev, mul_assoc] using hb₂)⟩
 
 /-- The fixed points of the action of `H` on its cosets correspond to `normalizer H / H`. -/
 def fixedPointsMulLeftCosetsEquivQuotient (H : Subgroup G) [Finite (H : Set G)] :
@@ -433,7 +433,7 @@ def fixedPointsMulLeftCosetsEquivQuotient (H : Subgroup G) [Finite (H : Set G)] 
     (by
       intros
       rw [setoidHasEquiv]
-      simp only [← left_rel_apply]
+      simp only [left_rel_apply]
       rfl)
 
 /-- If `H` is a `p`-subgroup of `G`, then the index of `H` inside its normalizer is congruent
@@ -512,7 +512,7 @@ theorem exists_subgroup_card_pow_succ [Fintype G] {p : ℕ} {n : ℕ} [hp : Fact
       pow_succ'ₓ, ← hH, Fintype.card_congr hequiv, ← hx, order_eq_card_zpowers, ← Fintype.card_prod]
     exact @Fintype.card_congr _ _ (id _) (id _) (preimage_mk_equiv_subgroup_times_set _ _), by
     intro y hy
-    simp only [← exists_prop, ← Subgroup.coe_subtype, ← mk'_apply, ← Subgroup.mem_map, ← Subgroup.mem_comap]
+    simp only [exists_prop, Subgroup.coe_subtype, mk'_apply, Subgroup.mem_map, Subgroup.mem_comap]
     refine' ⟨⟨y, le_normalizer hy⟩, ⟨0, _⟩, rfl⟩
     rw [zpow_zero, eq_comm, QuotientGroup.eq_one_iff]
     simpa using hy⟩
@@ -538,7 +538,7 @@ theorem exists_subgroup_card_pow_prime_le [Fintype G] (p : ℕ) :
           rw [hK'.1, tsub_add_cancel_of_le h0m.nat_succ_le], le_transₓ hK.2 hK'.2⟩)
       fun hnm : n = m =>
       ⟨H, by
-        simp [← hH, ← hnm]⟩
+        simp [hH, hnm]⟩
 
 /-- A generalisation of **Sylow's first theorem**. If `p ^ n` divides
   the cardinality of `G`, then there is a subgroup of cardinality `p ^ n` -/
@@ -608,16 +608,16 @@ end Pointwise
 theorem normal_of_normalizer_normal {p : ℕ} [Fact p.Prime] [Finite (Sylow p G)] (P : Sylow p G)
     (hn : (↑P : Subgroup G).normalizer.Normal) : (↑P : Subgroup G).Normal := by
   rw [← normalizer_eq_top, ← normalizer_sup_eq_top (P.subtype le_normalizer), coeSubtype,
-    map_comap_eq_self (le_normalizer.trans (ge_of_eq (subtype_range _))), sup_idem]
+    map_comap_eq_self (le_normalizer.trans (ge_of_eqₓ (subtype_range _))), sup_idem]
 
 @[simp]
 theorem normalizer_normalizer {p : ℕ} [Fact p.Prime] [Finite (Sylow p G)] (P : Sylow p G) :
     (↑P : Subgroup G).normalizer.normalizer = (↑P : Subgroup G).normalizer := by
   have := normal_of_normalizer_normal (P.subtype (le_normalizer.trans le_normalizer))
   simp_rw [← normalizer_eq_top, coeSubtype, ← comap_subtype_normalizer_eq le_normalizer, ←
-    comap_subtype_normalizer_eq le_rfl, comap_subtype_self_eq_top] at this
+    comap_subtype_normalizer_eq le_rflₓ, comap_subtype_self_eq_top] at this
   rw [← subtype_range (P : Subgroup G).normalizer.normalizer, MonoidHom.range_eq_map, ← this rfl]
-  exact map_comap_eq_self (le_normalizer.trans (ge_of_eq (subtype_range _)))
+  exact map_comap_eq_self (le_normalizer.trans (ge_of_eqₓ (subtype_range _)))
 
 theorem normal_of_all_max_subgroups_normal [Finite G] (hnc : ∀ H : Subgroup G, IsCoatom H → H.Normal) {p : ℕ}
     [Fact p.Prime] [Finite (Sylow p G)] (P : Sylow p G) : (↑P : Subgroup G).Normal :=
@@ -636,7 +636,7 @@ theorem normal_of_all_max_subgroups_normal [Finite G] (hnc : ∀ H : Subgroup G,
             rw [sup_eq_right.mpr]
             exact hNK
           _ = (map K.subtype (↑P' : Subgroup K)).normalizer⊔K := by
-            simp [← map_comap_eq_self, ← hPK]
+            simp [map_comap_eq_self, hPK]
           _ = ⊤ := normalizer_sup_eq_top P'
           
         )

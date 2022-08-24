@@ -31,7 +31,7 @@ theorem ne_zero_iff {R : Type _} [Zero R] {n : R} : NeZero n ↔ n ≠ 0 :=
   ⟨fun h => h.out, NeZero.mk⟩
 
 theorem not_ne_zero {R : Type _} [Zero R] {n : R} : ¬NeZero n ↔ n = 0 := by
-  simp [← ne_zero_iff]
+  simp [ne_zero_iff]
 
 namespace NeZero
 
@@ -69,7 +69,7 @@ theorem of_map [Zero R] [Zero M] [ZeroHomClass F R M] (f : F) [NeZero (f r)] : N
 theorem nat_of_ne_zero [Semiringₓ R] [Semiringₓ S] [RingHomClass F R S] (f : F) [hn : NeZero (n : S)] :
     NeZero (n : R) := by
   apply NeZero.of_map f
-  simp [← hn]
+  simp [hn]
 
 theorem of_injective [Zero R] [h : NeZero r] [Zero M] [ZeroHomClass F R M] {f : F} (hf : Function.Injective f) :
     NeZero (f r) :=

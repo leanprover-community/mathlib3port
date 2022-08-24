@@ -146,7 +146,7 @@ end Rbnode
 
 open Rbnode
 
--- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option auto_param.check_exists
+-- ./././Mathport/Syntax/Translate/Basic.lean:335:40: warning: unsupported option auto_param.check_exists
 set_option auto_param.check_exists false
 
 def Rbtree (α : Type u)
@@ -170,7 +170,7 @@ variable {α : Type u} {β : Type v} {lt : α → α → Prop}
 protected def Mem (a : α) (t : Rbtree α lt) : Prop :=
   Rbnode.Mem lt a t.val
 
-instance : HasMem α (Rbtree α lt) :=
+instance : Membership α (Rbtree α lt) :=
   ⟨Rbtree.Mem⟩
 
 def MemExact (a : α) (t : Rbtree α lt) : Prop :=

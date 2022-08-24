@@ -113,11 +113,11 @@ theorem transfer_eq_prod_quotient_orbit_rel_zpowers_quot [Fintype (G ⧸ H)] (g 
     _ = _ := Finset.prod_sigma _ _ _
     _ = _ := Fintype.prod_congr _ _ fun q => _
     
-  simp only [← quotient_equiv_sigma_zmod_symm_apply, ← transfer_transversal_apply', ← transfer_transversal_apply'']
+  simp only [quotient_equiv_sigma_zmod_symm_apply, transfer_transversal_apply', transfer_transversal_apply'']
   rw [Fintype.prod_eq_single (0 : Zmod (Function.minimalPeriod ((· • ·) g) q.out')) fun k hk => _]
-  · simp only [← if_pos, ← Zmod.cast_zero, ← zpow_zero, ← one_mulₓ, ← mul_assoc]
+  · simp only [if_pos, Zmod.cast_zero, zpow_zero, one_mulₓ, mul_assoc]
     
-  · simp only [← if_neg hk, ← inv_mul_selfₓ]
+  · simp only [if_neg hk, inv_mul_selfₓ]
     exact map_one ϕ
     
 
@@ -138,8 +138,8 @@ theorem transfer_eq_pow_aux (g : G) (key : ∀ (k : ℕ) (g₀ : G), g₀⁻¹ *
     (⟨g, mem_zpowers g⟩ : zpowers g) ^ Function.minimalPeriod ((· • ·) g) q.out'
   have hf : ∀ q, f q ∈ H.subgroup_of (zpowers g) := fun q => key q.out'
   replace key := Subgroup.prod_mem (H.subgroup_of (zpowers g)) fun q (hq : q ∈ Finset.univ) => hf q
-  simpa only [← minimal_period_eq_card, ← Finset.prod_pow_eq_pow_sum, ← Fintype.card_sigma, ←
-    Fintype.card_congr (self_equiv_sigma_orbits (zpowers g) (G ⧸ H)), ← index_eq_card] using key
+  simpa only [minimal_period_eq_card, Finset.prod_pow_eq_pow_sum, Fintype.card_sigma,
+    Fintype.card_congr (self_equiv_sigma_orbits (zpowers g) (G ⧸ H)), index_eq_card] using key
 
 theorem transfer_eq_pow [Fintype (G ⧸ H)] (g : G)
     (key : ∀ (k : ℕ) (g₀ : G), g₀⁻¹ * g ^ k * g₀ ∈ H → g₀⁻¹ * g ^ k * g₀ = g ^ k) :
@@ -151,7 +151,7 @@ theorem transfer_eq_pow [Fintype (G ⧸ H)] (g : G)
   rw [H.coe_mk, ← (zpowers g).coe_mk g (mem_zpowers g), ← (zpowers g).coe_pow, (zpowers g).coe_mk, index_eq_card,
     Fintype.card_congr (self_equiv_sigma_orbits (zpowers g) (G ⧸ H)), Fintype.card_sigma, ← Finset.prod_pow_eq_pow_sum,
     ← Finset.prod_to_list]
-  simp only [← coe_list_prod, ← List.map_mapₓ, minimal_period_eq_card]
+  simp only [coe_list_prod, List.map_mapₓ, ← minimal_period_eq_card]
   congr 2
   funext
   apply key

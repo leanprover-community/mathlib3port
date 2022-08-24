@@ -50,10 +50,10 @@ theorem continuous_refl_trans_symm_aux : Continuous reflTransSymmAux := by
   · continuity
     
   intro x hx
-  norm_num[← hx, ← mul_assoc]
+  norm_num[hx, mul_assoc]
 
 theorem refl_trans_symm_aux_mem_I (x : I × I) : reflTransSymmAux x ∈ I := by
-  dsimp' only [← refl_trans_symm_aux]
+  dsimp' only [refl_trans_symm_aux]
   split_ifs
   · constructor
     · apply mul_nonneg
@@ -103,9 +103,9 @@ def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.sy
   continuous_to_fun := by
     continuity
   map_zero_left' := by
-    norm_num[← refl_trans_symm_aux]
+    norm_num[refl_trans_symm_aux]
   map_one_left' := fun x => by
-    dsimp' only [← refl_trans_symm_aux, ← Path.coe_to_continuous_map, ← Path.trans]
+    dsimp' only [refl_trans_symm_aux, Path.coe_to_continuous_map, Path.trans]
     change _ = ite _ _ _
     split_ifs
     · rw [Path.extend, Set.Icc_extend_of_mem]
@@ -118,7 +118,7 @@ def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.sy
     · rw [Path.symm, Path.extend, Set.Icc_extend_of_mem]
       · congr 1
         ext
-        norm_num[← sub_sub_eq_add_sub]
+        norm_num[sub_sub_eq_add_sub]
         
       · rw [UnitInterval.two_mul_sub_one_mem_iff]
         exact ⟨(not_leₓ.1 h).le, UnitInterval.le_one x⟩
@@ -127,11 +127,11 @@ def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.sy
   prop' := fun t x hx => by
     cases hx
     · rw [hx]
-      simp [← refl_trans_symm_aux]
+      simp [refl_trans_symm_aux]
       
     · rw [Set.mem_singleton_iff] at hx
       rw [hx]
-      norm_num[← refl_trans_symm_aux]
+      norm_num[refl_trans_symm_aux]
       
 
 /-- For any path `p` from `x₀` to `x₁`, we have a homotopy from the constant path based at `x₁` to
@@ -152,17 +152,17 @@ theorem continuous_trans_refl_reparam_aux : Continuous transReflReparamAux := by
   refine' continuous_if_le _ _ (Continuous.continuous_on _) (Continuous.continuous_on _) _ <;> [continuity, continuity,
     continuity, continuity, skip]
   intro x hx
-  norm_num[← hx]
+  norm_num[hx]
 
 theorem trans_refl_reparam_aux_mem_I (t : I) : transReflReparamAux t ∈ I := by
   unfold trans_refl_reparam_aux
   split_ifs <;> constructor <;> linarith [UnitInterval.le_one t, UnitInterval.nonneg t]
 
 theorem trans_refl_reparam_aux_zero : transReflReparamAux 0 = 0 := by
-  norm_num[← trans_refl_reparam_aux]
+  norm_num[trans_refl_reparam_aux]
 
 theorem trans_refl_reparam_aux_one : transReflReparamAux 1 = 1 := by
-  norm_num[← trans_refl_reparam_aux]
+  norm_num[trans_refl_reparam_aux]
 
 theorem trans_refl_reparam (p : Path x₀ x₁) :
     p.trans (Path.refl x₁) =
@@ -173,7 +173,7 @@ theorem trans_refl_reparam (p : Path x₀ x₁) :
   by
   ext
   unfold trans_refl_reparam_aux
-  simp only [← Path.trans_apply, ← not_leₓ, ← coe_to_fun, ← Function.comp_app]
+  simp only [Path.trans_apply, not_leₓ, coe_to_fun, Function.comp_app]
   split_ifs
   · rfl
     
@@ -213,7 +213,7 @@ theorem continuous_trans_assoc_reparam_aux : Continuous transAssocReparamAux := 
           (continuous_if_le _ _ (Continuous.continuous_on _) (Continuous.continuous_on _) _).ContinuousOn _ <;>
       [continuity, continuity, continuity, continuity, continuity, continuity, continuity, skip, skip] <;>
     · intro x hx
-      norm_num[← hx]
+      norm_num[hx]
       
 
 theorem trans_assoc_reparam_aux_mem_I (t : I) : transAssocReparamAux t ∈ I := by
@@ -221,10 +221,10 @@ theorem trans_assoc_reparam_aux_mem_I (t : I) : transAssocReparamAux t ∈ I := 
   split_ifs <;> constructor <;> linarith [UnitInterval.le_one t, UnitInterval.nonneg t]
 
 theorem trans_assoc_reparam_aux_zero : transAssocReparamAux 0 = 0 := by
-  norm_num[← trans_assoc_reparam_aux]
+  norm_num[trans_assoc_reparam_aux]
 
 theorem trans_assoc_reparam_aux_one : transAssocReparamAux 1 = 1 := by
-  norm_num[← trans_assoc_reparam_aux]
+  norm_num[trans_assoc_reparam_aux]
 
 theorem trans_assoc_reparam {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : Path x₁ x₂) (r : Path x₂ x₃) :
     (p.trans q).trans r =
@@ -234,11 +234,11 @@ theorem trans_assoc_reparam {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : 
         (Subtype.ext trans_assoc_reparam_aux_zero) (Subtype.ext trans_assoc_reparam_aux_one) :=
   by
   ext
-  simp only [← trans_assoc_reparam_aux, ← Path.trans_apply, ← mul_inv_cancel_left₀, ← not_leₓ, ← Function.comp_app, ←
-    Ne.def, ← not_false_iff, ← bit0_eq_zero, ← one_ne_zero, ← mul_ite, ← Subtype.coe_mk, ← Path.coe_to_fun]
+  simp only [trans_assoc_reparam_aux, Path.trans_apply, mul_inv_cancel_left₀, not_leₓ, Function.comp_app, Ne.def,
+    not_false_iff, bit0_eq_zero, one_ne_zero, mul_ite, Subtype.coe_mk, Path.coe_to_fun]
   -- TODO: why does split_ifs not reduce the ifs??????
   split_ifs with h₁ h₂ h₃ h₄ h₅
-  · simp [← h₂, ← h₃, -one_div]
+  · simp [h₂, h₃, -one_div]
     
   · exfalso
     linarith
@@ -252,8 +252,7 @@ theorem trans_assoc_reparam {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : 
       linarith
     have h'' : 2 * (2 * (x : ℝ)) - 1 = 2 * (2 * (↑x + 1 / 4) - 1) := by
       linarith
-    simp only [← h₄, ← h₁, ← h, ← h', ← h'', ← dif_neg (show ¬False from id), ← dif_pos True.intro, ← if_false, ←
-      if_true]
+    simp only [h₄, h₁, h, h', h'', dif_neg (show ¬False from id), dif_pos True.intro, if_false, if_true]
     
   · exfalso
     linarith
@@ -262,7 +261,7 @@ theorem trans_assoc_reparam {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : 
       linarith
     have h' : ¬2 * ((1 / 2 : ℝ) * (x + 1)) - 1 ≤ 1 / 2 := by
       linarith
-    simp only [← h₁, ← h₅, ← h, ← h', ← if_false, ← dif_neg (show ¬False from id)]
+    simp only [h₁, h₅, h, h', if_false, dif_neg (show ¬False from id)]
     congr
     ring
     
@@ -339,7 +338,7 @@ def fundamentalGroupoidFunctor : Top ⥤ CategoryTheory.Groupoidₓ where
     { obj := f, map := fun x y p => p.mapFn f, map_id' := fun X => rfl,
       map_comp' := fun x y z p q =>
         (Quotientₓ.induction_on₂ p q) fun a b => by
-          simp [← comp_eq, Path.Homotopic.map_lift, Path.Homotopic.comp_lift] }
+          simp [comp_eq, ← Path.Homotopic.map_lift, ← Path.Homotopic.comp_lift] }
   map_id' := by
     intro X
     change _ = (⟨_, _, _, _⟩ : FundamentalGroupoid X ⥤ FundamentalGroupoid X)
@@ -354,7 +353,7 @@ def fundamentalGroupoidFunctor : Top ⥤ CategoryTheory.Groupoidₓ where
     congr
     ext x y p
     refine' Quotientₓ.induction_on p fun q => _
-    simp only [← Quotientₓ.map_mk, ← Path.map_map, ← Quotientₓ.eq]
+    simp only [Quotientₓ.map_mk, Path.map_map, Quotientₓ.eq]
     rfl
 
 -- mathport name: «exprπ»

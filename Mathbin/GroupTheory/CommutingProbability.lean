@@ -90,7 +90,7 @@ theorem Subgroup.comm_prob_subgroup_le : commProb H ≤ commProb G * H.index ^ 2
   · apply card_le_of_injective _ _
     exact fun p => ⟨⟨p.1.1, p.1.2⟩, subtype.ext_iff.mp p.2⟩
     exact fun p q h => by
-      simpa only [← Subtype.ext_iff, ← Prod.ext_iff] using h
+      simpa only [Subtype.ext_iff, Prod.ext_iff] using h
     
   · exact pow_ne_zero 2 (nat.cast_ne_zero.mpr card_ne_zero)
     
@@ -115,6 +115,6 @@ variable (G)
 
 theorem inv_card_commutator_le_comm_prob : (↑(card (commutator G)))⁻¹ ≤ commProb G :=
   (inv_pos_le_iff_one_le_mul (nat.cast_pos.mpr card_pos)).mpr
-    (le_transₓ (ge_of_eq (comm_prob_eq_one_iff.mpr (Abelianization.commGroup G).mul_comm))
+    (le_transₓ (ge_of_eqₓ (comm_prob_eq_one_iff.mpr (Abelianization.commGroup G).mul_comm))
       (commutator G).comm_prob_quotient_le)
 

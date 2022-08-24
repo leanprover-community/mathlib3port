@@ -44,7 +44,7 @@ theorem _root_.is_open.measure_pos_iff (hU : IsOpen U) : 0 < μ U ↔ U.Nonempty
   ⟨fun h => ne_empty_iff_nonempty.1 fun he => h.ne' <| he.symm ▸ measure_empty, hU.measure_pos μ⟩
 
 theorem _root_.is_open.measure_eq_zero_iff (hU : IsOpen U) : μ U = 0 ↔ U = ∅ := by
-  simpa only [← not_ltₓ, ← nonpos_iff_eq_zero, ← not_nonempty_iff_eq_empty] using not_congr (hU.measure_pos_iff μ)
+  simpa only [not_ltₓ, nonpos_iff_eq_zero, not_nonempty_iff_eq_empty] using not_congr (hU.measure_pos_iff μ)
 
 theorem measure_pos_of_nonempty_interior (h : (Interior s).Nonempty) : 0 < μ s :=
   (is_open_interior.measure_pos μ h).trans_le (measure_mono interior_subset)
@@ -74,7 +74,7 @@ equal on this set. -/
 theorem eq_on_open_of_ae_eq {f g : X → Y} (h : f =ᵐ[μ.restrict U] g) (hU : IsOpen U) (hf : ContinuousOn f U)
     (hg : ContinuousOn g U) : EqOn f g U := by
   replace h := ae_imp_of_ae_restrict h
-  simp only [← eventually_eq, ← ae_iff, ← not_imp] at h
+  simp only [eventually_eq, ae_iff, not_imp] at h
   have : IsOpen (U ∩ { a | f a ≠ g a }) := by
     refine' is_open_iff_mem_nhds.mpr fun a ha => inter_mem (hU.mem_nhds ha.1) _
     rcases ha with ⟨ha : a ∈ U, ha' : (f a, g a) ∈ diagonal Yᶜ⟩

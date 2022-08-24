@@ -27,7 +27,7 @@ theorem nnnorm_indicator_eq_indicator_nnnorm : ∥indicatorₓ s f a∥₊ = ind
   flip congr_fun a (indicator_comp_of_zero nnnorm_zero).symm
 
 theorem norm_indicator_le_of_subset (h : s ⊆ t) (f : α → E) (a : α) : ∥indicatorₓ s f a∥ ≤ ∥indicatorₓ t f a∥ := by
-  simp only [← norm_indicator_eq_indicator_norm]
+  simp only [norm_indicator_eq_indicator_norm]
   exact indicator_le_indicator_of_subset ‹_› (fun _ => norm_nonneg _) _
 
 theorem indicator_norm_le_norm_self : indicatorₓ s (fun a => ∥f a∥) a ≤ ∥f a∥ :=

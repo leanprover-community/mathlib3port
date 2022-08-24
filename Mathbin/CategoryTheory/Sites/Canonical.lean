@@ -87,7 +87,7 @@ theorem is_sheaf_for_bind (P : Cᵒᵖ ⥤ Type v) (U : Sieve X) (B : ∀ ⦃Y�
       simp
       
     · have : s _ _ = _ := (ht hf _ hm).symm
-      simp only [← assoc] at this
+      simp only [assoc] at this
       rw [this]
       simp
       
@@ -133,11 +133,11 @@ theorem is_sheaf_for_trans (P : Cᵒᵖ ⥤ Type v) (R S : Sieve X) (hR : Presie
       constructor
       · rintro ⟨W, k, l, hl, _, comm⟩
         rw [pullback_apply, ← comm]
-        simp [← hl]
+        simp [hl]
         
       · intro a
         refine' ⟨Z, 𝟙 Z, _, a, _⟩
-        simp [← hf]
+        simp [hf]
         
     rw [this]
     apply hR' hf
@@ -185,7 +185,7 @@ theorem sheaf_for_finest_topology (Ps : Set (Cᵒᵖ ⥤ Type v)) (h : P ∈ Ps)
 /-- Check that if each `P ∈ Ps` is a sheaf for `J`, then `J` is a subtopology of `finest_topology Ps`.
 -/
 theorem le_finest_topology (Ps : Set (Cᵒᵖ ⥤ Type v)) (J : GrothendieckTopology C)
-    (hJ : ∀, ∀ P ∈ Ps, ∀, Presieve.IsSheaf J P) : J ≤ finestTopology Ps := by
+    (hJ : ∀ P ∈ Ps, Presieve.IsSheaf J P) : J ≤ finestTopology Ps := by
   rintro X S hS _ ⟨⟨_, _, ⟨P, hP, rfl⟩, rfl⟩, rfl⟩
   intro Y f
   -- this can't be combined with the previous because the `subst` is applied at the end

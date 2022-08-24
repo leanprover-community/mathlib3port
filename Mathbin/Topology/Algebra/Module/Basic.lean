@@ -46,7 +46,7 @@ theorem HasContinuousSmul.of_nhds_zero [TopologicalRing R] [TopologicalAddGroup 
     rintro ⟨a₀, m₀⟩
     have key : ∀ p : R × M, p.1 • p.2 = a₀ • m₀ + ((p.1 - a₀) • m₀ + a₀ • (p.2 - m₀) + (p.1 - a₀) • (p.2 - m₀)) := by
       rintro ⟨a, m⟩
-      simp [← sub_smul, ← smul_sub]
+      simp [sub_smul, smul_sub]
       abel
     rw [funext key]
     clear key
@@ -131,7 +131,7 @@ theorem Module.punctured_nhds_ne_bot [Nontrivial M] [NeBot (𝓝[≠] (0 : R))] 
     rw [zero_smul, add_zeroₓ]
     
   · intro c hc
-    simpa [← hy] using hc
+    simpa [hy] using hc
     
 
 end
@@ -175,14 +175,14 @@ theorem Submodule.closure_smul_self_subset (s : Submodule R M) :
   calc
     (fun p : R × M => p.1 • p.2) '' Set.Univ ×ˢ Closure s = (fun p : R × M => p.1 • p.2) '' Closure (Set.Univ ×ˢ s) :=
       by
-      simp [← closure_prod_eq]
+      simp [closure_prod_eq]
     _ ⊆ Closure ((fun p : R × M => p.1 • p.2) '' Set.Univ ×ˢ s) := image_closure_subset_closure_image continuous_smul
     _ = Closure s := by
       congr
       ext x
       refine' ⟨_, fun hx => ⟨⟨1, x⟩, ⟨Set.mem_univ _, hx⟩, one_smul R _⟩⟩
       rintro ⟨⟨c, y⟩, ⟨hc, hy⟩, rfl⟩
-      simp [← s.smul_mem c hy]
+      simp [s.smul_mem c hy]
     
 
 theorem Submodule.closure_smul_self_eq (s : Submodule R M) :
@@ -346,7 +346,7 @@ section
 variable (M₁ M₂) (σ : R →+* S)
 
 theorem is_closed_set_of_map_smul : IsClosed { f : M₁ → M₂ | ∀ c x, f (c • x) = σ c • f x } := by
-  simp only [← Set.set_of_forall]
+  simp only [Set.set_of_forall]
   exact
     is_closed_Inter fun c =>
       is_closed_Inter fun x => is_closed_eq (continuous_apply _) ((continuous_apply _).const_smul _)
@@ -480,7 +480,7 @@ protected theorem map_smulₛₗ (f : M₁ →SL[σ₁₂] M₂) (c : R₁) (x :
 
 @[simp]
 protected theorem map_smul [Module R₁ M₂] (f : M₁ →L[R₁] M₂) (c : R₁) (x : M₁) : f (c • x) = c • f x := by
-  simp only [← RingHom.id_apply, ← ContinuousLinearMap.map_smulₛₗ]
+  simp only [RingHom.id_apply, ContinuousLinearMap.map_smulₛₗ]
 
 @[simp]
 theorem map_smul_of_tower {R S : Type _} [Semiringₓ S] [HasSmul R M₁] [Module S M₁] [HasSmul R M₂] [Module S M₂]
@@ -530,7 +530,7 @@ theorem _root_.dense_range.topological_closure_map_submodule [RingHomSurjective 
     [HasContinuousAdd M₂] {f : M₁ →SL[σ₁₂] M₂} (hf' : DenseRange f) {s : Submodule R₁ M₁}
     (hs : s.topologicalClosure = ⊤) : (s.map (f : M₁ →ₛₗ[σ₁₂] M₂)).topologicalClosure = ⊤ := by
   rw [SetLike.ext'_iff] at hs⊢
-  simp only [← Submodule.topological_closure_coe, ← Submodule.top_coe, dense_iff_closure_eq] at hs⊢
+  simp only [Submodule.topological_closure_coe, Submodule.top_coe, ← dense_iff_closure_eq] at hs⊢
   exact hf'.dense_image f.continuous hs
 
 section SmulMonoid
@@ -676,7 +676,7 @@ instance : AddCommMonoidₓ (M₁ →SL[σ₁₂] M₂) where
     simp
   nsmul_succ' := fun n f => by
     ext
-    simp [← Nat.succ_eq_one_add, ← add_smul]
+    simp [Nat.succ_eq_one_add, add_smul]
 
 @[simp, norm_cast]
 theorem coe_sum {ι : Type _} (t : Finset ι) (f : ι → M₁ →SL[σ₁₂] M₂) :
@@ -685,11 +685,11 @@ theorem coe_sum {ι : Type _} (t : Finset ι) (f : ι → M₁ →SL[σ₁₂] M
 
 @[simp, norm_cast]
 theorem coe_sum' {ι : Type _} (t : Finset ι) (f : ι → M₁ →SL[σ₁₂] M₂) : ⇑(∑ d in t, f d) = ∑ d in t, f d := by
-  simp only [coe_coe, ← coe_sum, ← LinearMap.coe_fn_sum]
+  simp only [← coe_coe, coe_sum, LinearMap.coe_fn_sum]
 
 theorem sum_apply {ι : Type _} (t : Finset ι) (f : ι → M₁ →SL[σ₁₂] M₂) (b : M₁) : (∑ d in t, f d) b = ∑ d in t, f d b :=
   by
-  simp only [← coe_sum', ← Finset.sum_apply]
+  simp only [coe_sum', Finset.sum_apply]
 
 end Add
 
@@ -1060,17 +1060,17 @@ variable [Module R₁ M₂] [TopologicalSpace R₁] [HasContinuousSmul R₁ M₂
 
 @[simp]
 theorem smul_right_one_one (c : R₁ →L[R₁] M₂) : smulRight (1 : R₁ →L[R₁] R₁) (c 1) = c := by
-  ext <;> simp [ContinuousLinearMap.map_smul_of_tower]
+  ext <;> simp [← ContinuousLinearMap.map_smul_of_tower]
 
 @[simp]
 theorem smul_right_one_eq_iff {f f' : M₂} : smulRight (1 : R₁ →L[R₁] R₁) f = smulRight (1 : R₁ →L[R₁] R₁) f' ↔ f = f' :=
   by
-  simp only [← ext_ring_iff, ← smul_right_apply, ← one_apply, ← one_smul]
+  simp only [ext_ring_iff, smul_right_apply, one_apply, one_smul]
 
 theorem smul_right_comp [HasContinuousMul R₁] {x : M₂} {c : R₁} :
     (smulRight (1 : R₁ →L[R₁] R₁) x).comp (smulRight (1 : R₁ →L[R₁] R₁) c) = smulRight (1 : R₁ →L[R₁] R₁) (c • x) := by
   ext
-  simp [← mul_smul]
+  simp [mul_smul]
 
 end Semiringₓ
 
@@ -1097,7 +1097,7 @@ theorem pi_apply (f : ∀ i, M →L[R] φ i) (c : M) (i : ι) : pi f c i = f i c
   rfl
 
 theorem pi_eq_zero (f : ∀ i, M →L[R] φ i) : pi f = 0 ↔ ∀ i, f i = 0 := by
-  simp only [← ext_iff, ← pi_apply, ← Function.funext_iffₓ]
+  simp only [ext_iff, pi_apply, Function.funext_iffₓ]
   exact forall_swap
 
 theorem pi_zero : pi (fun i => 0 : ∀ i, M →L[R] φ i) = 0 :=
@@ -1209,10 +1209,10 @@ instance : AddCommGroupₓ (M →SL[σ₁₂] M₂) := by
           simp ,
         zsmul_succ' := fun n f => by
           ext
-          simp [← add_smul, ← add_commₓ],
+          simp [add_smul, add_commₓ],
         zsmul_neg' := fun n f => by
           ext
-          simp [← Nat.succ_eq_add_one, ← add_smul].. } <;>
+          simp [Nat.succ_eq_add_one, add_smul].. } <;>
     intros <;> ext <;> apply_rules [zero_addₓ, add_assocₓ, add_zeroₓ, add_left_negₓ, add_commₓ, sub_eq_add_neg]
 
 theorem sub_apply (f g : M →SL[σ₁₂] M₂) (x : M) : (f - g) x = f x - g x :=
@@ -1273,7 +1273,7 @@ variable {σ₂₁ : R₂ →+* R} [RingHomInvPair σ₁₂ σ₂₁]
 def projKerOfRightInverse [TopologicalAddGroup M] (f₁ : M →SL[σ₁₂] M₂) (f₂ : M₂ →SL[σ₂₁] M)
     (h : Function.RightInverse f₂ f₁) : M →L[R] f₁.ker :=
   ((id R M - f₂.comp f₁).codRestrict f₁.ker) fun x => by
-    simp [← h (f₁ x)]
+    simp [h (f₁ x)]
 
 @[simp]
 theorem coe_proj_ker_of_right_inverse_apply [TopologicalAddGroup M] (f₁ : M →SL[σ₁₂] M₂) (f₂ : M₂ →SL[σ₂₁] M)
@@ -1290,7 +1290,7 @@ theorem proj_ker_of_right_inverse_apply_idem [TopologicalAddGroup M] (f₁ : M �
 theorem proj_ker_of_right_inverse_comp_inv [TopologicalAddGroup M] (f₁ : M →SL[σ₁₂] M₂) (f₂ : M₂ →SL[σ₂₁] M)
     (h : Function.RightInverse f₂ f₁) (y : M₂) : f₁.projKerOfRightInverse f₂ h (f₂ y) = 0 :=
   Subtype.ext_iff_val.2 <| by
-    simp [← h y]
+    simp [h y]
 
 end
 
@@ -1311,7 +1311,7 @@ protected theorem is_open_map_of_ne_zero [TopologicalSpace R] [DivisionRing R] [
         continuity,
       by
       simp , fun a => by
-      simp [← hx]⟩
+      simp [hx]⟩
 
 end DivisionMonoid
 
@@ -1351,7 +1351,7 @@ theorem comp_smulₛₗ [SmulCommClass R₂ R₂ M₂] [SmulCommClass R₃ R₃ 
     [HasContinuousConstSmul R₃ M₃] (h : M₂ →SL[σ₂₃] M₃) (c : R₂) (f : M →SL[σ₁₂] M₂) :
     h.comp (c • f) = σ₂₃ c • h.comp f := by
   ext x
-  simp only [← coe_smul', ← coe_comp', ← Function.comp_app, ← Pi.smul_apply, ← ContinuousLinearMap.map_smulₛₗ]
+  simp only [coe_smul', coe_comp', Function.comp_app, Pi.smul_apply, ContinuousLinearMap.map_smulₛₗ]
 
 omit σ₁₃
 
@@ -1385,7 +1385,7 @@ def prodEquiv : (M →L[R] N₂) × (M →L[R] N₃) ≃ (M →L[R] N₂ × N₃
 
 theorem prod_ext_iff {f g : M × N₂ →L[R] N₃} :
     f = g ↔ f.comp (inl _ _ _) = g.comp (inl _ _ _) ∧ f.comp (inr _ _ _) = g.comp (inr _ _ _) := by
-  simp only [coe_inj, ← LinearMap.prod_ext_iff]
+  simp only [← coe_inj, LinearMap.prod_ext_iff]
   rfl
 
 @[ext]
@@ -1957,10 +1957,10 @@ def arrowCongrEquiv (e₁₂ : M₁ ≃SL[σ₁₂] M₂) (e₄₃ : M₄ ≃SL[
   invFun := fun f => (e₄₃.symm : M₃ →SL[σ₃₄] M₄).comp (f.comp (e₁₂ : M₁ →SL[σ₁₂] M₂))
   left_inv := fun f =>
     ContinuousLinearMap.ext fun x => by
-      simp only [← ContinuousLinearMap.comp_apply, ← symm_apply_apply, ← coe_coe]
+      simp only [ContinuousLinearMap.comp_apply, symm_apply_apply, coe_coe]
   right_inv := fun f =>
     ContinuousLinearMap.ext fun x => by
-      simp only [← ContinuousLinearMap.comp_apply, ← apply_symm_apply, ← coe_coe]
+      simp only [ContinuousLinearMap.comp_apply, apply_symm_apply, coe_coe]
 
 end AddCommMonoidₓ
 
@@ -2130,7 +2130,7 @@ def equivOfRightInverse (f₁ : M →L[R] M₂) (f₂ : M₂ →L[R] M) (h : Fun
     (fun x => by
       simp )
     fun ⟨x, y⟩ => by
-    simp [← h x]
+    simp [h x]
 
 @[simp]
 theorem fst_equiv_of_right_inverse (f₁ : M →L[R] M₂) (f₂ : M₂ →L[R] M) (h : Function.RightInverse f₂ f₁) (x : M) :
@@ -2214,7 +2214,7 @@ noncomputable def inverse : (M →L[R] M₂) → M₂ →L[R] M := fun f =>
 @[simp]
 theorem inverse_equiv (e : M ≃L[R] M₂) : inverse (e : M →L[R] M₂) = e.symm := by
   have h : ∃ e' : M ≃L[R] M₂, (e' : M →L[R] M₂) = ↑e := ⟨e, rfl⟩
-  simp only [← inverse, ← dif_pos h]
+  simp only [inverse, dif_pos h]
   congr
   exact_mod_cast Classical.some_spec h
 
@@ -2252,7 +2252,7 @@ theorem to_ring_inverse (e : M ≃L[R] M₂) (f : M →L[R] M₂) :
     simp
     
   · suffices ¬IsUnit ((e.symm : M₂ →L[R] M).comp f) by
-      simp [← this, ← h₁]
+      simp [this, h₁]
     contrapose! h₁
     rcases h₁ with ⟨F, hF⟩
     use (ContinuousLinearEquiv.unitsEquiv _ _ F).trans e
@@ -2264,7 +2264,7 @@ theorem to_ring_inverse (e : M ≃L[R] M₂) (f : M →L[R] M₂) :
 
 theorem ring_inverse_eq_map_inverse : Ring.inverse = @inverse R M M _ _ _ _ _ _ _ := by
   ext
-  simp [← to_ring_inverse (ContinuousLinearEquiv.refl R M)]
+  simp [to_ring_inverse (ContinuousLinearEquiv.refl R M)]
 
 end
 
@@ -2294,7 +2294,7 @@ protected theorem ClosedComplemented.is_closed [TopologicalAddGroup M] [T1Space 
 @[simp]
 theorem closed_complemented_bot : ClosedComplemented (⊥ : Submodule R M) :=
   ⟨0, fun x => by
-    simp only [← zero_apply, ← eq_zero_of_bot_submodule x]⟩
+    simp only [zero_apply, eq_zero_of_bot_submodule x]⟩
 
 @[simp]
 theorem closed_complemented_top : ClosedComplemented (⊤ : Submodule R M) :=

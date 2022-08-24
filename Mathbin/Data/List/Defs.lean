@@ -25,7 +25,7 @@ universe u v w x
 
 variable {α β γ δ ε ζ : Type _}
 
-instance [DecidableEq α] : HasSdiff (List α) :=
+instance [DecidableEq α] : Sdiff (List α) :=
   ⟨List.diffₓ⟩
 
 /-- Split a list at an index.
@@ -625,12 +625,12 @@ variable (R : α → α → Prop)
   and if `R = (<)` then it asserts that `l` is (strictly) sorted. -/
 inductive Pairwiseₓ : List α → Prop
   | nil : pairwise []
-  | cons : ∀ {a : α} {l : List α}, (∀, ∀ a' ∈ l, ∀, R a a') → pairwise l → pairwise (a :: l)
+  | cons : ∀ {a : α} {l : List α}, (∀ a' ∈ l, R a a') → pairwise l → pairwise (a :: l)
 
 variable {R}
 
 @[simp]
-theorem pairwise_cons {a : α} {l : List α} : Pairwiseₓ R (a :: l) ↔ (∀, ∀ a' ∈ l, ∀, R a a') ∧ Pairwiseₓ R l :=
+theorem pairwise_cons {a : α} {l : List α} : Pairwiseₓ R (a :: l) ↔ (∀ a' ∈ l, R a a') ∧ Pairwiseₓ R l :=
   ⟨fun p => by
     cases' p with a l n p <;> exact ⟨n, p⟩, fun ⟨n, p⟩ => p.cons n⟩
 
@@ -650,7 +650,7 @@ def pwFilterₓ (R : α → α → Prop) [DecidableRel R] : List α → List α
   | [] => []
   | x :: xs =>
     let IH := pw_filter xs
-    if ∀, ∀ y ∈ IH, ∀, R x y then x :: IH else IH
+    if ∀ y ∈ IH, R x y then x :: IH else IH
 
 section Chain
 
@@ -680,7 +680,7 @@ theorem chain_cons {a b : α} {l : List α} : Chain R a (b :: l) ↔ R a b ∧ C
 attribute [simp] chain.nil
 
 instance decidableChain [DecidableRel R] (a : α) (l : List α) : Decidable (Chain R a l) := by
-  induction l generalizing a <;> simp only [← chain.nil, ← chain_cons] <;> skip <;> infer_instance
+  induction l generalizing a <;> simp only [chain.nil, chain_cons] <;> skip <;> infer_instance
 
 instance decidableChain' [DecidableRel R] (l : List α) : Decidable (Chain' R l) := by
   cases l <;> dunfold chain' <;> infer_instance

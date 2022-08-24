@@ -110,7 +110,7 @@ theorem GradedRing.proj_recompose (a : ⨁ i, 𝒜 i) (i : ι) :
 
 theorem GradedRing.mem_support_iff [∀ (i) (x : 𝒜 i), Decidable (x ≠ 0)] (r : A) (i : ι) :
     i ∈ (decompose 𝒜 r).support ↔ GradedRing.proj 𝒜 i r ≠ 0 :=
-  Dfinsupp.mem_support_iff.trans AddSubmonoidClass.coe_eq_zero.Not.symm
+  Dfinsupp.mem_support_iff.trans ZeroMemClass.coe_eq_zero.Not.symm
 
 end GradedRing
 
@@ -134,7 +134,7 @@ theorem DirectSum.coe_decompose_mul_add_of_left_mem {ι σ A} [DecidableEq ι] [
   refine'
     dite (decompose 𝒜 b j = 0)
       (fun h => by
-        simp [← if_neg (not_mem_support_iff.mpr h), ← h])
+        simp [if_neg (not_mem_support_iff.mpr h), h])
       fun h => _
   erw [if_pos (mem_support_iff.mpr h), Finset.sum_singleton, of_eq_same]
   rfl
@@ -155,7 +155,7 @@ theorem DirectSum.coe_decompose_mul_add_of_right_mem {ι σ A} [DecidableEq ι] 
   refine'
     dite (decompose 𝒜 a i = 0)
       (fun h => by
-        simp [← if_neg (not_mem_support_iff.mpr h), ← h])
+        simp [if_neg (not_mem_support_iff.mpr h), h])
       fun h => _
   erw [if_pos (mem_support_iff.mpr h), Finset.sum_singleton, of_eq_same]
   rfl
@@ -260,14 +260,14 @@ def GradedRing.projZeroRingHom : A →+* A where
     rfl
   map_mul' := by
     refine' DirectSum.Decomposition.induction_on 𝒜 (fun x => _) _ _
-    · simp only [← zero_mul, ← decompose_zero, ← zero_apply, ← AddSubmonoidClass.coe_zero]
+    · simp only [zero_mul, decompose_zero, zero_apply, ZeroMemClass.coe_zero]
       
     · rintro i ⟨c, hc⟩
       refine' DirectSum.Decomposition.induction_on 𝒜 _ _ _
-      · simp only [← mul_zero, ← decompose_zero, ← zero_apply, ← AddSubmonoidClass.coe_zero]
+      · simp only [mul_zero, decompose_zero, zero_apply, ZeroMemClass.coe_zero]
         
       · rintro j ⟨c', hc'⟩
-        · simp only [← Subtype.coe_mk]
+        · simp only [Subtype.coe_mk]
           by_cases' h : i + j = 0
           · rw [decompose_of_mem_same 𝒜 (show c * c' ∈ 𝒜 0 from h ▸ mul_mem hc hc'),
               decompose_of_mem_same 𝒜 (show c ∈ 𝒜 0 from (add_eq_zero_iff.mp h).1 ▸ hc),
@@ -278,19 +278,19 @@ def GradedRing.projZeroRingHom : A →+* A where
               show i ≠ 0 ∨ j ≠ 0 by
                 rwa [add_eq_zero_iff, not_and_distrib] at h with
               h' h'
-            · simp only [← decompose_of_mem_ne 𝒜 hc h', ← zero_mul]
+            · simp only [decompose_of_mem_ne 𝒜 hc h', zero_mul]
               
-            · simp only [← decompose_of_mem_ne 𝒜 hc' h', ← mul_zero]
+            · simp only [decompose_of_mem_ne 𝒜 hc' h', mul_zero]
               
             
           
         
       · intro _ _ hd he
-        simp only [← mul_addₓ, ← decompose_add, ← add_apply, ← AddMemClass.coe_add, ← hd, ← he]
+        simp only [mul_addₓ, decompose_add, add_apply, AddMemClass.coe_add, hd, he]
         
       
     · rintro _ _ ha hb _
-      simp only [← add_mulₓ, ← decompose_add, ← add_apply, ← AddMemClass.coe_add, ← ha, ← hb]
+      simp only [add_mulₓ, decompose_add, add_apply, AddMemClass.coe_add, ha, hb]
       
 
 end CanonicalOrder

@@ -52,7 +52,7 @@ def HolderWith (C r : ℝ≥0 ) (f : X → Y) : Prop :=
 `C : ℝ≥0` and exponent `r : ℝ≥0` on a set `s : set X`, if `edist (f x) (f y) ≤ C * edist x y ^ r`
 for all `x y ∈ s`. -/
 def HolderOnWith (C r : ℝ≥0 ) (f : X → Y) (s : Set X) : Prop :=
-  ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, edist (f x) (f y) ≤ C * edist x y ^ (r : ℝ)
+  ∀ x ∈ s, ∀ y ∈ s, edist (f x) (f y) ≤ C * edist x y ^ (r : ℝ)
 
 @[simp]
 theorem holder_on_with_empty (C r : ℝ≥0 ) (f : X → Y) : HolderOnWith C r f ∅ := fun x hx => hx.elim
@@ -68,11 +68,11 @@ theorem Set.Subsingleton.holder_on_with {s : Set X} (hs : s.Subsingleton) (C r :
   hs.induction_on (holder_on_with_empty C r f) (holder_on_with_singleton C r f)
 
 theorem holder_on_with_univ {C r : ℝ≥0 } {f : X → Y} : HolderOnWith C r f Univ ↔ HolderWith C r f := by
-  simp only [← HolderOnWith, ← HolderWith, ← mem_univ, ← true_implies_iff]
+  simp only [HolderOnWith, HolderWith, mem_univ, true_implies_iff]
 
 @[simp]
 theorem holder_on_with_one {C : ℝ≥0 } {f : X → Y} {s : Set X} : HolderOnWith C 1 f s ↔ LipschitzOnWith C f s := by
-  simp only [← HolderOnWith, ← LipschitzOnWith, ← Nnreal.coe_one, ← Ennreal.rpow_one]
+  simp only [HolderOnWith, LipschitzOnWith, Nnreal.coe_one, Ennreal.rpow_one]
 
 alias holder_on_with_one ↔ _ LipschitzOnWith.holder_on_with
 
@@ -130,7 +130,7 @@ theorem ediam_image_le_of_le (hf : HolderOnWith C r f s) {d : ℝ≥0∞} (hd : 
   Emetric.diam_image_le_iff.2 fun x hx y hy => hf.edist_le_of_le hx hy <| (Emetric.edist_le_diam_of_mem hx hy).trans hd
 
 theorem ediam_image_le (hf : HolderOnWith C r f s) : Emetric.diam (f '' s) ≤ C * Emetric.diam s ^ (r : ℝ) :=
-  hf.ediam_image_le_of_le le_rfl
+  hf.ediam_image_le_of_le le_rflₓ
 
 theorem ediam_image_le_of_subset (hf : HolderOnWith C r f s) (ht : t ⊆ s) :
     Emetric.diam (f '' t) ≤ C * Emetric.diam t ^ (r : ℝ) :=
@@ -146,7 +146,7 @@ theorem ediam_image_inter_le_of_le (hf : HolderOnWith C r f s) {d : ℝ≥0∞} 
 
 theorem ediam_image_inter_le (hf : HolderOnWith C r f s) (t : Set X) :
     Emetric.diam (f '' (t ∩ s)) ≤ C * Emetric.diam t ^ (r : ℝ) :=
-  hf.ediam_image_inter_le_of_le le_rfl
+  hf.ediam_image_inter_le_of_le le_rflₓ
 
 end HolderOnWith
 
@@ -196,7 +196,7 @@ theorem nndist_le_of_le (hf : HolderWith C r f) {x y : X} {d : ℝ≥0 } (hd : n
   rwa [edist_nndist, Ennreal.coe_le_coe]
 
 theorem nndist_le (hf : HolderWith C r f) (x y : X) : nndist (f x) (f y) ≤ C * nndist x y ^ (r : ℝ) :=
-  hf.nndist_le_of_le le_rfl
+  hf.nndist_le_of_le le_rflₓ
 
 theorem dist_le_of_le (hf : HolderWith C r f) {x y : X} {d : ℝ} (hd : dist x y ≤ d) :
     dist (f x) (f y) ≤ C * d ^ (r : ℝ) := by
@@ -206,7 +206,7 @@ theorem dist_le_of_le (hf : HolderWith C r f) {x y : X} {d : ℝ} (hd : dist x y
   exact hf.nndist_le_of_le hd
 
 theorem dist_le (hf : HolderWith C r f) (x y : X) : dist (f x) (f y) ≤ C * dist x y ^ (r : ℝ) :=
-  hf.dist_le_of_le le_rfl
+  hf.dist_le_of_le le_rflₓ
 
 end HolderWith
 

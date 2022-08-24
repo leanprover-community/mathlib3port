@@ -78,7 +78,7 @@ alias right_distrib ← add_mulₓ
 
 theorem distrib_three_right [Mul R] [Add R] [RightDistribClass R] (a b c d : R) :
     (a + b + c) * d = a * d + b * d + c * d := by
-  simp [← right_distrib]
+  simp [right_distrib]
 
 /-- Pullback a `distrib` instance along an injective function.
 See note [reducible non-instances]. -/
@@ -89,10 +89,10 @@ protected def Function.Injective.distrib {S} [Mul R] [Add R] [Distribₓ S] (f :
   add := (· + ·)
   left_distrib := fun x y z =>
     hf <| by
-      simp only [*, ← left_distrib]
+      simp only [*, left_distrib]
   right_distrib := fun x y z =>
     hf <| by
-      simp only [*, ← right_distrib]
+      simp only [*, right_distrib]
 
 /-- Pushforward a `distrib` instance along a surjective function.
 See note [reducible non-instances]. -/
@@ -103,10 +103,10 @@ protected def Function.Surjective.distrib {S} [Distribₓ R] [Add S] [Mul S] (f 
   add := (· + ·)
   left_distrib :=
     hf.forall₃.2 fun x y z => by
-      simp only [add, mul, ← left_distrib]
+      simp only [← add, ← mul, left_distrib]
   right_distrib :=
     hf.forall₃.2 fun x y z => by
-      simp only [add, mul, ← right_distrib]
+      simp only [← add, ← mul, right_distrib]
 
 /-!
 ### Semirings
@@ -230,7 +230,7 @@ theorem dvd_add [LeftDistribClass α] {a b c : α} (h₁ : a ∣ b) (h₂ : a �
     Dvd.elim h₂ fun e he =>
       Dvd.intro (d + e)
         (by
-          simp [← left_distrib, ← hd, ← he])
+          simp [left_distrib, hd, he])
 
 end DistribSemigroup
 
@@ -301,15 +301,15 @@ theorem boole_mul {α} [MulZeroOneClassₓ α] (P : Prop) [Decidable P] (a : α)
 
 theorem ite_mul_zero_left {α : Type _} [MulZeroClassₓ α] (P : Prop) [Decidable P] (a b : α) :
     ite P (a * b) 0 = ite P a 0 * b := by
-  by_cases' h : P <;> simp [← h]
+  by_cases' h : P <;> simp [h]
 
 theorem ite_mul_zero_right {α : Type _} [MulZeroClassₓ α] (P : Prop) [Decidable P] (a b : α) :
     ite P (a * b) 0 = a * ite P b 0 := by
-  by_cases' h : P <;> simp [← h]
+  by_cases' h : P <;> simp [h]
 
 theorem ite_and_mul_zero {α : Type _} [MulZeroClassₓ α] (P Q : Prop) [Decidable P] [Decidable Q] (a b : α) :
     ite (P ∧ Q) (a * b) 0 = ite P a 0 * ite Q b 0 := by
-  simp only [ite_and, ← ite_mul, ← mul_ite, ← mul_zero, ← zero_mul, ← and_comm]
+  simp only [← ite_and, ite_mul, mul_ite, mul_zero, zero_mul, and_comm]
 
 end Semiringₓ
 
@@ -439,7 +439,7 @@ protected def Function.Surjective.commSemiring [Zero γ] [One γ] [Add γ] [Mul 
   { hf.Semiring f zero one add mul nsmul npow nat_cast, hf.CommSemigroup f mul with }
 
 theorem add_mul_self_eq (a b : α) : (a + b) * (a + b) = a * a + 2 * a * b + b * b := by
-  simp only [← two_mul, ← add_mulₓ, ← mul_addₓ, ← add_assocₓ, ← mul_comm b]
+  simp only [two_mul, add_mulₓ, mul_addₓ, add_assocₓ, mul_comm b]
 
 end CommSemiringₓ
 
@@ -559,7 +559,7 @@ variable [Semigroupₓ α] [HasDistribNeg α] {a b c : α}
 theorem dvd_neg_of_dvd (h : a ∣ b) : a ∣ -b :=
   let ⟨c, hc⟩ := h
   ⟨-c, by
-    simp [← hc]⟩
+    simp [hc]⟩
 
 theorem dvd_of_dvd_neg (h : a ∣ -b) : a ∣ b := by
   let t := dvd_neg_of_dvd h
@@ -574,7 +574,7 @@ theorem dvd_neg (a b : α) : a ∣ -b ↔ a ∣ b :=
 theorem neg_dvd_of_dvd (h : a ∣ b) : -a ∣ b :=
   let ⟨c, hc⟩ := h
   ⟨-c, by
-    simp [← hc]⟩
+    simp [hc]⟩
 
 theorem dvd_of_neg_dvd (h : -a ∣ b) : a ∣ b := by
   let t := neg_dvd_of_dvd h
@@ -644,12 +644,12 @@ instance (priority := 100) NonUnitalNonAssocRing.toHasDistribNeg : HasDistribNeg
       rw [← left_distrib, add_left_negₓ, mul_zero]
 
 theorem mul_sub_left_distrib (a b c : α) : a * (b - c) = a * b - a * c := by
-  simpa only [← sub_eq_add_neg, ← neg_mul_eq_mul_neg] using mul_addₓ a b (-c)
+  simpa only [sub_eq_add_neg, neg_mul_eq_mul_neg] using mul_addₓ a b (-c)
 
 alias mul_sub_left_distrib ← mul_sub
 
 theorem mul_sub_right_distrib (a b c : α) : (a - b) * c = a * c - b * c := by
-  simpa only [← sub_eq_add_neg, ← neg_mul_eq_neg_mulₓ] using add_mulₓ a (-b) c
+  simpa only [sub_eq_add_neg, neg_mul_eq_neg_mulₓ] using add_mulₓ a (-b) c
 
 alias mul_sub_right_distrib ← sub_mul
 
@@ -660,7 +660,7 @@ variable {a b c d e : α}
 theorem mul_add_eq_mul_add_iff_sub_mul_add_eq : a * e + c = b * e + d ↔ (a - b) * e + c = d :=
   calc
     a * e + c = b * e + d ↔ a * e + c = d + b * e := by
-      simp [← add_commₓ]
+      simp [add_commₓ]
     _ ↔ a * e + c - b * e = d :=
       Iff.intro
         (fun h => by
@@ -670,7 +670,7 @@ theorem mul_add_eq_mul_add_iff_sub_mul_add_eq : a * e + c = b * e + d ↔ (a - b
         rw [← h]
         simp
     _ ↔ (a - b) * e + c = d := by
-      simp [← sub_mul, ← sub_add_eq_add_sub]
+      simp [sub_mul, sub_add_eq_add_sub]
     
 
 /-- A simplification of one side of an equation exploiting right distributivity in rings
@@ -678,10 +678,10 @@ theorem mul_add_eq_mul_add_iff_sub_mul_add_eq : a * e + c = b * e + d ↔ (a - b
 theorem sub_mul_add_eq_of_mul_add_eq_mul_add : a * e + c = b * e + d → (a - b) * e + c = d := fun h =>
   calc
     (a - b) * e + c = a * e + c - b * e := by
-      simp [← sub_mul, ← sub_add_eq_add_sub]
+      simp [sub_mul, sub_add_eq_add_sub]
     _ = d := by
       rw [h]
-      simp [← @add_sub_cancel α]
+      simp [@add_sub_cancel α]
     
 
 end NonUnitalNonAssocRing
@@ -859,11 +859,11 @@ instance : HasDistribNeg αˣ :=
 
 @[field_simps]
 theorem neg_divp (a : α) (u : αˣ) : -(a /ₚ u) = -a /ₚ u := by
-  simp only [← divp, ← neg_mul]
+  simp only [divp, neg_mul]
 
 @[field_simps]
 theorem divp_add_divp_same (a b : α) (u : αˣ) : a /ₚ u + b /ₚ u = (a + b) /ₚ u := by
-  simp only [← divp, ← add_mulₓ]
+  simp only [divp, add_mulₓ]
 
 @[field_simps]
 theorem divp_sub_divp_same (a b : α) (u : αˣ) : a /ₚ u - b /ₚ u = (a - b) /ₚ u := by
@@ -871,19 +871,19 @@ theorem divp_sub_divp_same (a b : α) (u : αˣ) : a /ₚ u - b /ₚ u = (a - b)
 
 @[field_simps]
 theorem add_divp (a b : α) (u : αˣ) : a + b /ₚ u = (a * u + b) /ₚ u := by
-  simp only [← divp, ← add_mulₓ, ← Units.mul_inv_cancel_right]
+  simp only [divp, add_mulₓ, Units.mul_inv_cancel_right]
 
 @[field_simps]
 theorem sub_divp (a b : α) (u : αˣ) : a - b /ₚ u = (a * u - b) /ₚ u := by
-  simp only [← divp, ← sub_mul, ← Units.mul_inv_cancel_right]
+  simp only [divp, sub_mul, Units.mul_inv_cancel_right]
 
 @[field_simps]
 theorem divp_add (a b : α) (u : αˣ) : a /ₚ u + b = (a + b * u) /ₚ u := by
-  simp only [← divp, ← add_mulₓ, ← Units.mul_inv_cancel_right]
+  simp only [divp, add_mulₓ, Units.mul_inv_cancel_right]
 
 @[field_simps]
 theorem divp_sub (a b : α) (u : αˣ) : a /ₚ u - b = (a - b * u) /ₚ u := by
-  simp only [← divp, ← sub_mul, ← sub_right_inj]
+  simp only [divp, sub_mul, sub_right_inj]
   assoc_rw [Units.mul_inv, mul_oneₓ]
 
 end Units
@@ -1012,7 +1012,7 @@ theorem Vieta_formula_quadratic {b c x : α} (h : x * x - b * x + c = 0) :
   have : c = x * (b - x) :=
     (eq_neg_of_add_eq_zero_right h).trans
       (by
-        simp [← mul_sub, ← mul_comm])
+        simp [mul_sub, mul_comm])
   refine'
     ⟨b - x, _, by
       simp , by
@@ -1022,7 +1022,7 @@ theorem Vieta_formula_quadratic {b c x : α} (h : x * x - b * x + c = 0) :
 theorem dvd_mul_sub_mul {k a b x y : α} (hab : k ∣ a - b) (hxy : k ∣ x - y) : k ∣ a * x - b * y := by
   convert dvd_add (hxy.mul_left a) (hab.mul_right y)
   rw [mul_sub_left_distrib, mul_sub_right_distrib]
-  simp only [← sub_eq_add_neg, ← add_assocₓ, ← neg_add_cancel_leftₓ]
+  simp only [sub_eq_add_neg, add_assocₓ, neg_add_cancel_leftₓ]
 
 end NonUnitalCommRing
 
@@ -1058,14 +1058,14 @@ theorem succ_ne_self [NonAssocRing α] [Nontrivial α] (a : α) : a + 1 ≠ a :=
   one_ne_zero
     ((add_right_injₓ a).mp
       (by
-        simp [← h]))
+        simp [h]))
 
 theorem pred_ne_self [NonAssocRing α] [Nontrivial α] (a : α) : a - 1 ≠ a := fun h =>
   one_ne_zero
     (neg_injective
       ((add_right_injₓ a).mp
         (by
-          simpa [← sub_eq_add_neg] using h)))
+          simpa [sub_eq_add_neg] using h)))
 
 /-- Left `mul` by a `k : α` over `[ring α]` is injective, if `k` is not a zero divisor.
 The typeclass that restricts all terms of `α` to have this property is `no_zero_divisors`. -/
@@ -1139,26 +1139,26 @@ namespace SemiconjBy
 @[simp]
 theorem add_right [Distribₓ R] {a x y x' y' : R} (h : SemiconjBy a x y) (h' : SemiconjBy a x' y') :
     SemiconjBy a (x + x') (y + y') := by
-  simp only [← SemiconjBy, ← left_distrib, ← right_distrib, ← h.eq, ← h'.eq]
+  simp only [SemiconjBy, left_distrib, right_distrib, h.eq, h'.eq]
 
 @[simp]
 theorem add_left [Distribₓ R] {a b x y : R} (ha : SemiconjBy a x y) (hb : SemiconjBy b x y) : SemiconjBy (a + b) x y :=
   by
-  simp only [← SemiconjBy, ← left_distrib, ← right_distrib, ← ha.eq, ← hb.eq]
+  simp only [SemiconjBy, left_distrib, right_distrib, ha.eq, hb.eq]
 
 section
 
 variable [Mul R] [HasDistribNeg R] {a x y : R}
 
 theorem neg_right (h : SemiconjBy a x y) : SemiconjBy a (-x) (-y) := by
-  simp only [← SemiconjBy, ← h.eq, ← neg_mul, ← mul_neg]
+  simp only [SemiconjBy, h.eq, neg_mul, mul_neg]
 
 @[simp]
 theorem neg_right_iff : SemiconjBy a (-x) (-y) ↔ SemiconjBy a x y :=
   ⟨fun h => neg_negₓ x ▸ neg_negₓ y ▸ h.neg_right, SemiconjBy.neg_right⟩
 
 theorem neg_left (h : SemiconjBy a x y) : SemiconjBy (-a) x y := by
-  simp only [← SemiconjBy, ← h.eq, ← neg_mul, ← mul_neg]
+  simp only [SemiconjBy, h.eq, neg_mul, mul_neg]
 
 @[simp]
 theorem neg_left_iff : SemiconjBy (-a) x y ↔ SemiconjBy a x y :=
@@ -1186,11 +1186,11 @@ variable [NonUnitalNonAssocRing R] {a b x y x' y' : R}
 
 @[simp]
 theorem sub_right (h : SemiconjBy a x y) (h' : SemiconjBy a x' y') : SemiconjBy a (x - x') (y - y') := by
-  simpa only [← sub_eq_add_neg] using h.add_right h'.neg_right
+  simpa only [sub_eq_add_neg] using h.add_right h'.neg_right
 
 @[simp]
 theorem sub_left (ha : SemiconjBy a x y) (hb : SemiconjBy b x y) : SemiconjBy (a - b) x y := by
-  simpa only [← sub_eq_add_neg] using ha.add_left hb.neg_left
+  simpa only [sub_eq_add_neg] using ha.add_left hb.neg_left
 
 end
 
@@ -1298,7 +1298,7 @@ namespace Units
 
 @[field_simps]
 theorem divp_add_divp [CommRingₓ α] (a b : α) (u₁ u₂ : αˣ) : a /ₚ u₁ + b /ₚ u₂ = (a * u₂ + u₁ * b) /ₚ (u₁ * u₂) := by
-  simp only [← divp, ← add_mulₓ, ← mul_inv_rev, ← coe_mul]
+  simp only [divp, add_mulₓ, mul_inv_rev, coe_mul]
   rw [mul_comm (↑u₁ * b), mul_comm b]
   assoc_rw [mul_inv, mul_inv, mul_oneₓ, mul_oneₓ]
 
@@ -1310,9 +1310,117 @@ theorem divp_sub_divp [CommRingₓ α] (a b : α) (u₁ u₂ : αˣ) : a /ₚ u�
   one's additive inverse. -/
 theorem inv_eq_self_iff [Ringₓ R] [NoZeroDivisors R] (u : Rˣ) : u⁻¹ = u ↔ u = 1 ∨ u = -1 := by
   rw [inv_eq_iff_mul_eq_one]
-  simp only [← ext_iff]
+  simp only [ext_iff]
   push_cast
   exact mul_self_eq_one_iff
 
 end Units
+
+/-! ### Order dual -/
+
+
+instance [h : Distribₓ α] : Distribₓ αᵒᵈ :=
+  h
+
+instance [Mul α] [Add α] [h : LeftDistribClass α] : LeftDistribClass αᵒᵈ :=
+  h
+
+instance [Mul α] [Add α] [h : RightDistribClass α] : RightDistribClass αᵒᵈ :=
+  h
+
+instance [h : NonUnitalNonAssocSemiringₓ α] : NonUnitalNonAssocSemiringₓ αᵒᵈ :=
+  h
+
+instance [h : NonUnitalSemiringₓ α] : NonUnitalSemiringₓ αᵒᵈ :=
+  h
+
+instance [h : NonAssocSemiringₓ α] : NonAssocSemiringₓ αᵒᵈ :=
+  h
+
+instance [h : Semiringₓ α] : Semiringₓ αᵒᵈ :=
+  h
+
+instance [h : NonUnitalCommSemiring α] : NonUnitalCommSemiring αᵒᵈ :=
+  h
+
+instance [h : CommSemiringₓ α] : CommSemiringₓ αᵒᵈ :=
+  h
+
+instance [Mul α] [h : HasDistribNeg α] : HasDistribNeg αᵒᵈ :=
+  h
+
+instance [h : NonUnitalNonAssocRing α] : NonUnitalNonAssocRing αᵒᵈ :=
+  h
+
+instance [h : NonUnitalRing α] : NonUnitalRing αᵒᵈ :=
+  h
+
+instance [h : NonAssocRing α] : NonAssocRing αᵒᵈ :=
+  h
+
+instance [h : Ringₓ α] : Ringₓ αᵒᵈ :=
+  h
+
+instance [h : NonUnitalCommRing α] : NonUnitalCommRing αᵒᵈ :=
+  h
+
+instance [h : CommRingₓ α] : CommRingₓ αᵒᵈ :=
+  h
+
+instance [Ringₓ α] [h : IsDomain α] : IsDomain αᵒᵈ :=
+  h
+
+/-! ### Lexicographical order -/
+
+
+instance [h : Distribₓ α] : Distribₓ (Lex α) :=
+  h
+
+instance [Mul α] [Add α] [h : LeftDistribClass α] : LeftDistribClass (Lex α) :=
+  h
+
+instance [Mul α] [Add α] [h : RightDistribClass α] : RightDistribClass (Lex α) :=
+  h
+
+instance [h : NonUnitalNonAssocSemiringₓ α] : NonUnitalNonAssocSemiringₓ (Lex α) :=
+  h
+
+instance [h : NonUnitalSemiringₓ α] : NonUnitalSemiringₓ (Lex α) :=
+  h
+
+instance [h : NonAssocSemiringₓ α] : NonAssocSemiringₓ (Lex α) :=
+  h
+
+instance [h : Semiringₓ α] : Semiringₓ (Lex α) :=
+  h
+
+instance [h : NonUnitalCommSemiring α] : NonUnitalCommSemiring (Lex α) :=
+  h
+
+instance [h : CommSemiringₓ α] : CommSemiringₓ (Lex α) :=
+  h
+
+instance [Mul α] [h : HasDistribNeg α] : HasDistribNeg (Lex α) :=
+  h
+
+instance [h : NonUnitalNonAssocRing α] : NonUnitalNonAssocRing (Lex α) :=
+  h
+
+instance [h : NonUnitalRing α] : NonUnitalRing (Lex α) :=
+  h
+
+instance [h : NonAssocRing α] : NonAssocRing (Lex α) :=
+  h
+
+instance [h : Ringₓ α] : Ringₓ (Lex α) :=
+  h
+
+instance [h : NonUnitalCommRing α] : NonUnitalCommRing (Lex α) :=
+  h
+
+instance [h : CommRingₓ α] : CommRingₓ (Lex α) :=
+  h
+
+instance [Ringₓ α] [h : IsDomain α] : IsDomain (Lex α) :=
+  h
 

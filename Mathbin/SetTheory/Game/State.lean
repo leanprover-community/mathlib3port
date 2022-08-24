@@ -83,7 +83,7 @@ def ofStateAuxRelabelling :
     ∀ (s : S) (n m : ℕ) (hn : turnBound s ≤ n) (hm : turnBound s ≤ m),
       Relabelling (ofStateAux n s hn) (ofStateAux m s hm)
   | s, 0, 0, hn, hm => by
-    dsimp' [← Pgame.ofStateAux]
+    dsimp' [Pgame.ofStateAux]
     fconstructor
     rfl
     rfl
@@ -98,7 +98,7 @@ def ofStateAuxRelabelling :
       exact turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp hm)
       
   | s, 0, m + 1, hn, hm => by
-    dsimp' [← Pgame.ofStateAux]
+    dsimp' [Pgame.ofStateAux]
     fconstructor
     rfl
     rfl
@@ -113,7 +113,7 @@ def ofStateAuxRelabelling :
       exact turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp hn)
       
   | s, n + 1, 0, hn, hm => by
-    dsimp' [← Pgame.ofStateAux]
+    dsimp' [Pgame.ofStateAux]
     fconstructor
     rfl
     rfl
@@ -128,7 +128,7 @@ def ofStateAuxRelabelling :
       exact turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp hm)
       
   | s, n + 1, m + 1, hn, hm => by
-    dsimp' [← Pgame.ofStateAux]
+    dsimp' [Pgame.ofStateAux]
     fconstructor
     rfl
     rfl
@@ -237,7 +237,7 @@ instance shortOfStateAux : ∀ (n : ℕ) {s : S} (h : turnBound s ≤ n), Short 
       shortOfRelabelling (relabellingMoveRightAux (n + 1) h j).symm (short_of_state_aux n _)
 
 instance shortOfState (s : S) : Short (ofState s) := by
-  dsimp' [← Pgame.ofState]
+  dsimp' [Pgame.ofState]
   infer_instance
 
 end Pgame

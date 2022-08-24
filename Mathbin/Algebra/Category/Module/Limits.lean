@@ -45,8 +45,8 @@ def sectionsSubmodule (F : J ⥤ ModuleCat.{max v w} R) : Submodule R (∀ j, F.
       (F ⋙ forget₂ (ModuleCat R) AddCommGroupₓₓ.{max v w} ⋙ forget₂ AddCommGroupₓₓ AddGroupₓₓ.{max v w}) with
     Carrier := (F ⋙ forget (ModuleCat R)).sections,
     smul_mem' := fun r s sh j j' f => by
-      simp only [← forget_map_eq_coe, ← functor.comp_map, ← Pi.smul_apply, ← LinearMap.map_smul]
-      dsimp' [← functor.sections]  at sh
+      simp only [forget_map_eq_coe, functor.comp_map, Pi.smul_apply, LinearMap.map_smul]
+      dsimp' [functor.sections]  at sh
       rw [sh f] }
 
 -- Adding the following instance speeds up `limit_module` noticeably,
@@ -94,15 +94,14 @@ def limitConeIsLimit (F : J ⥤ ModuleCat.{max v w} R) : IsLimit (limitCone F) :
       is_limit.of_faithful (forget (ModuleCat R)) (types.limit_cone_is_limit _) (fun s => ⟨_, _, _⟩) fun s => rfl <;>
     intros <;>
       ext j <;>
-        simp only [← Subtype.coe_mk, ← functor.map_cone_π_app, ← forget_map_eq_coe, ← LinearMap.map_add, ←
-            LinearMap.map_smul] <;>
+        simp only [Subtype.coe_mk, functor.map_cone_π_app, forget_map_eq_coe, LinearMap.map_add, LinearMap.map_smul] <;>
           rfl
 
 end HasLimits
 
 open HasLimits
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1401:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Command.lean:271:38: unsupported irreducible non-definition
 /-- The category of R-modules has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} (ModuleCat.{max v w} R) :=
   { HasLimitsOfShape := fun J 𝒥 =>
@@ -209,7 +208,7 @@ def directLimitIsColimit [Nonempty ι] [IsDirected ι (· ≤ ·)] : IsColimit (
       rfl
     apply LinearMap.ext
     intro x
-    simp only [← this]
+    simp only [this]
     apply Module.DirectLimit.lift_unique
 
 end DirectLimit

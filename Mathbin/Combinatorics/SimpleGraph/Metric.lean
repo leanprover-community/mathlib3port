@@ -62,32 +62,32 @@ theorem dist_le {u v : V} (p : G.Walk u v) : G.dist u v ≤ p.length :=
 
 @[simp]
 theorem dist_eq_zero_iff_eq_or_not_reachable {u v : V} : G.dist u v = 0 ↔ u = v ∨ ¬G.Reachable u v := by
-  simp [← dist, ← Nat.Inf_eq_zero, ← reachable]
+  simp [dist, Nat.Inf_eq_zero, reachable]
 
 theorem dist_self {v : V} : dist G v v = 0 := by
   simp
 
 protected theorem Reachable.dist_eq_zero_iff {u v : V} (hr : G.Reachable u v) : G.dist u v = 0 ↔ u = v := by
-  simp [← hr]
+  simp [hr]
 
 protected theorem Reachable.pos_dist_of_ne {u v : V} (h : G.Reachable u v) (hne : u ≠ v) : 0 < G.dist u v :=
   Nat.pos_of_ne_zeroₓ
     (by
-      simp [← h, ← hne])
+      simp [h, hne])
 
 protected theorem Connected.dist_eq_zero_iff (hconn : G.Connected) {u v : V} : G.dist u v = 0 ↔ u = v := by
-  simp [← hconn u v]
+  simp [hconn u v]
 
 protected theorem Connected.pos_dist_of_ne {u v : V} (hconn : G.Connected) (hne : u ≠ v) : 0 < G.dist u v :=
   Nat.pos_of_ne_zeroₓ
     (by
-      simp [← hconn.dist_eq_zero_iff, ← hne])
+      simp [hconn.dist_eq_zero_iff, hne])
 
 theorem dist_eq_zero_of_not_reachable {u v : V} (h : ¬G.Reachable u v) : G.dist u v = 0 := by
-  simp [← h]
+  simp [h]
 
 theorem nonempty_of_pos_dist {u v : V} (h : 0 < G.dist u v) : (Set.Univ : Set (G.Walk u v)).Nonempty := by
-  simpa [← Set.range_nonempty_iff_nonempty, ← Set.nonempty_iff_univ_nonempty] using Nat.nonempty_of_pos_Inf h
+  simpa [Set.range_nonempty_iff_nonempty, Set.nonempty_iff_univ_nonempty] using Nat.nonempty_of_pos_Inf h
 
 protected theorem Connected.dist_triangle (hconn : G.Connected) {u v w : V} : G.dist u w ≤ G.dist u v + G.dist v w := by
   obtain ⟨p, hp⟩ := hconn.exists_walk_of_dist u v
@@ -105,7 +105,7 @@ theorem dist_comm {u v : V} : G.dist u v = G.dist v u := by
   · apply le_antisymmₓ (dist_comm_aux h) (dist_comm_aux h.symm)
     
   · have h' : ¬G.reachable v u := fun h' => absurd h'.symm h
-    simp [← h, ← h', ← dist_eq_zero_of_not_reachable]
+    simp [h, h', dist_eq_zero_of_not_reachable]
     
 
 end SimpleGraph

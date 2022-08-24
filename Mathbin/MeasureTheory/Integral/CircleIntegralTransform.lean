@@ -50,7 +50,7 @@ theorem circle_transform_deriv_periodic (f : ℂ → E) : Periodic (circleTransf
   intro x
   simp_rw [circle_transform_deriv, this]
   congr 2
-  simp [← this]
+  simp [this]
 
 theorem circle_transform_deriv_eq (f : ℂ → E) :
     circleTransformDeriv R z w f = fun θ => (circleMap z R θ - w)⁻¹ • circleTransform R z w f θ := by
@@ -96,7 +96,7 @@ theorem continuous_on_prod_circle_transform_function {R r : ℝ} (hr : r < R) {z
   refine'
     ((continuous_circle_map z R).ContinuousOn.comp continuous_on_snd fun _ => And.right).sub
       (continuous_on_id.comp continuous_on_fst fun _ => And.left)
-  simp only [← mem_prod, ← Ne.def, ← and_imp, ← Prod.forall]
+  simp only [mem_prod, Ne.def, and_imp, Prod.forall]
   intro a b ha hb
   have ha2 : a ∈ ball z R := by
     simp at *
@@ -109,27 +109,27 @@ theorem continuous_on_abs_circle_transform_bounding_function {R r : ℝ} (hr : r
     ContinuousOn (abs ∘ fun t => circleTransformBoundingFunction R z t) (ClosedBall z r ×ˢ univ) := by
   have : ContinuousOn (circle_transform_bounding_function R z) (closed_ball z r ×ˢ (⊤ : Set ℝ)) := by
     apply_rules [ContinuousOn.smul, continuous_on_const]
-    simp only [← deriv_circle_map]
+    simp only [deriv_circle_map]
     have c := (continuous_circle_map 0 R).ContinuousOn
     apply_rules [ContinuousOn.mul, c.comp continuous_on_snd fun _ => And.right, continuous_on_const]
     simp_rw [← inv_pow]
     apply continuous_on_prod_circle_transform_function hr
   refine' continuous_abs.continuous_on.comp this _
   show maps_to _ _ (⊤ : Set ℂ)
-  simp [← maps_to]
+  simp [maps_to]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
--- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 theorem abs_circle_transform_bounding_function_le {R r : ℝ} (hr : r < R) (hr' : 0 ≤ r) (z : ℂ) :
-    ∃ x : ClosedBall z r ×ˢ "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)",
-      ∀ y : ClosedBall z r ×ˢ "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)",
+    ∃ x : ClosedBall z r ×ˢ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)",
+      ∀ y : ClosedBall z r ×ˢ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)",
         abs (circleTransformBoundingFunction R z y) ≤ abs (circleTransformBoundingFunction R z x) :=
   by
   have cts := continuous_on_abs_circle_transform_bounding_function hr z
   have comp :
-    IsCompact (closed_ball z r ×ˢ "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)") := by
+    IsCompact (closed_ball z r ×ˢ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") := by
     apply_rules [IsCompact.prod, ProperSpace.is_compact_closed_ball z r, is_compact_interval]
   have none := (nonempty_closed_ball.2 hr').Prod nonempty_interval
   simpa using
@@ -140,11 +140,11 @@ theorem abs_circle_transform_bounding_function_le {R r : ℝ} (hr : r < R) (hr' 
           simp
           tauto))
 
--- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 /-- The derivative of a `circle_transform` is locally bounded. -/
 theorem circle_transform_deriv_bound {R : ℝ} (hR : 0 < R) {z x : ℂ} {f : ℂ → ℂ} (hx : x ∈ Ball z R)
     (hf : ContinuousOn f (Sphere z R)) :
-    ∃ B ε : ℝ, 0 < ε ∧ Ball x ε ⊆ Ball z R ∧ ∀ (t : ℝ), ∀ y ∈ Ball x ε, ∀, ∥circleTransformDeriv R z y f t∥ ≤ B := by
+    ∃ B ε : ℝ, 0 < ε ∧ Ball x ε ⊆ Ball z R ∧ ∀ (t : ℝ), ∀ y ∈ Ball x ε, ∥circleTransformDeriv R z y f t∥ ≤ B := by
   obtain ⟨r, hr, hrx⟩ := exists_lt_mem_ball_of_mem_ball hx
   obtain ⟨ε', hε', H⟩ := exists_ball_subset_ball hrx
   obtain ⟨⟨⟨a, b⟩, ⟨ha, hb⟩⟩, hab⟩ := abs_circle_transform_bounding_function_le hr (pos_of_mem_ball hrx).le z
@@ -160,18 +160,17 @@ theorem circle_transform_deriv_bound {R : ℝ} (hR : 0 < R) {z x : ℂ} {f : ℂ
   refine' ⟨abs (V b a) * abs (f X), ε', hε', subset.trans H (ball_subset_ball hr.le), _⟩
   intro y v hv
   obtain ⟨y1, hy1, hfun⟩ := periodic.exists_mem_Ico₀ (circle_transform_deriv_periodic R z v f) Real.two_pi_pos y
-  have hy2 : y1 ∈ "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)" := by
+  have hy2 : y1 ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" := by
     convert Ico_subset_Icc_self hy1
-    simp [← interval_of_le real.two_pi_pos.le]
+    simp [interval_of_le real.two_pi_pos.le]
   have :=
     mul_le_mul (hab ⟨⟨v, y1⟩, ⟨ball_subset_closed_ball (H hv), hy2⟩⟩)
       (HX2 (circleMap z R y1) (circle_map_mem_sphere z hR.le y1)) (abs_nonneg _) (abs_nonneg _)
   simp_rw [hfun]
-  simp only [← circle_transform_bounding_function, ← circle_transform_deriv, ← V, ← norm_eq_abs, ←
-    Algebra.id.smul_eq_mul, ← deriv_circle_map, ← abs_mul, ← abs_circle_map_zero, ← abs_I, ← mul_oneₓ, mul_assoc, ←
-    mul_inv_rev, ← inv_I, ← abs_neg, ← abs_inv, ← abs_of_real, ← one_mulₓ, ← abs_two, ← abs_pow, ← mem_ball, ←
-    gt_iff_lt, ← Subtype.coe_mk, ← SetCoe.forall, ← mem_prod, ← mem_closed_ball, ← and_imp, ← Prod.forall, ←
-    NormedSpace.sphere_nonempty, ← mem_sphere_iff_norm] at *
+  simp only [circle_transform_bounding_function, circle_transform_deriv, V, norm_eq_abs, Algebra.id.smul_eq_mul,
+    deriv_circle_map, abs_mul, abs_circle_map_zero, abs_I, mul_oneₓ, ← mul_assoc, mul_inv_rev, inv_I, abs_neg, abs_inv,
+    abs_of_real, one_mulₓ, abs_two, abs_pow, mem_ball, gt_iff_ltₓ, Subtype.coe_mk, SetCoe.forall, mem_prod,
+    mem_closed_ball, and_imp, Prod.forall, NormedSpace.sphere_nonempty, mem_sphere_iff_norm] at *
   exact this
 
 end Complex

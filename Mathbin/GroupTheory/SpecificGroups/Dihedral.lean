@@ -59,7 +59,7 @@ private def inv : DihedralGroup n → DihedralGroup n
 instance : Groupₓ (DihedralGroup n) where
   mul := mul
   mul_assoc := by
-    rintro (a | a) (b | b) (c | c) <;> simp only [← mul] <;> ring
+    rintro (a | a) (b | b) (c | c) <;> simp only [mul] <;> ring
   one := one
   one_mul := by
     rintro (a | a)

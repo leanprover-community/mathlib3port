@@ -99,7 +99,7 @@ theorem infinite_of_nonempty_of_is_empty (a b : α) [ha : Nonempty (β a)] [he :
       · simp_all
         
       · refine' congr_arg Nat.succ (ih _)
-        simp_all [← Function.funext_iffₓ]
+        simp_all [Function.funext_iffₓ]
         
       ⟩
 
@@ -163,7 +163,7 @@ private def encodable_succ (n : Nat) (h : Encodable (WType' β n)) : Encodable (
 encodable. -/
 instance : Encodable (WType β) := by
   haveI h' : ∀ n, Encodable (W_type' β n) := fun n => Nat.recOn n encodable_zero encodable_succ
-  let f : WType β → Σn, W_type' β n := fun t => ⟨t.depth, ⟨t, le_rfl⟩⟩
+  let f : WType β → Σn, W_type' β n := fun t => ⟨t.depth, ⟨t, le_rflₓ⟩⟩
   let finv : (Σn, W_type' β n) → WType β := fun p => p.2.1
   have : ∀ t, finv (f t) = t := fun t => rfl
   exact Encodable.ofLeftInverse f finv this

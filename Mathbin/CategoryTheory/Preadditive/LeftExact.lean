@@ -82,7 +82,7 @@ def preservesEqualizerOfPreservesKernels [∀ {X Y} (f : X ⟶ Y), PreservesLimi
   constructor
   intro c i
   let c' := is_limit_kernel_fork_of_fork (i.of_iso_limit (fork.iso_fork_of_ι c))
-  dsimp' only [← kernel_fork_of_fork_of_ι]  at c'
+  dsimp' only [kernel_fork_of_fork_of_ι]  at c'
   let iFc := is_limit_fork_map_of_is_limit' F _ c'
   apply is_limit.of_iso_limit _ ((cones.functoriality _ F).mapIso (fork.iso_fork_of_ι c).symm)
   apply (is_limit_map_cone_fork_equiv F (fork.condition c)).invFun
@@ -159,7 +159,7 @@ def preservesCoequalizerOfPreservesCokernels [∀ {X Y} (f : X ⟶ Y), Preserves
   constructor
   intro c i
   let c' := is_colimit_cokernel_cofork_of_cofork (i.of_iso_colimit (cofork.iso_cofork_of_π c))
-  dsimp' only [← cokernel_cofork_of_cofork_of_π]  at c'
+  dsimp' only [cokernel_cofork_of_cofork_of_π]  at c'
   let iFc := is_colimit_cofork_map_of_is_colimit' F _ c'
   apply is_colimit.of_iso_colimit _ ((cocones.functoriality _ F).mapIso (cofork.iso_cofork_of_π c).symm)
   apply (is_colimit_map_cocone_cofork_equiv F (cofork.condition c)).invFun

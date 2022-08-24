@@ -65,21 +65,21 @@ variable [hp : Fact p.Prime] [CommRingₓ R]
 
 include hp
 
-theorem verschiebung_shift (x : 𝕎 R) (k : ℕ) (h : ∀, ∀ i < k + 1, ∀, x.coeff i = 0) :
+theorem verschiebung_shift (x : 𝕎 R) (k : ℕ) (h : ∀ i < k + 1, x.coeff i = 0) :
     verschiebung (x.shift k.succ) = x.shift k := by
   ext ⟨j⟩
   · rw [verschiebung_coeff_zero, shift_coeff, h]
     apply Nat.lt_succ_selfₓ
     
-  · simp only [← verschiebung_coeff_succ, ← shift]
+  · simp only [verschiebung_coeff_succ, shift]
     congr 1
     rw [Nat.add_succ, add_commₓ, Nat.add_succ, add_commₓ]
     
 
-theorem eq_iterate_verschiebung {x : 𝕎 R} {n : ℕ} (h : ∀, ∀ i < n, ∀, x.coeff i = 0) :
-    x = (verschiebung^[n]) (x.shift n) := by
+theorem eq_iterate_verschiebung {x : 𝕎 R} {n : ℕ} (h : ∀ i < n, x.coeff i = 0) : x = (verschiebung^[n]) (x.shift n) :=
+  by
   induction' n with k ih
-  · cases x <;> simp [← shift]
+  · cases x <;> simp [shift]
     
   · dsimp'
     rw [verschiebung_shift]
@@ -95,7 +95,7 @@ theorem verschiebung_nonzero {x : 𝕎 R} (hx : x ≠ 0) : ∃ n : ℕ, ∃ x' :
     by_contra' hall
     apply hx
     ext i
-    simp only [← hall, ← zero_coeff]
+    simp only [hall, zero_coeff]
   let n := Nat.findₓ hex
   use n, x.shift n
   refine' ⟨Nat.find_specₓ hex, eq_iterate_verschiebung fun i hi => not_not.mp _⟩

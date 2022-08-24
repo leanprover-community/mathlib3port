@@ -46,7 +46,7 @@ variable {l : List α}
 
 theorem reverse_eq {l : List α} (p : Palindrome l) : reverse l = l :=
   Palindrome.rec_on p rfl (fun _ => rfl) fun x l p h => by
-    simp [← h]
+    simp [h]
 
 theorem of_reverse_eq {l : List α} : reverse l = l → Palindrome l := by
   refine' bidirectional_rec_on l (fun _ => palindrome.nil) (fun a _ => palindrome.singleton a) _

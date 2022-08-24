@@ -105,7 +105,7 @@ def adj : Cat.free ⊣ Quiv.forget :=
             rfl,
           right_inv := by
             rintro ⟨obj, map⟩
-            dsimp' only [← Prefunctor.comp]
+            dsimp' only [Prefunctor.comp]
             congr
             ext X Y f
             exact category.id_comp _ },

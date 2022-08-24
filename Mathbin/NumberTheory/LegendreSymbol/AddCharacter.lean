@@ -179,13 +179,13 @@ theorem pow_mul_shift (ψ : AddChar R R') (n : ℕ) : ψ ^ n = mulShift ψ n := 
 /-- The product of `mul_shift ψ a` and `mul_shift ψ b` is `mul_shift ψ (a + b)`. -/
 theorem mul_shift_mul (ψ : AddChar R R') (a b : R) : mulShift ψ a * mulShift ψ b = mulShift ψ (a + b) := by
   ext
-  simp only [← right_distrib, ← MonoidHom.mul_apply, ← mul_shift_apply, ← map_add_mul]
+  simp only [right_distrib, MonoidHom.mul_apply, mul_shift_apply, map_add_mul]
 
 /-- `mul_shift ψ 0` is the trivial character. -/
 @[simp]
 theorem mul_shift_zero (ψ : AddChar R R') : mulShift ψ 0 = 1 := by
   ext
-  simp only [← mul_shift_apply, ← zero_mul, ← map_zero_one, ← MonoidHom.one_apply]
+  simp only [mul_shift_apply, zero_mul, map_zero_one, MonoidHom.one_apply]
 
 /-- An additive character is *primitive* iff all its multiplicative shifts by nonzero
 elements are nontrivial. -/
@@ -197,7 +197,7 @@ is injective when `ψ` is primitive. -/
 theorem to_mul_shift_inj_of_is_primitive {ψ : AddChar R R'} (hψ : IsPrimitive ψ) : Function.Injective ψ.mulShift := by
   intro a b h
   apply_fun fun x => x * mul_shift ψ (-b)  at h
-  simp only [← mul_shift_mul, ← mul_shift_zero, ← add_right_negₓ] at h
+  simp only [mul_shift_mul, mul_shift_zero, add_right_negₓ] at h
   have h₂ := hψ (a + -b)
   rw [h, is_nontrivial_iff_ne_trivial, ← sub_eq_add_neg, sub_ne_zero] at h₂
   exact not_not.mp fun h => h₂ h rfl
@@ -243,7 +243,7 @@ open Multiplicative
 def zmodChar (n : ℕ+) {ζ : C} (hζ : ζ ^ ↑n = 1) : AddChar (Zmod n) C where
   toFun := fun a : Multiplicative (Zmod n) => ζ ^ a.toAdd.val
   map_one' := by
-    simp only [← to_add_one, ← Zmod.val_zero, ← pow_zeroₓ]
+    simp only [to_add_one, Zmod.val_zero, pow_zeroₓ]
   map_mul' := fun x y => by
     rw [to_add_mul, ← pow_addₓ, Zmod.val_add (to_add x) (to_add y), ← pow_eq_pow_mod _ hζ]
 
@@ -354,9 +354,9 @@ theorem sum_eq_zero_of_is_nontrivial [IsDomain R'] {ψ : AddChar R R'} (hψ : Is
 
 /-- The sum over the values of the trivial additive character is the cardinality of the source. -/
 theorem sum_eq_card_of_is_trivial {ψ : AddChar R R'} (hψ : ¬IsNontrivial ψ) : (∑ a, ψ a) = Fintype.card R := by
-  simp only [← is_nontrivial] at hψ
+  simp only [is_nontrivial] at hψ
   push_neg  at hψ
-  simp only [← hψ, ← Finset.sum_const, ← Nat.smul_one_eq_coe]
+  simp only [hψ, Finset.sum_const, Nat.smul_one_eq_coe]
   rfl
 
 /-- The sum over the values of `mul_shift ψ b` for `ψ` primitive is zero when `b ≠ 0`
@@ -365,7 +365,7 @@ theorem sum_mul_shift [DecidableEq R] [IsDomain R'] {ψ : AddChar R R'} (b : R) 
     (∑ x : R, ψ (x * b)) = if b = 0 then Fintype.card R else 0 := by
   split_ifs with h
   · -- case `b = 0`
-    simp only [← h, ← mul_zero, ← map_zero_one, ← Finset.sum_const, ← Nat.smul_one_eq_coe]
+    simp only [h, mul_zero, map_zero_one, Finset.sum_const, Nat.smul_one_eq_coe]
     rfl
     
   · -- case `b ≠ 0`

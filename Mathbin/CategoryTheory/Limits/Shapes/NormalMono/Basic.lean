@@ -60,7 +60,7 @@ def equivalenceReflectsNormalMono {D : Type u₂} [Category.{v₁} D] [HasZeroMo
   g := Full.preimage (hf.g ≫ (F.objObjPreimageIso hf.z).inv)
   w :=
     Faithful.map_injective F <| by
-      simp [← reassoc_of hf.w]
+      simp [reassoc_of hf.w]
   IsLimit :=
     reflects_limit.reflects <|
       IsLimit.ofConeEquiv (Cones.postcomposeEquivalence (compNatIso F : _)) <|
@@ -164,7 +164,7 @@ def equivalenceReflectsNormalEpi {D : Type u₂} [Category.{v₁} D] [HasZeroMor
   g := Full.preimage ((F.objObjPreimageIso hf.w).Hom ≫ hf.g)
   w :=
     Faithful.map_injective F <| by
-      simp [← hf.w]
+      simp [hf.w]
   IsColimit :=
     reflects_colimit.reflects <|
       IsColimit.ofCoconeEquiv (Cocones.precomposeEquivalence (compNatIso F).symm) <|

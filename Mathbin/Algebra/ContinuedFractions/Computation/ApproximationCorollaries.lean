@@ -77,7 +77,7 @@ variable [Archimedean K]
 
 open Nat
 
-theorem of_convergence_epsilon : ∀, ∀ ε > (0 : K), ∀, ∃ N : ℕ, ∀, ∀ n ≥ N, ∀, abs (v - (of v).convergents n) < ε := by
+theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, abs (v - (of v).convergents n) < ε := by
   intro ε ε_pos
   -- use the archimedean property to obtian a suitable N
   rcases(exists_nat_gt (1 / ε) : ∃ N' : ℕ, 1 / ε < N') with ⟨N', one_div_ε_lt_N'⟩
@@ -113,7 +113,7 @@ theorem of_convergence_epsilon : ∀, ∀ ε > (0 : K), ∀, ∃ N : ℕ, ∀, �
         have : (0 : K) < fib (n + 2) := by
           exact_mod_cast fib_pos (n + 1).zero_lt_succ
         exact lt_of_lt_of_leₓ this nB_ineq
-      solve_by_elim [← mul_pos]
+      solve_by_elim [mul_pos]
     suffices : 1 < ε * (B * nB)
     exact (div_lt_iff zero_lt_mul_conts).elim_right this
     -- use that `N ≥ n` was obtained from the archimedean property to show the following
@@ -157,7 +157,7 @@ theorem of_convergence_epsilon : ∀, ∀ ε > (0 : K), ∀, ∃ N : ℕ, ∀, �
 attribute [local instance] Preorderₓ.topology
 
 theorem of_convergence [OrderTopology K] : Filter.Tendsto (of v).convergents Filter.atTop <| nhds v := by
-  simpa [← LinearOrderedAddCommGroup.tendsto_nhds, ← abs_sub_comm] using of_convergence_epsilon v
+  simpa [LinearOrderedAddCommGroup.tendsto_nhds, abs_sub_comm] using of_convergence_epsilon v
 
 end Convergence
 

@@ -106,11 +106,11 @@ def equivSignedMeasureₗ : ComplexMeasure α ≃ₗ[R] SignedMeasure α × Sign
       intro r c
       ext i hi
       · change (r • c i).re = r • (c i).re
-        simp [← Complex.smul_re]
+        simp [Complex.smul_re]
         
       · ext i hi
         change (r • c i).im = r • (c i).im
-        simp [← Complex.smul_im]
+        simp [Complex.smul_im]
          }
 
 end
@@ -120,7 +120,7 @@ theorem absolutely_continuous_ennreal_iff (c : ComplexMeasure α) (μ : VectorMe
   constructor <;> intro h
   · constructor <;>
       · intro i hi
-        simp [← h hi]
+        simp [h hi]
         
     
   · intro i hi

@@ -102,7 +102,7 @@ theorem ortho_smul_left {B : V₁ →ₛₗ[I₁] V₂ →ₛₗ[I₂] K} {x y} 
     
   · rw [map_smulₛₗ₂, smul_eq_zero] at H
     cases H
-    · rw [I₁.map_eq_zero] at H
+    · rw [map_eq_zero I₁] at H
       trivial
       
     · exact H
@@ -140,7 +140,7 @@ theorem linear_independent_of_is_Ortho {B : V₁ →ₛₗ[I₁] V₁ →ₛₗ[
     intro j hj hij
     rw [is_Ortho_def.1 hv₁ _ _ hij, mul_zero]
   simp_rw [B.map_sum₂, map_smulₛₗ₂, smul_eq_mul, hsum] at this
-  apply I₁.map_eq_zero.mp
+  apply (map_eq_zero I₁).mp
   exact eq_zero_of_ne_zero_of_mul_right_eq_zero (hv₂ i) this
 
 end Field
@@ -205,7 +205,7 @@ protected theorem eq (H : B.IsSymm) (x y) : I (B x y) = B y x :=
 
 theorem is_refl (H : B.IsSymm) : B.IsRefl := fun x y H1 => by
   rw [← H.eq]
-  simp [← H1]
+  simp [H1]
 
 theorem ortho_comm (H : B.IsSymm) {x y} : IsOrtho B x y ↔ IsOrtho B y x :=
   H.IsRefl.ortho_comm
@@ -250,7 +250,7 @@ theorem self_eq_zero (x) : B x x = 0 :=
 
 theorem neg (x y) : -B x y = B y x := by
   have H1 : B (y + x) (y + x) = 0 := self_eq_zero H (y + x)
-  simp [← map_add, ← self_eq_zero H] at H1
+  simp [map_add, self_eq_zero H] at H1
   rw [add_eq_zero_iff_neg_eq] at H1
   exact H1
 
@@ -271,7 +271,7 @@ theorem is_alt_iff_eq_neg_flip [NoZeroDivisors R] [CharZero R] {B : M₁ →ₛ�
     
   intro x
   let h' := congr_fun₂ h x x
-  simp only [← neg_apply, ← flip_apply, add_eq_zero_iff_eq_neg] at h'
+  simp only [neg_apply, flip_apply, ← add_eq_zero_iff_eq_neg] at h'
   exact add_self_eq_zero.mp h'
 
 end Alternating
@@ -294,7 +294,7 @@ chirality; in addition to this "left" orthogonal complement one could define a "
 complement for which, for all `y` in `N`, `B y x = 0`.  This variant definition is not currently
 provided in mathlib. -/
 def orthogonalBilin (N : Submodule R₁ M₁) (B : M₁ →ₛₗ[I₁] M₁ →ₛₗ[I₂] R) : Submodule R₁ M₁ where
-  Carrier := { m | ∀, ∀ n ∈ N, ∀, B.IsOrtho n m }
+  Carrier := { m | ∀ n ∈ N, B.IsOrtho n m }
   zero_mem' := fun x _ => B.is_ortho_zero_right x
   add_mem' := fun x y hx hy n hn => by
     rw [LinearMap.IsOrtho, map_add, show B n x = 0 from hx n hn, show B n y = 0 from hy n hn, zero_addₓ]
@@ -304,7 +304,7 @@ def orthogonalBilin (N : Submodule R₁ M₁) (B : M₁ →ₛₗ[I₁] M₁ →
 variable {N L : Submodule R₁ M₁}
 
 @[simp]
-theorem mem_orthogonal_bilin_iff {m : M₁} : m ∈ N.orthogonalBilin B ↔ ∀, ∀ n ∈ N, ∀, B.IsOrtho n m :=
+theorem mem_orthogonal_bilin_iff {m : M₁} : m ∈ N.orthogonalBilin B ↔ ∀ n ∈ N, B.IsOrtho n m :=
   Iff.rfl
 
 theorem orthogonal_bilin_le (h : N ≤ L) : L.orthogonalBilin B ≤ N.orthogonalBilin B := fun _ hn l hl => hn l (h hl)
@@ -412,7 +412,7 @@ theorem is_adjoint_pair_iff_comp_eq_compl₂ : IsAdjointPair B B' f g ↔ B'.com
     
 
 theorem is_adjoint_pair_zero : IsAdjointPair B B' 0 0 := fun _ _ => by
-  simp only [← zero_apply, ← map_zero]
+  simp only [zero_apply, map_zero]
 
 theorem is_adjoint_pair_id : IsAdjointPair B B 1 1 := fun x y => rfl
 
@@ -447,7 +447,7 @@ theorem IsAdjointPair.sub (h : IsAdjointPair B B' f g) (h' : IsAdjointPair B B' 
   rw [f.sub_apply, g.sub_apply, B'.map_sub₂, (B x).map_sub, h, h']
 
 theorem IsAdjointPair.smul (c : R) (h : IsAdjointPair B B' f g) : IsAdjointPair B B' (c • f) (c • g) := fun _ _ => by
-  simp only [← smul_apply, ← map_smul, ← smul_eq_mul, ← h _ _]
+  simp only [smul_apply, map_smul, smul_eq_mul, h _ _]
 
 end AddCommGroupₓ
 
@@ -524,14 +524,13 @@ theorem is_pair_self_adjoint_equiv (e : M₁ ≃ₗ[R] M) (f : Module.End R M) :
       (F.comp f).compl₁₂ (↑e : M₁ →ₗ[R] M) (↑e : M₁ →ₗ[R] M) :=
     by
     ext
-    simp only [← LinearEquiv.symm_conj_apply, ← coe_comp, ← LinearEquiv.coe_coe, ← compl₁₂_apply, ←
-      LinearEquiv.apply_symm_apply]
+    simp only [LinearEquiv.symm_conj_apply, coe_comp, LinearEquiv.coe_coe, compl₁₂_apply, LinearEquiv.apply_symm_apply]
   have hᵣ :
     (B.compl₁₂ (↑e : M₁ →ₗ[R] M) (↑e : M₁ →ₗ[R] M)).compl₂ (e.symm.conj f) =
       (B.compl₂ f).compl₁₂ (↑e : M₁ →ₗ[R] M) (↑e : M₁ →ₗ[R] M) :=
     by
     ext
-    simp only [← LinearEquiv.symm_conj_apply, ← compl₂_apply, ← coe_comp, ← LinearEquiv.coe_coe, ← compl₁₂_apply, ←
+    simp only [LinearEquiv.symm_conj_apply, compl₂_apply, coe_comp, LinearEquiv.coe_coe, compl₁₂_apply,
       LinearEquiv.apply_symm_apply]
   have he : Function.Surjective (⇑(↑e : M₁ →ₗ[R] M) : M₁ → M) := e.surjective
   simp_rw [is_pair_self_adjoint, is_adjoint_pair_iff_comp_eq_compl₂, hₗ, hᵣ, compl₁₂_inj he he]
@@ -595,7 +594,7 @@ theorem separating_left_iff_linear_nontrivial {B : M₁ →ₛₗ[I₁] M₂ →
     B.SeparatingLeft ↔ ∀ x : M₁, B x = 0 → x = 0 := by
   constructor <;> intro h x hB
   · let h' := h x
-    simp only [← hB, ← zero_apply, ← eq_self_iff_true, ← forall_const] at h'
+    simp only [hB, zero_apply, eq_self_iff_true, forall_const] at h'
     exact h'
     
   have h' : B x = 0 := by

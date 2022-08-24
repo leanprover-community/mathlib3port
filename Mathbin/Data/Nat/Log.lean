@@ -85,7 +85,7 @@ theorem log_zero_right (b : ℕ) : log b 0 = 0 := by
 
 @[simp]
 theorem log_one_left : ∀ n, log 1 n = 0 :=
-  log_of_left_le_one le_rfl
+  log_of_left_le_one le_rflₓ
 
 @[simp]
 theorem log_one_right (b : ℕ) : log b 1 = 0 :=
@@ -109,10 +109,10 @@ theorem pow_le_iff_le_log {b : ℕ} (hb : 1 < b) {x y : ℕ} (hy : 0 < y) : b ^ 
     
 
 theorem lt_pow_iff_log_lt {b : ℕ} (hb : 1 < b) {x y : ℕ} (hy : 0 < y) : y < b ^ x ↔ log b y < x :=
-  lt_iff_lt_of_le_iff_le (pow_le_iff_le_log hb hy)
+  lt_iff_lt_of_le_iff_leₓ (pow_le_iff_le_log hb hy)
 
 theorem log_pow {b : ℕ} (hb : 1 < b) (x : ℕ) : log b (b ^ x) = x :=
-  eq_of_forall_le_iff fun z => by
+  eq_of_forall_le_iffₓ fun z => by
     rw [← pow_le_iff_le_log hb (pow_pos (zero_lt_one.trans hb) _)]
     exact (pow_right_strict_mono hb).le_iff_le
 
@@ -120,25 +120,25 @@ theorem log_pos {b n : ℕ} (hb : 1 < b) (hn : b ≤ n) : 0 < log b n := by
   rwa [← succ_le_iff, ← pow_le_iff_le_log hb (hb.le.trans hn), pow_oneₓ]
 
 theorem log_mul_base (b n : ℕ) (hb : 1 < b) (hn : 0 < n) : log b (n * b) = log b n + 1 :=
-  eq_of_forall_le_iff fun z => by
+  eq_of_forall_le_iffₓ fun z => by
     cases z
     · simp
       
     have : 0 < b := zero_lt_one.trans hb
     rw [← pow_le_iff_le_log hb, pow_succ'ₓ, (strict_mono_mul_right_of_pos this).le_iff_le, pow_le_iff_le_log hb hn,
       Nat.succ_le_succ_iff]
-    simp [← hn, ← this]
+    simp [hn, this]
 
 theorem lt_pow_succ_log_self {b : ℕ} (hb : 1 < b) (x : ℕ) : x < b ^ (log b x).succ := by
   cases' x.eq_zero_or_pos with hx hx
-  · simp only [← hx, ← log_zero_right, ← pow_oneₓ]
+  · simp only [hx, log_zero_right, pow_oneₓ]
     exact pos_of_gt hb
     
   rw [← not_leₓ, pow_le_iff_le_log hb hx, not_leₓ]
   exact lt_succ_self _
 
 theorem pow_log_le_self {b : ℕ} (hb : 1 < b) {x : ℕ} (hx : 0 < x) : b ^ log b x ≤ x :=
-  (pow_le_iff_le_log hb hx).2 le_rfl
+  (pow_le_iff_le_log hb hx).2 le_rflₓ
 
 @[mono]
 theorem log_mono_right {b n m : ℕ} (h : n ≤ m) : log b n ≤ log b m := by
@@ -173,7 +173,7 @@ theorem log_antitone_left {n : ℕ} : AntitoneOn (fun b => log b n) (Set.Ioi 1) 
 
 @[simp]
 theorem log_div_mul_self (b n : ℕ) : log b (n / b * b) = log b n :=
-  eq_of_forall_le_iff fun z =>
+  eq_of_forall_le_iffₓ fun z =>
     ⟨fun h => h.trans (log_monotone (div_mul_le_selfₓ _ _)), fun h => by
       rcases b with (_ | _ | b)
       · rwa [log_zero_left] at *
@@ -191,9 +191,9 @@ theorem log_div_mul_self (b n : ℕ) : log b (n / b * b) = log b n :=
         · rwa [(strict_mono_mul_right_of_pos Nat.succ_pos').le_iff_le, Nat.le_div_iff_mul_leₓ Nat.succ_pos']
           
         all_goals
-          simp [← hn, ← Nat.div_pos hb Nat.succ_pos']
+          simp [hn, Nat.div_pos hb Nat.succ_pos']
         
-      · simpa [← div_eq_of_lt, ← hb, ← log_of_lt] using h
+      · simpa [div_eq_of_lt, hb, log_of_lt] using h
         ⟩
 
 @[simp]
@@ -212,7 +212,7 @@ theorem log_div_base (b n : ℕ) : log b (n / b) = log b n - 1 := by
   rw [← succ_inj', ← succ_inj']
   simp_rw [succ_eq_add_one]
   rw [Nat.sub_add_cancelₓ, ← log_mul_base] <;>
-    · simp [← succ_le_iff, ← log_pos, ← h, ← Nat.div_pos]
+    · simp [succ_le_iff, log_pos, h, Nat.div_pos]
       
 
 private theorem add_pred_div_lt {b n : ℕ} (hb : 1 < b) (hn : 2 ≤ n) : (n + b - 1) / b < n := by
@@ -249,11 +249,11 @@ theorem clog_zero_right (b : ℕ) : clog b 0 = 0 :=
 
 @[simp]
 theorem clog_one_left (n : ℕ) : clog 1 n = 0 :=
-  clog_of_left_le_one le_rfl _
+  clog_of_left_le_one le_rflₓ _
 
 @[simp]
 theorem clog_one_right (b : ℕ) : clog b 1 = 0 :=
-  clog_of_right_le_one le_rfl _
+  clog_of_right_le_one le_rflₓ _
 
 theorem clog_of_two_le {b n : ℕ} (hb : 1 < b) (hn : 2 ≤ n) : clog b n = clog b ((n + b - 1) / b) + 1 := by
   rw [clog, if_pos (⟨hb, hn⟩ : 1 < b ∧ 1 < n)]
@@ -290,10 +290,10 @@ theorem le_pow_iff_clog_le {b : ℕ} (hb : 1 < b) {x y : ℕ} : x ≤ b ^ y ↔ 
     
 
 theorem pow_lt_iff_lt_clog {b : ℕ} (hb : 1 < b) {x y : ℕ} : b ^ y < x ↔ y < clog b x :=
-  lt_iff_lt_of_le_iff_le (le_pow_iff_clog_le hb)
+  lt_iff_lt_of_le_iff_leₓ (le_pow_iff_clog_le hb)
 
 theorem clog_pow (b x : ℕ) (hb : 1 < b) : clog b (b ^ x) = x :=
-  eq_of_forall_ge_iff fun z => by
+  eq_of_forall_ge_iffₓ fun z => by
     rw [← le_pow_iff_clog_le hb]
     exact (pow_right_strict_mono hb).le_iff_le
 
@@ -302,7 +302,7 @@ theorem pow_pred_clog_lt_self {b : ℕ} (hb : 1 < b) {x : ℕ} (hx : 1 < x) : b 
   exact pred_lt (clog_pos hb hx).ne'
 
 theorem le_pow_clog {b : ℕ} (hb : 1 < b) (x : ℕ) : x ≤ b ^ clog b x :=
-  (le_pow_iff_clog_le hb).2 le_rfl
+  (le_pow_iff_clog_le hb).2 le_rflₓ
 
 @[mono]
 theorem clog_mono_right (b : ℕ) {n m : ℕ} (h : n ≤ m) : clog b n ≤ clog b m := by

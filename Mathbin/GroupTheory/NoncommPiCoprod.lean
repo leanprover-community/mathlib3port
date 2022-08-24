@@ -97,7 +97,7 @@ include hdec
 @[simp, to_additive]
 theorem noncomm_pi_coprod_mul_single (i : ι) (y : N i) : noncommPiCoprod ϕ hcomm (Pi.mulSingle i y) = ϕ i y := by
   change finset.univ.noncomm_prod (fun j => ϕ j (Pi.mulSingle i y j)) _ = ϕ i y
-  simp (config := { singlePass := true })only [Finset.insert_erase (Finset.mem_univ i)]
+  simp (config := { singlePass := true })only [← Finset.insert_erase (Finset.mem_univ i)]
   rw [Finset.noncomm_prod_insert_of_not_mem _ _ _ _ (Finset.not_mem_erase i _)]
   rw [Pi.mul_single_eq_same]
   rw [Finset.noncomm_prod_eq_pow_card]
@@ -105,8 +105,8 @@ theorem noncomm_pi_coprod_mul_single (i : ι) (y : N i) : noncommPiCoprod ϕ hco
     exact mul_oneₓ _
     
   · intro j hj
-    simp only [← Finset.mem_erase] at hj
-    simp [← hj]
+    simp only [Finset.mem_erase] at hj
+    simp [hj]
     
 
 omit hcomm
@@ -205,7 +205,7 @@ theorem injective_noncomm_pi_coprod_of_independent (hind : CompleteLattice.Indep
       heq1
   ext i
   apply hinj
-  simp [← this i (Finset.mem_univ i)]
+  simp [this i (Finset.mem_univ i)]
 
 variable (hcomm)
 
@@ -290,7 +290,7 @@ omit hdec
 
 @[to_additive]
 theorem noncomm_pi_coprod_range : (noncommPiCoprod hcomm).range = ⨆ i : ι, H i := by
-  simp [← noncomm_pi_coprod, ← MonoidHom.noncomm_pi_coprod_range]
+  simp [noncomm_pi_coprod, MonoidHom.noncomm_pi_coprod_range]
 
 @[to_additive]
 theorem injective_noncomm_pi_coprod_of_independent (hind : CompleteLattice.Independent H) :

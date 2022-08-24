@@ -95,7 +95,7 @@ theorem of_iso {P Q : C} (i : P ≅ Q) (hP : Projective P) : Projective Q := by
   obtain ⟨f', hf'⟩ := projective.factors (i.hom ≫ f) e
   exact
     ⟨i.inv ≫ f', by
-      simp [← hf']⟩
+      simp [hf']⟩
 
 theorem iso_iff {P Q : C} (i : P ≅ Q) : Projective P ↔ Projective Q :=
   ⟨of_iso i, of_iso i.symm⟩
@@ -213,7 +213,7 @@ def Exact.lift {P Q R S : C} [Projective P] (h : P ⟶ R) (f : Q ⟶ R) (g : R �
 @[simp]
 theorem Exact.lift_comp {P Q R S : C} [Projective P] (h : P ⟶ R) (f : Q ⟶ R) (g : R ⟶ S) (hfg : Exact f g)
     (w : h ≫ g = 0) : Exact.lift h f g hfg w ≫ f = h := by
-  simp [← exact.lift]
+  simp [exact.lift]
   conv_lhs => congr skip rw [← image_subobject_arrow_comp f]
   rw [← category.assoc, factor_thru_comp, ← image_to_kernel_arrow, ← category.assoc,
     CategoryTheory.Projective.factor_thru_comp, factor_thru_kernel_subobject_comp_arrow]

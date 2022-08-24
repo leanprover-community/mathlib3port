@@ -149,7 +149,7 @@ def freqAux : ∀ (xs : List (ℕ+ × Genₓ α)) (i), i < (xs.map (Subtype.val 
       freq_aux xs (j - i)
         (by
           rw [tsub_lt_iff_right (le_of_not_gtₓ h')]
-          simpa [← List.sum_cons, ← add_commₓ] using h)
+          simpa [List.sum_cons, add_commₓ] using h)
 
 /-- `freq [(1, gena), (3, genb), (5, genc)] _` will choose one of `gena`, `genb`, `genc` with
 probabilities proportional to the number accompanying them. In this example, the sum of

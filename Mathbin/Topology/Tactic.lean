@@ -44,7 +44,7 @@ theorem continuous_id' {α : Type _} [TopologicalSpace α] : Continuous fun a : 
 
 namespace Tactic
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic to apply `continuous.comp` when appropriate.
 
 Applying `continuous.comp` is not always a good idea, so we have some

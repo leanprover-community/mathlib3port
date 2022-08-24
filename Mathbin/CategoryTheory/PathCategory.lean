@@ -65,7 +65,7 @@ theorem ext_functor {C} [Category C] {F G : Paths V ⥤ C} (h_obj : F.obj = G.ob
     · erw [F.map_id, G.map_id, category.id_comp, eq_to_hom_trans, eq_to_hom_refl]
       
     · erw [F.map_comp g e.to_path, G.map_comp g e.to_path, ih, h]
-      simp only [← category.id_comp, ← eq_to_hom_refl, ← eq_to_hom_trans_assoc, ← category.assoc]
+      simp only [category.id_comp, eq_to_hom_refl, eq_to_hom_trans_assoc, category.assoc]
       
     
   · intro X
@@ -106,7 +106,7 @@ theorem compose_path_comp {X Y Z : C} (f : Path X Y) (g : Path Y Z) :
   induction' g with Y' Z' g e ih
   · simp
     
-  · simp [← ih]
+  · simp [ih]
     
 
 @[simp]
@@ -173,10 +173,10 @@ def quotientPathsEquiv : Quotient (PathsHomRel C) ≌ C where
         cases Y
         induction f
         dsimp'
-        simp only [← category.comp_id, ← category.id_comp]
+        simp only [category.comp_id, category.id_comp]
         apply Quot.sound
         apply quotient.comp_closure.of
-        simp [← paths_hom_rel])
+        simp [paths_hom_rel])
   counitIso :=
     NatIso.ofComponents (fun X => Iso.refl _)
       (by

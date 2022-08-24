@@ -48,29 +48,29 @@ theorem extend_from_eq [T2Space Y] {A : Set X} {f : X → Y} {x : X} {y : Y} (hx
   exact tendsto_nhds_unique (tendsto_nhds_lim ⟨y, hf⟩) hf
 
 theorem extend_from_extends [T2Space Y] {f : X → Y} {A : Set X} (hf : ContinuousOn f A) :
-    ∀, ∀ x ∈ A, ∀, extendFrom A f x = f x := fun x x_in => extend_from_eq (subset_closure x_in) (hf x x_in)
+    ∀ x ∈ A, extendFrom A f x = f x := fun x x_in => extend_from_eq (subset_closure x_in) (hf x x_in)
 
 /-- If `f` is a function to a T₃ space `Y` which has a limit within `A` at any
 point of a set `B ⊆ closure A`, then `extend_from A f` is continuous on `B`. -/
 theorem continuous_on_extend_from [T3Space Y] {f : X → Y} {A B : Set X} (hB : B ⊆ Closure A)
-    (hf : ∀, ∀ x ∈ B, ∀, ∃ y, Tendsto f (𝓝[A] x) (𝓝 y)) : ContinuousOn (extendFrom A f) B := by
+    (hf : ∀ x ∈ B, ∃ y, Tendsto f (𝓝[A] x) (𝓝 y)) : ContinuousOn (extendFrom A f) B := by
   set φ := extendFrom A f
   intro x x_in
-  suffices ∀, ∀ V' ∈ 𝓝 (φ x), ∀, IsClosed V' → φ ⁻¹' V' ∈ 𝓝[B] x by
-    simpa [← ContinuousWithinAt, ← (closed_nhds_basis _).tendsto_right_iff]
+  suffices ∀ V' ∈ 𝓝 (φ x), IsClosed V' → φ ⁻¹' V' ∈ 𝓝[B] x by
+    simpa [ContinuousWithinAt, (closed_nhds_basis _).tendsto_right_iff]
   intro V' V'_in V'_closed
   obtain ⟨V, V_in, V_op, hV⟩ : ∃ V ∈ 𝓝 x, IsOpen V ∧ V ∩ A ⊆ f ⁻¹' V' := by
     have := tendsto_extend_from (hf x x_in)
     rcases(nhds_within_basis_open x A).tendsto_left_iff.mp this V' V'_in with ⟨V, ⟨hxV, V_op⟩, hV⟩
     use V, IsOpen.mem_nhds V_op hxV, V_op, hV
-  suffices : ∀, ∀ y ∈ V ∩ B, ∀, φ y ∈ V'
+  suffices : ∀ y ∈ V ∩ B, φ y ∈ V'
   exact mem_of_superset (inter_mem_inf V_in <| mem_principal_self B) this
   rintro y ⟨hyV, hyB⟩
   haveI := mem_closure_iff_nhds_within_ne_bot.mp (hB hyB)
   have limy : tendsto f (𝓝[A] y) (𝓝 <| φ y) := tendsto_extend_from (hf y hyB)
   have hVy : V ∈ 𝓝 y := IsOpen.mem_nhds V_op hyV
   have : V ∩ A ∈ 𝓝[A] y := by
-    simpa [← inter_comm] using inter_mem_nhds_within _ hVy
+    simpa [inter_comm] using inter_mem_nhds_within _ hVy
   exact V'_closed.mem_of_tendsto limy (mem_of_superset this hV)
 
 /-- If a function `f` to a T₃ space `Y` has a limit within a

@@ -45,13 +45,12 @@ theorem deriv_eq_smul_circle_integral [CompleteSpace F] {R : ℝ} {c : ℂ} {f :
     (hf : DiffContOnCl ℂ f (Ball c R)) : deriv f c = (2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z := by
   lift R to ℝ≥0 using hR.le
   refine' (hf.has_fpower_series_on_ball hR).HasFpowerSeriesAt.deriv.trans _
-  simp only [← cauchy_power_series_apply, ← one_div, ← zpow_neg, ← pow_oneₓ, ← smul_smul, ← zpow_two, ← mul_inv]
+  simp only [cauchy_power_series_apply, one_div, zpow_neg, pow_oneₓ, smul_smul, zpow_two, mul_inv]
 
 theorem norm_deriv_le_aux [CompleteSpace F] {c : ℂ} {R C : ℝ} {f : ℂ → F} (hR : 0 < R)
-    (hf : DiffContOnCl ℂ f (Ball c R)) (hC : ∀, ∀ z ∈ Sphere c R, ∀, ∥f z∥ ≤ C) : ∥deriv f c∥ ≤ C / R := by
-  have : ∀, ∀ z ∈ sphere c R, ∀, ∥(z - c) ^ (-2 : ℤ) • f z∥ ≤ C / (R * R) := fun z (hz : abs (z - c) = R) => by
-    simpa [-mul_inv_rev, ← norm_smul, ← hz, ← zpow_two, div_eq_inv_mul] using
-      (div_le_div_right (mul_pos hR hR)).2 (hC z hz)
+    (hf : DiffContOnCl ℂ f (Ball c R)) (hC : ∀ z ∈ Sphere c R, ∥f z∥ ≤ C) : ∥deriv f c∥ ≤ C / R := by
+  have : ∀ z ∈ sphere c R, ∥(z - c) ^ (-2 : ℤ) • f z∥ ≤ C / (R * R) := fun z (hz : abs (z - c) = R) => by
+    simpa [-mul_inv_rev, norm_smul, hz, zpow_two, ← div_eq_inv_mul] using (div_le_div_right (mul_pos hR hR)).2 (hC z hz)
   calc
     ∥deriv f c∥ = ∥(2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z∥ :=
       congr_arg norm (deriv_eq_smul_circle_integral hR hf)
@@ -64,7 +63,7 @@ theorem norm_deriv_le_aux [CompleteSpace F] {c : ℂ} {R C : ℝ} {f : ℂ → F
 closure, and its values on the boundary circle of this disc are bounded from above by `C`, then the
 norm of its derivative at the center is at most `C / R`. -/
 theorem norm_deriv_le_of_forall_mem_sphere_norm_le {c : ℂ} {R C : ℝ} {f : ℂ → F} (hR : 0 < R)
-    (hd : DiffContOnCl ℂ f (Ball c R)) (hC : ∀, ∀ z ∈ Sphere c R, ∀, ∥f z∥ ≤ C) : ∥deriv f c∥ ≤ C / R := by
+    (hd : DiffContOnCl ℂ f (Ball c R)) (hC : ∀ z ∈ Sphere c R, ∥f z∥ ≤ C) : ∥deriv f c∥ ≤ C / R := by
   set e : F →L[ℂ] F̂ := UniformSpace.Completion.toComplL
   have : HasDerivAt (e ∘ f) (e (deriv f c)) c :=
     e.has_fderiv_at.comp_has_deriv_at c (hd.differentiable_at is_open_ball <| mem_ball_self hR).HasDerivAt
@@ -86,7 +85,7 @@ theorem liouville_theorem_aux {f : ℂ → F} (hf : Differentiable ℂ f) (hb : 
   obtain ⟨C, C₀, hC⟩ : ∃ C > (0 : ℝ), ∀ z, ∥f z∥ ≤ C := by
     rcases bounded_iff_forall_norm_le.1 hb with ⟨C, hC⟩
     exact ⟨max C 1, lt_max_iff.2 (Or.inr zero_lt_one), fun z => (hC (f z) (mem_range_self _)).trans (le_max_leftₓ _ _)⟩
-  refine' norm_le_zero_iff.1 (le_of_forall_le_of_dense fun ε ε₀ => _)
+  refine' norm_le_zero_iff.1 (le_of_forall_le_of_denseₓ fun ε ε₀ => _)
   calc
     ∥deriv f c∥ ≤ C / (C / ε) :=
       norm_deriv_le_of_forall_mem_sphere_norm_le (div_pos C₀ ε₀) hf.diff_cont_on_cl fun z _ => hC z
@@ -104,7 +103,7 @@ theorem apply_eq_apply_of_bounded {f : E → F} (hf : Differentiable ℂ f) (hb 
     f z = f w := by
   set g : ℂ → F := f ∘ fun t : ℂ => t • (w - z) + z
   suffices g 0 = g 1 by
-    simpa [← g]
+    simpa [g]
   apply liouville_theorem_aux
   exacts[hf.comp ((differentiable_id.smul_const (w - z)).AddConst z), hb.mono (range_comp_subset_range _ _)]
 

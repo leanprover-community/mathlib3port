@@ -60,11 +60,11 @@ def Matrix.lieConj (P : Matrix n n R) (h : Invertible P) : Matrix n n R ≃ₗ�
 
 @[simp]
 theorem Matrix.lie_conj_apply (P A : Matrix n n R) (h : Invertible P) : P.lieConj h A = P ⬝ A ⬝ P⁻¹ := by
-  simp [← LinearEquiv.conj_apply, ← Matrix.lieConj, ← LinearMap.to_matrix'_comp, ← LinearMap.to_matrix'_to_lin']
+  simp [LinearEquiv.conj_apply, Matrix.lieConj, LinearMap.to_matrix'_comp, LinearMap.to_matrix'_to_lin']
 
 @[simp]
 theorem Matrix.lie_conj_symm_apply (P A : Matrix n n R) (h : Invertible P) : (P.lieConj h).symm A = P⁻¹ ⬝ A ⬝ P := by
-  simp [← LinearEquiv.symm_conj_apply, ← Matrix.lieConj, ← LinearMap.to_matrix'_comp, ← LinearMap.to_matrix'_to_lin']
+  simp [LinearEquiv.symm_conj_apply, Matrix.lieConj, LinearMap.to_matrix'_comp, LinearMap.to_matrix'_to_lin']
 
 variable {m : Type w₁} [DecidableEq m] [Fintype m] (e : n ≃ m)
 
@@ -73,8 +73,8 @@ types, `matrix.reindex`, is an equivalence of Lie algebras. -/
 def Matrix.reindexLieEquiv : Matrix n n R ≃ₗ⁅R⁆ Matrix m m R :=
   { Matrix.reindexLinearEquiv R R e e with toFun := Matrix.reindex e e,
     map_lie' := fun M N => by
-      simp only [← LieRing.of_associative_ring_bracket, ← Matrix.reindex_apply, ← Matrix.minor_mul_equiv, ←
-        Matrix.mul_eq_mul, ← Matrix.minor_sub, ← Pi.sub_apply] }
+      simp only [LieRing.of_associative_ring_bracket, Matrix.reindex_apply, Matrix.submatrix_mul_equiv,
+        Matrix.mul_eq_mul, Matrix.submatrix_sub, Pi.sub_apply] }
 
 @[simp]
 theorem Matrix.reindex_lie_equiv_apply (M : Matrix n n R) : Matrix.reindexLieEquiv e M = Matrix.reindex e e M :=

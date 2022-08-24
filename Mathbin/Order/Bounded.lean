@@ -38,14 +38,14 @@ theorem unbounded_le_of_forall_exists_lt [Preorderₓ α] (h : ∀ a, ∃ b ∈ 
   ⟨b, hb, fun hba => hba.not_lt hb'⟩
 
 theorem unbounded_le_iff [LinearOrderₓ α] : Unbounded (· ≤ ·) s ↔ ∀ a, ∃ b ∈ s, a < b := by
-  simp only [← unbounded, ← not_leₓ]
+  simp only [unbounded, not_leₓ]
 
 theorem unbounded_lt_of_forall_exists_le [Preorderₓ α] (h : ∀ a, ∃ b ∈ s, a ≤ b) : Unbounded (· < ·) s := fun a =>
   let ⟨b, hb, hb'⟩ := h a
   ⟨b, hb, fun hba => hba.not_le hb'⟩
 
 theorem unbounded_lt_iff [LinearOrderₓ α] : Unbounded (· < ·) s ↔ ∀ a, ∃ b ∈ s, a ≤ b := by
-  simp only [← unbounded, ← not_ltₓ]
+  simp only [unbounded, not_ltₓ]
 
 theorem unbounded_ge_of_forall_exists_gt [Preorderₓ α] (h : ∀ a, ∃ b ∈ s, b < a) : Unbounded (· ≥ ·) s :=
   @unbounded_le_of_forall_exists_lt αᵒᵈ _ _ h
@@ -148,7 +148,7 @@ theorem bounded_le_Iic [Preorderₓ α] (a : α) : Bounded (· ≤ ·) (Set.Iic 
   bounded_self a
 
 theorem bounded_lt_Iic [Preorderₓ α] [NoMaxOrder α] (a : α) : Bounded (· < ·) (Set.Iic a) := by
-  simp only [bounded_le_iff_bounded_lt, ← bounded_le_Iic]
+  simp only [← bounded_le_iff_bounded_lt, bounded_le_Iic]
 
 theorem bounded_gt_Ioi [Preorderₓ α] (a : α) : Bounded (· > ·) (Set.Ioi a) :=
   bounded_self a
@@ -160,7 +160,7 @@ theorem bounded_ge_Ici [Preorderₓ α] (a : α) : Bounded (· ≥ ·) (Set.Ici 
   bounded_self a
 
 theorem bounded_gt_Ici [Preorderₓ α] [NoMinOrder α] (a : α) : Bounded (· > ·) (Set.Ici a) := by
-  simp only [bounded_ge_iff_bounded_gt, ← bounded_ge_Ici]
+  simp only [← bounded_ge_iff_bounded_gt, bounded_ge_Ici]
 
 /-! #### Other bounded intervals -/
 

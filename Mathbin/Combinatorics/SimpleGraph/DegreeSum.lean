@@ -53,7 +53,7 @@ variable [Fintype V] [DecidableRel G.Adj]
 theorem dart_fst_fiber [DecidableEq V] (v : V) :
     (univ.filter fun d : G.Dart => d.fst = v) = univ.Image (G.dartOfNeighborSet v) := by
   ext d
-  simp only [← mem_image, ← true_andₓ, ← mem_filter, ← SetCoe.exists, ← mem_univ, ← exists_prop_of_true]
+  simp only [mem_image, true_andₓ, mem_filter, SetCoe.exists, mem_univ, exists_prop_of_true]
   constructor
   · rintro rfl
     exact
@@ -66,12 +66,12 @@ theorem dart_fst_fiber [DecidableEq V] (v : V) :
 
 theorem dart_fst_fiber_card_eq_degree [DecidableEq V] (v : V) :
     (univ.filter fun d : G.Dart => d.fst = v).card = G.degree v := by
-  simpa only [← dart_fst_fiber, ← Finset.card_univ, ← card_neighbor_set_eq_degree] using
+  simpa only [dart_fst_fiber, Finset.card_univ, card_neighbor_set_eq_degree] using
     card_image_of_injective univ (G.dart_of_neighbor_set_injective v)
 
 theorem dart_card_eq_sum_degrees : Fintype.card G.Dart = ∑ v, G.degree v := by
   haveI := Classical.decEq V
-  simp only [card_univ, dart_fst_fiber_card_eq_degree]
+  simp only [← card_univ, ← dart_fst_fiber_card_eq_degree]
   exact
     card_eq_sum_card_fiberwise
       (by
@@ -117,17 +117,17 @@ theorem even_card_odd_degree_vertices [Fintype V] [DecidableRel G.Adj] :
     Even (univ.filter fun v => Odd (G.degree v)).card := by
   classical
   have h := congr_arg (fun n => ↑n : ℕ → Zmod 2) G.sum_degrees_eq_twice_card_edges
-  simp only [← Zmod.nat_cast_self, ← zero_mul, ← Nat.cast_mulₓ] at h
+  simp only [Zmod.nat_cast_self, zero_mul, Nat.cast_mulₓ] at h
   rw [Nat.cast_sum, ← sum_filter_ne_zero] at h
   rw [@sum_congr _ _ _ _ (fun v => (G.degree v : Zmod 2)) (fun v => (1 : Zmod 2)) _ rfl] at h
-  · simp only [← filter_congr_decidable, ← mul_oneₓ, ← nsmul_eq_mul, ← sum_const, ← Ne.def] at h
+  · simp only [filter_congr_decidable, mul_oneₓ, nsmul_eq_mul, sum_const, Ne.def] at h
     rw [← Zmod.eq_zero_iff_even]
     convert h
     ext v
     rw [← Zmod.ne_zero_iff_odd]
     
   · intro v
-    simp only [← true_andₓ, ← mem_filter, ← mem_univ, ← Ne.def]
+    simp only [true_andₓ, mem_filter, mem_univ, Ne.def]
     rw [Zmod.eq_zero_iff_even, Zmod.eq_one_iff_odd, Nat.odd_iff_not_even, imp_self]
     trivial
     
@@ -138,21 +138,21 @@ theorem odd_card_odd_degree_vertices_ne [Fintype V] [DecidableEq V] [DecidableRe
   have hk : 0 < k := by
     have hh : (filter (fun v : V => Odd (G.degree v)) univ).Nonempty := by
       use v
-      simp only [← true_andₓ, ← mem_filter, ← mem_univ]
+      simp only [true_andₓ, mem_filter, mem_univ]
       use h
     rwa [← card_pos, hg, ← two_mul, zero_lt_mul_left] at hh
     exact zero_lt_two
   have hc : (fun w : V => w ≠ v ∧ Odd (G.degree w)) = fun w : V => Odd (G.degree w) ∧ w ≠ v := by
     ext w
     rw [and_comm]
-  simp only [← hc, ← filter_congr_decidable]
+  simp only [hc, filter_congr_decidable]
   rw [← filter_filter, filter_ne', card_erase_of_mem]
   · refine' ⟨k - 1, tsub_eq_of_eq_add <| hg.trans _⟩
     rw [add_assocₓ, one_add_one_eq_two, ← Nat.mul_succ, ← two_mul]
     congr
     exact (tsub_add_cancel_of_le <| Nat.succ_le_iff.2 hk).symm
     
-  · simpa only [← true_andₓ, ← mem_filter, ← mem_univ]
+  · simpa only [true_andₓ, mem_filter, mem_univ]
     
 
 theorem exists_ne_odd_degree_of_exists_odd_degree [Fintype V] [DecidableRel G.Adj] (v : V) (h : Odd (G.degree v)) :
@@ -163,7 +163,7 @@ theorem exists_ne_odd_degree_of_exists_odd_degree [Fintype V] [DecidableRel G.Ad
     rw [hg]
     apply Nat.succ_posₓ
   rcases card_pos.mp hg' with ⟨w, hw⟩
-  simp only [← true_andₓ, ← mem_filter, ← mem_univ, ← Ne.def] at hw
+  simp only [true_andₓ, mem_filter, mem_univ, Ne.def] at hw
   exact ⟨w, hw⟩
 
 end SimpleGraph

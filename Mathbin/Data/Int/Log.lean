@@ -69,11 +69,11 @@ theorem log_of_right_le_one (b : ℕ) {r : R} (hr : r ≤ 1) : log b r = -Nat.cl
 @[simp, norm_cast]
 theorem log_nat_cast (b : ℕ) (n : ℕ) : log b (n : R) = Nat.log b n := by
   cases n
-  · simp [← log_of_right_le_one _ _, ← Nat.log_zero_right]
+  · simp [log_of_right_le_one _ _, Nat.log_zero_right]
     
   · have : 1 ≤ (n.succ : R) := by
       simp
-    simp [← log_of_one_le_right _ this, Nat.cast_succₓ]
+    simp [log_of_one_le_right _ this, ← Nat.cast_succₓ]
     
 
 theorem log_of_left_le_one {b : ℕ} (hb : b ≤ 1) (r : R) : log b r = 0 := by
@@ -127,11 +127,11 @@ theorem lt_zpow_succ_log_self {b : ℕ} (hb : 1 < b) (r : R) : r < (b : R) ^ (lo
 
 @[simp]
 theorem log_zero_right (b : ℕ) : log b (0 : R) = 0 :=
-  log_of_right_le_zero b le_rfl
+  log_of_right_le_zero b le_rflₓ
 
 @[simp]
 theorem log_one_right (b : ℕ) : log b (1 : R) = 0 := by
-  rw [log_of_one_le_right _ le_rfl, Nat.floor_one, Nat.log_one_right, Int.coe_nat_zero]
+  rw [log_of_one_le_right _ le_rflₓ, Nat.floor_one, Nat.log_one_right, Int.coe_nat_zero]
 
 theorem log_zpow {b : ℕ} (hb : 1 < b) (z : ℤ) : log b (b ^ z : R) = z := by
   obtain ⟨n, rfl | rfl⟩ := z.eq_coe_or_neg
@@ -243,11 +243,11 @@ theorem neg_clog_inv_eq_log (b : ℕ) (r : R) : -clog b r⁻¹ = log b r := by
 @[simp, norm_cast]
 theorem clog_nat_cast (b : ℕ) (n : ℕ) : clog b (n : R) = Nat.clog b n := by
   cases n
-  · simp [← clog_of_right_le_one _ _, ← Nat.clog_zero_right]
+  · simp [clog_of_right_le_one _ _, Nat.clog_zero_right]
     
   · have : 1 ≤ (n.succ : R) := by
       simp
-    simp [← clog_of_one_le_right _ this, Nat.cast_succₓ]
+    simp [clog_of_one_le_right _ this, ← Nat.cast_succₓ]
     
 
 theorem clog_of_left_le_one {b : ℕ} (hb : b ≤ 1) (r : R) : clog b r = 0 := by
@@ -273,11 +273,11 @@ theorem zpow_pred_clog_lt_self {b : ℕ} {r : R} (hb : 1 < b) (hr : 0 < r) : (b 
 
 @[simp]
 theorem clog_zero_right (b : ℕ) : clog b (0 : R) = 0 :=
-  clog_of_right_le_zero _ le_rfl
+  clog_of_right_le_zero _ le_rflₓ
 
 @[simp]
 theorem clog_one_right (b : ℕ) : clog b (1 : R) = 0 := by
-  rw [clog_of_one_le_right _ le_rfl, Nat.ceil_one, Nat.clog_one_right, Int.coe_nat_zero]
+  rw [clog_of_one_le_right _ le_rflₓ, Nat.ceil_one, Nat.clog_one_right, Int.coe_nat_zero]
 
 theorem clog_zpow {b : ℕ} (hb : 1 < b) (z : ℤ) : clog b (b ^ z : R) = z := by
   rw [← neg_log_inv_eq_clog, ← zpow_neg, log_zpow hb, neg_negₓ]

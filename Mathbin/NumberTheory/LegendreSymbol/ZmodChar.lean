@@ -73,7 +73,7 @@ theorem χ₄_nat_eq_if_mod_four (n : ℕ) : χ₄ n = if n % 2 = 0 then 0 else 
 /-- Alternative description for odd `n : ℕ` in terms of powers of `-1` -/
 theorem χ₄_eq_neg_one_pow {n : ℕ} (hn : n % 2 = 1) : χ₄ n = -1 ^ (n / 2) := by
   rw [χ₄_nat_eq_if_mod_four]
-  simp only [← hn, ← Nat.one_ne_zero, ← if_false]
+  simp only [hn, Nat.one_ne_zero, if_false]
   nth_rw 0[← Nat.div_add_modₓ n 4]
   nth_rw
     0[(by
@@ -94,6 +94,16 @@ theorem χ₄_eq_neg_one_pow {n : ℕ} (hn : n % 2 = 1) : χ₄ n = -1 ^ (n / 2)
             (by
               norm_num : 2 ∣ 4)).trans
         hn)
+
+/-- If `n % 4 = 1`, then `(-1)^(n/2) = 1`. -/
+theorem _root_.neg_one_pow_div_two_of_one_mod_four {n : ℕ} (hn : n % 4 = 1) : (-1 : ℤ) ^ (n / 2) = 1 := by
+  rw [← χ₄_eq_neg_one_pow (Nat.odd_of_mod_four_eq_one hn), ← nat_cast_mod, hn]
+  rfl
+
+/-- If `n % 4 = 3`, then `(-1)^(n/2) = -1`. -/
+theorem _root_.neg_one_pow_div_two_of_three_mod_four {n : ℕ} (hn : n % 4 = 3) : (-1 : ℤ) ^ (n / 2) = -1 := by
+  rw [← χ₄_eq_neg_one_pow (Nat.odd_of_mod_four_eq_three hn), ← nat_cast_mod, hn]
+  rfl
 
 /-- Define the first primitive quadratic character on `zmod 8`, `χ₈`.
 It corresponds to the extension `ℚ(√2)/ℚ`. -/

@@ -55,13 +55,13 @@ noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → �
     exact False.elim (hj' hj)
   simp_rw [Basis.units_smul_apply]
   erw [hsum]
-  simp only [← u, ← Function.comp, ← smul_eq_mul]
+  simp only [u, Function.comp, smul_eq_mul]
   split_ifs
-  · simp only [← h, ← zero_smul, ← zero_mul, ← Real.sign_zero]
+  · simp only [h, zero_smul, zero_mul, Real.sign_zero]
     
   have hwu : w j = u j := by
-    simp only [← u, ← dif_neg h, ← Units.coe_mk0]
-  simp only [← hwu, ← Units.coe_mk0]
+    simp only [u, dif_neg h, Units.coe_mk0]
+  simp only [hwu, Units.coe_mk0]
   suffices
     (u j : ℝ).sign * v j * v j = (sign (u j) * u j) ^ -(1 / 2 : ℝ) * (sign (u j) * u j) ^ -(1 / 2 : ℝ) * u j * v j * v j
     by

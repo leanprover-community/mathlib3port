@@ -69,8 +69,8 @@ theorem pow_le_max_of_min_le (hx : 1 ≤ x) {a b c : ℤ} (h : min a b ≤ c) : 
   have hfle : x ^ -b ≤ x ^ -a := zpow_le_of_le hx hnle
   have : x ^ -c ≤ x ^ -a := by
     apply zpow_le_of_le hx
-    simpa only [← min_eq_leftₓ hle, ← neg_le_neg_iff] using h
-  simpa only [← max_eq_leftₓ hfle]
+    simpa only [min_eq_leftₓ hle, neg_le_neg_iff] using h
+  simpa only [max_eq_leftₓ hfle]
 
 theorem zpow_le_one_of_nonpos (ha : 1 ≤ a) (hn : n ≤ 0) : a ^ n ≤ 1 :=
   (zpow_le_of_le ha hn).trans_eq <| zpow_zero _
@@ -168,7 +168,7 @@ theorem zpow_bit1_neg_iff : a ^ bit1 n < 0 ↔ a < 0 :=
 
 @[simp]
 theorem zpow_bit1_nonneg_iff : 0 ≤ a ^ bit1 n ↔ 0 ≤ a :=
-  le_iff_le_iff_lt_iff_lt.2 zpow_bit1_neg_iff
+  le_iff_le_iff_lt_iff_ltₓ.2 zpow_bit1_neg_iff
 
 @[simp]
 theorem zpow_bit1_nonpos_iff : a ^ bit1 n ≤ 0 ↔ a ≤ 0 := by
@@ -176,7 +176,7 @@ theorem zpow_bit1_nonpos_iff : a ^ bit1 n ≤ 0 ↔ a ≤ 0 := by
 
 @[simp]
 theorem zpow_bit1_pos_iff : 0 < a ^ bit1 n ↔ 0 < a :=
-  lt_iff_lt_of_le_iff_le zpow_bit1_nonpos_iff
+  lt_iff_lt_of_le_iff_leₓ zpow_bit1_nonpos_iff
 
 end LinearOrderedField
 

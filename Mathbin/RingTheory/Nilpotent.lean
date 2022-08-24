@@ -95,7 +95,7 @@ theorem is_nilpotent_add (hx : IsNilpotent x) (hy : IsNilpotent y) : IsNilpotent
   apply Finset.sum_eq_zero
   rintro ⟨i, j⟩ hij
   suffices x ^ i * y ^ j = 0 by
-    simp only [← this, ← nsmul_eq_mul, ← mul_zero]
+    simp only [this, nsmul_eq_mul, mul_zero]
   cases' Nat.le_or_le_of_add_eq_add_pred (finset.nat.mem_antidiagonal.mp hij) with hi hj
   · rw [pow_eq_zero_of_le hi hn, zero_mul]
     
@@ -163,11 +163,11 @@ variable (R) {A : Type v} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
 @[simp]
 theorem is_nilpotent_mul_left_iff (a : A) : IsNilpotent (mulLeft R a) ↔ IsNilpotent a := by
-  constructor <;> rintro ⟨n, hn⟩ <;> use n <;> simp only [← mul_left_eq_zero_iff, ← pow_mul_left] at hn⊢ <;> exact hn
+  constructor <;> rintro ⟨n, hn⟩ <;> use n <;> simp only [mul_left_eq_zero_iff, pow_mul_left] at hn⊢ <;> exact hn
 
 @[simp]
 theorem is_nilpotent_mul_right_iff (a : A) : IsNilpotent (mulRight R a) ↔ IsNilpotent a := by
-  constructor <;> rintro ⟨n, hn⟩ <;> use n <;> simp only [← mul_right_eq_zero_iff, ← pow_mul_right] at hn⊢ <;> exact hn
+  constructor <;> rintro ⟨n, hn⟩ <;> use n <;> simp only [mul_right_eq_zero_iff, pow_mul_right] at hn⊢ <;> exact hn
 
 end LinearMap
 
@@ -180,7 +180,7 @@ variable {f : Module.End R M} {p : Submodule R M} (hp : p ≤ p.comap f)
 theorem IsNilpotent.mapq (hnp : IsNilpotent f) : IsNilpotent (p.mapq p f hp) := by
   obtain ⟨k, hk⟩ := hnp
   use k
-  simp [p.mapq_pow, ← hk]
+  simp [← p.mapq_pow, hk]
 
 end Module.End
 

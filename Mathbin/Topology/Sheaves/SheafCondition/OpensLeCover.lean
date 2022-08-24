@@ -106,7 +106,7 @@ the object level of `pairwise_to_opens_le_cover : pairwise ι ⥤ opens_le_cover
 -/
 @[simp]
 def pairwiseToOpensLeCoverObj : Pairwise ι → OpensLeCover U
-  | single i => ⟨U i, ⟨i, le_rfl⟩⟩
+  | single i => ⟨U i, ⟨i, le_rflₓ⟩⟩
   | pair i j => ⟨U i⊓U j, ⟨i, inf_le_left⟩⟩
 
 open CategoryTheory.Pairwise.Hom
@@ -301,10 +301,10 @@ def whiskerIsoMapGenerateCocone :
         congr }
   hom_inv_id' := by
     ext
-    simp [← eq_to_hom_map]
+    simp [eq_to_hom_map]
   inv_hom_id' := by
     ext
-    simp [← eq_to_hom_map]
+    simp [eq_to_hom_map]
 
 /-- Given a presheaf `F` on the topological space `X` and a family of opens `U` of `X`,
     the natural cone associated to `F` and `U` used in the definition of

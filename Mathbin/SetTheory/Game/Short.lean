@@ -209,11 +209,11 @@ instance shortNat : ∀ n : ℕ, Short n
   | n + 1 => @Pgame.shortAdd _ _ (short_nat n) Pgame.short1
 
 instance shortBit0 (x : Pgame.{u}) [Short x] : Short (bit0 x) := by
-  dsimp' [← bit0]
+  dsimp' [bit0]
   infer_instance
 
 instance shortBit1 (x : Pgame.{u}) [Short x] : Short (bit1 x) := by
-  dsimp' [← bit1]
+  dsimp' [bit1]
   infer_instance
 
 /-- Auxiliary construction of decidability instances.

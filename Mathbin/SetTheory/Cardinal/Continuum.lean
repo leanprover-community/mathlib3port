@@ -92,7 +92,7 @@ theorem continuum_add_aleph_0 : 𝔠 + ℵ₀ = 𝔠 :=
 
 @[simp]
 theorem continuum_add_self : 𝔠 + 𝔠 = 𝔠 :=
-  add_eq_right aleph_0_le_continuum le_rfl
+  add_eq_right aleph_0_le_continuum le_rflₓ
 
 @[simp]
 theorem nat_add_continuum (n : ℕ) : ↑n + 𝔠 = 𝔠 :=
@@ -109,7 +109,7 @@ theorem continuum_add_nat (n : ℕ) : 𝔠 + n = 𝔠 :=
 
 @[simp]
 theorem continuum_mul_self : 𝔠 * 𝔠 = 𝔠 :=
-  mul_eq_left aleph_0_le_continuum le_rfl continuum_ne_zero
+  mul_eq_left aleph_0_le_continuum le_rflₓ continuum_ne_zero
 
 @[simp]
 theorem continuum_mul_aleph_0 : 𝔠 * ℵ₀ = 𝔠 :=
@@ -134,15 +134,15 @@ theorem continuum_mul_nat {n : ℕ} (hn : n ≠ 0) : 𝔠 * n = 𝔠 :=
 
 @[simp]
 theorem aleph_0_power_aleph_0 : aleph_0.{u} ^ aleph_0.{u} = 𝔠 :=
-  power_self_eq le_rfl
+  power_self_eq le_rflₓ
 
 @[simp]
 theorem nat_power_aleph_0 {n : ℕ} (hn : 2 ≤ n) : (n ^ aleph_0.{u} : Cardinal.{u}) = 𝔠 :=
-  nat_power_eq le_rfl hn
+  nat_power_eq le_rflₓ hn
 
 @[simp]
 theorem continuum_power_aleph_0 : continuum.{u} ^ aleph_0.{u} = 𝔠 := by
-  rw [← two_power_aleph_0, ← power_mul, mul_eq_left le_rfl le_rfl aleph_0_ne_zero]
+  rw [← two_power_aleph_0, ← power_mul, mul_eq_left le_rflₓ le_rflₓ aleph_0_ne_zero]
 
 end Cardinal
 

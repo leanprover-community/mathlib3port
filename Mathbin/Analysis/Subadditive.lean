@@ -51,7 +51,7 @@ theorem lim_le_div (hbdd : BddBelow (Range fun n => u n / n)) {n : ℕ} (hn : n 
 
 theorem apply_mul_add_le (k n r) : u (k * n + r) ≤ k * u n + u r := by
   induction' k with k IH
-  · simp only [← Nat.cast_zeroₓ, ← zero_mul, ← zero_addₓ]
+  · simp only [Nat.cast_zeroₓ, zero_mul, zero_addₓ]
     
   calc
     u ((k + 1) * n + r) = u (n + (k * n + r)) := by
@@ -66,13 +66,13 @@ theorem apply_mul_add_le (k n r) : u (k * n + r) ≤ k * u n + u r := by
 theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n / n < L) : ∀ᶠ p in at_top, u p / p < L := by
   have I : ∀ i : ℕ, 0 < i → (i : ℝ) ≠ 0 := by
     intro i hi
-    simp only [← hi.ne', ← Ne.def, ← Nat.cast_eq_zero, ← not_false_iff]
+    simp only [hi.ne', Ne.def, Nat.cast_eq_zero, not_false_iff]
   obtain ⟨w, nw, wL⟩ : ∃ w, u n / n < w ∧ w < L := exists_between hL
-  obtain ⟨x, hx⟩ : ∃ x, ∀, ∀ i < n, ∀, u i - i * w ≤ x := by
+  obtain ⟨x, hx⟩ : ∃ x, ∀ i < n, u i - i * w ≤ x := by
     obtain ⟨x, hx⟩ : BddAbove ↑(Finset.image (fun i => u i - i * w) (Finset.range n)) := Finset.bdd_above _
     refine' ⟨x, fun i hi => _⟩
-    simp only [← UpperBounds, ← mem_image, ← and_imp, ← forall_exists_index, ← mem_set_of_eq, ←
-      forall_apply_eq_imp_iff₂, ← Finset.mem_range, ← Finset.mem_coe, ← Finset.coe_image] at hx
+    simp only [UpperBounds, mem_image, and_imp, forall_exists_index, mem_set_of_eq, forall_apply_eq_imp_iff₂,
+      Finset.mem_range, Finset.mem_coe, Finset.coe_image] at hx
     exact hx _ hi
   have A : ∀ p : ℕ, u p ≤ p * w + x := by
     intro p
@@ -85,7 +85,7 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
         rw [hp]
       _ ≤ s * u n + u r := h.apply_mul_add_le _ _ _
       _ = s * n * (u n / n) + u r := by
-        field_simp [← I _ hn.bot_lt]
+        field_simp [I _ hn.bot_lt]
         ring
       _ ≤ s * n * w + u r :=
         add_le_add_right (mul_le_mul_of_nonneg_left nw.le (mul_nonneg (Nat.cast_nonneg _) (Nat.cast_nonneg _))) _
@@ -93,12 +93,12 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
         ring
       _ = p * w + (u r - r * w) := by
         rw [hp]
-        simp only [← Nat.cast_addₓ, ← Nat.cast_mulₓ]
+        simp only [Nat.cast_addₓ, Nat.cast_mulₓ]
       _ ≤ p * w + x := add_le_add_left (hx _ (Nat.mod_ltₓ _ hn.bot_lt)) _
       
   have B : ∀ᶠ p in at_top, u p / p ≤ w + x / p := by
     refine' eventually_at_top.2 ⟨1, fun p hp => _⟩
-    simp' only [← I p hp, ← Ne.def, ← not_false_iff] with field_simps
+    simp' only [I p hp, Ne.def, not_false_iff] with field_simps
     refine' div_le_div_of_le_of_nonneg _ (Nat.cast_nonneg _)
     rw [mul_comm]
     exact A _

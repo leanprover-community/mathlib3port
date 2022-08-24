@@ -77,7 +77,7 @@ instance liftHom₂WhiskerLeft (f : a ⟶ b) [LiftHom f] {g h : b ⟶ c} (η : g
 instance liftHom₂WhiskerRight {f g : a ⟶ b} (η : f ⟶ g) [LiftHom f] [LiftHom g] [LiftHom₂ η] {h : b ⟶ c} [LiftHom h] :
     LiftHom₂ (η ▷ h) where lift := LiftHom₂.lift η ▷ LiftHom.lift h
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`Hom] []
+-- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`Hom] []
 /-- A typeclass carrying a choice of bicategorical structural isomorphism between two objects.
 Used by the `⊗≫` bicategorical composition operator, and the `coherence` tactic.
 -/
@@ -180,7 +180,7 @@ example {f' : a ⟶ d} {f : a ⟶ b} {g : b ⟶ c} {h : c ⟶ d} (η : f' ⟶ (f
 
 @[simp]
 theorem bicategorical_comp_refl {f g h : a ⟶ b} (η : f ⟶ g) (θ : g ⟶ h) : η ⊗≫ θ = η ≫ θ := by
-  dsimp' [← bicategorical_comp]
+  dsimp' [bicategorical_comp]
   simp
 
 end CategoryTheory.Bicategory
@@ -191,7 +191,7 @@ namespace Tactic
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 /-- Coherence tactic for bicategories. -/
 unsafe def bicategorical_coherence : tactic Unit :=
   focus1 <| do
@@ -208,7 +208,7 @@ unsafe def bicategorical_coherence : tactic Unit :=
 
 namespace Bicategory
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 /-- Simp lemmas for rewriting a 2-morphism into a normal form. -/
 unsafe def whisker_simps : tactic Unit :=
   sorry

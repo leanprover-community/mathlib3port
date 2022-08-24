@@ -62,7 +62,7 @@ variable {α : Type v} [CommRingₓ α] [StarRing α]
 
 theorem mem_unitary_group_iff {A : Matrix n n α} : A ∈ Matrix.unitaryGroup n α ↔ A * star A = 1 := by
   refine' ⟨And.right, fun hA => ⟨_, hA⟩⟩
-  simpa only [← Matrix.mul_eq_mul, ← Matrix.mul_eq_one_comm] using hA
+  simpa only [Matrix.mul_eq_mul, Matrix.mul_eq_one_comm] using hA
 
 namespace UnitaryGroup
 
@@ -187,7 +187,7 @@ abbrev orthogonalGroup :=
 
 theorem mem_orthogonal_group_iff {A : Matrix n n β} : A ∈ Matrix.orthogonalGroup n β ↔ A * star A = 1 := by
   refine' ⟨And.right, fun hA => ⟨_, hA⟩⟩
-  simpa only [← Matrix.mul_eq_mul, ← Matrix.mul_eq_one_comm] using hA
+  simpa only [Matrix.mul_eq_mul, Matrix.mul_eq_one_comm] using hA
 
 end OrthogonalGroup
 

@@ -31,7 +31,7 @@ then `y` is a fixed point for `f`. -/
 theorem is_fixed_pt_of_tendsto_iterate {x y : α} (hy : Tendsto (fun n => (f^[n]) x) atTop (𝓝 y))
     (hf : ContinuousAt f y) : IsFixedPt f y := by
   refine' tendsto_nhds_unique ((tendsto_add_at_top_iff_nat 1).1 _) hy
-  simp only [← iterate_succ' f]
+  simp only [iterate_succ' f]
   exact hf.tendsto.comp hy
 
 /-- The set of fixed points of a continuous map is a closed set. -/

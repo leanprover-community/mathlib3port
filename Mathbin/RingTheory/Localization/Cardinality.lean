@@ -44,7 +44,7 @@ theorem card_le : # L ≤ # R := by
   refine' @Cardinal.mk_le_of_surjective _ _ f fun a => _
   obtain ⟨x, y, h⟩ := IsLocalization.mk'_surjective S a
   use (x, y)
-  dsimp' [← f]
+  dsimp' [f]
   rwa [dif_pos <| show ↑y ∈ S from y.2, SetLike.eta]
 
 variable (L)

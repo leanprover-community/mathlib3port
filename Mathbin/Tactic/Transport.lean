@@ -27,8 +27,8 @@ mk_simp_attribute transport_simps :=
 attribute [transport_simps]
   eq_rec_constant eq_mp_eq_cast cast_eq Equivₓ.to_fun_as_coe Equivₓ.arrow_congr'_apply Equivₓ.symm_apply_apply Equivₓ.apply_eq_iff_eq_symm_apply
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 -- we use `apply_eq_iff_eq_symm_apply` rather than `apply_eq_iff_eq`,
 -- as many axioms have a constant on the right-hand-side
 -- At present we don't actually use `s`; it's inferred in the `mk_app` call.

@@ -80,7 +80,7 @@ theorem Directed.strict_convex_Union {ι : Sort _} {s : ι → Set E} (hdir : Di
   exact interior_mono (subset_Union s k) (hs (hik hx) (hjk hy) hxy ha hb hab)
 
 theorem DirectedOn.strict_convex_sUnion {S : Set (Set E)} (hdir : DirectedOn (· ⊆ ·) S)
-    (hS : ∀, ∀ s ∈ S, ∀, StrictConvex 𝕜 s) : StrictConvex 𝕜 (⋃₀S) := by
+    (hS : ∀ s ∈ S, StrictConvex 𝕜 s) : StrictConvex 𝕜 (⋃₀S) := by
   rw [sUnion_eq_Union]
   exact (directed_on_iff_directed.1 hdir).strict_convex_Union fun s => hS _ s.2
 
@@ -187,7 +187,7 @@ theorem StrictConvex.preimage_add_right (hs : StrictConvex 𝕜 s) (z : E) : Str
 
 /-- The translation of a strictly convex set is also strictly convex. -/
 theorem StrictConvex.preimage_add_left (hs : StrictConvex 𝕜 s) (z : E) : StrictConvex 𝕜 ((fun x => x + z) ⁻¹' s) := by
-  simpa only [← add_commₓ] using hs.preimage_add_right z
+  simpa only [add_commₓ] using hs.preimage_add_right z
 
 end AddCancelCommMonoid
 
@@ -211,10 +211,10 @@ theorem StrictConvex.add (hs : StrictConvex 𝕜 s) (ht : StrictConvex 𝕜 t) :
   exact subset_interior_add_left (add_mem_add (hs hv hx hvx ha hb hab) <| ht.convex hw hy ha.le hb.le hab)
 
 theorem StrictConvex.add_left (hs : StrictConvex 𝕜 s) (z : E) : StrictConvex 𝕜 ((fun x => z + x) '' s) := by
-  simpa only [← singleton_add] using (strict_convex_singleton z).add hs
+  simpa only [singleton_add] using (strict_convex_singleton z).add hs
 
 theorem StrictConvex.add_right (hs : StrictConvex 𝕜 s) (z : E) : StrictConvex 𝕜 ((fun x => x + z) '' s) := by
-  simpa only [← add_commₓ] using hs.add_left z
+  simpa only [add_commₓ] using hs.add_left z
 
 /-- The translation of a strictly convex set is also strictly convex. -/
 theorem StrictConvex.vadd (hs : StrictConvex 𝕜 s) (x : E) : StrictConvex 𝕜 (x +ᵥ s) :=

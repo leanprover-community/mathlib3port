@@ -95,7 +95,7 @@ theorem Continuous.const_smul (hg : Continuous g) (c : M) : Continuous fun x => 
 /-- If a scalar is central, then its right action is continuous when its left action is. -/
 instance HasContinuousConstSmul.op [HasSmul Mᵐᵒᵖ α] [IsCentralScalar M α] : HasContinuousConstSmul Mᵐᵒᵖ α :=
   ⟨MulOpposite.rec fun c => by
-      simpa only [← op_smul_eq_smul] using continuous_const_smul c⟩
+      simpa only [op_smul_eq_smul] using continuous_const_smul c⟩
 
 @[to_additive]
 instance MulOpposite.has_continuous_const_smul : HasContinuousConstSmul M αᵐᵒᵖ :=
@@ -140,7 +140,7 @@ variable {G : Type _} [TopologicalSpace α] [Groupₓ G] [MulAction G α] [HasCo
 theorem tendsto_const_smul_iff {f : β → α} {l : Filter β} {a : α} (c : G) :
     Tendsto (fun x => c • f x) l (𝓝 <| c • a) ↔ Tendsto f l (𝓝 a) :=
   ⟨fun h => by
-    simpa only [← inv_smul_smul] using h.const_smul c⁻¹, fun h => h.const_smul _⟩
+    simpa only [inv_smul_smul] using h.const_smul c⁻¹, fun h => h.const_smul _⟩
 
 variable [TopologicalSpace β] {f : β → α} {b : β} {s : Set β}
 
@@ -159,7 +159,7 @@ theorem continuous_at_const_smul_iff (c : G) : ContinuousAt (fun x => c • f x)
 
 @[to_additive]
 theorem continuous_const_smul_iff (c : G) : (Continuous fun x => c • f x) ↔ Continuous f := by
-  simp only [← continuous_iff_continuous_at, ← continuous_at_const_smul_iff]
+  simp only [continuous_iff_continuous_at, continuous_at_const_smul_iff]
 
 /-- The homeomorphism given by scalar multiplication by a given element of a group `Γ` acting on
   `T` is a homeomorphism from `T` to itself. -/
@@ -170,7 +170,7 @@ def Homeomorph.smul (γ : G) : α ≃ₜ α where
   continuous_inv_fun := continuous_const_smul γ⁻¹
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident homeomorph.vadd]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident homeomorph.vadd]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[to_additive]
 theorem is_open_map_smul (c : G) : IsOpenMap fun x : α => c • x :=
   (Homeomorph.smul c).IsOpenMap
@@ -264,7 +264,7 @@ normed field) is `is_closed_map_smul_left` in `analysis.normed_space.finite_dime
 theorem is_closed_map_smul₀ {𝕜 M : Type _} [DivisionRing 𝕜] [AddCommMonoidₓ M] [TopologicalSpace M] [T1Space M]
     [Module 𝕜 M] [HasContinuousConstSmul 𝕜 M] (c : 𝕜) : IsClosedMap fun x : M => c • x := by
   rcases eq_or_ne c 0 with (rfl | hne)
-  · simp only [← zero_smul]
+  · simp only [zero_smul]
     exact is_closed_map_const
     
   · exact (Homeomorph.smulOfNeZero c hne).IsClosedMap
@@ -382,7 +382,7 @@ instance (priority := 100) t2_space_of_properly_discontinuous_smul_of_t2_space [
   · exact fun h => u_v_disjoint γ ⟨mem_Inter₂.mp x_in_U₀₀ γ H, mem_Inter₂.mp h.1 γ H⟩
     
   · rintro ⟨-, h'⟩
-    simp only [← image_smul, ← not_not, ← mem_set_of_eq, ← Ne.def] at H
+    simp only [image_smul, not_not, mem_set_of_eq, Ne.def] at H
     exact eq_empty_iff_forall_not_mem.mp H (γ • x) ⟨mem_image_of_mem _ x_in_K₀, h'⟩
     
 

@@ -494,11 +494,11 @@ def unitsWithZeroEquiv [Groupₓ α] : (WithZero α)ˣ ≃* α where
   invFun := fun a => Units.mk0 a coe_ne_zero
   left_inv := fun _ =>
     Units.ext <| by
-      simpa only [← coe_unzero]
+      simpa only [coe_unzero]
   right_inv := fun _ => rfl
   map_mul' := fun _ _ =>
     coe_inj.mp <| by
-      simpa only [← coe_unzero, ← coe_mul]
+      simpa only [coe_unzero, coe_mul]
 
 end WithZero
 

@@ -49,7 +49,7 @@ attribute [to_additive AddSubmonoid.centralizer_to_add_subsemigroup] Submonoid.c
 variable {S}
 
 @[to_additive]
-theorem mem_centralizer_iff {z : M} : z ∈ centralizer S ↔ ∀, ∀ g ∈ S, ∀, g * z = z * g :=
+theorem mem_centralizer_iff {z : M} : z ∈ centralizer S ↔ ∀ g ∈ S, g * z = z * g :=
   Iff.rfl
 
 @[to_additive]

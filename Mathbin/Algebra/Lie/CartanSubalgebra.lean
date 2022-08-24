@@ -61,7 +61,7 @@ theorem ucs_eq_self_of_is_cartan_subalgebra (H : LieSubalgebra R L) [H.IsCartanS
   induction' k with k ih
   · simp
     
-  · simp [← ih]
+  · simp [ih]
     
 
 theorem is_cartan_subalgebra_iff_is_ucs_limit : H.IsCartanSubalgebra ↔ H.toLieSubmodule.IsUcsLimit := by
@@ -96,7 +96,7 @@ end LieSubalgebra
 theorem LieIdeal.normalizer_eq_top {R : Type u} {L : Type v} [CommRingₓ R] [LieRing L] [LieAlgebra R L]
     (I : LieIdeal R L) : (I : LieSubalgebra R L).normalizer = ⊤ := by
   ext x
-  simpa only [← LieSubalgebra.mem_normalizer_iff, ← LieSubalgebra.mem_top, ← iff_trueₓ] using fun y hy => I.lie_mem hy
+  simpa only [LieSubalgebra.mem_normalizer_iff, LieSubalgebra.mem_top, iff_trueₓ] using fun y hy => I.lie_mem hy
 
 open LieIdeal
 

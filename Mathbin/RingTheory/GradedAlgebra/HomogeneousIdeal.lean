@@ -79,7 +79,7 @@ theorem HomogeneousIdeal.is_homogeneous (I : HomogeneousIdeal 𝒜) : I.toIdeal.
 theorem HomogeneousIdeal.to_ideal_injective :
     Function.Injective (HomogeneousIdeal.toIdeal : HomogeneousIdeal 𝒜 → Ideal A) := fun ⟨x, hx⟩ ⟨y, hy⟩ (h : x = y) =>
   by
-  simp [← h]
+  simp [h]
 
 instance HomogeneousIdeal.setLike : SetLike (HomogeneousIdeal 𝒜) A where
   coe := fun I => I.toIdeal
@@ -151,8 +151,7 @@ theorem Ideal.mul_homogeneous_element_mem_of_mem {I : Ideal A} (r x : A) (hx₁ 
   · exact I.zero_mem
     
 
-theorem Ideal.is_homogeneous_span (s : Set A) (h : ∀, ∀ x ∈ s, ∀, IsHomogeneous 𝒜 x) : (Ideal.span s).IsHomogeneous 𝒜 :=
-  by
+theorem Ideal.is_homogeneous_span (s : Set A) (h : ∀ x ∈ s, IsHomogeneous 𝒜 x) : (Ideal.span s).IsHomogeneous 𝒜 := by
   rintro i r hr
   rw [Ideal.span, Finsupp.span_eq_range_total] at hr
   rw [LinearMap.mem_range] at hr
@@ -232,12 +231,12 @@ include A
 namespace Ideal.IsHomogeneous
 
 theorem bot : Ideal.IsHomogeneous 𝒜 ⊥ := fun i r hr => by
-  simp only [← Ideal.mem_bot] at hr
+  simp only [Ideal.mem_bot] at hr
   rw [hr, decompose_zero, zero_apply]
   apply Ideal.zero_mem
 
 theorem top : Ideal.IsHomogeneous 𝒜 ⊤ := fun i r hr => by
-  simp only [← Submodule.mem_top]
+  simp only [Submodule.mem_top]
 
 variable {𝒜}
 
@@ -263,24 +262,24 @@ protected theorem supr {κ : Sort _} {f : κ → Ideal A} (h : ∀ i, (f i).IsHo
 protected theorem infi {κ : Sort _} {f : κ → Ideal A} (h : ∀ i, (f i).IsHomogeneous 𝒜) : (⨅ i, f i).IsHomogeneous 𝒜 :=
   by
   intro i x hx
-  simp only [← Ideal.mem_infi] at hx⊢
+  simp only [Ideal.mem_infi] at hx⊢
   exact fun j => h _ _ (hx j)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 theorem supr₂ {κ : Sort _} {κ' : κ → Sort _} {f : ∀ i, κ' i → Ideal A} (h : ∀ i j, (f i j).IsHomogeneous 𝒜) :
     (⨆ (i) (j), f i j).IsHomogeneous 𝒜 :=
   is_homogeneous.supr fun i => is_homogeneous.supr <| h i
 
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 theorem infi₂ {κ : Sort _} {κ' : κ → Sort _} {f : ∀ i, κ' i → Ideal A} (h : ∀ i j, (f i j).IsHomogeneous 𝒜) :
     (⨅ (i) (j), f i j).IsHomogeneous 𝒜 :=
   is_homogeneous.infi fun i => is_homogeneous.infi <| h i
 
-theorem Sup {ℐ : Set (Ideal A)} (h : ∀, ∀ I ∈ ℐ, ∀, Ideal.IsHomogeneous 𝒜 I) : (sup ℐ).IsHomogeneous 𝒜 := by
+theorem Sup {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) : (sup ℐ).IsHomogeneous 𝒜 := by
   rw [Sup_eq_supr]
   exact supr₂ h
 
-theorem Inf {ℐ : Set (Ideal A)} (h : ∀, ∀ I ∈ ℐ, ∀, Ideal.IsHomogeneous 𝒜 I) : (inf ℐ).IsHomogeneous 𝒜 := by
+theorem Inf {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) : (inf ℐ).IsHomogeneous 𝒜 := by
   rw [Inf_eq_infi]
   exact infi₂ h
 
@@ -359,15 +358,15 @@ theorem to_ideal_supr {κ : Sort _} (s : κ → HomogeneousIdeal 𝒜) : (⨆ i,
 theorem to_ideal_infi {κ : Sort _} (s : κ → HomogeneousIdeal 𝒜) : (⨅ i, s i).toIdeal = ⨅ i, (s i).toIdeal := by
   rw [infi, to_ideal_Inf, infi_range]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 @[simp]
 theorem to_ideal_supr₂ {κ : Sort _} {κ' : κ → Sort _} (s : ∀ i, κ' i → HomogeneousIdeal 𝒜) :
     (⨆ (i) (j), s i j).toIdeal = ⨆ (i) (j), (s i j).toIdeal := by
   simp_rw [to_ideal_supr]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 @[simp]
 theorem to_ideal_infi₂ {κ : Sort _} {κ' : κ → Sort _} (s : ∀ i, κ' i → HomogeneousIdeal 𝒜) :
     (⨅ (i) (j), s i j).toIdeal = ⨅ (i) (j), (s i j).toIdeal := by
@@ -533,8 +532,8 @@ theorem Ideal.to_ideal_homogeneous_hull_eq_supr :
   rw [← Ideal.span_Union]
   apply congr_arg Ideal.span _
   ext1
-  simp only [← Set.mem_Union, ← Set.mem_image, ← mem_set_of_eq, ← GradedRing.proj_apply, ← SetLike.exists, ←
-    exists_prop, ← Subtype.coe_mk, ← SetLike.mem_coe]
+  simp only [Set.mem_Union, Set.mem_image, mem_set_of_eq, GradedRing.proj_apply, SetLike.exists, exists_prop,
+    Subtype.coe_mk, SetLike.mem_coe]
 
 theorem Ideal.homogeneous_hull_eq_supr :
     I.homogeneousHull 𝒜 =
@@ -607,7 +606,7 @@ def HomogeneousIdeal.irrelevant : HomogeneousIdeal 𝒜 :=
   ⟨(GradedRing.projZeroRingHom 𝒜).ker, fun i r (hr : (decompose 𝒜 r 0 : A) = 0) => by
     change (decompose 𝒜 (decompose 𝒜 r _ : A) 0 : A) = 0
     by_cases' h : i = 0
-    · rw [h, hr, decompose_zero, zero_apply, AddSubmonoidClass.coe_zero]
+    · rw [h, hr, decompose_zero, zero_apply, ZeroMemClass.coe_zero]
       
     · rw [decompose_of_mem_ne 𝒜 (SetLike.coe_mem _) h]
       ⟩

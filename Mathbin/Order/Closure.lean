@@ -79,7 +79,7 @@ variable [PartialOrderₓ α]
 @[simps]
 def id : ClosureOperator α where
   toOrderHom := OrderHom.id
-  le_closure' := fun _ => le_rfl
+  le_closure' := fun _ => le_rflₓ
   idempotent' := fun _ => rfl
 
 instance : Inhabited (ClosureOperator α) :=
@@ -108,7 +108,7 @@ def mk₂ (f : α → α) (hf : ∀ x, x ≤ f x) (hmin : ∀ ⦃x y⦄, x ≤ f
   toFun := f
   monotone' := fun x y hxy => hmin (hxy.trans (hf y))
   le_closure' := hf
-  idempotent' := fun x => (hmin le_rfl).antisymm (hf _)
+  idempotent' := fun x => (hmin le_rflₓ).antisymm (hf _)
 
 /-- Expanded out version of `mk₂`. `p` implies being closed. This constructor should be used when
 you already know a sufficient condition for being closed and using `mem_mk₃_closed` will avoid you
@@ -187,7 +187,7 @@ theorem eq_mk₃_closed (c : ClosureOperator α) :
 /-- The property `p` fed into the `mk₃` constructor implies being closed. -/
 theorem mem_mk₃_closed {f : α → α} {p : α → Prop} {hf : ∀ x, x ≤ f x} {hfp : ∀ x, p (f x)}
     {hmin : ∀ ⦃x y⦄, x ≤ y → p y → f x ≤ y} {x : α} (hx : p x) : x ∈ (mk₃ f p hf hfp hmin).Closed :=
-  (hmin le_rfl hx).antisymm (hf _)
+  (hmin le_rflₓ hx).antisymm (hf _)
 
 end PartialOrderₓ
 
@@ -237,8 +237,8 @@ theorem closure_supr_closure (f : ι → α) : c (⨆ i, c (f i)) = c (⨆ i, f 
   le_antisymmₓ ((c.le_closure_iff _ _).1 <| supr_le fun i => c.Monotone <| le_supr f i) <|
     c.Monotone <| supr_mono fun i => c.le_closure _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 @[simp]
 theorem closure_supr₂_closure (f : ∀ i, κ i → α) : c (⨆ (i) (j), c (f i j)) = c (⨆ (i) (j), f i j) :=
   le_antisymmₓ ((c.le_closure_iff _ _).1 <| supr₂_le fun i j => c.Monotone <| le_supr₂ i j) <|
@@ -398,8 +398,8 @@ variable [CompleteLattice α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint
 theorem closure_supr_closure (f : ι → α) : u (l (⨆ i, u (l (f i)))) = u (l (⨆ i, f i)) :=
   l.ClosureOperator.closure_supr_closure _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 theorem closure_supr₂_closure (f : ∀ i, κ i → α) : u (l <| ⨆ (i) (j), u (l <| f i j)) = u (l <| ⨆ (i) (j), f i j) :=
   l.ClosureOperator.closure_supr₂_closure _
 
@@ -420,7 +420,7 @@ theorem le_iff_subset (s : Set β) (S : α) : l s ≤ S ↔ s ⊆ S :=
 
 theorem mem_iff (s : Set β) (x : β) : x ∈ l s ↔ ∀ S : α, s ⊆ S → x ∈ S := by
   simp_rw [← SetLike.mem_coe, ← Set.singleton_subset_iff, ← l.le_iff_subset]
-  exact ⟨fun h S => h.trans, fun h => h _ le_rfl⟩
+  exact ⟨fun h S => h.trans, fun h => h _ le_rflₓ⟩
 
 theorem eq_of_le {s : Set β} {S : α} (h₁ : s ⊆ S) (h₂ : S ≤ l s) : l s = S :=
   ((l.le_iff_subset _ _).2 h₁).antisymm h₂
@@ -444,8 +444,8 @@ theorem closure_union_closure (x y : α) : l (l x ∪ l y) = l (x ∪ y) :=
 theorem closure_Union_closure (f : ι → α) : l (⋃ i, l (f i)) = l (⋃ i, f i) :=
   SetLike.coe_injective <| l.closure_supr_closure _
 
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 @[simp]
 theorem closure_Union₂_closure (f : ∀ i, κ i → α) : l (⋃ (i) (j), l (f i j)) = l (⋃ (i) (j), f i j) :=
   SetLike.coe_injective <| l.closure_supr₂_closure _

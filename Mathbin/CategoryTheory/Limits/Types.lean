@@ -110,13 +110,13 @@ noncomputable def Limit.mk (F : J ⥤ Type max v u) (x : ∀ j, F.obj j) (h : �
 @[simp]
 theorem Limit.π_mk (F : J ⥤ Type max v u) (x : ∀ j, F.obj j) (h : ∀ (j j') (f : j ⟶ j'), F.map f (x j) = x j') (j) :
     limit.π F j (Limit.mk F x h) = x j := by
-  dsimp' [← limit.mk]
+  dsimp' [limit.mk]
   simp
 
 @[simp]
 theorem Limit.π_mk' (F : J ⥤ Type v) (x : ∀ j, F.obj j) (h : ∀ (j j') (f : j ⟶ j'), F.map f (x j) = x j') (j) :
     limit.π F j (Limit.mk.{v, v} F x h) = x j := by
-  dsimp' [← limit.mk]
+  dsimp' [limit.mk]
   simp
 
 -- PROJECT: prove this for concrete categories where the forgetful functor preserves limits
@@ -124,13 +124,13 @@ theorem Limit.π_mk' (F : J ⥤ Type v) (x : ∀ j, F.obj j) (h : ∀ (j j') (f 
 theorem limit_ext (F : J ⥤ Type max v u) (x y : limit F) (w : ∀ j, limit.π F j x = limit.π F j y) : x = y := by
   apply (limit_equiv_sections F).Injective
   ext j
-  simp [← w j]
+  simp [w j]
 
 @[ext]
 theorem limit_ext' (F : J ⥤ Type v) (x y : limit F) (w : ∀ j, limit.π F j x = limit.π F j y) : x = y := by
   apply (limitEquivSections.{v, v} F).Injective
   ext j
-  simp [← w j]
+  simp [w j]
 
 theorem limit_ext_iff (F : J ⥤ Type max v u) (x y : limit F) : x = y ↔ ∀ j, limit.π F j x = limit.π F j y :=
   ⟨fun t _ => t ▸ rfl, limit_ext _ _ _⟩
@@ -470,7 +470,7 @@ instance :
           ⟨st.left (Classical.some x.2), by
             have p := st.w
             replace p := congr_fun p (Classical.some x.2)
-            simp only [← functor.id_map, ← types_comp_apply, ← Subtype.val_eq_coe] at p
+            simp only [functor.id_map, types_comp_apply, Subtype.val_eq_coe] at p
             erw [p, Classical.some_spec x.2]⟩⟩)
       rfl
 

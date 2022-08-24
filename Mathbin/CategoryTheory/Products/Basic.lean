@@ -197,7 +197,7 @@ def evaluationUncurried : C × (C ⥤ D) ⥤ D where
     cases Z
     cases Y
     cases X
-    simp only [← prod_comp, ← nat_trans.comp_app, ← functor.map_comp, ← category.assoc]
+    simp only [prod_comp, nat_trans.comp_app, functor.map_comp, category.assoc]
     rw [← nat_trans.comp_app, nat_trans.naturality, nat_trans.comp_app, category.assoc, nat_trans.naturality]
 
 variable {C}
@@ -270,7 +270,7 @@ def prod {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.Prod 
   naturality' := fun X Y f => by
     cases X
     cases Y
-    simp only [← functor.prod_map, ← Prod.mk.inj_iff, ← prod_comp]
+    simp only [functor.prod_map, Prod.mk.inj_iff, prod_comp]
     constructor <;> rw [naturality]
 
 /- Again, it is inadvisable in Lean 3 to setup a notation `α × β`;
@@ -298,10 +298,10 @@ def functorProdToProdFunctor : (A ⥤ B × C) ⥤ (A ⥤ B) × (A ⥤ C) where
   map := fun F G α =>
     ⟨{ app := fun X => (α.app X).1,
         naturality' := fun X Y f => by
-          simp only [← functor.comp_map, ← prod.fst_map, prod_comp_fst, ← α.naturality] },
+          simp only [functor.comp_map, prod.fst_map, ← prod_comp_fst, α.naturality] },
       { app := fun X => (α.app X).2,
         naturality' := fun X Y f => by
-          simp only [← functor.comp_map, ← prod.snd_map, prod_comp_snd, ← α.naturality] }⟩
+          simp only [functor.comp_map, prod.snd_map, ← prod_comp_snd, α.naturality] }⟩
 
 /-- The unit isomorphism for `functor_prod_functor_equiv` -/
 @[simps]

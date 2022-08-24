@@ -262,8 +262,8 @@ theorem preimage_basic_open {X Y : LocallyRingedSpace} (f : X ⟶ Y) {U : Opens 
 theorem basic_open_zero (X : LocallyRingedSpace) (U : Opens X.Carrier) :
     X.toRingedSpace.basicOpen (0 : X.Presheaf.obj <| op U) = ∅ := by
   ext
-  simp only [← Set.mem_empty_eq, ← TopologicalSpace.Opens.empty_eq, ← TopologicalSpace.Opens.mem_coe, ← opens.coe_bot, ←
-    iff_falseₓ, ← RingedSpace.basic_open, ← is_unit_zero_iff, ← Set.mem_set_of_eq, ← map_zero]
+  simp only [Set.mem_empty_eq, TopologicalSpace.Opens.empty_eq, TopologicalSpace.Opens.mem_coe, opens.coe_bot,
+    iff_falseₓ, RingedSpace.basic_open, is_unit_zero_iff, Set.mem_set_of_eq, map_zero]
   rintro ⟨⟨y, _⟩, h, e⟩
   exact @zero_ne_one (X.presheaf.stalk y) _ _ h
 

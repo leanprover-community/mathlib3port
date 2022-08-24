@@ -38,7 +38,7 @@ and `(a, b₁)` and `(a, b₂)` if `H` relates `b₁` and `b₂`. -/
 def boxProd (G : SimpleGraph α) (H : SimpleGraph β) : SimpleGraph (α × β) where
   Adj := fun x y => G.Adj x.1 y.1 ∧ x.2 = y.2 ∨ H.Adj x.2 y.2 ∧ x.1 = y.1
   symm := fun x y => by
-    simp [← and_comm, ← or_comm, ← eq_comm, ← adj_comm]
+    simp [and_comm, or_comm, eq_comm, adj_comm]
   loopless := fun x => by
     simp
 
@@ -68,8 +68,8 @@ def boxProdComm : G □ H ≃g H □ G :=
 @[simps]
 def boxProdAssoc : G □ H □ I ≃g G □ (H □ I) :=
   ⟨Equivₓ.prodAssoc _ _ _, fun x y => by
-    simp only [← box_prod_adj, ← Equivₓ.prod_assoc_apply, ← or_and_distrib_right, ← or_assoc, ← Prod.ext_iff, ←
-      and_assoc, ← @And.comm (x.1.1 = _)]⟩
+    simp only [box_prod_adj, Equivₓ.prod_assoc_apply, or_and_distrib_right, or_assoc, Prod.ext_iff, and_assoc,
+      @And.comm (x.1.1 = _)]⟩
 
 /-- The embedding of `G` into `G □ H` given by `b`. -/
 @[simps]

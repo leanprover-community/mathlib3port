@@ -38,7 +38,7 @@ protected theorem induction_on {M : R[X] → Prop} (p : R[X]) (h_C : ∀ a, M (c
   have A : ∀ {n : ℕ} {a}, M (C a * X ^ n) := by
     intro n a
     induction' n with n ih
-    · simp only [← pow_zeroₓ, ← mul_oneₓ, ← h_C]
+    · simp only [pow_zeroₓ, mul_oneₓ, h_C]
       
     · exact h_monomial _ _ ih
       
@@ -72,7 +72,7 @@ variable {f : R[X]} {I : Ideal R[X]}
 /-- If the coefficients of a polynomial belong to an ideal, then that ideal contains
 the ideal spanned by the coefficients of the polynomial. -/
 theorem span_le_of_C_coeff_mem (cf : ∀ i : ℕ, c (f.coeff i) ∈ I) : Ideal.span { g | ∃ i, g = c (f.coeff i) } ≤ I := by
-  simp (config := { singlePass := true })only [← @eq_comm _ _ (C _)]
+  simp (config := { singlePass := true })only [@eq_comm _ _ (C _)]
   exact (ideal.span_le.trans range_subset_iff).mpr cf
 
 theorem mem_span_C_coeff : f ∈ Ideal.span { g : R[X] | ∃ i : ℕ, g = c (coeff f i) } := by
@@ -85,7 +85,7 @@ theorem mem_span_C_coeff : f ∈ Ideal.span { g : R[X] | ∃ i : ℕ, g = c (coe
     simp
   have : monomial n (1 : R) • C (coeff f n) ∈ p := p.smul_mem _ this
   convert this using 1
-  simp only [← monomial_mul_C, ← one_mulₓ, ← smul_eq_mul]
+  simp only [monomial_mul_C, one_mulₓ, smul_eq_mul]
   rw [monomial_eq_C_mul_X]
 
 theorem exists_C_coeff_not_mem : f ∉ I → ∃ i : ℕ, c (coeff f i) ∉ I :=

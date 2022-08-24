@@ -53,14 +53,14 @@ def condCount (s : Set Ω) : Measureₓ Ω :=
 
 @[simp]
 theorem cond_count_empty_meas : (condCount ∅ : Measureₓ Ω) = 0 := by
-  simp [← cond_count]
+  simp [cond_count]
 
 theorem cond_count_empty {s : Set Ω} : condCount s ∅ = 0 := by
   simp
 
 theorem finite_of_cond_count_ne_zero {s t : Set Ω} (h : condCount s t ≠ 0) : s.Finite := by
   by_contra hs'
-  simpa [← cond_count, ← cond, ← measure.count_apply_infinite hs'] using h
+  simpa [cond_count, cond, measure.count_apply_infinite hs'] using h
 
 variable [MeasurableSingletonClass Ω]
 
@@ -120,7 +120,7 @@ theorem pred_true_of_cond_count_eq_one (h : condCount s t = 1) : s ⊆ t := by
   exact Finset.eq_of_subset_of_card_le (Set.Finite.to_finset_mono.2 (s.inter_subset_left t)) h.symm.le
 
 theorem cond_count_eq_zero_iff (hs : s.Finite) : condCount s t = 0 ↔ s ∩ t = ∅ := by
-  simp [← cond_count, ← cond_apply _ hs.measurable_set, ← measure.count_apply_eq_top, ← Set.not_infinite.2 hs, ←
+  simp [cond_count, cond_apply _ hs.measurable_set, measure.count_apply_eq_top, Set.not_infinite.2 hs,
     measure.count_apply_finite _ (hs.inter_of_left _)]
 
 theorem cond_count_univ (hs : s.Finite) (hs' : s.Nonempty) : condCount s Set.Univ = 1 :=
@@ -158,9 +158,9 @@ theorem cond_count_disjoint_union (hs : s.Finite) (ht : t.Finite) (hst : Disjoin
   rcases s.eq_empty_or_nonempty with (rfl | hs') <;> rcases t.eq_empty_or_nonempty with (rfl | ht')
   · simp
     
-  · simp [← cond_count_self ht ht']
+  · simp [cond_count_self ht ht']
     
-  · simp [← cond_count_self hs hs']
+  · simp [cond_count_self hs hs']
     
   rw [cond_count, cond_count, cond_count, cond_apply _ hs.measurable_set, cond_apply _ ht.measurable_set,
     cond_apply _ (hs.union ht).MeasurableSet, cond_apply _ (hs.union ht).MeasurableSet,
@@ -184,7 +184,7 @@ theorem cond_count_add_compl_eq (u t : Set Ω) (hs : s.Finite) :
       ←
       cond_count_disjoint_union (hs.inter_of_left _) (hs.inter_of_left _)
         (disjoint_compl_right.mono inf_le_right inf_le_right)]
-  simp [← cond_count_inter_self hs]
+  simp [cond_count_inter_self hs]
 
 end ProbabilityTheory
 

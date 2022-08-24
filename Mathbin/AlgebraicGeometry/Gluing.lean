@@ -188,8 +188,8 @@ theorem ι_iso_carrier_inv (i : D.J) :
       (D.ι i).1.base :=
   by
   delta' iso_carrier
-  simp only [← functor.map_iso_inv, ← iso.trans_inv, ← iso.trans_assoc, ← glue_data.ι_glued_iso_inv_assoc, ←
-    functor.map_iso_trans, ← category.assoc]
+  simp only [functor.map_iso_inv, iso.trans_inv, iso.trans_assoc, glue_data.ι_glued_iso_inv_assoc,
+    functor.map_iso_trans, category.assoc]
   iterate 3 
     erw [← comp_base]
   simp_rw [← category.assoc]
@@ -242,7 +242,7 @@ def gluedCoverT' (x y z : 𝒰.J) :
   refine' _ ≫ (pullback_symmetry _ _).Hom
   refine' _ ≫ (pullback_right_pullback_fst_iso _ _ _).inv
   refine' pullback.map _ _ _ _ (pullback_symmetry _ _).Hom (𝟙 _) (𝟙 _) _ _
-  · simp [← pullback.condition]
+  · simp [pullback.condition]
     
   · simp
     
@@ -277,7 +277,7 @@ theorem glued_cover_cocycle_fst (x y z : 𝒰.J) :
 
 theorem glued_cover_cocycle_snd (x y z : 𝒰.J) :
     gluedCoverT' 𝒰 x y z ≫ gluedCoverT' 𝒰 y z x ≫ gluedCoverT' 𝒰 z x y ≫ pullback.snd = pullback.snd := by
-  apply pullback.hom_ext <;> simp [← pullback.condition]
+  apply pullback.hom_ext <;> simp [pullback.condition]
 
 theorem glued_cover_cocycle (x y z : 𝒰.J) : gluedCoverT' 𝒰 x y z ≫ gluedCoverT' 𝒰 y z x ≫ gluedCoverT' 𝒰 z x y = 𝟙 _ :=
   by

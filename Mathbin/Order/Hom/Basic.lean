@@ -152,7 +152,7 @@ variable [Preorderₓ α] [Preorderₓ β] [OrderIsoClass F α β]
 include β
 
 theorem map_lt_map_iff (f : F) {a b : α} : f a < f b ↔ a < b :=
-  lt_iff_lt_of_le_iff_le' (map_le_map_iff f) (map_le_map_iff f)
+  lt_iff_lt_of_le_iff_le'ₓ (map_le_map_iff f) (map_le_map_iff f)
 
 @[simp]
 theorem map_inv_lt_iff (f : F) {a : α} {b : β} : EquivLike.inv f b < a ↔ b < f a := by
@@ -251,7 +251,7 @@ theorem apply_mono {f g : α →o β} {x y : α} (h₁ : f ≤ g) (h₂ : x ≤ 
 /-- Curry/uncurry as an order isomorphism between `α × β →o γ` and `α →o β →o γ`. -/
 def curry : (α × β →o γ) ≃o (α →o β →o γ) where
   toFun := fun f =>
-    ⟨fun x => ⟨Function.curry f x, fun y₁ y₂ h => f.mono ⟨le_rfl, h⟩⟩, fun x₁ x₂ h y => f.mono ⟨h, le_rfl⟩⟩
+    ⟨fun x => ⟨Function.curry f x, fun y₁ y₂ h => f.mono ⟨le_rflₓ, h⟩⟩, fun x₁ x₂ h y => f.mono ⟨h, le_rflₓ⟩⟩
   invFun := fun f => ⟨Function.uncurry fun x => f x, fun x y h => (f.mono h.1 x.2).trans <| (f y.1).mono h.2⟩
   left_inv := fun f => by
     ext ⟨x, y⟩
@@ -260,7 +260,7 @@ def curry : (α × β →o γ) ≃o (α →o β →o γ) where
     ext x y
     rfl
   map_rel_iff' := fun f g => by
-    simp [← le_def]
+    simp [le_def]
 
 @[simp]
 theorem curry_apply (f : α × β →o γ) (x : α) (y : β) : curry f x y = f (x, y) :=
@@ -297,7 +297,7 @@ theorem id_comp (f : α →o β) : comp id f = f := by
 /-- Constant function bundled as a `order_hom`. -/
 @[simps (config := { fullyApplied := false })]
 def const (α : Type _) [Preorderₓ α] {β : Type _} [Preorderₓ β] : β →o α →o β where
-  toFun := fun b => ⟨Function.const α b, fun _ _ _ => le_rfl⟩
+  toFun := fun b => ⟨Function.const α b, fun _ _ _ => le_rflₓ⟩
   monotone' := fun b₁ b₂ h x => h
 
 @[simp]
@@ -478,7 +478,7 @@ def RelEmbedding.orderEmbeddingOfLtEmbedding [PartialOrderₓ α] [PartialOrder�
   { f with
     map_rel_iff' := by
       intros
-      simp [← le_iff_lt_or_eqₓ, ← f.map_rel_iff, ← f.injective.eq_iff] }
+      simp [le_iff_lt_or_eqₓ, f.map_rel_iff, f.injective.eq_iff] }
 
 @[simp]
 theorem RelEmbedding.order_embedding_of_lt_embedding_apply [PartialOrderₓ α] [PartialOrderₓ β]
@@ -494,7 +494,7 @@ variable [Preorderₓ α] [Preorderₓ β] (f : α ↪o β)
 def ltEmbedding : ((· < ·) : α → α → Prop) ↪r ((· < ·) : β → β → Prop) :=
   { f with
     map_rel_iff' := by
-      intros <;> simp [← lt_iff_le_not_leₓ, ← f.map_rel_iff] }
+      intros <;> simp [lt_iff_le_not_leₓ, f.map_rel_iff] }
 
 @[simp]
 theorem lt_embedding_apply (x : α) : f.ltEmbedding x = f x :=
@@ -832,7 +832,7 @@ theorem to_rel_iso_lt_symm (e : α ≃o β) : e.toRelIsoLt.symm = e.symm.toRelIs
 def ofRelIsoLt {α β} [PartialOrderₓ α] [PartialOrderₓ β] (e : ((· < ·) : α → α → Prop) ≃r ((· < ·) : β → β → Prop)) :
     α ≃o β :=
   ⟨e.toEquiv, fun x y => by
-    simp [← le_iff_eq_or_lt, ← e.map_rel_iff]⟩
+    simp [le_iff_eq_or_ltₓ, e.map_rel_iff]⟩
 
 @[simp]
 theorem of_rel_iso_lt_apply {α β} [PartialOrderₓ α] [PartialOrderₓ β]
@@ -904,7 +904,7 @@ def Set.univ : (Set.Univ : Set α) ≃o α where
 def funUnique (α β : Type _) [Unique α] [Preorderₓ β] : (α → β) ≃o β where
   toEquiv := Equivₓ.funUnique α β
   map_rel_iff' := fun f g => by
-    simp [← Pi.le_def, ← Unique.forall_iff]
+    simp [Pi.le_def, Unique.forall_iff]
 
 @[simp]
 theorem fun_unique_symm_apply {α β : Type _} [Unique α] [Preorderₓ β] :
@@ -922,7 +922,7 @@ order isomorphism. -/
 def toOrderIso (e : α ≃ β) (h₁ : Monotone e) (h₂ : Monotone e.symm) : α ≃o β :=
   ⟨e, fun x y =>
     ⟨fun h => by
-      simpa only [← e.symm_apply_apply] using h₂ h, fun h => h₁ h⟩⟩
+      simpa only [e.symm_apply_apply] using h₂ h, fun h => h₁ h⟩⟩
 
 @[simp]
 theorem coe_to_order_iso (e : α ≃ β) (h₁ : Monotone e) (h₂ : Monotone e.symm) : ⇑(e.toOrderIso h₁ h₂) = e :=
@@ -1007,7 +1007,7 @@ theorem OrderEmbedding.le_map_sup [SemilatticeSup α] [SemilatticeSup β] (f : �
 
 theorem OrderIso.map_inf [SemilatticeInf α] [SemilatticeInf β] (f : α ≃o β) (x y : α) : f (x⊓y) = f x⊓f y := by
   refine' (f.to_order_embedding.map_inf_le x y).antisymm _
-  simpa [f.symm.le_iff_le] using f.symm.to_order_embedding.map_inf_le (f x) (f y)
+  simpa [← f.symm.le_iff_le] using f.symm.to_order_embedding.map_inf_le (f x) (f y)
 
 theorem OrderIso.map_sup [SemilatticeSup α] [SemilatticeSup β] (f : α ≃o β) (x y : α) : f (x⊔y) = f x⊔f y :=
   f.dual.map_inf x y

@@ -41,8 +41,7 @@ theorem card_embedding_eq {α β} [Fintype α] [Fintype β] [Fintype (α ↪ β)
     exact ⟨embedding.of_is_empty, fun x => FunLike.ext _ _ isEmptyElim⟩
     
   · rw [card_option, Nat.desc_factorial_succ, card_congr (embedding.option_embedding_equiv α β), card_sigma, ← ih]
-    simp only [← Fintype.card_compl_set, ← Fintype.card_range, ← Finset.sum_const, ← Finset.card_univ, ← smul_eq_mul, ←
-      mul_comm]
+    simp only [Fintype.card_compl_set, Fintype.card_range, Finset.sum_const, Finset.card_univ, smul_eq_mul, mul_comm]
     
 
 /- The cardinality of embeddings from an infinite type to a finite type is zero.

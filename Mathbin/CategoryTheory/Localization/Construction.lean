@@ -182,8 +182,8 @@ theorem fac : W.q ⋙ lift G hG = G :=
   Functor.ext (fun X => rfl)
     (by
       intro X Y f
-      simp only [← functor.comp_map, ← eq_to_hom_refl, ← comp_id, ← id_comp]
-      dsimp' [← lift, ← lift_to_path_category, ← morphism_property.Q]
+      simp only [functor.comp_map, eq_to_hom_refl, comp_id, id_comp]
+      dsimp' [lift, lift_to_path_category, morphism_property.Q]
       rw [compose_path_to_path])
 
 omit G hG
@@ -208,7 +208,7 @@ theorem uniq (G₁ G₂ : W.Localization ⥤ D) (h : W.q ⋙ G₁ = W.q ⋙ G₂
         
       · have hw : W.Q.map w = (Wiso w hw).Hom := rfl
         have hw' := functor.congr_hom h w
-        simp only [← functor.comp_map, ← hw] at hw'
+        simp only [functor.comp_map, hw] at hw'
         refine' functor.congr_inv_of_congr_hom _ _ _ _ _ hw'
         all_goals
           apply functor.congr_obj h
@@ -240,7 +240,7 @@ theorem morphism_property_is_top (P : MorphismProperty W.Localization) (hP₁ : 
   ext X Y f
   constructor
   · intro hf
-    simp only [← Pi.top_apply]
+    simp only [Pi.top_apply]
     
   · intro hf
     clear hf
@@ -250,10 +250,10 @@ theorem morphism_property_is_top (P : MorphismProperty W.Localization) (hP₁ : 
       by
       rcases X with ⟨⟨X⟩⟩
       rcases Y with ⟨⟨Y⟩⟩
-      simpa only [← functor.image_preimage] using this _ _ (G.preimage f)
+      simpa only [functor.image_preimage] using this _ _ (G.preimage f)
     intro X₁ X₂ p
     induction' p with X₂ X₃ p g hp
-    · simpa only [← Functor.map_id] using hP₁ (𝟙 X₁)
+    · simpa only [Functor.map_id] using hP₁ (𝟙 X₁)
       
     · cases X₂
       cases X₃
@@ -294,7 +294,7 @@ def app (X : W.Localization) : F₁.obj X ⟶ F₂.obj X :=
 
 @[simp]
 theorem app_eq (X : C) : (app τ) (W.q.obj X) = τ.app X := by
-  simpa only [← app, ← eq_to_hom_refl, ← comp_id, ← id_comp]
+  simpa only [app, eq_to_hom_refl, comp_id, id_comp]
 
 end NatTransExtension
 
@@ -310,17 +310,17 @@ def natTransExtension {F₁ F₂ : W.Localization ⥤ D} (τ : W.q ⋙ F₁ ⟶ 
         (morphism_property.naturality_property.is_stable_under_composition _)
     swap
     · intro X Y f
-      simpa only [← morphism_property.naturality_property, ← nat_trans_extension.app_eq] using τ.naturality f
+      simpa only [morphism_property.naturality_property, nat_trans_extension.app_eq] using τ.naturality f
       
     have hf : (⊤ : morphism_property _) f := by
-      simp only [← Pi.top_apply]
-    simpa only [h] using hf
+      simp only [Pi.top_apply]
+    simpa only [← h] using hf
 
 @[simp]
 theorem nat_trans_extension_hcomp {F G : W.Localization ⥤ D} (τ : W.q ⋙ F ⟶ W.q ⋙ G) :
     𝟙 W.q ◫ natTransExtension τ = τ := by
   ext X
-  simp only [← nat_trans.hcomp_app, ← nat_trans.id_app, ← G.map_id, ← comp_id, ← nat_trans_extension_app, ←
+  simp only [nat_trans.hcomp_app, nat_trans.id_app, G.map_id, comp_id, nat_trans_extension_app,
     nat_trans_extension.app_eq]
 
 end Construction

@@ -55,7 +55,7 @@ theorem cardinal_mk_le_sigma_polynomial : # L ≤ # (Σp : R[X], { x : L // x �
     intro h
     simp only at h
     refine' (Subtype.heq_iff_coe_eq _).1 h.2
-    simp only [← h.1, ← iff_selfₓ, ← forall_true_iff]
+    simp only [h.1, iff_selfₓ, forall_true_iff]
 
 /-- The cardinality of an algebraic extension is at most the maximum of the cardinality
 of the base ring or `ℵ₀` -/
@@ -67,9 +67,9 @@ theorem cardinal_mk_le_max : # L ≤ max (# R) ℵ₀ :=
     _ ≤ Cardinal.sum.{u, u} fun p : R[X] => ℵ₀ := (sum_le_sum _ _) fun p => (Multiset.finite_to_set _).lt_aleph_0.le
     _ = # R[X] * ℵ₀ := sum_const' _ _
     _ ≤ max (max (# R[X]) ℵ₀) ℵ₀ := mul_le_max _ _
-    _ ≤ max (max (max (# R) ℵ₀) ℵ₀) ℵ₀ := max_le_max (max_le_max Polynomial.cardinal_mk_le_max le_rfl) le_rfl
+    _ ≤ max (max (max (# R) ℵ₀) ℵ₀) ℵ₀ := max_le_max (max_le_max Polynomial.cardinal_mk_le_max le_rflₓ) le_rflₓ
     _ = max (# R) ℵ₀ := by
-      simp only [← max_assocₓ, ← max_commₓ ℵ₀, ← max_left_commₓ ℵ₀, ← max_selfₓ]
+      simp only [max_assocₓ, max_commₓ ℵ₀, max_left_commₓ ℵ₀, max_selfₓ]
     
 
 end Algebra.IsAlgebraic
@@ -142,9 +142,9 @@ theorem cardinal_le_max_transcendence_basis (hv : IsTranscendenceBasis R v) : # 
       Algebra.IsAlgebraic.cardinal_mk_le_max _ _ IsAlgClosure.algebraic
     _ = max (# (MvPolynomial ι R)) ℵ₀ := by
       rw [Cardinal.eq.2 ⟨hv.1.aevalEquiv.toEquiv⟩]
-    _ ≤ max (max (max (# R) (# ι)) ℵ₀) ℵ₀ := max_le_max MvPolynomial.cardinal_mk_le_max le_rfl
+    _ ≤ max (max (max (# R) (# ι)) ℵ₀) ℵ₀ := max_le_max MvPolynomial.cardinal_mk_le_max le_rflₓ
     _ = _ := by
-      simp [← max_assocₓ]
+      simp [max_assocₓ]
     
 
 /-- If `K` is an uncountable algebraically closed field, then its
@@ -156,7 +156,7 @@ theorem cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt [Nontrivial R] (h
       not_le_of_gtₓ hK <|
         calc
           # K ≤ max (max (# R) (# ι)) ℵ₀ := cardinal_le_max_transcendence_basis v hv
-          _ ≤ _ := max_leₓ (max_leₓ hR (le_of_ltₓ h)) le_rfl
+          _ ≤ _ := max_leₓ (max_leₓ hR (le_of_ltₓ h)) le_rflₓ
           
   le_antisymmₓ
     (calc

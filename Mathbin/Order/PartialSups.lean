@@ -54,7 +54,7 @@ theorem partial_sups_succ (f : ℕ → α) (n : ℕ) : partialSups f (n + 1) = p
 theorem le_partial_sups_of_le (f : ℕ → α) {m n : ℕ} (h : m ≤ n) : f m ≤ partialSups f n := by
   induction' n with n ih
   · cases h
-    exact le_rfl
+    exact le_rflₓ
     
   · cases' h with h h
     · exact le_sup_right
@@ -63,13 +63,13 @@ theorem le_partial_sups_of_le (f : ℕ → α) {m n : ℕ} (h : m ≤ n) : f m �
       
     
 
-theorem le_partial_sups (f : ℕ → α) : f ≤ partialSups f := fun n => le_partial_sups_of_le f le_rfl
+theorem le_partial_sups (f : ℕ → α) : f ≤ partialSups f := fun n => le_partial_sups_of_le f le_rflₓ
 
 theorem partial_sups_le (f : ℕ → α) (n : ℕ) (a : α) (w : ∀ m, m ≤ n → f m ≤ a) : partialSups f n ≤ a := by
   induction' n with n ih
-  · apply w 0 le_rfl
+  · apply w 0 le_rflₓ
     
-  · exact sup_le (ih fun m p => w m (Nat.le_succ_of_leₓ p)) (w (n + 1) le_rfl)
+  · exact sup_le (ih fun m p => w m (Nat.le_succ_of_leₓ p)) (w (n + 1) le_rflₓ)
     
 
 theorem Monotone.partial_sups_eq {f : ℕ → α} (hf : Monotone f) : (partialSups f : ℕ → α) = f := by
@@ -107,7 +107,7 @@ theorem partial_sups_eq_sup'_range (f : ℕ → α) (n : ℕ) :
   induction' n with n ih
   · simp
     
-  · dsimp' [← partialSups]  at ih⊢
+  · dsimp' [partialSups]  at ih⊢
     simp_rw [@Finset.range_succ n.succ]
     rw [ih, Finset.sup'_insert, sup_comm]
     
@@ -119,7 +119,7 @@ theorem partial_sups_eq_sup_range [SemilatticeSup α] [OrderBot α] (f : ℕ →
   induction' n with n ih
   · simp
     
-  · dsimp' [← partialSups]  at ih⊢
+  · dsimp' [partialSups]  at ih⊢
     rw [Finset.range_succ, Finset.sup_insert, sup_comm, ih]
     
 

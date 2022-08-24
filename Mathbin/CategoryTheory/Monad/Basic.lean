@@ -29,8 +29,8 @@ universe v₁ u₁
 -- morphism levels before object levels. See note [category_theory universes].
 variable (C : Type u₁) [Category.{v₁} C]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`η'] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`μ'] []
+-- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`η'] []
+-- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`μ'] []
 /-- The data of a monad on C consists of an endofunctor T together with natural transformations
 η : 𝟭 C ⟶ T and μ : T ⋙ T ⟶ T satisfying three equations:
 - T μ_X ≫ μ_X = μ_(TX) ≫ μ_X (associativity)
@@ -50,8 +50,8 @@ structure Monad extends C ⥤ C where
     run_tac
       obviously
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`ε'] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`δ'] []
+-- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`ε'] []
+-- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`δ'] []
 /-- The data of a comonad on C consists of an endofunctor G together with natural transformations
 ε : G ⟶ 𝟭 C and δ : G ⟶ G ⋙ G satisfying three equations:
 - δ_X ≫ G δ_X = δ_X ≫ δ_(GX) (coassociativity)
@@ -230,11 +230,11 @@ def MonadIso.mk {M N : Monad C} (f : (M : C ⥤ C) ≅ N) (f_η f_μ) : M ≅ N 
   inv :=
     { toNatTrans := f.inv,
       app_η' := fun X => by
-        simp [f_η],
+        simp [← f_η],
       app_μ' := fun X => by
         rw [← nat_iso.cancel_nat_iso_hom_right f]
-        simp only [← nat_trans.naturality, ← iso.inv_hom_id_app, ← assoc, ← comp_id, ← f_μ, ←
-          nat_trans.naturality_assoc, ← iso.inv_hom_id_app_assoc, functor.map_comp_assoc]
+        simp only [nat_trans.naturality, iso.inv_hom_id_app, assoc, comp_id, f_μ, nat_trans.naturality_assoc,
+          iso.inv_hom_id_app_assoc, ← functor.map_comp_assoc]
         simp }
 
 /-- Construct a comonad isomorphism from a natural isomorphism of functors where the forward
@@ -245,10 +245,10 @@ def ComonadIso.mk {M N : Comonad C} (f : (M : C ⥤ C) ≅ N) (f_ε f_δ) : M �
   inv :=
     { toNatTrans := f.inv,
       app_ε' := fun X => by
-        simp [f_ε],
+        simp [← f_ε],
       app_δ' := fun X => by
         rw [← nat_iso.cancel_nat_iso_hom_left f]
-        simp only [← reassoc_of (f_δ X), ← iso.hom_inv_id_app_assoc, ← nat_trans.naturality_assoc]
+        simp only [reassoc_of (f_δ X), iso.hom_inv_id_app_assoc, nat_trans.naturality_assoc]
         rw [← functor.map_comp, iso.hom_inv_id_app, Functor.map_id]
         apply (comp_id _).symm }
 

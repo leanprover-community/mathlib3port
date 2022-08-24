@@ -88,12 +88,12 @@ def LeftSplit.splitting {f : A ⟶ B} {g : B ⟶ C} (h : LeftSplit f g) : Splitt
   Splitting.mk' h.ShortExact (biprod.lift h.LeftSplit.some g)
     (by
       ext
-      · simpa only [← biprod.inl_fst, ← biprod.lift_fst, ← category.assoc] using h.left_split.some_spec
+      · simpa only [biprod.inl_fst, biprod.lift_fst, category.assoc] using h.left_split.some_spec
         
-      · simp only [← biprod.inl_snd, ← biprod.lift_snd, ← category.assoc, ← h.exact.w]
+      · simp only [biprod.inl_snd, biprod.lift_snd, category.assoc, h.exact.w]
         )
     (by
-      simp only [← biprod.lift_snd])
+      simp only [biprod.lift_snd])
 
 /-- A short exact sequence that is right split admits a splitting. -/
 def RightSplit.splitting {f : A ⟶ B} {g : B ⟶ C} (h : RightSplit f g) : Splitting f g :=

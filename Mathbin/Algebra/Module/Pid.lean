@@ -124,7 +124,7 @@ theorem p_pow_smul_lift {x y : M} {k : ℕ} (hM' : Module.IsTorsionBy R M (p ^ p
     obtain ⟨a, ha⟩ := this
     use a
     rw [f.eq_symm_apply, ← Ideal.Quotient.mk_eq_mk, ← quotient.mk_smul] at ha
-    dsimp' only [← smul_eq_mul, ← f, ← LinearEquiv.trans_apply, ← Submodule.quot_equiv_of_eq_mk, ←
+    dsimp' only [smul_eq_mul, f, LinearEquiv.trans_apply, Submodule.quot_equiv_of_eq_mk,
       quot_torsion_of_equiv_span_singleton_apply_mk]  at ha
     rw [smul_smul, mul_comm]
     exact congr_arg coe ha.symm
@@ -186,7 +186,7 @@ theorem torsion_by_prime_power_decomposition (hN : Module.IsTorsion' N (Submonoi
         obtain ⟨x, h0, h1⟩ := exists_smul_eq_zero_and_mk_eq hp hN hj fi
         refine' ⟨x, h0, _⟩
         rw [h1]
-        simp only [← LinearMap.coe_comp, ← f.symm.coe_to_linear_map, ← f.apply_symm_apply]
+        simp only [LinearMap.coe_comp, f.symm.coe_to_linear_map, f.apply_symm_apply]
       refine'
         ⟨_,
           ⟨(((@lequivProdOfRightSplitExact _ _ _ _ _ _ _ _ _ _ _ _
@@ -211,7 +211,7 @@ theorem torsion_by_prime_power_decomposition (hN : Module.IsTorsion' N (Submonoi
         suffices (f.to_linear_map.comp (R∙s j).mkq).comp _ = LinearMap.id by
           rw [← f.to_linear_map_eq_coe, this, LinearMap.id_comp]
         ext i : 3
-        simp only [← LinearMap.coe_comp, ← Function.comp_app, ← mkq_apply]
+        simp only [LinearMap.coe_comp, Function.comp_app, mkq_apply]
         rw [LinearEquiv.coe_to_linear_map, LinearMap.id_apply, DirectSum.to_module_lof, liftq_span_singleton_apply,
           LinearMap.to_span_singleton_one, Ideal.Quotient.mk_eq_mk, map_one, (this i).some_spec.right]
         
@@ -223,8 +223,8 @@ theorem torsion_by_prime_power_decomposition (hN : Module.IsTorsion' N (Submonoi
       
     · have hs' := congr_arg (Submodule.map <| mkq <| R∙s j) hs
       rw [Submodule.map_span, Submodule.map_top, range_mkq] at hs'
-      simp only [← mkq_apply] at hs'
-      simp only [← s']
+      simp only [mkq_apply] at hs'
+      simp only [s']
       rw [Set.range_comp (_ ∘ s), Finₓ.range_succ_above]
       rw [← Set.range_comp, ← Set.insert_image_compl_eq_range _ j, Function.comp_applyₓ,
         (quotient.mk_eq_zero _).mpr (mem_span_singleton_self _), span_insert_zero] at hs'

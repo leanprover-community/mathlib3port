@@ -101,8 +101,9 @@ theorem Preadditive.exact_of_iso_of_exact {A₁ B₁ C₁ A₂ B₂ C₂ : V} (f
   suffices w₂ : f₂ ≫ g₂ = 0
   exact ⟨w₂, ⟨(homology.mapIso w₁ w₂ α β p).symm.trans i⟩⟩
   rw [← cancel_epi α.hom.left, ← cancel_mono β.inv.right, comp_zero, zero_comp, ← w₁]
-  simp only [arrow.mk_hom f₁, arrow.left_hom_inv_right α.hom, arrow.mk_hom g₁, arrow.left_hom_inv_right β.hom, ← p]
-  simp only [← arrow.mk_hom, ← is_iso.inv_hom_id_assoc, ← category.assoc, arrow.inv_right, ← is_iso.iso.inv_hom]
+  simp only [← arrow.mk_hom f₁, ← arrow.left_hom_inv_right α.hom, ← arrow.mk_hom g₁, ← arrow.left_hom_inv_right β.hom,
+    p]
+  simp only [arrow.mk_hom, is_iso.inv_hom_id_assoc, category.assoc, ← arrow.inv_right, is_iso.iso.inv_hom]
 
 /-- A reformulation of `preadditive.exact_of_iso_of_exact` that does not involve the arrow
 category. -/
@@ -118,8 +119,8 @@ theorem Preadditive.exact_iff_exact_of_iso {A₁ B₁ C₁ A₂ B₂ C₂ : V} (
     Preadditive.exact_of_iso_of_exact _ _ _ _ α.symm β.symm
       (by
         rw [← cancel_mono α.hom.right]
-        simp only [← iso.symm_hom, comma.comp_right, ← α.inv_hom_id]
-        simp only [← p, comma.comp_left, ← arrow.id_right, ← arrow.id_left, ← iso.inv_hom_id]
+        simp only [iso.symm_hom, ← comma.comp_right, α.inv_hom_id]
+        simp only [p, ← comma.comp_left, arrow.id_right, arrow.id_left, iso.inv_hom_id]
         rfl)⟩
 
 end
@@ -138,8 +139,8 @@ theorem comp_eq_zero_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g : B ⟶ C) 
 theorem image_to_kernel_is_iso_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g : B ⟶ C)
     (p : imageSubobject f = kernelSubobject g) : IsIso (imageToKernel f g (comp_eq_zero_of_image_eq_kernel f g p)) := by
   refine' ⟨⟨subobject.of_le _ _ p.ge, _⟩⟩
-  dsimp' [← imageToKernel]
-  simp only [← subobject.of_le_comp_of_le, ← subobject.of_le_refl]
+  dsimp' [imageToKernel]
+  simp only [subobject.of_le_comp_of_le, subobject.of_le_refl]
   simp
 
 -- We'll prove the converse later, when `V` is abelian.
@@ -163,7 +164,7 @@ variable [HasZeroMorphisms V] [HasEqualizers V]
 theorem exact_comp_hom_inv_comp (i : B ≅ D) (h : Exact f g) : Exact (f ≫ i.Hom) (i.inv ≫ g) := by
   refine'
     ⟨by
-      simp [← h.w], _⟩
+      simp [h.w], _⟩
   rw [image_to_kernel_comp_hom_inv_comp]
   haveI := h.epi
   infer_instance
@@ -178,7 +179,7 @@ theorem exact_comp_hom_inv_comp_iff (i : B ≅ D) : Exact (f ≫ i.Hom) (i.inv �
 theorem exact_epi_comp (hgh : Exact g h) [Epi f] : Exact (f ≫ g) h := by
   refine'
     ⟨by
-      simp [← hgh.w], _⟩
+      simp [hgh.w], _⟩
   rw [image_to_kernel_comp_left]
   infer_instance
 
@@ -191,7 +192,7 @@ theorem exact_iso_comp [IsIso f] : Exact (f ≫ g) h ↔ Exact g h :=
 theorem exact_comp_mono (hfg : Exact f g) [Mono h] : Exact f (g ≫ h) := by
   refine'
     ⟨by
-      simp [← hfg.w_assoc], _⟩
+      simp [hfg.w_assoc], _⟩
   rw [image_to_kernel_comp_right f g h hfg.w]
   infer_instance
 
@@ -245,7 +246,7 @@ theorem kernel_subobject_arrow_eq_zero_of_exact_zero_left (h : Exact (0 : A ⟶ 
 
 theorem kernel_ι_eq_zero_of_exact_zero_left (h : Exact (0 : A ⟶ B) g) : kernel.ι g = 0 := by
   rw [← kernel_subobject_arrow']
-  simp [← kernel_subobject_arrow_eq_zero_of_exact_zero_left A h]
+  simp [kernel_subobject_arrow_eq_zero_of_exact_zero_left A h]
 
 theorem exact_zero_left_of_mono [HasZeroObject V] [Mono g] : Exact (0 : A ⟶ B) g :=
   ⟨by

@@ -67,7 +67,7 @@ theorem dvd_choose_of_middling_prime (p : ℕ) (is_prime : Nat.Prime p) (m : ℕ
   exacts[(s h).elim, (t h).elim]
 
 theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
-  | 0 => le_rfl
+  | 0 => le_rflₓ
   | 1 => le_of_inf_eq rfl
   | n + 2 =>
     match Nat.mod_two_eq_zero_or_oneₓ (n + 1) with
@@ -78,12 +78,12 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
           linarith
         calc
           (n + 2)# = ∏ i in filter Nat.Prime (range (2 * m + 2)), i := by
-            simpa [← two_mul, twice_m]
+            simpa [two_mul, ← twice_m]
           _ = ∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2) ∪ range (m + 2)), i := by
             rw [range_eq_Ico, Finset.union_comm, Finset.Ico_union_Ico_eq_Ico]
             · exact bot_le
               
-            · simpa only [← add_le_add_iff_right, ← two_mul] using Nat.le_add_leftₓ m m
+            · simpa only [add_le_add_iff_right, two_mul] using Nat.le_add_leftₓ m m
               
           _ = ∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)) ∪ filter Nat.Prime (range (m + 2)), i := by
             rw [filter_union]
@@ -93,7 +93,7 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
             by
             apply Finset.prod_union
             have disj : Disjoint (Finset.ico (m + 2) (2 * m + 2)) (range (m + 2)) := by
-              simp only [← Finset.disjoint_left, ← and_imp, ← Finset.mem_Ico, ← not_ltₓ, ← Finset.mem_range]
+              simp only [Finset.disjoint_left, and_imp, Finset.mem_Ico, not_ltₓ, Finset.mem_range]
               intro _ pr _
               exact pr
             exact Finset.disjoint_filter_filter disj
@@ -110,7 +110,7 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
                 rw [Finset.mem_filter]
                 intro pr
                 rcases pr with ⟨size, is_prime⟩
-                simp only [← Finset.mem_Ico] at size
+                simp only [Finset.mem_Ico] at size
                 rcases size with ⟨a_big, a_small⟩
                 exact dvd_choose_of_middling_prime a is_prime m a_big (nat.lt_succ_iff.mp a_small)
                 
@@ -142,6 +142,6 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
           
         
       · have n_zero : n = 0 := eq_bot_iff.2 (succ_le_succ_iff.1 n_le_one)
-        norm_num[← n_zero, ← primorial, ← range_succ, ← prod_filter, ← Nat.not_prime_zero, ← Nat.prime_two]
+        norm_num[n_zero, primorial, range_succ, prod_filter, Nat.not_prime_zero, Nat.prime_two]
         
 

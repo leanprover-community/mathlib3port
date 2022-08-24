@@ -44,7 +44,7 @@ field, division ring, skew field, skew-field, skewfield
 -/
 
 
-open Function Set
+open Function OrderDual Set
 
 universe u
 
@@ -197,7 +197,7 @@ theorem neg_div (a b : K) : -b / a = -(b / a) := by
 
 @[field_simps]
 theorem neg_div' (a b : K) : -(b / a) = -b / a := by
-  simp [← neg_div]
+  simp [neg_div]
 
 theorem neg_div_neg_eq (a b : K) : -a / -b = a / b := by
   rw [div_neg_eq_neg_div, neg_div, neg_negₓ]
@@ -253,13 +253,13 @@ theorem div_sub_div_same (a b c : K) : a / c - b / c = (a - b) / c := by
   rw [sub_eq_add_neg, ← neg_div, div_add_div_same, sub_eq_add_neg]
 
 theorem same_sub_div {a b : K} (h : b ≠ 0) : (b - a) / b = 1 - a / b := by
-  simpa only [@div_self _ _ b h] using (div_sub_div_same b a b).symm
+  simpa only [← @div_self _ _ b h] using (div_sub_div_same b a b).symm
 
 theorem one_sub_div {a b : K} (h : b ≠ 0) : 1 - a / b = (b - a) / b :=
   (same_sub_div h).symm
 
 theorem div_sub_same {a b : K} (h : b ≠ 0) : (a - b) / b = a / b - 1 := by
-  simpa only [@div_self _ _ b h] using (div_sub_div_same a b b).symm
+  simpa only [← @div_self _ _ b h] using (div_sub_div_same a b b).symm
 
 theorem div_sub_one {a b : K} (h : b ≠ 0) : a / b - 1 = (a - b) / b :=
   (div_sub_same h).symm
@@ -308,7 +308,7 @@ attribute [local simp] mul_assoc mul_comm mul_left_commₓ
 @[field_simps]
 theorem div_sub_div (a : K) {b : K} (c : K) {d : K} (hb : b ≠ 0) (hd : d ≠ 0) :
     a / b - c / d = (a * d - b * c) / (b * d) := by
-  simp [← sub_eq_add_neg]
+  simp [sub_eq_add_neg]
   rw [neg_eq_neg_one_mul, ← mul_div_assoc, div_add_div _ _ hb hd, ← mul_assoc, mul_comm b, mul_assoc, ←
     neg_eq_neg_one_mul]
 
@@ -397,23 +397,8 @@ end IsField
 
 namespace RingHom
 
-section Semiringₓ
-
-variable [Semiringₓ α] [DivisionSemiring β]
-
-variable [Nontrivial α] (f : β →+* α) {a : β}
-
-@[simp]
-theorem map_eq_zero : f a = 0 ↔ a = 0 :=
-  MonoidWithZeroHom.map_eq_zero f
-
-theorem map_ne_zero : f a ≠ 0 ↔ a ≠ 0 :=
-  MonoidWithZeroHom.map_ne_zero f
-
-end Semiringₓ
-
 protected theorem injective [DivisionRing α] [Semiringₓ β] [Nontrivial β] (f : α →+* β) : Injective f :=
-  (injective_iff_map_eq_zero f).2 fun x => f.map_eq_zero.1
+  (injective_iff_map_eq_zero f).2 fun x => (map_eq_zero f).1
 
 end RingHom
 
@@ -502,4 +487,56 @@ protected def Function.Injective.field [Field K] {K'} [Zero K'] [Mul K'] [Add K'
       hf
         (by
           erw [qsmul, mul, Rat.smul_def, rat_cast]) }
+
+/-! ### Order dual -/
+
+
+instance [h : HasRatCast α] : HasRatCast αᵒᵈ :=
+  h
+
+instance [h : DivisionSemiring α] : DivisionSemiring αᵒᵈ :=
+  h
+
+instance [h : DivisionRing α] : DivisionRing αᵒᵈ :=
+  h
+
+instance [h : Semifield α] : Semifield αᵒᵈ :=
+  h
+
+instance [h : Field α] : Field αᵒᵈ :=
+  h
+
+@[simp]
+theorem to_dual_rat_cast [HasRatCast α] (n : ℚ) : toDual (n : α) = n :=
+  rfl
+
+@[simp]
+theorem of_dual_rat_cast [HasRatCast α] (n : ℚ) : (ofDual n : α) = n :=
+  rfl
+
+/-! ### Lexicographic order -/
+
+
+instance [h : HasRatCast α] : HasRatCast (Lex α) :=
+  h
+
+instance [h : DivisionSemiring α] : DivisionSemiring (Lex α) :=
+  h
+
+instance [h : DivisionRing α] : DivisionRing (Lex α) :=
+  h
+
+instance [h : Semifield α] : Semifield (Lex α) :=
+  h
+
+instance [h : Field α] : Field (Lex α) :=
+  h
+
+@[simp]
+theorem to_lex_rat_cast [HasRatCast α] (n : ℚ) : toLex (n : α) = n :=
+  rfl
+
+@[simp]
+theorem of_lex_rat_cast [HasRatCast α] (n : ℚ) : (ofLex n : α) = n :=
+  rfl
 

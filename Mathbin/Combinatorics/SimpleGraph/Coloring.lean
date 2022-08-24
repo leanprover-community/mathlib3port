@@ -181,7 +181,7 @@ variable {G}
 theorem Colorable.mono {n m : ℕ} (h : n ≤ m) (hc : G.Colorable n) : G.Colorable m :=
   ⟨G.recolorOfCardLe
       (by
-        simp [← h])
+        simp [h])
       hc.some⟩
 
 theorem Coloring.to_colorable [Fintype α] (C : G.Coloring α) : G.Colorable (Fintype.card α) :=
@@ -224,7 +224,7 @@ theorem colorable_iff_exists_bdd_nat_coloring (n : ℕ) : G.Colorable n ↔ ∃ 
     · exact fun v => ⟨C v, Cf v⟩
       
     · rintro v w hvw
-      simp only [← Subtype.mk_eq_mk, ← Ne.def]
+      simp only [Subtype.mk_eq_mk, Ne.def]
       exact C.valid hvw
       
     
@@ -245,7 +245,7 @@ theorem chromatic_number_le_card [Fintype α] (C : G.Coloring α) : G.chromaticN
   cInf_le chromatic_number_bdd_below C.to_colorable
 
 theorem colorable_chromatic_number {m : ℕ} (hc : G.Colorable m) : G.Colorable G.chromaticNumber := by
-  dsimp' only [← chromatic_number]
+  dsimp' only [chromatic_number]
   rw [Nat.Inf_def]
   apply Nat.find_specₓ
   exact colorable_set_nonempty_of_colorable hc
@@ -278,7 +278,7 @@ theorem chromatic_number_pos [Nonempty V] {n : ℕ} (hc : G.Colorable n) : 0 < G
   apply le_cInf (colorable_set_nonempty_of_colorable hc)
   intro m hm
   by_contra h'
-  simp only [← not_leₓ, ← Nat.lt_one_iff] at h'
+  simp only [not_leₓ, Nat.lt_one_iff] at h'
   subst h'
   obtain ⟨i, hi⟩ := hm.some (Classical.arbitrary V)
   exact Nat.not_lt_zeroₓ _ hi
@@ -377,8 +377,7 @@ theorem CompleteBipartiteGraph.chromatic_number {V W : Type _} [Nonempty V] [Non
     · exact ⟨_, he'⟩
       
     · exfalso
-      cases b <;>
-        simp only [← eq_tt_eq_not_eq_ff, ← eq_ff_eq_not_eq_tt] at he he' <;> rw [he, he'] at hn <;> contradiction
+      cases b <;> simp only [eq_tt_eq_not_eq_ff, eq_ff_eq_not_eq_tt] at he he' <;> rw [he, he'] at hn <;> contradiction
       
     
 
@@ -406,7 +405,7 @@ theorem IsClique.card_le_chromatic_number [Finite V] {s : Finset V} (h : G.IsCli
 
 protected theorem Colorable.clique_free {n m : ℕ} (hc : G.Colorable n) (hm : n < m) : G.CliqueFree m := by
   by_contra h
-  simp only [← clique_free, ← is_n_clique_iff, ← not_forall, ← not_not] at h
+  simp only [clique_free, is_n_clique_iff, not_forall, not_not] at h
   obtain ⟨s, h, rfl⟩ := h
   exact Nat.lt_le_antisymmₓ hm (h.card_le_of_colorable hc)
 

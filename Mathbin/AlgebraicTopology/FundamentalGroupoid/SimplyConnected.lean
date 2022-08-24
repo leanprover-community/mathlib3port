@@ -29,7 +29,7 @@ open ContinuousMap
 
 open ContinuousMap
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`equiv_unit] []
+-- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`equiv_unit] []
 /-- A simply connected space is one whose fundamental groupoid is equivalent to `discrete unit` -/
 class SimplyConnectedSpace (X : Type _) [TopologicalSpace X] : Prop where
   equiv_unit : Nonempty (FundamentalGroupoid X ≌ Discrete Unit)
@@ -88,6 +88,6 @@ theorem simply_connected_iff_paths_homotopic {Y : Type _} [TopologicalSpace Y] :
 theorem simply_connected_iff_paths_homotopic' {Y : Type _} [TopologicalSpace Y] :
     SimplyConnectedSpace Y ↔ PathConnectedSpace Y ∧ ∀ {x y : Y} (p₁ p₂ : Path x y), Path.Homotopic p₁ p₂ := by
   convert simply_connected_iff_paths_homotopic
-  simp [← Path.Homotopic.Quotient, ← Setoidₓ.eq_top_iff]
+  simp [Path.Homotopic.Quotient, Setoidₓ.eq_top_iff]
   rfl
 

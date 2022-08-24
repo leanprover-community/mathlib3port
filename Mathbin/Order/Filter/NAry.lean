@@ -40,7 +40,7 @@ def map₂ (m : α → β → γ) (f : Filter α) (g : Filter β) : Filter γ wh
   sets_of_superset := fun s t hs hst =>
     Exists₂.imp (fun u v => And.imp_right <| And.imp_right fun h => Subset.trans h hst) hs
   inter_sets := fun s t => by
-    simp only [← exists_prop, ← mem_set_of_eq, ← subset_inter_iff]
+    simp only [exists_prop, mem_set_of_eq, subset_inter_iff]
     rintro ⟨s₁, s₂, hs₁, hs₂, hs⟩ ⟨t₁, t₂, ht₁, ht₂, ht⟩
     exact
       ⟨s₁ ∩ t₁, s₂ ∩ t₂, inter_sets f hs₁ ht₁, inter_sets g hs₂ ht₂,
@@ -107,7 +107,7 @@ theorem map₂_bot_right : map₂ m f ⊥ = ⊥ :=
 
 @[simp]
 theorem map₂_eq_bot_iff : map₂ m f g = ⊥ ↔ f = ⊥ ∨ g = ⊥ := by
-  simp only [empty_mem_iff_bot, ← mem_map₂_iff, ← subset_empty_iff, ← image2_eq_empty_iff]
+  simp only [← empty_mem_iff_bot, mem_map₂_iff, subset_empty_iff, image2_eq_empty_iff]
   constructor
   · rintro ⟨s, t, hs, ht, rfl | rfl⟩
     · exact Or.inl hs
@@ -218,7 +218,7 @@ def map₃ (m : α → β → γ → δ) (f : Filter α) (g : Filter β) (h : Fi
   sets_of_superset := fun s t hs hst =>
     Exists₃.imp (fun u v w => And.imp_right <| And.imp_right <| And.imp_right fun h => Subset.trans h hst) hs
   inter_sets := fun s t => by
-    simp only [← exists_prop, ← mem_set_of_eq, ← subset_inter_iff]
+    simp only [exists_prop, mem_set_of_eq, subset_inter_iff]
     rintro ⟨s₁, s₂, s₃, hs₁, hs₂, hs₃, hs⟩ ⟨t₁, t₂, t₃, ht₁, ht₂, ht₃, ht⟩
     exact
       ⟨s₁ ∩ t₁, s₂ ∩ t₂, s₃ ∩ t₃, inter_mem hs₁ ht₁, inter_mem hs₂ ht₂, inter_mem hs₃ ht₃,
@@ -290,7 +290,7 @@ The proof pattern is `map₂_lemma operation_lemma`. For example, `map₂_comm m
 
 theorem map₂_assoc {m : δ → γ → ε} {n : α → β → δ} {m' : α → ε' → ε} {n' : β → γ → ε'} {h : Filter γ}
     (h_assoc : ∀ a b c, m (n a b) c = m' a (n' b c)) : map₂ m (map₂ n f g) h = map₂ m' f (map₂ n' g h) := by
-  simp only [← map₂_map₂_left, ← map₂_map₂_right, ← h_assoc]
+  simp only [map₂_map₂_left, map₂_map₂_right, h_assoc]
 
 theorem map₂_comm {n : β → α → γ} (h_comm : ∀ a b, m a b = n b a) : map₂ m f g = map₂ n g f :=
   (map₂_swap _ _ _).trans <| by

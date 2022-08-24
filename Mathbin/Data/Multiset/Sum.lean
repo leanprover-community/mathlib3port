@@ -47,14 +47,14 @@ theorem mem_disj_sum : x ∈ s.disjSum t ↔ (∃ a, a ∈ s ∧ inl a = x) ∨ 
 @[simp]
 theorem inl_mem_disj_sum : inl a ∈ s.disjSum t ↔ a ∈ s := by
   rw [mem_disj_sum, or_iff_left]
-  simp only [← exists_eq_right]
+  simp only [exists_eq_right]
   rintro ⟨b, _, hb⟩
   exact inr_ne_inl hb
 
 @[simp]
 theorem inr_mem_disj_sum : inr b ∈ s.disjSum t ↔ b ∈ t := by
   rw [mem_disj_sum, or_iff_right]
-  simp only [← exists_eq_right]
+  simp only [exists_eq_right]
   rintro ⟨a, _, ha⟩
   exact inl_ne_inr ha
 
@@ -74,10 +74,10 @@ theorem disj_sum_lt_disj_sum_of_le_of_lt (hs : s₁ ≤ s₂) (ht : t₁ < t₂)
   add_lt_add_of_le_of_lt (map_le_map hs) (map_lt_map ht)
 
 theorem disj_sum_strict_mono_left (t : Multiset β) : StrictMono fun s : Multiset α => s.disjSum t := fun s₁ s₂ hs =>
-  disj_sum_lt_disj_sum_of_lt_of_le hs le_rfl
+  disj_sum_lt_disj_sum_of_lt_of_le hs le_rflₓ
 
 theorem disj_sum_strict_mono_right (s : Multiset α) : StrictMono (s.disjSum : Multiset β → Multiset (Sum α β)) :=
-  fun s₁ s₂ => disj_sum_lt_disj_sum_of_le_of_lt le_rfl
+  fun s₁ s₂ => disj_sum_lt_disj_sum_of_le_of_lt le_rflₓ
 
 protected theorem Nodup.disj_sum (hs : s.Nodup) (ht : t.Nodup) : (s.disjSum t).Nodup := by
   refine' ((hs.map inl_injective).add_iff <| ht.map inr_injective).2 fun x hs ht => _

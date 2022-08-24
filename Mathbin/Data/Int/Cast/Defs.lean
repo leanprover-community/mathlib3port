@@ -118,8 +118,8 @@ theorem cast_neg : ∀ n, ((-n : ℤ) : R) = -n
 theorem cast_sub_nat_nat (m n) : ((Int.subNatNat m n : ℤ) : R) = m - n := by
   unfold sub_nat_nat
   cases e : n - m
-  · simp only [← sub_nat_nat, ← cast_of_nat]
-    simp [← e, ← Nat.le_of_sub_eq_zeroₓ e]
+  · simp only [sub_nat_nat, cast_of_nat]
+    simp [e, Nat.le_of_sub_eq_zeroₓ e]
     
   · rw [sub_nat_nat, cast_neg_succ_of_nat, Nat.add_one, ← e,
       Nat.cast_sub <| _root_.le_of_lt <| Nat.lt_of_sub_eq_succₓ e, neg_sub]
@@ -130,12 +130,12 @@ theorem neg_of_nat_eq (n : ℕ) : negOfNat n = -(n : ℤ) := by
 
 @[simp]
 theorem cast_neg_of_nat (n : ℕ) : ((negOfNat n : ℤ) : R) = -n := by
-  simp [← neg_of_nat_eq]
+  simp [neg_of_nat_eq]
 
 @[simp, norm_cast]
 theorem cast_add : ∀ m n, ((m + n : ℤ) : R) = m + n
   | (m : ℕ), (n : ℕ) => by
-    simp [Int.coe_nat_add]
+    simp [← Int.coe_nat_add]
   | (m : ℕ), -[1+ n] => by
     erw [cast_sub_nat_nat, cast_coe_nat, cast_neg_succ_of_nat, sub_eq_add_neg]
   | -[1+ m], (n : ℕ) => by
@@ -148,7 +148,7 @@ theorem cast_add : ∀ m n, ((m + n : ℤ) : R) = m + n
 
 @[simp, norm_cast]
 theorem cast_sub (m n) : ((m - n : ℤ) : R) = m - n := by
-  simp [← Int.sub_eq_add_neg, ← sub_eq_add_neg]
+  simp [Int.sub_eq_add_neg, sub_eq_add_neg]
 
 @[simp, norm_cast]
 theorem coe_nat_bit0 (n : ℕ) : (↑(bit0 n) : ℤ) = bit0 ↑n :=

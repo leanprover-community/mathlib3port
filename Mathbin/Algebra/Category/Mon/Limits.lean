@@ -43,8 +43,8 @@ def sectionsSubmonoid (F : J ⥤ Mon.{max v u}) : Submonoid (∀ j, F.obj j) whe
   one_mem' := fun j j' f => by
     simp
   mul_mem' := fun a b ah bh j j' f => by
-    simp only [← forget_map_eq_coe, ← functor.comp_map, ← MonoidHom.map_mul, ← Pi.mul_apply]
-    dsimp' [← functor.sections]  at ah bh
+    simp only [forget_map_eq_coe, functor.comp_map, MonoidHom.map_mul, Pi.mul_apply]
+    dsimp' [functor.sections]  at ah bh
     rw [ah f, bh f]
 
 @[to_additive]

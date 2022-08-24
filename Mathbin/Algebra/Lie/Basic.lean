@@ -134,7 +134,7 @@ theorem lie_skew : -⁅y,x⁆ = ⁅x,y⁆ := by
   have h : ⁅x + y,x⁆ + ⁅x + y,y⁆ = 0 := by
     rw [← lie_add]
     apply lie_self
-  simpa [← neg_eq_iff_add_eq_zero] using h
+  simpa [neg_eq_iff_add_eq_zero] using h
 
 /-- Every Lie algebra is a module over itself. -/
 instance lieAlgebraSelfModule : LieModule R L L where
@@ -155,11 +155,11 @@ theorem lie_neg : ⁅x,-m⁆ = -⁅x,m⁆ := by
 
 @[simp]
 theorem sub_lie : ⁅x - y,m⁆ = ⁅x,m⁆ - ⁅y,m⁆ := by
-  simp [← sub_eq_add_neg]
+  simp [sub_eq_add_neg]
 
 @[simp]
 theorem lie_sub : ⁅x,m - n⁆ = ⁅x,m⁆ - ⁅x,n⁆ := by
-  simp [← sub_eq_add_neg]
+  simp [sub_eq_add_neg]
 
 @[simp]
 theorem nsmul_lie (n : ℕ) : ⁅n • x,m⁆ = n • ⁅x,m⁆ :=
@@ -191,21 +191,21 @@ instance : LieRingModule L (M →ₗ[R] N) where
   bracket := fun x f =>
     { toFun := fun m => ⁅x,f m⁆ - f ⁅x,m⁆,
       map_add' := fun m n => by
-        simp only [← lie_add, ← LinearMap.map_add]
+        simp only [lie_add, LinearMap.map_add]
         abel,
       map_smul' := fun t m => by
-        simp only [← smul_sub, ← LinearMap.map_smul, ← lie_smul, ← RingHom.id_apply] }
+        simp only [smul_sub, LinearMap.map_smul, lie_smul, RingHom.id_apply] }
   add_lie := fun x y f => by
     ext n
-    simp only [← add_lie, ← LinearMap.coe_mk, ← LinearMap.add_apply, ← LinearMap.map_add]
+    simp only [add_lie, LinearMap.coe_mk, LinearMap.add_apply, LinearMap.map_add]
     abel
   lie_add := fun x f g => by
     ext n
-    simp only [← LinearMap.coe_mk, ← lie_add, ← LinearMap.add_apply]
+    simp only [LinearMap.coe_mk, lie_add, LinearMap.add_apply]
     abel
   leibniz_lie := fun x y f => by
     ext n
-    simp only [← lie_lie, ← LinearMap.coe_mk, ← LinearMap.map_sub, ← LinearMap.add_apply, ← lie_sub]
+    simp only [lie_lie, LinearMap.coe_mk, LinearMap.map_sub, LinearMap.add_apply, lie_sub]
     abel
 
 @[simp]
@@ -215,10 +215,10 @@ theorem LieHom.lie_apply (f : M →ₗ[R] N) (x : L) (m : M) : ⁅x,f⁆ m = ⁅
 instance : LieModule R L (M →ₗ[R] N) where
   smul_lie := fun t x f => by
     ext n
-    simp only [← smul_sub, ← smul_lie, ← LinearMap.smul_apply, ← LieHom.lie_apply, ← LinearMap.map_smul]
+    simp only [smul_sub, smul_lie, LinearMap.smul_apply, LieHom.lie_apply, LinearMap.map_smul]
   lie_smul := fun t x f => by
     ext n
-    simp only [← smul_sub, ← LinearMap.smul_apply, ← LieHom.lie_apply, ← lie_smul]
+    simp only [smul_sub, LinearMap.smul_apply, LieHom.lie_apply, lie_smul]
 
 end BasicProperties
 
@@ -416,9 +416,9 @@ def LieRingModule.compLieHom : LieRingModule L₁ M where
   bracket := fun x m => ⁅f x,m⁆
   lie_add := fun x => lie_add (f x)
   add_lie := fun x y m => by
-    simp only [← LieHom.map_add, ← add_lie]
+    simp only [LieHom.map_add, add_lie]
   leibniz_lie := fun x y m => by
-    simp only [← lie_lie, ← sub_add_cancel, ← LieHom.map_lie]
+    simp only [lie_lie, sub_add_cancel, LieHom.map_lie]
 
 theorem LieRingModule.comp_lie_hom_apply (x : L₁) (m : M) :
     haveI := LieRingModule.compLieHom M f
@@ -432,9 +432,9 @@ See note [reducible non-instances]. -/
 def LieModule.compLieHom [Module R M] [LieModule R L₂ M] :
     @LieModule R L₁ M _ _ _ _ _ (LieRingModule.compLieHom M f) where
   smul_lie := fun t x m => by
-    simp only [← smul_lie, ← LieHom.map_smul]
+    simp only [smul_lie, LieHom.map_smul]
   lie_smul := fun t x m => by
-    simp only [← lie_smul]
+    simp only [lie_smul]
 
 end ModulePullBack
 
@@ -642,7 +642,7 @@ theorem map_lie (f : M →ₗ⁅R,L⁆ N) (x : L) (m : M) : f ⁅x,m⁆ = ⁅x,f
   LieModuleHom.map_lie' f
 
 theorem map_lie₂ (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) (x : L) (m : M) (n : N) : ⁅x,f m n⁆ = f ⁅x,m⁆ n + f m ⁅x,n⁆ := by
-  simp only [← sub_add_cancel, ← map_lie, ← LieHom.lie_apply]
+  simp only [sub_add_cancel, map_lie, LieHom.lie_apply]
 
 @[simp]
 theorem map_zero (f : M →ₗ⁅R,L⁆ N) : f 0 = 0 :=

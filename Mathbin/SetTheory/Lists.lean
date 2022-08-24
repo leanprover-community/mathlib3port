@@ -79,7 +79,7 @@ def toList : ∀ {b}, Lists' α b → List (Lists α)
 
 @[simp]
 theorem to_list_cons (a : Lists α) (l) : toList (cons a l) = a :: l.toList := by
-  cases a <;> simp [← cons]
+  cases a <;> simp [cons]
 
 /-- Converts a `list` of ZFA lists to a proper ZFA prelist. -/
 @[simp]
@@ -108,7 +108,7 @@ theorem of_to_list : ∀ l : Lists' α true, ofList (toList l) = l :=
   case lists'.cons' b a l IH₁ IH₂ =>
     intro
     change l' with cons' a l
-    simpa [← cons] using IH₂ rfl
+    simpa [cons] using IH₂ rfl
 
 end Lists'
 
@@ -126,17 +126,17 @@ end
 local infixl:50 " ~ " => Lists.Equiv
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident lists.equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident lists.equiv]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident lists'.subset]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident lists'.subset]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace Lists'
 
-instance : HasSubset (Lists' α true) :=
+instance : Subset (Lists' α true) :=
   ⟨Lists'.Subset⟩
 
 /-- ZFA prelist membership. A ZFA list is in a ZFA prelist if some element of this ZFA prelist is
 equivalent as a ZFA list to this ZFA list. -/
-instance {b} : HasMem (Lists α) (Lists' α b) :=
+instance {b} : Membership (Lists α) (Lists' α b) :=
   ⟨fun a l => ∃ a' ∈ l.toList, a ~ a'⟩
 
 theorem mem_def {b a} {l : Lists' α b} : a ∈ l ↔ ∃ a' ∈ l.toList, a ~ a' :=
@@ -144,7 +144,7 @@ theorem mem_def {b a} {l : Lists' α b} : a ∈ l ↔ ∃ a' ∈ l.toList, a ~ a
 
 @[simp]
 theorem mem_cons {a y l} : a ∈ @cons α y l ↔ a ~ y ∨ a ∈ l := by
-  simp [← mem_def, ← or_and_distrib_right, ← exists_or_distrib]
+  simp [mem_def, or_and_distrib_right, exists_or_distrib]
 
 theorem cons_subset {a} {l₁ l₂ : Lists' α true} : Lists'.cons a l₁ ⊆ l₂ ↔ a ∈ l₂ ∧ l₁ ⊆ l₂ := by
   refine' ⟨fun h => _, fun ⟨⟨a', m, e⟩, s⟩ => subset.cons e m s⟩
@@ -164,7 +164,7 @@ theorem of_list_subset {l₁ l₂ : List (Lists α)} (h : l₁ ⊆ l₂) : Lists
     
   refine' subset.cons (Lists.Equiv.refl _) _ (l₁_ih (List.subset_of_cons_subsetₓ h))
   simp at h
-  simp [← h]
+  simp [h]
 
 @[refl]
 theorem Subset.refl {l : Lists' α true} : l ⊆ l := by
@@ -185,7 +185,7 @@ theorem mem_of_subset' {a} {l₁ l₂ : Lists' α true} (s : l₁ ⊆ l₂) (h :
   rcases h with (rfl | h)
   exacts[⟨_, m, e⟩, IH h]
 
-theorem subset_def {l₁ l₂ : Lists' α true} : l₁ ⊆ l₂ ↔ ∀, ∀ a ∈ l₁.toList, ∀, a ∈ l₂ :=
+theorem subset_def {l₁ l₂ : Lists' α true} : l₁ ⊆ l₂ ↔ ∀ a ∈ l₁.toList, a ∈ l₂ :=
   ⟨fun H a => mem_of_subset' H, fun H => by
     rw [← of_to_list l₁]
     revert H
@@ -227,11 +227,11 @@ theorem is_list_to_list (l : List (Lists α)) : IsList (ofList l) :=
   Eq.refl _
 
 theorem to_of_list (l : List (Lists α)) : toList (ofList l) = l := by
-  simp [← of_list, ← of']
+  simp [of_list, of']
 
 theorem of_to_list : ∀ {l : Lists α}, IsList l → ofList (toList l) = l
   | ⟨tt, l⟩, _ => by
-    simp [← of_list, ← of']
+    simp [of_list, of']
 
 instance : Inhabited (Lists α) :=
   ⟨of' Lists'.nil⟩
@@ -271,7 +271,7 @@ def Mem (a : Lists α) : Lists α → Prop
   | ⟨ff, l⟩ => False
   | ⟨tt, l⟩ => a ∈ l
 
-instance : HasMem (Lists α) (Lists α) :=
+instance : Membership (Lists α) (Lists α) :=
   ⟨Mem⟩
 
 theorem is_list_of_mem {a : Lists α} : ∀ {l : Lists α}, a ∈ l → IsList l
@@ -281,7 +281,7 @@ theorem is_list_of_mem {a : Lists α} : ∀ {l : Lists α}, a ∈ l → IsList l
 theorem Equiv.antisymm_iff {l₁ l₂ : Lists' α true} : of' l₁ ~ of' l₂ ↔ l₁ ⊆ l₂ ∧ l₂ ⊆ l₁ := by
   refine' ⟨fun h => _, fun ⟨h₁, h₂⟩ => equiv.antisymm h₁ h₂⟩
   cases' h with _ _ _ h₁ h₂
-  · simp [← Lists'.Subset.refl]
+  · simp [Lists'.Subset.refl]
     
   · exact ⟨h₁, h₂⟩
     
@@ -297,7 +297,7 @@ theorem Equiv.symm {l₁ l₂ : Lists α} (h : l₁ ~ l₂) : l₂ ~ l₁ := by
 
 theorem Equiv.trans : ∀ {l₁ l₂ l₃ : Lists α}, l₁ ~ l₂ → l₂ ~ l₃ → l₁ ~ l₃ := by
   let trans := fun l₁ : Lists α => ∀ ⦃l₂ l₃⦄, l₁ ~ l₂ → l₂ ~ l₃ → l₁ ~ l₃
-  suffices PProd (∀ l₁, trans l₁) (∀ (l : Lists' α tt), ∀ l' ∈ l.toList, ∀, trans l') by
+  suffices PProd (∀ l₁, trans l₁) (∀ (l : Lists' α tt), ∀ l' ∈ l.toList, trans l') by
     exact this.1
   apply induction_mut
   · intro a l₂ l₃ h₁ h₂
@@ -327,7 +327,7 @@ theorem Equiv.trans : ∀ {l₁ l₂ l₃ : Lists α}, l₁ ~ l₂ → l₂ ~ l�
   · rintro _ ⟨⟩
     
   · intro a l IH₁ IH₂
-    simpa [← IH₁] using IH₂
+    simpa [IH₁] using IH₂
     
 
 instance : Setoidₓ (Lists α) :=
@@ -363,7 +363,7 @@ mutual
           refine'
             equiv_atom.trans
               (by
-                simp [← atom])
+                simp [atom])
     | ⟨ff, l₁⟩, ⟨tt, l₂⟩ =>
       is_false <| by
         rintro ⟨⟩
@@ -439,7 +439,7 @@ def Finsets (α : Type _) :=
 
 namespace Finsets
 
-instance : HasEmptyc (Finsets α) :=
+instance : EmptyCollection (Finsets α) :=
   ⟨⟦Lists.of' Lists'.nil⟧⟩
 
 instance : Inhabited (Finsets α) :=

@@ -61,7 +61,7 @@ def mapBicone {f : J → C} (b : Bicone f) : Bicone (F.obj ∘ f) where
     rw [← F.map_comp]
     split_ifs
     · subst h
-      simp only [← bicone_ι_π_self, ← CategoryTheory.Functor.map_id, ← eq_to_hom_refl]
+      simp only [bicone_ι_π_self, CategoryTheory.Functor.map_id, eq_to_hom_refl]
       
     · rw [bicone_ι_π_ne _ h, F.map_zero]
       
@@ -239,7 +239,7 @@ theorem biproduct_comparison'_comp_biproduct_comparison :
     biproductComparison' F f ≫ biproductComparison F f = 𝟙 (⨁ F.obj ∘ f) := by
   classical
   ext
-  simp [← biproduct.ι_π, functor.map_comp, ← eq_to_hom_map]
+  simp [biproduct.ι_π, ← functor.map_comp, eq_to_hom_map]
 
 /-- `biproduct_comparison F f` is a split epimorphism. -/
 @[simps]
@@ -318,7 +318,7 @@ variable [PreservesZeroMorphisms F]
 @[simp, reassoc]
 theorem biprod_comparison'_comp_biprod_comparison :
     biprodComparison' F X Y ≫ biprodComparison F X Y = 𝟙 (F.obj X ⊞ F.obj Y) := by
-  ext <;> simp [functor.map_comp]
+  ext <;> simp [← functor.map_comp]
 
 /-- `biprod_comparison F X Y` is a split epi. -/
 @[simps]
@@ -370,12 +370,12 @@ variable {J : Type w₁} (f : J → C) [HasBiproduct f] [PreservesBiproduct f F]
 theorem biproduct.map_lift_map_biprod (g : ∀ j, W ⟶ f j) :
     F.map (biproduct.lift g) ≫ (F.mapBiproduct f).Hom = biproduct.lift fun j => F.map (g j) := by
   ext
-  simp [F.map_comp]
+  simp [← F.map_comp]
 
 theorem biproduct.map_biproduct_inv_map_desc (g : ∀ j, f j ⟶ W) :
     (F.mapBiproduct f).inv ≫ F.map (biproduct.desc g) = biproduct.desc fun j => F.map (g j) := by
   ext
-  simp [F.map_comp]
+  simp [← F.map_comp]
 
 theorem biproduct.map_biproduct_hom_desc (g : ∀ j, f j ⟶ W) :
     ((F.mapBiproduct f).Hom ≫ biproduct.desc fun j => F.map (g j)) = F.map (biproduct.desc g) := by
@@ -389,7 +389,7 @@ variable (X Y : C) [HasBinaryBiproduct X Y] [PreservesBinaryBiproduct X Y F] {W 
 
 theorem biprod.map_lift_map_biprod (f : W ⟶ X) (g : W ⟶ Y) :
     F.map (biprod.lift f g) ≫ (F.mapBiprod X Y).Hom = biprod.lift (F.map f) (F.map g) := by
-  ext <;> simp [F.map_comp]
+  ext <;> simp [← F.map_comp]
 
 theorem biprod.lift_map_biprod (f : W ⟶ X) (g : W ⟶ Y) :
     biprod.lift (F.map f) (F.map g) ≫ (F.mapBiprod X Y).inv = F.map (biprod.lift f g) := by
@@ -397,7 +397,7 @@ theorem biprod.lift_map_biprod (f : W ⟶ X) (g : W ⟶ Y) :
 
 theorem biprod.map_biprod_inv_map_desc (f : X ⟶ W) (g : Y ⟶ W) :
     (F.mapBiprod X Y).inv ≫ F.map (biprod.desc f g) = biprod.desc (F.map f) (F.map g) := by
-  ext <;> simp [F.map_comp]
+  ext <;> simp [← F.map_comp]
 
 theorem biprod.map_biprod_hom_desc (f : X ⟶ W) (g : Y ⟶ W) :
     (F.mapBiprod X Y).Hom ≫ biprod.desc (F.map f) (F.map g) = F.map (biprod.desc f g) := by
@@ -469,7 +469,7 @@ def preservesBiproductOfMonoBiproductComparison {f : J → C} [HasBiproduct f] [
       (F.map_iso (biproduct.iso_product f)).inv ≫ biproduct_comparison F f ≫ (biproduct.iso_product _).Hom :=
     by
     ext
-    convert pi_comparison_comp_π F f j.as <;> simp [functor.map_comp]
+    convert pi_comparison_comp_π F f j.as <;> simp [← functor.map_comp]
   haveI : is_iso (biproduct_comparison F f) := is_iso_of_mono_of_is_split_epi _
   haveI : is_iso (pi_comparison F f) := by
     rw [this]
@@ -580,7 +580,7 @@ def preservesBinaryBiproductOfMonoBiprodComparison {X Y : C} [HasBinaryBiproduct
     prod_comparison F X Y =
       (F.map_iso (biprod.iso_prod X Y)).inv ≫ biprod_comparison F X Y ≫ (biprod.iso_prod _ _).Hom :=
     by
-    ext <;> simp [functor.map_comp]
+    ext <;> simp [← functor.map_comp]
   haveI : is_iso (biprod_comparison F X Y) := is_iso_of_mono_of_is_split_epi _
   haveI : is_iso (prod_comparison F X Y) := by
     rw [this]

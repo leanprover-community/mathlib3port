@@ -73,14 +73,14 @@ def diagramCompPreservesLimits : diagram F U ⋙ G ≅ diagram (F ⋙ G) U := by
     
   -- non-terminal `simp`, but `squeeze_simp` fails
   · ext
-    simp only [← limit.lift_π, ← functor.comp_map, ← map_lift_pi_comparison, ← fan.mk_π_app, ←
-      preserves_product.iso_hom, ← parallel_pair_map_left, ← functor.map_comp, ← category.assoc]
+    simp only [limit.lift_π, functor.comp_map, map_lift_pi_comparison, fan.mk_π_app, preserves_product.iso_hom,
+      parallel_pair_map_left, functor.map_comp, category.assoc]
     dsimp'
     simp
     
   · ext
-    simp only [← limit.lift_π, ← functor.comp_map, ← parallel_pair_map_right, ← fan.mk_π_app, ←
-      preserves_product.iso_hom, ← map_lift_pi_comparison, ← functor.map_comp, ← category.assoc]
+    simp only [limit.lift_π, functor.comp_map, parallel_pair_map_right, fan.mk_π_app, preserves_product.iso_hom,
+      map_lift_pi_comparison, functor.map_comp, category.assoc]
     dsimp'
     simp
     
@@ -100,7 +100,7 @@ def mapConeFork :
     G.mapCone (fork F U) ≅ (Cones.postcompose (diagramCompPreservesLimits G F U).inv).obj (fork (F ⋙ G) U) :=
   Cones.ext (Iso.refl _) fun j => by
     dsimp'
-    simp [← diagram_comp_preserves_limits]
+    simp [diagram_comp_preserves_limits]
     cases j <;> dsimp'
     · rw [iso.eq_comp_inv]
       ext
@@ -113,7 +113,7 @@ def mapConeFork :
       simp
       -- non-terminal `simp`, but `squeeze_simp` fails
       dsimp'
-      simp only [← limit.lift_π, ← fan.mk_π_app, G.map_comp, ← limit.lift_π_assoc, ← fan.mk_π_app]
+      simp only [limit.lift_π, fan.mk_π_app, ← G.map_comp, limit.lift_π_assoc, fan.mk_π_app]
       
 
 end SheafCondition
@@ -181,7 +181,7 @@ theorem is_sheaf_iff_is_sheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F 
       fapply cones.ext
       exact as_iso f
       rintro ⟨_ | _⟩ <;>
-        · dsimp' [← f]
+        · dsimp' [f]
           simp
           
     · -- Returning to the task of shwoing that `G.map f` is an isomorphism,
@@ -205,12 +205,12 @@ theorem is_sheaf_iff_is_sheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F 
       let f' : c ⟶ d' :=
         fork.mk_hom (G.map f)
           (by
-            dsimp' only [← c, ← d, ← d', ← f, ← diagram_comp_preserves_limits, ← res]
+            dsimp' only [c, d, d', f, diagram_comp_preserves_limits, res]
             dunfold fork.ι
             ext1 j
             dsimp'
-            simp only [← category.assoc, functor.map_comp_assoc, ← equalizer.lift_ι, ← map_lift_pi_comparison_assoc]
-            dsimp' [← res]
+            simp only [category.assoc, ← functor.map_comp_assoc, equalizer.lift_ι, map_lift_pi_comparison_assoc]
+            dsimp' [res]
             simp )
       -- conclude that it is an isomorphism,
       -- just because it's a morphism between two limit cones.

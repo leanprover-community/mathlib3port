@@ -68,7 +68,7 @@ def extendFanIsLimit {n : ℕ} (f : Finₓ (n + 1) → C) {c₁ : Fan fun i : Fi
     · apply (binary_fan.is_limit.lift' t₂ _ _).2.1
       
     · rintro i -
-      dsimp' only [← extend_fan_π_app]
+      dsimp' only [extend_fan_π_app]
       rw [Finₓ.cases_succ, ← assoc, (binary_fan.is_limit.lift' t₂ _ _).2.2, t₁.fac]
       rfl
       
@@ -81,9 +81,9 @@ def extendFanIsLimit {n : ℕ} (f : Finₓ (n + 1) → C) {c₁ : Fan fun i : Fi
       apply t₁.uniq ⟨_, _⟩
       rintro ⟨j⟩
       rw [assoc]
-      dsimp' only [← discrete.nat_trans_app, ← extend_fan_is_limit._match_1]
+      dsimp' only [discrete.nat_trans_app, extend_fan_is_limit._match_1]
       rw [← w ⟨j.succ⟩]
-      dsimp' only [← extend_fan_π_app]
+      dsimp' only [extend_fan_π_app]
       rw [Finₓ.cases_succ]
       
 
@@ -160,7 +160,7 @@ noncomputable def preservesFinOfPreservesBinaryAndTerminalₓ :
     · apply (category.id_comp _).symm
       
     · rintro i -
-      dsimp' only [← extend_fan_π_app, ← iso.refl_hom, ← fan.mk_π_app]
+      dsimp' only [extend_fan_π_app, iso.refl_hom, fan.mk_π_app]
       rw [Finₓ.cases_succ, Finₓ.cases_succ]
       change F.map _ ≫ _ = 𝟙 _ ≫ _
       rw [id_comp, ← F.map_comp]
@@ -218,7 +218,7 @@ def extendCofanIsColimit {n : ℕ} (f : Finₓ (n + 1) → C) {c₁ : Cofan fun 
     · apply (binary_cofan.is_colimit.desc' t₂ _ _).2.1
       
     · rintro i -
-      dsimp' only [← extend_cofan_ι_app]
+      dsimp' only [extend_cofan_ι_app]
       rw [Finₓ.cases_succ, assoc, (binary_cofan.is_colimit.desc' t₂ _ _).2.2, t₁.fac]
       rfl
       
@@ -230,9 +230,9 @@ def extendCofanIsColimit {n : ℕ} (f : Finₓ (n + 1) → C) {c₁ : Cofan fun 
     · rw [(binary_cofan.is_colimit.desc' t₂ _ _).2.2]
       apply t₁.uniq ⟨_, _⟩
       rintro ⟨j⟩
-      dsimp' only [← discrete.nat_trans_app]
+      dsimp' only [discrete.nat_trans_app]
       rw [← w ⟨j.succ⟩]
-      dsimp' only [← extend_cofan_ι_app]
+      dsimp' only [extend_cofan_ι_app]
       rw [Finₓ.cases_succ, assoc]
       
 
@@ -311,7 +311,7 @@ noncomputable def preservesFinOfPreservesBinaryAndInitialₓ :
     · apply category.comp_id
       
     · rintro i -
-      dsimp' only [← extend_cofan_ι_app, ← iso.refl_hom, ← cofan.mk_ι_app]
+      dsimp' only [extend_cofan_ι_app, iso.refl_hom, cofan.mk_ι_app]
       rw [Finₓ.cases_succ, Finₓ.cases_succ]
       erw [comp_id, ← F.map_comp]
       rfl

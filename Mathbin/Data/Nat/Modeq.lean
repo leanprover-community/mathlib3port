@@ -124,7 +124,7 @@ protected theorem add_right (c : ℕ) (h : a ≡ b [MOD n]) : a + c ≡ b + c [M
   h.add Modeq.rfl
 
 protected theorem add_left_cancel (h₁ : a ≡ b [MOD n]) (h₂ : a + c ≡ b + d [MOD n]) : c ≡ d [MOD n] := by
-  simp only [← modeq_iff_dvd, ← Int.coe_nat_add] at *
+  simp only [modeq_iff_dvd, Int.coe_nat_add] at *
   rw [add_sub_add_comm] at h₂
   convert _root_.dvd_sub h₂ h₁ using 1
   rw [add_sub_cancel']
@@ -140,19 +140,19 @@ protected theorem add_right_cancel' (c : ℕ) (h : a + c ≡ b + c [MOD n]) : a 
   Modeq.rfl.add_right_cancel h
 
 protected theorem mul_left_cancel' {a b c m : ℕ} (hc : c ≠ 0) : c * a ≡ c * b [MOD c * m] → a ≡ b [MOD m] := by
-  simp [← modeq_iff_dvd, mul_sub, ←
+  simp [modeq_iff_dvd, ← mul_sub,
     mul_dvd_mul_iff_left
       (by
-        simp [← hc] : (c : ℤ) ≠ 0)]
+        simp [hc] : (c : ℤ) ≠ 0)]
 
 protected theorem mul_left_cancel_iff' {a b c m : ℕ} (hc : c ≠ 0) : c * a ≡ c * b [MOD c * m] ↔ a ≡ b [MOD m] :=
   ⟨Modeq.mul_left_cancel' hc, Modeq.mul_left' _⟩
 
 protected theorem mul_right_cancel' {a b c m : ℕ} (hc : c ≠ 0) : a * c ≡ b * c [MOD m * c] → a ≡ b [MOD m] := by
-  simp [← modeq_iff_dvd, sub_mul, ←
+  simp [modeq_iff_dvd, ← sub_mul,
     mul_dvd_mul_iff_right
       (by
-        simp [← hc] : (c : ℤ) ≠ 0)]
+        simp [hc] : (c : ℤ) ≠ 0)]
 
 protected theorem mul_right_cancel_iff' {a b c m : ℕ} (hc : c ≠ 0) : a * c ≡ b * c [MOD m * c] ↔ a ≡ b [MOD m] :=
   ⟨Modeq.mul_right_cancel' hc, Modeq.mul_right' _⟩
@@ -195,7 +195,7 @@ theorem add_le_of_lt (h1 : a ≡ b [MOD m]) (h2 : a < b) : a + m ≤ b :=
   le_of_lt_add (add_modeq_right.trans h1) (add_lt_add_right h2 m)
 
 theorem dvd_iff_of_modeq_of_dvd {a b d m : ℕ} (h : a ≡ b [MOD m]) (hdm : d ∣ m) : d ∣ a ↔ d ∣ b := by
-  simp only [modeq_zero_iff_dvd]
+  simp only [← modeq_zero_iff_dvd]
   replace h := h.modeq_of_dvd hdm
   exact ⟨h.symm.trans, h.trans⟩
 
@@ -226,14 +226,14 @@ theorem modeq_cancel_left_div_gcd {a b c m : ℕ} (hm : 0 < m) (h : c * a ≡ c 
     exact modeq_iff_dvd.mp h
     
   show Int.gcdₓ (m / d) (c / d) = 1
-  · simp only [Int.coe_nat_div, ← Int.coe_nat_gcd (m / d) (c / d), ← gcd_div hmd hcd, ←
+  · simp only [← Int.coe_nat_div, Int.coe_nat_gcd (m / d) (c / d), gcd_div hmd hcd,
       Nat.div_selfₓ (gcd_pos_of_pos_left c hm)]
     
 
 theorem modeq_cancel_right_div_gcd {a b c m : ℕ} (hm : 0 < m) (h : a * c ≡ b * c [MOD m]) : a ≡ b [MOD m / gcdₓ m c] :=
   by
   apply modeq_cancel_left_div_gcd hm
-  simpa [← mul_comm] using h
+  simpa [mul_comm] using h
 
 theorem modeq_cancel_left_div_gcd' {a b c d m : ℕ} (hm : 0 < m) (hcd : c ≡ d [MOD m]) (h : c * a ≡ d * b [MOD m]) :
     a ≡ b [MOD m / gcdₓ m c] :=
@@ -242,23 +242,23 @@ theorem modeq_cancel_left_div_gcd' {a b c d m : ℕ} (hm : 0 < m) (hcd : c ≡ d
 theorem modeq_cancel_right_div_gcd' {a b c d m : ℕ} (hm : 0 < m) (hcd : c ≡ d [MOD m]) (h : a * c ≡ b * d [MOD m]) :
     a ≡ b [MOD m / gcdₓ m c] := by
   apply modeq_cancel_left_div_gcd' hm hcd
-  simpa [← mul_comm] using h
+  simpa [mul_comm] using h
 
 /-- A common factor that's coprime with the modulus can be cancelled from a `modeq` -/
 theorem modeq_cancel_left_of_coprime {a b c m : ℕ} (hmc : gcdₓ m c = 1) (h : c * a ≡ c * b [MOD m]) : a ≡ b [MOD m] :=
   by
   rcases m.eq_zero_or_pos with (rfl | hm)
-  · simp only [← gcd_zero_left] at hmc
-    simp only [← gcd_zero_left, ← hmc, ← one_mulₓ, ← modeq_zero_iff] at h
+  · simp only [gcd_zero_left] at hmc
+    simp only [gcd_zero_left, hmc, one_mulₓ, modeq_zero_iff] at h
     subst h
     
-  simpa [← hmc] using modeq_cancel_left_div_gcd hm h
+  simpa [hmc] using modeq_cancel_left_div_gcd hm h
 
 /-- A common factor that's coprime with the modulus can be cancelled from a `modeq` -/
 theorem modeq_cancel_right_of_coprime {a b c m : ℕ} (hmc : gcdₓ m c = 1) (h : a * c ≡ b * c [MOD m]) : a ≡ b [MOD m] :=
   by
   apply modeq_cancel_left_of_coprime hmc
-  simpa [← mul_comm] using h
+  simpa [mul_comm] using h
 
 end Modeq
 
@@ -284,7 +284,7 @@ def chineseRemainder' (h : a ≡ b [MOD gcdₓ n m]) : { k // k ≡ a [MOD n] �
         Int.toNat ((n * c * b + m * d * a) / gcdₓ n m % lcmₓ n m),
         by
         rw [xgcd_val]
-        dsimp' [← chinese_remainder'._match_1]
+        dsimp' [chinese_remainder'._match_1]
         rw [modeq_iff_dvd, modeq_iff_dvd,
           Int.to_nat_of_nonneg (Int.mod_nonneg _ (Int.coe_nat_ne_zero.2 (lcm_ne_zero hn hm)))]
         have hnonzero : (gcd n m : ℤ) ≠ 0 := by
@@ -325,7 +325,7 @@ def chineseRemainder (co : Coprime n m) (a b : ℕ) : { k // k ≡ a [MOD n] ∧
 
 theorem chinese_remainder'_lt_lcm (h : a ≡ b [MOD gcdₓ n m]) (hn : n ≠ 0) (hm : m ≠ 0) :
     ↑(chineseRemainder' h) < lcmₓ n m := by
-  dsimp' only [← chinese_remainder']
+  dsimp' only [chinese_remainder']
   rw [dif_neg hn, dif_neg hm, Subtype.coe_mk, xgcd_val, ← Int.to_nat_coe_nat (lcm n m)]
   have lcm_pos := int.coe_nat_pos.mpr (Nat.pos_of_ne_zeroₓ (lcm_ne_zero hn hm))
   exact (Int.to_nat_lt_to_nat lcm_pos).mpr (Int.mod_lt_of_pos _ lcm_pos)
@@ -362,7 +362,7 @@ theorem mod_mul_left_mod (a b c : ℕ) : a % (b * c) % c = a % c :=
 
 theorem div_mod_eq_mod_mul_div (a b c : ℕ) : a / b % c = a % (b * c) / b :=
   if hb0 : b = 0 then by
-    simp [← hb0]
+    simp [hb0]
   else by
     rw [← @add_right_cancel_iffₓ _ _ (c * (a / b / c)), mod_add_div, Nat.div_div_eq_div_mulₓ, ←
       Nat.mul_right_inj (Nat.pos_of_ne_zeroₓ hb0), ← @add_left_cancel_iffₓ _ _ (a % b), mod_add_div, mul_addₓ, ←
@@ -372,7 +372,7 @@ theorem div_mod_eq_mod_mul_div (a b c : ℕ) : a / b % c = a % (b * c) / b :=
 theorem add_mod_add_ite (a b c : ℕ) : ((a + b) % c + if c ≤ a % c + b % c then c else 0) = a % c + b % c :=
   have : (a + b) % c = (a % c + b % c) % c := ((mod_modeq _ _).add <| mod_modeq _ _).symm
   if hc0 : c = 0 then by
-    simp [← hc0]
+    simp [hc0]
   else by
     rw [this]
     split_ifs
@@ -389,7 +389,7 @@ theorem add_mod_add_ite (a b c : ℕ) : ((a + b) % c + if c ≤ a % c + b % c th
       
 
 theorem add_mod_of_add_mod_lt {a b c : ℕ} (hc : a % c + b % c < c) : (a + b) % c = a % c + b % c := by
-  rw [← add_mod_add_ite, if_neg (not_le_of_lt hc), add_zeroₓ]
+  rw [← add_mod_add_ite, if_neg (not_le_of_ltₓ hc), add_zeroₓ]
 
 theorem add_mod_add_of_le_add_mod {a b c : ℕ} (hc : c ≤ a % c + b % c) : (a + b) % c + c = a % c + b % c := by
   rw [← add_mod_add_ite, if_pos hc]
@@ -400,7 +400,7 @@ theorem add_div {a b c : ℕ} (hc0 : 0 < c) : (a + b) / c = a / c + b / c + if c
     (a + b) % c + c * ((a + b) / c) + a % c + b % c =
       (a % c + c * (a / c) + (b % c + c * (b / c)) + c * if c ≤ a % c + b % c then 1 else 0) + (a + b) % c
     by
-    simpa only [← mul_addₓ, ← add_commₓ, ← add_left_commₓ, ← add_assocₓ]
+    simpa only [mul_addₓ, add_commₓ, add_left_commₓ, add_assocₓ]
   rw [mod_add_div, mod_add_div, mod_add_div, mul_ite, add_assocₓ, add_assocₓ]
   conv_lhs => rw [← add_mod_add_ite]
   simp
@@ -408,13 +408,13 @@ theorem add_div {a b c : ℕ} (hc0 : 0 < c) : (a + b) / c = a / c + b / c + if c
 
 theorem add_div_eq_of_add_mod_lt {a b c : ℕ} (hc : a % c + b % c < c) : (a + b) / c = a / c + b / c :=
   if hc0 : c = 0 then by
-    simp [← hc0]
+    simp [hc0]
   else by
-    rw [add_div (Nat.pos_of_ne_zeroₓ hc0), if_neg (not_le_of_lt hc), add_zeroₓ]
+    rw [add_div (Nat.pos_of_ne_zeroₓ hc0), if_neg (not_le_of_ltₓ hc), add_zeroₓ]
 
 protected theorem add_div_of_dvd_right {a b c : ℕ} (hca : c ∣ a) : (a + b) / c = a / c + b / c :=
   if h : c = 0 then by
-    simp [← h]
+    simp [h]
   else
     add_div_eq_of_add_mod_lt
       (by
@@ -430,17 +430,17 @@ theorem add_div_eq_of_le_mod_add_mod {a b c : ℕ} (hc : c ≤ a % c + b % c) (h
 
 theorem add_div_le_add_div (a b c : ℕ) : a / c + b / c ≤ (a + b) / c :=
   if hc0 : c = 0 then by
-    simp [← hc0]
+    simp [hc0]
   else by
     rw [Nat.add_div (Nat.pos_of_ne_zeroₓ hc0)] <;> exact Nat.le_add_rightₓ _ _
 
 theorem le_mod_add_mod_of_dvd_add_of_not_dvd {a b c : ℕ} (h : c ∣ a + b) (ha : ¬c ∣ a) : c ≤ a % c + b % c :=
   by_contradiction fun hc => by
     have : (a + b) % c = a % c + b % c := add_mod_of_add_mod_lt (lt_of_not_geₓ hc)
-    simp_all [← dvd_iff_mod_eq_zero]
+    simp_all [dvd_iff_mod_eq_zero]
 
 theorem odd_mul_odd {n m : ℕ} : n % 2 = 1 → m % 2 = 1 → n * m % 2 = 1 := by
-  simpa [← Nat.Modeq] using @modeq.mul 2 n 1 m 1
+  simpa [Nat.Modeq] using @modeq.mul 2 n 1 m 1
 
 theorem odd_mul_odd_div_two {m n : ℕ} (hm1 : m % 2 = 1) (hn1 : n % 2 = 1) : m * n / 2 = m * (n / 2) + m / 2 :=
   have hm0 : 0 < m :=
@@ -455,16 +455,15 @@ theorem odd_mul_odd_div_two {m n : ℕ} (hm1 : m % 2 = 1) (hn1 : n % 2 = 1) : m 
       tsub_add_cancel_of_le (le_mul_of_one_le_right (Nat.zero_leₓ _) hn0)]
 
 theorem odd_of_mod_four_eq_one {n : ℕ} : n % 4 = 1 → n % 2 = 1 := by
-  simpa [← modeq, ←
+  simpa [modeq,
     show 2 * 2 = 4 by
       norm_num] using
     @modeq.of_modeq_mul_left 2 n 1 2
 
 theorem odd_of_mod_four_eq_three {n : ℕ} : n % 4 = 3 → n % 2 = 1 := by
-  simpa [← modeq, ←
+  simpa [modeq,
     show 2 * 2 = 4 by
       norm_num,
-    ←
     show 3 % 4 = 3 by
       norm_num] using
     @modeq.of_modeq_mul_left 2 n 3 2
@@ -493,7 +492,7 @@ variable {α : Type _}
 theorem nth_rotate : ∀ {l : List α} {n m : ℕ} (hml : m < l.length), (l.rotate n).nth m = l.nth ((m + n) % l.length)
   | [], n, m, hml => (Nat.not_lt_zeroₓ _ hml).elim
   | l, 0, m, hml => by
-    simp [← Nat.mod_eq_of_ltₓ hml]
+    simp [Nat.mod_eq_of_ltₓ hml]
   | a :: l, n + 1, m, hml =>
     have h₃ : m < List.length (l ++ [a]) := by
       simpa using hml
@@ -506,7 +505,7 @@ theorem nth_rotate : ∀ {l : List α} {n m : ℕ} (hml : m < l.length), (l.rota
             _ = (m + n) % (l.length + 1) + 1 := Nat.mod_eq_of_ltₓ (Nat.succ_lt_succₓ hml')
             
         have h₂ : (m + n) % (l ++ [a]).length < l.length := by
-          simpa [← Nat.add_one] using hml'
+          simpa [Nat.add_one] using hml'
         rw [List.rotate_cons_succ, nth_rotate h₃, List.nth_append h₂, h₁, List.nth] <;> simp )
       fun hml' => by
       have h₁ : (m + (n + 1)) % (l.length + 1) = 0 :=

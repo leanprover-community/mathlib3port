@@ -150,7 +150,7 @@ theorem IsEquivalent.tendsto_nhds_iff {c : β} (huv : u ~[l] v) : Tendsto u l (�
   ⟨huv.tendsto_nhds, huv.symm.tendsto_nhds⟩
 
 theorem IsEquivalent.add_is_o (huv : u ~[l] v) (hwv : w =o[l] v) : w + u ~[l] v := by
-  simpa only [← is_equivalent, ← Pi.sub_apply, ← add_sub] using hwv.add huv
+  simpa only [is_equivalent, Pi.sub_apply, add_sub] using hwv.add huv
 
 theorem IsOₓ.add_is_equivalent (hu : u =o[l] w) (hv : v ~[l] w) : u + v ~[l] w :=
   add_commₓ u v ▸ hv.add_is_o hu
@@ -178,12 +178,12 @@ theorem is_equivalent_iff_exists_eq_mul : u ~[l] v ↔ ∃ (φ : α → β)(hφ 
   · conv in 𝓝 _ => rw [← zero_addₓ (1 : β)]
     exact hφ.add tendsto_const_nhds
     
-  · convert h.add (eventually_eq.refl l v) <;> ext <;> simp [← add_mulₓ]
+  · convert h.add (eventually_eq.refl l v) <;> ext <;> simp [add_mulₓ]
     
   · conv in 𝓝 _ => rw [← sub_self (1 : β)]
     exact hφ.sub tendsto_const_nhds
     
-  · convert h.sub (eventually_eq.refl l v) <;> ext <;> simp [← sub_mul]
+  · convert h.sub (eventually_eq.refl l v) <;> ext <;> simp [sub_mul]
     
 
 theorem IsEquivalent.exists_eq_mul (huv : u ~[l] v) : ∃ (φ : α → β)(hφ : Tendsto φ l (𝓝 1)), u =ᶠ[l] φ * v :=
@@ -201,7 +201,7 @@ theorem is_equivalent_iff_tendsto_one (hz : ∀ᶠ x in l, v x ≠ 0) : u ~[l] v
   constructor
   · intro hequiv
     have := hequiv.is_o.tendsto_div_nhds_zero
-    simp only [← Pi.sub_apply, ← sub_div] at this
+    simp only [Pi.sub_apply, sub_div] at this
     have key : tendsto (fun x => v x / v x) l (𝓝 1) :=
       (tendsto_congr' <| hz.mono fun x hnz => @div_self _ _ (v x) hnz).mpr tendsto_const_nhds
     convert this.add key
@@ -230,7 +230,7 @@ theorem IsEquivalent.smul {α E 𝕜 : Type _} [NormedField 𝕜] [NormedAddComm
   rw [is_equivalent] at *
   rw [is_o_iff] at *
   rw [is_O_with] at hCuv
-  simp only [← Metric.tendsto_nhds, ← dist_eq_norm] at hφ
+  simp only [Metric.tendsto_nhds, dist_eq_norm] at hφ
   intro c hc
   specialize
     hφ (c / 2 / C)
@@ -253,12 +253,12 @@ theorem IsEquivalent.smul {α E 𝕜 : Type _} [NormedField 𝕜] [NormedAddComm
                 linarith)
               hC).le
       _ = c / 2 * ∥v x∥ := by
-        field_simp [← hC.ne.symm]
+        field_simp [hC.ne.symm]
         ring
       
   calc
     ∥((fun x : α => φ x • u x) - v) x∥ = ∥(φ x - 1) • u x + (u x - v x)∥ := by
-      simp [← sub_smul, ← sub_add]
+      simp [sub_smul, sub_add]
     _ ≤ ∥(φ x - 1) • u x∥ + ∥u x - v x∥ := norm_add_le _ _
     _ = ∥φ x - 1∥ * ∥u x∥ + ∥u x - v x∥ := by
       rw [norm_smul]
@@ -289,10 +289,10 @@ theorem IsEquivalent.inv (huv : u ~[l] v) : (fun x => (u x)⁻¹) ~[l] fun x => 
       _⟩
   convert h.inv
   ext
-  simp [← mul_inv]
+  simp [mul_inv]
 
 theorem IsEquivalent.div (htu : t ~[l] u) (hvw : v ~[l] w) : (fun x => t x / v x) ~[l] fun x => u x / w x := by
-  simpa only [← div_eq_mul_inv] using htu.mul hvw.inv
+  simpa only [div_eq_mul_inv] using htu.mul hvw.inv
 
 end mul_inv
 

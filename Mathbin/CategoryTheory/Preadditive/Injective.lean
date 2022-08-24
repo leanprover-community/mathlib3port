@@ -118,11 +118,11 @@ instance {P Q : C} [HasBinaryProduct P Q] [Injective P] [Injective Q] :
     Injective (P ⨯ Q) where Factors := fun X Y g f mono => by
     skip
     use limits.prod.lift (factor_thru (g ≫ limits.prod.fst) f) (factor_thru (g ≫ limits.prod.snd) f)
-    simp only [← prod.comp_lift, ← comp_factor_thru]
+    simp only [prod.comp_lift, comp_factor_thru]
     ext
-    · simp only [← prod.lift_fst]
+    · simp only [prod.lift_fst]
       
-    · simp only [← prod.lift_snd]
+    · simp only [prod.lift_snd]
       
 
 instance {β : Type v} (c : β → C) [HasProduct c] [∀ b, Injective (c b)] :
@@ -130,16 +130,16 @@ instance {β : Type v} (c : β → C) [HasProduct c] [∀ b, Injective (c b)] :
     skip
     refine' ⟨pi.lift fun b => factor_thru (g ≫ pi.π c _) f, _⟩
     ext ⟨j⟩
-    simp only [← category.assoc, ← limit.lift_π, ← fan.mk_π_app, ← comp_factor_thru]
+    simp only [category.assoc, limit.lift_π, fan.mk_π_app, comp_factor_thru]
 
 instance {P Q : C} [HasZeroMorphisms C] [HasBinaryBiproduct P Q] [Injective P] [Injective Q] :
     Injective (P ⊞ Q) where Factors := fun X Y g f mono => by
     skip
     refine' ⟨biprod.lift (factor_thru (g ≫ biprod.fst) f) (factor_thru (g ≫ biprod.snd) f), _⟩
     ext
-    · simp only [← category.assoc, ← biprod.lift_fst, ← comp_factor_thru]
+    · simp only [category.assoc, biprod.lift_fst, comp_factor_thru]
       
-    · simp only [← category.assoc, ← biprod.lift_snd, ← comp_factor_thru]
+    · simp only [category.assoc, biprod.lift_snd, comp_factor_thru]
       
 
 instance {β : Type v} (c : β → C) [HasZeroMorphisms C] [HasBiproduct c] [∀ b, Injective (c b)] :
@@ -147,7 +147,7 @@ instance {β : Type v} (c : β → C) [HasZeroMorphisms C] [HasBiproduct c] [∀
     skip
     refine' ⟨biproduct.lift fun b => factor_thru (g ≫ biproduct.π _ _) f, _⟩
     ext
-    simp only [← category.assoc, ← biproduct.lift_π, ← comp_factor_thru]
+    simp only [category.assoc, biproduct.lift_π, comp_factor_thru]
 
 instance {P : Cᵒᵖ} [Projective P] :
     Injective

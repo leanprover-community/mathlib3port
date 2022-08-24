@@ -43,7 +43,7 @@ variable {R S : Type _} [Semiringₓ R] [TopologicalSpace R] [TopologicalSemirin
 
 @[continuity]
 protected theorem continuous_eval₂ [Semiringₓ S] (p : S[X]) (f : S →+* R) : Continuous fun x => p.eval₂ f x := by
-  dsimp' only [← eval₂_eq_sum, ← Finsupp.sum]
+  dsimp' only [eval₂_eq_sum, Finsupp.sum]
   exact continuous_finset_sum _ fun c hc => continuous_const.mul (continuous_pow _)
 
 @[continuity]
@@ -88,11 +88,11 @@ theorem tendsto_abv_eval₂_at_top {R S k α : Type _} [Semiringₓ R] [Ringₓ 
   refine' degree_pos_induction_on p hd _ _ _ <;> clear hd p
   · rintro c - hc
     rw [leading_coeff_mul_X, leading_coeff_C] at hc
-    simpa [← abv_mul abv] using hz.const_mul_at_top ((abv_pos abv).2 hc)
+    simpa [abv_mul abv] using hz.const_mul_at_top ((abv_pos abv).2 hc)
     
   · intro p hpd ihp hf
     rw [leading_coeff_mul_X] at hf
-    simpa [← abv_mul abv] using (ihp hf).at_top_mul_at_top hz
+    simpa [abv_mul abv] using (ihp hf).at_top_mul_at_top hz
     
   · intro p a hd ihp hf
     rw [add_commₓ, leading_coeff_add_of_degree_lt (degree_C_le.trans_lt hd)] at hf

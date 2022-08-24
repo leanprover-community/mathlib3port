@@ -26,7 +26,7 @@ def dnfCore : Preform → List Clause
   | t ≤* s => [([], [Term.sub (canonize s) (canonize t)])]
   | ¬* _ => []
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 theorem exists_clause_holds_core {v : Nat → Nat} :
     ∀ {p : Preform}, p.NegFree → p.SubFree → p.Holds v → ∃ c ∈ dnfCore p, Clause.Holds (fun x => ↑(v x)) c := by
   run_tac
@@ -35,7 +35,7 @@ theorem exists_clause_holds_core {v : Nat → Nat} :
     constructor
     rw [List.forall_mem_singletonₓ]
     cases' h0 with ht hs
-    simp only [← val_canonize ht, ← val_canonize hs, ← term.val_sub, ← preform.holds, ← sub_eq_add_neg] at *
+    simp only [val_canonize ht, val_canonize hs, term.val_sub, preform.holds, sub_eq_add_neg] at *
     rw [h2, add_neg_selfₓ]
     apply List.forall_mem_nilₓ
     
@@ -43,7 +43,7 @@ theorem exists_clause_holds_core {v : Nat → Nat} :
     constructor
     apply List.forall_mem_nilₓ
     rw [List.forall_mem_singletonₓ]
-    simp only [← val_canonize h0.left, ← val_canonize h0.right, ← term.val_sub, ← preform.holds, ← sub_eq_add_neg] at *
+    simp only [val_canonize h0.left, val_canonize h0.right, term.val_sub, preform.holds, sub_eq_add_neg] at *
     rw [← sub_eq_add_neg, le_sub, sub_zero, Int.coe_nat_le]
     assumption
     
@@ -59,7 +59,7 @@ theorem exists_clause_holds_core {v : Nat → Nat} :
   · rcases ihp h1.left h0.left h2.left with ⟨cp, hp1, hp2⟩
     rcases ihq h1.right h0.right h2.right with ⟨cq, hq1, hq2⟩
     refine' ⟨clause.append cp cq, ⟨_, clause.holds_append hp2 hq2⟩⟩
-    simp only [← dnf_core, ← List.mem_mapₓ]
+    simp only [dnf_core, List.mem_mapₓ]
     refine' ⟨(cp, cq), ⟨_, rfl⟩⟩
     rw [List.mem_product]
     constructor <;> assumption
@@ -106,22 +106,21 @@ def dnf (p : Preform) : List Clause :=
   (dnfCore p).map nonnegate
 
 theorem holds_nonneg_consts_core {v : Nat → Int} (h1 : ∀ x, 0 ≤ v x) :
-    ∀ m bs, ∀, ∀ t ∈ nonnegConstsCore m bs, ∀, 0 ≤ Term.val v t
+    ∀ m bs, ∀ t ∈ nonnegConstsCore m bs, 0 ≤ Term.val v t
   | _, [] => fun _ h2 => by
     cases h2
   | k, ff :: bs => holds_nonneg_consts_core (k + 1) bs
   | k, tt :: bs => by
-    simp only [← nonneg_consts_core]
+    simp only [nonneg_consts_core]
     rw [List.forall_mem_consₓ]
     constructor
-    · simp only [← term.val, ← one_mulₓ, ← zero_addₓ, ← coeffs.val_set]
+    · simp only [term.val, one_mulₓ, zero_addₓ, coeffs.val_set]
       apply h1
       
     · apply holds_nonneg_consts_core (k + 1) bs
       
 
-theorem holds_nonneg_consts {v : Nat → Int} {bs : List Bool} :
-    (∀ x, 0 ≤ v x) → ∀, ∀ t ∈ nonnegConsts bs, ∀, 0 ≤ Term.val v t
+theorem holds_nonneg_consts {v : Nat → Int} {bs : List Bool} : (∀ x, 0 ≤ v x) → ∀ t ∈ nonnegConsts bs, 0 ≤ Term.val v t
   | h1 => by
     apply holds_nonneg_consts_core h1
 
@@ -131,12 +130,12 @@ theorem exists_clause_holds {v : Nat → Nat} {p : Preform} :
   rcases exists_clause_holds_core h1 h2 h3 with ⟨c, h4, h5⟩
   exists nonnegate c
   have h6 : nonnegate c ∈ dnf p := by
-    simp only [← dnf]
+    simp only [dnf]
     rw [List.mem_mapₓ]
     refine' ⟨c, h4, rfl⟩
   refine' ⟨h6, _⟩
   cases' c with eqs les
-  simp only [← nonnegate, ← clause.holds]
+  simp only [nonnegate, clause.holds]
   constructor
   apply h5.left
   rw [List.forall_mem_appendₓ]

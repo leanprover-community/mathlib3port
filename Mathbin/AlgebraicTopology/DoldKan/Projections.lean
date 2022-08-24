@@ -63,8 +63,8 @@ theorem P_f_0_eq (q : ℕ) : ((p q).f 0 : X _[0] ⟶ X _[0]) = 𝟙 _ := by
   · rfl
     
   · unfold P
-    simp only [← HomologicalComplex.add_f_apply, ← HomologicalComplex.comp_f, ← HomologicalComplex.id_f, ← id_comp, ←
-      hq, ← Hσ_eq_zero, ← add_zeroₓ]
+    simp only [HomologicalComplex.add_f_apply, HomologicalComplex.comp_f, HomologicalComplex.id_f, id_comp, hq,
+      Hσ_eq_zero, add_zeroₓ]
     
 
 /-- `Q q` is the complement projection associated to `P q` -/
@@ -84,13 +84,13 @@ theorem Q_eq_zero : (q 0 : K[X] ⟶ _) = 0 :=
 
 theorem Q_eq (q : ℕ) : (q (q + 1) : K[X] ⟶ _) = q q - p q ≫ hσₓ q := by
   unfold Q P
-  simp only [← comp_add, ← comp_id]
+  simp only [comp_add, comp_id]
   abel
 
 /-- All the `Q q` coincide with `0` in degree 0. -/
 @[simp]
 theorem Q_f_0_eq (q : ℕ) : ((q q).f 0 : X _[0] ⟶ X _[0]) = 0 := by
-  simp only [← HomologicalComplex.sub_f_apply, ← HomologicalComplex.id_f, ← Q, ← P_f_0_eq, ← sub_self]
+  simp only [HomologicalComplex.sub_f_apply, HomologicalComplex.id_f, Q, P_f_0_eq, sub_self]
 
 namespace HigherFacesVanish
 
@@ -113,23 +113,23 @@ theorem comp_P_eq_self {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFa
     apply comp_id
     
   · unfold P
-    simp only [← comp_add, ← HomologicalComplex.comp_f, ← HomologicalComplex.add_f_apply, ← comp_id, assoc, ←
-      hq v.of_succ, ← add_right_eq_selfₓ]
+    simp only [comp_add, HomologicalComplex.comp_f, HomologicalComplex.add_f_apply, comp_id, ← assoc, hq v.of_succ,
+      add_right_eq_selfₓ]
     by_cases' hqn : n < q
     · exact v.of_succ.comp_Hσ_eq_zero hqn
       
     · cases' Nat.Le.dest (not_lt.mp hqn) with a ha
       have hnaq : n = a + q := by
         linarith
-      simp only [← v.of_succ.comp_Hσ_eq hnaq, ← neg_eq_zero, assoc]
+      simp only [v.of_succ.comp_Hσ_eq hnaq, neg_eq_zero, ← assoc]
       have eq :=
         v
           ⟨a, by
             linarith⟩
           (by
-            simp only [← hnaq, ← Finₓ.coe_mk, ← Nat.succ_eq_add_one, ← add_assocₓ])
-      simp only [← Finₓ.succ_mk] at eq
-      simp only [← Eq, ← zero_comp]
+            simp only [hnaq, Finₓ.coe_mk, Nat.succ_eq_add_one, add_assocₓ])
+      simp only [Finₓ.succ_mk] at eq
+      simp only [Eq, zero_comp]
       
     
 
@@ -165,11 +165,11 @@ def natTransP (q : ℕ) : alternatingFaceMapComplex C ⟶ alternatingFaceMapComp
   naturality' := fun X Y f => by
     induction' q with q hq
     · unfold P
-      dsimp' only [← alternating_face_map_complex]
+      dsimp' only [alternating_face_map_complex]
       rw [id_comp, comp_id]
       
     · unfold P
-      simp only [← add_comp, ← comp_add, ← assoc, ← comp_id, ← hq]
+      simp only [add_comp, comp_add, assoc, comp_id, hq]
       congr 1
       rw [← assoc, hq, assoc]
       congr 1
@@ -188,8 +188,8 @@ theorem map_P {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additiv
     apply G.map_id
     
   · unfold P
-    simp only [← comp_add, ← HomologicalComplex.comp_f, ← HomologicalComplex.add_f_apply, ← comp_id, ← functor.map_add,
-      ← functor.map_comp, ← hq, ← map_Hσ]
+    simp only [comp_add, HomologicalComplex.comp_f, HomologicalComplex.add_f_apply, comp_id, functor.map_add,
+      functor.map_comp, hq, map_Hσ]
     
 
 end DoldKan

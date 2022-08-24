@@ -302,7 +302,7 @@ theorem mul_subset_mul_right : s₁ ⊆ s₂ → s₁ * t ⊆ s₂ * t :=
   image₂_subset_right
 
 @[to_additive]
-theorem mul_subset_iff : s * t ⊆ u ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, x * y ∈ u :=
+theorem mul_subset_iff : s * t ⊆ u ↔ ∀ x ∈ s, ∀ y ∈ t, x * y ∈ u :=
   image₂_subset_iff
 
 attribute [mono] add_subset_add
@@ -442,7 +442,7 @@ theorem div_subset_div_right : s₁ ⊆ s₂ → s₁ / t ⊆ s₂ / t :=
   image₂_subset_right
 
 @[to_additive]
-theorem div_subset_iff : s / t ⊆ u ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, x / y ∈ u :=
+theorem div_subset_iff : s / t ⊆ u ↔ ∀ x ∈ s, ∀ y ∈ t, x / y ∈ u :=
   image₂_subset_iff
 
 attribute [mono] sub_subset_sub
@@ -761,18 +761,18 @@ variable [MulZeroClassₓ α] {s t : Finset α}
 
 
 theorem mul_zero_subset (s : Finset α) : s * 0 ⊆ 0 := by
-  simp [← subset_iff, ← mem_mul]
+  simp [subset_iff, mem_mul]
 
 theorem zero_mul_subset (s : Finset α) : 0 * s ⊆ 0 := by
-  simp [← subset_iff, ← mem_mul]
+  simp [subset_iff, mem_mul]
 
 theorem Nonempty.mul_zero (hs : s.Nonempty) : s * 0 = 0 :=
   s.mul_zero_subset.antisymm <| by
-    simpa [← mem_mul] using hs
+    simpa [mem_mul] using hs
 
 theorem Nonempty.zero_mul (hs : s.Nonempty) : 0 * s = 0 :=
   s.zero_mul_subset.antisymm <| by
-    simpa [← mem_mul] using hs
+    simpa [mem_mul] using hs
 
 end MulZeroClassₓ
 
@@ -802,7 +802,7 @@ theorem is_unit_singleton (a : α) : IsUnit ({a} : Finset α) :=
 
 @[simp]
 theorem is_unit_iff_singleton : IsUnit s ↔ ∃ a, s = {a} := by
-  simp only [← is_unit_iff, ← Groupₓ.is_unit, ← and_trueₓ]
+  simp only [is_unit_iff, Groupₓ.is_unit, and_trueₓ]
 
 @[simp, to_additive]
 theorem image_mul_left : image (fun b => a * b) t = preimage t (fun b => a⁻¹ * b) ((mul_right_injective _).InjOn _) :=
@@ -833,18 +833,18 @@ section GroupWithZeroₓ
 variable [GroupWithZeroₓ α] {s t : Finset α}
 
 theorem div_zero_subset (s : Finset α) : s / 0 ⊆ 0 := by
-  simp [← subset_iff, ← mem_div]
+  simp [subset_iff, mem_div]
 
 theorem zero_div_subset (s : Finset α) : 0 / s ⊆ 0 := by
-  simp [← subset_iff, ← mem_div]
+  simp [subset_iff, mem_div]
 
 theorem Nonempty.div_zero (hs : s.Nonempty) : s / 0 = 0 :=
   s.div_zero_subset.antisymm <| by
-    simpa [← mem_div] using hs
+    simpa [mem_div] using hs
 
 theorem Nonempty.zero_div (hs : s.Nonempty) : 0 / s = 0 :=
   s.zero_div_subset.antisymm <| by
-    simpa [← mem_div] using hs
+    simpa [mem_div] using hs
 
 end GroupWithZeroₓ
 
@@ -975,7 +975,7 @@ theorem smul_subset_smul_right : s₁ ⊆ s₂ → s₁ • t ⊆ s₂ • t :=
   image₂_subset_right
 
 @[to_additive]
-theorem smul_subset_iff : s • t ⊆ u ↔ ∀, ∀ a ∈ s, ∀, ∀ b ∈ t, ∀, a • b ∈ u :=
+theorem smul_subset_iff : s • t ⊆ u ↔ ∀ a ∈ s, ∀ b ∈ t, a • b ∈ u :=
   image₂_subset_iff
 
 attribute [mono] vadd_subset_vadd
@@ -1087,7 +1087,7 @@ theorem vsub_subset_vsub_left : t₁ ⊆ t₂ → s -ᵥ t₁ ⊆ s -ᵥ t₂ :=
 theorem vsub_subset_vsub_right : s₁ ⊆ s₂ → s₁ -ᵥ t ⊆ s₂ -ᵥ t :=
   image₂_subset_right
 
-theorem vsub_subset_iff : s -ᵥ t ⊆ u ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, x -ᵥ y ∈ u :=
+theorem vsub_subset_iff : s -ᵥ t ⊆ u ↔ ∀ x ∈ s, ∀ y ∈ t, x -ᵥ y ∈ u :=
   image₂_subset_iff
 
 section
@@ -1141,7 +1141,7 @@ theorem image_smul : (s.Image fun x => a • x) = a • s :=
 
 @[to_additive]
 theorem mem_smul_finset {x : β} : x ∈ a • s ↔ ∃ y, y ∈ s ∧ a • y = x := by
-  simp only [← Finset.smul_finset_def, ← And.assoc, ← mem_image, ← exists_prop, ← Prod.exists, ← mem_product]
+  simp only [Finset.smul_finset_def, And.assoc, mem_image, exists_prop, Prod.exists, mem_product]
 
 @[simp, norm_cast, to_additive]
 theorem coe_smul_finset (a : α) (s : Finset β) : (↑(a • s) : Set β) = a • s :=
@@ -1210,7 +1210,7 @@ instance smul_comm_class_finset' [HasSmul α γ] [HasSmul β γ] [SmulCommClass 
     SmulCommClass α (Finset β) (Finset γ) :=
   ⟨fun a s t =>
     coe_injective <| by
-      simp only [← coe_smul_finset, ← coe_smul, ← smul_comm]⟩
+      simp only [coe_smul_finset, coe_smul, smul_comm]⟩
 
 @[to_additive]
 instance smul_comm_class_finset'' [HasSmul α γ] [HasSmul β γ] [SmulCommClass α β γ] :
@@ -1229,7 +1229,7 @@ instance smul_comm_class [HasSmul α γ] [HasSmul β γ] [SmulCommClass α β γ
 instance is_scalar_tower [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
     IsScalarTower α β (Finset γ) :=
   ⟨fun a b s => by
-    simp only [image_smul, ← image_image, ← smul_assoc]⟩
+    simp only [← image_smul, image_image, smul_assoc]⟩
 
 variable [DecidableEq β]
 
@@ -1238,19 +1238,19 @@ instance is_scalar_tower' [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsSca
     IsScalarTower α (Finset β) (Finset γ) :=
   ⟨fun a s t =>
     coe_injective <| by
-      simp only [← coe_smul_finset, ← coe_smul, ← smul_assoc]⟩
+      simp only [coe_smul_finset, coe_smul, smul_assoc]⟩
 
 @[to_additive]
 instance is_scalar_tower'' [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
     IsScalarTower (Finset α) (Finset β) (Finset γ) :=
   ⟨fun a s t =>
     coe_injective <| by
-      simp only [← coe_smul_finset, ← coe_smul, ← smul_assoc]⟩
+      simp only [coe_smul_finset, coe_smul, smul_assoc]⟩
 
 instance is_central_scalar [HasSmul α β] [HasSmul αᵐᵒᵖ β] [IsCentralScalar α β] : IsCentralScalar α (Finset β) :=
   ⟨fun a s =>
     coe_injective <| by
-      simp only [← coe_smul_finset, ← coe_smul, ← op_smul_eq_smul]⟩
+      simp only [coe_smul_finset, coe_smul, op_smul_eq_smul]⟩
 
 /-- A multiplicative action of a monoid `α` on a type `β` gives a multiplicative action of
 `finset α` on `finset β`. -/
@@ -1415,6 +1415,83 @@ theorem smul_finset_univ₀ [Fintype β] (ha : a ≠ 0) : a • (univ : Finset �
     exact Set.smul_set_univ₀ ha
 
 end GroupWithZeroₓ
+
+section SmulWithZero
+
+variable [Zero α] [Zero β] [SmulWithZero α β] [DecidableEq β] {s : Finset α} {t : Finset β}
+
+/-!
+Note that we have neither `smul_with_zero α (finset β)` nor `smul_with_zero (finset α) (finset β)`
+because `0 * ∅ ≠ 0`.
+-/
+
+
+theorem smul_zero_subset (s : Finset α) : s • (0 : Finset β) ⊆ 0 := by
+  simp [subset_iff, mem_smul]
+
+theorem zero_smul_subset (t : Finset β) : (0 : Finset α) • t ⊆ 0 := by
+  simp [subset_iff, mem_smul]
+
+theorem Nonempty.smul_zero (hs : s.Nonempty) : s • (0 : Finset β) = 0 :=
+  s.smul_zero_subset.antisymm <| by
+    simpa [mem_smul] using hs
+
+theorem Nonempty.zero_smul (ht : t.Nonempty) : (0 : Finset α) • t = 0 :=
+  t.zero_smul_subset.antisymm <| by
+    simpa [mem_smul] using ht
+
+/-- A nonempty set is scaled by zero to the singleton set containing 0. -/
+theorem zero_smul_finset {s : Finset β} (h : s.Nonempty) : (0 : α) • s = (0 : Finset β) :=
+  coe_injective <| by
+    simpa using Set.zero_smul_set h
+
+theorem zero_smul_finset_subset (s : Finset β) : (0 : α) • s ⊆ 0 :=
+  image_subset_iff.2 fun x _ => mem_zero.2 <| zero_smul α x
+
+theorem zero_mem_smul_finset {t : Finset β} {a : α} (h : (0 : β) ∈ t) : (0 : β) ∈ a • t :=
+  mem_smul_finset.2 ⟨0, h, smul_zero' _ _⟩
+
+variable [NoZeroSmulDivisors α β] {a : α}
+
+theorem zero_mem_smul_iff : (0 : β) ∈ s • t ↔ (0 : α) ∈ s ∧ t.Nonempty ∨ (0 : β) ∈ t ∧ s.Nonempty := by
+  rw [← mem_coe, coe_smul, Set.zero_mem_smul_iff]
+  rfl
+
+theorem zero_mem_smul_finset_iff (ha : a ≠ 0) : (0 : β) ∈ a • t ↔ (0 : β) ∈ t := by
+  rw [← mem_coe, coe_smul_finset, Set.zero_mem_smul_set_iff ha, mem_coe]
+  infer_instance
+
+end SmulWithZero
+
+section Monoidₓ
+
+variable [Monoidₓ α] [AddGroupₓ β] [DistribMulAction α β] [DecidableEq β] (a : α) (s : Finset α) (t : Finset β)
+
+@[simp]
+theorem smul_finset_neg : a • -t = -(a • t) := by
+  simp only [← image_smul, ← image_neg, Function.comp, image_image, smul_neg]
+
+@[simp]
+protected theorem smul_neg : s • -t = -(s • t) := by
+  simp_rw [← image_neg]
+  exact image_image₂_right_comm smul_neg
+
+end Monoidₓ
+
+section Ringₓ
+
+variable [Ringₓ α] [AddCommGroupₓ β] [Module α β] [DecidableEq β] {s : Finset α} {t : Finset β} {a : α}
+
+@[simp]
+theorem neg_smul_finset : -a • t = -(a • t) := by
+  simp only [← image_smul, ← image_neg, image_image, neg_smul]
+
+@[simp]
+protected theorem neg_smul [DecidableEq α] : -s • t = -(s • t) := by
+  simp_rw [← image_neg]
+  exact image₂_image_left_comm neg_smul
+
+end Ringₓ
 
 end Finset
 

@@ -74,7 +74,7 @@ def pullback {Y X : C} {P : Cᵒᵖ ⥤ D} {S : J.cover X} (x : Meq P S) (f : Y 
   ⟨fun I => x ⟨_, I.f ≫ f, I.hf⟩, fun I =>
     x.condition
       ⟨I.y₁, I.y₂, I.z, I.g₁, I.g₂, I.f₁ ≫ f, I.f₂ ≫ f, I.h₁, I.h₂, by
-        simp [← reassoc_of I.w]⟩⟩
+        simp [reassoc_of I.w]⟩⟩
 
 @[simp]
 theorem pullback_apply {Y X : C} {P : Cᵒᵖ ⥤ D} {S : J.cover X} (x : Meq P S) (f : Y ⟶ X)
@@ -90,7 +90,7 @@ theorem pullback_refine {Y X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (h : S �
 def mk {X : C} {P : Cᵒᵖ ⥤ D} (S : J.cover X) (x : P.obj (op X)) : Meq P S :=
   ⟨fun I => P.map I.f.op x, fun I => by
     dsimp'
-    simp only [comp_apply, P.map_comp, op_comp, ← I.w]⟩
+    simp only [← comp_apply, ← P.map_comp, ← op_comp, I.w]⟩
 
 theorem mk_apply {X : C} {P : Cᵒᵖ ⥤ D} (S : J.cover X) (x : P.obj (op X)) (I : S.arrow) : mk S x I = P.map I.f.op x :=
   rfl
@@ -138,58 +138,58 @@ def mk {X : C} {P : Cᵒᵖ ⥤ D} {S : J.cover X} (x : Meq P S) : (J.plusObj P)
 
 theorem res_mk_eq_mk_pullback {Y X : C} {P : Cᵒᵖ ⥤ D} {S : J.cover X} (x : Meq P S) (f : Y ⟶ X) :
     (J.plusObj P).map f.op (mk x) = mk (x.pullback f) := by
-  dsimp' [← mk, ← plus_obj]
-  simp only [comp_apply, ← colimit.ι_pre, ← ι_colim_map_assoc]
+  dsimp' [mk, plus_obj]
+  simp only [← comp_apply, colimit.ι_pre, ι_colim_map_assoc]
   simp_rw [comp_apply]
   congr 1
   apply_fun meq.equiv P _
   erw [Equivₓ.apply_symm_apply]
   ext i
-  simp only [← diagram_pullback_app, ← meq.pullback_apply, ← meq.equiv_apply, comp_apply]
+  simp only [diagram_pullback_app, meq.pullback_apply, meq.equiv_apply, ← comp_apply]
   erw [multiequalizer.lift_ι, meq.equiv_symm_eq_apply]
   cases i
   rfl
 
 theorem to_plus_mk {X : C} {P : Cᵒᵖ ⥤ D} (S : J.cover X) (x : P.obj (op X)) : (J.toPlus P).app _ x = mk (Meq.mk S x) :=
   by
-  dsimp' [← mk, ← to_plus]
+  dsimp' [mk, to_plus]
   let e : S ⟶ ⊤ := hom_of_le (OrderTop.le_top _)
   rw [← colimit.w _ e.op]
   delta' cover.to_multiequalizer
-  simp only [← comp_apply]
+  simp only [comp_apply]
   congr 1
-  dsimp' [← diagram]
+  dsimp' [diagram]
   apply concrete.multiequalizer_ext
   intro i
-  simpa only [comp_apply, ← category.assoc, ← multiequalizer.lift_ι, ← category.comp_id, ← meq.equiv_symm_eq_apply]
+  simpa only [← comp_apply, category.assoc, multiequalizer.lift_ι, category.comp_id, meq.equiv_symm_eq_apply]
 
 theorem to_plus_apply {X : C} {P : Cᵒᵖ ⥤ D} (S : J.cover X) (x : Meq P S) (I : S.arrow) :
     (J.toPlus P).app _ (x I) = (J.plusObj P).map I.f.op (mk x) := by
-  dsimp' only [← to_plus, ← plus_obj]
+  dsimp' only [to_plus, plus_obj]
   delta' cover.to_multiequalizer
-  dsimp' [← mk]
-  simp only [comp_apply, ← colimit.ι_pre, ← ι_colim_map_assoc]
-  simp only [← comp_apply]
-  dsimp' only [← functor.op]
+  dsimp' [mk]
+  simp only [← comp_apply, colimit.ι_pre, ι_colim_map_assoc]
+  simp only [comp_apply]
+  dsimp' only [functor.op]
   let e : (J.pullback I.f).obj (unop (op S)) ⟶ ⊤ := hom_of_le (OrderTop.le_top _)
   rw [← colimit.w _ e.op]
-  simp only [← comp_apply]
+  simp only [comp_apply]
   congr 1
   apply concrete.multiequalizer_ext
   intro i
-  dsimp' [← diagram]
-  simp only [comp_apply, ← category.assoc, ← multiequalizer.lift_ι, ← category.comp_id, ← meq.equiv_symm_eq_apply]
+  dsimp' [diagram]
+  simp only [← comp_apply, category.assoc, multiequalizer.lift_ι, category.comp_id, meq.equiv_symm_eq_apply]
   let RR : S.relation :=
     ⟨_, _, _, i.f, 𝟙 _, I.f, i.f ≫ I.f, I.hf, sieve.downward_closed _ I.hf _, by
       simp ⟩
   cases I
   erw [x.condition RR]
-  simpa [← RR]
+  simpa [RR]
 
 theorem to_plus_eq_mk {X : C} {P : Cᵒᵖ ⥤ D} (x : P.obj (op X)) : (J.toPlus P).app _ x = mk (Meq.mk ⊤ x) := by
-  dsimp' [← mk, ← to_plus]
+  dsimp' [mk, to_plus]
   delta' cover.to_multiequalizer
-  simp only [← comp_apply]
+  simp only [comp_apply]
   congr 1
   apply_fun meq.equiv P ⊤
   ext i
@@ -201,7 +201,7 @@ theorem exists_rep {X : C} {P : Cᵒᵖ ⥤ D} (x : (J.plusObj P).obj (op X)) : 
   obtain ⟨S, y, h⟩ := concrete.colimit_exists_rep (J.diagram P X) x
   use S.unop, meq.equiv _ _ y
   rw [← h]
-  dsimp' [← mk]
+  dsimp' [mk]
   simp
 
 theorem eq_mk_iff_exists {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (x : Meq P S) (y : Meq P T) :
@@ -214,8 +214,8 @@ theorem eq_mk_iff_exists {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (x : Meq 
     apply_fun multiequalizer.ι (W.unop.index P) I  at hh
     convert hh
     all_goals
-      dsimp' [← diagram]
-      simp only [comp_apply, ← multiequalizer.lift_ι, ← category.comp_id, ← meq.equiv_symm_eq_apply]
+      dsimp' [diagram]
+      simp only [← comp_apply, multiequalizer.lift_ι, category.comp_id, meq.equiv_symm_eq_apply]
       cases I
       rfl
     
@@ -227,8 +227,8 @@ theorem eq_mk_iff_exists {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (x : Meq 
     apply_fun fun ee => ee i  at e
     convert e
     all_goals
-      dsimp' [← diagram]
-      simp only [comp_apply, ← multiequalizer.lift_ι, ← meq.equiv_symm_eq_apply]
+      dsimp' [diagram]
+      simp only [← comp_apply, multiequalizer.lift_ι, meq.equiv_symm_eq_apply]
       cases i
       rfl
     
@@ -239,7 +239,7 @@ theorem sep {X : C} (P : Cᵒᵖ ⥤ D) (S : J.cover X) (x y : (J.plusObj P).obj
   -- First, we choose representatives for x and y.
   obtain ⟨Sx, x, rfl⟩ := exists_rep x
   obtain ⟨Sy, y, rfl⟩ := exists_rep y
-  simp only [← res_mk_eq_mk_pullback] at h
+  simp only [res_mk_eq_mk_pullback] at h
   -- Next, using our assumption,
   -- choose covers over which the pullbacks of these representatives become equal.
   choose W h1 h2 hh using fun I : S.arrow => (eq_mk_iff_exists _ _).mp (h I)
@@ -278,13 +278,13 @@ theorem sep {X : C} (P : Cᵒᵖ ⥤ D) (S : J.cover X) (x y : (J.plusObj P).obj
   convert hh
   · let Rx : Sx.relation :=
       ⟨I.Y, I.Y, I.Y, 𝟙 _, 𝟙 _, I.f, I.to_middle_hom ≫ I.from_middle_hom, _, _, by
-        simp [← I.middle_spec]⟩
+        simp [I.middle_spec]⟩
     have := x.condition Rx
     simpa using this
     
   · let Ry : Sy.relation :=
       ⟨I.Y, I.Y, I.Y, 𝟙 _, 𝟙 _, I.f, I.to_middle_hom ≫ I.from_middle_hom, _, _, by
-        simp [← I.middle_spec]⟩
+        simp [I.middle_spec]⟩
     have := y.condition Ry
     simpa using this
     
@@ -293,7 +293,7 @@ theorem inj_of_sep (P : Cᵒᵖ ⥤ D)
     (hsep : ∀ (X : C) (S : J.cover X) (x y : P.obj (op X)), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y)
     (X : C) : Function.Injective ((J.toPlus P).app (op X)) := by
   intro x y h
-  simp only [← to_plus_eq_mk] at h
+  simp only [to_plus_eq_mk] at h
   rw [eq_mk_iff_exists] at h
   obtain ⟨W, h1, h2, hh⟩ := h
   apply hsep X W
@@ -323,7 +323,7 @@ def meqOfSep (P : Cᵒᵖ ⥤ D)
       ⟨_, _, _, II.g₁ ≫ II.fst.to_middle_hom, II.g₂ ≫ II.snd.to_middle_hom, II.fst.from_middle_hom,
         II.snd.from_middle_hom, II.fst.from_middle_condition, II.snd.from_middle_condition, _⟩
     swap
-    · simp only [← category.assoc, ← II.fst.middle_spec, ← II.snd.middle_spec]
+    · simp only [category.assoc, II.fst.middle_spec, II.snd.middle_spec]
       apply II.w
       
     exact s.condition IR
@@ -350,7 +350,7 @@ theorem exists_of_sep (P : Cᵒᵖ ⥤ D)
   -- original local sections.
   apply sep P (T I)
   intro II
-  simp only [← res_mk_eq_mk_pullback, ← eq_mk_iff_exists]
+  simp only [res_mk_eq_mk_pullback, eq_mk_iff_exists]
   -- It suffices to prove equality for representatives over a
   -- convenient sufficiently large cover...
   use (J.pullback II.f).obj (T I)
@@ -364,7 +364,7 @@ theorem exists_of_sep (P : Cᵒᵖ ⥤ D)
           )
   use e0, 𝟙 _
   ext IV
-  dsimp' only [← meq.refine_apply, ← meq.pullback_apply, ← w]
+  dsimp' only [meq.refine_apply, meq.pullback_apply, w]
   let IA : B.arrow := ⟨_, (IV.f ≫ II.f) ≫ I.f, _⟩
   swap
   · refine' ⟨I.Y, _, _, I.hf, _, rfl⟩
@@ -451,18 +451,18 @@ def sheafifyMap {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : J.sheafify P ⟶ J.sheafi
 
 @[simp]
 theorem sheafify_map_id (P : Cᵒᵖ ⥤ D) : J.sheafifyMap (𝟙 P) = 𝟙 (J.sheafify P) := by
-  dsimp' [← sheafify_map, ← sheafify]
+  dsimp' [sheafify_map, sheafify]
   simp
 
 @[simp]
 theorem sheafify_map_comp {P Q R : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (γ : Q ⟶ R) :
     J.sheafifyMap (η ≫ γ) = J.sheafifyMap η ≫ J.sheafifyMap γ := by
-  dsimp' [← sheafify_map, ← sheafify]
+  dsimp' [sheafify_map, sheafify]
   simp
 
 @[simp, reassoc]
 theorem to_sheafify_naturality {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : η ≫ J.toSheafify _ = J.toSheafify _ ≫ J.sheafifyMap η := by
-  dsimp' [← sheafify_map, ← sheafify, ← to_sheafify]
+  dsimp' [sheafify_map, sheafify, to_sheafify]
   simp
 
 variable (D)
@@ -492,7 +492,7 @@ theorem to_sheafification_app (P : Cᵒᵖ ⥤ D) : (J.toSheafification D).app P
 variable {D}
 
 theorem is_iso_to_sheafify {P : Cᵒᵖ ⥤ D} (hP : Presheaf.IsSheaf J P) : IsIso (J.toSheafify P) := by
-  dsimp' [← to_sheafify]
+  dsimp' [to_sheafify]
   haveI : is_iso (J.to_plus P) := by
     apply is_iso_to_plus_of_is_sheaf J P hP
   haveI : is_iso ((J.plus_functor D).map (J.to_plus P)) := by
@@ -516,7 +516,7 @@ def sheafifyLift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q
 @[simp, reassoc]
 theorem to_sheafify_sheafify_lift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q) :
     J.toSheafify P ≫ sheafifyLift J η hQ = η := by
-  dsimp' only [← sheafify_lift, ← to_sheafify]
+  dsimp' only [sheafify_lift, to_sheafify]
   simp
 
 theorem sheafify_lift_unique {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q) (γ : J.sheafify P ⟶ Q) :
@@ -531,7 +531,7 @@ theorem sheafify_lift_unique {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf
 theorem iso_sheafify_inv {P : Cᵒᵖ ⥤ D} (hP : Presheaf.IsSheaf J P) : (J.isoSheafify hP).inv = J.sheafifyLift (𝟙 _) hP :=
   by
   apply J.sheafify_lift_unique
-  simp [← iso.comp_inv_eq]
+  simp [iso.comp_inv_eq]
 
 theorem sheafify_hom_ext {P Q : Cᵒᵖ ⥤ D} (η γ : J.sheafify P ⟶ Q) (hQ : Presheaf.IsSheaf J Q)
     (h : J.toSheafify P ≫ η = J.toSheafify P ≫ γ) : η = γ := by

@@ -70,8 +70,8 @@ theorem norm_bound_pos : 0 < normBound abv bS := by
     apply bS.ne_zero i
     apply (injective_iff_map_eq_zero (Algebra.leftMulMatrix bS)).mp (Algebra.left_mul_matrix_injective bS)
     ext j k
-    simp [← h, ← Dmatrix.zero_apply]
-  simp only [← norm_bound, ← Algebra.smul_def, ← eq_nat_cast]
+    simp [h, Dmatrix.zero_apply]
+  simp only [norm_bound, Algebra.smul_def, eq_nat_cast]
   refine' mul_pos (int.coe_nat_pos.mpr (Nat.factorial_pos _)) _
   refine' pow_pos (mul_pos (int.coe_nat_pos.mpr (fintype.card_pos_iff.mpr ⟨i⟩)) _) _
   refine' lt_of_lt_of_leₓ (abv.pos hijk) (Finset.le_max' _ _ _)
@@ -83,8 +83,8 @@ theorem norm_le (a : S) {y : ℤ} (hy : ∀ k, abv (bS.repr a k) ≤ y) :
     abv (Algebra.norm R a) ≤ normBound abv bS * y ^ Fintype.card ι := by
   conv_lhs => rw [← bS.sum_repr a]
   rw [Algebra.norm_apply, ← LinearMap.det_to_matrix bS]
-  simp only [← Algebra.norm_apply, ← AlgHom.map_sum, ← AlgHom.map_smul, ← LinearEquiv.map_sum, ← LinearEquiv.map_smul, ←
-    Algebra.to_matrix_lmul_eq, ← norm_bound, ← smul_mul_assoc, mul_powₓ]
+  simp only [Algebra.norm_apply, AlgHom.map_sum, AlgHom.map_smul, LinearEquiv.map_sum, LinearEquiv.map_smul,
+    Algebra.to_matrix_lmul_eq, norm_bound, smul_mul_assoc, ← mul_powₓ]
   convert Matrix.det_sum_smul_le Finset.univ _ hy using 3
   · rw [Finset.card_univ, smul_mul_assoc, mul_comm]
     
@@ -107,13 +107,13 @@ theorem norm_lt {T : Type _} [LinearOrderedRing T] (a : S) {y : T} (hy : ∀ k, 
   have : (y' : T) < y := by
     rw [y'_def, ← Finset.max'_image (show Monotone (coe : ℤ → T) from fun x y h => int.cast_le.mpr h)]
     apply (Finset.max'_lt_iff _ (him.image _)).mpr
-    simp only [← Finset.mem_image, ← exists_prop]
+    simp only [Finset.mem_image, exists_prop]
     rintro _ ⟨x, ⟨k, -, rfl⟩, rfl⟩
     exact hy k
   have y'_nonneg : 0 ≤ y' := le_transₓ (abv.nonneg _) (hy' i)
   apply (int.cast_le.mpr (norm_le abv bS a hy')).trans_lt
-  simp only [← Int.cast_mul, ← Int.cast_pow]
-  apply mul_lt_mul' le_rfl
+  simp only [Int.cast_mul, Int.cast_pow]
+  apply mul_lt_mul' le_rflₓ
   · exact pow_lt_pow_of_lt_left this (int.cast_nonneg.mpr y'_nonneg) (fintype.card_pos_iff.mpr ⟨i⟩)
     
   · exact pow_nonneg (int.cast_nonneg.mpr y'_nonneg) _
@@ -125,8 +125,7 @@ theorem norm_lt {T : Type _} [LinearOrderedRing T] (a : S) {y : T} (hy : ∀ k, 
 
 /-- A nonzero ideal has an element of minimal norm. -/
 theorem exists_min (I : (Ideal S)⁰) :
-    ∃ b ∈ (I : Ideal S),
-      b ≠ 0 ∧ ∀, ∀ c ∈ (I : Ideal S), ∀, abv (Algebra.norm R c) < abv (Algebra.norm R b) → c = (0 : S) :=
+    ∃ b ∈ (I : Ideal S), b ≠ 0 ∧ ∀ c ∈ (I : Ideal S), abv (Algebra.norm R c) < abv (Algebra.norm R b) → c = (0 : S) :=
   by
   obtain ⟨_, ⟨b, b_mem, b_ne_zero, rfl⟩, min⟩ :=
     @Int.exists_least_of_bdd (fun a => ∃ b ∈ (I : Ideal S), b ≠ (0 : S) ∧ abv (Algebra.norm R b) = a) _ _
@@ -178,7 +177,7 @@ theorem finsetApprox.zero_not_mem : (0 : R) ∉ finsetApprox bS adm :=
 @[simp]
 theorem mem_finset_approx {x : R} :
     x ∈ finsetApprox bS adm ↔ ∃ i j, i ≠ j ∧ distinctElems bS adm i - distinctElems bS adm j = x := by
-  simp only [← finset_approx, ← Finset.mem_erase, ← Finset.mem_image]
+  simp only [finset_approx, Finset.mem_erase, Finset.mem_image]
   constructor
   · rintro ⟨hx, ⟨i, j⟩, _, rfl⟩
     refine' ⟨i, j, _, rfl⟩
@@ -208,8 +207,8 @@ theorem exists_mem_finset_approx (a : S) {b} (hb : b ≠ (0 : R)) :
   have ε_le : (norm_bound abv bS : ℝ) * (abv b • ε) ^ Fintype.card ι ≤ abv b ^ Fintype.card ι := by
     have := norm_bound_pos abv bS
     have := abv.nonneg b
-    rw [ε_eq, Algebra.smul_def, RingHom.eq_int_cast, ← rpow_nat_cast, mul_rpow, ← rpow_mul, div_mul_cancel,
-        rpow_neg_one, mul_left_commₓ, mul_inv_cancel, mul_oneₓ, rpow_nat_cast] <;>
+    rw [ε_eq, Algebra.smul_def, eq_int_cast, ← rpow_nat_cast, mul_rpow, ← rpow_mul, div_mul_cancel, rpow_neg_one,
+        mul_left_commₓ, mul_inv_cancel, mul_oneₓ, rpow_nat_cast] <;>
       try
         norm_cast
         linarith
@@ -230,20 +229,20 @@ theorem exists_mem_finset_approx (a : S) {b} (hb : b ≠ (0 : R)) :
   have μ_mul_a_eq : ∀ j, μ j • a = (b • ∑ i, qs j i • bS i) + ∑ i, rs j i • bS i := by
     intro j
     rw [← bS.sum_repr a]
-    simp only [← Finset.smul_sum, Finset.sum_add_distrib]
+    simp only [Finset.smul_sum, ← Finset.sum_add_distrib]
     refine' Finset.sum_congr rfl fun i _ => _
     rw [← s_eq, ← mul_smul, μ_eq, add_smul, mul_smul]
   obtain ⟨j, k, j_ne_k, hjk⟩ := adm.exists_approx hε hb fun j i => μ j * s i
   have hjk' : ∀ i, (abv (rs k i - rs j i) : ℝ) < abv b • ε := by
-    simpa only [← r_eq] using hjk
+    simpa only [r_eq] using hjk
   set q := ∑ i, (qs k i - qs j i) • bS i with q_eq
   set r := μ k - μ j with r_eq
   refine' ⟨q, r, (mem_finset_approx bS adm).mpr _, _⟩
   · exact ⟨k, j, j_ne_k.symm, rfl⟩
     
   have : r • a - b • q = ∑ x : ι, rs k x • bS x - rs j x • bS x := by
-    simp only [← r_eq, ← sub_smul, ← μ_mul_a_eq, ← q_eq, ← Finset.smul_sum, Finset.sum_add_distrib,
-      Finset.sum_sub_distrib, ← smul_sub]
+    simp only [r_eq, sub_smul, μ_mul_a_eq, q_eq, Finset.smul_sum, ← Finset.sum_add_distrib, ← Finset.sum_sub_distrib,
+      smul_sub]
     refine' Finset.sum_congr rfl fun x _ => _
     ring
   rw [this, Algebra.norm_algebra_map_of_basis bS, abv.map_pow]
@@ -271,7 +270,7 @@ theorem exists_mem_finset_approx' (h : Algebra.IsAlgebraic R L) (a : S) {b : S} 
   refine' lt_of_mul_lt_mul_left _ (show 0 ≤ abv (Algebra.norm R (algebraMap R S b')) from abv.nonneg _)
   refine'
     lt_of_le_of_ltₓ (le_of_eqₓ _)
-      (mul_lt_mul hqr le_rfl (abv.pos ((Algebra.norm_ne_zero_iff_of_basis bS).mpr hb)) (abv.nonneg _))
+      (mul_lt_mul hqr le_rflₓ (abv.pos ((Algebra.norm_ne_zero_iff_of_basis bS).mpr hb)) (abv.nonneg _))
   rw [← abv.map_mul, ← MonoidHom.map_mul, ← abv.map_mul, ← MonoidHom.map_mul, ← Algebra.smul_def, smul_sub b', sub_mul,
     smul_comm, h, mul_comm b a', Algebra.smul_mul_assoc r a' b, Algebra.smul_mul_assoc b' q b]
 
@@ -279,7 +278,7 @@ end Real
 
 theorem prod_finset_approx_ne_zero : algebraMap R S (∏ m in finsetApprox bS adm, m) ≠ 0 := by
   refine' mt ((injective_iff_map_eq_zero _).mp bS.algebra_map_injective _) _
-  simp only [← Finset.prod_eq_zero_iff, ← not_exists]
+  simp only [Finset.prod_eq_zero_iff, not_exists]
   rintro x hx rfl
   exact finset_approx.zero_not_mem bS adm hx
 
@@ -315,7 +314,7 @@ theorem exists_mk0_eq_mk0 [IsDedekindDomain S] [IsFractionRing S L] (h : Algebra
     · exact mt ideal.span_singleton_eq_bot.mp b_ne_zero
       
     rw [Subtype.coe_mk, Ideal.dvd_iff_le, ← hJ, mul_comm]
-    apply Ideal.mul_mono le_rfl
+    apply Ideal.mul_mono le_rflₓ
     rw [Ideal.span_le, Set.singleton_subset_iff]
     exact b_mem
   rw [Ideal.dvd_iff_le, Ideal.mul_le]
@@ -323,7 +322,7 @@ theorem exists_mk0_eq_mk0 [IsDedekindDomain S] [IsFractionRing S L] (h : Algebra
   rw [Ideal.mem_span_singleton] at hr'⊢
   obtain ⟨q, r, r_mem, lt⟩ := exists_mem_finset_approx' L bS adm h a b_ne_zero
   apply @dvd_of_mul_left_dvd _ _ q
-  simp only [← Algebra.smul_def] at lt
+  simp only [Algebra.smul_def] at lt
   rw [← sub_eq_zero.mp (b_min _ (I.1.sub_mem (I.1.mul_mem_left _ ha) (I.1.mul_mem_left _ b_mem)) lt)]
   refine' mul_dvd_mul_right (dvd_trans (RingHom.map_dvd _ _) hr') _
   exact Multiset.dvd_prod (multiset.mem_map.mpr ⟨_, r_mem, rfl⟩)
@@ -393,7 +392,7 @@ noncomputable def fintypeOfAdmissibleOfFinite [IsDedekindDomain R] :
       
     
   · refine' (Basis.linear_independent _).restrictScalars _
-    simp only [← Algebra.smul_def, ← mul_oneₓ]
+    simp only [Algebra.smul_def, mul_oneₓ]
     apply IsFractionRing.injective
     
 

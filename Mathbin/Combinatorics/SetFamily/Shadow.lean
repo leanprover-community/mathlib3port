@@ -77,12 +77,12 @@ theorem shadow_monotone : Monotone (shadow : Finset (Finset α) → Finset (Fins
 /-- `s` is in the shadow of `𝒜` iff there is an `t ∈ 𝒜` from which we can remove one element to
 get `s`. -/
 theorem mem_shadow_iff : s ∈ (∂ ) 𝒜 ↔ ∃ t ∈ 𝒜, ∃ a ∈ t, erase t a = s := by
-  simp only [← shadow, ← mem_sup, ← mem_image]
+  simp only [shadow, mem_sup, mem_image]
 
 theorem erase_mem_shadow (hs : s ∈ 𝒜) (ha : a ∈ s) : erase s a ∈ (∂ ) 𝒜 :=
   mem_shadow_iff.2 ⟨s, hs, a, ha, rfl⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (a «expr ∉ » s)
 /-- `t` is in the shadow of `𝒜` iff we can add an element to it so that the resulting finset is in
 `𝒜`. -/
 theorem mem_shadow_iff_insert_mem : s ∈ (∂ ) 𝒜 ↔ ∃ (a : _)(_ : a ∉ s), insert a s ∈ 𝒜 := by
@@ -135,7 +135,7 @@ theorem mem_shadow_iff_exists_mem_card_add : s ∈ (∂ ^[k]) 𝒜 ↔ ∃ t ∈
     rintro ⟨t, ht, hst, hcard⟩
     rwa [eq_of_subset_of_card_le hst hcard.le]
     
-  simp only [← exists_prop, ← Function.comp_app, ← Function.iterate_succ]
+  simp only [exists_prop, Function.comp_app, Function.iterate_succ]
   refine' ih.trans _
   clear ih
   constructor
@@ -184,7 +184,7 @@ theorem up_shadow_empty : (∂⁺ ) (∅ : Finset (Finset α)) = ∅ :=
 @[mono]
 theorem up_shadow_monotone : Monotone (upShadow : Finset (Finset α) → Finset (Finset α)) := fun 𝒜 ℬ => sup_mono
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a «expr ∉ » t)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (a «expr ∉ » t)
 /-- `s` is in the upper shadow of `𝒜` iff there is an `t ∈ 𝒜` from which we can remove one element
 to get `s`. -/
 theorem mem_up_shadow_iff : s ∈ (∂⁺ ) 𝒜 ↔ ∃ t ∈ 𝒜, ∃ (a : _)(_ : a ∉ t), insert a t = s := by
@@ -239,7 +239,7 @@ theorem mem_up_shadow_iff_exists_mem_card_add : s ∈ (∂⁺ ^[k]) 𝒜 ↔ ∃
     rintro ⟨t, ht, hst, hcard⟩
     rwa [← eq_of_subset_of_card_le hst hcard.ge]
     
-  simp only [← exists_prop, ← Function.comp_app, ← Function.iterate_succ]
+  simp only [exists_prop, Function.comp_app, Function.iterate_succ]
   refine' ih.trans _
   clear ih
   constructor
@@ -265,7 +265,7 @@ theorem mem_up_shadow_iff_exists_mem_card_add : s ∈ (∂⁺ ^[k]) 𝒜 ↔ ∃
 @[simp]
 theorem shadow_image_compl : ((∂ ) 𝒜).Image compl = (∂⁺ ) (𝒜.Image compl) := by
   ext s
-  simp only [← mem_image, ← exists_prop, ← mem_shadow_iff, ← mem_up_shadow_iff]
+  simp only [mem_image, exists_prop, mem_shadow_iff, mem_up_shadow_iff]
   constructor
   · rintro ⟨_, ⟨s, hs, a, ha, rfl⟩, rfl⟩
     exact ⟨sᶜ, ⟨s, hs, rfl⟩, a, not_mem_compl.2 ha, compl_erase.symm⟩
@@ -277,7 +277,7 @@ theorem shadow_image_compl : ((∂ ) 𝒜).Image compl = (∂⁺ ) (𝒜.Image c
 @[simp]
 theorem up_shadow_image_compl : ((∂⁺ ) 𝒜).Image compl = (∂ ) (𝒜.Image compl) := by
   ext s
-  simp only [← mem_image, ← exists_prop, ← mem_shadow_iff, ← mem_up_shadow_iff]
+  simp only [mem_image, exists_prop, mem_shadow_iff, mem_up_shadow_iff]
   constructor
   · rintro ⟨_, ⟨s, hs, a, ha, rfl⟩, rfl⟩
     exact ⟨sᶜ, ⟨s, hs, rfl⟩, a, mem_compl.2 ha, compl_insert.symm⟩

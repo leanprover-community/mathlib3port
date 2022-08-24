@@ -28,7 +28,7 @@ def Groupₓₓ : Type (u + 1) :=
   Bundled Groupₓ
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident AddGroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident AddGroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace Groupₓₓ
 
 @[to_additive]
@@ -49,14 +49,14 @@ def of (X : Type u) [Groupₓ X] : Groupₓₓ :=
   Bundled.of X
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident AddGroup.of]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident AddGroup.of]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Typecheck a `monoid_hom` as a morphism in `Group`. -/
 @[to_additive]
 def ofHom {X Y : Type u} [Groupₓ X] [Groupₓ Y] (f : X →* Y) : of X ⟶ of Y :=
   f
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident AddGroup.of_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident AddGroup.of_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem of_hom_apply {X Y : Type _} [Groupₓ X] [Groupₓ Y] (f : X →* Y) (x : X) : ofHom f x = f x :=
   rfl
@@ -101,7 +101,7 @@ def CommGroupₓₓ : Type (u + 1) :=
   Bundled CommGroupₓ
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident AddCommGroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident AddCommGroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `Ab` is an abbreviation for `AddCommGroup`, for the sake of mathematicians' sanity. -/
 abbrev Ab :=
   AddCommGroupₓₓ
@@ -126,14 +126,14 @@ def of (G : Type u) [CommGroupₓ G] : CommGroupₓₓ :=
   Bundled.of G
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident AddCommGroup.of]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident AddCommGroup.of]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Typecheck a `monoid_hom` as a morphism in `CommGroup`. -/
 @[to_additive]
 def ofHom {X Y : Type u} [CommGroupₓ X] [CommGroupₓ Y] (f : X →* Y) : of X ⟶ of Y :=
   f
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident AddCommGroup.of_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident AddCommGroup.of_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem of_hom_apply {X Y : Type _} [CommGroupₓ X] [CommGroupₓ Y] (f : X →* Y) (x : X) : ofHom f x = f x :=
   rfl
@@ -185,7 +185,7 @@ end CommGroupₓₓ
 -- Now, it just works.
 @[to_additive]
 example {R S : CommGroupₓₓ} (i : R ⟶ S) (r : R) (h : r = 1) : i r = 1 := by
-  simp [← h]
+  simp [h]
 
 namespace AddCommGroupₓₓ
 
@@ -213,7 +213,7 @@ theorem int_hom_ext {G : AddCommGroupₓₓ.{0}} (f g : AddCommGroupₓₓ.of �
 theorem injective_of_mono {G H : AddCommGroupₓₓ.{0}} (f : G ⟶ H) [Mono f] : Function.Injective f := fun g₁ g₂ h => by
   have t0 : as_hom g₁ ≫ f = as_hom g₂ ≫ f := by
     ext
-    simpa [← as_hom_apply] using h
+    simpa [as_hom_apply] using h
   have t1 : as_hom g₁ = as_hom g₂ := (cancel_mono _).1 t0
   apply as_hom_injective t1
 
@@ -226,7 +226,7 @@ def MulEquiv.toGroupIso {X Y : Groupₓₓ} (e : X ≃* Y) : X ≅ Y where
   inv := e.symm.toMonoidHom
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_equiv.to_AddGroup_iso]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_equiv.to_AddGroup_iso]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Build an isomorphism in the category `CommGroup` from a `mul_equiv` between `comm_group`s. -/
 @[to_additive AddEquiv.toAddCommGroupIso, simps]
 def MulEquiv.toCommGroupIso {X Y : CommGroupₓₓ} (e : X ≃* Y) : X ≅ Y where
@@ -234,7 +234,7 @@ def MulEquiv.toCommGroupIso {X Y : CommGroupₓₓ} (e : X ≃* Y) : X ≅ Y whe
   inv := e.symm.toMonoidHom
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_equiv.to_AddCommGroup_iso]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_equiv.to_AddCommGroup_iso]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace CategoryTheory.Iso
 
 /-- Build a `mul_equiv` from an isomorphism in the category `Group`. -/

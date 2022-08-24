@@ -47,7 +47,7 @@ instance : IsLawfulMonad Set where
   comp_map := fun α β γ f g s => image_comp _ _ _
   pure_bind := fun α β => bUnion_singleton
   bind_assoc := fun α β γ s f g => by
-    simp only [← bind_def, ← bUnion_Union]
+    simp only [bind_def, bUnion_Union]
   bind_pure_comp_eq_map := fun α β f s => (image_eq_Union _ _).symm
   bind_map_eq_seq := fun α β s t => seq_def.symm
 

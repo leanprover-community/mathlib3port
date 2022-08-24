@@ -117,7 +117,7 @@ theorem generate_from_pi_eq {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountab
         simp
         
       · rw [← Ne.def] at h
-        simp [← h]
+        simp [h]
         
     rw [this, ← Union_univ_pi]
     apply MeasurableSet.Union
@@ -168,7 +168,7 @@ def piPremeasure (m : ∀ i, OuterMeasure (α i)) (s : Set (∀ i, α i)) : ℝ�
 
 theorem pi_premeasure_pi {s : ∀ i, Set (α i)} (hs : (pi Univ s).Nonempty) :
     piPremeasure m (pi Univ s) = ∏ i, m i (s i) := by
-  simp [← hs]
+  simp [hs]
 
 theorem pi_premeasure_pi' {s : ∀ i, Set (α i)} : piPremeasure m (pi Univ s) = ∏ i, m i (s i) := by
   cases is_empty_or_nonempty ι
@@ -178,11 +178,10 @@ theorem pi_premeasure_pi' {s : ∀ i, Set (α i)} : piPremeasure m (pi Univ s) =
   · rcases univ_pi_eq_empty_iff.mp h with ⟨i, hi⟩
     have : ∃ i, m i (s i) = 0 :=
       ⟨i, by
-        simp [← hi]⟩
-    simpa [← h, ← Finset.card_univ, ← zero_pow (fintype.card_pos_iff.mpr ‹_›), ← @eq_comm _ (0 : ℝ≥0∞), ←
-      Finset.prod_eq_zero_iff]
+        simp [hi]⟩
+    simpa [h, Finset.card_univ, zero_pow (fintype.card_pos_iff.mpr ‹_›), @eq_comm _ (0 : ℝ≥0∞), Finset.prod_eq_zero_iff]
     
-  · simp [← h]
+  · simp [h]
     
 
 theorem pi_premeasure_pi_mono {s t : Set (∀ i, α i)} (h : s ⊆ t) : piPremeasure m s ≤ piPremeasure m t :=
@@ -190,7 +189,7 @@ theorem pi_premeasure_pi_mono {s t : Set (∀ i, α i)} (h : s ⊆ t) : piPremea
 
 theorem pi_premeasure_pi_eval {s : Set (∀ i, α i)} : piPremeasure m (pi Univ fun i => eval i '' s) = piPremeasure m s :=
   by
-  simp [← pi_premeasure_pi']
+  simp [pi_premeasure_pi']
 
 namespace OuterMeasure
 
@@ -204,7 +203,7 @@ protected def pi (m : ∀ i, OuterMeasure (α i)) : OuterMeasure (∀ i, α i) :
 theorem pi_pi_le (m : ∀ i, OuterMeasure (α i)) (s : ∀ i, Set (α i)) : OuterMeasure.pi m (pi Univ s) ≤ ∏ i, m i (s i) :=
   by
   cases' (pi univ s).eq_empty_or_nonempty with h h
-  simp [← h]
+  simp [h]
   exact (bounded_by_le _).trans_eq (pi_premeasure_pi h)
 
 theorem le_pi {m : ∀ i, OuterMeasure (α i)} {n : OuterMeasure (∀ i, α i)} :
@@ -216,7 +215,7 @@ theorem le_pi {m : ∀ i, OuterMeasure (α i)} {n : OuterMeasure (∀ i, α i)} 
     
   · intro h s hs
     refine' le_transₓ (n.mono <| subset_pi_eval_image univ s) (h _ _)
-    simp [← univ_pi_nonempty_iff, ← hs]
+    simp [univ_pi_nonempty_iff, hs]
     
 
 end OuterMeasure
@@ -296,7 +295,7 @@ theorem pi_caratheodory : MeasurableSpace.pi ≤ (OuterMeasure.pi fun i => (μ i
   intro t
   simp_rw [pi_premeasure]
   refine' Finset.prod_add_prod_le' (Finset.mem_univ i) _ _ _
-  · simp [← image_inter_preimage, ← image_diff_preimage, ← measure_inter_add_diff _ hs, ← le_reflₓ]
+  · simp [image_inter_preimage, image_diff_preimage, measure_inter_add_diff _ hs, le_reflₓ]
     
   · rintro j - hj
     apply mono'
@@ -355,7 +354,7 @@ def FiniteSpanningSetsIn.pi {C : ∀ i, Set (Set (α i))} (hμ : ∀ i, (μ i).F
         measure_mono (pi_mono fun i hi => subset_to_measurable _ _)
       _ = ∏ i, μ i (to_measurable (μ i) ((hμ i).Set (e n i))) := pi_pi_aux μ _ fun i => measurable_set_to_measurable _ _
       _ = ∏ i, μ i ((hμ i).Set (e n i)) := by
-        simp only [← measure_to_measurable]
+        simp only [measure_to_measurable]
       _ < ∞ := Ennreal.prod_lt_top fun i hi => ((hμ i).Finite _).Ne
       
     
@@ -434,7 +433,7 @@ theorem pi_eval_preimage_null {i : ι} {s : Set (α i)} (hs : μ i s = 0) : Meas
   -- Now rewrite it as `set.pi`, and apply `pi_pi`
   rw [← univ_pi_update_univ, pi_pi]
   apply Finset.prod_eq_zero (Finset.mem_univ i)
-  simp [← hμt]
+  simp [hμt]
 
 theorem pi_hyperplane (i : ι) [HasNoAtoms (μ i)] (x : α i) : Measure.pi μ { f : ∀ i, α i | f i = x } = 0 :=
   show Measure.pi μ (eval i ⁻¹' {x}) = 0 from pi_eval_preimage_null _ (measure_singleton x)
@@ -458,12 +457,12 @@ theorem ae_le_pi {β : ι → Type _} [∀ i, Preorderₓ (β i)] {f f' : ∀ i,
     (fun (x : ∀ i, α i) i => f i (x i)) ≤ᵐ[Measure.pi μ] fun x i => f' i (x i) :=
   (eventually_all.2 fun i => tendsto_eval_ae_ae.Eventually (h i)).mono fun x hx => hx
 
-theorem ae_le_set_pi {I : Set ι} {s t : ∀ i, Set (α i)} (h : ∀, ∀ i ∈ I, ∀, s i ≤ᵐ[μ i] t i) :
+theorem ae_le_set_pi {I : Set ι} {s t : ∀ i, Set (α i)} (h : ∀ i ∈ I, s i ≤ᵐ[μ i] t i) :
     Set.Pi I s ≤ᵐ[Measure.pi μ] Set.Pi I t :=
   ((eventually_all_finite I.to_finite).2 fun i hi => tendsto_eval_ae_ae.Eventually (h i hi)).mono fun x hst hx i hi =>
     hst i hi <| hx i hi
 
-theorem ae_eq_set_pi {I : Set ι} {s t : ∀ i, Set (α i)} (h : ∀, ∀ i ∈ I, ∀, s i =ᵐ[μ i] t i) :
+theorem ae_eq_set_pi {I : Set ι} {s t : ∀ i, Set (α i)} (h : ∀ i ∈ I, s i =ᵐ[μ i] t i) :
     Set.Pi I s =ᵐ[Measure.pi μ] Set.Pi I t :=
   (ae_le_set_pi fun i hi => (h i hi).le).antisymm (ae_le_set_pi fun i hi => (h i hi).symm.le)
 
@@ -634,7 +633,7 @@ theorem measure_preserving_pi_fin_succ_above_equiv {n : ℕ} {α : Finₓ (n + 1
   refine' ⟨e.measurable, (pi_eq fun s hs => _).symm⟩
   rw [e.map_apply, i.prod_univ_succ_above _, ← pi_pi, ← prod_prod]
   congr 1 with ⟨x, f⟩
-  simp [← i.forall_iff_succ_above]
+  simp [i.forall_iff_succ_above]
 
 theorem volume_preserving_pi_fin_succ_above_equiv {n : ℕ} (α : Finₓ (n + 1) → Type u) [∀ i, MeasureSpace (α i)]
     [∀ i, SigmaFinite (volume : Measure (α i))] (i : Finₓ (n + 1)) :
@@ -649,7 +648,7 @@ theorem measure_preserving_fun_unique {β : Type u} {m : MeasurableSpace β} (μ
     rw [pi_premeasure, Fintype.prod_unique, to_outer_measure_apply, e.symm.map_apply]
     congr 1
     exact e.to_equiv.image_eq_preimage s
-  simp only [← measure.pi, ← outer_measure.pi, ← this, ← bounded_by_measure, ← to_outer_measure_to_measure]
+  simp only [measure.pi, outer_measure.pi, this, bounded_by_measure, to_outer_measure_to_measure]
   exact (e.symm.measurable.measure_preserving _).symm e.symm
 
 theorem volume_preserving_fun_unique (α : Type u) (β : Type v) [Unique α] [MeasureSpace β] :
@@ -674,7 +673,7 @@ theorem measure_preserving_fin_two_arrow_vec {α : Type u} {m : MeasurableSpace 
 
 theorem measure_preserving_fin_two_arrow {α : Type u} {m : MeasurableSpace α} (μ : Measure α) [SigmaFinite μ] :
     MeasurePreserving MeasurableEquiv.finTwoArrow (Measure.pi fun _ => μ) (μ.Prod μ) := by
-  simpa only [← Matrix.vec_single_eq_const, ← Matrix.vec_cons_const] using measure_preserving_fin_two_arrow_vec μ μ
+  simpa only [Matrix.vec_single_eq_const, Matrix.vec_cons_const] using measure_preserving_fin_two_arrow_vec μ μ
 
 theorem volume_preserving_fin_two_arrow (α : Type u) [MeasureSpace α] [SigmaFinite (volume : Measure α)] :
     MeasurePreserving (@MeasurableEquiv.finTwoArrow α _) volume volume :=

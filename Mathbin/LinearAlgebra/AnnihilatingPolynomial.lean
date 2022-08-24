@@ -86,8 +86,8 @@ variable {𝕜}
 
 @[simp]
 theorem ann_ideal_generator_eq_zero_iff {a : A} : annIdealGenerator 𝕜 a = 0 ↔ annIdeal 𝕜 a = ⊥ := by
-  simp only [← ann_ideal_generator, ← mul_eq_zero, ← is_principal.eq_bot_iff_generator_eq_zero, ← Polynomial.C_eq_zero,
-    ← inv_eq_zero, ← Polynomial.leading_coeff_eq_zero, ← or_selfₓ]
+  simp only [ann_ideal_generator, mul_eq_zero, is_principal.eq_bot_iff_generator_eq_zero, Polynomial.C_eq_zero,
+    inv_eq_zero, Polynomial.leading_coeff_eq_zero, or_selfₓ]
 
 end
 
@@ -146,7 +146,7 @@ theorem ann_ideal_generator_eq_minpoly (a : A) : annIdealGenerator 𝕜 a = minp
   · rw [h, minpoly.eq_zero]
     rintro ⟨p, p_monic, hp : aeval a p = 0⟩
     refine' p_monic.ne_zero (ideal.mem_bot.mp _)
-    simpa only [← ann_ideal_generator_eq_zero_iff.mp h] using mem_ann_ideal_iff_aeval_eq_zero.mpr hp
+    simpa only [ann_ideal_generator_eq_zero_iff.mp h] using mem_ann_ideal_iff_aeval_eq_zero.mpr hp
     
   · exact
       minpoly.unique _ _ (monic_ann_ideal_generator _ _ h) (ann_ideal_generator_aeval_eq_zero _ _) fun q q_monic hq =>

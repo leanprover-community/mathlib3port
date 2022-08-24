@@ -260,7 +260,7 @@ def mapMapIso {X Y : Top.{u}} (H : X ≅ Y) : Opens Y ≌ Opens X where
       (fun U =>
         eqToIso
           (by
-            simp [← map, ← Set.preimage_preimage]))
+            simp [map, Set.preimage_preimage]))
       (by
         intro _ _ _
         simp )
@@ -269,7 +269,7 @@ def mapMapIso {X Y : Top.{u}} (H : X ≅ Y) : Opens Y ≌ Opens X where
       (fun U =>
         eqToIso
           (by
-            simp [← map, ← Set.preimage_preimage]))
+            simp [map, Set.preimage_preimage]))
       (by
         intro _ _ _
         simp )

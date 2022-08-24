@@ -381,7 +381,7 @@ instance : PseudoMetricSpace (Hamming β) :=
         · rintro ⟨_, hε, hs⟩ ⟨_, _⟩ hab
           rw [mem_id_rel] at hab
           rw [hab]
-          refine' hs (lt_of_eq_of_lt _ hε)
+          refine' hs (lt_of_eq_of_ltₓ _ hε)
           exact_mod_cast hamming_dist_self _
           ,
     toBornology := ⟨⊥, bot_le⟩,

@@ -58,7 +58,7 @@ theorem is_square_op_iff (a : α) : IsSquare (op a) ↔ IsSquare a :=
     ⟨unop c, by
       rw [← unop_mul, ← hc, unop_op]⟩,
     fun ⟨c, hc⟩ => by
-    simp [← hc]⟩
+    simp [hc]⟩
 
 /-- Create a decidability instance for `is_square` on `fintype`s. -/
 instance isSquareDecidable [Fintype α] [DecidableEq α] : DecidablePred (IsSquare : α → Prop) := fun a =>
@@ -84,7 +84,7 @@ variable [Monoidₓ α]
 
 @[to_additive even_iff_exists_two_nsmul]
 theorem is_square_iff_exists_sq (m : α) : IsSquare m ↔ ∃ c, m = c ^ 2 := by
-  simp [← IsSquare, ← pow_two]
+  simp [IsSquare, pow_two]
 
 alias is_square_iff_exists_sq ↔ IsSquare.exists_sq is_square_of_exists_sq
 
@@ -112,7 +112,7 @@ end Monoidₓ
 /-- `0` is always a square (in a monoid with zero). -/
 theorem is_square_zero (M : Type _) [MonoidWithZeroₓ M] : IsSquare (0 : M) := by
   use 0
-  simp only [← mul_zero]
+  simp only [mul_zero]
 
 @[to_additive]
 theorem IsSquare.mul [CommSemigroupₓ α] {a b : α} : IsSquare a → IsSquare b → IsSquare (a * b) := by
@@ -148,7 +148,7 @@ theorem Even.neg_one_zpow (h : Even n) : (-1 : α) ^ n = 1 := by
 end DivisionMonoid
 
 theorem even_abs [SubtractionMonoid α] [LinearOrderₓ α] {a : α} : Even (abs a) ↔ Even a := by
-  cases abs_choice a <;> simp only [← h, ← even_neg]
+  cases abs_choice a <;> simp only [h, even_neg]
 
 @[to_additive]
 theorem IsSquare.div [DivisionCommMonoid α] {a b : α} (ha : IsSquare a) (hb : IsSquare b) : IsSquare (a / b) := by
@@ -177,15 +177,15 @@ section Semiringₓ
 variable [Semiringₓ α] [Semiringₓ β] {m n : α}
 
 theorem even_iff_exists_two_mul (m : α) : Even m ↔ ∃ c, m = 2 * c := by
-  simp [← even_iff_exists_two_nsmul]
+  simp [even_iff_exists_two_nsmul]
 
 theorem even_iff_two_dvd {a : α} : Even a ↔ 2 ∣ a := by
-  simp [← Even, ← Dvd.Dvd, ← two_mul]
+  simp [Even, Dvd.Dvd, two_mul]
 
 @[simp]
 theorem range_two_mul (α : Type _) [Semiringₓ α] : (Set.Range fun x : α => 2 * x) = { a | Even a } := by
   ext x
-  simp [← eq_comm, ← two_mul, ← Even]
+  simp [eq_comm, two_mul, Even]
 
 @[simp]
 theorem even_bit0 (a : α) : Even (bit0 a) :=
@@ -232,7 +232,7 @@ theorem odd_bit1 (a : α) : Odd (bit1 a) :=
 @[simp]
 theorem range_two_mul_add_one (α : Type _) [Semiringₓ α] : (Set.Range fun x : α => 2 * x + 1) = { a | Odd a } := by
   ext x
-  simp [← Odd, ← eq_comm]
+  simp [Odd, eq_comm]
 
 theorem Even.add_odd : Even m → Odd n → Odd (m + n) := by
   rintro ⟨m, rfl⟩ ⟨n, rfl⟩
@@ -262,7 +262,7 @@ theorem Odd.map [RingHomClass F α β] (f : F) : Odd m → Odd (f m) := by
   rintro ⟨m, rfl⟩
   exact
     ⟨f m, by
-      simp [← two_mul]⟩
+      simp [two_mul]⟩
 
 @[simp]
 theorem Odd.mul : Odd m → Odd n → Odd (m * n) := by
@@ -315,7 +315,7 @@ variable [Ringₓ α] {a b : α} {n : ℕ}
 
 @[simp]
 theorem even_neg_two : Even (-2 : α) := by
-  simp only [← even_neg, ← even_two]
+  simp only [even_neg, even_two]
 
 theorem Odd.neg (hp : Odd a) : Odd (-a) := by
   obtain ⟨k, hk⟩ := hp
@@ -343,7 +343,7 @@ theorem Odd.sub_odd (ha : Odd a) (hb : Odd b) : Even (a - b) := by
   exact ha.add_odd hb.neg
 
 theorem odd_abs [LinearOrderₓ α] : Odd (abs a) ↔ Odd a := by
-  cases' abs_choice a with h h <;> simp only [← h, ← odd_neg]
+  cases' abs_choice a with h h <;> simp only [h, odd_neg]
 
 end Ringₓ
 
@@ -352,16 +352,16 @@ section Powers
 variable [LinearOrderedRing R] {a : R} {n : ℕ}
 
 theorem Even.pow_nonneg (hn : Even n) (a : R) : 0 ≤ a ^ n := by
-  cases' hn with k hk <;> simpa only [← hk, ← two_mul] using pow_bit0_nonneg a k
+  cases' hn with k hk <;> simpa only [hk, two_mul] using pow_bit0_nonneg a k
 
 theorem Even.pow_pos (hn : Even n) (ha : a ≠ 0) : 0 < a ^ n := by
-  cases' hn with k hk <;> simpa only [← hk, ← two_mul] using pow_bit0_pos ha k
+  cases' hn with k hk <;> simpa only [hk, two_mul] using pow_bit0_pos ha k
 
 theorem Odd.pow_nonpos (hn : Odd n) (ha : a ≤ 0) : a ^ n ≤ 0 := by
-  cases' hn with k hk <;> simpa only [← hk, ← two_mul] using pow_bit1_nonpos_iff.mpr ha
+  cases' hn with k hk <;> simpa only [hk, two_mul] using pow_bit1_nonpos_iff.mpr ha
 
 theorem Odd.pow_neg (hn : Odd n) (ha : a < 0) : a ^ n < 0 := by
-  cases' hn with k hk <;> simpa only [← hk, ← two_mul] using pow_bit1_neg_iff.mpr ha
+  cases' hn with k hk <;> simpa only [hk, two_mul] using pow_bit1_neg_iff.mpr ha
 
 theorem Odd.pow_nonneg_iff (hn : Odd n) : 0 ≤ a ^ n ↔ 0 ≤ a :=
   ⟨fun h => le_of_not_ltₓ fun ha => h.not_lt <| hn.pow_neg ha, fun ha => pow_nonneg ha n⟩
@@ -389,7 +389,7 @@ theorem pow_bit0_abs (a : R) (p : ℕ) : abs a ^ bit0 p = a ^ bit0 p :=
   (even_bit0 _).pow_abs _
 
 theorem Odd.strict_mono_pow (hn : Odd n) : StrictMono fun a : R => a ^ n := by
-  cases' hn with k hk <;> simpa only [← hk, ← two_mul] using strict_mono_pow_bit1 _
+  cases' hn with k hk <;> simpa only [hk, two_mul] using strict_mono_pow_bit1 _
 
 end Powers
 
@@ -427,22 +427,22 @@ protected theorem Even.zpow_nonneg (hn : Even n) (a : K) : 0 ≤ a ^ n := by
     
 
 theorem Even.zpow_pos (hn : Even n) (ha : a ≠ 0) : 0 < a ^ n := by
-  cases' hn with k hk <;> simpa only [← hk, ← two_mul] using zpow_bit0_pos ha k
+  cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit0_pos ha k
 
 protected theorem Odd.zpow_nonneg (hn : Odd n) (ha : 0 ≤ a) : 0 ≤ a ^ n := by
-  cases' hn with k hk <;> simpa only [← hk, ← two_mul] using zpow_bit1_nonneg_iff.mpr ha
+  cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit1_nonneg_iff.mpr ha
 
 theorem Odd.zpow_pos (hn : Odd n) (ha : 0 < a) : 0 < a ^ n := by
-  cases' hn with k hk <;> simpa only [← hk, ← two_mul] using zpow_bit1_pos_iff.mpr ha
+  cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit1_pos_iff.mpr ha
 
 theorem Odd.zpow_nonpos (hn : Odd n) (ha : a ≤ 0) : a ^ n ≤ 0 := by
-  cases' hn with k hk <;> simpa only [← hk, ← two_mul] using zpow_bit1_nonpos_iff.mpr ha
+  cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit1_nonpos_iff.mpr ha
 
 theorem Odd.zpow_neg (hn : Odd n) (ha : a < 0) : a ^ n < 0 := by
-  cases' hn with k hk <;> simpa only [← hk, ← two_mul] using zpow_bit1_neg_iff.mpr ha
+  cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit1_neg_iff.mpr ha
 
 theorem Even.zpow_abs {p : ℤ} (hp : Even p) (a : K) : abs a ^ p = a ^ p := by
-  cases' abs_choice a with h h <;> simp only [← h, ← hp.neg_zpow _]
+  cases' abs_choice a with h h <;> simp only [h, hp.neg_zpow _]
 
 @[simp]
 theorem zpow_bit0_abs (a : K) (p : ℤ) : abs a ^ bit0 p = a ^ bit0 p :=

@@ -164,7 +164,7 @@ instance finBiconeHom [FinCategory J] (j k : Bicone J) : Fintype (j ⟶ k) := by
     { elems := Finset.image bicone_hom.diagram (Fintype.elems (j ⟶ k)),
       complete := fun f => by
         cases f
-        simp only [← Finset.mem_image]
+        simp only [Finset.mem_image]
         use f_f
         simpa using Fintype.complete _ }
 

@@ -132,5 +132,5 @@ instance (priority := 100) UniformConvexSpace.to_strict_convex_space : StrictCon
   (StrictConvexSpace.of_norm_add_lt one_half_pos one_half_pos (add_halves _)) fun x y hx hy hxy => by
     obtain ⟨δ, hδ, h⟩ := exists_forall_closed_ball_dist_add_le_two_sub E (norm_sub_pos_iff.2 hxy)
     rw [← smul_add, norm_smul_of_nonneg one_half_pos.le, ← lt_div_iff' one_half_pos, one_div_one_div]
-    exact (h hx hy le_rfl).trans_lt (sub_lt_self _ hδ)
+    exact (h hx hy le_rflₓ).trans_lt (sub_lt_self _ hδ)
 

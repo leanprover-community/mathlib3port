@@ -166,7 +166,7 @@ instance : Unique (Finpartition (⊥ : α)) :=
 def _root_.is_atom.unique_finpartition (ha : IsAtom a) : Unique (Finpartition a) where
   default := indiscrete ha.1
   uniq := fun P => by
-    have h : ∀, ∀ b ∈ P.parts, ∀, b = a := fun b hb => (ha.le_iff.mp <| P.le hb).resolve_left (P.ne_bot hb)
+    have h : ∀ b ∈ P.parts, b = a := fun b hb => (ha.le_iff.mp <| P.le hb).resolve_left (P.ne_bot hb)
     ext b
     refine' Iff.trans ⟨h b, _⟩ mem_singleton.symm
     rintro rfl
@@ -188,7 +188,7 @@ instance : LE (Finpartition a) :=
   ⟨fun P Q => ∀ ⦃b⦄, b ∈ P.parts → ∃ c ∈ Q.parts, b ≤ c⟩
 
 instance : PartialOrderₓ (Finpartition a) :=
-  { Finpartition.hasLe with le_refl := fun P b hb => ⟨b, hb, le_rfl⟩,
+  { Finpartition.hasLe with le_refl := fun P b hb => ⟨b, hb, le_rflₓ⟩,
     le_trans := fun P Q R hPQ hQR b hb => by
       obtain ⟨c, hc, hbc⟩ := hPQ hb
       obtain ⟨d, hd, hcd⟩ := hQR hc
@@ -212,7 +212,7 @@ instance [Decidable (a = ⊥)] : OrderTop (Finpartition a) where
   le_top := fun P => by
     split_ifs
     · intro x hx
-      simpa [← h, ← P.ne_bot hx] using P.le hx
+      simpa [h, P.ne_bot hx] using P.le hx
       
     · exact fun b hb => ⟨a, mem_singleton_self _, P.le hb⟩
       
@@ -221,7 +221,7 @@ theorem parts_top_subset (a : α) [Decidable (a = ⊥)] : (⊤ : Finpartition a)
   intro b hb
   change b ∈ Finpartition.parts (dite _ _ _) at hb
   split_ifs  at hb
-  · simp only [← copy_parts, ← empty_parts, ← not_mem_empty] at hb
+  · simp only [copy_parts, empty_parts, not_mem_empty] at hb
     exact hb.elim
     
   · exact hb
@@ -247,13 +247,13 @@ instance : HasInf (Finpartition a) :=
     ofErase ((P.parts ×ˢ Q.parts).Image fun bc => bc.1⊓bc.2)
       (by
         rw [sup_indep_iff_disjoint_erase]
-        simp only [← mem_image, ← and_imp, ← exists_prop, ← forall_exists_index, ← id.def, ← Prod.exists, ← mem_product,
-          ← Finset.disjoint_sup_right, ← mem_erase, ← Ne.def]
+        simp only [mem_image, and_imp, exists_prop, forall_exists_index, id.def, Prod.exists, mem_product,
+          Finset.disjoint_sup_right, mem_erase, Ne.def]
         rintro _ x₁ y₁ hx₁ hy₁ rfl _ h x₂ y₂ hx₂ hy₂ rfl
         rcases eq_or_ne x₁ x₂ with (rfl | xdiff)
         · refine' Disjoint.mono inf_le_right inf_le_right (Q.disjoint hy₁ hy₂ _)
           intro t
-          simpa [← t] using h
+          simpa [t] using h
           
         exact Disjoint.mono inf_le_left inf_le_left (P.disjoint hx₁ hx₂ xdiff))
       (by
@@ -304,7 +304,7 @@ theorem exists_le_of_le {a b : α} {P Q : Finpartition a} (h : P ≤ Q) (hb : b 
 
 theorem card_mono {a : α} {P Q : Finpartition a} (h : P ≤ Q) : Q.parts.card ≤ P.parts.card := by
   classical
-  have : ∀, ∀ b ∈ Q.parts, ∀, ∃ c ∈ P.parts, c ≤ b := fun b => exists_le_of_le h
+  have : ∀ b ∈ Q.parts, ∃ c ∈ P.parts, c ≤ b := fun b => exists_le_of_le h
   choose f hP hf using this
   rw [← card_attach]
   refine' card_le_card_of_inj_on (fun b => f _ b.2) (fun b _ => hP _ b.2) fun b hb c hc h => _
@@ -317,12 +317,12 @@ variable [DecidableEq α] {a b c : α}
 
 section Bind
 
-variable {P : Finpartition a} {Q : ∀, ∀ i ∈ P.parts, ∀, Finpartition i}
+variable {P : Finpartition a} {Q : ∀ i ∈ P.parts, Finpartition i}
 
 /-- Given a finpartition `P` of `a` and finpartitions of each part of `P`, this yields the
 finpartition of `a` obtained by juxtaposing all the subpartitions. -/
 @[simps]
-def bind (P : Finpartition a) (Q : ∀, ∀ i ∈ P.parts, ∀, Finpartition i) : Finpartition a where
+def bind (P : Finpartition a) (Q : ∀ i ∈ P.parts, Finpartition i) : Finpartition a where
   parts := P.parts.attach.bUnion fun i => (Q i.1 i.2).parts
   SupIndep := by
     rw [sup_indep_iff_pairwise_disjoint]
@@ -354,7 +354,7 @@ theorem mem_bind : b ∈ (P.bind Q).parts ↔ ∃ A hA, b ∈ (Q A hA).parts := 
     exact ⟨⟨A, hA⟩, mem_attach _ ⟨A, hA⟩, h⟩
     
 
-theorem card_bind (Q : ∀, ∀ i ∈ P.parts, ∀, Finpartition i) :
+theorem card_bind (Q : ∀ i ∈ P.parts, Finpartition i) :
     (P.bind Q).parts.card = ∑ A in P.parts.attach, (Q _ A.2).parts.card := by
   apply card_bUnion
   rintro ⟨b, hb⟩ - ⟨c, hc⟩ - hbc d
@@ -396,7 +396,7 @@ def avoid (b : α) : Finpartition (a \ b) :=
 
 @[simp]
 theorem mem_avoid : c ∈ (P.avoid b).parts ↔ ∃ d ∈ P.parts, ¬d ≤ b ∧ d \ b = c := by
-  simp only [← avoid, ← of_erase_parts, ← mem_erase, ← Ne.def, ← mem_image, ← exists_prop, exists_and_distrib_left, ←
+  simp only [avoid, of_erase_parts, mem_erase, Ne.def, mem_image, exists_prop, ← exists_and_distrib_left,
     @And.left_comm (c ≠ ⊥)]
   refine' exists_congr fun d => and_congr_right' <| and_congr_left _
   rintro rfl
@@ -468,7 +468,7 @@ section Atomise
 /-- Cuts `s` along the finsets in `F`: Two elements of `s` will be in the same part if they are
 in the same finsets of `F`. -/
 def atomise (s : Finset α) (F : Finset (Finset α)) : Finpartition s :=
-  ofErase (F.Powerset.Image fun Q => s.filter fun i => ∀, ∀ t ∈ F, ∀, t ∈ Q ↔ i ∈ t)
+  ofErase (F.Powerset.Image fun Q => s.filter fun i => ∀ t ∈ F, t ∈ Q ↔ i ∈ t)
     (Set.PairwiseDisjoint.sup_indep fun x hx y hy h z hz =>
       h
         (by
@@ -502,16 +502,14 @@ def atomise (s : Finset α) (F : Finset (Finset α)) : Finpartition s :=
 
 variable {F : Finset (Finset α)}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (Q «expr ⊆ » F)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (Q «expr ⊆ » F)
 theorem mem_atomise :
-    t ∈ (atomise s F).parts ↔ t.Nonempty ∧ ∃ (Q : _)(_ : Q ⊆ F), (s.filter fun i => ∀, ∀ u ∈ F, ∀, u ∈ Q ↔ i ∈ u) = t :=
-  by
-  simp only [← atomise, ← of_erase, ← bot_eq_empty, ← mem_erase, ← mem_image, ← nonempty_iff_ne_empty, ← mem_singleton,
-    ← and_comm, ← mem_powerset, ← exists_prop]
+    t ∈ (atomise s F).parts ↔ t.Nonempty ∧ ∃ (Q : _)(_ : Q ⊆ F), (s.filter fun i => ∀ u ∈ F, u ∈ Q ↔ i ∈ u) = t := by
+  simp only [atomise, of_erase, bot_eq_empty, mem_erase, mem_image, nonempty_iff_ne_empty, mem_singleton, and_comm,
+    mem_powerset, exists_prop]
 
 theorem atomise_empty (hs : s.Nonempty) : (atomise s ∅).parts = {s} := by
-  simp only [← atomise, ← powerset_empty, ← image_singleton, ← not_mem_empty, ← IsEmpty.forall_iff, ← implies_true_iff,
-    ← filter_true]
+  simp only [atomise, powerset_empty, image_singleton, not_mem_empty, IsEmpty.forall_iff, implies_true_iff, filter_true]
   exact erase_eq_of_not_mem (not_mem_singleton.2 hs.ne_empty.symm)
 
 theorem card_atomise_le : (atomise s F).parts.card ≤ 2 ^ F.card :=
@@ -531,16 +529,16 @@ theorem card_filter_atomise_le_two_pow (ht : t ∈ F) :
     ((atomise s F).parts.filter fun u => u ⊆ t ∧ u.Nonempty).card ≤ 2 ^ (F.card - 1) := by
   suffices h :
     ((atomise s F).parts.filter fun u => u ⊆ t ∧ u.Nonempty) ⊆
-      (F.erase t).Powerset.Image fun P => s.filter fun i => ∀, ∀ x ∈ F, ∀, x ∈ insert t P ↔ i ∈ x
+      (F.erase t).Powerset.Image fun P => s.filter fun i => ∀ x ∈ F, x ∈ insert t P ↔ i ∈ x
   · refine' (card_le_of_subset h).trans (card_image_le.trans _)
     rw [card_powerset, card_erase_of_mem ht]
     
   rw [subset_iff]
-  simp only [← mem_erase, ← mem_sdiff, ← mem_powerset, ← mem_image, ← exists_prop, ← mem_filter, ← and_assoc, ←
-    Finset.Nonempty, ← exists_imp_distrib, ← and_imp, ← mem_atomise, ← forall_apply_eq_imp_iff₂]
+  simp only [mem_erase, mem_sdiff, mem_powerset, mem_image, exists_prop, mem_filter, and_assoc, Finset.Nonempty,
+    exists_imp_distrib, and_imp, mem_atomise, forall_apply_eq_imp_iff₂]
   rintro P' i hi P PQ rfl hy₂ j hj
   refine' ⟨P.erase t, erase_subset_erase _ PQ, _⟩
-  simp only [← insert_erase (((mem_filter.1 hi).2 _ ht).2 <| hy₂ hi), ← filter_congr_decidable]
+  simp only [insert_erase (((mem_filter.1 hi).2 _ ht).2 <| hy₂ hi), filter_congr_decidable]
 
 end Atomise
 

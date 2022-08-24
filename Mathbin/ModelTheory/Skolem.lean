@@ -45,7 +45,7 @@ variable {L}
 
 theorem card_functions_sum_skolem₁ : # (Σn, (L.Sum L.skolem₁).Functions n) = # (Σn, L.BoundedFormula Empty (n + 1)) :=
   by
-  simp only [← card_functions_sum, ← skolem₁_functions, ← lift_id', ← mk_sigma, ← sum_add_distrib']
+  simp only [card_functions_sum, skolem₁_functions, lift_id', mk_sigma, sum_add_distrib']
   rw [add_commₓ, add_eq_max, max_eq_leftₓ]
   · refine' sum_le_sum _ _ fun n => _
     rw [← lift_le, lift_lift, lift_mk_le]
@@ -63,7 +63,7 @@ theorem card_functions_sum_skolem₁_le : # (Σn, (L.Sum L.skolem₁).Functions 
   · exact ⟨⟨Sigma.map Nat.succ fun _ => id, nat.succ_injective.sigma_map fun _ => Function.injective_id⟩⟩
     
   · refine' trans bounded_formula.card_le (lift_le.1 _)
-    simp only [← mk_empty, ← lift_zero, ← lift_uzero, ← zero_addₓ]
+    simp only [mk_empty, lift_zero, lift_uzero, zero_addₓ]
     
 
 /-- The structure assigning each function symbol of `L.skolem₁` to a skolem function generated with
@@ -128,12 +128,12 @@ theorem exists_elementary_substructure_card_eq (s : Set M) (κ : Cardinal.{w'}) 
   rw [max_le_iff, aleph_0_le_lift, ← aleph_0_le_lift, h, add_eq_max, max_le_iff, lift_le]
   refine' ⟨h1, (mk_union_le _ _).trans _, (lift_le.2 card_functions_sum_skolem₁_le).trans _⟩
   · rw [← lift_le, lift_add, h, add_commₓ, add_eq_max h1]
-    exact max_leₓ le_rfl h2
+    exact max_leₓ le_rflₓ h2
     
   · rw [lift_max, lift_aleph_0, max_le_iff, aleph_0_le_lift, and_comm, ← lift_le.{_, w'}, lift_lift, lift_lift, ←
       aleph_0_le_lift, h]
     refine' ⟨_, h1⟩
-    simp only [lift_lift, ← lift_umax, ← lift_umax']
+    simp only [← lift_lift, lift_umax, lift_umax']
     rw [lift_lift, ← lift_lift.{w', w} L.card]
     refine' trans (lift_le.{_, w}.2 h3) _
     rw [lift_lift, ← lift_lift.{w, max u v}, ← hs', ← h, lift_lift, lift_lift, lift_lift]

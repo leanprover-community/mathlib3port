@@ -374,7 +374,7 @@ noncomputable def equivMonoidAlgebraFreeMonoid : FreeAlgebra R X ≃ₐ[R] Monoi
         
       · intro x y ih
         simp at ih
-        simp [← ih]
+        simp [ih]
         )
     (by
       ext
@@ -390,7 +390,7 @@ def algebraMapInv : FreeAlgebra R X →ₐ[R] R :=
   lift R (0 : X → R)
 
 theorem algebra_map_left_inverse : Function.LeftInverse algebraMapInv (algebraMap R <| FreeAlgebra R X) := fun x => by
-  simp [← algebra_map_inv]
+  simp [algebra_map_inv]
 
 @[simp]
 theorem algebra_map_inj (x y : R) : algebraMap R (FreeAlgebra R X) x = algebraMap R (FreeAlgebra R X) y ↔ x = y :=
@@ -461,10 +461,10 @@ theorem induction {C : FreeAlgebra R X → Prop} (h_grade0 : ∀ r, C (algebraMa
   -- the mapping through the subalgebra is the identity
   have of_id : AlgHom.id R (FreeAlgebra R X) = s.val.comp (lift R of) := by
     ext
-    simp [← of, ← Subtype.coind]
+    simp [of, Subtype.coind]
   -- finding a proof is finding an element of the subalgebra
   convert Subtype.prop (lift R of a)
-  simp [← AlgHom.ext_iff] at of_id
+  simp [AlgHom.ext_iff] at of_id
   exact of_id a
 
 end FreeAlgebra

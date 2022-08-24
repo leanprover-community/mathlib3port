@@ -20,5 +20,5 @@ instance : LinearOrderₓ Charₓ :=
 theorem Charₓ.of_nat_to_nat {c : Charₓ} (h : IsValidChar c.toNat) : Charₓ.ofNat c.toNat = c := by
   rw [Charₓ.ofNat, dif_pos h]
   cases c
-  simp [← Charₓ.toNat]
+  simp [Charₓ.toNat]
 

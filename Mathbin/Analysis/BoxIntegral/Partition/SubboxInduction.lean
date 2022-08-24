@@ -43,7 +43,7 @@ namespace Prepartition
 def splitCenter (I : Box ι) : Prepartition I where
   boxes := Finset.univ.map (Box.splitCenterBoxEmb I)
   le_of_mem' := by
-    simp [← I.split_center_box_le]
+    simp [I.split_center_box_le]
   PairwiseDisjoint := by
     rw [Finset.coe_map, Finset.coe_univ, image_univ]
     rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩ Hne
@@ -51,10 +51,10 @@ def splitCenter (I : Box ι) : Prepartition I where
 
 @[simp]
 theorem mem_split_center : J ∈ splitCenter I ↔ ∃ s, I.splitCenterBox s = J := by
-  simp [← split_center]
+  simp [split_center]
 
 theorem is_partition_split_center (I : Box ι) : IsPartition (splitCenter I) := fun x hx => by
-  simp [← hx]
+  simp [hx]
 
 theorem upper_sub_lower_of_mem_split_center (h : J ∈ splitCenter I) (i : ι) :
     J.upper i - J.lower i = (I.upper i - I.lower i) / 2 :=
@@ -79,17 +79,12 @@ hold true.
 Then `p I` is true. See also `box_integral.box.subbox_induction_on'` for a version using
 `box_integral.box.split_center_box` instead of `box_integral.prepartition.split_center`. -/
 @[elabAsElim]
-theorem subbox_induction_on {p : Box ι → Prop} (I : Box ι)
-    (H_ind : ∀, ∀ J ≤ I, ∀, (∀, ∀ J' ∈ splitCenter J, ∀, p J') → p J)
+theorem subbox_induction_on {p : Box ι → Prop} (I : Box ι) (H_ind : ∀ J ≤ I, (∀ J' ∈ splitCenter J, p J') → p J)
     (H_nhds :
-      ∀,
-        ∀ z ∈ I.Icc,
-          ∀,
-            ∃ U ∈ 𝓝[I.Icc] z,
-              ∀,
-                ∀ J ≤ I,
-                  ∀ (m : ℕ),
-                    z ∈ J.Icc → J.Icc ⊆ U → (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
+      ∀ z ∈ I.Icc,
+        ∃ U ∈ 𝓝[I.Icc] z,
+          ∀ J ≤ I,
+            ∀ (m : ℕ), z ∈ J.Icc → J.Icc ⊆ U → (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
     p I := by
   refine' subbox_induction_on' I (fun J hle hs => (H_ind J hle) fun J' h' => _) H_nhds
   rcases mem_split_center.1 h' with ⟨s, rfl⟩
@@ -109,7 +104,7 @@ theorem exists_tagged_partition_is_Henstock_is_subordinate_homothetic (I : Box �
       π.IsPartition ∧
         π.IsHenstock ∧
           π.IsSubordinate r ∧
-            (∀, ∀ J ∈ π, ∀, ∃ m : ℕ, ∀ i, (J : _).upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) ∧
+            (∀ J ∈ π, ∃ m : ℕ, ∀ i, (J : _).upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) ∧
               π.distortion = I.distortion :=
   by
   refine' subbox_induction_on I (fun J hle hJ => _) fun z hz => _
@@ -117,14 +112,13 @@ theorem exists_tagged_partition_is_Henstock_is_subordinate_homothetic (I : Box �
     choose! n hn using Hn
     have hP : ((split_center J).bUnionTagged πi).IsPartition := (is_partition_split_center _).bUnionTagged hP
     have hsub :
-      ∀,
-        ∀ J' ∈ (split_center J).bUnionTagged πi,
-          ∀, ∃ n : ℕ, ∀ i, (J' : _).upper i - J'.lower i = (J.upper i - J.lower i) / 2 ^ n :=
+      ∀ J' ∈ (split_center J).bUnionTagged πi,
+        ∃ n : ℕ, ∀ i, (J' : _).upper i - J'.lower i = (J.upper i - J.lower i) / 2 ^ n :=
       by
       intro J' hJ'
       rcases(split_center J).mem_bUnion_tagged.1 hJ' with ⟨J₁, h₁, h₂⟩
       refine' ⟨n J₁ J' + 1, fun i => _⟩
-      simp only [← hn J₁ h₁ J' h₂, ← upper_sub_lower_of_mem_split_center h₁, ← pow_succₓ, ← div_div]
+      simp only [hn J₁ h₁ J' h₂, upper_sub_lower_of_mem_split_center h₁, pow_succₓ, div_div]
     refine' ⟨_, hP, is_Henstock_bUnion_tagged.2 hHen, is_subordinate_bUnion_tagged.2 hr, hsub, _⟩
     refine' tagged_prepartition.distortion_of_const _ hP.nonempty_boxes fun J' h' => _
     rcases hsub J' h' with ⟨n, hn⟩
@@ -134,9 +128,9 @@ theorem exists_tagged_partition_is_Henstock_is_subordinate_homothetic (I : Box �
     intro J Hle n Hmem HIcc Hsub
     rw [Set.subset_inter_iff] at HIcc
     refine'
-      ⟨single _ _ le_rfl _ Hmem, is_partition_single _, is_Henstock_single _, (is_subordinate_single _ _).2 HIcc.2, _,
+      ⟨single _ _ le_rflₓ _ Hmem, is_partition_single _, is_Henstock_single _, (is_subordinate_single _ _).2 HIcc.2, _,
         distortion_single _ _⟩
-    simp only [← tagged_prepartition.mem_single, ← forall_eq]
+    simp only [tagged_prepartition.mem_single, forall_eq]
     refine' ⟨0, fun i => _⟩
     simp
     
@@ -240,7 +234,7 @@ theorem Union_union_compl_to_subordinate_boxes (π₁ : TaggedPrepartition I) (�
 theorem distortion_union_compl_to_subordinate (π₁ : TaggedPrepartition I) (π₂ : Prepartition I)
     (hU : π₂.Union = I \ π₁.Union) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     (π₁.unionComplToSubordinate π₂ hU r).distortion = max π₁.distortion π₂.distortion := by
-  simp [← union_compl_to_subordinate]
+  simp [union_compl_to_subordinate]
 
 end TaggedPrepartition
 

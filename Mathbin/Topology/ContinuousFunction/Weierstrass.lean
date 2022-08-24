@@ -34,11 +34,11 @@ theorem polynomial_functions_closure_eq_top' : (polynomialFunctions I).topologic
   refine' Filter.Tendsto.frequently (bernstein_approximation_uniform f) _
   apply frequently_of_forall
   intro n
-  simp only [← SetLike.mem_coe]
+  simp only [SetLike.mem_coe]
   apply Subalgebra.sum_mem
   rintro n -
   apply Subalgebra.smul_mem
-  dsimp' [← bernstein, ← polynomialFunctions]
+  dsimp' [bernstein, polynomialFunctions]
   simp
 
 /-- The **Weierstrass Approximation Theorem**:
@@ -62,7 +62,7 @@ theorem polynomial_functions_closure_eq_top (a b : ℝ) : (polynomialFunctions (
     have p := polynomial_functions_closure_eq_top'
     -- and pullback both sides, obtaining an equation between subalgebras of `C([a,b], ℝ)`.
     apply_fun fun s => s.comap W  at p
-    simp only [← Algebra.comap_top] at p
+    simp only [Algebra.comap_top] at p
     -- Since the pullback operation is continuous, it commutes with taking `topological_closure`,
     rw [Subalgebra.topological_closure_comap_homeomorph _ W W' w] at p
     -- and precomposing with an affine map takes polynomial functions to polynomial functions.
@@ -106,7 +106,7 @@ Every real-valued function `ℝ → ℝ` which is continuous on `[a,b]`
 can be approximated to within any `ε > 0` on `[a,b]` by some polynomial.
 -/
 theorem exists_polynomial_near_of_continuous_on (a b : ℝ) (f : ℝ → ℝ) (c : ContinuousOn f (Set.Icc a b)) (ε : ℝ)
-    (pos : 0 < ε) : ∃ p : Polynomial ℝ, ∀, ∀ x ∈ Set.Icc a b, ∀, abs (p.eval x - f x) < ε := by
+    (pos : 0 < ε) : ∃ p : Polynomial ℝ, ∀ x ∈ Set.Icc a b, abs (p.eval x - f x) < ε := by
   let f' : C(Set.Icc a b, ℝ) := ⟨fun x => f x, continuous_on_iff_continuous_restrict.mp c⟩
   obtain ⟨p, b⟩ := exists_polynomial_near_continuous_map a b f' ε Pos
   use p

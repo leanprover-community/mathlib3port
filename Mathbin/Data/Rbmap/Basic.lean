@@ -10,7 +10,7 @@ universe u v w
 def RbmapLt {α : Type u} {β : Type v} (lt : α → α → Prop) (a b : α × β) : Prop :=
   lt a.1 b.1
 
--- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option auto_param.check_exists
+-- ./././Mathport/Syntax/Translate/Basic.lean:335:40: warning: unsupported option auto_param.check_exists
 set_option auto_param.check_exists false
 
 def Rbmap (α : Type u) (β : Type v)
@@ -61,7 +61,7 @@ protected def Mem (k : α) (m : Rbmap α β lt) : Prop :=
   | Rbnode.red_node _ e _ => Rbtree.Mem (k, e.2) m
   | Rbnode.black_node _ e _ => Rbtree.Mem (k, e.2) m
 
-instance : HasMem α (Rbmap α β lt) :=
+instance : Membership α (Rbmap α β lt) :=
   ⟨Rbmap.Mem⟩
 
 instance [HasRepr α] [HasRepr β] : HasRepr (Rbmap α β lt) :=

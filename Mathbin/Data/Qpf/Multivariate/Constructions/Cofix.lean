@@ -207,7 +207,7 @@ private theorem cofix.bisim_aux {α : Typevec n} (r : Cofix F α → Cofix F α 
     have h₁ : ∀ u v : q.P.M α, Mcongr u v → Quot.mk r' u = Quot.mk r' v := by
       intro u v cuv
       apply Quot.sound
-      dsimp' [← r']
+      dsimp' [r']
       rw [Quot.sound cuv]
       apply h'
     let f : Quot r → Quot r' :=
@@ -344,7 +344,7 @@ theorem liftr_map {α β : Typevec n} {F' : Typevec n → Type u} [Mvfunctor F']
   exists h <$$> x
   rw [Mvfunctor.map_map, comp_assoc, hh, ← comp_assoc, fst_prod_mk, comp_assoc, fst_diag]
   rw [Mvfunctor.map_map, comp_assoc, hh, ← comp_assoc, snd_prod_mk, comp_assoc, snd_diag]
-  dsimp' [← liftr']
+  dsimp' [liftr']
   constructor <;> rfl
 
 open Function
@@ -358,11 +358,10 @@ theorem liftr_map_last [IsLawfulMvfunctor F] {α : Typevec n} {ι ι'} (R : ι' 
       ((fun i : Fin2 n => { x // ofRepeat (α.relLast' R i.fs x) }) ::: Subtype (uncurry R)) :=
     ofSubtype _ ::: id
   have hh : subtypeVal _ ⊚ toSubtype _ ⊚ from_append1_drop_last ⊚ c ⊚ b = ((id ::: f) ⊗' (id ::: g)) ⊚ prod.diag := by
-    dsimp' [← c, ← b]
+    dsimp' [c, b]
     apply eq_of_drop_last_eq
     · dsimp'
-      simp only [← prod_map_id, ← drop_fun_prod, ← drop_fun_append_fun, ← drop_fun_diag, ← id_comp, ←
-        drop_fun_to_subtype]
+      simp only [prod_map_id, drop_fun_prod, drop_fun_append_fun, drop_fun_diag, id_comp, drop_fun_to_subtype]
       erw [to_subtype_of_subtype_assoc, id_comp]
       clear * -
       ext i x : 2
@@ -370,8 +369,8 @@ theorem liftr_map_last [IsLawfulMvfunctor F] {α : Typevec n} {ι ι'} (R : ι' 
       rfl
       apply i_ih
       
-    simp only [← h, ← last_fun_from_append1_drop_last, ← last_fun_to_subtype, ← last_fun_append_fun, ←
-      last_fun_subtype_val, ← comp.left_id, ← last_fun_comp, ← last_fun_prod]
+    simp only [h, last_fun_from_append1_drop_last, last_fun_to_subtype, last_fun_append_fun, last_fun_subtype_val,
+      comp.left_id, last_fun_comp, last_fun_prod]
     dsimp'
     ext1
     rfl
@@ -389,30 +388,30 @@ theorem Cofix.abs_repr {α} (x : Cofix F α) : Quot.mk _ (Cofix.repr x) = x := b
   refine' cofix.bisim₂ R _ _ _ rfl
   clear x
   rintro x y h
-  dsimp' [← R]  at h
+  dsimp' [R]  at h
   subst h
-  dsimp' [← cofix.dest, ← cofix.abs]
+  dsimp' [cofix.dest, cofix.abs]
   induction y using Quot.ind
-  simp only [← cofix.repr, ← M.dest_corec, ← abs_map, ← abs_repr]
+  simp only [cofix.repr, M.dest_corec, abs_map, abs_repr]
   conv => congr skip rw [cofix.dest]
   dsimp'
   rw [Mvfunctor.map_map, Mvfunctor.map_map, ← append_fun_comp_id, ← append_fun_comp_id]
   let f : (α ::: (P F).M α) ⟹ subtype_ (α.rel_last' R) :=
     split_fun diag_sub fun x => ⟨(cofix.abs (cofix.abs x).repr, cofix.abs x), _⟩
   refine' liftr_map _ _ _ _ f _
-  · simp only [append_prod_append_fun, ← prod_map_id]
+  · simp only [← append_prod_append_fun, prod_map_id]
     apply eq_of_drop_last_eq
     · dsimp'
-      simp only [← drop_fun_diag]
+      simp only [drop_fun_diag]
       erw [subtype_val_diag_sub]
       
     ext1
-    simp only [← cofix.abs, ← Prod.mk.inj_iff, ← prod_map, ← Function.comp_app, ← last_fun_append_fun, ←
-      last_fun_subtype_val, ← last_fun_comp, ← last_fun_split_fun]
-    dsimp' [← drop_fun_rel_last, ← last_fun, ← prod.diag]
+    simp only [cofix.abs, Prod.mk.inj_iff, prod_map, Function.comp_app, last_fun_append_fun, last_fun_subtype_val,
+      last_fun_comp, last_fun_split_fun]
+    dsimp' [drop_fun_rel_last, last_fun, prod.diag]
     constructor <;> rfl
     
-  dsimp' [← rel_last', ← split_fun, ← Function.uncurry, ← R]
+  dsimp' [rel_last', split_fun, Function.uncurry, R]
   rfl
 
 section Tactic
@@ -468,20 +467,20 @@ theorem Cofix.dest_corec' {α : Typevec n} {β : Type u} (g : β → F (α.Appen
     Cofix.dest (Cofix.corec' g x) = appendFun id (Sum.elim id (Cofix.corec' g)) <$$> g x := by
   rw [cofix.corec', cofix.dest_corec]
   dsimp'
-  congr with (i | i) <;> rw [corec_roll] <;> dsimp' [← cofix.corec']
+  congr with (i | i) <;> rw [corec_roll] <;> dsimp' [cofix.corec']
   · mv_bisim i
     rw [Ha, Hb, cofix.dest_corec]
-    dsimp' [← (· ∘ ·)]
+    dsimp' [(· ∘ ·)]
     repeat'
       rw [Mvfunctor.map_map, ← append_fun_comp_id]
     apply liftr_map_last'
-    dsimp' [← (· ∘ ·), ← R]
+    dsimp' [(· ∘ ·), R]
     intros
     exact ⟨_, rfl, rfl⟩
     
   · congr with y
     erw [append_fun_id_id]
-    simp [← Mvfunctor.id_map]
+    simp [Mvfunctor.id_map]
     
 
 theorem Cofix.dest_corec₁ {α : Typevec n} {β : Type u} (g : ∀ {X}, (Cofix F α → X) → (β → X) → β → F (α.Append1 X))

@@ -24,12 +24,12 @@ variable {K : Type _} {g : GeneralizedContinuedFraction K} {n : ℕ} [DivisionRi
 theorem continuants_aux_recurrence {gp ppred pred : Pair K} (nth_s_eq : g.s.nth n = some gp)
     (nth_conts_aux_eq : g.continuantsAux n = ppred) (succ_nth_conts_aux_eq : g.continuantsAux (n + 1) = pred) :
     g.continuantsAux (n + 2) = ⟨gp.b * pred.a + gp.a * ppred.a, gp.b * pred.b + gp.a * ppred.b⟩ := by
-  simp [*, ← continuants_aux, ← next_continuants, ← next_denominator, ← next_numerator]
+  simp [*, continuants_aux, next_continuants, next_denominator, next_numerator]
 
 theorem continuants_recurrence_aux {gp ppred pred : Pair K} (nth_s_eq : g.s.nth n = some gp)
     (nth_conts_aux_eq : g.continuantsAux n = ppred) (succ_nth_conts_aux_eq : g.continuantsAux (n + 1) = pred) :
     g.continuants (n + 1) = ⟨gp.b * pred.a + gp.a * ppred.a, gp.b * pred.b + gp.a * ppred.b⟩ := by
-  simp [← nth_cont_eq_succ_nth_cont_aux, ← continuants_aux_recurrence nth_s_eq nth_conts_aux_eq succ_nth_conts_aux_eq]
+  simp [nth_cont_eq_succ_nth_cont_aux, continuants_aux_recurrence nth_s_eq nth_conts_aux_eq succ_nth_conts_aux_eq]
 
 /-- Shows that `Aₙ = bₙ * Aₙ₋₁ + aₙ * Aₙ₋₂` and `Bₙ = bₙ * Bₙ₋₁ + aₙ * Bₙ₋₂`. -/
 theorem continuants_recurrence {gp ppred pred : Pair K} (succ_nth_s_eq : g.s.nth (n + 1) = some gp)

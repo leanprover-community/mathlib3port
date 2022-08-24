@@ -146,10 +146,10 @@ def linearEquivFunOnFintype [Fintype ι] : (⨁ i, M i) ≃ₗ[R] ∀ i, M i :=
   { Dfinsupp.equivFunOnFintype with toFun := coeFn,
     map_add' := fun f g => by
       ext
-      simp only [← add_apply, ← Pi.add_apply],
+      simp only [add_apply, Pi.add_apply],
     map_smul' := fun c f => by
       ext
-      simp only [← Dfinsupp.coe_smul, ← RingHom.id_apply] }
+      simp only [Dfinsupp.coe_smul, RingHom.id_apply] }
 
 variable {ι M}
 
@@ -172,7 +172,7 @@ theorem linear_equiv_fun_on_fintype_symm_single [Fintype ι] [DecidableEq ι] (i
 theorem linear_equiv_fun_on_fintype_symm_coe [Fintype ι] (f : ⨁ i, M i) : (linearEquivFunOnFintype R ι M).symm f = f :=
   by
   ext
-  simp [← linear_equiv_fun_on_fintype]
+  simp [linear_equiv_fun_on_fintype]
 
 /-- The natural linear equivalence between `⨁ _ : ι, M` and `M` when `unique ι`. -/
 protected def lid (M : Type v) (ι : Type _ := PUnit) [AddCommMonoidₓ M] [Module R M] [Unique ι] :
@@ -234,7 +234,7 @@ variable {α : ι → Type _} {δ : ∀ i, α i → Type w}
 
 variable [∀ i j, AddCommMonoidₓ (δ i j)] [∀ i j, Module R (δ i j)]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 /-- `curry` as a linear map.-/
 noncomputable def sigmaLcurry : (⨁ i : Σi, _, δ i.1 i.2) →ₗ[R] ⨁ (i) (j), δ i j :=
   { sigmaCurry with
@@ -245,17 +245,17 @@ noncomputable def sigmaLcurry : (⨁ i : Σi, _, δ i.1 i.2) →ₗ[R] ⨁ (i) (
 theorem sigma_lcurry_apply (f : ⨁ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) : sigmaLcurry R f i j = f ⟨i, j⟩ :=
   sigma_curry_apply f i j
 
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 /-- `uncurry` as a linear map.-/
 noncomputable def sigmaLuncurry : (⨁ (i) (j), δ i j) →ₗ[R] ⨁ i : Σi, _, δ i.1 i.2 :=
   { sigmaUncurry with map_smul' := Dfinsupp.sigma_uncurry_smul }
 
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 @[simp]
 theorem sigma_luncurry_apply (f : ⨁ (i) (j), δ i j) (i : ι) (j : α i) : sigmaLuncurry R f ⟨i, j⟩ = f i j :=
   sigma_uncurry_apply f i j
 
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 /-- `curry_equiv` as a linear equiv.-/
 noncomputable def sigmaLcurryEquiv : (⨁ i : Σi, _, δ i.1 i.2) ≃ₗ[R] ⨁ (i) (j), δ i j :=
   { sigmaCurryEquiv, sigmaLcurry R with }
@@ -325,12 +325,11 @@ noncomputable def IsInternal.collectedBasis (h : IsInternal A) {α : ι → Type
 theorem IsInternal.collected_basis_coe (h : IsInternal A) {α : ι → Type _} (v : ∀ i, Basis (α i) R (A i)) :
     ⇑(h.collectedBasis v) = fun a : Σi, α i => ↑(v a.1 a.2) := by
   funext a
-  simp only [← is_internal.collected_basis, ← to_module, ← coe_linear_map, ← AddEquiv.to_fun_eq_coe, ←
-    Basis.coe_of_repr, ← Basis.repr_symm_apply, ← Dfinsupp.lsum_apply_apply, ← Dfinsupp.mapRange.linear_equiv_apply, ←
-    Dfinsupp.mapRange.linear_equiv_symm, ← Dfinsupp.map_range_single, ← Finsupp.total_single, ←
-    LinearEquiv.of_bijective_apply, ← LinearEquiv.symm_symm, ← LinearEquiv.symm_trans_apply, ← one_smul, ←
-    sigma_finsupp_add_equiv_dfinsupp_apply, ← sigma_finsupp_equiv_dfinsupp_single, ←
-    sigma_finsupp_lequiv_dfinsupp_apply]
+  simp only [is_internal.collected_basis, to_module, coe_linear_map, AddEquiv.to_fun_eq_coe, Basis.coe_of_repr,
+    Basis.repr_symm_apply, Dfinsupp.lsum_apply_apply, Dfinsupp.mapRange.linear_equiv_apply,
+    Dfinsupp.mapRange.linear_equiv_symm, Dfinsupp.map_range_single, Finsupp.total_single,
+    LinearEquiv.of_bijective_apply, LinearEquiv.symm_symm, LinearEquiv.symm_trans_apply, one_smul,
+    sigma_finsupp_add_equiv_dfinsupp_apply, sigma_finsupp_equiv_dfinsupp_single, sigma_finsupp_lequiv_dfinsupp_apply]
   convert Dfinsupp.sum_add_hom_single (fun i => (A i).Subtype.toAddMonoidHom) a.1 (v a.1 a.2)
 
 theorem IsInternal.collected_basis_mem (h : IsInternal A) {α : ι → Type _} (v : ∀ i, Basis (α i) R (A i))
@@ -343,7 +342,7 @@ the two submodules are complementary. Over a `ring R`, this is true as an iff, a
 theorem IsInternal.is_compl {A : ι → Submodule R M} {i j : ι} (hij : i ≠ j) (h : (Set.Univ : Set ι) = {i, j})
     (hi : IsInternal A) : IsCompl (A i) (A j) :=
   ⟨hi.submodule_independent.PairwiseDisjoint _ _ hij,
-    Eq.le <|
+    Eq.leₓ <|
       hi.submodule_supr_eq_top.symm.trans <| by
         rw [← Sup_pair, supr, ← Set.image_univ, h, Set.image_insert_eq, Set.image_singleton]⟩
 

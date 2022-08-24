@@ -64,10 +64,10 @@ instance : Mvqpf (Sigma F) where
   abs := Sigma.abs F
   repr := Sigma.repr F
   abs_repr := by
-    rintro α ⟨x, f⟩ <;> simp [← sigma.repr, ← sigma.abs, ← abs_repr]
+    rintro α ⟨x, f⟩ <;> simp [sigma.repr, sigma.abs, abs_repr]
   abs_map := by
     rintro α β f ⟨x, g⟩ <;>
-      simp [← sigma.abs, ← Mvpfunctor.map_eq] <;> simp [← (· <$$> ·), ← mvfunctor._match_1, abs_map, Mvpfunctor.map_eq]
+      simp [sigma.abs, Mvpfunctor.map_eq] <;> simp [(· <$$> ·), mvfunctor._match_1, ← abs_map, ← Mvpfunctor.map_eq]
 
 end Sigma
 
@@ -94,11 +94,11 @@ instance : Mvqpf (Pi F) where
   abs := Pi.abs F
   repr := Pi.repr F
   abs_repr := by
-    rintro α f <;> ext <;> simp [← pi.repr, ← pi.abs, ← abs_repr]
+    rintro α f <;> ext <;> simp [pi.repr, pi.abs, abs_repr]
   abs_map := by
     rintro α β f ⟨x, g⟩ <;>
-      simp only [← pi.abs, ← Mvpfunctor.map_eq] <;>
-        ext <;> simp only [← (· <$$> ·)] <;> simp only [abs_map, ← Mvpfunctor.map_eq] <;> rfl
+      simp only [pi.abs, Mvpfunctor.map_eq] <;>
+        ext <;> simp only [(· <$$> ·)] <;> simp only [← abs_map, Mvpfunctor.map_eq] <;> rfl
 
 end Pi
 

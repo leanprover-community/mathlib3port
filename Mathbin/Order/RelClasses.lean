@@ -75,7 +75,7 @@ theorem IsTotal.swap (r) [IsTotal α r] : IsTotal α (swap r) :=
 
 theorem IsTrichotomous.swap (r) [IsTrichotomous α r] : IsTrichotomous α (swap r) :=
   ⟨fun a b => by
-    simpa [← swap, ← Or.comm, ← Or.left_comm] using trichotomous_of r a b⟩
+    simpa [swap, Or.comm, Or.left_comm] using trichotomous_of r a b⟩
 
 theorem IsPreorder.swap (r) [IsPreorder α r] : IsPreorder α (swap r) :=
   { @IsRefl.swap α r _, @IsTrans.swap α r _ with }
@@ -219,7 +219,7 @@ class IsOrderConnected (α : Type u) (lt : α → α → Prop) : Prop where
 theorem IsOrderConnected.neg_trans {r : α → α → Prop} [IsOrderConnected α r] {a b c} (h₁ : ¬r a b) (h₂ : ¬r b c) :
     ¬r a c :=
   mt (IsOrderConnected.conn a b c) <| by
-    simp [← h₁, ← h₂]
+    simp [h₁, h₂]
 
 theorem is_strict_weak_order_of_is_order_connected [IsAsymm α r] [IsOrderConnected α r] : IsStrictWeakOrder α r :=
   { @IsAsymm.is_irrefl α r _ with trans := fun a b c h₁ h₂ => (IsOrderConnected.conn _ c _ h₁).resolve_right (asymm h₂),
@@ -472,11 +472,11 @@ def Unbounded (r : α → α → Prop) (s : Set α) : Prop :=
 
 /-- A bounded or final set. Not to be confused with `metric.bounded`. -/
 def Bounded (r : α → α → Prop) (s : Set α) : Prop :=
-  ∃ a, ∀, ∀ b ∈ s, ∀, r b a
+  ∃ a, ∀ b ∈ s, r b a
 
 @[simp]
 theorem not_bounded_iff {r : α → α → Prop} (s : Set α) : ¬Bounded r s ↔ Unbounded r s := by
-  simp only [← bounded, ← unbounded, ← not_forall, ← not_exists, ← exists_prop, ← not_and, ← not_not]
+  simp only [bounded, unbounded, not_forall, not_exists, exists_prop, not_and, not_not]
 
 @[simp]
 theorem not_unbounded_iff {r : α → α → Prop} (s : Set α) : ¬Unbounded r s ↔ Bounded r s := by
@@ -534,7 +534,7 @@ instance (priority := 100) IsNonstrictStrictOrder.to_is_irrefl {r : α → α �
 
 section Subset
 
-variable [HasSubset α] {a b c : α}
+variable [Subset α] {a b c : α}
 
 @[refl]
 theorem subset_refl [IsRefl α (· ⊆ ·)] (a : α) : a ⊆ a :=
@@ -568,11 +568,11 @@ alias subset_of_eq ← Eq.subset'
 --TODO: Fix it and kill `eq.subset`
 alias superset_of_eq ← Eq.superset
 
-alias subset_trans ← HasSubset.Subset.trans
+alias subset_trans ← Subset.Subset.trans
 
-alias subset_antisymm ← HasSubset.Subset.antisymm
+alias subset_antisymm ← Subset.Subset.antisymm
 
-alias superset_antisymm ← HasSubset.Subset.antisymm'
+alias superset_antisymm ← Subset.Subset.antisymm'
 
 theorem subset_antisymm_iff [IsRefl α (· ⊆ ·)] [IsAntisymm α (· ⊆ ·)] : a = b ↔ a ⊆ b ∧ b ⊆ a :=
   ⟨fun h => ⟨h.subset', h.Superset⟩, fun h => h.1.antisymm h.2⟩
@@ -584,7 +584,7 @@ end Subset
 
 section Ssubset
 
-variable [HasSsubset α]
+variable [SSubset α]
 
 theorem ssubset_irrefl [IsIrrefl α (· ⊂ ·)] (a : α) : ¬a ⊂ a :=
   irrefl _
@@ -605,21 +605,21 @@ theorem ssubset_trans [IsTrans α (· ⊂ ·)] {a b c : α} : a ⊂ b → b ⊂ 
 theorem ssubset_asymm [IsAsymm α (· ⊂ ·)] {a b : α} (h : a ⊂ b) : ¬b ⊂ a :=
   asymm h
 
-alias ssubset_irrfl ← HasSsubset.Ssubset.false
+alias ssubset_irrfl ← SSubset.Ssubset.false
 
-alias ne_of_ssubset ← HasSsubset.Ssubset.ne
+alias ne_of_ssubset ← SSubset.Ssubset.ne
 
-alias ne_of_ssuperset ← HasSsubset.Ssubset.ne'
+alias ne_of_ssuperset ← SSubset.Ssubset.ne'
 
-alias ssubset_trans ← HasSsubset.Ssubset.trans
+alias ssubset_trans ← SSubset.Ssubset.trans
 
-alias ssubset_asymm ← HasSsubset.Ssubset.asymm
+alias ssubset_asymm ← SSubset.Ssubset.asymm
 
 end Ssubset
 
 section SubsetSsubset
 
-variable [HasSubset α] [HasSsubset α] [IsNonstrictStrictOrder α (· ⊆ ·) (· ⊂ ·)] {a b c : α}
+variable [Subset α] [SSubset α] [IsNonstrictStrictOrder α (· ⊆ ·) (· ⊂ ·)] {a b c : α}
 
 theorem ssubset_iff_subset_not_subset : a ⊂ b ↔ a ⊆ b ∧ ¬b ⊆ a :=
   right_iff_left_not_left
@@ -635,13 +635,13 @@ theorem not_ssubset_of_subset (h : a ⊆ b) : ¬b ⊂ a := fun h' => not_subset_
 theorem ssubset_of_subset_not_subset (h₁ : a ⊆ b) (h₂ : ¬b ⊆ a) : a ⊂ b :=
   ssubset_iff_subset_not_subset.2 ⟨h₁, h₂⟩
 
-alias subset_of_ssubset ← HasSsubset.Ssubset.subset
+alias subset_of_ssubset ← SSubset.Ssubset.subset
 
-alias not_subset_of_ssubset ← HasSsubset.Ssubset.not_subset
+alias not_subset_of_ssubset ← SSubset.Ssubset.not_subset
 
-alias not_ssubset_of_subset ← HasSubset.Subset.not_ssubset
+alias not_ssubset_of_subset ← Subset.Subset.not_ssubset
 
-alias ssubset_of_subset_not_subset ← HasSubset.Subset.ssubset_of_not_subset
+alias ssubset_of_subset_not_subset ← Subset.Subset.ssubset_of_not_subset
 
 theorem ssubset_of_subset_of_ssubset [IsTrans α (· ⊆ ·)] (h₁ : a ⊆ b) (h₂ : b ⊂ c) : a ⊂ c :=
   (h₁.trans h₂.Subset).ssubset_of_not_subset fun h => h₂.not_subset <| h.trans h₁
@@ -661,17 +661,17 @@ theorem eq_or_ssubset_of_subset [IsAntisymm α (· ⊆ ·)] (h : a ⊆ b) : a = 
 theorem ssubset_or_eq_of_subset [IsAntisymm α (· ⊆ ·)] (h : a ⊆ b) : a ⊂ b ∨ a = b :=
   (eq_or_ssubset_of_subset h).swap
 
-alias ssubset_of_subset_of_ssubset ← HasSubset.Subset.trans_ssubset
+alias ssubset_of_subset_of_ssubset ← Subset.Subset.trans_ssubset
 
-alias ssubset_of_ssubset_of_subset ← HasSsubset.Ssubset.trans_subset
+alias ssubset_of_ssubset_of_subset ← SSubset.Ssubset.trans_subset
 
-alias ssubset_of_subset_of_ne ← HasSubset.Subset.ssubset_of_ne
+alias ssubset_of_subset_of_ne ← Subset.Subset.ssubset_of_ne
 
 alias ssubset_of_ne_of_subset ← Ne.ssubset_of_subset
 
-alias eq_or_ssubset_of_subset ← HasSubset.Subset.eq_or_ssubset
+alias eq_or_ssubset_of_subset ← Subset.Subset.eq_or_ssubset
 
-alias ssubset_or_eq_of_subset ← HasSubset.Subset.ssubset_or_eq
+alias ssubset_or_eq_of_subset ← Subset.Subset.ssubset_or_eq
 
 theorem ssubset_iff_subset_ne [IsAntisymm α (· ⊆ ·)] : a ⊂ b ↔ a ⊆ b ∧ a ≠ b :=
   ⟨fun h => ⟨h.Subset, h.Ne⟩, fun h => h.1.ssubset_of_ne h.2⟩

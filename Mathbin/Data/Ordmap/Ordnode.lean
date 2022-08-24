@@ -62,7 +62,7 @@ ordered map, ordered set, data structure
 
 universe u
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1436:30: infer kinds are unsupported in Lean 4: nil {}
+-- ./././Mathport/Syntax/Translate/Command.lean:306:30: infer kinds are unsupported in Lean 4: nil {}
 /-- An `ordnode α` is a finite set of values, represented as a tree.
   The operations on this type maintain that the tree is balanced
   and correctly stores subtree sizes at each level. -/
@@ -74,7 +74,7 @@ namespace Ordnode
 
 variable {α : Type u}
 
-instance : HasEmptyc (Ordnode α) :=
+instance : EmptyCollection (Ordnode α) :=
   ⟨nil⟩
 
 instance : Inhabited (Ordnode α) :=
@@ -113,7 +113,7 @@ protected def singleton (a : α) : Ordnode α :=
 -- mathport name: «exprι »
 local prefix:arg "ι" => Ordnode.singleton
 
-instance : HasSingleton α (Ordnode α) :=
+instance : Singleton α (Ordnode α) :=
   ⟨Ordnode.singleton⟩
 
 /-- O(1). Get the size of the set.
@@ -766,7 +766,7 @@ in the kernel, meaning that you probably can't prove things like
 `of_asc_list [1, 2, 3] = {1, 2, 3}` by `rfl`.
 This implementation is optimized for VM evaluation. -/
 def ofAscListAux₁ : ∀ l : List α, ℕ → Ordnode α × { l' : List α // l'.length ≤ l.length }
-  | [] => fun s => (nil, ⟨[], le_rfl⟩)
+  | [] => fun s => (nil, ⟨[], le_rflₓ⟩)
   | x :: xs => fun s =>
     if s = 1 then (ι x, ⟨xs, Nat.le_succₓ _⟩)
     else
@@ -836,7 +836,7 @@ def find (x : α) : Ordnode α → Option α
     | Ordering.eq => some y
     | Ordering.gt => find r
 
-instance : HasMem α (Ordnode α) :=
+instance : Membership α (Ordnode α) :=
   ⟨fun x t => t.Mem x⟩
 
 instance mem.decidable (x : α) (t : Ordnode α) : Decidable (x ∈ t) :=
@@ -935,7 +935,7 @@ protected def insert (x : α) : Ordnode α → Ordnode α
     | Ordering.eq => node sz l x r
     | Ordering.gt => balanceR l y (insert r)
 
-instance : HasInsert α (Ordnode α) :=
+instance : Insert α (Ordnode α) :=
   ⟨Ordnode.insert⟩
 
 /-- O(log n). Insert an element into the set, preserving balance and the BST property.

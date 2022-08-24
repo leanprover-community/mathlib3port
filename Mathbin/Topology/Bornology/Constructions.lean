@@ -72,7 +72,7 @@ theorem is_bounded_prod : IsBounded (s ×ˢ t) ↔ s = ∅ ∨ t = ∅ ∨ IsBou
   rcases t.eq_empty_or_nonempty with (rfl | ht)
   · simp
     
-  simp only [← hs.ne_empty, ← ht.ne_empty, ← is_bounded_prod_of_nonempty (hs.prod ht), ← false_orₓ]
+  simp only [hs.ne_empty, ht.ne_empty, is_bounded_prod_of_nonempty (hs.prod ht), false_orₓ]
 
 theorem is_bounded_prod_self : IsBounded (s ×ˢ s) ↔ IsBounded s := by
   rcases s.eq_empty_or_nonempty with (rfl | hs)
@@ -99,10 +99,10 @@ theorem is_bounded_pi_of_nonempty (hne : (pi Univ S).Nonempty) : IsBounded (pi U
 
 theorem is_bounded_pi : IsBounded (pi Univ S) ↔ (∃ i, S i = ∅) ∨ ∀ i, IsBounded (S i) := by
   by_cases' hne : ∃ i, S i = ∅
-  · simp [← hne, ← univ_pi_eq_empty_iff.2 hne]
+  · simp [hne, univ_pi_eq_empty_iff.2 hne]
     
-  · simp only [← hne, ← false_orₓ]
-    simp only [← not_exists, Ne.def, ← ne_empty_iff_nonempty, univ_pi_nonempty_iff] at hne
+  · simp only [hne, false_orₓ]
+    simp only [not_exists, ← Ne.def, ne_empty_iff_nonempty, ← univ_pi_nonempty_iff] at hne
     exact is_bounded_pi_of_nonempty hne
     
 
@@ -129,10 +129,10 @@ end Bornology
 open Bornology
 
 instance [BoundedSpace α] [BoundedSpace β] : BoundedSpace (α × β) := by
-  simp [cobounded_eq_bot_iff, ← cobounded_prod]
+  simp [← cobounded_eq_bot_iff, cobounded_prod]
 
 instance [∀ i, BoundedSpace (π i)] : BoundedSpace (∀ i, π i) := by
-  simp [cobounded_eq_bot_iff, ← cobounded_pi]
+  simp [← cobounded_eq_bot_iff, cobounded_pi]
 
 theorem bounded_space_induced_iff {α β : Type _} [Bornology β] {f : α → β} :
     @BoundedSpace α (Bornology.induced f) ↔ IsBounded (Range f) := by

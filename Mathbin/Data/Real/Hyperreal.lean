@@ -132,8 +132,8 @@ theorem epsilon_pos : 0 < ε := by
   suffices ∀ᶠ i in hyperfilter ℕ, (0 : ℝ) < (i : ℕ)⁻¹ by
     rwa [lt_def]
   have h0' : { n : ℕ | ¬0 < n } = {0} := by
-    simp only [← not_ltₓ, ← Set.set_of_eq_eq_singleton.symm] <;> ext <;> exact Nat.le_zero_iffₓ
-  simp only [← inv_pos, ← Nat.cast_pos]
+    simp only [not_ltₓ, Set.set_of_eq_eq_singleton.symm] <;> ext <;> exact Nat.le_zero_iffₓ
+  simp only [inv_pos, Nat.cast_pos]
   exact
     mem_hyperfilter_of_finite_compl
       (by
@@ -152,13 +152,13 @@ theorem epsilon_mul_omega : ε * ω = 1 :=
   @inv_mul_cancel _ _ ω omega_ne_zero
 
 theorem lt_of_tendsto_zero_of_pos {f : ℕ → ℝ} (hf : Tendsto f atTop (𝓝 0)) : ∀ {r : ℝ}, 0 < r → ofSeq f < (r : ℝ*) := by
-  simp only [← Metric.tendsto_at_top, ← Real.dist_eq, ← sub_zero, ← lt_def] at hf⊢
+  simp only [Metric.tendsto_at_top, Real.dist_eq, sub_zero, lt_def] at hf⊢
   intro r hr
   cases' hf r hr with N hf'
   have hs : { i : ℕ | f i < r }ᶜ ⊆ { i : ℕ | i ≤ N } := fun i hi1 =>
     le_of_ltₓ
       (by
-        simp only [← lt_iff_not_geₓ] <;> exact fun hi2 => hi1 (lt_of_le_of_ltₓ (le_abs_self _) (hf' i hi2)) : i < N)
+        simp only [lt_iff_not_geₓ] <;> exact fun hi2 => hi1 (lt_of_le_of_ltₓ (le_abs_self _) (hf' i hi2)) : i < N)
   exact mem_hyperfilter_of_finite_compl ((Set.finite_le_nat N).Subset hs)
 
 theorem neg_lt_of_tendsto_zero_of_pos {f : ℕ → ℝ} (hf : Tendsto f atTop (𝓝 0)) :
@@ -238,11 +238,11 @@ theorem is_st_Sup {x : ℝ*} (hni : ¬Infinite x) : IsSt x (sup { y : ℝ | (y :
       have HR₂ : BddAbove S := ⟨r₂, fun y hy => le_of_ltₓ (coe_lt_coe.1 (lt_of_lt_of_leₓ hy (not_ltₓ.mp hr₂)))⟩
       fun δ hδ =>
       ⟨lt_of_not_le fun c =>
-          have hc : ∀, ∀ y ∈ S, ∀, y ≤ R - δ := fun y hy => coe_le_coe.1 <| le_of_ltₓ <| lt_of_lt_of_leₓ hy c
-          not_lt_of_le (cSup_le HR₁ hc) <| sub_lt_self R hδ,
+          have hc : ∀ y ∈ S, y ≤ R - δ := fun y hy => coe_le_coe.1 <| le_of_ltₓ <| lt_of_lt_of_leₓ hy c
+          not_lt_of_leₓ (cSup_le HR₁ hc) <| sub_lt_self R hδ,
         lt_of_not_le fun c =>
           have hc : ↑(R + δ / 2) < x := lt_of_lt_of_leₓ (add_lt_add_left (coe_lt_coe.2 (half_lt_self hδ)) R) c
-          not_lt_of_le (le_cSup HR₂ hc) <| (lt_add_iff_pos_right _).mpr <| half_pos hδ⟩
+          not_lt_of_leₓ (le_cSup HR₂ hc) <| (lt_add_iff_pos_right _).mpr <| half_pos hδ⟩
 
 theorem exists_st_of_not_infinite {x : ℝ*} (hni : ¬Infinite x) : ∃ r : ℝ, IsSt x r :=
   ⟨sup { y : ℝ | (y : ℝ*) < x }, is_st_Sup hni⟩
@@ -330,7 +330,7 @@ theorem is_st_inj_real {r₁ r₂ s : ℝ} (h1 : IsSt r₁ s) (h2 : IsSt r₂ s)
   Eq.trans (eq_of_is_st_real h1) (eq_of_is_st_real h2).symm
 
 theorem is_st_iff_abs_sub_lt_delta {x : ℝ*} {r : ℝ} : IsSt x r ↔ ∀ δ : ℝ, 0 < δ → abs (x - r) < δ := by
-  simp only [← abs_sub_lt_iff, ← sub_lt_iff_lt_add, ← is_st, ← and_comm, ← add_commₓ]
+  simp only [abs_sub_lt_iff, sub_lt_iff_lt_add, is_st, and_comm, add_commₓ]
 
 theorem is_st_add {x y : ℝ*} {r s : ℝ} : IsSt x r → IsSt y s → IsSt (x + y) (r + s) := fun hxr hys d hd =>
   have hxr' := hxr (d / 2) (half_pos hd)
@@ -546,7 +546,7 @@ theorem infinite_pos_of_tendsto_top {f : ℕ → ℝ} (hf : Tendsto f atTop atTo
     have hi' : ∀ a : ℕ, f a < r + 1 → a < i := fun a => by
       rw [← not_leₓ, ← not_leₓ] <;> exact not_imp_not.mpr (hi a)
     have hS : { a : ℕ | r < f a }ᶜ ⊆ { a : ℕ | a ≤ i } := by
-      simp only [← Set.compl_set_of, ← not_ltₓ] <;>
+      simp only [Set.compl_set_of, not_ltₓ] <;>
         exact fun a har => le_of_ltₓ (hi' a (lt_of_le_of_ltₓ har (lt_add_one _)))
     Germ.coe_lt.2 <| mem_hyperfilter_of_finite_compl <| (Set.finite_le_nat _).Subset hS
 
@@ -556,7 +556,7 @@ theorem infinite_neg_of_tendsto_bot {f : ℕ → ℝ} (hf : Tendsto f atTop atBo
     have hi' : ∀ a : ℕ, r - 1 < f a → a < i := fun a => by
       rw [← not_leₓ, ← not_leₓ] <;> exact not_imp_not.mpr (hi a)
     have hS : { a : ℕ | f a < r }ᶜ ⊆ { a : ℕ | a ≤ i } := by
-      simp only [← Set.compl_set_of, ← not_ltₓ] <;>
+      simp only [Set.compl_set_of, not_ltₓ] <;>
         exact fun a har => le_of_ltₓ (hi' a (lt_of_lt_of_leₓ (sub_one_lt _) har))
     Germ.coe_lt.2 <| mem_hyperfilter_of_finite_compl <| (Set.finite_le_nat _).Subset hS
 
@@ -612,7 +612,7 @@ private theorem is_st_mul' {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt
             rw [mul_sub, sub_mul, add_sub, sub_add_cancel]
           _ ≤ abs (x * (y - s)) + abs ((x - r) * s) := abs_add _ _
           _ ≤ abs x * abs (y - s) + abs (x - r) * abs s := by
-            simp only [← abs_mul]
+            simp only [abs_mul]
           _ ≤ abs x * (d / t / 2 : ℝ) + (d / abs s / 2 : ℝ) * abs s :=
             add_le_add
               (mul_le_mul_of_nonneg_left
@@ -626,7 +626,7 @@ private theorem is_st_mul' {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt
             have : (abs s : ℝ*) ≠ 0 := by
               simpa
             have : (2 : ℝ*) ≠ 0 := two_ne_zero
-            field_simp [*, ← add_mulₓ, ← mul_addₓ, ← mul_assoc, ← mul_comm, ← mul_left_commₓ]
+            field_simp [*, add_mulₓ, mul_addₓ, mul_assoc, mul_comm, mul_left_commₓ]
           _ < (d / 2 * 1 + d / 2 : ℝ*) :=
             add_lt_add_right
               (mul_lt_mul_of_pos_left ((div_lt_one <| lt_of_le_of_ltₓ (abs_nonneg x) ht).mpr ht) <|
@@ -717,16 +717,16 @@ theorem zero_iff_infinitesimal_real {r : ℝ} : Infinitesimal r ↔ r = 0 :=
     rw [hr] <;> exact infinitesimal_zero⟩
 
 theorem infinitesimal_add {x y : ℝ*} (hx : Infinitesimal x) (hy : Infinitesimal y) : Infinitesimal (x + y) := by
-  simpa only [← add_zeroₓ] using is_st_add hx hy
+  simpa only [add_zeroₓ] using is_st_add hx hy
 
 theorem infinitesimal_neg {x : ℝ*} (hx : Infinitesimal x) : Infinitesimal (-x) := by
-  simpa only [← neg_zero] using is_st_neg hx
+  simpa only [neg_zero] using is_st_neg hx
 
 theorem infinitesimal_neg_iff {x : ℝ*} : Infinitesimal x ↔ Infinitesimal (-x) :=
   ⟨infinitesimal_neg, fun h => neg_negₓ x ▸ @infinitesimal_neg (-x) h⟩
 
 theorem infinitesimal_mul {x y : ℝ*} (hx : Infinitesimal x) (hy : Infinitesimal y) : Infinitesimal (x * y) := by
-  simpa only [← mul_zero] using is_st_mul hx hy
+  simpa only [mul_zero] using is_st_mul hx hy
 
 theorem infinitesimal_of_tendsto_zero {f : ℕ → ℝ} : Tendsto f atTop (𝓝 0) → Infinitesimal (ofSeq f) := fun hf d hd => by
   rw [sub_eq_add_neg, ← coe_neg, ← coe_add, ← coe_add, zero_addₓ, zero_addₓ] <;>
@@ -782,13 +782,13 @@ theorem infinite_iff_infinitesimal_inv {x : ℝ*} (h0 : x ≠ 0) : Infinite x �
   ⟨infinitesimal_inv_of_infinite, infinite_of_infinitesimal_inv h0⟩
 
 theorem infinitesimal_pos_iff_infinite_pos_inv {x : ℝ*} : InfinitePos x⁻¹ ↔ Infinitesimal x ∧ 0 < x := by
-  convert infinite_pos_iff_infinitesimal_inv_pos <;> simp only [← inv_invₓ]
+  convert infinite_pos_iff_infinitesimal_inv_pos <;> simp only [inv_invₓ]
 
 theorem infinitesimal_neg_iff_infinite_neg_inv {x : ℝ*} : InfiniteNeg x⁻¹ ↔ Infinitesimal x ∧ x < 0 := by
-  convert infinite_neg_iff_infinitesimal_inv_neg <;> simp only [← inv_invₓ]
+  convert infinite_neg_iff_infinitesimal_inv_neg <;> simp only [inv_invₓ]
 
 theorem infinitesimal_iff_infinite_inv {x : ℝ*} (h : x ≠ 0) : Infinitesimal x ↔ Infinite x⁻¹ := by
-  convert (infinite_iff_infinitesimal_inv (inv_ne_zero h)).symm <;> simp only [← inv_invₓ]
+  convert (infinite_iff_infinitesimal_inv (inv_ne_zero h)).symm <;> simp only [inv_invₓ]
 
 /-!
 ### `st` stuff that requires infinitesimal machinery

@@ -100,8 +100,8 @@ theorem continuous_coe : Continuous (coe : Mˣ → M) :=
 @[to_additive]
 protected theorem continuous_iff {f : X → Mˣ} :
     Continuous f ↔ Continuous (coe ∘ f : X → M) ∧ Continuous (fun x => ↑(f x)⁻¹ : X → M) := by
-  simp only [← inducing_embed_product.continuous_iff, ← embed_product_apply, ← (· ∘ ·), ← continuous_prod_mk, ←
-    op_homeomorph.symm.inducing.continuous_iff, ← op_homeomorph_symm_apply, ← unop_op]
+  simp only [inducing_embed_product.continuous_iff, embed_product_apply, (· ∘ ·), continuous_prod_mk,
+    op_homeomorph.symm.inducing.continuous_iff, op_homeomorph_symm_apply, unop_op]
 
 @[to_additive]
 theorem continuous_coe_inv : Continuous (fun u => ↑u⁻¹ : Mˣ → M) :=

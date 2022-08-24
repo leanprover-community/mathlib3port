@@ -41,7 +41,7 @@ theorem coe_expand : (expand R p : R[X] → R[X]) = eval₂ c (X ^ p) :=
 variable {R}
 
 theorem expand_eq_sum {f : R[X]} : expand R p f = f.Sum fun e a => c a * (X ^ p) ^ e := by
-  dsimp' [← expand, ← eval₂]
+  dsimp' [expand, eval₂]
   rfl
 
 @[simp]
@@ -70,7 +70,7 @@ theorem expand_mul (f : R[X]) : expand R (p * q) f = expand R p (expand R q f) :
 
 @[simp]
 theorem expand_zero (f : R[X]) : expand R 0 f = c (eval 1 f) := by
-  simp [← expand]
+  simp [expand]
 
 @[simp]
 theorem expand_one (f : R[X]) : expand R 1 f = f :=
@@ -94,7 +94,7 @@ theorem derivative_expand (f : R[X]) : (expand R p f).derivative = expand R p f.
 
 theorem coeff_expand {p : ℕ} (hp : 0 < p) (f : R[X]) (n : ℕ) :
     (expand R p f).coeff n = if p ∣ n then f.coeff (n / p) else 0 := by
-  simp only [← expand_eq_sum]
+  simp only [expand_eq_sum]
   simp_rw [coeff_sum, ← pow_mulₓ, C_mul_X_pow_eq_monomial, coeff_monomial, Sum]
   split_ifs with h
   · rw [Finset.sum_eq_single (n / p), Nat.mul_div_cancel'ₓ h, if_pos rfl]
@@ -165,11 +165,11 @@ theorem nat_degree_expand (p : ℕ) (f : R[X]) : (expand R p f).natDegree = f.na
 
 theorem Monic.expand {p : ℕ} {f : R[X]} (hp : 0 < p) (h : f.Monic) : (expand R p f).Monic := by
   rw [monic.def, leading_coeff, nat_degree_expand, coeff_expand hp]
-  simp [← hp, ← h]
+  simp [hp, h]
 
 theorem map_expand {p : ℕ} {f : R →+* S} {q : R[X]} : map f (expand R p q) = expand S p (map f q) := by
   by_cases' hp : p = 0
-  · simp [← hp]
+  · simp [hp]
     
   ext
   rw [coeff_map, coeff_expand (Nat.pos_of_ne_zeroₓ hp), coeff_expand (Nat.pos_of_ne_zeroₓ hp)]
@@ -182,7 +182,7 @@ theorem expand_injective {n : ℕ} (hn : 0 < n) : Function.Injective (expand R n
     apply Polynomial.ext_iff.1
     exact h
   rw [Polynomial.coeff_expand hn g (n * n_1), Polynomial.coeff_expand hn g' (n * n_1)] at h'
-  simp only [← if_true, ← dvd_mul_right] at h'
+  simp only [if_true, dvd_mul_right] at h'
   rw [Nat.mul_div_rightₓ n_1 hn] at h'
   exact h'
 
@@ -212,19 +212,19 @@ noncomputable def contract (p : ℕ) (f : R[X]) : R[X] :=
   ∑ n in range (f.natDegree + 1), monomial n (f.coeff (n * p))
 
 theorem coeff_contract {p : ℕ} (hp : p ≠ 0) (f : R[X]) (n : ℕ) : (contract p f).coeff n = f.coeff (n * p) := by
-  simp only [← contract, ← coeff_monomial, ← sum_ite_eq', ← finset_sum_coeff, ← mem_range, ← not_ltₓ, ← ite_eq_left_iff]
+  simp only [contract, coeff_monomial, sum_ite_eq', finset_sum_coeff, mem_range, not_ltₓ, ite_eq_left_iff]
   intro hn
   apply (coeff_eq_zero_of_nat_degree_lt _).symm
   calc
     f.nat_degree < f.nat_degree + 1 := Nat.lt_succ_selfₓ _
     _ ≤ n * 1 := by
-      simpa only [← mul_oneₓ] using hn
+      simpa only [mul_oneₓ] using hn
     _ ≤ n * p := mul_le_mul_of_nonneg_left (show 1 ≤ p from hp.bot_lt) (zero_le n)
     
 
 theorem contract_expand {f : R[X]} (hp : p ≠ 0) : contract p (expand R p f) = f := by
   ext
-  simp [← coeff_contract hp, ← coeff_expand hp.bot_lt, ← Nat.mul_div_cancelₓ _ hp.bot_lt]
+  simp [coeff_contract hp, coeff_expand hp.bot_lt, Nat.mul_div_cancelₓ _ hp.bot_lt]
 
 section CharP
 
@@ -263,7 +263,7 @@ theorem expand_char (f : R[X]) : map (frobenius R p) (expand R p f) = f ^ p := b
 
 theorem map_expand_pow_char (f : R[X]) (n : ℕ) : map (frobenius R p ^ n) (expand R (p ^ n) f) = f ^ p ^ n := by
   induction n
-  · simp [← RingHom.one_def]
+  · simp [RingHom.one_def]
     
   symm
   rw [pow_succ'ₓ, pow_mulₓ, ← n_ih, ← expand_char, pow_succₓ, RingHom.mul_def, ← map_map, mul_comm, expand_mul, ←

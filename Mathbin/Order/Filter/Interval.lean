@@ -81,24 +81,24 @@ theorem Tendsto.Ioo {l₁ l₂ : Filter α} [TendstoIxxClass Ioo l₁ l₂] {lb 
     (h₁ : Tendsto u₁ lb l₁) (h₂ : Tendsto u₂ lb l₁) : Tendsto (fun x => Ioo (u₁ x) (u₂ x)) lb l₂.smallSets :=
   TendstoIxxClass.tendsto_Ixx.comp <| h₁.prod_mk h₂
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem tendsto_Ixx_class_principal {s t : Set α} {Ixx : α → α → Set α} :
     TendstoIxxClass Ixx (𝓟 s) (𝓟 t) ↔ ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), Ixx x y ⊆ t :=
   Iff.trans ⟨fun h => h.1, fun h => ⟨h⟩⟩ <| by
-    simp only [← small_sets_principal, ← prod_principal_principal, ← tendsto_principal_principal, ← forall_prod_set, ←
-      mem_powerset_iff, ← mem_principal]
+    simp only [small_sets_principal, prod_principal_principal, tendsto_principal_principal, forall_prod_set,
+      mem_powerset_iff, mem_principal]
 
 theorem tendsto_Ixx_class_inf {l₁ l₁' l₂ l₂' : Filter α} {Ixx} [h : TendstoIxxClass Ixx l₁ l₂]
     [h' : TendstoIxxClass Ixx l₁' l₂'] : TendstoIxxClass Ixx (l₁⊓l₁') (l₂⊓l₂') :=
   ⟨by
-    simpa only [← prod_inf_prod, ← small_sets_inf] using h.1.inf h'.1⟩
+    simpa only [prod_inf_prod, small_sets_inf] using h.1.inf h'.1⟩
 
 theorem tendsto_Ixx_class_of_subset {l₁ l₂ : Filter α} {Ixx Ixx' : α → α → Set α} (h : ∀ a b, Ixx a b ⊆ Ixx' a b)
     [h' : TendstoIxxClass Ixx' l₁ l₂] : TendstoIxxClass Ixx l₁ l₂ :=
   ⟨h'.1.small_sets_mono <| eventually_of_forall <| Prod.forall.2 h⟩
 
 theorem HasBasis.tendsto_Ixx_class {ι : Type _} {p : ι → Prop} {s} {l : Filter α} (hl : l.HasBasis p s)
-    {Ixx : α → α → Set α} (H : ∀ i, p i → ∀, ∀ x ∈ s i, ∀, ∀ y ∈ s i, ∀, Ixx x y ⊆ s i) : TendstoIxxClass Ixx l l :=
+    {Ixx : α → α → Set α} (H : ∀ i, p i → ∀ x ∈ s i, ∀ y ∈ s i, Ixx x y ⊆ s i) : TendstoIxxClass Ixx l l :=
   ⟨(hl.prod_self.tendsto_iff hl.smallSets).2 fun i hi => ⟨i, hi, fun x hx => H i hi _ hx.1 _ hx.2⟩⟩
 
 instance tendsto_Icc_at_top_at_top : TendstoIxxClass Icc (atTop : Filter α) atTop :=
@@ -200,23 +200,23 @@ section LinearOrderₓ
 
 variable [LinearOrderₓ α]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 instance tendsto_Icc_interval_interval {a b : α} :
-    TendstoIxxClass Icc (𝓟 "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)")
-      (𝓟 "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)") :=
+    TendstoIxxClass Icc (𝓟 "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")
+      (𝓟 "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") :=
   Filter.tendsto_Icc_Icc_Icc
 
--- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 instance tendsto_Ioc_interval_interval {a b : α} :
-    TendstoIxxClass Ioc (𝓟 "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)")
-      (𝓟 "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)") :=
+    TendstoIxxClass Ioc (𝓟 "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")
+      (𝓟 "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") :=
   Filter.tendsto_Ioc_Icc_Icc
 
 instance tendsto_interval_of_Icc {l : Filter α} [TendstoIxxClass Icc l l] : TendstoIxxClass Interval l l := by
   refine' ⟨fun s hs => mem_map.2 <| mem_prod_self_iff.2 _⟩
-  obtain ⟨t, htl, hts⟩ : ∃ t ∈ l, ∀, ∀ p ∈ (t : Set α) ×ˢ t, ∀, Icc (p : α × α).1 p.2 ∈ s
+  obtain ⟨t, htl, hts⟩ : ∃ t ∈ l, ∀ p ∈ (t : Set α) ×ˢ t, Icc (p : α × α).1 p.2 ∈ s
   exact mem_prod_self_iff.1 (mem_map.1 (tendsto_fst.Icc tendsto_snd hs))
   refine' ⟨t, htl, fun p hp => _⟩
   cases le_totalₓ p.1 p.2
@@ -227,10 +227,10 @@ instance tendsto_interval_of_Icc {l : Filter α} [TendstoIxxClass Icc l l] : Ten
     exact hts ⟨p.2, p.1⟩ ⟨hp.2, hp.1⟩
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 theorem Tendsto.interval {l : Filter α} [TendstoIxxClass Icc l l] {f g : β → α} {lb : Filter β} (hf : Tendsto f lb l)
     (hg : Tendsto g lb l) :
-    Tendsto (fun x => "./././Mathport/Syntax/Translate/Basic.lean:960:47: unsupported (impossible)") lb l.smallSets :=
+    Tendsto (fun x => "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") lb l.smallSets :=
   TendstoIxxClass.tendsto_Ixx.comp <| hf.prod_mk hg
 
 end LinearOrderₓ

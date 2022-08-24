@@ -60,7 +60,7 @@ theorem ext {P Q : Karoubi C} (h_X : P.x = Q.x) (h_p : P.p ≫ eqToHom h_X = eqT
   cases Q
   dsimp'  at h_X h_p
   subst h_X
-  simpa only [← true_andₓ, ← eq_self_iff_true, ← id_comp, ← eq_to_hom_refl, ← heq_iff_eq, ← comp_id] using h_p
+  simpa only [true_andₓ, eq_self_iff_true, id_comp, eq_to_hom_refl, heq_iff_eq, comp_id] using h_p
 
 /-- A morphism `P ⟶ Q` in the category `karoubi C` is a morphism in the underlying category
 `C` which satisfies a relation, which in the preadditive case, expresses that it induces a
@@ -139,7 +139,7 @@ theorem coe_p (X : C) : (X : Karoubi C).p = 𝟙 X := by
 theorem eq_to_hom_f {P Q : Karoubi C} (h : P = Q) : Karoubi.Hom.f (eqToHom h) = P.p ≫ eqToHom (congr_arg Karoubi.x h) :=
   by
   subst h
-  simp only [← eq_to_hom_refl, ← karoubi.id_eq, ← comp_id]
+  simp only [eq_to_hom_refl, karoubi.id_eq, comp_id]
 
 end Karoubi
 
@@ -152,7 +152,7 @@ def toKaroubi : C ⥤ Karoubi C where
       rw [comp_id]⟩
   map := fun X Y f =>
     ⟨f, by
-      simp only [← comp_id, ← id_comp]⟩
+      simp only [comp_id, id_comp]⟩
 
 instance : Full (toKaroubi C) where preimage := fun X Y f => f.f
 
@@ -171,21 +171,21 @@ instance [Preadditive C] {P Q : Karoubi C} : AddCommGroupₓ (P ⟶ Q) where
       exacts[f.comm, g.comm]⟩
   zero :=
     ⟨0, by
-      simp only [← comp_zero, ← zero_comp]⟩
+      simp only [comp_zero, zero_comp]⟩
   zero_add := fun f => by
     ext
-    simp only [← zero_addₓ]
+    simp only [zero_addₓ]
   add_zero := fun f => by
     ext
-    simp only [← add_zeroₓ]
+    simp only [add_zeroₓ]
   add_assoc := fun f g h' => by
-    simp only [← add_assocₓ]
+    simp only [add_assocₓ]
   add_comm := fun f g => by
     ext
     apply_rules [add_commₓ]
   neg := fun f =>
     ⟨-f.f, by
-      simpa only [← neg_comp, ← comp_neg, ← neg_inj] using f.comm⟩
+      simpa only [neg_comp, comp_neg, neg_inj] using f.comm⟩
   add_left_neg := fun f => by
     ext
     apply_rules [add_left_negₓ]
@@ -215,10 +215,10 @@ instance [Preadditive C] : Preadditive (Karoubi C) where
     infer_instance
   add_comp' := fun P Q R f g h => by
     ext
-    simp only [← add_comp, ← quiver.hom.add_comm_group_add_f, ← karoubi.comp]
+    simp only [add_comp, quiver.hom.add_comm_group_add_f, karoubi.comp]
   comp_add' := fun P Q R f g h => by
     ext
-    simp only [← comp_add, ← quiver.hom.add_comm_group_add_f, ← karoubi.comp]
+    simp only [comp_add, quiver.hom.add_comm_group_add_f, karoubi.comp]
 
 instance [Preadditive C] : Functor.Additive (toKaroubi C) where
 
@@ -230,7 +230,7 @@ instance : IsIdempotentComplete (Karoubi C) := by
   refine' ⟨_⟩
   intro P p hp
   have hp' := hom_ext.mp hp
-  simp only [← comp] at hp'
+  simp only [comp] at hp'
   use ⟨P.X, p.f, hp'⟩
   use
     ⟨p.f, by
@@ -238,7 +238,7 @@ instance : IsIdempotentComplete (Karoubi C) := by
   use
     ⟨p.f, by
       rw [hp', p_comp p]⟩
-  constructor <;> simpa only [← hom_ext] using hp'
+  constructor <;> simpa only [hom_ext] using hp'
 
 instance [IsIdempotentComplete C] : EssSurj (toKaroubi C) :=
   ⟨fun P => by
@@ -278,11 +278,11 @@ def decompIdP (P : Karoubi C) : (P.x : Karoubi C) ⟶ P :=
 is actually a direct factor in the category `karoubi C`. -/
 theorem decomp_id (P : Karoubi C) : 𝟙 P = decompIdI P ≫ decompIdP P := by
   ext
-  simp only [← comp, ← id_eq, ← P.idem, ← decomp_id_i, ← decomp_id_p]
+  simp only [comp, id_eq, P.idem, decomp_id_i, decomp_id_p]
 
 theorem decomp_p (P : Karoubi C) : (toKaroubi C).map P.p = decompIdP P ≫ decompIdI P := by
   ext
-  simp only [← comp, ← decomp_id_p_f, ← decomp_id_i_f, ← P.idem, ← to_karoubi_map_f]
+  simp only [comp, decomp_id_p_f, decomp_id_i_f, P.idem, to_karoubi_map_f]
 
 theorem decomp_id_i_to_karoubi (X : C) : decompIdI ((toKaroubi C).obj X) = 𝟙 _ := by
   ext
@@ -299,7 +299,7 @@ theorem decomp_id_i_naturality {P Q : Karoubi C} (f : P ⟶ Q) :
           erw [comp_id, id_comp]⟩ :=
   by
   ext
-  simp only [← comp, ← decomp_id_i_f, ← karoubi.comp_p, ← karoubi.p_comp]
+  simp only [comp, decomp_id_i_f, karoubi.comp_p, karoubi.p_comp]
 
 theorem decomp_id_p_naturality {P Q : Karoubi C} (f : P ⟶ Q) :
     decompIdP P ≫ f =
@@ -309,7 +309,7 @@ theorem decomp_id_p_naturality {P Q : Karoubi C} (f : P ⟶ Q) :
         decompIdP Q :=
   by
   ext
-  simp only [← comp, ← decomp_id_p_f, ← karoubi.comp_p, ← karoubi.p_comp]
+  simp only [comp, decomp_id_p_f, karoubi.comp_p, karoubi.p_comp]
 
 end Karoubi
 

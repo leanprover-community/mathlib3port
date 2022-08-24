@@ -212,7 +212,7 @@ instance (priority := 100) locally_small_of_thin {C : Type u} [Category.{v} C] [
 -/
 theorem essentially_small_iff_of_thin {C : Type u} [Category.{v} C] [∀ X Y : C, Subsingleton (X ⟶ Y)] :
     EssentiallySmall.{w} C ↔ Small.{w} (Skeleton C) := by
-  simp [← essentially_small_iff, ← CategoryTheory.locally_small_of_thin]
+  simp [essentially_small_iff, CategoryTheory.locally_small_of_thin]
 
 end CategoryTheory
 

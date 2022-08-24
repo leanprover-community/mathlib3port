@@ -183,7 +183,7 @@ theorem SmulCommClass.symm (M N α : Type _) [HasSmul M α] [HasSmul N α] [Smul
   ⟨fun a' a b => (smul_comm a a' b).symm⟩
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident vadd_comm_class.symm]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident vadd_comm_class.symm]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[to_additive]
 instance smul_comm_class_self (M α : Type _) [CommMonoidₓ M] [MulAction M α] : SmulCommClass M M α :=
   ⟨fun a a' b => by
@@ -380,7 +380,7 @@ protected def Function.Injective.mulAction [HasSmul M β] (f : β → α) (hf : 
   one_smul := fun x => hf <| (smul _ _).trans <| one_smul _ (f x)
   mul_smul := fun c₁ c₂ x =>
     hf <| by
-      simp only [← smul, ← mul_smul]
+      simp only [smul, mul_smul]
 
 /-- Pushforward a multiplicative action along a surjective map respecting `•`.
 See note [reducible non-instances]. -/
@@ -393,7 +393,7 @@ protected def Function.Surjective.mulAction [HasSmul M β] (f : α → β) (hf :
     rw [← smul, one_smul]
   mul_smul := fun c₁ c₂ y => by
     rcases hf y with ⟨x, rfl⟩
-    simp only [smul, ← mul_smul]
+    simp only [← smul, mul_smul]
 
 /-- Push forward the action of `R` on `M` along a compatible surjective map `f : R →* S`.
 
@@ -407,7 +407,7 @@ def Function.Surjective.mulActionLeft {R S M : Type _} [Monoidₓ R] [MulAction 
     rw [← f.map_one, hsmul, one_smul]
   mul_smul :=
     hf.Forall₂.mpr fun a b x => by
-      simp only [f.map_mul, ← hsmul, ← mul_smul]
+      simp only [← f.map_mul, hsmul, mul_smul]
 
 section
 
@@ -424,7 +424,7 @@ instance (priority := 910) Monoidₓ.toMulAction : MulAction M M where
   mul_smul := mul_assoc
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_monoid.to_add_action]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_monoid.to_add_action]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[to_additive]
 instance IsScalarTower.left : IsScalarTower M M α :=
   ⟨fun x y z => mul_smul x y z⟩
@@ -453,7 +453,7 @@ def toFun : α ↪ M → α :=
         convert congr_fun H 1⟩
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_action.to_fun]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_action.to_fun]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 variable {M α}
 
 @[simp, to_additive]
@@ -470,12 +470,12 @@ See note [reducible non-instances]. -/
 def compHom [Monoidₓ N] (g : N →* M) : MulAction N α where
   smul := HasSmul.Comp.smul g
   one_smul := by
-    simp [← g.map_one, ← MulAction.one_smul]
+    simp [g.map_one, MulAction.one_smul]
   mul_smul := by
-    simp [← g.map_mul, ← MulAction.mul_smul]
+    simp [g.map_mul, MulAction.mul_smul]
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_action.comp_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_action.comp_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 end MulAction
 
 end
@@ -537,10 +537,10 @@ protected def Function.Injective.distribMulAction [AddMonoidₓ B] [HasSmul M B]
   { hf.MulAction f smul with smul := (· • ·),
     smul_add := fun c x y =>
       hf <| by
-        simp only [← smul, ← f.map_add, ← smul_add],
+        simp only [smul, f.map_add, smul_add],
     smul_zero := fun c =>
       hf <| by
-        simp only [← smul, ← f.map_zero, ← smul_zero] }
+        simp only [smul, f.map_zero, smul_zero] }
 
 /-- Pushforward a distributive multiplicative action along a surjective additive monoid
 homomorphism.
@@ -552,9 +552,9 @@ protected def Function.Surjective.distribMulAction [AddMonoidₓ B] [HasSmul M B
     smul_add := fun c x y => by
       rcases hf x with ⟨x, rfl⟩
       rcases hf y with ⟨y, rfl⟩
-      simp only [← smul_add, smul, f.map_add],
+      simp only [smul_add, ← smul, ← f.map_add],
     smul_zero := fun c => by
-      simp only [f.map_zero, smul, ← smul_zero] }
+      simp only [← f.map_zero, ← smul, smul_zero] }
 
 /-- Push forward the action of `R` on `M` along a compatible surjective map `f : R →* S`.
 
@@ -570,7 +570,7 @@ def Function.Surjective.distribMulActionLeft {R S M : Type _} [Monoidₓ R] [Add
         rw [hsmul, smul_zero],
     smul_add :=
       hf.forall.mpr fun c x y => by
-        simp only [← hsmul, ← smul_add] }
+        simp only [hsmul, smul_add] }
 
 variable (A)
 
@@ -652,10 +652,10 @@ protected def Function.Injective.mulDistribMulAction [Monoidₓ B] [HasSmul M B]
   { hf.MulAction f smul with smul := (· • ·),
     smul_mul := fun c x y =>
       hf <| by
-        simp only [← smul, ← f.map_mul, ← smul_mul'],
+        simp only [smul, f.map_mul, smul_mul'],
     smul_one := fun c =>
       hf <| by
-        simp only [← smul, ← f.map_one, ← smul_one] }
+        simp only [smul, f.map_one, smul_one] }
 
 /-- Pushforward a multiplicative distributive multiplicative action along a surjective monoid
 homomorphism.
@@ -667,9 +667,9 @@ protected def Function.Surjective.mulDistribMulAction [Monoidₓ B] [HasSmul M B
     smul_mul := fun c x y => by
       rcases hf x with ⟨x, rfl⟩
       rcases hf y with ⟨y, rfl⟩
-      simp only [← smul_mul', smul, f.map_mul],
+      simp only [smul_mul', ← smul, ← f.map_mul],
     smul_one := fun c => by
-      simp only [f.map_one, smul, ← smul_one] }
+      simp only [← f.map_one, ← smul, smul_one] }
 
 variable (A)
 

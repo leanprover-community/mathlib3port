@@ -60,7 +60,7 @@ namespace Equivₓ.Perm
 theorem mem_alternating_group {f : Perm α} : f ∈ alternatingGroup α ↔ sign f = 1 :=
   sign.mem_ker
 
-theorem prod_list_swap_mem_alternating_group_iff_even_length {l : List (Perm α)} (hl : ∀, ∀ g ∈ l, ∀, IsSwap g) :
+theorem prod_list_swap_mem_alternating_group_iff_even_length {l : List (Perm α)} (hl : ∀ g ∈ l, IsSwap g) :
     l.Prod ∈ alternatingGroup α ↔ Even l.length := by
   rw [mem_alternating_group, sign_prod_list_swap hl, ← Units.coe_eq_one, Units.coe_pow, Units.coe_neg_one,
     neg_one_pow_eq_one_iff_even]
@@ -95,7 +95,7 @@ theorem is_conj_of {σ τ : alternatingGroup α} (hc : IsConj (σ : Perm α) (τ
   cases' Int.units_eq_one_or (sign π) with h h
   · rw [is_conj_iff]
     refine' ⟨⟨π, mem_alternating_group.mp h⟩, Subtype.val_injective _⟩
-    simpa only [← Subtype.val_eq_coe, ← Subgroup.coe_mul, ← coe_inv, ← coe_mk] using hπ
+    simpa only [Subtype.val_eq_coe, Subgroup.coe_mul, coe_inv, coe_mk] using hπ
     
   · have h2 : 2 ≤ σ.supportᶜ.card := by
       rw [Finset.card_compl, le_tsub_iff_left σ.support.card_le_univ]
@@ -104,12 +104,12 @@ theorem is_conj_of {σ τ : alternatingGroup α} (hc : IsConj (σ : Perm α) (τ
     refine' is_conj_iff.2 ⟨⟨π * swap a b, _⟩, Subtype.val_injective _⟩
     · rw [mem_alternating_group, MonoidHom.map_mul, h, sign_swap ab, Int.units_mul_self]
       
-    · simp only [hπ, ← coe_mk, ← Subgroup.coe_mul, ← Subtype.val_eq_coe]
+    · simp only [← hπ, coe_mk, Subgroup.coe_mul, Subtype.val_eq_coe]
       have hd : Disjoint (swap a b) σ := by
         rw [disjoint_iff_disjoint_support, support_swap ab, Finset.disjoint_insert_left, Finset.disjoint_singleton_left]
         exact ⟨Finset.mem_compl.1 ha, Finset.mem_compl.1 hb⟩
       rw [mul_assoc π _ σ, hd.commute.eq, coe_inv, coe_mk]
-      simp [← mul_assoc]
+      simp [mul_assoc]
       
     
 
@@ -138,7 +138,7 @@ theorem closure_three_cycles_eq_alternating : closure { σ : Perm α | IsThreeCy
       
     intro n
     induction' n with n ih <;> intro l hl hn
-    · simp [← List.length_eq_zero.1 hn, ← one_mem]
+    · simp [List.length_eq_zero.1 hn, one_mem]
       
     rw [Nat.mul_succ] at hn
     obtain ⟨a, l, rfl⟩ := l.exists_of_length_succ hn
@@ -174,7 +174,7 @@ theorem IsThreeCycle.alternating_normal_closure (h5 : 5 ≤ Fintype.card α) {f 
 theorem is_three_cycle_sq_of_three_mem_cycle_type_five {g : Perm (Finₓ 5)} (h : 3 ∈ cycleType g) :
     IsThreeCycle (g * g) := by
   obtain ⟨c, g', rfl, hd, hc, h3⟩ := mem_cycle_type_iff.1 h
-  simp only [← mul_assoc]
+  simp only [mul_assoc]
   rw [hd.commute.eq, ← mul_assoc g']
   suffices hg' : orderOf g' ∣ 2
   · rw [← pow_two, order_of_dvd_iff_pow_eq_one.1 hg', one_mulₓ]
@@ -261,7 +261,7 @@ theorem normal_closure_swap_mul_swap_five :
       alternatingGroup (Finₓ 5))
   have h5 : g1 * g2 * g1⁻¹ * g2⁻¹ = ⟨finRotate 5, fin_rotate_bit1_mem_alternating_group⟩ := by
     rw [Subtype.ext_iff]
-    simp only [← Finₓ.coe_mk, ← Subgroup.coe_mul, ← Subgroup.coe_inv, ← Finₓ.coe_mk]
+    simp only [Finₓ.coe_mk, Subgroup.coe_mul, Subgroup.coe_inv, Finₓ.coe_mk]
     decide
   rw [eq_top_iff, ← normal_closure_fin_rotate_five]
   refine' normal_closure_le_normal _
@@ -294,7 +294,7 @@ theorem is_conj_swap_mul_swap_of_cycle_type_two {g : Perm (Finₓ 5)} (ha : g �
   · exact (h1 (card_cycle_type_eq_zero.1 h_1)).elim
     
   · contrapose! ha
-    simp [← h_1]
+    simp [h_1]
     
   · have h04 : (0 : Finₓ 5) ≠ 4 := by
       decide
@@ -309,7 +309,7 @@ theorem is_conj_swap_mul_swap_of_cycle_type_two {g : Perm (Finₓ 5)} (ha : g �
       
     
   · contrapose! ha
-    simp [← h_1]
+    simp [h_1]
     
 
 /-- Shows that $A_5$ is simple by taking an arbitrary non-identity element and showing by casework
@@ -323,9 +323,9 @@ instance is_simple_group_five : IsSimpleGroup (alternatingGroup (Finₓ 5)) :=
     obtain ⟨⟨g, gA⟩, gH, g1⟩ : ∃ x : ↥(alternatingGroup (Finₓ 5)), x ∈ H ∧ x ≠ 1 := Hb
     -- `g` is a non-identity alternating permutation in a normal subgroup `H` of $A_5$.
     rw [← SetLike.mem_coe, ← Set.singleton_subset_iff] at gH
-    refine' eq_top_iff.2 (le_transₓ (ge_of_eq _) (normal_closure_le_normal gH))
+    refine' eq_top_iff.2 (le_transₓ (ge_of_eqₓ _) (normal_closure_le_normal gH))
     -- It suffices to show that the normal closure of `g` in $A_5$ is $A_5$.
-    by_cases' h2 : ∀, ∀ n ∈ g.cycle_type, ∀, n = 2
+    by_cases' h2 : ∀ n ∈ g.cycle_type, n = 2
     · -- If the cycle decomposition of `g` consists entirely of swaps, then the cycle type is $(2,2)$.
       -- This means that it is conjugate to $(04)(13)$, whose normal closure is $A_5$.
       rw [Ne.def, Subtype.ext_iff] at g1
@@ -341,7 +341,7 @@ instance is_simple_group_five : IsSimpleGroup (alternatingGroup (Finₓ 5)) :=
     swap
     · obtain ⟨m, hm⟩ := Multiset.exists_cons_of_mem ng
       rw [← sum_cycle_type, hm, Multiset.sum_cons]
-      exact le_add_right le_rfl
+      exact le_add_right le_rflₓ
       
     interval_cases n
     -- This breaks into cases `n = 3`, `n = 4`, `n = 5`.

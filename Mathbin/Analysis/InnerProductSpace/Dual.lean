@@ -79,7 +79,7 @@ theorem ext_inner_left_basis {ι : Type _} {x y : E} (b : Basis ι 𝕜 E) (h : 
   apply (to_dual_map 𝕜 E).map_eq_iff.mp
   refine' (Function.Injective.eq_iff ContinuousLinearMap.coe_injective).mp (Basis.ext b _)
   intro i
-  simp only [← to_dual_map_apply, ← ContinuousLinearMap.coe_coe]
+  simp only [to_dual_map_apply, ContinuousLinearMap.coe_coe]
   rw [← inner_conj_sym]
   nth_rw_rhs 0[← inner_conj_sym]
   exact congr_arg conj (h i)
@@ -108,7 +108,7 @@ def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
           exact h'
         exact
           ⟨0, by
-            simp [← hℓ]⟩
+            simp [hℓ]⟩
         
       · rw [← Submodule.orthogonal_eq_bot_iff] at htriv
         change Yᗮ ≠ ⊥ at htriv
@@ -129,13 +129,13 @@ def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
               _ = ⟪z, ℓ z • x⟫ - ⟪z, ℓ x • z⟫ := by
                 rw [inner_sub_right]
               _ = ℓ z * ⟪z, x⟫ - ℓ x * ⟪z, z⟫ := by
-                simp [← inner_smul_right]
+                simp [inner_smul_right]
               
           exact sub_eq_zero.mp (Eq.symm h₃)
         have h₄ :=
           calc
             ⟪(ℓ z† / ⟪z, z⟫) • z, x⟫ = ℓ z / ⟪z, z⟫ * ⟪z, x⟫ := by
-              simp [← inner_smul_left, ← conj_conj]
+              simp [inner_smul_left, conj_conj]
             _ = ℓ z * ⟪z, x⟫ / ⟪z, z⟫ := by
               rw [← div_mul_eq_mul_div]
             _ = ℓ x * ⟪z, z⟫ / ⟪z, z⟫ := by
@@ -144,7 +144,7 @@ def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
               have : ⟪z, z⟫ ≠ 0 := by
                 change z = 0 → False at z_ne_0
                 rwa [← inner_self_eq_zero] at z_ne_0
-              field_simp [← this]
+              field_simp [this]
             
         exact h₄
         )
@@ -158,7 +158,7 @@ theorem to_dual_apply {x y : E} : toDual 𝕜 E x y = ⟪x, y⟫ :=
 @[simp]
 theorem to_dual_symm_apply {x : E} {y : NormedSpace.Dual 𝕜 E} : ⟪(toDual 𝕜 E).symm y, x⟫ = y x := by
   rw [← to_dual_apply]
-  simp only [← LinearIsometryEquiv.apply_symm_apply]
+  simp only [LinearIsometryEquiv.apply_symm_apply]
 
 variable {E 𝕜}
 
@@ -176,7 +176,7 @@ variable (B : E →L⋆[𝕜] E →L[𝕜] 𝕜)
 
 @[simp]
 theorem continuous_linear_map_of_bilin_apply (v w : E) : ⟪B♯ v, w⟫ = B v w := by
-  simp [← continuous_linear_map_of_bilin]
+  simp [continuous_linear_map_of_bilin]
 
 theorem unique_continuous_linear_map_of_bilin {v f : E} (is_lax_milgram : ∀ w, ⟪f, w⟫ = B v w) : f = B♯ v := by
   refine' ext_inner_right 𝕜 _

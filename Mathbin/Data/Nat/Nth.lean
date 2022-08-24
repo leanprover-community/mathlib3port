@@ -43,7 +43,7 @@ variable (p : ℕ → Prop)
 natural number satisfying `p`), or `0` if there is no such number. See also
 `subtype.order_iso_of_nat` for the order isomorphism with ℕ when `p` is infinitely often true. -/
 noncomputable def nth : ℕ → ℕ
-  | n => inf { i : ℕ | p i ∧ ∀, ∀ k < n, ∀, nth k < i }
+  | n => inf { i : ℕ | p i ∧ ∀ k < n, nth k < i }
 
 theorem nth_zero : nth p 0 = inf { i : ℕ | p i } := by
   rw [nth]
@@ -51,17 +51,17 @@ theorem nth_zero : nth p 0 = inf { i : ℕ | p i } := by
 
 @[simp]
 theorem nth_zero_of_zero (h : p 0) : nth p 0 = 0 := by
-  simp [← nth_zero, ← h]
+  simp [nth_zero, h]
 
 theorem nth_zero_of_exists [DecidablePred p] (h : ∃ n, p n) : nth p 0 = Nat.findₓ h := by
   rw [nth_zero]
   convert Nat.Inf_def h
 
-theorem nth_set_card_aux {n : ℕ} (hp : (SetOf p).Finite) (hp' : { i : ℕ | p i ∧ ∀, ∀ t < n, ∀, nth p t < i }.Finite)
+theorem nth_set_card_aux {n : ℕ} (hp : (SetOf p).Finite) (hp' : { i : ℕ | p i ∧ ∀ t < n, nth p t < i }.Finite)
     (hle : n ≤ hp.toFinset.card) : hp'.toFinset.card = hp.toFinset.card - n := by
   induction' n with k hk
   · congr
-    simp only [← IsEmpty.forall_iff, ← Nat.not_lt_zeroₓ, ← forall_const, ← and_trueₓ]
+    simp only [IsEmpty.forall_iff, Nat.not_lt_zeroₓ, forall_const, and_trueₓ]
     
   have hp'' : { i : ℕ | p i ∧ ∀ t, t < k → nth p t < i }.Finite := by
     refine' hp.subset fun x hx => _
@@ -73,7 +73,7 @@ theorem nth_set_card_aux {n : ℕ} (hp : (SetOf p).Finite) (hp' : { i : ℕ | p 
   convert_to (Finset.erase hp''.to_finset (nth p k)).card = _
   · congr
     ext a
-    simp only [← Set.Finite.mem_to_finset, ← Ne.def, ← Set.mem_set_of_eq, ← Finset.mem_erase]
+    simp only [Set.Finite.mem_to_finset, Ne.def, Set.mem_set_of_eq, Finset.mem_erase]
     refine' ⟨fun ⟨hp, hlt⟩ => ⟨(hlt _ (lt_add_one k)).ne', ⟨hp, fun n hn => hlt n (hn.trans_le k.le_succ)⟩⟩, _⟩
     rintro ⟨hak : _ ≠ _, hp, hlt⟩
     refine' ⟨hp, fun n hn => _⟩
@@ -84,7 +84,7 @@ theorem nth_set_card_aux {n : ℕ} (hp : (SetOf p).Finite) (hp' : { i : ℕ | p 
     · refine' lt_of_le_of_neₓ _ (Ne.symm hak)
       rw [nth]
       apply Nat.Inf_le
-      simpa [← hp] using hlt
+      simpa [hp] using hlt
       
     
   apply Finset.card_erase_of_mem
@@ -92,17 +92,17 @@ theorem nth_set_card_aux {n : ℕ} (hp : (SetOf p).Finite) (hp' : { i : ℕ | p 
   apply Inf_mem
   rwa [← hp''.nonempty_to_finset, ← Finset.card_pos, hk]
 
-theorem nth_set_card {n : ℕ} (hp : (SetOf p).Finite) (hp' : { i : ℕ | p i ∧ ∀, ∀ k < n, ∀, nth p k < i }.Finite) :
+theorem nth_set_card {n : ℕ} (hp : (SetOf p).Finite) (hp' : { i : ℕ | p i ∧ ∀ k < n, nth p k < i }.Finite) :
     hp'.toFinset.card = hp.toFinset.card - n := by
   obtain hn | hn := le_or_ltₓ n hp.to_finset.card
   · exact nth_set_card_aux p hp _ hn
     
   rw [Nat.sub_eq_zero_of_leₓ hn.le]
-  simp only [← Finset.card_eq_zero, ← Set.finite_to_finset_eq_empty_iff, Set.subset_empty_iff]
+  simp only [Finset.card_eq_zero, Set.finite_to_finset_eq_empty_iff, ← Set.subset_empty_iff]
   convert_to _ ⊆ { i : ℕ | p i ∧ ∀ k : ℕ, k < hp.to_finset.card → nth p k < i }
   · symm
     rw [← Set.finite_to_finset_eq_empty_iff, ← Finset.card_eq_zero, ← Nat.sub_self hp.to_finset.card]
-    · apply nth_set_card_aux p hp _ le_rfl
+    · apply nth_set_card_aux p hp _ le_rflₓ
       
     · exact hp.subset fun x hx => hx.1
       
@@ -110,13 +110,13 @@ theorem nth_set_card {n : ℕ} (hp : (SetOf p).Finite) (hp' : { i : ℕ | p i �
   exact fun x hx => ⟨hx.1, fun k hk => hx.2 _ (hk.trans hn)⟩
 
 theorem nth_set_nonempty_of_lt_card {n : ℕ} (hp : (SetOf p).Finite) (hlt : n < hp.toFinset.card) :
-    { i : ℕ | p i ∧ ∀, ∀ k < n, ∀, nth p k < i }.Nonempty := by
+    { i : ℕ | p i ∧ ∀ k < n, nth p k < i }.Nonempty := by
   have hp' : { i : ℕ | p i ∧ ∀ k : ℕ, k < n → nth p k < i }.Finite := hp.subset fun x hx => hx.1
   rw [← hp'.nonempty_to_finset, ← Finset.card_pos, nth_set_card p hp]
   exact Nat.sub_pos_of_ltₓ hlt
 
 theorem nth_mem_of_lt_card_finite_aux (n : ℕ) (hp : (SetOf p).Finite) (hlt : n < hp.toFinset.card) :
-    nth p n ∈ { i : ℕ | p i ∧ ∀, ∀ k < n, ∀, nth p k < i } := by
+    nth p n ∈ { i : ℕ | p i ∧ ∀ k < n, nth p k < i } := by
   rw [nth]
   apply Inf_mem
   exact nth_set_nonempty_of_lt_card _ _ hlt
@@ -128,8 +128,8 @@ theorem nth_strict_mono_of_finite {m n : ℕ} (hp : (SetOf p).Finite) (hlt : n <
     nth p m < nth p n :=
   (nth_mem_of_lt_card_finite_aux p _ hp hlt).2 _ hmn
 
-theorem nth_mem_of_infinite_aux (hp : (SetOf p).Infinite) (n : ℕ) :
-    nth p n ∈ { i : ℕ | p i ∧ ∀, ∀ k < n, ∀, nth p k < i } := by
+theorem nth_mem_of_infinite_aux (hp : (SetOf p).Infinite) (n : ℕ) : nth p n ∈ { i : ℕ | p i ∧ ∀ k < n, nth p k < i } :=
+  by
   rw [nth]
   apply Inf_mem
   let s : Set ℕ := ⋃ k < n, { i : ℕ | nth p k ≥ i }
@@ -151,7 +151,7 @@ theorem nth_injective_of_infinite (hp : (SetOf p).Infinite) : Function.Injective
   wlog h' : m ≤ n
   rw [le_iff_lt_or_eqₓ] at h'
   obtain h' | rfl := h'
-  · simpa [← h] using nth_strict_mono p hp h'
+  · simpa [h] using nth_strict_mono p hp h'
     
   · rfl
     
@@ -162,7 +162,7 @@ theorem nth_monotone (hp : (SetOf p).Infinite) : Monotone (nth p) :=
 theorem nth_mono_of_finite {a b : ℕ} (hp : (SetOf p).Finite) (hb : b < hp.toFinset.card) (hab : a ≤ b) :
     nth p a ≤ nth p b := by
   obtain rfl | h := hab.eq_or_lt
-  · exact le_rfl
+  · exact le_rflₓ
     
   · exact (nth_strict_mono_of_finite p hp hb h).le
     
@@ -269,13 +269,13 @@ theorem nth_count_eq_Inf {n : ℕ} : nth p (count p n) = inf { i : ℕ | p i ∧
   rw [nth]
   congr
   ext a
-  simp only [← Set.mem_set_of_eq, ← And.congr_right_iff]
+  simp only [Set.mem_set_of_eq, And.congr_right_iff]
   intro hpa
   refine' ⟨fun h => _, fun hn k hk => lt_of_lt_of_leₓ _ hn⟩
   · by_contra ha
-    simp only [← not_leₓ] at ha
+    simp only [not_leₓ] at ha
     have hn : nth p (count p a) < a := h _ (count_strict_mono hpa ha)
-    rwa [nth_count p hpa, lt_self_iff_false] at hn
+    rwa [nth_count p hpa, lt_self_iff_falseₓ] at hn
     
   · apply (count_monotone p).reflect_lt
     convert hk
@@ -308,7 +308,7 @@ theorem count_nth_gc (hp : (SetOf p).Infinite) : GaloisConnection (count p) (nth
     · specialize h (count p n)
       replace hn : nth p (count p n) = n := nth_count _ hn
       replace h : count p x ≤ count p n := by
-        rwa [hn, lt_self_iff_false, imp_false, not_ltₓ] at h
+        rwa [hn, lt_self_iff_falseₓ, imp_false, not_ltₓ] at h
       refine' (nth_count_le p hp x).trans _
       rw [← hn]
       exact nth_monotone p hp h
@@ -322,7 +322,7 @@ theorem count_le_iff_le_nth (hp : (SetOf p).Infinite) {a b : ℕ} : count p a �
   count_nth_gc p hp _ _
 
 theorem lt_nth_iff_count_lt (hp : (SetOf p).Infinite) {a b : ℕ} : a < count p b ↔ nth p a < b :=
-  lt_iff_lt_of_le_iff_le <| count_le_iff_le_nth p hp
+  lt_iff_lt_of_le_iff_leₓ <| count_le_iff_le_nth p hp
 
 theorem nth_lt_of_lt_count (n k : ℕ) (h : k < count p n) : nth p k < n := by
   obtain hp | hp := em (SetOf p).Finite
@@ -357,10 +357,10 @@ theorem nth_zero_of_nth_zero (h₀ : ¬p 0) {a b : ℕ} (hab : a ≤ b) (ha : nt
 theorem nth_eq_order_iso_of_nat (i : Infinite (SetOf p)) (n : ℕ) : nth p n = Nat.Subtype.orderIsoOfNat (SetOf p) n := by
   classical
   have hi := set.infinite_coe_iff.mp i
-  induction' n with k hk <;> simp only [← subtype.order_iso_of_nat_apply, ← subtype.of_nat, ← nat_zero_eq_zero]
+  induction' n with k hk <;> simp only [subtype.order_iso_of_nat_apply, subtype.of_nat, nat_zero_eq_zero]
   · rw [Nat.Subtype.coe_bot, nth_zero_of_exists]
     
-  · simp only [← Nat.Subtype.succ, ← Set.mem_set_of_eq, ← Subtype.coe_mk, ← Subtype.val_eq_coe]
+  · simp only [Nat.Subtype.succ, Set.mem_set_of_eq, Subtype.coe_mk, Subtype.val_eq_coe]
     rw [subtype.order_iso_of_nat_apply] at hk
     set b := nth p k.succ - nth p k - 1 with hb
     replace hb : p (↑(subtype.of_nat (SetOf p) k) + b + 1)
@@ -392,7 +392,7 @@ theorem nth_eq_order_iso_of_nat (i : Infinite (SetOf p)) (n : ℕ) : nth p n = N
           (by
             simp )
       
-    simp only [← exists_prop, ← not_and, ← not_ltₓ, ← Set.mem_set_of_eq, ← not_forall]
+    simp only [exists_prop, not_and, not_ltₓ, Set.mem_set_of_eq, not_forall]
     refine' fun hpn => ⟨k, lt_add_one k, _⟩
     by_contra' hlt
     replace hn : n - nth p k - 1 < t

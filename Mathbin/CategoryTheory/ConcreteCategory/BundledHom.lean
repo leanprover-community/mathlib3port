@@ -61,7 +61,7 @@ instance category : Category (Bundled c) := by
       { Hom := fun X Y => @hom X Y X.str Y.str, id := fun X => @bundled_hom.id c hom 𝒞 X X.str,
         comp := fun X Y Z f g => @bundled_hom.comp c hom 𝒞 X Y Z X.str Y.str Z.str g f, comp_id' := _, id_comp' := _,
         assoc' := _ } <;>
-    intros <;> apply 𝒞.hom_ext <;> simp only [← 𝒞.id_to_fun, ← 𝒞.comp_to_fun, ← Function.left_id, ← Function.right_id]
+    intros <;> apply 𝒞.hom_ext <;> simp only [𝒞.id_to_fun, 𝒞.comp_to_fun, Function.left_id, Function.right_id]
 
 /-- A category given by `bundled_hom` is a concrete category.
 

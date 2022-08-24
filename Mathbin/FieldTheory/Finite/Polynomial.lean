@@ -32,11 +32,11 @@ theorem frobenius_zmod (f : MvPolynomial σ (Zmod p)) : frobenius _ p f = expand
   · intro a
     rw [expand_C, frobenius_def, ← C_pow, Zmod.pow_card]
     
-  · simp only [← AlgHom.map_add, ← RingHom.map_add]
+  · simp only [AlgHom.map_add, RingHom.map_add]
     intro _ _ hf hg
     rw [hf, hg]
     
-  · simp only [← expand_X, ← RingHom.map_mul, ← AlgHom.map_mul]
+  · simp only [expand_X, RingHom.map_mul, AlgHom.map_mul]
     intro _ _ hf
     rw [hf, frobenius_def]
     
@@ -73,8 +73,8 @@ variable [CommRingₓ K]
 theorem eval_indicator_apply_eq_one (a : σ → K) : eval a (indicator a) = 1 := by
   nontriviality
   have : 0 < Fintype.card K - 1 := tsub_pos_of_lt Fintype.one_lt_card
-  simp only [← indicator, ← map_prod, ← map_sub, ← map_one, ← map_pow, ← eval_X, ← eval_C, ← sub_self, ← zero_pow this,
-    ← sub_zero, ← Finset.prod_const_one]
+  simp only [indicator, map_prod, map_sub, map_one, map_pow, eval_X, eval_C, sub_self, zero_pow this, sub_zero,
+    Finset.prod_const_one]
 
 theorem degrees_indicator (c : σ → K) : degrees (indicator c) ≤ ∑ s : σ, (Fintype.card K - 1) • {s} := by
   rw [indicator]
@@ -110,8 +110,7 @@ variable [Field K]
 theorem eval_indicator_apply_eq_zero (a b : σ → K) (h : a ≠ b) : eval a (indicator b) = 0 := by
   obtain ⟨i, hi⟩ : ∃ i, a i ≠ b i := by
     rwa [(· ≠ ·), Function.funext_iffₓ, not_forall] at h
-  simp only [← indicator, ← map_prod, ← map_sub, ← map_one, ← map_pow, ← eval_X, ← eval_C, ← sub_self, ←
-    Finset.prod_eq_zero_iff]
+  simp only [indicator, map_prod, map_sub, map_one, map_pow, eval_X, eval_C, sub_self, Finset.prod_eq_zero_iff]
   refine' ⟨i, Finset.mem_univ _, _⟩
   rw [FiniteField.pow_card_sub_one_eq_one, sub_self]
   rwa [(· ≠ ·), sub_eq_zero]
@@ -137,17 +136,17 @@ def evalₗ [CommSemiringₓ K] : MvPolynomial σ K →ₗ[K] (σ → K) → K w
 
 end
 
-variable [Field K] [Fintype K] [Fintype σ]
+variable [Field K] [Fintype K] [Finite σ]
 
 theorem map_restrict_dom_evalₗ : (restrictDegree σ K (Fintype.card K - 1)).map (evalₗ K σ) = ⊤ := by
+  cases nonempty_fintype σ
   refine' top_unique (SetLike.le_def.2 fun e _ => mem_map.2 _)
   refine' ⟨∑ n : σ → K, e n • indicator n, _, _⟩
   · exact sum_mem fun c _ => smul_mem _ _ (indicator_mem_restrict_degree _)
     
   · ext n
-    simp only [← LinearMap.map_sum, ← @Finset.sum_apply (σ → K) (fun _ => K) _ _ _ _ _, ← Pi.smul_apply, ←
-      LinearMap.map_smul]
-    simp only [← evalₗ_apply]
+    simp only [LinearMap.map_sum, @Finset.sum_apply (σ → K) (fun _ => K) _ _ _ _ _, Pi.smul_apply, LinearMap.map_smul]
+    simp only [evalₗ_apply]
     trans
     refine' Finset.sum_eq_single n (fun b _ h => _) _
     · rw [eval_indicator_apply_eq_zero _ _ h.symm, smul_zero]
@@ -170,12 +169,12 @@ universe u
 
 variable (σ : Type u) (K : Type u) [Fintype K]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler module K
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module K
 /-- The submodule of multivariate polynomials whose degree of each variable is strictly less
 than the cardinality of K. -/
 def R [CommRingₓ K] : Type u :=
   restrictDegree σ K (Fintype.card K - 1)deriving AddCommGroupₓ,
-  «./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler module K», Inhabited
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module K», Inhabited
 
 /-- Evaluation in the `mv_polynomial.R` subtype. -/
 def evalᵢ [CommRingₓ K] : R σ K →ₗ[K] (σ → K) → K :=
@@ -186,7 +185,7 @@ section CommRingₓ
 variable [CommRingₓ K]
 
 noncomputable instance decidableRestrictDegree (m : ℕ) : DecidablePred (· ∈ { n : σ →₀ ℕ | ∀ i, n i ≤ m }) := by
-  simp only [← Set.mem_set_of_eq] <;> infer_instance
+  simp only [Set.mem_set_of_eq] <;> infer_instance
 
 end CommRingₓ
 
@@ -209,24 +208,26 @@ theorem dim_R [Fintype σ] : Module.rank K (R σ K) = Fintype.card (σ → K) :=
     _ = Fintype.card (σ → K) := Cardinal.mk_fintype _
     
 
-instance [Fintype σ] : FiniteDimensional K (R σ K) :=
-  IsNoetherian.iff_fg.1 <|
-    IsNoetherian.iff_dim_lt_aleph_0.mpr
-      (by
-        simpa only [← dim_R] using Cardinal.nat_lt_aleph_0 (Fintype.card (σ → K)))
+instance [Finite σ] : FiniteDimensional K (R σ K) := by
+  cases nonempty_fintype σ
+  exact
+    IsNoetherian.iff_fg.1
+      (is_noetherian.iff_dim_lt_aleph_0.mpr <| by
+        simpa only [dim_R] using Cardinal.nat_lt_aleph_0 (Fintype.card (σ → K)))
 
 theorem finrank_R [Fintype σ] : FiniteDimensional.finrank K (R σ K) = Fintype.card (σ → K) :=
   FiniteDimensional.finrank_eq_of_dim_eq (dim_R σ K)
 
-theorem range_evalᵢ [Fintype σ] : (evalᵢ σ K).range = ⊤ := by
+theorem range_evalᵢ [Finite σ] : (evalᵢ σ K).range = ⊤ := by
   rw [evalᵢ, LinearMap.range_comp, range_subtype]
   exact map_restrict_dom_evalₗ
 
-theorem ker_evalₗ [Fintype σ] : (evalᵢ σ K).ker = ⊥ := by
+theorem ker_evalₗ [Finite σ] : (evalᵢ σ K).ker = ⊥ := by
+  cases nonempty_fintype σ
   refine' (ker_eq_bot_iff_range_eq_top_of_finrank_eq_finrank _).mpr (range_evalᵢ _ _)
   rw [FiniteDimensional.finrank_fintype_fun_eq_card, finrank_R]
 
-theorem eq_zero_of_eval_eq_zero [Fintype σ] (p : MvPolynomial σ K) (h : ∀ v : σ → K, eval v p = 0)
+theorem eq_zero_of_eval_eq_zero [Finite σ] (p : MvPolynomial σ K) (h : ∀ v : σ → K, eval v p = 0)
     (hp : p ∈ restrictDegree σ K (Fintype.card K - 1)) : p = 0 :=
   let p' : R σ K := ⟨p, hp⟩
   have : p' ∈ (evalᵢ σ K).ker := funext h

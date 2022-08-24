@@ -44,8 +44,8 @@ theorem expand_monomial (p : ℕ) (d : σ →₀ ℕ) (r : R) :
   bind₁_monomial _ _ _
 
 theorem expand_one_apply (f : MvPolynomial σ R) : expand 1 f = f := by
-  simp only [← expand, ← bind₁_X_left, ← AlgHom.id_apply, ← RingHom.to_fun_eq_coe, ← eval₂_hom_C_left, ←
-    AlgHom.coe_to_ring_hom, ← pow_oneₓ, ← AlgHom.coe_mk]
+  simp only [expand, bind₁_X_left, AlgHom.id_apply, RingHom.to_fun_eq_coe, eval₂_hom_C_left, AlgHom.coe_to_ring_hom,
+    pow_oneₓ, AlgHom.coe_mk]
 
 @[simp]
 theorem expand_one : expand 1 = AlgHom.id R (MvPolynomial σ R) := by
@@ -56,7 +56,7 @@ theorem expand_comp_bind₁ (p : ℕ) (f : σ → MvPolynomial τ R) :
     (expand p).comp (bind₁ f) = bind₁ fun i => expand p (f i) := by
   apply alg_hom_ext
   intro i
-  simp only [← AlgHom.comp_apply, ← bind₁_X_right]
+  simp only [AlgHom.comp_apply, bind₁_X_right]
 
 theorem expand_bind₁ (p : ℕ) (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
     expand p (bind₁ f φ) = bind₁ (fun i => expand p (f i)) φ := by
@@ -64,17 +64,17 @@ theorem expand_bind₁ (p : ℕ) (f : σ → MvPolynomial τ R) (φ : MvPolynomi
 
 @[simp]
 theorem map_expand (f : R →+* S) (p : ℕ) (φ : MvPolynomial σ R) : map f (expand p φ) = expand p (map f φ) := by
-  simp [← expand, ← map_bind₁]
+  simp [expand, map_bind₁]
 
 @[simp]
 theorem rename_expand (f : σ → τ) (p : ℕ) (φ : MvPolynomial σ R) : rename f (expand p φ) = expand p (rename f φ) := by
-  simp [← expand, ← bind₁_rename, ← rename_bind₁]
+  simp [expand, bind₁_rename, rename_bind₁]
 
 @[simp]
 theorem rename_comp_expand (f : σ → τ) (p : ℕ) :
     (rename f).comp (expand p) = (expand p).comp (rename f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) := by
   ext1 φ
-  simp only [← rename_expand, ← AlgHom.comp_apply]
+  simp only [rename_expand, AlgHom.comp_apply]
 
 end MvPolynomial
 

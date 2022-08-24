@@ -79,7 +79,7 @@ theorem ack_one (n : ℕ) : ack 1 n = n + 2 := by
   induction' n with n IH
   · simp
     
-  · simp [← IH]
+  · simp [IH]
     
 
 @[simp]
@@ -87,7 +87,7 @@ theorem ack_two (n : ℕ) : ack 2 n = 2 * n + 3 := by
   induction' n with n IH
   · simp
     
-  · simp [← IH, ← mul_succ]
+  · simp [IH, mul_succ]
     
 
 private theorem ack_three_aux (n : ℕ) : (ack 3 n : ℤ) = 2 ^ (n + 3) - 3 := by
@@ -95,7 +95,7 @@ private theorem ack_three_aux (n : ℕ) : (ack 3 n : ℤ) = 2 ^ (n + 3) - 3 := b
   · simp
     norm_num
     
-  · simp [← IH, ← pow_succₓ]
+  · simp [IH, pow_succₓ]
     rw [mul_sub, sub_add]
     norm_num
     
@@ -108,7 +108,7 @@ theorem ack_three (n : ℕ) : ack 3 n = 2 ^ (n + 3) - 3 := by
     
   · have H : 3 ≤ 2 ^ 3 := by
       norm_num
-    exact H.trans (pow_mono one_le_two <| le_add_left le_rfl)
+    exact H.trans (pow_mono one_le_two <| le_add_left le_rflₓ)
     
 
 theorem ack_pos : ∀ m n, 0 < ack m n
@@ -184,7 +184,7 @@ theorem add_lt_ack : ∀ m n, m + n < ack m n
       _ < ack m (m + n + 2) := add_lt_ack _ _
       _ ≤ ack m (ack (m + 1) n) :=
         ack_mono_right m <|
-          le_of_eq_of_le
+          le_of_eq_of_leₓ
               (by
                 ring_nf) <|
             succ_le_of_lt <| add_lt_ack (m + 1) n
@@ -383,7 +383,7 @@ theorem exists_lt_ack_of_nat_primrec {f : ℕ → ℕ} (hf : Nat.Primrec f) : �
         -- We now use the inductive hypothesis, and some simple algebraic manipulation.
         apply (ack_strict_mono_right _ IH).le.trans
         rw [add_succ m, add_succ _ 8, ack_succ_succ (_ + 8), add_assocₓ]
-        exact ack_mono_left _ (add_le_add (le_max_rightₓ a b) le_rfl)
+        exact ack_mono_left _ (add_le_add (le_max_rightₓ a b) le_rflₓ)
         
     -- The proof is now simple.
     exact ⟨max a b + 9, fun n => this.trans_le <| ack_mono_right _ <| unpair_add_le n⟩

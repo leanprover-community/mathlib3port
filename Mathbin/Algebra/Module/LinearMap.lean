@@ -90,7 +90,7 @@ structure LinearMap {R : Type _} {S : Type _} [Semiringₓ R] [Semiringₓ S] (�
   map_smul' : ∀ (r : R) (x : M), to_fun (r • x) = σ r • to_fun x
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident linear_map.to_add_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident linear_map.to_add_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- mathport name: «expr →ₛₗ[ ] »
 notation:25 M " →ₛₗ[" σ:25 "] " M₂:0 => LinearMap σ M M₂
 
@@ -298,7 +298,7 @@ protected theorem map_smul_inv {σ' : S →+* R} [RingHomInvPair σ σ'] (c : S)
 theorem map_eq_zero_iff (h : Function.Injective f) {x : M} : f x = 0 ↔ x = 0 :=
   ⟨fun w => by
     apply h
-    simp [← w], fun w => by
+    simp [w], fun w => by
     subst w
     simp ⟩
 
@@ -323,16 +323,16 @@ theorem _root_.preimage_smul_setₛₗ [SemilinearMapClass F σ M M₃] {c : R} 
   apply Set.Subset.antisymm
   · rintro x ⟨y, ys, hy⟩
     refine' ⟨(hc.unit.inv : R) • x, _, _⟩
-    · simp only [hy, ← smul_smul, ← Set.mem_preimage, ← Units.inv_eq_coe_inv, ← map_smulₛₗ h, map_mul, ←
-        IsUnit.coe_inv_mul, ← one_smul, ← map_one, ← ys]
+    · simp only [← hy, smul_smul, Set.mem_preimage, Units.inv_eq_coe_inv, map_smulₛₗ h, ← map_mul, IsUnit.coe_inv_mul,
+        one_smul, map_one, ys]
       
-    · simp only [← smul_smul, ← IsUnit.mul_coe_inv, ← one_smul, ← Units.inv_eq_coe_inv]
+    · simp only [smul_smul, IsUnit.mul_coe_inv, one_smul, Units.inv_eq_coe_inv]
       
     
   · rintro x ⟨y, hy, rfl⟩
     refine'
       ⟨h y, hy, by
-        simp only [← RingHom.id_apply, ← map_smulₛₗ h]⟩
+        simp only [RingHom.id_apply, map_smulₛₗ h]⟩
     
 
 variable (R M₂)
@@ -458,7 +458,7 @@ include module_M₁ module_M₂ module_M₃
 def comp : M₁ →ₛₗ[σ₁₃] M₃ where
   toFun := f ∘ g
   map_add' := by
-    simp only [← map_add, ← forall_const, ← eq_self_iff_true, ← comp_app]
+    simp only [map_add, forall_const, eq_self_iff_true, comp_app]
   map_smul' := fun r x => by
     rw [comp_app, map_smulₛₗ, map_smulₛₗ, RingHomCompTriple.comp_apply]
 
@@ -514,14 +514,14 @@ variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂] [A
 /-- If a function `g` is a left and right inverse of a linear map `f`, then `g` is linear itself. -/
 def inverse [Module R M] [Module S M₂] {σ : R →+* S} {σ' : S →+* R} [RingHomInvPair σ σ'] (f : M →ₛₗ[σ] M₂) (g : M₂ → M)
     (h₁ : LeftInverse g f) (h₂ : RightInverse g f) : M₂ →ₛₗ[σ'] M := by
-  dsimp' [← left_inverse, ← Function.RightInverse]  at h₁ h₂ <;>
+  dsimp' [left_inverse, Function.RightInverse]  at h₁ h₂ <;>
     exact
       { toFun := g,
         map_add' := fun x y => by
-          rw [← h₁ (g (x + y)), ← h₁ (g x + g y)] <;> simp [← h₂],
+          rw [← h₁ (g (x + y)), ← h₁ (g x + g y)] <;> simp [h₂],
         map_smul' := fun a b => by
           rw [← h₁ (g (a • b)), ← h₁ (σ' a • g b)]
-          simp [← h₂] }
+          simp [h₂] }
 
 end AddCommMonoidₓ
 
@@ -545,9 +545,9 @@ instance CompatibleSmul.intModule {S : Type _} [Semiringₓ S] [Module S M] [Mod
     case hz =>
       simp
     case hp n ih =>
-      simp [← add_smul, ← ih]
+      simp [add_smul, ih]
     case hn n ih =>
-      simp [← sub_smul, ← ih]⟩
+      simp [sub_smul, ih]⟩
 
 instance CompatibleSmul.units {R S : Type _} [Monoidₓ R] [MulAction R M] [MulAction R M₂] [Semiringₓ S] [Module S M]
     [Module S M₂] [CompatibleSmul M M₂ R S] : CompatibleSmul M M₂ Rˣ S :=
@@ -619,7 +619,7 @@ theorem is_linear_map_smul {R M : Type _} [CommSemiringₓ R] [AddCommMonoidₓ 
     IsLinearMap R fun z : M => c • z := by
   refine' IsLinearMap.mk (smul_add c) _
   intro _ _
-  simp only [← smul_smul, ← mul_comm]
+  simp only [smul_smul, mul_comm]
 
 theorem is_linear_map_smul' {R M : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] (a : M) :
     IsLinearMap R fun c : R => c • a :=
@@ -730,9 +730,9 @@ instance : HasSmul S (M →ₛₗ[σ₁₂] M₂) :=
   ⟨fun a f =>
     { toFun := a • f,
       map_add' := fun x y => by
-        simp only [← Pi.smul_apply, ← f.map_add, ← smul_add],
+        simp only [Pi.smul_apply, f.map_add, smul_add],
       map_smul' := fun c x => by
-        simp [← Pi.smul_apply, ← smul_comm (σ₁₂ c)] }⟩
+        simp [Pi.smul_apply, smul_comm (σ₁₂ c)] }⟩
 
 @[simp]
 theorem smul_apply (a : S) (f : M →ₛₗ[σ₁₂] M₂) (x : M) : (a • f) x = a • f x :=
@@ -804,9 +804,9 @@ instance : Add (M →ₛₗ[σ₁₂] M₂) :=
   ⟨fun f g =>
     { toFun := f + g,
       map_add' := by
-        simp [← add_commₓ, ← add_left_commₓ],
+        simp [add_commₓ, add_left_commₓ],
       map_smul' := by
-        simp [← smul_add] }⟩
+        simp [smul_add] }⟩
 
 @[simp]
 theorem add_apply (f g : M →ₛₗ[σ₁₂] M₂) (x : M) : (f + g) x = f x + g x :=
@@ -827,7 +827,7 @@ instance : Neg (M →ₛₗ[σ₁₂] N₂) :=
   ⟨fun f =>
     { toFun := -f,
       map_add' := by
-        simp [← add_commₓ],
+        simp [add_commₓ],
       map_smul' := by
         simp }⟩
 
@@ -852,9 +852,9 @@ instance : Sub (M →ₛₗ[σ₁₂] N₂) :=
   ⟨fun f g =>
     { toFun := f - g,
       map_add' := fun x y => by
-        simp only [← Pi.sub_apply, ← map_add, ← add_sub_add_comm],
+        simp only [Pi.sub_apply, map_add, add_sub_add_comm],
       map_smul' := fun r x => by
-        simp [← Pi.sub_apply, ← map_smul, ← smul_sub] }⟩
+        simp [Pi.sub_apply, map_smul, smul_sub] }⟩
 
 @[simp]
 theorem sub_apply (f g : M →ₛₗ[σ₁₂] N₂) (x : M) : (f - g) x = f x - g x :=

@@ -40,7 +40,7 @@ theorem card_dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : (s.Dfinsupp t
 
 variable [∀ i, DecidableEq (α i)]
 
-theorem mem_dfinsupp_iff : f ∈ s.Dfinsupp t ↔ f.support ⊆ s ∧ ∀, ∀ i ∈ s, ∀, f i ∈ t i := by
+theorem mem_dfinsupp_iff : f ∈ s.Dfinsupp t ↔ f.support ⊆ s ∧ ∀ i ∈ s, f i ∈ t i := by
   refine' mem_map.trans ⟨_, _⟩
   · rintro ⟨f, hf, rfl⟩
     refine' ⟨support_mk_subset, fun i hi => _⟩
@@ -147,7 +147,7 @@ theorem card_pi (f : Π₀ i, Finset (α i)) : f.pi.card = f.Prod fun i => (f i)
   rw [pi, card_dfinsupp]
   exact
     Finset.prod_congr rfl fun i _ => by
-      simp only [← Pi.nat_apply, ← Nat.cast_id]
+      simp only [Pi.nat_apply, Nat.cast_id]
 
 end Pi
 

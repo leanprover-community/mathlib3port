@@ -104,14 +104,14 @@ theorem kronecker_map_diagonal_diagonal [Zero α] [Zero β] [Zero γ] [Decidable
     (hf₁ : ∀ b, f 0 b = 0) (hf₂ : ∀ a, f a 0 = 0) (a : m → α) (b : n → β) :
     kroneckerMapₓ f (diagonalₓ a) (diagonalₓ b) = diagonalₓ fun mn => f (a mn.1) (b mn.2) := by
   ext ⟨i₁, i₂⟩ ⟨j₁, j₂⟩
-  simp [← diagonal, ← apply_ite f, ← ite_and, ← ite_apply, ← apply_ite (f (a i₁)), ← hf₁, ← hf₂]
+  simp [diagonal, apply_ite f, ite_and, ite_apply, apply_ite (f (a i₁)), hf₁, hf₂]
 
 @[simp]
 theorem kronecker_map_one_one [Zero α] [Zero β] [Zero γ] [One α] [One β] [One γ] [DecidableEq m] [DecidableEq n]
     (f : α → β → γ) (hf₁ : ∀ b, f 0 b = 0) (hf₂ : ∀ a, f a 0 = 0) (hf₃ : f 1 1 = 1) :
     kroneckerMapₓ f (1 : Matrix m m α) (1 : Matrix n n β) = 1 :=
   (kronecker_map_diagonal_diagonal _ hf₁ hf₂ _ _).trans <| by
-    simp only [← hf₃, ← diagonal_one]
+    simp only [hf₃, diagonal_one]
 
 theorem kronecker_map_reindex (f : α → β → γ) (el : l ≃ l') (em : m ≃ m') (en : n ≃ n') (ep : p ≃ p') (M : Matrix l m α)
     (N : Matrix n p β) :
@@ -163,7 +163,7 @@ theorem kronecker_map_bilinear_mul_mul [CommSemiringₓ R] [Fintype m] [Fintype 
     (B : Matrix m n α) (A' : Matrix l' m' β) (B' : Matrix m' n' β) :
     kroneckerMapBilinear f (A ⬝ B) (A' ⬝ B') = kroneckerMapBilinear f A A' ⬝ kroneckerMapBilinear f B B' := by
   ext ⟨i, i'⟩ ⟨j, j'⟩
-  simp only [← kronecker_map_bilinear_apply_apply, ← mul_apply, Finset.univ_product_univ, ← Finset.sum_product, ←
+  simp only [kronecker_map_bilinear_apply_apply, mul_apply, ← Finset.univ_product_univ, Finset.sum_product,
     kronecker_map]
   simp_rw [f.map_sum, LinearMap.sum_apply, LinearMap.map_sum, h_comm]
 

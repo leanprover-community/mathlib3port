@@ -25,7 +25,7 @@ structure StarSubalgebra (R : Type u) (A : Type v) [CommSemiringₓ R] [StarRing
 namespace StarSubalgebra
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident star_subalgebra.to_subalgebra]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident star_subalgebra.to_subalgebra]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 variable (R : Type u) (A : Type v) [CommSemiringₓ R] [StarRing R] [Semiringₓ A] [StarRing A] [Algebra R A]
   [StarModule R A]
 
@@ -55,7 +55,7 @@ def centralizer (s : Set A) (w : ∀ a : A, a ∈ s → star a ∈ s) : StarSuba
 theorem coe_centralizer (s : Set A) (w : ∀ a : A, a ∈ s → star a ∈ s) : (centralizer R s w : Set A) = s.Centralizer :=
   rfl
 
-theorem mem_centralizer_iff {s : Set A} {w} {z : A} : z ∈ centralizer R s w ↔ ∀, ∀ g ∈ s, ∀, g * z = z * g :=
+theorem mem_centralizer_iff {s : Set A} {w} {z : A} : z ∈ centralizer R s w ↔ ∀ g ∈ s, g * z = z * g :=
   Iff.rfl
 
 theorem centralizer_le (s t : Set A) (ws : ∀ a : A, a ∈ s → star a ∈ s) (wt : ∀ a : A, a ∈ t → star a ∈ t) (h : s ⊆ t) :

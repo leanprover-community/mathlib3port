@@ -48,7 +48,7 @@ theorem compact_space_uniformity [CompactSpace α] [SeparatedSpace α] : 𝓤 α
   refine' le_antisymmₓ supr_nhds_le_uniformity _
   by_contra H
   obtain ⟨V, hV, h⟩ : ∃ V : Set (α × α), (∀ x : α, V ∈ 𝓝 (x, x)) ∧ 𝓤 α⊓𝓟 (Vᶜ) ≠ ⊥ := by
-    simpa [← le_iff_forall_inf_principal_compl] using H
+    simpa [le_iff_forall_inf_principal_compl] using H
   let F := 𝓤 α⊓𝓟 (Vᶜ)
   haveI : ne_bot F := ⟨h⟩
   obtain ⟨⟨x, y⟩, hx⟩ : ∃ p : α × α, ClusterPt p F := cluster_point_of_compact F
@@ -78,7 +78,7 @@ theorem unique_uniformity_of_compact_t2 [t : TopologicalSpace γ] [CompactSpace 
     rwa [separated_iff_t2, h']
   rw [compact_space_uniformity, compact_space_uniformity, h, h']
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y «expr ≠ » x)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (y «expr ≠ » x)
 /-- The unique uniform structure inducing a given compact Hausdorff topological structure. -/
 def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ] : UniformSpace γ where
   uniformity := ⨆ x, 𝓝 (x, x)
@@ -122,7 +122,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
       intro h
       apply this
       apply diag_subset
-      simp [← h]
+      simp [h]
     -- Since γ is compact and Hausdorff, it is normal, hence T₃.
     haveI : NormalSpace γ := normal_of_compact_t2
     -- So there are closed neighboords V₁ and V₂ of x and y contained in disjoint open neighborhoods
@@ -148,7 +148,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
           
         
       all_goals
-        simp only [← IsOpen.prod, *]
+        simp only [IsOpen.prod, *]
     -- So W ○ W ∈ F by definition of F
     have : W ○ W ∈ F := by
       simpa only using mem_lift' W_in
@@ -186,8 +186,8 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     suffices ∀ (y) (_ : y ≠ x), comap (fun y : γ => x) (𝓝 y)⊓𝓝 y ≤ 𝓝 x by
       simpa
     intro y hxy
-    simp [←
-      comap_const_of_not_mem (compl_singleton_mem_nhds hxy)
+    simp
+      [comap_const_of_not_mem (compl_singleton_mem_nhds hxy)
         (by
           simp )]
 

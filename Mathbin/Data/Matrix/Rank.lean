@@ -87,8 +87,8 @@ theorem rank_eq_finrank_range_to_lin {M₁ M₂ : Type _} [AddCommGroupₓ M₁]
   have aux₂ := Basis.equiv_apply (Pi.basisFun K n) i v₂
   rw [to_lin_eq_to_lin'] at aux₁
   rw [Pi.basis_fun_apply, LinearMap.coe_std_basis] at aux₁ aux₂
-  simp only [← LinearMap.comp_apply, ← e₁, ← e₂, ← LinearEquiv.coe_coe, ← Equivₓ.refl_apply, ← aux₁, ← aux₂, ←
-    LinearMap.coe_single, ← to_lin_self, ← LinearEquiv.map_sum, ← LinearEquiv.map_smul, ← Basis.equiv_apply]
+  simp only [LinearMap.comp_apply, e₁, e₂, LinearEquiv.coe_coe, Equivₓ.refl_apply, aux₁, aux₂, LinearMap.coe_single,
+    to_lin_self, LinearEquiv.map_sum, LinearEquiv.map_smul, Basis.equiv_apply]
 
 theorem rank_le_card_height : A.rank ≤ Fintype.card m :=
   (Submodule.finrank_le _).trans (Module.Free.finrank_pi K).le

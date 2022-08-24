@@ -72,7 +72,7 @@ theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimitLi
   replace h := fun j => congr_arg (limit.π (curry.obj F ⋙ colim) j) h
   -- and they are equations in a filtered colimit,
   -- so for each `j` we have some place `k j` to the right of both `kx` and `ky`
-  simp [← colimit_eq_iff.{v, v}] at h
+  simp [colimit_eq_iff.{v, v}] at h
   let k := fun j => (h j).some
   let f : ∀ j, kx ⟶ k j := fun j => (h j).some_spec.some
   let g : ∀ j, ky ⟶ k j := fun j => (h j).some_spec.some_spec.some
@@ -120,19 +120,17 @@ theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimitLi
     finset.mem_union.mpr
       (Or.inl
         (by
-          simp only [← true_andₓ, ← Finset.mem_univ, ← eq_self_iff_true, ← exists_prop_of_true, ← Finset.mem_image, ←
-            heq_iff_eq]
+          simp only [true_andₓ, Finset.mem_univ, eq_self_iff_true, exists_prop_of_true, Finset.mem_image, heq_iff_eq]
           refine' ⟨j, rfl, _⟩
-          simp only [← heq_iff_eq]
+          simp only [heq_iff_eq]
           exact ⟨rfl, rfl, rfl⟩))
   have gH : ∀ j, (⟨ky, k j, kyO, kjO j, g j⟩ : Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H := fun j =>
     finset.mem_union.mpr
       (Or.inr
         (by
-          simp only [← true_andₓ, ← Finset.mem_univ, ← eq_self_iff_true, ← exists_prop_of_true, ← Finset.mem_image, ←
-            heq_iff_eq]
+          simp only [true_andₓ, Finset.mem_univ, eq_self_iff_true, exists_prop_of_true, Finset.mem_image, heq_iff_eq]
           refine' ⟨j, rfl, _⟩
-          simp only [← heq_iff_eq]
+          simp only [heq_iff_eq]
           exact ⟨rfl, rfl, rfl⟩))
   -- Our goal is now an equation between equivalence classes of representatives of a colimit,
   -- and so it suffices to show those representative become equal somewhere, in particular at `S`.
@@ -140,10 +138,10 @@ theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimitLi
   -- We can check if two elements of a limit (in `Type`) are equal by comparing them componentwise.
   ext
   -- Now it's just a calculation using `W` and `w`.
-  simp only [← functor.comp_map, ← limit.map_π_apply, ← curry_obj_map_app, ← swap_map]
+  simp only [functor.comp_map, limit.map_π_apply, curry_obj_map_app, swap_map]
   rw [← W _ _ (fH j)]
   rw [← W _ _ (gH j)]
-  simp [← w]
+  simp [w]
 
 end
 
@@ -191,7 +189,7 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
     by
     intro j j' f
     have t : (f, g j) = (((f, 𝟙 (k j)) : (j, k j) ⟶ (j', k j)) ≫ (𝟙 j', g j) : (j, k j) ⟶ (j', k')) := by
-      simp only [← id_comp, ← comp_id, ← prod_comp]
+      simp only [id_comp, comp_id, prod_comp]
     erw [colimit.w_apply', t, functor_to_types.map_comp_apply, colimit.w_apply', e, ← limit.w_apply' f, ← e]
     simp
   -- Because `K` is filtered, we can restate this as saying that
@@ -211,7 +209,7 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
       (w f).some_spec.some_spec.some_spec
     dsimp'  at q
     simp_rw [← functor_to_types.map_comp_apply] at q
-    convert q <;> simp only [← comp_id]
+    convert q <;> simp only [comp_id]
   clear_value kf gf hf
   -- and clean up some things that are no longer needed.
   clear w
@@ -252,7 +250,7 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
       refine' ⟨j₂, Finset.mem_univ _, _⟩
       rw [Finset.mem_bUnion]
       refine' ⟨f, Finset.mem_univ _, _⟩
-      simp only [← true_orₓ, ← eq_self_iff_true, ← and_selfₓ, ← Finset.mem_insert, ← heq_iff_eq]
+      simp only [true_orₓ, eq_self_iff_true, and_selfₓ, Finset.mem_insert, heq_iff_eq]
       
     · rw [Finset.mem_bUnion]
       refine' ⟨j₃, Finset.mem_univ _, _⟩
@@ -260,7 +258,7 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
       refine' ⟨j₄, Finset.mem_univ _, _⟩
       rw [Finset.mem_bUnion]
       refine' ⟨f', Finset.mem_univ _, _⟩
-      simp only [← eq_self_iff_true, ← or_trueₓ, ← and_selfₓ, ← Finset.mem_insert, ← Finset.mem_singleton, ← heq_iff_eq]
+      simp only [eq_self_iff_true, or_trueₓ, and_selfₓ, Finset.mem_insert, Finset.mem_singleton, heq_iff_eq]
       
   clear_value i
   clear s' i' H kfO k'O O
@@ -281,7 +279,7 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
     · -- After which it's just a calculation, using `s` and `wf`, to see they are coherent.
       dsimp'
       intro j j' f
-      simp only [functor_to_types.map_comp_apply, ← prod_comp, ← id_comp, ← comp_id]
+      simp only [← functor_to_types.map_comp_apply, prod_comp, id_comp, comp_id]
       calc
         F.map ((f, g j ≫ gf (𝟙 j) ≫ i (𝟙 j)) : (j, k j) ⟶ (j', k'')) (y j) =
             F.map ((f, g j ≫ hf f ≫ i f) : (j, k j) ⟶ (j', k'')) (y j) :=
@@ -307,10 +305,10 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
     intro j
     -- and as each component is an equation in a colimit, we can verify it by
     -- pointing out the morphism which carries one representative to the other:
-    simp only [e, ← colimit_eq_iff.{v, v}, ← curry_obj_obj_map, ← limit.π_mk', ← bifunctor.map_id_comp, ← id.def, ←
-      types_comp_apply, ← limits.ι_colimit_limit_to_limit_colimit_π_apply]
+    simp only [← e, colimit_eq_iff.{v, v}, curry_obj_obj_map, limit.π_mk', bifunctor.map_id_comp, id.def,
+      types_comp_apply, limits.ι_colimit_limit_to_limit_colimit_π_apply]
     refine' ⟨k'', 𝟙 k'', g j ≫ gf (𝟙 j) ≫ i (𝟙 j), _⟩
-    simp only [← bifunctor.map_id_comp, ← types_comp_apply, ← bifunctor.map_id, ← types_id_apply]
+    simp only [bifunctor.map_id_comp, types_comp_apply, bifunctor.map_id, types_id_apply]
     
 
 instance colimit_limit_to_limit_colimit_is_iso : IsIso (colimitLimitToLimitColimit F) :=
@@ -318,7 +316,7 @@ instance colimit_limit_to_limit_colimit_is_iso : IsIso (colimitLimitToLimitColim
 
 instance colimit_limit_to_limit_colimit_cone_iso (F : J ⥤ K ⥤ Type v) : IsIso (colimitLimitToLimitColimitCone F) := by
   have : is_iso (colimit_limit_to_limit_colimit_cone F).Hom := by
-    dsimp' only [← colimit_limit_to_limit_colimit_cone]
+    dsimp' only [colimit_limit_to_limit_colimit_cone]
     infer_instance
   apply cones.cone_iso_of_hom_iso
 
@@ -381,13 +379,13 @@ theorem ι_colimit_limit_iso_limit_π (F : J ⥤ K ⥤ C) (a) (b) :
     colimit.ι (limit F) a ≫ (colimitLimitIso F).Hom ≫ limit.π (colimit F.flip) b =
       (limit.π F b).app a ≫ (colimit.ι F.flip a).app b :=
   by
-  dsimp' [← colimit_limit_iso]
-  simp only [← functor.map_cone_π_app, ← iso.symm_hom, ← limits.limit.cone_point_unique_up_to_iso_hom_comp_assoc, ←
-    limits.limit.cone_π, ← limits.colimit.ι_map_assoc, ← limits.colimit_flip_iso_comp_colim_inv_app, ← assoc, ←
+  dsimp' [colimit_limit_iso]
+  simp only [functor.map_cone_π_app, iso.symm_hom, limits.limit.cone_point_unique_up_to_iso_hom_comp_assoc,
+    limits.limit.cone_π, limits.colimit.ι_map_assoc, limits.colimit_flip_iso_comp_colim_inv_app, assoc,
     limits.has_limit.iso_of_nat_iso_hom_π]
   congr 1
-  simp only [category.assoc, ← iso.comp_inv_eq, ← limits.colimit_obj_iso_colimit_comp_evaluation_ι_app_hom, ←
-    limits.has_colimit.iso_of_nat_iso_ι_hom, ← nat_iso.of_components_hom_app]
+  simp only [← category.assoc, iso.comp_inv_eq, limits.colimit_obj_iso_colimit_comp_evaluation_ι_app_hom,
+    limits.has_colimit.iso_of_nat_iso_ι_hom, nat_iso.of_components_hom_app]
   dsimp'
   simp
 

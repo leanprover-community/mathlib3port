@@ -65,7 +65,7 @@ theorem schwarz_aux {f : ℂ → ℂ} (hd : DifferentiableOn ℂ f (Ball c R₁)
     refine' ge_of_tendsto _ this
     exact (tendsto_const_nhds.div tendsto_id hR₁.ne').mono_left nhds_within_le_nhds
   rw [mem_ball] at hz
-  filter_upwards [Ioo_mem_nhds_within_Iio ⟨hz, le_rfl⟩] with r hr
+  filter_upwards [Ioo_mem_nhds_within_Iio ⟨hz, le_rflₓ⟩] with r hr
   have hr₀ : 0 < r := dist_nonneg.trans_lt hr.1
   replace hd : DiffContOnCl ℂ (dslope f c) (ball c r)
   · refine' DifferentiableOn.diff_cont_on_cl _
@@ -102,14 +102,14 @@ theorem norm_dslope_le_div_of_maps_to_ball (hd : DifferentiableOn ℂ f (Ball c 
   rcases exists_dual_vector ℂ _ hc with ⟨g, hg, hgf⟩
   have hg' : ∥g∥₊ = 1 := Nnreal.eq hg
   have hg₀ : ∥g∥₊ ≠ 0 := by
-    simpa only [← hg'] using one_ne_zero
+    simpa only [hg'] using one_ne_zero
   calc
     ∥dslope f c z∥ = ∥dslope (g ∘ f) c z∥ := by
       rw [g.dslope_comp, hgf, IsROrC.norm_of_real, norm_norm]
       exact fun _ => hd.differentiable_at (ball_mem_nhds _ hR₁)
     _ ≤ R₂ / R₁ := by
       refine' schwarz_aux (g.differentiable.comp_differentiable_on hd) (maps_to.comp _ h_maps) hz
-      simpa only [← hg', ← Nnreal.coe_one, ← one_mulₓ] using g.lipschitz.maps_to_ball hg₀ (f c) R₂
+      simpa only [hg', Nnreal.coe_one, one_mulₓ] using g.lipschitz.maps_to_ball hg₀ (f c) R₂
     
 
 /-- The **Schwarz Lemma**: if `f : ℂ → E` sends an open disk with center `c` and a positive radius
@@ -117,7 +117,7 @@ theorem norm_dslope_le_div_of_maps_to_ball (hd : DifferentiableOn ℂ f (Ball c 
 `f` at `c` is at most the ratio `R₂ / R₁`. -/
 theorem norm_deriv_le_div_of_maps_to_ball (hd : DifferentiableOn ℂ f (Ball c R₁))
     (h_maps : MapsTo f (Ball c R₁) (Ball (f c) R₂)) (h₀ : 0 < R₁) : ∥deriv f c∥ ≤ R₂ / R₁ := by
-  simpa only [← dslope_same] using norm_dslope_le_div_of_maps_to_ball hd h_maps (mem_ball_self h₀)
+  simpa only [dslope_same] using norm_dslope_le_div_of_maps_to_ball hd h_maps (mem_ball_self h₀)
 
 /-- The **Schwarz Lemma**: if `f : ℂ → E` sends an open disk with center `c` and radius `R₁` to an
 open ball with center `f c` and radius `R₂`, then for any `z` in the former disk we have
@@ -125,9 +125,9 @@ open ball with center `f c` and radius `R₂`, then for any `z` in the former di
 theorem dist_le_div_mul_dist_of_maps_to_ball (hd : DifferentiableOn ℂ f (Ball c R₁))
     (h_maps : MapsTo f (Ball c R₁) (Ball (f c) R₂)) (hz : z ∈ Ball c R₁) : dist (f z) (f c) ≤ R₂ / R₁ * dist z c := by
   rcases eq_or_ne z c with (rfl | hne)
-  · simp only [← dist_self, ← mul_zero]
+  · simp only [dist_self, mul_zero]
     
-  simpa only [← dslope_of_ne _ hne, ← slope_def_module, ← norm_smul, ← norm_inv, div_eq_inv_mul, dist_eq_norm, ←
+  simpa only [dslope_of_ne _ hne, slope_def_module, norm_smul, norm_inv, ← div_eq_inv_mul, ← dist_eq_norm,
     div_le_iff (dist_pos.2 hne)] using norm_dslope_le_div_of_maps_to_ball hd h_maps hz
 
 end Space
@@ -157,7 +157,7 @@ disk to itself, then for any point `z` of this disk we have `dist (f z) c ≤ di
 theorem dist_le_dist_of_maps_to_ball_self (hd : DifferentiableOn ℂ f (Ball c R))
     (h_maps : MapsTo f (Ball c R) (Ball c R)) (hc : f c = c) (hz : z ∈ Ball c R) : dist (f z) c ≤ dist z c := by
   have hR : 0 < R := nonempty_ball.1 ⟨z, hz⟩
-  simpa only [← hc, ← div_self hR.ne', ← one_mulₓ] using
+  simpa only [hc, div_self hR.ne', one_mulₓ] using
     dist_le_div_mul_dist_of_maps_to_ball hd
       (by
         rwa [hc])
@@ -169,7 +169,7 @@ theorem abs_le_abs_of_maps_to_ball_self (hd : DifferentiableOn ℂ f (Ball 0 R))
     (h₀ : f 0 = 0) (hz : abs z < R) : abs (f z) ≤ abs z := by
   replace hz : z ∈ ball (0 : ℂ) R
   exact mem_ball_zero_iff.2 hz
-  simpa only [← dist_zero_right] using dist_le_dist_of_maps_to_ball_self hd h_maps h₀ hz
+  simpa only [dist_zero_right] using dist_le_dist_of_maps_to_ball_self hd h_maps h₀ hz
 
 end Complex
 

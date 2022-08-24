@@ -118,10 +118,10 @@ variable {f s a l} {t : Set α} {l' : Filter α}
 theorem IsExtrOn.elim {p : Prop} : IsExtrOn f s a → (IsMinOn f s a → p) → (IsMaxOn f s a → p) → p :=
   Or.elim
 
-theorem is_min_on_iff : IsMinOn f s a ↔ ∀, ∀ x ∈ s, ∀, f a ≤ f x :=
+theorem is_min_on_iff : IsMinOn f s a ↔ ∀ x ∈ s, f a ≤ f x :=
   Iff.rfl
 
-theorem is_max_on_iff : IsMaxOn f s a ↔ ∀, ∀ x ∈ s, ∀, f x ≤ f a :=
+theorem is_max_on_iff : IsMaxOn f s a ↔ ∀ x ∈ s, f x ≤ f a :=
   Iff.rfl
 
 theorem is_min_on_univ_iff : IsMinOn f Univ a ↔ ∀ x, f a ≤ f x :=
@@ -155,10 +155,10 @@ theorem IsMaxOn.is_extr (h : IsMaxOn f s a) : IsExtrOn f s a :=
 
 
 theorem is_min_filter_const {b : β} : IsMinFilter (fun _ => b) l a :=
-  univ_mem' fun _ => le_rfl
+  univ_mem' fun _ => le_rflₓ
 
 theorem is_max_filter_const {b : β} : IsMaxFilter (fun _ => b) l a :=
-  univ_mem' fun _ => le_rfl
+  univ_mem' fun _ => le_rflₓ
 
 theorem is_extr_filter_const {b : β} : IsExtrFilter (fun _ => b) l a :=
   is_min_filter_const.is_extr
@@ -328,7 +328,7 @@ theorem IsExtrOn.on_preimage (g : δ → α) {b : δ} (hf : IsExtrOn f s (g b)) 
 
 theorem IsMinOn.comp_maps_to {t : Set δ} {g : δ → α} {b : δ} (hf : IsMinOn f s a) (hg : MapsTo g t s) (ha : g b = a) :
     IsMinOn (f ∘ g) t b := fun y hy => by
-  simpa only [← mem_set_of_eq, ← ha, ← (· ∘ ·)] using hf (hg hy)
+  simpa only [mem_set_of_eq, ha, (· ∘ ·)] using hf (hg hy)
 
 theorem IsMaxOn.comp_maps_to {t : Set δ} {g : δ → α} {b : δ} (hf : IsMaxOn f s a) (hg : MapsTo g t s) (ha : g b = a) :
     IsMaxOn (f ∘ g) t b :=
@@ -387,16 +387,16 @@ theorem IsExtrOn.neg (hf : IsExtrOn f s a) : IsExtrOn (fun x => -f x) s a :=
   hf.elim (fun hf => hf.neg.is_extr) fun hf => hf.neg.is_extr
 
 theorem IsMinFilter.sub (hf : IsMinFilter f l a) (hg : IsMaxFilter g l a) : IsMinFilter (fun x => f x - g x) l a := by
-  simpa only [← sub_eq_add_neg] using hf.add hg.neg
+  simpa only [sub_eq_add_neg] using hf.add hg.neg
 
 theorem IsMaxFilter.sub (hf : IsMaxFilter f l a) (hg : IsMinFilter g l a) : IsMaxFilter (fun x => f x - g x) l a := by
-  simpa only [← sub_eq_add_neg] using hf.add hg.neg
+  simpa only [sub_eq_add_neg] using hf.add hg.neg
 
 theorem IsMinOn.sub (hf : IsMinOn f s a) (hg : IsMaxOn g s a) : IsMinOn (fun x => f x - g x) s a := by
-  simpa only [← sub_eq_add_neg] using hf.add hg.neg
+  simpa only [sub_eq_add_neg] using hf.add hg.neg
 
 theorem IsMaxOn.sub (hf : IsMaxOn f s a) (hg : IsMinOn g s a) : IsMaxOn (fun x => f x - g x) s a := by
-  simpa only [← sub_eq_add_neg] using hf.add hg.neg
+  simpa only [sub_eq_add_neg] using hf.add hg.neg
 
 end OrderedAddCommGroup
 

@@ -6,6 +6,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Simon Hudon, Mario Carneiro
 import Mathbin.Algebra.Group.Defs
 import Mathbin.Data.Bracket
 import Mathbin.Logic.Function.Basic
+import Mathbin.Order.Synonym
 
 /-!
 # Basic lemmas about semigroups, monoids, and groups
@@ -20,7 +21,7 @@ open Function
 
 universe u
 
-variable {α G : Type _}
+variable {α β G : Type _}
 
 section Associative
 
@@ -68,11 +69,11 @@ variable {M : Type u} [MulOneClassₓ M]
 
 @[to_additive]
 theorem ite_mul_one {P : Prop} [Decidable P] {a b : M} : ite P (a * b) 1 = ite P a 1 * ite P b 1 := by
-  by_cases' h : P <;> simp [← h]
+  by_cases' h : P <;> simp [h]
 
 @[to_additive]
 theorem ite_one_mul {P : Prop} [Decidable P] {a b : M} : ite P 1 (a * b) = ite P 1 a * ite P 1 b := by
-  by_cases' h : P <;> simp [← h]
+  by_cases' h : P <;> simp [h]
 
 @[to_additive]
 theorem eq_one_iff_eq_one_of_mul_eq_one {a b : M} (h : a * b = 1) : a = 1 ↔ b = 1 := by
@@ -105,15 +106,15 @@ theorem mul_right_commₓ : ∀ a b c : G, a * b * c = a * c * b :=
 
 @[to_additive]
 theorem mul_mul_mul_commₓ (a b c d : G) : a * b * (c * d) = a * c * (b * d) := by
-  simp only [← mul_left_commₓ, ← mul_assoc]
+  simp only [mul_left_commₓ, mul_assoc]
 
 @[to_additive]
 theorem mul_rotate (a b c : G) : a * b * c = b * c * a := by
-  simp only [← mul_left_commₓ, ← mul_comm]
+  simp only [mul_left_commₓ, mul_comm]
 
 @[to_additive]
 theorem mul_rotate' (a b c : G) : a * (b * c) = b * (c * a) := by
-  simp only [← mul_left_commₓ, ← mul_comm]
+  simp only [mul_left_commₓ, mul_comm]
 
 end CommSemigroupₓ
 
@@ -216,7 +217,7 @@ theorem inv_inj {a b : G} : a⁻¹ = b⁻¹ ↔ a = b :=
 
 @[to_additive]
 theorem eq_inv_of_eq_inv (h : a = b⁻¹) : b = a⁻¹ := by
-  simp [← h]
+  simp [h]
 
 @[to_additive]
 theorem eq_inv_iff_eq_inv : a = b⁻¹ ↔ b = a⁻¹ :=
@@ -270,7 +271,7 @@ theorem one_div (a : G) : 1 / a = a⁻¹ :=
 
 @[to_additive]
 theorem mul_div (a b c : G) : a * (b / c) = a * b / c := by
-  simp only [← mul_assoc, ← div_eq_mul_inv]
+  simp only [mul_assoc, div_eq_mul_inv]
 
 @[to_additive]
 theorem div_eq_mul_one_div (a b : G) : a / b = a * (1 / b) := by
@@ -334,7 +335,7 @@ theorem one_div_div : 1 / (a / b) = b / a := by
 
 @[simp, to_additive]
 theorem inv_one : (1 : α)⁻¹ = 1 := by
-  simpa only [← one_div, ← inv_invₓ] using (inv_div (1 : α) 1).symm
+  simpa only [one_div, inv_invₓ] using (inv_div (1 : α) 1).symm
 
 @[simp, to_additive]
 theorem div_one : a / 1 = a := by
@@ -379,7 +380,7 @@ theorem div_inv_eq_mul : a / b⁻¹ = a * b := by
 
 @[to_additive]
 theorem div_mul_eq_div_div_swap : a / (b * c) = a / c / b := by
-  simp only [← mul_assoc, ← mul_inv_rev, ← div_eq_mul_inv]
+  simp only [mul_assoc, mul_inv_rev, div_eq_mul_inv]
 
 end DivisionMonoid
 
@@ -499,27 +500,27 @@ theorem mul_right_surjective (a : G) : Function.Surjective fun x => x * a := fun
 
 @[to_additive]
 theorem eq_mul_inv_of_mul_eq (h : a * c = b) : a = b * c⁻¹ := by
-  simp [← h.symm]
+  simp [h.symm]
 
 @[to_additive]
 theorem eq_inv_mul_of_mul_eq (h : b * a = c) : a = b⁻¹ * c := by
-  simp [← h.symm]
+  simp [h.symm]
 
 @[to_additive]
 theorem inv_mul_eq_of_eq_mul (h : b = a * c) : a⁻¹ * b = c := by
-  simp [← h]
+  simp [h]
 
 @[to_additive]
 theorem mul_inv_eq_of_eq_mul (h : a = c * b) : a * b⁻¹ = c := by
-  simp [← h]
+  simp [h]
 
 @[to_additive]
 theorem eq_mul_of_mul_inv_eq (h : a * c⁻¹ = b) : a = b * c := by
-  simp [← h.symm]
+  simp [h.symm]
 
 @[to_additive]
 theorem eq_mul_of_inv_mul_eq (h : b⁻¹ * a = c) : a = b * c := by
-  simp [← h.symm, ← mul_inv_cancel_left]
+  simp [h.symm, mul_inv_cancel_left]
 
 @[to_additive]
 theorem mul_eq_of_eq_inv_mul (h : b = a⁻¹ * c) : a * b = c := by
@@ -527,7 +528,7 @@ theorem mul_eq_of_eq_inv_mul (h : b = a⁻¹ * c) : a * b = c := by
 
 @[to_additive]
 theorem mul_eq_of_eq_mul_inv (h : a = c * b⁻¹) : a * b = c := by
-  simp [← h]
+  simp [h]
 
 @[to_additive]
 theorem mul_eq_one_iff_eq_inv : a * b = 1 ↔ a = b⁻¹ :=
@@ -580,11 +581,11 @@ theorem inv_mul_eq_one : a⁻¹ * b = 1 ↔ a = b := by
 
 @[to_additive]
 theorem div_left_injective : Function.Injective fun a => a / b := by
-  simpa only [← div_eq_mul_inv] using fun a a' h => mul_left_injective b⁻¹ h
+  simpa only [div_eq_mul_inv] using fun a a' h => mul_left_injective b⁻¹ h
 
 @[to_additive]
 theorem div_right_injective : Function.Injective fun a => b / a := by
-  simpa only [← div_eq_mul_inv] using fun a a' h => inv_injective (mul_right_injective b h)
+  simpa only [div_eq_mul_inv] using fun a a' h => inv_injective (mul_right_injective b h)
 
 @[simp, to_additive sub_add_cancel]
 theorem div_mul_cancel' (a b : G) : a / b * b = a := by
@@ -600,23 +601,23 @@ theorem mul_div_cancel'' (a b : G) : a * b / b = a := by
 
 @[simp, to_additive]
 theorem mul_div_mul_right_eq_div (a b c : G) : a * c / (b * c) = a / b := by
-  rw [div_mul_eq_div_div_swap] <;> simp only [← mul_left_injₓ, ← eq_self_iff_true, ← mul_div_cancel'']
+  rw [div_mul_eq_div_div_swap] <;> simp only [mul_left_injₓ, eq_self_iff_true, mul_div_cancel'']
 
 @[to_additive eq_sub_of_add_eq]
 theorem eq_div_of_mul_eq' (h : a * c = b) : a = b / c := by
-  simp [h]
+  simp [← h]
 
 @[to_additive sub_eq_of_eq_add]
 theorem div_eq_of_eq_mul'' (h : a = c * b) : a / b = c := by
-  simp [← h]
-
-@[to_additive]
-theorem eq_mul_of_div_eq (h : a / c = b) : a = b * c := by
   simp [h]
 
 @[to_additive]
-theorem mul_eq_of_eq_div (h : a = c / b) : a * b = c := by
+theorem eq_mul_of_div_eq (h : a / c = b) : a = b * c := by
   simp [← h]
+
+@[to_additive]
+theorem mul_eq_of_eq_div (h : a = c / b) : a * b = c := by
+  simp [h]
 
 @[simp, to_additive]
 theorem div_right_inj : a / b = a / c ↔ b = c :=
@@ -711,15 +712,15 @@ theorem mul_div_mul_left_eq_div (a b c : G) : c * a / (c * b) = a / b := by
 
 @[to_additive eq_sub_of_add_eq']
 theorem eq_div_of_mul_eq'' (h : c * a = b) : a = b / c := by
-  simp [← h.symm]
+  simp [h.symm]
 
 @[to_additive]
 theorem eq_mul_of_div_eq' (h : a / b = c) : a = b * c := by
-  simp [← h.symm]
+  simp [h.symm]
 
 @[to_additive]
 theorem mul_eq_of_eq_div' (h : b = c / a) : a * b = c := by
-  simp [← h]
+  simp [h]
   rw [mul_comm c, mul_inv_cancel_left]
 
 @[to_additive sub_sub_self]
@@ -728,7 +729,7 @@ theorem div_div_self' (a b : G) : a / (a / b) = b := by
 
 @[to_additive]
 theorem div_eq_div_mul_div (a b c : G) : a / b = c / b * (a / c) := by
-  simp [← mul_left_commₓ c]
+  simp [mul_left_commₓ c]
 
 @[simp, to_additive]
 theorem div_div_cancel (a b : G) : a / (a / b) = b :=
@@ -788,7 +789,7 @@ theorem div_div_div_cancel_left (a b c : G) : c / a / (c / b) = b / a := by
 @[to_additive]
 theorem div_eq_div_iff_mul_eq_mul : a / b = c / d ↔ a * d = c * b := by
   rw [div_eq_iff_eq_mul, div_mul_eq_mul_div, eq_comm, div_eq_iff_eq_mul']
-  simp only [← mul_comm, ← eq_comm]
+  simp only [mul_comm, eq_comm]
 
 @[to_additive]
 theorem div_eq_div_iff_div_eq_div : a / b = c / d ↔ a / c = b / d := by
@@ -818,4 +819,304 @@ theorem commutator_element_def {G : Type _} [Groupₓ G] (g₁ g₂ : G) : ⁅g�
   rfl
 
 end Commutator
+
+/-! ### Order dual -/
+
+
+open OrderDual
+
+@[to_additive]
+instance [h : One α] : One αᵒᵈ :=
+  h
+
+@[to_additive]
+instance [h : Mul α] : Mul αᵒᵈ :=
+  h
+
+@[to_additive]
+instance [h : Inv α] : Inv αᵒᵈ :=
+  h
+
+@[to_additive]
+instance [h : Div α] : Div αᵒᵈ :=
+  h
+
+@[to_additive]
+instance [h : HasSmul α β] : HasSmul α βᵒᵈ :=
+  h
+
+@[to_additive]
+instance OrderDual.hasPow [h : Pow α β] : Pow αᵒᵈ β :=
+  h
+
+@[to_additive]
+instance [h : Semigroupₓ α] : Semigroupₓ αᵒᵈ :=
+  h
+
+@[to_additive]
+instance [h : CommSemigroupₓ α] : CommSemigroupₓ αᵒᵈ :=
+  h
+
+@[to_additive]
+instance [h : LeftCancelSemigroup α] : LeftCancelSemigroup αᵒᵈ :=
+  h
+
+@[to_additive]
+instance [h : RightCancelSemigroup α] : RightCancelSemigroup αᵒᵈ :=
+  h
+
+@[to_additive]
+instance [h : MulOneClassₓ α] : MulOneClassₓ αᵒᵈ :=
+  h
+
+@[to_additive]
+instance [h : Monoidₓ α] : Monoidₓ αᵒᵈ :=
+  h
+
+@[to_additive]
+instance [h : CommMonoidₓ α] : CommMonoidₓ αᵒᵈ :=
+  h
+
+@[to_additive]
+instance [h : LeftCancelMonoid α] : LeftCancelMonoid αᵒᵈ :=
+  h
+
+@[to_additive]
+instance [h : RightCancelMonoid α] : RightCancelMonoid αᵒᵈ :=
+  h
+
+@[to_additive]
+instance [h : CancelMonoid α] : CancelMonoid αᵒᵈ :=
+  h
+
+@[to_additive]
+instance [h : CancelCommMonoid α] : CancelCommMonoid αᵒᵈ :=
+  h
+
+@[to_additive]
+instance [h : HasInvolutiveInv α] : HasInvolutiveInv αᵒᵈ :=
+  h
+
+@[to_additive]
+instance [h : DivInvMonoidₓ α] : DivInvMonoidₓ αᵒᵈ :=
+  h
+
+@[to_additive OrderDual.subtractionMonoid]
+instance [h : DivisionMonoid α] : DivisionMonoid αᵒᵈ :=
+  h
+
+@[to_additive OrderDual.subtractionCommMonoid]
+instance [h : DivisionCommMonoid α] : DivisionCommMonoid αᵒᵈ :=
+  h
+
+@[to_additive]
+instance [h : Groupₓ α] : Groupₓ αᵒᵈ :=
+  h
+
+@[to_additive]
+instance [h : CommGroupₓ α] : CommGroupₓ αᵒᵈ :=
+  h
+
+@[simp, to_additive]
+theorem to_dual_one [One α] : toDual (1 : α) = 1 :=
+  rfl
+
+@[simp, to_additive]
+theorem of_dual_one [One α] : (ofDual 1 : α) = 1 :=
+  rfl
+
+@[simp, to_additive]
+theorem to_dual_mul [Mul α] (a b : α) : toDual (a * b) = toDual a * toDual b :=
+  rfl
+
+@[simp, to_additive]
+theorem of_dual_mul [Mul α] (a b : αᵒᵈ) : ofDual (a * b) = ofDual a * ofDual b :=
+  rfl
+
+@[simp, to_additive]
+theorem to_dual_inv [Inv α] (a : α) : toDual a⁻¹ = (toDual a)⁻¹ :=
+  rfl
+
+@[simp, to_additive]
+theorem of_dual_inv [Inv α] (a : αᵒᵈ) : ofDual a⁻¹ = (ofDual a)⁻¹ :=
+  rfl
+
+@[simp, to_additive]
+theorem to_dual_div [Div α] (a b : α) : toDual (a / b) = toDual a / toDual b :=
+  rfl
+
+@[simp, to_additive]
+theorem of_dual_div [Div α] (a b : αᵒᵈ) : ofDual (a / b) = ofDual a / ofDual b :=
+  rfl
+
+theorem to_dual_vadd [HasVadd α β] (a : α) (b : β) : toDual (a +ᵥ b) = a +ᵥ toDual b :=
+  rfl
+
+theorem of_dual_vadd [HasVadd α β] (a : α) (b : βᵒᵈ) : ofDual (a +ᵥ b) = a +ᵥ ofDual b :=
+  rfl
+
+@[simp, to_additive]
+theorem to_dual_smul [HasSmul α β] (a : α) (b : β) : toDual (a • b) = a • toDual b :=
+  rfl
+
+@[simp, to_additive]
+theorem of_dual_smul [HasSmul α β] (a : α) (b : βᵒᵈ) : ofDual (a • b) = a • ofDual b :=
+  rfl
+
+@[simp, to_additive to_dual_smul]
+theorem to_dual_pow [Pow α β] (a : α) (b : β) : toDual (a ^ b) = toDual a ^ b :=
+  rfl
+
+@[simp, to_additive of_dual_smul]
+theorem of_dual_pow [Pow α β] (a : αᵒᵈ) (b : β) : ofDual (a ^ b) = ofDual a ^ b :=
+  rfl
+
+/-! ### Lexicographical order -/
+
+
+@[to_additive]
+instance [h : One α] : One (Lex α) :=
+  h
+
+@[to_additive]
+instance [h : Mul α] : Mul (Lex α) :=
+  h
+
+@[to_additive]
+instance [h : Inv α] : Inv (Lex α) :=
+  h
+
+@[to_additive]
+instance [h : Div α] : Div (Lex α) :=
+  h
+
+@[to_additive]
+instance [h : HasSmul α β] : HasSmul α (Lex β) :=
+  h
+
+@[to_additive]
+instance Lex.hasPow [h : Pow α β] : Pow (Lex α) β :=
+  h
+
+@[to_additive]
+instance [h : Semigroupₓ α] : Semigroupₓ (Lex α) :=
+  h
+
+@[to_additive]
+instance [h : CommSemigroupₓ α] : CommSemigroupₓ (Lex α) :=
+  h
+
+@[to_additive]
+instance [h : LeftCancelSemigroup α] : LeftCancelSemigroup (Lex α) :=
+  h
+
+@[to_additive]
+instance [h : RightCancelSemigroup α] : RightCancelSemigroup (Lex α) :=
+  h
+
+@[to_additive]
+instance [h : MulOneClassₓ α] : MulOneClassₓ (Lex α) :=
+  h
+
+@[to_additive]
+instance [h : Monoidₓ α] : Monoidₓ (Lex α) :=
+  h
+
+@[to_additive]
+instance [h : CommMonoidₓ α] : CommMonoidₓ (Lex α) :=
+  h
+
+@[to_additive]
+instance [h : LeftCancelMonoid α] : LeftCancelMonoid (Lex α) :=
+  h
+
+@[to_additive]
+instance [h : RightCancelMonoid α] : RightCancelMonoid (Lex α) :=
+  h
+
+@[to_additive]
+instance [h : CancelMonoid α] : CancelMonoid (Lex α) :=
+  h
+
+@[to_additive]
+instance [h : CancelCommMonoid α] : CancelCommMonoid (Lex α) :=
+  h
+
+@[to_additive]
+instance [h : HasInvolutiveInv α] : HasInvolutiveInv (Lex α) :=
+  h
+
+@[to_additive]
+instance [h : DivInvMonoidₓ α] : DivInvMonoidₓ (Lex α) :=
+  h
+
+@[to_additive OrderDual.subtractionMonoid]
+instance [h : DivisionMonoid α] : DivisionMonoid (Lex α) :=
+  h
+
+@[to_additive OrderDual.subtractionCommMonoid]
+instance [h : DivisionCommMonoid α] : DivisionCommMonoid (Lex α) :=
+  h
+
+@[to_additive]
+instance [h : Groupₓ α] : Groupₓ (Lex α) :=
+  h
+
+@[to_additive]
+instance [h : CommGroupₓ α] : CommGroupₓ (Lex α) :=
+  h
+
+@[simp, to_additive]
+theorem to_lex_one [One α] : toLex (1 : α) = 1 :=
+  rfl
+
+@[simp, to_additive]
+theorem of_lex_one [One α] : (ofLex 1 : α) = 1 :=
+  rfl
+
+@[simp, to_additive]
+theorem to_lex_mul [Mul α] (a b : α) : toLex (a * b) = toLex a * toLex b :=
+  rfl
+
+@[simp, to_additive]
+theorem of_lex_mul [Mul α] (a b : αᵒᵈ) : ofLex (a * b) = ofLex a * ofLex b :=
+  rfl
+
+@[simp, to_additive]
+theorem to_lex_inv [Inv α] (a : α) : toLex a⁻¹ = (toLex a)⁻¹ :=
+  rfl
+
+@[simp, to_additive]
+theorem of_lex_inv [Inv α] (a : αᵒᵈ) : ofLex a⁻¹ = (ofLex a)⁻¹ :=
+  rfl
+
+@[simp, to_additive]
+theorem to_lex_div [Div α] (a b : α) : toLex (a / b) = toLex a / toLex b :=
+  rfl
+
+@[simp, to_additive]
+theorem of_lex_div [Div α] (a b : αᵒᵈ) : ofLex (a / b) = ofLex a / ofLex b :=
+  rfl
+
+theorem to_lex_vadd [HasVadd α β] (a : α) (b : β) : toLex (a +ᵥ b) = a +ᵥ toLex b :=
+  rfl
+
+theorem of_lex_vadd [HasVadd α β] (a : α) (b : βᵒᵈ) : ofLex (a +ᵥ b) = a +ᵥ ofLex b :=
+  rfl
+
+@[simp, to_additive]
+theorem to_lex_smul [HasSmul α β] (a : α) (b : β) : toLex (a • b) = a • toLex b :=
+  rfl
+
+@[simp, to_additive]
+theorem of_lex_smul [HasSmul α β] (a : α) (b : βᵒᵈ) : ofLex (a • b) = a • ofLex b :=
+  rfl
+
+@[simp, to_additive to_lex_smul, to_additive_reorder 1 4]
+theorem to_lex_pow [Pow α β] (a : α) (b : β) : toLex (a ^ b) = toLex a ^ b :=
+  rfl
+
+@[simp, to_additive of_lex_smul, to_additive_reorder 1 4]
+theorem of_lex_pow [Pow α β] (a : αᵒᵈ) (b : β) : ofLex (a ^ b) = ofLex a ^ b :=
+  rfl
 

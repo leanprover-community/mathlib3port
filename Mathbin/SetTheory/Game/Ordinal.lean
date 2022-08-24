@@ -136,7 +136,7 @@ theorem to_pgame_lt_iff {a b : Ordinal} : a.toPgame < b.toPgame ↔ a < b :=
   ⟨by
     contrapose
     rw [not_ltₓ]
-    exact fun h => not_lt_of_le (to_pgame_le h), to_pgame_lt⟩
+    exact fun h => not_lt_of_leₓ (to_pgame_le h), to_pgame_lt⟩
 
 @[simp]
 theorem to_pgame_equiv_iff {a b : Ordinal} : a.toPgame ≈ b.toPgame ↔ a = b := by

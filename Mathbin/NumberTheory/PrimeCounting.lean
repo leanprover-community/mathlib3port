@@ -82,7 +82,7 @@ theorem prime_counting'_add_le {a k : ℕ} (h0 : 0 < a) (h1 : a < k) (n : ℕ) :
       rw [prime_counting', count_eq_card_filter_range]
     _ ≤ π' k + ((ico k (k + n)).filter (Coprime a)).card := by
       refine' add_le_add_left (card_le_of_subset _) k.prime_counting'
-      simp only [← subset_iff, ← and_imp, ← mem_filter, ← mem_Ico]
+      simp only [subset_iff, and_imp, mem_filter, mem_Ico]
       intro p succ_k_le_p p_lt_n p_prime
       constructor
       · exact ⟨succ_k_le_p, p_lt_n⟩

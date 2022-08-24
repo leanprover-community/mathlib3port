@@ -22,14 +22,14 @@ universe v
 
 variable {α β γ : Type _}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler has_mem (list α)
--- ./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler has_singleton (list α)
--- ./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler has_insert (list α)
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_mem (list α)
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_singleton (list α)
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_insert (list α)
 /-- A language is a set of strings over an alphabet. -/
 def Language (α) :=
-  Set (List α)deriving «./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler has_mem (list α)»,
-  «./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler has_singleton (list α)»,
-  «./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler has_insert (list α)»,
+  Set (List α)deriving «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_mem (list α)»,
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_singleton (list α)»,
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_insert (list α)»,
   CompleteBooleanAlgebra
 
 namespace Language
@@ -73,9 +73,9 @@ theorem mul_def (l m : Language α) : l * m = Image2 (· ++ ·) l m :=
 /-- The star of a language `L` is the set of all strings which can be written by concatenating
   strings from `L`. -/
 def Star (l : Language α) : Language α :=
-  { x | ∃ S : List (List α), x = S.join ∧ ∀, ∀ y ∈ S, ∀, y ∈ l }
+  { x | ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l }
 
-theorem star_def (l : Language α) : l.star = { x | ∃ S : List (List α), x = S.join ∧ ∀, ∀ y ∈ S, ∀, y ∈ l } :=
+theorem star_def (l : Language α) : l.star = { x | ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l } :=
   rfl
 
 @[simp]
@@ -99,10 +99,10 @@ theorem mem_mul : x ∈ l * m ↔ ∃ a b, a ∈ l ∧ b ∈ m ∧ a ++ b = x :=
 theorem append_mem_mul : a ∈ l → b ∈ m → a ++ b ∈ l * m :=
   mem_image2_of_mem
 
-theorem mem_star : x ∈ l.star ↔ ∃ S : List (List α), x = S.join ∧ ∀, ∀ y ∈ S, ∀, y ∈ l :=
+theorem mem_star : x ∈ l.star ↔ ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l :=
   Iff.rfl
 
-theorem join_mem_star {S : List (List α)} (h : ∀, ∀ y ∈ S, ∀, y ∈ l) : S.join ∈ l.star :=
+theorem join_mem_star {S : List (List α)} (h : ∀ y ∈ S, y ∈ l) : S.join ∈ l.star :=
   ⟨S, rfl, h⟩
 
 theorem nil_mem_star (l : Language α) : [] ∈ l.star :=
@@ -121,13 +121,13 @@ instance : Semiringₓ (Language α) where
   mul_zero := fun _ => image2_empty_right
   one := 1
   one_mul := fun l => by
-    simp [← mul_def, ← one_def]
+    simp [mul_def, one_def]
   mul_one := fun l => by
-    simp [← mul_def, ← one_def]
+    simp [mul_def, one_def]
   natCast := fun n => if n = 0 then 0 else 1
   nat_cast_zero := rfl
   nat_cast_succ := fun n => by
-    cases n <;> simp [← Nat.castₓ, ← add_def, ← zero_def]
+    cases n <;> simp [Nat.castₓ, add_def, zero_def]
   left_distrib := fun _ _ _ => image2_union_right
   right_distrib := fun _ _ _ => image2_union_left
 
@@ -145,14 +145,14 @@ def map (f : α → β) : Language α →+* Language β where
 
 @[simp]
 theorem map_id (l : Language α) : map id l = l := by
-  simp [← map]
+  simp [map]
 
 @[simp]
 theorem map_map (g : β → γ) (f : α → β) (l : Language α) : map g (map f l) = map (g ∘ f) l := by
-  simp [← map, ← image_image]
+  simp [map, image_image]
 
 theorem star_def_nonempty (l : Language α) :
-    l.star = { x | ∃ S : List (List α), x = S.join ∧ ∀, ∀ y ∈ S, ∀, y ∈ l ∧ y ≠ [] } := by
+    l.star = { x | ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l ∧ y ≠ [] } := by
   ext x
   constructor
   · rintro ⟨S, rfl, h⟩
@@ -171,7 +171,7 @@ theorem le_iff (l m : Language α) : l ≤ m ↔ l + m = m :=
 
 theorem le_mul_congr {l₁ l₂ m₁ m₂ : Language α} : l₁ ≤ m₁ → l₂ ≤ m₂ → l₁ * l₂ ≤ m₁ * m₂ := by
   intro h₁ h₂ x hx
-  simp only [← mul_def, ← exists_and_distrib_left, ← mem_image2, ← image_prod] at hx⊢
+  simp only [mul_def, exists_and_distrib_left, mem_image2, image_prod] at hx⊢
   tauto
 
 theorem le_add_congr {l₁ l₂ m₁ m₂ : Language α} : l₁ ≤ m₁ → l₂ ≤ m₂ → l₁ + l₂ ≤ m₁ + m₂ :=
@@ -193,9 +193,9 @@ theorem add_supr {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Langu
   sup_supr
 
 theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
-    x ∈ l ^ n ↔ ∃ S : List (List α), x = S.join ∧ S.length = n ∧ ∀, ∀ y ∈ S, ∀, y ∈ l := by
+    x ∈ l ^ n ↔ ∃ S : List (List α), x = S.join ∧ S.length = n ∧ ∀ y ∈ S, y ∈ l := by
   induction' n with n ihn generalizing x
-  · simp only [← mem_one, ← pow_zeroₓ, ← length_eq_zero]
+  · simp only [mem_one, pow_zeroₓ, length_eq_zero]
     constructor
     · rintro rfl
       exact ⟨[], rfl, rfl, fun y h => h.elim⟩
@@ -204,7 +204,7 @@ theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
       rfl
       
     
-  · simp only [← pow_succₓ, ← mem_mul, ← ihn]
+  · simp only [pow_succₓ, mem_mul, ihn]
     constructor
     · rintro ⟨a, b, ha, ⟨S, rfl, rfl, hS⟩, rfl⟩
       exact ⟨a :: S, rfl, rfl, forall_mem_cons.2 ⟨ha, hS⟩⟩
@@ -217,7 +217,7 @@ theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
 
 theorem star_eq_supr_pow (l : Language α) : l.star = ⨆ i : ℕ, l ^ i := by
   ext x
-  simp only [← mem_star, ← mem_supr, ← mem_pow]
+  simp only [mem_star, mem_supr, mem_pow]
   constructor
   · rintro ⟨S, rfl, hS⟩
     exact ⟨_, S, rfl, rfl, hS⟩
@@ -233,11 +233,11 @@ theorem map_star (f : α → β) (l : Language α) : map f (Star l) = Star (map 
   exact image_Union
 
 theorem mul_self_star_comm (l : Language α) : l.star * l = l * l.star := by
-  simp only [← star_eq_supr_pow, ← mul_supr, ← supr_mul, pow_succₓ, pow_succ'ₓ]
+  simp only [star_eq_supr_pow, mul_supr, supr_mul, ← pow_succₓ, ← pow_succ'ₓ]
 
 @[simp]
 theorem one_add_self_mul_star_eq_star (l : Language α) : 1 + l * l.star = l.star := by
-  simp only [← star_eq_supr_pow, ← mul_supr, pow_succₓ, pow_zeroₓ l]
+  simp only [star_eq_supr_pow, mul_supr, ← pow_succₓ, ← pow_zeroₓ l]
   exact sup_supr_nat_succ _
 
 @[simp]
@@ -253,7 +253,7 @@ theorem star_mul_le_right_of_mul_le_right (l m : Language α) : l * m ≤ m → 
   · simp
     
   rw [pow_succ'ₓ, mul_assoc (l ^ n) l m]
-  exact le_transₓ (le_mul_congr le_rfl h) ih
+  exact le_transₓ (le_mul_congr le_rflₓ h) ih
 
 theorem star_mul_le_left_of_mul_le_left (l m : Language α) : m * l ≤ m → m * l.star ≤ m := by
   intro h
@@ -264,7 +264,7 @@ theorem star_mul_le_left_of_mul_le_left (l m : Language α) : m * l ≤ m → m 
   · simp
     
   rw [pow_succₓ, ← mul_assoc m l (l ^ n)]
-  exact le_transₓ (le_mul_congr h le_rfl) ih
+  exact le_transₓ (le_mul_congr h le_rflₓ) ih
 
 end Language
 

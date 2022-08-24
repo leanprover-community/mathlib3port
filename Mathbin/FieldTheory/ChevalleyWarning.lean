@@ -56,7 +56,7 @@ theorem MvPolynomial.sum_mv_polynomial_eq_zero [DecidableEq σ] (f : MvPolynomia
   haveI : DecidableEq K := Classical.decEq K
   calc
     (∑ x, eval x f) = ∑ x : σ → K, ∑ d in f.support, f.coeff d * ∏ i, x i ^ d i := by
-      simp only [← eval_eq']
+      simp only [eval_eq']
     _ = ∑ d in f.support, ∑ x : σ → K, f.coeff d * ∏ i, x i ^ d i := sum_comm
     _ = 0 := sum_eq_zero _
     
@@ -114,14 +114,14 @@ Assume that the sum of the total degrees of the `f i` is less than the cardinali
 Then the number of common solutions of the `f i` is divisible by `p`. -/
 theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : Finset ι} {f : ι → MvPolynomial σ K}
     (h : (∑ i in s, (f i).totalDegree) < Fintype.card σ) :
-    p ∣ Fintype.card { x : σ → K // ∀, ∀ i ∈ s, ∀, eval x (f i) = 0 } := by
+    p ∣ Fintype.card { x : σ → K // ∀ i ∈ s, eval x (f i) = 0 } := by
   have hq : 0 < q - 1 := by
     rw [← Fintype.card_units, Fintype.card_pos_iff]
     exact ⟨1⟩
-  let S : Finset (σ → K) := { x ∈ univ | ∀, ∀ i ∈ s, ∀, eval x (f i) = 0 }
+  let S : Finset (σ → K) := { x ∈ univ | ∀ i ∈ s, eval x (f i) = 0 }
   have hS : ∀ x : σ → K, x ∈ S ↔ ∀ i : ι, i ∈ s → eval x (f i) = 0 := by
     intro x
-    simp only [← S, ← true_andₓ, ← sep_def, ← mem_filter, ← mem_univ]
+    simp only [S, true_andₓ, sep_def, mem_filter, mem_univ]
   /- The polynomial `F = ∏ i in s, (1 - (f i)^(q - 1))` has the nice property
     that it takes the value `1` on elements of `{x : σ → K // ∀ i ∈ s, (f i).eval x = 0}`
     while it is `0` outside that locus.
@@ -134,7 +134,7 @@ theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : 
       eval x F = ∏ i in s, eval x (1 - f i ^ (q - 1)) := eval_prod s _ x
       _ = if x ∈ S then 1 else 0 := _
       
-    simp only [← (eval x).map_sub, ← (eval x).map_pow, ← (eval x).map_one]
+    simp only [(eval x).map_sub, (eval x).map_pow, (eval x).map_one]
     split_ifs with hx hx
     · apply Finset.prod_eq_one
       intro i hi
@@ -142,12 +142,12 @@ theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : 
       rw [hx i hi, zero_pow hq, sub_zero]
       
     · obtain ⟨i, hi, hx⟩ : ∃ i : ι, i ∈ s ∧ eval x (f i) ≠ 0 := by
-        simpa only [← hS, ← not_forall, ← not_imp] using hx
+        simpa only [hS, not_forall, not_imp] using hx
       apply Finset.prod_eq_zero hi
       rw [pow_card_sub_one_eq_one (eval x (f i)) hx, sub_self]
       
   -- In particular, we can now show:
-  have key : (∑ x, eval x F) = Fintype.card { x : σ → K // ∀, ∀ i ∈ s, ∀, eval x (f i) = 0 }
+  have key : (∑ x, eval x F) = Fintype.card { x : σ → K // ∀ i ∈ s, eval x (f i) = 0 }
   rw [Fintype.card_of_subtype S hS, card_eq_sum_ones, Nat.cast_sum, Nat.cast_oneₓ, ← Fintype.sum_extend_by_zero S,
     sum_congr rfl fun x hx => hF x]
   -- With these preparations under our belt, we will approach the main goal.
@@ -174,7 +174,7 @@ theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : 
     (1 - f i ^ (q - 1)).totalDegree ≤ max (1 : MvPolynomial σ K).totalDegree (f i ^ (q - 1)).totalDegree :=
       total_degree_sub _ _
     _ ≤ (f i ^ (q - 1)).totalDegree := by
-      simp only [← max_eq_rightₓ, ← Nat.zero_leₓ, ← total_degree_one]
+      simp only [max_eq_rightₓ, Nat.zero_leₓ, total_degree_one]
     _ ≤ (q - 1) * (f i).totalDegree := total_degree_pow _ _
     
 
@@ -188,9 +188,9 @@ theorem char_dvd_card_solutions (p : ℕ) [CharP K p] {f : MvPolynomial σ K} (h
     p ∣ Fintype.card { x : σ → K // eval x f = 0 } := by
   let F : Unit → MvPolynomial σ K := fun _ => f
   have : (∑ i : Unit, (F i).totalDegree) < Fintype.card σ := by
-    simpa only [← Fintype.univ_punit, ← sum_singleton] using h
+    simpa only [Fintype.univ_punit, sum_singleton] using h
   have key := char_dvd_card_solutions_family p this
-  simp only [← F, ← Fintype.univ_punit, ← forall_eq, ← mem_singleton] at key
+  simp only [F, Fintype.univ_punit, forall_eq, mem_singleton] at key
   convert key
 
 end FiniteField

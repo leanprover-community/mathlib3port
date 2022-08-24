@@ -88,7 +88,7 @@ theorem card_member_subfamily_add_card_non_member_subfamily (a : α) (𝒜 : Fin
 theorem member_subfamily_union_non_member_subfamily (a : α) (𝒜 : Finset (Finset α)) :
     𝒜.memberSubfamily a ∪ 𝒜.nonMemberSubfamily a = 𝒜.Image fun s => s.erase a := by
   ext s
-  simp only [← mem_union, ← mem_member_subfamily, ← mem_non_member_subfamily, ← mem_image, ← exists_prop]
+  simp only [mem_union, mem_member_subfamily, mem_non_member_subfamily, mem_image, exists_prop]
   constructor
   · rintro (h | h)
     · exact ⟨_, h.1, erase_insert h.2⟩

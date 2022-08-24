@@ -77,7 +77,7 @@ theorem map_bounded_formula (f : M ↪ₑ[L] N) {α : Type} {n : ℕ} (φ : L.Bo
   have h :=
     f.map_formula' ((φ.restrict_free_var id).toFormula.relabel (Fintype.equivFin _))
       (Sum.elim (v ∘ coe) xs ∘ (Fintype.equivFin _).symm)
-  simp only [← formula.realize_relabel, ← bounded_formula.realize_to_formula, ← iff_eq_eq] at h
+  simp only [formula.realize_relabel, bounded_formula.realize_to_formula, iff_eq_eq] at h
   rw [← Function.comp.assoc _ _ (Fintype.equivFin _).symm,
     Function.comp.assoc _ (Fintype.equivFin _).symm (Fintype.equivFin _), Equivₓ.symm_comp_self, Function.comp.right_id,
     Function.comp.assoc, Sum.elim_comp_inl, Function.comp.assoc _ _ Sum.inr, Sum.elim_comp_inr, ←
@@ -94,7 +94,7 @@ theorem map_sentence (f : M ↪ₑ[L] N) (φ : L.Sentence) : M ⊨ φ ↔ N ⊨ 
   rw [sentence.realize, sentence.realize, ← f.map_formula, Unique.eq_default (f ∘ default)]
 
 theorem Theory_model_iff (f : M ↪ₑ[L] N) (T : L.Theory) : M ⊨ T ↔ N ⊨ T := by
-  simp only [← Theory.model_iff, ← f.map_sentence]
+  simp only [Theory.model_iff, f.map_sentence]
 
 theorem elementarily_equivalent (f : M ↪ₑ[L] N) : M ≅[L] N :=
   elementarily_equivalent_iff.2 f.map_sentence
@@ -104,8 +104,8 @@ theorem injective (φ : M ↪ₑ[L] N) : Function.Injective φ := by
   intro x y
   have h := φ.map_formula ((var 0).equal (var 1) : L.formula (Finₓ 2)) fun i => if i = 0 then x else y
   rw [formula.realize_equal, formula.realize_equal] at h
-  simp only [← Nat.one_ne_zero, ← term.realize, ← Finₓ.one_eq_zero_iff, ← if_true, ← eq_self_iff_true, ←
-    Function.comp_app, ← if_false] at h
+  simp only [Nat.one_ne_zero, term.realize, Finₓ.one_eq_zero_iff, if_true, eq_self_iff_true, Function.comp_app,
+    if_false] at h
   exact h.1
 
 instance embeddingLike : EmbeddingLike (M ↪ₑ[L] N) M N where injective' := injective
@@ -234,16 +234,16 @@ theorem is_elementary_of_exists (f : M ↪[L] N)
   · exact fun _ _ => Iff.rfl
     
   · intros
-    simp [← bounded_formula.realize, Sum.comp_elim, ← embedding.realize_term]
+    simp [bounded_formula.realize, ← Sum.comp_elim, embedding.realize_term]
     
   · intros
-    simp [← bounded_formula.realize, Sum.comp_elim, ← embedding.realize_term]
+    simp [bounded_formula.realize, ← Sum.comp_elim, embedding.realize_term]
     
   · intro _ _ _ ih1 ih2 _
-    simp [← ih1, ← ih2]
+    simp [ih1, ih2]
     
   · intro n φ ih xs
-    simp only [← bounded_formula.realize_all]
+    simp only [bounded_formula.realize_all]
     refine' ⟨fun h a => _, _⟩
     · rw [← ih, Finₓ.comp_snoc]
       exact h (f a)
@@ -288,7 +288,7 @@ theorem coe_to_elementary_embedding (f : M ≃[L] N) : (f.toElementaryEmbedding 
 end Equivₓ
 
 @[simp]
-theorem realize_term_substructure {α : Type _} {S : L.Substructure M} (v : α → S) (t : L.Term α) :
+theorem realize_term_substructure {α : Type _} {S : L.Substructure M} (v : α → S) (t : L.term α) :
     t.realize (coe ∘ v) = (↑(t.realize v) : M) :=
   S.Subtype.realize_term t
 
@@ -370,7 +370,7 @@ theorem realize_sentence (S : L.ElementarySubstructure M) (φ : L.Sentence) : S 
 
 @[simp]
 theorem Theory_model_iff (S : L.ElementarySubstructure M) (T : L.Theory) : S ⊨ T ↔ M ⊨ T := by
-  simp only [← Theory.model_iff, ← realize_sentence]
+  simp only [Theory.model_iff, realize_sentence]
 
 instance Theory_model {T : L.Theory} [h : M ⊨ T] {S : L.ElementarySubstructure M} : S ⊨ T :=
   (Theory_model_iff S T).2 h

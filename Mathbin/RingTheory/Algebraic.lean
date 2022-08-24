@@ -43,7 +43,7 @@ variable {R}
 
 /-- A subalgebra is algebraic if all its elements are algebraic. -/
 def Subalgebra.IsAlgebraic (S : Subalgebra R A) : Prop :=
-  ∀, ∀ x ∈ S, ∀, IsAlgebraic R x
+  ∀ x ∈ S, IsAlgebraic R x
 
 variable (R A)
 
@@ -65,11 +65,11 @@ theorem Subalgebra.is_algebraic_iff (S : Subalgebra R A) : S.IsAlgebraic ↔ @Al
 /-- An algebra is algebraic if and only if it is algebraic as a subalgebra. -/
 theorem Algebra.is_algebraic_iff : Algebra.IsAlgebraic R A ↔ (⊤ : Subalgebra R A).IsAlgebraic := by
   delta' Algebra.IsAlgebraic Subalgebra.IsAlgebraic
-  simp only [← Algebra.mem_top, ← forall_prop_of_true, ← iff_selfₓ]
+  simp only [Algebra.mem_top, forall_prop_of_true, iff_selfₓ]
 
 theorem is_algebraic_iff_not_injective {x : A} :
     IsAlgebraic R x ↔ ¬Function.Injective (Polynomial.aeval x : R[X] →ₐ[R] A) := by
-  simp only [← IsAlgebraic, ← injective_iff_map_eq_zero, ← not_forall, ← And.comm, ← exists_prop]
+  simp only [IsAlgebraic, injective_iff_map_eq_zero, not_forall, And.comm, exists_prop]
 
 end
 
@@ -104,10 +104,10 @@ theorem is_algebraic_nat [Nontrivial R] (n : ℕ) : IsAlgebraic R (n : A) := by
   exact is_algebraic_algebra_map n
 
 theorem is_algebraic_int [Nontrivial R] (n : ℤ) : IsAlgebraic R (n : A) := by
-  rw [← RingHom.map_int_cast (algebraMap R A)]
+  rw [← _root_.map_int_cast (algebraMap R A)]
   exact is_algebraic_algebra_map n
 
-theorem is_algebraic_rat (R : Type u) {A : Type v} [DivisionRing A] [Field R] [CharZero R] [Algebra R A] (n : ℚ) :
+theorem is_algebraic_rat (R : Type u) {A : Type v} [DivisionRing A] [Field R] [Algebra R A] (n : ℚ) :
     IsAlgebraic R (n : A) := by
   rw [← map_rat_cast (algebraMap R A)]
   exact is_algebraic_algebra_map n
@@ -191,7 +191,7 @@ variable [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A]
 /-- If L is an algebraic field extension of K and A is an algebraic algebra over L,
 then A is algebraic over K. -/
 theorem is_algebraic_trans (L_alg : IsAlgebraic K L) (A_alg : IsAlgebraic L A) : IsAlgebraic K A := by
-  simp only [← IsAlgebraic, ← is_algebraic_iff_is_integral] at L_alg A_alg⊢
+  simp only [IsAlgebraic, is_algebraic_iff_is_integral] at L_alg A_alg⊢
   exact is_integral_trans L_alg A_alg
 
 variable (K L)
@@ -266,7 +266,7 @@ end Algebra
 
 variable {R S : Type _} [CommRingₓ R] [IsDomain R] [CommRingₓ S]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y «expr ≠ » (0 : R))
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (y «expr ≠ » (0 : R))
 theorem exists_integral_multiple [Algebra R S] {z : S} (hz : IsAlgebraic R z)
     (inj : ∀ x, algebraMap R S x = 0 → x = 0) :
     ∃ (x : integralClosure R S)(y : _)(_ : y ≠ (0 : R)), z * algebraMap R S y = x := by
@@ -278,7 +278,7 @@ theorem exists_integral_multiple [Algebra R S] {z : S} (hz : IsAlgebraic R z)
     ⟨p.integral_normalization, monic_integral_normalization p_ne_zero, integral_normalization_aeval_eq_zero px inj⟩
   exact ⟨⟨_, x_integral⟩, a, a_ne_zero, rfl⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (d «expr ≠ » (0 : R))
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (d «expr ≠ » (0 : R))
 /-- A fraction `(a : S) / (b : S)` can be reduced to `(c : S) / (d : R)`,
 if `S` is the integral closure of `R` in an algebraic extension `L` of `R`. -/
 theorem IsIntegralClosure.exists_smul_eq_mul {L : Type _} [Field L] [Algebra R S] [Algebra S L] [Algebra R L]
@@ -288,7 +288,7 @@ theorem IsIntegralClosure.exists_smul_eq_mul {L : Type _} [Field L] [Algebra R S
   obtain ⟨c, d, d_ne, hx⟩ :=
     exists_integral_multiple (h (algebraMap _ L a / algebraMap _ L b)) ((injective_iff_map_eq_zero _).mp inj)
   refine' ⟨IsIntegralClosure.mk' S (c : L) c.2, d, d_ne, IsIntegralClosure.algebra_map_injective S R L _⟩
-  simp only [← Algebra.smul_def, ← RingHom.map_mul, ← IsIntegralClosure.algebra_map_mk', hx,
+  simp only [Algebra.smul_def, RingHom.map_mul, IsIntegralClosure.algebra_map_mk', ← hx, ←
     IsScalarTower.algebra_map_apply]
   rw [← mul_assoc _ (_ / _), mul_div_cancel' (algebraMap S L a), mul_comm]
   exact mt ((injective_iff_map_eq_zero _).mp (IsIntegralClosure.algebra_map_injective S R L) _) hb
@@ -394,20 +394,20 @@ noncomputable def Polynomial.algebraPi : Algebra R'[X] (S' → T') :=
   { Polynomial.hasSmulPi' R' S' T' with toFun := fun p z => algebraMap S' T' (aeval z p),
     map_one' :=
       funext fun z => by
-        simp only [← Polynomial.aeval_one, ← Pi.one_apply, ← map_one],
+        simp only [Polynomial.aeval_one, Pi.one_apply, map_one],
     map_mul' := fun f g =>
       funext fun z => by
-        simp only [← Pi.mul_apply, ← map_mul],
+        simp only [Pi.mul_apply, map_mul],
     map_zero' :=
       funext fun z => by
-        simp only [← Polynomial.aeval_zero, ← Pi.zero_apply, ← map_zero],
+        simp only [Polynomial.aeval_zero, Pi.zero_apply, map_zero],
     map_add' := fun f g =>
       funext fun z => by
-        simp only [← Polynomial.aeval_add, ← Pi.add_apply, ← map_add],
+        simp only [Polynomial.aeval_add, Pi.add_apply, map_add],
     commutes' := fun p f => funext fun z => mul_comm _ _,
     smul_def' := fun p f =>
       funext fun z => by
-        simp only [← Algebra.algebra_map_eq_smul_one, ← polynomial_smul_apply', ← one_mulₓ, ← Pi.mul_apply, ←
+        simp only [Algebra.algebra_map_eq_smul_one, polynomial_smul_apply', one_mulₓ, Pi.mul_apply,
           Algebra.smul_mul_assoc] }
 
 attribute [local instance] Polynomial.algebraPi

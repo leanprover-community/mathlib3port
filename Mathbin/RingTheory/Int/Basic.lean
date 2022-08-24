@@ -38,13 +38,13 @@ instance : WfDvdMonoid ℕ :=
     cases a
     · exfalso
       revert h
-      simp [← DvdNotUnit]
+      simp [DvdNotUnit]
       
     cases b
-    · simpa [← succ_ne_zero] using WithTop.coe_lt_top (a + 1)
+    · simpa [succ_ne_zero] using WithTop.coe_lt_top (a + 1)
       
     cases' dvd_and_not_dvd_iff.2 h with h1 h2
-    simp only [← succ_ne_zero, ← WithTop.coe_lt_coe, ← if_false]
+    simp only [succ_ne_zero, WithTop.coe_lt_coe, if_false]
     apply lt_of_le_of_neₓ (Nat.le_of_dvdₓ (Nat.succ_posₓ _) h1) fun con => h2 _
     rw [Con]⟩
 
@@ -81,10 +81,10 @@ section NormalizationMonoid
 
 instance : NormalizationMonoid ℤ where
   normUnit := fun a : ℤ => if 0 ≤ a then 1 else -1
-  norm_unit_zero := if_pos le_rfl
+  norm_unit_zero := if_pos le_rflₓ
   norm_unit_mul := fun a b hna hnb => by
     cases' hna.lt_or_lt with ha ha <;>
-      cases' hnb.lt_or_lt with hb hb <;> simp [← mul_nonneg_iff, ← ha.le, ← ha.not_le, ← hb.le, ← hb.not_le]
+      cases' hnb.lt_or_lt with hb hb <;> simp [mul_nonneg_iff, ha.le, ha.not_le, hb.le, hb.not_le]
   norm_unit_coe_units := fun u =>
     (units_eq_one_or u).elim (fun eq => Eq.symm ▸ if_pos zero_le_one) fun eq =>
       Eq.symm ▸
@@ -106,9 +106,9 @@ theorem normalize_coe_nat (n : ℕ) : normalize (n : ℤ) = n :=
 
 theorem coe_nat_abs_eq_normalize (z : ℤ) : (z.natAbs : ℤ) = normalize z := by
   by_cases' 0 ≤ z
-  · simp [← nat_abs_of_nonneg h, ← normalize_of_nonneg h]
+  · simp [nat_abs_of_nonneg h, normalize_of_nonneg h]
     
-  · simp [← of_nat_nat_abs_of_nonpos (le_of_not_geₓ h), ← normalize_of_neg (lt_of_not_geₓ h)]
+  · simp [of_nat_nat_abs_of_nonpos (le_of_not_geₓ h), normalize_of_neg (lt_of_not_geₓ h)]
     
 
 theorem nonneg_of_normalize_eq_self {z : ℤ} (hz : normalize z = z) : 0 ≤ z :=
@@ -165,7 +165,7 @@ theorem exists_unit_of_abs (a : ℤ) : ∃ (u : ℤ)(h : IsUnit u), (Int.natAbs 
     
   · use -1, is_unit_one.neg
     rw [← neg_eq_iff_neg_eq.mp (Eq.symm h)]
-    simp only [← neg_mul, ← one_mulₓ]
+    simp only [neg_mul, one_mulₓ]
     
 
 theorem gcd_eq_nat_abs {a b : ℤ} : Int.gcdₓ a b = Nat.gcdₓ a.natAbs b.natAbs :=
@@ -293,7 +293,7 @@ theorem Nat.factors_multiset_prod_of_irreducible {s : Multiset ℕ} (h : ∀ x :
 namespace multiplicity
 
 theorem finite_int_iff_nat_abs_finite {a b : ℤ} : Finite a b ↔ Finite a.natAbs b.natAbs := by
-  simp only [← finite_def, Int.nat_abs_dvd_iff_dvd, ← Int.nat_abs_pow]
+  simp only [finite_def, ← Int.nat_abs_dvd_iff_dvd, Int.nat_abs_pow]
 
 theorem finite_int_iff {a b : ℤ} : Finite a b ↔ a.natAbs ≠ 1 ∧ b ≠ 0 := by
   rw [finite_int_iff_nat_abs_finite, finite_nat_iff, pos_iff_ne_zero, Int.nat_abs_ne_zero]

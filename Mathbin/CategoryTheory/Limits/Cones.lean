@@ -346,7 +346,7 @@ def whiskeringEquivalence (e : K ≌ J) : Cone F ≌ Cone (e.Functor ⋙ F) wher
             intro k
             dsimp'
             -- See library note [dsimp, simp]
-            simpa [← e.counit_app_functor] using s.w (e.unit_inv.app k)))
+            simpa [e.counit_app_functor] using s.w (e.unit_inv.app k)))
       (by
         tidy)
 
@@ -381,7 +381,7 @@ def functoriality : Cone F ⥤ Cone (F ⋙ G) where
   map := fun X Y f =>
     { Hom := G.map f.Hom,
       w' := fun j => by
-        simp [-cone_morphism.w, f.w j] }
+        simp [-cone_morphism.w, ← f.w j] }
 
 instance functorialityFull [Full G] [Faithful G] :
     Full
@@ -567,7 +567,7 @@ def whiskeringEquivalence (e : K ≌ J) : Cocone F ≌ Cocone (e.Functor ⋙ F) 
           (by
             intro k
             dsimp'
-            simpa [← e.counit_inv_app_functor k] using s.w (e.unit.app k)))
+            simpa [e.counit_inv_app_functor k] using s.w (e.unit.app k)))
       (by
         tidy)
 
@@ -645,8 +645,8 @@ def functorialityEquivalence (e : C ≌ D) : Cocone F ≌ Cocone (F ⋙ e.Functo
               -- In this configuration `simp` reaches a dead-end and needs help.
               intro j
               dsimp'
-              simp only [equivalence.counit_inv_app_functor, ← iso.inv_hom_id_app, ← map_comp, ←
-                equivalence.fun_inv_map, ← assoc, ← id_comp, ← iso.inv_hom_id_app_assoc]
+              simp only [← equivalence.counit_inv_app_functor, iso.inv_hom_id_app, map_comp, equivalence.fun_inv_map,
+                assoc, id_comp, iso.inv_hom_id_app_assoc]
               dsimp'
               simp ))-- See note [dsimp, simp].
       fun c c' f => by
@@ -948,7 +948,7 @@ def coconeOfConeLeftOp (c : Cone F.leftOp) : Cocone F where
 @[simp]
 theorem cocone_of_cone_left_op_ι_app (c : Cone F.leftOp) (j) : (coconeOfConeLeftOp c).ι.app j = (c.π.app (op j)).op :=
   by
-  dsimp' only [← cocone_of_cone_left_op]
+  dsimp' only [cocone_of_cone_left_op]
   simp
 
 /-- Change a cocone on `F : J ⥤ Cᵒᵖ` to a cone on `F.left_op : Jᵒᵖ ⥤ C`. -/

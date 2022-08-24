@@ -62,23 +62,25 @@ abbrev homologyCToK : homologyC f g w ⟶ homologyK f g w :=
 
 attribute [local instance] pseudoelement.hom_to_fun pseudoelement.has_zero
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident c, ",", ident rfl, "⟩", ":", expr «expr∃ , »((c), «expr = »(kernel.lift g f w c, a))]]
 instance : Mono (homologyCToK f g w) := by
   apply pseudoelement.mono_of_zero_of_map_zero
   intro a ha
   obtain ⟨a, rfl⟩ := pseudoelement.pseudo_surjective_of_epi (cokernel.π (kernel.lift g f w)) a
   apply_fun kernel.ι (cokernel.desc f g w)  at ha
-  simp only [pseudoelement.comp_apply, ← cokernel.π_desc, ← kernel.lift_ι, ← pseudoelement.apply_zero] at ha
-  simp only [← pseudoelement.comp_apply] at ha
+  simp only [← pseudoelement.comp_apply, cokernel.π_desc, kernel.lift_ι, pseudoelement.apply_zero] at ha
+  simp only [pseudoelement.comp_apply] at ha
   obtain ⟨b, hb⟩ : ∃ b, f b = _ := (pseudoelement.pseudo_exact_of_exact (exact_cokernel f)).2 _ ha
-  suffices ∃ c, kernel.lift g f w c = a by
-    obtain ⟨c, rfl⟩ := this
-    simp [pseudoelement.comp_apply]
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident c, \",\", ident rfl, \"⟩\", \":\", expr «expr∃ , »((c), «expr = »(kernel.lift g f w c, a))]]"
+  · simp [← pseudoelement.comp_apply]
+    
   use b
   apply_fun kernel.ι g
   swap
   · apply pseudoelement.pseudo_injective_of_mono
     
-  simpa [pseudoelement.comp_apply]
+  simpa [← pseudoelement.comp_apply]
 
 instance : Epi (homologyCToK f g w) := by
   apply pseudoelement.epi_of_pseudo_surjective
@@ -87,12 +89,12 @@ instance : Epi (homologyCToK f g w) := by
   obtain ⟨c, hc⟩ : ∃ c, cokernel.π f c = b
   apply pseudoelement.pseudo_surjective_of_epi (cokernel.π f)
   have : g c = 0 := by
-    dsimp' [← b]  at hc
+    dsimp' [b]  at hc
     rw
       [show g = cokernel.π f ≫ cokernel.desc f g w by
         simp ,
       pseudoelement.comp_apply, hc]
-    simp [pseudoelement.comp_apply]
+    simp [← pseudoelement.comp_apply]
   obtain ⟨d, hd⟩ : ∃ d, kernel.ι g d = c := by
     apply (pseudoelement.pseudo_exact_of_exact exact_kernel_ι).2 _ this
   use cokernel.π (kernel.lift g f w) d
@@ -100,8 +102,8 @@ instance : Epi (homologyCToK f g w) := by
   swap
   · apply pseudoelement.pseudo_injective_of_mono
     
-  simp only [pseudoelement.comp_apply, ← cokernel.π_desc, ← kernel.lift_ι]
-  simp only [← pseudoelement.comp_apply, ← hd, ← hc]
+  simp only [← pseudoelement.comp_apply, cokernel.π_desc, kernel.lift_ι]
+  simp only [pseudoelement.comp_apply, hd, hc]
 
 instance (w : f ≫ g = 0) : IsIso (homologyCToK f g w) :=
   is_iso_of_mono_of_epi _
@@ -133,59 +135,59 @@ def lift {W : A} (e : W ⟶ cokernel f) (he : e ≫ cokernel.desc f g w = 0) : W
 
 @[simp, reassoc]
 theorem π'_desc' {W : A} (e : kernel g ⟶ W) (he : kernel.lift g f w ≫ e = 0) : π' f g w ≫ desc' f g w e he = e := by
-  dsimp' [← π', ← desc']
+  dsimp' [π', desc']
   simp
 
 @[simp, reassoc]
 theorem lift_ι {W : A} (e : W ⟶ cokernel f) (he : e ≫ cokernel.desc f g w = 0) : lift f g w e he ≫ ι _ _ _ = e := by
-  dsimp' [← ι, ← lift]
+  dsimp' [ι, lift]
   simp
 
 @[simp, reassoc]
 theorem condition_π' : kernel.lift g f w ≫ π' f g w = 0 := by
-  dsimp' [← π']
+  dsimp' [π']
   simp
 
 @[simp, reassoc]
 theorem condition_ι : ι f g w ≫ cokernel.desc f g w = 0 := by
-  dsimp' [← ι]
+  dsimp' [ι]
   simp
 
 @[ext]
 theorem hom_from_ext {W : A} (a b : homology f g w ⟶ W) (h : π' f g w ≫ a = π' f g w ≫ b) : a = b := by
-  dsimp' [← π']  at h
+  dsimp' [π']  at h
   apply_fun fun e => (homologyIsoCokernelLift f g w).inv ≫ e
   swap
   · intro i j hh
     apply_fun fun e => (homologyIsoCokernelLift f g w).Hom ≫ e  at hh
     simpa using hh
     
-  simp only [← category.assoc] at h
+  simp only [category.assoc] at h
   exact coequalizer.hom_ext h
 
 @[ext]
 theorem hom_to_ext {W : A} (a b : W ⟶ homology f g w) (h : a ≫ ι f g w = b ≫ ι f g w) : a = b := by
-  dsimp' [← ι]  at h
+  dsimp' [ι]  at h
   apply_fun fun e => e ≫ (homologyIsoKernelDesc f g w).Hom
   swap
   · intro i j hh
     apply_fun fun e => e ≫ (homologyIsoKernelDesc f g w).inv  at hh
     simpa using hh
     
-  simp only [category.assoc] at h
+  simp only [← category.assoc] at h
   exact equalizer.hom_ext h
 
 @[simp, reassoc]
 theorem π'_ι : π' f g w ≫ ι f g w = kernel.ι _ ≫ cokernel.π _ := by
-  dsimp' [← π', ← ι, ← homologyIsoKernelDesc]
+  dsimp' [π', ι, homologyIsoKernelDesc]
   simp
 
 @[simp, reassoc]
 theorem π'_eq_π : (kernelSubobjectIso _).Hom ≫ π' f g w = π _ _ _ := by
-  dsimp' [← π', ← homologyIsoCokernelLift]
-  simp only [category.assoc]
+  dsimp' [π', homologyIsoCokernelLift]
+  simp only [← category.assoc]
   rw [iso.comp_inv_eq]
-  dsimp' [← π, ← homologyIsoCokernelImageToKernel']
+  dsimp' [π, homologyIsoCokernelImageToKernel']
   simp
 
 section
@@ -197,7 +199,7 @@ theorem π'_map (α β h) :
     π' _ _ _ ≫ map w w' α β h =
       kernel.map _ _ α.right β.right
           (by
-            simp [← h, ← β.w.symm]) ≫
+            simp [h, β.w.symm]) ≫
         π' _ _ _ :=
   by
   apply_fun fun e => (kernel_subobject_iso _).Hom ≫ e
@@ -206,10 +208,10 @@ theorem π'_map (α β h) :
     apply_fun fun e => (kernel_subobject_iso _).inv ≫ e  at hh
     simpa using hh
     
-  dsimp' [← map]
-  simp only [← π'_eq_π_assoc]
-  dsimp' [← π]
-  simp only [← cokernel.π_desc]
+  dsimp' [map]
+  simp only [π'_eq_π_assoc]
+  dsimp' [π]
+  simp only [cokernel.π_desc]
   rw [← iso.inv_comp_eq, ← category.assoc]
   have :
     (limits.kernel_subobject_iso g).inv ≫ limits.kernel_subobject_map β =
@@ -220,15 +222,15 @@ theorem π'_map (α β h) :
     dsimp'
     simp
   rw [this]
-  simp only [← category.assoc]
-  dsimp' [← π', ← homologyIsoCokernelLift]
-  simp only [← cokernel_iso_of_eq_inv_comp_desc, ← cokernel.π_desc_assoc]
+  simp only [category.assoc]
+  dsimp' [π', homologyIsoCokernelLift]
+  simp only [cokernel_iso_of_eq_inv_comp_desc, cokernel.π_desc_assoc]
   congr 1
   · congr
     exact h.symm
     
   · rw [iso.inv_comp_eq, ← category.assoc, iso.eq_comp_inv]
-    dsimp' [← homologyIsoCokernelImageToKernel']
+    dsimp' [homologyIsoCokernelImageToKernel']
     simp
     
 
@@ -240,24 +242,24 @@ theorem map_eq_desc'_lift_left (α β h) :
             simp ))
         (by
           ext
-          simp only [h, ← category.assoc, ← zero_comp, ← lift_ι, ← kernel.lift_ι_assoc]
+          simp only [← h, category.assoc, zero_comp, lift_ι, kernel.lift_ι_assoc]
           erw [← reassoc_of α.w]
           simp ) :=
   by
   apply homology.hom_from_ext
-  simp only [← π'_map, ← π'_desc']
-  dsimp' [← π', ← lift]
+  simp only [π'_map, π'_desc']
+  dsimp' [π', lift]
   rw [iso.eq_comp_inv]
-  dsimp' [← homologyIsoKernelDesc]
+  dsimp' [homologyIsoKernelDesc]
   ext
-  simp [← h]
+  simp [h]
 
 theorem map_eq_lift_desc'_left (α β h) :
     map w w' α β h =
       homology.lift _ _ _
         (homology.desc' _ _ _ (kernel.ι _ ≫ β.left ≫ cokernel.π _)
           (by
-            simp only [← kernel.lift_ι_assoc, h]
+            simp only [kernel.lift_ι_assoc, ← h]
             erw [← reassoc_of α.w]
             simp ))
         (by
@@ -273,28 +275,28 @@ theorem map_eq_desc'_lift_right (α β h) :
       homology.desc' _ _ _
         (homology.lift _ _ _ (kernel.ι _ ≫ α.right ≫ cokernel.π _)
           (by
-            simp [← h]))
+            simp [h]))
         (by
           ext
-          simp only [← category.assoc, ← zero_comp, ← lift_ι, ← kernel.lift_ι_assoc]
+          simp only [category.assoc, zero_comp, lift_ι, kernel.lift_ι_assoc]
           erw [← reassoc_of α.w]
           simp ) :=
   by
   rw [map_eq_desc'_lift_left]
   ext
-  simp [← h]
+  simp [h]
 
 theorem map_eq_lift_desc'_right (α β h) :
     map w w' α β h =
       homology.lift _ _ _
         (homology.desc' _ _ _ (kernel.ι _ ≫ α.right ≫ cokernel.π _)
           (by
-            simp only [← kernel.lift_ι_assoc]
+            simp only [kernel.lift_ι_assoc]
             erw [← reassoc_of α.w]
             simp ))
         (by
           ext
-          simp [← h]) :=
+          simp [h]) :=
   by
   rw [map_eq_desc'_lift_right]
   ext
@@ -306,11 +308,11 @@ theorem map_ι (α β h) :
       ι f g w ≫
         cokernel.map f f' α.left β.left
           (by
-            simp [← h, ← β.w.symm]) :=
+            simp [h, β.w.symm]) :=
   by
   rw [map_eq_lift_desc'_left, lift_ι]
   ext
-  simp only [category.assoc]
+  simp only [← category.assoc]
   rw [π'_ι, π'_desc', category.assoc, category.assoc, cokernel.π_desc]
 
 end

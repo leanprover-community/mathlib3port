@@ -29,12 +29,12 @@ variable (S)
 /-- The centralizer of a subset of a magma. -/
 @[to_additive add_centralizer " The centralizer of a subset of an additive magma. "]
 def Centralizer [Mul M] : Set M :=
-  { c | ∀, ∀ m ∈ S, ∀, m * c = c * m }
+  { c | ∀ m ∈ S, m * c = c * m }
 
 variable {S}
 
 @[to_additive mem_add_centralizer]
-theorem mem_centralizer_iff [Mul M] {c : M} : c ∈ Centralizer S ↔ ∀, ∀ m ∈ S, ∀, m * c = c * m :=
+theorem mem_centralizer_iff [Mul M] {c : M} : c ∈ Centralizer S ↔ ∀ m ∈ S, m * c = c * m :=
   Iff.rfl
 
 @[to_additive decidable_mem_add_centralizer]
@@ -45,11 +45,11 @@ variable (S)
 
 @[simp, to_additive zero_mem_add_centralizer]
 theorem one_mem_centralizer [MulOneClassₓ M] : (1 : M) ∈ Centralizer S := by
-  simp [← mem_centralizer_iff]
+  simp [mem_centralizer_iff]
 
 @[simp]
 theorem zero_mem_centralizer [MulZeroClassₓ M] : (0 : M) ∈ Centralizer S := by
-  simp [← mem_centralizer_iff]
+  simp [mem_centralizer_iff]
 
 variable {S} {a b : M}
 
@@ -127,7 +127,7 @@ theorem coe_centralizer : ↑(centralizer S) = S.Centralizer :=
 variable {S}
 
 @[to_additive]
-theorem mem_centralizer_iff {z : M} : z ∈ centralizer S ↔ ∀, ∀ g ∈ S, ∀, g * z = z * g :=
+theorem mem_centralizer_iff {z : M} : z ∈ centralizer S ↔ ∀ g ∈ S, g * z = z * g :=
   Iff.rfl
 
 @[to_additive]

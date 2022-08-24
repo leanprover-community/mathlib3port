@@ -28,7 +28,7 @@ theorem is_add_fundamental_domain_Ioc {T : ℝ} (hT : 0 < T) (t : ℝ)
   have : bijective (cod_restrict (fun n : ℤ => n • T) (AddSubgroup.zmultiples T) _) :=
     (Equivₓ.ofInjective (fun n : ℤ => n • T) (zsmul_strict_mono_left hT).Injective).Bijective
   refine' this.exists_unique_iff.2 _
-  simpa only [← add_commₓ x] using exists_unique_add_zsmul_mem_Ioc hT x t
+  simpa only [add_commₓ x] using exists_unique_add_zsmul_mem_Ioc hT x t
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
@@ -44,7 +44,7 @@ variable {f : ℝ → E} {T : ℝ}
 theorem interval_integral_add_eq_of_pos (hf : Periodic f T) (hT : 0 < T) (t s : ℝ) :
     (∫ x in t..t + T, f x) = ∫ x in s..s + T, f x := by
   haveI : Encodable (AddSubgroup.zmultiples T) := (countable_range _).toEncodable
-  simp only [← integral_of_le, ← hT.le, ← le_add_iff_nonneg_right]
+  simp only [integral_of_le, hT.le, le_add_iff_nonneg_right]
   haveI : vadd_invariant_measure (AddSubgroup.zmultiples T) ℝ volume := ⟨fun c s hs => measure_preimage_add _ _ _⟩
   exact (is_add_fundamental_domain_Ioc hT t).set_integral_eq (is_add_fundamental_domain_Ioc hT s) hf.map_vadd_zmultiples
 
@@ -57,7 +57,7 @@ theorem interval_integral_add_eq (hf : Periodic f T) (t s : ℝ) : (∫ x in t..
   · simp
     
   · rw [← neg_inj, ← integral_symm, ← integral_symm]
-    simpa only [sub_eq_add_neg, ← add_sub_cancel] using
+    simpa only [← sub_eq_add_neg, add_sub_cancel] using
       hf.neg.interval_integral_add_eq_of_pos (neg_pos.2 hT) (t + T) (s + T)
     
 
@@ -75,18 +75,18 @@ theorem interval_integral_add_zsmul_eq (hf : Periodic f T) (n : ℤ) (t : ℝ)
     (∫ x in t..t + n • T, f x) = n • ∫ x in t..t + T, f x := by
   -- Reduce to the case `b = 0`
   suffices (∫ x in 0 ..n • T, f x) = n • ∫ x in 0 ..T, f x by
-    simp only [← hf.interval_integral_add_eq t 0, ← (hf.zsmul n).interval_integral_add_eq t 0, ← zero_addₓ, ← this]
+    simp only [hf.interval_integral_add_eq t 0, (hf.zsmul n).interval_integral_add_eq t 0, zero_addₓ, this]
   -- First prove it for natural numbers
   have : ∀ m : ℕ, (∫ x in 0 ..m • T, f x) = m • ∫ x in 0 ..T, f x := by
     intros
     induction' m with m ih
     · simp
       
-    · simp only [← succ_nsmul', ← hf.interval_integral_add_eq_add 0 (m • T) h_int, ← ih, ← zero_addₓ]
+    · simp only [succ_nsmul', hf.interval_integral_add_eq_add 0 (m • T) h_int, ih, zero_addₓ]
       
   -- Then prove it for all integers
   cases' n with n n
-  · simp [this n]
+  · simp [← this n]
     
   · conv_rhs => rw [zsmul_neg_succ_of_nat]
     have h₀ : Int.negSucc n • T + (n + 1) • T = 0 := by

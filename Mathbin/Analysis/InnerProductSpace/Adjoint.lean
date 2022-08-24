@@ -52,116 +52,6 @@ variable [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 F] [InnerProductSpac
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
-namespace LinearMap
-
-/-! ### Symmetric operators -/
-
-
-/-- A (not necessarily bounded) operator on an inner product space is symmetric, if for all
-`x`, `y`, we have `⟪T x, y⟫ = ⟪x, T y⟫`. -/
-def IsSymmetric (T : E →ₗ[𝕜] E) : Prop :=
-  ∀ x y, ⟪T x, y⟫ = ⟪x, T y⟫
-
-section Real
-
-variable {E' : Type _} [InnerProductSpace ℝ E']
-
--- Todo: Generalize this to `is_R_or_C`.
-/-- An operator `T` on a `ℝ`-inner product space is symmetric if and only if it is
-`bilin_form.is_self_adjoint` with respect to the bilinear form given by the inner product. -/
-theorem is_symmetric_iff_bilin_form (T : E' →ₗ[ℝ] E') : IsSymmetric T ↔ bilinFormOfRealInner.IsSelfAdjoint T := by
-  simp [← is_symmetric, ← BilinForm.IsSelfAdjoint, ← BilinForm.IsAdjointPair]
-
-end Real
-
-theorem IsSymmetric.conj_inner_sym {T : E →ₗ[𝕜] E} (hT : IsSymmetric T) (x y : E) : conj ⟪T x, y⟫ = ⟪T y, x⟫ := by
-  rw [hT x y, inner_conj_sym]
-
-@[simp]
-theorem IsSymmetric.apply_clm {T : E →L[𝕜] E} (hT : IsSymmetric (T : E →ₗ[𝕜] E)) (x y : E) : ⟪T x, y⟫ = ⟪x, T y⟫ :=
-  hT x y
-
-theorem is_symmetric_zero : (0 : E →ₗ[𝕜] E).IsSymmetric := fun x y =>
-  (inner_zero_right : ⟪x, 0⟫ = 0).symm ▸ (inner_zero_left : ⟪0, y⟫ = 0)
-
-theorem is_symmetric_id : (LinearMap.id : E →ₗ[𝕜] E).IsSymmetric := fun x y => rfl
-
-theorem IsSymmetric.add {T S : E →ₗ[𝕜] E} (hT : T.IsSymmetric) (hS : S.IsSymmetric) : (T + S).IsSymmetric := by
-  intro x y
-  rw [LinearMap.add_apply, inner_add_left, hT x y, hS x y, ← inner_add_right]
-  rfl
-
-/-- The orthogonal projection is symmetric. -/
-theorem _root_.orthogonal_projection_is_symmetric [CompleteSpace E] (U : Submodule 𝕜 E) [CompleteSpace U] :
-    (U.subtypeL ∘L orthogonalProjection U : E →ₗ[𝕜] E).IsSymmetric :=
-  inner_orthogonal_projection_left_eq_right U
-
-/-- The **Hellinger--Toeplitz theorem**: if a symmetric operator is defined everywhere, then
-  it is automatically continuous. -/
-theorem IsSymmetric.continuous [CompleteSpace E] {T : E →ₗ[𝕜] E} (hT : IsSymmetric T) : Continuous T := by
-  -- We prove it by using the closed graph theorem
-  refine' T.continuous_of_seq_closed_graph fun u x y hu hTu => _
-  rw [← sub_eq_zero, ← inner_self_eq_zero]
-  have hlhs : ∀ k : ℕ, ⟪T (u k) - T x, y - T x⟫ = ⟪u k - x, T (y - T x)⟫ := by
-    intro k
-    rw [← T.map_sub, hT]
-  refine' tendsto_nhds_unique ((hTu.sub_const _).inner tendsto_const_nhds) _
-  simp_rw [hlhs]
-  rw [← @inner_zero_left 𝕜 E _ _ (T (y - T x))]
-  refine' Filter.Tendsto.inner _ tendsto_const_nhds
-  rw [← sub_self x]
-  exact hu.sub_const _
-
-/-- For a symmetric operator `T`, the function `λ x, ⟪T x, x⟫` is real-valued. -/
-@[simp]
-theorem IsSymmetric.coe_re_apply_inner_self_apply {T : E →L[𝕜] E} (hT : IsSymmetric (T : E →ₗ[𝕜] E)) (x : E) :
-    (T.reApplyInnerSelf x : 𝕜) = ⟪T x, x⟫ := by
-  suffices ∃ r : ℝ, ⟪T x, x⟫ = r by
-    obtain ⟨r, hr⟩ := this
-    simp [← hr, ← T.re_apply_inner_self_apply]
-  rw [← eq_conj_iff_real]
-  exact hT.conj_inner_sym x x
-
-/-- If a symmetric operator preserves a submodule, its restriction to that submodule is
-symmetric. -/
-theorem IsSymmetric.restrict_invariant {T : E →ₗ[𝕜] E} (hT : IsSymmetric T) {V : Submodule 𝕜 E}
-    (hV : ∀, ∀ v ∈ V, ∀, T v ∈ V) : IsSymmetric (T.restrict hV) := fun v w => hT v w
-
-theorem IsSymmetric.restrict_scalars {T : E →ₗ[𝕜] E} (hT : T.IsSymmetric) :
-    @LinearMap.IsSymmetric ℝ E _ (InnerProductSpace.isROrCToReal 𝕜 E)
-      (@LinearMap.restrictScalars ℝ 𝕜 _ _ _ _ _ _ (InnerProductSpace.isROrCToReal 𝕜 E).toModule
-        (InnerProductSpace.isROrCToReal 𝕜 E).toModule _ _ _ T) :=
-  fun x y => by
-  simp [← hT x y, ← real_inner_eq_re_inner, ← LinearMap.coe_restrict_scalars_eq_coe]
-
-section Complex
-
-variable {V : Type _} [InnerProductSpace ℂ V]
-
-/-- A linear operator on a complex inner product space is symmetric precisely when
-`⟪T v, v⟫_ℂ` is real for all v.-/
-theorem is_symmetric_iff_inner_map_self_real (T : V →ₗ[ℂ] V) : IsSymmetric T ↔ ∀ v : V, conj ⟪T v, v⟫_ℂ = ⟪T v, v⟫_ℂ :=
-  by
-  constructor
-  · intro hT v
-    apply is_symmetric.conj_inner_sym hT
-    
-  · intro h x y
-    nth_rw 1[← inner_conj_sym]
-    nth_rw 1[inner_map_polarization]
-    simp only [← star_ring_end_apply, ← star_div', ← star_sub, ← star_add, ← star_mul]
-    simp only [star_ring_end_apply]
-    rw [h (x + y), h (x - y), h (x + Complex.i • y), h (x - Complex.i • y)]
-    simp only [← Complex.conj_I]
-    rw [inner_map_polarization']
-    norm_num
-    ring
-    
-
-end Complex
-
-end LinearMap
-
 /-! ### Adjoint operator -/
 
 
@@ -184,7 +74,7 @@ theorem adjoint_aux_apply (A : E →L[𝕜] F) (x : F) :
   rfl
 
 theorem adjoint_aux_inner_left (A : E →L[𝕜] F) (x : E) (y : F) : ⟪adjointAux A y, x⟫ = ⟪y, A x⟫ := by
-  simp only [← adjoint_aux_apply, ← to_dual_symm_apply, ← to_sesq_form_apply_coe, ← coe_comp', ← innerSL_apply_coe]
+  simp only [adjoint_aux_apply, to_dual_symm_apply, to_sesq_form_apply_coe, coe_comp', innerSL_apply_coe]
 
 theorem adjoint_aux_inner_right (A : E →L[𝕜] F) (x : E) (y : F) : ⟪x, adjointAux A y⟫ = ⟪A x, y⟫ := by
   rw [← inner_conj_sym, adjoint_aux_inner_left, inner_conj_sym]
@@ -236,7 +126,7 @@ in reverse order. -/
 theorem adjoint_comp (A : F →L[𝕜] G) (B : E →L[𝕜] F) : (A ∘L B)† = B† ∘L A† := by
   ext v
   refine' ext_inner_left 𝕜 fun w => _
-  simp only [← adjoint_inner_right, ← ContinuousLinearMap.coe_comp', ← Function.comp_app]
+  simp only [adjoint_inner_right, ContinuousLinearMap.coe_comp', Function.comp_app]
 
 theorem apply_norm_sq_eq_inner_adjoint_left (A : E →L[𝕜] E) (x : E) : ∥A x∥ ^ 2 = re ⟪(A† * A) x, x⟫ := by
   have h : ⟪(A† * A) x, x⟫ = ⟪A x, A x⟫ := by
@@ -265,7 +155,7 @@ theorem eq_adjoint_iff (A : E →L[𝕜] F) (B : F →L[𝕜] E) : A = B† ↔ 
   ext x
   exact
     ext_inner_right 𝕜 fun y => by
-      simp only [← adjoint_inner_left, ← h x y]
+      simp only [adjoint_inner_left, h x y]
 
 @[simp]
 theorem adjoint_id : (ContinuousLinearMap.id 𝕜 E).adjoint = ContinuousLinearMap.id 𝕜 E := by
@@ -345,7 +235,7 @@ variable [CompleteSpace E'] [CompleteSpace F']
 theorem is_adjoint_pair_inner (A : E' →L[ℝ] F') :
     LinearMap.IsAdjointPair (sesqFormOfInner : E' →ₗ[ℝ] E' →ₗ[ℝ] ℝ) (sesqFormOfInner : F' →ₗ[ℝ] F' →ₗ[ℝ] ℝ) A (A†) :=
   fun x y => by
-  simp only [← sesq_form_of_inner_apply_apply, ← adjoint_inner_left, ← to_linear_map_eq_coe, ← coe_coe]
+  simp only [sesq_form_of_inner_apply_apply, adjoint_inner_left, to_linear_map_eq_coe, coe_coe]
 
 end Real
 
@@ -370,13 +260,13 @@ theorem is_symmetric {A : E →L[𝕜] E} (hA : IsSelfAdjoint A) : (A : E →ₗ
 /-- Conjugating preserves self-adjointness -/
 theorem conj_adjoint {T : E →L[𝕜] E} (hT : IsSelfAdjoint T) (S : E →L[𝕜] F) : IsSelfAdjoint (S ∘L T ∘L S.adjoint) := by
   rw [is_self_adjoint_iff'] at hT⊢
-  simp only [← hT, ← adjoint_comp, ← adjoint_adjoint]
+  simp only [hT, adjoint_comp, adjoint_adjoint]
   exact ContinuousLinearMap.comp_assoc _ _ _
 
 /-- Conjugating preserves self-adjointness -/
 theorem adjoint_conj {T : E →L[𝕜] E} (hT : IsSelfAdjoint T) (S : F →L[𝕜] E) : IsSelfAdjoint (S.adjoint ∘L T ∘L S) := by
   rw [is_self_adjoint_iff'] at hT⊢
-  simp only [← hT, ← adjoint_comp, ← adjoint_adjoint]
+  simp only [hT, adjoint_comp, adjoint_adjoint]
   exact ContinuousLinearMap.comp_assoc _ _ _
 
 theorem _root_.continuous_linear_map.is_self_adjoint_iff_is_symmetric {A : E →L[𝕜] E} :
@@ -463,7 +353,7 @@ in reverse order. -/
 theorem adjoint_comp (A : F →ₗ[𝕜] G) (B : E →ₗ[𝕜] F) : (A ∘ₗ B).adjoint = B.adjoint ∘ₗ A.adjoint := by
   ext v
   refine' ext_inner_left 𝕜 fun w => _
-  simp only [← adjoint_inner_right, ← LinearMap.coe_comp, ← Function.comp_app]
+  simp only [adjoint_inner_right, LinearMap.coe_comp, Function.comp_app]
 
 /-- The adjoint is unique: a map `A` is the adjoint of `B` iff it satisfies `⟪A x, y⟫ = ⟪x, B y⟫`
 for all `x` and `y`. -/
@@ -474,7 +364,7 @@ theorem eq_adjoint_iff (A : E →ₗ[𝕜] F) (B : F →ₗ[𝕜] E) : A = B.adj
   ext x
   exact
     ext_inner_right 𝕜 fun y => by
-      simp only [← adjoint_inner_left, ← h x y]
+      simp only [adjoint_inner_left, h x y]
 
 /-- The adjoint is unique: a map `A` is the adjoint of `B` iff it satisfies `⟪A x, y⟫ = ⟪x, B y⟫`
 for all basis vectors `x` and `y`. -/
@@ -486,7 +376,7 @@ theorem eq_adjoint_iff_basis {ι₁ : Type _} {ι₂ : Type _} (b₁ : Basis ι�
   refine' Basis.ext b₁ fun i₁ => _
   exact
     ext_inner_right_basis b₂ fun i₂ => by
-      simp only [← adjoint_inner_left, ← h i₁ i₂]
+      simp only [adjoint_inner_left, h i₁ i₂]
 
 theorem eq_adjoint_iff_basis_left {ι : Type _} (b : Basis ι 𝕜 E) (A : E →ₗ[𝕜] F) (B : F →ₗ[𝕜] E) :
     A = B.adjoint ↔ ∀ i y, ⟪A (b i), y⟫ = ⟪b i, B y⟫ := by
@@ -495,7 +385,7 @@ theorem eq_adjoint_iff_basis_left {ι : Type _} (b : Basis ι 𝕜 E) (A : E →
       rw [h, adjoint_inner_left], fun h => Basis.ext b fun i => _⟩
   exact
     ext_inner_right 𝕜 fun y => by
-      simp only [← h i, ← adjoint_inner_left]
+      simp only [h i, adjoint_inner_left]
 
 theorem eq_adjoint_iff_basis_right {ι : Type _} (b : Basis ι 𝕜 F) (A : E →ₗ[𝕜] F) (B : F →ₗ[𝕜] E) :
     A = B.adjoint ↔ ∀ i x, ⟪A x, b i⟫ = ⟪x, B (b i)⟫ := by
@@ -505,7 +395,7 @@ theorem eq_adjoint_iff_basis_right {ι : Type _} (b : Basis ι 𝕜 F) (A : E �
   ext x
   refine'
     ext_inner_right_basis b fun i => by
-      simp only [← h i, ← adjoint_inner_left]
+      simp only [h i, adjoint_inner_left]
 
 /-- `E →ₗ[𝕜] E` is a star algebra with the adjoint as the star operation. -/
 instance : HasStar (E →ₗ[𝕜] E) :=
@@ -544,23 +434,23 @@ variable [FiniteDimensional ℝ E'] [FiniteDimensional ℝ F']
 theorem is_adjoint_pair_inner (A : E' →ₗ[ℝ] F') :
     IsAdjointPair (sesqFormOfInner : E' →ₗ[ℝ] E' →ₗ[ℝ] ℝ) (sesqFormOfInner : F' →ₗ[ℝ] F' →ₗ[ℝ] ℝ) A A.adjoint :=
   fun x y => by
-  simp only [← sesq_form_of_inner_apply_apply, ← adjoint_inner_left]
+  simp only [sesq_form_of_inner_apply_apply, adjoint_inner_left]
 
 end Real
 
 /-- The Gram operator T†T is symmetric. -/
 theorem is_symmetric_adjoint_mul_self (T : E →ₗ[𝕜] E) : IsSymmetric (T.adjoint * T) := fun x y => by
-  simp only [← mul_apply, ← adjoint_inner_left, ← adjoint_inner_right]
+  simp only [mul_apply, adjoint_inner_left, adjoint_inner_right]
 
 /-- The Gram operator T†T is a positive operator. -/
 theorem re_inner_adjoint_mul_self_nonneg (T : E →ₗ[𝕜] E) (x : E) : 0 ≤ re ⟪x, (T.adjoint * T) x⟫ := by
-  simp only [← mul_apply, ← adjoint_inner_right, ← inner_self_eq_norm_sq_to_K]
+  simp only [mul_apply, adjoint_inner_right, inner_self_eq_norm_sq_to_K]
   norm_cast
   exact sq_nonneg _
 
 @[simp]
 theorem im_inner_adjoint_mul_self_eq_zero (T : E →ₗ[𝕜] E) (x : E) : im ⟪x, LinearMap.adjoint T (T x)⟫ = 0 := by
-  simp only [← mul_apply, ← adjoint_inner_right, ← inner_self_eq_norm_sq_to_K]
+  simp only [mul_apply, adjoint_inner_right, inner_self_eq_norm_sq_to_K]
   norm_cast
 
 end LinearMap
@@ -578,7 +468,7 @@ theorem conj_transpose_eq_adjoint (A : Matrix m n 𝕜) :
   rw [@LinearMap.eq_adjoint_iff _ (EuclideanSpace 𝕜 m) (EuclideanSpace 𝕜 n)]
   intro x y
   convert dot_product_assoc (conj ∘ (id x : m → 𝕜)) y A using 1
-  simp [← dot_product, ← mul_vec, ← RingHom.map_sum, star_ring_end_apply, ← mul_comm]
+  simp [dot_product, mul_vec, RingHom.map_sum, ← star_ring_end_apply, mul_comm]
 
 end Matrix
 

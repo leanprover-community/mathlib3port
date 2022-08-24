@@ -102,7 +102,7 @@ def succ₂ (t : ℕ × ℕ) : ℕ × ℕ :=
 
 theorem v_eq_succ_vp : u.V = succ₂ u.vp := by
   ext <;>
-    dsimp' [← v, ← vp, ← w, ← z, ← a, ← b, ← succ₂] <;>
+    dsimp' [v, vp, w, z, a, b, succ₂] <;>
       repeat'
           rw [Nat.succ_eq_add_one] <;>
         ring
@@ -115,10 +115,10 @@ def IsSpecial' : Prop :=
   u.w * u.z = succPnat (u.x * u.y)
 
 theorem is_special_iff : u.IsSpecial ↔ u.IsSpecial' := by
-  dsimp' [← is_special, ← is_special']
+  dsimp' [is_special, is_special']
   constructor <;> intro h
   · apply Eq
-    dsimp' [← w, ← z, ← succ_pnat]
+    dsimp' [w, z, succ_pnat]
     rw [← h]
     repeat'
       rw [Nat.succ_eq_add_one]
@@ -181,15 +181,15 @@ theorem flip_b : (flip u).b = u.a :=
   rfl
 
 theorem flip_is_reduced : (flip u).IsReduced ↔ u.IsReduced := by
-  dsimp' [← is_reduced, ← flip]
+  dsimp' [is_reduced, flip]
   constructor <;> intro h <;> exact h.symm
 
 theorem flip_is_special : (flip u).IsSpecial ↔ u.IsSpecial := by
-  dsimp' [← is_special, ← flip]
+  dsimp' [is_special, flip]
   rw [mul_comm u.x, mul_comm u.zp, add_commₓ u.zp]
 
 theorem flip_v : (flip u).V = u.V.swap := by
-  dsimp' [← v]
+  dsimp' [v]
   ext
   · simp only
     ring
@@ -220,11 +220,11 @@ def start (a b : ℕ+) : XgcdType :=
   ⟨0, 0, 0, 0, a - 1, b - 1⟩
 
 theorem start_is_special (a b : ℕ+) : (start a b).IsSpecial := by
-  dsimp' [← start, ← is_special]
+  dsimp' [start, is_special]
   rfl
 
 theorem start_v (a b : ℕ+) : (start a b).V = ⟨a, b⟩ := by
-  dsimp' [← start, ← v, ← xgcd_type.a, ← xgcd_type.b, ← w, ← z]
+  dsimp' [start, v, xgcd_type.a, xgcd_type.b, w, z]
   rw [one_mulₓ, one_mulₓ, zero_mul, zero_mul, zero_addₓ, add_zeroₓ]
   rw [← Nat.pred_eq_sub_one, ← Nat.pred_eq_sub_one]
   rw [Nat.succ_pred_eq_of_posₓ a.pos, Nat.succ_pred_eq_of_posₓ b.pos]
@@ -233,11 +233,11 @@ def finish : XgcdType :=
   XgcdType.mk u.wp ((u.wp + 1) * u.qp + u.x) u.y (u.y * u.qp + u.zp) u.bp u.bp
 
 theorem finish_is_reduced : u.finish.IsReduced := by
-  dsimp' [← is_reduced]
+  dsimp' [is_reduced]
   rfl
 
 theorem finish_is_special (hs : u.IsSpecial) : u.finish.IsSpecial := by
-  dsimp' [← is_special, ← finish]  at hs⊢
+  dsimp' [is_special, finish]  at hs⊢
   rw [add_mulₓ _ _ u.y, add_commₓ _ (u.x * u.y), ← hs]
   ring
 
@@ -270,7 +270,7 @@ theorem step_wf (hr : u.R ≠ 0) : sizeof u.step < sizeof u := by
   exact lt_of_succ_lt_succ h₁
 
 theorem step_is_special (hs : u.IsSpecial) : u.step.IsSpecial := by
-  dsimp' [← is_special, ← step]  at hs⊢
+  dsimp' [is_special, step]  at hs⊢
   rw [mul_addₓ, mul_comm u.y u.x, ← hs]
   ring
 
@@ -379,11 +379,11 @@ def gcdB' : ℕ+ :=
   succPnat ((xgcd a b).y + (xgcd a b).zp)
 
 theorem gcd_a'_coe : (gcdA' a b : ℕ) = gcdW a b + gcdX a b := by
-  dsimp' [← gcd_a', ← gcd_x, ← gcd_w, ← xgcd_type.w]
+  dsimp' [gcd_a', gcd_x, gcd_w, xgcd_type.w]
   rw [Nat.succ_eq_add_one, Nat.succ_eq_add_one, add_right_commₓ]
 
 theorem gcd_b'_coe : (gcdB' a b : ℕ) = gcdY a b + gcdZ a b := by
-  dsimp' [← gcd_b', ← gcd_y, ← gcd_z, ← xgcd_type.z]
+  dsimp' [gcd_b', gcd_y, gcd_z, xgcd_type.z]
   rw [Nat.succ_eq_add_one, Nat.succ_eq_add_one, add_assocₓ]
 
 theorem gcd_props :

@@ -44,14 +44,14 @@ theorem lt_iff_to_list_lt : ∀ {s₁ s₂ : Stringₓ}, s₁ < s₂ ↔ s₁.to
   | ⟨i₁⟩, ⟨i₂⟩ => by
     suffices ∀ {p₁ p₂ s₁ s₂}, ltb ⟨p₁, s₁⟩ ⟨p₂, s₂⟩ ↔ s₁ < s₂ from this
     intros
-    induction' s₁ with a s₁ IH generalizing p₁ p₂ s₂ <;> cases' s₂ with b s₂ <;> rw [ltb] <;> simp [← iterator.has_next]
+    induction' s₁ with a s₁ IH generalizing p₁ p₂ s₂ <;> cases' s₂ with b s₂ <;> rw [ltb] <;> simp [iterator.has_next]
     · rfl
       
     · exact iff_of_true rfl List.Lex.nil
       
     · exact iff_of_false Bool.ff_ne_tt (not_lt_of_lt List.Lex.nil)
       
-    · dsimp' [← iterator.has_next, ← iterator.curr, ← iterator.next]
+    · dsimp' [iterator.has_next, iterator.curr, iterator.next]
       split_ifs
       · subst b
         exact IH.trans list.lex.cons_iff.symm
@@ -110,9 +110,9 @@ theorem popn_empty {n : ℕ} : "".popn n = "" := by
   · rcases hs : "" with ⟨_ | ⟨hd, tl⟩⟩
     · rw [hs] at hn
       conv_rhs => rw [← hn]
-      simp only [← popn, ← mk_iterator, ← iterator.nextn, ← iterator.next]
+      simp only [popn, mk_iterator, iterator.nextn, iterator.next]
       
-    · simpa only [to_list_inj] using hs
+    · simpa only [← to_list_inj] using hs
       
     
 
@@ -124,18 +124,18 @@ instance : LinearOrderₓ Stringₓ where
   decidableLe := Stringₓ.decidableLe
   DecidableEq := by
     infer_instance
-  le_refl := fun a => le_iff_to_list_le.2 le_rfl
+  le_refl := fun a => le_iff_to_list_le.2 le_rflₓ
   le_trans := fun a b c => by
-    simp only [← le_iff_to_list_le]
+    simp only [le_iff_to_list_le]
     exact fun h₁ h₂ => h₁.trans h₂
   le_total := fun a b => by
-    simp only [← le_iff_to_list_le]
+    simp only [le_iff_to_list_le]
     exact le_totalₓ _ _
   le_antisymm := fun a b => by
-    simp only [← le_iff_to_list_le, to_list_inj]
+    simp only [le_iff_to_list_le, ← to_list_inj]
     apply le_antisymmₓ
   lt_iff_le_not_le := fun a b => by
-    simp only [← le_iff_to_list_le, ← lt_iff_to_list_lt, ← lt_iff_le_not_leₓ]
+    simp only [le_iff_to_list_le, lt_iff_to_list_lt, lt_iff_le_not_leₓ]
 
 end Stringₓ
 

@@ -79,15 +79,15 @@ private theorem symm_gen : map Prod.swap ((𝓤 α).lift' gen) ≤ (𝓤 α).lif
   calc
     map Prod.swap ((𝓤 α).lift' gen) = (𝓤 α).lift' fun s : Set (α × α) => { p | s ∈ p.2.val ×ᶠ p.1.val } := by
       delta' gen
-      simp [← map_lift'_eq, ← monotone_set_of, ← monotone_mem, ← Function.comp, ← image_swap_eq_preimage_swap,
+      simp [map_lift'_eq, monotone_set_of, monotone_mem, Function.comp, image_swap_eq_preimage_swap,
         -Subtype.val_eq_coe]
     _ ≤ (𝓤 α).lift' gen :=
       uniformity_lift_le_swap
         (monotone_principal.comp (monotone_set_of fun p => @monotone_mem (α × α) (p.2.val ×ᶠ p.1.val)))
         (by
           have h := fun p : Cauchyₓ α × Cauchyₓ α => @Filter.prod_comm _ _ p.2.val p.1.val
-          simp [← Function.comp, ← h, -Subtype.val_eq_coe, ← mem_map']
-          exact le_rfl)
+          simp [Function.comp, h, -Subtype.val_eq_coe, mem_map']
+          exact le_rflₓ)
     
 
 private theorem comp_rel_gen_gen_subset_gen_comp_rel {s t : Set (α × α)} :
@@ -110,7 +110,7 @@ private theorem comp_gen : (((𝓤 α).lift' gen).lift' fun s => CompRel s s) �
       rw [lift'_lift'_assoc]
       exact monotone_comp_rel monotone_id monotone_id
       exact monotone_gen
-    _ ≤ (𝓤 α).lift' gen := lift'_mono comp_le_uniformity le_rfl
+    _ ≤ (𝓤 α).lift' gen := lift'_mono comp_le_uniformity le_rflₓ
     
 
 instance : UniformSpace (Cauchyₓ α) :=
@@ -134,20 +134,20 @@ theorem uniform_inducing_pure_cauchy : UniformInducing (pure_cauchy : α → Cau
   ⟨have : (Preimage fun x : α × α => (pure_cauchy x.fst, pure_cauchy x.snd)) ∘ gen = id :=
       funext fun s =>
         Set.ext fun ⟨a₁, a₂⟩ => by
-          simp [← preimage, ← gen, ← pure_cauchy, ← prod_principal_principal]
+          simp [preimage, gen, pure_cauchy, prod_principal_principal]
     calc
       comap (fun x : α × α => (pure_cauchy x.fst, pure_cauchy x.snd)) ((𝓤 α).lift' gen) =
           (𝓤 α).lift' ((Preimage fun x : α × α => (pure_cauchy x.fst, pure_cauchy x.snd)) ∘ gen) :=
         comap_lift'_eq
       _ = 𝓤 α := by
-        simp [← this]
+        simp [this]
       ⟩
 
 theorem uniform_embedding_pure_cauchy : UniformEmbedding (pure_cauchy : α → Cauchyₓ α) :=
   { uniform_inducing_pure_cauchy with inj := fun a₁ a₂ h => pure_injective <| Subtype.ext_iff_val.1 h }
 
 theorem dense_range_pure_cauchy : DenseRange pure_cauchy := fun f => by
-  have h_ex : ∀, ∀ s ∈ 𝓤 (Cauchyₓ α), ∀, ∃ y : α, (f, pure_cauchy y) ∈ s := fun s hs =>
+  have h_ex : ∀ s ∈ 𝓤 (Cauchyₓ α), ∃ y : α, (f, pure_cauchy y) ∈ s := fun s hs =>
     let ⟨t'', ht''₁, (ht''₂ : gen t'' ⊆ s)⟩ := (mem_lift'_sets monotone_gen).mp hs
     let ⟨t', ht'₁, ht'₂⟩ := comp_mem_uniformity_sets ht''₁
     have : t' ∈ f.val ×ᶠ f.val := f.property.right ht'₁
@@ -159,9 +159,9 @@ theorem dense_range_pure_cauchy : DenseRange pure_cauchy := fun f => by
           ht'₂ <| prod_mk_mem_comp_rel (@h (a, x) ⟨h₁, hx⟩) h₂⟩
     ⟨x,
       ht''₂ <| by
-        dsimp' [← gen] <;> exact this⟩
-  simp only [← closure_eq_cluster_pts, ← ClusterPt, ← nhds_eq_uniformity, ← lift'_inf_principal_eq, ←
-    Set.inter_comm _ (range pure_cauchy), ← mem_set_of_eq]
+        dsimp' [gen] <;> exact this⟩
+  simp only [closure_eq_cluster_pts, ClusterPt, nhds_eq_uniformity, lift'_inf_principal_eq,
+    Set.inter_comm _ (range pure_cauchy), mem_set_of_eq]
   exact
     (lift'_ne_bot_iff <| monotone_const.inter monotone_preimage).mpr fun s hs =>
       let ⟨y, hy⟩ := h_ex s hs
@@ -185,7 +185,7 @@ theorem nonempty_Cauchy_iff : Nonempty (Cauchyₓ α) ↔ Nonempty α := by
 
 section
 
--- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option eqn_compiler.zeta
+-- ./././Mathport/Syntax/Translate/Basic.lean:335:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 instance : CompleteSpace (Cauchyₓ α) :=
@@ -199,7 +199,7 @@ instance : CompleteSpace (Cauchyₓ α) :=
           (f ×ᶠ pure x).sets_of_superset (prod_mem_prod ht' hx) h
         f.sets_of_superset ht' <| Subset.trans this (preimage_mono ht₂)
     ⟨f', by
-      simp [← nhds_eq_uniformity] <;> assumption⟩
+      simp [nhds_eq_uniformity] <;> assumption⟩
 
 end
 
@@ -268,7 +268,7 @@ theorem Cauchy_eq {α : Type _} [Inhabited α] [UniformSpace α] [CompleteSpace 
     rcases mem_uniformity_is_closed tu with ⟨d, du, dc, dt⟩
     refine' H { p | (lim p.1.1, lim p.2.1) ∈ t } (Cauchyₓ.mem_uniformity'.2 ⟨d, du, fun f g h => _⟩)
     rcases mem_prod_iff.1 h with ⟨x, xf, y, yg, h⟩
-    have limc : ∀ (f : Cauchyₓ α), ∀ x ∈ f.1, ∀, lim f.1 ∈ Closure x := by
+    have limc : ∀ (f : Cauchyₓ α), ∀ x ∈ f.1, lim f.1 ∈ Closure x := by
       intro f x xf
       rw [closure_eq_cluster_pts]
       exact f.2.1.mono (le_inf f.2.le_nhds_Lim (le_principal_iff.2 xf))
@@ -512,7 +512,7 @@ theorem map_id : Completion.map (@id α) = id :=
 theorem extension_map [CompleteSpace γ] [SeparatedSpace γ] {f : β → γ} {g : α → β} (hf : UniformContinuous f)
     (hg : UniformContinuous g) : Completion.extension f ∘ Completion.map g = Completion.extension (f ∘ g) :=
   Completion.ext (continuous_extension.comp continuous_map) continuous_extension <| by
-    intro a <;> simp only [← hg, ← hf, ← hf.comp hg, ← (· ∘ ·), ← map_coe, ← extension_coe]
+    intro a <;> simp only [hg, hf, hf.comp hg, (· ∘ ·), map_coe, extension_coe]
 
 theorem map_comp {g : β → γ} {f : α → β} (hg : UniformContinuous g) (hf : UniformContinuous f) :
     Completion.map g ∘ Completion.map f = Completion.map (g ∘ f) :=

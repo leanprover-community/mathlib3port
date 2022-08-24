@@ -218,7 +218,7 @@ theorem compl_adj (G : SimpleGraph V) (v w : V) : Gᶜ.Adj v w ↔ v ≠ w ∧ �
   Iff.rfl
 
 /-- The difference of two graphs `x \ y` has the edges of `x` with the edges of `y` removed. -/
-instance : HasSdiff (SimpleGraph V) :=
+instance : Sdiff (SimpleGraph V) :=
   ⟨fun x y =>
     { Adj := x.Adj \ y.Adj,
       symm := fun v w h => by
@@ -338,7 +338,7 @@ theorem adj_iff_exists_edge {v w : V} : G.Adj v w ↔ v ≠ w ∧ ∃ e ∈ G.Ed
     
 
 theorem adj_iff_exists_edge_coe : G.Adj a b ↔ ∃ e : G.EdgeSet, ↑e = ⟦(a, b)⟧ := by
-  simp only [← mem_edge_set, ← exists_prop, ← SetCoe.exists, ← exists_eq_right, ← Subtype.coe_mk]
+  simp only [mem_edge_set, exists_prop, SetCoe.exists, exists_eq_right, Subtype.coe_mk]
 
 theorem edge_other_ne {e : Sym2 V} (he : e ∈ G.EdgeSet) {v : V} (h : v ∈ e) : h.other ≠ v := by
   erw [← Sym2.other_spec h, Sym2.eq_swap] at he
@@ -426,7 +426,7 @@ theorem Dart.symm_ne (d : G.Dart) : d.symm ≠ d :=
 
 theorem dart_edge_eq_iff : ∀ d₁ d₂ : G.Dart, d₁.edge = d₂.edge ↔ d₁ = d₂ ∨ d₁ = d₂.symm := by
   rintro ⟨p, hp⟩ ⟨q, hq⟩
-  simp [← Sym2.mk_eq_mk_iff]
+  simp [Sym2.mk_eq_mk_iff]
 
 theorem dart_edge_eq_mk_iff : ∀ {d : G.Dart} {p : V × V}, d.edge = ⟦p⟧ ↔ d.toProd = p ∨ d.toProd = p.swap := by
   rintro ⟨p, h⟩
@@ -529,15 +529,15 @@ theorem mem_neighbor_set (v w : V) : w ∈ G.NeighborSet v ↔ G.Adj v w :=
 
 @[simp]
 theorem mem_incidence_set (v w : V) : ⟦(v, w)⟧ ∈ G.IncidenceSet v ↔ G.Adj v w := by
-  simp [← incidence_set]
+  simp [incidence_set]
 
 theorem mem_incidence_iff_neighbor {v w : V} : ⟦(v, w)⟧ ∈ G.IncidenceSet v ↔ w ∈ G.NeighborSet v := by
-  simp only [← mem_incidence_set, ← mem_neighbor_set]
+  simp only [mem_incidence_set, mem_neighbor_set]
 
 theorem adj_incidence_set_inter {v : V} {e : Sym2 V} (he : e ∈ G.EdgeSet) (h : v ∈ e) :
     G.IncidenceSet v ∩ G.IncidenceSet h.other = {e} := by
   ext e'
-  simp only [← incidence_set, ← Set.mem_sep_eq, ← Set.mem_inter_eq, ← Set.mem_singleton_iff]
+  simp only [incidence_set, Set.mem_sep_eq, Set.mem_inter_eq, Set.mem_singleton_iff]
   refine' ⟨fun h' => _, _⟩
   · rw [← Sym2.other_spec h]
     exact (Sym2.mem_and_mem_iff (edge_other_ne G he h).symm).mp ⟨h'.1.2, h'.2.2⟩
@@ -569,7 +569,7 @@ theorem card_neighbor_set_union_compl_neighbor_set [Fintype V] (G : SimpleGraph 
 
 theorem neighbor_set_compl (G : SimpleGraph V) (v : V) : Gᶜ.NeighborSet v = G.NeighborSet vᶜ \ {v} := by
   ext w
-  simp [← and_comm, ← eq_comm]
+  simp [and_comm, eq_comm]
 
 /-- The set of common neighbors between two vertices `v` and `w` in a graph `G` is the
 intersection of the neighbor sets of `v` and `w`.
@@ -601,7 +601,7 @@ instance decidableMemCommonNeighbors [DecidableRel G.Adj] (v w : V) : DecidableP
 
 theorem common_neighbors_top_eq {v w : V} : (⊤ : SimpleGraph V).CommonNeighbors v w = Set.Univ \ {v, w} := by
   ext u
-  simp [← common_neighbors, ← eq_comm, ← not_or_distrib.symm]
+  simp [common_neighbors, eq_comm, not_or_distrib.symm]
 
 section Incidence
 
@@ -615,7 +615,7 @@ def otherVertexOfIncident {v : V} {e : Sym2 V} (h : e ∈ G.IncidenceSet v) : V 
 theorem edge_other_incident_set {v : V} {e : Sym2 V} (h : e ∈ G.IncidenceSet v) :
     e ∈ G.IncidenceSet (G.otherVertexOfIncident h) := by
   use h.1
-  simp [← other_vertex_of_incident, ← Sym2.other_mem']
+  simp [other_vertex_of_incident, Sym2.other_mem']
 
 theorem incidence_other_prop {v : V} {e : Sym2 V} (h : e ∈ G.IncidenceSet v) :
     G.otherVertexOfIncident h ∈ G.NeighborSet v := by
@@ -635,7 +635,7 @@ def incidenceSetEquivNeighborSet (v : V) : G.IncidenceSet v ≃ G.NeighborSet v 
   toFun := fun e => ⟨G.otherVertexOfIncident e.2, G.incidence_other_prop e.2⟩
   invFun := fun w => ⟨⟦(v, w.1)⟧, G.mem_incidence_iff_neighbor.mpr w.2⟩
   left_inv := fun x => by
-    simp [← other_vertex_of_incident]
+    simp [other_vertex_of_incident]
   right_inv := fun ⟨w, hw⟩ => by
     simp
 
@@ -651,7 +651,7 @@ See also: `simple_graph.subgraph.delete_edges`. -/
 def deleteEdges (s : Set (Sym2 V)) : SimpleGraph V where
   Adj := G.Adj \ Sym2.ToRel s
   symm := fun a b => by
-    simp [← adj_comm, ← Sym2.eq_swap]
+    simp [adj_comm, Sym2.eq_swap]
 
 @[simp]
 theorem delete_edges_adj (s : Set (Sym2 V)) (v w : V) : (G.deleteEdges s).Adj v w ↔ G.Adj v w ∧ ¬⟦(v, w)⟧ ∈ s :=
@@ -669,7 +669,7 @@ theorem compl_eq_delete_edges : Gᶜ = (⊤ : SimpleGraph V).deleteEdges G.EdgeS
 theorem delete_edges_delete_edges (s s' : Set (Sym2 V)) : (G.deleteEdges s).deleteEdges s' = G.deleteEdges (s ∪ s') :=
   by
   ext
-  simp [← and_assoc, ← not_or_distrib]
+  simp [and_assoc, not_or_distrib]
 
 @[simp]
 theorem delete_edges_empty_eq : G.deleteEdges ∅ = G := by
@@ -686,12 +686,12 @@ theorem delete_edges_le (s : Set (Sym2 V)) : G.deleteEdges s ≤ G := by
   simp (config := { contextual := true })
 
 theorem delete_edges_le_of_le {s s' : Set (Sym2 V)} (h : s ⊆ s') : G.deleteEdges s' ≤ G.deleteEdges s := fun v w => by
-  simp (config := { contextual := true })only [← delete_edges_adj, ← and_imp, ← true_andₓ]
+  simp (config := { contextual := true })only [delete_edges_adj, and_imp, true_andₓ]
   exact fun ha hn hs => hn (h hs)
 
 theorem delete_edges_eq_inter_edge_set (s : Set (Sym2 V)) : G.deleteEdges s = G.deleteEdges (s ∩ G.EdgeSet) := by
   ext
-  simp (config := { contextual := true })[← imp_false]
+  simp (config := { contextual := true })[imp_false]
 
 /-! ## Map and comap -/
 
@@ -811,12 +811,12 @@ theorem card_neighbor_set_eq_degree : Fintype.card (G.NeighborSet v) = G.degree 
   (Set.to_finset_card _).symm
 
 theorem degree_pos_iff_exists_adj : 0 < G.degree v ↔ ∃ w, G.Adj v w := by
-  simp only [← degree, ← card_pos, ← Finset.Nonempty, ← mem_neighbor_finset]
+  simp only [degree, card_pos, Finset.Nonempty, mem_neighbor_finset]
 
 theorem degree_compl [Fintype (Gᶜ.NeighborSet v)] [Fintype V] : Gᶜ.degree v = Fintype.card V - 1 - G.degree v := by
   classical
   rw [← card_neighbor_set_union_compl_neighbor_set G v, Set.to_finset_union]
-  simp [← card_disjoint_union (set.to_finset_disjoint_iff.mpr (compl_neighbor_set_disjoint G v))]
+  simp [card_disjoint_union (set.to_finset_disjoint_iff.mpr (compl_neighbor_set_disjoint G v))]
 
 instance incidenceSetFintype [DecidableEq V] : Fintype (G.IncidenceSet v) :=
   Fintype.ofEquiv (G.NeighborSet v) (G.incidenceSetEquivNeighborSet v).symm
@@ -841,10 +841,10 @@ theorem mem_incidence_finset [DecidableEq V] (e : Sym2 V) : e ∈ G.incidenceFin
   Set.mem_to_finset
 
 theorem incidence_finset_eq_filter [DecidableEq V] [Fintype G.EdgeSet] :
-    G.incidenceFinset v = G.edgeFinset.filter (HasMem.Mem v) := by
+    G.incidenceFinset v = G.edgeFinset.filter (Membership.Mem v) := by
   ext e
   refine' Sym2.ind (fun x y => _) e
-  simp [← mk_mem_incidence_set_iff]
+  simp [mk_mem_incidence_set_iff]
 
 end FiniteAt
 
@@ -892,8 +892,7 @@ theorem neighbor_finset_eq_filter {v : V} [DecidableRel G.Adj] : G.neighborFinse
 
 theorem neighbor_finset_compl [DecidableEq V] [DecidableRel G.Adj] (v : V) :
     Gᶜ.neighborFinset v = G.neighborFinset vᶜ \ {v} := by
-  simp only [← neighbor_finset, ← neighbor_set_compl, ← Set.to_finset_diff, ← Set.to_finset_compl, ←
-    Set.to_finset_singleton]
+  simp only [neighbor_finset, neighbor_set_compl, Set.to_finset_diff, Set.to_finset_compl, Set.to_finset_singleton]
 
 @[simp]
 theorem complete_graph_degree [DecidableEq V] (v : V) : (⊤ : SimpleGraph V).degree v = Fintype.card V - 1 := by
@@ -922,7 +921,7 @@ theorem exists_minimal_degree_vertex [DecidableRel G.Adj] [Nonempty V] : ∃ v, 
   obtain ⟨v, _, rfl⟩ := mem_image.mp (mem_of_min ht)
   refine'
     ⟨v, by
-      simp [← min_degree, ← ht]⟩
+      simp [min_degree, ht]⟩
 
 /-- The minimum degree in the graph is at most the degree of any particular vertex. -/
 theorem min_degree_le_degree [DecidableRel G.Adj] (v : V) : G.minDegree ≤ G.degree v := by
@@ -953,7 +952,7 @@ the lemma implies there exists a vertex.
 theorem exists_maximal_degree_vertex [DecidableRel G.Adj] [Nonempty V] : ∃ v, G.maxDegree = G.degree v := by
   obtain ⟨t, ht⟩ := max_of_nonempty (univ_nonempty.image fun v => G.degree v)
   have ht₂ := mem_of_max ht
-  simp only [← mem_image, ← mem_univ, ← exists_prop_of_true] at ht₂
+  simp only [mem_image, mem_univ, exists_prop_of_true] at ht₂
   rcases ht₂ with ⟨v, rfl⟩
   refine' ⟨v, _⟩
   rw [max_degree, ht]
@@ -1035,11 +1034,11 @@ theorem Adj.card_common_neighbors_lt_degree {G : SimpleGraph V} [DecidableRel G.
 
 theorem card_common_neighbors_top [DecidableEq V] {v w : V} (h : v ≠ w) :
     Fintype.card ((⊤ : SimpleGraph V).CommonNeighbors v w) = Fintype.card V - 2 := by
-  simp only [← common_neighbors_top_eq, Set.to_finset_card, ← Set.to_finset_diff]
+  simp only [common_neighbors_top_eq, ← Set.to_finset_card, Set.to_finset_diff]
   rw [Finset.card_sdiff]
-  · simp [← Finset.card_univ, ← h]
+  · simp [Finset.card_univ, h]
     
-  · simp only [← Set.to_finset_mono, ← Set.subset_univ]
+  · simp only [Set.to_finset_mono, Set.subset_univ]
     
 
 end Finite
@@ -1121,7 +1120,7 @@ def mapSpanningSubgraphs {G G' : SimpleGraph V} (h : G ≤ G') : G →g G' where
 
 theorem mapEdgeSet.injective (hinj : Function.Injective f) : Function.Injective f.mapEdgeSet := by
   rintro ⟨e₁, h₁⟩ ⟨e₂, h₂⟩
-  dsimp' [← hom.map_edge_set]
+  dsimp' [hom.map_edge_set]
   repeat'
     rw [Subtype.mk_eq_mk]
   apply Sym2.map.injective hinj
@@ -1270,15 +1269,15 @@ def mapEdgeSet : G.EdgeSet ≃ G'.EdgeSet where
   invFun := Hom.mapEdgeSet f.symm
   left_inv := by
     rintro ⟨e, h⟩
-    simp only [← hom.map_edge_set, ← Sym2.map_map, ← RelIso.coe_coe_fn, ← RelEmbedding.coe_coe_fn, ← Subtype.mk_eq_mk, ←
-      Subtype.coe_mk, ← coe_coe]
+    simp only [hom.map_edge_set, Sym2.map_map, RelIso.coe_coe_fn, RelEmbedding.coe_coe_fn, Subtype.mk_eq_mk,
+      Subtype.coe_mk, coe_coe]
     apply congr_fun
     convert Sym2.map_id
     exact funext fun _ => RelIso.symm_apply_apply _ _
   right_inv := by
     rintro ⟨e, h⟩
-    simp only [← hom.map_edge_set, ← Sym2.map_map, ← RelIso.coe_coe_fn, ← RelEmbedding.coe_coe_fn, ← Subtype.mk_eq_mk, ←
-      Subtype.coe_mk, ← coe_coe]
+    simp only [hom.map_edge_set, Sym2.map_map, RelIso.coe_coe_fn, RelEmbedding.coe_coe_fn, Subtype.mk_eq_mk,
+      Subtype.coe_mk, coe_coe]
     apply congr_fun
     convert Sym2.map_id
     exact funext fun _ => RelIso.apply_symm_apply _ _
@@ -1290,7 +1289,7 @@ def mapNeighborSet (v : V) : G.NeighborSet v ≃ G'.NeighborSet (f v) where
   invFun := fun w =>
     ⟨f.symm w, by
       convert f.symm.apply_mem_neighbor_set_iff.mpr w.2
-      simp only [← RelIso.symm_apply_apply]⟩
+      simp only [RelIso.symm_apply_apply]⟩
   left_inv := fun w => by
     simp
   right_inv := fun w => by

@@ -305,7 +305,7 @@ protected def removeOp (α : F.op ⟶ G.op) : G ⟶ F where
   app := fun X => (α.app (op X)).unop
   naturality' := fun X Y f =>
     Quiver.Hom.op_inj <| by
-      simpa only [← functor.op_map] using (α.naturality f.op).symm
+      simpa only [functor.op_map] using (α.naturality f.op).symm
 
 @[simp]
 theorem remove_op_id (F : C ⥤ D) : NatTrans.removeOp (𝟙 F.op) = 𝟙 F :=
@@ -318,7 +318,7 @@ protected def removeUnop {F G : Cᵒᵖ ⥤ Dᵒᵖ} (α : F.unop ⟶ G.unop) : 
   app := fun X => (α.app (unop X)).op
   naturality' := fun X Y f =>
     Quiver.Hom.unop_inj <| by
-      simpa only [← functor.unop_map] using (α.naturality f.unop).symm
+      simpa only [functor.unop_map] using (α.naturality f.unop).symm
 
 @[simp]
 theorem remove_unop_id (F : Cᵒᵖ ⥤ Dᵒᵖ) : NatTrans.removeUnop (𝟙 F.unop) = 𝟙 F :=
@@ -357,7 +357,7 @@ protected def removeLeftOp (α : F.leftOp ⟶ G.leftOp) : G ⟶ F where
   app := fun X => (α.app (op X)).op
   naturality' := fun X Y f =>
     Quiver.Hom.unop_inj <| by
-      simpa only [← functor.left_op_map] using (α.naturality f.op).symm
+      simpa only [functor.left_op_map] using (α.naturality f.op).symm
 
 @[simp]
 theorem remove_left_op_id : NatTrans.removeLeftOp (𝟙 F.leftOp) = 𝟙 F :=
@@ -396,7 +396,7 @@ protected def removeRightOp (α : F.rightOp ⟶ G.rightOp) : G ⟶ F where
   app := fun X => (α.app X.unop).unop
   naturality' := fun X Y f =>
     Quiver.Hom.op_inj <| by
-      simpa only [← functor.right_op_map] using (α.naturality f.unop).symm
+      simpa only [functor.right_op_map] using (α.naturality f.unop).symm
 
 @[simp]
 theorem remove_right_op_id : NatTrans.removeRightOp (𝟙 F.rightOp) = 𝟙 F :=
@@ -425,9 +425,9 @@ def unop {X Y : Cᵒᵖ} (f : X ≅ Y) : Y.unop ≅ X.unop where
   Hom := f.Hom.unop
   inv := f.inv.unop
   hom_inv_id' := by
-    simp only [unop_comp, ← f.inv_hom_id, ← unop_id]
+    simp only [← unop_comp, f.inv_hom_id, unop_id]
   inv_hom_id' := by
-    simp only [unop_comp, ← f.hom_inv_id, ← unop_id]
+    simp only [← unop_comp, f.hom_inv_id, unop_id]
 
 @[simp]
 theorem unop_op {X Y : Cᵒᵖ} (f : X ≅ Y) : f.unop.op = f := by
@@ -597,7 +597,7 @@ def opUnopEquiv : (C ⥤ D)ᵒᵖ ≌ Cᵒᵖ ⥤ Dᵒᵖ where
     NatIso.ofComponents (fun F => F.unop.opUnopIso.op)
       (by
         intro F G f
-        dsimp' [← op_unop_iso]
+        dsimp' [op_unop_iso]
         rw
           [show f = f.unop.op by
             simp ,

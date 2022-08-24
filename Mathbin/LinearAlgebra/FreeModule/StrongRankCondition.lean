@@ -56,6 +56,6 @@ instance (priority := 100) comm_ring_strong_rank_condition : StrongRankCondition
     obtain ⟨P, hP⟩ := X_dvd_iff.2 (erase_same (minpoly R g) 0)
     rw [← monomial_add_erase (minpoly R g) 0, hP] at heval
     replace heval := congr_fun heval (Finₓ.last n)
-    simpa [← hnex] using heval
+    simpa [hnex] using heval
   contradiction
 

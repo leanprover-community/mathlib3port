@@ -97,10 +97,10 @@ theorem Closure.is_subfield : IsSubfield (Closure S) :=
       rcases id hb with ⟨r, hr, s, hs, rfl⟩
       classical
       by_cases' hq0 : q = 0
-      · simp [← hb, ← hq0]
+      · simp [hb, hq0]
         
       by_cases' hs0 : s = 0
-      · simp [← ha, ← hs0]
+      · simp [ha, hs0]
         
       exact
         ⟨p * s + q * r,

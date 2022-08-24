@@ -302,24 +302,24 @@ def powerBasisAux' (hg : g.Monic) : Basis (Finₓ g.natDegree) R (AdjoinRoot g) 
       invFun := fun c => mk g <| ∑ i : Finₓ g.natDegree, monomial i (c i),
       map_add' := fun f₁ f₂ =>
         funext fun i => by
-          simp only [← (mod_by_monic_hom hg).map_add, ← coeff_add, ← Pi.add_apply],
+          simp only [(mod_by_monic_hom hg).map_add, coeff_add, Pi.add_apply],
       map_smul' := fun f₁ f₂ =>
         funext fun i => by
-          simp only [← (mod_by_monic_hom hg).map_smul, ← coeff_smul, ← Pi.smul_apply, ← RingHom.id_apply],
+          simp only [(mod_by_monic_hom hg).map_smul, coeff_smul, Pi.smul_apply, RingHom.id_apply],
       left_inv := fun f =>
         induction_on g f fun f =>
           Eq.symm <|
             mk_eq_mk.mpr <| by
-              simp only [← mod_by_monic_hom_mk, ← sum_mod_by_monic_coeff hg degree_le_nat_degree]
+              simp only [mod_by_monic_hom_mk, sum_mod_by_monic_coeff hg degree_le_nat_degree]
               rw [mod_by_monic_eq_sub_mul_div _ hg, sub_sub_cancel]
               exact dvd_mul_right _ _,
       right_inv := fun x =>
         funext fun i => by
           nontriviality R
-          simp only [← mod_by_monic_hom_mk]
+          simp only [mod_by_monic_hom_mk]
           rw [(mod_by_monic_eq_self_iff hg).mpr, finset_sum_coeff, Finset.sum_eq_single i] <;>
             try
-              simp only [← coeff_monomial, ← eq_self_iff_true, ← if_true]
+              simp only [coeff_monomial, eq_self_iff_true, if_true]
           · intro j _ hj
             exact if_neg (fin.coe_injective.ne hj)
             
@@ -344,7 +344,7 @@ def powerBasis' (hg : g.Monic) : PowerBasis R (AdjoinRoot g) where
   dim := g.natDegree
   Basis := powerBasisAux' hg
   basis_eq_pow := fun i => by
-    simp only [← power_basis_aux', ← Basis.coe_of_equiv_fun, ← LinearEquiv.coe_symm_mk]
+    simp only [power_basis_aux', Basis.coe_of_equiv_fun, LinearEquiv.coe_symm_mk]
     rw [Finset.sum_eq_single i]
     · rw [Function.update_same, monomial_one_right_eq_X_pow, (mk g).map_pow, mk_X]
       
@@ -371,10 +371,10 @@ theorem minpoly_root (hf : f ≠ 0) : minpoly K (root f) = f * c f.leadingCoeff�
   intro q q_monic q_aeval
   have commutes : (lift (algebraMap K (AdjoinRoot f)) (root f) q_aeval).comp (mk q) = mk f := by
     ext
-    · simp only [← RingHom.comp_apply, ← mk_C, ← lift_of]
+    · simp only [RingHom.comp_apply, mk_C, lift_of]
       rfl
       
-    · simp only [← RingHom.comp_apply, ← mk_X, ← lift_root]
+    · simp only [RingHom.comp_apply, mk_X, lift_root]
       
   rw [degree_eq_nat_degree f'_monic.ne_zero, degree_eq_nat_degree q_monic.ne_zero, WithBot.coe_le_coe,
     nat_degree_mul hf, nat_degree_C, add_zeroₓ]
@@ -442,7 +442,7 @@ see `adjoin_root.minpoly.equiv_adjoin`. -/
 def Minpoly.toAdjoin : AdjoinRoot (minpoly R x) →ₐ[R] adjoin R ({x} : Set S) :=
   liftHom _ ⟨x, self_mem_adjoin_singleton R x⟩
     (by
-      simp [Subalgebra.coe_eq_zero, ← aeval_subalgebra_coe])
+      simp [← Subalgebra.coe_eq_zero, aeval_subalgebra_coe])
 
 variable {R x}
 
@@ -450,7 +450,7 @@ theorem Minpoly.to_adjoin_apply' (a : AdjoinRoot (minpoly R x)) :
     Minpoly.toAdjoin R x a =
       liftHom (minpoly R x) (⟨x, self_mem_adjoin_singleton R x⟩ : adjoin R ({x} : Set S))
         (by
-          simp [Subalgebra.coe_eq_zero, ← aeval_subalgebra_coe])
+          simp [← Subalgebra.coe_eq_zero, aeval_subalgebra_coe])
         a :=
   rfl
 
@@ -462,7 +462,7 @@ variable (R x)
 theorem Minpoly.toAdjoin.surjective : Function.Surjective (Minpoly.toAdjoin R x) := by
   rw [← range_top_iff_surjective, _root_.eq_top_iff, ← adjoin_adjoin_coe_preimage]
   refine' adjoin_le _
-  simp only [← AlgHom.coe_range, ← Set.mem_range]
+  simp only [AlgHom.coe_range, Set.mem_range]
   rintro ⟨y₁, y₂⟩ h
   refine'
     ⟨mk (minpoly R x) X, by
@@ -474,7 +474,7 @@ theorem Minpoly.toAdjoin.injective (hx : IsIntegral R x) : Function.Injective (M
   refine' (injective_iff_map_eq_zero _).2 fun P₁ hP₁ => _
   obtain ⟨P, hP⟩ := mk_surjective (minpoly.monic hx) P₁
   by_cases' hPzero : P = 0
-  · simpa [← hPzero] using hP.symm
+  · simpa [hPzero] using hP.symm
     
   have hPcont : P.content ≠ 0 := fun h => hPzero (content_eq_zero_iff.1 h)
   rw [← hP, minpoly.to_adjoin_apply', lift_hom_mk, ← Subalgebra.coe_eq_zero, aeval_subalgebra_coe, SetLike.coe_mk,
@@ -484,7 +484,7 @@ theorem Minpoly.toAdjoin.injective (hx : IsIntegral R x) : Function.Injective (M
       hP₁
   obtain ⟨Q, hQ⟩ := minpoly.gcd_domain_dvd hx P.is_primitive_prim_part.ne_zero hP₁
   rw [P.eq_C_content_mul_prim_part] at hP
-  simpa [← hQ] using hP.symm
+  simpa [hQ] using hP.symm
 
 /-- The algebra isomorphism `adjoin_root (minpoly R x) ≃ₐ[R] adjoin R x` -/
 @[simps]
@@ -625,15 +625,14 @@ def Polynomial.quotQuotEquivComm :
 theorem Polynomial.quot_quot_equiv_comm_mk (p : R[X]) :
     (Polynomial.quotQuotEquivComm I f) (Ideal.Quotient.mk _ (p.map I)) = Ideal.Quotient.mk _ (Ideal.Quotient.mk _ p) :=
   by
-  simp only [← polynomial.quot_quot_equiv_comm, ← quotient_equiv_mk, ←
-    polynomial_quotient_equiv_quotient_polynomial_map_mk]
+  simp only [polynomial.quot_quot_equiv_comm, quotient_equiv_mk, polynomial_quotient_equiv_quotient_polynomial_map_mk]
 
 @[simp]
 theorem Polynomial.quot_quot_equiv_comm_symm_mk_mk (p : R[X]) :
     (Polynomial.quotQuotEquivComm I f).symm (Ideal.Quotient.mk _ (Ideal.Quotient.mk _ p)) =
       Ideal.Quotient.mk _ (p.map I) :=
   by
-  simp only [← polynomial.quot_quot_equiv_comm, ← quotient_equiv_symm_mk, ←
+  simp only [polynomial.quot_quot_equiv_comm, quotient_equiv_symm_mk,
     polynomial_quotient_equiv_quotient_polynomial_symm_mk]
 
 /-- The natural isomorphism `R[α]/I[α] ≅ (R/I)[X]/(f mod I)` for `α` a root of `f : polynomial R`

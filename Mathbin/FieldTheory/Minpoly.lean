@@ -119,7 +119,7 @@ theorem min {p : A[X]} (pmonic : p.Monic) (hp : Polynomial.aeval x p = 0) : degr
   split_ifs with hx
   · exact le_of_not_ltₓ (WellFounded.not_lt_min degree_lt_wf _ hx ⟨pmonic, hp⟩)
     
-  · simp only [← degree_zero, ← bot_le]
+  · simp only [degree_zero, bot_le]
     
 
 @[nontriviality]
@@ -157,8 +157,8 @@ theorem nat_degree_pos (hx : IsIntegral A x) : 0 < natDegree (minpoly A x) := by
   have eq_one : minpoly A x = 1 := by
     rw [eq_C_of_nat_degree_eq_zero ndeg_eq_zero]
     convert C_1
-    simpa only [← ndeg_eq_zero.symm] using (monic hx).leadingCoeff
-  simpa only [← eq_one, ← AlgHom.map_one, ← one_ne_zero] using aeval A x
+    simpa only [ndeg_eq_zero.symm] using (monic hx).leadingCoeff
+  simpa only [eq_one, AlgHom.map_one, one_ne_zero] using aeval A x
 
 /-- The degree of a minimal polynomial is positive. -/
 theorem degree_pos (hx : IsIntegral A x) : 0 < degree (minpoly A x) :=
@@ -173,22 +173,21 @@ theorem eq_X_sub_C_of_algebra_map_inj (a : A) (hf : Function.Injective (algebraM
     apply WithBot.coe_le_coe.1
     rw [← degree_eq_nat_degree (ne_zero (@is_integral_algebra_map A B _ _ _ a)), WithTop.coe_one, ← degree_X_sub_C a]
     refine' min A (algebraMap A B a) (monic_X_sub_C a) _
-    simp only [← aeval_C, ← aeval_X, ← AlgHom.map_sub, ← sub_self]
+    simp only [aeval_C, aeval_X, AlgHom.map_sub, sub_self]
   have hdeg : (minpoly A (algebraMap A B a)).degree = 1 := by
     apply (degree_eq_iff_nat_degree_eq (ne_zero (@is_integral_algebra_map A B _ _ _ a))).2
     apply le_antisymmₓ hdegle (nat_degree_pos (@is_integral_algebra_map A B _ _ _ a))
   have hrw := eq_X_add_C_of_degree_eq_one hdeg
-  simp only [← monic (@is_integral_algebra_map A B _ _ _ a), ← one_mulₓ, ← monic.leading_coeff, ← RingHom.map_one] at
-    hrw
+  simp only [monic (@is_integral_algebra_map A B _ _ _ a), one_mulₓ, monic.leading_coeff, RingHom.map_one] at hrw
   have h0 : (minpoly A (algebraMap A B a)).coeff 0 = -a := by
     have hroot := aeval A (algebraMap A B a)
     rw [hrw, add_commₓ] at hroot
-    simp only [← aeval_C, ← aeval_X, ← aeval_add] at hroot
+    simp only [aeval_C, aeval_X, aeval_add] at hroot
     replace hroot := eq_neg_of_add_eq_zero_left hroot
     rw [← RingHom.map_neg _ a] at hroot
     exact hf hroot
   rw [hrw]
-  simp only [← h0, ← RingHom.map_neg, ← sub_eq_add_neg]
+  simp only [h0, RingHom.map_neg, sub_eq_add_neg]
 
 end Ringₓ
 
@@ -231,20 +230,20 @@ theorem irreducible (hx : IsIntegral A x) : Irreducible (minpoly A x) := by
   obtain ⟨a, b, ha_nunit, hb_nunit, hab_eq⟩ := hred
   have coeff_prod : a.leading_coeff * b.leading_coeff = 1 := by
     rw [← monic.def.1 (monic hx), ← hab_eq]
-    simp only [← leading_coeff_mul]
+    simp only [leading_coeff_mul]
   have hamonic : (a * C b.leading_coeff).Monic := by
     rw [monic.def]
-    simp only [← coeff_prod, ← leading_coeff_mul, ← leading_coeff_C]
+    simp only [coeff_prod, leading_coeff_mul, leading_coeff_C]
   have hbmonic : (b * C a.leading_coeff).Monic := by
     rw [monic.def, mul_comm]
-    simp only [← coeff_prod, ← leading_coeff_mul, ← leading_coeff_C]
+    simp only [coeff_prod, leading_coeff_mul, leading_coeff_C]
   have prod : minpoly A x = a * C b.leading_coeff * (b * C a.leading_coeff) := by
     symm
     calc
       a * C b.leading_coeff * (b * C a.leading_coeff) = a * b * (C a.leading_coeff * C b.leading_coeff) := by
         ring
       _ = a * b * C (a.leading_coeff * b.leading_coeff) := by
-        simp only [← RingHom.map_mul]
+        simp only [RingHom.map_mul]
       _ = a * b := by
         rw [coeff_prod, C_1, mul_oneₓ]
       _ = minpoly A x := hab_eq
@@ -285,7 +284,7 @@ theorem degree_le_of_ne_zero {p : A[X]} (pnz : p ≠ 0) (hp : Polynomial.aeval x
     degree (minpoly A x) ≤ degree (p * c (leadingCoeff p)⁻¹) :=
       min A x (monic_mul_leading_coeff_inv pnz)
         (by
-          simp [← hp])
+          simp [hp])
     _ = degree p := degree_mul_leading_coeff_inv p pnz
     
 
@@ -305,7 +304,7 @@ theorem unique {p : A[X]} (pmonic : p.Monic) (hp : Polynomial.aeval x p = 0)
   have :=
     degree_le_of_ne_zero A x hnz
       (by
-        simp [← hp])
+        simp [hp])
   contrapose! this
   apply degree_sub_lt _ (ne_zero hx)
   · rw [(monic hx).leadingCoeff, pmonic.leading_coeff]
@@ -318,7 +317,7 @@ See also `minpoly.gcd_domain_dvd` which relaxes the assumptions on `A` in exchan
 assumptions on `B`. -/
 theorem dvd {p : A[X]} (hp : Polynomial.aeval x p = 0) : minpoly A x ∣ p := by
   by_cases' hp0 : p = 0
-  · simp only [← hp0, ← dvd_zero]
+  · simp only [hp0, dvd_zero]
     
   have hx : IsIntegral A x := by
     rw [← is_algebraic_iff_is_integral]
@@ -391,10 +390,10 @@ theorem eq_of_algebra_map_eq {K S T : Type _} [Field K] [CommRingₓ S] [CommRin
 theorem add_algebra_map {B : Type _} [CommRingₓ B] [Algebra A B] {x : B} (hx : IsIntegral A x) (a : A) :
     minpoly A (x + algebraMap A B a) = (minpoly A x).comp (X - c a) := by
   refine' (minpoly.unique _ _ ((minpoly.monic hx).comp_X_sub_C _) _ fun q qmo hq => _).symm
-  · simp [← aeval_comp]
+  · simp [aeval_comp]
     
   · have : (Polynomial.aeval x) (q.comp (X + C a)) = 0 := by
-      simpa [← aeval_comp] using hq
+      simpa [aeval_comp] using hq
     have H := minpoly.min A x (qmo.comp_X_add_C _) this
     rw [degree_eq_nat_degree qmo.ne_zero, degree_eq_nat_degree ((minpoly.monic hx).comp_X_sub_C _).ne_zero,
       WithBot.coe_le_coe, nat_degree_comp, nat_degree_X_sub_C, mul_oneₓ]
@@ -404,7 +403,7 @@ theorem add_algebra_map {B : Type _} [CommRingₓ B] [Algebra A B] {x : B} (hx :
 
 theorem sub_algebra_map {B : Type _} [CommRingₓ B] [Algebra A B] {x : B} (hx : IsIntegral A x) (a : A) :
     minpoly A (x - algebraMap A B a) = (minpoly A x).comp (X + c a) := by
-  simpa [← sub_eq_add_neg] using add_algebra_map hx (-a)
+  simpa [sub_eq_add_neg] using add_algebra_map hx (-a)
 
 section GcdDomain
 
@@ -481,7 +480,7 @@ theorem gcd_domain_unique {P : R[X]} (hmo : P.Monic) (hP : Polynomial.aeval s P 
   have :=
     gcd_domain_degree_le_of_ne_zero hs hnz
       (by
-        simp [← hP])
+        simp [hP])
   contrapose! this
   refine' degree_sub_lt _ (ne_zero hs) _
   · exact le_antisymmₓ (min R s hmo hP) (Pmin (minpoly R s) (monic hs) (aeval R s))
@@ -506,12 +505,12 @@ variable (A)
 /-- The minimal polynomial of `0` is `X`. -/
 @[simp]
 theorem zero : minpoly A (0 : B) = X := by
-  simpa only [← add_zeroₓ, ← C_0, ← sub_eq_add_neg, ← neg_zero, ← RingHom.map_zero] using eq_X_sub_C B (0 : A)
+  simpa only [add_zeroₓ, C_0, sub_eq_add_neg, neg_zero, RingHom.map_zero] using eq_X_sub_C B (0 : A)
 
 /-- The minimal polynomial of `1` is `X - 1`. -/
 @[simp]
 theorem one : minpoly A (1 : B) = X - 1 := by
-  simpa only [← RingHom.map_one, ← C_1, ← sub_eq_add_neg] using eq_X_sub_C B (1 : A)
+  simpa only [RingHom.map_one, C_1, sub_eq_add_neg] using eq_X_sub_C B (1 : A)
 
 end Ringₓ
 
@@ -526,7 +525,7 @@ theorem prime (hx : IsIntegral A x) : Prime (minpoly A x) := by
   refine' ⟨ne_zero hx, not_is_unit A x, _⟩
   rintro p q ⟨d, h⟩
   have : Polynomial.aeval x (p * q) = 0 := by
-    simp [← h, ← aeval A x]
+    simp [h, aeval A x]
   replace : Polynomial.aeval x p = 0 ∨ Polynomial.aeval x q = 0 := by
     simpa
   exact Or.imp (dvd A x) (dvd A x) this
@@ -557,7 +556,7 @@ theorem coeff_zero_eq_zero (hx : IsIntegral A x) : coeff (minpoly A x) 0 = 0 ↔
 /-- The minimal polynomial of a nonzero element has nonzero constant coefficient. -/
 theorem coeff_zero_ne_zero (hx : IsIntegral A x) (h : x ≠ 0) : coeff (minpoly A x) 0 ≠ 0 := by
   contrapose! h
-  simpa only [← hx, ← coeff_zero_eq_zero] using h
+  simpa only [hx, coeff_zero_eq_zero] using h
 
 end IsDomain
 

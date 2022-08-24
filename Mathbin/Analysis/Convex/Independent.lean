@@ -146,7 +146,7 @@ theorem convex_independent_set_iff_inter_convex_hull_subset {s : Set E} :
 /-- If a set is convex independent, a point in the set is not in the convex hull of the other
 points. See `convex_independent_iff_not_mem_convex_hull_diff` for the indexed family version.  -/
 theorem convex_independent_set_iff_not_mem_convex_hull_diff {s : Set E} :
-    ConvexIndependent 𝕜 (fun x => x : s → E) ↔ ∀, ∀ x ∈ s, ∀, x ∉ convexHull 𝕜 (s \ {x}) := by
+    ConvexIndependent 𝕜 (fun x => x : s → E) ↔ ∀ x ∈ s, x ∉ convexHull 𝕜 (s \ {x}) := by
   rw [convex_independent_set_iff_inter_convex_hull_subset]
   constructor
   · rintro hs x hxs hx

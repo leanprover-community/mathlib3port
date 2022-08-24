@@ -45,7 +45,7 @@ namespace OpenNhds
 
 instance (x : X) : PartialOrderₓ (OpenNhds x) where
   le := fun U V => U.1 ≤ V.1
-  le_refl := fun _ => le_rfl
+  le_refl := fun _ => le_rflₓ
   le_trans := fun _ _ _ => le_transₓ
   le_antisymm := fun _ _ i j => FullSubcategory.ext _ _ <| le_antisymmₓ i j
 

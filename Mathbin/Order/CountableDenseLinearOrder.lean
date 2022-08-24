@@ -39,8 +39,8 @@ namespace Order
     before `hi`. Then there is an element of `α` strictly between `lo`
     and `hi`. -/
 theorem exists_between_finsets {α : Type _} [LinearOrderₓ α] [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α]
-    [nonem : Nonempty α] (lo hi : Finset α) (lo_lt_hi : ∀, ∀ x ∈ lo, ∀, ∀ y ∈ hi, ∀, x < y) :
-    ∃ m : α, (∀, ∀ x ∈ lo, ∀, x < m) ∧ ∀, ∀ y ∈ hi, ∀, m < y :=
+    [nonem : Nonempty α] (lo hi : Finset α) (lo_lt_hi : ∀ x ∈ lo, ∀ y ∈ hi, x < y) :
+    ∃ m : α, (∀ x ∈ lo, x < m) ∧ ∀ y ∈ hi, m < y :=
   if nlo : lo.Nonempty then
     if nhi : hi.Nonempty then
       -- both sets are nonempty, use densely_ordered
@@ -64,7 +64,7 @@ theorem exists_between_finsets {α : Type _} [LinearOrderₓ α] [DenselyOrdered
 
 variable (α β : Type _) [LinearOrderₓ α] [LinearOrderₓ β]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (p q «expr ∈ » f)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (p q «expr ∈ » f)
 /-- The type of partial order isomorphisms between `α` and `β` defined on finite subsets.
     A partial order isomorphism is encoded as a finite subset of `α × β`, consisting
     of pairs which should be identified. -/
@@ -78,7 +78,7 @@ instance : Inhabited (PartialIso α β) :=
   ⟨⟨∅, fun p h q => h.elim⟩⟩
 
 instance : Preorderₓ (PartialIso α β) :=
-  Subtype.preorder _
+  Subtype.preorderₓ _
 
 variable {α β}
 
@@ -88,15 +88,14 @@ the domain of `f` is `b`'s relation to the image of `f`.
 Thus, if `a` is not already in `f`, then we can extend `f` by sending `a` to `b`.
 -/
 theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] (f : PartialIso α β) (a : α) :
-    ∃ b : β, ∀, ∀ p ∈ f.val, ∀, cmp (Prod.fst p) a = cmp (Prod.snd p) b := by
+    ∃ b : β, ∀ p ∈ f.val, cmp (Prod.fst p) a = cmp (Prod.snd p) b := by
   by_cases' h : ∃ b, (a, b) ∈ f.val
   · cases' h with b hb
     exact ⟨b, fun p hp => f.prop _ hp _ hb⟩
     
   have :
-    ∀,
-      ∀ x ∈ (f.val.filter fun p : α × β => p.fst < a).Image Prod.snd,
-        ∀, ∀ y ∈ (f.val.filter fun p : α × β => a < p.fst).Image Prod.snd, ∀, x < y :=
+    ∀ x ∈ (f.val.filter fun p : α × β => p.fst < a).Image Prod.snd,
+      ∀ y ∈ (f.val.filter fun p : α × β => a < p.fst).Image Prod.snd, x < y :=
     by
     intro x hx y hy
     rw [Finset.mem_image] at hx hy
@@ -143,7 +142,7 @@ def definedAtLeft [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty 
     refine' ⟨⟨insert (a, b) f.val, fun p hp q hq => _⟩, ⟨b, Finset.mem_insert_self _ _⟩, Finset.subset_insert _ _⟩
     rw [Finset.mem_insert] at hp hq
     rcases hp with (rfl | pf) <;> rcases hq with (rfl | qf)
-    · simp only [← cmp_self_eq_eq]
+    · simp only [cmp_self_eq_eq]
       
     · rw [cmp_eq_cmp_symm]
       exact a_b _ qf

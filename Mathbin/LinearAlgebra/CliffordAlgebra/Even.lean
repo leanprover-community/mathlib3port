@@ -83,23 +83,23 @@ def even.ι : EvenHom Q (even Q) where
   bilin :=
     LinearMap.mk₂ R (fun m₁ m₂ => ⟨ι Q m₁ * ι Q m₂, ι_mul_ι_mem_even_odd_zero _ _ _⟩)
       (fun _ _ _ => by
-        simp only [← LinearMap.map_add, ← add_mulₓ]
+        simp only [LinearMap.map_add, add_mulₓ]
         rfl)
       (fun _ _ _ => by
-        simp only [← LinearMap.map_smul, ← smul_mul_assoc]
+        simp only [LinearMap.map_smul, smul_mul_assoc]
         rfl)
       (fun _ _ _ => by
-        simp only [← LinearMap.map_add, ← mul_addₓ]
+        simp only [LinearMap.map_add, mul_addₓ]
         rfl)
       fun _ _ _ => by
-      simp only [← LinearMap.map_smul, ← mul_smul_comm]
+      simp only [LinearMap.map_smul, mul_smul_comm]
       rfl
   contract := fun m => Subtype.ext <| ι_sq_scalar Q m
   contract_mid := fun m₁ m₂ m₃ =>
     Subtype.ext <|
       calc
         ι Q m₁ * ι Q m₂ * (ι Q m₂ * ι Q m₃) = ι Q m₁ * (ι Q m₂ * ι Q m₂ * ι Q m₃) := by
-          simp only [← mul_assoc]
+          simp only [mul_assoc]
         _ = Q m₂ • (ι Q m₁ * ι Q m₃) := by
           rw [Algebra.smul_def, ι_sq_scalar, Algebra.left_comm]
         

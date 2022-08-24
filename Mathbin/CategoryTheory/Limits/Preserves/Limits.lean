@@ -45,7 +45,7 @@ theorem preserves_lift_map_cone (c₁ c₂ : Cone F) (t : IsLimit c₁) :
     (PreservesLimit.preserves t).lift (G.mapCone c₂) = G.map (t.lift c₂) :=
   ((PreservesLimit.preserves t).uniq (G.mapCone c₂) _
       (by
-        simp [G.map_comp])).symm
+        simp [← G.map_comp])).symm
 
 variable [HasLimit F] [HasLimit (F ⋙ G)]
 
@@ -67,7 +67,7 @@ theorem preserves_limits_iso_inv_π (j) : (preservesLimitIso G F).inv ≫ G.map 
 theorem lift_comp_preserves_limits_iso_hom (t : Cone F) :
     G.map (limit.lift _ t) ≫ (preservesLimitIso G F).Hom = limit.lift (F ⋙ G) (G.mapCone _) := by
   ext
-  simp [G.map_comp]
+  simp [← G.map_comp]
 
 variable [PreservesLimitsOfShape J G] [HasLimitsOfShape J D] [HasLimitsOfShape J C]
 
@@ -80,8 +80,8 @@ def preservesLimitNatIso : lim ⋙ G ≅ (whiskeringRight J C D).obj G ⋙ lim :
       intro _ _ f
       ext
       dsimp'
-      simp only [← preserves_limits_iso_hom_π, ← whisker_right_app, ← lim_map_π, ← category.assoc, ←
-        preserves_limits_iso_hom_π_assoc, G.map_comp])
+      simp only [preserves_limits_iso_hom_π, whisker_right_app, lim_map_π, category.assoc,
+        preserves_limits_iso_hom_π_assoc, ← G.map_comp])
 
 end
 
@@ -94,7 +94,7 @@ theorem preserves_desc_map_cocone (c₁ c₂ : Cocone F) (t : IsColimit c₁) :
     (PreservesColimit.preserves t).desc (G.mapCocone _) = G.map (t.desc c₂) :=
   ((PreservesColimit.preserves t).uniq (G.mapCocone _) _
       (by
-        simp [G.map_comp])).symm
+        simp [← G.map_comp])).symm
 
 variable [HasColimit F] [HasColimit (F ⋙ G)]
 
@@ -118,7 +118,7 @@ theorem ι_preserves_colimits_iso_hom (j : J) :
 theorem preserves_colimits_iso_inv_comp_desc (t : Cocone F) :
     (preservesColimitIso G F).inv ≫ G.map (colimit.desc _ t) = colimit.desc _ (G.mapCocone t) := by
   ext
-  simp [G.map_comp]
+  simp [← G.map_comp]
 
 variable [PreservesColimitsOfShape J G] [HasColimitsOfShape J D] [HasColimitsOfShape J C]
 
@@ -133,8 +133,8 @@ def preservesColimitNatIso : colim ⋙ G ≅ (whiskeringRight J C D).obj G ⋙ c
       ext
       dsimp'
       erw [ι_colim_map_assoc]
-      simp only [← ι_preserves_colimits_iso_inv, ← whisker_right_app, ← category.assoc, ←
-        ι_preserves_colimits_iso_inv_assoc, G.map_comp]
+      simp only [ι_preserves_colimits_iso_inv, whisker_right_app, category.assoc, ι_preserves_colimits_iso_inv_assoc, ←
+        G.map_comp]
       erw [ι_colim_map])
 
 end

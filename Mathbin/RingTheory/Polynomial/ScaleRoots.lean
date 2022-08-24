@@ -29,7 +29,7 @@ noncomputable def scaleRoots (p : R[X]) (s : R) : R[X] :=
 @[simp]
 theorem coeff_scale_roots (p : R[X]) (s : R) (i : ℕ) : (scaleRoots p s).coeff i = coeff p i * s ^ (p.natDegree - i) :=
   by
-  simp (config := { contextual := true })[← scale_roots, ← coeff_monomial]
+  simp (config := { contextual := true })[scale_roots, coeff_monomial]
 
 theorem coeff_scale_roots_nat_degree (p : R[X]) (s : R) : (scaleRoots p s).coeff p.natDegree = p.leadingCoeff := by
   rw [leading_coeff, coeff_scale_roots, tsub_self, pow_zeroₓ, mul_oneₓ]
@@ -54,7 +54,7 @@ theorem support_scale_roots_eq (p : R[X]) {s : R} (hs : s ∈ nonZeroDivisors R)
   le_antisymmₓ (support_scale_roots_le p s)
     (by
       intro i
-      simp only [← coeff_scale_roots, ← Polynomial.mem_support_iff]
+      simp only [coeff_scale_roots, Polynomial.mem_support_iff]
       intro p_ne_zero ps_zero
       have := pow_mem hs (p.nat_degree - i) _ ps_zero
       contradiction)
@@ -74,10 +74,10 @@ theorem degree_scale_roots (p : R[X]) {s : R} : degree (scaleRoots p s) = degree
 
 @[simp]
 theorem nat_degree_scale_roots (p : R[X]) (s : R) : natDegree (scaleRoots p s) = natDegree p := by
-  simp only [← nat_degree, ← degree_scale_roots]
+  simp only [nat_degree, degree_scale_roots]
 
 theorem monic_scale_roots_iff {p : R[X]} (s : R) : Monic (scaleRoots p s) ↔ Monic p := by
-  simp only [← monic, ← leading_coeff, ← nat_degree_scale_roots, ← coeff_scale_roots_nat_degree]
+  simp only [monic, leading_coeff, nat_degree_scale_roots, coeff_scale_roots_nat_degree]
 
 theorem scale_roots_eval₂_mul {p : S[X]} (f : S →+* R) (r : R) (s : S) :
     eval₂ f (f s * r) (scaleRoots p s) = f s ^ p.natDegree * eval₂ f r p :=
@@ -85,12 +85,12 @@ theorem scale_roots_eval₂_mul {p : S[X]} (f : S →+* R) (r : R) (s : S) :
     eval₂ f (f s * r) (scaleRoots p s) =
         (scaleRoots p s).support.Sum fun i => f (coeff p i * s ^ (p.natDegree - i)) * (f s * r) ^ i :=
       by
-      simp [← eval₂_eq_sum, ← sum_def]
+      simp [eval₂_eq_sum, sum_def]
     _ = p.support.Sum fun i => f (coeff p i * s ^ (p.natDegree - i)) * (f s * r) ^ i :=
       Finset.sum_subset (support_scale_roots_le p s) fun i hi hi' => by
         let this : coeff p i * s ^ (p.natDegree - i) = 0 := by
           simpa using hi'
-        simp [← this]
+        simp [this]
     _ = p.support.Sum fun i : ℕ => f (p.coeff i) * f s ^ (p.natDegree - i + i) * r ^ i :=
       Finset.sum_congr rfl fun i hi => by
         simp_rw [f.map_mul, f.map_pow, pow_addₓ, mul_powₓ, mul_assoc]
@@ -100,7 +100,7 @@ theorem scale_roots_eval₂_mul {p : S[X]} (f : S →+* R) (r : R) (s : S) :
         exact le_nat_degree_of_ne_zero (polynomial.mem_support_iff.mp hi)
     _ = f s ^ p.natDegree * p.support.Sum fun i : ℕ => f (p.coeff i) * r ^ i := Finset.mul_sum.symm
     _ = f s ^ p.natDegree * eval₂ f r p := by
-      simp [← eval₂_eq_sum, ← sum_def]
+      simp [eval₂_eq_sum, sum_def]
     
 
 theorem scale_roots_eval₂_eq_zero {p : S[X]} (f : S →+* R) {r : R} {s : S} (hr : eval₂ f r p = 0) :
@@ -125,7 +125,7 @@ theorem scale_roots_aeval_eq_zero_of_aeval_div_eq_zero [Algebra A K] (inj : Func
 theorem map_scale_roots (p : R[X]) (x : R) (f : R →+* S) (h : f p.leadingCoeff ≠ 0) :
     (p.scaleRoots x).map f = (p.map f).scaleRoots (f x) := by
   ext
-  simp [← Polynomial.nat_degree_map_of_leading_coeff_ne_zero _ h]
+  simp [Polynomial.nat_degree_map_of_leading_coeff_ne_zero _ h]
 
 end Polynomial
 

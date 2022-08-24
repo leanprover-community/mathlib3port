@@ -58,7 +58,7 @@ def of (V : Type u) [AddCommGroupₓ V] [Module K V] [FiniteDimensional K V] : F
     infer_instance⟩
 
 instance : HasForget₂ (FinVect.{u} K) (ModuleCat.{u} K) := by
-  dsimp' [← FinVect]
+  dsimp' [FinVect]
   infer_instance
 
 instance : Full (forget₂ (FinVect K) (ModuleCat.{u} K)) where preimage := fun X Y f => f

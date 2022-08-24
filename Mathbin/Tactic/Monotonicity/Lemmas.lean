@@ -33,7 +33,7 @@ theorem mul_mono_nonpos {x y z : α} [LinearOrderedRing α] (h' : z ≤ 0) (h : 
   classical
   by_contra h''
   revert h
-  apply not_le_of_lt
+  apply not_le_of_ltₓ
   apply lt_of_mul_lt_mul_neg_right _ h'
   apply lt_of_not_geₓ h''
 
@@ -67,7 +67,7 @@ attribute [mono]
   upper_bounds_mono_set lower_bounds_mono_set upper_bounds_mono_mem lower_bounds_mono_mem upper_bounds_mono lower_bounds_mono BddAbove.mono BddBelow.mono
 
 attribute [mono]
-  add_le_add mul_le_mul neg_le_neg mul_lt_mul_of_pos_left mul_lt_mul_of_pos_right imp_imp_imp le_implies_le_of_le_of_le sub_le_sub tsub_le_tsub tsub_le_tsub_right abs_le_abs sup_le_sup inf_le_inf
+  add_le_add mul_le_mul neg_le_neg mul_lt_mul_of_pos_left mul_lt_mul_of_pos_right imp_imp_imp le_implies_le_of_le_of_leₓ sub_le_sub tsub_le_tsub tsub_le_tsub_right abs_le_abs sup_le_sup inf_le_inf
 
 attribute [mono left] add_lt_add_of_le_of_lt mul_lt_mul'
 

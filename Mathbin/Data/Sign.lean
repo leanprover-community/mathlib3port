@@ -287,7 +287,7 @@ theorem sign_apply : sign a = ite (0 < a) 1 (ite (a < 0) (-1) 0) :=
 
 @[simp]
 theorem sign_zero : sign (0 : α) = 0 := by
-  simp [← sign_apply]
+  simp [sign_apply]
 
 @[simp]
 theorem sign_pos (ha : 0 < a) : sign a = 1 := by
@@ -333,21 +333,21 @@ theorem sign_ne_zero : sign a ≠ 0 ↔ a ≠ 0 :=
 @[simp]
 theorem sign_nonneg_iff : 0 ≤ sign a ↔ 0 ≤ a := by
   rcases lt_trichotomyₓ 0 a with (h | rfl | h)
-  · simp [← h, ← h.le]
+  · simp [h, h.le]
     
   · simp
     
-  · simpa [← h, ← h.not_le]
+  · simpa [h, h.not_le]
     
 
 @[simp]
 theorem sign_nonpos_iff : sign a ≤ 0 ↔ a ≤ 0 := by
   rcases lt_trichotomyₓ 0 a with (h | rfl | h)
-  · simp [← h, ← h.not_le]
+  · simp [h, h.not_le]
     
   · simp
     
-  · simp [← h, ← h.le]
+  · simp [h, h.le]
     
 
 end LinearOrderₓ
@@ -373,9 +373,8 @@ attribute [local instance] LinearOrderedRing.decidableLt
 theorem sign_mul (x y : α) : sign (x * y) = sign x * sign y := by
   rcases lt_trichotomyₓ x 0 with (hx | hx | hx) <;>
     rcases lt_trichotomyₓ y 0 with (hy | hy | hy) <;>
-      simp only [← sign_zero, ← mul_zero, ← zero_mul, ← sign_pos, ← sign_neg, ← hx, ← hy, ← mul_oneₓ, ← neg_one_mul, ←
-        neg_negₓ, ← one_mulₓ, ← mul_pos_of_neg_of_neg, ← mul_neg_of_neg_of_pos, ← neg_zero', ← mul_neg_of_pos_of_neg, ←
-        mul_pos]
+      simp only [sign_zero, mul_zero, zero_mul, sign_pos, sign_neg, hx, hy, mul_oneₓ, neg_one_mul, neg_negₓ, one_mulₓ,
+        mul_pos_of_neg_of_neg, mul_neg_of_neg_of_pos, neg_zero', mul_neg_of_pos_of_neg, mul_pos]
 
 /-- `sign` as a `monoid_with_zero_hom` for a nontrivial ordered semiring. Note that linearity
 is required; consider ℂ with the order `z ≤ w` iff they have the same imaginary part and

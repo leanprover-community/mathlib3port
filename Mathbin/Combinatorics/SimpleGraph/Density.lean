@@ -47,7 +47,7 @@ def edgeDensity (s : Finset α) (t : Finset β) : ℚ :=
 variable {r}
 
 theorem mem_interedges_iff {x : α × β} : x ∈ interedges r s t ↔ x.1 ∈ s ∧ x.2 ∈ t ∧ r x.1 x.2 := by
-  simp only [← interedges, ← and_assoc, ← mem_filter, ← Finset.mem_product]
+  simp only [interedges, and_assoc, mem_filter, Finset.mem_product]
 
 theorem mk_mem_interedges_iff : (a, b) ∈ interedges r s t ↔ a ∈ s ∧ b ∈ t ∧ r a b :=
   mem_interedges_iff
@@ -87,12 +87,12 @@ theorem interedges_disjoint_right (s : Finset α) {t t' : Finset β} (ht : Disjo
 theorem interedges_bUnion_left (s : Finset ι) (t : Finset β) (f : ι → Finset α) :
     interedges r (s.bUnion f) t = s.bUnion fun a => interedges r (f a) t :=
   ext fun a => by
-    simp only [← mem_bUnion, ← mem_interedges_iff, ← exists_and_distrib_right]
+    simp only [mem_bUnion, mem_interedges_iff, exists_and_distrib_right]
 
 theorem interedges_bUnion_right (s : Finset α) (t : Finset ι) (f : ι → Finset β) :
     interedges r s (t.bUnion f) = t.bUnion fun b => interedges r s (f b) :=
   ext fun a => by
-    simp only [← mem_interedges_iff, ← mem_bUnion, exists_and_distrib_left, exists_and_distrib_right]
+    simp only [mem_interedges_iff, mem_bUnion, ← exists_and_distrib_left, ← exists_and_distrib_right]
 
 theorem interedges_bUnion (s : Finset ι) (t : Finset κ) (f : ι → Finset α) (g : κ → Finset β) :
     interedges r (s.bUnion f) (t.bUnion g) = (s ×ˢ t).bUnion fun ab => interedges r (f ab.1) (g ab.2) := by
@@ -150,7 +150,7 @@ theorem card_interedges_finpartition [DecidableEq α] [DecidableEq β] (P : Finp
 theorem mul_edge_density_le_edge_density (hs : s₂ ⊆ s₁) (ht : t₂ ⊆ t₁) (hs₂ : s₂.Nonempty) (ht₂ : t₂.Nonempty) :
     (s₂.card : ℚ) / s₁.card * (t₂.card / t₁.card) * edgeDensity r s₂ t₂ ≤ edgeDensity r s₁ t₁ := by
   have hst : (s₂.card : ℚ) * t₂.card ≠ 0 := by
-    simp [← hs₂.ne_empty, ← ht₂.ne_empty]
+    simp [hs₂.ne_empty, ht₂.ne_empty]
   rw [edge_density, edge_density, div_mul_div_comm, mul_comm, div_mul_div_cancel _ hst]
   refine'
     div_le_div_of_le
@@ -193,14 +193,14 @@ theorem abs_edge_density_sub_edge_density_le_two_mul_sub_sq (hs : s₂ ⊆ s₁)
             norm_num))
         hδ₀
   rw [← sub_pos] at hδ₁
-  simp only [← edge_density]
+  simp only [edge_density]
   obtain rfl | hs₂' := s₂.eq_empty_or_nonempty
   · rw [Finset.card_empty, Nat.cast_zeroₓ] at hs₂
-    simpa [← (nonpos_of_mul_nonpos_right hs₂ hδ₁).antisymm (Nat.cast_nonneg _)] using hδ'
+    simpa [(nonpos_of_mul_nonpos_right hs₂ hδ₁).antisymm (Nat.cast_nonneg _)] using hδ'
     
   obtain rfl | ht₂' := t₂.eq_empty_or_nonempty
   · rw [Finset.card_empty, Nat.cast_zeroₓ] at ht₂
-    simpa [← (nonpos_of_mul_nonpos_right ht₂ hδ₁).antisymm (Nat.cast_nonneg _)] using hδ'
+    simpa [(nonpos_of_mul_nonpos_right ht₂ hδ₁).antisymm (Nat.cast_nonneg _)] using hδ'
     
   rw
     [show 2 * δ - δ ^ 2 = 1 - (1 - δ) * (1 - δ) by

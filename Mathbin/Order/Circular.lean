@@ -334,7 +334,7 @@ See note [reducible non-instances]. -/
 def Preorderₓ.toCircularPreorder (α : Type _) [Preorderₓ α] : CircularPreorder α where
   Btw := fun a b c => a ≤ b ∧ b ≤ c ∨ b ≤ c ∧ c ≤ a ∨ c ≤ a ∧ a ≤ b
   Sbtw := fun a b c => a < b ∧ b < c ∨ b < c ∧ c < a ∨ c < a ∧ a < b
-  btw_refl := fun a => Or.inl ⟨le_rfl, le_rfl⟩
+  btw_refl := fun a => Or.inl ⟨le_rflₓ, le_rflₓ⟩
   btw_cyclic_left := fun a b c h => by
     unfold btw  at h⊢
     rwa [← Or.assoc, or_comm]

@@ -60,21 +60,23 @@ open Classical
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {s : Set E}
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident t, ",", "⟨", "⟨", ident x, ",", ident hxt, "⟩", ",", ident htclos, ",", ident hst, "⟩", ",", ident hBmin, "⟩", ":", expr «expr∃ , »((t «expr ∈ » S), ∀
+    u «expr ∈ » S, «expr ⊆ »(u, t) → «expr = »(u, t))]]
 /-- **Krein-Milman lemma**: In a LCTVS (currently only in normed `ℝ`-spaces), any nonempty compact
 set has an extreme point. -/
 theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty) : (s.ExtremePoints ℝ).Nonempty := by
   let S : Set (Set E) := { t | t.Nonempty ∧ IsClosed t ∧ IsExtreme ℝ s t }
-  suffices h : ∃ t ∈ S, ∀, ∀ u ∈ S, ∀, u ⊆ t → u = t
-  · obtain ⟨t, ⟨⟨x, hxt⟩, htclos, hst⟩, hBmin⟩ := h
-    refine' ⟨x, mem_extreme_points_iff_extreme_singleton.2 _⟩
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident t, \",\", \"⟨\", \"⟨\", ident x, \",\", ident hxt, \"⟩\", \",\", ident htclos, \",\", ident hst, \"⟩\", \",\", ident hBmin, \"⟩\", \":\", expr «expr∃ , »((t «expr ∈ » S), ∀\n    u «expr ∈ » S, «expr ⊆ »(u, t) → «expr = »(u, t))]]"
+  · refine' ⟨x, mem_extreme_points_iff_extreme_singleton.2 _⟩
     rwa [← eq_singleton_iff_unique_mem.2 ⟨hxt, fun y hyB => _⟩]
     by_contra hyx
     obtain ⟨l, hl⟩ := geometric_hahn_banach_point_point hyx
     obtain ⟨z, hzt, hz⟩ :=
       (compact_of_is_closed_subset hscomp htclos hst.1).exists_forall_ge ⟨x, hxt⟩ l.continuous.continuous_on
-    have h : IsExposed ℝ t ({ z ∈ t | ∀, ∀ w ∈ t, ∀, l w ≤ l z }) := fun h => ⟨l, rfl⟩
+    have h : IsExposed ℝ t ({ z ∈ t | ∀ w ∈ t, l w ≤ l z }) := fun h => ⟨l, rfl⟩
     rw [←
-      hBmin ({ z ∈ t | ∀, ∀ w ∈ t, ∀, l w ≤ l z }) ⟨⟨z, hzt, hz⟩, h.is_closed htclos, hst.trans h.is_extreme⟩
+      hBmin ({ z ∈ t | ∀ w ∈ t, l w ≤ l z }) ⟨⟨z, hzt, hz⟩, h.is_closed htclos, hst.trans h.is_extreme⟩
         (t.sep_subset _)] at
       hyB
     exact hl.not_le (hyB.2 x hxt)
@@ -102,7 +104,7 @@ theorem closure_convex_hull_extreme_points (hscomp : IsCompact s) (hAconv : Conv
   by_contra hs
   obtain ⟨x, hxA, hxt⟩ := not_subset.1 hs
   obtain ⟨l, r, hlr, hrx⟩ := geometric_hahn_banach_closed_point (convex_convex_hull _ _).closure is_closed_closure hxt
-  have h : IsExposed ℝ s ({ y ∈ s | ∀, ∀ z ∈ s, ∀, l z ≤ l y }) := fun _ => ⟨l, rfl⟩
+  have h : IsExposed ℝ s ({ y ∈ s | ∀ z ∈ s, l z ≤ l y }) := fun _ => ⟨l, rfl⟩
   obtain ⟨z, hzA, hz⟩ := hscomp.exists_forall_ge ⟨x, hxA⟩ l.continuous.continuous_on
   obtain ⟨y, hy⟩ := (h.is_compact hscomp).has_extreme_point ⟨z, hzA, hz⟩
   linarith [hlr _ (subset_closure <| subset_convex_hull _ _ <| h.is_extreme.extreme_points_subset_extreme_points hy),

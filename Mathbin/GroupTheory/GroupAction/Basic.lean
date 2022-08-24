@@ -56,7 +56,7 @@ theorem mem_orbit (b : β) (x : α) : x • b ∈ Orbit α b :=
 @[simp, to_additive]
 theorem mem_orbit_self (b : β) : b ∈ Orbit α b :=
   ⟨1, by
-    simp [← MulAction.one_smul]⟩
+    simp [MulAction.one_smul]⟩
 
 @[to_additive]
 theorem orbit_nonempty (b : β) : Set.Nonempty (Orbit α b) :=
@@ -146,7 +146,7 @@ theorem mem_fixed_points_iff_card_orbit_eq_one {a : β} [Fintype (Orbit α a)] :
   · exact fun h =>
       ⟨⟨a, mem_orbit_self _⟩, fun ⟨b, ⟨x, hx⟩⟩ =>
         Subtype.eq <| by
-          simp [← h x, ← hx.symm]⟩
+          simp [h x, hx.symm]⟩
     
   · intro h x
     rcases h with ⟨⟨z, hz⟩, hz₁⟩
@@ -204,7 +204,7 @@ instance (x : β) : IsPretransitive α (Orbit α x) :=
     rintro ⟨_, a, rfl⟩ ⟨_, b, rfl⟩
     use b * a⁻¹
     ext1
-    simp [← mul_smul]⟩
+    simp [mul_smul]⟩
 
 @[to_additive]
 theorem orbit_eq_iff {a b : β} : Orbit α a = Orbit α b ↔ a ∈ Orbit α b :=
@@ -214,11 +214,11 @@ variable (α) {β}
 
 @[to_additive]
 theorem mem_orbit_smul (g : α) (a : β) : a ∈ Orbit α (g • a) := by
-  simp only [← orbit_smul, ← mem_orbit_self]
+  simp only [orbit_smul, mem_orbit_self]
 
 @[to_additive]
 theorem smul_mem_orbit_smul (g h : α) (a : β) : g • a ∈ Orbit α (h • a) := by
-  simp only [← orbit_smul, ← mem_orbit]
+  simp only [orbit_smul, mem_orbit]
 
 variable (α) (β)
 
@@ -228,8 +228,8 @@ def orbitRel : Setoidₓ β where
   R := fun a b => a ∈ Orbit α b
   iseqv :=
     ⟨mem_orbit_self, fun a b => by
-      simp [← orbit_eq_iff.symm, ← eq_comm], fun a b => by
-      simp (config := { contextual := true })[← orbit_eq_iff.symm, ← eq_comm]⟩
+      simp [orbit_eq_iff.symm, eq_comm], fun a b => by
+      simp (config := { contextual := true })[orbit_eq_iff.symm, eq_comm]⟩
 
 attribute [local instance] orbit_rel
 
@@ -255,15 +255,15 @@ theorem quotient_preimage_image_eq_union_mul (U : Set β) :
     rw [Set.mem_preimage, Set.mem_image_iff_bex]
     refine'
       ⟨a⁻¹ • x, _, by
-        simp only [← Quotientₓ.eq] <;> use a⁻¹⟩
+        simp only [Quotientₓ.eq] <;> use a⁻¹⟩
     rw [← hu₂]
     convert hu₁
-    simp only [← inv_smul_smul]
+    simp only [inv_smul_smul]
     
 
 @[to_additive]
 theorem disjoint_image_image_iff {U V : Set β} :
-    Disjoint (Quotientₓ.mk '' U) (Quotientₓ.mk '' V) ↔ ∀, ∀ x ∈ U, ∀, ∀ a : α, a • x ∉ V := by
+    Disjoint (Quotientₓ.mk '' U) (Quotientₓ.mk '' V) ↔ ∀ x ∈ U, ∀ a : α, a • x ∉ V := by
   set f : β → Quotientₓ (MulAction.orbitRel α β) := Quotientₓ.mk
   refine' ⟨fun h x x_in_U a a_in_V => h ⟨⟨x, x_in_U, Quotientₓ.sound ⟨a⁻¹, _⟩⟩, ⟨a • x, a_in_V, rfl⟩⟩, _⟩
   · simp
@@ -274,8 +274,7 @@ theorem disjoint_image_image_iff {U V : Set β} :
     
 
 @[to_additive]
-theorem image_inter_image_iff (U V : Set β) :
-    Quotientₓ.mk '' U ∩ Quotientₓ.mk '' V = ∅ ↔ ∀, ∀ x ∈ U, ∀, ∀ a : α, a • x ∉ V :=
+theorem image_inter_image_iff (U V : Set β) : Quotientₓ.mk '' U ∩ Quotientₓ.mk '' V = ∅ ↔ ∀ x ∈ U, ∀ a : α, a • x ∉ V :=
   Set.disjoint_iff_inter_eq_empty.symm.trans disjoint_image_image_iff
 
 variable (α β)

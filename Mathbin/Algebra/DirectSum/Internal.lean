@@ -162,7 +162,7 @@ instance nat_power_graded_monoid [CommSemiringₓ S] [Semiringₓ R] [Algebra S 
     SetLike.GradedMonoid fun i : ℕ => p ^ i where
   one_mem := by
     rw [← one_le, pow_zeroₓ]
-    exact le_rfl
+    exact le_rflₓ
   mul_mem := fun i j p q hp hq => by
     rw [pow_addₓ]
     exact Submodule.mul_mem_mul hp hq

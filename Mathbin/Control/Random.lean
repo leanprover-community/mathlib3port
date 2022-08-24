@@ -74,7 +74,7 @@ open Streamₓ
 class BoundedRandomₓ (α : Type u) [Preorderₓ α] where
   randomR : ∀ (g) [RandomGen g] (x y : α), x ≤ y → RandGₓ g (x .. y)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`Random] []
+-- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`Random] []
 /-- `random α` gives us machinery to generate values of type `α` -/
 class Randomₓ (α : Type u) where
   Random : ∀ (g : Type) [RandomGen g], RandGₓ g α
@@ -134,7 +134,7 @@ namespace Io
 private def accum_char (w : ℕ) (c : Charₓ) : ℕ :=
   c.toNat + 256 * w
 
-/-- create and a seed a random number generator -/
+/-- create and seed a random number generator -/
 def mkGenerator : Io StdGen := do
   let seed ← Io.rand 0 shift31Left
   return <| mkStdGenₓ seed
@@ -279,7 +279,7 @@ def randomFinOfPos : ∀ {n : ℕ} (h : 0 < n), Randomₓ (Finₓ n)
 
 theorem bool_of_nat_mem_Icc_of_mem_Icc_to_nat (x y : Bool) (n : ℕ) :
     n ∈ (x.toNat .. y.toNat) → Bool.ofNat n ∈ (x .. y) := by
-  simp only [← and_imp, ← Set.mem_Icc]
+  simp only [and_imp, Set.mem_Icc]
   intro h₀ h₁
   constructor <;> [have h₂ := Bool.of_nat_le_of_nat h₀, have h₂ := Bool.of_nat_le_of_nat h₁] <;>
     rw [Bool.of_nat_to_nat] at h₂ <;> exact h₂
@@ -304,7 +304,7 @@ def Bitvec.random (n : ℕ) : RandGₓ g (Bitvec n) :=
 /-- generate a random bit vector of length `n` -/
 def Bitvec.randomR {n : ℕ} (x y : Bitvec n) (h : x ≤ y) : RandGₓ g (x .. y) :=
   have h' : ∀ a : Finₓ (2 ^ n), a ∈ (x.toFin .. y.toFin) → Bitvec.ofFin a ∈ (x .. y) := by
-    simp only [← and_imp, ← Set.mem_Icc]
+    simp only [and_imp, Set.mem_Icc]
     intro z h₀ h₁
     replace h₀ := Bitvec.of_fin_le_of_fin_of_le h₀
     replace h₁ := Bitvec.of_fin_le_of_fin_of_le h₁

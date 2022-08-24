@@ -71,9 +71,9 @@ instance hasMul (I : Ideal R) : Mul (R ⧸ I) :=
 instance commRing (I : Ideal R) : CommRingₓ (R ⧸ I) :=
   { Submodule.Quotient.addCommGroup I with mul := (· * ·), one := 1, natCast := fun n => Submodule.Quotient.mk n,
     nat_cast_zero := by
-      simp [← Nat.castₓ],
+      simp [Nat.castₓ],
     nat_cast_succ := by
-      simp [← Nat.castₓ] <;> rfl,
+      simp [Nat.castₓ] <;> rfl,
     mul_assoc := fun a b c =>
       (Quotientₓ.induction_on₃' a b c) fun a b c => congr_arg Submodule.Quotient.mk (mul_assoc a b c),
     mul_comm := fun a b => (Quotientₓ.induction_on₂' a b) fun a b => congr_arg Submodule.Quotient.mk (mul_comm a b),
@@ -131,7 +131,7 @@ theorem mk_surjective : Function.Surjective (mk I) := fun y => Quotientₓ.induc
 `s ⊆ R` is a subset, then `q⁻¹(q(s)) = ⋃ᵢ(i + s)`, the union running over all `i ∈ I`. -/
 theorem quotient_ring_saturate (I : Ideal R) (s : Set R) : mk I ⁻¹' (mk I '' s) = ⋃ x : I, (fun y => x.1 + y) '' s := by
   ext x
-  simp only [← mem_preimage, ← mem_image, ← mem_Union, ← Ideal.Quotient.eq]
+  simp only [mem_preimage, mem_image, mem_Union, Ideal.Quotient.eq]
   exact
     ⟨fun ⟨a, a_in, h⟩ =>
       ⟨⟨_, I.neg_mem h⟩, a, a_in, by
@@ -149,7 +149,7 @@ instance is_domain (I : Ideal R) [hI : I.IsPrime] : IsDomain (R ⧸ I) :=
 theorem is_domain_iff_prime (I : Ideal R) : IsDomain (R ⧸ I) ↔ I.IsPrime :=
   ⟨fun ⟨h1, h2⟩ =>
     ⟨zero_ne_one_iff.1 <| @zero_ne_one _ _ ⟨h2⟩, fun x y h => by
-      simp only [eq_zero_iff_mem, ← (mk I).map_mul] at h⊢
+      simp only [← eq_zero_iff_mem, (mk I).map_mul] at h⊢
       exact h1 h⟩,
     fun h => by
     skip
@@ -272,7 +272,7 @@ instance modulePi : Module (R ⧸ I) ((ι → R) ⧸ I.pi ι) where
   mul_smul := by
     rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
     change Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
-    simp only [← (· • ·)]
+    simp only [(· • ·)]
     congr with i
     exact mul_assoc a b (c i)
   smul_add := by
@@ -324,7 +324,7 @@ theorem map_pi {ι} [Fintype ι] {ι' : Type w} (x : ι → R) (hi : ∀ i, x i 
     f x i ∈ I := by
   classical
   rw [pi_eq_sum_univ x]
-  simp only [← Finset.sum_apply, ← smul_eq_mul, ← LinearMap.map_sum, ← Pi.smul_apply, ← LinearMap.map_smul]
+  simp only [Finset.sum_apply, smul_eq_mul, LinearMap.map_sum, Pi.smul_apply, LinearMap.map_smul]
   exact I.sum_mem fun j hj => I.mul_mem_right _ (hi j)
 
 end Pi
@@ -333,10 +333,9 @@ section ChineseRemainder
 
 variable {ι : Type v}
 
-theorem exists_sub_one_mem_and_mem (s : Finset ι) {f : ι → Ideal R}
-    (hf : ∀, ∀ i ∈ s, ∀, ∀, ∀ j ∈ s, ∀, i ≠ j → f i⊔f j = ⊤) (i : ι) (his : i ∈ s) :
-    ∃ r : R, r - 1 ∈ f i ∧ ∀, ∀ j ∈ s, ∀, j ≠ i → r ∈ f j := by
-  have : ∀, ∀ j ∈ s, ∀, j ≠ i → ∃ r : R, ∃ H : r - 1 ∈ f i, r ∈ f j := by
+theorem exists_sub_one_mem_and_mem (s : Finset ι) {f : ι → Ideal R} (hf : ∀ i ∈ s, ∀ j ∈ s, i ≠ j → f i⊔f j = ⊤) (i : ι)
+    (his : i ∈ s) : ∃ r : R, r - 1 ∈ f i ∧ ∀ j ∈ s, j ≠ i → r ∈ f j := by
+  have : ∀ j ∈ s, j ≠ i → ∃ r : R, ∃ H : r - 1 ∈ f i, r ∈ f j := by
     intro j hjs hji
     specialize hf i his j hjs hji.symm
     rw [eq_top_iff_one, Submodule.mem_sup] at hf
@@ -349,7 +348,7 @@ theorem exists_sub_one_mem_and_mem (s : Finset ι) {f : ι → Ideal R}
       exact hsj
       
   classical
-  have : ∃ g : ι → R, (∀ j, g j - 1 ∈ f i) ∧ ∀, ∀ j ∈ s, ∀, j ≠ i → g j ∈ f j := by
+  have : ∃ g : ι → R, (∀ j, g j - 1 ∈ f i) ∧ ∀ j ∈ s, j ≠ i → g j ∈ f j := by
     choose g hg1 hg2
     refine' ⟨fun j => if H : j ∈ s ∧ j ≠ i then g j H.1 H.2 else 1, fun j => _, fun j => _⟩
     · split_ifs with h

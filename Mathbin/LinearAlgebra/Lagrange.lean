@@ -44,8 +44,8 @@ open Function Fintype
 
 variable (s : Finset R)
 
-theorem eq_zero_of_degree_lt_of_eval_finset_eq_zero (degree_f_lt : f.degree < s.card)
-    (eval_f : ∀, ∀ x ∈ s, ∀, f.eval x = 0) : f = 0 := by
+theorem eq_zero_of_degree_lt_of_eval_finset_eq_zero (degree_f_lt : f.degree < s.card) (eval_f : ∀ x ∈ s, f.eval x = 0) :
+    f = 0 := by
   rw [← mem_degree_lt] at degree_f_lt
   simp_rw [eval_eq_sum_degree_lt_equiv degree_f_lt] at eval_f
   rw [← degree_lt_equiv_eq_zero_iff_eq_zero degree_f_lt]
@@ -55,14 +55,14 @@ theorem eq_zero_of_degree_lt_of_eval_finset_eq_zero (degree_f_lt : f.degree < s.
       eval_f _ (Finset.coe_mem _)
 
 theorem eq_of_degree_sub_lt_of_eval_finset_eq (degree_fg_lt : (f - g).degree < s.card)
-    (eval_fg : ∀, ∀ x ∈ s, ∀, f.eval x = g.eval x) : f = g := by
+    (eval_fg : ∀ x ∈ s, f.eval x = g.eval x) : f = g := by
   rw [← sub_eq_zero]
   refine' eq_zero_of_degree_lt_of_eval_finset_eq_zero _ degree_fg_lt _
   simp_rw [eval_sub, sub_eq_zero]
   exact eval_fg
 
 theorem eq_of_degrees_lt_of_eval_finset_eq (degree_f_lt : f.degree < s.card) (degree_g_lt : g.degree < s.card)
-    (eval_fg : ∀, ∀ x ∈ s, ∀, f.eval x = g.eval x) : f = g := by
+    (eval_fg : ∀ x ∈ s, f.eval x = g.eval x) : f = g := by
   rw [← mem_degree_lt] at degree_f_lt degree_g_lt
   refine' eq_of_degree_sub_lt_of_eval_finset_eq _ _ eval_fg
   rw [← mem_degree_lt]
@@ -77,7 +77,7 @@ open Finset
 variable {ι : Type _} {v : ι → R} (s : Finset ι)
 
 theorem eq_zero_of_degree_lt_of_eval_index_eq_zero (hvs : Set.InjOn v s) (degree_f_lt : f.degree < s.card)
-    (eval_f : ∀, ∀ i ∈ s, ∀, f.eval (v i) = 0) : f = 0 := by
+    (eval_f : ∀ i ∈ s, f.eval (v i) = 0) : f = 0 := by
   classical
   rw [← card_image_of_inj_on hvs] at degree_f_lt
   refine' eq_zero_of_degree_lt_of_eval_finset_eq_zero _ degree_f_lt _
@@ -86,14 +86,14 @@ theorem eq_zero_of_degree_lt_of_eval_index_eq_zero (hvs : Set.InjOn v s) (degree
   exact eval_f _ hj
 
 theorem eq_of_degree_sub_lt_of_eval_index_eq (hvs : Set.InjOn v s) (degree_fg_lt : (f - g).degree < s.card)
-    (eval_fg : ∀, ∀ i ∈ s, ∀, f.eval (v i) = g.eval (v i)) : f = g := by
+    (eval_fg : ∀ i ∈ s, f.eval (v i) = g.eval (v i)) : f = g := by
   rw [← sub_eq_zero]
   refine' eq_zero_of_degree_lt_of_eval_index_eq_zero _ hvs degree_fg_lt _
   simp_rw [eval_sub, sub_eq_zero]
   exact eval_fg
 
 theorem eq_of_degrees_lt_of_eval_index_eq (hvs : Set.InjOn v s) (degree_f_lt : f.degree < s.card)
-    (degree_g_lt : g.degree < s.card) (eval_fg : ∀, ∀ i ∈ s, ∀, f.eval (v i) = g.eval (v i)) : f = g := by
+    (degree_g_lt : g.degree < s.card) (eval_fg : ∀ i ∈ s, f.eval (v i) = g.eval (v i)) : f = g := by
   refine' eq_of_degree_sub_lt_of_eval_index_eq _ hvs _ eval_fg
   rw [← mem_degree_lt] at degree_f_lt degree_g_lt⊢
   exact Submodule.sub_mem _ degree_f_lt degree_g_lt
@@ -123,7 +123,7 @@ def basisDivisor (x y : F) : F[X] :=
   c (x - y)⁻¹ * (X - c y)
 
 theorem basis_divisor_self : basisDivisor x x = 0 := by
-  simp only [← basis_divisor, ← sub_self, ← inv_zero, ← map_zero, ← zero_mul]
+  simp only [basis_divisor, sub_self, inv_zero, map_zero, zero_mul]
 
 theorem basis_divisor_inj (hxy : basisDivisor x y = 0) : x = y := by
   simp_rw [basis_divisor, mul_eq_zero, X_sub_C_ne_zero, or_falseₓ, C_eq_zero, inv_eq_zero, sub_eq_zero] at hxy
@@ -152,10 +152,10 @@ theorem nat_degree_basis_divisor_of_ne (hxy : x ≠ y) : (basisDivisor x y).natD
 
 @[simp]
 theorem eval_basis_divisor_right : eval y (basisDivisor x y) = 0 := by
-  simp only [← basis_divisor, ← eval_mul, ← eval_C, ← eval_sub, ← eval_X, ← sub_self, ← mul_zero]
+  simp only [basis_divisor, eval_mul, eval_C, eval_sub, eval_X, sub_self, mul_zero]
 
 theorem eval_basis_divisor_left_of_ne (hxy : x ≠ y) : eval x (basisDivisor x y) = 1 := by
-  simp only [← basis_divisor, ← eval_mul, ← eval_C, ← eval_sub, ← eval_X]
+  simp only [basis_divisor, eval_mul, eval_C, eval_sub, eval_X]
   exact inv_mul_cancel (sub_ne_zero_of_ne hxy)
 
 end BasisDivisor
@@ -182,8 +182,8 @@ theorem basis_singleton (i : ι) : Lagrange.basis {i} v i = 1 := by
 
 @[simp]
 theorem basis_pair_left (hij : i ≠ j) : Lagrange.basis {i, j} v i = basisDivisor (v i) (v j) := by
-  simp only [← Lagrange.basis, ← hij, ← erase_insert_eq_erase, ← erase_eq_of_not_mem, ← mem_singleton, ← not_false_iff,
-    ← prod_singleton]
+  simp only [Lagrange.basis, hij, erase_insert_eq_erase, erase_eq_of_not_mem, mem_singleton, not_false_iff,
+    prod_singleton]
 
 @[simp]
 theorem basis_pair_right (hij : i ≠ j) : Lagrange.basis {i, j} v j = basisDivisor (v j) (v i) := by
@@ -288,7 +288,7 @@ theorem degree_interpolate_le (hvs : Set.InjOn v s) : (interpolate s v r).degree
   intro i hi
   rw [degree_mul, degree_basis hvs hi]
   by_cases' hr : r i = 0
-  · simpa only [← hr, ← map_zero, ← degree_zero, ← WithBot.bot_add] using bot_le
+  · simpa only [hr, map_zero, degree_zero, WithBot.bot_add] using bot_le
     
   · rw [degree_C hr, zero_addₓ, WithBot.coe_le_coe]
     
@@ -309,15 +309,15 @@ theorem degree_interpolate_erase_lt (hvs : Set.InjOn v s) (hi : i ∈ s) :
   exact degree_interpolate_lt _ (Set.InjOn.mono (coe_subset.mpr (erase_subset _ _)) hvs)
 
 theorem values_eq_on_of_interpolate_eq (hvs : Set.InjOn v s) (hrr' : interpolate s v r = interpolate s v r') :
-    ∀, ∀ i ∈ s, ∀, r i = r' i := fun _ hi => by
+    ∀ i ∈ s, r i = r' i := fun _ hi => by
   rw [← eval_interpolate_at_node r hvs hi, hrr', eval_interpolate_at_node r' hvs hi]
 
-theorem interpolate_eq_of_values_eq_on (hrr' : ∀, ∀ i ∈ s, ∀, r i = r' i) : interpolate s v r = interpolate s v r' :=
+theorem interpolate_eq_of_values_eq_on (hrr' : ∀ i ∈ s, r i = r' i) : interpolate s v r = interpolate s v r' :=
   sum_congr rfl fun i hi => by
     rw [hrr' _ hi]
 
 theorem interpolate_eq_iff_values_eq_on (hvs : Set.InjOn v s) :
-    interpolate s v r = interpolate s v r' ↔ ∀, ∀ i ∈ s, ∀, r i = r' i :=
+    interpolate s v r = interpolate s v r' ↔ ∀ i ∈ s, r i = r' i :=
   ⟨values_eq_on_of_interpolate_eq _ _ hvs, interpolate_eq_of_values_eq_on _ _⟩
 
 theorem eq_interpolate {f : F[X]} (hvs : Set.InjOn v s) (degree_f_lt : f.degree < s.card) :
@@ -326,7 +326,7 @@ theorem eq_interpolate {f : F[X]} (hvs : Set.InjOn v s) (degree_f_lt : f.degree 
     (eval_interpolate_at_node _ hvs hi).symm
 
 theorem eq_interpolate_of_eval_eq {f : F[X]} (hvs : Set.InjOn v s) (degree_f_lt : f.degree < s.card)
-    (eval_f : ∀, ∀ i ∈ s, ∀, f.eval (v i) = r i) : f = interpolate s v r := by
+    (eval_f : ∀ i ∈ s, f.eval (v i) = r i) : f = interpolate s v r := by
   rw [eq_interpolate hvs degree_f_lt]
   exact interpolate_eq_of_values_eq_on _ _ eval_f
 
@@ -334,7 +334,7 @@ theorem eq_interpolate_of_eval_eq {f : F[X]} (hvs : Set.InjOn v s) (degree_f_lt 
 unique polynomial of `degree < fintype.card ι` which takes the value of the `r i` on the `v i`.
 -/
 theorem eq_interpolate_iff {f : F[X]} (hvs : Set.InjOn v s) :
-    (f.degree < s.card ∧ ∀, ∀ i ∈ s, ∀, eval (v i) f = r i) ↔ f = interpolate s v r := by
+    (f.degree < s.card ∧ ∀ i ∈ s, eval (v i) f = r i) ↔ f = interpolate s v r := by
   constructor <;> intro h
   · exact eq_interpolate_of_eval_eq _ hvs h.1 h.2
     
@@ -354,14 +354,14 @@ def funEquivDegreeLt (hvs : Set.InjOn v s) : degreeLt F s.card ≃ₗ[F] s → F
     ⟨interpolate s v fun x => if hx : x ∈ s then r ⟨x, hx⟩ else 0, mem_degree_lt.2 <| degree_interpolate_lt _ hvs⟩
   left_inv := by
     rintro ⟨f, hf⟩
-    simp only [← Subtype.mk_eq_mk, ← Subtype.coe_mk, ← dite_eq_ite]
+    simp only [Subtype.mk_eq_mk, Subtype.coe_mk, dite_eq_ite]
     rw [mem_degree_lt] at hf
     nth_rw_rhs 0[eq_interpolate hvs hf]
     exact interpolate_eq_of_values_eq_on _ _ fun _ hi => if_pos hi
   right_inv := by
     intro f
     ext ⟨i, hi⟩
-    simp only [← Subtype.coe_mk, ← eval_interpolate_at_node _ hvs hi]
+    simp only [Subtype.coe_mk, eval_interpolate_at_node _ hvs hi]
     exact dif_pos hi
 
 theorem interpolate_eq_sum_interpolate_insert_sdiff (hvt : Set.InjOn v t) (hs : s.Nonempty) (hst : s ⊆ t) :
@@ -447,7 +447,7 @@ theorem eval_nodal_at_node (hi : i ∈ s) : eval (v i) (nodal s v) = 0 := by
   rw [eval_nodal, prod_eq_zero_iff]
   exact ⟨i, hi, sub_eq_zero_of_eq rfl⟩
 
-theorem eval_nodal_not_at_node (hx : ∀, ∀ i ∈ s, ∀, x ≠ v i) : eval x (nodal s v) ≠ 0 := by
+theorem eval_nodal_not_at_node (hx : ∀ i ∈ s, x ≠ v i) : eval x (nodal s v) ≠ 0 := by
   simp_rw [nodal, eval_prod, prod_ne_zero_iff, eval_sub, eval_X, eval_C, sub_ne_zero]
   exact hx
 
@@ -520,26 +520,25 @@ theorem interpolate_eq_nodal_weight_mul_nodal_div_X_sub_C :
     rw [mul_comm, basis_eq_prod_sub_inv_mul_nodal_div hj]
 
 /-- This is the first barycentric form of the Lagrange interpolant. -/
-theorem eval_interpolate_not_at_node (hx : ∀, ∀ i ∈ s, ∀, x ≠ v i) :
+theorem eval_interpolate_not_at_node (hx : ∀ i ∈ s, x ≠ v i) :
     eval x (interpolate s v r) = eval x (nodal s v) * ∑ i in s, nodalWeight s v i * (x - v i)⁻¹ * r i := by
   simp_rw [interpolate_apply, mul_sum, eval_finset_sum, eval_mul, eval_C]
   refine' sum_congr rfl fun i hi => _
   rw [← mul_assoc, mul_comm, eval_basis_not_at_node hi (hx _ hi)]
 
-theorem sum_nodal_weight_mul_inv_sub_ne_zero (hvs : Set.InjOn v s) (hx : ∀, ∀ i ∈ s, ∀, x ≠ v i) (hs : s.Nonempty) :
+theorem sum_nodal_weight_mul_inv_sub_ne_zero (hvs : Set.InjOn v s) (hx : ∀ i ∈ s, x ≠ v i) (hs : s.Nonempty) :
     (∑ i in s, nodalWeight s v i * (x - v i)⁻¹) ≠ 0 :=
   @right_ne_zero_of_mul_eq_one _ _ _ (eval x (nodal s v)) _ <| by
-    simpa only [← Pi.one_apply, ← interpolate_one hvs hs, ← eval_one, ← mul_oneₓ] using
-      (eval_interpolate_not_at_node 1 hx).symm
+    simpa only [Pi.one_apply, interpolate_one hvs hs, eval_one, mul_oneₓ] using (eval_interpolate_not_at_node 1 hx).symm
 
 /-- This is the second barycentric form of the Lagrange interpolant. -/
-theorem eval_interpolate_not_at_node' (hvs : Set.InjOn v s) (hs : s.Nonempty) (hx : ∀, ∀ i ∈ s, ∀, x ≠ v i) :
+theorem eval_interpolate_not_at_node' (hvs : Set.InjOn v s) (hs : s.Nonempty) (hx : ∀ i ∈ s, x ≠ v i) :
     eval x (interpolate s v r) =
       (∑ i in s, nodalWeight s v i * (x - v i)⁻¹ * r i) / ∑ i in s, nodalWeight s v i * (x - v i)⁻¹ :=
   by
   rw [← div_one (eval x (interpolate s v r)), ← @eval_one _ _ x, ← interpolate_one hvs hs,
     eval_interpolate_not_at_node r hx, eval_interpolate_not_at_node 1 hx]
-  simp only [← mul_div_mul_left _ _ (eval_nodal_not_at_node hx), ← Pi.one_apply, ← mul_oneₓ]
+  simp only [mul_div_mul_left _ _ (eval_nodal_not_at_node hx), Pi.one_apply, mul_oneₓ]
 
 end Nodal
 

@@ -101,7 +101,7 @@ variable {A : Type v} [CommGroupₓ A] (f : G →* A)
 theorem commutator_subset_ker : commutator G ≤ f.ker := by
   rw [commutator_eq_closure, Subgroup.closure_le]
   rintro x ⟨p, q, rfl⟩
-  simp [← MonoidHom.mem_ker, ← mul_right_commₓ (f p) (f q), ← commutator_element_def]
+  simp [MonoidHom.mem_ker, mul_right_commₓ (f p) (f q), commutator_element_def]
 
 /-- If `f : G → A` is a group homomorphism to an abelian group, then `lift f` is the unique map from
   the abelianization of a `G` to `A` that factors through `f`. -/

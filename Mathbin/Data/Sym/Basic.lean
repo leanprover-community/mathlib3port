@@ -74,6 +74,10 @@ abbrev mk (m : Multiset α) (h : m.card = n) : Sym α n :=
 def nil : Sym α 0 :=
   ⟨0, Multiset.card_zero⟩
 
+@[simp]
+theorem coe_nil : coe (@Sym.nil α) = (0 : Multiset α) :=
+  rfl
+
 /-- Inserts an element into the term of `sym α n`, increasing the length by one.
 -/
 @[matchPattern]
@@ -114,7 +118,7 @@ theorem of_vector_cons (a : α) (v : Vector α n) : ↑(Vector.cons a v) = a ::�
 
 /-- `α ∈ s` means that `a` appears as one of the factors in `s`.
 -/
-instance : HasMem α (Sym α n) :=
+instance : Membership α (Sym α n) :=
   ⟨fun a s => a ∈ s.1⟩
 
 instance decidableMem [DecidableEq α] (a : α) (s : Sym α n) : Decidable (a ∈ s) :=
@@ -198,7 +202,7 @@ theorem cons_equiv_eq_equiv_cons (α : Type _) (n : ℕ) (a : α) (s : Sym α n)
 instance : Zero (Sym α 0) :=
   ⟨⟨0, rfl⟩⟩
 
-instance : HasEmptyc (Sym α 0) :=
+instance : EmptyCollection (Sym α 0) :=
   ⟨0⟩
 
 theorem eq_nil_of_card_zero (s : Sym α 0) : s = nil :=
@@ -221,7 +225,7 @@ theorem coe_repeat : (repeat a n : Multiset α) = Multiset.repeat a n :=
 theorem mem_repeat : b ∈ repeat a n ↔ n ≠ 0 ∧ b = a :=
   Multiset.mem_repeat
 
-theorem eq_repeat_iff : s = repeat a n ↔ ∀, ∀ b ∈ s, ∀, b = a := by
+theorem eq_repeat_iff : s = repeat a n ↔ ∀ b ∈ s, b = a := by
   rw [Subtype.ext_iff, coe_repeat]
   convert Multiset.eq_repeat'
   exact s.2.symm
@@ -234,7 +238,7 @@ theorem exists_eq_cons_of_succ (s : Sym α n.succ) : ∃ (a : α)(s' : Sym α n)
   classical
   exact ⟨a, s.erase a ha, (cons_erase ha).symm⟩
 
-theorem eq_repeat {a : α} {n : ℕ} {s : Sym α n} : s = repeat a n ↔ ∀, ∀ b ∈ s, ∀, b = a :=
+theorem eq_repeat {a : α} {n : ℕ} {s : Sym α n} : s = repeat a n ↔ ∀ b ∈ s, b = a :=
   Subtype.ext_iff.trans <| Multiset.eq_repeat.trans <| and_iff_right s.Prop
 
 theorem eq_repeat_of_subsingleton [Subsingleton α] (a : α) {n : ℕ} (s : Sym α n) : s = repeat a n :=
@@ -277,7 +281,7 @@ instance (n : ℕ) [Nontrivial α] : Nontrivial (Sym α (n + 1)) :=
 the underlying `n`-tuple. -/
 def map {n : ℕ} (f : α → β) (x : Sym α n) : Sym β n :=
   ⟨x.val.map f, by
-    simpa [← Multiset.card_map] using x.property⟩
+    simpa [Multiset.card_map] using x.property⟩
 
 @[simp]
 theorem mem_map {n : ℕ} {f : α → β} {b : β} {l : Sym α n} : b ∈ Sym.map f l ↔ ∃ a, a ∈ l ∧ f a = b :=
@@ -286,15 +290,15 @@ theorem mem_map {n : ℕ} {f : α → β} {b : β} {l : Sym α n} : b ∈ Sym.ma
 /-- Note: `sym.map_id` is not simp-normal, as simp ends up unfolding `id` with `sym.map_congr` -/
 @[simp]
 theorem map_id' {α : Type _} {n : ℕ} (s : Sym α n) : Sym.map (fun x : α => x) s = s := by
-  simp [← Sym.map]
+  simp [Sym.map]
 
 theorem map_id {α : Type _} {n : ℕ} (s : Sym α n) : Sym.map id s = s := by
-  simp [← Sym.map]
+  simp [Sym.map]
 
 @[simp]
 theorem map_map {α β γ : Type _} {n : ℕ} (g : β → γ) (f : α → β) (s : Sym α n) :
     Sym.map g (Sym.map f s) = Sym.map (g ∘ f) s := by
-  simp [← Sym.map]
+  simp [Sym.map]
 
 @[simp]
 theorem map_zero (f : α → β) : Sym.map f (0 : Sym α 0) = (0 : Sym β 0) :=
@@ -302,10 +306,10 @@ theorem map_zero (f : α → β) : Sym.map f (0 : Sym α 0) = (0 : Sym β 0) :=
 
 @[simp]
 theorem map_cons {n : ℕ} (f : α → β) (a : α) (s : Sym α n) : (a ::ₛ s).map f = f a ::ₛ s.map f := by
-  simp [← map, ← cons]
+  simp [map, cons]
 
 @[congr]
-theorem map_congr {f g : α → β} {s : Sym α n} (h : ∀, ∀ x ∈ s, ∀, f x = g x) : map f s = map g s :=
+theorem map_congr {f g : α → β} {s : Sym α n} (h : ∀ x ∈ s, f x = g x) : map f s = map g s :=
   Subtype.ext <| Multiset.map_congr rfl h
 
 @[simp]
@@ -313,7 +317,7 @@ theorem map_mk {f : α → β} {m : Multiset α} {hc : m.card = n} :
     map f (mk m hc) =
       mk (m.map f)
         (by
-          simp [← hc]) :=
+          simp [hc]) :=
   rfl
 
 @[simp]
@@ -403,10 +407,10 @@ def decode : Sum (Sym (Option α) n) (Sym α n.succ) → Sym (Option α) n.succ
 @[simp]
 theorem decode_encode [DecidableEq α] (s : Sym (Option α) n.succ) : decode (encode s) = s := by
   by_cases' h : none ∈ s
-  · simp [← h]
+  · simp [h]
     
-  · simp only [← h, ← decode, ← not_false_iff, ← Subtype.val_eq_coe, ← encode_of_not_none_mem, ←
-      embedding.coe_option_apply, ← map_map, ← comp_app, ← Option.coe_get]
+  · simp only [h, decode, not_false_iff, Subtype.val_eq_coe, encode_of_not_none_mem, embedding.coe_option_apply,
+      map_map, comp_app, Option.coe_get]
     convert s.attach_map_coe
     
 

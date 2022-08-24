@@ -223,16 +223,16 @@ end SpecialLinearGroup
 
 section Examples
 
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation
 /-- The matrix [a, -b; b, a] (inspired by multiplication by a complex number); it is an element of
 $GL_2(R)$ if `a ^ 2 + b ^ 2` is nonzero. -/
 @[simps (config := { fullyApplied := false }) coe]
 def planeConformalMatrix {R} [Field R] (a b : R) (hab : a ^ 2 + b ^ 2 ≠ 0) : Matrix.GeneralLinearGroup (Finₓ 2) R :=
   GeneralLinearGroup.mkOfDetNeZero
-    («expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation")
+    («expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation")
     (by
-      simpa [← det_fin_two, ← sq] using hab)
+      simpa [det_fin_two, sq] using hab)
 
 /- TODO: Add Iwasawa matrices `n_x=!![1,x; 0,1]`, `a_t=!![exp(t/2),0;0,exp(-t/2)]` and
   `k_θ=!![cos θ, sin θ; -sin θ, cos θ]`

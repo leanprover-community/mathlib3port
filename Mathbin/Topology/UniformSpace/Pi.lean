@@ -36,7 +36,7 @@ variable {α}
 
 theorem uniform_continuous_pi {β : Type _} [UniformSpace β] {f : β → ∀ i, α i} :
     UniformContinuous f ↔ ∀ i, UniformContinuous fun x => f x i := by
-  simp only [← UniformContinuous, ← Pi.uniformity, ← tendsto_infi, ← tendsto_comap_iff]
+  simp only [UniformContinuous, Pi.uniformity, tendsto_infi, tendsto_comap_iff]
 
 variable (α)
 

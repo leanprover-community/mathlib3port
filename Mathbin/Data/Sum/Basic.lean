@@ -89,10 +89,10 @@ def isRight : Sum α β → Bool
 variable {x y : Sum α β}
 
 theorem get_left_eq_none_iff : x.getLeft = none ↔ x.isRight := by
-  cases x <;> simp only [← get_left, ← is_right, ← coe_sort_tt, ← coe_sort_ff, ← eq_self_iff_true]
+  cases x <;> simp only [get_left, is_right, coe_sort_tt, coe_sort_ff, eq_self_iff_true]
 
 theorem get_right_eq_none_iff : x.getRight = none ↔ x.isLeft := by
-  cases x <;> simp only [← get_right, ← is_left, ← coe_sort_tt, ← coe_sort_ff, ← eq_self_iff_true]
+  cases x <;> simp only [get_right, is_left, coe_sort_tt, coe_sort_ff, eq_self_iff_true]
 
 end get
 
@@ -441,7 +441,7 @@ theorem elim_update_left [DecidableEq α] [DecidableEq β] (f : α → γ) (g : 
     · subst h
       simp
       
-    · simp [← h]
+    · simp [h]
       
     
   · simp
@@ -457,7 +457,7 @@ theorem elim_update_right [DecidableEq α] [DecidableEq β] (f : α → γ) (g :
     · subst h
       simp
       
-    · simp [← h]
+    · simp [h]
       
     
 

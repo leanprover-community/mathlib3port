@@ -51,22 +51,22 @@ local infixr:65 " +ᵣ " => rightAdd X Y
 
 theorem is_unital_left_add : EckmannHilton.IsUnital (· +ₗ ·) 0 :=
   ⟨⟨fun f => by
-      simp [←
-        show biprod.lift (0 : X ⟶ Y) f = f ≫ biprod.inr by
+      simp
+        [show biprod.lift (0 : X ⟶ Y) f = f ≫ biprod.inr by
           ext <;> simp ]⟩,
     ⟨fun f => by
-      simp [←
-        show biprod.lift f (0 : X ⟶ Y) = f ≫ biprod.inl by
+      simp
+        [show biprod.lift f (0 : X ⟶ Y) = f ≫ biprod.inl by
           ext <;> simp ]⟩⟩
 
 theorem is_unital_right_add : EckmannHilton.IsUnital (· +ᵣ ·) 0 :=
   ⟨⟨fun f => by
-      simp [←
-        show biprod.desc (0 : X ⟶ Y) f = biprod.snd ≫ f by
+      simp
+        [show biprod.desc (0 : X ⟶ Y) f = biprod.snd ≫ f by
           ext <;> simp ]⟩,
     ⟨fun f => by
-      simp [←
-        show biprod.desc f (0 : X ⟶ Y) = biprod.fst ≫ f by
+      simp
+        [show biprod.desc f (0 : X ⟶ Y) = biprod.fst ≫ f by
           ext <;> simp ]⟩⟩
 
 theorem distrib (f g h k : X ⟶ Y) : (f +ᵣ g) +ₗ h +ᵣ k = (f +ₗ h) +ᵣ g +ₗ k := by
@@ -78,7 +78,7 @@ theorem distrib (f g h k : X ⟶ Y) : (f +ᵣ g) +ₗ h +ᵣ k = (f +ₗ h) +ᵣ
   have h₁ : biprod.lift (f +ᵣ g) (h +ᵣ k) = biprod.lift (𝟙 X) (𝟙 X) ≫ diag := by
     ext <;> simp
   have h₂ : diag ≫ biprod.desc (𝟙 Y) (𝟙 Y) = biprod.desc (f +ₗ h) (g +ₗ k) := by
-    ext <;> simp [← reassoc_of hd₁, ← reassoc_of hd₂]
+    ext <;> simp [reassoc_of hd₁, reassoc_of hd₂]
   rw [leftAdd, h₁, category.assoc, h₂, rightAdd]
 
 /-- In a category with binary biproducts, the morphisms form a commutative monoid. -/
@@ -105,12 +105,12 @@ theorem add_eq_left_addition (f g : X ⟶ Y) : f + g = biprod.lift f g ≫ bipro
   congr_fun₂ (EckmannHilton.mul (is_unital_left_add X Y) (is_unital_right_add X Y) (distrib X Y)).symm f g
 
 theorem add_comp (f g : X ⟶ Y) (h : Y ⟶ Z) : (f + g) ≫ h = f ≫ h + g ≫ h := by
-  simp only [← add_eq_right_addition, ← category.assoc]
+  simp only [add_eq_right_addition, category.assoc]
   congr
   ext <;> simp
 
 theorem comp_add (f : X ⟶ Y) (g h : Y ⟶ Z) : f ≫ (g + h) = f ≫ g + f ≫ h := by
-  simp only [← add_eq_left_addition, category.assoc]
+  simp only [add_eq_left_addition, ← category.assoc]
   congr
   ext <;> simp
 

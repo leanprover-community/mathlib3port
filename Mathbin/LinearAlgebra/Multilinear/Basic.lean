@@ -147,8 +147,8 @@ theorem map_zero [Nonempty ι] : f 0 = 0 := by
 instance : Add (MultilinearMap R M₁ M₂) :=
   ⟨fun f f' =>
     ⟨fun x => f x + f' x, fun m i x y => by
-      simp [← add_left_commₓ, ← add_assocₓ], fun m i c x => by
-      simp [← smul_add]⟩⟩
+      simp [add_left_commₓ, add_assocₓ], fun m i c x => by
+      simp [smul_add]⟩⟩
 
 @[simp]
 theorem add_apply (m : ∀ i, M₁ i) : (f + f') m = f m + f' m :=
@@ -174,8 +174,8 @@ variable {R' A : Type _} [Monoidₓ R'] [Semiringₓ A] [∀ i, Module A (M₁ i
 instance : HasSmul R' (MultilinearMap A M₁ M₂) :=
   ⟨fun c f =>
     ⟨fun m => c • f m, fun m i x y => by
-      simp [← smul_add], fun l i x d => by
-      simp [smul_comm x c]⟩⟩
+      simp [smul_add], fun l i x d => by
+      simp [← smul_comm x c]⟩⟩
 
 @[simp]
 theorem smul_apply (f : MultilinearMap A M₁ M₂) (c : R') (m : ∀ i, M₁ i) : (c • f) m = c • f m :=
@@ -199,7 +199,7 @@ theorem sum_apply {α : Type _} (f : α → MultilinearMap R M₁ M₂) (m : ∀
     
   · intro a s has H
     rw [Finset.sum_insert has]
-    simp [← H, ← has]
+    simp [H, has]
     
 
 /-- If `f` is a multilinear map, then `f.to_linear_map m i` is the linear map obtained by fixing all
@@ -240,10 +240,10 @@ def ofSubsingleton [Subsingleton ι] (i' : ι) : MultilinearMap R (fun _ : ι =>
   toFun := Function.eval i'
   map_add' := fun m i x y => by
     rw [Subsingleton.elimₓ i i']
-    simp only [← Function.eval, ← Function.update_same]
+    simp only [Function.eval, Function.update_same]
   map_smul' := fun m i r x => by
     rw [Subsingleton.elimₓ i i']
-    simp only [← Function.eval, ← Function.update_same]
+    simp only [Function.eval, Function.update_same]
 
 variable {M₂}
 
@@ -315,11 +315,11 @@ def compLinearMap (g : MultilinearMap R M₁' M₂) (f : ∀ i, M₁ i →ₗ[R]
   map_add' := fun m i x y => by
     have : ∀ j z, f j (update m i z j) = update (fun k => f k (m k)) i (f i z) j := fun j z =>
       Function.apply_update (fun k => f k) _ _ _ _
-    simp [← this]
+    simp [this]
   map_smul' := fun m i c x => by
     have : ∀ j z, f j (update m i z j) = update (fun k => f k (m k)) i (f i z) j := fun j z =>
       Function.apply_update (fun k => f k) _ _ _ _
-    simp [← this]
+    simp [this]
 
 @[simp]
 theorem comp_linear_map_apply (g : MultilinearMap R M₁' M₂) (f : ∀ i, M₁ i →ₗ[R] M₁' i) (m : ∀ i, M₁ i) :
@@ -346,7 +346,7 @@ theorem comp_linear_map_id (g : MultilinearMap R M₁' M₂) : (g.compLinearMap 
 theorem comp_linear_map_injective (f : ∀ i, M₁ i →ₗ[R] M₁' i) (hf : ∀ i, Surjective (f i)) :
     Injective fun g : MultilinearMap R M₁' M₂ => g.compLinearMap f := fun g₁ g₂ h =>
   ext fun x => by
-    simpa [← fun i => surj_inv_eq (hf i)] using ext_iff.mp h fun i => surj_inv (hf i) (x i)
+    simpa [fun i => surj_inv_eq (hf i)] using ext_iff.mp h fun i => surj_inv (hf i) (x i)
 
 theorem comp_linear_map_inj (f : ∀ i, M₁ i →ₗ[R] M₁' i) (hf : ∀ i, Surjective (f i)) (g₁ g₂ : MultilinearMap R M₁' M₂) :
     g₁.compLinearMap f = g₂.compLinearMap f ↔ g₁ = g₂ :=
@@ -382,18 +382,18 @@ theorem map_piecewise_add (m m' : ∀ i, M₁ i) (t : Finset ι) :
     ext j
     by_cases' h : j = i
     · rw [h]
-      simp [← hit]
+      simp [hit]
       
-    · simp [← h]
+    · simp [h]
       
   let m'' := update m' i (m i)
   have C : update (t.piecewise (m + m') m') i (m i) = t.piecewise (m + m'') m'' := by
     ext j
     by_cases' h : j = i
     · rw [h]
-      simp [← m'', ← hit]
+      simp [m'', hit]
       
-    · by_cases' h' : j ∈ t <;> simp [← h, ← hit, ← m'', ← h']
+    · by_cases' h' : j ∈ t <;> simp [h, hit, m'', h']
       
   rw [A, f.map_add, B, C, Finset.sum_powerset_insert hit, Hrec, Hrec, add_commₓ]
   congr 1
@@ -402,9 +402,9 @@ theorem map_piecewise_add (m m' : ∀ i, M₁ i) (t : Finset ι) :
     ext j
     by_cases' h : j = i
     · rw [h]
-      simp [← m'', ← Finset.not_mem_of_mem_powerset_of_not_mem hs hit]
+      simp [m'', Finset.not_mem_of_mem_powerset_of_not_mem hs hit]
       
-    · by_cases' h' : j ∈ s <;> simp [← h, ← m'', ← h']
+    · by_cases' h' : j ∈ s <;> simp [h, m'', h']
       
   rw [this]
 
@@ -448,20 +448,20 @@ theorem map_sum_finset_aux [Fintype ι] {n : ℕ} (h : (∑ i, (A i).card) = n) 
   · have Ai_card : ∀ i, (A i).card = 1 := by
       intro i
       have pos : Finset.card (A i) ≠ 0 := by
-        simp [← Finset.card_eq_zero, ← Ai_empty i]
+        simp [Finset.card_eq_zero, Ai_empty i]
       have : Finset.card (A i) ≤ 1 := Ai_singleton i
       exact le_antisymmₓ this (Nat.succ_le_of_ltₓ (_root_.pos_iff_ne_zero.mpr Pos))
     have : ∀ r : ∀ i, α i, r ∈ pi_finset A → (f fun i => g i (r i)) = f fun i => ∑ j in A i, g i j := by
       intro r hr
       unfold_coes
       congr with i
-      have : ∀, ∀ j ∈ A i, ∀, g i j = g i (r i) := by
+      have : ∀ j ∈ A i, g i j = g i (r i) := by
         intro j hj
         congr
         apply Finset.card_le_one_iff.1 (Ai_singleton i) hj
         exact mem_pi_finset.mp hr i
-      simp only [← Finset.sum_congr rfl this, ← Finset.mem_univ, ← Finset.sum_const, ← Ai_card i, ← one_nsmul]
-    simp only [← sum_congr rfl this, ← Ai_card, ← card_pi_finset, ← prod_const_one, ← one_nsmul, ← Finset.sum_const]
+      simp only [Finset.sum_congr rfl this, Finset.mem_univ, Finset.sum_const, Ai_card i, one_nsmul]
+    simp only [sum_congr rfl this, Ai_card, card_pi_finset, prod_const_one, one_nsmul, Finset.sum_const]
     
   -- Remains the interesting case where one of the `A i`, say `A i₀`, has cardinality at least 2.
   -- We will split into two parts `B i₀` and `C i₀` of smaller cardinality, let `B i = C i = A i`
@@ -476,17 +476,17 @@ theorem map_sum_finset_aux [Fintype ι] {n : ℕ} (h : (∑ i, (A i).card) = n) 
     intro i
     by_cases' hi : i = i₀
     · rw [hi]
-      simp only [← B, ← sdiff_subset, ← update_same]
+      simp only [B, sdiff_subset, update_same]
       
-    · simp only [← hi, ← B, ← update_noteq, ← Ne.def, ← not_false_iff, ← Finset.Subset.refl]
+    · simp only [hi, B, update_noteq, Ne.def, not_false_iff, Finset.Subset.refl]
       
   have C_subset_A : ∀ i, C i ⊆ A i := by
     intro i
     by_cases' hi : i = i₀
     · rw [hi]
-      simp only [← C, ← hj₂, ← Finset.singleton_subset_iff, ← update_same]
+      simp only [C, hj₂, Finset.singleton_subset_iff, update_same]
       
-    · simp only [← hi, ← C, ← update_noteq, ← Ne.def, ← not_false_iff, ← Finset.Subset.refl]
+    · simp only [hi, C, update_noteq, Ne.def, not_false_iff, Finset.Subset.refl]
       
   -- split the sum at `i₀` as the sum over `B i₀` plus the sum over `C i₀`, to use additivity.
   have A_eq_BC :
@@ -496,47 +496,46 @@ theorem map_sum_finset_aux [Fintype ι] {n : ℕ} (h : (∑ i, (A i).card) = n) 
     ext i
     by_cases' hi : i = i₀
     · rw [hi]
-      simp only [← Function.update_same]
+      simp only [Function.update_same]
       have : A i₀ = B i₀ ∪ C i₀ := by
-        simp only [← B, ← C, ← Function.update_same, ← Finset.sdiff_union_self_eq_union]
+        simp only [B, C, Function.update_same, Finset.sdiff_union_self_eq_union]
         symm
-        simp only [← hj₂, ← Finset.singleton_subset_iff, ← Finset.union_eq_left_iff_subset]
+        simp only [hj₂, Finset.singleton_subset_iff, Finset.union_eq_left_iff_subset]
       rw [this]
       apply Finset.sum_union
       apply Finset.disjoint_right.2 fun j hj => _
       have : j = j₂ := by
-        dsimp' [← C]  at hj
+        dsimp' [C]  at hj
         simpa using hj
       rw [this]
-      dsimp' [← B]
-      simp only [← mem_sdiff, ← eq_self_iff_true, ← not_true, ← not_false_iff, ← Finset.mem_singleton, ← update_same, ←
-        and_falseₓ]
+      dsimp' [B]
+      simp only [mem_sdiff, eq_self_iff_true, not_true, not_false_iff, Finset.mem_singleton, update_same, and_falseₓ]
       
-    · simp [← hi]
+    · simp [hi]
       
   have Beq : Function.update (fun i => ∑ j in A i, g i j) i₀ (∑ j in B i₀, g i₀ j) = fun i => ∑ j in B i, g i j := by
     ext i
     by_cases' hi : i = i₀
     · rw [hi]
-      simp only [← update_same]
+      simp only [update_same]
       
-    · simp only [← hi, ← B, ← update_noteq, ← Ne.def, ← not_false_iff]
+    · simp only [hi, B, update_noteq, Ne.def, not_false_iff]
       
   have Ceq : Function.update (fun i => ∑ j in A i, g i j) i₀ (∑ j in C i₀, g i₀ j) = fun i => ∑ j in C i, g i j := by
     ext i
     by_cases' hi : i = i₀
     · rw [hi]
-      simp only [← update_same]
+      simp only [update_same]
       
-    · simp only [← hi, ← C, ← update_noteq, ← Ne.def, ← not_false_iff]
+    · simp only [hi, C, update_noteq, Ne.def, not_false_iff]
       
   -- Express the inductive assumption for `B`
   have Brec : (f fun i => ∑ j in B i, g i j) = ∑ r in pi_finset B, f fun i => g i (r i) := by
     have : (∑ i, Finset.card (B i)) < ∑ i, Finset.card (A i) := by
       refine' Finset.sum_lt_sum (fun i hi => Finset.card_le_of_subset (B_subset_A i)) ⟨i₀, Finset.mem_univ _, _⟩
       have : {j₂} ⊆ A i₀ := by
-        simp [← hj₂]
-      simp only [← B, ← Finset.card_sdiff this, ← Function.update_same, ← Finset.card_singleton]
+        simp [hj₂]
+      simp only [B, Finset.card_sdiff this, Function.update_same, Finset.card_singleton]
       exact Nat.pred_ltₓ (ne_of_gtₓ (lt_transₓ Nat.zero_lt_oneₓ hi₀))
     rw [h] at this
     exact IH _ this B rfl
@@ -545,12 +544,12 @@ theorem map_sum_finset_aux [Fintype ι] {n : ℕ} (h : (∑ i, (A i).card) = n) 
     have : (∑ i, Finset.card (C i)) < ∑ i, Finset.card (A i) :=
       Finset.sum_lt_sum (fun i hi => Finset.card_le_of_subset (C_subset_A i))
         ⟨i₀, Finset.mem_univ _, by
-          simp [← C, ← hi₀]⟩
+          simp [C, hi₀]⟩
     rw [h] at this
     exact IH _ this C rfl
   have D : Disjoint (pi_finset B) (pi_finset C) := by
     have : Disjoint (B i₀) (C i₀) := by
-      simp [← B, ← C]
+      simp [B, C]
     exact pi_finset_disjoint_of_disjoint B C this
   have pi_BC : pi_finset A = pi_finset B ∪ pi_finset C := by
     apply Finset.Subset.antisymm
@@ -560,20 +559,20 @@ theorem map_sum_finset_aux [Fintype ι] {n : ℕ} (h : (∑ i, (A i).card) = n) 
         apply mem_pi_finset.2 fun i => _
         by_cases' hi : i = i₀
         · have : r i₀ ∈ C i₀ := by
-            simp [← C, ← hri₀]
+            simp [C, hri₀]
           convert this
           
-        · simp [← C, ← hi, ← mem_pi_finset.1 hr i]
+        · simp [C, hi, mem_pi_finset.1 hr i]
           
         
       · apply Finset.mem_union_left
         apply mem_pi_finset.2 fun i => _
         by_cases' hi : i = i₀
         · have : r i₀ ∈ B i₀ := by
-            simp [← B, ← hri₀, ← mem_pi_finset.1 hr i₀]
+            simp [B, hri₀, mem_pi_finset.1 hr i₀]
           convert this
           
-        · simp [← B, ← hi, ← mem_pi_finset.1 hr i]
+        · simp [B, hi, mem_pi_finset.1 hr i]
           
         
       
@@ -581,7 +580,7 @@ theorem map_sum_finset_aux [Fintype ι] {n : ℕ} (h : (∑ i, (A i).card) = n) 
         Finset.union_subset (pi_finset_subset _ _ fun i => B_subset_A i) (pi_finset_subset _ _ fun i => C_subset_A i)
       
   rw [A_eq_BC]
-  simp only [← MultilinearMap.map_add, ← Beq, ← Ceq, ← Brec, ← Crec, ← pi_BC]
+  simp only [MultilinearMap.map_add, Beq, Ceq, Brec, Crec, pi_BC]
   rw [← Finset.sum_union D]
 
 /-- If `f` is multilinear, then `f (Σ_{j₁ ∈ A₁} g₁ j₁, ..., Σ_{jₙ ∈ Aₙ} gₙ jₙ)` is the sum of
@@ -602,7 +601,7 @@ theorem map_update_sum {α : Type _} (t : Finset α) (i : ι) (g : α → M₁ i
   induction' t using Finset.induction with a t has ih h
   · simp
     
-  · simp [← Finset.sum_insert has, ← ih]
+  · simp [Finset.sum_insert has, ih]
     
 
 end ApplySum
@@ -760,12 +759,12 @@ theorem map_piecewise_smul (c : ι → R) (m : ∀ i, M₁ i) (s : Finset ι) :
     ext i
     by_cases' h : i = j
     · rw [h]
-      simp [← j_not_mem_s]
+      simp [j_not_mem_s]
       
-    · simp [← h]
+    · simp [h]
       
   rw [s.piecewise_insert, f.map_smul, A, Hrec]
-  simp [← j_not_mem_s, ← mul_smul]
+  simp [j_not_mem_s, mul_smul]
 
 /-- Multiplicativity of a multilinear map along all coordinates at the same time,
 writing `f (λi, c i • m i)` as `(∏ i, c i) • f m`. -/
@@ -779,7 +778,7 @@ theorem map_update_smul [Fintype ι] (m : ∀ i, M₁ i) (i : ι) (c : R) (x : M
     f ((finset.univ.erase i).piecewise (c • update m i x) (update m i x)) =
       (∏ i in finset.univ.erase i, c) • f (update m i x) :=
     map_piecewise_smul f _ _ _
-  simpa [Function.update_smul c m] using this
+  simpa [← Function.update_smul c m] using this
 
 section DistribMulAction
 
@@ -830,33 +829,33 @@ def domDomCongrLinearEquiv' {ι' : Type _} [DecidableEq ι'] (σ : ι ≃ ι') :
       map_add' := fun m i => by
         rw [← σ.apply_symm_apply i]
         intro x y
-        simp only [← comp_app, ← Pi_congr_left'_symm_update, ← f.map_add],
+        simp only [comp_app, Pi_congr_left'_symm_update, f.map_add],
       map_smul' := fun m i c => by
         rw [← σ.apply_symm_apply i]
         intro x
-        simp only [← comp_app, ← Pi_congr_left'_symm_update, ← f.map_smul] }
+        simp only [comp_app, Pi_congr_left'_symm_update, f.map_smul] }
   invFun := fun f =>
     { toFun := f ∘ σ.piCongrLeft' M₁,
       map_add' := fun m i => by
         rw [← σ.symm_apply_apply i]
         intro x y
-        simp only [← comp_app, ← Pi_congr_left'_update, ← f.map_add],
+        simp only [comp_app, Pi_congr_left'_update, f.map_add],
       map_smul' := fun m i c => by
         rw [← σ.symm_apply_apply i]
         intro x
-        simp only [← comp_app, ← Pi_congr_left'_update, ← f.map_smul] }
+        simp only [comp_app, Pi_congr_left'_update, f.map_smul] }
   map_add' := fun f₁ f₂ => by
     ext
-    simp only [← comp_app, ← coe_mk, ← add_apply]
+    simp only [comp_app, coe_mk, add_apply]
   map_smul' := fun c f => by
     ext
-    simp only [← comp_app, ← coe_mk, ← smul_apply, ← RingHom.id_apply]
+    simp only [comp_app, coe_mk, smul_apply, RingHom.id_apply]
   left_inv := fun f => by
     ext
-    simp only [← comp_app, ← coe_mk, ← Equivₓ.symm_apply_apply]
+    simp only [comp_app, coe_mk, Equivₓ.symm_apply_apply]
   right_inv := fun f => by
     ext
-    simp only [← comp_app, ← coe_mk, ← Equivₓ.apply_symm_apply]
+    simp only [comp_app, coe_mk, Equivₓ.apply_symm_apply]
 
 /-- The space of constant maps is equivalent to the space of maps that are multilinear with respect
 to an empty family. -/
@@ -883,9 +882,9 @@ algebra `A` but requires `ι = fin n`. -/
 protected def mkPiAlgebra : MultilinearMap R (fun i : ι => A) A where
   toFun := fun m => ∏ i, m i
   map_add' := fun m i x y => by
-    simp [← Finset.prod_update_of_mem, ← add_mulₓ]
+    simp [Finset.prod_update_of_mem, add_mulₓ]
   map_smul' := fun m i c x => by
-    simp [← Finset.prod_update_of_mem]
+    simp [Finset.prod_update_of_mem]
 
 variable {R A ι}
 
@@ -910,13 +909,13 @@ protected def mkPiAlgebraFin : MultilinearMap R (fun i : Finₓ n => A) A where
     intro m i x y
     have : (List.finRange n).indexOf i < n := by
       simpa using List.index_of_lt_length.2 (List.mem_fin_range i)
-    simp [← List.of_fn_eq_map, ← (List.nodup_fin_range n).map_update, ← List.prod_update_nth, ← add_mulₓ, ← this, ←
-      mul_addₓ, ← add_mulₓ]
+    simp [List.of_fn_eq_map, (List.nodup_fin_range n).map_update, List.prod_update_nth, add_mulₓ, this, mul_addₓ,
+      add_mulₓ]
   map_smul' := by
     intro m i c x
     have : (List.finRange n).indexOf i < n := by
       simpa using List.index_of_lt_length.2 (List.mem_fin_range i)
-    simp [← List.of_fn_eq_map, ← (List.nodup_fin_range n).map_update, ← List.prod_update_nth, ← this]
+    simp [List.of_fn_eq_map, (List.nodup_fin_range n).map_update, List.prod_update_nth, this]
 
 variable {R A n}
 
@@ -972,7 +971,7 @@ variable [Semiringₓ R] [∀ i, AddCommMonoidₓ (M₁ i)] [AddCommGroupₓ M�
 instance : Neg (MultilinearMap R M₁ M₂) :=
   ⟨fun f =>
     ⟨fun m => -f m, fun m i x y => by
-      simp [← add_commₓ], fun m i c x => by
+      simp [add_commₓ], fun m i c x => by
       simp ⟩⟩
 
 @[simp]
@@ -982,9 +981,9 @@ theorem neg_apply (m : ∀ i, M₁ i) : (-f) m = -f m :=
 instance : Sub (MultilinearMap R M₁ M₂) :=
   ⟨fun f g =>
     ⟨fun m => f m - g m, fun m i x y => by
-      simp only [← MultilinearMap.map_add, ← sub_eq_add_neg, ← neg_add]
+      simp only [MultilinearMap.map_add, sub_eq_add_neg, neg_add]
       cc, fun m i c x => by
-      simp only [← MultilinearMap.map_smul, ← smul_sub]⟩⟩
+      simp only [MultilinearMap.map_smul, smul_sub]⟩⟩
 
 @[simp]
 theorem sub_apply (m : ∀ i, M₁ i) : (f - g) m = f m - g m :=
@@ -996,14 +995,14 @@ instance : AddCommGroupₓ (MultilinearMap R M₁ M₂) := by
         sub := Sub.sub, sub_eq_add_neg := _,
         nsmul := fun n f =>
           ⟨fun m => n • f m, fun m i x y => by
-            simp [← smul_add], fun l i x d => by
-            simp [smul_comm x n]⟩,
+            simp [smul_add], fun l i x d => by
+            simp [← smul_comm x n]⟩,
         zsmul := fun n f =>
           ⟨fun m => n • f m, fun m i x y => by
-            simp [← smul_add], fun l i x d => by
-            simp [smul_comm x n]⟩,
+            simp [smul_add], fun l i x d => by
+            simp [← smul_comm x n]⟩,
         zsmul_zero' := _, zsmul_succ' := _, zsmul_neg' := _.. } <;>
-    intros <;> ext <;> simp [← add_commₓ, ← add_left_commₓ, ← sub_eq_add_neg, ← add_smul, ← Nat.succ_eq_add_one]
+    intros <;> ext <;> simp [add_commₓ, add_left_commₓ, sub_eq_add_neg, add_smul, Nat.succ_eq_add_one]
 
 end RangeAddCommGroup
 
@@ -1036,10 +1035,10 @@ protected def piRingEquiv [Fintype ι] : M₂ ≃ₗ[R] MultilinearMap R (fun i 
   invFun := fun f => f fun i => 1
   map_add' := fun z z' => by
     ext m
-    simp [← smul_add]
+    simp [smul_add]
   map_smul' := fun c z => by
     ext m
-    simp [← smul_smul, ← mul_comm]
+    simp [smul_smul, mul_comm]
   left_inv := fun z => by
     simp
   right_inv := fun f => f.mk_pi_ring_apply_one_eq_self
@@ -1133,7 +1132,7 @@ theorem MultilinearMap.curry_left_apply (f : MultilinearMap R M M₂) (x : M 0) 
 theorem LinearMap.curry_uncurry_left (f : M 0 →ₗ[R] MultilinearMap R (fun i : Finₓ n => M i.succ) M₂) :
     f.uncurryLeft.curryLeft = f := by
   ext m x
-  simp only [← tail_cons, ← LinearMap.uncurry_left_apply, ← MultilinearMap.curry_left_apply]
+  simp only [tail_cons, LinearMap.uncurry_left_apply, MultilinearMap.curry_left_apply]
   rw [cons_zero]
 
 @[simp]
@@ -1221,7 +1220,7 @@ def MultilinearMap.curryRight (f : MultilinearMap R M M₂) :
       map_add' := fun x y => by
         rw [f.snoc_add],
       map_smul' := fun c x => by
-        simp only [← f.snoc_smul, ← RingHom.id_apply] }
+        simp only [f.snoc_smul, RingHom.id_apply] }
   map_add' := fun m i x y => by
     ext z
     change f (snoc (update m i (x + y)) z) = f (snoc (update m i x) z) + f (snoc (update m i y) z)
@@ -1240,7 +1239,7 @@ theorem MultilinearMap.curry_right_apply (f : MultilinearMap R M M₂) (m : ∀ 
 theorem MultilinearMap.curry_uncurry_right
     (f : MultilinearMap R (fun i : Finₓ n => M i.cast_succ) (M (last n) →ₗ[R] M₂)) : f.uncurryRight.curryRight = f := by
   ext m x
-  simp only [← snoc_last, ← MultilinearMap.curry_right_apply, ← MultilinearMap.uncurry_right_apply]
+  simp only [snoc_last, MultilinearMap.curry_right_apply, MultilinearMap.uncurry_right_apply]
   rw [init_snoc]
 
 @[simp]
@@ -1282,15 +1281,15 @@ def currySum (f : MultilinearMap R (fun x : Sum ι ι' => M') M₂) :
   toFun := fun u =>
     { toFun := fun v => f (Sum.elim u v),
       map_add' := fun v i x y => by
-        simp only [Sum.update_elim_inr, ← f.map_add],
+        simp only [← Sum.update_elim_inr, f.map_add],
       map_smul' := fun v i c x => by
-        simp only [Sum.update_elim_inr, ← f.map_smul] }
+        simp only [← Sum.update_elim_inr, f.map_smul] }
   map_add' := fun u i x y =>
     ext fun v => by
-      simp only [← MultilinearMap.coe_mk, ← add_apply, Sum.update_elim_inl, ← f.map_add]
+      simp only [MultilinearMap.coe_mk, add_apply, ← Sum.update_elim_inl, f.map_add]
   map_smul' := fun u i c x =>
     ext fun v => by
-      simp only [← MultilinearMap.coe_mk, ← smul_apply, Sum.update_elim_inl, ← f.map_smul]
+      simp only [MultilinearMap.coe_mk, smul_apply, ← Sum.update_elim_inl, f.map_smul]
 
 @[simp]
 theorem curry_sum_apply (f : MultilinearMap R (fun x : Sum ι ι' => M') M₂) (u : ι → M') (v : ι' → M') :
@@ -1304,12 +1303,12 @@ def uncurrySum (f : MultilinearMap R (fun x : ι => M') (MultilinearMap R (fun x
   toFun := fun u => f (u ∘ Sum.inl) (u ∘ Sum.inr)
   map_add' := fun u i x y => by
     cases i <;>
-      simp only [← MultilinearMap.map_add, ← add_apply, ← Sum.update_inl_comp_inl, ← Sum.update_inl_comp_inr, ←
-        Sum.update_inr_comp_inl, ← Sum.update_inr_comp_inr]
+      simp only [MultilinearMap.map_add, add_apply, Sum.update_inl_comp_inl, Sum.update_inl_comp_inr,
+        Sum.update_inr_comp_inl, Sum.update_inr_comp_inr]
   map_smul' := fun u i c x => by
     cases i <;>
-      simp only [← MultilinearMap.map_smul, ← smul_apply, ← Sum.update_inl_comp_inl, ← Sum.update_inl_comp_inr, ←
-        Sum.update_inr_comp_inl, ← Sum.update_inr_comp_inr]
+      simp only [MultilinearMap.map_smul, smul_apply, Sum.update_inl_comp_inl, Sum.update_inl_comp_inr,
+        Sum.update_inr_comp_inl, Sum.update_inr_comp_inr]
 
 @[simp]
 theorem uncurry_sum_aux_apply (f : MultilinearMap R (fun x : ι => M') (MultilinearMap R (fun x : ι' => M') M₂))

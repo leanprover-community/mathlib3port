@@ -47,14 +47,14 @@ theorem separable_def' (f : R[X]) : f.Separable ↔ ∃ a b : R[X], a * f + b * 
 
 theorem not_separable_zero [Nontrivial R] : ¬Separable (0 : R[X]) := by
   rintro ⟨x, y, h⟩
-  simpa only [← derivative_zero, ← mul_zero, ← add_zeroₓ, ← zero_ne_one] using h
+  simpa only [derivative_zero, mul_zero, add_zeroₓ, zero_ne_one] using h
 
 theorem separable_one : (1 : R[X]).Separable :=
   is_coprime_one_left
 
 @[nontriviality]
 theorem separable_of_subsingleton [Subsingleton R] (f : R[X]) : f.Separable := by
-  simp [← separable]
+  simp [separable]
 
 theorem separable_X_add_C (a : R) : (X + c a).Separable := by
   rw [separable_def, derivative_add, derivative_X, derivative_C, add_zeroₓ]
@@ -115,7 +115,7 @@ theorem is_unit_of_self_mul_dvd_separable {p q : R[X]} (hp : p.Separable) (hq : 
   obtain ⟨p, rfl⟩ := hq
   apply is_coprime_self.mp
   have : IsCoprime (q * (q * p)) (q * (q.derivative * p + q.derivative * p + q * p.derivative)) := by
-    simp only [mul_assoc, ← mul_addₓ]
+    simp only [← mul_assoc, mul_addₓ]
     convert hp
     rw [derivative_mul, derivative_mul]
     ring
@@ -126,7 +126,7 @@ theorem multiplicity_le_one_of_separable {p q : R[X]} (hq : ¬IsUnit q) (hsep : 
   apply is_unit_of_self_mul_dvd_separable hsep
   rw [← sq]
   apply multiplicity.pow_dvd_of_le_multiplicity
-  simpa only [← Nat.cast_oneₓ, ← Nat.cast_bit0] using PartEnat.add_one_le_of_lt hq
+  simpa only [Nat.cast_oneₓ, Nat.cast_bit0] using PartEnat.add_one_le_of_lt hq
 
 theorem Separable.squarefree {p : R[X]} (hsep : Separable p) : Squarefree p := by
   rw [multiplicity.squarefree_iff_multiplicity_le_one p]
@@ -143,15 +143,14 @@ section CommRingₓ
 variable {R : Type u} [CommRingₓ R]
 
 theorem separable_X_sub_C {x : R} : Separable (X - c x) := by
-  simpa only [← sub_eq_add_neg, ← C_neg] using separable_X_add_C (-x)
+  simpa only [sub_eq_add_neg, C_neg] using separable_X_add_C (-x)
 
 theorem Separable.mul {f g : R[X]} (hf : f.Separable) (hg : g.Separable) (h : IsCoprime f g) : (f * g).Separable := by
   rw [separable_def, derivative_mul]
   exact ((hf.mul_right h).add_mul_left_right _).mul_left ((h.symm.mul_right hg).mul_add_right_right _)
 
 theorem separable_prod' {ι : Sort _} {f : ι → R[X]} {s : Finset ι} :
-    (∀, ∀ x ∈ s, ∀, ∀, ∀ y ∈ s, ∀, x ≠ y → IsCoprime (f x) (f y)) →
-      (∀, ∀ x ∈ s, ∀, (f x).Separable) → (∏ x in s, f x).Separable :=
+    (∀ x ∈ s, ∀ y ∈ s, x ≠ y → IsCoprime (f x) (f y)) → (∀ x ∈ s, (f x).Separable) → (∏ x in s, f x).Separable :=
   (Finset.induction_on s fun _ _ => separable_one) fun a s has ih h1 h2 => by
     simp_rw [Finset.forall_mem_insert, forall_and_distrib] at h1 h2
     rw [prod_insert has]
@@ -179,7 +178,7 @@ theorem nodup_of_separable_prod [Nontrivial R] {s : Multiset R}
   rw [Multiset.nodup_iff_ne_cons_cons]
   rintro a t rfl
   refine' not_is_unit_X_sub_C a (is_unit_of_self_mul_dvd_separable hs _)
-  simpa only [← Multiset.map_cons, ← Multiset.prod_cons] using mul_dvd_mul_left _ (dvd_mul_right _ _)
+  simpa only [Multiset.map_cons, Multiset.prod_cons] using mul_dvd_mul_left _ (dvd_mul_right _ _)
 
 /-- If `is_unit n` in a `comm_ring R`, then `X ^ n - u` is separable for any unit `u`. -/
 theorem separable_X_pow_sub_C_unit {n : ℕ} (u : Rˣ) (hn : IsUnit (n : R)) : Separable (X ^ n - c (u : R)) := by
@@ -195,17 +194,17 @@ theorem separable_X_pow_sub_C_unit {n : ℕ} (u : Rˣ) (hn : IsUnit (n : R)) : S
     -C ↑u⁻¹ * (X ^ n - C ↑u) + C ↑u⁻¹ * C n' * X * (↑n * X ^ (n - 1)) =
         C (↑u⁻¹ * ↑u) - C ↑u⁻¹ * X ^ n + C ↑u⁻¹ * C (n' * ↑n) * (X * X ^ (n - 1)) :=
       by
-      simp only [← C.map_mul, ← C_eq_nat_cast]
+      simp only [C.map_mul, C_eq_nat_cast]
       ring
     _ = 1 := by
-      simp only [← Units.inv_mul, ← hn', ← C.map_one, ← mul_oneₓ, pow_succₓ, ←
-        Nat.sub_add_cancelₓ (show 1 ≤ n from hpos), ← sub_add_cancel]
+      simp only [Units.inv_mul, hn', C.map_one, mul_oneₓ, ← pow_succₓ, Nat.sub_add_cancelₓ (show 1 ≤ n from hpos),
+        sub_add_cancel]
     
 
 theorem root_multiplicity_le_one_of_separable [Nontrivial R] {p : R[X]} (hsep : Separable p) (x : R) :
     rootMultiplicity x p ≤ 1 := by
   by_cases' hp : p = 0
-  · simp [← hp]
+  · simp [hp]
     
   rw [root_multiplicity_eq_multiplicity, dif_neg hp, ← PartEnat.coe_le_coe, PartEnat.coe_get, Nat.cast_oneₓ]
   exact multiplicity_le_one_of_separable (not_is_unit_X_sub_C _) hsep
@@ -236,13 +235,13 @@ theorem separable_iff_derivative_ne_zero {f : F[X]} (hf : Irreducible f) : f.Sep
       have : f ∣ f.derivative := by
         conv_lhs => rw [hg3, ← hu]
         rwa [Units.mul_right_dvd]
-      not_lt_of_le (nat_degree_le_of_dvd this h) <| nat_degree_derivative_lt <| mt derivative_of_nat_degree_zero h⟩
+      not_lt_of_leₓ (nat_degree_le_of_dvd this h) <| nat_degree_derivative_lt <| mt derivative_of_nat_degree_zero h⟩
 
 theorem separable_map (f : F →+* K) {p : F[X]} : (p.map f).Separable ↔ p.Separable := by
   simp_rw [separable_def, derivative_map, is_coprime_map]
 
 theorem separable_prod_X_sub_C_iff' {ι : Sort _} {f : ι → F} {s : Finset ι} :
-    (∏ i in s, X - c (f i)).Separable ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, f x = f y → x = y :=
+    (∏ i in s, X - c (f i)).Separable ↔ ∀ x ∈ s, ∀ y ∈ s, f x = f y → x = y :=
   ⟨fun hfs x hx y hy hfxy => hfs.inj_of_prod_X_sub_C hx hy hfxy, fun H => by
     rw [← prod_attach]
     exact
@@ -376,7 +375,7 @@ theorem card_root_set_eq_nat_degree [Algebra F K] {p : F[X]} (hsep : p.Separable
 variable {i : F →+* K}
 
 theorem eq_X_sub_C_of_separable_of_root_eq {x : F} {h : F[X]} (h_sep : h.Separable) (h_root : h.eval x = 0)
-    (h_splits : Splits i h) (h_roots : ∀, ∀ y ∈ (h.map i).roots, ∀, y = i x) : h = c (leadingCoeff h) * (X - c x) := by
+    (h_splits : Splits i h) (h_roots : ∀ y ∈ (h.map i).roots, y = i x) : h = c (leadingCoeff h) * (X - c x) := by
   have h_ne_zero : h ≠ 0 := by
     rintro rfl
     exact not_separable_zero h_sep

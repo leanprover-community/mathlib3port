@@ -59,11 +59,11 @@ instance [MulOneClassₓ Y] : MulOneClassₓ (LocallyConstant X Y) :=
     one_mul := by
       intros
       ext
-      simp only [← mul_apply, ← one_apply, ← one_mulₓ],
+      simp only [mul_apply, one_apply, one_mulₓ],
     mul_one := by
       intros
       ext
-      simp only [← mul_apply, ← one_apply, ← mul_oneₓ] }
+      simp only [mul_apply, one_apply, mul_oneₓ] }
 
 /-- `coe_fn` is a `monoid_hom`. -/
 @[to_additive "`coe_fn` is an `add_monoid_hom`.", simps]
@@ -84,11 +84,11 @@ instance [MulZeroClassₓ Y] : MulZeroClassₓ (LocallyConstant X Y) :=
     zero_mul := by
       intros
       ext
-      simp only [← mul_apply, ← zero_apply, ← zero_mul],
+      simp only [mul_apply, zero_apply, zero_mul],
     mul_zero := by
       intros
       ext
-      simp only [← mul_apply, ← zero_apply, ← mul_zero] }
+      simp only [mul_apply, zero_apply, mul_zero] }
 
 instance [MulZeroOneClassₓ Y] : MulZeroOneClassₓ (LocallyConstant X Y) :=
   { LocallyConstant.mulZeroClass, LocallyConstant.mulOneClass with }
@@ -134,7 +134,7 @@ instance [Semigroupₓ Y] : Semigroupₓ (LocallyConstant X Y) :=
     mul_assoc := by
       intros
       ext
-      simp only [← mul_apply, ← mul_assoc] }
+      simp only [mul_apply, mul_assoc] }
 
 instance [SemigroupWithZeroₓ Y] : SemigroupWithZeroₓ (LocallyConstant X Y) :=
   { LocallyConstant.mulZeroClass, LocallyConstant.semigroup with }
@@ -145,7 +145,7 @@ instance [CommSemigroupₓ Y] : CommSemigroupₓ (LocallyConstant X Y) :=
     mul_comm := by
       intros
       ext
-      simp only [← mul_apply, ← mul_comm] }
+      simp only [mul_apply, mul_comm] }
 
 @[to_additive]
 instance [Monoidₓ Y] : Monoidₓ (LocallyConstant X Y) :=
@@ -154,9 +154,9 @@ instance [Monoidₓ Y] : Monoidₓ (LocallyConstant X Y) :=
 instance [AddMonoidWithOneₓ Y] : AddMonoidWithOneₓ (LocallyConstant X Y) :=
   { LocallyConstant.addMonoid, LocallyConstant.hasOne with natCast := fun n => const X n,
     nat_cast_zero := by
-      ext <;> simp [← Nat.castₓ],
+      ext <;> simp [Nat.castₓ],
     nat_cast_succ := fun _ => by
-      ext <;> simp [← Nat.castₓ] }
+      ext <;> simp [Nat.castₓ] }
 
 @[to_additive]
 instance [CommMonoidₓ Y] : CommMonoidₓ (LocallyConstant X Y) :=
@@ -168,11 +168,11 @@ instance [Groupₓ Y] : Groupₓ (LocallyConstant X Y) :=
     mul_left_inv := by
       intros
       ext
-      simp only [← mul_apply, ← inv_apply, ← one_apply, ← mul_left_invₓ],
+      simp only [mul_apply, inv_apply, one_apply, mul_left_invₓ],
     div_eq_mul_inv := by
       intros
       ext
-      simp only [← mul_apply, ← inv_apply, ← div_apply, ← div_eq_mul_inv] }
+      simp only [mul_apply, inv_apply, div_apply, div_eq_mul_inv] }
 
 @[to_additive]
 instance [CommGroupₓ Y] : CommGroupₓ (LocallyConstant X Y) :=
@@ -183,11 +183,11 @@ instance [Distribₓ Y] : Distribₓ (LocallyConstant X Y) :=
     left_distrib := by
       intros
       ext
-      simp only [← mul_apply, ← add_apply, ← mul_addₓ],
+      simp only [mul_apply, add_apply, mul_addₓ],
     right_distrib := by
       intros
       ext
-      simp only [← mul_apply, ← add_apply, ← add_mulₓ] }
+      simp only [mul_apply, add_apply, add_mulₓ] }
 
 instance [NonUnitalNonAssocSemiringₓ Y] : NonUnitalNonAssocSemiringₓ (LocallyConstant X Y) :=
   { LocallyConstant.addCommMonoid, LocallyConstant.hasMul, LocallyConstant.distrib, LocallyConstant.mulZeroClass with }

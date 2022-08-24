@@ -245,39 +245,38 @@ def normalizeIso : tensorFunc C ≅ normalize' C :=
       intro f
       ext n
       induction f generalizing n
-      · simp only [← mk_id, ← Functor.map_id, ← category.id_comp, ← category.comp_id]
+      · simp only [mk_id, Functor.map_id, category.id_comp, category.comp_id]
         
       · dsimp'
-        simp only [← id_tensor_associator_inv_naturality_assoc, pentagon_inv_assoc, ← tensor_hom_inv_id_assoc, ←
-          tensor_id, ← category.id_comp, ← discrete.functor_map_id, ← comp_tensor_id, ← iso.cancel_iso_inv_left, ←
-          category.assoc]
+        simp only [id_tensor_associator_inv_naturality_assoc, ← pentagon_inv_assoc, tensor_hom_inv_id_assoc, tensor_id,
+          category.id_comp, discrete.functor_map_id, comp_tensor_id, iso.cancel_iso_inv_left, category.assoc]
         dsimp'
-        simp only [← category.comp_id]
+        simp only [category.comp_id]
         
       · dsimp'
-        simp only [← discrete.functor_map_id, ← comp_tensor_id, ← category.assoc, ← pentagon_inv_assoc,
-          associator_inv_naturality_assoc, ← tensor_id, ← iso.cancel_iso_inv_left]
+        simp only [discrete.functor_map_id, comp_tensor_id, category.assoc, pentagon_inv_assoc, ←
+          associator_inv_naturality_assoc, tensor_id, iso.cancel_iso_inv_left]
         dsimp'
-        simp only [← category.comp_id]
+        simp only [category.comp_id]
         
       · dsimp'
         rw [triangle_assoc_comp_right_assoc]
-        simp only [← discrete.functor_map_id, ← category.assoc]
+        simp only [discrete.functor_map_id, category.assoc]
         cases n
         dsimp'
-        simp only [← category.comp_id]
+        simp only [category.comp_id]
         
       · dsimp'
-        simp only [← triangle_assoc_comp_left_inv_assoc, ← inv_hom_id_tensor_assoc, ← tensor_id, ← category.id_comp, ←
+        simp only [triangle_assoc_comp_left_inv_assoc, inv_hom_id_tensor_assoc, tensor_id, category.id_comp,
           discrete.functor_map_id]
         dsimp'
-        simp only [← category.comp_id]
+        simp only [category.comp_id]
         cases n
         simp
         
       · dsimp'
         rw [← (iso.inv_comp_eq _).2 (right_unitor_tensor _ _), category.assoc, ← right_unitor_naturality]
-        simp only [← iso.cancel_iso_inv_left, ← category.assoc]
+        simp only [iso.cancel_iso_inv_left, category.assoc]
         congr 1
         convert (category.comp_id _).symm
         convert discrete_functor_map_eq_id inclusion_obj _ _
@@ -285,8 +284,8 @@ def normalizeIso : tensorFunc C ≅ normalize' C :=
         rfl
         
       · dsimp'
-        simp only [(iso.eq_comp_inv _).1 (right_unitor_tensor_inv _ _), ← right_unitor_conjugation, ← category.assoc, ←
-          iso.hom_inv_id, ← iso.hom_inv_id_assoc, ← iso.inv_hom_id, ← iso.inv_hom_id_assoc]
+        simp only [← (iso.eq_comp_inv _).1 (right_unitor_tensor_inv _ _), right_unitor_conjugation, category.assoc,
+          iso.hom_inv_id, iso.hom_inv_id_assoc, iso.inv_hom_id, iso.inv_hom_id_assoc]
         congr
         convert (discrete_functor_map_eq_id inclusion_obj _ _).symm
         ext
@@ -301,14 +300,14 @@ def normalizeIso : tensorFunc C ≅ normalize' C :=
         rw [associator_inv_naturality_assoc]
         slice_lhs 2 3 => rw [← tensor_comp, f_ih_f ⟦f_f⟧]
         conv_lhs => rw [← @category.id_comp (F C) _ _ _ ⟦f_g⟧]
-        simp only [← category.comp_id, ← tensor_comp, ← category.assoc]
+        simp only [category.comp_id, tensor_comp, category.assoc]
         congr 2
         rw [← mk_tensor, Quotientₓ.lift_mk]
         dsimp'
         rw [functor.map_comp, ← category.assoc, ← f_ih_g ⟦f_g⟧, ← @category.comp_id (F C) _ _ _ ⟦f_g⟧, ←
           category.id_comp ((discrete.functor inclusion_obj).map _), tensor_comp]
         dsimp'
-        simp only [← category.assoc, ← category.comp_id]
+        simp only [category.assoc, category.comp_id]
         congr 1
         convert (normalize_iso_aux C f_Z).Hom.naturality ((normalize_map_aux f_f).app n)
         exact (tensor_func_obj_map _ _ _).symm
@@ -332,7 +331,7 @@ instance subsingleton_hom {X Y : F C} : Subsingleton (X ⟶ Y) :=
   ⟨fun f g => by
     have : (fullNormalize C).map f = (fullNormalize C).map g := Subsingleton.elimₓ _ _
     rw [← functor.id_map f, ← functor.id_map g]
-    simp [nat_iso.naturality_2 (fullNormalizeIso.{u} C), ← this]⟩
+    simp [← nat_iso.naturality_2 (fullNormalizeIso.{u} C), this]⟩
 
 section Groupoid
 

@@ -159,12 +159,12 @@ theorem to_Ioc_mod_eq_iff {a b x y : α} (hb : 0 < b) :
 @[simp]
 theorem to_Ico_div_apply_left (a : α) {b : α} (hb : 0 < b) : toIcoDiv a hb a = 0 := by
   refine' (eq_to_Ico_div_of_add_zsmul_mem_Ico hb _).symm
-  simp [← hb]
+  simp [hb]
 
 @[simp]
 theorem to_Ioc_div_apply_left (a : α) {b : α} (hb : 0 < b) : toIocDiv a hb a = 1 := by
   refine' (eq_to_Ioc_div_of_add_zsmul_mem_Ioc hb _).symm
-  simp [← hb]
+  simp [hb]
 
 @[simp]
 theorem to_Ico_mod_apply_left (a : α) {b : α} (hb : 0 < b) : toIcoMod a hb a = a := by
@@ -180,11 +180,11 @@ theorem to_Ioc_mod_apply_left (a : α) {b : α} (hb : 0 < b) : toIocMod a hb a =
 
 theorem to_Ico_div_apply_right (a : α) {b : α} (hb : 0 < b) : toIcoDiv a hb (a + b) = -1 := by
   refine' (eq_to_Ico_div_of_add_zsmul_mem_Ico hb _).symm
-  simp [← hb]
+  simp [hb]
 
 theorem to_Ioc_div_apply_right (a : α) {b : α} (hb : 0 < b) : toIocDiv a hb (a + b) = 0 := by
   refine' (eq_to_Ioc_div_of_add_zsmul_mem_Ioc hb _).symm
-  simp [← hb]
+  simp [hb]
 
 theorem to_Ico_mod_apply_right (a : α) {b : α} (hb : 0 < b) : toIcoMod a hb (a + b) = a := by
   rw [to_Ico_mod_eq_iff hb]
@@ -201,14 +201,14 @@ theorem to_Ico_div_add_zsmul (a : α) {b : α} (hb : 0 < b) (x : α) (m : ℤ) :
     toIcoDiv a hb (x + m • b) = toIcoDiv a hb x - m := by
   refine' (eq_to_Ico_div_of_add_zsmul_mem_Ico hb _).symm
   convert add_to_Ico_div_zsmul_mem_Ico a hb x using 1
-  simp [← sub_smul]
+  simp [sub_smul]
 
 @[simp]
 theorem to_Ioc_div_add_zsmul (a : α) {b : α} (hb : 0 < b) (x : α) (m : ℤ) :
     toIocDiv a hb (x + m • b) = toIocDiv a hb x - m := by
   refine' (eq_to_Ioc_div_of_add_zsmul_mem_Ioc hb _).symm
   convert add_to_Ioc_div_zsmul_mem_Ioc a hb x using 1
-  simp [← sub_smul]
+  simp [sub_smul]
 
 @[simp]
 theorem to_Ico_div_zsmul_add (a : α) {b : α} (hb : 0 < b) (x : α) (m : ℤ) :
@@ -406,22 +406,22 @@ theorem to_Ioc_div_eq_floor (a : α) {b : α} (hb : 0 < b) (x : α) : toIocDiv a
   exact Int.sub_floor_div_mul_lt _ hb
 
 theorem to_Ico_div_zero_one (x : α) : toIcoDiv (0 : α) zero_lt_one x = -⌊x⌋ := by
-  simp [← to_Ico_div_eq_neg_floor]
+  simp [to_Ico_div_eq_neg_floor]
 
 theorem to_Ico_mod_eq_add_fract_mul (a : α) {b : α} (hb : 0 < b) (x : α) :
     toIcoMod a hb x = a + Int.fract ((x - a) / b) * b := by
   rw [toIcoMod, to_Ico_div_eq_neg_floor, Int.fract]
-  field_simp [← hb.ne.symm]
+  field_simp [hb.ne.symm]
   ring
 
 theorem to_Ioc_mod_eq_sub_fract_mul (a : α) {b : α} (hb : 0 < b) (x : α) :
     toIocMod a hb x = a + b - Int.fract ((a + b - x) / b) * b := by
   rw [toIocMod, to_Ioc_div_eq_floor, Int.fract]
-  field_simp [← hb.ne.symm]
+  field_simp [hb.ne.symm]
   ring
 
 theorem to_Ico_mod_zero_one (x : α) : toIcoMod (0 : α) zero_lt_one x = Int.fract x := by
-  simp [← to_Ico_mod_eq_add_fract_mul]
+  simp [to_Ico_mod_eq_add_fract_mul]
 
 end LinearOrderedField
 

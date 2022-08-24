@@ -187,7 +187,7 @@ theorem preimage_image (h : α ≃ᵤ β) (s : Set α) : h ⁻¹' (h '' s) = s :
 
 protected theorem uniform_inducing (h : α ≃ᵤ β) : UniformInducing h :=
   uniform_inducing_of_compose h.UniformContinuous h.symm.UniformContinuous <| by
-    simp only [← symm_comp_self, ← uniform_inducing_id]
+    simp only [symm_comp_self, uniform_inducing_id]
 
 theorem comap_eq (h : α ≃ᵤ β) : UniformSpace.comap h ‹_› = ‹_› := by
   ext : 1 <;> exact h.uniform_inducing.comap_uniformity
@@ -199,7 +199,7 @@ protected theorem uniform_embedding (h : α ≃ᵤ β) : UniformEmbedding h :=
 noncomputable def ofUniformEmbedding (f : α → β) (hf : UniformEmbedding f) : α ≃ᵤ Set.Range f where
   uniform_continuous_to_fun := uniform_continuous_subtype_mk hf.to_uniform_inducing.UniformContinuous _
   uniform_continuous_inv_fun := by
-    simp [← hf.to_uniform_inducing.uniform_continuous_iff, ← uniform_continuous_subtype_coe]
+    simp [hf.to_uniform_inducing.uniform_continuous_iff, uniform_continuous_subtype_coe]
   toEquiv := Equivₓ.ofInjective f hf.inj
 
 /-- If two sets are equal, then they are uniformly equivalent. -/

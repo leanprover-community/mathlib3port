@@ -45,8 +45,7 @@ continuous on `U` and sends each `y ∈ U` to a point of `t y`. Then there exist
 `g : C(X, E)` such that `g x ∈ t x` for all `x`. See also
 `exists_continuous_forall_mem_convex_of_local_const`. -/
 theorem exists_continuous_forall_mem_convex_of_local (ht : ∀ x, Convex ℝ (t x))
-    (H : ∀ x : X, ∃ U ∈ 𝓝 x, ∃ g : X → E, ContinuousOn g U ∧ ∀, ∀ y ∈ U, ∀, g y ∈ t y) :
-    ∃ g : C(X, E), ∀ x, g x ∈ t x := by
+    (H : ∀ x : X, ∃ U ∈ 𝓝 x, ∃ g : X → E, ContinuousOn g U ∧ ∀ y ∈ U, g y ∈ t y) : ∃ g : C(X, E), ∀ x, g x ∈ t x := by
   choose U hU g hgc hgt using H
   obtain ⟨f, hf⟩ :=
     PartitionOfUnity.exists_is_subordinate is_closed_univ (fun x => Interior (U x)) (fun x => is_open_interior)

@@ -63,7 +63,7 @@ def buildLimit : Cone F where
 
 variable {i}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]
 /-- (Implementation) Show the cone constructed in `build_limit` is limiting, provided the cones used in
 its construction are.
 -/
@@ -75,8 +75,8 @@ def buildIsLimit (t₁ : IsLimit c₁) (t₂ : IsLimit c₂) (hi : IsLimit i) : 
       
     · apply t₂.hom_ext
       intro j
-      trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `discrete_cases #[]"
-      simp [← hs, ← ht]
+      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]"
+      simp [hs, ht]
       
   uniq' := fun q m w =>
     hi.hom_ext
@@ -174,14 +174,14 @@ def preservesLimitOfPreservesEqualizersAndProduct :
       
     · intro f
       dsimp'
-      simp only [G.map_comp, ← limit.lift_π, ← fan.mk_π_app]
+      simp only [← G.map_comp, limit.lift_π, fan.mk_π_app]
       
     · intro f
       dsimp'
-      simp only [G.map_comp, ← limit.lift_π, ← fan.mk_π_app]
+      simp only [← G.map_comp, limit.lift_π, fan.mk_π_app]
       
     · apply fork.of_ι (G.map i) _
-      simp only [G.map_comp, ← equalizer.condition]
+      simp only [← G.map_comp, equalizer.condition]
       
     · apply is_limit_of_has_product_of_preserves_limit
       
@@ -257,7 +257,7 @@ def buildColimit : Cocone F where
 
 variable {i}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `discrete_cases #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]
 /-- (Implementation) Show the cocone constructed in `build_colimit` is colimiting,
 provided the cocones used in its construction are.
 -/
@@ -270,8 +270,8 @@ def buildIsColimit (t₁ : IsColimit c₁) (t₂ : IsColimit c₂) (hi : IsColim
       
     · apply t₁.hom_ext
       intro j
-      trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `discrete_cases #[]"
-      simp [← reassoc_of hs, ← reassoc_of ht]
+      trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]"
+      simp [reassoc_of hs, reassoc_of ht]
       
   uniq' := fun q m w =>
     hi.hom_ext
@@ -371,14 +371,14 @@ def preservesColimitOfPreservesCoequalizersAndCoproduct :
       
     · intro f
       dsimp'
-      simp only [G.map_comp, ← colimit.ι_desc, ← cofan.mk_ι_app]
+      simp only [← G.map_comp, colimit.ι_desc, cofan.mk_ι_app]
       
     · intro f
       dsimp'
-      simp only [G.map_comp, ← colimit.ι_desc, ← cofan.mk_ι_app]
+      simp only [← G.map_comp, colimit.ι_desc, cofan.mk_ι_app]
       
     · apply cofork.of_π (G.map i) _
-      simp only [G.map_comp, ← coequalizer.condition]
+      simp only [← G.map_comp, coequalizer.condition]
       
     · apply is_colimit_of_has_coproduct_of_preserves_colimit
       

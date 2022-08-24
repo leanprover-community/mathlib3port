@@ -75,13 +75,13 @@ theorem ext : ∀ {f g : α ≃. β} (h : ∀ x, f x = g x), f = g
       have hf := fun a => hf a b
       have hg := fun a => hg a b
       cases' h : g₂ b with a
-      · simp only [← h, ← Option.not_mem_none, ← false_iffₓ] at hg
-        simp only [← hg, ← iff_falseₓ] at hf
+      · simp only [h, Option.not_mem_none, false_iffₓ] at hg
+        simp only [hg, iff_falseₓ] at hf
         rwa [Option.eq_none_iff_forall_not_mem]
         
       · rw [← Option.mem_def, hf, ← hg, h, Option.mem_def]
         
-    simp [*, ← funext_iff]
+    simp [*, funext_iff]
 
 theorem ext_iff {f g : α ≃. β} : f = g ↔ ∀ x, f x = g x :=
   ⟨congr_fun ∘ congr_arg _, ext⟩
@@ -112,7 +112,7 @@ protected def trans (f : α ≃. β) (g : β ≃. γ) : α ≃. γ where
   toFun := fun a => (f a).bind g
   invFun := fun a => (g.symm a).bind f.symm
   inv := fun a b => by
-    simp_all [← And.comm, ← eq_some_iff f, ← eq_some_iff g]
+    simp_all [And.comm, eq_some_iff f, eq_some_iff g]
 
 @[simp]
 theorem refl_apply (a : α) : Pequiv.refl α a = some a :=
@@ -140,17 +140,17 @@ theorem trans_eq_some (f : α ≃. β) (g : β ≃. γ) (a : α) (c : γ) :
   Option.bind_eq_some'
 
 theorem trans_eq_none (f : α ≃. β) (g : β ≃. γ) (a : α) : f.trans g a = none ↔ ∀ b c, b ∉ f a ∨ c ∉ g b := by
-  simp only [← eq_none_iff_forall_not_mem, ← mem_trans, ← imp_iff_not_or.symm]
+  simp only [eq_none_iff_forall_not_mem, mem_trans, imp_iff_not_or.symm]
   push_neg
   tauto
 
 @[simp]
 theorem refl_trans (f : α ≃. β) : (Pequiv.refl α).trans f = f := by
-  ext <;> dsimp' [← Pequiv.trans] <;> rfl
+  ext <;> dsimp' [Pequiv.trans] <;> rfl
 
 @[simp]
 theorem trans_refl (f : α ≃. β) : f.trans (Pequiv.refl β) = f := by
-  ext <;> dsimp' [← Pequiv.trans] <;> simp
+  ext <;> dsimp' [Pequiv.trans] <;> simp
 
 protected theorem inj (f : α ≃. β) {a₁ a₂ : α} {b : β} (h₁ : b ∈ f a₁) (h₂ : b ∈ f a₂) : a₁ = a₂ := by
   rw [← mem_iff_mem] at * <;> cases h : f.symm b <;> simp_all
@@ -165,9 +165,9 @@ theorem injective_of_forall_ne_is_some (f : α ≃. β) (a₂ : α) (h : ∀ a�
           not_imp_comm.1 (h x)
             (hfx.symm ▸ by
               simp )
-        simp [← this]
+        simp [this]
         
-      · simp only [← hfx]
+      · simp only [hfx]
         rw [(eq_some_iff f).2 hfx]
         rfl
         ⟩
@@ -187,26 +187,26 @@ def ofSet (s : Set α) [DecidablePred (· ∈ s)] : α ≃. α where
   invFun := fun a => if a ∈ s then some a else none
   inv := fun a b => by
     split_ifs with hb ha ha
-    · simp [← eq_comm]
+    · simp [eq_comm]
       
-    · simp [← ne_of_mem_of_not_mem hb ha]
+    · simp [ne_of_mem_of_not_mem hb ha]
       
-    · simp [← ne_of_mem_of_not_mem ha hb]
+    · simp [ne_of_mem_of_not_mem ha hb]
       
     · simp
       
 
 theorem mem_of_set_self_iff {s : Set α} [DecidablePred (· ∈ s)] {a : α} : a ∈ ofSet s a ↔ a ∈ s := by
-  dsimp' [← of_set] <;> split_ifs <;> simp [*]
+  dsimp' [of_set] <;> split_ifs <;> simp [*]
 
 theorem mem_of_set_iff {s : Set α} [DecidablePred (· ∈ s)] {a b : α} : a ∈ ofSet s b ↔ a = b ∧ a ∈ s := by
-  dsimp' [← of_set]
+  dsimp' [of_set]
   split_ifs
-  · simp only [← iff_self_and, ← Option.mem_def, ← eq_comm]
+  · simp only [iff_self_and, Option.mem_def, eq_comm]
     rintro rfl
     exact h
     
-  · simp only [← false_iffₓ, ← not_and, ← Option.not_mem_none]
+  · simp only [false_iffₓ, not_and, Option.not_mem_none]
     rintro rfl
     exact h
     
@@ -234,7 +234,7 @@ theorem of_set_eq_refl {s : Set α} [DecidablePred (· ∈ s)] : ofSet s = Pequi
     intro
     rw [← mem_of_set_self_iff, h]
     exact rfl, fun h => by
-    simp only [of_set_univ, ← h]⟩
+    simp only [← of_set_univ, h]⟩
 
 end OfSet
 
@@ -243,8 +243,8 @@ theorem symm_trans_rev (f : α ≃. β) (g : β ≃. γ) : (f.trans g).symm = g.
 
 theorem self_trans_symm (f : α ≃. β) : f.trans f.symm = ofSet { a | (f a).isSome } := by
   ext
-  dsimp' [← Pequiv.trans]
-  simp only [← eq_some_iff f, ← Option.is_some_iff_exists, ← Option.mem_def, ← bind_eq_some', ← of_set_eq_some_iff]
+  dsimp' [Pequiv.trans]
+  simp only [eq_some_iff f, Option.is_some_iff_exists, Option.mem_def, bind_eq_some', of_set_eq_some_iff]
   constructor
   · rintro ⟨b, hb₁, hb₂⟩
     exact ⟨Pequiv.inj _ hb₂ hb₁, b, hb₂⟩
@@ -254,7 +254,7 @@ theorem self_trans_symm (f : α ≃. β) : f.trans f.symm = ofSet { a | (f a).is
 
 theorem symm_trans_self (f : α ≃. β) : f.symm.trans f = ofSet { b | (f.symm b).isSome } :=
   symm_injective <| by
-    simp [← symm_trans_rev, ← self_trans_symm, -symm_symm]
+    simp [symm_trans_rev, self_trans_symm, -symm_symm]
 
 theorem trans_symm_eq_iff_forall_is_some {f : α ≃. β} : f.trans f.symm = Pequiv.refl α ↔ ∀ a, isSome (f a) := by
   rw [self_trans_symm, of_set_eq_refl, Set.eq_univ_iff_forall] <;> rfl
@@ -277,11 +277,11 @@ theorem symm_bot : (⊥ : α ≃. β).symm = ⊥ :=
 
 @[simp]
 theorem trans_bot (f : α ≃. β) : f.trans (⊥ : β ≃. γ) = ⊥ := by
-  ext <;> dsimp' [← Pequiv.trans] <;> simp
+  ext <;> dsimp' [Pequiv.trans] <;> simp
 
 @[simp]
 theorem bot_trans (f : β ≃. γ) : (⊥ : α ≃. β).trans f = ⊥ := by
-  ext <;> dsimp' [← Pequiv.trans] <;> simp
+  ext <;> dsimp' [Pequiv.trans] <;> simp
 
 theorem is_some_symm_get (f : α ≃. β) {a : α} (h : isSome (f a)) : isSome (f.symm (Option.getₓ h)) :=
   is_some_iff_exists.2
@@ -303,7 +303,7 @@ theorem mem_single (a : α) (b : β) : b ∈ single a b a :=
   if_pos rfl
 
 theorem mem_single_iff (a₁ a₂ : α) (b₁ b₂ : β) : b₁ ∈ single a₂ b₂ a₁ ↔ a₁ = a₂ ∧ b₁ = b₂ := by
-  dsimp' [← single] <;> split_ifs <;> simp [*, ← eq_comm]
+  dsimp' [single] <;> split_ifs <;> simp [*, eq_comm]
 
 @[simp]
 theorem symm_single (a : α) (b : β) : (single a b).symm = single b a :=
@@ -318,7 +318,7 @@ theorem single_apply_of_ne {a₁ a₂ : α} (h : a₁ ≠ a₂) (b : β) : singl
 
 theorem single_trans_of_mem (a : α) {b : β} {c : γ} {f : β ≃. γ} (h : c ∈ f b) : (single a b).trans f = single a c := by
   ext
-  dsimp' [← single, ← Pequiv.trans]
+  dsimp' [single, Pequiv.trans]
   split_ifs <;> simp_all
 
 theorem trans_single_of_mem {a : α} {b : β} (c : γ) {f : α ≃. β} (h : b ∈ f a) : f.trans (single b c) = single a c :=
@@ -331,13 +331,13 @@ theorem single_trans_single (a : α) (b : β) (c : γ) : (single a b).trans (sin
 @[simp]
 theorem single_subsingleton_eq_refl [Subsingleton α] (a b : α) : single a b = Pequiv.refl α := by
   ext i j
-  dsimp' [← single]
+  dsimp' [single]
   rw [if_pos (Subsingleton.elimₓ i a), Subsingleton.elimₓ i j, Subsingleton.elimₓ b j]
 
 theorem trans_single_of_eq_none {b : β} (c : γ) {f : δ ≃. β} (h : f.symm b = none) : f.trans (single b c) = ⊥ := by
   ext
-  simp only [← eq_none_iff_forall_not_mem, ← Option.mem_def, ← f.eq_some_iff] at h
-  dsimp' [← Pequiv.trans, ← single]
+  simp only [eq_none_iff_forall_not_mem, Option.mem_def, f.eq_some_iff] at h
+  dsimp' [Pequiv.trans, single]
   simp
   intros
   split_ifs <;> simp_all
@@ -383,17 +383,17 @@ instance [DecidableEq α] [DecidableEq β] : SemilatticeInf (α ≃. β) :=
           have hg := @mem_iff_mem _ _ g a b
           split_ifs with h1 h2 h2 <;>
             try
-              simp [← hf]
+              simp [hf]
           · contrapose! h2
             rw [h2]
             rw [← h1, hf, h2] at hg
-            simp only [← mem_def, ← true_iffₓ, ← eq_self_iff_true] at hg
+            simp only [mem_def, true_iffₓ, eq_self_iff_true] at hg
             rw [hg]
             
           · contrapose! h1
             rw [h1] at *
             rw [← h2] at hg
-            simp only [← mem_def, ← eq_self_iff_true, ← iff_trueₓ] at hf hg
+            simp only [mem_def, eq_self_iff_true, iff_trueₓ] at hf hg
             rw [hf, hg]
              },
     inf_le_left := fun _ _ _ _ => by
@@ -404,7 +404,7 @@ instance [DecidableEq α] [DecidableEq β] : SemilatticeInf (α ≃. β) :=
       intro H
       have hf := fg a b H
       have hg := gh a b H
-      simp only [← Option.mem_def, ← Pequiv.coe_mk_apply]
+      simp only [Option.mem_def, Pequiv.coe_mk_apply]
       split_ifs with h1
       · exact hf
         
@@ -424,7 +424,7 @@ def toPequiv (f : α ≃ β) : α ≃. β where
   toFun := some ∘ f
   invFun := some ∘ f.symm
   inv := by
-    simp [← Equivₓ.eq_symm_apply, ← eq_comm]
+    simp [Equivₓ.eq_symm_apply, eq_comm]
 
 @[simp]
 theorem to_pequiv_refl : (Equivₓ.refl α).toPequiv = Pequiv.refl α :=

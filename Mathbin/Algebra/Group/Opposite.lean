@@ -165,11 +165,11 @@ theorem unop_div [DivInvMonoidₓ α] (x y : αᵐᵒᵖ) : unop (x / y) = (unop
 
 @[simp, to_additive]
 theorem op_div [DivInvMonoidₓ α] (x y : α) : op (x / y) = (op y)⁻¹ * op x := by
-  simp [← div_eq_mul_inv]
+  simp [div_eq_mul_inv]
 
 @[simp, to_additive]
 theorem semiconj_by_op [Mul α] {a x y : α} : SemiconjBy (op a) (op y) (op x) ↔ SemiconjBy a x y := by
-  simp only [← SemiconjBy, op_mul, ← op_inj, ← eq_comm]
+  simp only [SemiconjBy, ← op_mul, op_inj, eq_comm]
 
 @[simp, to_additive]
 theorem semiconj_by_unop [Mul α] {a x y : αᵐᵒᵖ} : SemiconjBy (unop a) (unop y) (unop x) ↔ SemiconjBy a x y := by
@@ -288,7 +288,7 @@ defines a semigroup homomorphism to `Nᵐᵒᵖ`. -/
 def MulHom.toOpposite {M N : Type _} [Mul M] [Mul N] (f : M →ₙ* N) (hf : ∀ x y, Commute (f x) (f y)) : M →ₙ* Nᵐᵒᵖ where
   toFun := MulOpposite.op ∘ f
   map_mul' := fun x y => by
-    simp [← (hf x y).Eq]
+    simp [(hf x y).Eq]
 
 /-- A semigroup homomorphism `f : M →ₙ* N` such that `f x` commutes with `f y` for all `x, y`
 defines a semigroup homomorphism from `Mᵐᵒᵖ`. -/
@@ -310,7 +310,7 @@ def MonoidHom.toOpposite {M N : Type _} [MulOneClassₓ M] [MulOneClassₓ N] (f
   toFun := MulOpposite.op ∘ f
   map_one' := congr_arg op f.map_one
   map_mul' := fun x y => by
-    simp [← (hf x y).Eq]
+    simp [(hf x y).Eq]
 
 /-- A monoid homomorphism `f : M →* N` such that `f x` commutes with `f y` for all `x, y` defines
 a monoid homomorphism from `Mᵐᵒᵖ`. -/

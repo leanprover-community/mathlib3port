@@ -83,7 +83,7 @@ def subfield : Subfield F :=
   Subfield.copy (⨅ m : M, FixedBy.subfield F m) (FixedPoints M F)
     (by
       ext z
-      simp [← fixed_points, ← FixedBy.subfield, ← infi, ← Subfield.mem_Inf])
+      simp [fixed_points, FixedBy.subfield, infi, Subfield.mem_Inf])
 
 instance :
     IsInvariantSubfield M (FixedPoints.subfield M F) where smul_mem := fun g x hx g' => by
@@ -131,7 +131,7 @@ theorem linear_independent_smul_of_linear_independent {s : Finset F} :
   rw [Finsupp.mem_span_image_iff_total] at ha
   rcases ha with ⟨l, hl, hla⟩
   rw [Finsupp.total_apply_of_mem_supported F hl] at hla
-  suffices ∀, ∀ i ∈ s, ∀, l i ∈ FixedPoints.subfield G F by
+  suffices ∀ i ∈ s, l i ∈ FixedPoints.subfield G F by
     replace hla := (sum_apply _ _ fun i => l i • to_fun G F i).symm.trans (congr_fun hla 1)
     simp_rw [Pi.smul_apply, to_fun_apply, one_smul] at hla
     refine' hs.2 (hla ▸ Submodule.sum_mem _ fun c hcs => _)
@@ -154,6 +154,8 @@ theorem linear_independent_smul_of_linear_independent {s : Finset F} :
   dsimp' only
   rw [hla, to_fun_apply, to_fun_apply, smul_smul, mul_inv_cancel_left]
 
+section Fintype
+
 variable [Fintype G] (x : F)
 
 /-- `minpoly G F x` is the minimal polynomial of `(x : F)` over `fixed_points G F`. -/
@@ -165,12 +167,12 @@ def minpoly : Polynomial (FixedPoints.subfield G F) :=
 namespace minpoly
 
 theorem monic : (minpoly G F x).Monic := by
-  simp only [← minpoly, ← Polynomial.monic_to_subring]
+  simp only [minpoly, Polynomial.monic_to_subring]
   exact prodXSubSmul.monic G F x
 
 theorem eval₂ : Polynomial.eval₂ (Subring.subtype <| (FixedPoints.subfield G F).toSubring) x (minpoly G F x) = 0 := by
   rw [← prodXSubSmul.eval G F x, Polynomial.eval₂_eq_eval_map]
-  simp only [← minpoly, ← Polynomial.map_to_subring]
+  simp only [minpoly, Polynomial.map_to_subring]
 
 theorem eval₂' : Polynomial.eval₂ (Subfield.subtype <| FixedPoints.subfield G F) x (minpoly G F x) = 0 :=
   eval₂ G F x
@@ -223,37 +225,55 @@ theorem irreducible : Irreducible (minpoly G F x) :=
 
 end minpoly
 
-theorem is_integral : IsIntegral (FixedPoints.subfield G F) x :=
-  ⟨minpoly G F x, minpoly.monic G F x, minpoly.eval₂ G F x⟩
+end Fintype
+
+theorem is_integral [Finite G] (x : F) : IsIntegral (FixedPoints.subfield G F) x := by
+  cases nonempty_fintype G
+  exact ⟨minpoly G F x, minpoly.monic G F x, minpoly.eval₂ G F x⟩
+
+section Fintype
+
+variable [Fintype G] (x : F)
 
 theorem minpoly_eq_minpoly : minpoly G F x = minpoly (FixedPoints.subfield G F) x :=
   minpoly.eq_of_irreducible_of_monic (minpoly.irreducible G F x) (minpoly.eval₂ G F x) (minpoly.monic G F x)
 
+theorem dim_le_card : Module.rank (FixedPoints.subfield G F) F ≤ Fintype.card G :=
+  dim_le fun s hs => by
+    simpa only [dim_fun', Cardinal.mk_coe_finset, Finset.coe_sort_coe, Cardinal.lift_nat_cast,
+      Cardinal.nat_cast_le] using
+      cardinal_lift_le_dim_of_linear_independent' (linear_independent_smul_of_linear_independent G F hs)
+
+end Fintype
+
+section Finite
+
+variable [Finite G]
+
 instance normal : Normal (FixedPoints.subfield G F) F :=
   ⟨fun x => (is_integral G F x).IsAlgebraic _, fun x =>
     (Polynomial.splits_id_iff_splits _).1 <| by
+      cases nonempty_fintype G
       rw [← minpoly_eq_minpoly, minpoly, coe_algebra_map, ← Subfield.toSubring.subtype_eq_subtype,
-        Polynomial.map_to_subring _ (FixedPoints.subfield G F).toSubring, prodXSubSmul]
+        Polynomial.map_to_subring _ (Subfield G F).toSubring, prodXSubSmul]
       exact Polynomial.splits_prod _ fun _ _ => Polynomial.splits_X_sub_C _⟩
 
 instance separable : IsSeparable (FixedPoints.subfield G F) F :=
-  ⟨fun x => is_integral G F x, fun x => by
+  ⟨is_integral G F, fun x => by
+    cases nonempty_fintype G
     -- this was a plain rw when we were using unbundled subrings
     erw [← minpoly_eq_minpoly, ← Polynomial.separable_map (FixedPoints.subfield G F).Subtype, minpoly,
       Polynomial.map_to_subring _ (Subfield G F).toSubring]
     exact Polynomial.separable_prod_X_sub_C_iff.2 (injective_of_quotient_stabilizer G x)⟩
 
-theorem dim_le_card : Module.rank (FixedPoints.subfield G F) F ≤ Fintype.card G :=
-  dim_le fun s hs => by
-    simpa only [← dim_fun', ← Cardinal.mk_coe_finset, ← Finset.coe_sort_coe, ← Cardinal.lift_nat_cast, ←
-      Cardinal.nat_cast_le] using
-      cardinal_lift_le_dim_of_linear_independent' (linear_independent_smul_of_linear_independent G F hs)
+instance : FiniteDimensional (subfield G F) F := by
+  cases nonempty_fintype G
+  exact
+    IsNoetherian.iff_fg.1 (IsNoetherian.iff_dim_lt_aleph_0.2 <| (dim_le_card G F).trans_lt <| Cardinal.nat_lt_aleph_0 _)
 
-instance : FiniteDimensional (FixedPoints.subfield G F) F :=
-  IsNoetherian.iff_fg.1 <|
-    IsNoetherian.iff_dim_lt_aleph_0.2 <| lt_of_le_of_ltₓ (dim_le_card G F) (Cardinal.nat_lt_aleph_0 _)
+end Finite
 
-theorem finrank_le_card : finrank (FixedPoints.subfield G F) F ≤ Fintype.card G := by
+theorem finrank_le_card [Fintype G] : finrank (subfield G F) F ≤ Fintype.card G := by
   rw [← Cardinal.nat_cast_le, finrank_eq_dim]
   apply dim_le_card
 
@@ -341,8 +361,9 @@ theorem finrank_eq_card (G : Type u) (F : Type v) [Groupₓ G] [Field F] [Fintyp
       
 
 /-- `mul_semiring_action.to_alg_hom` is bijective. -/
-theorem to_alg_hom_bijective (G : Type u) (F : Type v) [Groupₓ G] [Field F] [Fintype G] [MulSemiringAction G F]
+theorem to_alg_hom_bijective (G : Type u) (F : Type v) [Groupₓ G] [Field F] [Finite G] [MulSemiringAction G F]
     [HasFaithfulSmul G F] : Function.Bijective (MulSemiringAction.toAlgHom _ _ : G → F →ₐ[subfield G F] F) := by
+  cases nonempty_fintype G
   rw [Fintype.bijective_iff_injective_and_card]
   constructor
   · exact MulSemiringAction.to_alg_hom_injective _ F
@@ -351,7 +372,7 @@ theorem to_alg_hom_bijective (G : Type u) (F : Type v) [Groupₓ G] [Field F] [F
     · exact Fintype.card_le_of_injective _ (MulSemiringAction.to_alg_hom_injective _ F)
       
     · rw [← finrank_eq_card G F]
-      exact LE.le.trans_eq (finrank_alg_hom _ F) (finrank_linear_map' _ _ _)
+      exact LE.le.trans_eqₓ (finrank_alg_hom _ F) (finrank_linear_map' _ _ _)
       
     
 

@@ -200,7 +200,7 @@ theorem Ico_subset_Ico_iff {a₁ b₁ a₂ b₂ : α} (h : a₁ < b₁) : ico a�
   Finset.Ico_subset_Ico_iff h
 
 theorem Ico_add_Ico_eq_Ico {a b c : α} (hab : a ≤ b) (hbc : b ≤ c) : ico a b + ico b c = ico a c := by
-  rw [add_eq_union_iff_disjoint.2 (Ico_disjoint_Ico le_rfl), Ico, Ico, Ico, ← Finset.union_val,
+  rw [add_eq_union_iff_disjoint.2 (Ico_disjoint_Ico le_rflₓ), Ico, Ico, Ico, ← Finset.union_val,
     Finset.Ico_union_Ico_eq_Ico hab hbc]
 
 theorem Ico_inter_Ico : ico a b ∩ ico c d = ico (max a c) (min b d) := by

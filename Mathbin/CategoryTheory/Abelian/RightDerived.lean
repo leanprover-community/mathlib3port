@@ -99,11 +99,11 @@ theorem Functor.right_derived_map_eq (F : C ⥤ D) [F.Additive] (n : ℕ) {X Y :
       (F.rightDerivedObjIso n Q).Hom ≫
         (homologyFunctor D _ n).map ((F.mapHomologicalComplex _).map g) ≫ (F.rightDerivedObjIso n P).inv :=
   by
-  dsimp' only [← functor.right_derived, ← functor.right_derived_obj_iso]
+  dsimp' only [functor.right_derived, functor.right_derived_obj_iso]
   dsimp'
-  simp only [← category.comp_id, ← category.id_comp]
+  simp only [category.comp_id, category.id_comp]
   rw [← homology_functor_map, HomotopyCategory.homology_functor_map_factors]
-  simp only [functor.map_comp]
+  simp only [← functor.map_comp]
   congr 1
   apply HomotopyCategory.eq_of_homotopy
   apply functor.map_homotopy
@@ -112,9 +112,9 @@ theorem Functor.right_derived_map_eq (F : C ⥤ D) [F.Additive] (n : ℕ) {X Y :
   apply InjectiveResolution.desc_homotopy f
   · simp
     
-  · simp only [← InjectiveResolution.homotopy_equiv_hom_ι_assoc]
+  · simp only [InjectiveResolution.homotopy_equiv_hom_ι_assoc]
     rw [← category.assoc, w, category.assoc]
-    simp only [← InjectiveResolution.homotopy_equiv_inv_ι]
+    simp only [InjectiveResolution.homotopy_equiv_inv_ι]
     
 
 /-- The natural transformation between right-derived functors induced by a natural transformation.-/
@@ -127,13 +127,13 @@ def NatTrans.rightDerived {F G : C ⥤ D} [F.Additive] [G.Additive] (α : F ⟶ 
 @[simp]
 theorem NatTrans.right_derived_id (F : C ⥤ D) [F.Additive] (n : ℕ) :
     NatTrans.rightDerived (𝟙 F) n = 𝟙 (F.rightDerived n) := by
-  simp [← nat_trans.right_derived]
+  simp [nat_trans.right_derived]
   rfl
 
 @[simp, nolint simp_nf]
 theorem NatTrans.right_derived_comp {F G H : C ⥤ D} [F.Additive] [G.Additive] [H.Additive] (α : F ⟶ G) (β : G ⟶ H)
     (n : ℕ) : NatTrans.rightDerived (α ≫ β) n = NatTrans.rightDerived α n ≫ NatTrans.rightDerived β n := by
-  simp [← nat_trans.right_derived]
+  simp [nat_trans.right_derived]
 
 /-- A component of the natural transformation between right-derived functors can be computed
 using a chosen injective resolution.
@@ -146,13 +146,13 @@ theorem NatTrans.right_derived_eq {F G : C ⥤ D} [F.Additive] [G.Additive] (α 
           (G.rightDerivedObjIso n P).inv :=
   by
   symm
-  dsimp' [← nat_trans.right_derived, ← functor.right_derived_obj_iso]
-  simp only [← category.comp_id, ← category.id_comp]
+  dsimp' [nat_trans.right_derived, functor.right_derived_obj_iso]
+  simp only [category.comp_id, category.id_comp]
   rw [← homology_functor_map, HomotopyCategory.homology_functor_map_factors]
-  simp only [functor.map_comp]
+  simp only [← functor.map_comp]
   congr 1
   apply HomotopyCategory.eq_of_homotopy
-  simp only [← nat_trans.map_homological_complex_naturality_assoc, functor.map_comp]
+  simp only [nat_trans.map_homological_complex_naturality_assoc, ← functor.map_comp]
   apply Homotopy.compLeftId
   rw [← Functor.map_id]
   apply functor.map_homotopy
@@ -182,7 +182,7 @@ theorem preserves_exact_of_preserves_finite_limits_of_mono [PreservesFiniteLimit
     Exact (F.map f) (F.map g) :=
   Abelian.exact_of_is_kernel _ _
       (by
-        simp [functor.map_comp, ← ex.w]) <|
+        simp [← functor.map_comp, ex.w]) <|
     Limits.isLimitForkMapOfIsLimit' _ ex.w (Abelian.isLimitOfExactOfMono _ _ ex)
 
 theorem exact_of_map_injective_resolution (P : InjectiveResolution X) [PreservesFiniteLimits F] :
@@ -219,13 +219,13 @@ def rightDerivedZeroToSelfAppInv [EnoughInjectives C] {X : C} (P : InjectiveReso
         have : (ComplexShape.up ℕ).Rel 0 1 := rfl
         rw [category.assoc, cokernel.π_desc, HomologicalComplex.d_from_eq _ this, map_homological_complex_obj_d, ←
           category.assoc, ← functor.map_comp]
-        simp only [← InjectiveResolution.ι_f_zero_comp_complex_d, ← functor.map_zero, ← zero_comp]) ≫
+        simp only [InjectiveResolution.ι_f_zero_comp_complex_d, functor.map_zero, zero_comp]) ≫
     (rightDerivedObjIso F 0 P).inv
 
 theorem right_derived_zero_to_self_app_comp_inv [EnoughInjectives C] [PreservesFiniteLimits F] {X : C}
     (P : InjectiveResolution X) : right_derived_zero_to_self_app F P ≫ right_derived_zero_to_self_app_inv F P = 𝟙 _ :=
   by
-  dsimp' [← right_derived_zero_to_self_app, ← right_derived_zero_to_self_app_inv]
+  dsimp' [right_derived_zero_to_self_app, right_derived_zero_to_self_app_inv]
   rw [← category.assoc, iso.comp_inv_eq, category.id_comp, category.assoc, category.assoc, ← iso.eq_inv_comp,
     iso.inv_hom_id]
   ext
@@ -239,11 +239,11 @@ theorem right_derived_zero_to_self_app_comp_inv [EnoughInjectives C] [PreservesF
 theorem right_derived_zero_to_self_app_inv_comp [EnoughInjectives C] [PreservesFiniteLimits F] {X : C}
     (P : InjectiveResolution X) : right_derived_zero_to_self_app_inv F P ≫ right_derived_zero_to_self_app F P = 𝟙 _ :=
   by
-  dsimp' [← right_derived_zero_to_self_app, ← right_derived_zero_to_self_app_inv]
+  dsimp' [right_derived_zero_to_self_app, right_derived_zero_to_self_app_inv]
   rw [← category.assoc _ (F.right_derived_obj_iso 0 P).Hom, category.assoc _ _ (F.right_derived_obj_iso 0 P).Hom,
     iso.inv_hom_id, category.comp_id, ← category.assoc, ← category.assoc, is_iso.comp_inv_eq, category.id_comp]
   ext
-  simp only [← limits.kernel.lift_ι_assoc, ← category.assoc, ← limits.kernel.lift_ι, ← homology.lift]
+  simp only [limits.kernel.lift_ι_assoc, category.assoc, limits.kernel.lift_ι, homology.lift]
   rw [← category.assoc, ← category.assoc, category.assoc _ _ (homologyIsoKernelDesc _ _ _).Hom]
   simp
 
@@ -263,15 +263,15 @@ theorem right_derived_zero_to_self_natural [EnoughInjectives C] {X : C} {Y : C} 
     F.map f ≫ right_derived_zero_to_self_app_inv F Q =
       right_derived_zero_to_self_app_inv F P ≫ (F.rightDerived 0).map f :=
   by
-  dsimp' [← right_derived_zero_to_self_app_inv]
-  simp only [← CategoryTheory.Functor.map_id, ← category.id_comp, category.assoc]
+  dsimp' [right_derived_zero_to_self_app_inv]
+  simp only [CategoryTheory.Functor.map_id, category.id_comp, ← category.assoc]
   rw [iso.comp_inv_eq,
     right_derived_map_eq F 0 f (InjectiveResolution.desc f Q P)
       (by
         simp ),
     category.assoc, category.assoc, category.assoc, category.assoc, iso.inv_hom_id, category.comp_id, ←
     category.assoc (F.right_derived_obj_iso 0 P).inv, iso.inv_hom_id, category.id_comp]
-  dsimp' only [← homology_functor_map]
+  dsimp' only [homology_functor_map]
   ext
   rw [category.assoc, homology.lift_ι, category.assoc, homology.map_ι, ← category.assoc (homology.lift _ _ _ _ _) _ _,
     homology.lift_ι, category.assoc, cokernel.π_desc, ← category.assoc, ← functor.map_comp, ← category.assoc,

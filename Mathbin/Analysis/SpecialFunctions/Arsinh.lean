@@ -61,7 +61,7 @@ theorem exp_arsinh (x : ℝ) : exp (arsinh x) = x + sqrt (1 + x ^ 2) := by
 
 @[simp]
 theorem arsinh_zero : arsinh 0 = 0 := by
-  simp [← arsinh]
+  simp [arsinh]
 
 @[simp]
 theorem arsinh_neg (x : ℝ) : arsinh (-x) = -arsinh x := by
@@ -150,11 +150,11 @@ theorem arsinh_nonpos_iff : arsinh x ≤ 0 ↔ x ≤ 0 := by
 
 @[simp]
 theorem arsinh_pos_iff : 0 < arsinh x ↔ 0 < x :=
-  lt_iff_lt_of_le_iff_le arsinh_nonpos_iff
+  lt_iff_lt_of_le_iff_leₓ arsinh_nonpos_iff
 
 @[simp]
 theorem arsinh_neg_iff : arsinh x < 0 ↔ x < 0 :=
-  lt_iff_lt_of_le_iff_le arsinh_nonneg_iff
+  lt_iff_lt_of_le_iff_leₓ arsinh_nonneg_iff
 
 theorem has_strict_deriv_at_arsinh (x : ℝ) : HasStrictDerivAt arsinh (sqrt (1 + x ^ 2))⁻¹ x := by
   convert

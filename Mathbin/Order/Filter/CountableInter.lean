@@ -34,30 +34,29 @@ variable {ι α β : Type _}
 /-- A filter `l` has the countable intersection property if for any countable collection
 of sets `s ∈ l` their intersection belongs to `l` as well. -/
 class CountableInterFilter (l : Filter α) : Prop where
-  countable_sInter_mem' : ∀ {S : Set (Set α)} (hSc : S.Countable) (hS : ∀, ∀ s ∈ S, ∀, s ∈ l), ⋂₀ S ∈ l
+  countable_sInter_mem' : ∀ {S : Set (Set α)} (hSc : S.Countable) (hS : ∀ s ∈ S, s ∈ l), ⋂₀ S ∈ l
 
 variable {l : Filter α} [CountableInterFilter l]
 
-theorem countable_sInter_mem {S : Set (Set α)} (hSc : S.Countable) : ⋂₀ S ∈ l ↔ ∀, ∀ s ∈ S, ∀, s ∈ l :=
+theorem countable_sInter_mem {S : Set (Set α)} (hSc : S.Countable) : ⋂₀ S ∈ l ↔ ∀ s ∈ S, s ∈ l :=
   ⟨fun hS s hs => mem_of_superset hS (sInter_subset_of_mem hs), CountableInterFilter.countable_sInter_mem' hSc⟩
 
 theorem countable_Inter_mem [Encodable ι] {s : ι → Set α} : (⋂ i, s i) ∈ l ↔ ∀ i, s i ∈ l :=
   sInter_range s ▸ (countable_sInter_mem (countable_range _)).trans forall_range_iff
 
-theorem countable_bInter_mem {S : Set ι} (hS : S.Countable) {s : ∀, ∀ i ∈ S, ∀, Set α} :
-    (⋂ i ∈ S, s i ‹_›) ∈ l ↔ ∀, ∀ i ∈ S, ∀, s i ‹_› ∈ l := by
+theorem countable_bInter_mem {S : Set ι} (hS : S.Countable) {s : ∀ i ∈ S, Set α} :
+    (⋂ i ∈ S, s i ‹_›) ∈ l ↔ ∀ i ∈ S, s i ‹_› ∈ l := by
   rw [bInter_eq_Inter]
   haveI := hS.to_encodable
   exact countable_Inter_mem.trans Subtype.forall
 
 theorem eventually_countable_forall [Encodable ι] {p : α → ι → Prop} :
     (∀ᶠ x in l, ∀ i, p x i) ↔ ∀ i, ∀ᶠ x in l, p x i := by
-  simpa only [← Filter.Eventually, ← set_of_forall] using @countable_Inter_mem _ _ l _ _ fun i => { x | p x i }
+  simpa only [Filter.Eventually, set_of_forall] using @countable_Inter_mem _ _ l _ _ fun i => { x | p x i }
 
-theorem eventually_countable_ball {S : Set ι} (hS : S.Countable) {p : ∀ (x : α), ∀ i ∈ S, ∀, Prop} :
-    (∀ᶠ x in l, ∀, ∀ i ∈ S, ∀, p x i ‹_›) ↔ ∀, ∀ i ∈ S, ∀, ∀ᶠ x in l, p x i ‹_› := by
-  simpa only [← Filter.Eventually, ← set_of_forall] using
-    @countable_bInter_mem _ _ l _ _ hS fun i hi => { x | p x i hi }
+theorem eventually_countable_ball {S : Set ι} (hS : S.Countable) {p : ∀ (x : α), ∀ i ∈ S, Prop} :
+    (∀ᶠ x in l, ∀ i ∈ S, p x i ‹_›) ↔ ∀ i ∈ S, ∀ᶠ x in l, p x i ‹_› := by
+  simpa only [Filter.Eventually, set_of_forall] using @countable_bInter_mem _ _ l _ _ hS fun i hi => { x | p x i hi }
 
 theorem EventuallyLe.countable_Union [Encodable ι] {s t : ι → Set α} (h : ∀ i, s i ≤ᶠ[l] t i) :
     (⋃ i, s i) ≤ᶠ[l] ⋃ i, t i :=
@@ -67,14 +66,14 @@ theorem EventuallyEq.countable_Union [Encodable ι] {s t : ι → Set α} (h : �
     (⋃ i, s i) =ᶠ[l] ⋃ i, t i :=
   (EventuallyLe.countable_Union fun i => (h i).le).antisymm (EventuallyLe.countable_Union fun i => (h i).symm.le)
 
-theorem EventuallyLe.countable_bUnion {S : Set ι} (hS : S.Countable) {s t : ∀, ∀ i ∈ S, ∀, Set α}
-    (h : ∀, ∀ i ∈ S, ∀, s i ‹_› ≤ᶠ[l] t i ‹_›) : (⋃ i ∈ S, s i ‹_›) ≤ᶠ[l] ⋃ i ∈ S, t i ‹_› := by
-  simp only [← bUnion_eq_Union]
+theorem EventuallyLe.countable_bUnion {S : Set ι} (hS : S.Countable) {s t : ∀ i ∈ S, Set α}
+    (h : ∀ i ∈ S, s i ‹_› ≤ᶠ[l] t i ‹_›) : (⋃ i ∈ S, s i ‹_›) ≤ᶠ[l] ⋃ i ∈ S, t i ‹_› := by
+  simp only [bUnion_eq_Union]
   haveI := hS.to_encodable
   exact EventuallyLe.countable_Union fun i => h i i.2
 
-theorem EventuallyEq.countable_bUnion {S : Set ι} (hS : S.Countable) {s t : ∀, ∀ i ∈ S, ∀, Set α}
-    (h : ∀, ∀ i ∈ S, ∀, s i ‹_› =ᶠ[l] t i ‹_›) : (⋃ i ∈ S, s i ‹_›) =ᶠ[l] ⋃ i ∈ S, t i ‹_› :=
+theorem EventuallyEq.countable_bUnion {S : Set ι} (hS : S.Countable) {s t : ∀ i ∈ S, Set α}
+    (h : ∀ i ∈ S, s i ‹_› =ᶠ[l] t i ‹_›) : (⋃ i ∈ S, s i ‹_›) =ᶠ[l] ⋃ i ∈ S, t i ‹_› :=
   (EventuallyLe.countable_bUnion hS fun i hi => (h i hi).le).antisymm
     (EventuallyLe.countable_bUnion hS fun i hi => (h i hi).symm.le)
 
@@ -86,14 +85,14 @@ theorem EventuallyEq.countable_Inter [Encodable ι] {s t : ι → Set α} (h : �
     (⋂ i, s i) =ᶠ[l] ⋂ i, t i :=
   (EventuallyLe.countable_Inter fun i => (h i).le).antisymm (EventuallyLe.countable_Inter fun i => (h i).symm.le)
 
-theorem EventuallyLe.countable_bInter {S : Set ι} (hS : S.Countable) {s t : ∀, ∀ i ∈ S, ∀, Set α}
-    (h : ∀, ∀ i ∈ S, ∀, s i ‹_› ≤ᶠ[l] t i ‹_›) : (⋂ i ∈ S, s i ‹_›) ≤ᶠ[l] ⋂ i ∈ S, t i ‹_› := by
-  simp only [← bInter_eq_Inter]
+theorem EventuallyLe.countable_bInter {S : Set ι} (hS : S.Countable) {s t : ∀ i ∈ S, Set α}
+    (h : ∀ i ∈ S, s i ‹_› ≤ᶠ[l] t i ‹_›) : (⋂ i ∈ S, s i ‹_›) ≤ᶠ[l] ⋂ i ∈ S, t i ‹_› := by
+  simp only [bInter_eq_Inter]
   haveI := hS.to_encodable
   exact EventuallyLe.countable_Inter fun i => h i i.2
 
-theorem EventuallyEq.countable_bInter {S : Set ι} (hS : S.Countable) {s t : ∀, ∀ i ∈ S, ∀, Set α}
-    (h : ∀, ∀ i ∈ S, ∀, s i ‹_› =ᶠ[l] t i ‹_›) : (⋂ i ∈ S, s i ‹_›) =ᶠ[l] ⋂ i ∈ S, t i ‹_› :=
+theorem EventuallyEq.countable_bInter {S : Set ι} (hS : S.Countable) {s t : ∀ i ∈ S, Set α}
+    (h : ∀ i ∈ S, s i ‹_› =ᶠ[l] t i ‹_›) : (⋂ i ∈ S, s i ‹_›) =ᶠ[l] ⋂ i ∈ S, t i ‹_› :=
   (EventuallyLe.countable_bInter hS fun i hi => (h i hi).le).antisymm
     (EventuallyLe.countable_bInter hS fun i hi => (h i hi).symm.le)
 
@@ -133,12 +132,12 @@ instance (l : Filter β) [CountableInterFilter l] (f : α → β) : CountableInt
   choose! t htl ht using hS
   have : (⋂ s ∈ S, t s) ∈ l := (countable_bInter_mem hSc).2 htl
   refine' ⟨_, this, _⟩
-  simpa [← preimage_Inter] using Inter₂_mono ht
+  simpa [preimage_Inter] using Inter₂_mono ht
 
 instance (l : Filter α) [CountableInterFilter l] (f : α → β) : CountableInterFilter (map f l) := by
   constructor
   intro S hSc hS
-  simp only [← mem_map, ← sInter_eq_bInter, ← preimage_Inter₂] at hS⊢
+  simp only [mem_map, sInter_eq_bInter, preimage_Inter₂] at hS⊢
   exact (countable_bInter_mem hSc).2 hS
 
 /-- Infimum of two `countable_Inter_filter`s is a `countable_Inter_filter`. This is useful, e.g.,

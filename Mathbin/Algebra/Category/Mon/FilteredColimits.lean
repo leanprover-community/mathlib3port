@@ -181,7 +181,7 @@ instance colimitMonoid : Monoidₓ M :=
         colimit_mul_mk_eq F ⟨max₃ j₁ j₂ j₃, _⟩ ⟨j₃, z⟩ _ (𝟙 _) (third_to_max₃ j₁ j₂ j₃),
         colimit_mul_mk_eq F ⟨j₂, y⟩ ⟨j₃, z⟩ _ (second_to_max₃ j₁ j₂ j₃) (third_to_max₃ j₁ j₂ j₃),
         colimit_mul_mk_eq F ⟨j₁, x⟩ ⟨max₃ j₁ j₂ j₃, _⟩ _ (first_to_max₃ j₁ j₂ j₃) (𝟙 _)]
-      simp only [← F.map_id, ← id_apply, ← mul_assoc] }
+      simp only [F.map_id, id_apply, mul_assoc] }
 
 /-- The bundled monoid giving the filtered colimit of a diagram. -/
 @[to_additive "The bundled additive monoid giving the filtered colimit of a diagram."]
@@ -227,7 +227,7 @@ def colimitDesc (t : cocone F) : colimit ⟶ t.x where
     cases' x with i x
     cases' y with j y
     rw [colimit_mul_mk_eq F ⟨i, x⟩ ⟨j, y⟩ (max' i j) (left_to_max i j) (right_to_max i j)]
-    dsimp' [← types.colimit_cocone_is_colimit]
+    dsimp' [types.colimit_cocone_is_colimit]
     rw [MonoidHom.map_mul, t.w_apply, t.w_apply]
 
 /-- The proposed colimit cocone is a colimit in `Mon`. -/

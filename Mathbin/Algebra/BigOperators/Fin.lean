@@ -38,7 +38,7 @@ namespace Finₓ
 
 @[to_additive]
 theorem prod_univ_def [CommMonoidₓ β] {n : ℕ} (f : Finₓ n → β) : (∏ i, f i) = ((List.finRange n).map f).Prod := by
-  simp [← univ_def]
+  simp [univ_def]
 
 @[to_additive]
 theorem prod_of_fn [CommMonoidₓ β] {n : ℕ} (f : Finₓ n → β) : (List.ofFnₓ f).Prod = ∏ i, f i := by
@@ -49,31 +49,28 @@ theorem prod_of_fn [CommMonoidₓ β] {n : ℕ} (f : Finₓ n → β) : (List.of
 theorem prod_univ_zero [CommMonoidₓ β] (f : Finₓ 0 → β) : (∏ i, f i) = 1 :=
   rfl
 
-/- A sum of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
-is the sum of `f x`, for some `x : fin (n + 1)` plus the remaining product -/
 /-- A product of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
 is the product of `f x`, for some `x : fin (n + 1)` times the remaining product -/
-@[to_additive]
+@[to_additive
+      "A sum of a function `f : fin (n + 1) → β` over all `fin (n + 1)` is the sum of `f x`,\nfor some `x : fin (n + 1)` plus the remaining product"]
 theorem prod_univ_succ_above [CommMonoidₓ β] {n : ℕ} (f : Finₓ (n + 1) → β) (x : Finₓ (n + 1)) :
     (∏ i, f i) = f x * ∏ i : Finₓ n, f (x.succAbove i) := by
   rw [univ_succ_above, prod_cons, Finset.prod_map, RelEmbedding.coe_fn_to_embedding]
 
-/- A sum of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
-is the sum of `f 0` plus the remaining product -/
 /-- A product of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
 is the product of `f 0` plus the remaining product -/
-@[to_additive]
+@[to_additive
+      "A sum of a function `f : fin (n + 1) → β` over all `fin (n + 1)` is the sum of `f 0`\nplus the remaining product"]
 theorem prod_univ_succ [CommMonoidₓ β] {n : ℕ} (f : Finₓ (n + 1) → β) : (∏ i, f i) = f 0 * ∏ i : Finₓ n, f i.succ :=
   prod_univ_succ_above f 0
 
-/- A sum of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
-is the sum of `f (fin.last n)` plus the remaining sum -/
 /-- A product of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
 is the product of `f (fin.last n)` plus the remaining product -/
-@[to_additive]
+@[to_additive
+      "A sum of a function `f : fin (n + 1) → β` over all `fin (n + 1)` is the sum of\n`f (fin.last n)` plus the remaining sum"]
 theorem prod_univ_cast_succ [CommMonoidₓ β] {n : ℕ} (f : Finₓ (n + 1) → β) :
     (∏ i, f i) = (∏ i : Finₓ n, f i.cast_succ) * f (last n) := by
-  simpa [← mul_comm] using prod_univ_succ_above f (last n)
+  simpa [mul_comm] using prod_univ_succ_above f (last n)
 
 @[to_additive]
 theorem prod_cons [CommMonoidₓ β] {n : ℕ} (x : β) (f : Finₓ n → β) :
@@ -86,7 +83,7 @@ theorem prod_univ_one [CommMonoidₓ β] (f : Finₓ 1 → β) : (∏ i, f i) = 
 
 @[simp, to_additive]
 theorem prod_univ_two [CommMonoidₓ β] (f : Finₓ 2 → β) : (∏ i, f i) = f 0 * f 1 := by
-  simp [← prod_univ_succ]
+  simp [prod_univ_succ]
 
 @[to_additive]
 theorem prod_univ_three [CommMonoidₓ β] (f : Finₓ 3 → β) : (∏ i, f i) = f 0 * f 1 * f 2 := by
@@ -155,7 +152,7 @@ theorem prod_univ_add {M : Type _} [CommMonoidₓ M] {a b : ℕ} (f : Finₓ (a 
   rw [Fintype.prod_equiv fin_sum_fin_equiv.symm f fun i => f (fin_sum_fin_equiv.to_fun i)]
   swap
   · intro x
-    simp only [← Equivₓ.to_fun_as_coe, ← Equivₓ.apply_symm_apply]
+    simp only [Equivₓ.to_fun_as_coe, Equivₓ.apply_symm_apply]
     
   apply prod_on_sum
 
@@ -163,7 +160,7 @@ theorem prod_univ_add {M : Type _} [CommMonoidₓ M] {a b : ℕ} (f : Finₓ (a 
 theorem prod_trunc {M : Type _} [CommMonoidₓ M] {a b : ℕ} (f : Finₓ (a + b) → M)
     (hf : ∀ j : Finₓ b, f (natAdd a j) = 1) :
     (∏ i : Finₓ (a + b), f i) = ∏ i : Finₓ a, f (castLe (Nat.Le.intro rfl) i) := by
-  simpa only [← prod_univ_add, ← Fintype.prod_eq_one _ hf, ← mul_oneₓ]
+  simpa only [prod_univ_add, Fintype.prod_eq_one _ hf, mul_oneₓ]
 
 section PartialProd
 
@@ -176,16 +173,16 @@ def partialProd (f : Finₓ n → α) (i : Finₓ (n + 1)) : α :=
 
 @[simp, to_additive]
 theorem partial_prod_zero (f : Finₓ n → α) : partialProd f 0 = 1 := by
-  simp [← partial_prod]
+  simp [partial_prod]
 
 @[to_additive]
 theorem partial_prod_succ (f : Finₓ n → α) (j : Finₓ n) : partialProd f j.succ = partialProd f j.cast_succ * f j := by
-  simp [← partial_prod, ← List.take_succ, ← List.ofFnNthValₓ, ← dif_pos j.is_lt, Option.coe_def]
+  simp [partial_prod, List.take_succ, List.ofFnNthValₓ, dif_pos j.is_lt, ← Option.coe_def]
 
 @[to_additive]
 theorem partial_prod_succ' (f : Finₓ (n + 1) → α) (j : Finₓ (n + 1)) :
     partialProd f j.succ = f 0 * partialProd (Finₓ.tail f) j := by
-  simpa [← partial_prod]
+  simpa [partial_prod]
 
 @[to_additive]
 theorem partial_prod_left_inv {G : Type _} [Groupₓ G] (f : Finₓ (n + 1) → G) :
@@ -195,7 +192,7 @@ theorem partial_prod_left_inv {G : Type _} [Groupₓ G] (f : Finₓ (n + 1) → 
       (by
         simp )
       fun x hx => by
-      simp only [← coe_eq_cast_succ, ← Pi.smul_apply, ← smul_eq_mul] at hx⊢
+      simp only [coe_eq_cast_succ, Pi.smul_apply, smul_eq_mul] at hx⊢
       rw [partial_prod_succ, ← mul_assoc, hx, mul_inv_cancel_left]
 
 @[to_additive]
@@ -203,13 +200,12 @@ theorem partial_prod_right_inv {G : Type _} [Groupₓ G] (g : G) (f : Finₓ n �
     ((g • partialProd f) i)⁻¹ * (g • partialProd f) i.succ = f i := by
   cases' i with i hn
   induction' i with i hi generalizing hn
-  · simp [Finₓ.succ_mk, ← partial_prod_succ]
+  · simp [← Finₓ.succ_mk, partial_prod_succ]
     
   · specialize hi (lt_transₓ (Nat.lt_succ_selfₓ i) hn)
-    simp only [← mul_inv_rev, ← Finₓ.coe_eq_cast_succ, ← Finₓ.succ_mk, ← Finₓ.cast_succ_mk, ← smul_eq_mul, ←
-      Pi.smul_apply] at hi⊢
+    simp only [mul_inv_rev, Finₓ.coe_eq_cast_succ, Finₓ.succ_mk, Finₓ.cast_succ_mk, smul_eq_mul, Pi.smul_apply] at hi⊢
     rw [← Finₓ.succ_mk _ _ (lt_transₓ (Nat.lt_succ_selfₓ _) hn), ← Finₓ.succ_mk]
-    simp only [← partial_prod_succ, ← mul_inv_rev, ← Finₓ.cast_succ_mk]
+    simp only [partial_prod_succ, mul_inv_rev, Finₓ.cast_succ_mk]
     assoc_rw [hi, inv_mul_cancel_leftₓ]
     
 
@@ -228,7 +224,7 @@ theorem prod_take_of_fn {n : ℕ} (f : Finₓ n → α) (i : ℕ) :
     ((ofFnₓ f).take i).Prod = ∏ j in Finset.univ.filter fun j : Finₓ n => j.val < i, f j := by
   have A : ∀ j : Finₓ n, ¬(j : ℕ) < 0 := fun j => not_lt_bot
   induction' i with i IH
-  · simp [← A]
+  · simp [A]
     
   by_cases' h : i < n
   · have : i < length (of_fn f) := by
@@ -239,7 +235,7 @@ theorem prod_take_of_fn {n : ℕ} (f : Finₓ n → α) (i : ℕ) :
         ((Finset.univ : Finset (Finₓ n)).filter fun j => j.val < i) ∪ {(⟨i, h⟩ : Finₓ n)} :=
       by
       ext j
-      simp [← Nat.lt_succ_iff_lt_or_eq, ← Finₓ.ext_iff, -add_commₓ]
+      simp [Nat.lt_succ_iff_lt_or_eq, Finₓ.ext_iff, -add_commₓ]
     have B : _root_.disjoint (Finset.filter (fun j : Finₓ n => j.val < i) Finset.univ) (singleton (⟨i, h⟩ : Finₓ n)) :=
       by
       simp
@@ -253,8 +249,8 @@ theorem prod_take_of_fn {n : ℕ} (f : Finₓ n → α) (i : ℕ) :
     have B : ∀ j : Finₓ n, ((j : ℕ) < i.succ) = ((j : ℕ) < i) := by
       intro j
       have : (j : ℕ) < i := lt_of_lt_of_leₓ j.2 (not_lt.mp h)
-      simp [← this, ← lt_transₓ this (Nat.lt_succ_selfₓ _)]
-    simp [A, ← B, ← IH]
+      simp [this, lt_transₓ this (Nat.lt_succ_selfₓ _)]
+    simp [← A, B, IH]
     
 
 @[to_additive]
@@ -263,7 +259,7 @@ theorem prod_of_fn {n : ℕ} {f : Finₓ n → α} : (ofFnₓ f).Prod = ∏ i, f
   · rw [take_all_of_le (le_of_eqₓ (length_of_fn f))]
     
   · have : ∀ j : Finₓ n, (j : ℕ) < n := fun j => j.is_lt
-    simp [← this]
+    simp [this]
     
 
 end CommMonoidₓ
@@ -282,7 +278,7 @@ theorem alternating_sum_eq_finset_sum {G : Type _} [AddCommGroupₓ G] :
       _ = ∑ i : Finₓ (L.length + 2), (-1 : ℤ) ^ (i : ℕ) • List.nthLe (g :: h :: L) i _ := by
         rw [Finₓ.sum_univ_succ, Finₓ.sum_univ_succ, add_assocₓ]
         unfold_coes
-        simp [← Nat.succ_eq_add_one, ← pow_addₓ]
+        simp [Nat.succ_eq_add_one, pow_addₓ]
         rfl
       
 
@@ -303,7 +299,7 @@ theorem alternating_prod_eq_finset_prod {G : Type _} [CommGroupₓ G] :
       _ = ∏ i : Finₓ (L.length + 2), List.nthLe (g :: h :: L) i _ ^ (-1 : ℤ) ^ (i : ℕ) := by
         rw [Finₓ.prod_univ_succ, Finₓ.prod_univ_succ, mul_assoc]
         unfold_coes
-        simp [← Nat.succ_eq_add_one, ← pow_addₓ]
+        simp [Nat.succ_eq_add_one, pow_addₓ]
         rfl
       
 

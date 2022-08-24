@@ -45,11 +45,11 @@ variable (K L L' : Type _) [Field K] [Field L] [Field L'] [Algebra K L] [Algebra
 /-- `S : intermediate_field K L` is a subset of `L` such that there is a field
 tower `L / S / K`. -/
 structure IntermediateField extends Subalgebra K L where
-  neg_mem' : ∀, ∀ x ∈ carrier, ∀, -x ∈ carrier
-  inv_mem' : ∀, ∀ x ∈ carrier, ∀, x⁻¹ ∈ carrier
+  neg_mem' : ∀ x ∈ carrier, -x ∈ carrier
+  inv_mem' : ∀ x ∈ carrier, x⁻¹ ∈ carrier
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident intermediate_field.to_subalgebra]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident intermediate_field.to_subalgebra]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 variable {K L L'} (S : IntermediateField K L)
 
 namespace IntermediateField
@@ -170,29 +170,29 @@ protected theorem div_mem {x y : L} : x ∈ S → y ∈ S → x / y ∈ S :=
   div_mem
 
 /-- Product of a list of elements in an intermediate_field is in the intermediate_field. -/
-protected theorem list_prod_mem {l : List L} : (∀, ∀ x ∈ l, ∀, x ∈ S) → l.Prod ∈ S :=
+protected theorem list_prod_mem {l : List L} : (∀ x ∈ l, x ∈ S) → l.Prod ∈ S :=
   list_prod_mem
 
 /-- Sum of a list of elements in an intermediate field is in the intermediate_field. -/
-protected theorem list_sum_mem {l : List L} : (∀, ∀ x ∈ l, ∀, x ∈ S) → l.Sum ∈ S :=
+protected theorem list_sum_mem {l : List L} : (∀ x ∈ l, x ∈ S) → l.Sum ∈ S :=
   list_sum_mem
 
 /-- Product of a multiset of elements in an intermediate field is in the intermediate_field. -/
-protected theorem multiset_prod_mem (m : Multiset L) : (∀, ∀ a ∈ m, ∀, a ∈ S) → m.Prod ∈ S :=
+protected theorem multiset_prod_mem (m : Multiset L) : (∀ a ∈ m, a ∈ S) → m.Prod ∈ S :=
   multiset_prod_mem m
 
 /-- Sum of a multiset of elements in a `intermediate_field` is in the `intermediate_field`. -/
-protected theorem multiset_sum_mem (m : Multiset L) : (∀, ∀ a ∈ m, ∀, a ∈ S) → m.Sum ∈ S :=
+protected theorem multiset_sum_mem (m : Multiset L) : (∀ a ∈ m, a ∈ S) → m.Sum ∈ S :=
   multiset_sum_mem m
 
 /-- Product of elements of an intermediate field indexed by a `finset` is in the intermediate_field.
 -/
-protected theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀, ∀ c ∈ t, ∀, f c ∈ S) : (∏ i in t, f i) ∈ S :=
+protected theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀ c ∈ t, f c ∈ S) : (∏ i in t, f i) ∈ S :=
   prod_mem h
 
 /-- Sum of elements in a `intermediate_field` indexed by a `finset` is in the `intermediate_field`.
 -/
-protected theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀, ∀ c ∈ t, ∀, f c ∈ S) : (∑ i in t, f i) ∈ S :=
+protected theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀ c ∈ t, f c ∈ S) : (∑ i in t, f i) ∈ S :=
   sum_mem h
 
 protected theorem pow_mem {x : L} (hx : x ∈ S) (n : ℤ) : x ^ n ∈ S :=
@@ -233,11 +233,11 @@ theorem coe_nat_mem (n : ℕ) : (n : L) ∈ S := by
 end IntermediateField
 
 /-- Turn a subalgebra closed under inverses into an intermediate field -/
-def Subalgebra.toIntermediateField (S : Subalgebra K L) (inv_mem : ∀, ∀ x ∈ S, ∀, x⁻¹ ∈ S) : IntermediateField K L :=
+def Subalgebra.toIntermediateField (S : Subalgebra K L) (inv_mem : ∀ x ∈ S, x⁻¹ ∈ S) : IntermediateField K L :=
   { S with neg_mem' := fun x => S.neg_mem, inv_mem' := inv_mem }
 
 @[simp]
-theorem to_subalgebra_to_intermediate_field (S : Subalgebra K L) (inv_mem : ∀, ∀ x ∈ S, ∀, x⁻¹ ∈ S) :
+theorem to_subalgebra_to_intermediate_field (S : Subalgebra K L) (inv_mem : ∀ x ∈ S, x⁻¹ ∈ S) :
     (S.toIntermediateField inv_mem).toSubalgebra = S := by
   ext
   rfl
@@ -423,7 +423,7 @@ theorem aeval_coe {R : Type _} [CommRingₓ R] [Algebra R K] [Algebra R L] [IsSc
   refine' Polynomial.induction_on' P (fun f g hf hg => _) fun n r => _
   · rw [aeval_add, aeval_add, AddMemClass.coe_add, hf, hg]
     
-  · simp only [← MulMemClass.coe_mul, ← aeval_monomial, ← SubmonoidClass.coe_pow, ← mul_eq_mul_right_iff]
+  · simp only [MulMemClass.coe_mul, aeval_monomial, SubmonoidClass.coe_pow, mul_eq_mul_right_iff]
     left
     rfl
     
@@ -439,7 +439,7 @@ theorem coe_is_integral_iff {R : Type _} [CommRingₓ R] [Algebra R K] [Algebra 
     
   · obtain ⟨P, hPmo, hProot⟩ := h
     refine' ⟨P, hPmo, _⟩
-    rw [← aeval_def, aeval_coe, aeval_def, hProot, AddSubmonoidClass.coe_zero]
+    rw [← aeval_def, aeval_coe, aeval_def, hProot, ZeroMemClass.coe_zero]
     
 
 /-- The map `E → F` when `E` is an intermediate field contained in the intermediate field `F`.

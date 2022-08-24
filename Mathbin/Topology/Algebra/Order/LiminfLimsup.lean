@@ -100,7 +100,7 @@ theorem Limsup_nhds (a : α) : limsup (𝓝 a) = a :=
   cInf_eq_of_forall_ge_of_forall_gt_exists_lt (is_bounded_le_nhds a)
     (fun a' (h : { n : α | n ≤ a' } ∈ 𝓝 a) => show a ≤ a' from @mem_of_mem_nhds α _ a _ h) fun b (hba : a < b) =>
     show ∃ (c : _)(h : { n : α | n ≤ c } ∈ 𝓝 a), c < b from
-      match dense_or_discrete a b with
+      match dense_or_discreteₓ a b with
       | Or.inl ⟨c, hac, hcb⟩ => ⟨c, ge_mem_nhds hac, hcb⟩
       | Or.inr ⟨_, h⟩ => ⟨a, (𝓝 a).sets_of_superset (gt_mem_nhds hba) h, hba⟩
 
@@ -170,7 +170,7 @@ above `b`. If it is also ultimately bounded above and below, then it has to conv
 works if `a` and `b` are restricted to a dense subset.
 -/
 theorem tendsto_of_no_upcrossings [DenselyOrdered α] {f : Filter β} {u : β → α} {s : Set α} (hs : Dense s)
-    (H : ∀, ∀ a ∈ s, ∀, ∀ b ∈ s, ∀, a < b → ¬((∃ᶠ n in f, u n < a) ∧ ∃ᶠ n in f, b < u n))
+    (H : ∀ a ∈ s, ∀ b ∈ s, a < b → ¬((∃ᶠ n in f, u n < a) ∧ ∃ᶠ n in f, b < u n))
     (h : f.IsBoundedUnder (· ≤ ·) u := by
       run_tac
         is_bounded_default)
@@ -184,7 +184,7 @@ theorem tendsto_of_no_upcrossings [DenselyOrdered α] {f : Filter β} {u : β �
     
   haveI : ne_bot f := ⟨hbot⟩
   refine' ⟨limsup f u, _⟩
-  apply tendsto_of_le_liminf_of_limsup_le _ le_rfl h h'
+  apply tendsto_of_le_liminf_of_limsup_le _ le_rflₓ h h'
   by_contra' hlt
   obtain ⟨a, ⟨⟨la, au⟩, as⟩⟩ : ∃ a, (f.liminf u < a ∧ a < f.limsup u) ∧ a ∈ s :=
     dense_iff_inter_open.1 hs (Set.Ioo (f.liminf u) (f.limsup u)) is_open_Ioo (Set.nonempty_Ioo.2 hlt)
@@ -212,15 +212,15 @@ theorem Antitone.map_Limsup_of_continuous_at {F : Filter R} [NeBot F] {f : R →
       ⟨⊤, by
         simp ⟩
     rw [Limsup, f_decr.map_Inf_of_continuous_at' f_cont A]
-    apply le_of_forall_lt
+    apply le_of_forall_ltₓ
     intro c hc
-    simp only [← liminf, ← Liminf, ← lt_Sup_iff, ← eventually_map, ← Set.mem_set_of_eq, ← exists_prop, ← Set.mem_image,
-      ← exists_exists_and_eq_and] at hc⊢
+    simp only [liminf, Liminf, lt_Sup_iff, eventually_map, Set.mem_set_of_eq, exists_prop, Set.mem_image,
+      exists_exists_and_eq_and] at hc⊢
     rcases hc with ⟨d, hd, h'd⟩
     refine' ⟨f d, _, h'd⟩
     filter_upwards [hd] with x hx using f_decr hx
     
-  · rcases eq_or_lt_of_le (bot_le : ⊥ ≤ F.Limsup) with (h | Limsup_ne_bot)
+  · rcases eq_or_lt_of_leₓ (bot_le : ⊥ ≤ F.Limsup) with (h | Limsup_ne_bot)
     · rw [← h]
       apply liminf_le_of_frequently_le
       apply frequently_of_forall
@@ -239,7 +239,7 @@ theorem Antitone.map_Limsup_of_continuous_at {F : Filter R} [NeBot F] {f : R →
         intro x hx
         by_contra'
         have : (Set.Ioo c F.Limsup).Nonempty := ⟨x, ⟨hx, this⟩⟩
-        simpa [← hc]
+        simpa [hc]
       apply liminf_le_of_frequently_le
       exact B.mono fun x hx => f_decr hx
       

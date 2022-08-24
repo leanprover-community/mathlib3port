@@ -50,7 +50,7 @@ restate_axiom full.witness'
 
 attribute [simp] full.witness
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`map_injective'] []
+-- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`map_injective'] []
 /-- A functor `F : C ⥤ D` is faithful if for each `X Y : C`, `F.map` is injective.
 
 See <https://stacks.math.columbia.edu/tag/001C>.
@@ -206,12 +206,12 @@ def natIsoOfCompFullyFaithful (i : F ⋙ H ≅ G ⋙ H) : F ≅ G :=
 theorem nat_iso_of_comp_fully_faithful_hom (i : F ⋙ H ≅ G ⋙ H) :
     (natIsoOfCompFullyFaithful H i).Hom = natTransOfCompFullyFaithful H i.Hom := by
   ext
-  simp [← nat_iso_of_comp_fully_faithful]
+  simp [nat_iso_of_comp_fully_faithful]
 
 theorem nat_iso_of_comp_fully_faithful_inv (i : F ⋙ H ≅ G ⋙ H) :
     (natIsoOfCompFullyFaithful H i).inv = natTransOfCompFullyFaithful H i.inv := by
   ext
-  simp [preimage_comp]
+  simp [← preimage_comp]
   dsimp'
   simp
 
@@ -247,7 +247,7 @@ variable {F F'}
 def Full.ofIso [Full F] (α : F ≅ F') : Full F' where
   preimage := fun X Y f => F.preimage ((α.app X).Hom ≫ f ≫ (α.app Y).inv)
   witness' := fun X Y f => by
-    simp [nat_iso.naturality_1 α]
+    simp [← nat_iso.naturality_1 α]
 
 theorem Faithful.of_iso [Faithful F] (α : F ≅ F') : Faithful F' :=
   { map_injective' := fun X Y f f' h =>

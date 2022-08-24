@@ -63,13 +63,13 @@ theorem mem_grade_iff (m : M) (a : AddMonoidAlgebra R M) : a ∈ grade R m ↔ a
   rfl
 
 theorem mem_grade_iff' (m : M) (a : AddMonoidAlgebra R M) :
-    a ∈ grade R m ↔ a ∈ ((Finsupp.lsingle m).range : Submodule R (AddMonoidAlgebra R M)) := by
+    a ∈ grade R m ↔ a ∈ ((Finsupp.lsingle m : R →ₗ[R] M →₀ R).range : Submodule R (AddMonoidAlgebra R M)) := by
   rw [mem_grade_iff, Finsupp.support_subset_singleton']
   apply exists_congr
   intro r
   constructor <;> exact Eq.symm
 
-theorem grade_eq_lsingle_range (m : M) : grade R m = (Finsupp.lsingle m).range :=
+theorem grade_eq_lsingle_range (m : M) : grade R m = (Finsupp.lsingle m : R →ₗ[R] M →₀ R).range :=
   Submodule.ext (mem_grade_iff' R m)
 
 theorem single_mem_grade_by {R} [CommSemiringₓ R] (f : M → ι) (m : M) (r : R) :
@@ -98,7 +98,7 @@ instance gradeBy.graded_monoid [AddMonoidₓ M] [AddMonoidₓ ι] [CommSemiring�
       
   mul_mem := fun i j a b ha hb c hc => by
     set h := support_mul a b hc
-    simp only [← Finset.mem_bUnion] at h
+    simp only [Finset.mem_bUnion] at h
     rcases h with ⟨ma, ⟨hma, ⟨mb, ⟨hmb, hmc⟩⟩⟩⟩
     rw [← ha ma hma, ← hb mb hmb, finset.mem_singleton.mp hmc]
     apply AddMonoidHom.map_add
@@ -121,7 +121,7 @@ def decomposeAux : AddMonoidAlgebra R M →ₐ[R] ⨁ i : ι, gradeBy R f i :=
             congr 2 <;>
               try
                   ext <;>
-                simp only [← Submodule.mem_to_add_submonoid, ← to_add_one, ← AddMonoidHom.map_zero]),
+                simp only [Submodule.mem_to_add_submonoid, to_add_one, AddMonoidHom.map_zero]),
       map_mul' := fun i j => by
         symm
         convert DirectSum.of_mul_of _ _
@@ -130,7 +130,7 @@ def decomposeAux : AddMonoidAlgebra R M →ₐ[R] ⨁ i : ι, gradeBy R f i :=
         · rw [to_add_mul, AddMonoidHom.map_add]
           
         · ext
-          simp only [← Submodule.mem_to_add_submonoid, ← AddMonoidHom.map_add, ← to_add_mul]
+          simp only [Submodule.mem_to_add_submonoid, AddMonoidHom.map_add, to_add_mul]
           
         · exact
             Eq.trans
@@ -162,13 +162,13 @@ theorem decompose_aux_coe {i : ι} (x : gradeBy R f i) : decomposeAux f ↑x = D
     
   · intro m b y hmy hb ih hmby
     have : Disjoint (Finsupp.single m b).Support y.support := by
-      simpa only [← Finsupp.support_single_ne_zero _ hb, ← Finset.disjoint_singleton_left]
+      simpa only [Finsupp.support_single_ne_zero _ hb, Finset.disjoint_singleton_left]
     rw [mem_grade_by_iff, Finsupp.support_add_eq this, Finset.coe_union, Set.union_subset_iff] at hmby
     cases' hmby with h1 h2
     have : f m = i := by
       rwa [Finsupp.support_single_ne_zero _ hb, Finset.coe_singleton, Set.singleton_subset_iff] at h1
     subst this
-    simp only [← AlgHom.map_add, ← Submodule.coe_mk, ← decompose_aux_single f m]
+    simp only [AlgHom.map_add, Submodule.coe_mk, decompose_aux_single f m]
     let ih' := ih h2
     dsimp'  at ih'
     rw [ih', ← AddMonoidHom.map_add]

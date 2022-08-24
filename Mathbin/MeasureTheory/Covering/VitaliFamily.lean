@@ -67,13 +67,12 @@ structure VitaliFamily {m : MeasurableSpace α} (μ : Measureₓ α) where
   SetsAt : ∀ x : α, Set (Set α)
   MeasurableSet' : ∀ x : α, ∀ a : Set α, a ∈ sets_at x → MeasurableSet a
   nonempty_interior : ∀ x : α, ∀ y : Set α, y ∈ sets_at x → (Interior y).Nonempty
-  Nontrivial : ∀ (x : α), ∀ ε > (0 : ℝ), ∀, ∃ y ∈ sets_at x, y ⊆ ClosedBall x ε
+  Nontrivial : ∀ (x : α), ∀ ε > (0 : ℝ), ∃ y ∈ sets_at x, y ⊆ ClosedBall x ε
   covering :
     ∀ (s : Set α) (f : ∀ x : α, Set (Set α)),
-      (∀, ∀ x ∈ s, ∀, f x ⊆ sets_at x) →
-        (∀, ∀ x ∈ s, ∀, ∀ ε > (0 : ℝ), ∀, ∃ a ∈ f x, a ⊆ ClosedBall x ε) →
-          ∃ (t : Set α)(u : α → Set α),
-            t ⊆ s ∧ t.PairwiseDisjoint u ∧ (∀, ∀ x ∈ t, ∀, u x ∈ f x) ∧ μ (s \ ⋃ x ∈ t, u x) = 0
+      (∀ x ∈ s, f x ⊆ sets_at x) →
+        (∀ x ∈ s, ∀ ε > (0 : ℝ), ∃ a ∈ f x, a ⊆ ClosedBall x ε) →
+          ∃ (t : Set α)(u : α → Set α), t ⊆ s ∧ t.PairwiseDisjoint u ∧ (∀ x ∈ t, u x ∈ f x) ∧ μ (s \ ⋃ x ∈ t, u x) = 0
 
 namespace VitaliFamily
 
@@ -97,7 +96,7 @@ every point `x` in `s` belongs to arbitrarily small sets in `v.sets_at x ∩ f x
 the subfamilies for which the Vitali family definition ensures that one can extract a disjoint
 covering of almost all `s`. -/
 def FineSubfamilyOn (v : VitaliFamily μ) (f : α → Set (Set α)) (s : Set α) : Prop :=
-  ∀, ∀ x ∈ s, ∀, ∀, ∀ ε > 0, ∀, ∃ a ∈ v.SetsAt x ∩ f x, a ⊆ ClosedBall x ε
+  ∀ x ∈ s, ∀ ε > 0, ∃ a ∈ v.SetsAt x ∩ f x, a ⊆ ClosedBall x ε
 
 namespace FineSubfamilyOn
 
@@ -107,7 +106,7 @@ include h
 
 theorem exists_disjoint_covering_ae :
     ∃ (t : Set α)(u : α → Set α),
-      t ⊆ s ∧ t.PairwiseDisjoint u ∧ (∀, ∀ x ∈ t, ∀, u x ∈ v.SetsAt x ∩ f x) ∧ μ (s \ ⋃ x ∈ t, u x) = 0 :=
+      t ⊆ s ∧ t.PairwiseDisjoint u ∧ (∀ x ∈ t, u x ∈ v.SetsAt x ∩ f x) ∧ μ (s \ ⋃ x ∈ t, u x) = 0 :=
   v.covering s (fun x => v.SetsAt x ∩ f x) (fun x hx => inter_subset_left _ _) h
 
 /-- Given `h : v.fine_subfamily_on f s`, then `h.index` is a subset of `s` parametrizing a disjoint
@@ -150,7 +149,7 @@ theorem measure_le_tsum_of_absolutely_continuous [SecondCountableTopology α] {�
     ρ s ≤ ρ ((s \ ⋃ x ∈ h.index, h.covering x) ∪ ⋃ x ∈ h.index, h.covering x) :=
       measure_mono
         (by
-          simp only [← subset_union_left, ← diff_union_self])
+          simp only [subset_union_left, diff_union_self])
     _ ≤ ρ (s \ ⋃ x ∈ h.index, h.covering x) + ρ (⋃ x ∈ h.index, h.covering x) := measure_union_le _ _
     _ = ∑' x : h.index, ρ (h.covering x) := by
       rw [hρ h.measure_diff_bUnion,
@@ -173,13 +172,12 @@ def filterAt (x : α) : Filter (Set α) :=
   ⨅ ε ∈ Ioi (0 : ℝ), 𝓟 ({ a ∈ v.SetsAt x | a ⊆ ClosedBall x ε })
 
 theorem mem_filter_at_iff {x : α} {s : Set (Set α)} :
-    s ∈ v.filterAt x ↔ ∃ ε > (0 : ℝ), ∀, ∀ a ∈ v.SetsAt x, ∀, a ⊆ ClosedBall x ε → a ∈ s := by
-  simp only [← filter_at, ← exists_prop, ← gt_iff_lt]
+    s ∈ v.filterAt x ↔ ∃ ε > (0 : ℝ), ∀ a ∈ v.SetsAt x, a ⊆ ClosedBall x ε → a ∈ s := by
+  simp only [filter_at, exists_prop, gt_iff_ltₓ]
   rw [mem_binfi_of_directed]
-  · simp only [← subset_def, ← and_imp, ← exists_prop, ← mem_sep_eq, ← mem_Ioi, ← mem_principal]
+  · simp only [subset_def, and_imp, exists_prop, mem_sep_eq, mem_Ioi, mem_principal]
     
-  · simp only [← DirectedOn, ← exists_prop, ← ge_iff_le, ← le_principal_iff, ← mem_Ioi, ← Order.Preimage, ←
-      mem_principal]
+  · simp only [DirectedOn, exists_prop, ge_iff_leₓ, le_principal_iff, mem_Ioi, Order.Preimage, mem_principal]
     intro x hx y hy
     refine'
       ⟨min x y, lt_minₓ hx hy, fun a ha => ⟨ha.1, ha.2.trans (closed_ball_subset_closed_ball (min_le_leftₓ _ _))⟩,
@@ -189,18 +187,18 @@ theorem mem_filter_at_iff {x : α} {s : Set (Set α)} :
     
 
 instance filter_at_ne_bot (x : α) : (v.filterAt x).ne_bot := by
-  simp only [← ne_bot_iff, empty_mem_iff_bot, ← mem_filter_at_iff, ← not_exists, ← exists_prop, ← mem_empty_eq, ←
-    and_trueₓ, ← gt_iff_lt, ← not_and, ← Ne.def, ← not_false_iff, ← not_forall]
+  simp only [ne_bot_iff, ← empty_mem_iff_bot, mem_filter_at_iff, not_exists, exists_prop, mem_empty_eq, and_trueₓ,
+    gt_iff_ltₓ, not_and, Ne.def, not_false_iff, not_forall]
   intro ε εpos
   obtain ⟨w, w_sets, hw⟩ : ∃ w ∈ v.sets_at x, w ⊆ closed_ball x ε := v.nontrivial x ε εpos
   exact ⟨w, w_sets, hw⟩
 
 theorem eventually_filter_at_iff {x : α} {P : Set α → Prop} :
-    (∀ᶠ a in v.filterAt x, P a) ↔ ∃ ε > (0 : ℝ), ∀, ∀ a ∈ v.SetsAt x, ∀, a ⊆ ClosedBall x ε → P a :=
+    (∀ᶠ a in v.filterAt x, P a) ↔ ∃ ε > (0 : ℝ), ∀ a ∈ v.SetsAt x, a ⊆ ClosedBall x ε → P a :=
   v.mem_filter_at_iff
 
 theorem eventually_filter_at_mem_sets (x : α) : ∀ᶠ a in v.filterAt x, a ∈ v.SetsAt x := by
-  simp (config := { contextual := true })only [← eventually_filter_at_iff, ← exists_prop, ← and_trueₓ, ← gt_iff_lt, ←
+  simp (config := { contextual := true })only [eventually_filter_at_iff, exists_prop, and_trueₓ, gt_iff_ltₓ,
     implies_true_iff]
   exact ⟨1, zero_lt_one⟩
 
@@ -208,9 +206,8 @@ theorem eventually_filter_at_measurable_set (x : α) : ∀ᶠ a in v.filterAt x,
   filter_upwards [v.eventually_filter_at_mem_sets x] with _ ha using v.measurable_set' _ _ ha
 
 theorem frequently_filter_at_iff {x : α} {P : Set α → Prop} :
-    (∃ᶠ a in v.filterAt x, P a) ↔ ∀, ∀ ε > (0 : ℝ), ∀, ∃ a ∈ v.SetsAt x, a ⊆ ClosedBall x ε ∧ P a := by
-  simp only [← Filter.Frequently, ← eventually_filter_at_iff, ← not_exists, ← exists_prop, ← not_and, ← not_not, ←
-    not_forall]
+    (∃ᶠ a in v.filterAt x, P a) ↔ ∀ ε > (0 : ℝ), ∃ a ∈ v.SetsAt x, a ⊆ ClosedBall x ε ∧ P a := by
+  simp only [Filter.Frequently, eventually_filter_at_iff, not_exists, exists_prop, not_and, not_not, not_forall]
 
 theorem eventually_filter_at_subset_of_nhds {x : α} {o : Set α} (hx : o ∈ 𝓝 x) : ∀ᶠ a in v.filterAt x, a ⊆ o := by
   rw [eventually_filter_at_iff]
@@ -218,7 +215,7 @@ theorem eventually_filter_at_subset_of_nhds {x : α} {o : Set α} (hx : o ∈ �
   exact ⟨ε / 2, half_pos εpos, fun a av ha => ha.trans ((closed_ball_subset_ball (half_lt_self εpos)).trans hε)⟩
 
 theorem fine_subfamily_on_of_frequently (v : VitaliFamily μ) (f : α → Set (Set α)) (s : Set α)
-    (h : ∀, ∀ x ∈ s, ∀, ∃ᶠ a in v.filterAt x, a ∈ f x) : v.FineSubfamilyOn f s := by
+    (h : ∀ x ∈ s, ∃ᶠ a in v.filterAt x, a ∈ f x) : v.FineSubfamilyOn f s := by
   intro x hx ε εpos
   obtain ⟨a, av, ha, af⟩ : ∃ (a : Set α)(H : a ∈ v.sets_at x), a ⊆ closed_ball x ε ∧ a ∈ f x :=
     v.frequently_filter_at_iff.1 (h x hx) ε εpos

@@ -153,7 +153,7 @@ def mkIso {M N : Action V G} (f : M.V ≅ N.V) (comm : ∀ g : G, M.ρ g ≫ f.H
       comm' := fun g => by
         have w := comm g =≫ f.inv
         simp at w
-        simp [← w] }
+        simp [w] }
 
 instance (priority := 100) is_iso_of_hom_is_iso {M N : Action V G} (f : M ⟶ N) [IsIso f.Hom] : IsIso f := by
   convert is_iso.of_iso (mk_iso (as_iso f.hom) f.comm)
@@ -275,7 +275,7 @@ end Forget
 
 theorem Iso.conj_ρ {M N : Action V G} (f : M ≅ N) (g : G) : N.ρ g = ((forget V G).mapIso f).conj (M.ρ g) := by
   rw [iso.conj_apply, iso.eq_inv_comp]
-  simp [← f.hom.comm']
+  simp [f.hom.comm']
 
 section HasZeroMorphisms
 
@@ -301,10 +301,10 @@ instance : Preadditive (Action V G) where
           simp ⟩,
       add := fun f g =>
         ⟨f.Hom + g.Hom, by
-          simp [← f.comm, ← g.comm]⟩,
+          simp [f.comm, g.comm]⟩,
       neg := fun f =>
         ⟨-f.Hom, by
-          simp [← f.comm]⟩,
+          simp [f.comm]⟩,
       zero_add := by
         intros
         ext
@@ -358,7 +358,7 @@ instance : Linear R (Action V G) where
   homModule := fun X Y =>
     { smul := fun r f =>
         ⟨r • f.Hom, by
-          simp [← f.comm]⟩,
+          simp [f.comm]⟩,
       one_smul := by
         intros
         ext
@@ -440,32 +440,32 @@ theorem tensor_hom {W X Y Z : Action V G} (f : W ⟶ X) (g : Y ⟶ Z) : (f ⊗ g
 
 @[simp]
 theorem associator_hom_hom {X Y Z : Action V G} : Hom.hom (α_ X Y Z).Hom = (α_ X.V Y.V Z.V).Hom := by
-  dsimp' [← monoidal.transport_associator]
+  dsimp' [monoidal.transport_associator]
   simp
 
 @[simp]
 theorem associator_inv_hom {X Y Z : Action V G} : Hom.hom (α_ X Y Z).inv = (α_ X.V Y.V Z.V).inv := by
-  dsimp' [← monoidal.transport_associator]
+  dsimp' [monoidal.transport_associator]
   simp
 
 @[simp]
 theorem left_unitor_hom_hom {X : Action V G} : Hom.hom (λ_ X).Hom = (λ_ X.V).Hom := by
-  dsimp' [← monoidal.transport_left_unitor]
+  dsimp' [monoidal.transport_left_unitor]
   simp
 
 @[simp]
 theorem left_unitor_inv_hom {X : Action V G} : Hom.hom (λ_ X).inv = (λ_ X.V).inv := by
-  dsimp' [← monoidal.transport_left_unitor]
+  dsimp' [monoidal.transport_left_unitor]
   simp
 
 @[simp]
 theorem right_unitor_hom_hom {X : Action V G} : Hom.hom (ρ_ X).Hom = (ρ_ X.V).Hom := by
-  dsimp' [← monoidal.transport_right_unitor]
+  dsimp' [monoidal.transport_right_unitor]
   simp
 
 @[simp]
 theorem right_unitor_inv_hom {X : Action V G} : Hom.hom (ρ_ X).inv = (ρ_ X.V).inv := by
-  dsimp' [← monoidal.transport_right_unitor]
+  dsimp' [monoidal.transport_right_unitor]
   simp
 
 variable (V G)
@@ -665,9 +665,9 @@ def mapAction (F : V ⥤ W) (G : Mon.{u}) : Action V G ⥤ Action W G where
       ρ :=
         { toFun := fun g => F.map (M.ρ g),
           map_one' := by
-            simp only [← End.one_def, ← Action.ρ_one, ← F.map_id],
+            simp only [End.one_def, Action.ρ_one, F.map_id],
           map_mul' := fun g h => by
-            simp only [← End.mul_def, ← F.map_comp, ← map_mul] } }
+            simp only [End.mul_def, F.map_comp, map_mul] } }
   map := fun M N f =>
     { Hom := F.map f.Hom,
       comm' := fun g => by
@@ -675,10 +675,10 @@ def mapAction (F : V ⥤ W) (G : Mon.{u}) : Action V G ⥤ Action W G where
         rw [← F.map_comp, f.comm, F.map_comp] }
   map_id' := fun M => by
     ext
-    simp only [← Action.id_hom, ← F.map_id]
+    simp only [Action.id_hom, F.map_id]
   map_comp' := fun M N P f g => by
     ext
-    simp only [← Action.comp_hom, ← F.map_comp]
+    simp only [Action.comp_hom, F.map_comp]
 
 variable (F : V ⥤ W) (G : Mon.{u}) [Preadditive V] [Preadditive W]
 

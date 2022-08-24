@@ -36,13 +36,13 @@ open Cardinal
 open Cardinal
 
 theorem cardinal_mk_eq_sum : # (WType β) = Sum fun a : α => # (WType β) ^ # (β a) := by
-  simp only [← Cardinal.power_def, Cardinal.mk_sigma]
+  simp only [Cardinal.power_def, ← Cardinal.mk_sigma]
   exact mk_congr (equiv_sigma β)
 
 /-- `#(W_type β)` is the least cardinal `κ` such that `sum (λ a : α, κ ^ #(β a)) ≤ κ` -/
 theorem cardinal_mk_le_of_le {κ : Cardinal.{u}} (hκ : (Sum fun a : α => κ ^ # (β a)) ≤ κ) : # (WType β) ≤ κ := by
   induction' κ using Cardinal.induction_on with γ
-  simp only [← Cardinal.power_def, Cardinal.mk_sigma, ← Cardinal.le_def] at hκ
+  simp only [Cardinal.power_def, ← Cardinal.mk_sigma, Cardinal.le_def] at hκ
   cases hκ
   exact Cardinal.mk_le_of_injective (elim_injective _ hκ.1 hκ.2)
 
@@ -59,7 +59,7 @@ theorem cardinal_mk_le_max_aleph_0_of_finite [∀ a, Finite (β a)] : # (WType �
     cardinal_mk_le_of_le <|
       calc
         (Cardinal.sum fun a => m ^ # (β a)) ≤ # α * ⨆ a, m ^ # (β a) := Cardinal.sum_le_supr _
-        _ ≤ m * ⨆ a, m ^ # (β a) := mul_le_mul' (le_max_leftₓ _ _) le_rfl
+        _ ≤ m * ⨆ a, m ^ # (β a) := mul_le_mul' (le_max_leftₓ _ _) le_rflₓ
         _ = m :=
           mul_eq_left.{u} (le_max_rightₓ _ _)
               (csupr_le' fun i => pow_le (le_max_rightₓ _ _) (lt_aleph_0_of_finite _)) <|

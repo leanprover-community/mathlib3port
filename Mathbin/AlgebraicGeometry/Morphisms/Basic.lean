@@ -175,7 +175,7 @@ theorem target_affine_locally_of_open_cover {P : AffineTargetMorphismProperty} (
     · apply_fun Ideal.comap (Y.presheaf.map (eq_to_hom U.1.open_embedding_obj_top.symm).op)  at hs
       rw [Ideal.comap_top] at hs
       rw [← hs]
-      simp only [← eq_to_hom_op, ← eq_to_hom_map, ← Finset.coe_image]
+      simp only [eq_to_hom_op, eq_to_hom_map, Finset.coe_image]
       have :
         ∀ {R S : CommRingₓₓ} (e : S = R) (s : Set S),
           Ideal.span (eq_to_hom e '' s) = Ideal.comap (eq_to_hom e.symm) (Ideal.span s) :=
@@ -192,7 +192,7 @@ theorem target_affine_locally_of_open_cover {P : AffineTargetMorphismProperty} (
       
     
   · rw [Set.eq_univ_iff_forall]
-    simp only [← Set.mem_Union]
+    simp only [Set.mem_Union]
     intro x
     exact ⟨⟨_, ⟨𝒰.f x, rfl⟩⟩, 𝒰.covers x⟩
     
@@ -353,7 +353,7 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
     rw [(hP.affine_open_cover_tfae f).out 0 1]
     refine' ⟨𝒰.bind fun _ => Scheme.affine_cover _, _, _⟩
     · intro i
-      dsimp' [← Scheme.open_cover.bind]
+      dsimp' [Scheme.open_cover.bind]
       infer_instance
       
     · intro i
@@ -368,7 +368,7 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
         refine' (pullback_right_pullback_fst_iso _ _ _).inv ≫ _
         refine' (pullback_symmetry _ _).Hom ≫ _
         refine' pullback.map _ _ _ _ (pullback_symmetry _ _).Hom (𝟙 _) (𝟙 _) _ _ <;>
-          simp only [← category.comp_id, ← category.id_comp, ← pullback_symmetry_hom_comp_snd]
+          simp only [category.comp_id, category.id_comp, pullback_symmetry_hom_comp_snd]
       rw [← affine_cancel_left_is_iso hP.1 e] at h𝒰
       convert h𝒰
       simp

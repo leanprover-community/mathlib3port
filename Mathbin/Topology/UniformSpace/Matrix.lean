@@ -28,7 +28,7 @@ theorem uniformity : 𝓤 (Matrix m n 𝕜) = ⨅ (i : m) (j : n), (𝓤 𝕜).c
 
 theorem uniform_continuous {β : Type _} [UniformSpace β] {f : β → Matrix m n 𝕜} :
     UniformContinuous f ↔ ∀ i j, UniformContinuous fun x => f x i j := by
-  simp only [← UniformContinuous, ← Matrix.uniformity, ← Filter.tendsto_infi, ← Filter.tendsto_comap_iff]
+  simp only [UniformContinuous, Matrix.uniformity, Filter.tendsto_infi, Filter.tendsto_comap_iff]
 
 instance [CompleteSpace 𝕜] : CompleteSpace (Matrix m n 𝕜) :=
   (by

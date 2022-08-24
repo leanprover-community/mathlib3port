@@ -46,7 +46,7 @@ theorem convex_on_exp : ConvexOn ℝ Univ exp :=
 /-- `x^n`, `n : ℕ` is convex on the whole real line whenever `n` is even -/
 theorem Even.convex_on_pow {n : ℕ} (hn : Even n) : ConvexOn ℝ Set.Univ fun x : ℝ => x ^ n := by
   apply convex_on_univ_of_deriv2_nonneg (differentiable_pow n)
-  · simp only [← deriv_pow', ← Differentiable.mul, ← differentiable_const, ← differentiable_pow]
+  · simp only [deriv_pow', Differentiable.mul, differentiable_const, differentiable_pow]
     
   · intro x
     obtain ⟨k, hk⟩ := (hn.tsub <| even_bit0 _).exists_two_nsmul _
@@ -64,7 +64,7 @@ theorem Even.strict_convex_on_pow {n : ℕ} (hn : Even n) (h : n ≠ 0) : Strict
 /-- `x^n`, `n : ℕ` is convex on `[0, +∞)` for all `n` -/
 theorem convex_on_pow (n : ℕ) : ConvexOn ℝ (Ici 0) fun x : ℝ => x ^ n := by
   apply convex_on_of_deriv2_nonneg (convex_Ici _) (continuous_pow n).ContinuousOn (differentiable_on_pow n)
-  · simp only [← deriv_pow']
+  · simp only [deriv_pow']
     exact (@differentiable_on_pow ℝ _ _ _).const_mul (n : ℝ)
     
   · intro x hx
@@ -86,7 +86,7 @@ theorem Finset.prod_nonneg_of_card_nonpos_even {α β : Type _} [LinearOrderedCo
     0 ≤ ∏ x in s, (if f x ≤ 0 then (-1 : β) else 1) * f x :=
       Finset.prod_nonneg fun x _ => by
         split_ifs with hx hx
-        · simp [← hx]
+        · simp [hx]
           
         simp at hx⊢
         exact le_of_ltₓ hx
@@ -126,7 +126,7 @@ theorem convex_on_zpow (m : ℤ) : ConvexOn ℝ (Ioi 0) fun x : ℝ => x ^ m := 
     differentiable_on_zpow _ _ (Or.inl <| lt_irreflₓ _)
   apply convex_on_of_deriv2_nonneg (convex_Ioi 0) <;>
     try
-      simp only [← interior_Ioi, ← deriv_zpow']
+      simp only [interior_Ioi, deriv_zpow']
   · exact (this _).ContinuousOn
     
   · exact this _
@@ -156,7 +156,7 @@ theorem strict_convex_on_zpow {m : ℤ} (hm₀ : m ≠ 0) (hm₁ : m ≠ 1) : St
 theorem convex_on_rpow {p : ℝ} (hp : 1 ≤ p) : ConvexOn ℝ (Ici 0) fun x : ℝ => x ^ p := by
   have A : (deriv fun x : ℝ => x ^ p) = fun x => p * x ^ (p - 1) := by
     ext x
-    simp [← hp]
+    simp [hp]
   apply convex_on_of_deriv2_nonneg (convex_Ici 0)
   · exact continuous_on_id.rpow_const fun x _ => Or.inr (zero_le_one.trans hp)
     
@@ -168,14 +168,14 @@ theorem convex_on_rpow {p : ℝ} (hp : 1 ≤ p) : ConvexOn ℝ (Ici 0) fun x : �
     · simp at hx
       exact ne_of_gtₓ hx
       
-    simp [← DifferentiableAt.differentiable_within_at, ← hx]
+    simp [DifferentiableAt.differentiable_within_at, hx]
     
   · intro x hx
     replace hx : 0 < x
     · simpa using hx
       
     suffices 0 ≤ p * ((p - 1) * x ^ (p - 1 - 1)) by
-      simpa [← ne_of_gtₓ hx, ← A]
+      simpa [ne_of_gtₓ hx, A]
     apply mul_nonneg (le_transₓ zero_le_one hp)
     exact mul_nonneg (sub_nonneg_of_le hp) (rpow_nonneg_of_nonneg hx.le _)
     
@@ -183,14 +183,14 @@ theorem convex_on_rpow {p : ℝ} (hp : 1 ≤ p) : ConvexOn ℝ (Ici 0) fun x : �
 theorem strict_convex_on_rpow {p : ℝ} (hp : 1 < p) : StrictConvexOn ℝ (Ici 0) fun x : ℝ => x ^ p := by
   have A : (deriv fun x : ℝ => x ^ p) = fun x => p * x ^ (p - 1) := by
     ext x
-    simp [← hp.le]
+    simp [hp.le]
   apply strict_convex_on_of_deriv2_pos (convex_Ici 0)
   · exact continuous_on_id.rpow_const fun x _ => Or.inr (zero_le_one.trans hp.le)
     
   rw [interior_Ici]
   rintro x (hx : 0 < x)
   suffices 0 < p * ((p - 1) * x ^ (p - 1 - 1)) by
-    simpa [← ne_of_gtₓ hx, ← A]
+    simpa [ne_of_gtₓ hx, A]
   exact mul_pos (zero_lt_one.trans hp) (mul_pos (sub_pos_of_lt hp) (rpow_pos_of_pos hx _))
 
 theorem strict_concave_on_log_Ioi : StrictConcaveOn ℝ (Ioi 0) log := by
@@ -231,7 +231,7 @@ theorem deriv_sqrt_mul_log' : (deriv fun x => sqrt x * log x) = fun x => (2 + lo
   funext deriv_sqrt_mul_log
 
 theorem deriv2_sqrt_mul_log (x : ℝ) : (deriv^[2]) (fun x => sqrt x * log x) x = -log x / (4 * sqrt x ^ 3) := by
-  simp only [← Nat.iterate, ← deriv_sqrt_mul_log']
+  simp only [Nat.iterate, deriv_sqrt_mul_log']
   cases' le_or_ltₓ x 0 with hx hx
   · rw [sqrt_eq_zero_of_nonpos hx, zero_pow zero_lt_three, mul_zero, div_zero]
     refine' HasDerivWithinAt.deriv_eq_zero _ (unique_diff_on_Iic 0 x hx)
@@ -265,10 +265,10 @@ open Real
 theorem strict_concave_on_sin_Icc : StrictConcaveOn ℝ (Icc 0 π) sin := by
   apply strict_concave_on_of_deriv2_neg (convex_Icc _ _) continuous_on_sin fun x hx => _
   rw [interior_Icc] at hx
-  simp [← sin_pos_of_mem_Ioo hx]
+  simp [sin_pos_of_mem_Ioo hx]
 
 theorem strict_concave_on_cos_Icc : StrictConcaveOn ℝ (Icc (-(π / 2)) (π / 2)) cos := by
   apply strict_concave_on_of_deriv2_neg (convex_Icc _ _) continuous_on_cos fun x hx => _
   rw [interior_Icc] at hx
-  simp [← cos_pos_of_mem_Ioo hx]
+  simp [cos_pos_of_mem_Ioo hx]
 

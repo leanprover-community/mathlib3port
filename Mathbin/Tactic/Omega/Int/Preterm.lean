@@ -80,18 +80,18 @@ def canonize : Preterm → Term
 @[simp]
 theorem val_canonize {v : Nat → Int} : ∀ {t : Preterm}, (canonize t).val v = t.val v
   | &i => by
-    simp only [← preterm.val, ← add_zeroₓ, ← term.val, ← canonize, ← coeffs.val_nil]
+    simp only [preterm.val, add_zeroₓ, term.val, canonize, coeffs.val_nil]
   | i ** n => by
-    simp only [← coeffs.val_set, ← canonize, ← preterm.val, ← zero_addₓ, ← term.val]
+    simp only [coeffs.val_set, canonize, preterm.val, zero_addₓ, term.val]
     split_ifs with h1 h2
-    · simp only [← one_mulₓ, ← h1]
+    · simp only [one_mulₓ, h1]
       
-    · simp only [← neg_mul, ← one_mulₓ, ← h2]
+    · simp only [neg_mul, one_mulₓ, h2]
       
     · rw [mul_comm]
       
   | t+*s => by
-    simp only [← canonize, ← val_canonize, ← term.val_add, ← preterm.val]
+    simp only [canonize, val_canonize, term.val_add, preterm.val]
 
 end Int
 

@@ -144,7 +144,7 @@ theorem triangle (M N : ModuleCat.{u} R) :
   apply TensorProduct.ext_threefold
   intro x y z
   change R at y
-  dsimp' [← tensor_hom, ← associator]
+  dsimp' [tensor_hom, associator]
   erw [TensorProduct.lid_tmul, TensorProduct.rid_tmul]
   exact (TensorProduct.smul_tmul _ _ _).symm
 
@@ -277,11 +277,11 @@ instance : MonoidalPreadditive (ModuleCat.{u} R) where
   tensor_add' := by
     intros
     ext
-    simp [← TensorProduct.tmul_add]
+    simp [TensorProduct.tmul_add]
   add_tensor' := by
     intros
     ext
-    simp [← TensorProduct.add_tmul]
+    simp [TensorProduct.add_tmul]
 
 instance : MonoidalLinear R (ModuleCat.{u} R) where
   tensor_smul' := by
@@ -291,7 +291,7 @@ instance : MonoidalLinear R (ModuleCat.{u} R) where
   smul_tensor' := by
     intros
     ext
-    simp [← TensorProduct.smul_tmul]
+    simp [TensorProduct.smul_tmul]
 
 /-- Auxiliary definition for the `monoidal_closed` instance on `Module R`.
 (This is only a separate definition in order to speed up typechecking. )
@@ -303,11 +303,11 @@ def monoidalClosedHomEquiv (M N P : ModuleCat.{u} R) :
   invFun := fun f => (β_ M N).Hom ≫ TensorProduct.lift f
   left_inv := fun f => by
     ext m n
-    simp only [← TensorProduct.mk_apply, ← TensorProduct.lift.tmul, ← LinearMap.compr₂_apply, ← Function.comp_app, ←
-      coe_comp, ← monoidal_category.braiding_hom_apply]
+    simp only [TensorProduct.mk_apply, TensorProduct.lift.tmul, LinearMap.compr₂_apply, Function.comp_app, coe_comp,
+      monoidal_category.braiding_hom_apply]
   right_inv := fun f => by
     ext m n
-    simp only [← TensorProduct.mk_apply, ← TensorProduct.lift.tmul, ← LinearMap.compr₂_apply, ←
+    simp only [TensorProduct.mk_apply, TensorProduct.lift.tmul, LinearMap.compr₂_apply,
       symmetric_category.symmetry_assoc]
 
 instance :
@@ -327,7 +327,7 @@ theorem monoidal_closed_curry {M N P : ModuleCat.{u} R} (f : M ⊗ N ⟶ P) (x :
 @[simp]
 theorem monoidal_closed_uncurry {M N P : ModuleCat.{u} R} (f : N ⟶ M ⟶[ModuleCat.{u} R] P) (x : M) (y : N) :
     MonoidalClosed.uncurry f (x ⊗ₜ[R] y) = (@coeFn _ _ LinearMap.hasCoeToFun (f y)) x := by
-  simp only [← monoidal_closed.uncurry, ← ihom.adjunction, ← is_left_adjoint.adj]
+  simp only [monoidal_closed.uncurry, ihom.adjunction, is_left_adjoint.adj]
   simp
 
 end ModuleCat

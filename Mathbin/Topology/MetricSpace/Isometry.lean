@@ -37,12 +37,12 @@ def Isometry [PseudoEmetricSpace α] [PseudoEmetricSpace β] (f : α → β) : P
 distances. -/
 theorem isometry_iff_nndist_eq [PseudoMetricSpace α] [PseudoMetricSpace β] {f : α → β} :
     Isometry f ↔ ∀ x y, nndist (f x) (f y) = nndist x y := by
-  simp only [← Isometry, ← edist_nndist, ← Ennreal.coe_eq_coe]
+  simp only [Isometry, edist_nndist, Ennreal.coe_eq_coe]
 
 /-- On pseudometric spaces, a map is an isometry if and only if it preserves distances. -/
 theorem isometry_iff_dist_eq [PseudoMetricSpace α] [PseudoMetricSpace β] {f : α → β} :
     Isometry f ↔ ∀ x y, dist (f x) (f y) = dist x y := by
-  simp only [← isometry_iff_nndist_eq, coe_nndist, ← Nnreal.coe_eq]
+  simp only [isometry_iff_nndist_eq, ← coe_nndist, Nnreal.coe_eq]
 
 /-- An isometry preserves distances. -/
 alias isometry_iff_dist_eq ↔ Isometry.dist_eq _
@@ -72,7 +72,7 @@ theorem lipschitz (h : Isometry f) : LipschitzWith 1 f :=
   LipschitzWith.of_edist_le fun x y => (h x y).le
 
 theorem antilipschitz (h : Isometry f) : AntilipschitzWith 1 f := fun x y => by
-  simp only [← h x y, ← Ennreal.coe_one, ← one_mulₓ, ← le_reflₓ]
+  simp only [h x y, Ennreal.coe_one, one_mulₓ, le_reflₓ]
 
 /-- Any map on a subsingleton is an isometry -/
 @[nontriviality]
@@ -109,16 +109,16 @@ theorem right_inv {f : α → β} {g : β → α} (h : Isometry f) (hg : RightIn
 theorem preimage_emetric_closed_ball (h : Isometry f) (x : α) (r : ℝ≥0∞) :
     f ⁻¹' Emetric.ClosedBall (f x) r = Emetric.ClosedBall x r := by
   ext y
-  simp [← h.edist_eq]
+  simp [h.edist_eq]
 
 theorem preimage_emetric_ball (h : Isometry f) (x : α) (r : ℝ≥0∞) : f ⁻¹' Emetric.Ball (f x) r = Emetric.Ball x r := by
   ext y
-  simp [← h.edist_eq]
+  simp [h.edist_eq]
 
 /-- Isometries preserve the diameter in pseudoemetric spaces. -/
 theorem ediam_image (hf : Isometry f) (s : Set α) : Emetric.diam (f '' s) = Emetric.diam s :=
-  eq_of_forall_ge_iff fun d => by
-    simp only [← Emetric.diam_le_iff, ← ball_image_iff, ← hf.edist_eq]
+  eq_of_forall_ge_iffₓ fun d => by
+    simp only [Emetric.diam_le_iff, ball_image_iff, hf.edist_eq]
 
 theorem ediam_range (hf : Isometry f) : Emetric.diam (Range f) = Emetric.diam (Univ : Set α) := by
   rw [← image_univ]
@@ -184,7 +184,7 @@ theorem diam_range (hf : Isometry f) : Metric.diam (Range f) = Metric.diam (Univ
 theorem preimage_set_of_dist (hf : Isometry f) (x : α) (p : ℝ → Prop) :
     f ⁻¹' { y | p (dist y (f x)) } = { y | p (dist y x) } := by
   ext y
-  simp [← hf.dist_eq]
+  simp [hf.dist_eq]
 
 theorem preimage_closed_ball (hf : Isometry f) (x : α) (r : ℝ) :
     f ⁻¹' Metric.ClosedBall (f x) r = Metric.ClosedBall x r :=
@@ -519,6 +519,6 @@ range of the isometry. -/
 @[simps (config := { simpRhs := true }) toEquiv apply]
 def Isometry.isometricOnRange [EmetricSpace α] [PseudoEmetricSpace β] {f : α → β} (h : Isometry f) : α ≃ᵢ Range f where
   isometry_to_fun := fun x y => by
-    simpa [← Subtype.edist_eq] using h x y
+    simpa [Subtype.edist_eq] using h x y
   toEquiv := Equivₓ.ofInjective f h.Injective
 

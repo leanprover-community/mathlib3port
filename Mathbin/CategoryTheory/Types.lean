@@ -118,11 +118,11 @@ variable (σ : F ⟶ G) (τ : G ⟶ H)
 
 @[simp]
 theorem map_comp_apply (f : X ⟶ Y) (g : Y ⟶ Z) (a : F.obj X) : (F.map (f ≫ g)) a = (F.map g) ((F.map f) a) := by
-  simp [← types_comp]
+  simp [types_comp]
 
 @[simp]
 theorem map_id_apply (a : F.obj X) : (F.map (𝟙 X)) a = a := by
-  simp [← types_id]
+  simp [types_id]
 
 theorem naturality (f : X ⟶ Y) (x : F.obj X) : σ.app Y ((F.map f) x) = (G.map f) (σ.app X x) :=
   congr_fun (σ.naturality f) x

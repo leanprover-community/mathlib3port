@@ -93,11 +93,11 @@ theorem _root_.filter.eventually_eq.trans_is_Theta {f₁ f₂ : α → E} {g : �
 
 @[simp]
 theorem is_Theta_norm_left : (fun x => ∥f' x∥) =Θ[l] g ↔ f' =Θ[l] g := by
-  simp [← is_Theta]
+  simp [is_Theta]
 
 @[simp]
 theorem is_Theta_norm_right : (f =Θ[l] fun x => ∥g' x∥) ↔ f =Θ[l] g' := by
-  simp [← is_Theta]
+  simp [is_Theta]
 
 alias is_Theta_norm_left ↔ is_Theta.of_norm_left is_Theta.norm_left
 
@@ -105,14 +105,14 @@ alias is_Theta_norm_right ↔ is_Theta.of_norm_right is_Theta.norm_right
 
 theorem is_Theta_of_norm_eventually_eq (h : (fun x => ∥f x∥) =ᶠ[l] fun x => ∥g x∥) : f =Θ[l] g :=
   ⟨IsO.of_bound 1 <| by
-      simpa only [← one_mulₓ] using h.le,
+      simpa only [one_mulₓ] using h.le,
     IsO.of_bound 1 <| by
-      simpa only [← one_mulₓ] using h.symm.le⟩
+      simpa only [one_mulₓ] using h.symm.le⟩
 
 theorem is_Theta_of_norm_eventually_eq' {g : α → ℝ} (h : (fun x => ∥f' x∥) =ᶠ[l] g) : f' =Θ[l] g :=
   is_Theta_of_norm_eventually_eq <|
     h.mono fun x hx => by
-      simp only [hx, ← norm_norm]
+      simp only [← hx, norm_norm]
 
 theorem IsTheta.is_o_congr_left (h : f' =Θ[l] g') : f' =o[l] k ↔ g' =o[l] k :=
   ⟨h.symm.trans_is_o, h.trans_is_o⟩
@@ -140,15 +140,15 @@ theorem IsTheta.eq_zero_iff (h : f'' =Θ[l] g'') : ∀ᶠ x in l, f'' x = 0 ↔ 
   h.1.eq_zero_imp.mp <| h.2.eq_zero_imp.mono fun x => Iff.intro
 
 theorem IsTheta.tendsto_zero_iff (h : f'' =Θ[l] g'') : Tendsto f'' l (𝓝 0) ↔ Tendsto g'' l (𝓝 0) := by
-  simp only [is_o_one_iff ℝ, ← h.is_o_congr_left]
+  simp only [← is_o_one_iff ℝ, h.is_o_congr_left]
 
 theorem IsTheta.tendsto_norm_at_top_iff (h : f' =Θ[l] g') : Tendsto (norm ∘ f') l atTop ↔ Tendsto (norm ∘ g') l atTop :=
   by
-  simp only [is_o_const_left_of_ne (@one_ne_zero ℝ _ _), ← h.is_o_congr_right]
+  simp only [← is_o_const_left_of_ne (@one_ne_zero ℝ _ _), h.is_o_congr_right]
 
 theorem IsTheta.is_bounded_under_le_iff (h : f' =Θ[l] g') :
     IsBoundedUnder (· ≤ ·) l (norm ∘ f') ↔ IsBoundedUnder (· ≤ ·) l (norm ∘ g') := by
-  simp only [is_O_const_of_ne (@one_ne_zero ℝ _ _), ← h.is_O_congr_left]
+  simp only [← is_O_const_of_ne (@one_ne_zero ℝ _ _), h.is_O_congr_left]
 
 theorem IsTheta.smul [NormedSpace 𝕜 E'] [NormedSpace 𝕜' F'] {f₁ : α → 𝕜} {f₂ : α → 𝕜'} {g₁ : α → E'} {g₂ : α → F'}
     (hf : f₁ =Θ[l] f₂) (hg : g₁ =Θ[l] g₂) : (fun x => f₁ x • g₁ x) =Θ[l] fun x => f₂ x • g₂ x :=
@@ -164,20 +164,20 @@ theorem IsTheta.inv {f : α → 𝕜} {g : α → 𝕜'} (h : f =Θ[l] g) : (fun
 @[simp]
 theorem is_Theta_inv {f : α → 𝕜} {g : α → 𝕜'} : ((fun x => (f x)⁻¹) =Θ[l] fun x => (g x)⁻¹) ↔ f =Θ[l] g :=
   ⟨fun h => by
-    simpa only [← inv_invₓ] using h.inv, IsTheta.inv⟩
+    simpa only [inv_invₓ] using h.inv, IsTheta.inv⟩
 
 theorem IsTheta.div {f₁ f₂ : α → 𝕜} {g₁ g₂ : α → 𝕜'} (h₁ : f₁ =Θ[l] g₁) (h₂ : f₂ =Θ[l] g₂) :
     (fun x => f₁ x / f₂ x) =Θ[l] fun x => g₁ x / g₂ x := by
-  simpa only [← div_eq_mul_inv] using h₁.mul h₂.inv
+  simpa only [div_eq_mul_inv] using h₁.mul h₂.inv
 
 theorem IsTheta.pow {f : α → 𝕜} {g : α → 𝕜'} (h : f =Θ[l] g) (n : ℕ) : (fun x => f x ^ n) =Θ[l] fun x => g x ^ n :=
   ⟨h.1.pow n, h.2.pow n⟩
 
 theorem IsTheta.zpow {f : α → 𝕜} {g : α → 𝕜'} (h : f =Θ[l] g) (n : ℤ) : (fun x => f x ^ n) =Θ[l] fun x => g x ^ n := by
   cases n
-  · simpa only [← zpow_of_nat] using h.pow _
+  · simpa only [zpow_of_nat] using h.pow _
     
-  · simpa only [← zpow_neg_succ_of_nat] using (h.pow _).inv
+  · simpa only [zpow_neg_succ_of_nat] using (h.pow _).inv
     
 
 theorem is_Theta_const_const {c₁ : E''} {c₂ : F''} (h₁ : c₁ ≠ 0) (h₂ : c₂ ≠ 0) : (fun x : α => c₁) =Θ[l] fun x => c₂ :=
@@ -186,11 +186,11 @@ theorem is_Theta_const_const {c₁ : E''} {c₂ : F''} (h₁ : c₁ ≠ 0) (h₂
 @[simp]
 theorem is_Theta_const_const_iff [NeBot l] {c₁ : E''} {c₂ : F''} :
     ((fun x : α => c₁) =Θ[l] fun x => c₂) ↔ (c₁ = 0 ↔ c₂ = 0) := by
-  simpa only [← is_Theta, ← is_O_const_const_iff, iff_def] using Iff.comm
+  simpa only [is_Theta, is_O_const_const_iff, ← iff_def] using Iff.comm
 
 @[simp]
 theorem is_Theta_zero_left : (fun x => (0 : E')) =Θ[l] g'' ↔ g'' =ᶠ[l] 0 := by
-  simp only [← is_Theta, ← is_O_zero, ← is_O_zero_right_iff, ← true_andₓ]
+  simp only [is_Theta, is_O_zero, is_O_zero_right_iff, true_andₓ]
 
 @[simp]
 theorem is_Theta_zero_right : (f'' =Θ[l] fun x => (0 : F')) ↔ f'' =ᶠ[l] 0 :=
@@ -207,12 +207,12 @@ theorem is_Theta_const_smul_right [NormedSpace 𝕜 F'] {c : 𝕜} (hc : c ≠ 0
 alias is_Theta_const_smul_right ↔ is_Theta.of_const_smul_right is_Theta.const_smul_right
 
 theorem is_Theta_const_mul_left {c : 𝕜} {f : α → 𝕜} (hc : c ≠ 0) : (fun x => c * f x) =Θ[l] g ↔ f =Θ[l] g := by
-  simpa only [smul_eq_mul] using is_Theta_const_smul_left hc
+  simpa only [← smul_eq_mul] using is_Theta_const_smul_left hc
 
 alias is_Theta_const_mul_left ↔ is_Theta.of_const_mul_left is_Theta.const_mul_left
 
 theorem is_Theta_const_mul_right {c : 𝕜} {g : α → 𝕜} (hc : c ≠ 0) : (f =Θ[l] fun x => c * g x) ↔ f =Θ[l] g := by
-  simpa only [smul_eq_mul] using is_Theta_const_smul_right hc
+  simpa only [← smul_eq_mul] using is_Theta_const_smul_right hc
 
 alias is_Theta_const_mul_right ↔ is_Theta.of_const_mul_right is_Theta.const_mul_right
 

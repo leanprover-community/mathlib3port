@@ -164,7 +164,7 @@ theorem nim_birthday (o : Ordinal) : (nim o).birthday = o := by
   induction' o using Ordinal.induction with o IH
   rw [nim_def, birthday_def]
   dsimp'
-  rw [max_eq_rightₓ le_rfl]
+  rw [max_eq_rightₓ le_rflₓ]
   convert lsub_typein o
   exact funext fun i => IH _ (typein_lt_self i)
 
@@ -268,7 +268,7 @@ theorem equiv_nim_grundy_value : ∀ (G : Pgame.{u}) [G.Impartial], G ≈ nim (g
       use to_left_moves_add (Sum.inl i)
       rw [add_move_left_inl, move_left_mk]
       apply (add_congr_left (equiv_nim_grundy_value (G.move_left i))).trans
-      simpa only [← hi] using impartial.add_self (nim (grundy_value (G.move_left i)))
+      simpa only [hi] using impartial.add_self (nim (grundy_value (G.move_left i)))
       
 
 theorem grundy_value_eq_iff_equiv_nim {G : Pgame} [G.Impartial] {o : Ordinal} : grundyValue G = o ↔ G ≈ nim o :=
@@ -334,7 +334,7 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} 
       replace hk := Ordinal.nat_cast_lt.1 hk
       -- Thus, the problem is reduced to computing the Grundy value of `nim n + nim k` or
       -- `nim k + nim m`, both of which can be dealt with using an inductive hypothesis.
-      simp only [← hk', ← add_move_left_inl, ← add_move_left_inr, ← id]
+      simp only [hk', add_move_left_inl, add_move_left_inr, id]
       first |
         rw [hn _ hk]|
         rw [hm _ hk]
@@ -358,12 +358,12 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} 
     -- is `(u xor m) xor m = u` or `n xor (u xor n) = u` as required.
     · obtain ⟨i, hi⟩ := exists_move_left_eq (Ordinal.nat_cast_lt.2 h)
       refine' ⟨to_left_moves_add (Sum.inl i), _⟩
-      simp only [← hi, ← add_move_left_inl]
+      simp only [hi, add_move_left_inl]
       rw [hn _ h, Nat.lxor_assoc, Nat.lxor_self, Nat.lxor_zero]
       
     · obtain ⟨i, hi⟩ := exists_move_left_eq (Ordinal.nat_cast_lt.2 h)
       refine' ⟨to_left_moves_add (Sum.inr i), _⟩
-      simp only [← hi, ← add_move_left_inr]
+      simp only [hi, add_move_left_inr]
       rw [hm _ h, Nat.lxor_comm, Nat.lxor_assoc, Nat.lxor_self, Nat.lxor_zero]
       
   -- We are done!
@@ -378,7 +378,7 @@ theorem grundy_value_add (G H : Pgame) [G.Impartial] [H.Impartial] {n m : ℕ} (
     (hH : grundyValue H = m) : grundyValue (G + H) = Nat.lxor n m := by
   rw [← nim_grundy_value (Nat.lxor n m), grundy_value_eq_iff_equiv]
   refine' Equivₓ.trans _ nim_add_nim_equiv
-  convert add_congr (equiv_nim_grundy_value G) (equiv_nim_grundy_value H) <;> simp only [← hG, ← hH]
+  convert add_congr (equiv_nim_grundy_value G) (equiv_nim_grundy_value H) <;> simp only [hG, hH]
 
 end Pgame
 

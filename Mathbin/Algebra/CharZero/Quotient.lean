@@ -21,7 +21,7 @@ theorem zsmul_mem_zmultiples_iff_exists_sub_div {r : R} {z : ℤ} (hz : z ≠ 0)
   rw [AddSubgroup.mem_zmultiples_iff]
   simp_rw [AddSubgroup.mem_zmultiples_iff, div_eq_mul_inv, ← smul_mul_assoc, eq_sub_iff_add_eq]
   have hz' : (z : R) ≠ 0 := int.cast_ne_zero.mpr hz
-  conv_rhs => simp (config := { singlePass := true })only [(mul_right_injective₀ hz').eq_iff]
+  conv_rhs => simp (config := { singlePass := true })only [← (mul_right_injective₀ hz').eq_iff]
   simp_rw [← zsmul_eq_mul, smul_add, ← mul_smul_comm, zsmul_eq_mul (z : R)⁻¹, mul_inv_cancel hz', mul_oneₓ, ←
     coe_nat_zsmul, smul_smul, ← add_smul]
   constructor
@@ -51,7 +51,7 @@ theorem zmultiples_zsmul_eq_zsmul_iff {ψ θ : R ⧸ AddSubgroup.zmultiples p} {
   induction ψ using Quotientₓ.induction_on'
   induction θ using Quotientₓ.induction_on'
   have : (Quotientₓ.mk' : R → R ⧸ AddSubgroup.zmultiples p) = coe := rfl
-  simp only [← this]
+  simp only [this]
   simp_rw [← coe_zsmul, ← coe_nsmul, ← coe_add, QuotientAddGroup.eq_iff_sub_mem, ← smul_sub, ← sub_sub,
     AddSubgroup.zsmul_mem_zmultiples_iff_exists_sub_div hz]
 

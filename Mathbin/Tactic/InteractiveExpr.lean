@@ -34,7 +34,7 @@ open Widget.Html Widget.Attr
 
 namespace InteractiveExpression
 
-unsafe instance : HasMem Expr.Coord Expr.Address :=
+unsafe instance : Membership Expr.Coord Expr.Address :=
   List.hasMem
 
 /-- eformat but without any of the formatting stuff like highlighting, groups etc. -/
@@ -95,7 +95,7 @@ unsafe def sf.flatten : sf → sf
 
 private unsafe def elim_part_apps : sf → Expr.Address → sf
   | sf.tag_expr ea e m, Acc =>
-    if ∀, ∀ c ∈ ea, ∀, c = Expr.Coord.app_fn then elim_part_apps m (Acc ++ ea)
+    if ∀ c ∈ ea, c = Expr.Coord.app_fn then elim_part_apps m (Acc ++ ea)
     else sf.tag_expr (Acc ++ ea) e (elim_part_apps m [])
   | sf.compose a b, Acc => (elim_part_apps a Acc).compose (elim_part_apps b Acc)
   | sf.of_string s, _ => sf.of_string s

@@ -61,15 +61,15 @@ def cons (x : α 0) (p : ∀ i : Finₓ n, α i.succ) : ∀ i, α i := fun j => 
 
 @[simp]
 theorem tail_cons : tail (cons x p) = p := by
-  simp [← tail, ← cons]
+  simp [tail, cons]
 
 @[simp]
 theorem cons_succ : cons x p i.succ = p i := by
-  simp [← cons]
+  simp [cons]
 
 @[simp]
 theorem cons_zero : cons x p 0 = x := by
-  simp [← cons]
+  simp [cons]
 
 /-- Updating a tuple and adding an element at the beginning commute. -/
 @[simp]
@@ -77,7 +77,7 @@ theorem cons_update : cons x (update p i y) = update (cons x p) i.succ y := by
   ext j
   by_cases' h : j = 0
   · rw [h]
-    simp [← Ne.symm (succ_ne_zero i)]
+    simp [Ne.symm (succ_ne_zero i)]
     
   · let j' := pred j h
     have : j'.succ = j := succ_pred j h
@@ -116,7 +116,7 @@ theorem update_cons_zero : update (cons x p) 0 z = cons z p := by
   · rw [h]
     simp
     
-  · simp only [← h, ← update_noteq, ← Ne.def, ← not_false_iff]
+  · simp only [h, update_noteq, Ne.def, not_false_iff]
     let j' := pred j h
     have : j'.succ = j := succ_pred j h
     rw [← this, cons_succ, cons_succ]
@@ -169,7 +169,7 @@ theorem exists_fin_succ_pi {P : (∀ i, α i) → Prop} : (∃ x, P x) ↔ ∃ a
 @[simp]
 theorem tail_update_zero : tail (update q 0 z) = tail q := by
   ext j
-  simp [← tail, ← Finₓ.succ_ne_zero]
+  simp [tail, Finₓ.succ_ne_zero]
 
 /-- Updating a nonzero element and taking the tail commute. -/
 @[simp]
@@ -177,9 +177,9 @@ theorem tail_update_succ : tail (update q i.succ y) = update (tail q) i y := by
   ext j
   by_cases' h : j = i
   · rw [h]
-    simp [← tail]
+    simp [tail]
     
-  · simp [← tail, ← (Finₓ.succ_injective n).Ne h, ← h]
+  · simp [tail, (Finₓ.succ_injective n).Ne h, h]
     
 
 theorem comp_cons {α : Type _} {β : Type _} (g : α → β) (y : α) (q : Finₓ n → α) : g ∘ cons y q = cons (g y) (g ∘ q) :=
@@ -196,14 +196,14 @@ theorem comp_cons {α : Type _} {β : Type _} (g : α → β) (y : α) (q : Fin�
 
 theorem comp_tail {α : Type _} {β : Type _} (g : α → β) (q : Finₓ n.succ → α) : g ∘ tail q = tail (g ∘ q) := by
   ext j
-  simp [← tail]
+  simp [tail]
 
 theorem le_cons [∀ i, Preorderₓ (α i)] {x : α 0} {q : ∀ i, α i} {p : ∀ i : Finₓ n, α i.succ} :
     q ≤ cons x p ↔ q 0 ≤ x ∧ tail q ≤ p :=
   forall_fin_succ.trans <|
     and_congr Iff.rfl <|
       forall_congrₓ fun j => by
-        simp [← tail]
+        simp [tail]
 
 theorem cons_le [∀ i, Preorderₓ (α i)] {x : α 0} {q : ∀ i, α i} {p : ∀ i : Finₓ n, α i.succ} :
     cons x p ≤ q ↔ x ≤ q 0 ∧ p ≤ tail q :=
@@ -213,20 +213,20 @@ theorem cons_le_cons [∀ i, Preorderₓ (α i)] {x₀ y₀ : α 0} {x y : ∀ i
     cons x₀ x ≤ cons y₀ y ↔ x₀ ≤ y₀ ∧ x ≤ y :=
   forall_fin_succ.trans <|
     and_congr_right' <| by
-      simp only [← cons_succ, ← Pi.le_def]
+      simp only [cons_succ, Pi.le_def]
 
 theorem pi_lex_lt_cons_cons {x₀ y₀ : α 0} {x y : ∀ i : Finₓ n, α i.succ} (s : ∀ {i : Finₓ n.succ}, α i → α i → Prop) :
     Pi.Lex (· < ·) (@s) (Finₓ.cons x₀ x) (Finₓ.cons y₀ y) ↔
       s x₀ y₀ ∨ x₀ = y₀ ∧ Pi.Lex (· < ·) (fun i : Finₓ n => @s i.succ) x y :=
   by
   simp_rw [Pi.Lex, Finₓ.exists_fin_succ, Finₓ.cons_succ, Finₓ.cons_zero, Finₓ.forall_fin_succ]
-  simp [← and_assoc, ← exists_and_distrib_left]
+  simp [and_assoc, exists_and_distrib_left]
 
 @[simp]
 theorem range_cons {α : Type _} {n : ℕ} (x : α) (b : Finₓ n → α) :
     Set.Range (Finₓ.cons x b : Finₓ n.succ → α) = insert x (Set.Range b) := by
   ext y
-  simp only [← Set.mem_range, ← Set.mem_insert_iff]
+  simp only [Set.mem_range, Set.mem_insert_iff]
   constructor
   · rintro ⟨i, rfl⟩
     refine' cases (Or.inl (cons_zero _ _)) (fun i => Or.inr ⟨i, _⟩) i
@@ -291,14 +291,14 @@ def snoc (p : ∀ i : Finₓ n, α i.cast_succ) (x : α (last n)) (i : Finₓ (n
 theorem init_snoc : init (snoc p x) = p := by
   ext i
   have h' := Finₓ.cast_lt_cast_succ i i.is_lt
-  simp [← init, ← snoc, ← i.is_lt, ← h']
+  simp [init, snoc, i.is_lt, h']
   convert cast_eq rfl (p i)
 
 @[simp]
 theorem snoc_cast_succ : snoc p x i.cast_succ = p i := by
   have : i.cast_succ.val < n := i.is_lt
   have h' := Finₓ.cast_lt_cast_succ i i.is_lt
-  simp [← snoc, ← this, ← h']
+  simp [snoc, this, h']
   convert cast_eq rfl (p i)
 
 @[simp]
@@ -309,17 +309,17 @@ theorem snoc_comp_cast_succ {n : ℕ} {α : Sort _} {a : α} {f : Finₓ n → �
 
 @[simp]
 theorem snoc_last : snoc p x (last n) = x := by
-  simp [← snoc]
+  simp [snoc]
 
 @[simp]
 theorem snoc_comp_nat_add {n m : ℕ} {α : Sort _} (f : Finₓ (m + n) → α) (a : α) :
     (snoc f a : Finₓ _ → α) ∘ (natAdd m : Finₓ (n + 1) → Finₓ (m + n + 1)) = snoc (f ∘ natAdd m) a := by
   ext i
   refine' Finₓ.lastCases _ (fun i => _) i
-  · simp only [← Function.comp_app]
+  · simp only [Function.comp_app]
     rw [snoc_last, nat_add_last, snoc_last]
     
-  · simp only [← Function.comp_app]
+  · simp only [Function.comp_app]
     rw [snoc_cast_succ, nat_add_cast_succ, snoc_cast_succ]
     
 
@@ -338,7 +338,7 @@ theorem snoc_comp_cast_add {n m : ℕ} {α : Sort _} (f : Finₓ (n + m) → α)
 theorem snoc_update : snoc (update p i y) x = update (snoc p x) i.cast_succ y := by
   ext j
   by_cases' h : j.val < n
-  · simp only [← snoc, ← h, ← dif_pos]
+  · simp only [snoc, h, dif_pos]
     by_cases' h' : j = cast_succ i
     · have C1 : α i.cast_succ = α j := by
         rw [h']
@@ -356,7 +356,7 @@ theorem snoc_update : snoc (update p i y) x = update (snoc p x) i.cast_succ y :=
         have : update p (cast_lt j h) (_root_.cast C2 y) (cast_lt j h) = _root_.cast C2 y := by
           simp
         convert this
-        · simp [← h, ← h']
+        · simp [h, h']
           
         · exact heq_of_cast_eq C2 rfl
           
@@ -367,11 +367,11 @@ theorem snoc_update : snoc (update p i y) x = update (snoc p x) i.cast_succ y :=
         intro E
         apply h'
         rw [← E, cast_succ_cast_lt]
-      simp [← h', ← this, ← snoc, ← h]
+      simp [h', this, snoc, h]
       
     
   · rw [eq_last_of_not_lt h]
-    simp [← Ne.symm (ne_of_ltₓ (cast_succ_lt_last i))]
+    simp [Ne.symm (ne_of_ltₓ (cast_succ_lt_last i))]
     
 
 /-- Adding an element at the beginning of a tuple and then updating it amounts to adding it
@@ -380,7 +380,7 @@ theorem update_snoc_last : update (snoc p x) (last n) z = snoc p z := by
   ext j
   by_cases' h : j.val < n
   · have : j ≠ last n := ne_of_ltₓ h
-    simp [← h, ← update_noteq, ← this, ← snoc]
+    simp [h, update_noteq, this, snoc]
     
   · rw [eq_last_of_not_lt h]
     simp
@@ -392,7 +392,7 @@ theorem snoc_init_self : snoc (init q) (q (last n)) = q := by
   ext j
   by_cases' h : j.val < n
   · have : j ≠ last n := ne_of_ltₓ h
-    simp [← h, ← update_noteq, ← this, ← snoc, ← init, ← cast_succ_cast_lt]
+    simp [h, update_noteq, this, snoc, init, cast_succ_cast_lt]
     have A : cast_succ (cast_lt j h) = j := cast_succ_cast_lt _ _
     rw [← cast_eq rfl (q j)]
     congr 1 <;> rw [A]
@@ -405,7 +405,7 @@ theorem snoc_init_self : snoc (init q) (q (last n)) = q := by
 @[simp]
 theorem init_update_last : init (update q (last n) z) = init q := by
   ext j
-  simp [← init, ← ne_of_ltₓ, ← cast_succ_lt_last]
+  simp [init, ne_of_ltₓ, cast_succ_lt_last]
 
 /-- Updating an element and taking the beginning commute. -/
 @[simp]
@@ -413,16 +413,16 @@ theorem init_update_cast_succ : init (update q i.cast_succ y) = update (init q) 
   ext j
   by_cases' h : j = i
   · rw [h]
-    simp [← init]
+    simp [init]
     
-  · simp [← init, ← h]
+  · simp [init, h]
     
 
 /-- `tail` and `init` commute. We state this lemma in a non-dependent setting, as otherwise it
 would involve a cast to convince Lean that the two types are equal, making it harder to use. -/
 theorem tail_init_eq_init_tail {β : Type _} (q : Finₓ (n + 2) → β) : tail (init q) = init (tail q) := by
   ext i
-  simp [← tail, ← init, ← cast_succ_fin_succ]
+  simp [tail, init, cast_succ_fin_succ]
 
 /-- `cons` and `snoc` commute. We state this lemma in a non-dependent setting, as otherwise it
 would involve a cast to convince Lean that the two types are equal, making it harder to use. -/
@@ -452,7 +452,7 @@ theorem comp_snoc {α : Type _} {β : Type _} (g : α → β) (q : Finₓ n → 
   ext j
   by_cases' h : j.val < n
   · have : j ≠ last n := ne_of_ltₓ h
-    simp [← h, ← this, ← snoc, ← cast_succ_cast_lt]
+    simp [h, this, snoc, cast_succ_cast_lt]
     
   · rw [eq_last_of_not_lt h]
     simp
@@ -460,7 +460,7 @@ theorem comp_snoc {α : Type _} {β : Type _} (g : α → β) (q : Finₓ n → 
 
 theorem comp_init {α : Type _} {β : Type _} (g : α → β) (q : Finₓ n.succ → α) : g ∘ init q = init (g ∘ q) := by
   ext j
-  simp [← init]
+  simp [init]
 
 end TupleRight
 
@@ -492,12 +492,12 @@ def insertNth (i : Finₓ (n + 1)) (x : α i) (p : ∀ j : Finₓ n, α (i.succA
 
 @[simp]
 theorem insert_nth_apply_same (i : Finₓ (n + 1)) (x : α i) (p : ∀ j, α (i.succAbove j)) : insertNth i x p i = x := by
-  simp [← insert_nth, ← succ_above_cases]
+  simp [insert_nth, succ_above_cases]
 
 @[simp]
 theorem insert_nth_apply_succ_above (i : Finₓ (n + 1)) (x : α i) (p : ∀ j, α (i.succAbove j)) (j : Finₓ n) :
     insertNth i x p (i.succAbove j) = p j := by
-  simp only [← insert_nth, ← succ_above_cases, ← dif_neg (succ_above_ne _ _)]
+  simp only [insert_nth, succ_above_cases, dif_neg (succ_above_ne _ _)]
   by_cases' hlt : j.cast_succ < i
   · rw [dif_pos ((succ_above_lt_iff _ _).2 hlt)]
     apply eq_of_heq ((eq_rec_heq _ _).trans _)
@@ -518,7 +518,7 @@ theorem insert_nth_comp_succ_above (i : Finₓ (n + 1)) (x : β) (p : Finₓ n �
 
 theorem insert_nth_eq_iff {i : Finₓ (n + 1)} {x : α i} {p : ∀ j, α (i.succAbove j)} {q : ∀ j, α j} :
     i.insertNth x p = q ↔ q i = x ∧ p = fun j => q (i.succAbove j) := by
-  simp [← funext_iff, ← forall_iff_succ_above i, ← eq_comm]
+  simp [funext_iff, forall_iff_succ_above i, eq_comm]
 
 theorem eq_insert_nth_iff {i : Finₓ (n + 1)} {x : α i} {p : ∀ j, α (i.succAbove j)} {q : ∀ j, α j} :
     q = i.insertNth x p ↔ q i = x ∧ p = fun j => q (i.succAbove j) :=
@@ -543,7 +543,7 @@ theorem insert_nth_zero (x : α 0) (p : ∀ j : Finₓ n, α (succAbove 0 j)) :
 
 @[simp]
 theorem insert_nth_zero' (x : β) (p : Finₓ n → β) : @insertNth _ (fun _ => β) 0 x p = cons x p := by
-  simp [← insert_nth_zero]
+  simp [insert_nth_zero]
 
 theorem insert_nth_last (x : α (last n)) (p : ∀ j : Finₓ n, α ((last n).succAbove j)) :
     insertNth (last n) x p = snoc (fun j => cast (congr_arg α (succ_above_last_apply j)) (p j)) x := by
@@ -563,12 +563,12 @@ theorem insert_nth_last (x : α (last n)) (p : ∀ j : Finₓ n, α ((last n).su
 
 @[simp]
 theorem insert_nth_last' (x : β) (p : Finₓ n → β) : @insertNth _ (fun _ => β) (last n) x p = snoc p x := by
-  simp [← insert_nth_last]
+  simp [insert_nth_last]
 
 @[simp]
 theorem insert_nth_zero_right [∀ j, Zero (α j)] (i : Finₓ (n + 1)) (x : α i) : i.insertNth x 0 = Pi.single i x :=
   insert_nth_eq_iff.2 <| by
-    simp [← succ_above_ne, ← Pi.zero_def]
+    simp [succ_above_ne, Pi.zero_def]
 
 theorem insert_nth_binop (op : ∀ j, α j → α j → α j) (i : Finₓ (n + 1)) (x y : α i) (p q : ∀ j, α (i.succAbove j)) :
     (i.insertNth (op i x y) fun j => op _ (p j) (q j)) = fun j => op j (i.insertNth x p j) (i.insertNth y q j) :=
@@ -604,11 +604,11 @@ variable [∀ i, Preorderₓ (α i)]
 
 theorem insert_nth_le_iff {i : Finₓ (n + 1)} {x : α i} {p : ∀ j, α (i.succAbove j)} {q : ∀ j, α j} :
     i.insertNth x p ≤ q ↔ x ≤ q i ∧ p ≤ fun j => q (i.succAbove j) := by
-  simp [← Pi.le_def, ← forall_iff_succ_above i]
+  simp [Pi.le_def, forall_iff_succ_above i]
 
 theorem le_insert_nth_iff {i : Finₓ (n + 1)} {x : α i} {p : ∀ j, α (i.succAbove j)} {q : ∀ j, α j} :
     q ≤ i.insertNth x p ↔ q i ≤ x ∧ (fun j => q (i.succAbove j)) ≤ p := by
-  simp [← Pi.le_def, ← forall_iff_succ_above i]
+  simp [Pi.le_def, forall_iff_succ_above i]
 
 open Set
 
@@ -616,17 +616,17 @@ theorem insert_nth_mem_Icc {i : Finₓ (n + 1)} {x : α i} {p : ∀ j, α (i.suc
     i.insertNth x p ∈ Icc q₁ q₂ ↔
       x ∈ Icc (q₁ i) (q₂ i) ∧ p ∈ Icc (fun j => q₁ (i.succAbove j)) fun j => q₂ (i.succAbove j) :=
   by
-  simp only [← mem_Icc, ← insert_nth_le_iff, ← le_insert_nth_iff, ← And.assoc, ← And.left_comm]
+  simp only [mem_Icc, insert_nth_le_iff, le_insert_nth_iff, And.assoc, And.left_comm]
 
 theorem preimage_insert_nth_Icc_of_mem {i : Finₓ (n + 1)} {x : α i} {q₁ q₂ : ∀ j, α j} (hx : x ∈ Icc (q₁ i) (q₂ i)) :
     i.insertNth x ⁻¹' Icc q₁ q₂ = Icc (fun j => q₁ (i.succAbove j)) fun j => q₂ (i.succAbove j) :=
   Set.ext fun p => by
-    simp only [← mem_preimage, ← insert_nth_mem_Icc, ← hx, ← true_andₓ]
+    simp only [mem_preimage, insert_nth_mem_Icc, hx, true_andₓ]
 
 theorem preimage_insert_nth_Icc_of_not_mem {i : Finₓ (n + 1)} {x : α i} {q₁ q₂ : ∀ j, α j}
     (hx : x ∉ Icc (q₁ i) (q₂ i)) : i.insertNth x ⁻¹' Icc q₁ q₂ = ∅ :=
   Set.ext fun p => by
-    simp only [← mem_preimage, ← insert_nth_mem_Icc, ← hx, ← false_andₓ, ← mem_empty_eq]
+    simp only [mem_preimage, insert_nth_mem_Icc, hx, false_andₓ, mem_empty_eq]
 
 end InsertNth
 
@@ -646,7 +646,7 @@ def find : ∀ {n : ℕ} (p : Finₓ n → Prop) [DecidablePred p], Option (Fin�
 theorem find_spec : ∀ {n : ℕ} (p : Finₓ n → Prop) [DecidablePred p] {i : Finₓ n} (hi : i ∈ Finₓ.find p), p i
   | 0, p, I, i, hi => Option.noConfusion hi
   | n + 1, p, I, i, hi => by
-    dsimp' [← find]  at hi
+    dsimp' [find]  at hi
     skip
     cases' h : find fun i : Finₓ n => p (i.cast_lt (Nat.lt_succ_of_ltₓ i.2)) with j
     · rw [h] at hi
@@ -671,7 +671,7 @@ theorem is_some_find_iff : ∀ {n : ℕ} {p : Finₓ n → Prop} [DecidablePred 
       cases' h with i hi
       exact ⟨i, find_spec _ hi⟩, fun ⟨⟨i, hin⟩, hi⟩ => by
       skip
-      dsimp' [← find]
+      dsimp' [find]
       cases' h : find fun i : Finₓ n => p (i.cast_lt (Nat.lt_succ_of_ltₓ i.2)) with j
       · split_ifs with hl hl
         · exact Option.is_some_some
@@ -700,7 +700,7 @@ theorem find_min :
   | 0, p, _, i, hi, j, hj, hpj => Option.noConfusion hi
   | n + 1, p, _, i, hi, ⟨j, hjn⟩, hj, hpj => by
     skip
-    dsimp' [← find]  at hi
+    dsimp' [find]  at hi
     cases' h : find fun i : Finₓ n => p (i.cast_lt (Nat.lt_succ_of_ltₓ i.2)) with k
     · rw [h] at hi
       split_ifs  at hi with hl hl

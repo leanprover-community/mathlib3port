@@ -127,7 +127,7 @@ theorem CompatiblePreserving.apply_map {Y : C} {f : Y ⟶ Z} (hf : T f) :
   simpa using
     hG.compatible ℱ h f' (𝟙 _) hg hf
       (by
-        simp [← Eq])
+        simp [Eq])
 
 omit h hG
 
@@ -291,15 +291,15 @@ open Limits.WalkingCospan
             []
             ["only"]
             ["["
-             [(Tactic.simpLemma [] ["←"] `op_comp)
+             [(Tactic.simpLemma [] [] `op_comp)
               ","
-              (Tactic.simpLemma [] ["←"] `functor.map_comp)
+              (Tactic.simpLemma [] [] `functor.map_comp)
               ","
-              (Tactic.simpLemma [] ["←"] `types_comp_apply)
+              (Tactic.simpLemma [] [] `types_comp_apply)
               ","
-              (Tactic.simpLemma [] ["←"] `eq_to_hom_op)
+              (Tactic.simpLemma [] [] `eq_to_hom_op)
               ","
-              (Tactic.simpLemma [] ["←"] `eq_to_hom_map)]
+              (Tactic.simpLemma [] [] `eq_to_hom_map)]
              "]"]
             [])
            [])
@@ -423,7 +423,7 @@ theorem
             by erw [ ← c'.π.app right . w ] dsimp' simp
         conv_lhs => rw [ eq₁ ]
         conv_rhs => rw [ eq₂ ]
-        simp only [ ← op_comp , ← functor.map_comp , ← types_comp_apply , ← eq_to_hom_op , ← eq_to_hom_map ]
+        simp only [ op_comp , functor.map_comp , types_comp_apply , eq_to_hom_op , eq_to_hom_map ]
         congr 1
         injection c'.π.naturality walking_cospan.hom.inl with _ e₁
         injection c'.π.naturality walking_cospan.hom.inr with _ e₂
@@ -455,7 +455,7 @@ theorem pullback_is_sheaf_of_cover_preserving {G : C ⥤ D} (hG₁ : CompatibleP
     rintro V f ⟨Z, f', g', h, rfl⟩
     erw [family_of_elements.comp_of_compatible (S.functor_pushforward G) hx' (image_mem_functor_pushforward G S h) g']
     dsimp'
-    simp [← hG₁.apply_map (sheaf_over ℱ X) hx h, hy f' h]
+    simp [hG₁.apply_map (sheaf_over ℱ X) hx h, ← hy f' h]
     
 
 /-- The pullback of a sheaf along a cover-preserving and compatible-preserving functor. -/

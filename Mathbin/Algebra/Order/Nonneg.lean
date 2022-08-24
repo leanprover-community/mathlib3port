@@ -49,7 +49,7 @@ definitions, so type-class inference won't see this. -/
 instance orderBot [Preorderₓ α] {a : α} : OrderBot { x : α // a ≤ x } :=
   { Set.Ici.orderBot with }
 
-theorem bot_eq [Preorderₓ α] {a : α} : (⊥ : { x : α // a ≤ x }) = ⟨a, le_rfl⟩ :=
+theorem bot_eq [Preorderₓ α] {a : α} : (⊥ : { x : α // a ≤ x }) = ⟨a, le_rflₓ⟩ :=
   rfl
 
 instance no_max_order [PartialOrderₓ α] [NoMaxOrder α] {a : α} : NoMaxOrder { x : α // a ≤ x } :=
@@ -65,7 +65,7 @@ instance densely_ordered [Preorderₓ α] [DenselyOrdered α] {a : α} : Densely
 @[reducible]
 protected noncomputable def conditionallyCompleteLinearOrder [ConditionallyCompleteLinearOrder α] {a : α} :
     ConditionallyCompleteLinearOrder { x : α // a ≤ x } :=
-  { @ordConnectedSubsetConditionallyCompleteLinearOrder α (Set.Ici a) _ ⟨⟨a, le_rfl⟩⟩ _ with }
+  { @ordConnectedSubsetConditionallyCompleteLinearOrder α (Set.Ici a) _ ⟨⟨a, le_rflₓ⟩⟩ _ with }
 
 /-- If `Sup ∅ ≤ a` then `{x : α // a ≤ x}` is a `conditionally_complete_linear_order_bot`.
 
@@ -77,19 +77,19 @@ protected noncomputable def conditionallyCompleteLinearOrderBot [ConditionallyCo
     (h : sup ∅ ≤ a) : ConditionallyCompleteLinearOrderBot { x : α // a ≤ x } :=
   { Nonneg.orderBot, Nonneg.conditionallyCompleteLinearOrder with
     cSup_empty :=
-      (Function.funext_iffₓ.1 (@subset_Sup_def α (Set.Ici a) _ ⟨⟨a, le_rfl⟩⟩) ∅).trans <|
+      (Function.funext_iffₓ.1 (@subset_Sup_def α (Set.Ici a) _ ⟨⟨a, le_rflₓ⟩⟩) ∅).trans <|
         Subtype.eq <| by
           rw [bot_eq]
           cases' h.lt_or_eq with h2 h2
-          · simp [← h2.not_le]
+          · simp [h2.not_le]
             
-          simp [← h2] }
+          simp [h2] }
 
 instance inhabited [Preorderₓ α] {a : α} : Inhabited { x : α // a ≤ x } :=
-  ⟨⟨a, le_rfl⟩⟩
+  ⟨⟨a, le_rflₓ⟩⟩
 
 instance hasZero [Zero α] [Preorderₓ α] : Zero { x : α // 0 ≤ x } :=
-  ⟨⟨0, le_rfl⟩⟩
+  ⟨⟨0, le_rflₓ⟩⟩
 
 @[simp, norm_cast]
 protected theorem coe_zero [Zero α] [Preorderₓ α] : ((0 : { x : α // 0 ≤ x }) : α) = 0 :=
@@ -153,7 +153,7 @@ instance archimedean [OrderedAddCommMonoid α] [Archimedean α] : Archimedean { 
     let ⟨n, hr⟩ := Archimedean.arch (x : α) (pos_y : (0 : α) < y)
     ⟨n,
       show (x : α) ≤ (n • y : { x : α // 0 ≤ x }) by
-        simp [*, -nsmul_eq_mul, ← nsmul_coe]⟩⟩
+        simp [*, -nsmul_eq_mul, nsmul_coe]⟩⟩
 
 instance hasOne [OrderedSemiring α] : One { x : α // 0 ≤ x } where one := ⟨1, zero_le_one⟩
 
@@ -179,9 +179,9 @@ theorem mk_mul_mk [OrderedSemiring α] {x y : α} (hx : 0 ≤ x) (hy : 0 ≤ y) 
 instance addMonoidWithOne [OrderedSemiring α] : AddMonoidWithOneₓ { x : α // 0 ≤ x } :=
   { Nonneg.hasOne, Nonneg.orderedCancelAddCommMonoid with natCast := fun n => ⟨n, Nat.cast_nonneg n⟩,
     nat_cast_zero := by
-      simp [← Nat.castₓ],
+      simp [Nat.castₓ],
     nat_cast_succ := fun _ => by
-      simp [← Nat.castₓ] <;> rfl }
+      simp [Nat.castₓ] <;> rfl }
 
 instance hasPow [OrderedSemiring α] : Pow { x : α // 0 ≤ x } ℕ where pow := fun x n => ⟨x ^ n, pow_nonneg x.2 n⟩
 
@@ -314,7 +314,7 @@ theorem coe_to_nonneg {a : α} : (toNonneg a : α) = max a 0 :=
 
 @[simp]
 theorem to_nonneg_of_nonneg {a : α} (h : 0 ≤ a) : toNonneg a = ⟨a, h⟩ := by
-  simp [← to_nonneg, ← h]
+  simp [to_nonneg, h]
 
 @[simp]
 theorem to_nonneg_coe {a : { x : α // 0 ≤ x }} : toNonneg (a : α) = a := by
@@ -324,12 +324,12 @@ theorem to_nonneg_coe {a : { x : α // 0 ≤ x }} : toNonneg (a : α) = a := by
 @[simp]
 theorem to_nonneg_le {a : α} {b : { x : α // 0 ≤ x }} : toNonneg a ≤ b ↔ a ≤ b := by
   cases' b with b hb
-  simp [← to_nonneg, ← hb]
+  simp [to_nonneg, hb]
 
 @[simp]
 theorem to_nonneg_lt {a : { x : α // 0 ≤ x }} {b : α} : a < toNonneg b ↔ ↑a < b := by
   cases' a with a ha
-  simp [← to_nonneg, ← ha.not_lt]
+  simp [to_nonneg, ha.not_lt]
 
 instance hasSub [Sub α] : Sub { x : α // 0 ≤ x } :=
   ⟨fun x y => toNonneg (x - y)⟩
@@ -344,7 +344,7 @@ end LinearOrderₓ
 instance hasOrderedSub [LinearOrderedRing α] : HasOrderedSub { x : α // 0 ≤ x } :=
   ⟨by
     rintro ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩
-    simp only [← sub_le_iff_le_add, ← Subtype.mk_le_mk, ← mk_sub_mk, ← mk_add_mk, ← to_nonneg_le, ← Subtype.coe_mk]⟩
+    simp only [sub_le_iff_le_add, Subtype.mk_le_mk, mk_sub_mk, mk_add_mk, to_nonneg_le, Subtype.coe_mk]⟩
 
 end Nonneg
 

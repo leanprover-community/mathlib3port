@@ -50,18 +50,18 @@ noncomputable def isometrySumSquares [DecidableEq ι] (w' : ι → ℂ) :
   simp_rw [Basis.units_smul_apply]
   erw [hsum, smul_eq_mul]
   split_ifs
-  · simp only [← h, ← zero_smul, ← zero_mul]
+  · simp only [h, zero_smul, zero_mul]
     
   have hww' : w' j = w j := by
-    simp only [← w, ← dif_neg h, ← Units.coe_mk0]
-  simp only [← hww', ← one_mulₓ]
+    simp only [w, dif_neg h, Units.coe_mk0]
+  simp only [hww', one_mulₓ]
   change v j * v j = ↑(w j) * (v j * ↑(w j) ^ -(1 / 2 : ℂ) * (v j * ↑(w j) ^ -(1 / 2 : ℂ)))
   suffices v j * v j = w j ^ -(1 / 2 : ℂ) * w j ^ -(1 / 2 : ℂ) * w j * v j * v j by
     rw [this]
     ring
   rw [← Complex.cpow_add _ _ (w j).ne_zero,
     show -(1 / 2 : ℂ) + -(1 / 2) = -1 by
-      simp [two_mul],
+      simp [← two_mul],
     Complex.cpow_neg_one, inv_mul_cancel (w j).ne_zero, one_mulₓ]
 
 /-- The isometry between a weighted sum of squares on the complex numbers and the

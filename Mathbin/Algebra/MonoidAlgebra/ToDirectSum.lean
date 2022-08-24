@@ -125,10 +125,10 @@ theorem to_direct_sum_mul [DecidableEq ι] [AddMonoidₓ ι] [Semiringₓ M] (f 
   revert f g
   rw [AddMonoidHom.map_mul_iff]
   ext xi xv yi yv : 4
-  dsimp' only [← AddMonoidHom.comp_apply, ← AddMonoidHom.compl₂_apply, ← AddMonoidHom.compr₂_apply, ←
-    AddMonoidHom.mul_apply, ← AddEquiv.coe_to_add_monoid_hom, ← Finsupp.single_add_hom_apply]
-  simp only [← AddMonoidAlgebra.single_mul_single, ← to_hom, ← AddMonoidHom.coe_mk, ←
-    AddMonoidAlgebra.to_direct_sum_single, ← DirectSum.of_mul_of, ← Mul.ghas_mul_mul]
+  dsimp' only [AddMonoidHom.comp_apply, AddMonoidHom.compl₂_apply, AddMonoidHom.compr₂_apply, AddMonoidHom.mul_apply,
+    AddEquiv.coe_to_add_monoid_hom, Finsupp.single_add_hom_apply]
+  simp only [AddMonoidAlgebra.single_mul_single, to_hom, AddMonoidHom.coe_mk, AddMonoidAlgebra.to_direct_sum_single,
+    DirectSum.of_mul_of, Mul.ghas_mul_mul]
 
 end AddMonoidAlgebra
 

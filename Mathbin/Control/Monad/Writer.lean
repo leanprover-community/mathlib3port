@@ -68,14 +68,14 @@ instance [Monoidₓ ω] [IsLawfulMonad m] : IsLawfulMonad (WriterTₓ ω m) wher
   id_map := by
     intros
     cases x
-    simp [← (· <$> ·), ← WriterTₓ.bind, ← WriterTₓ.pure]
+    simp [(· <$> ·), WriterTₓ.bind, WriterTₓ.pure]
   pure_bind := by
     intros
-    simp [← Pure.pure, ← WriterTₓ.pure, ← (· >>= ·), ← WriterTₓ.bind]
+    simp [Pure.pure, WriterTₓ.pure, (· >>= ·), WriterTₓ.bind]
     ext <;> rfl
   bind_assoc := by
     intros
-    simp' [← (· >>= ·), ← WriterTₓ.bind, ← mul_assoc] with functor_norm
+    simp' [(· >>= ·), WriterTₓ.bind, mul_assoc] with functor_norm
 
 @[inline]
 protected def lift [One ω] (a : m α) : WriterTₓ ω m α :=

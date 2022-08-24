@@ -56,7 +56,7 @@ theorem out_mk {α} (a : α) : (mk a).out = a := by
 @[simp]
 theorem mk_out {α} : ∀ a : Erased α, mk (out a) = a
   | ⟨s, h⟩ => by
-    simp [← mk] <;> congr <;> exact Classical.some_spec h
+    simp [mk] <;> congr <;> exact Classical.some_spec h
 
 @[ext]
 theorem out_inj {α} (a b : Erased α) (h : a.out = b.out) : a = b := by
@@ -117,7 +117,7 @@ def map {α β} (f : α → β) (a : Erased α) : Erased β :=
 
 @[simp]
 theorem map_out {α β} {f : α → β} (a : Erased α) : (a.map f).out = f a.out := by
-  simp [← map]
+  simp [map]
 
 instance : Monadₓ Erased where
   pure := @mk

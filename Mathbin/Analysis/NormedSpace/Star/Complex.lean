@@ -38,21 +38,21 @@ elements of a star module. -/
 def mulNegILin : skewAdjoint E ≃ₗ[ℝ] selfAdjoint E where
   toFun := fun x =>
     ⟨-I • x, by
-      simp [← selfAdjoint.mem_iff]⟩
+      simp [selfAdjoint.mem_iff]⟩
   invFun := fun x =>
     ⟨I • x, by
-      simp [← skewAdjoint.mem_iff]⟩
+      simp [skewAdjoint.mem_iff]⟩
   map_add' := fun x y => by
     ext
-    simp only [← AddSubgroup.coe_add, ← smul_add, ← AddSubgroup.coe_mk]
+    simp only [AddSubgroup.coe_add, smul_add, AddSubgroup.coe_mk]
   map_smul' := fun r x => by
     ext
-    simp only [← neg_smul, ← neg_inj, ← skewAdjoint.coe_smul, ← AddSubgroup.coe_mk, ← RingHom.id_apply, ←
-      selfAdjoint.coe_smul, ← smul_neg, ← smul_comm I]
+    simp only [neg_smul, neg_inj, skewAdjoint.coe_smul, AddSubgroup.coe_mk, RingHom.id_apply, selfAdjoint.coe_smul,
+      smul_neg, smul_comm I]
   left_inv := fun x => by
-    simp only [← neg_smul, ← AddSubgroup.coe_mk, ← smul_neg, mul_smul, ← I_mul_I, ← neg_negₓ, ← one_smul, ← SetLike.eta]
+    simp only [neg_smul, AddSubgroup.coe_mk, smul_neg, ← mul_smul, I_mul_I, neg_negₓ, one_smul, SetLike.eta]
   right_inv := fun x => by
-    simp only [mul_smul, ← I_mul_I, ← AddSubgroup.coe_mk, ← neg_mul, ← neg_negₓ, ← one_smul, ← SetLike.eta]
+    simp only [← mul_smul, I_mul_I, AddSubgroup.coe_mk, neg_mul, neg_negₓ, one_smul, SetLike.eta]
 
 /-- The imaginary part of an element of a star module, as a real-linear map.  -/
 @[simps]
@@ -68,7 +68,7 @@ noncomputable abbrev re : E →ₗ[ℝ] selfAdjoint E :=
 /-- An element of a complex star module can be decomposed into self-adjoint "real" and
 "imaginary" parts -/
 theorem re_add_im (x : E) : (re x : E) + I • im x = x := by
-  simp [mul_smul, ← I_mul_I, smul_add, two_smul ℝ]
+  simp [← mul_smul, I_mul_I, ← smul_add, ← two_smul ℝ]
 
 end StarModule
 

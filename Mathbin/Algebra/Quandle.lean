@@ -182,7 +182,7 @@ This is used in the natural rack homomorphism `to_conj` from `R` to
 theorem ad_conj {R : Type _} [Rack R] (x y : R) : act (x ◃ y) = act x * act y * (act x)⁻¹ := by
   apply @mul_right_cancelₓ _ _ _ (act x)
   ext z
-  simp only [← inv_mul_cancel_right]
+  simp only [inv_mul_cancel_right]
   apply self_distrib.symm
 
 /-- The opposite rack, swapping the roles of `◃` and `◃⁻¹`.
@@ -193,7 +193,7 @@ instance oppositeRack : Rack Rᵐᵒᵖ where
     MulOpposite.rec fun x =>
       MulOpposite.rec fun y =>
         MulOpposite.rec fun z => by
-          simp only [← unop_op, ← op_inj]
+          simp only [unop_op, op_inj]
           exact self_distrib_inv
   invAct := fun x y => op (Shelf.act (unop x) (unop y))
   left_inv :=
@@ -350,14 +350,14 @@ def Conj (G : Type _) :=
 instance Conj.quandle (G : Type _) [Groupₓ G] : Quandle (Conj G) where
   act := fun x => @MulAut.conj G _ x
   self_distrib := fun x y z => by
-    dsimp' only [← MulEquiv.coe_to_equiv, ← MulAut.conj_apply, ← conj]
+    dsimp' only [MulEquiv.coe_to_equiv, MulAut.conj_apply, conj]
     group
   invAct := fun x => (@MulAut.conj G _ x).symm
   left_inv := fun x y => by
-    dsimp' [← act, ← conj]
+    dsimp' [act, conj]
     group
   right_inv := fun x y => by
-    dsimp' [← act, ← conj]
+    dsimp' [act, conj]
     group
   fix := fun x => by
     simp
@@ -367,7 +367,7 @@ theorem conj_act_eq_conj {G : Type _} [Groupₓ G] (x y : Conj G) : x ◃ y = ((
   rfl
 
 theorem conj_swap {G : Type _} [Groupₓ G] (x y : Conj G) : x ◃ y = y ↔ y ◃ x = x := by
-  dsimp' [← conj]  at *
+  dsimp' [conj]  at *
   constructor
   repeat'
     intro h
@@ -398,19 +398,19 @@ def dihedralAct (n : ℕ) (a : Zmod n) : Zmod n → Zmod n := fun b => 2 * a - b
 
 theorem dihedralAct.inv (n : ℕ) (a : Zmod n) : Function.Involutive (dihedralAct n a) := by
   intro b
-  dsimp' [← dihedral_act]
+  dsimp' [dihedral_act]
   ring
 
 instance (n : ℕ) : Quandle (Dihedral n) where
   act := dihedralAct n
   self_distrib := fun x y z => by
-    dsimp' [← dihedral_act]
+    dsimp' [dihedral_act]
     ring
   invAct := dihedralAct n
   left_inv := fun x => (dihedralAct.inv n x).LeftInverse
   right_inv := fun x => (dihedralAct.inv n x).RightInverse
   fix := fun x => by
-    dsimp' [← dihedral_act]
+    dsimp' [dihedral_act]
     ring
 
 end Quandle
@@ -609,19 +609,19 @@ theorem well_def {R : Type _} [Rack R] {G : Type _} [Groupₓ G] (f : R →◃ Q
   | a, b, symm h => (well_def h).symm
   | a, b, trans hac hcb => Eq.trans (well_def hac) (well_def hcb)
   | _, _, congr_mul ha hb => by
-    simp [← to_envel_group.map_aux, ← well_def ha, ← well_def hb]
+    simp [to_envel_group.map_aux, well_def ha, well_def hb]
   | _, _, congr_inv ha => by
-    simp [← to_envel_group.map_aux, ← well_def ha]
+    simp [to_envel_group.map_aux, well_def ha]
   | _, _, assoc a b c => by
     apply mul_assoc
   | _, _, one_mulₓ a => by
-    simp [← to_envel_group.map_aux]
+    simp [to_envel_group.map_aux]
   | _, _, mul_oneₓ a => by
-    simp [← to_envel_group.map_aux]
+    simp [to_envel_group.map_aux]
   | _, _, mul_left_invₓ a => by
-    simp [← to_envel_group.map_aux]
+    simp [to_envel_group.map_aux]
   | _, _, act_incl x y => by
-    simp [← to_envel_group.map_aux]
+    simp [to_envel_group.map_aux]
 
 end ToEnvelGroup.MapAux
 
@@ -633,11 +633,11 @@ def toEnvelGroup.map {R : Type _} [Rack R] {G : Type _} [Groupₓ G] : (R →◃
     { toFun := fun x => Quotientₓ.liftOn x (toEnvelGroup.mapAux f) fun a b ⟨hab⟩ => toEnvelGroup.mapAux.well_def f hab,
       map_one' := by
         change Quotientₓ.liftOn ⟦Rack.PreEnvelGroup.unit⟧ (to_envel_group.map_aux f) _ = 1
-        simp [← to_envel_group.map_aux],
+        simp [to_envel_group.map_aux],
       map_mul' := fun x y =>
         Quotientₓ.induction_on₂ x y fun x y => by
           change Quotientₓ.liftOn ⟦mul x y⟧ (to_envel_group.map_aux f) _ = _
-          simp [← to_envel_group.map_aux] }
+          simp [to_envel_group.map_aux] }
   invFun := fun F => (Quandle.Conj.map F).comp (toEnvelGroup R)
   left_inv := fun f => by
     ext

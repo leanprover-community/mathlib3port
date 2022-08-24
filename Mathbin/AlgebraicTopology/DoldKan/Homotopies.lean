@@ -114,7 +114,7 @@ def hσ' (q : ℕ) : ∀ n m, c.Rel m n → (K[X].x n ⟶ K[X].x m) := fun n m h
         congr)
 
 theorem hσ'_eq_zero {q n m : ℕ} (hnq : n < q) (hnm : c.Rel m n) : (hσ' q n m hnm : X _[n] ⟶ X _[m]) = 0 := by
-  simp only [← hσ', ← hσ]
+  simp only [hσ', hσ]
   split_ifs
   exact zero_comp
 
@@ -125,7 +125,7 @@ theorem hσ'_eq {q n a m : ℕ} (ha : n = a + q) (hnm : c.Rel m n) :
           (by
             congr) :=
   by
-  simp only [← hσ', ← hσ]
+  simp only [hσ', hσ]
   split_ifs
   · exfalso
     linarith
@@ -152,10 +152,10 @@ theorem Hσ_eq_zero (q : ℕ) : (hσₓ q : K[X] ⟶ K[X]).f 0 = 0 := by
         (show 0 = 0 + 0 by
           rfl)
         (c_mk 1 0 rfl)]
-    simp only [← pow_zeroₓ, ← Finₓ.mk_zero, ← one_zsmul, ← eq_to_hom_refl, ← category.comp_id]
+    simp only [pow_zeroₓ, Finₓ.mk_zero, one_zsmul, eq_to_hom_refl, category.comp_id]
     erw [ChainComplex.of_d]
-    simp only [← alternating_face_map_complex.obj_d, ← Finₓ.sum_univ_two, ← Finₓ.coe_zero, ← pow_zeroₓ, ← one_zsmul, ←
-      Finₓ.coe_one, ← pow_oneₓ, ← comp_add, ← neg_smul, ← one_zsmul, ← comp_neg, ← add_neg_eq_zero]
+    simp only [alternating_face_map_complex.obj_d, Finₓ.sum_univ_two, Finₓ.coe_zero, pow_zeroₓ, one_zsmul, Finₓ.coe_one,
+      pow_oneₓ, comp_add, neg_smul, one_zsmul, comp_neg, add_neg_eq_zero]
     erw [δ_comp_σ_self, δ_comp_σ_succ]
     
   · rw [hσ'_eq_zero (Nat.succ_posₓ q) (c_mk 1 0 rfl), zero_comp]
@@ -166,12 +166,12 @@ theorem hσ'_naturality (q : ℕ) (n m : ℕ) (hnm : c.Rel m n) {X Y : Simplicia
     f.app (op [n]) ≫ hσ' q n m hnm = hσ' q n m hnm ≫ f.app (op [m]) := by
   have h : n + 1 = m := hnm
   subst h
-  simp only [← hσ', ← eq_to_hom_refl, ← comp_id]
+  simp only [hσ', eq_to_hom_refl, comp_id]
   unfold hσ
   split_ifs
   · rw [zero_comp, comp_zero]
     
-  · simp only [← zsmul_comp, ← comp_zsmul]
+  · simp only [zsmul_comp, comp_zsmul]
     erw [f.naturality]
     rfl
     
@@ -184,7 +184,7 @@ def natTransHσ (q : ℕ) : alternatingFaceMapComplex C ⟶ alternatingFaceMapCo
     rw [null_homotopic_map'_comp, comp_null_homotopic_map']
     congr
     ext n m hnm
-    simp only [← alternating_face_map_complex_map_f, ← hσ'_naturality]
+    simp only [alternating_face_map_complex_map_f, hσ'_naturality]
 
 /-- The maps `hσ' q n m hnm` are compatible with the application of additive functors. -/
 theorem map_hσ' {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additive] (X : SimplicialObject C) (q n m : ℕ)
@@ -192,9 +192,9 @@ theorem map_hσ' {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Addi
     (hσ' q n m hnm : K[((whiskering _ _).obj G).obj X].x n ⟶ _) = G.map (hσ' q n m hnm : K[X].x n ⟶ _) := by
   unfold hσ' hσ
   split_ifs
-  · simp only [← functor.map_zero, ← zero_comp]
+  · simp only [functor.map_zero, zero_comp]
     
-  · simpa only [← eq_to_hom_map, ← functor.map_comp, ← functor.map_zsmul]
+  · simpa only [eq_to_hom_map, functor.map_comp, functor.map_zsmul]
     
 
 /-- The null homotopic maps `Hσ` are compatible with the application of additive functors. -/
@@ -202,7 +202,7 @@ theorem map_Hσ {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Addit
     (hσₓ q : K[((whiskering C D).obj G).obj X] ⟶ _).f n = G.map ((hσₓ q : K[X] ⟶ _).f n) := by
   unfold Hσ
   have eq := HomologicalComplex.congr_hom (map_null_homotopic_map' G (hσ' q)) n
-  simp only [← functor.map_homological_complex_map_f, map_hσ'] at eq
+  simp only [functor.map_homological_complex_map_f, ← map_hσ'] at eq
   rw [Eq]
   let h := (functor.congr_obj (map_alternating_face_map_complex G) X).symm
   congr

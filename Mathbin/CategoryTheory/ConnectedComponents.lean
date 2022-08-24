@@ -89,7 +89,7 @@ instance (j : ConnectedComponents J) : IsConnected (Component j) := by
   · erw
       [List.last_pmap _ f (j₁ :: l)
         (by
-          simpa [← h₁₂] using hf)
+          simpa [h₁₂] using hf)
         (List.cons_ne_nil _ _)]
     exact full_subcategory.ext _ _ hl₂
     

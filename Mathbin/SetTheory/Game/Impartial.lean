@@ -39,7 +39,7 @@ theorem impartial_iff_aux {G : Pgame} : G.Impartial ↔ G.ImpartialAux :=
 
 theorem impartial_def {G : Pgame} :
     G.Impartial ↔ G ≈ -G ∧ (∀ i, Impartial (G.moveLeft i)) ∧ ∀ j, Impartial (G.moveRight j) := by
-  simpa only [← impartial_iff_aux] using impartial_aux_def
+  simpa only [impartial_iff_aux] using impartial_aux_def
 
 namespace Impartial
 
@@ -83,13 +83,13 @@ instance impartial_add : ∀ (G H : Pgame) [G.Impartial] [H.Impartial], (G + H).
     · apply left_moves_add_cases k
       all_goals
         intro i
-        simp only [← add_move_left_inl, ← add_move_left_inr]
+        simp only [add_move_left_inl, add_move_left_inr]
         apply impartial_add
       
     · apply right_moves_add_cases k
       all_goals
         intro i
-        simp only [← add_move_right_inl, ← add_move_right_inr]
+        simp only [add_move_right_inl, add_move_right_inr]
         apply impartial_add
       
 

@@ -123,7 +123,7 @@ noncomputable def partialFunEquivPointed : PartialFun.{u} ≌ Pointed := by
               { toFun := fun a => ⟨some a, some_ne_none a⟩, invFun := fun a => get <| ne_none_iff_is_some.1 a.2,
                 left_inv := fun a => get_some _ _,
                 right_inv := fun a => by
-                  simp only [← Subtype.val_eq_coe, ← some_get, ← Subtype.coe_eta] })
+                  simp only [Subtype.val_eq_coe, some_get, Subtype.coe_eta] })
           fun X Y f =>
           Pfun.ext fun a b => by
             unfold_projs
@@ -144,7 +144,7 @@ noncomputable def partialFunEquivPointed : PartialFun.{u} ≌ Pointed := by
                 left_inv := fun a =>
                   (Option.recOn a (dif_pos rfl)) fun a =>
                     (dif_neg a.2).trans <| by
-                      simp only [← Option.elimₓ, ← Subtype.val_eq_coe, ← Subtype.coe_eta],
+                      simp only [Option.elimₓ, Subtype.val_eq_coe, Subtype.coe_eta],
                 right_inv := fun a => by
                   change Option.elimₓ _ _ (dite _ _ _) = _
                   split_ifs

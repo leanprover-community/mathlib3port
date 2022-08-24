@@ -18,8 +18,7 @@ variable {α : Type _}
 
 theorem lift_fun_vec_cons {n : ℕ} (r : α → α → Prop) [IsTrans α r] {f : Finₓ (n + 1) → α} {a : α} :
     ((· < ·)⇒r) (vecCons a f) (vecCons a f) ↔ r a (f 0) ∧ ((· < ·)⇒r) f f := by
-  simp only [← lift_fun_iff_succ r, ← forall_fin_succ, ← cons_val_succ, ← cons_val_zero, succ_cast_succ, ←
-    cast_succ_zero]
+  simp only [lift_fun_iff_succ r, forall_fin_succ, cons_val_succ, cons_val_zero, ← succ_cast_succ, cast_succ_zero]
 
 variable [Preorderₓ α] {n : ℕ} {f : Finₓ (n + 1) → α} {a : α}
 
@@ -29,7 +28,7 @@ theorem strict_mono_vec_cons : StrictMono (vecCons a f) ↔ a < f 0 ∧ StrictMo
 
 @[simp]
 theorem monotone_vec_cons : Monotone (vecCons a f) ↔ a ≤ f 0 ∧ Monotone f := by
-  simpa only [← monotone_iff_forall_lt] using @lift_fun_vec_cons α n (· ≤ ·) _ f a
+  simpa only [monotone_iff_forall_lt] using @lift_fun_vec_cons α n (· ≤ ·) _ f a
 
 @[simp]
 theorem strict_anti_vec_cons : StrictAnti (vecCons a f) ↔ f 0 < a ∧ StrictAnti f :=
@@ -52,5 +51,5 @@ theorem Antitone.vec_cons (hf : Antitone f) (ha : f 0 ≤ a) : Antitone (vecCons
   antitone_vec_cons.2 ⟨ha, hf⟩
 
 example : Monotone ![1, 2, 2, 3] := by
-  simp [← Subsingleton.monotone]
+  simp [Subsingleton.monotone]
 

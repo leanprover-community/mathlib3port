@@ -44,23 +44,23 @@ def discrim [Ringₓ R] (a b c : R) : R :=
 
 variable [CommRingₓ R] [IsDomain R] {a b c : R}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr «expr * »(«expr * »(«expr- »(4), a), h)], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args
--- ./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr «expr- »(h)], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr * »(«expr * »(«expr- »(4), a), h)], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr- »(h)], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args
 /-- A quadratic has roots if and only if its discriminant equals some square.
 -/
 theorem quadratic_eq_zero_iff_discrim_eq_sq (h2 : (2 : R) ≠ 0) (ha : a ≠ 0) (x : R) :
     a * x * x + b * x + c = 0 ↔ discrim a b c = (2 * a * x + b) ^ 2 := by
-  dsimp' [← discrim]  at *
+  dsimp' [discrim]  at *
   constructor
   · intro h
     trace
-      "./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr «expr * »(«expr * »(«expr- »(4), a), h)], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr * »(«expr * »(«expr- »(4), a), h)], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args"
     
   · intro h
     have ha : 2 * 2 * a ≠ 0 := mul_ne_zero (mul_ne_zero h2 h2) ha
     apply mul_left_cancel₀ ha
     trace
-      "./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr «expr- »(h)], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr- »(h)], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args"
     
 
 /-- A quadratic has no root if its discriminant has no square root. -/
@@ -76,8 +76,8 @@ section Field
 
 variable {K : Type _} [Field K] [Invertible (2 : K)] {a b c x : K}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr «expr- »(h')], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args
--- ./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr h'], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr- »(h')], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr h'], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args
 /-- Roots of a quadratic -/
 theorem quadratic_eq_zero_iff (ha : a ≠ 0) {s : K} (h : discrim a b c = s * s) (x : K) :
     a * x * x + b * x + c = 0 ↔ x = (-b + s) / (2 * a) ∨ x = (-b - s) / (2 * a) := by
@@ -89,12 +89,12 @@ theorem quadratic_eq_zero_iff (ha : a ≠ 0) {s : K} (h : discrim a b c = s * s)
   · constructor <;>
       intro h' <;>
         trace
-          "./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr «expr- »(h')], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args"
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr- »(h')], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args"
     
   · constructor <;>
       intro h' <;>
         trace
-          "./././Mathport/Syntax/Translate/Basic.lean:648:40: in linear_combination #[[expr h'], []]: ./././Mathport/Syntax/Translate/Basic.lean:319:22: unsupported: too many args"
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr h'], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args"
     
 
 /-- A quadratic has roots if its discriminant has square roots -/
@@ -148,7 +148,7 @@ theorem discrim_le_zero (h : ∀ x : K, 0 ≤ a * x * x + b * x + c) : discrim a
           by
           ring
         _ = -(b * b - 4 * a * c) := by
-          simp only [← mul_div_cancel' b (ne_of_gtₓ ha)]
+          simp only [mul_div_cancel' b (ne_of_gtₓ ha)]
           ring
         
     have ha' : 0 ≤ 4 * a := by

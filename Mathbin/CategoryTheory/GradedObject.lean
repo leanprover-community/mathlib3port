@@ -77,13 +77,13 @@ def comapEq {β γ : Type w} {f g : β → γ} (h : f = g) : comap (fun _ => C) 
     { app := fun X b =>
         eqToHom
           (by
-            dsimp' [← comap]
+            dsimp' [comap]
             subst h) }
   inv :=
     { app := fun X b =>
         eqToHom
           (by
-            dsimp' [← comap]
+            dsimp' [comap]
             subst h) }
 
 theorem comap_eq_symm {β γ : Type w} {f g : β → γ} (h : f = g) : comapEq C h.symm = (comapEq C h).symm := by
@@ -145,7 +145,7 @@ instance hasShift {β : Type _} [AddCommGroupₓ β] (s : β) : HasShift (Graded
           comapEq C
             (by
               ext
-              simp [← add_zsmul, ← add_commₓ]),
+              simp [add_zsmul, add_commₓ]),
       left_unitality := by
         introv
         ext

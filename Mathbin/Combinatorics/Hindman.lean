@@ -63,7 +63,7 @@ def Ultrafilter.semigroup {M} [Semigroupₓ M] : Semigroupₓ (Ultrafilter M) :=
     mul_assoc := fun U V W =>
       Ultrafilter.coe_inj.mp <|
         Filter.ext' fun p => by
-          simp only [← Ultrafilter.eventually_mul, ← mul_assoc] }
+          simp only [Ultrafilter.eventually_mul, mul_assoc] }
 
 attribute [local instance] Ultrafilter.semigroup Ultrafilter.addSemigroup
 
@@ -94,8 +94,8 @@ inductive FP {M} [Semigroupₓ M] : Streamₓ M → Set M
 from a subsequence of `M` starting sufficiently late. -/
 @[to_additive
       "If `m` and `m'` are finite sums in `M`, then so is `m + m'`, provided that `m'`\nis obtained from a subsequence of `M` starting sufficiently late."]
-theorem FP.mul {M} [Semigroupₓ M] {a : Streamₓ M} {m : M} (hm : m ∈ FP a) :
-    ∃ n, ∀, ∀ m' ∈ FP (a.drop n), ∀, m * m' ∈ FP a := by
+theorem FP.mul {M} [Semigroupₓ M] {a : Streamₓ M} {m : M} (hm : m ∈ FP a) : ∃ n, ∀ m' ∈ FP (a.drop n), m * m' ∈ FP a :=
+  by
   induction' hm with a a m hm ih a m hm ih
   · exact ⟨1, fun m hm => FP.cons a m hm⟩
     
@@ -148,7 +148,7 @@ theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroupₓ M] (a : Streamₓ 
     apply eventually.mono (hV (n' + n))
     intro m' hm'
     apply hn
-    simpa only [← Streamₓ.drop_drop] using hm'
+    simpa only [Streamₓ.drop_drop] using hm'
     
 
 @[to_additive exists_FS_of_large]
@@ -169,7 +169,7 @@ theorem exists_FP_of_large {M} [Semigroupₓ M] (U : Ultrafilter M) (U_idem : U 
     ⟨p.val ∩ { m | elem p * m ∈ p.val },
       inter_mem p.2 <| show _ from Set.inter_subset_right _ _ (exists_elem p.2).some_mem⟩
   use Streamₓ.corec elem succ (Subtype.mk s₀ sU)
-  suffices ∀ (a : Streamₓ M), ∀ m ∈ FP a, ∀, ∀ p, a = Streamₓ.corec elem succ p → m ∈ p.val by
+  suffices ∀ (a : Streamₓ M), ∀ m ∈ FP a, ∀ p, a = Streamₓ.corec elem succ p → m ∈ p.val by
     intro m hm
     exact this _ m hm ⟨s₀, sU⟩ rfl
   clear sU s₀

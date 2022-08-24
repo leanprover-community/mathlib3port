@@ -242,10 +242,10 @@ protected def addMonoidWithOne [AddMonoidWithOneₓ β] : AddMonoidWithOneₓ α
   { e.AddMonoid, e.HasOne with natCast := fun n => e.symm n,
     nat_cast_zero :=
       show e.symm _ = _ by
-        simp [← zero_def],
+        simp [zero_def],
     nat_cast_succ := fun n =>
       show e.symm _ = e.symm (e (e.symm _) + _) by
-        simp [← add_def, ← one_def] }
+        simp [add_def, one_def] }
 
 /-- Transfer `add_group_with_one` across an `equiv` -/
 protected def addGroupWithOne [AddGroupWithOneₓ β] : AddGroupWithOneₓ α :=
@@ -388,9 +388,9 @@ variable [Monoidₓ R]
 protected def mulAction (e : α ≃ β) [MulAction R β] : MulAction R α :=
   { e.HasSmul R with
     one_smul := by
-      simp [← smul_def],
+      simp [smul_def],
     mul_smul := by
-      simp [← smul_def, ← mul_smul] }
+      simp [smul_def, mul_smul] }
 
 /-- Transfer `distrib_mul_action` across an `equiv` -/
 protected def distribMulAction (e : α ≃ β) [AddCommMonoidₓ β] : by
@@ -401,9 +401,9 @@ protected def distribMulAction (e : α ≃ β) [AddCommMonoidₓ β] : by
   exact
     ({ Equivₓ.mulAction R e with
       smul_zero := by
-        simp [← zero_def, ← smul_def],
+        simp [zero_def, smul_def],
       smul_add := by
-        simp [← add_def, ← smul_def, ← smul_add] } :
+        simp [add_def, smul_def, smul_add] } :
       DistribMulAction R α)
 
 end
@@ -420,9 +420,9 @@ protected def module (e : α ≃ β) [AddCommMonoidₓ β] : by
   exact
     ({ Equivₓ.distribMulAction R e with
       zero_smul := by
-        simp [← zero_def, ← smul_def],
+        simp [zero_def, smul_def],
       add_smul := by
-        simp [← add_def, ← smul_def, ← add_smul] } :
+        simp [add_def, smul_def, add_smul] } :
       Module R α)
 
 /-- An equivalence `e : α ≃ β` gives a linear equivalence `α ≃ₗ[R] β`
@@ -456,14 +456,14 @@ protected def algebra (e : α ≃ β) [Semiringₓ β] : by
   · exact ((RingEquiv e).symm : β →+* α).comp (algebraMap R β)
     
   · intro r x
-    simp only [← Function.comp_app, ← RingHom.coe_comp]
+    simp only [Function.comp_app, RingHom.coe_comp]
     have p := ring_equiv_symm_apply e
     dsimp'  at p
     erw [p]
     clear p
     apply (RingEquiv e).Injective
-    simp only [← (RingEquiv e).map_mul]
-    simp [← Algebra.commutes]
+    simp only [(RingEquiv e).map_mul]
+    simp [Algebra.commutes]
     
 
 /-- An equivalence `e : α ≃ β` gives an algebra equivalence `α ≃ₐ[R] β`

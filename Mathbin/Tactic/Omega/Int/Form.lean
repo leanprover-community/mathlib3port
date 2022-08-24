@@ -125,12 +125,12 @@ theorem univ_close_of_valid {p : Preform} : ∀ {m v}, p.valid → UnivClose p v
   | m + 1, v, h1 => fun i => univ_close_of_valid h1
 
 theorem valid_of_unsat_not {p : Preform} : (¬* p).Unsat → p.valid := by
-  simp only [← preform.sat, ← preform.unsat, ← preform.valid, ← preform.holds]
+  simp only [preform.sat, preform.unsat, preform.valid, preform.holds]
   rw [not_exists_not]
   intro h
   assumption
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic for setting up proof by induction over preforms. -/
 unsafe def preform.induce (t : tactic Unit := tactic.skip) : tactic Unit :=
   sorry

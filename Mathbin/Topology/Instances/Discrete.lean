@@ -33,7 +33,7 @@ instance (priority := 100) DiscreteTopology.second_countable_topology_of_encodab
   have : ∀ i : α, second_countable_topology ↥({i} : Set α) := fun i =>
     { is_open_generated_countable :=
         ⟨{univ}, countable_singleton _, by
-          simp only [← eq_iff_true_of_subsingleton]⟩ }
+          simp only [eq_iff_true_of_subsingleton]⟩ }
   exact second_countable_topology_of_countable_cover (singletons_open_iff_discrete.mpr hd) (Union_of_singleton α)
 
 instance (priority := 100) DiscreteTopology.order_topology_of_pred_succ' [h : DiscreteTopology α] [PartialOrderₓ α]

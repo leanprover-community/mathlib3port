@@ -46,7 +46,7 @@ protected theorem has_fpower_series_on_ball (f : E →L[𝕜] F) (x : E) : HasFp
     r_pos := Ennreal.coe_lt_top,
     HasSum := fun y _ =>
       (has_sum_nat_add_iff' 2).1 <| by
-        simp [← Finset.sum_range_succ, sub_sub, ← has_sum_zero] }
+        simp [Finset.sum_range_succ, ← sub_sub, has_sum_zero] }
 
 protected theorem has_fpower_series_at (f : E →L[𝕜] F) (x : E) : HasFpowerSeriesAt f (f.fpowerSeries x) x :=
   ⟨∞, f.HasFpowerSeriesOnBall x⟩
@@ -86,9 +86,9 @@ protected theorem has_fpower_series_on_ball_bilinear (f : E →L[𝕜] F →L[�
     r_pos := Ennreal.coe_lt_top,
     HasSum := fun y _ =>
       (has_sum_nat_add_iff' 3).1 <| by
-        simp only [← Finset.sum_range_succ, ← Finset.sum_range_one, ← Prod.fst_add, ← Prod.snd_add, ← f.map_add_add]
+        simp only [Finset.sum_range_succ, Finset.sum_range_one, Prod.fst_add, Prod.snd_add, f.map_add_add]
         dsimp'
-        simp only [← add_commₓ, ← sub_self, ← has_sum_zero] }
+        simp only [add_commₓ, sub_self, has_sum_zero] }
 
 protected theorem has_fpower_series_at_bilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
     HasFpowerSeriesAt (fun x : E × F => f x.1 x.2) (f.fpowerSeriesBilinear x) x :=

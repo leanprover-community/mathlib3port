@@ -57,6 +57,9 @@ theorem prod_mk_mem_set_prod_eq : ((a, b) ∈ s ×ˢ t) = (a ∈ s ∧ b ∈ t) 
 theorem mk_mem_prod (ha : a ∈ s) (hb : b ∈ t) : (a, b) ∈ s ×ˢ t :=
   ⟨ha, hb⟩
 
+instance decidableMemProd [hs : DecidablePred (· ∈ s)] [ht : DecidablePred (· ∈ t)] : DecidablePred (· ∈ s ×ˢ t) :=
+  fun _ => And.decidable
+
 theorem prod_mono (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : s₁ ×ˢ t₁ ⊆ s₂ ×ˢ t₂ := fun x ⟨h₁, h₂⟩ => ⟨hs h₁, ht h₂⟩
 
 @[simp]
@@ -67,14 +70,14 @@ theorem prod_self_subset_prod_self : s₁ ×ˢ s₁ ⊆ s₂ ×ˢ s₂ ↔ s₁ 
 theorem prod_self_ssubset_prod_self : s₁ ×ˢ s₁ ⊂ s₂ ×ˢ s₂ ↔ s₁ ⊂ s₂ :=
   and_congr prod_self_subset_prod_self <| not_congr prod_self_subset_prod_self
 
-theorem prod_subset_iff {P : Set (α × β)} : s ×ˢ t ⊆ P ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, (x, y) ∈ P :=
+theorem prod_subset_iff {P : Set (α × β)} : s ×ˢ t ⊆ P ↔ ∀ x ∈ s, ∀ y ∈ t, (x, y) ∈ P :=
   ⟨fun h _ hx _ hy => h (mk_mem_prod hx hy), fun h ⟨_, _⟩ hp => h _ hp.1 _ hp.2⟩
 
-theorem forall_prod_set {p : α × β → Prop} : (∀, ∀ x ∈ s ×ˢ t, ∀, p x) ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, p (x, y) :=
+theorem forall_prod_set {p : α × β → Prop} : (∀ x ∈ s ×ˢ t, p x) ↔ ∀ x ∈ s, ∀ y ∈ t, p (x, y) :=
   prod_subset_iff
 
 theorem exists_prod_set {p : α × β → Prop} : (∃ x ∈ s ×ˢ t, p x) ↔ ∃ x ∈ s, ∃ y ∈ t, p (x, y) := by
-  simp [← and_assoc]
+  simp [and_assoc]
 
 @[simp]
 theorem prod_empty : s ×ˢ (∅ : Set β) = ∅ := by
@@ -92,20 +95,20 @@ theorem univ_prod_univ : @Univ α ×ˢ @Univ β = univ := by
   exact true_andₓ _
 
 theorem univ_prod {t : Set β} : (Univ : Set α) ×ˢ t = Prod.snd ⁻¹' t := by
-  simp [← prod_eq]
+  simp [prod_eq]
 
 theorem prod_univ {s : Set α} : s ×ˢ (Univ : Set β) = Prod.fst ⁻¹' s := by
-  simp [← prod_eq]
+  simp [prod_eq]
 
 @[simp]
 theorem singleton_prod : ({a} : Set α) ×ˢ t = Prod.mk a '' t := by
   ext ⟨x, y⟩
-  simp [← And.left_comm, ← eq_comm]
+  simp [And.left_comm, eq_comm]
 
 @[simp]
 theorem prod_singleton : s ×ˢ ({b} : Set β) = (fun a => (a, b)) '' s := by
   ext ⟨x, y⟩
-  simp [← And.left_comm, ← eq_comm]
+  simp [And.left_comm, eq_comm]
 
 theorem singleton_prod_singleton : ({a} : Set α) ×ˢ ({b} : Set β) = {(a, b)} := by
   simp
@@ -113,24 +116,24 @@ theorem singleton_prod_singleton : ({a} : Set α) ×ˢ ({b} : Set β) = {(a, b)}
 @[simp]
 theorem union_prod : (s₁ ∪ s₂) ×ˢ t = s₁ ×ˢ t ∪ s₂ ×ˢ t := by
   ext ⟨x, y⟩
-  simp [← or_and_distrib_right]
+  simp [or_and_distrib_right]
 
 @[simp]
 theorem prod_union : s ×ˢ (t₁ ∪ t₂) = s ×ˢ t₁ ∪ s ×ˢ t₂ := by
   ext ⟨x, y⟩
-  simp [← and_or_distrib_left]
+  simp [and_or_distrib_left]
 
 theorem prod_inter_prod : s₁ ×ˢ t₁ ∩ s₂ ×ˢ t₂ = (s₁ ∩ s₂) ×ˢ (t₁ ∩ t₂) := by
   ext ⟨x, y⟩
-  simp [← and_assoc, ← And.left_comm]
+  simp [and_assoc, And.left_comm]
 
 theorem insert_prod : insert a s ×ˢ t = Prod.mk a '' t ∪ s ×ˢ t := by
   ext ⟨x, y⟩
-  simp (config := { contextual := true })[← image, ← iff_def, ← or_imp_distrib, ← Imp.swap]
+  simp (config := { contextual := true })[image, iff_def, or_imp_distrib, Imp.swap]
 
 theorem prod_insert : s ×ˢ insert b t = (fun a => (a, b)) '' s ∪ s ×ˢ t := by
   ext ⟨x, y⟩
-  simp (config := { contextual := true })[← image, ← iff_def, ← or_imp_distrib, ← Imp.swap]
+  simp (config := { contextual := true })[image, iff_def, or_imp_distrib, Imp.swap]
 
 theorem prod_preimage_eq {f : γ → α} {g : δ → β} :
     (f ⁻¹' s) ×ˢ (g ⁻¹' t) = (fun p : γ × δ => (f p.1, g p.2)) ⁻¹' s ×ˢ t :=
@@ -152,29 +155,29 @@ theorem mk_preimage_prod (f : γ → α) (g : γ → β) : (fun x => (f x, g x))
 @[simp]
 theorem mk_preimage_prod_left (hb : b ∈ t) : (fun a => (a, b)) ⁻¹' s ×ˢ t = s := by
   ext a
-  simp [← hb]
+  simp [hb]
 
 @[simp]
 theorem mk_preimage_prod_right (ha : a ∈ s) : Prod.mk a ⁻¹' s ×ˢ t = t := by
   ext b
-  simp [← ha]
+  simp [ha]
 
 @[simp]
 theorem mk_preimage_prod_left_eq_empty (hb : b ∉ t) : (fun a => (a, b)) ⁻¹' s ×ˢ t = ∅ := by
   ext a
-  simp [← hb]
+  simp [hb]
 
 @[simp]
 theorem mk_preimage_prod_right_eq_empty (ha : a ∉ s) : Prod.mk a ⁻¹' s ×ˢ t = ∅ := by
   ext b
-  simp [← ha]
+  simp [ha]
 
 theorem mk_preimage_prod_left_eq_if [DecidablePred (· ∈ t)] : (fun a => (a, b)) ⁻¹' s ×ˢ t = if b ∈ t then s else ∅ :=
   by
-  split_ifs <;> simp [← h]
+  split_ifs <;> simp [h]
 
 theorem mk_preimage_prod_right_eq_if [DecidablePred (· ∈ s)] : Prod.mk a ⁻¹' s ×ˢ t = if a ∈ s then t else ∅ := by
-  split_ifs <;> simp [← h]
+  split_ifs <;> simp [h]
 
 theorem mk_preimage_prod_left_fn_eq_if [DecidablePred (· ∈ t)] (f : γ → α) :
     (fun a => (f a, b)) ⁻¹' s ×ˢ t = if b ∈ t then f ⁻¹' s else ∅ := by
@@ -186,7 +189,7 @@ theorem mk_preimage_prod_right_fn_eq_if [DecidablePred (· ∈ s)] (g : δ → �
 
 theorem preimage_swap_prod {s : Set α} {t : Set β} : Prod.swap ⁻¹' t ×ˢ s = s ×ˢ t := by
   ext ⟨x, y⟩
-  simp [← and_comm]
+  simp [and_comm]
 
 theorem image_swap_prod : Prod.swap '' t ×ˢ s = s ×ˢ t := by
   rw [image_swap_eq_preimage_swap, preimage_swap_prod]
@@ -194,12 +197,12 @@ theorem image_swap_prod : Prod.swap '' t ×ˢ s = s ×ˢ t := by
 theorem prod_image_image_eq {m₁ : α → γ} {m₂ : β → δ} :
     (m₁ '' s) ×ˢ (m₂ '' t) = (fun p : α × β => (m₁ p.1, m₂ p.2)) '' s ×ˢ t :=
   ext <| by
-    simp [-exists_and_distrib_right, ← exists_and_distrib_right.symm, ← And.left_comm, ← And.assoc, ← And.comm]
+    simp [-exists_and_distrib_right, exists_and_distrib_right.symm, And.left_comm, And.assoc, And.comm]
 
 theorem prod_range_range_eq {m₁ : α → γ} {m₂ : β → δ} :
     Range m₁ ×ˢ Range m₂ = Range fun p : α × β => (m₁ p.1, m₂ p.2) :=
   ext <| by
-    simp [← range]
+    simp [range]
 
 @[simp]
 theorem range_prod_map {m₁ : α → γ} {m₂ : β → δ} : Range (Prod.map m₁ m₂) = Range m₁ ×ˢ Range m₂ :=
@@ -207,11 +210,11 @@ theorem range_prod_map {m₁ : α → γ} {m₂ : β → δ} : Range (Prod.map m
 
 theorem prod_range_univ_eq {m₁ : α → γ} : Range m₁ ×ˢ (Univ : Set β) = Range fun p : α × β => (m₁ p.1, p.2) :=
   ext <| by
-    simp [← range]
+    simp [range]
 
 theorem prod_univ_range_eq {m₂ : β → δ} : (Univ : Set α) ×ˢ Range m₂ = Range fun p : α × β => (p.1, m₂ p.2) :=
   ext <| by
-    simp [← range]
+    simp [range]
 
 theorem range_pair_subset (f : α → β) (g : α → γ) : (Range fun x => (f x, g x)) ⊆ Range f ×ˢ Range g := by
   have : (fun x => (f x, g x)) = Prod.map f g ∘ fun x => (x, x) := funext fun x => rfl
@@ -228,10 +231,10 @@ theorem prod_nonempty_iff : (s ×ˢ t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
   ⟨fun h => ⟨h.fst, h.snd⟩, fun h => h.1.Prod h.2⟩
 
 theorem prod_eq_empty_iff : s ×ˢ t = ∅ ↔ s = ∅ ∨ t = ∅ := by
-  simp only [← not_nonempty_iff_eq_empty.symm, ← prod_nonempty_iff, ← not_and_distrib]
+  simp only [not_nonempty_iff_eq_empty.symm, prod_nonempty_iff, not_and_distrib]
 
 theorem prod_sub_preimage_iff {W : Set γ} {f : α × β → γ} : s ×ˢ t ⊆ f ⁻¹' W ↔ ∀ a b, a ∈ s → b ∈ t → f (a, b) ∈ W := by
-  simp [← subset_def]
+  simp [subset_def]
 
 theorem image_prod_mk_subset_prod_left (hb : b ∈ t) : (fun a => (a, b)) '' s ⊆ s ×ˢ t := by
   rintro _ ⟨a, ha, rfl⟩
@@ -271,7 +274,7 @@ theorem prod_diff_prod : s ×ˢ t \ s₁ ×ˢ t₁ = s ×ˢ (t \ t₁) ∪ (s \ 
 first set is empty. -/
 theorem prod_subset_prod_iff : s ×ˢ t ⊆ s₁ ×ˢ t₁ ↔ s ⊆ s₁ ∧ t ⊆ t₁ ∨ s = ∅ ∨ t = ∅ := by
   cases' (s ×ˢ t).eq_empty_or_nonempty with h h
-  · simp [← h, ← prod_eq_empty_iff.1 h]
+  · simp [h, prod_eq_empty_iff.1 h]
     
   have st : s.nonempty ∧ t.nonempty := by
     rwa [prod_nonempty_iff] at h
@@ -283,7 +286,7 @@ theorem prod_subset_prod_iff : s ×ˢ t ⊆ s₁ ×ˢ t₁ ↔ s ⊆ s₁ ∧ t 
     rwa [snd_image_prod st.1, snd_image_prod (h.mono H).fst] at this
     
   · intro H
-    simp only [← st.1.ne_empty, ← st.2.ne_empty, ← or_falseₓ] at H
+    simp only [st.1.ne_empty, st.2.ne_empty, or_falseₓ] at H
     exact prod_mono H.1 H.2
     
 
@@ -367,7 +370,7 @@ def Diagonal (α : Type _) : Set (α × α) :=
   { p | p.1 = p.2 }
 
 theorem mem_diagonal (x : α) : (x, x) ∈ Diagonal α := by
-  simp [← diagonal]
+  simp [diagonal]
 
 @[simp]
 theorem mem_diagonal_iff {x : α × α} : x ∈ Diagonal α ↔ x.1 = x.2 :=
@@ -378,12 +381,12 @@ instance decidableMemDiagonal [h : DecidableEq α] (x : α × α) : Decidable (x
 
 theorem preimage_coe_coe_diagonal (s : Set α) : Prod.map coe coe ⁻¹' Diagonal α = Diagonal s := by
   ext ⟨⟨x, hx⟩, ⟨y, hy⟩⟩
-  simp [← Set.Diagonal]
+  simp [Set.Diagonal]
 
 @[simp]
 theorem range_diag : (Range fun x => (x, x)) = Diagonal α := by
   ext ⟨x, y⟩
-  simp [← diagonal, ← eq_comm]
+  simp [diagonal, eq_comm]
 
 @[simp]
 theorem prod_subset_compl_diagonal_iff_disjoint : s ×ˢ t ⊆ Diagonal αᶜ ↔ Disjoint s t :=
@@ -410,10 +413,10 @@ variable {ι : Type _} {α β : ι → Type _} {s s₁ s₂ : Set ι} {t t₁ t�
 is the set of dependent functions `f : Πa, π a` such that `f a` belongs to `t a`
 whenever `a ∈ s`. -/
 def Pi (s : Set ι) (t : ∀ i, Set (α i)) : Set (∀ i, α i) :=
-  { f | ∀, ∀ i ∈ s, ∀, f i ∈ t i }
+  { f | ∀ i ∈ s, f i ∈ t i }
 
 @[simp]
-theorem mem_pi {f : ∀ i, α i} : f ∈ s.pi t ↔ ∀, ∀ i ∈ s, ∀, f i ∈ t i :=
+theorem mem_pi {f : ∀ i, α i} : f ∈ s.pi t ↔ ∀ i ∈ s, f i ∈ t i :=
   Iff.rfl
 
 @[simp]
@@ -423,36 +426,36 @@ theorem mem_univ_pi {f : ∀ i, α i} : f ∈ Pi Univ t ↔ ∀ i, f i ∈ t i :
 @[simp]
 theorem empty_pi (s : ∀ i, Set (α i)) : Pi ∅ s = univ := by
   ext
-  simp [← pi]
+  simp [pi]
 
 @[simp]
 theorem pi_univ (s : Set ι) : (Pi s fun i => (Univ : Set (α i))) = univ :=
   eq_univ_of_forall fun f i hi => mem_univ _
 
-theorem pi_mono (h : ∀, ∀ i ∈ s, ∀, t₁ i ⊆ t₂ i) : Pi s t₁ ⊆ Pi s t₂ := fun x hx i hi => h i hi <| hx i hi
+theorem pi_mono (h : ∀ i ∈ s, t₁ i ⊆ t₂ i) : Pi s t₁ ⊆ Pi s t₂ := fun x hx i hi => h i hi <| hx i hi
 
 theorem pi_inter_distrib : (s.pi fun i => t i ∩ t₁ i) = s.pi t ∩ s.pi t₁ :=
   ext fun x => by
-    simp only [← forall_and_distrib, ← mem_pi, ← mem_inter_eq]
+    simp only [forall_and_distrib, mem_pi, mem_inter_eq]
 
-theorem pi_congr (h : s₁ = s₂) (h' : ∀, ∀ i ∈ s₁, ∀, t₁ i = t₂ i) : s₁.pi t₁ = s₂.pi t₂ :=
+theorem pi_congr (h : s₁ = s₂) (h' : ∀ i ∈ s₁, t₁ i = t₂ i) : s₁.pi t₁ = s₂.pi t₂ :=
   h ▸ ext fun x => forall₂_congrₓ fun i hi => h' i hi ▸ Iff.rfl
 
 theorem pi_eq_empty (hs : i ∈ s) (ht : t i = ∅) : s.pi t = ∅ := by
   ext f
-  simp only [← mem_empty_eq, ← not_forall, ← iff_falseₓ, ← mem_pi, ← not_imp]
+  simp only [mem_empty_eq, not_forall, iff_falseₓ, mem_pi, not_imp]
   exact
     ⟨i, hs, by
-      simp [← ht]⟩
+      simp [ht]⟩
 
 theorem univ_pi_eq_empty (ht : t i = ∅) : Pi Univ t = ∅ :=
   pi_eq_empty (mem_univ i) ht
 
 theorem pi_nonempty_iff : (s.pi t).Nonempty ↔ ∀ i, ∃ x, i ∈ s → x ∈ t i := by
-  simp [← Classical.skolem, ← Set.Nonempty]
+  simp [Classical.skolem, Set.Nonempty]
 
 theorem univ_pi_nonempty_iff : (Pi Univ t).Nonempty ↔ ∀ i, (t i).Nonempty := by
-  simp [← Classical.skolem, ← Set.Nonempty]
+  simp [Classical.skolem, Set.Nonempty]
 
 theorem pi_eq_empty_iff : s.pi t = ∅ ↔ ∃ i, IsEmpty (α i) ∨ i ∈ s ∧ t i = ∅ := by
   rw [← not_nonempty_iff_eq_empty, pi_nonempty_iff]
@@ -461,17 +464,17 @@ theorem pi_eq_empty_iff : s.pi t = ∅ ↔ ∃ i, IsEmpty (α i) ∨ i ∈ s ∧
   · rintro ⟨x⟩
     exact
       ⟨(h x).1, by
-        simp [← eq_empty_iff_forall_not_mem, ← h]⟩
+        simp [eq_empty_iff_forall_not_mem, h]⟩
     
   · rintro (h | h) x
     · exact h.elim' x
       
-    · simp [← h]
+    · simp [h]
       
     
 
 theorem univ_pi_eq_empty_iff : Pi Univ t = ∅ ↔ ∃ i, t i = ∅ := by
-  simp [not_nonempty_iff_eq_empty, ← univ_pi_nonempty_iff]
+  simp [← not_nonempty_iff_eq_empty, univ_pi_nonempty_iff]
 
 @[simp]
 theorem univ_pi_empty [h : Nonempty ι] : Pi Univ (fun i => ∅ : ∀ i, Set (α i)) = ∅ :=
@@ -491,19 +494,19 @@ theorem range_dcomp (f : ∀ i, α i → β i) :
 @[simp]
 theorem insert_pi (i : ι) (s : Set ι) (t : ∀ i, Set (α i)) : Pi (insert i s) t = eval i ⁻¹' t i ∩ Pi s t := by
   ext
-  simp [← pi, ← or_imp_distrib, ← forall_and_distrib]
+  simp [pi, or_imp_distrib, forall_and_distrib]
 
 @[simp]
 theorem singleton_pi (i : ι) (t : ∀ i, Set (α i)) : Pi {i} t = eval i ⁻¹' t i := by
   ext
-  simp [← pi]
+  simp [pi]
 
 theorem singleton_pi' (i : ι) (t : ∀ i, Set (α i)) : Pi {i} t = { x | x i ∈ t i } :=
   singleton_pi i t
 
 theorem univ_pi_singleton (f : ∀ i, α i) : (Pi Univ fun i => {f i}) = ({f} : Set (∀ i, α i)) :=
   ext fun g => by
-    simp [← funext_iff]
+    simp [funext_iff]
 
 theorem pi_if {p : ι → Prop} [h : DecidablePred p] (s : Set ι) (t₁ t₂ : ∀ i, Set (α i)) :
     (Pi s fun i => if p i then t₁ i else t₂ i) = Pi ({ i ∈ s | p i }) t₁ ∩ Pi ({ i ∈ s | ¬p i }) t₂ := by
@@ -519,7 +522,7 @@ theorem pi_if {p : ι → Prop} [h : DecidablePred p] (s : Set ι) (t₁ t₂ : 
     
 
 theorem union_pi : (s₁ ∪ s₂).pi t = s₁.pi t ∩ s₂.pi t := by
-  simp [← pi, ← or_imp_distrib, ← forall_and_distrib, ← set_of_and]
+  simp [pi, or_imp_distrib, forall_and_distrib, set_of_and]
 
 @[simp]
 theorem pi_inter_compl (s : Set ι) : Pi s t ∩ Pi (sᶜ) t = Pi Univ t := by
@@ -560,7 +563,7 @@ theorem eval_image_pi (hs : i ∈ s) (ht : (s.pi t).Nonempty) : eval i '' s.pi t
   classical
   obtain ⟨f, hf⟩ := ht
   refine' fun y hy => ⟨update f i y, fun j hj => _, update_same _ _ _⟩
-  obtain rfl | hji := eq_or_ne j i <;> simp [*, ← hf _ hj]
+  obtain rfl | hji := eq_or_ne j i <;> simp [*, hf _ hj]
 
 @[simp]
 theorem eval_image_univ_pi (ht : (Pi Univ t).Nonempty) : (fun f : ∀ i, α i => f i) '' Pi Univ t = t i :=
@@ -568,13 +571,13 @@ theorem eval_image_univ_pi (ht : (Pi Univ t).Nonempty) : (fun f : ∀ i, α i =>
 
 theorem eval_preimage [DecidableEq ι] {s : Set (α i)} : eval i ⁻¹' s = Pi Univ (update (fun i => Univ) i s) := by
   ext x
-  simp [← @forall_update_iff _ (fun i => Set (α i)) _ _ _ _ fun i' y => x i' ∈ y]
+  simp [@forall_update_iff _ (fun i => Set (α i)) _ _ _ _ fun i' y => x i' ∈ y]
 
 theorem eval_preimage' [DecidableEq ι] {s : Set (α i)} : eval i ⁻¹' s = Pi {i} (update (fun i => Univ) i s) := by
   ext
   simp
 
-theorem update_preimage_pi [DecidableEq ι] {f : ∀ i, α i} (hi : i ∈ s) (hf : ∀, ∀ j ∈ s, ∀, j ≠ i → f j ∈ t j) :
+theorem update_preimage_pi [DecidableEq ι] {f : ∀ i, α i} (hi : i ∈ s) (hf : ∀ j ∈ s, j ≠ i → f j ∈ t j) :
     update f i ⁻¹' s.pi t = t i := by
   ext x
   refine' ⟨fun h => _, fun hx j hj => _⟩
@@ -589,7 +592,7 @@ theorem update_preimage_pi [DecidableEq ι] {f : ∀ i, α i} (hi : i ∈ s) (hf
       
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem update_preimage_univ_pi [DecidableEq ι] {f : ∀ i, α i} (hf : ∀ (j) (_ : j ≠ i), f j ∈ t j) :
     update f i ⁻¹' Pi Univ t = t i :=
   update_preimage_pi (mem_univ i) fun j _ => hf j
@@ -602,7 +605,7 @@ theorem univ_pi_ite (s : Set ι) [DecidablePred (· ∈ s)] (t : ∀ i, Set (α 
   ext
   simp_rw [mem_univ_pi]
   refine' forall_congrₓ fun i => _
-  split_ifs <;> simp [← h]
+  split_ifs <;> simp [h]
 
 end Pi
 

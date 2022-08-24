@@ -104,8 +104,8 @@ namespace StalkMap
 
 @[simp]
 theorem id (X : PresheafedSpace.{v} C) (x : X) : stalkMap (𝟙 X) x = 𝟙 (X.stalk x) := by
-  dsimp' [← stalk_map]
-  simp only [← stalk_pushforward.id]
+  dsimp' [stalk_map]
+  simp only [stalk_pushforward.id]
   rw [← map_comp]
   convert (stalk_functor C x).map_id X.presheaf
   tidy
@@ -117,14 +117,14 @@ theorem comp {X Y Z : PresheafedSpace.{v} C} (α : X ⟶ Y) (β : Y ⟶ Z) (x : 
       (stalkMap β (α.base x) : Z.stalk (β.base (α.base x)) ⟶ Y.stalk (α.base x)) ≫
         (stalkMap α x : Y.stalk (α.base x) ⟶ X.stalk x) :=
   by
-  dsimp' [← stalk_map, ← stalk_functor, ← stalk_pushforward]
+  dsimp' [stalk_map, stalk_functor, stalk_pushforward]
   ext U
   induction U using Opposite.rec
   cases U
-  simp only [← colimit.ι_map_assoc, ← colimit.ι_pre_assoc, ← colimit.ι_pre, ← whisker_left_app, ← whisker_right_app, ←
-    assoc, ← id_comp, ← map_id, ← map_comp]
+  simp only [colimit.ι_map_assoc, colimit.ι_pre_assoc, colimit.ι_pre, whisker_left_app, whisker_right_app, assoc,
+    id_comp, map_id, map_comp]
   dsimp'
-  simp only [← map_id, ← assoc, ← pushforward.comp_inv_app]
+  simp only [map_id, assoc, pushforward.comp_inv_app]
   -- FIXME Why doesn't simp do this:
   erw [CategoryTheory.Functor.map_id]
   erw [CategoryTheory.Functor.map_id]
@@ -206,7 +206,7 @@ theorem stalk_specializes_stalk_map {X Y : PresheafedSpace.{v} C} (f : X ⟶ Y) 
       stalkMap f y ≫ X.Presheaf.stalkSpecializes h :=
   by
   delta' PresheafedSpace.stalk_map
-  simp [← stalk_map]
+  simp [stalk_map]
 
 end StalkMap
 

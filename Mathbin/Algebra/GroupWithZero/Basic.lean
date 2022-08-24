@@ -40,7 +40,7 @@ open Classical
 
 open Function
 
-variable {M₀ G₀ M₀' G₀' F : Type _}
+variable {α M₀ G₀ M₀' G₀' F : Type _}
 
 section
 
@@ -57,10 +57,10 @@ protected def Function.Injective.mulZeroClass [Mul M₀'] [Zero M₀'] (f : M₀
   zero := 0
   zero_mul := fun a =>
     hf <| by
-      simp only [← mul, ← zero, ← zero_mul]
+      simp only [mul, zero, zero_mul]
   mul_zero := fun a =>
     hf <| by
-      simp only [← mul, ← zero, ← mul_zero]
+      simp only [mul, zero, mul_zero]
 
 /-- Pushforward a `mul_zero_class` instance along an surjective function.
 See note [reducible non-instances]. -/
@@ -71,10 +71,10 @@ protected def Function.Surjective.mulZeroClass [Mul M₀'] [Zero M₀'] (f : M�
   zero := 0
   mul_zero :=
     hf.forall.2 fun x => by
-      simp only [zero, mul, ← mul_zero]
+      simp only [← zero, ← mul, mul_zero]
   zero_mul :=
     hf.forall.2 fun x => by
-      simp only [zero, mul, ← zero_mul]
+      simp only [← zero, ← mul, zero_mul]
 
 theorem mul_eq_zero_of_left (h : a = 0) (b : M₀) : a * b = 0 :=
   h.symm ▸ zero_mul b
@@ -121,8 +121,18 @@ protected theorem Function.Injective.no_zero_divisors [Mul M₀] [Zero M₀] [Mu
         hf <| by
           rwa [zero] }
 
-theorem eq_zero_of_mul_self_eq_zero [Mul M₀] [Zero M₀] [NoZeroDivisors M₀] {a : M₀} (h : a * a = 0) : a = 0 :=
+section Mul
+
+variable [Mul M₀] [Zero M₀] [NoZeroDivisors M₀] {a b : M₀}
+
+theorem eq_zero_of_mul_self_eq_zero (h : a * a = 0) : a = 0 :=
   (eq_zero_or_eq_zero_of_mul_eq_zero h).elim id id
+
+@[field_simps]
+theorem mul_ne_zero (ha : a ≠ 0) (hb : b ≠ 0) : a * b ≠ 0 :=
+  mt eq_zero_or_eq_zero_of_mul_eq_zero <| not_or_distrib.mpr ⟨ha, hb⟩
+
+end Mul
 
 section
 
@@ -143,11 +153,7 @@ theorem zero_eq_mul : 0 = a * b ↔ a = 0 ∨ b = 0 := by
 /-- If `α` has no zero divisors, then the product of two elements is nonzero iff both of them
 are nonzero. -/
 theorem mul_ne_zero_iff : a * b ≠ 0 ↔ a ≠ 0 ∧ b ≠ 0 :=
-  (not_congr mul_eq_zero).trans not_or_distrib
-
-@[field_simps]
-theorem mul_ne_zero (ha : a ≠ 0) (hb : b ≠ 0) : a * b ≠ 0 :=
-  mul_ne_zero_iff.2 ⟨ha, hb⟩
+  mul_eq_zero.Not.trans not_or_distrib
 
 /-- If `α` has no zero divisors, then for elements `a, b : α`, `a * b` equals zero iff so is
 `b * a`. -/
@@ -157,7 +163,7 @@ theorem mul_eq_zero_comm : a * b = 0 ↔ b * a = 0 :=
 /-- If `α` has no zero divisors, then for elements `a, b : α`, `a * b` is nonzero iff so is
 `b * a`. -/
 theorem mul_ne_zero_comm : a * b ≠ 0 ↔ b * a ≠ 0 :=
-  not_congr mul_eq_zero_comm
+  mul_eq_zero_comm.Not
 
 theorem mul_self_eq_zero : a * a = 0 ↔ a = 0 := by
   simp
@@ -166,10 +172,10 @@ theorem zero_eq_mul_self : 0 = a * a ↔ a = 0 := by
   simp
 
 theorem mul_self_ne_zero : a * a ≠ 0 ↔ a ≠ 0 :=
-  not_congr mul_self_eq_zero
+  mul_self_eq_zero.Not
 
 theorem zero_ne_mul_self : 0 ≠ a * a ↔ a ≠ 0 :=
-  not_congr zero_eq_mul_self
+  zero_eq_mul_self.Not
 
 end
 
@@ -384,7 +390,7 @@ noncomputable def inverse : M₀ → M₀ := fun x => if h : IsUnit x then ((h.U
 /-- By definition, if `x` is invertible then `inverse x = x⁻¹`. -/
 @[simp]
 theorem inverse_unit (u : M₀ˣ) : inverse (u : M₀) = (u⁻¹ : M₀ˣ) := by
-  simp only [← Units.is_unit, ← inverse, ← dif_pos]
+  simp only [Units.is_unit, inverse, dif_pos]
   exact Units.inv_unique rfl
 
 /-- By definition, if `x` is not invertible then `inverse x = 0`. -/
@@ -486,11 +492,11 @@ theorem mul_right_inj' (ha : a ≠ 0) : a * b = a * c ↔ b = c :=
 
 @[simp]
 theorem mul_eq_mul_right_iff : a * c = b * c ↔ a = b ∨ c = 0 := by
-  by_cases' hc : c = 0 <;> [simp [← hc], simp [← mul_left_inj', ← hc]]
+  by_cases' hc : c = 0 <;> [simp [hc], simp [mul_left_inj', hc]]
 
 @[simp]
 theorem mul_eq_mul_left_iff : a * b = a * c ↔ b = c ∨ a = 0 := by
-  by_cases' ha : a = 0 <;> [simp [← ha], simp [← mul_right_inj', ← ha]]
+  by_cases' ha : a = 0 <;> [simp [ha], simp [mul_right_inj', ha]]
 
 theorem mul_right_eq_self₀ : a * b = a ↔ b = 1 ∨ a = 0 :=
   calc
@@ -587,7 +593,7 @@ theorem mul_inv_cancel_right₀ (h : b ≠ 0) (a : G₀) : a * b * b⁻¹ = a :=
   calc
     a * b * b⁻¹ = a * (b * b⁻¹) := mul_assoc _ _ _
     _ = a := by
-      simp [← h]
+      simp [h]
     
 
 @[simp]
@@ -595,35 +601,35 @@ theorem mul_inv_cancel_left₀ (h : a ≠ 0) (b : G₀) : a * (a⁻¹ * b) = b :
   calc
     a * (a⁻¹ * b) = a * a⁻¹ * b := (mul_assoc _ _ _).symm
     _ = b := by
-      simp [← h]
+      simp [h]
     
 
 theorem inv_ne_zero (h : a ≠ 0) : a⁻¹ ≠ 0 := fun a_eq_0 => by
-  simpa [← a_eq_0] using mul_inv_cancel h
+  simpa [a_eq_0] using mul_inv_cancel h
 
 @[simp]
 theorem inv_mul_cancel (h : a ≠ 0) : a⁻¹ * a = 1 :=
   calc
     a⁻¹ * a = a⁻¹ * a * a⁻¹ * a⁻¹⁻¹ := by
-      simp [← inv_ne_zero h]
+      simp [inv_ne_zero h]
     _ = a⁻¹ * a⁻¹⁻¹ := by
-      simp [← h]
+      simp [h]
     _ = 1 := by
-      simp [← inv_ne_zero h]
+      simp [inv_ne_zero h]
     
 
 theorem GroupWithZeroₓ.mul_left_injective (h : x ≠ 0) : Function.Injective fun y => x * y := fun y y' w => by
-  simpa only [mul_assoc, ← inv_mul_cancel h, ← one_mulₓ] using congr_arg (fun y => x⁻¹ * y) w
+  simpa only [← mul_assoc, inv_mul_cancel h, one_mulₓ] using congr_arg (fun y => x⁻¹ * y) w
 
 theorem GroupWithZeroₓ.mul_right_injective (h : x ≠ 0) : Function.Injective fun y => y * x := fun y y' w => by
-  simpa only [← mul_assoc, ← mul_inv_cancel h, ← mul_oneₓ] using congr_arg (fun y => y * x⁻¹) w
+  simpa only [mul_assoc, mul_inv_cancel h, mul_oneₓ] using congr_arg (fun y => y * x⁻¹) w
 
 @[simp]
 theorem inv_mul_cancel_right₀ (h : b ≠ 0) (a : G₀) : a * b⁻¹ * b = a :=
   calc
     a * b⁻¹ * b = a * (b⁻¹ * b) := mul_assoc _ _ _
     _ = a := by
-      simp [← h]
+      simp [h]
     
 
 @[simp]
@@ -631,7 +637,7 @@ theorem inv_mul_cancel_left₀ (h : a ≠ 0) (b : G₀) : a⁻¹ * (a * b) = b :
   calc
     a⁻¹ * (a * b) = a⁻¹ * a * b := (mul_assoc _ _ _).symm
     _ = b := by
-      simp [← h]
+      simp [h]
     
 
 private theorem inv_eq_of_mul (h : a * b = 1) : a⁻¹ = b := by
@@ -642,19 +648,19 @@ instance (priority := 100) GroupWithZeroₓ.toDivisionMonoid : DivisionMonoid G�
   { ‹GroupWithZeroₓ G₀› with inv := Inv.inv,
     inv_inv := fun a => by
       by_cases' h : a = 0
-      · simp [← h]
+      · simp [h]
         
       · exact left_inv_eq_right_invₓ (inv_mul_cancel <| inv_ne_zero h) (inv_mul_cancel h)
         ,
     mul_inv_rev := fun a b => by
       by_cases' ha : a = 0
-      · simp [← ha]
+      · simp [ha]
         
       by_cases' hb : b = 0
-      · simp [← hb]
+      · simp [hb]
         
       refine' inv_eq_of_mul _
-      simp [← mul_assoc, ← ha, ← hb],
+      simp [mul_assoc, ha, hb],
     inv_eq_of_mul := fun a b => inv_eq_of_mul }
 
 end GroupWithZeroₓ
@@ -712,7 +718,7 @@ theorem exists0' {p : ∀ g : G₀, g ≠ 0 → Prop} : (∃ (g : G₀)(hg : g �
 
 @[simp]
 theorem exists_iff_ne_zero {x : G₀} : (∃ u : G₀ˣ, ↑u = x) ↔ x ≠ 0 := by
-  simp [← exists0]
+  simp [exists0]
 
 theorem _root_.group_with_zero.eq_zero_or_unit (a : G₀) : a = 0 ∨ ∃ u : G₀ˣ, a = u := by
   by_cases' h : a = 0
@@ -720,7 +726,7 @@ theorem _root_.group_with_zero.eq_zero_or_unit (a : G₀) : a = 0 ∨ ∃ u : G�
     exact h
     
   · right
-    simpa only [← eq_comm] using units.exists_iff_ne_zero.mpr h
+    simpa only [eq_comm] using units.exists_iff_ne_zero.mpr h
     
 
 @[simp]
@@ -917,12 +923,12 @@ attribute [local simp] div_eq_mul_inv mul_comm mul_assoc mul_left_commₓ
 theorem div_self_mul_self' (a : G₀) : a / (a * a) = a⁻¹ :=
   calc
     a / (a * a) = a⁻¹⁻¹ * a⁻¹ * a⁻¹ := by
-      simp [← mul_inv_rev]
+      simp [mul_inv_rev]
     _ = a⁻¹ := inv_mul_mul_self _
     
 
 theorem one_div_ne_zero {a : G₀} (h : a ≠ 0) : 1 / a ≠ 0 := by
-  simpa only [← one_div] using inv_ne_zero h
+  simpa only [one_div] using inv_ne_zero h
 
 @[simp]
 theorem inv_eq_zero {a : G₀} : a⁻¹ = 0 ↔ a = 0 := by
@@ -942,10 +948,10 @@ theorem div_ne_zero (ha : a ≠ 0) (hb : b ≠ 0) : a / b ≠ 0 := by
 
 @[simp]
 theorem div_eq_zero_iff : a / b = 0 ↔ a = 0 ∨ b = 0 := by
-  simp [← div_eq_mul_inv]
+  simp [div_eq_mul_inv]
 
 theorem div_ne_zero_iff : a / b ≠ 0 ↔ a ≠ 0 ∧ b ≠ 0 :=
-  (not_congr div_eq_zero_iff).trans not_or_distrib
+  div_eq_zero_iff.Not.trans not_or_distrib
 
 theorem Ring.inverse_eq_inv (a : G₀) : Ring.inverse a = a⁻¹ := by
   obtain rfl | ha := eq_or_ne a 0
@@ -1041,11 +1047,11 @@ namespace SemiconjBy
 
 @[simp]
 theorem zero_right [MulZeroClassₓ G₀] (a : G₀) : SemiconjBy a 0 0 := by
-  simp only [← SemiconjBy, ← mul_zero, ← zero_mul]
+  simp only [SemiconjBy, mul_zero, zero_mul]
 
 @[simp]
 theorem zero_left [MulZeroClassₓ G₀] (x y : G₀) : SemiconjBy 0 x y := by
-  simp only [← SemiconjBy, ← mul_zero, ← zero_mul]
+  simp only [SemiconjBy, mul_zero, zero_mul]
 
 variable [GroupWithZeroₓ G₀] {a x y x' y' : G₀}
 
@@ -1053,7 +1059,7 @@ variable [GroupWithZeroₓ G₀] {a x y x' y' : G₀}
 theorem inv_symm_left_iff₀ : SemiconjBy a⁻¹ x y ↔ SemiconjBy a y x :=
   Classical.by_cases
     (fun ha : a = 0 => by
-      simp only [← ha, ← inv_zero, ← SemiconjBy.zero_left])
+      simp only [ha, inv_zero, SemiconjBy.zero_left])
     fun ha => @units_inv_symm_left_iff _ _ (Units.mk0 a ha) _ _
 
 theorem inv_symm_left₀ (h : SemiconjBy a x y) : SemiconjBy a⁻¹ y x :=
@@ -1061,12 +1067,12 @@ theorem inv_symm_left₀ (h : SemiconjBy a x y) : SemiconjBy a⁻¹ y x :=
 
 theorem inv_right₀ (h : SemiconjBy a x y) : SemiconjBy a x⁻¹ y⁻¹ := by
   by_cases' ha : a = 0
-  · simp only [← ha, ← zero_left]
+  · simp only [ha, zero_left]
     
   by_cases' hx : x = 0
   · subst x
-    simp only [← SemiconjBy, ← mul_zero, ← @eq_comm _ _ (y * a), ← mul_eq_zero] at h
-    simp [← h.resolve_right ha]
+    simp only [SemiconjBy, mul_zero, @eq_comm _ _ (y * a), mul_eq_zero] at h
+    simp [h.resolve_right ha]
     
   · have := mul_ne_zero ha hx
     rw [h.eq, mul_ne_zero_iff] at this
@@ -1120,10 +1126,9 @@ theorem div_left (hac : Commute a c) (hbc : Commute b c) : Commute (a / b) c := 
 
 end Commute
 
-namespace MonoidWithZeroHom
+section MonoidWithZeroₓ
 
-variable [GroupWithZeroₓ G₀] [GroupWithZeroₓ G₀'] [MonoidWithZeroₓ M₀] [Nontrivial M₀] [MonoidWithZeroHomClass F G₀ M₀]
-  (f : F) {a : G₀}
+variable [GroupWithZeroₓ G₀] [MonoidWithZeroₓ M₀] [Nontrivial M₀] [MonoidWithZeroHomClass F G₀ M₀] (f : F) {a : G₀}
 
 include M₀
 
@@ -1134,7 +1139,7 @@ theorem map_ne_zero : f a ≠ 0 ↔ a ≠ 0 :=
 theorem map_eq_zero : f a = 0 ↔ a = 0 :=
   not_iff_not.1 (map_ne_zero f)
 
-end MonoidWithZeroHom
+end MonoidWithZeroₓ
 
 section GroupWithZeroₓ
 
@@ -1146,7 +1151,7 @@ include G₀'
 @[simp]
 theorem map_inv₀ : f a⁻¹ = (f a)⁻¹ := by
   by_cases' h : a = 0
-  · simp [← h]
+  · simp [h]
     
   apply eq_inv_of_mul_eq_one_left
   rw [← map_mul, inv_mul_cancel h, map_one]
@@ -1200,4 +1205,72 @@ noncomputable def commGroupWithZeroOfIsUnitOrEqZero [hM : CommMonoidWithZero M] 
   { groupWithZeroOfIsUnitOrEqZero h, hM with }
 
 end NoncomputableDefs
+
+/-! ### Order dual -/
+
+
+open OrderDual
+
+instance [h : MulZeroClassₓ α] : MulZeroClassₓ αᵒᵈ :=
+  h
+
+instance [h : MulZeroOneClassₓ α] : MulZeroOneClassₓ αᵒᵈ :=
+  h
+
+instance [Mul α] [Zero α] [h : NoZeroDivisors α] : NoZeroDivisors αᵒᵈ :=
+  h
+
+instance [h : SemigroupWithZeroₓ α] : SemigroupWithZeroₓ αᵒᵈ :=
+  h
+
+instance [h : MonoidWithZeroₓ α] : MonoidWithZeroₓ αᵒᵈ :=
+  h
+
+instance [h : CancelMonoidWithZero α] : CancelMonoidWithZero αᵒᵈ :=
+  h
+
+instance [h : CommMonoidWithZero α] : CommMonoidWithZero αᵒᵈ :=
+  h
+
+instance [h : CancelCommMonoidWithZero α] : CancelCommMonoidWithZero αᵒᵈ :=
+  h
+
+instance [h : GroupWithZeroₓ α] : GroupWithZeroₓ αᵒᵈ :=
+  h
+
+instance [h : CommGroupWithZero α] : CommGroupWithZero αᵒᵈ :=
+  h
+
+/-! ### Lexicographic order -/
+
+
+instance [h : MulZeroClassₓ α] : MulZeroClassₓ (Lex α) :=
+  h
+
+instance [h : MulZeroOneClassₓ α] : MulZeroOneClassₓ (Lex α) :=
+  h
+
+instance [Mul α] [Zero α] [h : NoZeroDivisors α] : NoZeroDivisors (Lex α) :=
+  h
+
+instance [h : SemigroupWithZeroₓ α] : SemigroupWithZeroₓ (Lex α) :=
+  h
+
+instance [h : MonoidWithZeroₓ α] : MonoidWithZeroₓ (Lex α) :=
+  h
+
+instance [h : CancelMonoidWithZero α] : CancelMonoidWithZero (Lex α) :=
+  h
+
+instance [h : CommMonoidWithZero α] : CommMonoidWithZero (Lex α) :=
+  h
+
+instance [h : CancelCommMonoidWithZero α] : CancelCommMonoidWithZero (Lex α) :=
+  h
+
+instance [h : GroupWithZeroₓ α] : GroupWithZeroₓ (Lex α) :=
+  h
+
+instance [h : CommGroupWithZero α] : CommGroupWithZero (Lex α) :=
+  h
 

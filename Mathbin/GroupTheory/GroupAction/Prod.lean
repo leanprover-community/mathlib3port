@@ -116,12 +116,12 @@ end
 instance smul_comm_class_both [Mul N] [Mul P] [HasSmul M N] [HasSmul M P] [SmulCommClass M N N] [SmulCommClass M P P] :
     SmulCommClass M (N × P) (N × P) :=
   ⟨fun c x y => by
-    simp [← smul_def, ← mul_def, ← mul_smul_comm]⟩
+    simp [smul_def, mul_def, mul_smul_comm]⟩
 
 instance is_scalar_tower_both [Mul N] [Mul P] [HasSmul M N] [HasSmul M P] [IsScalarTower M N N] [IsScalarTower M P P] :
     IsScalarTower M (N × P) (N × P) :=
   ⟨fun c x y => by
-    simp [← smul_def, ← mul_def, ← smul_mul_assoc]⟩
+    simp [smul_def, mul_def, smul_mul_assoc]⟩
 
 @[to_additive]
 instance {m : Monoidₓ M} [MulAction M α] [MulAction M β] : MulAction M (α × β) where

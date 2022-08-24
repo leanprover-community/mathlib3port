@@ -47,9 +47,9 @@ def domCoprod (a : MultilinearMap R (fun _ : ι₁ => N) N₁) (b : MultilinearM
     MultilinearMap R (fun _ : Sum ι₁ ι₂ => N) (N₁ ⊗[R] N₂) where
   toFun := fun v => (a fun i => v (Sum.inl i)) ⊗ₜ b fun i => v (Sum.inr i)
   map_add' := fun v i p q => by
-    cases i <;> simp [← TensorProduct.add_tmul, ← TensorProduct.tmul_add]
+    cases i <;> simp [TensorProduct.add_tmul, TensorProduct.tmul_add]
   map_smul' := fun v i c p => by
-    cases i <;> simp [← TensorProduct.smul_tmul', ← TensorProduct.tmul_smul]
+    cases i <;> simp [TensorProduct.smul_tmul', TensorProduct.tmul_smul]
 
 /-- A more bundled version of `multilinear_map.dom_coprod` that maps
 `((ι₁ → N) → N₁) ⊗ ((ι₂ → N) → N₂)` to `(ι₁ ⊕ ι₂ → N) → N₁ ⊗ N₂`. -/
@@ -60,16 +60,16 @@ def domCoprod' :
     LinearMap.mk₂ R domCoprod
       (fun m₁ m₂ n => by
         ext
-        simp only [← dom_coprod_apply, ← TensorProduct.add_tmul, ← add_apply])
+        simp only [dom_coprod_apply, TensorProduct.add_tmul, add_apply])
       (fun c m n => by
         ext
-        simp only [← dom_coprod_apply, ← TensorProduct.smul_tmul', ← smul_apply])
+        simp only [dom_coprod_apply, TensorProduct.smul_tmul', smul_apply])
       (fun m n₁ n₂ => by
         ext
-        simp only [← dom_coprod_apply, ← TensorProduct.tmul_add, ← add_apply])
+        simp only [dom_coprod_apply, TensorProduct.tmul_add, add_apply])
       fun c m n => by
       ext
-      simp only [← dom_coprod_apply, ← TensorProduct.tmul_smul, ← smul_apply]
+      simp only [dom_coprod_apply, TensorProduct.tmul_smul, smul_apply]
 
 @[simp]
 theorem dom_coprod'_apply (a : MultilinearMap R (fun _ : ι₁ => N) N₁) (b : MultilinearMap R (fun _ : ι₂ => N) N₂) :

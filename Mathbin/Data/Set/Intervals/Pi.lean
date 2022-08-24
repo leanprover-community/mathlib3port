@@ -26,21 +26,21 @@ variable [∀ i, Preorderₓ (α i)] (x y : ∀ i, α i)
 @[simp]
 theorem pi_univ_Ici : (Pi Univ fun i => Ici (x i)) = Ici x :=
   ext fun y => by
-    simp [← Pi.le_def]
+    simp [Pi.le_def]
 
 @[simp]
 theorem pi_univ_Iic : (Pi Univ fun i => Iic (x i)) = Iic x :=
   ext fun y => by
-    simp [← Pi.le_def]
+    simp [Pi.le_def]
 
 @[simp]
 theorem pi_univ_Icc : (Pi Univ fun i => Icc (x i) (y i)) = Icc x y :=
   ext fun y => by
-    simp [← Pi.le_def, ← forall_and_distrib]
+    simp [Pi.le_def, forall_and_distrib]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem piecewise_mem_Icc {s : Set ι} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g₁ g₂ : ∀ i, α i}
-    (h₁ : ∀, ∀ i ∈ s, ∀, f₁ i ∈ Icc (g₁ i) (g₂ i)) (h₂ : ∀ (i) (_ : i ∉ s), f₂ i ∈ Icc (g₁ i) (g₂ i)) :
+    (h₁ : ∀ i ∈ s, f₁ i ∈ Icc (g₁ i) (g₂ i)) (h₂ : ∀ (i) (_ : i ∉ s), f₂ i ∈ Icc (g₁ i) (g₂ i)) :
     s.piecewise f₁ f₂ ∈ Icc g₁ g₂ :=
   ⟨le_piecewise (fun i hi => (h₁ i hi).1) fun i hi => (h₂ i hi).1,
     piecewise_le (fun i hi => (h₁ i hi).2) fun i hi => (h₂ i hi).2⟩
@@ -94,7 +94,7 @@ theorem disjoint_pi_univ_Ioc_update_left_right {x y : ∀ i, α i} {i₀ : ι} {
     Disjoint (Pi Univ fun i => Ioc (x i) (update y i₀ m i)) (Pi Univ fun i => Ioc (update x i₀ m i) (y i)) := by
   rintro z ⟨h₁, h₂⟩
   refine' (h₁ i₀ (mem_univ _)).2.not_lt _
-  simpa only [← Function.update_same] using (h₂ i₀ (mem_univ _)).1
+  simpa only [Function.update_same] using (h₂ i₀ (mem_univ _)).1
 
 end PiPreorder
 
@@ -122,8 +122,7 @@ theorem Icc_diff_pi_univ_Ioo_subset (x y x' y' : ∀ i, α i) :
       (⋃ i : ι, Icc x (update y i (x' i))) ∪ ⋃ i : ι, Icc (update x i (y' i)) y :=
   by
   rintro a ⟨⟨hxa, hay⟩, ha'⟩
-  simpa [← le_update_iff, ← update_le_iff, ← hxa, ← hay, ← hxa _, ← hay _, exists_or_distrib, ← not_and_distrib] using
-    ha'
+  simpa [le_update_iffₓ, update_le_iffₓ, hxa, hay, hxa _, hay _, ← exists_or_distrib, not_and_distrib] using ha'
 
 /-- If `x`, `y`, `z` are functions `Π i : ι, α i`, then
 the set difference between the box `[x, z]` and the product of the intervals `(y i, z i]`
@@ -135,7 +134,7 @@ of the faces of `[x, y]` adjacent to `x`. -/
 theorem Icc_diff_pi_univ_Ioc_subset (x y z : ∀ i, α i) :
     (Icc x z \ Pi Univ fun i => Ioc (y i) (z i)) ⊆ ⋃ i : ι, Icc x (update z i (y i)) := by
   rintro a ⟨⟨hax, haz⟩, hay⟩
-  simpa [← not_and_distrib, ← hax, ← le_update_iff, ← haz _] using hay
+  simpa [not_and_distrib, hax, le_update_iffₓ, haz _] using hay
 
 end Set
 

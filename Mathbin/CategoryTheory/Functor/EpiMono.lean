@@ -157,7 +157,7 @@ def splitEpiEquiv [Full F] [Faithful F] : SplitEpi f ≃ SplitEpi (F.map f) wher
   invFun := fun s => by
     refine' ⟨F.preimage s.section_, _⟩
     apply F.map_injective
-    simp only [← map_comp, ← image_preimage, ← map_id]
+    simp only [map_comp, image_preimage, map_id]
     apply split_epi.id
   left_inv := by
     tidy
@@ -170,7 +170,7 @@ def splitMonoEquiv [Full F] [Faithful F] : SplitMono f ≃ SplitMono (F.map f) w
   invFun := fun s => by
     refine' ⟨F.preimage s.retraction, _⟩
     apply F.map_injective
-    simp only [← map_comp, ← image_preimage, ← map_id]
+    simp only [map_comp, image_preimage, map_id]
     apply split_mono.id
   left_inv := by
     tidy

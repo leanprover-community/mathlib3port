@@ -68,7 +68,7 @@ def Terminates (s : Seqₓₓ α) : Prop :=
   ∃ n : ℕ, s.TerminatedAt n
 
 theorem not_terminates_iff {s : Seqₓₓ α} : ¬s.Terminates ↔ ∀ n, (s.nth n).isSome := by
-  simp [← terminates, ← terminated_at, Ne.def, ← Option.ne_none_iff_is_some]
+  simp [terminates, terminated_at, ← Ne.def, Option.ne_none_iff_is_some]
 
 /-- Functorial action of the functor `option (α × _)` -/
 @[simp]
@@ -89,7 +89,7 @@ def tail (s : Seqₓₓ α) : Seqₓₓ α :=
 protected def Mem (a : α) (s : Seqₓₓ α) :=
   some a ∈ s.1
 
-instance : HasMem α (Seqₓₓ α) :=
+instance : Membership α (Seqₓₓ α) :=
   ⟨Seqₓₓ.Mem⟩
 
 theorem le_stable (s : Seqₓₓ α) {m n} (h : m ≤ n) : s.nth m = none → s.nth n = none := by
@@ -107,7 +107,7 @@ that `s.nth = some aₘ` for `m ≤ n`.
 theorem ge_stable (s : Seqₓₓ α) {aₙ : α} {n m : ℕ} (m_le_n : m ≤ n) (s_nth_eq_some : s.nth n = some aₙ) :
     ∃ aₘ : α, s.nth m = some aₘ :=
   have : s.nth n ≠ none := by
-    simp [← s_nth_eq_some]
+    simp [s_nth_eq_some]
   have : s.nth m ≠ none := mt (s.le_stable m_le_n) this
   Option.ne_none_iff_exists'.mp this
 
@@ -136,7 +136,7 @@ def destruct (s : Seqₓₓ α) : Option (Seq1 α) :=
   (fun a' => (a', s.tail)) <$> nth s 0
 
 theorem destruct_eq_nil {s : Seqₓₓ α} : destruct s = none → s = nil := by
-  dsimp' [← destruct]
+  dsimp' [destruct]
   induction' f0 : nth s 0 with <;> intro h
   · apply Subtype.eq
     funext n
@@ -147,7 +147,7 @@ theorem destruct_eq_nil {s : Seqₓₓ α} : destruct s = none → s = nil := by
     
 
 theorem destruct_eq_cons {s : Seqₓₓ α} {a s'} : destruct s = some (a, s') → s = cons a s' := by
-  dsimp' [← destruct]
+  dsimp' [destruct]
   induction' f0 : nth s 0 with a' <;> intro h
   · contradiction
     
@@ -155,7 +155,7 @@ theorem destruct_eq_cons {s : Seqₓₓ α} {a s'} : destruct s = some (a, s') �
     injections with _ h1 h2
     rw [← h2]
     apply Subtype.eq
-    dsimp' [← tail, ← cons]
+    dsimp' [tail, cons]
     rw [h1] at f0
     rw [← f0]
     exact (Streamₓ.eta f).symm
@@ -171,7 +171,7 @@ theorem destruct_cons (a : α) : ∀ s, destruct (cons a s) = some (a, s)
     unfold cons destruct Functor.map
     apply congr_arg fun s => some (a, s)
     apply Subtype.eq
-    dsimp' [← tail]
+    dsimp' [tail]
     rw [Streamₓ.tail_cons]
 
 theorem head_eq_destruct (s : Seqₓₓ α) : head s = Prod.fst <$> destruct s := by
@@ -191,7 +191,7 @@ theorem tail_nil : tail (nil : Seqₓₓ α) = nil :=
 
 @[simp]
 theorem tail_cons (a : α) (s) : tail (cons a s) = s := by
-  cases' s with f al <;> apply Subtype.eq <;> dsimp' [← tail, ← cons] <;> rw [Streamₓ.tail_cons]
+  cases' s with f al <;> apply Subtype.eq <;> dsimp' [tail, cons] <;> rw [Streamₓ.tail_cons]
 
 def casesOn {C : Seqₓₓ α → Sort v} (s : Seqₓₓ α) (h1 : C nil) (h2 : ∀ x s, C (cons x s)) : C s := by
   induction' H : destruct s with v v
@@ -246,8 +246,8 @@ def corec (f : β → Option (α × β)) (b : β) : Seqₓₓ α := by
     cases' o with b <;> intro h
     · rfl
       
-    dsimp' [← corec.F]  at h
-    dsimp' [← corec.F]
+    dsimp' [corec.F]  at h
+    dsimp' [corec.F]
     cases' f b with s
     · rfl
       
@@ -261,19 +261,19 @@ def corec (f : β → Option (α × β)) (b : β) : Seqₓₓ α := by
 
 @[simp]
 theorem corec_eq (f : β → Option (α × β)) (b : β) : destruct (corec f b) = omap (corec f) (f b) := by
-  dsimp' [← corec, ← destruct, ← nth]
+  dsimp' [corec, destruct, nth]
   change Streamₓ.corec' (corec.F f) (some b) 0 with (corec.F f (some b)).1
-  dsimp' [← corec.F]
+  dsimp' [corec.F]
   induction' h : f b with s
   · rfl
     
   cases' s with a b'
-  dsimp' [← corec.F]
+  dsimp' [corec.F]
   apply congr_arg fun b' => some (a, b')
   apply Subtype.eq
-  dsimp' [← corec, ← tail]
+  dsimp' [corec, tail]
   rw [Streamₓ.corec'_eq, Streamₓ.tail_cons]
-  dsimp' [← corec.F]
+  dsimp' [corec.F]
   rw [h]
   rfl
 
@@ -282,8 +282,8 @@ def ofList (l : List α) : Seqₓₓ α :=
   ⟨List.nth l, fun n h => by
     induction' l with a l IH generalizing n
     rfl
-    dsimp' [← List.nth]
-    cases' n with n <;> dsimp' [← List.nth]  at h
+    dsimp' [List.nth]
+    cases' n with n <;> dsimp' [List.nth]  at h
     · contradiction
       
     · apply IH _ h
@@ -313,7 +313,7 @@ def IsBisimulation :=
 theorem eq_of_bisim (bisim : IsBisimulation R) {s₁ s₂} (r : s₁ ~ s₂) : s₁ = s₂ := by
   apply Subtype.eq
   apply Streamₓ.eq_of_bisim fun x y => ∃ s s' : Seqₓₓ α, s.1 = x ∧ s'.1 = y ∧ R s s'
-  dsimp' [← Streamₓ.IsBisimulation]
+  dsimp' [Streamₓ.IsBisimulation]
   intro t₁ t₂ e
   exact
     match t₁, t₂, e with
@@ -418,7 +418,7 @@ def append (s₁ s₂ : Seqₓₓ α) : Seqₓₓ α :=
 def map (f : α → β) : Seqₓₓ α → Seqₓₓ β
   | ⟨s, al⟩ =>
     ⟨s.map (Option.map f), fun n => by
-      dsimp' [← Streamₓ.map, ← Streamₓ.nth]
+      dsimp' [Streamₓ.map, Streamₓ.nth]
       induction' e : s n with <;> intro
       · rw [al e]
         assumption
@@ -479,10 +479,10 @@ def zipWith (f : α → β → γ) : Seqₓₓ α → Seqₓₓ β → Seqₓₓ
       fun n => by
       induction' h1 : f₁ n with
       · intro H
-        simp only [← a₁ h1]
+        simp only [a₁ h1]
         rfl
         
-      induction' h2 : f₂ n with <;> dsimp' [← Seqₓₓ.ZipWith._match1] <;> intro H
+      induction' h2 : f₂ n with <;> dsimp' [Seqₓₓ.ZipWith._match1] <;> intro H
       · rw [a₂ h2]
         cases f₁ (n + 1) <;> rfl
         
@@ -498,19 +498,19 @@ theorem zip_with_nth_some {a : α} {b : β} (s_nth_eq_some : s.nth n = some a) (
   have : st n = some a := s_nth_eq_some
   cases' s' with st'
   have : st' n = some b := s_nth_eq_some'
-  simp only [← zip_with, ← Seqₓₓ.nth, *]
+  simp only [zip_with, Seqₓₓ.nth, *]
 
 theorem zip_with_nth_none (s_nth_eq_none : s.nth n = none) (f : α → β → γ) : (zipWith f s s').nth n = none := by
   cases' s with st
   have : st n = none := s_nth_eq_none
   cases' s' with st'
-  cases st'_nth_eq : st' n <;> simp only [← zip_with, ← Seqₓₓ.nth, *]
+  cases st'_nth_eq : st' n <;> simp only [zip_with, Seqₓₓ.nth, *]
 
 theorem zip_with_nth_none' (s'_nth_eq_none : s'.nth n = none) (f : α → β → γ) : (zipWith f s s').nth n = none := by
   cases' s' with st'
   have : st' n = none := s'_nth_eq_none
   cases' s with st
-  cases st_nth_eq : st n <;> simp only [← zip_with, ← Seqₓₓ.nth, *]
+  cases st_nth_eq : st n <;> simp only [zip_with, Seqₓₓ.nth, *]
 
 end ZipWith
 
@@ -539,9 +539,9 @@ def toListOrStream (s : Seqₓₓ α) [Decidable s.Terminates] : Sum (List α) (
 theorem nil_append (s : Seqₓₓ α) : append nil s = s := by
   apply coinduction2
   intro s
-  dsimp' [← append]
+  dsimp' [append]
   rw [corec_eq]
-  dsimp' [← append]
+  dsimp' [append]
   apply cases_on s _ _
   · trivial
     
@@ -554,11 +554,11 @@ theorem nil_append (s : Seqₓₓ α) : append nil s = s := by
 @[simp]
 theorem cons_append (a : α) (s t) : append (cons a s) t = cons a (append s t) :=
   destruct_eq_cons <| by
-    dsimp' [← append]
+    dsimp' [append]
     rw [corec_eq]
-    dsimp' [← append]
+    dsimp' [append]
     rw [destruct_cons]
-    dsimp' [← append]
+    dsimp' [append]
     rfl
 
 @[simp]
@@ -606,22 +606,22 @@ theorem map_nil (f : α → β) : map f nil = nil :=
 @[simp]
 theorem map_cons (f : α → β) (a) : ∀ s, map f (cons a s) = cons (f a) (map f s)
   | ⟨s, al⟩ => by
-    apply Subtype.eq <;> dsimp' [← cons, ← map] <;> rw [Streamₓ.map_cons] <;> rfl
+    apply Subtype.eq <;> dsimp' [cons, map] <;> rw [Streamₓ.map_cons] <;> rfl
 
 @[simp]
 theorem map_id : ∀ s : Seqₓₓ α, map id s = s
   | ⟨s, al⟩ => by
-    apply Subtype.eq <;> dsimp' [← map]
+    apply Subtype.eq <;> dsimp' [map]
     rw [Option.map_id, Streamₓ.map_id] <;> rfl
 
 @[simp]
 theorem map_tail (f : α → β) : ∀ s, map f (tail s) = tail (map f s)
   | ⟨s, al⟩ => by
-    apply Subtype.eq <;> dsimp' [← tail, ← map] <;> rw [Streamₓ.map_tail] <;> rfl
+    apply Subtype.eq <;> dsimp' [tail, map] <;> rw [Streamₓ.map_tail] <;> rfl
 
 theorem map_comp (f : α → β) (g : β → γ) : ∀ s : Seqₓₓ α, map (g ∘ f) s = map g (map f s)
   | ⟨s, al⟩ => by
-    apply Subtype.eq <;> dsimp' [← map]
+    apply Subtype.eq <;> dsimp' [map]
     rw [Streamₓ.map_map]
     apply congr_arg fun f : _ → Option γ => Streamₓ.map f s
     ext ⟨⟩ <;> rfl
@@ -660,12 +660,12 @@ theorem join_nil : join nil = (nil : Seqₓₓ α) :=
 @[simp]
 theorem join_cons_nil (a : α) (S) : join (cons (a, nil) S) = cons a (join S) :=
   destruct_eq_cons <| by
-    simp [← join]
+    simp [join]
 
 @[simp]
 theorem join_cons_cons (a b : α) (s S) : join (cons (a, cons b s) S) = cons a (join (cons (b, s) S)) :=
   destruct_eq_cons <| by
-    simp [← join]
+    simp [join]
 
 @[simp]
 theorem join_cons (a : α) (s S) : join (cons (a, s) S) = cons a (append s (join S)) := by
@@ -727,11 +727,11 @@ theorem of_list_nil : ofList [] = (nil : Seqₓₓ α) :=
 
 @[simp]
 theorem of_list_cons (a : α) (l) : ofList (a :: l) = cons a (ofList l) := by
-  ext (_ | n) : 2 <;> simp [← of_list, ← cons, ← Streamₓ.nth, ← Streamₓ.cons]
+  ext (_ | n) : 2 <;> simp [of_list, cons, Streamₓ.nth, Streamₓ.cons]
 
 @[simp]
 theorem of_stream_cons (a : α) (s) : ofStream (a :: s) = cons a (ofStream s) := by
-  apply Subtype.eq <;> simp [← of_stream, ← cons] <;> rw [Streamₓ.map_cons]
+  apply Subtype.eq <;> simp [of_stream, cons] <;> rw [Streamₓ.map_cons]
 
 @[simp]
 theorem of_list_append (l l' : List α) : ofList (l ++ l') = append (ofList l) (ofList l') := by
@@ -739,7 +739,7 @@ theorem of_list_append (l l' : List α) : ofList (l ++ l') = append (ofList l) (
 
 @[simp]
 theorem of_stream_append (l : List α) (s : Streamₓ α) : ofStream (l ++ₛ s) = append (ofList l) (ofStream s) := by
-  induction l <;> simp [*, ← Streamₓ.nil_append_stream, ← Streamₓ.cons_append_stream]
+  induction l <;> simp [*, Streamₓ.nil_append_stream, Streamₓ.cons_append_stream]
 
 /-- Convert a sequence into a list, embedded in a computation to allow for
   the possibility of infinite sequences (in which case the computation
@@ -772,14 +772,14 @@ protected theorem ext (s s' : Seqₓₓ α) (hyp : ∀ n : ℕ, s.nth n = s'.nth
   unfold Seqₓₓ.destruct
   rw [hyp 0]
   cases s'.nth 0
-  · simp [← Seqₓₓ.BisimO]
+  · simp [Seqₓₓ.BisimO]
     
   -- option.none
   · -- option.some
     suffices ext s.tail s'.tail by
       simpa
     intro n
-    simp only [← Seqₓₓ.nth_tail _ n, ← hyp <| n + 1]
+    simp only [Seqₓₓ.nth_tail _ n, hyp <| n + 1]
     
 
 @[simp]
@@ -822,7 +822,7 @@ theorem of_mem_append {s₁ s₂ : Seqₓₓ α} {a : α} (h : a ∈ append s₁
           simpa with
         i1 i2
       cases' o with e' IH
-      · simp [← i1, ← e']
+      · simp [i1, e']
         
       · exact Or.imp_left (mem_cons_of_mem _) (IH m i2)
         
@@ -853,7 +853,7 @@ def map (f : α → β) : Seq1 α → Seq1 β
 
 theorem map_id : ∀ s : Seq1 α, map id s = s
   | ⟨a, s⟩ => by
-    simp [← map]
+    simp [map]
 
 /-- Flatten a nonempty sequence of nonempty sequences -/
 def join : Seq1 (Seq1 α) → Seq1 α
@@ -868,7 +868,7 @@ theorem join_nil (a : α) (S) : join ((a, nil), S) = (a, Seqₓₓ.join S) :=
 
 @[simp]
 theorem join_cons (a b : α) (s S) : join ((a, cons b s), S) = (a, Seqₓₓ.join (cons (b, s) S)) := by
-  dsimp' [← join] <;> rw [destruct_cons] <;> rfl
+  dsimp' [join] <;> rw [destruct_cons] <;> rfl
 
 /-- The `return` operator for the `seq1` monad,
   which produces a singleton sequence. -/
@@ -887,19 +887,19 @@ def bind (s : Seq1 α) (f : α → Seq1 β) : Seq1 β :=
 
 @[simp]
 theorem join_map_ret (s : Seqₓₓ α) : Seqₓₓ.join (Seqₓₓ.map ret s) = s := by
-  apply coinduction2 s <;> intro s <;> apply cases_on s <;> simp [← ret]
+  apply coinduction2 s <;> intro s <;> apply cases_on s <;> simp [ret]
 
 @[simp]
 theorem bind_ret (f : α → β) : ∀ s, bind s (ret ∘ f) = map f s
   | ⟨a, s⟩ => by
-    dsimp' [← bind, ← map]
+    dsimp' [bind, map]
     change fun x => ret (f x) with ret ∘ f
     rw [map_comp]
-    simp [← Function.comp, ← ret]
+    simp [Function.comp, ret]
 
 @[simp]
 theorem ret_bind (a : α) (f : α → Seq1 β) : bind (ret a) f = f a := by
-  simp [← ret, ← bind, ← map]
+  simp [ret, bind, map]
   cases' f a with a s
   apply cases_on s <;> intros <;> simp
 
@@ -915,7 +915,7 @@ theorem map_join' (f : α → β) (S) : Seqₓₓ.map f (Seqₓₓ.join S) = Seq
         apply cases_on s <;> simp
         · apply cases_on S <;> simp
           · intro x S
-            cases' x with a s <;> simp [← map]
+            cases' x with a s <;> simp [map]
             exact ⟨_, _, rfl, rfl⟩
             
           
@@ -929,7 +929,7 @@ theorem map_join' (f : α → β) (S) : Seqₓₓ.map f (Seqₓₓ.join S) = Seq
 @[simp]
 theorem map_join (f : α → β) : ∀ S, map f (join S) = join (map (map f) S)
   | ((a, s), S) => by
-    apply cases_on s <;> intros <;> simp [← map]
+    apply cases_on s <;> intros <;> simp [map]
 
 @[simp]
 theorem join_join (SS : Seqₓₓ (Seq1 (Seq1 α))) : Seqₓₓ.join (Seqₓₓ.join SS) = Seqₓₓ.join (Seqₓₓ.map join SS) := by
@@ -943,7 +943,7 @@ theorem join_join (SS : Seqₓₓ (Seq1 (Seq1 α))) : Seqₓₓ.join (Seqₓₓ.
         apply cases_on s <;> simp
         · apply cases_on SS <;> simp
           · intro S SS
-            cases' S with s S <;> cases' s with x s <;> simp [← map]
+            cases' S with s S <;> cases' s with x s <;> simp [map]
             apply cases_on s <;> simp
             · exact ⟨_, _, rfl, rfl⟩
               
@@ -963,7 +963,7 @@ theorem join_join (SS : Seqₓₓ (Seq1 (Seq1 α))) : Seqₓₓ.join (Seqₓₓ.
 theorem bind_assoc (s : Seq1 α) (f : α → Seq1 β) (g : β → Seq1 γ) :
     bind (bind s f) g = bind s fun x : α => bind (f x) g := by
   cases' s with a s
-  simp [← bind, ← map]
+  simp [bind, map]
   rw [← map_comp]
   change fun x => join (map g (f x)) with join ∘ map g ∘ f
   rw [map_comp _ join]

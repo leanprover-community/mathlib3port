@@ -184,18 +184,18 @@ theorem measure_mono_top (h : s₁ ⊆ s₂) (h₁ : μ s₁ = ∞) : μ s₂ = 
 
 /-- For every set there exists a measurable superset of the same measure. -/
 theorem exists_measurable_superset (μ : Measure α) (s : Set α) : ∃ t, s ⊆ t ∧ MeasurableSet t ∧ μ t = μ s := by
-  simpa only [measure_eq_trim] using μ.to_outer_measure.exists_measurable_superset_eq_trim s
+  simpa only [← measure_eq_trim] using μ.to_outer_measure.exists_measurable_superset_eq_trim s
 
 /-- For every set `s` and a countable collection of measures `μ i` there exists a measurable
 superset `t ⊇ s` such that each measure `μ i` takes the same value on `s` and `t`. -/
 theorem exists_measurable_superset_forall_eq {ι} [Encodable ι] (μ : ι → Measure α) (s : Set α) :
     ∃ t, s ⊆ t ∧ MeasurableSet t ∧ ∀ i, μ i t = μ i s := by
-  simpa only [measure_eq_trim] using
+  simpa only [← measure_eq_trim] using
     outer_measure.exists_measurable_superset_forall_eq_trim (fun i => (μ i).toOuterMeasure) s
 
 theorem exists_measurable_superset₂ (μ ν : Measure α) (s : Set α) :
     ∃ t, s ⊆ t ∧ MeasurableSet t ∧ μ t = μ s ∧ ν t = ν s := by
-  simpa only [← bool.forall_bool.trans And.comm] using exists_measurable_superset_forall_eq (fun b => cond b μ ν) s
+  simpa only [bool.forall_bool.trans And.comm] using exists_measurable_superset_forall_eq (fun b => cond b μ ν) s
 
 theorem exists_measurable_superset_of_null (h : μ s = 0) : ∃ t, s ⊆ t ∧ MeasurableSet t ∧ μ t = 0 :=
   h ▸ exists_measurable_superset μ s
@@ -219,14 +219,14 @@ theorem measure_Union_fintype_le [Fintype β] (f : β → Set α) : μ (⋃ b, f
   convert measure_bUnion_finset_le Finset.univ f
   simp
 
-theorem measure_bUnion_lt_top {s : Set β} {f : β → Set α} (hs : s.Finite) (hfin : ∀, ∀ i ∈ s, ∀, μ (f i) ≠ ∞) :
+theorem measure_bUnion_lt_top {s : Set β} {f : β → Set α} (hs : s.Finite) (hfin : ∀ i ∈ s, μ (f i) ≠ ∞) :
     μ (⋃ i ∈ s, f i) < ∞ := by
   convert (measure_bUnion_finset_le hs.to_finset f).trans_lt _
   · ext
     rw [finite.mem_to_finset]
     
   apply Ennreal.sum_lt_top
-  simpa only [← finite.mem_to_finset]
+  simpa only [finite.mem_to_finset]
 
 theorem measure_Union_null [Encodable β] {s : β → Set α} : (∀ i, μ (s i) = 0) → μ (⋃ i, s i) = 0 :=
   μ.toOuterMeasure.Union_null
@@ -236,10 +236,10 @@ theorem measure_Union_null_iff [Encodable ι] {s : ι → Set α} : μ (⋃ i, s
   μ.toOuterMeasure.Union_null_iff
 
 theorem measure_bUnion_null_iff {s : Set ι} (hs : s.Countable) {t : ι → Set α} :
-    μ (⋃ i ∈ s, t i) = 0 ↔ ∀, ∀ i ∈ s, ∀, μ (t i) = 0 :=
+    μ (⋃ i ∈ s, t i) = 0 ↔ ∀ i ∈ s, μ (t i) = 0 :=
   μ.toOuterMeasure.bUnion_null_iff hs
 
-theorem measure_sUnion_null_iff {S : Set (Set α)} (hS : S.Countable) : μ (⋃₀S) = 0 ↔ ∀, ∀ s ∈ S, ∀, μ s = 0 :=
+theorem measure_sUnion_null_iff {S : Set (Set α)} (hS : S.Countable) : μ (⋃₀S) = 0 ↔ ∀ s ∈ S, μ s = 0 :=
   μ.toOuterMeasure.sUnion_null_iff hS
 
 theorem measure_union_le (s₁ s₂ : Set α) : μ (s₁ ∪ s₂) ≤ μ s₁ + μ s₂ :=
@@ -270,7 +270,7 @@ theorem measure_union_ne_top (hs : μ s ≠ ∞) (ht : μ t ≠ ∞) : μ (s ∪
 @[simp]
 theorem measure_union_eq_top_iff : μ (s ∪ t) = ∞ ↔ μ s = ∞ ∨ μ t = ∞ :=
   not_iff_not.1 <| by
-    simp only [lt_top_iff_ne_top, Ne.def, ← not_or_distrib, ← measure_union_lt_top_iff]
+    simp only [← lt_top_iff_ne_top, ← Ne.def, not_or_distrib, measure_union_lt_top_iff]
 
 theorem exists_measure_pos_of_not_measure_Union_null [Encodable β] {s : β → Set α} (hs : μ (⋃ n, s n) ≠ 0) :
     ∃ n, 0 < μ (s n) := by
@@ -298,7 +298,7 @@ def Measure.ae {α} {m : MeasurableSpace α} (μ : Measure α) : Filter α where
   univ_sets := by
     simp
   inter_sets := fun s t hs ht => by
-    simp only [← compl_inter, ← mem_set_of_eq] <;> exact measure_union_null hs ht
+    simp only [compl_inter, mem_set_of_eq] <;> exact measure_union_null hs ht
   sets_of_superset := fun s t hs hst => measure_mono_null (Set.compl_subset_compl.2 hst) hs
 
 -- mathport name: «expr∀ᵐ ∂ , »
@@ -320,7 +320,7 @@ theorem ae_iff {p : α → Prop} : (∀ᵐ a ∂μ, p a) ↔ μ { a | ¬p a } = 
   Iff.rfl
 
 theorem compl_mem_ae_iff {s : Set α} : sᶜ ∈ μ.ae ↔ μ s = 0 := by
-  simp only [← mem_ae_iff, ← compl_compl]
+  simp only [mem_ae_iff, compl_compl]
 
 theorem frequently_ae_iff {p : α → Prop} : (∃ᵐ a ∂μ, p a) ↔ μ { a | p a } ≠ 0 :=
   not_congr compl_mem_ae_iff
@@ -349,8 +349,8 @@ theorem ae_imp_iff {p : α → Prop} {q : Prop} : (∀ᵐ x ∂μ, q → p x) �
 theorem ae_all_iff [Encodable ι] {p : α → ι → Prop} : (∀ᵐ a ∂μ, ∀ i, p a i) ↔ ∀ i, ∀ᵐ a ∂μ, p a i :=
   eventually_countable_forall
 
-theorem ae_ball_iff {S : Set ι} (hS : S.Countable) {p : ∀ (x : α), ∀ i ∈ S, ∀, Prop} :
-    (∀ᵐ x ∂μ, ∀, ∀ i ∈ S, ∀, p x i ‹_›) ↔ ∀, ∀ i ∈ S, ∀, ∀ᵐ x ∂μ, p x i ‹_› :=
+theorem ae_ball_iff {S : Set ι} (hS : S.Countable) {p : ∀ (x : α), ∀ i ∈ S, Prop} :
+    (∀ᵐ x ∂μ, ∀ i ∈ S, p x i ‹_›) ↔ ∀ i ∈ S, ∀ᵐ x ∂μ, p x i ‹_› :=
   eventually_countable_ball hS
 
 theorem ae_eq_refl (f : α → δ) : f =ᵐ[μ] f :=
@@ -371,7 +371,7 @@ theorem ae_le_of_ae_lt {f g : α → ℝ≥0∞} (h : ∀ᵐ x ∂μ, f x < g x)
 @[simp]
 theorem ae_eq_empty : s =ᵐ[μ] (∅ : Set α) ↔ μ s = 0 :=
   eventually_eq_empty.trans <| by
-    simp only [← ae_iff, ← not_not, ← set_of_mem_eq]
+    simp only [ae_iff, not_not, set_of_mem_eq]
 
 @[simp]
 theorem ae_eq_univ : s =ᵐ[μ] (Univ : Set α) ↔ μ (sᶜ) = 0 :=
@@ -381,7 +381,7 @@ theorem ae_le_set : s ≤ᵐ[μ] t ↔ μ (s \ t) = 0 :=
   calc
     s ≤ᵐ[μ] t ↔ ∀ᵐ x ∂μ, x ∈ s → x ∈ t := Iff.rfl
     _ ↔ μ (s \ t) = 0 := by
-      simp [← ae_iff] <;> rfl
+      simp [ae_iff] <;> rfl
     
 
 theorem ae_le_set_inter {s' t' : Set α} (h : s ≤ᵐ[μ] t) (h' : s' ≤ᵐ[μ] t') : (s ∩ s' : Set α) ≤ᵐ[μ] (t ∩ t' : Set α) :=
@@ -389,17 +389,16 @@ theorem ae_le_set_inter {s' t' : Set α} (h : s ≤ᵐ[μ] t) (h' : s' ≤ᵐ[μ
 
 @[simp]
 theorem union_ae_eq_right : (s ∪ t : Set α) =ᵐ[μ] t ↔ μ (s \ t) = 0 := by
-  simp [← eventually_le_antisymm_iff, ← ae_le_set, ← union_diff_right, ← diff_eq_empty.2 (Set.subset_union_right _ _)]
+  simp [eventually_le_antisymm_iff, ae_le_set, union_diff_right, diff_eq_empty.2 (Set.subset_union_right _ _)]
 
 theorem diff_ae_eq_self : (s \ t : Set α) =ᵐ[μ] s ↔ μ (s ∩ t) = 0 := by
-  simp [← eventually_le_antisymm_iff, ← ae_le_set, ← diff_diff_right, ← diff_diff, ←
-    diff_eq_empty.2 (Set.subset_union_right _ _)]
+  simp [eventually_le_antisymm_iff, ae_le_set, diff_diff_right, diff_diff, diff_eq_empty.2 (Set.subset_union_right _ _)]
 
 theorem diff_null_ae_eq_self (ht : μ t = 0) : (s \ t : Set α) =ᵐ[μ] s :=
   diff_ae_eq_self.mpr (measure_mono_null (inter_subset_right _ _) ht)
 
 theorem ae_eq_set {s t : Set α} : s =ᵐ[μ] t ↔ μ (s \ t) = 0 ∧ μ (t \ s) = 0 := by
-  simp [← eventually_le_antisymm_iff, ← ae_le_set]
+  simp [eventually_le_antisymm_iff, ae_le_set]
 
 theorem ae_eq_set_inter {s' t' : Set α} (h : s =ᵐ[μ] t) (h' : s' =ᵐ[μ] t') : (s ∩ s' : Set α) =ᵐ[μ] (t ∩ t' : Set α) :=
   h.inter h'
@@ -407,7 +406,7 @@ theorem ae_eq_set_inter {s' t' : Set α} (h : s =ᵐ[μ] t) (h' : s' =ᵐ[μ] t'
 @[to_additive]
 theorem _root_.set.mul_indicator_ae_eq_one {M : Type _} [One M] {f : α → M} {s : Set α} (h : s.mulIndicator f =ᵐ[μ] 1) :
     μ (s ∩ Function.MulSupport f) = 0 := by
-  simpa [← Filter.EventuallyEq, ← ae_iff] using h
+  simpa [Filter.EventuallyEq, ae_iff] using h
 
 /-- If `s ⊆ t` modulo a set of measure `0`, then `μ s ≤ μ t`. -/
 @[mono]
@@ -432,8 +431,8 @@ alias measure_congr ← _root_.filter.eventually_eq.measure_eq
 theorem measure_mono_null_ae (H : s ≤ᵐ[μ] t) (ht : μ t = 0) : μ s = 0 :=
   nonpos_iff_eq_zero.1 <| ht ▸ H.measure_le
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊇ » s)
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊇ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊇ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊇ » s)
 /-- A measurable set `t ⊇ s` such that `μ t = μ s`. It even satisfies `μ (t ∩ u) = μ (s ∩ u)` for
 any measurable set `u` if `μ s ≠ ∞`, see `measure_to_measurable_inter`.
 (This property holds without the assumption `μ s ≠ ∞` when the space is sigma-finite,
@@ -467,7 +466,7 @@ theorem measure_to_measurable (s : Set α) : μ (ToMeasurable μ s) = μ s := by
   split_ifs with hs h's
   · exact measure_congr hs.some_spec.snd.2
     
-  · simpa only [← inter_univ] using h's.some_spec.snd.2 univ MeasurableSet.univ
+  · simpa only [inter_univ] using h's.some_spec.snd.2 univ MeasurableSet.univ
     
   · exact (exists_measurable_superset μ s).some_spec.2.2
     
@@ -480,7 +479,7 @@ class MeasureSpace (α : Type _) extends MeasurableSpace α where
 export MeasureSpace (volume)
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident volume]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident volume]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 section MeasureSpace
 
 -- mathport name: «expr∀ᵐ , »
@@ -491,7 +490,7 @@ notation3"∀ᵐ "(...)", "r:(scoped P => Filter.Eventually P MeasureTheory.Meas
 notation3"∃ᵐ "(...)", "r:(scoped P => Filter.Frequently P MeasureTheory.Measure.ae MeasureTheory.MeasureSpace.volume) =>
   r
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 /-- The tactic `exact volume`, to be used in optional (`auto_param`) arguments. -/
 unsafe def volume_tac : tactic Unit :=
   sorry

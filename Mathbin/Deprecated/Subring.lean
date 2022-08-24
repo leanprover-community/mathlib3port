@@ -89,7 +89,7 @@ variable {s : Set R}
 attribute [local reducible] closure
 
 theorem exists_list_of_mem_closure {a : R} (h : a ∈ Closure s) :
-    ∃ L : List (List R), (∀, ∀ l ∈ L, ∀, ∀, ∀ x ∈ l, ∀, x ∈ s ∨ x = (-1 : R)) ∧ (L.map List.prod).Sum = a :=
+    ∃ L : List (List R), (∀ l ∈ L, ∀ x ∈ l, x ∈ s ∨ x = (-1 : R)) ∧ (L.map List.prod).Sum = a :=
   AddGroupₓ.InClosure.rec_on h
     (fun x hx =>
       match x, Monoidₓ.exists_list_of_mem_closure hx with
@@ -102,7 +102,7 @@ theorem exists_list_of_mem_closure {a : R} (h : a ∈ Closure s) :
           match L2, List.mem_mapₓ.1 h2 with
           | _, ⟨L3, h3, rfl⟩ => List.forall_mem_consₓ.2 ⟨Or.inr rfl, h1 L3 h3⟩,
           by
-          simp only [← List.map_mapₓ, ← (· ∘ ·), ← List.prod_cons, ← neg_one_mul] <;>
+          simp only [List.map_mapₓ, (· ∘ ·), List.prod_cons, neg_one_mul] <;>
             exact
               List.recOn L1 neg_zero.symm fun hd tl ih => by
                 rw [List.map_cons, List.sum_cons, ih, List.map_cons, List.sum_cons, neg_add]⟩)
@@ -112,9 +112,11 @@ theorem exists_list_of_mem_closure {a : R} (h : a ∈ Closure s) :
       ⟨L1 ++ L2, List.forall_mem_appendₓ.2 ⟨h1, h2⟩, by
         rw [List.map_append, List.sum_append]⟩
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident L, ",", ident HL', ",", ident HP, "|", ident HP, "⟩", ":", expr «expr∃ , »((L : list R), «expr ∧ »(∀
+     x «expr ∈ » L, «expr ∈ »(x, s), «expr ∨ »(«expr = »(list.prod hd, list.prod L), «expr = »(list.prod hd, «expr- »(list.prod L)))))]]
 @[elabAsElim]
 protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ Closure s) (h1 : C 1) (hneg1 : C (-1))
-    (hs : ∀, ∀ z ∈ s, ∀, ∀ n, C n → C (z * n)) (ha : ∀ {x y}, C x → C y → C (x + y)) : C x := by
+    (hs : ∀ z ∈ s, ∀ n, C n → C (z * n)) (ha : ∀ {x y}, C x → C y → C (x + y)) : C x := by
   have h0 : C 0 := add_neg_selfₓ (1 : R) ▸ ha h1 hneg1
   rcases exists_list_of_mem_closure hx with ⟨L, HL, rfl⟩
   clear hx
@@ -127,18 +129,18 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ Closure 
     exact ha this (ih HL.2)
   replace HL := HL.1
   clear ih tl
-  suffices ∃ L : List R, (∀, ∀ x ∈ L, ∀, x ∈ s) ∧ (List.prod hd = List.prod L ∨ List.prod hd = -List.prod L) by
-    rcases this with ⟨L, HL', HP | HP⟩
-    · rw [HP]
-      clear HP HL hd
-      induction' L with hd tl ih
-      · exact h1
-        
-      rw [List.forall_mem_consₓ] at HL'
-      rw [List.prod_cons]
-      exact hs _ HL'.1 _ (ih HL'.2)
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident L, \",\", ident HL', \",\", ident HP, \"|\", ident HP, \"⟩\", \":\", expr «expr∃ , »((L : list R), «expr ∧ »(∀\n     x «expr ∈ » L, «expr ∈ »(x, s), «expr ∨ »(«expr = »(list.prod hd, list.prod L), «expr = »(list.prod hd, «expr- »(list.prod L)))))]]"
+  · rw [HP]
+    clear HP HL hd
+    induction' L with hd tl ih
+    · exact h1
       
-    rw [HP]
+    rw [List.forall_mem_consₓ] at HL'
+    rw [List.prod_cons]
+    exact hs _ HL'.1 _ (ih HL'.2)
+    
+  · rw [HP]
     clear HP HL hd
     induction' L with hd tl ih
     · exact hneg1
@@ -146,6 +148,7 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ Closure 
     rw [List.prod_cons, neg_mul_eq_mul_neg]
     rw [List.forall_mem_consₓ] at HL'
     exact hs _ HL'.1 _ (ih HL'.2)
+    
   induction' hd with hd tl ih
   · exact ⟨[], List.forall_mem_nilₓ _, Or.inl rfl⟩
     
@@ -215,7 +218,7 @@ theorem image_closure {S : Type _} [Ringₓ S] (f : R →+* S) (s : Set R) : f '
         apply closure.is_subring.to_is_submonoid.one_mem
         
       · rw [f.map_mul]
-        apply closure.is_subring.to_is_submonoid.mul_mem <;> solve_by_elim [← subset_closure, ← Set.mem_image_of_mem]
+        apply closure.is_subring.to_is_submonoid.mul_mem <;> solve_by_elim [subset_closure, Set.mem_image_of_mem]
         
       · rw [f.map_add]
         apply closure.is_subring.to_is_add_submonoid.add_mem

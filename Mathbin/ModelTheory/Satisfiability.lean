@@ -90,8 +90,8 @@ theorem is_satisfiable_iff_is_finitely_satisfiable {T : L.Theory} : T.IsSatisfia
           (Filter.eventually_at_top.2
             ⟨{⟨φ, hφ⟩}, fun s h' =>
               Theory.realize_sentence_of_mem (s.map (Function.Embedding.subtype fun x => x ∈ T)) _⟩)
-      simp only [← Finset.coe_map, ← Function.Embedding.coe_subtype, ← Set.mem_image, ← Finset.mem_coe, ←
-        Subtype.exists, ← Subtype.coe_mk, ← exists_and_distrib_right, ← exists_eq_right]
+      simp only [Finset.coe_map, Function.Embedding.coe_subtype, Set.mem_image, Finset.mem_coe, Subtype.exists,
+        Subtype.coe_mk, exists_and_distrib_right, exists_eq_right]
       exact ⟨hφ, h' (Finset.mem_singleton_self _)⟩
     exact ⟨Model.of T M'⟩⟩
 
@@ -130,7 +130,7 @@ theorem is_satisfiable_union_distinct_constants_theory_of_infinite (T : L.Theory
         ((lift_le_aleph_0.2 (finset_card_lt_aleph_0 _).le).trans (aleph_0_le_lift.2 (aleph_0_le_mk M)))
     
   · refine' (monotone_const.union (monotone_distinct_constants_theory.comp _)).directed_le
-    simp only [← Finset.coe_map, ← Function.Embedding.coe_subtype]
+    simp only [Finset.coe_map, Function.Embedding.coe_subtype]
     exact set.monotone_image.comp fun _ _ => Finset.coe_subset.2
     
 
@@ -140,7 +140,7 @@ theorem exists_large_model_of_infinite_model (T : L.Theory) (κ : Cardinal.{w}) 
   obtain ⟨N⟩ := is_satisfiable_union_distinct_constants_theory_of_infinite T (Set.Univ : Set κ.out) M
   refine' ⟨(N.is_model.mono (Set.subset_union_left _ _)).Bundled.reduct _, _⟩
   haveI : N ⊨ distinct_constants_theory _ _ := N.is_model.mono (Set.subset_union_right _ _)
-  simp only [← Model.reduct_carrier, ← coe_of, ← Model.carrier_eq_coe]
+  simp only [Model.reduct_carrier, coe_of, Model.carrier_eq_coe]
   refine' trans (lift_le.2 (le_of_eqₓ (Cardinal.mk_out κ).symm)) _
   rw [← mk_univ]
   refine' (card_le_of_model_distinct_constants_theory L Set.Univ N).trans (lift_le.1 _)
@@ -164,11 +164,11 @@ theorem exists_elementary_embedding_card_eq_of_le (M : Type w') [L.Structure M] 
       h2 h3
   have : Small.{w} S := by
     rw [← lift_inj.{_, w + 1}, lift_lift, lift_lift] at hS
-    exact small_iff_lift_mk_lt_univ.2 (lt_of_eq_of_lt hS κ.lift_lt_univ')
+    exact small_iff_lift_mk_lt_univ.2 (lt_of_eq_of_ltₓ hS κ.lift_lt_univ')
   refine'
     ⟨(equivShrink S).bundledInduced L, ⟨S.subtype.comp (Equivₓ.bundledInducedEquiv L _).symm.toElementaryEmbedding⟩,
       lift_inj.1 (trans _ hS)⟩
-  simp only [← Equivₓ.bundled_induced_α, ← lift_mk_shrink']
+  simp only [Equivₓ.bundled_induced_α, lift_mk_shrink']
 
 /-- The Upward Löwenheim–Skolem Theorem: If `κ` is a cardinal greater than the cardinalities of `L`
 and an infinite `L`-structure `M`, then `M` has an elementary extension of cardinality `κ`. -/
@@ -186,7 +186,7 @@ theorem exists_elementary_embedding_card_eq_of_ge (M : Type w') [L.Structure M] 
     refine' ⟨bundled.of N, ⟨_⟩, hN⟩
     apply elementary_embedding.of_models_elementary_diagram L M N
     
-  · simp only [← card_with_constants, ← lift_add, ← lift_lift]
+  · simp only [card_with_constants, lift_add, lift_lift]
     rw [add_commₓ, add_eq_max (aleph_0_le_lift.2 (infinite_iff.1 iM)), max_le_iff]
     rw [← lift_le.{_, w'}, lift_lift, lift_lift] at h1
     exact ⟨h2, h1⟩
@@ -343,13 +343,13 @@ theorem semantically_equivalent_not_not : T.SemanticallyEquivalent φ φ.Not.Not
   simp
 
 theorem imp_semantically_equivalent_not_sup : T.SemanticallyEquivalent (φ.imp ψ) (φ.Not⊔ψ) := fun M v xs => by
-  simp [← imp_iff_not_or]
+  simp [imp_iff_not_or]
 
 theorem sup_semantically_equivalent_not_inf_not : T.SemanticallyEquivalent (φ⊔ψ) (φ.Not⊓ψ.Not).Not := fun M v xs => by
-  simp [← imp_iff_not_or]
+  simp [imp_iff_not_or]
 
 theorem inf_semantically_equivalent_not_sup_not : T.SemanticallyEquivalent (φ⊓ψ) (φ.Not⊔ψ.Not).Not := fun M v xs => by
-  simp [← and_iff_not_or_not]
+  simp [and_iff_not_or_not]
 
 theorem all_semantically_equivalent_not_ex_not (φ : L.BoundedFormula α (n + 1)) :
     T.SemanticallyEquivalent φ.all φ.Not.ex.Not := fun M v xs => by
@@ -467,7 +467,7 @@ theorem empty_Theory_categorical (T : Language.empty.Theory) : κ.Categorical T 
   rw [empty.nonempty_equiv_iff, hM, hN]
 
 theorem empty_infinite_Theory_is_complete : Language.empty.InfiniteTheory.IsComplete :=
-  (empty_Theory_categorical ℵ₀ _).IsComplete ℵ₀ _ le_rfl
+  (empty_Theory_categorical ℵ₀ _).IsComplete ℵ₀ _ le_rflₓ
     (by
       simp )
     ⟨Theory.Model.bundled ((model_infinite_theory_iff Language.empty).2 Nat.infinite)⟩ fun M =>

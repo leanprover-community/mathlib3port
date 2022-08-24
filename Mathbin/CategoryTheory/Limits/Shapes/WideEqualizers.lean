@@ -215,7 +215,7 @@ def Trident.ofι [Nonempty J] {P : C} (ι : P ⟶ X) (w : ∀ j₁ j₂, ι ≫ 
         cases' f with _ k
         · simp
           
-        · simp [← w (Classical.arbitrary J) k]
+        · simp [w (Classical.arbitrary J) k]
            }
 
 /-- A cotrident on `f : J → (X ⟶ Y)` is determined by the morphism `π : Y ⟶ P` satisfying
@@ -231,7 +231,7 @@ def Cotrident.ofπ [Nonempty J] {P : C} (π : Y ⟶ P) (w : ∀ j₁ j₂, f j�
         cases' f with _ k
         · simp
           
-        · simp [← w (Classical.arbitrary J) k]
+        · simp [w (Classical.arbitrary J) k]
            }
 
 -- See note [dsimp, simp]
@@ -410,7 +410,7 @@ def Cocone.ofCotrident {F : WalkingParallelFamily J ⥤ C} (t : Cotrident fun j 
               tidy) ≫
           t.ι.app X,
       naturality' := fun j j' g => by
-        cases g <;> dsimp' <;> simp [← cotrident.app_one t] }
+        cases g <;> dsimp' <;> simp [cotrident.app_one t] }
 
 @[simp]
 theorem Cone.of_trident_π {F : WalkingParallelFamily J ⥤ C} (t : Trident fun j => F.map (line j)) (j) :

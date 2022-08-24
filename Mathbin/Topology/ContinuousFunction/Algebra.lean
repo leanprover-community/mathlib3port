@@ -643,7 +643,7 @@ theorem Subalgebra.SeparatesPoints.strongly {s : Subalgebra 𝕜 C(α, 𝕜)} (h
     · apply s.smul_mem
       apply s.one_mem
       
-    · simp [← coe_fn_coe_base']
+    · simp [coe_fn_coe_base']
       
     
   obtain ⟨f, ⟨f, ⟨m, rfl⟩⟩, w⟩ := h n
@@ -652,16 +652,16 @@ theorem Subalgebra.SeparatesPoints.strongly {s : Subalgebra 𝕜 C(α, 𝕜)} (h
   let b := v y
   let f' := ((b - a) * (f x - f y)⁻¹) • (ContinuousMap.c (f x) - f) + ContinuousMap.c a
   refine' ⟨⟨f', _⟩, _, _⟩
-  · simp only [← f', ← SetLike.mem_coe, ← Subalgebra.mem_to_submodule]
+  · simp only [f', SetLike.mem_coe, Subalgebra.mem_to_submodule]
     -- TODO should there be a tactic for this?
     -- We could add an attribute `@[subobject_mem]`, and a tactic
     -- ``def subobject_mem := `[solve_by_elim with subobject_mem { max_depth := 10 }]``
-    solve_by_elim(config := { max_depth := 6 }) [← Subalgebra.add_mem, ← Subalgebra.smul_mem, ← Subalgebra.sub_mem, ←
+    solve_by_elim(config := { max_depth := 6 }) [Subalgebra.add_mem, Subalgebra.smul_mem, Subalgebra.sub_mem,
       Subalgebra.algebra_map_mem]
     
-  · simp [← f', ← coe_fn_coe_base']
+  · simp [f', coe_fn_coe_base']
     
-  · simp [← f', ← coe_fn_coe_base', ← inv_mul_cancel_right₀ w]
+  · simp [f', coe_fn_coe_base', inv_mul_cancel_right₀ w]
     
 
 end ContinuousMap
@@ -675,17 +675,17 @@ instance ContinuousMap.subsingleton_subalgebra (α : Type _) [TopologicalSpace �
     ext f
     have h : f = algebraMap R C(α, R) (f x) := by
       ext x'
-      simp only [← mul_oneₓ, ← Algebra.id.smul_eq_mul, ← algebra_map_apply]
+      simp only [mul_oneₓ, Algebra.id.smul_eq_mul, algebra_map_apply]
       congr
     rw [h]
-    simp only [← Subalgebra.algebra_map_mem]
+    simp only [Subalgebra.algebra_map_mem]
     
   · ext f
     have h : f = 0 := by
       ext x'
       exact False.elim (n ⟨x'⟩)
     subst h
-    simp only [← Subalgebra.zero_mem]
+    simp only [Subalgebra.zero_mem]
     
 
 end AlgebraStructure
@@ -742,10 +742,10 @@ variable {R : Type _} [LinearOrderedField R]
 -- Rather than stranding it at some intermediate location,
 -- it's here, immediately prior to the point of use.
 theorem min_eq_half_add_sub_abs_sub {x y : R} : min x y = 2⁻¹ * (x + y - abs (x - y)) := by
-  cases' le_totalₓ x y with h h <;> field_simp [← h, ← abs_of_nonneg, ← abs_of_nonpos, ← mul_two] <;> abel
+  cases' le_totalₓ x y with h h <;> field_simp [h, abs_of_nonneg, abs_of_nonpos, mul_two] <;> abel
 
 theorem max_eq_half_add_add_abs_sub {x y : R} : max x y = 2⁻¹ * (x + y + abs (x - y)) := by
-  cases' le_totalₓ x y with h h <;> field_simp [← h, ← abs_of_nonneg, ← abs_of_nonpos, ← mul_two] <;> abel
+  cases' le_totalₓ x y with h h <;> field_simp [h, abs_of_nonneg, abs_of_nonpos, mul_two] <;> abel
 
 end
 
@@ -764,7 +764,7 @@ theorem inf_eq (f g : C(α, β)) : f⊓g = (2⁻¹ : β) • (f + g - abs (f - g
 -- Not sure why this is grosser than `inf_eq`:
 theorem sup_eq (f g : C(α, β)) : f⊔g = (2⁻¹ : β) • (f + g + abs (f - g)) :=
   ext fun x => by
-    simpa [← mul_addₓ] using @max_eq_half_add_add_abs_sub _ _ (f x) (g x)
+    simpa [mul_addₓ] using @max_eq_half_add_add_abs_sub _ _ (f x) (g x)
 
 end Lattice
 

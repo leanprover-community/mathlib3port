@@ -100,7 +100,7 @@ theorem conj_pow {i : ℕ} {a b : α} : (a * b * a⁻¹) ^ i = a * b ^ i * a⁻�
   induction' i with i hi
   · simp
     
-  · simp [← pow_succₓ, ← hi]
+  · simp [pow_succₓ, hi]
     
 
 @[simp]
@@ -108,7 +108,7 @@ theorem conj_zpow {i : ℤ} {a b : α} : (a * b * a⁻¹) ^ i = a * b ^ i * a⁻
   induction i
   · simp
     
-  · simp [← zpow_neg_succ_of_nat, ← conj_pow]
+  · simp [zpow_neg_succ_of_nat, conj_pow]
     
 
 theorem conj_injective {x : α} : Function.Injective fun g : α => x * g * x⁻¹ :=

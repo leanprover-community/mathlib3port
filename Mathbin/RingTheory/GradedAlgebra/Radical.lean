@@ -88,7 +88,7 @@ theorem Ideal.IsHomogeneous.is_prime_of_homogeneous_mem_or_mem {I : Ideal A} (hI
       set antidiag :=
         ((decompose 𝒜 x).support ×ˢ (decompose 𝒜 y).support).filter fun z : ι × ι => z.1 + z.2 = max₁ + max₂ with ha
       have mem_antidiag : (max₁, max₂) ∈ antidiag := by
-        simp only [← add_sum_erase, ← mem_filter, ← mem_product]
+        simp only [add_sum_erase, mem_filter, mem_product]
         exact ⟨⟨mem_of_mem_filter _ mem_max₁, mem_of_mem_filter _ mem_max₂⟩, rfl⟩
       have eq_add_sum :=
         calc
@@ -100,7 +100,7 @@ theorem Ideal.IsHomogeneous.is_prime_of_homogeneous_mem_or_mem {I : Ideal A} (hI
       rw [eq_sub_of_add_eq eq_add_sum.symm]
       refine' Ideal.sub_mem _ hxy (Ideal.sum_mem _ fun z H => _)
       rcases z with ⟨i, j⟩
-      simp only [← mem_erase, ← Prod.mk.inj_iff, ← Ne.def, ← mem_filter, ← mem_product] at H
+      simp only [mem_erase, Prod.mk.inj_iff, Ne.def, mem_filter, mem_product] at H
       rcases H with ⟨H₁, ⟨H₂, H₃⟩, H₄⟩
       have max_lt : max₁ < i ∨ max₂ < j := by
         rcases lt_trichotomyₓ max₁ i with (h | rfl | h)
@@ -117,13 +117,13 @@ theorem Ideal.IsHomogeneous.is_prime_of_homogeneous_mem_or_mem {I : Ideal A} (hI
       · -- in this case `max₁ < i`, then `xᵢ ∈ I`; for otherwise `i ∈ set₁` then `i ≤ max₁`.
         have not_mem : i ∉ set₁ := fun h => lt_irreflₓ _ ((max'_lt_iff set₁ (Nonempty x rid₁)).mp max_ltₓ i h)
         rw [set₁_eq] at not_mem
-        simp only [← not_and, ← not_not, ← Ne.def, ← mem_filter] at not_mem
+        simp only [not_and, not_not, Ne.def, mem_filter] at not_mem
         exact Ideal.mul_mem_right _ I (not_mem H₂)
         
       · -- in this case  `max₂ < j`, then `yⱼ ∈ I`; for otherwise `j ∈ set₂`, then `j ≤ max₂`.
         have not_mem : j ∉ set₂ := fun h => lt_irreflₓ _ ((max'_lt_iff set₂ (Nonempty y rid₂)).mp max_ltₓ j h)
         rw [set₂_eq] at not_mem
-        simp only [← not_and, ← not_not, ← Ne.def, ← mem_filter] at not_mem
+        simp only [not_and, not_not, Ne.def, mem_filter] at not_mem
         exact Ideal.mul_mem_left I _ (not_mem H₃)
         
     have not_mem_I : proj 𝒜 max₁ x * proj 𝒜 max₂ y ∉ I := by

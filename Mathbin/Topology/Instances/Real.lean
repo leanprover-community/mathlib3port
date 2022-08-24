@@ -42,7 +42,7 @@ theorem Real.uniform_continuous_add : UniformContinuous fun p : ℝ × ℝ => p.
 theorem Real.uniform_continuous_neg : UniformContinuous (@Neg.neg ℝ _) :=
   Metric.uniform_continuous_iff.2 fun ε ε0 =>
     ⟨_, ε0, fun a b h => by
-      rw [dist_comm] at h <;> simpa [← Real.dist_eq] using h⟩
+      rw [dist_comm] at h <;> simpa [Real.dist_eq] using h⟩
 
 instance : HasContinuousStar ℝ :=
   ⟨continuous_id⟩
@@ -62,23 +62,23 @@ instance :
 instance : SecondCountableTopology ℝ :=
   second_countable_of_proper
 
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (a b)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b)
 theorem Real.is_topological_basis_Ioo_rat : @IsTopologicalBasis ℝ _ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
   is_topological_basis_of_open_of_nhds
     (by
-      simp (config := { contextual := true })[← is_open_Ioo])
+      simp (config := { contextual := true })[is_open_Ioo])
     fun a v hav hv =>
     let ⟨l, u, ⟨hl, hu⟩, h⟩ := mem_nhds_iff_exists_Ioo_subset.mp (IsOpen.mem_nhds hv hav)
     let ⟨q, hlq, hqa⟩ := exists_rat_btwn hl
     let ⟨p, hap, hpu⟩ := exists_rat_btwn hu
     ⟨Ioo q p, by
-      simp only [← mem_Union]
+      simp only [mem_Union]
       exact ⟨q, p, Rat.cast_lt.1 <| hqa.trans hap, rfl⟩, ⟨hqa, hap⟩, fun a' ⟨hqa', ha'p⟩ =>
       h ⟨hlq.trans hqa', ha'p.trans hpu⟩⟩
 
 @[simp]
 theorem Real.cocompact_eq : cocompact ℝ = at_bot⊔at_top := by
-  simp only [comap_dist_right_at_top_eq_cocompact (0 : ℝ), ← Real.dist_eq, ← sub_zero, ← comap_abs_at_top]
+  simp only [← comap_dist_right_at_top_eq_cocompact (0 : ℝ), Real.dist_eq, sub_zero, comap_abs_at_top]
 
 /- TODO(Mario): Prove that these are uniform isomorphisms instead of uniform embeddings
 lemma uniform_embedding_add_rat {r : ℚ} : uniform_embedding (λp:ℚ, p + r) :=
@@ -86,10 +86,10 @@ _
 
 lemma uniform_embedding_mul_rat {q : ℚ} (hq : q ≠ 0) : uniform_embedding ((*) q) :=
 _ -/
-theorem Real.mem_closure_iff {s : Set ℝ} {x : ℝ} : x ∈ Closure s ↔ ∀, ∀ ε > 0, ∀, ∃ y ∈ s, abs (y - x) < ε := by
-  simp [← mem_closure_iff_nhds_basis nhds_basis_ball, ← Real.dist_eq]
+theorem Real.mem_closure_iff {s : Set ℝ} {x : ℝ} : x ∈ Closure s ↔ ∀ ε > 0, ∃ y ∈ s, abs (y - x) < ε := by
+  simp [mem_closure_iff_nhds_basis nhds_basis_ball, Real.dist_eq]
 
-theorem Real.uniform_continuous_inv (s : Set ℝ) {r : ℝ} (r0 : 0 < r) (H : ∀, ∀ x ∈ s, ∀, r ≤ abs x) :
+theorem Real.uniform_continuous_inv (s : Set ℝ) {r : ℝ} (r0 : 0 < r) (H : ∀ x ∈ s, r ≤ abs x) :
     UniformContinuous fun p : s => p.1⁻¹ :=
   Metric.uniform_continuous_iff.2 fun ε ε0 =>
     let ⟨δ, δ0, Hδ⟩ := rat_inv_continuous_lemma abs ε0 r0
@@ -117,8 +117,8 @@ theorem Real.Continuous.inv [TopologicalSpace α] {f : α → ℝ} (h : ∀ a, f
 theorem Real.uniform_continuous_const_mul {x : ℝ} : UniformContinuous ((· * ·) x) :=
   uniform_continuous_const_smul x
 
-theorem Real.uniform_continuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ}
-    (H : ∀, ∀ x ∈ s, ∀, abs (x : ℝ × ℝ).1 < r₁ ∧ abs x.2 < r₂) : UniformContinuous fun p : s => p.1.1 * p.1.2 :=
+theorem Real.uniform_continuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ} (H : ∀ x ∈ s, abs (x : ℝ × ℝ).1 < r₁ ∧ abs x.2 < r₂) :
+    UniformContinuous fun p : s => p.1.1 * p.1.2 :=
   Metric.uniform_continuous_iff.2 fun ε ε0 =>
     let ⟨δ, δ0, Hδ⟩ := rat_mul_continuous_lemma abs ε0
     ⟨δ, δ0, fun a b h =>
@@ -143,7 +143,7 @@ instance : CompleteSpace ℝ := by
   refine' ⟨c.lim, fun s h => _⟩
   rcases Metric.mem_nhds_iff.1 h with ⟨ε, ε0, hε⟩
   have := c.equiv_lim ε ε0
-  simp only [← mem_map, ← mem_at_top_sets, ← mem_set_of_eq]
+  simp only [mem_map, mem_at_top_sets, mem_set_of_eq]
   refine' this.imp fun N hN n hn => hε (hN n hn)
 
 theorem Real.totally_bounded_ball (x ε : ℝ) : TotallyBounded (Ball x ε) := by
@@ -222,8 +222,8 @@ theorem Real.subgroup_dense_of_no_min {G : AddSubgroup ℝ} {g₀ : ℝ} (g₀_i
   let G_pos := { g : ℝ | g ∈ G ∧ 0 < g }
   push_neg  at H'
   intro x
-  suffices ∀, ∀ ε > (0 : ℝ), ∀, ∃ g ∈ G, abs (x - g) < ε by
-    simpa only [← Real.mem_closure_iff, ← abs_sub_comm]
+  suffices ∀ ε > (0 : ℝ), ∃ g ∈ G, abs (x - g) < ε by
+    simpa only [Real.mem_closure_iff, abs_sub_comm]
   intro ε ε_pos
   obtain ⟨g₁, g₁_in, g₁_pos⟩ : ∃ g₁ : ℝ, g₁ ∈ G ∧ 0 < g₁ := by
     cases' lt_or_gt_of_neₓ g₀_ne with Hg₀ Hg₀

@@ -126,7 +126,7 @@ theorem powers_le_non_zero_divisors_of_no_zero_divisors [NoZeroDivisors M] {a : 
 theorem map_le_non_zero_divisors_of_injective [NoZeroDivisors M'] [MonoidWithZeroHomClass F M M'] (f : F)
     (hf : Function.Injective f) {S : Submonoid M} (hS : S ≤ M⁰) : S.map f ≤ M'⁰ := by
   cases subsingleton_or_nontrivial M
-  · simp [← Subsingleton.elimₓ S ⊥]
+  · simp [Subsingleton.elimₓ S ⊥]
     
   · exact
       le_non_zero_divisors_of_no_zero_divisors fun h =>
@@ -136,7 +136,7 @@ theorem map_le_non_zero_divisors_of_injective [NoZeroDivisors M'] [MonoidWithZer
 
 theorem non_zero_divisors_le_comap_non_zero_divisors_of_injective [NoZeroDivisors M'] [MonoidWithZeroHomClass F M M']
     (f : F) (hf : Function.Injective f) : M⁰ ≤ M'⁰.comap f :=
-  Submonoid.le_comap_of_map_le _ (map_le_non_zero_divisors_of_injective _ hf le_rfl)
+  Submonoid.le_comap_of_map_le _ (map_le_non_zero_divisors_of_injective _ hf le_rflₓ)
 
 theorem prod_zero_iff_exists_zero [NoZeroDivisors M₁] [Nontrivial M₁] {s : Multiset M₁} :
     s.Prod = 0 ↔ ∃ (r : M₁)(hr : r ∈ s), r = 0 := by

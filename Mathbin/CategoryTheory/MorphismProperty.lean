@@ -140,17 +140,17 @@ namespace NaturalityProperty
 
 theorem is_stable_under_composition {F₁ F₂ : C ⥤ D} (app : ∀ X, F₁.obj X ⟶ F₂.obj X) :
     (NaturalityProperty app).StableUnderComposition := fun X Y Z f g hf hg => by
-  simp only [← naturality_property] at hf hg⊢
-  simp only [← functor.map_comp, ← category.assoc, ← hg]
+  simp only [naturality_property] at hf hg⊢
+  simp only [functor.map_comp, category.assoc, hg]
   slice_lhs 1 2 => rw [hf]
   rw [category.assoc]
 
 theorem is_stable_under_inverse {F₁ F₂ : C ⥤ D} (app : ∀ X, F₁.obj X ⟶ F₂.obj X) :
     (NaturalityProperty app).StableUnderInverse := fun X Y e he => by
-  simp only [← naturality_property] at he⊢
+  simp only [naturality_property] at he⊢
   rw [← cancel_epi (F₁.map e.hom)]
   slice_rhs 1 2 => rw [he]
-  simp only [← category.assoc, F₁.map_comp_assoc, F₂.map_comp, ← e.hom_inv_id, ← Functor.map_id, ← category.id_comp, ←
+  simp only [category.assoc, ← F₁.map_comp_assoc, ← F₂.map_comp, e.hom_inv_id, Functor.map_id, category.id_comp,
     category.comp_id]
 
 end NaturalityProperty

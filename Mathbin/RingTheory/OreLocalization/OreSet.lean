@@ -69,7 +69,7 @@ instance oreSetBot : OreSet (⊥ : Submonoid R) where
   ore_eq := fun _ s => by
     rcases s with ⟨s, hs⟩
     rw [Submonoid.mem_bot] at hs
-    simp [← hs]
+    simp [hs]
 
 /-- Every submonoid of a commutative monoid is an Ore set. -/
 instance (priority := 100) oreSetComm {R} [CommMonoidₓ R] (S : Submonoid R) : OreSet S where

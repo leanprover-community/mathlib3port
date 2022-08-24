@@ -67,7 +67,7 @@ theorem map_derived_series_le_derived_series (n : ℕ) : (derivedSeries G n).map
   induction' n with n ih
   · exact le_top
     
-  · simp only [← derived_series_succ, ← map_commutator, ← commutator_mono, ← ih]
+  · simp only [derived_series_succ, map_commutator, commutator_mono, ih]
     
 
 variable {f}
@@ -186,7 +186,7 @@ section PermNotSolvable
 
 theorem not_solvable_of_mem_derived_series {g : G} (h1 : g ≠ 1) (h2 : ∀ n : ℕ, g ∈ derivedSeries G n) : ¬IsSolvable G :=
   mt (is_solvable_def _).mp
-    (not_exists_of_forall_not fun n h => h1 (Subgroup.mem_bot.mp ((congr_arg (HasMem.Mem g) h).mp (h2 n))))
+    (not_exists_of_forall_not fun n h => h1 (Subgroup.mem_bot.mp ((congr_arg (Membership.Mem g) h).mp (h2 n))))
 
 theorem Equivₓ.Perm.fin_5_not_solvable : ¬IsSolvable (Equivₓ.Perm (Finₓ 5)) := by
   let x : Equivₓ.Perm (Finₓ 5) :=

@@ -81,18 +81,18 @@ theorem fg_def {N : Submodule R M} : N.Fg ↔ ∃ S : Set M, S.Finite ∧ span R
 theorem fg_iff_add_submonoid_fg (P : Submodule ℕ M) : P.Fg ↔ P.toAddSubmonoid.Fg :=
   ⟨fun ⟨S, hS⟩ =>
     ⟨S, by
-      simpa [span_nat_eq_add_submonoid_closure] using hS⟩,
+      simpa [← span_nat_eq_add_submonoid_closure] using hS⟩,
     fun ⟨S, hS⟩ =>
     ⟨S, by
-      simpa [span_nat_eq_add_submonoid_closure] using hS⟩⟩
+      simpa [← span_nat_eq_add_submonoid_closure] using hS⟩⟩
 
 theorem fg_iff_add_subgroup_fg {G : Type _} [AddCommGroupₓ G] (P : Submodule ℤ G) : P.Fg ↔ P.toAddSubgroup.Fg :=
   ⟨fun ⟨S, hS⟩ =>
     ⟨S, by
-      simpa [span_int_eq_add_subgroup_closure] using hS⟩,
+      simpa [← span_int_eq_add_subgroup_closure] using hS⟩,
     fun ⟨S, hS⟩ =>
     ⟨S, by
-      simpa [span_int_eq_add_subgroup_closure] using hS⟩⟩
+      simpa [← span_int_eq_add_subgroup_closure] using hS⟩⟩
 
 theorem fg_iff_exists_fin_generating_family {N : Submodule R M} :
     N.Fg ↔ ∃ (n : ℕ)(s : Finₓ n → M), span R (Range s) = N := by
@@ -110,7 +110,7 @@ theorem fg_iff_exists_fin_generating_family {N : Submodule R M} :
 [Stacks 00DV](https://stacks.math.columbia.edu/tag/00DV) -/
 theorem exists_sub_one_mem_and_smul_eq_zero_of_fg_of_le_smul {R : Type _} [CommRingₓ R] {M : Type _} [AddCommGroupₓ M]
     [Module R M] (I : Ideal R) (N : Submodule R M) (hn : N.Fg) (hin : N ≤ I • N) :
-    ∃ r : R, r - 1 ∈ I ∧ ∀, ∀ n ∈ N, ∀, r • n = (0 : M) := by
+    ∃ r : R, r - 1 ∈ I ∧ ∀ n ∈ N, r • n = (0 : M) := by
   rw [fg_def] at hn
   rcases hn with ⟨s, hfs, hs⟩
   have : ∃ r : R, r - 1 ∈ I ∧ N ≤ (I • span R s).comap (LinearMap.lsmul R M r) ∧ s ⊆ N := by
@@ -173,12 +173,11 @@ theorem exists_sub_one_mem_and_smul_eq_zero_of_fg_of_le_smul {R : Type _} [CommR
     
 
 theorem exists_mem_and_smul_eq_self_of_fg_of_le_smul {R : Type _} [CommRingₓ R] {M : Type _} [AddCommGroupₓ M]
-    [Module R M] (I : Ideal R) (N : Submodule R M) (hn : N.Fg) (hin : N ≤ I • N) : ∃ r ∈ I, ∀, ∀ n ∈ N, ∀, r • n = n :=
-  by
+    [Module R M] (I : Ideal R) (N : Submodule R M) (hn : N.Fg) (hin : N ≤ I • N) : ∃ r ∈ I, ∀ n ∈ N, r • n = n := by
   obtain ⟨r, hr, hr'⟩ := N.exists_sub_one_mem_and_smul_eq_zero_of_fg_of_le_smul I hn hin
   exact
     ⟨-(r - 1), I.neg_mem hr, fun n hn => by
-      simpa [← sub_smul] using hr' n hn⟩
+      simpa [sub_smul] using hr' n hn⟩
 
 theorem fg_bot : (⊥ : Submodule R M).Fg :=
   ⟨∅, by
@@ -187,7 +186,7 @@ theorem fg_bot : (⊥ : Submodule R M).Fg :=
 theorem _root_.subalgebra.fg_bot_to_submodule {R A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] :
     (⊥ : Subalgebra R A).toSubmodule.Fg :=
   ⟨{1}, by
-    simp [← Algebra.to_submodule_bot]⟩
+    simp [Algebra.to_submodule_bot]⟩
 
 theorem fg_span {s : Set M} (hs : s.Finite) : Fg (span R s) :=
   ⟨hs.toFinset, by
@@ -203,13 +202,11 @@ theorem Fg.sup {N₁ N₂ : Submodule R M} (hN₁ : N₁.Fg) (hN₂ : N₂.Fg) :
     ⟨t₁ ∪ t₂, ht₁.1.union ht₂.1, by
       rw [span_union, ht₁.2, ht₂.2]⟩
 
-theorem fg_finset_sup {ι : Type _} (s : Finset ι) (N : ι → Submodule R M) (h : ∀, ∀ i ∈ s, ∀, (N i).Fg) :
-    (s.sup N).Fg :=
+theorem fg_finset_sup {ι : Type _} (s : Finset ι) (N : ι → Submodule R M) (h : ∀ i ∈ s, (N i).Fg) : (s.sup N).Fg :=
   Finset.sup_induction fg_bot (fun a ha b hb => ha.sup hb) h
 
-theorem fg_bsupr {ι : Type _} (s : Finset ι) (N : ι → Submodule R M) (h : ∀, ∀ i ∈ s, ∀, (N i).Fg) :
-    (⨆ i ∈ s, N i).Fg := by
-  simpa only [← Finset.sup_eq_supr] using fg_finset_sup s N h
+theorem fg_bsupr {ι : Type _} (s : Finset ι) (N : ι → Submodule R M) (h : ∀ i ∈ s, (N i).Fg) : (⨆ i ∈ s, N i).Fg := by
+  simpa only [Finset.sup_eq_supr] using fg_finset_sup s N h
 
 theorem fg_supr {ι : Type _} [Fintype ι] (N : ι → Submodule R M) (h : ∀ i, (N i).Fg) : (supr N).Fg := by
   simpa using fg_bsupr Finset.univ N fun i hi => h i
@@ -271,22 +268,22 @@ theorem fg_of_fg_map_of_fg_inf_ker {R M P : Type _} [Ringₓ R] [AddCommGroupₓ
   haveI := Classical.decEq P
   cases' hs1 with t1 ht1
   cases' hs2 with t2 ht2
-  have : ∀, ∀ y ∈ t1, ∀, ∃ x ∈ s, f x = y := by
+  have : ∀ y ∈ t1, ∃ x ∈ s, f x = y := by
     intro y hy
     have : y ∈ map f s := by
       rw [← ht1]
       exact subset_span hy
     rcases mem_map.1 this with ⟨x, hx1, hx2⟩
     exact ⟨x, hx1, hx2⟩
-  have : ∃ g : P → M, ∀, ∀ y ∈ t1, ∀, g y ∈ s ∧ f (g y) = y := by
+  have : ∃ g : P → M, ∀ y ∈ t1, g y ∈ s ∧ f (g y) = y := by
     choose g hg1 hg2
     exists fun y => if H : y ∈ t1 then g y H else 0
     intro y H
     constructor
-    · simp only [← dif_pos H]
+    · simp only [dif_pos H]
       apply hg1
       
-    · simp only [← dif_pos H]
+    · simp only [dif_pos H]
       apply hg2
       
   cases' this with g hg
@@ -459,7 +456,7 @@ theorem is_idempotent_elem_iff_of_fg {R : Type _} [CommRingₓ R] (I : Ideal R) 
     exact ideal.mem_span_singleton'.mpr ⟨_, mul_comm _ _⟩
     
   · rintro ⟨e, he, rfl⟩
-    simp [← IsIdempotentElem, ← Ideal.span_singleton_mul_span_singleton, ← he.eq]
+    simp [IsIdempotentElem, Ideal.span_singleton_mul_span_singleton, he.eq]
     
 
 theorem is_idempotent_elem_iff_eq_bot_or_top {R : Type _} [CommRingₓ R] [IsDomain R] (I : Ideal R) (h : I.Fg) :
@@ -467,12 +464,12 @@ theorem is_idempotent_elem_iff_eq_bot_or_top {R : Type _} [CommRingₓ R] [IsDom
   constructor
   · intro H
     obtain ⟨e, he, rfl⟩ := (I.is_idempotent_elem_iff_of_fg h).mp H
-    simp only [← Ideal.submodule_span_eq, ← Ideal.span_singleton_eq_bot]
+    simp only [Ideal.submodule_span_eq, Ideal.span_singleton_eq_bot]
     apply or_of_or_of_imp_of_imp (is_idempotent_elem.iff_eq_zero_or_one.mp he) id
     rintro rfl
     simp
     
-  · rintro (rfl | rfl) <;> simp [← IsIdempotentElem]
+  · rintro (rfl | rfl) <;> simp [IsIdempotentElem]
     
 
 end Ideal
@@ -507,7 +504,7 @@ theorem is_noetherian_submodule {N : Submodule R M} : IsNoetherian R N ↔ ∀ s
       fun h => ⟨fun s => _⟩⟩
   have f := (Submodule.equivMapOfInjective N.subtype Subtype.val_injective s).symm
   have h₁ := h (s.map N.subtype) (Submodule.map_subtype_le N s)
-  have h₂ : (⊤ : Submodule R (s.map N.subtype)).map (↑f : _ →ₗ[R] s) = ⊤ := by
+  have h₂ : (⊤ : Submodule R (s.map N.subtype)).map f = ⊤ := by
     simp
   have h₃ := ((Submodule.fg_top _).2 h₁).map (↑f : _ →ₗ[R] s)
   exact (Submodule.fg_top _).1 (h₂ ▸ h₃)
@@ -607,14 +604,14 @@ instance is_noetherian_pi {R ι : Type _} {M : ι → Type _} [Ringₓ R] [∀ i
     cases' i with i hi
     rcases Finset.mem_insert.1 hi with (rfl | h)
     · change _ = _ + _
-      simp only [← dif_pos]
+      simp only [dif_pos]
       rfl
       
     · change _ = _ + _
       have : ¬i = a := by
         rintro rfl
         exact has h
-      simp only [← dif_neg this, ← dif_pos h]
+      simp only [dif_neg this, dif_pos h]
       rfl
       
     
@@ -624,14 +621,14 @@ instance is_noetherian_pi {R ι : Type _} {M : ι → Type _} [Ringₓ R] [∀ i
     cases' i with i hi
     rcases Finset.mem_insert.1 hi with (rfl | h)
     · change _ = c • _
-      simp only [← dif_pos]
+      simp only [dif_pos]
       rfl
       
     · change _ = c • _
       have : ¬i = a := by
         rintro rfl
         exact has h
-      simp only [← dif_neg this, ← dif_pos h]
+      simp only [dif_neg this, dif_pos h]
       rfl
       
     
@@ -639,13 +636,13 @@ instance is_noetherian_pi {R ι : Type _} {M : ι → Type _} [Ringₓ R] [∀ i
     
   · intro f
     apply Prod.extₓ
-    · simp only [← Or.byCases, ← dif_pos]
+    · simp only [Or.byCases, dif_pos]
       
     · ext ⟨i, his⟩
       have : ¬i = a := by
         rintro rfl
         exact has his
-      dsimp' only [← Or.byCases]
+      dsimp' only [Or.byCases]
       change i ∈ s at his
       rw [dif_neg this, dif_pos his]
       
@@ -653,12 +650,12 @@ instance is_noetherian_pi {R ι : Type _} {M : ι → Type _} [Ringₓ R] [∀ i
   · intro f
     ext ⟨i, hi⟩
     rcases Finset.mem_insert.1 hi with (rfl | h)
-    · simp only [← Or.byCases, ← dif_pos]
+    · simp only [Or.byCases, dif_pos]
       
     · have : ¬i = a := by
         rintro rfl
         exact has h
-      simp only [← Or.byCases, ← dif_neg this, ← dif_pos h]
+      simp only [Or.byCases, dif_neg this, dif_pos h]
       
     
 
@@ -733,7 +730,7 @@ variable {R M}
 /-- A module is Noetherian iff every nonempty set of submodules has a maximal submodule among them.
 -/
 theorem set_has_maximal_iff_noetherian :
-    (∀ a : Set <| Submodule R M, a.Nonempty → ∃ M' ∈ a, ∀, ∀ I ∈ a, ∀, M' ≤ I → I = M') ↔ IsNoetherian R M := by
+    (∀ a : Set <| Submodule R M, a.Nonempty → ∃ M' ∈ a, ∀ I ∈ a, M' ≤ I → I = M') ↔ IsNoetherian R M := by
   rw [is_noetherian_iff_well_founded, WellFounded.well_founded_iff_has_max']
 
 /-- A module is Noetherian iff every increasing chain of submodules stabilizes. -/
@@ -742,7 +739,7 @@ theorem monotone_stabilizes_iff_noetherian :
   rw [is_noetherian_iff_well_founded, WellFounded.monotone_chain_condition]
 
 /-- If `∀ I > J, P I` implies `P J`, then `P` holds for all submodules. -/
-theorem IsNoetherian.induction [IsNoetherian R M] {P : Submodule R M → Prop} (hgt : ∀ I, (∀, ∀ J > I, ∀, P J) → P I)
+theorem IsNoetherian.induction [IsNoetherian R M] {P : Submodule R M → Prop} (hgt : ∀ I, (∀ J > I, P J) → P I)
     (I : Submodule R M) : P I :=
   WellFounded.recursionₓ (well_founded_submodule_gt R M) I hgt
 
@@ -771,9 +768,9 @@ theorem finite_of_linear_independent [Nontrivial R] [IsNoetherian R M] {s : Set 
     exact ⟨fun hab x (hxa : x ≤ a) => le_transₓ hxa hab, fun hx => hx a (le_reflₓ a)⟩
   exact
     ⟨⟨fun n => span R (coe ∘ f '' { m | m ≤ n }), fun x y => by
-        simp (config := { contextual := true })[← le_antisymm_iffₓ, ← (this _ _).symm]⟩,
+        simp (config := { contextual := true })[le_antisymm_iffₓ, (this _ _).symm]⟩,
       by
-      dsimp' [← Gt] <;> simp only [← lt_iff_le_not_leₓ, ← (this _ _).symm] <;> tauto⟩
+      dsimp' [Gt] <;> simp only [lt_iff_le_not_leₓ, (this _ _).symm] <;> tauto⟩
 
 /-- If the first and final modules in a short exact sequence are noetherian,
   then the middle module is also noetherian. -/
@@ -784,9 +781,9 @@ theorem is_noetherian_of_range_eq_ker [IsNoetherian R M] [IsNoetherian R P] (f :
       (Submodule.map f) (Submodule.comap f) (Submodule.comap g) (Submodule.map g) (Submodule.gciMapComap hf)
       (Submodule.giMapComap hg)
       (by
-        simp [← Submodule.map_comap_eq, ← inf_comm])
+        simp [Submodule.map_comap_eq, inf_comm])
       (by
-        simp [← Submodule.comap_map_eq, ← h])
+        simp [Submodule.comap_map_eq, h])
 
 /-- For any endomorphism of a Noetherian module, there is some nontrivial iterate
 with disjoint kernel and range.
@@ -915,7 +912,7 @@ theorem is_noetherian_of_fg_of_noetherian {R M} [Ringₓ R] [AddCommGroupₓ M] 
   haveI := Classical.decEq R
   letI : IsNoetherian R R := by
     infer_instance
-  have : ∀, ∀ x ∈ s, ∀, x ∈ N := fun x hx => hs ▸ Submodule.subset_span hx
+  have : ∀ x ∈ s, x ∈ N := fun x hx => hs ▸ Submodule.subset_span hx
   refine' @is_noetherian_of_surjective ((↑s : Set M) → R) _ _ _ (Pi.module _ _ _) _ _ _ is_noetherian_pi
   · fapply LinearMap.mk
     · exact fun f => ⟨∑ i in s.attach, f i • i.1, N.sum_mem fun c _ => N.smul_mem _ <| this _ c.2⟩
@@ -923,13 +920,13 @@ theorem is_noetherian_of_fg_of_noetherian {R M} [Ringₓ R] [AddCommGroupₓ M] 
     · intro f g
       apply Subtype.eq
       change (∑ i in s.attach, (f i + g i) • _) = _
-      simp only [← add_smul, ← Finset.sum_add_distrib]
+      simp only [add_smul, Finset.sum_add_distrib]
       rfl
       
     · intro c f
       apply Subtype.eq
       change (∑ i in s.attach, (c • f i) • _) = _
-      simp only [← smul_eq_mul, ← mul_smul]
+      simp only [smul_eq_mul, mul_smul]
       exact finset.smul_sum.symm
       
     
@@ -998,9 +995,9 @@ theorem Fg.mul (hm : M.Fg) (hn : N.Fg) : (M * N).Fg :=
 theorem Fg.pow (h : M.Fg) (n : ℕ) : (M ^ n).Fg :=
   Nat.recOn n
     ⟨{1}, by
-      simp [← one_eq_span]⟩
+      simp [one_eq_span]⟩
     fun n ih => by
-    simpa [← pow_succₓ] using h.mul ih
+    simpa [pow_succₓ] using h.mul ih
 
 end Mul
 

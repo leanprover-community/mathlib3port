@@ -21,21 +21,21 @@ theorem Equivₓ.option_congr_one {α : Type _} : (1 : Perm α).optionCongr = 1 
 theorem Equivₓ.option_congr_swap {α : Type _} [DecidableEq α] (x y : α) :
     optionCongr (swap x y) = swap (some x) (some y) := by
   ext (_ | i)
-  · simp [← swap_apply_of_ne_of_ne]
+  · simp [swap_apply_of_ne_of_ne]
     
   · by_cases' hx : i = x
-    simp [← hx, ← swap_apply_of_ne_of_ne]
-    by_cases' hy : i = y <;> simp [← hx, ← hy, ← swap_apply_of_ne_of_ne]
+    simp [hx, swap_apply_of_ne_of_ne]
+    by_cases' hy : i = y <;> simp [hx, hy, swap_apply_of_ne_of_ne]
     
 
 @[simp]
 theorem Equivₓ.option_congr_sign {α : Type _} [DecidableEq α] [Fintype α] (e : Perm α) :
     Perm.sign e.optionCongr = Perm.sign e := by
   apply perm.swap_induction_on e
-  · simp [← perm.one_def]
+  · simp [perm.one_def]
     
   · intro f x y hne h
-    simp [← h, ← hne, ← perm.mul_def, Equivₓ.option_congr_trans]
+    simp [h, hne, perm.mul_def, ← Equivₓ.option_congr_trans]
     
 
 @[simp]
@@ -47,15 +47,15 @@ theorem map_equiv_remove_none {α : Type _} [DecidableEq α] (σ : Perm (Option 
     · simp
       
     · cases h : σ (some x)
-      · simp [← remove_none_none _ h]
+      · simp [remove_none_none _ h]
         
       · have hn : σ (some x) ≠ none := by
-          simp [← h]
+          simp [h]
         have hσn : σ (some x) ≠ σ none :=
           σ.injective.ne
             (by
               simp )
-        simp [← remove_none_some _ ⟨_, h⟩, h, ← swap_apply_of_ne_of_ne hn hσn]
+        simp [remove_none_some _ ⟨_, h⟩, ← h, swap_apply_of_ne_of_ne hn hσn]
         
       
   simpa using this
@@ -73,8 +73,8 @@ def Equivₓ.Perm.decomposeOption {α : Type _} [DecidableEq α] : Perm (Option 
     have : remove_none (swap none x * σ.option_congr) = σ :=
       Equivₓ.option_congr_injective
         (by
-          simp [mul_assoc])
-    simp [perm.eq_inv_iff_eq, ← this]
+          simp [← mul_assoc])
+    simp [← perm.eq_inv_iff_eq, this]
 
 theorem Equivₓ.Perm.decompose_option_symm_of_none_apply {α : Type _} [DecidableEq α] (e : Perm α) (i : Option α) :
     Equivₓ.Perm.decomposeOption.symm (none, e) i = i.map e := by

@@ -191,7 +191,7 @@ theorem supp_eq {α : Typevec n} {i} (x : F α) : Supp x i = { u | ∀ a f, abs 
   ext <;> apply mem_supp
 
 theorem has_good_supp_iff {α : Typevec n} (x : F α) :
-    (∀ p, Liftp p x ↔ ∀ (i), ∀ u ∈ Supp x i, ∀, p i u) ↔
+    (∀ p, Liftp p x ↔ ∀ (i), ∀ u ∈ Supp x i, p i u) ↔
       ∃ a f, abs ⟨a, f⟩ = x ∧ ∀ i a' f', abs ⟨a', f'⟩ = x → f i '' univ ⊆ f' i '' univ :=
   by
   constructor
@@ -258,7 +258,7 @@ theorem supp_eq_of_is_uniform (h : q.IsUniform) {α : Typevec n} (a : q.p.A) (f 
   apply h'
 
 theorem liftp_iff_of_is_uniform (h : q.IsUniform) {α : Typevec n} (x : F α) (p : ∀ i, α i → Prop) :
-    Liftp p x ↔ ∀ (i), ∀ u ∈ Supp x i, ∀, p i u := by
+    Liftp p x ↔ ∀ (i), ∀ u ∈ Supp x i, p i u := by
   rw [liftp_iff, ← abs_repr x]
   cases' reprₓ x with a f
   constructor
@@ -296,15 +296,15 @@ theorem supp_preservation_iff_liftp_preservation : q.SuppPreservation ↔ q.Lift
   · rintro α p ⟨a, f⟩
     have h' := h
     rw [supp_preservation_iff_uniform] at h'
-    dsimp' only [← supp_preservation, ← supp]  at h
-    simp only [← liftp_iff_of_is_uniform, ← supp_eq_of_is_uniform, ← Mvpfunctor.liftp_iff', ← h', ← image_univ, ←
-      mem_range, ← exists_imp_distrib]
+    dsimp' only [supp_preservation, supp]  at h
+    simp only [liftp_iff_of_is_uniform, supp_eq_of_is_uniform, Mvpfunctor.liftp_iff', h', image_univ, mem_range,
+      exists_imp_distrib]
     constructor <;> intros <;> subst_vars <;> solve_by_elim
     
   · rintro α ⟨a, f⟩
-    simp only [← liftp_preservation] at h
+    simp only [liftp_preservation] at h
     ext
-    simp [← supp, ← h]
+    simp [supp, h]
     
 
 theorem liftp_preservation_iff_uniform : q.LiftpPreservation ↔ q.IsUniform := by

@@ -98,7 +98,7 @@ def pushoutCoconeIsColimit : Limits.IsColimit (pushoutCocone f g) :=
           exact (s.ι.naturality limits.walking_span.hom.snd).trans (s.ι.naturality limits.walking_span.hom.fst).symm }
     -- The factor map is a ⊗ b ↦ f(a) * g(b).
     use AlgHom.toRingHom (Algebra.TensorProduct.productMap f' g')
-    simp only [← pushout_cocone_inl, ← pushout_cocone_inr]
+    simp only [pushout_cocone_inl, pushout_cocone_inr]
     constructor
     · ext x
       exact Algebra.TensorProduct.product_map_left_apply _ _ x
@@ -120,7 +120,7 @@ def pushoutCoconeIsColimit : Limits.IsColimit (pushoutCocone f g) :=
       rw [this]
     apply Algebra.TensorProduct.ext
     intro a b
-    simp [eq1, eq2, h.map_mul]
+    simp [← eq1, ← eq2, ← h.map_mul]
 
 end Pushout
 
@@ -172,8 +172,7 @@ def prodFanIsLimit : IsLimit (prodFan A B) where
   lift := fun c => RingHom.prod (c.π.app ⟨WalkingPair.left⟩) (c.π.app ⟨WalkingPair.right⟩)
   fac' := fun c j => by
     ext
-    rcases j with ⟨⟨⟩⟩ <;>
-      simpa only [← binary_fan.π_app_left, ← binary_fan.π_app_right, ← comp_apply, ← RingHom.prod_apply]
+    rcases j with ⟨⟨⟩⟩ <;> simpa only [binary_fan.π_app_left, binary_fan.π_app_right, comp_apply, RingHom.prod_apply]
   uniq' := fun s m h => by
     ext
     · simpa using congr_hom (h ⟨walking_pair.left⟩) x

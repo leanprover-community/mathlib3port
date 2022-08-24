@@ -173,12 +173,12 @@ def equivalenceLeftToRight (X : SimplicialObject.Augmented C) (F : Arrow C) (G :
         intro x y f
         ext
         · dsimp'
-          simp only [← wide_pullback.lift_π, ← category.assoc]
+          simp only [wide_pullback.lift_π, category.assoc]
           rw [← category.assoc, ← X.left.map_comp]
           rfl
           
         · dsimp'
-          simp only [← functor.const_obj_map, ← nat_trans.naturality_assoc, ← wide_pullback.lift_base, ← category.assoc]
+          simp only [functor.const_obj_map, nat_trans.naturality_assoc, wide_pullback.lift_base, category.assoc]
           erw [category.id_comp]
            }
   right := G.right
@@ -215,7 +215,7 @@ def cechNerveEquiv (X : SimplicialObject.Augmented C) (F : Arrow C) :
     intro A
     ext _ ⟨j⟩
     · dsimp'
-      simp only [← arrow.cech_nerve_map, ← wide_pullback.lift_π, ← nat_trans.naturality_assoc]
+      simp only [arrow.cech_nerve_map, wide_pullback.lift_π, nat_trans.naturality_assoc]
       erw [wide_pullback.lift_π]
       rfl
       
@@ -377,8 +377,7 @@ def equivalenceLeftToRight (F : Arrow C) (X : CosimplicialObject.Augmented C) (G
   w' := by
     have := G.w
     apply_fun fun e => e.app (SimplexCategory.mk 0)  at this
-    simpa only [← CategoryTheory.Functor.id_map, ← augmented.to_arrow_obj_hom, ←
-      wide_pushout.arrow_ι_assoc fun i => F.hom]
+    simpa only [CategoryTheory.Functor.id_map, augmented.to_arrow_obj_hom, wide_pushout.arrow_ι_assoc fun i => F.hom]
 
 /-- A helper function used in defining the Čech conerve adjunction. -/
 @[simps]
@@ -393,19 +392,19 @@ def equivalenceRightToLeft (F : Arrow C) (X : CosimplicialObject.Augmented C) (G
             rw [← arrow.w_assoc G]
             have t := X.hom.naturality (x.const j)
             dsimp'  at t⊢
-            simp only [← category.id_comp] at t
+            simp only [category.id_comp] at t
             rw [← t]),
       naturality' := by
         intro x y f
         ext
         · dsimp'
-          simp only [← wide_pushout.ι_desc_assoc, ← wide_pushout.ι_desc]
+          simp only [wide_pushout.ι_desc_assoc, wide_pushout.ι_desc]
           rw [category.assoc, ← X.right.map_comp]
           rfl
           
         · dsimp'
-          simp only [← functor.const_obj_map, nat_trans.naturality, ← wide_pushout.head_desc_assoc, ←
-            wide_pushout.head_desc, ← category.assoc]
+          simp only [functor.const_obj_map, ← nat_trans.naturality, wide_pushout.head_desc_assoc,
+            wide_pushout.head_desc, category.assoc]
           erw [category.id_comp]
            }
   w' := by
@@ -427,7 +426,7 @@ def cechConerveEquiv (F : Arrow C) (X : CosimplicialObject.Augmented C) :
     ext _ ⟨⟩
     -- A bug in the `ext` tactic?
     · dsimp'
-      simp only [← arrow.cech_conerve_map, ← wide_pushout.ι_desc, ← category.assoc, nat_trans.naturality, ←
+      simp only [arrow.cech_conerve_map, wide_pushout.ι_desc, category.assoc, ← nat_trans.naturality,
         wide_pushout.ι_desc_assoc]
       rfl
       

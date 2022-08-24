@@ -96,7 +96,7 @@ variable (hx : AlgebraicIndependent R x)
 include hx
 
 theorem algebra_map_injective : Injective (algebraMap R A) := by
-  simpa [MvPolynomial.algebra_map_eq, ← Function.comp] using
+  simpa [← MvPolynomial.algebra_map_eq, Function.comp] using
     (injective.of_comp_iff (algebraic_independent_iff_injective_aeval.1 hx) MvPolynomial.c).2
       (MvPolynomial.C_injective _ _)
 
@@ -117,7 +117,7 @@ theorem ne_zero [Nontrivial R] (i : ι) : x i ≠ 0 :=
   hx.LinearIndependent.ne_zero i
 
 theorem comp (f : ι' → ι) (hf : Function.Injective f) : AlgebraicIndependent R (x ∘ f) := fun p q => by
-  simpa [← aeval_rename, ← (rename_injective f hf).eq_iff] using @hx (rename f p) (rename f q)
+  simpa [aeval_rename, (rename_injective f hf).eq_iff] using @hx (rename f p) (rename f q)
 
 theorem coe_range : AlgebraicIndependent R (coe : Range x → A) := by
   simpa using hx.comp _ (range_splitting_injective x)
@@ -129,7 +129,7 @@ theorem map {f : A →ₐ[R] A'} (hf_inj : Set.InjOn f (adjoin R (Range x))) : A
     intro p
     rw [AlgHom.mem_range]
     refine' ⟨MvPolynomial.rename (cod_restrict x (range x) mem_range_self) p, _⟩
-    simp [← Function.comp, ← aeval_rename]
+    simp [Function.comp, aeval_rename]
   intro x y hxy
   rw [this] at hxy
   rw [adjoin_eq_range] at hf_inj
@@ -188,7 +188,7 @@ theorem AlgebraicIndependent.restrict_scalars {K : Type _} [CommRingₓ K] [Alge
     (aeval x : MvPolynomial ι K →ₐ[K] A).toRingHom.comp (MvPolynomial.map (algebraMap R K)) =
       (aeval x : MvPolynomial ι R →ₐ[R] A).toRingHom :=
     by
-    ext <;> simp [← algebra_map_eq_smul_one]
+    ext <;> simp [algebra_map_eq_smul_one]
   show injective (aeval x).toRingHom
   rw [← this]
   exact injective.comp ai (MvPolynomial.map_injective _ hinj)
@@ -201,13 +201,13 @@ theorem algebraic_independent_finset_map_embedding_subtype (s : Set A) (li : Alg
       obtain ⟨x, h⟩ := x
       rw [Finset.mem_map] at h
       obtain ⟨a, ha, rfl⟩ := h
-      simp only [← Subtype.coe_prop, ← embedding.coe_subtype]⟩
+      simp only [Subtype.coe_prop, embedding.coe_subtype]⟩
   convert AlgebraicIndependent.comp li f _
   rintro ⟨x, hx⟩ ⟨y, hy⟩
   rw [Finset.mem_map] at hx hy
   obtain ⟨a, ha, rfl⟩ := hx
   obtain ⟨b, hb, rfl⟩ := hy
-  simp only [← imp_self, ← Subtype.mk_eq_mk]
+  simp only [imp_self, Subtype.mk_eq_mk]
 
 /-- If every finite set of algebraically independent element has cardinality at most `n`,
 then the same is true for arbitrary sets of algebraically independent elements.
@@ -238,7 +238,7 @@ variable {R A}
 
 theorem AlgebraicIndependent.mono {t s : Set A} (h : t ⊆ s) (hx : AlgebraicIndependent R (fun x => x : s → A)) :
     AlgebraicIndependent R (fun x => x : t → A) := by
-  simpa [← Function.comp] using hx.comp (inclusion h) (inclusion_injective h)
+  simpa [Function.comp] using hx.comp (inclusion h) (inclusion_injective h)
 
 end Subtype
 
@@ -253,13 +253,13 @@ theorem AlgebraicIndependent.to_subtype_range' {ι} {f : ι → A} (hf : Algebra
   ht ▸ hf.to_subtype_range
 
 theorem algebraic_independent_comp_subtype {s : Set ι} :
-    AlgebraicIndependent R (x ∘ coe : s → A) ↔ ∀, ∀ p ∈ MvPolynomial.supported R s, ∀, aeval x p = 0 → p = 0 := by
+    AlgebraicIndependent R (x ∘ coe : s → A) ↔ ∀ p ∈ MvPolynomial.supported R s, aeval x p = 0 → p = 0 := by
   have : (aeval (x ∘ coe : s → A) : _ →ₐ[R] _) = (aeval x).comp (rename coe) := by
     ext <;> simp
   have : ∀ p : MvPolynomial s R, rename (coe : s → ι) p = 0 ↔ p = 0 :=
     (injective_iff_map_eq_zero' (rename (coe : s → ι) : MvPolynomial s R →ₐ[R] _).toRingHom).1
       (rename_injective _ Subtype.val_injective)
-  simp [← algebraic_independent_iff, ← supported_eq_range_rename, *]
+  simp [algebraic_independent_iff, supported_eq_range_rename, *]
 
 theorem algebraic_independent_subtype {s : Set A} :
     AlgebraicIndependent R (fun x => x : s → A) ↔
@@ -267,7 +267,7 @@ theorem algebraic_independent_subtype {s : Set A} :
   by
   apply @algebraic_independent_comp_subtype _ _ _ id
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem algebraic_independent_of_finite (s : Set A)
     (H : ∀ (t) (_ : t ⊆ s), t.Finite → AlgebraicIndependent R (fun x => x : t → A)) :
     AlgebraicIndependent R (fun x => x : s → A) :=
@@ -295,7 +295,7 @@ theorem algebraic_independent_Union_of_directed {η : Type _} [Nonempty η] {s :
   exact (h i).mono (subset.trans hI <| Union₂_subset fun j hj => hi j (fi.mem_to_finset.2 hj))
 
 theorem algebraic_independent_sUnion_of_directed {s : Set (Set A)} (hsn : s.Nonempty) (hs : DirectedOn (· ⊆ ·) s)
-    (h : ∀, ∀ a ∈ s, ∀, AlgebraicIndependent R (fun x => x : (a : Set A) → A)) :
+    (h : ∀ a ∈ s, AlgebraicIndependent R (fun x => x : (a : Set A) → A)) :
     AlgebraicIndependent R (fun x => x : ⋃₀s → A) := by
   letI : Nonempty s := nonempty.to_subtype hsn <;>
     rw [sUnion_eq_Union] <;>
@@ -420,8 +420,8 @@ theorem AlgebraicIndependent.aeval_comp_mv_polynomial_option_equiv_polynomial_ad
       ↑(MvPolynomial.aeval fun o : Option ι => o.elim a x : MvPolynomial (Option ι) R →ₐ[R] A) :=
   by
   refine' MvPolynomial.ring_hom_ext _ _ <;>
-    simp only [← RingHom.comp_apply, ← RingEquiv.to_ring_hom_eq_coe, ← RingEquiv.coe_to_ring_hom, ←
-      AlgHom.coe_to_ring_hom, ← AlgHom.coe_to_ring_hom]
+    simp only [RingHom.comp_apply, RingEquiv.to_ring_hom_eq_coe, RingEquiv.coe_to_ring_hom, AlgHom.coe_to_ring_hom,
+      AlgHom.coe_to_ring_hom]
   · intro r
     rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_C, aeval_C, Polynomial.aeval_C,
       IsScalarTower.algebra_map_apply R (adjoin R (range x)) A]
@@ -455,7 +455,7 @@ theorem exists_is_transcendence_basis (h : Injective (algebraMap R A)) :
     s hs
   use s, hs.1
   intro t ht hr
-  simp only [← Subtype.range_coe_subtype, ← set_of_mem_eq] at *
+  simp only [Subtype.range_coe_subtype, set_of_mem_eq] at *
   exact Eq.symm (hs.2.2.2 t ht hr (Set.subset_univ _))
 
 variable {R}

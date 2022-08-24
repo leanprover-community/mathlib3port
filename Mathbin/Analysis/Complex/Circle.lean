@@ -58,7 +58,7 @@ theorem mem_circle_iff_norm_sq {z : ℂ} : z ∈ circle ↔ normSq z = 1 := by
 
 @[simp]
 theorem norm_sq_eq_of_mem_circle (z : circle) : normSq z = 1 := by
-  simp [← norm_sq_eq_abs]
+  simp [norm_sq_eq_abs]
 
 theorem ne_zero_of_mem_circle (z : circle) : (z : ℂ) ≠ 0 :=
   ne_zero_of_mem_unit_sphere z
@@ -99,7 +99,7 @@ def circle.ofConjDivSelf (z : ℂ) (hz : z ≠ 0) : circle :=
 def expMapCircle :
     C(ℝ, circle) where toFun := fun t =>
     ⟨exp (t * I), by
-      simp [← exp_mul_I, ← abs_cos_add_sin_mul_I]⟩
+      simp [exp_mul_I, abs_cos_add_sin_mul_I]⟩
 
 @[simp]
 theorem exp_map_circle_apply (t : ℝ) : ↑(expMapCircle t) = Complex.exp (t * Complex.i) :=
@@ -113,7 +113,7 @@ theorem exp_map_circle_zero : expMapCircle 0 = 1 :=
 @[simp]
 theorem exp_map_circle_add (x y : ℝ) : expMapCircle (x + y) = expMapCircle x * expMapCircle y :=
   Subtype.ext <| by
-    simp only [← exp_map_circle_apply, ← Submonoid.coe_mul, ← of_real_add, ← add_mulₓ, ← Complex.exp_add]
+    simp only [exp_map_circle_apply, Submonoid.coe_mul, of_real_add, add_mulₓ, Complex.exp_add]
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`, considered as a homomorphism of
 groups. -/

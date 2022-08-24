@@ -390,33 +390,33 @@ include module_M₃
 theorem eq_comp_to_linear_map_symm (f : M₂ →ₛₗ[σ₂₃] M₃) (g : M₁ →ₛₗ[σ₁₃] M₃) :
     f = g.comp e₁₂.symm.toLinearMap ↔ f.comp e₁₂.toLinearMap = g := by
   constructor <;> intro H <;> ext
-  · simp [← H, ← e₁₂.to_equiv.eq_comp_symm f g]
-    
   · simp [H, e₁₂.to_equiv.eq_comp_symm f g]
+    
+  · simp [← H, ← e₁₂.to_equiv.eq_comp_symm f g]
     
 
 theorem comp_to_linear_map_symm_eq (f : M₂ →ₛₗ[σ₂₃] M₃) (g : M₁ →ₛₗ[σ₁₃] M₃) :
     g.comp e₁₂.symm.toLinearMap = f ↔ g = f.comp e₁₂.toLinearMap := by
   constructor <;> intro H <;> ext
-  · simp [H, e₁₂.to_equiv.comp_symm_eq f g]
-    
   · simp [← H, ← e₁₂.to_equiv.comp_symm_eq f g]
+    
+  · simp [H, e₁₂.to_equiv.comp_symm_eq f g]
     
 
 theorem eq_to_linear_map_symm_comp (f : M₃ →ₛₗ[σ₃₁] M₁) (g : M₃ →ₛₗ[σ₃₂] M₂) :
     f = e₁₂.symm.toLinearMap.comp g ↔ e₁₂.toLinearMap.comp f = g := by
   constructor <;> intro H <;> ext
-  · simp [← H, ← e₁₂.to_equiv.eq_symm_comp f g]
-    
   · simp [H, e₁₂.to_equiv.eq_symm_comp f g]
+    
+  · simp [← H, ← e₁₂.to_equiv.eq_symm_comp f g]
     
 
 theorem to_linear_map_symm_comp_eq (f : M₃ →ₛₗ[σ₃₁] M₁) (g : M₃ →ₛₗ[σ₃₂] M₂) :
     e₁₂.symm.toLinearMap.comp g = f ↔ g = e₁₂.toLinearMap.comp f := by
   constructor <;> intro H <;> ext
-  · simp [H, e₁₂.to_equiv.symm_comp_eq f g]
-    
   · simp [← H, ← e₁₂.to_equiv.symm_comp_eq f g]
+    
+  · simp [H, e₁₂.to_equiv.symm_comp_eq f g]
     
 
 omit module_M₃

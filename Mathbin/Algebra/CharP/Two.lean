@@ -41,7 +41,7 @@ theorem bit0_apply_eq_zero (x : R) : (bit0 x : R) = 0 := by
 @[simp]
 theorem bit1_eq_one : (bit1 : R → R) = 1 := by
   funext
-  simp [← bit1]
+  simp [bit1]
 
 theorem bit1_apply_eq_one (x : R) : (bit1 x : R) = 1 := by
   simp
@@ -119,7 +119,7 @@ theorem order_of_neg_one [Nontrivial R] : orderOf (-1 : R) = if ringChar R = 2 t
   apply order_of_eq_prime
   · simp
     
-  simpa [← neg_one_eq_one_iff] using h
+  simpa [neg_one_eq_one_iff] using h
 
 end ringChar
 

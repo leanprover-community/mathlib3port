@@ -65,7 +65,7 @@ theorem integrable_rpow_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs 
   rw [←
     (measure.measure_preserving_neg (volume : Measureₓ ℝ)).integrable_on_comp_preimage
       (Homeomorph.neg ℝ).toMeasurableEquiv.MeasurableEmbedding]
-  simp only [← Function.comp, ← neg_sq, ← neg_preimage, ← preimage_neg_Iio, ← neg_negₓ, ← neg_zero]
+  simp only [Function.comp, neg_sq, neg_preimage, preimage_neg_Iio, neg_negₓ, neg_zero]
   apply integrable.mono' (integrable_on_rpow_mul_exp_neg_mul_sq hb hs)
   · apply Measurable.ae_strongly_measurable
     exact (measurable_id'.neg.pow measurable_const).mul ((measurable_id'.pow measurable_const).const_mul (-b)).exp
@@ -75,7 +75,7 @@ theorem integrable_rpow_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs 
     have h'x : 0 ≤ x := le_of_ltₓ hx
     rw [Real.norm_eq_abs, abs_mul, abs_of_nonneg (exp_pos _).le]
     apply mul_le_mul_of_nonneg_right _ (exp_pos _).le
-    simpa [← abs_of_nonneg h'x] using abs_rpow_le_abs_rpow (-x) s
+    simpa [abs_of_nonneg h'x] using abs_rpow_le_abs_rpow (-x) s
     
 
 theorem integrable_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) : Integrable fun x : ℝ => exp (-b * x ^ 2) := by
@@ -89,8 +89,8 @@ theorem integrable_exp_neg_mul_sq_iff {b : ℝ} : (Integrable fun x : ℝ => exp
   by_contra' hb
   have : (∫⁻ x : ℝ, 1) ≤ ∫⁻ x : ℝ, ∥exp (-b * x ^ 2)∥₊ := by
     apply lintegral_mono fun x => _
-    simp only [← neg_mul, ← Ennreal.one_le_coe_iff, to_nnreal_one, ← to_nnreal_le_iff_le_coe, ←
-      Real.norm_of_nonneg (exp_pos _).le, ← coe_nnnorm, ← one_le_exp_iff, ← Right.nonneg_neg_iff]
+    simp only [neg_mul, Ennreal.one_le_coe_iff, ← to_nnreal_one, to_nnreal_le_iff_le_coe,
+      Real.norm_of_nonneg (exp_pos _).le, coe_nnnorm, one_le_exp_iff, Right.nonneg_neg_iff]
     exact mul_nonpos_of_nonpos_of_nonneg hb (sq_nonneg _)
   simpa using this.trans_lt h.2
 
@@ -106,7 +106,7 @@ theorem integral_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) : (∫ r in Ioi 0, r 
   have A : ∀ x, HasDerivAt (fun x => -(2 * b)⁻¹ * exp (-b * x ^ 2)) (x * exp (-b * x ^ 2)) x := by
     intro x
     convert ((has_deriv_at_pow 2 x).const_mul (-b)).exp.const_mul (-(2 * b)⁻¹) using 1
-    field_simp [← hb.ne']
+    field_simp [hb.ne']
     ring
   have :
     ∀ y : ℝ, (∫ x in 0 ..id y, x * exp (-b * x ^ 2)) = -(2 * b)⁻¹ * exp (-b * y ^ 2) - -(2 * b)⁻¹ * exp (-b * 0 ^ 2) :=
@@ -125,7 +125,7 @@ theorem integral_gaussian (b : ℝ) : (∫ x, exp (-b * x ^ 2)) = sqrt (π / b) 
   · rw [integral_undef, sqrt_eq_zero_of_nonpos]
     · exact div_nonpos_of_nonneg_of_nonpos pi_pos.le hb
       
-    · simpa only [← not_ltₓ, ← integrable_exp_neg_mul_sq_iff] using hb
+    · simpa only [not_ltₓ, integrable_exp_neg_mul_sq_iff] using hb
       
     
   -- Assume now `b > 0`. We will show that the squares of the sides coincide.
@@ -142,7 +142,7 @@ theorem integral_gaussian (b : ℝ) : (∫ x, exp (-b * x ^ 2)) = sqrt (π / b) 
     _ = ∫ p : ℝ × ℝ, Real.exp (-b * (p.1 ^ 2 + p.2 ^ 2)) := by
       congr
       ext p
-      simp only [Real.exp_add, ← neg_add_rev, ← Real.exp_eq_exp]
+      simp only [← Real.exp_add, neg_add_rev, Real.exp_eq_exp]
       ring
     _ = ∫ p in polar_coord.target, p.1 * exp (-b * ((p.1 * cos p.2) ^ 2 + (p.1 * sin p.2) ^ 2)) :=
       (integral_comp_polar_coord_symm fun p => exp (-b * (p.1 ^ 2 + p.2 ^ 2))).symm
@@ -156,10 +156,10 @@ theorem integral_gaussian (b : ℝ) : (∫ x, exp (-b * x ^ 2)) = sqrt (π / b) 
     _ = π / b := by
       have : 0 ≤ π + π := by
         linarith [Real.pi_pos]
-      simp only [← integral_const, ← measure.restrict_apply', ← measurable_set_Ioo, ← univ_inter, ← this, ←
-        sub_neg_eq_add, ← Algebra.id.smul_eq_mul, ← mul_oneₓ, ← volume_Ioo, ← two_mul, ← Ennreal.to_real_of_real, ←
-        integral_mul_exp_neg_mul_sq hb, ← one_mulₓ]
-      field_simp [← hb.ne']
+      simp only [integral_const, measure.restrict_apply', measurable_set_Ioo, univ_inter, this, sub_neg_eq_add,
+        Algebra.id.smul_eq_mul, mul_oneₓ, volume_Ioo, two_mul, Ennreal.to_real_of_real, integral_mul_exp_neg_mul_sq hb,
+        one_mulₓ]
+      field_simp [hb.ne']
       ring
     _ = sqrt (π / b) ^ 2 := by
       rw [sq_sqrt]

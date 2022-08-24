@@ -96,7 +96,7 @@ def isoMk {f f' : StructuredArrow S T} (g : f.right ≅ f'.right) (w : f.Hom ≫
         ext))
     g
     (by
-      simpa [← eq_to_hom_map] using w.symm)
+      simpa [eq_to_hom_map] using w.symm)
 
 theorem ext {A B : StructuredArrow S T} (f g : A ⟶ B) : f.right = g.right → f = g :=
   CommaMorphism.ext _ _ (Subsingleton.elimₓ _ _)
@@ -183,7 +183,7 @@ def mkIdInitial [Full T] [Faithful T] : IsInitial (mk (𝟙 (T.obj Y))) where
   uniq' := fun c m _ => by
     ext
     apply T.map_injective
-    simpa only [← hom_mk_right, ← T.image_preimage, w m] using (category.id_comp _).symm
+    simpa only [hom_mk_right, T.image_preimage, ← w m] using (category.id_comp _).symm
 
 variable {A : Type u₃} [Category.{v₃} A] {B : Type u₄} [Category.{v₄} B]
 
@@ -199,7 +199,7 @@ def post (S : C) (F : B ⥤ C) (G : C ⥤ D) : StructuredArrow S F ⥤ Structure
   map := fun X Y f =>
     { right := f.right,
       w' := by
-        simp [← functor.comp_map, G.map_comp, f.w] }
+        simp [functor.comp_map, ← G.map_comp, ← f.w] }
 
 end StructuredArrow
 
@@ -252,7 +252,7 @@ def homMk {f f' : CostructuredArrow S T} (g : f.left ⟶ f'.left) (w : S.map g �
       (by
         ext)
   w' := by
-    simpa [← eq_to_hom_map] using w
+    simpa [eq_to_hom_map] using w
 
 /-- To construct an isomorphism of costructured arrows,
 we need an isomorphism of the objects underlying the source,
@@ -265,7 +265,7 @@ def isoMk {f f' : CostructuredArrow S T} (g : f.left ≅ f'.left) (w : S.map g.H
       (by
         ext))
     (by
-      simpa [← eq_to_hom_map] using w)
+      simpa [eq_to_hom_map] using w)
 
 theorem ext {A B : CostructuredArrow S T} (f g : A ⟶ B) (h : f.left = g.left) : f = g :=
   CommaMorphism.ext _ _ h (Subsingleton.elimₓ _ _)
@@ -353,7 +353,7 @@ def mkIdTerminal [Full S] [Faithful S] : IsTerminal (mk (𝟙 (S.obj Y))) where
     rintro c m -
     ext
     apply S.map_injective
-    simpa only [← hom_mk_left, ← S.image_preimage, w m] using (category.comp_id _).symm
+    simpa only [hom_mk_left, S.image_preimage, ← w m] using (category.comp_id _).symm
 
 variable {A : Type u₃} [Category.{v₃} A] {B : Type u₄} [Category.{v₄} B]
 
@@ -369,7 +369,7 @@ def post (F : B ⥤ C) (G : C ⥤ D) (S : C) : CostructuredArrow F S ⥤ Costruc
   map := fun X Y f =>
     { left := f.left,
       w' := by
-        simp [← functor.comp_map, G.map_comp, f.w] }
+        simp [functor.comp_map, ← G.map_comp, ← f.w] }
 
 end CostructuredArrow
 

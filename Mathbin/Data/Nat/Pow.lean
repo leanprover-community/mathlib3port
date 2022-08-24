@@ -36,7 +36,7 @@ theorem pow_lt_pow_succ {p : ℕ} (h : 1 < p) (n : ℕ) : p ^ n < p ^ (n + 1) :=
 
 theorem lt_pow_self {p : ℕ} (h : 1 < p) : ∀ n : ℕ, n < p ^ n
   | 0 => by
-    simp [← zero_lt_one]
+    simp [zero_lt_one]
   | n + 1 =>
     calc
       n + 1 < p ^ n + 1 := Nat.add_lt_add_rightₓ (lt_pow_self _) _
@@ -71,7 +71,7 @@ theorem one_lt_pow' (n m : ℕ) : 1 < (m + 2) ^ (n + 1) :=
 @[simp]
 theorem one_lt_pow_iff {k n : ℕ} (h : 0 ≠ k) : 1 < n ^ k ↔ 1 < n := by
   cases n
-  · cases k <;> simp [← zero_pow_eq]
+  · cases k <;> simp [zero_pow_eq]
     
   cases n
   · rw [one_pow]
@@ -141,11 +141,11 @@ alias sq_sub_sq ← pow_two_sub_pow_two
 theorem pow_mod (a b n : ℕ) : a ^ b % n = (a % n) ^ b % n := by
   induction' b with b ih
   rfl
-  simp [← pow_succₓ, ← Nat.mul_modₓ, ← ih]
+  simp [pow_succₓ, Nat.mul_modₓ, ih]
 
 theorem mod_pow_succ {b : ℕ} (w m : ℕ) : m % b ^ succ w = b * (m / b % b ^ w) + m % b := by
   by_cases' b_h : b = 0
-  · simp [← b_h, ← pow_succₓ]
+  · simp [b_h, pow_succₓ]
     
   have b_pos := Nat.pos_of_ne_zeroₓ b_h
   apply Nat.strong_induction_onₓ m
@@ -155,9 +155,9 @@ theorem mod_pow_succ {b : ℕ} (w m : ℕ) : m % b ^ succ w = b * (m / b % b ^ w
   -- base case: p < b^succ w
   · have h₂ : p / b < b ^ w := by
       rw [div_lt_iff_lt_mul b_pos]
-      simpa [← pow_succ'ₓ] using h₁
+      simpa [pow_succ'ₓ] using h₁
     rw [mod_eq_of_lt h₁, mod_eq_of_lt h₂]
-    simp [← div_add_mod]
+    simp [div_add_mod]
     
   -- step: p ≥ b^succ w
   · -- Generate condition for induction hypothesis
@@ -165,8 +165,8 @@ theorem mod_pow_succ {b : ℕ} (w m : ℕ) : m % b ^ succ w = b * (m / b % b ^ w
     -- Apply induction
     rw [mod_eq_sub_mod h₁, IH _ h₂]
     -- Normalize goal and h1
-    simp only [← pow_succₓ]
-    simp only [← Ge, ← pow_succₓ] at h₁
+    simp only [pow_succₓ]
+    simp only [Ge, pow_succₓ] at h₁
     -- Pull subtraction outside mod and div
     rw [sub_mul_mod _ _ _ h₁, sub_mul_div _ _ _ h₁]
     -- Cancel subtraction inside mod b^w
@@ -184,7 +184,7 @@ theorem pow_dvd_pow_iff_pow_le_pow {k l : ℕ} : ∀ {x : ℕ} (w : 0 < x), x ^ 
       
     · intro a
       cases' x with x
-      · simp only [← one_pow]
+      · simp only [one_pow]
         
       · have le := (pow_le_iff_le_right (Nat.le_add_leftₓ _ _)).mp a
         use (x + 2) ^ (l - k)
@@ -202,7 +202,7 @@ theorem pow_dvd_pow_iff_le_right' {b k l : ℕ} : (b + 2) ^ k ∣ (b + 2) ^ l �
 theorem not_pos_pow_dvd : ∀ {p k : ℕ} (hp : 1 < p) (hk : 1 < k), ¬p ^ k ∣ p
   | succ p, succ k, hp, hk, h =>
     have : succ p * succ p ^ k ∣ succ p * 1 := by
-      simpa [← pow_succₓ] using h
+      simpa [pow_succₓ] using h
     have : succ p ^ k ∣ 1 := dvd_of_mul_dvd_mul_leftₓ (succ_posₓ _) this
     have he : succ p ^ k = 1 := eq_one_of_dvd_one this
     have : k < succ p ^ k := lt_pow_self hp k
@@ -239,7 +239,7 @@ theorem shiftl_eq_mul_pow (m) : ∀ n, shiftl m n = m * 2 ^ n
 
 theorem shiftl'_tt_eq_mul_pow (m) : ∀ n, shiftl' true m n + 1 = (m + 1) * 2 ^ n
   | 0 => by
-    simp [← shiftl, ← shiftl', ← pow_zeroₓ, ← Nat.one_mul]
+    simp [shiftl, shiftl', pow_zeroₓ, Nat.one_mul]
   | k + 1 => by
     change bit1 (shiftl' tt m k) + 1 = (m + 1) * (2 * 2 ^ k)
     rw [bit1_val]
@@ -264,7 +264,7 @@ theorem zero_shiftr (n) : shiftr 0 n = 0 :=
   (shiftr_eq_div_pow _ _).trans (Nat.zero_divₓ _)
 
 theorem shiftl'_ne_zero_left (b) {m} (h : m ≠ 0) (n) : shiftl' b m n ≠ 0 := by
-  induction n <;> simp [← shiftl', ← bit_ne_zero, *]
+  induction n <;> simp [shiftl', bit_ne_zero, *]
 
 theorem shiftl'_tt_ne_zero (m) : ∀ {n} (h : n ≠ 0), shiftl' true m n ≠ 0
   | 0, h => absurd rfl h
@@ -275,12 +275,12 @@ theorem shiftl'_tt_ne_zero (m) : ∀ {n} (h : n ≠ 0), shiftl' true m n ≠ 0
 
 @[simp]
 theorem size_zero : size 0 = 0 := by
-  simp [← size]
+  simp [size]
 
 @[simp]
 theorem size_bit {b n} (h : bit b n ≠ 0) : size (bit b n) = succ (size n) := by
   rw [size]
-  conv => lhs rw [binary_rec]simp [← h]
+  conv => lhs rw [binary_rec]simp [h]
   rw [div2_bit]
 
 @[simp]
@@ -298,7 +298,7 @@ theorem size_one : size 1 = 1 :=
 
 @[simp]
 theorem size_shiftl' {b m n} (h : shiftl' b m n ≠ 0) : size (shiftl' b m n) = size m + n := by
-  induction' n with n IH <;> simp [← shiftl'] at h⊢
+  induction' n with n IH <;> simp [shiftl'] at h⊢
   rw [size_bit h, Nat.add_succ]
   by_cases' s0 : shiftl' b m n = 0 <;> [skip, rw [IH s0]]
   rw [s0] at h⊢
@@ -354,14 +354,14 @@ theorem size_le {m n : ℕ} : size m ≤ n ↔ m < 2 ^ n :=
       
     · intro b m IH n h
       by_cases' e : bit b m = 0
-      · simp [← e]
+      · simp [e]
         
       rw [size_bit e]
       cases' n with n
       · exact e.elim (Nat.eq_zero_of_le_zeroₓ (le_of_lt_succ h))
         
       · apply succ_le_succ (IH _)
-        apply lt_imp_lt_of_le_imp_le (fun h' => bit0_le_bit _ h') h
+        apply lt_imp_lt_of_le_imp_leₓ (fun h' => bit0_le_bit _ h') h
         
       ⟩
 
@@ -372,7 +372,7 @@ theorem size_pos {n : ℕ} : 0 < size n ↔ 0 < n := by
   rw [lt_size] <;> rfl
 
 theorem size_eq_zero {n : ℕ} : size n = 0 ↔ n = 0 := by
-  have := @size_pos n <;> simp [← pos_iff_ne_zero] at this <;> exact Decidable.not_iff_not.1 this
+  have := @size_pos n <;> simp [pos_iff_ne_zero] at this <;> exact Decidable.not_iff_not.1 this
 
 theorem size_pow {n : ℕ} : size (2 ^ n) = n + 1 :=
   le_antisymmₓ
@@ -381,7 +381,7 @@ theorem size_pow {n : ℕ} : size (2 ^ n) = n + 1 :=
         (by
           decide)
         (lt_succ_selfₓ _))
-    (lt_size.2 <| le_rfl)
+    (lt_size.2 <| le_rflₓ)
 
 theorem size_le_size {m n : ℕ} (h : m ≤ n) : size m ≤ size n :=
   size_le.2 <| lt_of_le_of_ltₓ h (lt_size_self _)

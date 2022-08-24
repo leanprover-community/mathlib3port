@@ -98,7 +98,7 @@ protected theorem mem_nhds [T : TopologicalSpace α] (F : Realizer α) {s : Set 
   have := mem_nhds_to_topsp F.F <;> rwa [F.eq] at this
 
 theorem is_open_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} :
-    IsOpen s ↔ ∀, ∀ a ∈ s, ∀, ∃ b, a ∈ F.f b ∧ F.f b ⊆ s :=
+    IsOpen s ↔ ∀ a ∈ s, ∃ b, a ∈ F.f b ∧ F.f b ⊆ s :=
   is_open_iff_mem_nhds.trans <| ball_congr fun a h => F.mem_nhds
 
 theorem is_closed_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} :
@@ -106,9 +106,8 @@ theorem is_closed_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} :
   is_open_compl_iff.symm.trans <|
     F.is_open_iff.trans <|
       forall_congrₓ fun a =>
-        show (a ∉ s → ∃ b : F.σ, a ∈ F.f b ∧ ∀, ∀ z ∈ F.f b, ∀, z ∉ s) ↔ _ by
-          haveI := Classical.propDecidable <;>
-            rw [not_imp_comm] <;> simp [← not_exists, ← not_and, ← not_forall, ← and_comm]
+        show (a ∉ s → ∃ b : F.σ, a ∈ F.f b ∧ ∀ z ∈ F.f b, z ∉ s) ↔ _ by
+          haveI := Classical.propDecidable <;> rw [not_imp_comm] <;> simp [not_exists, not_and, not_forall, and_comm]
 
 theorem mem_interior_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} {a : α} :
     a ∈ Interior s ↔ ∃ b, a ∈ F.f b ∧ F.f b ⊆ s :=
@@ -178,7 +177,7 @@ theorem nhds_F (m : α → β) (F : Realizer α) (a : α) (s) : (F.nhds a).f s =
   rfl
 
 theorem tendsto_nhds_iff {m : β → α} {f : Filter β} (F : f.Realizer) (R : Realizer α) {a : α} :
-    Tendsto m f (𝓝 a) ↔ ∀ t, a ∈ R.f t → ∃ s, ∀, ∀ x ∈ F.f s, ∀, m x ∈ R.f t :=
+    Tendsto m f (𝓝 a) ↔ ∀ t, a ∈ R.f t → ∃ s, ∀ x ∈ F.f s, m x ∈ R.f t :=
   (F.tendsto_iff _ (R.nhds a)).trans Subtype.forall
 
 end Ctop.Realizer

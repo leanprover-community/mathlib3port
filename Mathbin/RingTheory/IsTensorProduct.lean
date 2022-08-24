@@ -244,36 +244,36 @@ theorem IsBaseChange.of_lift_unique
   let f'' : S ⊗[R] M →ₗ[S] N := by
     refine' { f' with map_smul' := fun r x => _ }
     apply TensorProduct.induction_on x
-    · simp only [← map_zero, ← smul_zero, ← LinearMap.to_fun_eq_coe]
+    · simp only [map_zero, smul_zero, LinearMap.to_fun_eq_coe]
       
     · intro x y
-      simp only [← Algebra.of_id_apply, ← Algebra.id.smul_eq_mul, ← AlgHom.to_linear_map_apply, ← LinearMap.mul_apply, ←
-        TensorProduct.lift.tmul', ← LinearMap.smul_apply, ← RingHom.id_apply, ← Module.algebra_map_End_apply, ← f', ←
-        _root_.map_mul, ← TensorProduct.smul_tmul', ← LinearMap.coe_restrict_scalars_eq_coe, ← LinearMap.flip_apply]
+      simp only [Algebra.of_id_apply, Algebra.id.smul_eq_mul, AlgHom.to_linear_map_apply, LinearMap.mul_apply,
+        TensorProduct.lift.tmul', LinearMap.smul_apply, RingHom.id_apply, Module.algebra_map_End_apply, f',
+        _root_.map_mul, TensorProduct.smul_tmul', LinearMap.coe_restrict_scalars_eq_coe, LinearMap.flip_apply]
       
     · intro x y hx hy
       dsimp'  at hx hy⊢
-      simp only [← hx, ← hy, ← smul_add, ← map_add]
+      simp only [hx, hy, smul_add, map_add]
       
   change Function.Bijective f''
   constructor
   · apply Function.HasLeftInverse.injective
     refine' ⟨ulift.module_equiv.to_linear_map.comp g, fun x => _⟩
     apply TensorProduct.induction_on x
-    · simp only [← map_zero]
+    · simp only [map_zero]
       
     · intro x y
       have := (congr_arg (fun a => x • a) (LinearMap.congr_fun hg y)).trans (ulift.module_equiv.symm.map_smul x _).symm
       apply (ULift.moduleEquiv : ULift.{v₂} (S ⊗ M) ≃ₗ[S] S ⊗ M).toEquiv.apply_eq_iff_eq_symm_apply.mpr
       any_goals {
       }
-      simpa only [← Algebra.of_id_apply, ← smul_tmul', ← Algebra.id.smul_eq_mul, ← lift.tmul', ←
-        LinearMap.coe_restrict_scalars_eq_coe, ← LinearMap.flip_apply, ← AlgHom.to_linear_map_apply, ←
-        Module.algebra_map_End_apply, ← LinearMap.smul_apply, ← LinearMap.coe_mk, ← LinearMap.map_smulₛₗ, ← mk_apply, ←
+      simpa only [Algebra.of_id_apply, smul_tmul', Algebra.id.smul_eq_mul, lift.tmul',
+        LinearMap.coe_restrict_scalars_eq_coe, LinearMap.flip_apply, AlgHom.to_linear_map_apply,
+        Module.algebra_map_End_apply, LinearMap.smul_apply, LinearMap.coe_mk, LinearMap.map_smulₛₗ, mk_apply,
         mul_oneₓ] using this
       
     · intro x y hx hy
-      simp only [← map_add, ← hx, ← hy]
+      simp only [map_add, hx, hy]
       
     
   · apply Function.HasRightInverse.surjective
@@ -289,10 +289,10 @@ theorem IsBaseChange.of_lift_unique
     apply hg₂
     ext y
     have := LinearMap.congr_fun hg y
-    dsimp' [← ULift.moduleEquiv]  at this⊢
+    dsimp' [ULift.moduleEquiv]  at this⊢
     rw [this]
-    simp only [← lift.tmul, ← LinearMap.coe_restrict_scalars_eq_coe, ← LinearMap.flip_apply, ←
-      AlgHom.to_linear_map_apply, ← _root_.map_one, ← LinearMap.one_apply]
+    simp only [lift.tmul, LinearMap.coe_restrict_scalars_eq_coe, LinearMap.flip_apply, AlgHom.to_linear_map_apply,
+      _root_.map_one, LinearMap.one_apply]
     
 
 variable {f}
@@ -345,7 +345,7 @@ theorem IsBaseChange.comp {f : M →ₗ[R] N} (hf : IsBaseChange S f) {g : N →
   refine'
     ⟨hg.lift (hf.lift i), by
       ext
-      simp [← IsBaseChange.lift_eq], _⟩
+      simp [IsBaseChange.lift_eq], _⟩
   rintro g' (e : _ = _)
   refine' hg.alg_hom_ext' _ _ (hf.alg_hom_ext' _ _ _)
   rw [IsBaseChange.lift_comp, IsBaseChange.lift_comp, ← e]
@@ -366,21 +366,21 @@ theorem IsBaseChange.symm (h : IsBaseChange S (IsScalarTower.toAlgHom R R' S').t
     intro r x
     change h.equiv (TensorProduct.comm R R' S (r • x)) = r • h.equiv (TensorProduct.comm R R' S x)
     apply TensorProduct.induction_on x
-    · simp only [← smul_zero, ← map_zero]
+    · simp only [smul_zero, map_zero]
       
     · intro x y
-      simp [← smul_tmul', ← Algebra.smul_def, ← RingHom.algebra_map_to_algebra, ← h.equiv_tmul]
+      simp [smul_tmul', Algebra.smul_def, RingHom.algebra_map_to_algebra, h.equiv_tmul]
       ring
       
     · intro x y hx hy
-      simp only [← map_add, ← smul_add, ← hx, ← hy]
+      simp only [map_add, smul_add, hx, hy]
       
   have :
     (IsScalarTower.toAlgHom R S S').toLinearMap =
       (e.to_linear_map.restrict_scalars R).comp (TensorProduct.mk R R' S 1) :=
     by
     ext
-    simp [← e, ← h.equiv_tmul, ← Algebra.smul_def]
+    simp [e, h.equiv_tmul, Algebra.smul_def]
   rw [this]
   exact (TensorProduct.is_base_change R S R').comp (IsBaseChange.of_equiv e)
 

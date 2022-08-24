@@ -94,7 +94,7 @@ theorem exists_mem_adjoin_mul_eq_pow_nat_degree {x : S} (hx : aeval x f = 0) (hm
   rw [aeval_def, Polynomial.eval₂_eq_eval_map, eval_eq_sum_range, range_add_one, sum_insert not_mem_range_self,
     sum_range, (hmo.map (algebraMap R S)).coeff_nat_degree, one_mulₓ] at hx
   replace hx := eq_neg_of_add_eq_zero_left hx
-  have : ∀, ∀ n < f.nat_degree, ∀, p ∣ f.coeff n := by
+  have : ∀ n < f.nat_degree, p ∣ f.coeff n := by
     intro n hn
     refine'
       mem_span_singleton.1
@@ -172,7 +172,7 @@ theorem dvd_pow_nat_degree_of_eval₂_eq_zero {f : R →+* A} (hf : Function.Inj
   refine'
     (scale_roots.is_weakly_eisenstein_at _
           (ideal.mem_span_singleton.mpr <| dvd_refl x)).pow_nat_degree_le_of_root_of_monic_mem
-      _ ((monic_scale_roots_iff x).mpr hp) _ le_rfl
+      _ ((monic_scale_roots_iff x).mpr hp) _ le_rflₓ
   rw [injective_iff_map_eq_zero'] at hf
   have := scale_roots_eval₂_eq_zero f h
   rwa [hz, Polynomial.eval₂_at_apply, hf] at this
@@ -261,8 +261,8 @@ theorem cyclotomic_comp_X_add_one_is_eisenstein_at [hp : Fact p.Prime] :
       show (X + 1 : ℤ[X]) = X + C 1 by
         simp ,
       nat_degree_X_add_C, mul_oneₓ, nat_degree_cyclotomic, Nat.totient_prime hp.out] at hi
-    simp only [← lt_of_lt_of_leₓ hi (Nat.sub_leₓ _ _), ← sum_ite_eq', ← mem_range, ← if_true, ← Ideal.submodule_span_eq,
-      ← Ideal.mem_span_singleton]
+    simp only [lt_of_lt_of_leₓ hi (Nat.sub_leₓ _ _), sum_ite_eq', mem_range, if_true, Ideal.submodule_span_eq,
+      Ideal.mem_span_singleton]
     exact Int.coe_nat_dvd.2 (Nat.Prime.dvd_choose_self (Nat.succ_posₓ i) (lt_tsub_iff_right.1 hi) hp.out)
     
   · rw [coeff_zero_eq_eval_zero, eval_comp, cyclotomic_eq_geom_sum hp.out, eval_add, eval_X, eval_one, zero_addₓ,
@@ -301,7 +301,7 @@ theorem cyclotomic_prime_pow_comp_X_add_one_is_eisenstein_at [hp : Fact p.Prime]
       rw [Ideal.submodule_span_eq, Ideal.mem_span_singleton, ← Zmod.int_coe_zmod_eq_zero_iff_dvd, ←
         Int.coe_cast_ring_hom, ← coeff_map, map_comp, map_cyclotomic, Polynomial.map_add, map_X, Polynomial.map_one,
         pow_addₓ, pow_oneₓ, cyclotomic_mul_prime_dvd_eq_pow, pow_comp, ← Zmod.expand_card, coeff_expand hp.out.pos]
-      · simp only [← ite_eq_right_iff]
+      · simp only [ite_eq_right_iff]
         rintro ⟨k, hk⟩
         rw [nat_degree_comp,
           show (X + 1 : ℤ[X]) = X + C 1 by
@@ -313,7 +313,7 @@ theorem cyclotomic_prime_pow_comp_X_add_one_is_eisenstein_at [hp : Fact p.Prime]
         replace hn := hn (lt_of_mul_lt_mul_left' hi)
         rw [Ideal.submodule_span_eq, Ideal.mem_span_singleton, ← Zmod.int_coe_zmod_eq_zero_iff_dvd, ←
           Int.coe_cast_ring_hom, ← coeff_map] at hn
-        simpa [← map_comp] using hn
+        simpa [map_comp] using hn
         
       · exact
           ⟨p ^ n, by
@@ -323,8 +323,8 @@ theorem cyclotomic_prime_pow_comp_X_add_one_is_eisenstein_at [hp : Fact p.Prime]
     
   · rw [coeff_zero_eq_eval_zero, eval_comp, cyclotomic_prime_pow_eq_geom_sum hp.out, eval_add, eval_X, eval_one,
       zero_addₓ, eval_finset_sum]
-    simp only [← eval_pow, ← eval_X, ← one_pow, ← sum_const, ← card_range, ← Nat.smul_one_eq_coe, ← submodule_span_eq, ←
-      Ideal.submodule_span_eq, ← Ideal.span_singleton_pow, ← Ideal.mem_span_singleton]
+    simp only [eval_pow, eval_X, one_pow, sum_const, card_range, Nat.smul_one_eq_coe, submodule_span_eq,
+      Ideal.submodule_span_eq, Ideal.span_singleton_pow, Ideal.mem_span_singleton]
     intro h
     obtain ⟨k, hk⟩ := Int.coe_nat_dvd.1 h
     rw [← mul_assoc, mul_oneₓ, mul_assoc] at hk
@@ -366,7 +366,7 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
       (minpoly.monic hBint).nat_degree_map (algebraMap R K)]
   choose! f hf using
     hei.is_weakly_eisenstein_at.exists_mem_adjoin_mul_eq_pow_nat_degree_le (minpoly.aeval R B.gen) (minpoly.monic hBint)
-  simp only [← (minpoly.monic hBint).nat_degree_map, ← deg_R_P] at hf
+  simp only [(minpoly.monic hBint).nat_degree_map, deg_R_P] at hf
   -- The Eisenstein condition shows that `p` divides `Q.coeff 0`
   -- if `p^n.succ` divides the following multiple of `Q.coeff 0^n.succ`:
   suffices p ^ n.succ ∣ Q.coeff 0 ^ n.succ * (-1 ^ (n.succ * n) * (minpoly R B.gen).coeff 0 ^ n) by
@@ -376,11 +376,11 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
     convert (IsUnit.dvd_mul_right ⟨-1 ^ (n.succ * n), rfl⟩).mpr this using 1
     push_cast
     ring_nf
-    simp [← pow_right_comm _ _ 2]
+    simp [pow_right_comm _ _ 2]
   -- We claim the quotient of `Q^n * _` by `p^n` is the following `r`:
-  have aux : ∀, ∀ i ∈ (range (Q.nat_degree + 1)).erase 0, ∀, B.dim ≤ i + n := by
+  have aux : ∀ i ∈ (range (Q.nat_degree + 1)).erase 0, B.dim ≤ i + n := by
     intro i hi
-    simp only [← mem_range, ← mem_erase] at hi
+    simp only [mem_range, mem_erase] at hi
     rw [hn]
     exact le_add_pred_of_pos _ hi.1
   have hintsum : IsIntegral R (z * B.gen ^ n - ∑ x : ℕ in (range (Q.nat_degree + 1)).erase 0, Q.coeff x • f (x + n)) :=
@@ -393,7 +393,7 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
   use r
   -- Do the computation in `K` so we can work in terms of `z` instead of `r`.
   apply IsFractionRing.injective R K
-  simp only [← _root_.map_mul, ← _root_.map_pow, ← _root_.map_neg, ← _root_.map_one]
+  simp only [_root_.map_mul, _root_.map_pow, _root_.map_neg, _root_.map_one]
   -- Both sides are actually norms:
   calc
     _ = norm K (Q.coeff 0 • B.gen ^ n) := _
@@ -401,9 +401,9 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
       congr_arg (norm K) (eq_sub_of_add_eq _)
     _ = _ := _
     
-  · simp only [← Algebra.smul_def, ← algebra_map_apply R K L, ← Algebra.norm_algebra_map, ← _root_.map_mul, ←
-      _root_.map_pow, ← finrank_K_L, ← power_basis.norm_gen_eq_coeff_zero_minpoly, ←
-      minpoly.gcd_domain_eq_field_fractions' K hBint, ← coeff_map, hn]
+  · simp only [Algebra.smul_def, algebra_map_apply R K L, Algebra.norm_algebra_map, _root_.map_mul, _root_.map_pow,
+      finrank_K_L, power_basis.norm_gen_eq_coeff_zero_minpoly, minpoly.gcd_domain_eq_field_fractions' K hBint,
+      coeff_map, ← hn]
     ring_exp
     
   swap
@@ -418,12 +418,11 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
     _ = _ := by
       rw [hQ, Algebra.smul_mul_assoc]
     
-  · have :
-      ∀, ∀ i ∈ (range (Q.nat_degree + 1)).erase 0, ∀, Q.coeff i • (B.gen ^ i * B.gen ^ n) = p • Q.coeff i • f (i + n) :=
+  · have : ∀ i ∈ (range (Q.nat_degree + 1)).erase 0, Q.coeff i • (B.gen ^ i * B.gen ^ n) = p • Q.coeff i • f (i + n) :=
       by
       intro i hi
       rw [← pow_addₓ, ← (hf _ (aux i hi)).2, ← Algebra.smul_def, smul_smul, mul_comm _ p, smul_smul]
-    simp only [← add_mulₓ, ← smul_mul_assoc, ← one_mulₓ, ← sum_mul, ← sum_congr rfl this]
+    simp only [add_mulₓ, smul_mul_assoc, one_mulₓ, sum_mul, sum_congr rfl this]
     
   · rw [aeval_eq_sum_range, Finset.add_sum_erase (range (Q.nat_degree + 1)) fun i => Q.coeff i • B.gen ^ i]
     simp
@@ -431,8 +430,7 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
 
 theorem mem_adjoin_of_dvd_coeff_of_dvd_aeval {A B : Type _} [CommSemiringₓ A] [CommRingₓ B] [Algebra A B]
     [NoZeroSmulDivisors A B] {Q : Polynomial A} {p : A} {x z : B} (hp : p ≠ 0)
-    (hQ : ∀, ∀ i ∈ range (Q.natDegree + 1), ∀, p ∣ Q.coeff i) (hz : aeval x Q = p • z) : z ∈ adjoin A ({x} : Set B) :=
-  by
+    (hQ : ∀ i ∈ range (Q.natDegree + 1), p ∣ Q.coeff i) (hz : aeval x Q = p • z) : z ∈ adjoin A ({x} : Set B) := by
   choose! f hf using hQ
   rw [aeval_eq_sum_range, sum_range] at hz
   conv_lhs at hz => congr skip ext rw [hf i (mem_range.2 (Finₓ.is_lt i)), ← smul_smul]
@@ -467,7 +465,7 @@ theorem mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at {B : PowerBas
     simpa using hQ
     
   by_cases' hQzero : Q = 0
-  · simp only [← hQzero, ← Algebra.smul_def, ← zero_eq_mul, ← aeval_zero] at hQ
+  · simp only [hQzero, Algebra.smul_def, zero_eq_mul, aeval_zero] at hQ
     cases' hQ with H H₁
     · have : Function.Injective (algebraMap R L) := by
         rw [algebra_map_eq R K L]
@@ -504,7 +502,7 @@ theorem mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at {B : PowerBas
     -- By induction hypothesis we can find `g : ℕ → R` such that
     -- `k ∈ range (j + 1) → Q.coeff k • B.gen ^ k = (algebra_map R L) p * g k • B.gen ^ k`-
     choose! g hg using hind
-    replace hg : ∀, ∀ k ∈ range (j + 1), ∀, Q.coeff k • B.gen ^ k = algebraMap R L p * g k • B.gen ^ k
+    replace hg : ∀ k ∈ range (j + 1), Q.coeff k • B.gen ^ k = algebraMap R L p * g k • B.gen ^ k
     · intro k hk
       rw
         [hg k (mem_range_succ_iff.1 hk)
@@ -519,11 +517,9 @@ theorem mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at {B : PowerBas
       is_weakly_eisenstein_at.exists_mem_adjoin_mul_eq_pow_nat_degree_le (minpoly.aeval R B.gen) (minpoly.monic hBint)
         hei.is_weakly_eisenstein_at
     have hf₁ :
-      ∀,
-        ∀ k ∈ (range (Q.nat_degree - j)).erase 0,
-          ∀,
-            Q.coeff (j + 1 + k) • B.gen ^ (j + 1 + k) * B.gen ^ (P.nat_degree - (j + 2)) =
-              (algebraMap R L) p * Q.coeff (j + 1 + k) • f (k + P.nat_degree - 1) :=
+      ∀ k ∈ (range (Q.nat_degree - j)).erase 0,
+        Q.coeff (j + 1 + k) • B.gen ^ (j + 1 + k) * B.gen ^ (P.nat_degree - (j + 2)) =
+          (algebraMap R L) p * Q.coeff (j + 1 + k) • f (k + P.nat_degree - 1) :=
       by
       intro k hk
       rw [smul_mul_assoc, ← pow_addₓ, ← Nat.add_sub_assocₓ H, ← add_assocₓ j 1 1, add_commₓ (j + 1) 1,

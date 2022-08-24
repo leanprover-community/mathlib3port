@@ -67,17 +67,17 @@ def reesAlgebra : Subalgebra R R[X] where
 theorem mem_rees_algebra_iff (f : R[X]) : f ∈ reesAlgebra I ↔ ∀ i, f.coeff i ∈ I ^ i :=
   Iff.rfl
 
-theorem mem_rees_algebra_iff_support (f : R[X]) : f ∈ reesAlgebra I ↔ ∀, ∀ i ∈ f.support, ∀, f.coeff i ∈ I ^ i := by
+theorem mem_rees_algebra_iff_support (f : R[X]) : f ∈ reesAlgebra I ↔ ∀ i ∈ f.support, f.coeff i ∈ I ^ i := by
   apply forall_congrₓ
   intro a
   rw [mem_support_iff, Iff.comm, imp_iff_right_iff, Ne.def, ← imp_iff_not_or]
   exact fun e => e.symm ▸ (I ^ a).zero_mem
 
 theorem reesAlgebra.monomial_mem {I : Ideal R} {i : ℕ} {r : R} : monomial i r ∈ reesAlgebra I ↔ r ∈ I ^ i := by
-  simp (config := { contextual := true })[← mem_rees_algebra_iff_support, ← coeff_monomial, imp_iff_not_or]
+  simp (config := { contextual := true })[mem_rees_algebra_iff_support, coeff_monomial, ← imp_iff_not_or]
 
 theorem monomial_mem_adjoin_monomial {I : Ideal R} {n : ℕ} {r : R} (hr : r ∈ I ^ n) :
-    monomial n r ∈ Algebra.adjoin R (Submodule.map (monomial 1) I : Set R[X]) := by
+    monomial n r ∈ Algebra.adjoin R (Submodule.map (monomial 1 : R →ₗ[R] R[X]) I : Set R[X]) := by
   induction' n with n hn generalizing r
   · exact Subalgebra.algebra_map_mem _ _
     
@@ -93,8 +93,8 @@ theorem monomial_mem_adjoin_monomial {I : Ideal R} {n : ℕ} {r : R} (hr : r ∈
       
     
 
-theorem adjoin_monomial_eq_rees_algebra : Algebra.adjoin R (Submodule.map (monomial 1) I : Set R[X]) = reesAlgebra I :=
-  by
+theorem adjoin_monomial_eq_rees_algebra :
+    Algebra.adjoin R (Submodule.map (monomial 1 : R →ₗ[R] R[X]) I : Set R[X]) = reesAlgebra I := by
   apply le_antisymmₓ
   · apply Algebra.adjoin_le _
     rintro _ ⟨r, hr, rfl⟩
@@ -118,7 +118,7 @@ theorem reesAlgebra.fg (hI : I.Fg) : (reesAlgebra I).Fg := by
   rw [← adjoin_monomial_eq_rees_algebra, ← hs]
   use s.image (monomial 1)
   rw [Finset.coe_image]
-  change _ = Algebra.adjoin R (Submodule.map (monomial 1) (Submodule.span R ↑s) : Set R[X])
+  change _ = Algebra.adjoin R (Submodule.map (monomial 1 : R →ₗ[R] R[X]) (Submodule.span R ↑s) : Set R[X])
   rw [Submodule.map_span, Algebra.adjoin_span]
 
 instance [IsNoetherianRing R] : Algebra.FiniteType R (reesAlgebra I) :=

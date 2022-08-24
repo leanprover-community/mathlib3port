@@ -60,7 +60,7 @@ theorem cast_one : ((1 : ℚ) : α) = 1 :=
   (cast_of_int _).trans Int.cast_oneₓ
 
 theorem cast_commute (r : ℚ) (a : α) : Commute (↑r) a := by
-  simpa only [← cast_def] using (r.1.cast_commute a).div_left (r.2.cast_commute a)
+  simpa only [cast_def] using (r.1.cast_commute a).div_left (r.2.cast_commute a)
 
 theorem cast_comm (r : ℚ) (a : α) : (r : α) * a = a * r :=
   (cast_commute r a).Eq
@@ -104,17 +104,17 @@ theorem cast_add_of_ne_zero : ∀ {m n : ℚ}, (m.denom : α) ≠ 0 → (n.denom
     rw [num_denom', num_denom', add_def d₁0' d₂0']
     suffices (n₁ * (d₂ * (d₂⁻¹ * d₁⁻¹)) + n₂ * (d₁ * d₂⁻¹) * d₁⁻¹ : α) = n₁ * d₁⁻¹ + n₂ * d₂⁻¹ by
       rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero, cast_mk_of_ne_zero]
-      · simpa [← division_def, ← left_distrib, ← right_distrib, ← mul_inv_rev, ← d₁0, ← d₂0, ← mul_assoc]
+      · simpa [division_def, left_distrib, right_distrib, mul_inv_rev, d₁0, d₂0, mul_assoc]
         
       all_goals
-        simp [← d₁0, ← d₂0]
+        simp [d₁0, d₂0]
     rw [← mul_assoc (d₂ : α), mul_inv_cancel d₂0, one_mulₓ, (Nat.cast_commute _ _).Eq]
-    simp [← d₁0, ← mul_assoc]
+    simp [d₁0, mul_assoc]
 
 @[simp, norm_cast]
 theorem cast_neg : ∀ n, ((-n : ℚ) : α) = -n
   | ⟨n, d, h, c⟩ => by
-    simpa only [← cast_def] using
+    simpa only [cast_def] using
       show (↑(-n) / d : α) = -(n / d) by
         rw [div_eq_mul_inv, div_eq_mul_inv, Int.cast_neg, neg_mul_eq_neg_mulₓ]
 
@@ -123,7 +123,7 @@ theorem cast_sub_of_ne_zero {m n : ℚ} (m0 : (m.denom : α) ≠ 0) (n0 : (n.den
   by
   have : ((-n).denom : α) ≠ 0 := by
     cases n <;> exact n0
-  simp [← sub_eq_add_neg, ← cast_add_of_ne_zero m0 this]
+  simp [sub_eq_add_neg, cast_add_of_ne_zero m0 this]
 
 @[norm_cast]
 theorem cast_mul_of_ne_zero : ∀ {m n : ℚ}, (m.denom : α) ≠ 0 → (n.denom : α) ≠ 0 → ((m * n : ℚ) : α) = m * n
@@ -137,10 +137,10 @@ theorem cast_mul_of_ne_zero : ∀ {m n : ℚ}, (m.denom : α) ≠ 0 → (n.denom
     rw [num_denom', num_denom', mul_def d₁0' d₂0']
     suffices (n₁ * (n₂ * d₂⁻¹ * d₁⁻¹) : α) = n₁ * (d₁⁻¹ * (n₂ * d₂⁻¹)) by
       rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero, cast_mk_of_ne_zero]
-      · simpa [← division_def, ← mul_inv_rev, ← d₁0, ← d₂0, ← mul_assoc]
+      · simpa [division_def, mul_inv_rev, d₁0, d₂0, mul_assoc]
         
       all_goals
-        simp [← d₁0, ← d₂0]
+        simp [d₁0, d₂0]
     rw [(d₁.commute_cast (_ : α)).inv_right₀.Eq]
 
 @[simp]
@@ -149,14 +149,14 @@ theorem cast_inv_nat (n : ℕ) : ((n⁻¹ : ℚ) : α) = n⁻¹ := by
   · simp
     
   simp_rw [coe_nat_eq_mk, inv_def, mk, mk_nat, dif_neg n.succ_ne_zero, mk_pnat]
-  simp [← cast_def]
+  simp [cast_def]
 
 @[simp]
 theorem cast_inv_int (n : ℤ) : ((n⁻¹ : ℚ) : α) = n⁻¹ := by
   cases n
-  · simp [← cast_inv_nat]
+  · simp [cast_inv_nat]
     
-  · simp only [← Int.cast_neg_succ_of_nat, Nat.cast_succₓ, ← cast_neg, ← inv_neg, ← cast_inv_nat]
+  · simp only [Int.cast_neg_succ_of_nat, ← Nat.cast_succₓ, cast_neg, inv_neg, cast_inv_nat]
     
 
 @[norm_cast]
@@ -168,7 +168,7 @@ theorem cast_inv_of_ne_zero : ∀ {n : ℚ}, (n.num : α) ≠ 0 → (n.denom : �
       Int.coe_nat_ne_zero.2 fun e => by
         rw [e] at d0 <;> exact d0 Nat.cast_zeroₓ
     rw [num_denom', inv_def]
-    rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero, inv_div] <;> simp [← n0, ← d0]
+    rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero, inv_div] <;> simp [n0, d0]
 
 @[norm_cast]
 theorem cast_div_of_ne_zero {m n : ℚ} (md : (m.denom : α) ≠ 0) (nn : (n.num : α) ≠ 0) (nd : (n.denom : α) ≠ 0) :
@@ -189,7 +189,7 @@ theorem cast_inj [CharZero α] : ∀ {m n : ℚ}, (m : α) = n ↔ m = n
     have d₁a : (d₁ : α) ≠ 0 := Nat.cast_ne_zero.2 d₁0
     have d₂a : (d₂ : α) ≠ 0 := Nat.cast_ne_zero.2 d₂0
     rw [num_denom', num_denom'] at h⊢
-    rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero] at h <;> simp [← d₁0, ← d₂0] at h⊢
+    rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero] at h <;> simp [d₁0, d₂0] at h⊢
     rwa [eq_div_iff_mul_eq d₂a, division_def, mul_assoc, (d₁.cast_commute (d₂ : α)).inv_left₀.Eq, ← mul_assoc, ←
       division_def, eq_comm, eq_div_iff_mul_eq d₁a, eq_comm, ← Int.cast_coe_nat d₁, ← Int.cast_mul, ←
       Int.cast_coe_nat d₂, ← Int.cast_mul, Int.cast_inj, ←
@@ -247,7 +247,7 @@ theorem cast_div (m n) : ((m / n : ℚ) : α) = m / n :=
 
 @[norm_cast]
 theorem cast_mk (a b : ℤ) : (a /. b : α) = a / b := by
-  simp only [← mk_eq_div, ← cast_div, ← cast_coe_int]
+  simp only [mk_eq_div, cast_div, cast_coe_int]
 
 @[simp, norm_cast]
 theorem cast_pow (q) (k : ℕ) : ((q ^ k : ℚ) : α) = q ^ k :=
@@ -322,34 +322,27 @@ theorem cast_hom_rat : castHom ℚ = RingHom.id ℚ :=
 
 @[simp, norm_cast]
 theorem cast_min [LinearOrderedField α] {a b : ℚ} : (↑(min a b) : α) = min a b := by
-  by_cases' a ≤ b <;> simp [← h, ← min_def]
+  by_cases' a ≤ b <;> simp [h, min_def]
 
 @[simp, norm_cast]
 theorem cast_max [LinearOrderedField α] {a b : ℚ} : (↑(max a b) : α) = max a b := by
-  by_cases' b ≤ a <;> simp [← h, ← max_def]
+  by_cases' b ≤ a <;> simp [h, max_def]
 
 @[simp, norm_cast]
 theorem cast_abs [LinearOrderedField α] {q : ℚ} : ((abs q : ℚ) : α) = abs q := by
-  simp [← abs_eq_max_neg]
+  simp [abs_eq_max_neg]
 
 end Rat
 
-open Rat RingHom
+open Rat
 
-theorem RingHom.eq_rat_cast {k} [DivisionRing k] (f : ℚ →+* k) (r : ℚ) : f r = r :=
-  calc
-    f r = f (r.1 / r.2) := by
-      rw [← Int.cast_coe_nat, ← mk_eq_div, num_denom]
-    _ = f r.1 / f r.2 := map_div₀ f _ _
-    _ = r := by
-      rw [map_nat_cast, map_int_cast, cast_def]
-    
-
--- This seems to be true for a `[char_p k]` too because `k'` must have the same characteristic
--- but the proof would be much longer
 @[simp]
-theorem map_rat_cast [DivisionRing α] [DivisionRing β] [CharZero α] [RingHomClass F α β] (f : F) (q : ℚ) : f q = q :=
-  ((f : α →+* β).comp <| castHom α).eq_rat_cast q
+theorem map_rat_cast [DivisionRing α] [DivisionRing β] [RingHomClass F α β] (f : F) (q : ℚ) : f q = q := by
+  rw [cast_def, map_div₀, map_int_cast, map_nat_cast, cast_def]
+
+@[simp]
+theorem eq_rat_cast {k} [DivisionRing k] [RingHomClass F ℚ k] (f : F) (r : ℚ) : f r = r := by
+  rw [← map_rat_cast f, Rat.cast_id]
 
 theorem RingHom.ext_rat {R : Type _} [Semiringₓ R] (f g : ℚ →+* R) : f = g := by
   ext r

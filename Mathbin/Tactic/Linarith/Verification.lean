@@ -50,12 +50,12 @@ along with the name of a lemma to apply in order to conclude `t1 + t2 R 0`.
 -/
 unsafe def ineq_const_nm : Ineq → Ineq → Name × ineq
   | Eq, Eq => (`` eq_of_eq_of_eq, Eq)
-  | Eq, le => (`` le_of_eq_of_le, le)
-  | Eq, lt => (`` lt_of_eq_of_lt, lt)
-  | le, Eq => (`` le_of_le_of_eq, le)
+  | Eq, le => (`` le_of_eq_of_leₓ, le)
+  | Eq, lt => (`` lt_of_eq_of_ltₓ, lt)
+  | le, Eq => (`` le_of_le_of_eqₓ, le)
   | le, le => (`add_nonpos, le)
   | le, lt => (`add_lt_of_le_of_neg, lt)
-  | lt, Eq => (`` lt_of_lt_of_eq, lt)
+  | lt, Eq => (`` lt_of_lt_of_eqₓ, lt)
   | lt, le => (`add_lt_of_neg_of_le, lt)
   | lt, lt => (`left.add_neg, lt)
 

@@ -100,7 +100,7 @@ theorem equiv_punit_iff_unique : Nonempty (C ≌ Discrete PUnit) ↔ Nonempty C 
     apply Subsingleton.intro
     intro a b
     rw [this a, this b]
-    simp only [← functor.comp_map]
+    simp only [functor.comp_map]
     congr
     
   · rintro ⟨⟨p⟩, h⟩

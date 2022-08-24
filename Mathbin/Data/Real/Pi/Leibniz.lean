@@ -51,15 +51,15 @@ theorem tendsto_sum_pi_div_four :
       (((tendsto_rpow_div_mul_add (-1) 2 1 two_ne_zero.symm).neg.const_add 1).add tendsto_inv_at_top_zero).comp
         tendsto_coe_nat_at_top_at_top
     · ext k
-      simp only [← Nnreal.coe_nat_cast, ← Function.comp_app, ← Nnreal.coe_rpow]
+      simp only [Nnreal.coe_nat_cast, Function.comp_app, Nnreal.coe_rpow]
       rw [← rpow_mul (Nat.cast_nonneg k) (-1 / (2 * (k : ℝ) + 1)) (2 * (k : ℝ) + 1),
         @div_mul_cancel _ _ (2 * (k : ℝ) + 1) _
           (by
             norm_cast
-            simp only [← Nat.succ_ne_zero, ← not_false_iff]),
+            simp only [Nat.succ_ne_zero, not_false_iff]),
         rpow_neg_one k, sub_eq_add_neg]
       
-    · simp only [← add_zeroₓ, ← add_right_negₓ]
+    · simp only [add_zeroₓ, add_right_negₓ]
       
   -- (2) We convert the limit in our goal to an inequality
   refine' squeeze_zero_norm _ H
@@ -72,13 +72,13 @@ theorem tendsto_sum_pi_div_four :
   suffices f_bound : |f 1 - f 0| ≤ (1 : ℝ) - U + U ^ (2 * (k : ℝ) + 1)
   · rw [← norm_neg]
     convert f_bound
-    simp only [← f]
-    simp [← b]
+    simp only [f]
+    simp [b]
     
   -- We show that `U` is indeed in [0,1]
   have hU1 : (U : ℝ) ≤ 1 := by
     by_cases' hk : k = 0
-    · simp [← u, ← U, ← hk]
+    · simp [u, U, hk]
       
     · exact
         rpow_le_one_of_one_le_of_nonpos
@@ -96,16 +96,16 @@ theorem tendsto_sum_pi_div_four :
   let f' := fun x : ℝ => -(x ^ 2) ^ k / (1 + x ^ 2)
   have has_deriv_at_f : ∀ x, HasDerivAt f (f' x) x := by
     intro x
-    have has_deriv_at_b : ∀, ∀ i ∈ Finset.range k, ∀, HasDerivAt (b i) (-(x ^ 2) ^ i) x := by
+    have has_deriv_at_b : ∀ i ∈ Finset.range k, HasDerivAt (b i) (-(x ^ 2) ^ i) x := by
       intro i hi
       convert
         HasDerivAt.const_mul ((-1 : ℝ) ^ i / (2 * i + 1)) (@HasDerivAt.pow _ _ _ _ _ (2 * i + 1) (has_deriv_at_id x))
       · ext y
-        simp only [← b, ← id.def]
+        simp only [b, id.def]
         ring
         
-      · simp only [← Nat.add_succ_sub_one, ← add_zeroₓ, ← mul_oneₓ, ← id.def, ← Nat.cast_bit0, ← Nat.cast_addₓ, ←
-          Nat.cast_oneₓ, ← Nat.cast_mulₓ]
+      · simp only [Nat.add_succ_sub_one, add_zeroₓ, mul_oneₓ, id.def, Nat.cast_bit0, Nat.cast_addₓ, Nat.cast_oneₓ,
+          Nat.cast_mulₓ]
         rw [← mul_assoc,
           @div_mul_cancel _ _ (2 * (i : ℝ) + 1) _
             (by
@@ -116,28 +116,28 @@ theorem tendsto_sum_pi_div_four :
         
     convert (has_deriv_at_arctan x).sub (HasDerivAt.sum has_deriv_at_b)
     have g_sum := @geom_sum_eq _ _ (-(x ^ 2)) ((neg_nonpos.mpr (sq_nonneg x)).trans_lt zero_lt_one).Ne k
-    simp only [← f'] at g_sum⊢
+    simp only [f'] at g_sum⊢
     rw [g_sum, ← neg_add' (x ^ 2) 1, add_commₓ (x ^ 2) 1, sub_eq_add_neg, neg_div', neg_div_neg_eq]
     ring
-  have hderiv1 : ∀, ∀ x ∈ Icc (U : ℝ) 1, ∀, HasDerivWithinAt f (f' x) (Icc (U : ℝ) 1) x := fun x hx =>
+  have hderiv1 : ∀ x ∈ Icc (U : ℝ) 1, HasDerivWithinAt f (f' x) (Icc (U : ℝ) 1) x := fun x hx =>
     (has_deriv_at_f x).HasDerivWithinAt
-  have hderiv2 : ∀, ∀ x ∈ Icc 0 (U : ℝ), ∀, HasDerivWithinAt f (f' x) (Icc 0 (U : ℝ)) x := fun x hx =>
+  have hderiv2 : ∀ x ∈ Icc 0 (U : ℝ), HasDerivWithinAt f (f' x) (Icc 0 (U : ℝ)) x := fun x hx =>
     (has_deriv_at_f x).HasDerivWithinAt
   -- (5) We prove a general bound for `f'` and then more precise bounds on each of two subintervals
-  have f'_bound : ∀, ∀ x ∈ Icc (-1 : ℝ) 1, ∀, |f' x| ≤ |x| ^ (2 * k) := by
+  have f'_bound : ∀ x ∈ Icc (-1 : ℝ) 1, |f' x| ≤ |x| ^ (2 * k) := by
     intro x hx
     rw [abs_div, IsAbsoluteValue.abv_pow abs (-(x ^ 2)) k, abs_neg, IsAbsoluteValue.abv_pow abs x 2, ← pow_mulₓ]
     refine' div_le_of_nonneg_of_le_mul (abs_nonneg _) (pow_nonneg (abs_nonneg _) _) _
     refine' le_mul_of_one_le_right (pow_nonneg (abs_nonneg _) _) _
     rw [abs_of_nonneg (add_nonneg zero_le_one (sq_nonneg x) : (0 : ℝ) ≤ _)]
     exact (le_add_of_nonneg_right (sq_nonneg x) : (1 : ℝ) ≤ _)
-  have hbound1 : ∀, ∀ x ∈ Ico (U : ℝ) 1, ∀, |f' x| ≤ 1 := by
+  have hbound1 : ∀ x ∈ Ico (U : ℝ) 1, |f' x| ≤ 1 := by
     rintro x ⟨hx_left, hx_right⟩
     have hincr := pow_le_pow_of_le_left (le_transₓ hU2 hx_left) (le_of_ltₓ hx_right) (2 * k)
     rw [one_pow (2 * k), ← abs_of_nonneg (le_transₓ hU2 hx_left)] at hincr
     rw [← abs_of_nonneg (le_transₓ hU2 hx_left)] at hx_right
     linarith [f'_bound x (mem_Icc.mpr (abs_le.mp (le_of_ltₓ hx_right)))]
-  have hbound2 : ∀, ∀ x ∈ Ico 0 (U : ℝ), ∀, |f' x| ≤ U ^ (2 * k) := by
+  have hbound2 : ∀ x ∈ Ico 0 (U : ℝ), |f' x| ≤ U ^ (2 * k) := by
     rintro x ⟨hx_left, hx_right⟩
     have hincr := pow_le_pow_of_le_left hx_left (le_of_ltₓ hx_right) (2 * k)
     rw [← abs_of_nonneg hx_left] at hincr hx_right

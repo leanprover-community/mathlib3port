@@ -126,7 +126,7 @@ theorem trailing_degree_mul : (p * q).trailingDegree = p.trailingDegree + q.trai
 theorem nat_degree_pow (p : R[X]) (n : ℕ) : natDegree (p ^ n) = n * natDegree p :=
   if hp0 : p = 0 then
     if hn0 : n = 0 then by
-      simp [← hp0, ← hn0]
+      simp [hp0, hn0]
     else by
       rw [hp0, zero_pow (Nat.pos_of_ne_zeroₓ hn0)] <;> simp
   else
@@ -136,7 +136,7 @@ theorem nat_degree_pow (p : R[X]) (n : ℕ) : natDegree (p ^ n) = n * natDegree 
 
 theorem degree_le_mul_left (p : R[X]) (hq : q ≠ 0) : degree p ≤ degree (p * q) :=
   if hp : p = 0 then by
-    simp only [← hp, ← zero_mul, ← le_reflₓ]
+    simp only [hp, zero_mul, le_reflₓ]
   else by
     rw [degree_mul, degree_eq_nat_degree hp, degree_eq_nat_degree hq] <;>
       exact WithBot.coe_le_coe.2 (Nat.le_add_rightₓ _ _)
@@ -194,9 +194,9 @@ open Multiset
 theorem degree_eq_zero_of_is_unit (h : IsUnit p) : degree p = 0 := by
   let ⟨q, hq⟩ := is_unit_iff_dvd_one.1 h
   have hp0 : p ≠ 0 := fun hp0 => by
-    simpa [← hp0] using hq
+    simpa [hp0] using hq
   have hq0 : q ≠ 0 := fun hp0 => by
-    simpa [← hp0] using hq
+    simpa [hp0] using hq
   have : natDegree (1 : R[X]) = natDegree (p * q) := congr_arg _ hq
   rw [nat_degree_one, nat_degree_mul hp0 hq0, eq_comm, _root_.add_eq_zero_iff, ← WithBot.coe_eq_coe, ←
       degree_eq_nat_degree hp0] at this <;>
@@ -217,7 +217,7 @@ theorem prime_X : Prime (x : R[X]) := by
 
 theorem Monic.prime_of_degree_eq_one (hp1 : degree p = 1) (hm : Monic p) : Prime p :=
   have : p = X - c (-p.coeff 0) := by
-    simpa [← hm.leading_coeff] using eq_X_add_C_of_degree_eq_one hp1
+    simpa [hm.leading_coeff] using eq_X_add_C_of_degree_eq_one hp1
   this.symm ▸ prime_X_sub_C _
 
 theorem irreducible_X_sub_C (r : R) : Irreducible (X - c r) :=
@@ -258,11 +258,11 @@ theorem root_multiplicity_X_sub_C {x y : R} : rootMultiplicity x (X - c y) = if 
 theorem root_multiplicity_X_sub_C_pow (a : R) (n : ℕ) : rootMultiplicity a ((X - c a) ^ n) = n := by
   induction' n with n hn
   · refine' root_multiplicity_eq_zero _
-    simp only [← eval_one, ← is_root.def, ← not_false_iff, ← one_ne_zero, ← pow_zeroₓ]
+    simp only [eval_one, is_root.def, not_false_iff, one_ne_zero, pow_zeroₓ]
     
   have hzero := pow_ne_zero n.succ (X_sub_C_ne_zero a)
   rw [pow_succₓ (X - C a) n] at hzero⊢
-  simp only [← root_multiplicity_mul hzero, ← root_multiplicity_X_sub_C_self, ← hn, ← Nat.one_add]
+  simp only [root_multiplicity_mul hzero, root_multiplicity_X_sub_C_self, hn, Nat.one_add]
 
 /-- If `(X - a) ^ n` divides a polynomial `p` then the multiplicity of `a` as root of `p` is at
 least `n`. -/
@@ -270,7 +270,7 @@ theorem root_multiplicity_of_dvd {p : R[X]} {a : R} {n : ℕ} (hzero : p ≠ 0) 
     n ≤ rootMultiplicity a p := by
   obtain ⟨q, hq⟩ := exists_eq_mul_right_of_dvd h
   rw [hq] at hzero
-  simp only [← hq, ← root_multiplicity_mul hzero, ← root_multiplicity_X_sub_C_pow, ← ge_iff_le, ← _root_.zero_le, ←
+  simp only [hq, root_multiplicity_mul hzero, root_multiplicity_X_sub_C_pow, ge_iff_leₓ, _root_.zero_le,
     le_add_iff_nonneg_right]
 
 /-- The multiplicity of `p + q` is at least the minimum of the multiplicities. -/
@@ -338,7 +338,7 @@ theorem card_roots (hp0 : p ≠ 0) : ((roots p).card : WithBot ℕ) ≤ degree p
 
 theorem card_roots' (p : R[X]) : p.roots.card ≤ natDegree p := by
   by_cases' hp0 : p = 0
-  · simp [← hp0]
+  · simp [hp0]
     
   exact WithBot.coe_le_coe.1 (le_transₓ (card_roots hp0) (le_of_eqₓ <| degree_eq_nat_degree hp0))
 
@@ -355,12 +355,12 @@ theorem card_roots_sub_C' {p : R[X]} {a : R} (hp0 : 0 < degree p) : (p - c a).ro
     (le_transₓ (card_roots_sub_C hp0)
       (le_of_eqₓ <|
         degree_eq_nat_degree fun h => by
-          simp_all [← lt_irreflₓ]))
+          simp_all [lt_irreflₓ]))
 
 @[simp]
 theorem count_roots (p : R[X]) : p.roots.count a = rootMultiplicity a p := by
   by_cases' hp : p = 0
-  · simp [← hp]
+  · simp [hp]
     
   rw [roots, dif_neg hp]
   exact (Classical.some_spec (exists_multiset_roots hp)).2 a
@@ -379,7 +379,7 @@ theorem card_le_degree_of_subset_roots {p : R[X]} {Z : Finset R} (h : Z.val ⊆ 
   (Multiset.card_le_of_le (Finset.val_le_iff_val_subset.2 h)).trans (Polynomial.card_roots' p)
 
 theorem finite_set_of_is_root {p : R[X]} (hp : p ≠ 0) : Set.Finite { x | IsRoot p x } := by
-  simpa only [Finset.set_of_mem, ← mem_to_finset, ← mem_roots hp] using p.roots.to_finset.finite_to_set
+  simpa only [← Finset.set_of_mem, mem_to_finset, mem_roots hp] using p.roots.to_finset.finite_to_set
 
 theorem eq_zero_of_infinite_is_root (p : R[X]) (h : Set.Infinite { x | IsRoot p x }) : p = 0 :=
   not_imp_comm.mp finite_set_of_is_root h
@@ -393,7 +393,7 @@ theorem exists_min_root [LinearOrderₓ R] (p : R[X]) (hp : p ≠ 0) : ∃ x₀,
 theorem eq_of_infinite_eval_eq (p q : R[X]) (h : Set.Infinite { x | eval x p = eval x q }) : p = q := by
   rw [← sub_eq_zero]
   apply eq_zero_of_infinite_is_root
-  simpa only [← is_root, ← eval_sub, ← sub_eq_zero]
+  simpa only [is_root, eval_sub, sub_eq_zero]
 
 theorem roots_mul {p q : R[X]} (hpq : p * q ≠ 0) : (p * q).roots = p.roots + q.roots :=
   Multiset.ext.mpr fun r => by
@@ -416,7 +416,7 @@ theorem roots_X_sub_C (r : R) : roots (X - c r) = {r} := by
   split_ifs with h
   · rw [h, count_singleton_self]
     
-  · rw [singleton_eq_cons, count_cons_of_ne h, count_zero]
+  · rw [← cons_zero, count_cons_of_ne h, count_zero]
     
 
 @[simp]
@@ -432,7 +432,7 @@ theorem roots_one : (1 : R[X]).roots = ∅ :=
   roots_C 1
 
 theorem roots_smul_nonzero (p : R[X]) {r : R} (hr : r ≠ 0) : (r • p).roots = p.roots := by
-  by_cases' hp : p = 0 <;> simp [← smul_eq_C_mul, ← roots_mul, ← hr, ← hp]
+  by_cases' hp : p = 0 <;> simp [smul_eq_C_mul, roots_mul, hr, hp]
 
 theorem roots_list_prod (L : List R[X]) : (0 : R[X]) ∉ L → L.Prod.roots = (L : Multiset R[X]).bind roots :=
   (List.recOn L fun _ => roots_one) fun hd tl ih H => by
@@ -442,12 +442,12 @@ theorem roots_list_prod (L : List R[X]) : (0 : R[X]) ∉ L → L.Prod.roots = (L
 
 theorem roots_multiset_prod (m : Multiset R[X]) : (0 : R[X]) ∉ m → m.Prod.roots = m.bind roots := by
   rcases m with ⟨L⟩
-  simpa only [← Multiset.coe_prod, ← quot_mk_to_coe''] using roots_list_prod L
+  simpa only [Multiset.coe_prod, quot_mk_to_coe''] using roots_list_prod L
 
 theorem roots_prod {ι : Type _} (f : ι → R[X]) (s : Finset ι) :
     s.Prod f ≠ 0 → (s.Prod f).roots = s.val.bind fun i => roots (f i) := by
   rcases s with ⟨m, hm⟩
-  simpa [← Multiset.prod_eq_zero_iff, ← bind_map] using roots_multiset_prod (m.map f)
+  simpa [Multiset.prod_eq_zero_iff, bind_map] using roots_multiset_prod (m.map f)
 
 theorem roots_prod_X_sub_C (s : Finset R) : (s.Prod fun a => X - c a).roots = s.val :=
   (roots_prod (fun a => X - c a) s (prod_ne_zero_iff.mpr fun a _ => X_sub_C_ne_zero a)).trans
@@ -497,25 +497,25 @@ theorem le_root_multiplicity_map {p : A[X]} {f : A →+* B} (hmap : map f p ≠ 
     rootMultiplicity a p ≤ rootMultiplicity (f a) (map f p) := by
   have hp0 : p ≠ 0 := fun h => hmap (h.symm ▸ Polynomial.map_zero f)
   rw [root_multiplicity, root_multiplicity, dif_neg hp0, dif_neg hmap]
-  simp only [← not_not, ← Nat.lt_find_iff, ← Nat.le_find_iff]
+  simp only [not_not, Nat.lt_find_iff, Nat.le_find_iff]
   intro m hm
-  have := (map_ring_hom f).map_dvd (hm m le_rfl)
-  simpa only [← coe_map_ring_hom, ← map_pow, ← map_sub, ← map_X, ← map_C]
+  have := (map_ring_hom f).map_dvd (hm m le_rflₓ)
+  simpa only [coe_map_ring_hom, map_pow, map_sub, map_X, map_C]
 
 theorem eq_root_multiplicity_map {p : A[X]} {f : A →+* B} (hf : Function.Injective f) (a : A) :
     rootMultiplicity a p = rootMultiplicity (f a) (map f p) := by
   by_cases' hp0 : p = 0
-  · simp only [← hp0, ← root_multiplicity_zero, ← Polynomial.map_zero]
+  · simp only [hp0, root_multiplicity_zero, Polynomial.map_zero]
     
   have hmap : map f p ≠ 0 := by
-    simpa only [← Polynomial.map_zero] using (map_injective f hf).Ne hp0
+    simpa only [Polynomial.map_zero] using (map_injective f hf).Ne hp0
   apply le_antisymmₓ (le_root_multiplicity_map hmap a)
   rw [root_multiplicity, root_multiplicity, dif_neg hp0, dif_neg hmap]
-  simp only [← not_not, ← Nat.lt_find_iff, ← Nat.le_find_iff]
+  simp only [not_not, Nat.lt_find_iff, Nat.le_find_iff]
   intro m hm
   rw [← map_dvd_map f hf ((monic_X_sub_C a).pow _)]
-  convert hm m le_rfl
-  simp only [← Polynomial.map_pow, ← Polynomial.map_sub, ← map_pow, ← map_sub, ← map_X, ← map_C]
+  convert hm m le_rflₓ
+  simp only [Polynomial.map_pow, Polynomial.map_sub, map_pow, map_sub, map_X, map_C]
 
 theorem count_map_roots [IsDomain A] (p : A[X]) {f : A →+* B} (hf : Function.Injective f) (a : B) :
     count a (p.roots.map f) ≤ rootMultiplicity a (map f p) := by
@@ -535,14 +535,14 @@ theorem count_map_roots [IsDomain A] (p : A[X]) {f : A →+* B} (hf : Function.I
 theorem roots_map_of_injective_card_eq_total_degree [IsDomain A] [IsDomain B] {p : A[X]} {f : A →+* B}
     (hf : Function.Injective f) (hroots : p.roots.card = p.natDegree) : p.roots.map f = (map f p).roots := by
   by_cases' hp0 : p = 0
-  · simp only [← hp0, ← roots_zero, ← Multiset.map_zero, ← Polynomial.map_zero]
+  · simp only [hp0, roots_zero, Multiset.map_zero, Polynomial.map_zero]
     
   have hmap : map f p ≠ 0 := by
-    simpa only [← Polynomial.map_zero] using (map_injective f hf).Ne hp0
+    simpa only [Polynomial.map_zero] using (map_injective f hf).Ne hp0
   apply Multiset.eq_of_le_of_card_le
-  · simpa only [← Multiset.le_iff_count, ← count_roots] using count_map_roots p hf
+  · simpa only [Multiset.le_iff_count, count_roots] using count_map_roots p hf
     
-  · simpa only [← Multiset.card_map, ← hroots] using (card_roots' _).trans (nat_degree_map_le f p)
+  · simpa only [Multiset.card_map, hroots] using (card_roots' _).trans (nat_degree_map_le f p)
     
 
 end
@@ -559,12 +559,12 @@ theorem mem_nth_roots {n : ℕ} (hn : 0 < n) {a x : R} : x ∈ nthRoots n a ↔ 
 
 @[simp]
 theorem nth_roots_zero (r : R) : nthRoots 0 r = 0 := by
-  simp only [← empty_eq_zero, ← pow_zeroₓ, ← nth_roots, C_1, C_sub, ← roots_C]
+  simp only [empty_eq_zero, pow_zeroₓ, nth_roots, ← C_1, ← C_sub, roots_C]
 
 theorem card_nth_roots (n : ℕ) (a : R) : (nthRoots n a).card ≤ n :=
   if hn : n = 0 then
     if h : (x : R[X]) ^ n - c a = 0 then by
-      simp only [← Nat.zero_leₓ, ← nth_roots, ← roots, ← h, ← dif_pos rfl, ← empty_eq_zero, ← card_zero]
+      simp only [Nat.zero_leₓ, nth_roots, roots, h, dif_pos rfl, empty_eq_zero, card_zero]
     else
       WithBot.coe_le_coe.1
         (le_transₓ (card_roots h)
@@ -585,7 +585,7 @@ theorem mem_nth_roots_finset {n : ℕ} (h : 0 < n) {x : R} : x ∈ nthRootsFinse
 
 @[simp]
 theorem nth_roots_finset_zero : nthRootsFinset 0 R = ∅ := by
-  simp [← nth_roots_finset]
+  simp [nth_roots_finset]
 
 end NthRoots
 
@@ -713,7 +713,7 @@ theorem coeff_coe_units_zero_ne_zero (u : R[X]ˣ) : coeff (u : R[X]) 0 ≠ 0 := 
 
 theorem degree_eq_degree_of_associated (h : Associated p q) : degree p = degree q := by
   let ⟨u, hu⟩ := h
-  simp [← hu.symm]
+  simp [hu.symm]
 
 theorem degree_eq_one_of_irreducible_of_root (hi : Irreducible p) {x : R} (hx : IsRoot p x) : degree p = 1 :=
   let ⟨g, hg⟩ := dvd_iff_is_root.2 hx
@@ -735,7 +735,7 @@ theorem leading_coeff_div_by_monic_of_monic {R : Type u} [CommRingₓ R] {p q : 
     (hdegree : q.degree ≤ p.degree) : (p /ₘ q).leadingCoeff = p.leadingCoeff := by
   nontriviality
   have h : q.leading_coeff * (p /ₘ q).leadingCoeff ≠ 0 := by
-    simpa [← div_by_monic_eq_zero_iff hmonic, ← hmonic.leading_coeff, ← Nat.WithBot.one_le_iff_zero_lt] using hdegree
+    simpa [div_by_monic_eq_zero_iff hmonic, hmonic.leading_coeff, Nat.WithBot.one_le_iff_zero_lt] using hdegree
   nth_rw_rhs 0[← mod_by_monic_add_div p hmonic]
   rw [leading_coeff_add_of_degree_lt, leading_coeff_monic_mul hmonic]
   rw [degree_mul' h, degree_add_div_by_monic hmonic hdegree]
@@ -757,7 +757,7 @@ theorem eq_leading_coeff_mul_of_monic_of_dvd_of_nat_degree_le {R} [CommRingₓ R
   · simp
     
   have rzero : r ≠ 0 := fun h => by
-    simpa [← h, ← hq] using hr
+    simpa [h, hq] using hr
   rw [hr, nat_degree_mul'] at hdeg
   swap
   · rw [hp.leading_coeff, one_mulₓ, leading_coeff_ne_zero]
@@ -792,7 +792,7 @@ theorem monic_prod_multiset_X_sub_C : Monic (p.roots.map fun a => X - c a).Prod 
 
 theorem prod_multiset_root_eq_finset_root :
     (p.roots.map fun a => X - c a).Prod = p.roots.toFinset.Prod fun a => (X - c a) ^ rootMultiplicity a p := by
-  simp only [← count_roots, ← Finset.prod_multiset_map_count]
+  simp only [count_roots, Finset.prod_multiset_map_count]
 
 /-- The product `∏ (X - a)` for `a` inside the multiset `p.roots` divides `p`. -/
 theorem prod_multiset_X_sub_C_dvd (p : R[X]) : (p.roots.map fun a => X - c a).Prod ∣ p := by
@@ -875,7 +875,7 @@ A special case of this lemma is that a polynomial over `ℤ` is irreducible if
 theorem Monic.irreducible_of_irreducible_map (f : R[X]) (h_mon : Monic f) (h_irr : Irreducible (map φ f)) :
     Irreducible f := by
   refine' ⟨h_irr.not_unit ∘ IsUnit.map (map_ring_hom φ), fun a b h => _⟩
-  dsimp' [← monic]  at h_mon
+  dsimp' [monic]  at h_mon
   have q := (leading_coeff_mul a b).symm
   rw [← h, h_mon] at q
   refine' (h_irr.is_unit_or_is_unit <| (congr_arg (map φ) h).trans (Polynomial.map_mul φ)).imp _ _ <;>

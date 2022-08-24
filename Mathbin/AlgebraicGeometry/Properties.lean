@@ -184,7 +184,7 @@ theorem eq_zero_of_basic_open_empty {X : Scheme} [hX : IsReduced X] {U : Opens X
           trivial⟩
     · rw [← Scheme.preimage_basic_open, hs]
       ext1
-      simp [← opens.map]
+      simp [opens.map]
       
     · erw [← PresheafedSpace.stalk_map_germ_apply f.1 ⟨_, _⟩ ⟨x, _⟩] at H
       apply_fun inv <| PresheafedSpace.stalk_map f.val x  at H
@@ -313,7 +313,7 @@ instance {R : CommRingₓₓ} [H : IsDomain R] : IsIntegral (Scheme.spec.obj <| 
   apply is_integral_of_is_irreducible_is_reduced with { instances := false }
   · infer_instance
     
-  · dsimp' [← Spec.Top_obj]
+  · dsimp' [Spec.Top_obj]
     infer_instance
     
 

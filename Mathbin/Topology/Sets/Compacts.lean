@@ -137,10 +137,10 @@ protected def equiv (f : α ≃ₜ β) : Compacts α ≃ Compacts β where
   invFun := Compacts.map _ f.symm.Continuous
   left_inv := fun s => by
     ext1
-    simp only [← coe_map, image_comp, ← f.symm_comp_self, ← image_id]
+    simp only [coe_map, ← image_comp, f.symm_comp_self, image_id]
   right_inv := fun s => by
     ext1
-    simp only [← coe_map, image_comp, ← f.self_comp_symm, ← image_id]
+    simp only [coe_map, ← image_comp, f.self_comp_symm, image_id]
 
 /-- The image of a compact set under a homeomorphism can also be expressed as a preimage. -/
 theorem equiv_to_fun_val (f : α ≃ₜ β) (K : Compacts α) : (Compacts.equiv f K).1 = f.symm ⁻¹' K.1 :=
@@ -315,7 +315,7 @@ instance nonempty' [LocallyCompactSpace α] [Nonempty α] : Nonempty (PositiveCo
 protected def prod (K : PositiveCompacts α) (L : PositiveCompacts β) : PositiveCompacts (α × β) :=
   { K.toCompacts.Prod L.toCompacts with
     interior_nonempty' := by
-      simp only [← compacts.carrier_eq_coe, ← compacts.coe_prod, ← interior_prod_eq]
+      simp only [compacts.carrier_eq_coe, compacts.coe_prod, interior_prod_eq]
       exact K.interior_nonempty.prod L.interior_nonempty }
 
 @[simp]
@@ -381,7 +381,7 @@ instance [CompactSpace α] : HasTop (CompactOpens α) :=
 instance : HasBot (CompactOpens α) :=
   ⟨⟨⊥, is_open_empty⟩⟩
 
-instance [T2Space α] : HasSdiff (CompactOpens α) :=
+instance [T2Space α] : Sdiff (CompactOpens α) :=
   ⟨fun s t => ⟨⟨s \ t, s.compact.diff t.open⟩, s.open.sdiff t.compact.IsClosed⟩⟩
 
 instance [T2Space α] [CompactSpace α] : HasCompl (CompactOpens α) :=

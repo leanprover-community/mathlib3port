@@ -71,7 +71,7 @@ theorem is_zero_of_subsingleton (V : SemiNormedGroup) [Subsingleton V] : Limits.
   refine' ⟨fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩
   · ext
     have : x = 0 := Subsingleton.elimₓ _ _
-    simp only [← this, ← map_zero]
+    simp only [this, map_zero]
     
   · ext
     apply Subsingleton.elimₓ
@@ -178,7 +178,7 @@ instance : Limits.HasZeroMorphisms.{u, u + 1} SemiNormedGroup₁ where
     rfl
   zero_comp' := fun X Y Z f => by
     ext
-    simp [← coe_fn_coe_base']
+    simp [coe_fn_coe_base']
 
 @[simp]
 theorem zero_apply {V W : SemiNormedGroup₁} (x : V) : (0 : V ⟶ W) x = 0 :=
@@ -188,7 +188,7 @@ theorem is_zero_of_subsingleton (V : SemiNormedGroup₁) [Subsingleton V] : Limi
   refine' ⟨fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩
   · ext
     have : x = 0 := Subsingleton.elimₓ _ _
-    simp only [← this, ← map_zero]
+    simp only [this, map_zero]
     exact map_zero f.1
     
   · ext

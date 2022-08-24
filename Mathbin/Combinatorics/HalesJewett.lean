@@ -113,7 +113,7 @@ Used in the proof `exists_mono_in_high_dimension`. -/
 structure ColorFocused {α ι κ : Type _} (C : (ι → Option α) → κ) where
   lines : Multiset (AlmostMono C)
   focus : ι → Option α
-  is_focused : ∀, ∀ p ∈ lines, ∀, AlmostMono.line p none = focus
+  is_focused : ∀ p ∈ lines, AlmostMono.line p none = focus
   distinct_colors : (lines.map AlmostMono.color).Nodup
 
 instance {α ι κ} (C : (ι → Option α) → κ) : Inhabited (ColorFocused C) :=
@@ -146,14 +146,14 @@ theorem apply {α ι} (l : Line α ι) (x : α) : l x = fun i => (l.idxFun i).ge
   rfl
 
 theorem apply_none {α ι} (l : Line α ι) (x : α) (i : ι) (h : l.idxFun i = none) : l x i = x := by
-  simp only [← Option.get_or_else_none, ← h, ← l.apply]
+  simp only [Option.get_or_else_none, h, l.apply]
 
 theorem apply_of_ne_none {α ι} (l : Line α ι) (x : α) (i : ι) (h : l.idxFun i ≠ none) : some (l x i) = l.idxFun i := by
   rw [l.apply, Option.get_or_else_of_ne_none h]
 
 @[simp]
 theorem map_apply {α α' ι} (f : α → α') (l : Line α ι) (x : α) : l.map f (f x) = f ∘ l x := by
-  simp only [← line.apply, ← line.map, ← Option.get_or_else_map]
+  simp only [line.apply, line.map, Option.get_or_else_map]
 
 @[simp]
 theorem vertical_apply {α ι ι'} (v : ι → α) (l : Line α ι') (x : α) : l.vertical v x = Sum.elim v (l x) := by
@@ -316,7 +316,7 @@ end Line
 /-- A generalization of Van der Waerden's theorem: if `M` is a finitely colored commutative
 monoid, and `S` is a finite subset, then there exists a monochromatic homothetic copy of `S`. -/
 theorem exists_mono_homothetic_copy {M κ : Type _} [AddCommMonoidₓ M] (S : Finset M) [Finite κ] (C : M → κ) :
-    ∃ a > 0, ∃ (b : M)(c : κ), ∀, ∀ s ∈ S, ∀, C (a • s + b) = c := by
+    ∃ a > 0, ∃ (b : M)(c : κ), ∀ s ∈ S, C (a • s + b) = c := by
   obtain ⟨ι, _inst, hι⟩ := line.exists_mono_in_high_dimension S κ
   skip
   specialize hι fun v => C <| ∑ i, v i

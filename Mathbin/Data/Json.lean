@@ -37,7 +37,7 @@ unsafe instance :
     | success x => success x
     | exception msg => g
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`of_json] []
+-- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`of_json] []
 /-- A class to indicate that a type is json serializable -/
 unsafe class json_serializable (α : Type) where
   to_json : α → json
@@ -175,7 +175,7 @@ unsafe def json_serializable.field_terminator (l : List (Stringₓ × json)) : e
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- ``((c_name, c_fun), [(p_name, p_fun), ...]) ← get_constructor_and_projections `(struct n)``
 gets the names and partial invocations of the constructor and projections of a structure -/
 unsafe def get_constructor_and_projections (t : expr) : tactic (Name × (Name × expr) × List (Name × expr)) := do
@@ -190,7 +190,7 @@ unsafe def get_constructor_and_projections (t : expr) : tactic (Name × (Name ×
   let ctor_type ← infer_type ctor.2
   let tt ← pure ctor_type.is_pi | pure (I, ctor, [])
   let some fields ← pure (env.structure_fields I) |
-    "./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   let projs ←
     fields.mmap fun f => do
         let d ← get_decl (I ++ f)
@@ -239,7 +239,7 @@ unsafe def of_json_helper (struct_name : Name) (t : expr) :
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- A derive handler to serialize structures by their fields.
 
 For the following structure:
@@ -289,7 +289,7 @@ unsafe def non_null_json_serializable_handler : derive_handler :=
           let s ← infer_type t
           let expr.sort (level.succ u) ← pure s | pure (none : Option expr)
           let level.zero ← pure u |
-            "./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+            "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
           let j ← tactic.mk_app `json_serializable.to_json [x_e]
           pure (some (quote.1 ((%%ₓquote.1 f.toString, %%ₓj) : Stringₓ × json)))
     tactic.exact (projs (quote.1 (Stringₓ × json)) level.zero)

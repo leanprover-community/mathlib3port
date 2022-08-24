@@ -236,7 +236,7 @@ theorem pair_mk_mk (f : α → β) (hf) (g : α → γ) (hg) :
 
 theorem pair_eq_mk (f : α →ₘ[μ] β) (g : α →ₘ[μ] γ) :
     f.pair g = mk (fun x => (f x, g x)) (f.AeStronglyMeasurable.prod_mk g.AeStronglyMeasurable) := by
-  simp only [pair_mk_mk, ← mk_coe_fn]
+  simp only [← pair_mk_mk, mk_coe_fn]
 
 theorem coe_fn_pair (f : α →ₘ[μ] β) (g : α →ₘ[μ] γ) : f.pair g =ᵐ[μ] fun x => (f x, g x) := by
   rw [pair_eq_mk]
@@ -711,7 +711,7 @@ theorem lintegral_eq_zero_iff {f : α →ₘ[μ] ℝ≥0∞} : lintegral f = 0 �
 
 theorem lintegral_add (f g : α →ₘ[μ] ℝ≥0∞) : lintegral (f + g) = lintegral f + lintegral g :=
   (induction_on₂ f g) fun f hf g hg => by
-    simp [← lintegral_add_left' hf.ae_measurable]
+    simp [lintegral_add_left' hf.ae_measurable]
 
 theorem lintegral_mono {f g : α →ₘ[μ] ℝ≥0∞} : f ≤ g → lintegral f ≤ lintegral g :=
   (induction_on₂ f g) fun f hf g hg hfg => lintegral_mono_ae hfg

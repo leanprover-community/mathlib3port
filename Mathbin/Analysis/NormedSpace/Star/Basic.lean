@@ -77,7 +77,7 @@ class CstarRing (E : Type _) [NonUnitalNormedRing E] [StarRing E] : Prop where
 
 instance :
     CstarRing ℝ where norm_star_mul_self := fun x => by
-    simp only [← star, ← id.def, ← norm_mul]
+    simp only [star, id.def, norm_mul]
 
 namespace CstarRing
 
@@ -91,7 +91,7 @@ instance (priority := 100) to_normed_star_group : NormedStarGroup E :=
   ⟨by
     intro x
     by_cases' htriv : x = 0
-    · simp only [← htriv, ← star_zero]
+    · simp only [htriv, star_zero]
       
     · have hnt : 0 < ∥x∥ := norm_pos_iff.mpr htriv
       have hnt_star : 0 < ∥x⋆∥ := norm_pos_iff.mpr ((AddEquiv.map_ne_zero_iff starAddEquiv).mpr htriv)
@@ -111,7 +111,7 @@ instance (priority := 100) to_normed_star_group : NormedStarGroup E :=
 
 theorem norm_self_mul_star {x : E} : ∥x * x⋆∥ = ∥x∥ * ∥x∥ := by
   nth_rw 0[← star_star x]
-  simp only [← norm_star_mul_self, ← norm_star]
+  simp only [norm_star_mul_self, norm_star]
 
 theorem norm_star_mul_self' {x : E} : ∥x⋆ * x∥ = ∥x⋆∥ * ∥x∥ := by
   rw [norm_star_mul_self, norm_star]
@@ -174,7 +174,7 @@ theorem norm_mem_unitary_mul {U : E} (A : E) (hU : U ∈ unitary E) : ∥U * A�
 theorem norm_mul_coe_unitary (A : E) (U : unitary E) : ∥A * U∥ = ∥A∥ :=
   calc
     _ = ∥((U : E)⋆ * A⋆)⋆∥ := by
-      simp only [← star_star, ← star_mul]
+      simp only [star_star, star_mul]
     _ = ∥(U : E)⋆ * A⋆∥ := by
       rw [norm_star]
     _ = ∥A⋆∥ := norm_mem_unitary_mul (star A) (unitary.star_mem U.Prop)
@@ -191,7 +191,7 @@ end CstarRing
 theorem nnnorm_pow_two_pow_of_self_adjoint [NormedRing E] [StarRing E] [CstarRing E] {x : E} (hx : x ∈ selfAdjoint E)
     (n : ℕ) : ∥x ^ 2 ^ n∥₊ = ∥x∥₊ ^ 2 ^ n := by
   induction' n with k hk
-  · simp only [← pow_zeroₓ, ← pow_oneₓ]
+  · simp only [pow_zeroₓ, pow_oneₓ]
     
   · rw [pow_succₓ, pow_mul', sq]
     nth_rw 0[← self_adjoint.mem_iff.mp hx]

@@ -36,7 +36,7 @@ def image₂ (f : α → β → γ) (s : Finset α) (t : Finset β) : Finset γ 
 
 @[simp]
 theorem mem_image₂ : c ∈ image₂ f s t ↔ ∃ a b, a ∈ s ∧ b ∈ t ∧ f a b = c := by
-  simp [← image₂, ← and_assoc]
+  simp [image₂, and_assoc]
 
 @[simp, norm_cast]
 theorem coe_image₂ (f : α → β → γ) (s : Finset α) (t : Finset β) : (image₂ f s t : Set γ) = Set.Image2 f s t :=
@@ -74,11 +74,11 @@ theorem image_subset_image₂_left (hb : b ∈ t) : (fun a => f a b) '' s ⊆ im
 theorem image_subset_image₂_right (ha : a ∈ s) : f a '' t ⊆ image₂ f s t :=
   ball_image_of_ball fun b => mem_image₂_of_mem ha
 
-theorem forall_image₂_iff {p : γ → Prop} : (∀, ∀ z ∈ image₂ f s t, ∀, p z) ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, p (f x y) := by
+theorem forall_image₂_iff {p : γ → Prop} : (∀ z ∈ image₂ f s t, p z) ↔ ∀ x ∈ s, ∀ y ∈ t, p (f x y) := by
   simp_rw [← mem_coe, coe_image₂, forall_image2_iff]
 
 @[simp]
-theorem image₂_subset_iff : image₂ f s t ⊆ u ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, f x y ∈ u :=
+theorem image₂_subset_iff : image₂ f s t ⊆ u ↔ ∀ x ∈ s, ∀ y ∈ t, f x y ∈ u :=
   forall_image₂_iff
 
 @[simp]
@@ -145,7 +145,7 @@ theorem image₂_inter_subset_right [DecidableEq β] : image₂ f s (t ∩ t') �
     push_cast
     exact image2_inter_subset_right
 
-theorem image₂_congr (h : ∀, ∀ a ∈ s, ∀, ∀ b ∈ t, ∀, f a b = f' a b) : image₂ f s t = image₂ f' s t :=
+theorem image₂_congr (h : ∀ a ∈ s, ∀ b ∈ t, f a b = f' a b) : image₂ f s t = image₂ f' s t :=
   coe_injective <| by
     push_cast
     exact image2_congr h

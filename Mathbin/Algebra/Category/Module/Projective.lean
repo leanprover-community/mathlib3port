@@ -58,7 +58,7 @@ instance Module_enough_projectives :
           (epi_iff_range_eq_top _).mpr
             (range_eq_top.2 fun m =>
               ⟨Finsupp.single m (1 : R), by
-                simp [← Basis.constr]⟩) }⟩
+                simp [Basis.constr]⟩) }⟩
 
 end ModuleCat
 

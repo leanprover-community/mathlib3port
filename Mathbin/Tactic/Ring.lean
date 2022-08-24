@@ -181,11 +181,11 @@ unsafe def horner_expr.refl_conv (e : horner_expr) : ring_m (horner_expr × expr
   return (e, p)
 
 theorem zero_hornerₓ {α} [CommSemiringₓ α] (x n b) : @hornerₓ α _ 0 x n b = b := by
-  simp [← horner]
+  simp [horner]
 
 theorem horner_hornerₓ {α} [CommSemiringₓ α] (a₁ x n₁ n₂ b n') (h : n₁ + n₂ = n') :
     @hornerₓ α _ (hornerₓ a₁ x n₁ 0) x n₂ b = hornerₓ a₁ x n' b := by
-  simp [← h.symm, ← horner, ← pow_addₓ, ← mul_assoc]
+  simp [h.symm, horner, pow_addₓ, mul_assoc]
 
 /-- Evaluate `horner a n x b` where `a` and `b` are already in normal form. -/
 unsafe def eval_horner : horner_expr → expr × ℕ → expr × ℕ → horner_expr → ring_m (horner_expr × expr)
@@ -201,25 +201,25 @@ unsafe def eval_horner : horner_expr → expr × ℕ → expr × ℕ → horner_
 
 theorem const_add_hornerₓ {α} [CommSemiringₓ α] (k a x n b b') (h : k + b = b') :
     k + @hornerₓ α _ a x n b = hornerₓ a x n b' := by
-  simp [← h.symm, ← horner] <;> cc
+  simp [h.symm, horner] <;> cc
 
 theorem horner_add_constₓ {α} [CommSemiringₓ α] (a x n b k b') (h : b + k = b') :
     @hornerₓ α _ a x n b + k = hornerₓ a x n b' := by
-  simp [← h.symm, ← horner, ← add_assocₓ]
+  simp [h.symm, horner, add_assocₓ]
 
 theorem horner_add_horner_ltₓ {α} [CommSemiringₓ α] (a₁ x n₁ b₁ a₂ n₂ b₂ k a' b') (h₁ : n₁ + k = n₂)
     (h₂ : (a₁ + hornerₓ a₂ x k 0 : α) = a') (h₃ : b₁ + b₂ = b') :
     @hornerₓ α _ a₁ x n₁ b₁ + hornerₓ a₂ x n₂ b₂ = hornerₓ a' x n₁ b' := by
-  simp [← h₂.symm, ← h₃.symm, ← h₁.symm, ← horner, ← pow_addₓ, ← mul_addₓ, ← mul_comm, ← mul_left_commₓ] <;> cc
+  simp [h₂.symm, h₃.symm, h₁.symm, horner, pow_addₓ, mul_addₓ, mul_comm, mul_left_commₓ] <;> cc
 
 theorem horner_add_horner_gtₓ {α} [CommSemiringₓ α] (a₁ x n₁ b₁ a₂ n₂ b₂ k a' b') (h₁ : n₂ + k = n₁)
     (h₂ : (hornerₓ a₁ x k 0 + a₂ : α) = a') (h₃ : b₁ + b₂ = b') :
     @hornerₓ α _ a₁ x n₁ b₁ + hornerₓ a₂ x n₂ b₂ = hornerₓ a' x n₂ b' := by
-  simp [← h₂.symm, ← h₃.symm, ← h₁.symm, ← horner, ← pow_addₓ, ← mul_addₓ, ← mul_comm, ← mul_left_commₓ] <;> cc
+  simp [h₂.symm, h₃.symm, h₁.symm, horner, pow_addₓ, mul_addₓ, mul_comm, mul_left_commₓ] <;> cc
 
 theorem horner_add_horner_eqₓ {α} [CommSemiringₓ α] (a₁ x n b₁ a₂ b₂ a' b' t) (h₁ : a₁ + a₂ = a') (h₂ : b₁ + b₂ = b')
     (h₃ : hornerₓ a' x n b' = t) : @hornerₓ α _ a₁ x n b₁ + hornerₓ a₂ x n b₂ = t := by
-  simp [← h₃.symm, ← h₂.symm, ← h₁.symm, ← horner, ← add_mulₓ, ← mul_comm (x ^ n)] <;> cc
+  simp [h₃.symm, h₂.symm, h₁.symm, horner, add_mulₓ, mul_comm (x ^ n)] <;> cc
 
 /-- Evaluate `a + b` where `a` and `b` are already in normal form. -/
 unsafe def eval_add : horner_expr → horner_expr → ring_m (horner_expr × expr)
@@ -292,7 +292,7 @@ unsafe def eval_add : horner_expr → horner_expr → ring_m (horner_expr × exp
 
 theorem horner_neg {α} [CommRingₓ α] (a x n b a' b') (h₁ : -a = a') (h₂ : -b = b') :
     -@hornerₓ α _ a x n b = hornerₓ a' x n b' := by
-  simp [← h₂.symm, ← h₁.symm, ← horner] <;> cc
+  simp [h₂.symm, h₁.symm, horner] <;> cc
 
 /-- Evaluate `-a` where `a` is already in normal form. -/
 unsafe def eval_neg : horner_expr → ring_m (horner_expr × expr)
@@ -308,11 +308,11 @@ unsafe def eval_neg : horner_expr → ring_m (horner_expr × expr)
 
 theorem horner_const_mulₓ {α} [CommSemiringₓ α] (c a x n b a' b') (h₁ : c * a = a') (h₂ : c * b = b') :
     c * @hornerₓ α _ a x n b = hornerₓ a' x n b' := by
-  simp [← h₂.symm, ← h₁.symm, ← horner, ← mul_addₓ, ← mul_assoc]
+  simp [h₂.symm, h₁.symm, horner, mul_addₓ, mul_assoc]
 
 theorem horner_mul_constₓ {α} [CommSemiringₓ α] (a x n b c a' b') (h₁ : a * c = a') (h₂ : b * c = b') :
     @hornerₓ α _ a x n b * c = hornerₓ a' x n b' := by
-  simp [← h₂.symm, ← h₁.symm, ← horner, ← add_mulₓ, ← mul_right_commₓ]
+  simp [h₂.symm, h₁.symm, horner, add_mulₓ, mul_right_commₓ]
 
 /-- Evaluate `k * a` where `k` is a rational numeral and `a` is in normal form. -/
 unsafe def eval_const_mul (k : expr × ℚ) : horner_expr → ring_m (horner_expr × expr)
@@ -327,12 +327,12 @@ unsafe def eval_const_mul (k : expr × ℚ) : horner_expr → ring_m (horner_exp
 
 theorem horner_mul_horner_zeroₓ {α} [CommSemiringₓ α] (a₁ x n₁ b₁ a₂ n₂ aa t) (h₁ : @hornerₓ α _ a₁ x n₁ b₁ * a₂ = aa)
     (h₂ : hornerₓ aa x n₂ 0 = t) : hornerₓ a₁ x n₁ b₁ * hornerₓ a₂ x n₂ 0 = t := by
-  rw [← h₂, ← h₁] <;> simp [← horner, ← mul_addₓ, ← mul_comm, ← mul_left_commₓ, ← mul_assoc]
+  rw [← h₂, ← h₁] <;> simp [horner, mul_addₓ, mul_comm, mul_left_commₓ, mul_assoc]
 
 theorem horner_mul_hornerₓ {α} [CommSemiringₓ α] (a₁ x n₁ b₁ a₂ n₂ b₂ aa haa ab bb t)
     (h₁ : @hornerₓ α _ a₁ x n₁ b₁ * a₂ = aa) (h₂ : hornerₓ aa x n₂ 0 = haa) (h₃ : a₁ * b₂ = ab) (h₄ : b₁ * b₂ = bb)
     (H : haa + hornerₓ ab x n₁ bb = t) : hornerₓ a₁ x n₁ b₁ * hornerₓ a₂ x n₂ b₂ = t := by
-  rw [← H, ← h₂, ← h₁, ← h₃, ← h₄] <;> simp [← horner, ← mul_addₓ, ← mul_comm, ← mul_left_commₓ, ← mul_assoc]
+  rw [← H, ← h₂, ← h₁, ← h₃, ← h₄] <;> simp [horner, mul_addₓ, mul_comm, mul_left_commₓ, mul_assoc]
 
 /-- Evaluate `a * b` where `a` and `b` are in normal form. -/
 unsafe def eval_mul : horner_expr → horner_expr → ring_m (horner_expr × expr)
@@ -380,7 +380,7 @@ unsafe def eval_mul : horner_expr → horner_expr → ring_m (horner_expr × exp
 
 theorem horner_powₓ {α} [CommSemiringₓ α] (a x n m n' a') (h₁ : n * m = n') (h₂ : a ^ m = a') :
     @hornerₓ α _ a x n 0 ^ m = hornerₓ a' x n' 0 := by
-  simp [← h₁.symm, ← h₂.symm, ← horner, ← mul_powₓ, ← pow_mulₓ]
+  simp [h₁.symm, h₂.symm, horner, mul_powₓ, pow_mulₓ]
 
 theorem pow_succ {α} [CommSemiringₓ α] (a n b c) (h₁ : (a : α) ^ n = b) (h₂ : b * a = c) : a ^ (n + 1) = c := by
   rw [← h₂, ← h₁, pow_succ'ₓ]
@@ -414,7 +414,7 @@ unsafe def eval_pow : horner_expr → expr × ℕ → ring_m (horner_expr × exp
         return (t, c `` pow_succₓ [e, e₂, tl, t, hl, p₂])
 
 theorem horner_atomₓ {α} [CommSemiringₓ α] (x : α) : x = hornerₓ 1 x 1 0 := by
-  simp [← horner]
+  simp [horner]
 
 /-- Evaluate `a` where `a` is an atom. -/
 unsafe def eval_atom (e : expr) : ring_m (horner_expr × expr) := do
@@ -513,16 +513,16 @@ unsafe def eval' (red : Transparency) (atoms : ref (Buffer expr)) (norm_atom : e
     return (e', p)
 
 theorem horner_def' {α} [CommSemiringₓ α] (a x n b) : @hornerₓ α _ a x n b = x ^ n * a + b := by
-  simp [← horner, ← mul_comm]
+  simp [horner, mul_comm]
 
 theorem mul_assoc_rev {α} [Semigroupₓ α] (a b c : α) : a * (b * c) = a * b * c := by
-  simp [← mul_assoc]
+  simp [mul_assoc]
 
 theorem pow_add_rev {α} [Monoidₓ α] (a : α) (m n : ℕ) : a ^ m * a ^ n = a ^ (m + n) := by
-  simp [← pow_addₓ]
+  simp [pow_addₓ]
 
 theorem pow_add_rev_right {α} [Monoidₓ α] (a b : α) (m n : ℕ) : b * a ^ m * a ^ n = b * a ^ (m + n) := by
-  simp [← pow_addₓ, ← mul_assoc]
+  simp [pow_addₓ, mul_assoc]
 
 theorem add_neg_eq_sub {α} [AddGroupₓ α] (a b : α) : a + -b = a - b :=
   (sub_eq_add_neg a b).symm

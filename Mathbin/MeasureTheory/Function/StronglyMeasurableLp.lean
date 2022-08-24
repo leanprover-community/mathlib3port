@@ -35,10 +35,10 @@ local infixr:25 " →ₛ " => SimpleFunc
 
 variable {α G : Type _} {p : ℝ≥0∞} {m m0 : MeasurableSpace α} {μ : Measure α} [NormedAddCommGroup G] {f : α → G}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `borelize #[[expr G]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `borelize #[[expr G]]
 theorem Memℒp.fin_strongly_measurable_of_strongly_measurable (hf : Memℒp f p μ) (hf_meas : StronglyMeasurable f)
     (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) : FinStronglyMeasurable f μ := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `borelize #[[expr G]]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `borelize #[[expr G]]"
   haveI : separable_space (Set.Range f ∪ {0} : Set G) := hf_meas.separable_space_range_union_singleton
   let fs :=
     simple_func.approx_on f hf_meas.measurable (Set.Range f ∪ {0}) 0

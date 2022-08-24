@@ -161,11 +161,11 @@ instance RepresentablyFlat.comp (F : C ⥤ D) (G : D ⥤ E) [RepresentablyFlat F
     use
       structured_arrow.hom_mk Y''.right
         (by
-          simp [G.map_comp])
+          simp [← G.map_comp])
     use
       structured_arrow.hom_mk Z''.right
         (by
-          simp [G.map_comp])
+          simp [← G.map_comp])
     
   · intro Y Z f g
     let W :=
@@ -184,7 +184,7 @@ instance RepresentablyFlat.comp (F : C ⥤ D) (G : D ⥤ E) [RepresentablyFlat F
     use
       structured_arrow.hom_mk h'.right
         (by
-          simp [G.map_comp])
+          simp [← G.map_comp])
     ext
     exact (congr_arg comma_morphism.right h'_cond : _)
     
@@ -241,7 +241,7 @@ noncomputable def lift : s.x ⟶ F.obj c.x :=
           (StructuredArrow.proj s.x F).mapCone s')
 
 theorem fac (x : J) : lift F hc s ≫ (F.mapCone c).π.app x = s.π.app x := by
-  simpa [← lift, functor.map_comp]
+  simpa [lift, ← functor.map_comp]
 
 attribute [local simp] eq_to_hom_map
 
@@ -286,7 +286,9 @@ attribute [local simp] eq_to_hom_map
                       "by"
                       (Tactic.tacticSeq
                        (Tactic.tacticSeq1Indented
-                        [(group (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h₁)] "]"] []) [])])))]))))
+                        [(group
+                          (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] ["←"] `h₁)] "]"] [])
+                          [])])))]))))
                 ","
                 (Term.structInstField
                  (Term.structInstLVal `naturality' [])
@@ -342,7 +344,9 @@ attribute [local simp] eq_to_hom_map
                       "by"
                       (Tactic.tacticSeq
                        (Tactic.tacticSeq1Indented
-                        [(group (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h₂)] "]"] []) [])])))]))))
+                        [(group
+                          (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] ["←"] `h₂)] "]"] [])
+                          [])])))]))))
                 ","
                 (Term.structInstField
                  (Term.structInstLVal `naturality' [])
@@ -1160,12 +1164,12 @@ theorem
           α₁
             : to_diagram F.map_cone c ⋙ map f₁ ⟶ to_diagram s
             :=
-            { app := fun X => eq_to_hom by simp [ h₁ ] , naturality' := fun _ _ _ => by ext simp }
+            { app := fun X => eq_to_hom by simp [ ← h₁ ] , naturality' := fun _ _ _ => by ext simp }
         let
           α₂
             : to_diagram F.map_cone c ⋙ map f₂ ⟶ to_diagram s
             :=
-            { app := fun X => eq_to_hom by simp [ h₂ ] , naturality' := fun _ _ _ => by ext simp }
+            { app := fun X => eq_to_hom by simp [ ← h₂ ] , naturality' := fun _ _ _ => by ext simp }
         let
           c₁
             : cone to_diagram s ⋙ pre s.X K F
@@ -1246,8 +1250,8 @@ noncomputable def lanEvaluationIsoColim (F : C ⥤ D) (X : D) [∀ X : D, HasCol
     (by
       intro G H i
       ext
-      simp only [← functor.comp_map, ← colimit.ι_desc_assoc, ← functor.map_iso_refl, ← evaluation_obj_map, ←
-        whiskering_left_obj_map, ← category.comp_id, ← Lan_map_app, ← category.assoc]
+      simp only [functor.comp_map, colimit.ι_desc_assoc, functor.map_iso_refl, evaluation_obj_map,
+        whiskering_left_obj_map, category.comp_id, Lan_map_app, category.assoc]
       erw [colimit.ι_pre_assoc (Lan.diagram F H X) (costructured_arrow.map j.hom), category.id_comp, category.comp_id,
         colimit.ι_map]
       rcases j with ⟨j_left, ⟨⟨⟩⟩, j_hom⟩

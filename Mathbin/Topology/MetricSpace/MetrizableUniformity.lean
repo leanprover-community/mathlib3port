@@ -58,13 +58,13 @@ noncomputable def ofPrenndist (d : X → X → ℝ≥0 ) (dist_self : ∀ x, d x
     (Nnreal.coe_eq_zero _).2 <|
       nonpos_iff_eq_zero.1 <|
         (cinfi_le (OrderBot.bdd_below _) []).trans_eq <| by
-          simp [← dist_self]
+          simp [dist_self]
   dist_comm := fun x y =>
     Nnreal.coe_eq.2 <| by
       refine' reverse_surjective.infi_congr _ fun l => _
       rw [← sum_reverse, zip_with_distrib_reverse, reverse_append, reverse_reverse, reverse_singleton, singleton_append,
         reverse_cons, reverse_reverse, zip_with_comm _ dist_comm]
-      simp only [← length, ← length_append]
+      simp only [length, length_append]
   dist_triangle := fun x y z => by
     rw [← Nnreal.coe_add, Nnreal.coe_le_coe]
     refine' Nnreal.le_infi_add_infi fun lxy lyz => _
@@ -89,6 +89,8 @@ theorem dist_of_prenndist_le (d : X → X → ℝ≥0 ) (dist_self : ∀ x, d x 
     (cinfi_le (OrderBot.bdd_below _) []).trans_eq <| by
       simp
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident z, ",", ident z', ",", ident hxz, ",", ident hzz', ",", ident hz'y, "⟩", ":", expr «expr∃ , »((z
+     z' : X), «expr ∧ »(«expr ≤ »(d x z, L.sum), «expr ∧ »(«expr ≤ »(d z z', L.sum), «expr ≤ »(d z' y, L.sum))))]]
 /-- Consider a function `d : X → X → ℝ≥0` such that `d x x = 0` and `d x y = d y x` for all `x`,
 `y`. Let `dist` be the largest pseudometric distance such that `dist x y ≤ d x y`, see
 `pseudo_metric_space.of_prenndist`. Suppose that `d` satisfies the following triangle-like
@@ -108,7 +110,7 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0 ) (dist_self : ∀
   have hd₀_trans : Transitive fun x y => d x y = 0 := by
     intro a b c hab hbc
     rw [← nonpos_iff_eq_zero]
-    simpa only [*, ← max_eq_rightₓ, ← mul_zero] using hd a b c c
+    simpa only [*, max_eq_rightₓ, mul_zero] using hd a b c c
   haveI : IsTrans X fun x y => d x y = 0 := ⟨hd₀_trans⟩
   induction' hn : length l using Nat.strong_induction_onₓ with n ihn generalizing x y l
   simp only at ihn
@@ -117,14 +119,15 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0 ) (dist_self : ∀
   have hL_len : length L = length l + 1 := by
     simp
   cases' eq_or_ne (d x y) 0 with hd₀ hd₀
-  · simp only [← hd₀, ← zero_le]
+  · simp only [hd₀, zero_le]
     
-  suffices ∃ z z' : X, d x z ≤ L.sum ∧ d z z' ≤ L.sum ∧ d z' y ≤ L.sum by
-    rcases this with ⟨z, z', hxz, hzz', hz'y⟩
-    exact (hd x z z' y).trans (mul_le_mul_left' (max_leₓ hxz (max_leₓ hzz' hz'y)) _)
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident z, \",\", ident z', \",\", ident hxz, \",\", ident hzz', \",\", ident hz'y, \"⟩\", \":\", expr «expr∃ , »((z\n     z' : X), «expr ∧ »(«expr ≤ »(d x z, L.sum), «expr ∧ »(«expr ≤ »(d z z', L.sum), «expr ≤ »(d z' y, L.sum))))]]"
+  · exact (hd x z z' y).trans (mul_le_mul_left' (max_leₓ hxz (max_leₓ hzz' hz'y)) _)
+    
   set s : Set ℕ := { m : ℕ | 2 * (take m L).Sum ≤ L.sum }
   have hs₀ : 0 ∈ s := by
-    simp [← s]
+    simp [s]
   have hsne : s.nonempty := ⟨0, hs₀⟩
   obtain ⟨M, hMl, hMs⟩ : ∃ M ≤ length l, IsGreatest s M := by
     have hs_ub : length l ∈ UpperBounds s := by
@@ -145,11 +148,11 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0 ) (dist_self : ∀
   have hM_lty : M < length (l ++ [y]) := lt_length_right_of_zip_with hM_lt
   refine' ⟨(x :: l).nthLe M hM_ltx, (l ++ [y]).nthLe M hM_lty, _, _, _⟩
   · cases M
-    · simp [← dist_self]
+    · simp [dist_self]
       
     rw [Nat.succ_le_iff] at hMl
     have hMl' : length (take M l) = M := (length_take _ _).trans (min_eq_leftₓ hMl.le)
-    simp only [← nth_le]
+    simp only [nth_le]
     refine' (ihn _ hMl _ _ _ hMl').trans _
     convert hMs.1.out
     rw [zip_with_distrib_take, take, take_succ, nth_append hMl, nth_le_nth hMl, ← Option.coe_def, Option.to_list_some,
@@ -160,7 +163,7 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0 ) (dist_self : ∀
     apply nth_le_zip_with
     
   · rcases hMl.eq_or_lt with (rfl | hMl)
-    · simp only [← nth_le_append_right le_rfl, ← sub_self, ← nth_le_singleton, ← dist_self, ← zero_le]
+    · simp only [nth_le_append_right le_rflₓ, sub_self, nth_le_singleton, dist_self, zero_le]
       
     rw [nth_le_append _ hMl]
     have hlen : length (drop (M + 1) l) = length l - (M + 1) := length_drop _ _
@@ -203,38 +206,38 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
   set d : X → X → ℝ≥0 := fun x y => if h : ∃ n, (x, y) ∉ U n then (1 / 2) ^ Nat.findₓ h else 0
   have hd₀ : ∀ {x y}, d x y = 0 ↔ x ≈ y := by
     intro x y
-    dsimp' only [← d]
+    dsimp' only [d]
     refine' Iff.trans _ hB.to_has_basis.mem_separation_rel.symm
-    simp only [← true_implies_iff]
+    simp only [true_implies_iff]
     split_ifs with h
     · rw [← not_forall] at h
-      simp [← h, ← pow_eq_zero_iff']
+      simp [h, pow_eq_zero_iff']
       
-    · simpa only [← not_exists, ← not_not, ← eq_self_iff_true, ← true_iffₓ] using h
+    · simpa only [not_exists, not_not, eq_self_iff_true, true_iffₓ] using h
       
   have hd_symm : ∀ x y, d x y = d y x := by
     intro x y
-    dsimp' only [← d]
-    simp only [← @SymmetricRel.mk_mem_comm _ _ (hU_symm _) x y]
+    dsimp' only [d]
+    simp only [@SymmetricRel.mk_mem_comm _ _ (hU_symm _) x y]
   have hr : (1 / 2 : ℝ≥0 ) ∈ Ioo (0 : ℝ≥0 ) 1 := ⟨Nnreal.half_pos one_pos, Nnreal.half_lt_self one_ne_zero⟩
   letI I := PseudoMetricSpace.ofPrenndist d (fun x => hd₀.2 (Setoidₓ.refl _)) hd_symm
   have hdist_le : ∀ x y, dist x y ≤ d x y := PseudoMetricSpace.dist_of_prenndist_le _ _ _
   have hle_d : ∀ {x y : X} {n : ℕ}, (1 / 2) ^ n ≤ d x y ↔ (x, y) ∉ U n := by
     intro x y n
-    simp only [← d]
+    simp only [d]
     split_ifs with h
     · rw [(strict_anti_pow hr.1 hr.2).le_iff_le, Nat.find_le_iff]
-      exact ⟨fun ⟨m, hmn, hm⟩ hn => hm (hB.antitone hmn hn), fun h => ⟨n, le_rfl, h⟩⟩
+      exact ⟨fun ⟨m, hmn, hm⟩ hn => hm (hB.antitone hmn hn), fun h => ⟨n, le_rflₓ, h⟩⟩
       
     · push_neg  at h
-      simp only [← h, ← not_true, ← (pow_pos hr.1 _).not_le]
+      simp only [h, not_true, (pow_pos hr.1 _).not_le]
       
   have hd_le : ∀ x y, ↑(d x y) ≤ 2 * dist x y := by
     refine' PseudoMetricSpace.le_two_mul_dist_of_prenndist _ _ _ fun x₁ x₂ x₃ x₄ => _
     by_cases' H : ∃ n, (x₁, x₄) ∉ U n
     · refine' (dif_pos H).trans_le _
       rw [← Nnreal.div_le_iff' two_ne_zero, ← mul_one_div (_ ^ _), ← pow_succ'ₓ]
-      simp only [← le_max_iff, ← hle_d, not_and_distrib]
+      simp only [le_max_iff, hle_d, ← not_and_distrib]
       rintro ⟨h₁₂, h₂₃, h₃₄⟩
       refine' Nat.find_specₓ H (hU_comp (lt_add_one <| Nat.findₓ H) _)
       exact ⟨x₂, h₁₂, x₃, h₂₃, h₃₄⟩

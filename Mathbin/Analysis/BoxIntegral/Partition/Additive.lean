@@ -95,12 +95,12 @@ instance : Inhabited (ι →ᵇᵃ[I₀] M) :=
 instance : Add (ι →ᵇᵃ[I₀] M) :=
   ⟨fun f g =>
     ⟨f + g, fun I hI π hπ => by
-      simp only [← Pi.add_apply, ← sum_add_distrib, ← sum_partition_boxes _ hI hπ]⟩⟩
+      simp only [Pi.add_apply, sum_add_distrib, sum_partition_boxes _ hI hπ]⟩⟩
 
 instance {R} [Monoidₓ R] [DistribMulAction R M] : HasSmul R (ι →ᵇᵃ[I₀] M) :=
   ⟨fun r f =>
     ⟨r • f, fun I hI π hπ => by
-      simp only [← Pi.smul_apply, smul_sum, ← sum_partition_boxes _ hI hπ]⟩⟩
+      simp only [Pi.smul_apply, ← smul_sum, sum_partition_boxes _ hI hπ]⟩⟩
 
 instance : AddCommMonoidₓ (ι →ᵇᵃ[I₀] M) :=
   Function.Injective.addCommMonoid _ coe_injective rfl (fun _ _ => rfl) fun _ _ => rfl
@@ -140,7 +140,7 @@ def ofMapSplitAdd [Fintype ι] (f : Box ι → M) (I₀ : WithTop (Box ι))
       
     
   intro I hI π hπ
-  have Hle : ∀, ∀ J ∈ π, ∀, ↑J ≤ I₀ := fun J hJ => (WithTop.coe_le_coe.2 <| π.le_of_mem hJ).trans hI
+  have Hle : ∀ J ∈ π, ↑J ≤ I₀ := fun J hJ => (WithTop.coe_le_coe.2 <| π.le_of_mem hJ).trans hI
   rcases hπ.exists_split_many_le with ⟨s, hs⟩
   rw [← hf _ hI, ← inf_of_le_right hs, inf_split_many, bUnion_boxes, sum_bUnion_boxes]
   exact Finset.sum_congr rfl fun J hJ => (hf _ (Hle _ hJ) _).symm
@@ -158,7 +158,7 @@ def map (f : ι →ᵇᵃ[I₀] M) (g : M →+ N) : ι →ᵇᵃ[I₀] N where
 theorem sum_boxes_congr [Fintype ι] (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I₀) {π₁ π₂ : Prepartition I}
     (h : π₁.Union = π₂.Union) : (∑ J in π₁.boxes, f J) = ∑ J in π₂.boxes, f J := by
   rcases exists_split_many_inf_eq_filter_of_finite {π₁, π₂} ((finite_singleton _).insert _) with ⟨s, hs⟩
-  simp only [← inf_split_many] at hs
+  simp only [inf_split_many] at hs
   rcases hs _ (Or.inl rfl), hs _ (Or.inr rfl) with ⟨h₁, h₂⟩
   clear hs
   rw [h] at h₁
@@ -202,8 +202,8 @@ def upperSubLower.{u} {G : Type u} [AddCommGroupₓ G] (I₀ : Box (Finₓ (n + 
       rw [WithTop.coe_le_coe] at hJ
       refine' i.succ_above_cases _ _ j
       · intro x hx
-        simp only [← box.split_lower_def hx, ← box.split_upper_def hx, ← update_same, WithBot.some_eq_coe, ←
-          Option.elimₓ, ← box.face, ← (· ∘ ·), ← update_noteq (Finₓ.succ_above_ne _ _)]
+        simp only [box.split_lower_def hx, box.split_upper_def hx, update_same, ← WithBot.some_eq_coe, Option.elimₓ,
+          box.face, (· ∘ ·), update_noteq (Finₓ.succ_above_ne _ _)]
         abel
         
       · clear j
@@ -213,11 +213,10 @@ def upperSubLower.{u} {G : Type u} [AddCommGroupₓ G] (I₀ : Box (Finₓ (n + 
         rw [hf _ (hJ J.upper_mem_Icc _ trivialₓ), hf _ (hJ J.lower_mem_Icc _ trivialₓ), ← (fb _).map_split_add this j x,
           ← (fb _).map_split_add this j x]
         have hx' : x ∈ Ioo ((J.face i).lower j) ((J.face i).upper j) := hx
-        simp only [← box.split_lower_def hx, ← box.split_upper_def hx, ← box.split_lower_def hx', ←
-          box.split_upper_def hx', WithBot.some_eq_coe, ← Option.elimₓ, ← box.face_mk, ←
-          update_noteq (Finₓ.succ_above_ne _ _).symm, ← sub_add_sub_comm, ←
-          update_comp_eq_of_injective _ i.succ_above.injective j x, hf]
-        simp only [← box.face]
+        simp only [box.split_lower_def hx, box.split_upper_def hx, box.split_lower_def hx', box.split_upper_def hx', ←
+          WithBot.some_eq_coe, Option.elimₓ, box.face_mk, update_noteq (Finₓ.succ_above_ne _ _).symm, sub_add_sub_comm,
+          update_comp_eq_of_injective _ i.succ_above.injective j x, ← hf]
+        simp only [box.face]
         )
 
 end BoxAdditiveMap

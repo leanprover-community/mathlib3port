@@ -66,18 +66,18 @@ theorem midpoint_fixed {x y : PE} : ∀ e : PE ≃ᵢ PE, e x = x → e y = y �
   -- Note that `f` doubles the value of ``dist (e z) z`
   have hf_dist : ∀ e, dist (f e z) z = 2 * dist (e z) z := by
     intro e
-    dsimp' [← f]
+    dsimp' [f]
     rw [dist_point_reflection_fixed, ← e.dist_eq, e.apply_symm_apply, dist_point_reflection_self_real, dist_comm]
   -- Also note that `f` maps `s` to itself
   have hf_maps_to : maps_to f s s := by
     rintro e ⟨hx, hy⟩
-    constructor <;> simp [← hx, ← hy, ← e.symm_apply_eq.2 hx.symm, ← e.symm_apply_eq.2 hy.symm]
+    constructor <;> simp [hx, hy, e.symm_apply_eq.2 hx.symm, e.symm_apply_eq.2 hy.symm]
   -- Therefore, `dist (e z) z = 0` for all `e ∈ s`.
   set c := ⨆ e : s, dist ((e : PE ≃ᵢ PE) z) z
   have : c ≤ c / 2 := by
     apply csupr_le
     rintro ⟨e, he⟩
-    simp only [← Subtype.coe_mk, ← le_div_iff' (@zero_lt_two ℝ _ _), hf_dist]
+    simp only [Subtype.coe_mk, le_div_iff' (@zero_lt_two ℝ _ _), ← hf_dist]
     exact le_csupr h_bdd ⟨f e, hf_maps_to he⟩
   replace : c ≤ 0
   · linarith
@@ -97,7 +97,7 @@ theorem map_midpoint (f : PE ≃ᵢ PF) (x y : PE) : f (midpoint ℝ x y) = midp
   have hy : e y = y := by
     simp
   have hm := e.midpoint_fixed hx hy
-  simp only [← e, ← trans_apply] at hm
+  simp only [e, trans_apply] at hm
   rwa [← eq_symm_apply, to_isometric_symm, point_reflection_symm, coe_to_isometric, coe_to_isometric,
     point_reflection_self, symm_apply_eq, point_reflection_fixed_iff] at hm
 
@@ -113,7 +113,7 @@ def toRealLinearIsometryEquivOfMapZero (f : E ≃ᵢ F) (h0 : f 0 = 0) : E ≃�
   { (AddMonoidHom.ofMapMidpoint ℝ ℝ f h0 f.map_midpoint).toRealLinearMap f.Continuous, f with
     norm_map' := fun x =>
       show ∥f x∥ = ∥x∥ by
-        simp only [dist_zero_right, h0, ← f.dist_eq] }
+        simp only [← dist_zero_right, ← h0, f.dist_eq] }
 
 @[simp]
 theorem coe_to_real_linear_equiv_of_map_zero (f : E ≃ᵢ F) (h0 : f 0 = 0) :
@@ -130,7 +130,7 @@ over `ℝ`, then `x ↦ f x - f 0` is a linear isometry equivalence. -/
 def toRealLinearIsometryEquiv (f : E ≃ᵢ F) : E ≃ₗᵢ[ℝ] F :=
   (f.trans (Isometric.addRight (f 0)).symm).toRealLinearIsometryEquivOfMapZero
     (by
-      simpa only [← sub_eq_add_neg] using sub_self (f 0))
+      simpa only [sub_eq_add_neg] using sub_self (f 0))
 
 @[simp]
 theorem to_real_linear_equiv_apply (f : E ≃ᵢ F) (x : E) : (f.toRealLinearIsometryEquiv : E → F) x = f x - f 0 :=

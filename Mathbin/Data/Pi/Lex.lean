@@ -121,7 +121,7 @@ instance [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrderₓ (
 instance Lex.orderedCommGroup [LinearOrderₓ ι] [∀ a, OrderedCommGroup (β a)] : OrderedCommGroup (Lex (∀ i, β i)) :=
   { Pi.Lex.partialOrder, Pi.commGroup with
     mul_le_mul_left := fun x y hxy z =>
-      hxy.elim (fun hxyz => hxyz ▸ le_rfl) fun ⟨i, hi⟩ =>
+      hxy.elim (fun hxyz => hxyz ▸ le_rflₓ) fun ⟨i, hi⟩ =>
         Or.inr
           ⟨i, fun j hji =>
             show z j * x j = z j * y j by

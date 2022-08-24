@@ -116,7 +116,7 @@ noncomputable instance (R : CommRingₓₓ) [IsDomain R] : Algebra R (Scheme.spe
 theorem generic_point_eq_bot_of_affine (R : CommRingₓₓ) [IsDomain R] :
     genericPoint (Scheme.spec.obj <| op R).Carrier = (⟨0, Ideal.bot_prime⟩ : PrimeSpectrum R) := by
   apply (generic_point_spec (Scheme.Spec.obj <| op R).Carrier).Eq
-  simp [← is_generic_point_def, PrimeSpectrum.zero_locus_vanishing_ideal_eq_closure]
+  simp [is_generic_point_def, ← PrimeSpectrum.zero_locus_vanishing_ideal_eq_closure]
 
 instance function_field_is_fraction_ring_of_affine (R : CommRingₓₓ.{u}) [IsDomain R] :
     IsFractionRing R (Scheme.spec.obj <| op R).functionField := by

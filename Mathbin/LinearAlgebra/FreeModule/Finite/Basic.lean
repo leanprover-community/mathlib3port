@@ -61,7 +61,7 @@ theorem _root_.module.finite.of_basis {R : Type _} {M : Type _} {ι : Type _} [C
     [Module R M] [Fintype ι] (b : Basis ι R M) : Module.Finite R M := by
   classical
   refine' ⟨⟨finset.univ.image b, _⟩⟩
-  simp only [← Set.image_univ, ← Finset.coe_univ, ← Finset.coe_image, ← Basis.span_eq]
+  simp only [Set.image_univ, Finset.coe_univ, Finset.coe_image, Basis.span_eq]
 
 instance _root_.module.finite.matrix {ι₁ : Type _} [Fintype ι₁] {ι₂ : Type _} [Fintype ι₂] :
     Module.Finite R (Matrix ι₁ ι₂ R) :=

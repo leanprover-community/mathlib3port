@@ -68,7 +68,7 @@ theorem is_open_singleton_iff : IsOpen ({a} : Set Ordinal) ↔ ¬IsLimit a := by
       
     
 
-theorem is_open_iff : IsOpen s ↔ ∀, ∀ o ∈ s, ∀, IsLimit o → ∃ a < o, Set.Ioo a o ⊆ s := by
+theorem is_open_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.Ioo a o ⊆ s := by
   classical
   refine' ⟨_, fun h => _⟩
   · rw [is_open_iff_generate_intervals]
@@ -150,7 +150,7 @@ theorem mem_closure_iff_sup :
           le_antisymmₓ (sup_le fun i => le_of_lt_succ (hf i).1.2) _⟩
       by_contra' h
       cases' H _ h with b hb
-      rcases eq_or_lt_of_le (le_of_lt_succ hb.1.2) with (rfl | hba)
+      rcases eq_or_lt_of_leₓ (le_of_lt_succ hb.1.2) with (rfl | hba)
       · exact has hb.2
         
       · have :
@@ -188,8 +188,7 @@ theorem mem_closed_iff_sup (hs : IsClosed s) :
   rw [← mem_closure_iff_sup, hs.closure_eq]
 
 theorem mem_closure_iff_bsup :
-    a ∈ Closure s ↔
-      ∃ (o : Ordinal)(ho : o ≠ 0)(f : ∀, ∀ a < o, ∀, Ordinal), (∀ i hi, f i hi ∈ s) ∧ bsup.{u, u} o f = a :=
+    a ∈ Closure s ↔ ∃ (o : Ordinal)(ho : o ≠ 0)(f : ∀ a < o, Ordinal), (∀ i hi, f i hi ∈ s) ∧ bsup.{u, u} o f = a :=
   mem_closure_iff_sup.trans
     ⟨fun ⟨ι, ⟨i⟩, f, hf, ha⟩ =>
       ⟨_, fun h => (type_eq_zero_iff_is_empty.1 h).elim i, bfamilyOfFamily f, fun i hi => hf _, by
@@ -199,7 +198,7 @@ theorem mem_closure_iff_bsup :
         rwa [sup_eq_bsup]⟩⟩
 
 theorem mem_closed_iff_bsup (hs : IsClosed s) :
-    a ∈ s ↔ ∃ (o : Ordinal)(ho : o ≠ 0)(f : ∀, ∀ a < o, ∀, Ordinal), (∀ i hi, f i hi ∈ s) ∧ bsup.{u, u} o f = a := by
+    a ∈ s ↔ ∃ (o : Ordinal)(ho : o ≠ 0)(f : ∀ a < o, Ordinal), (∀ i hi, f i hi ∈ s) ∧ bsup.{u, u} o f = a := by
   rw [← mem_closure_iff_bsup, hs.closure_eq]
 
 theorem is_closed_iff_sup :
@@ -211,9 +210,7 @@ theorem is_closed_iff_sup :
   exact h hι f hf
 
 theorem is_closed_iff_bsup :
-    IsClosed s ↔
-      ∀ {o : Ordinal} (ho : o ≠ 0) (f : ∀, ∀ a < o, ∀, Ordinal), (∀ i hi, f i hi ∈ s) → bsup.{u, u} o f ∈ s :=
-  by
+    IsClosed s ↔ ∀ {o : Ordinal} (ho : o ≠ 0) (f : ∀ a < o, Ordinal), (∀ i hi, f i hi ∈ s) → bsup.{u, u} o f ∈ s := by
   rw [is_closed_iff_sup]
   refine' ⟨fun H o ho f hf => H (out_nonempty_iff_ne_zero.2 ho) _ _, fun H ι hι f hf => _⟩
   · exact fun i => hf _ _
@@ -224,7 +221,7 @@ theorem is_closed_iff_bsup :
     
 
 theorem is_limit_of_mem_frontier (ha : a ∈ Frontier s) : IsLimit a := by
-  simp only [← frontier_eq_closure_inter_closure, ← Set.mem_inter_iff, ← mem_closure_iff] at ha
+  simp only [frontier_eq_closure_inter_closure, Set.mem_inter_iff, mem_closure_iff] at ha
   by_contra h
   rw [← is_open_singleton_iff] at h
   rcases ha.1 _ h rfl with ⟨b, hb, hb'⟩
@@ -255,7 +252,7 @@ theorem is_normal_iff_strict_mono_and_continuous (f : Ordinal.{u} → Ordinal.{u
     exact ⟨_, out_nonempty_iff_ne_zero.2 ho.1, typein (· < ·), fun i => h _ (typein_lt_self i), sup_typein_limit ho.2⟩
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (b «expr < » a)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (b «expr < » a)
 theorem enum_ord_is_normal_iff_is_closed (hs : s.Unbounded (· < ·)) : IsNormal (enumOrd s) ↔ IsClosed s := by
   have Hs := enum_ord_strict_mono hs
   refine'

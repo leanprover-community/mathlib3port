@@ -40,7 +40,7 @@ theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
   subst s
   cases' eq_empty_or_nonempty (univ.sigma f) with he hne
   · convert h0
-    simpa [← funext_iff] using he
+    simpa [funext_iff] using he
     
   · rcases sigma_nonempty.1 hne with ⟨i, -, hi⟩
     rcases H_ex i (f i) hi with ⟨x, x_mem, hr⟩
@@ -60,8 +60,8 @@ theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
           ⟨mem_univ _, by
             simp ⟩,
         by
-        simp [← hx']⟩,
-      (@le_update_iff _ _ _ _ g g i _).2 ⟨subset_insert _ _, fun _ _ => le_rfl⟩]
+        simp [hx']⟩,
+      (@le_update_iffₓ _ _ _ _ g g i _).2 ⟨subset_insert _ _, fun _ _ => le_rflₓ⟩]
     
 
 /-- Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all
@@ -83,10 +83,9 @@ This lemma requires `linear_order` instances on all `α i`. See also `finset.ind
 version that `x ∉ g i` instead of ` does not need `Π i, linear_order (α i)`. -/
 theorem induction_on_pi_max [∀ i, LinearOrderₓ (α i)] {p : (∀ i, Finset (α i)) → Prop} (f : ∀ i, Finset (α i))
     (h0 : p fun _ => ∅)
-    (step :
-      ∀ (g : ∀ i, Finset (α i)) (i : ι) (x : α i), (∀, ∀ y ∈ g i, ∀, y < x) → p g → p (update g i (insert x (g i)))) :
+    (step : ∀ (g : ∀ i, Finset (α i)) (i : ι) (x : α i), (∀ y ∈ g i, y < x) → p g → p (update g i (insert x (g i)))) :
     p f :=
-  induction_on_pi_of_choice (fun i x s => ∀, ∀ y ∈ s, ∀, y < x)
+  induction_on_pi_of_choice (fun i x s => ∀ y ∈ s, y < x)
     (fun i s hs => ⟨s.max' hs, s.max'_mem hs, fun y => s.lt_max'_of_mem_erase_max' _⟩) f h0 step
 
 /-- Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all
@@ -98,8 +97,7 @@ This lemma requires `linear_order` instances on all `α i`. See also `finset.ind
 version that `x ∉ g i` instead of ` does not need `Π i, linear_order (α i)`. -/
 theorem induction_on_pi_min [∀ i, LinearOrderₓ (α i)] {p : (∀ i, Finset (α i)) → Prop} (f : ∀ i, Finset (α i))
     (h0 : p fun _ => ∅)
-    (step :
-      ∀ (g : ∀ i, Finset (α i)) (i : ι) (x : α i), (∀, ∀ y ∈ g i, ∀, x < y) → p g → p (update g i (insert x (g i)))) :
+    (step : ∀ (g : ∀ i, Finset (α i)) (i : ι) (x : α i), (∀ y ∈ g i, x < y) → p g → p (update g i (insert x (g i)))) :
     p f :=
   @induction_on_pi_max ι (fun i => (α i)ᵒᵈ) _ _ _ _ _ _ h0 step
 

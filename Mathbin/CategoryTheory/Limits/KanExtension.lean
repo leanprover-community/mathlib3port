@@ -62,7 +62,7 @@ def cone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : ι ⋙ G ⟶ F) : Cone (diagra
       naturality' := by
         rintro ⟨⟨il⟩, ir, i⟩ ⟨⟨jl⟩, jr, j⟩ ⟨⟨⟨fl⟩⟩, fr, ff⟩
         dsimp'  at *
-        simp only [← category.id_comp, ← category.assoc] at *
+        simp only [category.id_comp, category.assoc] at *
         rw [ff]
         have := f.naturality
         tidy }
@@ -77,7 +77,7 @@ def loc (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] : L ⥤ D where
   map_id' := by
     intro l
     ext j
-    simp only [← category.id_comp, ← limit.pre_π]
+    simp only [category.id_comp, limit.pre_π]
     congr 1
     simp
   map_comp' := by
@@ -95,8 +95,8 @@ def equiv (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] (G : L ⥤ D) :
     { app := fun x => f.app _ ≫ limit.π (diagram ι F (ι.obj x)) (StructuredArrow.mk (𝟙 _)),
       naturality' := by
         intro x y ff
-        dsimp' only [← whiskering_left]
-        simp only [← functor.comp_map, ← nat_trans.naturality_assoc, ← loc_map, ← category.assoc]
+        dsimp' only [whiskering_left]
+        simp only [functor.comp_map, nat_trans.naturality_assoc, loc_map, category.assoc]
         congr 1
         erw [limit.pre_π]
         change _ = _ ≫ (diagram ι F (ι.obj x)).map (structured_arrow.hom_mk _ _)
@@ -112,9 +112,9 @@ def equiv (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] (G : L ⥤ D) :
   left_inv := by
     intro x
     ext k j
-    dsimp' only [← cone]
+    dsimp' only [cone]
     rw [limit.lift_π]
-    simp only [← nat_trans.naturality_assoc, ← loc_map]
+    simp only [nat_trans.naturality_assoc, loc_map]
     erw [limit.pre_π]
     congr
     rcases j with ⟨⟨⟩, _, _⟩
@@ -145,8 +145,8 @@ theorem reflective [Full ι] [Faithful ι] [∀ X, HasLimitsOfShape (StructuredA
   intro F
   apply nat_iso.is_iso_of_is_iso_app _
   intro X
-  dsimp' [← adjunction]
-  simp only [← category.id_comp]
+  dsimp' [adjunction]
+  simp only [category.id_comp]
   exact
     is_iso.of_iso
       ((limit.is_limit _).conePointUniqueUpToIso (limit_of_diagram_initial structured_arrow.mk_id_initial _))
@@ -172,7 +172,7 @@ def cocone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : F ⟶ ι ⋙ G) : Cocone (di
       naturality' := by
         rintro ⟨ir, ⟨il⟩, i⟩ ⟨jl, ⟨jr⟩, j⟩ ⟨fl, ⟨⟨fl⟩⟩, ff⟩
         dsimp'  at *
-        simp only [← functor.comp_map, ← category.comp_id, ← nat_trans.naturality_assoc]
+        simp only [functor.comp_map, category.comp_id, nat_trans.naturality_assoc]
         rw [← G.map_comp, ff]
         tidy }
 
@@ -213,8 +213,8 @@ def equiv (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
         apply colimit.ι (diagram ι F (ι.obj x)) (costructured_arrow.mk (𝟙 _)) ≫ f.app _,-- sigh
       naturality' := by
         intro x y ff
-        dsimp' only [← whiskering_left]
-        simp only [← functor.comp_map, ← category.assoc]
+        dsimp' only [whiskering_left]
+        simp only [functor.comp_map, category.assoc]
         rw [← f.naturality (ι.map ff), ← category.assoc, ← category.assoc]
         let fff : costructured_arrow ι _ ⥤ _ := costructured_arrow.map (ι.map ff)
         -- same issue :-(
@@ -225,7 +225,7 @@ def equiv (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
         let fff : xx ⟶ yy :=
           costructured_arrow.hom_mk ff
             (by
-              simp only [← costructured_arrow.mk_hom_eq_self]
+              simp only [costructured_arrow.mk_hom_eq_self]
               erw [category.comp_id])
         erw [colimit.w (diagram ι F (ι.obj y)) fff]
         congr
@@ -241,7 +241,7 @@ def equiv (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
     intro x
     ext k j
     rw [colimit.ι_desc]
-    dsimp' only [← cocone]
+    dsimp' only [cocone]
     rw [category.assoc, ← x.naturality j.hom, ← category.assoc]
     congr 1
     change colimit.ι _ _ ≫ colimit.pre (diagram ι F k) (costructured_arrow.map _) = _
@@ -275,8 +275,8 @@ theorem coreflective [Full ι] [Faithful ι] [∀ X, HasColimitsOfShape (Costruc
   intro F
   apply nat_iso.is_iso_of_is_iso_app _
   intro X
-  dsimp' [← adjunction]
-  simp only [← category.comp_id]
+  dsimp' [adjunction]
+  simp only [category.comp_id]
   exact
     is_iso.of_iso
       ((colimit.is_colimit _).coconePointUniqueUpToIso

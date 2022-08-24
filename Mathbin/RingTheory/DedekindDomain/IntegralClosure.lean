@@ -59,6 +59,7 @@ variable [Algebra K L] [FiniteDimensional K L] [Algebra A L] [IsScalarTower A K 
 
 variable [Algebra C L] [IsIntegralClosure C A L] [Algebra A C] [IsScalarTower A C L]
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident c, ",", ident x_eq, "⟩", ":", expr «expr∃ , »((c : ι → A), «expr = »(algebra_map C L x, «expr∑ , »((i), «expr • »(c i, db i))))]]
 theorem IsIntegralClosure.range_le_span_dual_basis [IsSeparable K L] {ι : Type _} [Fintype ι] [DecidableEq ι]
     (b : Basis ι K L) (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
     ((Algebra.linearMap C L).restrictScalars A).range ≤
@@ -66,14 +67,15 @@ theorem IsIntegralClosure.range_le_span_dual_basis [IsSeparable K L] {ι : Type 
   by
   let db := (trace_form K L).dualBasis (trace_form_nondegenerate K L) b
   rintro _ ⟨x, rfl⟩
-  simp only [← LinearMap.coe_restrict_scalars_eq_coe, ← Algebra.linear_map_apply]
+  simp only [LinearMap.coe_restrict_scalars_eq_coe, Algebra.linear_map_apply]
   have hx : IsIntegral A (algebraMap C L x) := (IsIntegralClosure.is_integral A L x).algebraMap
-  suffices ∃ c : ι → A, algebraMap C L x = ∑ i, c i • db i by
-    obtain ⟨c, x_eq⟩ := this
-    rw [x_eq]
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident c, \",\", ident x_eq, \"⟩\", \":\", expr «expr∃ , »((c : ι → A), «expr = »(algebra_map C L x, «expr∑ , »((i), «expr • »(c i, db i))))]]"
+  · rw [x_eq]
     refine' Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span _)
     rw [Set.mem_range]
     exact ⟨i, rfl⟩
+    
   suffices ∃ c : ι → K, (∀ i, IsIntegral A (c i)) ∧ algebraMap C L x = ∑ i, c i • db i by
     obtain ⟨c, hc, hx⟩ := this
     have hc' : ∀ i, IsLocalization.IsInteger A (c i) := fun i => is_integrally_closed.is_integral_iff.mp (hc i)
@@ -98,10 +100,10 @@ variable (A) (K)
 
 include K
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y «expr ≠ » (0 : A))
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (y «expr ≠ » (0 : A))
 /-- Send a set of `x`'es in a finite extension `L` of the fraction field of `R`
 to `(y : R) • x ∈ integral_closure R L`. -/
-theorem exists_integral_multiples (s : Finset L) : ∃ (y : _)(_ : y ≠ (0 : A)), ∀, ∀ x ∈ s, ∀, IsIntegral A (y • x) := by
+theorem exists_integral_multiples (s : Finset L) : ∃ (y : _)(_ : y ≠ (0 : A)), ∀ x ∈ s, IsIntegral A (y • x) := by
   haveI := Classical.decEq L
   refine' s.induction _ _
   · use 1, one_ne_zero
@@ -146,14 +148,14 @@ theorem FiniteDimensional.exists_is_basis_integral : ∃ (s : Finset L)(b : Basi
           invFun := fun x => (algebraMap A L y)⁻¹ * x, left_inv := _, right_inv := _ },
       _⟩
   · intro x
-    simp only [← inv_mul_cancel_left₀ hy']
+    simp only [inv_mul_cancel_left₀ hy']
     
   · intro x
-    simp only [← mul_inv_cancel_left₀ hy']
+    simp only [mul_inv_cancel_left₀ hy']
     
   · rintro ⟨x', hx'⟩
-    simp only [← Algebra.smul_def, ← Finset.mem_image, ← exists_prop, ← Finset.mem_univ, ← true_andₓ] at his'
-    simp only [← Basis.map_apply, ← LinearEquiv.coe_mk]
+    simp only [Algebra.smul_def, Finset.mem_image, exists_prop, Finset.mem_univ, true_andₓ] at his'
+    simp only [Basis.map_apply, LinearEquiv.coe_mk]
     exact his' _ ⟨_, rfl⟩
     
 

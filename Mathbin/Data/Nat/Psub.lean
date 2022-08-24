@@ -61,14 +61,14 @@ theorem ppred_eq_none : ∀ {n : ℕ}, ppred n = none ↔ n = 0
 
 theorem psub_eq_some {m : ℕ} : ∀ {n k}, psub m n = some k ↔ k + n = m
   | 0, k => by
-    simp [← eq_comm]
+    simp [eq_comm]
   | n + 1, k => by
     dsimp'
     apply option.bind_eq_some.trans
-    simp [← psub_eq_some, ← add_commₓ, ← add_left_commₓ, ← Nat.succ_eq_add_one]
+    simp [psub_eq_some, add_commₓ, add_left_commₓ, Nat.succ_eq_add_one]
 
 theorem psub_eq_none {m n : ℕ} : psub m n = none ↔ m < n := by
-  cases s : psub m n <;> simp [← eq_comm]
+  cases s : psub m n <;> simp [eq_comm]
   · show m < n
     refine' lt_of_not_geₓ fun h => _
     cases' le.dest h with k e
@@ -90,7 +90,7 @@ theorem psub_add (m n k) :
       let x ← psub m n
       psub x k :=
   by
-  induction k <;> simp [*, ← add_succ, ← bind_assoc]
+  induction k <;> simp [*, add_succ, bind_assoc]
 
 /-- Same as `psub`, but with a more efficient implementation. -/
 @[inline]

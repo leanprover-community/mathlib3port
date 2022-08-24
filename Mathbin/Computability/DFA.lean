@@ -48,7 +48,7 @@ theorem eval_from_singleton (s : σ) (a : α) : M.evalFrom s [a] = M.step s a :=
 @[simp]
 theorem eval_from_append_singleton (s : σ) (x : List α) (a : α) : M.evalFrom s (x ++ [a]) = M.step (M.evalFrom s x) a :=
   by
-  simp only [← eval_from, ← List.foldl_append, ← List.foldl_cons, ← List.foldl_nil]
+  simp only [eval_from, List.foldl_append, List.foldl_cons, List.foldl_nil]
 
 /-- `M.eval x` evaluates `M` with input `x` starting from the state `M.start`. -/
 def eval : List α → σ :=
@@ -95,13 +95,13 @@ theorem eval_from_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.ca
       rfl, _⟩
   · rw [List.take_append_dropₓ, List.take_append_dropₓ]
     
-  · simp only [← List.length_dropₓ, ← List.length_takeₓ]
+  · simp only [List.length_dropₓ, List.length_takeₓ]
     rw [min_eq_leftₓ (hm.trans hlen), min_eq_leftₓ hle, add_tsub_cancel_of_le hle]
     exact hm
     
   · intro h
     have hlen' := congr_arg List.length h
-    simp only [← List.length_dropₓ, ← List.length, ← List.length_takeₓ] at hlen'
+    simp only [List.length_dropₓ, List.length, List.length_takeₓ] at hlen'
     rw [min_eq_leftₓ, tsub_eq_zero_iff_le] at hlen'
     · apply hneq
       apply le_antisymmₓ

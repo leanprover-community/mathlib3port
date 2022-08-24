@@ -57,7 +57,7 @@ variable {V : Type u} (G : SimpleGraph V)
 structure Partition where
   parts : Set (Set V)
   IsPartition : Setoidₓ.IsPartition parts
-  Independent : ∀, ∀ s ∈ parts, ∀, IsAntichain G.Adj s
+  Independent : ∀ s ∈ parts, IsAntichain G.Adj s
 
 /-- Whether a partition `P` has at most `n` parts. A graph with a partition
 satisfying this predicate called `n`-partite. (See `simple_graph.partitionable`.) -/

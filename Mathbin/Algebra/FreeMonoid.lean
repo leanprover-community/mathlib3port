@@ -71,14 +71,14 @@ def recOn {C : FreeMonoid α → Sort _} (xs : FreeMonoid α) (h0 : C 1) (ih : �
 theorem hom_eq ⦃f g : FreeMonoid α →* M⦄ (h : ∀ x, f (of x) = g (of x)) : f = g :=
   MonoidHom.ext fun l =>
     (recOn l (f.map_one.trans g.map_one.symm)) fun x xs hxs => by
-      simp only [← h, ← hxs, ← MonoidHom.map_mul]
+      simp only [h, hxs, MonoidHom.map_mul]
 
 /-- Equivalence between maps `α → M` and monoid homomorphisms `free_monoid α →* M`. -/
 @[to_additive "Equivalence between maps `α → A` and additive monoid homomorphisms\n`free_add_monoid α →+ A`."]
 def lift : (α → M) ≃ (FreeMonoid α →* M) where
   toFun := fun f =>
     ⟨fun l => (l.map f).Prod, rfl, fun l₁ l₂ => by
-      simp only [← mul_def, ← List.map_append, ← List.prod_append]⟩
+      simp only [mul_def, List.map_append, List.prod_append]⟩
   invFun := fun f x => f (of x)
   left_inv := fun f => funext fun x => one_mulₓ (f x)
   right_inv := fun f => hom_eq fun x => one_mulₓ (f (of x))

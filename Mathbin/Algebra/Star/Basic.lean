@@ -55,7 +55,7 @@ variable {R : Type u}
 export HasStar (star)
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident star]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident star]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Typeclass for a star operation with is involutive.
 -/
 class HasInvolutiveStar (R : Type u) extends HasStar R where
@@ -75,7 +75,7 @@ protected def Equivₓ.star [HasInvolutiveStar R] : Equivₓ.Perm R :=
   star_involutive.toPerm _
 
 theorem eq_star_of_eq_star [HasInvolutiveStar R] {r s : R} (h : r = star s) : s = star r := by
-  simp [← h]
+  simp [h]
 
 theorem eq_star_iff_eq_star [HasInvolutiveStar R] {r s : R} : r = star s ↔ s = star r :=
   ⟨eq_star_of_eq_star, eq_star_of_eq_star⟩
@@ -253,10 +253,10 @@ theorem star_nat_cast [Semiringₓ R] [StarRing R] (n : ℕ) : star (n : R) = n 
 
 @[simp, norm_cast]
 theorem star_int_cast [Ringₓ R] [StarRing R] (z : ℤ) : star (z : R) = z :=
-  (congr_arg unop ((starRingEquiv : R ≃+* Rᵐᵒᵖ).toRingHom.map_int_cast z)).trans (unop_int_cast _)
+  (congr_arg unop <| map_int_cast (starRingEquiv : R ≃+* Rᵐᵒᵖ) z).trans (unop_int_cast _)
 
 @[simp, norm_cast]
-theorem star_rat_cast [DivisionRing R] [CharZero R] [StarRing R] (r : ℚ) : star (r : R) = r :=
+theorem star_rat_cast [DivisionRing R] [StarRing R] (r : ℚ) : star (r : R) = r :=
   (congr_arg unop <| map_rat_cast (starRingEquiv : R ≃+* Rᵐᵒᵖ) r).trans (unop_rat_cast _)
 
 /-- `star` as a ring automorphism, for commutative `R`. -/
@@ -311,11 +311,11 @@ theorem star_div' [Field R] [StarRing R] (x y : R) : star (x / y) = star x / sta
 
 @[simp]
 theorem star_bit0 [AddMonoidₓ R] [StarAddMonoid R] (r : R) : star (bit0 r) = bit0 (star r) := by
-  simp [← bit0]
+  simp [bit0]
 
 @[simp]
 theorem star_bit1 [Semiringₓ R] [StarRing R] (r : R) : star (bit1 r) = bit1 (star r) := by
-  simp [← bit1]
+  simp [bit1]
 
 /-- Any commutative semiring admits the trivial `*`-structure.
 
@@ -385,6 +385,16 @@ instance [CommSemiringₓ R] [StarRing R] : RingHomInvPair (starRingEnd R) (star
   ⟨RingHom.ext star_star, RingHom.ext star_star⟩
 
 end RingHomInvPair
+
+section
+
+/-- `star_hom_class F R S` states that `F` is a type of `star`-preserving maps from `R` to `S`. -/
+class StarHomClass (F : Type _) (R S : outParam (Type _)) [HasStar R] [HasStar S] extends FunLike F R fun _ => S where
+  map_star : ∀ (f : F) (r : R), f (star r) = star (f r)
+
+export StarHomClass (map_star)
+
+end
 
 /-! ### Instances -/
 

@@ -61,7 +61,7 @@ elements γ₀. -/
 theorem directed_lt : Directed (· ≥ ·) fun γ₀ : Γ₀ˣ => principal { γ : Γ₀ | γ < γ₀ } := by
   intro γ₁ γ₂
   use LinearOrderₓ.min γ₁ γ₂ <;> dsimp' only
-  constructor <;> rw [ge_iff_le, principal_mono] <;> intro x x_in
+  constructor <;> rw [ge_iff_leₓ, principal_mono] <;> intro x x_in
   · calc
       x < ↑(LinearOrderₓ.min γ₁ γ₂) := x_in
       _ ≤ γ₁ := min_le_leftₓ γ₁ γ₂
@@ -78,14 +78,13 @@ theorem directed_lt : Directed (· ≥ ·) fun γ₀ : Γ₀ˣ => principal { γ
 /-- At all points of a linearly ordered commutative group with a zero element adjoined,
 the pure filter is smaller than the filter given by nhds_fun. -/
 theorem pure_le_nhds_fun : pure ≤ nhdsFun Γ₀ := fun x => by
-  by_cases' hx : x = 0 <;> simp [← hx, ← nhds_fun]
+  by_cases' hx : x = 0 <;> simp [hx, nhds_fun]
 
 /-- For every point Γ₀, and every “neighbourhood” s of it (described by nhds_fun), there is a
 smaller “neighbourhood” t ⊆ s, such that s is a “neighbourhood“ of all the points in t. -/
-theorem nhds_fun_ok (x : Γ₀) {s} (s_in : s ∈ nhdsFun Γ₀ x) :
-    ∃ t ∈ nhdsFun Γ₀ x, t ⊆ s ∧ ∀, ∀ y ∈ t, ∀, s ∈ nhdsFun Γ₀ y := by
+theorem nhds_fun_ok (x : Γ₀) {s} (s_in : s ∈ nhdsFun Γ₀ x) : ∃ t ∈ nhdsFun Γ₀ x, t ⊆ s ∧ ∀ y ∈ t, s ∈ nhdsFun Γ₀ y := by
   by_cases' hx : x = 0
-  · simp only [← hx, ← nhds_fun, ← exists_prop, ← if_true, ← eq_self_iff_true] at s_in⊢
+  · simp only [hx, nhds_fun, exists_prop, if_true, eq_self_iff_true] at s_in⊢
     cases' (mem_infi_of_directed (directed_lt Γ₀) _).mp s_in with γ₀ h
     use { γ : Γ₀ | γ < γ₀ }
     rw [mem_principal] at h
@@ -95,17 +94,17 @@ theorem nhds_fun_ok (x : Γ₀) {s} (s_in : s ∈ nhdsFun Γ₀ x) :
       
     · refine' ⟨h, fun y y_in => _⟩
       by_cases' hy : y = 0
-      · simp only [← hy, ← if_true, ← eq_self_iff_true]
+      · simp only [hy, if_true, eq_self_iff_true]
         apply mem_infi_of_mem γ₀
         rwa [mem_principal]
         
-      · simp [← hy, ← h y_in]
+      · simp [hy, h y_in]
         
       
     
-  · simp only [← hx, ← nhds_fun, ← exists_prop, ← if_false, ← mem_pure] at s_in⊢
+  · simp only [hx, nhds_fun, exists_prop, if_false, mem_pure] at s_in⊢
     refine' ⟨{x}, mem_singleton _, singleton_subset_iff.2 s_in, fun y y_in => _⟩
-    simpa [← mem_singleton_iff.mp y_in, ← hx]
+    simpa [mem_singleton_iff.mp y_in, hx]
     
 
 variable {Γ₀}
@@ -132,7 +131,7 @@ theorem singleton_nhds_of_units (γ : Γ₀ˣ) : ({γ} : Set Γ₀) ∈ 𝓝 (γ
 /-- If γ is a nonzero element of a linearly ordered group with zero element adjoined,
 then {γ} is a neighbourhood of γ. -/
 theorem singleton_nhds_of_ne_zero (γ : Γ₀) (h : γ ≠ 0) : ({γ} : Set Γ₀) ∈ 𝓝 (γ : Γ₀) := by
-  simp [← h]
+  simp [h]
 
 /-- If U is a neighbourhood of 0 in a linearly ordered group with zero element adjoined,
 then there exists an invertible element γ₀ such that {γ | γ < γ₀} ⊆ U. -/
@@ -140,7 +139,7 @@ theorem has_basis_nhds_zero : HasBasis (𝓝 (0 : Γ₀)) (fun _ => True) fun γ
   ⟨by
     intro U
     rw [nhds_mk_of_nhds (nhds_fun Γ₀) 0 (pure_le_nhds_fun Γ₀) (nhds_fun_ok Γ₀)]
-    simp only [← nhds_fun, ← if_true, ← eq_self_iff_true, ← exists_true_left]
+    simp only [nhds_fun, if_true, eq_self_iff_true, exists_true_left]
     simp_rw [mem_infi_of_directed (directed_lt Γ₀), mem_principal]⟩
 
 /-- If γ is an invertible element of a linearly ordered group with zero element adjoined,
@@ -187,7 +186,7 @@ instance (priority := 100) ordered_topology :
     OrderClosedTopology Γ₀ where is_closed_le' := by
     rw [← is_open_compl_iff]
     show IsOpen { p : Γ₀ × Γ₀ | ¬p.fst ≤ p.snd }
-    simp only [← not_leₓ]
+    simp only [not_leₓ]
     rw [is_open_iff_mem_nhds]
     rintro ⟨a, b⟩ hab
     change b < a at hab
@@ -224,25 +223,25 @@ instance (priority := 100) t3_space : T3Space Γ₀ := by
       · subst y
         contradiction
         
-      simpa [← hy']
+      simpa [hy']
       
     · erw [inf_eq_bot_iff]
       use sᶜ
-      simp only [← exists_prop, ← mem_principal]
+      simp only [exists_prop, mem_principal]
       exact
         ⟨s_closed.compl_mem_nhds x_not_in_s,
           ⟨s, subset.refl s, by
             simp ⟩⟩
       
     
-  · simp only [← nhdsWithin, ← inf_eq_bot_iff, ← exists_prop, ← mem_principal]
+  · simp only [nhdsWithin, inf_eq_bot_iff, exists_prop, mem_principal]
     exact
       ⟨{x}ᶜ, is_open_compl_iff.mpr is_closed_singleton, by
         rwa [subset_compl_singleton_iff], {x}, singleton_nhds_of_ne_zero x hx, {x}ᶜ, by
-        simp [← subset.refl]⟩
+        simp [subset.refl]⟩
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y «expr ≠ » (0 : Γ₀))
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (y «expr ≠ » (0 : Γ₀))
 /-- The topology on a linearly ordered group with zero element adjoined makes it a topological
 monoid. -/
 instance (priority := 100) : HasContinuousMul Γ₀ :=
@@ -251,7 +250,7 @@ instance (priority := 100) : HasContinuousMul Γ₀ :=
       intro y hy
       set γ := Units.mk0 y hy
       suffices tendsto (fun p : Γ₀ × Γ₀ => p.fst * p.snd) ((𝓝 0).Prod (𝓝 γ)) (𝓝 0) by
-        simpa [← ContinuousAt, ← nhds_prod_eq]
+        simpa [ContinuousAt, nhds_prod_eq]
       suffices ∀ γ' : Γ₀ˣ, ∃ γ'' : Γ₀ˣ, ∀ a b : Γ₀, a < γ'' → b = y → a * b < γ' by
         rw [(has_basis_nhds_zero.prod <| has_basis_nhds_units γ).tendsto_iff has_basis_nhds_zero]
         simpa
@@ -265,9 +264,9 @@ instance (priority := 100) : HasContinuousMul Γ₀ :=
     rintro ⟨x, y⟩
     by_cases' hx : x = 0 <;> by_cases' hy : y = 0
     · suffices tendsto (fun p : Γ₀ × Γ₀ => p.fst * p.snd) (𝓝 (0, 0)) (𝓝 0) by
-        simpa [← hx, ← hy, ← ContinuousAt]
+        simpa [hx, hy, ContinuousAt]
       suffices ∀ γ : Γ₀ˣ, ∃ γ' : Γ₀ˣ, ∀ a b : Γ₀, a < γ' → b < γ' → a * b < γ by
-        simpa [← nhds_prod_eq, ← has_basis_nhds_zero.prod_self.tendsto_iff has_basis_nhds_zero]
+        simpa [nhds_prod_eq, has_basis_nhds_zero.prod_self.tendsto_iff has_basis_nhds_zero]
       intro γ
       rcases exists_square_le γ with ⟨γ', h⟩
       use γ'

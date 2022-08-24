@@ -162,10 +162,10 @@ theorem is_pi_system_prod :
 theorem measurable_measure_prod_mk_left_finite [IsFiniteMeasure ν] {s : Set (α × β)} (hs : MeasurableSet s) :
     Measurable fun x => ν (Prod.mk x ⁻¹' s) := by
   refine' induction_on_inter generate_from_prod.symm is_pi_system_prod _ _ _ _ hs
-  · simp [← measurable_zero, ← const_def]
+  · simp [measurable_zero, const_def]
     
   · rintro _ ⟨s, t, hs, ht, rfl⟩
-    simp only [← mk_preimage_prod_right_eq_if, ← measure_if]
+    simp only [mk_preimage_prod_right_eq_if, measure_if]
     exact measurable_const.indicator hs
     
   · intro t ht h2t
@@ -185,7 +185,7 @@ theorem measurable_measure_prod_mk_left_finite [IsFiniteMeasure ν] {s : Set (α
 theorem measurable_measure_prod_mk_left [SigmaFinite ν] {s : Set (α × β)} (hs : MeasurableSet s) :
     Measurable fun x => ν (Prod.mk x ⁻¹' s) := by
   have : ∀ x, MeasurableSet (Prod.mk x ⁻¹' s) := fun x => measurable_prod_mk_left hs
-  simp only [@supr_restrict_spanning_sets _ _ ν, ← this]
+  simp only [← @supr_restrict_spanning_sets _ _ ν, this]
   apply measurable_supr
   intro i
   haveI := Fact.mk (measure_spanning_sets_lt_top ν i)
@@ -217,9 +217,9 @@ theorem Measurable.lintegral_prod_right' [SigmaFinite ν] :
   have m := @measurable_prod_mk_left
   refine' Measurable.ennreal_induction _ _ _
   · intro c s hs
-    simp only [indicator_comp_right]
+    simp only [← indicator_comp_right]
     suffices Measurable fun x => c * ν (Prod.mk x ⁻¹' s) by
-      simpa [← lintegral_indicator _ (m hs)]
+      simpa [lintegral_indicator _ (m hs)]
     exact (measurable_measure_prod_mk_left hs).const_mul _
     
   · rintro f g - hf hg h2f h2g
@@ -229,7 +229,7 @@ theorem Measurable.lintegral_prod_right' [SigmaFinite ν] :
   · intro f hf h2f h3f
     have := measurable_supr h3f
     have : ∀ x, Monotone fun n y => f n (x, y) := fun x i j hij y => h2f hij (x, y)
-    simpa [← lintegral_supr fun n => (hf n).comp m, ← this]
+    simpa [lintegral_supr fun n => (hf n).comp m, this]
     
 
 /-- The Lebesgue integral is measurable. This shows that the integrand of (the right-hand-side of)
@@ -261,13 +261,13 @@ section
 
 variable [NormedSpace ℝ E] [CompleteSpace E]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `borelize #[[expr E]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `borelize #[[expr E]]
 /-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
   Fubini's theorem is measurable.
   This version has `f` in curried form. -/
 theorem MeasureTheory.StronglyMeasurable.integral_prod_right [SigmaFinite ν] ⦃f : α → β → E⦄
     (hf : StronglyMeasurable (uncurry f)) : StronglyMeasurable fun x => ∫ y, f x y ∂ν := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `borelize #[[expr E]]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `borelize #[[expr E]]"
   haveI : separable_space (range (uncurry f) ∪ {0} : Set E) := hf.separable_space_range_union_singleton
   let s : ℕ → simple_func (α × β) E :=
     simple_func.approx_on _ hf.measurable (range (uncurry f) ∪ {0}) 0
@@ -285,10 +285,10 @@ theorem MeasureTheory.StronglyMeasurable.integral_prod_right [SigmaFinite ν] �
       simp_rw [simple_func.mem_range]
       rintro ⟨z, rfl⟩
       exact ⟨(x, z), rfl⟩
-    simp only [← simple_func.integral_eq_sum_of_subset (this _)]
+    simp only [simple_func.integral_eq_sum_of_subset (this _)]
     refine' Finset.strongly_measurable_sum _ fun x _ => _
     refine' (Measurable.ennreal_to_real _).StronglyMeasurable.smul_const _
-    simp (config := { singlePass := true })only [← simple_func.coe_comp, ← preimage_comp]
+    simp (config := { singlePass := true })only [simple_func.coe_comp, preimage_comp]
     apply measurable_measure_prod_mk_left
     exact (s n).measurable_set_fiber x
   have h2f' : tendsto f' at_top (𝓝 fun x : α => ∫ y : β, f x y ∂ν) := by
@@ -302,7 +302,7 @@ theorem MeasureTheory.StronglyMeasurable.integral_prod_right [SigmaFinite ν] �
         intro y
         simp_rw [s', simple_func.coe_comp]
         exact simple_func.norm_approx_on_zero_le _ _ (x, y) n
-      simp only [← f', ← hfx, ← simple_func.integral_eq_integral _ (this _), ← indicator_of_mem, ← mem_set_of_eq]
+      simp only [f', hfx, simple_func.integral_eq_integral _ (this _), indicator_of_mem, mem_set_of_eq]
       refine'
         tendsto_integral_of_dominated_convergence (fun y => ∥f x y∥ + ∥f x y∥) (fun n => (s' n x).AeStronglyMeasurable)
           (hfx.norm.add hfx.norm) _ _
@@ -313,7 +313,7 @@ theorem MeasureTheory.StronglyMeasurable.integral_prod_right [SigmaFinite ν] �
         simp [-uncurry_apply_pair]
         
       
-    · simpa [← f', ← hfx, ← integral_undef] using @tendsto_const_nhds _ _ _ (0 : E) _
+    · simpa [f', hfx, integral_undef] using @tendsto_const_nhds _ _ _ (0 : E) _
       
   exact strongly_measurable_of_tendsto _ hf' h2f'
 
@@ -393,7 +393,7 @@ theorem prod_prod (s : Set α) (t : Set β) : μ.Prod ν (s ×ˢ t) = μ s * ν 
       _ = ∫⁻ x in s', ν t ∂μ := by
         rw [set_lintegral_const, mul_comm]
       _ ≤ ∫⁻ x in s', f x ∂μ := set_lintegral_mono measurable_const hfm fun x => id
-      _ ≤ ∫⁻ x, f x ∂μ := lintegral_mono' restrict_le_self le_rfl
+      _ ≤ ∫⁻ x, f x ∂μ := lintegral_mono' restrict_le_self le_rflₓ
       _ = μ.prod ν ST := (prod_apply hSTm).symm
       _ = μ.prod ν (s ×ˢ t) := measure_to_measurable _
       
@@ -406,7 +406,7 @@ instance {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y] {m : Measurabl
   rintro U U_open ⟨⟨x, y⟩, hxy⟩
   rcases is_open_prod_iff.1 U_open x y hxy with ⟨u, v, u_open, v_open, xu, yv, huv⟩
   refine' ne_of_gtₓ (lt_of_lt_of_leₓ _ (measure_mono huv))
-  simp only [← prod_prod, ← CanonicallyOrderedCommSemiring.mul_pos]
+  simp only [prod_prod, CanonicallyOrderedCommSemiring.mul_pos]
   constructor
   · exact u_open.measure_pos μ ⟨x, xu⟩
     
@@ -431,7 +431,7 @@ instance {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {mα : Mea
   set L := (Prod.fst '' K) ×ˢ (Prod.snd '' K) with hL
   have : K ⊆ L := by
     rintro ⟨x, y⟩ hxy
-    simp only [← prod_mk_mem_set_prod_eq, ← mem_image, ← Prod.exists, ← exists_and_distrib_right, ← exists_eq_right]
+    simp only [prod_mk_mem_set_prod_eq, mem_image, Prod.exists, exists_and_distrib_right, exists_eq_right]
     exact ⟨⟨y, hxy⟩, ⟨x, hxy⟩⟩
   apply lt_of_le_of_ltₓ (measure_mono this)
   rw [hL, prod_prod]
@@ -455,7 +455,7 @@ theorem integrable_measure_prod_mk_left {s : Set (α × β)} (hs : MeasurableSet
   apply eventually_of_forall
   intro x hx
   rw [lt_top_iff_ne_top] at hx
-  simp [← of_real_to_real, ← hx]
+  simp [of_real_to_real, hx]
 
 /-- Note: the assumption `hs` cannot be dropped. For a counterexample, see
   Walter Rudin *Real and Complex Analysis*, example (c) in section 8.9. -/
@@ -511,7 +511,7 @@ instance prod.sigma_finite : SigmaFinite (μ.Prod ν) :=
 theorem prod_eq_generate_from {μ : Measure α} {ν : Measure β} {C : Set (Set α)} {D : Set (Set β)}
     (hC : generateFrom C = ‹_›) (hD : generateFrom D = ‹_›) (h2C : IsPiSystem C) (h2D : IsPiSystem D)
     (h3C : μ.FiniteSpanningSetsIn C) (h3D : ν.FiniteSpanningSetsIn D) {μν : Measure (α × β)}
-    (h₁ : ∀, ∀ s ∈ C, ∀, ∀ t ∈ D, ∀, μν (s ×ˢ t) = μ s * ν t) : μ.Prod ν = μν := by
+    (h₁ : ∀ s ∈ C, ∀ t ∈ D, μν (s ×ˢ t) = μ s * ν t) : μ.Prod ν = μν := by
   refine'
     (h3C.prod h3D).ext (generate_from_eq_prod hC hD h3C.is_countably_spanning h3D.is_countably_spanning).symm
       (h2C.prod h2D) _
@@ -534,7 +534,7 @@ theorem prod_swap : map Prod.swap (μ.Prod ν) = ν.Prod μ := by
 theorem prod_apply_symm {s : Set (α × β)} (hs : MeasurableSet s) : μ.Prod ν s = ∫⁻ y, μ ((fun x => (x, y)) ⁻¹' s) ∂ν :=
   by
   rw [← prod_swap, map_apply measurable_swap hs]
-  simp only [← prod_apply (measurable_swap hs)]
+  simp only [prod_apply (measurable_swap hs)]
   rfl
 
 theorem prod_assoc_prod [SigmaFinite τ] : map MeasurableEquiv.prodAssoc ((μ.Prod ν).Prod τ) = μ.Prod (ν.Prod τ) := by
@@ -595,7 +595,7 @@ theorem zero_prod (ν : Measure β) : (0 : Measure α).Prod ν = 0 := by
 
 @[simp]
 theorem prod_zero (μ : Measure α) : μ.Prod (0 : Measure β) = 0 := by
-  simp [← measure.prod]
+  simp [measure.prod]
 
 theorem map_prod_map {δ} [MeasurableSpace δ] {f : α → β} {g : γ → δ} {μa : Measure α} {μc : Measure γ}
     (hfa : SigmaFinite (map f μa)) (hgc : SigmaFinite (map g μc)) (hf : Measurable f) (hg : Measurable g) :
@@ -624,7 +624,7 @@ theorem skew_product [SigmaFinite μb] [SigmaFinite μd] {f : α → β} (hf : M
   · rw [← hf.map_eq, zero_prod, measure.map_zero, zero_prod]
     exact
       ⟨this, by
-        simp only [← measure.map_zero]⟩
+        simp only [measure.map_zero]⟩
     
   have : sigma_finite μc := by
     rcases(ae_ne_bot.2 ha).nonempty_of_mem hg with ⟨x, hx : map (g x) μc = μd⟩
@@ -639,10 +639,10 @@ theorem skew_product [SigmaFinite μb] [SigmaFinite μd] {f : α → β} (hf : M
   have : ∀ᵐ x ∂μa, μc ((fun y => (f x, g x y)) ⁻¹' s ×ˢ t) = indicator (f ⁻¹' s) (fun y => μd t) x := by
     refine' hg.mono fun x hx => _
     subst hx
-    simp only [← mk_preimage_prod_right_fn_eq_if, ← indicator_apply, ← mem_preimage]
+    simp only [mk_preimage_prod_right_fn_eq_if, indicator_apply, mem_preimage]
     split_ifs
     exacts[(map_apply hgm.of_uncurry_left ht).symm, measure_empty]
-  simp only [← preimage_preimage]
+  simp only [preimage_preimage]
   rw [lintegral_congr_ae this, lintegral_indicator _ (hf.1 hs), set_lintegral_const, hf.measure_preimage hs, mul_comm]
 
 /-- If `f : α → β` sends the measure `μa` to `μb` and `g : γ → δ` sends the measure `μc` to `μd`,
@@ -742,19 +742,18 @@ theorem lintegral_prod_of_measurable :
   have m := @measurable_prod_mk_left
   refine' Measurable.ennreal_induction _ _ _
   · intro c s hs
-    simp only [indicator_comp_right]
-    simp [← lintegral_indicator, ← m hs, ← hs, ← lintegral_const_mul, ← measurable_measure_prod_mk_left hs, ←
-      prod_apply]
+    simp only [← indicator_comp_right]
+    simp [lintegral_indicator, m hs, hs, lintegral_const_mul, measurable_measure_prod_mk_left hs, prod_apply]
     
   · rintro f g - hf hg h2f h2g
-    simp [← lintegral_add_left, ← Measurable.lintegral_prod_right', ← hf.comp m, ← hf, ← h2f, ← h2g]
+    simp [lintegral_add_left, Measurable.lintegral_prod_right', hf.comp m, hf, h2f, h2g]
     
   · intro f hf h2f h3f
     have kf : ∀ x n, Measurable fun y => f n (x, y) := fun x n => (hf n).comp m
     have k2f : ∀ x, Monotone fun n y => f n (x, y) := fun x i j hij y => h2f hij (x, y)
     have lf : ∀ n, Measurable fun x => ∫⁻ y, f n (x, y) ∂ν := fun n => (hf n).lintegral_prod_right'
     have l2f : Monotone fun n x => ∫⁻ y, f n (x, y) ∂ν := fun i j hij x => lintegral_mono (k2f x hij)
-    simp only [← lintegral_supr hf h2f, ← lintegral_supr (kf _), ← k2f, ← lintegral_supr lf l2f, ← h3f]
+    simp only [lintegral_supr hf h2f, lintegral_supr (kf _), k2f, lintegral_supr lf l2f, h3f]
     
 
 /-- **Tonelli's Theorem**: For `ℝ≥0∞`-valued almost everywhere measurable functions on `α × β`,
@@ -800,7 +799,7 @@ theorem lintegral_lintegral_swap [SigmaFinite μ] ⦃f : α → β → ℝ≥0�
 
 theorem lintegral_prod_mul {f : α → ℝ≥0∞} {g : β → ℝ≥0∞} (hf : AeMeasurable f μ) (hg : AeMeasurable g ν) :
     (∫⁻ z, f z.1 * g z.2 ∂μ.Prod ν) = (∫⁻ x, f x ∂μ) * ∫⁻ y, g y ∂ν := by
-  simp [← lintegral_prod _ (hf.fst.mul hg.snd), ← lintegral_lintegral_mul hf hg]
+  simp [lintegral_prod _ (hf.fst.mul hg.snd), lintegral_lintegral_mul hf hg]
 
 /-! ### Integrability on a product -/
 
@@ -823,7 +822,7 @@ theorem has_finite_integral_prod_iff ⦃f : α × β → E⦄ (h1f : StronglyMea
     HasFiniteIntegral f (μ.Prod ν) ↔
       (∀ᵐ x ∂μ, HasFiniteIntegral (fun y => f (x, y)) ν) ∧ HasFiniteIntegral (fun x => ∫ y, ∥f (x, y)∥ ∂ν) μ :=
   by
-  simp only [← has_finite_integral, ← lintegral_prod_of_measurable _ h1f.ennnorm]
+  simp only [has_finite_integral, lintegral_prod_of_measurable _ h1f.ennnorm]
   have : ∀ x, ∀ᵐ y ∂ν, 0 ≤ ∥f (x, y)∥ := fun x => eventually_of_forall fun y => norm_nonneg _
   simp_rw
     [integral_eq_lintegral_of_nonneg_ae (this _)
@@ -871,7 +870,7 @@ theorem integrable_prod_iff ⦃f : α × β → E⦄ (h1f : AeStronglyMeasurable
     Integrable f (μ.Prod ν) ↔
       (∀ᵐ x ∂μ, Integrable (fun y => f (x, y)) ν) ∧ Integrable (fun x => ∫ y, ∥f (x, y)∥ ∂ν) μ :=
   by
-  simp [← integrable, ← h1f, ← has_finite_integral_prod_iff', ← h1f.norm.integral_prod_right', ← h1f.prod_mk_left]
+  simp [integrable, h1f, has_finite_integral_prod_iff', h1f.norm.integral_prod_right', h1f.prod_mk_left]
 
 /-- A binary function is integrable if the function `x ↦ f (x, y)` is integrable for almost every
   `y` and the function `y ↦ ∫ ∥f (x, y)∥ dx` is integrable. -/
@@ -909,7 +908,7 @@ theorem integrable_prod_mul {f : α → ℝ} {g : β → ℝ} (hf : Integrable f
     
   · exact eventually_of_forall fun x => hg.const_mul (f x)
     
-  · simpa only [← norm_mul, ← integral_mul_left] using hf.norm.mul_const _
+  · simpa only [norm_mul, integral_mul_left] using hf.norm.mul_const _
     
 
 end
@@ -949,7 +948,7 @@ theorem integral_fn_integral_add ⦃f g : α × β → E⦄ (F : E → E') (hf :
     (∫ x, F (∫ y, f (x, y) + g (x, y) ∂ν) ∂μ) = ∫ x, F ((∫ y, f (x, y) ∂ν) + ∫ y, g (x, y) ∂ν) ∂μ := by
   refine' integral_congr_ae _
   filter_upwards [hf.prod_right_ae, hg.prod_right_ae] with _ h2f h2g
-  simp [← integral_add h2f h2g]
+  simp [integral_add h2f h2g]
 
 /-- Integrals commute with subtraction inside another integral.
   `F` can be any measurable function. -/
@@ -958,7 +957,7 @@ theorem integral_fn_integral_sub ⦃f g : α × β → E⦄ (F : E → E') (hf :
     (∫ x, F (∫ y, f (x, y) - g (x, y) ∂ν) ∂μ) = ∫ x, F ((∫ y, f (x, y) ∂ν) - ∫ y, g (x, y) ∂ν) ∂μ := by
   refine' integral_congr_ae _
   filter_upwards [hf.prod_right_ae, hg.prod_right_ae] with _ h2f h2g
-  simp [← integral_sub h2f h2g]
+  simp [integral_sub h2f h2g]
 
 /-- Integrals commute with subtraction inside a lower Lebesgue integral.
   `F` can be any function. -/
@@ -967,7 +966,7 @@ theorem lintegral_fn_integral_sub ⦃f g : α × β → E⦄ (F : E → ℝ≥0�
     (∫⁻ x, F (∫ y, f (x, y) - g (x, y) ∂ν) ∂μ) = ∫⁻ x, F ((∫ y, f (x, y) ∂ν) - ∫ y, g (x, y) ∂ν) ∂μ := by
   refine' lintegral_congr_ae _
   filter_upwards [hf.prod_right_ae, hg.prod_right_ae] with _ h2f h2g
-  simp [← integral_sub h2f h2g]
+  simp [integral_sub h2f h2g]
 
 /-- Double integrals commute with addition. -/
 theorem integral_integral_add ⦃f g : α × β → E⦄ (hf : Integrable f (μ.Prod ν)) (hg : Integrable g (μ.Prod ν)) :
@@ -1069,7 +1068,7 @@ theorem integral_integral_swap ⦃f : α → β → E⦄ (hf : Integrable (uncur
 /-- **Fubini's Theorem** for set integrals. -/
 theorem set_integral_prod (f : α × β → E) {s : Set α} {t : Set β} (hf : IntegrableOn f (s ×ˢ t) (μ.Prod ν)) :
     (∫ z in s ×ˢ t, f z ∂μ.Prod ν) = ∫ x in s, ∫ y in t, f (x, y) ∂ν ∂μ := by
-  simp only [measure.prod_restrict s t, ← integrable_on] at hf⊢
+  simp only [← measure.prod_restrict s t, integrable_on] at hf⊢
   exact integral_prod f hf
 
 theorem integral_prod_mul (f : α → ℝ) (g : β → ℝ) : (∫ z, f z.1 * g z.2 ∂μ.Prod ν) = (∫ x, f x ∂μ) * ∫ y, g y ∂ν := by
@@ -1080,11 +1079,11 @@ theorem integral_prod_mul (f : α → ℝ) (g : β → ℝ) : (∫ z, f z.1 * g 
   have H : ¬integrable f μ ∨ ¬integrable g ν := by
     contrapose! h
     exact integrable_prod_mul h.1 h.2
-  cases H <;> simp [← integral_undef h, ← integral_undef H]
+  cases H <;> simp [integral_undef h, integral_undef H]
 
 theorem set_integral_prod_mul (f : α → ℝ) (g : β → ℝ) (s : Set α) (t : Set β) :
     (∫ z in s ×ˢ t, f z.1 * g z.2 ∂μ.Prod ν) = (∫ x in s, f x ∂μ) * ∫ y in t, g y ∂ν := by
-  simp only [measure.prod_restrict s t, ← integrable_on, ← integral_prod_mul]
+  simp only [← measure.prod_restrict s t, integrable_on, integral_prod_mul]
 
 end MeasureTheory
 

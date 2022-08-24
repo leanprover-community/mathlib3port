@@ -87,7 +87,7 @@ variable (R)
 
 instance self : Finite R R :=
   ⟨⟨{1}, by
-      simpa only [← Finset.coe_singleton] using Ideal.span_singleton_one⟩⟩
+      simpa only [Finset.coe_singleton] using Ideal.span_singleton_one⟩⟩
 
 variable (M)
 
@@ -195,7 +195,7 @@ theorem of_restrict_scalars_finite_type [Algebra A B] [IsScalarTower R A B] [hB 
   refine' ⟨⟨S, eq_top_iff.2 fun b => _⟩⟩
   have le : adjoin R (S : Set B) ≤ Subalgebra.restrictScalars R (adjoin A S) := by
     apply (Algebra.adjoin_le _ : _ ≤ Subalgebra.restrictScalars R (adjoin A ↑S))
-    simp only [← Subalgebra.coe_restrict_scalars]
+    simp only [Subalgebra.coe_restrict_scalars]
     exact Algebra.subset_adjoin
   exact le (eq_top_iff.1 hS b)
 
@@ -204,7 +204,7 @@ variable {R A B}
 theorem of_surjective (hRA : FiniteType R A) (f : A →ₐ[R] B) (hf : Surjective f) : FiniteType R B :=
   ⟨by
     convert hRA.1.map f
-    simpa only [← map_top f, ← @eq_comm _ ⊤, ← eq_top_iff, ← AlgHom.mem_range] using hf⟩
+    simpa only [map_top f, @eq_comm _ ⊤, eq_top_iff, AlgHom.mem_range] using hf⟩
 
 theorem equiv (hRA : FiniteType R A) (e : A ≃ₐ[R] B) : FiniteType R B :=
   hRA.ofSurjective e e.Surjective
@@ -346,7 +346,7 @@ protected theorem quotient {I : Ideal A} (h : I.Fg) (hfp : FinitePresentation R 
   · exact (Ideal.Quotient.mkₐ_surjective R I).comp hf.1
     
   · refine' Ideal.fg_ker_comp _ _ hf.2 _ hf.1
-    simp [← h]
+    simp [h]
     
 
 /-- If `f : A →ₐ[R] B` is surjective with finitely generated kernel and `A` is finitely presented,
@@ -458,7 +458,7 @@ theorem comp {g : B →+* C} {f : A →+* B} (hg : g.Finite) (hf : f.Finite) : (
     (by
       fconstructor
       intro a b c
-      simp only [← Algebra.smul_def, ← RingHom.map_mul, ← mul_assoc]
+      simp only [Algebra.smul_def, RingHom.map_mul, mul_assoc]
       rfl)
     hf hg
 
@@ -497,7 +497,7 @@ theorem comp {g : B →+* C} {f : A →+* B} (hg : g.FiniteType) (hf : f.FiniteT
     (by
       fconstructor
       intro a b c
-      simp only [← Algebra.smul_def, ← RingHom.map_mul, ← mul_assoc]
+      simp only [Algebra.smul_def, RingHom.map_mul, mul_assoc]
       rfl)
     hf hg
 
@@ -544,7 +544,7 @@ theorem comp {g : B →+* C} {f : A →+* B} (hg : g.FinitePresentation) (hf : f
     (g.comp f).FinitePresentation :=
   @Algebra.FinitePresentation.trans A B C _ _ f.toAlgebra _ (g.comp f).toAlgebra g.toAlgebra
     { smul_assoc := fun a b c => by
-        simp only [← Algebra.smul_def, ← RingHom.map_mul, ← mul_assoc]
+        simp only [Algebra.smul_def, RingHom.map_mul, mul_assoc]
         rfl }
     hf hg
 
@@ -692,7 +692,7 @@ theorem support_gen_of_gen' {S : Set (AddMonoidAlgebra R M)} (hS : Algebra.adjoi
   suffices (of' R M '' ⋃ f ∈ S, (f.support : Set M)) = ⋃ f ∈ S, of' R M '' (f.support : Set M) by
     rw [this]
     exact support_gen_of_gen hS
-  simp only [← Set.image_Union]
+  simp only [Set.image_Union]
 
 end Semiringₓ
 
@@ -708,7 +708,7 @@ theorem exists_finset_adjoin_eq_top [h : FiniteType R (AddMonoidAlgebra R M)] :
   letI : DecidableEq M := Classical.decEq M
   use Finset.bUnion S fun f => f.support
   have : (Finset.bUnion S fun f => f.support : Set M) = ⋃ f ∈ S, (f.support : Set M) := by
-    simp only [← Finset.set_bUnion_coe, ← Finset.coe_bUnion]
+    simp only [Finset.set_bUnion_coe, Finset.coe_bUnion]
   rw [this]
   exact support_gen_of_gen' hS
 
@@ -729,7 +729,7 @@ the closure of some `S : set M` then `m ∈ closure S`. -/
 theorem mem_closure_of_mem_span_closure [Nontrivial R] {m : M} {S : Set M}
     (h : of' R M m ∈ span R (Submonoid.closure (of' R M '' S) : Set (AddMonoidAlgebra R M))) : m ∈ closure S := by
   suffices Multiplicative.ofAdd m ∈ Submonoid.closure (Multiplicative.toAdd ⁻¹' S) by
-    simpa [to_submonoid_closure]
+    simpa [← to_submonoid_closure]
   let S' := @Submonoid.closure M Multiplicative.mulOneClass S
   have h' : Submonoid.map (of R M) S' = Submonoid.closure ((fun x : M => (of R M) x) '' S) := MonoidHom.map_mclosure _ _
   rw [Set.image_congr' (show ∀ x, of' R M x = of R M x from fun x => of'_eq_of x), ← h'] at h
@@ -784,7 +784,7 @@ theorem finite_type_iff_fg [CommRingₓ R] [Nontrivial R] : FiniteType R (AddMon
   obtain ⟨S, hS⟩ := @exists_finset_adjoin_eq_top R M _ _ h
   refine' AddMonoidₓ.fg_def.2 ⟨S, (eq_top_iff' _).2 fun m => _⟩
   have hm : of' R M m ∈ (adjoin R (of' R M '' ↑S)).toSubmodule := by
-    simp only [← hS, ← top_to_submodule, ← Submodule.mem_top]
+    simp only [hS, top_to_submodule, Submodule.mem_top]
   rw [adjoin_eq_span] at hm
   exact mem_closure_of_mem_span_closure hm
 
@@ -796,7 +796,7 @@ theorem fg_of_finite_type [CommRingₓ R] [Nontrivial R] [h : FiniteType R (AddM
 finite type. -/
 theorem finite_type_iff_group_fg {G : Type _} [AddCommGroupₓ G] [CommRingₓ R] [Nontrivial R] :
     FiniteType R (AddMonoidAlgebra R G) ↔ AddGroupₓ.Fg G := by
-  simpa [← AddGroupₓ.FgIffAddMonoid.fg] using finite_type_iff_fg
+  simpa [AddGroupₓ.FgIffAddMonoid.fg] using finite_type_iff_fg
 
 end AddMonoidAlgebra
 
@@ -836,7 +836,7 @@ theorem support_gen_of_gen' {S : Set (MonoidAlgebra R M)} (hS : Algebra.adjoin R
   suffices (of R M '' ⋃ f ∈ S, (f.support : Set M)) = ⋃ f ∈ S, of R M '' (f.support : Set M) by
     rw [this]
     exact support_gen_of_gen hS
-  simp only [← Set.image_Union]
+  simp only [Set.image_Union]
 
 end Semiringₓ
 
@@ -852,7 +852,7 @@ theorem exists_finset_adjoin_eq_top [h : FiniteType R (MonoidAlgebra R M)] :
   letI : DecidableEq M := Classical.decEq M
   use Finset.bUnion S fun f => f.support
   have : (Finset.bUnion S fun f => f.support : Set M) = ⋃ f ∈ S, (f.support : Set M) := by
-    simp only [← Finset.set_bUnion_coe, ← Finset.coe_bUnion]
+    simp only [Finset.set_bUnion_coe, Finset.coe_bUnion]
   rw [this]
   exact support_gen_of_gen' hS
 
@@ -921,7 +921,7 @@ theorem fg_of_finite_type [CommRingₓ R] [Nontrivial R] [h : FiniteType R (Mono
 /-- A group `G` is finitely generated if and only if `add_monoid_algebra R G` is of finite type. -/
 theorem finite_type_iff_group_fg {G : Type _} [CommGroupₓ G] [CommRingₓ R] [Nontrivial R] :
     FiniteType R (MonoidAlgebra R G) ↔ Groupₓ.Fg G := by
-  simpa [← Groupₓ.FgIffMonoid.fg] using finite_type_iff_fg
+  simpa [Groupₓ.FgIffMonoid.fg] using finite_type_iff_fg
 
 end MonoidAlgebra
 

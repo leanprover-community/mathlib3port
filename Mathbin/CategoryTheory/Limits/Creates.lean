@@ -341,7 +341,7 @@ def createsColimitOfFullyFaithfulOfIso {K : J ⥤ C} {F : C ⥤ D} [Full F] [Fai
             F.map_injective
               (by
                 erw [category.comp_id]
-                simp only [← functor.map_comp, ← functor.image_preimage]
+                simp only [functor.map_comp, functor.image_preimage]
                 erw [colimit.w_assoc (K ⋙ F)]) } } :
       Cocone K)
     (by

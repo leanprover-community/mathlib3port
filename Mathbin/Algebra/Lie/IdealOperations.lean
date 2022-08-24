@@ -62,7 +62,7 @@ theorem lie_ideal_oper_eq_linear_span :
     (↑⁅I,N⁆ : Submodule R M) = Submodule.span R { m | ∃ (x : I)(n : N), ⁅(x : L),(n : M)⁆ = m } := by
   apply le_antisymmₓ
   · let s := { m : M | ∃ (x : ↥I)(n : ↥N), ⁅(x : L),(n : M)⁆ = m }
-    have aux : ∀ (y : L), ∀ m' ∈ Submodule.span R s, ∀, ⁅y,m'⁆ ∈ Submodule.span R s := by
+    have aux : ∀ (y : L), ∀ m' ∈ Submodule.span R s, ⁅y,m'⁆ ∈ Submodule.span R s := by
       intro y m' hm'
       apply Submodule.span_induction hm'
       · rintro m'' ⟨x, n, hm''⟩
@@ -75,7 +75,7 @@ theorem lie_ideal_oper_eq_linear_span :
           rfl
           
         
-      · simp only [← lie_zero, ← Submodule.zero_mem]
+      · simp only [lie_zero, Submodule.zero_mem]
         
       · intro m₁ m₂ hm₁ hm₂
         rw [lie_add]
@@ -106,7 +106,7 @@ theorem lie_ideal_oper_eq_linear_span' :
     exact ⟨⟨x, hx⟩, ⟨n, hn⟩, rfl⟩
     
 
-theorem lie_le_iff : ⁅I,N⁆ ≤ N' ↔ ∀, ∀ x ∈ I, ∀, ∀ m ∈ N, ∀, ⁅x,m⁆ ∈ N' := by
+theorem lie_le_iff : ⁅I,N⁆ ≤ N' ↔ ∀ x ∈ I, ∀ m ∈ N, ⁅x,m⁆ ∈ N' := by
   rw [lie_ideal_oper_eq_span, LieSubmodule.lie_span_le]
   refine' ⟨fun h x hx m hm => h ⟨⟨x, hx⟩, ⟨m, hm⟩, rfl⟩, _⟩
   rintro h _ ⟨⟨x, hx⟩, ⟨m, hm⟩, rfl⟩
@@ -159,9 +159,9 @@ theorem bot_lie : ⁅(⊥ : LieIdeal R L),N⁆ = ⊥ := by
   rw [← hn]
   change x ∈ (⊥ : LieIdeal R L) at hx
   rw [mem_bot] at hx
-  simp [← hx]
+  simp [hx]
 
-theorem lie_eq_bot_iff : ⁅I,N⁆ = ⊥ ↔ ∀, ∀ x ∈ I, ∀, ∀ m ∈ N, ∀, ⁅(x : L),m⁆ = 0 := by
+theorem lie_eq_bot_iff : ⁅I,N⁆ = ⊥ ↔ ∀ x ∈ I, ∀ m ∈ N, ⁅(x : L),m⁆ = 0 := by
   rw [lie_ideal_oper_eq_span, LieSubmodule.lie_span_eq_bot_iff]
   refine' ⟨fun h x hx m hm => h ⁅x,m⁆ ⟨⟨x, hx⟩, ⟨m, hm⟩, rfl⟩, _⟩
   rintro h - ⟨⟨x, hx⟩, ⟨⟨n, hn⟩, rfl⟩⟩
@@ -206,7 +206,7 @@ theorem lie_sup : ⁅I,N⊔N'⁆ = ⁅I,N⁆⊔⁅I,N'⁆ := by
   constructor
   · apply lie_coe_mem_lie
     
-  simp [h, hn']
+  simp [← h, ← hn']
 
 @[simp]
 theorem sup_lie : ⁅I⊔J,N⁆ = ⁅I,N⁆⊔⁅J,N⁆ := by
@@ -229,7 +229,7 @@ theorem sup_lie : ⁅I⊔J,N⁆ = ⁅I,N⁆⊔⁅J,N⁆ := by
   constructor
   · apply lie_coe_mem_lie
     
-  simp [h, hx']
+  simp [← h, ← hx']
 
 @[simp]
 theorem lie_inf : ⁅I,N⊓N'⁆ ≤ ⁅I,N⁆⊓⁅I,N'⁆ := by
@@ -250,7 +250,7 @@ theorem map_bracket_eq : map f ⁅I,N⁆ = ⁅I,map f N⁆ := by
   ext m
   constructor
   · rintro ⟨-, ⟨⟨x, ⟨n, hn⟩, rfl⟩, hm⟩⟩
-    simp only [← LieModuleHom.coe_to_linear_map, ← LieModuleHom.map_lie] at hm
+    simp only [LieModuleHom.coe_to_linear_map, LieModuleHom.map_lie] at hm
     exact ⟨x, ⟨f n, (mem_map (f n)).mpr ⟨n, hn, rfl⟩⟩, hm⟩
     
   · rintro ⟨x, ⟨m₂, hm₂ : m₂ ∈ map f N⟩, rfl⟩
@@ -308,7 +308,7 @@ theorem map_bracket_le {I₁ I₂ : LieIdeal R L} : map f ⁅I₁,I₂⁆ ≤ �
   let fy₁ : ↥(map f I₁) := ⟨f y₁, mem_map hy₁⟩
   let fy₂ : ↥(map f I₂) := ⟨f y₂, mem_map hy₂⟩
   change _ ∈ comap f ⁅map f I₁,map f I₂⁆
-  simp only [← Submodule.coe_mk, ← mem_comap, ← LieHom.map_lie]
+  simp only [Submodule.coe_mk, mem_comap, LieHom.map_lie]
   exact LieSubmodule.lie_coe_mem_lie _ _ fy₁ fy₂
 
 theorem map_bracket_eq {I₁ I₂ : LieIdeal R L} (h : Function.Surjective f) : map f ⁅I₁,I₂⁆ = ⁅map f I₁,map f I₂⁆ := by
@@ -340,7 +340,7 @@ theorem comap_bracket_eq {J₁ J₂ : LieIdeal R L'} (h : f.IsIdealMorphism) :
     f.ker_coe_submodule, ← Submodule.comap_map_eq, LieSubmodule.lie_ideal_oper_eq_linear_span,
     LieSubmodule.lie_ideal_oper_eq_linear_span, LinearMap.map_span]
   congr
-  simp only [← LieHom.coe_to_linear_map, ← Set.mem_set_of_eq]
+  simp only [LieHom.coe_to_linear_map, Set.mem_set_of_eq]
   ext y
   constructor
   · rintro ⟨⟨x₁, hx₁⟩, ⟨x₂, hx₂⟩, hy⟩
@@ -351,7 +351,7 @@ theorem comap_bracket_eq {J₁ J₂ : LieIdeal R L'} (h : f.IsIdealMorphism) :
     obtain ⟨⟨z₂, hz₂⟩, hz₂'⟩ := hx₂
     rw [← hz₂] at hz₂'
     use ⁅z₁,z₂⁆, ⟨z₁, hz₁'⟩, ⟨z₂, hz₂'⟩, rfl
-    simp only [← hz₁, ← hz₂, ← Submodule.coe_mk, ← LieHom.map_lie]
+    simp only [hz₁, hz₂, Submodule.coe_mk, LieHom.map_lie]
     
   · rintro ⟨x, ⟨⟨z₁, hz₁⟩, ⟨z₂, hz₂⟩, hx⟩, hy⟩
     rw [← hy, ← hx]
@@ -362,7 +362,7 @@ theorem comap_bracket_eq {J₁ J₂ : LieIdeal R L'} (h : f.IsIdealMorphism) :
       rw [LieSubmodule.mem_inf]
       exact ⟨f.mem_ideal_range, hz₂⟩
     use ⟨f z₁, hz₁'⟩, ⟨f z₂, hz₂'⟩
-    simp only [← Submodule.coe_mk, ← LieHom.map_lie]
+    simp only [Submodule.coe_mk, LieHom.map_lie]
     
 
 theorem map_comap_bracket_eq {J₁ J₂ : LieIdeal R L'} (h : f.IsIdealMorphism) :
@@ -373,7 +373,7 @@ theorem map_comap_bracket_eq {J₁ J₂ : LieIdeal R L'} (h : f.IsIdealMorphism)
 theorem comap_bracket_incl {I₁ I₂ : LieIdeal R L} : ⁅comap I.incl I₁,comap I.incl I₂⁆ = comap I.incl ⁅I⊓I₁,I⊓I₂⁆ := by
   conv_rhs => congr skip rw [← I.incl_ideal_range]
   rw [comap_bracket_eq]
-  simp only [← ker_incl, ← sup_bot_eq]
+  simp only [ker_incl, sup_bot_eq]
   exact I.incl_is_ideal_morphism
 
 /-- This is a very useful result; it allows us to use the fact that inclusion distributes over the

@@ -81,12 +81,12 @@ protected def e2 {n k : ℕ} : { s : Sym (Finₓ n.succ.succ) k // ↑0 ∉ s } 
     ⟨map (Finₓ.succAbove 0) s, (mt mem_map.1) (not_exists.2 fun t => not_and.2 fun _ => Finₓ.succ_above_ne _ t)⟩
   left_inv := fun s => by
     obtain ⟨s, hs⟩ := s
-    simp only [← Finₓ.zero_succ_above, ← map_map, ← comp_app]
+    simp only [Finₓ.zero_succ_above, map_map, comp_app]
     nth_rw_rhs 0[← map_id' s]
     refine' Sym.map_congr fun v hv => _
-    simp [← Finₓ.pred_above_zero (ne_of_mem_of_not_mem hv hs)]
+    simp [Finₓ.pred_above_zero (ne_of_mem_of_not_mem hv hs)]
   right_inv := fun s => by
-    simp only [← Finₓ.zero_succ_above, ← map_map, ← comp_app]
+    simp only [Finₓ.zero_succ_above, map_map, comp_app]
     nth_rw_rhs 0[← map_id' s]
     refine' Sym.map_congr fun v hv => _
     rw [← Finₓ.zero_succ_above v, ← Finₓ.cast_succ_zero, Finₓ.pred_above_succ_above 0 v]
@@ -105,7 +105,7 @@ theorem card_sym_fin_eq_multichoose (n k : ℕ) : card (Sym (Finₓ n) k) = mult
   · intro x y h1 h2
     rw [multichoose_succ_succ, ← h1, ← h2, add_commₓ]
     cases x
-    · simp only [← card_eq_zero_iff, ← Nat.nat_zero_eq_zero, ← card_unique, ← self_eq_add_rightₓ]
+    · simp only [card_eq_zero_iff, Nat.nat_zero_eq_zero, card_unique, self_eq_add_rightₓ]
       infer_instance
       
     rw [← card_sum]
@@ -141,14 +141,14 @@ theorem card_image_diag (s : Finset α) : (s.diag.Image Quotientₓ.mk).card = s
   cases Quotientₓ.eq.1 h
   · rfl
     
-  · simp only [← mem_coe, ← mem_diag] at hx
+  · simp only [mem_coe, mem_diag] at hx
     rw [hx.2]
     
 
 theorem two_mul_card_image_off_diag (s : Finset α) : 2 * (s.offDiag.Image Quotientₓ.mk).card = s.offDiag.card := by
   rw
     [card_eq_sum_card_fiberwise
-      (fun x => mem_image_of_mem _ : ∀, ∀ x ∈ s.off_diag, ∀, Quotientₓ.mk x ∈ s.off_diag.image Quotientₓ.mk),
+      (fun x => mem_image_of_mem _ : ∀ x ∈ s.off_diag, Quotientₓ.mk x ∈ s.off_diag.image Quotientₓ.mk),
     sum_const_nat (Quotientₓ.ind _), mul_comm]
   rintro ⟨x, y⟩ hxy
   simp_rw [mem_image, exists_prop, mem_off_diag, Quotientₓ.eq] at hxy
@@ -162,7 +162,7 @@ theorem two_mul_card_image_off_diag (s : Finset α) : 2 * (s.offDiag.Image Quoti
     rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) <;> rw [mem_off_diag] <;> exact ⟨‹_›, ‹_›, ‹_›⟩
   -- hxy' is used here
   rw [this, card_insert_of_not_mem, card_singleton]
-  simp only [← not_and, ← Prod.mk.inj_iff, ← mem_singleton]
+  simp only [not_and, Prod.mk.inj_iff, mem_singleton]
   exact fun _ => hxy'
 
 /-- The `off_diag` of `s : finset α` is sent on a finset of `sym2 α` of card `s.off_diag.card / 2`.

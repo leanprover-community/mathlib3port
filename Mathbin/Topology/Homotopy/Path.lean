@@ -83,12 +83,12 @@ def eval (F : Homotopy p₀ p₁) (t : I) : Path x₀ x₁ where
 @[simp]
 theorem eval_zero (F : Homotopy p₀ p₁) : F.eval 0 = p₀ := by
   ext t
-  simp [← eval]
+  simp [eval]
 
 @[simp]
 theorem eval_one (F : Homotopy p₀ p₁) : F.eval 1 = p₁ := by
   ext t
-  simp [← eval]
+  simp [eval]
 
 end
 
@@ -156,11 +156,11 @@ def hcomp (F : Homotopy p₀ q₀) (G : Homotopy p₁ q₁) : Homotopy (p₀.tra
               continuity)).ContinuousOn
         _
     intro x hx
-    norm_num[← hx]
+    norm_num[hx]
   map_zero_left' := fun x => by
-    norm_num[← Path.trans]
+    norm_num[Path.trans]
   map_one_left' := fun x => by
-    norm_num[← Path.trans]
+    norm_num[Path.trans]
   prop' := by
     rintro x t ht
     cases ht
@@ -213,11 +213,11 @@ def reparam (p : Path x₀ x₁) (f : I → I) (hf : Continuous f) (hf₀ : f 0 
   prop' := fun t x hx => by
     cases hx
     · rw [hx]
-      norm_num[← hf₀]
+      norm_num[hf₀]
       
     · rw [Set.mem_singleton_iff] at hx
       rw [hx]
-      norm_num[← hf₁]
+      norm_num[hf₁]
       
 
 /-- Suppose `F : homotopy p q`. Then we have a `homotopy p.symm q.symm` by reversing the second
@@ -227,9 +227,9 @@ argument.
 def symm₂ {p q : Path x₀ x₁} (F : p.Homotopy q) : p.symm.Homotopy q.symm where
   toFun := fun x => F ⟨x.1, σ x.2⟩
   map_zero_left' := by
-    simp [← Path.symm]
+    simp [Path.symm]
   map_one_left' := by
-    simp [← Path.symm]
+    simp [Path.symm]
   prop' := fun t x hx => by
     cases hx
     · rw [hx]
@@ -252,10 +252,10 @@ def map {p q : Path x₀ x₁} (F : p.Homotopy q) (f : C(X, Y)) : Homotopy (p.ma
     simp
   prop' := fun t x hx => by
     cases hx
-    · simp [← hx]
+    · simp [hx]
       
     · rw [Set.mem_singleton_iff] at hx
-      simp [← hx]
+      simp [hx]
       
 
 end Homotopy

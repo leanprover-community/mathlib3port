@@ -146,7 +146,7 @@ theorem is_invariant_iff_image_eq (s : Set α) : IsInvariant ϕ s ↔ ∀ t, ϕ 
       (fun h t =>
         Subset.antisymm (h t) fun _ hx =>
           ⟨_, h (-t) ⟨_, hx, rfl⟩, by
-            simp [map_add]⟩)
+            simp [← map_add]⟩)
       fun h t => by
       rw [h t])
 

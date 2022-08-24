@@ -51,12 +51,12 @@ open Function Rat Real Set
 
 open Classical Pointwise
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1481:11: unsupported: advanced extends in structure
+-- ./././Mathport/Syntax/Translate/Command.lean:351:11: unsupported: advanced extends in structure
 /-- A field which is both linearly ordered and conditionally complete with respect to the order.
 This axiomatizes the reals. -/
 @[protect_proj, ancestor LinearOrderedField ConditionallyCompleteLinearOrder]
 class ConditionallyCompleteLinearOrderedField (α : Type _) extends
-  "./././Mathport/Syntax/Translate/Basic.lean:1481:11: unsupported: advanced extends in structure",
+  "./././Mathport/Syntax/Translate/Command.lean:351:11: unsupported: advanced extends in structure",
   ConditionallyCompleteLinearOrder α
 
 -- see Note [lower instance priority]
@@ -304,7 +304,7 @@ def inducedOrderRingHom : α →+*o β :=
             · simp_rw [AddMonoidHom.map_neg, neg_mul, mul_neg, neg_negₓ]
               
             
-          · simp only [← mul_zero, ← AddMonoidHom.map_zero]
+          · simp only [mul_zero, AddMonoidHom.map_zero]
             
           · exact this x h
             
@@ -322,7 +322,7 @@ def inducedOrderRingIso : β ≃+*o γ :=
     right_inv := induced_map_inv_self _ _,
     map_le_map_iff' := fun x y => by
       refine' ⟨fun h => _, fun h => induced_map_mono _ _ h⟩
-      simpa [← induced_order_ring_hom, ← AddMonoidHom.mkRingHomOfMulSelfOfTwoNeZero, ← induced_add_hom] using
+      simpa [induced_order_ring_hom, AddMonoidHom.mkRingHomOfMulSelfOfTwoNeZero, induced_add_hom] using
         induced_map_mono γ β h }
 
 @[simp]
@@ -355,7 +355,7 @@ end LinearOrderedField
 
 section Real
 
-variable {R S : Type _} [LinearOrderedField R] [LinearOrderedField S]
+variable {R S : Type _} [OrderedRing R] [LinearOrderedRing S]
 
 theorem ring_hom_monotone (hR : ∀ r : R, 0 ≤ r → ∃ s : R, s ^ 2 = r) (f : R →+* S) : Monotone f := by
   intro a b hab

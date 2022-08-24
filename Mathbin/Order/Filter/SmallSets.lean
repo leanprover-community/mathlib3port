@@ -46,10 +46,10 @@ theorem has_basis_small_sets (l : Filter α) : HasBasis l.smallSets (fun t : Set
   l.basis_sets.smallSets
 
 /-- `g` converges to `f.small_sets` if for all `s ∈ f`, eventually we have `g x ⊆ s`. -/
-theorem tendsto_small_sets_iff {f : α → Set β} : Tendsto f la lb.smallSets ↔ ∀, ∀ t ∈ lb, ∀, ∀ᶠ x in la, f x ⊆ t :=
+theorem tendsto_small_sets_iff {f : α → Set β} : Tendsto f la lb.smallSets ↔ ∀ t ∈ lb, ∀ᶠ x in la, f x ⊆ t :=
   (has_basis_small_sets lb).tendsto_right_iff
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem eventually_small_sets {p : Set α → Prop} : (∀ᶠ s in l.smallSets, p s) ↔ ∃ s ∈ l, ∀ (t) (_ : t ⊆ s), p t :=
   eventually_lift'_iff monotone_powerset
 
@@ -57,9 +57,8 @@ theorem eventually_small_sets' {p : Set α → Prop} (hp : ∀ ⦃s t⦄, s ⊆ 
     (∀ᶠ s in l.smallSets, p s) ↔ ∃ s ∈ l, p s :=
   eventually_small_sets.trans <| exists₂_congrₓ fun s hsf => ⟨fun H => H s Subset.rfl, fun hs t ht => hp ht hs⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (s «expr ⊆ » t)
-theorem frequently_small_sets {p : Set α → Prop} :
-    (∃ᶠ s in l.smallSets, p s) ↔ ∀, ∀ t ∈ l, ∀, ∃ (s : _)(_ : s ⊆ t), p s :=
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (s «expr ⊆ » t)
+theorem frequently_small_sets {p : Set α → Prop} : (∃ᶠ s in l.smallSets, p s) ↔ ∀ t ∈ l, ∃ (s : _)(_ : s ⊆ t), p s :=
   l.has_basis_small_sets.frequently_iff
 
 theorem frequently_small_sets_mem (l : Filter α) : ∃ᶠ s in l.smallSets, s ∈ l :=
@@ -111,14 +110,14 @@ theorem eventually_small_sets_eventually {p : α → Prop} :
   calc
     _ ↔ ∃ s ∈ l, ∀ᶠ x in l', x ∈ s → p x := eventually_small_sets' fun s t hst ht => ht.mono fun x hx hs => hx (hst hs)
     _ ↔ ∃ s ∈ l, ∃ t ∈ l', ∀ x, x ∈ t → x ∈ s → p x := by
-      simp only [← eventually_iff_exists_mem]
+      simp only [eventually_iff_exists_mem]
     _ ↔ ∀ᶠ x in l⊓l', p x := by
-      simp only [← eventually_inf, ← and_comm, ← mem_inter_iff, and_imp]
+      simp only [eventually_inf, and_comm, mem_inter_iff, ← and_imp]
     
 
 @[simp]
-theorem eventually_small_sets_forall {p : α → Prop} : (∀ᶠ s in l.smallSets, ∀, ∀ x ∈ s, ∀, p x) ↔ ∀ᶠ x in l, p x := by
-  simpa only [← inf_top_eq, ← eventually_top] using @eventually_small_sets_eventually α l ⊤ p
+theorem eventually_small_sets_forall {p : α → Prop} : (∀ᶠ s in l.smallSets, ∀ x ∈ s, p x) ↔ ∀ᶠ x in l, p x := by
+  simpa only [inf_top_eq, eventually_top] using @eventually_small_sets_eventually α l ⊤ p
 
 alias eventually_small_sets_forall ↔ eventually.of_small_sets eventually.small_sets
 

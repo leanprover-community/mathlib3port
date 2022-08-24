@@ -156,7 +156,7 @@ theorem compress_mem_compression (ha : a ∈ s) : compress u v a ∈ 𝓒 u v s 
 -- This is a special case of `compress_mem_compression` once we have `compression_idem`.
 theorem compress_mem_compression_of_mem_compression (ha : a ∈ 𝓒 u v s) : compress u v a ∈ 𝓒 u v s := by
   rw [mem_compression] at ha⊢
-  simp only [← compress_idem, ← exists_prop]
+  simp only [compress_idem, exists_prop]
   obtain ⟨_, ha⟩ | ⟨_, b, hb, rfl⟩ := ha
   · exact Or.inl ⟨ha, ha⟩
     

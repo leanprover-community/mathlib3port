@@ -27,12 +27,12 @@ unitary
 def unitary (R : Type _) [Monoidₓ R] [StarSemigroup R] : Submonoid R where
   Carrier := { U | star U * U = 1 ∧ U * star U = 1 }
   one_mem' := by
-    simp only [← mul_oneₓ, ← and_selfₓ, ← Set.mem_set_of_eq, ← star_one]
+    simp only [mul_oneₓ, and_selfₓ, Set.mem_set_of_eq, star_one]
   mul_mem' := fun U B ⟨hA₁, hA₂⟩ ⟨hB₁, hB₂⟩ => by
     refine' ⟨_, _⟩
     · calc
         star (U * B) * (U * B) = star B * star U * U * B := by
-          simp only [← mul_assoc, ← star_mul]
+          simp only [mul_assoc, star_mul]
         _ = star B * (star U * U) * B := by
           rw [← mul_assoc]
         _ = 1 := by
@@ -104,12 +104,12 @@ instance : Groupₓ (unitary R) :=
 instance : HasInvolutiveStar (unitary R) :=
   ⟨fun _ => by
     ext
-    simp only [← coe_star, ← star_star]⟩
+    simp only [coe_star, star_star]⟩
 
 instance : StarSemigroup (unitary R) :=
   ⟨fun _ _ => by
     ext
-    simp only [← coe_star, ← Submonoid.coe_mul, ← star_mul]⟩
+    simp only [coe_star, Submonoid.coe_mul, star_mul]⟩
 
 instance : Inhabited (unitary R) :=
   ⟨1⟩
@@ -157,14 +157,14 @@ theorem coe_inv (U : unitary R) : ↑U⁻¹ = (U⁻¹ : R) :=
 
 @[norm_cast]
 theorem coe_div (U₁ U₂ : unitary R) : ↑(U₁ / U₂) = (U₁ / U₂ : R) := by
-  simp only [← div_eq_mul_inv, ← coe_inv, ← Submonoid.coe_mul]
+  simp only [div_eq_mul_inv, coe_inv, Submonoid.coe_mul]
 
 @[norm_cast]
 theorem coe_zpow (U : unitary R) (z : ℤ) : ↑(U ^ z) = (U ^ z : R) := by
   induction z
-  · simp [← SubmonoidClass.coe_pow]
+  · simp [SubmonoidClass.coe_pow]
     
-  · simp [← coe_inv]
+  · simp [coe_inv]
     
 
 end GroupWithZeroₓ

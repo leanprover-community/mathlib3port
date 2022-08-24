@@ -112,7 +112,7 @@ theorem adjunction_to_types_unit_app_val {G : Type max v u ⥤ D} (adj : G ⊣ f
     ((adjunctionToTypes J adj).Unit.app Y).val =
       (adj.whiskerRight _).Unit.app ((sheafOfTypesToPresheaf J).obj Y) ≫ whiskerRight (J.toSheafify _) (forget D) :=
   by
-  dsimp' [← adjunction_to_types, ← adjunction.comp]
+  dsimp' [adjunction_to_types, adjunction.comp]
   simpa
 
 @[simp]
@@ -120,12 +120,12 @@ theorem adjunction_to_types_counit_app_val {G : Type max v u ⥤ D} (adj : G ⊣
     ((adjunctionToTypes J adj).counit.app X).val =
       J.sheafifyLift ((Functor.associator _ _ _).Hom ≫ (adj.whiskerRight _).counit.app _) X.2 :=
   by
-  dsimp' [← adjunction_to_types, ← adjunction.comp, ← adjunction.whisker_right]
+  dsimp' [adjunction_to_types, adjunction.comp, adjunction.whisker_right]
   rw [category.id_comp]
   apply J.sheafify_lift_unique
   rw [adjunction_counit_app_val, J.sheafify_map_sheafify_lift, J.to_sheafify_sheafify_lift]
   ext
-  dsimp' [← Sheaf_equiv_SheafOfTypes, ← equivalence.symm, ← equivalence.to_adjunction, ← nat_iso.of_components]
+  dsimp' [Sheaf_equiv_SheafOfTypes, equivalence.symm, equivalence.to_adjunction, nat_iso.of_components]
   simp
 
 instance [IsRightAdjoint (forget D)] : IsRightAdjoint (sheafForget J) :=

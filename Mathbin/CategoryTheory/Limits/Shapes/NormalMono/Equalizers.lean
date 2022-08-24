@@ -25,7 +25,7 @@ namespace CategoryTheory.NormalMonoCategory
 
 variable [HasFiniteProducts C] [HasKernels C] [NormalMonoCategory C]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1401:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Command.lean:271:38: unsupported irreducible non-definition
 /-- The pullback of two monomorphisms exists. -/
 irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a] [Mono b] : HasLimit (cospan a b) :=
   let ⟨P, f, haf, i⟩ := normalMonoOfMono a
@@ -60,7 +60,7 @@ irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a
               prod.hom_ext
                 (calc
                   ((PullbackCone.snd s ≫ b) ≫ prod.lift f g) ≫ limits.prod.fst = PullbackCone.snd s ≫ b ≫ f := by
-                    simp only [← prod.lift_fst, ← category.assoc]
+                    simp only [prod.lift_fst, category.assoc]
                   _ = PullbackCone.fst s ≫ a ≫ f := by
                     rw [pullback_cone.condition_assoc]
                   _ = PullbackCone.fst s ≫ 0 := by
@@ -70,7 +70,7 @@ irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a
                   )
                 (calc
                   ((PullbackCone.snd s ≫ b) ≫ prod.lift f g) ≫ limits.prod.snd = PullbackCone.snd s ≫ b ≫ g := by
-                    simp only [← prod.lift_snd, ← category.assoc]
+                    simp only [prod.lift_snd, category.assoc]
                   _ = PullbackCone.snd s ≫ 0 := by
                     rw [hbg]
                   _ = 0 ≫ limits.prod.snd := by
@@ -79,11 +79,11 @@ irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a
           (fun s =>
             (cancel_mono a).1 <| by
               rw [kernel_fork.ι_of_ι] at ha'
-              simp [← ha', ← pullback_cone.condition s])
+              simp [ha', pullback_cone.condition s])
           (fun s =>
             (cancel_mono b).1 <| by
               rw [kernel_fork.ι_of_ι] at hb'
-              simp [← hb'])
+              simp [hb'])
           fun s m h₁ h₂ =>
           (cancel_mono (kernel.ι (prod.lift f g))).1 <|
             calc
@@ -105,7 +105,7 @@ attribute [local instance] pullback_of_mono
 private abbrev P {X Y : C} (f g : X ⟶ Y) [Mono (prod.lift (𝟙 X) f)] [Mono (prod.lift (𝟙 X) g)] : C :=
   pullback (prod.lift (𝟙 X) f) (prod.lift (𝟙 X) g)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1401:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Command.lean:271:38: unsupported irreducible non-definition
 /-- The equalizer of `f` and `g` exists. -/
 irreducible_def has_limit_parallel_pair {X Y : C} (f g : X ⟶ Y) : HasLimit (parallelPair f g) :=
   have huv : (pullback.fst : p f g ⟶ X) = pullback.snd :=
@@ -137,17 +137,17 @@ irreducible_def has_limit_parallel_pair {X Y : C} (f g : X ⟶ Y) : HasLimit (pa
             pullback.lift (Fork.ι s) (Fork.ι s) <|
               prod.hom_ext
                 (by
-                  simp only [← prod.lift_fst, ← category.assoc])
+                  simp only [prod.lift_fst, category.assoc])
                 (by
-                  simp only [← prod.comp_lift, ← fork.condition]))
+                  simp only [prod.comp_lift, fork.condition]))
           (fun s => by
-            simp only [← fork.ι_of_ι, ← pullback.lift_fst])
+            simp only [fork.ι_of_ι, pullback.lift_fst])
           fun s m h =>
           pullback.hom_ext
             (by
-              simpa only [← pullback.lift_fst] using h)
+              simpa only [pullback.lift_fst] using h)
             (by
-              simpa only [← huv.symm, ← pullback.lift_fst] using h) }
+              simpa only [huv.symm, pullback.lift_fst] using h) }
 
 end
 
@@ -199,7 +199,7 @@ namespace CategoryTheory.NormalEpiCategory
 
 variable [HasFiniteCoproducts C] [HasCokernels C] [NormalEpiCategory C]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1401:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Command.lean:271:38: unsupported irreducible non-definition
 /-- The pushout of two epimorphisms exists. -/
 irreducible_def pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [Epi a] [Epi b] : HasColimit (span a b) :=
   let ⟨P, f, hfa, i⟩ := normalEpiOfEpi a
@@ -225,7 +225,7 @@ irreducible_def pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [Epi a] [
   HasColimit.mk
     { Cocone :=
         PushoutCocone.mk a' b' <| by
-          simp only [← cofork.π_of_π] at ha' hb'
+          simp only [cofork.π_of_π] at ha' hb'
           rw [ha', hb'],
       IsColimit :=
         PushoutCocone.IsColimit.mk _
@@ -253,11 +253,11 @@ irreducible_def pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [Epi a] [
           (fun s =>
             (cancel_epi a).1 <| by
               rw [cokernel_cofork.π_of_π] at ha'
-              simp [← reassoc_of ha', ← pushout_cocone.condition s])
+              simp [reassoc_of ha', pushout_cocone.condition s])
           (fun s =>
             (cancel_epi b).1 <| by
               rw [cokernel_cofork.π_of_π] at hb'
-              simp [← reassoc_of hb'])
+              simp [reassoc_of hb'])
           fun s m h₁ h₂ =>
           (cancel_epi (cokernel.π (coprod.desc f g))).1 <|
             calc
@@ -279,7 +279,7 @@ attribute [local instance] pushout_of_epi
 private abbrev Q {X Y : C} (f g : X ⟶ Y) [Epi (coprod.desc (𝟙 Y) f)] [Epi (coprod.desc (𝟙 Y) g)] : C :=
   pushout (coprod.desc (𝟙 Y) f) (coprod.desc (𝟙 Y) g)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1401:38: unsupported irreducible non-definition
+-- ./././Mathport/Syntax/Translate/Command.lean:271:38: unsupported irreducible non-definition
 /-- The coequalizer of `f` and `g` exists. -/
 irreducible_def has_colimit_parallel_pair {X Y : C} (f g : X ⟶ Y) : HasColimit (parallelPair f g) :=
   have huv : (pushout.inl : Y ⟶ q f g) = pushout.inr :=
@@ -288,7 +288,7 @@ irreducible_def has_colimit_parallel_pair {X Y : C} (f g : X ⟶ Y) : HasColimit
       _ = (coprod.inl ≫ coprod.desc (𝟙 Y) f) ≫ pushout.inl := by
         rw [coprod.inl_desc]
       _ = (coprod.inl ≫ coprod.desc (𝟙 Y) g) ≫ pushout.inr := by
-        simp only [← category.assoc, ← pushout.condition]
+        simp only [category.assoc, pushout.condition]
       _ = pushout.inr := by
         rw [coprod.inl_desc, category.id_comp]
       
@@ -297,7 +297,7 @@ irreducible_def has_colimit_parallel_pair {X Y : C} (f g : X ⟶ Y) : HasColimit
       f ≫ (pushout.inl : Y ⟶ q f g) = (coprod.inr ≫ coprod.desc (𝟙 Y) f) ≫ pushout.inl := by
         rw [coprod.inr_desc]
       _ = (coprod.inr ≫ coprod.desc (𝟙 Y) g) ≫ pushout.inr := by
-        simp only [← category.assoc, ← pushout.condition]
+        simp only [category.assoc, pushout.condition]
       _ = g ≫ pushout.inr := by
         rw [coprod.inr_desc]
       
@@ -311,17 +311,17 @@ irreducible_def has_colimit_parallel_pair {X Y : C} (f g : X ⟶ Y) : HasColimit
             pushout.desc (Cofork.π s) (Cofork.π s) <|
               coprod.hom_ext
                 (by
-                  simp only [← coprod.inl_desc_assoc])
+                  simp only [coprod.inl_desc_assoc])
                 (by
-                  simp only [← coprod.desc_comp, ← cofork.condition]))
+                  simp only [coprod.desc_comp, cofork.condition]))
           (fun s => by
-            simp only [← pushout.inl_desc, ← cofork.π_of_π])
+            simp only [pushout.inl_desc, cofork.π_of_π])
           fun s m h =>
           pushout.hom_ext
             (by
-              simpa only [← pushout.inl_desc] using h)
+              simpa only [pushout.inl_desc] using h)
             (by
-              simpa only [← huv.symm, ← pushout.inl_desc] using h) }
+              simpa only [huv.symm, pushout.inl_desc] using h) }
 
 end
 

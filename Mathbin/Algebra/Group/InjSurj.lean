@@ -291,7 +291,7 @@ protected def addGroupWithOne {M₁} [Zero M₁] [One M₁] [Add M₁] [HasSmul 
     int_cast_of_nat := fun n =>
       hf
         (by
-          simp only [← nat_cast, ← int_cast, ← Int.cast_coe_nat]),
+          simp only [nat_cast, int_cast, Int.cast_coe_nat]),
     int_cast_neg_succ_of_nat := fun n =>
       hf
         (by
@@ -330,7 +330,7 @@ protected def semigroup [Semigroupₓ M₁] (f : M₁ → M₂) (hf : Surjective
   { ‹Mul M₂› with
     mul_assoc :=
       hf.forall₃.2 fun x y z => by
-        simp only [mul, ← mul_assoc] }
+        simp only [← mul, mul_assoc] }
 
 /-- A type endowed with `*` is a commutative semigroup,
 if it admits a surjective map that preserves `*` from a commutative semigroup.

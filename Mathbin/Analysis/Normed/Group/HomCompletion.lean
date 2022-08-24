@@ -73,7 +73,7 @@ def NormedAddGroupHom.completion (f : NormedAddGroupHom G H) : NormedAddGroupHom
       · intro x
         change ∥f.to_add_monoid_hom.completion _ ↑x∥ ≤ ∥f∥ * ∥↑x∥
         rw [f.to_add_monoid_hom.completion_coe f.continuous]
-        simp only [← completion.norm_coe]
+        simp only [completion.norm_coe]
         exact f.le_op_norm x
          }
 
@@ -138,7 +138,7 @@ def NormedAddCommGroup.toCompl : NormedAddGroupHom G (Completion G) where
   map_add' := Completion.toCompl.map_add
   bound' :=
     ⟨1, by
-      simp [← le_reflₓ]⟩
+      simp [le_reflₓ]⟩
 
 open NormedAddCommGroup
 
@@ -164,7 +164,7 @@ theorem NormedAddGroupHom.norm_completion (f : NormedAddGroupHom G H) : ∥f.Com
       continuity
       
     · intro g
-      simp [← f.le_op_norm g]
+      simp [f.le_op_norm g]
       
     
   · intro N N_nonneg hN
@@ -182,7 +182,7 @@ theorem NormedAddGroupHom.ker_le_ker_completion (f : NormedAddGroupHom G H) :
   rcases h with ⟨⟨g, g_in : g ∈ f.ker⟩, rfl⟩
   rw [f.mem_ker] at g_in
   change f.completion (g : completion G) = 0
-  simp [← NormedAddGroupHom.mem_ker, ← f.completion_coe g, ← g_in, ← completion.coe_zero]
+  simp [NormedAddGroupHom.mem_ker, f.completion_coe g, g_in, completion.coe_zero]
 
 theorem NormedAddGroupHom.ker_completion {f : NormedAddGroupHom G H} {C : ℝ} (h : f.SurjectiveOnWith f.range C) :
     (f.Completion.ker : Set <| Completion G) = Closure (toCompl.comp <| incl f.ker).range := by
@@ -227,7 +227,7 @@ theorem NormedAddGroupHom.ker_completion {f : NormedAddGroupHom G H} {C : ℝ} (
     · norm_cast
       rw [NormedAddGroupHom.comp_range]
       apply AddSubgroup.mem_map_of_mem
-      simp only [← incl_range, ← mem_ker]
+      simp only [incl_range, mem_ker]
       
     · calc
         ∥hatg - (g - g')∥ = ∥hatg - g + g'∥ := by

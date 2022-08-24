@@ -100,7 +100,7 @@ theorem projective_lifting_property [h : Projective R P] (f : M →ₗ[R] N) (g 
   use φ.comp s
   ext p
   conv_rhs => rw [← hs p]
-  simp [← φ, ← Finsupp.total_apply, ← Function.surj_inv_eq hf]
+  simp [φ, Finsupp.total_apply, Function.surj_inv_eq hf]
 
 /-- A module which satisfies the universal property is projective. Note that the universe variables
 in `huniv` are somewhat restricted. -/
@@ -165,8 +165,7 @@ theorem projective_of_basis {ι : Type _} (b : Basis ι R P) : Projective R P :=
   -- get it from `ι → (P →₀ R)` coming from `b`.
   use b.constr ℕ fun i => Finsupp.single (b i) (1 : R)
   intro m
-  simp only [← b.constr_apply, ← mul_oneₓ, ← id.def, ← Finsupp.smul_single', ← Finsupp.total_single, ←
-    LinearMap.map_finsupp_sum]
+  simp only [b.constr_apply, mul_oneₓ, id.def, Finsupp.smul_single', Finsupp.total_single, LinearMap.map_finsupp_sum]
   exact b.total_repr m
 
 instance (priority := 100) projective_of_free [Module.Free R P] : Module.Projective R P :=

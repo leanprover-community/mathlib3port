@@ -328,7 +328,7 @@ instance : OrderedAddCommGroup Surreal where
   lt := (· < ·)
   le_refl := by
     rintro ⟨_⟩
-    apply @le_rfl Pgame
+    apply @le_rflₓ Pgame
   le_trans := by
     rintro ⟨_⟩ ⟨_⟩ ⟨_⟩
     apply @le_transₓ Pgame

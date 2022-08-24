@@ -290,7 +290,7 @@ def mkOfUnitCounit (adj : CoreUnitCounit F G) : F ⊣ G :=
           convert id_comp f
           have t := congr_arg (fun t : nat_trans _ _ => t.app _) adj.left_triangle
           dsimp'  at t
-          simp only [← id_comp] at t
+          simp only [id_comp] at t
           exact t,
         right_inv := fun g => by
           change _ ≫ G.map (_ ≫ _) = _
@@ -298,7 +298,7 @@ def mkOfUnitCounit (adj : CoreUnitCounit F G) : F ⊣ G :=
           convert comp_id g
           have t := congr_arg (fun t : nat_trans _ _ => t.app _) adj.right_triangle
           dsimp'  at t
-          simp only [← id_comp] at t
+          simp only [id_comp] at t
           exact t } }
 
 /-- The adjunction between the identity functor on a category and itself. -/
@@ -416,7 +416,7 @@ def adjunctionOfEquivLeft : leftAdjointOfEquiv e he ⊣ G :=
       hom_equiv_naturality_left_symm' := by
         intros
         erw [← he' e he, ← Equivₓ.apply_eq_iff_eq]
-        simp [← (he _ _ _ _ _).symm] }
+        simp [(he _ _ _ _ _).symm] }
 
 end ConstructLeft
 
@@ -500,11 +500,11 @@ def toAdjunction (e : C ≌ D) : e.Functor ⊣ e.inverse :=
     ⟨e.Unit, e.counit, by
       ext
       dsimp'
-      simp only [← id_comp]
+      simp only [id_comp]
       exact e.functor_unit_comp _, by
       ext
       dsimp'
-      simp only [← id_comp]
+      simp only [id_comp]
       exact e.unit_inverse_comp _⟩
 
 @[simp]

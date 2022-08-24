@@ -48,10 +48,10 @@ instance : Abelian AddCommGroupₓₓ.{u} where
   normalEpiOfEpi := fun X Y => normalEpi
   add_comp' := by
     intros
-    simp only [← preadditive.add_comp]
+    simp only [preadditive.add_comp]
   comp_add' := by
     intros
-    simp only [← preadditive.comp_add]
+    simp only [preadditive.comp_add]
 
 end AddCommGroupₓₓ
 

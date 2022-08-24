@@ -35,7 +35,7 @@ theorem has_deriv_at_exp (x : ℂ) : HasDerivAt exp (exp x) x := by
     norm_num
   refine' (is_O.of_bound ∥exp x∥ _).trans_is_o (is_o_pow_id this)
   filter_upwards [Metric.ball_mem_nhds (0 : ℂ) zero_lt_one]
-  simp only [← Metric.mem_ball, ← dist_zero_right, ← norm_pow]
+  simp only [Metric.mem_ball, dist_zero_right, norm_pow]
   exact fun z hz => exp_bound_sq x z hz.le
 
 theorem differentiable_exp : Differentiable 𝕜 exp := fun x => (has_deriv_at_exp x).DifferentiableAt.restrictScalars 𝕜
@@ -66,7 +66,7 @@ theorem cont_diff_exp : ∀ {n}, ContDiff 𝕜 n exp := by
   exact this.restrict_scalars 𝕜
 
 theorem has_strict_deriv_at_exp (x : ℂ) : HasStrictDerivAt exp (exp x) x :=
-  cont_diff_exp.ContDiffAt.has_strict_deriv_at' (has_deriv_at_exp x) le_rfl
+  cont_diff_exp.ContDiffAt.has_strict_deriv_at' (has_deriv_at_exp x) le_rflₓ
 
 theorem has_strict_fderiv_at_exp_real (x : ℂ) : HasStrictFderivAt exp (exp x • (1 : ℂ →L[ℝ] ℂ)) x :=
   (has_strict_deriv_at_exp x).complex_to_real_fderiv

@@ -79,7 +79,7 @@ def limitConeIsLimit (F : J ⥤ Mon_ C) : IsLimit (limitCone F) where
   uniq' := fun s m w => by
     ext
     dsimp'
-    simp only [← Mon_.forget_map, ← limit.lift_π, ← functor.map_cone_π_app]
+    simp only [Mon_.forget_map, limit.lift_π, functor.map_cone_π_app]
     exact congr_arg Mon_.Hom.hom (w j)
 
 instance has_limits :

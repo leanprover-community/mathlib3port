@@ -51,19 +51,19 @@ theorem preimage_coe_Iic : (coe : α → WithTop α) ⁻¹' Iic a = Iic a :=
 
 @[simp]
 theorem preimage_coe_Icc : (coe : α → WithTop α) ⁻¹' Icc a b = Icc a b := by
-  simp [Ici_inter_Iic]
+  simp [← Ici_inter_Iic]
 
 @[simp]
 theorem preimage_coe_Ico : (coe : α → WithTop α) ⁻¹' Ico a b = Ico a b := by
-  simp [Ici_inter_Iio]
+  simp [← Ici_inter_Iio]
 
 @[simp]
 theorem preimage_coe_Ioc : (coe : α → WithTop α) ⁻¹' Ioc a b = Ioc a b := by
-  simp [Ioi_inter_Iic]
+  simp [← Ioi_inter_Iic]
 
 @[simp]
 theorem preimage_coe_Ioo : (coe : α → WithTop α) ⁻¹' Ioo a b = Ioo a b := by
-  simp [Ioi_inter_Iio]
+  simp [← Ioi_inter_Iio]
 
 @[simp]
 theorem preimage_coe_Iio_top : (coe : α → WithTop α) ⁻¹' Iio ⊤ = univ := by
@@ -71,11 +71,11 @@ theorem preimage_coe_Iio_top : (coe : α → WithTop α) ⁻¹' Iio ⊤ = univ :
 
 @[simp]
 theorem preimage_coe_Ico_top : (coe : α → WithTop α) ⁻¹' Ico a ⊤ = Ici a := by
-  simp [Ici_inter_Iio]
+  simp [← Ici_inter_Iio]
 
 @[simp]
 theorem preimage_coe_Ioo_top : (coe : α → WithTop α) ⁻¹' Ioo a ⊤ = Ioi a := by
-  simp [Ioi_inter_Iio]
+  simp [← Ioi_inter_Iio]
 
 theorem image_coe_Ioi : (coe : α → WithTop α) '' Ioi a = Ioo a ⊤ := by
   rw [← preimage_coe_Ioi, image_preimage_eq_inter_range, range_coe, Ioi_inter_Iio]
@@ -141,19 +141,19 @@ theorem preimage_coe_Iic : (coe : α → WithBot α) ⁻¹' Iic a = Iic a :=
 
 @[simp]
 theorem preimage_coe_Icc : (coe : α → WithBot α) ⁻¹' Icc a b = Icc a b := by
-  simp [Ici_inter_Iic]
+  simp [← Ici_inter_Iic]
 
 @[simp]
 theorem preimage_coe_Ico : (coe : α → WithBot α) ⁻¹' Ico a b = Ico a b := by
-  simp [Ici_inter_Iio]
+  simp [← Ici_inter_Iio]
 
 @[simp]
 theorem preimage_coe_Ioc : (coe : α → WithBot α) ⁻¹' Ioc a b = Ioc a b := by
-  simp [Ioi_inter_Iic]
+  simp [← Ioi_inter_Iic]
 
 @[simp]
 theorem preimage_coe_Ioo : (coe : α → WithBot α) ⁻¹' Ioo a b = Ioo a b := by
-  simp [Ioi_inter_Iio]
+  simp [← Ioi_inter_Iio]
 
 @[simp]
 theorem preimage_coe_Ioi_bot : (coe : α → WithBot α) ⁻¹' Ioi ⊥ = univ := by
@@ -161,11 +161,11 @@ theorem preimage_coe_Ioi_bot : (coe : α → WithBot α) ⁻¹' Ioi ⊥ = univ :
 
 @[simp]
 theorem preimage_coe_Ioc_bot : (coe : α → WithBot α) ⁻¹' Ioc ⊥ a = Iic a := by
-  simp [Ioi_inter_Iic]
+  simp [← Ioi_inter_Iic]
 
 @[simp]
 theorem preimage_coe_Ioo_bot : (coe : α → WithBot α) ⁻¹' Ioo ⊥ a = Iio a := by
-  simp [Ioi_inter_Iio]
+  simp [← Ioi_inter_Iio]
 
 theorem image_coe_Iio : (coe : α → WithBot α) '' Iio a = Ioo ⊥ a := by
   rw [← preimage_coe_Iio, image_preimage_eq_inter_range, range_coe, inter_comm, Ioi_inter_Iio]

@@ -85,18 +85,17 @@ theorem gram_schmidt_orthogonal (f : ι → E) {a b : ι} (h₀ : a ≠ b) : ⟪
   revert a
   apply WellFounded.induction (@IsWellFounded.wf ι (· < ·) _) b
   intro b ih a h₀
-  simp only [← gram_schmidt_def 𝕜 f b, ← inner_sub_right, ← inner_sum, ← orthogonal_projection_singleton, ←
-    inner_smul_right]
+  simp only [gram_schmidt_def 𝕜 f b, inner_sub_right, inner_sum, orthogonal_projection_singleton, inner_smul_right]
   rw [Finset.sum_eq_single_of_mem a (finset.mem_Iio.mpr h₀)]
   · by_cases' h : gramSchmidt 𝕜 f a = 0
-    · simp only [← h, ← inner_zero_left, ← zero_div, ← zero_mul, ← sub_zero]
+    · simp only [h, inner_zero_left, zero_div, zero_mul, sub_zero]
       
     · rw [← inner_self_eq_norm_sq_to_K, div_mul_cancel, sub_self]
       rwa [Ne.def, inner_self_eq_zero]
       
     
-  simp_intro i hi hia only [← Finset.mem_range]
-  simp only [← mul_eq_zero, ← div_eq_zero_iff, ← inner_self_eq_zero]
+  simp_intro i hi hia only [Finset.mem_range]
+  simp only [mul_eq_zero, div_eq_zero_iff, inner_self_eq_zero]
   right
   cases' hia.lt_or_lt with hia₁ hia₂
   · rw [inner_eq_zero_sym]
@@ -126,7 +125,7 @@ theorem gram_schmidt_mem_span (f : ι → E) : ∀ {j i}, i ≤ j → gramSchmid
     simp_rw [orthogonal_projection_singleton]
     refine' Submodule.sub_mem _ (subset_span (mem_image_of_mem _ hij)) ((Submodule.sum_mem _) fun k hk => _)
     let hkj : k < j := (Finset.mem_Iio.1 hk).trans_le hij
-    exact smul_mem _ _ (span_mono (image_subset f <| Iic_subset_Iic.2 hkj.le) <| gram_schmidt_mem_span le_rfl)
+    exact smul_mem _ _ (span_mono (image_subset f <| Iic_subset_Iic.2 hkj.le) <| gram_schmidt_mem_span le_rflₓ)
 
 theorem span_gram_schmidt_Iic (f : ι → E) (c : ι) : span 𝕜 (gramSchmidt 𝕜 f '' Iic c) = span 𝕜 (f '' Iic c) :=
   span_eq_span (Set.image_subset_iff.2 fun i => gram_schmidt_mem_span _ _) <|
@@ -135,14 +134,14 @@ theorem span_gram_schmidt_Iic (f : ι → E) (c : ι) : span 𝕜 (gramSchmidt �
 theorem span_gram_schmidt_Iio (f : ι → E) (c : ι) : span 𝕜 (gramSchmidt 𝕜 f '' Iio c) = span 𝕜 (f '' Iio c) :=
   span_eq_span
       (Set.image_subset_iff.2 fun i hi =>
-        span_mono (image_subset _ <| Iic_subset_Iio.2 hi) <| gram_schmidt_mem_span _ _ le_rfl) <|
+        span_mono (image_subset _ <| Iic_subset_Iio.2 hi) <| gram_schmidt_mem_span _ _ le_rflₓ) <|
     Set.image_subset_iff.2 fun i hi =>
-      span_mono (image_subset _ <| Iic_subset_Iio.2 hi) <| mem_span_gram_schmidt _ _ le_rfl
+      span_mono (image_subset _ <| Iic_subset_Iio.2 hi) <| mem_span_gram_schmidt _ _ le_rflₓ
 
 /-- `gram_schmidt` preserves span of vectors. -/
 theorem span_gram_schmidt (f : ι → E) : span 𝕜 (Range (gramSchmidt 𝕜 f)) = span 𝕜 (Range f) :=
-  span_eq_span (range_subset_iff.2 fun i => span_mono (image_subset_range _ _) <| gram_schmidt_mem_span _ _ le_rfl) <|
-    range_subset_iff.2 fun i => span_mono (image_subset_range _ _) <| mem_span_gram_schmidt _ _ le_rfl
+  span_eq_span (range_subset_iff.2 fun i => span_mono (image_subset_range _ _) <| gram_schmidt_mem_span _ _ le_rflₓ) <|
+    range_subset_iff.2 fun i => span_mono (image_subset_range _ _) <| mem_span_gram_schmidt _ _ le_rflₓ
 
 theorem gram_schmidt_ne_zero_coe (f : ι → E) (n : ι) (h₀ : LinearIndependent 𝕜 (f ∘ (coe : Set.Iic n → ι))) :
     gramSchmidt 𝕜 f n ≠ 0 := by
@@ -150,8 +149,8 @@ theorem gram_schmidt_ne_zero_coe (f : ι → E) (n : ι) (h₀ : LinearIndepende
   have h₁ : f n ∈ span 𝕜 (f '' Iio n) := by
     rw [← span_gram_schmidt_Iio 𝕜 f n, gram_schmidt_def' _ f, h, zero_addₓ]
     apply Submodule.sum_mem _ _
-    simp_intro a ha only [← Finset.mem_Ico]
-    simp only [← Set.mem_image, ← Set.mem_Iio, ← orthogonal_projection_singleton]
+    simp_intro a ha only [Finset.mem_Ico]
+    simp only [Set.mem_image, Set.mem_Iio, orthogonal_projection_singleton]
     apply Submodule.smul_mem _ _ _
     rw [Finset.mem_Iio] at ha
     refine'
@@ -165,7 +164,7 @@ theorem gram_schmidt_ne_zero_coe (f : ι → E) (n : ι) (h₀ : LinearIndepende
     ext i
     simpa using @le_of_ltₓ _ _ i n
   apply LinearIndependent.not_mem_span_image h₀ _ h₂
-  simp only [← Set.mem_Iio, ← lt_self_iff_false, ← not_false_iff]
+  simp only [Set.mem_Iio, lt_self_iff_falseₓ, not_false_iff]
 
 /-- If the input vectors of `gram_schmidt` are linearly independent,
 then the output vectors are non-zero. -/
@@ -201,7 +200,7 @@ noncomputable def gramSchmidtNormed (f : ι → E) (n : ι) : E :=
 
 theorem gram_schmidt_normed_unit_length_coe (f : ι → E) (n : ι) (h₀ : LinearIndependent 𝕜 (f ∘ (coe : Set.Iic n → ι))) :
     ∥gramSchmidtNormed 𝕜 f n∥ = 1 := by
-  simp only [← gram_schmidt_ne_zero_coe 𝕜 f n h₀, ← gramSchmidtNormed, ← norm_smul_inv_norm, ← Ne.def, ← not_false_iff]
+  simp only [gram_schmidt_ne_zero_coe 𝕜 f n h₀, gramSchmidtNormed, norm_smul_inv_norm, Ne.def, not_false_iff]
 
 theorem gram_schmidt_normed_unit_length (f : ι → E) (n : ι) (h₀ : LinearIndependent 𝕜 f) :
     ∥gramSchmidtNormed 𝕜 f n∥ = 1 :=
@@ -212,11 +211,11 @@ theorem gram_schmidt_normed_unit_length (f : ι → E) (n : ι) (h₀ : LinearIn
 theorem gram_schmidt_orthonormal (f : ι → E) (h₀ : LinearIndependent 𝕜 f) : Orthonormal 𝕜 (gramSchmidtNormed 𝕜 f) := by
   unfold Orthonormal
   constructor
-  · simp only [← gram_schmidt_normed_unit_length, ← h₀, ← eq_self_iff_true, ← implies_true_iff]
+  · simp only [gram_schmidt_normed_unit_length, h₀, eq_self_iff_true, implies_true_iff]
     
   · intro i j hij
-    simp only [← gramSchmidtNormed, ← inner_smul_left, ← inner_smul_right, ← IsROrC.conj_inv, ← IsROrC.conj_of_real, ←
-      mul_eq_zero, ← inv_eq_zero, ← IsROrC.of_real_eq_zero, ← norm_eq_zero]
+    simp only [gramSchmidtNormed, inner_smul_left, inner_smul_right, IsROrC.conj_inv, IsROrC.conj_of_real, mul_eq_zero,
+      inv_eq_zero, IsROrC.of_real_eq_zero, norm_eq_zero]
     repeat'
       right
     exact gram_schmidt_orthogonal 𝕜 f hij
@@ -227,9 +226,9 @@ theorem span_gram_schmidt_normed (f : ι → E) (s : Set ι) :
   refine'
     span_eq_span (Set.image_subset_iff.2 fun i hi => smul_mem _ _ <| subset_span <| mem_image_of_mem _ hi)
       (Set.image_subset_iff.2 fun i hi => span_mono (image_subset _ <| singleton_subset_set_iff.2 hi) _)
-  simp only [← coe_singleton, ← Set.image_singleton]
+  simp only [coe_singleton, Set.image_singleton]
   by_cases' h : gramSchmidt 𝕜 f i = 0
-  · simp [← h]
+  · simp [h]
     
   · refine' mem_span_singleton.2 ⟨∥gramSchmidt 𝕜 f i∥, smul_inv_smul₀ _ _⟩
     exact_mod_cast norm_ne_zero_iff.2 h
@@ -237,7 +236,7 @@ theorem span_gram_schmidt_normed (f : ι → E) (s : Set ι) :
 
 theorem span_gram_schmidt_normed_range (f : ι → E) :
     span 𝕜 (Range (gramSchmidtNormed 𝕜 f)) = span 𝕜 (Range (gramSchmidt 𝕜 f)) := by
-  simpa only [← image_univ.symm] using span_gram_schmidt_normed 𝕜 f univ
+  simpa only [image_univ.symm] using span_gram_schmidt_normed 𝕜 f univ
 
 /-- When given a basis, `gram_schmidt_normed` produces an orthonormal basis. -/
 noncomputable def gramSchmidtOrthonormalBasis [Fintype ι] (b : Basis ι 𝕜 E) : OrthonormalBasis ι 𝕜 E :=

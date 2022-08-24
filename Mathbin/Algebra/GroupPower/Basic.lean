@@ -137,9 +137,9 @@ theorem pow_mul_commₓ (a : M) (m n : ℕ) : a ^ m * a ^ n = a ^ n * a ^ m :=
 theorem Commute.mul_pow {a b : M} (h : Commute a b) (n : ℕ) : (a * b) ^ n = a ^ n * b ^ n :=
   (Nat.recOn n
       (by
-        simp only [← pow_zeroₓ, ← one_mulₓ]))
+        simp only [pow_zeroₓ, one_mulₓ]))
     fun n ihn => by
-    simp only [← pow_succₓ, ← ihn, mul_assoc, ← (h.pow_left n).right_comm]
+    simp only [pow_succₓ, ihn, ← mul_assoc, (h.pow_left n).right_comm]
 
 @[to_additive bit0_nsmul']
 theorem pow_bit0' (a : M) (n : ℕ) : a ^ bit0 n = (a * a) ^ n := by
@@ -270,9 +270,9 @@ theorem one_div_zpow (a : α) (n : ℤ) : (1 / a) ^ n = 1 / a ^ n := by
 @[to_additive AddCommute.zsmul_add]
 protected theorem Commute.mul_zpow (h : Commute a b) : ∀ i : ℤ, (a * b) ^ i = a ^ i * b ^ i
   | (n : ℕ) => by
-    simp [← h.mul_pow n]
+    simp [h.mul_pow n]
   | -[1+ n] => by
-    simp [← h.mul_pow, ← (h.pow_pow _ _).Eq, ← mul_inv_rev]
+    simp [h.mul_pow, (h.pow_pow _ _).Eq, mul_inv_rev]
 
 end DivisionMonoid
 
@@ -286,11 +286,11 @@ theorem mul_zpow (a b : α) : ∀ n : ℤ, (a * b) ^ n = a ^ n * b ^ n :=
 
 @[simp, to_additive nsmul_sub]
 theorem div_pow (a b : α) (n : ℕ) : (a / b) ^ n = a ^ n / b ^ n := by
-  simp only [← div_eq_mul_inv, ← mul_powₓ, ← inv_pow]
+  simp only [div_eq_mul_inv, mul_powₓ, inv_pow]
 
 @[simp, to_additive zsmul_sub]
 theorem div_zpow (a b : α) (n : ℤ) : (a / b) ^ n = a ^ n / b ^ n := by
-  simp only [← div_eq_mul_inv, ← mul_zpow, ← inv_zpow]
+  simp only [div_eq_mul_inv, mul_zpow, inv_zpow]
 
 /-- The `n`-th power map (for an integer `n`) on a commutative group, considered as a group
 homomorphism. -/
@@ -349,9 +349,9 @@ theorem of_mul_zpow [DivInvMonoidₓ G] (x : G) (n : ℤ) : Additive.ofMul (x ^ 
 @[simp, to_additive]
 theorem SemiconjBy.zpow_right [Groupₓ G] {a x y : G} (h : SemiconjBy a x y) : ∀ m : ℤ, SemiconjBy a (x ^ m) (y ^ m)
   | (n : ℕ) => by
-    simp [← zpow_coe_nat, ← h.pow_right n]
+    simp [zpow_coe_nat, h.pow_right n]
   | -[1+ n] => by
-    simp [← (h.pow_right n.succ).inv_right]
+    simp [(h.pow_right n.succ).inv_right]
 
 namespace Commute
 

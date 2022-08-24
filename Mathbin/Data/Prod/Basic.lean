@@ -79,11 +79,11 @@ theorem mk.inj_iff {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) = (a₂, b�
 
 theorem mk.inj_left {α β : Type _} (a : α) : Function.Injective (Prod.mk a : β → α × β) := by
   intro b₁ b₂ h
-  simpa only [← true_andₓ, ← Prod.mk.inj_iff, ← eq_self_iff_true] using h
+  simpa only [true_andₓ, Prod.mk.inj_iff, eq_self_iff_true] using h
 
 theorem mk.inj_right {α β : Type _} (b : β) : Function.Injective (fun a => Prod.mk a b : α → α × β) := by
   intro b₁ b₂ h
-  · simpa only [← and_trueₓ, ← eq_self_iff_true, ← mk.inj_iff] using h
+  · simpa only [and_trueₓ, eq_self_iff_true, mk.inj_iff] using h
     
 
 theorem ext_iff {p q : α × β} : p = q ↔ p.1 = q.1 ∧ p.2 = q.2 := by

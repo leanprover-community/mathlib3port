@@ -91,7 +91,7 @@ theorem prod_Ico_eq_mul_inv {δ : Type _} [CommGroupₓ δ] (f : ℕ → δ) {m 
 @[to_additive]
 theorem prod_Ico_eq_div {δ : Type _} [CommGroupₓ δ] (f : ℕ → δ) {m n : ℕ} (h : m ≤ n) :
     (∏ k in ico m n, f k) = (∏ k in range n, f k) / ∏ k in range m, f k := by
-  simpa only [← div_eq_mul_inv] using prod_Ico_eq_mul_inv f h
+  simpa only [div_eq_mul_inv] using prod_Ico_eq_mul_inv f h
 
 @[to_additive]
 theorem prod_range_sub_prod_range {α : Type _} [CommGroupₓ α] {f : ℕ → α} {n m : ℕ} (hnm : n ≤ m) :
@@ -99,7 +99,7 @@ theorem prod_range_sub_prod_range {α : Type _} [CommGroupₓ α] {f : ℕ → �
   rw [← prod_Ico_eq_div f hnm]
   congr
   apply Finset.ext
-  simp only [← mem_Ico, ← mem_filter, ← mem_range, *]
+  simp only [mem_Ico, mem_filter, mem_range, *]
   tauto
 
 /-- The two ways of summing over `(i,j)` in the range `a<=i<=j<b` are equal. -/
@@ -114,7 +114,7 @@ theorem sum_Ico_Ico_comm {M : Type _} [AddCommMonoidₓ M] (a b : ℕ) (f : ℕ 
           rintro ⟨⟩ _ <;> rfl)
         (by
           rintro ⟨⟩ _ <;> rfl) <;>
-    simp only [← Finset.mem_Ico, ← Sigma.forall, ← Finset.mem_sigma] <;>
+    simp only [Finset.mem_Ico, Sigma.forall, Finset.mem_sigma] <;>
       rintro a b ⟨⟨h₁, h₂⟩, ⟨h₃, h₄⟩⟩ <;> refine' ⟨⟨_, _⟩, ⟨_, _⟩⟩ <;> linarith
 
 @[to_additive]
@@ -128,17 +128,17 @@ theorem prod_Ico_eq_prod_range (f : ℕ → β) (m n : ℕ) : (∏ k in ico m n,
 
 theorem prod_Ico_reflect (f : ℕ → β) (k : ℕ) {m n : ℕ} (h : m ≤ n + 1) :
     (∏ j in ico k m, f (n - j)) = ∏ j in ico (n + 1 - m) (n + 1 - k), f j := by
-  have : ∀, ∀ i < m, ∀, i ≤ n := by
+  have : ∀ i < m, i ≤ n := by
     intro i hi
     exact (add_le_add_iff_right 1).1 (le_transₓ (Nat.lt_iff_add_one_le.1 hi) h)
   cases' lt_or_leₓ k m with hkm hkm
   · rw [← Nat.Ico_image_const_sub_eq_Ico (this _ hkm)]
     refine' (prod_image _).symm
-    simp only [← mem_Ico]
+    simp only [mem_Ico]
     rintro i ⟨ki, im⟩ j ⟨kj, jm⟩ Hij
     rw [← tsub_tsub_cancel_of_le (this _ im), Hij, tsub_tsub_cancel_of_le (this _ jm)]
     
-  · simp [← Ico_eq_empty_of_le, ← tsub_le_tsub_left, ← hkm]
+  · simp [Ico_eq_empty_of_le, tsub_le_tsub_left, hkm]
     
 
 theorem sum_Ico_reflect {δ : Type _} [AddCommMonoidₓ δ] (f : ℕ → δ) (k : ℕ) {m n : ℕ} (h : m ≤ n + 1) :
@@ -149,8 +149,8 @@ theorem prod_range_reflect (f : ℕ → β) (n : ℕ) : (∏ j in range n, f (n 
   cases n
   · simp
     
-  · simp only [Nat.Ico_zero_eq_range, ← Nat.succ_sub_succ_eq_sub, ← tsub_zero]
-    rw [prod_Ico_reflect _ _ le_rfl]
+  · simp only [← Nat.Ico_zero_eq_range, Nat.succ_sub_succ_eq_sub, tsub_zero]
+    rw [prod_Ico_reflect _ _ le_rflₓ]
     simp
     
 
@@ -169,7 +169,7 @@ theorem prod_Ico_id_eq_factorial : ∀ n : ℕ, (∏ x in ico 1 (n + 1), x) = n 
 theorem prod_range_add_one_eq_factorial : ∀ n : ℕ, (∏ x in range n, x + 1) = n !
   | 0 => rfl
   | n + 1 => by
-    simp [← Finset.range_succ, ← prod_range_add_one_eq_factorial n]
+    simp [Finset.range_succ, prod_range_add_one_eq_factorial n]
 
 section GaussSum
 
@@ -236,7 +236,7 @@ open Finset
 local notation "G" n:80 => ∑ i in range n, g i
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:648:40: in rw #[["<-", expr sum_range_succ_sub_sum g]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in rw #[["<-", expr sum_range_succ_sub_sum g]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- **Summation by parts**, also known as **Abel's lemma** or an **Abel transformation** -/
 theorem sum_Ico_by_parts (hmn : m < n) :
     (∑ i in ico m n, f i • g i) = f (n - 1) • G n - f m • G m - ∑ i in ico m (n - 1), (f (i + 1) - f i) • G(i + 1) := by
@@ -253,7 +253,7 @@ theorem sum_Ico_by_parts (hmn : m < n) :
   conv =>
     for (f _ • g _) [2] =>
       trace
-        "./././Mathport/Syntax/Translate/Basic.lean:648:40: in rw #[[\"<-\", expr sum_range_succ_sub_sum g]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in rw #[[\"<-\", expr sum_range_succ_sub_sum g]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   simp_rw [smul_sub, sum_sub_distrib, h₂, h₁]
   conv_lhs => congr skip rw [← add_sub, add_commₓ, ← add_sub, ← sum_sub_distrib]
   have : ∀ i, f i • G(i + 1) - f (i + 1) • G(i + 1) = -((f (i + 1) - f i) • G(i + 1)) := by
@@ -269,7 +269,7 @@ variable (n)
 theorem sum_range_by_parts :
     (∑ i in range n, f i • g i) = f (n - 1) • G n - ∑ i in range (n - 1), (f (i + 1) - f i) • G(i + 1) := by
   by_cases' hn : n = 0
-  · simp [← hn]
+  · simp [hn]
     
   · rw [range_eq_Ico, sum_Ico_by_parts f g (Nat.pos_of_ne_zeroₓ hn), sum_range_zero, smul_zero, sub_zero, range_eq_Ico]
     

@@ -94,14 +94,14 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
   apply Finset.sum_bij φ
   · -- φ(S) is contained in Sᶜ
     intro ij hij
-    simp only [← Finset.mem_univ, ← Finset.compl_filter, ← Finset.mem_filter, ← true_andₓ, ← Finₓ.coe_succ, ←
-      Finₓ.coe_cast_lt] at hij⊢
+    simp only [Finset.mem_univ, Finset.compl_filter, Finset.mem_filter, true_andₓ, Finₓ.coe_succ, Finₓ.coe_cast_lt] at
+      hij⊢
     linarith
     
   · -- identification of corresponding terms in both sums
     rintro ⟨i, j⟩ hij
-    simp only [← term, ← d_l, ← d_r, ← φ, ← comp_zsmul, ← zsmul_comp, neg_smul, mul_smul, ← pow_addₓ, ← neg_mul, ←
-      mul_oneₓ, ← Finₓ.coe_cast_lt, ← Finₓ.coe_succ, ← pow_oneₓ, ← mul_neg, ← neg_negₓ]
+    simp only [term, d_l, d_r, φ, comp_zsmul, zsmul_comp, ← neg_smul, ← mul_smul, pow_addₓ, neg_mul, mul_oneₓ,
+      Finₓ.coe_cast_lt, Finₓ.coe_succ, pow_oneₓ, mul_neg, neg_negₓ]
     let jj : Finₓ (n + 2) := (φ (i, j) hij).1
     have ineq : jj ≤ i := by
       rw [← Finₓ.coe_fin_le]
@@ -115,19 +115,19 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
       ⟨by
         simpa using congr_arg Prod.snd h, _⟩
     have h1 := congr_arg Finₓ.castSucc (congr_arg Prod.fst h)
-    simpa [← Finₓ.cast_succ_cast_lt] using h1
+    simpa [Finₓ.cast_succ_cast_lt] using h1
     
   · -- φ : S → Sᶜ is surjective
     rintro ⟨i', j'⟩ hij'
-    simp only [← true_andₓ, ← Finset.mem_univ, ← Finset.compl_filter, ← not_leₓ, ← Finset.mem_filter] at hij'
+    simp only [true_andₓ, Finset.mem_univ, Finset.compl_filter, not_leₓ, Finset.mem_filter] at hij'
     refine' ⟨(j'.pred _, Finₓ.castSucc i'), _, _⟩
     · intro H
-      simpa only [← H, ← Nat.not_lt_zeroₓ, ← Finₓ.coe_zero] using hij'
+      simpa only [H, Nat.not_lt_zeroₓ, Finₓ.coe_zero] using hij'
       
-    · simpa only [← true_andₓ, ← Finset.mem_univ, ← Finₓ.coe_cast_succ, ← Finₓ.coe_pred, ← Finset.mem_filter] using
+    · simpa only [true_andₓ, Finset.mem_univ, Finₓ.coe_cast_succ, Finₓ.coe_pred, Finset.mem_filter] using
         Nat.le_pred_of_ltₓ hij'
       
-    · simp only [← Prod.mk.inj_iff, ← Finₓ.succ_pred, ← Finₓ.cast_lt_cast_succ]
+    · simp only [Prod.mk.inj_iff, Finₓ.succ_pred, Finₓ.cast_lt_cast_succ]
       constructor <;> rfl
       
     
@@ -200,16 +200,16 @@ theorem map_alternating_face_map_complex {D : Type _} [Category D] [Preadditive 
   apply CategoryTheory.Functor.ext
   · intro X Y f
     ext n
-    simp only [← functor.comp_map, ← HomologicalComplex.comp_f, ← alternating_face_map_complex_map_f, ←
-      functor.map_homological_complex_map_f, ← HomologicalComplex.eq_to_hom_f, ← eq_to_hom_refl, ← comp_id, ← id_comp, ←
+    simp only [functor.comp_map, HomologicalComplex.comp_f, alternating_face_map_complex_map_f,
+      functor.map_homological_complex_map_f, HomologicalComplex.eq_to_hom_f, eq_to_hom_refl, comp_id, id_comp,
       simplicial_object.whiskering_obj_map_app]
     
   · intro X
     apply HomologicalComplex.ext
     · rintro i j (rfl : j + 1 = i)
-      dsimp' only [← functor.comp_obj]
-      simpa only [← functor.map_homological_complex_obj_d, ← alternating_face_map_complex_obj_d, ← eq_to_hom_refl, ←
-        id_comp, ← comp_id, ← alternating_face_map_complex.obj_d, ← functor.map_sum, ← functor.map_zsmul]
+      dsimp' only [functor.comp_obj]
+      simpa only [functor.map_homological_complex_obj_d, alternating_face_map_complex_obj_d, eq_to_hom_refl, id_comp,
+        comp_id, alternating_face_map_complex.obj_d, functor.map_sum, functor.map_zsmul]
       
     · ext n
       rfl
@@ -231,7 +231,7 @@ def inclusionOfMooreComplexMap (X : SimplicialObject A) :
              face map complex with those defined on the normalized Moore complex:
              we first get rid of the terms of the alternating sum that are obviously
              zero on the normalized_Moore_complex -/
-    simp only [← alternating_face_map_complex.obj_d]
+    simp only [alternating_face_map_complex.obj_d]
     rw [comp_sum]
     let t := fun j : Finₓ (n + 2) => (normalized_Moore_complex.obj_X X (n + 1)).arrow ≫ ((-1 : ℤ) ^ (j : ℕ) • X.δ j)
     have def_t :
@@ -248,11 +248,11 @@ def inclusionOfMooreComplexMap (X : SimplicialObject A) :
         factor_thru_arrow _ _
           (finset_inf_arrow_factors Finset.univ _ j
             (by
-              simp only [← Finset.mem_univ]))]
+              simp only [Finset.mem_univ]))]
       slice_lhs 2 3 => rw [kernel_subobject_arrow_comp (X.δ j.succ)]
-      simp only [← comp_zero]
+      simp only [comp_zero]
     rw [Fintype.sum_eq_zero _ null]
-    simp only [← add_zeroₓ]
+    simp only [add_zeroₓ]
     -- finally, we study the remaining term which is induced by X.δ 0
     let eq := def_t 0
     rw
@@ -288,10 +288,10 @@ def objD (n : ℕ) : X.obj [n] ⟶ X.obj [n + 1] :=
 
 theorem d_eq_unop_d (n : ℕ) :
     objD X n = (AlternatingFaceMapComplex.objD ((cosimplicialSimplicialEquiv C).Functor.obj (op X)) n).unop := by
-  simpa only [← obj_d, ← alternating_face_map_complex.obj_d, ← unop_sum, ← unop_zsmul]
+  simpa only [obj_d, alternating_face_map_complex.obj_d, unop_sum, unop_zsmul]
 
 theorem d_squared (n : ℕ) : objD X n ≫ objD X (n + 1) = 0 := by
-  simp only [← d_eq_unop_d, unop_comp, ← alternating_face_map_complex.d_squared, ← unop_zero]
+  simp only [d_eq_unop_d, ← unop_comp, alternating_face_map_complex.d_squared, unop_zero]
 
 /-- The alternating coface map complex, on objects -/
 def obj : CochainComplex C ℕ :=

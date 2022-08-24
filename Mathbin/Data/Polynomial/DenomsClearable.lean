@@ -39,9 +39,9 @@ def DenomsClearable (a b : R) (N : ℕ) (f : R[X]) (i : R →+* K) : Prop :=
 
 theorem denoms_clearable_zero (N : ℕ) (a : R) (bu : bi * i b = 1) : DenomsClearable a b N 0 i :=
   ⟨0, bi, bu, by
-    simp only [← eval_zero, ← RingHom.map_zero, ← mul_zero, ← Polynomial.map_zero]⟩
+    simp only [eval_zero, RingHom.map_zero, mul_zero, Polynomial.map_zero]⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:92:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([2]) }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([2]) }
 theorem denoms_clearable_C_mul_X_pow {N : ℕ} (a : R) (bu : bi * i b = 1) {n : ℕ} (r : R) (nN : n ≤ N) :
     DenomsClearable a b N (c r * X ^ n) i := by
   refine' ⟨r * a ^ n * b ^ (N - n), bi, bu, _⟩
@@ -69,7 +69,7 @@ theorem denoms_clearable_of_nat_degree_le (N : ℕ) (a : R) (bu : bi * i b = 1) 
 `b ^ f.nat_degree * f (a / b)` equals `i D`. -/
 theorem denoms_clearable_nat_degree (i : R →+* K) (f : R[X]) (a : R) (bu : bi * i b = 1) :
     DenomsClearable a b f.natDegree f i :=
-  denoms_clearable_of_nat_degree_le f.natDegree a bu f le_rfl
+  denoms_clearable_of_nat_degree_le f.natDegree a bu f le_rflₓ
 
 end DenomsClearable
 

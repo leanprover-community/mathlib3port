@@ -66,7 +66,7 @@ namespace SimplicialComplex
 variable {𝕜 E} {K : SimplicialComplex 𝕜 E} {s t : Finset E} {x : E}
 
 /-- A `finset` belongs to a `simplicial_complex` if it's a face of it. -/
-instance : HasMem (Finset E) (SimplicialComplex 𝕜 E) :=
+instance : Membership (Finset E) (SimplicialComplex 𝕜 E) :=
   ⟨fun s K => s ∈ K.Faces⟩
 
 /-- The underlying space of a simplicial complex is the union of its faces. -/
@@ -105,12 +105,12 @@ theorem disjoint_or_exists_inter_eq_convex_hull (hs : s ∈ K.Faces) (ht : t ∈
   · rw [coe_inter, convex_hull_inter_convex_hull hs ht]
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (s t «expr ∈ » faces)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (s t «expr ∈ » faces)
 /-- Construct a simplicial complex by removing the empty face for you. -/
 @[simps]
-def ofErase (faces : Set (Finset E)) (indep : ∀, ∀ s ∈ faces, ∀, AffineIndependent 𝕜 (coe : (s : Set E) → E))
-    (down_closed : ∀, ∀ s ∈ faces, ∀, ∀ (t) (_ : t ⊆ s), t ∈ faces)
+def ofErase (faces : Set (Finset E)) (indep : ∀ s ∈ faces, AffineIndependent 𝕜 (coe : (s : Set E) → E))
+    (down_closed : ∀ s ∈ faces, ∀ (t) (_ : t ⊆ s), t ∈ faces)
     (inter_subset_convex_hull :
       ∀ (s t) (_ : s ∈ faces) (_ : t ∈ faces), convexHull 𝕜 ↑s ∩ convexHull 𝕜 ↑t ⊆ convexHull 𝕜 (s ∩ t : Set E)) :
     SimplicialComplex 𝕜 E where
@@ -173,7 +173,7 @@ theorem face_subset_face_iff (hs : s ∈ K.Faces) (ht : t ∈ K.Faces) :
 def Facets (K : SimplicialComplex 𝕜 E) : Set (Finset E) :=
   { s ∈ K.Faces | ∀ ⦃t⦄, t ∈ K.Faces → s ⊆ t → s = t }
 
-theorem mem_facets : s ∈ K.Facets ↔ s ∈ K.Faces ∧ ∀, ∀ t ∈ K.Faces, ∀, s ⊆ t → s = t :=
+theorem mem_facets : s ∈ K.Facets ↔ s ∈ K.Faces ∧ ∀ t ∈ K.Faces, s ⊆ t → s = t :=
   mem_sep_iff
 
 theorem facets_subset : K.Facets ⊆ K.Faces := fun s hs => hs.1

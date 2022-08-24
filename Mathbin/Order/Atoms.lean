@@ -86,7 +86,7 @@ theorem IsAtom.Iic_eq (h : IsAtom a) : Set.Iic a = {⊥, a} :=
 
 @[simp]
 theorem bot_covby_iff : ⊥ ⋖ a ↔ IsAtom a := by
-  simp only [← Covby, ← bot_lt_iff_ne_bot, ← IsAtom, ← not_imp_not]
+  simp only [Covby, bot_lt_iff_ne_bot, IsAtom, not_imp_not]
 
 alias bot_covby_iff ↔ Covby.is_atom IsAtom.bot_covby
 
@@ -241,7 +241,7 @@ section WellFounded
 theorem is_atomic_of_order_bot_well_founded_lt [OrderBot α] (h : WellFounded ((· < ·) : α → α → Prop)) : IsAtomic α :=
   ⟨fun a =>
     or_iff_not_imp_left.2 fun ha =>
-      let ⟨b, hb, hm⟩ := h.has_min { b | b ≠ ⊥ ∧ b ≤ a } ⟨a, ha, le_rfl⟩
+      let ⟨b, hb, hm⟩ := h.has_min { b | b ≠ ⊥ ∧ b ≤ a } ⟨a, ha, le_rflₓ⟩
       ⟨b, ⟨hb.1, fun c => not_imp_not.1 fun hc hl => hm c ⟨hc, hl.le.trans hb.2⟩ hl⟩, hb.2⟩⟩
 
 theorem is_coatomic_of_order_top_gt_well_founded [OrderTop α] (h : WellFounded ((· > ·) : α → α → Prop)) :
@@ -299,7 +299,7 @@ instance (priority := 100) : IsAtomic α :=
   ⟨fun b => by
     rcases eq_Sup_atoms b with ⟨s, rfl, hs⟩
     cases' s.eq_empty_or_nonempty with h h
-    · simp [← h]
+    · simp [h]
       
     · exact Or.intro_rightₓ _ ⟨h.some, hs _ h.some_spec, le_Sup h.some_spec⟩
       ⟩
@@ -338,7 +338,7 @@ instance (priority := 100) : IsCoatomic α :=
   ⟨fun b => by
     rcases eq_Inf_coatoms b with ⟨s, rfl, hs⟩
     cases' s.eq_empty_or_nonempty with h h
-    · simp [← h]
+    · simp [h]
       
     · exact Or.intro_rightₓ _ ⟨h.some, hs _ h.some_spec, Inf_le h.some_spec⟩
       ⟩
@@ -461,7 +461,7 @@ protected def distribLattice : DistribLattice α :=
 
 -- see Note [lower instance priority]
 instance (priority := 100) : IsAtomic α :=
-  ⟨fun b => (eq_bot_or_eq_top b).imp_right fun h => ⟨⊤, ⟨is_atom_top, ge_of_eq h⟩⟩⟩
+  ⟨fun b => (eq_bot_or_eq_top b).imp_right fun h => ⟨⊤, ⟨is_atom_top, ge_of_eqₓ h⟩⟩⟩
 
 -- see Note [lower instance priority]
 instance (priority := 100) : IsCoatomic α :=
@@ -480,21 +480,21 @@ def equivBool {α} [DecidableEq α] [LE α] [BoundedOrder α] [IsSimpleOrder α]
   toFun := fun x => x = ⊤
   invFun := fun x => cond x ⊤ ⊥
   left_inv := fun x => by
-    rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp [← bot_ne_top]
+    rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp [bot_ne_top]
   right_inv := fun x => by
-    cases x <;> simp [← bot_ne_top]
+    cases x <;> simp [bot_ne_top]
 
 /-- Every simple lattice over a partial order is order-isomorphic to `bool`. -/
 def orderIsoBool : α ≃o Bool :=
   { equivBool with
     map_rel_iff' := fun a b => by
       rcases eq_bot_or_eq_top a with (rfl | rfl)
-      · simp [← bot_ne_top]
+      · simp [bot_ne_top]
         
       · rcases eq_bot_or_eq_top b with (rfl | rfl)
-        · simp [← bot_ne_top.symm, ← bot_ne_top, ← Bool.ff_lt_tt]
+        · simp [bot_ne_top.symm, bot_ne_top, Bool.ff_lt_tt]
           
-        · simp [← bot_ne_top]
+        · simp [bot_ne_top]
           
          }
 
@@ -510,13 +510,13 @@ protected def booleanAlgebra {α} [DecidableEq α] [Lattice α] [BoundedOrder α
     IsSimpleOrder.distribLattice with compl := fun x => if x = ⊥ then ⊤ else ⊥,
     sdiff := fun x y => if x = ⊤ ∧ y = ⊥ then ⊤ else ⊥,
     sdiff_eq := fun x y => by
-      rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp [← bot_ne_top, ← HasSdiff.sdiff, ← compl],
+      rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp [bot_ne_top, Sdiff.sdiff, compl],
     inf_compl_le_bot := fun x => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · simp
         
-      · simp only [← top_inf_eq]
-        split_ifs with h h <;> simp [← h]
+      · simp only [top_inf_eq]
+        split_ifs with h h <;> simp [h]
         ,
     top_le_sup_compl := fun x => by
       rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp }
@@ -565,17 +565,17 @@ protected noncomputable def completeBooleanAlgebra : CompleteBooleanAlgebra α :
   { IsSimpleOrder.completeLattice, IsSimpleOrder.booleanAlgebra with
     infi_sup_le_sup_Inf := fun x s => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
-      · simp only [← bot_sup_eq, Inf_eq_infi]
-        exact le_rfl
+      · simp only [bot_sup_eq, ← Inf_eq_infi]
+        exact le_rflₓ
         
-      · simp only [← top_sup_eq, ← le_top]
+      · simp only [top_sup_eq, le_top]
         ,
     inf_Sup_le_supr_inf := fun x s => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
-      · simp only [← bot_inf_eq, ← bot_le]
+      · simp only [bot_inf_eq, bot_le]
         
-      · simp only [← top_inf_eq, Sup_eq_supr]
-        exact le_rfl
+      · simp only [top_inf_eq, ← Sup_eq_supr]
+        exact le_rflₓ
          }
 
 end IsSimpleOrder
@@ -584,7 +584,7 @@ namespace IsSimpleOrder
 
 variable [CompleteLattice α] [IsSimpleOrder α]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option default_priority
+-- ./././Mathport/Syntax/Translate/Basic.lean:335:40: warning: unsupported option default_priority
 set_option default_priority 100
 
 instance : IsAtomistic α :=
@@ -606,7 +606,7 @@ variable [PartialOrderₓ α] [BoundedOrder α] [IsSimpleOrder α] [DecidableEq 
 theorem univ : (Finset.univ : Finset α) = {⊤, ⊥} := by
   change Finset.map _ (Finset.univ : Finset Bool) = _
   rw [Fintype.univ_bool]
-  simp only [← Finset.map_insert, ← Function.Embedding.coe_fn_mk, ← Finset.map_singleton]
+  simp only [Finset.map_insert, Function.Embedding.coe_fn_mk, Finset.map_singleton]
   rfl
 
 theorem card : Fintype.card α = 2 :=
@@ -627,7 +627,7 @@ end Bool
 
 theorem is_simple_order_iff_is_atom_top [PartialOrderₓ α] [BoundedOrder α] : IsSimpleOrder α ↔ IsAtom (⊤ : α) :=
   ⟨fun h => @is_atom_top _ _ _ h, fun h =>
-    { exists_pair_ne := ⟨⊤, ⊥, h.1⟩, eq_bot_or_eq_top := fun a => ((eq_or_lt_of_le le_top).imp_right (h.2 a)).symm }⟩
+    { exists_pair_ne := ⟨⊤, ⊥, h.1⟩, eq_bot_or_eq_top := fun a => ((eq_or_lt_of_leₓ le_top).imp_right (h.2 a)).symm }⟩
 
 theorem is_simple_order_iff_is_coatom_bot [PartialOrderₓ α] [BoundedOrder α] : IsSimpleOrder α ↔ IsCoatom (⊥ : α) :=
   is_simple_order_iff_is_simple_order_order_dual.trans is_simple_order_iff_is_atom_top
@@ -754,11 +754,11 @@ open Finset
 -- see Note [lower instance priority]
 instance (priority := 100) Finite.to_is_coatomic [PartialOrderₓ α] [OrderTop α] [Finite α] : IsCoatomic α := by
   refine' IsCoatomic.mk fun b => or_iff_not_imp_left.2 fun ht => _
-  obtain ⟨c, hc, hmax⟩ := Set.Finite.exists_maximal_wrt id { x : α | b ≤ x ∧ x ≠ ⊤ } (Set.to_finite _) ⟨b, le_rfl, ht⟩
+  obtain ⟨c, hc, hmax⟩ := Set.Finite.exists_maximal_wrt id { x : α | b ≤ x ∧ x ≠ ⊤ } (Set.to_finite _) ⟨b, le_rflₓ, ht⟩
   refine' ⟨c, ⟨hc.2, fun y hcy => _⟩, hc.1⟩
   by_contra hyt
   obtain rfl : c = y := hmax y ⟨hc.1.trans hcy.le, hyt⟩ hcy.le
-  exact (lt_self_iff_false _).mp hcy
+  exact (lt_self_iff_falseₓ _).mp hcy
 
 -- see Note [lower instance priority]
 instance (priority := 100) Finite.to_is_atomic [PartialOrderₓ α] [OrderBot α] [Finite α] : IsAtomic α :=

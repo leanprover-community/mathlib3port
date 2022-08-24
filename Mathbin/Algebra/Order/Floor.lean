@@ -117,7 +117,7 @@ theorem le_floor (h : (n : α) ≤ a) : n ≤ ⌊a⌋₊ :=
   (le_floor_iff <| n.cast_nonneg.trans h).2 h
 
 theorem floor_lt (ha : 0 ≤ a) : ⌊a⌋₊ < n ↔ a < n :=
-  lt_iff_lt_of_le_iff_le <| le_floor_iff ha
+  lt_iff_lt_of_le_iff_leₓ <| le_floor_iff ha
 
 theorem floor_lt_one (ha : 0 ≤ a) : ⌊a⌋₊ < 1 ↔ a < 1 :=
   (floor_lt ha).trans <| by
@@ -130,7 +130,7 @@ theorem lt_one_of_floor_lt_one (h : ⌊a⌋₊ < 1) : a < 1 := by
   exact_mod_cast lt_of_floor_lt h
 
 theorem floor_le (ha : 0 ≤ a) : (⌊a⌋₊ : α) ≤ a :=
-  (le_floor_iff ha).1 le_rfl
+  (le_floor_iff ha).1 le_rflₓ
 
 theorem lt_succ_floor (a : α) : a < ⌊a⌋₊.succ :=
   lt_of_floor_lt <| Nat.lt_succ_selfₓ _
@@ -140,7 +140,7 @@ theorem lt_floor_add_one (a : α) : a < ⌊a⌋₊ + 1 := by
 
 @[simp]
 theorem floor_coe (n : ℕ) : ⌊(n : α)⌋₊ = n :=
-  eq_of_forall_le_iff fun a => by
+  eq_of_forall_le_iffₓ fun a => by
     rw [le_floor_iff, Nat.cast_le]
     exact n.cast_nonneg
 
@@ -169,7 +169,8 @@ theorem le_floor_iff' (hn : n ≠ 0) : n ≤ ⌊a⌋₊ ↔ (n : α) ≤ a := by
   obtain ha | ha := le_totalₓ a 0
   · rw [floor_of_nonpos ha]
     exact
-      iff_of_false (Nat.pos_of_ne_zeroₓ hn).not_le (not_le_of_lt <| ha.trans_lt <| cast_pos.2 <| Nat.pos_of_ne_zeroₓ hn)
+      iff_of_false (Nat.pos_of_ne_zeroₓ hn).not_le
+        (not_le_of_ltₓ <| ha.trans_lt <| cast_pos.2 <| Nat.pos_of_ne_zeroₓ hn)
     
   · exact le_floor_iff ha
     
@@ -179,7 +180,7 @@ theorem one_le_floor_iff (x : α) : 1 ≤ ⌊x⌋₊ ↔ 1 ≤ x := by
   exact_mod_cast @le_floor_iff' α _ _ x 1 one_ne_zero
 
 theorem floor_lt' (hn : n ≠ 0) : ⌊a⌋₊ < n ↔ a < n :=
-  lt_iff_lt_of_le_iff_le <| le_floor_iff' hn
+  lt_iff_lt_of_le_iff_leₓ <| le_floor_iff' hn
 
 theorem floor_pos : 0 < ⌊a⌋₊ ↔ 1 ≤ a := by
   convert le_floor_iff' Nat.one_ne_zero
@@ -194,7 +195,7 @@ theorem lt_of_lt_floor (h : n < ⌊a⌋₊) : ↑n < a :=
   (Nat.cast_lt.2 h).trans_le <| floor_le (pos_of_floor_pos <| (Nat.zero_leₓ n).trans_lt h).le
 
 theorem floor_le_of_le (h : a ≤ n) : ⌊a⌋₊ ≤ n :=
-  le_imp_le_iff_lt_imp_lt.2 lt_of_lt_floor h
+  le_imp_le_iff_lt_imp_ltₓ.2 lt_of_lt_floor h
 
 theorem floor_le_one_of_le_one (h : a ≤ 1) : ⌊a⌋₊ ≤ 1 :=
   floor_le_of_le <| h.trans_eq <| Nat.cast_oneₓ.symm
@@ -212,10 +213,10 @@ theorem floor_eq_iff' (hn : n ≠ 0) : ⌊a⌋₊ = n ↔ ↑n ≤ a ∧ a < ↑
   rw [← le_floor_iff' hn, ← Nat.cast_oneₓ, ← Nat.cast_addₓ, ← floor_lt' (Nat.add_one_ne_zero n), Nat.lt_add_one_iff,
     le_antisymm_iffₓ, And.comm]
 
-theorem floor_eq_on_Ico (n : ℕ) : ∀, ∀ a ∈ (Set.Ico n (n + 1) : Set α), ∀, ⌊a⌋₊ = n := fun a ⟨h₀, h₁⟩ =>
+theorem floor_eq_on_Ico (n : ℕ) : ∀ a ∈ (Set.Ico n (n + 1) : Set α), ⌊a⌋₊ = n := fun a ⟨h₀, h₁⟩ =>
   (floor_eq_iff <| n.cast_nonneg.trans h₀).mpr ⟨h₀, h₁⟩
 
-theorem floor_eq_on_Ico' (n : ℕ) : ∀, ∀ a ∈ (Set.Ico n (n + 1) : Set α), ∀, (⌊a⌋₊ : α) = n := fun x hx => by
+theorem floor_eq_on_Ico' (n : ℕ) : ∀ a ∈ (Set.Ico n (n + 1) : Set α), (⌊a⌋₊ : α) = n := fun x hx => by
   exact_mod_cast floor_eq_on_Ico n x hx
 
 @[simp]
@@ -236,17 +237,17 @@ theorem ceil_le : ⌈a⌉₊ ≤ n ↔ a ≤ n :=
   gc_ceil_coe _ _
 
 theorem lt_ceil : n < ⌈a⌉₊ ↔ (n : α) < a :=
-  lt_iff_lt_of_le_iff_le ceil_le
+  lt_iff_lt_of_le_iff_leₓ ceil_le
 
 theorem le_ceil (a : α) : a ≤ ⌈a⌉₊ :=
-  ceil_le.1 le_rfl
+  ceil_le.1 le_rflₓ
 
 theorem ceil_mono : Monotone (ceil : α → ℕ) :=
   gc_ceil_coe.monotone_l
 
 @[simp]
 theorem ceil_coe (n : ℕ) : ⌈(n : α)⌉₊ = n :=
-  eq_of_forall_ge_iff fun a => ceil_le.trans Nat.cast_le
+  eq_of_forall_ge_iffₓ fun a => ceil_le.trans Nat.cast_le
 
 @[simp]
 theorem ceil_zero : ⌈(0 : α)⌉₊ = 0 := by
@@ -303,45 +304,45 @@ theorem preimage_ceil_of_ne_zero (hn : n ≠ 0) : (Nat.ceil : α → ℕ) ⁻¹'
 @[simp]
 theorem preimage_Ioo {a b : α} (ha : 0 ≤ a) : (coe : ℕ → α) ⁻¹' Set.Ioo a b = Set.Ioo ⌊a⌋₊ ⌈b⌉₊ := by
   ext
-  simp [← floor_lt, ← lt_ceil, ← ha]
+  simp [floor_lt, lt_ceil, ha]
 
 @[simp]
 theorem preimage_Ico {a b : α} : (coe : ℕ → α) ⁻¹' Set.Ico a b = Set.Ico ⌈a⌉₊ ⌈b⌉₊ := by
   ext
-  simp [← ceil_le, ← lt_ceil]
+  simp [ceil_le, lt_ceil]
 
 @[simp]
 theorem preimage_Ioc {a b : α} (ha : 0 ≤ a) (hb : 0 ≤ b) : (coe : ℕ → α) ⁻¹' Set.Ioc a b = Set.Ioc ⌊a⌋₊ ⌊b⌋₊ := by
   ext
-  simp [← floor_lt, ← le_floor_iff, ← hb, ← ha]
+  simp [floor_lt, le_floor_iff, hb, ha]
 
 @[simp]
 theorem preimage_Icc {a b : α} (hb : 0 ≤ b) : (coe : ℕ → α) ⁻¹' Set.Icc a b = Set.Icc ⌈a⌉₊ ⌊b⌋₊ := by
   ext
-  simp [← ceil_le, ← hb, ← le_floor_iff]
+  simp [ceil_le, hb, le_floor_iff]
 
 @[simp]
 theorem preimage_Ioi {a : α} (ha : 0 ≤ a) : (coe : ℕ → α) ⁻¹' Set.Ioi a = Set.Ioi ⌊a⌋₊ := by
   ext
-  simp [← floor_lt, ← ha]
+  simp [floor_lt, ha]
 
 @[simp]
 theorem preimage_Ici {a : α} : (coe : ℕ → α) ⁻¹' Set.Ici a = Set.Ici ⌈a⌉₊ := by
   ext
-  simp [← ceil_le]
+  simp [ceil_le]
 
 @[simp]
 theorem preimage_Iio {a : α} : (coe : ℕ → α) ⁻¹' Set.Iio a = Set.Iio ⌈a⌉₊ := by
   ext
-  simp [← lt_ceil]
+  simp [lt_ceil]
 
 @[simp]
 theorem preimage_Iic {a : α} (ha : 0 ≤ a) : (coe : ℕ → α) ⁻¹' Set.Iic a = Set.Iic ⌊a⌋₊ := by
   ext
-  simp [← le_floor_iff, ← ha]
+  simp [le_floor_iff, ha]
 
 theorem floor_add_nat (ha : 0 ≤ a) (n : ℕ) : ⌊a + n⌋₊ = ⌊a⌋₊ + n :=
-  eq_of_forall_le_iff fun b => by
+  eq_of_forall_le_iffₓ fun b => by
     rw [le_floor_iff (add_nonneg ha n.cast_nonneg)]
     obtain hb | hb := le_totalₓ n b
     · obtain ⟨d, rfl⟩ := exists_add_of_le hb
@@ -370,7 +371,7 @@ theorem floor_sub_nat [Sub α] [HasOrderedSub α] [HasExistsAddOfLe α] (a : α)
     
 
 theorem ceil_add_nat (ha : 0 ≤ a) (n : ℕ) : ⌈a + n⌉₊ = ⌈a⌉₊ + n :=
-  eq_of_forall_ge_iff fun b => by
+  eq_of_forall_ge_iffₓ fun b => by
     rw [← not_ltₓ, ← not_ltₓ, not_iff_not]
     rw [lt_ceil]
     obtain hb | hb := le_or_ltₓ n b
@@ -442,7 +443,7 @@ theorem subsingleton_floor_semiring {α} [LinearOrderedSemiring α] : Subsinglet
     cases lt_or_leₓ a 0
     · rw [H₁.floor_of_neg, H₂.floor_of_neg] <;> exact h
       
-    · refine' eq_of_forall_le_iff fun n => _
+    · refine' eq_of_forall_le_iffₓ fun n => _
       rw [H₁.gc_floor, H₂.gc_floor] <;> exact h
       
   cases H₁
@@ -512,7 +513,7 @@ theorem ceil_int : (Int.ceil : ℤ → ℤ) = id :=
 @[simp]
 theorem fract_int : (Int.fract : ℤ → ℤ) = 0 :=
   funext fun x => by
-    simp [← fract]
+    simp [fract]
 
 -- mathport name: «expr⌊ ⌋»
 notation "⌊" a "⌋" => Int.floor a
@@ -539,7 +540,7 @@ theorem le_floor : z ≤ ⌊a⌋ ↔ (z : α) ≤ a :=
   (gc_coe_floor z a).symm
 
 theorem floor_lt : ⌊a⌋ < z ↔ a < z :=
-  lt_iff_lt_of_le_iff_le le_floor
+  lt_iff_lt_of_le_iff_leₓ le_floor
 
 theorem floor_le (a : α) : (⌊a⌋ : α) ≤ a :=
   gc_coe_floor.l_u_le a
@@ -555,14 +556,14 @@ theorem lt_succ_floor (a : α) : a < ⌊a⌋.succ :=
   floor_lt.1 <| Int.lt_succ_self _
 
 theorem lt_floor_add_one (a : α) : a < ⌊a⌋ + 1 := by
-  simpa only [← Int.succ, ← Int.cast_add, ← Int.cast_oneₓ] using lt_succ_floor a
+  simpa only [Int.succ, Int.cast_add, Int.cast_oneₓ] using lt_succ_floor a
 
 theorem sub_one_lt_floor (a : α) : a - 1 < ⌊a⌋ :=
   sub_lt_iff_lt_add.2 (lt_floor_add_one a)
 
 @[simp]
 theorem floor_coe (z : ℤ) : ⌊(z : α)⌋ = z :=
-  eq_of_forall_le_iff fun a => by
+  eq_of_forall_le_iffₓ fun a => by
     rw [le_floor, Int.cast_le]
 
 @[simp]
@@ -583,7 +584,7 @@ theorem floor_pos : 0 < ⌊a⌋ ↔ 1 ≤ a := by
 
 @[simp]
 theorem floor_add_int (a : α) (z : ℤ) : ⌊a + z⌋ = ⌊a⌋ + z :=
-  eq_of_forall_le_iff fun a => by
+  eq_of_forall_le_iffₓ fun a => by
     rw [le_floor, ← sub_le_iff_le_add, ← sub_le_iff_le_add, le_floor, Int.cast_sub]
 
 theorem floor_add_one (a : α) : ⌊a + 1⌋ = ⌊a⌋ + 1 := by
@@ -592,7 +593,7 @@ theorem floor_add_one (a : α) : ⌊a + 1⌋ = ⌊a⌋ + 1 := by
 
 @[simp]
 theorem floor_int_add (z : ℤ) (a : α) : ⌊↑z + a⌋ = z + ⌊a⌋ := by
-  simpa only [← add_commₓ] using floor_add_int a z
+  simpa only [add_commₓ] using floor_add_int a z
 
 @[simp]
 theorem floor_add_nat (a : α) (n : ℕ) : ⌊a + n⌋ = ⌊a⌋ + n := by
@@ -629,10 +630,9 @@ theorem abs_sub_lt_one_of_floor_eq_floor {α : Type _} [LinearOrderedCommRing α
 theorem floor_eq_iff : ⌊a⌋ = z ↔ ↑z ≤ a ∧ a < z + 1 := by
   rw [le_antisymm_iffₓ, le_floor, ← Int.lt_add_one_iff, floor_lt, Int.cast_add, Int.cast_oneₓ, And.comm]
 
-theorem floor_eq_on_Ico (n : ℤ) : ∀, ∀ a ∈ Set.Ico (n : α) (n + 1), ∀, ⌊a⌋ = n := fun a ⟨h₀, h₁⟩ =>
-  floor_eq_iff.mpr ⟨h₀, h₁⟩
+theorem floor_eq_on_Ico (n : ℤ) : ∀ a ∈ Set.Ico (n : α) (n + 1), ⌊a⌋ = n := fun a ⟨h₀, h₁⟩ => floor_eq_iff.mpr ⟨h₀, h₁⟩
 
-theorem floor_eq_on_Ico' (n : ℤ) : ∀, ∀ a ∈ Set.Ico (n : α) (n + 1), ∀, (⌊a⌋ : α) = n := fun a ha =>
+theorem floor_eq_on_Ico' (n : ℤ) : ∀ a ∈ Set.Ico (n : α) (n + 1), (⌊a⌋ : α) = n := fun a ha =>
   congr_arg _ <| floor_eq_on_Ico n a ha
 
 @[simp]
@@ -688,7 +688,7 @@ theorem fract_zero : fract (0 : α) = 0 := by
 
 @[simp]
 theorem fract_one : fract (1 : α) = 0 := by
-  simp [← fract]
+  simp [fract]
 
 @[simp]
 theorem fract_coe (z : ℤ) : fract (z : α) = 0 := by
@@ -714,7 +714,7 @@ theorem fract_eq_iff {a b : α} : fract a = b ↔ 0 ≤ b ∧ b < 1 ∧ ∃ z : 
     rw [eq_sub_iff_add_eq, add_commₓ, ← eq_sub_iff_add_eq]
     rw [hz, Int.cast_inj, floor_eq_iff, ← hz]
     clear hz
-    constructor <;> simpa [← sub_eq_add_neg, ← add_assocₓ] ⟩
+    constructor <;> simpa [sub_eq_add_neg, add_assocₓ] ⟩
 
 theorem fract_eq_fract {a b : α} : fract a = fract b ↔ ∃ z : ℤ, a - b = z :=
   ⟨fun h =>
@@ -742,7 +742,7 @@ theorem fract_fract (a : α) : fract (fract a) = fract a :=
 theorem fract_add (a b : α) : ∃ z : ℤ, fract (a + b) - fract a - fract b = z :=
   ⟨⌊a⌋ + ⌊b⌋ - ⌊a + b⌋, by
     unfold fract
-    simp [← sub_eq_add_neg]
+    simp [sub_eq_add_neg]
     abel⟩
 
 theorem fract_mul_nat (a : α) (b : ℕ) : ∃ z : ℤ, fract a * b - fract (a * b) = z := by
@@ -758,7 +758,7 @@ theorem fract_mul_nat (a : α) (b : ℕ) : ∃ z : ℤ, fract a * b - fract (a *
 
 theorem preimage_fract (s : Set α) : fract ⁻¹' s = ⋃ m : ℤ, (fun x => x - m) ⁻¹' (s ∩ Ico (0 : α) 1) := by
   ext x
-  simp only [← mem_preimage, ← mem_Union, ← mem_inter_eq]
+  simp only [mem_preimage, mem_Union, mem_inter_eq]
   refine' ⟨fun h => ⟨⌊x⌋, h, fract_nonneg x, fract_lt_one x⟩, _⟩
   rintro ⟨m, hms, hm0, hm1⟩
   obtain rfl : ⌊x⌋ = m
@@ -767,7 +767,7 @@ theorem preimage_fract (s : Set α) : fract ⁻¹' s = ⋃ m : ℤ, (fun x => x 
 
 theorem image_fract (s : Set α) : fract '' s = ⋃ m : ℤ, (fun x => x - m) '' s ∩ Ico 0 1 := by
   ext x
-  simp only [← mem_image, ← mem_inter_eq, ← mem_Union]
+  simp only [mem_image, mem_inter_eq, mem_Union]
   constructor
   · rintro ⟨y, hy, rfl⟩
     exact ⟨⌊y⌋, ⟨y, hy, rfl⟩, fract_nonneg y, fract_lt_one y⟩
@@ -808,15 +808,15 @@ theorem ceil_le : ⌈a⌉ ≤ z ↔ a ≤ z :=
   gc_ceil_coe a z
 
 theorem floor_neg : ⌊-a⌋ = -⌈a⌉ :=
-  eq_of_forall_le_iff fun z => by
+  eq_of_forall_le_iffₓ fun z => by
     rw [le_neg, ceil_le, le_floor, Int.cast_neg, le_neg]
 
 theorem ceil_neg : ⌈-a⌉ = -⌊a⌋ :=
-  eq_of_forall_ge_iff fun z => by
+  eq_of_forall_ge_iffₓ fun z => by
     rw [neg_le, ceil_le, le_floor, Int.cast_neg, neg_le]
 
 theorem lt_ceil : z < ⌈a⌉ ↔ (z : α) < a :=
-  lt_iff_lt_of_le_iff_le ceil_le
+  lt_iff_lt_of_le_iff_leₓ ceil_le
 
 theorem ceil_le_floor_add_one (a : α) : ⌈a⌉ ≤ ⌊a⌋ + 1 := by
   rw [ceil_le, Int.cast_add, Int.cast_oneₓ]
@@ -827,7 +827,7 @@ theorem le_ceil (a : α) : a ≤ ⌈a⌉ :=
 
 @[simp]
 theorem ceil_coe (z : ℤ) : ⌈(z : α)⌉ = z :=
-  eq_of_forall_ge_iff fun a => by
+  eq_of_forall_ge_iffₓ fun a => by
     rw [ceil_le, Int.cast_le]
 
 theorem ceil_mono : Monotone (ceil : α → ℤ) :=
@@ -875,10 +875,9 @@ theorem ceil_nonneg (ha : 0 ≤ a) : 0 ≤ ⌈a⌉ := by
 theorem ceil_eq_iff : ⌈a⌉ = z ↔ ↑z - 1 < a ∧ a ≤ z := by
   rw [← ceil_le, ← Int.cast_oneₓ, ← Int.cast_sub, ← lt_ceil, Int.sub_one_lt_iff, le_antisymm_iffₓ, And.comm]
 
-theorem ceil_eq_on_Ioc (z : ℤ) : ∀, ∀ a ∈ Set.Ioc (z - 1 : α) z, ∀, ⌈a⌉ = z := fun a ⟨h₀, h₁⟩ =>
-  ceil_eq_iff.mpr ⟨h₀, h₁⟩
+theorem ceil_eq_on_Ioc (z : ℤ) : ∀ a ∈ Set.Ioc (z - 1 : α) z, ⌈a⌉ = z := fun a ⟨h₀, h₁⟩ => ceil_eq_iff.mpr ⟨h₀, h₁⟩
 
-theorem ceil_eq_on_Ioc' (z : ℤ) : ∀, ∀ a ∈ Set.Ioc (z - 1 : α) z, ∀, (⌈a⌉ : α) = z := fun a ha => by
+theorem ceil_eq_on_Ioc' (z : ℤ) : ∀ a ∈ Set.Ioc (z - 1 : α) z, (⌈a⌉ : α) = z := fun a ha => by
   exact_mod_cast ceil_eq_on_Ioc z a ha
 
 theorem floor_le_ceil (a : α) : ⌊a⌋ ≤ ⌈a⌉ :=
@@ -897,42 +896,42 @@ theorem preimage_ceil_singleton (m : ℤ) : (ceil : α → ℤ) ⁻¹' {m} = Ioc
 @[simp]
 theorem preimage_Ioo {a b : α} : (coe : ℤ → α) ⁻¹' Set.Ioo a b = Set.Ioo ⌊a⌋ ⌈b⌉ := by
   ext
-  simp [← floor_lt, ← lt_ceil]
+  simp [floor_lt, lt_ceil]
 
 @[simp]
 theorem preimage_Ico {a b : α} : (coe : ℤ → α) ⁻¹' Set.Ico a b = Set.Ico ⌈a⌉ ⌈b⌉ := by
   ext
-  simp [← ceil_le, ← lt_ceil]
+  simp [ceil_le, lt_ceil]
 
 @[simp]
 theorem preimage_Ioc {a b : α} : (coe : ℤ → α) ⁻¹' Set.Ioc a b = Set.Ioc ⌊a⌋ ⌊b⌋ := by
   ext
-  simp [← floor_lt, ← le_floor]
+  simp [floor_lt, le_floor]
 
 @[simp]
 theorem preimage_Icc {a b : α} : (coe : ℤ → α) ⁻¹' Set.Icc a b = Set.Icc ⌈a⌉ ⌊b⌋ := by
   ext
-  simp [← ceil_le, ← le_floor]
+  simp [ceil_le, le_floor]
 
 @[simp]
 theorem preimage_Ioi : (coe : ℤ → α) ⁻¹' Set.Ioi a = Set.Ioi ⌊a⌋ := by
   ext
-  simp [← floor_lt]
+  simp [floor_lt]
 
 @[simp]
 theorem preimage_Ici : (coe : ℤ → α) ⁻¹' Set.Ici a = Set.Ici ⌈a⌉ := by
   ext
-  simp [← ceil_le]
+  simp [ceil_le]
 
 @[simp]
 theorem preimage_Iio : (coe : ℤ → α) ⁻¹' Set.Iio a = Set.Iio ⌈a⌉ := by
   ext
-  simp [← lt_ceil]
+  simp [lt_ceil]
 
 @[simp]
 theorem preimage_Iic : (coe : ℤ → α) ⁻¹' Set.Iic a = Set.Iic ⌊a⌋ := by
   ext
-  simp [← le_floor]
+  simp [le_floor]
 
 end Int
 

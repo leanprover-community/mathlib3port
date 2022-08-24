@@ -188,28 +188,27 @@ noncomputable instance : NormedAddCommGroup (V →A[𝕜] W) :=
         rcases max_eq_iff.mp h₀ with (⟨h₁, h₂⟩ | ⟨h₁, h₂⟩) <;> rw [h₁] at h₂
         · rw [norm_le_zero_iff, cont_linear_eq_zero_iff_exists_const] at h₂
           obtain ⟨q, rfl⟩ := h₂
-          simp only [← Function.const_applyₓ, ← coe_const, ← norm_eq_zero] at h₁
+          simp only [Function.const_applyₓ, coe_const, norm_eq_zero] at h₁
           rw [h₁]
           rfl
           
         · rw [norm_eq_zero_iff', cont_linear_eq_zero_iff_exists_const] at h₁
           obtain ⟨q, rfl⟩ := h₁
-          simp only [← Function.const_applyₓ, ← coe_const, ← norm_le_zero_iff] at h₂
+          simp only [Function.const_applyₓ, coe_const, norm_le_zero_iff] at h₂
           rw [h₂]
           rfl
           ,
       triangle := fun f g => by
-        simp only [← norm_def, ← Pi.add_apply, ← add_cont_linear, ← coe_add, ← max_le_iff]
+        simp only [norm_def, Pi.add_apply, add_cont_linear, coe_add, max_le_iff]
         exact
           ⟨(norm_add_le _ _).trans (add_le_add (le_max_leftₓ _ _) (le_max_leftₓ _ _)),
             (norm_add_le _ _).trans (add_le_add (le_max_rightₓ _ _) (le_max_rightₓ _ _))⟩,
       norm_neg := fun f => by
-        simp [← norm_def] }
+        simp [norm_def] }
 
 instance :
     NormedSpace 𝕜 (V →A[𝕜] W) where norm_smul_le := fun t f => by
-    simp only [← norm_def, ← smul_cont_linear, ← coe_smul, ← Pi.smul_apply, ← norm_smul,
-      mul_max_of_nonneg _ _ (norm_nonneg t)]
+    simp only [norm_def, smul_cont_linear, coe_smul, Pi.smul_apply, norm_smul, ← mul_max_of_nonneg _ _ (norm_nonneg t)]
 
 theorem norm_comp_le (g : W₂ →A[𝕜] V) : ∥f.comp g∥ ≤ ∥f∥ * ∥g∥ + ∥f 0∥ := by
   rw [norm_def, max_le_iff]
@@ -255,7 +254,7 @@ def toConstProdContinuousLinearMap : (V →A[𝕜] W) ≃ₗᵢ[𝕜] W × (V �
   map_smul' := by
     simp
   norm_map' := fun f => by
-    simp [← Prod.norm_def, ← norm_def]
+    simp [Prod.norm_def, norm_def]
 
 @[simp]
 theorem to_const_prod_continuous_linear_map_fst (f : V →A[𝕜] W) : (toConstProdContinuousLinearMap 𝕜 V W f).fst = f 0 :=

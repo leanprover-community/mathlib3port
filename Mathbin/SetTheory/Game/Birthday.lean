@@ -109,7 +109,7 @@ theorem birthday_eq_zero (x : Pgame) : birthday x = 0 ↔ IsEmpty x.LeftMoves �
 
 @[simp]
 theorem birthday_zero : birthday 0 = 0 := by
-  simp [← Pempty.is_empty]
+  simp [Pempty.is_empty]
 
 @[simp]
 theorem birthday_one : birthday 1 = 1 := by
@@ -131,7 +131,7 @@ theorem neg_birthday : ∀ x : Pgame, (-x).birthday = x.birthday
 theorem to_pgame_birthday (o : Ordinal) : o.toPgame.birthday = o := by
   induction' o using Ordinal.induction with o IH
   rw [to_pgame_def, Pgame.birthday]
-  simp only [← lsub_empty, ← max_zero_right]
+  simp only [lsub_empty, max_zero_right]
   nth_rw 0[← lsub_typein o]
   congr with x
   exact IH _ (typein_lt_self x)
@@ -142,7 +142,7 @@ theorem le_birthday : ∀ x : Pgame, x ≤ x.birthday.toPgame
       ⟨fun i =>
         Or.inl
           ⟨toLeftMovesToPgame ⟨_, birthday_move_left_lt i⟩, by
-            simp [← le_birthday (xL i)]⟩,
+            simp [le_birthday (xL i)]⟩,
         isEmptyElim⟩
 
 theorem neg_birthday_le (x : Pgame) : -x.birthday.toPgame ≤ x := by

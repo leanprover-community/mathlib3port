@@ -23,6 +23,8 @@ the integers into an additive group with a one (`int.cast`).
 
 open Nat
 
+variable {F ι α β : Type _}
+
 namespace Int
 
 /-- Coercion `ℕ → ℤ` as a `ring_hom`. -/
@@ -31,17 +33,15 @@ def ofNatHom : ℕ →+* ℤ :=
 
 section cast
 
-variable {α : Type _}
-
 @[simp, norm_cast]
 theorem cast_mul [NonAssocRing α] : ∀ m n, ((m * n : ℤ) : α) = m * n := fun m =>
   Int.inductionOn' m 0
     (by
       simp )
     (fun k _ ih n => by
-      simp [← add_mulₓ, ← ih])
+      simp [add_mulₓ, ih])
     fun k _ ih n => by
-    simp [← sub_mul, ← ih]
+    simp [sub_mul, ih]
 
 @[simp, norm_cast]
 theorem cast_ite [AddGroupWithOneₓ α] (P : Prop) [Decidable P] (m n : ℤ) : ((ite P m n : ℤ) : α) = ite P m n :=
@@ -67,7 +67,7 @@ theorem cast_commute [NonAssocRing α] : ∀ (m : ℤ) (x : α), Commute (↑m) 
   | (n : ℕ), x => by
     simpa using n.cast_commute x
   | -[1+ n], x => by
-    simpa only [← cast_neg_succ_of_nat, ← Commute.neg_left_iff, ← Commute.neg_right_iff] using (n + 1).cast_commute (-x)
+    simpa only [cast_neg_succ_of_nat, Commute.neg_left_iff, Commute.neg_right_iff] using (n + 1).cast_commute (-x)
 
 theorem cast_comm [NonAssocRing α] (m : ℤ) (x : α) : (m : α) * x = x * m :=
   (cast_commute m x).Eq
@@ -92,7 +92,7 @@ theorem cast_nonneg [OrderedRing α] [Nontrivial α] : ∀ {n : ℤ}, (0 : α) �
         (by
           simp )
         zero_lt_one
-    simpa [← (neg_succ_lt_zero n).not_le, sub_eq_add_neg, ← le_neg] using this.not_le
+    simpa [(neg_succ_lt_zero n).not_le, ← sub_eq_add_neg, le_neg] using this.not_le
 
 @[simp, norm_cast]
 theorem cast_le [OrderedRing α] [Nontrivial α] {m n : ℤ} : (m : α) ≤ n ↔ m ≤ n := by
@@ -131,7 +131,7 @@ theorem cast_max : (↑(max a b) : α) = max a b :=
 
 @[simp, norm_cast]
 theorem cast_abs : ((abs a : ℤ) : α) = abs a := by
-  simp [← abs_eq_max_neg]
+  simp [abs_eq_max_neg]
 
 theorem cast_one_le_of_pos (h : 0 < a) : (1 : α) ≤ a := by
   exact_mod_cast Int.add_one_le_of_ltₓ h
@@ -154,7 +154,7 @@ theorem nneg_mul_add_sq_of_abs_le_one {x : α} (hx : abs x ≤ 1) : (0 : α) ≤
         ⟨by
           exact_mod_cast h.le, hnx' h⟩
     
-  · simp [← le_totalₓ 0 x]
+  · simp [le_totalₓ 0 x]
     
   · exact
       Or.inl
@@ -166,7 +166,7 @@ theorem cast_nat_abs : (n.natAbs : α) = abs n := by
   cases n
   · simp
     
-  · simp only [← Int.natAbs, ← Int.cast_neg_succ_of_nat, ← abs_neg, Nat.cast_succₓ, ← Nat.abs_cast]
+  · simp only [Int.natAbs, Int.cast_neg_succ_of_nat, abs_neg, ← Nat.cast_succₓ, Nat.abs_cast]
     
 
 end LinearOrderedRing
@@ -180,7 +180,7 @@ end Int
 
 namespace Prod
 
-variable {α : Type _} {β : Type _} [AddGroupWithOneₓ α] [AddGroupWithOneₓ β]
+variable [AddGroupWithOneₓ α] [AddGroupWithOneₓ β]
 
 instance : AddGroupWithOneₓ (α × β) :=
   { Prod.addMonoidWithOne, Prod.addGroup with intCast := fun n => (n, n),
@@ -217,12 +217,12 @@ variable [AddGroupWithOneₓ A]
 
 theorem eq_int_cast_hom (f : ℤ →+ A) (h1 : f 1 = 1) : f = Int.castAddHom A :=
   ext_int <| by
-    simp [← h1]
-
-theorem eq_int_cast (f : ℤ →+ A) (h1 : f 1 = 1) : ∀ n : ℤ, f n = n :=
-  ext_iff.1 (f.eq_int_cast_hom h1)
+    simp [h1]
 
 end AddMonoidHom
+
+theorem eq_int_cast' [AddGroupWithOneₓ α] [AddMonoidHomClass F ℤ α] (f : F) (h₁ : f 1 = 1) : ∀ n : ℤ, f n = n :=
+  AddMonoidHom.ext_iff.1 <| (f : ℤ →+ α).eq_int_cast_hom h₁
 
 @[simp]
 theorem Int.cast_add_hom_int : Int.castAddHom ℤ = AddMonoidHom.id ℤ :=
@@ -262,26 +262,33 @@ theorem ext_int {f g : ℤ →*₀ M} (h_neg_one : f (-1) = g (-1))
     (h_nat : f.comp Int.ofNatHom.toMonoidWithZeroHom = g.comp Int.ofNatHom.toMonoidWithZeroHom) : f = g :=
   to_monoid_hom_injective <| MonoidHom.ext_int h_neg_one <| MonoidHom.ext (congr_fun h_nat : _)
 
-/-- If two `monoid_with_zero_hom`s agree on `-1` and the _positive_ naturals then they are equal. -/
-theorem ext_int' {φ₁ φ₂ : ℤ →*₀ M} (h_neg_one : φ₁ (-1) = φ₂ (-1)) (h_pos : ∀ n : ℕ, 0 < n → φ₁ n = φ₂ n) : φ₁ = φ₂ :=
-  ext_int h_neg_one <| ext_nat h_pos
-
 end MonoidWithZeroHom
+
+/-- If two `monoid_with_zero_hom`s agree on `-1` and the _positive_ naturals then they are equal. -/
+theorem ext_int' [MonoidWithZeroₓ α] [MonoidWithZeroHomClass F ℤ α] {f g : F} (h_neg_one : f (-1) = g (-1))
+    (h_pos : ∀ n : ℕ, 0 < n → f n = g n) : f = g :=
+  (FunLike.ext _ _) fun n => by
+    have :=
+      FunLike.congr_fun
+        (@MonoidWithZeroHom.ext_int _ _ (f : ℤ →*₀ α) (g : ℤ →*₀ α) h_neg_one <| MonoidWithZeroHom.ext_nat h_pos) n
+    exact this
+
+section NonAssocRing
+
+variable [NonAssocRing α] [NonAssocRing β]
+
+@[simp]
+theorem eq_int_cast [RingHomClass F ℤ α] (f : F) (n : ℤ) : f n = n :=
+  eq_int_cast' f (map_one _) n
+
+@[simp]
+theorem map_int_cast [RingHomClass F α β] (f : F) (n : ℤ) : f n = n :=
+  eq_int_cast ((f : α →+* β).comp (Int.castRingHom α)) n
 
 namespace RingHom
 
-variable {α : Type _} {β : Type _} [NonAssocRing α] [NonAssocRing β]
-
-@[simp]
-theorem eq_int_cast (f : ℤ →+* α) (n : ℤ) : f n = n :=
-  f.toAddMonoidHom.eq_int_cast f.map_one n
-
 theorem eq_int_cast' (f : ℤ →+* α) : f = Int.castRingHom α :=
-  RingHom.ext f.eq_int_cast
-
-@[simp]
-theorem map_int_cast (f : α →+* β) (n : ℤ) : f n = n :=
-  (f.comp (Int.castRingHom α)).eq_int_cast n
+  RingHom.ext <| eq_int_cast f
 
 theorem ext_int {R : Type _} [NonAssocSemiringₓ R] (f g : ℤ →+* R) : f = g :=
   coe_add_monoid_hom_injective <| AddMonoidHom.ext_int <| f.map_one.trans g.map_one.symm
@@ -291,9 +298,11 @@ instance Int.subsingleton_ring_hom {R : Type _} [NonAssocSemiringₓ R] : Subsin
 
 end RingHom
 
+end NonAssocRing
+
 @[simp, norm_cast]
 theorem Int.cast_id (n : ℤ) : ↑n = n :=
-  ((RingHom.id ℤ).eq_int_cast n).symm
+  (eq_int_cast (RingHom.id ℤ) _).symm
 
 @[simp]
 theorem Int.cast_ring_hom_int : Int.castRingHom ℤ = RingHom.id ℤ :=
@@ -301,18 +310,18 @@ theorem Int.cast_ring_hom_int : Int.castRingHom ℤ = RingHom.id ℤ :=
 
 namespace Pi
 
-variable {α : Type _} {β : α → Type _} [∀ a, HasIntCast (β a)]
+variable {π : ι → Type _} [∀ i, HasIntCast (π i)]
 
-instance : HasIntCast (∀ a, β a) := by
+instance : HasIntCast (∀ i, π i) := by
   refine_struct { .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-theorem int_apply (n : ℤ) (a : α) : (n : ∀ a, β a) a = n :=
+theorem int_apply (n : ℤ) (i : ι) : (n : ∀ i, π i) i = n :=
   rfl
 
 @[simp]
-theorem coe_int (n : ℤ) : (n : ∀ a, β a) = fun _ => n :=
+theorem coe_int (n : ℤ) : (n : ∀ i, π i) = fun _ => n :=
   rfl
 
 end Pi
@@ -322,9 +331,9 @@ theorem Sum.elim_int_cast_int_cast {α β γ : Type _} [HasIntCast γ] (n : ℤ)
 
 namespace Pi
 
-variable {α : Type _} {β : α → Type _} [∀ a, AddGroupWithOneₓ (β a)]
+variable {π : ι → Type _} [∀ i, AddGroupWithOneₓ (π i)]
 
-instance : AddGroupWithOneₓ (∀ a, β a) := by
+instance : AddGroupWithOneₓ (∀ i, π i) := by
   refine_struct { .. } <;>
     run_tac
       tactic.pi_instance_derive_field
@@ -333,7 +342,7 @@ end Pi
 
 namespace MulOpposite
 
-variable {α : Type _} [AddGroupWithOneₓ α]
+variable [AddGroupWithOneₓ α]
 
 @[simp, norm_cast]
 theorem op_int_cast (z : ℤ) : op (z : α) = z :=
@@ -344,4 +353,46 @@ theorem unop_int_cast (n : ℤ) : unop (n : αᵐᵒᵖ) = n :=
   rfl
 
 end MulOpposite
+
+/-! ### Order dual -/
+
+
+open OrderDual
+
+instance [h : HasIntCast α] : HasIntCast αᵒᵈ :=
+  h
+
+instance [h : AddGroupWithOneₓ α] : AddGroupWithOneₓ αᵒᵈ :=
+  h
+
+instance [h : AddCommGroupWithOne α] : AddCommGroupWithOne αᵒᵈ :=
+  h
+
+@[simp]
+theorem to_dual_int_cast [HasIntCast α] (n : ℤ) : toDual (n : α) = n :=
+  rfl
+
+@[simp]
+theorem of_dual_int_cast [HasIntCast α] (n : ℤ) : (ofDual n : α) = n :=
+  rfl
+
+/-! ### Lexicographic order -/
+
+
+instance [h : HasIntCast α] : HasIntCast (Lex α) :=
+  h
+
+instance [h : AddGroupWithOneₓ α] : AddGroupWithOneₓ (Lex α) :=
+  h
+
+instance [h : AddCommGroupWithOne α] : AddCommGroupWithOne (Lex α) :=
+  h
+
+@[simp]
+theorem to_lex_int_cast [HasIntCast α] (n : ℤ) : toLex (n : α) = n :=
+  rfl
+
+@[simp]
+theorem of_lex_int_cast [HasIntCast α] (n : ℤ) : (ofLex n : α) = n :=
+  rfl
 

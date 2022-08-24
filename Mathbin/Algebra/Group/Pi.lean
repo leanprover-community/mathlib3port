@@ -331,13 +331,13 @@ theorem Pi.mul_single_commute [∀ i, MulOneClassₓ <| f i] :
   ext k
   by_cases' h1 : i = k
   · subst h1
-    simp [← hij]
+    simp [hij]
     
   by_cases' h2 : j = k
   · subst h2
-    simp [← hij]
+    simp [hij]
     
-  simp [← h1, ← h2]
+  simp [h1, h2]
 
 /-- The injection into a pi group with the same values commutes. -/
 @[to_additive "The injection into an additive pi group with the same values commutes."]
@@ -356,7 +356,7 @@ theorem Pi.update_eq_div_mul_single [∀ i, Groupₓ <| f i] (g : ∀ i : I, f i
   rcases eq_or_ne i j with (rfl | h)
   · simp
     
-  · simp [← Function.update_noteq h.symm, ← h]
+  · simp [Function.update_noteq h.symm, h]
     
 
 @[to_additive Pi.single_add_single_eq_single_add_single]
@@ -370,7 +370,7 @@ theorem Pi.mul_single_mul_mul_single_eq_mul_single_mul_mul_single {M : Type _} [
     have hl := congr_fun h l
     have hm := (congr_fun h m).symm
     have hn := (congr_fun h n).symm
-    simp only [← mul_apply, ← mul_single_apply, ← if_pos rfl] at hk hl hm hn
+    simp only [mul_apply, mul_single_apply, if_pos rfl] at hk hl hm hn
     rcases eq_or_ne k m with (rfl | hkm)
     · refine' Or.inl ⟨rfl, not_ne_iff.mp fun hln => (hv _).elim⟩
       rcases eq_or_ne k l with (rfl | hkl)
@@ -384,7 +384,7 @@ theorem Pi.mul_single_mul_mul_single_eq_mul_single_mul_mul_single {M : Type _} [
         · rw [if_neg hkm.symm, if_neg hkm.symm, one_mulₓ, if_pos rfl] at hm
           exact Or.inr (Or.inr ⟨hm, rfl, rfl⟩)
           
-        · simpa only [← if_neg hkm, ← if_neg hkl, ← mul_oneₓ] using hk
+        · simpa only [if_neg hkm, if_neg hkl, mul_oneₓ] using hk
           
         
       · rw [if_neg hkm.symm, if_neg hmn, one_mulₓ, mul_oneₓ] at hm

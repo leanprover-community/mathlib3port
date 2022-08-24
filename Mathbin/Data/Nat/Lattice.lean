@@ -26,12 +26,12 @@ noncomputable instance : HasInfₓ ℕ :=
   ⟨fun s => if h : ∃ n, n ∈ s then @Nat.findₓ (fun n => n ∈ s) _ h else 0⟩
 
 noncomputable instance : HasSupₓ ℕ :=
-  ⟨fun s => if h : ∃ n, ∀, ∀ a ∈ s, ∀, a ≤ n then @Nat.findₓ (fun n => ∀, ∀ a ∈ s, ∀, a ≤ n) _ h else 0⟩
+  ⟨fun s => if h : ∃ n, ∀ a ∈ s, a ≤ n then @Nat.findₓ (fun n => ∀ a ∈ s, a ≤ n) _ h else 0⟩
 
 theorem Inf_def {s : Set ℕ} (h : s.Nonempty) : inf s = @Nat.findₓ (fun n => n ∈ s) _ h :=
   dif_pos _
 
-theorem Sup_def {s : Set ℕ} (h : ∃ n, ∀, ∀ a ∈ s, ∀, a ≤ n) : sup s = @Nat.findₓ (fun n => ∀, ∀ a ∈ s, ∀, a ≤ n) _ h :=
+theorem Sup_def {s : Set ℕ} (h : ∃ n, ∀ a ∈ s, a ≤ n) : sup s = @Nat.findₓ (fun n => ∀ a ∈ s, a ≤ n) _ h :=
   dif_pos _
 
 theorem _root_.set.infinite.nat.Sup_eq_zero {s : Set ℕ} (h : s.Infinite) : sup s = 0 :=
@@ -43,11 +43,11 @@ theorem _root_.set.infinite.nat.Sup_eq_zero {s : Set ℕ} (h : s.Infinite) : sup
 theorem Inf_eq_zero {s : Set ℕ} : inf s = 0 ↔ 0 ∈ s ∨ s = ∅ := by
   cases eq_empty_or_nonempty s
   · subst h
-    simp only [← or_trueₓ, ← eq_self_iff_true, ← iff_trueₓ, ← Inf, ← HasInfₓ.inf, ← mem_empty_eq, ← exists_false, ←
-      dif_neg, ← not_false_iff]
+    simp only [or_trueₓ, eq_self_iff_true, iff_trueₓ, Inf, HasInfₓ.inf, mem_empty_eq, exists_false, dif_neg,
+      not_false_iff]
     
   · have := ne_empty_iff_nonempty.mpr h
-    simp only [← this, ← or_falseₓ, ← Nat.Inf_def, ← h, ← Nat.find_eq_zero]
+    simp only [this, or_falseₓ, Nat.Inf_def, h, Nat.find_eq_zero]
     
 
 @[simp]
@@ -98,7 +98,7 @@ theorem Inf_upward_closed_eq_succ_iff {s : Set ℕ} (hs : ∀ k₁ k₂ : ℕ, k
   constructor
   · intro H
     rw [eq_Ici_of_nonempty_of_upward_closed (nonempty_of_Inf_eq_succ H) hs, H, mem_Ici, mem_Ici]
-    exact ⟨le_rfl, k.not_succ_le_self⟩
+    exact ⟨le_rflₓ, k.not_succ_le_self⟩
     
   · rintro ⟨H, H'⟩
     rw [Inf_def (⟨_, H⟩ : s.nonempty), find_eq_iff]
@@ -122,7 +122,7 @@ noncomputable instance : ConditionallyCompleteLinearOrderBot ℕ :=
     cInf_le := fun s a hb ha => by
       rw [Inf_def ⟨a, ha⟩] <;> exact Nat.find_min'ₓ _ ha,
     cSup_empty := by
-      simp only [← Sup_def, ← Set.mem_empty_eq, ← forall_const, ← forall_prop_of_false, ← not_false_iff, ← exists_const]
+      simp only [Sup_def, Set.mem_empty_eq, forall_const, forall_prop_of_false, not_false_iff, exists_const]
       apply bot_unique (Nat.find_min'ₓ _ _)
       trivial }
 
@@ -167,7 +167,7 @@ section
 variable {α : Type _} [CompleteLattice α]
 
 theorem supr_lt_succ (u : ℕ → α) (n : ℕ) : (⨆ k < n + 1, u k) = (⨆ k < n, u k)⊔u n := by
-  simp [← Nat.lt_succ_iff_lt_or_eq, ← supr_or, ← supr_sup_eq]
+  simp [Nat.lt_succ_iff_lt_or_eq, supr_or, supr_sup_eq]
 
 theorem supr_lt_succ' (u : ℕ → α) (n : ℕ) : (⨆ k < n + 1, u k) = u 0⊔⨆ k < n, u (k + 1) := by
   rw [← sup_supr_nat_succ]

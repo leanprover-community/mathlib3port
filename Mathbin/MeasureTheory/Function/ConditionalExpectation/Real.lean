@@ -104,7 +104,7 @@ theorem Integrable.uniform_integrable_condexp {ι : Type _} [IsFiniteMeasure μ]
     measurable_set_le measurable_const (strongly_measurable_condexp.mono (hℱ n)).Measurable.nnnorm
   have hg : mem_ℒp g 1 μ := mem_ℒp_one_iff_integrable.2 hint
   refine'
-    uniform_integrable_of le_rfl Ennreal.one_ne_top
+    uniform_integrable_of le_rflₓ Ennreal.one_ne_top
       (fun n => (strongly_measurable_condexp.mono (hℱ n)).AeStronglyMeasurable) fun ε hε => _
   by_cases' hne : snorm g 1 μ = 0
   · rw [snorm_eq_zero_iff hg.1 one_ne_zero] at hne
@@ -116,9 +116,9 @@ theorem Integrable.uniform_integrable_condexp {ι : Type _} [IsFiniteMeasure μ]
                 _).trans
           (zero_le _)⟩
     filter_upwards [@condexp_congr_ae _ _ _ _ _ (ℱ n) m0 μ _ _ hne] with x hx
-    simp only [← zero_le', ← Set.set_of_true, ← Set.indicator_univ, ← Pi.zero_apply, ← hx, ← condexp_zero]
+    simp only [zero_le', Set.set_of_true, Set.indicator_univ, Pi.zero_apply, hx, condexp_zero]
     
-  obtain ⟨δ, hδ, h⟩ := hg.snorm_indicator_le μ le_rfl Ennreal.one_ne_top hε
+  obtain ⟨δ, hδ, h⟩ := hg.snorm_indicator_le μ le_rflₓ Ennreal.one_ne_top hε
   set C : ℝ≥0 := ⟨δ, hδ.le⟩⁻¹ * (snorm g 1 μ).toNnreal with hC
   have hCpos : 0 < C := mul_pos (Nnreal.inv_pos.2 hδ) (Ennreal.to_nnreal_pos hne hg.snorm_lt_top.ne)
   have : ∀ n, μ { x : α | C ≤ ∥(μ[g|ℱ n]) x∥₊ } ≤ Ennreal.ofReal δ := by
@@ -152,12 +152,12 @@ theorem condexp_strongly_measurable_simple_func_mul (hm : m ≤ m0) (f : @Simple
     intro s c f
     ext1 x
     by_cases' hx : x ∈ s
-    · simp only [← hx, ← Pi.mul_apply, ← Set.indicator_of_mem, ← Pi.smul_apply, ← Algebra.id.smul_eq_mul]
+    · simp only [hx, Pi.mul_apply, Set.indicator_of_mem, Pi.smul_apply, Algebra.id.smul_eq_mul]
       
-    · simp only [← hx, ← Pi.mul_apply, ← Set.indicator_of_not_mem, ← not_false_iff, ← zero_mul]
+    · simp only [hx, Pi.mul_apply, Set.indicator_of_not_mem, not_false_iff, zero_mul]
       
   refine' @simple_func.induction _ _ m _ _ (fun c s hs => _) (fun g₁ g₂ h_disj h_eq₁ h_eq₂ => _) f
-  · simp only [← simple_func.const_zero, ← simple_func.coe_piecewise, ← simple_func.coe_const, ← simple_func.coe_zero, ←
+  · simp only [simple_func.const_zero, simple_func.coe_piecewise, simple_func.coe_const, simple_func.coe_zero,
       Set.piecewise_eq_indicator]
     rw [this, this]
     refine' (condexp_indicator (hg.smul c) hs).trans _
@@ -185,10 +185,10 @@ theorem condexp_strongly_measurable_mul_of_bound (hm : m ≤ m0) [IsFiniteMeasur
   let fs := hf.approx_bounded c
   have hfs_tendsto : ∀ᵐ x ∂μ, tendsto (fun n => fs n x) at_top (𝓝 (f x)) := hf.tendsto_approx_bounded_ae hf_bound
   by_cases' hμ : μ = 0
-  · simp only [← hμ, ← ae_zero]
+  · simp only [hμ, ae_zero]
     
   have : μ.ae.ne_bot := by
-    simp only [← hμ, ← ae_ne_bot, ← Ne.def, ← not_false_iff]
+    simp only [hμ, ae_ne_bot, Ne.def, not_false_iff]
   have hc : 0 ≤ c := by
     have h_exists : ∃ x, ∥f x∥ ≤ c := eventually.exists hf_bound
     exact (norm_nonneg _).trans h_exists.some_spec
@@ -300,10 +300,10 @@ theorem condexp_strongly_measurable_mul {f g : α → ℝ} (hf : strongly_measur
   refine' condexp_strongly_measurable_mul_of_bound hm (hf.indicator (h_meas n)) hg.integrable_on n _
   refine' eventually_of_forall fun x => _
   by_cases' hxs : x ∈ sets n
-  · simp only [← hxs, ← Set.indicator_of_mem]
+  · simp only [hxs, Set.indicator_of_mem]
     exact h_norm n x hxs
     
-  · simp only [← hxs, ← Set.indicator_of_not_mem, ← not_false_iff, ← _root_.norm_zero, ← Nat.cast_nonneg]
+  · simp only [hxs, Set.indicator_of_not_mem, not_false_iff, _root_.norm_zero, Nat.cast_nonneg]
     
 
 /-- Pull-out property of the conditional expectation. -/

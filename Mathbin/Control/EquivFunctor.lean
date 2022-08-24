@@ -66,7 +66,7 @@ theorem map_equiv_symm_apply (y : f β) : (mapEquiv f e).symm y = EquivFunctor.m
 
 @[simp]
 theorem map_equiv_refl (α) : mapEquiv f (Equivₓ.refl α) = Equivₓ.refl (f α) := by
-  simpa [← EquivFunctor.mapEquiv]
+  simpa [EquivFunctor.mapEquiv]
 
 @[simp]
 theorem map_equiv_symm : (mapEquiv f e).symm = mapEquiv f e.symm :=
@@ -80,7 +80,7 @@ or `map_comp_map` when not applied.
 theorem map_equiv_trans {γ : Type u₀} (ab : α ≃ β) (bc : β ≃ γ) :
     (mapEquiv f ab).trans (mapEquiv f bc) = mapEquiv f (ab.trans bc) :=
   Equivₓ.ext fun x => by
-    simp [← map_equiv, ← map_trans']
+    simp [map_equiv, map_trans']
 
 end
 
@@ -100,7 +100,7 @@ theorem mapEquiv.injective (f : Type u₀ → Type u₁) [Applicativeₓ f] [IsL
   Equivₓ.ext fun x =>
     h β
       (by
-        simpa [← EquivFunctor.map] using Equivₓ.congr_fun H (pure x))
+        simpa [EquivFunctor.map] using Equivₓ.congr_fun H (pure x))
 
 end EquivFunctor
 

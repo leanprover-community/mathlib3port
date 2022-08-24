@@ -63,7 +63,7 @@ def MulSalemSpencer : Prop :=
 /-- Whether a given finset is Salem-Spencer is decidable. -/
 @[to_additive "Whether a given finset is Salem-Spencer is decidable."]
 instance {α : Type _} [DecidableEq α] [Monoidₓ α] {s : Finset α} : Decidable (MulSalemSpencer (s : Set α)) :=
-  decidableOfIff (∀, ∀ a ∈ s, ∀, ∀, ∀ b ∈ s, ∀, ∀, ∀ c ∈ s, ∀, a * b = c * c → a = b)
+  decidableOfIff (∀ a ∈ s, ∀ b ∈ s, ∀ c ∈ s, a * b = c * c → a = b)
     ⟨fun h a b c ha hb hc => h a ha b hb c hc, fun h a ha b hb c hc => h ha hb hc⟩
 
 variable {s t}
@@ -197,7 +197,7 @@ section OrderedCancelCommMonoid
 variable [OrderedCancelCommMonoid α] {s : Set α} {a : α}
 
 @[to_additive]
-theorem mul_salem_spencer_insert_of_lt (hs : ∀, ∀ i ∈ s, ∀, i < a) :
+theorem mul_salem_spencer_insert_of_lt (hs : ∀ i ∈ s, i < a) :
     MulSalemSpencer (insert a s) ↔ MulSalemSpencer s ∧ ∀ ⦃b c⦄, b ∈ s → c ∈ s → a * b = c * c → a = b := by
   refine' mul_salem_spencer_insert.trans _
   rw [← and_assoc]
@@ -286,7 +286,7 @@ section Monoidₓ
 
 variable [Monoidₓ α] [DecidableEq β] [Monoidₓ β] (s t : Finset α)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- The multiplicative Roth number of a finset is the cardinality of its biggest multiplicative
 Salem-Spencer subset. -/
 @[to_additive
@@ -302,8 +302,8 @@ def mulRothNumber : Finset α →o ℕ :=
 theorem mul_roth_number_le : mulRothNumber s ≤ s.card := by
   convert Nat.find_greatest_le s.card
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
 @[to_additive]
 theorem mul_roth_number_spec : ∃ (t : _)(_ : t ⊆ s), t.card = mulRothNumber s ∧ MulSalemSpencer (t : Set α) :=
   @Nat.find_greatest_spec _ (fun m => ∃ (t : _)(_ : t ⊆ s), t.card = m ∧ MulSalemSpencer (t : Set α)) _ _
@@ -354,7 +354,7 @@ theorem le_mul_roth_number_product (s : Finset α) (t : Finset β) :
 
 @[to_additive]
 theorem mul_roth_number_lt_of_forall_not_mul_salem_spencer
-    (h : ∀, ∀ t ∈ powersetLen n s, ∀, ¬MulSalemSpencer ((t : Finset α) : Set α)) : mulRothNumber s < n := by
+    (h : ∀ t ∈ powersetLen n s, ¬MulSalemSpencer ((t : Finset α) : Set α)) : mulRothNumber s < n := by
   obtain ⟨t, hts, hcard, ht⟩ := mul_roth_number_spec s
   rw [← hcard, ← not_leₓ]
   intro hn
@@ -413,15 +413,15 @@ theorem roth_number_nat_def (n : ℕ) : rothNumberNat n = addRothNumber (range n
 theorem roth_number_nat_le (N : ℕ) : rothNumberNat N ≤ N :=
   (add_roth_number_le _).trans (card_range _).le
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » range n)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » range n)
 theorem roth_number_nat_spec (n : ℕ) :
     ∃ (t : _)(_ : t ⊆ range n), t.card = rothNumberNat n ∧ AddSalemSpencer (t : Set ℕ) :=
   add_roth_number_spec _
 
 /-- A verbose specialization of `add_salem_spencer.le_add_roth_number`, sometimes convenient in
 practice. -/
-theorem AddSalemSpencer.le_roth_number_nat (s : Finset ℕ) (hs : AddSalemSpencer (s : Set ℕ))
-    (hsn : ∀, ∀ x ∈ s, ∀, x < n) (hsk : s.card = k) : k ≤ rothNumberNat n :=
+theorem AddSalemSpencer.le_roth_number_nat (s : Finset ℕ) (hs : AddSalemSpencer (s : Set ℕ)) (hsn : ∀ x ∈ s, x < n)
+    (hsk : s.card = k) : k ≤ rothNumberNat n :=
   hsk.Ge.trans <| hs.le_add_roth_number fun x hx => mem_range.2 <| hsn x hx
 
 /-- The Roth number is a subadditive function. Note that by Fekete's lemma this shows that
@@ -449,7 +449,7 @@ open Asymptotics Filter
 
 theorem roth_number_nat_is_O_with_id : IsOWith 1 atTop (fun N => (rothNumberNat N : ℝ)) fun N => (N : ℝ) :=
   is_O_with_of_le _ <| by
-    simpa only [← Real.norm_coe_nat, ← Nat.cast_le] using roth_number_nat_le
+    simpa only [Real.norm_coe_nat, Nat.cast_le] using roth_number_nat_le
 
 /-- The Roth number has the trivial bound `roth_number_nat N = O(N)`. -/
 theorem roth_number_nat_is_O_id : (fun N => (rothNumberNat N : ℝ)) =O[at_top] fun N => (N : ℝ) :=

@@ -17,7 +17,7 @@ instances for types in the core library.
 
 namespace Tactic
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 /-- Tries to derive an `inhabited` instance for inductives and structures.
 
 For example:

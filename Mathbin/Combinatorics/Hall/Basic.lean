@@ -65,7 +65,7 @@ def HallMatchingsOn.restrict {ι : Type u} {α : Type v} (t : ι → Finset α) 
   cases' f.property with hinj hc
   refine' ⟨_, fun i => hc ⟨i, h i.property⟩⟩
   rintro ⟨i, hi⟩ ⟨j, hj⟩ hh
-  simpa only [← Subtype.mk_eq_mk] using hinj hh
+  simpa only [Subtype.mk_eq_mk] using hinj hh
 
 /-- When the Hall condition is satisfied, the set of matchings on a finite set is nonempty.
 This is where `finset.all_card_le_bUnion_card_iff_exists_injective'` comes into the argument. -/
@@ -76,7 +76,7 @@ theorem HallMatchingsOn.nonempty {ι : Type u} {α : Type v} [DecidableEq α] (t
   apply (all_card_le_bUnion_card_iff_exists_injective' fun i : ι' => t i).mp
   intro s'
   convert h (s'.image coe) using 1
-  simp only [← card_image_of_injective s' Subtype.coe_injective]
+  simp only [card_image_of_injective s' Subtype.coe_injective]
   rw [image_bUnion]
 
 -- TODO: This takes a long time to elaborate for an unknown reason.
@@ -97,7 +97,7 @@ noncomputable instance HallMatchingsOn.fintype {ι : Type u} {α : Type v} (t : 
     exact ⟨i, i.property, f.property.2 i⟩
   apply Fintype.ofInjective g
   intro f f' h
-  simp only [← g, ← Function.funext_iffₓ, ← Subtype.val_eq_coe] at h
+  simp only [g, Function.funext_iffₓ, Subtype.val_eq_coe] at h
   ext a
   exact h a
 
@@ -132,7 +132,7 @@ theorem Finset.all_card_le_bUnion_card_iff_exists_injective {ι : Type u} {α : 
       exact fun i =>
         (u (Opposite.op ({i} : Finset ι))).val
           ⟨i, by
-            simp only [← Opposite.unop_op, ← mem_singleton]⟩
+            simp only [Opposite.unop_op, mem_singleton]⟩
       
     · -- Show that it is injective
       intro i i'
@@ -166,7 +166,7 @@ instance {α : Type u} {β : Type v} [DecidableEq β] (r : α → β → Prop) [
     (A : Finset α) : Fintype (Rel.Image r A) := by
   have h : Rel.Image r A = (A.bUnion fun a => (Rel.Image r {a}).toFinset : Set β) := by
     ext
-    simp [← Rel.Image]
+    simp [Rel.Image]
   rw [h]
   apply FinsetCoe.fintype
 
@@ -189,10 +189,10 @@ theorem Fintype.all_card_le_rel_image_card_iff_exists_injective {α : Type u} {�
     rw [← Set.to_finset_card]
     apply congr_arg
     ext b
-    simp [← Rel.Image]
+    simp [Rel.Image]
   have h' : ∀ (f : α → β) (x), r x (f x) ↔ f x ∈ r' x := by
-    simp [← Rel.Image]
-  simp only [← h, ← h']
+    simp [Rel.Image]
+  simp only [h, h']
   apply Finset.all_card_le_bUnion_card_iff_exists_injective
 
 -- TODO: decidable_pred makes Yael sad. When an appropriate decidable_rel-like exists, fix it.

@@ -63,10 +63,10 @@ theorem mem_rev_list_aux :
     ⟨fun ⟨j, ji1, e⟩ =>
       Or.elim (lt_or_eq_of_leₓ <| Nat.le_of_succ_le_succₓ ji1) (fun ji => List.mem_cons_of_memₓ _ <| IH.1 ⟨j, ji, e⟩)
         fun je => by
-        simp [← DArray.iterateAux] <;>
+        simp [DArray.iterateAux] <;>
           apply Or.inl <;> unfold read  at e <;> have H : j = ⟨i, h⟩ := Finₓ.eq_of_veq je <;> rwa [← H, e],
       fun m => by
-      simp [← DArray.iterateAux, ← List.Memₓ] at m
+      simp [DArray.iterateAux, List.Memₓ] at m
       cases' m with e m'
       exact ⟨⟨i, h⟩, Nat.lt_succ_selfₓ _, Eq.symm e⟩
       exact
@@ -117,7 +117,7 @@ section Length
 variable {n : ℕ} {α : Type u}
 
 theorem rev_list_length_aux (a : Arrayₓ n α) (i h) : (a.iterateAux (fun _ => (· :: ·)) i h []).length = i := by
-  induction i <;> simp [*, ← DArray.iterateAux]
+  induction i <;> simp [*, DArray.iterateAux]
 
 @[simp]
 theorem rev_list_length (a : Arrayₓ n α) : a.revList.length = n :=
@@ -147,11 +147,11 @@ theorem to_list_nth_le_aux (i : ℕ) (ih : i < n) :
           match i, e, ih with
           | _, rfl, _ => rfl
         | k' + 1, _, tl => by
-          simp [← List.nthLe] <;>
+          simp [List.nthLe] <;>
             exact
               al _ _
                 (by
-                  simp [← add_commₓ, ← add_assocₓ, *] <;> cc)
+                  simp [add_commₓ, add_assocₓ, *] <;> cc)
 
 theorem to_list_nth_le (i : ℕ) (h h') : List.nthLe a.toList i h' = a.read ⟨i, h⟩ :=
   to_list_nth_le_aux _ _ _ fun k tl => absurd tl k.not_lt_zero
@@ -183,7 +183,7 @@ theorem write_to_list {i v} : (a.write i v).toList = a.toList.updateNth i v :=
     by_cases' ij : (i : ℕ) = j
     · subst j
       rw [show (⟨(i : ℕ), h₃⟩ : Finₓ _) = i from Finₓ.eq_of_veq rfl, Arrayₓ.read_write, List.nth_update_nth_of_lt]
-      simp [← h₃]
+      simp [h₃]
       
     · rw [List.nth_update_nth_ne _ _ ij, a.read_write_of_ne, to_list_nth.2 ⟨h₃, rfl⟩]
       exact Finₓ.ne_of_vne ij
@@ -197,7 +197,7 @@ section Enum
 variable {n : ℕ} {α : Type u} {a : Arrayₓ n α}
 
 theorem mem_to_list_enum {i v} : (i, v) ∈ a.toList.enum ↔ ∃ h, a.read ⟨i, h⟩ = v := by
-  simp [← List.mem_iff_nth, ← to_list_nth, ← And.comm, ← And.assoc, ← And.left_comm]
+  simp [List.mem_iff_nth, to_list_nth, And.comm, And.assoc, And.left_comm]
 
 end Enum
 
@@ -232,9 +232,9 @@ theorem push_back_rev_list_aux :
       DArray.iterateAux (a.pushBack v) (fun _ => (· :: ·)) i h [] = DArray.iterateAux a (fun _ => (· :: ·)) i h' []
   | 0, h, h' => rfl
   | i + 1, h, h' => by
-    simp [← DArray.iterateAux]
+    simp [DArray.iterateAux]
     refine' ⟨_, push_back_rev_list_aux _ _ _⟩
-    dsimp' [← read, ← DArray.read, ← push_back]
+    dsimp' [read, DArray.read, push_back]
     rw [dif_neg]
     rfl
     exact ne_of_ltₓ h'
@@ -242,7 +242,7 @@ theorem push_back_rev_list_aux :
 @[simp]
 theorem push_back_rev_list : (a.pushBack v).revList = v :: a.revList := by
   unfold push_back rev_list foldl iterate DArray.iterate
-  dsimp' [← DArray.iterateAux, ← read, ← DArray.read, ← push_back]
+  dsimp' [DArray.iterateAux, read, DArray.read, push_back]
   rw [dif_pos (Eq.refl n)]
   apply congr_arg
   apply push_back_rev_list_aux
@@ -255,14 +255,14 @@ theorem push_back_to_list : (a.pushBack v).toList = a.toList ++ [v] := by
 theorem read_push_back_left (i : Finₓ n) : (a.pushBack v).read i.cast_succ = a.read i := by
   cases' i with i hi
   have : ¬i = n := ne_of_ltₓ hi
-  simp [← push_back, ← this, ← Finₓ.castSucc, ← Finₓ.castAdd, ← Finₓ.castLe, ← Finₓ.castLt, ← read, ← DArray.read]
+  simp [push_back, this, Finₓ.castSucc, Finₓ.castAdd, Finₓ.castLe, Finₓ.castLt, read, DArray.read]
 
 @[simp]
 theorem read_push_back_right : (a.pushBack v).read (Finₓ.last _) = v := by
   cases' hn : Finₓ.last n with k hk
   have : k = n := by
-    simpa [← Finₓ.eq_iff_veq] using hn.symm
-  simp [← push_back, ← this, ← Finₓ.castSucc, ← Finₓ.castAdd, ← Finₓ.castLe, ← Finₓ.castLt, ← read, ← DArray.read]
+    simpa [Finₓ.eq_iff_veq] using hn.symm
+  simp [push_back, this, Finₓ.castSucc, Finₓ.castAdd, Finₓ.castLe, Finₓ.castLt, read, DArray.read]
 
 end PushBack
 

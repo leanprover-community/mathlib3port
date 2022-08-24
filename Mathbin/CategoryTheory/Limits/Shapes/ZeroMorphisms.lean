@@ -200,7 +200,7 @@ theorem iff_is_split_mono_eq_zero {X Y : C} (f : X ⟶ Y) [IsSplitMono f] : IsZe
     
   · intro h
     rw [← is_split_mono.id f]
-    simp [← h]
+    simp [h]
     
 
 theorem iff_is_split_epi_eq_zero {X Y : C} (f : X ⟶ Y) [IsSplitEpi f] : IsZero Y ↔ f = 0 := by
@@ -211,7 +211,7 @@ theorem iff_is_split_epi_eq_zero {X Y : C} (f : X ⟶ Y) [IsSplitEpi f] : IsZero
     
   · intro h
     rw [← is_split_epi.id f]
-    simp [← h]
+    simp [h]
     
 
 theorem of_mono {X Y : C} (f : X ⟶ Y) [Mono f] (i : IsZero Y) : IsZero X := by
@@ -350,7 +350,7 @@ theorem zero_of_to_zero {X : C} (f : X ⟶ 0) : f = 0 := by
 
 theorem zero_of_target_iso_zero {X Y : C} (f : X ⟶ Y) (i : Y ≅ 0) : f = 0 := by
   have h : f = f ≫ i.hom ≫ 𝟙 0 ≫ i.inv := by
-    simp only [← iso.hom_inv_id, ← id_comp, ← comp_id]
+    simp only [iso.hom_inv_id, id_comp, comp_id]
   simpa using h
 
 /-- An arrow starting at the zero object is zero -/
@@ -359,7 +359,7 @@ theorem zero_of_from_zero {X : C} (f : 0 ⟶ X) : f = 0 := by
 
 theorem zero_of_source_iso_zero {X Y : C} (f : X ⟶ Y) (i : X ≅ 0) : f = 0 := by
   have h : f = i.hom ≫ 𝟙 0 ≫ i.inv ≫ f := by
-    simp only [← iso.hom_inv_id_assoc, ← id_comp, ← comp_id]
+    simp only [iso.hom_inv_id_assoc, id_comp, comp_id]
   simpa using h
 
 theorem zero_of_source_iso_zero' {X Y : C} (f : X ⟶ Y) (i : IsIsomorphic X 0) : f = 0 :=
@@ -542,12 +542,12 @@ variable [HasZeroMorphisms C]
 theorem image_ι_comp_eq_zero {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} [HasImage f] [Epi (factorThruImage f)]
     (h : f ≫ g = 0) : image.ι f ≫ g = 0 :=
   zero_of_epi_comp (factorThruImage f) <| by
-    simp [← h]
+    simp [h]
 
 theorem comp_factor_thru_image_eq_zero {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} [HasImage g] (h : f ≫ g = 0) :
     f ≫ factorThruImage g = 0 :=
   zero_of_comp_mono (image.ι g) <| by
-    simp [← h]
+    simp [h]
 
 variable [HasZeroObject C]
 

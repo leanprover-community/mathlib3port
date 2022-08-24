@@ -22,7 +22,7 @@ variable {α R : Type _} [MeasurableSpace α] [LinearOrderedRing R] [FloorRing R
 
 theorem Int.measurable_floor [OpensMeasurableSpace R] : Measurable (Int.floor : R → ℤ) :=
   measurable_to_encodable fun x => by
-    simpa only [← Int.preimage_floor_singleton] using measurable_set_Ico
+    simpa only [Int.preimage_floor_singleton] using measurable_set_Ico
 
 @[measurability]
 theorem Measurable.floor [OpensMeasurableSpace R] {f : α → R} (hf : Measurable f) : Measurable fun x => ⌊f x⌋ :=
@@ -30,7 +30,7 @@ theorem Measurable.floor [OpensMeasurableSpace R] {f : α → R} (hf : Measurabl
 
 theorem Int.measurable_ceil [OpensMeasurableSpace R] : Measurable (Int.ceil : R → ℤ) :=
   measurable_to_encodable fun x => by
-    simpa only [← Int.preimage_ceil_singleton] using measurable_set_Ioc
+    simpa only [Int.preimage_ceil_singleton] using measurable_set_Ioc
 
 @[measurability]
 theorem Measurable.ceil [OpensMeasurableSpace R] {f : α → R} (hf : Measurable f) : Measurable fun x => ⌈f x⌉ :=
@@ -47,7 +47,7 @@ theorem Measurable.fract [BorelSpace R] {f : α → R} (hf : Measurable f) : Mea
 
 theorem MeasurableSet.image_fract [BorelSpace R] {s : Set R} (hs : MeasurableSet s) : MeasurableSet (Int.fract '' s) :=
   by
-  simp only [← Int.image_fract, ← sub_eq_add_neg, ← image_add_right']
+  simp only [Int.image_fract, sub_eq_add_neg, image_add_right']
   exact MeasurableSet.Union fun m => (measurable_add_const _ hs).inter measurable_set_Ico
 
 end FloorRing
@@ -59,7 +59,7 @@ variable {α R : Type _} [MeasurableSpace α] [LinearOrderedSemiring R] [FloorSe
 
 theorem Nat.measurable_floor : Measurable (Nat.floor : R → ℕ) :=
   measurable_to_encodable fun n => by
-    cases eq_or_ne ⌊n⌋₊ 0 <;> simp [*, ← Nat.preimage_floor_of_ne_zero]
+    cases eq_or_ne ⌊n⌋₊ 0 <;> simp [*, Nat.preimage_floor_of_ne_zero]
 
 @[measurability]
 theorem Measurable.nat_floor (hf : Measurable f) : Measurable fun x => ⌊f x⌋₊ :=
@@ -67,7 +67,7 @@ theorem Measurable.nat_floor (hf : Measurable f) : Measurable fun x => ⌊f x⌋
 
 theorem Nat.measurable_ceil : Measurable (Nat.ceil : R → ℕ) :=
   measurable_to_encodable fun n => by
-    cases eq_or_ne ⌈n⌉₊ 0 <;> simp [*, ← Nat.preimage_ceil_of_ne_zero]
+    cases eq_or_ne ⌈n⌉₊ 0 <;> simp [*, Nat.preimage_ceil_of_ne_zero]
 
 @[measurability]
 theorem Measurable.nat_ceil (hf : Measurable f) : Measurable fun x => ⌈f x⌉₊ :=

@@ -83,7 +83,7 @@ end Cube
 /-- The `n`-dimensional generalized loops; functions `I^n → X` that send the boundary to the base point.
 -/
 structure GenLoop (n : ℕ) (x : X) extends C(I^ n, X) where
-  Boundary : ∀, ∀ y ∈ Cube.Boundary n, ∀, to_fun y = x
+  Boundary : ∀ y ∈ Cube.Boundary n, to_fun y = x
 
 namespace GenLoop
 

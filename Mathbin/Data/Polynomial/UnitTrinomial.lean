@@ -67,7 +67,7 @@ theorem trinomial_nat_degree (hkm : k < m) (hmn : m < n) (hw : w ≠ 0) : (trino
     
   · exact with_bot.coe_le_coe.mpr hmn.le
     
-  · exact le_rfl
+  · exact le_rflₓ
     
 
 theorem trinomial_nat_trailing_degree (hkm : k < m) (hmn : m < n) (hu : u ≠ 0) :
@@ -81,7 +81,7 @@ theorem trinomial_nat_trailing_degree (hkm : k < m) (hmn : m < n) (hu : u ≠ 0)
   replace h := support_trinomial' k m n u v w h
   rw [mem_insert, mem_insert, mem_singleton] at h
   rcases h with (rfl | rfl | rfl)
-  · exact le_rfl
+  · exact le_rflₓ
     
   · exact with_top.coe_le_coe.mpr hkm.le
     
@@ -107,7 +107,7 @@ theorem trinomial_mirror (hkm : k < m) (hmn : m < n) (hu : u ≠ 0) (hw : w ≠ 
     (trinomial k m n u v w).mirror = trinomial k (n - m + k) n w v u := by
   rw [mirror, trinomial_nat_trailing_degree hkm hmn hu, reverse, trinomial_nat_degree hkm hmn hw, trinomial_def,
     reflect_add, reflect_add, reflect_C_mul_X_pow, reflect_C_mul_X_pow, reflect_C_mul_X_pow,
-    rev_at_le (hkm.trans hmn).le, rev_at_le hmn.le, rev_at_le le_rfl, add_mulₓ, add_mulₓ, mul_assoc, mul_assoc,
+    rev_at_le (hkm.trans hmn).le, rev_at_le hmn.le, rev_at_le le_rflₓ, add_mulₓ, add_mulₓ, mul_assoc, mul_assoc,
     mul_assoc, ← pow_addₓ, ← pow_addₓ, ← pow_addₓ, Nat.sub_add_cancelₓ (hkm.trans hmn).le, Nat.sub_self, zero_addₓ,
     add_commₓ, add_commₓ (C u * X ^ n), ← add_assocₓ, ← trinomial_def]
 
@@ -168,7 +168,7 @@ theorem trailing_coeff_is_unit (hp : p.IsUnitTrinomial) : IsUnit p.trailingCoeff
 
 end IsUnitTrinomial
 
-theorem is_unit_trinomial_iff : p.IsUnitTrinomial ↔ p.support.card = 3 ∧ ∀, ∀ k ∈ p.support, ∀, IsUnit (p.coeff k) := by
+theorem is_unit_trinomial_iff : p.IsUnitTrinomial ↔ p.support.card = 3 ∧ ∀ k ∈ p.support, IsUnit (p.coeff k) := by
   refine' ⟨fun hp => ⟨hp.card_support_eq_three, fun k => hp.coeff_is_unit⟩, fun hp => _⟩
   obtain ⟨k, m, n, hkm, hmn, x, y, z, hx, hy, hz, rfl⟩ := card_support_eq_three.mp hp.1
   rw [support_trinomial hkm hmn hx hy hz] at hp
@@ -195,7 +195,7 @@ theorem is_unit_trinomial_iff' :
       trinomial_middle_coeff hkm hmn, trinomial_trailing_coeff' hkm hmn]
     simp_rw [← Units.coe_pow, Int.units_sq, Units.coe_one, ← add_assocₓ, bit1, bit0]
     
-  · have key : ∀, ∀ k ∈ p.support, ∀, p.coeff k ^ 2 = 1 := fun k hk =>
+  · have key : ∀ k ∈ p.support, p.coeff k ^ 2 = 1 := fun k hk =>
       Int.sq_eq_one_of_sq_le_three ((single_le_sum (fun k hk => sq_nonneg (p.coeff k)) hk).trans hp.le)
         (mem_support_iff.mp hk)
     refine' is_unit_trinomial_iff.mpr ⟨_, fun k hk => is_unit_of_pow_eq_one _ 2 (key k hk) zero_lt_two⟩
@@ -220,7 +220,7 @@ theorem irreducible_aux1 {k m n : ℕ} (hkm : k < m) (hmn : m < n) (u v w : Unit
   rw [Finsupp.filter_single_of_neg, Finsupp.filter_single_of_neg, Finsupp.filter_single_of_neg,
     Finsupp.filter_single_of_neg, Finsupp.filter_single_of_neg, Finsupp.filter_single_of_pos,
     Finsupp.filter_single_of_neg, Finsupp.filter_single_of_pos, Finsupp.filter_single_of_neg]
-  · simp only [← add_zeroₓ, ← zero_addₓ, ← of_finsupp_add, ← of_finsupp_single]
+  · simp only [add_zeroₓ, zero_addₓ, of_finsupp_add, of_finsupp_single]
     rw [C_mul_monomial, C_mul_monomial, mul_comm ↑v ↑w, add_commₓ (n - m + k) n]
     
   · exact fun h => h.2.Ne rfl
@@ -256,7 +256,7 @@ theorem irreducible_aux2 {k m m' n : ℕ} (hkm : k < m) (hmn : m < n) (hkm' : k 
   replace h := h.trans (irreducible_aux1 hkm' hmn' u v w hq).symm
   rw [(is_unit_C.mpr v.is_unit).mul_right_inj] at h
   rw [binomial_eq_binomial u.ne_zero w.ne_zero] at h
-  simp only [← add_left_injₓ, ← Units.eq_iff] at h
+  simp only [add_left_injₓ, Units.eq_iff] at h
   rcases h with (⟨rfl, -⟩ | ⟨rfl, rfl, h⟩ | ⟨-, hm, hm'⟩)
   · exact Or.inl (hq.trans hp.symm)
     
@@ -283,13 +283,13 @@ theorem irreducible_aux3 {k m m' n : ℕ} (hkm : k < m) (hmn : m < n) (hkm' : k 
     trinomial_trailing_coeff hkm hmn u.ne_zero, trinomial_trailing_coeff hkm' hmn' x.ne_zero] at hmul
   have hadd := congr_arg (eval 1) h
   rw [eval_mul, eval_mul, mirror_eval_one, mirror_eval_one, ← sq, ← sq, hp, hq] at hadd
-  simp only [← eval_add, ← eval_C_mul, ← eval_pow, ← eval_X, ← one_pow, ← mul_oneₓ, ← trinomial_def] at hadd
+  simp only [eval_add, eval_C_mul, eval_pow, eval_X, one_pow, mul_oneₓ, trinomial_def] at hadd
   rw [add_assocₓ, add_assocₓ, add_commₓ ↑u, add_commₓ ↑x, add_assocₓ, add_assocₓ] at hadd
-  simp only [← add_sq', ← add_assocₓ, ← add_right_injₓ, Units.coe_pow, ← Int.units_sq] at hadd
+  simp only [add_sq', add_assocₓ, add_right_injₓ, ← Units.coe_pow, Int.units_sq] at hadd
   rw [mul_assoc, hmul, ← mul_assoc, add_right_injₓ,
     mul_right_inj' (show 2 * (v : ℤ) ≠ 0 from mul_ne_zero two_ne_zero v.ne_zero)] at hadd
   replace hadd := (Int.is_unit_add_is_unit_eq_is_unit_add_is_unit w.is_unit u.is_unit z.is_unit x.is_unit).mp hadd
-  simp only [← Units.eq_iff] at hadd
+  simp only [Units.eq_iff] at hadd
   rcases hadd with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
   · exact irreducible_aux2 hkm hmn hkm' hmn' u v w hp hq h
     

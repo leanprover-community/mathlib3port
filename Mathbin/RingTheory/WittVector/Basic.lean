@@ -75,12 +75,12 @@ theorem injective (f : α → β) (hf : Injective f) : Injective (mapFun f : �
 theorem surjective (f : α → β) (hf : Surjective f) : Surjective (mapFun f : 𝕎 α → 𝕎 β) := fun x =>
   ⟨mk _ fun n => Classical.some <| hf <| x.coeff n, by
     ext n
-    dsimp' [← map_fun]
+    dsimp' [map_fun]
     rw [Classical.some_spec (hf (x.coeff n))]⟩
 
 variable (f : R →+* S) (x y : 𝕎 R)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 /-- Auxiliary tactic for showing that `map_fun` respects the ring operations. -/
 unsafe def map_fun_tac : tactic Unit :=
   sorry
@@ -126,11 +126,11 @@ theorem pow (n : ℕ) : mapFun f (x ^ n) = mapFun f x ^ n := by
 
 theorem nat_cast (n : ℕ) : mapFun f (n : 𝕎 R) = n :=
   show mapFun f n.unaryCast = coe n by
-    induction n <;> simp [*, ← Nat.unaryCast, ← add, ← one, ← zero] <;> rfl
+    induction n <;> simp [*, Nat.unaryCast, add, one, zero] <;> rfl
 
 theorem int_cast (n : ℤ) : mapFun f (n : 𝕎 R) = n :=
   show mapFun f n.castDef = coe n by
-    cases n <;> simp [*, ← Int.castDef, ← add, ← one, ← neg, ← zero, ← nat_cast] <;> rfl
+    cases n <;> simp [*, Int.castDef, add, one, neg, zero, nat_cast] <;> rfl
 
 end MapFun
 
@@ -142,9 +142,9 @@ setup_tactic_parser
 
 open Tactic
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 /-- An auxiliary tactic for proving that `ghost_fun` respects the ring operations. -/
 unsafe def tactic.interactive.ghost_fun_tac (φ fn : parse parser.pexpr) : tactic Unit := do
   let fn ← to_expr (ppquote.1 (%%ₓfn : Finₓ _ → ℕ → R))
@@ -192,7 +192,7 @@ private theorem ghost_fun_add : ghostFun (x + y) = ghostFun x + ghostFun y := by
 
 private theorem ghost_fun_nat_cast (i : ℕ) : ghostFun (i : 𝕎 R) = i :=
   show ghostFun i.unaryCast = _ by
-    induction i <;> simp [*, ← Nat.unaryCast, ← ghost_fun_zero, ← ghost_fun_one, ← ghost_fun_add, -Pi.coe_nat]
+    induction i <;> simp [*, Nat.unaryCast, ghost_fun_zero, ghost_fun_one, ghost_fun_add, -Pi.coe_nat]
 
 private theorem ghost_fun_sub : ghostFun (x - y) = ghostFun x - ghostFun y := by
   ghost_fun_tac X 0 - X 1, ![x.coeff, y.coeff]
@@ -205,7 +205,7 @@ private theorem ghost_fun_neg : ghostFun (-x) = -ghostFun x := by
 
 private theorem ghost_fun_int_cast (i : ℤ) : ghostFun (i : 𝕎 R) = i :=
   show ghostFun i.castDef = _ by
-    cases i <;> simp [*, ← Int.castDef, ← ghost_fun_nat_cast, ← ghost_fun_neg, -Pi.coe_nat, -Pi.coe_int]
+    cases i <;> simp [*, Int.castDef, ghost_fun_nat_cast, ghost_fun_neg, -Pi.coe_nat, -Pi.coe_int]
 
 private theorem ghost_fun_nsmul (m : ℕ) : ghostFun (m • x) = m • ghostFun x := by
   ghost_fun_tac m • X 0, ![x.coeff]
@@ -230,13 +230,13 @@ private def ghost_equiv' [Invertible (p : R)] : 𝕎 R ≃ (ℕ → R) where
     ext n
     have := bind₁_witt_polynomial_X_in_terms_of_W p R n
     apply_fun aeval x.coeff  at this
-    simpa only [← aeval_bind₁, ← aeval_X, ← ghost_fun, ← aeval_witt_polynomial]
+    simpa only [aeval_bind₁, aeval_X, ghost_fun, aeval_witt_polynomial]
   right_inv := by
     intro x
     ext n
     have := bind₁_X_in_terms_of_W_witt_polynomial p R n
     apply_fun aeval x  at this
-    simpa only [← aeval_bind₁, ← aeval_X, ← ghost_fun, ← aeval_witt_polynomial]
+    simpa only [aeval_bind₁, aeval_X, ghost_fun, aeval_witt_polynomial]
 
 include hp
 

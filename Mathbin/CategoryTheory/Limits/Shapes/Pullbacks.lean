@@ -139,10 +139,10 @@ def WalkingCospan.ext {F : walking_cospan ⥤ C} {s t : Cone F} (i : s.x ≅ t.x
   rintro (⟨⟩ | ⟨⟨⟩⟩)
   · have h₁ := s.π.naturality walking_cospan.hom.inl
     dsimp'  at h₁
-    simp only [← category.id_comp] at h₁
+    simp only [category.id_comp] at h₁
     have h₂ := t.π.naturality walking_cospan.hom.inl
     dsimp'  at h₂
-    simp only [← category.id_comp] at h₂
+    simp only [category.id_comp] at h₂
     simp_rw [h₂, ← category.assoc, ← w₁, ← h₁]
     
   · exact w₁
@@ -160,10 +160,10 @@ def WalkingSpan.ext {F : walking_span ⥤ C} {s t : Cocone F} (i : s.x ≅ t.x)
   rintro (⟨⟩ | ⟨⟨⟩⟩)
   · have h₁ := s.ι.naturality walking_span.hom.fst
     dsimp'  at h₁
-    simp only [← category.comp_id] at h₁
+    simp only [category.comp_id] at h₁
     have h₂ := t.ι.naturality walking_span.hom.fst
     dsimp'  at h₂
-    simp only [← category.comp_id] at h₂
+    simp only [category.comp_id] at h₂
     simp_rw [← h₁, category.assoc, w₁, h₂]
     
   · exact w₁
@@ -375,53 +375,53 @@ def cospanExt (wf : iX.Hom ≫ f' = f ≫ iZ.Hom) (wg : iY.Hom ≫ g' = g ≫ iZ
       rintro (⟨⟩ | ⟨⟨⟩⟩) (⟨⟩ | ⟨⟨⟩⟩) ⟨⟩ <;>
         repeat'
           dsimp'
-          simp [← wf, ← wg])
+          simp [wf, wg])
 
 variable (wf : iX.Hom ≫ f' = f ≫ iZ.Hom) (wg : iY.Hom ≫ g' = g ≫ iZ.Hom)
 
 @[simp]
 theorem cospan_ext_app_left : (cospanExt iX iY iZ wf wg).app WalkingCospan.left = iX := by
-  dsimp' [← cospan_ext]
+  dsimp' [cospan_ext]
   simp
 
 @[simp]
 theorem cospan_ext_app_right : (cospanExt iX iY iZ wf wg).app WalkingCospan.right = iY := by
-  dsimp' [← cospan_ext]
+  dsimp' [cospan_ext]
   simp
 
 @[simp]
 theorem cospan_ext_app_one : (cospanExt iX iY iZ wf wg).app WalkingCospan.one = iZ := by
-  dsimp' [← cospan_ext]
+  dsimp' [cospan_ext]
   simp
 
 @[simp]
 theorem cospan_ext_hom_app_left : (cospanExt iX iY iZ wf wg).Hom.app WalkingCospan.left = iX.Hom := by
-  dsimp' [← cospan_ext]
+  dsimp' [cospan_ext]
   simp
 
 @[simp]
 theorem cospan_ext_hom_app_right : (cospanExt iX iY iZ wf wg).Hom.app WalkingCospan.right = iY.Hom := by
-  dsimp' [← cospan_ext]
+  dsimp' [cospan_ext]
   simp
 
 @[simp]
 theorem cospan_ext_hom_app_one : (cospanExt iX iY iZ wf wg).Hom.app WalkingCospan.one = iZ.Hom := by
-  dsimp' [← cospan_ext]
+  dsimp' [cospan_ext]
   simp
 
 @[simp]
 theorem cospan_ext_inv_app_left : (cospanExt iX iY iZ wf wg).inv.app WalkingCospan.left = iX.inv := by
-  dsimp' [← cospan_ext]
+  dsimp' [cospan_ext]
   simp
 
 @[simp]
 theorem cospan_ext_inv_app_right : (cospanExt iX iY iZ wf wg).inv.app WalkingCospan.right = iY.inv := by
-  dsimp' [← cospan_ext]
+  dsimp' [cospan_ext]
   simp
 
 @[simp]
 theorem cospan_ext_inv_app_one : (cospanExt iX iY iZ wf wg).inv.app WalkingCospan.one = iZ.inv := by
-  dsimp' [← cospan_ext]
+  dsimp' [cospan_ext]
   simp
 
 end
@@ -440,53 +440,53 @@ def spanExt (wf : iX.Hom ≫ f' = f ≫ iY.Hom) (wg : iX.Hom ≫ g' = g ≫ iZ.H
       rintro (⟨⟩ | ⟨⟨⟩⟩) (⟨⟩ | ⟨⟨⟩⟩) ⟨⟩ <;>
         repeat'
           dsimp'
-          simp [← wf, ← wg])
+          simp [wf, wg])
 
 variable (wf : iX.Hom ≫ f' = f ≫ iY.Hom) (wg : iX.Hom ≫ g' = g ≫ iZ.Hom)
 
 @[simp]
 theorem span_ext_app_left : (spanExt iX iY iZ wf wg).app WalkingSpan.left = iY := by
-  dsimp' [← span_ext]
+  dsimp' [span_ext]
   simp
 
 @[simp]
 theorem span_ext_app_right : (spanExt iX iY iZ wf wg).app WalkingSpan.right = iZ := by
-  dsimp' [← span_ext]
+  dsimp' [span_ext]
   simp
 
 @[simp]
 theorem span_ext_app_one : (spanExt iX iY iZ wf wg).app WalkingSpan.zero = iX := by
-  dsimp' [← span_ext]
+  dsimp' [span_ext]
   simp
 
 @[simp]
 theorem span_ext_hom_app_left : (spanExt iX iY iZ wf wg).Hom.app WalkingSpan.left = iY.Hom := by
-  dsimp' [← span_ext]
+  dsimp' [span_ext]
   simp
 
 @[simp]
 theorem span_ext_hom_app_right : (spanExt iX iY iZ wf wg).Hom.app WalkingSpan.right = iZ.Hom := by
-  dsimp' [← span_ext]
+  dsimp' [span_ext]
   simp
 
 @[simp]
 theorem span_ext_hom_app_zero : (spanExt iX iY iZ wf wg).Hom.app WalkingSpan.zero = iX.Hom := by
-  dsimp' [← span_ext]
+  dsimp' [span_ext]
   simp
 
 @[simp]
 theorem span_ext_inv_app_left : (spanExt iX iY iZ wf wg).inv.app WalkingSpan.left = iY.inv := by
-  dsimp' [← span_ext]
+  dsimp' [span_ext]
   simp
 
 @[simp]
 theorem span_ext_inv_app_right : (spanExt iX iY iZ wf wg).inv.app WalkingSpan.right = iZ.inv := by
-  dsimp' [← span_ext]
+  dsimp' [span_ext]
   simp
 
 @[simp]
 theorem span_ext_inv_app_zero : (spanExt iX iY iZ wf wg).inv.app WalkingSpan.zero = iX.inv := by
-  dsimp' [← span_ext]
+  dsimp' [span_ext]
   simp
 
 end
@@ -605,14 +605,14 @@ theorem mono_snd_of_is_pullback_of_mono {t : PullbackCone f g} (ht : IsLimit t) 
   ⟨fun W h k i =>
     IsLimit.hom_ext ht
       (by
-        simp [cancel_mono f, ← t.condition, ← reassoc_of i])
+        simp [← cancel_mono f, t.condition, reassoc_of i])
       i⟩
 
 theorem mono_fst_of_is_pullback_of_mono {t : PullbackCone f g} (ht : IsLimit t) [Mono g] : Mono t.fst :=
   ⟨fun W h k i =>
     IsLimit.hom_ext ht i
       (by
-        simp [cancel_mono g, t.condition, ← reassoc_of i])⟩
+        simp [← cancel_mono g, ← t.condition, reassoc_of i])⟩
 
 /-- To construct an isomorphism of pullback cones, it suffices to construct an isomorphism
 of the cone points and check it commutes with `fst` and `snd`. -/
@@ -676,14 +676,14 @@ def isLimitOfFactors (f : X ⟶ Z) (g : Y ⟶ Z) (h : W ⟶ Z) [Mono h] (x : X �
       (PullbackCone.mk _ _
         (show s.fst ≫ x = s.snd ≫ y from
           (cancel_mono h).1 <| by
-            simp only [← category.assoc, ← hxh, ← hyh, ← s.condition])) :=
+            simp only [category.assoc, hxh, hyh, s.condition])) :=
   (PullbackCone.isLimitAux' _) fun t =>
     ⟨hs.lift
         (PullbackCone.mk t.fst t.snd <| by
           rw [← hxh, ← hyh, reassoc_of t.condition]),
       ⟨hs.fac _ WalkingCospan.left, hs.fac _ WalkingCospan.right, fun r hr hr' => by
         apply pullback_cone.is_limit.hom_ext hs <;>
-          simp only [← pullback_cone.mk_fst, ← pullback_cone.mk_snd] at hr hr'⊢ <;> simp only [← hr, ← hr'] <;> symm
+          simp only [pullback_cone.mk_fst, pullback_cone.mk_snd] at hr hr'⊢ <;> simp only [hr, hr'] <;> symm
         exacts[hs.fac _ walking_cospan.left, hs.fac _ walking_cospan.right]⟩⟩
 
 /-- If `W` is the pullback of `f, g`,
@@ -749,7 +749,7 @@ def isColimitAux (t : PushoutCocone f g) (desc : ∀ s : PushoutCocone f g, t.x 
     fac' := fun s j =>
       Option.casesOn j
         (by
-          simp [s.w fst, t.w fst, ← fac_left s])
+          simp [← s.w fst, ← t.w fst, fac_left s])
         fun j' => WalkingPair.casesOn j' (fac_left s) (fac_right s),
     uniq' := uniq }
 
@@ -822,14 +822,14 @@ theorem epi_inr_of_is_pushout_of_epi {t : PushoutCocone f g} (ht : IsColimit t) 
   ⟨fun W h k i =>
     IsColimit.hom_ext ht
       (by
-        simp [cancel_epi f, ← t.condition_assoc, ← i])
+        simp [← cancel_epi f, t.condition_assoc, i])
       i⟩
 
 theorem epi_inl_of_is_pushout_of_epi {t : PushoutCocone f g} (ht : IsColimit t) [Epi g] : Epi t.inl :=
   ⟨fun W h k i =>
     IsColimit.hom_ext ht i
       (by
-        simp [cancel_epi g, t.condition_assoc, ← i])⟩
+        simp [← cancel_epi g, ← t.condition_assoc, i])⟩
 
 /-- To construct an isomorphism of pushout cocones, it suffices to construct an isomorphism
 of the cocone points and check it commutes with `inl` and `inr`. -/
@@ -894,7 +894,7 @@ def isColimitOfFactors (f : X ⟶ Y) (g : X ⟶ Z) (h : X ⟶ W) [Epi h] (x : W 
           rw [← hhx, ← hhy, category.assoc, category.assoc, t.condition]),
       ⟨hs.fac _ WalkingSpan.left, hs.fac _ WalkingSpan.right, fun r hr hr' => by
         apply pushout_cocone.is_colimit.hom_ext hs <;>
-          simp only [← pushout_cocone.mk_inl, ← pushout_cocone.mk_inr] at hr hr'⊢ <;> simp only [← hr, ← hr'] <;> symm
+          simp only [pushout_cocone.mk_inl, pushout_cocone.mk_inr] at hr hr'⊢ <;> simp only [hr, hr'] <;> symm
         exacts[hs.fac _ walking_span.left, hs.fac _ walking_span.right]⟩⟩
 
 /-- If `W` is the pushout of `f, g`,
@@ -1106,7 +1106,7 @@ abbrev pullback.map {W X Y Z S T : C} (f₁ : W ⟶ S) (f₂ : X ⟶ S) [HasPull
     pullback f₁ f₂ ⟶ pullback g₁ g₂ :=
   pullback.lift (pullback.fst ≫ i₁) (pullback.snd ≫ i₂)
     (by
-      simp [eq₁, eq₂, ← pullback.condition_assoc])
+      simp [← eq₁, ← eq₂, pullback.condition_assoc])
 
 /-- Given such a diagram, then there is a natural morphism `W ⨿ₛ X ⟶ Y ⨿ₜ Z`.
 
@@ -1122,8 +1122,8 @@ abbrev pushout.map {W X Y Z S T : C} (f₁ : S ⟶ W) (f₂ : S ⟶ X) [HasPusho
     pushout f₁ f₂ ⟶ pushout g₁ g₂ :=
   pushout.desc (i₁ ≫ pushout.inl) (i₂ ≫ pushout.inr)
     (by
-      simp only [category.assoc, ← eq₁, ← eq₂]
-      simp [← pushout.condition])
+      simp only [← category.assoc, eq₁, eq₂]
+      simp [pushout.condition])
 
 /-- Two morphisms into a pullback are equal if their compositions with the pullback morphisms are
     equal -/
@@ -1219,9 +1219,9 @@ def pullback.congrHom {X Y Z : C} {f₁ f₂ : X ⟶ Z} {g₁ g₂ : Y ⟶ Z} (h
   as_iso <|
     pullback.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _)
       (by
-        simp [← h₁])
+        simp [h₁])
       (by
-        simp [← h₂])
+        simp [h₂])
 
 @[simp]
 theorem pullback.congr_hom_inv {X Y Z : C} {f₁ f₂ : X ⟶ Z} {g₁ g₂ : Y ⟶ Z} (h₁ : f₁ = f₂) (h₂ : g₁ = g₂)
@@ -1229,9 +1229,9 @@ theorem pullback.congr_hom_inv {X Y Z : C} {f₁ f₂ : X ⟶ Z} {g₁ g₂ : Y 
     (pullback.congrHom h₁ h₂).inv =
       pullback.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _)
         (by
-          simp [← h₁])
+          simp [h₁])
         (by
-          simp [← h₂]) :=
+          simp [h₂]) :=
   by
   apply pullback.hom_ext
   · erw [pullback.lift_fst]
@@ -1263,9 +1263,9 @@ def pushout.congrHom {X Y Z : C} {f₁ f₂ : X ⟶ Y} {g₁ g₂ : X ⟶ Z} (h�
   as_iso <|
     pushout.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _)
       (by
-        simp [← h₁])
+        simp [h₁])
       (by
-        simp [← h₂])
+        simp [h₂])
 
 @[simp]
 theorem pushout.congr_hom_inv {X Y Z : C} {f₁ f₂ : X ⟶ Y} {g₁ g₂ : X ⟶ Z} (h₁ : f₁ = f₂) (h₂ : g₁ = g₂)
@@ -1273,9 +1273,9 @@ theorem pushout.congr_hom_inv {X Y Z : C} {f₁ f₂ : X ⟶ Y} {g₁ g₂ : X �
     (pushout.congrHom h₁ h₂).inv =
       pushout.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _)
         (by
-          simp [← h₁])
+          simp [h₁])
         (by
-          simp [← h₂]) :=
+          simp [h₂]) :=
   by
   apply pushout.hom_ext
   · erw [pushout.inl_desc]
@@ -1301,7 +1301,7 @@ def pullbackComparison (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f g] [HasPullbac
     G.obj (pullback f g) ⟶ pullback (G.map f) (G.map g) :=
   pullback.lift (G.map pullback.fst) (G.map pullback.snd)
     (by
-      simp only [G.map_comp, ← pullback.condition])
+      simp only [← G.map_comp, pullback.condition])
 
 @[simp, reassoc]
 theorem pullback_comparison_comp_fst (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f g] [HasPullback (G.map f) (G.map g)] :
@@ -1319,9 +1319,9 @@ theorem map_lift_pullback_comparison (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f 
     G.map (pullback.lift _ _ w) ≫ pullbackComparison G f g =
       pullback.lift (G.map h) (G.map k)
         (by
-          simp only [G.map_comp, ← w]) :=
+          simp only [← G.map_comp, w]) :=
   by
-  ext <;> simp [G.map_comp]
+  ext <;> simp [← G.map_comp]
 
 /-- The comparison morphism for the pushout of `f,g`.
 This is an isomorphism iff `G` preserves the pushout of `f,g`; see
@@ -1331,7 +1331,7 @@ def pushoutComparison (f : X ⟶ Y) (g : X ⟶ Z) [HasPushout f g] [HasPushout (
     pushout (G.map f) (G.map g) ⟶ G.obj (pushout f g) :=
   pushout.desc (G.map pushout.inl) (G.map pushout.inr)
     (by
-      simp only [G.map_comp, ← pushout.condition])
+      simp only [← G.map_comp, pushout.condition])
 
 @[simp, reassoc]
 theorem inl_comp_pushout_comparison (f : X ⟶ Y) (g : X ⟶ Z) [HasPushout f g] [HasPushout (G.map f) (G.map g)] :
@@ -1349,9 +1349,9 @@ theorem pushout_comparison_map_desc (f : X ⟶ Y) (g : X ⟶ Z) [HasPushout f g]
     pushoutComparison G f g ≫ G.map (pushout.desc _ _ w) =
       pushout.desc (G.map h) (G.map k)
         (by
-          simp only [G.map_comp, ← w]) :=
+          simp only [← G.map_comp, w]) :=
   by
-  ext <;> simp [G.map_comp]
+  ext <;> simp [← G.map_comp]
 
 end
 
@@ -1376,22 +1376,22 @@ def pullbackSymmetry [HasPullback f g] : pullback f g ≅ pullback g f :=
 @[simp, reassoc]
 theorem pullback_symmetry_hom_comp_fst [HasPullback f g] : (pullbackSymmetry f g).Hom ≫ pullback.fst = pullback.snd :=
   by
-  simp [← pullback_symmetry]
+  simp [pullback_symmetry]
 
 @[simp, reassoc]
 theorem pullback_symmetry_hom_comp_snd [HasPullback f g] : (pullbackSymmetry f g).Hom ≫ pullback.snd = pullback.fst :=
   by
-  simp [← pullback_symmetry]
+  simp [pullback_symmetry]
 
 @[simp, reassoc]
 theorem pullback_symmetry_inv_comp_fst [HasPullback f g] : (pullbackSymmetry f g).inv ≫ pullback.fst = pullback.snd :=
   by
-  simp [← iso.inv_comp_eq]
+  simp [iso.inv_comp_eq]
 
 @[simp, reassoc]
 theorem pullback_symmetry_inv_comp_snd [HasPullback f g] : (pullbackSymmetry f g).inv ≫ pullback.snd = pullback.fst :=
   by
-  simp [← iso.inv_comp_eq]
+  simp [iso.inv_comp_eq]
 
 end PullbackSymmetry
 
@@ -1425,11 +1425,11 @@ theorem inr_comp_pushout_symmetry_hom [HasPushout f g] : pushout.inr ≫ (pushou
 
 @[simp, reassoc]
 theorem inl_comp_pushout_symmetry_inv [HasPushout f g] : pushout.inl ≫ (pushoutSymmetry f g).inv = pushout.inr := by
-  simp [← iso.comp_inv_eq]
+  simp [iso.comp_inv_eq]
 
 @[simp, reassoc]
 theorem inr_comp_pushout_symmetry_inv [HasPushout f g] : pushout.inr ≫ (pushoutSymmetry f g).inv = pushout.inl := by
-  simp [← iso.comp_inv_eq]
+  simp [iso.comp_inv_eq]
 
 end PushoutSymmetry
 
@@ -1482,7 +1482,7 @@ theorem pullback_cone_of_left_iso_π_app_right : (pullbackConeOfLeftIso f g).π.
 def pullbackConeOfLeftIsoIsLimit : IsLimit (pullbackConeOfLeftIso f g) :=
   PullbackCone.isLimitAux' _ fun s =>
     ⟨s.snd, by
-      simp [s.condition_assoc]⟩
+      simp [← s.condition_assoc]⟩
 
 theorem has_pullback_of_left_iso : HasPullback f g :=
   ⟨⟨⟨_, pullbackConeOfLeftIsoIsLimit f g⟩⟩⟩
@@ -1497,9 +1497,9 @@ instance pullback_snd_iso_of_left_iso : IsIso (pullback.snd : pullback f g ⟶ _
         _, by
         simp ⟩⟩
   ext
-  · simp [pullback.condition_assoc]
-    
   · simp [← pullback.condition_assoc]
+    
+  · simp [pullback.condition_assoc]
     
 
 variable (i : Z ⟶ W) [Mono i]
@@ -1557,7 +1557,7 @@ theorem pullback_cone_of_right_iso_π_app_right : (pullbackConeOfRightIso f g).�
 def pullbackConeOfRightIsoIsLimit : IsLimit (pullbackConeOfRightIso f g) :=
   PullbackCone.isLimitAux' _ fun s =>
     ⟨s.fst, by
-      simp [← s.condition_assoc]⟩
+      simp [s.condition_assoc]⟩
 
 theorem has_pullback_of_right_iso : HasPullback f g :=
   ⟨⟨⟨_, pullbackConeOfRightIsoIsLimit f g⟩⟩⟩
@@ -1574,7 +1574,7 @@ instance pullback_snd_iso_of_right_iso : IsIso (pullback.fst : pullback f g ⟶ 
   ext
   · simp
     
-  · simp [← pullback.condition_assoc]
+  · simp [pullback.condition_assoc]
     
 
 variable (i : Z ⟶ W) [Mono i]
@@ -1642,7 +1642,7 @@ theorem pushout_cocone_of_left_iso_ι_app_right : (pushoutCoconeOfLeftIso f g).�
 def pushoutCoconeOfLeftIsoIsLimit : IsColimit (pushoutCoconeOfLeftIso f g) :=
   PushoutCocone.isColimitAux' _ fun s =>
     ⟨s.inr, by
-      simp [s.condition]⟩
+      simp [← s.condition]⟩
 
 theorem has_pushout_of_left_iso : HasPushout f g :=
   ⟨⟨⟨_, pushoutCoconeOfLeftIsoIsLimit f g⟩⟩⟩
@@ -1657,9 +1657,9 @@ instance pushout_inr_iso_of_left_iso : IsIso (pushout.inr : _ ⟶ pushout f g) :
         by
         simp , _⟩⟩
   ext
-  · simp [pushout.condition]
+  · simp [← pushout.condition]
     
-  · simp [← pushout.condition_assoc]
+  · simp [pushout.condition_assoc]
     
 
 variable (h : W ⟶ X) [Epi h]
@@ -1718,7 +1718,7 @@ theorem pushout_cocone_of_right_iso_ι_app_right : (pushoutCoconeOfRightIso f g)
 def pushoutCoconeOfRightIsoIsLimit : IsColimit (pushoutCoconeOfRightIso f g) :=
   PushoutCocone.isColimitAux' _ fun s =>
     ⟨s.inl, by
-      simp [s.condition]⟩
+      simp [← s.condition]⟩
 
 theorem has_pushout_of_right_iso : HasPushout f g :=
   ⟨⟨⟨_, pushoutCoconeOfRightIsoIsLimit f g⟩⟩⟩
@@ -1733,9 +1733,9 @@ instance pushout_inl_iso_of_right_iso : IsIso (pushout.inl : _ ⟶ pushout f g) 
         by
         simp , _⟩⟩
   ext
-  · simp [pushout.condition]
-    
   · simp [← pushout.condition]
+    
+  · simp [pushout.condition]
     
 
 variable (h : W ⟶ X) [Epi h]
@@ -1769,7 +1769,7 @@ theorem fst_eq_snd_of_mono_eq [Mono f] : (pullback.fst : pullback f f ⟶ _) = p
 
 @[simp]
 theorem pullback_symmetry_hom_of_mono_eq [Mono f] : (pullbackSymmetry f f).Hom = 𝟙 _ := by
-  ext <;> simp [← fst_eq_snd_of_mono_eq]
+  ext <;> simp [fst_eq_snd_of_mono_eq]
 
 instance fst_iso_of_mono_eq [Mono f] : IsIso (pullback.fst : pullback f f ⟶ _) := by
   refine'
@@ -1781,7 +1781,7 @@ instance fst_iso_of_mono_eq [Mono f] : IsIso (pullback.fst : pullback f f ⟶ _)
   ext
   · simp
     
-  · simp [← fst_eq_snd_of_mono_eq]
+  · simp [fst_eq_snd_of_mono_eq]
     
 
 instance snd_iso_of_mono_eq [Mono f] : IsIso (pullback.snd : pullback f f ⟶ _) := by
@@ -1805,7 +1805,7 @@ theorem inl_eq_inr_of_epi_eq [Epi f] : (pushout.inl : _ ⟶ pushout f f) = pusho
 
 @[simp]
 theorem pullback_symmetry_hom_of_epi_eq [Epi f] : (pushoutSymmetry f f).Hom = 𝟙 _ := by
-  ext <;> simp [← inl_eq_inr_of_epi_eq]
+  ext <;> simp [inl_eq_inr_of_epi_eq]
 
 instance inl_iso_of_epi_eq [Epi f] : IsIso (pushout.inl : _ ⟶ pushout f f) := by
   refine'
@@ -1817,7 +1817,7 @@ instance inl_iso_of_epi_eq [Epi f] : IsIso (pushout.inl : _ ⟶ pushout f f) := 
   ext
   · simp
     
-  · simp [← inl_eq_inr_of_epi_eq]
+  · simp [inl_eq_inr_of_epi_eq]
     
 
 instance inr_iso_of_epi_eq [Epi f] : IsIso (pushout.inr : _ ⟶ pushout f f) := by

@@ -30,15 +30,15 @@ theorem dedup_nil : dedup [] = ([] : List α) :=
 
 theorem dedup_cons_of_mem' {a : α} {l : List α} (h : a ∈ dedup l) : dedup (a :: l) = dedup l :=
   pw_filter_cons_of_neg <| by
-    simpa only [← forall_mem_ne] using h
+    simpa only [forall_mem_ne] using h
 
 theorem dedup_cons_of_not_mem' {a : α} {l : List α} (h : a ∉ dedup l) : dedup (a :: l) = a :: dedup l :=
   pw_filter_cons_of_pos <| by
-    simpa only [← forall_mem_ne] using h
+    simpa only [forall_mem_ne] using h
 
 @[simp]
 theorem mem_dedup {a : α} {l : List α} : a ∈ dedup l ↔ a ∈ l := by
-  simpa only [← dedup, ← forall_mem_ne, ← not_not] using
+  simpa only [dedup, forall_mem_ne, not_not] using
     not_congr (@forall_mem_pw_filter α (· ≠ ·) _ (fun x y z xz => not_and_distrib.1 <| mt (And.ndrec Eq.trans) xz) a l)
 
 @[simp]
@@ -98,26 +98,26 @@ theorem sum_map_count_dedup_filter_eq_countp (p : α → Prop) [DecidablePred p]
     congr 1
     · refine' trans _ h
       by_cases' ha : a ∈ as
-      · simp [← dedup_cons_of_mem ha]
+      · simp [dedup_cons_of_mem ha]
         
-      · simp only [← dedup_cons_of_not_mem ha, ← List.filterₓ]
-        split_ifs with hp <;> simp [← List.map_cons, ← List.sum_cons, ← List.count_eq_zero.2 ha, ← zero_addₓ]
+      · simp only [dedup_cons_of_not_mem ha, List.filterₓ]
+        split_ifs with hp <;> simp [List.map_cons, List.sum_cons, List.count_eq_zero.2 ha, zero_addₓ]
         
       
     · by_cases' hp : p a
       · refine'
           trans
             (sum_map_eq_nsmul_single a _ fun _ h _ => by
-              simp [← h])
+              simp [h])
             _
-        simp [← hp, ← count_dedup]
+        simp [hp, count_dedup]
         
       · refine'
           trans (List.sum_eq_zero fun n hn => _)
             (by
-              simp [← hp])
+              simp [hp])
         obtain ⟨a', ha'⟩ := List.mem_mapₓ.1 hn
-        simp only [← (fun h => hp (h ▸ (List.mem_filterₓ.1 ha'.1).2) : a' ≠ a), ← if_false] at ha'
+        simp only [(fun h => hp (h ▸ (List.mem_filterₓ.1 ha'.1).2) : a' ≠ a), if_false] at ha'
         exact ha'.2.symm
         
       

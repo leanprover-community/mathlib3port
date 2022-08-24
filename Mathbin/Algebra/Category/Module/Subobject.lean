@@ -43,7 +43,7 @@ noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
             fapply eq_mk_of_comm
             · apply LinearEquiv.toModuleIso'Left
               apply LinearEquiv.ofBijective (LinearMap.codRestrict S.arrow.range S.arrow _)
-              · simpa only [LinearMap.ker_eq_bot, ← LinearMap.ker_cod_restrict] using ker_eq_bot_of_mono _
+              · simpa only [← LinearMap.ker_eq_bot, LinearMap.ker_cod_restrict] using ker_eq_bot_of_mono _
                 
               · rw [← LinearMap.range_eq_top, LinearMap.range_cod_restrict, Submodule.comap_subtype_self]
                 
@@ -72,7 +72,7 @@ noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
                 ext
                 rfl)⟩
         convert LinearMap.range_comp_le_range (of_mk_le_mk _ _ h) (↾T.subtype)
-        · simpa only [comp_def, ← of_mk_le_mk_comp] using (Submodule.range_subtype _).symm
+        · simpa only [← comp_def, of_mk_le_mk_comp] using (Submodule.range_subtype _).symm
           
         · exact (Submodule.range_subtype _).symm
            }
@@ -89,7 +89,7 @@ noncomputable def toKernelSubobject {M N : ModuleCat R} {f : M ⟶ N} : LinearMa
 @[simp]
 theorem to_kernel_subobject_arrow {M N : ModuleCat R} {f : M ⟶ N} (x : LinearMap.ker f) :
     (kernelSubobject f).arrow (toKernelSubobject x) = x.1 := by
-  simp [← to_kernel_subobject]
+  simp [to_kernel_subobject]
 
 /-- An extensionality lemma showing that two elements of a cokernel by an image
 are equal if they differ by an element of the image.

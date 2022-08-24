@@ -93,9 +93,9 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
     We use the shorthand `B n = 2^{-n}` in ennreal. -/
   let B : ℕ → ℝ≥0∞ := fun n => 2⁻¹ ^ n
   have B_pos : ∀ n, (0 : ℝ≥0∞) < B n := by
-    simp [← B, ← Ennreal.pow_pos]
+    simp [B, Ennreal.pow_pos]
   have B_ne_top : ∀ n, B n ≠ ⊤ := by
-    simp [← B, ← Ennreal.pow_ne_top]
+    simp [B, Ennreal.pow_ne_top]
   /- Consider a sequence of closed sets `s n` with `edist (s n) (s (n+1)) < B n`.
     We will show that it converges. The limit set is t0 = ⋂n, closure (⋃m≥n, s m).
     We will have to show that a point in `s n` is close to a point in `t0`, and a point
@@ -106,7 +106,7 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
   let t : closeds α := ⟨t0, is_closed_Inter fun _ => is_closed_closure⟩
   use t
   -- The inequality is written this way to agree with `edist_le_of_edist_le_geometric_of_tendsto₀`
-  have I1 : ∀ n, ∀, ∀ x ∈ s n, ∀, ∃ y ∈ t0, edist x y ≤ 2 * B n := by
+  have I1 : ∀ n, ∀ x ∈ s n, ∃ y ∈ t0, edist x y ≤ 2 * B n := by
     /- This is the main difficulty of the proof. Starting from `x ∈ s n`, we want
            to find a point in `t0` which is close to `x`. Define inductively a sequence of
            points `z m` with `z n = x` and `z m ∈ s m` and `edist (z m) (z (m+1)) ≤ B m`. This is
@@ -124,7 +124,7 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
             
           · exact z.2
             
-          simp only [← B, ← Ennreal.inv_pow, ← div_eq_mul_inv]
+          simp only [B, Ennreal.inv_pow, div_eq_mul_inv]
           rw [← pow_addₓ]
           apply hs <;> simp
         exact ⟨⟨z', z'_mem⟩, le_of_ltₓ hz'⟩
@@ -141,15 +141,14 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
       mem_Inter.2 fun k =>
         mem_closure_of_tendsto y_lim
           (by
-            simp only [← exists_prop, ← Set.mem_Union, ← Filter.eventually_at_top, ← Set.mem_preimage, ←
-              Set.preimage_Union]
+            simp only [exists_prop, Set.mem_Union, Filter.eventually_at_top, Set.mem_preimage, Set.preimage_Union]
             exact ⟨k, fun m hm => ⟨n + m, zero_addₓ k ▸ add_le_add (zero_le n) hm, (z m).2⟩⟩)
     use this
     -- Then, we check that `y` is close to `x = z n`. This follows from the fact that `y`
     -- is the limit of `z k`, and the distance between `z n` and `z k` has already been estimated.
     rw [← hz₀]
     exact edist_le_of_edist_le_geometric_two_of_tendsto₀ (B n) hz y_lim
-  have I2 : ∀ n, ∀, ∀ x ∈ t0, ∀, ∃ y ∈ s n, edist x y ≤ 2 * B n := by
+  have I2 : ∀ n, ∀ x ∈ t0, ∃ y ∈ s n, edist x y ≤ 2 * B n := by
     /- For the (much easier) reverse inequality, we start from a point `x ∈ t0` and we want
             to find a point `y ∈ s n` which is close to `x`.
             `x` belongs to `t0`, the intersection of the closures. In particular, it is well
@@ -161,7 +160,7 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
       apply mem_Inter.1 xt0 n
     rcases mem_closure_iff.1 this (B n) (B_pos n) with ⟨z, hz, Dxz⟩
     -- z : α,  Dxz : edist x z < B n,
-    simp only [← exists_prop, ← Set.mem_Union] at hz
+    simp only [exists_prop, Set.mem_Union] at hz
     rcases hz with ⟨m, ⟨m_ge_n, hm⟩⟩
     -- m : ℕ, m_ge_n : m ≥ n, hm : z ∈ s m
     have : Hausdorff_edist (s m : Set α) (s n) < B n := hs n m n m_ge_n (le_reflₓ n)
@@ -181,15 +180,15 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
   have : tendsto (fun n => 2 * B n) at_top (𝓝 (2 * 0)) :=
     Ennreal.Tendsto.const_mul
       (Ennreal.tendsto_pow_at_top_nhds_0_of_lt_1 <| by
-        simp [← Ennreal.one_lt_two])
+        simp [Ennreal.one_lt_two])
       (Or.inr <| by
         simp )
   rw [mul_zero] at this
-  obtain ⟨N, hN⟩ : ∃ N, ∀, ∀ b ≥ N, ∀, ε > 2 * B b
+  obtain ⟨N, hN⟩ : ∃ N, ∀ b ≥ N, ε > 2 * B b
   exact ((tendsto_order.1 this).2 ε εpos).exists_forall_of_at_top
   exact ⟨N, fun n hn => lt_of_le_of_ltₓ (main n) (hN n hn)⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (v «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (v «expr ⊆ » s)
 /-- In a compact space, the type of closed subsets is compact. -/
 instance Closeds.compact_space [CompactSpace α] : CompactSpace (Closeds α) :=
   ⟨by
@@ -227,7 +226,7 @@ instance Closeds.compact_space [CompactSpace α] : CompactSpace (Closeds α) :=
     -- `F` is finite
     · apply @finite.of_finite_image _ _ F coe
       · apply fs.finite_subsets.subset fun b => _
-        simp only [← and_imp, ← Set.mem_image, ← Set.mem_set_of_eq, ← exists_imp_distrib]
+        simp only [and_imp, Set.mem_image, Set.mem_set_of_eq, exists_imp_distrib]
         intro x hx hx'
         rwa [hx'] at hx
         
@@ -348,7 +347,7 @@ instance NonemptyCompacts.second_countable_topology [SecondCountableTopology α]
       -- replace each center by a nearby approximation in `s`, giving a new set `b`
       let b := F '' a
       have : b.finite := af.image _
-      have tb : ∀, ∀ x ∈ t, ∀, ∃ y ∈ b, edist x y < δ := by
+      have tb : ∀ x ∈ t, ∃ y ∈ b, edist x y < δ := by
         intro x hx
         rcases mem_Union₂.1 (ta hx) with ⟨z, za, Dxz⟩
         exists F z, mem_image_of_mem _ za
@@ -361,14 +360,14 @@ instance NonemptyCompacts.second_countable_topology [SecondCountableTopology α]
       let c := { y ∈ b | ∃ x ∈ t, edist x y < δ }
       have : c.finite := ‹b.finite›.Subset fun x hx => hx.1
       -- points in `t` are well approximated by points in `c`
-      have tc : ∀, ∀ x ∈ t, ∀, ∃ y ∈ c, edist x y ≤ δ := by
+      have tc : ∀ x ∈ t, ∃ y ∈ c, edist x y ≤ δ := by
         intro x hx
         rcases tb x hx with ⟨y, yv, Dxy⟩
         have : y ∈ c := by
-          simp [← c, -mem_image] <;> exact ⟨yv, ⟨x, hx, Dxy⟩⟩
+          simp [c, -mem_image] <;> exact ⟨yv, ⟨x, hx, Dxy⟩⟩
         exact ⟨y, this, le_of_ltₓ Dxy⟩
       -- points in `c` are well approximated by points in `t`
-      have ct : ∀, ∀ y ∈ c, ∀, ∃ x ∈ t, edist y x ≤ δ := by
+      have ct : ∀ y ∈ c, ∃ x ∈ t, edist y x ≤ δ := by
         rintro y ⟨hy1, x, xt, Dyx⟩
         have : edist y x ≤ δ :=
           calc

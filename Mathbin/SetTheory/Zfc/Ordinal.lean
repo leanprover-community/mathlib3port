@@ -34,7 +34,7 @@ namespace Setₓ
 
 /-- A transitive set is one where every element is a subset. -/
 def IsTransitive (x : Setₓ) : Prop :=
-  ∀, ∀ y ∈ x, ∀, y ⊆ x
+  ∀ y ∈ x, y ⊆ x
 
 @[simp]
 theorem empty_is_transitive : IsTransitive ∅ := fun y hy => (mem_empty y hy).elim
@@ -56,7 +56,7 @@ protected theorem IsTransitive.sUnion (h : x.IsTransitive) : (⋃₀x).IsTransit
   rcases mem_sUnion.1 hy with ⟨w, hw, hw'⟩
   exact mem_sUnion_of_mem hz (h.mem_trans hw' hw)
 
-theorem IsTransitive.sUnion' (H : ∀, ∀ y ∈ x, ∀, IsTransitive y) : (⋃₀x).IsTransitive := fun y hy z hz => by
+theorem IsTransitive.sUnion' (H : ∀ y ∈ x, IsTransitive y) : (⋃₀x).IsTransitive := fun y hy z hz => by
   rcases mem_sUnion.1 hy with ⟨w, hw, hw'⟩
   exact mem_sUnion_of_mem ((H w hw).mem_trans hz hw') hw
 

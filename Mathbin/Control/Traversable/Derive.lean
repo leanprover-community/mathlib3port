@@ -15,7 +15,7 @@ unsafe def with_prefix : Option Name → Name → Name
   | none, n => n
   | some p, n => p ++ n
 
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `t
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `t
 /-- similar to `nested_traverse` but for `functor` -/
 unsafe def nested_map (f v : expr) : expr → tactic expr
   | t => do
@@ -117,7 +117,7 @@ unsafe def derive_map_equations (pre : Option Name) (n : Name) (vs : List expr) 
   set_goals []
   return ()
 
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `d
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `d
 unsafe def derive_functor (pre : Option Name) : tactic Unit := do
   let vs ← local_context
   let quote.1 (Functor (%%ₓf)) ← target
@@ -138,7 +138,7 @@ private unsafe def seq_apply_constructor : expr → List (Sum expr expr) → tac
   | e, Sum.inl x :: xs => Prod.map (cons <| pure x) id <$> seq_apply_constructor e xs
   | e, [] => return ([], e)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `t
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `t
 /-- ``nested_traverse f α (list (array n (list α)))`` synthesizes the expression
 `traverse (traverse (traverse f))`. `nested_traverse` assumes that `α` appears in
 `(list (array n (list α)))` -/
@@ -245,7 +245,7 @@ unsafe def derive_traverse_equations (pre : Option Name) (n : Name) (vs : List e
   set_goals []
   return ()
 
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `d
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `d
 unsafe def derive_traverse (pre : Option Name) : tactic Unit := do
   let vs ← local_context
   let quote.1 (Traversable (%%ₓf)) ← target

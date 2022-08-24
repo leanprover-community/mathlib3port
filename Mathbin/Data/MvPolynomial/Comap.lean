@@ -42,7 +42,7 @@ theorem comap_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) (x : τ 
 @[simp]
 theorem comap_id_apply (x : σ → R) : comap (AlgHom.id R (MvPolynomial σ R)) x = x := by
   funext i
-  simp only [← comap, ← AlgHom.id_apply, ← id.def, ← aeval_X]
+  simp only [comap, AlgHom.id_apply, id.def, aeval_X]
 
 variable (σ R)
 
@@ -62,7 +62,7 @@ theorem comap_comp_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) (g 
       rw [← this]
     exact aeval_unique g
     
-  · simp only [← comap, ← aeval_eq_eval₂_hom, ← map_eval₂_hom, ← AlgHom.comp_apply]
+  · simp only [comap, aeval_eq_eval₂_hom, map_eval₂_hom, AlgHom.comp_apply]
     refine' eval₂_hom_congr _ rfl rfl
     ext r
     apply aeval_C
@@ -81,7 +81,7 @@ theorem comap_eq_id_of_eq_id (f : MvPolynomial σ R →ₐ[R] MvPolynomial σ R)
 
 theorem comap_rename (f : σ → τ) (x : τ → R) : comap (rename f) x = x ∘ f := by
   ext i
-  simp only [← rename_X, ← comap_apply, ← aeval_X]
+  simp only [rename_X, comap_apply, aeval_X]
 
 /-- If two polynomial types over the same coefficient ring `R` are equivalent,
 there is a bijection between the types of functions from their variable types to `R`.
@@ -94,13 +94,13 @@ noncomputable def comapEquiv (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R)
     rw [← comap_comp_apply]
     apply comap_eq_id_of_eq_id
     intro
-    simp only [← AlgHom.id_apply, ← AlgEquiv.comp_symm]
+    simp only [AlgHom.id_apply, AlgEquiv.comp_symm]
   right_inv := by
     intro x
     rw [← comap_comp_apply]
     apply comap_eq_id_of_eq_id
     intro
-    simp only [← AlgHom.id_apply, ← AlgEquiv.symm_comp]
+    simp only [AlgHom.id_apply, AlgEquiv.symm_comp]
 
 @[simp]
 theorem comap_equiv_coe (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R) : (comapEquiv f : (τ → R) → σ → R) = comap f :=

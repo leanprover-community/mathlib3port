@@ -66,7 +66,7 @@ protected theorem function_field_iff (Fqt : Type _) [Field Fqt] [Algebra Fq[X] F
     refine' congr_fun _ c
     refine' IsLocalization.ext (nonZeroDivisors Fq[X]) _ _ _ _ _ _ _ <;>
       intros <;>
-        simp only [← AlgEquiv.map_one, ← RingHom.map_one, ← AlgEquiv.map_mul, ← RingHom.map_mul, ← AlgEquiv.commutes,
+        simp only [AlgEquiv.map_one, RingHom.map_one, AlgEquiv.map_mul, RingHom.map_mul, AlgEquiv.commutes, ←
           IsScalarTower.algebra_map_apply]
   constructor <;> intro h <;> skip
   · let b := FiniteDimensional.finBasis (Ratfunc Fq) F
@@ -76,7 +76,7 @@ protected theorem function_field_iff (Fqt : Type _) [Field Fqt] [Algebra Fq[X] F
     refine' FiniteDimensional.of_fintype_basis (b.map_coeffs e.symm _)
     intro c x
     convert (this (e.symm c) x).symm
-    simp only [← e.apply_symm_apply]
+    simp only [e.apply_symm_apply]
     
 
 theorem algebra_map_injective [Algebra Fq[X] F] [Algebra (Ratfunc Fq) F] [IsScalarTower Fq[X] (Ratfunc Fq) F] :
@@ -118,7 +118,7 @@ theorem algebra_map_injective : Function.Injective ⇑(algebraMap Fq[X] (ringOfI
   exact hinj p hp
 
 theorem not_is_field : ¬IsField (ringOfIntegers Fq F) := by
-  simpa [(IsIntegralClosure.is_integral_algebra Fq[X] F).is_field_iff_is_field (algebra_map_injective Fq F)] using
+  simpa [← (IsIntegralClosure.is_integral_algebra Fq[X] F).is_field_iff_is_field (algebra_map_injective Fq F)] using
     Polynomial.not_is_field Fq
 
 variable [FunctionField Fq F]
@@ -216,7 +216,7 @@ theorem infty_valuation_apply {x : Ratfunc Fq} : inftyValuation Fq x = inftyValu
 
 @[simp]
 theorem inftyValuation.C {k : Fq} (hk : k ≠ 0) : inftyValuationDef Fq (Ratfunc.c k) = Multiplicative.ofAdd (0 : ℤ) := by
-  have hCk : Ratfunc.c k ≠ 0 := (RingHom.map_ne_zero _).mpr hk
+  have hCk : Ratfunc.c k ≠ 0 := (map_ne_zero _).mpr hk
   rw [infty_valuation_def, if_neg hCk, Ratfunc.int_degree_C]
 
 @[simp]

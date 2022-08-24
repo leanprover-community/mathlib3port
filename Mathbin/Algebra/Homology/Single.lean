@@ -98,7 +98,7 @@ instance (j : ι) :
     Faithful (single V c j) where map_injective' := fun X Y f g w => by
     have := congr_hom w j
     dsimp'  at this
-    simp only [← dif_pos] at this
+    simp only [dif_pos] at this
     rw [← is_iso.inv_comp_eq, inv_eq_to_hom, eq_to_hom_trans_assoc, eq_to_hom_refl, category.id_comp, ←
       is_iso.comp_inv_eq, category.assoc, inv_eq_to_hom, eq_to_hom_trans, eq_to_hom_refl, category.comp_id] at this
     exact this
@@ -218,7 +218,7 @@ noncomputable def homologyFunctor0Single₀ : single₀ V ⋙ homologyFunctor V 
         homologyZeroZero)
     fun X Y f => by
     ext
-    dsimp' [← homologyFunctor]
+    dsimp' [homologyFunctor]
     simp
 
 /-- Sending objects to chain complexes supported at `0` then taking `(n+1)`-st homology
@@ -254,14 +254,14 @@ def toSingle₀Equiv (C : ChainComplex V ℕ) (X : V) : (C ⟶ (single₀ V).obj
         | 0 => f.1
         | n + 1 => 0,
       comm' := fun i j h => by
-        rcases i with (_ | _ | i) <;> cases j <;> unfold_aux <;> simp only [← comp_zero, ← zero_comp, ← single₀_obj_X_d]
+        rcases i with (_ | _ | i) <;> cases j <;> unfold_aux <;> simp only [comp_zero, zero_comp, single₀_obj_X_d]
         · rw [C.shape, zero_comp]
           simp
           
         · exact f.2.symm
           
         · rw [C.shape, zero_comp]
-          simp [← i.succ_succ_ne_one.symm]
+          simp [i.succ_succ_ne_one.symm]
            }
   left_inv := fun f => by
     ext i
@@ -399,7 +399,7 @@ noncomputable def homologyFunctor0Single₀ : single₀ V ⋙ homologyFunctor V 
         homologyZeroZero)
     fun X Y f => by
     ext
-    dsimp' [← homologyFunctor]
+    dsimp' [homologyFunctor]
     simp
 
 /-- Sending objects to cochain complexes supported at `0` then taking `(n+1)`-st homology
@@ -436,7 +436,7 @@ def fromSingle₀Equiv (C : CochainComplex V ℕ) (X : V) :
         | 0 => f.1
         | n + 1 => 0,
       comm' := fun i j h => by
-        rcases j with (_ | _ | j) <;> cases i <;> unfold_aux <;> simp only [← comp_zero, ← zero_comp, ← single₀_obj_X_d]
+        rcases j with (_ | _ | j) <;> cases i <;> unfold_aux <;> simp only [comp_zero, zero_comp, single₀_obj_X_d]
         · convert comp_zero
           rw [C.shape]
           simp
@@ -445,7 +445,7 @@ def fromSingle₀Equiv (C : CochainComplex V ℕ) (X : V) :
           
         · convert comp_zero
           rw [C.shape]
-          simp only [← ComplexShape.up_rel, ← zero_addₓ]
+          simp only [ComplexShape.up_rel, zero_addₓ]
           exact (Nat.one_lt_succ_succ j).Ne
            }
   left_inv := fun f => by

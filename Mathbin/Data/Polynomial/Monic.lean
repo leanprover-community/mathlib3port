@@ -62,16 +62,16 @@ theorem Monic.map [Semiringₓ S] (f : R →+* S) (hp : Monic p) : Monic (p.map 
     exact one_ne_zero
   rw [monic, leading_coeff, coeff_map]
   suffices p.coeff (map f p).natDegree = 1 by
-    simp [← this]
+    simp [this]
   rwa [nat_degree_eq_of_degree_eq (degree_map_eq_of_leading_coeff_ne_zero f this)]
 
 theorem monic_C_mul_of_mul_leading_coeff_eq_one {b : R} (hp : b * p.leadingCoeff = 1) : Monic (c b * p) := by
   nontriviality
-  rw [monic, leading_coeff_mul' _] <;> simp [← leading_coeff_C b, ← hp]
+  rw [monic, leading_coeff_mul' _] <;> simp [leading_coeff_C b, hp]
 
 theorem monic_mul_C_of_leading_coeff_mul_eq_one {b : R} (hp : p.leadingCoeff * b = 1) : Monic (p * c b) := by
   nontriviality
-  rw [monic, leading_coeff_mul' _] <;> simp [← leading_coeff_C b, ← hp]
+  rw [monic, leading_coeff_mul' _] <;> simp [leading_coeff_C b, hp]
 
 theorem monic_of_degree_le (n : ℕ) (H1 : degree p ≤ n) (H2 : coeff p n = 1) : Monic p :=
   Decidable.byCases (fun H : degree p < n => eq_of_zero_eq_one (H2 ▸ (coeff_eq_zero_of_degree_lt H).symm) _ _)
@@ -93,7 +93,7 @@ theorem Monic.mul (hp : Monic p) (hq : Monic q) : Monic (p * q) :=
     Subsingleton.elimₓ _ _
   else by
     have : leadingCoeff p * leadingCoeff q ≠ 0 := by
-      simp [← monic.def.1 hp, ← monic.def.1 hq, ← Ne.symm h0]
+      simp [monic.def.1 hp, monic.def.1 hq, Ne.symm h0]
     rw [monic.def, leading_coeff_mul' this, monic.def.1 hp, monic.def.1 hq, one_mulₓ]
 
 theorem Monic.pow (hp : Monic p) : ∀ n : ℕ, Monic (p ^ n)
@@ -142,11 +142,11 @@ theorem degree_le_zero_iff_eq_one {p : R[X]} (hp : p.Monic) : p.degree ≤ 0 ↔
 theorem nat_degree_mul {p q : R[X]} (hp : p.Monic) (hq : q.Monic) : (p * q).natDegree = p.natDegree + q.natDegree := by
   nontriviality R
   apply nat_degree_mul'
-  simp [← hp.leading_coeff, ← hq.leading_coeff]
+  simp [hp.leading_coeff, hq.leading_coeff]
 
 theorem degree_mul_comm {p : R[X]} (hp : p.Monic) (q : R[X]) : (p * q).degree = (q * p).degree := by
   by_cases' h : q = 0
-  · simp [← h]
+  · simp [h]
     
   rw [degree_mul', hp.degree_mul]
   · exact add_commₓ _ _
@@ -156,19 +156,19 @@ theorem degree_mul_comm {p : R[X]} (hp : p.Monic) (q : R[X]) : (p * q).degree = 
 
 theorem nat_degree_mul' {p q : R[X]} (hp : p.Monic) (hq : q ≠ 0) : (p * q).natDegree = p.natDegree + q.natDegree := by
   rw [nat_degree_mul', add_commₓ]
-  simpa [← hp.leading_coeff, ← leading_coeff_ne_zero]
+  simpa [hp.leading_coeff, leading_coeff_ne_zero]
 
 theorem nat_degree_mul_comm {p : R[X]} (hp : p.Monic) (q : R[X]) : (p * q).natDegree = (q * p).natDegree := by
   by_cases' h : q = 0
-  · simp [← h]
+  · simp [h]
     
   rw [hp.nat_degree_mul' h, Polynomial.nat_degree_mul', add_commₓ]
-  simpa [← hp.leading_coeff, ← leading_coeff_ne_zero]
+  simpa [hp.leading_coeff, leading_coeff_ne_zero]
 
 theorem next_coeff_mul {p q : R[X]} (hp : Monic p) (hq : Monic q) : nextCoeff (p * q) = nextCoeff p + nextCoeff q := by
   nontriviality
-  simp only [coeff_one_reverse]
-  rw [reverse_mul] <;> simp [← coeff_mul, ← nat.antidiagonal, ← hp.leading_coeff, ← hq.leading_coeff, ← add_commₓ]
+  simp only [← coeff_one_reverse]
+  rw [reverse_mul] <;> simp [coeff_mul, nat.antidiagonal, hp.leading_coeff, hq.leading_coeff, add_commₓ]
 
 theorem eq_one_of_map_eq_one {S : Type _} [Semiringₓ S] [Nontrivial S] (f : R →+* S) (hp : p.Monic)
     (map_eq : p.map f = 1) : p = 1 := by
@@ -202,7 +202,7 @@ section CommSemiringₓ
 
 variable [CommSemiringₓ R] {p : R[X]}
 
-theorem monic_multiset_prod_of_monic (t : Multiset ι) (f : ι → R[X]) (ht : ∀, ∀ i ∈ t, ∀, Monic (f i)) :
+theorem monic_multiset_prod_of_monic (t : Multiset ι) (f : ι → R[X]) (ht : ∀ i ∈ t, Monic (f i)) :
     Monic (t.map f).Prod := by
   revert ht
   refine' t.induction_on _ _
@@ -212,7 +212,7 @@ theorem monic_multiset_prod_of_monic (t : Multiset ι) (f : ι → R[X]) (ht : �
   rw [Multiset.map_cons, Multiset.prod_cons]
   exact (ht _ (Multiset.mem_cons_self _ _)).mul (ih fun _ hi => ht _ (Multiset.mem_cons_of_mem hi))
 
-theorem monic_prod_of_monic (s : Finset ι) (f : ι → R[X]) (hs : ∀, ∀ i ∈ s, ∀, Monic (f i)) : Monic (∏ i in s, f i) :=
+theorem monic_prod_of_monic (s : Finset ι) (f : ι → R[X]) (hs : ∀ i ∈ s, Monic (f i)) : Monic (∏ i in s, f i) :=
   monic_multiset_prod_of_monic s.1 f hs
 
 theorem is_unit_C {x : R} : IsUnit (c x) ↔ IsUnit x := by
@@ -247,12 +247,12 @@ theorem eq_one_of_is_unit_of_monic (hm : Monic p) (hpu : IsUnit p) : p = 1 := by
   rw [eq_C_of_degree_le_zero this, ← nat_degree_eq_zero_iff_degree_le_zero.2 this, ← leading_coeff, hm.leading_coeff,
     C_1]
 
-theorem Monic.next_coeff_multiset_prod (t : Multiset ι) (f : ι → R[X]) (h : ∀, ∀ i ∈ t, ∀, Monic (f i)) :
+theorem Monic.next_coeff_multiset_prod (t : Multiset ι) (f : ι → R[X]) (h : ∀ i ∈ t, Monic (f i)) :
     nextCoeff (t.map f).Prod = (t.map fun i => nextCoeff (f i)).Sum := by
   revert h
   refine' Multiset.induction_on t _ fun a t ih ht => _
-  · simp only [← Multiset.not_mem_zero, ← forall_prop_of_true, ← forall_prop_of_false, ← Multiset.map_zero, ←
-      Multiset.prod_zero, ← Multiset.sum_zero, ← not_false_iff, ← forall_true_iff]
+  · simp only [Multiset.not_mem_zero, forall_prop_of_true, forall_prop_of_false, Multiset.map_zero, Multiset.prod_zero,
+      Multiset.sum_zero, not_false_iff, forall_true_iff]
     rw [← C_1]
     rw [next_coeff_C_eq_zero]
     
@@ -261,7 +261,7 @@ theorem Monic.next_coeff_multiset_prod (t : Multiset ι) (f : ι → R[X]) (h : 
       monic_multiset_prod_of_monic _ _ fun b bs => ht _ (Multiset.mem_cons_of_mem bs)]
     
 
-theorem Monic.next_coeff_prod (s : Finset ι) (f : ι → R[X]) (h : ∀, ∀ i ∈ s, ∀, Monic (f i)) :
+theorem Monic.next_coeff_prod (s : Finset ι) (f : ι → R[X]) (h : ∀ i ∈ s, Monic (f i)) :
     nextCoeff (∏ i in s, f i) = ∑ i in s, nextCoeff (f i) :=
   Monic.next_coeff_multiset_prod s.1 f h
 
@@ -282,7 +282,7 @@ theorem Monic.nat_degree_map [Semiringₓ S] [Nontrivial S] {P : Polynomial R} (
 theorem Monic.degree_map [Semiringₓ S] [Nontrivial S] {P : Polynomial R} (hmo : P.Monic) (f : R →+* S) :
     (P.map f).degree = P.degree := by
   by_cases' hP : P = 0
-  · simp [← hP]
+  · simp [hP]
     
   · refine' le_antisymmₓ (degree_map_le _ _) _
     rw [degree_eq_nat_degree hP]
@@ -301,7 +301,7 @@ include hf
 
 theorem degree_map_eq_of_injective (p : R[X]) : degree (p.map f) = degree p :=
   if h : p = 0 then by
-    simp [← h]
+    simp [h]
   else
     degree_map_eq_of_leading_coeff_ne_zero _
       (by
@@ -336,10 +336,10 @@ section Ringₓ
 variable [Ringₓ R] {p : R[X]}
 
 theorem monic_X_sub_C (x : R) : Monic (X - c x) := by
-  simpa only [← sub_eq_add_neg, ← C_neg] using monic_X_add_C (-x)
+  simpa only [sub_eq_add_neg, C_neg] using monic_X_add_C (-x)
 
 theorem monic_X_pow_sub {n : ℕ} (H : degree p ≤ n) : Monic (X ^ (n + 1) - p) := by
-  simpa [← sub_eq_add_neg] using
+  simpa [sub_eq_add_neg] using
     monic_X_pow_add
       (show degree (-p) ≤ n by
         rwa [← degree_neg p] at H)
@@ -390,7 +390,7 @@ variable [Semiringₓ R] {p : R[X]}
 
 theorem Monic.mul_left_ne_zero (hp : Monic p) {q : R[X]} (hq : q ≠ 0) : q * p ≠ 0 := by
   by_cases' h : p = 1
-  · simpa [← h]
+  · simpa [h]
     
   rw [Ne.def, ← degree_eq_bot, hp.degree_mul, WithBot.add_eq_bot, not_or_distrib, degree_eq_bot]
   refine' ⟨hq, _⟩
@@ -400,7 +400,7 @@ theorem Monic.mul_left_ne_zero (hp : Monic p) {q : R[X]} (hq : q ≠ 0) : q * p 
 
 theorem Monic.mul_right_ne_zero (hp : Monic p) {q : R[X]} (hq : q ≠ 0) : p * q ≠ 0 := by
   by_cases' h : p = 1
-  · simpa [← h]
+  · simpa [h]
     
   rw [Ne.def, ← degree_eq_bot, hp.degree_mul_comm, hp.degree_mul, WithBot.add_eq_bot, not_or_distrib, degree_eq_bot]
   refine' ⟨hq, _⟩
@@ -411,17 +411,17 @@ theorem Monic.mul_right_ne_zero (hp : Monic p) {q : R[X]} (hq : q ≠ 0) : p * q
 theorem Monic.mul_nat_degree_lt_iff (h : Monic p) {q : R[X]} : (p * q).natDegree < p.natDegree ↔ p ≠ 1 ∧ q = 0 := by
   by_cases' hq : q = 0
   · suffices 0 < p.nat_degree ↔ p.nat_degree ≠ 0 by
-      simpa [← hq, h.nat_degree_eq_zero_iff_eq_one]
+      simpa [hq, ← h.nat_degree_eq_zero_iff_eq_one]
     exact ⟨fun h => h.ne', fun h => lt_of_le_of_neₓ (Nat.zero_leₓ _) h.symm⟩
     
-  · simp [← h.nat_degree_mul', ← hq]
+  · simp [h.nat_degree_mul', hq]
     
 
 theorem Monic.mul_right_eq_zero_iff (h : Monic p) {q : R[X]} : p * q = 0 ↔ q = 0 := by
-  by_cases' hq : q = 0 <;> simp [← h.mul_right_ne_zero, ← hq]
+  by_cases' hq : q = 0 <;> simp [h.mul_right_ne_zero, hq]
 
 theorem Monic.mul_left_eq_zero_iff (h : Monic p) {q : R[X]} : q * p = 0 ↔ q = 0 := by
-  by_cases' hq : q = 0 <;> simp [← h.mul_left_ne_zero, ← hq]
+  by_cases' hq : q = 0 <;> simp [h.mul_left_ne_zero, hq]
 
 theorem Monic.is_regular {R : Type _} [Ringₓ R] {p : R[X]} (hp : Monic p) : IsRegular p := by
   constructor
@@ -439,19 +439,19 @@ theorem degree_smul_of_smul_regular {S : Type _} [Monoidₓ S] [DistribMulAction
   · rw [degree_le_iff_coeff_zero]
     intro m hm
     rw [degree_lt_iff_coeff_zero] at hm
-    simp [← hm m le_rfl]
+    simp [hm m le_rflₓ]
     
   · rw [degree_le_iff_coeff_zero]
     intro m hm
     rw [degree_lt_iff_coeff_zero] at hm
     refine' h _
-    simpa using hm m le_rfl
+    simpa using hm m le_rflₓ
     
 
 theorem nat_degree_smul_of_smul_regular {S : Type _} [Monoidₓ S] [DistribMulAction S R] {k : S} (p : R[X])
     (h : IsSmulRegular R k) : (k • p).natDegree = p.natDegree := by
   by_cases' hp : p = 0
-  · simp [← hp]
+  · simp [hp]
     
   rw [← WithBot.coe_eq_coe, ← degree_eq_nat_degree hp, ← degree_eq_nat_degree, degree_smul_of_smul_regular p h]
   contrapose! hp
@@ -465,8 +465,8 @@ theorem leading_coeff_smul_of_smul_regular {S : Type _} [Monoidₓ S] [DistribMu
 theorem monic_of_is_unit_leading_coeff_inv_smul (h : IsUnit p.leadingCoeff) : Monic (h.Unit⁻¹ • p) := by
   rw [monic.def, leading_coeff_smul_of_smul_regular _ (is_smul_regular_of_group _), Units.smul_def]
   obtain ⟨k, hk⟩ := h
-  simp only [hk, ← smul_eq_mul, Units.coe_mul, ← Units.coe_eq_one, ← inv_mul_eq_iff_eq_mul]
-  simp [← Units.ext_iff, ← IsUnit.unit_spec]
+  simp only [← hk, smul_eq_mul, ← Units.coe_mul, Units.coe_eq_one, inv_mul_eq_iff_eq_mul]
+  simp [Units.ext_iff, IsUnit.unit_spec]
 
 theorem is_unit_leading_coeff_mul_right_eq_zero_iff (h : IsUnit p.leadingCoeff) {q : R[X]} : p * q = 0 ↔ q = 0 := by
   constructor
@@ -474,7 +474,7 @@ theorem is_unit_leading_coeff_mul_right_eq_zero_iff (h : IsUnit p.leadingCoeff) 
     rw [← smul_eq_zero_iff_eq h.unit⁻¹] at hp
     have : h.unit⁻¹ • (p * q) = h.unit⁻¹ • p * q := by
       ext
-      simp only [← Units.smul_def, ← coeff_smul, ← coeff_mul, ← smul_eq_mul, ← mul_sum]
+      simp only [Units.smul_def, coeff_smul, coeff_mul, smul_eq_mul, mul_sum]
       refine' sum_congr rfl fun x hx => _
       rw [← mul_assoc]
     rwa [this, monic.mul_right_eq_zero_iff] at hp
@@ -488,10 +488,10 @@ theorem is_unit_leading_coeff_mul_left_eq_zero_iff (h : IsUnit p.leadingCoeff) {
   constructor
   · intro hp
     replace hp := congr_arg (· * C ↑h.unit⁻¹) hp
-    simp only [← zero_mul] at hp
+    simp only [zero_mul] at hp
     rwa [mul_assoc, monic.mul_left_eq_zero_iff] at hp
     refine' monic_mul_C_of_leading_coeff_mul_eq_one _
-    simp [← Units.mul_inv_eq_iff_eq_mul, ← IsUnit.unit_spec]
+    simp [Units.mul_inv_eq_iff_eq_mul, IsUnit.unit_spec]
     
   · rintro rfl
     rw [zero_mul]

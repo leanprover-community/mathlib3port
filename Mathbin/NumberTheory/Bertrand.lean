@@ -72,7 +72,7 @@ theorem real_main_inequality {x : ℝ} (n_large : (512 : ℝ) ≤ x) : x * (2 * 
     refine'
         ((strict_concave_on_log_Ioi.concave_on.subset (Set.Ioi_subset_Ioi _) (convex_Ioi 0.5)).add
               ((strict_concave_on_sqrt_mul_log_Ioi.concave_on.comp_linear_map ((2 : ℝ) • LinearMap.id)).Subset
-                (fun a ha => lt_of_eq_of_lt _ ((mul_lt_mul_left two_pos).mpr ha)) (convex_Ioi 0.5))).sub
+                (fun a ha => lt_of_eq_of_ltₓ _ ((mul_lt_mul_left two_pos).mpr ha)) (convex_Ioi 0.5))).sub
           ((convex_on_id (convex_Ioi 0.5)).smul (div_nonneg (log_nonneg _) _)) <;>
       norm_num1
   suffices ∃ x1 x2, 0.5 < x1 ∧ x1 < x2 ∧ x2 ≤ x ∧ 0 ≤ f x1 ∧ f x2 ≤ 0 by
@@ -119,7 +119,7 @@ open Nat
 theorem bertrand_main_inequality {n : ℕ} (n_large : 512 ≤ n) : n * (2 * n) ^ sqrt (2 * n) * 4 ^ (2 * n / 3) ≤ 4 ^ n :=
   by
   rw [← @cast_le ℝ]
-  simp only [← cast_bit0, ← cast_add, ← cast_one, ← cast_mul, ← cast_pow, Real.rpow_nat_cast]
+  simp only [cast_bit0, cast_add, cast_one, cast_mul, cast_pow, ← Real.rpow_nat_cast]
   have n_pos : 0 < n :=
     (by
           decide : 0 < 512).trans_le
@@ -198,7 +198,7 @@ theorem central_binom_le_of_no_bertrand_prime (n : ℕ) (n_big : 2 < n)
   have : (∏ x : ℕ in S, f x) = ∏ x : ℕ in Finset.range (2 * n / 3 + 1), f x := by
     refine' Finset.prod_filter_of_ne fun p hp h => _
     contrapose! h
-    dsimp' only [← f]
+    dsimp' only [f]
     rw [factorization_eq_zero_of_non_prime n.central_binom h, pow_zeroₓ]
   rw [central_binom_factorization_small n n_big no_prime, ← this, ←
     Finset.prod_filter_mul_prod_filter_not S (· ≤ sqrt (2 * n))]
@@ -261,7 +261,7 @@ theorem exists_prime_lt_and_le_two_mul_succ {n} (q) {p : ℕ} (prime_p : Nat.Pri
     
   exact H (lt_of_mul_lt_mul_left' (lt_of_lt_of_leₓ (not_leₓ.1 h) covering))
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 /-- **Bertrand's Postulate**: For any positive natural number, there is a prime which is greater than
 it, but no more than twice as large.
 -/

@@ -27,7 +27,7 @@ instance functorHasRightDual [RightRigidCategory D] (F : C ⥤ D) : HasRightDual
   rightDual :=
     { obj := fun X => F.obj Xᘁ, map := fun X Y f => F.map (inv f)ᘁ,
       map_comp' := fun X Y Z f g => by
-        simp [← comp_right_adjoint_mate] }
+        simp [comp_right_adjoint_mate] }
   exact :=
     { evaluation :=
         { app := fun X => ε_ _ _,
@@ -50,7 +50,7 @@ instance functorHasLeftDual [LeftRigidCategory D] (F : C ⥤ D) : HasLeftDual F 
   leftDual :=
     { obj := fun X => ᘁF.obj X, map := fun X Y f => ᘁF.map (inv f),
       map_comp' := fun X Y Z f g => by
-        simp [← comp_left_adjoint_mate] }
+        simp [comp_left_adjoint_mate] }
   exact :=
     { evaluation :=
         { app := fun X => ε_ _ _,

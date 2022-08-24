@@ -33,7 +33,7 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip {F : H → ℝ → E} {F'
     (bound_integrable : IntervalIntegrable bound μ a b)
     (h_diff : ∀ᵐ t ∂μ, t ∈ Ι a b → HasFderivAt (fun x => F x t) (F' t) x₀) :
     IntervalIntegrable F' μ a b ∧ HasFderivAt (fun x => ∫ t in a..b, F x t ∂μ) (∫ t in a..b, F' t ∂μ) x₀ := by
-  simp only [← interval_integrable_iff, ← interval_integral_eq_integral_interval_oc,
+  simp only [interval_integrable_iff, interval_integral_eq_integral_interval_oc, ←
     ae_restrict_iff' measurable_set_interval_oc] at *
   have := has_fderiv_at_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas h_lip bound_integrable h_diff
   exact ⟨this.1, this.2.const_smul _⟩
@@ -45,11 +45,11 @@ and `F x` is ae-measurable for `x` in a possibly smaller neighborhood of `x₀`.
 theorem has_fderiv_at_integral_of_dominated_of_fderiv_le {F : H → ℝ → E} {F' : H → ℝ → H →L[𝕜] E} {x₀ : H}
     (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) (μ.restrict (Ι a b)))
     (hF_int : IntervalIntegrable (F x₀) μ a b) (hF'_meas : AeStronglyMeasurable (F' x₀) (μ.restrict (Ι a b)))
-    (h_bound : ∀ᵐ t ∂μ, t ∈ Ι a b → ∀, ∀ x ∈ Ball x₀ ε, ∀, ∥F' x t∥ ≤ bound t)
+    (h_bound : ∀ᵐ t ∂μ, t ∈ Ι a b → ∀ x ∈ Ball x₀ ε, ∥F' x t∥ ≤ bound t)
     (bound_integrable : IntervalIntegrable bound μ a b)
-    (h_diff : ∀ᵐ t ∂μ, t ∈ Ι a b → ∀, ∀ x ∈ Ball x₀ ε, ∀, HasFderivAt (fun x => F x t) (F' x t) x) :
+    (h_diff : ∀ᵐ t ∂μ, t ∈ Ι a b → ∀ x ∈ Ball x₀ ε, HasFderivAt (fun x => F x t) (F' x t) x) :
     HasFderivAt (fun x => ∫ t in a..b, F x t ∂μ) (∫ t in a..b, F' x₀ t ∂μ) x₀ := by
-  simp only [← interval_integrable_iff, ← interval_integral_eq_integral_interval_oc,
+  simp only [interval_integrable_iff, interval_integral_eq_integral_interval_oc, ←
     ae_restrict_iff' measurable_set_interval_oc] at *
   exact
     (has_fderiv_at_integral_of_dominated_of_fderiv_le ε_pos hF_meas hF_int hF'_meas h_bound bound_integrable
@@ -67,7 +67,7 @@ theorem has_deriv_at_integral_of_dominated_loc_of_lip {F : 𝕜 → ℝ → E} {
     (bound_integrable : IntervalIntegrable (bound : ℝ → ℝ) μ a b)
     (h_diff : ∀ᵐ t ∂μ, t ∈ Ι a b → HasDerivAt (fun x => F x t) (F' t) x₀) :
     IntervalIntegrable F' μ a b ∧ HasDerivAt (fun x => ∫ t in a..b, F x t ∂μ) (∫ t in a..b, F' t ∂μ) x₀ := by
-  simp only [← interval_integrable_iff, ← interval_integral_eq_integral_interval_oc,
+  simp only [interval_integrable_iff, interval_integral_eq_integral_interval_oc, ←
     ae_restrict_iff' measurable_set_interval_oc] at *
   have := has_deriv_at_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas h_lipsch bound_integrable h_diff
   exact ⟨this.1, this.2.const_smul _⟩
@@ -79,11 +79,11 @@ function, and `F x` is ae-measurable for `x` in a possibly smaller neighborhood 
 theorem has_deriv_at_integral_of_dominated_loc_of_deriv_le {F : 𝕜 → ℝ → E} {F' : 𝕜 → ℝ → E} {x₀ : 𝕜} (ε_pos : 0 < ε)
     (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) (μ.restrict (Ι a b))) (hF_int : IntervalIntegrable (F x₀) μ a b)
     (hF'_meas : AeStronglyMeasurable (F' x₀) (μ.restrict (Ι a b)))
-    (h_bound : ∀ᵐ t ∂μ, t ∈ Ι a b → ∀, ∀ x ∈ Ball x₀ ε, ∀, ∥F' x t∥ ≤ bound t)
+    (h_bound : ∀ᵐ t ∂μ, t ∈ Ι a b → ∀ x ∈ Ball x₀ ε, ∥F' x t∥ ≤ bound t)
     (bound_integrable : IntervalIntegrable bound μ a b)
-    (h_diff : ∀ᵐ t ∂μ, t ∈ Ι a b → ∀, ∀ x ∈ Ball x₀ ε, ∀, HasDerivAt (fun x => F x t) (F' x t) x) :
+    (h_diff : ∀ᵐ t ∂μ, t ∈ Ι a b → ∀ x ∈ Ball x₀ ε, HasDerivAt (fun x => F x t) (F' x t) x) :
     IntervalIntegrable (F' x₀) μ a b ∧ HasDerivAt (fun x => ∫ t in a..b, F x t ∂μ) (∫ t in a..b, F' x₀ t ∂μ) x₀ := by
-  simp only [← interval_integrable_iff, ← interval_integral_eq_integral_interval_oc,
+  simp only [interval_integrable_iff, interval_integral_eq_integral_interval_oc, ←
     ae_restrict_iff' measurable_set_interval_oc] at *
   have :=
     has_deriv_at_integral_of_dominated_loc_of_deriv_le ε_pos hF_meas hF_int hF'_meas h_bound bound_integrable h_diff

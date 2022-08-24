@@ -111,7 +111,7 @@ namespace DeriveFintype
 We will set `enum` to the discriminant of the inductive type, so a `finset_above`
 represents a finset that enumerates all elements in a tail of the constructor list. -/
 def FinsetAbove (α) (enum : α → ℕ) (n : ℕ) :=
-  { s : Finset α // ∀, ∀ x ∈ s, ∀, n ≤ enum x }
+  { s : Finset α // ∀ x ∈ s, n ≤ enum x }
 
 /-- Construct a fintype instance from a completed `finset_above`. -/
 def mkFintype {α} (enum : α → ℕ) (s : FinsetAbove α enum 0) (H : ∀ x, x ∈ s.1) : Fintype α :=
@@ -128,7 +128,7 @@ def FinsetAbove.cons {α} {enum : α → ℕ} (n) (a : α) (h : enum a = n) (s :
     
   · intro x h'
     rcases Finset.mem_cons.1 h' with (rfl | h')
-    · exact ge_of_eq h
+    · exact ge_of_eqₓ h
       
     · exact Nat.le_of_succ_leₓ (s.2 _ h')
       
@@ -154,7 +154,7 @@ The property `P` here is `λ a, enum a = n` where `n` is the discriminant for th
 variant. -/
 @[nolint has_nonempty_instance]
 def FinsetIn {α} (P : α → Prop) :=
-  { s : Finset α // ∀, ∀ x ∈ s, ∀, P x }
+  { s : Finset α // ∀ x ∈ s, P x }
 
 /-- To construct the finset, we use an injective map from the type `Γ`, which will be the
 sigma over all constructor arguments. We use sigma instances and existing fintype instances
@@ -182,7 +182,7 @@ def FinsetAbove.union {α} {enum : α → ℕ} (n) (s : FinsetIn fun a => enum a
     
   · intro x h'
     rcases Finset.mem_disj_union.1 h' with (h' | h')
-    · exact ge_of_eq (s.2 _ h')
+    · exact ge_of_eqₓ (s.2 _ h')
       
     · exact Nat.le_of_succ_leₓ (t.2 _ h')
       

@@ -38,7 +38,7 @@ theorem exists_subset_mul_div (ht : t.Nonempty) : ∃ u : Finset α, u.card * t.
   by_cases' hau : a ∈ u
   · exact subset_mul_left _ ht.one_mem_div hau
     
-  by_cases' H : ∀, ∀ b ∈ u, ∀, Disjoint (a • t) (b • t)
+  by_cases' H : ∀ b ∈ u, Disjoint (a • t) (b • t)
   · refine' (hCmax _ _ <| ssubset_insert hau).elim
     rw [mem_filter, mem_powerset, insert_subset, coe_insert]
     exact ⟨⟨ha, hu.1⟩, hu.2.insert fun b hb _ => H _ hb⟩
@@ -51,7 +51,7 @@ theorem exists_subset_mul_div (ht : t.Nonempty) : ∃ u : Finset α, u.card * t.
       ⟨_, _, hb,
         mem_div.2
           ⟨_, _, hc₂, hc₁, by
-            simp [← div_eq_mul_inv a b]⟩,
+            simp [div_eq_mul_inv a b]⟩,
         by
         simp ⟩
 

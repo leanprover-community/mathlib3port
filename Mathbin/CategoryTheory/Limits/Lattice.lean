@@ -70,7 +70,7 @@ theorem finite_product_eq_finset_inf [SemilatticeInf α] [OrderTop α] {ι : Typ
   trans
   exact (is_limit.cone_point_unique_up_to_iso (limit.is_limit _) (finite_limit_cone (discrete.functor f)).IsLimit).to_eq
   change finset.univ.inf (f ∘ discrete_equiv.to_embedding) = (Fintype.elems ι).inf f
-  simp only [Finset.inf_map, ← Finset.univ_map_equiv_to_embedding]
+  simp only [← Finset.inf_map, Finset.univ_map_equiv_to_embedding]
   rfl
 
 /-- A finite coproduct in the category of a `semilattice_sup` with `order_bot` is the same as the
@@ -83,7 +83,7 @@ theorem finite_coproduct_eq_finset_sup [SemilatticeSup α] [OrderBot α] {ι : T
     (is_colimit.cocone_point_unique_up_to_iso (colimit.is_colimit _)
         (finite_colimit_cocone (discrete.functor f)).IsColimit).to_eq
   change finset.univ.sup (f ∘ discrete_equiv.to_embedding) = (Fintype.elems ι).sup f
-  simp only [Finset.sup_map, ← Finset.univ_map_equiv_to_embedding]
+  simp only [← Finset.sup_map, Finset.univ_map_equiv_to_embedding]
   rfl
 
 -- see Note [lower instance priority]

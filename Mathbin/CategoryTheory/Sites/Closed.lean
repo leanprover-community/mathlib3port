@@ -133,7 +133,7 @@ theorem monotone_close {X : C} : Monotone (J₁.close : Sieve X → Sieve X) := 
 
 @[simp]
 theorem close_close {X : C} (S : Sieve X) : J₁.close (J₁.close S) = J₁.close S :=
-  le_antisymmₓ (J₁.le_close_of_is_closed le_rfl (J₁.close_is_closed S)) (J₁.monotone_close (J₁.le_close _))
+  le_antisymmₓ (J₁.le_close_of_is_closed le_rflₓ (J₁.close_is_closed S)) (J₁.monotone_close (J₁.le_close _))
 
 /-- The sieve `S` is in the topology iff its closure is the maximal sieve. This shows that the closure
 operator determines the topology.
@@ -157,7 +157,7 @@ theorem close_eq_top_iff_mem {X : C} (S : Sieve X) : J₁.close S = ⊤ ↔ S �
 def closureOperator (X : C) : ClosureOperator (Sieve X) :=
   ClosureOperator.mk' J₁.close
     (fun S₁ S₂ h => J₁.le_close_of_is_closed (h.trans (J₁.le_close _)) (J₁.close_is_closed S₂)) J₁.le_close fun S =>
-    J₁.le_close_of_is_closed le_rfl (J₁.close_is_closed S)
+    J₁.le_close_of_is_closed le_rflₓ (J₁.close_is_closed S)
 
 @[simp]
 theorem closed_iff_closed {X : C} (S : Sieve X) : S ∈ (J₁.ClosureOperator X).closed ↔ J₁.IsClosed S :=
@@ -182,7 +182,7 @@ theorem classifier_is_sheaf : Presieve.IsSheaf J₁ (Functor.closedSieves J₁) 
   refine' ⟨_, _⟩
   · rintro x ⟨M, hM⟩ ⟨N, hN⟩ hM₂ hN₂
     ext
-    dsimp' only [← Subtype.coe_mk]
+    dsimp' only [Subtype.coe_mk]
     rw [← J₁.covers_iff_mem_of_closed hM, ← J₁.covers_iff_mem_of_closed hN]
     have q : ∀ ⦃Z : C⦄ (g : Z ⟶ X) (hg : S g), M.pullback g = N.pullback g := by
       intro Z g hg
@@ -227,7 +227,7 @@ theorem classifier_is_sheaf : Presieve.IsSheaf J₁ (Functor.closedSieves J₁) 
       ext1
       dsimp'
       rw [← J₁.pullback_close, this _ hf]
-      apply le_antisymmₓ (J₁.le_close_of_is_closed le_rfl (x f hf).2) (J₁.le_close _)
+      apply le_antisymmₓ (J₁.le_close_of_is_closed le_rflₓ (x f hf).2) (J₁.le_close _)
       
     
 

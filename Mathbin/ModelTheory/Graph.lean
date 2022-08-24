@@ -67,10 +67,10 @@ theorem Theory.simple_graph_model_iff [Language.graph.Structure V] :
     V ⊨ Theory.simple_graph ↔
       (Irreflexive fun x y : V => RelMap adj ![x, y]) ∧ Symmetric fun x y : V => RelMap adj ![x, y] :=
   by
-  simp [← Theory.simple_graph]
+  simp [Theory.simple_graph]
 
 instance simple_graph_model (G : SimpleGraph V) : @Theory.Model _ V G.Structure Theory.SimpleGraph := by
-  simp only [← Theory.simple_graph_model_iff, ← rel_map_apply₂]
+  simp only [Theory.simple_graph_model_iff, rel_map_apply₂]
   exact ⟨G.loopless, G.symm⟩
 
 variable (V)
@@ -110,7 +110,7 @@ theorem Structure_simple_graph_of_structure [S : Language.graph.Structure V] [V 
         · cases r
           change rel_map adj ![xs 0, xs 1] = _
           refine' congr rfl (funext _)
-          simp [← Finₓ.forall_fin_two]
+          simp [Finₓ.forall_fin_two]
           
         · exact r.elim
           

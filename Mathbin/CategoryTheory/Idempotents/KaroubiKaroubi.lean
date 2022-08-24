@@ -31,10 +31,10 @@ variable (C : Type _) [Category C]
 def inverse : Karoubi (Karoubi C) ⥤ Karoubi C where
   obj := fun P =>
     ⟨P.x.x, P.p.f, by
-      simpa only [← hom_ext] using P.idem⟩
+      simpa only [hom_ext] using P.idem⟩
   map := fun P Q f =>
     ⟨f.f.f, by
-      simpa only [← hom_ext] using f.comm⟩
+      simpa only [hom_ext] using f.comm⟩
 
 instance [Preadditive C] : Functor.Additive (inverse C) where
 
@@ -46,14 +46,14 @@ def unitIso : 𝟭 (Karoubi C) ≅ toKaroubi (Karoubi C) ⋙ inverse C :=
       apply Functor.ext
       · intro P Q f
         ext
-        simp only [← functor.id_map, ← inverse_map_f, ← to_karoubi_map_f, ← eq_to_hom_f, ← eq_to_hom_refl, ← comp_id, ←
-          p_comp_assoc, ← functor.comp_map, ← comp]
+        simp only [functor.id_map, inverse_map_f, to_karoubi_map_f, eq_to_hom_f, eq_to_hom_refl, comp_id, p_comp_assoc,
+          functor.comp_map, comp]
         dsimp'
-        simp only [← id_eq, ← comp_p]
+        simp only [id_eq, comp_p]
         
       · intro P
         ext
-        · simpa only [← eq_to_hom_refl, ← comp_id, ← id_comp]
+        · simpa only [eq_to_hom_refl, comp_id, id_comp]
           
         · rfl
           
@@ -68,34 +68,34 @@ def counitIso : inverse C ⋙ toKaroubi (Karoubi C) ≅ 𝟭 (Karoubi (Karoubi C
             { f := P.p.1,
               comm := by
                 have h := P.idem
-                simp only [← hom_ext, ← comp] at h
+                simp only [hom_ext, comp] at h
                 erw [← assoc, h, comp_p] },
           comm := by
             have h := P.idem
-            simp only [← hom_ext, ← comp] at h⊢
+            simp only [hom_ext, comp] at h⊢
             erw [h, h] },
       naturality' := fun P Q f => by
-        simpa only [← hom_ext] using (p_comm f).symm }
+        simpa only [hom_ext] using (p_comm f).symm }
   inv :=
     { app := fun P =>
         { f :=
             { f := P.p.1,
               comm := by
                 have h := P.idem
-                simp only [← hom_ext, ← comp] at h
+                simp only [hom_ext, comp] at h
                 erw [h, p_comp] },
           comm := by
             have h := P.idem
-            simp only [← hom_ext, ← comp] at h⊢
+            simp only [hom_ext, comp] at h⊢
             erw [h, h] },
       naturality' := fun P Q f => by
-        simpa [← hom_ext] using (p_comm f).symm }
+        simpa [hom_ext] using (p_comm f).symm }
   hom_inv_id' := by
     ext P
-    simpa only [← hom_ext, ← id_eq] using P.idem
+    simpa only [hom_ext, id_eq] using P.idem
   inv_hom_id' := by
     ext P
-    simpa only [← hom_ext, ← id_eq] using P.idem
+    simpa only [hom_ext, id_eq] using P.idem
 
 /-- The equivalence `karoubi C ≌ karoubi (karoubi C)` -/
 @[simps]
@@ -106,8 +106,8 @@ def equivalence : Karoubi C ≌ Karoubi (Karoubi C) where
   counitIso := KaroubiKaroubi.counitIso C
   functor_unit_iso_comp' := fun P => by
     ext
-    simp only [← eq_to_hom_f, ← eq_to_hom_refl, ← comp_id, ← counit_iso_hom_app_f_f, ← to_karoubi_obj_p, ← id_eq, ←
-      assoc, ← comp, ← unit_iso_hom, ← eq_to_hom_app, ← eq_to_hom_map]
+    simp only [eq_to_hom_f, eq_to_hom_refl, comp_id, counit_iso_hom_app_f_f, to_karoubi_obj_p, id_eq, assoc, comp,
+      unit_iso_hom, eq_to_hom_app, eq_to_hom_map]
     erw [P.idem, P.idem]
 
 instance equivalence.additive_functor [Preadditive C] : Functor.Additive (equivalence C).Functor := by

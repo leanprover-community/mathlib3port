@@ -310,6 +310,7 @@ import Mathbin.Algebra.Star.Pi
 import Mathbin.Algebra.Star.Pointwise
 import Mathbin.Algebra.Star.Prod
 import Mathbin.Algebra.Star.SelfAdjoint
+import Mathbin.Algebra.Star.StarAlgHom
 import Mathbin.Algebra.Star.Subalgebra
 import Mathbin.Algebra.Star.Unitary
 import Mathbin.Algebra.Support
@@ -365,6 +366,7 @@ import Mathbin.AlgebraicTopology.Nerve
 import Mathbin.AlgebraicTopology.SimplexCategory
 import Mathbin.AlgebraicTopology.SimplicialObject
 import Mathbin.AlgebraicTopology.SimplicialSet
+import Mathbin.AlgebraicTopology.SplitSimplicialObject
 import Mathbin.AlgebraicTopology.TopologicalSimplex
 import Mathbin.Analysis.ODE.Gronwall
 import Mathbin.Analysis.ODE.PicardLindelof
@@ -452,6 +454,7 @@ import Mathbin.Analysis.Convex.KreinMilman
 import Mathbin.Analysis.Convex.Measure
 import Mathbin.Analysis.Convex.PartitionOfUnity
 import Mathbin.Analysis.Convex.Quasiconvex
+import Mathbin.Analysis.Convex.Segment
 import Mathbin.Analysis.Convex.SimplicialComplex.Basic
 import Mathbin.Analysis.Convex.Slope
 import Mathbin.Analysis.Convex.SpecificFunctions
@@ -479,6 +482,7 @@ import Mathbin.Analysis.InnerProductSpace.Positive
 import Mathbin.Analysis.InnerProductSpace.Projection
 import Mathbin.Analysis.InnerProductSpace.Rayleigh
 import Mathbin.Analysis.InnerProductSpace.Spectrum
+import Mathbin.Analysis.InnerProductSpace.Symmetric
 import Mathbin.Analysis.LocallyConvex.BalancedCoreHull
 import Mathbin.Analysis.LocallyConvex.Basic
 import Mathbin.Analysis.LocallyConvex.Bounded
@@ -1100,10 +1104,12 @@ import Mathbin.Data.Finsupp.Antidiagonal
 import Mathbin.Data.Finsupp.Basic
 import Mathbin.Data.Finsupp.BigOperators
 import Mathbin.Data.Finsupp.Default
+import Mathbin.Data.Finsupp.Defs
 import Mathbin.Data.Finsupp.Fin
 import Mathbin.Data.Finsupp.Indicator
 import Mathbin.Data.Finsupp.Interval
 import Mathbin.Data.Finsupp.Multiset
+import Mathbin.Data.Finsupp.NeLocus
 import Mathbin.Data.Finsupp.Order
 import Mathbin.Data.Finsupp.Pointwise
 import Mathbin.Data.Finsupp.Pwo
@@ -1320,7 +1326,6 @@ import Mathbin.Data.Polynomial.Identities
 import Mathbin.Data.Polynomial.Induction
 import Mathbin.Data.Polynomial.Inductions
 import Mathbin.Data.Polynomial.IntegralNormalization
-import Mathbin.Data.Polynomial.IteratedDeriv
 import Mathbin.Data.Polynomial.Laurent
 import Mathbin.Data.Polynomial.Lifts
 import Mathbin.Data.Polynomial.Mirror
@@ -1405,6 +1410,7 @@ import Mathbin.Data.Set.Intervals.Default
 import Mathbin.Data.Set.Intervals.Disjoint
 import Mathbin.Data.Set.Intervals.ImagePreimage
 import Mathbin.Data.Set.Intervals.Infinite
+import Mathbin.Data.Set.Intervals.Instances
 import Mathbin.Data.Set.Intervals.Monotone
 import Mathbin.Data.Set.Intervals.OrdConnected
 import Mathbin.Data.Set.Intervals.Pi
@@ -1690,6 +1696,7 @@ import Mathbin.LinearAlgebra.Matrix.FiniteDimensional
 import Mathbin.LinearAlgebra.Matrix.Hermitian
 import Mathbin.LinearAlgebra.Matrix.InvariantBasisNumber
 import Mathbin.LinearAlgebra.Matrix.IsDiag
+import Mathbin.LinearAlgebra.Matrix.Ldl
 import Mathbin.LinearAlgebra.Matrix.MvPolynomial
 import Mathbin.LinearAlgebra.Matrix.Nondegenerate
 import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
@@ -2434,6 +2441,7 @@ import Mathbin.Topology.Algebra.Localization
 import Mathbin.Topology.Algebra.Module.Basic
 import Mathbin.Topology.Algebra.Module.CharacterSpace
 import Mathbin.Topology.Algebra.Module.FiniteDimension
+import Mathbin.Topology.Algebra.Module.LinearPmap
 import Mathbin.Topology.Algebra.Module.LocallyConvex
 import Mathbin.Topology.Algebra.Module.Multilinear
 import Mathbin.Topology.Algebra.Module.WeakDual

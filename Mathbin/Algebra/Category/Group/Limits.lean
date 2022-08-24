@@ -42,8 +42,8 @@ instance groupObj (F : J ⥤ Groupₓₓ.{max v u}) (j) : Groupₓ ((F ⋙ forge
 def sectionsSubgroup (F : J ⥤ Groupₓₓ) : Subgroup (∀ j, F.obj j) :=
   { Mon.sectionsSubmonoid (F ⋙ forget₂ Groupₓₓ Mon) with Carrier := (F ⋙ forget Groupₓₓ).sections,
     inv_mem' := fun a ah j j' f => by
-      simp only [← forget_map_eq_coe, ← functor.comp_map, ← Pi.inv_apply, ← MonoidHom.map_inv, ← inv_inj]
-      dsimp' [← functor.sections]  at ah
+      simp only [forget_map_eq_coe, functor.comp_map, Pi.inv_apply, MonoidHom.map_inv, inv_inj]
+      dsimp' [functor.sections]  at ah
       rw [ah f] }
 
 @[to_additive]
@@ -57,7 +57,7 @@ All we need to do is notice that the limit point has a `group` instance availabl
 the existing limit. -/
 @[to_additive
       "We show that the forgetful functor `AddGroup ⥤ AddMon` creates limits.\n\nAll we need to do is notice that the limit point has an `add_group` instance available, and then\nreuse the existing limit."]
-instance (F : J ⥤ Groupₓₓ.{max v u}) : CreatesLimit F (forget₂ Groupₓₓ.{max v u} Mon.{max v u}) :=
+instance Forget₂.createsLimit (F : J ⥤ Groupₓₓ.{max v u}) : CreatesLimit F (forget₂ Groupₓₓ.{max v u} Mon.{max v u}) :=
   createsLimitOfReflectsIso fun c' t =>
     { liftedCone :=
         { x := Groupₓₓ.of (Types.limitCone (F ⋙ forget Groupₓₓ)).x,
@@ -147,8 +147,10 @@ instance limitCommGroup (F : J ⥤ CommGroupₓₓ.{max v u}) :
 All we need to do is notice that the limit point has a `comm_group` instance available,
 and then reuse the existing limit.
 -/
-@[to_additive]
-instance (F : J ⥤ CommGroupₓₓ.{max v u}) : CreatesLimit F (forget₂ CommGroupₓₓ Groupₓₓ.{max v u}) :=
+@[to_additive
+      "We show that the forgetful functor `AddCommGroup ⥤ AddGroup` creates limits.\n\nAll we need to do is notice that the limit point has an `add_comm_group` instance available, and\nthen reuse the existing limit."]
+instance Forget₂.createsLimit (F : J ⥤ CommGroupₓₓ.{max v u}) :
+    CreatesLimit F (forget₂ CommGroupₓₓ Groupₓₓ.{max v u}) :=
   createsLimitOfReflectsIso fun c' t =>
     { liftedCone :=
         { x := CommGroupₓₓ.of (Types.limitCone (F ⋙ forget CommGroupₓₓ)).x,
@@ -255,7 +257,7 @@ def kernelIsoKer {G H : AddCommGroupₓₓ.{u}} (f : G ⟶ H) : kernel f ≅ Add
         ⟨kernel.ι f g, by
           -- TODO where is this `has_coe_t_aux.coe` coming from? can we prevent it appearing?
           change (kernel.ι f) g ∈ f.ker
-          simp [← AddMonoidHom.mem_ker]⟩,
+          simp [AddMonoidHom.mem_ker]⟩,
       map_zero' := by
         ext
         simp ,
@@ -272,7 +274,7 @@ def kernelIsoKer {G H : AddCommGroupₓₓ.{u}} (f : G ⟶ H) : kernel f ≅ Add
     simp
   inv_hom_id' := by
     apply AddCommGroupₓₓ.ext
-    simp only [← AddMonoidHom.coe_mk, ← coe_id, ← coe_comp]
+    simp only [AddMonoidHom.coe_mk, coe_id, coe_comp]
     rintro ⟨x, mem⟩
     simp
 
@@ -285,7 +287,7 @@ theorem kernel_iso_ker_hom_comp_subtype {G H : AddCommGroupₓₓ} (f : G ⟶ H)
 theorem kernel_iso_ker_inv_comp_ι {G H : AddCommGroupₓₓ} (f : G ⟶ H) :
     (kernelIsoKer f).inv ≫ kernel.ι f = AddSubgroup.subtype f.ker := by
   ext
-  simp [← kernel_iso_ker]
+  simp [kernel_iso_ker]
 
 /-- The categorical kernel inclusion for `f : G ⟶ H`, as an object over `G`,
 agrees with the `subtype` map.

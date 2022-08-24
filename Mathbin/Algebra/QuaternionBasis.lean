@@ -108,31 +108,31 @@ def lift (x : ℍ[R,c₁,c₂]) : A :=
   algebraMap R _ x.re + x.imI • q.i + x.imJ • q.j + x.imK • q.k
 
 theorem lift_zero : q.lift (0 : ℍ[R,c₁,c₂]) = 0 := by
-  simp [← lift]
+  simp [lift]
 
 theorem lift_one : q.lift (1 : ℍ[R,c₁,c₂]) = 1 := by
-  simp [← lift]
+  simp [lift]
 
 theorem lift_add (x y : ℍ[R,c₁,c₂]) : q.lift (x + y) = q.lift x + q.lift y := by
-  simp [← lift, ← add_smul]
+  simp [lift, add_smul]
   abel
 
 theorem lift_mul (x y : ℍ[R,c₁,c₂]) : q.lift (x * y) = q.lift x * q.lift y := by
-  simp only [← lift, ← Algebra.algebra_map_eq_smul_one]
-  simp only [← add_mulₓ]
-  simp only [← add_mulₓ, ← mul_addₓ, ← smul_mul_assoc, ← mul_smul_comm, ← one_mulₓ, ← mul_oneₓ, Algebra.smul_def, ←
-    smul_add, ← smul_smul]
-  simp only [← i_mul_i, ← j_mul_j, ← i_mul_j, ← j_mul_i, ← i_mul_k, ← k_mul_i, ← k_mul_j, ← j_mul_k, ← k_mul_k]
-  simp only [← smul_smul, ← smul_neg, ← sub_eq_add_neg, ← add_smul, add_assocₓ, ← mul_neg, ← neg_smul]
-  simp only [← mul_right_commₓ _ _ (c₁ * c₂), ← mul_comm _ (c₁ * c₂)]
-  simp only [← mul_comm _ c₁, ← mul_right_commₓ _ _ c₁]
-  simp only [← mul_comm _ c₂, ← mul_right_commₓ _ _ c₂]
-  simp only [mul_comm c₁ c₂, mul_assoc]
-  simp [← sub_eq_add_neg, ← add_smul, add_assocₓ]
+  simp only [lift, Algebra.algebra_map_eq_smul_one]
+  simp only [add_mulₓ]
+  simp only [add_mulₓ, mul_addₓ, smul_mul_assoc, mul_smul_comm, one_mulₓ, mul_oneₓ, ← Algebra.smul_def, smul_add,
+    smul_smul]
+  simp only [i_mul_i, j_mul_j, i_mul_j, j_mul_i, i_mul_k, k_mul_i, k_mul_j, j_mul_k, k_mul_k]
+  simp only [smul_smul, smul_neg, sub_eq_add_neg, add_smul, ← add_assocₓ, mul_neg, neg_smul]
+  simp only [mul_right_commₓ _ _ (c₁ * c₂), mul_comm _ (c₁ * c₂)]
+  simp only [mul_comm _ c₁, mul_right_commₓ _ _ c₁]
+  simp only [mul_comm _ c₂, mul_right_commₓ _ _ c₂]
+  simp only [← mul_comm c₁ c₂, ← mul_assoc]
+  simp [sub_eq_add_neg, add_smul, ← add_assocₓ]
   abel
 
 theorem lift_smul (r : R) (x : ℍ[R,c₁,c₂]) : q.lift (r • x) = r • q.lift x := by
-  simp [← lift, ← mul_smul, Algebra.smul_def]
+  simp [lift, mul_smul, ← Algebra.smul_def]
 
 /-- A `quaternion_algebra.basis` implies an `alg_hom` from the quaternions. -/
 @[simps]
@@ -165,12 +165,12 @@ def lift : Basis A c₁ c₂ ≃ (ℍ[R,c₁,c₂] →ₐ[R] A) where
   toFun := Basis.liftHom
   invFun := (Basis.self R).compHom
   left_inv := fun q => by
-    ext <;> simp [← basis.lift]
+    ext <;> simp [basis.lift]
   right_inv := fun F => by
     ext
-    dsimp' [← basis.lift]
+    dsimp' [basis.lift]
     rw [← F.commutes]
-    simp only [F.commutes, F.map_smul, F.map_add, ← mk_add_mk, ← smul_mk, ← smul_zero, ← algebra_map_eq]
+    simp only [← F.commutes, ← F.map_smul, ← F.map_add, mk_add_mk, smul_mk, smul_zero, algebra_map_eq]
     congr
     simp
 

@@ -74,7 +74,7 @@ unsafe def step1 (md : Transparency) (unify : Bool) (e : expr) (to_generalize : 
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Input: for each equation that should be generated: the equation name, the
 argument `jᵢ` and the corresponding local constant `kᵢ` from step 1.
 
@@ -90,7 +90,7 @@ unsafe def step2 (md : Transparency) (to_generalize : List (Name × expr × expr
     let J ← infer_type j
     let K ← infer_type k
     let sort u ← infer_type K |
-      "./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
     let homogeneous ← succeeds <| is_def_eq J K md
     let ⟨eq_type, eq_proof⟩ :=
       if homogeneous then ((const `eq [u]) K k j, (const `eq.refl [u]) J j)
@@ -100,7 +100,7 @@ unsafe def step2 (md : Transparency) (to_generalize : List (Name × expr × expr
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Input: The `jᵢ`; the local constants `kᵢ` from step 1; the equations and their
 proofs from step 2.
 
@@ -112,7 +112,7 @@ unsafe def step3 (e : expr) (js ks eqs eq_proofs : List expr) : tactic Unit :=
   focus1 <| do
     let new_target_type := (e.pis eqs).pis ks
     type_check new_target_type <|>
-        "./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+        "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
     let n ← mk_fresh_name
     let new_target ← assert n new_target_type
     swap

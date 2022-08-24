@@ -102,7 +102,7 @@ variable {F : Type _} [NormedAddCommGroup F] [NormedSpace ℝ F] {f g : F → E}
 
 theorem ContDiff.euclidean_dist (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) (h : ∀ x, f x ≠ g x) :
     ContDiff ℝ n fun x => Euclidean.dist (f x) (g x) := by
-  simp only [← Euclidean.dist]
+  simp only [Euclidean.dist]
   apply @ContDiff.dist ℝ
   exacts[(@toEuclidean E _ _ _).ContDiff.comp hf, (@toEuclidean E _ _ _).ContDiff.comp hg, fun x =>
     to_euclidean.injective.ne (h x)]

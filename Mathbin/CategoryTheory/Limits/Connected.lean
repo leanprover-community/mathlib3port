@@ -107,7 +107,7 @@ noncomputable def prodPreservesConnectedLimits [IsConnected J] (X : C) :
             · erw [assoc, lim_map_π, comp_id, limit.lift_π]
               exact (nat_trans_from_is_connected (s.π ≫ γ₁ X) j (Classical.arbitrary _)).symm
               
-            · simp [l.fac (forget_cone s) j]
+            · simp [← l.fac (forget_cone s) j]
               ,
           uniq' := fun s m L => by
             apply prod.hom_ext
@@ -117,7 +117,7 @@ noncomputable def prodPreservesConnectedLimits [IsConnected J] (X : C) :
             · rw [limit.lift_π]
               apply l.uniq (forget_cone s)
               intro j
-              simp [L j]
+              simp [← L j]
                } }
 
 end CategoryTheory

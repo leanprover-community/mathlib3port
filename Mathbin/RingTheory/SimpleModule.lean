@@ -44,7 +44,7 @@ theorem IsSimpleModule.nontrivial [IsSimpleModule R M] : Nontrivial M :=
       have h : (⊥ : Submodule R M) ≠ ⊤ := bot_ne_top
       contrapose! h
       ext
-      simp [← Submodule.mem_bot, ← Submodule.mem_top, ← h x]⟩⟩
+      simp [Submodule.mem_bot, Submodule.mem_top, h x]⟩⟩
 
 variable {R} {M} {m : Submodule R M} {N : Type _} [AddCommGroupₓ N] [Module R N]
 

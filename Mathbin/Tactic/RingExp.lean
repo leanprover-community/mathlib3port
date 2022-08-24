@@ -414,7 +414,7 @@ unsafe def mk_app_class (f : Name) (inst : expr) (args : List expr) : ring_exp_m
   let ctx ← get_context
   pure <| (@expr.const tt f [ctx] ctx inst).mk_app args
 
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `ctx
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `ctx
 /-- Specialized version of `mk_app` where the first two arguments are `{α}` `[comm_semiring α]`.
 Should be faster because it can use the cached instances.
  -/
@@ -852,7 +852,7 @@ theorem mul_pf_prod_c {pps p ps qs pqs : α} : pps = p * ps → ps * qs = pqs �
 theorem mul_pp_pf_overlap {pps p_b ps qqs qs psqs : α} {p_e q_e : ℕ} :
     pps = p_b ^ p_e * ps → qqs = p_b ^ q_e * qs → p_b ^ (p_e + q_e) * (ps * qs) = psqs → pps * qqs = psqs :=
   fun ps_pf qs_pf psqs_pf => by
-  simp [← symm psqs_pf, ← pow_addₓ, ← ps_pf, ← qs_pf] <;> ac_rfl
+  simp [symm psqs_pf, pow_addₓ, ps_pf, qs_pf] <;> ac_rfl
 
 theorem mul_pp_pf_prod_lt {pps p ps qqs pqs : α} : pps = p * ps → ps * qqs = pqs → pps * qqs = p * pqs := by
   cc

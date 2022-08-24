@@ -56,7 +56,7 @@ theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injec
   have hns : g '' (f '' s)ᶜ = sᶜ :=
     compl_injective
       (by
-        simp [← hs])
+        simp [hs])
   set g' := inv_fun g
   have g'g : left_inverse g' g := left_inverse_inv_fun hg
   have hg'ns : g' '' sᶜ = (f '' s)ᶜ := by
@@ -97,14 +97,14 @@ parameter {ι : Type u}(β : ι → Type v)
 
 @[reducible]
 private def sets :=
-  { s : Set (∀ i, β i) | ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀ (i), (x : ∀ i, β i) i = y i → x = y }
+  { s : Set (∀ i, β i) | ∀ x ∈ s, ∀ y ∈ s, ∀ (i), (x : ∀ i, β i) i = y i → x = y }
 
 /-- The cardinals are well-ordered. We express it here by the fact that in any set of cardinals
 there is an element that injects into the others. See `cardinal.linear_order` for (one of) the
 lattice instances. -/
 theorem min_injective [I : Nonempty ι] : ∃ i, Nonempty (∀ j, β i ↪ β j) :=
   let ⟨s, hs, ms⟩ :=
-    show ∃ s ∈ sets, ∀, ∀ a ∈ sets, ∀, s ⊆ a → a = s from
+    show ∃ s ∈ sets, ∀ a ∈ sets, s ⊆ a → a = s from
       zorn_subset sets fun c hc hcc =>
         ⟨⋃₀c, fun x ⟨p, hpc, hxp⟩ y ⟨q, hqc, hyq⟩ i hi =>
           (hcc.Total hpc hqc).elim (fun h => hc hqc x (h hxp) y hyq i hi) fun h => hc hpc x hxp y (h hyq) i hi, fun _ =>
@@ -112,13 +112,13 @@ theorem min_injective [I : Nonempty ι] : ∃ i, Nonempty (∀ j, β i ↪ β j)
   let ⟨i, e⟩ :=
     show ∃ i, ∀ y, ∃ x ∈ s, (x : ∀ i, β i) i = y from
       Classical.by_contradiction fun h =>
-        have h : ∀ i, ∃ y, ∀, ∀ x ∈ s, ∀, (x : ∀ i, β i) i ≠ y := by
-          simpa only [← not_exists, ← not_forall] using h
+        have h : ∀ i, ∃ y, ∀ x ∈ s, (x : ∀ i, β i) i ≠ y := by
+          simpa only [not_exists, not_forall] using h
         let ⟨f, hf⟩ := Classical.axiom_of_choice h
         have : f ∈ s :=
           have : insert f s ∈ sets := fun x hx y hy => by
             cases hx <;> cases hy
-            · simp [← hx, ← hy]
+            · simp [hx, hy]
               
             · subst x
               exact fun i e => (hf i y hy e.symm).elim

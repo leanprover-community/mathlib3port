@@ -181,12 +181,12 @@ theorem mul_def {a b : ℤ} : Int.mul a b = a * b :=
 
 @[simp]
 theorem neg_succ_not_nonneg (n : ℕ) : 0 ≤ -[1+ n] ↔ False := by
-  simp only [← not_leₓ, ← iff_falseₓ]
+  simp only [not_leₓ, iff_falseₓ]
   exact Int.neg_succ_lt_zeroₓ n
 
 @[simp]
 theorem neg_succ_not_pos (n : ℕ) : 0 < -[1+ n] ↔ False := by
-  simp only [← not_ltₓ, ← iff_falseₓ]
+  simp only [not_ltₓ, iff_falseₓ]
 
 @[simp]
 theorem neg_succ_sub_one (n : ℕ) : -[1+ n] - 1 = -[1+ n + 1] :=
@@ -232,7 +232,7 @@ theorem le_coe_nat_sub (m n : ℕ) : (m - n : ℤ) ≤ ↑(m - n : ℕ) := by
   by_cases' h : m ≥ n
   · exact le_of_eqₓ (Int.coe_nat_subₓ h).symm
     
-  · simp [← le_of_not_geₓ h, ← coe_nat_le]
+  · simp [le_of_not_geₓ h, coe_nat_le]
     
 
 theorem coe_nat_ne_zero_iff_pos {n : ℕ} : (n : ℤ) ≠ 0 ↔ 0 < n :=
@@ -350,10 +350,10 @@ protected theorem induction_on {p : ℤ → Prop} (i : ℤ) (hz : p 0) (hp : ∀
   · have : ∀ n : ℕ, p (-n) := by
       intro n
       induction n
-      · simp [← hz]
+      · simp [hz]
         
       · convert hn _ n_ih using 1
-        simp [← sub_eq_neg_add]
+        simp [sub_eq_neg_add]
         
     exact this (i + 1)
     
@@ -362,7 +362,7 @@ protected theorem induction_on {p : ℤ → Prop} (i : ℤ) (hz : p 0) (hp : ∀
 than `b`, and the `pred` of a number less than `b`. -/
 @[elabAsElim]
 protected def inductionOn' {C : ℤ → Sort _} (z : ℤ) (b : ℤ) (H0 : C b) (Hs : ∀ k, b ≤ k → C k → C (k + 1))
-    (Hp : ∀, ∀ k ≤ b, ∀, C k → C (k - 1)) : C z := by
+    (Hp : ∀ k ≤ b, C k → C (k - 1)) : C z := by
   -- Note that we use `convert` here where possible as we are constructing data, and this reduces
   -- the number of times `eq.mpr` appears in the term.
   rw [← sub_add_cancel z b]
@@ -375,10 +375,10 @@ protected def inductionOn' {C : ℤ → Sort _} (z : ℤ) (b : ℤ) (H0 : C b) (
     rw [of_nat_succ, add_assocₓ, add_commₓ 1 b, ← add_assocₓ]
     
   · induction' n with n ih
-    · convert Hp _ le_rfl H0 using 1
+    · convert Hp _ le_rflₓ H0 using 1
       rw [neg_succ_of_nat_eq, ← of_nat_eq_coe, of_nat_zero, zero_addₓ, neg_add_eq_sub]
       
-    · convert Hp _ (le_of_ltₓ (add_lt_of_neg_of_le (neg_succ_lt_zero _) le_rfl)) ih using 1
+    · convert Hp _ (le_of_ltₓ (add_lt_of_neg_of_le (neg_succ_lt_zero _) le_rflₓ)) ih using 1
       rw [neg_succ_of_nat_coe', Nat.succ_eq_add_one, ← neg_succ_of_nat_coe, sub_add_eq_add_sub]
       
     
@@ -434,7 +434,7 @@ theorem nat_abs_add_le (a b : ℤ) : natAbs (a + b) ≤ natAbs a + natAbs b := b
       
   cases a <;>
     cases' b with b b <;>
-      simp [← nat_abs, ← Nat.succ_add] <;>
+      simp [nat_abs, Nat.succ_add] <;>
         try
               rfl <;>
             [skip, rw [add_commₓ a b]] <;>
@@ -448,7 +448,7 @@ theorem nat_abs_neg_of_nat (n : ℕ) : natAbs (negOfNat n) = n := by
   cases n <;> rfl
 
 theorem nat_abs_mul (a b : ℤ) : natAbs (a * b) = natAbs a * natAbs b := by
-  cases a <;> cases b <;> simp only [Int.mul_def, ← Int.mul, ← nat_abs_neg_of_nat, ← eq_self_iff_true, ← Int.natAbs]
+  cases a <;> cases b <;> simp only [← Int.mul_def, Int.mul, nat_abs_neg_of_nat, eq_self_iff_true, Int.natAbs]
 
 theorem nat_abs_mul_nat_abs_eq {a b : ℤ} {c : ℕ} (h : a * b = (c : ℤ)) : a.natAbs * b.natAbs = c := by
   rw [← nat_abs_mul, h, nat_abs_of_nat]
@@ -458,7 +458,7 @@ theorem nat_abs_mul_self' (a : ℤ) : (natAbs a * natAbs a : ℤ) = a * a := by
   rw [← Int.coe_nat_mul, nat_abs_mul_self]
 
 theorem neg_succ_of_nat_eq' (m : ℕ) : -[1+ m] = -m - 1 := by
-  simp [← neg_succ_of_nat_eq, ← sub_eq_neg_add]
+  simp [neg_succ_of_nat_eq, sub_eq_neg_add]
 
 theorem nat_abs_ne_zero_of_ne_zero {z : ℤ} (hz : z ≠ 0) : z.natAbs ≠ 0 := fun h =>
   hz <| Int.eq_zero_of_nat_abs_eq_zero h
@@ -473,11 +473,11 @@ theorem nat_abs_ne_zero {a : ℤ} : a.natAbs ≠ 0 ↔ a ≠ 0 :=
 theorem nat_abs_lt_nat_abs_of_nonneg_of_lt {a b : ℤ} (w₁ : 0 ≤ a) (w₂ : a < b) : a.natAbs < b.natAbs := by
   lift b to ℕ using le_transₓ w₁ (le_of_ltₓ w₂)
   lift a to ℕ using w₁
-  simpa [← coe_nat_lt] using w₂
+  simpa [coe_nat_lt] using w₂
 
 theorem nat_abs_eq_nat_abs_iff {a b : ℤ} : a.natAbs = b.natAbs ↔ a = b ∨ a = -b := by
   constructor <;> intro h
-  · cases' Int.nat_abs_eq a with h₁ h₁ <;> cases' Int.nat_abs_eq b with h₂ h₂ <;> rw [h₁, h₂] <;> simp [← h]
+  · cases' Int.nat_abs_eq a with h₁ h₁ <;> cases' Int.nat_abs_eq b with h₂ h₂ <;> rw [h₁, h₂] <;> simp [h]
     
   · cases h <;> rw [h]
     rw [Int.nat_abs_neg]
@@ -524,14 +524,14 @@ theorem nat_abs_inj_of_nonneg_of_nonneg {a b : ℤ} (ha : 0 ≤ a) (hb : 0 ≤ b
   rw [← sq_eq_sq ha hb, ← nat_abs_eq_iff_sq_eq]
 
 theorem nat_abs_inj_of_nonpos_of_nonpos {a b : ℤ} (ha : a ≤ 0) (hb : b ≤ 0) : natAbs a = natAbs b ↔ a = b := by
-  simpa only [← Int.nat_abs_neg, ← neg_inj] using
+  simpa only [Int.nat_abs_neg, neg_inj] using
     nat_abs_inj_of_nonneg_of_nonneg (neg_nonneg_of_nonpos ha) (neg_nonneg_of_nonpos hb)
 
 theorem nat_abs_inj_of_nonneg_of_nonpos {a b : ℤ} (ha : 0 ≤ a) (hb : b ≤ 0) : natAbs a = natAbs b ↔ a = -b := by
-  simpa only [← Int.nat_abs_neg] using nat_abs_inj_of_nonneg_of_nonneg ha (neg_nonneg_of_nonpos hb)
+  simpa only [Int.nat_abs_neg] using nat_abs_inj_of_nonneg_of_nonneg ha (neg_nonneg_of_nonpos hb)
 
 theorem nat_abs_inj_of_nonpos_of_nonneg {a b : ℤ} (ha : a ≤ 0) (hb : 0 ≤ b) : natAbs a = natAbs b ↔ -a = b := by
-  simpa only [← Int.nat_abs_neg] using nat_abs_inj_of_nonneg_of_nonneg (neg_nonneg_of_nonpos ha) hb
+  simpa only [Int.nat_abs_neg] using nat_abs_inj_of_nonneg_of_nonneg (neg_nonneg_of_nonpos ha) hb
 
 section Intervals
 
@@ -541,7 +541,7 @@ theorem strict_mono_on_nat_abs : StrictMonoOn natAbs (Ici 0) := fun a ha b hb ha
   nat_abs_lt_nat_abs_of_nonneg_of_lt ha hab
 
 theorem strict_anti_on_nat_abs : StrictAntiOn natAbs (Iic 0) := fun a ha b hb hab => by
-  simpa [← Int.nat_abs_neg] using
+  simpa [Int.nat_abs_neg] using
     nat_abs_lt_nat_abs_of_nonneg_of_lt (right.nonneg_neg_iff.mpr hb) (neg_lt_neg_iff.mpr hab)
 
 theorem inj_on_nat_abs_Ici : InjOn natAbs (Ici 0) :=
@@ -668,7 +668,7 @@ protected theorem add_mul_div_left (a : ℤ) {b : ℤ} (c : ℤ) (H : b ≠ 0) :
 
 protected theorem add_div_of_dvd_right {a b c : ℤ} (H : c ∣ b) : (a + b) / c = a / c + b / c := by
   by_cases' h1 : c = 0
-  · simp [← h1]
+  · simp [h1]
     
   cases' H with k hk
   rw [hk]
@@ -849,7 +849,7 @@ theorem mul_mod (a b n : ℤ) : a * b % n = a % n * (b % n) % n := by
 theorem neg_mod_two (i : ℤ) : -i % 2 = i % 2 := by
   apply int.mod_eq_mod_iff_mod_sub_eq_zero.mpr
   convert Int.mul_mod_right 2 (-i)
-  simp only [← two_mul, ← sub_eq_add_neg]
+  simp only [two_mul, sub_eq_add_neg]
 
 -- Will be generalized to Euclidean domains.
 @[local simp]
@@ -982,13 +982,13 @@ theorem coe_nat_dvd {m n : ℕ} : (↑m : ℤ) ∣ ↑n ↔ m ∣ n :=
   ⟨fun ⟨a, ae⟩ =>
     m.eq_zero_or_pos.elim
       (fun m0 => by
-        simp [← m0] at ae <;> simp [← ae, ← m0])
+        simp [m0] at ae <;> simp [ae, m0])
       fun m0l => by
       cases'
         eq_coe_of_zero_le
           (@nonneg_of_mul_nonneg_right ℤ _ m a
             (by
-              simp [← ae.symm])
+              simp [ae.symm])
             (by
               simpa using m0l)) with
         k e
@@ -999,10 +999,10 @@ theorem coe_nat_dvd {m n : ℕ} : (↑m : ℤ) ∣ ↑n ↔ m ∣ n :=
       rw [e, Int.coe_nat_mul]⟩
 
 theorem coe_nat_dvd_left {n : ℕ} {z : ℤ} : (↑n : ℤ) ∣ z ↔ n ∣ z.natAbs := by
-  rcases nat_abs_eq z with (eq | eq) <;> rw [Eq] <;> simp [← coe_nat_dvd]
+  rcases nat_abs_eq z with (eq | eq) <;> rw [Eq] <;> simp [coe_nat_dvd]
 
 theorem coe_nat_dvd_right {n : ℕ} {z : ℤ} : z ∣ (↑n : ℤ) ↔ z.natAbs ∣ n := by
-  rcases nat_abs_eq z with (eq | eq) <;> rw [Eq] <;> simp [← coe_nat_dvd]
+  rcases nat_abs_eq z with (eq | eq) <;> rw [Eq] <;> simp [coe_nat_dvd]
 
 theorem dvd_antisymm {a b : ℤ} (H1 : 0 ≤ a) (H2 : 0 ≤ b) : a ∣ b → b ∣ a → a = b := by
   rw [← abs_of_nonneg H1, ← abs_of_nonneg H2, abs_eq_nat_abs, abs_eq_nat_abs]
@@ -1054,7 +1054,7 @@ protected theorem mul_div_cancel' {a b : ℤ} (H : a ∣ b) : a * (b / a) = b :=
 protected theorem mul_div_assoc (a : ℤ) : ∀ {b c : ℤ}, c ∣ b → a * b / c = a * (b / c)
   | _, c, ⟨d, rfl⟩ =>
     if cz : c = 0 then by
-      simp [← cz]
+      simp [cz]
     else by
       rw [mul_left_commₓ, Int.mul_div_cancel_left _ cz, Int.mul_div_cancel_left _ cz]
 
@@ -1064,7 +1064,7 @@ protected theorem mul_div_assoc' (b : ℤ) {a c : ℤ} (h : c ∣ a) : a * b / c
 theorem div_dvd_div : ∀ {a b c : ℤ} (H1 : a ∣ b) (H2 : b ∣ c), b / a ∣ c / a
   | a, _, _, ⟨b, rfl⟩, ⟨c, rfl⟩ =>
     if az : a = 0 then by
-      simp [← az]
+      simp [az]
     else by
       rw [Int.mul_div_cancel_left _ az, mul_assoc, Int.mul_div_cancel_left _ az] <;> apply dvd_mul_right
 
@@ -1097,7 +1097,7 @@ protected theorem eq_zero_of_div_eq_zero {d n : ℤ} (h : d ∣ n) (H : n / d = 
 theorem neg_div_of_dvd : ∀ {a b : ℤ} (H : b ∣ a), -a / b = -(a / b)
   | _, b, ⟨c, rfl⟩ =>
     if bz : b = 0 then by
-      simp [← bz]
+      simp [bz]
     else by
       rw [neg_mul_eq_mul_neg, Int.mul_div_cancel_left _ bz, Int.mul_div_cancel_left _ bz]
 
@@ -1135,9 +1135,9 @@ theorem div_sign : ∀ a b, a / sign b = a * sign b
   | a, (n + 1 : ℕ) => by
     unfold sign <;> simp
   | a, 0 => by
-    simp [← sign]
+    simp [sign]
   | a, -[1+ n] => by
-    simp [← sign]
+    simp [sign]
 
 @[simp]
 theorem sign_mul : ∀ a b, sign (a * b) = sign a * sign b
@@ -1152,7 +1152,7 @@ theorem sign_mul : ∀ a b, sign (a * b) = sign a * sign b
 
 protected theorem sign_eq_div_abs (a : ℤ) : sign a = a / abs a :=
   if az : a = 0 then by
-    simp [← az]
+    simp [az]
   else (Int.div_eq_of_eq_mul_left (mt abs_eq_zero.1 az) (sign_mul_abs _).symm).symm
 
 theorem mul_sign : ∀ i : ℤ, i * sign i = natAbs i
@@ -1226,7 +1226,7 @@ theorem exists_lt_and_lt_iff_not_dvd (m : ℤ) {n : ℤ} (hn : 0 < n) : (∃ k, 
   · intro h
     rw [dvd_iff_mod_eq_zero, ← Ne.def] at h
     have := (mod_nonneg m hn.ne.symm).lt_of_ne h.symm
-    simp (config := { singlePass := true })only [mod_add_div m n]
+    simp (config := { singlePass := true })only [← mod_add_div m n]
     refine' ⟨m / n, lt_add_of_pos_left _ this, _⟩
     rw [add_commₓ _ (1 : ℤ), left_distrib, mul_oneₓ]
     exact add_lt_add_right (mod_lt_of_pos _ hn) _
@@ -1313,13 +1313,13 @@ theorem of_nat_add_neg_succ_of_nat_of_lt {m n : ℕ} (h : m < n.succ) : ofNat m 
   have h' : n.succ - m = (n - m).succ
   apply succ_sub
   apply le_of_lt_succ h
-  simp [*, ← sub_nat_nat]
+  simp [*, sub_nat_nat]
 
 theorem of_nat_add_neg_succ_of_nat_of_ge {m n : ℕ} (h : n.succ ≤ m) : ofNat m + -[1+ n] = ofNat (m - n.succ) := by
   change sub_nat_nat _ _ = _
   have h' : n.succ - m = 0
   apply tsub_eq_zero_iff_le.mpr h
-  simp [*, ← sub_nat_nat]
+  simp [*, sub_nat_nat]
 
 @[simp]
 theorem neg_add_neg (m n : ℕ) : -[1+ m] + -[1+ n] = -[1+ Nat.succ (m + n)] :=
@@ -1336,11 +1336,11 @@ theorem div_dvd_of_dvd {s t : ℤ} (hst : s ∣ t) : t / s ∣ t := by
   · simpa using hst
     
   rcases hst with ⟨c, hc⟩
-  simp [← hc, ← Int.mul_div_cancel_left _ hs]
+  simp [hc, Int.mul_div_cancel_left _ hs]
 
 theorem dvd_div_of_mul_dvd {a b c : ℤ} (h : a * b ∣ c) : b ∣ c / a := by
   rcases eq_or_ne a 0 with (rfl | ha)
-  · simp only [← Int.div_zero, ← dvd_zero]
+  · simp only [Int.div_zero, dvd_zero]
     
   rcases h with ⟨d, rfl⟩
   refine' ⟨d, _⟩
@@ -1386,7 +1386,7 @@ theorem to_nat_le {a : ℤ} {n : ℕ} : toNat a ≤ n ↔ a ≤ n := by
 
 @[simp]
 theorem lt_to_nat {n : ℕ} {a : ℤ} : n < toNat a ↔ (n : ℤ) < a :=
-  le_iff_le_iff_lt_iff_lt.1 to_nat_le
+  le_iff_le_iff_lt_iff_ltₓ.1 to_nat_le
 
 @[simp]
 theorem le_to_nat_iff {n : ℕ} {z : ℤ} (h : 0 ≤ z) : n ≤ z.toNat ↔ (n : ℤ) ≤ z := by
@@ -1431,7 +1431,7 @@ theorem pred_to_nat : ∀ i : ℤ, (i - 1).toNat = i.toNat - 1
 
 @[simp]
 theorem to_nat_pred_coe_of_pos {i : ℤ} (h : 0 < i) : ((i.toNat - 1 : ℕ) : ℤ) = i - 1 := by
-  simp' [← h, ← le_of_ltₓ h] with push_cast
+  simp' [h, le_of_ltₓ h] with push_cast
 
 @[simp]
 theorem to_nat_sub_to_nat_neg : ∀ n : ℤ, ↑n.toNat - ↑(-n).toNat = n
@@ -1495,7 +1495,7 @@ theorem units_nat_abs (u : ℤˣ) : natAbs u = 1 :=
         rw [← nat_abs_mul, Units.inv_mul] <;> rfl⟩
 
 theorem units_eq_one_or (u : ℤˣ) : u = 1 ∨ u = -1 := by
-  simpa only [← Units.ext_iff, ← units_nat_abs] using nat_abs_eq u
+  simpa only [Units.ext_iff, units_nat_abs] using nat_abs_eq u
 
 theorem is_unit_eq_one_or {a : ℤ} : IsUnit a → a = 1 ∨ a = -1
   | ⟨x, hx⟩ => hx ▸ (units_eq_one_or _).imp (congr_arg coe) (congr_arg coe)
@@ -1524,7 +1524,7 @@ theorem eq_one_or_neg_one_of_mul_eq_one' {z w : ℤ} (h : z * w = 1) : z = 1 ∧
     rcases eq_one_or_neg_one_of_mul_eq_one h' with (rfl | rfl) <;> tauto
 
 theorem is_unit_iff_nat_abs_eq {n : ℤ} : IsUnit n ↔ n.natAbs = 1 := by
-  simp [← nat_abs_eq_iff, ← is_unit_iff]
+  simp [nat_abs_eq_iff, is_unit_iff]
 
 alias is_unit_iff_nat_abs_eq ↔ is_unit.nat_abs_eq _
 
@@ -1595,15 +1595,15 @@ theorem bodd_neg_of_nat (n : ℕ) : bodd (negOfNat n) = n.bodd := by
 
 @[simp]
 theorem bodd_neg (n : ℤ) : bodd (-n) = bodd n := by
-  cases n <;> simp [← Neg.neg, ← Int.coe_nat_eq, ← Int.neg, ← bodd, -of_nat_eq_coe]
+  cases n <;> simp [Neg.neg, Int.coe_nat_eq, Int.neg, bodd, -of_nat_eq_coe]
 
 @[simp]
 theorem bodd_add (m n : ℤ) : bodd (m + n) = bxor (bodd m) (bodd n) := by
-  cases' m with m m <;> cases' n with n n <;> unfold Add.add <;> simp [← Int.add, -of_nat_eq_coe, ← Bool.bxor_comm]
+  cases' m with m m <;> cases' n with n n <;> unfold Add.add <;> simp [Int.add, -of_nat_eq_coe, Bool.bxor_comm]
 
 @[simp]
 theorem bodd_mul (m n : ℤ) : bodd (m * n) = (bodd m && bodd n) := by
-  cases' m with m m <;> cases' n with n n <;> simp [Int.mul_def, ← Int.mul, -of_nat_eq_coe, ← Bool.bxor_comm]
+  cases' m with m m <;> cases' n with n n <;> simp [← Int.mul_def, Int.mul, -of_nat_eq_coe, Bool.bxor_comm]
 
 theorem bodd_add_div2 : ∀ n, cond (bodd n) 1 0 + 2 * div2 n = n
   | (n : ℕ) => by
@@ -1613,8 +1613,8 @@ theorem bodd_add_div2 : ∀ n, cond (bodd n) 1 0 + 2 * div2 n = n
       exact congr_arg of_nat n.bodd_add_div2
   | -[1+ n] => by
     refine' Eq.trans _ (congr_arg neg_succ_of_nat n.bodd_add_div2)
-    dsimp' [← bodd]
-    cases Nat.bodd n <;> dsimp' [← cond, ← bnot, ← div2, ← Int.mul]
+    dsimp' [bodd]
+    cases Nat.bodd n <;> dsimp' [cond, bnot, div2, Int.mul]
     · change -[1+ 2 * Nat.div2 n] = _
       rw [zero_addₓ]
       
@@ -1689,23 +1689,23 @@ theorem bit1_ne_bit0 (m n : ℤ) : bit1 m ≠ bit0 n :=
   (bit0_ne_bit1 _ _).symm
 
 theorem bit1_ne_zero (m : ℤ) : bit1 m ≠ 0 := by
-  simpa only [← bit0_zero] using bit1_ne_bit0 m 0
+  simpa only [bit0_zero] using bit1_ne_bit0 m 0
 
 @[simp]
 theorem test_bit_zero (b) : ∀ n, testBit (bit b n) 0 = b
   | (n : ℕ) => by
     rw [bit_coe_nat] <;> apply Nat.test_bit_zero
   | -[1+ n] => by
-    rw [bit_neg_succ] <;> dsimp' [← test_bit] <;> rw [Nat.test_bit_zero] <;> clear test_bit_zero <;> cases b <;> rfl
+    rw [bit_neg_succ] <;> dsimp' [test_bit] <;> rw [Nat.test_bit_zero] <;> clear test_bit_zero <;> cases b <;> rfl
 
 @[simp]
 theorem test_bit_succ (m b) : ∀ n, testBit (bit b n) (Nat.succ m) = testBit n m
   | (n : ℕ) => by
     rw [bit_coe_nat] <;> apply Nat.test_bit_succ
   | -[1+ n] => by
-    rw [bit_neg_succ] <;> dsimp' [← test_bit] <;> rw [Nat.test_bit_succ]
+    rw [bit_neg_succ] <;> dsimp' [test_bit] <;> rw [Nat.test_bit_succ]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 private unsafe def bitwise_tac : tactic Unit :=
   sorry
 
@@ -1725,7 +1725,7 @@ theorem bitwise_xor : bitwise bxor = lxor := by
   run_tac
     bitwise_tac
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:293:16: warning: unsupported simp config option: fail_if_unchanged
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:325:16: warning: unsupported simp config option: fail_if_unchanged
 @[simp]
 theorem bitwise_bit (f : Bool → Bool → Bool) (a m b n) : bitwise f (bit a m) (bit b n) = bit (f a b) (bitwise f m n) :=
   by
@@ -1768,18 +1768,18 @@ theorem lxor_bit (a m b n) : lxor (bit a m) (bit b n) = bit (bxor a b) (lxor m n
 @[simp]
 theorem lnot_bit (b) : ∀ n, lnot (bit b n) = bit (bnot b) (lnot n)
   | (n : ℕ) => by
-    simp [← lnot]
+    simp [lnot]
   | -[1+ n] => by
-    simp [← lnot]
+    simp [lnot]
 
 @[simp]
 theorem test_bit_bitwise (f : Bool → Bool → Bool) (m n k) : testBit (bitwise f m n) k = f (testBit m k) (testBit n k) :=
   by
   induction' k with k IH generalizing m n <;>
     apply bit_cases_on m <;> intro a m' <;> apply bit_cases_on n <;> intro b n' <;> rw [bitwise_bit]
-  · simp [← test_bit_zero]
+  · simp [test_bit_zero]
     
-  · simp [← test_bit_succ, ← IH]
+  · simp [test_bit_succ, IH]
     
 
 @[simp]
@@ -1801,9 +1801,9 @@ theorem test_bit_lxor (m n k) : testBit (lxor m n) k = bxor (testBit m k) (testB
 @[simp]
 theorem test_bit_lnot : ∀ n k, testBit (lnot n) k = bnot (testBit n k)
   | (n : ℕ), k => by
-    simp [← lnot, ← test_bit]
+    simp [lnot, test_bit]
   | -[1+ n], k => by
-    simp [← lnot, ← test_bit]
+    simp [lnot, test_bit]
 
 theorem shiftl_add : ∀ (m : ℤ) (n : ℕ) (k : ℤ), shiftl m (n + k) = shiftl (shiftl m n) k
   | (m : ℕ), n, (k : ℕ) => congr_arg ofNat (Nat.shiftl_add _ _ _)

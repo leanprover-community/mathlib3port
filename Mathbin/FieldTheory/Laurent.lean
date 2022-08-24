@@ -69,7 +69,7 @@ def laurent : Ratfunc R →ₐ[R] Ratfunc R :=
   Ratfunc.mapAlgHom
     (AlgHom.mk (taylor r) (taylor_one _) (taylor_mul _) (LinearMap.map_zero _) (LinearMap.map_add _)
       (by
-        simp [← Polynomial.algebra_map_apply]))
+        simp [Polynomial.algebra_map_apply]))
     (taylor_mem_non_zero_divisors _)
 
 theorem laurent_div :
@@ -98,7 +98,7 @@ theorem laurent_laurent : laurent r (laurent s f) = laurent (r + s) f := by
   simp_rw [laurent_div, taylor_taylor]
 
 theorem laurent_injective : Function.Injective (laurent r) := fun _ _ h => by
-  simpa [← laurent_laurent] using congr_arg (laurent (-r)) h
+  simpa [laurent_laurent] using congr_arg (laurent (-r)) h
 
 end Ratfunc
 

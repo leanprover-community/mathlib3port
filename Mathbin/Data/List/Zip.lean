@@ -62,16 +62,16 @@ theorem zip_swap : ∀ (l₁ : List α) (l₂ : List β), (zipₓ l₁ l₂).map
   | l₁, [] => by
     rw [zip_nil_right] <;> rfl
   | a :: l₁, b :: l₂ => by
-    simp only [← zip_cons_cons, ← map_cons, ← zip_swap l₁ l₂, ← Prod.swap_prod_mk] <;> constructor <;> rfl
+    simp only [zip_cons_cons, map_cons, zip_swap l₁ l₂, Prod.swap_prod_mk] <;> constructor <;> rfl
 
 @[simp]
 theorem length_zip_with (f : α → β → γ) :
     ∀ (l₁ : List α) (l₂ : List β), length (zipWithₓ f l₁ l₂) = min (length l₁) (length l₂)
   | [], l₂ => rfl
   | l₁, [] => by
-    simp only [← length, ← min_zero, ← zip_with_nil_right]
+    simp only [length, min_zero, zip_with_nil_right]
   | a :: l₁, b :: l₂ => by
-    simp [← length, ← zip_cons_cons, ← length_zip_with l₁ l₂, ← min_add_add_right]
+    simp [length, zip_cons_cons, length_zip_with l₁ l₂, min_add_add_right]
 
 @[simp]
 theorem length_zip : ∀ (l₁ : List α) (l₂ : List β), length (zipₓ l₁ l₂) = min (length l₁) (length l₂) :=
@@ -83,8 +83,8 @@ theorem all₂_zip_with {f : α → β → γ} {p : γ → Prop} :
   | [], [], _ => by
     simp
   | a :: l₁, b :: l₂, h => by
-    simp only [← length_cons, ← add_left_injₓ] at h
-    simp [← all₂_zip_with h]
+    simp only [length_cons, add_left_injₓ] at h
+    simp [all₂_zip_with h]
 
 theorem lt_length_left_of_zip_with {f : α → β → γ} {i : ℕ} {l : List α} {l' : List β}
     (h : i < (zipWithₓ f l l').length) : i < l.length := by
@@ -106,19 +106,19 @@ theorem zip_append :
     ∀ {l₁ r₁ : List α} {l₂ r₂ : List β} (h : length l₁ = length l₂),
       zipₓ (l₁ ++ r₁) (l₂ ++ r₂) = zipₓ l₁ l₂ ++ zipₓ r₁ r₂
   | [], r₁, l₂, r₂, h => by
-    simp only [← eq_nil_of_length_eq_zero h.symm] <;> rfl
+    simp only [eq_nil_of_length_eq_zero h.symm] <;> rfl
   | l₁, r₁, [], r₂, h => by
-    simp only [← eq_nil_of_length_eq_zero h] <;> rfl
+    simp only [eq_nil_of_length_eq_zero h] <;> rfl
   | a :: l₁, r₁, b :: l₂, r₂, h => by
-    simp only [← cons_append, ← zip_cons_cons, ← zip_append (succ.inj h)] <;> constructor <;> rfl
+    simp only [cons_append, zip_cons_cons, zip_append (succ.inj h)] <;> constructor <;> rfl
 
 theorem zip_map (f : α → γ) (g : β → δ) :
     ∀ (l₁ : List α) (l₂ : List β), zipₓ (l₁.map f) (l₂.map g) = (zipₓ l₁ l₂).map (Prod.map f g)
   | [], l₂ => rfl
   | l₁, [] => by
-    simp only [← map, ← zip_nil_right]
+    simp only [map, zip_nil_right]
   | a :: l₁, b :: l₂ => by
-    simp only [← map, ← zip_cons_cons, ← zip_map l₁ l₂, ← Prod.map] <;> constructor <;> rfl
+    simp only [map, zip_cons_cons, zip_map l₁ l₂, Prod.map] <;> constructor <;> rfl
 
 theorem zip_map_left (f : α → γ) (l₁ : List α) (l₂ : List β) : zipₓ (l₁.map f) l₂ = (zipₓ l₁ l₂).map (Prod.map f id) :=
   by
@@ -150,7 +150,7 @@ theorem zip_with_map_right (f : α → β → γ) (l : List α) (g : δ → β) 
 theorem zip_map' (f : α → β) (g : α → γ) : ∀ l : List α, zipₓ (l.map f) (l.map g) = l.map fun a => (f a, g a)
   | [] => rfl
   | a :: l => by
-    simp only [← map, ← zip_cons_cons, ← zip_map' l] <;> constructor <;> rfl
+    simp only [map, zip_cons_cons, zip_map' l] <;> constructor <;> rfl
 
 theorem map_zip_with {δ : Type _} (f : α → β) (g : γ → δ → α) (l : List γ) (l' : List δ) :
     map f (zipWithₓ g l l') = zipWithₓ (fun x y => f (g x y)) l l' := by
@@ -160,16 +160,16 @@ theorem map_zip_with {δ : Type _} (f : α → β) (g : γ → δ → α) (l : L
   · cases l'
     · simp
       
-    · simp [← hl]
+    · simp [hl]
       
     
 
 theorem mem_zip {a b} : ∀ {l₁ : List α} {l₂ : List β}, (a, b) ∈ zipₓ l₁ l₂ → a ∈ l₁ ∧ b ∈ l₂
   | _ :: l₁, _ :: l₂, Or.inl rfl => ⟨Or.inl rfl, Or.inl rfl⟩
   | a' :: l₁, b' :: l₂, Or.inr h => by
-    constructor <;> simp only [← mem_cons_iff, ← or_trueₓ, ← mem_zip h]
+    constructor <;> simp only [mem_cons_iff, or_trueₓ, mem_zip h]
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
 theorem map_fst_zip : ∀ (l₁ : List α) (l₂ : List β), l₁.length ≤ l₂.length → map Prod.fst (zipₓ l₁ l₂) = l₁
   | [], bs, _ => rfl
   | a :: as, b :: bs, h => by
@@ -179,7 +179,7 @@ theorem map_fst_zip : ∀ (l₁ : List α) (l₂ : List β), l₁.length ≤ l�
     simp at h
     contradiction
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
 theorem map_snd_zip : ∀ (l₁ : List α) (l₂ : List β), l₂.length ≤ l₁.length → map Prod.snd (zipₓ l₁ l₂) = l₂
   | _, [], _ => by
     rw [zip_nil_right]
@@ -202,34 +202,34 @@ theorem unzip_cons (a : α) (b : β) (l : List (α × β)) : unzip ((a, b) :: l)
 theorem unzip_eq_map : ∀ l : List (α × β), unzip l = (l.map Prod.fst, l.map Prod.snd)
   | [] => rfl
   | (a, b) :: l => by
-    simp only [← unzip_cons, ← map_cons, ← unzip_eq_map l]
+    simp only [unzip_cons, map_cons, unzip_eq_map l]
 
 theorem unzip_left (l : List (α × β)) : (unzip l).1 = l.map Prod.fst := by
-  simp only [← unzip_eq_map]
+  simp only [unzip_eq_map]
 
 theorem unzip_right (l : List (α × β)) : (unzip l).2 = l.map Prod.snd := by
-  simp only [← unzip_eq_map]
+  simp only [unzip_eq_map]
 
 theorem unzip_swap (l : List (α × β)) : unzip (l.map Prod.swap) = (unzip l).swap := by
-  simp only [← unzip_eq_map, ← map_map] <;> constructor <;> rfl
+  simp only [unzip_eq_map, map_map] <;> constructor <;> rfl
 
 theorem zip_unzip : ∀ l : List (α × β), zipₓ (unzip l).1 (unzip l).2 = l
   | [] => rfl
   | (a, b) :: l => by
-    simp only [← unzip_cons, ← zip_cons_cons, ← zip_unzip l] <;> constructor <;> rfl
+    simp only [unzip_cons, zip_cons_cons, zip_unzip l] <;> constructor <;> rfl
 
 theorem unzip_zip_left : ∀ {l₁ : List α} {l₂ : List β}, length l₁ ≤ length l₂ → (unzip (zipₓ l₁ l₂)).1 = l₁
   | [], l₂, h => rfl
   | l₁, [], h => by
     rw [eq_nil_of_length_eq_zero (Nat.eq_zero_of_le_zeroₓ h)] <;> rfl
   | a :: l₁, b :: l₂, h => by
-    simp only [← zip_cons_cons, ← unzip_cons, ← unzip_zip_left (le_of_succ_le_succ h)] <;> constructor <;> rfl
+    simp only [zip_cons_cons, unzip_cons, unzip_zip_left (le_of_succ_le_succ h)] <;> constructor <;> rfl
 
 theorem unzip_zip_right {l₁ : List α} {l₂ : List β} (h : length l₂ ≤ length l₁) : (unzip (zipₓ l₁ l₂)).2 = l₂ := by
   rw [← zip_swap, unzip_swap] <;> exact unzip_zip_left h
 
 theorem unzip_zip {l₁ : List α} {l₂ : List β} (h : length l₁ = length l₂) : unzip (zipₓ l₁ l₂) = (l₁, l₂) := by
-  rw [← @Prod.mk.eta _ _ (unzip (zip l₁ l₂)), unzip_zip_left (le_of_eqₓ h), unzip_zip_right (ge_of_eq h)]
+  rw [← @Prod.mk.eta _ _ (unzip (zip l₁ l₂)), unzip_zip_left (le_of_eqₓ h), unzip_zip_right (ge_of_eqₓ h)]
 
 theorem zip_of_prod {l : List α} {l' : List β} {lp : List (α × β)} (hl : lp.map Prod.fst = l)
     (hr : lp.map Prod.snd = l') : lp = l.zip l' := by
@@ -253,7 +253,7 @@ theorem zip_with_comm (f : α → α → β) (comm : ∀ x y : α, f x y = f y x
   · cases l'
     · simp
       
-    · simp [← comm, ← hl]
+    · simp [comm, hl]
       
     
 
@@ -262,7 +262,7 @@ instance (f : α → α → β) [IsSymmOp α β f] : IsSymmOp (List α) (List β
 
 @[simp]
 theorem length_revzip (l : List α) : length (revzipₓ l) = length l := by
-  simp only [← revzip, ← length_zip, ← length_reverse, ← min_selfₓ]
+  simp only [revzip, length_zip, length_reverse, min_selfₓ]
 
 @[simp]
 theorem unzip_revzip (l : List α) : (revzipₓ l).unzip = (l, l.reverse) :=
@@ -277,29 +277,29 @@ theorem revzip_map_snd (l : List α) : (revzipₓ l).map Prod.snd = l.reverse :=
   rw [← unzip_right, unzip_revzip]
 
 theorem reverse_revzip (l : List α) : reverse l.revzip = revzipₓ l.reverse := by
-  rw [← zip_unzip.{u, u} (revzip l).reverse, unzip_eq_map] <;> simp <;> simp [← revzip]
+  rw [← zip_unzip.{u, u} (revzip l).reverse, unzip_eq_map] <;> simp <;> simp [revzip]
 
 theorem revzip_swap (l : List α) : (revzipₓ l).map Prod.swap = revzipₓ l.reverse := by
-  simp [← revzip]
+  simp [revzip]
 
 theorem nth_zip_with (f : α → β → γ) (l₁ : List α) (l₂ : List β) (i : ℕ) :
     (zipWithₓ f l₁ l₂).nth i = ((l₁.nth i).map f).bind fun g => (l₂.nth i).map g := by
   induction l₁ generalizing l₂ i
-  · simp [← zip_with, ← (· <*> ·)]
+  · simp [zip_with, (· <*> ·)]
     
-  · cases l₂ <;> simp only [← zip_with, ← Seqₓ.seq, ← Functor.map, ← nth, ← Option.map_none'ₓ]
+  · cases l₂ <;> simp only [zip_with, Seqₓ.seq, Functor.map, nth, Option.map_none'ₓ]
     · cases (l₁_hd :: l₁_tl).nth i <;> rfl
       
-    · cases i <;> simp only [← Option.map_some'ₓ, ← nth, ← Option.some_bind', *]
+    · cases i <;> simp only [Option.map_some'ₓ, nth, Option.some_bind', *]
       
     
 
 theorem nth_zip_with_eq_some {α β γ} (f : α → β → γ) (l₁ : List α) (l₂ : List β) (z : γ) (i : ℕ) :
     (zipWithₓ f l₁ l₂).nth i = some z ↔ ∃ x y, l₁.nth i = some x ∧ l₂.nth i = some y ∧ f x y = z := by
   induction l₁ generalizing l₂ i
-  · simp [← zip_with]
+  · simp [zip_with]
     
-  · cases l₂ <;> simp only [← zip_with, ← nth, ← exists_false, ← and_falseₓ, ← false_andₓ]
+  · cases l₂ <;> simp only [zip_with, nth, exists_false, and_falseₓ, false_andₓ]
     cases i <;> simp [*]
     
 
@@ -322,7 +322,7 @@ theorem nth_le_zip_with {f : α → β → γ} {l : List α} {l' : List β} {i :
   by
   rw [← Option.some_inj, ← nth_le_nth, nth_zip_with_eq_some]
   refine' ⟨l.nth_le i (lt_length_left_of_zip_with h), l'.nth_le i (lt_length_right_of_zip_with h), nth_le_nth _, _⟩
-  simp only [nth_le_nth, ← eq_self_iff_true, ← and_selfₓ]
+  simp only [← nth_le_nth, eq_self_iff_true, and_selfₓ]
 
 @[simp]
 theorem nth_le_zip {l : List α} {l' : List β} {i : ℕ} {h : i < (zipₓ l l').length} :
@@ -338,7 +338,7 @@ theorem mem_zip_inits_tails {l : List α} {init tail : List α} :
     · rintro (⟨rfl, rfl⟩ | ⟨_, _, h, rfl, rfl⟩)
       · simp
         
-      · simp [← l_ih.mp h]
+      · simp [l_ih.mp h]
         
       
     · cases init
@@ -360,7 +360,7 @@ theorem map_uncurry_zip_eq_zip_with (f : α → β → γ) (l : List α) (l' : L
   · cases' l' with hd' tl'
     · simp
       
-    · simp [← hl]
+    · simp [hl]
       
     
 
@@ -373,7 +373,7 @@ theorem sum_zip_with_distrib_left {γ : Type _} [Semiringₓ γ] (f : α → β 
   · cases' l' with hd' tl'
     · simp
       
-    · simp [← hl, ← mul_addₓ]
+    · simp [hl, mul_addₓ]
       
     
 
@@ -394,7 +394,7 @@ theorem zip_with_distrib_take : (zipWithₓ f l l').take n = zipWithₓ f (l.tak
     · cases n
       · simp
         
-      · simp [← hl]
+      · simp [hl]
         
       
     
@@ -409,7 +409,7 @@ theorem zip_with_distrib_drop : (zipWithₓ f l l').drop n = zipWithₓ f (l.dro
     · cases n
       · simp
         
-      · simp [← hl]
+      · simp [hl]
         
       
     
@@ -424,13 +424,13 @@ theorem zip_with_append (f : α → β → γ) (l la : List α) (l' lb : List β
       eq_nil_of_length_eq_zero
         (by
           simpa using h.symm)
-    simp [← this]
+    simp [this]
     
   · cases l'
     · simpa using h
       
-    · simp only [← add_left_injₓ, ← length] at h
-      simp [← hl _ h]
+    · simp only [add_left_injₓ, length] at h
+      simp [hl _ h]
       
     
 
@@ -442,10 +442,10 @@ theorem zip_with_distrib_reverse (h : l.length = l'.length) :
   · cases' l' with hd' tl'
     · simp
       
-    · simp only [← add_left_injₓ, ← length] at h
+    · simp only [add_left_injₓ, length] at h
       have : tl.reverse.length = tl'.reverse.length := by
-        simp [← h]
-      simp [← hl _ h, ← zip_with_append _ _ _ _ _ this]
+        simp [h]
+      simp [hl _ h, zip_with_append _ _ _ _ _ this]
       
     
 
@@ -463,7 +463,7 @@ theorem prod_mul_prod_eq_prod_zip_with_mul_prod_drop :
   | xs, [] => by
     simp
   | x :: xs, y :: ys => by
-    simp only [← drop, ← length, ← zip_with_cons_cons, ← prod_cons]
+    simp only [drop, length, zip_with_cons_cons, prod_cons]
     rw [mul_assoc x, mul_comm xs.prod, mul_assoc y, mul_comm ys.prod,
       prod_mul_prod_eq_prod_zip_with_mul_prod_drop xs ys, mul_assoc, mul_assoc, mul_assoc, mul_assoc]
 
@@ -472,7 +472,7 @@ theorem prod_mul_prod_eq_prod_zip_with_of_length_eq (L L' : List α) (h : L.leng
     L.Prod * L'.Prod = (zipWithₓ (· * ·) L L').Prod :=
   (prod_mul_prod_eq_prod_zip_with_mul_prod_drop L L').trans
     (by
-      simp [← h])
+      simp [h])
 
 end CommMonoidₓ
 

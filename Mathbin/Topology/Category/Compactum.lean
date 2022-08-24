@@ -195,7 +195,7 @@ private theorem subset_cl {X : Compactum} (A : Set X) : A ⊆ Cl A := fun a ha =
   ⟨X.incl a, ha, by
     simp ⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (B C «expr ∈ » C0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (B C «expr ∈ » C0)
 private theorem cl_cl {X : Compactum} (A : Set X) : Cl (Cl A) ⊆ Cl A := by
   rintro _ ⟨F, hF, rfl⟩
   -- Notation to be used in this proof.
@@ -210,16 +210,16 @@ private theorem cl_cl {X : Compactum} (A : Set X) : Cl (Cl A) ⊆ Cl A := by
   have claim1 : ∀ (B C) (_ : B ∈ C0) (_ : C ∈ C0), B ∩ C ∈ C0 := by
     rintro B ⟨Q, hQ, rfl⟩ C ⟨R, hR, rfl⟩
     use Q ∩ R
-    simp only [← and_trueₓ, ← eq_self_iff_true, ← Set.preimage_inter, ← Subtype.val_eq_coe]
+    simp only [and_trueₓ, eq_self_iff_true, Set.preimage_inter, Subtype.val_eq_coe]
     exact inter_sets _ hQ hR
   -- All sets in C0 are nonempty.
-  have claim2 : ∀, ∀ B ∈ C0, ∀, Set.Nonempty B := by
+  have claim2 : ∀ B ∈ C0, Set.Nonempty B := by
     rintro B ⟨Q, hQ, rfl⟩
     obtain ⟨q⟩ := Filter.nonempty_of_mem hQ
     use X.incl q
     simpa
   -- The intersection of AA with every set in C0 is nonempty.
-  have claim3 : ∀, ∀ B ∈ C0, ∀, (AA ∩ B).Nonempty := by
+  have claim3 : ∀ B ∈ C0, (AA ∩ B).Nonempty := by
     rintro B ⟨Q, hQ, rfl⟩
     have : (Q ∩ cl A).Nonempty := Filter.nonempty_of_mem (inter_mem hQ hF)
     rcases this with ⟨q, hq1, P, hq2, hq3⟩
@@ -238,8 +238,8 @@ private theorem cl_cl {X : Compactum} (A : Set X) : Cl (Cl A) ⊆ Cl A := by
   -- C0 is closed under finite intersections by claim1.
   have claim5 : HasFiniteInter C0 := ⟨⟨_, univ_mem, Set.preimage_univ⟩, claim1⟩
   -- Every element of C2 is nonempty.
-  have claim6 : ∀, ∀ P ∈ C2, ∀, (P : Set (Ultrafilter X)).Nonempty := by
-    suffices ∀, ∀ P ∈ C2, ∀, P ∈ C0 ∨ ∃ Q ∈ C0, P = AA ∩ Q by
+  have claim6 : ∀ P ∈ C2, (P : Set (Ultrafilter X)).Nonempty := by
+    suffices ∀ P ∈ C2, P ∈ C0 ∨ ∃ Q ∈ C0, P = AA ∩ Q by
       intro P hP
       cases this P hP
       · exact claim2 _ h
@@ -263,7 +263,7 @@ theorem is_closed_cl {X : Compactum} (A : Set X) : IsClosed (Cl A) := by
   intro F hF
   exact cl_cl _ ⟨F, hF, rfl⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0)
 theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤ 𝓝 x → X.str F = x := by
   -- Notation to be used in this proof.
   let fsu := Finset (Set (Ultrafilter X))
@@ -291,19 +291,19 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
     rintro S1 ⟨S1, hS1, rfl⟩ S2 ⟨S2, hS2, rfl⟩
     exact
       ⟨S1 ∩ S2, inter_mem hS1 hS2, by
-        simp [← basic_inter]⟩
+        simp [basic_inter]⟩
   -- For every S ∈ T0, the intersection AA ∩ S is nonempty.
-  have claim4 : ∀, ∀ S ∈ T0, ∀, (AA ∩ S).Nonempty := by
+  have claim4 : ∀ S ∈ T0, (AA ∩ S).Nonempty := by
     rintro S ⟨S, hS, rfl⟩
     rcases claim2 _ hS with ⟨G, hG, hG2⟩
     exact ⟨G, hG2, hG⟩
   -- Every element of T0 is nonempty.
-  have claim5 : ∀, ∀ S ∈ T0, ∀, Set.Nonempty S := by
+  have claim5 : ∀ S ∈ T0, Set.Nonempty S := by
     rintro S ⟨S, hS, rfl⟩
     exact ⟨F, hS⟩
   -- Every element of T2 is nonempty.
-  have claim6 : ∀, ∀ S ∈ T2, ∀, Set.Nonempty S := by
-    suffices ∀, ∀ S ∈ T2, ∀, S ∈ T0 ∨ ∃ Q ∈ T0, S = AA ∩ Q by
+  have claim6 : ∀ S ∈ T2, Set.Nonempty S := by
+    suffices ∀ S ∈ T2, S ∈ T0 ∨ ∃ Q ∈ T0, S = AA ∩ Q by
       intro S hS
       cases' this _ hS with h h
       · exact claim5 S h
@@ -338,7 +338,7 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
       apply mem_of_superset (h1 (Or.inl rfl))
       rintro x ⟨rfl⟩
       exact hP
-    simp [c1, ← c2]
+    simp [← c1, c2]
   -- Finish...
   intro T hT
   refine' claim6 _ (finite_inter_mem (finite_inter_closure_has_finite_inter _) _ _)
@@ -422,7 +422,7 @@ def homOfContinuous {X Y : Compactum} (f : X → Y) (cont : Continuous f) : X �
       ext (F : Ultrafilter X)
       specialize cont (X.str F) F (le_nhds_of_str_eq F (X.str F) rfl)
       have := str_eq_of_le_nhds (Ultrafilter.map f F) _ cont
-      simpa only [this, ← types_comp_apply, ← of_type_functor_map] }
+      simpa only [← this, types_comp_apply, of_type_functor_map] }
 
 end Compactum
 

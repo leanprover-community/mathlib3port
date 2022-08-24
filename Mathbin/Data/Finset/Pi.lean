@@ -32,7 +32,7 @@ variable {δ : α → Type _} [DecidableEq α]
 /-- Given a finset `s` of `α` and for all `a : α` a finset `t a` of `δ a`, then one can define the
 finset `s.pi t` of all functions defined on elements of `s` taking values in `t a` for `a ∈ s`.
 Note that the elements of `s.pi t` are only partially defined, on `s`. -/
-def pi (s : Finset α) (t : ∀ a, Finset (δ a)) : Finset (∀, ∀ a ∈ s, ∀, δ a) :=
+def pi (s : Finset α) (t : ∀ a, Finset (δ a)) : Finset (∀ a ∈ s, δ a) :=
   ⟨s.1.pi fun a => (t a).1, s.Nodup.pi fun a _ => (t a).Nodup⟩
 
 @[simp]
@@ -40,7 +40,7 @@ theorem pi_val (s : Finset α) (t : ∀ a, Finset (δ a)) : (s.pi t).1 = s.1.pi 
   rfl
 
 @[simp]
-theorem mem_pi {s : Finset α} {t : ∀ a, Finset (δ a)} {f : ∀, ∀ a ∈ s, ∀, δ a} :
+theorem mem_pi {s : Finset α} {t : ∀ a, Finset (δ a)} {f : ∀ a ∈ s, δ a} :
     f ∈ s.pi t ↔ ∀ (a) (h : a ∈ s), f a h ∈ t a :=
   mem_pi _ _ _
 
@@ -68,10 +68,10 @@ theorem pi_cons_injective {a : α} {b : δ a} {s : Finset α} (hs : a ∉ s) : F
         have :
           pi.cons s a b e₁ e
               (by
-                simpa only [← Multiset.mem_cons, ← mem_insert] using h) =
+                simpa only [Multiset.mem_cons, mem_insert] using h) =
             pi.cons s a b e₂ e
               (by
-                simpa only [← Multiset.mem_cons, ← mem_insert] using h) :=
+                simpa only [Multiset.mem_cons, mem_insert] using h) :=
           by
           rw [Eq]
         this
@@ -114,12 +114,11 @@ theorem pi_singletons {β : Type _} (s : Finset α) (f : α → β) : (s.pi fun 
 theorem pi_const_singleton {β : Type _} (s : Finset α) (i : β) : (s.pi fun _ => ({i} : Finset β)) = {fun _ _ => i} :=
   pi_singletons s fun _ => i
 
-theorem pi_subset {s : Finset α} (t₁ t₂ : ∀ a, Finset (δ a)) (h : ∀, ∀ a ∈ s, ∀, t₁ a ⊆ t₂ a) : s.pi t₁ ⊆ s.pi t₂ :=
+theorem pi_subset {s : Finset α} (t₁ t₂ : ∀ a, Finset (δ a)) (h : ∀ a ∈ s, t₁ a ⊆ t₂ a) : s.pi t₁ ⊆ s.pi t₂ :=
   fun g hg => mem_pi.2 fun a ha => h a ha (mem_pi.mp hg a ha)
 
-theorem pi_disjoint_of_disjoint {δ : α → Type _} [∀ a, DecidableEq (δ a)] {s : Finset α}
-    [DecidableEq (∀, ∀ a ∈ s, ∀, δ a)] (t₁ t₂ : ∀ a, Finset (δ a)) {a : α} (ha : a ∈ s) (h : Disjoint (t₁ a) (t₂ a)) :
-    Disjoint (s.pi t₁) (s.pi t₂) :=
+theorem pi_disjoint_of_disjoint {δ : α → Type _} [∀ a, DecidableEq (δ a)] {s : Finset α} [DecidableEq (∀ a ∈ s, δ a)]
+    (t₁ t₂ : ∀ a, Finset (δ a)) {a : α} (ha : a ∈ s) (h : Disjoint (t₁ a) (t₂ a)) : Disjoint (s.pi t₁) (s.pi t₂) :=
   disjoint_iff_ne.2 fun f₁ hf₁ f₂ hf₂ eq₁₂ =>
     disjoint_iff_ne.1 h (f₁ a ha) (mem_pi.mp hf₁ a ha) (f₂ a ha) (mem_pi.mp hf₂ a ha) <| congr_fun (congr_fun eq₁₂ a) ha
 

@@ -40,12 +40,12 @@ def xgcdAux : ℕ → ℤ → ℤ → ℕ → ℤ → ℤ → ℕ × ℤ × ℤ
 
 @[simp]
 theorem xgcd_zero_left {s t r' s' t'} : xgcdAux 0 s t r' s' t' = (r', s', t') := by
-  simp [← xgcd_aux]
+  simp [xgcd_aux]
 
 theorem xgcd_aux_rec {r s t r' s' t'} (h : 0 < r) :
     xgcdAux r s t r' s' t' = xgcdAux (r' % r) (s' - r' / r * s) (t' - r' / r * t) r s t := by
   cases r <;> [exact absurd h (lt_irreflₓ _),
-    · simp only [← xgcd_aux]
+    · simp only [xgcd_aux]
       rfl
       ]
 
@@ -78,7 +78,7 @@ theorem gcd_a_zero_right {s : ℕ} (h : s ≠ 0) : gcdA s 0 = 1 := by
   induction s
   · exact absurd rfl h
     
-  · simp [← xgcd_aux]
+  · simp [xgcd_aux]
     
 
 @[simp]
@@ -87,7 +87,7 @@ theorem gcd_b_zero_right {s : ℕ} (h : s ≠ 0) : gcdB s 0 = 0 := by
   induction s
   · exact absurd rfl h
     
-  · simp [← xgcd_aux]
+  · simp [xgcd_aux]
     
 
 @[simp]
@@ -96,7 +96,7 @@ theorem xgcd_aux_fst (x y) : ∀ s t s' t', (xgcdAux x s t y s' t').1 = gcdₓ x
     (by
       simp )
     fun x y h IH s t s' t' => by
-    simp [← xgcd_aux_rec, ← h, ← IH] <;> rw [← gcd_rec]
+    simp [xgcd_aux_rec, h, IH] <;> rw [← gcd_rec]
 
 theorem xgcd_aux_val (x y) : xgcdAux x 1 0 y 0 1 = (gcdₓ x y, xgcd x y) := by
   rw [xgcd, ← xgcd_aux_fst x y 1 0 0 1] <;> cases xgcd_aux x 1 0 y 0 1 <;> rfl
@@ -118,11 +118,11 @@ theorem xgcd_aux_P {r r'} : ∀ {s t s' t'}, P (r, s, t) → P (r', s', t') → 
     fun a b h IH s t s' t' p p' => by
     rw [xgcd_aux_rec h]
     refine' IH _ p
-    dsimp' [← P]  at *
+    dsimp' [P]  at *
     rw [Int.mod_def]
     generalize (b / a : ℤ) = k
     rw [p, p']
-    simp [← mul_addₓ, ← mul_comm, ← mul_left_commₓ, ← add_commₓ, ← add_left_commₓ, ← sub_eq_neg_add, ← mul_assoc]
+    simp [mul_addₓ, mul_comm, mul_left_commₓ, add_commₓ, add_left_commₓ, sub_eq_neg_add, mul_assoc]
 
 /-- **Bézout's lemma**: given `x y : ℕ`, `gcd x y = x * a + y * b`, where `a = gcd_a x y` and
 `b = gcd_b x y` are computed by the extended Euclidean algorithm.
@@ -131,9 +131,9 @@ theorem gcd_eq_gcd_ab : (gcdₓ x y : ℤ) = x * gcdA x y + y * gcdB x y := by
   have :=
       @xgcd_aux_P x y x y 1 0 0 1
         (by
-          simp [← P])
+          simp [P])
         (by
-          simp [← P]) <;>
+          simp [P]) <;>
     rwa [xgcd_aux_val, xgcd_val] at this
 
 end
@@ -187,7 +187,7 @@ theorem gcd_eq_gcd_ab : ∀ x y : ℤ, (gcdₓ x y : ℤ) = x * gcdA x y + y * g
 theorem nat_abs_div (a b : ℤ) (H : b ∣ a) : natAbs (a / b) = natAbs a / natAbs b := by
   cases Nat.eq_zero_or_posₓ (nat_abs b)
   · rw [eq_zero_of_nat_abs_eq_zero h]
-    simp [← Int.div_zero]
+    simp [Int.div_zero]
     
   calc
     nat_abs (a / b) = nat_abs (a / b) * 1 := by
@@ -263,15 +263,15 @@ theorem gcd_assoc (i j k : ℤ) : gcdₓ (gcdₓ i j) k = gcdₓ i (gcdₓ j k) 
 
 @[simp]
 theorem gcd_self (i : ℤ) : gcdₓ i i = natAbs i := by
-  simp [← gcd]
+  simp [gcd]
 
 @[simp]
 theorem gcd_zero_left (i : ℤ) : gcdₓ 0 i = natAbs i := by
-  simp [← gcd]
+  simp [gcd]
 
 @[simp]
 theorem gcd_zero_right (i : ℤ) : gcdₓ i 0 = natAbs i := by
-  simp [← gcd]
+  simp [gcd]
 
 @[simp]
 theorem gcd_one_left (i : ℤ) : gcdₓ 1 i = 1 :=
@@ -388,9 +388,9 @@ Compare with `is_coprime.dvd_of_dvd_mul_left` and
 `unique_factorization_monoid.dvd_of_dvd_mul_left_of_no_prime_factors` -/
 theorem dvd_of_dvd_mul_left_of_gcd_one {a b c : ℤ} (habc : a ∣ b * c) (hab : gcdₓ a c = 1) : a ∣ b := by
   have := gcd_eq_gcd_ab a c
-  simp only [← hab, ← Int.coe_nat_zero, ← Int.coe_nat_succ, ← zero_addₓ] at this
+  simp only [hab, Int.coe_nat_zero, Int.coe_nat_succ, zero_addₓ] at this
   have : b * a * gcd_a a c + b * c * gcd_b a c = b := by
-    simp [← mul_assoc, mul_addₓ, this]
+    simp [mul_assoc, ← mul_addₓ, ← this]
   rw [← this]
   exact dvd_add (dvd_mul_of_dvd_left (dvd_mul_left a b) _) (dvd_mul_of_dvd_left habc _)
 
@@ -407,9 +407,9 @@ theorem gcd_least_linear {a b : ℤ} (ha : a ≠ 0) : IsLeast { n : ℕ | 0 < n 
   by
   simp_rw [← gcd_dvd_iff]
   constructor
-  · simpa [← and_trueₓ, ← dvd_refl, ← Set.mem_set_of_eq] using gcd_pos_of_non_zero_left b ha
+  · simpa [and_trueₓ, dvd_refl, Set.mem_set_of_eq] using gcd_pos_of_non_zero_left b ha
     
-  · simp only [← LowerBounds, ← and_imp, ← Set.mem_set_of_eq]
+  · simp only [LowerBounds, and_imp, Set.mem_set_of_eq]
     exact fun n hn_pos hn => Nat.le_of_dvdₓ hn_pos hn
     
 
@@ -469,13 +469,13 @@ end Int
 theorem pow_gcd_eq_one {M : Type _} [Monoidₓ M] (x : M) {m n : ℕ} (hm : x ^ m = 1) (hn : x ^ n = 1) : x ^ m.gcd n = 1 :=
   by
   cases m
-  · simp only [← hn, ← Nat.gcd_zero_leftₓ]
+  · simp only [hn, Nat.gcd_zero_leftₓ]
     
   obtain ⟨x, rfl⟩ : IsUnit x := by
     apply is_unit_of_pow_eq_one _ _ hm m.succ_pos
-  simp only [Units.coe_pow] at *
+  simp only [← Units.coe_pow] at *
   rw [← Units.coe_one, ← zpow_coe_nat, ← Units.ext_iff] at *
-  simp only [← Nat.gcd_eq_gcd_ab, ← zpow_add, ← zpow_mul, ← hm, ← hn, ← one_zpow, ← one_mulₓ]
+  simp only [Nat.gcd_eq_gcd_ab, zpow_add, zpow_mul, hm, hn, one_zpow, one_mulₓ]
 
 theorem gcd_nsmul_eq_zero {M : Type _} [AddMonoidₓ M] (x : M) {m n : ℕ} (hm : m • x = 0) (hn : n • x = 0) :
     m.gcd n • x = 0 := by

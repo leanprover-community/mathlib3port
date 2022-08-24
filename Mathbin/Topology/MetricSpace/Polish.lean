@@ -55,7 +55,7 @@ variable {α : Type _} {β : Type _}
 /-! ### Basic properties of Polish spaces -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`second_countable] []
+-- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`second_countable] []
 /-- A Polish space is a topological space with second countable topology, that can be endowed
 with a metric for which it is complete.
 We register an instance from complete second countable metric space to polish space, and not the
@@ -165,7 +165,7 @@ theorem exists_polish_space_forall_le {ι : Type _} [Encodable ι] [t : Topologi
     (m : ι → TopologicalSpace α) (hm : ∀ n, m n ≤ t) (h'm : ∀ n, @PolishSpace α (m n)) :
     ∃ t' : TopologicalSpace α, (∀ n, t' ≤ m n) ∧ t' ≤ t ∧ @PolishSpace α t' := by
   rcases is_empty_or_nonempty ι with (hι | hι)
-  · exact ⟨t, fun i => (IsEmpty.elim hι i : _), le_rfl, p⟩
+  · exact ⟨t, fun i => (IsEmpty.elim hι i : _), le_rflₓ, p⟩
     
   inhabit ι
   /- Consider the product of infinitely many copies of `α`, each endowed with the topology `m n`.
@@ -186,7 +186,7 @@ theorem exists_polish_space_forall_le {ι : Type _} [Encodable ι] [t : Topologi
       exact hs
       
     · ext x
-      simp only [← singleton_pi, ← mem_preimage]
+      simp only [singleton_pi, mem_preimage]
       
   refine' ⟨T.induced f, fun n => T_le_m n, (T_le_m default).trans (hm default), _⟩
   -- show that the new topology is Polish, as the pullback of a Polish topology under a closed
@@ -197,7 +197,7 @@ theorem exists_polish_space_forall_le {ι : Type _} [Encodable ι] [t : Topologi
     · rintro ⟨y, rfl⟩
       exact
         mem_Inter.2 fun n => by
-          simp only [← mem_set_of_eq]
+          simp only [mem_set_of_eq]
       
     · intro hx
       refine' ⟨x default, _⟩
@@ -274,9 +274,9 @@ second term blows up close to the boundary to ensure that Cauchy sequences for `
 inside `s`. -/
 def completeCopyMetricSpace (s : Set α) : MetricSpace (CompleteCopy s) where
   dist_self := fun x => by
-    simp [← dist_complete_copy_eq]
+    simp [dist_complete_copy_eq]
   dist_comm := fun x y => by
-    simp [← dist_complete_copy_eq, ← dist_comm, ← abs_sub_comm]
+    simp [dist_complete_copy_eq, dist_comm, abs_sub_comm]
   dist_triangle := fun x y z =>
     calc
       dist x z = dist x.1 z.1 + abs (1 / infDist x.1 (sᶜ) - 1 / infDist z.1 (sᶜ)) := rfl
@@ -317,7 +317,7 @@ def completeCopyIdHomeo (hs : IsOpen s) (h's : sᶜ.Nonempty) : CompleteCopy s �
       tendsto (fun b : s => dist b.1 x.1 + abs (1 / inf_dist b.1 (sᶜ) - 1 / inf_dist x.1 (sᶜ))) (𝓝 x)
         (𝓝 (dist x.1 x.1 + abs (1 / inf_dist x.1 (sᶜ) - 1 / inf_dist x.1 (sᶜ))))
     · rw [ContinuousAt, tendsto_iff_dist_tendsto_zero]
-      simpa only [← sub_self, ← abs_zero, ← add_zeroₓ, ← dist_self] using H
+      simpa only [sub_self, abs_zero, add_zeroₓ, dist_self] using H
       
     have I : 0 < inf_dist x.val (sᶜ) := by
       rw [← hs.is_closed_compl.not_mem_iff_inf_dist_pos h's]
@@ -360,7 +360,7 @@ theorem complete_space_complete_copy [CompleteSpace α] (hs : IsOpen s) (h's : s
       exact xlim
     convert ((complete_copy_id_homeo hs h's).symm.Continuous.Tendsto _).comp L
     ext1 n
-    simp [← complete_copy_id_homeo]
+    simp [complete_copy_id_homeo]
     
   obtain ⟨C, hC⟩ : ∃ C, ∀ n, 1 / inf_dist (u n).1 (sᶜ) < C := by
     refine' ⟨(1 / 2) ^ 0 + dist (1 / inf_dist (u 0).1 (sᶜ)) 0, fun n => _⟩
@@ -373,13 +373,13 @@ theorem complete_space_complete_copy [CompleteSpace α] (hs : IsOpen s) (h's : s
       _ ≤
           dist (u n).1 (u 0).1 + dist (1 / inf_dist (u n).1 (sᶜ)) (1 / inf_dist (u 0).1 (sᶜ)) +
             dist (1 / inf_dist (u 0).1 (sᶜ)) 0 :=
-        add_le_add (le_add_of_nonneg_left dist_nonneg) le_rfl
+        add_le_add (le_add_of_nonneg_left dist_nonneg) le_rflₓ
       _ = dist (u n) (u 0) + dist (1 / inf_dist (u 0).1 (sᶜ)) 0 := rfl
-      _ < (1 / 2) ^ 0 + dist (1 / inf_dist (u 0).1 (sᶜ)) 0 := add_lt_add_right (hu 0 n 0 (zero_le _) le_rfl) _
+      _ < (1 / 2) ^ 0 + dist (1 / inf_dist (u 0).1 (sᶜ)) 0 := add_lt_add_right (hu 0 n 0 (zero_le _) le_rflₓ) _
       
   have Cpos : 0 < C := by
     apply lt_of_le_of_ltₓ _ (hC 0)
-    simp [← inf_dist_nonneg]
+    simp [inf_dist_nonneg]
   have I : ∀ n, 1 / C ≤ inf_dist (u n).1 (sᶜ) := by
     intro n
     have : 0 < inf_dist (u n).val (sᶜ) := by
@@ -394,7 +394,7 @@ theorem complete_space_complete_copy [CompleteSpace α] (hs : IsOpen s) (h's : s
   suffices x ∉ sᶜ by
     simpa
   apply (hs.is_closed_compl.not_mem_iff_inf_dist_pos h's).2 (lt_of_lt_of_leₓ _ I')
-  simp [← Cpos]
+  simp [Cpos]
 
 /-- An open subset of a Polish space is also Polish. -/
 theorem _root_.is_open.polish_space {α : Type _} [TopologicalSpace α] [PolishSpace α] {s : Set α} (hs : IsOpen s) :
@@ -441,29 +441,29 @@ theorem _root_.is_closed.is_clopenable [TopologicalSpace α] [PolishSpace α] {s
   have A : g ⁻¹' range (Sum.inl : s → Sum s t) = s := by
     ext x
     by_cases' h : x ∈ s
-    · simp only [← Equivₓ.Set.sum_compl_symm_apply_of_mem, ← h, ← mem_preimage, ← Equivₓ.to_fun_as_coe, ←
-        mem_range_self, ← Equivₓ.to_homeomorph_of_inducing_apply]
+    · simp only [Equivₓ.Set.sum_compl_symm_apply_of_mem, h, mem_preimage, Equivₓ.to_fun_as_coe, mem_range_self,
+        Equivₓ.to_homeomorph_of_inducing_apply]
       
-    · simp only [← Equivₓ.Set.sum_compl_symm_apply_of_not_mem, ← h, ← not_false_iff, ← mem_preimage, ←
-        Equivₓ.to_homeomorph_of_inducing_apply, ← Equivₓ.to_fun_as_coe, ← mem_range, ← exists_false]
+    · simp only [Equivₓ.Set.sum_compl_symm_apply_of_not_mem, h, not_false_iff, mem_preimage,
+        Equivₓ.to_homeomorph_of_inducing_apply, Equivₓ.to_fun_as_coe, mem_range, exists_false]
       
   refine' ⟨t', _, f.polish_space_induced, _, _⟩
   · intro u hu
     change ∃ s' : Set (Sum (↥s) ↥t), T.is_open s' ∧ f ⁻¹' s' = u
     refine'
       ⟨f.symm ⁻¹' u, _, by
-        simp only [← Equivₓ.symm_symm, ← Equivₓ.symm_preimage_preimage]⟩
+        simp only [Equivₓ.symm_symm, Equivₓ.symm_preimage_preimage]⟩
     refine' is_open_sum_iff.2 ⟨_, _⟩
     · have : IsOpen ((coe : s → α) ⁻¹' u) := IsOpen.preimage continuous_subtype_coe hu
       have : Sum.inl ⁻¹' (⇑f.symm ⁻¹' u) = (coe : s → α) ⁻¹' u := by
         ext x
-        simp only [← Equivₓ.symm_symm, ← mem_preimage, ← Equivₓ.Set.sum_compl_apply_inl]
+        simp only [Equivₓ.symm_symm, mem_preimage, Equivₓ.Set.sum_compl_apply_inl]
       rwa [this]
       
     · have : IsOpen ((coe : t → α) ⁻¹' u) := IsOpen.preimage continuous_subtype_coe hu
       have : Sum.inr ⁻¹' (⇑f.symm ⁻¹' u) = (coe : t → α) ⁻¹' u := by
         ext x
-        simp only [← Equivₓ.symm_symm, ← mem_preimage, ← Equivₓ.Set.sum_compl_apply_inr]
+        simp only [Equivₓ.symm_symm, mem_preimage, Equivₓ.Set.sum_compl_apply_inr]
       rwa [this]
       
     

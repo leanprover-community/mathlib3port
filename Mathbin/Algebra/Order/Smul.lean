@@ -47,9 +47,6 @@ namespace OrderDual
 
 variable {R M : Type _}
 
-instance [HasSmul R M] : HasSmul R Mᵒᵈ :=
-  ⟨fun k x => OrderDual.rec (fun x' => (k • x' : M)) x⟩
-
 instance [Zero R] [AddZeroClassₓ M] [h : SmulWithZero R M] : SmulWithZero R Mᵒᵈ :=
   { OrderDual.hasSmul with zero_smul := fun m => OrderDual.rec (zero_smul _) m,
     smul_zero := fun r => OrderDual.rec (smul_zero' _) r }
@@ -68,14 +65,6 @@ instance [MonoidWithZeroₓ R] [AddMonoidₓ M] [DistribMulAction R M] : Distrib
 instance [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M] : OrderedSmul R Mᵒᵈ where
   smul_lt_smul_of_pos := fun a b => @OrderedSmul.smul_lt_smul_of_pos R M _ _ _ _ b a
   lt_of_smul_lt_smul_of_pos := fun a b => @OrderedSmul.lt_of_smul_lt_smul_of_pos R M _ _ _ _ b a
-
-@[simp]
-theorem to_dual_smul [HasSmul R M] {c : R} {a : M} : toDual (c • a) = c • toDual a :=
-  rfl
-
-@[simp]
-theorem of_dual_smul [HasSmul R M] {c : R} {a : Mᵒᵈ} : ofDual (c • a) = c • ofDual a :=
-  rfl
 
 end OrderDual
 
@@ -153,7 +142,7 @@ theorem OrderedSmul.mk'' {R M : Type _} [LinearOrderedSemiring R] [OrderedAddCom
   rcases hR hc.ne' with ⟨c, rfl⟩
   rw [← inv_smul_smul c a, ← inv_smul_smul c b]
   refine' hlt' h (pos_of_mul_pos_right _ hc.le)
-  simp only [← c.mul_inv, ← zero_lt_one]
+  simp only [c.mul_inv, zero_lt_one]
 
 /-- If `R` is a linear ordered field, then it suffices to verify only the first axiom of
 `ordered_smul`. -/

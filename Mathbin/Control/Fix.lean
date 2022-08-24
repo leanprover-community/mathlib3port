@@ -69,7 +69,7 @@ protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
   replace hk : Nat.findₓ h' = k + (@upto.zero p).val := hk
   rw [hk] at this
   revert hk
-  dsimp' [← Part.fix]
+  dsimp' [Part.fix]
   rw [assert_pos h']
   revert this
   generalize upto.zero = z
@@ -83,7 +83,7 @@ protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
     rw [assert_neg]
     rfl
     rw [Nat.zero_add] at this
-    simpa only [← not_not, ← Subtype.val_eq_coe]
+    simpa only [not_not, Subtype.val_eq_coe]
     
   · rw [fix.approx, WellFounded.fix_eq, fix_aux]
     congr
@@ -98,7 +98,7 @@ protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
     
 
 theorem fix_def' {x : α} (h' : ¬∃ i, (Fix.approx f i x).Dom) : Part.fix f x = none := by
-  dsimp' [← Part.fix] <;> rw [assert_neg h']
+  dsimp' [Part.fix] <;> rw [assert_neg h']
 
 end Basic
 

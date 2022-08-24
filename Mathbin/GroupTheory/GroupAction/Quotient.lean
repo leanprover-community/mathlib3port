@@ -173,7 +173,7 @@ theorem orbit_equiv_quotient_stabilizer_symm_apply (b : β) (a : α) :
 @[simp, to_additive]
 theorem stabilizer_quotient {G} [Groupₓ G] (H : Subgroup G) : MulAction.stabilizer G ((1 : G) : G ⧸ H) = H := by
   ext
-  simp [← QuotientGroup.eq]
+  simp [QuotientGroup.eq]
 
 variable (β)
 
@@ -263,7 +263,7 @@ instance is_pretransitive_quotient (G) [Groupₓ G] (H : Subgroup G) :
     IsPretransitive G (G ⧸ H) where exists_smul_eq := by
     rintro ⟨x⟩ ⟨y⟩
     refine' ⟨y * x⁻¹, quotient_group.eq.mpr _⟩
-    simp only [← smul_eq_mul, ← H.one_mem, ← mul_left_invₓ, ← inv_mul_cancel_right]
+    simp only [smul_eq_mul, H.one_mem, mul_left_invₓ, inv_mul_cancel_right]
 
 end MulAction
 

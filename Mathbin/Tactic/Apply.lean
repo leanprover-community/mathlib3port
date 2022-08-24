@@ -184,7 +184,7 @@ unsafe def symmetry' : parse location → tactic Unit
   | l@loc.wildcard => l.try_apply symmetry_hyp tactic.symmetry'
   | loc.ns hs => (Loc.ns hs.reverse).apply symmetry_hyp tactic.symmetry'
 
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
 /-- Similar to `transitivity` with the difference that `apply'` is used instead of `apply`.
 -/
 unsafe def transitivity' (q : parse («expr ?» texpr)) : tactic Unit :=

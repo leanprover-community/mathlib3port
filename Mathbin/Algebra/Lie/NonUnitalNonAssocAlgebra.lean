@@ -23,7 +23,8 @@ algebra and we provide some basic definitions for doing so here.
 
 ## Main definitions
 
-  * `lie_ring.to_non_unital_non_assoc_semiring`
+  * `commutator_ring` turns a Lie ring into a `non_unital_non_assoc_semiring` by turning its
+    `has_bracket` (denoted `⁅, ⁆`) into a `has_mul` (denoted `*`).
   * `lie_hom.to_non_unital_alg_hom`
 
 ## Tags
@@ -36,24 +37,44 @@ universe u v w
 
 variable (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L] [LieAlgebra R L]
 
+/-- Type synonym for turning a `lie_ring` into a `non_unital_non_assoc_semiring`.
+
+A `lie_ring` can be regarded as a `non_unital_non_assoc_semiring` by turning its
+`has_bracket` (denoted `⁅, ⁆`) into a `has_mul` (denoted `*`). -/
+def CommutatorRing (L : Type v) : Type v :=
+  L
+
 /-- A `lie_ring` can be regarded as a `non_unital_non_assoc_semiring` by turning its
 `has_bracket` (denoted `⁅, ⁆`) into a `has_mul` (denoted `*`). -/
-def LieRing.toNonUnitalNonAssocSemiring : NonUnitalNonAssocSemiringₓ L :=
-  { (inferInstance : AddCommMonoidₓ L) with mul := HasBracket.bracket, left_distrib := lie_add,
-    right_distrib := add_lie, zero_mul := zero_lie, mul_zero := lie_zero }
-
-attribute [local instance] LieRing.toNonUnitalNonAssocSemiring
+instance : NonUnitalNonAssocSemiringₓ (CommutatorRing L) :=
+  show NonUnitalNonAssocSemiringₓ L from
+    { (inferInstance : AddCommMonoidₓ L) with mul := HasBracket.bracket, left_distrib := lie_add,
+      right_distrib := add_lie, zero_mul := zero_lie, mul_zero := lie_zero }
 
 namespace LieAlgebra
 
+instance (L : Type v) [Nonempty L] : Nonempty (CommutatorRing L) :=
+  ‹Nonempty L›
+
+instance (L : Type v) [Inhabited L] : Inhabited (CommutatorRing L) :=
+  ‹Inhabited L›
+
+instance : LieRing (CommutatorRing L) :=
+  show LieRing L by
+    infer_instance
+
+instance : LieAlgebra R (CommutatorRing L) :=
+  show LieAlgebra R L by
+    infer_instance
+
 /-- Regarding the `lie_ring` of a `lie_algebra` as a `non_unital_non_assoc_semiring`, we can
 reinterpret the `smul_lie` law as an `is_scalar_tower`. -/
-instance is_scalar_tower : IsScalarTower R L L :=
+instance is_scalar_tower : IsScalarTower R (CommutatorRing L) (CommutatorRing L) :=
   ⟨smul_lie⟩
 
 /-- Regarding the `lie_ring` of a `lie_algebra` as a `non_unital_non_assoc_semiring`, we can
 reinterpret the `lie_smul` law as an `smul_comm_class`. -/
-instance smul_comm_class : SmulCommClass R L L :=
+instance smul_comm_class : SmulCommClass R (CommutatorRing L) (CommutatorRing L) :=
   ⟨fun t x y => (lie_smul t x y).symm⟩
 
 end LieAlgebra
@@ -65,10 +86,11 @@ variable {R L} {L₂ : Type w} [LieRing L₂] [LieAlgebra R L₂]
 /-- Regarding the `lie_ring` of a `lie_algebra` as a `non_unital_non_assoc_semiring`, we can
 regard a `lie_hom` as a `non_unital_alg_hom`. -/
 @[simps]
-def toNonUnitalAlgHom (f : L →ₗ⁅R⁆ L₂) : L →ₙₐ[R] L₂ :=
+def toNonUnitalAlgHom (f : L →ₗ⁅R⁆ L₂) : CommutatorRing L →ₙₐ[R] CommutatorRing L₂ :=
   { f with toFun := f, map_zero' := f.map_zero, map_mul' := f.map_lie }
 
-theorem to_non_unital_alg_hom_injective : Function.Injective (toNonUnitalAlgHom : _ → L →ₙₐ[R] L₂) := fun f g h =>
+theorem to_non_unital_alg_hom_injective :
+    Function.Injective (toNonUnitalAlgHom : _ → CommutatorRing L →ₙₐ[R] CommutatorRing L₂) := fun f g h =>
   ext <| NonUnitalAlgHom.congr_fun h
 
 end LieHom

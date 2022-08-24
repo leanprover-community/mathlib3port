@@ -200,7 +200,7 @@ private theorem measure_of_restrict_nonpos_seq (hi₂ : ¬s ≤[i] 0) (n : ℕ)
         mt
           (restrict_le_zero_subset _ _
             (by
-              simp [← Nat.lt_succ_iffₓ]))
+              simp [Nat.lt_succ_iffₓ]))
           hn
       convert measurable_of_not_restrict_le_zero _ hn
       exact
@@ -252,7 +252,7 @@ private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ 
     MeasurableSet.Union fun _ => MeasurableSet.Union_Prop fun _ => restrict_nonpos_seq_measurable_set _
   refine' ⟨i \ ⋃ l < k, restrict_nonpos_seq s i l, hi₁.diff hmeas, Set.diff_subset _ _, hk₂, _⟩
   rw [of_diff hmeas hi₁, s.of_disjoint_Union_nat]
-  · have h₁ : ∀, ∀ l < k, ∀, 0 ≤ s (restrict_nonpos_seq s i l) := by
+  · have h₁ : ∀ l < k, 0 ≤ s (restrict_nonpos_seq s i l) := by
       intro l hl
       refine' le_of_ltₓ (measure_of_restrict_nonpos_seq h _ _)
       refine' mt (restrict_le_zero_subset _ (hi₁.diff _) (Set.Subset.refl _)) (Nat.find_minₓ hn hl)
@@ -270,7 +270,7 @@ private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ 
       
     · convert le_of_eqₓ s.empty.symm
       ext
-      simp only [← exists_prop, ← Set.mem_empty_eq, ← Set.mem_Union, ← not_and, ← iff_falseₓ]
+      simp only [exists_prop, Set.mem_empty_eq, Set.mem_Union, not_and, iff_falseₓ]
       exact fun h' => False.elim (h h')
       
     
@@ -278,14 +278,14 @@ private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ 
     exact MeasurableSet.Union_Prop fun _ => restrict_nonpos_seq_measurable_set _
     
   · intro a b hab x hx
-    simp only [← exists_prop, ← Set.mem_Union, ← Set.mem_inter_eq, ← Set.inf_eq_inter] at hx
+    simp only [exists_prop, Set.mem_Union, Set.mem_inter_eq, Set.inf_eq_inter] at hx
     exact
       let ⟨⟨_, hx₁⟩, _, hx₂⟩ := hx
       restrict_nonpos_seq_disjoint a b hab ⟨hx₁, hx₂⟩
     
   · apply Set.Union_subset
     intro a x
-    simp only [← and_imp, ← exists_prop, ← Set.mem_Union]
+    simp only [and_imp, exists_prop, Set.mem_Union]
     intro _ hx
     exact restrict_nonpos_seq_subset _ hx
     
@@ -308,7 +308,7 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) : ∃ j : Set α, Measurabl
     intro n
     convert hn (n + 1) <;>
       · ext l
-        simp only [← exists_prop, ← Set.mem_Union, ← And.congr_left_iff]
+        simp only [exists_prop, Set.mem_Union, And.congr_left_iff]
         exact fun _ => nat.lt_succ_iff.symm
         
   have h₁ : s i = s A + ∑' l, s (restrict_nonpos_seq s i l) := by
@@ -329,7 +329,7 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) : ∃ j : Set α, Measurabl
     · exact le_of_ltₓ (restrict_nonpos_seq_lt n (hn' n))
       
   have h₃ : tendsto (fun n => (bdd n : ℝ) + 1) at_top at_top := by
-    simp only [← one_div] at h₃'
+    simp only [one_div] at h₃'
     exact Summable.tendsto_top_of_pos h₃' fun n => Nat.cast_add_one_pos (bdd n)
   have h₄ : tendsto (fun n => (bdd n : ℝ)) at_top at_top := by
     convert at_top.tendsto_at_top_add_const_right (-1) h₃
@@ -344,12 +344,12 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) : ∃ j : Set α, Measurabl
     rw [tendsto_at_top_at_top] at h₄
     obtain ⟨k, hk⟩ := h₄ (max (1 / s E + 1) 1)
     refine' ⟨k, _, _⟩
-    · have hle := le_of_max_le_right (hk k le_rfl)
+    · have hle := le_of_max_le_right (hk k le_rflₓ)
       norm_cast  at hle
       exact hle
       
     · have : 1 / s E < bdd k := by
-        linarith(config := { restrict_type := ℝ }) [le_of_max_le_left (hk k le_rfl)]
+        linarith(config := { restrict_type := ℝ }) [le_of_max_le_left (hk k le_rflₓ)]
       rw [one_div] at this⊢
       rwa [inv_lt (lt_transₓ (inv_pos.2 hE₃) this) hE₃]
       
@@ -357,7 +357,7 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) : ∃ j : Set α, Measurabl
   have hA' : A ⊆ i \ ⋃ l ≤ k, restrict_nonpos_seq s i l := by
     apply Set.diff_subset_diff_right
     intro x
-    simp only [← Set.mem_Union]
+    simp only [Set.mem_Union]
     rintro ⟨n, _, hn₂⟩
     exact ⟨n, hn₂⟩
   refine' find_exists_one_div_lt_min (hn' k) (Buffer.lt_aux_2 hk₁) ⟨E, Set.Subset.trans hE₂ hA', hE₁, _⟩

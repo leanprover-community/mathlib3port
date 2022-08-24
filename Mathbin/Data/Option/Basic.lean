@@ -145,7 +145,7 @@ theorem bind_eq_some' {x : Option α} {f : α → Option β} {b : β} : x.bind f
 
 @[simp]
 theorem bind_eq_none' {o : Option α} {f : α → Option β} : o.bind f = none ↔ ∀ b a, a ∈ o → b ∉ f a := by
-  simp only [← eq_none_iff_forall_not_mem, ← not_exists, ← not_and, ← mem_def, ← bind_eq_some']
+  simp only [eq_none_iff_forall_not_mem, not_exists, not_and, mem_def, bind_eq_some']
 
 @[simp]
 theorem bind_eq_noneₓ {α β} {o : Option α} {f : α → Option β} : o >>= f = none ↔ ∀ b a, a ∈ o → b ∉ f a :=
@@ -214,14 +214,14 @@ theorem map_eq_some' {x : Option α} {f : α → β} {b : β} : x.map f = some b
   cases x <;> simp
 
 theorem map_eq_none {α β} {x : Option α} {f : α → β} : f <$> x = none ↔ x = none := by
-  cases x <;> simp only [← map_none, ← map_some, ← eq_self_iff_true]
+  cases x <;> simp only [map_none, map_some, eq_self_iff_true]
 
 @[simp]
 theorem map_eq_none' {x : Option α} {f : α → β} : x.map f = none ↔ x = none := by
-  cases x <;> simp only [← map_none', ← map_some', ← eq_self_iff_true]
+  cases x <;> simp only [map_none', map_some', eq_self_iff_true]
 
-theorem map_congr {f g : α → β} {x : Option α} (h : ∀, ∀ a ∈ x, ∀, f a = g a) : Option.map f x = Option.map g x := by
-  cases x <;> simp only [← map_none', ← map_some', ← h, ← mem_def]
+theorem map_congr {f g : α → β} {x : Option α} (h : ∀ a ∈ x, f a = g a) : Option.map f x = Option.map g x := by
+  cases x <;> simp only [map_none', map_some', h, mem_def]
 
 @[simp]
 theorem map_id' : Option.map (@id α) = id :=
@@ -229,7 +229,7 @@ theorem map_id' : Option.map (@id α) = id :=
 
 @[simp]
 theorem map_mapₓ (h : β → γ) (g : α → β) (x : Option α) : Option.map h (Option.map g x) = Option.map (h ∘ g) x := by
-  cases x <;> simp only [← map_none', ← map_some']
+  cases x <;> simp only [map_none', map_some']
 
 theorem comp_mapₓ (h : β → γ) (g : α → β) (x : Option α) : Option.map (h ∘ g) x = Option.map h (Option.map g x) :=
   (map_mapₓ _ _ _).symm
@@ -261,7 +261,7 @@ variable {p : α → Prop} (f : ∀ a : α, p a → β) (x : Option α)
 
 @[simp]
 theorem pbind_eq_bind (f : α → Option β) (x : Option α) : (x.pbind fun a _ => f a) = x.bind f := by
-  cases x <;> simp only [← pbind, ← none_bind', ← some_bind']
+  cases x <;> simp only [pbind, none_bind', some_bind']
 
 theorem map_bind {α β γ} (f : β → γ) (x : Option α) (g : α → Option β) :
     Option.map f (x >>= g) = x >>= fun a => Option.map f (g a) := by
@@ -273,7 +273,7 @@ theorem map_bind' (f : β → γ) (x : Option α) (g : α → Option β) :
 
 theorem map_pbind (f : β → γ) (x : Option α) (g : ∀ a, a ∈ x → Option β) :
     Option.map f (x.pbind g) = x.pbind fun a H => Option.map f (g a H) := by
-  cases x <;> simp only [← pbind, ← map_none']
+  cases x <;> simp only [pbind, map_none']
 
 theorem pbind_map (f : α → β) (x : Option α) (g : ∀ b : β, b ∈ x.map f → Option γ) :
     pbind (Option.map f x) g = x.pbind fun a h => g (f a) (mem_map_of_mem _ h) := by
@@ -287,40 +287,40 @@ theorem pmap_none (f : ∀ a : α, p a → β) {H} : pmap f (@none α) H = none 
 theorem pmap_some (f : ∀ a : α, p a → β) {x : α} (h : p x) : pmap f (some x) = fun _ => some (f x h) :=
   rfl
 
-theorem mem_pmem {a : α} (h : ∀, ∀ a ∈ x, ∀, p a) (ha : a ∈ x) : f a (h a ha) ∈ pmap f x h := by
+theorem mem_pmem {a : α} (h : ∀ a ∈ x, p a) (ha : a ∈ x) : f a (h a ha) ∈ pmap f x h := by
   rw [mem_def] at ha⊢
   subst ha
   rfl
 
 theorem pmap_map (g : γ → α) (x : Option γ) (H) :
     pmap f (x.map g) H = pmap (fun a h => f (g a) h) x fun a h => H _ (mem_map_of_mem _ h) := by
-  cases x <;> simp only [← map_none', ← map_some', ← pmap]
+  cases x <;> simp only [map_none', map_some', pmap]
 
 theorem map_pmap (g : β → γ) (f : ∀ a, p a → β) (x H) : Option.map g (pmap f x H) = pmap (fun a h => g (f a h)) x H :=
   by
-  cases x <;> simp only [← map_none', ← map_some', ← pmap]
+  cases x <;> simp only [map_none', map_some', pmap]
 
 @[simp]
 theorem pmap_eq_map (p : α → Prop) (f : α → β) (x H) : @pmap _ _ p (fun a _ => f a) x H = Option.map f x := by
-  cases x <;> simp only [← map_none', ← map_some', ← pmap]
+  cases x <;> simp only [map_none', map_some', pmap]
 
 theorem pmap_bind {α β γ} {x : Option α} {g : α → Option β} {p : β → Prop} {f : ∀ b, p b → γ} (H)
-    (H' : ∀ (a : α), ∀ b ∈ g a, ∀, b ∈ x >>= g) :
+    (H' : ∀ (a : α), ∀ b ∈ g a, b ∈ x >>= g) :
     pmap f (x >>= g) H = x >>= fun a => pmap f (g a) fun b h => H _ (H' a _ h) := by
-  cases x <;> simp only [← pmap, ← none_bind, ← some_bind]
+  cases x <;> simp only [pmap, none_bind, some_bind]
 
 theorem bind_pmap {α β γ} {p : α → Prop} (f : ∀ a, p a → β) (x : Option α) (g : β → Option γ) (H) :
     pmap f x H >>= g = x.pbind fun a h => g (f a (H _ h)) := by
-  cases x <;> simp only [← pmap, ← none_bind, ← some_bind, ← pbind]
+  cases x <;> simp only [pmap, none_bind, some_bind, pbind]
 
 variable {f x}
 
-theorem pbind_eq_none {f : ∀ a : α, a ∈ x → Option β} (h' : ∀, ∀ a ∈ x, ∀, f a H = none → x = none) :
+theorem pbind_eq_none {f : ∀ a : α, a ∈ x → Option β} (h' : ∀ a ∈ x, f a H = none → x = none) :
     x.pbind f = none ↔ x = none := by
   cases x
   · simp
     
-  · simp only [← pbind, ← iff_falseₓ]
+  · simp only [pbind, iff_falseₓ]
     intro h
     cases h' x rfl h
     
@@ -329,15 +329,15 @@ theorem pbind_eq_some {f : ∀ a : α, a ∈ x → Option β} {y : β} : x.pbind
   cases x
   · simp
     
-  · simp only [← pbind]
+  · simp only [pbind]
     constructor
     · intro h
       use x
-      simpa only [← mem_def, ← exists_prop_of_true] using h
+      simpa only [mem_def, exists_prop_of_true] using h
       
     · rintro ⟨z, H, hz⟩
-      simp only [← mem_def] at H
-      simpa only [← H] using hz
+      simp only [mem_def] at H
+      simpa only [H] using hz
       
     
 
@@ -348,16 +348,16 @@ theorem pmap_eq_none_iff {h} : pmap f x h = none ↔ x = none := by
 @[simp]
 theorem pmap_eq_some_iff {hf} {y : β} : pmap f x hf = some y ↔ ∃ (a : α)(H : x = some a), f a (hf a H) = y := by
   cases x
-  · simp only [← not_mem_none, ← exists_false, ← pmap, ← not_false_iff, ← exists_prop_of_false]
+  · simp only [not_mem_none, exists_false, pmap, not_false_iff, exists_prop_of_false]
     
   · constructor
     · intro h
-      simp only [← pmap] at h
+      simp only [pmap] at h
       exact ⟨x, rfl, h⟩
       
     · rintro ⟨a, H, rfl⟩
-      simp only [← mem_def] at H
-      simp only [← H, ← pmap]
+      simp only [mem_def] at H
+      simp only [H, pmap]
       
     
 
@@ -405,7 +405,7 @@ theorem is_some_some {a : α} : isSome (some a) = tt :=
   rfl
 
 theorem is_some_iff_exists {x : Option α} : isSome x ↔ ∃ a, x = some a := by
-  cases x <;> simp [← is_some] <;> exact ⟨_, rfl⟩
+  cases x <;> simp [is_some] <;> exact ⟨_, rfl⟩
 
 @[simp]
 theorem is_none_none : @isNone α none = tt :=
@@ -434,17 +434,17 @@ theorem ne_none_iff_exists {o : Option α} : o ≠ none ↔ ∃ x : α, some x =
 theorem ne_none_iff_exists' {o : Option α} : o ≠ none ↔ ∃ x : α, o = some x :=
   ne_none_iff_exists.trans <| exists_congr fun _ => eq_comm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ≠ » none)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ≠ » none)
 theorem bex_ne_none {p : Option α → Prop} : (∃ (x : _)(_ : x ≠ none), p x) ↔ ∃ x, p (some x) :=
   ⟨fun ⟨x, hx, hp⟩ =>
     ⟨get <| ne_none_iff_is_some.1 hx, by
       rwa [some_get]⟩,
     fun ⟨x, hx⟩ => ⟨some x, some_ne_none x, hx⟩⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ≠ » none)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ≠ » none)
 theorem ball_ne_none {p : Option α → Prop} : (∀ (x) (_ : x ≠ none), p x) ↔ ∀ x, p (some x) :=
   ⟨fun h x => h (some x) (some_ne_none x), fun h x hx => by
-    simpa only [← some_get] using h (get <| ne_none_iff_is_some.1 hx)⟩
+    simpa only [some_get] using h (get <| ne_none_iff_is_some.1 hx)⟩
 
 theorem iget_mem [Inhabited α] : ∀ {o : Option α}, isSome o → o.iget ∈ o
   | some a, _ => rfl
@@ -457,13 +457,13 @@ theorem get_or_else_default_eq_iget [Inhabited α] (o : Option α) : o.getOrElse
 
 @[simp]
 theorem guard_eq_some {p : α → Prop} [DecidablePred p] {a b : α} : guard p a = some b ↔ a = b ∧ p a := by
-  by_cases' p a <;> simp [← Option.guard, ← h] <;> intro <;> contradiction
+  by_cases' p a <;> simp [Option.guard, h] <;> intro <;> contradiction
 
 @[simp]
 theorem guard_eq_some' {p : Prop} [Decidable p] (u) : guardₓ p = some u ↔ p := by
   cases u
   by_cases' p <;>
-    simp [← _root_.guard, ← h] <;>
+    simp [_root_.guard, h] <;>
       first |
         rfl|
         contradiction
@@ -474,7 +474,7 @@ theorem lift_or_get_choice {f : α → α → α} (h : ∀ a b, f a b = a ∨ f 
   | some a, none => Or.inl rfl
   | none, some b => Or.inr rfl
   | some a, some b => by
-    simpa [← lift_or_get] using h a b
+    simpa [lift_or_get] using h a b
 
 @[simp]
 theorem lift_or_get_none_left {f} {b : Option α} : liftOrGet f none b = b := by
@@ -516,9 +516,9 @@ theorem get_or_else_map (f : α → β) (x : α) (o : Option α) : getOrElse (o.
 
 theorem orelse_eq_some (o o' : Option α) (x : α) : (o <|> o') = some x ↔ o = some x ∨ o = none ∧ o' = some x := by
   cases o
-  · simp only [← true_andₓ, ← false_orₓ, ← eq_self_iff_true, ← none_orelse]
+  · simp only [true_andₓ, false_orₓ, eq_self_iff_true, none_orelse]
     
-  · simp only [← some_orelse, ← or_falseₓ, ← false_andₓ]
+  · simp only [some_orelse, or_falseₓ, false_andₓ]
     
 
 theorem orelse_eq_some' (o o' : Option α) (x : α) : o.orelse o' = some x ↔ o = some x ∨ o = none ∧ o' = some x :=
@@ -527,9 +527,9 @@ theorem orelse_eq_some' (o o' : Option α) (x : α) : o.orelse o' = some x ↔ o
 @[simp]
 theorem orelse_eq_none (o o' : Option α) : (o <|> o') = none ↔ o = none ∧ o' = none := by
   cases o
-  · simp only [← true_andₓ, ← none_orelse, ← eq_self_iff_true]
+  · simp only [true_andₓ, none_orelse, eq_self_iff_true]
     
-  · simp only [← some_orelse, ← false_andₓ]
+  · simp only [some_orelse, false_andₓ]
     
 
 @[simp]
@@ -545,7 +545,7 @@ noncomputable def choice (α : Type _) : Option α :=
   if h : Nonempty α then some h.some else none
 
 theorem choice_eq {α : Type _} [Subsingleton α] (a : α) : choice α = some a := by
-  dsimp' [← choice]
+  dsimp' [choice]
   rw [dif_pos (⟨a⟩ : Nonempty α)]
   congr
 
@@ -558,7 +558,7 @@ theorem choice_is_some_iff_nonempty {α : Type _} : (choice α).isSome ↔ Nonem
     exact ⟨Option.getₓ h⟩
     
   · intro h
-    dsimp' only [← choice]
+    dsimp' only [choice]
     rw [dif_pos h]
     exact is_some_some
     

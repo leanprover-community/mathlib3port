@@ -88,10 +88,10 @@ def index (K V : Set G) : ℕ :=
 
 @[to_additive add_index_empty]
 theorem index_empty {V : Set G} : index ∅ V = 0 := by
-  simp only [← index, ← Nat.Inf_eq_zero]
+  simp only [index, Nat.Inf_eq_zero]
   left
   use ∅
-  simp only [← Finset.card_empty, ← empty_subset, ← mem_set_of_eq, ← eq_self_iff_true, ← and_selfₓ]
+  simp only [Finset.card_empty, empty_subset, mem_set_of_eq, eq_self_iff_true, and_selfₓ]
 
 variable [TopologicalSpace G]
 
@@ -121,7 +121,7 @@ def HaarProduct (K₀ : Set G) : Set (Compacts G → ℝ) :=
 @[simp, to_additive]
 theorem mem_prehaar_empty {K₀ : Set G} {f : Compacts G → ℝ} :
     f ∈ HaarProduct K₀ ↔ ∀ K : Compacts G, f K ∈ Icc (0 : ℝ) (index (K : Set G) K₀) := by
-  simp only [← haar_product, ← pi, ← forall_prop_of_true, ← mem_univ, ← mem_set_of_eq]
+  simp only [haar_product, pi, forall_prop_of_true, mem_univ, mem_set_of_eq]
 
 /-- The closure of the collection of elements of the form `prehaar K₀ U`,
   for `U` open neighbourhoods of `1`, contained in `V`. The closure is taken in the space
@@ -215,8 +215,8 @@ theorem index_union_le (K₁ K₂ : Compacts G) {V : Set G} (hV : (Interior V).N
           _ <;>
       apply bUnion_subset_bUnion_left <;>
         intro g hg <;>
-          simp only [← mem_def] at hg <;>
-            simp only [← mem_def, ← Multiset.mem_union, ← Finset.union_val, ← hg, ← or_trueₓ, ← true_orₓ]
+          simp only [mem_def] at hg <;>
+            simp only [mem_def, Multiset.mem_union, Finset.union_val, hg, or_trueₓ, true_orₓ]
 
 @[to_additive add_index_union_eq]
 theorem index_union_eq (K₁ K₂ : Compacts G) {V : Set G} (hV : (Interior V).Nonempty)
@@ -235,13 +235,13 @@ theorem index_union_eq (K₁ K₂ : Compacts G) {V : Set G} (hV : (Interior V).N
     rw [mem_set_of_eq]
     intro g hg
     rcases hK hg with ⟨_, ⟨g₀, rfl⟩, _, ⟨h1g₀, rfl⟩, h2g₀⟩
-    simp only [← mem_preimage] at h2g₀
-    simp only [← mem_Union]
+    simp only [mem_preimage] at h2g₀
+    simp only [mem_Union]
     use g₀
     constructor
-    · simp only [← Finset.mem_filter, ← h1g₀, ← true_andₓ]
+    · simp only [Finset.mem_filter, h1g₀, true_andₓ]
       use g
-      simp only [← hg, ← h2g₀, ← mem_inter_eq, ← mem_preimage, ← and_selfₓ]
+      simp only [hg, h2g₀, mem_inter_eq, mem_preimage, and_selfₓ]
       
     exact h2g₀
   refine'
@@ -253,16 +253,16 @@ theorem index_union_eq (K₁ K₂ : Compacts G) {V : Set G} (hV : (Interior V).N
   exact s.card_filter_le _
   apply finset.disjoint_filter.mpr
   rintro g₁ h1g₁ ⟨g₂, h1g₂, h2g₂⟩ ⟨g₃, h1g₃, h2g₃⟩
-  simp only [← mem_preimage] at h1g₃ h1g₂
+  simp only [mem_preimage] at h1g₃ h1g₂
   apply @h g₁⁻¹
-  constructor <;> simp only [← Set.mem_inv, ← Set.mem_mul, ← exists_exists_and_eq_and, ← exists_and_distrib_left]
+  constructor <;> simp only [Set.mem_inv, Set.mem_mul, exists_exists_and_eq_and, exists_and_distrib_left]
   · refine' ⟨_, h2g₂, (g₁ * g₂)⁻¹, _, _⟩
-    simp only [← inv_invₓ, ← h1g₂]
-    simp only [← mul_inv_rev, ← mul_inv_cancel_left]
+    simp only [inv_invₓ, h1g₂]
+    simp only [mul_inv_rev, mul_inv_cancel_left]
     
   · refine' ⟨_, h2g₃, (g₁ * g₃)⁻¹, _, _⟩
-    simp only [← inv_invₓ, ← h1g₃]
-    simp only [← mul_inv_rev, ← mul_inv_cancel_left]
+    simp only [inv_invₓ, h1g₃]
+    simp only [mul_inv_rev, mul_inv_cancel_left]
     
 
 @[to_additive add_left_add_index_le]
@@ -273,14 +273,14 @@ theorem mul_left_index_le {K : Set G} (hK : IsCompact K) {V : Set G} (hV : (Inte
   apply Nat.Inf_le
   rw [mem_image]
   refine' ⟨s.map (Equivₓ.mulRight g⁻¹).toEmbedding, _, Finset.card_map _⟩
-  · simp only [← mem_set_of_eq]
+  · simp only [mem_set_of_eq]
     refine' subset.trans (image_subset _ h1s) _
     rintro _ ⟨g₁, ⟨_, ⟨g₂, rfl⟩, ⟨_, ⟨hg₂, rfl⟩, hg₁⟩⟩, rfl⟩
-    simp only [← mem_preimage] at hg₁
-    simp only [← exists_prop, ← mem_Union, ← Finset.mem_map, ← Equivₓ.coe_mul_right, ← exists_exists_and_eq_and, ←
-      mem_preimage, ← Equivₓ.to_embedding_apply]
+    simp only [mem_preimage] at hg₁
+    simp only [exists_prop, mem_Union, Finset.mem_map, Equivₓ.coe_mul_right, exists_exists_and_eq_and, mem_preimage,
+      Equivₓ.to_embedding_apply]
     refine' ⟨_, hg₂, _⟩
-    simp only [← mul_assoc, ← hg₁, ← inv_mul_cancel_leftₓ]
+    simp only [mul_assoc, hg₁, inv_mul_cancel_leftₓ]
     
 
 @[to_additive is_left_invariant_add_index]
@@ -319,7 +319,7 @@ theorem prehaar_pos (K₀ : PositiveCompacts G) {U : Set G} (hU : (Interior U).N
 @[to_additive]
 theorem prehaar_mono {K₀ : PositiveCompacts G} {U : Set G} (hU : (Interior U).Nonempty) {K₁ K₂ : Compacts G}
     (h : (K₁ : Set G) ⊆ K₂.1) : prehaar (K₀ : Set G) U K₁ ≤ prehaar (K₀ : Set G) U K₂ := by
-  simp only [← prehaar]
+  simp only [prehaar]
   rw [div_le_div_right]
   exact_mod_cast index_mono K₂.2 h hU
   exact_mod_cast index_pos K₀ hU
@@ -334,7 +334,7 @@ theorem prehaar_self {K₀ : PositiveCompacts G} {U : Set G} (hU : (Interior U).
 @[to_additive]
 theorem prehaar_sup_le {K₀ : PositiveCompacts G} {U : Set G} (K₁ K₂ : Compacts G) (hU : (Interior U).Nonempty) :
     prehaar (K₀ : Set G) U (K₁⊔K₂) ≤ prehaar (K₀ : Set G) U K₁ + prehaar (K₀ : Set G) U K₂ := by
-  simp only [← prehaar]
+  simp only [prehaar]
   rw [div_add_div_same, div_le_div_right]
   exact_mod_cast index_union_le K₁ K₂ hU
   exact_mod_cast index_pos K₀ hU
@@ -343,7 +343,7 @@ theorem prehaar_sup_le {K₀ : PositiveCompacts G} {U : Set G} (K₁ K₂ : Comp
 theorem prehaar_sup_eq {K₀ : PositiveCompacts G} {U : Set G} {K₁ K₂ : Compacts G} (hU : (Interior U).Nonempty)
     (h : Disjoint (K₁.1 * U⁻¹) (K₂.1 * U⁻¹)) :
     prehaar (K₀ : Set G) U (K₁⊔K₂) = prehaar (K₀ : Set G) U K₁ + prehaar (K₀ : Set G) U K₂ := by
-  simp only [← prehaar]
+  simp only [prehaar]
   rw [div_add_div_same]
   congr
   exact_mod_cast index_union_eq K₁ K₂ hU h
@@ -351,7 +351,7 @@ theorem prehaar_sup_eq {K₀ : PositiveCompacts G} {U : Set G} {K₁ K₂ : Comp
 @[to_additive]
 theorem is_left_invariant_prehaar {K₀ : PositiveCompacts G} {U : Set G} (hU : (Interior U).Nonempty) (g : G)
     (K : Compacts G) : prehaar (K₀ : Set G) U (K.map _ <| continuous_mul_left g) = prehaar (K₀ : Set G) U K := by
-  simp only [← prehaar, ← compacts.coe_map, ← is_left_invariant_index K.compact _ hU]
+  simp only [prehaar, compacts.coe_map, is_left_invariant_index K.compact _ hU]
 
 /-!
 ### Lemmas about `haar_product`
@@ -380,7 +380,7 @@ theorem nonempty_Inter_cl_prehaar (K₀ : PositiveCompacts G) :
     rintro ⟨V, hV⟩ h2V
     exact hV.1
   have h2V₀ : (1 : G) ∈ V₀ := by
-    simp only [← mem_Inter]
+    simp only [mem_Inter]
     rintro ⟨V, hV⟩ h2V
     exact hV.2
   refine' ⟨prehaar K₀ V₀, _⟩
@@ -389,7 +389,7 @@ theorem nonempty_Inter_cl_prehaar (K₀ : PositiveCompacts G) :
     use 1
     rwa [h1V₀.interior_eq]
     
-  · simp only [← mem_Inter]
+  · simp only [mem_Inter]
     rintro ⟨V, hV⟩ h2V
     apply subset_closure
     apply mem_image_of_mem
@@ -472,7 +472,7 @@ theorem chaar_mono {K₀ : PositiveCompacts G} {K₁ K₂ : Compacts G} (h : (K�
   unfold cl_prehaar
   rw [IsClosed.closure_subset_iff]
   · rintro _ ⟨U, ⟨h1U, h2U, h3U⟩, rfl⟩
-    simp only [← mem_preimage, ← mem_Ici, ← eval, ← sub_nonneg]
+    simp only [mem_preimage, mem_Ici, eval, sub_nonneg]
     apply prehaar_mono _ h
     rw [h2U.interior_eq]
     exact ⟨1, h3U⟩
@@ -493,7 +493,7 @@ theorem chaar_sup_le {K₀ : PositiveCompacts G} (K₁ K₂ : Compacts G) : chaa
   unfold cl_prehaar
   rw [IsClosed.closure_subset_iff]
   · rintro _ ⟨U, ⟨h1U, h2U, h3U⟩, rfl⟩
-    simp only [← mem_preimage, ← mem_Ici, ← eval, ← sub_nonneg]
+    simp only [mem_preimage, mem_Ici, eval, sub_nonneg]
     apply prehaar_sup_le
     rw [h2U.interior_eq]
     exact ⟨1, h3U⟩
@@ -523,11 +523,11 @@ theorem chaar_sup_eq [T2Space G] {K₀ : PositiveCompacts G} {K₁ K₂ : Compac
     mem_of_subset_of_mem _
       (chaar_mem_cl_prehaar K₀
         ⟨V⁻¹, (IsOpen.inter h2V₁ h2V₂).Preimage continuous_inv, by
-          simp only [← mem_inv, ← inv_one, ← h3V₁, ← h3V₂, ← V, ← mem_inter_eq, ← true_andₓ]⟩)
+          simp only [mem_inv, inv_one, h3V₁, h3V₂, V, mem_inter_eq, true_andₓ]⟩)
   unfold cl_prehaar
   rw [IsClosed.closure_subset_iff]
   · rintro _ ⟨U, ⟨h1U, h2U, h3U⟩, rfl⟩
-    simp only [← mem_preimage, ← eval, ← sub_eq_zero, ← mem_singleton_iff]
+    simp only [mem_preimage, eval, sub_eq_zero, mem_singleton_iff]
     rw [eq_comm]
     apply prehaar_sup_eq
     · rw [h2U.interior_eq]
@@ -557,7 +557,7 @@ theorem is_left_invariant_chaar {K₀ : PositiveCompacts G} (g : G) (K : Compact
   unfold cl_prehaar
   rw [IsClosed.closure_subset_iff]
   · rintro _ ⟨U, ⟨h1U, h2U, h3U⟩, rfl⟩
-    simp only [← mem_singleton_iff, ← mem_preimage, ← eval, ← sub_eq_zero]
+    simp only [mem_singleton_iff, mem_preimage, eval, sub_eq_zero]
     apply is_left_invariant_prehaar
     rw [h2U.interior_eq]
     exact ⟨1, h3U⟩
@@ -573,12 +573,12 @@ variable [T2Space G]
 def haarContent (K₀ : PositiveCompacts G) : Content G where
   toFun := fun K => ⟨chaar K₀ K, chaar_nonneg _ _⟩
   mono' := fun K₁ K₂ h => by
-    simp only [Nnreal.coe_le_coe, ← Subtype.coe_mk, ← chaar_mono, ← h]
+    simp only [← Nnreal.coe_le_coe, Subtype.coe_mk, chaar_mono, h]
   sup_disjoint' := fun K₁ K₂ h => by
-    simp only [← chaar_sup_eq h]
+    simp only [chaar_sup_eq h]
     rfl
   sup_le' := fun K₁ K₂ => by
-    simp only [Nnreal.coe_le_coe, ← Nnreal.coe_add, ← Subtype.coe_mk, ← chaar_sup_le]
+    simp only [← Nnreal.coe_le_coe, Nnreal.coe_add, Subtype.coe_mk, chaar_sup_le]
 
 /-! We only prove the properties for `haar_content` that we use at least twice below. -/
 
@@ -598,7 +598,7 @@ theorem haar_content_self {K₀ : PositiveCompacts G} : haarContent K₀ K₀.to
 @[to_additive]
 theorem is_left_invariant_haar_content {K₀ : PositiveCompacts G} (g : G) (K : Compacts G) :
     haarContent K₀ (K.map _ <| continuous_mul_left g) = haarContent K₀ K := by
-  simpa only [← Ennreal.coe_eq_coe, Nnreal.coe_eq, ← haar_content_apply] using is_left_invariant_chaar g K
+  simpa only [Ennreal.coe_eq_coe, ← Nnreal.coe_eq, haar_content_apply] using is_left_invariant_chaar g K
 
 @[to_additive]
 theorem haar_content_outer_measure_self_pos {K₀ : PositiveCompacts G} : 0 < (haarContent K₀).OuterMeasure K₀ := by
@@ -628,7 +628,7 @@ def haarMeasure (K₀ : PositiveCompacts G) : Measure G :=
 theorem haar_measure_apply {K₀ : PositiveCompacts G} {s : Set G} (hs : MeasurableSet s) :
     haarMeasure K₀ s = (haarContent K₀).OuterMeasure s / (haarContent K₀).OuterMeasure K₀ := by
   change ((haar_content K₀).OuterMeasure K₀)⁻¹ * (haar_content K₀).Measure s = _
-  simp only [← hs, ← div_eq_mul_inv, ← mul_comm, ← content.measure_apply]
+  simp only [hs, div_eq_mul_inv, mul_comm, content.measure_apply]
 
 @[to_additive]
 instance is_mul_left_invariant_haar_measure (K₀ : PositiveCompacts G) : IsMulLeftInvariant (haarMeasure K₀) := by
@@ -669,10 +669,10 @@ sets and positive mass to nonempty open sets. -/
 @[to_additive]
 instance is_haar_measure_haar_measure (K₀ : PositiveCompacts G) : IsHaarMeasure (haarMeasure K₀) := by
   apply is_haar_measure_of_is_compact_nonempty_interior (haar_measure K₀) K₀ K₀.compact K₀.interior_nonempty
-  · simp only [← haar_measure_self]
+  · simp only [haar_measure_self]
     exact one_ne_zero
     
-  · simp only [← haar_measure_self]
+  · simp only [haar_measure_self]
     exact Ennreal.coe_ne_top
     
 
@@ -716,11 +716,11 @@ theorem is_haar_measure_eq_smul_is_haar_measure [LocallyCompactSpace G] (μ ν :
   have νpos : 0 < ν K := measure_pos_of_nonempty_interior _ K.interior_nonempty
   have νne : ν K ≠ ∞ := K.compact.measure_lt_top.ne
   refine' ⟨μ K / ν K, _, _, _⟩
-  · simp only [← νne, ← (μ.measure_pos_of_nonempty_interior K.interior_nonempty).ne', ← Ne.def, ← Ennreal.div_zero_iff,
-      ← not_false_iff, ← or_selfₓ]
+  · simp only [νne, (μ.measure_pos_of_nonempty_interior K.interior_nonempty).ne', Ne.def, Ennreal.div_zero_iff,
+      not_false_iff, or_selfₓ]
     
-  · simp only [← div_eq_mul_inv, ← νpos.ne', ← K.compact.measure_lt_top.Ne, ← or_selfₓ, ← Ennreal.inv_eq_top, ←
-      WithTop.mul_eq_top_iff, ← Ne.def, ← not_false_iff, ← and_falseₓ, ← false_andₓ]
+  · simp only [div_eq_mul_inv, νpos.ne', K.compact.measure_lt_top.Ne, or_selfₓ, Ennreal.inv_eq_top,
+      WithTop.mul_eq_top_iff, Ne.def, not_false_iff, and_falseₓ, false_andₓ]
     
   · calc
       μ = μ K • haar_measure K := haar_measure_unique μ K
@@ -772,13 +772,13 @@ theorem div_mem_nhds_one_of_haar_pos (μ : Measure G) [IsHaarMeasure μ] [Locall
       apply Set.union_subset _ hUK
       apply subset_trans _ hVKU
       apply Set.mul_subset_mul _ (Set.Subset.refl K)
-      simp only [← Set.singleton_subset_iff, ← hv]
+      simp only [Set.singleton_subset_iff, hv]
     replace hKvsub := @measure_mono _ _ μ _ _ hKvsub
     have hcontr := lt_of_le_of_ltₓ hKvsub hμUK
     rw [measure_union hKv (IsCompact.measurable_set hK)] at hcontr
     have hKtranslate : μ ({v} * K) = μ K := by
-      simp only [← singleton_mul, ← image_mul_left, ← measure_preimage_mul]
-    rw [hKtranslate, lt_self_iff_false] at hcontr
+      simp only [singleton_mul, image_mul_left, measure_preimage_mul]
+    rw [hKtranslate, lt_self_iff_falseₓ] at hcontr
     assumption
   suffices : V ⊆ E / E
   exact Filter.mem_of_superset hV1 this
@@ -787,9 +787,9 @@ theorem div_mem_nhds_one_of_haar_pos (μ : Measure G) [IsHaarMeasure μ] [Locall
   exact Set.not_disjoint_iff.1 (hv v hvV)
   refine' ⟨x, v⁻¹ * x, hLE (hKL hxvK), _, _⟩
   · apply hKL.trans hLE
-    simpa only [← singleton_mul, ← image_mul_left, ← mem_preimage] using hxK
+    simpa only [singleton_mul, image_mul_left, mem_preimage] using hxK
     
-  · simp only [← div_eq_iff_eq_mul, mul_assoc, ← mul_right_invₓ, ← one_mulₓ]
+  · simp only [div_eq_iff_eq_mul, ← mul_assoc, mul_right_invₓ, one_mulₓ]
     
 
 end SecondCountable
@@ -807,10 +807,10 @@ theorem map_haar_inv {G : Type _} [CommGroupₓ G] [TopologicalSpace G] [Topolog
   obtain ⟨c, cpos, clt, hc⟩ : ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ∞ ∧ measure.map Inv.inv μ = c • μ :=
     is_haar_measure_eq_smul_is_haar_measure _ _
   have : map Inv.inv (map Inv.inv μ) = c ^ 2 • μ := by
-    simp only [← hc, ← smul_smul, ← pow_two, ← measure.map_smul]
+    simp only [hc, smul_smul, pow_two, measure.map_smul]
   have μeq : μ = c ^ 2 • μ := by
     rw [map_map continuous_inv.measurable continuous_inv.measurable] at this
-    · simpa only [← inv_involutive, ← involutive.comp_self, ← map_id]
+    · simpa only [inv_involutive, involutive.comp_self, map_id]
       
     all_goals
       infer_instance

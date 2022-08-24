@@ -79,7 +79,7 @@ instance yonedaPreservesLimits (X : C) :
                 funext fun x => by
                   refine' Quiver.Hom.op_inj (t.uniq ⟨op X, _, _⟩ _ fun j => _)
                   · dsimp'
-                    simp [s.w α]
+                    simp [← s.w α]
                     
                   -- See library note [dsimp, simp]
                   · exact Quiver.Hom.unop_inj (congr_fun (w j) x)
@@ -96,7 +96,7 @@ instance coyonedaPreservesLimits (X : Cᵒᵖ) :
                 t.lift
                   ⟨unop X, fun j => s.π.app j x, fun j₁ j₂ α => by
                     dsimp'
-                    simp [s.w α]⟩,-- See library note [dsimp, simp]
+                    simp [← s.w α]⟩,-- See library note [dsimp, simp]
               fac' := fun s j => funext fun x => t.fac _ _,
               uniq' := fun s m w =>
                 funext fun x => by

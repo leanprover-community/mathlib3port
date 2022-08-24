@@ -65,7 +65,7 @@ theorem exists_approx_polynomial_aux [Ringₓ Fq] {d : ℕ} {m : ℕ} (hm : Fint
     rintro rfl
     specialize hA 0
     rw [degree_zero] at hA
-    exact not_lt_of_le bot_le hA
+    exact not_lt_of_leₓ bot_le hA
   -- Since there are > q^d elements of A, and only q^d choices for the highest `d` coefficients,
   -- there must be two elements of A with the same coefficients at
   -- `degree b - 1`, ... `degree b - d`.
@@ -106,7 +106,7 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
     (A : Finₓ (Fintype.card Fq ^ ⌈-log ε / log (Fintype.card Fq)⌉₊).succ → Fq[X]) :
     ∃ i₀ i₁, i₀ ≠ i₁ ∧ (cardPowDegree (A i₁ % b - A i₀ % b) : ℝ) < cardPowDegree b • ε := by
   have hbε : 0 < card_pow_degree b • ε := by
-    rw [Algebra.smul_def, RingHom.eq_int_cast]
+    rw [Algebra.smul_def, eq_int_cast]
     exact mul_pos (int.cast_pos.mpr (AbsoluteValue.pos _ hb)) hε
   have one_lt_q : 1 < Fintype.card Fq := Fintype.one_lt_card
   have one_lt_q' : (1 : ℝ) < Fintype.card Fq := by
@@ -118,7 +118,7 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
   -- If `b` is already small enough, then the remainders are equal and we are done.
   by_cases' le_b : b.nat_degree ≤ ⌈-log ε / log (Fintype.card Fq)⌉₊
   · obtain ⟨i₀, i₁, i_ne, mod_eq⟩ :=
-      exists_eq_polynomial le_rfl b le_b (fun i => A i % b) fun i => EuclideanDomain.mod_lt (A i) hb
+      exists_eq_polynomial le_rflₓ b le_b (fun i => A i % b) fun i => EuclideanDomain.mod_lt (A i) hb
     refine' ⟨i₀, i₁, i_ne, _⟩
     simp only at mod_eq
     rwa [mod_eq, sub_self, AbsoluteValue.map_zero, Int.cast_zeroₓ]
@@ -126,7 +126,7 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
   -- Otherwise, it suffices to choose two elements whose difference is of small enough degree.
   rw [not_leₓ] at le_b
   obtain ⟨i₀, i₁, i_ne, deg_lt⟩ :=
-    exists_approx_polynomial_aux le_rfl b (fun i => A i % b) fun i => EuclideanDomain.mod_lt (A i) hb
+    exists_approx_polynomial_aux le_rflₓ b (fun i => A i % b) fun i => EuclideanDomain.mod_lt (A i) hb
   simp only at deg_lt
   use i₀, i₁, i_ne
   -- Again, if the remainders are equal we are done.
@@ -138,7 +138,7 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
   -- In particular, we'll show the degree is less than the following:
   suffices (nat_degree (A i₁ % b - A i₀ % b) : ℝ) < b.nat_degree + log ε / log (Fintype.card Fq) by
     rwa [← Real.log_lt_log_iff (int.cast_pos.mpr (card_pow_degree.pos h')) hbε, card_pow_degree_nonzero _ h',
-      card_pow_degree_nonzero _ hb, Algebra.smul_def, RingHom.eq_int_cast, Int.cast_pow, Int.cast_coe_nat, Int.cast_pow,
+      card_pow_degree_nonzero _ hb, Algebra.smul_def, eq_int_cast, Int.cast_pow, Int.cast_coe_nat, Int.cast_pow,
       Int.cast_coe_nat, log_mul (pow_ne_zero _ q_pos'.ne') hε.ne', ← rpow_nat_cast, ← rpow_nat_cast, log_rpow q_pos',
       log_rpow q_pos', ← lt_div_iff (log_pos one_lt_q'), add_div, mul_div_cancel _ (log_pos one_lt_q').ne']
   -- And that result follows from manipulating the result from `exists_approx_polynomial_aux`
@@ -171,13 +171,15 @@ theorem card_pow_degree_anti_archimedean {x y z : Fq[X]} {a : ℤ} (hxy : cardPo
   rw [card_pow_degree_nonzero _ hxz', card_pow_degree_nonzero _ hxy', card_pow_degree_nonzero _ hyz']
   have : (1 : ℤ) ≤ Fintype.card Fq := by
     exact_mod_cast (@Fintype.one_lt_card Fq _ _).le
-  simp only [← Int.cast_pow, ← Int.cast_coe_nat, ← le_max_iff]
+  simp only [Int.cast_pow, Int.cast_coe_nat, le_max_iff]
   refine' Or.imp (pow_le_pow this) (pow_le_pow this) _
   rw [nat_degree_le_iff_degree_le, nat_degree_le_iff_degree_le, ← le_max_iff, ← degree_eq_nat_degree hxy', ←
     degree_eq_nat_degree hyz']
   convert degree_add_le (x - y) (y - z) using 2
   exact (sub_add_sub_cancel _ _ _).symm
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident j, ",", ident hj, "⟩", ":", expr «expr∃ , »((j), ∀
+    i, «expr ↔ »(«expr = »(t' i, j), «expr < »((card_pow_degree «expr - »(«expr % »(A 0, b), «expr % »(A i.succ, b)) : exprℝ()), «expr • »(card_pow_degree b, ε))))]]
 /-- A slightly stronger version of `exists_partition` on which we perform induction on `n`:
 for all `ε > 0`, we can partition the remainders of any family of polynomials `A`
 into equivalence classes, where the equivalence(!) relation is "closer than `ε`". -/
@@ -186,7 +188,7 @@ theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b :
       ∀ i₀ i₁ : Finₓ n, t i₀ = t i₁ ↔ (cardPowDegree (A i₁ % b - A i₀ % b) : ℝ) < cardPowDegree b • ε :=
   by
   have hbε : 0 < card_pow_degree b • ε := by
-    rw [Algebra.smul_def, RingHom.eq_int_cast]
+    rw [Algebra.smul_def, eq_int_cast]
     exact mul_pos (int.cast_pos.mpr (AbsoluteValue.pos _ hb)) hε
   -- We go by induction on the size `A`.
   induction' n with n ih
@@ -202,10 +204,9 @@ theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b :
     simp_rw [← Int.lt_ceil]
     exact card_pow_degree_anti_archimedean
   obtain ⟨t', ht'⟩ := ih (Finₓ.tail A)
-  -- We got rid of `A 0`, so determine the index `j` of the partition we'll re-add it to.
-  suffices ∃ j, ∀ i, t' i = j ↔ (card_pow_degree (A 0 % b - A i.succ % b) : ℝ) < card_pow_degree b • ε by
-    obtain ⟨j, hj⟩ := this
-    refine' ⟨Finₓ.cons j t', fun i₀ i₁ => _⟩
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident j, \",\", ident hj, \"⟩\", \":\", expr «expr∃ , »((j), ∀\n    i, «expr ↔ »(«expr = »(t' i, j), «expr < »((card_pow_degree «expr - »(«expr % »(A 0, b), «expr % »(A i.succ, b)) : exprℝ()), «expr • »(card_pow_degree b, ε))))]]"
+  · refine' ⟨Finₓ.cons j t', fun i₀ i₁ => _⟩
     refine' Finₓ.cases _ (fun i₀ => _) i₀ <;> refine' Finₓ.cases _ (fun i₁ => _) i₁
     · simpa using hbε
       
@@ -218,6 +219,7 @@ theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b :
     · rw [Finₓ.cons_succ, Finₓ.cons_succ]
       exact ht' i₀ i₁
       
+    
   -- `exists_approx_polynomial` guarantees that we can insert `A 0` into some partition `j`,
   -- but not that `j` is uniquely defined (which is needed to keep the induction going).
   obtain ⟨j, hj⟩ :

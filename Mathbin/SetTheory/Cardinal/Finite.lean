@@ -3,6 +3,7 @@ Copyright (c) 2021 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
+import Mathbin.Data.Zmod.Defs
 import Mathbin.SetTheory.Cardinal.Basic
 
 /-!
@@ -72,7 +73,7 @@ theorem card_of_is_empty [IsEmpty α] : Nat.card α = 0 := by
 
 @[simp]
 theorem card_prod (α β : Type _) : Nat.card (α × β) = Nat.card α * Nat.card β := by
-  simp only [← Nat.card, ← mk_prod, ← to_nat_mul, ← to_nat_lift]
+  simp only [Nat.card, mk_prod, to_nat_mul, to_nat_lift]
 
 @[simp]
 theorem card_ulift (α : Type _) : Nat.card (ULift α) = Nat.card α :=
@@ -81,6 +82,14 @@ theorem card_ulift (α : Type _) : Nat.card (ULift α) = Nat.card α :=
 @[simp]
 theorem card_plift (α : Type _) : Nat.card (Plift α) = Nat.card α :=
   card_congr Equivₓ.plift
+
+@[simp]
+theorem card_zmod (n : ℕ) : Nat.card (Zmod n) = n := by
+  cases n
+  · exact Nat.card_eq_zero_of_infinite
+    
+  · rw [Nat.card_eq_fintype_card, Zmod.card]
+    
 
 end Nat
 

@@ -49,7 +49,7 @@ instance Lex.hasLe [LT ι] [∀ i, LE (α i)] : LE (Σₗ' i, α i) where le := 
 instance Lex.hasLt [LT ι] [∀ i, LT (α i)] : LT (Σₗ' i, α i) where lt := Lex (· < ·) fun i => (· < ·)
 
 instance Lex.preorder [Preorderₓ ι] [∀ i, Preorderₓ (α i)] : Preorderₓ (Σₗ' i, α i) :=
-  { Lex.hasLe, Lex.hasLt with le_refl := fun ⟨i, a⟩ => Lex.right _ le_rfl,
+  { Lex.hasLe, Lex.hasLt with le_refl := fun ⟨i, a⟩ => Lex.right _ le_rflₓ,
     le_trans := by
       rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ ⟨a₃, b₃⟩ ⟨h₁l, h₁r⟩ ⟨h₂l, h₂r⟩
       · left

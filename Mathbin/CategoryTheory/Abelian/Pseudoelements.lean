@@ -214,7 +214,7 @@ theorem pseudo_zero_aux {P : C} (Q : C) (f : Over P) : f ≈ (0 : Q ⟶ P) ↔ f
   ⟨fun ⟨R, p, q, ep, Eq, comm⟩ =>
     zero_of_epi_comp p
       (by
-        simp [← comm]),
+        simp [comm]),
     fun hf =>
     ⟨biprod f.1 Q, biprod.fst, biprod.snd, by
       infer_instance, by
@@ -285,7 +285,7 @@ localized [Pseudoelement]
 
 theorem eq_zero_iff {P Q : C} (f : P ⟶ Q) : f = 0 ↔ ∀ a, f a = 0 :=
   ⟨fun h a => by
-    simp [← h], zero_morphism_ext _⟩
+    simp [h], zero_morphism_ext _⟩
 
 /-- A monomorphism is injective on pseudoelements. -/
 theorem pseudo_injective_of_mono {P Q : C} (f : P ⟶ Q) [Mono f] : Function.Injective f := fun abar abar' =>
@@ -297,7 +297,7 @@ theorem pseudo_injective_of_mono {P Q : C} (f : P ⟶ Q) [Mono f] : Function.Inj
       | ⟨R, p, q, ep, Eq, comm⟩ =>
         ⟨R, p, q, ep, Eq,
           (cancel_mono f).1 <| by
-            simp only [← category.assoc]
+            simp only [category.assoc]
             exact comm⟩
 
 /-- A morphism that is injective on pseudoelements only maps the zero element to zero. -/
@@ -377,7 +377,7 @@ theorem pseudo_exact_of_exact {P Q R : C} {f : P ⟶ Q} {g : Q ⟶ R} (h : Exact
 end
 
 theorem apply_eq_zero_of_comp_eq_zero {P Q R : C} (f : Q ⟶ R) (a : P ⟶ Q) : a ≫ f = 0 → f a = 0 := fun h => by
-  simp [← over_coe_def, ← pseudo_apply_mk, ← over.coe_hom, ← h]
+  simp [over_coe_def, pseudo_apply_mk, over.coe_hom, h]
 
 section
 
@@ -401,7 +401,7 @@ theorem exact_of_pseudo_exact {P Q R : C} (f : P ⟶ Q) (g : Q ⟶ R) :
       obtain ⟨z, hz₁, hz₂⟩ :=
         @pullback.lift' _ _ _ _ _ _ (kernel.ι (cokernel.π f)) (kernel.ι g) _ (r ≫ a.hom ≫ abelian.factor_thru_image f) q
           (by
-            simp only [← category.assoc, ← abelian.image.fac]
+            simp only [category.assoc, abelian.image.fac]
             exact comm)
       -- Let's give a name to the second pullback morphism.
       let j : pullback (kernel.ι (cokernel.π f)) (kernel.ι g) ⟶ kernel g := pullback.snd
@@ -414,7 +414,7 @@ theorem exact_of_pseudo_exact {P Q R : C} (f : P ⟶ Q) (g : Q ⟶ R) :
       -- But then kernel.ι g can be expressed using all of the maps of the pullback square, and we
       -- are done.
       rw [(iso.eq_inv_comp (as_iso j)).2 pullback.condition.symm]
-      simp only [← category.assoc, ← kernel.condition, ← has_zero_morphisms.comp_zero]⟩
+      simp only [category.assoc, kernel.condition, has_zero_morphisms.comp_zero]⟩
 
 end
 
@@ -430,7 +430,7 @@ theorem sub_of_eq_image {P Q : C} (f : P ⟶ Q) (x y : P) :
       ⟨a'',
         ⟨show ⟦((p ≫ a.Hom - q ≫ a'.Hom) ≫ f : Over Q)⟧ = ⟦(0 : Q ⟶ Q)⟧ by
             dsimp'  at comm
-            simp [← sub_eq_zero.2 comm],
+            simp [sub_eq_zero.2 comm],
           fun Z g hh => by
           obtain ⟨X, p', q', ep', eq', comm'⟩ := Quotientₓ.exact hh
           have : a'.hom ≫ g = 0 := by
@@ -442,7 +442,7 @@ theorem sub_of_eq_image {P Q : C} (f : P ⟶ Q) (x y : P) :
           exact
             ⟨R, 𝟙 R, p, by
               infer_instance, ep, by
-              simp [← sub_eq_add_neg, ← this]⟩⟩⟩
+              simp [sub_eq_add_neg, this]⟩⟩⟩
 
 variable [Limits.HasPullbacks C]
 
@@ -458,7 +458,7 @@ theorem pseudo_pullback {P Q R : C} {f : P ⟶ R} {g : Q ⟶ R} {p : P} {q : Q} 
     obtain ⟨l, hl₁, hl₂⟩ :=
       @pullback.lift' _ _ _ _ _ _ f g _ (a ≫ x.hom) (b ≫ y.hom)
         (by
-          simp only [← category.assoc]
+          simp only [category.assoc]
           exact comm)
     exact
       ⟨l,

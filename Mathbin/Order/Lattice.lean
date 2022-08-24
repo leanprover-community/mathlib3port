@@ -91,10 +91,10 @@ def SemilatticeSup.mk' {α : Type _} [HasSup α] (sup_comm : ∀ a b : α, a⊔b
   le := fun a b => a⊔b = b
   le_refl := sup_idem
   le_trans := fun a b c hab hbc => by
-    dsimp' only [← (· ≤ ·)]  at *
+    dsimp' only [(· ≤ ·)]  at *
     rwa [← hbc, ← sup_assoc, hab]
   le_antisymm := fun a b hab hba => by
-    dsimp' only [← (· ≤ ·)]  at *
+    dsimp' only [(· ≤ ·)]  at *
     rwa [← hba, sup_comm]
   le_sup_left := fun a b =>
     show a⊔(a⊔b) = a⊔b by
@@ -103,7 +103,7 @@ def SemilatticeSup.mk' {α : Type _} [HasSup α] (sup_comm : ∀ a b : α, a⊔b
     show b⊔(a⊔b) = a⊔b by
       rw [sup_comm, sup_assoc, sup_idem]
   sup_le := fun a b c hac hbc => by
-    dsimp' only [← (· ≤ ·), ← Preorderₓ.Le]  at *
+    dsimp' only [(· ≤ ·), Preorderₓ.Le]  at *
     rwa [sup_assoc, hbc]
 
 instance (α : Type _) [HasInf α] : HasSup αᵒᵈ :=
@@ -154,7 +154,7 @@ theorem sup_le_iff : a⊔b ≤ c ↔ a ≤ c ∧ b ≤ c :=
 @[simp]
 theorem sup_eq_left : a⊔b = a ↔ b ≤ a :=
   le_antisymm_iffₓ.trans <| by
-    simp [← le_reflₓ]
+    simp [le_reflₓ]
 
 theorem sup_of_le_left (h : b ≤ a) : a⊔b = a :=
   sup_eq_left.2 h
@@ -170,7 +170,7 @@ theorem left_lt_sup : a < a⊔b ↔ ¬b ≤ a :=
 @[simp]
 theorem sup_eq_right : a⊔b = b ↔ a ≤ b :=
   le_antisymm_iffₓ.trans <| by
-    simp [← le_reflₓ]
+    simp [le_reflₓ]
 
 theorem sup_of_le_right (h : a ≤ b) : a⊔b = b :=
   sup_eq_right.2 h
@@ -199,10 +199,10 @@ theorem sup_le_sup (h₁ : a ≤ b) (h₂ : c ≤ d) : a⊔c ≤ b⊔d :=
   sup_le (le_sup_of_le_left h₁) (le_sup_of_le_right h₂)
 
 theorem sup_le_sup_left (h₁ : a ≤ b) (c) : c⊔a ≤ c⊔b :=
-  sup_le_sup le_rfl h₁
+  sup_le_sup le_rflₓ h₁
 
 theorem sup_le_sup_right (h₁ : a ≤ b) (c) : a⊔c ≤ b⊔c :=
-  sup_le_sup h₁ le_rfl
+  sup_le_sup h₁ le_rflₓ
 
 theorem le_of_sup_eq (h : a⊔b = b) : a ≤ b := by
   rw [← h]
@@ -222,8 +222,8 @@ instance sup_is_commutative : IsCommutative α (·⊔·) :=
   ⟨@sup_comm _ _⟩
 
 theorem sup_assoc : a⊔b⊔c = a⊔(b⊔c) :=
-  eq_of_forall_ge_iff fun x => by
-    simp only [← sup_le_iff, ← and_assoc]
+  eq_of_forall_ge_iffₓ fun x => by
+    simp only [sup_le_iff, and_assoc]
 
 instance sup_is_associative : IsAssociative α (·⊔·) :=
   ⟨@sup_assoc _ _⟩
@@ -285,8 +285,8 @@ theorem SemilatticeSup.ext_sup {α} {A B : SemilatticeSup α}
     (haveI := A
       x⊔y) =
       x⊔y :=
-  eq_of_forall_ge_iff fun c => by
-    simp only [← sup_le_iff] <;> rw [← H, @sup_le_iff α A, H, H]
+  eq_of_forall_ge_iffₓ fun c => by
+    simp only [sup_le_iff] <;> rw [← H, @sup_le_iff α A, H, H]
 
 theorem SemilatticeSup.ext {α} {A B : SemilatticeSup α}
     (H :
@@ -373,7 +373,7 @@ theorem le_inf_iff : a ≤ b⊓c ↔ a ≤ b ∧ a ≤ c :=
 @[simp]
 theorem inf_eq_left : a⊓b = a ↔ a ≤ b :=
   le_antisymm_iffₓ.trans <| by
-    simp [← le_reflₓ]
+    simp [le_reflₓ]
 
 @[simp]
 theorem inf_lt_left : a⊓b < a ↔ ¬a ≤ b :=
@@ -389,7 +389,7 @@ theorem left_eq_inf : a = a⊓b ↔ a ≤ b :=
 @[simp]
 theorem inf_eq_right : a⊓b = b ↔ b ≤ a :=
   le_antisymm_iffₓ.trans <| by
-    simp [← le_reflₓ]
+    simp [le_reflₓ]
 
 @[simp]
 theorem inf_lt_right : a⊓b < b ↔ ¬b ≤ a :=
@@ -409,10 +409,10 @@ theorem inf_le_inf (h₁ : a ≤ b) (h₂ : c ≤ d) : a⊓c ≤ b⊓d :=
   @sup_le_sup αᵒᵈ _ _ _ _ _ h₁ h₂
 
 theorem inf_le_inf_right (a : α) {b c : α} (h : b ≤ c) : b⊓a ≤ c⊓a :=
-  inf_le_inf h le_rfl
+  inf_le_inf h le_rflₓ
 
 theorem inf_le_inf_left (a : α) {b c : α} (h : b ≤ c) : a⊓b ≤ a⊓c :=
-  inf_le_inf le_rfl h
+  inf_le_inf le_rflₓ h
 
 theorem le_of_inf_eq (h : a⊓b = a) : a ≤ b :=
   inf_eq_left.1 h
@@ -484,8 +484,8 @@ theorem SemilatticeInf.ext_inf {α} {A B : SemilatticeInf α}
     (haveI := A
       x⊓y) =
       x⊓y :=
-  eq_of_forall_le_iff fun c => by
-    simp only [← le_inf_iff] <;> rw [← H, @le_inf_iff α A, H, H]
+  eq_of_forall_le_iffₓ fun c => by
+    simp only [le_inf_iff] <;> rw [← H, @le_inf_iff α A, H, H]
 
 theorem SemilatticeInf.ext {α} {A B : SemilatticeInf α}
     (H :
@@ -601,7 +601,7 @@ theorem inf_lt_sup : a⊓b < a⊔b ↔ a ≠ b := by
   · rintro H rfl
     simpa using H
     
-  · refine' fun Hne => lt_iff_le_and_ne.2 ⟨inf_le_sup, fun Heq => Hne _⟩
+  · refine' fun Hne => lt_iff_le_and_neₓ.2 ⟨inf_le_sup, fun Heq => Hne _⟩
     refine' le_antisymmₓ _ _
     exacts[le_sup_left.trans (Heq.symm.trans_le inf_le_right), le_sup_right.trans (Heq.symm.trans_le inf_le_left)]
     
@@ -672,14 +672,14 @@ theorem sup_inf_left : x⊔y⊓z = (x⊔y)⊓(x⊔z) :=
   le_antisymmₓ sup_inf_le le_sup_inf
 
 theorem sup_inf_right : y⊓z⊔x = (y⊔x)⊓(z⊔x) := by
-  simp only [← sup_inf_left, ← fun y : α => @sup_comm α _ y x, ← eq_self_iff_true]
+  simp only [sup_inf_left, fun y : α => @sup_comm α _ y x, eq_self_iff_true]
 
 theorem inf_sup_left : x⊓(y⊔z) = x⊓y⊔x⊓z :=
   calc
     x⊓(y⊔z) = x⊓(x⊔z)⊓(y⊔z) := by
       rw [inf_sup_self]
     _ = x⊓(x⊓y⊔z) := by
-      simp only [← inf_assoc, ← sup_inf_right, ← eq_self_iff_true]
+      simp only [inf_assoc, sup_inf_right, eq_self_iff_true]
     _ = (x⊔x⊓y)⊓(x⊓y⊔z) := by
       rw [sup_inf_self]
     _ = (x⊓y⊔x)⊓(x⊓y⊔z) := by
@@ -692,7 +692,7 @@ instance (α : Type _) [DistribLattice α] : DistribLattice αᵒᵈ :=
   { OrderDual.lattice α with le_sup_inf := fun x y z => le_of_eqₓ inf_sup_left.symm }
 
 theorem inf_sup_right : (y⊔z)⊓x = y⊓x⊔z⊓x := by
-  simp only [← inf_sup_left, ← fun y : α => @inf_comm α _ y x, ← eq_self_iff_true]
+  simp only [inf_sup_left, fun y : α => @inf_comm α _ y x, eq_self_iff_true]
 
 theorem le_of_inf_le_sup_le (h₁ : x⊓z ≤ y⊓z) (h₂ : x⊔z ≤ y⊔z) : x ≤ y :=
   calc
@@ -950,9 +950,9 @@ variable [LinearOrderₓ α]
 theorem map_sup [SemilatticeSup β] {f : α → β} (hf : Monotone f) (x y : α) : f (x⊔y) = f x⊔f y :=
   (IsTotal.total x y).elim
     (fun h : x ≤ y => by
-      simp only [← h, ← hf h, ← sup_of_le_right])
+      simp only [h, hf h, sup_of_le_right])
     fun h => by
-    simp only [← h, ← hf h, ← sup_of_le_left]
+    simp only [h, hf h, sup_of_le_left]
 
 theorem map_inf [SemilatticeInf β] {f : α → β} (hf : Monotone f) (x y : α) : f (x⊓y) = f x⊓f y :=
   hf.dual.map_sup _ _

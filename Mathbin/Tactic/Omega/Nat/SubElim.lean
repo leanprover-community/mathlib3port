@@ -37,22 +37,22 @@ theorem val_sub_subst {k : Nat} {x y : Preterm} {v : Nat → Nat} :
   | &m, h1 => rfl
   | m ** n, h1 => by
     have h2 : n ≠ k := ne_of_ltₓ h1
-    simp only [← sub_subst, ← preterm.val]
+    simp only [sub_subst, preterm.val]
     rw [update_eq_of_ne _ h2]
   | t +* s, h1 => by
-    simp only [← sub_subst, ← val_add]
+    simp only [sub_subst, val_add]
     apply fun_mono_2 <;> apply val_sub_subst (le_transₓ _ h1)
     apply le_max_leftₓ
     apply le_max_rightₓ
   | t -* s, h1 => by
-    simp only [← sub_subst, ← val_sub]
+    simp only [sub_subst, val_sub]
     by_cases' h2 : t = x ∧ s = y
     · rw [if_pos h2]
-      simp only [← val_var, ← one_mulₓ]
+      simp only [val_var, one_mulₓ]
       rw [update_eq, h2.left, h2.right]
       
     · rw [if_neg h2]
-      simp only [← val_sub, ← sub_subst]
+      simp only [val_sub, sub_subst]
       apply fun_mono_2 <;> apply val_sub_subst (le_transₓ _ h1)
       apply le_max_leftₓ
       apply le_max_rightₓ
@@ -88,8 +88,7 @@ def isDiff (t s : Preterm) (k : Nat) : Preform :=
 
 theorem holds_is_diff {t s : Preterm} {k : Nat} {v : Nat → Nat} : v k = t.val v - s.val v → (isDiff t s k).Holds v := by
   intro h1
-  simp only [← preform.holds, ← is_diff, ← if_pos (Eq.refl 1), ← preterm.val_add, ← preterm.val_var, ←
-    preterm.val_const]
+  simp only [preform.holds, is_diff, if_pos (Eq.refl 1), preterm.val_add, preterm.val_var, preterm.val_const]
   cases' le_totalₓ (t.val v) (s.val v) with h2 h2
   · right
     refine' ⟨h2, _⟩
@@ -116,12 +115,12 @@ def subElim (t s : Preterm) (p : Preform) : Preform :=
 theorem sub_subst_equiv {k : Nat} {x y : Preterm} {v : Nat → Nat} :
     ∀ p : Preform, p.freshIndex ≤ k → ((Preform.subSubst x y k p).Holds (update k (x.val v - y.val v) v) ↔ p.Holds v)
   | t =* s, h1 => by
-    simp only [← preform.holds, ← preform.sub_subst]
+    simp only [preform.holds, preform.sub_subst]
     apply pred_mono_2 <;> apply preterm.val_sub_subst (le_transₓ _ h1)
     apply le_max_leftₓ
     apply le_max_rightₓ
   | t ≤* s, h1 => by
-    simp only [← preform.holds, ← preform.sub_subst]
+    simp only [preform.holds, preform.sub_subst]
     apply pred_mono_2 <;> apply preterm.val_sub_subst (le_transₓ _ h1)
     apply le_max_leftₓ
     apply le_max_rightₓ
@@ -129,19 +128,19 @@ theorem sub_subst_equiv {k : Nat} {x y : Preterm} {v : Nat → Nat} :
     apply not_iff_not_of_iff
     apply sub_subst_equiv p h1
   | p ∨* q, h1 => by
-    simp only [← preform.holds, ← preform.sub_subst]
+    simp only [preform.holds, preform.sub_subst]
     apply pred_mono_2 <;> apply propext <;> apply sub_subst_equiv _ (le_transₓ _ h1)
     apply le_max_leftₓ
     apply le_max_rightₓ
   | p ∧* q, h1 => by
-    simp only [← preform.holds, ← preform.sub_subst]
+    simp only [preform.holds, preform.sub_subst]
     apply pred_mono_2 <;> apply propext <;> apply sub_subst_equiv _ (le_transₓ _ h1)
     apply le_max_leftₓ
     apply le_max_rightₓ
 
 theorem sat_sub_elim {t s : Preterm} {p : Preform} : p.Sat → (subElim t s p).Sat := by
   intro h1
-  simp only [← sub_elim, ← sub_elim_core]
+  simp only [sub_elim, sub_elim_core]
   cases' h1 with v h1
   refine' ⟨update (sub_fresh_index t s p) (t.val v - s.val v) v, _⟩
   constructor

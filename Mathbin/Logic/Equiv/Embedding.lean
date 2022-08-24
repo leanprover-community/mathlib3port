@@ -17,17 +17,17 @@ open Function.Embedding
 
 namespace Equivₓ
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
 /-- Embeddings from a sum type are equivalent to two separate embeddings with disjoint ranges. -/
 def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
     (Sum α β ↪ γ) ≃ { f : (α ↪ γ) × (β ↪ γ) // Disjoint (Set.Range f.1) (Set.Range f.2) } where
   toFun := fun f =>
     ⟨(inl.trans f, inr.trans f), by
       rintro _ ⟨⟨a, h⟩, ⟨b, rfl⟩⟩
-      simp only [← trans_apply, ← inl_apply, ← inr_apply] at h
+      simp only [trans_apply, inl_apply, inr_apply] at h
       have : Sum.inl a = Sum.inr b := f.injective h
       simp only at this
       assumption⟩
@@ -37,7 +37,7 @@ def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
       | Sum.inl a => f a
       | Sum.inr b => g b,
       by
-      rintro (a₁ | b₁) (a₂ | b₂) f_eq <;> simp only [← Equivₓ.coe_fn_symm_mk, ← Sum.elim_inl, ← Sum.elim_inr] at f_eq
+      rintro (a₁ | b₁) (a₂ | b₂) f_eq <;> simp only [Equivₓ.coe_fn_symm_mk, Sum.elim_inl, Sum.elim_inr] at f_eq
       · rw [f.injective f_eq]
         
       · simp only at f_eq
@@ -47,7 +47,7 @@ def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
             ⟨⟨a₁, by
                 simp ⟩,
               ⟨b₂, by
-                simp [← f_eq]⟩⟩
+                simp [f_eq]⟩⟩
         
       · simp only at f_eq
         exfalso
@@ -56,7 +56,7 @@ def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
             ⟨⟨a₂, by
                 simp ⟩,
               ⟨b₁, by
-                simp [← f_eq]⟩⟩
+                simp [f_eq]⟩⟩
         
       · rw [g.injective f_eq]
         ⟩
@@ -65,7 +65,7 @@ def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
     ext
     cases x <;> simp
   right_inv := fun ⟨⟨f, g⟩, _⟩ => by
-    simp only [← Prod.mk.inj_iff]
+    simp only [Prod.mk.inj_iff]
     constructor <;> ext <;> simp
 
 /-- Embeddings whose range lies within a set are equivalent to embeddings to that set.

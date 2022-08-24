@@ -63,10 +63,10 @@ theorem IsLocalExtrOn.exists_linear_map_of_has_strict_fderiv_at (hextr : IsLocal
   refine' ⟨Λ, Λ₀, e.map_ne_zero_iff.1 h0, fun x => _⟩
   convert LinearMap.congr_fun (LinearMap.range_le_ker_iff.1 hΛ') x using 1
   -- squeezed `simp [mul_comm]` to speed up elaboration
-  simp only [← LinearMap.coprod_equiv_apply, ← LinearEquiv.refl_apply, ← LinearMap.ring_lmap_equiv_self_symm_apply, ←
-    LinearMap.comp_apply, ← ContinuousLinearMap.coe_coe, ← ContinuousLinearMap.prod_apply, ← LinearEquiv.trans_apply, ←
-    LinearEquiv.prod_apply, ← LinearMap.coprod_apply, ← LinearMap.smul_right_apply, ← LinearMap.one_apply, ←
-    smul_eq_mul, ← mul_comm]
+  simp only [LinearMap.coprod_equiv_apply, LinearEquiv.refl_apply, LinearMap.ring_lmap_equiv_self_symm_apply,
+    LinearMap.comp_apply, ContinuousLinearMap.coe_coe, ContinuousLinearMap.prod_apply, LinearEquiv.trans_apply,
+    LinearEquiv.prod_apply, LinearMap.coprod_apply, LinearMap.smul_right_apply, LinearMap.one_apply, smul_eq_mul,
+    mul_comm]
 
 /-- Lagrange multipliers theorem: if `φ : E → ℝ` has a local extremum on the set `{x | f x = f x₀}`
 at `x₀`, and both `f : E → ℝ` and `φ` are strictly differentiable at `x₀`, then there exist
@@ -77,16 +77,16 @@ theorem IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at_1d {f : E → �
   obtain ⟨Λ, Λ₀, hΛ, hfΛ⟩ := hextr.exists_linear_map_of_has_strict_fderiv_at hf' hφ'
   refine' ⟨Λ 1, Λ₀, _, _⟩
   · contrapose! hΛ
-    simp only [← Prod.mk_eq_zero] at hΛ⊢
+    simp only [Prod.mk_eq_zero] at hΛ⊢
     refine' ⟨LinearMap.ext fun x => _, hΛ.2⟩
-    simpa [← hΛ.1] using Λ.map_smul x 1
+    simpa [hΛ.1] using Λ.map_smul x 1
     
   · ext x
     have H₁ : Λ (f' x) = f' x * Λ 1 := by
-      simpa only [← mul_oneₓ, ← Algebra.id.smul_eq_mul] using Λ.map_smul (f' x) 1
+      simpa only [mul_oneₓ, Algebra.id.smul_eq_mul] using Λ.map_smul (f' x) 1
     have H₂ : f' x * Λ 1 + Λ₀ * φ' x = 0 := by
-      simpa only [← Algebra.id.smul_eq_mul, ← H₁] using hfΛ x
-    simpa [← mul_comm] using H₂
+      simpa only [Algebra.id.smul_eq_mul, H₁] using hfΛ x
+    simpa [mul_comm] using H₂
     
 
 /-- Lagrange multipliers theorem, 1d version. Let `f : ι → E → ℝ` be a finite family of functions.
@@ -103,16 +103,16 @@ theorem IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at {ι : Type _} [
     ∃ (Λ : ι → ℝ)(Λ₀ : ℝ), (Λ, Λ₀) ≠ 0 ∧ (∑ i, Λ i • f' i) + Λ₀ • φ' = 0 := by
   letI := Classical.decEq ι
   replace hextr : IsLocalExtrOn φ { x | (fun i => f i x) = fun i => f i x₀ } x₀
-  · simpa only [← Function.funext_iffₓ] using hextr
+  · simpa only [Function.funext_iffₓ] using hextr
     
   rcases hextr.exists_linear_map_of_has_strict_fderiv_at (has_strict_fderiv_at_pi.2 fun i => hf' i) hφ' with
     ⟨Λ, Λ₀, h0, hsum⟩
   rcases(LinearEquiv.piRing ℝ ℝ ι ℝ).symm.Surjective Λ with ⟨Λ, rfl⟩
   refine' ⟨Λ, Λ₀, _, _⟩
-  · simpa only [← Ne.def, ← Prod.ext_iff, ← LinearEquiv.map_eq_zero_iff, ← Prod.fst_zero] using h0
+  · simpa only [Ne.def, Prod.ext_iff, LinearEquiv.map_eq_zero_iff, Prod.fst_zero] using h0
     
   · ext x
-    simpa [← mul_comm] using hsum x
+    simpa [mul_comm] using hsum x
     
 
 /-- Lagrange multipliers theorem. Let `f : ι → E → ℝ` be a finite family of functions.
@@ -131,8 +131,8 @@ theorem IsLocalExtrOn.linear_dependent_of_has_strict_fderiv_at {ι : Type _} [Fi
   push_neg
   rcases hextr.exists_multipliers_of_has_strict_fderiv_at hf' hφ' with ⟨Λ, Λ₀, hΛ, hΛf⟩
   refine' ⟨Option.elimₓ Λ₀ Λ, _, _⟩
-  · simpa [← add_commₓ] using hΛf
+  · simpa [add_commₓ] using hΛf
     
-  · simpa [← Function.funext_iffₓ, ← not_and_distrib, ← or_comm, ← Option.exists] using hΛ
+  · simpa [Function.funext_iffₓ, not_and_distrib, or_comm, Option.exists] using hΛ
     
 

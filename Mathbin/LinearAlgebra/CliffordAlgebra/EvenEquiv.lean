@@ -73,9 +73,9 @@ theorem v_sq_scalar (m : M) : v Q m * v Q m = algebraMap _ _ (Q m) :=
 
 theorem neg_e0_mul_v (m : M) : -(e0 Q * v Q m) = v Q m * e0 Q := by
   refine' neg_eq_of_add_eq_zero_right ((ι_mul_ι_add_swap _ _).trans _)
-  dsimp' [← QuadraticForm.polar]
-  simp only [← add_zeroₓ, ← mul_zero, ← mul_oneₓ, ← zero_addₓ, ← neg_zero, ← QuadraticForm.map_zero, ← add_sub_cancel, ←
-    sub_self, ← map_zero, ← zero_sub]
+  dsimp' [QuadraticForm.polar]
+  simp only [add_zeroₓ, mul_zero, mul_oneₓ, zero_addₓ, neg_zero, QuadraticForm.map_zero, add_sub_cancel, sub_self,
+    map_zero, zero_sub]
 
 theorem neg_v_mul_e0 (m : M) : -(v Q m * e0 Q) = e0 Q * v Q m := by
   rw [neg_eq_iff_neg_eq]
@@ -114,8 +114,8 @@ def toEven : CliffordAlgebra Q →ₐ[R] CliffordAlgebra.even (q' Q) := by
     exact Submodule.mul_mem_mul (LinearMap.mem_range_self _ _) (LinearMap.mem_range_self _ _)
     
   · ext1
-    dsimp' only [← Subalgebra.coe_mul, ← LinearMap.cod_restrict_apply, ← LinearMap.comp_apply, ←
-      LinearMap.mul_left_apply, ← LinearMap.inl_apply, ← Subalgebra.coe_algebra_map]
+    dsimp' only [Subalgebra.coe_mul, LinearMap.cod_restrict_apply, LinearMap.comp_apply, LinearMap.mul_left_apply,
+      LinearMap.inl_apply, Subalgebra.coe_algebra_map]
     rw [← mul_assoc, e0_mul_v_mul_e0, v_sq_scalar]
     
 
@@ -214,14 +214,14 @@ theorem coe_to_even_reverse_involute (x : CliffordAlgebra Q) :
     ↑(toEven Q (reverse (involute x))) = reverse (toEven Q x : CliffordAlgebra (q' Q)) := by
   induction x using CliffordAlgebra.induction
   case h_grade0 r =>
-    simp only [← AlgHom.commutes, ← Subalgebra.coe_algebra_map, ← reverse.commutes]
+    simp only [AlgHom.commutes, Subalgebra.coe_algebra_map, reverse.commutes]
   case h_grade1 m =>
-    simp only [← involute_ι, ← Subalgebra.coe_neg, ← to_even_ι, ← reverse.map_mul, ← reverse_v, ← reverse_e0, ←
-      reverse_ι, ← neg_e0_mul_v, ← map_neg]
+    simp only [involute_ι, Subalgebra.coe_neg, to_even_ι, reverse.map_mul, reverse_v, reverse_e0, reverse_ι,
+      neg_e0_mul_v, map_neg]
   case h_mul x y hx hy =>
-    simp only [← map_mul, ← Subalgebra.coe_mul, ← reverse.map_mul, ← hx, ← hy]
+    simp only [map_mul, Subalgebra.coe_mul, reverse.map_mul, hx, hy]
   case h_add x y hx hy =>
-    simp only [← map_add, ← Subalgebra.coe_add, ← hx, ← hy]
+    simp only [map_add, Subalgebra.coe_add, hx, hy]
 
 /-! ### Constructions needed for `clifford_algebra.even_equiv_even_neg` -/
 
@@ -244,7 +244,7 @@ theorem even_to_neg_ι (Q' : QuadraticForm R M) (h : Q' = -Q) (m₁ m₂ : M) :
 theorem even_to_neg_comp_even_to_neg (Q' : QuadraticForm R M) (h : Q' = -Q) (h' : Q = -Q') :
     (evenToNeg Q' Q h').comp (evenToNeg Q Q' h) = AlgHom.id R _ := by
   ext m₁ m₂ : 4
-  dsimp' only [← even_hom.compr₂_bilin, ← LinearMap.compr₂_apply, ← AlgHom.to_linear_map_apply, ← AlgHom.comp_apply, ←
+  dsimp' only [even_hom.compr₂_bilin, LinearMap.compr₂_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply,
     AlgHom.id_apply]
   rw [even_to_neg_ι, map_neg, even_to_neg_ι, neg_negₓ]
 

@@ -197,14 +197,14 @@ theorem preimage_image (h : α ≃ₜ β) (s : Set α) : h ⁻¹' (h '' s) = s :
 
 protected theorem inducing (h : α ≃ₜ β) : Inducing h :=
   inducing_of_inducing_compose h.Continuous h.symm.Continuous <| by
-    simp only [← symm_comp_self, ← inducing_id]
+    simp only [symm_comp_self, inducing_id]
 
 theorem induced_eq (h : α ≃ₜ β) : TopologicalSpace.induced h ‹_› = ‹_› :=
   h.Inducing.1.symm
 
 protected theorem quotient_map (h : α ≃ₜ β) : QuotientMap h :=
   QuotientMap.of_quotient_map_compose h.symm.Continuous h.Continuous <| by
-    simp only [← self_comp_symm, ← QuotientMap.id]
+    simp only [self_comp_symm, QuotientMap.id]
 
 theorem coinduced_eq (h : α ≃ₜ β) : TopologicalSpace.coinduced h ‹_› = ‹_› :=
   h.QuotientMap.2.symm
@@ -216,7 +216,7 @@ protected theorem embedding (h : α ≃ₜ β) : Embedding h :=
 noncomputable def ofEmbedding (f : α → β) (hf : Embedding f) : α ≃ₜ Set.Range f :=
   { Equivₓ.ofInjective f hf.inj with continuous_to_fun := continuous_subtype_mk _ hf.Continuous,
     continuous_inv_fun := by
-      simp [← hf.continuous_iff, ← continuous_subtype_coe] }
+      simp [hf.continuous_iff, continuous_subtype_coe] }
 
 protected theorem second_countable_topology [TopologicalSpace.SecondCountableTopology β] (h : α ≃ₜ β) :
     TopologicalSpace.SecondCountableTopology α :=
@@ -270,7 +270,7 @@ protected theorem is_open_map (h : α ≃ₜ β) : IsOpenMap h := fun s => h.is_
 
 @[simp]
 theorem is_closed_preimage (h : α ≃ₜ β) {s : Set β} : IsClosed (h ⁻¹' s) ↔ IsClosed s := by
-  simp only [is_open_compl_iff, preimage_compl, ← is_open_preimage]
+  simp only [← is_open_compl_iff, ← preimage_compl, is_open_preimage]
 
 @[simp]
 theorem is_closed_image (h : α ≃ₜ β) {s : Set α} : IsClosed (h '' s) ↔ IsClosed s := by

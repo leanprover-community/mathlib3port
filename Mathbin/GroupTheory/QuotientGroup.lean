@@ -54,7 +54,7 @@ protected def con : Con G where
     rw [left_rel_eq] at hab hcd⊢
     calc
       (a * c)⁻¹ * (b * d) = c⁻¹ * (a⁻¹ * b) * c⁻¹⁻¹ * (c⁻¹ * d) := by
-        simp only [← mul_inv_rev, ← mul_assoc, ← inv_mul_cancel_leftₓ]
+        simp only [mul_inv_rev, mul_assoc, inv_mul_cancel_leftₓ]
       _ ∈ N := N.mul_mem (nN.conj_mem _ hab _) hcd
       
 
@@ -82,7 +82,7 @@ theorem mk'_surjective : Function.Surjective <| mk' N :=
 @[to_additive]
 theorem mk'_eq_mk' {x y : G} : mk' N x = mk' N y ↔ ∃ z ∈ N, x * z = y :=
   QuotientGroup.eq'.trans <| by
-    simp only [_root_.eq_inv_mul_iff_mul_eq, ← exists_prop, ← exists_eq_right]
+    simp only [← _root_.eq_inv_mul_iff_mul_eq, exists_prop, exists_eq_right]
 
 /-- Two `monoid_hom`s from a quotient group are equal if their compositions with
 `quotient_group.mk'` are equal.
@@ -149,9 +149,9 @@ theorem coe_zpow (a : G) (n : ℤ) : ((a ^ n : G) : Q ) = a ^ n :=
 group homomorphism `G/N →* H`. -/
 @[to_additive QuotientAddGroup.lift
       "An `add_group` homomorphism `φ : G →+ H` with `N ⊆ ker(φ)`\ndescends (i.e. `lift`s) to a group homomorphism `G/N →* H`."]
-def lift (φ : G →* H) (HN : ∀, ∀ x ∈ N, ∀, φ x = 1) : Q →* H :=
+def lift (φ : G →* H) (HN : ∀ x ∈ N, φ x = 1) : Q →* H :=
   ((QuotientGroup.con N).lift φ) fun x y h => by
-    simp only [← QuotientGroup.con, ← left_rel_apply, ← Con.rel_mk] at h
+    simp only [QuotientGroup.con, left_rel_apply, Con.rel_mk] at h
     calc
       φ x = φ (y * (x⁻¹ * y)⁻¹) := by
         rw [mul_inv_rev, inv_invₓ, mul_inv_cancel_left]
@@ -160,15 +160,15 @@ def lift (φ : G →* H) (HN : ∀, ∀ x ∈ N, ∀, φ x = 1) : Q →* H :=
       
 
 @[simp, to_additive QuotientAddGroup.lift_mk]
-theorem lift_mk {φ : G →* H} (HN : ∀, ∀ x ∈ N, ∀, φ x = 1) (g : G) : lift N φ HN (g : Q ) = φ g :=
+theorem lift_mk {φ : G →* H} (HN : ∀ x ∈ N, φ x = 1) (g : G) : lift N φ HN (g : Q ) = φ g :=
   rfl
 
 @[simp, to_additive QuotientAddGroup.lift_mk']
-theorem lift_mk' {φ : G →* H} (HN : ∀, ∀ x ∈ N, ∀, φ x = 1) (g : G) : lift N φ HN (mk g : Q ) = φ g :=
+theorem lift_mk' {φ : G →* H} (HN : ∀ x ∈ N, φ x = 1) (g : G) : lift N φ HN (mk g : Q ) = φ g :=
   rfl
 
 @[simp, to_additive QuotientAddGroup.lift_quot_mk]
-theorem lift_quot_mk {φ : G →* H} (HN : ∀, ∀ x ∈ N, ∀, φ x = 1) (g : G) : lift N φ HN (Quot.mk _ g : Q ) = φ g :=
+theorem lift_quot_mk {φ : G →* H} (HN : ∀ x ∈ N, φ x = 1) (g : G) : lift N φ HN (Quot.mk _ g : Q ) = φ g :=
   rfl
 
 /-- A group homomorphism `f : G →* H` induces a map `G/N →* H/M` if `N ⊆ f⁻¹(M)`. -/
@@ -278,12 +278,12 @@ def equivQuotientOfEq {M N : Subgroup G} [M.Normal] [N.Normal] (h : M = N) : G �
     lift M (mk' N) fun m hm =>
       QuotientGroup.eq.mpr
         (by
-          simpa [h] using M.inv_mem hm)
+          simpa [← h] using M.inv_mem hm)
   invFun :=
     lift N (mk' M) fun n hn =>
       QuotientGroup.eq.mpr
         (by
-          simpa [h] using N.inv_mem hn)
+          simpa [← h] using N.inv_mem hn)
   left_inv := fun x =>
     x.induction_on' <| by
       intro
@@ -307,7 +307,7 @@ then there is a map `A / (A' ⊓ A) →* B / (B' ⊓ B)` induced by the inclusio
 def quotientMapSubgroupOfOfLe {A' A B' B : Subgroup G} [hAN : (A'.subgroupOf A).Normal] [hBN : (B'.subgroupOf B).Normal]
     (h' : A' ≤ B') (h : A ≤ B) : A ⧸ A'.subgroupOf A →* B ⧸ B'.subgroupOf B :=
   map _ _ (Subgroup.inclusion h) <| by
-    simp [← Subgroup.subgroupOf, ← Subgroup.comap_comap] <;> exact Subgroup.comap_mono h'
+    simp [Subgroup.subgroupOf, Subgroup.comap_comap] <;> exact Subgroup.comap_mono h'
 
 @[simp, to_additive]
 theorem quotient_map_subgroup_of_of_le_coe {A' A B' B : Subgroup G} [hAN : (A'.subgroupOf A).Normal]
@@ -345,7 +345,7 @@ def homQuotientZpowOfHom : A ⧸ (zpowGroupHom n : A →* A).range →* B ⧸ (z
   (lift _ ((mk' _).comp f)) fun g ⟨h, (hg : h ^ n = g)⟩ =>
     (eq_one_iff _).mpr
       ⟨_, by
-        simpa only [hg, ← map_zpow] ⟩
+        simpa only [← hg, map_zpow] ⟩
 
 @[to_additive, simp]
 theorem hom_quotient_zpow_of_hom_id : homQuotientZpowOfHom (MonoidHom.id A) n = MonoidHom.id _ :=
@@ -415,7 +415,7 @@ noncomputable def quotientInfEquivProdNormalQuotient (H N : Subgroup G) [N.Norma
       rwa [← mul_assoc, inv_mul_selfₓ, one_mulₓ]
   (equivQuotientOfEq
         (by
-          simp [← comap_comap, comap_ker])).trans
+          simp [comap_comap, ← comap_ker])).trans
     (quotientKerEquivOfSurjective φ φ_surjective)
 
 end SndIsomorphismThm
@@ -431,7 +431,7 @@ instance map_normal :
     (M.map (QuotientGroup.mk' N)).Normal where conj_mem := by
     rintro _ ⟨x, hx, rfl⟩ y
     refine' induction_on' y fun y => ⟨y * x * y⁻¹, Subgroup.Normal.conj_mem nM x hx y, _⟩
-    simp only [← mk'_apply, ← coe_mul, ← coe_inv]
+    simp only [mk'_apply, coe_mul, coe_inv]
 
 variable (h : N ≤ M)
 
@@ -473,7 +473,7 @@ section trivialₓ
 
 @[to_additive]
 theorem subsingleton_quotient_top : Subsingleton (G ⧸ (⊤ : Subgroup G)) := by
-  dsimp' [← HasQuotient.Quotient, ← subgroup.has_quotient, ← Quotientₓ]
+  dsimp' [HasQuotient.Quotient, subgroup.has_quotient, Quotientₓ]
   rw [left_rel_eq]
   exact @Trunc.subsingleton G
 
@@ -493,8 +493,7 @@ theorem comap_comap_center {H₁ : Subgroup G} [H₁.Normal] {H₂ : Subgroup (G
       (Subgroup.center (G ⧸ H₂.comap (mk' H₁))).comap (mk' (H₂.comap (mk' H₁))) :=
   by
   ext x
-  simp only [← mk'_apply, ← Subgroup.mem_comap, ← Subgroup.mem_center_iff, ← forall_coe, coe_mul, ← eq_iff_div_mem, ←
-    coe_div]
+  simp only [mk'_apply, Subgroup.mem_comap, Subgroup.mem_center_iff, forall_coe, ← coe_mul, eq_iff_div_mem, coe_div]
 
 end QuotientGroup
 

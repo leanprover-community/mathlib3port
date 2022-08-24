@@ -72,10 +72,10 @@ instance distribMulAction' [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M]
   { ULift.mulAction' with
     smul_zero := fun c => by
       ext
-      simp [← smul_zero],
+      simp [smul_zero],
     smul_add := fun c f g => by
       ext
-      simp [← smul_add] }
+      simp [smul_add] }
 
 instance mulDistribMulAction [Monoidₓ R] [Monoidₓ M] [MulDistribMulAction R M] : MulDistribMulAction (ULift R) M where
   smul_one := fun _ => smul_one _
@@ -85,10 +85,10 @@ instance mulDistribMulAction' [Monoidₓ R] [Monoidₓ M] [MulDistribMulAction R
   { ULift.mulAction' with
     smul_one := fun _ => by
       ext
-      simp [← smul_one],
+      simp [smul_one],
     smul_mul := fun c f g => by
       ext
-      simp [← smul_mul'] }
+      simp [smul_mul'] }
 
 instance smulWithZero [Zero R] [Zero M] [SmulWithZero R M] : SmulWithZero (ULift R) M :=
   { ULift.hasSmulLeft with smul_zero := fun _ => smul_zero' _ _, zero_smul := zero_smul _ }

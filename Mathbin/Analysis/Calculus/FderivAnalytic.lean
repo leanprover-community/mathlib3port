@@ -85,7 +85,7 @@ theorem HasFpowerSeriesOnBall.fderiv [CompleteSpace F] (h : HasFpowerSeriesOnBal
     intro z hz
     dsimp'
     rw [← h.fderiv_eq, add_sub_cancel'_right]
-    simpa only [← edist_eq_coe_nnnorm_sub, ← Emetric.mem_ball] using hz
+    simpa only [edist_eq_coe_nnnorm_sub, Emetric.mem_ball] using hz
     
   suffices B : HasFpowerSeriesOnBall (fun z => p.change_origin (z - x) 1) (p.change_origin_series 1) x r
   exact
@@ -160,7 +160,7 @@ theorem AnalyticOn.iterated_deriv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) (n
   induction' n with n IH
   · exact h
     
-  · simpa only [← Function.iterate_succ', ← Function.comp_app] using IH.deriv
+  · simpa only [Function.iterate_succ', Function.comp_app] using IH.deriv
     
 
 end deriv

@@ -46,7 +46,7 @@ theorem sub_eq_zero_of_le (h : μ ≤ ν) : μ - ν = 0 :=
       rwa [zero_addₓ]
 
 theorem sub_le : μ - ν ≤ μ :=
-  sub_le_of_le_add <| Measure.le_add_right le_rfl
+  sub_le_of_le_add <| Measure.le_add_right le_rflₓ
 
 @[simp]
 theorem sub_top : μ - ⊤ = 0 :=
@@ -58,7 +58,7 @@ theorem zero_sub : 0 - μ = 0 :=
 
 @[simp]
 theorem sub_self : μ - μ = 0 :=
-  sub_eq_zero_of_le le_rfl
+  sub_eq_zero_of_le le_rflₓ
 
 /-- This application lemma only works in special circumstances. Given knowledge of
 when `μ ≤ ν` and `ν ≤ μ`, a more general application lemma can be written. -/
@@ -78,14 +78,14 @@ theorem sub_apply [IsFiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ �
   -- Now, we demonstrate `μ - ν = measure_sub`, and apply it.
   · have h_measure_sub_add : ν + measure_sub = μ := by
       ext t h_t_measurable_set
-      simp only [← Pi.add_apply, ← coe_add]
+      simp only [Pi.add_apply, coe_add]
       rw [MeasureTheory.Measure.of_measurable_apply _ h_t_measurable_set, add_commₓ,
         tsub_add_cancel_of_le (h₂ t h_t_measurable_set)]
     have h_measure_sub_eq : μ - ν = measure_sub := by
       rw [MeasureTheory.Measure.sub_def]
       apply le_antisymmₓ
       · apply @Inf_le (Measureₓ α) measure.complete_semilattice_Inf
-        simp [← le_reflₓ, ← add_commₓ, ← h_measure_sub_add]
+        simp [le_reflₓ, add_commₓ, h_measure_sub_add]
         
       apply @le_Inf (Measureₓ α) measure.complete_semilattice_Inf
       intro d h_d
@@ -103,7 +103,7 @@ theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
     (μ - ν).restrict s = μ.restrict s - ν.restrict s := by
   repeat'
     rw [sub_def]
-  have h_nonempty : { d | μ ≤ d + ν }.Nonempty := ⟨μ, measure.le_add_right le_rfl⟩
+  have h_nonempty : { d | μ ≤ d + ν }.Nonempty := ⟨μ, measure.le_add_right le_rflₓ⟩
   rw [restrict_Inf_eq_Inf_restrict h_nonempty h_meas_s]
   apply le_antisymmₓ
   · refine' Inf_le_Inf_of_forall_exists_le _
@@ -123,16 +123,16 @@ theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
         
       · rw [add_apply, restrict_apply (h_meas_t.diff h_meas_s), diff_eq, inter_assoc, inter_self, ← add_apply]
         have h_mu_le_add_top : μ ≤ ν' + ν + ⊤ := by
-          simp only [← add_top, ← le_top]
+          simp only [add_top, le_top]
         exact measure.le_iff'.1 h_mu_le_add_top _
         
       
     · ext1 t h_meas_t
-      simp [← restrict_apply h_meas_t, ← restrict_apply (h_meas_t.inter h_meas_s), ← inter_assoc]
+      simp [restrict_apply h_meas_t, restrict_apply (h_meas_t.inter h_meas_s), inter_assoc]
       
     
   · refine' Inf_le_Inf_of_forall_exists_le _
-    refine' ball_image_iff.2 fun t h_t_in => ⟨t.restrict s, _, le_rfl⟩
+    refine' ball_image_iff.2 fun t h_t_in => ⟨t.restrict s, _, le_rflₓ⟩
     rw [Set.mem_set_of_eq, ← restrict_add]
     exact restrict_mono subset.rfl h_t_in
     

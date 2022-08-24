@@ -82,7 +82,7 @@ theorem permutations_aux2_comp_append {t : α} {ts ys : List α} {r : List β} (
   induction ys generalizing f
   · simp
     
-  · simp [← ys_ih fun xs => f (ys_hd :: xs)]
+  · simp [ys_ih fun xs => f (ys_hd :: xs)]
     
 
 theorem map_permutations_aux2' {α β α' β'} (g : α → α') (g' : β → β') (t : α) (ts ys : List α) (r : List β)
@@ -90,7 +90,7 @@ theorem map_permutations_aux2' {α β α' β'} (g : α → α') (g' : β → β'
     map g' (permutationsAux2 t ts r ys f).2 = (permutationsAux2 (g t) (map g ts) (map g' r) (map g ys) f').2 := by
   induction ys generalizing f f' <;> simp [*]
   apply ys_ih
-  simp [← H]
+  simp [H]
 
 /-- The `f` argument to `permutations_aux2` when `r = []` can be eliminated. -/
 theorem map_permutations_aux2 (t : α) (ts : List α) (ys : List α) (f : List α → β) :
@@ -120,7 +120,7 @@ theorem map_map_permutations_aux2 {α α'} (g : α → α') (t : α) (ts ys : Li
 theorem map_map_permutations'_aux (f : α → β) (t : α) (ts : List α) :
     map (map f) (permutations'Aux t ts) = permutations'Aux (f t) (map f ts) := by
   induction' ts with a ts ih <;> [rfl,
-    · simp [ih]
+    · simp [← ih]
       rfl
       ]
 
@@ -129,9 +129,9 @@ theorem permutations'_aux_eq_permutations_aux2 (t : α) (ts : List α) :
   induction' ts with a ts ih
   · rfl
     
-  simp [← permutations'_aux, ← permutations_aux2_snd_cons, ← ih]
-  simp (config := { singlePass := true })only [permutations_aux2_append]
-  simp [← map_permutations_aux2]
+  simp [permutations'_aux, permutations_aux2_snd_cons, ih]
+  simp (config := { singlePass := true })only [← permutations_aux2_append]
+  simp [map_permutations_aux2]
 
 theorem mem_permutations_aux2 {t : α} {ts : List α} {ys : List α} {l l' : List α} :
     l' ∈ (permutationsAux2 t ts [] ys (append l)).2 ↔
@@ -156,9 +156,9 @@ theorem mem_permutations_aux2 {t : α} {ts : List α} {ys : List α} {l l' : Lis
       
     
   · rintro ⟨_ | ⟨y', l₁⟩, l₂, l0, ye, rfl⟩
-    · simp [← ye]
+    · simp [ye]
       
-    · simp only [← cons_append] at ye
+    · simp only [cons_append] at ye
       rcases ye with ⟨rfl, rfl⟩
       exact
         Or.inr
@@ -183,7 +183,7 @@ theorem foldr_permutations_aux2 (t : α) (ts : List α) (r L : List (List α)) :
       (L.bind fun y => (permutationsAux2 t ts [] y id).2) ++ r :=
   by
   induction' L with l L ih <;> [rfl,
-    · simp [← ih]
+    · simp [ih]
       rw [← permutations_aux2_append]
       ]
 
@@ -196,15 +196,13 @@ theorem mem_foldr_permutations_aux2 {t : α} {ts : List α} {r L : List (List α
       ∃ l₁ l₂ : List α, ¬l₂ = nil ∧ l₁ ++ l₂ ∈ L ∧ l' = l₁ ++ t :: (l₂ ++ ts) :=
     ⟨fun ⟨a, aL, l₁, l₂, l0, e, h⟩ => ⟨l₁, l₂, l0, e ▸ aL, h⟩, fun ⟨l₁, l₂, l0, aL, h⟩ => ⟨_, aL, l₁, l₂, l0, rfl, h⟩⟩
   rw [foldr_permutations_aux2] <;>
-    simp [← mem_permutations_aux2', ← this, ← Or.comm, ← Or.left_comm, ← Or.assoc, ← And.comm, ← And.left_comm, ←
-      And.assoc]
+    simp [mem_permutations_aux2', this, Or.comm, Or.left_comm, Or.assoc, And.comm, And.left_comm, And.assoc]
 
 theorem length_foldr_permutations_aux2 (t : α) (ts : List α) (r L : List (List α)) :
     length (foldr (fun y r => (permutationsAux2 t ts r y id).2) r L) = sum (map length L) + length r := by
-  simp [← foldr_permutations_aux2, ← (· ∘ ·), ← length_permutations_aux2]
+  simp [foldr_permutations_aux2, (· ∘ ·), length_permutations_aux2]
 
-theorem length_foldr_permutations_aux2' (t : α) (ts : List α) (r L : List (List α)) (n)
-    (H : ∀, ∀ l ∈ L, ∀, length l = n) :
+theorem length_foldr_permutations_aux2' (t : α) (ts : List α) (r L : List (List α)) (n) (H : ∀ l ∈ L, length l = n) :
     length (foldr (fun y r => (permutationsAux2 t ts r y id).2) r L) = n * length L + length r := by
   rw [length_foldr_permutations_aux2, (_ : Sum (map length L) = n * length L)]
   induction' L with l L ih
@@ -212,7 +210,7 @@ theorem length_foldr_permutations_aux2' (t : α) (ts : List α) (r L : List (Lis
     
   have sum_map : Sum (map length L) = n * length L := ih fun l m => H l (mem_cons_of_mem _ m)
   have length_l : length l = n := H _ (mem_cons_self _ _)
-  simp [← sum_map, ← length_l, ← mul_addₓ, ← add_commₓ]
+  simp [sum_map, length_l, mul_addₓ, add_commₓ]
 
 @[simp]
 theorem permutations_aux_nil (is : List α) : permutationsAux [] is = [] := by
@@ -238,14 +236,14 @@ theorem map_permutations_aux (f : α → β) :
       _
   introv IH1 IH2
   rw [map] at IH2
-  simp only [← foldr_permutations_aux2, ← map_append, ← map, ← map_map_permutations_aux2, ← permutations, ← bind_map, ←
-    IH1, ← append_assoc, ← permutations_aux_cons, ← cons_bind, IH2, ← map_bind]
+  simp only [foldr_permutations_aux2, map_append, map, map_map_permutations_aux2, permutations, bind_map, IH1,
+    append_assoc, permutations_aux_cons, cons_bind, ← IH2, map_bind]
 
 theorem map_permutations (f : α → β) (ts : List α) : map (map f) (permutations ts) = permutations (map f ts) := by
   rw [permutations, permutations, map, map_permutations_aux, map]
 
 theorem map_permutations' (f : α → β) (ts : List α) : map (map f) (permutations' ts) = permutations' (map f ts) := by
-  induction' ts with t ts ih <;> [rfl, simp [ih, ← map_bind, map_map_permutations'_aux, ← bind_map]]
+  induction' ts with t ts ih <;> [rfl, simp [← ih, map_bind, ← map_map_permutations'_aux, bind_map]]
 
 theorem permutations_aux_append (is is' ts : List α) :
     permutationsAux (is ++ ts) is' = (permutationsAux is is').map (· ++ ts) ++ permutationsAux ts (is.reverse ++ is') :=
@@ -253,16 +251,16 @@ theorem permutations_aux_append (is is' ts : List α) :
   induction' is with t is ih generalizing is'
   · simp
     
-  simp [← foldr_permutations_aux2, ← ih, ← bind_map]
+  simp [foldr_permutations_aux2, ih, bind_map]
   congr 2
   funext ys
   rw [map_permutations_aux2]
-  simp (config := { singlePass := true })only [permutations_aux2_comp_append]
-  simp only [← id, ← append_assoc]
+  simp (config := { singlePass := true })only [← permutations_aux2_comp_append]
+  simp only [id, append_assoc]
 
 theorem permutations_append (is ts : List α) :
     permutations (is ++ ts) = (permutations is).map (· ++ ts) ++ permutationsAux ts is.reverse := by
-  simp [← permutations, ← permutations_aux_append]
+  simp [permutations, permutations_aux_append]
 
 end List
 

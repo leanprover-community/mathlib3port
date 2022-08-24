@@ -133,7 +133,7 @@ theorem right_induction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (alg
     rintro ⟨m, rfl⟩
     exact h_ι_mul _ _ px
     
-  · simpa only [← map_zero] using hr 0
+  · simpa only [map_zero] using hr 0
     
 
 theorem left_induction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (algebraMap _ _ r))
@@ -141,11 +141,11 @@ theorem left_induction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (alge
   refine' reverse_involutive.surjective.forall.2 _
   intro x
   induction' x using CliffordAlgebra.right_induction with r x y hx hy m x hx
-  · simpa only [← reverse.commutes] using hr r
+  · simpa only [reverse.commutes] using hr r
     
-  · simpa only [← map_add] using h_add _ _ hx hy
+  · simpa only [map_add] using h_add _ _ hx hy
     
-  · simpa only [← reverse.map_mul, ← reverse_ι] using h_mul_ι _ _ hx
+  · simpa only [reverse.map_mul, reverse_ι] using h_mul_ι _ _ hx
     
 
 end CliffordAlgebra

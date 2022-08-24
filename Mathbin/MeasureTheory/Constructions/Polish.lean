@@ -172,7 +172,7 @@ theorem AnalyticSet.Inter [hι : Nonempty ι] [Encodable ι] [T2Space α] {s : �
       choose x hx using A
       have xt : x ∈ t := by
         apply mem_Inter.2 fun n => _
-        simp [← hx]
+        simp [hx]
       refine' ⟨⟨x, xt⟩, _⟩
       exact hx i₀
       
@@ -226,7 +226,7 @@ theorem _root_.measurable_set.analytic_set {α : Type _} [t : TopologicalSpace �
     ∃ t' : TopologicalSpace α, t' ≤ t ∧ @PolishSpace α t' ∧ @IsClosed α t' s ∧ @IsOpen α t' s := hs.is_clopenable
   have A := @IsClosed.analytic_set α t' t'_polish s s_closed
   convert @analytic_set.image_of_continuous α t' α t s A id (continuous_id_of_le t't)
-  simp only [← id.def, ← image_id']
+  simp only [id.def, image_id']
 
 /-- Given a Borel-measurable function from a Polish space to a second-countable space, there exists
 a finer Polish topology on the source space for which the function is continuous. -/
@@ -311,18 +311,18 @@ theorem measurably_separable_range_of_disjoint [T2Space α] [MeasurableSpace α]
   choose F hFn hFx hFy using this
   let p0 : A :=
     ⟨⟨0, fun n => 0, fun n => 0⟩, by
-      simp [← hfg]⟩
+      simp [hfg]⟩
   -- construct inductively decreasing sequences of cylinders whose images are not separated
   let p : ℕ → A := fun n => (F^[n]) p0
   have prec : ∀ n, p (n + 1) = F (p n) := fun n => by
-    simp only [← p, ← iterate_succ']
+    simp only [p, iterate_succ']
   -- check that at the `n`-th step we deal with cylinders of length `n`
   have pn_fst : ∀ n, (p n).1.1 = n := by
     intro n
     induction' n with n IH
     · rfl
       
-    · simp only [← prec, ← hFn, ← IH]
+    · simp only [prec, hFn, IH]
       
   -- check that the cylinders we construct are indeed decreasing, by checking that the coordinates
   -- are stationary.
@@ -508,7 +508,7 @@ theorem measurable_set_range_of_continuous_injective {β : Type _} [TopologicalS
   · intro x hx
     -- pick for each `n` a good set `s n` of small diameter for which `x ∈ E (s n)`.
     have C1 : ∀ n, ∃ (s : b)(hs : bounded s.1 ∧ diam s.1 ≤ u n), x ∈ E s := fun n => by
-      simpa only [← mem_Union] using mem_Inter.1 hx n
+      simpa only [mem_Union] using mem_Inter.1 hx n
     choose s hs hxs using C1
     have C2 : ∀ n, (s n).1.Nonempty := by
       intro n
@@ -533,7 +533,7 @@ theorem measurable_set_range_of_continuous_injective {β : Type _} [TopologicalS
     -- the points `y n` are nearby, and therefore they form a Cauchy sequence.
     have cauchy_y : CauchySeq y := by
       have : tendsto (fun n => 2 * u n) at_top (𝓝 0) := by
-        simpa only [← mul_zero] using u_lim.const_mul 2
+        simpa only [mul_zero] using u_lim.const_mul 2
       apply cauchy_seq_of_le_tendsto_0' (fun n => 2 * u n) (fun m n hmn => _) this
       rcases I m n with ⟨z, zsm, zsn⟩
       calc
@@ -560,7 +560,7 @@ theorem measurable_set_range_of_continuous_injective {β : Type _} [TopologicalS
       exact f_cont.continuous_at.preimage_mem_nhds (v_open.mem_nhds fzv)
     obtain ⟨n, hn⟩ : ∃ n, u n + dist (y n) z < δ := by
       have : tendsto (fun n => u n + dist (y n) z) at_top (𝓝 0) := by
-        simpa only [← add_zeroₓ] using u_lim.add (tendsto_iff_dist_tendsto_zero.1 y_lim)
+        simpa only [add_zeroₓ] using u_lim.add (tendsto_iff_dist_tendsto_zero.1 y_lim)
       exact ((tendsto_order.1 this).2 _ δpos).exists
     -- for large enough `n`, the image of `s n` is contained in `v`, by continuity of `f`.
     have fsnv : f '' s n ⊆ v := by
@@ -682,7 +682,7 @@ theorem is_clopenable_iff_measurable_set : IsClopenable s ↔ MeasurableSet s :=
       s_closed
   -- therefore, its image under the measurable embedding `id` is also measurable for `tγ`.
   convert E.measurable_set_image.2 M
-  simp only [← id.def, ← image_id']
+  simp only [id.def, image_id']
 
 omit hγb
 
@@ -694,7 +694,7 @@ theorem measurable_set_exists_tendsto [hγ : OpensMeasurableSpace γ] [Countable
   by_cases' hl : l.ne_bot
   swap
   · rw [not_ne_bot] at hl
-    simp [← hl]
+    simp [hl]
     
   letI := upgradePolishSpace γ
   rcases l.exists_antitone_basis with ⟨u, hu⟩

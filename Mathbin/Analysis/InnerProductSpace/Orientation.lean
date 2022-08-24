@@ -48,7 +48,7 @@ protected theorem Orientation.fin_orthonormal_basis_orthonormal {n : ℕ} (hn : 
   exact
     show Orthonormal ℝ (finStdOrthonormalBasis h).toBasis by
           -- Note sure how to format this
-          simp only [← OrthonormalBasis.coe_to_basis, ← OrthonormalBasis.orthonormal].orthonormal_adjust_to_orientation
+          simp only [OrthonormalBasis.coe_to_basis, OrthonormalBasis.orthonormal].orthonormal_adjust_to_orientation
       _
 
 /-- `orientation.fin_orthonormal_basis` gives a basis with the required orientation. -/

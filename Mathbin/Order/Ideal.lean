@@ -199,7 +199,7 @@ theorem IsMaximal.is_coatom' [IsMaximal I] : IsCoatom I :=
 theorem _root_.is_coatom.is_maximal (hI : IsCoatom I) : IsMaximal I :=
   { IsCoatom.is_proper ‹_› with
     maximal_proper := fun _ _ => by
-      simp [← hI.2 _ ‹_›] }
+      simp [hI.2 _ ‹_›] }
 
 theorem is_maximal_iff_is_coatom : IsMaximal I ↔ IsCoatom I :=
   ⟨fun h => h.IsCoatom, fun h => h.IsMaximal⟩
@@ -243,14 +243,14 @@ variable {I J : Ideal P} {x y : P}
 def principal (p : P) : Ideal P where
   toLowerSet := LowerSet.iic p
   nonempty' := nonempty_Iic
-  directed' := fun x hx y hy => ⟨p, le_rfl, hx, hy⟩
+  directed' := fun x hx y hy => ⟨p, le_rflₓ, hx, hy⟩
 
 instance [Inhabited P] : Inhabited (Ideal P) :=
   ⟨Ideal.principal default⟩
 
 @[simp]
 theorem principal_le_iff : principal x ≤ I ↔ x ∈ I :=
-  ⟨fun h => h le_rfl, fun hx y hy => I.lower hy hx⟩
+  ⟨fun h => h le_rflₓ, fun hx y hy => I.lower hy hx⟩
 
 @[simp]
 theorem mem_principal : x ∈ principal y ↔ x ≤ y :=
@@ -336,8 +336,8 @@ instance : HasSup (Ideal P) :=
           le_sup_left, le_sup_right⟩,
       lower' := fun x y h ⟨yi, _, yj, _, _⟩ => ⟨yi, ‹_›, yj, ‹_›, h.trans ‹_›⟩ }⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (i «expr ∈ » I)
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j «expr ∈ » J)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ∈ » J)
 instance : Lattice (Ideal P) :=
   { Ideal.partialOrder with sup := (·⊔·),
     le_sup_left := fun I J i (_ : i ∈ I) => by
@@ -370,7 +370,7 @@ theorem mem_sup : x ∈ I⊔J ↔ ∃ i ∈ I, ∃ j ∈ J, x ≤ i⊔j :=
 theorem lt_sup_principal_of_not_mem (hx : x ∉ I) : I < I⊔principal x :=
   le_sup_left.lt_of_ne fun h =>
     hx <| by
-      simpa only [← left_eq_sup, ← principal_le_iff] using h
+      simpa only [left_eq_sup, principal_le_iff] using h
 
 end SemilatticeSupDirected
 
@@ -398,7 +398,7 @@ theorem coe_Inf : (↑(inf S) : Set P) = ⋂ s ∈ S, ↑s :=
   LowerSet.coe_infi₂ _
 
 @[simp]
-theorem mem_Inf : x ∈ inf S ↔ ∀, ∀ s ∈ S, ∀, x ∈ s := by
+theorem mem_Inf : x ∈ inf S ↔ ∀ s ∈ S, x ∈ s := by
   simp_rw [← SetLike.mem_coe, coe_Inf, mem_Inter₂]
 
 instance : CompleteLattice (Ideal P) :=
@@ -461,9 +461,9 @@ namespace Cofinal
 variable [Preorderₓ P]
 
 instance : Inhabited (Cofinal P) :=
-  ⟨{ Carrier := Univ, mem_gt := fun x => ⟨x, trivialₓ, le_rfl⟩ }⟩
+  ⟨{ Carrier := Univ, mem_gt := fun x => ⟨x, trivialₓ, le_rflₓ⟩ }⟩
 
-instance : HasMem P (Cofinal P) :=
+instance : Membership P (Cofinal P) :=
   ⟨fun x D => x ∈ D.Carrier⟩
 
 variable (D : Cofinal P) (x : P)
@@ -517,17 +517,17 @@ theorem sequenceOfCofinals.encode_mem (i : ι) : sequenceOfCofinals p 𝒟 (Enco
 def idealOfCofinals : Ideal P where
   Carrier := { x : P | ∃ n, x ≤ sequenceOfCofinals p 𝒟 n }
   lower' := fun x y hxy ⟨n, hn⟩ => ⟨n, le_transₓ hxy hn⟩
-  nonempty' := ⟨p, 0, le_rfl⟩
+  nonempty' := ⟨p, 0, le_rflₓ⟩
   directed' := fun x ⟨n, hn⟩ y ⟨m, hm⟩ =>
-    ⟨_, ⟨max n m, le_rfl⟩, le_transₓ hn <| sequenceOfCofinals.monotone p 𝒟 (le_max_leftₓ _ _),
+    ⟨_, ⟨max n m, le_rflₓ⟩, le_transₓ hn <| sequenceOfCofinals.monotone p 𝒟 (le_max_leftₓ _ _),
       le_transₓ hm <| sequenceOfCofinals.monotone p 𝒟 (le_max_rightₓ _ _)⟩
 
 theorem mem_ideal_of_cofinals : p ∈ idealOfCofinals p 𝒟 :=
-  ⟨0, le_rfl⟩
+  ⟨0, le_rflₓ⟩
 
 /-- `ideal_of_cofinals p 𝒟` is `𝒟`-generic. -/
 theorem cofinal_meets_ideal_of_cofinals (i : ι) : ∃ x : P, x ∈ 𝒟 i ∧ x ∈ idealOfCofinals p 𝒟 :=
-  ⟨_, sequenceOfCofinals.encode_mem p 𝒟 i, _, le_rfl⟩
+  ⟨_, sequenceOfCofinals.encode_mem p 𝒟 i, _, le_rflₓ⟩
 
 end IdealOfCofinals
 

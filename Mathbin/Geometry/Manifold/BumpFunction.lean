@@ -94,7 +94,7 @@ theorem eventually_eq_of_mem_source (hx : x ∈ (chartAt H c).Source) : f =ᶠ[�
 
 theorem one_of_dist_le (hs : x ∈ (chartAt H c).Source) (hd : dist (extChartAt I c x) (extChartAt I c c) ≤ f.R) :
     f x = 1 := by
-  simp only [← f.eq_on_source hs, ← (· ∘ ·), ← f.to_cont_diff_bump.one_of_mem_closed_ball hd]
+  simp only [f.eq_on_source hs, (· ∘ ·), f.to_cont_diff_bump.one_of_mem_closed_ball hd]
 
 theorem support_eq_inter_preimage : Support f = (chartAt H c).Source ∩ extChartAt I c ⁻¹' Ball (extChartAt I c c) f.r :=
   by
@@ -226,7 +226,7 @@ theorem update_r_r {r : ℝ} (hr : r ∈ Ioo 0 f.r) : (f.updateR r hr).R = r :=
 
 @[simp]
 theorem support_update_r {r : ℝ} (hr : r ∈ Ioo 0 f.r) : Support (f.updateR r hr) = Support f := by
-  simp only [← support_eq_inter_preimage, ← update_r_R]
+  simp only [support_eq_inter_preimage, update_r_R]
 
 instance : Inhabited (SmoothBumpFunction I c) :=
   Classical.inhabitedOfNonempty nhds_within_range_basis.Nonempty
@@ -253,7 +253,7 @@ theorem tsupport_subset_ext_chart_at_source : Tsupport f ⊆ (extChartAt I c).So
     
 
 theorem tsupport_subset_chart_at_source : Tsupport f ⊆ (chartAt H c).Source := by
-  simpa only [← ext_chart_at_source] using f.tsupport_subset_ext_chart_at_source
+  simpa only [ext_chart_at_source] using f.tsupport_subset_ext_chart_at_source
 
 protected theorem has_compact_support : HasCompactSupport f :=
   compact_of_is_closed_subset f.compact_symm_image_closed_ball is_closed_closure

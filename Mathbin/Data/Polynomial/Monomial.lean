@@ -30,7 +30,7 @@ theorem monomial_one_eq_iff [Nontrivial R] {i j : ℕ} : (monomial i 1 : R[X]) =
 
 instance [Nontrivial R] : Infinite R[X] :=
   (Infinite.of_injective fun i => monomial i 1) fun m n h => by
-    simpa [← monomial_one_eq_iff] using h
+    simpa [monomial_one_eq_iff] using h
 
 theorem card_support_le_one_iff_monomial {f : R[X]} : Finset.card f.Support ≤ 1 ↔ ∃ n a, f = monomial n a := by
   constructor
@@ -40,12 +40,12 @@ theorem card_support_le_one_iff_monomial {f : R[X]} : Finset.card f.Support ≤ 
     refine' ⟨n, f.coeff n, _⟩
     ext i
     by_cases' hi : i = n
-    · simp [← hi, ← coeff_monomial]
+    · simp [hi, coeff_monomial]
       
     · have : f.coeff i = 0 := by
         rw [← not_mem_support_iff]
         exact fun hi' => hi (Finset.mem_singleton.1 (hn hi'))
-      simp [← this, ← Ne.symm hi, ← coeff_monomial]
+      simp [this, Ne.symm hi, coeff_monomial]
       
     
   · rintro ⟨n, a, rfl⟩
@@ -59,19 +59,19 @@ theorem ring_hom_ext {S} [Semiringₓ S] {f g : R[X] →+* S} (h₁ : ∀ a, f (
   set g' := g.comp (to_finsupp_iso R).symm.toRingHom with hg'
   have A : f' = g' := by
     ext
-    · simp [← h₁, ← RingEquiv.to_ring_hom_eq_coe]
+    · simp [h₁, RingEquiv.to_ring_hom_eq_coe]
       
-    · simpa [← RingEquiv.to_ring_hom_eq_coe] using h₂
+    · simpa [RingEquiv.to_ring_hom_eq_coe] using h₂
       
   have B : f = f'.comp (to_finsupp_iso R) := by
     rw [hf', RingHom.comp_assoc]
     ext x
-    simp only [← RingEquiv.to_ring_hom_eq_coe, ← RingEquiv.symm_apply_apply, ← Function.comp_app, ← RingHom.coe_comp, ←
+    simp only [RingEquiv.to_ring_hom_eq_coe, RingEquiv.symm_apply_apply, Function.comp_app, RingHom.coe_comp,
       RingEquiv.coe_to_ring_hom]
   have C : g = g'.comp (to_finsupp_iso R) := by
     rw [hg', RingHom.comp_assoc]
     ext x
-    simp only [← RingEquiv.to_ring_hom_eq_coe, ← RingEquiv.symm_apply_apply, ← Function.comp_app, ← RingHom.coe_comp, ←
+    simp only [RingEquiv.to_ring_hom_eq_coe, RingEquiv.symm_apply_apply, Function.comp_app, RingHom.coe_comp,
       RingEquiv.coe_to_ring_hom]
   rw [B, C, A]
 

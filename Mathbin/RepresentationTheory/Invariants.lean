@@ -40,8 +40,8 @@ noncomputable def average : MonoidAlgebra k G :=
 -/
 @[simp]
 theorem mul_average_left (g : G) : (Finsupp.single g 1 * average k G : MonoidAlgebra k G) = average k G := by
-  simp only [← mul_oneₓ, ← Finset.mul_sum, ← Algebra.mul_smul_comm, ← average, ← MonoidAlgebra.of_apply, ←
-    Finset.sum_congr, ← MonoidAlgebra.single_mul_single]
+  simp only [mul_oneₓ, Finset.mul_sum, Algebra.mul_smul_comm, average, MonoidAlgebra.of_apply, Finset.sum_congr,
+    MonoidAlgebra.single_mul_single]
   set f : G → MonoidAlgebra k G := fun x => Finsupp.single x 1
   show (⅟ ↑(Fintype.card G) • ∑ x : G, f (g * x)) = ⅟ ↑(Fintype.card G) • ∑ x : G, f x
   rw [Function.Bijective.sum_comp (Groupₓ.mul_left_bijective g) _]
@@ -50,8 +50,8 @@ theorem mul_average_left (g : G) : (Finsupp.single g 1 * average k G : MonoidAlg
 -/
 @[simp]
 theorem mul_average_right (g : G) : average k G * Finsupp.single g 1 = average k G := by
-  simp only [← mul_oneₓ, ← Finset.sum_mul, ← Algebra.smul_mul_assoc, ← average, ← MonoidAlgebra.of_apply, ←
-    Finset.sum_congr, ← MonoidAlgebra.single_mul_single]
+  simp only [mul_oneₓ, Finset.sum_mul, Algebra.smul_mul_assoc, average, MonoidAlgebra.of_apply, Finset.sum_congr,
+    MonoidAlgebra.single_mul_single]
   set f : G → MonoidAlgebra k G := fun x => Finsupp.single x 1
   show (⅟ ↑(Fintype.card G) • ∑ x : G, f (x * g)) = ⅟ ↑(Fintype.card G) • ∑ x : G, f x
   rw [Function.Bijective.sum_comp (Groupₓ.mul_right_bijective g) _]
@@ -73,11 +73,11 @@ variable (ρ : Representation k G V)
 def invariants : Submodule k V where
   Carrier := SetOf fun v => ∀ g : G, ρ g v = v
   zero_mem' := fun g => by
-    simp only [← map_zero]
+    simp only [map_zero]
   add_mem' := fun v w hv hw g => by
-    simp only [← hv g, ← hw g, ← map_add]
+    simp only [hv g, hw g, map_add]
   smul_mem' := fun r v hv g => by
-    simp only [← hv g, ← LinearMap.map_smulₛₗ, ← RingHom.id_apply]
+    simp only [hv g, LinearMap.map_smulₛₗ, RingHom.id_apply]
 
 @[simp]
 theorem mem_invariants (v : V) : v ∈ invariants ρ ↔ ∀ g : G, ρ g v = v := by
@@ -85,7 +85,7 @@ theorem mem_invariants (v : V) : v ∈ invariants ρ ↔ ∀ g : G, ρ g v = v :
 
 theorem invariants_eq_inter : (invariants ρ).Carrier = ⋂ g : G, Function.FixedPoints (ρ g) := by
   ext
-  simp [← Function.IsFixedPt]
+  simp [Function.IsFixedPt]
 
 variable [Fintype G] [Invertible (Fintype.card G : k)]
 
@@ -104,7 +104,7 @@ theorem average_map_invariant (v : V) : averageMap ρ v ∈ invariants ρ := fun
 -/
 theorem average_map_id (v : V) (hv : v ∈ invariants ρ) : averageMap ρ v = v := by
   rw [mem_invariants] at hv
-  simp [← average, ← map_sum, ← hv, ← Finset.card_univ, ← nsmul_eq_smul_cast k _ v, ← smul_smul]
+  simp [average, map_sum, hv, Finset.card_univ, nsmul_eq_smul_cast k _ v, smul_smul]
 
 theorem is_proj_average_map : LinearMap.IsProj ρ.invariants ρ.averageMap :=
   ⟨ρ.average_map_invariant, ρ.average_map_id⟩

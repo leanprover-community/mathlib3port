@@ -100,11 +100,11 @@ theorem strong_epi_of_strong_epi [StrongEpi (f ≫ g)] : StrongEpi g :=
       constructor
       intro u v sq
       have h₀ : (f ≫ u) ≫ z = (f ≫ g) ≫ v := by
-        simp only [← category.assoc, ← sq.w]
+        simp only [category.assoc, sq.w]
       exact
         comm_sq.has_lift.mk'
           ⟨(comm_sq.mk h₀).lift, by
-            simp only [cancel_mono z, ← category.assoc, ← comm_sq.fac_right, ← sq.w], by
+            simp only [← cancel_mono z, category.assoc, comm_sq.fac_right, sq.w], by
             simp ⟩ }
 
 /-- If `f ≫ g` is a strong monomorphism, then so is `f`. -/
@@ -120,7 +120,7 @@ theorem strong_mono_of_strong_mono [StrongMono (f ≫ g)] : StrongMono f :=
         comm_sq.has_lift.mk'
           ⟨(comm_sq.mk h₀).lift, by
             simp , by
-            simp [cancel_epi z, ← sq.w]⟩ }
+            simp [← cancel_epi z, sq.w]⟩ }
 
 /-- An isomorphism is in particular a strong epimorphism. -/
 instance (priority := 100) strong_epi_of_is_iso [IsIso f] : StrongEpi f where

@@ -61,7 +61,7 @@ theorem prod_eq_one (f : α → M) (h : ∀ a, f a = 1) : (∏ a, f a) = 1 :=
 theorem prod_congr (f g : α → M) (h : ∀ a, f a = g a) : (∏ a, f a) = ∏ a, g a :=
   (Finset.prod_congr rfl) fun a ha => h a
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ≠ » a)
 @[to_additive]
 theorem prod_eq_single {f : α → M} (a : α) (h : ∀ (x) (_ : x ≠ a), f x = 1) : (∏ x, f x) = f a :=
   (Finset.prod_eq_single a fun x _ hx => h x hx) fun ha => (ha (Finset.mem_univ a)).elim
@@ -75,7 +75,7 @@ theorem prod_eq_mul {f : α → M} (a b : α) (h₁ : a ≠ b) (h₂ : ∀ x, x 
 value, so do the terms in that product. -/
 @[to_additive "If a sum of a `finset` of a subsingleton type has a given\nvalue, so do the terms in that sum."]
 theorem eq_of_subsingleton_of_prod_eq {ι : Type _} [Subsingleton ι] {s : Finset ι} {f : ι → M} {b : M}
-    (h : (∏ i in s, f i) = b) : ∀, ∀ i ∈ s, ∀, f i = b :=
+    (h : (∏ i in s, f i) = b) : ∀ i ∈ s, f i = b :=
   Finset.eq_of_card_le_one_of_prod_eq (Finset.card_le_one_of_subsingleton s) h
 
 end
@@ -109,7 +109,7 @@ theorem Finset.card_pi [DecidableEq α] {δ : α → Type _} (s : Finset α) (t 
 @[simp]
 theorem Fintype.card_pi_finset [DecidableEq α] [Fintype α] {δ : α → Type _} (t : ∀ a, Finset (δ a)) :
     (Fintype.piFinset t).card = ∏ a, card (t a) := by
-  simp [← Fintype.piFinset, ← card_map]
+  simp [Fintype.piFinset, card_map]
 
 @[simp]
 theorem Fintype.card_pi {β : α → Type _} [DecidableEq α] [Fintype α] [f : ∀ a, Fintype (β a)] :
@@ -147,7 +147,7 @@ theorem Finset.prod_univ_pi [DecidableEq α] [Fintype α] [CommMonoidₓ β] {δ
     (by
       simp )
     (by
-      simp (config := { contextual := true })[← Function.funext_iffₓ])
+      simp (config := { contextual := true })[Function.funext_iffₓ])
     fun x hx =>
     ⟨fun a _ => x a, by
       simp_all ⟩
@@ -158,7 +158,7 @@ theorem Finset.prod_univ_pi [DecidableEq α] [Fintype α] [CommMonoidₓ β] {δ
 theorem Finset.prod_univ_sum [DecidableEq α] [Fintype α] [CommSemiringₓ β] {δ : α → Type u_1}
     [∀ a : α, DecidableEq (δ a)] {t : ∀ a : α, Finset (δ a)} {f : ∀ a : α, δ a → β} :
     (∏ a, ∑ b in t a, f a b) = ∑ p in Fintype.piFinset t, ∏ x, f x (p x) := by
-  simp only [← Finset.prod_attach_univ, ← prod_sum, ← Finset.sum_univ_pi]
+  simp only [Finset.prod_attach_univ, prod_sum, Finset.sum_univ_pi]
 
 /-- Summing `a^s.card * b^(n-s.card)` over all finite subsets `s` of a fintype of cardinality `n`
 gives `(a + b)^n`. The "good" proof involves expanding along all coordinates using the fact that
@@ -192,7 +192,7 @@ theorem Finset.prod_fin_eq_prod_range [CommMonoidₓ β] {n : ℕ} (c : Finₓ n
     (∏ i, c i) = ∏ i in Finset.range n, if h : i < n then c ⟨i, h⟩ else 1 := by
   rw [← Finₓ.prod_univ_eq_prod_range, Finset.prod_congr rfl]
   rintro ⟨i, hi⟩ _
-  simp only [← Finₓ.coe_eq_val, ← hi, ← dif_pos]
+  simp only [Finₓ.coe_eq_val, hi, dif_pos]
 
 @[to_additive]
 theorem Finset.prod_to_finset_eq_subtype {M : Type _} [CommMonoidₓ M] [Fintype α] (p : α → Prop) [DecidablePred p]
@@ -214,7 +214,7 @@ theorem Fintype.prod_fiberwise [Fintype α] [DecidableEq β] [Fintype β] [CommM
 theorem Fintype.prod_dite [Fintype α] {p : α → Prop} [DecidablePred p] [CommMonoidₓ β] (f : ∀ (a : α) (ha : p a), β)
     (g : ∀ (a : α) (ha : ¬p a), β) :
     (∏ a, dite (p a) (f a) (g a)) = (∏ a : { a // p a }, f a a.2) * ∏ a : { a // ¬p a }, g a a.2 := by
-  simp only [← prod_dite, ← attach_eq_univ]
+  simp only [prod_dite, attach_eq_univ]
   congr 1
   · convert (Equivₓ.subtypeEquivRight _).prod_comp fun x : { x // p x } => f x x.2
     simp
@@ -236,7 +236,7 @@ theorem Fintype.prod_sum_elim (f : α₁ → M) (g : α₂ → M) : (∏ x, Sum.
 
 @[to_additive]
 theorem Fintype.prod_sum_type (f : Sum α₁ α₂ → M) : (∏ x, f x) = (∏ a₁, f (Sum.inl a₁)) * ∏ a₂, f (Sum.inr a₂) := by
-  simp only [Fintype.prod_sum_elim, ← Sum.elim_comp_inl_inr]
+  simp only [← Fintype.prod_sum_elim, Sum.elim_comp_inl_inr]
 
 end
 

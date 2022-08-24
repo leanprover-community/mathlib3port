@@ -75,7 +75,7 @@ theorem sum_boole_mul [DecidableEq α] (s : Finset α) (f : α → β) (a : α) 
 end Semiringₓ
 
 theorem sum_div [DivisionRing β] {s : Finset α} {f : α → β} {b : β} : (∑ x in s, f x) / b = ∑ x in s, f x / b := by
-  simp only [← div_eq_mul_inv, ← sum_mul]
+  simp only [div_eq_mul_inv, sum_mul]
 
 section CommSemiringₓ
 
@@ -90,12 +90,10 @@ theorem prod_sum {δ : α → Type _} [DecidableEq α] [∀ a, DecidableEq (δ a
     rfl
     
   · have h₁ :
-      ∀,
-        ∀ x ∈ t a,
-          ∀, ∀, ∀ y ∈ t a, ∀, ∀ h : x ≠ y, Disjoint (image (pi.cons s a x) (pi s t)) (image (pi.cons s a y) (pi s t)) :=
+      ∀ x ∈ t a, ∀ y ∈ t a, ∀ h : x ≠ y, Disjoint (image (pi.cons s a x) (pi s t)) (image (pi.cons s a y) (pi s t)) :=
       by
       intro x hx y hy h
-      simp only [← disjoint_iff_ne, ← mem_image]
+      simp only [disjoint_iff_ne, mem_image]
       rintro _ ⟨p₂, hp, eq₂⟩ _ ⟨p₃, hp₃, eq₃⟩ eq
       have : pi.cons s a x p₂ a (mem_insert_self _ _) = pi.cons s a y p₃ a (mem_insert_self _ _) := by
         rw [eq₂, eq₃, Eq]
@@ -103,12 +101,12 @@ theorem prod_sum {δ : α → Type _} [DecidableEq α] [∀ a, DecidableEq (δ a
       exact h this
     rw [prod_insert ha, pi_insert ha, ih, sum_mul, sum_bUnion h₁]
     refine' sum_congr rfl fun b _ => _
-    have h₂ : ∀, ∀ p₁ ∈ pi s t, ∀, ∀, ∀ p₂ ∈ pi s t, ∀, pi.cons s a b p₁ = pi.cons s a b p₂ → p₁ = p₂ :=
-      fun p₁ h₁ p₂ h₂ eq => pi_cons_injective ha Eq
+    have h₂ : ∀ p₁ ∈ pi s t, ∀ p₂ ∈ pi s t, pi.cons s a b p₁ = pi.cons s a b p₂ → p₁ = p₂ := fun p₁ h₁ p₂ h₂ eq =>
+      pi_cons_injective ha Eq
     rw [sum_image h₂, mul_sum]
     refine' sum_congr rfl fun g _ => _
     rw [attach_insert, prod_insert, prod_image]
-    · simp only [← pi.cons_same]
+    · simp only [pi.cons_same]
       congr with ⟨v, hv⟩
       congr
       exact
@@ -118,7 +116,7 @@ theorem prod_sum {δ : α → Type _} [DecidableEq α] [∀ a, DecidableEq (δ a
       
     · exact fun _ _ _ _ => Subtype.eq ∘ Subtype.mk.injₓ
       
-    · simp only [← mem_image]
+    · simp only [mem_image]
       rintro ⟨⟨_, hm⟩, _, rfl⟩
       exact ha hm
       
@@ -135,12 +133,12 @@ theorem prod_add (f g : α → β) (s : Finset α) :
     (∏ a in s, f a + g a) = ∏ a in s, ∑ p in ({True, False} : Finset Prop), if p then f a else g a := by
       simp
     _ =
-        ∑ p in (s.pi fun _ => {True, False} : Finset (∀, ∀ a ∈ s, ∀, Prop)),
+        ∑ p in (s.pi fun _ => {True, False} : Finset (∀ a ∈ s, Prop)),
           ∏ a in s.attach, if p a.1 a.2 then f a.1 else g a.1 :=
       prod_sum
     _ = ∑ t in s.Powerset, (∏ a in t, f a) * ∏ a in s \ t, g a := by
       refine' Eq.symm (sum_bij (fun t _ a _ => a ∈ t) _ _ _ _)
-      · simp [← subset_iff] <;> tauto
+      · simp [subset_iff] <;> tauto
         
       · intro t ht
         erw [prod_ite (fun a : { a // a ∈ s } => f a.1) fun a : { a // a ∈ s } => g a.1]
@@ -149,8 +147,8 @@ theorem prod_add (f g : α → β) (s : Finset α) :
               (prod_bij (fun (a : α) (ha : a ∈ t) => ⟨a, mem_powerset.1 ht ha⟩) _ _ _ fun b hb =>
                 ⟨b, by
                   cases b <;>
-                    simpa only [← true_andₓ, ← exists_prop, ← mem_filter, ← and_trueₓ, ← mem_attach, ← eq_self_iff_true,
-                      ← Subtype.coe_mk] using hb⟩)
+                    simpa only [true_andₓ, exists_prop, mem_filter, and_trueₓ, mem_attach, eq_self_iff_true,
+                      Subtype.coe_mk] using hb⟩)
               (prod_bij
                 (fun (a : α) (ha : a ∈ s \ t) =>
                   ⟨a, by
@@ -158,15 +156,15 @@ theorem prod_add (f g : α → β) (s : Finset α) :
                 _ _ _ fun b hb =>
                 ⟨b, by
                   cases b <;>
-                    · simp only [← true_andₓ, ← mem_filter, ← mem_attach, ← Subtype.coe_mk] at hb
-                      simpa only [← true_andₓ, ← exists_prop, ← and_trueₓ, ← mem_sdiff, ← eq_self_iff_true, ←
-                        Subtype.coe_mk, ← b_property]
+                    · simp only [true_andₓ, mem_filter, mem_attach, Subtype.coe_mk] at hb
+                      simpa only [true_andₓ, exists_prop, and_trueₓ, mem_sdiff, eq_self_iff_true, Subtype.coe_mk,
+                        b_property]
                       ⟩) <;>
           intros <;> simp_all <;> simp_all
         
       · intro a₁ a₂ h₁ h₂ H
         ext x
-        simp only [← Function.funext_iffₓ, ← subset_iff, ← mem_powerset, ← eq_iff_iff] at h₁ h₂ H
+        simp only [Function.funext_iffₓ, subset_iff, mem_powerset, eq_iff_iff] at h₁ h₂ H
         exact ⟨fun hx => (H x (h₁ hx)).1 hx, fun hx => (H x (h₂ hx)).2 hx⟩
         
       · intro f hf
@@ -209,7 +207,7 @@ theorem prod_sub_ordered {ι R : Type _} [CommRingₓ R] [LinearOrderₓ ι] (s 
     (∏ i in s, f i - g i) =
       (∏ i in s, f i) - ∑ i in s, (g i * ∏ j in s.filter (· < i), f j - g j) * ∏ j in s.filter fun j => i < j, f j :=
   by
-  simp only [← sub_eq_add_neg]
+  simp only [sub_eq_add_neg]
   convert prod_add_ordered s f fun i => -g i
   simp
 
@@ -228,7 +226,7 @@ theorem sum_pow_mul_eq_add_pow {α R : Type _} [CommSemiringₓ R] (a b : R) (s 
   refine' Finset.sum_congr rfl fun t ht => _
   rw [prod_const, prod_const, ← card_sdiff (mem_powerset.1 ht)]
 
-theorem dvd_sum {b : β} {s : Finset α} {f : α → β} (h : ∀, ∀ x ∈ s, ∀, b ∣ f x) : b ∣ ∑ x in s, f x :=
+theorem dvd_sum {b : β} {s : Finset α} {f : α → β} (h : ∀ x ∈ s, b ∣ f x) : b ∣ ∑ x in s, f x :=
   Multiset.dvd_sum fun y hy => by
     rcases Multiset.mem_map.1 hy with ⟨x, hx, rfl⟩ <;> exact h x hx
 
@@ -290,7 +288,7 @@ theorem sum_range_succ_mul_sum_range_succ [NonUnitalNonAssocSemiringₓ β] (n k
       (((∑ i in range n, f i) * ∑ i in range k, g i) + f n * ∑ i in range k, g i) + (∑ i in range n, f i) * g k +
         f n * g k :=
   by
-  simp only [← add_mulₓ, ← mul_addₓ, ← add_assocₓ, ← sum_range_succ]
+  simp only [add_mulₓ, mul_addₓ, add_assocₓ, sum_range_succ]
 
 end Finset
 

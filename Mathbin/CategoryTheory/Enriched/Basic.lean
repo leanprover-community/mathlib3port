@@ -40,13 +40,13 @@ open MonoidalCategory
 
 variable (V : Type v) [Category.{w} V] [MonoidalCategory V]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1467:24: unsupported: (notation) in structure
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ⟶[] »
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ⟶[] »
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ⟶[] »
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ⟶[] »
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ⟶[] »
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ⟶[] »
+-- ./././Mathport/Syntax/Translate/Command.lean:337:24: unsupported: (notation) in structure
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] »
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] »
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] »
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] »
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] »
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] »
 /-- A `V`-category is a category enriched in a monoidal category `V`.
 
 Note that we do not assume that `V` is a concrete category,
@@ -157,7 +157,7 @@ def enrichedCategoryTypeEquivCategory (C : Type u₁) : EnrichedCategory (Type v
   invFun := fun 𝒞 => enriched_category_Type_of_category C
   left_inv := fun 𝒞 => by
     cases 𝒞
-    dsimp' [← enriched_category_Type_of_category]
+    dsimp' [enriched_category_Type_of_category]
     congr
     · ext X ⟨⟩
       rfl
@@ -313,8 +313,8 @@ def EnrichedFunctor.forget {C : Type u₁} {D : Type u₂} [EnrichedCategory W C
   map_comp' := fun X Y Z f g => by
     dsimp'
     apply_fun forget_enrichment.hom_to W
-    · simp only [← iso.cancel_iso_inv_left, ← category.assoc, ← tensor_comp, ← forget_enrichment.hom_to_hom_of, ←
-        enriched_functor.map_comp, ← forget_enrichment_comp]
+    · simp only [iso.cancel_iso_inv_left, category.assoc, tensor_comp, forget_enrichment.hom_to_hom_of,
+        enriched_functor.map_comp, forget_enrichment_comp]
       rfl
       
     · intro f g w

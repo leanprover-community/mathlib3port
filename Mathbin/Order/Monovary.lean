@@ -72,9 +72,9 @@ protected theorem MonovaryOn.subset (hst : s ⊆ t) (h : MonovaryOn f g t) : Mon
 protected theorem AntivaryOn.subset (hst : s ⊆ t) (h : AntivaryOn f g t) : AntivaryOn f g s := fun i hi j hj =>
   h (hst hi) (hst hj)
 
-theorem monovary_const_left (g : ι → β) (a : α) : Monovary (const ι a) g := fun i j _ => le_rfl
+theorem monovary_const_left (g : ι → β) (a : α) : Monovary (const ι a) g := fun i j _ => le_rflₓ
 
-theorem antivary_const_left (g : ι → β) (a : α) : Antivary (const ι a) g := fun i j _ => le_rfl
+theorem antivary_const_left (g : ι → β) (a : α) : Antivary (const ι a) g := fun i j _ => le_rflₓ
 
 theorem monovary_const_right (f : ι → α) (b : β) : Monovary f (const ι b) := fun i j h => (h.Ne rfl).elim
 
@@ -96,9 +96,9 @@ protected theorem Subsingleton.monovary_on [Subsingleton ι] (f : ι → α) (g 
 protected theorem Subsingleton.antivary_on [Subsingleton ι] (f : ι → α) (g : ι → β) (s : Set ι) : AntivaryOn f g s :=
   fun i _ j _ h => (ne_of_apply_ne _ h.Ne <| Subsingleton.elimₓ _ _).elim
 
-theorem monovary_on_const_left (g : ι → β) (a : α) (s : Set ι) : MonovaryOn (const ι a) g s := fun i _ j _ _ => le_rfl
+theorem monovary_on_const_left (g : ι → β) (a : α) (s : Set ι) : MonovaryOn (const ι a) g s := fun i _ j _ _ => le_rflₓ
 
-theorem antivary_on_const_left (g : ι → β) (a : α) (s : Set ι) : AntivaryOn (const ι a) g s := fun i _ j _ _ => le_rfl
+theorem antivary_on_const_left (g : ι → β) (a : α) (s : Set ι) : AntivaryOn (const ι a) g s := fun i _ j _ _ => le_rflₓ
 
 theorem monovary_on_const_right (f : ι → α) (b : β) (s : Set ι) : MonovaryOn f (const ι b) s := fun i _ j _ h =>
   (h.Ne rfl).elim

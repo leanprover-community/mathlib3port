@@ -61,7 +61,7 @@ instance equalizerRegular (g h : X ⟶ Y) [HasLimit (parallelPair g h)] : Regula
         simp )
       fun s m w => by
       ext1
-      simp [w]
+      simp [← w]
 
 /-- Every split monomorphism is a regular monomorphism. -/
 instance (priority := 100) RegularMono.ofIsSplitMono (f : X ⟶ Y) [IsSplitMono f] : RegularMono f where
@@ -123,10 +123,10 @@ instance (priority := 100) strong_mono_of_regular_mono (f : X ⟶ Y) [RegularMon
       intro A B z hz u v sq
       have : v ≫ (regular_mono.left : Y ⟶ regular_mono.Z f) = v ≫ regular_mono.right := by
         apply (cancel_epi z).1
-        simp only [← regular_mono.w, reassoc_of sq.w]
+        simp only [regular_mono.w, ← reassoc_of sq.w]
       obtain ⟨t, ht⟩ := regular_mono.lift' _ _ this
       refine' comm_sq.has_lift.mk' ⟨t, (cancel_mono f).1 _, ht⟩
-      simp only [← arrow.mk_hom, ← arrow.hom_mk'_left, ← category.assoc, ← ht, ← sq.w])
+      simp only [arrow.mk_hom, arrow.hom_mk'_left, category.assoc, ht, sq.w])
 
 /-- A regular monomorphism is an isomorphism if it is an epimorphism. -/
 theorem is_iso_of_regular_mono_of_epi (f : X ⟶ Y) [RegularMono f] [e : Epi f] : IsIso f :=
@@ -181,7 +181,7 @@ instance coequalizerRegular (g h : X ⟶ Y) [HasColimit (parallelPair g h)] : Re
         simp )
       fun s m w => by
       ext1
-      simp [w]
+      simp [← w]
 
 /-- Every split epimorphism is a regular epimorphism. -/
 instance (priority := 100) RegularEpi.ofSplitEpi (f : X ⟶ Y) [IsSplitEpi f] : RegularEpi f where
@@ -243,14 +243,14 @@ instance (priority := 100) strong_epi_of_regular_epi (f : X ⟶ Y) [RegularEpi f
       intro A B z hz u v sq
       have : (regular_epi.left : regular_epi.W f ⟶ X) ≫ u = regular_epi.right ≫ u := by
         apply (cancel_mono z).1
-        simp only [← category.assoc, ← sq.w, ← regular_epi.w_assoc]
+        simp only [category.assoc, sq.w, regular_epi.w_assoc]
       obtain ⟨t, ht⟩ := regular_epi.desc' f u this
       exact
         comm_sq.has_lift.mk'
           ⟨t, ht,
             (cancel_epi f).1
               (by
-                simp only [category.assoc, ← ht, sq.w, ← arrow.mk_hom, ← arrow.hom_mk'_right])⟩)
+                simp only [← category.assoc, ht, ← sq.w, arrow.mk_hom, arrow.hom_mk'_right])⟩)
 
 /-- A regular epimorphism is an isomorphism if it is a monomorphism. -/
 theorem is_iso_of_regular_epi_of_mono (f : X ⟶ Y) [RegularEpi f] [m : Mono f] : IsIso f :=

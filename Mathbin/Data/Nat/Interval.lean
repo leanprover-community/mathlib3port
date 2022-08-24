@@ -214,36 +214,36 @@ theorem Ico_image_const_sub_eq_Ico (hac : a ≤ c) : ((ico a b).Image fun x => c
 
 theorem Ico_succ_left_eq_erase_Ico : ico a.succ b = erase (ico a b) a := by
   ext x
-  rw [Ico_succ_left, mem_erase, mem_Ico, mem_Ioo, ← and_assoc, ne_comm, and_comm (a ≠ x), lt_iff_le_and_ne]
+  rw [Ico_succ_left, mem_erase, mem_Ico, mem_Ioo, ← and_assoc, ne_comm, and_comm (a ≠ x), lt_iff_le_and_neₓ]
 
 theorem mod_inj_on_Ico (n a : ℕ) : Set.InjOn (· % a) (Finset.ico n (n + a)) := by
   induction' n with n ih
-  · simp only [← zero_addₓ, ← nat_zero_eq_zero, ← Ico_zero_eq_range]
+  · simp only [zero_addₓ, nat_zero_eq_zero, Ico_zero_eq_range]
     rintro k hk l hl (hkl : k % a = l % a)
-    simp only [← Finset.mem_range, ← Finset.mem_coe] at hk hl
+    simp only [Finset.mem_range, Finset.mem_coe] at hk hl
     rwa [mod_eq_of_lt hk, mod_eq_of_lt hl] at hkl
     
   rw [Ico_succ_left_eq_erase_Ico, succ_add, Ico_succ_right_eq_insert_Ico le_self_add]
   rintro k hk l hl (hkl : k % a = l % a)
   have ha : 0 < a := by
     by_contra ha
-    simp only [← not_ltₓ, ← nonpos_iff_eq_zero] at ha
-    simpa [← ha] using hk
-  simp only [← Finset.mem_coe, ← Finset.mem_insert, ← Finset.mem_erase] at hk hl
+    simp only [not_ltₓ, nonpos_iff_eq_zero] at ha
+    simpa [ha] using hk
+  simp only [Finset.mem_coe, Finset.mem_insert, Finset.mem_erase] at hk hl
   rcases hk with ⟨hkn, rfl | hk⟩ <;> rcases hl with ⟨hln, rfl | hl⟩
   · rfl
     
   · rw [add_mod_right] at hkl
     refine' (hln <| ih hl _ hkl.symm).elim
-    simp only [← lt_add_iff_pos_right, ← Set.left_mem_Ico, ← Finset.coe_Ico, ← ha]
+    simp only [lt_add_iff_pos_right, Set.left_mem_Ico, Finset.coe_Ico, ha]
     
   · rw [add_mod_right] at hkl
     suffices k = n by
       contradiction
     refine' ih hk _ hkl
-    simp only [← lt_add_iff_pos_right, ← Set.left_mem_Ico, ← Finset.coe_Ico, ← ha]
+    simp only [lt_add_iff_pos_right, Set.left_mem_Ico, Finset.coe_Ico, ha]
     
-  · refine' ih _ _ hkl <;> simp only [← Finset.mem_coe, ← hk, ← hl]
+  · refine' ih _ _ hkl <;> simp only [Finset.mem_coe, hk, hl]
     
 
 /-- Note that while this lemma cannot be easily generalized to a type class, it holds for ℤ as
@@ -253,7 +253,7 @@ theorem image_Ico_mod (n a : ℕ) : (ico n (n + a)).Image (· % a) = range a := 
   · rw [range_zero, add_zeroₓ, Ico_self, image_empty]
     
   ext i
-  simp only [← mem_image, ← exists_prop, ← mem_range, ← mem_Ico]
+  simp only [mem_image, exists_prop, mem_range, mem_Ico]
   constructor
   · rintro ⟨i, h, rfl⟩
     exact mod_lt i ha.bot_lt
@@ -264,7 +264,7 @@ theorem image_Ico_mod (n a : ℕ) : (ico n (n + a)).Image (· % a) = range a := 
   · refine' ⟨i + a * (n / a + 1), ⟨_, _⟩, _⟩
     · rw [add_commₓ (n / a), mul_addₓ, mul_oneₓ, ← add_assocₓ]
       refine' hn.symm.le.trans (add_le_add_right _ _)
-      simpa only [← zero_addₓ] using add_le_add (zero_le i) (Nat.mod_ltₓ n ha.bot_lt).le
+      simpa only [zero_addₓ] using add_le_add (zero_le i) (Nat.mod_ltₓ n ha.bot_lt).le
       
     · refine' lt_of_lt_of_leₓ (add_lt_add_right hi (a * (n / a + 1))) _
       rw [mul_addₓ, mul_oneₓ, ← add_assocₓ, hn]
@@ -277,7 +277,7 @@ theorem image_Ico_mod (n a : ℕ) : (ico n (n + a)).Image (· % a) = range a := 
       
     · rw [add_commₓ n a]
       refine' add_lt_add_of_lt_of_le hia (le_transₓ _ hn.le)
-      simp only [← zero_le, ← le_add_iff_nonneg_left]
+      simp only [zero_le, le_add_iff_nonneg_left]
       
     · rw [Nat.add_mul_mod_self_leftₓ, Nat.mod_eq_of_ltₓ hia]
       

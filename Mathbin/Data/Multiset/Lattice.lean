@@ -47,18 +47,18 @@ theorem sup_singleton {a : α} : ({a} : Multiset α).sup = a :=
 theorem sup_add (s₁ s₂ : Multiset α) : (s₁ + s₂).sup = s₁.sup⊔s₂.sup :=
   Eq.trans
     (by
-      simp [← sup])
+      simp [sup])
     (fold_add _ _ _ _ _)
 
-theorem sup_le {s : Multiset α} {a : α} : s.sup ≤ a ↔ ∀, ∀ b ∈ s, ∀, b ≤ a :=
+theorem sup_le {s : Multiset α} {a : α} : s.sup ≤ a ↔ ∀ b ∈ s, b ≤ a :=
   Multiset.induction_on s
     (by
       simp )
     (by
-      simp (config := { contextual := true })[← or_imp_distrib, ← forall_and_distrib])
+      simp (config := { contextual := true })[or_imp_distrib, forall_and_distrib])
 
 theorem le_sup {s : Multiset α} {a : α} (h : a ∈ s) : a ≤ s.sup :=
-  sup_le.1 le_rfl _ h
+  sup_le.1 le_rflₓ _ h
 
 theorem sup_mono {s₁ s₂ : Multiset α} (h : s₁ ⊆ s₂) : s₁.sup ≤ s₂.sup :=
   sup_le.2 fun b hb => le_sup (h hb)
@@ -87,7 +87,7 @@ theorem nodup_sup_iff {α : Type _} [DecidableEq α] {m : Multiset (Multiset α)
   · simp
     
   · intro a s h
-    simp [← h]
+    simp [h]
     
 
 end Sup
@@ -124,18 +124,18 @@ theorem inf_singleton {a : α} : ({a} : Multiset α).inf = a :=
 theorem inf_add (s₁ s₂ : Multiset α) : (s₁ + s₂).inf = s₁.inf⊓s₂.inf :=
   Eq.trans
     (by
-      simp [← inf])
+      simp [inf])
     (fold_add _ _ _ _ _)
 
-theorem le_inf {s : Multiset α} {a : α} : a ≤ s.inf ↔ ∀, ∀ b ∈ s, ∀, a ≤ b :=
+theorem le_inf {s : Multiset α} {a : α} : a ≤ s.inf ↔ ∀ b ∈ s, a ≤ b :=
   Multiset.induction_on s
     (by
       simp )
     (by
-      simp (config := { contextual := true })[← or_imp_distrib, ← forall_and_distrib])
+      simp (config := { contextual := true })[or_imp_distrib, forall_and_distrib])
 
 theorem inf_le {s : Multiset α} {a : α} (h : a ∈ s) : s.inf ≤ a :=
-  le_inf.1 le_rfl _ h
+  le_inf.1 le_rflₓ _ h
 
 theorem inf_mono {s₁ s₂ : Multiset α} (h : s₁ ⊆ s₂) : s₂.inf ≤ s₁.inf :=
   le_inf.2 fun b hb => inf_le (h hb)

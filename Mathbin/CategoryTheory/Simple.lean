@@ -109,7 +109,7 @@ instance (X : C) [Simple.{v} X] : Nontrivial (End X) :=
 section
 
 theorem Simple.not_is_zero (X : C) [Simple X] : ¬IsZero X := by
-  simpa [← limits.is_zero.iff_id_eq_zero] using id_nonzero X
+  simpa [limits.is_zero.iff_id_eq_zero] using id_nonzero X
 
 variable [HasZeroObject C]
 
@@ -183,7 +183,7 @@ theorem Biprod.is_iso_inl_iff_is_zero (X Y : C) : IsIso (biprod.inl : X ⟶ X �
   constructor
   · intro h
     replace h := h =≫ biprod.snd
-    simpa [is_zero.iff_is_split_epi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] using h
+    simpa [← is_zero.iff_is_split_epi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] using h
     
   · intro h
     rw [is_zero.iff_is_split_epi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] at h

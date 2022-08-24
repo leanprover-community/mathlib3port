@@ -221,9 +221,9 @@ variable [Module R M] [LieModule R L M]
 `L`, we may regard `M` as a Lie module of `L'` by restriction. -/
 instance : LieModule R L' M where
   smul_lie := fun t x m => by
-    simp only [← coe_bracket_of_module, ← smul_lie, ← Submodule.coe_smul_of_tower]
+    simp only [coe_bracket_of_module, smul_lie, Submodule.coe_smul_of_tower]
   lie_smul := fun t x m => by
-    simp only [← coe_bracket_of_module, ← lie_smul]
+    simp only [coe_bracket_of_module, lie_smul]
 
 /-- An `L`-equivariant map of Lie modules `M → N` is `L'`-equivariant for any Lie subalgebra
 `L' ⊆ L`. -/
@@ -240,7 +240,7 @@ end LieModule
 def incl : L' →ₗ⁅R⁆ L :=
   { (L' : Submodule R L).Subtype with
     map_lie' := fun x y => by
-      simp only [← LinearMap.to_fun_eq_coe, ← Submodule.subtype_apply]
+      simp only [LinearMap.to_fun_eq_coe, Submodule.subtype_apply]
       rfl }
 
 @[simp]
@@ -251,7 +251,7 @@ theorem coe_incl : ⇑L'.incl = coe :=
 def incl' : L' →ₗ⁅R,L'⁆ L :=
   { (L' : Submodule R L).Subtype with
     map_lie' := fun x y => by
-      simp only [← coe_bracket_of_module, ← LinearMap.to_fun_eq_coe, ← Submodule.subtype_apply, ← coe_bracket] }
+      simp only [coe_bracket_of_module, LinearMap.to_fun_eq_coe, Submodule.subtype_apply, coe_bracket] }
 
 @[simp]
 theorem coe_incl' : ⇑L'.incl' = coe :=
@@ -305,13 +305,13 @@ theorem surjective_range_restrict : Function.Surjective f.range_restrict := by
   erw [mem_range] at hy
   obtain ⟨x, rfl⟩ := hy
   use x
-  simp only [← Subtype.mk_eq_mk, ← range_restrict_apply]
+  simp only [Subtype.mk_eq_mk, range_restrict_apply]
 
 /-- A Lie algebra is equivalent to its range under an injective Lie algebra morphism. -/
 noncomputable def equivRangeOfInjective (h : Function.Injective f) : L ≃ₗ⁅R⁆ f.range :=
   LieEquiv.ofBijective f.range_restrict
     (fun x y hxy => by
-      simp only [← Subtype.mk_eq_mk, ← range_restrict_apply] at hxy
+      simp only [Subtype.mk_eq_mk, range_restrict_apply] at hxy
       exact h hxy)
     f.surjective_range_restrict
 
@@ -372,7 +372,7 @@ def comap : LieSubalgebra R L :=
   { (K₂ : Submodule R L₂).comap (f : L →ₗ[R] L₂) with
     lie_mem' := fun x y hx hy => by
       suffices ⁅f x,f y⁆ ∈ K₂ by
-        simp [← this]
+        simp [this]
       exact K₂.lie_mem hx hy }
 
 section LatticeStructure
@@ -430,14 +430,14 @@ instance : HasInf (LieSubalgebra R L) :=
   ⟨fun K K' =>
     { (K⊓K' : Submodule R L) with lie_mem' := fun x y hx hy => mem_inter (K.lie_mem hx.1 hy.1) (K'.lie_mem hx.2 hy.2) }⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1129:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
+-- ./././Mathport/Syntax/Translate/Expr.lean:368:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
 instance : HasInfₓ (LieSubalgebra R L) :=
   ⟨fun S =>
     { inf
-        "./././Mathport/Syntax/Translate/Basic.lean:1129:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" with
+        "./././Mathport/Syntax/Translate/Expr.lean:368:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" with
       lie_mem' := fun x y hx hy => by
-        simp only [← Submodule.mem_carrier, ← mem_Inter, ← Submodule.Inf_coe, ← mem_set_of_eq, ←
-          forall_apply_eq_imp_iff₂, ← exists_imp_distrib] at *
+        simp only [Submodule.mem_carrier, mem_Inter, Submodule.Inf_coe, mem_set_of_eq, forall_apply_eq_imp_iff₂,
+          exists_imp_distrib] at *
         intro K hK
         exact K.lie_mem (hx K hK) (hy K hK) }⟩
 
@@ -445,26 +445,26 @@ instance : HasInfₓ (LieSubalgebra R L) :=
 theorem inf_coe : (↑(K⊓K') : Set L) = K ∩ K' :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1129:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
+-- ./././Mathport/Syntax/Translate/Expr.lean:368:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
 @[simp]
 theorem Inf_coe_to_submodule (S : Set (LieSubalgebra R L)) :
     (↑(inf S) : Submodule R L) =
       inf
-        "./././Mathport/Syntax/Translate/Basic.lean:1129:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:368:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" :=
   rfl
 
 @[simp]
 theorem Inf_coe (S : Set (LieSubalgebra R L)) : (↑(inf S) : Set L) = ⋂ s ∈ S, (s : Set L) := by
   rw [← coe_to_submodule, Inf_coe_to_submodule, Submodule.Inf_coe]
   ext x
-  simpa only [← mem_Inter, ← mem_set_of_eq, ← forall_apply_eq_imp_iff₂, ← exists_imp_distrib]
+  simpa only [mem_Inter, mem_set_of_eq, forall_apply_eq_imp_iff₂, exists_imp_distrib]
 
 theorem Inf_glb (S : Set (LieSubalgebra R L)) : IsGlb S (inf S) := by
   have h : ∀ K K' : LieSubalgebra R L, (K : Set L) ≤ K' ↔ K ≤ K' := by
     intros
     exact Iff.rfl
   apply IsGlb.of_image h
-  simp only [← Inf_coe]
+  simp only [Inf_coe]
   exact is_glb_binfi
 
 /-- The set of Lie subalgebras of a Lie algebra form a complete lattice.
@@ -514,7 +514,7 @@ instance subsingleton_of_bot : Subsingleton (LieSubalgebra R ↥(⊥ : LieSubalg
   change x ∈ ⊥ at hx
   rw [LieSubalgebra.mem_bot] at hx
   subst hx
-  simp only [← true_iffₓ, ← eq_self_iff_true, ← Submodule.mk_eq_zero, ← mem_bot]
+  simp only [true_iffₓ, eq_self_iff_true, Submodule.mk_eq_zero, mem_bot]
 
 theorem subsingleton_bot : Subsingleton ↥(⊥ : LieSubalgebra R L) :=
   show Subsingleton ((⊥ : LieSubalgebra R L) : Set L) by
@@ -548,7 +548,7 @@ theorem hom_of_le_apply (x : K) : homOfLe h x = ⟨x.1, h x.2⟩ :=
   rfl
 
 theorem hom_of_le_injective : Function.Injective (homOfLe h) := fun x y => by
-  simp only [← hom_of_le_apply, ← imp_self, ← Subtype.mk_eq_mk, ← SetLike.coe_eq_coe, ← Subtype.val_eq_coe]
+  simp only [hom_of_le_apply, imp_self, Subtype.mk_eq_mk, SetLike.coe_eq_coe, Subtype.val_eq_coe]
 
 /-- Given two nested Lie subalgebras `K ⊆ K'`, we can view `K` as a Lie subalgebra of `K'`,
 regarded as Lie algebra in its own right. -/
@@ -557,7 +557,7 @@ def ofLe : LieSubalgebra R K' :=
 
 @[simp]
 theorem mem_of_le (x : K') : x ∈ ofLe h ↔ (x : L) ∈ K := by
-  simp only [← of_le, ← hom_of_le_apply, ← LieHom.mem_range]
+  simp only [of_le, hom_of_le_apply, LieHom.mem_range]
   constructor
   · rintro ⟨y, rfl⟩
     exact y.property

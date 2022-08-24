@@ -58,7 +58,7 @@ noncomputable def IsMatching.toEdge {M : Subgraph G} (h : M.IsMatching) (v : M.V
 
 theorem IsMatching.to_edge_eq_of_adj {M : Subgraph G} (h : M.IsMatching) {v w : V} (hv : v ∈ M.Verts)
     (hvw : M.Adj v w) : h.toEdge ⟨v, hv⟩ = ⟨⟦(v, w)⟧, hvw⟩ := by
-  simp only [← is_matching.to_edge, ← Subtype.mk_eq_mk]
+  simp only [is_matching.to_edge, Subtype.mk_eq_mk]
   congr
   exact ((h (M.edge_vert hvw)).some_spec.2 w hvw).symm
 
@@ -84,14 +84,14 @@ theorem IsMatching.support_eq_verts {M : Subgraph G} (h : M.IsMatching) : M.Supp
 
 theorem is_matching_iff_forall_degree {M : Subgraph G} [∀ v : V, Fintype (M.NeighborSet v)] :
     M.IsMatching ↔ ∀ v : V, v ∈ M.Verts → M.degree v = 1 := by
-  simpa [← degree_eq_one_iff_unique_adj]
+  simpa [degree_eq_one_iff_unique_adj]
 
 theorem IsMatching.even_card {M : Subgraph G} [Fintype M.Verts] (h : M.IsMatching) : Even M.Verts.toFinset.card := by
   classical
   rw [is_matching_iff_forall_degree] at h
   use M.coe.edge_finset.card
   rw [← two_mul, ← M.coe.sum_degrees_eq_twice_card_edges]
-  simp [← h, ← Finset.card_univ]
+  simp [h, Finset.card_univ]
 
 theorem is_perfect_matching_iff : M.IsPerfectMatching ↔ ∀ v, ∃! w, M.Adj v w := by
   refine' ⟨_, fun hm => ⟨fun v hv => hm v, fun v => _⟩⟩
@@ -104,11 +104,11 @@ theorem is_perfect_matching_iff : M.IsPerfectMatching ↔ ∀ v, ∃! w, M.Adj v
 
 theorem is_perfect_matching_iff_forall_degree {M : Subgraph G} [∀ v, Fintype (M.NeighborSet v)] :
     M.IsPerfectMatching ↔ ∀ v, M.degree v = 1 := by
-  simp [← degree_eq_one_iff_unique_adj, ← is_perfect_matching_iff]
+  simp [degree_eq_one_iff_unique_adj, is_perfect_matching_iff]
 
 theorem IsPerfectMatching.even_card {M : Subgraph G} [Fintype V] (h : M.IsPerfectMatching) : Even (Fintype.card V) := by
   classical
-  simpa [← h.2.card_verts] using is_matching.even_card h.1
+  simpa [h.2.card_verts] using is_matching.even_card h.1
 
 end Subgraph
 

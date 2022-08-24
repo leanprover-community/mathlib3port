@@ -51,7 +51,7 @@ theorem of_bot : IsPGroup p (⊥ : Subgroup G) :=
 theorem iff_card [Fact p.Prime] [Fintype G] : IsPGroup p G ↔ ∃ n : ℕ, card G = p ^ n := by
   have hG : card G ≠ 0 := card_ne_zero
   refine' ⟨fun h => _, fun ⟨n, hn⟩ => of_card hn⟩
-  suffices ∀, ∀ q ∈ Nat.factors (card G), ∀, q = p by
+  suffices ∀ q ∈ Nat.factors (card G), q = p by
     use (card G).factors.length
     rw [← List.prod_repeat, ← List.eq_repeat_of_mem this, Nat.prod_factors hG]
   intro q hq
@@ -130,7 +130,7 @@ theorem card_modeq_card_fixed_points [Fintype (FixedPoints G α)] : card α ≡ 
   rw [← Zmod.eq_iff_modeq_nat p, Nat.cast_sum, Nat.cast_sum]
   have key : ∀ x, card { y // (Quotientₓ.mk' y : Quotientₓ (orbit_rel G α)) = Quotientₓ.mk' x } = card (orbit G x) :=
     fun x => by
-    simp only [← Quotientₓ.eq'] <;> congr
+    simp only [Quotientₓ.eq'] <;> congr
   refine'
     Eq.symm
       (Finset.sum_bij_ne_zero (fun a _ _ => Quotientₓ.mk' a.1) (fun _ _ _ => Finset.mem_univ _)
@@ -285,7 +285,7 @@ theorem disjoint_of_ne (p₁ p₂ : ℕ) [hp₁ : Fact p₁.Prime] [hp₂ : Fact
     rw [← associated_iff_eq] at this⊢
     exact
       Associated.of_pow_associated_of_prime (nat.prime_iff.mp hp₁.elim) (nat.prime_iff.mp hp₂.elim) (Ne.bot_lt h) this
-  simpa [← this] using hn₁
+  simpa [this] using hn₁
 
 section P2comm
 

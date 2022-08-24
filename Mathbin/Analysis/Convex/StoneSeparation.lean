@@ -72,13 +72,13 @@ theorem not_disjoint_segment_convex_hull_triple {p q u v x y z : E} (hz : z ∈ 
       
   have hw : (∑ i, w i) = az * av + bz * au := by
     trans az * av * bu + (bz * au * bv + au * av)
-    · simp [← w, ← Finₓ.sum_univ_succ, ← Finₓ.sum_univ_zero]
+    · simp [w, Finₓ.sum_univ_succ, Finₓ.sum_univ_zero]
       
     rw [← one_mulₓ (au * av), ← habz, add_mulₓ, ← add_assocₓ, add_add_add_commₓ, mul_assoc, ← mul_addₓ, mul_assoc, ←
       mul_addₓ, mul_comm av, ← add_mulₓ, ← mul_addₓ, add_commₓ bu, add_commₓ bv, habu, habv, one_mulₓ, mul_oneₓ]
   have hz : ∀ i, z i ∈ ({p, q, az • x + bz • y} : Set E) := by
     rintro i
-    fin_cases i <;> simp [← z]
+    fin_cases i <;> simp [z]
   convert
     Finset.center_mass_mem_convex_hull (Finset.univ : Finset (Finₓ 3)) (fun i _ => hw₀ i)
       (by
@@ -88,8 +88,8 @@ theorem not_disjoint_segment_convex_hull_triple {p q u v x y z : E} (hz : z ∈ 
   simp_rw [div_eq_inv_mul, hw, mul_assoc, mul_smul (az * av + bz * au)⁻¹, ← smul_add, add_assocₓ, ← mul_assoc]
   congr 3
   rw [← mul_smul, ← mul_rotate, mul_right_commₓ, mul_smul, ← mul_smul _ av, mul_rotate, mul_smul _ bz, ← smul_add]
-  simp only [← List.map, ← List.pmap, ← Nat.add_def, ← add_zeroₓ, ← Finₓ.mk_eq_subtype_mk, ← Finₓ.mk_bit0, ←
-    Finₓ.mk_one, ← List.foldr_cons, ← List.foldr_nil]
+  simp only [List.map, List.pmap, Nat.add_def, add_zeroₓ, Finₓ.mk_eq_subtype_mk, Finₓ.mk_bit0, Finₓ.mk_one,
+    List.foldr_cons, List.foldr_nil]
   rfl
 
 /-- **Stone's Separation Theorem** -/
@@ -102,14 +102,14 @@ theorem exists_convex_convex_compl_subset (hs : Convex 𝕜 s) (ht : Convex 𝕜
         ⟨⋃₀c, ⟨hc.directed_on.convex_sUnion fun s hs => (hcS hs).1, disjoint_sUnion_left.2 fun c hc => (hcS hc).2⟩,
           fun s => subset_sUnion_of_mem⟩)
       s ⟨hs, hst⟩
-  refine' ⟨C, hC.1, convex_iff_segment_subset.2 fun x y hx hy z hz hzC => _, hsC, hC.2.subset_compl_left⟩
-  suffices h : ∀, ∀ c ∈ Cᶜ, ∀, ∃ a ∈ C, (Segment 𝕜 c a ∩ t).Nonempty
+  refine' ⟨C, hC.1, convex_iff_segment_subset.2 fun x hx y hy z hz hzC => _, hsC, hC.2.subset_compl_left⟩
+  suffices h : ∀ c ∈ Cᶜ, ∃ a ∈ C, (Segment 𝕜 c a ∩ t).Nonempty
   · obtain ⟨p, hp, u, hu, hut⟩ := h x hx
     obtain ⟨q, hq, v, hv, hvt⟩ := h y hy
     refine'
       not_disjoint_segment_convex_hull_triple hz hu hv
         (hC.2.symm.mono (ht.segment_subset hut hvt) <| convex_hull_min _ hC.1)
-    simp [← insert_subset, ← hp, ← hq, ← singleton_subset_iff.2 hzC]
+    simp [insert_subset, hp, hq, singleton_subset_iff.2 hzC]
     
   rintro c hc
   by_contra' h

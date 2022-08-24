@@ -58,7 +58,7 @@ See also `is_alg_closed.splits_domain` for the case where `K` is algebraically c
 theorem IsAlgClosed.splits_codomain {k K : Type _} [Field k] [IsAlgClosed k] [Field K] {f : K →+* k} (p : K[X]) :
     p.Splits f := by
   convert IsAlgClosed.splits (p.map f)
-  simp [← splits_map_iff]
+  simp [splits_map_iff]
 
 /-- Every polynomial splits in the field extension `f : K →+* k` if `K` is algebraically closed.
 
@@ -82,7 +82,7 @@ theorem exists_pow_nat_eq [IsAlgClosed k] (x : k) {n : ℕ} (hn : 0 < n) : ∃ z
     exact ne_of_gtₓ (WithBot.coe_lt_coe.2 hn)
     
   use z
-  simp only [← eval_C, ← eval_X, ← eval_pow, ← eval_sub, ← is_root.def] at hz
+  simp only [eval_C, eval_X, eval_pow, eval_sub, is_root.def] at hz
   exact sub_eq_zero.1 hz
 
 theorem exists_eq_mul_self [IsAlgClosed k] (x : k) : ∃ z, x = z * z := by
@@ -209,7 +209,7 @@ theorem compat (h : E₁ ≤ E₂) : ∀ x, E₂.emb (inclusion h.fst x) = E₁.
 instance : Preorderₓ (SubfieldWithHom K L M hL) where
   le := (· ≤ ·)
   le_refl := fun E =>
-    ⟨le_rfl, by
+    ⟨le_rflₓ, by
       simp ⟩
   le_trans := fun E₁ E₂ E₃ h₁₂ h₂₃ =>
     ⟨le_transₓ h₁₂.fst h₂₃.fst, fun _ => by
@@ -233,7 +233,7 @@ theorem maximal_subfield_with_hom_chain_bounded (c : Set (SubfieldWithHom K L M 
               intro i j h
               ext x
               cases' hc.total i.prop j.prop with hij hji
-              · simp [hij.snd x]
+              · simp [← hij.snd x]
                 
               · erw [AlgHom.comp_apply, ← hji.snd (inclusion h x), inclusion_inclusion, inclusion_self,
                   AlgHom.id_apply x]
@@ -242,11 +242,11 @@ theorem maximal_subfield_with_hom_chain_bounded (c : Set (SubfieldWithHom K L M 
     ⟨ub, fun N hN =>
       ⟨(le_supr (fun i : c => (i : SubfieldWithHom K L M hL).Carrier) ⟨N, hN⟩ : _), by
         intro x
-        simp [← ub]
+        simp [ub]
         rfl⟩⟩
   else by
     rw [Set.not_nonempty_iff_eq_empty] at hcn
-    simp [← hcn]
+    simp [hcn]
 
 variable (hL M)
 
@@ -285,7 +285,7 @@ theorem maximal_subfield_with_hom_eq_top : (maximalSubfieldWithHom M hL).Carrier
     refine' ⟨hNO, _⟩
     intro z
     show O'.emb (algebraMap N O z) = algebraMap N M z
-    simp only [← O', ← restrict_scalars_apply, ← AlgHom.commutes]
+    simp only [O', restrict_scalars_apply, AlgHom.commutes]
   refine' (maximal_subfield_with_hom_is_maximal M hL O' hO').fst _
   exact Algebra.subset_adjoin (Set.mem_singleton x)
 
@@ -381,7 +381,7 @@ noncomputable def equiv : L ≃ₐ[R] M :=
       letI : IsScalarTower R L M :=
         IsScalarTower.of_algebra_map_eq
           (by
-            simp [← RingHom.algebra_map_to_algebra])
+            simp [RingHom.algebra_map_to_algebra])
       show Function.Surjective (algebraMap L M)
       exact
         IsAlgClosed.algebra_map_surjective_of_is_algebraic
@@ -439,7 +439,7 @@ noncomputable def equivOfEquivAux (hSR : S ≃+* R) :
   haveI : IsScalarTower S R L :=
     IsScalarTower.of_algebra_map_eq
       (by
-        simp [← RingHom.algebra_map_to_algebra])
+        simp [RingHom.algebra_map_to_algebra])
   haveI : NoZeroSmulDivisors R S := NoZeroSmulDivisors.of_algebra_map_injective hSR.symm.injective
   refine'
     ⟨equiv_of_algebraic' R S L M
@@ -447,7 +447,7 @@ noncomputable def equivOfEquivAux (hSR : S ≃+* R) :
           IsAlgClosure.algebraic),
       _⟩
   ext
-  simp only [← RingEquiv.to_ring_hom_eq_coe, ← Function.comp_app, ← RingHom.coe_comp, ← AlgEquiv.coe_ring_equiv, ←
+  simp only [RingEquiv.to_ring_hom_eq_coe, Function.comp_app, RingHom.coe_comp, AlgEquiv.coe_ring_equiv,
     RingEquiv.coe_to_ring_hom]
   conv_lhs => rw [← hSR.symm_apply_apply x]
   show equiv_of_algebraic' R S L M _ (algebraMap R L (hSR x)) = _

@@ -52,7 +52,7 @@ theorem of_comm {A ι : Type _} [CommRingₓ A] (B : ι → AddSubgroup A) (inte
       intro x i
       cases' leftMul x i with j hj
       use j
-      simpa [← mul_comm] using hj }
+      simpa [mul_comm] using hj }
 
 /-- Every subgroups basis on a ring leads to a ring filter basis. -/
 def toRingFilterBasis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B) : RingFilterBasis A where
@@ -123,7 +123,7 @@ theorem has_basis_nhds (a : A) : HasBasis (@nhds A hB.topology a) (fun _ => True
   ⟨by
     intro s
     rw [(hB.to_ring_filter_basis.to_add_group_filter_basis.nhds_has_basis a).mem_iff]
-    simp only [← exists_prop, ← exists_true_left]
+    simp only [exists_prop, exists_true_left]
     constructor
     · rintro ⟨-, ⟨i, rfl⟩, hi⟩
       use i

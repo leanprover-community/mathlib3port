@@ -104,7 +104,7 @@ def piLimitFanIsLimit ⦃J : Type u⦄ (F : J → Groupoidₓ.{u, u}) : Limits.I
     (by
       intros
       dunfold pi_limit_fan
-      simp [← hom_to_functor])
+      simp [hom_to_functor])
     (by
       intro s m w
       apply functor.pi_ext
@@ -123,7 +123,7 @@ noncomputable def piIsoPi (J : Type u) (f : J → Groupoidₓ.{u, u}) : @of (∀
 @[simp]
 theorem pi_iso_pi_hom_π (J : Type u) (f : J → Groupoidₓ.{u, u}) (j : J) :
     (piIsoPi J f).Hom ≫ Limits.Pi.π f j = CategoryTheory.pi.eval _ j := by
-  simp [← pi_iso_pi]
+  simp [pi_iso_pi]
   rfl
 
 end Products

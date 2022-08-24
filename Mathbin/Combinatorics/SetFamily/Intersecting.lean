@@ -51,9 +51,9 @@ theorem intersecting_empty : (∅ : Set α).Intersecting := fun _ => False.elim
 
 @[simp]
 theorem intersecting_singleton : ({a} : Set α).Intersecting ↔ a ≠ ⊥ := by
-  simp [← intersecting]
+  simp [intersecting]
 
-theorem Intersecting.insert (hs : s.Intersecting) (ha : a ≠ ⊥) (h : ∀, ∀ b ∈ s, ∀, ¬Disjoint a b) :
+theorem Intersecting.insert (hs : s.Intersecting) (ha : a ≠ ⊥) (h : ∀ b ∈ s, ¬Disjoint a b) :
     (insert a s).Intersecting := by
   rintro b (rfl | hb) c (rfl | hc)
   · rwa [disjoint_self]
@@ -65,7 +65,7 @@ theorem Intersecting.insert (hs : s.Intersecting) (ha : a ≠ ⊥) (h : ∀, ∀
   · exact hs hb hc
     
 
-theorem intersecting_insert : (insert a s).Intersecting ↔ s.Intersecting ∧ a ≠ ⊥ ∧ ∀, ∀ b ∈ s, ∀, ¬Disjoint a b :=
+theorem intersecting_insert : (insert a s).Intersecting ↔ s.Intersecting ∧ a ≠ ⊥ ∧ ∀ b ∈ s, ¬Disjoint a b :=
   ⟨fun h =>
     ⟨h.mono <| subset_insert _ _, h.ne_bot <| mem_insert _ _, fun b hb => h (mem_insert _ _) <| mem_insert_of_mem _ hb⟩,
     fun h => h.1.insert h.2.1 h.2.2⟩

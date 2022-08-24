@@ -86,7 +86,7 @@ def ofSums (n : ℕ) (l : Multiset ℕ) (hl : l.Sum = n) : Partition n where
     have lz : (l.filter (· = 0)).Sum = 0 := by
       rw [Multiset.sum_eq_zero_iff]
       simp
-    simpa [← lz, ← hl] using lt
+    simpa [lz, hl] using lt
 
 /-- A `multiset ℕ` induces a partition on its sum. -/
 def ofMultiset (l : Multiset ℕ) : Partition l.Sum :=
@@ -119,7 +119,7 @@ instance (n : ℕ) : Fintype (Partition n) :=
 
 /-- The finset of those partitions in which every part is odd. -/
 def odds (n : ℕ) : Finset (Partition n) :=
-  Finset.univ.filter fun c => ∀, ∀ i ∈ c.parts, ∀, ¬Even i
+  Finset.univ.filter fun c => ∀ i ∈ c.parts, ¬Even i
 
 /-- The finset of those partitions in which each part is used at most once. -/
 def distincts (n : ℕ) : Finset (Partition n) :=

@@ -49,7 +49,7 @@ theorem deriv_sqrt_aux {x : ℝ} (hx : x ≠ 0) : HasStrictDerivAt sqrt (1 / (2 
         cont_diff_at_const.congr_of_eventually_eq this⟩
     
   · have : ↑2 * sqrt x ^ (2 - 1) ≠ 0 := by
-      simp [← (sqrt_pos.2 hx).ne', ← @two_ne_zero ℝ]
+      simp [(sqrt_pos.2 hx).ne', @two_ne_zero ℝ]
     constructor
     · simpa using sq_local_homeomorph.has_strict_deriv_at_symm hx this (has_strict_deriv_at_pow 2 _)
       
@@ -77,15 +77,15 @@ variable {f : ℝ → ℝ} {s : Set ℝ} {f' x : ℝ}
 
 theorem HasDerivWithinAt.sqrt (hf : HasDerivWithinAt f f' s x) (hx : f x ≠ 0) :
     HasDerivWithinAt (fun y => sqrt (f y)) (f' / (2 * sqrt (f x))) s x := by
-  simpa only [← (· ∘ ·), ← div_eq_inv_mul, ← mul_oneₓ] using (has_deriv_at_sqrt hx).comp_has_deriv_within_at x hf
+  simpa only [(· ∘ ·), div_eq_inv_mul, mul_oneₓ] using (has_deriv_at_sqrt hx).comp_has_deriv_within_at x hf
 
 theorem HasDerivAt.sqrt (hf : HasDerivAt f f' x) (hx : f x ≠ 0) :
     HasDerivAt (fun y => sqrt (f y)) (f' / (2 * sqrt (f x))) x := by
-  simpa only [← (· ∘ ·), ← div_eq_inv_mul, ← mul_oneₓ] using (has_deriv_at_sqrt hx).comp x hf
+  simpa only [(· ∘ ·), div_eq_inv_mul, mul_oneₓ] using (has_deriv_at_sqrt hx).comp x hf
 
 theorem HasStrictDerivAt.sqrt (hf : HasStrictDerivAt f f' x) (hx : f x ≠ 0) :
     HasStrictDerivAt (fun t => sqrt (f t)) (f' / (2 * sqrt (f x))) x := by
-  simpa only [← (· ∘ ·), ← div_eq_inv_mul, ← mul_oneₓ] using (has_strict_deriv_at_sqrt hx).comp x hf
+  simpa only [(· ∘ ·), div_eq_inv_mul, mul_oneₓ] using (has_strict_deriv_at_sqrt hx).comp x hf
 
 theorem deriv_within_sqrt (hf : DifferentiableWithinAt ℝ f s x) (hx : f x ≠ 0) (hxs : UniqueDiffWithinAt ℝ s x) :
     derivWithin (fun x => sqrt (f x)) s x = derivWithin f s x / (2 * sqrt (f x)) :=
@@ -123,7 +123,7 @@ theorem DifferentiableAt.sqrt (hf : DifferentiableAt ℝ f x) (hx : f x ≠ 0) :
     DifferentiableAt ℝ (fun y => sqrt (f y)) x :=
   (hf.HasFderivAt.sqrt hx).DifferentiableAt
 
-theorem DifferentiableOn.sqrt (hf : DifferentiableOn ℝ f s) (hs : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
+theorem DifferentiableOn.sqrt (hf : DifferentiableOn ℝ f s) (hs : ∀ x ∈ s, f x ≠ 0) :
     DifferentiableOn ℝ (fun y => sqrt (f y)) s := fun x hx => (hf x hx).sqrt (hs x hx)
 
 theorem Differentiable.sqrt (hf : Differentiable ℝ f) (hs : ∀ x, f x ≠ 0) : Differentiable ℝ fun y => sqrt (f y) :=
@@ -145,8 +145,8 @@ theorem ContDiffWithinAt.sqrt (hf : ContDiffWithinAt ℝ n f s x) (hx : f x ≠ 
     ContDiffWithinAt ℝ n (fun y => sqrt (f y)) s x :=
   (cont_diff_at_sqrt hx).comp_cont_diff_within_at x hf
 
-theorem ContDiffOn.sqrt (hf : ContDiffOn ℝ n f s) (hs : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
-    ContDiffOn ℝ n (fun y => sqrt (f y)) s := fun x hx => (hf x hx).sqrt (hs x hx)
+theorem ContDiffOn.sqrt (hf : ContDiffOn ℝ n f s) (hs : ∀ x ∈ s, f x ≠ 0) : ContDiffOn ℝ n (fun y => sqrt (f y)) s :=
+  fun x hx => (hf x hx).sqrt (hs x hx)
 
 theorem ContDiff.sqrt (hf : ContDiff ℝ n f) (h : ∀ x, f x ≠ 0) : ContDiff ℝ n fun y => sqrt (f y) :=
   cont_diff_iff_cont_diff_at.2 fun x => hf.ContDiffAt.sqrt (h x)

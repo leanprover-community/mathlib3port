@@ -204,9 +204,9 @@ instance : PartialOrderₓ Ordinal where
     (Quotientₓ.induction_on₂ a b) fun ⟨α, r, _⟩ ⟨β, s, _⟩ ⟨h₁⟩ ⟨h₂⟩ => Quot.sound ⟨InitialSeg.antisymm h₁ h₂⟩
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident ordinal.partial_order.le]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident ordinal.partial_order.le]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident ordinal.partial_order.lt]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident ordinal.partial_order.lt]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 theorem type_le_iff {α β} {r : α → α → Prop} {s : β → β → Prop} [IsWellOrder α r] [IsWellOrder β s] :
     type r ≤ type s ↔ Nonempty (r ≼i s) :=
   Iff.rfl
@@ -593,11 +593,11 @@ theorem lift_le {a b : Ordinal} : lift.{u, v} a ≤ lift b ↔ a ≤ b :=
 
 @[simp]
 theorem lift_inj {a b : Ordinal} : lift a = lift b ↔ a = b := by
-  simp only [← le_antisymm_iffₓ, ← lift_le]
+  simp only [le_antisymm_iffₓ, lift_le]
 
 @[simp]
 theorem lift_lt {a b : Ordinal} : lift a < lift b ↔ a < b := by
-  simp only [← lt_iff_le_not_leₓ, ← lift_le]
+  simp only [lt_iff_le_not_leₓ, lift_le]
 
 @[simp]
 theorem lift_zero : lift 0 = 0 :=
@@ -707,8 +707,8 @@ instance : AddMonoidWithOneₓ Ordinal.{u} where
         ⟨⟨sumAssoc _ _ _, fun a b => by
             rcases a with (⟨a | a⟩ | a) <;>
               rcases b with (⟨b | b⟩ | b) <;>
-                simp only [← sum_assoc_apply_inl_inl, ← sum_assoc_apply_inl_inr, ← sum_assoc_apply_inr, ←
-                  Sum.lex_inl_inl, ← Sum.lex_inr_inr, ← Sum.Lex.sep, ← Sum.lex_inr_inl]⟩⟩
+                simp only [sum_assoc_apply_inl_inl, sum_assoc_apply_inl_inr, sum_assoc_apply_inr, Sum.lex_inl_inl,
+                  Sum.lex_inr_inr, Sum.Lex.sep, Sum.lex_inr_inl]⟩⟩
 
 @[simp]
 theorem card_add (o₁ o₂ : Ordinal) : card (o₁ + o₂) = card o₁ + card o₂ :=
@@ -721,7 +721,7 @@ theorem type_sum_lex {α β : Type u} (r : α → α → Prop) (s : β → β �
 
 @[simp]
 theorem card_nat (n : ℕ) : card.{u} n = n := by
-  induction n <;> [rfl, simp only [← card_add, ← card_one, ← Nat.cast_succₓ, *]]
+  induction n <;> [rfl, simp only [card_add, card_one, Nat.cast_succₓ, *]]
 
 instance add_covariant_class_le : CovariantClass Ordinal.{u} Ordinal.{u} (· + ·) (· ≤ ·) :=
   ⟨fun c a b h => by
@@ -762,10 +762,10 @@ instance add_swap_covariant_class_le : CovariantClass Ordinal.{u} Ordinal.{u} (s
                   ⟩⟩
 
 theorem le_add_right (a b : Ordinal) : a ≤ a + b := by
-  simpa only [← add_zeroₓ] using add_le_add_left (Ordinal.zero_le b) a
+  simpa only [add_zeroₓ] using add_le_add_left (Ordinal.zero_le b) a
 
 theorem le_add_left (a b : Ordinal) : a ≤ b + a := by
-  simpa only [← zero_addₓ] using add_le_add_right (Ordinal.zero_le b) a
+  simpa only [zero_addₓ] using add_le_add_right (Ordinal.zero_le b) a
 
 instance : LinearOrderₓ Ordinal :=
   { Ordinal.partialOrder with
@@ -840,7 +840,7 @@ private theorem succ_le_iff' {a b : Ordinal} : a + 1 ≤ b ↔ a < b :=
         · exact fun _ => t
           
         · rcases a with (a | _) <;> rcases b with (b | _)
-          · simpa only [← Sum.lex_inl_inl] using f.map_rel_iff.2
+          · simpa only [Sum.lex_inl_inl] using f.map_rel_iff.2
             
           · intro
             rw [hf]
@@ -864,7 +864,7 @@ private theorem succ_le_iff' {a b : Ordinal} : a + 1 ≤ b ↔ a < b :=
           ⟩
 
 instance : NoMaxOrder Ordinal :=
-  ⟨fun a => ⟨_, succ_le_iff'.1 le_rfl⟩⟩
+  ⟨fun a => ⟨_, succ_le_iff'.1 le_rflₓ⟩⟩
 
 instance : SuccOrder Ordinal.{u} :=
   SuccOrder.ofSuccLeIff (fun o => o + 1) fun a b => succ_le_iff'
@@ -1011,7 +1011,7 @@ def lift.principalSeg : @PrincipalSeg Ordinal.{u} Ordinal.{max (u + 1) v} (· < 
         cases' (hf _).1 (typein_lt_type _ a') with b e
         exists b
         simp
-        simp [← e]
+        simp [e]
         
       
     · cases' h with a e
@@ -1030,7 +1030,7 @@ theorem lift.principal_seg_top : lift.principalSeg.top = univ :=
   rfl
 
 theorem lift.principal_seg_top' : lift.principalSeg.{u, u + 1}.top = @type Ordinal (· < ·) _ := by
-  simp only [← lift.principal_seg_top, ← univ_id]
+  simp only [lift.principal_seg_top, univ_id]
 
 end Ordinal
 
@@ -1078,7 +1078,7 @@ theorem ord_le {c o} : ord c ≤ o ↔ c ≤ o.card :=
     (Ordinal.induction_on o) fun β s _ => by
       let ⟨r, _, e⟩ := ord_eq α
       skip
-      simp only [← card_type]
+      simp only [card_type]
       constructor <;> intro h
       · rw [e] at h
         exact
@@ -1100,7 +1100,7 @@ theorem lt_ord {c o} : o < ord c ↔ o.card < c :=
 theorem card_ord (c) : (ord c).card = c :=
   (Quotientₓ.induction_on c) fun α => by
     let ⟨r, _, e⟩ := ord_eq α
-    simp only [← mk_def, ← e, ← card_type]
+    simp only [mk_def, e, card_type]
 
 /-- Galois coinsertion between `cardinal.ord` and `ordinal.card`. -/
 def gciOrdCard : GaloisCoinsertion ord card :=
@@ -1148,7 +1148,7 @@ theorem ord_one : ord 1 = 1 := by
 
 @[simp]
 theorem lift_ord (c) : (ord c).lift = ord (lift c) := by
-  refine' le_antisymmₓ (le_of_forall_lt fun a ha => _) _
+  refine' le_antisymmₓ (le_of_forall_ltₓ fun a ha => _) _
   · rcases Ordinal.lt_lift_iff.1 ha with ⟨a, rfl, h⟩
     rwa [lt_ord, ← lift_card, lift_lt, ← lt_ord, ← Ordinal.lift_lt]
     
@@ -1200,23 +1200,23 @@ theorem univ_umax : univ.{u, max (u + 1) v} = univ.{u, v} :=
   congr_fun lift_umax _
 
 theorem lift_lt_univ (c : Cardinal) : lift.{u + 1, u} c < univ.{u, u + 1} := by
-  simpa only [← lift.principal_seg_coe, ← lift_ord, ← lift_succ, ← ord_le, ← succ_le_iff] using
+  simpa only [lift.principal_seg_coe, lift_ord, lift_succ, ord_le, succ_le_iff] using
     le_of_ltₓ (lift.principalSeg.{u, u + 1}.lt_top (succ c).ord)
 
 theorem lift_lt_univ' (c : Cardinal) : lift.{max (u + 1) v, u} c < univ.{u, v} := by
-  simpa only [← lift_lift, ← lift_univ, ← univ_umax] using lift_lt.{_, max (u + 1) v}.2 (lift_lt_univ c)
+  simpa only [lift_lift, lift_univ, univ_umax] using lift_lt.{_, max (u + 1) v}.2 (lift_lt_univ c)
 
 @[simp]
 theorem ord_univ : ord univ.{u, v} = Ordinal.univ.{u, v} :=
   le_antisymmₓ (ord_card_le _) <|
-    le_of_forall_lt fun o h =>
+    le_of_forall_ltₓ fun o h =>
       lt_ord.2
         (by
           rcases lift.principalSeg.{u, v}.down.1
               (by
-                simpa only [← lift.principal_seg_coe] using h) with
+                simpa only [lift.principal_seg_coe] using h) with
             ⟨o', rfl⟩
-          simp only [← lift.principal_seg_coe]
+          simp only [lift.principal_seg_coe]
           rw [← lift_card]
           apply lift_lt_univ')
 
@@ -1227,7 +1227,7 @@ theorem lt_univ {c} : c < univ.{u, u + 1} ↔ ∃ c', c = lift.{u + 1, u} c' :=
     cases'
       lift.principalSeg.{u, u + 1}.down.1
         (by
-          simpa only [← lift.principal_seg_top] ) with
+          simpa only [lift.principal_seg_top] ) with
       o e
     have := card_ord c
     rw [← e, lift.principal_seg_coe, ← lift_card] at this
@@ -1240,7 +1240,7 @@ theorem lt_univ' {c} : c < univ.{u, v} ↔ ∃ c', c = lift.{max (u + 1) v, u} c
     rcases lt_univ.{u}.1 h' with ⟨c', rfl⟩
     exact
       ⟨c', by
-        simp only [← e.symm, ← lift_lift]⟩,
+        simp only [e.symm, lift_lift]⟩,
     fun ⟨c', e⟩ => e.symm ▸ lift_lt_univ' _⟩
 
 theorem small_iff_lift_mk_lt_univ {α : Type u} : Small.{v} α ↔ Cardinal.lift (# α) < univ.{v, max u (v + 1)} := by
@@ -1272,15 +1272,15 @@ theorem nat_lt_card {o} {n : ℕ} : (n : Cardinal) < card o ↔ (n : Ordinal) < 
 
 @[simp]
 theorem card_lt_nat {o} {n : ℕ} : card o < n ↔ o < n :=
-  lt_iff_lt_of_le_iff_le nat_le_card
+  lt_iff_lt_of_le_iff_leₓ nat_le_card
 
 @[simp]
 theorem card_le_nat {o} {n : ℕ} : card o ≤ n ↔ o ≤ n :=
-  le_iff_le_iff_lt_iff_lt.2 nat_lt_card
+  le_iff_le_iff_lt_iff_ltₓ.2 nat_lt_card
 
 @[simp]
 theorem card_eq_nat {o} {n : ℕ} : card o = n ↔ o = n := by
-  simp only [← le_antisymm_iffₓ, ← card_le_nat, ← nat_le_card]
+  simp only [le_antisymm_iffₓ, card_le_nat, nat_le_card]
 
 @[simp]
 theorem type_fintype (r : α → α → Prop) [IsWellOrder α r] [Fintype α] : type r = Fintype.card α := by

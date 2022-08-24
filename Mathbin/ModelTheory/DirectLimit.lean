@@ -67,7 +67,7 @@ theorem coe_nat_le_rec (m n : ℕ) (h : m ≤ n) : (natLeRec f' m n h : G' m →
 
 instance natLeRec.directed_system : DirectedSystem G' fun i j h => natLeRec f' i j h :=
   ⟨fun i x h => congr (congr rfl (Nat.le_rec_on_self _)) rfl, fun i j k ij jk => by
-    simp [← Nat.le_rec_on_trans ij jk]⟩
+    simp [Nat.le_rec_on_trans ij jk]⟩
 
 end DirectedSystem
 
@@ -83,12 +83,12 @@ variable [DirectedSystem G fun i j h => f i j h]
 theorem unify_sigma_mk_self {α : Type _} {i : ι} {x : α → G i} :
     (unify f (Sigma.mk i ∘ x) i fun j ⟨a, hj⟩ => trans (le_of_eqₓ hj.symm) (refl _)) = x := by
   ext a
-  simp only [← unify, ← DirectedSystem.map_self]
+  simp only [unify, DirectedSystem.map_self]
 
 theorem comp_unify {α : Type _} {x : α → Σi, G i} {i j : ι} (ij : i ≤ j) (h : i ∈ UpperBounds (Range (Sigma.fst ∘ x))) :
     f i j ij ∘ unify f x i h = unify f x j fun k hk => trans (mem_upper_bounds.1 h k hk) ij := by
   ext a
-  simp [← unify, ← DirectedSystem.map_map]
+  simp [unify, DirectedSystem.map_map]
 
 end DirectLimit
 
@@ -205,10 +205,10 @@ noncomputable instance structure : L.Structure (DirectLimit G f) :=
 @[simp]
 theorem fun_map_quotient_mk_sigma_mk {n : ℕ} {F : L.Functions n} {i : ι} {x : Finₓ n → G i} :
     (funMap F fun a => (⟦⟨i, x a⟩⟧ : DirectLimit G f)) = ⟦⟨i, funMap F x⟩⟧ := by
-  simp only [← Function.comp_app, ← fun_map_quotient_mk, ← Quotientₓ.eq]
+  simp only [Function.comp_app, fun_map_quotient_mk, Quotientₓ.eq]
   obtain ⟨k, ik, jk⟩ := directed_of (· ≤ ·) i (Classical.some (Fintype.bdd_above_range fun a : Finₓ n => i))
   refine' ⟨k, jk, ik, _⟩
-  simp only [← embedding.map_fun, ← comp_unify]
+  simp only [embedding.map_fun, comp_unify]
   rfl
 
 @[simp]
@@ -224,7 +224,7 @@ theorem exists_quotient_mk_sigma_mk_eq {α : Type _} [Fintype α] (x : α → Di
   refine' ⟨i, unify f (Quotientₓ.out ∘ x) i hi, _⟩
   ext a
   rw [Quotientₓ.eq_mk_iff_out, Function.comp_app, unify, equiv_iff G f _]
-  · simp only [← DirectedSystem.map_self]
+  · simp only [DirectedSystem.map_self]
     
   · rfl
     
@@ -235,7 +235,7 @@ variable (L ι)
 def of (i : ι) : G i ↪[L] DirectLimit G f where
   toFun := Quotientₓ.mk ∘ Sigma.mk i
   inj' := fun x y h => by
-    simp only [← Quotientₓ.eq] at h
+    simp only [Quotientₓ.eq] at h
     obtain ⟨j, h1, h2, h3⟩ := h
     exact (f i j h1).Injective h3
 
@@ -247,9 +247,9 @@ theorem of_apply {i : ι} {x : G i} : of L ι G f i x = ⟦⟨i, x⟩⟧ :=
 
 @[simp]
 theorem of_f {i j : ι} {hij : i ≤ j} {x : G i} : of L ι G f j (f i j hij x) = of L ι G f i x := by
-  simp only [← of_apply, ← Quotientₓ.eq]
+  simp only [of_apply, Quotientₓ.eq]
   refine' Setoidₓ.symm ⟨j, hij, refl j, _⟩
-  simp only [← DirectedSystem.map_self]
+  simp only [DirectedSystem.map_self]
 
 /-- Every element of the direct limit corresponds to some element in
 some component of the directed system. -/
@@ -290,7 +290,7 @@ def lift : DirectLimit G f ↪[L] P where
   map_fun' := fun n F x => by
     obtain ⟨i, y, rfl⟩ := exists_quotient_mk_sigma_mk_eq G f x
     rw [fun_map_quotient_mk_sigma_mk, ← Function.comp.assoc, Quotientₓ.lift_comp_mk]
-    simp only [← Quotientₓ.lift_mk, ← embedding.map_fun]
+    simp only [Quotientₓ.lift_mk, embedding.map_fun]
   map_rel' := fun n R x => by
     obtain ⟨i, y, rfl⟩ := exists_quotient_mk_sigma_mk_eq G f x
     rw [rel_map_quotient_mk_sigma_mk G f, ← (g i).map_rel R y, ← Function.comp.assoc, Quotientₓ.lift_comp_mk]
@@ -302,7 +302,7 @@ omit Hg
 @[simp]
 theorem lift_quotient_mk_sigma_mk {i} (x : G i) : lift L ι G f g Hg ⟦⟨i, x⟩⟧ = (g i) x := by
   change (lift L ι G f g Hg).toFun ⟦⟨i, x⟩⟧ = _
-  simp only [← lift, ← Quotientₓ.lift_mk]
+  simp only [lift, Quotientₓ.lift_mk]
 
 theorem lift_of {i} (x : G i) : lift L ι G f g Hg (of L ι G f i x) = g i x := by
   simp
@@ -330,9 +330,9 @@ theorem cg {ι : Type _} [Encodable ι] [Preorderₓ ι] [IsDirected ι (· ≤ 
     let out := @Quotientₓ.out _ (direct_limit.setoid G f)
     refine' hS (out x).1 ⟨(out x).2, _, _⟩
     · rw [(Classical.some_spec (h (out x).1).out).2]
-      simp only [← substructure.coe_top]
+      simp only [substructure.coe_top]
       
-    · simp only [← embedding.coe_to_hom, ← direct_limit.of_apply, ← Sigma.eta, ← Quotientₓ.out_eq]
+    · simp only [embedding.coe_to_hom, direct_limit.of_apply, Sigma.eta, Quotientₓ.out_eq]
       
     
 

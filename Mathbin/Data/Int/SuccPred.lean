@@ -26,8 +26,8 @@ instance : SuccOrder ℤ :=
 @[reducible]
 instance : PredOrder ℤ where
   pred := pred
-  pred_le := fun a => (sub_one_lt_of_leₓ le_rfl).le
-  min_of_le_pred := fun a ha => ((sub_one_lt_of_leₓ le_rfl).not_le ha).elim
+  pred_le := fun a => (sub_one_lt_of_leₓ le_rflₓ).le
+  min_of_le_pred := fun a ha => ((sub_one_lt_of_leₓ le_rflₓ).not_le ha).elim
   le_pred_of_lt := fun a b => le_sub_one_of_ltₓ
   le_of_pred_lt := fun a b => le_of_sub_one_ltₓ
 

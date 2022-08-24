@@ -51,17 +51,17 @@ instance limitLaxMonoidal : LaxMonoidal fun F : J ⥤ C => limit F where
           { app := fun j => limit.π F j ⊗ limit.π G j,
             naturality' := fun j j' f => by
               dsimp'
-              simp only [← category.id_comp, tensor_comp, ← limit.w] } }
+              simp only [category.id_comp, ← tensor_comp, limit.w] } }
   μ_natural' := fun X Y X' Y' f g => by
     ext
     dsimp'
-    simp only [← limit.lift_π, ← cones.postcompose_obj_π, ← monoidal.tensor_hom_app, ← limit.lift_map, ←
-      nat_trans.comp_app, ← category.assoc, tensor_comp, ← lim_map_π]
+    simp only [limit.lift_π, cones.postcompose_obj_π, monoidal.tensor_hom_app, limit.lift_map, nat_trans.comp_app,
+      category.assoc, ← tensor_comp, lim_map_π]
   associativity' := fun X Y Z => by
     ext
     dsimp'
-    simp only [← limit.lift_π, ← cones.postcompose_obj_π, ← monoidal.associator_hom_app, ← limit.lift_map, ←
-      nat_trans.comp_app, ← category.assoc]
+    simp only [limit.lift_π, cones.postcompose_obj_π, monoidal.associator_hom_app, limit.lift_map, nat_trans.comp_app,
+      category.assoc]
     slice_lhs 2 2 => rw [← tensor_id_comp_id_tensor]
     slice_lhs 1 2 => rw [← comp_tensor_id, limit.lift_π]dsimp
     slice_lhs 1 2 => rw [tensor_id_comp_id_tensor]
@@ -115,7 +115,7 @@ theorem lim_lax_μ (F G : J ⥤ C) :
             { app := fun j => limit.π F j ⊗ limit.π G j,
               naturality' := fun j j' f => by
                 dsimp'
-                simp only [← category.id_comp, tensor_comp, ← limit.w] } } :=
+                simp only [category.id_comp, ← tensor_comp, limit.w] } } :=
   rfl
 
 end CategoryTheory.Limits

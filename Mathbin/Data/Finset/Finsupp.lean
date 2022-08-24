@@ -3,6 +3,7 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
+import Mathbin.Algebra.BigOperators.Finsupp
 import Mathbin.Data.Finset.Pointwise
 import Mathbin.Data.Finsupp.Indicator
 import Mathbin.Data.Fintype.Card
@@ -40,7 +41,7 @@ namespace Finset
 protected def finsupp (s : Finset ι) (t : ι → Finset α) : Finset (ι →₀ α) :=
   (s.pi t).map ⟨indicator s, indicator_injective s⟩
 
-theorem mem_finsupp_iff {t : ι → Finset α} : f ∈ s.Finsupp t ↔ f.Support ⊆ s ∧ ∀, ∀ i ∈ s, ∀, f i ∈ t i := by
+theorem mem_finsupp_iff {t : ι → Finset α} : f ∈ s.Finsupp t ↔ f.Support ⊆ s ∧ ∀ i ∈ s, f i ∈ t i := by
   refine' mem_map.trans ⟨_, _⟩
   · rintro ⟨f, hf, rfl⟩
     refine' ⟨support_indicator_subset _ _, fun i hi => _⟩
@@ -95,7 +96,7 @@ theorem card_pi (f : ι →₀ Finset α) : f.pi.card = f.Prod fun i => (f i).ca
   rw [pi, card_finsupp]
   exact
     Finset.prod_congr rfl fun i _ => by
-      simp only [← Pi.nat_apply, ← Nat.cast_id]
+      simp only [Pi.nat_apply, Nat.cast_id]
 
 end Finsupp
 

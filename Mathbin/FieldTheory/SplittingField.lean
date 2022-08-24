@@ -75,14 +75,13 @@ theorem splits_C (a : K) : Splits i (c a) :=
         (not_not.2
           (is_unit_iff_degree_eq_zero.2 <| by
             have := congr_arg degree hp <;>
-              simp [← degree_C hia, ← @eq_comm (WithBot ℕ) 0, ← Nat.WithBot.add_eq_zero_iff] at this <;>
+              simp [degree_C hia, @eq_comm (WithBot ℕ) 0, Nat.WithBot.add_eq_zero_iff] at this <;>
                 clear _fun_match <;> tauto))
 
 theorem splits_of_degree_eq_one {f : K[X]} (hf : degree f = 1) : Splits i f :=
   Or.inr fun g hg ⟨p, hp⟩ => by
     have := congr_arg degree hp <;>
-      simp [← Nat.WithBot.add_eq_one_iff, ← hf, ← @eq_comm (WithBot ℕ) 1, ← mt is_unit_iff_degree_eq_zero.2 hg.1] at
-          this <;>
+      simp [Nat.WithBot.add_eq_one_iff, hf, @eq_comm (WithBot ℕ) 1, mt is_unit_iff_degree_eq_zero.2 hg.1] at this <;>
         clear _fun_match <;> tauto
 
 theorem splits_of_degree_le_one {f : K[X]} (hf : degree f ≤ 1) : Splits i f := by
@@ -90,7 +89,7 @@ theorem splits_of_degree_le_one {f : K[X]} (hf : degree f ≤ 1) : Splits i f :=
   · rw [degree_eq_bot.1 h] <;> exact splits_zero i
     
   · cases' n with n
-    · rw [eq_C_of_degree_le_zero (trans_rel_right (· ≤ ·) h le_rfl)] <;> exact splits_C _ _
+    · rw [eq_C_of_degree_le_zero (trans_rel_right (· ≤ ·) h le_rflₓ)] <;> exact splits_C _ _
       
     · have hn : n = 0 := by
         rw [h] at hf
@@ -117,7 +116,7 @@ theorem splits_of_nat_degree_eq_one {f : K[X]} (hf : natDegree f = 1) : Splits i
 
 theorem splits_mul {f g : K[X]} (hf : Splits i f) (hg : Splits i g) : Splits i (f * g) :=
   if h : f * g = 0 then by
-    simp [← h]
+    simp [h]
   else
     Or.inr fun p hp hpf =>
       ((PrincipalIdealRing.irreducible_iff_prime.1 hp).2.2 _ _
@@ -125,11 +124,11 @@ theorem splits_mul {f g : K[X]} (hf : Splits i f) (hg : Splits i g) : Splits i (
               convert hpf <;> rw [Polynomial.map_mul])).elim
         (hf.resolve_left
           (fun hf => by
-            simpa [← hf] using h)
+            simpa [hf] using h)
           hp)
         (hg.resolve_left
           (fun hg => by
-            simpa [← hg] using h)
+            simpa [hg] using h)
           hp)
 
 theorem splits_of_splits_mul {f g : K[X]} (hfg : f * g ≠ 0) (h : Splits i (f * g)) : Splits i f ∧ Splits i g :=
@@ -153,7 +152,7 @@ theorem splits_of_splits_gcd_right {f g : K[X]} (hg0 : g ≠ 0) (hg : Splits i g
   Polynomial.splits_of_splits_of_dvd i hg0 hg (EuclideanDomain.gcd_dvd_right f g)
 
 theorem splits_map_iff (j : L →+* F) {f : K[X]} : Splits j (f.map i) ↔ Splits (j.comp i) f := by
-  simp [← splits, ← Polynomial.map_map]
+  simp [splits, Polynomial.map_map]
 
 theorem splits_one : Splits i 1 :=
   splits_C i 1
@@ -173,8 +172,8 @@ theorem splits_id_iff_splits {f : K[X]} : (f.map i).Splits (RingHom.id L) ↔ f.
 theorem splits_mul_iff {f g : K[X]} (hf : f ≠ 0) (hg : g ≠ 0) : (f * g).Splits i ↔ f.Splits i ∧ g.Splits i :=
   ⟨splits_of_splits_mul i (mul_ne_zero hf hg), fun ⟨hfs, hgs⟩ => splits_mul i hfs hgs⟩
 
-theorem splits_prod {ι : Type u} {s : ι → K[X]} {t : Finset ι} :
-    (∀, ∀ j ∈ t, ∀, (s j).Splits i) → (∏ x in t, s x).Splits i := by
+theorem splits_prod {ι : Type u} {s : ι → K[X]} {t : Finset ι} : (∀ j ∈ t, (s j).Splits i) → (∏ x in t, s x).Splits i :=
+  by
   refine' Finset.induction_on t (fun _ => splits_one i) fun a t hat ih ht => _
   rw [Finset.forall_mem_insert] at ht
   rw [Finset.prod_insert hat]
@@ -188,7 +187,7 @@ theorem splits_X_pow (n : ℕ) : (X ^ n).Splits i :=
   splits_pow i (splits_X i) n
 
 theorem splits_prod_iff {ι : Type u} {s : ι → K[X]} {t : Finset ι} :
-    (∀, ∀ j ∈ t, ∀, s j ≠ 0) → ((∏ x in t, s x).Splits i ↔ ∀, ∀ j ∈ t, ∀, (s j).Splits i) := by
+    (∀ j ∈ t, s j ≠ 0) → ((∏ x in t, s x).Splits i ↔ ∀ j ∈ t, (s j).Splits i) := by
   refine' Finset.induction_on t (fun _ => ⟨fun _ _ h => h.elim, fun _ => splits_one i⟩) fun a t hat ih ht => _
   rw [Finset.forall_mem_insert] at ht⊢
   rw [Finset.prod_insert hat, splits_mul_iff i ht.1 (Finset.prod_ne_zero_iff.2 ht.2), ih ht.2]
@@ -208,7 +207,7 @@ theorem degree_eq_one_of_irreducible_of_splits {p : L[X]} (hp : Irreducible p) (
 
 theorem exists_root_of_splits {f : K[X]} (hs : Splits i f) (hf0 : degree f ≠ 0) : ∃ x, eval₂ i x f = 0 :=
   if hf0 : f = 0 then by
-    simp [← hf0]
+    simp [hf0]
   else
     let ⟨g, hg⟩ :=
       WfDvdMonoid.exists_irreducible_factor
@@ -293,7 +292,7 @@ theorem eq_prod_roots_of_splits_id {p : K[X]} (hsplit : Splits (RingHom.id K) p)
 theorem eq_prod_roots_of_monic_of_splits_id {p : K[X]} (m : Monic p) (hsplit : Splits (RingHom.id K) p) :
     p = (p.roots.map fun a => X - c a).Prod := by
   convert eq_prod_roots_of_splits_id hsplit
-  simp [← m]
+  simp [m]
 
 theorem eq_X_sub_C_of_splits_of_single_root {x : K} {h : K[X]} (h_splits : Splits i h)
     (h_roots : (h.map i).roots = {i x}) : h = c h.leadingCoeff * (X - c x) := by
@@ -362,7 +361,7 @@ theorem splits_iff_card_roots {p : K[X]} : Splits (RingHom.id K) p ↔ p.roots.c
   · intro hroots
     rw [splits_iff_exists_multiset (RingHom.id K)]
     use p.roots
-    simp only [← RingHom.id_apply, ← map_id]
+    simp only [RingHom.id_apply, map_id]
     exact (C_leading_coeff_mul_prod_multiset_X_sub_C hroots).symm
     
 
@@ -428,7 +427,7 @@ theorem FiniteDimensional.of_subalgebra_to_submodule {K V : Type _} [Field K] [R
 /-- If `K` and `L` are field extensions of `F` and we have `s : finset K` such that
 the minimal polynomial of each `x ∈ s` splits in `L` then `algebra.adjoin F s` embeds in `L`. -/
 theorem lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L] [Algebra F K] [Algebra F L] (s : Finset K) :
-    (∀, ∀ x ∈ s, ∀, IsIntegral F x ∧ Polynomial.Splits (algebraMap F L) (minpoly F x)) →
+    (∀ x ∈ s, IsIntegral F x ∧ Polynomial.Splits (algebraMap F L) (minpoly F x)) →
       Nonempty (Algebra.adjoin F (↑s : Set K) →ₐ[F] L) :=
   by
   refine' Finset.induction_on s (fun H => _) fun a s has ih H => _
@@ -727,8 +726,8 @@ end SplittingField
 
 variable (K L) [Algebra K L]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`Splits] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`adjoin_roots] []
+-- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`Splits] []
+-- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`adjoin_roots] []
 /-- Typeclass characterising splitting fields. -/
 class IsSplittingField (f : K[X]) : Prop where
   Splits : Splits (algebraMap K L) f
@@ -865,8 +864,8 @@ open Polynomial
 
 variable [Field K] [Field L] [Algebra K L] {p : Polynomial K}
 
-theorem splits_of_splits {F : IntermediateField K L} (h : p.Splits (algebraMap K L))
-    (hF : ∀, ∀ x ∈ p.RootSet L, ∀, x ∈ F) : p.Splits (algebraMap K F) := by
+theorem splits_of_splits {F : IntermediateField K L} (h : p.Splits (algebraMap K L)) (hF : ∀ x ∈ p.RootSet L, x ∈ F) :
+    p.Splits (algebraMap K F) := by
   simp_rw [root_set, Finset.mem_coe, Multiset.mem_to_finset] at hF
   rw [splits_iff_exists_multiset]
   refine' ⟨Multiset.pmap Subtype.mk _ hF, map_injective _ (algebraMap F L).Injective _⟩

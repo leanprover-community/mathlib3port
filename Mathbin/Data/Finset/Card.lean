@@ -77,9 +77,9 @@ theorem card_singleton (a : α) : card ({a} : Finset α) = 1 :=
 
 theorem card_singleton_inter [DecidableEq α] : ({a} ∩ s).card ≤ 1 := by
   cases Finset.decidableMem a s
-  · simp [← Finset.singleton_inter_of_not_mem h]
+  · simp [Finset.singleton_inter_of_not_mem h]
     
-  · simp [← Finset.singleton_inter_of_mem h]
+  · simp [Finset.singleton_inter_of_mem h]
     
 
 @[simp]
@@ -189,17 +189,17 @@ theorem length_to_list (s : Finset α) : s.toList.length = s.card := by
   rfl
 
 theorem card_image_le [DecidableEq β] : (s.Image f).card ≤ s.card := by
-  simpa only [← card_map] using (s.1.map f).to_finset_card_le
+  simpa only [card_map] using (s.1.map f).to_finset_card_le
 
 theorem card_image_of_inj_on [DecidableEq β] (H : Set.InjOn f s) : (s.Image f).card = s.card := by
-  simp only [← card, ← image_val_of_inj_on H, ← card_map]
+  simp only [card, image_val_of_inj_on H, card_map]
 
 theorem inj_on_of_card_image_eq [DecidableEq β] (H : (s.Image f).card = s.card) : Set.InjOn f s := by
   change (s.1.map f).dedup.card = s.1.card at H
   have : (s.1.map f).dedup = s.1.map f := by
     refine' Multiset.eq_of_le_of_card_le (Multiset.dedup_le _) _
     rw [H]
-    simp only [← Multiset.card_map]
+    simp only [Multiset.card_map]
   rw [Multiset.dedup_eq_self] at this
   exact inj_on_of_nodup_map this
 
@@ -219,7 +219,7 @@ theorem card_map (f : α ↪ β) : (s.map f).card = s.card :=
 
 @[simp]
 theorem card_subtype (p : α → Prop) [DecidablePred p] (s : Finset α) : (s.Subtype p).card = (s.filter p).card := by
-  simp [← Finset.subtype]
+  simp [Finset.subtype]
 
 theorem card_filter_le (s : Finset α) (p : α → Prop) [DecidablePred p] : (s.filter p).card ≤ s.card :=
   card_le_of_subset <| filter_subset _ _
@@ -238,7 +238,7 @@ theorem filter_card_eq {p : α → Prop} [DecidablePred p] (h : (s.filter p).car
 theorem card_lt_card (h : s ⊂ t) : s.card < t.card :=
   card_lt_of_lt <| val_lt_iff.2 h
 
-theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀, ∀ a ∈ s, ∀, ∃ i, ∃ h : i < n, f i h = a)
+theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i, ∃ h : i < n, f i h = a)
     (hf' : ∀ (i) (h : i < n), f i h ∈ s) (f_inj : ∀ (i j) (hi : i < n) (hj : j < n), f i hi = f j hj → i = j) :
     s.card = n := by
   classical
@@ -248,7 +248,7 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀, ∀ a ∈ s, �
       ⟨i, mem_range.2 hi, Eq⟩,
       fun ⟨i, hi, Eq⟩ => Eq ▸ hf' i (mem_range.1 hi)⟩
   have : s = (range n).attach.Image fun i => f i.1 (mem_range.1 i.2) := by
-    simpa only [← ext_iff, ← mem_image, ← exists_prop, ← Subtype.exists, ← mem_attach, ← true_andₓ]
+    simpa only [ext_iff, mem_image, exists_prop, Subtype.exists, mem_attach, true_andₓ]
   calc
     s.card = card ((range n).attach.Image fun i => f i.1 (mem_range.1 i.2)) := by
       rw [this]
@@ -258,8 +258,8 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀, ∀ a ∈ s, �
     _ = n := card_range n
     
 
-theorem card_congr {t : Finset β} (f : ∀, ∀ a ∈ s, ∀, β) (h₁ : ∀ a ha, f a ha ∈ t)
-    (h₂ : ∀ a b ha hb, f a ha = f b hb → a = b) (h₃ : ∀, ∀ b ∈ t, ∀, ∃ a ha, f a ha = b) : s.card = t.card := by
+theorem card_congr {t : Finset β} (f : ∀ a ∈ s, β) (h₁ : ∀ a ha, f a ha ∈ t) (h₂ : ∀ a b ha hb, f a ha = f b hb → a = b)
+    (h₃ : ∀ b ∈ t, ∃ a ha, f a ha = b) : s.card = t.card := by
   classical <;>
     calc
       s.card = s.attach.card := card_attach.symm
@@ -275,11 +275,11 @@ theorem card_congr {t : Finset β} (f : ∀, ∀ a ∈ s, ∀, β) (h₁ : ∀ a
               let ⟨a, ha₁, ha₂⟩ := h₃ b h
               mem_image.2
                 ⟨⟨a, ha₁⟩, by
-                  simp [← ha₂]⟩⟩)
+                  simp [ha₂]⟩⟩)
       
 
-theorem card_le_card_of_inj_on {t : Finset β} (f : α → β) (hf : ∀, ∀ a ∈ s, ∀, f a ∈ t)
-    (f_inj : ∀, ∀ a₁ ∈ s, ∀, ∀, ∀ a₂ ∈ s, ∀, f a₁ = f a₂ → a₁ = a₂) : s.card ≤ t.card := by
+theorem card_le_card_of_inj_on {t : Finset β} (f : α → β) (hf : ∀ a ∈ s, f a ∈ t)
+    (f_inj : ∀ a₁ ∈ s, ∀ a₂ ∈ s, f a₁ = f a₂ → a₁ = a₂) : s.card ≤ t.card := by
   classical <;>
     calc
       s.card = (s.image f).card := (card_image_of_inj_on f_inj).symm
@@ -289,7 +289,7 @@ theorem card_le_card_of_inj_on {t : Finset β} (f : α → β) (hf : ∀, ∀ a 
 /-- If there are more pigeons than pigeonholes, then there are two pigeons in the same pigeonhole.
 -/
 theorem exists_ne_map_eq_of_card_lt_of_maps_to {t : Finset β} (hc : t.card < s.card) {f : α → β}
-    (hf : ∀, ∀ a ∈ s, ∀, f a ∈ t) : ∃ x ∈ s, ∃ y ∈ s, x ≠ y ∧ f x = f y := by
+    (hf : ∀ a ∈ s, f a ∈ t) : ∃ x ∈ s, ∃ y ∈ s, x ≠ y ∧ f x = f y := by
   classical
   by_contra' hz
   refine' hc.not_le (card_le_card_of_inj_on f hf _)
@@ -297,21 +297,20 @@ theorem exists_ne_map_eq_of_card_lt_of_maps_to {t : Finset β} (hc : t.card < s.
   contrapose
   exact hz x hx y hy
 
-theorem le_card_of_inj_on_range (f : ℕ → α) (hf : ∀, ∀ i < n, ∀, f i ∈ s)
-    (f_inj : ∀, ∀ i < n, ∀, ∀ j < n, ∀, f i = f j → i = j) : n ≤ s.card :=
+theorem le_card_of_inj_on_range (f : ℕ → α) (hf : ∀ i < n, f i ∈ s) (f_inj : ∀ i < n, ∀ j < n, f i = f j → i = j) :
+    n ≤ s.card :=
   calc
     n = card (range n) := (card_range n).symm
     _ ≤ s.card :=
       card_le_card_of_inj_on f
         (by
-          simpa only [← mem_range] )
+          simpa only [mem_range] )
         (by
-          simpa only [← mem_range] )
+          simpa only [mem_range] )
     
 
-theorem surj_on_of_inj_on_of_card_le {t : Finset β} (f : ∀, ∀ a ∈ s, ∀, β) (hf : ∀ a ha, f a ha ∈ t)
-    (hinj : ∀ a₁ a₂ ha₁ ha₂, f a₁ ha₁ = f a₂ ha₂ → a₁ = a₂) (hst : t.card ≤ s.card) :
-    ∀, ∀ b ∈ t, ∀, ∃ a ha, b = f a ha := by
+theorem surj_on_of_inj_on_of_card_le {t : Finset β} (f : ∀ a ∈ s, β) (hf : ∀ a ha, f a ha ∈ t)
+    (hinj : ∀ a₁ a₂ ha₁ ha₂, f a₁ ha₁ = f a₂ ha₂ → a₁ = a₂) (hst : t.card ≤ s.card) : ∀ b ∈ t, ∃ a ha, b = f a ha := by
   classical
   intro b hb
   have h : (s.attach.image fun a : { a // a ∈ s } => f a a.Prop).card = s.card :=
@@ -322,13 +321,13 @@ theorem surj_on_of_inj_on_of_card_le {t : Finset β} (f : ∀, ∀ a ∈ s, ∀,
         let ⟨a, ha₁, ha₂⟩ := mem_image.1 h
         ha₂ ▸ hf _ _)
       (by
-        simp [← hst, ← h])
+        simp [hst, h])
   rw [← h'] at hb
   obtain ⟨a, ha₁, ha₂⟩ := mem_image.1 hb
   exact ⟨a, a.2, ha₂.symm⟩
 
-theorem inj_on_of_surj_on_of_card_le {t : Finset β} (f : ∀, ∀ a ∈ s, ∀, β) (hf : ∀ a ha, f a ha ∈ t)
-    (hsurj : ∀, ∀ b ∈ t, ∀, ∃ a ha, b = f a ha) (hst : s.card ≤ t.card) ⦃a₁ a₂⦄ (ha₁ : a₁ ∈ s) (ha₂ : a₂ ∈ s)
+theorem inj_on_of_surj_on_of_card_le {t : Finset β} (f : ∀ a ∈ s, β) (hf : ∀ a ha, f a ha ∈ t)
+    (hsurj : ∀ b ∈ t, ∃ a ha, b = f a ha) (hst : s.card ≤ t.card) ⦃a₁ a₂⦄ (ha₁ : a₁ ∈ s) (ha₂ : a₂ ∈ s)
     (ha₁a₂ : f a₁ ha₁ = f a₂ ha₂) : a₁ = a₂ :=
   haveI : Inhabited { x // x ∈ s } := ⟨⟨a₁, ha₁⟩⟩
   let f' : { x // x ∈ s } → { x // x ∈ t } := fun x => ⟨f x.1 x.2, hf x.1 x.2⟩
@@ -400,7 +399,7 @@ end Lattice
 theorem filter_card_add_filter_neg_card_eq_card (p : α → Prop) [DecidablePred p] :
     (s.filter p).card + (s.filter (Not ∘ p)).card = s.card := by
   classical
-  simp [card_union_eq, ← filter_union_filter_neg_eq, ← disjoint_filter]
+  simp [← card_union_eq, filter_union_filter_neg_eq, disjoint_filter]
 
 /-- Given a set `A` and a set `B` inside it, we can shrink `A` to any appropriate size, and keep `B`
 inside it. -/
@@ -453,9 +452,9 @@ theorem exists_subset_or_subset_of_two_mul_lt_card [DecidableEq α] {X Y : Finse
 
 
 theorem card_eq_one : s.card = 1 ↔ ∃ a, s = {a} := by
-  cases s <;> simp only [← Multiset.card_eq_one, ← Finset.card, val_inj, ← singleton_val]
+  cases s <;> simp only [Multiset.card_eq_one, Finset.card, ← val_inj, singleton_val]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (a «expr ∉ » s)
 theorem exists_eq_insert_iff [DecidableEq α] {s t : Finset α} :
     (∃ (a : _)(_ : a ∉ s), insert a s = t) ↔ s ⊆ t ∧ s.card + 1 = t.card := by
   constructor
@@ -474,7 +473,7 @@ theorem exists_eq_insert_iff [DecidableEq α] {s t : Finset α} :
     exact not_mem_sdiff_of_mem_right hs
     
 
-theorem card_le_one : s.card ≤ 1 ↔ ∀, ∀ a ∈ s, ∀, ∀ b ∈ s, ∀, a = b := by
+theorem card_le_one : s.card ≤ 1 ↔ ∀ a ∈ s, ∀ b ∈ s, a = b := by
   obtain rfl | ⟨x, hx⟩ := s.eq_empty_or_nonempty
   · simp
     
@@ -515,7 +514,7 @@ theorem one_lt_card : 1 < s.card ↔ ∃ a ∈ s, ∃ b ∈ s, a ≠ b := by
 
 theorem one_lt_card_iff : 1 < s.card ↔ ∃ a b, a ∈ s ∧ b ∈ s ∧ a ≠ b := by
   rw [one_lt_card]
-  simp only [← exists_prop, ← exists_and_distrib_left]
+  simp only [exists_prop, exists_and_distrib_left]
 
 theorem two_lt_card_iff : 2 < s.card ↔ ∃ a b c, a ∈ s ∧ b ∈ s ∧ c ∈ s ∧ a ≠ b ∧ a ≠ c ∧ b ≠ c := by
   classical
@@ -547,7 +546,7 @@ theorem card_eq_succ [DecidableEq α] : s.card = n + 1 ↔ ∃ a t, a ∉ t ∧ 
   ⟨fun h =>
     let ⟨a, has⟩ := card_pos.mp (h.symm ▸ Nat.zero_lt_succₓ _ : 0 < s.card)
     ⟨a, s.erase a, s.not_mem_erase a, insert_erase has, by
-      simp only [← h, ← card_erase_of_mem has, ← add_tsub_cancel_right]⟩,
+      simp only [h, card_erase_of_mem has, add_tsub_cancel_right]⟩,
     fun ⟨a, t, hat, s_eq, n_eq⟩ => s_eq ▸ n_eq ▸ card_insert_of_not_mem hat⟩
 
 theorem card_eq_two [DecidableEq α] : s.card = 2 ↔ ∃ x y, x ≠ y ∧ s = {x, y} := by
@@ -570,14 +569,13 @@ theorem card_eq_three [DecidableEq α] : s.card = 3 ↔ ∃ x y z, x ≠ y ∧ x
     exact ⟨a, b, c, abc.1, abc.2, bc, rfl⟩
     
   · rintro ⟨x, y, z, xy, xz, yz, rfl⟩
-    simp only [← xy, ← xz, ← yz, ← mem_insert, ← card_insert_of_not_mem, ← not_false_iff, ← mem_singleton, ← or_selfₓ, ←
-      card_singleton]
+    simp only [xy, xz, yz, mem_insert, card_insert_of_not_mem, not_false_iff, mem_singleton, or_selfₓ, card_singleton]
     
 
 /-! ### Inductions -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊂ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊂ » s)
 /-- Suppose that, given objects defined on all strict subsets of any finset `s`, one knows how to
 define an object on `s`. Then one can inductively define an object on all finsets, starting from
 the empty set and iterating. This can be used either to define data, or to prove properties. -/
@@ -587,24 +585,24 @@ def strongInductionₓ {p : Finset α → Sort _} (H : ∀ s, (∀ (t) (_ : t �
       have : t.card < s.card := card_lt_card h
       strong_induction t
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊂ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊂ » s)
 theorem strong_induction_eq {p : Finset α → Sort _} (H : ∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) (s : Finset α) :
     strongInductionₓ H s = H s fun t h => strongInductionₓ H t := by
   rw [strong_induction]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊂ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊂ » s)
 /-- Analogue of `strong_induction` with order of arguments swapped. -/
 @[elabAsElim]
 def strongInductionOn {p : Finset α → Sort _} (s : Finset α) : (∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) → p s := fun H =>
   strongInductionₓ H s
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊂ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊂ » s)
 theorem strong_induction_on_eq {p : Finset α → Sort _} (s : Finset α) (H : ∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) :
     s.strong_induction_on H = H s fun t h => t.strong_induction_on H := by
   dunfold strong_induction_on
   rw [strong_induction]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
 @[elabAsElim]
 theorem case_strong_induction_on [DecidableEq α] {p : Finset α → Prop} (s : Finset α) (h₀ : p ∅)
     (h₁ : ∀ a s, a ∉ s → (∀ (t) (_ : t ⊆ s), p t) → p (insert a s)) : p s :=

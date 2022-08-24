@@ -64,7 +64,7 @@ def raisedConeIsLimit [IsConnected J] {B : C} {F : J ⥤ Over B} {c : Cone (F �
     ext1
     apply t.hom_ext
     intro j
-    simp [K j]
+    simp [← K j]
 
 end CreatesConnected
 

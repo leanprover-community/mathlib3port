@@ -123,7 +123,7 @@ theorem rel_equiv : Equivalenceₓ D.Rel :=
     exacts[Or.inl rfl,
       Or.inr
         ⟨D.t _ _ x, by
-          simp [← e₁, ← e₂]⟩],
+          simp [e₁, e₂]⟩],
     by
     rintro ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩ (⟨⟨⟩⟩ | ⟨x, e₁, e₂⟩)
     exact id
@@ -159,7 +159,7 @@ theorem eqv_gen_of_π_eq {x y : ∐ D.U} (h : 𝖣.π x = 𝖣.π y) :
   let diagram := parallel_pair 𝖣.diagram.fstSigmaMap 𝖣.diagram.sndSigmaMap ⋙ forget _
   have : colimit.ι diagram one x = colimit.ι diagram one y := by
     rw [← ι_preserves_colimits_iso_hom]
-    simp [← h]
+    simp [h]
   have :
     (colimit.ι diagram _ ≫ colim.map _ ≫ (colimit.iso_colimit_cocone _).Hom) _ =
       (colimit.ι diagram _ ≫ colim.map _ ≫ (colimit.iso_colimit_cocone _).Hom) _ :=
@@ -168,8 +168,8 @@ theorem eqv_gen_of_π_eq {x y : ∐ D.U} (h : 𝖣.π x = 𝖣.π y) :
         (colimit.iso_colimit_cocone (types.coequalizer_colimit _ _)).Hom)
       this :
       _)
-  simp only [← eq_to_hom_refl, ← types_comp_apply, ← colimit.ι_map_assoc, ← diagram_iso_parallel_pair_hom_app, ←
-    colimit.iso_colimit_cocone_ι_hom, ← types_id_apply] at this
+  simp only [eq_to_hom_refl, types_comp_apply, colimit.ι_map_assoc, diagram_iso_parallel_pair_hom_app,
+    colimit.iso_colimit_cocone_ι_hom, types_id_apply] at this
   exact Quot.eq.1 this
   infer_instance
 
@@ -181,7 +181,7 @@ theorem ι_eq_iff_rel (i j : D.J) (x : D.U i) (y : D.U j) : 𝖣.ι i x = 𝖣.�
     rw [← show _ = Sigma.mk i x from concrete_category.congr_hom (sigmaIsoSigma.{u} D.U).inv_hom_id _]
     rw [← show _ = Sigma.mk j y from concrete_category.congr_hom (sigmaIsoSigma.{u} D.U).inv_hom_id _]
     change InvImage D.rel (sigmaIsoSigma.{u} D.U).Hom _ _
-    simp only [← Top.sigma_iso_sigma_inv_apply]
+    simp only [Top.sigma_iso_sigma_inv_apply]
     rw [← (InvImage.equivalence _ _ D.rel_equiv).eqv_gen_iff]
     refine' EqvGen.mono _ (D.eqv_gen_of_π_eq h : _)
     rintro _ _ ⟨x⟩
@@ -189,14 +189,14 @@ theorem ι_eq_iff_rel (i j : D.J) (x : D.U i) (y : D.U j) : 𝖣.ι i x = 𝖣.�
     generalize (sigmaIsoSigma.{u} D.V).Hom x = x'
     obtain ⟨⟨i, j⟩, y⟩ := x'
     unfold InvImage multispan_index.fst_sigma_map multispan_index.snd_sigma_map
-    simp only [← opens.inclusion_apply, ← Top.comp_app, ← sigma_iso_sigma_inv_apply, ←
-      CategoryTheory.Limits.colimit.ι_desc_apply, ← cofan.mk_ι_app, ← sigma_iso_sigma_hom_ι_apply, ←
+    simp only [opens.inclusion_apply, Top.comp_app, sigma_iso_sigma_inv_apply,
+      CategoryTheory.Limits.colimit.ι_desc_apply, cofan.mk_ι_app, sigma_iso_sigma_hom_ι_apply,
       ContinuousMap.to_fun_eq_coe]
     erw [sigma_iso_sigma_hom_ι_apply, sigma_iso_sigma_hom_ι_apply]
     exact
       Or.inr
         ⟨y, by
-          dsimp' [← glue_data.diagram]
+          dsimp' [glue_data.diagram]
           simp ⟩
     
   · rintro (⟨⟨⟩⟩ | ⟨z, e₁, e₂⟩)
@@ -228,7 +228,7 @@ theorem image_inter (i j : D.J) : Set.Range (𝖣.ι i) ∩ Set.Range (𝖣.ι j
     obtain ⟨⟨⟩⟩ | ⟨y, e₁, e₂⟩ := (D.ι_eq_iff_rel _ _ _ _).mp (eq₁.trans eq₂.symm)
     · exact
         ⟨inv (D.f i i) x₁, by
-          simp [← eq₁]⟩
+          simp [eq₁]⟩
       
     · dsimp' only  at *
       substs e₁ eq₁
@@ -241,7 +241,7 @@ theorem image_inter (i j : D.J) : Set.Range (𝖣.ι i) ∩ Set.Range (𝖣.ι j
     exact
       ⟨⟨D.f i j x, hx⟩,
         ⟨D.f j i (D.t _ _ x), by
-          simp [hx]⟩⟩
+          simp [← hx]⟩⟩
     
 
 theorem preimage_range (i j : D.J) : 𝖣.ι j ⁻¹' Set.Range (𝖣.ι i) = Set.Range (D.f j i) := by
@@ -363,11 +363,10 @@ def mk' (h : MkCore.{u}) : Top.GlueData where
     delta' mk_core.t'
     simp_rw [← category.assoc]
     rw [iso.comp_inv_eq]
-    simp only [← iso.inv_hom_id_assoc, ← category.assoc, ← category.id_comp]
+    simp only [iso.inv_hom_id_assoc, category.assoc, category.id_comp]
     rw [← iso.eq_inv_comp, iso.inv_hom_id]
     ext1 ⟨⟨⟨x, hx⟩, ⟨x', hx'⟩⟩, rfl : x = x'⟩
-    simp only [← Top.comp_app, ← ContinuousMap.coe_mk, ← Prod.mk.inj_iff, ← Top.id_app, ← Subtype.mk_eq_mk, ←
-      Subtype.coe_mk]
+    simp only [Top.comp_app, ContinuousMap.coe_mk, Prod.mk.inj_iff, Top.id_app, Subtype.mk_eq_mk, Subtype.coe_mk]
     rw [← subtype.coe_injective.eq_iff, Subtype.val_eq_coe, Subtype.coe_mk, and_selfₓ]
     convert congr_arg coe (h.t_inv k i ⟨x, hx'⟩) using 3
     ext

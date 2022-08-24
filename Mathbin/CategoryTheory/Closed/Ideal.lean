@@ -196,7 +196,7 @@ noncomputable def bijection (A B : C) (X : D) :
     
 
 theorem bijection_symm_apply_id (A B : C) : (bijection i A B _).symm (𝟙 _) = prodComparison _ _ _ := by
-  dsimp' [← bijection]
+  dsimp' [bijection]
   rw [comp_id, comp_id, comp_id, i.map_id, comp_id, unit_comp_partial_bijective_symm_apply,
     unit_comp_partial_bijective_symm_apply, uncurry_natural_left, uncurry_curry, uncurry_natural_left, uncurry_curry,
     prod.lift_map_assoc, comp_id, prod.lift_map_assoc, comp_id, prod.comp_lift_assoc, prod.lift_snd,
@@ -212,7 +212,7 @@ theorem bijection_symm_apply_id (A B : C) : (bijection i A B _).symm (𝟙 _) = 
 
 theorem bijection_natural (A B : C) (X X' : D) (f : (leftAdjoint i).obj (A ⨯ B) ⟶ X) (g : X ⟶ X') :
     bijection i _ _ _ (f ≫ g) = bijection i _ _ _ f ≫ g := by
-  dsimp' [← bijection]
+  dsimp' [bijection]
   apply i.map_injective
   rw [i.image_preimage, i.map_comp, i.image_preimage, comp_id, comp_id, comp_id, comp_id, comp_id, comp_id,
     adjunction.hom_equiv_naturality_right, ← assoc, curry_natural_right _ (i.map g),

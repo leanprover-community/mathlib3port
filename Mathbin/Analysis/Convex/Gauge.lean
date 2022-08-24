@@ -3,7 +3,7 @@ Copyright (c) 2021 Yaël Dillies, Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 -/
-import Mathbin.Analysis.Convex.Star
+import Mathbin.Analysis.Convex.Basic
 import Mathbin.Analysis.NormedSpace.Pointwise
 import Mathbin.Analysis.Seminorm
 import Mathbin.Data.Complex.IsROrC
@@ -59,11 +59,11 @@ variable {s t : Set E} {a : ℝ} {x : E}
 theorem gauge_def : gauge s x = inf ({ r ∈ Set.Ioi 0 | x ∈ r • s }) :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `congrm #[[expr Inf (λ r, _)]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `congrm #[[expr Inf (λ r, _)]]
 /-- An alternative definition of the gauge using scalar multiplication on the element rather than on
 the set. -/
 theorem gauge_def' : gauge s x = inf ({ r ∈ Set.Ioi 0 | r⁻¹ • x ∈ s }) := by
-  trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `congrm #[[expr Inf (λ r, _)]]"
+  trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `congrm #[[expr Inf (λ r, _)]]"
   exact and_congr_right fun hr => mem_smul_set_iff_inv_smul_mem₀ hr.ne' _ _
 
 private theorem gauge_set_bdd_below : BddBelow { r : ℝ | 0 < r ∧ x ∈ r • s } :=
@@ -88,9 +88,9 @@ but, the real infimum of the empty set in Lean being defined as `0`, it holds un
 theorem gauge_zero : gauge s 0 = 0 := by
   rw [gauge_def']
   by_cases' (0 : E) ∈ s
-  · simp only [← smul_zero, ← sep_true, ← h, ← cInf_Ioi]
+  · simp only [smul_zero, sep_true, h, cInf_Ioi]
     
-  · simp only [← smul_zero, ← sep_false, ← h, ← Real.Inf_empty]
+  · simp only [smul_zero, sep_false, h, Real.Inf_empty]
     
 
 @[simp]
@@ -98,9 +98,9 @@ theorem gauge_zero' : gauge (0 : Set E) = 0 := by
   ext
   rw [gauge_def']
   obtain rfl | hx := eq_or_ne x 0
-  · simp only [← cInf_Ioi, ← mem_zero, ← Pi.zero_apply, ← eq_self_iff_true, ← sep_true, ← smul_zero]
+  · simp only [cInf_Ioi, mem_zero, Pi.zero_apply, eq_self_iff_true, sep_true, smul_zero]
     
-  · simp only [← mem_zero, ← Pi.zero_apply, ← inv_eq_zero, ← smul_eq_zero]
+  · simp only [mem_zero, Pi.zero_apply, inv_eq_zero, smul_eq_zero]
     convert Real.Inf_empty
     exact eq_empty_iff_forall_not_mem.2 fun r hr => hr.2.elim (ne_of_gtₓ hr.1) hx
     
@@ -108,7 +108,7 @@ theorem gauge_zero' : gauge (0 : Set E) = 0 := by
 @[simp]
 theorem gauge_empty : gauge (∅ : Set E) = 0 := by
   ext
-  simp only [← gauge_def', ← Real.Inf_empty, ← mem_empty_eq, ← Pi.zero_apply, ← sep_false]
+  simp only [gauge_def', Real.Inf_empty, mem_empty_eq, Pi.zero_apply, sep_false]
 
 theorem gauge_of_subset_zero (h : s ⊆ 0) : gauge s = 0 := by
   obtain rfl | rfl := subset_singleton_iff_eq.1 h
@@ -118,7 +118,7 @@ theorem gauge_of_subset_zero (h : s ⊆ 0) : gauge s = 0 := by
 theorem gauge_nonneg (x : E) : 0 ≤ gauge s x :=
   (Real.Inf_nonneg _) fun x hx => hx.1.le
 
-theorem gauge_neg (symmetric : ∀, ∀ x ∈ s, ∀, -x ∈ s) (x : E) : gauge s (-x) = gauge s x := by
+theorem gauge_neg (symmetric : ∀ x ∈ s, -x ∈ s) (x : E) : gauge s (-x) = gauge s x := by
   have : ∀ x, -x ∈ s ↔ x ∈ s := fun x =>
     ⟨fun h => by
       simpa using Symmetric _ h, Symmetric x⟩
@@ -265,7 +265,7 @@ theorem gauge_smul_left_of_nonneg [MulActionWithZero α E] [SmulCommClass α ℝ
     
 
 theorem gauge_smul_left [Module α E] [SmulCommClass α ℝ ℝ] [IsScalarTower α ℝ ℝ] [IsScalarTower α ℝ E] {s : Set E}
-    (symmetric : ∀, ∀ x ∈ s, ∀, -x ∈ s) (a : α) : gauge (a • s) = (abs a)⁻¹ • gauge s := by
+    (symmetric : ∀ x ∈ s, -x ∈ s) (a : α) : gauge (a • s) = (abs a)⁻¹ • gauge s := by
   rw [← gauge_smul_left_of_nonneg (abs_nonneg a)]
   obtain h | h := abs_choice a
   · rw [h]
@@ -289,7 +289,7 @@ variable [IsROrC 𝕜] [Module 𝕜 E] [IsScalarTower ℝ 𝕜 E]
 theorem gauge_norm_smul (hs : Balanced 𝕜 s) (r : 𝕜) (x : E) : gauge s (∥r∥ • x) = gauge s (r • x) := by
   rw [@IsROrC.real_smul_eq_coe_smul 𝕜]
   obtain rfl | hr := eq_or_ne r 0
-  · simp only [← norm_zero, ← IsROrC.of_real_zero]
+  · simp only [norm_zero, IsROrC.of_real_zero]
     
   unfold gauge
   congr with θ
@@ -315,7 +315,7 @@ theorem interior_subset_gauge_lt_one (s : Set E) : Interior s ⊆ { x | gauge s 
   let s' := f ⁻¹' Interior s
   have hs' : IsOpen s' := hf.is_open_preimage _ is_open_interior
   have one_mem : (1 : ℝ) ∈ s' := by
-    simpa only [← s', ← f, ← Set.mem_preimage, ← one_smul]
+    simpa only [s', f, Set.mem_preimage, one_smul]
   obtain ⟨ε, hε₀, hε⟩ := (Metric.nhds_basis_closed_ball.1 _).1 (is_open_iff_mem_nhds.1 hs' 1 one_mem)
   rw [Real.closed_ball_eq_Icc] at hε
   have hε₁ : 0 < 1 + ε := hε₀.trans (lt_one_add ε)
@@ -325,7 +325,7 @@ theorem interior_subset_gauge_lt_one (s : Set E) : Interior s ⊆ { x | gauge s 
     linarith
   refine' (gauge_le_of_mem (inv_nonneg.2 hε₁.le) _).trans_lt this
   rw [mem_inv_smul_set_iff₀ hε₁.ne']
-  exact interior_subset (hε ⟨(sub_le_self _ hε₀.le).trans ((le_add_iff_nonneg_right _).2 hε₀.le), le_rfl⟩)
+  exact interior_subset (hε ⟨(sub_le_self _ hε₀.le).trans ((le_add_iff_nonneg_right _).2 hε₀.le), le_rflₓ⟩)
 
 theorem gauge_lt_one_eq_self_of_open (hs₁ : Convex ℝ s) (hs₀ : (0 : E) ∈ s) (hs₂ : IsOpen s) :
     { x | gauge s x < 1 } = s := by

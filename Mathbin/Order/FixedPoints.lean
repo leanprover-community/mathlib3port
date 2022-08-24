@@ -64,7 +64,7 @@ theorem map_le_lfp {a : α} (ha : a ≤ f.lfp) : f a ≤ f.lfp :=
 
 @[simp]
 theorem map_lfp : f (lfp f) = lfp f :=
-  have h : f (lfp f) ≤ lfp f := f.map_le_lfp le_rfl
+  have h : f (lfp f) ≤ lfp f := f.map_le_lfp le_rflₓ
   h.antisymm <| f.lfp_le <| f.mono h
 
 theorem is_fixed_pt_lfp : IsFixedPt f f.lfp :=
@@ -82,8 +82,8 @@ theorem is_least_lfp_le : IsLeast { a | f a ≤ a } (lfp f) :=
 theorem is_least_lfp : IsLeast (FixedPoints f) (lfp f) :=
   ⟨f.is_fixed_pt_lfp, fun a => f.lfp_le_fixed⟩
 
-theorem lfp_induction {p : α → Prop} (step : ∀ a, p a → a ≤ lfp f → p (f a))
-    (hSup : ∀ s, (∀, ∀ a ∈ s, ∀, p a) → p (sup s)) : p (lfp f) := by
+theorem lfp_induction {p : α → Prop} (step : ∀ a, p a → a ≤ lfp f → p (f a)) (hSup : ∀ s, (∀ a ∈ s, p a) → p (sup s)) :
+    p (lfp f) := by
   set s := { a | a ≤ lfp f ∧ p a }
   specialize hSup s fun a => And.right
   suffices : Sup s = lfp f
@@ -117,8 +117,8 @@ theorem is_greatest_gfp_le : IsGreatest { a | a ≤ f a } (gfp f) :=
 theorem is_greatest_gfp : IsGreatest (FixedPoints f) (gfp f) :=
   f.dual.is_least_lfp
 
-theorem gfp_induction {p : α → Prop} (step : ∀ a, p a → gfp f ≤ a → p (f a))
-    (hInf : ∀ s, (∀, ∀ a ∈ s, ∀, p a) → p (inf s)) : p (gfp f) :=
+theorem gfp_induction {p : α → Prop} (step : ∀ a, p a → gfp f ≤ a → p (f a)) (hInf : ∀ s, (∀ a ∈ s, p a) → p (inf s)) :
+    p (gfp f) :=
   f.dual.lfp_induction step hInf
 
 end Basic
@@ -138,7 +138,7 @@ theorem map_gfp_comp : f (g.comp f).gfp = (f.comp g).gfp :=
 -- Diagonal rule
 theorem lfp_lfp (h : α →o α →o α) : lfp (lfp.comp h) = lfp h.onDiag := by
   let a := lfp (lfp.comp h)
-  refine' (lfp_le _ _).antisymm (lfp_le _ (Eq.le _))
+  refine' (lfp_le _ _).antisymm (lfp_le _ (Eq.leₓ _))
   · exact lfp_le _ h.on_diag.map_lfp.le
     
   have ha : (lfp ∘ h) a = a := (lfp.comp h).map_lfp

@@ -62,10 +62,10 @@ theorem Infinite.nonempty_field {α : Type u} [Infinite α] : Nonempty (Field α
   suffices # α = # K by
     obtain ⟨e⟩ := Cardinal.eq.1 this
     exact ⟨e.field⟩
-  rw [← IsLocalization.card (MvPolynomial α <| ULift.{u} ℚ)⁰ K le_rfl]
+  rw [← IsLocalization.card (MvPolynomial α <| ULift.{u} ℚ)⁰ K le_rflₓ]
   apply le_antisymmₓ
   · refine' ⟨⟨fun a => MvPolynomial.monomial (Finsupp.single a 1) (1 : ULift.{u} ℚ), fun x y h => _⟩⟩
-    simpa [← MvPolynomial.monomial_eq_monomial_iff, ← Finsupp.single_eq_single_iff] using h
+    simpa [MvPolynomial.monomial_eq_monomial_iff, Finsupp.single_eq_single_iff] using h
     
   · simp
     
@@ -74,9 +74,9 @@ theorem Infinite.nonempty_field {α : Type u} [Infinite α] : Nonempty (Field α
 theorem Field.nonempty_iff {α : Type u} : Nonempty (Field α) ↔ IsPrimePow (# α) := by
   rw [Cardinal.is_prime_pow_iff]
   cases' fintypeOrInfinite α with h h
-  · simpa only [← Cardinal.mk_fintype, ← Nat.cast_inj, ← exists_eq_left', ← (Cardinal.nat_lt_aleph_0 _).not_le, ←
-      false_orₓ] using Fintype.nonempty_field_iff
+  · simpa only [Cardinal.mk_fintype, Nat.cast_inj, exists_eq_left', (Cardinal.nat_lt_aleph_0 _).not_le, false_orₓ] using
+      Fintype.nonempty_field_iff
     
-  · simpa only [Cardinal.infinite_iff, ← h, ← true_orₓ, ← iff_trueₓ] using Infinite.nonempty_field
+  · simpa only [← Cardinal.infinite_iff, h, true_orₓ, iff_trueₓ] using Infinite.nonempty_field
     
 

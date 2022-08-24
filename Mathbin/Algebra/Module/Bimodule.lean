@@ -86,21 +86,21 @@ def mk (p : AddSubmonoid M) (hA : ∀ (a : A) {m : M}, m ∈ p → a • m ∈ p
     smul_mem' := fun ab m =>
       TensorProduct.induction_on ab
         (fun hm => by
-          simpa only [← zero_smul] using p.zero_mem)
+          simpa only [zero_smul] using p.zero_mem)
         (fun a b hm => by
-          simpa only [← TensorProduct.Algebra.smul_def] using hA a (hB b hm))
+          simpa only [TensorProduct.Algebra.smul_def] using hA a (hB b hm))
         fun z w hz hw hm => by
-        simpa only [← add_smul] using p.add_mem (hz hm) (hw hm) }
+        simpa only [add_smul] using p.add_mem (hz hm) (hw hm) }
 
 theorem smul_mem (p : Submodule (A ⊗[R] B) M) (a : A) {m : M} (hm : m ∈ p) : a • m ∈ p := by
   suffices a • m = a ⊗ₜ[R] (1 : B) • m by
     exact this.symm ▸ p.smul_mem _ hm
-  simp [← TensorProduct.Algebra.smul_def]
+  simp [TensorProduct.Algebra.smul_def]
 
 theorem smul_mem' (p : Submodule (A ⊗[R] B) M) (b : B) {m : M} (hm : m ∈ p) : b • m ∈ p := by
   suffices b • m = (1 : A) ⊗ₜ[R] b • m by
     exact this.symm ▸ p.smul_mem _ hm
-  simp [← TensorProduct.Algebra.smul_def]
+  simp [TensorProduct.Algebra.smul_def]
 
 /-- If `A` and `B` are also `algebra`s over yet another set of scalars `S` then we may "base change"
 from `R` to `S`. -/

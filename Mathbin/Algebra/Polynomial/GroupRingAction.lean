@@ -32,7 +32,7 @@ theorem smul_eq_map [MulSemiringAction M R] (m : M) : (· • ·) m = map (MulSe
     exact AddMonoidHom.congr_fun this r
   ext n r : 2
   change m • monomial n r = map (MulSemiringAction.toRingHom M R m) (monomial n r)
-  simpa only [← Polynomial.map_monomial, ← Polynomial.smul_monomial]
+  simpa only [Polynomial.map_monomial, Polynomial.smul_monomial]
 
 variable (M)
 

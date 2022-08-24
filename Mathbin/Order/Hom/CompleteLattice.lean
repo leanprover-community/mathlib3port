@@ -92,8 +92,8 @@ attribute [simp] map_Sup map_Inf
 theorem map_supr [HasSupₓ α] [HasSupₓ β] [SupHomClassₓ F α β] (f : F) (g : ι → α) : f (⨆ i, g i) = ⨆ i, f (g i) := by
   rw [supr, supr, map_Sup, Set.range_comp]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 theorem map_supr₂ [HasSupₓ α] [HasSupₓ β] [SupHomClassₓ F α β] (f : F) (g : ∀ i, κ i → α) :
     f (⨆ (i) (j), g i j) = ⨆ (i) (j), f (g i j) := by
   simp_rw [map_supr]
@@ -101,8 +101,8 @@ theorem map_supr₂ [HasSupₓ α] [HasSupₓ β] [SupHomClassₓ F α β] (f : 
 theorem map_infi [HasInfₓ α] [HasInfₓ β] [InfHomClassₓ F α β] (f : F) (g : ι → α) : f (⨅ i, g i) = ⨅ i, f (g i) := by
   rw [infi, infi, map_Inf, Set.range_comp]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 theorem map_infi₂ [HasInfₓ α] [HasInfₓ β] [InfHomClassₓ F α β] (f : F) (g : ∀ i, κ i → α) :
     f (⨅ (i) (j), g i j) = ⨅ (i) (j), f (g i j) := by
   simp_rw [map_infi]
@@ -147,15 +147,15 @@ instance (priority := 100) CompleteLatticeHomClass.toBoundedLatticeHomClass [Com
 instance (priority := 100) OrderIsoClass.toSupHomClassₓ [CompleteLattice α] [CompleteLattice β] [OrderIsoClass F α β] :
     SupHomClassₓ F α β :=
   ⟨fun f s =>
-    eq_of_forall_ge_iff fun c => by
-      simp only [le_map_inv_iff, ← Sup_le_iff, ← Set.ball_image_iff]⟩
+    eq_of_forall_ge_iffₓ fun c => by
+      simp only [← le_map_inv_iff, Sup_le_iff, Set.ball_image_iff]⟩
 
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toInfHomClassₓ [CompleteLattice α] [CompleteLattice β] [OrderIsoClass F α β] :
     InfHomClassₓ F α β :=
   ⟨fun f s =>
-    eq_of_forall_le_iff fun c => by
-      simp only [map_inv_le_iff, ← le_Inf_iff, ← Set.ball_image_iff]⟩
+    eq_of_forall_le_iffₓ fun c => by
+      simp only [← map_inv_le_iff, le_Inf_iff, Set.ball_image_iff]⟩
 
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toCompleteLatticeHomClass [CompleteLattice α] [CompleteLattice β]
@@ -716,10 +716,10 @@ def setPreimage (f : α → β) : CompleteLatticeHom (Set β) (Set α) where
   toFun := Preimage f
   map_Sup' := fun s =>
     preimage_sUnion.trans <| by
-      simp only [← Set.Sup_eq_sUnion, ← Set.sUnion_image]
+      simp only [Set.Sup_eq_sUnion, Set.sUnion_image]
   map_Inf' := fun s =>
     preimage_sInter.trans <| by
-      simp only [← Set.Inf_eq_sInter, ← Set.sInter_image]
+      simp only [Set.Inf_eq_sInter, Set.sInter_image]
 
 @[simp]
 theorem coe_set_preimage (f : α → β) : ⇑(setPreimage f) = Preimage f :=

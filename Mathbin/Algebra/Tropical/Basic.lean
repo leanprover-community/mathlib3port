@@ -157,7 +157,7 @@ instance decidableLt [LT R] [DecidableRel ((· < ·) : R → R → Prop)] :
     DecidableRel ((· < ·) : Tropical R → Tropical R → Prop) := fun x y => ‹DecidableRel (· < ·)› (untrop x) (untrop y)
 
 instance [Preorderₓ R] : Preorderₓ (Tropical R) :=
-  { Tropical.hasLe, Tropical.hasLt with le_refl := fun _ => le_rfl, le_trans := fun _ _ _ h h' => le_transₓ h h',
+  { Tropical.hasLe, Tropical.hasLt with le_refl := fun _ => le_rflₓ, le_trans := fun _ _ _ h h' => le_transₓ h h',
     lt_iff_le_not_le := fun _ _ => lt_iff_le_not_leₓ }
 
 /-- Reinterpret `x : R` as an element of `tropical R`, preserving the order. -/
@@ -288,7 +288,7 @@ theorem add_eq_right_iff {x y : Tropical R} : x + y = y ↔ y ≤ x := by
 
 @[simp]
 theorem add_self (x : Tropical R) : x + x = x :=
-  untrop_injective (min_eq_rightₓ le_rfl)
+  untrop_injective (min_eq_rightₓ le_rflₓ)
 
 @[simp]
 theorem bit0 (x : Tropical R) : bit0 x = x :=
@@ -296,7 +296,7 @@ theorem bit0 (x : Tropical R) : bit0 x = x :=
 
 theorem add_eq_iff {x y z : Tropical R} : x + y = z ↔ x = z ∧ x ≤ y ∨ y = z ∧ y ≤ x := by
   rw [trop_add_def, trop_eq_iff_eq_untrop]
-  simp [← min_eq_iff]
+  simp [min_eq_iff]
 
 @[simp]
 theorem add_eq_zero_iff {a b : Tropical (WithTop R)} : a + b = 0 ↔ a = 0 ∧ b = 0 := by
@@ -351,7 +351,7 @@ instance [LinearOrderₓ R] [OrderTop R] [Zero R] : AddMonoidWithOneₓ (Tropica
     nat_cast_succ := fun n =>
       (untrop_inj_iff _ _).1
         (by
-          cases n <;> simp [← Nat.castₓ]) }
+          cases n <;> simp [Nat.castₓ]) }
 
 instance [Zero R] : Nontrivial (Tropical (WithTop R)) :=
   ⟨⟨0, 1, trop_injective.Ne WithTop.top_ne_coe⟩⟩
@@ -496,7 +496,7 @@ theorem succ_nsmul {R} [LinearOrderₓ R] [OrderTop R] (x : Tropical R) (n : ℕ
 @[simp]
 theorem mul_eq_zero_iff {R : Type _} [LinearOrderedAddCommMonoid R] {a b : Tropical (WithTop R)} :
     a * b = 0 ↔ a = 0 ∨ b = 0 := by
-  simp [untrop_inj_iff, ← WithTop.add_eq_top]
+  simp [← untrop_inj_iff, WithTop.add_eq_top]
 
 instance {R : Type _} [LinearOrderedAddCommMonoid R] : NoZeroDivisors (Tropical (WithTop R)) :=
   ⟨fun _ _ => mul_eq_zero_iff.mp⟩

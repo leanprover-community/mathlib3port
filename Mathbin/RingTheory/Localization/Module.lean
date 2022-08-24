@@ -54,7 +54,7 @@ theorem LinearIndependent.localization {ι : Type _} {b : ι → M} (hli : Linea
     
   refine' (IsLocalization.map_units Rₛ a).mul_right_eq_zero.mp _
   rw [← Algebra.smul_def, ← map_zero (algebraMap R Rₛ), ← hli]
-  simp [← hi, ← hg']
+  simp [hi, hg']
 
 end AddCommMonoidₓ
 

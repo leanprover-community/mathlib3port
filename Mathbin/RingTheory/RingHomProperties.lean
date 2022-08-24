@@ -66,14 +66,14 @@ theorem RespectsIso.is_localization_away_iff (hP : RingHom.RespectsIso @P) {R S 
   refine' (hP.cancel_right_is_iso (CommRingₓₓ.ofHom _) e₂.to_CommRing_iso.hom).symm.trans _
   rw [← eq_iff_iff]
   congr 1
-  dsimp' [← CommRingₓₓ.ofHom, ← CommRingₓₓ.of, ← bundled.of]
+  dsimp' [CommRingₓₓ.ofHom, CommRingₓₓ.of, bundled.of]
   refine' IsLocalization.ring_hom_ext (Submonoid.powers r) _
   ext1
   revert e₁ e₂
-  dsimp' [← RingEquiv.toRingHom, ← IsLocalization.Away.map]
-  simp only [← CategoryTheory.comp_apply, ← RingEquiv.refl_apply, ← IsLocalization.alg_equiv_apply, ←
-    IsLocalization.ring_equiv_of_ring_equiv_apply, ← RingHom.coe_mk, ← RingEquiv.to_fun_eq_coe, ←
-    IsLocalization.ring_equiv_of_ring_equiv_eq, ← IsLocalization.map_eq]
+  dsimp' [RingEquiv.toRingHom, IsLocalization.Away.map]
+  simp only [CategoryTheory.comp_apply, RingEquiv.refl_apply, IsLocalization.alg_equiv_apply,
+    IsLocalization.ring_equiv_of_ring_equiv_apply, RingHom.coe_mk, RingEquiv.to_fun_eq_coe,
+    IsLocalization.ring_equiv_of_ring_equiv_eq, IsLocalization.map_eq]
 
 end RespectsIso
 

@@ -45,7 +45,7 @@ protected def sym2 (s : Finset α) : Finset (Sym2 α) :=
   (s ×ˢ s).Image Quotientₓ.mk
 
 @[simp]
-theorem mem_sym2_iff : m ∈ s.Sym2 ↔ ∀, ∀ a ∈ m, ∀, a ∈ s := by
+theorem mem_sym2_iff : m ∈ s.Sym2 ↔ ∀ a ∈ m, a ∈ s := by
   refine' mem_image.trans ⟨_, fun h => ⟨m.out, mem_product.2 ⟨h _ m.out_fst_mem, h _ m.out_snd_mem⟩, m.out_eq⟩⟩
   rintro ⟨⟨a, b⟩, h, rfl⟩
   rw [Sym2.ball]
@@ -110,7 +110,7 @@ theorem sym_succ : s.Sym (n + 1) = s.sup fun a => (s.Sym n).Image <| Sym.cons a 
   rfl
 
 @[simp]
-theorem mem_sym_iff : m ∈ s.Sym n ↔ ∀, ∀ a ∈ m, ∀, a ∈ s := by
+theorem mem_sym_iff : m ∈ s.Sym n ↔ ∀ a ∈ m, a ∈ s := by
   induction' n with n ih
   · refine' mem_singleton.trans ⟨_, fun _ => Sym.eq_nil_of_card_zero _⟩
     rintro rfl
@@ -182,7 +182,7 @@ theorem sym_mono (h : s ⊆ t) (n : ℕ) : s.Sym n ⊆ t.Sym n := fun m hm =>
 @[simp]
 theorem sym_inter (s t : Finset α) (n : ℕ) : (s ∩ t).Sym n = s.Sym n ∩ t.Sym n := by
   ext m
-  simp only [← mem_inter, ← mem_sym_iff, ← imp_and_distrib, ← forall_and_distrib]
+  simp only [mem_inter, mem_sym_iff, imp_and_distrib, forall_and_distrib]
 
 @[simp]
 theorem sym_union (s t : Finset α) (n : ℕ) : s.Sym n ∪ t.Sym n ⊆ (s ∪ t).Sym n :=

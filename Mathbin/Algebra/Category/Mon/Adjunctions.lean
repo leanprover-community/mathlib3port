@@ -47,7 +47,7 @@ def adjoinOneAdj : adjoinOne ⊣ forget₂ Mon.{u} Semigroupₓₓ.{u} :=
       hom_equiv_naturality_left_symm' := by
         intro S T M f g
         ext
-        simp only [← Equivₓ.symm_symm, ← adjoin_one_map, ← coe_comp]
+        simp only [Equivₓ.symm_symm, adjoin_one_map, coe_comp]
         simp_rw [WithOne.map]
         apply WithOne.cases_on x
         · rfl

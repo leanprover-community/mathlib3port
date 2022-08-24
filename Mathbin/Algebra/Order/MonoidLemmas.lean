@@ -758,9 +758,9 @@ theorem mul_eq_one_iff' [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantC
     (ha : 1 ≤ a) (hb : 1 ≤ b) : a * b = 1 ↔ a = 1 ∧ b = 1 :=
   Iff.intro
     (fun hab : a * b = 1 =>
-      have : a ≤ 1 := hab ▸ le_mul_of_le_of_one_le le_rfl hb
+      have : a ≤ 1 := hab ▸ le_mul_of_le_of_one_le le_rflₓ hb
       have : a = 1 := le_antisymmₓ this ha
-      have : b ≤ 1 := hab ▸ le_mul_of_one_le_of_le ha le_rfl
+      have : b ≤ 1 := hab ▸ le_mul_of_one_le_of_le ha le_rflₓ
       have : b = 1 := le_antisymmₓ this hb
       And.intro ‹a = 1› ‹b = 1›)
     fun ⟨ha', hb'⟩ => by
@@ -822,7 +822,7 @@ theorem Left.mul_eq_mul_iff_eq_and_eq [CovariantClass α α (· * ·) (· < ·)]
   rcases hac.eq_or_lt with (rfl | hac)
   · exact ⟨rfl, mul_left_cancel'' h⟩
     
-  rcases eq_or_lt_of_le hbd with (rfl | hbd)
+  rcases eq_or_lt_of_leₓ hbd with (rfl | hbd)
   · exact ⟨mul_right_cancel'' h, rfl⟩
     
   exact ((Left.mul_lt_mul hac hbd).Ne h).elim
@@ -835,7 +835,7 @@ theorem Right.mul_eq_mul_iff_eq_and_eq [CovariantClass α α (· * ·) (· ≤ �
   rcases hac.eq_or_lt with (rfl | hac)
   · exact ⟨rfl, mul_left_cancel'' h⟩
     
-  rcases eq_or_lt_of_le hbd with (rfl | hbd)
+  rcases eq_or_lt_of_leₓ hbd with (rfl | hbd)
   · exact ⟨mul_right_cancel'' h, rfl⟩
     
   exact ((Right.mul_lt_mul hac hbd).Ne h).elim
@@ -1038,7 +1038,7 @@ theorem Contravariant.mul_le_cancellable [Mul α] [LE α] [ContravariantClass α
 
 @[to_additive]
 theorem mul_le_cancellable_one [Monoidₓ α] [LE α] : MulLeCancellable (1 : α) := fun a b => by
-  simpa only [← one_mulₓ] using id
+  simpa only [one_mulₓ] using id
 
 namespace MulLeCancellable
 

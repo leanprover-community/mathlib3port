@@ -161,7 +161,7 @@ theorem image_basic_open_image_preimage :
       injection this
     delta' image_basic_open
     rw [preimage_basic_open f, preimage_basic_open g]
-    dsimp' only [← functor.op, ← unop_op]
+    dsimp' only [functor.op, unop_op]
     rw [← comp_apply, ← SheafedSpace.comp_c_app', ← comp_apply, ← SheafedSpace.comp_c_app',
       SheafedSpace.congr_app (coequalizer.condition f.1 g.1), comp_apply]
     erw [X.to_RingedSpace.basic_open_res]
@@ -176,7 +176,7 @@ theorem image_basic_open_image_open : IsOpen ((coequalizer.π f.1 g.1).base '' (
     Top.coequalizer_is_open_iff, ← Set.preimage_comp]
   erw [← coe_comp]
   rw [preserves_coequalizer.iso_hom, ι_comp_coequalizer_comparison]
-  dsimp' only [← SheafedSpace.forget]
+  dsimp' only [SheafedSpace.forget]
   rw [image_basic_open_image_preimage]
   exact (image_basic_open f g U s).2
 
@@ -268,7 +268,7 @@ noncomputable instance preservesCoequalizer : PreservesColimitsOfShape WalkingPa
     apply preserves_colimit_of_iso_diagram _ (diagram_iso_parallel_pair F).symm
     apply preserves_colimit_of_preserves_colimit_cocone (coequalizer_cofork_is_colimit _ _)
     apply (is_colimit_map_cocone_cofork_equiv _ _).symm _
-    dsimp' only [← forget_to_SheafedSpace]
+    dsimp' only [forget_to_SheafedSpace]
     exact coequalizer_is_coequalizer _ _⟩
 
 end HasCoequalizer

@@ -113,7 +113,7 @@ theorem not_is_uniform_iff :
               ↑s.card * ε ≤ s'.card ∧ ↑t.card * ε ≤ t'.card ∧ ε ≤ abs (G.edgeDensity s' t' - G.edgeDensity s t) :=
   by
   unfold is_uniform
-  simp only [← not_forall, ← not_ltₓ, ← exists_prop]
+  simp only [not_forall, not_ltₓ, exists_prop]
 
 open Classical
 
@@ -209,7 +209,7 @@ theorem non_uniforms_mono {ε ε' : 𝕜} (h : ε ≤ ε') : P.nonUniforms G ε'
 theorem non_uniforms_bot (hε : 0 < ε) : (⊥ : Finpartition A).nonUniforms G ε = ∅ := by
   rw [eq_empty_iff_forall_not_mem]
   rintro ⟨u, v⟩
-  simp only [← Finpartition.mk_mem_non_uniforms_iff, ← Finpartition.parts_bot, ← mem_map, ← not_and, ← not_not, ←
+  simp only [Finpartition.mk_mem_non_uniforms_iff, Finpartition.parts_bot, mem_map, not_and, not_not,
     exists_imp_distrib]
   rintro x hx rfl y hy rfl h
   exact G.is_uniform_singleton hε
@@ -235,7 +235,7 @@ theorem IsUniform.mono {ε ε' : 𝕜} (hP : P.IsUniform G ε) (h : ε ≤ ε') 
     mul_le_mul_of_nonneg_left h <| Nat.cast_nonneg _
 
 theorem is_uniform_of_empty (hP : P.parts = ∅) : P.IsUniform G ε := by
-  simp [← is_uniform, ← hP, ← non_uniforms]
+  simp [is_uniform, hP, non_uniforms]
 
 theorem nonempty_of_not_uniform (h : ¬P.IsUniform G ε) : P.parts.Nonempty :=
   nonempty_of_ne_empty fun h₁ => h <| is_uniform_of_empty h₁

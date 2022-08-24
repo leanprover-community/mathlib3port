@@ -124,7 +124,7 @@ theorem snd_comp_prod : (snd S T).comp (f.Prod g) = g :=
 
 theorem prod_unique (f : R →ₙ+* S × T) : ((fst S T).comp f).Prod ((snd S T).comp f) = f :=
   ext fun x => by
-    simp only [← prod_apply, ← coe_fst, ← coe_snd, ← comp_apply, ← Prod.mk.eta]
+    simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
 
 end Prod
 
@@ -199,7 +199,7 @@ theorem snd_comp_prod : (snd S T).comp (f.Prod g) = g :=
 
 theorem prod_unique (f : R →+* S × T) : ((fst S T).comp f).Prod ((snd S T).comp f) = f :=
   ext fun x => by
-    simp only [← prod_apply, ← coe_fst, ← coe_snd, ← comp_apply, ← Prod.mk.eta]
+    simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
 
 end Prod
 

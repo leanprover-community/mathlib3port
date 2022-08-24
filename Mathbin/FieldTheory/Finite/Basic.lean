@@ -49,11 +49,11 @@ variable {K : Type _} {R : Type _}
 -- mathport name: «exprq»
 local notation "q" => Fintype.card K
 
+open Finset Function
+
 open BigOperators Polynomial
 
 namespace FiniteField
-
-open Finset Function
 
 section Polynomial
 
@@ -70,7 +70,7 @@ theorem card_image_polynomial_eval [DecidableEq R] [Fintype R] {p : R[X]} (hp : 
       _ = (p - c a).roots.toFinset.card :=
         congr_arg card
           (by
-            simp [← Finset.ext_iff, ← mem_roots_sub_C hp])
+            simp [Finset.ext_iff, mem_roots_sub_C hp])
       _ ≤ (p - c a).roots.card := Multiset.to_finset_card_le _
       _ ≤ _ := card_roots_sub_C' hp
       
@@ -80,7 +80,7 @@ theorem exists_root_sum_quadratic [Fintype R] {f g : R[X]} (hf2 : degree f = 2) 
     (hR : Fintype.card R % 2 = 1) : ∃ a b, f.eval a + g.eval b = 0 :=
   letI := Classical.decEq R
   suffices ¬Disjoint (univ.image fun x : R => eval x f) (univ.image fun x : R => eval x (-g)) by
-    simp only [← disjoint_left, ← mem_image] at this
+    simp only [disjoint_left, mem_image] at this
     push_neg  at this
     rcases this with ⟨x, ⟨a, _, ha⟩, ⟨b, _, hb⟩⟩
     exact
@@ -104,7 +104,7 @@ theorem exists_root_sum_quadratic [Fintype R] {f g : R[X]} (hf2 : degree f = 2) 
                     decide))
             (mt (congr_arg (· % 2))
               (by
-                simp [← nat_degree_eq_of_degree_eq_some hf2, ← hR])))
+                simp [nat_degree_eq_of_degree_eq_some hf2, hR])))
           (card_image_polynomial_eval
             (by
               rw [degree_neg, hg2] <;>
@@ -112,7 +112,7 @@ theorem exists_root_sum_quadratic [Fintype R] {f g : R[X]} (hf2 : degree f = 2) 
                   decide))
       _ = 2 * ((univ.image fun x : R => eval x f) ∪ univ.image fun x : R => eval x (-g)).card := by
         rw [card_disjoint_union hd] <;>
-          simp [← nat_degree_eq_of_degree_eq_some hf2, ← nat_degree_eq_of_degree_eq_some hg2, ← bit0, ← mul_addₓ]
+          simp [nat_degree_eq_of_degree_eq_some hf2, nat_degree_eq_of_degree_eq_some hg2, bit0, mul_addₓ]
       
 
 end Polynomial
@@ -124,9 +124,9 @@ theorem prod_univ_units_id_eq_neg_one [CommRingₓ K] [IsDomain K] [Fintype Kˣ]
       (by
         simp )
       (fun a => by
-        simp (config := { contextual := true })[← Units.inv_eq_self_iff])
+        simp (config := { contextual := true })[Units.inv_eq_self_iff])
       (fun a => by
-        simp [← @inv_eq_iff_inv_eq _ _ a, ← eq_comm])
+        simp [@inv_eq_iff_inv_eq _ _ a, eq_comm])
       (by
         simp )
   rw [← insert_erase (mem_univ (-1 : Kˣ)), prod_insert (not_mem_erase _ _), this, mul_oneₓ]
@@ -157,7 +157,7 @@ theorem pow_card_pow (n : ℕ) (a : K) : a ^ q ^ n = a := by
   induction' n with n ih
   · simp
     
-  · simp [← pow_succₓ, ← pow_mulₓ, ← ih, ← pow_card]
+  · simp [pow_succₓ, pow_mulₓ, ih, pow_card]
     
 
 end
@@ -187,7 +187,7 @@ theorem cast_card_eq_zero : (q : K) = 0 := by
   rcases CharP.exists K with ⟨p, _char_p⟩
   skip
   rcases card K p with ⟨n, hp, hn⟩
-  simp only [← CharP.cast_eq_zero_iff K p, ← hn]
+  simp only [CharP.cast_eq_zero_iff K p, hn]
   conv => congr rw [← pow_oneₓ p]
   exact pow_dvd_pow _ n.2
 
@@ -223,7 +223,7 @@ theorem sum_pow_units [Fintype Kˣ] (i : ℕ) : (∑ x : Kˣ, (x ^ i : K)) = if 
     _ = if q - 1 ∣ i then -1 else 0 := _
     
   suffices q - 1 ∣ i ↔ φ = 1 by
-    simp only [← this]
+    simp only [this]
     split_ifs with h h
     swap
     rfl
@@ -240,7 +240,7 @@ theorem sum_pow_units [Fintype Kˣ] (i : ℕ) : (∑ x : Kˣ, (x ^ i : K)) = if 
 is equal to `0` if `i < q - 1`. -/
 theorem sum_pow_lt_card_sub_one (i : ℕ) (h : i < q - 1) : (∑ x : K, x ^ i) = 0 := by
   by_cases' hi : i = 0
-  · simp only [← hi, ← nsmul_one, ← sum_const, ← pow_zeroₓ, ← card_univ, ← cast_card_eq_zero]
+  · simp only [hi, nsmul_one, sum_const, pow_zeroₓ, card_univ, cast_card_eq_zero]
     
   classical
   have hiq : ¬q - 1 ∣ i := by
@@ -249,8 +249,8 @@ theorem sum_pow_lt_card_sub_one (i : ℕ) (h : i < q - 1) : (∑ x : K, x ^ i) =
   let φ : Kˣ ↪ K := ⟨coe, Units.ext⟩
   have : univ.map φ = univ \ {0} := by
     ext x
-    simp only [← true_andₓ, ← embedding.coe_fn_mk, ← mem_sdiff, ← Units.exists_iff_ne_zero, ← mem_univ, ← mem_map, ←
-      exists_prop_of_true, ← mem_singleton]
+    simp only [true_andₓ, embedding.coe_fn_mk, mem_sdiff, Units.exists_iff_ne_zero, mem_univ, mem_map,
+      exists_prop_of_true, mem_singleton]
   calc
     (∑ x : K, x ^ i) = ∑ x in univ \ {(0 : K)}, x ^ i := by
       rw [← sum_sdiff ({0} : Finset K).subset_univ, sum_singleton, zero_pow (Nat.pos_of_ne_zeroₓ hi), add_zeroₓ]
@@ -316,7 +316,7 @@ instance (F : Type _) [Field F] [Algebra F K] : IsSplittingField F K (X ^ q - X)
   adjoin_roots := by
     classical
     trans Algebra.adjoin F ((roots (X ^ q - X : K[X])).toFinset : Set K)
-    · simp only [← Polynomial.map_pow, ← map_X, ← Polynomial.map_sub]
+    · simp only [Polynomial.map_pow, map_X, Polynomial.map_sub]
       
     · rw [roots_X_pow_card_sub_X, val_to_finset, coe_univ, Algebra.adjoin_univ]
       
@@ -375,7 +375,7 @@ theorem sq_add_sq (p : ℕ) [hp : Fact p.Prime] (x : Zmod p) : ∃ a b : Zmod p,
         rw [Zmod.card, hp_odd])
   refine' ⟨a, b, _⟩
   rw [← sub_eq_zero]
-  simpa only [← eval_C, ← eval_X, ← eval_pow, ← eval_sub, add_sub_assoc] using hab
+  simpa only [eval_C, eval_X, eval_pow, eval_sub, ← add_sub_assoc] using hab
 
 end Zmod
 
@@ -411,8 +411,8 @@ theorem Nat.Modeq.pow_totient {x n : ℕ} (h : Nat.Coprime x n) : x ^ φ n ≡ 1
   let x' : Units (Zmod n) := Zmod.unitOfCoprime _ h
   have := Zmod.pow_totient x'
   apply_fun (coe : Units (Zmod n) → Zmod n)  at this
-  simpa only [-Zmod.pow_totient, ← Nat.succ_eq_add_one, ← Nat.cast_powₓ, ← Units.coe_one, ← Nat.cast_oneₓ, ←
-    coe_unit_of_coprime, ← Units.coe_pow]
+  simpa only [-Zmod.pow_totient, Nat.succ_eq_add_one, Nat.cast_powₓ, Units.coe_one, Nat.cast_oneₓ, coe_unit_of_coprime,
+    Units.coe_pow]
 
 section
 
@@ -442,7 +442,7 @@ theorem pow_card_pow {n p : ℕ} [Fact p.Prime] (x : Zmod p) : x ^ p ^ n = x := 
   induction' n with n ih
   · simp
     
-  · simp [← pow_succₓ, ← pow_mulₓ, ← ih, ← pow_card]
+  · simp [pow_succₓ, pow_mulₓ, ih, pow_card]
     
 
 @[simp]
@@ -481,18 +481,40 @@ theorem Int.Modeq.pow_card_sub_one_eq_one {p : ℕ} (hp : Nat.Prime p) {n : ℤ}
     · exact hpn.symm
       
     exact Zmod.char_p p
-  simpa [Zmod.int_coe_eq_int_coe_iff] using Zmod.pow_card_sub_one_eq_one this
+  simpa [← Zmod.int_coe_eq_int_coe_iff] using Zmod.pow_card_sub_one_eq_one this
 
 section
 
 namespace FiniteField
 
-variable {F : Type _} [Field F] [Fintype F]
+variable {F : Type _} [Field F]
+
+section Finite
+
+variable [Finite F]
 
 /-- In a finite field of characteristic `2`, all elements are squares. -/
 theorem is_square_of_char_two (hF : ringChar F = 2) (a : F) : IsSquare a := by
   haveI hF' : CharP F 2 := ringChar.of_eq hF
   exact is_square_of_char_two' a
+
+/-- In a finite field of odd characteristic, not every element is a square. -/
+theorem exists_nonsquare (hF : ringChar F ≠ 2) : ∃ a : F, ¬IsSquare a := by
+  -- Idea: the squaring map on `F` is not injective, hence not surjective
+  let sq : F → F := fun x => x ^ 2
+  have h : ¬injective sq := by
+    simp only [injective, not_forall, exists_prop]
+    refine' ⟨-1, 1, _, Ringₓ.neg_one_ne_one_of_char_ne_two hF⟩
+    simp only [sq, one_pow, neg_one_sq]
+  rw [Finite.injective_iff_surjective] at h
+  -- sq not surjective
+  simp_rw [IsSquare, ← pow_two, @eq_comm _ _ (_ ^ 2)]
+  push_neg  at h⊢
+  exact h
+
+end Finite
+
+variable [Fintype F]
 
 /-- The finite field `F` has even cardinality iff it has characteristic `2`. -/
 theorem even_card_iff_char_two : ringChar F = 2 ↔ Fintype.card F % 2 = 0 := by
@@ -501,7 +523,7 @@ theorem even_card_iff_char_two : ringChar F = 2 ↔ Fintype.card F % 2 = 0 := by
   constructor
   · intro hF
     rw [hF]
-    simp only [← Nat.bit0_mod_two, ← zero_pow', ← Ne.def, ← Pnat.ne_zero, ← not_false_iff, ← Nat.zero_modₓ]
+    simp only [Nat.bit0_mod_two, zero_pow', Ne.def, Pnat.ne_zero, not_false_iff, Nat.zero_modₓ]
     
   · rw [← Nat.even_iff, Nat.even_pow]
     rintro ⟨hev, hnz⟩
@@ -559,9 +581,9 @@ theorem is_square_iff (hF : ringChar F ≠ 2) {a : F} (ha : a ≠ 0) : IsSquare 
   apply
     (iff_congr _
           (by
-            simp [← Units.ext_iff])).mp
+            simp [Units.ext_iff])).mp
       (FiniteField.unit_is_square_iff hF (Units.mk0 a ha))
-  simp only [← IsSquare, ← Units.ext_iff, ← Units.coe_mk0, ← Units.coe_mul]
+  simp only [IsSquare, Units.ext_iff, Units.coe_mk0, Units.coe_mul]
   constructor
   · rintro ⟨y, hy⟩
     exact ⟨y, hy⟩
@@ -569,32 +591,10 @@ theorem is_square_iff (hF : ringChar F ≠ 2) {a : F} (ha : a ≠ 0) : IsSquare 
   · rintro ⟨y, rfl⟩
     have hy : y ≠ 0 := by
       rintro rfl
-      simpa [← zero_pow] using ha
+      simpa [zero_pow] using ha
     refine' ⟨Units.mk0 y hy, _⟩
     simp
     
-
-/-- In a finite field of odd characteristic, not every element is a square. -/
-theorem exists_nonsquare (hF : ringChar F ≠ 2) : ∃ a : F, ¬IsSquare a := by
-  -- idea: the squaring map on `F` is not injetive, hence not surjective
-  let sq : F → F := fun x => x ^ 2
-  have h : ¬Function.Injective sq := by
-    simp only [← Function.Injective, ← not_forall, ← exists_prop]
-    use -1, 1
-    constructor
-    · simp only [← sq, ← one_pow, ← neg_one_sq]
-      
-    · exact Ringₓ.neg_one_ne_one_of_char_ne_two hF
-      
-  have h₁ := mt finite.injective_iff_surjective.mpr h
-  -- sq not surjective
-  push_neg  at h₁
-  cases' h₁ with a h₁
-  use a
-  simp only [← IsSquare, ← sq, ← not_exists, ← Ne.def] at h₁⊢
-  intro b hb
-  rw [← pow_two] at hb
-  exact h₁ b hb.symm
 
 end FiniteField
 

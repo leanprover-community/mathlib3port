@@ -61,9 +61,9 @@ structure NonUnitalRingHom (α β : Type _) [NonUnitalNonAssocSemiringₓ α] [N
 infixr:25 " →ₙ+* " => NonUnitalRingHom
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident non_unital_ring_hom.to_mul_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident non_unital_ring_hom.to_mul_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident non_unital_ring_hom.to_add_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident non_unital_ring_hom.to_add_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 section NonUnitalRingHomClass
 
 /-- `non_unital_ring_hom_class F α β` states that `F` is a type of non-unital (semi)ring
@@ -303,13 +303,13 @@ structure RingHom (α : Type _) (β : Type _) [NonAssocSemiringₓ α] [NonAssoc
 infixr:25 " →+* " => RingHom
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident ring_hom.to_monoid_with_zero_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident ring_hom.to_monoid_with_zero_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident ring_hom.to_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident ring_hom.to_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident ring_hom.to_add_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident ring_hom.to_add_monoid_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident ring_hom.to_non_unital_ring_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident ring_hom.to_non_unital_ring_hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 section RingHomClass
 
 /-- `ring_hom_class F α β` states that `F` is a type of (semi)ring homomorphisms.
@@ -326,7 +326,7 @@ variable [NonAssocSemiringₓ α] [NonAssocSemiringₓ β] [RingHomClass F α β
 /-- Ring homomorphisms preserve `bit1`. -/
 @[simp]
 theorem map_bit1 (f : F) (a : α) : (f (bit1 a) : β) = bit1 (f a) := by
-  simp [← bit1]
+  simp [bit1]
 
 instance : CoeTₓ F (α →+* β) :=
   ⟨fun f =>
@@ -491,7 +491,7 @@ theorem codomain_trivial_iff_range_eq_singleton_zero : (0 : β) = 1 ↔ Set.Rang
     ⟨fun h =>
       Set.ext fun y =>
         ⟨fun ⟨x, hx⟩ => by
-          simp [hx, ← h x], fun hy =>
+          simp [← hx, h x], fun hy =>
           ⟨0, by
             simpa using hy.symm⟩⟩,
       fun h x => Set.mem_singleton_iff.mp (h ▸ Set.mem_range_self x)⟩
@@ -646,7 +646,7 @@ def mkRingHomOfMulSelfOfTwoNeZero (h : ∀ x, f (x * x) = f x * f x) (h_two : (2
       have hxy := h (x + y)
       rw [mul_addₓ, add_mulₓ, add_mulₓ, f.map_add, f.map_add, f.map_add, f.map_add, h x, h y, add_mulₓ, mul_addₓ,
         mul_addₓ, ← sub_eq_zero, add_commₓ, ← sub_sub, ← sub_sub, ← sub_sub, mul_comm y x, mul_comm (f y) (f x)] at hxy
-      simp only [← add_assocₓ, ← add_sub_assoc, ← add_sub_cancel'_right] at hxy
+      simp only [add_assocₓ, add_sub_assoc, add_sub_cancel'_right] at hxy
       rw [sub_sub, ← two_mul, ← add_sub_assoc, ← two_mul, ← mul_sub, mul_eq_zero, sub_eq_zero, or_iff_not_imp_left] at
         hxy
       exact hxy h_two }

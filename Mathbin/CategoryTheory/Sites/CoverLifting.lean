@@ -177,10 +177,10 @@ theorem get_section_commute {Y Z : StructuredArrow (op U) G.op} (f : Y ⟶ Z) :
   convert get_section_is_amalgamation hu ℱ hS hx Y (fV' ≫ f.right.unop) _ using 1
   · tidy
     
-  · simp only [← Eq, ← Quiver.Hom.unop_op, ← pulledback_family_apply, ← functor.map_comp, ← unop_comp, ← category.assoc]
+  · simp only [Eq, Quiver.Hom.unop_op, pulledback_family_apply, functor.map_comp, unop_comp, category.assoc]
     
   · change S (G.map _ ≫ Y.hom.unop)
-    simpa only [← functor.map_comp, ← category.assoc] using hV'
+    simpa only [functor.map_comp, category.assoc] using hV'
     
 
 /-- The limit cone in order to glue the sections obtained via `get_section`. -/
@@ -209,10 +209,10 @@ theorem helper {V} (f : V ⟶ U) (y : X ⟶ ((ran G.op).obj ℱ.val).obj (op V))
     y ≫ limit.π (Ran.diagram G.op ℱ.val (op V)) W =
       (gluedLimitCone hu ℱ hS hx).π.app ((StructuredArrow.map f.op).obj W) :=
   by
-  dsimp' only [← glued_limit_cone_π_app]
+  dsimp' only [glued_limit_cone_π_app]
   apply get_section_is_unique hu ℱ hS hx ((structured_arrow.map f.op).obj W)
   intro V' fV' hV'
-  dsimp' only [← Ran.adjunction, ← Ran.equiv, ← pulledback_family_apply]
+  dsimp' only [Ran.adjunction, Ran.equiv, pulledback_family_apply]
   erw [adjunction.adjunction_of_equiv_right_counit_app]
   have :
     y ≫ ((Ran G.op).obj ℱ.val).map (G.map fV' ≫ W.hom.unop).op =
@@ -223,23 +223,23 @@ theorem helper {V} (f : V ⟶ U) (y : X ⟶ ((ran G.op).obj ℱ.val).obj (op V))
     convert
       H
         (show S ((G.map fV' ≫ W.hom.unop) ≫ f) by
-          simpa only [← category.assoc] using hV') using
+          simpa only [category.assoc] using hV') using
       2
-    simp only [← category.assoc]
-  simp only [← Quiver.Hom.unop_op, ← Equivₓ.symm_symm, ← structured_arrow.map_obj_hom, ← unop_comp, ← Equivₓ.coe_fn_mk,
-    ← functor.comp_map, ← coyoneda_obj_map, ← category.assoc, this, ← op_comp, ← Ran_obj_map, ← nat_trans.id_app]
+    simp only [category.assoc]
+  simp only [Quiver.Hom.unop_op, Equivₓ.symm_symm, structured_arrow.map_obj_hom, unop_comp, Equivₓ.coe_fn_mk,
+    functor.comp_map, coyoneda_obj_map, category.assoc, ← this, op_comp, Ran_obj_map, nat_trans.id_app]
   erw [category.id_comp, limit.pre_π]
   congr
   convert limit.w (Ran.diagram G.op ℱ.val (op V)) (structured_arrow.hom_mk' W fV'.op)
   rw [structured_arrow.map_mk]
   erw [category.comp_id]
-  simp only [← Quiver.Hom.unop_op, ← functor.op_map, ← Quiver.Hom.op_unop]
+  simp only [Quiver.Hom.unop_op, functor.op_map, Quiver.Hom.op_unop]
 
 /-- Verify that the `glued_section` is an amalgamation of `x`. -/
 theorem glued_section_is_amalgamation : x.IsAmalgamation (gluedSection hu ℱ hS hx) := by
   intro V fV hV
   ext W
-  simp only [← functor.comp_map, ← limit.lift_pre, ← coyoneda_obj_map, ← Ran_obj_map, ← glued_section]
+  simp only [functor.comp_map, limit.lift_pre, coyoneda_obj_map, Ran_obj_map, glued_section]
   erw [limit.lift_π]
   symm
   convert helper hu ℱ hS hx _ (x fV hV) _ _ using 1
@@ -248,7 +248,7 @@ theorem glued_section_is_amalgamation : x.IsAmalgamation (gluedSection hu ℱ hS
     hx fV' (𝟙 _) hV hV'
       (by
         rw [category.id_comp])
-  simp only [← op_id, ← functor_to_types.map_id_apply]
+  simp only [op_id, functor_to_types.map_id_apply]
 
 /-- Verify that the amalgamation is indeed unique. -/
 theorem glued_section_is_unique (y) (hy : x.IsAmalgamation y) : y = gluedSection hu ℱ hS hx := by
@@ -256,13 +256,13 @@ theorem glued_section_is_unique (y) (hy : x.IsAmalgamation y) : y = gluedSection
   ext W
   erw [limit.lift_π]
   convert helper hu ℱ hS hx (𝟙 _) y W _
-  · simp only [← op_id, ← structured_arrow.map_id]
+  · simp only [op_id, structured_arrow.map_id]
     
   · intro V' fV' hV'
     convert
       hy fV'
         (by
-          simpa only [← category.comp_id] using hV')
+          simpa only [category.comp_id] using hV')
     erw [category.comp_id]
     
 

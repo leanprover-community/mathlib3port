@@ -135,7 +135,7 @@ variable [SeparatedSpace β]
 theorem extend_unique (hf : UniformContinuous f) {g : hatα → β} (hg : UniformContinuous g)
     (h : ∀ a : α, f a = g (ι a)) : pkg.extend f = g := by
   apply pkg.funext pkg.continuous_extend hg.continuous
-  simpa only [← pkg.extend_coe hf] using h
+  simpa only [pkg.extend_coe hf] using h
 
 @[simp]
 theorem extend_comp_coe {f : hatα → β} (hf : UniformContinuous f) : pkg.extend (f ∘ ι) = f :=
@@ -180,7 +180,7 @@ theorem map_unique {f : α → β} {g : hatα → hatβ} (hg : UniformContinuous
   pkg.funext (pkg.continuous_map _ _) hg.Continuous <| by
     intro a
     change pkg.extend (ι' ∘ f) _ = _
-    simp only [← (· ∘ ·), ← h]
+    simp only [(· ∘ ·), h]
     rw [pkg.extend_coe (hg.comp pkg.uniform_continuous_coe)]
 
 @[simp]

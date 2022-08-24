@@ -102,8 +102,8 @@ theorem w_mk_right {f : Arrow T} {X Y : T} {g : X ⟶ Y} (sq : f ⟶ mk g) : sq.
 theorem is_iso_of_iso_left_of_is_iso_right {f g : Arrow T} (ff : f ⟶ g) [IsIso ff.left] [IsIso ff.right] : IsIso ff :=
   { out :=
       ⟨⟨inv ff.left, inv ff.right⟩, by
-        ext <;> dsimp' <;> simp only [← is_iso.hom_inv_id], by
-        ext <;> dsimp' <;> simp only [← is_iso.inv_hom_id]⟩ }
+        ext <;> dsimp' <;> simp only [is_iso.hom_inv_id], by
+        ext <;> dsimp' <;> simp only [is_iso.inv_hom_id]⟩ }
 
 /-- Create an isomorphism between arrows,
 by providing isomorphisms between the domains and codomains,
@@ -125,14 +125,12 @@ variable {f g : Arrow T} (sq : f ⟶ g)
 instance is_iso_left [IsIso sq] :
     IsIso sq.left where out :=
     ⟨(inv sq).left, by
-      simp only [comma.comp_left, ← is_iso.hom_inv_id, ← is_iso.inv_hom_id, ← arrow.id_left, ← eq_self_iff_true, ←
-        and_selfₓ]⟩
+      simp only [← comma.comp_left, is_iso.hom_inv_id, is_iso.inv_hom_id, arrow.id_left, eq_self_iff_true, and_selfₓ]⟩
 
 instance is_iso_right [IsIso sq] :
     IsIso sq.right where out :=
     ⟨(inv sq).right, by
-      simp only [comma.comp_right, ← is_iso.hom_inv_id, ← is_iso.inv_hom_id, ← arrow.id_right, ← eq_self_iff_true, ←
-        and_selfₓ]⟩
+      simp only [← comma.comp_right, is_iso.hom_inv_id, is_iso.inv_hom_id, arrow.id_right, eq_self_iff_true, and_selfₓ]⟩
 
 @[simp]
 theorem inv_left [IsIso sq] : (inv sq).left = inv sq.left :=
@@ -146,11 +144,11 @@ theorem inv_right [IsIso sq] : (inv sq).right = inv sq.right :=
 
 @[simp]
 theorem left_hom_inv_right [IsIso sq] : sq.left ≫ g.Hom ≫ inv sq.right = f.Hom := by
-  simp only [category.assoc, ← is_iso.comp_inv_eq, ← w]
+  simp only [← category.assoc, is_iso.comp_inv_eq, w]
 
 -- simp proves this
 theorem inv_left_hom_right [IsIso sq] : inv sq.left ≫ f.Hom ≫ sq.right = g.Hom := by
-  simp only [← w, ← is_iso.inv_comp_eq]
+  simp only [w, is_iso.inv_comp_eq]
 
 instance mono_left [Mono sq] :
     Mono sq.left where right_cancellation := fun Z φ ψ h => by
@@ -161,8 +159,8 @@ instance mono_left [Mono sq] :
     ext
     · exact h
       
-    · simp only [← comma.comp_right, ← category.assoc, arrow.w]
-      simp only [category.assoc, ← h]
+    · simp only [comma.comp_right, category.assoc, ← arrow.w]
+      simp only [← category.assoc, h]
       
 
 instance epi_right [Epi sq] :
@@ -172,7 +170,7 @@ instance epi_right [Epi sq] :
     congr 1
     rw [← cancel_epi sq]
     ext
-    · simp only [← comma.comp_left, ← category.assoc, ← arrow.w_assoc, ← h]
+    · simp only [comma.comp_left, category.assoc, arrow.w_assoc, h]
       
     · exact h
       
@@ -184,13 +182,13 @@ in terms of the inverse of `p`. -/
 @[simp]
 theorem square_to_iso_invert (i : Arrow T) {X Y : T} (p : X ≅ Y) (sq : i ⟶ Arrow.mk p.Hom) :
     i.Hom ≫ sq.right ≫ p.inv = sq.left := by
-  simpa only [← category.assoc] using (iso.comp_inv_eq p).mpr (arrow.w_mk_right sq).symm
+  simpa only [category.assoc] using (iso.comp_inv_eq p).mpr (arrow.w_mk_right sq).symm
 
 /-- Given a square from an isomorphism `i` to an arrow `p`, express the target part of `sq`
 in terms of the inverse of `i`. -/
 theorem square_from_iso_invert {X Y : T} (i : X ≅ Y) (p : Arrow T) (sq : Arrow.mk i.Hom ⟶ p) :
     i.inv ≫ sq.left ≫ p.Hom = sq.right := by
-  simp only [← iso.inv_hom_id_assoc, ← arrow.w, ← arrow.mk_hom]
+  simp only [iso.inv_hom_id_assoc, arrow.w, arrow.mk_hom]
 
 variable {C : Type u} [Category.{v} C]
 
@@ -237,9 +235,9 @@ def mapArrow (F : C ⥤ D) : Arrow C ⥤ Arrow D where
     { left := F.map f.left, right := F.map f.right,
       w' := by
         have w := f.w
-        simp only [← id_map] at w
+        simp only [id_map] at w
         dsimp'
-        simp only [F.map_comp, ← w] }
+        simp only [← F.map_comp, w] }
 
 end Functor
 

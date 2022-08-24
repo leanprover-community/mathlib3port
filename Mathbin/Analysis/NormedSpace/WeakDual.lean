@@ -182,13 +182,13 @@ weak-star topology is `weak_dual.polar 𝕜 s`. -/
 def Polar (s : Set E) : Set (WeakDual 𝕜 E) :=
   to_normed_dual ⁻¹' Polar 𝕜 s
 
-theorem polar_def (s : Set E) : Polar 𝕜 s = { f : WeakDual 𝕜 E | ∀, ∀ x ∈ s, ∀, ∥f x∥ ≤ 1 } :=
+theorem polar_def (s : Set E) : Polar 𝕜 s = { f : WeakDual 𝕜 E | ∀ x ∈ s, ∥f x∥ ≤ 1 } :=
   rfl
 
 /-- The polar `polar 𝕜 s` of a set `s : E` is a closed subset when the weak star topology
 is used. -/
 theorem is_closed_polar (s : Set E) : IsClosed (Polar 𝕜 s) := by
-  simp only [← polar_def, ← set_of_forall]
+  simp only [polar_def, set_of_forall]
   exact is_closed_bInter fun x hx => is_closed_Iic.preimage (WeakBilin.eval_continuous _ _).norm
 
 variable {𝕜}

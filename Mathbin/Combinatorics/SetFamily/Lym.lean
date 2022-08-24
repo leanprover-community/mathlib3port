@@ -100,10 +100,10 @@ theorem card_div_choose_le_card_shadow_div_choose (hr : r ≠ 0) (h𝒜 : (𝒜 
     rw [tsub_add_eq_add_tsub hr', add_tsub_add_eq_tsub_right] at h𝒜
     apply le_of_mul_le_mul_right _ (pos_iff_ne_zero.2 hr)
     convert Nat.mul_le_mul_rightₓ ((Fintype.card α).choose r) h𝒜 using 1
-    · simp [← mul_assoc, ← Nat.choose_succ_right_eq]
+    · simp [mul_assoc, Nat.choose_succ_right_eq]
       exact Or.inl (mul_comm _ _)
       
-    · simp only [← mul_assoc, ← choose_succ_right_eq, ← mul_eq_mul_left_iff]
+    · simp only [mul_assoc, choose_succ_right_eq, mul_eq_mul_left_iff]
       exact Or.inl (mul_comm _ _)
       
     
@@ -182,7 +182,7 @@ theorem le_card_falling_div_choose [Fintype α] (hk : k ≤ Fintype.card α)
       (falling (Fintype.card α - k) 𝒜).card / (Fintype.card α).choose (Fintype.card α - k) :=
   by
   induction' k with k ih
-  · simp only [← tsub_zero, ← cast_one, ← cast_le, ← sum_singleton, ← div_one, ← choose_self, ← range_one]
+  · simp only [tsub_zero, cast_one, cast_le, sum_singleton, div_one, choose_self, range_one]
     exact card_le_of_subset (slice_subset_falling _ _)
     
   rw [succ_eq_add_one] at *
@@ -205,9 +205,9 @@ theorem sum_card_slice_div_choose_le_one [Fintype α] (h𝒜 : IsAntichain (· �
     (∑ r in range (Fintype.card α + 1), ((𝒜 # r).card : 𝕜) / (Fintype.card α).choose r) ≤ 1 := by
   classical
   rw [← sum_flip]
-  refine' (le_card_falling_div_choose le_rfl h𝒜).trans _
+  refine' (le_card_falling_div_choose le_rflₓ h𝒜).trans _
   rw [div_le_iff] <;> norm_cast
-  · simpa only [← Nat.sub_self, ← one_mulₓ, ← Nat.choose_zero_right, ← falling] using (sized_falling 0 𝒜).card_le
+  · simpa only [Nat.sub_self, one_mulₓ, Nat.choose_zero_right, falling] using (sized_falling 0 𝒜).card_le
     
   · rw [tsub_self, choose_zero_right]
     exact zero_lt_one

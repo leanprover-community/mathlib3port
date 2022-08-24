@@ -264,23 +264,23 @@ variable [PartialOrderₓ α]
 
 -- see Note [lower instance priority]
 instance (priority := 100) PosMulStrictMono.to_pos_mul_mono [PosMulStrictMono α] : PosMulMono α :=
-  ⟨fun x a b h => h.eq_or_lt.elim (fun h' => h' ▸ le_rfl) fun h' => (mul_lt_mul_left h' x.Prop).le⟩
+  ⟨fun x a b h => h.eq_or_lt.elim (fun h' => h' ▸ le_rflₓ) fun h' => (mul_lt_mul_left h' x.Prop).le⟩
 
 -- see Note [lower instance priority]
 instance (priority := 100) MulPosStrictMono.to_mul_pos_mono [MulPosStrictMono α] : MulPosMono α :=
-  ⟨fun x a b h => h.eq_or_lt.elim (fun h' => h' ▸ le_rfl) fun h' => (mul_lt_mul_right h' x.Prop).le⟩
+  ⟨fun x a b h => h.eq_or_lt.elim (fun h' => h' ▸ le_rflₓ) fun h' => (mul_lt_mul_right h' x.Prop).le⟩
 
 -- see Note [lower instance priority]
 instance (priority := 100) PosMulMonoRev.to_pos_mul_reflect_lt [PosMulMonoRev α] : PosMulReflectLt α :=
   ⟨fun x a b h =>
     lt_of_le_of_neₓ (le_of_mul_le_mul_left' h.le x.Prop) fun h' => by
-      simpa [← h'] using h⟩
+      simpa [h'] using h⟩
 
 -- see Note [lower instance priority]
 instance (priority := 100) MulPosMonoRev.to_mul_pos_reflect_lt [MulPosMonoRev α] : MulPosReflectLt α :=
   ⟨fun x a b h =>
     lt_of_le_of_neₓ (le_of_mul_le_mul_right' h.le x.Prop) fun h' => by
-      simpa [← h'] using h⟩
+      simpa [h'] using h⟩
 
 end PartialOrderₓ
 
@@ -364,11 +364,11 @@ variable [PartialOrderₓ α]
 
 theorem mul_le_mul_left [PosMulMono α] (bc : b ≤ c) (a0 : 0 ≤ a) : a * b ≤ a * c :=
   a0.lt_or_eq.elim (mul_le_mul_left' bc) fun h => by
-    simp only [h, ← zero_mul]
+    simp only [← h, zero_mul]
 
 theorem mul_le_mul_right [MulPosMono α] (bc : b ≤ c) (a0 : 0 ≤ a) : b * a ≤ c * a :=
   a0.lt_or_eq.elim (mul_le_mul_right' bc) fun h => by
-    simp only [h, ← mul_zero]
+    simp only [← h, mul_zero]
 
 /-- Assumes left covariance. -/
 theorem Left.mul_nonneg [PosMulMono α] (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a * b := by
@@ -393,7 +393,7 @@ theorem lt_of_mul_lt_mul_left [PosMulReflectLt α] (bc : a * b < a * c) (a0 : 0 
   · exact
       (lt_irreflₓ (0 : α)
           (by
-            simpa only [← a₀, ← zero_mul] using bc)).elim
+            simpa only [a₀, zero_mul] using bc)).elim
     
   · exact lt_of_mul_lt_mul_left' bc ((Ne.symm a₀).le_iff_lt.mp a0)
     
@@ -406,7 +406,7 @@ theorem lt_of_mul_lt_mul_right [MulPosReflectLt α] (bc : b * a < c * a) (a0 : 0
   · exact
       (lt_irreflₓ (0 : α)
           (by
-            simpa only [← a₀, ← mul_zero] using bc)).elim
+            simpa only [a₀, mul_zero] using bc)).elim
     
   · exact lt_of_mul_lt_mul_right' bc ((Ne.symm a₀).le_iff_lt.mp a0)
     
@@ -449,7 +449,7 @@ theorem mul_eq_mul_iff_eq_and_eq [PosMulStrictMono α] [MulPosStrictMono α] [Po
   rcases hac.eq_or_lt with (rfl | hac)
   · exact ⟨rfl, (mul_left_cancel_iffₓ a0).mp h⟩
     
-  rcases eq_or_lt_of_le hbd with (rfl | hbd)
+  rcases eq_or_lt_of_leₓ hbd with (rfl | hbd)
   · exact ⟨(mul_right_cancel_iffₓ d0).mp h, rfl⟩
     
   exact ((mul_lt_mul_of_lt_of_lt hac hbd a0 d0).Ne h).elim
@@ -460,7 +460,7 @@ theorem mul_eq_mul_iff_eq_and_eq' [PosMulStrictMono α] [MulPosStrictMono α] [P
   rcases hac.eq_or_lt with (rfl | hac)
   · exact ⟨rfl, (mul_left_cancel_iffₓ b0).mp h⟩
     
-  rcases eq_or_lt_of_le hbd with (rfl | hbd)
+  rcases eq_or_lt_of_leₓ hbd with (rfl | hbd)
   · exact ⟨(mul_right_cancel_iffₓ c0).mp h, rfl⟩
     
   exact ((mul_lt_mul_of_lt_of_lt' hac hbd b0 c0).Ne h).elim
@@ -474,13 +474,13 @@ variable [LinearOrderₓ α]
 theorem pos_and_pos_or_neg_and_neg_of_mul_pos [PosMulMono α] [MulPosMono α] (hab : 0 < a * b) :
     0 < a ∧ 0 < b ∨ a < 0 ∧ b < 0 := by
   rcases lt_trichotomyₓ 0 a with (ha | rfl | ha)
-  · refine' Or.inl ⟨ha, lt_imp_lt_of_le_imp_le (fun hb => _) hab⟩
+  · refine' Or.inl ⟨ha, lt_imp_lt_of_le_imp_leₓ (fun hb => _) hab⟩
     exact mul_nonpos_of_nonneg_of_nonpos ha.le hb
     
   · rw [zero_mul] at hab
     exact hab.false.elim
     
-  · refine' Or.inr ⟨ha, lt_imp_lt_of_le_imp_le (fun hb => _) hab⟩
+  · refine' Or.inr ⟨ha, lt_imp_lt_of_le_imp_leₓ (fun hb => _) hab⟩
     exact mul_nonpos_of_nonpos_of_nonneg ha.le hb
     
 
@@ -919,31 +919,31 @@ theorem lt_mul_of_one_lt_of_lt' [PosMulStrictMono α] [MulPosStrictMono α] (ha 
 
 -- proven with `a0 : 0 ≤ a` as `mul_le_of_le_one_right`
 theorem Preorder.mul_le_of_le_one_right [PosMulMono α] (h : b ≤ 1) (a0 : 0 < a) : a * b ≤ a :=
-  Preorder.mul_le_of_le_of_le_one le_rfl h a0
+  Preorder.mul_le_of_le_of_le_one le_rflₓ h a0
 
 -- proven with `a0 : 0 ≤ a` as `le_mul_of_one_le_right`
 theorem Preorder.le_mul_of_one_le_right [PosMulMono α] (h : 1 ≤ b) (a0 : 0 < a) : a ≤ a * b :=
-  Preorder.le_mul_of_le_of_one_le le_rfl h a0
+  Preorder.le_mul_of_le_of_one_le le_rflₓ h a0
 
 -- proven with `b0 : 0 ≤ b` as `mul_le_of_le_one_left`
 theorem Preorder.mul_le_of_le_one_left [MulPosMono α] (h : a ≤ 1) (b0 : 0 < b) : a * b ≤ b :=
-  Preorder.mul_le_of_le_one_of_le h le_rfl b0
+  Preorder.mul_le_of_le_one_of_le h le_rflₓ b0
 
 -- proven with `b0 : 0 ≤ b` as `le_mul_of_one_le_left`
 theorem Preorder.le_mul_of_one_le_left [MulPosMono α] (h : 1 ≤ a) (b0 : 0 < b) : b ≤ a * b :=
-  Preorder.le_mul_of_one_le_of_le h le_rfl b0
+  Preorder.le_mul_of_one_le_of_le h le_rflₓ b0
 
 theorem mul_lt_of_lt_one_right [PosMulStrictMono α] (h : b < 1) (a0 : 0 < a) : a * b < a :=
-  mul_lt_of_le_of_lt_one le_rfl h a0
+  mul_lt_of_le_of_lt_one le_rflₓ h a0
 
 theorem lt_mul_of_one_lt_right [PosMulStrictMono α] (h : 1 < b) (a0 : 0 < a) : a < a * b :=
-  lt_mul_of_le_of_one_lt le_rfl h a0
+  lt_mul_of_le_of_one_lt le_rflₓ h a0
 
 theorem mul_lt_of_lt_one_left [MulPosStrictMono α] (h : a < 1) (b0 : 0 < b) : a * b < b :=
-  mul_lt_of_lt_one_of_le h le_rfl b0
+  mul_lt_of_lt_one_of_le h le_rflₓ b0
 
 theorem lt_mul_of_one_lt_left [MulPosStrictMono α] (h : 1 < a) (b0 : 0 < b) : b < a * b :=
-  lt_mul_of_one_lt_of_le h le_rfl b0
+  lt_mul_of_one_lt_of_le h le_rflₓ b0
 
 -- proven with `a0 : 0 ≤ a` as `le_of_mul_le_of_one_le_left`
 theorem Preorder.le_of_mul_le_of_one_le_left [PosMulMono α] (h : a * b ≤ c) (hle : 1 ≤ b) (a0 : 0 < a) : a ≤ c :=
@@ -1145,32 +1145,32 @@ theorem lt_mul_of_one_le_of_lt' [PosMulStrictMono α] [MulPosMono α] (ha : 1 �
     
 
 theorem mul_le_of_le_one_right [PosMulMono α] (h : b ≤ 1) (a0 : 0 ≤ a) : a * b ≤ a :=
-  mul_le_of_le_of_le_one le_rfl h a0
+  mul_le_of_le_of_le_one le_rflₓ h a0
 
 theorem le_mul_of_one_le_right [PosMulMono α] (h : 1 ≤ b) (a0 : 0 ≤ a) : a ≤ a * b :=
-  le_mul_of_le_of_one_le le_rfl h a0
+  le_mul_of_le_of_one_le le_rflₓ h a0
 
 theorem mul_le_of_le_one_left [MulPosMono α] (h : a ≤ 1) (b0 : 0 ≤ b) : a * b ≤ b :=
-  mul_le_of_le_one_of_le h le_rfl b0
+  mul_le_of_le_one_of_le h le_rflₓ b0
 
 theorem le_mul_of_one_le_left [MulPosMono α] (h : 1 ≤ a) (b0 : 0 ≤ b) : b ≤ a * b :=
-  le_mul_of_one_le_of_le h le_rfl b0
+  le_mul_of_one_le_of_le h le_rflₓ b0
 
 theorem le_of_mul_le_of_one_le_left [PosMulMono α] (h : a * b ≤ c) (hle : 1 ≤ b) (a0 : 0 ≤ a) : a ≤ c :=
   a0.lt_or_eq.elim (Preorder.le_of_mul_le_of_one_le_left h hle) fun ha => by
-    simpa only [ha, ← zero_mul] using h
+    simpa only [← ha, zero_mul] using h
 
 theorem le_of_le_mul_of_le_one_left [PosMulMono α] (h : a ≤ b * c) (hle : c ≤ 1) (b0 : 0 ≤ b) : a ≤ b :=
   b0.lt_or_eq.elim (Preorder.le_of_le_mul_of_le_one_left h hle) fun hb => by
-    simpa only [hb, ← zero_mul] using h
+    simpa only [← hb, zero_mul] using h
 
 theorem le_of_mul_le_of_one_le_right [MulPosMono α] (h : a * b ≤ c) (hle : 1 ≤ a) (b0 : 0 ≤ b) : b ≤ c :=
   b0.lt_or_eq.elim (Preorder.le_of_mul_le_of_one_le_right h hle) fun ha => by
-    simpa only [ha, ← mul_zero] using h
+    simpa only [← ha, mul_zero] using h
 
 theorem le_of_le_mul_of_le_one_right [MulPosMono α] (h : a ≤ b * c) (hle : b ≤ 1) (c0 : 0 ≤ c) : a ≤ c :=
   c0.lt_or_eq.elim (Preorder.le_of_le_mul_of_le_one_right h hle) fun ha => by
-    simpa only [ha, ← mul_zero] using h
+    simpa only [← ha, mul_zero] using h
 
 end PartialOrderₓ
 
@@ -1233,23 +1233,23 @@ variable [CommSemigroupₓ α] [Zero α]
 
 variable [LT α]
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
 theorem pos_mul_strict_mono_iff_mul_pos_strict_mono : PosMulStrictMono α ↔ MulPosStrictMono α := by
-  simp only [← mul_comm]
+  simp only [mul_comm]
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
 theorem pos_mul_reflect_lt_iff_mul_pos_reflect_lt : PosMulReflectLt α ↔ MulPosReflectLt α := by
-  simp only [← mul_comm]
+  simp only [mul_comm]
 
 variable [LE α]
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
 theorem pos_mul_mono_iff_mul_pos_mono : PosMulMono α ↔ MulPosMono α := by
-  simp only [← mul_comm]
+  simp only [mul_comm]
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
 theorem pos_mul_mono_rev_iff_mul_pos_mono_rev : PosMulMonoRev α ↔ MulPosMonoRev α := by
-  simp only [← mul_comm]
+  simp only [mul_comm]
 
 end CommSemigroupHasZero
 

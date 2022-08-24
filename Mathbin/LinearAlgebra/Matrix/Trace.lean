@@ -140,7 +140,7 @@ theorem trace_mul_cycle' [NonUnitalCommSemiring R] (A : Matrix m n R) (B : Matri
 
 @[simp]
 theorem trace_col_mul_row [NonUnitalNonAssocSemiringₓ R] (a b : n → R) : trace (colₓ a ⬝ rowₓ b) = dotProduct a b := by
-  simp [← dot_product, ← trace]
+  simp [dot_product, trace]
 
 end Mul
 

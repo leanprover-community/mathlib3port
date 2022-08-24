@@ -54,7 +54,7 @@ def equivBoundedOfCompact : C(α, β) ≃ (α →ᵇ β) :=
 theorem uniform_inducing_equiv_bounded_of_compact : UniformInducing (equivBoundedOfCompact α β) :=
   UniformInducing.mk'
     (by
-      simp only [← has_basis_compact_convergence_uniformity.mem_iff, ← uniformity_basis_dist_le.mem_iff]
+      simp only [has_basis_compact_convergence_uniformity.mem_iff, uniformity_basis_dist_le.mem_iff]
       exact fun s =>
         ⟨fun ⟨⟨a, b⟩, ⟨ha, ⟨ε, hε, hb⟩⟩, hs⟩ =>
           ⟨{ p | ∀ x, (p.1 x, p.2 x) ∈ b }, ⟨ε, hε, fun _ h x => hb ((dist_le hε.le).mp h x)⟩, fun f g h =>
@@ -104,23 +104,23 @@ variable {α β} {f g : C(α, β)} {C : ℝ}
 
 /-- The pointwise distance is controlled by the distance between functions, by definition. -/
 theorem dist_apply_le_dist (x : α) : dist (f x) (g x) ≤ dist f g := by
-  simp only [dist_mk_of_compact, ← dist_coe_le_dist, mk_of_compact_apply]
+  simp only [← dist_mk_of_compact, dist_coe_le_dist, ← mk_of_compact_apply]
 
 /-- The distance between two functions is controlled by the supremum of the pointwise distances -/
 theorem dist_le (C0 : (0 : ℝ) ≤ C) : dist f g ≤ C ↔ ∀ x : α, dist (f x) (g x) ≤ C := by
-  simp only [dist_mk_of_compact, ← dist_le C0, ← mk_of_compact_apply]
+  simp only [← dist_mk_of_compact, dist_le C0, mk_of_compact_apply]
 
 theorem dist_le_iff_of_nonempty [Nonempty α] : dist f g ≤ C ↔ ∀ x, dist (f x) (g x) ≤ C := by
-  simp only [dist_mk_of_compact, ← dist_le_iff_of_nonempty, ← mk_of_compact_apply]
+  simp only [← dist_mk_of_compact, dist_le_iff_of_nonempty, mk_of_compact_apply]
 
 theorem dist_lt_iff_of_nonempty [Nonempty α] : dist f g < C ↔ ∀ x : α, dist (f x) (g x) < C := by
-  simp only [dist_mk_of_compact, ← dist_lt_iff_of_nonempty_compact, ← mk_of_compact_apply]
+  simp only [← dist_mk_of_compact, dist_lt_iff_of_nonempty_compact, mk_of_compact_apply]
 
 theorem dist_lt_of_nonempty [Nonempty α] (w : ∀ x : α, dist (f x) (g x) < C) : dist f g < C :=
   dist_lt_iff_of_nonempty.2 w
 
 theorem dist_lt_iff (C0 : (0 : ℝ) < C) : dist f g < C ↔ ∀ x : α, dist (f x) (g x) < C := by
-  simp only [dist_mk_of_compact, ← dist_lt_iff_of_compact C0, ← mk_of_compact_apply]
+  simp only [← dist_mk_of_compact, dist_lt_iff_of_compact C0, mk_of_compact_apply]
 
 end
 
@@ -432,7 +432,7 @@ theorem summable_of_locally_summable_norm {ι : Type _} {F : ι → C(X, E)}
     intro s
     ext1 x
     simp
-  simpa only [← HasSum, ← A] using summable_of_summable_norm (hF K)
+  simpa only [HasSum, A] using summable_of_summable_norm (hF K)
 
 end Weierstrass
 
@@ -474,8 +474,7 @@ instance [CompactSpace α] [CstarRing β] :
     refine' le_antisymmₓ _ _
     · rw [← sq, ContinuousMap.norm_le _ (sq_nonneg _)]
       intro x
-      simp only [← ContinuousMap.coe_mul, ← coe_star, ← Pi.mul_apply, ← Pi.star_apply, ← CstarRing.norm_star_mul_self,
-        sq]
+      simp only [ContinuousMap.coe_mul, coe_star, Pi.mul_apply, Pi.star_apply, CstarRing.norm_star_mul_self, ← sq]
       refine' sq_le_sq' _ _
       · linarith [norm_nonneg (f x), norm_nonneg f]
         

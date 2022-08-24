@@ -52,32 +52,32 @@ def toMatrixₓ [DecidableEq n] [Zero α] [One α] (f : m ≃. n) : Matrix m n �
 
 theorem mul_matrix_apply [Fintype m] [DecidableEq m] [Semiringₓ α] (f : l ≃. m) (M : Matrix m n α) (i j) :
     (f.toMatrix ⬝ M) i j = Option.casesOn (f i) 0 fun fi => M fi j := by
-  dsimp' [← to_matrix, ← Matrix.mul_apply]
+  dsimp' [to_matrix, Matrix.mul_apply]
   cases' h : f i with fi
-  · simp [← h]
+  · simp [h]
     
-  · rw [Finset.sum_eq_single fi] <;> simp (config := { contextual := true })[← h, ← eq_comm]
+  · rw [Finset.sum_eq_single fi] <;> simp (config := { contextual := true })[h, eq_comm]
     
 
 theorem to_matrix_symm [DecidableEq m] [DecidableEq n] [Zero α] [One α] (f : m ≃. n) :
     (f.symm.toMatrix : Matrix n m α) = f.toMatrixᵀ := by
-  ext <;> simp only [← transpose, ← mem_iff_mem f, ← to_matrix] <;> congr
+  ext <;> simp only [transpose, mem_iff_mem f, to_matrix] <;> congr
 
 @[simp]
 theorem to_matrix_refl [DecidableEq n] [Zero α] [One α] : ((Pequiv.refl n).toMatrix : Matrix n n α) = 1 := by
-  ext <;> simp [← to_matrix, ← one_apply] <;> congr
+  ext <;> simp [to_matrix, one_apply] <;> congr
 
 theorem matrix_mul_apply [Fintype m] [Semiringₓ α] [DecidableEq n] (M : Matrix l m α) (f : m ≃. n) (i j) :
     (M ⬝ f.toMatrix) i j = Option.casesOn (f.symm j) 0 fun fj => M i fj := by
-  dsimp' [← to_matrix, ← Matrix.mul_apply]
+  dsimp' [to_matrix, Matrix.mul_apply]
   cases' h : f.symm j with fj
-  · simp [← h, f.eq_some_iff]
+  · simp [h, ← f.eq_some_iff]
     
   · rw [Finset.sum_eq_single fj]
-    · simp [← h, f.eq_some_iff]
+    · simp [h, ← f.eq_some_iff]
       
     · intro b H n
-      simp [← h, f.eq_some_iff, ← n.symm]
+      simp [h, ← f.eq_some_iff, n.symm]
       
     · simp
       
@@ -92,7 +92,7 @@ theorem to_matrix_trans [Fintype m] [DecidableEq m] [DecidableEq n] [Semiringₓ
     ((f.trans g).toMatrix : Matrix l n α) = f.toMatrix ⬝ g.toMatrix := by
   ext i j
   rw [mul_matrix_apply]
-  dsimp' [← to_matrix, ← Pequiv.trans]
+  dsimp' [to_matrix, Pequiv.trans]
   cases f i <;> simp
 
 @[simp]
@@ -104,7 +104,7 @@ theorem to_matrix_injective [DecidableEq n] [MonoidWithZeroₓ α] [Nontrivial �
   classical
   intro f g
   refine' not_imp_not.1 _
-  simp only [← matrix.ext_iff.symm, ← to_matrix, ← Pequiv.ext_iff, ← not_forall, ← exists_imp_distrib]
+  simp only [matrix.ext_iff.symm, to_matrix, Pequiv.ext_iff, not_forall, exists_imp_distrib]
   intro i hi
   use i
   cases' hf : f i with fi
@@ -116,7 +116,7 @@ theorem to_matrix_injective [DecidableEq n] [MonoidWithZeroₓ α] [Nontrivial �
       
     
   · use fi
-    simp [← hf.symm, ← Ne.symm hi]
+    simp [hf.symm, Ne.symm hi]
     
 
 theorem to_matrix_swap [DecidableEq n] [Ringₓ α] (i j : n) :
@@ -125,7 +125,7 @@ theorem to_matrix_swap [DecidableEq n] [Ringₓ α] (i j : n) :
         (single j i).toMatrix :=
   by
   ext
-  dsimp' [← to_matrix, ← single, ← Equivₓ.swap_apply_def, ← Equivₓ.toPequiv, ← one_apply]
+  dsimp' [to_matrix, single, Equivₓ.swap_apply_def, Equivₓ.toPequiv, one_apply]
   split_ifs <;>
     first |
       · simp_all

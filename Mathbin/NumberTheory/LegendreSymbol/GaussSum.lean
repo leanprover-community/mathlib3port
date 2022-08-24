@@ -72,7 +72,7 @@ def gaussSum (χ : MulChar R R') (ψ : AddChar R R') : R' :=
 /-- Replacing `ψ` by `mul_shift ψ a` and multiplying the Gauss sum by `χ a` does not change it. -/
 theorem gauss_sum_mul_shift (χ : MulChar R R') (ψ : AddChar R R') (a : Rˣ) :
     χ a * gaussSum χ (mulShift ψ a) = gaussSum χ ψ := by
-  simp only [← gaussSum, ← mul_shift_apply, ← Finset.mul_sum]
+  simp only [gaussSum, mul_shift_apply, Finset.mul_sum]
   simp_rw [← mul_assoc, ← map_mul]
   exact Fintype.sum_bijective _ a.mul_left_bijective _ _ fun x => rfl
 
@@ -94,8 +94,7 @@ private theorem gauss_sum_mul_aux {χ : MulChar R R'} (hχ : IsNontrivial χ) (�
     (∑ a, χ (a * b⁻¹) * ψ (a - b)) = ∑ c, χ c * ψ (b * (c - 1)) := by
   cases' eq_or_ne b 0 with hb hb
   · -- case `b = 0`
-    simp only [← hb, ← inv_zero, ← mul_zero, ← MulChar.map_zero, ← zero_mul, ← Finset.sum_const_zero, ← map_zero_one, ←
-      mul_oneₓ]
+    simp only [hb, inv_zero, mul_zero, MulChar.map_zero, zero_mul, Finset.sum_const_zero, map_zero_one, mul_oneₓ]
     exact hχ.sum_eq_zero.symm
     
   · -- case `b ≠ 0`
@@ -107,7 +106,7 @@ private theorem gauss_sum_mul_aux {χ : MulChar R R'} (hχ : IsNontrivial χ) (�
 when `χ` is nontrivial and `ψ` is primitive (and `R` is a field). -/
 theorem gauss_sum_mul_gauss_sum_eq_card {χ : MulChar R R'} (hχ : IsNontrivial χ) {ψ : AddChar R R'}
     (hψ : IsPrimitive ψ) : gaussSum χ ψ * gaussSum χ⁻¹ ψ⁻¹ = Fintype.card R := by
-  simp only [← gaussSum, ← AddChar.inv_apply, ← Finset.sum_mul, ← Finset.mul_sum, ← MulChar.inv_apply']
+  simp only [gaussSum, AddChar.inv_apply, Finset.sum_mul, Finset.mul_sum, MulChar.inv_apply']
   conv in _ * _ * (_ * _) => rw [mul_mul_mul_commₓ, ← map_mul, ← map_add_mul, ← sub_eq_add_neg]
   simp_rw [gauss_sum_mul_aux hχ ψ]
   rw [Finset.sum_comm]
@@ -115,7 +114,7 @@ theorem gauss_sum_mul_gauss_sum_eq_card {χ : MulChar R R'} (hχ : IsNontrivial 
   -- to get `[decidable_eq R]` for `sum_mul_shift`
   simp_rw [← Finset.mul_sum, sum_mul_shift _ hψ, sub_eq_zero, mul_ite, mul_zero]
   rw [Finset.sum_ite_eq' Finset.univ (1 : R)]
-  simp only [← Finset.mem_univ, ← map_one, ← one_mulₓ, ← if_true]
+  simp only [Finset.mem_univ, map_one, one_mulₓ, if_true]
 
 /-- When `χ` is a nontrivial quadratic character, then the square of `gauss_sum χ ψ`
 is `χ(-1)` times the cardinality of `R`. -/
@@ -218,7 +217,7 @@ theorem Charₓ.card_pow_card {F : Type} [Field F] [Fintype F] {F' : Type} [Fiel
   have hchar := Algebra.ring_char_eq F' FF'
   apply (algebraMap F' FF').Injective
   rw [map_pow, map_mul, map_nat_cast, hc', hchar, Nat.cast_powₓ]
-  simp only [MulChar.ring_hom_comp_apply]
+  simp only [← MulChar.ring_hom_comp_apply]
   haveI := Fact.mk hp'
   haveI := Fact.mk (hchar.subst hp')
   rw [Ne, ← Nat.prime_dvd_prime_iff_eq hp' hp, ← is_unit_iff_not_dvd_char, hchar] at hch₁
@@ -274,7 +273,7 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
   let τ : FF := ψ₈.char 1
   have τ_spec : τ ^ 4 = -1 := by
     refine' (sq_eq_one_iff.1 _).resolve_left _ <;>
-      · simp only [← τ, map_nsmul_pow]
+      · simp only [τ, ← map_nsmul_pow]
         erw [AddChar.IsPrimitive.zmod_char_eq_one_iff 8 ψ₈.prim]
         decide
         
@@ -291,9 +290,9 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
       apply pow_oneₓ
       
     convert_to (0 + 1 * τ ^ 1 + 0 + -1 * τ ^ 3 + 0 + -1 * τ ^ 5 + 0 + 1 * τ ^ 7) ^ 2 = _
-    · simp only [← χ₈_apply, ← Matrix.cons_val_zero, ← Matrix.cons_val_one, ← Matrix.head_cons, ←
-        Matrix.cons_vec_bit0_eq_alt0, ← Matrix.cons_vec_bit1_eq_alt1, ← Matrix.cons_append, ← Matrix.cons_vec_alt0, ←
-        Matrix.cons_vec_alt1, ← Int.cast_zeroₓ, ← Int.cast_oneₓ, ← Int.cast_neg, ← zero_mul]
+    · simp only [χ₈_apply, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons, Matrix.cons_vec_bit0_eq_alt0,
+        Matrix.cons_vec_bit1_eq_alt1, Matrix.cons_append, Matrix.cons_vec_alt0, Matrix.cons_vec_alt1, Int.cast_zeroₓ,
+        Int.cast_oneₓ, Int.cast_neg, zero_mul]
       rfl
       
     convert_to 8 + (τ ^ 4 + 1) * (τ ^ 10 - 2 * τ ^ 8 - 2 * τ ^ 6 + 6 * τ ^ 4 + τ ^ 2 - 8) = _
@@ -313,7 +312,7 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
       mul_powₓ, (FiniteField.is_square_iff hF <| hp2 2).mp ⟨2, pow_two 2⟩, one_mulₓ]
     
   apply (algebraMap F FF).Injective
-  simp only [← map_pow, ← map_bit0, ← map_one, ← RingHom.map_int_cast]
+  simp only [map_pow, map_bit0, map_one, map_int_cast]
   convert h
   norm_num
 

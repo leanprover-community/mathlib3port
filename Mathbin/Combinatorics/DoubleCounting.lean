@@ -72,20 +72,20 @@ theorem sum_card_bipartite_above_eq_sum_card_bipartite_below [∀ a b, Decidable
 
 /-- Double counting argument. Considering `r` as a bipartite graph, the LHS is a lower bound on the
 number of edges while the RHS is an upper bound. -/
-theorem card_mul_le_card_mul [∀ a b, Decidable (r a b)] (hm : ∀, ∀ a ∈ s, ∀, m ≤ (t.bipartiteAbove r a).card)
-    (hn : ∀, ∀ b ∈ t, ∀, (s.bipartiteBelow r b).card ≤ n) : s.card * m ≤ t.card * n :=
+theorem card_mul_le_card_mul [∀ a b, Decidable (r a b)] (hm : ∀ a ∈ s, m ≤ (t.bipartiteAbove r a).card)
+    (hn : ∀ b ∈ t, (s.bipartiteBelow r b).card ≤ n) : s.card * m ≤ t.card * n :=
   calc
     _ ≤ ∑ a in s, (t.bipartiteAbove r a).card := s.card_nsmul_le_sum _ _ hm
     _ = ∑ b in t, (s.bipartiteBelow r b).card := sum_card_bipartite_above_eq_sum_card_bipartite_below _
     _ ≤ _ := t.sum_le_card_nsmul _ _ hn
     
 
-theorem card_mul_le_card_mul' [∀ a b, Decidable (r a b)] (hn : ∀, ∀ b ∈ t, ∀, n ≤ (s.bipartiteBelow r b).card)
-    (hm : ∀, ∀ a ∈ s, ∀, (t.bipartiteAbove r a).card ≤ m) : t.card * n ≤ s.card * m :=
+theorem card_mul_le_card_mul' [∀ a b, Decidable (r a b)] (hn : ∀ b ∈ t, n ≤ (s.bipartiteBelow r b).card)
+    (hm : ∀ a ∈ s, (t.bipartiteAbove r a).card ≤ m) : t.card * n ≤ s.card * m :=
   card_mul_le_card_mul (swap r) hn hm
 
-theorem card_mul_eq_card_mul [∀ a b, Decidable (r a b)] (hm : ∀, ∀ a ∈ s, ∀, (t.bipartiteAbove r a).card = m)
-    (hn : ∀, ∀ b ∈ t, ∀, (s.bipartiteBelow r b).card = n) : s.card * m = t.card * n :=
+theorem card_mul_eq_card_mul [∀ a b, Decidable (r a b)] (hm : ∀ a ∈ s, (t.bipartiteAbove r a).card = m)
+    (hn : ∀ b ∈ t, (s.bipartiteBelow r b).card = n) : s.card * m = t.card * n :=
   ((card_mul_le_card_mul _ fun a ha => (hm a ha).Ge) fun b hb => (hn b hb).le).antisymm <|
     (card_mul_le_card_mul' _ fun a ha => (hn a ha).Ge) fun b hb => (hm b hb).le
 

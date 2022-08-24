@@ -71,7 +71,7 @@ attribute [simp] map_spectral
 -- See note [lower instance priority]
 instance (priority := 100) SpectralMapClass.toContinuousMapClass [TopologicalSpace α] [TopologicalSpace β]
     [SpectralMapClass F α β] : ContinuousMapClass F α β :=
-  ⟨fun f => (map_spectral f).Continuous⟩
+  { ‹SpectralMapClass F α β› with map_continuous := fun f => (map_spectral f).Continuous }
 
 instance [TopologicalSpace α] [TopologicalSpace β] [SpectralMapClass F α β] : CoeTₓ F (SpectralMap α β) :=
   ⟨fun f => ⟨_, map_spectral f⟩⟩

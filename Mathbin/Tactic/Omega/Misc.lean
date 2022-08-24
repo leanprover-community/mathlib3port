@@ -32,7 +32,7 @@ def update (m : Nat) (a : α) (v : Nat → α) : Nat → α
 localized [Omega] notation v " ⟨" m " ↦ " a "⟩" => Omega.update m a v
 
 theorem update_eq (m : Nat) (a : α) (v : Nat → α) : (v ⟨m ↦ a⟩) m = a := by
-  simp only [← update, ← if_pos rfl]
+  simp only [update, if_pos rfl]
 
 theorem update_eq_of_ne {m : Nat} {a : α} {v : Nat → α} (k : Nat) : k ≠ m → update m a v k = v k := by
   intro h1

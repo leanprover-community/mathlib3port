@@ -173,30 +173,30 @@ theorem nadd_def (a b : Ordinal) :
 
 theorem lt_nadd_iff : a < b ♯ c ↔ (∃ b' < b, a ≤ b' ♯ c) ∨ ∃ c' < c, a ≤ b ♯ c' := by
   rw [nadd_def]
-  simp [← lt_blsub_iff]
+  simp [lt_blsub_iff]
 
-theorem nadd_le_iff : b ♯ c ≤ a ↔ (∀, ∀ b' < b, ∀, b' ♯ c < a) ∧ ∀, ∀ c' < c, ∀, b ♯ c' < a := by
+theorem nadd_le_iff : b ♯ c ≤ a ↔ (∀ b' < b, b' ♯ c < a) ∧ ∀ c' < c, b ♯ c' < a := by
   rw [nadd_def]
-  simp [← blsub_le_iff]
+  simp [blsub_le_iff]
 
 theorem nadd_lt_nadd_left (h : b < c) (a) : a ♯ b < a ♯ c :=
-  lt_nadd_iff.2 (Or.inr ⟨b, h, le_rfl⟩)
+  lt_nadd_iff.2 (Or.inr ⟨b, h, le_rflₓ⟩)
 
 theorem nadd_lt_nadd_right (h : b < c) (a) : b ♯ a < c ♯ a :=
-  lt_nadd_iff.2 (Or.inl ⟨b, h, le_rfl⟩)
+  lt_nadd_iff.2 (Or.inl ⟨b, h, le_rflₓ⟩)
 
 theorem nadd_le_nadd_left (h : b ≤ c) (a) : a ♯ b ≤ a ♯ c := by
   rcases lt_or_eq_of_leₓ h with (h | rfl)
   · exact (nadd_lt_nadd_left h a).le
     
-  · exact le_rfl
+  · exact le_rflₓ
     
 
 theorem nadd_le_nadd_right (h : b ≤ c) (a) : b ♯ a ≤ c ♯ a := by
   rcases lt_or_eq_of_leₓ h with (h | rfl)
   · exact (nadd_lt_nadd_right h a).le
     
-  · exact le_rfl
+  · exact le_rflₓ
     
 
 variable (a b)
@@ -206,7 +206,7 @@ theorem nadd_comm : ∀ a b, a ♯ b = b ♯ a
     rw [nadd_def, nadd_def, max_commₓ]
     congr <;> ext c hc <;> apply nadd_comm
 
-theorem blsub_nadd_of_mono {f : ∀, ∀ c < a ♯ b, ∀, Ordinal.{max u v}} (hf : ∀ {i j} (hi hj), i ≤ j → f i hi ≤ f j hj) :
+theorem blsub_nadd_of_mono {f : ∀ c < a ♯ b, Ordinal.{max u v}} (hf : ∀ {i j} (hi hj), i ≤ j → f i hi ≤ f j hj) :
     blsub _ f =
       max (blsub.{u, v} a fun a' ha' => f (a' ♯ b) <| nadd_lt_nadd_right ha' b)
         (blsub.{u, v} b fun b' hb' => f (a ♯ b') <| nadd_lt_nadd_left hb' a) :=

@@ -50,7 +50,7 @@ instance {X Y : C} : Subsingleton (X ⟶ Y) :=
       exact ⟨_, _, r_ne_s⟩
     let md := ΣZ W : C, Z ⟶ W
     let α := # md
-    apply not_le_of_lt (Cardinal.cantor α)
+    apply not_le_of_ltₓ (Cardinal.cantor α)
     let yp : C := ∏ fun f : md => Y
     trans # (X ⟶ yp)
     · apply le_transₓ (Cardinal.power_le_power_right z)

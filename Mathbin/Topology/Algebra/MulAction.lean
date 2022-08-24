@@ -103,7 +103,7 @@ instance HasContinuousSmul.op [HasSmul Mᵐᵒᵖ X] [IsCentralScalar M X] : Has
   ⟨by
     suffices Continuous fun p : M × X => MulOpposite.op p.fst • p.snd from
       this.comp (MulOpposite.continuous_unop.prod_map continuous_id)
-    simpa only [← op_smul_eq_smul] using (continuous_smul : Continuous fun p : M × X => _)⟩
+    simpa only [op_smul_eq_smul] using (continuous_smul : Continuous fun p : M × X => _)⟩
 
 @[to_additive]
 instance MulOpposite.has_continuous_smul : HasContinuousSmul M Xᵐᵒᵖ :=
@@ -142,7 +142,7 @@ section LatticeOps
 variable {ι : Sort _} {M X : Type _} [TopologicalSpace M] [HasSmul M X]
 
 @[to_additive]
-theorem has_continuous_smul_Inf {ts : Set (TopologicalSpace X)} (h : ∀, ∀ t ∈ ts, ∀, @HasContinuousSmul M X _ _ t) :
+theorem has_continuous_smul_Inf {ts : Set (TopologicalSpace X)} (h : ∀ t ∈ ts, @HasContinuousSmul M X _ _ t) :
     @HasContinuousSmul M X _ _ (inf ts) :=
   { continuous_smul := by
       rw [← @Inf_singleton _ _ ‹TopologicalSpace M›]

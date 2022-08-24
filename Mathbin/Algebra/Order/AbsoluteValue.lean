@@ -37,6 +37,14 @@ section OrderedSemiring
 
 variable {R S : Type _} [Semiringₓ R] [OrderedSemiring S] (abv : AbsoluteValue R S)
 
+instance mulHomClass : MulHomClass (AbsoluteValue R S) R S where
+  coe := fun f => f.toFun
+  coe_injective' := fun f g h => by
+    obtain ⟨⟨_, _⟩, _⟩ := f
+    obtain ⟨⟨_, _⟩, _⟩ := g
+    congr
+  map_mul := fun f => f.map_mul'
+
 instance : CoeFun (AbsoluteValue R S) fun f => R → S :=
   ⟨fun f => f.toFun⟩
 
@@ -79,7 +87,7 @@ section OrderedRing
 variable {R S : Type _} [Ringₓ R] [OrderedRing S] (abv : AbsoluteValue R S)
 
 protected theorem sub_le (a b c : R) : abv (a - c) ≤ abv (a - b) + abv (b - c) := by
-  simpa [← sub_eq_add_neg, ← add_assocₓ] using abv.add_le (a - b) (b - c)
+  simpa [sub_eq_add_neg, add_assocₓ] using abv.add_le (a - b) (b - c)
 
 protected theorem le_sub (a b : R) : abv a - abv b ≤ abv (a - b) :=
   sub_le_iff_le_add.2 <| by
@@ -114,17 +122,20 @@ protected theorem map_one : abv 1 = 1 :=
   (mul_right_inj' <| abv.ne_zero one_ne_zero).1 <| by
     rw [← abv.map_mul, mul_oneₓ, mul_oneₓ]
 
+instance : MonoidWithZeroHomClass (AbsoluteValue R S) R S :=
+  { AbsoluteValue.mulHomClass with map_zero := fun f => f.map_zero, map_one := fun f => f.map_one }
+
 /-- Absolute values from a nontrivial `R` to a linear ordered ring preserve `*`, `0` and `1`. -/
 def toMonoidWithZeroHom : R →*₀ S :=
-  { abv with toFun := abv, map_zero' := abv.map_zero, map_one' := abv.map_one }
+  abv
 
 @[simp]
 theorem coe_to_monoid_with_zero_hom : ⇑abv.toMonoidWithZeroHom = abv :=
   rfl
 
 /-- Absolute values from a nontrivial `R` to a linear ordered ring preserve `*` and `1`. -/
-def toMonoidHom : MonoidHom R S :=
-  { abv with toFun := abv, map_one' := abv.map_one }
+def toMonoidHom : R →* S :=
+  abv
 
 @[simp]
 theorem coe_to_monoid_hom : ⇑abv.toMonoidHom = abv :=
@@ -145,7 +156,7 @@ variable {R S : Type _} [Ringₓ R] [LinearOrderedCommRing S] (abv : AbsoluteVal
 @[simp]
 protected theorem map_neg (a : R) : abv (-a) = abv a := by
   by_cases' ha : a = 0
-  · simp [← ha]
+  · simp [ha]
     
   refine'
     (mul_self_eq_mul_self_iff.mp
@@ -170,10 +181,10 @@ end AbsoluteValue
 
 section IsAbsoluteValue
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`abv_nonneg] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`abv_eq_zero] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`abv_add] []
--- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`abv_mul] []
+-- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`abv_nonneg] []
+-- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`abv_eq_zero] []
+-- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`abv_add] []
+-- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`abv_mul] []
 /-- A function `f` is an absolute value if it is nonnegative, zero only at 0, additive, and
 multiplicative.
 
@@ -213,7 +224,7 @@ theorem abv_zero : abv 0 = 0 :=
   (abv_eq_zero abv).2 rfl
 
 theorem abv_pos {a : R} : 0 < abv a ↔ a ≠ 0 := by
-  rw [lt_iff_le_and_ne, Ne, eq_comm] <;> simp [← abv_eq_zero abv, ← abv_nonneg abv]
+  rw [lt_iff_le_and_neₓ, Ne, eq_comm] <;> simp [abv_eq_zero abv, abv_nonneg abv]
 
 end OrderedSemiring
 
@@ -269,7 +280,7 @@ theorem abv_sub (a b : R) : abv (a - b) = abv (b - a) := by
   rw [← neg_sub, abv_neg abv]
 
 theorem abv_sub_le (a b c : R) : abv (a - c) ≤ abv (a - b) + abv (b - c) := by
-  simpa [← sub_eq_add_neg, ← add_assocₓ] using abv_add abv (a - b) (b - c)
+  simpa [sub_eq_add_neg, add_assocₓ] using abv_add abv (a - b) (b - c)
 
 theorem sub_abv_le_abv_sub (a b : R) : abv a - abv b ≤ abv (a - b) :=
   sub_le_iff_le_add.2 <| by

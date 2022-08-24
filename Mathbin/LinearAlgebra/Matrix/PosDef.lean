@@ -33,16 +33,21 @@ def PosDef (M : Matrix n n 𝕜) :=
 theorem PosDef.is_hermitian {M : Matrix n n 𝕜} (hM : M.PosDef) : M.IsHermitian :=
   hM.1
 
+theorem PosDef.transpose {M : Matrix n n 𝕜} (hM : M.PosDef) : Mᵀ.PosDef := by
+  refine' ⟨is_hermitian.transpose hM.1, fun x hx => _⟩
+  convert hM.2 (star x) (star_ne_zero.2 hx) using 2
+  rw [mul_vec_transpose, Matrix.dot_product_mul_vec, star_star, dot_product_comm]
+
 theorem pos_def_of_to_quadratic_form' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.IsSymm)
     (hMq : M.toQuadraticForm'.PosDef) : M.PosDef := by
   refine' ⟨hM, fun x hx => _⟩
-  simp only [← to_quadratic_form', ← QuadraticForm.PosDef, ← BilinForm.to_quadratic_form_apply, ←
-    Matrix.to_bilin'_apply'] at hMq
+  simp only [to_quadratic_form', QuadraticForm.PosDef, BilinForm.to_quadratic_form_apply, Matrix.to_bilin'_apply'] at
+    hMq
   apply hMq x hx
 
 theorem pos_def_to_quadratic_form' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.PosDef) : M.toQuadraticForm'.PosDef := by
   intro x hx
-  simp only [← to_quadratic_form', ← BilinForm.to_quadratic_form_apply, ← Matrix.to_bilin'_apply']
+  simp only [to_quadratic_form', BilinForm.to_quadratic_form_apply, Matrix.to_bilin'_apply']
   apply hM.2 x hx
 
 end Matrix
@@ -73,15 +78,15 @@ noncomputable def InnerProductSpace.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDe
         rw [star_dot_product, star_ring_end_apply, star_star, star_mul_vec, dot_product_mul_vec, hM.is_hermitian.eq],
       nonneg_re := fun x => by
         by_cases' h : x = 0
-        · simp [← h]
+        · simp [h]
           
         · exact le_of_ltₓ (hM.2 x h)
           ,
       definite := fun x hx => by
         by_contra' h
-        simpa [← hx, ← lt_self_iff_false] using hM.2 x h,
+        simpa [hx, lt_self_iff_falseₓ] using hM.2 x h,
       add_left := by
-        simp only [← star_add, ← add_dot_product, ← eq_self_iff_true, ← forall_const],
+        simp only [star_add, add_dot_product, eq_self_iff_true, forall_const],
       smul_left := fun x y r => by
         rw [← smul_eq_mul, ← smul_dot_product, star_ring_end_apply, ← star_smul] }
 

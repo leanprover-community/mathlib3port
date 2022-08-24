@@ -178,7 +178,7 @@ theorem congr_inv_of_congr_hom (F G : C ⥤ D) {X Y : C} (e : X ≅ Y) (hX : F.o
             (by
               rw [hX]) :=
   by
-  simp only [is_iso.iso.inv_hom e, ← functor.map_inv, ← h₂, ← is_iso.inv_comp, ← inv_eq_to_hom, ← category.assoc]
+  simp only [← is_iso.iso.inv_hom e, functor.map_inv, h₂, is_iso.inv_comp, inv_eq_to_hom, category.assoc]
 
 theorem congr_map (F : C ⥤ D) {X Y : C} {f g : X ⟶ Y} (h : f = g) : F.map f = F.map g := by
   rw [h]
@@ -239,10 +239,10 @@ theorem eq_to_hom_app {F G : C ⥤ D} (h : F = G) (X : C) : (eqToHom h : F ⟶ G
 theorem NatTrans.congr {F G : C ⥤ D} (α : F ⟶ G) {X Y : C} (h : X = Y) :
     α.app X = F.map (eqToHom h) ≫ α.app Y ≫ G.map (eqToHom h.symm) := by
   rw [α.naturality_assoc]
-  simp [← eq_to_hom_map]
+  simp [eq_to_hom_map]
 
 theorem eq_conj_eq_to_hom {X Y : C} (f : X ⟶ Y) : f = eqToHom rfl ≫ f ≫ eqToHom rfl := by
-  simp only [← category.id_comp, ← eq_to_hom_refl, ← category.comp_id]
+  simp only [category.id_comp, eq_to_hom_refl, category.comp_id]
 
 theorem dcongr_arg {ι : Type _} {F G : ι → C} (α : ∀ i, F i ⟶ G i) {i j : ι} (h : i = j) :
     α i = eqToHom (congr_arg F h) ≫ α j ≫ eqToHom (congr_arg G h.symm) := by

@@ -143,14 +143,14 @@ theorem Continuous.matrix_vec_mul [NonUnitalNonAssocSemiringₓ R] [HasContinuou
   continuous_pi fun i => hA.matrix_dot_product <| continuous_pi fun j => hB.matrix_elem _ _
 
 @[continuity]
-theorem Continuous.matrix_minor {A : X → Matrix l n R} (hA : Continuous A) (e₁ : m → l) (e₂ : p → n) :
-    Continuous fun x => (A x).minor e₁ e₂ :=
+theorem Continuous.matrix_submatrix {A : X → Matrix l n R} (hA : Continuous A) (e₁ : m → l) (e₂ : p → n) :
+    Continuous fun x => (A x).submatrix e₁ e₂ :=
   continuous_matrix fun i j => hA.matrix_elem _ _
 
 @[continuity]
 theorem Continuous.matrix_reindex {A : X → Matrix l n R} (hA : Continuous A) (e₁ : l ≃ m) (e₂ : n ≃ p) :
     Continuous fun x => reindex e₁ e₂ (A x) :=
-  hA.matrix_minor _ _
+  hA.matrix_submatrix _ _
 
 @[continuity]
 theorem Continuous.matrix_diag {A : X → Matrix n n R} (hA : Continuous A) : Continuous fun x => Matrix.diag (A x) :=
@@ -224,7 +224,7 @@ theorem Continuous.matrix_block_diag {A : X → Matrix (m × p) (n × p) R} (hA 
 theorem Continuous.matrix_block_diagonal' [Zero R] [DecidableEq l] {A : X → ∀ i, Matrix (m' i) (n' i) R}
     (hA : Continuous A) : Continuous fun x => blockDiagonal'ₓ (A x) :=
   continuous_matrix fun ⟨i₁, i₂⟩ ⟨j₁, j₂⟩ => by
-    dsimp' only [← block_diagonal']
+    dsimp' only [block_diagonal']
     split_ifs
     · subst h
       exact ((continuous_apply i₁).comp hA).matrix_elem i₂ j₂

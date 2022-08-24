@@ -37,8 +37,8 @@ namespace LazyList
 
 open Function
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
 /-- Isomorphism between strict and lazy lists. -/
 def listEquivLazyList (α : Type _) : List α ≃ LazyList α where
   toFun := LazyList.ofList
@@ -94,32 +94,32 @@ instance : Traversable LazyList where
   map := @LazyList.traverse id _
   traverse := @LazyList.traverse
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
 instance : IsLawfulTraversable LazyList := by
   apply Equivₓ.isLawfulTraversable' list_equiv_lazy_list <;> intros <;> skip <;> ext
   · induction x
     rfl
-    simp [← Equivₓ.map, ← Functor.map] at *
+    simp [Equivₓ.map, Functor.map] at *
     simp [*]
     rfl
     
   · induction x
     rfl
-    simp [← Equivₓ.map, ← Functor.mapConst] at *
+    simp [Equivₓ.map, Functor.mapConst] at *
     simp [*]
     rfl
     
   · induction x
-    · simp' [← Traversable.traverse, ← Equivₓ.traverse] with functor_norm
+    · simp' [Traversable.traverse, Equivₓ.traverse] with functor_norm
       rfl
       
-    simp [← Equivₓ.map, ← Functor.mapConst, ← Traversable.traverse] at *
+    simp [Equivₓ.map, Functor.mapConst, Traversable.traverse] at *
     rw [x_ih]
-    dsimp' [← list_equiv_lazy_list, ← Equivₓ.traverse, ← to_list, ← Traversable.traverse, ← List.traverseₓₓ]
+    dsimp' [list_equiv_lazy_list, Equivₓ.traverse, to_list, Traversable.traverse, List.traverseₓₓ]
     simp' with functor_norm
     rfl
     
@@ -172,16 +172,16 @@ instance : Monadₓ LazyList where
 theorem append_nil {α} (xs : LazyList α) : xs.append LazyList.nil = xs := by
   induction xs
   rfl
-  simp [← LazyList.append, ← xs_ih]
+  simp [LazyList.append, xs_ih]
   ext
   congr
 
 theorem append_assoc {α} (xs ys zs : LazyList α) : (xs.append ys).append zs = xs.append (ys.append zs) := by
-  induction xs <;> simp [← append, *]
+  induction xs <;> simp [append, *]
 
 theorem append_bind {α β} (xs : LazyList α) (ys : Thunkₓ (LazyList α)) (f : α → LazyList β) :
     (@LazyList.append _ xs ys).bind f = (xs.bind f).append ((ys ()).bind f) := by
-  induction xs <;> simp [← LazyList.bind, ← append, *, ← append_assoc, ← append, ← LazyList.bind]
+  induction xs <;> simp [LazyList.bind, append, *, append_assoc, append, LazyList.bind]
 
 instance : IsLawfulMonad LazyList where
   pure_bind := by
@@ -189,12 +189,12 @@ instance : IsLawfulMonad LazyList where
     apply append_nil
   bind_assoc := by
     intros
-    dsimp' [← (· >>= ·)]
-    induction x <;> simp [← LazyList.bind, ← append_bind, *]
+    dsimp' [(· >>= ·)]
+    induction x <;> simp [LazyList.bind, append_bind, *]
   id_map := by
     intros
-    simp [← (· <$> ·)]
-    induction x <;> simp [← LazyList.bind, *, ← singleton, ← append]
+    simp [(· <$> ·)]
+    induction x <;> simp [LazyList.bind, *, singleton, append]
     ext ⟨⟩
     rfl
 
@@ -209,7 +209,7 @@ protected def Mem {α} (x : α) : LazyList α → Prop
   | LazyList.nil => False
   | LazyList.cons y ys => x = y ∨ mem (ys ())
 
-instance {α} : HasMem α (LazyList α) :=
+instance {α} : Membership α (LazyList α) :=
   ⟨LazyList.Mem⟩
 
 instance Mem.decidable {α} [DecidableEq α] (x : α) : ∀ xs : LazyList α, Decidable (x ∈ xs)
@@ -219,7 +219,7 @@ instance Mem.decidable {α} [DecidableEq α] (x : α) : ∀ xs : LazyList α, De
     else
       decidableOfDecidableOfIff (mem.decidable (ys ()))
         (by
-          simp [*, ← (· ∈ ·), ← LazyList.Mem])
+          simp [*, (· ∈ ·), LazyList.Mem])
 
 @[simp]
 theorem mem_nil {α} (x : α) : x ∈ @LazyList.nil α ↔ False :=
@@ -230,8 +230,8 @@ theorem mem_cons {α} (x y : α) (ys : Thunkₓ (LazyList α)) : x ∈ @LazyList
   Iff.rfl
 
 theorem forall_mem_cons {α} {p : α → Prop} {a : α} {l : Thunkₓ (LazyList α)} :
-    (∀, ∀ x ∈ @LazyList.cons _ a l, ∀, p x) ↔ p a ∧ ∀, ∀ x ∈ l (), ∀, p x := by
-  simp only [← HasMem.Mem, ← LazyList.Mem, ← or_imp_distrib, ← forall_and_distrib, ← forall_eq]
+    (∀ x ∈ @LazyList.cons _ a l, p x) ↔ p a ∧ ∀ x ∈ l (), p x := by
+  simp only [Membership.Mem, LazyList.Mem, or_imp_distrib, forall_and_distrib, forall_eq]
 
 /-! ### map for partial functions -/
 
@@ -241,7 +241,7 @@ theorem forall_mem_cons {α} {p : α → Prop} {a : α} {l : Thunkₓ (LazyList 
   but is defined only when all members of `l` satisfy `p`, using the proof
   to apply `f`. -/
 @[simp]
-def pmap {α β} {p : α → Prop} (f : ∀ a, p a → β) : ∀ l : LazyList α, (∀, ∀ a ∈ l, ∀, p a) → LazyList β
+def pmap {α β} {p : α → Prop} (f : ∀ a, p a → β) : ∀ l : LazyList α, (∀ a ∈ l, p a) → LazyList β
   | LazyList.nil, H => LazyList.nil
   | LazyList.cons x xs, H => LazyList.cons (f x (forall_mem_cons.1 H).1) (pmap (xs ()) (forall_mem_cons.1 H).2)
 

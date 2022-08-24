@@ -49,17 +49,17 @@ variable {α : Type u} {o n m : ℕ} {m' n' o' : Type _}
 
 open Matrix
 
--- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `reflect_name #[]
--- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]
 /-- Matrices can be reflected whenever their entries can. We insert an `@id (matrix m' n' α)` to
 prevent immediate decay to a function. -/
 unsafe instance matrix.reflect [reflected_univ.{u}] [reflected_univ.{u_1}] [reflected_univ.{u_2}] [reflected _ α]
     [reflected _ m'] [reflected _ n'] [h : has_reflect (m' → n' → α)] : has_reflect (Matrix m' n' α) := fun m =>
   (by
-          trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `reflect_name #[]" :
+          trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]" :
           reflected _ @id.{max u_1 u_2 u + 1}).subst₂
       ((by
-            trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `reflect_name #[]" :
+            trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]" :
             reflected _ @Matrix.{u_1, u_2, u}).subst₃
         (quote.1 _) (quote.1 _) (quote.1 _)) <|
     by
@@ -144,7 +144,7 @@ theorem head_val' (B : Finₓ m.succ → n' → α) (j : n') : (vecHead fun i =>
 @[simp]
 theorem tail_val' (B : Finₓ m.succ → n' → α) (j : n') : (vecTail fun i => B i j) = fun i => vecTail B i j := by
   ext
-  simp [← vec_tail]
+  simp [vec_tail]
 
 section DotProduct
 
@@ -157,12 +157,12 @@ theorem dot_product_empty (v w : Finₓ 0 → α) : dotProduct v w = 0 :=
 @[simp]
 theorem cons_dot_product (x : α) (v : Finₓ n → α) (w : Finₓ n.succ → α) :
     dotProduct (vecCons x v) w = x * vecHead w + dotProduct v (vecTail w) := by
-  simp [← dot_product, ← Finₓ.sum_univ_succ, ← vec_head, ← vec_tail]
+  simp [dot_product, Finₓ.sum_univ_succ, vec_head, vec_tail]
 
 @[simp]
 theorem dot_product_cons (v : Finₓ n.succ → α) (x : α) (w : Finₓ n → α) :
     dotProduct v (vecCons x w) = vecHead v * x + dotProduct (vecTail v) w := by
-  simp [← dot_product, ← Finₓ.sum_univ_succ, ← vec_head, ← vec_tail]
+  simp [dot_product, Finₓ.sum_univ_succ, vec_head, vec_tail]
 
 @[simp]
 theorem cons_dot_product_cons (x : α) (v : Finₓ n → α) (y : α) (w : Finₓ n → α) :
@@ -180,7 +180,7 @@ theorem col_empty (v : Finₓ 0 → α) : colₓ v = vec_empty :=
 @[simp]
 theorem col_cons (x : α) (u : Finₓ m → α) : colₓ (vecCons x u) = vecCons (fun _ => x) (colₓ u) := by
   ext i j
-  refine' Finₓ.cases _ _ i <;> simp [← vec_head, ← vec_tail]
+  refine' Finₓ.cases _ _ i <;> simp [vec_head, vec_tail]
 
 @[simp]
 theorem row_empty : rowₓ (vecEmpty : Finₓ 0 → α) = fun _ => vecEmpty := by
@@ -248,7 +248,7 @@ theorem cons_mul [Fintype n'] (v : n' → α) (A : Finₓ m → n' → α) (B : 
   refine' Finₓ.cases _ _ i
   · rfl
     
-  simp [← mul_val_succ]
+  simp [mul_val_succ]
 
 end Mul
 
@@ -268,13 +268,13 @@ theorem vec_mul_empty [Fintype n'] (v : n' → α) (B : Matrix n' (Finₓ 0) α)
 theorem cons_vec_mul (x : α) (v : Finₓ n → α) (B : Finₓ n.succ → o' → α) :
     vecMulₓ (vecCons x v) (of B) = x • vecHead B + vecMulₓ v (of <| vecTail B) := by
   ext i
-  simp [← vec_mul]
+  simp [vec_mul]
 
 @[simp]
 theorem vec_mul_cons (v : Finₓ n.succ → α) (w : o' → α) (B : Finₓ n → o' → α) :
     vecMulₓ v (of <| vecCons w B) = vecHead v • w + vecMulₓ (vecTail v) (of B) := by
   ext i
-  simp [← vec_mul]
+  simp [vec_mul]
 
 @[simp]
 theorem cons_vec_mul_cons (x : α) (v : Finₓ n → α) (w : o' → α) (B : Finₓ n → o' → α) :
@@ -299,13 +299,13 @@ theorem mul_vec_empty (A : Matrix m' (Finₓ 0) α) (v : Finₓ 0 → α) : mulV
 theorem cons_mul_vec [Fintype n'] (v : n' → α) (A : Finₓ m → n' → α) (w : n' → α) :
     mulVecₓ (of <| vecCons v A) w = vecCons (dotProduct v w) (mulVecₓ (of A) w) := by
   ext i
-  refine' Finₓ.cases _ _ i <;> simp [← mul_vec]
+  refine' Finₓ.cases _ _ i <;> simp [mul_vec]
 
 @[simp]
 theorem mul_vec_cons {α} [CommSemiringₓ α] (A : m' → Finₓ n.succ → α) (x : α) (v : Finₓ n → α) :
     mulVecₓ (of A) (vecCons x v) = x • vec_head ∘ A + mulVecₓ (of (vec_tail ∘ A)) v := by
   ext i
-  simp [← mul_vec, ← mul_comm]
+  simp [mul_vec, mul_comm]
 
 end MulVec
 
@@ -325,7 +325,7 @@ theorem vec_mul_vec_empty (v : m' → α) (w : Finₓ 0 → α) : vecMulVecₓ v
 theorem cons_vec_mul_vec (x : α) (v : Finₓ m → α) (w : n' → α) :
     vecMulVecₓ (vecCons x v) w = vecCons (x • w) (vecMulVecₓ v w) := by
   ext i
-  refine' Finₓ.cases _ _ i <;> simp [← vec_mul_vec]
+  refine' Finₓ.cases _ _ i <;> simp [vec_mul_vec]
 
 @[simp]
 theorem vec_mul_vec_cons (v : m' → α) (x : α) (w : Finₓ n → α) :
@@ -350,19 +350,19 @@ theorem smul_mat_cons (x : α) (v : n' → α) (A : Finₓ m → n' → α) : x 
 
 end Smul
 
-section Minor
+section Submatrix
 
 @[simp]
-theorem minor_empty (A : Matrix m' n' α) (row : Finₓ 0 → m') (col : o' → n') : minor A row col = ![] :=
+theorem submatrix_empty (A : Matrix m' n' α) (row : Finₓ 0 → m') (col : o' → n') : submatrix A row col = ![] :=
   empty_eq _
 
 @[simp]
-theorem minor_cons_row (A : Matrix m' n' α) (i : m') (row : Finₓ m → m') (col : o' → n') :
-    minor A (vecCons i row) col = vecCons (fun j => A i (col j)) (minor A row col) := by
+theorem submatrix_cons_row (A : Matrix m' n' α) (i : m') (row : Finₓ m → m') (col : o' → n') :
+    submatrix A (vecCons i row) col = vecCons (fun j => A i (col j)) (submatrix A row col) := by
   ext i j
-  refine' Finₓ.cases _ _ i <;> simp [← minor]
+  refine' Finₓ.cases _ _ i <;> simp [submatrix]
 
-end Minor
+end Submatrix
 
 section Vec2AndVec3
 
@@ -372,22 +372,22 @@ variable [Zero α] [One α]
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation
 theorem one_fin_two :
     (1 : Matrix (Finₓ 2) (Finₓ 2) α) =
-      «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation" :=
+      «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
   by
   ext i j
   fin_cases i <;> fin_cases j <;> rfl
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation
 theorem one_fin_three :
     (1 : Matrix (Finₓ 3) (Finₓ 3) α) =
-      «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation" :=
+      «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
   by
   ext i j
   fin_cases i <;> fin_cases j <;> rfl
@@ -396,54 +396,54 @@ end One
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation
 theorem eta_fin_two (A : Matrix (Finₓ 2) (Finₓ 2) α) :
-    A = «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation" := by
+    A = «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" := by
   ext i j
   fin_cases i <;> fin_cases j <;> rfl
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation
 theorem eta_fin_three (A : Matrix (Finₓ 3) (Finₓ 3) α) :
-    A = «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation" := by
+    A = «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" := by
   ext i j
   fin_cases i <;> fin_cases j <;> rfl
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation
 theorem mul_fin_two [AddCommMonoidₓ α] [Mul α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁₁ b₁₂ b₂₁ b₂₂ : α) :
-    «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation" ⬝
-        «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation" =
-      «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation" :=
+    «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" ⬝
+        «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" =
+      «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
   by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [← Matrix.mul, ← dot_product, ← Finₓ.sum_univ_succ]
+  fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Finₓ.sum_univ_succ]
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation
 theorem mul_fin_three [AddCommMonoidₓ α] [Mul α]
     (a₁₁ a₁₂ a₁₃ a₂₁ a₂₂ a₂₃ a₃₁ a₃₂ a₃₃ b₁₁ b₁₂ b₁₃ b₂₁ b₂₂ b₂₃ b₃₁ b₃₂ b₃₃ : α) :
-    «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation" ⬝
-        «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation" =
-      «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation" :=
+    «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" ⬝
+        «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" =
+      «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
   by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [← Matrix.mul, ← dot_product, ← Finₓ.sum_univ_succ, add_assocₓ]
+  fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Finₓ.sum_univ_succ, ← add_assocₓ]
 
 theorem vec2_eq {a₀ a₁ b₀ b₁ : α} (h₀ : a₀ = b₀) (h₁ : a₁ = b₁) : ![a₀, a₁] = ![b₀, b₁] := by
   subst_vars

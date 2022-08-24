@@ -89,10 +89,10 @@ theorem ext {C₁ C₂ : HomologicalComplex V c} (h_X : C₁.x = C₂.x)
   cases C₂
   dsimp'  at h_X
   subst h_X
-  simp only [← true_andₓ, ← eq_self_iff_true, ← heq_iff_eq]
+  simp only [true_andₓ, eq_self_iff_true, heq_iff_eq]
   ext i j
   by_cases' hij : c.rel i j
-  · simpa only [← id_comp, ← eq_to_hom_refl, ← comp_id] using h_d i j hij
+  · simpa only [id_comp, eq_to_hom_refl, comp_id] using h_d i j hij
     
   · rw [C₁_shape' i j hij, C₂_shape' i j hij]
     
@@ -321,7 +321,7 @@ def xPrevIsoSelf {j : ι} (h : ¬c.Rel (c.prev j) j) : C.xPrev j ≅ C.x j :=
   eq_to_iso <|
     congr_arg C.x
       (by
-        dsimp' [← ComplexShape.prev]
+        dsimp' [ComplexShape.prev]
         rw [dif_neg]
         push_neg
         intro i hi
@@ -343,7 +343,7 @@ def xNextIsoSelf {i : ι} (h : ¬c.Rel i (c.next i)) : C.xNext i ≅ C.x i :=
   eq_to_iso <|
     congr_arg C.x
       (by
-        dsimp' [← ComplexShape.next]
+        dsimp' [ComplexShape.next]
         rw [dif_neg]
         rintro ⟨j, hj⟩
         have : c.next i = j := c.next_eq' hj
@@ -378,19 +378,19 @@ theorem d_from_eq_zero {i : ι} (h : ¬c.Rel i (c.next i)) : C.dFrom i = 0 :=
 
 @[simp, reassoc]
 theorem X_prev_iso_comp_d_to {i j : ι} (r : c.Rel i j) : (C.xPrevIso r).inv ≫ C.dTo j = C.d i j := by
-  simp [← C.d_to_eq r]
+  simp [C.d_to_eq r]
 
 @[simp, reassoc]
 theorem X_prev_iso_self_comp_d_to {j : ι} (h : ¬c.Rel (c.prev j) j) : (C.xPrevIsoSelf h).inv ≫ C.dTo j = 0 := by
-  simp [← h]
+  simp [h]
 
 @[simp, reassoc]
 theorem d_from_comp_X_next_iso {i j : ι} (r : c.Rel i j) : C.dFrom i ≫ (C.xNextIso r).Hom = C.d i j := by
-  simp [← C.d_from_eq r]
+  simp [C.d_from_eq r]
 
 @[simp, reassoc]
 theorem d_from_comp_X_next_iso_self {i : ι} (h : ¬c.Rel i (c.next i)) : C.dFrom i ≫ (C.xNextIsoSelf h).Hom = 0 := by
-  simp [← h]
+  simp [h]
 
 @[simp]
 theorem d_to_comp_d_from (j : ι) : C.dTo j ≫ C.dFrom j = 0 :=
@@ -458,7 +458,7 @@ abbrev prev (f : Hom C₁ C₂) (j : ι) : C₁.xPrev j ⟶ C₂.xPrev j :=
 theorem prev_eq (f : Hom C₁ C₂) {i j : ι} (w : c.Rel i j) :
     f.prev j = (C₁.xPrevIso w).Hom ≫ f.f i ≫ (C₂.xPrevIso w).inv := by
   obtain rfl := c.prev_eq' w
-  simp only [← X_prev_iso, ← eq_to_iso_refl, ← iso.refl_hom, ← iso.refl_inv, ← id_comp, ← comp_id]
+  simp only [X_prev_iso, eq_to_iso_refl, iso.refl_hom, iso.refl_inv, id_comp, comp_id]
 
 /-- `f.next i` is `f.f j` if there is some `r i j`, and `f.f j` otherwise. -/
 abbrev next (f : Hom C₁ C₂) (i : ι) : C₁.xNext i ⟶ C₂.xNext i :=
@@ -467,7 +467,7 @@ abbrev next (f : Hom C₁ C₂) (i : ι) : C₁.xNext i ⟶ C₂.xNext i :=
 theorem next_eq (f : Hom C₁ C₂) {i j : ι} (w : c.Rel i j) :
     f.next i = (C₁.xNextIso w).Hom ≫ f.f j ≫ (C₂.xNextIso w).inv := by
   obtain rfl := c.next_eq' w
-  simp only [← X_next_iso, ← eq_to_iso_refl, ← iso.refl_hom, ← iso.refl_inv, ← id_comp, ← comp_id]
+  simp only [X_next_iso, eq_to_iso_refl, iso.refl_hom, iso.refl_inv, id_comp, comp_id]
 
 @[simp, reassoc, elementwise]
 theorem comm_from (f : Hom C₁ C₂) (i : ι) : f.f i ≫ C₂.dFrom i = C₁.dFrom i ≫ f.next i :=
@@ -539,7 +539,7 @@ def of (X : α → V) (d : ∀ n, X (n + 1) ⟶ X n) (sq : ∀ n, d (n + 1) ≫ 
     d_comp_d' := fun i j k hij hjk => by
       dsimp'  at hij hjk
       substs hij hjk
-      simp only [← category.id_comp, ← dif_pos rfl, ← eq_to_hom_refl]
+      simp only [category.id_comp, dif_pos rfl, eq_to_hom_refl]
       exact sq k }
 
 variable (X : α → V) (d : ∀ n, X (n + 1) ⟶ X n) (sq : ∀ n, d (n + 1) ≫ d n = 0)
@@ -550,11 +550,11 @@ theorem of_X (n : α) : (of X d sq).x n = X n :=
 
 @[simp]
 theorem of_d (j : α) : (of X d sq).d (j + 1) j = d j := by
-  dsimp' [← of]
+  dsimp' [of]
   rw [if_pos rfl, category.id_comp]
 
 theorem of_d_ne {i j : α} (h : i ≠ j + 1) : (of X d sq).d i j = 0 := by
-  dsimp' [← of]
+  dsimp' [of]
   rw [dif_neg h]
 
 end Of
@@ -727,7 +727,7 @@ theorem mk_hom_f_succ_succ (n : ℕ) :
           ⟨(mkHom P Q zero one one_zero_comm succ).f n, (mkHom P Q zero one one_zero_comm succ).f (n + 1),
             (mkHom P Q zero one one_zero_comm succ).comm (n + 1) n⟩).1 :=
   by
-  dsimp' [← mk_hom, ← mk_hom_aux]
+  dsimp' [mk_hom, mk_hom_aux]
   induction n <;> congr
 
 end MkHom
@@ -757,7 +757,7 @@ def of (X : α → V) (d : ∀ n, X n ⟶ X (n + 1)) (sq : ∀ n, d n ≫ d (n +
     d_comp_d' := fun i j k => by
       split_ifs with h h' h'
       · substs h h'
-        simp [← sq]
+        simp [sq]
         
       all_goals
         simp }
@@ -770,11 +770,11 @@ theorem of_X (n : α) : (of X d sq).x n = X n :=
 
 @[simp]
 theorem of_d (j : α) : (of X d sq).d j (j + 1) = d j := by
-  dsimp' [← of]
+  dsimp' [of]
   rw [if_pos rfl, category.comp_id]
 
 theorem of_d_ne {i j : α} (h : i + 1 ≠ j) : (of X d sq).d i j = 0 := by
-  dsimp' [← of]
+  dsimp' [of]
   rw [dif_neg h]
 
 end Of
@@ -947,7 +947,7 @@ theorem mk_hom_f_succ_succ (n : ℕ) :
           ⟨(mkHom P Q zero one one_zero_comm succ).f n, (mkHom P Q zero one one_zero_comm succ).f (n + 1),
             (mkHom P Q zero one one_zero_comm succ).comm n (n + 1)⟩).1 :=
   by
-  dsimp' [← mk_hom, ← mk_hom_aux]
+  dsimp' [mk_hom, mk_hom_aux]
   induction n <;> congr
 
 end MkHom

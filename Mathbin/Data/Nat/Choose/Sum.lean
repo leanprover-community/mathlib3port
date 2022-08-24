@@ -39,15 +39,15 @@ theorem add_pow : (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * ch
   let t : ℕ → ℕ → R := fun n m => x ^ m * y ^ (n - m) * choose n m
   change (x + y) ^ n = ∑ m in range (n + 1), t n m
   have h_first : ∀ n, t n 0 = y ^ n := fun n => by
-    dsimp' [← t]
+    dsimp' [t]
     rw [choose_zero_right, pow_zeroₓ, Nat.cast_oneₓ, mul_oneₓ, one_mulₓ]
   have h_last : ∀ n, t n n.succ = 0 := fun n => by
-    dsimp' [← t]
+    dsimp' [t]
     rw [choose_succ_self, Nat.cast_zeroₓ, mul_zero]
   have h_middle : ∀ n i : ℕ, i ∈ range n.succ → (t n.succ ∘ Nat.succ) i = x * t n i + y * t n i.succ := by
     intro n i h_mem
     have h_le : i ≤ n := Nat.le_of_lt_succₓ (mem_range.mp h_mem)
-    dsimp' [← t]
+    dsimp' [t]
     rw [choose_succ_succ, Nat.cast_addₓ, mul_addₓ]
     congr 1
     · rw [pow_succₓ x, succ_sub_succ, mul_assoc, mul_assoc, mul_assoc]
@@ -62,7 +62,7 @@ theorem add_pow : (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * ch
       
   induction' n with n ih
   · rw [pow_zeroₓ, sum_range_succ, range_zero, sum_empty, zero_addₓ]
-    dsimp' [← t]
+    dsimp' [t]
     rw [pow_zeroₓ, pow_zeroₓ, choose_self, Nat.cast_oneₓ, mul_oneₓ, mul_oneₓ]
     
   · rw [sum_range_succ', h_first]
@@ -130,14 +130,14 @@ theorem choose_middle_le_pow (n : ℕ) : choose (2 * n + 1) n ≤ 4 ^ n := by
       (fun x _ => by
         linarith)
       (self_mem_range_succ n)
-  simpa [← sum_range_choose_halfway n] using t
+  simpa [sum_range_choose_halfway n] using t
 
 theorem four_pow_le_two_mul_add_one_mul_central_binom (n : ℕ) : 4 ^ n ≤ (2 * n + 1) * choose (2 * n) n :=
   calc
     4 ^ n = (1 + 1) ^ (2 * n) := by
-      norm_num[← pow_mulₓ]
+      norm_num[pow_mulₓ]
     _ = ∑ m in range (2 * n + 1), choose (2 * n) m := by
-      simp [← add_pow]
+      simp [add_pow]
     _ ≤ ∑ m in range (2 * n + 1), choose (2 * n) (2 * n / 2) := sum_le_sum fun i hi => choose_le_middle i (2 * n)
     _ = (2 * n + 1) * choose (2 * n) n := by
       simp
@@ -151,7 +151,7 @@ theorem Int.alternating_sum_range_choose {n : ℕ} :
   · simp
     
   have h := add_pow (-1 : ℤ) 1 n.succ
-  simp only [← one_pow, ← mul_oneₓ, ← add_left_negₓ] at h
+  simp only [one_pow, mul_oneₓ, add_left_negₓ] at h
   rw [← h, zero_pow (Nat.succ_posₓ n), if_neg (Nat.succ_ne_zero n)]
 
 theorem Int.alternating_sum_range_choose_of_ne {n : ℕ} (h0 : n ≠ 0) :
@@ -178,7 +178,7 @@ theorem sum_powerset_apply_card {α β : Type _} [AddCommMonoidₓ α] (f : ℕ 
 theorem sum_powerset_neg_one_pow_card {α : Type _} [DecidableEq α] {x : Finset α} :
     (∑ m in x.Powerset, (-1 : ℤ) ^ m.card) = if x = ∅ then 1 else 0 := by
   rw [sum_powerset_apply_card]
-  simp only [← nsmul_eq_mul', card_eq_zero, ← Int.alternating_sum_range_choose]
+  simp only [nsmul_eq_mul', ← card_eq_zero, Int.alternating_sum_range_choose]
 
 theorem sum_powerset_neg_one_pow_card_of_nonempty {α : Type _} {x : Finset α} (h0 : x.Nonempty) :
     (∑ m in x.Powerset, (-1 : ℤ) ^ m.card) = 0 := by

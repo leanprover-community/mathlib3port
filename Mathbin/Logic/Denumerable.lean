@@ -112,8 +112,8 @@ instance option : Denumerable (Option α) :=
 instance sum : Denumerable (Sum α β) :=
   ⟨fun n => by
     suffices ∃ a ∈ @decode_sum α β _ _ n, encode_sum a = bit (bodd n) (div2 n) by
-      simpa [← bit_decomp]
-    simp [← decode_sum] <;> cases bodd n <;> simp [← decode_sum, ← bit, ← encode_sum]⟩
+      simpa [bit_decomp]
+    simp [decode_sum] <;> cases bodd n <;> simp [decode_sum, bit, encode_sum]⟩
 
 section Sigma
 
@@ -122,7 +122,7 @@ variable {γ : α → Type _} [∀ a, Denumerable (γ a)]
 /-- A denumerable collection of denumerable types is denumerable. -/
 instance sigma : Denumerable (Sigma γ) :=
   ⟨fun n => by
-    simp [← decode_sigma] <;>
+    simp [decode_sigma] <;>
       exact
         ⟨_, _, ⟨rfl, HEq.rfl⟩, by
           simp ⟩⟩
@@ -193,7 +193,7 @@ theorem exists_succ (x : s) : ∃ n, ↑x + n + 1 ∈ s :=
             (by
               simp [-Multiset.range_succ])).toFinset,
         by
-        simpa [← Subtype.ext_iff_val, ← Multiset.mem_filter, -Multiset.range_succ] ⟩
+        simpa [Subtype.ext_iff_val, Multiset.mem_filter, -Multiset.range_succ] ⟩
 
 end Classical
 
@@ -211,7 +211,7 @@ theorem succ_le_of_lt {x y : s} (h : y < x) : succ y ≤ x :=
   show (y : ℕ) + Nat.findₓ hx + 1 ≤ x by
     rw [hk] <;> exact add_le_add_right (add_le_add_left this _) _
 
-theorem le_succ_of_forall_lt_le {x y : s} (h : ∀, ∀ z < x, ∀, z ≤ y) : x ≤ succ y :=
+theorem le_succ_of_forall_lt_le {x y : s} (h : ∀ z < x, z ≤ y) : x ≤ succ y :=
   have hx : ∃ m, ↑y + m + 1 ∈ s := exists_succ _
   show ↑x ≤ ↑y + Nat.findₓ hx + 1 from
     le_of_not_gtₓ fun hxy =>
@@ -242,9 +242,9 @@ theorem of_nat_surjective_aux : ∀ {x : ℕ} (hx : x ∈ s), ∃ n, ofNat s n =
         (by
           simp )
     have hmt : ∀ {y : s}, y ∈ t ↔ y < ⟨x, hx⟩ := by
-      simp [← List.mem_filterₓ, ← Subtype.ext_iff_val, ← t] <;> intros <;> rfl
+      simp [List.mem_filterₓ, Subtype.ext_iff_val, t] <;> intros <;> rfl
     have wf : ∀ m : s, List.maximum t = m → ↑m < x := fun m hmax => by
-      simpa [← hmt] using List.maximum_mem hmax
+      simpa [hmt] using List.maximum_mem hmax
     cases' hmax : List.maximum t with m
     · exact
         ⟨0,
@@ -298,13 +298,13 @@ private theorem right_inverse_aux : ∀ n, toFunAux (ofNat s n) = n
     have h₁ : (ofNat s n : ℕ) ∉ (range (ofNat s n)).filter (· ∈ s) := by
       simp
     have h₂ : (range (succ (ofNat s n))).filter (· ∈ s) = insert (ofNat s n) ((range (ofNat s n)).filter (· ∈ s)) := by
-      simp only [← Finset.ext_iff, ← mem_insert, ← mem_range, ← mem_filter]
+      simp only [Finset.ext_iff, mem_insert, mem_range, mem_filter]
       exact fun m =>
         ⟨fun h => by
-          simp only [← h.2, ← and_trueₓ] <;> exact Or.symm (lt_or_eq_of_leₓ ((@lt_succ_iff_le _ _ _ ⟨m, h.2⟩ _).1 h.1)),
+          simp only [h.2, and_trueₓ] <;> exact Or.symm (lt_or_eq_of_leₓ ((@lt_succ_iff_le _ _ _ ⟨m, h.2⟩ _).1 h.1)),
           fun h =>
           h.elim (fun h => h.symm ▸ ⟨lt_succ_self _, (of_nat s n).Prop⟩) fun h => ⟨h.1.trans (lt_succ_self _), h.2⟩⟩
-    simp only [← to_fun_aux_eq, ← of_nat, ← range_succ] at ih⊢
+    simp only [to_fun_aux_eq, of_nat, range_succ] at ih⊢
     conv => rhs rw [← ih, ← card_insert_of_not_mem h₁, ← h₂]
 
 /-- Any infinite set of naturals is denumerable. -/

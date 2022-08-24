@@ -58,7 +58,7 @@ theorem pow_eq_zero_iff [NoZeroDivisors M] {a : M} {n : ℕ} (hn : 0 < n) : a ^ 
   exact zero_pow hn
 
 theorem pow_eq_zero_iff' [NoZeroDivisors M] [Nontrivial M] {a : M} {n : ℕ} : a ^ n = 0 ↔ a = 0 ∧ n ≠ 0 := by
-  cases (zero_le n).eq_or_gt <;> simp [*, ← ne_of_gtₓ]
+  cases (zero_le n).eq_or_gt <;> simp [*, ne_of_gtₓ]
 
 theorem pow_ne_zero_iff [NoZeroDivisors M] {a : M} {n : ℕ} (hn : 0 < n) : a ^ n ≠ 0 ↔ a ≠ 0 :=
   (pow_eq_zero_iff hn).Not
@@ -148,7 +148,7 @@ section CommSemiringₓ
 variable [CommSemiringₓ R]
 
 theorem add_sq (a b : R) : (a + b) ^ 2 = a ^ 2 + 2 * a * b + b ^ 2 := by
-  simp only [← sq, ← add_mul_self_eq]
+  simp only [sq, add_mul_self_eq]
 
 theorem add_sq' (a b : R) : (a + b) ^ 2 = a ^ 2 + b ^ 2 + 2 * a * b := by
   rw [add_sq, add_assocₓ, add_commₓ _ (b ^ 2), add_assocₓ]
@@ -183,11 +183,11 @@ theorem neg_pow_bit0 (a : R) (n : ℕ) : -a ^ bit0 n = a ^ bit0 n := by
 
 @[simp]
 theorem neg_pow_bit1 (a : R) (n : ℕ) : -a ^ bit1 n = -(a ^ bit1 n) := by
-  simp only [← bit1, ← pow_succₓ, ← neg_pow_bit0, ← neg_mul_eq_neg_mulₓ]
+  simp only [bit1, pow_succₓ, neg_pow_bit0, neg_mul_eq_neg_mulₓ]
 
 @[simp]
 theorem neg_sq (a : R) : -a ^ 2 = a ^ 2 := by
-  simp [← sq]
+  simp [sq]
 
 @[simp]
 theorem neg_one_sq : (-1 : R) ^ 2 = 1 := by
@@ -208,11 +208,11 @@ protected theorem Commute.sq_sub_sq (h : Commute a b) : a ^ 2 - b ^ 2 = (a + b) 
 
 @[simp]
 theorem neg_one_pow_mul_eq_zero_iff {n : ℕ} {r : R} : -1 ^ n * r = 0 ↔ r = 0 := by
-  rcases neg_one_pow_eq_or R n with ⟨⟩ <;> simp [← h]
+  rcases neg_one_pow_eq_or R n with ⟨⟩ <;> simp [h]
 
 @[simp]
 theorem mul_neg_one_pow_eq_zero_iff {n : ℕ} {r : R} : r * -1 ^ n = 0 ↔ r = 0 := by
-  rcases neg_one_pow_eq_or R n with ⟨⟩ <;> simp [← h]
+  rcases neg_one_pow_eq_or R n with ⟨⟩ <;> simp [h]
 
 variable [NoZeroDivisors R]
 

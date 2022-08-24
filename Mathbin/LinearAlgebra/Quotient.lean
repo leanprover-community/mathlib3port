@@ -106,7 +106,7 @@ instance hasSmul' : HasSmul S (M ⧸ P) :=
   ⟨fun a =>
     (Quotientₓ.map' ((· • ·) a)) fun x y h =>
       left_rel_apply.mpr <| by
-        simpa [← smul_sub] using P.smul_mem (a • 1 : R) (left_rel_apply.mp h)⟩
+        simpa [smul_sub] using P.smul_mem (a • 1 : R) (left_rel_apply.mp h)⟩
 
 /-- Shortcut to help the elaborator in the common case. -/
 instance hasSmul : HasSmul R (M ⧸ P) :=
@@ -261,15 +261,15 @@ theorem le_comap_mkq (p' : Submodule R (M ⧸ p)) : p ≤ comap p.mkq p' := by
 
 @[simp]
 theorem mkq_map_self : map p.mkq p = ⊥ := by
-  rw [eq_bot_iff, map_le_iff_le_comap, comap_bot, ker_mkq] <;> exact le_rfl
+  rw [eq_bot_iff, map_le_iff_le_comap, comap_bot, ker_mkq] <;> exact le_rflₓ
 
 @[simp]
 theorem comap_map_mkq : comap p.mkq (map p.mkq p') = p⊔p' := by
-  simp [← comap_map_eq, ← sup_comm]
+  simp [comap_map_eq, sup_comm]
 
 @[simp]
 theorem map_mkq_eq_top : map p.mkq p' = ⊤ ↔ p⊔p' = ⊤ := by
-  simp only [← map_eq_top_iff p.range_mkq, ← sup_comm, ← ker_mkq]
+  simp only [map_eq_top_iff p.range_mkq, sup_comm, ker_mkq]
 
 variable (q : Submodule R₂ M₂)
 
@@ -277,7 +277,7 @@ variable (q : Submodule R₂ M₂)
 `f : M → M₂` is linear. -/
 def mapq (f : M →ₛₗ[τ₁₂] M₂) (h : p ≤ comap f q) : M ⧸ p →ₛₗ[τ₁₂] M₂ ⧸ q :=
   p.liftq (q.mkq.comp f) <| by
-    simpa [← ker_comp] using h
+    simpa [ker_comp] using h
 
 @[simp]
 theorem mapq_apply (f : M →ₛₗ[τ₁₂] M₂) {h} (x : M) : mapq p q f h (Quotient.mk x) = Quotient.mk (f x) :=
@@ -307,7 +307,8 @@ theorem mapq_comp {R₃ M₃ : Type _} [Ringₓ R₃] [AddCommGroupₓ M₃] [Mo
 @[simp]
 theorem mapq_id
     (h : p ≤ p.comap LinearMap.id := by
-      simp ) :
+      rw [comap_id]
+      exact le_reflₓ _) :
     p.mapq p LinearMap.id h = LinearMap.id := by
   ext
   simp
@@ -315,9 +316,9 @@ theorem mapq_id
 theorem mapq_pow {f : M →ₗ[R] M} (h : p ≤ p.comap f) (k : ℕ)
     (h' : p ≤ p.comap (f ^ k) := p.le_comap_pow_of_le_comap h k) : p.mapq p (f ^ k) h' = p.mapq p f h ^ k := by
   induction' k with k ih
-  · simp [← LinearMap.one_eq_id]
+  · simp [LinearMap.one_eq_id]
     
-  · simp only [← LinearMap.iterate_succ, ih]
+  · simp only [LinearMap.iterate_succ, ← ih]
     apply p.mapq_comp
     
 
@@ -326,7 +327,7 @@ theorem comap_liftq (f : M →ₛₗ[τ₁₂] M₂) (h) : q.comap (p.liftq f h)
     (by
       rintro ⟨x⟩ hx <;> exact ⟨_, hx, rfl⟩)
     (by
-      rw [map_le_iff_le_comap, ← comap_comp, liftq_mkq] <;> exact le_rfl)
+      rw [map_le_iff_le_comap, ← comap_comp, liftq_mkq] <;> exact le_rflₓ)
 
 theorem map_liftq [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂) (h) (q : Submodule R (M ⧸ p)) :
     q.map (p.liftq f h) = (q.comap p.mkq).map f :=
@@ -340,7 +341,7 @@ theorem ker_liftq (f : M →ₛₗ[τ₁₂] M₂) (h) : ker (p.liftq f h) = (ke
   comap_liftq _ _ _ _
 
 theorem range_liftq [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂) (h) : range (p.liftq f h) = range f := by
-  simpa only [← range_eq_map] using map_liftq _ _ _ _
+  simpa only [range_eq_map] using map_liftq _ _ _ _
 
 theorem ker_liftq_eq_bot (f : M →ₛₗ[τ₁₂] M₂) (h) (h' : ker f ≤ p) : ker (p.liftq f h) = ⊥ := by
   rw [ker_liftq, le_antisymmₓ h h', mkq_map_self]
@@ -355,7 +356,7 @@ def ComapMkq.relIso : Submodule R (M ⧸ p) ≃o { p' : Submodule R M // p ≤ p
       simp
   right_inv := fun ⟨q, hq⟩ =>
     Subtype.ext_val <| by
-      simpa [← comap_map_mkq p]
+      simpa [comap_map_mkq p]
   map_rel_iff' := fun p₁ p₂ => comap_le_comap_iff <| range_mkq _
 
 /-- The ordering on submodules of the quotient of `M` by `p` embeds into the ordering on submodules

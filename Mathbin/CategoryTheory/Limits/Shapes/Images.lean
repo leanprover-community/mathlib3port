@@ -157,7 +157,7 @@ def ofArrowIso {f g : Arrow C} (F : MonoFactorisation f.Hom) (sq : f ⟶ g) [IsI
   e := inv sq.left ≫ F.e
   m_mono := mono_comp _ _
   fac' := by
-    simp only [← fac_assoc, ← arrow.w, ← is_iso.inv_comp_eq, ← category.assoc]
+    simp only [fac_assoc, arrow.w, is_iso.inv_comp_eq, category.assoc]
 
 end MonoFactorisation
 
@@ -229,7 +229,7 @@ def ofArrowIso {f g : Arrow C} {F : MonoFactorisation f.Hom} (hF : IsImage F) (s
     IsImage (F.ofArrowIso sq) where
   lift := fun F' => hF.lift (F'.ofArrowIso (inv sq))
   lift_fac' := fun F' => by
-    simpa only [← mono_factorisation.of_arrow_iso_m, ← arrow.inv_right, category.assoc, ← is_iso.comp_inv_eq] using
+    simpa only [mono_factorisation.of_arrow_iso_m, arrow.inv_right, ← category.assoc, is_iso.comp_inv_eq] using
       hF.lift_fac (F'.of_arrow_iso (inv sq))
 
 end IsImage
@@ -345,7 +345,7 @@ instance image.lift_mono (F' : MonoFactorisation f) : Mono (image.lift F') := by
 theorem HasImage.uniq (F' : MonoFactorisation f) (l : image f ⟶ F'.i) (w : l ≫ F'.m = image.ι f) : l = image.lift F' :=
   (cancel_mono F'.m).1
     (by
-      simp [← w])
+      simp [w])
 
 /-- If `has_image g`, then `has_image (f ≫ g)` when `f` is an isomorphism. -/
 instance {X Y Z : C} (f : X ⟶ Y) [IsIso f] (g : Y ⟶ Z) [HasImage g] :
@@ -379,7 +379,7 @@ def imageMonoIsoSource [Mono f] : image f ≅ X :=
 
 @[simp, reassoc]
 theorem image_mono_iso_source_inv_ι [Mono f] : (imageMonoIsoSource f).inv ≫ image.ι f = f := by
-  simp [← image_mono_iso_source]
+  simp [image_mono_iso_source]
 
 @[simp, reassoc]
 theorem image_mono_iso_source_hom_self [Mono f] : (imageMonoIsoSource f).Hom ≫ f = image.ι f := by
@@ -450,10 +450,10 @@ instance (h : f = f') : IsIso (image.eqToHom h) :=
   ⟨⟨image.eqToHom h.symm,
       ⟨(cancel_mono (image.ι f)).1
           (by
-            simp [← image.eq_to_hom]),
+            simp [image.eq_to_hom]),
         (cancel_mono (image.ι f')).1
           (by
-            simp [← image.eq_to_hom])⟩⟩⟩
+            simp [image.eq_to_hom])⟩⟩⟩
 
 /-- An equation between morphisms gives an isomorphism between the images. -/
 def image.eqToIso (h : f = f') : image f ≅ image f' :=
@@ -464,7 +464,7 @@ the image inclusion maps commute with `image.eq_to_iso`.
 -/
 theorem image.eq_fac [HasEqualizers C] (h : f = f') : image.ι f = (image.eqToIso h).Hom ≫ image.ι f' := by
   ext
-  simp [← image.eq_to_iso, ← image.eq_to_hom]
+  simp [image.eq_to_iso, image.eq_to_hom]
 
 end
 
@@ -478,18 +478,18 @@ def image.preComp [HasImage g] [HasImage (f ≫ g)] : image (f ≫ g) ⟶ image 
 
 @[simp, reassoc]
 theorem image.pre_comp_ι [HasImage g] [HasImage (f ≫ g)] : image.preComp f g ≫ image.ι g = image.ι (f ≫ g) := by
-  simp [← image.pre_comp]
+  simp [image.pre_comp]
 
 @[simp, reassoc]
 theorem image.factor_thru_image_pre_comp [HasImage g] [HasImage (f ≫ g)] :
     factorThruImage (f ≫ g) ≫ image.preComp f g = f ≫ factorThruImage g := by
-  simp [← image.pre_comp]
+  simp [image.pre_comp]
 
 /-- `image.pre_comp f g` is a monomorphism.
 -/
 instance image.pre_comp_mono [HasImage g] [HasImage (f ≫ g)] : Mono (image.preComp f g) := by
   apply mono_of_mono _ (image.ι g)
-  simp only [← image.pre_comp_ι]
+  simp only [image.pre_comp_ι]
   infer_instance
 
 /-- The two step comparison map
@@ -502,7 +502,7 @@ theorem image.pre_comp_comp {W : C} (h : Z ⟶ W) [HasImage (g ≫ h)] [HasImage
     image.preComp f (g ≫ h) ≫ image.preComp g h = image.eqToHom (Category.assoc f g h).symm ≫ image.preComp (f ≫ g) h :=
   by
   apply (cancel_mono (image.ι h)).1
-  simp [← image.pre_comp, ← image.eq_to_hom]
+  simp [image.pre_comp, image.eq_to_hom]
 
 variable [HasEqualizers C]
 
@@ -524,9 +524,9 @@ instance image.is_iso_precomp_iso (f : X ⟶ Y) [IsIso f] [HasImage g] : IsIso (
   ⟨⟨image.lift { i := image (f ≫ g), m := image.ι (f ≫ g), e := inv f ≫ factorThruImage (f ≫ g) },
       ⟨by
         ext
-        simp [← image.pre_comp], by
+        simp [image.pre_comp], by
         ext
-        simp [← image.pre_comp]⟩⟩⟩
+        simp [image.pre_comp]⟩⟩⟩
 
 -- Note that in general we don't have the other comparison map you might expect
 -- `image f ⟶ image (f ≫ g)`.
@@ -543,13 +543,13 @@ def image.compIso [HasImage f] [IsIso g] : image f ≅ image (f ≫ g) where
 theorem image.comp_iso_hom_comp_image_ι [HasImage f] [IsIso g] :
     (image.compIso f g).Hom ≫ image.ι (f ≫ g) = image.ι f ≫ g := by
   ext
-  simp [← image.comp_iso]
+  simp [image.comp_iso]
 
 @[simp, reassoc]
 theorem image.comp_iso_inv_comp_image_ι [HasImage f] [IsIso g] :
     (image.compIso f g).inv ≫ image.ι f = image.ι (f ≫ g) ≫ inv g := by
   ext
-  simp [← image.comp_iso]
+  simp [image.comp_iso]
 
 end
 
@@ -599,7 +599,7 @@ def ImageMap.transport {f g : Arrow C} [HasImage f.Hom] [HasImage g.Hom] (sq : f
     ImageMap sq where
   map := image.lift F ≫ map ≫ hF'.lift (Image.monoFactorisation g.Hom)
   map_ι' := by
-    simp [← map_ι]
+    simp [map_ι]
 
 /-- `has_image_map sq` means that there is an `image_map` for the square `sq`. -/
 class HasImageMap {f g : Arrow C} [HasImage f.Hom] [HasImage g.Hom] (sq : f ⟶ g) : Prop where mk' ::
@@ -633,7 +633,7 @@ instance HasImageMap.comp {f g h : Arrow C} [HasImage f.Hom] [HasImage g.Hom] [H
   HasImageMap.mk
     { map := (HasImageMap.imageMap sq1).map ≫ (HasImageMap.imageMap sq2).map,
       map_ι' := by
-        simp only [← image_map.map_ι, ← image_map.map_ι_assoc, ← comma.comp_right, ← category.assoc] }
+        simp only [image_map.map_ι, image_map.map_ι_assoc, comma.comp_right, category.assoc] }
 
 variable {f g : Arrow C} [HasImage f.Hom] [HasImage g.Hom] (sq : f ⟶ g)
 
@@ -645,7 +645,7 @@ instance : Subsingleton (ImageMap sq) :=
   Subsingleton.intro fun a b =>
     ImageMap.ext a b <|
       (cancel_mono (image.ι g.Hom)).1 <| by
-        simp only [← image_map.map_ι]
+        simp only [image_map.map_ι]
 
 end
 
@@ -831,10 +831,10 @@ instance (priority := 100) has_strong_epi_images_of_has_pullbacks_of_has_equaliz
                   e := pullback.lift _ _ sq.w } ≫
               pullback.fst,
           fac_left' := by
-            simp only [← image.fac_lift_assoc, ← pullback.lift_fst],
+            simp only [image.fac_lift_assoc, pullback.lift_fst],
           fac_right' := by
             ext
-            simp only [← sq.w, ← category.assoc, ← image.fac_lift_assoc, ← pullback.lift_fst_assoc] }
+            simp only [sq.w, category.assoc, image.fac_lift_assoc, pullback.lift_fst_assoc] }
 
 end HasStrongEpiImages
 

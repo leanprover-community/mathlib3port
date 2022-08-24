@@ -129,7 +129,7 @@ theorem Union_lift_binary (dir : Directed (· ≤ ·) S) (op : T → T → T) (o
   have hxy : (Set.inclusion (Set.subset_Union S k) (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩) : α) ∈ S k :=
     (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩).Prop
   conv_lhs => rw [hx, hy, ← hopi, Union_lift_of_mem _ hxy]
-  simp only [← coe_inclusion, ← Subtype.coe_eta]
+  simp only [coe_inclusion, Subtype.coe_eta]
 
 end UnionLift
 

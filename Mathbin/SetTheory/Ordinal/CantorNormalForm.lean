@@ -76,10 +76,10 @@ theorem CNF_ne_zero {b o : Ordinal} (ho : o ≠ 0) : cNF b o = (log b o, o / b ^
   CNF_rec_pos b ho _ _
 
 theorem zero_CNF {o : Ordinal} (ho : o ≠ 0) : cNF 0 o = [⟨0, o⟩] := by
-  simp [← CNF_ne_zero ho]
+  simp [CNF_ne_zero ho]
 
 theorem one_CNF {o : Ordinal} (ho : o ≠ 0) : cNF 1 o = [⟨0, o⟩] := by
-  simp [← CNF_ne_zero ho]
+  simp [CNF_ne_zero ho]
 
 theorem CNF_of_le_one {b o : Ordinal} (hb : b ≤ 1) (ho : o ≠ 0) : cNF b o = [⟨0, o⟩] := by
   rcases le_one_iff.1 hb with (rfl | rfl)
@@ -89,7 +89,7 @@ theorem CNF_of_le_one {b o : Ordinal} (hb : b ≤ 1) (ho : o ≠ 0) : cNF b o = 
     
 
 theorem CNF_of_lt {b o : Ordinal} (ho : o ≠ 0) (hb : o < b) : cNF b o = [⟨0, o⟩] := by
-  simp [← CNF_ne_zero ho, ← log_eq_zero hb]
+  simp [CNF_ne_zero ho, log_eq_zero hb]
 
 /-- Evaluating the Cantor normal form of an ordinal returns the ordinal. -/
 theorem CNF_foldr (b o : Ordinal) : (cNF b o).foldr (fun p r => b ^ p.1 * p.2 + r) 0 = o :=
@@ -109,7 +109,7 @@ theorem CNF_fst_le_log {b o : Ordinal.{u}} {x : Ordinal × Ordinal} : x ∈ cNF 
     
   · rw [CNF_ne_zero ho, List.mem_cons_iffₓ]
     rintro (rfl | h)
-    · exact le_rfl
+    · exact le_rflₓ
       
     · exact (H h).trans (log_mono_right _ (mod_opow_log_lt_self b ho).le)
       
@@ -162,10 +162,10 @@ theorem CNF_sorted (b o : Ordinal) : ((cNF b o).map Prod.fst).Sorted (· > ·) :
   · simp
     
   · cases' le_or_ltₓ b 1 with hb hb
-    · simp [← CNF_of_le_one hb ho]
+    · simp [CNF_of_le_one hb ho]
       
     · cases' lt_or_leₓ o b with hob hbo
-      · simp [← CNF_of_lt ho hob]
+      · simp [CNF_of_lt ho hob]
         
       · rw [CNF_ne_zero ho, List.map_cons, List.sorted_cons]
         refine' ⟨fun a H => _, IH⟩

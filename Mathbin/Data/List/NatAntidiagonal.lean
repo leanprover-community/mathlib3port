@@ -64,18 +64,18 @@ theorem nodup_antidiagonal (n : ℕ) : Nodupₓ (antidiagonal n) :=
 @[simp]
 theorem antidiagonal_succ {n : ℕ} : antidiagonal (n + 1) = (0, n + 1) :: (antidiagonal n).map (Prod.map Nat.succ id) :=
   by
-  simp only [← antidiagonal, ← range_succ_eq_map, ← map_cons, ← true_andₓ, ← Nat.add_succ_sub_one, ← add_zeroₓ, ←
-    id.def, ← eq_self_iff_true, ← tsub_zero, ← map_map, ← Prod.map_mkₓ]
+  simp only [antidiagonal, range_succ_eq_map, map_cons, true_andₓ, Nat.add_succ_sub_one, add_zeroₓ, id.def,
+    eq_self_iff_true, tsub_zero, map_map, Prod.map_mkₓ]
   apply congr (congr rfl _) rfl
   ext <;> simp
 
 theorem antidiagonal_succ' {n : ℕ} :
     antidiagonal (n + 1) = (antidiagonal n).map (Prod.map id Nat.succ) ++ [(n + 1, 0)] := by
-  simp only [← antidiagonal, ← range_succ, ← add_tsub_cancel_left, ← map_append, ← append_assoc, ← tsub_self, ←
-    singleton_append, ← map_map, ← map]
+  simp only [antidiagonal, range_succ, add_tsub_cancel_left, map_append, append_assoc, tsub_self, singleton_append,
+    map_map, map]
   congr 1
   apply map_congr
-  simp (config := { contextual := true })[← le_of_ltₓ, ← Nat.succ_eq_add_one, ← Nat.sub_add_commₓ]
+  simp (config := { contextual := true })[le_of_ltₓ, Nat.succ_eq_add_one, Nat.sub_add_commₓ]
 
 theorem antidiagonal_succ_succ' {n : ℕ} :
     antidiagonal (n + 2) = (0, n + 2) :: (antidiagonal n).map (Prod.map Nat.succ Nat.succ) ++ [(n + 2, 0)] := by
@@ -85,7 +85,7 @@ theorem antidiagonal_succ_succ' {n : ℕ} :
 theorem map_swap_antidiagonal {n : ℕ} : (antidiagonal n).map Prod.swap = (antidiagonal n).reverse := by
   rw [antidiagonal, map_map, Prod.swap, ← List.map_reverse, range_eq_range', reverse_range', ← range_eq_range', map_map]
   apply map_congr
-  simp (config := { contextual := true })[← Nat.sub_sub_selfₓ, ← lt_succ_iff]
+  simp (config := { contextual := true })[Nat.sub_sub_selfₓ, lt_succ_iff]
 
 end Nat
 

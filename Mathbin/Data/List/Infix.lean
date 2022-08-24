@@ -115,7 +115,7 @@ theorem IsSuffix.trans : ∀ {l₁ l₂ l₃ : List α}, l₁ <:+ l₂ → l₂ 
 theorem IsInfix.trans : ∀ {l₁ l₂ l₃ : List α}, l₁ <:+: l₂ → l₂ <:+: l₃ → l₁ <:+: l₃
   | l, _, _, ⟨l₁, r₁, rfl⟩, ⟨l₂, r₂, rfl⟩ =>
     ⟨l₂ ++ l₁, r₁ ++ r₂, by
-      simp only [← append_assoc]⟩
+      simp only [append_assoc]⟩
 
 protected theorem IsInfix.sublist : l₁ <:+: l₂ → l₁ <+ l₂ := fun ⟨s, t, h⟩ => by
   rw [← h]
@@ -147,7 +147,7 @@ theorem reverse_suffix : reverse l₁ <:+ reverse l₂ ↔ l₁ <+: l₂ :=
 
 @[simp]
 theorem reverse_prefix : reverse l₁ <+: reverse l₂ ↔ l₁ <:+ l₂ := by
-  rw [← reverse_suffix] <;> simp only [← reverse_reverse]
+  rw [← reverse_suffix] <;> simp only [reverse_reverse]
 
 @[simp]
 theorem reverse_infix : reverse l₁ <:+: reverse l₂ ↔ l₁ <:+: l₂ :=
@@ -340,7 +340,7 @@ theorem suffix_of_suffix_length_le (h₁ : l₁ <:+ l₃) (h₂ : l₂ <:+ l₃)
   reverse_prefix.1 <|
     prefix_of_prefix_length_le (reverse_prefix.2 h₁) (reverse_prefix.2 h₂)
       (by
-        simp [← ll])
+        simp [ll])
 
 theorem suffix_or_suffix_of_suffix (h₁ : l₁ <:+ l₃) (h₂ : l₂ <:+ l₃) : l₁ <:+ l₂ ∨ l₂ <:+ l₁ :=
   (prefix_or_prefix_of_prefix (reverse_prefix.2 h₁) (reverse_prefix.2 h₂)).imp reverse_prefix.1 reverse_prefix.1
@@ -350,7 +350,7 @@ theorem suffix_cons_iff : l₁ <:+ a :: l₂ ↔ l₁ = a :: l₂ ∨ l₁ <:+ l
   · rintro ⟨⟨hd, tl⟩, hl₃⟩
     · exact Or.inl hl₃
       
-    · simp only [← cons_append] at hl₃
+    · simp only [cons_append] at hl₃
       exact Or.inr ⟨_, hl₃.2⟩
       
     
@@ -366,7 +366,7 @@ theorem infix_cons_iff : l₁ <:+: a :: l₂ ↔ l₁ <+: a :: l₂ ∨ l₁ <:+
   · rintro ⟨⟨hd, tl⟩, t, hl₃⟩
     · exact Or.inl ⟨t, hl₃⟩
       
-    · simp only [← cons_append] at hl₃
+    · simp only [cons_append] at hl₃
       exact Or.inr ⟨_, t, hl₃.2⟩
       
     
@@ -451,7 +451,7 @@ theorem prefix_iff_eq_append : l₁ <+: l₂ ↔ l₁ ++ dropₓ (length l₁) l
 
 theorem suffix_iff_eq_append : l₁ <:+ l₂ ↔ takeₓ (length l₂ - length l₁) l₂ ++ l₁ = l₂ :=
   ⟨by
-    rintro ⟨r, rfl⟩ <;> simp only [← length_append, ← add_tsub_cancel_right, ← take_left], fun e => ⟨_, e⟩⟩
+    rintro ⟨r, rfl⟩ <;> simp only [length_append, add_tsub_cancel_right, take_left], fun e => ⟨_, e⟩⟩
 
 theorem prefix_iff_eq_take : l₁ <+: l₂ ↔ l₁ = takeₓ (length l₁) l₂ :=
   ⟨fun h => append_right_cancel <| (prefix_iff_eq_append.1 h).trans (take_append_dropₓ _ _).symm, fun e =>
@@ -493,11 +493,11 @@ instance decidableInfix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l
     decidableOfDecidableOfIff (@Or.decidable _ _ (l₁.decidablePrefix (b :: l₂)) (l₁.decidableInfix l₂))
       infix_cons_iff.symm
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:494:6: unsupported: specialize @hyp
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:526:6: unsupported: specialize @hyp
 theorem prefix_take_le_iff {L : List (List (Option α))} (hm : m < L.length) : L.take m <+: L.take n ↔ m ≤ n := by
-  simp only [← prefix_iff_eq_take, ← length_take]
+  simp only [prefix_iff_eq_take, length_take]
   induction' m with m IH generalizing L n
-  · simp only [← min_eq_leftₓ, ← eq_self_iff_true, ← Nat.zero_leₓ, ← take]
+  · simp only [min_eq_leftₓ, eq_self_iff_true, Nat.zero_leₓ, take]
     
   cases' L with l ls
   · exact (not_lt_bot hm).elim
@@ -505,20 +505,20 @@ theorem prefix_take_le_iff {L : List (List (Option α))} (hm : m < L.length) : L
   cases n
   · refine' iff_of_false _ (zero_lt_succ _).not_le
     rw [take_zero, take_nil]
-    simp only [← take]
+    simp only [take]
     exact not_false
     
-  · simp only [← length] at hm
+  · simp only [length] at hm
     specialize IH ls n (Nat.lt_of_succ_lt_succₓ hm)
-    simp only [← le_of_ltₓ (Nat.lt_of_succ_lt_succₓ hm), ← min_eq_leftₓ] at IH
-    simp only [← le_of_ltₓ hm, ← IH, ← true_andₓ, ← min_eq_leftₓ, ← eq_self_iff_true, ← length, ← take]
+    simp only [le_of_ltₓ (Nat.lt_of_succ_lt_succₓ hm), min_eq_leftₓ] at IH
+    simp only [le_of_ltₓ hm, IH, true_andₓ, min_eq_leftₓ, eq_self_iff_true, length, take]
     exact ⟨Nat.succ_le_succₓ, Nat.le_of_succ_le_succₓ⟩
     
 
 theorem cons_prefix_iff : a :: l₁ <+: b :: l₂ ↔ a = b ∧ l₁ <+: l₂ := by
   constructor
   · rintro ⟨L, hL⟩
-    simp only [← cons_append] at hL
+    simp only [cons_append] at hL
     exact ⟨hL.left, ⟨L, hL.right⟩⟩
     
   · rintro ⟨rfl, h⟩
@@ -527,19 +527,19 @@ theorem cons_prefix_iff : a :: l₁ <+: b :: l₂ ↔ a = b ∧ l₁ <+: l₂ :=
 
 theorem IsPrefix.map (h : l₁ <+: l₂) (f : α → β) : l₁.map f <+: l₂.map f := by
   induction' l₁ with hd tl hl generalizing l₂
-  · simp only [← nil_prefix, ← map_nil]
+  · simp only [nil_prefix, map_nil]
     
   · cases' l₂ with hd₂ tl₂
     · simpa only using eq_nil_of_prefix_nil h
       
     · rw [cons_prefix_iff] at h
-      simp only [← h, ← prefix_cons_inj, ← hl, ← map]
+      simp only [h, prefix_cons_inj, hl, map]
       
     
 
 theorem IsPrefix.filter_map (h : l₁ <+: l₂) (f : α → Option β) : l₁.filterMap f <+: l₂.filterMap f := by
   induction' l₁ with hd₁ tl₁ hl generalizing l₂
-  · simp only [← nil_prefix, ← filter_map_nil]
+  · simp only [nil_prefix, filter_map_nil]
     
   · cases' l₂ with hd₂ tl₂
     · simpa only using eq_nil_of_prefix_nil h
@@ -595,7 +595,7 @@ section InitsTails
 theorem mem_inits : ∀ s t : List α, s ∈ inits t ↔ s <+: t
   | s, [] =>
     suffices s = nil ↔ s <+: nil by
-      simpa only [← inits, ← mem_singleton]
+      simpa only [inits, mem_singleton]
     ⟨fun h => h.symm ▸ prefix_refl [], eq_nil_of_prefix_nil⟩
   | s, a :: t =>
     suffices (s = nil ∨ ∃ l ∈ inits t, a :: l = s) ↔ s <+: a :: t by
@@ -617,12 +617,12 @@ theorem mem_inits : ∀ s t : List α, s ∈ inits t ↔ s <+: t
 @[simp]
 theorem mem_tails : ∀ s t : List α, s ∈ tails t ↔ s <:+ t
   | s, [] => by
-    simp only [← tails, ← mem_singleton] <;>
+    simp only [tails, mem_singleton] <;>
       exact
         ⟨fun h => by
           rw [h] <;> exact suffix_refl [], eq_nil_of_suffix_nil⟩
   | s, a :: t => by
-    simp only [← tails, ← mem_cons_iff, ← mem_tails s t] <;>
+    simp only [tails, mem_cons_iff, mem_tails s t] <;>
       exact
         show s = a :: t ∨ s <:+ t ↔ s <:+ a :: t from
           ⟨fun o =>
@@ -647,7 +647,7 @@ theorem inits_append : ∀ s t : List α, inits (s ++ t) = s.inits ++ t.inits.ta
   | [], a :: t => by
     simp
   | a :: s, t => by
-    simp [← inits_append s t]
+    simp [inits_append s t]
 
 @[simp]
 theorem tails_append : ∀ s t : List α, tails (s ++ t) = (s.tails.map fun l => l ++ t) ++ t.tails.tail
@@ -656,36 +656,36 @@ theorem tails_append : ∀ s t : List α, tails (s ++ t) = (s.tails.map fun l =>
   | [], a :: t => by
     simp
   | a :: s, t => by
-    simp [← tails_append s t]
+    simp [tails_append s t]
 
 -- the lemma names `inits_eq_tails` and `tails_eq_inits` are like `sublists_eq_sublists'`
 theorem inits_eq_tails : ∀ l : List α, l.inits = (reverse <| map reverse <| tails <| reverse l)
   | [] => by
     simp
   | a :: l => by
-    simp [← inits_eq_tails l, ← map_eq_map_iff]
+    simp [inits_eq_tails l, map_eq_map_iff]
 
 theorem tails_eq_inits : ∀ l : List α, l.tails = (reverse <| map reverse <| inits <| reverse l)
   | [] => by
     simp
   | a :: l => by
-    simp [← tails_eq_inits l, ← append_left_inj]
+    simp [tails_eq_inits l, append_left_inj]
 
 theorem inits_reverse (l : List α) : inits (reverse l) = reverse (map reverse l.tails) := by
   rw [tails_eq_inits l]
-  simp [← reverse_involutive.comp_self]
+  simp [reverse_involutive.comp_self]
 
 theorem tails_reverse (l : List α) : tails (reverse l) = reverse (map reverse l.inits) := by
   rw [inits_eq_tails l]
-  simp [← reverse_involutive.comp_self]
+  simp [reverse_involutive.comp_self]
 
 theorem map_reverse_inits (l : List α) : map reverse l.inits = (reverse <| tails <| reverse l) := by
   rw [inits_eq_tails l]
-  simp [← reverse_involutive.comp_self]
+  simp [reverse_involutive.comp_self]
 
 theorem map_reverse_tails (l : List α) : map reverse l.tails = (reverse <| inits <| reverse l) := by
   rw [tails_eq_inits l]
-  simp [← reverse_involutive.comp_self]
+  simp [reverse_involutive.comp_self]
 
 @[simp]
 theorem length_tails (l : List α) : length (tails l) = length l + 1 := by
@@ -697,7 +697,7 @@ theorem length_tails (l : List α) : length (tails l) = length l + 1 := by
 
 @[simp]
 theorem length_inits (l : List α) : length (inits l) = length l + 1 := by
-  simp [← inits_eq_tails]
+  simp [inits_eq_tails]
 
 @[simp]
 theorem nth_le_tails (l : List α) (n : ℕ) (hn : n < length (tails l)) : nthLe (tails l) n hn = l.drop n := by
@@ -741,25 +741,25 @@ theorem insertₓ.def (a : α) (l : List α) : insert a l = if a ∈ l then l el
 
 @[simp]
 theorem insert_of_memₓ (h : a ∈ l) : insert a l = l := by
-  simp only [← insert.def, ← if_pos h]
+  simp only [insert.def, if_pos h]
 
 @[simp]
 theorem insert_of_not_memₓ (h : a ∉ l) : insert a l = a :: l := by
-  simp only [← insert.def, ← if_neg h] <;> constructor <;> rfl
+  simp only [insert.def, if_neg h] <;> constructor <;> rfl
 
 @[simp]
 theorem mem_insert_iffₓ : a ∈ insert b l ↔ a = b ∨ a ∈ l := by
   by_cases' h' : b ∈ l
-  · simp only [← insert_of_mem h']
+  · simp only [insert_of_mem h']
     apply (or_iff_right_of_imp _).symm
     exact fun e => e.symm ▸ h'
     
-  · simp only [← insert_of_not_mem h', ← mem_cons_iff]
+  · simp only [insert_of_not_mem h', mem_cons_iff]
     
 
 @[simp]
 theorem suffix_insert (a : α) (l : List α) : l <:+ insert a l := by
-  by_cases' a ∈ l <;> [simp only [← insert_of_mem h], simp only [← insert_of_not_mem h, ← suffix_cons]]
+  by_cases' a ∈ l <;> [simp only [insert_of_mem h], simp only [insert_of_not_mem h, suffix_cons]]
 
 theorem infix_insert (a : α) (l : List α) : l <:+: insert a l :=
   (suffix_insert a l).IsInfix

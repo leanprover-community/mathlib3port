@@ -38,12 +38,12 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ) where
     · simpa using hr
       
     · right
-      simpa only [← ne_of_gtₓ hr, ← Ne.def, ← mem_set_of_eq, ← mul_eq_zero, ← false_orₓ, ←
+      simpa only [ne_of_gtₓ hr, Ne.def, mem_set_of_eq, mul_eq_zero, false_orₓ,
         sin_eq_zero_iff_of_lt_of_lt hθ.1 hθ.2] using h'θ
       
   map_source' := by
     rintro ⟨x, y⟩ hxy
-    simp only [← prod_mk_mem_set_prod_eq, ← mem_Ioi, ← sqrt_pos, ← mem_Ioo, ← Complex.neg_pi_lt_arg, ← true_andₓ, ←
+    simp only [prod_mk_mem_set_prod_eq, mem_Ioi, sqrt_pos, mem_Ioo, Complex.neg_pi_lt_arg, true_andₓ,
       Complex.arg_lt_pi_iff]
     constructor
     · cases hxy
@@ -62,26 +62,25 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ) where
   right_inv' := by
     rintro ⟨r, θ⟩ ⟨hr, hθ⟩
     dsimp'  at hr hθ
-    simp only [← Prod.mk.inj_iff]
+    simp only [Prod.mk.inj_iff]
     constructor
     · conv_rhs => rw [← sqrt_sq (le_of_ltₓ hr), ← one_mulₓ (r ^ 2), ← sin_sq_add_cos_sq θ]
       congr 1
       ring_exp
       
     · convert Complex.arg_mul_cos_add_sin_mul_I hr ⟨hθ.1, hθ.2.le⟩
-      simp only [← Complex.equiv_real_prod_symm_apply, ← Complex.of_real_mul, ← Complex.of_real_cos, ←
-        Complex.of_real_sin]
+      simp only [Complex.equiv_real_prod_symm_apply, Complex.of_real_mul, Complex.of_real_cos, Complex.of_real_sin]
       ring
       
   left_inv' := by
     rintro ⟨x, y⟩ hxy
     have A : sqrt (x ^ 2 + y ^ 2) = Complex.abs (x + y * Complex.i) := by
-      simp only [← Complex.abs, ← Complex.normSq, ← pow_two, ← MonoidWithZeroHom.coe_mk, ← Complex.add_re, ←
-        Complex.of_real_re, ← Complex.mul_re, ← Complex.I_re, ← mul_zero, ← Complex.of_real_im, ← Complex.I_im, ←
-        sub_self, ← add_zeroₓ, ← Complex.add_im, ← Complex.mul_im, ← mul_oneₓ, ← zero_addₓ]
+      simp only [Complex.abs, Complex.normSq, pow_two, MonoidWithZeroHom.coe_mk, Complex.add_re, Complex.of_real_re,
+        Complex.mul_re, Complex.I_re, mul_zero, Complex.of_real_im, Complex.I_im, sub_self, add_zeroₓ, Complex.add_im,
+        Complex.mul_im, mul_oneₓ, zero_addₓ]
     have Z := Complex.abs_mul_cos_add_sin_mul_I (x + y * Complex.i)
-    simp only [Complex.of_real_cos, Complex.of_real_sin, ← mul_addₓ, Complex.of_real_mul, mul_assoc] at Z
-    simpa [← A, -Complex.of_real_cos, -Complex.of_real_sin] using Complex.ext_iff.1 Z
+    simp only [← Complex.of_real_cos, ← Complex.of_real_sin, mul_addₓ, ← Complex.of_real_mul, ← mul_assoc] at Z
+    simpa [A, -Complex.of_real_cos, -Complex.of_real_sin] using Complex.ext_iff.1 Z
   open_target := is_open_Ioi.Prod is_open_Ioo
   open_source := (is_open_lt continuous_const continuous_fst).union (is_open_ne_fun continuous_snd continuous_const)
   continuous_inv_fun :=
@@ -101,13 +100,13 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ) where
     · exact complex.equiv_real_prodₗ.symm.continuous.continuous_on
       
 
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation
 theorem has_fderiv_at_polar_coord_symm (p : ℝ × ℝ) :
     HasFderivAt polarCoord.symm
       (Matrix.toLin (Basis.finTwoProd ℝ) (Basis.finTwoProd ℝ)
           («expr!![ »
-            "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation")).toContinuousLinearMap
+            "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation")).toContinuousLinearMap
       p :=
   by
   rw [Matrix.to_lin_fin_two_prod_to_continuous_linear_map]
@@ -115,13 +114,12 @@ theorem has_fderiv_at_polar_coord_symm (p : ℝ × ℝ) :
       HasFderivAt.prod (has_fderiv_at_fst.mul ((has_deriv_at_cos p.2).comp_has_fderiv_at p has_fderiv_at_snd))
         (has_fderiv_at_fst.mul ((has_deriv_at_sin p.2).comp_has_fderiv_at p has_fderiv_at_snd)) using
       2 <;>
-    simp only [← smul_smul, ← add_commₓ, ← neg_mul, ← neg_smul, ← smul_neg]
+    simp only [smul_smul, add_commₓ, neg_mul, neg_smul, smul_neg]
 
 theorem polar_coord_source_ae_eq_univ : polarCoord.Source =ᵐ[volume] univ := by
   have A : polar_coord.sourceᶜ ⊆ (LinearMap.snd ℝ ℝ ℝ).ker := by
     intro x hx
-    simp only [← polar_coord_source, ← compl_union, ← mem_inter_eq, ← mem_compl_eq, ← mem_set_of_eq, ← not_ltₓ, ←
-      not_not] at hx
+    simp only [polar_coord_source, compl_union, mem_inter_eq, mem_compl_eq, mem_set_of_eq, not_ltₓ, not_not] at hx
     exact hx.2
   have B : volume ((LinearMap.snd ℝ ℝ ℝ).ker : Set (ℝ × ℝ)) = 0 := by
     apply measure.add_haar_submodule
@@ -130,24 +128,24 @@ theorem polar_coord_source_ae_eq_univ : polarCoord.Source =ᵐ[volume] univ := b
     have : (LinearMap.snd ℝ ℝ ℝ) (0, 1) = (0 : ℝ × ℝ →ₗ[ℝ] ℝ) (0, 1) := by
       rw [h]
     simpa using this
-  simp only [← ae_eq_univ]
+  simp only [ae_eq_univ]
   exact le_antisymmₓ ((measure_mono A).trans (le_of_eqₓ B)) bot_le
 
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation
 theorem integral_comp_polar_coord_symm {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     (f : ℝ × ℝ → E) : (∫ p in polarCoord.Target, p.1 • f (polarCoord.symm p)) = ∫ p, f p := by
   set B : ℝ × ℝ → ℝ × ℝ →L[ℝ] ℝ × ℝ := fun p =>
     (Matrix.toLin (Basis.finTwoProd ℝ) (Basis.finTwoProd ℝ)
         («expr!![ »
-          "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation")).toContinuousLinearMap with
+          "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation")).toContinuousLinearMap with
     hB
-  have A : ∀, ∀ p ∈ polar_coord.symm.source, ∀, HasFderivAt polar_coord.symm (B p) p := fun p hp =>
+  have A : ∀ p ∈ polar_coord.symm.source, HasFderivAt polar_coord.symm (B p) p := fun p hp =>
     has_fderiv_at_polar_coord_symm p
   have B_det : ∀ p, (B p).det = p.1 := by
     intro p
     conv_rhs => rw [← one_mulₓ p.1, ← cos_sq_add_sin_sq p.2]
-    simp only [← neg_mul, ← LinearMap.det_to_continuous_linear_map, ← LinearMap.det_to_lin, ← Matrix.det_fin_two_of, ←
+    simp only [neg_mul, LinearMap.det_to_continuous_linear_map, LinearMap.det_to_lin, Matrix.det_fin_two_of,
       sub_neg_eq_add]
     ring_exp
   symm

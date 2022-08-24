@@ -123,7 +123,7 @@ theorem IsPrimitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp 
     rw [Ne.def, Ne.def, ← Decidable.not_or_iff_and_not, ← mul_eq_zero, ← hab]
     intro con
     apply hp.ne_zero (map_injective (algebraMap R K) (IsFractionRing.injective _ _) _)
-    simp [← Con]
+    simp [Con]
   rcases hi.is_unit_or_is_unit (mul_left_cancel₀ hcd0 h1).symm with (h | h)
   · right
     apply is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part h0.2 (is_unit_of_mul_is_unit_right h)
@@ -154,7 +154,7 @@ theorem IsPrimitive.dvd_of_fraction_map_dvd_fraction_map {p q : R[X]} (hp : p.Is
     apply mul_ne_zero hq.ne_zero
     rw [Ne.def, C_eq_zero]
     contrapose! s0
-    simp [← s0, ← mem_non_zero_divisors_iff_ne_zero]
+    simp [s0, mem_non_zero_divisors_iff_ne_zero]
 
 variable (K)
 

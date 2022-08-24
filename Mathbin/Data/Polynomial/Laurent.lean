@@ -151,7 +151,7 @@ theorem T_zero : (t 0 : R[T;T⁻¹]) = 1 :=
 
 theorem T_add (m n : ℤ) : (t (m + n) : R[T;T⁻¹]) = t m * t n := by
   convert single_mul_single.symm
-  simp [← T]
+  simp [T]
 
 theorem T_sub (m n : ℤ) : (t (m - n) : R[T;T⁻¹]) = t m * t (-n) := by
   rw [← T_add, sub_eq_add_neg]
@@ -163,7 +163,7 @@ theorem T_pow (m : ℤ) (n : ℕ) : (t m ^ n : R[T;T⁻¹]) = t (n * m) := by
 /-- The `simp` version of `mul_assoc`, in the presence of `T`'s. -/
 @[simp]
 theorem mul_T_assoc (f : R[T;T⁻¹]) (m n : ℤ) : f * t m * t n = f * t (m + n) := by
-  simp [T_add, ← mul_assoc]
+  simp [← T_add, mul_assoc]
 
 @[simp]
 theorem single_eq_C_mul_T (r : R) (n : ℤ) : (single n r : R[T;T⁻¹]) = (c r * t n : R[T;T⁻¹]) := by
@@ -180,13 +180,13 @@ theorem _root_.polynomial.to_laurent_C_mul_T (n : ℕ) (r : R) :
 @[simp]
 theorem _root_.polynomial.to_laurent_C (r : R) : (Polynomial.c r).toLaurent = c r := by
   convert Polynomial.to_laurent_C_mul_T 0 r
-  simp only [← Int.coe_nat_zero, ← T_zero, ← mul_oneₓ]
+  simp only [Int.coe_nat_zero, T_zero, mul_oneₓ]
 
 @[simp]
 theorem _root_.polynomial.to_laurent_X : (Polynomial.x.toLaurent : R[T;T⁻¹]) = t 1 := by
   have : (Polynomial.x : R[X]) = monomial 1 1 := by
-    simp [← monomial_eq_C_mul_X]
-  simp [← this, ← Polynomial.to_laurent_C_mul_T]
+    simp [monomial_eq_C_mul_X]
+  simp [this, Polynomial.to_laurent_C_mul_T]
 
 @[simp]
 theorem _root_.polynomial.to_laurent_one : (Polynomial.toLaurent : R[X] → R[T;T⁻¹]) 1 = 1 :=
@@ -195,15 +195,15 @@ theorem _root_.polynomial.to_laurent_one : (Polynomial.toLaurent : R[X] → R[T;
 @[simp]
 theorem _root_.polynomial.to_laurent_C_mul_eq (r : R) (f : R[X]) : (Polynomial.c r * f).toLaurent = c r * f.toLaurent :=
   by
-  simp only [← _root_.map_mul, ← Polynomial.to_laurent_C]
+  simp only [_root_.map_mul, Polynomial.to_laurent_C]
 
 @[simp]
 theorem _root_.polynomial.to_laurent_X_pow (n : ℕ) : (X ^ n : R[X]).toLaurent = t n := by
-  simp only [← map_pow, ← Polynomial.to_laurent_X, ← T_pow, ← mul_oneₓ]
+  simp only [map_pow, Polynomial.to_laurent_X, T_pow, mul_oneₓ]
 
 @[simp]
 theorem _root_.polynomial.to_laurent_C_mul_X_pow (n : ℕ) (r : R) : (Polynomial.c r * X ^ n).toLaurent = c r * t n := by
-  simp only [← _root_.map_mul, ← Polynomial.to_laurent_C, ← Polynomial.to_laurent_X_pow]
+  simp only [_root_.map_mul, Polynomial.to_laurent_C, Polynomial.to_laurent_X_pow]
 
 instance invertibleT (n : ℤ) : Invertible (t n : R[T;T⁻¹]) where
   invOf := t (-n)
@@ -226,7 +226,7 @@ protected theorem induction_on {M : R[T;T⁻¹] → Prop} (p : R[T;T⁻¹]) (h_C
   have A : ∀ {n : ℤ} {a : R}, M (C a * T n) := by
     intro n a
     apply n.induction_on
-    · simpa only [← T_zero, ← mul_oneₓ] using h_C a
+    · simpa only [T_zero, mul_oneₓ] using h_C a
       
     · exact fun m => h_C_mul_T m a
       
@@ -235,7 +235,7 @@ protected theorem induction_on {M : R[T;T⁻¹] → Prop} (p : R[T;T⁻¹]) (h_C
   have B : ∀ s : Finset ℤ, M (s.Sum fun n : ℤ => C (p.to_fun n) * T n) := by
     apply Finset.induction
     · convert h_C 0
-      simp only [← Finset.sum_empty, ← _root_.map_zero]
+      simp only [Finset.sum_empty, _root_.map_zero]
       
     · intro n s ns ih
       rw [Finset.sum_insert ns]
@@ -267,7 +267,7 @@ theorem commute_T (n : ℤ) (f : R[T;T⁻¹]) : Commute (t n) f :=
   (f.induction_on' fun p q Tp Tq => Commute.add_right Tp Tq) fun m a =>
     show t n * _ = _ by
       rw [T, T, ← single_eq_C, single_mul_single, single_mul_single, single_mul_single]
-      simp [← add_commₓ]
+      simp [add_commₓ]
 
 @[simp]
 theorem T_mul (n : ℤ) (f : R[T;T⁻¹]) : t n * f = f * t n :=
@@ -287,26 +287,24 @@ theorem trunc_C_mul_T (n : ℤ) (r : R) : trunc (c r * t n) = ite (0 ≤ n) (mon
   by_cases' n0 : 0 ≤ n
   · lift n to ℕ using n0
     erw [comap_domain_single, to_finsupp_iso_symm_apply]
-    simp only [← Int.coe_nat_nonneg, ← Int.to_nat_coe_nat, ← if_true, ← to_finsupp_iso_apply, ← to_finsupp_monomial]
+    simp only [Int.coe_nat_nonneg, Int.to_nat_coe_nat, if_true, to_finsupp_iso_apply, to_finsupp_monomial]
     
   · lift -n to ℕ using (neg_pos.mpr (not_le.mp n0)).le with m
     rw [to_finsupp_iso_apply, to_finsupp_inj, if_neg n0]
     erw [to_finsupp_iso_symm_apply]
     ext a
     have := ((not_le.mp n0).trans_le (Int.coe_zero_le a)).ne'
-    simp only [← coeff, ← comap_domain_apply, ← Int.of_nat_eq_coe, ← coeff_zero, ← single_apply_eq_zero, ← this, ←
-      IsEmpty.forall_iff]
+    simp only [coeff, comap_domain_apply, Int.of_nat_eq_coe, coeff_zero, single_apply_eq_zero, this, IsEmpty.forall_iff]
     
 
 @[simp]
 theorem left_inverse_trunc_to_laurent : Function.LeftInverse (trunc : R[T;T⁻¹] → R[X]) Polynomial.toLaurent := by
   refine' fun f => f.induction_on' _ _
   · exact fun f g hf hg => by
-      simp only [← hf, ← hg, ← _root_.map_add]
+      simp only [hf, hg, _root_.map_add]
     
   · exact fun n r => by
-      simp only [← Polynomial.to_laurent_C_mul_T, ← trunc_C_mul_T, ← Int.coe_nat_nonneg, ← Int.to_nat_coe_nat, ←
-        if_true]
+      simp only [Polynomial.to_laurent_C_mul_T, trunc_C_mul_T, Int.coe_nat_nonneg, Int.to_nat_coe_nat, if_true]
     
 
 @[simp]
@@ -327,8 +325,8 @@ theorem exists_T_pow (f : R[T;T⁻¹]) : ∃ (n : ℕ)(f' : R[X]), f'.toLaurent 
   apply f.induction_on' _ fun n a => _ <;> clear f
   · rintro f g ⟨m, fn, hf⟩ ⟨n, gn, hg⟩
     refine' ⟨m + n, fn * X ^ n + gn * X ^ m, _⟩
-    simp only [← hf, ← hg, ← add_mulₓ, ← add_commₓ (n : ℤ), ← map_add, ← map_mul, ← Polynomial.to_laurent_X_pow, ←
-      mul_T_assoc, ← Int.coe_nat_add]
+    simp only [hf, hg, add_mulₓ, add_commₓ (n : ℤ), map_add, map_mul, Polynomial.to_laurent_X_pow, mul_T_assoc,
+      Int.coe_nat_add]
     
   · cases' n with n n
     · exact
@@ -336,8 +334,8 @@ theorem exists_T_pow (f : R[T;T⁻¹]) : ∃ (n : ℕ)(f' : R[X]), f'.toLaurent 
           simp ⟩
       
     · refine' ⟨n + 1, Polynomial.c a, _⟩
-      simp only [← Int.neg_succ_of_nat_eq, ← Polynomial.to_laurent_C, ← Int.coe_nat_succ, ← mul_T_assoc, ←
-        add_left_negₓ, ← T_zero, ← mul_oneₓ]
+      simp only [Int.neg_succ_of_nat_eq, Polynomial.to_laurent_C, Int.coe_nat_succ, mul_T_assoc, add_left_negₓ, T_zero,
+        mul_oneₓ]
       
     
 
@@ -357,7 +355,7 @@ theorem reduce_to_polynomial_of_mul_T (f : R[T;T⁻¹]) {Q : R[T;T⁻¹] → Pro
     (QT : ∀ f, Q (f * t 1) → Q f) : Q f := by
   induction' f using LaurentPolynomial.induction_on_mul_T with f n
   induction' n with n hn
-  · simpa only [← Int.coe_nat_zero, ← neg_zero', ← T_zero, ← mul_oneₓ] using Qf _
+  · simpa only [Int.coe_nat_zero, neg_zero', T_zero, mul_oneₓ] using Qf _
     
   · convert QT _ _
     simpa using hn
@@ -366,7 +364,7 @@ theorem reduce_to_polynomial_of_mul_T (f : R[T;T⁻¹]) {Q : R[T;T⁻¹] → Pro
 section Support
 
 theorem support_C_mul_T (a : R) (n : ℤ) : (c a * t n).support ⊆ {n} := by
-  simpa only [single_eq_C_mul_T] using support_single_subset
+  simpa only [← single_eq_C_mul_T] using support_single_subset
 
 theorem support_C_mul_T_of_ne_zero {a : R} (a0 : a ≠ 0) (n : ℤ) : (c a * t n).support = {n} := by
   rw [← single_eq_C_mul_T]
@@ -379,14 +377,14 @@ theorem to_laurent_support (f : R[X]) : f.toLaurent.support = f.support.map Nat.
   generalize hd : f.support = s
   revert f
   refine' Finset.induction_on s _ _ <;> clear s
-  · simp (config := { contextual := true })only [← Polynomial.support_eq_empty, ← map_zero, ← Finsupp.support_zero, ←
-      eq_self_iff_true, ← implies_true_iff, ← Finset.map_empty]
+  · simp (config := { contextual := true })only [Polynomial.support_eq_empty, map_zero, Finsupp.support_zero,
+      eq_self_iff_true, implies_true_iff, Finset.map_empty]
     
   · intro a s as hf f fs
     have : (erase a f).toLaurent.support = s.map Nat.castEmbedding :=
       hf (f.erase a)
         (by
-          simp only [← fs, ← Finset.erase_eq_of_not_mem as, ← Polynomial.support_erase, ← Finset.erase_insert_eq_erase])
+          simp only [fs, Finset.erase_eq_of_not_mem as, Polynomial.support_erase, Finset.erase_insert_eq_erase])
     rw [← monomial_add_erase f a, Finset.map_insert, ← this, map_add, Polynomial.to_laurent_C_mul_T, support_add_eq,
       Finset.insert_eq]
     · congr
@@ -394,7 +392,7 @@ theorem to_laurent_support (f : R[X]) : f.toLaurent.support = f.support.map Nat.
         support_C_mul_T_of_ne_zero
           (polynomial.mem_support_iff.mp
             (by
-              simp [← fs]))
+              simp [fs]))
           _
       
     · rw [this]
@@ -439,11 +437,10 @@ theorem degree_C_mul_T (n : ℤ) (a : R) (a0 : a ≠ 0) : (c a * t n).degree = n
   rw [degree]
   convert Finset.max_singleton
   refine' support_eq_singleton.mpr _
-  simp only [single_eq_C_mul_T, ← single_eq_same, ← a0, ← Ne.def, ← not_false_iff, ← eq_self_iff_true, ← and_selfₓ]
+  simp only [← single_eq_C_mul_T, single_eq_same, a0, Ne.def, not_false_iff, eq_self_iff_true, and_selfₓ]
 
 theorem degree_C_mul_T_ite (n : ℤ) (a : R) : (c a * t n).degree = ite (a = 0) ⊥ n := by
-  split_ifs with h h <;>
-    simp only [← h, ← map_zero, ← zero_mul, ← degree_zero, ← degree_C_mul_T, ← Ne.def, ← not_false_iff]
+  split_ifs with h h <;> simp only [h, map_zero, zero_mul, degree_zero, degree_C_mul_T, Ne.def, not_false_iff]
 
 @[simp]
 theorem degree_T [Nontrivial R] (n : ℤ) : (t n : R[T;T⁻¹]).degree = n := by
@@ -455,7 +452,7 @@ theorem degree_C {a : R} (a0 : a ≠ 0) : (c a).degree = 0 := by
   exact degree_C_mul_T 0 a a0
 
 theorem degree_C_ite (a : R) : (c a).degree = ite (a = 0) ⊥ 0 := by
-  split_ifs with h h <;> simp only [← h, ← map_zero, ← degree_zero, ← degree_C, ← Ne.def, ← not_false_iff]
+  split_ifs with h h <;> simp only [h, map_zero, degree_zero, degree_C, Ne.def, not_false_iff]
 
 end ExactDegrees
 
@@ -463,7 +460,7 @@ section DegreeBounds
 
 theorem degree_C_mul_T_le (n : ℤ) (a : R) : (c a * t n).degree ≤ n := by
   by_cases' a0 : a = 0
-  · simp only [← a0, ← map_zero, ← zero_mul, ← degree_zero, ← bot_le]
+  · simp only [a0, map_zero, zero_mul, degree_zero, bot_le]
     
   · exact (degree_C_mul_T n a a0).le
     
@@ -489,7 +486,7 @@ instance : Module R[X] R[T;T⁻¹] :=
 
 instance (R : Type _) [Semiringₓ R] :
     IsScalarTower R[X] R[X] R[T;T⁻¹] where smul_assoc := fun x y z => by
-    simp only [← HasSmul.smul, ← HasSmul.Comp.smul, ← map_mul, ← mul_assoc]
+    simp only [HasSmul.smul, HasSmul.Comp.smul, map_mul, mul_assoc]
 
 end Semiringₓ
 
@@ -500,7 +497,7 @@ variable [CommSemiringₓ R]
 instance algebraPolynomial (R : Type _) [CommSemiringₓ R] : Algebra R[X] R[T;T⁻¹] :=
   { Polynomial.toLaurent with
     commutes' := fun f l => by
-      simp [← mul_comm],
+      simp [mul_comm],
     smul_def' := fun f l => rfl }
 
 theorem algebra_map_X_pow (n : ℕ) : algebraMap R[X] R[T;T⁻¹] (X ^ n) = t n :=
@@ -514,13 +511,13 @@ theorem is_localization : IsLocalization (Submonoid.closure ({x} : Set R[X])) R[
   { map_units := fun t => by
       cases' t with t ht
       rcases submonoid.mem_closure_singleton.mp ht with ⟨n, rfl⟩
-      simp only [← is_unit_T n, ← SetLike.coe_mk, ← algebra_map_eq_to_laurent, ← Polynomial.to_laurent_X_pow],
+      simp only [is_unit_T n, SetLike.coe_mk, algebra_map_eq_to_laurent, Polynomial.to_laurent_X_pow],
     surj := fun f => by
       induction' f using LaurentPolynomial.induction_on_mul_T with f n
       have := (Submonoid.closure ({X} : Set R[X])).pow_mem Submonoid.mem_closure_singleton_self n
       refine' ⟨(f, ⟨_, this⟩), _⟩
-      simp only [← SetLike.coe_mk, ← algebra_map_eq_to_laurent, ← Polynomial.to_laurent_X_pow, ← mul_T_assoc, ←
-        add_left_negₓ, ← T_zero, ← mul_oneₓ],
+      simp only [SetLike.coe_mk, algebra_map_eq_to_laurent, Polynomial.to_laurent_X_pow, mul_T_assoc, add_left_negₓ,
+        T_zero, mul_oneₓ],
     eq_iff_exists := fun f g => by
       rw [algebra_map_eq_to_laurent, algebra_map_eq_to_laurent, Polynomial.to_laurent_inj]
       refine' ⟨_, _⟩
@@ -532,7 +529,7 @@ theorem is_localization : IsLocalization (Submonoid.closure ({x} : Set R[X])) R[
         exact
           mul_X_pow_injective n
             (by
-              simpa only [← X_pow_mul] using h)
+              simpa only [X_pow_mul] using h)
          }
 
 end CommSemiringₓ

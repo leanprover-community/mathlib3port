@@ -105,7 +105,7 @@ theorem id_c_app (X : SheafedSpace C) (U) :
   by
   induction U using Opposite.rec
   cases U
-  simp only [← id_c]
+  simp only [id_c]
   dsimp'
   simp
 

@@ -163,13 +163,13 @@ def mulHom : (⨁ i, A i) →+ (⨁ i, A i) →+ ⨁ i, A i :=
 instance : NonUnitalNonAssocSemiringₓ (⨁ i, A i) :=
   { DirectSum.addCommMonoid _ _ with mul := fun a b => mulHom A a b, zero := 0, add := (· + ·),
     zero_mul := fun a => by
-      simp only [← AddMonoidHom.map_zero, ← AddMonoidHom.zero_apply],
+      simp only [AddMonoidHom.map_zero, AddMonoidHom.zero_apply],
     mul_zero := fun a => by
-      simp only [← AddMonoidHom.map_zero],
+      simp only [AddMonoidHom.map_zero],
     left_distrib := fun a b c => by
-      simp only [← AddMonoidHom.map_add],
+      simp only [AddMonoidHom.map_add],
     right_distrib := fun a b c => by
-      simp only [← AddMonoidHom.map_add, ← AddMonoidHom.add_apply] }
+      simp only [AddMonoidHom.map_add, AddMonoidHom.add_apply] }
 
 variable {A}
 
@@ -219,7 +219,7 @@ private theorem mul_assoc (a b c : ⨁ i, A i) : a * b * c = a * (b * c) := by
             (mulHom A)).flip
     from AddMonoidHom.congr_fun (AddMonoidHom.congr_fun (AddMonoidHom.congr_fun this a) b) c
   ext ai ax bi bx ci cx : 6
-  dsimp' only [← coe_comp, ← Function.comp_app, ← comp_hom_apply_apply, ← flip_apply, ← flip_hom_apply]
+  dsimp' only [coe_comp, Function.comp_app, comp_hom_apply_apply, flip_apply, flip_hom_apply]
   rw [mul_hom_of_of, mul_hom_of_of, mul_hom_of_of, mul_hom_of_of]
   exact of_eq_of_graded_monoid_eq (mul_assoc (GradedMonoid.mk ai ax) ⟨bi, bx⟩ ⟨ci, cx⟩)
 
@@ -245,10 +245,10 @@ theorem of_pow {i} (a : A i) (n : ℕ) : of _ i a ^ n = of _ (n • i) (GradedMo
 theorem of_list_dprod {α} (l : List α) (fι : α → ι) (fA : ∀ a, A (fι a)) :
     of A _ (l.dprod fι fA) = (l.map fun a => of A (fι a) (fA a)).Prod := by
   induction l
-  · simp only [← List.map_nil, ← List.prod_nil, ← List.dprod_nil]
+  · simp only [List.map_nil, List.prod_nil, List.dprod_nil]
     rfl
     
-  · simp only [← List.map_cons, ← List.prod_cons, ← List.dprod_cons, l_ih, ← DirectSum.of_mul_of]
+  · simp only [List.map_cons, List.prod_cons, List.dprod_cons, ← l_ih, DirectSum.of_mul_of]
     rfl
     
 
@@ -265,9 +265,9 @@ theorem mul_eq_sum_support_ghas_mul [∀ (i : ι) (x : A i), Decidable (x ≠ 0)
         DirectSum.of _ _ (GradedMonoid.GhasMul.mul (a ij.fst) (a' ij.snd)) :=
   by
   change DirectSum.mulHom _ a a' = _
-  dsimp' [← DirectSum.mulHom, ← DirectSum.toAddMonoid, ← Dfinsupp.lift_add_hom_apply]
-  simp only [← Dfinsupp.sum_add_hom_apply, ← Dfinsupp.sum, ← Dfinsupp.finset_sum_apply, ← AddMonoidHom.coe_finset_sum, ←
-    Finset.sum_apply, ← AddMonoidHom.flip_apply, ← AddMonoidHom.comp_hom_apply_apply, ← AddMonoidHom.comp_apply, ←
+  dsimp' [DirectSum.mulHom, DirectSum.toAddMonoid, Dfinsupp.lift_add_hom_apply]
+  simp only [Dfinsupp.sum_add_hom_apply, Dfinsupp.sum, Dfinsupp.finset_sum_apply, AddMonoidHom.coe_finset_sum,
+    Finset.sum_apply, AddMonoidHom.flip_apply, AddMonoidHom.comp_hom_apply_apply, AddMonoidHom.comp_apply,
     DirectSum.gmul_hom_apply_apply]
   rw [Finset.sum_product]
 
@@ -539,10 +539,10 @@ def liftRingHom :
   toFun := fun f => toSemiring f.1 f.2.1 f.2.2
   invFun := fun F =>
     ⟨fun i => (F : (⨁ i, A i) →+ R).comp (of _ i), by
-      simp only [← AddMonoidHom.comp_apply, ← RingHom.coe_add_monoid_hom]
+      simp only [AddMonoidHom.comp_apply, RingHom.coe_add_monoid_hom]
       rw [← F.map_one]
       rfl, fun i j ai aj => by
-      simp only [← AddMonoidHom.comp_apply, ← RingHom.coe_add_monoid_hom]
+      simp only [AddMonoidHom.comp_apply, RingHom.coe_add_monoid_hom]
       rw [← F.map_mul, of_mul_of]⟩
   left_inv := fun f => by
     ext xi xv
@@ -550,8 +550,8 @@ def liftRingHom :
   right_inv := fun F => by
     apply RingHom.coe_add_monoid_hom_injective
     ext xi xv
-    simp only [← RingHom.coe_add_monoid_hom_mk, ← DirectSum.to_add_monoid_of, ← AddMonoidHom.mk_coe, ←
-      AddMonoidHom.comp_apply, ← to_semiring_coe_add_monoid_hom]
+    simp only [RingHom.coe_add_monoid_hom_mk, DirectSum.to_add_monoid_of, AddMonoidHom.mk_coe, AddMonoidHom.comp_apply,
+      to_semiring_coe_add_monoid_hom]
 
 end ToSemiring
 

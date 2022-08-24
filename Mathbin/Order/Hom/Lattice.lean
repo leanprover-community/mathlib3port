@@ -163,15 +163,15 @@ instance (priority := 100) BoundedLatticeHomClass.toBoundedOrderHomClass [Lattic
 instance (priority := 100) OrderIsoClass.toSupHomClass [SemilatticeSup α] [SemilatticeSup β] [OrderIsoClass F α β] :
     SupHomClass F α β :=
   ⟨fun f a b =>
-    eq_of_forall_ge_iff fun c => by
-      simp only [le_map_inv_iff, ← sup_le_iff]⟩
+    eq_of_forall_ge_iffₓ fun c => by
+      simp only [← le_map_inv_iff, sup_le_iff]⟩
 
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toInfHomClass [SemilatticeInf α] [SemilatticeInf β] [OrderIsoClass F α β] :
     InfHomClass F α β :=
   ⟨fun f a b =>
-    eq_of_forall_le_iff fun c => by
-      simp only [map_inv_le_iff, ← le_inf_iff]⟩
+    eq_of_forall_le_iffₓ fun c => by
+      simp only [← map_inv_le_iff, le_inf_iff]⟩
 
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toSupBotHomClass [SemilatticeSup α] [OrderBot α] [SemilatticeSup β]

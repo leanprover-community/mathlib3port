@@ -102,7 +102,7 @@ theorem is_extreme_Inter {ι : Type _} [Nonempty ι] {F : ι → Set E} (hAF : �
   have h := fun i => (hAF i).2 hx₁A hx₂A (hxF i) hx
   exact ⟨fun i => (h i).1, fun i => (h i).2⟩
 
-theorem is_extreme_bInter {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀, ∀ B ∈ F, ∀, IsExtreme 𝕜 A B) :
+theorem is_extreme_bInter {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F, IsExtreme 𝕜 A B) :
     IsExtreme 𝕜 A (⋂ B ∈ F, B) := by
   obtain ⟨B, hB⟩ := hF
   refine' ⟨(bInter_subset_of_mem hB).trans (hAF B hB).1, fun x₁ hx₁A x₂ hx₂A x hxF hx => _⟩
@@ -110,15 +110,15 @@ theorem is_extreme_bInter {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀, ∀ B 
   have h := fun B hB => (hAF B hB).2 hx₁A hx₂A (hxF B hB) hx
   exact ⟨fun B hB => (h B hB).1, fun B hB => (h B hB).2⟩
 
-theorem is_extreme_sInter {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀, ∀ B ∈ F, ∀, IsExtreme 𝕜 A B) :
-    IsExtreme 𝕜 A (⋂₀ F) := by
+theorem is_extreme_sInter {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F, IsExtreme 𝕜 A B) : IsExtreme 𝕜 A (⋂₀ F) :=
+  by
   obtain ⟨B, hB⟩ := hF
   refine' ⟨(sInter_subset_of_mem hB).trans (hAF B hB).1, fun x₁ hx₁A x₂ hx₂A x hxF hx => _⟩
   simp_rw [mem_sInter] at hxF⊢
   have h := fun B hB => (hAF B hB).2 hx₁A hx₂A (hxF B hB) hx
   exact ⟨fun B hB => (h B hB).1, fun B hB => (h B hB).2⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
 theorem extreme_points_def :
     x ∈ A.ExtremePoints 𝕜 ↔ x ∈ A ∧ ∀ (x₁ x₂) (_ : x₁ ∈ A) (_ : x₂ ∈ A), x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x :=
   Iff.rfl
@@ -160,7 +160,7 @@ section OrderedSemiring
 variable {𝕜} [OrderedSemiring 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {A B : Set E} {x : E}
 
 theorem IsExtreme.convex_diff (hA : Convex 𝕜 A) (hAB : IsExtreme 𝕜 A B) : Convex 𝕜 (A \ B) :=
-  convex_iff_open_segment_subset.2 fun x₁ x₂ ⟨hx₁A, hx₁B⟩ ⟨hx₂A, hx₂B⟩ x hx =>
+  convex_iff_open_segment_subset.2 fun x₁ ⟨hx₁A, hx₁B⟩ x₂ ⟨hx₂A, hx₂B⟩ x hx =>
     ⟨hA.open_segment_subset hx₁A hx₂A hx, fun hxB => hx₁B (hAB.2 hx₁A hx₂A hxB hx).1⟩
 
 end OrderedSemiring
@@ -171,7 +171,7 @@ variable {𝕜} [LinearOrderedRing 𝕜] [AddCommGroupₓ E] [Module 𝕜 E]
 
 variable [DenselyOrdered 𝕜] [NoZeroSmulDivisors 𝕜 E] {A B : Set E} {x : E}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
 /-- A useful restatement using `segment`: `x` is an extreme point iff the only (closed) segments
 that contain it are those with `x` as one of their endpoints. -/
 theorem mem_extreme_points_iff_forall_segment :

@@ -33,8 +33,7 @@ variable {ι α : Type _} [Fintype α] [DecidableEq α] [Nonempty α]
 /-- **Kleitman's theorem**. An intersecting family on `n` elements contains at most `2ⁿ⁻¹` sets, and
 each further intersecting family takes at most half of the sets that are in no previous family. -/
 theorem Finset.card_bUnion_le_of_intersecting (s : Finset ι) (f : ι → Finset (Finset α))
-    (hf : ∀, ∀ i ∈ s, ∀, (f i : Set (Finset α)).Intersecting) :
-    (s.bUnion f).card ≤ 2 ^ card α - 2 ^ (card α - s.card) := by
+    (hf : ∀ i ∈ s, (f i : Set (Finset α)).Intersecting) : (s.bUnion f).card ≤ 2 ^ card α - 2 ^ (card α - s.card) := by
   obtain hs | hs := le_totalₓ (card α) s.card
   · rw [tsub_eq_zero_of_le hs, pow_zeroₓ]
     refine'

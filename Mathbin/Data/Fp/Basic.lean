@@ -71,7 +71,7 @@ theorem Float.Zero.valid : ValidFinite emin 0 :=
     suffices prec ≤ 2 * emax by
       rw [← Int.coe_nat_le] at this
       rw [← sub_nonneg] at *
-      simp only [← emin, ← emax] at *
+      simp only [emin, emax] at *
       ring_nf
       assumption
     le_transₓ C.prec_max
@@ -79,7 +79,7 @@ theorem Float.Zero.valid : ValidFinite emin 0 :=
         (by
           decide)),
     by
-    rw [max_eq_rightₓ] <;> simp [← sub_eq_add_neg]⟩
+    rw [max_eq_rightₓ] <;> simp [sub_eq_add_neg]⟩
 
 def Float.zero (s : Bool) : Float :=
   Float.finite s emin 0 Float.Zero.valid

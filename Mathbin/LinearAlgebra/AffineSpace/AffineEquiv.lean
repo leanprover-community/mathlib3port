@@ -99,7 +99,7 @@ theorem linear_to_affine_map (e : P₁ ≃ᵃ[k] P₂) : e.toAffineMap.linear = 
 
 theorem to_affine_map_injective : Injective (toAffineMap : (P₁ ≃ᵃ[k] P₂) → P₁ →ᵃ[k] P₂) := by
   rintro ⟨e, el, h⟩ ⟨e', el', h'⟩ H
-  simp only [← to_affine_map_mk, ← Equivₓ.coe_inj, ← LinearEquiv.to_linear_map_inj] at H
+  simp only [to_affine_map_mk, Equivₓ.coe_inj, LinearEquiv.to_linear_map_inj] at H
   congr
   exacts[H.1, H.2]
 
@@ -135,12 +135,12 @@ def mk' (e : P₁ → P₂) (e' : V₁ ≃ₗ[k] V₂) (p : P₁) (h : ∀ p' : 
   toFun := e
   invFun := fun q' : P₂ => e'.symm (q' -ᵥ e p) +ᵥ p
   left_inv := fun p' => by
-    simp [← h p']
+    simp [h p']
   right_inv := fun q' => by
-    simp [← h (e'.symm (q' -ᵥ e p) +ᵥ p)]
+    simp [h (e'.symm (q' -ᵥ e p) +ᵥ p)]
   linear := e'
   map_vadd' := fun p' v => by
-    simp [← h p', ← h (v +ᵥ p'), ← vadd_vsub_assoc, ← vadd_vadd]
+    simp [h p', h (v +ᵥ p'), vadd_vsub_assoc, vadd_vadd]
 
 @[simp]
 theorem coe_mk' (e : P₁ ≃ P₂) (e' : V₁ ≃ₗ[k] V₂) (p h) : ⇑(mk' e e' p h) = e :=
@@ -251,7 +251,7 @@ def trans (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) : P₁ ≃ᵃ[k] 
   toEquiv := e.toEquiv.trans e'.toEquiv
   linear := e.linear.trans e'.linear
   map_vadd' := fun p v => by
-    simp only [← LinearEquiv.trans_apply, ← coe_to_equiv, ← (· ∘ ·), ← Equivₓ.coe_trans, ← map_vadd]
+    simp only [LinearEquiv.trans_apply, coe_to_equiv, (· ∘ ·), Equivₓ.coe_trans, map_vadd]
 
 @[simp]
 theorem coe_trans (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) : ⇑(e.trans e') = e' ∘ e :=
@@ -355,7 +355,7 @@ def constVsub (p : P₁) : P₁ ≃ᵃ[k] V₁ where
   toEquiv := Equivₓ.constVsub p
   linear := LinearEquiv.neg k
   map_vadd' := fun p' v => by
-    simp [← vsub_vadd_eq_vsub_sub, ← neg_add_eq_sub]
+    simp [vsub_vadd_eq_vsub_sub, neg_add_eq_sub]
 
 @[simp]
 theorem coe_const_vsub (p : P₁) : ⇑(constVsub k p) = (· -ᵥ ·) p :=
@@ -513,7 +513,7 @@ theorem vadd_line_map (v : V₁) (p₁ p₂ : P₁) (c : k) : v +ᵥ lineMap p�
 variable {R' : Type _} [CommRingₓ R'] [Module R' V₁]
 
 theorem homothety_neg_one_apply (c p : P₁) : homothety c (-1 : R') p = pointReflection R' c p := by
-  simp [← homothety_apply, ← point_reflection_apply]
+  simp [homothety_apply, point_reflection_apply]
 
 end AffineMap
 

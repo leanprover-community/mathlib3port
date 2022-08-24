@@ -127,11 +127,11 @@ instance : IsLawfulMonad ULift where
   bind_pure_comp_eq_map := fun α β f ⟨x⟩ => rfl
   bind_map_eq_seq := fun α β ⟨a⟩ ⟨b⟩ => rfl
   pure_bind := fun α β x f => by
-    dsimp' only [← bind, ← pure, ← ULift.pure, ← ULift.bind]
+    dsimp' only [bind, pure, ULift.pure, ULift.bind]
     cases f x
     rfl
   bind_assoc := fun α β γ ⟨x⟩ f g => by
-    dsimp' only [← bind, ← pure, ← ULift.pure, ← ULift.bind]
+    dsimp' only [bind, pure, ULift.pure, ULift.bind]
     cases f x
     rfl
 

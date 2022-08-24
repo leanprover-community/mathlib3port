@@ -161,7 +161,7 @@ theorem Convex.open_segment_self_interior_subset_interior {s : Set E} (hs : Conv
 -/
 theorem Convex.add_smul_sub_mem_interior' {s : Set E} (hs : Convex 𝕜 s) {x y : E} (hx : x ∈ Closure s)
     (hy : y ∈ Interior s) {t : 𝕜} (ht : t ∈ Ioc (0 : 𝕜) 1) : x + t • (y - x) ∈ Interior s := by
-  simpa only [← sub_smul, ← smul_sub, ← one_smul, ← add_sub, ← add_commₓ] using
+  simpa only [sub_smul, smul_sub, one_smul, add_sub, add_commₓ] using
     hs.combo_interior_closure_mem_interior hy hx ht.1 (sub_nonneg.mpr ht.2) (add_sub_cancel'_right _ _)
 
 /-- If `x ∈ s` and `y ∈ interior s`, then the segment `(x, y]` is included in `interior s`. -/
@@ -172,7 +172,7 @@ theorem Convex.add_smul_sub_mem_interior {s : Set E} (hs : Convex 𝕜 s) {x y :
 /-- If `x ∈ closure s` and `x + y ∈ interior s`, then `x + t y ∈ interior s` for `t ∈ (0, 1]`. -/
 theorem Convex.add_smul_mem_interior' {s : Set E} (hs : Convex 𝕜 s) {x y : E} (hx : x ∈ Closure s)
     (hy : x + y ∈ Interior s) {t : 𝕜} (ht : t ∈ Ioc (0 : 𝕜) 1) : x + t • y ∈ Interior s := by
-  simpa only [← add_sub_cancel'] using hs.add_smul_sub_mem_interior' hx hy ht
+  simpa only [add_sub_cancel'] using hs.add_smul_sub_mem_interior' hx hy ht
 
 /-- If `x ∈ s` and `x + y ∈ interior s`, then `x + t y ∈ interior s` for `t ∈ (0, 1]`. -/
 theorem Convex.add_smul_mem_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E} (hx : x ∈ s) (hy : x + y ∈ Interior s)
@@ -181,11 +181,11 @@ theorem Convex.add_smul_mem_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E} 
 
 /-- In a topological vector space, the interior of a convex set is convex. -/
 protected theorem Convex.interior {s : Set E} (hs : Convex 𝕜 s) : Convex 𝕜 (Interior s) :=
-  convex_iff_open_segment_subset.mpr fun x y hx hy =>
+  convex_iff_open_segment_subset.mpr fun x hx y hy =>
     hs.open_segment_closure_interior_subset_interior (interior_subset_closure hx) hy
 
 /-- In a topological vector space, the closure of a convex set is convex. -/
-protected theorem Convex.closure {s : Set E} (hs : Convex 𝕜 s) : Convex 𝕜 (Closure s) := fun x y hx hy a b ha hb hab =>
+protected theorem Convex.closure {s : Set E} (hs : Convex 𝕜 s) : Convex 𝕜 (Closure s) := fun x hx y hy a b ha hb hab =>
   let f : E → E → E := fun x' y' => a • x' + b • y'
   have hf : Continuous fun p : E × E => f p.1 p.2 := (continuous_fst.const_smul _).add (continuous_snd.const_smul _)
   show f x y ∈ Closure s from
@@ -278,7 +278,7 @@ variable [SeminormedAddCommGroup E] [NormedSpace ℝ E] {s t : Set E}
 /-- The norm on a real normed space is convex on any convex set. See also `seminorm.convex_on`
 and `convex_on_univ_norm`. -/
 theorem convex_on_norm (hs : Convex ℝ s) : ConvexOn ℝ s norm :=
-  ⟨hs, fun x y hx hy a b ha hb hab =>
+  ⟨hs, fun x hx y hy a b ha hb hab =>
     calc
       ∥a • x + b • y∥ ≤ ∥a • x∥ + ∥b • y∥ := norm_add_le _ _
       _ = a * ∥x∥ + b * ∥y∥ := by
@@ -291,17 +291,17 @@ theorem convex_on_univ_norm : ConvexOn ℝ Univ (norm : E → ℝ) :=
   convex_on_norm convex_univ
 
 theorem convex_on_dist (z : E) (hs : Convex ℝ s) : ConvexOn ℝ s fun z' => dist z' z := by
-  simpa [← dist_eq_norm, ← preimage_preimage] using
+  simpa [dist_eq_norm, preimage_preimage] using
     (convex_on_norm (hs.translate (-z))).comp_affine_map (AffineMap.id ℝ E - AffineMap.const ℝ E z)
 
 theorem convex_on_univ_dist (z : E) : ConvexOn ℝ Univ fun z' => dist z' z :=
   convex_on_dist z convex_univ
 
 theorem convex_ball (a : E) (r : ℝ) : Convex ℝ (Metric.Ball a r) := by
-  simpa only [← Metric.Ball, ← sep_univ] using (convex_on_univ_dist a).convex_lt r
+  simpa only [Metric.Ball, sep_univ] using (convex_on_univ_dist a).convex_lt r
 
 theorem convex_closed_ball (a : E) (r : ℝ) : Convex ℝ (Metric.ClosedBall a r) := by
-  simpa only [← Metric.ClosedBall, ← sep_univ] using (convex_on_univ_dist a).convex_le r
+  simpa only [Metric.ClosedBall, sep_univ] using (convex_on_univ_dist a).convex_le r
 
 theorem Convex.thickening (hs : Convex ℝ s) (δ : ℝ) : Convex ℝ (Thickening δ s) := by
   rw [← add_ball_zero]
@@ -352,12 +352,12 @@ theorem convex_hull_ediam (s : Set E) : Emetric.diam (convexHull ℝ s) = Emetri
 /-- Diameter of the convex hull of a set `s` equals the emetric diameter of `s. -/
 @[simp]
 theorem convex_hull_diam (s : Set E) : Metric.diam (convexHull ℝ s) = Metric.diam s := by
-  simp only [← Metric.diam, ← convex_hull_ediam]
+  simp only [Metric.diam, convex_hull_ediam]
 
 /-- Convex hull of `s` is bounded if and only if `s` is bounded. -/
 @[simp]
 theorem bounded_convex_hull {s : Set E} : Metric.Bounded (convexHull ℝ s) ↔ Metric.Bounded s := by
-  simp only [← Metric.bounded_iff_ediam_ne_top, ← convex_hull_ediam]
+  simp only [Metric.bounded_iff_ediam_ne_top, convex_hull_ediam]
 
 instance (priority := 100) NormedSpace.path_connected : PathConnectedSpace E :=
   TopologicalAddGroup.path_connected
@@ -365,11 +365,11 @@ instance (priority := 100) NormedSpace.path_connected : PathConnectedSpace E :=
 instance (priority := 100) NormedSpace.loc_path_connected : LocPathConnectedSpace E :=
   loc_path_connected_of_bases (fun x => Metric.nhds_basis_ball) fun x r r_pos =>
     (convex_ball x r).IsPathConnected <| by
-      simp [← r_pos]
+      simp [r_pos]
 
 theorem dist_add_dist_of_mem_segment {x y z : E} (h : y ∈ [x -[ℝ] z]) : dist x y + dist y z = dist x z := by
-  simp only [← dist_eq_norm, ← mem_segment_iff_same_ray] at *
-  simpa only [← sub_add_sub_cancel', ← norm_sub_rev] using h.norm_add.symm
+  simp only [dist_eq_norm, mem_segment_iff_same_ray] at *
+  simpa only [sub_add_sub_cancel', norm_sub_rev] using h.norm_add.symm
 
 end NormedSpace
 

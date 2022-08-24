@@ -117,7 +117,7 @@ instance IsScalarTower.opposite_mid {M N} [Mul N] [HasSmul M N] [SmulCommClass M
 instance SmulCommClass.opposite_mid {M N} [Mul N] [HasSmul M N] [IsScalarTower M N N] : SmulCommClass M Nᵐᵒᵖ N :=
   ⟨fun x y z => by
     induction y using MulOpposite.rec
-    simp [← smul_mul_assoc]⟩
+    simp [smul_mul_assoc]⟩
 
 -- The above instance does not create an unwanted diamond, the two paths to
 -- `mul_action αᵐᵒᵖ αᵐᵒᵖ` are defeq.

@@ -380,9 +380,9 @@ instance [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : MulOneClassₓ 
 instance [AddMonoidWithOneₓ R] [AddMonoidₓ M] : AddMonoidWithOneₓ (tsze R M) :=
   { TrivSqZeroExt.addMonoid, TrivSqZeroExt.hasOne with natCast := fun n => (n, 0),
     nat_cast_zero := by
-      simp [← Nat.castₓ],
+      simp [Nat.castₓ],
     nat_cast_succ := fun _ => by
-      ext <;> simp [← Nat.castₓ] }
+      ext <;> simp [Nat.castₓ] }
 
 instance [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : NonAssocSemiringₓ (tsze R M) :=
   { TrivSqZeroExt.addMonoidWithOne, TrivSqZeroExt.mulOneClass, TrivSqZeroExt.addCommMonoid with
@@ -492,7 +492,7 @@ def liftAux (f : M →ₗ[R] A) (hf : ∀ x y, f x * f y = 0) : tsze R M →ₐ[
     (TrivSqZeroExt.ind fun r₁ m₁ =>
       TrivSqZeroExt.ind fun r₂ m₂ => by
         dsimp'
-        simp only [← add_zeroₓ, ← zero_addₓ, ← add_mulₓ, ← mul_addₓ, ← smul_mul_smul, ← hf, ← smul_zero]
+        simp only [add_zeroₓ, zero_addₓ, add_mulₓ, mul_addₓ, smul_mul_smul, hf, smul_zero]
         rw [← RingHom.map_mul, LinearMap.map_add, ← Algebra.commutes _ (f _), ← Algebra.smul_def, ← Algebra.smul_def,
           add_right_commₓ, add_assocₓ, LinearMap.map_smul, LinearMap.map_smul])
 

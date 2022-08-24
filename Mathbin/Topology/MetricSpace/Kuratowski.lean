@@ -49,7 +49,7 @@ theorem embedding_of_subset_coe : embeddingOfSubset x a n = dist a (x n) - dist 
 /-- The embedding map is always a semi-contraction. -/
 theorem embedding_of_subset_dist_le (a b : α) : dist (embeddingOfSubset x a) (embeddingOfSubset x b) ≤ dist a b := by
   refine' lp.norm_le_of_forall_le dist_nonneg fun n => _
-  simp only [← lp.coe_fn_sub, ← Pi.sub_apply, ← embedding_of_subset_coe, ← Real.dist_eq]
+  simp only [lp.coe_fn_sub, Pi.sub_apply, embedding_of_subset_coe, Real.dist_eq]
   convert abs_dist_sub_le a b (x n) using 2
   ring
 
@@ -63,12 +63,12 @@ theorem embedding_of_subset_isometry (H : DenseRange x) : Isometry (embeddingOfS
   rcases Metric.mem_closure_range_iff.1 (H a) (e / 2) (half_pos epos) with ⟨n, hn⟩
   -- Second step: use the norm control at index n to conclude
   have C : dist b (x n) - dist a (x n) = embedding_of_subset x b n - embedding_of_subset x a n := by
-    simp only [← embedding_of_subset_coe, ← sub_sub_sub_cancel_right]
+    simp only [embedding_of_subset_coe, sub_sub_sub_cancel_right]
   have :=
     calc
       dist a b ≤ dist a (x n) + dist (x n) b := dist_triangle _ _ _
       _ = 2 * dist a (x n) + (dist b (x n) - dist a (x n)) := by
-        simp [← dist_comm]
+        simp [dist_comm]
         ring
       _ ≤ 2 * dist a (x n) + abs (dist b (x n) - dist a (x n)) := by
         apply_rules [add_le_add_left, le_abs_self]
@@ -81,13 +81,13 @@ theorem embedding_of_subset_isometry (H : DenseRange x) : Isometry (embeddingOfS
           abs (embedding_of_subset x b n - embedding_of_subset x a n) ≤
             dist (embedding_of_subset x b) (embedding_of_subset x a) :=
           by
-          simpa [← dist_eq_norm] using
+          simpa [dist_eq_norm] using
             lp.norm_apply_le_norm Ennreal.top_ne_zero (embedding_of_subset x b - embedding_of_subset x a) n
         nlinarith
       _ = dist (embedding_of_subset x b) (embedding_of_subset x a) + e := by
         ring
       
-  simpa [← dist_comm] using this
+  simpa [dist_comm] using this
 
 /-- Every separable metric space embeds isometrically in `ℓ_infty_ℝ`. -/
 theorem exists_isometric_embedding (α : Type u) [MetricSpace α] [SeparableSpace α] : ∃ f : α → ℓ_infty_ℝ, Isometry f :=

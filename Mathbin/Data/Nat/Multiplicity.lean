@@ -98,7 +98,7 @@ over the finset `Ico 1 b` where `b` is any bound greater than `log p n`. -/
 theorem multiplicity_factorial {p : ℕ} (hp : p.Prime) :
     ∀ {n b : ℕ}, log p n < b → multiplicity p n ! = (∑ i in ico 1 b, n / p ^ i : ℕ)
   | 0, b, hb => by
-    simp [← Ico, ← hp.multiplicity_one]
+    simp [Ico, hp.multiplicity_one]
   | n + 1, b, hb =>
     calc
       multiplicity p (n + 1)! = multiplicity p n ! + multiplicity p (n + 1) := by
@@ -128,7 +128,7 @@ theorem multiplicity_factorial_mul_succ {n p : ℕ} (hp : p.Prime) :
     rw [Ne.def, eq_top_iff_not_finite, not_not, finite_nat_iff]
     exact ⟨hp.ne_one, factorial_pos _⟩
   revert hm
-  have h4 : ∀, ∀ m ∈ Ico (p * n + 1) (p * (n + 1)), ∀, multiplicity p m = 0 := by
+  have h4 : ∀ m ∈ Ico (p * n + 1) (p * (n + 1)), multiplicity p m = 0 := by
     intro m hm
     apply multiplicity_eq_zero_of_not_dvd
     rw [← not_dvd_iff_between_consec_multiples _ (pos_iff_ne_zero.mpr hp.ne_zero)]
@@ -144,8 +144,8 @@ theorem multiplicity_factorial_mul {n p : ℕ} (hp : p.Prime) : multiplicity p (
   induction' n with n ih
   · simp
     
-  · simp only [← succ_eq_add_one, ← multiplicity.mul, ← hp, ← prime_iff.mp hp, ← ih, ← multiplicity_factorial_mul_succ,
-      add_assocₓ, ← Nat.cast_oneₓ, ← Nat.cast_addₓ, ← factorial_succ]
+  · simp only [succ_eq_add_one, multiplicity.mul, hp, prime_iff.mp hp, ih, multiplicity_factorial_mul_succ, ←
+      add_assocₓ, Nat.cast_oneₓ, Nat.cast_addₓ, factorial_succ]
     congr 1
     rw [add_commₓ, add_assocₓ]
     
@@ -166,11 +166,11 @@ theorem multiplicity_choose_aux {p n b k : ℕ} (hp : p.Prime) (hkn : k ≤ n) :
         ((Finset.ico 1 b).filter fun i => p ^ i ≤ k % p ^ i + (n - k) % p ^ i).card :=
   calc
     (∑ i in Finset.ico 1 b, n / p ^ i) = ∑ i in Finset.ico 1 b, (k + (n - k)) / p ^ i := by
-      simp only [← add_tsub_cancel_of_le hkn]
+      simp only [add_tsub_cancel_of_le hkn]
     _ = ∑ i in Finset.ico 1 b, k / p ^ i + (n - k) / p ^ i + if p ^ i ≤ k % p ^ i + (n - k) % p ^ i then 1 else 0 := by
-      simp only [← Nat.add_div (pow_pos hp.pos _)]
+      simp only [Nat.add_div (pow_pos hp.pos _)]
     _ = _ := by
-      simp [← sum_add_distrib, ← sum_boole]
+      simp [sum_add_distrib, sum_boole]
     
 
 /-- The multiplicity of `p` in `choose n k` is the number of carries when `k` and `n - k`
@@ -185,7 +185,7 @@ theorem multiplicity_choose {p n k b : ℕ} (hp : p.Prime) (hkn : k ≤ n) (hnb 
     rw [← hp.multiplicity_mul, ← mul_assoc, choose_mul_factorial_mul_factorial hkn, hp.multiplicity_factorial hnb,
       hp.multiplicity_mul, hp.multiplicity_factorial ((log_mono_right hkn).trans_lt hnb),
       hp.multiplicity_factorial (lt_of_le_of_ltₓ (log_mono_right tsub_le_self) hnb), multiplicity_choose_aux hp hkn]
-    simp [← add_commₓ]
+    simp [add_commₓ]
   (PartEnat.add_right_cancel_iff
         (PartEnat.ne_top_iff_dom.2 <|
           finite_nat_iff.2 ⟨ne_of_gtₓ hp.one_lt, mul_pos (factorial_pos k) (factorial_pos (n - k))⟩)).1
@@ -212,7 +212,7 @@ theorem multiplicity_choose_prime_pow {p n k : ℕ} (hp : p.Prime) (hkn : k ≤ 
         Disjoint ((ico 1 n.succ).filter fun i => p ^ i ≤ k % p ^ i + (p ^ n - k) % p ^ i)
           ((ico 1 n.succ).filter fun i => p ^ i ∣ k) :=
         by
-        simp (config := { contextual := true })[← disjoint_right, *, ← dvd_iff_mod_eq_zero, ←
+        simp (config := { contextual := true })[disjoint_right, *, dvd_iff_mod_eq_zero,
           Nat.mod_ltₓ _ (pow_pos hp.pos _)]
       rw [multiplicity_choose hp hkn (lt_succ_self _),
         multiplicity_eq_card_pow_dvd (ne_of_gtₓ hp.one_lt) hk0 (lt_succ_of_le (log_mono_right hkn)), ← Nat.cast_addₓ,
@@ -233,7 +233,7 @@ theorem multiplicity_two_factorial_lt : ∀ {n : ℕ} (h : n ≠ 0), multiplicit
     by_cases' hn : n = 0
     · subst hn
       simp at h
-      simp [← h, ← one_right h2.not_unit, ← PartEnat.zero_lt_one]
+      simp [h, one_right h2.not_unit, PartEnat.zero_lt_one]
       
     have : multiplicity 2 (2 * n)! < (2 * n : ℕ) := by
       rw [prime_two.multiplicity_factorial_mul]
@@ -241,10 +241,10 @@ theorem multiplicity_two_factorial_lt : ∀ {n : ℕ} (h : n ≠ 0), multiplicit
       rw [two_mul]
       norm_cast
     cases b
-    · simpa [← bit0_eq_two_mul n]
+    · simpa [bit0_eq_two_mul n]
       
     · suffices multiplicity 2 (2 * n + 1) + multiplicity 2 (2 * n)! < ↑(2 * n) + 1 by
-        simpa [← succ_eq_add_one, ← multiplicity.mul, ← h2, ← prime_two, ← Nat.bit1_eq_succ_bit0, ← bit0_eq_two_mul n]
+        simpa [succ_eq_add_one, multiplicity.mul, h2, prime_two, Nat.bit1_eq_succ_bit0, bit0_eq_two_mul n]
       rw [multiplicity_eq_zero_of_not_dvd (two_not_dvd_two_mul_add_one n), zero_addₓ]
       refine' this.trans _
       exact_mod_cast lt_succ_self _

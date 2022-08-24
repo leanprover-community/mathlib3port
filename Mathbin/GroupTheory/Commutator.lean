@@ -66,7 +66,7 @@ variable {g₁ g₂ g₃} {H₁ H₂ H₃ K₁ K₂ : Subgroup G}
 theorem commutator_mem_commutator (h₁ : g₁ ∈ H₁) (h₂ : g₂ ∈ H₂) : ⁅g₁,g₂⁆ ∈ ⁅H₁,H₂⁆ :=
   subset_closure ⟨g₁, h₁, g₂, h₂, rfl⟩
 
-theorem commutator_le : ⁅H₁,H₂⁆ ≤ H₃ ↔ ∀, ∀ g₁ ∈ H₁, ∀, ∀ g₂ ∈ H₂, ∀, ⁅g₁,g₂⁆ ∈ H₃ :=
+theorem commutator_le : ⁅H₁,H₂⁆ ≤ H₃ ↔ ∀ g₁ ∈ H₁, ∀ g₂ ∈ H₂, ⁅g₁,g₂⁆ ∈ H₃ :=
   H₃.closure_le.trans ⟨fun h a b c d => h ⟨a, b, c, d, rfl⟩, fun h g ⟨a, b, c, d, h_eq⟩ => h_eq ▸ h a b c d⟩
 
 theorem commutator_mono (h₁ : H₁ ≤ K₁) (h₂ : H₂ ≤ K₂) : ⁅H₁,H₂⁆ ≤ ⁅K₁,K₂⁆ :=
@@ -149,7 +149,7 @@ variable {H₁ H₂}
 
 theorem commutator_le_map_commutator {f : G →* G'} {K₁ K₂ : Subgroup G'} (h₁ : K₁ ≤ H₁.map f) (h₂ : K₂ ≤ H₂.map f) :
     ⁅K₁,K₂⁆ ≤ ⁅H₁,H₂⁆.map f :=
-  (commutator_mono h₁ h₂).trans (ge_of_eq (map_commutator H₁ H₂ f))
+  (commutator_mono h₁ h₂).trans (ge_of_eqₓ (map_commutator H₁ H₂ f))
 
 variable (H₁ H₂)
 
@@ -167,8 +167,8 @@ theorem commutator_prod_prod (K₁ K₂ : Subgroup G') : ⁅H₁.Prod K₁,H₂.
     constructor <;>
       · rw [map_commutator]
         apply commutator_mono <;>
-          simp [← le_prod_iff, ← map_map, ← MonoidHom.fst_comp_inl, ← MonoidHom.snd_comp_inl, ← MonoidHom.fst_comp_inr,
-            ← MonoidHom.snd_comp_inr]
+          simp [le_prod_iff, map_map, MonoidHom.fst_comp_inl, MonoidHom.snd_comp_inl, MonoidHom.fst_comp_inr,
+            MonoidHom.snd_comp_inr]
         
     
 
@@ -198,7 +198,7 @@ theorem commutator_pi_pi_of_finite {η : Type _} [Finite η] {Gs : η → Type _
         · subst h
           simpa using hx
           
-        · simp [← h, ← one_mem]
+        · simp [h, one_mem]
           
         
     

@@ -121,7 +121,7 @@ end Substructure
 
 variable {S : L.Substructure M}
 
-theorem Term.realize_mem {α : Type _} (t : L.Term α) (xs : α → M) (h : ∀ a, xs a ∈ S) : t.realize xs ∈ S := by
+theorem Term.realize_mem {α : Type _} (t : L.term α) (xs : α → M) (h : ∀ a, xs a ∈ S) : t.realize xs ∈ S := by
   induction' t with a n f ts ih
   · exact h a
     
@@ -175,24 +175,24 @@ instance : HasInfₓ (L.Substructure M) :=
           (by
             rintro _ ⟨t, rfl⟩
             by_cases' h : t ∈ s
-            · simpa [← h] using t.fun_mem f
+            · simpa [h] using t.fun_mem f
               
-            · simp [← h]
+            · simp [h]
               ) }⟩
 
 @[simp, norm_cast]
 theorem coe_Inf (S : Set (L.Substructure M)) : ((inf S : L.Substructure M) : Set M) = ⋂ s ∈ S, ↑s :=
   rfl
 
-theorem mem_Inf {S : Set (L.Substructure M)} {x : M} : x ∈ inf S ↔ ∀, ∀ p ∈ S, ∀, x ∈ p :=
+theorem mem_Inf {S : Set (L.Substructure M)} {x : M} : x ∈ inf S ↔ ∀ p ∈ S, x ∈ p :=
   Set.mem_Inter₂
 
 theorem mem_infi {ι : Sort _} {S : ι → L.Substructure M} {x : M} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
-  simp only [← infi, ← mem_Inf, ← Set.forall_range_iff]
+  simp only [infi, mem_Inf, Set.forall_range_iff]
 
 @[simp, norm_cast]
 theorem coe_infi {ι : Sort _} {S : ι → L.Substructure M} : (↑(⨅ i, S i) : Set M) = ⋂ i, S i := by
-  simp only [← infi, ← coe_Inf, ← Set.bInter_range]
+  simp only [infi, coe_Inf, Set.bInter_range]
 
 /-- Substructures of a structure form a complete lattice. -/
 instance : CompleteLattice (L.Substructure M) :=
@@ -248,19 +248,19 @@ theorem coe_closure_eq_range_term_realize : (closure L s : Set M) = Range (@Term
       exact t.realize_mem _ fun i => hS' i.2
       
     
-  · simp only [← mem_range] at *
+  · simp only [mem_range] at *
     refine' ⟨func f fun i => Classical.some (hx i), _⟩
-    simp only [← term.realize, ← fun i => Classical.some_spec (hx i)]
+    simp only [term.realize, fun i => Classical.some_spec (hx i)]
     
 
 instance small_closure [Small.{u} s] : Small.{u} (closure L s) := by
   rw [← SetLike.coe_sort_coe, substructure.coe_closure_eq_range_term_realize]
   exact small_range _
 
-theorem mem_closure_iff_exists_term {x : M} : x ∈ closure L s ↔ ∃ t : L.Term s, t.realize (coe : s → M) = x := by
+theorem mem_closure_iff_exists_term {x : M} : x ∈ closure L s ↔ ∃ t : L.term s, t.realize (coe : s → M) = x := by
   rw [← SetLike.mem_coe, coe_closure_eq_range_term_realize, mem_range]
 
-theorem lift_card_closure_le_card_term : Cardinal.lift.{max u w} (# (closure L s)) ≤ # (L.Term s) := by
+theorem lift_card_closure_le_card_term : Cardinal.lift.{max u w} (# (closure L s)) ≤ # (L.term s) := by
   rw [← SetLike.coe_sort_coe, coe_closure_eq_range_term_realize]
   rw [← Cardinal.lift_id'.{w, max u w} (# (L.term s))]
   exact Cardinal.mk_range_le_lift
@@ -286,7 +286,7 @@ variable {L} (S)
 /-- An induction principle for closure membership. If `p` holds for all elements of `s`, and
 is preserved under function symbols, then `p` holds for all elements of the closure of `s`. -/
 @[elabAsElim]
-theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure L s) (Hs : ∀, ∀ x ∈ s, ∀, p x)
+theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure L s) (Hs : ∀ x ∈ s, p x)
     (Hfun : ∀ {n : ℕ} (f : L.Functions n), ClosedUnder f (SetOf p)) : p x :=
   (@closure_le L M _ ⟨SetOf p, fun n => Hfun⟩ _).2 Hs h
 
@@ -294,10 +294,10 @@ theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure L s) (Hs : ∀
 that some predicate `p` holds for all `x : M` it suffices to verify `p x` for `x ∈ s`, and verify
 that `p` is preserved under function symbols. -/
 @[elabAsElim]
-theorem dense_induction {p : M → Prop} (x : M) {s : Set M} (hs : closure L s = ⊤) (Hs : ∀, ∀ x ∈ s, ∀, p x)
+theorem dense_induction {p : M → Prop} (x : M) {s : Set M} (hs : closure L s = ⊤) (Hs : ∀ x ∈ s, p x)
     (Hfun : ∀ {n : ℕ} (f : L.Functions n), ClosedUnder f (SetOf p)) : p x := by
-  have : ∀, ∀ x ∈ closure L s, ∀, p x := fun x hx => closure_induction hx Hs fun n => Hfun
-  simpa [← hs] using this x
+  have : ∀ x ∈ closure L s, p x := fun x hx => closure_induction hx Hs fun n => Hfun
+  simpa [hs] using this x
 
 variable (L) (M)
 
@@ -366,7 +366,7 @@ def map (φ : M →[L] N) (S : L.Substructure M) : L.Substructure N where
   fun_mem := fun n f x hx =>
     (mem_image _ _ _).1
       ⟨funMap f fun i => Classical.some (hx i), S.fun_mem f _ fun i => (Classical.some_spec (hx i)).1, by
-        simp only [← hom.map_fun, ← SetLike.mem_coe]
+        simp only [hom.map_fun, SetLike.mem_coe]
         exact congr rfl (funext fun i => (Classical.some_spec (hx i)).2)⟩
 
 @[simp]
@@ -456,7 +456,7 @@ include hf
 /-- `map f` and `comap f` form a `galois_coinsertion` when `f` is injective. -/
 def gciMapComap : GaloisCoinsertion (map f) (comap f) :=
   (gc_map_comap f).toGaloisCoinsertion fun S x => by
-    simp [← mem_comap, ← mem_map, ← hf.eq_iff]
+    simp [mem_comap, mem_map, hf.eq_iff]
 
 theorem comap_map_eq_of_injective (S : L.Substructure M) : (S.map f).comap f = S :=
   (gciMapComap hf).u_l_eq _
@@ -499,7 +499,7 @@ def giMapComap : GaloisInsertion (map f) (comap f) :=
     let ⟨y, hy⟩ := hf x
     mem_map.2
       ⟨y, by
-        simp [← hy, ← h]⟩
+        simp [hy, h]⟩
 
 theorem map_comap_eq_of_surjective (S : L.Substructure N) : (S.comap f).map f = S :=
   (giMapComap hf).l_u_eq _
@@ -579,10 +579,10 @@ def substructureReduct : L'.Substructure M ↪o L.Substructure M where
     { Carrier := S,
       fun_mem := fun n f x hx => by
         have h := S.fun_mem (φ.on_function f) x hx
-        simp only [← Lhom.map_on_function, ← substructure.mem_carrier] at h
+        simp only [Lhom.map_on_function, substructure.mem_carrier] at h
         exact h }
   inj' := fun S T h => by
-    simp only [← SetLike.coe_set_eq] at h
+    simp only [SetLike.coe_set_eq] at h
     exact h
   map_rel_iff' := fun S T => Iff.rfl
 
@@ -629,7 +629,7 @@ theorem reduct_with_constants : (L.lhomWithConstants A).substructureReduct (S.wi
 
 theorem subset_closure_with_constants : A ⊆ closure (L[[A]]) s := by
   intro a ha
-  simp only [← SetLike.mem_coe]
+  simp only [SetLike.mem_coe]
   let a' : L[[A]].Constants := Sum.inr ⟨a, ha⟩
   exact constants_mem a'
 
@@ -637,8 +637,8 @@ theorem closure_with_constants_eq :
     closure (L[[A]]) s = (closure L (A ∪ s)).withConstants ((A.subset_union_left s).trans subset_closure) := by
   refine' closure_eq_of_le ((A.subset_union_right s).trans subset_closure) _
   rw [← (L.Lhom_with_constants A).substructureReduct.le_iff_le]
-  simp only [← subset_closure, ← reduct_with_constants, ← closure_le, ← Lhom.coe_substructure_reduct, ←
-    Set.union_subset_iff, ← and_trueₓ]
+  simp only [subset_closure, reduct_with_constants, closure_le, Lhom.coe_substructure_reduct, Set.union_subset_iff,
+    and_trueₓ]
   · exact subset_closure_with_constants
     
   · infer_instance
@@ -721,7 +721,7 @@ def eqLocus (f g : M →[L] N) : Substructure L M where
       repeat'
         rw [Function.comp_applyₓ]
       apply hx
-    simp [← h]
+    simp [h]
 
 /-- If two `L.hom`s are equal on a set, then they are equal on its substructure closure. -/
 theorem eq_on_closure {f g : M →[L] N} {s : Set M} (h : Set.EqOn f g s) : Set.EqOn f g (closure L s) :=
@@ -810,7 +810,7 @@ namespace Equivₓ
 
 theorem to_hom_range (f : M ≃[L] N) : f.toHom.range = ⊤ := by
   ext n
-  simp only [← hom.mem_range, ← coe_to_hom, ← substructure.mem_top, ← iff_trueₓ]
+  simp only [hom.mem_range, coe_to_hom, substructure.mem_top, iff_trueₓ]
   exact ⟨f.symm n, apply_symm_apply _ _⟩
 
 end Equivₓ
@@ -827,7 +827,7 @@ theorem coe_inclusion {S T : L.Substructure M} (h : S ≤ T) : (inclusion h : S 
 
 theorem range_subtype (S : L.Substructure M) : S.Subtype.toHom.range = S := by
   ext x
-  simp only [← hom.mem_range, ← embedding.coe_to_hom, ← coeSubtype]
+  simp only [hom.mem_range, embedding.coe_to_hom, coeSubtype]
   refine' ⟨_, fun h => ⟨⟨x, h⟩, rfl⟩⟩
   rintro ⟨⟨y, hy⟩, rfl⟩
   exact hy

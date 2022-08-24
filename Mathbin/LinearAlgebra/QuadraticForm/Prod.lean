@@ -87,10 +87,10 @@ theorem nonneg_prod_iff {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q�
   · intro h
     constructor
     · intro x
-      simpa only [← add_zeroₓ, ← map_zero] using h x 0
+      simpa only [add_zeroₓ, map_zero] using h x 0
       
     · intro x
-      simpa only [← zero_addₓ, ← map_zero] using h 0 x
+      simpa only [zero_addₓ, map_zero] using h 0 x
       
     
   · rintro ⟨h₁, h₂⟩ x₁ x₂
@@ -132,8 +132,8 @@ from a pair of isometries between the left and right parts. -/
 def Isometry.pi [Fintype ι] {Q : ∀ i, QuadraticForm R (Mᵢ i)} {Q' : ∀ i, QuadraticForm R (Nᵢ i)}
     (e : ∀ i, (Q i).Isometry (Q' i)) : (pi Q).Isometry (pi Q') where
   map_app' := fun x => by
-    simp only [← pi_apply, ← LinearEquiv.Pi_congr_right_apply, ← LinearEquiv.to_fun_eq_coe, ←
-      isometry.coe_to_linear_equiv, ← isometry.map_app]
+    simp only [pi_apply, LinearEquiv.Pi_congr_right_apply, LinearEquiv.to_fun_eq_coe, isometry.coe_to_linear_equiv,
+      isometry.map_app]
   toLinearEquiv := LinearEquiv.piCongrRight fun i => (e i : Mᵢ i ≃ₗ[R] Nᵢ i)
 
 theorem Equivalent.pi [Fintype ι] {Q : ∀ i, QuadraticForm R (Mᵢ i)} {Q' : ∀ i, QuadraticForm R (Nᵢ i)}

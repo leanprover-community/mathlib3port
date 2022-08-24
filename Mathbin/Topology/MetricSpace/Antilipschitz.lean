@@ -45,13 +45,13 @@ section Metric
 variable [PseudoMetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0 } {f : α → β}
 
 theorem antilipschitz_with_iff_le_mul_nndist : AntilipschitzWith K f ↔ ∀ x y, nndist x y ≤ K * nndist (f x) (f y) := by
-  simp only [← AntilipschitzWith, ← edist_nndist]
+  simp only [AntilipschitzWith, edist_nndist]
   norm_cast
 
 alias antilipschitz_with_iff_le_mul_nndist ↔ AntilipschitzWith.le_mul_nndist AntilipschitzWith.of_le_mul_nndist
 
 theorem antilipschitz_with_iff_le_mul_dist : AntilipschitzWith K f ↔ ∀ x y, dist x y ≤ K * dist (f x) (f y) := by
-  simp only [← antilipschitz_with_iff_le_mul_nndist, ← dist_nndist]
+  simp only [antilipschitz_with_iff_le_mul_nndist, dist_nndist]
   norm_cast
 
 alias antilipschitz_with_iff_le_mul_dist ↔ AntilipschitzWith.le_mul_dist AntilipschitzWith.of_le_mul_dist
@@ -59,7 +59,7 @@ alias antilipschitz_with_iff_le_mul_dist ↔ AntilipschitzWith.le_mul_dist Antil
 namespace AntilipschitzWith
 
 theorem mul_le_nndist (hf : AntilipschitzWith K f) (x y : α) : K⁻¹ * nndist x y ≤ nndist (f x) (f y) := by
-  simpa only [← div_eq_inv_mul] using Nnreal.div_le_of_le_mul' (hf.le_mul_nndist x y)
+  simpa only [div_eq_inv_mul] using Nnreal.div_le_of_le_mul' (hf.le_mul_nndist x y)
 
 theorem mul_le_dist (hf : AntilipschitzWith K f) (x y : α) : (K⁻¹ * dist x y : ℝ) ≤ dist (f x) (f y) := by
   exact_mod_cast hf.mul_le_nndist x y
@@ -85,7 +85,7 @@ protected def k (hf : AntilipschitzWith K f) : ℝ≥0 :=
 
 protected theorem injective {α : Type _} {β : Type _} [EmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0 } {f : α → β}
     (hf : AntilipschitzWith K f) : Function.Injective f := fun x y h => by
-  simpa only [← h, ← edist_self, ← mul_zero, ← edist_le_zero] using hf x y
+  simpa only [h, edist_self, mul_zero, edist_le_zero] using hf x y
 
 theorem mul_le_edist (hf : AntilipschitzWith K f) (x y : α) : (K⁻¹ * edist x y : ℝ≥0∞) ≤ edist (f x) (f y) := by
   rw [mul_comm, ← div_eq_mul_inv]
@@ -98,7 +98,7 @@ theorem le_mul_ediam_image (hf : AntilipschitzWith K f) (s : Set α) : diam s �
   (diam_mono (subset_preimage_image _ _)).trans (hf.ediam_preimage_le (f '' s))
 
 protected theorem id : AntilipschitzWith 1 (id : α → α) := fun x y => by
-  simp only [← Ennreal.coe_one, ← one_mulₓ, ← id, ← le_reflₓ]
+  simp only [Ennreal.coe_one, one_mulₓ, id, le_reflₓ]
 
 theorem comp {Kg : ℝ≥0 } {g : β → γ} (hg : AntilipschitzWith Kg g) {Kf : ℝ≥0 } {f : α → β}
     (hf : AntilipschitzWith Kf f) : AntilipschitzWith (Kf * Kg) (g ∘ f) := fun x y =>
@@ -116,7 +116,7 @@ theorem cod_restrict (hf : AntilipschitzWith K f) {s : Set β} (hs : ∀ x, f x 
 
 theorem to_right_inv_on' {s : Set α} (hf : AntilipschitzWith K (s.restrict f)) {g : β → α} {t : Set β}
     (g_maps : MapsTo g t s) (g_inv : RightInvOn g f t) : LipschitzWith K (t.restrict g) := fun x y => by
-  simpa only [← restrict_apply, ← g_inv x.mem, ← g_inv y.mem, ← Subtype.edist_eq, ← Subtype.coe_mk] using
+  simpa only [restrict_apply, g_inv x.mem, g_inv y.mem, Subtype.edist_eq, Subtype.coe_mk] using
     hf ⟨g x, g_maps x.mem⟩ ⟨g y, g_maps y.mem⟩
 
 theorem to_right_inv_on (hf : AntilipschitzWith K f) {g : β → α} {t : Set β} (h : RightInvOn g f t) :
@@ -160,7 +160,7 @@ theorem subtype_coe (s : Set α) : AntilipschitzWith 1 (coe : s → α) :=
   AntilipschitzWith.id.restrict s
 
 theorem of_subsingleton [Subsingleton α] {K : ℝ≥0 } : AntilipschitzWith K f := fun x y => by
-  simp only [← Subsingleton.elimₓ x y, ← edist_self, ← zero_le]
+  simp only [Subsingleton.elimₓ x y, edist_self, zero_le]
 
 /-- If `f : α → β` is `0`-antilipschitz, then `α` is a `subsingleton`. -/
 protected theorem subsingleton {α β} [EmetricSpace α] [PseudoEmetricSpace β] {f : α → β} (h : AntilipschitzWith 0 f) :
@@ -201,5 +201,5 @@ end AntilipschitzWith
 
 theorem LipschitzWith.to_right_inverse [PseudoEmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0 } {f : α → β}
     (hf : LipschitzWith K f) {g : β → α} (hg : Function.RightInverse g f) : AntilipschitzWith K g := fun x y => by
-  simpa only [← hg _] using hf (g x) (g y)
+  simpa only [hg _] using hf (g x) (g y)
 

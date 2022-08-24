@@ -45,7 +45,7 @@ theorem subset_Sup_def [Inhabited s] :
 
 theorem subset_Sup_of_within [Inhabited s] {t : Set s} (h : sup (coe '' t : Set α) ∈ s) :
     sup (coe '' t : Set α) = (@sup s _ t : α) := by
-  simp [← dif_pos h]
+  simp [dif_pos h]
 
 end HasSupₓ
 
@@ -68,7 +68,7 @@ theorem subset_Inf_def [Inhabited s] :
 
 theorem subset_Inf_of_within [Inhabited s] {t : Set s} (h : inf (coe '' t : Set α) ∈ s) :
     inf (coe '' t : Set α) = (@inf s _ t : α) := by
-  simp [← dif_pos h]
+  simp [dif_pos h]
 
 end HasInfₓ
 

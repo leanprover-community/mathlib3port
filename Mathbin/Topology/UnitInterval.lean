@@ -6,6 +6,7 @@ Authors: Patrick Massot, Scott Morrison
 import Mathbin.Topology.Instances.Real
 import Mathbin.Topology.Algebra.Field
 import Mathbin.Data.Set.Intervals.ProjIcc
+import Mathbin.Data.Set.Intervals.Instances
 
 /-!
 # The unit interval, as a topological space
@@ -22,7 +23,7 @@ noncomputable section
 
 open Classical TopologicalSpace Filter
 
-open Set Int
+open Set Int Set.Icc
 
 /-! ### The unit interval -/
 
@@ -37,10 +38,10 @@ localized [UnitInterval] notation "I" => UnitInterval
 namespace UnitInterval
 
 theorem zero_mem : (0 : ℝ) ∈ I :=
-  ⟨le_rfl, zero_le_one⟩
+  ⟨le_rflₓ, zero_le_one⟩
 
 theorem one_mem : (1 : ℝ) ∈ I :=
-  ⟨zero_le_one, le_rfl⟩
+  ⟨zero_le_one, le_rflₓ⟩
 
 theorem mul_mem {x y : ℝ} (hx : x ∈ I) (hy : y ∈ I) : x * y ∈ I :=
   ⟨mul_nonneg hx.1 hy.1, (mul_le_mul hx.2 hy.2 hy.1 zero_le_one).trans_eq <| one_mulₓ 1⟩
@@ -58,38 +59,12 @@ theorem mem_iff_one_sub_mem {t : ℝ} : t ∈ I ↔ 1 - t ∈ I := by
 instance hasZero : Zero I :=
   ⟨⟨0, zero_mem⟩⟩
 
-@[simp, norm_cast]
-theorem coe_zero : ((0 : I) : ℝ) = 0 :=
-  rfl
-
-@[simp]
-theorem mk_zero (h : (0 : ℝ) ∈ Icc (0 : ℝ) 1) : (⟨0, h⟩ : I) = 0 :=
-  rfl
-
-@[simp, norm_cast]
-theorem coe_eq_zero {x : I} : (x : ℝ) = 0 ↔ x = 0 := by
-  symm
-  exact Subtype.ext_iff
-
 instance hasOne : One I :=
   ⟨⟨1, by
       constructor <;> norm_num⟩⟩
 
-@[simp, norm_cast]
-theorem coe_one : ((1 : I) : ℝ) = 1 :=
-  rfl
-
 theorem coe_ne_zero {x : I} : (x : ℝ) ≠ 0 ↔ x ≠ 0 :=
   not_iff_not.mpr coe_eq_zero
-
-@[simp]
-theorem mk_one (h : (1 : ℝ) ∈ Icc (0 : ℝ) 1) : (⟨1, h⟩ : I) = 1 :=
-  rfl
-
-@[simp, norm_cast]
-theorem coe_eq_one {x : I} : (x : ℝ) = 1 ↔ x = 1 := by
-  symm
-  exact Subtype.ext_iff
 
 theorem coe_ne_one {x : I} : (x : ℝ) ≠ 1 ↔ x ≠ 1 :=
   not_iff_not.mpr coe_eq_one
@@ -99,10 +74,6 @@ instance : Nonempty I :=
 
 instance : Mul I :=
   ⟨fun x y => ⟨x * y, mul_mem x.2 y.2⟩⟩
-
-@[simp, norm_cast]
-theorem coe_mul {x y : I} : ((x * y : I) : ℝ) = x * y :=
-  rfl
 
 -- todo: we could set up a `linear_ordered_comm_monoid_with_zero I` instance
 theorem mul_le_left {x y : I} : x * y ≤ x :=
@@ -120,17 +91,17 @@ localized [UnitInterval] notation "σ" => UnitInterval.symm
 @[simp]
 theorem symm_zero : σ 0 = 1 :=
   Subtype.ext <| by
-    simp [← symm]
+    simp [symm]
 
 @[simp]
 theorem symm_one : σ 1 = 0 :=
   Subtype.ext <| by
-    simp [← symm]
+    simp [symm]
 
 @[simp]
 theorem symm_symm (x : I) : σ (σ x) = x :=
   Subtype.ext <| by
-    simp [← symm]
+    simp [symm]
 
 @[simp]
 theorem coe_symm_eq (x : I) : (σ x : ℝ) = 1 - x :=
@@ -193,10 +164,10 @@ theorem proj_Icc_eq_one {x : ℝ} : projIcc (0 : ℝ) 1 zero_le_one x = 1 ↔ 1 
 
 namespace Tactic.Interactive
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 /-- A tactic that solves `0 ≤ ↑x`, `0 ≤ 1 - ↑x`, `↑x ≤ 1`, and `1 - ↑x ≤ 1` for `x : I`. -/
 unsafe def unit_interval : tactic Unit :=
   sorry <|> sorry <|> sorry <|> sorry
@@ -213,7 +184,7 @@ variable {𝕜 : Type _} [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [Topo
 -/
 theorem affine_homeomorph_image_I (a b : 𝕜) (h : 0 < a) :
     affineHomeomorph a b h.Ne.symm '' Set.Icc 0 1 = Set.Icc b (a + b) := by
-  simp [← h]
+  simp [h]
 
 /-- The affine homeomorphism from a nontrivial interval `[a,b]` to `[0,1]`.
 -/
@@ -221,7 +192,7 @@ def iccHomeoI (a b : 𝕜) (h : a < b) : Set.Icc a b ≃ₜ Set.Icc (0 : 𝕜) (
   let e := Homeomorph.image (affineHomeomorph (b - a) a (sub_pos.mpr h).Ne.symm) (Set.Icc 0 1)
   refine' (e.trans _).symm
   apply Homeomorph.setCongr
-  simp [← sub_pos.mpr h]
+  simp [sub_pos.mpr h]
 
 @[simp]
 theorem Icc_homeo_I_apply_coe (a b : 𝕜) (h : a < b) (x : Set.Icc a b) : ((iccHomeoI a b h) x : 𝕜) = (x - a) / (b - a) :=

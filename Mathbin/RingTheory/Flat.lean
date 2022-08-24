@@ -69,8 +69,8 @@ instance self (R : Type u) [CommRingₓ R] : Flat R R :=
     rw [← Equivₓ.injective_comp (TensorProduct.rid R I).symm.toEquiv]
     convert Subtype.coe_injective using 1
     ext x
-    simp only [← Function.comp_app, ← LinearEquiv.coe_to_equiv, ← rid_symm_apply, ← comp_apply, ← mul_oneₓ, ← lift.tmul,
-      ← subtype_apply, ← Algebra.id.smul_eq_mul, ← lsmul_apply]⟩
+    simp only [Function.comp_app, LinearEquiv.coe_to_equiv, rid_symm_apply, comp_apply, mul_oneₓ, lift.tmul,
+      subtype_apply, Algebra.id.smul_eq_mul, lsmul_apply]⟩
 
 end Flat
 

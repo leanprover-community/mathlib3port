@@ -52,7 +52,7 @@ def nthLeEquiv (l : List α) (H : Nodupₓ l) : Finₓ (length l) ≃ { x // x �
   toFun := fun i => ⟨nthLe l i i.2, nth_le_mem l i i.2⟩
   invFun := fun x => ⟨indexOfₓ (↑x) l, index_of_lt_length.2 x.2⟩
   left_inv := fun i => by
-    simp [← H]
+    simp [H]
   right_inv := fun x => by
     simp
 
@@ -66,7 +66,7 @@ def nthLeEquivOfForallMemList (l : List α) (nd : l.Nodup) (h : ∀ x : α, x �
   toFun := fun i => l.nthLe i i.2
   invFun := fun a => ⟨_, index_of_lt_length.2 (h a)⟩
   left_inv := fun i => by
-    simp [← nd]
+    simp [nd]
   right_inv := fun a => by
     simp
 
@@ -118,10 +118,10 @@ theorem sublist_of_order_embedding_nth_eq {l l' : List α} (f : ℕ ↪o ℕ) (h
   obtain ⟨w, h⟩ := this
   let f' : ℕ ↪o ℕ :=
     OrderEmbedding.ofMapLeIff (fun i => f (i + 1) - (f 0 + 1)) fun a b => by
-      simp [← tsub_le_tsub_iff_right, ← Nat.succ_le_iff, ← Nat.lt_succ_iffₓ]
+      simp [tsub_le_tsub_iff_right, Nat.succ_le_iff, Nat.lt_succ_iffₓ]
   have : ∀ ix, tl.nth ix = (l'.drop (f 0 + 1)).nth (f' ix) := by
     intro ix
-    simp [← List.nth_drop, ← add_tsub_cancel_of_le, ← Nat.succ_le_iff, hf]
+    simp [List.nth_drop, add_tsub_cancel_of_le, Nat.succ_le_iff, ← hf]
   rw [← List.take_append_dropₓ (f 0 + 1) l', ← List.singleton_append]
   apply List.Sublist.append _ (IH _ this)
   rw [List.singleton_sublist, ← h, l'.nth_le_take _ (Nat.lt_succ_selfₓ _)]
@@ -148,7 +148,7 @@ theorem sublist_iff_exists_order_embedding_nth_eq {l l' : List α} :
       
     · obtain ⟨f, hf⟩ := IH
       refine' ⟨OrderEmbedding.ofMapLeIff (fun ix : ℕ => if ix = 0 then 0 else (f ix.pred).succ) _, _⟩
-      · rintro ⟨_ | a⟩ ⟨_ | b⟩ <;> simp [← Nat.succ_le_succ_iff]
+      · rintro ⟨_ | a⟩ ⟨_ | b⟩ <;> simp [Nat.succ_le_succ_iff]
         
       · rintro ⟨_ | i⟩
         · simp
@@ -184,7 +184,7 @@ theorem sublist_iff_exists_fin_order_embedding_nth_le_eq {l l' : List α} :
       
     · intro i
       apply Option.some_injective
-      simpa [nth_le_nth] using hf _
+      simpa [← nth_le_nth] using hf _
       
     
   · rintro ⟨f, hf⟩
@@ -203,7 +203,7 @@ theorem sublist_iff_exists_fin_order_embedding_nth_le_eq {l l' : List α} :
         
       
     · intro i
-      simp only [← OrderEmbedding.coe_of_strict_mono]
+      simp only [OrderEmbedding.coe_of_strict_mono]
       split_ifs with hi
       · rw [nth_le_nth hi, nth_le_nth, ← hf]
         simp
@@ -254,12 +254,12 @@ theorem duplicate_iff_exists_distinct_nth_le {l : List α} {x : α} :
     · rintro ⟨⟨_ | i⟩, hi⟩ ⟨⟨_ | j⟩, hj⟩
       · simp
         
-      · simp [← hnm]
+      · simp [hnm]
         
       · simp
         
-      · simp only [← Nat.lt_succ_iffₓ, ← Nat.succ_le_succ_iff, ← repeat, ← length, ← nonpos_iff_eq_zero] at hi hj
-        simp [← hi, ← hj]
+      · simp only [Nat.lt_succ_iffₓ, Nat.succ_le_succ_iff, repeat, length, nonpos_iff_eq_zero] at hi hj
+        simp [hi, hj]
         
       
     · rintro ⟨⟨_ | i⟩, hi⟩

@@ -127,7 +127,7 @@ variable (P S)
     iff `Hom (E, P -)` is a sheaf of types for the sieve `S` and all `E : A`. -/
 theorem is_limit_iff_is_sheaf_for :
     Nonempty (IsLimit (P.mapCone S.Arrows.Cocone.op)) ↔ ∀ E : Aᵒᵖ, IsSheafFor (P ⋙ coyoneda.obj E) S := by
-  dsimp' [← is_sheaf_for]
+  dsimp' [is_sheaf_for]
   simp_rw [compatible_iff_sieve_compatible]
   rw [((cone.is_limit_equiv_is_terminal _).trans (is_terminal_equiv_unique _ _)).nonempty_congr]
   rw [Classical.nonempty_piₓ]
@@ -200,7 +200,7 @@ theorem is_sheaf_iff_is_limit_pretopology [HasPullbacks C] (K : Pretopology C) :
     IsSheaf (K.toGrothendieck C) P ↔
       ∀ ⦃X : C⦄ (R : Presieve X), R ∈ K X → Nonempty (IsLimit (P.mapCone (generate R).Arrows.Cocone.op)) :=
   by
-  dsimp' [← is_sheaf]
+  dsimp' [is_sheaf]
   simp_rw [is_sheaf_pretopology]
   exact
     ⟨fun h X R hR => (is_limit_iff_is_sheaf_for_presieve P R).2 fun E => h E.unop R hR, fun h E X R hR =>
@@ -492,8 +492,8 @@ def secondMap : firstObj R P ⟶ secondObj R P :=
 theorem w : forkMap R P ≫ firstMap R P = forkMap R P ≫ secondMap R P := by
   apply limit.hom_ext
   rintro ⟨⟨Y, f, hf⟩, ⟨Z, g, hg⟩⟩
-  simp only [← first_map, ← second_map, ← fork_map, ← limit.lift_π, ← limit.lift_π_assoc, ← assoc, ← fan.mk_π_app, ←
-    Subtype.coe_mk, ← Subtype.val_eq_coe]
+  simp only [first_map, second_map, fork_map, limit.lift_π, limit.lift_π_assoc, assoc, fan.mk_π_app, Subtype.coe_mk,
+    Subtype.val_eq_coe]
   rw [← P.map_comp, ← op_comp, pullback.condition]
   simp
 
@@ -518,13 +518,13 @@ def isSheafForIsSheafFor' (P : Cᵒᵖ ⥤ A) (s : A ⥤ Type max v₁ u₁)
       
     · rintro _ _ (_ | _)
       · ext : 1
-        dsimp' [← equalizer.presieve.first_map, ← first_map]
-        simp only [← limit.lift_π, ← map_lift_pi_comparison, ← assoc, ← fan.mk_π_app, ← functor.map_comp]
+        dsimp' [equalizer.presieve.first_map, first_map]
+        simp only [limit.lift_π, map_lift_pi_comparison, assoc, fan.mk_π_app, functor.map_comp]
         erw [pi_comparison_comp_π_assoc]
         
       · ext : 1
-        dsimp' [← equalizer.presieve.second_map, ← second_map]
-        simp only [← limit.lift_π, ← map_lift_pi_comparison, ← assoc, ← fan.mk_π_app, ← functor.map_comp]
+        dsimp' [equalizer.presieve.second_map, second_map]
+        simp only [limit.lift_π, map_lift_pi_comparison, assoc, fan.mk_π_app, functor.map_comp]
         erw [pi_comparison_comp_π_assoc]
         
       · dsimp'
@@ -533,8 +533,8 @@ def isSheafForIsSheafFor' (P : Cᵒᵖ ⥤ A) (s : A ⥤ Type max v₁ u₁)
       
     
   · refine' fork.ext (iso.refl _) _
-    dsimp' [← equalizer.fork_map, ← fork_map]
-    simp [← fork.ι]
+    dsimp' [equalizer.fork_map, fork_map]
+    simp [fork.ι]
     
 
 /-- The equalizer definition of a sheaf given by `is_sheaf'` is equivalent to `is_sheaf`. -/

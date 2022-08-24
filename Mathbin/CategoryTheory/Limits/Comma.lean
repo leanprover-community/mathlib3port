@@ -62,7 +62,7 @@ def coneOfPreserves [PreservesLimit (F ⋙ snd L R) R] (c₁ : Cone (F ⋙ fst L
         { left := c₁.π.app j, right := c₂.π.app j,
           w' := ((isLimitOfPreserves R t₂).fac (limitAuxiliaryCone F c₁) j).symm },
       naturality' := fun j₁ j₂ t => by
-        ext <;> dsimp' <;> simp [c₁.w t, c₂.w t] }
+        ext <;> dsimp' <;> simp [← c₁.w t, ← c₂.w t] }
 
 /-- Provided that `R` preserves the appropriate limit, then the cone in `cone_of_preserves` is a
 limit. -/
@@ -78,9 +78,9 @@ def coneOfPreservesIsLimit [PreservesLimit (F ⋙ snd L R) R] {c₁ : Cone (F �
   uniq' := fun s m w =>
     CommaMorphism.ext _ _
       (t₁.uniq ((fst L R).mapCone s) _ fun j => by
-        simp [w])
+        simp [← w])
       (t₂.uniq ((snd L R).mapCone s) _ fun j => by
-        simp [w])
+        simp [← w])
 
 /-- (Implementation). An auxiliary cocone which is useful in order to construct colimits
 in the comma category. -/
@@ -101,7 +101,7 @@ def coconeOfPreserves [PreservesColimit (F ⋙ fst L R) L] {c₁ : Cocone (F ⋙
         { left := c₁.ι.app j, right := c₂.ι.app j,
           w' := (isColimitOfPreserves L t₁).fac (colimitAuxiliaryCocone _ c₂) j },
       naturality' := fun j₁ j₂ t => by
-        ext <;> dsimp' <;> simp [c₁.w t, c₂.w t] }
+        ext <;> dsimp' <;> simp [← c₁.w t, ← c₂.w t] }
 
 /-- Provided that `L` preserves the appropriate colimit, then the cocone in `cocone_of_preserves` is
 a colimit. -/
@@ -118,10 +118,10 @@ def coconeOfPreservesIsColimit [PreservesColimit (F ⋙ fst L R) L] {c₁ : Coco
     CommaMorphism.ext _ _
       (t₁.uniq ((fst L R).mapCocone s) _
         (by
-          simp [w]))
+          simp [← w]))
       (t₂.uniq ((snd L R).mapCocone s) _
         (by
-          simp [w]))
+          simp [← w]))
 
 instance has_limit (F : J ⥤ Comma L R) [HasLimit (F ⋙ fst L R)] [HasLimit (F ⋙ snd L R)]
     [PreservesLimit (F ⋙ snd L R) R] : HasLimit F :=

@@ -58,7 +58,7 @@ def homogeneousSubmodule [CommSemiringₓ R] (n : ℕ) : Submodule R (MvPolynomi
     rw [coeff_add] at hc
     obtain h | h : coeff c a ≠ 0 ∨ coeff c b ≠ 0 := by
       contrapose! hc
-      simp only [← hc, ← add_zeroₓ]
+      simp only [hc, add_zeroₓ]
     · exact ha h
       
     · exact hb h
@@ -78,7 +78,7 @@ theorem homogeneous_submodule_eq_finsupp_supported [CommSemiringₓ R] (n : ℕ)
     homogeneousSubmodule σ R n = Finsupp.supported _ R { d | (∑ i in d.support, d i) = n } := by
   ext
   rw [Finsupp.mem_supported, Set.subset_def]
-  simp only [← Finsupp.mem_support_iff, ← Finset.mem_coe]
+  simp only [Finsupp.mem_support_iff, Finset.mem_coe]
   rfl
 
 variable {σ R}
@@ -91,7 +91,7 @@ theorem homogeneous_submodule_mul [CommSemiringₓ R] (m n : ℕ) :
   obtain ⟨⟨d, e⟩, hde, H⟩ := Finset.exists_ne_zero_of_sum_ne_zero hc
   have aux : coeff d φ ≠ 0 ∧ coeff e ψ ≠ 0 := by
     contrapose! H
-    by_cases' h : coeff d φ = 0 <;> simp_all only [← Ne.def, ← not_false_iff, ← zero_mul, ← mul_zero]
+    by_cases' h : coeff d φ = 0 <;> simp_all only [Ne.def, not_false_iff, zero_mul, mul_zero]
   specialize hφ aux.1
   specialize hψ aux.2
   rw [Finsupp.mem_antidiagonal] at hde
@@ -134,7 +134,7 @@ theorem is_homogeneous_of_total_degree_zero {p : MvPolynomial σ R} (hp : p.tota
 
 theorem is_homogeneous_C (r : R) : IsHomogeneous (c r : MvPolynomial σ R) 0 := by
   apply is_homogeneous_monomial
-  simp only [← Finsupp.zero_apply, ← Finset.sum_const_zero]
+  simp only [Finsupp.zero_apply, Finset.sum_const_zero]
 
 variable (σ R)
 
@@ -148,7 +148,7 @@ variable {σ} (R)
 
 theorem is_homogeneous_X (i : σ) : IsHomogeneous (x i : MvPolynomial σ R) 1 := by
   apply is_homogeneous_monomial
-  simp only [← Finsupp.support_single_ne_zero _ one_ne_zero, ← Finset.sum_singleton]
+  simp only [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton]
   exact Finsupp.single_eq_same
 
 end
@@ -169,7 +169,7 @@ theorem inj_right (hm : IsHomogeneous φ m) (hn : IsHomogeneous φ n) (hφ : φ 
 theorem add (hφ : IsHomogeneous φ n) (hψ : IsHomogeneous ψ n) : IsHomogeneous (φ + ψ) n :=
   (homogeneousSubmodule σ R n).add_mem hφ hψ
 
-theorem sum {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : ℕ) (h : ∀, ∀ i ∈ s, ∀, IsHomogeneous (φ i) n) :
+theorem sum {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : ℕ) (h : ∀ i ∈ s, IsHomogeneous (φ i) n) :
     IsHomogeneous (∑ i in s, φ i) n :=
   (homogeneousSubmodule σ R n).sum_mem h
 
@@ -177,15 +177,15 @@ theorem mul (hφ : IsHomogeneous φ m) (hψ : IsHomogeneous ψ n) : IsHomogeneou
   homogeneous_submodule_mul m n <| Submodule.mul_mem_mul hφ hψ
 
 theorem prod {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : ι → ℕ)
-    (h : ∀, ∀ i ∈ s, ∀, IsHomogeneous (φ i) (n i)) : IsHomogeneous (∏ i in s, φ i) (∑ i in s, n i) := by
+    (h : ∀ i ∈ s, IsHomogeneous (φ i) (n i)) : IsHomogeneous (∏ i in s, φ i) (∑ i in s, n i) := by
   classical
   revert h
   apply Finset.induction_on s
   · intro
-    simp only [← is_homogeneous_one, ← Finset.sum_empty, ← Finset.prod_empty]
+    simp only [is_homogeneous_one, Finset.sum_empty, Finset.prod_empty]
     
   · intro i s his IH h
-    simp only [← his, ← Finset.prod_insert, ← Finset.sum_insert, ← not_false_iff]
+    simp only [his, Finset.prod_insert, Finset.sum_insert, not_false_iff]
     apply (h i (Finset.mem_insert_self _ _)).mul (IH _)
     intro j hjs
     exact h j (Finset.mem_insert_of_mem hjs)
@@ -200,7 +200,7 @@ theorem total_degree (hφ : IsHomogeneous φ n) (h : φ ≠ 0) : totalDegree φ 
     rw [Finsupp.sum, hφ hd]
     
   · obtain ⟨d, hd⟩ : ∃ d, coeff d φ ≠ 0 := exists_coeff_ne_zero h
-    simp only [hφ hd, ← Finsupp.sum]
+    simp only [← hφ hd, Finsupp.sum]
     replace hd := finsupp.mem_support_iff.mpr hd
     exact Finset.le_sup hd
     
@@ -259,18 +259,18 @@ theorem homogeneous_component_is_homogeneous : (homogeneousComponent n φ).IsHom
 theorem homogeneous_component_zero : homogeneousComponent 0 φ = c (coeff 0 φ) := by
   ext1 d
   rcases em (d = 0) with (rfl | hd)
-  · simp only [← coeff_homogeneous_component, ← sum_eq_zero_iff, ← Finsupp.zero_apply, ← if_true, ← coeff_C, ←
-      eq_self_iff_true, ← forall_true_iff]
+  · simp only [coeff_homogeneous_component, sum_eq_zero_iff, Finsupp.zero_apply, if_true, coeff_C, eq_self_iff_true,
+      forall_true_iff]
     
   · rw [coeff_homogeneous_component, if_neg, coeff_C, if_neg (Ne.symm hd)]
-    simp only [← Finsupp.ext_iff, ← Finsupp.zero_apply] at hd
-    simp [← hd]
+    simp only [Finsupp.ext_iff, Finsupp.zero_apply] at hd
+    simp [hd]
     
 
 @[simp]
 theorem homogeneous_component_C_mul (n : ℕ) (r : R) :
     homogeneousComponent n (c r * φ) = c r * homogeneousComponent n φ := by
-  simp only [← C_mul', ← LinearMap.map_smul]
+  simp only [C_mul', LinearMap.map_smul]
 
 theorem homogeneous_component_eq_zero' (h : ∀ d : σ →₀ ℕ, d ∈ φ.support → (∑ i in d.support, d i) ≠ n) :
     homogeneousComponent n φ = 0 := by
@@ -292,25 +292,25 @@ theorem homogeneous_component_eq_zero (h : φ.totalDegree < n) : homogeneousComp
 theorem sum_homogeneous_component : (∑ i in range (φ.totalDegree + 1), homogeneousComponent i φ) = φ := by
   ext1 d
   suffices φ.total_degree < d.support.sum d → 0 = coeff d φ by
-    simpa [← coeff_sum, ← coeff_homogeneous_component]
+    simpa [coeff_sum, coeff_homogeneous_component]
   exact fun h => (coeff_eq_zero_of_total_degree_lt h).symm
 
 theorem homogeneous_component_homogeneous_polynomial (m n : ℕ) (p : MvPolynomial σ R)
     (h : p ∈ homogeneousSubmodule σ R n) : homogeneousComponent m p = if m = n then p else 0 := by
-  simp only [← mem_homogeneous_submodule] at h
+  simp only [mem_homogeneous_submodule] at h
   ext x
   rw [coeff_homogeneous_component]
   by_cases' zero_coeff : coeff x p = 0
   · split_ifs
     all_goals
-      simp only [← zero_coeff, ← coeff_zero]
+      simp only [zero_coeff, coeff_zero]
     
   · rw [h zero_coeff]
-    simp only [← show n = m ↔ m = n from eq_comm]
+    simp only [show n = m ↔ m = n from eq_comm]
     split_ifs with h1
     · rfl
       
-    · simp only [← coeff_zero]
+    · simp only [coeff_zero]
       
     
 

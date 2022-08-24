@@ -45,7 +45,7 @@ theorem ι_mul_ι_mem_even_odd_zero (m₁ m₂ : M) : ι Q m₁ * ι Q m₂ ∈ 
   Submodule.mem_supr_of_mem ⟨2, rfl⟩
     (by
       rw [Subtype.coe_mk, pow_two]
-      exact Submodule.mul_mem_mul ((ι Q).mem_range_self m₁) ((ι Q).mem_range_self m₂))
+      exact Submodule.mul_mem_mul (LinearMap.mem_range_self (ι Q) m₁) (LinearMap.mem_range_self (ι Q) m₂))
 
 theorem even_odd_mul_le (i j : Zmod 2) : evenOdd Q i * evenOdd Q j ≤ evenOdd Q (i + j) := by
   simp_rw [even_odd, Submodule.supr_eq_span, Submodule.span_mul_span]
@@ -57,9 +57,9 @@ theorem even_odd_mul_le (i j : Zmod 2) : evenOdd Q i * evenOdd Q j ≤ evenOdd Q
   refine'
     set.mem_Union.mpr
       ⟨⟨xi + yi, by
-          simp only [← Nat.cast_addₓ, ← xi.prop, ← yi.prop]⟩,
+          simp only [Nat.cast_addₓ, xi.prop, yi.prop]⟩,
         _⟩
-  simp only [← Subtype.coe_mk, ← Nat.cast_addₓ, ← pow_addₓ]
+  simp only [Subtype.coe_mk, Nat.cast_addₓ, pow_addₓ]
   exact Submodule.mul_mem_mul hx' hy'
 
 instance evenOdd.graded_monoid : SetLike.GradedMonoid (evenOdd Q) where
@@ -87,10 +87,10 @@ theorem GradedAlgebra.lift_ι_eq (i' : Zmod 2) (x' : evenOdd Q i') :
       DirectSum.of (fun i => evenOdd Q i) i' x' :=
   by
   cases' x' with x' hx'
-  dsimp' only [← Subtype.coe_mk, ← DirectSum.lof_eq_of]
+  dsimp' only [Subtype.coe_mk, DirectSum.lof_eq_of]
   refine' Submodule.supr_induction' _ (fun i x hx => _) _ (fun x y hx hy ihx ihy => _) hx'
   · obtain ⟨i, rfl⟩ := i
-    dsimp' only [← Subtype.coe_mk]  at hx
+    dsimp' only [Subtype.coe_mk]  at hx
     refine' Submodule.pow_induction_on_left' _ (fun r => _) (fun x y i hx hy ihx ihy => _) (fun m hm i x hx ih => _) hx
     · rw [AlgHom.commutes, DirectSum.algebra_map_apply]
       rfl
@@ -101,7 +101,7 @@ theorem GradedAlgebra.lift_ι_eq (i' : Zmod 2) (x' : evenOdd Q i') :
     · obtain ⟨_, rfl⟩ := hm
       rw [AlgHom.map_mul, ih, lift_ι_apply, graded_algebra.ι_apply Q, DirectSum.of_mul_of]
       refine' DirectSum.of_eq_of_graded_monoid_eq (Sigma.subtype_ext _ _) <;>
-        dsimp' only [← GradedMonoid.mk, ← Subtype.coe_mk]
+        dsimp' only [GradedMonoid.mk, Subtype.coe_mk]
       · rw [Nat.succ_eq_add_one, add_commₓ, Nat.cast_addₓ, Nat.cast_oneₓ]
         
       rfl
@@ -128,7 +128,7 @@ instance gradedAlgebra : GradedAlgebra (evenOdd Q) :=
     -- handling for the `supr` in `even_odd`.
     by
       ext m
-      dsimp' only [← LinearMap.comp_apply, ← AlgHom.to_linear_map_apply, ← AlgHom.comp_apply, ← AlgHom.id_apply]
+      dsimp' only [LinearMap.comp_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply, AlgHom.id_apply]
       rw [lift_ι_apply, graded_algebra.ι_apply Q, DirectSum.coe_alg_hom_of, Subtype.coe_mk])
     (by
       apply graded_algebra.lift_ι_eq Q)

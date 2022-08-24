@@ -257,7 +257,7 @@ def post (L : A ⥤ T) (R : B ⥤ T) (F : T ⥤ C) : Comma L R ⥤ Comma (L ⋙ 
   map := fun X Y f =>
     { left := f.left, right := f.right,
       w' := by
-        simp only [← functor.comp_map, F.map_comp, ← f.w] }
+        simp only [functor.comp_map, ← F.map_comp, f.w] }
 
 end
 

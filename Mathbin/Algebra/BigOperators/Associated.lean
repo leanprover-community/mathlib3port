@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Anne Baanen
 -/
 import Mathbin.Algebra.Associated
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Data.Finsupp.Basic
+import Mathbin.Algebra.BigOperators.Finsupp
 
 /-!
 # Products of associated, prime, and irreducible elements.
@@ -41,7 +40,7 @@ theorem exists_mem_multiset_dvd {s : Multiset α} : p ∣ s.Prod → ∃ a ∈ s
 include hp
 
 theorem exists_mem_multiset_map_dvd {s : Multiset β} {f : β → α} : p ∣ (s.map f).Prod → ∃ a ∈ s, p ∣ f a := fun h => by
-  simpa only [← exists_prop, ← Multiset.mem_map, ← exists_exists_and_eq_and] using hp.exists_mem_multiset_dvd h
+  simpa only [exists_prop, Multiset.mem_map, exists_exists_and_eq_and] using hp.exists_mem_multiset_dvd h
 
 theorem exists_mem_finset_dvd {s : Finset β} {f : β → α} : p ∣ s.Prod f → ∃ i ∈ s, p ∣ f i :=
   hp.exists_mem_multiset_map_dvd
@@ -49,10 +48,10 @@ theorem exists_mem_finset_dvd {s : Finset β} {f : β → α} : p ∣ s.Prod f �
 end Prime
 
 theorem exists_associated_mem_of_dvd_prod [CancelCommMonoidWithZero α] {p : α} (hp : Prime p) {s : Multiset α} :
-    (∀, ∀ r ∈ s, ∀, Prime r) → p ∣ s.Prod → ∃ q ∈ s, p ~ᵤ q :=
+    (∀ r ∈ s, Prime r) → p ∣ s.Prod → ∃ q ∈ s, p ~ᵤ q :=
   Multiset.induction_on s
     (by
-      simp [← mt is_unit_iff_dvd_one.2 hp.not_unit])
+      simp [mt is_unit_iff_dvd_one.2 hp.not_unit])
     fun a s ih hs hps => by
     rw [Multiset.prod_cons] at hps
     cases' hp.dvd_or_dvd hps with h h
@@ -64,10 +63,9 @@ theorem exists_associated_mem_of_dvd_prod [CancelCommMonoidWithZero α] {p : α}
       
 
 theorem Multiset.prod_primes_dvd [CancelCommMonoidWithZero α] [∀ a : α, DecidablePred (Associated a)] {s : Multiset α}
-    (n : α) (h : ∀, ∀ a ∈ s, ∀, Prime a) (div : ∀, ∀ a ∈ s, ∀, a ∣ n) (uniq : ∀ a, s.countp (Associated a) ≤ 1) :
-    s.Prod ∣ n := by
+    (n : α) (h : ∀ a ∈ s, Prime a) (div : ∀ a ∈ s, a ∣ n) (uniq : ∀ a, s.countp (Associated a) ≤ 1) : s.Prod ∣ n := by
   induction' s using Multiset.induction_on with a s induct n primes divs generalizing n
-  · simp only [← Multiset.prod_zero, ← one_dvd]
+  · simp only [Multiset.prod_zero, one_dvd]
     
   · rw [Multiset.prod_cons]
     obtain ⟨k, rfl⟩ : a ∣ n := div a (Multiset.mem_cons_self a s)
@@ -87,18 +85,18 @@ theorem Multiset.prod_primes_dvd [CancelCommMonoidWithZero α] [∀ a : α, Deci
       
     
 
-theorem Finset.prod_primes_dvd [CancelCommMonoidWithZero α] [Unique αˣ] {s : Finset α} (n : α)
-    (h : ∀, ∀ a ∈ s, ∀, Prime a) (div : ∀, ∀ a ∈ s, ∀, a ∣ n) : (∏ p in s, p) ∣ n := by
+theorem Finset.prod_primes_dvd [CancelCommMonoidWithZero α] [Unique αˣ] {s : Finset α} (n : α) (h : ∀ a ∈ s, Prime a)
+    (div : ∀ a ∈ s, a ∣ n) : (∏ p in s, p) ∣ n := by
   classical
   exact
     Multiset.prod_primes_dvd n
       (by
-        simpa only [← Multiset.map_id', ← Finset.mem_def] using h)
+        simpa only [Multiset.map_id', Finset.mem_def] using h)
       (by
-        simpa only [← Multiset.map_id', ← Finset.mem_def] using div)
+        simpa only [Multiset.map_id', Finset.mem_def] using div)
       (by
-        simp only [← Multiset.map_id', ← associated_eq_eq, ← Multiset.countp_eq_card_filter,
-          Multiset.count_eq_card_filter_eq, Multiset.nodup_iff_count_le_one, ← s.nodup])
+        simp only [Multiset.map_id', associated_eq_eq, Multiset.countp_eq_card_filter, ←
+          Multiset.count_eq_card_filter_eq, ← Multiset.nodup_iff_count_le_one, s.nodup])
 
 namespace Associates
 
@@ -111,7 +109,7 @@ theorem prod_mk {p : Multiset α} : (p.map Associates.mk).Prod = Associates.mk p
       (by
         simp ))
     fun a s ih => by
-    simp [← ih, ← Associates.mk_mul_mk]
+    simp [ih, Associates.mk_mul_mk]
 
 theorem finset_prod_mk {p : Finset β} {f : β → α} : (∏ i in p, Associates.mk (f i)) = Associates.mk (∏ i in p, f i) :=
   by
@@ -120,14 +118,14 @@ theorem finset_prod_mk {p : Finset β} {f : β → α} : (∏ i in p, Associates
 theorem rel_associated_iff_map_eq_map {p q : Multiset α} :
     Multiset.Rel Associated p q ↔ p.map Associates.mk = q.map Associates.mk := by
   rw [← Multiset.rel_eq, Multiset.rel_map]
-  simp only [← mk_eq_mk_iff_associated]
+  simp only [mk_eq_mk_iff_associated]
 
-theorem prod_eq_one_iff {p : Multiset (Associates α)} : p.Prod = 1 ↔ ∀, ∀ a ∈ p, ∀, (a : Associates α) = 1 :=
+theorem prod_eq_one_iff {p : Multiset (Associates α)} : p.Prod = 1 ↔ ∀ a ∈ p, (a : Associates α) = 1 :=
   Multiset.induction_on p
     (by
       simp )
     (by
-      simp (config := { contextual := true })[← mul_eq_one_iff, ← or_imp_distrib, ← forall_and_distrib])
+      simp (config := { contextual := true })[mul_eq_one_iff, or_imp_distrib, forall_and_distrib])
 
 theorem prod_le_prod {p q : Multiset (Associates α)} (h : p ≤ q) : p.Prod ≤ q.Prod := by
   haveI := Classical.decEq (Associates α)
@@ -161,8 +159,8 @@ end Associates
 
 namespace Multiset
 
-theorem prod_ne_zero_of_prime [CancelCommMonoidWithZero α] [Nontrivial α] (s : Multiset α)
-    (h : ∀, ∀ x ∈ s, ∀, Prime x) : s.Prod ≠ 0 :=
+theorem prod_ne_zero_of_prime [CancelCommMonoidWithZero α] [Nontrivial α] (s : Multiset α) (h : ∀ x ∈ s, Prime x) :
+    s.Prod ≠ 0 :=
   Multiset.prod_ne_zero fun h0 => Prime.ne_zero (h 0 h0) rfl
 
 end Multiset

@@ -25,7 +25,7 @@ def Equivₓ.Perm.decomposeFin {n : ℕ} : Perm (Finₓ n.succ) ≃ Finₓ n.suc
 @[simp]
 theorem Equivₓ.Perm.decompose_fin_symm_of_refl {n : ℕ} (p : Finₓ (n + 1)) :
     Equivₓ.Perm.decomposeFin.symm (p, Equivₓ.refl _) = swap 0 p := by
-  simp [← Equivₓ.Perm.decomposeFin, ← Equivₓ.perm_congr_def]
+  simp [Equivₓ.Perm.decomposeFin, Equivₓ.perm_congr_def]
 
 @[simp]
 theorem Equivₓ.Perm.decompose_fin_symm_of_one {n : ℕ} (p : Finₓ (n + 1)) :
@@ -35,21 +35,21 @@ theorem Equivₓ.Perm.decompose_fin_symm_of_one {n : ℕ} (p : Finₓ (n + 1)) :
 @[simp]
 theorem Equivₓ.Perm.decompose_fin_symm_apply_zero {n : ℕ} (p : Finₓ (n + 1)) (e : Perm (Finₓ n)) :
     Equivₓ.Perm.decomposeFin.symm (p, e) 0 = p := by
-  simp [← Equivₓ.Perm.decomposeFin]
+  simp [Equivₓ.Perm.decomposeFin]
 
 @[simp]
 theorem Equivₓ.Perm.decompose_fin_symm_apply_succ {n : ℕ} (e : Perm (Finₓ n)) (p : Finₓ (n + 1)) (x : Finₓ n) :
     Equivₓ.Perm.decomposeFin.symm (p, e) x.succ = swap 0 p (e x).succ := by
   refine' Finₓ.cases _ _ p
-  · simp [← Equivₓ.Perm.decomposeFin, ← EquivFunctor.map]
+  · simp [Equivₓ.Perm.decomposeFin, EquivFunctor.map]
     
   · intro i
     by_cases' h : i = e x
-    · simp [← h, ← Equivₓ.Perm.decomposeFin, ← EquivFunctor.map]
+    · simp [h, Equivₓ.Perm.decomposeFin, EquivFunctor.map]
       
     · have h' : some (e x) ≠ some i := fun H => h (Option.some_injective _ H).symm
       have h'' : (e x).succ ≠ i.succ := fun H => h (Finₓ.succ_injective _ H).symm
-      simp [← h, ← h'', ← Finₓ.succ_ne_zero, ← Equivₓ.Perm.decomposeFin, ← EquivFunctor.map, ← swap_apply_of_ne_of_ne, ←
+      simp [h, h'', Finₓ.succ_ne_zero, Equivₓ.Perm.decomposeFin, EquivFunctor.map, swap_apply_of_ne_of_ne,
         swap_apply_of_ne_of_ne (Option.some_ne_none (e x)) h']
       
     
@@ -62,7 +62,7 @@ theorem Equivₓ.Perm.decompose_fin_symm_apply_one {n : ℕ} (e : Perm (Finₓ (
 @[simp]
 theorem Equivₓ.Perm.decomposeFin.symm_sign {n : ℕ} (p : Finₓ (n + 1)) (e : Perm (Finₓ n)) :
     Perm.sign (Equivₓ.Perm.decomposeFin.symm (p, e)) = ite (p = 0) 1 (-1) * Perm.sign e := by
-  refine' Finₓ.cases _ _ p <;> simp [← Equivₓ.Perm.decomposeFin, ← Finₓ.succ_ne_zero]
+  refine' Finₓ.cases _ _ p <;> simp [Equivₓ.Perm.decomposeFin, Finₓ.succ_ne_zero]
 
 /-- The set of all permutations of `fin (n + 1)` can be constructed by augmenting the set of
 permutations of `fin n` by each element of `fin (n + 1)` in turn. -/
@@ -91,7 +91,7 @@ theorem fin_rotate_succ {n : ℕ} : finRotate n.succ = decomposeFin.symm (1, fin
     
   rw [coe_fin_rotate, decompose_fin_symm_apply_succ, if_congr i.succ_eq_last_succ rfl rfl]
   split_ifs with h
-  · simp [← h]
+  · simp [h]
     
   · rw [Finₓ.coe_succ, Function.Injective.map_swap Finₓ.coe_injective, Finₓ.coe_succ, coe_fin_rotate, if_neg h,
       Finₓ.coe_zero, Finₓ.coe_one, swap_apply_of_ne_of_ne (Nat.succ_ne_zero _) (Nat.succ_succ_ne_one _)]
@@ -103,7 +103,7 @@ theorem sign_fin_rotate (n : ℕ) : Perm.sign (finRotate (n + 1)) = -1 ^ n := by
   · simp
     
   · rw [fin_rotate_succ]
-    simp [← ih, ← pow_succₓ]
+    simp [ih, pow_succₓ]
     
 
 @[simp]
@@ -169,7 +169,7 @@ theorem cycle_range_of_le {n : ℕ} {i j : Finₓ n.succ} (h : j ≤ i) : cycleR
   rw [this, cycle_range, of_left_inverse'_eq_of_injective, ← Function.Embedding.to_equiv_range_eq_of_injective, ←
     via_fintype_embedding, via_fintype_embedding_apply_image, RelEmbedding.coe_fn_to_embedding, coe_cast_le,
     coe_fin_rotate]
-  simp only [← Finₓ.ext_iff, ← coe_last, ← coe_mk, ← coe_zero, ← Finₓ.eta, ← apply_ite coe, ← cast_le_mk]
+  simp only [Finₓ.ext_iff, coe_last, coe_mk, coe_zero, Finₓ.eta, apply_ite coe, cast_le_mk]
   split_ifs with heq
   · rfl
     
@@ -236,7 +236,7 @@ theorem cycle_range_zero' {n : ℕ} (h : 0 < n) : cycleRange ⟨0, h⟩ = 1 := b
 
 @[simp]
 theorem sign_cycle_range {n : ℕ} (i : Finₓ n) : Perm.sign (cycleRange i) = -1 ^ (i : ℕ) := by
-  simp [← cycle_range]
+  simp [cycle_range]
 
 @[simp]
 theorem succ_above_cycle_range {n : ℕ} (i j : Finₓ n) : i.succ.succAbove (i.cycleRange j) = swap 0 i.succ j.succ := by
@@ -253,7 +253,7 @@ theorem succ_above_cycle_range {n : ℕ} (i j : Finₓ n) : i.succ.succAbove (i.
     · exact (Finₓ.succ_injective _).Ne hlt.ne
       
     · rw [Finₓ.lt_iff_coe_lt_coe]
-      simpa [← this] using hlt
+      simpa [this] using hlt
       
     
   · rw [HEq, Finₓ.cycle_range_self, Finₓ.succ_above_below, swap_apply_right, Finₓ.cast_succ_zero]
@@ -266,7 +266,7 @@ theorem succ_above_cycle_range {n : ℕ} (i j : Finₓ n) : i.succ.succAbove (i.
       
     · apply (Finₓ.succ_injective _).Ne hgt.ne.symm
       
-    · simpa [← Finₓ.le_iff_coe_le_coe] using hgt
+    · simpa [Finₓ.le_iff_coe_le_coe] using hgt
       
     
 

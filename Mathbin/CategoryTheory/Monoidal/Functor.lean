@@ -190,13 +190,13 @@ theorem map_tensor {X Y X' Y' : C} (f : X ⟶ Y) (g : X' ⟶ Y') :
 
 theorem map_left_unitor (X : C) :
     F.map (λ_ X).Hom = inv (F.μ (𝟙_ C) X) ≫ (inv F.ε ⊗ 𝟙 (F.obj X)) ≫ (λ_ (F.obj X)).Hom := by
-  simp only [← lax_monoidal_functor.left_unitality]
+  simp only [lax_monoidal_functor.left_unitality]
   slice_rhs 2 3 => rw [← comp_tensor_id]simp
   simp
 
 theorem map_right_unitor (X : C) :
     F.map (ρ_ X).Hom = inv (F.μ X (𝟙_ C)) ≫ (𝟙 (F.obj X) ⊗ inv F.ε) ≫ (ρ_ (F.obj X)).Hom := by
-  simp only [← lax_monoidal_functor.right_unitality]
+  simp only [lax_monoidal_functor.right_unitality]
   slice_rhs 2 3 => rw [← id_tensor_comp]simp
   simp
 
@@ -283,7 +283,7 @@ variable (F : LaxMonoidalFunctor.{v₁, v₂} C D) (G : LaxMonoidalFunctor.{v₂
 def comp : LaxMonoidalFunctor.{v₁, v₃} C E :=
   { F.toFunctor ⋙ G.toFunctor with ε := G.ε ≫ G.map F.ε, μ := fun X Y => G.μ (F.obj X) (F.obj Y) ≫ G.map (F.μ X Y),
     μ_natural' := fun _ _ _ _ f g => by
-      simp only [← functor.comp_map, ← assoc]
+      simp only [functor.comp_map, assoc]
       rw [← category.assoc, lax_monoidal_functor.μ_natural, category.assoc, ← map_comp, ← map_comp, ←
         lax_monoidal_functor.μ_natural],
     associativity' := fun X Y Z => by
@@ -356,12 +356,12 @@ theorem prod'_to_functor : (F.prod' G).toFunctor = F.toFunctor.prod' G.toFunctor
 
 @[simp]
 theorem prod'_ε : (F.prod' G).ε = (F.ε, G.ε) := by
-  dsimp' [← prod']
+  dsimp' [prod']
   simp
 
 @[simp]
 theorem prod'_μ (X Y : C) : (F.prod' G).μ X Y = (F.μ X Y, G.μ X Y) := by
-  dsimp' [← prod']
+  dsimp' [prod']
   simp
 
 end LaxMonoidalFunctor
@@ -462,10 +462,10 @@ noncomputable def monoidalAdjoint (F : MonoidalFunctor C D) {G : D ⥤ C} (h : F
 noncomputable def monoidalInverse (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] : MonoidalFunctor D C where
   toLaxMonoidalFunctor := monoidalAdjoint F (asEquivalence _).toAdjunction
   ε_is_iso := by
-    dsimp' [← equivalence.to_adjunction]
+    dsimp' [equivalence.to_adjunction]
     infer_instance
   μ_is_iso := fun X Y => by
-    dsimp' [← equivalence.to_adjunction]
+    dsimp' [equivalence.to_adjunction]
     infer_instance
 
 end CategoryTheory

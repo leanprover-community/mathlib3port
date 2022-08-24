@@ -75,10 +75,10 @@ unsafe def guess_degree : expr → tactic expr
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `resolve_sum_step e` takes the type of the current goal `e` as input.
 It tries to make progress on the goal `e` by reducing it to subgoals.
 It assumes that `e` is of the form `f.nat_degree ≤ d`, failing otherwise.
@@ -118,7 +118,7 @@ unsafe def resolve_sum_step : expr → tactic Unit
           (pquote.1
             (dite ((%%ₓn) = 0)
               (fun n0 : (%%ₓn) = 0 => by
-                simp only [← n0, ← zero_mul, ← zero_le])
+                simp only [n0, zero_mul, zero_le])
               _))
       let n0 ← get_unused_name "n0" >>= intro
       refine (pquote.1 ((mul_comm _ _).le.trans ((Nat.le_div_iff_mul_le' (Nat.pos_of_ne_zeroₓ (%%ₓn0))).mp _)))
@@ -126,11 +126,11 @@ unsafe def resolve_sum_step : expr → tactic Unit
       let lem2 ← to_expr (pquote.1 (Nat.div_selfₓ (Nat.pos_of_ne_zeroₓ (%%ₓn0)))) true false
       focus1 (refine (pquote.1 ((%%ₓn0) rfl).elim) <|> rewrite_target lem1 <|> rewrite_target lem2) <|> skip
     | e =>
-      "./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   | e =>
-    "./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+    "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 /-- `norm_assum` simply tries `norm_num` and `assumption`.
 It is used to try to discharge as many as possible of the side-goals of `compute_degree_le`.
 Several side-goals are of the form `m ≤ n`, for natural numbers `m, n` or of the form `c ≠ 0`,

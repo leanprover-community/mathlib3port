@@ -32,18 +32,18 @@ def projIcc (a b : α) (h : a ≤ b) (x : α) : Icc a b :=
 variable {a b : α} (h : a ≤ b) {x : α}
 
 theorem proj_Icc_of_le_left (hx : x ≤ a) : projIcc a b h x = ⟨a, left_mem_Icc.2 h⟩ := by
-  simp [← proj_Icc, ← hx, ← hx.trans h]
+  simp [proj_Icc, hx, hx.trans h]
 
 @[simp]
 theorem proj_Icc_left : projIcc a b h a = ⟨a, left_mem_Icc.2 h⟩ :=
-  proj_Icc_of_le_left h le_rfl
+  proj_Icc_of_le_left h le_rflₓ
 
 theorem proj_Icc_of_right_le (hx : b ≤ x) : projIcc a b h x = ⟨b, right_mem_Icc.2 h⟩ := by
-  simp [← proj_Icc, ← hx, ← h]
+  simp [proj_Icc, hx, h]
 
 @[simp]
 theorem proj_Icc_right : projIcc a b h b = ⟨b, right_mem_Icc.2 h⟩ :=
-  proj_Icc_of_right_le h le_rfl
+  proj_Icc_of_right_le h le_rflₓ
 
 theorem proj_Icc_eq_left (h : a < b) : projIcc a b h.le x = ⟨a, left_mem_Icc.mpr h.le⟩ ↔ x ≤ a := by
   refine' ⟨fun h' => _, proj_Icc_of_le_left _⟩
@@ -56,12 +56,12 @@ theorem proj_Icc_eq_right (h : a < b) : projIcc a b h.le x = ⟨b, right_mem_Icc
   have :=
     ((max_choice _ _).resolve_left
             (by
-              simp [← h.ne', ← h'])).symm.trans
+              simp [h.ne', h'])).symm.trans
       h'
   exact min_eq_left_iff.mp this
 
 theorem proj_Icc_of_mem (hx : x ∈ Icc a b) : projIcc a b h x = ⟨x, hx⟩ := by
-  simp [← proj_Icc, ← hx.1, ← hx.2]
+  simp [proj_Icc, hx.1, hx.2]
 
 @[simp]
 theorem proj_Icc_coe (x : Icc a b) : projIcc a b h x = x := by
@@ -76,10 +76,10 @@ theorem proj_Icc_surjective : Surjective (projIcc a b h) := fun x => ⟨x, proj_
 theorem range_proj_Icc : Range (projIcc a b h) = univ :=
   (proj_Icc_surjective h).range_eq
 
-theorem monotone_proj_Icc : Monotone (projIcc a b h) := fun x y hxy => max_le_max le_rfl <| min_le_min le_rfl hxy
+theorem monotone_proj_Icc : Monotone (projIcc a b h) := fun x y hxy => max_le_max le_rflₓ <| min_le_min le_rflₓ hxy
 
 theorem strict_mono_on_proj_Icc : StrictMonoOn (projIcc a b h) (Icc a b) := fun x hx y hy hxy => by
-  simpa only [← proj_Icc_of_mem, ← hx, ← hy]
+  simpa only [proj_Icc_of_mem, hx, hy]
 
 /-- Extend a function `[a, b] → β` to a map `α → β`. -/
 def iccExtend {a b : α} (h : a ≤ b) (f : Icc a b → β) : α → β :=
@@ -87,21 +87,21 @@ def iccExtend {a b : α} (h : a ≤ b) (f : Icc a b → β) : α → β :=
 
 @[simp]
 theorem Icc_extend_range (f : Icc a b → β) : Range (iccExtend h f) = Range f := by
-  simp only [← Icc_extend, ← range_comp f, ← range_proj_Icc, ← range_id']
+  simp only [Icc_extend, range_comp f, range_proj_Icc, range_id']
 
 theorem Icc_extend_of_le_left (f : Icc a b → β) (hx : x ≤ a) : iccExtend h f x = f ⟨a, left_mem_Icc.2 h⟩ :=
   congr_arg f <| proj_Icc_of_le_left h hx
 
 @[simp]
 theorem Icc_extend_left (f : Icc a b → β) : iccExtend h f a = f ⟨a, left_mem_Icc.2 h⟩ :=
-  Icc_extend_of_le_left h f le_rfl
+  Icc_extend_of_le_left h f le_rflₓ
 
 theorem Icc_extend_of_right_le (f : Icc a b → β) (hx : b ≤ x) : iccExtend h f x = f ⟨b, right_mem_Icc.2 h⟩ :=
   congr_arg f <| proj_Icc_of_right_le h hx
 
 @[simp]
 theorem Icc_extend_right (f : Icc a b → β) : iccExtend h f b = f ⟨b, right_mem_Icc.2 h⟩ :=
-  Icc_extend_of_right_le h f le_rfl
+  Icc_extend_of_right_le h f le_rflₓ
 
 theorem Icc_extend_of_mem (f : Icc a b → β) (hx : x ∈ Icc a b) : iccExtend h f x = f ⟨x, hx⟩ :=
   congr_arg f <| proj_Icc_of_mem h hx

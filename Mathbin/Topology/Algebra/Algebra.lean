@@ -40,7 +40,7 @@ variable [Semiringₓ A]
 theorem continuous_algebra_map_iff_smul [Algebra R A] [TopologicalSemiring A] :
     Continuous (algebraMap R A) ↔ Continuous fun p : R × A => p.1 • p.2 := by
   refine' ⟨fun h => _, fun h => _⟩
-  · simp only [← Algebra.smul_def]
+  · simp only [Algebra.smul_def]
     exact (h.comp continuous_fst).mul continuous_snd
     
   · rw [algebra_map_eq_smul_one']
@@ -109,8 +109,8 @@ theorem Subalgebra.topological_closure_comap_homeomorph (s : Subalgebra R A) {B 
     [TopologicalRing B] [Algebra R B] (f : B →ₐ[R] A) (f' : B ≃ₜ A) (w : (f : B → A) = f') :
     s.topologicalClosure.comap f = (s.comap f).topologicalClosure := by
   apply SetLike.ext'
-  simp only [← Subalgebra.topological_closure_coe]
-  simp only [← Subalgebra.coe_comap, ← Subsemiring.coe_comap, ← AlgHom.coe_to_ring_hom]
+  simp only [Subalgebra.topological_closure_coe]
+  simp only [Subalgebra.coe_comap, Subsemiring.coe_comap, AlgHom.coe_to_ring_hom]
   rw [w]
   exact f'.preimage_closure _
 
@@ -162,7 +162,7 @@ section DivisionRing
 instance DivisionRing.has_continuous_const_smul_rat {A} [DivisionRing A] [TopologicalSpace A] [HasContinuousMul A]
     [CharZero A] : HasContinuousConstSmul ℚ A :=
   ⟨fun r => by
-    simpa only [← Algebra.smul_def] using continuous_const.mul continuous_id⟩
+    simpa only [Algebra.smul_def] using continuous_const.mul continuous_id⟩
 
 end DivisionRing
 

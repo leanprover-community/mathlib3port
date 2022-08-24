@@ -50,7 +50,7 @@ def toMon : Monad C → Mon_ (C ⥤ C) := fun M =>
     mul_assoc' := by
       ext
       dsimp'
-      simp [← M.assoc] }
+      simp [M.assoc] }
 
 variable (C)
 
@@ -99,7 +99,7 @@ def monToMonad : Mon_ (C ⥤ C) ⥤ Monad C where
       app_μ' := by
         intro X
         erw [← nat_trans.comp_app, f.mul_hom]
-        simpa only [← nat_trans.naturality, ← nat_trans.hcomp_app, ← assoc, ← nat_trans.comp_app, ← of_Mon_μ] }
+        simpa only [nat_trans.naturality, nat_trans.hcomp_app, assoc, nat_trans.comp_app, of_Mon_μ] }
 
 namespace MonadMonEquiv
 

@@ -52,13 +52,13 @@ theorem is_clique_iff_induce_eq : G.IsClique s ↔ G.induce s = ⊤ := by
   constructor
   · intro h
     ext ⟨v, hv⟩ ⟨w, hw⟩
-    simp only [← comap_adj, ← Subtype.coe_mk, ← top_adj, ← Ne.def, ← Subtype.mk_eq_mk]
+    simp only [comap_adj, Subtype.coe_mk, top_adj, Ne.def, Subtype.mk_eq_mk]
     exact ⟨adj.ne, h hv hw⟩
     
   · intro h v hv w hw hne
     have : (G.induce s).Adj ⟨v, hv⟩ ⟨w, hw⟩ = _ := rfl
     conv_lhs at this => rw [h]
-    simpa [← hne]
+    simpa [hne]
     
 
 instance [DecidableEq α] [DecidableRel G.Adj] {s : Finset α} : Decidable (G.IsClique s) :=
@@ -116,11 +116,11 @@ theorem is_n_clique_bot_iff : (⊥ : SimpleGraph α).IsNClique n s ↔ n ≤ 1 �
 variable [DecidableEq α] {a b c : α}
 
 theorem is_3_clique_triple_iff : G.IsNClique 3 {a, b, c} ↔ G.Adj a b ∧ G.Adj a c ∧ G.Adj b c := by
-  simp only [← is_n_clique_iff, ← is_clique_iff, ← Set.pairwise_insert_of_symmetric G.symm, ← coe_insert]
+  simp only [is_n_clique_iff, is_clique_iff, Set.pairwise_insert_of_symmetric G.symm, coe_insert]
   have : ¬1 + 1 = 3 := by
     norm_num
   by_cases' hab : a = b <;>
-    by_cases' hbc : b = c <;> by_cases' hac : a = c <;> subst_vars <;> simp [← G.ne_of_adj, ← and_rotate, *]
+    by_cases' hbc : b = c <;> by_cases' hac : a = c <;> subst_vars <;> simp [G.ne_of_adj, and_rotate, *]
 
 theorem is_3_clique_iff : G.IsNClique 3 s ↔ ∃ a b c, G.Adj a b ∧ G.Adj a c ∧ G.Adj b c ∧ s = {a, b, c} := by
   refine' ⟨fun h => _, _⟩
@@ -149,21 +149,20 @@ def CliqueFree (n : ℕ) : Prop :=
 variable {G H}
 
 theorem not_clique_free_of_top_embedding {n : ℕ} (f : (⊤ : SimpleGraph (Finₓ n)) ↪g G) : ¬G.CliqueFree n := by
-  simp only [← clique_free, ← is_n_clique_iff, ← is_clique_iff_induce_eq, ← not_forall, ← not_not]
+  simp only [clique_free, is_n_clique_iff, is_clique_iff_induce_eq, not_forall, not_not]
   use finset.univ.map f.to_embedding
-  simp only [← card_map, ← Finset.card_fin, ← eq_self_iff_true, ← and_trueₓ]
+  simp only [card_map, Finset.card_fin, eq_self_iff_true, and_trueₓ]
   ext ⟨v, hv⟩ ⟨w, hw⟩
-  simp only [← coe_map, ← RelEmbedding.coe_fn_to_embedding, ← Set.mem_image, ← coe_univ, ← Set.mem_univ, ← true_andₓ] at
-    hv hw
+  simp only [coe_map, RelEmbedding.coe_fn_to_embedding, Set.mem_image, coe_univ, Set.mem_univ, true_andₓ] at hv hw
   obtain ⟨v', rfl⟩ := hv
   obtain ⟨w', rfl⟩ := hw
-  simp only [← f.map_adj_iff, ← comap_adj, ← Function.Embedding.coe_subtype, ← Subtype.coe_mk, ← top_adj, ← Ne.def, ←
+  simp only [f.map_adj_iff, comap_adj, Function.Embedding.coe_subtype, Subtype.coe_mk, top_adj, Ne.def,
     Subtype.mk_eq_mk]
   exact (Function.Embedding.apply_eq_iff_eq _ _ _).symm.Not
 
 /-- An embedding of a complete graph that witnesses the fact that the graph is not clique-free. -/
 noncomputable def topEmbeddingOfNotCliqueFree {n : ℕ} (h : ¬G.CliqueFree n) : (⊤ : SimpleGraph (Finₓ n)) ↪g G := by
-  simp only [← clique_free, ← is_n_clique_iff, ← is_clique_iff_induce_eq, ← not_forall, ← not_not] at h
+  simp only [clique_free, is_n_clique_iff, is_clique_iff_induce_eq, not_forall, not_not] at h
   obtain ⟨ha, hb⟩ := h.some_spec
   have : (⊤ : SimpleGraph (Finₓ h.some.card)) ≃g (⊤ : SimpleGraph h.some) := by
     apply iso.complete_graph

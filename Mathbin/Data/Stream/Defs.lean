@@ -52,7 +52,7 @@ def Any (p : α → Prop) (s : Streamₓ α) :=
   ∃ n, p (nth s n)
 
 /-- `a ∈ s` means that `a = stream.nth n s` for some `n`. -/
-instance : HasMem α (Streamₓ α) :=
+instance : Membership α (Streamₓ α) :=
   ⟨fun a s => Any (fun b => a = b) s⟩
 
 /-- Apply a function `f` to all elements of a stream `s`. -/

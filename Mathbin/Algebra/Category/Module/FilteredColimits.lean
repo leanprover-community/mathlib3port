@@ -69,7 +69,7 @@ theorem colimit_smul_aux_eq_of_rel (r : R) (x y : Σj, F.obj j)
   apply M.mk_eq
   obtain ⟨k, f, g, hfg⟩ := h
   use k, f, g
-  simp only [← CategoryTheory.Functor.comp_map, ← forget_map_eq_coe] at hfg
+  simp only [CategoryTheory.Functor.comp_map, forget_map_eq_coe] at hfg
   rw [LinearMap.map_smul, LinearMap.map_smul, hfg]
 
 /-- Scalar multiplication in the colimit. See also `colimit_smul_aux`. -/

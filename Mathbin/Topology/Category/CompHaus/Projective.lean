@@ -42,7 +42,7 @@ instance projective_ultrafilter (X : Type _) :
     have hh : Continuous h := continuous_ultrafilter_extend _
     use ⟨h, hh⟩
     apply faithful.map_injective (forget CompHaus)
-    simp only [← forget_map_eq_coe, ← ContinuousMap.coe_mk, ← coe_comp]
+    simp only [forget_map_eq_coe, ContinuousMap.coe_mk, coe_comp]
     convert dense_range_pure.equalizer (g.continuous.comp hh) f.continuous _
     rw [comp.assoc, ultrafilter_extend_extends, ← comp.assoc, hg'.comp_eq_id, comp.left_id]
 

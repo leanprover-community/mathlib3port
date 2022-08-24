@@ -80,7 +80,7 @@ theorem mul_left_right_apply (a b x : A) : mulLeftRight R (a, b) x = a * x * b :
 
 @[simp]
 theorem mul'_apply {a b : A} : mul' R A (a ⊗ₜ b) = a * b := by
-  simp only [← LinearMap.mul', ← TensorProduct.lift.tmul, ← mul_apply']
+  simp only [LinearMap.mul', TensorProduct.lift.tmul, mul_apply']
 
 @[simp]
 theorem mul_left_zero_eq_zero : mulLeft R (0 : A) = 0 :=
@@ -123,12 +123,12 @@ theorem commute_mul_left_right (a b : A) : Commute (mulLeft R a) (mulRight R b) 
 @[simp]
 theorem mul_left_mul (a b : A) : mulLeft R (a * b) = (mulLeft R a).comp (mulLeft R b) := by
   ext
-  simp only [← mul_left_apply, ← comp_apply, ← mul_assoc]
+  simp only [mul_left_apply, comp_apply, mul_assoc]
 
 @[simp]
 theorem mul_right_mul (a b : A) : mulRight R (a * b) = (mulRight R b).comp (mulRight R a) := by
   ext
-  simp only [← mul_right_apply, ← comp_apply, ← mul_assoc]
+  simp only [mul_right_apply, comp_apply, mul_assoc]
 
 end NonUnital
 
@@ -184,20 +184,20 @@ theorem mul_right_eq_zero_iff (a : A) : mulRight R a = 0 ↔ a = 0 := by
 @[simp]
 theorem mul_left_one : mulLeft R (1 : A) = LinearMap.id := by
   ext
-  simp only [← LinearMap.id_coe, ← one_mulₓ, ← id.def, ← mul_left_apply]
+  simp only [LinearMap.id_coe, one_mulₓ, id.def, mul_left_apply]
 
 @[simp]
 theorem mul_right_one : mulRight R (1 : A) = LinearMap.id := by
   ext
-  simp only [← LinearMap.id_coe, ← mul_oneₓ, ← id.def, ← mul_right_apply]
+  simp only [LinearMap.id_coe, mul_oneₓ, id.def, mul_right_apply]
 
 @[simp]
 theorem pow_mul_left (a : A) (n : ℕ) : mulLeft R a ^ n = mulLeft R (a ^ n) := by
-  simpa only [← mul_left, Algebra.coe_lmul_eq_mul] using ((Algebra.lmul R A).map_pow a n).symm
+  simpa only [mul_left, ← Algebra.coe_lmul_eq_mul] using ((Algebra.lmul R A).map_pow a n).symm
 
 @[simp]
 theorem pow_mul_right (a : A) (n : ℕ) : mulRight R a ^ n = mulRight R (a ^ n) := by
-  simp only [← mul_right, Algebra.coe_lmul_eq_mul]
+  simp only [mul_right, ← Algebra.coe_lmul_eq_mul]
   exact LinearMap.coe_injective (((mul_right R a).coe_pow n).symm ▸ mul_right_iterate a n)
 
 end Semiringₓ

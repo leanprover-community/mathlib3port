@@ -58,7 +58,7 @@ theorem mem_join {a S} : a ∈ @join α S ↔ ∃ s ∈ S, a ∈ s :=
       (by
         simp ) <|
     by
-    simp (config := { contextual := true })[← or_and_distrib_right, ← exists_or_distrib]
+    simp (config := { contextual := true })[or_and_distrib_right, exists_or_distrib]
 
 @[simp]
 theorem card_join (S) : card (@join α S) = sum (map card S) :=
@@ -97,23 +97,23 @@ theorem zero_bind : bind 0 f = 0 :=
 
 @[simp]
 theorem cons_bind : (a ::ₘ s).bind f = f a + s.bind f := by
-  simp [← bind]
+  simp [bind]
 
 @[simp]
 theorem singleton_bind : bind {a} f = f a := by
-  simp [← bind]
+  simp [bind]
 
 @[simp]
 theorem add_bind : (s + t).bind f = s.bind f + t.bind f := by
-  simp [← bind]
+  simp [bind]
 
 @[simp]
 theorem bind_zero : s.bind (fun a => 0 : α → Multiset β) = 0 := by
-  simp [← bind, ← join, ← nsmul_zero]
+  simp [bind, join, nsmul_zero]
 
 @[simp]
 theorem bind_add : (s.bind fun a => f a + g a) = s.bind f + s.bind g := by
-  simp [← bind, ← join]
+  simp [bind, join]
 
 @[simp]
 theorem bind_cons (f : α → β) (g : α → Multiset β) : (s.bind fun a => f a ::ₘ g a) = map f s + s.bind g :=
@@ -121,7 +121,7 @@ theorem bind_cons (f : α → β) (g : α → Multiset β) : (s.bind fun a => f 
     (by
       simp )
     (by
-      simp (config := { contextual := true })[← add_commₓ, ← add_left_commₓ])
+      simp (config := { contextual := true })[add_commₓ, add_left_commₓ])
 
 @[simp]
 theorem bind_singleton (f : α → β) : (s.bind fun x => ({f x} : Multiset β)) = map f s :=
@@ -129,25 +129,25 @@ theorem bind_singleton (f : α → β) : (s.bind fun x => ({f x} : Multiset β))
     (by
       rw [zero_bind, map_zero])
     (by
-      simp [← singleton_add])
+      simp [singleton_add])
 
 @[simp]
 theorem mem_bind {b s} {f : α → Multiset β} : b ∈ bind s f ↔ ∃ a ∈ s, b ∈ f a := by
-  simp [← bind] <;>
-    simp [-exists_and_distrib_right, ← exists_and_distrib_right.symm] <;> rw [exists_swap] <;> simp [← and_assoc]
+  simp [bind] <;>
+    simp [-exists_and_distrib_right, exists_and_distrib_right.symm] <;> rw [exists_swap] <;> simp [and_assoc]
 
 @[simp]
 theorem card_bind : (s.bind f).card = (s.map (card ∘ f)).Sum := by
-  simp [← bind]
+  simp [bind]
 
-theorem bind_congr {f g : α → Multiset β} {m : Multiset α} : (∀, ∀ a ∈ m, ∀, f a = g a) → bind m f = bind m g := by
-  simp (config := { contextual := true })[← bind]
+theorem bind_congr {f g : α → Multiset β} {m : Multiset α} : (∀ a ∈ m, f a = g a) → bind m f = bind m g := by
+  simp (config := { contextual := true })[bind]
 
 theorem bind_hcongr {β' : Type _} {m : Multiset α} {f : α → Multiset β} {f' : α → Multiset β'} (h : β = β')
-    (hf : ∀, ∀ a ∈ m, ∀, HEq (f a) (f' a)) : HEq (bind m f) (bind m f') := by
+    (hf : ∀ a ∈ m, HEq (f a) (f' a)) : HEq (bind m f) (bind m f') := by
   subst h
   simp at hf
-  simp [← bind_congr hf]
+  simp [bind_congr hf]
 
 theorem map_bind (m : Multiset α) (n : α → Multiset β) (f : β → γ) : map f (bind m n) = bind m fun a => map f (n a) :=
   Multiset.induction_on m
@@ -194,7 +194,7 @@ theorem prod_bind [CommMonoidₓ β] (s : Multiset α) (t : α → Multiset β) 
     (by
       simp )
     fun a s ih => by
-    simp [← ih, ← cons_bind]
+    simp [ih, cons_bind]
 
 theorem rel_bind {r : α → β → Prop} {p : γ → δ → Prop} {s t} {f : α → Multiset γ} {g : β → Multiset δ}
     (h : (r⇒Rel p) f g) (hst : Rel r s t) : Rel p (s.bind f) (t.bind g) := by
@@ -254,15 +254,15 @@ theorem zero_product : @product α β 0 t = 0 :=
 --TODO: Add `product_zero`
 @[simp]
 theorem cons_product : (a ::ₘ s) ×ˢ t = map (Prod.mk a) t + s ×ˢ t := by
-  simp [← product]
+  simp [product]
 
 @[simp]
 theorem product_singleton : ({a} : Multiset α) ×ˢ ({b} : Multiset β) = {(a, b)} := by
-  simp only [← product, ← bind_singleton, ← map_singleton]
+  simp only [product, bind_singleton, map_singleton]
 
 @[simp]
 theorem add_product (s t : Multiset α) (u : Multiset β) : (s + t) ×ˢ u = s ×ˢ u + t ×ˢ u := by
-  simp [← product]
+  simp [product]
 
 @[simp]
 theorem product_add (s : Multiset α) : ∀ t u : Multiset β, s ×ˢ (t + u) = s ×ˢ t + s ×ˢ u :=
@@ -272,11 +272,11 @@ theorem product_add (s : Multiset α) : ∀ t u : Multiset β, s ×ˢ (t + u) = 
 @[simp]
 theorem mem_product {s t} : ∀ {p : α × β}, p ∈ @product α β s t ↔ p.1 ∈ s ∧ p.2 ∈ t
   | (a, b) => by
-    simp [← product, ← And.left_comm]
+    simp [product, And.left_comm]
 
 @[simp]
 theorem card_product : (s ×ˢ t).card = s.card * t.card := by
-  simp [← product, ← repeat, ← (· ∘ ·), ← mul_comm]
+  simp [product, repeat, (· ∘ ·), mul_comm]
 
 end Product
 
@@ -302,7 +302,7 @@ theorem zero_sigma : @Multiset.sigma α σ 0 t = 0 :=
 
 @[simp]
 theorem cons_sigma : (a ::ₘ s).Sigma t = (t a).map (Sigma.mk a) + s.Sigma t := by
-  simp [← Multiset.sigma]
+  simp [Multiset.sigma]
 
 @[simp]
 theorem sigma_singleton (b : α → β) : (({a} : Multiset α).Sigma fun a => ({b a} : Multiset β)) = {⟨a, b a⟩} :=
@@ -310,7 +310,7 @@ theorem sigma_singleton (b : α → β) : (({a} : Multiset α).Sigma fun a => ({
 
 @[simp]
 theorem add_sigma (s t : Multiset α) (u : ∀ a, Multiset (σ a)) : (s + t).Sigma u = s.Sigma u + t.Sigma u := by
-  simp [← Multiset.sigma]
+  simp [Multiset.sigma]
 
 @[simp]
 theorem sigma_add : ∀ t u : ∀ a, Multiset (σ a), (s.Sigma fun a => t a + u a) = s.Sigma t + s.Sigma u :=
@@ -320,11 +320,11 @@ theorem sigma_add : ∀ t u : ∀ a, Multiset (σ a), (s.Sigma fun a => t a + u 
 @[simp]
 theorem mem_sigma {s t} : ∀ {p : Σa, σ a}, p ∈ @Multiset.sigma α σ s t ↔ p.1 ∈ s ∧ p.2 ∈ t p.1
   | ⟨a, b⟩ => by
-    simp [← Multiset.sigma, ← and_assoc, ← And.left_comm]
+    simp [Multiset.sigma, and_assoc, And.left_comm]
 
 @[simp]
 theorem card_sigma : card (s.Sigma t) = sum (map (fun a => card (t a)) s) := by
-  simp [← Multiset.sigma, ← (· ∘ ·)]
+  simp [Multiset.sigma, (· ∘ ·)]
 
 end Sigma
 

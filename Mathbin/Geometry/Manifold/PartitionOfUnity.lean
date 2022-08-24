@@ -104,7 +104,7 @@ structure SmoothBumpCovering (s : Set M := Univ) where
   toFun : ∀ i, SmoothBumpFunction I (c i)
   c_mem' : ∀ i, c i ∈ s
   locally_finite' : LocallyFinite fun i => Support (to_fun i)
-  eventually_eq_one' : ∀, ∀ x ∈ s, ∀, ∃ i, to_fun i =ᶠ[𝓝 x] 1
+  eventually_eq_one' : ∀ x ∈ s, ∃ i, to_fun i =ᶠ[𝓝 x] 1
 
 /-- We say that that a collection of functions form a smooth partition of unity on a set `s` if
 
@@ -116,7 +116,7 @@ structure SmoothPartitionOfUnity (s : Set M := Univ) where
   toFun : ι → C^∞⟮I, M; 𝓘(ℝ), ℝ⟯
   locally_finite' : LocallyFinite fun i => Support (to_fun i)
   nonneg' : ∀ i x, 0 ≤ to_fun i x
-  sum_eq_one' : ∀, ∀ x ∈ s, ∀, (∑ᶠ i, to_fun i x) = 1
+  sum_eq_one' : ∀ x ∈ s, (∑ᶠ i, to_fun i x) = 1
   sum_le_one' : ∀ x, (∑ᶠ i, to_fun i x) ≤ 1
 
 variable {ι I M}
@@ -153,26 +153,26 @@ theorem le_one (i : ι) (x : M) : f i x ≤ 1 :=
 theorem sum_nonneg (x : M) : 0 ≤ ∑ᶠ i, f i x :=
   f.toPartitionOfUnity.sum_nonneg x
 
-theorem cont_mdiff_smul {g : M → F} {i} (hg : ∀, ∀ x ∈ Tsupport (f i), ∀, ContMdiffAt I 𝓘(ℝ, F) n g x) :
+theorem cont_mdiff_smul {g : M → F} {i} (hg : ∀ x ∈ Tsupport (f i), ContMdiffAt I 𝓘(ℝ, F) n g x) :
     ContMdiff I 𝓘(ℝ, F) n fun x => f i x • g x :=
   cont_mdiff_of_support fun x hx =>
     ((f i).ContMdiff.ContMdiffAt.of_le le_top).smul <| hg x <| tsupport_smul_subset_left _ _ hx
 
-theorem smooth_smul {g : M → F} {i} (hg : ∀, ∀ x ∈ Tsupport (f i), ∀, SmoothAt I 𝓘(ℝ, F) g x) :
+theorem smooth_smul {g : M → F} {i} (hg : ∀ x ∈ Tsupport (f i), SmoothAt I 𝓘(ℝ, F) g x) :
     Smooth I 𝓘(ℝ, F) fun x => f i x • g x :=
   f.cont_mdiff_smul hg
 
 /-- If `f` is a smooth partition of unity on a set `s : set M` and `g : ι → M → F` is a family of
 functions such that `g i` is $C^n$ smooth at every point of the topological support of `f i`, then
 the sum `λ x, ∑ᶠ i, f i x • g i x` is smooth on the whole manifold. -/
-theorem cont_mdiff_finsum_smul {g : ι → M → F} (hg : ∀ (i), ∀ x ∈ Tsupport (f i), ∀, ContMdiffAt I 𝓘(ℝ, F) n (g i) x) :
+theorem cont_mdiff_finsum_smul {g : ι → M → F} (hg : ∀ (i), ∀ x ∈ Tsupport (f i), ContMdiffAt I 𝓘(ℝ, F) n (g i) x) :
     ContMdiff I 𝓘(ℝ, F) n fun x => ∑ᶠ i, f i x • g i x :=
   (cont_mdiff_finsum fun i => f.cont_mdiff_smul (hg i)) <| f.LocallyFinite.Subset fun i => support_smul_subset_left _ _
 
 /-- If `f` is a smooth partition of unity on a set `s : set M` and `g : ι → M → F` is a family of
 functions such that `g i` is smooth at every point of the topological support of `f i`, then the sum
 `λ x, ∑ᶠ i, f i x • g i x` is smooth on the whole manifold. -/
-theorem smooth_finsum_smul {g : ι → M → F} (hg : ∀ (i), ∀ x ∈ Tsupport (f i), ∀, SmoothAt I 𝓘(ℝ, F) (g i) x) :
+theorem smooth_finsum_smul {g : ι → M → F} (hg : ∀ (i), ∀ x ∈ Tsupport (f i), SmoothAt I 𝓘(ℝ, F) (g i) x) :
     Smooth I 𝓘(ℝ, F) fun x => ∑ᶠ i, f i x • g i x :=
   f.cont_mdiff_finsum_smul hg
 
@@ -217,7 +217,7 @@ theorem smooth_to_partition_of_unity {E : Type uE} [NormedAddCommGroup E] [Norme
     (f : BumpCovering ι M s) (hf : ∀ i, Smooth I 𝓘(ℝ) (f i)) (i : ι) : Smooth I 𝓘(ℝ) (f.toPartitionOfUnity i) :=
   (hf i).mul <|
     (smooth_finprod_cond fun j _ => smooth_const.sub (hf j)) <| by
-      simp only [← mul_support_one_sub]
+      simp only [mul_support_one_sub]
       exact f.locally_finite
 
 variable {s : Set M}
@@ -279,7 +279,7 @@ variable (I)
 Suppose also that `M` is a Hausdorff `σ`-compact topological space. Let `s` be a closed set
 in `M` and `U : M → set M` be a collection of sets such that `U x ∈ 𝓝 x` for every `x ∈ s`.
 Then there exists a smooth bump covering of `s` that is subordinate to `U`. -/
-theorem exists_is_subordinate [T2Space M] [SigmaCompactSpace M] (hs : IsClosed s) (hU : ∀, ∀ x ∈ s, ∀, U x ∈ 𝓝 x) :
+theorem exists_is_subordinate [T2Space M] [SigmaCompactSpace M] (hs : IsClosed s) (hU : ∀ x ∈ s, U x ∈ 𝓝 x) :
     ∃ (ι : Type uM)(f : SmoothBumpCovering ι I M s), f.IsSubordinate U := by
   -- First we deduce some missing instances
   haveI : LocallyCompactSpace H := I.locally_compact
@@ -294,12 +294,12 @@ theorem exists_is_subordinate [T2Space M] [SigmaCompactSpace M] (hs : IsClosed s
     ⟨V, hsV, hVc, hVf⟩
   choose r hrR hr using fun i => (f i).exists_r_pos_lt_subset_ball (hVc i) (hVf i)
   refine' ⟨ι, ⟨c, fun i => (f i).updateR (r i) (hrR i), hcs, _, fun x hx => _⟩, fun i => _⟩
-  · simpa only [← SmoothBumpFunction.support_update_r]
+  · simpa only [SmoothBumpFunction.support_update_r]
     
   · refine' (mem_Union.1 <| hsV hx).imp fun i hi => _
     exact ((f i).updateR _ _).eventually_eq_one_of_dist_lt ((f i).support_subset_source <| hVf _ hi) (hr i hi).2
     
-  · simpa only [← coe_mk, ← SmoothBumpFunction.support_update_r, ← Tsupport] using hfU i
+  · simpa only [coe_mk, SmoothBumpFunction.support_update_r, Tsupport] using hfU i
     
 
 variable {I M}
@@ -312,7 +312,7 @@ protected theorem point_finite (x : M) : { i | fs i x ≠ 0 }.Finite :=
 
 theorem mem_chart_at_source_of_eq_one {i : ι} {x : M} (h : fs i x = 1) : x ∈ (chartAt H (fs.c i)).Source :=
   (fs i).support_subset_source <| by
-    simp [← h]
+    simp [h]
 
 theorem mem_ext_chart_at_source_of_eq_one {i : ι} {x : M} (h : fs i x = 1) : x ∈ (extChartAt I (fs.c i)).Source := by
   rw [ext_chart_at_source]
@@ -329,7 +329,7 @@ theorem apply_ind (x : M) (hx : x ∈ s) : fs (fs.ind x hx) x = 1 :=
   (fs.eventually_eq_one x hx).eq_of_nhds
 
 theorem mem_support_ind (x : M) (hx : x ∈ s) : x ∈ Support (fs <| fs.ind x hx) := by
-  simp [← fs.apply_ind x hx]
+  simp [fs.apply_ind x hx]
 
 theorem mem_chart_at_ind_source (x : M) (hx : x ∈ s) : x ∈ (chartAt H (fs.c (fs.ind x hx))).Source :=
   fs.mem_chart_at_source_of_eq_one (fs.apply_ind x hx)
@@ -402,12 +402,12 @@ other. -/
 theorem exists_smooth_zero_one_of_closed [T2Space M] [SigmaCompactSpace M] {s t : Set M} (hs : IsClosed s)
     (ht : IsClosed t) (hd : Disjoint s t) :
     ∃ f : C^∞⟮I, M; 𝓘(ℝ), ℝ⟯, EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1 := by
-  have : ∀, ∀ x ∈ t, ∀, sᶜ ∈ 𝓝 x := fun x hx => hs.is_open_compl.mem_nhds (disjoint_right.1 hd hx)
+  have : ∀ x ∈ t, sᶜ ∈ 𝓝 x := fun x hx => hs.is_open_compl.mem_nhds (disjoint_right.1 hd hx)
   rcases SmoothBumpCovering.exists_is_subordinate I ht this with ⟨ι, f, hf⟩
   set g := f.to_smooth_partition_of_unity
   refine' ⟨⟨_, g.smooth_sum⟩, fun x hx => _, fun x => g.sum_eq_one, fun x => ⟨g.sum_nonneg x, g.sum_le_one x⟩⟩
   suffices ∀ i, g i x = 0 by
-    simp only [← this, ← ContMdiffMap.coe_fn_mk, ← finsum_zero, ← Pi.zero_apply]
+    simp only [this, ContMdiffMap.coe_fn_mk, finsum_zero, Pi.zero_apply]
   refine' fun i => f.to_smooth_partition_of_unity_zero_of_zero _
   exact nmem_support.1 (subset_compl_comm.1 (hf.support_subset i) hx)
 
@@ -418,9 +418,9 @@ defined as an example for `inhabited` instance. -/
 def single (i : ι) (s : Set M) : SmoothPartitionOfUnity ι I M s :=
   (BumpCovering.single i s).toSmoothPartitionOfUnity fun j => by
     rcases eq_or_ne j i with (rfl | h)
-    · simp only [← smooth_one, ← ContinuousMap.coe_one, ← BumpCovering.coe_single, ← Pi.single_eq_same]
+    · simp only [smooth_one, ContinuousMap.coe_one, BumpCovering.coe_single, Pi.single_eq_same]
       
-    · simp only [← smooth_zero, ← BumpCovering.coe_single, ← Pi.single_eq_of_ne h, ← ContinuousMap.coe_zero]
+    · simp only [smooth_zero, BumpCovering.coe_single, Pi.single_eq_of_ne h, ContinuousMap.coe_zero]
       
 
 instance [Inhabited ι] (s : Set M) : Inhabited (SmoothPartitionOfUnity ι I M s) :=
@@ -454,7 +454,7 @@ be a family of convex sets. Suppose that for each point `x : M` there exists a n
 for all `x`. See also `exists_smooth_forall_mem_convex_of_local` and
 `exists_smooth_forall_mem_convex_of_local_const`. -/
 theorem exists_cont_mdiff_forall_mem_convex_of_local (ht : ∀ x, Convex ℝ (t x))
-    (Hloc : ∀ x : M, ∃ U ∈ 𝓝 x, ∃ g : M → F, ContMdiffOn I 𝓘(ℝ, F) n g U ∧ ∀, ∀ y ∈ U, ∀, g y ∈ t y) :
+    (Hloc : ∀ x : M, ∃ U ∈ 𝓝 x, ∃ g : M → F, ContMdiffOn I 𝓘(ℝ, F) n g U ∧ ∀ y ∈ U, g y ∈ t y) :
     ∃ g : C^n⟮I, M; 𝓘(ℝ, F), F⟯, ∀ x, g x ∈ t x := by
   choose U hU g hgs hgt using Hloc
   obtain ⟨f, hf⟩ :=
@@ -473,7 +473,7 @@ Then there exists a smooth function `g : C^∞⟮I, M; 𝓘(ℝ, F), F⟯` such 
 See also `exists_cont_mdiff_forall_mem_convex_of_local` and
 `exists_smooth_forall_mem_convex_of_local_const`. -/
 theorem exists_smooth_forall_mem_convex_of_local (ht : ∀ x, Convex ℝ (t x))
-    (Hloc : ∀ x : M, ∃ U ∈ 𝓝 x, ∃ g : M → F, SmoothOn I 𝓘(ℝ, F) g U ∧ ∀, ∀ y ∈ U, ∀, g y ∈ t y) :
+    (Hloc : ∀ x : M, ∃ U ∈ 𝓝 x, ∃ g : M → F, SmoothOn I 𝓘(ℝ, F) g U ∧ ∀ y ∈ U, g y ∈ t y) :
     ∃ g : C^∞⟮I, M; 𝓘(ℝ, F), F⟯, ∀ x, g x ∈ t x :=
   exists_cont_mdiff_forall_mem_convex_of_local I ht Hloc
 
@@ -495,10 +495,9 @@ all `i`. Then there exists a positive smooth function `δ : M → ℝ≥0` such 
 theorem Emetric.exists_smooth_forall_closed_ball_subset {M} [EmetricSpace M] [ChartedSpace H M]
     [SmoothManifoldWithCorners I M] [SigmaCompactSpace M] {K : ι → Set M} {U : ι → Set M} (hK : ∀ i, IsClosed (K i))
     (hU : ∀ i, IsOpen (U i)) (hKU : ∀ i, K i ⊆ U i) (hfin : LocallyFinite K) :
-    ∃ δ : C^∞⟮I, M; 𝓘(ℝ, ℝ), ℝ⟯,
-      (∀ x, 0 < δ x) ∧ ∀ (i), ∀ x ∈ K i, ∀, Emetric.ClosedBall x (Ennreal.ofReal (δ x)) ⊆ U i :=
+    ∃ δ : C^∞⟮I, M; 𝓘(ℝ, ℝ), ℝ⟯, (∀ x, 0 < δ x) ∧ ∀ (i), ∀ x ∈ K i, Emetric.ClosedBall x (Ennreal.ofReal (δ x)) ⊆ U i :=
   by
-  simpa only [← mem_inter_eq, ← forall_and_distrib, ← mem_preimage, ← mem_Inter, ← @forall_swap ι M] using
+  simpa only [mem_inter_eq, forall_and_distrib, mem_preimage, mem_Inter, @forall_swap ι M] using
     exists_smooth_forall_mem_convex_of_local_const I Emetric.exists_forall_closed_ball_subset_aux₂
       (Emetric.exists_forall_closed_ball_subset_aux₁ hK hU hKU hfin)
 
@@ -509,7 +508,7 @@ we have `metric.closed_ball x (δ x) ⊆ U i`. -/
 theorem Metric.exists_smooth_forall_closed_ball_subset {M} [MetricSpace M] [ChartedSpace H M]
     [SmoothManifoldWithCorners I M] [SigmaCompactSpace M] {K : ι → Set M} {U : ι → Set M} (hK : ∀ i, IsClosed (K i))
     (hU : ∀ i, IsOpen (U i)) (hKU : ∀ i, K i ⊆ U i) (hfin : LocallyFinite K) :
-    ∃ δ : C^∞⟮I, M; 𝓘(ℝ, ℝ), ℝ⟯, (∀ x, 0 < δ x) ∧ ∀ (i), ∀ x ∈ K i, ∀, Metric.ClosedBall x (δ x) ⊆ U i := by
+    ∃ δ : C^∞⟮I, M; 𝓘(ℝ, ℝ), ℝ⟯, (∀ x, 0 < δ x) ∧ ∀ (i), ∀ x ∈ K i, Metric.ClosedBall x (δ x) ⊆ U i := by
   rcases Emetric.exists_smooth_forall_closed_ball_subset I hK hU hKU hfin with ⟨δ, hδ0, hδ⟩
   refine' ⟨δ, hδ0, fun i x hx => _⟩
   rw [← Metric.emetric_closed_ball (hδ0 _).le]

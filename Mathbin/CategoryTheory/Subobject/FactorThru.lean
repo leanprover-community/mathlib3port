@@ -39,10 +39,10 @@ def Factors {X Y : C} (P : MonoOver Y) (f : X ⟶ Y) : Prop :=
 theorem factors_congr {X : C} {f g : MonoOver X} {Y : C} (h : Y ⟶ X) (e : f ≅ g) : f.Factors h ↔ g.Factors h :=
   ⟨fun ⟨u, hu⟩ =>
     ⟨u ≫ ((MonoOver.forget _).map e.Hom).left, by
-      simp [← hu]⟩,
+      simp [hu]⟩,
     fun ⟨u, hu⟩ =>
     ⟨u ≫ ((MonoOver.forget _).map e.inv).left, by
-      simp [← hu]⟩⟩
+      simp [hu]⟩⟩
 
 /-- `P.factor_thru f h` provides a factorisation of `f : X ⟶ Y` through some `P : mono_over Y`,
 given the evidence `h : P.factors f` that such a factorisation exists. -/
@@ -110,10 +110,10 @@ theorem factors_zero [HasZeroMorphisms C] {X Y : C} {P : Subobject Y} : P.Factor
       simp ⟩
 
 theorem factors_of_le {Y Z : C} {P Q : Subobject Y} (f : Z ⟶ Y) (h : P ≤ Q) : P.Factors f → Q.Factors f := by
-  simp only [← factors_iff]
+  simp only [factors_iff]
   exact fun ⟨u, hu⟩ =>
     ⟨u ≫ of_le _ _ h, by
-      simp [hu]⟩
+      simp [← hu]⟩
 
 /-- `P.factor_thru f h` provides a factorisation of `f : X ⟶ Y` through some `P : subobject Y`,
 given the evidence `h : P.factors f` that such a factorisation exists. -/

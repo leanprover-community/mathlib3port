@@ -245,7 +245,7 @@ theorem Subsequent.mk_left {xl xr} (xL : xl → Pgame) (xR : xr → Pgame) (i : 
 theorem Subsequent.mk_right {xl xr} (xL : xl → Pgame) (xR : xr → Pgame) (j : xr) : Subsequent (xR j) (mk xl xr xL xR) :=
   @Subsequent.move_right (mk _ _ _ _) j
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 /-- A local tactic for proving well-foundedness of recursive definitions involving pregames. -/
 unsafe def pgame_wf_tac :=
   sorry
@@ -363,8 +363,8 @@ theorem lf_iff_exists_le {x y : Pgame} : x ⧏ y ↔ (∃ i, x ≤ y.moveLeft i)
 private theorem not_le_lf {x y : Pgame} : (¬x ≤ y ↔ y ⧏ x) ∧ (¬x ⧏ y ↔ y ≤ x) := by
   induction' x with xl xr xL xR IHxl IHxr generalizing y
   induction' y with yl yr yL yR IHyl IHyr
-  simp only [← mk_le_mk, ← mk_lf_mk, ← IHxl, ← IHxr, ← IHyl, ← IHyr, ← not_and_distrib, ← not_or_distrib, ← not_forall,
-    ← not_exists, ← and_comm, ← or_comm, ← iff_selfₓ, ← and_selfₓ]
+  simp only [mk_le_mk, mk_lf_mk, IHxl, IHxr, IHyl, IHyr, not_and_distrib, not_or_distrib, not_forall, not_exists,
+    and_comm, or_comm, iff_selfₓ, and_selfₓ]
 
 @[simp]
 protected theorem not_le {x y : Pgame} : ¬x ≤ y ↔ y ⧏ x :=
@@ -454,7 +454,7 @@ theorem lf_of_lt {x y : Pgame} (h : x < y) : x ⧏ y :=
 alias lf_of_lt ← _root_.has_lt.lt.lf
 
 theorem lf_irrefl (x : Pgame) : ¬x ⧏ x :=
-  le_rfl.not_gf
+  le_rflₓ.not_gf
 
 instance : IsIrrefl _ (· ⧏ ·) :=
   ⟨lf_irrefl⟩
@@ -486,10 +486,10 @@ alias lf_of_lt_of_lf ← _root_.has_lt.lt.trans_lf
 alias lf_of_lf_of_lt ← lf.trans_lt
 
 theorem move_left_lf {x : Pgame} : ∀ i, x.moveLeft i ⧏ x :=
-  le_rfl.move_left_lf
+  le_rflₓ.move_left_lf
 
 theorem lf_move_right {x : Pgame} : ∀ j, x ⧏ x.moveRight j :=
-  le_rfl.lf_move_right
+  le_rflₓ.lf_move_right
 
 theorem lf_mk {xl xr} (xL : xl → Pgame) (xR : xr → Pgame) (i) : xL i ⧏ mk xl xr xL xR :=
   @move_left_lf (mk _ _ _ _) i
@@ -509,7 +509,7 @@ theorem le_def {x y : Pgame} :
         ∀ j, (∃ i, x ≤ (y.moveRight j).moveLeft i) ∨ ∃ j', x.moveRight j' ≤ y.moveRight j :=
   by
   rw [le_iff_forall_lf]
-  conv => lhs simp only [← lf_iff_exists_le]
+  conv => lhs simp only [lf_iff_exists_le]
 
 /-- The definition of `x ⧏ y` on pre-games, in terms of `⧏` two moves later. -/
 theorem lf_def {x y : Pgame} :
@@ -518,7 +518,7 @@ theorem lf_def {x y : Pgame} :
         ∃ j, (∀ i, (x.moveRight j).moveLeft i ⧏ y) ∧ ∀ j', x.moveRight j ⧏ y.moveRight j' :=
   by
   rw [lf_iff_exists_le]
-  conv => lhs simp only [← le_iff_forall_lf]
+  conv => lhs simp only [le_iff_forall_lf]
 
 /-- The definition of `0 ≤ x` on pre-games, in terms of `0 ⧏`. -/
 theorem zero_le_lf {x : Pgame} : 0 ≤ x ↔ ∀ j, 0 ⧏ x.moveRight j := by
@@ -598,7 +598,7 @@ def Equiv (x y : Pgame) : Prop :=
   x ≤ y ∧ y ≤ x
 
 instance : IsEquiv _ (· ≈ ·) where
-  refl := fun x => ⟨le_rfl, le_rfl⟩
+  refl := fun x => ⟨le_rflₓ, le_rflₓ⟩
   trans := fun x y z ⟨xy, yx⟩ ⟨yz, zy⟩ => ⟨xy.trans yz, zy.trans yx⟩
   symm := fun x y => And.symm
 
@@ -758,7 +758,7 @@ instance : IsIrrefl _ (· ∥ ·) :=
   ⟨fuzzy_irrefl⟩
 
 theorem lf_iff_lt_or_fuzzy {x y : Pgame} : x ⧏ y ↔ x < y ∨ x ∥ y := by
-  simp only [← lt_iff_le_and_lf, ← fuzzy, Pgame.not_le]
+  simp only [lt_iff_le_and_lf, fuzzy, ← Pgame.not_le]
   tauto!
 
 theorem lf_of_fuzzy {x y : Pgame} (h : x ∥ y) : x ⧏ y :=
@@ -1026,12 +1026,12 @@ instance : HasInvolutiveNeg Pgame :=
 
 @[simp]
 protected theorem neg_zero : -(0 : Pgame) = 0 := by
-  dsimp' [← Zero.zero, ← Neg.neg, ← neg]
+  dsimp' [Zero.zero, Neg.neg, neg]
   congr <;> funext i <;> cases i
 
 @[simp]
 theorem neg_of_lists (L R : List Pgame) : -ofLists L R = ofLists (R.map fun x => -x) (L.map fun x => -x) := by
-  simp only [← of_lists, ← neg_def, ← List.length_mapₓ, ← List.nth_le_map', ← eq_self_iff_true, ← true_andₓ]
+  simp only [of_lists, neg_def, List.length_mapₓ, List.nth_le_map', eq_self_iff_true, true_andₓ]
   constructor
   all_goals
     apply hfunext
@@ -1406,7 +1406,7 @@ def addCommRelabelling : ∀ x y : Pgame.{u}, x + y ≡r y + x
   | mk xl xr xL xR, mk yl yr yL yR => by
     refine' ⟨Equivₓ.sumComm _ _, Equivₓ.sumComm _ _, _, _⟩ <;>
       rintro (_ | _) <;>
-        · dsimp' [← left_moves_add, ← right_moves_add]
+        · dsimp' [left_moves_add, right_moves_add]
           apply add_comm_relabelling
           
 
@@ -1622,11 +1622,11 @@ theorem star_fuzzy_zero : star ∥ 0 :=
 
 @[simp]
 theorem neg_star : -star = star := by
-  simp [← star]
+  simp [star]
 
 @[simp]
 theorem zero_lt_one : (0 : Pgame) < 1 :=
-  lt_of_le_of_lf (zero_le_of_is_empty_right_moves 1) (zero_lf_le.2 ⟨default, le_rfl⟩)
+  lt_of_le_of_lf (zero_le_of_is_empty_right_moves 1) (zero_lf_le.2 ⟨default, le_rflₓ⟩)
 
 instance : ZeroLeOneClass Pgame :=
   ⟨zero_lt_one.le⟩

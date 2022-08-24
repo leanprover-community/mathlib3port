@@ -62,7 +62,7 @@ instance applyMulSemiringAction : MulSemiringAction p.Gal p.SplittingField :=
   AlgEquiv.applyMulSemiringAction
 
 @[ext]
-theorem ext {σ τ : p.Gal} (h : ∀, ∀ x ∈ p.RootSet p.SplittingField, ∀, σ x = τ x) : σ = τ := by
+theorem ext {σ τ : p.Gal} (h : ∀ x ∈ p.RootSet p.SplittingField, σ x = τ x) : σ = τ := by
   refine'
     AlgEquiv.ext fun x =>
       (AlgHom.mem_equalizer σ.to_alg_hom τ.to_alg_hom x).mp ((set_like.ext_iff.mp _ x).mpr Algebra.mem_top)
@@ -125,7 +125,7 @@ def mapRoots [Fact (p.Splits (algebraMap F E))] : RootSet p p.SplittingField →
   ⟨IsScalarTower.toAlgHom F p.SplittingField E x, by
     have key := Subtype.mem x
     by_cases' p = 0
-    · simp only [← h, ← root_set_zero] at key
+    · simp only [h, root_set_zero] at key
       exact False.ndrec _ key
       
     · rw [mem_root_set h, aeval_alg_hom_apply, (mem_root_set h).mp key, AlgHom.map_zero]
@@ -142,7 +142,7 @@ theorem map_roots_bijective [h : Fact (p.Splits (algebraMap F E))] : Function.Bi
         ((splits_id_iff_splits _).mpr (is_splitting_field.splits p.splitting_field p))
     rw [map_map, AlgHom.comp_algebra_map] at key
     have hy := Subtype.mem y
-    simp only [← root_set, ← Finset.mem_coe, ← Multiset.mem_to_finset, ← key, ← Multiset.mem_map] at hy
+    simp only [root_set, Finset.mem_coe, Multiset.mem_to_finset, key, Multiset.mem_map] at hy
     rcases hy with ⟨x, hx1, hx2⟩
     exact ⟨⟨x, multiset.mem_to_finset.mpr hx1⟩, Subtype.ext hx2⟩
     
@@ -157,7 +157,7 @@ instance galActionAux : MulAction p.Gal (RootSet p p.SplittingField) where
       have key := Subtype.mem x
       --simp only [root_set, finset.mem_coe, multiset.mem_to_finset] at *,
       by_cases' p = 0
-      · simp only [← h, ← root_set_zero] at key
+      · simp only [h, root_set_zero] at key
         exact False.ndrec _ key
         
       · rw [mem_root_set h]
@@ -175,9 +175,9 @@ instance galActionAux : MulAction p.Gal (RootSet p p.SplittingField) where
 instance galAction [Fact (p.Splits (algebraMap F E))] : MulAction p.Gal (RootSet p E) where
   smul := fun ϕ x => rootsEquivRoots p E (ϕ • (rootsEquivRoots p E).symm x)
   one_smul := fun _ => by
-    simp only [← Equivₓ.apply_symm_apply, ← one_smul]
+    simp only [Equivₓ.apply_symm_apply, one_smul]
   mul_smul := fun _ _ _ => by
-    simp only [← Equivₓ.apply_symm_apply, ← Equivₓ.symm_apply_apply, ← mul_smul]
+    simp only [Equivₓ.apply_symm_apply, Equivₓ.symm_apply_apply, mul_smul]
 
 variable {p E}
 
@@ -224,7 +224,7 @@ def restrictDvd (hpq : p ∣ q) : q.Gal →* p.Gal :=
   else @restrict F _ p _ _ _ ⟨splits_of_splits_of_dvd (algebraMap F q.SplittingField) hq (SplittingField.splits q) hpq⟩
 
 theorem restrict_dvd_surjective (hpq : p ∣ q) (hq : q ≠ 0) : Function.Surjective (restrictDvd hpq) := by
-  simp only [← restrict_dvd, ← dif_neg hq, ← restrict_surjective]
+  simp only [restrict_dvd, dif_neg hq, restrict_surjective]
 
 variable (p q)
 
@@ -241,8 +241,8 @@ theorem restrict_prod_injective : Function.Injective (restrictProd p q) := by
     exact fun f g h => Eq.trans (Unique.eq_default f) (Unique.eq_default g).symm
     
   intro f g hfg
-  dsimp' only [← restrict_prod, ← restrict_dvd]  at hfg
-  simp only [← dif_neg hpq, ← MonoidHom.prod_apply, ← Prod.mk.inj_iff] at hfg
+  dsimp' only [restrict_prod, restrict_dvd]  at hfg
+  simp only [dif_neg hpq, MonoidHom.prod_apply, Prod.mk.inj_iff] at hfg
   ext x hx
   rw [root_set, Polynomial.map_mul, Polynomial.roots_mul] at hx
   cases' multiset.mem_add.mp (multiset.mem_to_finset.mp hx) with h h
@@ -340,7 +340,7 @@ def restrictComp (hq : q.natDegree ≠ 0) : (p.comp q).Gal →* p.Gal :=
   @restrict F _ p _ _ _ ⟨splits_in_splitting_field_of_comp p q hq⟩
 
 theorem restrict_comp_surjective (hq : q.natDegree ≠ 0) : Function.Surjective (restrictComp p q hq) := by
-  simp only [← restrict_comp, ← restrict_surjective]
+  simp only [restrict_comp, restrict_surjective]
 
 variable {p q}
 
@@ -350,8 +350,8 @@ theorem card_of_separable (hp : p.Separable) : Fintype.card p.Gal = finrank F p.
   haveI : IsGalois F p.splitting_field := IsGalois.of_separable_splitting_field hp
   exact IsGalois.card_aut_eq_finrank F p.splitting_field
 
--- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible)
 theorem prime_degree_dvd_card [CharZero F] (p_irr : Irreducible p) (p_deg : p.natDegree.Prime) :
     p.natDegree ∣ Fintype.card p.Gal := by
   rw [gal.card_of_separable p_irr.separable]
@@ -464,7 +464,7 @@ theorem gal_action_hom_bijective_of_prime_degree {p : ℚ[X]} (p_irr : Irreducib
   let conj := restrict p ℂ (complex.conj_ae.restrict_scalars ℚ)
   refine'
     ⟨gal_action_hom_injective p ℂ, fun x =>
-      (congr_arg (HasMem.Mem x) (show (gal_action_hom p ℂ).range = ⊤ from _)).mpr (Subgroup.mem_top x)⟩
+      (congr_arg (Membership.Mem x) (show (gal_action_hom p ℂ).range = ⊤ from _)).mpr (Subgroup.mem_top x)⟩
   apply Equivₓ.Perm.subgroup_eq_top_of_swap_mem
   · rwa [h1]
     

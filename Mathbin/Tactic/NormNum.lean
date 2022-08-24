@@ -56,7 +56,7 @@ theorem subst_into_mul {α} [Mul α] (l r tl tr t) (prl : (l : α) = tl) (prr : 
   rw [prl, prr, prt]
 
 theorem subst_into_neg {α} [Neg α] (a ta t : α) (pra : a = ta) (prt : -ta = t) : -a = t := by
-  simp [← pra, ← prt]
+  simp [pra, prt]
 
 /-- The result type of `match_numeral`, either `0`, `1`, or a top level
 decomposition of `bit0 e` or `bit1 e`. The `other` case means it is not a numeral. -/
@@ -86,7 +86,7 @@ theorem bit0_succ {α} [Semiringₓ α] (a : α) : bit0 a + 1 = bit1 a :=
 
 theorem bit1_succ {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : bit1 a + 1 = bit0 b :=
   h ▸ by
-    simp [← bit1, ← bit0, ← add_left_commₓ, ← add_assocₓ]
+    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
 
 section
 
@@ -126,54 +126,54 @@ theorem one_add {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : 1 + a = b := 
 
 theorem add_bit0_bit0 {α} [Semiringₓ α] (a b c : α) (h : a + b = c) : bit0 a + bit0 b = bit0 c :=
   h ▸ by
-    simp [← bit0, ← add_left_commₓ, ← add_assocₓ]
+    simp [bit0, add_left_commₓ, add_assocₓ]
 
 theorem add_bit0_bit1 {α} [Semiringₓ α] (a b c : α) (h : a + b = c) : bit0 a + bit1 b = bit1 c :=
   h ▸ by
-    simp [← bit0, ← bit1, ← add_left_commₓ, ← add_assocₓ]
+    simp [bit0, bit1, add_left_commₓ, add_assocₓ]
 
 theorem add_bit1_bit0 {α} [Semiringₓ α] (a b c : α) (h : a + b = c) : bit1 a + bit0 b = bit1 c :=
   h ▸ by
-    simp [← bit0, ← bit1, ← add_left_commₓ, ← add_commₓ, ← add_assocₓ]
+    simp [bit0, bit1, add_left_commₓ, add_commₓ, add_assocₓ]
 
 theorem add_bit1_bit1 {α} [Semiringₓ α] (a b c : α) (h : a + b + 1 = c) : bit1 a + bit1 b = bit0 c :=
   h ▸ by
-    simp [← bit0, ← bit1, ← add_left_commₓ, ← add_commₓ, ← add_assocₓ]
+    simp [bit0, bit1, add_left_commₓ, add_commₓ, add_assocₓ]
 
 theorem adc_one_one {α} [Semiringₓ α] : (1 + 1 + 1 : α) = 3 :=
   rfl
 
 theorem adc_bit0_one {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : bit0 a + 1 + 1 = bit0 b :=
   h ▸ by
-    simp [← bit0, ← add_left_commₓ, ← add_assocₓ]
+    simp [bit0, add_left_commₓ, add_assocₓ]
 
 theorem adc_one_bit0 {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : 1 + bit0 a + 1 = bit0 b :=
   h ▸ by
-    simp [← bit0, ← add_left_commₓ, ← add_assocₓ]
+    simp [bit0, add_left_commₓ, add_assocₓ]
 
 theorem adc_bit1_one {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : bit1 a + 1 + 1 = bit1 b :=
   h ▸ by
-    simp [← bit1, ← bit0, ← add_left_commₓ, ← add_assocₓ]
+    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
 
 theorem adc_one_bit1 {α} [Semiringₓ α] (a b : α) (h : a + 1 = b) : 1 + bit1 a + 1 = bit1 b :=
   h ▸ by
-    simp [← bit1, ← bit0, ← add_left_commₓ, ← add_assocₓ]
+    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
 
 theorem adc_bit0_bit0 {α} [Semiringₓ α] (a b c : α) (h : a + b = c) : bit0 a + bit0 b + 1 = bit1 c :=
   h ▸ by
-    simp [← bit1, ← bit0, ← add_left_commₓ, ← add_assocₓ]
+    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
 
 theorem adc_bit1_bit0 {α} [Semiringₓ α] (a b c : α) (h : a + b + 1 = c) : bit1 a + bit0 b + 1 = bit0 c :=
   h ▸ by
-    simp [← bit1, ← bit0, ← add_left_commₓ, ← add_assocₓ]
+    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
 
 theorem adc_bit0_bit1 {α} [Semiringₓ α] (a b c : α) (h : a + b + 1 = c) : bit0 a + bit1 b + 1 = bit0 c :=
   h ▸ by
-    simp [← bit1, ← bit0, ← add_left_commₓ, ← add_assocₓ]
+    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
 
 theorem adc_bit1_bit1 {α} [Semiringₓ α] (a b c : α) (h : a + b + 1 = c) : bit1 a + bit1 b + 1 = bit1 c :=
   h ▸ by
-    simp [← bit1, ← bit0, ← add_left_commₓ, ← add_assocₓ]
+    simp [bit1, bit0, add_left_commₓ, add_assocₓ]
 
 section
 
@@ -252,9 +252,9 @@ mutual
 end
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident prove_add_nat]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident prove_add_nat]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident prove_adc_nat]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident prove_adc_nat]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Given `a`,`b` natural numerals, returns `(r, ⊢ a + b = r)`. -/
 unsafe def prove_add_nat' (c : instance_cache) (a b : expr) : tactic (instance_cache × expr × expr) := do
   let na ← a.toNat
@@ -267,18 +267,18 @@ end
 
 theorem bit0_mul {α} [Semiringₓ α] (a b c : α) (h : a * b = c) : bit0 a * b = bit0 c :=
   h ▸ by
-    simp [← bit0, ← add_mulₓ]
+    simp [bit0, add_mulₓ]
 
 theorem mul_bit0' {α} [Semiringₓ α] (a b c : α) (h : a * b = c) : a * bit0 b = bit0 c :=
   h ▸ by
-    simp [← bit0, ← mul_addₓ]
+    simp [bit0, mul_addₓ]
 
 theorem mul_bit0_bit0 {α} [Semiringₓ α] (a b c : α) (h : a * b = c) : bit0 a * bit0 b = bit0 (bit0 c) :=
   bit0_mul _ _ _ (mul_bit0' _ _ _ h)
 
 theorem mul_bit1_bit1 {α} [Semiringₓ α] (a b c d e : α) (hc : a * b = c) (hd : a + b = d) (he : bit0 c + d = e) :
     bit1 a * bit1 b = bit1 e := by
-  rw [← he, ← hd, ← hc] <;> simp [← bit1, ← bit0, ← mul_addₓ, ← add_mulₓ, ← add_left_commₓ, ← add_assocₓ]
+  rw [← he, ← hd, ← hc] <;> simp [bit1, bit0, mul_addₓ, add_mulₓ, add_left_commₓ, add_assocₓ]
 
 section
 
@@ -421,7 +421,7 @@ theorem lt_bit0_bit1 {α} [LinearOrderedSemiring α] (a b : α) (h : a ≤ b) : 
 theorem lt_bit1_bit0 {α} [LinearOrderedSemiring α] (a b : α) (h : a + 1 ≤ b) : bit1 a < bit0 b :=
   lt_of_lt_of_leₓ
     (by
-      simp [← bit0, ← bit1, ← zero_lt_one, ← add_assocₓ])
+      simp [bit0, bit1, zero_lt_one, add_assocₓ])
     (bit0_le_bit0.2 h)
 
 theorem lt_bit1_bit1 {α} [LinearOrderedSemiring α] (a b : α) : a < b → bit1 a < bit1 b :=
@@ -542,9 +542,9 @@ mutual
 end
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident prove_le_nat]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident prove_le_nat]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident prove_sle_nat]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident prove_sle_nat]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- Given `a`,`b` natural numerals, proves `⊢ a < b`. -/
 unsafe def prove_lt_nat (ic : instance_cache) : expr → expr → tactic (instance_cache × expr)
   | a, b =>
@@ -1024,7 +1024,7 @@ unsafe def prove_mul_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) : tact
 
 theorem inv_neg {α} [DivisionRing α] (a b : α) (h : a⁻¹ = b) : (-a)⁻¹ = -b :=
   h ▸ by
-    simp only [← inv_eq_one_div, ← one_div_neg_eq_neg_one_div]
+    simp only [inv_eq_one_div, one_div_neg_eq_neg_one_div]
 
 theorem inv_one {α} [DivisionRing α] : (1 : α)⁻¹ = 1 :=
   inv_one
@@ -1036,7 +1036,7 @@ theorem inv_div_one {α} [DivisionRing α] (a : α) : a⁻¹ = 1 / a :=
   inv_eq_one_div _
 
 theorem inv_div {α} [DivisionRing α] (a b : α) : (a / b)⁻¹ = b / a := by
-  simp only [← inv_eq_one_div, ← one_div_div]
+  simp only [inv_eq_one_div, one_div_div]
 
 /-- Given `a` a rational numeral, returns `(b, ⊢ a⁻¹ = b)`. -/
 unsafe def prove_inv : instance_cache → expr → ℚ → tactic (instance_cache × expr × expr)
@@ -1172,11 +1172,11 @@ unsafe def eval_field : expr → tactic (expr × expr)
 
 theorem pow_bit0 [Monoidₓ α] (a c' c : α) (b : ℕ) (h : a ^ b = c') (h₂ : c' * c' = c) : a ^ bit0 b = c :=
   h₂ ▸ by
-    simp [← pow_bit0, ← h]
+    simp [pow_bit0, h]
 
 theorem pow_bit1 [Monoidₓ α] (a c₁ c₂ c : α) (b : ℕ) (h : a ^ b = c₁) (h₂ : c₁ * c₁ = c₂) (h₃ : c₂ * a = c) :
     a ^ bit1 b = c := by
-  rw [← h₃, ← h₂] <;> simp [← pow_bit1, ← h]
+  rw [← h₃, ← h₂] <;> simp [pow_bit1, h]
 
 section
 
@@ -1425,7 +1425,7 @@ theorem int_to_nat_pos (a : ℤ) (b : ℕ)
   rw [← h] <;> simp
 
 theorem int_to_nat_neg (a : ℤ) (h : 0 < a) : (-a).toNat = 0 := by
-  simp only [← Int.to_nat_of_nonpos, ← h.le, ← neg_nonpos]
+  simp only [Int.to_nat_of_nonpos, h.le, neg_nonpos]
 
 theorem nat_abs_pos (a : ℤ) (b : ℕ)
     (h :

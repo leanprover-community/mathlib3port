@@ -63,10 +63,10 @@ theorem adjoin_Union {α : Type _} (s : α → Set A) : adjoin R (Set.Union s) =
 
 theorem adjoin_attach_bUnion [DecidableEq A] {α : Type _} {s : Finset α} (f : s → Finset A) :
     adjoin R (s.attach.bUnion f : Set A) = ⨆ x, adjoin R (f x) := by
-  simpa [← adjoin_Union]
+  simpa [adjoin_Union]
 
 @[elabAsElim]
-theorem adjoin_induction {p : A → Prop} {x : A} (h : x ∈ adjoin R s) (Hs : ∀, ∀ x ∈ s, ∀, p x)
+theorem adjoin_induction {p : A → Prop} {x : A} (h : x ∈ adjoin R s) (Hs : ∀ x ∈ s, p x)
     (Halg : ∀ r, p (algebraMap R A r)) (Hadd : ∀ x y, p x → p y → p (x + y)) (Hmul : ∀ x y, p x → p y → p (x * y)) :
     p x :=
   let S : Subalgebra R A := { Carrier := p, mul_mem' := Hmul, add_mem' := Hadd, algebra_map_mem' := Halg }
@@ -77,8 +77,8 @@ theorem adjoin_induction {p : A → Prop} {x : A} (h : x ∈ adjoin R s) (Hs : �
 natural properties. -/
 @[elabAsElim]
 theorem adjoin_induction₂ {p : A → A → Prop} {a b : A} (ha : a ∈ adjoin R s) (hb : b ∈ adjoin R s)
-    (Hs : ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, p x y) (Halg : ∀ r₁ r₂, p (algebraMap R A r₁) (algebraMap R A r₂))
-    (Halg_left : ∀ (r), ∀ x ∈ s, ∀, p (algebraMap R A r) x) (Halg_right : ∀ (r), ∀ x ∈ s, ∀, p x (algebraMap R A r))
+    (Hs : ∀ x ∈ s, ∀ y ∈ s, p x y) (Halg : ∀ r₁ r₂, p (algebraMap R A r₁) (algebraMap R A r₂))
+    (Halg_left : ∀ (r), ∀ x ∈ s, p (algebraMap R A r) x) (Halg_right : ∀ (r), ∀ x ∈ s, p x (algebraMap R A r))
     (Hadd_left : ∀ x₁ x₂ y, p x₁ y → p x₂ y → p (x₁ + x₂) y) (Hadd_right : ∀ x y₁ y₂, p x y₁ → p x y₂ → p x (y₁ + y₂))
     (Hmul_left : ∀ x₁ x₂ y, p x₁ y → p x₂ y → p (x₁ * x₂) y) (Hmul_right : ∀ x y₁ y₂, p x y₁ → p x y₂ → p x (y₁ * y₂)) :
     p a b := by
@@ -202,9 +202,9 @@ theorem mem_adjoin_of_map_mul {s} {x : A} {f : A →ₗ[R] B} (hf : ∀ a₁ a�
     @adjoin_induction R A _ _ _ _ (fun a => f a ∈ adjoin R (f '' (s ∪ {1}))) x h
       (fun a ha => subset_adjoin ⟨a, ⟨Set.subset_union_left _ _ ha, rfl⟩⟩) (fun r => _)
       (fun y z hy hz => by
-        simpa [← hy, ← hz] using Subalgebra.add_mem _ hy hz)
+        simpa [hy, hz] using Subalgebra.add_mem _ hy hz)
       fun y z hy hz => by
-      simpa [← hy, ← hz, ← hf y z] using Subalgebra.mul_mem _ hy hz
+      simpa [hy, hz, hf y z] using Subalgebra.mul_mem _ hy hz
   have : f 1 ∈ adjoin R (f '' (s ∪ {1})) := subset_adjoin ⟨1, ⟨Set.subset_union_right _ _ <| Set.mem_singleton 1, rfl⟩⟩
   replace this := Subalgebra.smul_mem (adjoin R (f '' (s ∪ {1}))) this r
   convert this
@@ -215,11 +215,11 @@ theorem adjoin_inl_union_inr_eq_prod (s) (t) :
     adjoin R (LinearMap.inl R A B '' (s ∪ {1}) ∪ LinearMap.inr R A B '' (t ∪ {1})) = (adjoin R s).Prod (adjoin R t) :=
   by
   apply le_antisymmₓ
-  · simp only [← adjoin_le_iff, ← Set.insert_subset, ← Subalgebra.zero_mem, ← Subalgebra.one_mem, ← subset_adjoin,
-      ←-- the rest comes from `squeeze_simp`
+  · simp only [adjoin_le_iff, Set.insert_subset, Subalgebra.zero_mem, Subalgebra.one_mem,
+      subset_adjoin,-- the rest comes from `squeeze_simp`
       Set.union_subset_iff,
-      ← LinearMap.coe_inl, ← Set.mk_preimage_prod_right, ← Set.image_subset_iff, ← SetLike.mem_coe, ←
-      Set.mk_preimage_prod_left, ← LinearMap.coe_inr, ← and_selfₓ, ← Set.union_singleton, ← Subalgebra.coe_prod]
+      LinearMap.coe_inl, Set.mk_preimage_prod_right, Set.image_subset_iff, SetLike.mem_coe, Set.mk_preimage_prod_left,
+      LinearMap.coe_inr, and_selfₓ, Set.union_singleton, Subalgebra.coe_prod]
     
   · rintro ⟨a, b⟩ ⟨ha, hb⟩
     let P := adjoin R (LinearMap.inl R A B '' (s ∪ {1}) ∪ LinearMap.inr R A B '' (t ∪ {1}))
@@ -234,21 +234,20 @@ theorem adjoin_inl_union_inr_eq_prod (s) (t) :
 
 /-- If all elements of `s : set A` commute pairwise, then `adjoin R s` is a commutative
 semiring.  -/
-def adjoinCommSemiringOfComm {s : Set A} (hcomm : ∀, ∀ a ∈ s, ∀, ∀ b ∈ s, ∀, a * b = b * a) :
-    CommSemiringₓ (adjoin R s) :=
+def adjoinCommSemiringOfComm {s : Set A} (hcomm : ∀ a ∈ s, ∀ b ∈ s, a * b = b * a) : CommSemiringₓ (adjoin R s) :=
   { (adjoin R s).toSemiring with
     mul_comm := fun x y => by
       ext
-      simp only [← Subalgebra.coe_mul]
+      simp only [Subalgebra.coe_mul]
       exact
         adjoin_induction₂ x.prop y.prop hcomm
           (fun _ _ => by
             rw [commutes])
           (fun r x hx => commutes r x) (fun r x hx => (commutes r x).symm)
           (fun _ _ _ h₁ h₂ => by
-            simp only [← add_mulₓ, ← mul_addₓ, ← h₁, ← h₂])
+            simp only [add_mulₓ, mul_addₓ, h₁, h₂])
           (fun _ _ _ h₁ h₂ => by
-            simp only [← add_mulₓ, ← mul_addₓ, ← h₁, ← h₂])
+            simp only [add_mulₓ, mul_addₓ, h₁, h₂])
           (fun x₁ x₂ y₁ h₁ h₂ => by
             rw [mul_assoc, h₂, ← mul_assoc y₁, ← h₁, mul_assoc x₁])
           fun x₁ x₂ y₁ h₁ h₂ => by
@@ -283,13 +282,13 @@ theorem adjoin_union_coe_submodule :
     (adjoin R (s ∪ t)).toSubmodule = (adjoin R s).toSubmodule * (adjoin R t).toSubmodule := by
   rw [adjoin_eq_span, adjoin_eq_span, adjoin_eq_span, span_mul_span]
   congr 1 with z
-  simp [← Submonoid.closure_union, ← Submonoid.mem_sup, ← Set.mem_mul]
+  simp [Submonoid.closure_union, Submonoid.mem_sup, Set.mem_mul]
 
 variable {R}
 
 theorem pow_smul_mem_of_smul_subset_of_mem_adjoin [CommSemiringₓ B] [Algebra R B] [Algebra A B] [IsScalarTower R A B]
     (r : A) (s : Set B) (B' : Subalgebra R B) (hs : r • s ⊆ B') {x : B} (hx : x ∈ adjoin R s)
-    (hr : algebraMap A B r ∈ B') : ∃ n₀ : ℕ, ∀, ∀ n ≥ n₀, ∀, r ^ n • x ∈ B' := by
+    (hr : algebraMap A B r ∈ B') : ∃ n₀ : ℕ, ∀ n ≥ n₀, r ^ n • x ∈ B' := by
   change x ∈ (adjoin R s).toSubmodule at hx
   rw [adjoin_eq_span, Finsupp.mem_span_iff_total] at hx
   rcases hx with ⟨l, rfl : (l.sum fun (i : Submonoid.closure s) (c : R) => c • ↑i) = x⟩
@@ -310,7 +309,7 @@ theorem pow_smul_mem_of_smul_subset_of_mem_adjoin [CommSemiringₓ B] [Algebra R
   apply Submonoid.closure_mono hs (n₂ a)
 
 theorem pow_smul_mem_adjoin_smul (r : R) (s : Set A) {x : A} (hx : x ∈ adjoin R s) :
-    ∃ n₀ : ℕ, ∀, ∀ n ≥ n₀, ∀, r ^ n • x ∈ adjoin R (r • s) :=
+    ∃ n₀ : ℕ, ∀ n ≥ n₀, r ^ n • x ∈ adjoin R (r • s) :=
   pow_smul_mem_of_smul_subset_of_mem_adjoin r s _ subset_adjoin hx (Subalgebra.algebra_map_mem _ _)
 
 end CommSemiringₓ
@@ -342,7 +341,7 @@ variable (R)
 
 /-- If all elements of `s : set A` commute pairwise, then `adjoin R s` is a commutative
 ring.  -/
-def adjoinCommRingOfComm {s : Set A} (hcomm : ∀, ∀ a ∈ s, ∀, ∀ b ∈ s, ∀, a * b = b * a) : CommRingₓ (adjoin R s) :=
+def adjoinCommRingOfComm {s : Set A} (hcomm : ∀ a ∈ s, ∀ b ∈ s, a * b = b * a) : CommRingₓ (adjoin R s) :=
   { (adjoin R s).toRing, adjoinCommSemiringOfComm R hcomm with }
 
 end Ringₓ

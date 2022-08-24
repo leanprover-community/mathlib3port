@@ -230,12 +230,12 @@ section
 variable [CompleteLattice α]
 
 example {s : Set β} {f : β → α} : inf (Set.Image f s) = ⨅ a ∈ s, f a := by
-  simp [← Inf_eq_infi, ← infi_and]
+  simp [Inf_eq_infi, infi_and]
   run_tac
     conversion infi_eq_elim.old_conv
 
 example {s : Set β} {f : β → α} : sup (Set.Image f s) = ⨆ a ∈ s, f a := by
-  simp [← Sup_eq_supr, ← supr_and]
+  simp [Sup_eq_supr, supr_and]
   run_tac
     conversion supr_eq_elim.old_conv
 

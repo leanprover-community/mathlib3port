@@ -39,7 +39,7 @@ noncomputable def mirror :=
 
 @[simp]
 theorem mirror_zero : (0 : R[X]).mirror = 0 := by
-  simp [← mirror]
+  simp [mirror]
 
 theorem mirror_monomial (n : ℕ) (a : R) : (monomial n a).mirror = monomial n a := by
   classical

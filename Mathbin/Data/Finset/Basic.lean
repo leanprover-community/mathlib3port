@@ -163,7 +163,7 @@ instance hasDecidableEq [DecidableEq α] : DecidableEq (Finset α)
 /-! ### membership -/
 
 
-instance : HasMem α (Finset α) :=
+instance : Membership α (Finset α) :=
   ⟨fun a s => a ∈ s.1⟩
 
 theorem mem_def {a : α} {s : Finset α} : a ∈ s ↔ a ∈ s.1 :=
@@ -258,10 +258,10 @@ section Subset
 
 variable {s t : Finset α}
 
-instance : HasSubset (Finset α) :=
+instance : Subset (Finset α) :=
   ⟨fun s t => ∀ ⦃a⦄, a ∈ s → a ∈ t⟩
 
-instance : HasSsubset (Finset α) :=
+instance : SSubset (Finset α) :=
   ⟨fun s t => s ⊆ t ∧ ¬t ⊆ s⟩
 
 instance : PartialOrderₓ (Finset α) where
@@ -337,7 +337,7 @@ theorem Subset.antisymm_iff {s₁ s₂ : Finset α} : s₁ = s₂ ↔ s₁ ⊆ s
   le_antisymm_iffₓ
 
 theorem not_subset (s t : Finset α) : ¬s ⊆ t ↔ ∃ x ∈ s, ¬x ∈ t := by
-  simp only [Finset.coe_subset, ← Set.not_subset, ← exists_prop, ← Finset.mem_coe]
+  simp only [← Finset.coe_subset, Set.not_subset, exists_prop, Finset.mem_coe]
 
 @[simp]
 theorem le_eq_subset : ((· ≤ ·) : Finset α → Finset α → Prop) = (· ⊆ ·) :=
@@ -356,14 +356,14 @@ theorem lt_iff_ssubset {s₁ s₂ : Finset α} : s₁ < s₂ ↔ s₁ ⊂ s₂ :
 @[simp, norm_cast]
 theorem coe_ssubset {s₁ s₂ : Finset α} : (s₁ : Set α) ⊂ s₂ ↔ s₁ ⊂ s₂ :=
   show (s₁ : Set α) ⊂ s₂ ↔ s₁ ⊆ s₂ ∧ ¬s₂ ⊆ s₁ by
-    simp only [← Set.ssubset_def, ← Finset.coe_subset]
+    simp only [Set.ssubset_def, Finset.coe_subset]
 
 @[simp]
 theorem val_lt_iff {s₁ s₂ : Finset α} : s₁.1 < s₂.1 ↔ s₁ ⊂ s₂ :=
   and_congr val_le_iff <| not_congr val_le_iff
 
 theorem ssubset_iff_subset_ne {s t : Finset α} : s ⊂ t ↔ s ⊆ t ∧ s ≠ t :=
-  @lt_iff_le_and_ne _ _ s t
+  @lt_iff_le_and_neₓ _ _ s t
 
 theorem ssubset_iff_of_subset {s₁ s₂ : Finset α} (h : s₁ ⊆ s₂) : s₁ ⊂ s₂ ↔ ∃ x ∈ s₂, x ∉ s₁ :=
   Set.ssubset_iff_of_subset h
@@ -422,7 +422,7 @@ theorem Nonempty.bex {s : Finset α} (h : s.Nonempty) : ∃ x : α, x ∈ s :=
 theorem Nonempty.mono {s t : Finset α} (hst : s ⊆ t) (hs : s.Nonempty) : t.Nonempty :=
   Set.Nonempty.mono hst hs
 
-theorem Nonempty.forall_const {s : Finset α} (h : s.Nonempty) {p : Prop} : (∀, ∀ x ∈ s, ∀, p) ↔ p :=
+theorem Nonempty.forall_const {s : Finset α} (h : s.Nonempty) {p : Prop} : (∀ x ∈ s, p) ↔ p :=
   let ⟨x, hx⟩ := h
   ⟨fun h => h x hx, fun h x hx => h⟩
 
@@ -433,7 +433,7 @@ theorem Nonempty.forall_const {s : Finset α} (h : s.Nonempty) {p : Prop} : (∀
 protected def empty : Finset α :=
   ⟨0, nodup_zero⟩
 
-instance : HasEmptyc (Finset α) :=
+instance : EmptyCollection (Finset α) :=
   ⟨Finset.empty⟩
 
 instance inhabitedFinset : Inhabited (Finset α) :=
@@ -518,7 +518,7 @@ theorem eq_empty_of_is_empty [IsEmpty α] (s : Finset α) : s = ∅ :=
 
 This differs from `insert a ∅` in that it does not require a `decidable_eq` instance for `α`.
 -/
-instance : HasSingleton α (Finset α) :=
+instance : Singleton α (Finset α) :=
   ⟨fun a => ⟨{a}, nodup_singleton a⟩⟩
 
 @[simp]
@@ -561,7 +561,7 @@ theorem coe_singleton (a : α) : (({a} : Finset α) : Set α) = {a} := by
 theorem coe_eq_singleton {α : Type _} {s : Finset α} {a : α} : (s : Set α) = {a} ↔ s = {a} := by
   rw [← Finset.coe_singleton, Finset.coe_inj]
 
-theorem eq_singleton_iff_unique_mem {s : Finset α} {a : α} : s = {a} ↔ a ∈ s ∧ ∀, ∀ x ∈ s, ∀, x = a := by
+theorem eq_singleton_iff_unique_mem {s : Finset α} {a : α} : s = {a} ↔ a ∈ s ∧ ∀ x ∈ s, x = a := by
   constructor <;> intro t
   rw [t]
   refine' ⟨Finset.mem_singleton_self _, fun _ => Finset.mem_singleton.1⟩
@@ -569,7 +569,7 @@ theorem eq_singleton_iff_unique_mem {s : Finset α} {a : α} : s = {a} ↔ a ∈
   rw [Finset.mem_singleton]
   refine' ⟨t.right _, fun r => r.symm ▸ t.left⟩
 
-theorem eq_singleton_iff_nonempty_unique_mem {s : Finset α} {a : α} : s = {a} ↔ s.Nonempty ∧ ∀, ∀ x ∈ s, ∀, x = a := by
+theorem eq_singleton_iff_nonempty_unique_mem {s : Finset α} {a : α} : s = {a} ↔ s.Nonempty ∧ ∀ x ∈ s, x = a := by
   constructor
   · rintro rfl
     simp
@@ -582,12 +582,12 @@ theorem eq_singleton_iff_nonempty_unique_mem {s : Finset α} {a : α} : s = {a} 
     
 
 theorem nonempty_iff_eq_singleton_default [Unique α] {s : Finset α} : s.Nonempty ↔ s = {default} := by
-  simp [← eq_singleton_iff_nonempty_unique_mem]
+  simp [eq_singleton_iff_nonempty_unique_mem]
 
 alias nonempty_iff_eq_singleton_default ↔ nonempty.eq_singleton_default _
 
 theorem singleton_iff_unique_mem (s : Finset α) : (∃ a, s = {a}) ↔ ∃! a, a ∈ s := by
-  simp only [← eq_singleton_iff_unique_mem, ← ExistsUnique]
+  simp only [eq_singleton_iff_unique_mem, ExistsUnique]
 
 theorem singleton_subset_set_iff {s : Set α} {a : α} : ↑({a} : Finset α) ⊆ s ↔ a ∈ s := by
   rw [coe_singleton, Set.singleton_subset_iff]
@@ -603,7 +603,7 @@ theorem subset_singleton_iff {s : Finset α} {a : α} : s ⊆ {a} ↔ s = ∅ �
 protected theorem Nonempty.subset_singleton_iff {s : Finset α} {a : α} (h : s.Nonempty) : s ⊆ {a} ↔ s = {a} :=
   subset_singleton_iff.trans <| or_iff_right h.ne_empty
 
-theorem subset_singleton_iff' {s : Finset α} {a : α} : s ⊆ {a} ↔ ∀, ∀ b ∈ s, ∀, b = a :=
+theorem subset_singleton_iff' {s : Finset α} {a : α} : s ⊆ {a} ↔ ∀ b ∈ s, b = a :=
   forall₂_congrₓ fun _ _ => mem_singleton
 
 @[simp]
@@ -646,7 +646,7 @@ theorem cons_val (h : a ∉ s) : (cons a s h).1 = a ::ₘ s.1 :=
   rfl
 
 theorem forall_mem_cons (h : a ∉ s) (p : α → Prop) : (∀ x, x ∈ cons a s h → p x) ↔ p a ∧ ∀ x, x ∈ s → p x := by
-  simp only [← mem_cons, ← or_imp_distrib, ← forall_and_distrib, ← forall_eq]
+  simp only [mem_cons, or_imp_distrib, forall_and_distrib, forall_eq]
 
 @[simp]
 theorem mk_cons {s : Multiset α} (h : (a ::ₘ s).Nodup) :
@@ -662,7 +662,7 @@ theorem nonempty_mk_coe : ∀ {l : List α} {hl}, (⟨↑l, hl⟩ : Finset α).N
   | [], hl => by
     simp
   | a :: l, hl => by
-    simp [Multiset.cons_coe]
+    simp [← Multiset.cons_coe]
 
 @[simp]
 theorem coe_cons {a s h} : (@cons α a s h : Set α) = insert a s := by
@@ -695,32 +695,31 @@ end Cons
 /-- `disj_union s t h` is the set such that `a ∈ disj_union s t h` iff `a ∈ s` or `a ∈ t`.
 It is the same as `s ∪ t`, but it does not require decidable equality on the type. The hypothesis
 ensures that the sets are disjoint. -/
-def disjUnion (s t : Finset α) (h : ∀, ∀ a ∈ s, ∀, a ∉ t) : Finset α :=
+def disjUnion (s t : Finset α) (h : ∀ a ∈ s, a ∉ t) : Finset α :=
   ⟨s.1 + t.1, Multiset.nodup_add.2 ⟨s.2, t.2, h⟩⟩
 
 @[simp]
 theorem mem_disj_union {α s t h a} : a ∈ @disjUnion α s t h ↔ a ∈ s ∨ a ∈ t := by
   rcases s with ⟨⟨s⟩⟩ <;> rcases t with ⟨⟨t⟩⟩ <;> apply List.mem_appendₓ
 
-theorem disj_union_comm (s t : Finset α) (h : ∀, ∀ a ∈ s, ∀, a ∉ t) :
+theorem disj_union_comm (s t : Finset α) (h : ∀ a ∈ s, a ∉ t) :
     disjUnion s t h = disjUnion t s fun a ht hs => h _ hs ht :=
   eq_of_veq <| add_commₓ _ _
 
 @[simp]
-theorem empty_disj_union (t : Finset α) (h : ∀, ∀ a' ∈ ∅, ∀, a' ∉ t := fun a h _ => not_mem_empty _ h) :
+theorem empty_disj_union (t : Finset α) (h : ∀ a' ∈ ∅, a' ∉ t := fun a h _ => not_mem_empty _ h) :
     disjUnion ∅ t h = t :=
   eq_of_veq <| zero_addₓ _
 
 @[simp]
-theorem disj_union_empty (s : Finset α) (h : ∀, ∀ a' ∈ s, ∀, a' ∉ ∅ := fun a h => not_mem_empty _) :
-    disjUnion s ∅ h = s :=
+theorem disj_union_empty (s : Finset α) (h : ∀ a' ∈ s, a' ∉ ∅ := fun a h => not_mem_empty _) : disjUnion s ∅ h = s :=
   eq_of_veq <| add_zeroₓ _
 
-theorem singleton_disj_union (a : α) (t : Finset α) (h : ∀, ∀ a' ∈ {a}, ∀, a' ∉ t) :
+theorem singleton_disj_union (a : α) (t : Finset α) (h : ∀ a' ∈ {a}, a' ∉ t) :
     disjUnion {a} t h = cons a t (h _ <| mem_singleton_self _) :=
   eq_of_veq <| Multiset.singleton_add _ _
 
-theorem disj_union_singleton (s : Finset α) (a : α) (h : ∀, ∀ a' ∈ s, ∀, a' ∉ {a}) :
+theorem disj_union_singleton (s : Finset α) (a : α) (h : ∀ a' ∈ s, a' ∉ {a}) :
     disjUnion s {a} h = cons a s fun ha => h _ ha <| mem_singleton_self _ := by
   rw [disj_union_comm, singleton_disj_union]
 
@@ -732,7 +731,7 @@ section DecidableEq
 variable [DecidableEq α] {s t u v : Finset α} {a b : α}
 
 /-- `insert a s` is the set `{a} ∪ s` containing `a` and the elements of `s`. -/
-instance : HasInsert α (Finset α) :=
+instance : Insert α (Finset α) :=
   ⟨fun a s => ⟨_, s.2.ndinsert a⟩⟩
 
 theorem insert_def (a : α) (s : Finset α) : insert a s = ⟨_, s.2.ndinsert a⟩ :=
@@ -772,7 +771,7 @@ theorem cons_eq_insert {α} [DecidableEq α] (a s h) : @cons α a s h = insert a
 @[simp, norm_cast]
 theorem coe_insert (a : α) (s : Finset α) : ↑(insert a s) = (insert a s : Set α) :=
   Set.ext fun x => by
-    simp only [← mem_coe, ← mem_insert, ← Set.mem_insert_iff]
+    simp only [mem_coe, mem_insert, Set.mem_insert_iff]
 
 theorem mem_insert_coe {s : Finset α} {x y : α} : x ∈ insert y s ↔ x ∈ insert y (s : Set α) := by
   simp
@@ -799,7 +798,7 @@ theorem pair_eq_singleton (a : α) : ({a, a} : Finset α) = {a} :=
 
 theorem Insert.comm (a b : α) (s : Finset α) : insert a (insert b s) = insert b (insert a s) :=
   ext fun x => by
-    simp only [← mem_insert, ← Or.left_comm]
+    simp only [mem_insert, Or.left_comm]
 
 theorem pair_comm (a b : α) : ({a, b} : Finset α) = {b, a} :=
   Insert.comm a b ∅
@@ -807,7 +806,7 @@ theorem pair_comm (a b : α) : ({a, b} : Finset α) = {b, a} :=
 @[simp]
 theorem insert_idem (a : α) (s : Finset α) : insert a (insert a s) = insert a s :=
   ext fun x => by
-    simp only [← mem_insert, ← or.assoc.symm, ← or_selfₓ]
+    simp only [mem_insert, or.assoc.symm, or_selfₓ]
 
 @[simp]
 theorem insert_nonempty (a : α) (s : Finset α) : (insert a s).Nonempty :=
@@ -828,10 +827,10 @@ instance {α : Type u} [DecidableEq α] (i : α) (s : Finset α) : Nonempty.{u +
 
 theorem ne_insert_of_not_mem (s t : Finset α) {a : α} (h : a ∉ s) : s ≠ insert a t := by
   contrapose! h
-  simp [← h]
+  simp [h]
 
 theorem insert_subset : insert a s ⊆ t ↔ a ∈ t ∧ s ⊆ t := by
-  simp only [← subset_iff, ← mem_insert, ← forall_eq, ← or_imp_distrib, ← forall_and_distrib]
+  simp only [subset_iff, mem_insert, forall_eq, or_imp_distrib, forall_and_distrib]
 
 theorem subset_insert (a : α) (s : Finset α) : s ⊆ insert a s := fun b => mem_insert_of_mem
 
@@ -843,7 +842,7 @@ theorem insert_inj (ha : a ∉ s) : insert a s = insert b s ↔ a = b :=
 
 theorem insert_inj_on (s : Finset α) : Set.InjOn (fun a => insert a s) (sᶜ) := fun a h b _ => (insert_inj h).1
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (a «expr ∉ » s)
 theorem ssubset_iff : s ⊂ t ↔ ∃ (a : _)(_ : a ∉ s), insert a s ⊆ t := by
   exact_mod_cast @Set.ssubset_iff_insert α s t
 
@@ -922,26 +921,26 @@ def subtypeInsertEquivOption {t : Finset α} {x : α} (h : x ∉ t) : { i // i �
       invFun := fun y => (y.elim ⟨x, mem_insert_self _ _⟩) fun z => ⟨z, mem_insert_of_mem z.2⟩.. }
   · intro y
     by_cases' h : ↑y = x
-    simp only [← Subtype.ext_iff, ← h, ← Option.elimₓ, ← dif_pos, ← Subtype.coe_mk]
-    simp only [← h, ← Option.elimₓ, ← dif_neg, ← not_false_iff, ← Subtype.coe_eta, ← Subtype.coe_mk]
+    simp only [Subtype.ext_iff, h, Option.elimₓ, dif_pos, Subtype.coe_mk]
+    simp only [h, Option.elimₓ, dif_neg, not_false_iff, Subtype.coe_eta, Subtype.coe_mk]
     
   · rintro (_ | y)
-    simp only [← Option.elimₓ, ← dif_pos, ← Subtype.coe_mk]
+    simp only [Option.elimₓ, dif_pos, Subtype.coe_mk]
     have : ↑y ≠ x := by
       rintro ⟨⟩
       exact h y.2
-    simp only [← this, ← Option.elimₓ, ← Subtype.eta, ← dif_neg, ← not_false_iff, ← Subtype.coe_eta, ← Subtype.coe_mk]
+    simp only [this, Option.elimₓ, Subtype.eta, dif_neg, not_false_iff, Subtype.coe_eta, Subtype.coe_mk]
     
 
 /-! ### Lattice structure -/
 
 
 /-- `s ∪ t` is the set such that `a ∈ s ∪ t` iff `a ∈ s` or `a ∈ t`. -/
-instance : HasUnion (Finset α) :=
+instance : Union (Finset α) :=
   ⟨fun s t => ⟨_, t.2.ndunion s.1⟩⟩
 
 /-- `s ∩ t` is the set such that `a ∈ s ∩ t` iff `a ∈ s` and `a ∈ t`. -/
-instance : HasInter (Finset α) :=
+instance : Inter (Finset α) :=
   ⟨fun s t => ⟨_, s.2.ndinter t.1⟩⟩
 
 instance : Lattice (Finset α) :=
@@ -984,7 +983,7 @@ theorem mem_union_left (t : Finset α) (h : a ∈ s) : a ∈ s ∪ t :=
 theorem mem_union_right (s : Finset α) (h : a ∈ t) : a ∈ s ∪ t :=
   mem_union.2 <| Or.inr h
 
-theorem forall_mem_union {p : α → Prop} : (∀, ∀ a ∈ s ∪ t, ∀, p a) ↔ (∀, ∀ a ∈ s, ∀, p a) ∧ ∀, ∀ a ∈ t, ∀, p a :=
+theorem forall_mem_union {p : α → Prop} : (∀ a ∈ s ∪ t, p a) ↔ (∀ a ∈ s, p a) ∧ ∀ a ∈ t, p a :=
   ⟨fun h => ⟨fun a => h a ∘ mem_union_left _, fun b => h b ∘ mem_union_right _⟩, fun h ab hab =>
     (mem_union.mp hab).elim (h.1 _) (h.2 _)⟩
 
@@ -1033,11 +1032,11 @@ theorem union_subset_right {s t u : Finset α} (h : s ∪ t ⊆ u) : t ⊆ u :=
 
 theorem union_left_comm (s t u : Finset α) : s ∪ (t ∪ u) = t ∪ (s ∪ u) :=
   ext fun _ => by
-    simp only [← mem_union, ← Or.left_comm]
+    simp only [mem_union, Or.left_comm]
 
 theorem union_right_comm (s t u : Finset α) : s ∪ t ∪ u = s ∪ u ∪ t :=
   ext fun x => by
-    simp only [← mem_union, ← or_assoc, ← or_comm (x ∈ t)]
+    simp only [mem_union, or_assoc, or_comm (x ∈ t)]
 
 theorem union_self (s : Finset α) : s ∪ s = s :=
   union_idempotent s
@@ -1055,14 +1054,14 @@ theorem insert_eq (a : α) (s : Finset α) : insert a s = {a} ∪ s :=
 
 @[simp]
 theorem insert_union (a : α) (s t : Finset α) : insert a s ∪ t = insert a (s ∪ t) := by
-  simp only [← insert_eq, ← union_assoc]
+  simp only [insert_eq, union_assoc]
 
 @[simp]
 theorem union_insert (a : α) (s t : Finset α) : s ∪ insert a t = insert a (s ∪ t) := by
-  simp only [← insert_eq, ← union_left_comm]
+  simp only [insert_eq, union_left_comm]
 
 theorem insert_union_distrib (a : α) (s t : Finset α) : insert a (s ∪ t) = insert a s ∪ insert a t := by
-  simp only [← insert_union, ← union_insert, ← insert_idem]
+  simp only [insert_union, union_insert, insert_idem]
 
 @[simp]
 theorem union_eq_left_iff_subset {s t : Finset α} : s ∪ t = s ↔ t ⊆ s :=
@@ -1114,12 +1113,12 @@ theorem _root_.directed.exists_mem_subset_of_finset_subset_bUnion {α ι : Type 
   revert hs
   apply s.induction_on
   · refine' fun _ => ⟨hn.some, _⟩
-    simp only [← coe_empty, ← Set.empty_subset]
+    simp only [coe_empty, Set.empty_subset]
     
   · intro b t hbt htc hbtc
     obtain ⟨i : ι, hti : (t : Set α) ⊆ f i⟩ := htc (Set.Subset.trans (t.subset_insert b) hbtc)
     obtain ⟨j, hbj⟩ : ∃ j, b ∈ f j := by
-      simpa [← Set.mem_Union₂] using hbtc (t.mem_insert_self b)
+      simpa [Set.mem_Union₂] using hbtc (t.mem_insert_self b)
     rcases h j i with ⟨k, hk, hk'⟩
     use k
     rw [coe_insert, Set.insert_subset]
@@ -1162,7 +1161,7 @@ theorem inter_subset_left (s₁ s₂ : Finset α) : s₁ ∩ s₂ ⊆ s₁ := fu
 theorem inter_subset_right (s₁ s₂ : Finset α) : s₁ ∩ s₂ ⊆ s₂ := fun a => mem_of_mem_inter_right
 
 theorem subset_inter {s₁ s₂ u : Finset α} : s₁ ⊆ s₂ → s₁ ⊆ u → s₁ ⊆ s₂ ∩ u := by
-  simp (config := { contextual := true })only [← subset_iff, ← mem_inter] <;> intros <;> constructor <;> trivial
+  simp (config := { contextual := true })only [subset_iff, mem_inter] <;> intros <;> constructor <;> trivial
 
 @[simp, norm_cast]
 theorem coe_inter (s₁ s₂ : Finset α) : ↑(s₁ ∩ s₂) = (s₁ ∩ s₂ : Set α) :=
@@ -1178,20 +1177,20 @@ theorem union_inter_cancel_right {s t : Finset α} : (s ∪ t) ∩ t = t := by
 
 theorem inter_comm (s₁ s₂ : Finset α) : s₁ ∩ s₂ = s₂ ∩ s₁ :=
   ext fun _ => by
-    simp only [← mem_inter, ← and_comm]
+    simp only [mem_inter, and_comm]
 
 @[simp]
 theorem inter_assoc (s₁ s₂ s₃ : Finset α) : s₁ ∩ s₂ ∩ s₃ = s₁ ∩ (s₂ ∩ s₃) :=
   ext fun _ => by
-    simp only [← mem_inter, ← and_assoc]
+    simp only [mem_inter, and_assoc]
 
 theorem inter_left_comm (s₁ s₂ s₃ : Finset α) : s₁ ∩ (s₂ ∩ s₃) = s₂ ∩ (s₁ ∩ s₃) :=
   ext fun _ => by
-    simp only [← mem_inter, ← And.left_comm]
+    simp only [mem_inter, And.left_comm]
 
 theorem inter_right_comm (s₁ s₂ s₃ : Finset α) : s₁ ∩ s₂ ∩ s₃ = s₁ ∩ s₃ ∩ s₂ :=
   ext fun _ => by
-    simp only [← mem_inter, ← And.right_comm]
+    simp only [mem_inter, And.right_comm]
 
 @[simp]
 theorem inter_self (s : Finset α) : s ∩ s = s :=
@@ -1215,7 +1214,7 @@ theorem insert_inter_of_mem {s₁ s₂ : Finset α} {a : α} (h : a ∈ s₂) : 
     have : x = a ∨ x ∈ s₂ ↔ x ∈ s₂ :=
       or_iff_right_of_imp <| by
         rintro rfl <;> exact h
-    simp only [← mem_inter, ← mem_insert, ← or_and_distrib_left, ← this]
+    simp only [mem_inter, mem_insert, or_and_distrib_left, this]
 
 @[simp]
 theorem inter_insert_of_mem {s₁ s₂ : Finset α} {a : α} (h : a ∈ s₁) : s₁ ∩ insert a s₂ = insert a (s₁ ∩ s₂) := by
@@ -1226,7 +1225,7 @@ theorem insert_inter_of_not_mem {s₁ s₂ : Finset α} {a : α} (h : a ∉ s₂
   ext fun x => by
     have : ¬(x = a ∧ x ∈ s₂) := by
       rintro ⟨rfl, H⟩ <;> exact h H
-    simp only [← mem_inter, ← mem_insert, ← or_and_distrib_right, ← this, ← false_orₓ]
+    simp only [mem_inter, mem_insert, or_and_distrib_right, this, false_orₓ]
 
 @[simp]
 theorem inter_insert_of_not_mem {s₁ s₂ : Finset α} {a : α} (h : a ∉ s₁) : s₁ ∩ insert a s₂ = s₁ ∩ s₂ := by
@@ -1240,7 +1239,7 @@ theorem singleton_inter_of_mem {a : α} {s : Finset α} (H : a ∈ s) : {a} ∩ 
 @[simp]
 theorem singleton_inter_of_not_mem {a : α} {s : Finset α} (H : a ∉ s) : {a} ∩ s = ∅ :=
   eq_empty_of_forall_not_mem <| by
-    simp only [← mem_inter, ← mem_singleton] <;> rintro x ⟨rfl, h⟩ <;> exact H h
+    simp only [mem_inter, mem_singleton] <;> rintro x ⟨rfl, h⟩ <;> exact H h
 
 @[simp]
 theorem inter_singleton_of_mem {a : α} {s : Finset α} (h : a ∈ s) : s ∩ {a} = {a} := by
@@ -1274,9 +1273,8 @@ instance : DistribLattice (Finset α) :=
   { Finset.lattice with
     le_sup_inf := fun a b c =>
       show (a ∪ b) ∩ (a ∪ c) ⊆ a ∪ b ∩ c by
-        simp (config := { contextual := true })only [← subset_iff, ← mem_inter, ← mem_union, ← and_imp, ←
-            or_imp_distrib] <;>
-          simp only [← true_orₓ, ← imp_true_iff, ← true_andₓ, ← or_trueₓ] }
+        simp (config := { contextual := true })only [subset_iff, mem_inter, mem_union, and_imp, or_imp_distrib] <;>
+          simp only [true_orₓ, imp_true_iff, true_andₓ, or_trueₓ] }
 
 @[simp]
 theorem union_left_idem (s t : Finset α) : s ∪ (s ∪ t) = s ∪ t :=
@@ -1393,7 +1391,7 @@ theorem mem_of_mem_erase : b ∈ erase s a → b ∈ s :=
   mem_of_mem_erase
 
 theorem mem_erase_of_ne_of_mem : a ≠ b → a ∈ s → a ∈ erase s b := by
-  simp only [← mem_erase] <;> exact And.intro
+  simp only [mem_erase] <;> exact And.intro
 
 /-- An element of `s` that is not an element of `erase s a` must be
 `a`. -/
@@ -1403,12 +1401,12 @@ theorem eq_of_mem_of_not_mem_erase (hs : b ∈ s) (hsa : b ∉ s.erase a) : b = 
 
 theorem erase_insert {a : α} {s : Finset α} (h : a ∉ s) : erase (insert a s) a = s :=
   ext fun x => by
-    simp only [← mem_erase, ← mem_insert, ← and_or_distrib_left, ← not_and_selfₓ, ← false_orₓ] <;>
+    simp only [mem_erase, mem_insert, and_or_distrib_left, not_and_selfₓ, false_orₓ] <;>
       apply and_iff_right_of_imp <;> rintro H rfl <;> exact h H
 
 theorem insert_erase {a : α} {s : Finset α} (h : a ∈ s) : insert a (erase s a) = s :=
   ext fun x => by
-    simp only [← mem_insert, ← mem_erase, ← or_and_distrib_left, ← dec_em, ← true_andₓ] <;>
+    simp only [mem_insert, mem_erase, or_and_distrib_left, dec_em, true_andₓ] <;>
       apply or_iff_right_of_imp <;> rintro rfl <;> exact h
 
 theorem erase_subset_erase (a : α) {s t : Finset α} (h : s ⊆ t) : erase s a ⊆ erase t a :=
@@ -1455,7 +1453,7 @@ theorem erase_ne_self : s.erase a ≠ s ↔ a ∈ s :=
 @[simp]
 theorem erase_insert_eq_erase (s : Finset α) (a : α) : (insert a s).erase a = s.erase a := by
   by_cases' ha : a ∈ s <;>
-    · simp [← ha, ← erase_insert]
+    · simp [ha, erase_insert]
       
 
 theorem erase_cons {s : Finset α} {a : α} (h : a ∉ s) : (s.cons a h).erase a = s := by
@@ -1466,11 +1464,11 @@ theorem erase_idem {a : α} {s : Finset α} : erase (erase s a) a = erase s a :=
 
 theorem erase_right_comm {a b : α} {s : Finset α} : erase (erase s a) b = erase (erase s b) a := by
   ext x
-  simp only [← mem_erase, and_assoc]
+  simp only [mem_erase, ← and_assoc]
   rw [and_comm (x ≠ a)]
 
 theorem subset_insert_iff {a : α} {s t : Finset α} : s ⊆ insert a t ↔ erase s a ⊆ t := by
-  simp only [← subset_iff, ← or_iff_not_imp_left, ← mem_erase, ← mem_insert, ← and_imp] <;>
+  simp only [subset_iff, or_iff_not_imp_left, mem_erase, mem_insert, and_imp] <;>
     exact forall_congrₓ fun x => forall_swap
 
 theorem erase_insert_subset (a : α) (s : Finset α) : erase (insert a s) a ⊆ s :=
@@ -1501,7 +1499,7 @@ theorem erase_inj_on' (a : α) : { s : Finset α | a ∈ s }.InjOn fun s => eras
 
 
 /-- `s \ t` is the set consisting of the elements of `s` that are not in `t`. -/
-instance : HasSdiff (Finset α) :=
+instance : Sdiff (Finset α) :=
   ⟨fun s₁ s₂ => ⟨s₁.1 - s₂.1, nodup_of_le tsub_le_self s₁.2⟩⟩
 
 @[simp]
@@ -1515,20 +1513,19 @@ theorem mem_sdiff : a ∈ s \ t ↔ a ∈ s ∧ a ∉ t :=
 @[simp]
 theorem inter_sdiff_self (s₁ s₂ : Finset α) : s₁ ∩ (s₂ \ s₁) = ∅ :=
   eq_empty_of_forall_not_mem <| by
-    simp only [← mem_inter, ← mem_sdiff] <;> rintro x ⟨h, _, hn⟩ <;> exact hn h
+    simp only [mem_inter, mem_sdiff] <;> rintro x ⟨h, _, hn⟩ <;> exact hn h
 
 instance : GeneralizedBooleanAlgebra (Finset α) :=
   { Finset.hasSdiff, Finset.distribLattice, Finset.orderBot with
     sup_inf_sdiff := fun x y => by
-      simp only [← ext_iff, ← mem_union, ← mem_sdiff, ← inf_eq_inter, ← sup_eq_union, ← mem_inter]
+      simp only [ext_iff, mem_union, mem_sdiff, inf_eq_inter, sup_eq_union, mem_inter]
       tauto,
     inf_inf_sdiff := fun x y => by
-      simp only [← ext_iff, ← inter_sdiff_self, ← inter_empty, ← inter_assoc, ← false_iffₓ, ← inf_eq_inter, ←
-        not_mem_empty]
+      simp only [ext_iff, inter_sdiff_self, inter_empty, inter_assoc, false_iffₓ, inf_eq_inter, not_mem_empty]
       tauto }
 
 theorem not_mem_sdiff_of_mem_right (h : a ∈ t) : a ∉ s \ t := by
-  simp only [← mem_sdiff, ← h, ← not_true, ← not_false_iff, ← and_falseₓ]
+  simp only [mem_sdiff, h, not_true, not_false_iff, and_falseₓ]
 
 theorem not_mem_sdiff_of_not_mem_left (h : a ∉ s) : a ∉ s \ t := by
   simpa
@@ -1541,7 +1538,7 @@ theorem sdiff_union_of_subset {s₁ s₂ : Finset α} (h : s₁ ⊆ s₂) : s₂
 
 theorem inter_sdiff (s t u : Finset α) : s ∩ (t \ u) = (s ∩ t) \ u := by
   ext x
-  simp [← and_assoc]
+  simp [and_assoc]
 
 @[simp]
 theorem sdiff_inter_self (s₁ s₂ : Finset α) : s₂ \ s₁ ∩ s₁ = ∅ :=
@@ -1623,7 +1620,7 @@ theorem insert_sdiff_insert (s t : Finset α) (x : α) : insert x s \ insert x t
 
 theorem sdiff_insert_of_not_mem {x : α} (h : x ∉ s) (t : Finset α) : s \ insert x t = s \ t := by
   refine' subset.antisymm (sdiff_subset_sdiff (subset.refl _) (subset_insert _ _)) fun y hy => _
-  simp only [← mem_sdiff, ← mem_insert, ← not_or_distrib] at hy⊢
+  simp only [mem_sdiff, mem_insert, not_or_distrib] at hy⊢
   exact ⟨hy.1, fun hxy => h <| hxy ▸ hy.1, hy.2⟩
 
 @[simp]
@@ -1649,7 +1646,7 @@ theorem sdiff_singleton_eq_erase (a : α) (s : Finset α) : s \ singleton a = er
 
 @[simp]
 theorem sdiff_singleton_not_mem_eq_self (s : Finset α) {a : α} (ha : a ∉ s) : s \ {a} = s := by
-  simp only [← sdiff_singleton_eq_erase, ← ha, ← erase_eq_of_not_mem, ← not_false_iff]
+  simp only [sdiff_singleton_eq_erase, ha, erase_eq_of_not_mem, not_false_iff]
 
 theorem sdiff_sdiff_left' (s t u : Finset α) : (s \ t) \ u = s \ t ∩ (s \ u) :=
   sdiff_sdiff_left'
@@ -1692,7 +1689,7 @@ def attach (s : Finset α) : Finset { x // x ∈ s } :=
 
 theorem sizeof_lt_sizeof_of_mem [SizeOf α] {x : α} {s : Finset α} (hx : x ∈ s) : sizeof x < sizeof s := by
   cases s
-  dsimp' [← sizeof, ← SizeOf.sizeof, ← Finset.sizeof]
+  dsimp' [sizeof, SizeOf.sizeof, Finset.sizeof]
   apply lt_add_left
   exact Multiset.sizeof_lt_sizeof_of_mem hx
 
@@ -1710,11 +1707,11 @@ theorem attach_empty : attach (∅ : Finset α) = ∅ :=
 
 @[simp]
 theorem attach_nonempty_iff (s : Finset α) : s.attach.Nonempty ↔ s.Nonempty := by
-  simp [← Finset.Nonempty]
+  simp [Finset.Nonempty]
 
 @[simp]
 theorem attach_eq_empty_iff (s : Finset α) : s.attach = ∅ ↔ s = ∅ := by
-  simpa [← eq_empty_iff_forall_not_mem]
+  simpa [eq_empty_iff_forall_not_mem]
 
 /-! ### piecewise -/
 
@@ -1731,12 +1728,12 @@ variable {δ : α → Sort _} (s : Finset α) (f g : ∀ i, δ i)
 @[simp]
 theorem piecewise_insert_self [DecidableEq α] {j : α} [∀ i, Decidable (i ∈ insert j s)] :
     (insert j s).piecewise f g j = f j := by
-  simp [← piecewise]
+  simp [piecewise]
 
 @[simp]
 theorem piecewise_empty [∀ i : α, Decidable (i ∈ (∅ : Finset α))] : piecewise ∅ f g = g := by
   ext i
-  simp [← piecewise]
+  simp [piecewise]
 
 variable [∀ j, Decidable (j ∈ s)]
 
@@ -1748,29 +1745,29 @@ theorem piecewise_coe [∀ j, Decidable (j ∈ (s : Set α))] : (s : Set α).pie
 
 @[simp]
 theorem piecewise_eq_of_mem {i : α} (hi : i ∈ s) : s.piecewise f g i = f i := by
-  simp [← piecewise, ← hi]
+  simp [piecewise, hi]
 
 @[simp]
 theorem piecewise_eq_of_not_mem {i : α} (hi : i ∉ s) : s.piecewise f g i = g i := by
-  simp [← piecewise, ← hi]
+  simp [piecewise, hi]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (i «expr ∉ » s)
-theorem piecewise_congr {f f' g g' : ∀ i, δ i} (hf : ∀, ∀ i ∈ s, ∀, f i = f' i) (hg : ∀ (i) (_ : i ∉ s), g i = g' i) :
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (i «expr ∉ » s)
+theorem piecewise_congr {f f' g g' : ∀ i, δ i} (hf : ∀ i ∈ s, f i = f' i) (hg : ∀ (i) (_ : i ∉ s), g i = g' i) :
     s.piecewise f g = s.piecewise f' g' :=
   funext fun i => if_ctx_congr Iff.rfl (hf i) (hg i)
 
 @[simp]
 theorem piecewise_insert_of_ne [DecidableEq α] {i j : α} [∀ i, Decidable (i ∈ insert j s)] (h : i ≠ j) :
     (insert j s).piecewise f g i = s.piecewise f g i := by
-  simp [← piecewise, ← h]
+  simp [piecewise, h]
 
 theorem piecewise_insert [DecidableEq α] (j : α) [∀ i, Decidable (i ∈ insert j s)] :
     (insert j s).piecewise f g = update (s.piecewise f g) j (f j) := by
   classical
-  simp only [piecewise_coe, ← coe_insert, Set.piecewise_insert]
+  simp only [← piecewise_coe, coe_insert, ← Set.piecewise_insert]
 
 theorem piecewise_cases {i} (p : δ i → Prop) (hf : p (f i)) (hg : p (g i)) : p (s.piecewise f g i) := by
-  by_cases' hi : i ∈ s <;> simpa [← hi]
+  by_cases' hi : i ∈ s <;> simpa [hi]
 
 theorem piecewise_mem_set_pi {δ : α → Type _} {t : Set α} {t' : ∀ i, Set (δ i)} {f g} (hf : f ∈ Set.Pi t t')
     (hg : g ∈ Set.Pi t t') : s.piecewise f g ∈ Set.Pi t t' := by
@@ -1824,11 +1821,10 @@ theorem piecewise_le_of_le_of_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)
 theorem le_piecewise_of_le_of_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {f g h : ∀ i, δ i} (Hf : h ≤ f) (Hg : h ≤ g) :
     h ≤ s.piecewise f g := fun x => piecewise_cases s f g (fun y => h x ≤ y) (Hf x) (Hg x)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ∉ » s)
 theorem piecewise_le_piecewise' {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {f g f' g' : ∀ i, δ i}
-    (Hf : ∀, ∀ x ∈ s, ∀, f x ≤ f' x) (Hg : ∀ (x) (_ : x ∉ s), g x ≤ g' x) : s.piecewise f g ≤ s.piecewise f' g' :=
-  fun x => by
-  by_cases' hx : x ∈ s <;> simp [← hx, *]
+    (Hf : ∀ x ∈ s, f x ≤ f' x) (Hg : ∀ (x) (_ : x ∉ s), g x ≤ g' x) : s.piecewise f g ≤ s.piecewise f' g' := fun x => by
+  by_cases' hx : x ∈ s <;> simp [hx, *]
 
 theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {f g f' g' : ∀ i, δ i} (Hf : f ≤ f')
     (Hg : g ≤ g') : s.piecewise f g ≤ s.piecewise f' g' :=
@@ -1852,15 +1848,15 @@ section DecidablePiExists
 
 variable {s : Finset α}
 
-instance decidableDforallFinset {p : ∀, ∀ a ∈ s, ∀, Prop} [hp : ∀ (a) (h : a ∈ s), Decidable (p a h)] :
+instance decidableDforallFinset {p : ∀ a ∈ s, Prop} [hp : ∀ (a) (h : a ∈ s), Decidable (p a h)] :
     Decidable (∀ (a) (h : a ∈ s), p a h) :=
   Multiset.decidableDforallMultiset
 
 /-- decidable equality for functions whose domain is bounded by finsets -/
-instance decidableEqPiFinset {β : α → Type _} [h : ∀ a, DecidableEq (β a)] : DecidableEq (∀, ∀ a ∈ s, ∀, β a) :=
+instance decidableEqPiFinset {β : α → Type _} [h : ∀ a, DecidableEq (β a)] : DecidableEq (∀ a ∈ s, β a) :=
   Multiset.decidableEqPiMultiset
 
-instance decidableDexistsFinset {p : ∀, ∀ a ∈ s, ∀, Prop} [hp : ∀ (a) (h : a ∈ s), Decidable (p a h)] :
+instance decidableDexistsFinset {p : ∀ a ∈ s, Prop} [hp : ∀ (a) (h : a ∈ s), Decidable (p a h)] :
     Decidable (∃ (a : _)(h : a ∈ s), p a h) :=
   Multiset.decidableDexistsMultiset
 
@@ -1904,7 +1900,7 @@ variable (p)
 
 theorem filter_filter (s : Finset α) : (s.filter p).filter q = s.filter fun a => p a ∧ q a :=
   ext fun a => by
-    simp only [← mem_filter, ← and_comm, ← And.left_comm]
+    simp only [mem_filter, and_comm, And.left_comm]
 
 theorem filter_true {s : Finset α} [h : DecidablePred fun _ => True] : @Finset.filter α (fun _ => True) h s = s := by
   ext <;> simp
@@ -1912,34 +1908,34 @@ theorem filter_true {s : Finset α} [h : DecidablePred fun _ => True] : @Finset.
 @[simp]
 theorem filter_false {h} (s : Finset α) : @filter α (fun a => False) h s = ∅ :=
   ext fun a => by
-    simp only [← mem_filter, ← and_falseₓ] <;> rfl
+    simp only [mem_filter, and_falseₓ] <;> rfl
 
 variable {p q}
 
-theorem filter_eq_self (s : Finset α) : s.filter p = s ↔ ∀, ∀ x ∈ s, ∀, p x := by
-  simp [← Finset.ext_iff]
+theorem filter_eq_self (s : Finset α) : s.filter p = s ↔ ∀ x ∈ s, p x := by
+  simp [Finset.ext_iff]
 
 /-- If all elements of a `finset` satisfy the predicate `p`, `s.filter p` is `s`. -/
 @[simp]
-theorem filter_true_of_mem {s : Finset α} (h : ∀, ∀ x ∈ s, ∀, p x) : s.filter p = s :=
+theorem filter_true_of_mem {s : Finset α} (h : ∀ x ∈ s, p x) : s.filter p = s :=
   (filter_eq_self s).mpr h
 
 /-- If all elements of a `finset` fail to satisfy the predicate `p`, `s.filter p` is `∅`. -/
-theorem filter_false_of_mem {s : Finset α} (h : ∀, ∀ x ∈ s, ∀, ¬p x) : s.filter p = ∅ :=
+theorem filter_false_of_mem {s : Finset α} (h : ∀ x ∈ s, ¬p x) : s.filter p = ∅ :=
   eq_empty_of_forall_not_mem
     (by
       simpa)
 
-theorem filter_eq_empty_iff (s : Finset α) : s.filter p = ∅ ↔ ∀, ∀ x ∈ s, ∀, ¬p x := by
+theorem filter_eq_empty_iff (s : Finset α) : s.filter p = ∅ ↔ ∀ x ∈ s, ¬p x := by
   refine' ⟨_, filter_false_of_mem⟩
   intro hs
   injection hs with hs'
   rwa [filter_eq_nil] at hs'
 
 theorem filter_nonempty_iff {s : Finset α} : (s.filter p).Nonempty ↔ ∃ a ∈ s, p a := by
-  simp only [← nonempty_iff_ne_empty, ← Ne.def, ← filter_eq_empty_iff, ← not_not, ← not_forall]
+  simp only [nonempty_iff_ne_empty, Ne.def, filter_eq_empty_iff, not_not, not_forall]
 
-theorem filter_congr {s : Finset α} (H : ∀, ∀ x ∈ s, ∀, p x ↔ q x) : filter p s = filter q s :=
+theorem filter_congr {s : Finset α} (H : ∀ x ∈ s, p x ↔ q x) : filter p s = filter q s :=
   eq_of_veq <| filter_congr H
 
 variable (p q)
@@ -1960,14 +1956,14 @@ theorem monotone_filter_right (s : Finset α) ⦃p q : α → Prop⦄ [Decidable
 theorem coe_filter (s : Finset α) : ↑(s.filter p) = ({ x ∈ ↑s | p x } : Set α) :=
   Set.ext fun _ => mem_filter
 
-theorem subset_coe_filter_of_subset_forall (s : Finset α) {t : Set α} (h₁ : t ⊆ s) (h₂ : ∀, ∀ x ∈ t, ∀, p x) :
+theorem subset_coe_filter_of_subset_forall (s : Finset α) {t : Set α} (h₁ : t ⊆ s) (h₂ : ∀ x ∈ t, p x) :
     t ⊆ s.filter p := fun x hx => (s.coe_filter p).symm ▸ ⟨h₁ hx, h₂ x hx⟩
 
 theorem filter_singleton (a : α) : filter p (singleton a) = if p a then singleton a else ∅ := by
   classical
   ext x
   simp
-  split_ifs with h <;> by_cases' h' : x = a <;> simp [← h, ← h']
+  split_ifs with h <;> by_cases' h' : x = a <;> simp [h, h']
 
 theorem filter_cons_of_pos (a : α) (s : Finset α) (ha : a ∉ s) (hp : p a) :
     filter p (cons a s ha) = cons a (filter p s) (mem_filter.Not.mpr <| mt And.left ha) :=
@@ -2001,11 +1997,11 @@ variable [DecidableEq α]
 
 theorem filter_union (s₁ s₂ : Finset α) : (s₁ ∪ s₂).filter p = s₁.filter p ∪ s₂.filter p :=
   ext fun _ => by
-    simp only [← mem_filter, ← mem_union, ← or_and_distrib_right]
+    simp only [mem_filter, mem_union, or_and_distrib_right]
 
 theorem filter_union_right (s : Finset α) : s.filter p ∪ s.filter q = s.filter fun x => p x ∨ q x :=
   ext fun x => by
-    simp only [← mem_filter, ← mem_union, ← and_or_distrib_left.symm]
+    simp only [mem_filter, mem_union, and_or_distrib_left.symm]
 
 theorem filter_mem_eq_inter {s t : Finset α} [∀ i, Decidable (i ∈ t)] : (s.filter fun i => i ∈ t) = s ∩ t :=
   ext fun i => by
@@ -2013,12 +2009,12 @@ theorem filter_mem_eq_inter {s t : Finset α} [∀ i, Decidable (i ∈ t)] : (s.
 
 theorem filter_inter_distrib (s t : Finset α) : (s ∩ t).filter p = s.filter p ∩ t.filter p := by
   ext
-  simp only [← mem_filter, ← mem_inter]
+  simp only [mem_filter, mem_inter]
   exact and_and_distrib_right _ _ _
 
 theorem filter_inter (s t : Finset α) : filter p s ∩ t = filter p (s ∩ t) := by
   ext
-  simp only [← mem_inter, ← mem_filter, ← And.right_comm]
+  simp only [mem_inter, mem_filter, And.right_comm]
 
 theorem inter_filter (s t : Finset α) : s ∩ filter p t = filter p (s ∩ t) := by
   rw [inter_comm, filter_inter, inter_comm]
@@ -2027,33 +2023,33 @@ theorem filter_insert (a : α) (s : Finset α) :
     filter p (insert a s) = if p a then insert a (filter p s) else filter p s := by
   ext x
   simp
-  split_ifs with h <;> by_cases' h' : x = a <;> simp [← h, ← h']
+  split_ifs with h <;> by_cases' h' : x = a <;> simp [h, h']
 
 theorem filter_erase (a : α) (s : Finset α) : filter p (erase s a) = erase (filter p s) a := by
   ext x
-  simp only [← and_assoc, ← mem_filter, ← iff_selfₓ, ← mem_erase]
+  simp only [and_assoc, mem_filter, iff_selfₓ, mem_erase]
 
 theorem filter_or [DecidablePred fun a => p a ∨ q a] (s : Finset α) :
     (s.filter fun a => p a ∨ q a) = s.filter p ∪ s.filter q :=
   ext fun _ => by
-    simp only [← mem_filter, ← mem_union, ← and_or_distrib_left]
+    simp only [mem_filter, mem_union, and_or_distrib_left]
 
 theorem filter_and [DecidablePred fun a => p a ∧ q a] (s : Finset α) :
     (s.filter fun a => p a ∧ q a) = s.filter p ∩ s.filter q :=
   ext fun _ => by
-    simp only [← mem_filter, ← mem_inter, ← and_comm, ← And.left_comm, ← and_selfₓ]
+    simp only [mem_filter, mem_inter, and_comm, And.left_comm, and_selfₓ]
 
 theorem filter_not [DecidablePred fun a => ¬p a] (s : Finset α) : (s.filter fun a => ¬p a) = s \ s.filter p :=
   ext <| by
-    simpa only [← mem_filter, ← mem_sdiff, ← and_comm, ← not_and] using fun a =>
+    simpa only [mem_filter, mem_sdiff, and_comm, not_and] using fun a =>
       and_congr_right fun h : a ∈ s => (imp_iff_right h).symm.trans imp_not_comm
 
 theorem sdiff_eq_filter (s₁ s₂ : Finset α) : s₁ \ s₂ = filter (· ∉ s₂) s₁ :=
   ext fun _ => by
-    simp only [← mem_sdiff, ← mem_filter]
+    simp only [mem_sdiff, mem_filter]
 
 theorem sdiff_eq_self (s₁ s₂ : Finset α) : s₁ \ s₂ = s₁ ↔ s₁ ∩ s₂ ⊆ ∅ := by
-  simp [← subset.antisymm_iff]
+  simp [subset.antisymm_iff]
   constructor <;> intro h
   · trans' s₁ \ s₂ ∩ s₂
     mono
@@ -2061,27 +2057,27 @@ theorem sdiff_eq_self (s₁ s₂ : Finset α) : s₁ \ s₂ = s₁ ↔ s₁ ∩ 
     
   · calc
       s₁ \ s₂ ⊇ s₁ \ (s₁ ∩ s₂) := by
-        simp [← (· ⊇ ·)]
+        simp [(· ⊇ ·)]
       _ ⊇ s₁ \ ∅ := by
-        mono using ← (· ⊇ ·)
+        mono using (· ⊇ ·)
       _ ⊇ s₁ := by
-        simp [← (· ⊇ ·)]
+        simp [(· ⊇ ·)]
       
     
 
 theorem filter_union_filter_neg_eq [DecidablePred fun a => ¬p a] (s : Finset α) :
     (s.filter p ∪ s.filter fun a => ¬p a) = s := by
-  simp only [← filter_not, ← union_sdiff_of_subset (filter_subset p s)]
+  simp only [filter_not, union_sdiff_of_subset (filter_subset p s)]
 
 theorem filter_inter_filter_neg_eq [DecidablePred fun a => ¬p a] (s : Finset α) :
     (s.filter p ∩ s.filter fun a => ¬p a) = ∅ := by
-  simp only [← filter_not, ← inter_sdiff_self]
+  simp only [filter_not, inter_sdiff_self]
 
 theorem subset_union_elim {s : Finset α} {t₁ t₂ : Set α} (h : ↑s ⊆ t₁ ∪ t₂) :
     ∃ s₁ s₂ : Finset α, s₁ ∪ s₂ = s ∧ ↑s₁ ⊆ t₁ ∧ ↑s₂ ⊆ t₂ \ t₁ := by
   classical
   refine' ⟨s.filter (· ∈ t₁), s.filter (· ∉ t₁), _, _, _⟩
-  · simp [← filter_union_right, ← em]
+  · simp [filter_union_right, em]
     
   · intro x
     simp
@@ -2111,7 +2107,7 @@ open Classical
   simp-lemma `finset.filter_congr_decidable` will make sure that `finset.filter` uses the right
   instance for decidability.
 -/
-noncomputable instance {α : Type _} : HasSep α (Finset α) :=
+noncomputable instance {α : Type _} : Sep α (Finset α) :=
   ⟨fun p x => x.filter p⟩
 
 @[simp]
@@ -2129,14 +2125,14 @@ end Classical
 theorem filter_eq [DecidableEq β] (s : Finset β) (b : β) : s.filter (Eq b) = ite (b ∈ s) {b} ∅ := by
   split_ifs
   · ext
-    simp only [← mem_filter, ← mem_singleton]
+    simp only [mem_filter, mem_singleton]
     exact
       ⟨fun h => h.2.symm, by
         rintro ⟨h⟩
         exact ⟨h, rfl⟩⟩
     
   · ext
-    simp only [← mem_filter, ← not_and, ← iff_falseₓ, ← not_mem_empty]
+    simp only [mem_filter, not_and, iff_falseₓ, not_mem_empty]
     rintro m ⟨e⟩
     exact h m
     
@@ -2150,7 +2146,7 @@ theorem filter_eq' [DecidableEq β] (s : Finset β) (b : β) : (s.filter fun a =
 
 theorem filter_ne [DecidableEq β] (s : Finset β) (b : β) : (s.filter fun a => b ≠ a) = s.erase b := by
   ext
-  simp only [← mem_filter, ← mem_erase, ← Ne.def]
+  simp only [mem_filter, mem_erase, Ne.def]
   tauto
 
 theorem filter_ne' [DecidableEq β] (s : Finset β) (b : β) : (s.filter fun a => a ≠ b) = s.erase b :=
@@ -2229,18 +2225,18 @@ end Range
 
 -- useful rules for calculations with quantifiers
 theorem exists_mem_empty_iff (p : α → Prop) : (∃ x, x ∈ (∅ : Finset α) ∧ p x) ↔ False := by
-  simp only [← not_mem_empty, ← false_andₓ, ← exists_false]
+  simp only [not_mem_empty, false_andₓ, exists_false]
 
 theorem exists_mem_insert [DecidableEq α] (a : α) (s : Finset α) (p : α → Prop) :
     (∃ x, x ∈ insert a s ∧ p x) ↔ p a ∨ ∃ x, x ∈ s ∧ p x := by
-  simp only [← mem_insert, ← or_and_distrib_right, ← exists_or_distrib, ← exists_eq_left]
+  simp only [mem_insert, or_and_distrib_right, exists_or_distrib, exists_eq_left]
 
 theorem forall_mem_empty_iff (p : α → Prop) : (∀ x, x ∈ (∅ : Finset α) → p x) ↔ True :=
   iff_true_intro fun _ => False.elim
 
 theorem forall_mem_insert [DecidableEq α] (a : α) (s : Finset α) (p : α → Prop) :
     (∀ x, x ∈ insert a s → p x) ↔ p a ∧ ∀ x, x ∈ s → p x := by
-  simp only [← mem_insert, ← or_imp_distrib, ← forall_and_distrib, ← forall_eq]
+  simp only [mem_insert, or_imp_distrib, forall_and_distrib, forall_eq]
 
 end Finset
 
@@ -2287,7 +2283,7 @@ theorem to_finset_eq {s : Multiset α} (n : Nodup s) : Finset.mk s n = s.toFinse
 
 theorem Nodup.to_finset_inj {l l' : Multiset α} (hl : Nodup l) (hl' : Nodup l') (h : l.toFinset = l'.toFinset) :
     l = l' := by
-  simpa [to_finset_eq hl, to_finset_eq hl'] using h
+  simpa [← to_finset_eq hl, ← to_finset_eq hl'] using h
 
 @[simp]
 theorem mem_to_finset {a : α} {s : Multiset α} : a ∈ s.toFinset ↔ a ∈ s :=
@@ -2303,7 +2299,7 @@ theorem to_finset_cons (a : α) (s : Multiset α) : toFinset (a ::ₘ s) = inser
 
 @[simp]
 theorem to_finset_singleton (a : α) : toFinset ({a} : Multiset α) = {a} := by
-  rw [singleton_eq_cons, to_finset_cons, to_finset_zero, IsLawfulSingleton.insert_emptyc_eq]
+  rw [← cons_zero, to_finset_cons, to_finset_zero, IsLawfulSingleton.insert_emptyc_eq]
 
 @[simp]
 theorem to_finset_add (s t : Multiset α) : toFinset (s + t) = toFinset s ∪ toFinset t :=
@@ -2336,7 +2332,7 @@ theorem to_finset_eq_empty {m : Multiset α} : m.toFinset = ∅ ↔ m = 0 :=
 
 @[simp]
 theorem to_finset_subset (s t : Multiset α) : s.toFinset ⊆ t.toFinset ↔ s ⊆ t := by
-  simp only [← Finset.subset_iff, ← Multiset.subset_iff, ← Multiset.mem_to_finset]
+  simp only [Finset.subset_iff, Multiset.subset_iff, Multiset.mem_to_finset]
 
 end Multiset
 
@@ -2382,7 +2378,7 @@ theorem to_finset_nil : toFinset (@nil α) = ∅ :=
 @[simp]
 theorem to_finset_cons : toFinset (a :: l) = insert a (toFinset l) :=
   Finset.eq_of_veq <| by
-    by_cases' h : a ∈ l <;> simp [← Finset.insert_val', ← Multiset.dedup_cons, ← h]
+    by_cases' h : a ∈ l <;> simp [Finset.insert_val', Multiset.dedup_cons, h]
 
 theorem to_finset_surj_on : Set.SurjOn toFinset { l : List α | l.Nodup } Set.Univ := by
   rintro ⟨⟨l⟩, hl⟩ _
@@ -2393,10 +2389,10 @@ theorem to_finset_surjective : Surjective (toFinset : List α → Finset α) := 
   ⟨l, hls⟩
 
 theorem to_finset_eq_iff_perm_dedup : l.toFinset = l'.toFinset ↔ l.dedup ~ l'.dedup := by
-  simp [← Finset.ext_iff, ← perm_ext (nodup_dedup _) (nodup_dedup _)]
+  simp [Finset.ext_iff, perm_ext (nodup_dedup _) (nodup_dedup _)]
 
 theorem toFinset.ext_iff {a b : List α} : a.toFinset = b.toFinset ↔ ∀ x, x ∈ a ↔ x ∈ b := by
-  simp only [← Finset.ext_iff, ← mem_to_finset]
+  simp only [Finset.ext_iff, mem_to_finset]
 
 theorem toFinset.ext : (∀ x, x ∈ l ↔ x ∈ l') → l.toFinset = l'.toFinset :=
   toFinset.ext_iff.mpr
@@ -2413,7 +2409,7 @@ theorem to_finset_append : toFinset (l ++ l') = l.toFinset ∪ l'.toFinset := by
   induction' l with hd tl hl
   · simp
     
-  · simp [← hl]
+  · simp [hl]
     
 
 @[simp]
@@ -2422,7 +2418,7 @@ theorem to_finset_reverse {l : List α} : toFinset l.reverse = l.toFinset :=
 
 theorem to_finset_repeat_of_ne_zero {n : ℕ} (hn : n ≠ 0) : (List.repeat a n).toFinset = {a} := by
   ext x
-  simp [← hn, ← List.mem_repeat]
+  simp [hn, List.mem_repeat]
 
 @[simp]
 theorem to_finset_union (l l' : List α) : (l ∪ l').toFinset = l.toFinset ∪ l'.toFinset := by
@@ -2467,7 +2463,7 @@ variable {f : α ↪ β} {s : Finset α}
 @[simp]
 theorem mem_map {b : β} : b ∈ s.map f ↔ ∃ a ∈ s, f a = b :=
   mem_map.trans <| by
-    simp only [← exists_prop] <;> rfl
+    simp only [exists_prop] <;> rfl
 
 @[simp]
 theorem mem_map_equiv {f : α ≃ β} {b : β} : b ∈ s.map f.toEmbedding ↔ f.symm b ∈ s := by
@@ -2486,7 +2482,7 @@ theorem mem_map_of_mem (f : α ↪ β) {a} {s : Finset α} : a ∈ s → f a ∈
   (mem_map' _).2
 
 theorem forall_mem_map {f : α ↪ β} {s : Finset α} {p : ∀ a, a ∈ s.map f → Prop} :
-    (∀, ∀ y ∈ s.map f, ∀, p y H) ↔ ∀, ∀ x ∈ s, ∀, p (f x) (mem_map_of_mem _ H) :=
+    (∀ y ∈ s.map f, p y H) ↔ ∀ x ∈ s, p (f x) (mem_map_of_mem _ H) :=
   ⟨fun h y hy => h (f y) (mem_map_of_mem _ hy), fun h x hx => by
     obtain ⟨y, hy, rfl⟩ := mem_map.1 hx
     exact h _ hy⟩
@@ -2511,12 +2507,12 @@ theorem map_perm {σ : Equivₓ.Perm α} (hs : { a | σ a ≠ a } ⊆ s) : s.map
 
 theorem map_to_finset [DecidableEq α] [DecidableEq β] {s : Multiset α} : s.toFinset.map f = (s.map f).toFinset :=
   ext fun _ => by
-    simp only [← mem_map, ← Multiset.mem_map, ← exists_prop, ← Multiset.mem_to_finset]
+    simp only [mem_map, Multiset.mem_map, exists_prop, Multiset.mem_to_finset]
 
 @[simp]
 theorem map_refl : s.map (Embedding.refl _) = s :=
   ext fun _ => by
-    simpa only [← mem_map, ← exists_prop] using exists_eq_right
+    simpa only [mem_map, exists_prop] using exists_eq_right
 
 @[simp]
 theorem map_cast_heq {α β} (h : α = β) (s : Finset α) : HEq (s.map (Equivₓ.cast h).toEmbedding) s := by
@@ -2525,7 +2521,7 @@ theorem map_cast_heq {α β} (h : α = β) (s : Finset α) : HEq (s.map (Equiv�
 
 theorem map_map {g : β ↪ γ} : (s.map f).map g = s.map (f.trans g) :=
   eq_of_veq <| by
-    simp only [← map_val, ← Multiset.map_map] <;> rfl
+    simp only [map_val, Multiset.map_map] <;> rfl
 
 theorem map_comm {β'} {f : β ↪ γ} {g : α ↪ β} {f' : α ↪ β'} {g' : β' ↪ γ} (h_comm : ∀ a, f (g a) = g' (f' a)) :
     (s.map g).map f = (s.map f').map g' := by
@@ -2541,7 +2537,7 @@ theorem _root_.function.commute.finset_map {f g : α ↪ α} (h : Function.Commu
 @[simp]
 theorem map_subset_map {s₁ s₂ : Finset α} : s₁.map f ⊆ s₂.map f ↔ s₁ ⊆ s₂ :=
   ⟨fun h x xs => (mem_map' _).1 <| h <| (mem_map' f).2 xs, fun h => by
-    simp [← subset_def, ← map_subset_map h]⟩
+    simp [subset_def, map_subset_map h]⟩
 
 /-- Associate to an embedding `f` from `α` to `β` the order embedding that maps a finset to its
 image under `f`. -/
@@ -2579,22 +2575,22 @@ theorem map_disj_union' {f : α ↪ β} (s₁ s₂ : Finset α) (h') (h := map_d
 theorem map_union [DecidableEq α] [DecidableEq β] {f : α ↪ β} (s₁ s₂ : Finset α) :
     (s₁ ∪ s₂).map f = s₁.map f ∪ s₂.map f :=
   coe_injective <| by
-    simp only [← coe_map, ← coe_union, ← Set.image_union]
+    simp only [coe_map, coe_union, Set.image_union]
 
 theorem map_inter [DecidableEq α] [DecidableEq β] {f : α ↪ β} (s₁ s₂ : Finset α) :
     (s₁ ∩ s₂).map f = s₁.map f ∩ s₂.map f :=
   coe_injective <| by
-    simp only [← coe_map, ← coe_inter, ← Set.image_inter f.injective]
+    simp only [coe_map, coe_inter, Set.image_inter f.injective]
 
 @[simp]
 theorem map_singleton (f : α ↪ β) (a : α) : map f {a} = {f a} :=
   coe_injective <| by
-    simp only [← coe_map, ← coe_singleton, ← Set.image_singleton]
+    simp only [coe_map, coe_singleton, Set.image_singleton]
 
 @[simp]
 theorem map_insert [DecidableEq α] [DecidableEq β] (f : α ↪ β) (a : α) (s : Finset α) :
     (insert a s).map f = insert (f a) (s.map f) := by
-  simp only [← insert_eq, ← map_union, ← map_singleton]
+  simp only [insert_eq, map_union, map_singleton]
 
 @[simp]
 theorem map_cons (f : α ↪ β) (a : α) (s : Finset α) (ha : a ∉ s) :
@@ -2620,21 +2616,21 @@ theorem attach_map_val {s : Finset α} : s.attach.map (Embedding.subtype _) = s 
 
 theorem disjoint_range_add_left_embedding (a b : ℕ) : Disjoint (range a) (map (addLeftEmbedding a) (range b)) := by
   intro k hk
-  simp only [← exists_prop, ← mem_range, ← inf_eq_inter, ← mem_map, ← add_left_embedding_apply, ← mem_inter] at hk
+  simp only [exists_prop, mem_range, inf_eq_inter, mem_map, add_left_embedding_apply, mem_inter] at hk
   obtain ⟨a, haQ, ha⟩ := hk.2
-  simpa [ha] using hk.1
+  simpa [← ha] using hk.1
 
 theorem disjoint_range_add_right_embedding (a b : ℕ) : Disjoint (range a) (map (addRightEmbedding a) (range b)) := by
   intro k hk
-  simp only [← exists_prop, ← mem_range, ← inf_eq_inter, ← mem_map, ← add_left_embedding_apply, ← mem_inter] at hk
+  simp only [exists_prop, mem_range, inf_eq_inter, mem_map, add_left_embedding_apply, mem_inter] at hk
   obtain ⟨a, haQ, ha⟩ := hk.2
-  simpa [ha] using hk.1
+  simpa [← ha] using hk.1
 
 end Map
 
 theorem range_add_one' (n : ℕ) : range (n + 1) = insert 0 ((range n).map ⟨fun i => i + 1, fun i j => Nat.succ.injₓ⟩) :=
   by
-  ext (⟨⟩ | ⟨n⟩) <;> simp [← Nat.succ_eq_add_one, ← Nat.zero_lt_succₓ n]
+  ext (⟨⟩ | ⟨n⟩) <;> simp [Nat.succ_eq_add_one, Nat.zero_lt_succₓ n]
 
 /-! ### image -/
 
@@ -2659,7 +2655,7 @@ variable {f g : α → β} {s : Finset α} {t : Finset β} {a : α} {b c : β}
 
 @[simp]
 theorem mem_image : b ∈ s.Image f ↔ ∃ a ∈ s, f a = b := by
-  simp only [← mem_def, ← image_val, ← mem_dedup, ← Multiset.mem_map, ← exists_prop]
+  simp only [mem_def, image_val, mem_dedup, Multiset.mem_map, exists_prop]
 
 theorem mem_image_of_mem (f : α → β) {a} (h : a ∈ s) : f a ∈ s.Image f :=
   mem_image.2 ⟨_, h, rfl⟩
@@ -2667,14 +2663,14 @@ theorem mem_image_of_mem (f : α → β) {a} (h : a ∈ s) : f a ∈ s.Image f :
 @[simp]
 theorem mem_image_const : c ∈ s.Image (const α b) ↔ s.Nonempty ∧ b = c := by
   rw [mem_image]
-  simp only [← exists_prop, ← const_apply, ← exists_and_distrib_right]
+  simp only [exists_prop, const_apply, exists_and_distrib_right]
   rfl
 
 theorem mem_image_const_self : b ∈ s.Image (const α b) ↔ s.Nonempty :=
   mem_image_const.trans <| and_iff_left rfl
 
 instance [CanLift β α] : CanLift (Finset β) (Finset α) where
-  cond := fun s => ∀, ∀ x ∈ s, ∀, CanLift.Cond α x
+  cond := fun s => ∀ x ∈ s, CanLift.Cond α x
   coe := image CanLift.coe
   prf := by
     rintro ⟨⟨l⟩, hd : l.nodup⟩ hl
@@ -2696,17 +2692,17 @@ theorem _root_.function.injective.mem_finset_image (hf : Injective f) : f a ∈ 
   obtain ⟨y, hy, heq⟩ := mem_image.1 h
   exact hf HEq ▸ hy
 
-theorem filter_mem_image_eq_image (f : α → β) (s : Finset α) (t : Finset β) (h : ∀, ∀ x ∈ s, ∀, f x ∈ t) :
+theorem filter_mem_image_eq_image (f : α → β) (s : Finset α) (t : Finset β) (h : ∀ x ∈ s, f x ∈ t) :
     (t.filter fun y => y ∈ s.Image f) = s.Image f := by
   ext
   rw [mem_filter, mem_image]
-  simp only [← and_imp, ← exists_prop, ← and_iff_right_iff_imp, ← exists_imp_distrib]
+  simp only [and_imp, exists_prop, and_iff_right_iff_imp, exists_imp_distrib]
   rintro x xel rfl
   exact h _ xel
 
 theorem fiber_nonempty_iff_mem_image (f : α → β) (s : Finset α) (y : β) :
     (s.filter fun x => f x = y).Nonempty ↔ y ∈ s.Image f := by
-  simp [← Finset.Nonempty]
+  simp [Finset.Nonempty]
 
 @[simp, norm_cast]
 theorem coe_image {f : α → β} : ↑(s.Image f) = f '' ↑s :=
@@ -2725,7 +2721,7 @@ theorem Nonempty.image_iff (f : α → β) : (s.Image f).Nonempty ↔ s.Nonempty
 
 theorem image_to_finset [DecidableEq α] {s : Multiset α} : s.toFinset.Image f = (s.map f).toFinset :=
   ext fun _ => by
-    simp only [← mem_image, ← Multiset.mem_to_finset, ← exists_prop, ← Multiset.mem_map]
+    simp only [mem_image, Multiset.mem_to_finset, exists_prop, Multiset.mem_map]
 
 theorem image_val_of_inj_on (H : Set.InjOn f s) : (image f s).1 = s.1.map f :=
   (s.2.map_on H).dedup
@@ -2733,7 +2729,7 @@ theorem image_val_of_inj_on (H : Set.InjOn f s) : (image f s).1 = s.1.map f :=
 @[simp]
 theorem image_id [DecidableEq α] : s.Image id = s :=
   ext fun _ => by
-    simp only [← mem_image, ← exists_prop, ← id, ← exists_eq_right]
+    simp only [mem_image, exists_prop, id, exists_eq_right]
 
 @[simp]
 theorem image_id' [DecidableEq α] : (s.Image fun x => x) = s :=
@@ -2741,7 +2737,7 @@ theorem image_id' [DecidableEq α] : (s.Image fun x => x) = s :=
 
 theorem image_image [DecidableEq γ] {g : β → γ} : (s.Image f).Image g = s.Image (g ∘ f) :=
   eq_of_veq <| by
-    simp only [← image_val, ← dedup_map_dedup_eq, ← Multiset.map_map]
+    simp only [image_val, dedup_map_dedup_eq, Multiset.map_map]
 
 theorem image_comm {β'} [DecidableEq β'] [DecidableEq γ] {f : β → γ} {g : α → β} {f' : α → β'} {g' : β' → γ}
     (h_comm : ∀ a, f (g a) = g' (f' a)) : (s.Image g).Image f = (s.Image f').Image g' := by
@@ -2755,9 +2751,9 @@ theorem _root_.function.commute.finset_image [DecidableEq α] {f g : α → α} 
   h.finset_image
 
 theorem image_subset_image {s₁ s₂ : Finset α} (h : s₁ ⊆ s₂) : s₁.Image f ⊆ s₂.Image f := by
-  simp only [← subset_def, ← image_val, ← subset_dedup', ← dedup_subset', ← Multiset.map_subset_map h]
+  simp only [subset_def, image_val, subset_dedup', dedup_subset', Multiset.map_subset_map h]
 
-theorem image_subset_iff : s.Image f ⊆ t ↔ ∀, ∀ x ∈ s, ∀, f x ∈ t :=
+theorem image_subset_iff : s.Image f ⊆ t ↔ ∀ x ∈ s, f x ∈ t :=
   calc
     s.Image f ⊆ t ↔ f '' ↑s ⊆ ↑t := by
       norm_cast
@@ -2779,7 +2775,7 @@ theorem coe_image_subset_range : ↑(s.Image f) ⊆ Set.Range f :=
 
 theorem image_filter {p : β → Prop} [DecidablePred p] : (s.Image f).filter p = (s.filter (p ∘ f)).Image f :=
   ext fun b => by
-    simp only [← mem_filter, ← mem_image, ← exists_prop] <;>
+    simp only [mem_filter, mem_image, exists_prop] <;>
       exact
         ⟨by
           rintro ⟨⟨x, h1, rfl⟩, h2⟩ <;> exact ⟨x, ⟨h1, h2⟩, rfl⟩, by
@@ -2787,7 +2783,7 @@ theorem image_filter {p : β → Prop} [DecidablePred p] : (s.Image f).filter p 
 
 theorem image_union [DecidableEq α] {f : α → β} (s₁ s₂ : Finset α) : (s₁ ∪ s₂).Image f = s₁.Image f ∪ s₂.Image f :=
   ext fun _ => by
-    simp only [← mem_image, ← mem_union, ← exists_prop, ← or_and_distrib_right, ← exists_or_distrib]
+    simp only [mem_image, mem_union, exists_prop, or_and_distrib_right, exists_or_distrib]
 
 theorem image_inter_subset [DecidableEq α] (f : α → β) (s t : Finset α) : (s ∩ t).Image f ⊆ s.Image f ∩ t.Image f :=
   subset_inter (image_subset_image <| inter_subset_left _ _) <| image_subset_image <| inter_subset_right _ _
@@ -2795,7 +2791,7 @@ theorem image_inter_subset [DecidableEq α] (f : α → β) (s t : Finset α) : 
 theorem image_inter_of_inj_on [DecidableEq α] {f : α → β} (s t : Finset α) (hf : Set.InjOn f (s ∪ t)) :
     (s ∩ t).Image f = s.Image f ∩ t.Image f :=
   (image_inter_subset _ _ _).antisymm fun x => by
-    simp only [← mem_inter, ← mem_image]
+    simp only [mem_inter, mem_image]
     rintro ⟨⟨a, ha, rfl⟩, b, hb, h⟩
     exact
       ⟨a,
@@ -2810,16 +2806,16 @@ theorem image_inter [DecidableEq α] (s₁ s₂ : Finset α) (hf : Injective f) 
 @[simp]
 theorem image_singleton (f : α → β) (a : α) : image f {a} = {f a} :=
   ext fun x => by
-    simpa only [← mem_image, ← exists_prop, ← mem_singleton, ← exists_eq_left] using eq_comm
+    simpa only [mem_image, exists_prop, mem_singleton, exists_eq_left] using eq_comm
 
 @[simp]
 theorem image_insert [DecidableEq α] (f : α → β) (a : α) (s : Finset α) :
     (insert a s).Image f = insert (f a) (s.Image f) := by
-  simp only [← insert_eq, ← image_singleton, ← image_union]
+  simp only [insert_eq, image_singleton, image_union]
 
 theorem erase_image_subset_image_erase [DecidableEq α] (f : α → β) (s : Finset α) (a : α) :
     (s.Image f).erase (f a) ⊆ (s.erase a).Image f := by
-  simp only [← subset_iff, ← and_imp, ← exists_prop, ← mem_image, ← exists_imp_distrib, ← mem_erase]
+  simp only [subset_iff, and_imp, exists_prop, mem_image, exists_imp_distrib, mem_erase]
   rintro b hb x hx rfl
   exact ⟨_, ⟨ne_of_apply_ne f hb, hx⟩, rfl⟩
 
@@ -2827,7 +2823,7 @@ theorem erase_image_subset_image_erase [DecidableEq α] (f : α → β) (s : Fin
 theorem image_erase [DecidableEq α] {f : α → β} (hf : Injective f) (s : Finset α) (a : α) :
     (s.erase a).Image f = (s.Image f).erase (f a) := by
   refine' (erase_image_subset_image_erase _ _ _).antisymm' fun b => _
-  simp only [← mem_image, ← exists_prop, ← mem_erase]
+  simp only [mem_image, exists_prop, mem_erase]
   rintro ⟨a', ⟨haa', ha'⟩, rfl⟩
   exact ⟨hf.ne haa', a', ha', rfl⟩
 
@@ -2839,11 +2835,11 @@ theorem mem_range_iff_mem_finset_range_of_mod_eq' [DecidableEq α] {f : ℕ → 
     (h : ∀ i, f (i % n) = f i) : a ∈ Set.Range f ↔ a ∈ (Finset.range n).Image fun i => f i := by
   constructor
   · rintro ⟨i, hi⟩
-    simp only [← mem_image, ← exists_prop, ← mem_range]
+    simp only [mem_image, exists_prop, mem_range]
     exact ⟨i % n, Nat.mod_ltₓ i hn, (rfl.congr hi).mp (h i)⟩
     
   · rintro h
-    simp only [← mem_image, ← exists_prop, ← Set.mem_range, ← mem_range] at *
+    simp only [mem_image, exists_prop, Set.mem_range, mem_range] at *
     rcases h with ⟨i, hi, ha⟩
     exact ⟨i, ha⟩
     
@@ -2851,7 +2847,7 @@ theorem mem_range_iff_mem_finset_range_of_mod_eq' [DecidableEq α] {f : ℕ → 
 theorem mem_range_iff_mem_finset_range_of_mod_eq [DecidableEq α] {f : ℤ → α} {a : α} {n : ℕ} (hn : 0 < n)
     (h : ∀ i, f (i % n) = f i) : a ∈ Set.Range f ↔ a ∈ (Finset.range n).Image fun i => f i :=
   suffices (∃ i, f (i % n) = a) ↔ ∃ i, i < n ∧ f ↑i = a by
-    simpa [← h]
+    simpa [h]
   have hn' : 0 < (n : ℤ) := Int.coe_nat_lt.mpr hn
   Iff.intro
     (fun ⟨i, hi⟩ =>
@@ -2890,7 +2886,7 @@ theorem map_eq_image (f : α ↪ β) (s : Finset α) : s.map f = s.Image f :=
 
 theorem image_const {s : Finset α} (h : s.Nonempty) (b : β) : (s.Image fun a => b) = singleton b :=
   ext fun b' => by
-    simp only [← mem_image, ← exists_prop, ← exists_and_distrib_right, ← h.bex, ← true_andₓ, ← mem_singleton, ← eq_comm]
+    simp only [mem_image, exists_prop, exists_and_distrib_right, h.bex, true_andₓ, mem_singleton, eq_comm]
 
 @[simp]
 theorem map_erase [DecidableEq α] (f : α ↪ β) (s : Finset α) (a : α) : (s.erase a).map f = (s.map f).erase (f a) := by
@@ -2908,10 +2904,10 @@ protected def subtype {α} (p : α → Prop) [DecidablePred p] (s : Finset α) :
 @[simp]
 theorem mem_subtype {p : α → Prop} [DecidablePred p] {s : Finset α} : ∀ {a : Subtype p}, a ∈ s.Subtype p ↔ (a : α) ∈ s
   | ⟨a, ha⟩ => by
-    simp [← Finset.subtype, ← ha]
+    simp [Finset.subtype, ha]
 
 theorem subtype_eq_empty {p : α → Prop} [DecidablePred p] {s : Finset α} : s.Subtype p = ∅ ↔ ∀ x, p x → x ∉ s := by
-  simp [← ext_iff, ← Subtype.forall, ← Subtype.coe_mk] <;> rfl
+  simp [ext_iff, Subtype.forall, Subtype.coe_mk] <;> rfl
 
 @[mono]
 theorem subtype_mono {p : α → Prop} [DecidablePred p] : Monotone (Finset.subtype p) := fun s t h x hx =>
@@ -2922,11 +2918,11 @@ theorem subtype_mono {p : α → Prop} [DecidablePred p] : Monotone (Finset.subt
 @[simp]
 theorem subtype_map (p : α → Prop) [DecidablePred p] : (s.Subtype p).map (Embedding.subtype _) = s.filter p := by
   ext x
-  simp [← and_comm _ (_ = _), ← @And.left_comm _ (_ = _), ← and_comm (p x) (x ∈ s)]
+  simp [and_comm _ (_ = _), @And.left_comm _ (_ = _), and_comm (p x) (x ∈ s)]
 
 /-- If all elements of a `finset` satisfy the predicate `p`,
 `s.subtype p` converts back to `s` with `embedding.subtype`. -/
-theorem subtype_map_of_mem {p : α → Prop} [DecidablePred p] (h : ∀, ∀ x ∈ s, ∀, p x) :
+theorem subtype_map_of_mem {p : α → Prop} [DecidablePred p] (h : ∀ x ∈ s, p x) :
     (s.Subtype p).map (Embedding.subtype _) = s := by
   rw [subtype_map, filter_true_of_mem h]
 
@@ -2999,7 +2995,7 @@ theorem mem_to_list {a : α} (s : Finset α) : a ∈ s.toList ↔ a ∈ s := by
 
 @[simp]
 theorem to_list_empty : (∅ : Finset α).toList = [] := by
-  simp [← to_list]
+  simp [to_list]
 
 @[simp, norm_cast]
 theorem coe_to_list (s : Finset α) : (s.toList : Multiset α) = s.val := by
@@ -3018,9 +3014,9 @@ theorem exists_list_nodup_eq [DecidableEq α] (s : Finset α) : ∃ l : List α,
 theorem to_list_cons {a : α} {s : Finset α} (h : a ∉ s) : (cons a s h).toList ~ a :: s.toList :=
   (List.perm_ext (nodup_to_list _)
         (by
-          simp [← h, ← nodup_to_list s])).2
+          simp [h, nodup_to_list s])).2
     fun x => by
-    simp only [← List.mem_cons_iffₓ, ← Finset.mem_to_list, ← Finset.mem_cons]
+    simp only [List.mem_cons_iffₓ, Finset.mem_to_list, Finset.mem_cons]
 
 theorem to_list_insert [DecidableEq α] {a : α} {s : Finset α} (h : a ∉ s) : (insert a s).toList ~ a :: s.toList :=
   cons_eq_insert _ _ h ▸ to_list_cons _
@@ -3054,25 +3050,24 @@ theorem bUnion_empty : Finset.bUnion ∅ t = ∅ :=
 
 @[simp]
 theorem mem_bUnion {b : β} : b ∈ s.bUnion t ↔ ∃ a ∈ s, b ∈ t a := by
-  simp only [← mem_def, ← bUnion_val, ← mem_dedup, ← mem_bind, ← exists_prop]
+  simp only [mem_def, bUnion_val, mem_dedup, mem_bind, exists_prop]
 
 @[simp, norm_cast]
 theorem coe_bUnion : (s.bUnion t : Set β) = ⋃ x ∈ (s : Set α), t x := by
-  simp only [← Set.ext_iff, ← mem_bUnion, ← Set.mem_Union, ← iff_selfₓ, ← mem_coe, ← implies_true_iff]
+  simp only [Set.ext_iff, mem_bUnion, Set.mem_Union, iff_selfₓ, mem_coe, implies_true_iff]
 
 @[simp]
 theorem bUnion_insert [DecidableEq α] {a : α} : (insert a s).bUnion t = t a ∪ s.bUnion t :=
   ext fun x => by
-    simp only [← mem_bUnion, ← exists_prop, ← mem_union, ← mem_insert, ← or_and_distrib_right, ← exists_or_distrib, ←
-      exists_eq_left]
+    simp only [mem_bUnion, exists_prop, mem_union, mem_insert, or_and_distrib_right, exists_or_distrib, exists_eq_left]
 
 -- ext $ λ x, by simp [or_and_distrib_right, exists_or_distrib]
-theorem bUnion_congr (hs : s₁ = s₂) (ht : ∀, ∀ a ∈ s₁, ∀, t₁ a = t₂ a) : s₁.bUnion t₁ = s₂.bUnion t₂ :=
+theorem bUnion_congr (hs : s₁ = s₂) (ht : ∀ a ∈ s₁, t₁ a = t₂ a) : s₁.bUnion t₁ = s₂.bUnion t₂ :=
   ext fun x => by
-    simp (config := { contextual := true })[← hs, ← ht]
+    simp (config := { contextual := true })[hs, ht]
 
-theorem bUnion_subset {s' : Finset β} : s.bUnion t ⊆ s' ↔ ∀, ∀ x ∈ s, ∀, t x ⊆ s' := by
-  simp only [← subset_iff, ← mem_bUnion] <;> exact ⟨fun H a ha b hb => H ⟨a, ha, hb⟩, fun H b ⟨a, ha, hb⟩ => H a ha hb⟩
+theorem bUnion_subset {s' : Finset β} : s.bUnion t ⊆ s' ↔ ∀ x ∈ s, t x ⊆ s' := by
+  simp only [subset_iff, mem_bUnion] <;> exact ⟨fun H a ha b hb => H ⟨a, ha, hb⟩, fun H b ⟨a, ha, hb⟩ => H a ha hb⟩
 
 @[simp]
 theorem singleton_bUnion {a : α} : Finset.bUnion {a} t = t a := by
@@ -3081,44 +3076,44 @@ theorem singleton_bUnion {a : α} : Finset.bUnion {a} t = t a := by
 
 theorem bUnion_inter (s : Finset α) (f : α → Finset β) (t : Finset β) : s.bUnion f ∩ t = s.bUnion fun x => f x ∩ t := by
   ext x
-  simp only [← mem_bUnion, ← mem_inter]
+  simp only [mem_bUnion, mem_inter]
   tauto
 
 theorem inter_bUnion (t : Finset β) (s : Finset α) (f : α → Finset β) : t ∩ s.bUnion f = s.bUnion fun x => t ∩ f x := by
-  rw [inter_comm, bUnion_inter] <;> simp [← inter_comm]
+  rw [inter_comm, bUnion_inter] <;> simp [inter_comm]
 
 theorem image_bUnion [DecidableEq γ] {f : α → β} {s : Finset α} {t : β → Finset γ} :
     (s.Image f).bUnion t = s.bUnion fun a => t (f a) :=
   haveI := Classical.decEq α
   Finset.induction_on s rfl fun a s has ih => by
-    simp only [← image_insert, ← bUnion_insert, ← ih]
+    simp only [image_insert, bUnion_insert, ih]
 
 theorem bUnion_image [DecidableEq γ] {s : Finset α} {t : α → Finset β} {f : β → γ} :
     (s.bUnion t).Image f = s.bUnion fun a => (t a).Image f :=
   haveI := Classical.decEq α
   Finset.induction_on s rfl fun a s has ih => by
-    simp only [← bUnion_insert, ← image_union, ← ih]
+    simp only [bUnion_insert, image_union, ih]
 
 theorem bUnion_bUnion [DecidableEq γ] (s : Finset α) (f : α → Finset β) (g : β → Finset γ) :
     (s.bUnion f).bUnion g = s.bUnion fun a => (f a).bUnion g := by
   ext
-  simp only [← Finset.mem_bUnion, ← exists_prop]
+  simp only [Finset.mem_bUnion, exists_prop]
   simp_rw [← exists_and_distrib_right, ← exists_and_distrib_left, and_assoc]
   rw [exists_comm]
 
 theorem bind_to_finset [DecidableEq α] (s : Multiset α) (t : α → Multiset β) :
     (s.bind t).toFinset = s.toFinset.bUnion fun a => (t a).toFinset :=
   ext fun x => by
-    simp only [← Multiset.mem_to_finset, ← mem_bUnion, ← Multiset.mem_bind, ← exists_prop]
+    simp only [Multiset.mem_to_finset, mem_bUnion, Multiset.mem_bind, exists_prop]
 
-theorem bUnion_mono (h : ∀, ∀ a ∈ s, ∀, t₁ a ⊆ t₂ a) : s.bUnion t₁ ⊆ s.bUnion t₂ := by
+theorem bUnion_mono (h : ∀ a ∈ s, t₁ a ⊆ t₂ a) : s.bUnion t₁ ⊆ s.bUnion t₂ := by
   have : ∀ b a, a ∈ s → b ∈ t₁ a → ∃ a : α, a ∈ s ∧ b ∈ t₂ a := fun b a ha hb =>
     ⟨a, ha, Finset.mem_of_subset (h a ha) hb⟩
-  simpa only [← subset_iff, ← mem_bUnion, ← exists_imp_distrib, ← and_imp, ← exists_prop]
+  simpa only [subset_iff, mem_bUnion, exists_imp_distrib, and_imp, exists_prop]
 
 theorem bUnion_subset_bUnion_of_subset_left (t : α → Finset β) (h : s₁ ⊆ s₂) : s₁.bUnion t ⊆ s₂.bUnion t := by
   intro x
-  simp only [← and_imp, ← mem_bUnion, ← exists_prop]
+  simp only [and_imp, mem_bUnion, exists_prop]
   exact Exists.imp fun a ha => ⟨h ha.1, ha.2⟩
 
 theorem subset_bUnion_of_mem (u : α → Finset β) {x : α} (xs : x ∈ s) : u x ⊆ s.bUnion u :=
@@ -3126,14 +3121,14 @@ theorem subset_bUnion_of_mem (u : α → Finset β) {x : α} (xs : x ∈ s) : u 
 
 @[simp]
 theorem bUnion_subset_iff_forall_subset {α β : Type _} [DecidableEq β] {s : Finset α} {t : Finset β}
-    {f : α → Finset β} : s.bUnion f ⊆ t ↔ ∀, ∀ x ∈ s, ∀, f x ⊆ t :=
+    {f : α → Finset β} : s.bUnion f ⊆ t ↔ ∀ x ∈ s, f x ⊆ t :=
   ⟨fun h x hx => (subset_bUnion_of_mem f hx).trans h, fun h x hx =>
     let ⟨a, ha₁, ha₂⟩ := mem_bUnion.mp hx
     h _ ha₁ ha₂⟩
 
 theorem bUnion_singleton {f : α → β} : (s.bUnion fun a => {f a}) = s.Image f :=
   ext fun x => by
-    simp only [← mem_bUnion, ← mem_image, ← mem_singleton, ← eq_comm]
+    simp only [mem_bUnion, mem_image, mem_singleton, eq_comm]
 
 @[simp]
 theorem bUnion_singleton_eq_self [DecidableEq α] : s.bUnion (singleton : α → Finset α) = s := by
@@ -3143,7 +3138,7 @@ theorem bUnion_singleton_eq_self [DecidableEq α] : s.bUnion (singleton : α →
 theorem filter_bUnion (s : Finset α) (f : α → Finset β) (p : β → Prop) [DecidablePred p] :
     (s.bUnion f).filter p = s.bUnion fun a => (f a).filter p := by
   ext b
-  simp only [← mem_bUnion, ← exists_prop, ← mem_filter]
+  simp only [mem_bUnion, exists_prop, mem_filter]
   constructor
   · rintro ⟨⟨a, ha, hba⟩, hb⟩
     exact ⟨a, ha, hba, hb⟩
@@ -3152,8 +3147,8 @@ theorem filter_bUnion (s : Finset α) (f : α → Finset β) (p : β → Prop) [
     exact ⟨⟨a, ha, hba⟩, hb⟩
     
 
-theorem bUnion_filter_eq_of_maps_to [DecidableEq α] {s : Finset α} {t : Finset β} {f : α → β}
-    (h : ∀, ∀ x ∈ s, ∀, f x ∈ t) : (t.bUnion fun a => s.filter fun c => f c = a) = s :=
+theorem bUnion_filter_eq_of_maps_to [DecidableEq α] {s : Finset α} {t : Finset β} {f : α → β} (h : ∀ x ∈ s, f x ∈ t) :
+    (t.bUnion fun a => s.filter fun c => f c = a) = s :=
   ext fun b => by
     simpa using h b
 
@@ -3164,13 +3159,13 @@ theorem image_bUnion_filter_eq [DecidableEq α] (s : Finset β) (g : β → α) 
 theorem erase_bUnion (f : α → Finset β) (s : Finset α) (b : β) :
     (s.bUnion f).erase b = s.bUnion fun x => (f x).erase b := by
   ext
-  simp only [← Finset.mem_bUnion, ← iff_selfₓ, ← exists_and_distrib_left, ← Finset.mem_erase]
+  simp only [Finset.mem_bUnion, iff_selfₓ, exists_and_distrib_left, Finset.mem_erase]
 
 @[simp]
 theorem bUnion_nonempty : (s.bUnion t).Nonempty ↔ ∃ x ∈ s, (t x).Nonempty := by
-  simp [← Finset.Nonempty, exists_and_distrib_left, ← @exists_swap α]
+  simp [Finset.Nonempty, ← exists_and_distrib_left, @exists_swap α]
 
-theorem Nonempty.bUnion (hs : s.Nonempty) (ht : ∀, ∀ x ∈ s, ∀, (t x).Nonempty) : (s.bUnion t).Nonempty :=
+theorem Nonempty.bUnion (hs : s.Nonempty) (ht : ∀ x ∈ s, (t x).Nonempty) : (s.bUnion t).Nonempty :=
   bUnion_nonempty.2 <| hs.imp fun x hx => ⟨hx, ht x hx⟩
 
 end BUnion
@@ -3184,8 +3179,7 @@ section Disjoint
 variable [DecidableEq α] [DecidableEq β] {f : α → β} {s t u : Finset α} {a b : α}
 
 theorem disjoint_left : Disjoint s t ↔ ∀ ⦃a⦄, a ∈ s → a ∉ t := by
-  simp only [← _root_.disjoint, ← inf_eq_inter, ← le_iff_subset, ← subset_iff, ← mem_inter, ← not_and, ← and_imp] <;>
-    rfl
+  simp only [_root_.disjoint, inf_eq_inter, le_iff_subset, subset_iff, mem_inter, not_and, and_imp] <;> rfl
 
 theorem disjoint_val : Disjoint s t ↔ s.1.Disjoint t.1 :=
   disjoint_left
@@ -3202,8 +3196,8 @@ instance decidableDisjoint (U V : Finset α) : Decidable (Disjoint U V) :=
 theorem disjoint_right : Disjoint s t ↔ ∀ ⦃a⦄, a ∈ t → a ∉ s := by
   rw [Disjoint.comm, disjoint_left]
 
-theorem disjoint_iff_ne : Disjoint s t ↔ ∀, ∀ a ∈ s, ∀, ∀, ∀ b ∈ t, ∀, a ≠ b := by
-  simp only [← disjoint_left, ← imp_not_comm, ← forall_eq']
+theorem disjoint_iff_ne : Disjoint s t ↔ ∀ a ∈ s, ∀ b ∈ t, a ≠ b := by
+  simp only [disjoint_left, imp_not_comm, forall_eq']
 
 theorem _root_.disjoint.forall_ne_finset (h : Disjoint s t) (ha : a ∈ s) (hb : b ∈ t) : a ≠ b :=
   disjoint_iff_ne.1 h _ ha _ hb
@@ -3227,7 +3221,7 @@ theorem disjoint_empty_right (s : Finset α) : Disjoint s ∅ :=
 
 @[simp]
 theorem disjoint_singleton_left : Disjoint (singleton a) s ↔ a ∉ s := by
-  simp only [← disjoint_left, ← mem_singleton, ← forall_eq]
+  simp only [disjoint_left, mem_singleton, forall_eq]
 
 @[simp]
 theorem disjoint_singleton_right : Disjoint s (singleton a) ↔ a ∉ s :=
@@ -3239,7 +3233,7 @@ theorem disjoint_singleton : Disjoint ({a} : Finset α) {b} ↔ a ≠ b := by
 
 @[simp]
 theorem disjoint_insert_left : Disjoint (insert a s) t ↔ a ∉ t ∧ Disjoint s t := by
-  simp only [← disjoint_left, ← mem_insert, ← or_imp_distrib, ← forall_and_distrib, ← forall_eq]
+  simp only [disjoint_left, mem_insert, or_imp_distrib, forall_and_distrib, forall_eq]
 
 @[simp]
 theorem disjoint_insert_right : Disjoint s (insert a t) ↔ a ∉ s ∧ Disjoint s t :=
@@ -3248,11 +3242,11 @@ theorem disjoint_insert_right : Disjoint s (insert a t) ↔ a ∉ s ∧ Disjoint
 
 @[simp]
 theorem disjoint_union_left : Disjoint (s ∪ t) u ↔ Disjoint s u ∧ Disjoint t u := by
-  simp only [← disjoint_left, ← mem_union, ← or_imp_distrib, ← forall_and_distrib]
+  simp only [disjoint_left, mem_union, or_imp_distrib, forall_and_distrib]
 
 @[simp]
 theorem disjoint_union_right : Disjoint s (t ∪ u) ↔ Disjoint s t ∧ Disjoint s u := by
-  simp only [← disjoint_right, ← mem_union, ← or_imp_distrib, ← forall_and_distrib]
+  simp only [disjoint_right, mem_union, or_imp_distrib, forall_and_distrib]
 
 theorem sdiff_disjoint : Disjoint (t \ s) s :=
   disjoint_left.2 fun a ha => (mem_sdiff.1 ha).2
@@ -3273,22 +3267,22 @@ theorem disjoint_self_iff_empty (s : Finset α) : Disjoint s s ↔ s = ∅ :=
   disjoint_self
 
 theorem disjoint_bUnion_left {ι : Type _} (s : Finset ι) (f : ι → Finset α) (t : Finset α) :
-    Disjoint (s.bUnion f) t ↔ ∀, ∀ i ∈ s, ∀, Disjoint (f i) t := by
+    Disjoint (s.bUnion f) t ↔ ∀ i ∈ s, Disjoint (f i) t := by
   classical
   refine' s.induction _ _
-  · simp only [← forall_mem_empty_iff, ← bUnion_empty, ← disjoint_empty_left]
+  · simp only [forall_mem_empty_iff, bUnion_empty, disjoint_empty_left]
     
   · intro i s his ih
-    simp only [← disjoint_union_left, ← bUnion_insert, ← his, ← forall_mem_insert, ← ih]
+    simp only [disjoint_union_left, bUnion_insert, his, forall_mem_insert, ih]
     
 
 theorem disjoint_bUnion_right {ι : Type _} (s : Finset α) (t : Finset ι) (f : ι → Finset α) :
-    Disjoint s (t.bUnion f) ↔ ∀, ∀ i ∈ t, ∀, Disjoint s (f i) := by
-  simpa only [← Disjoint.comm] using disjoint_bUnion_left t f s
+    Disjoint s (t.bUnion f) ↔ ∀ i ∈ t, Disjoint s (f i) := by
+  simpa only [Disjoint.comm] using disjoint_bUnion_left t f s
 
 theorem disjoint_filter {p q : α → Prop} [DecidablePred p] [DecidablePred q] :
-    Disjoint (s.filter p) (s.filter q) ↔ ∀, ∀ x ∈ s, ∀, p x → ¬q x := by
-  constructor <;> simp (config := { contextual := true })[← disjoint_left]
+    Disjoint (s.filter p) (s.filter q) ↔ ∀ x ∈ s, p x → ¬q x := by
+  constructor <;> simp (config := { contextual := true })[disjoint_left]
 
 theorem disjoint_filter_filter {p q : α → Prop} [DecidablePred p] [DecidablePred q] :
     Disjoint s t → Disjoint (s.filter p) (t.filter q) :=
@@ -3315,7 +3309,7 @@ theorem _root_.disjoint.of_image_finset (h : Disjoint (s.Image f) (t.Image f)) :
 
 @[simp]
 theorem disjoint_image {f : α → β} (hf : Injective f) : Disjoint (s.Image f) (t.Image f) ↔ Disjoint s t := by
-  simp only [← disjoint_iff_ne, ← mem_image, ← exists_prop, ← exists_imp_distrib, ← and_imp]
+  simp only [disjoint_iff_ne, mem_image, exists_prop, exists_imp_distrib, and_imp]
   refine' ⟨fun h a ha b hb hab => h _ _ ha rfl _ _ hb rfl <| congr_arg _ hab, _⟩
   rintro h _ a ha rfl _ b hb rfl
   exact hf.ne (h _ ha _ hb)
@@ -3365,7 +3359,7 @@ theorem pairwise_subtype_iff_pairwise_finset' (r : β → β → Prop) (f : α �
     ⟨fun h x hx y hy hxy =>
       h ⟨x, hx⟩ ⟨y, hy⟩
         (by
-          simpa only [← Subtype.mk_eq_mk, ← Ne.def] ),
+          simpa only [Subtype.mk_eq_mk, Ne.def] ),
       _⟩
   rintro h ⟨x, hx⟩ ⟨y, hy⟩ hxy
   exact h hx hy (subtype.mk_eq_mk.not.mp hxy)
@@ -3376,9 +3370,9 @@ theorem pairwise_subtype_iff_pairwise_finset (r : α → α → Prop) :
 
 theorem pairwise_cons' {a : α} (ha : a ∉ s) (r : β → β → Prop) (f : α → β) :
     Pairwise (r on fun a : s.cons a ha => f a) ↔
-      Pairwise (r on fun a : s => f a) ∧ ∀, ∀ b ∈ s, ∀, r (f a) (f b) ∧ r (f b) (f a) :=
+      Pairwise (r on fun a : s => f a) ∧ ∀ b ∈ s, r (f a) (f b) ∧ r (f b) (f a) :=
   by
-  simp only [← pairwise_subtype_iff_pairwise_finset', ← Finset.coe_cons, ← Set.pairwise_insert, ← Finset.mem_coe, ←
+  simp only [pairwise_subtype_iff_pairwise_finset', Finset.coe_cons, Set.pairwise_insert, Finset.mem_coe,
     And.congr_right_iff]
   exact fun hsr =>
     ⟨fun h b hb =>
@@ -3388,7 +3382,7 @@ theorem pairwise_cons' {a : α} (ha : a ∉ s) (r : β → β → Prop) (f : α 
       fun h b hb _ => h b hb⟩
 
 theorem pairwise_cons {a : α} (ha : a ∉ s) (r : α → α → Prop) :
-    Pairwise (r on fun a : s.cons a ha => a) ↔ Pairwise (r on fun a : s => a) ∧ ∀, ∀ b ∈ s, ∀, r a b ∧ r b a :=
+    Pairwise (r on fun a : s.cons a ha => a) ↔ Pairwise (r on fun a : s => a) ∧ ∀ b ∈ s, r a b ∧ r b a :=
   pairwise_cons' ha r id
 
 end Pairwise
@@ -3402,9 +3396,9 @@ protected def finsetCongr (e : α ≃ β) : Finset α ≃ Finset β where
   toFun := fun s => s.map e.toEmbedding
   invFun := fun s => s.map e.symm.toEmbedding
   left_inv := fun s => by
-    simp [← Finset.map_map]
+    simp [Finset.map_map]
   right_inv := fun s => by
-    simp [← Finset.map_map]
+    simp [Finset.map_map]
 
 @[simp]
 theorem finset_congr_apply (e : α ≃ β) (s : Finset α) : e.finsetCongr s = s.map e.toEmbedding :=
@@ -3443,7 +3437,7 @@ def sigmaEquivOptionOfInhabited (α : Type u) [Inhabited α] [DecidableEq α] : 
           
         · dsimp' only
           split_ifs with hi
-          · simpa [← h] using hi
+          · simpa [h] using hi
             
           · simp
             

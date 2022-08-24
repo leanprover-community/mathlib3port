@@ -50,7 +50,7 @@ theorem independent_iff : Independent f ↔ LinearIndependent K (Projectivizatio
     
   · convert independent.mk _ _ h
     · ext
-      simp only [← mk_rep]
+      simp only [mk_rep]
       
     · intro i
       apply rep_nonzero
@@ -63,11 +63,11 @@ theorem independent_iff_complete_lattice_independent :
     Independent f ↔ CompleteLattice.Independent fun i => (f i).Submodule := by
   refine' ⟨_, fun h => _⟩
   · rintro ⟨f, hf, hi⟩
-    simpa [← submodule_mk, ← CompleteLattice.independent_iff_linear_independent_of_ne_zero hf]
+    simpa [submodule_mk, CompleteLattice.independent_iff_linear_independent_of_ne_zero hf]
     
   · rw [independent_iff]
     refine' h.linear_independent (Projectivization.submodule ∘ f) (fun i => _) fun i => _
-    · simpa only [← Function.comp_app, ← submodule_eq] using Submodule.mem_span_singleton_self _
+    · simpa only [Function.comp_app, submodule_eq] using Submodule.mem_span_singleton_self _
       
     · exact rep_nonzero (f i)
       
@@ -87,11 +87,11 @@ theorem dependent_iff : Dependent f ↔ ¬LinearIndependent K (Projectivization.
     choose a ha using fun i : ι => exists_smul_eq_mk_rep K (ff i) (hff i)
     convert hh1.units_smul a⁻¹
     ext i
-    simp only [ha, ← inv_smul_smul, ← Pi.smul_apply', ← Pi.inv_apply, ← Function.comp_app]
+    simp only [← ha, inv_smul_smul, Pi.smul_apply', Pi.inv_apply, Function.comp_app]
     
   · convert dependent.mk _ _ h
     · ext i
-      simp only [← mk_rep]
+      simp only [mk_rep]
       
     · exact fun i => rep_nonzero (f i)
       

@@ -143,7 +143,7 @@ theorem edist_eq_sum {p : ℝ≥0∞} (hp : 0 < p.toReal) (f g : PiLp p β) :
   (if_neg hp'.1.ne').trans (if_neg hp'.2.Ne)
 
 theorem edist_eq_supr (f g : PiLp ∞ β) : edist f g = ⨆ i, edist (f i) (g i) := by
-  dsimp' [← edist]
+  dsimp' [edist]
   exact if_neg Ennreal.top_ne_zero
 
 end Edist
@@ -156,22 +156,22 @@ variable {β} [∀ i, PseudoEmetricSpace (β i)]
 from `pi_Lp.pseudo_emetric_space` so it can be used also for `p < 1`. -/
 protected theorem edist_self (f : PiLp p β) : edist f f = 0 := by
   rcases p.trichotomy with (rfl | rfl | h)
-  · simp [← edist_eq_card]
+  · simp [edist_eq_card]
     
-  · simp [← edist_eq_supr]
+  · simp [edist_eq_supr]
     
-  · simp [← edist_eq_sum h, ← Ennreal.zero_rpow_of_pos h, ← Ennreal.zero_rpow_of_pos (inv_pos.2 <| h)]
+  · simp [edist_eq_sum h, Ennreal.zero_rpow_of_pos h, Ennreal.zero_rpow_of_pos (inv_pos.2 <| h)]
     
 
 /-- This holds independent of `p` and does not require `[fact (1 ≤ p)]`. We keep it separate
 from `pi_Lp.pseudo_emetric_space` so it can be used also for `p < 1`. -/
 protected theorem edist_comm (f g : PiLp p β) : edist f g = edist g f := by
   rcases p.trichotomy with (rfl | rfl | h)
-  · simp only [← edist_eq_card, ← eq_comm, ← Ne.def]
+  · simp only [edist_eq_card, eq_comm, Ne.def]
     
-  · simp only [← edist_eq_supr, ← edist_comm]
+  · simp only [edist_eq_supr, edist_comm]
     
-  · simp only [← edist_eq_sum h, ← edist_comm]
+  · simp only [edist_eq_sum h, edist_comm]
     
 
 end EdistProp
@@ -205,7 +205,7 @@ theorem dist_eq_sum {p : ℝ≥0∞} (hp : 0 < p.toReal) (f g : PiLp p α) :
   (if_neg hp'.1.ne').trans (if_neg hp'.2.Ne)
 
 theorem dist_eq_csupr (f g : PiLp ∞ α) : dist f g = ⨆ i, dist (f i) (g i) := by
-  dsimp' [← dist]
+  dsimp' [dist]
   exact if_neg Ennreal.top_ne_zero
 
 end Dist
@@ -233,7 +233,7 @@ theorem norm_eq_card (f : PiLp 0 β) : ∥f∥ = { i | f i ≠ 0 }.to_finite.toF
   if_pos rfl
 
 theorem norm_eq_csupr (f : PiLp ∞ β) : ∥f∥ = ⨆ i, ∥f i∥ := by
-  dsimp' [← norm]
+  dsimp' [norm]
   exact if_neg Ennreal.top_ne_zero
 
 theorem norm_eq_sum (hp : 0 < p.toReal) (f : PiLp p β) : ∥f∥ = (∑ i, ∥f i∥ ^ p.toReal) ^ (1 / p.toReal) :=
@@ -276,13 +276,13 @@ def pseudoEmetricAux : PseudoEmetricSpace (PiLp p β) where
   edist_comm := PiLp.edist_comm p
   edist_triangle := fun f g h => by
     rcases p.dichotomy with (rfl | hp)
-    · simp only [← edist_eq_supr]
+    · simp only [edist_eq_supr]
       cases is_empty_or_nonempty ι
-      · simp only [← csupr_of_empty, ← Ennreal.bot_eq_zero, ← add_zeroₓ, ← nonpos_iff_eq_zero]
+      · simp only [csupr_of_empty, Ennreal.bot_eq_zero, add_zeroₓ, nonpos_iff_eq_zero]
         
       exact supr_le fun i => (edist_triangle _ (g i) _).trans <| add_le_add (le_supr _ i) (le_supr _ i)
       
-    · simp only [← edist_eq_sum (zero_lt_one.trans_le hp)]
+    · simp only [edist_eq_sum (zero_lt_one.trans_le hp)]
       calc
         (∑ i, edist (f i) (h i) ^ p.to_real) ^ (1 / p.to_real) ≤
             (∑ i, (edist (f i) (g i) + edist (g i) (h i)) ^ p.to_real) ^ (1 / p.to_real) :=
@@ -306,7 +306,7 @@ theorem supr_edist_ne_top_aux {ι : Type _} [Finite ι] {α : ι → Type _} [�
   cases nonempty_fintype ι
   obtain ⟨M, hM⟩ := Fintype.exists_le fun i => (⟨dist (f i) (g i), dist_nonneg⟩ : ℝ≥0 )
   refine' ne_of_ltₓ ((supr_le fun i => _).trans_lt (@Ennreal.coe_lt_top M))
-  simp only [← edist, ← PseudoMetricSpace.edist_dist, ← Ennreal.of_real_eq_coe_nnreal dist_nonneg]
+  simp only [edist, PseudoMetricSpace.edist_dist, Ennreal.of_real_eq_coe_nnreal dist_nonneg]
   exact_mod_cast hM i
 
 /-- Endowing the space `pi_Lp p α` with the `L^p` pseudometric structure. This definition is not
@@ -335,7 +335,7 @@ def pseudoMetricAux : PseudoMetricSpace (PiLp p α) :=
     rcases p.dichotomy with (rfl | h)
     · rw [edist_eq_supr, dist_eq_csupr]
       · cases is_empty_or_nonempty ι
-        · simp only [← Real.csupr_empty, ← csupr_of_empty, ← Ennreal.bot_eq_zero, ← Ennreal.zero_to_real]
+        · simp only [Real.csupr_empty, csupr_of_empty, Ennreal.bot_eq_zero, Ennreal.zero_to_real]
           
         · refine' le_antisymmₓ (csupr_le fun i => _) _
           · rw [← Ennreal.of_real_le_iff_le_to_real (supr_edist_ne_top_aux f g), ← PseudoMetricSpace.edist_dist]
@@ -355,8 +355,8 @@ def pseudoMetricAux : PseudoMetricSpace (PiLp p α) :=
       
     · have A : ∀ i, edist (f i) (g i) ^ p.to_real ≠ ⊤ := fun i =>
         Ennreal.rpow_ne_top_of_nonneg (zero_le_one.trans h) (edist_ne_top _ _)
-      simp only [← edist_eq_sum (zero_lt_one.trans_le h), ← dist_edist, ← Ennreal.to_real_rpow, ←
-        dist_eq_sum (zero_lt_one.trans_le h), Ennreal.to_real_sum fun i _ => A i]
+      simp only [edist_eq_sum (zero_lt_one.trans_le h), dist_edist, Ennreal.to_real_rpow,
+        dist_eq_sum (zero_lt_one.trans_le h), ← Ennreal.to_real_sum fun i _ => A i]
       
 
 attribute [local instance] PiLp.pseudoMetricAux
@@ -364,16 +364,16 @@ attribute [local instance] PiLp.pseudoMetricAux
 theorem lipschitz_with_equiv_aux : LipschitzWith 1 (PiLp.equiv p β) := by
   intro x y
   rcases p.dichotomy with (rfl | h)
-  · simpa only [← equiv_apply', ← Ennreal.coe_one, ← one_mulₓ, ← edist_eq_supr, ← edist, ← Finset.sup_le_iff, ←
-      Finset.mem_univ, ← forall_true_left] using le_supr fun i => edist (x i) (y i)
+  · simpa only [equiv_apply', Ennreal.coe_one, one_mulₓ, edist_eq_supr, edist, Finset.sup_le_iff, Finset.mem_univ,
+      forall_true_left] using le_supr fun i => edist (x i) (y i)
     
   · have cancel : p.to_real * (1 / p.to_real) = 1 := mul_div_cancel' 1 (zero_lt_one.trans_le h).ne'
     rw [edist_eq_sum (zero_lt_one.trans_le h)]
-    simp only [← edist, ← forall_prop_of_true, ← one_mulₓ, ← Finset.mem_univ, ← Finset.sup_le_iff, ← Ennreal.coe_one]
+    simp only [edist, forall_prop_of_true, one_mulₓ, Finset.mem_univ, Finset.sup_le_iff, Ennreal.coe_one]
     intro i
     calc
       edist (x i) (y i) = (edist (x i) (y i) ^ p.to_real) ^ (1 / p.to_real) := by
-        simp [Ennreal.rpow_mul, ← cancel, -one_div]
+        simp [← Ennreal.rpow_mul, cancel, -one_div]
       _ ≤ (∑ i, edist (x i) (y i) ^ p.to_real) ^ (1 / p.to_real) := by
         apply Ennreal.rpow_le_rpow _ (one_div_nonneg.2 <| zero_le_one.trans h)
         exact Finset.single_le_sum (fun i hi => (bot_le : (0 : ℝ≥0∞) ≤ _)) (Finset.mem_univ i)
@@ -384,15 +384,15 @@ theorem antilipschitz_with_equiv_aux : AntilipschitzWith ((Fintype.card ι : ℝ
   by
   intro x y
   rcases p.dichotomy with (rfl | h)
-  · simp only [← edist_eq_supr, ← Ennreal.div_top, ← Ennreal.zero_to_real, ← Nnreal.rpow_zero, ← Ennreal.coe_one, ←
-      equiv_apply', ← one_mulₓ, ← supr_le_iff]
+  · simp only [edist_eq_supr, Ennreal.div_top, Ennreal.zero_to_real, Nnreal.rpow_zero, Ennreal.coe_one, equiv_apply',
+      one_mulₓ, supr_le_iff]
     exact fun i => Finset.le_sup (Finset.mem_univ i)
     
   · have pos : 0 < p.to_real := zero_lt_one.trans_le h
     have nonneg : 0 ≤ 1 / p.to_real := one_div_nonneg.2 (le_of_ltₓ Pos)
     have cancel : p.to_real * (1 / p.to_real) = 1 := mul_div_cancel' 1 (ne_of_gtₓ Pos)
     rw [edist_eq_sum Pos, Ennreal.to_real_div 1 p]
-    simp only [← edist, ← equiv_apply', one_div, ← Ennreal.one_to_real]
+    simp only [edist, equiv_apply', ← one_div, Ennreal.one_to_real]
     calc
       (∑ i, edist (x i) (y i) ^ p.to_real) ^ (1 / p.to_real) ≤
           (∑ i, edist (PiLp.equiv p β x) (PiLp.equiv p β y) ^ p.to_real) ^ (1 / p.to_real) :=
@@ -402,8 +402,8 @@ theorem antilipschitz_with_equiv_aux : AntilipschitzWith ((Fintype.card ι : ℝ
         apply Ennreal.rpow_le_rpow _ (le_of_ltₓ Pos)
         exact Finset.le_sup (Finset.mem_univ i)
       _ = ((Fintype.card ι : ℝ≥0 ) ^ (1 / p.to_real) : ℝ≥0 ) * edist (PiLp.equiv p β x) (PiLp.equiv p β y) := by
-        simp only [← nsmul_eq_mul, ← Finset.card_univ, ← Ennreal.rpow_one, ← Finset.sum_const, ←
-          Ennreal.mul_rpow_of_nonneg _ _ nonneg, Ennreal.rpow_mul, ← cancel]
+        simp only [nsmul_eq_mul, Finset.card_univ, Ennreal.rpow_one, Finset.sum_const,
+          Ennreal.mul_rpow_of_nonneg _ _ nonneg, ← Ennreal.rpow_mul, cancel]
         have : (Fintype.card ι : ℝ≥0∞) = (Fintype.card ι : ℝ≥0 ) := (Ennreal.coe_nat (Fintype.card ι)).symm
         rw [this, Ennreal.coe_rpow_of_nonneg _ nonneg]
       
@@ -483,9 +483,9 @@ theorem antilipschitz_with_equiv [∀ i, PseudoEmetricSpace (β i)] :
 theorem infty_equiv_isometry [∀ i, PseudoEmetricSpace (β i)] : Isometry (PiLp.equiv ∞ β) := fun x y =>
   le_antisymmₓ
     (by
-      simpa only [← Ennreal.coe_one, ← one_mulₓ] using lipschitz_with_equiv ∞ β x y)
+      simpa only [Ennreal.coe_one, one_mulₓ] using lipschitz_with_equiv ∞ β x y)
     (by
-      simpa only [← Ennreal.div_top, ← Ennreal.zero_to_real, ← Nnreal.rpow_zero, ← Ennreal.coe_one, ← one_mulₓ] using
+      simpa only [Ennreal.div_top, Ennreal.zero_to_real, Nnreal.rpow_zero, Ennreal.coe_one, one_mulₓ] using
         antilipschitz_with_equiv ∞ β x y)
 
 variable (p β)
@@ -496,13 +496,13 @@ instance seminormedAddCommGroup [∀ i, SeminormedAddCommGroup (β i)] : Seminor
   { Pi.addCommGroup with
     dist_eq := fun x y => by
       rcases p.dichotomy with (rfl | h)
-      · simpa only [← dist_eq_csupr, ← norm_eq_csupr, ← dist_eq_norm]
+      · simpa only [dist_eq_csupr, norm_eq_csupr, dist_eq_norm]
         
       · have : p ≠ ∞ := by
           intro hp
           rw [hp, Ennreal.top_to_real] at h
           linarith
-        simpa only [← dist_eq_sum (zero_lt_one.trans_le h), ← norm_eq_sum (zero_lt_one.trans_le h), ← dist_eq_norm]
+        simpa only [dist_eq_sum (zero_lt_one.trans_le h), norm_eq_sum (zero_lt_one.trans_le h), dist_eq_norm]
          }
 
 /-- normed group instance on the product of finitely many normed groups, using the `L^p` norm. -/
@@ -512,17 +512,16 @@ instance normedAddCommGroup [∀ i, NormedAddCommGroup (α i)] : NormedAddCommGr
 theorem nnnorm_eq_sum {p : ℝ≥0∞} [Fact (1 ≤ p)] {β : ι → Type _} (hp : p ≠ ∞) [∀ i, SeminormedAddCommGroup (β i)]
     (f : PiLp p β) : ∥f∥₊ = (∑ i, ∥f i∥₊ ^ p.toReal) ^ (1 / p.toReal) := by
   ext
-  simp [← Nnreal.coe_sum, ← norm_eq_sum (p.to_real_pos_iff_ne_top.mpr hp)]
+  simp [Nnreal.coe_sum, norm_eq_sum (p.to_real_pos_iff_ne_top.mpr hp)]
 
 theorem nnnorm_eq_csupr {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (f : PiLp ∞ β) : ∥f∥₊ = ⨆ i, ∥f i∥₊ := by
   ext
-  simp [← Nnreal.coe_supr, ← norm_eq_csupr]
+  simp [Nnreal.coe_supr, norm_eq_csupr]
 
 theorem norm_eq_of_nat {p : ℝ≥0∞} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (n : ℕ)
     (h : p = n) (f : PiLp p β) : ∥f∥ = (∑ i, ∥f i∥ ^ n) ^ (1 / (n : ℝ)) := by
   have := p.to_real_pos_iff_ne_top.mpr (ne_of_eq_of_ne h <| Ennreal.nat_ne_top n)
-  simp only [← one_div, ← h, ← Real.rpow_nat_cast, ← Ennreal.to_real_nat, ← eq_self_iff_true, ← Finset.sum_congr, ←
-    norm_eq_sum this]
+  simp only [one_div, h, Real.rpow_nat_cast, Ennreal.to_real_nat, eq_self_iff_true, Finset.sum_congr, norm_eq_sum this]
 
 theorem norm_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (x : PiLp 2 β) :
     ∥x∥ = sqrt (∑ i : ι, ∥x i∥ ^ 2) := by
@@ -543,7 +542,7 @@ theorem nnnorm_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β 
 theorem norm_sq_eq_of_L2 (β : ι → Type _) [∀ i, SeminormedAddCommGroup (β i)] (x : PiLp 2 β) :
     ∥x∥ ^ 2 = ∑ i : ι, ∥x i∥ ^ 2 := by
   suffices ∥x∥₊ ^ 2 = ∑ i : ι, ∥x i∥₊ ^ 2 by
-    simpa only [← Nnreal.coe_sum] using congr_arg (coe : ℝ≥0 → ℝ) this
+    simpa only [Nnreal.coe_sum] using congr_arg (coe : ℝ≥0 → ℝ) this
   rw [nnnorm_eq_of_L2, Nnreal.sq_sqrt]
 
 theorem dist_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (x y : PiLp 2 β) :
@@ -558,7 +557,7 @@ theorem nndist_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β 
 
 theorem edist_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (x y : PiLp 2 β) :
     edist x y = (∑ i, edist (x i) (y i) ^ 2) ^ (1 / 2 : ℝ) := by
-  simp [← PiLp.edist_eq_sum]
+  simp [PiLp.edist_eq_sum]
 
 variable [NormedField 𝕜]
 
@@ -570,10 +569,10 @@ instance normedSpace [∀ i, SeminormedAddCommGroup (β i)] [∀ i, NormedSpace 
       · letI : Module 𝕜 (PiLp ∞ β) := Pi.module ι β 𝕜
         suffices ∥c • f∥₊ = ∥c∥₊ * ∥f∥₊ by
           exact_mod_cast Nnreal.coe_mono this.le
-        simpa only [← nnnorm_eq_csupr, ← Nnreal.mul_supr, nnnorm_smul]
+        simpa only [nnnorm_eq_csupr, Nnreal.mul_supr, ← nnnorm_smul]
         
       · have : p.to_real * (1 / p.to_real) = 1 := mul_div_cancel' 1 (zero_lt_one.trans_le hp).ne'
-        simp only [← norm_eq_sum (zero_lt_one.trans_le hp), ← norm_smul, ← mul_rpow, ← norm_nonneg, Finset.mul_sum, ←
+        simp only [norm_eq_sum (zero_lt_one.trans_le hp), norm_smul, mul_rpow, norm_nonneg, ← Finset.mul_sum,
           Pi.smul_apply]
         rw [mul_rpow (rpow_nonneg_of_nonneg (norm_nonneg _) _), ← rpow_mul (norm_nonneg _), this, rpow_one]
         exact Finset.sum_nonneg fun i hi => rpow_nonneg_of_nonneg (norm_nonneg _) _
@@ -615,10 +614,10 @@ def equivₗᵢ : PiLp ∞ β ≃ₗᵢ[𝕜] ∀ i, β i :=
   { PiLp.equiv ∞ β with map_add' := fun f g => rfl, map_smul' := fun c f => rfl,
     norm_map' := fun f => by
       suffices (finset.univ.sup fun i => ∥f i∥₊) = ⨆ i, ∥f i∥₊ by
-        simpa only [← Nnreal.coe_supr] using congr_arg (coe : ℝ≥0 → ℝ) this
+        simpa only [Nnreal.coe_supr] using congr_arg (coe : ℝ≥0 → ℝ) this
       refine' antisymm (Finset.sup_le fun i _ => le_csupr (Fintype.bdd_above_range fun i => ∥f i∥₊) _) _
       cases is_empty_or_nonempty ι
-      · simp only [← csupr_of_empty, ← Finset.univ_eq_empty, ← Finset.sup_empty]
+      · simp only [csupr_of_empty, Finset.univ_eq_empty, Finset.sup_empty]
         
       · exact csupr_le fun i => Finset.le_sup (Finset.mem_univ i)
          }
@@ -639,7 +638,7 @@ def _root_.linear_isometry_equiv.pi_Lp_congr_left (e : ι ≃ ι') :
     · simp_rw [norm_eq_csupr, LinearEquiv.Pi_congr_left'_apply 𝕜 (fun i : ι => E) e x _]
       exact e.symm.supr_congr fun i => rfl
       
-    · simp only [← norm_eq_sum (zero_lt_one.trans_le h)]
+    · simp only [norm_eq_sum (zero_lt_one.trans_le h)]
       simp_rw [LinearEquiv.Pi_congr_left'_apply 𝕜 (fun i : ι => E) e x _]
       congr
       exact Fintype.sum_equiv e.symm _ _ fun i => rfl
@@ -661,8 +660,8 @@ theorem _root_.linear_isometry_equiv.pi_Lp_congr_left_symm (e : ι ≃ ι') :
 theorem _root_.linear_isometry_equiv.pi_Lp_congr_left_single [DecidableEq ι] [DecidableEq ι'] (e : ι ≃ ι') (i : ι)
     (v : E) : LinearIsometryEquiv.piLpCongrLeft p 𝕜 E e (Pi.single i v) = Pi.single (e i) v := by
   funext x
-  simp [← LinearIsometryEquiv.piLpCongrLeft, ← LinearEquiv.piCongrLeft', ← Equivₓ.piCongrLeft', ← Pi.single, ←
-    Function.update, ← Equivₓ.symm_apply_eq]
+  simp [LinearIsometryEquiv.piLpCongrLeft, LinearEquiv.piCongrLeft', Equivₓ.piCongrLeft', Pi.single, Function.update,
+    Equivₓ.symm_apply_eq]
 
 @[simp]
 theorem equiv_zero : PiLp.equiv p β 0 = 0 :=
@@ -726,8 +725,8 @@ for `p ≠ ∞`. -/
 theorem nnnorm_equiv_symm_const' {β} [SeminormedAddCommGroup β] [Nonempty ι] (b : β) :
     ∥(PiLp.equiv p fun _ : ι => β).symm (Function.const _ b)∥₊ = Fintype.card ι ^ (1 / p).toReal * ∥b∥₊ := by
   rcases em <| p = ∞ with (rfl | hp)
-  · simp only [← equiv_symm_apply', ← Ennreal.div_top, ← Ennreal.zero_to_real, ← Nnreal.rpow_zero, ← one_mulₓ, ←
-      nnnorm_eq_csupr, ← Function.const_applyₓ, ← csupr_const]
+  · simp only [equiv_symm_apply', Ennreal.div_top, Ennreal.zero_to_real, Nnreal.rpow_zero, one_mulₓ, nnnorm_eq_csupr,
+      Function.const_applyₓ, csupr_const]
     
   · exact nnnorm_equiv_symm_const hp b
     

@@ -48,31 +48,29 @@ def div (i : Int) : Term → Term
 
 theorem val_neg {v : Nat → Int} {t : Term} : (neg t).val v = -t.val v := by
   cases' t with b as
-  simp only [← val, ← neg_add, ← neg, ← val, ← coeffs.val_neg]
+  simp only [val, neg_add, neg, val, coeffs.val_neg]
 
 @[simp]
 theorem val_sub {v : Nat → Int} {t1 t2 : Term} : (sub t1 t2).val v = t1.val v - t2.val v := by
   cases t1
   cases t2
-  simp only [← add_assocₓ, ← coeffs.val_sub, ← neg_add_rev, ← val, ← sub, ← add_commₓ, ← add_left_commₓ, ←
-    sub_eq_add_neg]
+  simp only [add_assocₓ, coeffs.val_sub, neg_add_rev, val, sub, add_commₓ, add_left_commₓ, sub_eq_add_neg]
 
 @[simp]
 theorem val_add {v : Nat → Int} {t1 t2 : Term} : (add t1 t2).val v = t1.val v + t2.val v := by
   cases t1
   cases t2
-  simp only [← coeffs.val_add, ← add, ← val, ← add_commₓ, ← add_left_commₓ]
+  simp only [coeffs.val_add, add, val, add_commₓ, add_left_commₓ]
 
 @[simp]
 theorem val_mul {v : Nat → Int} {i : Int} {t : Term} : val v (mul i t) = i * val v t := by
   cases t
-  simp only [← mul, ← mul_addₓ, ← add_mulₓ, ← List.length_mapₓ, ← coeffs.val, ← coeffs.val_between_map_mul, ← val, ←
-    List.map]
+  simp only [mul, mul_addₓ, add_mulₓ, List.length_mapₓ, coeffs.val, coeffs.val_between_map_mul, val, List.map]
 
 theorem val_div {v : Nat → Int} {i b : Int} {as : List Int} :
-    i ∣ b → (∀, ∀ x ∈ as, ∀, i ∣ x) → (div i (b, as)).val v = val v (b, as) / i := by
+    i ∣ b → (∀ x ∈ as, i ∣ x) → (div i (b, as)).val v = val v (b, as) / i := by
   intro h1 h2
-  simp only [← val, ← div, ← List.map]
+  simp only [val, div, List.map]
   rw [Int.add_div_of_dvd_left h1]
   apply fun_mono_2 rfl
   rw [← coeffs.val_map_div h2]

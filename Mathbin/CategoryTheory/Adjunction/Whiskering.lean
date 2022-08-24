@@ -73,12 +73,12 @@ protected def whiskerLeft (adj : F ⊣ G) : (whiskeringLeft E D C).obj G ⊣ (wh
       left_triangle' := by
         ext x
         dsimp'
-        simp only [← category.id_comp, ← category.comp_id, x.map_comp]
+        simp only [category.id_comp, category.comp_id, ← x.map_comp]
         simp ,
       right_triangle' := by
         ext x
         dsimp'
-        simp only [← category.id_comp, ← category.comp_id, x.map_comp]
+        simp only [category.id_comp, category.comp_id, ← x.map_comp]
         simp }
 
 end CategoryTheory.Adjunction

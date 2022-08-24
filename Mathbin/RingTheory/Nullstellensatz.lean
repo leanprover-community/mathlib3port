@@ -37,10 +37,10 @@ variable {σ : Type _}
 
 /-- Set of points that are zeroes of all polynomials in an ideal -/
 def ZeroLocus (I : Ideal (MvPolynomial σ k)) : Set (σ → k) :=
-  { x : σ → k | ∀, ∀ p ∈ I, ∀, eval x p = 0 }
+  { x : σ → k | ∀ p ∈ I, eval x p = 0 }
 
 @[simp]
-theorem mem_zero_locus_iff {I : Ideal (MvPolynomial σ k)} {x : σ → k} : x ∈ ZeroLocus I ↔ ∀, ∀ p ∈ I, ∀, eval x p = 0 :=
+theorem mem_zero_locus_iff {I : Ideal (MvPolynomial σ k)} {x : σ → k} : x ∈ ZeroLocus I ↔ ∀ p ∈ I, eval x p = 0 :=
   Iff.rfl
 
 theorem zero_locus_anti_mono {I J : Ideal (MvPolynomial σ k)} (h : I ≤ J) : ZeroLocus J ≤ ZeroLocus I :=
@@ -54,16 +54,16 @@ theorem zero_locus_top : ZeroLocus (⊤ : Ideal (MvPolynomial σ k)) = ⊥ :=
 
 /-- Ideal of polynomials with common zeroes at all elements of a set -/
 def vanishingIdeal (V : Set (σ → k)) : Ideal (MvPolynomial σ k) where
-  Carrier := { p | ∀, ∀ x ∈ V, ∀, eval x p = 0 }
+  Carrier := { p | ∀ x ∈ V, eval x p = 0 }
   zero_mem' := fun x hx => RingHom.map_zero _
   add_mem' := fun p q hp hq x hx => by
-    simp only [← hq x hx, ← hp x hx, ← add_zeroₓ, ← RingHom.map_add]
+    simp only [hq x hx, hp x hx, add_zeroₓ, RingHom.map_add]
   smul_mem' := fun p q hq x hx => by
-    simp only [← hq x hx, ← Algebra.id.smul_eq_mul, ← mul_zero, ← RingHom.map_mul]
+    simp only [hq x hx, Algebra.id.smul_eq_mul, mul_zero, RingHom.map_mul]
 
 @[simp]
 theorem mem_vanishing_ideal_iff {V : Set (σ → k)} {p : MvPolynomial σ k} :
-    p ∈ vanishingIdeal V ↔ ∀, ∀ x ∈ V, ∀, eval x p = 0 :=
+    p ∈ vanishingIdeal V ↔ ∀ x ∈ V, eval x p = 0 :=
   Iff.rfl
 
 theorem vanishing_ideal_anti_mono {A B : Set (σ → k)} (h : A ≤ B) : vanishingIdeal B ≤ vanishingIdeal A :=
@@ -163,7 +163,7 @@ theorem is_maximal_iff_eq_vanishing_ideal_singleton (I : Ideal (MvPolynomial σ 
   intro p hp
   rw [← quotient.eq_zero_iff_mem, map_mv_polynomial_eq_eval₂ (Ideal.Quotient.mk I) p, eval₂_eq']
   rw [mem_vanishing_ideal_singleton_iff, eval_eq'] at hp
-  simpa only [← ϕ.map_sum, ← ϕ.map_mul, ← ϕ.map_prod, ← ϕ.map_pow, ← ϕ.map_zero, ← hx] using congr_arg ϕ hp
+  simpa only [ϕ.map_sum, ϕ.map_mul, ϕ.map_prod, ϕ.map_pow, ϕ.map_zero, hx] using congr_arg ϕ hp
 
 /-- Main statement of the Nullstellensatz -/
 @[simp]

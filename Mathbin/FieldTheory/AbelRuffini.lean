@@ -55,7 +55,7 @@ theorem gal_X_pow_is_solvable (n : ℕ) : IsSolvable (X ^ n : F[X]).Gal := by
 theorem gal_mul_is_solvable {p q : F[X]} (hp : IsSolvable p.Gal) (hq : IsSolvable q.Gal) : IsSolvable (p * q).Gal :=
   solvable_of_solvable_injective (Gal.restrict_prod_injective p q)
 
-theorem gal_prod_is_solvable {s : Multiset F[X]} (hs : ∀, ∀ p ∈ s, ∀, IsSolvable (Gal p)) : IsSolvable s.Prod.Gal := by
+theorem gal_prod_is_solvable {s : Multiset F[X]} (hs : ∀ p ∈ s, IsSolvable (Gal p)) : IsSolvable s.Prod.Gal := by
   apply Multiset.induction_on' s
   · exact gal_one_is_solvable
     
@@ -356,10 +356,10 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
       
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible)
 /-- An auxiliary induction lemma, which is generalized by `solvable_by_rad.is_solvable`. -/
 theorem induction2 {α β γ : solvableByRad F E} (hγ : γ ∈ F⟮⟯) (hα : P α) (hβ : P β) : P γ := by
   let p := minpoly F α
@@ -389,10 +389,10 @@ theorem induction2 {α β γ : solvableByRad F E} (hγ : γ ∈ F⟮⟯) (hα : 
   rw [P, key]
   exact gal_is_solvable_of_splits ⟨Normal.splits (splitting_field.normal _) _⟩ (gal_mul_is_solvable hα hβ)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible)
 /-- An auxiliary induction lemma, which is generalized by `solvable_by_rad.is_solvable`. -/
 theorem induction1 {α β : solvableByRad F E} (hβ : β ∈ F⟮⟯) (hα : P α) : P β :=
-  induction2 (adjoin.mono F _ _ (ge_of_eq (Set.pair_eq_singleton α)) hβ) hα hα
+  induction2 (adjoin.mono F _ _ (ge_of_eqₓ (Set.pair_eq_singleton α)) hβ) hα hα
 
 theorem is_solvable (α : solvableByRad F E) : IsSolvable (minpoly F α).Gal := by
   revert α

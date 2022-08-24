@@ -108,6 +108,7 @@ instance metrizable_space_pi [∀ i, MetrizableSpace (π i)] : MetrizableSpace (
 
 variable (X) [T3Space X] [SecondCountableTopology X]
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident f, ",", ident hf, "⟩", ":", expr «expr∃ , »((f : X → «expr →ᵇ »(s, exprℝ())), embedding f)]]
 /-- A T₃ topological space with second countable topology can be embedded into `l^∞ = ℕ →ᵇ ℝ`.
 -/
 theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := by
@@ -122,11 +123,12 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
   -- with the discrete topology and deal with `s →ᵇ ℝ` instead.
   letI : TopologicalSpace s := ⊥
   haveI : DiscreteTopology s := ⟨rfl⟩
-  suffices ∃ f : X → s →ᵇ ℝ, Embedding f by
-    rcases this with ⟨f, hf⟩
-    exact
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident f, \",\", ident hf, \"⟩\", \":\", expr «expr∃ , »((f : X → «expr →ᵇ »(s, exprℝ())), embedding f)]]"
+  · exact
       ⟨fun x => (f x).extend (Encodable.encode' s) 0,
         (BoundedContinuousFunction.isometry_extend (Encodable.encode' s) (0 : ℕ →ᵇ ℝ)).Embedding.comp hf⟩
+    
   have hd : ∀ UV : s, Disjoint (Closure UV.1.1) (UV.1.2ᶜ) := fun UV =>
     disjoint_compl_right.mono_right (compl_subset_compl.2 UV.2.2)
   -- Choose a sequence of `εₙ > 0`, `n : s`, that is bounded above by `1` and tends to zero
@@ -143,8 +145,8 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
       ⟨f, hf₀, hf₁, hf01⟩
     exact
       ⟨ε UV • f, fun x hx => by
-        simp [← hf₀ (subset_closure hx)], fun x hx => by
-        simp [← hf₁ hx], fun x => ⟨mul_nonneg (ε01 _).1.le (hf01 _).1, mul_le_of_le_one_right (ε01 _).1.le (hf01 _).2⟩⟩
+        simp [hf₀ (subset_closure hx)], fun x hx => by
+        simp [hf₁ hx], fun x => ⟨mul_nonneg (ε01 _).1.le (hf01 _).1, mul_le_of_le_one_right (ε01 _).1.le (hf01 _).2⟩⟩
   choose f hf0 hfε hf0ε
   have hf01 : ∀ UV x, f UV x ∈ Icc (0 : ℝ) 1 := fun UV x => Icc_subset_Icc_right (ε01 _).2 (hf0ε _ _)
   -- The embedding is given by `F x UV = f UV x`.
@@ -190,7 +192,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
         `F x (U, V)` belong to the interval `[0, ε (U, V)]`. -/
     refine' (nhds_basis_closed_ball.comap _).ge_iff.2 fun δ δ0 => _
     have h_fin : { UV : s | δ ≤ ε UV }.Finite := by
-      simpa only [not_ltₓ] using hε (gt_mem_nhds δ0)
+      simpa only [← not_ltₓ] using hε (gt_mem_nhds δ0)
     have : ∀ᶠ y in 𝓝 x, ∀ UV, δ ≤ ε UV → dist (F y UV) (F x UV) ≤ δ := by
       refine' (eventually_all_finite h_fin).2 fun UV hUV => _
       exact (f UV).Continuous.Tendsto x (closed_ball_mem_nhds _ δ0)

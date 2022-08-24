@@ -161,7 +161,7 @@ instance [Monoidₓ M] [MulAction M X] [HasUniformContinuousConstSmul M X] : Mul
       rw [← coe_smul, one_smul]
   mul_smul := fun x y =>
     (ext' (continuous_const_smul _) ((continuous_const_smul _).const_smul _)) fun a => by
-      simp only [coe_smul, ← mul_smul]
+      simp only [← coe_smul, mul_smul]
 
 end Completion
 

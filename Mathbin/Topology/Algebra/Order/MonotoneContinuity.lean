@@ -39,7 +39,7 @@ The assumption `hfs : ∀ b > f a, ∃ c ∈ s, f c ∈ Ioc (f a) b` is required
 function `f : ℝ → ℝ` given by `f x = if x ≤ 0 then x else x + 1` would be a counter-example at
 `a = 0`. -/
 theorem StrictMonoOn.continuous_at_right_of_exists_between {f : α → β} {s : Set α} {a : α} (h_mono : StrictMonoOn f s)
-    (hs : s ∈ 𝓝[≥] a) (hfs : ∀, ∀ b > f a, ∀, ∃ c ∈ s, f c ∈ Ioc (f a) b) : ContinuousWithinAt f (Ici a) a := by
+    (hs : s ∈ 𝓝[≥] a) (hfs : ∀ b > f a, ∃ c ∈ s, f c ∈ Ioc (f a) b) : ContinuousWithinAt f (Ici a) a := by
   have ha : a ∈ Ici a := left_mem_Ici
   have has : a ∈ s := mem_of_mem_nhds_within ha hs
   refine' tendsto_order.2 ⟨fun b hb => _, fun b hb => _⟩
@@ -59,7 +59,7 @@ The assumption `hfs : ∀ b > f a, ∃ c ∈ s, f c ∈ Ioo (f a) b` cannot be r
 assumption `hfs : ∀ b > f a, ∃ c ∈ s, f c ∈ Ioc (f a) b` we use for strictly monotone functions
 because otherwise the function `ceil : ℝ → ℤ` would be a counter-example at `a = 0`. -/
 theorem continuous_at_right_of_monotone_on_of_exists_between {f : α → β} {s : Set α} {a : α} (h_mono : MonotoneOn f s)
-    (hs : s ∈ 𝓝[≥] a) (hfs : ∀, ∀ b > f a, ∀, ∃ c ∈ s, f c ∈ Ioo (f a) b) : ContinuousWithinAt f (Ici a) a := by
+    (hs : s ∈ 𝓝[≥] a) (hfs : ∀ b > f a, ∃ c ∈ s, f c ∈ Ioo (f a) b) : ContinuousWithinAt f (Ici a) a := by
   have ha : a ∈ Ici a := left_mem_Ici
   have has : a ∈ s := mem_of_mem_nhds_within ha hs
   refine' tendsto_order.2 ⟨fun b hb => _, fun b hb => _⟩
@@ -123,7 +123,7 @@ The assumption `hfs : ∀ b < f a, ∃ c ∈ s, f c ∈ Ico b (f a)` is required
 function `f : ℝ → ℝ` given by `f x = if x < 0 then x else x + 1` would be a counter-example at
 `a = 0`. -/
 theorem StrictMonoOn.continuous_at_left_of_exists_between {f : α → β} {s : Set α} {a : α} (h_mono : StrictMonoOn f s)
-    (hs : s ∈ 𝓝[≤] a) (hfs : ∀, ∀ b < f a, ∀, ∃ c ∈ s, f c ∈ Ico b (f a)) : ContinuousWithinAt f (Iic a) a :=
+    (hs : s ∈ 𝓝[≤] a) (hfs : ∀ b < f a, ∃ c ∈ s, f c ∈ Ico b (f a)) : ContinuousWithinAt f (Iic a) a :=
   (h_mono.dual.continuous_at_right_of_exists_between hs) fun b hb =>
     let ⟨c, hcs, hcb, hca⟩ := hfs b hb
     ⟨c, hcs, hca, hcb⟩
@@ -135,7 +135,7 @@ The assumption `hfs : ∀ b < f a, ∃ c ∈ s, f c ∈ Ioo b (f a)` cannot be r
 assumption `hfs : ∀ b < f a, ∃ c ∈ s, f c ∈ Ico b (f a)` we use for strictly monotone functions
 because otherwise the function `floor : ℝ → ℤ` would be a counter-example at `a = 0`. -/
 theorem continuous_at_left_of_monotone_on_of_exists_between {f : α → β} {s : Set α} {a : α} (hf : MonotoneOn f s)
-    (hs : s ∈ 𝓝[≤] a) (hfs : ∀, ∀ b < f a, ∀, ∃ c ∈ s, f c ∈ Ioo b (f a)) : ContinuousWithinAt f (Iic a) a :=
+    (hs : s ∈ 𝓝[≤] a) (hfs : ∀ b < f a, ∃ c ∈ s, f c ∈ Ioo b (f a)) : ContinuousWithinAt f (Iic a) a :=
   (@continuous_at_right_of_monotone_on_of_exists_between αᵒᵈ βᵒᵈ _ _ _ _ _ _ f s a hf.dual hs) fun b hb =>
     let ⟨c, hcs, hcb, hca⟩ := hfs b hb
     ⟨c, hcs, hca, hcb⟩
@@ -180,8 +180,8 @@ theorem StrictMonoOn.continuous_at_left_of_surj_on {f : α → β} {s : Set α} 
 neighborhood under `f` meets every interval `[b, f a)`, `b < f a`, and every interval
 `(f a, b]`, `b > f a`, then `f` is continuous at `a`. -/
 theorem StrictMonoOn.continuous_at_of_exists_between {f : α → β} {s : Set α} {a : α} (h_mono : StrictMonoOn f s)
-    (hs : s ∈ 𝓝 a) (hfs_l : ∀, ∀ b < f a, ∀, ∃ c ∈ s, f c ∈ Ico b (f a))
-    (hfs_r : ∀, ∀ b > f a, ∀, ∃ c ∈ s, f c ∈ Ioc (f a) b) : ContinuousAt f a :=
+    (hs : s ∈ 𝓝 a) (hfs_l : ∀ b < f a, ∃ c ∈ s, f c ∈ Ico b (f a)) (hfs_r : ∀ b > f a, ∃ c ∈ s, f c ∈ Ioc (f a) b) :
+    ContinuousAt f a :=
   continuous_at_iff_continuous_left_right.2
     ⟨h_mono.continuous_at_left_of_exists_between (mem_nhds_within_of_mem_nhds hs) hfs_l,
       h_mono.continuous_at_right_of_exists_between (mem_nhds_within_of_mem_nhds hs) hfs_r⟩
@@ -207,8 +207,8 @@ theorem StrictMonoOn.continuous_at_of_image_mem_nhds [DenselyOrdered β] {f : α
 `f` meets every interval `(b, f a)`, `b < f a`, and every interval `(f a, b)`, `b > f a`, then `f`
 is continuous at `a`. -/
 theorem continuous_at_of_monotone_on_of_exists_between {f : α → β} {s : Set α} {a : α} (h_mono : MonotoneOn f s)
-    (hs : s ∈ 𝓝 a) (hfs_l : ∀, ∀ b < f a, ∀, ∃ c ∈ s, f c ∈ Ioo b (f a))
-    (hfs_r : ∀, ∀ b > f a, ∀, ∃ c ∈ s, f c ∈ Ioo (f a) b) : ContinuousAt f a :=
+    (hs : s ∈ 𝓝 a) (hfs_l : ∀ b < f a, ∃ c ∈ s, f c ∈ Ioo b (f a)) (hfs_r : ∀ b > f a, ∃ c ∈ s, f c ∈ Ioo (f a) b) :
+    ContinuousAt f a :=
   continuous_at_iff_continuous_left_right.2
     ⟨continuous_at_left_of_monotone_on_of_exists_between h_mono (mem_nhds_within_of_mem_nhds hs) hfs_l,
       continuous_at_right_of_monotone_on_of_exists_between h_mono (mem_nhds_within_of_mem_nhds hs) hfs_r⟩
@@ -235,7 +235,7 @@ theorem Monotone.continuous_of_dense_range [DenselyOrdered β] {f : α → β} (
     (h_dense : DenseRange f) : Continuous f :=
   continuous_iff_continuous_at.mpr fun a =>
     continuous_at_of_monotone_on_of_closure_image_mem_nhds (fun x hx y hy hxy => h_mono hxy) univ_mem <| by
-      simp only [← image_univ, ← h_dense.closure_eq, ← univ_mem]
+      simp only [image_univ, h_dense.closure_eq, univ_mem]
 
 /-- A monotone surjective function with a densely ordered codomain is continuous. -/
 theorem Monotone.continuous_of_surjective [DenselyOrdered β] {f : α → β} (h_mono : Monotone f)

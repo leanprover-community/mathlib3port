@@ -151,7 +151,7 @@ theorem Age.countable_quotient (h : (Univ : Set M).Countable) : (Quotientₓ.mk 
     Eq.mp (congr rfl (Set.ext _)) ((countable_set_of_finite_subset h).Image fun s => ⟦⟨closure L s, inferInstance⟩⟧)
   rw [forall_quotient_iff]
   intro N
-  simp only [← subset_univ, ← and_trueₓ, ← mem_image, ← mem_set_of_eq, ← Quotientₓ.eq]
+  simp only [subset_univ, and_trueₓ, mem_image, mem_set_of_eq, Quotientₓ.eq]
   constructor
   · rintro ⟨s, hs1, hs2⟩
     use bundled.of ↥(closure L s)
@@ -170,7 +170,7 @@ theorem age_direct_limit {ι : Type w} [Preorderₓ ι] [IsDirected ι (· ≤ �
     L.Age (DirectLimit G f) = ⋃ i : ι, L.Age (G i) := by
   classical
   ext M
-  simp only [← mem_Union]
+  simp only [mem_Union]
   constructor
   · rintro ⟨Mfg, ⟨e⟩⟩
     obtain ⟨s, hs⟩ := Mfg.range e.to_hom
@@ -195,7 +195,7 @@ theorem exists_cg_is_age_of (hn : K.Nonempty)
     (fg : ∀ M : Bundled.{w} L.Structure, M ∈ K → Structure.Fg L M) (hp : Hereditary K) (jep : JointEmbedding K) :
     ∃ M : Bundled.{w} L.Structure, Structure.Cg L M ∧ L.Age M = K := by
   obtain ⟨F, hF⟩ := hc.exists_eq_range (hn.image _)
-  simp only [← Set.ext_iff, ← forall_quotient_iff, ← mem_image, ← mem_range, ← Quotientₓ.eq] at hF
+  simp only [Set.ext_iff, forall_quotient_iff, mem_image, mem_range, Quotientₓ.eq] at hF
   simp_rw [Quotientₓ.eq_mk_iff_out] at hF
   have hF' : ∀ n : ℕ, (F n).out ∈ K := by
     intro n
@@ -264,10 +264,10 @@ theorem IsUltrahomogeneous.amalgamation_age (h : L.IsUltrahomogeneous M) : Amalg
       ⟨(fg_iff_Structure_fg _).1 (fg.sup (Pfg.range _) (Qfg.range _)), ⟨substructure.subtype _⟩⟩, _⟩
   ext n
   have hgn := (embedding.ext_iff.1 hg) ((PM.comp NP).equivRange n)
-  simp only [← embedding.comp_apply, ← equiv.coe_to_embedding, ← Equivₓ.symm_apply_apply, ← substructure.coe_subtype, ←
+  simp only [embedding.comp_apply, equiv.coe_to_embedding, Equivₓ.symm_apply_apply, substructure.coe_subtype,
     embedding.equiv_range_apply] at hgn
-  simp only [← embedding.comp_apply, ← equiv.coe_to_embedding, ← substructure.coe_inclusion, ← Set.coe_inclusion, ←
-    embedding.equiv_range_apply, ← hgn]
+  simp only [embedding.comp_apply, equiv.coe_to_embedding, substructure.coe_inclusion, Set.coe_inclusion,
+    embedding.equiv_range_apply, hgn]
 
 theorem IsUltrahomogeneous.age_is_fraisse (hc : (Univ : Set M).Countable) (h : L.IsUltrahomogeneous M) :
     IsFraisse (L.Age M) :=

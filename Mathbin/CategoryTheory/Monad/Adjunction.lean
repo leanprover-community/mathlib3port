@@ -235,9 +235,9 @@ instance [Reflective R] (X : (Adjunction.ofRightAdjoint R).toMonad.Algebra) :
     IsIso ((Adjunction.ofRightAdjoint R).Unit.app X.a) :=
   ⟨⟨X.a,
       ⟨X.Unit, by
-        dsimp' only [← functor.id_obj]
+        dsimp' only [functor.id_obj]
         rw [← (adjunction.of_right_adjoint R).unit_naturality]
-        dsimp' only [← functor.comp_obj, ← adjunction.to_monad_coe]
+        dsimp' only [functor.comp_obj, adjunction.to_monad_coe]
         rw [unit_obj_eq_map_unit, ← functor.map_comp, ← functor.map_comp]
         erw [X.unit]
         simp ⟩⟩⟩
@@ -248,8 +248,8 @@ instance comparison_ess_surj [Reflective R] : EssSurj (Monad.comparison (Adjunct
   refine' monad.algebra.iso_mk _ _
   · exact as_iso ((adjunction.of_right_adjoint R).Unit.app X.A)
     
-  dsimp' only [← functor.comp_map, ← monad.comparison_obj_a, ← as_iso_hom, ← functor.comp_obj, ← monad.comparison_obj_A,
-    ← monad_to_functor_eq_coe, ← adjunction.to_monad_coe]
+  dsimp' only [functor.comp_map, monad.comparison_obj_a, as_iso_hom, functor.comp_obj, monad.comparison_obj_A,
+    monad_to_functor_eq_coe, adjunction.to_monad_coe]
   rw [← cancel_epi ((adjunction.of_right_adjoint R).Unit.app X.A), adjunction.unit_naturality_assoc,
     adjunction.right_triangle_components, comp_id]
   apply (X.unit_assoc _).symm

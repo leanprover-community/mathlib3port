@@ -56,7 +56,7 @@ def pureTransformation : ApplicativeTransformation id F where
   app := @pure F _
   preserves_pure' := fun α x => rfl
   preserves_seq' := fun α β f x => by
-    simp only [← map_pure, ← seq_pure]
+    simp only [map_pure, seq_pure]
     rfl
 
 @[simp]
@@ -85,13 +85,13 @@ theorem pure_traverse (x : t α) : traverse pure x = (pure x : F (t α)) := by
     rwa [id_traverse] at this
 
 theorem id_sequence (x : t α) : sequence (id.mk <$> x) = id.mk x := by
-  simp [← sequence, ← traverse_map, ← id_traverse] <;> rfl
+  simp [sequence, traverse_map, id_traverse] <;> rfl
 
 theorem comp_sequence (x : t (F (G α))) : sequence (comp.mk <$> x) = Comp.mk (sequence <$> sequence x) := by
-  simp [← sequence, ← traverse_map] <;> rw [← comp_traverse] <;> simp [← map_id]
+  simp [sequence, traverse_map] <;> rw [← comp_traverse] <;> simp [map_id]
 
 theorem naturality' (η : ApplicativeTransformation F G) (x : t (F α)) : η (sequence x) = sequence (@η _ <$> x) := by
-  simp [← sequence, ← naturality, ← traverse_map]
+  simp [sequence, naturality, traverse_map]
 
 @[functor_norm]
 theorem traverse_id : traverse id.mk = (id.mk : t α → id (t α)) := by

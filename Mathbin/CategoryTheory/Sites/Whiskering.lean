@@ -101,7 +101,7 @@ def mapMultifork :
         
       · dsimp'
         simp
-        dsimp' [← multifork.of_ι]
+        dsimp' [multifork.of_ι]
         simpa
         )
 

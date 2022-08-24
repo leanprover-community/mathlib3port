@@ -85,7 +85,7 @@ structure Submonoid (M : Type _) [MulOneClassₓ M] extends Subsemigroup M where
 end
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident submonoid.to_subsemigroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident submonoid.to_subsemigroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `submonoid_class S M` says `S` is a type of subsets `s ≤ M` that contain `1`
 and are closed under `(*)` -/
 class SubmonoidClass (S : Type _) (M : outParam <| Type _) [MulOneClassₓ M] [SetLike S M] extends MulMemClass S M where
@@ -102,7 +102,7 @@ structure AddSubmonoid (M : Type _) [AddZeroClassₓ M] extends AddSubsemigroup 
 end
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_submonoid.to_add_subsemigroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_submonoid.to_add_subsemigroup]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- `add_submonoid_class S M` says `S` is a type of subsets `s ≤ M` that contain `0`
 and are closed under `(+)` -/
 class AddSubmonoidClass (S : Type _) (M : outParam <| Type _) [AddZeroClassₓ M] [SetLike S M] extends
@@ -209,7 +209,7 @@ instance : HasTop (Submonoid M) :=
 instance : HasBot (Submonoid M) :=
   ⟨{ Carrier := {1}, one_mem' := Set.mem_singleton 1,
       mul_mem' := fun a b ha hb => by
-        simp only [← Set.mem_singleton_iff] at *
+        simp only [Set.mem_singleton_iff] at *
         rw [ha, hb, mul_oneₓ] }⟩
 
 @[to_additive]
@@ -264,16 +264,16 @@ theorem coe_Inf (S : Set (Submonoid M)) : ((inf S : Submonoid M) : Set M) = ⋂ 
   rfl
 
 @[to_additive]
-theorem mem_Inf {S : Set (Submonoid M)} {x : M} : x ∈ inf S ↔ ∀, ∀ p ∈ S, ∀, x ∈ p :=
+theorem mem_Inf {S : Set (Submonoid M)} {x : M} : x ∈ inf S ↔ ∀ p ∈ S, x ∈ p :=
   Set.mem_Inter₂
 
 @[to_additive]
 theorem mem_infi {ι : Sort _} {S : ι → Submonoid M} {x : M} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
-  simp only [← infi, ← mem_Inf, ← Set.forall_range_iff]
+  simp only [infi, mem_Inf, Set.forall_range_iff]
 
 @[simp, norm_cast, to_additive]
 theorem coe_infi {ι : Sort _} {S : ι → Submonoid M} : (↑(⨅ i, S i) : Set M) = ⋂ i, S i := by
-  simp only [← infi, ← coe_Inf, ← Set.bInter_range]
+  simp only [infi, coe_Inf, Set.bInter_range]
 
 /-- Submonoids of a monoid form a complete lattice. -/
 @[to_additive "The `add_submonoid`s of an `add_monoid` form a complete lattice."]
@@ -295,7 +295,7 @@ theorem subsingleton_iff : Subsingleton (Submonoid M) ↔ Subsingleton M :=
     ⟨fun x y =>
       Submonoid.ext fun i =>
         Subsingleton.elimₓ 1 i ▸ by
-          simp [← Submonoid.one_mem]⟩⟩
+          simp [Submonoid.one_mem]⟩⟩
 
 @[simp, to_additive]
 theorem nontrivial_iff : Nontrivial (Submonoid M) ↔ Nontrivial M :=
@@ -352,7 +352,7 @@ is preserved under multiplication, then `p` holds for all elements of the closur
 @[elabAsElim,
   to_additive
       "An induction principle for additive closure membership. If `p`\nholds for `0` and all elements of `s`, and is preserved under addition, then `p` holds for all\nelements of the additive closure of `s`."]
-theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀, ∀ x ∈ s, ∀, p x) (H1 : p 1)
+theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀ x ∈ s, p x) (H1 : p 1)
     (Hmul : ∀ x y, p x → p y → p (x * y)) : p x :=
   (@closure_le _ _ _ ⟨p, Hmul, H1⟩).2 Hs h
 
@@ -367,7 +367,7 @@ theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure s → Prop} (Hs
 /-- An induction principle for closure membership for predicates with two arguments.  -/
 @[elabAsElim, to_additive "An induction principle for additive closure membership for\npredicates with two arguments."]
 theorem closure_induction₂ {p : M → M → Prop} {x} {y : M} (hx : x ∈ closure s) (hy : y ∈ closure s)
-    (Hs : ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, p x y) (H1_left : ∀ x, p 1 x) (H1_right : ∀ x, p x 1)
+    (Hs : ∀ x ∈ s, ∀ y ∈ s, p x y) (H1_left : ∀ x, p 1 x) (H1_right : ∀ x, p x 1)
     (Hmul_left : ∀ x y z, p x z → p y z → p (x * y) z) (Hmul_right : ∀ x y z, p z x → p z y → p z (x * y)) : p x y :=
   closure_induction hx (fun x xs => closure_induction hy (Hs x xs) (H1_right x) fun z y h₁ h₂ => Hmul_right z _ _ h₁ h₂)
     (H1_left y) fun x z h₁ h₂ => Hmul_left _ _ _ h₁ h₂
@@ -378,10 +378,10 @@ and verify that `p x` and `p y` imply `p (x * y)`. -/
 @[elabAsElim,
   to_additive
       "If `s` is a dense set in an additive monoid `M`,\n`add_submonoid.closure s = ⊤`, then in order to prove that some predicate `p` holds for all `x : M`\nit suffices to verify `p x` for `x ∈ s`, verify `p 0`, and verify that `p x` and `p y` imply\n`p (x + y)`."]
-theorem dense_induction {p : M → Prop} (x : M) {s : Set M} (hs : closure s = ⊤) (Hs : ∀, ∀ x ∈ s, ∀, p x) (H1 : p 1)
+theorem dense_induction {p : M → Prop} (x : M) {s : Set M} (hs : closure s = ⊤) (Hs : ∀ x ∈ s, p x) (H1 : p 1)
     (Hmul : ∀ x y, p x → p y → p (x * y)) : p x := by
-  have : ∀, ∀ x ∈ closure s, ∀, p x := fun x hx => closure_induction hx Hs H1 Hmul
-  simpa [← hs] using this x
+  have : ∀ x ∈ closure s, p x := fun x hx => closure_induction hx Hs H1 Hmul
+  simpa [hs] using this x
 
 variable (M)
 
@@ -423,7 +423,7 @@ theorem closure_singleton_le_iff_mem (m : M) (p : Submonoid M) : closure {m} ≤
 @[to_additive]
 theorem mem_supr {ι : Sort _} (p : ι → Submonoid M) {m : M} : (m ∈ ⨆ i, p i) ↔ ∀ N, (∀ i, p i ≤ N) → m ∈ N := by
   rw [← closure_singleton_le_iff_mem, le_supr_iff]
-  simp only [← closure_singleton_le_iff_mem]
+  simp only [closure_singleton_le_iff_mem]
 
 @[to_additive]
 theorem supr_eq_closure {ι : Sort _} (p : ι → Submonoid M) : (⨆ i, p i) = Submonoid.closure (⋃ i, (p i : Set M)) := by
@@ -483,7 +483,7 @@ section IsUnit
 def IsUnit.submonoid (M : Type _) [Monoidₓ M] : Submonoid M where
   Carrier := SetOf IsUnit
   one_mem' := by
-    simp only [← is_unit_one, ← Set.mem_set_of_eq]
+    simp only [is_unit_one, Set.mem_set_of_eq]
   mul_mem' := by
     intro a b ha hb
     rw [Set.mem_set_of_eq] at *
@@ -505,19 +505,19 @@ Then `monoid_hom.of_mdense` defines a monoid homomorphism from `M` asking for a 
 of `f (x * y) = f x * f y` only for `y ∈ s`. -/
 @[to_additive]
 def ofMdense {M N} [Monoidₓ M] [Monoidₓ N] {s : Set M} (f : M → N) (hs : closure s = ⊤) (h1 : f 1 = 1)
-    (hmul : ∀ (x), ∀ y ∈ s, ∀, f (x * y) = f x * f y) : M →* N where
+    (hmul : ∀ (x), ∀ y ∈ s, f (x * y) = f x * f y) : M →* N where
   toFun := f
   map_one' := h1
   map_mul' := fun x y =>
     dense_induction y hs (fun y hy x => hmul x y hy)
       (by
-        simp [← h1])
+        simp [h1])
       (fun y₁ y₂ h₁ h₂ x => by
-        simp only [mul_assoc, ← h₁, ← h₂])
+        simp only [← mul_assoc, h₁, h₂])
       x
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_monoid_hom.of_mdense]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_monoid_hom.of_mdense]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, norm_cast, to_additive]
 theorem coe_of_mdense (f : M → N) (hs : closure s = ⊤) (h1 hmul) : ⇑(ofMdense f hs h1 hmul) = f :=
   rfl

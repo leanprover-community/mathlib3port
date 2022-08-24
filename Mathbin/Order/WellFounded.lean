@@ -36,7 +36,7 @@ instance {α : Sort _} [HasWellFounded α] : IsIrrefl α HasWellFounded.R :=
 
 /-- If `r` is a well-founded relation, then any nonempty set has a minimal element
 with respect to `r`. -/
-theorem has_min {α} {r : α → α → Prop} (H : WellFounded r) (s : Set α) : s.Nonempty → ∃ a ∈ s, ∀, ∀ x ∈ s, ∀, ¬r x a
+theorem has_min {α} {r : α → α → Prop} (H : WellFounded r) (s : Set α) : s.Nonempty → ∃ a ∈ s, ∀ x ∈ s, ¬r x a
   | ⟨a, ha⟩ =>
     ((Acc.recOnₓ (H.apply a)) fun x _ IH =>
         not_imp_not.1 fun hne hx => hne <| ⟨x, hx, fun y hy hyx => hne <| IH y hyx hy⟩)
@@ -60,7 +60,7 @@ theorem not_lt_min {r : α → α → Prop} (H : WellFounded r) (s : Set α) (h 
   h' _ hx
 
 theorem well_founded_iff_has_min {r : α → α → Prop} :
-    WellFounded r ↔ ∀ s : Set α, s.Nonempty → ∃ m ∈ s, ∀, ∀ x ∈ s, ∀, ¬r x m := by
+    WellFounded r ↔ ∀ s : Set α, s.Nonempty → ∃ m ∈ s, ∀ x ∈ s, ¬r x m := by
   refine' ⟨fun h => h.has_min, fun h => ⟨fun x => _⟩⟩
   by_contra hx
   obtain ⟨m, hm, hm'⟩ := h _ ⟨x, hx⟩
@@ -81,22 +81,22 @@ theorem eq_iff_not_lt_of_le {α} [PartialOrderₓ α] {x y : α} : x ≤ y → y
     
 
 theorem well_founded_iff_has_max' [PartialOrderₓ α] :
-    WellFounded ((· > ·) : α → α → Prop) ↔ ∀ p : Set α, p.Nonempty → ∃ m ∈ p, ∀, ∀ x ∈ p, ∀, m ≤ x → x = m := by
-  simp only [← eq_iff_not_lt_of_le, ← well_founded_iff_has_min]
+    WellFounded ((· > ·) : α → α → Prop) ↔ ∀ p : Set α, p.Nonempty → ∃ m ∈ p, ∀ x ∈ p, m ≤ x → x = m := by
+  simp only [eq_iff_not_lt_of_le, well_founded_iff_has_min]
 
 theorem well_founded_iff_has_min' [PartialOrderₓ α] :
-    WellFounded (LT.lt : α → α → Prop) ↔ ∀ p : Set α, p.Nonempty → ∃ m ∈ p, ∀, ∀ x ∈ p, ∀, x ≤ m → x = m :=
+    WellFounded (LT.lt : α → α → Prop) ↔ ∀ p : Set α, p.Nonempty → ∃ m ∈ p, ∀ x ∈ p, x ≤ m → x = m :=
   @well_founded_iff_has_max' αᵒᵈ _
 
 open Set
 
 /-- The supremum of a bounded, well-founded order -/
 protected noncomputable def sup {r : α → α → Prop} (wf : WellFounded r) (s : Set α) (h : Bounded r s) : α :=
-  wf.min { x | ∀, ∀ a ∈ s, ∀, r a x } h
+  wf.min { x | ∀ a ∈ s, r a x } h
 
 protected theorem lt_sup {r : α → α → Prop} (wf : WellFounded r) {s : Set α} (h : Bounded r s) {x} (hx : x ∈ s) :
     r x (wf.sup s h) :=
-  min_mem wf { x | ∀, ∀ a ∈ s, ∀, r a x } h x hx
+  min_mem wf { x | ∀ a ∈ s, r a x } h x hx
 
 section
 
@@ -141,7 +141,7 @@ theorem min_le {x : β} {s : Set β} (hx : x ∈ s) (hne : s.Nonempty := ⟨x, h
   not_ltₓ.1 <| h.not_lt_min _ _ hx
 
 private theorem eq_strict_mono_iff_eq_range_aux {f g : β → γ} (hf : StrictMono f) (hg : StrictMono g)
-    (hfg : Set.Range f = Set.Range g) {b : β} (H : ∀, ∀ a < b, ∀, f a = g a) : f b ≤ g b := by
+    (hfg : Set.Range f = Set.Range g) {b : β} (H : ∀ a < b, f a = g a) : f b ≤ g b := by
   obtain ⟨c, hc⟩ : g b ∈ Set.Range f := by
     rw [hfg]
     exact Set.mem_range_self b

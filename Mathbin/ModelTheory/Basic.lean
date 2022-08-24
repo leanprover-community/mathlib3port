@@ -91,12 +91,12 @@ instance {n : ℕ} : IsEmpty (Sequence₂ a₀ a₁ a₂ (n + 3)) :=
 theorem lift_mk {i : ℕ} : Cardinal.lift (# (Sequence₂ a₀ a₁ a₂ i)) = # (Sequence₂ (ULift a₀) (ULift a₁) (ULift a₂) i) :=
   by
   rcases i with (_ | _ | _ | i) <;>
-    simp only [← sequence₂, ← mk_ulift, ← mk_fintype, ← Fintype.card_of_is_empty, ← Nat.cast_zeroₓ, ← lift_zero]
+    simp only [sequence₂, mk_ulift, mk_fintype, Fintype.card_of_is_empty, Nat.cast_zeroₓ, lift_zero]
 
 @[simp]
 theorem sum_card : (Cardinal.sum fun i => # (Sequence₂ a₀ a₁ a₂ i)) = # a₀ + # a₁ + # a₂ := by
   rw [sum_nat_eq_add_sum_succ, sum_nat_eq_add_sum_succ, sum_nat_eq_add_sum_succ]
-  simp [← add_assocₓ]
+  simp [add_assocₓ]
 
 end Sequence₂
 
@@ -168,7 +168,7 @@ theorem card_eq_card_functions_add_card_relations :
       (Cardinal.sum fun l => Cardinal.lift.{v} (# (L.Functions l))) +
         Cardinal.sum fun l => Cardinal.lift.{u} (# (L.Relations l)) :=
   by
-  simp [← card, ← symbols]
+  simp [card, symbols]
 
 instance [L.IsRelational] {n : ℕ} : IsEmpty (L.Functions n) :=
   IsRelational.empty_functions n
@@ -216,7 +216,7 @@ theorem Encodable.countable [h : Encodable L.Symbols] : L.Countable :=
 
 @[simp]
 theorem empty_card : Language.empty.card = 0 := by
-  simp [← card_eq_card_functions_add_card_relations]
+  simp [card_eq_card_functions_add_card_relations]
 
 instance countable_empty : Language.empty.Countable :=
   ⟨by
@@ -237,17 +237,17 @@ instance (priority := 100) IsRelational.countable_functions [L.IsRelational] : L
 @[simp]
 theorem card_functions_sum (i : ℕ) :
     # ((L.Sum L').Functions i) = (# (L.Functions i)).lift + Cardinal.lift.{u} (# (L'.Functions i)) := by
-  simp [← language.sum]
+  simp [language.sum]
 
 @[simp]
 theorem card_relations_sum (i : ℕ) :
     # ((L.Sum L').Relations i) = (# (L.Relations i)).lift + Cardinal.lift.{v} (# (L'.Relations i)) := by
-  simp [← language.sum]
+  simp [language.sum]
 
 @[simp]
 theorem card_sum : (L.Sum L').card = Cardinal.lift.{max u' v'} L.card + Cardinal.lift.{max u v} L'.card := by
-  simp only [← card_eq_card_functions_add_card_relations, ← card_functions_sum, ← card_relations_sum, ←
-    sum_add_distrib', ← lift_add, ← lift_sum, ← lift_lift]
+  simp only [card_eq_card_functions_add_card_relations, card_functions_sum, card_relations_sum, sum_add_distrib',
+    lift_add, lift_sum, lift_lift]
   rw [add_assocₓ, ← add_assocₓ (Cardinal.sum fun i => (# (L'.functions i)).lift),
     add_commₓ (Cardinal.sum fun i => (# (L'.functions i)).lift), add_assocₓ, add_assocₓ]
 
@@ -257,7 +257,7 @@ theorem card_mk₂ (c f₁ f₂ : Type u) (r₁ r₂ : Type v) :
       Cardinal.lift.{v} (# c) + Cardinal.lift.{v} (# f₁) + Cardinal.lift.{v} (# f₂) + Cardinal.lift.{u} (# r₁) +
         Cardinal.lift.{u} (# r₂) :=
   by
-  simp [← card_eq_card_functions_add_card_relations, ← add_assocₓ]
+  simp [card_eq_card_functions_add_card_relations, add_assocₓ]
 
 variable (L) (M : Type w)
 
@@ -483,7 +483,7 @@ theorem id_apply (x : M) : id L M x = x :=
 def comp (hnp : N →[L] P) (hmn : M →[L] N) : M →[L] P where
   toFun := hnp ∘ hmn
   map_rel' := fun _ _ _ h => by
-    simp [← h]
+    simp [h]
 
 @[simp]
 theorem comp_apply (g : N →[L] P) (f : M →[L] N) (x : M) : g.comp f x = g (f x) :=
@@ -603,7 +603,7 @@ theorem comp_assoc (f : M ↪[L] N) (g : N ↪[L] P) (h : P ↪[L] Q) : (h.comp 
 @[simp]
 theorem comp_to_hom (hnp : N ↪[L] P) (hmn : M ↪[L] N) : (hnp.comp hmn).toHom = hnp.toHom.comp hmn.toHom := by
   ext
-  simp only [← coe_to_hom, ← comp_apply, ← hom.comp_apply]
+  simp only [coe_to_hom, comp_apply, hom.comp_apply]
 
 end Embedding
 
@@ -635,12 +635,12 @@ instance : StrongHomClass L (M ≃[L] N) M N where
 def symm (f : M ≃[L] N) : N ≃[L] M :=
   { f.toEquiv.symm with
     map_fun' := fun n f' x => by
-      simp only [← Equivₓ.to_fun_as_coe]
+      simp only [Equivₓ.to_fun_as_coe]
       rw [Equivₓ.symm_apply_eq]
       refine' Eq.trans _ (f.map_fun' f' (f.to_equiv.symm ∘ x)).symm
       rw [← Function.comp.assoc, Equivₓ.to_fun_as_coe, Equivₓ.self_comp_symm, Function.comp.left_id],
     map_rel' := fun n r x => by
-      simp only [← Equivₓ.to_fun_as_coe]
+      simp only [Equivₓ.to_fun_as_coe]
       refine' (f.map_rel' r (f.to_equiv.symm ∘ x)).symm.trans _
       rw [← Function.comp.assoc, Equivₓ.to_fun_as_coe, Equivₓ.self_comp_symm, Function.comp.left_id] }
 
@@ -838,9 +838,9 @@ def inducedStructure (e : M ≃ N) : L.Structure N :=
 def inducedStructureEquiv (e : M ≃ N) : @Language.Equiv L M N _ (inducedStructure e) :=
   { e with
     map_fun' := fun n f x => by
-      simp [Function.comp.assoc e.symm e x],
+      simp [← Function.comp.assoc e.symm e x],
     map_rel' := fun n r x => by
-      simp [Function.comp.assoc e.symm e x] }
+      simp [← Function.comp.assoc e.symm e x] }
 
 end Equivₓ
 

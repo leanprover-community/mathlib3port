@@ -26,8 +26,8 @@ theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) : ∃ p : �
     rcases k with (_ | _ | k)
     · simpa using hpos
       
-    · simp only [← one_mulₓ, ← Int.coe_nat_mul, ← Int.coe_nat_succ, ← Int.coe_nat_zero, ← zero_addₓ, ← cyclotomic_one, ←
-        eval_sub, ← eval_X, ← eval_one]
+    · simp only [one_mulₓ, Int.coe_nat_mul, Int.coe_nat_succ, Int.coe_nat_zero, zero_addₓ, cyclotomic_one, eval_sub,
+        eval_X, eval_one]
       convert Int.nat_abs_lt_nat_abs_of_nonneg_of_lt Int.one_nonneg _
       rw [lt_sub_iff_add_lt]
       specialize hkey 0

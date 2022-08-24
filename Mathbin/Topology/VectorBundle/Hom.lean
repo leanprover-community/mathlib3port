@@ -126,8 +126,8 @@ theorem continuous_on_continuous_linear_map_coord_change (he₁ : e₁ ∈ Trivi
     
   · intro b hb
     ext L v
-    simp only [← continuous_linear_map_coord_change, ← ContinuousLinearEquiv.coe_coe, ←
-      ContinuousLinearEquiv.arrow_congrSL_apply, ← comp_apply, ← Function.comp, ← compSL_apply, ← flip_apply, ←
+    simp only [continuous_linear_map_coord_change, ContinuousLinearEquiv.coe_coe,
+      ContinuousLinearEquiv.arrow_congrSL_apply, comp_apply, Function.comp, compSL_apply, flip_apply,
       ContinuousLinearEquiv.symm_symm]
     
 
@@ -150,11 +150,11 @@ def continuousLinearMap : Pretrivialization 𝕜₂ (F₁ →SL[σ] F₂) (Bundl
   left_inv' := fun ⟨x, L⟩ ⟨h₁, h₂⟩ => by
     simp_rw [Sigma.mk.inj_iff, eq_self_iff_true, heq_iff_eq, true_andₓ]
     ext v
-    simp only [← comp_apply, ← trivialization.symmL_continuous_linear_map_at, ← h₁, ← h₂]
+    simp only [comp_apply, trivialization.symmL_continuous_linear_map_at, h₁, h₂]
   right_inv' := fun ⟨x, f⟩ ⟨⟨h₁, h₂⟩, _⟩ => by
     simp_rw [Prod.mk.inj_iff, eq_self_iff_true, true_andₓ]
     ext v
-    simp only [← comp_apply, ← trivialization.continuous_linear_map_at_symmL, ← h₁, ← h₂]
+    simp only [comp_apply, trivialization.continuous_linear_map_at_symmL, h₁, h₂]
   open_target := (e₁.open_base_set.inter e₂.open_base_set).Prod is_open_univ
   BaseSet := e₁.BaseSet ∩ e₂.BaseSet
   open_base_set := e₁.open_base_set.inter e₂.open_base_set
@@ -192,7 +192,7 @@ theorem continuous_linear_map_coord_change_apply (b : B)
     continuous_linear_map_apply, continuous_linear_map_symm_apply' σ e₁ e₂ hb.1, comp_apply,
     ContinuousLinearEquiv.coe_coe, ContinuousLinearEquiv.symm_symm, trivialization.continuous_linear_map_at_apply,
     trivialization.symmL_apply]
-  dsimp' only [← total_space_mk]
+  dsimp' only [total_space_mk]
   rw [e₂.coord_change_apply e₂', e₁'.coord_change_apply e₁, e₁.coe_linear_map_at_of_mem hb.1.1,
     e₂'.coe_linear_map_at_of_mem hb.2.2]
   exacts[⟨hb.2.1, hb.1.1⟩, ⟨hb.1.2, hb.2.2⟩]

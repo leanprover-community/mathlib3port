@@ -295,7 +295,7 @@ instance (priority := 100) comp_has_colimit [HasColimit G] : HasColimit (F ⋙ G
 
 theorem colimit_pre_is_iso_aux {t : Cocone G} (P : IsColimit t) :
     ((isColimitWhiskerEquiv F _).symm P).desc (t.whisker F) = 𝟙 t.x := by
-  dsimp' [← is_colimit_whisker_equiv]
+  dsimp' [is_colimit_whisker_equiv]
   apply P.hom_ext
   intro j
   dsimp'
@@ -551,7 +551,7 @@ instance (priority := 100) comp_has_limit [HasLimit G] : HasLimit (F ⋙ G) :=
 
 theorem limit_pre_is_iso_aux {t : Cone G} (P : IsLimit t) :
     ((isLimitWhiskerEquiv F _).symm P).lift (t.whisker F) = 𝟙 t.x := by
-  dsimp' [← is_limit_whisker_equiv]
+  dsimp' [is_limit_whisker_equiv]
   apply P.hom_ext
   intro j
   simp

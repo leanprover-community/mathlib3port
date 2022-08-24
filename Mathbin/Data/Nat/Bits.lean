@@ -23,7 +23,7 @@ namespace Nat
 
 theorem bit_eq_zero_iff {n : ℕ} {b : Bool} : bit b n = 0 ↔ n = 0 ∧ b = ff := by
   constructor
-  · cases b <;> simp [← Nat.bit]
+  · cases b <;> simp [Nat.bit]
     
   rintro ⟨rfl, rfl⟩
   rfl
@@ -37,7 +37,7 @@ theorem binary_rec_eq' {C : ℕ → Sort _} {z : C 0} {f : ∀ b n, C n → C (b
   split_ifs with h'
   · rcases bit_eq_zero_iff.mp h' with ⟨rfl, rfl⟩
     rw [binary_rec_zero]
-    simp only [← imp_false, ← or_falseₓ, ← eq_self_iff_true, ← not_true] at h
+    simp only [imp_false, or_falseₓ, eq_self_iff_true, not_true] at h
     exact h.symm
     
   · generalize_proofs e
@@ -69,7 +69,7 @@ def binaryRecFromOne {C : ℕ → Sort _} (z₀ : C 0) (z₁ : C 1) (f : ∀ b n
 
 @[simp]
 theorem zero_bits : bits 0 = [] := by
-  simp [← Nat.bits]
+  simp [Nat.bits]
 
 @[simp]
 theorem bits_append_bit (n : ℕ) (b : Bool) (hn : n = 0 → b = tt) : (bit b n).bits = b :: n.bits := by
@@ -96,22 +96,22 @@ theorem bodd_eq_bits_head (n : ℕ) : n.bodd = n.bits.head := by
   induction' n using Nat.binaryRec' with b n h ih
   · simp
     
-  simp [← bodd_bit, ← bits_append_bit _ _ h]
+  simp [bodd_bit, bits_append_bit _ _ h]
 
 theorem div2_bits_eq_tail (n : ℕ) : n.div2.bits = n.bits.tail := by
   induction' n using Nat.binaryRec' with b n h ih
   · simp
     
-  simp [← div2_bit, ← bits_append_bit _ _ h]
+  simp [div2_bit, bits_append_bit _ _ h]
 
 theorem size_eq_bits_len (n : ℕ) : n.bits.length = n.size := by
   induction' n using Nat.binaryRec' with b n h ih
   · simp
     
   rw [size_bit, bits_append_bit _ _ h]
-  · simp [← ih]
+  · simp [ih]
     
-  · simpa [← bit_eq_zero_iff]
+  · simpa [bit_eq_zero_iff]
     
 
 end Nat

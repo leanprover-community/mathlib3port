@@ -45,12 +45,12 @@ theorem monad_map_eq_map {α β : Type _} (f : α → β) (p : Pmf α) : f <$> p
 
 @[simp]
 theorem map_apply : (map f p) b = ∑' a, if b = f a then p a else 0 := by
-  simp [← map]
+  simp [map]
 
 @[simp]
 theorem support_map : (map f p).Support = f '' p.Support :=
   Set.ext fun b => by
-    simp [← map, ← @eq_comm β b]
+    simp [map, @eq_comm β b]
 
 theorem mem_support_map_iff : b ∈ (map f p).Support ↔ ∃ a ∈ p.Support, f a = b := by
   simp
@@ -59,13 +59,13 @@ theorem bind_pure_comp : bind p (pure ∘ f) = map f p :=
   rfl
 
 theorem map_id : map id p = p := by
-  simp [← map]
+  simp [map]
 
 theorem map_comp (g : β → γ) : (p.map f).map g = p.map (g ∘ f) := by
-  simp [← map]
+  simp [map]
 
 theorem pure_map (a : α) : (pure a).map f = pure (f a) := by
-  simp [← map]
+  simp [map]
 
 section Measureₓ
 
@@ -73,7 +73,7 @@ variable (s : Set β)
 
 @[simp]
 theorem to_outer_measure_map_apply : (p.map f).toOuterMeasure s = p.toOuterMeasure (f ⁻¹' s) := by
-  simp [← map, ← Set.indicatorₓ, ← to_outer_measure_apply p (f ⁻¹' s)]
+  simp [map, Set.indicatorₓ, to_outer_measure_apply p (f ⁻¹' s)]
 
 @[simp]
 theorem to_measure_map_apply [MeasurableSpace α] [MeasurableSpace β] (hf : Measurable f) (hs : MeasurableSet s) :
@@ -99,14 +99,14 @@ theorem monad_seq_eq_seq {α β : Type _} (q : Pmf (α → β)) (p : Pmf α) : q
 
 @[simp]
 theorem seq_apply : (seq q p) b = ∑' (f : α → β) (a : α), if b = f a then q f * p a else 0 := by
-  simp only [← seq, ← mul_boole, ← bind_apply, ← pure_apply]
+  simp only [seq, mul_boole, bind_apply, pure_apply]
   refine' tsum_congr fun f => (Nnreal.tsum_mul_left (q f) _).symm.trans (tsum_congr fun a => _)
-  simpa only [← mul_zero] using mul_ite (b = f a) (q f) (p a) 0
+  simpa only [mul_zero] using mul_ite (b = f a) (q f) (p a) 0
 
 @[simp]
 theorem support_seq : (seq q p).Support = ⋃ f ∈ q.Support, f '' p.Support :=
   Set.ext fun b => by
-    simp [-mem_support_iff, ← seq, ← @eq_comm β b]
+    simp [-mem_support_iff, seq, @eq_comm β b]
 
 theorem mem_support_seq_iff : b ∈ (seq q p).Support ↔ ∃ f ∈ q.Support, b ∈ f '' p.Support := by
   simp
@@ -126,13 +126,13 @@ instance : IsLawfulMonad Pmf where
 
 section OfFinset
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (a «expr ∉ » s)
 /-- Given a finset `s` and a function `f : α → ℝ≥0` with sum `1` on `s`,
   such that `f a = 0` for `a ∉ s`, we get a `pmf` -/
 def ofFinset (f : α → ℝ≥0 ) (s : Finset α) (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0) : Pmf α :=
   ⟨f, h ▸ has_sum_sum_of_ne_finset_zero h'⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (a «expr ∉ » s)
 variable {f : α → ℝ≥0 } {s : Finset α} (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0)
 
 @[simp]
@@ -142,7 +142,7 @@ theorem of_finset_apply (a : α) : ofFinset f s h h' a = f a :=
 @[simp]
 theorem support_of_finset : (ofFinset f s h h').Support = s ∩ Function.Support f :=
   Set.ext fun a => by
-    simpa [← mem_support_iff] using mt (h' a)
+    simpa [mem_support_iff] using mt (h' a)
 
 theorem mem_support_of_finset_iff (a : α) : a ∈ (ofFinset f s h h').Support ↔ a ∈ s ∧ f a ≠ 0 := by
   simp
@@ -221,7 +221,7 @@ theorem normalize_apply (a : α) : (normalize f hf0) a = f a * (∑' x, f x)⁻�
 theorem support_normalize : (normalize f hf0).Support = Function.Support f :=
   Set.ext
     (by
-      simp [← mem_support_iff, ← hf0])
+      simp [mem_support_iff, hf0])
 
 theorem mem_support_normalize_iff (a : α) : a ∈ (normalize f hf0).Support ↔ f a ≠ 0 := by
   simp
@@ -264,7 +264,7 @@ section Bernoulli
 def bernoulli (p : ℝ≥0 ) (h : p ≤ 1) : Pmf Bool :=
   ofFintype (fun b => cond b p (1 - p))
     (Nnreal.eq <| by
-      simp [← h])
+      simp [h])
 
 variable {p : ℝ≥0 } (h : p ≤ 1) (b : Bool)
 
@@ -279,7 +279,7 @@ theorem support_bernoulli : (bernoulli p h).Support = { b | cond b (p ≠ 0) (p 
   · simp_rw [mem_support_iff, bernoulli_apply, Bool.cond_ff, Ne.def, tsub_eq_zero_iff_le, not_leₓ]
     exact ⟨ne_of_ltₓ, lt_of_le_of_neₓ h⟩
     
-  · simp only [← mem_support_iff, ← bernoulli_apply, ← Bool.cond_tt, ← Set.mem_set_of_eq]
+  · simp only [mem_support_iff, bernoulli_apply, Bool.cond_tt, Set.mem_set_of_eq]
     
 
 theorem mem_support_bernoulli_iff : b ∈ (bernoulli p h).Support ↔ cond b (p ≠ 0) (p ≠ 1) := by

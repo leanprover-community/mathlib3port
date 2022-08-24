@@ -39,6 +39,7 @@ theorem nodup_cons {a : α} {s : Multiset α} : Nodup (a ::ₘ s) ↔ a ∉ s �
 theorem Nodup.cons (m : a ∉ s) (n : Nodup s) : Nodup (a ::ₘ s) :=
   nodup_cons.2 ⟨m, n⟩
 
+@[simp]
 theorem nodup_singleton : ∀ a : α, Nodup ({a} : Multiset α) :=
   nodup_singleton
 
@@ -84,7 +85,7 @@ theorem count_eq_of_nodup [DecidableEq α] {a : α} {s : Multiset α} (d : Nodup
 theorem nodup_iff_pairwise {α} {s : Multiset α} : Nodup s ↔ Pairwise (· ≠ ·) s :=
   (Quotientₓ.induction_on s) fun l => (pairwise_coe_iff_pairwise fun a b => Ne.symm).symm
 
-protected theorem Nodup.pairwise : (∀, ∀ a ∈ s, ∀, ∀, ∀ b ∈ s, ∀, a ≠ b → r a b) → Nodup s → Pairwise r s :=
+protected theorem Nodup.pairwise : (∀ a ∈ s, ∀ b ∈ s, a ≠ b → r a b) → Nodup s → Pairwise r s :=
   (Quotientₓ.induction_on s) fun l h hl => ⟨l, rfl, hl.imp_of_mem fun a b ha hb => h a ha b hb⟩
 
 theorem Pairwise.forall (H : Symmetric r) (hs : Pairwise r s) : ∀ ⦃a⦄, a ∈ s → ∀ ⦃b⦄, b ∈ s → a ≠ b → r a b :=
@@ -98,23 +99,22 @@ theorem disjoint_of_nodup_add {s t : Multiset α} (d : Nodup (s + t)) : Disjoint
   (nodup_add.1 d).2.2
 
 theorem Nodup.add_iff (d₁ : Nodup s) (d₂ : Nodup t) : Nodup (s + t) ↔ Disjoint s t := by
-  simp [← nodup_add, ← d₁, ← d₂]
+  simp [nodup_add, d₁, d₂]
 
 theorem Nodup.of_map (f : α → β) : Nodup (map f s) → Nodup s :=
   (Quot.induction_on s) fun l => Nodupₓ.of_map f
 
-theorem Nodup.map_on {f : α → β} : (∀, ∀ x ∈ s, ∀, ∀, ∀ y ∈ s, ∀, f x = f y → x = y) → Nodup s → Nodup (map f s) :=
+theorem Nodup.map_on {f : α → β} : (∀ x ∈ s, ∀ y ∈ s, f x = f y → x = y) → Nodup s → Nodup (map f s) :=
   (Quot.induction_on s) fun l => Nodupₓ.map_on
 
 theorem Nodup.map {f : α → β} {s : Multiset α} (hf : Injective f) : Nodup s → Nodup (map f s) :=
   Nodup.map_on fun x _ y _ h => hf h
 
-theorem inj_on_of_nodup_map {f : α → β} {s : Multiset α} :
-    Nodup (map f s) → ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, f x = f y → x = y :=
+theorem inj_on_of_nodup_map {f : α → β} {s : Multiset α} : Nodup (map f s) → ∀ x ∈ s, ∀ y ∈ s, f x = f y → x = y :=
   (Quot.induction_on s) fun l => inj_on_of_nodup_map
 
 theorem nodup_map_iff_inj_on {f : α → β} {s : Multiset α} (d : Nodup s) :
-    Nodup (map f s) ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ s, ∀, f x = f y → x = y :=
+    Nodup (map f s) ↔ ∀ x ∈ s, ∀ y ∈ s, f x = f y → x = y :=
   ⟨inj_on_of_nodup_map, fun h => d.map_on h⟩
 
 theorem Nodup.filter (p : α → Prop) [DecidablePred p] {s} : Nodup s → Nodup (filter p s) :=
@@ -145,7 +145,7 @@ theorem Nodup.not_mem_erase [DecidableEq α] {a : α} {s} (h : Nodup s) : a ∉ 
 
 protected theorem Nodup.product {t : Multiset β} : Nodup s → Nodup t → Nodup (product s t) :=
   (Quotientₓ.induction_on₂ s t) fun l₁ l₂ d₁ d₂ => by
-    simp [← d₁.product d₂]
+    simp [d₁.product d₂]
 
 protected theorem Nodup.sigma {σ : α → Type _} {t : ∀ a, Multiset (σ a)} :
     Nodup s → (∀ a, Nodup (t a)) → Nodup (s.Sigma t) :=
@@ -188,13 +188,13 @@ protected theorem Nodup.powerset_len {n : ℕ} (h : Nodup s) : Nodup (powersetLe
 
 @[simp]
 theorem nodup_bind {s : Multiset α} {t : α → Multiset β} :
-    Nodup (bind s t) ↔ (∀, ∀ a ∈ s, ∀, Nodup (t a)) ∧ s.Pairwise fun a b => Disjoint (t a) (t b) :=
+    Nodup (bind s t) ↔ (∀ a ∈ s, Nodup (t a)) ∧ s.Pairwise fun a b => Disjoint (t a) (t b) :=
   have h₁ : ∀ a, ∃ l : List β, t a = l := fun a => (Quot.induction_on (t a)) fun l => ⟨l, rfl⟩
   let ⟨t', h'⟩ := Classical.axiom_of_choice h₁
   have : t = fun a => t' a := funext h'
   have hd : Symmetric fun a b => List.Disjoint (t' a) (t' b) := fun a b h => h.symm
   Quot.induction_on s <| by
-    simp [← this, ← List.nodup_bind, ← pairwise_coe_iff_pairwise hd]
+    simp [this, List.nodup_bind, pairwise_coe_iff_pairwise hd]
 
 theorem Nodup.ext {s t : Multiset α} : Nodup s → Nodup t → (s = t ↔ ∀ a, a ∈ s ↔ a ∈ t) :=
   (Quotientₓ.induction_on₂ s t) fun l₁ l₂ d₁ d₂ => Quotientₓ.eq.trans <| perm_ext d₁ d₂
@@ -213,8 +213,8 @@ theorem mem_sub_of_nodup [DecidableEq α] {a : α} {s t : Multiset α} (d : Nodu
     fun ⟨h₁, h₂⟩ => Or.resolve_right (mem_add.1 <| mem_of_le le_tsub_add h₁) h₂⟩
 
 theorem map_eq_map_of_bij_of_nodup (f : α → γ) (g : β → γ) {s : Multiset α} {t : Multiset β} (hs : s.Nodup)
-    (ht : t.Nodup) (i : ∀, ∀ a ∈ s, ∀, β) (hi : ∀ a ha, i a ha ∈ t) (h : ∀ a ha, f a = g (i a ha))
-    (i_inj : ∀ a₁ a₂ ha₁ ha₂, i a₁ ha₁ = i a₂ ha₂ → a₁ = a₂) (i_surj : ∀, ∀ b ∈ t, ∀, ∃ a ha, b = i a ha) :
+    (ht : t.Nodup) (i : ∀ a ∈ s, β) (hi : ∀ a ha, i a ha ∈ t) (h : ∀ a ha, f a = g (i a ha))
+    (i_inj : ∀ a₁ a₂ ha₁ ha₂, i a₁ ha₁ = i a₂ ha₂ → a₁ = a₂) (i_surj : ∀ b ∈ t, ∃ a ha, b = i a ha) :
     s.map f = t.map g :=
   have : t = s.attach.map fun x => i x.1 x.2 :=
     (ht.ext <|
@@ -222,7 +222,7 @@ theorem map_eq_map_of_bij_of_nodup (f : α → γ) (g : β → γ) {s : Multiset
             show Injective fun x : { x // x ∈ s } => i x.1 x.2 from fun x y hxy =>
               Subtype.eq <| i_inj x.1 y.1 x.2 y.2 hxy).2
       fun x => by
-      simp only [← mem_map, ← true_andₓ, ← Subtype.exists, ← eq_comm, ← mem_attach] <;>
+      simp only [mem_map, true_andₓ, Subtype.exists, eq_comm, mem_attach] <;>
         exact ⟨i_surj _, fun ⟨y, hy⟩ => hy.snd.symm ▸ hi _ _⟩
   calc
     s.map f = s.pmap (fun x _ => f x) fun _ => id := by

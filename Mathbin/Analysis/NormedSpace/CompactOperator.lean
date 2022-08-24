@@ -266,7 +266,7 @@ of an endomorphism `f : E →ₗ E` to an endomorphism `f' : ↥V →ₗ ↥V`. 
 `is_compact_operator.cod_restrict` to `f ∘ U.subtypeL`, which is compact by
 `is_compact_operator.comp_clm`. -/
 theorem IsCompactOperator.restrict {f : M₁ →ₗ[R₁] M₁} (hf : IsCompactOperator f) {V : Submodule R₁ M₁}
-    (hV : ∀, ∀ v ∈ V, ∀, f v ∈ V) (h_closed : IsClosed (V : Set M₁)) : IsCompactOperator (f.restrict hV) :=
+    (hV : ∀ v ∈ V, f v ∈ V) (h_closed : IsClosed (V : Set M₁)) : IsCompactOperator (f.restrict hV) :=
   (hf.comp_clm V.subtypeL).codRestrict (SetLike.forall.2 hV) h_closed
 
 /-- If a compact operator preserves a complete submodule, its restriction to that submodule is
@@ -278,8 +278,7 @@ of an endomorphism `f : E →ₗ E` to an endomorphism `f' : ↥V →ₗ ↥V`. 
 `is_compact_operator.cod_restrict` to `f ∘ U.subtypeL`, which is compact by
 `is_compact_operator.comp_clm`. -/
 theorem IsCompactOperator.restrict' [SeparatedSpace M₂] {f : M₂ →ₗ[R₂] M₂} (hf : IsCompactOperator f)
-    {V : Submodule R₂ M₂} (hV : ∀, ∀ v ∈ V, ∀, f v ∈ V) [hcomplete : CompleteSpace V] :
-    IsCompactOperator (f.restrict hV) :=
+    {V : Submodule R₂ M₂} (hV : ∀ v ∈ V, f v ∈ V) [hcomplete : CompleteSpace V] : IsCompactOperator (f.restrict hV) :=
   hf.restrict hV (complete_space_coe_iff_is_complete.mp hcomplete).IsClosed
 
 end Restrict
@@ -316,7 +315,7 @@ theorem IsCompactOperator.continuous {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : I
     rwa [mem_map, preimage_smul_setₛₗ _ _ _ f this, set_smul_mem_nhds_zero_iff (inv_ne_zero hcnz)]
     infer_instance
   -- Since `σ₁₂ c⁻¹` = `(σ₁₂ c)⁻¹`, we have to prove that `K ⊆ σ₁₂ c • U`.
-  rw [map_inv₀, ← subset_set_smul_iff₀ (σ₁₂.map_ne_zero.mpr hcnz)]
+  rw [map_inv₀, ← subset_set_smul_iff₀ ((map_ne_zero σ₁₂).mpr hcnz)]
   -- But `σ₁₂` is isometric, so `∥σ₁₂ c∥ = ∥c∥ > r`, which concludes the argument since
   -- `∀ a : 𝕜₂, r ≤ ∥a∥ → K ⊆ a • U`.
   refine' hrU (σ₁₂ c) _

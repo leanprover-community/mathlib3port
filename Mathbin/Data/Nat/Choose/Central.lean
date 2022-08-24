@@ -86,7 +86,7 @@ theorem four_pow_lt_mul_central_binom (n : ℕ) (n_big : 4 ≤ n) : 4 ^ n < n * 
   · clear IH
     decide!
     
-  · norm_num[← central_binom, ← choose]
+  · norm_num[central_binom, choose]
     
   obtain ⟨n, rfl⟩ : ∃ m, n = m + 1 := Nat.exists_eq_succ_of_ne_zero (zero_lt_four.trans hn).ne'
   calc
@@ -105,11 +105,11 @@ because it appears in Erdős's proof of Bertrand's postulate.
 theorem four_pow_le_two_mul_self_mul_central_binom : ∀ (n : ℕ) (n_pos : 0 < n), 4 ^ n ≤ 2 * n * centralBinom n
   | 0, pr => (Nat.not_lt_zeroₓ _ pr).elim
   | 1, pr => by
-    norm_num[← central_binom, ← choose]
+    norm_num[central_binom, choose]
   | 2, pr => by
-    norm_num[← central_binom, ← choose]
+    norm_num[central_binom, choose]
   | 3, pr => by
-    norm_num[← central_binom, ← choose]
+    norm_num[central_binom, choose]
   | n@(m + 4), _ =>
     calc
       4 ^ n ≤ n * centralBinom n := (four_pow_lt_mul_central_binom _ le_add_self).le

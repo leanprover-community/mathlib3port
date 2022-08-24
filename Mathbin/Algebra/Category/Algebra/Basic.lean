@@ -108,14 +108,14 @@ def free : Type u ⥤ AlgebraCat.{u} R where
   map_id' := by
     intro X
     ext1
-    simp only [← FreeAlgebra.ι_comp_lift]
+    simp only [FreeAlgebra.ι_comp_lift]
     rfl
   map_comp' := by
     intros
     ext1
-    simp only [← FreeAlgebra.ι_comp_lift]
+    simp only [FreeAlgebra.ι_comp_lift]
     ext1
-    simp only [← FreeAlgebra.lift_ι_apply, ← CategoryTheory.coe_comp, ← Function.comp_app, ← types_comp_apply]
+    simp only [FreeAlgebra.lift_ι_apply, CategoryTheory.coe_comp, Function.comp_app, types_comp_apply]
 
 /-- The free/forget adjunction for `R`-algebras. -/
 def adj : free.{u} R ⊣ forget (AlgebraCat.{u} R) :=
@@ -125,12 +125,12 @@ def adj : free.{u} R ⊣ forget (AlgebraCat.{u} R) :=
       hom_equiv_naturality_left_symm' := by
         intros
         ext
-        simp only [← free_map, ← Equivₓ.symm_symm, ← FreeAlgebra.lift_ι_apply, ← CategoryTheory.coe_comp, ←
-          Function.comp_app, ← types_comp_apply],
+        simp only [free_map, Equivₓ.symm_symm, FreeAlgebra.lift_ι_apply, CategoryTheory.coe_comp, Function.comp_app,
+          types_comp_apply],
       hom_equiv_naturality_right' := by
         intros
         ext
-        simp only [← forget_map_eq_coe, ← CategoryTheory.coe_comp, ← Function.comp_app, ← FreeAlgebra.lift_symm_apply, ←
+        simp only [forget_map_eq_coe, CategoryTheory.coe_comp, Function.comp_app, FreeAlgebra.lift_symm_apply,
           types_comp_apply] }
 
 instance : IsRightAdjoint (forget (AlgebraCat.{u} R)) :=

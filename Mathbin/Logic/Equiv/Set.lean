@@ -120,23 +120,23 @@ theorem prod_comm_image {α β} {s : Set α} {t : Set β} : Equivₓ.prodComm α
 theorem prod_assoc_preimage {α β γ} {s : Set α} {t : Set β} {u : Set γ} :
     Equivₓ.prodAssoc α β γ ⁻¹' s ×ˢ t ×ˢ u = (s ×ˢ t) ×ˢ u := by
   ext
-  simp [← and_assoc]
+  simp [and_assoc]
 
 @[simp]
 theorem prod_assoc_symm_preimage {α β γ} {s : Set α} {t : Set β} {u : Set γ} :
     (Equivₓ.prodAssoc α β γ).symm ⁻¹' (s ×ˢ t) ×ˢ u = s ×ˢ t ×ˢ u := by
   ext
-  simp [← and_assoc]
+  simp [and_assoc]
 
 -- `@[simp]` doesn't like these lemmas, as it uses `set.image_congr'` to turn `equiv.prod_assoc`
 -- into a lambda expression and then unfold it.
 theorem prod_assoc_image {α β γ} {s : Set α} {t : Set β} {u : Set γ} :
     Equivₓ.prodAssoc α β γ '' (s ×ˢ t) ×ˢ u = s ×ˢ t ×ˢ u := by
-  simpa only [← Equivₓ.image_eq_preimage] using prod_assoc_symm_preimage
+  simpa only [Equivₓ.image_eq_preimage] using prod_assoc_symm_preimage
 
 theorem prod_assoc_symm_image {α β γ} {s : Set α} {t : Set β} {u : Set γ} :
     (Equivₓ.prodAssoc α β γ).symm '' s ×ˢ t ×ˢ u = (s ×ˢ t) ×ˢ u := by
-  simpa only [← Equivₓ.image_eq_preimage] using prod_assoc_preimage
+  simpa only [Equivₓ.image_eq_preimage] using prod_assoc_preimage
 
 /-- A set `s` in `α × β` is equivalent to the sigma-type `Σ x, {y | (x, y) ∈ s}`. -/
 def setProdEquivSigma {α β : Type _} (s : Set (α × β)) : s ≃ Σx : α, { y | (x, y) ∈ s } where
@@ -187,8 +187,8 @@ protected def pempty (α) : (∅ : Set α) ≃ Pempty :=
 
 /-- If sets `s` and `t` are separated by a decidable predicate, then `s ∪ t` is equivalent to
 `s ⊕ t`. -/
-protected def union' {α} {s t : Set α} (p : α → Prop) [DecidablePred p] (hs : ∀, ∀ x ∈ s, ∀, p x)
-    (ht : ∀, ∀ x ∈ t, ∀, ¬p x) : (s ∪ t : Set α) ≃ Sum s t where
+protected def union' {α} {s t : Set α} (p : α → Prop) [DecidablePred p] (hs : ∀ x ∈ s, p x) (ht : ∀ x ∈ t, ¬p x) :
+    (s ∪ t : Set α) ≃ Sum s t where
   toFun := fun x =>
     if hp : p x then Sum.inl ⟨_, x.2.resolve_right fun xt => ht _ xt hp⟩
     else Sum.inr ⟨_, x.2.resolve_left fun xs => hp (hs _ xs)⟩
@@ -197,9 +197,9 @@ protected def union' {α} {s t : Set α} (p : α → Prop) [DecidablePred p] (hs
     | Sum.inl x => ⟨x, Or.inl x.2⟩
     | Sum.inr x => ⟨x, Or.inr x.2⟩
   left_inv := fun ⟨x, h'⟩ => by
-    by_cases' p x <;> simp [← union'._match_1, ← h] <;> congr
+    by_cases' p x <;> simp [union'._match_1, h] <;> congr
   right_inv := fun o => by
-    rcases o with (⟨x, h⟩ | ⟨x, h⟩) <;> dsimp' [← union'._match_1] <;> [simp [← hs _ h], simp [← ht _ h]]
+    rcases o with (⟨x, h⟩ | ⟨x, h⟩) <;> dsimp' [union'._match_1] <;> [simp [hs _ h], simp [ht _ h]]
 
 /-- If sets `s` and `t` are disjoint, then `s ∪ t` is equivalent to `s ⊕ t`. -/
 protected def union {α} {s t : Set α} [DecidablePred fun x => x ∈ s] (H : s ∩ t ⊆ ∅) : (s ∪ t : Set α) ≃ Sum s t :=
@@ -276,7 +276,7 @@ protected def sumCompl {α} (s : Set α) [DecidablePred (· ∈ s)] : Sum s (s�
     Sum s (sᶜ : Set α) ≃ ↥(s ∪ sᶜ) :=
       (Equivₓ.Set.union
           (by
-            simp [← Set.ext_iff])).symm
+            simp [Set.ext_iff])).symm
     _ ≃ @Univ α :=
       Equivₓ.Set.ofEq
         (by
@@ -323,11 +323,11 @@ protected def sumDiffSubset {α} {s t : Set α} (h : s ⊆ t) [DecidablePred (·
     Sum s (t \ s : Set α) ≃ (s ∪ t \ s : Set α) :=
       (Equivₓ.Set.union
           (by
-            simp [← inter_diff_self])).symm
+            simp [inter_diff_self])).symm
     _ ≃ t :=
       Equivₓ.Set.ofEq
         (by
-          simp [← union_diff_self, ← union_eq_self_of_subset_left h])
+          simp [union_diff_self, union_eq_self_of_subset_left h])
     
 
 @[simp]
@@ -343,13 +343,13 @@ theorem sum_diff_subset_apply_inr {α} {s t : Set α} (h : s ⊆ t) [DecidablePr
 theorem sum_diff_subset_symm_apply_of_mem {α} {s t : Set α} (h : s ⊆ t) [DecidablePred (· ∈ s)] {x : t} (hx : x.1 ∈ s) :
     (Equivₓ.Set.sumDiffSubset h).symm x = Sum.inl ⟨x, hx⟩ := by
   apply (Equivₓ.Set.sumDiffSubset h).Injective
-  simp only [← apply_symm_apply, ← sum_diff_subset_apply_inl]
+  simp only [apply_symm_apply, sum_diff_subset_apply_inl]
   exact Subtype.eq rfl
 
 theorem sum_diff_subset_symm_apply_of_not_mem {α} {s t : Set α} (h : s ⊆ t) [DecidablePred (· ∈ s)] {x : t}
     (hx : x.1 ∉ s) : (Equivₓ.Set.sumDiffSubset h).symm x = Sum.inr ⟨x, ⟨x.2, hx⟩⟩ := by
   apply (Equivₓ.Set.sumDiffSubset h).Injective
-  simp only [← apply_symm_apply, ← sum_diff_subset_apply_inr]
+  simp only [apply_symm_apply, sum_diff_subset_apply_inr]
   exact Subtype.eq rfl
 
 /-- If `s` is a set with decidable membership, then the sum of `s ∪ t` and `s ∩ t` is equivalent
@@ -392,20 +392,20 @@ protected def compl {α : Type u} {β : Type v} {s : Set α} {t : Set β} [Decid
         _ ≃ β := Set.sumCompl t
         )
       fun x => by
-      simp only [← Sum.map_inl, ← trans_apply, ← sum_congr_apply, ← set.sum_compl_apply_inl, ← set.sum_compl_symm_apply]
+      simp only [Sum.map_inl, trans_apply, sum_congr_apply, set.sum_compl_apply_inl, set.sum_compl_symm_apply]
   left_inv := fun e => by
     ext x
     by_cases' hx : x ∈ s
-    · simp only [← set.sum_compl_symm_apply_of_mem hx, e.prop ⟨x, hx⟩, ← Sum.map_inl, ← sum_congr_apply, ← trans_apply,
-        ← Subtype.coe_mk, ← set.sum_compl_apply_inl]
+    · simp only [set.sum_compl_symm_apply_of_mem hx, ← e.prop ⟨x, hx⟩, Sum.map_inl, sum_congr_apply, trans_apply,
+        Subtype.coe_mk, set.sum_compl_apply_inl]
       
-    · simp only [← set.sum_compl_symm_apply_of_not_mem hx, ← Sum.map_inr, ← subtype_equiv_apply, ←
-        set.sum_compl_apply_inr, ← trans_apply, ← sum_congr_apply, ← Subtype.coe_mk]
+    · simp only [set.sum_compl_symm_apply_of_not_mem hx, Sum.map_inr, subtype_equiv_apply, set.sum_compl_apply_inr,
+        trans_apply, sum_congr_apply, Subtype.coe_mk]
       
   right_inv := fun e =>
     Equivₓ.ext fun x => by
-      simp only [← Sum.map_inr, ← subtype_equiv_apply, ← set.sum_compl_apply_inr, ← Function.comp_app, ←
-        sum_congr_apply, ← Equivₓ.coe_trans, ← Subtype.coe_eta, ← Subtype.coe_mk, ← set.sum_compl_symm_apply_compl]
+      simp only [Sum.map_inr, subtype_equiv_apply, set.sum_compl_apply_inr, Function.comp_app, sum_congr_apply,
+        Equivₓ.coe_trans, Subtype.coe_eta, Subtype.coe_mk, set.sum_compl_symm_apply_compl]
 
 /-- The set product of two sets is equivalent to the type product of their coercions to types. -/
 protected def prod {α β} (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ s × t :=
@@ -438,13 +438,13 @@ protected noncomputable def image {α β} (f : α → β) (s : Set α) (H : Inje
 protected theorem image_symm_apply {α β} (f : α → β) (s : Set α) (H : Injective f) (x : α) (h : x ∈ s) :
     (Set.image f s H).symm ⟨f x, ⟨x, ⟨h, rfl⟩⟩⟩ = ⟨x, h⟩ := by
   apply (Set.Image f s H).Injective
-  simp [← (Set.Image f s H).apply_symm_apply]
+  simp [(Set.Image f s H).apply_symm_apply]
 
 theorem image_symm_preimage {α β} {f : α → β} (hf : Injective f) (u s : Set α) :
     (fun x => (Set.image f s hf).symm x : f '' s → α) ⁻¹' u = coe ⁻¹' (f '' u) := by
   ext ⟨b, a, has, rfl⟩
   have : ∀ h : ∃ a', a' ∈ s ∧ a' = a, Classical.some h = a := fun h => (Classical.some_spec h).2
-  simp [← Equivₓ.Set.image, ← Equivₓ.Set.imageOfInjOn, ← hf.eq_iff, ← this]
+  simp [Equivₓ.Set.image, Equivₓ.Set.imageOfInjOn, hf.eq_iff, this]
 
 /-- If `α` is equivalent to `β`, then `set α` is equivalent to `set β`. -/
 @[simps]
@@ -477,13 +477,13 @@ noncomputable def rangeSplittingImageEquiv {α β : Type _} (f : α → β) (s :
         simp ⟩,
       by
       rcases x with ⟨x, ⟨y, ⟨m, rfl⟩⟩⟩
-      simpa [← apply_range_splitting f] using m⟩
+      simpa [apply_range_splitting f] using m⟩
   invFun := fun x => ⟨rangeSplitting f x, ⟨x, ⟨x.2, rfl⟩⟩⟩
   left_inv := fun x => by
     rcases x with ⟨x, ⟨y, ⟨m, rfl⟩⟩⟩
-    simp [← apply_range_splitting f]
+    simp [apply_range_splitting f]
   right_inv := fun x => by
-    simp [← apply_range_splitting f]
+    simp [apply_range_splitting f]
 
 end Set
 
@@ -522,13 +522,13 @@ theorem apply_of_injective_symm {α β} {f : α → β} (hf : Injective f) (b : 
 theorem of_injective_symm_apply {α β} {f : α → β} (hf : Injective f) (a : α) :
     (ofInjective f hf).symm ⟨f a, ⟨a, rfl⟩⟩ = a := by
   apply (of_injective f hf).Injective
-  simp [← apply_of_injective_symm hf]
+  simp [apply_of_injective_symm hf]
 
 theorem coe_of_injective_symm {α β} {f : α → β} (hf : Injective f) :
     ((ofInjective f hf).symm : Range f → α) = rangeSplitting f := by
   ext ⟨y, x, rfl⟩
   apply hf
-  simp [← apply_range_splitting f]
+  simp [apply_range_splitting f]
 
 @[simp]
 theorem self_comp_of_injective_symm {α β} {f : α → β} (hf : Injective f) : f ∘ (ofInjective f hf).symm = coe :=
@@ -559,10 +559,10 @@ theorem preimage_pi_equiv_pi_subtype_prod_symm_pi {α : Type _} {β : α → Typ
       (Pi Univ fun i : { i // p i } => s i) ×ˢ Pi Univ fun i : { i // ¬p i } => s i :=
   by
   ext ⟨f, g⟩
-  simp only [← mem_preimage, ← mem_univ_pi, ← prod_mk_mem_set_prod_eq, ← Subtype.forall, forall_and_distrib]
+  simp only [mem_preimage, mem_univ_pi, prod_mk_mem_set_prod_eq, Subtype.forall, ← forall_and_distrib]
   refine' forall_congrₓ fun i => _
-  dsimp' only [← Subtype.coe_mk]
-  by_cases' hi : p i <;> simp [← hi]
+  dsimp' only [Subtype.coe_mk]
+  by_cases' hi : p i <;> simp [hi]
 
 -- See also `equiv.sigma_fiber_equiv`.
 /-- `sigma_fiber_equiv f` for `f : α → β` is the natural equivalence between
@@ -610,6 +610,6 @@ theorem dite_comp_equiv_update {α : Type _} {β : Sort _} {γ : Sort _} {s : Se
       contrapose! h
       have : (e j : α) ∈ s := (e j).2
       rwa [← h] at this
-    simp [← h, ← this]
+    simp [h, this]
     
 

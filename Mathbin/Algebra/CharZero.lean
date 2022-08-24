@@ -72,7 +72,7 @@ variable {R : Type _} [NonAssocSemiringₓ R] [NoZeroDivisors R] [CharZero R]
 
 @[simp]
 theorem add_self_eq_zero {a : R} : a + a = 0 ↔ a = 0 := by
-  simp only [← (two_mul a).symm, ← mul_eq_zero, ← two_ne_zero', ← false_orₓ]
+  simp only [(two_mul a).symm, mul_eq_zero, two_ne_zero', false_orₓ]
 
 @[simp]
 theorem bit0_eq_zero {a : R} : bit0 a = 0 ↔ a = 0 :=
@@ -100,16 +100,16 @@ theorem nat_mul_inj {n : ℕ} {a b : R} (h : (n : R) * a = (n : R) * b) : n = 0 
   exact_mod_cast h
 
 theorem nat_mul_inj' {n : ℕ} {a b : R} (h : (n : R) * a = (n : R) * b) (w : n ≠ 0) : a = b := by
-  simpa [← w] using nat_mul_inj h
+  simpa [w] using nat_mul_inj h
 
 theorem bit0_injective : Function.Injective (bit0 : R → R) := fun a b h => by
-  dsimp' [← bit0]  at h
-  simp only [← (two_mul a).symm, ← (two_mul b).symm] at h
+  dsimp' [bit0]  at h
+  simp only [(two_mul a).symm, (two_mul b).symm] at h
   refine' nat_mul_inj' _ two_ne_zero
   exact_mod_cast h
 
 theorem bit1_injective : Function.Injective (bit1 : R → R) := fun a b h => by
-  simp only [← bit1, ← add_left_injₓ] at h
+  simp only [bit1, add_left_injₓ] at h
   exact bit0_injective h
 
 @[simp]

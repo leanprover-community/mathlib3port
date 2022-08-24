@@ -140,7 +140,7 @@ theorem IsTorsion.module_of_torsion [Semiringₓ R] [Module R M] (tR : IsTorsion
     obtain ⟨n, npos, hn⟩ := (is_of_fin_add_order_iff_nsmul_eq_zero _).mp (tR 1)
     exact
       ⟨n, npos, by
-        simp only [← nsmul_eq_smul_cast R _ f, nsmul_one, ← hn, ← zero_smul]⟩
+        simp only [nsmul_eq_smul_cast R _ f, ← nsmul_one, hn, zero_smul]⟩
 
 /-- A module with a finite ring of scalars is additively torsion. -/
 theorem IsTorsion.module_of_finite [Ringₓ R] [Finite R] [Module R M] : IsTorsion M :=
@@ -201,7 +201,7 @@ variable {G} {p}
 @[to_additive "Elements of the `p`-primary component have additive order `p^n` for some `n`"]
 theorem primaryComponent.exists_order_of_eq_prime_pow (g : CommMonoidₓ.primaryComponent G p) :
     ∃ n : ℕ, orderOf g = p ^ n := by
-  simpa [← primary_component] using g.property
+  simpa [primary_component] using g.property
 
 /-- The `p`- and `q`-primary components are disjoint for `p ≠ q`. -/
 @[to_additive "The `p`- and `q`-primary components are disjoint for `p ≠ q`."]
@@ -211,7 +211,7 @@ theorem primaryComponent.disjoint {p' : ℕ} [hp' : Fact p'.Prime] (hne : p ≠ 
     obtain ⟨n, hn⟩ := primary_component.exists_order_of_eq_prime_pow ⟨g, set_like.mem_coe.mp hgp⟩
     obtain ⟨n', hn'⟩ := primary_component.exists_order_of_eq_prime_pow ⟨g, set_like.mem_coe.mp hgp'⟩
     have := mt (eq_of_prime_pow_eq (nat.prime_iff.mp hp.out) (nat.prime_iff.mp hp'.out))
-    simp only [← not_forall, ← exists_prop, ← not_ltₓ, ← le_zero_iff, ← and_imp] at this
+    simp only [not_forall, exists_prop, not_ltₓ, le_zero_iff, and_imp] at this
     rw [← order_of_submonoid, SetLike.coe_mk] at hn hn'
     have hnzero := this (hn.symm.trans hn') hne
     rwa [hnzero, pow_zeroₓ, order_of_eq_one_iff] at hn
@@ -322,7 +322,7 @@ theorem IsTorsionFree.not_torsion [hN : Nontrivial G] : IsTorsionFree G → ¬Is
 theorem IsTorsionFree.subgroup (tG : IsTorsionFree G) (H : Subgroup G) : IsTorsionFree H := fun h hne =>
   (is_of_fin_order_iff_coe H.toSubmonoid h).Not.mpr <|
     tG h <| by
-      norm_cast <;> simp [← hne, ← not_false_iff]
+      norm_cast <;> simp [hne, not_false_iff]
 
 /-- Direct products of torsion free groups are torsion free. -/
 @[to_additive AddMonoidₓ.IsTorsionFree.prod "Direct products of additive torsion free groups are torsion free."]

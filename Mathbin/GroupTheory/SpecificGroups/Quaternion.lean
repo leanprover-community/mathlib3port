@@ -84,8 +84,8 @@ private def inv : QuaternionGroup n → QuaternionGroup n
 instance : Groupₓ (QuaternionGroup n) where
   mul := mul
   mul_assoc := by
-    rintro (i | i) (j | j) (k | k) <;> simp only [← mul] <;> abel
-    simp only [← neg_mul, ← one_mulₓ, ← Int.cast_oneₓ, ← zsmul_eq_mul, ← Int.cast_neg, ← add_right_injₓ]
+    rintro (i | i) (j | j) (k | k) <;> simp only [mul] <;> abel
+    simp only [neg_mul, one_mulₓ, Int.cast_oneₓ, zsmul_eq_mul, Int.cast_neg, add_right_injₓ]
     calc
       -(n : Zmod (2 * n)) = 0 - n := by
         rw [zero_sub]
@@ -211,15 +211,14 @@ theorem a_one_pow_n : (a 1 : QuaternionGroup n) ^ (2 * n) = 1 := by
 
 @[simp]
 theorem xa_sq (i : Zmod (2 * n)) : xa i ^ 2 = a n := by
-  simp [← sq]
+  simp [sq]
 
 @[simp]
 theorem xa_pow_four (i : Zmod (2 * n)) : xa i ^ 4 = 1 := by
-  simp only [← pow_succₓ, ← sq, ← xa_mul_xa, ← xa_mul_a, ← add_sub_cancel, ← add_sub_assoc, ← add_sub_cancel', ←
-    sub_self, ← add_zeroₓ]
+  simp only [pow_succₓ, sq, xa_mul_xa, xa_mul_a, add_sub_cancel, add_sub_assoc, add_sub_cancel', sub_self, add_zeroₓ]
   norm_cast
   rw [← two_mul]
-  simp [← one_def]
+  simp [one_def]
 
 /-- If `0 < n`, then `xa i` has order 4.
 -/
@@ -229,12 +228,11 @@ theorem order_of_xa [hpos : Fact (0 < n)] (i : Zmod (2 * n)) : orderOf (xa i) = 
   haveI : Fact (Nat.Prime 2) := Fact.mk Nat.prime_two
   apply order_of_eq_prime_pow
   · intro h
-    simp only [← pow_oneₓ, ← xa_sq] at h
+    simp only [pow_oneₓ, xa_sq] at h
     injection h with h'
     apply_fun Zmod.val  at h'
     apply_fun (· / n)  at h'
-    simp only [← Zmod.val_nat_cast, ← Zmod.val_zero, ← Nat.zero_divₓ, ← Nat.mod_mul_left_div_self, ←
-      Nat.div_selfₓ hpos.1] at h'
+    simp only [Zmod.val_nat_cast, Zmod.val_zero, Nat.zero_divₓ, Nat.mod_mul_left_div_self, Nat.div_selfₓ hpos.1] at h'
     norm_num at h'
     
   · norm_num
@@ -277,7 +275,7 @@ theorem exponent : Monoidₓ.exponent (QuaternionGroup n) = 2 * lcm n 2 := by
   rw [← normalize_eq 2, ← lcm_mul_left, normalize_eq]
   norm_num
   rcases n.eq_zero_or_pos with (rfl | hn)
-  · simp only [← lcm_zero_left, ← mul_zero]
+  · simp only [lcm_zero_left, mul_zero]
     exact Monoidₓ.exponent_eq_zero_of_order_zero order_of_a_one
     
   haveI := Fact.mk hn

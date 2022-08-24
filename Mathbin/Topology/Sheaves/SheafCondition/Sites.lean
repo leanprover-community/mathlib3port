@@ -374,7 +374,7 @@ theorem pi_opens_to_first_obj_comp_second_map_eq :
 theorem fork_map_comp_first_map_to_pi_opens_eq :
     Presheaf.forkMap (PresieveOfCovering U) F ≫ firstObjToPiOpens F U = res F U := by
   ext i
-  dsimp' [← presheaf.fork_map, ← first_obj_to_pi_opens, ← res]
+  dsimp' [presheaf.fork_map, first_obj_to_pi_opens, res]
   rw [category.assoc, limit.lift_π, fan.mk_π_app, limit.lift_π, fan.mk_π_app, limit.lift_π, fan.mk_π_app]
   rfl
 

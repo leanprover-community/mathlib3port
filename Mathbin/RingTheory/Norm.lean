@@ -145,7 +145,7 @@ theorem norm_eq_zero_iff_of_basis [IsDomain R] [IsDomain S] (b : Basis ι R S) {
     rw [← b.equiv_fun.apply_symm_apply v, b.equiv_fun_symm_apply, b.equiv_fun_apply,
       Algebra.left_mul_matrix_mul_vec_repr] at hv
     refine' (mul_eq_zero.mp (b.ext_elem fun i => _)).resolve_right (show (∑ i, v i • b i) ≠ 0 from _)
-    · simpa only [← LinearEquiv.map_zero, ← Pi.zero_apply] using congr_fun hv i
+    · simpa only [LinearEquiv.map_zero, Pi.zero_apply] using congr_fun hv i
       
     · contrapose! v_ne with sum_eq
       apply b.equiv_fun.symm.injective
@@ -177,9 +177,9 @@ open IntermediateField
 
 variable (K)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible)
 theorem norm_eq_norm_adjoin [FiniteDimensional K L] [IsSeparable K L] (x : L) :
     norm K x = norm K (AdjoinSimple.gen K x) ^ finrank K⟮⟯ L := by
   letI := is_separable_tower_top_of_is_separable K K⟮⟯ L
@@ -187,7 +187,7 @@ theorem norm_eq_norm_adjoin [FiniteDimensional K L] [IsSeparable K L] (x : L) :
   let pbx := IntermediateField.adjoin.powerBasis (IsSeparable.is_integral K x)
   rw [← adjoin_simple.algebra_map_gen K x, norm_eq_matrix_det (pbx.basis.smul pbL.basis) _,
     smul_left_mul_matrix_algebra_map, det_block_diagonal, norm_eq_matrix_det pbx.basis]
-  simp only [← Finset.card_fin, ← Finset.prod_const]
+  simp only [Finset.card_fin, Finset.prod_const]
   congr
   rw [← PowerBasis.finrank, adjoin_simple.algebra_map_gen K x]
 
@@ -195,7 +195,7 @@ variable {K}
 
 section IntermediateField
 
--- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible)
 theorem _root_.intermediate_field.adjoin_simple.norm_gen_eq_one {x : L} (hx : ¬IsIntegral K x) :
     norm K (AdjoinSimple.gen K x) = 1 := by
   rw [norm_eq_one_of_not_exists_basis]
@@ -207,14 +207,14 @@ theorem _root_.intermediate_field.adjoin_simple.norm_gen_eq_one {x : L} (hx : ¬
   · exact IntermediateField.subset_adjoin K _ (Set.mem_singleton x)
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible)
 theorem _root_.intermediate_field.adjoin_simple.norm_gen_eq_prod_roots (x : L)
     (hf : (minpoly K x).Splits (algebraMap K F)) :
     (algebraMap K F) (norm K (AdjoinSimple.gen K x)) = ((minpoly K x).map (algebraMap K F)).roots.Prod := by
   have injKxL := (algebraMap K⟮⟯ L).Injective
   by_cases' hx : _root_.is_integral K x
   swap
-  · simp [← minpoly.eq_zero hx, ← IntermediateField.AdjoinSimple.norm_gen_eq_one hx]
+  · simp [minpoly.eq_zero hx, IntermediateField.AdjoinSimple.norm_gen_eq_one hx]
     
   have hx' : _root_.is_integral K (adjoin_simple.gen K x) := by
     rwa [← is_integral_algebra_map_iff injKxL, adjoin_simple.algebra_map_gen]
@@ -222,7 +222,7 @@ theorem _root_.intermediate_field.adjoin_simple.norm_gen_eq_prod_roots (x : L)
   rw [← adjoin.power_basis_gen hx, power_basis.norm_gen_eq_prod_roots] <;>
     rw [adjoin.power_basis_gen hx, minpoly.eq_of_algebra_map_eq injKxL hx'] <;>
       try
-        simp only [← adjoin_simple.algebra_map_gen _ _]
+        simp only [adjoin_simple.algebra_map_gen _ _]
   exact hf
 
 end IntermediateField
@@ -247,7 +247,7 @@ theorem norm_eq_prod_embeddings_gen {K L : Type _} [Field K] [CommRingₓ L] [Al
     rw [PowerBasis.lift_equiv'_apply_coe, id.def]
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible)
 theorem norm_eq_prod_roots [IsSeparable K L] [FiniteDimensional K L] {x : L}
     (hF : (minpoly K x).Splits (algebraMap K F)) :
     algebraMap K F (norm K x) = ((minpoly K x).map (algebraMap K F)).roots.Prod ^ finrank K⟮⟯ L := by
@@ -268,18 +268,18 @@ theorem prod_embeddings_eq_finrank_pow [Algebra L F] [IsScalarTower K L F] [IsAl
     Finset.prod_sigma, ← Finset.prod_pow]
   refine' Finset.prod_congr rfl fun σ _ => _
   · letI : Algebra L E := σ.to_ring_hom.to_algebra
-    simp only [← Finset.prod_const, ← Finset.card_univ]
+    simp only [Finset.prod_const, Finset.card_univ]
     congr
     rw [AlgHom.card L F E]
     
   · intro σ
-    simp only [← algHomEquivSigma, ← Equivₓ.coe_fn_mk, ← AlgHom.restrictDomain, ← AlgHom.comp_apply, ←
+    simp only [algHomEquivSigma, Equivₓ.coe_fn_mk, AlgHom.restrictDomain, AlgHom.comp_apply,
       IsScalarTower.coe_to_alg_hom']
     
 
 variable (K)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:958:11: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible)
 /-- For `L/K` a finite separable extension of fields and `E` an algebraically closed extension
 of `K`, the norm (down to `K`) of an element `x` of `L` is equal to the product of the images
 of `x` over all the `K`-embeddings `σ`  of `L` into `E`. -/
@@ -300,11 +300,11 @@ theorem norm_eq_prod_automorphisms [FiniteDimensional K L] [IsGalois K L] {x : L
   rw [map_prod (algebraMap L (AlgebraicClosure L))]
   rw [← Fintype.prod_equiv (Normal.algHomEquivAut K (AlgebraicClosure L) L)]
   · rw [← norm_eq_prod_embeddings]
-    simp only [← algebra_map_eq_smul_one, ← smul_one_smul]
+    simp only [algebra_map_eq_smul_one, smul_one_smul]
     
   · intro σ
-    simp only [← Normal.algHomEquivAut, ← AlgHom.restrictNormal', ← Equivₓ.coe_fn_mk, ← AlgEquiv.coe_of_bijective, ←
-      AlgHom.restrict_normal_commutes, ← id.map_eq_id, ← RingHom.id_apply]
+    simp only [Normal.algHomEquivAut, AlgHom.restrictNormal', Equivₓ.coe_fn_mk, AlgEquiv.coe_of_bijective,
+      AlgHom.restrict_normal_commutes, id.map_eq_id, RingHom.id_apply]
     
 
 theorem is_integral_norm [Algebra S L] [Algebra S K] [IsScalarTower S K L] [IsSeparable K L] [FiniteDimensional K L]

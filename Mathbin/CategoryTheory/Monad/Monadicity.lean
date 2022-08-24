@@ -130,7 +130,7 @@ def leftAdjointComparison [∀ A : adj.toMonad.Algebra, HasCoequalizer (F.map A.
     
   · intro A B B' g h
     ext1
-    dsimp' [← comparison_left_adjoint_hom_equiv]
+    dsimp' [comparison_left_adjoint_hom_equiv]
     rw [← adj.hom_equiv_naturality_right, category.assoc]
     
 
@@ -168,7 +168,7 @@ theorem comparison_adjunction_unit_f
     (comparison_adjunction.Unit.app A).f = (beckCoequalizer A).desc (unit_cofork A) := by
   apply limits.cofork.is_colimit.hom_ext (beck_coequalizer A)
   rw [cofork.is_colimit.π_desc]
-  dsimp' only [← beck_cofork_π, ← unit_cofork_π]
+  dsimp' only [beck_cofork_π, unit_cofork_π]
   rw [comparison_adjunction_unit_f_aux, ← adj.hom_equiv_naturality_left A.a, coequalizer.condition,
     adj.hom_equiv_naturality_right, adj.hom_equiv_unit, category.assoc]
   apply adj.right_triangle_components_assoc

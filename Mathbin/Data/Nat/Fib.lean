@@ -70,10 +70,10 @@ theorem fib_two : fib 2 = 1 :=
 
 /-- Shows that `fib` indeed satisfies the Fibonacci recurrence `Fₙ₊₂ = Fₙ + Fₙ₊₁.` -/
 theorem fib_add_two {n : ℕ} : fib (n + 2) = fib n + fib (n + 1) := by
-  simp only [← fib, ← Function.iterate_succ']
+  simp only [fib, Function.iterate_succ']
 
 theorem fib_le_fib_succ {n : ℕ} : fib n ≤ fib (n + 1) := by
-  cases n <;> simp [← fib_add_two]
+  cases n <;> simp [fib_add_two]
 
 @[mono]
 theorem fib_mono : Monotone fib :=
@@ -136,7 +136,7 @@ theorem fib_add (m n : ℕ) : fib (m + n + 1) = fib m * fib n + fib (m + 1) * fi
   · intros
     specialize ih (m + 1)
     rw [add_assocₓ m 1 n, add_commₓ 1 n] at ih
-    simp only [← fib_add_two, ← ih]
+    simp only [fib_add_two, ih]
     ring
     
 
@@ -145,7 +145,7 @@ theorem fib_two_mul (n : ℕ) : fib (2 * n) = fib n * (2 * fib (n + 1) - fib n) 
   · simp
     
   · rw [Nat.succ_eq_add_one, two_mul, ← add_assocₓ, fib_add, fib_add_two, two_mul]
-    simp only [add_assocₓ, ← add_tsub_cancel_right]
+    simp only [← add_assocₓ, add_tsub_cancel_right]
     ring
     
 
@@ -205,12 +205,12 @@ theorem fast_fib_aux_bit_tt (n : ℕ) :
 
 theorem fast_fib_aux_eq (n : ℕ) : fastFibAux n = (fib n, fib (n + 1)) := by
   apply Nat.binaryRec _ (fun b n' ih => _) n
-  · simp [← fast_fib_aux]
+  · simp [fast_fib_aux]
     
   · cases b <;>
-      simp only [← fast_fib_aux_bit_ff, ← fast_fib_aux_bit_tt, ← congr_arg Prod.fst ih, ← congr_arg Prod.snd ih, ←
+      simp only [fast_fib_aux_bit_ff, fast_fib_aux_bit_tt, congr_arg Prod.fst ih, congr_arg Prod.snd ih,
           Prod.mk.inj_iff] <;>
-        constructor <;> simp [← bit, ← fib_bit0, ← fib_bit1, ← fib_bit0_succ, ← fib_bit1_succ]
+        constructor <;> simp [bit, fib_bit0, fib_bit1, fib_bit0_succ, fib_bit1_succ]
     
 
 theorem fast_fib_eq (n : ℕ) : fastFib n = fib n := by
@@ -260,7 +260,7 @@ theorem fib_dvd (m n : ℕ) (h : m ∣ n) : fib m ∣ fib n := by
 theorem fib_succ_eq_sum_choose : ∀ n : ℕ, fib (n + 1) = ∑ p in Finset.Nat.antidiagonal n, choose p.1 p.2 :=
   twoStepInduction rfl rfl fun n h1 h2 => by
     rw [fib_add_two, h1, h2, Finset.Nat.antidiagonal_succ_succ', Finset.Nat.antidiagonal_succ']
-    simp [← choose_succ_succ, ← Finset.sum_add_distrib, ← add_left_commₓ]
+    simp [choose_succ_succ, Finset.sum_add_distrib, add_left_commₓ]
 
 theorem fib_succ_eq_succ_sum (n : ℕ) : fib (n + 1) = (∑ k in Finset.range n, fib k) + 1 := by
   induction' n with n ih
@@ -271,7 +271,7 @@ theorem fib_succ_eq_succ_sum (n : ℕ) : fib (n + 1) = (∑ k in Finset.range n,
       _ = (fib n + ∑ k in Finset.range n, fib k) + 1 := by
         rw [ih, add_assocₓ]
       _ = (∑ k in Finset.range (n + 1), fib k) + 1 := by
-        simp [← Finset.range_add_one]
+        simp [Finset.range_add_one]
       
     
 

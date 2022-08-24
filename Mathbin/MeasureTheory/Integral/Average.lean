@@ -111,7 +111,7 @@ theorem set_average_eq (f : α → E) (s : Set α) : (⨍ x in s, f x ∂μ) = (
 variable {μ}
 
 theorem average_congr {f g : α → E} (h : f =ᵐ[μ] g) : (⨍ x, f x ∂μ) = ⨍ x, g x ∂μ := by
-  simp only [← average_def', ← integral_congr_ae h]
+  simp only [average_def', integral_congr_ae h]
 
 theorem average_add_measure [IsFiniteMeasure μ] {ν : Measure α} [IsFiniteMeasure ν] {f : α → E} (hμ : Integrable f μ)
     (hν : Integrable f ν) :
@@ -119,7 +119,7 @@ theorem average_add_measure [IsFiniteMeasure μ] {ν : Measure α} [IsFiniteMeas
       (((μ Univ).toReal / ((μ Univ).toReal + (ν Univ).toReal)) • ⨍ x, f x ∂μ) +
         ((ν Univ).toReal / ((μ Univ).toReal + (ν Univ).toReal)) • ⨍ x, f x ∂ν :=
   by
-  simp only [← div_eq_inv_mul, ← mul_smul, ← measure_smul_average, smul_add, integral_add_measure hμ hν,
+  simp only [div_eq_inv_mul, mul_smul, measure_smul_average, ← smul_add, ← integral_add_measure hμ hν, ←
     Ennreal.to_real_add (measure_ne_top μ _) (measure_ne_top ν _)]
   rw [average_def', measure.add_apply]
 
@@ -173,7 +173,7 @@ theorem average_union_mem_segment {f : α → E} {s t : Set α} (hd : AeDisjoint
 theorem average_mem_open_segment_compl_self [IsFiniteMeasure μ] {f : α → E} {s : Set α} (hs : NullMeasurableSet s μ)
     (hs₀ : μ s ≠ 0) (hsc₀ : μ (sᶜ) ≠ 0) (hfi : Integrable f μ) :
     (⨍ x, f x ∂μ) ∈ OpenSegment ℝ (⨍ x in s, f x ∂μ) (⨍ x in sᶜ, f x ∂μ) := by
-  simpa only [← union_compl_self, ← restrict_univ] using
+  simpa only [union_compl_self, restrict_univ] using
     average_union_mem_open_segment ae_disjoint_compl_right hs.compl hs₀ hsc₀ (measure_ne_top _ _) (measure_ne_top _ _)
       hfi.integrable_on hfi.integrable_on
 

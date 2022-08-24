@@ -285,7 +285,7 @@ theorem to_nat_many_one_reducible {p : Set α} : ToNat p ≤₀ p :=
 @[simp]
 theorem many_one_reducible_to_nat {p : Set α} : p ≤₀ ToNat p :=
   ⟨Encodable.encode, Computable.encode, by
-    simp [← ToNat, ← SetOf]⟩
+    simp [ToNat, SetOf]⟩
 
 @[simp]
 theorem many_one_reducible_to_nat_to_nat {p : Set α} {q : Set β} : ToNat p ≤₀ ToNat q ↔ p ≤₀ q :=
@@ -294,11 +294,11 @@ theorem many_one_reducible_to_nat_to_nat {p : Set α} {q : Set β} : ToNat p ≤
 
 @[simp]
 theorem to_nat_many_one_equiv {p : Set α} : ManyOneEquiv (ToNat p) p := by
-  simp [← ManyOneEquiv]
+  simp [ManyOneEquiv]
 
 @[simp]
 theorem many_one_equiv_to_nat (p : Set α) (q : Set β) : ManyOneEquiv (ToNat p) (ToNat q) ↔ ManyOneEquiv p q := by
-  simp [← ManyOneEquiv]
+  simp [ManyOneEquiv]
 
 /-- A many-one degree is an equivalence class of sets up to many-one equivalence. -/
 def ManyOneDegree : Type :=
@@ -352,7 +352,7 @@ protected theorem lift_on₂_eq {φ} (p q : Set ℕ) (f : Set ℕ → Set ℕ �
 
 @[simp]
 theorem of_eq_of {p : α → Prop} {q : β → Prop} : of p = of q ↔ ManyOneEquiv p q := by
-  simp [← of, ← Quotientₓ.eq']
+  simp [of, Quotientₓ.eq']
 
 instance : Inhabited ManyOneDegree :=
   ⟨of (∅ : Set ℕ)⟩
@@ -375,7 +375,7 @@ private theorem le_antisymm {d₁ d₂ : ManyOneDegree} : d₁ ≤ d₂ → d₂
   induction d₁ using ManyOneDegree.ind_on
   induction d₂ using ManyOneDegree.ind_on
   intro hp hq
-  simp_all only [← ManyOneEquiv, ← of_le_of, ← of_eq_of, ← true_andₓ]
+  simp_all only [ManyOneEquiv, of_le_of, of_eq_of, true_andₓ]
 
 private theorem le_trans {d₁ d₂ d₃ : ManyOneDegree} : d₁ ≤ d₂ → d₂ ≤ d₃ → d₁ ≤ d₃ := by
   induction d₁ using ManyOneDegree.ind_on
@@ -415,7 +415,7 @@ protected theorem add_le {d₁ d₂ d₃ : ManyOneDegree} : d₁ + d₂ ≤ d₃
   induction d₁ using ManyOneDegree.ind_on
   induction d₂ using ManyOneDegree.ind_on
   induction d₃ using ManyOneDegree.ind_on
-  simpa only [add_of, ← of_le_of] using disjoin_le
+  simpa only [← add_of, of_le_of] using disjoin_le
 
 @[simp]
 protected theorem le_add_left (d₁ d₂ : ManyOneDegree) : d₁ ≤ d₁ + d₂ :=

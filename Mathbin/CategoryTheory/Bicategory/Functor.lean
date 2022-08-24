@@ -81,7 +81,7 @@ structure PrelaxFunctor (B : Type u₁) [Quiver.{v₁ + 1} B] [∀ a b : B, Quiv
   map₂ {a b : B} {f g : a ⟶ b} : (f ⟶ g) → (map f ⟶ map g)
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident prelax_functor.to_prefunctor]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident prelax_functor.to_prefunctor]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace PrelaxFunctor
 
 instance hasCoeToPrefunctor : Coe (PrelaxFunctor B C) (Prefunctor B C) :=
@@ -210,7 +210,7 @@ attribute [simp] map₂_comp map₂_left_unitor map₂_right_unitor
 section
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident oplax_functor.to_prelax_functor]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident oplax_functor.to_prelax_functor]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 instance hasCoeToPrelax : Coe (OplaxFunctor B C) (PrelaxFunctor B C) :=
   ⟨toPrelaxFunctor⟩
 
@@ -259,14 +259,14 @@ def comp (F : OplaxFunctor B C) (G : OplaxFunctor C D) : OplaxFunctor B D :=
       rw [← map₂_comp_assoc, map_comp_naturality_right, map₂_comp_assoc, map_comp_naturality_right, assoc],
     map₂_associator' := fun a b c d f g h => by
       dsimp'
-      simp only [← map₂_associator, map₂_comp_assoc, map_comp_naturality_right_assoc, ← whisker_left_comp, ← assoc]
-      simp only [← map₂_associator, ← map₂_comp, ← map_comp_naturality_left_assoc, ← comp_whisker_right, ← assoc],
+      simp only [map₂_associator, ← map₂_comp_assoc, ← map_comp_naturality_right_assoc, whisker_left_comp, assoc]
+      simp only [map₂_associator, map₂_comp, map_comp_naturality_left_assoc, comp_whisker_right, assoc],
     map₂_left_unitor' := fun a b f => by
       dsimp'
-      simp only [← map₂_left_unitor, ← map₂_comp, ← map_comp_naturality_left_assoc, ← comp_whisker_right, ← assoc],
+      simp only [map₂_left_unitor, map₂_comp, map_comp_naturality_left_assoc, comp_whisker_right, assoc],
     map₂_right_unitor' := fun a b f => by
       dsimp'
-      simp only [← map₂_right_unitor, ← map₂_comp, ← map_comp_naturality_right_assoc, ← whisker_left_comp, ← assoc] }
+      simp only [map₂_right_unitor, map₂_comp, map_comp_naturality_right_assoc, whisker_left_comp, assoc] }
 
 /-- A structure on an oplax functor that promotes an oplax functor to a pseudofunctor.
 See `pseudofunctor.mk_of_oplax`.
@@ -380,7 +380,7 @@ section
 open Iso
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident pseudofunctor.to_prelax_functor]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident pseudofunctor.to_prelax_functor]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 instance hasCoeToPrelaxFunctor : Coe (Pseudofunctor B C) (PrelaxFunctor B C) :=
   ⟨toPrelaxFunctor⟩
 
@@ -486,9 +486,9 @@ noncomputable def mkOfOplax' (F : OplaxFunctor B C) [∀ a, IsIso (F.map_id a)]
       rw [← assoc, is_iso.eq_comp_inv, F.map_comp_naturality_left],
     map₂_associator' := fun a b c d f g h => by
       dsimp'
-      simp only [assoc]
+      simp only [← assoc]
       rw [is_iso.eq_comp_inv, ← inv_whisker_left, is_iso.eq_comp_inv]
-      simp only [← assoc, ← F.map₂_associator] }
+      simp only [assoc, F.map₂_associator] }
 
 end
 

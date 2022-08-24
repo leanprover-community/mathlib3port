@@ -106,7 +106,7 @@ noncomputable def atUnits (H : ∀ x : M, IsUnit (x : R)) : R ≃ₐ[R] S := by
     obtain ⟨⟨x, s⟩, eq⟩ := IsLocalization.surj M y
     obtain ⟨u, hu⟩ := H s
     use x * u.inv
-    dsimp' only [← Algebra.ofId, ← RingHom.to_fun_eq_coe, ← AlgHom.coe_mk]
+    dsimp' only [Algebra.ofId, RingHom.to_fun_eq_coe, AlgHom.coe_mk]
     rw [RingHom.map_mul, ← Eq, ← hu, mul_assoc, ← RingHom.map_mul]
     simp
     
@@ -118,7 +118,7 @@ noncomputable def atUnit (x : R) (e : IsUnit x) [IsLocalization.Away x S] : R �
   obtain ⟨u, hu⟩ := e
   rw [is_unit_iff_exists_inv]
   use u.inv ^ n
-  simp [hxn, hu, mul_powₓ]
+  simp [← hxn, ← hu, ← mul_powₓ]
 
 /-- The localization at one is isomorphic to the ring. -/
 noncomputable def atOne [IsLocalization.Away (1 : R) S] : R ≃ₐ[R] S :=

@@ -96,7 +96,7 @@ instance (priority := 100) Valued.topological_division_ring [Valued K Γ₀] : T
       use min (γ * (γ' * γ')) γ'
       intro y y_in
       apply hs
-      simp only [← mem_set_of_eq] at y_in
+      simp only [mem_set_of_eq] at y_in
       rw [Units.min_coe, Units.coe_mul, Units.coe_mul] at y_in
       exact Valuation.inversion_estimate _ x_ne y_in }
 
@@ -160,7 +160,7 @@ instance (priority := 100) completable : CompletableTopField K :=
   { ValuedRing.separated with
     nice := by
       rintro F hF h0
-      have : ∃ γ₀ : Γ₀ˣ, ∃ M ∈ F, ∀, ∀ x ∈ M, ∀, (γ₀ : Γ₀) ≤ v x := by
+      have : ∃ γ₀ : Γ₀ˣ, ∃ M ∈ F, ∀ x ∈ M, (γ₀ : Γ₀) ≤ v x := by
         rcases filter.inf_eq_bot_iff.mp h0 with ⟨U, U_in, M, M_in, H⟩
         rcases valued.mem_nhds_zero.mp U_in with ⟨γ₀, hU⟩
         exists γ₀, M, M_in
@@ -183,7 +183,7 @@ instance (priority := 100) completable : CompletableTopField K :=
         exact subset_preimage_image _ _
         
       · rintro _ ⟨x, ⟨x_in₀, x_in₁⟩, rfl⟩ _ ⟨y, ⟨y_in₀, y_in₁⟩, rfl⟩
-        simp only [← mem_set_of_eq]
+        simp only [mem_set_of_eq]
         specialize H₁ x x_in₁ y y_in₁
         replace x_in₀ := H₀ x x_in₀
         replace y_in₀ := H₀ y y_in₀
@@ -215,7 +215,7 @@ attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 noncomputable def extension : hat K → Γ₀ :=
   Completion.dense_inducing_coe.extend (v : K → Γ₀)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (x y «expr ∈ » V')
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x y «expr ∈ » V')
 theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) := by
   refine' completion.dense_inducing_coe.continuous_extend _
   intro x₀
@@ -263,10 +263,10 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
     have nhds_right : (fun x => x * x₀) '' V' ∈ 𝓝 x₀ := by
       have l : Function.LeftInverse (fun x : hat K => x * x₀⁻¹) fun x : hat K => x * x₀ := by
         intro x
-        simp only [← mul_assoc, ← mul_inv_cancel h, ← mul_oneₓ]
+        simp only [mul_assoc, mul_inv_cancel h, mul_oneₓ]
       have r : Function.RightInverse (fun x : hat K => x * x₀⁻¹) fun x : hat K => x * x₀ := by
         intro x
-        simp only [← mul_assoc, ← inv_mul_cancel h, ← mul_oneₓ]
+        simp only [mul_assoc, inv_mul_cancel h, mul_oneₓ]
       have c : Continuous fun x : hat K => x * x₀⁻¹ := continuous_id.mul continuous_const
       rw [image_eq_preimage_of_inverse l r]
       rw [← mul_inv_cancel h] at V'_in
@@ -351,12 +351,11 @@ theorem closure_coe_completion_v_lt {γ : Γ₀ˣ} :
   let γ₀ := extension_valuation x
   suffices γ₀ ≠ 0 → (x ∈ Closure (coe '' { x : K | v x < (γ : Γ₀) }) ↔ γ₀ < (γ : Γ₀)) by
     cases eq_or_ne γ₀ 0
-    · simp only [← h, ← (Valuation.zero_iff _).mp h, ← mem_set_of_eq, ← Valuation.map_zero, ← Units.zero_lt, ←
-        iff_trueₓ]
+    · simp only [h, (Valuation.zero_iff _).mp h, mem_set_of_eq, Valuation.map_zero, Units.zero_lt, iff_trueₓ]
       apply subset_closure
       exact
         ⟨0, by
-          simpa only [← mem_set_of_eq, ← Valuation.map_zero, ← Units.zero_lt, ← true_andₓ] ⟩
+          simpa only [mem_set_of_eq, Valuation.map_zero, Units.zero_lt, true_andₓ] ⟩
       
     · exact this h
       

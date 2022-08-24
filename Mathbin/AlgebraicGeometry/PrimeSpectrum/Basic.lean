@@ -159,7 +159,7 @@ theorem mem_vanishing_ideal (t : Set (PrimeSpectrum R)) (f : R) :
 
 @[simp]
 theorem vanishing_ideal_singleton (x : PrimeSpectrum R) : vanishingIdeal ({x} : Set (PrimeSpectrum R)) = x.asIdeal := by
-  simp [← vanishing_ideal]
+  simp [vanishing_ideal]
 
 theorem subset_zero_locus_iff_le_vanishing_ideal (t : Set (PrimeSpectrum R)) (I : Ideal R) :
     t ⊆ ZeroLocus I ↔ I ≤ vanishingIdeal t :=
@@ -179,7 +179,7 @@ theorem gc :
 theorem gc_set :
     @GaloisConnection (Set R) (Set (PrimeSpectrum R))ᵒᵈ _ _ (fun s => ZeroLocus s) fun t => vanishingIdeal t := by
   have ideal_gc : GaloisConnection Ideal.span coe := (Submodule.gi R R).gc
-  simpa [← zero_locus_span, ← Function.comp] using ideal_gc.compose (gc R)
+  simpa [zero_locus_span, Function.comp] using ideal_gc.compose (gc R)
 
 theorem subset_zero_locus_iff_subset_vanishing_ideal (t : Set (PrimeSpectrum R)) (s : Set R) :
     t ⊆ ZeroLocus s ↔ s ⊆ vanishingIdeal t :=
@@ -292,7 +292,7 @@ theorem zero_locus_Union {ι : Sort _} (s : ι → Set R) : ZeroLocus (⋃ i, s 
   (gc_set R).l_supr
 
 theorem zero_locus_bUnion (s : Set (Set R)) : ZeroLocus (⋃ s' ∈ s, s' : Set R) = ⋂ s' ∈ s, ZeroLocus s' := by
-  simp only [← zero_locus_Union]
+  simp only [zero_locus_Union]
 
 theorem vanishing_ideal_Union {ι : Sort _} (t : ι → Set (PrimeSpectrum R)) :
     vanishingIdeal (⋃ i, t i) = ⨅ i, vanishingIdeal (t i) :=
@@ -348,14 +348,14 @@ instance zariskiTopology : TopologicalSpace (PrimeSpectrum R) :=
       rw [Set.sInter_eq_Inter]
       let f : Zs → Set R := fun i => Classical.some (h i.2)
       have hf : ∀ i : Zs, ↑i = zero_locus (f i) := fun i => (Classical.some_spec (h i.2)).symm
-      simp only [← hf]
+      simp only [hf]
       exact ⟨_, zero_locus_Union _⟩)
     (by
       rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩
       exact ⟨_, (union_zero_locus s t).symm⟩)
 
 theorem is_open_iff (U : Set (PrimeSpectrum R)) : IsOpen U ↔ ∃ s, Uᶜ = ZeroLocus s := by
-  simp only [← @eq_comm _ (Uᶜ)] <;> rfl
+  simp only [@eq_comm _ (Uᶜ)] <;> rfl
 
 theorem is_closed_iff_zero_locus (Z : Set (PrimeSpectrum R)) : IsClosed Z ↔ ∃ s, Z = ZeroLocus s := by
   rw [← is_open_compl_iff, is_open_iff, compl_compl]
@@ -451,7 +451,7 @@ theorem is_irreducible_zero_locus_iff_of_radical (I : Ideal R) (hI : I.radical =
         apply h
         rw [← hI, ← Ideal.radical_le_radical_iff, Ideal.radical_inf, ← Ideal.radical_mul, Ideal.radical_le_radical_iff,
           hI, Ideal.span_mul_span]
-        simpa [← Ideal.span_le] using h'
+        simpa [Ideal.span_le] using h'
         
       · simp_rw [or_iff_not_imp_left, SetLike.not_le_iff_exists]
         rintro h s t h' ⟨x, hx, hx'⟩ y hy
@@ -479,8 +479,8 @@ instance : QuasiSober (PrimeSpectrum R) := by
   exact
     zero_locus_anti_mono
       (by
-        simpa [← hs] using hxZ)
-  simp [← hs]
+        simpa [hs] using hxZ)
+  simp [hs]
 
 section Comap
 
@@ -491,7 +491,7 @@ theorem preimage_comap_zero_locus_aux (f : R →+* S) (s : Set R) :
       ZeroLocus (f '' s) :=
   by
   ext x
-  simp only [← mem_zero_locus, ← Set.image_subset_iff]
+  simp only [mem_zero_locus, Set.image_subset_iff]
   rfl
 
 /-- The function between prime spectra of commutative rings induced by a ring homomorphism.
@@ -499,7 +499,7 @@ This function is continuous. -/
 def comap (f : R →+* S) : C(PrimeSpectrum S, PrimeSpectrum R) where
   toFun := fun y => ⟨Ideal.comap f y.asIdeal, inferInstance⟩
   continuous_to_fun := by
-    simp only [← continuous_iff_is_closed, ← is_closed_iff_zero_locus]
+    simp only [continuous_iff_is_closed, is_closed_iff_zero_locus]
     rintro _ ⟨s, rfl⟩
     exact ⟨_, preimage_comap_zero_locus_aux f s⟩
 
@@ -609,7 +609,7 @@ theorem comap_inducing_of_surjective (hf : Surjective f) : Inducing (comap f) :=
 
 theorem image_comap_zero_locus_eq_zero_locus_comap (hf : Surjective f) (I : Ideal S) :
     comap f '' ZeroLocus I = ZeroLocus (I.comap f) := by
-  simp only [← Set.ext_iff, ← Set.mem_image, ← mem_zero_locus, ← SetLike.coe_subset_coe]
+  simp only [Set.ext_iff, Set.mem_image, mem_zero_locus, SetLike.coe_subset_coe]
   refine' fun p => ⟨_, fun h_I_p => _⟩
   · rintro ⟨p, hp, rfl⟩ a ha
     exact hp ha
@@ -664,7 +664,7 @@ theorem is_open_basic_open {a : R} : IsOpen (basicOpen a : Set (PrimeSpectrum R)
 @[simp]
 theorem basic_open_eq_zero_locus_compl (r : R) : (basicOpen r : Set (PrimeSpectrum R)) = ZeroLocus {r}ᶜ :=
   Set.ext fun x => by
-    simpa only [← Set.mem_compl_eq, ← mem_zero_locus, ← Set.singleton_subset_iff]
+    simpa only [Set.mem_compl_eq, mem_zero_locus, Set.singleton_subset_iff]
 
 @[simp]
 theorem basic_open_one : basicOpen (1 : R) = ⊤ :=
@@ -683,7 +683,7 @@ theorem basic_open_le_basic_open_iff (f g : R) : basicOpen f ≤ basicOpen g ↔
 
 theorem basic_open_mul (f g : R) : basicOpen (f * g) = basicOpen f⊓basicOpen g :=
   TopologicalSpace.Opens.ext <| by
-    simp [← zero_locus_singleton_mul]
+    simp [zero_locus_singleton_mul]
 
 theorem basic_open_mul_le_left (f g : R) : basicOpen (f * g) ≤ basicOpen f := by
   rw [basic_open_mul f g]
@@ -721,7 +721,7 @@ theorem is_compact_basic_open (f : R) : IsCompact (basicOpen f : Set (PrimeSpect
   is_compact_of_finite_subfamily_closed fun ι Z hZc hZ => by
     let I : ι → Ideal R := fun i => vanishing_ideal (Z i)
     have hI : ∀ i, Z i = zero_locus (I i) := fun i => by
-      simpa only [← zero_locus_vanishing_ideal_eq_closure] using (hZc i).closure_eq.symm
+      simpa only [zero_locus_vanishing_ideal_eq_closure] using (hZc i).closure_eq.symm
     rw [basic_open_eq_zero_locus_compl f, Set.inter_comm, ← Set.diff_eq, Set.diff_eq_empty, funext hI, ←
       zero_locus_supr] at hZ
     obtain ⟨n, hn⟩ : f ∈ (⨆ i : ι, I i).radical := by
@@ -742,17 +742,16 @@ theorem is_compact_basic_open (f : R) : IsCompact (basicOpen f : Set (PrimeSpect
 @[simp]
 theorem basic_open_eq_bot_iff (f : R) : basicOpen f = ⊥ ↔ IsNilpotent f := by
   rw [← subtype.coe_injective.eq_iff, basic_open_eq_zero_locus_compl]
-  simp only [← Set.eq_univ_iff_forall, ← TopologicalSpace.Opens.empty_eq, ← Set.singleton_subset_iff, ←
-    TopologicalSpace.Opens.coe_bot, ← nilpotent_iff_mem_prime, ← Set.compl_empty_iff, ← mem_zero_locus, ←
-    SetLike.mem_coe]
+  simp only [Set.eq_univ_iff_forall, TopologicalSpace.Opens.empty_eq, Set.singleton_subset_iff,
+    TopologicalSpace.Opens.coe_bot, nilpotent_iff_mem_prime, Set.compl_empty_iff, mem_zero_locus, SetLike.mem_coe]
   exact Subtype.forall
 
 theorem localization_away_comap_range (S : Type v) [CommRingₓ S] [Algebra R S] (r : R) [IsLocalization.Away r S] :
     Set.Range (comap (algebraMap R S)) = basicOpen r := by
   rw [localization_comap_range S (Submonoid.powers r)]
   ext
-  simp only [← mem_zero_locus, ← basic_open_eq_zero_locus_compl, ← SetLike.mem_coe, ← Set.mem_set_of_eq, ←
-    Set.singleton_subset_iff, ← Set.mem_compl_eq]
+  simp only [mem_zero_locus, basic_open_eq_zero_locus_compl, SetLike.mem_coe, Set.mem_set_of_eq,
+    Set.singleton_subset_iff, Set.mem_compl_eq]
   constructor
   · intro h₁ h₂
     exact h₁ ⟨Submonoid.mem_powers r, h₂⟩

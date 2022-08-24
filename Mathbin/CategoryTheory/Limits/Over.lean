@@ -78,7 +78,7 @@ def pullback {X Y : C} (f : X ⟶ Y) : Over Y ⥤ Over X where
     Over.homMk
       (pullback.lift (pullback.fst ≫ k.left) pullback.snd
         (by
-          simp [← pullback.condition]))
+          simp [pullback.condition]))
       (by
         tidy)
 
@@ -100,7 +100,7 @@ def mapPullbackAdj {A B : C} (f : A ⟶ B) : Over.map f ⊣ pullback f :=
           right_inv := fun Y => by
             ext
             dsimp'
-            simp only [← pullback.lift_fst]
+            simp only [pullback.lift_fst]
             dsimp'
             rw [pullback.lift_snd, ← over.w Y]
             rfl } }
@@ -160,7 +160,7 @@ def pushout {X Y : C} (f : X ⟶ Y) : Under X ⥤ Under Y where
     Under.homMk
       (pushout.desc (k.right ≫ pushout.inl) pushout.inr
         (by
-          simp [pushout.condition]))
+          simp [← pushout.condition]))
       (by
         tidy)
 

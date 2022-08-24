@@ -53,7 +53,7 @@ instance :
     DenselyNormedField ℂ where lt_norm_lt := fun r₁ r₂ h₀ hr =>
     let ⟨x, h⟩ := NormedField.exists_lt_norm_lt ℝ h₀ hr
     have this : ∥(∥x∥ : ℂ)∥ = ∥∥x∥∥ := by
-      simp only [← norm_eq_abs, ← abs_of_real, ← Real.norm_eq_abs]
+      simp only [norm_eq_abs, abs_of_real, Real.norm_eq_abs]
     ⟨∥x∥, by
       rwa [this, norm_norm]⟩
 
@@ -133,10 +133,10 @@ theorem norm_nat (n : ℕ) : ∥(n : ℂ)∥ = n :=
 
 @[simp]
 theorem norm_int {n : ℤ} : ∥(n : ℂ)∥ = abs n := by
-  simp (config := { singlePass := true })[Rat.cast_coe_int]
+  simp (config := { singlePass := true })[← Rat.cast_coe_int]
 
 theorem norm_int_of_nonneg {n : ℤ} (hn : 0 ≤ n) : ∥(n : ℂ)∥ = n := by
-  simp [← hn]
+  simp [hn]
 
 @[continuity]
 theorem continuous_abs : Continuous abs :=
@@ -144,7 +144,7 @@ theorem continuous_abs : Continuous abs :=
 
 @[continuity]
 theorem continuous_norm_sq : Continuous normSq := by
-  simpa [norm_sq_eq_abs] using continuous_abs.pow 2
+  simpa [← norm_sq_eq_abs] using continuous_abs.pow 2
 
 @[simp, norm_cast]
 theorem nnnorm_real (r : ℝ) : ∥(r : ℂ)∥₊ = ∥r∥₊ :=
@@ -158,7 +158,7 @@ theorem nnnorm_nat (n : ℕ) : ∥(n : ℂ)∥₊ = n :=
 @[simp, norm_cast]
 theorem nnnorm_int (n : ℤ) : ∥(n : ℂ)∥₊ = ∥n∥₊ :=
   Subtype.ext <| by
-    simp only [← coe_nnnorm, ← norm_int, ← Int.norm_eq_abs]
+    simp only [coe_nnnorm, norm_int, Int.norm_eq_abs]
 
 theorem nnnorm_eq_one_of_pow_eq_one {ζ : ℂ} {n : ℕ} (h : ζ ^ n = 1) (hn : n ≠ 0) : ∥ζ∥₊ = 1 := by
   refine' (@pow_left_inj Nnreal _ _ _ _ zero_le' zero_le' hn.bot_lt).mp _
@@ -173,14 +173,14 @@ theorem tendsto_abs_cocompact_at_top : Filter.Tendsto abs (Filter.cocompact ℂ)
 
 /-- The `norm_sq` function on `ℂ` is proper. -/
 theorem tendsto_norm_sq_cocompact_at_top : Filter.Tendsto normSq (Filter.cocompact ℂ) Filter.atTop := by
-  simpa [← mul_self_abs] using tendsto_abs_cocompact_at_top.at_top_mul_at_top tendsto_abs_cocompact_at_top
+  simpa [mul_self_abs] using tendsto_abs_cocompact_at_top.at_top_mul_at_top tendsto_abs_cocompact_at_top
 
 open ContinuousLinearMap
 
 /-- Continuous linear map version of the real part function, from `ℂ` to `ℝ`. -/
 def reClm : ℂ →L[ℝ] ℝ :=
   reLm.mkContinuous 1 fun x => by
-    simp [← abs_re_le_abs]
+    simp [abs_re_le_abs]
 
 @[continuity]
 theorem continuous_re : Continuous re :=
@@ -213,7 +213,7 @@ theorem re_clm_nnnorm : ∥re_clm∥₊ = 1 :=
 /-- Continuous linear map version of the real part function, from `ℂ` to `ℝ`. -/
 def imClm : ℂ →L[ℝ] ℝ :=
   imLm.mkContinuous 1 fun x => by
-    simp [← abs_im_le_abs]
+    simp [abs_im_le_abs]
 
 @[continuity]
 theorem continuous_im : Continuous im :=
@@ -248,7 +248,7 @@ theorem restrict_scalars_one_smul_right' (x : E) :
       reClm.smul_right x + I • imClm.smul_right x :=
   by
   ext ⟨a, b⟩
-  simp [← mk_eq_add_mul_I, ← add_smul, ← mul_smul, ← smul_comm I]
+  simp [mk_eq_add_mul_I, add_smul, mul_smul, smul_comm I]
 
 theorem restrict_scalars_one_smul_right (x : ℂ) :
     ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] ℂ) = x • 1 := by
@@ -358,29 +358,29 @@ noncomputable instance : IsROrC ℂ where
   im := ⟨Complex.im, Complex.zero_im, Complex.add_im⟩
   i := Complex.i
   I_re_ax := by
-    simp only [← AddMonoidHom.coe_mk, ← Complex.I_re]
+    simp only [AddMonoidHom.coe_mk, Complex.I_re]
   I_mul_I_ax := by
-    simp only [← Complex.I_mul_I, ← eq_self_iff_true, ← or_trueₓ]
+    simp only [Complex.I_mul_I, eq_self_iff_true, or_trueₓ]
   re_add_im_ax := fun z => by
-    simp only [← AddMonoidHom.coe_mk, ← Complex.re_add_im, ← Complex.coe_algebra_map, ← Complex.of_real_eq_coe]
+    simp only [AddMonoidHom.coe_mk, Complex.re_add_im, Complex.coe_algebra_map, Complex.of_real_eq_coe]
   of_real_re_ax := fun r => by
-    simp only [← AddMonoidHom.coe_mk, ← Complex.of_real_re, ← Complex.coe_algebra_map, ← Complex.of_real_eq_coe]
+    simp only [AddMonoidHom.coe_mk, Complex.of_real_re, Complex.coe_algebra_map, Complex.of_real_eq_coe]
   of_real_im_ax := fun r => by
-    simp only [← AddMonoidHom.coe_mk, ← Complex.of_real_im, ← Complex.coe_algebra_map, ← Complex.of_real_eq_coe]
+    simp only [AddMonoidHom.coe_mk, Complex.of_real_im, Complex.coe_algebra_map, Complex.of_real_eq_coe]
   mul_re_ax := fun z w => by
-    simp only [← Complex.mul_re, ← AddMonoidHom.coe_mk]
+    simp only [Complex.mul_re, AddMonoidHom.coe_mk]
   mul_im_ax := fun z w => by
-    simp only [← AddMonoidHom.coe_mk, ← Complex.mul_im]
+    simp only [AddMonoidHom.coe_mk, Complex.mul_im]
   conj_re_ax := fun z => rfl
   conj_im_ax := fun z => rfl
   conj_I_ax := by
-    simp only [← Complex.conj_I, ← RingHom.coe_mk]
+    simp only [Complex.conj_I, RingHom.coe_mk]
   norm_sq_eq_def_ax := fun z => by
-    simp only [Complex.norm_sq_eq_abs, Complex.norm_sq_apply, ← AddMonoidHom.coe_mk, ← Complex.norm_eq_abs]
+    simp only [← Complex.norm_sq_eq_abs, ← Complex.norm_sq_apply, AddMonoidHom.coe_mk, Complex.norm_eq_abs]
   mul_im_I_ax := fun z => by
-    simp only [← mul_oneₓ, ← AddMonoidHom.coe_mk, ← Complex.I_im]
+    simp only [mul_oneₓ, AddMonoidHom.coe_mk, Complex.I_im]
   inv_def_ax := fun z => by
-    simp only [← Complex.inv_def, ← Complex.norm_sq_eq_abs, ← Complex.coe_algebra_map, ← Complex.of_real_eq_coe, ←
+    simp only [Complex.inv_def, Complex.norm_sq_eq_abs, Complex.coe_algebra_map, Complex.of_real_eq_coe,
       Complex.norm_eq_abs]
   div_I_ax := Complex.div_I
 
@@ -406,7 +406,7 @@ def equivRealProdAddHom : ℂ ≃+ ℝ × ℝ :=
 def equivRealProdAddHomLm : ℂ ≃ₗ[ℝ] ℝ × ℝ :=
   { equivRealProdAddHom with
     map_smul' := by
-      simp [← equiv_real_prod_add_hom] }
+      simp [equiv_real_prod_add_hom] }
 
 /-- The natural `continuous_linear_equiv` from `ℂ` to `ℝ × ℝ`. -/
 @[simps (config := { simpRhs := true }) apply symm_apply_re symm_apply_im]
@@ -461,11 +461,11 @@ theorem I_to_complex : IC = Complex.i :=
 
 @[simp]
 theorem norm_sq_to_complex {x : ℂ} : norm_sqC x = Complex.normSq x := by
-  simp [← IsROrC.normSq, ← Complex.normSq]
+  simp [IsROrC.normSq, Complex.normSq]
 
 @[simp]
 theorem abs_to_complex {x : ℂ} : absC x = Complex.abs x := by
-  simp [← IsROrC.abs, ← Complex.abs]
+  simp [IsROrC.abs, Complex.abs]
 
 end IsROrC
 

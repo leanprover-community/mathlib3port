@@ -67,7 +67,7 @@ instance NoetherianSpace.set [h : NoetherianSpace α] (s : Set α) : NoetherianS
   rintro ⟨_, x, hx, rfl⟩ hx' hx''
   refine' le_antisymmₓ (Set.preimage_mono (_ : (⟨x, hx⟩ : opens α) ≤ U)) hx''
   refine' sup_eq_right.mp (hU' (⟨x, hx⟩⊔U) _ le_sup_right)
-  dsimp' [← Set.Preimage]
+  dsimp' [Set.Preimage]
   rw [map_sup]
   convert hx'
   exact sup_eq_left.mpr hx''
@@ -123,13 +123,13 @@ theorem NoetherianSpace.range [NoetherianSpace α] (f : α → β) (hf : Continu
       continuity)
     fun ⟨a, b, h⟩ => ⟨b, Subtype.ext h⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem noetherian_space_set_iff (s : Set α) : NoetherianSpace s ↔ ∀ (t) (_ : t ⊆ s), IsCompact t := by
   rw [(noetherian_space_tfae s).out 0 2]
   constructor
   · intro H t ht
     have := embedding_subtype_coe.is_compact_iff_is_compact_image.mp (H (coe ⁻¹' t))
-    simpa [← set.inter_eq_left_iff_subset.mpr ht] using this
+    simpa [set.inter_eq_left_iff_subset.mpr ht] using this
     
   · intro H t
     refine' embedding_subtype_coe.is_compact_iff_is_compact_image.mpr (H (coe '' t) _)
@@ -178,7 +178,7 @@ theorem NoetherianSpace.exists_finset_irreducible [NoetherianSpace α] (s : Clos
     exact h
     
   · use {s}
-    simp only [← coe_coe, ← Finset.sup_singleton, ← id.def, ← eq_self_iff_true, ← and_trueₓ]
+    simp only [coe_coe, Finset.sup_singleton, id.def, eq_self_iff_true, and_trueₓ]
     rintro ⟨k, hk⟩
     cases finset.mem_singleton.mp hk
     exact ⟨h, h₁⟩
@@ -209,7 +209,7 @@ theorem NoetherianSpace.finite_irreducible_components [NoetherianSpace α] :
     convert is_irreducible_iff_sUnion_closed.mp is_irreducible_irreducible_component (S.image coe) _ _
     · infer_instance
       
-    · simp only [← Finset.mem_image, ← exists_prop, ← forall_exists_index, ← and_imp]
+    · simp only [Finset.mem_image, exists_prop, forall_exists_index, and_imp]
       rintro _ z hz rfl
       exact z.2
       

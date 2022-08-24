@@ -139,7 +139,7 @@ variable (p q) (f : F →* E)
 
 @[to_additive]
 instance : Zero (GroupSeminorm E) :=
-  ⟨{ toFun := 0, nonneg' := fun r => le_rfl, map_one' := Pi.zero_apply _, mul_le' := fun _ _ => (zero_addₓ _).Ge,
+  ⟨{ toFun := 0, nonneg' := fun r => le_rflₓ, map_one' := Pi.zero_apply _, mul_le' := fun _ _ => (zero_addₓ _).Ge,
       inv' := fun x => rfl }⟩
 
 @[simp, to_additive]
@@ -310,7 +310,7 @@ noncomputable instance : Lattice (GroupSeminorm E) :=
         rw [div_self', q.map_one, add_zeroₓ],
     inf_le_right := fun p q x =>
       cinfi_le_of_le mul_bdd_below_range_add (1 : E) <| by
-        simp only [← div_one, ← p.map_one, ← zero_addₓ],
+        simp only [div_one, p.map_one, zero_addₓ],
     le_inf := fun a b c hb hc x => le_cinfi fun u => (a.le_insert' _ _).trans <| add_le_add (hb _) (hc _) }
 
 end CommGroupₓ
@@ -334,12 +334,12 @@ instance [HasSmul R ℝ] [HasSmul R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ] :
     HasSmul R (AddGroupSeminorm E) where smul := fun r p =>
     { toFun := fun x => r • p x,
       nonneg' := fun x => by
-        simp only [smul_one_smul ℝ≥0 r (_ : ℝ), ← Nnreal.smul_def, ← smul_eq_mul]
+        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul]
         exact mul_nonneg (Nnreal.coe_nonneg _) (p.nonneg _),
       map_zero' := by
-        simp only [smul_one_smul ℝ≥0 r (_ : ℝ), ← Nnreal.smul_def, ← smul_eq_mul, ← p.map_zero, ← mul_zero],
+        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul, p.map_zero, mul_zero],
       add_le' := fun _ _ => by
-        simp only [smul_one_smul ℝ≥0 r (_ : ℝ), ← Nnreal.smul_def, ← smul_eq_mul]
+        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul]
         exact (mul_le_mul_of_nonneg_left (p.add_le _ _) (Nnreal.coe_nonneg _)).trans_eq (mul_addₓ _ _ _),
       neg' := fun x => by
         rw [p.neg] }
@@ -361,7 +361,7 @@ theorem smul_apply [HasSmul R ℝ] [HasSmul R ℝ≥0 ] [IsScalarTower R ℝ≥0
 theorem smul_sup [HasSmul R ℝ] [HasSmul R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ] (r : R) (p q : AddGroupSeminorm E) :
     r • (p⊔q) = r • p⊔r • q :=
   have real.smul_max : ∀ x y : ℝ, r • max x y = max (r • x) (r • y) := fun x y => by
-    simpa only [smul_eq_mul, Nnreal.smul_def, ← smul_one_smul ℝ≥0 r (_ : ℝ)] using
+    simpa only [← smul_eq_mul, ← Nnreal.smul_def, smul_one_smul ℝ≥0 r (_ : ℝ)] using
       mul_max_of_nonneg x y (r • 1 : ℝ≥0 ).Prop
   ext fun x => real.smul_max _ _
 
@@ -377,12 +377,12 @@ instance : HasSmul R (GroupSeminorm E) :=
   ⟨fun r p =>
     { toFun := fun x => r • p x,
       nonneg' := fun x => by
-        simp only [smul_one_smul ℝ≥0 r (_ : ℝ), ← Nnreal.smul_def, ← smul_eq_mul]
+        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul]
         exact mul_nonneg (Nnreal.coe_nonneg _) (p.nonneg _),
       map_one' := by
-        simp only [smul_one_smul ℝ≥0 r (_ : ℝ), ← Nnreal.smul_def, ← smul_eq_mul, ← p.map_one, ← mul_zero],
+        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul, p.map_one, mul_zero],
       mul_le' := fun _ _ => by
-        simp only [smul_one_smul ℝ≥0 r (_ : ℝ), ← Nnreal.smul_def, ← smul_eq_mul]
+        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul]
         exact (mul_le_mul_of_nonneg_left (p.mul_le _ _) <| Nnreal.coe_nonneg _).trans_eq (mul_addₓ _ _ _),
       inv' := fun x => by
         rw [p.inv] }⟩
@@ -403,7 +403,7 @@ theorem smul_apply (r : R) (p : GroupSeminorm E) (x : E) : (r • p) x = r • p
 @[to_additive AddGroupSeminorm.smul_sup]
 theorem smul_sup (r : R) (p q : GroupSeminorm E) : r • (p⊔q) = r • p⊔r • q :=
   have real.smul_max : ∀ x y : ℝ, r • max x y = max (r • x) (r • y) := fun x y => by
-    simpa only [smul_eq_mul, Nnreal.smul_def, ← smul_one_smul ℝ≥0 r (_ : ℝ)] using
+    simpa only [← smul_eq_mul, ← Nnreal.smul_def, smul_one_smul ℝ≥0 r (_ : ℝ)] using
       mul_max_of_nonneg x y (r • 1 : ℝ≥0 ).Prop
   ext fun x => real.smul_max _ _
 
@@ -516,7 +516,7 @@ instance [HasSmul R ℝ] [HasSmul R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ] :
         E) where smul := fun r p =>
     { r • p.toAddGroupSeminorm with toFun := fun x => r • p x,
       smul' := fun _ _ => by
-        simp only [smul_one_smul ℝ≥0 r (_ : ℝ), ← Nnreal.smul_def, ← smul_eq_mul]
+        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul]
         rw [p.smul, mul_left_commₓ] }
 
 instance [HasSmul R ℝ] [HasSmul R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ] [HasSmul R' ℝ] [HasSmul R' ℝ≥0 ]
@@ -537,7 +537,7 @@ instance :
         E) where add := fun p q =>
     { p.toAddGroupSeminorm + q.toAddGroupSeminorm with toFun := fun x => p x + q x,
       smul' := fun a x => by
-        simp only [← p.smul, ← q.smul, ← mul_addₓ] }
+        simp only [p.smul, q.smul, mul_addₓ] }
 
 theorem coe_add (p q : Seminorm 𝕜 E) : ⇑(p + q) = p + q :=
   rfl
@@ -595,7 +595,7 @@ theorem sup_apply (p q : Seminorm 𝕜 E) (x : E) : (p⊔q) x = p x⊔q x :=
 theorem smul_sup [HasSmul R ℝ] [HasSmul R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ] (r : R) (p q : Seminorm 𝕜 E) :
     r • (p⊔q) = r • p⊔r • q :=
   have real.smul_max : ∀ x y : ℝ, r • max x y = max (r • x) (r • y) := fun x y => by
-    simpa only [smul_eq_mul, Nnreal.smul_def, ← smul_one_smul ℝ≥0 r (_ : ℝ)] using
+    simpa only [← smul_eq_mul, ← Nnreal.smul_def, smul_one_smul ℝ≥0 r (_ : ℝ)] using
       mul_max_of_nonneg x y (r • 1 : ℝ≥0 ).Prop
   ext fun x => real.smul_max _ _
 
@@ -800,10 +800,10 @@ noncomputable instance : Lattice (Seminorm 𝕜 E) :=
   { Seminorm.semilatticeSup with inf := (·⊓·),
     inf_le_left := fun p q x => by
       apply cinfi_le_of_le (bdd_below_range_add _ _ _) x
-      simp only [← sub_self, ← map_zero, ← add_zeroₓ],
+      simp only [sub_self, map_zero, add_zeroₓ],
     inf_le_right := fun p q x => by
       apply cinfi_le_of_le (bdd_below_range_add _ _ _) (0 : E)
-      simp only [← sub_self, ← map_zero, ← zero_addₓ, ← sub_zero],
+      simp only [sub_self, map_zero, zero_addₓ, sub_zero],
     le_inf := fun a b c hab hac x => le_cinfi fun u => le_transₓ (a.le_insert' _ _) (add_le_add (hab _) (hac _)) }
 
 theorem smul_inf [HasSmul R ℝ] [HasSmul R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ] (r : R) (p q : Seminorm 𝕜 E) :
@@ -849,7 +849,7 @@ theorem ball_zero_eq : Ball p 0 r = { y : E | p y < r } :=
 @[simp]
 theorem ball_zero' (x : E) (hr : 0 < r) : Ball (0 : Seminorm 𝕜 E) x r = Set.Univ := by
   rw [Set.eq_univ_iff_forall, ball]
-  simp [← hr]
+  simp [hr]
 
 theorem ball_smul (p : Seminorm 𝕜 E) {c : Nnreal} (hc : 0 < c) (r : ℝ) (x : E) : (c • p).ball x r = p.ball x (r / c) :=
   by
@@ -895,7 +895,7 @@ variable (p : Seminorm 𝕜 E)
 
 theorem ball_zero_eq_preimage_ball {r : ℝ} : p.ball 0 r = p ⁻¹' Metric.Ball 0 r := by
   ext x
-  simp only [← mem_ball, ← sub_zero, ← mem_preimage, ← mem_ball_zero_iff]
+  simp only [mem_ball, sub_zero, mem_preimage, mem_ball_zero_iff]
   rw [Real.norm_of_nonneg]
   exact p.nonneg _
 
@@ -1028,7 +1028,7 @@ variable [HasSmul ℝ E] [IsScalarTower ℝ 𝕜 E] (p : Seminorm 𝕜 E)
 
 /-- A seminorm is convex. Also see `convex_on_norm`. -/
 protected theorem convex_on : ConvexOn ℝ Univ p := by
-  refine' ⟨convex_univ, fun x y _ _ a b ha hb hab => _⟩
+  refine' ⟨convex_univ, fun x _ y _ a b ha hb hab => _⟩
   calc
     p (a • x + b • y) ≤ p (a • x) + p (b • y) := p.add_le _ _
     _ = ∥a • (1 : 𝕜)∥ * p x + ∥b • (1 : 𝕜)∥ * p y := by
@@ -1082,7 +1082,7 @@ theorem coe_norm_seminorm : ⇑(normSeminorm 𝕜 E) = norm :=
 @[simp]
 theorem ball_norm_seminorm : (normSeminorm 𝕜 E).ball = Metric.Ball := by
   ext x r y
-  simp only [← Seminorm.mem_ball, ← Metric.mem_ball, ← coe_norm_seminorm, ← dist_eq_norm]
+  simp only [Seminorm.mem_ball, Metric.mem_ball, coe_norm_seminorm, dist_eq_norm]
 
 variable {𝕜 E} {x : E}
 

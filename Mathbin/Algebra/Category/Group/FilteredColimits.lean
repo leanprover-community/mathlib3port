@@ -101,7 +101,7 @@ instance colimitGroup : Groupₓ G :=
       erw [colimit_inv_mk_eq, colimit_mul_mk_eq (F ⋙ forget₂ Groupₓₓ Mon.{max v u}) ⟨j, _⟩ ⟨j, _⟩ j (𝟙 j) (𝟙 j),
         colimit_one_eq (F ⋙ forget₂ Groupₓₓ Mon.{max v u}) j]
       dsimp'
-      simp only [← CategoryTheory.Functor.map_id, ← id_apply, ← mul_left_invₓ] }
+      simp only [CategoryTheory.Functor.map_id, id_apply, mul_left_invₓ] }
 
 /-- The bundled group giving the filtered colimit of a diagram. -/
 @[to_additive "The bundled additive group giving the filtered colimit of a diagram."]

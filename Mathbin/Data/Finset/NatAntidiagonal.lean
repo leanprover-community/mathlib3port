@@ -36,7 +36,7 @@ theorem mem_antidiagonal {n : ℕ} {x : ℕ × ℕ} : x ∈ antidiagonal n ↔ x
 /-- The cardinality of the antidiagonal of `n` is `n + 1`. -/
 @[simp]
 theorem card_antidiagonal (n : ℕ) : (antidiagonal n).card = n + 1 := by
-  simp [← antidiagonal]
+  simp [antidiagonal]
 
 /-- The antidiagonal of `0` is the list `[(0, 0)]` -/
 @[simp]
@@ -83,7 +83,7 @@ theorem antidiagonal_succ_succ' {n : ℕ} :
 theorem map_swap_antidiagonal {n : ℕ} :
     (antidiagonal n).map ⟨Prod.swap, Prod.swap_right_inverse.Injective⟩ = antidiagonal n :=
   eq_of_veq <| by
-    simp [← antidiagonal, ← Multiset.Nat.map_swap_antidiagonal]
+    simp [antidiagonal, Multiset.Nat.map_swap_antidiagonal]
 
 /-- A point in the antidiagonal is determined by its first co-ordinate. -/
 theorem antidiagonal_congr {n : ℕ} {p q : ℕ × ℕ} (hp : p ∈ antidiagonal n) (hq : q ∈ antidiagonal n) :
@@ -105,12 +105,12 @@ theorem antidiagonal.snd_le {n : ℕ} {kl : ℕ × ℕ} (hlk : kl ∈ antidiagon
 theorem filter_fst_eq_antidiagonal (n m : ℕ) :
     filter (fun x : ℕ × ℕ => x.fst = m) (antidiagonal n) = if m ≤ n then {(m, n - m)} else ∅ := by
   ext ⟨x, y⟩
-  simp only [← mem_filter, ← nat.mem_antidiagonal]
+  simp only [mem_filter, nat.mem_antidiagonal]
   split_ifs with h h
-  · simp (config := { contextual := true })[← and_comm, ← eq_tsub_iff_add_eq_of_le h, ← add_commₓ]
+  · simp (config := { contextual := true })[and_comm, eq_tsub_iff_add_eq_of_le h, add_commₓ]
     
   · rw [not_leₓ] at h
-    simp only [← not_mem_empty, ← iff_falseₓ, ← not_and]
+    simp only [not_mem_empty, iff_falseₓ, not_and]
     exact fun hn => ne_of_ltₓ (lt_of_le_of_ltₓ (le_self_add.trans hn.le) h)
     
 
@@ -120,7 +120,7 @@ theorem filter_snd_eq_antidiagonal (n m : ℕ) :
     ext
     simp
   rw [← map_swap_antidiagonal]
-  simp [← map_filter, ← this, ← filter_fst_eq_antidiagonal, ← apply_ite (Finset.map _)]
+  simp [map_filter, this, filter_fst_eq_antidiagonal, apply_ite (Finset.map _)]
 
 section EquivProd
 

@@ -50,7 +50,7 @@ theorem sin_eq_zero_iff {θ : ℂ} : sin θ = 0 ↔ ∃ k : ℤ, θ = k * π := 
   constructor
   · rintro ⟨k, hk⟩
     use k + 1
-    field_simp [← eq_add_of_sub_eq hk]
+    field_simp [eq_add_of_sub_eq hk]
     ring
     
   · rintro ⟨k, rfl⟩
@@ -67,7 +67,7 @@ theorem tan_eq_zero_iff {θ : ℂ} : tan θ = 0 ↔ ∃ k : ℤ, θ = k * π / 2
   rw [mul_assoc] at h
   rw [tan, div_eq_zero_iff, ← mul_eq_zero, ← zero_mul (1 / 2 : ℂ), mul_one_div,
     CancelFactors.cancel_factors_eq_div h two_ne_zero', mul_comm]
-  simpa only [← zero_div, ← zero_mul, ← Ne.def, ← not_false_iff] with field_simps using sin_eq_zero_iff
+  simpa only [zero_div, zero_mul, Ne.def, not_false_iff] with field_simps using sin_eq_zero_iff
 
 theorem tan_ne_zero_iff {θ : ℂ} : tan θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ k * π / 2 := by
   rw [← not_exists, not_iff_not, tan_eq_zero_iff]
@@ -83,16 +83,16 @@ theorem cos_eq_cos_iff {x y : ℂ} : cos x = cos y ↔ ∃ k : ℤ, y = 2 * k * 
     _ ↔ -2 * sin ((x + y) / 2) * sin ((x - y) / 2) = 0 := by
       rw [cos_sub_cos]
     _ ↔ sin ((x + y) / 2) = 0 ∨ sin ((x - y) / 2) = 0 := by
-      simp [←
-        (by
+      simp
+        [(by
           norm_num : (2 : ℂ) ≠ 0)]
     _ ↔ sin ((x - y) / 2) = 0 ∨ sin ((x + y) / 2) = 0 := Or.comm
     _ ↔ (∃ k : ℤ, y = 2 * k * π + x) ∨ ∃ k : ℤ, y = 2 * k * π - x := by
       apply or_congr <;>
-        field_simp [← sin_eq_zero_iff, ←
+        field_simp [sin_eq_zero_iff,
           (by
             norm_num : -(2 : ℂ) ≠ 0),
-          ← eq_sub_iff_add_eq', ← sub_eq_iff_eq_add, ← mul_comm (2 : ℂ), ← mul_right_commₓ _ (2 : ℂ)]
+          eq_sub_iff_add_eq', sub_eq_iff_eq_add, mul_comm (2 : ℂ), mul_right_commₓ _ (2 : ℂ)]
       constructor <;>
         · rintro ⟨k, rfl⟩
           use -k
@@ -102,7 +102,7 @@ theorem cos_eq_cos_iff {x y : ℂ} : cos x = cos y ↔ ∃ k : ℤ, y = 2 * k * 
     
 
 theorem sin_eq_sin_iff {x y : ℂ} : sin x = sin y ↔ ∃ k : ℤ, y = 2 * k * π + x ∨ y = (2 * k + 1) * π - x := by
-  simp only [Complex.cos_sub_pi_div_two, ← cos_eq_cos_iff, ← sub_eq_iff_eq_add]
+  simp only [← Complex.cos_sub_pi_div_two, cos_eq_cos_iff, sub_eq_iff_eq_add]
   refine' exists_congr fun k => or_congr _ _ <;> refine' Eq.congr rfl _ <;> field_simp <;> ring
 
 theorem tan_add {x y : ℂ}
@@ -115,11 +115,11 @@ theorem tan_add {x y : ℂ}
       div_div_div_cancel_right (sin x * cos y + cos x * sin y)
         (mul_ne_zero (cos_ne_zero_iff.mpr h1) (cos_ne_zero_iff.mpr h2)),
       add_div, sub_div]
-    simp only [div_mul_div_comm, tan, ← mul_oneₓ, ← one_mulₓ, ← div_self (cos_ne_zero_iff.mpr h1), ←
+    simp only [← div_mul_div_comm, ← tan, mul_oneₓ, one_mulₓ, div_self (cos_ne_zero_iff.mpr h1),
       div_self (cos_ne_zero_iff.mpr h2)]
     
   · obtain ⟨t, hx, hy, hxy⟩ := tan_int_mul_pi_div_two, t (2 * k + 1), t (2 * l + 1), t (2 * k + 1 + (2 * l + 1))
-    simp only [← Int.cast_add, ← Int.cast_bit0, ← Int.cast_mul, ← Int.cast_oneₓ, ← hx, ← hy] at hx hy hxy
+    simp only [Int.cast_add, Int.cast_bit0, Int.cast_mul, Int.cast_oneₓ, hx, hy] at hx hy hxy
     rw [hx, hy, add_zeroₓ, zero_div, mul_div_assoc, mul_div_assoc, ← add_mulₓ (2 * (k : ℂ) + 1) (2 * l + 1) (π / 2), ←
       mul_div_assoc, hxy]
     
@@ -161,18 +161,18 @@ theorem continuous_tan : Continuous fun x : { x | cos x ≠ 0 } => tan x :=
 
 theorem cos_eq_iff_quadratic {z w : ℂ} : cos z = w ↔ exp (z * I) ^ 2 - 2 * w * exp (z * I) + 1 = 0 := by
   rw [← sub_eq_zero]
-  field_simp [← cos, ← exp_neg, ← exp_ne_zero]
+  field_simp [cos, exp_neg, exp_ne_zero]
   refine' Eq.congr _ rfl
   ring
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (w «expr ≠ » 0)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (w «expr ≠ » 0)
 theorem cos_surjective : Function.Surjective cos := by
   intro x
   obtain ⟨w, w₀, hw⟩ : ∃ (w : _)(_ : w ≠ 0), 1 * w * w + -2 * x * w + 1 = 0 := by
     rcases exists_quadratic_eq_zero (@one_ne_zero ℂ _ _) (IsAlgClosed.exists_eq_mul_self _) with ⟨w, hw⟩
     refine' ⟨w, _, hw⟩
     rintro rfl
-    simpa only [← zero_addₓ, ← one_ne_zero, ← mul_zero] using hw
+    simpa only [zero_addₓ, one_ne_zero, mul_zero] using hw
   refine' ⟨log w / I, cos_eq_iff_quadratic.2 _⟩
   rw [div_mul_cancel _ I_ne_zero, exp_log w₀]
   convert hw
@@ -210,18 +210,18 @@ theorem sin_eq_sin_iff {x y : ℝ} : sin x = sin y ↔ ∃ k : ℤ, y = 2 * k * 
   exact_mod_cast @Complex.sin_eq_sin_iff x y
 
 theorem lt_sin_mul {x : ℝ} (hx : 0 < x) (hx' : x < 1) : x < sin (π / 2 * x) := by
-  simpa [← mul_comm x] using
-    strict_concave_on_sin_Icc.2 ⟨le_rfl, pi_pos.le⟩ ⟨pi_div_two_pos.le, half_le_self pi_pos.le⟩ pi_div_two_pos.ne
+  simpa [mul_comm x] using
+    strict_concave_on_sin_Icc.2 ⟨le_rflₓ, pi_pos.le⟩ ⟨pi_div_two_pos.le, half_le_self pi_pos.le⟩ pi_div_two_pos.ne
       (sub_pos.2 hx') hx
 
 theorem le_sin_mul {x : ℝ} (hx : 0 ≤ x) (hx' : x ≤ 1) : x ≤ sin (π / 2 * x) := by
-  simpa [← mul_comm x] using
-    strict_concave_on_sin_Icc.concave_on.2 ⟨le_rfl, pi_pos.le⟩ ⟨pi_div_two_pos.le, half_le_self pi_pos.le⟩
+  simpa [mul_comm x] using
+    strict_concave_on_sin_Icc.concave_on.2 ⟨le_rflₓ, pi_pos.le⟩ ⟨pi_div_two_pos.le, half_le_self pi_pos.le⟩
       (sub_nonneg.2 hx') hx
 
 theorem mul_lt_sin {x : ℝ} (hx : 0 < x) (hx' : x < π / 2) : 2 / π * x < sin x := by
   rw [← inv_div]
-  simpa [-inv_div, ← pi_div_two_pos.ne'] using @lt_sin_mul ((π / 2)⁻¹ * x) _ _
+  simpa [-inv_div, pi_div_two_pos.ne'] using @lt_sin_mul ((π / 2)⁻¹ * x) _ _
   · exact mul_pos (inv_pos.2 pi_div_two_pos) hx
     
   · rwa [← div_eq_inv_mul, div_lt_one pi_div_two_pos]
@@ -231,7 +231,7 @@ theorem mul_lt_sin {x : ℝ} (hx : 0 < x) (hx' : x < π / 2) : 2 / π * x < sin 
 of Jordan's inequality, the other half is `real.sin_lt` -/
 theorem mul_le_sin {x : ℝ} (hx : 0 ≤ x) (hx' : x ≤ π / 2) : 2 / π * x ≤ sin x := by
   rw [← inv_div]
-  simpa [-inv_div, ← pi_div_two_pos.ne'] using @le_sin_mul ((π / 2)⁻¹ * x) _ _
+  simpa [-inv_div, pi_div_two_pos.ne'] using @le_sin_mul ((π / 2)⁻¹ * x) _ _
   · exact mul_nonneg (inv_nonneg.2 pi_div_two_pos.le) hx
     
   · rwa [← div_eq_inv_mul, div_le_one pi_div_two_pos]

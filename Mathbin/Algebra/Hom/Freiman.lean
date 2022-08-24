@@ -104,7 +104,7 @@ theorem map_prod_eq_map_prod [FreimanHomClass F A β n] (f : F) {s t : Multiset 
 theorem map_mul_map_eq_map_mul_map [FreimanHomClass F A β 2] (f : F) (ha : a ∈ A) (hb : b ∈ A) (hc : c ∈ A) (hd : d ∈ A)
     (h : a * b = c * d) : f a * f b = f c * f d := by
   simp_rw [← prod_pair] at h⊢
-  refine' map_prod_eq_map_prod f _ _ (card_pair _ _) (card_pair _ _) h <;> simp [← ha, ← hb, ← hc, ← hd]
+  refine' map_prod_eq_map_prod f _ _ (card_pair _ _) (card_pair _ _) h <;> simp [ha, hb, hc, hd]
 
 namespace FreimanHom
 
@@ -117,9 +117,9 @@ instance funLike : FunLike (A →*[n] β) α fun _ => β where
 @[to_additive]
 instance freimanHomClass : FreimanHomClass (A →*[n] β) A β n where map_prod_eq_map_prod' := map_prod_eq_map_prod'
 
-/-- Helper instance for when there's too many metavariables to apply
-`fun_like.has_coe_to_fun` directly. -/
-@[to_additive]
+/-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
+directly. -/
+@[to_additive "Helper instance for when there's too many metavariables to apply\n`fun_like.has_coe_to_fun` directly."]
 instance : CoeFun (A →*[n] β) fun _ => α → β :=
   ⟨toFun⟩
 
@@ -388,8 +388,8 @@ section CancelCommMonoid
 variable [CommMonoidₓ α] [CancelCommMonoid β] {A : Set α} {m n : ℕ}
 
 @[to_additive]
-theorem map_prod_eq_map_prod_of_le [FreimanHomClass F A β n] (f : F) {s t : Multiset α} (hsA : ∀, ∀ x ∈ s, ∀, x ∈ A)
-    (htA : ∀, ∀ x ∈ t, ∀, x ∈ A) (hs : s.card = m) (ht : t.card = m) (hst : s.Prod = t.Prod) (h : m ≤ n) :
+theorem map_prod_eq_map_prod_of_le [FreimanHomClass F A β n] (f : F) {s t : Multiset α} (hsA : ∀ x ∈ s, x ∈ A)
+    (htA : ∀ x ∈ t, x ∈ A) (hs : s.card = m) (ht : t.card = m) (hst : s.Prod = t.Prod) (h : m ≤ n) :
     (s.map f).Prod = (t.map f).Prod := by
   obtain rfl | hm := m.eq_zero_or_pos
   · rw [card_eq_zero] at hs ht

@@ -43,7 +43,7 @@ theorem Wcovby.le (h : a ⩿ b) : a ≤ b :=
   h.1
 
 theorem Wcovby.refl (a : α) : a ⩿ a :=
-  ⟨le_rfl, fun c hc => hc.not_lt⟩
+  ⟨le_rflₓ, fun c hc => hc.not_lt⟩
 
 theorem Wcovby.rfl : a ⩿ a :=
   Wcovby.refl a
@@ -118,7 +118,7 @@ theorem Wcovby.eq_or_eq (h : a ⩿ b) (h2 : a ≤ c) (h3 : c ≤ b) : c = a ∨ 
 theorem Wcovby.le_and_le_iff (h : a ⩿ b) : a ≤ c ∧ c ≤ b ↔ c = a ∨ c = b := by
   refine' ⟨fun h2 => h.eq_or_eq h2.1 h2.2, _⟩
   rintro (rfl | rfl)
-  exacts[⟨le_rfl, h.le⟩, ⟨h.le, le_rfl⟩]
+  exacts[⟨le_rflₓ, h.le⟩, ⟨h.le, le_rflₓ⟩]
 
 theorem Wcovby.Icc_eq (h : a ⩿ b) : Icc a b = {a, b} := by
   ext c
@@ -319,13 +319,14 @@ theorem swap_covby_swap : x.swap ⋖ y.swap ↔ x ⋖ y :=
 theorem fst_eq_or_snd_eq_of_wcovby : x ⩿ y → x.1 = y.1 ∨ x.2 = y.2 := by
   refine' fun h => of_not_not fun hab => _
   push_neg  at hab
-  exact h.2 (mk_lt_mk.2 <| Or.inl ⟨hab.1.lt_of_le h.1.1, le_rfl⟩) (mk_lt_mk.2 <| Or.inr ⟨le_rfl, hab.2.lt_of_le h.1.2⟩)
+  exact
+    h.2 (mk_lt_mk.2 <| Or.inl ⟨hab.1.lt_of_le h.1.1, le_rflₓ⟩) (mk_lt_mk.2 <| Or.inr ⟨le_rflₓ, hab.2.lt_of_le h.1.2⟩)
 
 theorem _root_.wcovby.fst (h : x ⩿ y) : x.1 ⩿ y.1 :=
-  ⟨h.1.1, fun c h₁ h₂ => h.2 (mk_lt_mk_iff_left.2 h₁) ⟨⟨h₂.le, h.1.2⟩, fun hc => h₂.not_le hc.1⟩⟩
+  ⟨h.1.1, fun c h₁ h₂ => h.2 (mk_lt_mk_iff_leftₓ.2 h₁) ⟨⟨h₂.le, h.1.2⟩, fun hc => h₂.not_le hc.1⟩⟩
 
 theorem _root_.wcovby.snd (h : x ⩿ y) : x.2 ⩿ y.2 :=
-  ⟨h.1.2, fun c h₁ h₂ => h.2 (mk_lt_mk_iff_right.2 h₁) ⟨⟨h.1.1, h₂.le⟩, fun hc => h₂.not_le hc.2⟩⟩
+  ⟨h.1.2, fun c h₁ h₂ => h.2 (mk_lt_mk_iff_rightₓ.2 h₁) ⟨⟨h.1.1, h₂.le⟩, fun hc => h₂.not_le hc.2⟩⟩
 
 theorem mk_wcovby_mk_iff_left : (a₁, b) ⩿ (a₂, b) ↔ a₁ ⩿ a₂ := by
   refine' ⟨Wcovby.fst, (And.imp mk_le_mk_iff_left.2) fun h c h₁ h₂ => _⟩

@@ -29,8 +29,8 @@ variable {K V₁ V₂ ι₁ ι₂ : Type _} [Field K] [AddCommGroupₓ V₁] [Mo
 theorem LinearMap.to_matrix_transpose (u : V₁ →ₗ[K] V₂) :
     LinearMap.toMatrix B₂.dualBasis B₁.dualBasis (Module.Dual.transpose u) = (LinearMap.toMatrix B₁ B₂ u)ᵀ := by
   ext i j
-  simp only [← LinearMap.to_matrix_apply, ← Module.Dual.transpose_apply, ← B₁.dual_basis_repr, ← B₂.dual_basis_apply, ←
-    Matrix.transpose_apply, ← LinearMap.comp_apply]
+  simp only [LinearMap.to_matrix_apply, Module.Dual.transpose_apply, B₁.dual_basis_repr, B₂.dual_basis_apply,
+    Matrix.transpose_apply, LinearMap.comp_apply]
 
 @[simp]
 theorem Matrix.to_lin_transpose (M : Matrix ι₁ ι₂ K) :

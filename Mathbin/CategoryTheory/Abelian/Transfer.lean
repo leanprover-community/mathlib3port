@@ -104,12 +104,12 @@ def coimageIsoImageAux {X Y : C} (f : X ⟶ Y) : kernel (G.map (cokernel.π (F.m
     _ ≅ kernel (cokernel.π (f ≫ i.inv.app Y) ≫ (cokernel_epi_comp (i.hom.app X) _).inv) :=
       kernel_iso_of_eq
         (by
-          simp only [← cokernel.π_desc, ← cokernel_epi_comp_inv])
+          simp only [cokernel.π_desc, cokernel_epi_comp_inv])
     _ ≅ kernel (cokernel.π (f ≫ _)) := kernel_comp_mono _ _
     _ ≅ kernel (inv (i.inv.app Y) ≫ cokernel.π f ≫ (cokernel_comp_is_iso f (i.inv.app Y)).inv) :=
       kernel_iso_of_eq
         (by
-          simp only [← cokernel.π_desc, ← cokernel_comp_is_iso_inv, ← iso.hom_inv_id_app_assoc, ← nat_iso.inv_inv_app])
+          simp only [cokernel.π_desc, cokernel_comp_is_iso_inv, iso.hom_inv_id_app_assoc, nat_iso.inv_inv_app])
     _ ≅ kernel (cokernel.π f ≫ _) := kernel_is_iso_comp _ _
     _ ≅ kernel (cokernel.π f) := kernel_comp_mono _ _
     
@@ -145,14 +145,13 @@ attribute [local simp] cokernel_iso coimage_iso_image coimage_iso_image_aux
 theorem coimage_iso_image_hom {X Y : C} (f : X ⟶ Y) :
     (coimageIsoImage F G i adj f).Hom = Abelian.coimageImageComparison f := by
   ext
-  simpa only [G.map_comp_assoc, ← coimage_iso_image, ← nat_iso.inv_inv_app, ← cokernel_iso, ← coimage_iso_image_aux, ←
-    iso.trans_symm, ← iso.symm_symm_eq, ← iso.refl_trans, ← iso.trans_refl, ← iso.trans_hom, ← iso.symm_hom, ←
-    cokernel_comp_is_iso_inv, ← cokernel_epi_comp_inv, ← as_iso_hom, ← functor.map_iso_hom, ← cokernel_epi_comp_hom, ←
-    preserves_kernel.iso_hom, ← kernel_comp_mono_hom, ← kernel_is_iso_comp_hom, ←
-    cokernel_iso_of_eq_hom_comp_desc_assoc, ← cokernel.π_desc_assoc, ← category.assoc, ←
-    π_comp_cokernel_iso_of_eq_inv_assoc, ← π_comp_cokernel_comparison_assoc, ← kernel.lift_ι, ← kernel.lift_ι_assoc, ←
-    kernel_iso_of_eq_hom_comp_ι_assoc, ← kernel_comparison_comp_ι_assoc, ← abelian.coimage_image_factorisation] using
-    nat_iso.naturality_1 i f
+  simpa only [← G.map_comp_assoc, coimage_iso_image, nat_iso.inv_inv_app, cokernel_iso, coimage_iso_image_aux,
+    iso.trans_symm, iso.symm_symm_eq, iso.refl_trans, iso.trans_refl, iso.trans_hom, iso.symm_hom,
+    cokernel_comp_is_iso_inv, cokernel_epi_comp_inv, as_iso_hom, functor.map_iso_hom, cokernel_epi_comp_hom,
+    preserves_kernel.iso_hom, kernel_comp_mono_hom, kernel_is_iso_comp_hom, cokernel_iso_of_eq_hom_comp_desc_assoc,
+    cokernel.π_desc_assoc, category.assoc, π_comp_cokernel_iso_of_eq_inv_assoc, π_comp_cokernel_comparison_assoc,
+    kernel.lift_ι, kernel.lift_ι_assoc, kernel_iso_of_eq_hom_comp_ι_assoc, kernel_comparison_comp_ι_assoc,
+    abelian.coimage_image_factorisation] using nat_iso.naturality_1 i f
 
 end AbelianOfAdjunction
 

@@ -42,7 +42,7 @@ def Prod.bitraverseₓ {α α' β β'} (f : α → F α') (f' : β → F β') : 
 instance : Bitraversable Prod where bitraverse := @Prod.bitraverseₓ
 
 instance : IsLawfulBitraversable Prod := by
-  constructor <;> intros <;> cases x <;> simp' [← bitraverse, ← Prod.bitraverseₓ] with functor_norm <;> rfl
+  constructor <;> intros <;> cases x <;> simp' [bitraverse, Prod.bitraverseₓ] with functor_norm <;> rfl
 
 open Functor
 
@@ -54,7 +54,7 @@ def Sum.bitraverseₓ {α α' β β'} (f : α → F α') (f' : β → F β') : S
 instance : Bitraversable Sum where bitraverse := @Sum.bitraverseₓ
 
 instance : IsLawfulBitraversable Sum := by
-  constructor <;> intros <;> cases x <;> simp' [← bitraverse, ← Sum.bitraverseₓ] with functor_norm <;> rfl
+  constructor <;> intros <;> cases x <;> simp' [bitraverse, Sum.bitraverseₓ] with functor_norm <;> rfl
 
 /-- The bitraverse function for `const`. It throws away the second map. -/
 @[nolint unused_arguments]
@@ -64,7 +64,7 @@ def Const.bitraverse {α α' β β'} (f : α → F α') (f' : β → F β') : Co
 instance Bitraversable.const : Bitraversable Const where bitraverse := @Const.bitraverse
 
 instance IsLawfulBitraversable.const : IsLawfulBitraversable Const := by
-  constructor <;> intros <;> simp' [← bitraverse, ← Const.bitraverse] with functor_norm <;> rfl
+  constructor <;> intros <;> simp' [bitraverse, Const.bitraverse] with functor_norm <;> rfl
 
 /-- The bitraverse function for `flip`. -/
 def flip.bitraverse {α α' β β'} (f : α → F α') (f' : β → F β') : flip t α β → F (flip t α' β') :=
@@ -87,13 +87,13 @@ instance (priority := 10) Bitraversable.traversable {α} : Traversable (t α) wh
 
 instance (priority := 10) Bitraversable.isLawfulTraversable [IsLawfulBitraversable t] {α} : IsLawfulTraversable (t α) :=
   by
-  constructor <;> intros <;> simp' [← traverse, ← comp_tsnd] with functor_norm
+  constructor <;> intros <;> simp' [traverse, comp_tsnd] with functor_norm
   · rfl
     
-  · simp [← tsnd_eq_snd_id]
+  · simp [tsnd_eq_snd_id]
     rfl
     
-  · simp' [← tsnd, ← binaturality, ← Function.comp] with functor_norm
+  · simp' [tsnd, binaturality, Function.comp] with functor_norm
     
 
 end
@@ -117,13 +117,12 @@ instance [IsLawfulTraversable F] [IsLawfulTraversable G] [IsLawfulBitraversable 
     IsLawfulBitraversable (bicompl t F G) := by
   constructor <;>
     intros <;>
-      simp' [← bitraverse, ← Bicompl.bitraverse, ← bimap, ← traverse_id, ← bitraverse_id_id, ← comp_bitraverse] with
-        functor_norm
-  · simp [← traverse_eq_map_id', ← bitraverse_eq_bimap_id]
+      simp' [bitraverse, Bicompl.bitraverse, bimap, traverse_id, bitraverse_id_id, comp_bitraverse] with functor_norm
+  · simp [traverse_eq_map_id', bitraverse_eq_bimap_id]
     
   · revert x
     dunfold bicompl
-    simp [← binaturality, ← naturality_pf]
+    simp [binaturality, naturality_pf]
     
 
 end Bicompl
@@ -140,14 +139,14 @@ def Bicompr.bitraverse {m} [Applicativeₓ m] {α β α' β'} (f : α → m β) 
 instance : Bitraversable (bicompr F t) where bitraverse := @Bicompr.bitraverse t _ F _
 
 instance [IsLawfulTraversable F] [IsLawfulBitraversable t] : IsLawfulBitraversable (bicompr F t) := by
-  constructor <;> intros <;> simp' [← bitraverse, ← Bicompr.bitraverse, ← bitraverse_id_id] with functor_norm
-  · simp [← bitraverse_eq_bimap_id', ← traverse_eq_map_id']
+  constructor <;> intros <;> simp' [bitraverse, Bicompr.bitraverse, bitraverse_id_id] with functor_norm
+  · simp [bitraverse_eq_bimap_id', traverse_eq_map_id']
     rfl
     
   · revert x
     dunfold bicompr
     intro
-    simp [← naturality, ← binaturality']
+    simp [naturality, binaturality']
     
 
 end Bicompr

@@ -37,30 +37,30 @@ def eraseLead (f : R[X]) : R[X] :=
 section EraseLead
 
 theorem erase_lead_support (f : R[X]) : f.eraseLead.Support = f.Support.erase f.natDegree := by
-  simp only [← erase_lead, ← support_erase]
+  simp only [erase_lead, support_erase]
 
 theorem erase_lead_coeff (i : ℕ) : f.eraseLead.coeff i = if i = f.natDegree then 0 else f.coeff i := by
-  simp only [← erase_lead, ← coeff_erase]
+  simp only [erase_lead, coeff_erase]
 
 @[simp]
 theorem erase_lead_coeff_nat_degree : f.eraseLead.coeff f.natDegree = 0 := by
-  simp [← erase_lead_coeff]
+  simp [erase_lead_coeff]
 
 theorem erase_lead_coeff_of_ne (i : ℕ) (hi : i ≠ f.natDegree) : f.eraseLead.coeff i = f.coeff i := by
-  simp [← erase_lead_coeff, ← hi]
+  simp [erase_lead_coeff, hi]
 
 @[simp]
 theorem erase_lead_zero : eraseLead (0 : R[X]) = 0 := by
-  simp only [← erase_lead, ← erase_zero]
+  simp only [erase_lead, erase_zero]
 
 @[simp]
 theorem erase_lead_add_monomial_nat_degree_leading_coeff (f : R[X]) :
     f.eraseLead + monomial f.natDegree f.leadingCoeff = f := by
   ext i
-  simp only [← erase_lead_coeff, ← coeff_monomial, ← coeff_add, ← @eq_comm _ _ i]
+  simp only [erase_lead_coeff, coeff_monomial, coeff_add, @eq_comm _ _ i]
   split_ifs with h
   · subst i
-    simp only [← leading_coeff, ← zero_addₓ]
+    simp only [leading_coeff, zero_addₓ]
     
   · exact add_zeroₓ _
     
@@ -111,7 +111,7 @@ theorem erase_lead_card_support' {c : ℕ} (fc : f.Support.card = c + 1) : f.era
 theorem erase_lead_monomial (i : ℕ) (r : R) : eraseLead (monomial i r) = 0 := by
   by_cases' hr : r = 0
   · subst r
-    simp only [← monomial_zero_right, ← erase_lead_zero]
+    simp only [monomial_zero_right, erase_lead_zero]
     
   · rw [erase_lead, nat_degree_monomial, if_neg hr, erase_monomial]
     
@@ -187,7 +187,7 @@ theorem erase_lead_nat_degree_le (f : R[X]) : (eraseLead f).natDegree ≤ f.natD
   rcases f.erase_lead_nat_degree_lt_or_erase_lead_eq_zero with (h | h)
   · exact Nat.le_pred_of_ltₓ h
     
-  · simp only [← h, ← nat_degree_zero, ← zero_le]
+  · simp only [h, nat_degree_zero, zero_le]
     
 
 end EraseLead
@@ -206,7 +206,7 @@ theorem induction_with_nat_degree_le (P : R[X] → Prop) (N : ℕ) (P_0 : P 0)
   induction' c with c hc
   · intro f df f0
     convert P_0
-    simpa only [← support_eq_empty, ← card_eq_zero] using f0
+    simpa only [support_eq_empty, card_eq_zero] using f0
     
   · intro f df f0
     rw [← erase_lead_add_C_mul_X_pow f]
@@ -250,7 +250,7 @@ theorem mono_map_nat_degree_eq {S F : Type _} [Semiringₓ S] [AddMonoidHomClass
   refine'
     induction_with_nat_degree_le (fun p => _ = fu _) p.nat_degree
       (by
-        simp [← fu0])
+        simp [fu0])
       _ _ _ rfl.le
   · intro n r r0 np
     rw [nat_degree_C_mul_X_pow _ _ r0, ← monomial_eq_C_mul_X, φ_mon_nat _ _ r0]
@@ -354,7 +354,7 @@ theorem card_support_eq {n : ℕ} :
         
       
     · rw [Finₓ.sum_univ_cast_succ]
-      simp only [← Function.extend_applyₓ fin.cast_succ.injective]
+      simp only [Function.extend_applyₓ fin.cast_succ.injective]
       rw [← hf, Function.extend_apply', Function.extend_apply', erase_lead_add_C_mul_X_pow]
       all_goals
         exact H

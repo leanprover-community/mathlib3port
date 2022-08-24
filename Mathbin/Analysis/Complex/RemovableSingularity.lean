@@ -52,7 +52,7 @@ theorem differentiable_on_compl_singleton_and_continuous_at_iff {f : ℂ → E} 
     refine' eventually_nhds_within_iff.2 ((eventually_mem_nhds.2 hs).mono fun z hz hzx => _)
     exact hd.differentiable_at (inter_mem hz (is_open_ne.mem_nhds hzx))
     
-  · simpa only [← DifferentiableWithinAt, ← HasFderivWithinAt, ← hne.nhds_within_diff_singleton] using hd x ⟨hx, hne⟩
+  · simpa only [DifferentiableWithinAt, HasFderivWithinAt, hne.nhds_within_diff_singleton] using hd x ⟨hx, hne⟩
     
 
 theorem differentiable_on_dslope {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s ∈ 𝓝 c) :
@@ -81,7 +81,7 @@ theorem differentiable_on_update_lim_of_is_o {f : ℂ → E} {s : Set ℂ} {c : 
   have H := ho.tendsto_inv_smul_nhds_zero
   have H' : tendsto (fun z => (z - c) • f c) (𝓝[≠] c) (𝓝 (F c)) :=
     (continuous_within_at_id.tendsto.sub tendsto_const_nhds).smul tendsto_const_nhds
-  simpa [smul_add, ← ContinuousWithinAt] using H.add H'
+  simpa [← smul_add, ContinuousWithinAt] using H.add H'
 
 /-- **Removable singularity** theorem: if `s` is a punctured neighborhood of `c : ℂ`, a function
 `f : ℂ → E` is complex differentiable on `s`, and $f(z) - f(c)=o((z-c)^{-1})$, then `f` redefined to
@@ -103,7 +103,7 @@ theorem differentiable_on_update_lim_of_bdd_above {f : ℂ → E} {s : Set ℂ} 
       ⟨C + ∥f c∥,
         eventually_map.2 <|
           mem_nhds_within_iff_exists_mem_nhds_inter.2
-            ⟨s, hc, fun z hz => norm_sub_le_of_le (hC <| mem_image_of_mem _ hz) le_rfl⟩⟩
+            ⟨s, hc, fun z hz => norm_sub_le_of_le (hC <| mem_image_of_mem _ hz) le_rflₓ⟩⟩
 
 /-- **Removable singularity** theorem: if a function `f : ℂ → E` is complex differentiable on a
 punctured neighborhood of `c` and $f(z) - f(c)=o((z-c)^{-1})$, then `f` has a limit at `c`. -/

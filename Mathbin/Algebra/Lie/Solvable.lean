@@ -90,7 +90,7 @@ theorem derived_series_of_ideal_le {I J : LieIdeal R L} {k l : ℕ} (h₁ : I �
     exact h₁
     
   · have h : l = k.succ ∨ l ≤ k := by
-      rwa [le_iff_eq_or_lt, Nat.lt_succ_iffₓ] at h₂
+      rwa [le_iff_eq_or_ltₓ, Nat.lt_succ_iffₓ] at h₂
     cases h
     · rw [h, derived_series_of_ideal_succ, derived_series_of_ideal_succ]
       exact LieSubmodule.mono_lie _ _ _ _ (ih (le_reflₓ k)) (ih (le_reflₓ k))
@@ -116,7 +116,7 @@ theorem derived_series_of_ideal_add_le_add (J : LieIdeal R L) (k l : ℕ) : D (k
   let D₁ : LieIdeal R L →o LieIdeal R L :=
     { toFun := fun I => ⁅I,I⁆, monotone' := fun I J h => LieSubmodule.mono_lie I J I J h h }
   have h₁ : ∀ I J : LieIdeal R L, D₁ (I⊔J) ≤ D₁ I⊔J := by
-    simp [← LieSubmodule.lie_le_right, ← LieSubmodule.lie_le_left, ← le_sup_of_le_right]
+    simp [LieSubmodule.lie_le_right, LieSubmodule.lie_le_left, le_sup_of_le_right]
   rw [← D₁.iterate_sup_le_sup_iff] at h₁
   exact h₁ k l I J
 
@@ -142,9 +142,9 @@ variable {R L}
 theorem derived_series_eq_derived_series_of_ideal_comap (k : ℕ) :
     derivedSeries R I k = (derivedSeriesOfIdeal R L k I).comap I.incl := by
   induction' k with k ih
-  · simp only [← derived_series_def, ← comap_incl_self, ← derived_series_of_ideal_zero]
+  · simp only [derived_series_def, comap_incl_self, derived_series_of_ideal_zero]
     
-  · simp only [← derived_series_def, ← derived_series_of_ideal_succ] at ih⊢
+  · simp only [derived_series_def, derived_series_of_ideal_succ] at ih⊢
     rw [ih]
     exact comap_bracket_incl_of_le I (derived_series_of_ideal_le_self I k) (derived_series_of_ideal_le_self I k)
     
@@ -173,9 +173,9 @@ theorem derived_series_add_eq_bot {k l : ℕ} {I J : LieIdeal R L} (hI : derived
 
 theorem derived_series_map_le (k : ℕ) : (derivedSeries R L' k).map f ≤ derivedSeries R L k := by
   induction' k with k ih
-  · simp only [← derived_series_def, ← derived_series_of_ideal_zero, ← le_top]
+  · simp only [derived_series_def, derived_series_of_ideal_zero, le_top]
     
-  · simp only [← derived_series_def, ← derived_series_of_ideal_succ] at ih⊢
+  · simp only [derived_series_def, derived_series_of_ideal_succ] at ih⊢
     exact le_transₓ (map_bracket_le f) (LieSubmodule.mono_lie _ _ _ _ ih ih)
     
 
@@ -186,7 +186,7 @@ theorem derived_series_map_eq (k : ℕ) (h : Function.Surjective f) :
     rw [← f.ideal_range_eq_map]
     exact f.ideal_range_eq_top_of_surjective h
     
-  · simp only [← derived_series_def, ← map_bracket_eq f h, ← ih, ← derived_series_of_ideal_succ]
+  · simp only [derived_series_def, map_bracket_eq f h, ih, derived_series_of_ideal_succ]
     
 
 end LieIdeal
@@ -224,7 +224,7 @@ theorem Surjective.lie_algebra_is_solvable [h₁ : IsSolvable R L'] (h₂ : Surj
   obtain ⟨k, hk⟩ := id h₁
   use k
   rw [← LieIdeal.derived_series_map_eq k h₂, hk]
-  simp only [← LieIdeal.map_eq_bot_iff, ← bot_le]
+  simp only [LieIdeal.map_eq_bot_iff, bot_le]
 
 end Function
 
@@ -341,7 +341,7 @@ theorem derived_length_zero (I : LieIdeal R L) [hI : IsSolvable R I] : derivedLe
     use k
     rw [derived_series_def, LieIdeal.derived_series_eq_bot_iff] at hk
     exact hk
-  simp [← hne]
+  simp [hne]
 
 theorem abelian_of_solvable_ideal_eq_bot_iff (I : LieIdeal R L) [h : IsSolvable R I] :
     derivedAbelianOfIdeal I = ⊥ ↔ I = ⊥ := by

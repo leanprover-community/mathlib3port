@@ -72,11 +72,11 @@ theorem NormalizeFin.one (n) : NormalizeFin (n + 1) 1 1 :=
 
 theorem NormalizeFin.add {n} {a b : Finₓ n} {a' b' c' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFin n b b')
     (h : a' + b' = c') : NormalizeFin n (a + b) c' := by
-  simp only [← normalize_fin, h] at * <;> rw [Nat.add_modₓ, ← ha, ← hb, Finₓ.add_def]
+  simp only [normalize_fin, ← h] at * <;> rw [Nat.add_modₓ, ← ha, ← hb, Finₓ.add_def]
 
 theorem NormalizeFin.mul {n} {a b : Finₓ n} {a' b' c' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFin n b b')
     (h : a' * b' = c') : NormalizeFin n (a * b) c' := by
-  simp only [← normalize_fin, h] at * <;> rw [Nat.mul_modₓ, ← ha, ← hb, Finₓ.mul_def]
+  simp only [normalize_fin, ← h] at * <;> rw [Nat.mul_modₓ, ← ha, ← hb, Finₓ.mul_def]
 
 theorem NormalizeFin.bit0 {n} {a : Finₓ n} {a' : ℕ} (h : NormalizeFin n a a') : NormalizeFin n (bit0 a) (bit0 a') :=
   h.add h rfl
@@ -87,19 +87,19 @@ theorem NormalizeFin.bit1 {n} {a : Finₓ (n + 1)} {a' : ℕ} (h : NormalizeFin 
 
 theorem NormalizeFinLt.succ {n} {a : Finₓ n} {a' b : ℕ} (h : NormalizeFinLt n a a') (e : a' + 1 = b) :
     NormalizeFinLt n.succ (Finₓ.succ a) b := by
-  simpa [← normalize_fin_lt, e] using h
+  simpa [normalize_fin_lt, ← e] using h
 
 theorem NormalizeFinLt.cast_lt {n m} {a : Finₓ m} {ha} {a' : ℕ} (h : NormalizeFinLt m a a') :
     NormalizeFinLt n (Finₓ.castLt a ha) a' := by
-  simpa [← normalize_fin_lt] using h
+  simpa [normalize_fin_lt] using h
 
 theorem NormalizeFinLt.cast_le {n m} {nm} {a : Finₓ m} {a' : ℕ} (h : NormalizeFinLt m a a') :
     NormalizeFinLt n (Finₓ.castLe nm a) a' := by
-  simpa [← normalize_fin_lt] using h
+  simpa [normalize_fin_lt] using h
 
 theorem NormalizeFinLt.cast {n m} {nm} {a : Finₓ m} {a' : ℕ} (h : NormalizeFinLt m a a') :
     NormalizeFinLt n (Finₓ.cast nm a) a' := by
-  simpa [← normalize_fin_lt] using h
+  simpa [normalize_fin_lt] using h
 
 theorem NormalizeFin.cast {n m} {nm} {a : Finₓ m} {a' : ℕ} (h : NormalizeFin m a a') :
     NormalizeFin n (Finₓ.cast nm a) a' := by
@@ -107,7 +107,7 @@ theorem NormalizeFin.cast {n m} {nm} {a : Finₓ m} {a' : ℕ} (h : NormalizeFin
 
 theorem NormalizeFinLt.cast_add {n m} {a : Finₓ n} {a' : ℕ} (h : NormalizeFinLt n a a') :
     NormalizeFinLt (n + m) (Finₓ.castAdd m a) a' := by
-  simpa [← normalize_fin_lt] using h
+  simpa [normalize_fin_lt] using h
 
 theorem NormalizeFinLt.cast_succ {n} {a : Finₓ n} {a' : ℕ} (h : NormalizeFinLt n a a') :
     NormalizeFinLt (n + 1) (Finₓ.castSucc a) a' :=
@@ -115,11 +115,11 @@ theorem NormalizeFinLt.cast_succ {n} {a : Finₓ n} {a' : ℕ} (h : NormalizeFin
 
 theorem NormalizeFinLt.add_nat {n m m'} (hm : m = m') {a : Finₓ n} {a' b : ℕ} (h : NormalizeFinLt n a a')
     (e : a' + m' = b) : NormalizeFinLt (n + m) (@Finₓ.addNat n m a) b := by
-  simpa [← normalize_fin_lt, e, hm] using h
+  simpa [normalize_fin_lt, ← e, ← hm] using h
 
 theorem NormalizeFinLt.nat_add {n m n'} (hn : n = n') {a : Finₓ m} {a' b : ℕ} (h : NormalizeFinLt m a a')
     (e : n' + a' = b) : NormalizeFinLt (n + m) (@Finₓ.natAdd n m a) b := by
-  simpa [← normalize_fin_lt, e, hn] using h
+  simpa [normalize_fin_lt, ← e, ← hn] using h
 
 theorem NormalizeFin.reduce {n} {a : Finₓ n} {n' a' b k nk : ℕ} (hn : n = n') (h : NormalizeFin n a a')
     (e1 : n' * k = nk) (e2 : nk + b = a') : NormalizeFin n a b := by

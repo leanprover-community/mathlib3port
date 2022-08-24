@@ -206,7 +206,7 @@ instance : AddCommGroupₓ (Poly α) := by
     intros <;>
       try
           rfl <;>
-        refine' ext fun _ => _ <;> simp [← sub_eq_add_neg, ← add_commₓ, ← add_assocₓ]
+        refine' ext fun _ => _ <;> simp [sub_eq_add_neg, add_commₓ, add_assocₓ]
 
 instance : AddGroupWithOneₓ (Poly α) :=
   { Poly.addCommGroup with one := 1, natCast := fun n => Poly.const n, intCast := Poly.const }
@@ -218,8 +218,7 @@ instance : CommRingₓ (Poly α) := by
     intros <;>
       try
           rfl <;>
-        refine' ext fun _ => _ <;>
-          simp [← sub_eq_add_neg, ← mul_addₓ, ← mul_left_commₓ, ← mul_comm, ← add_commₓ, ← add_assocₓ]
+        refine' ext fun _ => _ <;> simp [sub_eq_add_neg, mul_addₓ, mul_left_commₓ, mul_comm, add_commₓ, add_assocₓ]
 
 theorem induction {C : Poly α → Prop} (H1 : ∀ i, C (proj i)) (H2 : ∀ n, C (const n)) (H3 : ∀ f g, C f → C g → C (f - g))
     (H4 : ∀ f g, C f → C g → C (f * g)) (f : Poly α) : C f := by
@@ -258,7 +257,7 @@ theorem sumsq_eq_zero (x) : ∀ l, sumsq l x = 0 ↔ l.All₂ fun a : Poly α =>
                       rw [← h] <;> have t := add_le_add_left (sumsq_nonneg x ps) (p x * p x) <;> rwa [add_zeroₓ] at t)
                     (mul_self_nonneg _)
               ⟨this, by
-                simp [← this] at h <;> exact h⟩,
+                simp [this] at h <;> exact h⟩,
               fun ⟨h1, h2⟩ => by
               rw [h1, h2] <;> rfl⟩
 
@@ -312,7 +311,7 @@ theorem inject_dummies_lem (f : β → γ) (g : γ → Option β) (inv : ∀ x, 
   · have : (v ⊗ (0 ::ₒ t) ∘ g) ∘ (inl ⊗ inr ∘ f) = v ⊗ t :=
       funext fun s => by
         cases' s with a b <;>
-          dsimp' [← (· ∘ ·)] <;>
+          dsimp' [(· ∘ ·)] <;>
             try
                 rw [inv] <;>
               rfl
@@ -340,7 +339,7 @@ theorem reindex_dioph (f : α → β) : ∀ d : Dioph S, Dioph { v | v ∘ f ∈
       (pe _).trans <|
         exists_congr fun t =>
           suffices v ∘ f ⊗ t = (v ⊗ t) ∘ (inl ∘ f ⊗ inr) by
-            simp [← this]
+            simp [this]
           funext fun s => by
             cases' s with a b <;> rfl⟩
 
@@ -375,7 +374,7 @@ theorem DiophList.all₂ (l : List (Set <| α → ℕ)) (d : l.All₂ Dioph) :
                   exact hm,
                 by
                 refine' List.All₂.imp (fun q hq => _) hn
-                dsimp' [← (· ∘ ·)]
+                dsimp' [(· ∘ ·)]
                 rw
                     [show (fun x : Sum α γ => (v ⊗ m ⊗ n) ((inl ⊗ fun x : γ => inr (inr x)) x)) = v ⊗ n from
                       funext fun s => by
@@ -390,7 +389,7 @@ theorem DiophList.all₂ (l : List (Set <| α → ℕ)) (d : l.All₂ Dioph) :
                     hl⟩,
                 ⟨t ∘ inr, by
                   refine' List.All₂.imp (fun q hq => _) hr
-                  dsimp' [← (· ∘ ·)]  at hq
+                  dsimp' [(· ∘ ·)]  at hq
                   rwa
                     [show (fun x : Sum α γ => (v ⊗ t) ((inl ⊗ fun x : γ => inr (inr x)) x)) = v ⊗ t ∘ inr from
                       funext fun s => by

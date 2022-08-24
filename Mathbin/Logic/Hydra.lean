@@ -84,11 +84,11 @@ open Multiset Prod
   The lemma `relation.cut_expand_iff` below converts between this convenient definition
   and the direct translation when `r` is irreflexive. -/
 def CutExpand (r : α → α → Prop) (s' s : Multiset α) : Prop :=
-  ∃ (t : Multiset α)(a : α), (∀, ∀ a' ∈ t, ∀, r a' a) ∧ s' + {a} = s + t
+  ∃ (t : Multiset α)(a : α), (∀ a' ∈ t, r a' a) ∧ s' + {a} = s + t
 
 variable {r : α → α → Prop}
 
-theorem cut_expand_singleton {s x} (h : ∀, ∀ x' ∈ s, ∀, r x' x) : CutExpand r s {x} :=
+theorem cut_expand_singleton {s x} (h : ∀ x' ∈ s, r x' x) : CutExpand r s {x} :=
   ⟨s, x, h, add_commₓ s _⟩
 
 theorem cut_expand_singleton_singleton {x' x} (h : r x' x) : CutExpand r {x'} {x} :=
@@ -101,7 +101,7 @@ theorem cut_expand_add_left {t u} (s) : CutExpand r (s + t) (s + u) ↔ CutExpan
       rw [add_assocₓ, add_assocₓ, add_left_cancel_iffₓ]
 
 theorem cut_expand_iff [DecidableEq α] [IsIrrefl α r] {s' s : Multiset α} :
-    CutExpand r s' s ↔ ∃ (t : Multiset α)(a : _), (∀, ∀ a' ∈ t, ∀, r a' a) ∧ a ∈ s ∧ s' = s.erase a + t := by
+    CutExpand r s' s ↔ ∃ (t : Multiset α)(a : _), (∀ a' ∈ t, r a' a) ∧ a ∈ s ∧ s' = s.erase a + t := by
   simp_rw [cut_expand, add_singleton_eq_iff]
   refine' exists₂_congrₓ fun t a => ⟨_, _⟩
   · rintro ⟨ht, ha, rfl⟩
@@ -142,8 +142,7 @@ theorem cut_expand_fibration (r : α → α → Prop) :
 
 /-- A multiset is accessible under `cut_expand` if all its singleton subsets are,
   assuming `r` is irreflexive. -/
-theorem acc_of_singleton [IsIrrefl α r] {s : Multiset α} :
-    (∀, ∀ a ∈ s, ∀, Acc (CutExpand r) {a}) → Acc (CutExpand r) s := by
+theorem acc_of_singleton [IsIrrefl α r] {s : Multiset α} : (∀ a ∈ s, Acc (CutExpand r) {a}) → Acc (CutExpand r) s := by
   refine' Multiset.induction _ _ s
   · exact fun _ => (Acc.intro 0) fun s h => (not_cut_expand_zero s h).elim
     

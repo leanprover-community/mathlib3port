@@ -43,10 +43,10 @@ open Finset
 variable {M : Matrix n n R}
 
 theorem charmatrix_apply_nat_degree [Nontrivial R] (i j : n) : (charmatrix M i j).natDegree = ite (i = j) 1 0 := by
-  by_cases' i = j <;> simp [← h, degree_eq_iff_nat_degree_eq_of_pos (Nat.succ_posₓ 0)]
+  by_cases' i = j <;> simp [h, ← degree_eq_iff_nat_degree_eq_of_pos (Nat.succ_posₓ 0)]
 
 theorem charmatrix_apply_nat_degree_le (i j : n) : (charmatrix M i j).natDegree ≤ ite (i = j) 1 0 := by
-  split_ifs <;> simp [← h, ← nat_degree_X_sub_C_le]
+  split_ifs <;> simp [h, nat_degree_X_sub_C_le]
 
 namespace Matrix
 
@@ -55,8 +55,8 @@ variable (M)
 theorem charpoly_sub_diagonal_degree_lt : (M.charpoly - ∏ i : n, X - c (M i i)).degree < ↑(Fintype.card n - 1) := by
   rw [charpoly, det_apply', ← insert_erase (mem_univ (Equivₓ.refl n)), sum_insert (not_mem_erase (Equivₓ.refl n) univ),
     add_commₓ]
-  simp only [← charmatrix_apply_eq, ← one_mulₓ, ← Equivₓ.Perm.sign_refl, ← id.def, ← Int.cast_oneₓ, ← Units.coe_one, ←
-    add_sub_cancel, ← Equivₓ.coe_refl]
+  simp only [charmatrix_apply_eq, one_mulₓ, Equivₓ.Perm.sign_refl, id.def, Int.cast_oneₓ, Units.coe_one, add_sub_cancel,
+    Equivₓ.coe_refl]
   rw [← mem_degree_lt]
   apply Submodule.sum_mem (degree_lt R (Fintype.card n - 1))
   intro c hc
@@ -85,7 +85,7 @@ theorem charpoly_coeff_eq_prod_coeff_of_le {k : ℕ} (h : Fintype.card n - 1 ≤
 theorem det_of_card_zero (h : Fintype.card n = 0) (M : Matrix n n R) : M.det = 1 := by
   rw [Fintype.card_eq_zero_iff] at h
   suffices M = 1 by
-    simp [← this]
+    simp [this]
   ext i
   exact h.elim i
 
@@ -130,7 +130,7 @@ theorem charpoly_monic (M : Matrix n n R) : M.charpoly.Monic := by
     
   have mon : (∏ i : n, X - C (M i i)).Monic := by
     apply monic_prod_of_monic univ fun i : n => X - C (M i i)
-    simp [← monic_X_sub_C]
+    simp [monic_X_sub_C]
   rw [← sub_add_cancel (∏ i : n, X - C (M i i)) M.charpoly] at mon
   rw [monic] at *
   rw [leading_coeff_add_of_degree_lt] at mon
@@ -164,15 +164,15 @@ theorem mat_poly_equiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
     rfl
     
   · simp_rw [← RingHom.map_pow, ← (scalar.commute _ _).Eq]
-    simp only [← coe_scalar, ← Matrix.one_mul, ← RingHom.id_apply, ← Pi.smul_apply, ← smul_eq_mul, ← mul_eq_mul, ←
+    simp only [coe_scalar, Matrix.one_mul, RingHom.id_apply, Pi.smul_apply, smul_eq_mul, mul_eq_mul,
       Algebra.smul_mul_assoc]
     have h : ∀ x : ℕ, (fun (e : ℕ) (a : R) => r ^ e * a) x 0 = 0 := by
       simp
-    simp only [← Polynomial.sum, ← mat_poly_equiv_coeff_apply, ← mul_comm]
+    simp only [Polynomial.sum, mat_poly_equiv_coeff_apply, mul_comm]
     apply (Finset.sum_subset (support_subset_support_mat_poly_equiv _ _ _) _).symm
     intro n hn h'n
     rw [not_mem_support_iff] at h'n
-    simp only [← h'n, ← zero_mul]
+    simp only [h'n, zero_mul]
     
 
 theorem eval_det (M : Matrix n n R[X]) (r : R) :
@@ -198,12 +198,11 @@ theorem mat_poly_equiv_eq_X_pow_sub_C {K : Type _} (k : ℕ) [Field K] (M : Matr
     AlgHom.coe_to_ring_hom, Dmatrix.sub_apply, coeff_X_pow]
   by_cases' hij : i = j
   · rw [hij, charmatrix_apply_eq, AlgHom.map_sub, expand_C, expand_X, coeff_sub, coeff_X_pow, coeff_C]
-    split_ifs with mp m0 <;> simp only [← Matrix.one_apply_eq, ← Dmatrix.zero_apply]
+    split_ifs with mp m0 <;> simp only [Matrix.one_apply_eq, Dmatrix.zero_apply]
     
   · rw [charmatrix_apply_ne _ _ _ hij, AlgHom.map_neg, expand_C, coeff_neg, coeff_C]
     split_ifs with m0 mp <;>
-      simp only [← hij, ← zero_sub, ← Dmatrix.zero_apply, ← sub_zero, ← neg_zero, ← Matrix.one_apply_ne, ← Ne.def, ←
-        not_false_iff]
+      simp only [hij, zero_sub, Dmatrix.zero_apply, sub_zero, neg_zero, Matrix.one_apply_ne, Ne.def, not_false_iff]
     
 
 namespace Matrix

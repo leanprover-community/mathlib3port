@@ -118,7 +118,7 @@ theorem Function.Injective.sigma_map_iff {f₁ : α₁ → α₂} {f₂ : ∀ a,
 
 theorem Function.Surjective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)} (h₁ : Function.Surjective f₁)
     (h₂ : ∀ a, Function.Surjective (f₂ a)) : Function.Surjective (Sigma.map f₁ f₂) := by
-  simp only [← Function.Surjective, ← Sigma.forall, ← h₁.forall]
+  simp only [Function.Surjective, Sigma.forall, h₁.forall]
   exact fun i => (h₂ _).forall.2 fun x => ⟨⟨i, x⟩, rfl⟩
 
 /-- Interpret a function on `Σ x : α, β x` as a dependent function with two arguments.
@@ -162,14 +162,14 @@ theorem Prod.snd_to_sigma {α β} (x : α × β) : (Prod.toSigma x).snd = x.snd 
 theorem Prod.to_sigma_mk {α β} (x : α) (y : β) : (x, y).toSigma = ⟨x, y⟩ :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `reflect_name #[]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]
 -- we generate this manually as `@[derive has_reflect]` fails
 @[instance]
 protected unsafe def sigma.reflect.{u, v} [reflected_univ.{u}] [reflected_univ.{v}] {α : Type u} (β : α → Type v)
     [reflected _ α] [reflected _ β] [hα : has_reflect α] [hβ : ∀ i, has_reflect (β i)] : has_reflect (Σa, β a) :=
   fun ⟨a, b⟩ =>
   (by
-        trace "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `reflect_name #[]" :
+        trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]" :
         reflected _ @Sigma.mk.{u, v}).subst₄
     (quote.1 α) (quote.1 β) (quote.1 a) (quote.1 b)
 

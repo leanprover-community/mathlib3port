@@ -42,7 +42,7 @@ theorem inversion_vsub_center (c : P) (R : ℝ) (x : P) : inversion c R x -ᵥ c
 
 @[simp]
 theorem inversion_self (c : P) (R : ℝ) : inversion c R c = c := by
-  simp [← inversion]
+  simp [inversion]
 
 @[simp]
 theorem inversion_dist_center (c x : P) : inversion c (dist x c) x = x := by
@@ -63,7 +63,7 @@ theorem dist_inversion_center (c x : P) (R : ℝ) : dist (inversion c R x) c = R
   · simp
     
   have : dist x c ≠ 0 := dist_ne_zero.2 hx
-  field_simp [← inversion, ← norm_smul, ← abs_div, dist_eq_norm_vsub, ← sq, ← mul_assoc]
+  field_simp [inversion, norm_smul, abs_div, ← dist_eq_norm_vsub, sq, mul_assoc]
 
 /-- Distance from the center of an inversion to the image of a point under the inversion. This
 formula accidentally works for `x = c`. -/
@@ -97,7 +97,7 @@ theorem dist_inversion_inversion (hx : x ≠ c) (hy : y ≠ c) (R : ℝ) :
     dist (inversion c R x) (inversion c R y) = R ^ 2 / (dist x c * dist y c) * dist x y := by
   dunfold inversion
   simp_rw [dist_vadd_cancel_right, dist_eq_norm_vsub V _ c]
-  simpa only [← dist_vsub_cancel_right] using dist_div_norm_sq_smul (vsub_ne_zero.2 hx) (vsub_ne_zero.2 hy) R
+  simpa only [dist_vsub_cancel_right] using dist_div_norm_sq_smul (vsub_ne_zero.2 hx) (vsub_ne_zero.2 hy) R
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 /-- **Ptolemy's inequality**: in a quadrangle `ABCD`, `|AC| * |BD| ≤ |AB| * |CD| + |BC| * |AD|`. If
@@ -123,7 +123,7 @@ theorem mul_dist_le_mul_dist_add_mul_dist (a b c d : P) :
   rw [← dist_pos] at hb hc hd
   rw [← div_le_div_right (mul_pos hb (mul_pos hc hd))]
   convert H <;>
-    · field_simp [← hb.ne', ← hc.ne', ← hd.ne', ← dist_comm a]
+    · field_simp [hb.ne', hc.ne', hd.ne', dist_comm a]
       ring
       
 

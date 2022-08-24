@@ -65,9 +65,9 @@ structure Con [Mul M] extends Setoidₓ M where
   mul' : ∀ {w x y z}, r w x → r y z → r (w * y) (x * z)
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_con.to_setoid]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_con.to_setoid]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident con.to_setoid]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident con.to_setoid]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 variable {M}
 
 /-- The inductively defined smallest additive congruence relation containing a given binary
@@ -140,7 +140,7 @@ theorem rel_mk {s : Setoidₓ M} {h a b} : Con.mk s h a b ↔ R a b :=
     `x, y`, `(x, y) ∈ M × M` iff `x` is related to `y` by `c`. -/
 @[to_additive
       "Given a type `M` with an addition, `x, y ∈ M`, and an additive congruence relation\n`c` on `M`, `(x, y) ∈ M × M` iff `x` is related to `y` by `c`."]
-instance : HasMem (M × M) (Con M) :=
+instance : Membership (M × M) (Con M) :=
   ⟨fun x c => c x.1 x.2⟩
 
 variable {c}
@@ -179,7 +179,7 @@ theorem ext'_iff {c d : Con M} : c.R = d.R ↔ c = d :=
 def mulKer (f : M → P) (h : ∀ x y, f (x * y) = f x * f y) : Con M where
   toSetoid := Setoidₓ.ker f
   mul' := fun _ _ _ _ h1 h2 => by
-    dsimp' [← Setoidₓ.ker, ← on_fun]  at *
+    dsimp' [Setoidₓ.ker, on_fun]  at *
     rw [h, h1, h2, h]
 
 /-- Given types with multiplications `M, N`, the product of two congruence relations `c` on `M` and
@@ -353,7 +353,7 @@ theorem Inf_to_setoid (S : Set (Con M)) : (inf S).toSetoid = inf (to_setoid '' S
       "The infimum of a set of additive congruence relations is the same as the infimum\nof the set's image under the map to the underlying binary relation."]
 theorem Inf_def (S : Set (Con M)) : ⇑(inf S) = inf (@Set.Image (Con M) (M → M → Prop) coeFn S) := by
   ext
-  simp only [← Inf_image, ← infi_apply, ← infi_Prop_eq]
+  simp only [Inf_image, infi_apply, infi_Prop_eq]
   rfl
 
 @[to_additive]
@@ -369,7 +369,7 @@ instance : PartialOrderₓ (Con M) where
 @[to_additive "The complete lattice of additive congruence relations on a given type with\nan addition."]
 instance : CompleteLattice (Con M) :=
   { (completeLatticeOfInf (Con M)) fun s =>
-      ⟨fun r hr x y h => (h : ∀, ∀ r ∈ s, ∀, (r : Con M) x y) r hr, fun r hr x y h r' hr' => hr hr' h⟩ with
+      ⟨fun r hr x y h => (h : ∀ r ∈ s, (r : Con M) x y) r hr, fun r hr x y h r' hr' => hr hr' h⟩ with
     inf := fun c d => ⟨c.toSetoid⊓d.toSetoid, fun _ _ _ _ h1 h2 => ⟨c.mul h1.1 h2.1, d.mul h1.2 h2.2⟩⟩,
     inf_le_left := fun _ _ _ _ h => h.1, inf_le_right := fun _ _ _ _ h => h.2,
     le_inf := fun _ _ _ hb hc _ _ h => ⟨hb h, hc h⟩,
@@ -444,7 +444,7 @@ theorem con_gen_idem (r : M → M → Prop) : conGen (conGen r) = conGen r :=
 theorem sup_eq_con_gen (c d : Con M) : c⊔d = conGen fun x y => c x y ∨ d x y := by
   rw [con_gen_eq]
   apply congr_arg Inf
-  simp only [← le_def, ← or_imp_distrib, forall_and_distrib]
+  simp only [le_def, or_imp_distrib, ← forall_and_distrib]
 
 /-- The supremum of two congruence relations equals the smallest congruence relation containing
     the supremum of the underlying binary operations. -/
@@ -471,7 +471,7 @@ theorem Sup_eq_con_gen (S : Set (Con M)) : sup S = conGen fun x y => ∃ c : Con
 theorem Sup_def {S : Set (Con M)} : sup S = conGen (sup (@Set.Image (Con M) (M → M → Prop) coeFn S)) := by
   rw [Sup_eq_con_gen, Sup_image]
   congr with x y
-  simp only [← Sup_image, ← supr_apply, ← supr_Prop_eq, ← exists_prop, ← rel_eq_coe]
+  simp only [Sup_image, supr_apply, supr_Prop_eq, exists_prop, rel_eq_coe]
 
 variable (M)
 
@@ -899,7 +899,7 @@ protected theorem pow {M : Type _} [Monoidₓ M] (c : Con M) : ∀ (n : ℕ) {w 
   | 0, w, x, h => by
     simpa using c.refl _
   | Nat.succ n, w, x, h => by
-    simpa [← pow_succₓ] using c.mul h (pow n h)
+    simpa [pow_succₓ] using c.mul h (pow n h)
 
 @[to_additive]
 instance {M : Type _} [MulOneClassₓ M] (c : Con M) : One c.Quotient where one := ((1 : M) : c.Quotient)
@@ -945,15 +945,15 @@ protected theorem inv : ∀ {w x}, c w x → c w⁻¹ x⁻¹ := fun x y h => by
 /-- Multiplicative congruence relations preserve division. -/
 @[to_additive "Additive congruence relations preserve subtraction."]
 protected theorem div : ∀ {w x y z}, c w x → c y z → c (w / y) (x / z) := fun w x y z h1 h2 => by
-  simpa only [← div_eq_mul_inv] using c.mul h1 (c.inv h2)
+  simpa only [div_eq_mul_inv] using c.mul h1 (c.inv h2)
 
 /-- Multiplicative congruence relations preserve integer powers. -/
 @[to_additive AddCon.zsmul "Additive congruence relations preserve integer scaling."]
 protected theorem zpow : ∀ (n : ℤ) {w x}, c w x → c (w ^ n) (x ^ n)
   | Int.ofNat n, w, x, h => by
-    simpa only [← zpow_of_nat] using c.pow _ h
+    simpa only [zpow_of_nat] using c.pow _ h
   | -[1+ n], w, x, h => by
-    simpa only [← zpow_neg_succ_of_nat] using c.inv (c.pow _ h)
+    simpa only [zpow_neg_succ_of_nat] using c.inv (c.pow _ h)
 
 /-- The inversion induced on the quotient by a congruence relation on a type with a
     inversion. -/
@@ -1014,7 +1014,7 @@ def liftOnUnits (u : Units c.Quotient) (f : ∀ x y : M, c (x * y) 1 → c (y * 
   exact heq_of_eq (Hf _ _ _ _ _ _ _ _ hx hy)
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident add_con.lift_on_add_units]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_con.lift_on_add_units]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 @[simp, to_additive]
 theorem lift_on_units_mk (f : ∀ x y : M, c (x * y) 1 → c (y * x) 1 → α)
     (Hf : ∀ x y hxy hyx x' y' hxy' hyx', c x x' → c y y' → f x y hxy hyx = f x' y' hxy' hyx') (x y : M) (hxy hyx) :

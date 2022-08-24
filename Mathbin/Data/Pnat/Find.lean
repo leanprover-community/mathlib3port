@@ -34,7 +34,7 @@ protected def findX : { n // p n ∧ ∀ m : ℕ+, m < n → ¬p m } := by
     exact n'.prop
     
   · obtain ⟨n', hn', pn'⟩ := n.prop.1
-    simpa [← hn', ← Subtype.coe_eta] using pn'
+    simpa [hn', Subtype.coe_eta] using pn'
     
   · exact n.prop.2 m hm ⟨m, rfl, pm⟩
     
@@ -64,7 +64,7 @@ protected theorem find_min' {m : ℕ+} (hm : p m) : Pnat.find h ≤ m :=
 
 variable {n m : ℕ+}
 
-theorem find_eq_iff : Pnat.find h = m ↔ p m ∧ ∀, ∀ n < m, ∀, ¬p n := by
+theorem find_eq_iff : Pnat.find h = m ↔ p m ∧ ∀ n < m, ¬p n := by
   constructor
   · rintro rfl
     exact ⟨Pnat.find_spec h, fun _ => Pnat.find_min h⟩
@@ -79,19 +79,19 @@ theorem find_lt_iff (n : ℕ+) : Pnat.find h < n ↔ ∃ m < n, p m :=
 
 @[simp]
 theorem find_le_iff (n : ℕ+) : Pnat.find h ≤ n ↔ ∃ m ≤ n, p m := by
-  simp only [← exists_prop, lt_add_one_iff, ← find_lt_iff]
+  simp only [exists_prop, ← lt_add_one_iff, find_lt_iff]
 
 @[simp]
-theorem le_find_iff (n : ℕ+) : n ≤ Pnat.find h ↔ ∀, ∀ m < n, ∀, ¬p m := by
+theorem le_find_iff (n : ℕ+) : n ≤ Pnat.find h ↔ ∀ m < n, ¬p m := by
   simp_rw [← not_ltₓ, find_lt_iff, not_exists]
 
 @[simp]
-theorem lt_find_iff (n : ℕ+) : n < Pnat.find h ↔ ∀, ∀ m ≤ n, ∀, ¬p m := by
-  simp only [add_one_le_iff, ← le_find_iff, ← add_le_add_iff_right]
+theorem lt_find_iff (n : ℕ+) : n < Pnat.find h ↔ ∀ m ≤ n, ¬p m := by
+  simp only [← add_one_le_iff, le_find_iff, add_le_add_iff_right]
 
 @[simp]
 theorem find_eq_one : Pnat.find h = 1 ↔ p 1 := by
-  simp [← find_eq_iff]
+  simp [find_eq_iff]
 
 @[simp]
 theorem one_le_find : 1 < Pnat.find h ↔ ¬p 1 :=
@@ -102,15 +102,15 @@ theorem find_mono (h : ∀ n, q n → p n) {hp : ∃ n, p n} {hq : ∃ n, q n} :
   Pnat.find_min' _ (h _ (Pnat.find_spec hq))
 
 theorem find_le {h : ∃ n, p n} (hn : p n) : Pnat.find h ≤ n :=
-  (Pnat.find_le_iff _ _).2 ⟨n, le_rfl, hn⟩
+  (Pnat.find_le_iff _ _).2 ⟨n, le_rflₓ, hn⟩
 
 theorem find_comp_succ (h : ∃ n, p n) (h₂ : ∃ n, p (n + 1)) (h1 : ¬p 1) : Pnat.find h = Pnat.find h₂ + 1 := by
   refine' (find_eq_iff _).2 ⟨Pnat.find_spec h₂, fun n => Pnat.recOn n _ _⟩
-  · simp [← h1]
+  · simp [h1]
     
   intro m IH hm
-  simp only [← add_lt_add_iff_right, ← lt_find_iff] at hm
-  exact hm _ le_rfl
+  simp only [add_lt_add_iff_right, lt_find_iff] at hm
+  exact hm _ le_rflₓ
 
 end Pnat
 

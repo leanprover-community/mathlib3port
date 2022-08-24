@@ -94,8 +94,8 @@ theorem IsSymm.smul [HasSmul R α] {A : Matrix n n α} (h : A.IsSymm) (k : R) : 
   (transpose_smul _ _).trans (congr_arg _ h)
 
 @[simp]
-theorem IsSymm.minor {A : Matrix n n α} (h : A.IsSymm) (f : m → n) : (A.minor f f).IsSymm :=
-  (transpose_minor _ _ _).trans (h.symm ▸ rfl)
+theorem IsSymm.submatrix {A : Matrix n n α} (h : A.IsSymm) (f : m → n) : (A.submatrix f f).IsSymm :=
+  (transpose_submatrix _ _ _).trans (h.symm ▸ rfl)
 
 /-- The diagonal matrix `diagonal v` is symmetric. -/
 @[simp]

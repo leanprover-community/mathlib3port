@@ -553,7 +553,7 @@ def coneOfDiagramTerminal {X : J} (hX : IsTerminal X) (F : J ⥤ C) [∀ (i j : 
       naturality' := by
         intro i j f
         dsimp'
-        simp only [← is_iso.eq_inv_comp, ← is_iso.comp_inv_eq, ← category.id_comp, F.map_comp, ←
+        simp only [is_iso.eq_inv_comp, is_iso.comp_inv_eq, category.id_comp, ← F.map_comp,
           hX.hom_ext (hX.from i) (f ≫ hX.from j)] }
 
 /-- From a functor `F : J ⥤ C`, given a terminal object of `J` and that the morphisms in the
@@ -607,7 +607,7 @@ def coconeOfDiagramInitial {X : J} (hX : IsInitial X) (F : J ⥤ C) [∀ (i j : 
       naturality' := by
         intro i j f
         dsimp'
-        simp only [← is_iso.eq_inv_comp, ← is_iso.comp_inv_eq, ← category.comp_id, F.map_comp, ←
+        simp only [is_iso.eq_inv_comp, is_iso.comp_inv_eq, category.comp_id, ← F.map_comp,
           hX.hom_ext (hX.to i ≫ f) (hX.to j)] }
 
 /-- From a functor `F : J ⥤ C`, given an initial object of `J` and that the morphisms in the

@@ -71,7 +71,7 @@ theorem Concrete.wide_pullback_ext' {B : C} {ι : Type w} [Nonempty ι] {X : ι 
     (h : ∀ j, π f j x = π f j y) : x = y := by
   apply concrete.wide_pullback_ext _ _ _ _ h
   inhabit ι
-  simp only [π_arrow f (arbitrary _), ← comp_apply, ← h]
+  simp only [← π_arrow f (arbitrary _), comp_apply, h]
 
 end WidePullback
 
@@ -179,7 +179,7 @@ theorem Concrete.from_union_surjective_of_is_colimit {D : Cocone F} (hD : IsColi
     refine' ⟨b, _⟩
     apply_fun TX.inv  at hb
     change (TX.hom ≫ TX.inv) (ff b) = (TX.hom ≫ TX.inv) _ at hb
-    simpa only [← TX.hom_inv_id] using hb
+    simpa only [TX.hom_inv_id] using hb
   have : TX.hom ∘ ff = fun a => G.ι.app a.1 a.2 := by
     ext a
     change (E.ι.app a.1 ≫ hE.desc G) a.2 = _
@@ -264,8 +264,8 @@ theorem Concrete.is_colimit_exists_of_rep_eq {D : Cocone F} {i j : J} (hD : IsCo
     let k : J := is_filtered.coeq (g1 ≫ e1) (f2 ≫ e2)
     let e : k0 ⟶ k := is_filtered.coeq_hom _ _
     use k, f1 ≫ e1 ≫ e, g2 ≫ e2 ≫ e
-    simp only [← F.map_comp, ← comp_apply, ← h1, h2]
-    simp only [comp_apply, F.map_comp]
+    simp only [F.map_comp, comp_apply, h1, ← h2]
+    simp only [← comp_apply, ← F.map_comp]
     rw [is_filtered.coeq_condition]
 
 theorem Concrete.is_colimit_rep_eq_iff_exists {D : Cocone F} {i j : J} (hD : IsColimit D) (x : F.obj i) (y : F.obj j) :
@@ -304,7 +304,7 @@ theorem Concrete.wide_pushout_exists_rep' {B : C} {α : Type _} [Nonempty α] {X
   rcases concrete.wide_pushout_exists_rep f x with (⟨y, rfl⟩ | ⟨i, y, rfl⟩)
   · inhabit α
     use arbitrary _, f _ y
-    simp only [arrow_ι _ (arbitrary α), ← comp_apply]
+    simp only [← arrow_ι _ (arbitrary α), comp_apply]
     
   · use i, y
     

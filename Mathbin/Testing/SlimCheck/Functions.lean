@@ -5,7 +5,7 @@ Authors: Simon Hudon
 -/
 import Mathbin.Data.List.Sigma
 import Mathbin.Data.Int.Range
-import Mathbin.Data.Finsupp.Basic
+import Mathbin.Data.Finsupp.Defs
 import Mathbin.Data.Finsupp.ToDfinsupp
 import Mathbin.Tactic.PrettyCases
 import Mathbin.Testing.SlimCheck.Sampleable
@@ -157,21 +157,21 @@ def applyFinsupp (tf : TotalFunction α β) : α →₀ β where
   mem_support_to_fun := by
     intro a
     rcases tf with ⟨A, y⟩
-    simp only [← apply, ← zero_default_supp, ← List.mem_mapₓ, ← List.mem_filterₓ, ← exists_and_distrib_right, ←
-      List.mem_to_finset, ← exists_eq_right, ← Sigma.exists, ← Ne.def, ← zero_default]
+    simp only [apply, zero_default_supp, List.mem_mapₓ, List.mem_filterₓ, exists_and_distrib_right, List.mem_to_finset,
+      exists_eq_right, Sigma.exists, Ne.def, zero_default]
     constructor
     · rintro ⟨od, hval, hod⟩
       have := List.mem_lookup (List.nodupkeys_dedupkeys A) hval
       rw [(_ : List.lookupₓ a A = od)]
       · simpa
         
-      · simpa [← List.lookup_dedupkeys, ← WithTop.some_eq_coe]
+      · simpa [List.lookup_dedupkeys, WithTop.some_eq_coe]
         
       
     · intro h
       use (A.lookup a).getOrElse (0 : β)
       rw [← List.lookup_dedupkeys] at h⊢
-      simp only [← h, List.mem_lookup_iff A.nodupkeys_dedupkeys, ← and_trueₓ, ← not_false_iff, ← Option.mem_def]
+      simp only [h, ← List.mem_lookup_iff A.nodupkeys_dedupkeys, and_trueₓ, not_false_iff, Option.mem_def]
       cases List.lookupₓ a A.dedupkeys
       · simpa using h
         
@@ -265,7 +265,7 @@ def List.applyId [DecidableEq α] (xs : List (α × α)) (x : α) : α :=
 @[simp]
 theorem List.apply_id_cons [DecidableEq α] (xs : List (α × α)) (x y z : α) :
     List.applyId ((y, z) :: xs) x = if y = x then z else List.applyId xs x := by
-  simp only [← list.apply_id, ← List.lookupₓ, ← eq_rec_constant, ← Prod.toSigma, ← List.map] <;> split_ifs <;> rfl
+  simp only [list.apply_id, List.lookupₓ, eq_rec_constant, Prod.toSigma, List.map] <;> split_ifs <;> rfl
 
 open Function _Root_.List
 
@@ -285,17 +285,16 @@ theorem List.apply_id_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nod
       cases ys
       · cases h₁
         
-      · simp only [← list.apply_id, ← to_sigma, ← Option.get_or_else_some, ← nth, ← lookup_cons_eq, ← zip_cons_cons, ←
-          List.map]
+      · simp only [list.apply_id, to_sigma, Option.get_or_else_some, nth, lookup_cons_eq, zip_cons_cons, List.map]
         
       
     · cases ys
       · cases h₁
         
       · cases' h₀ with _ _ h₀ h₁
-        simp only [← nth, ← zip_cons_cons, ← list.apply_id_cons] at h₂⊢
+        simp only [nth, zip_cons_cons, list.apply_id_cons] at h₂⊢
         rw [if_neg]
-        · apply xs_ih <;> solve_by_elim [← succ.inj]
+        · apply xs_ih <;> solve_by_elim [succ.inj]
           
         · apply h₀
           apply nth_mem h₂
@@ -303,12 +302,12 @@ theorem List.apply_id_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nod
         
       
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:494:6: unsupported: specialize @hyp
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:526:6: unsupported: specialize @hyp
 theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodupₓ xs) (h₁ : xs ~ ys) (x : α) :
     List.applyId.{u} (xs.zip ys) x ∈ ys ↔ x ∈ xs := by
-  simp only [← list.apply_id]
+  simp only [list.apply_id]
   cases h₃ : lookup x (map Prod.toSigma (xs.zip ys))
-  · dsimp' [← Option.getOrElse]
+  · dsimp' [Option.getOrElse]
     rw [h₁.mem_iff]
     
   · have h₂ : ys.nodup := h₁.nodup_iff.1 h₀
@@ -321,26 +320,26 @@ theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup�
       cases' ys with y ys
       · cases h₃
         
-      dsimp' [← lookup]  at h₃
+      dsimp' [lookup]  at h₃
       split_ifs  at h₃
       · subst x'
         subst val
-        simp only [← mem_cons_iff, ← true_orₓ, ← eq_self_iff_true]
+        simp only [mem_cons_iff, true_orₓ, eq_self_iff_true]
         
       · cases' h₀ with _ _ h₀ h₅
         cases' h₂ with _ _ h₂ h₄
         have h₆ := Nat.succ.injₓ h₁
         specialize xs_ih h₅ ys h₃ h₄ h₆
-        simp only [← Ne.symm h, ← xs_ih, ← mem_cons_iff, ← false_orₓ]
+        simp only [Ne.symm h, xs_ih, mem_cons_iff, false_orₓ]
         suffices : val ∈ ys
         tauto!
         erw [← Option.mem_def, mem_lookup_iff] at h₃
-        simp only [← to_sigma, ← mem_map, ← heq_iff_eq, ← Prod.exists] at h₃
+        simp only [to_sigma, mem_map, heq_iff_eq, Prod.exists] at h₃
         rcases h₃ with ⟨a, b, h₃, h₄, h₅⟩
         subst a
         subst b
         apply (mem_zip h₃).2
-        simp only [← nodupkeys, ← keys, ← comp, ← Prod.fst_to_sigma, ← map_map]
+        simp only [nodupkeys, keys, comp, Prod.fst_to_sigma, map_map]
         rwa [map_fst_zip _ _ (le_of_eqₓ h₆)]
         
     
@@ -348,11 +347,11 @@ theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup�
 theorem List.apply_id_eq_self [DecidableEq α] {xs ys : List α} (x : α) : x ∉ xs → List.applyId.{u} (xs.zip ys) x = x :=
   by
   intro h
-  dsimp' [← list.apply_id]
+  dsimp' [list.apply_id]
   rw [lookup_eq_none.2]
   rfl
-  simp only [← keys, ← not_exists, ← to_sigma, ← exists_and_distrib_right, ← exists_eq_right, ← mem_map, ← comp_app, ←
-    map_map, ← Prod.exists]
+  simp only [keys, not_exists, to_sigma, exists_and_distrib_right, exists_eq_right, mem_map, comp_app, map_map,
+    Prod.exists]
   intro y hy
   exact h (mem_zip hy).1
 
@@ -432,13 +431,13 @@ protected def shrinkPerm {α : Type} [DecidableEq α] [SizeOf α] : ShrinkFn (Σ
         Nat.lt_of_div_lt_div
           (lt_of_le_of_ltₓ
             (by
-              simp only [← Nat.mul_div_cancelₓ, ← gt_iff_lt, ← Finₓ.val_eq_coe, ← Pnat.pos])
+              simp only [Nat.mul_div_cancelₓ, gt_iff_ltₓ, Finₓ.val_eq_coe, Pnat.pos])
             i.2)
       pure
         ⟨perm.slice (i * n) n xs, by
           rcases xs with ⟨a, b, c, d⟩ <;>
-            dsimp' [← sizeof_lt] <;>
-              unfold_wf <;> simp only [← perm.slice] <;> unfold_wf <;> apply List.sizeof_slice_lt _ _ n.2 _ this⟩
+            dsimp' [sizeof_lt] <;>
+              unfold_wf <;> simp only [perm.slice] <;> unfold_wf <;> apply List.sizeof_slice_lt _ _ n.2 _ this⟩
 
 instance [SizeOf α] : SizeOf (InjectiveFunction α) :=
   ⟨fun ⟨xs, _, _⟩ => sizeof (xs.map Sigma.fst)⟩
@@ -454,13 +453,13 @@ protected def shrink {α : Type} [SizeOf α] [DecidableEq α] : ShrinkFn (Inject
       have h₄ : ys' ≤ xs' := le_of_eqₓ (perm.length_eq h₀)
       pure
         ⟨⟨(List.zipₓ xs' ys').map Prod.toSigma, by
-            simp only [← comp, ← map_fst_zip, ← map_snd_zip, *, ← Prod.fst_to_sigma, ← Prod.snd_to_sigma, ← map_map], by
-            simp only [← comp, ← map_snd_zip, *, ← Prod.snd_to_sigma, ← map_map]⟩,
+            simp only [comp, map_fst_zip, map_snd_zip, *, Prod.fst_to_sigma, Prod.snd_to_sigma, map_map], by
+            simp only [comp, map_snd_zip, *, Prod.snd_to_sigma, map_map]⟩,
           by
           revert h₂ <;>
-            dsimp' [← sizeof_lt] <;>
+            dsimp' [sizeof_lt] <;>
               unfold_wf <;>
-                simp only [← has_sizeof._match_1, ← map_map, ← comp, ← map_fst_zip, *, ← Prod.fst_to_sigma] <;>
+                simp only [has_sizeof._match_1, map_map, comp, map_fst_zip, *, Prod.fst_to_sigma] <;>
                   unfold_wf <;> intro h₂ <;> convert h₂⟩
 
 /-- Create an injective function from one list and a permutation of that list. -/
@@ -469,24 +468,23 @@ protected def mk (xs ys : List α) (h : xs ~ ys) (h' : ys.Nodup) : InjectiveFunc
   have h₁ : ys.length ≤ xs.length := le_of_eqₓ h.length_eq.symm
   InjectiveFunction.map_to_self (List.toFinmap' (xs.zip ys))
     (by
-      simp only [← list.to_finmap', ← comp, ← map_fst_zip, ← map_snd_zip, *, ← Prod.fst_to_sigma, ← Prod.snd_to_sigma, ←
-        map_map])
+      simp only [list.to_finmap', comp, map_fst_zip, map_snd_zip, *, Prod.fst_to_sigma, Prod.snd_to_sigma, map_map])
     (by
-      simp only [← list.to_finmap', ← comp, ← map_snd_zip, *, ← Prod.snd_to_sigma, ← map_map])
+      simp only [list.to_finmap', comp, map_snd_zip, *, Prod.snd_to_sigma, map_map])
 
 protected theorem injective [DecidableEq α] (f : InjectiveFunction α) : Injective (apply f) := by
   cases' f with xs hperm hnodup
   generalize h₀ : map Sigma.fst xs = xs₀
   generalize h₁ : xs.map (@id ((Σ_ : α, α) → α) <| @Sigma.snd α fun _ : α => α) = xs₁
-  dsimp' [← id]  at h₁
+  dsimp' [id]  at h₁
   have hxs : xs = total_function.list.to_finmap' (xs₀.zip xs₁) := by
     rw [← h₀, ← h₁, list.to_finmap']
     clear h₀ h₁ xs₀ xs₁ hperm hnodup
     induction xs
     case list.nil =>
-      simp only [← zip_nil_right, ← map_nil]
+      simp only [zip_nil_right, map_nil]
     case list.cons xs_hd xs_tl xs_ih =>
-      simp only [← true_andₓ, ← to_sigma, ← eq_self_iff_true, ← Sigma.eta, ← zip_cons_cons, ← List.map]
+      simp only [true_andₓ, to_sigma, eq_self_iff_true, Sigma.eta, zip_cons_cons, List.map]
       exact xs_ih
   revert hperm hnodup
   rw [hxs]

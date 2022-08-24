@@ -205,9 +205,9 @@ theorem Encoding.card_le_card_list {α : Type u} (e : Encoding.{u, v} α) :
 
 theorem Encoding.card_le_aleph_0 {α : Type u} (e : Encoding.{u, v} α) [Encodable e.Γ] : # α ≤ ℵ₀ := by
   refine' Cardinal.lift_le.1 (e.card_le_card_list.trans _)
-  simp only [← Cardinal.lift_aleph_0, ← Cardinal.lift_le_aleph_0]
+  simp only [Cardinal.lift_aleph_0, Cardinal.lift_le_aleph_0]
   cases' is_empty_or_nonempty e.Γ with h h
-  · simp only [← Cardinal.mk_le_aleph_0]
+  · simp only [Cardinal.mk_le_aleph_0]
     
   · rw [Cardinal.mk_list_eq_aleph_0]
     

@@ -24,7 +24,7 @@ variable {α β : Type _} {n : ℕ}
 @[simp]
 theorem Ioi_zero_eq_map : ioi (0 : Finₓ n.succ) = univ.map (Finₓ.succEmbedding _).toEmbedding := by
   ext i
-  simp only [← mem_Ioi, ← mem_map, ← mem_univ, ← Function.Embedding.coe_fn_mk, ← exists_true_left]
+  simp only [mem_Ioi, mem_map, mem_univ, Function.Embedding.coe_fn_mk, exists_true_left]
   constructor
   · refine' cases _ _ i
     · rintro ⟨⟨⟩⟩
@@ -40,8 +40,7 @@ theorem Ioi_zero_eq_map : ioi (0 : Finₓ n.succ) = univ.map (Finₓ.succEmbeddi
 @[simp]
 theorem Ioi_succ (i : Finₓ n) : ioi i.succ = (ioi i).map (Finₓ.succEmbedding _).toEmbedding := by
   ext i
-  simp only [← mem_filter, ← mem_Ioi, ← mem_map, ← mem_univ, ← true_andₓ, ← Function.Embedding.coe_fn_mk, ←
-    exists_true_left]
+  simp only [mem_filter, mem_Ioi, mem_map, mem_univ, true_andₓ, Function.Embedding.coe_fn_mk, exists_true_left]
   constructor
   · refine' cases _ _ i
     · rintro ⟨⟨⟩⟩
@@ -63,7 +62,7 @@ theorem card_filter_univ_succ (p : Finₓ (n + 1) → Prop) [DecidablePred p] :
     (univ.filter p).card = if p 0 then (univ.filter (p ∘ Finₓ.succ)).card + 1 else (univ.filter (p ∘ Finₓ.succ)).card :=
   (card_filter_univ_succ' p).trans
     (by
-      split_ifs <;> simp [← add_commₓ 1])
+      split_ifs <;> simp [add_commₓ 1])
 
 theorem card_filter_univ_eq_vector_nth_eq_count [DecidableEq α] (a : α) (v : Vector α n) :
     (univ.filter fun i => a = v.nth i).card = v.toList.count a := by

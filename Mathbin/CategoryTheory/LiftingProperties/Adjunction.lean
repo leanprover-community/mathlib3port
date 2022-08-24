@@ -39,7 +39,7 @@ map is of the form `G.map i` and the right map is `p` has an "adjoint" commutati
 square whose left map is `i` and whose right map is `F.map p`. -/
 theorem right_adjoint : CommSq (adj.homEquiv _ _ u) i (F.map p) (adj.homEquiv _ _ v) :=
   ⟨by
-    simp only [← adjunction.hom_equiv_unit, ← assoc, F.map_comp, ← sq.w]
+    simp only [adjunction.hom_equiv_unit, assoc, ← F.map_comp, sq.w]
     rw [F.map_comp, adjunction.unit_naturality_assoc]⟩
 
 /-- The liftings of a commutative are in bijection with the liftings of its (right)
@@ -66,7 +66,7 @@ def rightAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.rightAdjoint adj).LiftSt
 
 /-- A square has a lifting if and only if its (right) adjoint square has a lifting. -/
 theorem right_adjoint_has_lift_iff : HasLift (sq.rightAdjoint adj) ↔ HasLift sq := by
-  simp only [← has_lift.iff]
+  simp only [has_lift.iff]
   exact Equivₓ.nonempty_congr (sq.right_adjoint_lift_struct_equiv adj).symm
 
 instance [HasLift sq] : HasLift (sq.rightAdjoint adj) := by
@@ -87,7 +87,7 @@ map is of the form `i` and the right map is `F.map p` has an "adjoint" commutati
 square whose left map is `G.map i` and whose right map is `p`. -/
 theorem left_adjoint : CommSq ((adj.homEquiv _ _).symm u) (G.map i) p ((adj.homEquiv _ _).symm v) :=
   ⟨by
-    simp only [← adjunction.hom_equiv_counit, ← assoc, G.map_comp_assoc, sq.w]
+    simp only [adjunction.hom_equiv_counit, assoc, ← G.map_comp_assoc, ← sq.w]
     rw [G.map_comp, assoc, adjunction.counit_naturality]⟩
 
 /-- The liftings of a commutative are in bijection with the liftings of its (left)
@@ -114,7 +114,7 @@ def leftAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.leftAdjoint adj).LiftStru
 
 /-- A (left) adjoint square has a lifting if and only if the original square has a lifting. -/
 theorem left_adjoint_has_lift_iff : HasLift (sq.leftAdjoint adj) ↔ HasLift sq := by
-  simp only [← has_lift.iff]
+  simp only [has_lift.iff]
   exact Equivₓ.nonempty_congr (sq.left_adjoint_lift_struct_equiv adj).symm
 
 instance [HasLift sq] : HasLift (sq.leftAdjoint adj) := by

@@ -45,7 +45,7 @@ theorem mem_supr_of_directed {S : ι → Subsemigroup M} (hS : Directed (· ≤ 
     (x ∈ ⨆ i, S i) ↔ ∃ i, x ∈ S i := by
   refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supr S i) hi⟩
   suffices x ∈ closure (⋃ i, (S i : Set M)) → ∃ i, x ∈ S i by
-    simpa only [← closure_Union, ← closure_eq (S _)] using this
+    simpa only [closure_Union, closure_eq (S _)] using this
   refine' fun hx => closure_induction hx (fun y hy => mem_Union.mp hy) _
   · rintro x y ⟨i, hi⟩ ⟨j, hj⟩
     rcases hS i j with ⟨k, hki, hkj⟩
@@ -56,18 +56,18 @@ theorem mem_supr_of_directed {S : ι → Subsemigroup M} (hS : Directed (· ≤ 
 theorem coe_supr_of_directed {S : ι → Subsemigroup M} (hS : Directed (· ≤ ·) S) :
     ((⨆ i, S i : Subsemigroup M) : Set M) = ⋃ i, ↑(S i) :=
   Set.ext fun x => by
-    simp [← mem_supr_of_directed hS]
+    simp [mem_supr_of_directed hS]
 
 @[to_additive]
 theorem mem_Sup_of_directed_on {S : Set (Subsemigroup M)} (hS : DirectedOn (· ≤ ·) S) {x : M} :
     x ∈ sup S ↔ ∃ s ∈ S, x ∈ s := by
-  simp only [← Sup_eq_supr', ← mem_supr_of_directed hS.directed_coe, ← SetCoe.exists, ← Subtype.coe_mk]
+  simp only [Sup_eq_supr', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
 
 @[to_additive]
 theorem coe_Sup_of_directed_on {S : Set (Subsemigroup M)} (hS : DirectedOn (· ≤ ·) S) :
     (↑(sup S) : Set M) = ⋃ s ∈ S, ↑s :=
   Set.ext fun x => by
-    simp [← mem_Sup_of_directed_on hS]
+    simp [mem_Sup_of_directed_on hS]
 
 @[to_additive]
 theorem mem_sup_left {S T : Subsemigroup M} : ∀ {x : M}, x ∈ S → x ∈ S⊔T :=
@@ -95,8 +95,8 @@ then it holds for all elements of the supremum of `S`. -/
 @[elabAsElim,
   to_additive
       " An induction principle for elements of `⨆ i, S i`.\nIf `C` holds all elements of `S i` for all `i`, and is preserved under addition,\nthen it holds for all elements of the supremum of `S`. "]
-theorem supr_induction (S : ι → Subsemigroup M) {C : M → Prop} {x : M} (hx : x ∈ ⨆ i, S i)
-    (hp : ∀ (i), ∀ x ∈ S i, ∀, C x) (hmul : ∀ x y, C x → C y → C (x * y)) : C x := by
+theorem supr_induction (S : ι → Subsemigroup M) {C : M → Prop} {x : M} (hx : x ∈ ⨆ i, S i) (hp : ∀ (i), ∀ x ∈ S i, C x)
+    (hmul : ∀ x y, C x → C y → C (x * y)) : C x := by
   rw [supr_eq_closure] at hx
   refine' closure_induction hx (fun x hx => _) hmul
   obtain ⟨i, hi⟩ := set.mem_Union.mp hx
@@ -105,7 +105,7 @@ theorem supr_induction (S : ι → Subsemigroup M) {C : M → Prop} {x : M} (hx 
 /-- A dependent version of `subsemigroup.supr_induction`. -/
 @[elabAsElim, to_additive "A dependent version of `add_subsemigroup.supr_induction`. "]
 theorem supr_induction' (S : ι → Subsemigroup M) {C : ∀ x, (x ∈ ⨆ i, S i) → Prop}
-    (hp : ∀ (i), ∀ x ∈ S i, ∀, C x (mem_supr_of_mem i ‹_›))
+    (hp : ∀ (i), ∀ x ∈ S i, C x (mem_supr_of_mem i ‹_›))
     (hmul : ∀ x y hx hy, C x hx → C y hy → C (x * y) (mul_mem ‹_› ‹_›)) {x : M} (hx : x ∈ ⨆ i, S i) : C x hx := by
   refine' Exists.elim _ fun (hx : x ∈ ⨆ i, S i) (hc : C x hx) => hc
   refine' supr_induction S hx (fun i x hx => _) fun x y => _

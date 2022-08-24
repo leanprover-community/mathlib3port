@@ -52,28 +52,28 @@ theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mΩ : M
     simp_rw [← inter_indicator_mul]
     rw [lintegral_indicator _ (MeasurableSet.inter (hMf _ h_meas_s') h_meas_T), lintegral_indicator _ (hMf _ h_meas_s'),
       lintegral_indicator _ h_meas_T]
-    simp only [← measurable_const, ← lintegral_const, ← univ_inter, ← lintegral_const_mul, ← MeasurableSet.univ, ←
+    simp only [measurable_const, lintegral_const, univ_inter, lintegral_const_mul, MeasurableSet.univ,
       measure.restrict_apply]
     ring_nf
     congr
     rw [mul_comm, h_ind s' T h_meas_s' (Set.mem_singleton _)]
     
   · intro f' g h_univ h_meas_f' h_meas_g h_ind_f' h_ind_g
-    have h_measM_f' : Measurable f' := h_meas_f'.mono hMf le_rfl
-    have h_measM_g : Measurable g := h_meas_g.mono hMf le_rfl
+    have h_measM_f' : Measurable f' := h_meas_f'.mono hMf le_rflₓ
+    have h_measM_g : Measurable g := h_meas_g.mono hMf le_rflₓ
     simp_rw [Pi.add_apply, right_distrib]
     rw [lintegral_add_left (h_mul_indicator _ h_measM_f'), lintegral_add_left h_measM_f', right_distrib, h_ind_f',
       h_ind_g]
     
   · intro f h_meas_f h_mono_f h_ind_f
-    have h_measM_f : ∀ n, Measurable (f n) := fun n => (h_meas_f n).mono hMf le_rfl
+    have h_measM_f : ∀ n, Measurable (f n) := fun n => (h_meas_f n).mono hMf le_rflₓ
     simp_rw [Ennreal.supr_mul]
     rw [lintegral_supr h_measM_f h_mono_f, lintegral_supr, Ennreal.supr_mul]
     · simp_rw [← h_ind_f]
       
     · exact fun n => h_mul_indicator _ (h_measM_f n)
       
-    · exact fun m n h_le a => Ennreal.mul_le_mul (h_mono_f h_le a) le_rfl
+    · exact fun m n h_le a => Ennreal.mul_le_mul (h_mono_f h_le a) le_rflₓ
       
     
 
@@ -87,7 +87,7 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space
     {μ : Measureₓ Ω} (hMf : Mf ≤ mΩ) (hMg : Mg ≤ mΩ) (h_ind : Indepₓ Mf Mg μ) (h_meas_f : measurable[Mf] f)
     (h_meas_g : measurable[Mg] g) : (∫⁻ ω, f ω * g ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ := by
   revert g
-  have h_measM_f : Measurable f := h_meas_f.mono hMf le_rfl
+  have h_measM_f : Measurable f := h_meas_f.mono hMf le_rflₓ
   apply Measurable.ennreal_induction
   · intro c s h_s
     apply lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator hMf _ (hMg _ h_s) _ h_meas_f
@@ -95,20 +95,20 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space
     rwa [singleton_subset_iff]
     
   · intro f' g h_univ h_measMg_f' h_measMg_g h_ind_f' h_ind_g'
-    have h_measM_f' : Measurable f' := h_measMg_f'.mono hMg le_rfl
-    have h_measM_g : Measurable g := h_measMg_g.mono hMg le_rfl
+    have h_measM_f' : Measurable f' := h_measMg_f'.mono hMg le_rflₓ
+    have h_measM_g : Measurable g := h_measMg_g.mono hMg le_rflₓ
     simp_rw [Pi.add_apply, left_distrib]
     rw [lintegral_add_left h_measM_f', lintegral_add_left (h_measM_f.mul h_measM_f'), left_distrib, h_ind_f', h_ind_g']
     
   · intro f' h_meas_f' h_mono_f' h_ind_f'
-    have h_measM_f' : ∀ n, Measurable (f' n) := fun n => (h_meas_f' n).mono hMg le_rfl
+    have h_measM_f' : ∀ n, Measurable (f' n) := fun n => (h_meas_f' n).mono hMg le_rflₓ
     simp_rw [Ennreal.mul_supr]
     rw [lintegral_supr, lintegral_supr h_measM_f' h_mono_f', Ennreal.mul_supr]
     · simp_rw [← h_ind_f']
       
     · exact fun n => h_measM_f.mul (h_measM_f' n)
       
-    · exact fun n m (h_le : n ≤ m) a => Ennreal.mul_le_mul le_rfl (h_mono_f' h_le a)
+    · exact fun n m (h_le : n ≤ m) a => Ennreal.mul_le_mul le_rflₓ (h_mono_f' h_le a)
       
     
 
@@ -117,7 +117,7 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space
 theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun (h_meas_f : Measurable f) (h_meas_g : Measurable g)
     (h_indep_fun : IndepFunₓ f g μ) : (∫⁻ ω, (f * g) ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ :=
   lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space (measurable_iff_comap_le.1 h_meas_f)
-    (measurable_iff_comap_le.1 h_meas_g) h_indep_fun (Measurable.of_comap_le le_rfl) (Measurable.of_comap_le le_rfl)
+    (measurable_iff_comap_le.1 h_meas_g) h_indep_fun (Measurable.of_comap_le le_rflₓ) (Measurable.of_comap_le le_rflₓ)
 
 /-- If `f` and `g` with values in `ℝ≥0∞` are independent and almost everywhere measurable,
    then `E[f * g] = E[f] * E[g]` (slightly generalizing

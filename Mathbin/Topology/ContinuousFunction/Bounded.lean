@@ -178,7 +178,7 @@ theorem dist_lt_iff_of_compact [CompactSpace α] (C0 : (0 : ℝ) < C) : dist f g
       convert C0
       apply le_antisymmₓ _ dist_nonneg'
       rw [dist_eq]
-      exact cInf_le ⟨0, fun C => And.left⟩ ⟨le_rfl, fun x => False.elim (h (Nonempty.intro x))⟩
+      exact cInf_le ⟨0, fun C => And.left⟩ ⟨le_rflₓ, fun x => False.elim (h (Nonempty.intro x))⟩
       
     
 
@@ -189,11 +189,11 @@ theorem dist_lt_iff_of_nonempty_compact [Nonempty α] [CompactSpace α] : dist f
 instance : PseudoMetricSpace (α →ᵇ β) where
   dist_self := fun f =>
     le_antisymmₓ
-      ((dist_le le_rfl).2 fun x => by
+      ((dist_le le_rflₓ).2 fun x => by
         simp )
       dist_nonneg'
   dist_comm := fun f g => by
-    simp [← dist_eq, ← dist_comm]
+    simp [dist_eq, dist_comm]
   dist_triangle := fun f g h =>
     (dist_le (add_nonneg dist_nonneg' dist_nonneg')).2 fun x =>
       le_transₓ (dist_triangle _ _ _) (add_le_add (dist_coe_le_dist _) (dist_coe_le_dist _))
@@ -251,7 +251,7 @@ variable (α) {β}
 @[simps (config := { fullyApplied := false })]
 def const (b : β) : α →ᵇ β :=
   ⟨ContinuousMap.const α b, 0, by
-    simp [← le_rfl]⟩
+    simp [le_rflₓ]⟩
 
 variable {α}
 
@@ -408,10 +408,10 @@ theorem dist_extend_extend (f : α ↪ δ) (g₁ g₂ : α →ᵇ β) (h₁ h₂
   by
   refine' le_antisymmₓ ((dist_le <| le_max_iff.2 <| Or.inl dist_nonneg).2 fun x => _) (max_leₓ _ _)
   · rcases em (∃ y, f y = x) with (⟨x, rfl⟩ | hx)
-    · simp only [← extend_apply]
+    · simp only [extend_apply]
       exact (dist_coe_le_dist x).trans (le_max_leftₓ _ _)
       
-    · simp only [← extend_apply' hx]
+    · simp only [extend_apply' hx]
       lift x to (range fᶜ : Set δ) using hx
       calc
         dist (h₁ x) (h₂ x) = dist (h₁.restrict (range fᶜ) x) (h₂.restrict (range fᶜ) x) := rfl
@@ -434,7 +434,7 @@ theorem dist_extend_extend (f : α ↪ δ) (g₁ g₂ : α →ᵇ β) (h₁ h₂
 
 theorem isometry_extend (f : α ↪ δ) (h : δ →ᵇ β) : Isometry fun g : α →ᵇ β => extend f g h :=
   Isometry.of_dist_eq fun g₁ g₂ => by
-    simp [← dist_nonneg]
+    simp [dist_nonneg]
 
 end Extend
 
@@ -446,15 +446,15 @@ variable [TopologicalSpace α] [CompactSpace α] [PseudoMetricSpace β]
 
 variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y z «expr ∈ » U)
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (y z «expr ∈ » U)
 /- Arzela-Ascoli theorem asserts that, on a compact space, a set of functions sharing
 a common modulus of continuity and taking values in a compact set forms a compact
 subset for the topology of uniform convergence. In this section, we prove this theorem
 and several useful variations around it. -/
 /-- First version, with pointwise equicontinuity and range in a compact space -/
 theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : IsClosed A)
-    (H : ∀ (x : α), ∀ ε > 0, ∀, ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U) (f : α →ᵇ β), f ∈ A → dist (f y) (f z) < ε) :
+    (H : ∀ (x : α), ∀ ε > 0, ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U) (f : α →ᵇ β), f ∈ A → dist (f y) (f z) < ε) :
     IsCompact A := by
   refine' compact_of_totally_bounded_is_closed _ closed
   refine' totally_bounded_of_finite_discretization fun ε ε0 => _
@@ -518,11 +518,11 @@ theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : Is
       
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (y z «expr ∈ » U)
 /-- Second version, with pointwise equicontinuity and range in a compact subset -/
 theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)) (closed : IsClosed A)
     (in_s : ∀ (f : α →ᵇ β) (x : α), f ∈ A → f x ∈ s)
-    (H : ∀ (x : α), ∀ ε > 0, ∀, ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U) (f : α →ᵇ β), f ∈ A → dist (f y) (f z) < ε) :
+    (H : ∀ (x : α), ∀ ε > 0, ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U) (f : α →ᵇ β), f ∈ A → dist (f y) (f z) < ε) :
     IsCompact A := by
   /- This version is deduced from the previous one by restricting to the compact type in the target,
   using compactness there and then lifting everything to the original space. -/
@@ -546,13 +546,13 @@ theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)
     exact ⟨g, hf, rfl⟩
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y z «expr ∈ » U)
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (y z «expr ∈ » U)
 /-- Third (main) version, with pointwise equicontinuity and range in a compact subset, but
 without closedness. The closure is then compact -/
 theorem arzela_ascoli [T2Space β] (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β))
     (in_s : ∀ (f : α →ᵇ β) (x : α), f ∈ A → f x ∈ s)
-    (H : ∀ (x : α), ∀ ε > 0, ∀, ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U) (f : α →ᵇ β), f ∈ A → dist (f y) (f z) < ε) :
+    (H : ∀ (x : α), ∀ ε > 0, ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U) (f : α →ᵇ β), f ∈ A → dist (f y) (f z) < ε) :
     IsCompact (Closure A) :=
   /- This version is deduced from the previous one by checking that the closure of A, in
     addition to being closed, still satisfies the properties of compact range and equicontinuity -/
@@ -574,7 +574,7 @@ theorem arzela_ascoli [T2Space β] (s : Set β) (hs : IsCompact s) (A : Set (α 
           rw [add_halves, add_halves]
         
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (y z «expr ∈ » U)
 /- To apply the previous theorems, one needs to check the equicontinuity. An important
 instance is when the source space is a metric space, and there is a fixed modulus of continuity
 for all the functions in the set A -/
@@ -594,11 +594,11 @@ theorem equicontinuous_of_continuity_modulus {α : Type u} [PseudoMetricSpace α
     dist (f y) (f z) ≤ b (dist y z) := H y z f hf
     _ ≤ abs (b (dist y z)) := le_abs_self _
     _ = dist (b (dist y z)) 0 := by
-      simp [← Real.dist_eq]
+      simp [Real.dist_eq]
     _ < ε :=
       hδ
         (by
-          simpa [← Real.dist_eq] using this)
+          simpa [Real.dist_eq] using this)
     
 
 end ArzelaAscoli
@@ -689,7 +689,7 @@ instance hasNatScalar :
     HasSmul ℕ (α →ᵇ β) where smul := fun n f =>
     { toContinuousMap := n • f.toContinuousMap,
       map_bounded' := by
-        simpa [← coe_nsmul_rec] using (nsmulRec n f).map_bounded' }
+        simpa [coe_nsmul_rec] using (nsmulRec n f).map_bounded' }
 
 @[simp]
 theorem coe_nsmul (r : ℕ) (f : α →ᵇ β) : ⇑(r • f) = r • f :=
@@ -747,7 +747,7 @@ variable [TopologicalSpace α] [PseudoMetricSpace β] [AddCommMonoidₓ β] [Has
 instance : AddCommMonoidₓ (α →ᵇ β) :=
   { BoundedContinuousFunction.addMonoid with
     add_comm := fun f g => by
-      ext <;> simp [← add_commₓ] }
+      ext <;> simp [add_commₓ] }
 
 open BigOperators
 
@@ -778,7 +778,7 @@ theorem norm_def : ∥f∥ = dist f 0 :=
 /-- The norm of a bounded continuous function is the supremum of `∥f x∥`.
 We use `Inf` to ensure that the definition works if `α` has no elements. -/
 theorem norm_eq (f : α →ᵇ β) : ∥f∥ = inf { C : ℝ | 0 ≤ C ∧ ∀ x : α, ∥f x∥ ≤ C } := by
-  simp [← norm_def, ← BoundedContinuousFunction.dist_eq]
+  simp [norm_def, BoundedContinuousFunction.dist_eq]
 
 /-- When the domain is non-empty, we do not need the `0 ≤ C` condition in the formula for ∥f∥ as an
 `Inf`. -/
@@ -787,7 +787,7 @@ theorem norm_eq_of_nonempty [h : Nonempty α] : ∥f∥ = inf { C : ℝ | ∀ x 
   rw [norm_eq]
   congr
   ext
-  simp only [← and_iff_right_iff_imp]
+  simp only [and_iff_right_iff_imp]
   exact fun h' => le_transₓ (norm_nonneg (f a)) (h' a)
 
 @[simp]
@@ -797,7 +797,7 @@ theorem norm_eq_zero_of_empty [h : IsEmpty α] : ∥f∥ = 0 :=
 theorem norm_coe_le_norm (x : α) : ∥f x∥ ≤ ∥f∥ :=
   calc
     ∥f x∥ = dist (f x) ((0 : α →ᵇ β) x) := by
-      simp [← dist_zero_right]
+      simp [dist_zero_right]
     _ ≤ ∥f∥ := dist_coe_le_dist _
     
 
@@ -836,7 +836,7 @@ variable (f)
 /-- Norm of `const α b` is less than or equal to `∥b∥`. If `α` is nonempty,
 then it is equal to `∥b∥`. -/
 theorem norm_const_le (b : β) : ∥const α b∥ ≤ ∥b∥ :=
-  (norm_le (norm_nonneg b)).2 fun x => le_rfl
+  (norm_le (norm_nonneg b)).2 fun x => le_rflₓ
 
 @[simp]
 theorem norm_const_eq [h : Nonempty α] (b : β) : ∥const α b∥ = ∥b∥ :=
@@ -880,7 +880,7 @@ theorem coe_norm_comp : (f.normComp : α → ℝ) = norm ∘ f :=
 
 @[simp]
 theorem norm_norm_comp : ∥f.normComp∥ = ∥f∥ := by
-  simp only [← norm_eq, ← coe_norm_comp, ← norm_norm]
+  simp only [norm_eq, coe_norm_comp, norm_norm]
 
 theorem bdd_above_range_norm_comp : BddAbove <| Set.Range <| norm ∘ f :=
   (Real.bounded_iff_bdd_below_bdd_above.mp <| @bounded_range _ _ _ _ f.normComp).2
@@ -897,7 +897,7 @@ instance : Neg (α →ᵇ β) :=
 instance : Sub (α →ᵇ β) :=
   ⟨fun f g =>
     (ofNormedAddCommGroup (f - g) (f.Continuous.sub g.Continuous) (∥f∥ + ∥g∥)) fun x => by
-      simp only [← sub_eq_add_neg]
+      simp only [sub_eq_add_neg]
       exact
         le_transₓ (norm_add_le _ _)
           (add_le_add (f.norm_coe_le_norm x) <| trans_rel_right _ (norm_neg _) (g.norm_coe_le_norm x))⟩
@@ -951,7 +951,7 @@ instance : AddCommGroupₓ (α →ᵇ β) :=
 
 instance :
     SeminormedAddCommGroup (α →ᵇ β) where dist_eq := fun f g => by
-    simp only [← norm_eq, ← dist_eq, ← dist_eq_norm, ← sub_apply]
+    simp only [norm_eq, dist_eq, dist_eq_norm, sub_apply]
 
 instance {α β} [TopologicalSpace α] [NormedAddCommGroup β] : NormedAddCommGroup (α →ᵇ β) :=
   { BoundedContinuousFunction.seminormedAddCommGroup with }
@@ -1218,7 +1218,7 @@ instance hasNatPow :
     Pow (α →ᵇ R) ℕ where pow := fun f n =>
     { toContinuousMap := f.toContinuousMap ^ n,
       map_bounded' := by
-        simpa [← coe_npow_rec] using (npowRec n f).map_bounded' }
+        simpa [coe_npow_rec] using (npowRec n f).map_bounded' }
 
 @[simp]
 theorem coe_pow (n : ℕ) (f : α →ᵇ R) : ⇑(f ^ n) = f ^ n :=
@@ -1350,7 +1350,7 @@ end NormedAlgebra
 
 theorem Nnreal.upper_bound {α : Type _} [TopologicalSpace α] (f : α →ᵇ ℝ≥0 ) (x : α) : f x ≤ nndist f 0 := by
   have key : nndist (f x) ((0 : α →ᵇ ℝ≥0 ) x) ≤ nndist f 0 := @dist_coe_le_dist α ℝ≥0 _ _ f 0 x
-  simp only [← coe_zero, ← Pi.zero_apply] at key
+  simp only [coe_zero, Pi.zero_apply] at key
   rwa [Nnreal.nndist_zero_eq_val' (f x)] at key
 
 /-!
@@ -1395,7 +1395,7 @@ theorem star_apply (f : α →ᵇ β) (x : α) : star f x = star (f x) :=
 
 instance :
     NormedStarGroup (α →ᵇ β) where norm_star := fun f => by
-    simp only [← norm_eq, ← star_apply, ← norm_star]
+    simp only [norm_eq, star_apply, norm_star]
 
 instance : StarModule 𝕜 (α →ᵇ β) where star_smul := fun k f => ext fun x => star_smul k (f x)
 
@@ -1417,7 +1417,7 @@ instance :
     intro f
     refine' le_antisymmₓ _ _
     · rw [← sq, norm_le (sq_nonneg _)]
-      dsimp' [← star_apply]
+      dsimp' [star_apply]
       intro x
       rw [CstarRing.norm_star_mul_self, ← sq]
       refine' sq_le_sq' _ _
@@ -1490,8 +1490,7 @@ instance : NormedLatticeAddCommGroup (α →ᵇ β) :=
   { BoundedContinuousFunction.lattice with
     add_le_add_left := by
       intro f g h₁ h t
-      simp only [← coe_to_continuous_fun, ← Pi.add_apply, ← add_le_add_iff_left, ← coe_add, ←
-        ContinuousMap.to_fun_eq_coe]
+      simp only [coe_to_continuous_fun, Pi.add_apply, add_le_add_iff_left, coe_add, ContinuousMap.to_fun_eq_coe]
       exact h₁ _,
     solid := by
       intro f g h
@@ -1527,7 +1526,7 @@ theorem nnnorm_coe_fun_eq (f : α →ᵇ ℝ) : ⇑f.nnnorm = HasNnnorm.nnnorm �
 theorem self_eq_nnreal_part_sub_nnreal_part_neg (f : α →ᵇ ℝ) : ⇑f = coe ∘ f.nnrealPart - coe ∘ (-f).nnrealPart := by
   funext x
   dsimp'
-  simp only [← max_zero_sub_max_neg_zero_eq_self]
+  simp only [max_zero_sub_max_neg_zero_eq_self]
 
 /-- Express the absolute value of a bounded continuous function in terms of its
 positive and negative parts. -/
@@ -1535,7 +1534,7 @@ theorem abs_self_eq_nnreal_part_add_nnreal_part_neg (f : α →ᵇ ℝ) :
     abs ∘ ⇑f = coe ∘ f.nnrealPart + coe ∘ (-f).nnrealPart := by
   funext x
   dsimp'
-  simp only [← max_zero_add_max_neg_zero_eq_abs_self]
+  simp only [max_zero_add_max_neg_zero_eq_abs_self]
 
 end NonnegativePart
 

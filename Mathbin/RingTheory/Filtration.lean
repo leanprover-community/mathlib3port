@@ -146,7 +146,7 @@ instance : Inhabited (I.Filtration M) :=
 
 /-- An `I` filtration is stable if `I • F.N n = F.N (n+1)` for large enough `n`. -/
 def Stable : Prop :=
-  ∃ n₀, ∀, ∀ n ≥ n₀, ∀, I • F.n n = F.n (n + 1)
+  ∃ n₀, ∀ n ≥ n₀, I • F.n n = F.n (n + 1)
 
 /-- The trivial stable `I`-filtration of `N`. -/
 @[simps]
@@ -180,7 +180,7 @@ theorem Stable.exists_pow_smul_eq : ∃ n₀, ∀ k, F.n (n₀ + k) = I ^ k • 
     linarith
     
 
-theorem Stable.exists_pow_smul_eq_of_ge : ∃ n₀, ∀, ∀ n ≥ n₀, ∀, F.n n = I ^ (n - n₀) • F.n n₀ := by
+theorem Stable.exists_pow_smul_eq_of_ge : ∃ n₀, ∀ n ≥ n₀, F.n n = I ^ (n - n₀) • F.n n₀ := by
   obtain ⟨n₀, hn₀⟩ := h.exists_pow_smul_eq
   use n₀
   intro n hn
@@ -189,7 +189,7 @@ theorem Stable.exists_pow_smul_eq_of_ge : ∃ n₀, ∀, ∀ n ≥ n₀, ∀, F.
 
 omit h
 
-theorem stable_iff_exists_pow_smul_eq_of_ge : F.Stable ↔ ∃ n₀, ∀, ∀ n ≥ n₀, ∀, F.n n = I ^ (n - n₀) • F.n n₀ := by
+theorem stable_iff_exists_pow_smul_eq_of_ge : F.Stable ↔ ∃ n₀, ∀ n ≥ n₀, F.n n = I ^ (n - n₀) • F.n n₀ := by
   refine' ⟨stable.exists_pow_smul_eq_of_ge, fun h => ⟨h.some, fun n hn => _⟩⟩
   rw [h.some_spec n hn,
     h.some_spec (n + 1)

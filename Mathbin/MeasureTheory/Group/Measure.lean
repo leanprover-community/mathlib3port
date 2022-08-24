@@ -338,7 +338,7 @@ theorem is_open_pos_measure_of_mul_left_invariant_of_compact (K : Set G) (hK : I
     μ K ≤ μ (⋃ (g : G) (H : g ∈ t), (fun h : G => g * h) ⁻¹' U) := measure_mono hKt
     _ ≤ ∑ g in t, μ ((fun h : G => g * h) ⁻¹' U) := measure_bUnion_finset_le _ _
     _ = 0 := by
-      simp [← measure_preimage_mul, ← h]
+      simp [measure_preimage_mul, h]
     
 
 /-- A nonzero left-invariant regular measure gives positive mass to any open set. -/
@@ -350,16 +350,16 @@ theorem is_open_pos_measure_of_mul_left_invariant_of_regular [Regular μ] (h₀ 
 @[to_additive]
 theorem null_iff_of_is_mul_left_invariant [Regular μ] {s : Set G} (hs : IsOpen s) : μ s = 0 ↔ s = ∅ ∨ μ = 0 := by
   by_cases' h3μ : μ = 0
-  · simp [← h3μ]
+  · simp [h3μ]
     
   · haveI := is_open_pos_measure_of_mul_left_invariant_of_regular h3μ
-    simp only [← h3μ, ← or_falseₓ, ← hs.measure_eq_zero_iff μ]
+    simp only [h3μ, or_falseₓ, hs.measure_eq_zero_iff μ]
     
 
 @[to_additive]
 theorem measure_ne_zero_iff_nonempty_of_is_mul_left_invariant [Regular μ] (hμ : μ ≠ 0) {s : Set G} (hs : IsOpen s) :
     μ s ≠ 0 ↔ s.Nonempty := by
-  simpa [← null_iff_of_is_mul_left_invariant hs, ← hμ] using ne_empty_iff_nonempty
+  simpa [null_iff_of_is_mul_left_invariant hs, hμ] using ne_empty_iff_nonempty
 
 @[to_additive]
 theorem measure_pos_iff_nonempty_of_is_mul_left_invariant [Regular μ] (h3μ : μ ≠ 0) {s : Set G} (hs : IsOpen s) :
@@ -379,7 +379,7 @@ theorem measure_lt_top_of_is_compact_of_is_mul_left_invariant (U : Set G) (hU : 
     μ K ≤ μ (⋃ (g : G) (H : g ∈ t), (fun h : G => g * h) ⁻¹' U) := measure_mono hKt
     _ ≤ ∑ g in t, μ ((fun h : G => g * h) ⁻¹' U) := measure_bUnion_finset_le _ _
     _ = Finset.card t * μ U := by
-      simp only [← measure_preimage_mul, ← Finset.sum_const, ← nsmul_eq_mul]
+      simp only [measure_preimage_mul, Finset.sum_const, nsmul_eq_mul]
     _ < ∞ := Ennreal.mul_lt_top (Ennreal.nat_ne_top _) h
     
 
@@ -443,7 +443,7 @@ variable [Groupₓ G] [TopologicalSpace G] (μ : Measure G) [IsHaarMeasure μ]
 @[simp, to_additive]
 theorem haar_singleton [TopologicalGroup G] [BorelSpace G] (g : G) : μ {g} = μ {(1 : G)} := by
   convert measure_preimage_mul μ g⁻¹ _
-  simp only [← mul_oneₓ, ← preimage_mul_left_singleton, ← inv_invₓ]
+  simp only [mul_oneₓ, preimage_mul_left_singleton, inv_invₓ]
 
 @[to_additive MeasureTheory.Measure.IsAddHaarMeasure.smul]
 theorem IsHaarMeasure.smul {c : ℝ≥0∞} (cpos : c ≠ 0) (ctop : c ≠ ∞) : IsHaarMeasure (c • μ) :=
@@ -475,7 +475,7 @@ theorem is_haar_measure_map [BorelSpace G] [TopologicalGroup G] {H : Type _} [Gr
       rw [map_map hf.measurable (continuous_mul_left _).Measurable]
       congr 2
       ext y
-      simp only [← MulEquiv.apply_symm_apply, ← comp_app, ← MulEquiv.map_mul],
+      simp only [MulEquiv.apply_symm_apply, comp_app, MulEquiv.map_mul],
     lt_top_of_is_compact := by
       intro K hK
       rw [map_apply hf.measurable hK.measurable_set]
@@ -513,7 +513,7 @@ instance (priority := 100) IsHaarMeasure.has_no_atoms [TopologicalGroup G] [Bore
     [LocallyCompactSpace G] [(𝓝[≠] (1 : G)).ne_bot] (μ : Measure G) [μ.IsHaarMeasure] : HasNoAtoms μ := by
   suffices H : μ {(1 : G)} ≤ 0
   · constructor
-    simp [← le_bot_iff.1 H]
+    simp [le_bot_iff.1 H]
     
   obtain ⟨K, K_compact, K_int⟩ : ∃ K : Set G, IsCompact K ∧ (1 : G) ∈ Interior K := by
     rcases exists_compact_subset is_open_univ (mem_univ (1 : G)) with ⟨K, hK⟩
@@ -528,10 +528,10 @@ instance (priority := 100) IsHaarMeasure.has_no_atoms [TopologicalGroup G] [Bore
       rw [← bUnion_of_singleton ↑t]
       change μ (⋃ x ∈ t, {x}) = n * μ {1}
       rw [@measure_bUnion_finset G G _ μ t fun i => {i}]
-      · simp only [← tn, ← Finset.sum_const, ← nsmul_eq_mul, ← haar_singleton]
+      · simp only [tn, Finset.sum_const, nsmul_eq_mul, haar_singleton]
         
       · intro x hx y hy xy
-        simp only [← on_fun, ← xy.symm, ← mem_singleton_iff, ← not_false_iff, ← disjoint_singleton_right]
+        simp only [on_fun, xy.symm, mem_singleton_iff, not_false_iff, disjoint_singleton_right]
         
       · intro b hb
         exact measurable_set_singleton b
@@ -542,7 +542,7 @@ instance (priority := 100) IsHaarMeasure.has_no_atoms [TopologicalGroup G] [Bore
     apply (measure_pos_of_nonempty_interior μ ⟨_, K_int⟩).ne'
   have J : tendsto (fun n : ℕ => μ K / n) at_top (𝓝 (μ K / ∞)) :=
     Ennreal.Tendsto.const_div Ennreal.tendsto_nat_nhds_top (Or.inr μKlt)
-  simp only [← Ennreal.div_top] at J
+  simp only [Ennreal.div_top] at J
   exact ge_of_tendsto' J I
 
 /- The above instance applies in particular to show that an additive Haar measure on a nontrivial

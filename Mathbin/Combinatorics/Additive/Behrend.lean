@@ -67,15 +67,15 @@ def box (n d : ℕ) : Finset (Finₓ n → ℕ) :=
   Fintype.piFinset fun _ => range d
 
 theorem mem_box : x ∈ box n d ↔ ∀ i, x i < d := by
-  simp only [← box, ← Fintype.mem_pi_finset, ← mem_range]
+  simp only [box, Fintype.mem_pi_finset, mem_range]
 
 @[simp]
 theorem card_box : (box n d).card = d ^ n := by
-  simp [← box]
+  simp [box]
 
 @[simp]
 theorem box_zero : box (n + 1) 0 = ∅ := by
-  simp [← box]
+  simp [box]
 
 /-- The intersection of the sphere of radius `sqrt k` with the integer points in the positive
 quadrant. -/
@@ -83,11 +83,11 @@ def sphere (n d k : ℕ) : Finset (Finₓ n → ℕ) :=
   (box n d).filter fun x => (∑ i, x i ^ 2) = k
 
 theorem sphere_zero_subset : sphere n d 0 ⊆ 0 := fun x => by
-  simp (config := { contextual := true })[← sphere, ← Function.funext_iffₓ]
+  simp (config := { contextual := true })[sphere, Function.funext_iffₓ]
 
 @[simp]
 theorem sphere_zero_right (n k : ℕ) : sphere (n + 1) 0 k = ∅ := by
-  simp [← sphere]
+  simp [sphere]
 
 theorem sphere_subset_box : sphere n d k ⊆ box n d :=
   filter_subset _ _
@@ -116,10 +116,10 @@ def map (d : ℕ) : (Finₓ n → ℕ) →+ ℕ where
 
 @[simp]
 theorem map_zero (d : ℕ) (a : Finₓ 0 → ℕ) : map d a = 0 := by
-  simp [← map]
+  simp [map]
 
 theorem map_succ (a : Finₓ (n + 1) → ℕ) : map d a = a 0 + (∑ x : Finₓ n, a x.succ * d ^ (x : ℕ)) * d := by
-  simp [← map, ← Finₓ.sum_univ_succ, ← pow_succ'ₓ, mul_assoc, sum_mul]
+  simp [map, Finₓ.sum_univ_succ, pow_succ'ₓ, ← mul_assoc, ← sum_mul]
 
 theorem map_succ' (a : Finₓ (n + 1) → ℕ) : map d a = a 0 + map d (a ∘ Finₓ.succ) * d :=
   map_succ _
@@ -206,13 +206,13 @@ theorem card_sphere_le_roth_number_nat (n d k : ℕ) : (sphere n d k).card ≤ r
   · simp
     
   refine' add_salem_spencer_image_sphere.le_roth_number_nat _ _ (card_image_of_inj_on _)
-  · simp only [← subset_iff, ← mem_image, ← and_imp, ← forall_exists_index, ← mem_range, ← forall_apply_eq_imp_iff₂, ←
-      sphere, ← mem_filter]
+  · simp only [subset_iff, mem_image, and_imp, forall_exists_index, mem_range, forall_apply_eq_imp_iff₂, sphere,
+      mem_filter]
     rintro _ x hx _ rfl
     exact (map_le_of_mem_box hx).trans_lt sum_lt
     
   refine' map_inj_on.mono fun x => _
-  simp only [← mem_coe, ← sphere, ← mem_filter, ← mem_box, ← and_imp, ← two_mul]
+  simp only [mem_coe, sphere, mem_filter, mem_box, and_imp, two_mul]
   exact fun h _ i => (h i).trans_le le_self_add
 
 /-!
@@ -250,8 +250,8 @@ theorem exists_large_sphere (n d : ℕ) : ∃ k, (d ^ n / ↑(n * d ^ 2) : ℝ) 
     
   · exact cast_add_one_pos _
     
-  simp only [le_sub_iff_add_le', ← cast_mul, mul_sub, ← cast_pow, ← cast_sub hd, ← sub_sq, ← one_pow, ← cast_one, ←
-    mul_oneₓ, ← sub_add, ← sub_sub_self]
+  simp only [← le_sub_iff_add_le', cast_mul, ← mul_sub, cast_pow, cast_sub hd, sub_sq, one_pow, cast_one, mul_oneₓ,
+    sub_add, sub_sub_self]
   apply one_le_mul_of_one_le_of_one_le
   · rwa [one_le_cast]
     
@@ -330,7 +330,7 @@ theorem le_sqrt_log (hN : 4096 ≤ N) : log (2 / (1 - 2 / exp 1)) * (69 / 50) �
     norm_num
   rw [l8, cast_bit1, cast_one]
   apply le_sqrt_of_sq_le (le_transₓ _ this)
-  simp only [← cast_bit0, ← cast_bit1, ← cast_one]
+  simp only [cast_bit0, cast_bit1, cast_one]
   rw [mul_right_commₓ, mul_powₓ, sq (log 2), ← mul_assoc]
   apply mul_le_mul_of_nonneg_right _ (log_nonneg one_le_two)
   rw [← le_div_iff']
@@ -534,7 +534,7 @@ theorem bound (hN : 4096 ≤ N) : (N : ℝ) ^ (1 / nValue N : ℝ) / exp 1 < dVa
           (by
             norm_num1)
     refine' le_transₓ _ this
-    simp only [← cast_bit0, ← cast_bit1, ← cast_one]
+    simp only [cast_bit0, cast_bit1, cast_one]
     rw [← div_le_iff']
     · exact
         log_two_gt_d9.le.trans'

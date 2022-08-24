@@ -3,7 +3,7 @@ Copyright (c) 2022 Yakov Pechersky. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
-import Mathbin.Data.Finsupp.Basic
+import Mathbin.Data.Finsupp.Defs
 
 /-!
 
@@ -37,7 +37,7 @@ theorem List.support_sum_subset [AddMonoidₓ M] (l : List (ι →₀ M)) :
   induction' l with hd tl IH
   · simp
     
-  · simp only [← List.sum_cons, ← List.foldr_cons, ← Finset.union_comm]
+  · simp only [List.sum_cons, List.foldr_cons, Finset.union_comm]
     refine' finsupp.support_add.trans (Finset.union_subset_union _ IH)
     rfl
     
@@ -54,11 +54,11 @@ theorem Finset.support_sum_subset [AddCommMonoidₓ M] (s : Finset (ι →₀ M)
 
 theorem List.mem_foldr_sup_support_iff [Zero M] {l : List (ι →₀ M)} {x : ι} :
     x ∈ l.foldr ((·⊔·) ∘ Finsupp.support) ∅ ↔ ∃ (f : ι →₀ M)(hf : f ∈ l), x ∈ f.Support := by
-  simp only [← Finset.sup_eq_union, ← List.foldr_map, ← Finsupp.mem_support_iff, ← exists_prop]
+  simp only [Finset.sup_eq_union, List.foldr_map, Finsupp.mem_support_iff, exists_prop]
   induction' l with hd tl IH
   · simp
     
-  · simp only [← IH, ← List.foldr_cons, ← Finset.mem_union, ← Finsupp.mem_support_iff, ← List.mem_cons_iffₓ]
+  · simp only [IH, List.foldr_cons, Finset.mem_union, Finsupp.mem_support_iff, List.mem_cons_iffₓ]
     constructor
     · rintro (h | h)
       · exact ⟨hd, Or.inl rfl, h⟩
@@ -88,15 +88,15 @@ theorem List.support_sum_eq [AddMonoidₓ M] (l : List (ι →₀ M)) (hl : l.Pa
   induction' l with hd tl IH
   · simp
     
-  · simp only [← List.pairwise_cons] at hl
-    simp only [← List.sum_cons, ← List.foldr_cons, ← Function.comp_app]
+  · simp only [List.pairwise_cons] at hl
+    simp only [List.sum_cons, List.foldr_cons, Function.comp_app]
     rw [Finsupp.support_add_eq, IH hl.right, Finset.sup_eq_union]
     suffices Disjoint hd.support (tl.foldr ((·⊔·) ∘ Finsupp.support) ∅) by
       exact Finset.disjoint_of_subset_right (List.support_sum_subset _) this
     · rw [← List.foldr_map, ← Finset.bot_eq_empty, List.foldr_sup_eq_sup_to_finset]
       rw [Finset.disjoint_sup_right]
       intro f hf
-      simp only [← List.mem_to_finset, ← List.mem_mapₓ] at hf
+      simp only [List.mem_to_finset, List.mem_mapₓ] at hf
       obtain ⟨f, hf, rfl⟩ := hf
       exact hl.left _ hf
       
@@ -111,7 +111,7 @@ theorem Multiset.support_sum_eq [AddCommMonoidₓ M] (s : Multiset (ι →₀ M)
     
   · simp
     
-  · simp only [← Multiset.quot_mk_to_coe'', ← Multiset.coe_map, ← Multiset.coe_eq_coe] at hl
+  · simp only [Multiset.quot_mk_to_coe'', Multiset.coe_map, Multiset.coe_eq_coe] at hl
     exact hl.symm.pairwise hd fun _ _ h => Disjoint.symm h
     
 

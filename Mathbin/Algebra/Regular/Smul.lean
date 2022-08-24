@@ -128,7 +128,7 @@ theorem of_mul_eq_one (h : a * b = 1) : IsSmulRegular M b :=
 /-- Any power of an `M`-regular element is `M`-regular. -/
 theorem pow (n : ℕ) (ra : IsSmulRegular M a) : IsSmulRegular M (a ^ n) := by
   induction' n with n hn
-  · simp only [← one, ← pow_zeroₓ]
+  · simp only [one, pow_zeroₓ]
     
   · rw [pow_succₓ]
     exact (ra.smul_iff (a ^ n)).mpr hn
@@ -213,7 +213,7 @@ variable {G : Type _} [Groupₓ G]
 of the inverse given by groups, since there is no `left_cancel_smul` typeclass. -/
 theorem is_smul_regular_of_group [MulAction G R] (g : G) : IsSmulRegular R g := by
   intro x y h
-  convert congr_arg ((· • ·) g⁻¹) h using 1 <;> simp [smul_assoc]
+  convert congr_arg ((· • ·) g⁻¹) h using 1 <;> simp [← smul_assoc]
 
 end Groupₓ
 

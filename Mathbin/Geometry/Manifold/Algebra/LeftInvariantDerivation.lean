@@ -116,7 +116,7 @@ theorem leibniz : X (f * f') = f • X f' + f' • X f :=
 
 instance : Zero (LeftInvariantDerivation I G) :=
   ⟨⟨0, fun g => by
-      simp only [← LinearMap.map_zero, ← Derivation.coe_zero]⟩⟩
+      simp only [LinearMap.map_zero, Derivation.coe_zero]⟩⟩
 
 instance : Inhabited (LeftInvariantDerivation I G) :=
   ⟨0⟩
@@ -124,17 +124,17 @@ instance : Inhabited (LeftInvariantDerivation I G) :=
 instance :
     Add (LeftInvariantDerivation I G) where add := fun X Y =>
     ⟨X + Y, fun g => by
-      simp only [← LinearMap.map_add, ← Derivation.coe_add, ← left_invariant', ← Pi.add_apply]⟩
+      simp only [LinearMap.map_add, Derivation.coe_add, left_invariant', Pi.add_apply]⟩
 
 instance :
     Neg (LeftInvariantDerivation I G) where neg := fun X =>
     ⟨-X, fun g => by
-      simp [← left_invariant']⟩
+      simp [left_invariant']⟩
 
 instance :
     Sub (LeftInvariantDerivation I G) where sub := fun X Y =>
     ⟨X - Y, fun g => by
-      simp [← left_invariant']⟩
+      simp [left_invariant']⟩
 
 @[simp]
 theorem coe_add : ⇑(X + Y) = X + Y :=
@@ -253,25 +253,25 @@ theorem commutator_apply : ⁅X,Y⁆ f = X (Y f) - Y (X f) :=
 instance : LieRing (LeftInvariantDerivation I G) where
   add_lie := fun X Y Z => by
     ext1
-    simp only [← commutator_apply, ← coe_add, ← Pi.add_apply, ← LinearMap.map_add, ← LeftInvariantDerivation.map_add]
+    simp only [commutator_apply, coe_add, Pi.add_apply, LinearMap.map_add, LeftInvariantDerivation.map_add]
     ring
   lie_add := fun X Y Z => by
     ext1
-    simp only [← commutator_apply, ← coe_add, ← Pi.add_apply, ← LinearMap.map_add, ← LeftInvariantDerivation.map_add]
+    simp only [commutator_apply, coe_add, Pi.add_apply, LinearMap.map_add, LeftInvariantDerivation.map_add]
     ring
   lie_self := fun X => by
     ext1
-    simp only [← commutator_apply, ← sub_self]
+    simp only [commutator_apply, sub_self]
     rfl
   leibniz_lie := fun X Y Z => by
     ext1
-    simp only [← commutator_apply, ← coe_add, ← coe_sub, ← map_sub, ← Pi.add_apply]
+    simp only [commutator_apply, coe_add, coe_sub, map_sub, Pi.add_apply]
     ring
 
 instance :
     LieAlgebra 𝕜 (LeftInvariantDerivation I G) where lie_smul := fun r Y Z => by
     ext1
-    simp only [← commutator_apply, ← map_smul, ← smul_sub, ← coe_smul, ← Pi.smul_apply]
+    simp only [commutator_apply, map_smul, smul_sub, coe_smul, Pi.smul_apply]
 
 end LeftInvariantDerivation
 

@@ -31,7 +31,7 @@ variable {M N : Dmatrix m n α}
 
 theorem ext_iff : (∀ i j, M i j = N i j) ↔ M = N :=
   ⟨fun h => funext fun i => funext <| h i, fun h => by
-    simp [← h]⟩
+    simp [h]⟩
 
 @[ext]
 theorem ext : (∀ i j, M i j = N i j) → M = N :=
@@ -127,7 +127,7 @@ theorem sub_apply [∀ i j, Sub (α i j)] (M N : Dmatrix m n α) (i j) : (M - N)
 theorem map_zero [∀ i j, Zero (α i j)] {β : m → n → Type w} [∀ i j, Zero (β i j)] {f : ∀ ⦃i j⦄, α i j → β i j}
     (h : ∀ i j, f (0 : α i j) = 0) : (0 : Dmatrix m n α).map f = 0 := by
   ext
-  simp [← h]
+  simp [h]
 
 theorem map_add [∀ i j, AddMonoidₓ (α i j)] {β : m → n → Type w} [∀ i j, AddMonoidₓ (β i j)]
     (f : ∀ ⦃i j⦄, α i j →+ β i j) (M N : Dmatrix m n α) :

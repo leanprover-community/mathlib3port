@@ -370,7 +370,7 @@ open SolveByElim
 initialize
   registerTraceClass.1 `silence_suggest
 
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
 -- Turn off `Try this: exact/refine ...` trace messages for `suggest`
 /-- `suggest` tries to apply suitable theorems/defs from the library, and generates
 a list of `exact ...` or `refine ...` scripts that could be used at this step.

@@ -29,13 +29,13 @@ primarily an auxiliary construction used to provide `exterior_algebra.graded_alg
 def GradedAlgebra.ι : M →ₗ[R] ⨁ i : ℕ, ↥((ι R : M →ₗ[_] _).range ^ i) :=
   DirectSum.lof R ℕ (fun i => ↥((ι R : M →ₗ[_] _).range ^ i)) 1 ∘ₗ
     (ι R).codRestrict _ fun m => by
-      simpa only [← pow_oneₓ] using LinearMap.mem_range_self _ m
+      simpa only [pow_oneₓ] using LinearMap.mem_range_self _ m
 
 theorem GradedAlgebra.ι_apply (m : M) :
     GradedAlgebra.ι R M m =
       DirectSum.of (fun i => ↥((ι R : M →ₗ[_] _).range ^ i)) 1
         ⟨ι R m, by
-          simpa only [← pow_oneₓ] using LinearMap.mem_range_self _ m⟩ :=
+          simpa only [pow_oneₓ] using LinearMap.mem_range_self _ m⟩ :=
   rfl
 
 theorem GradedAlgebra.ι_sq_zero (m : M) : GradedAlgebra.ι R M m * GradedAlgebra.ι R M m = 0 := by
@@ -51,10 +51,11 @@ def GradedAlgebra.liftι : ExteriorAlgebra R M →ₐ[R] ⨁ i : ℕ, ↥((ι R)
 
 variable (R M)
 
-theorem GradedAlgebra.lift_ι_eq (i : ℕ) (x : ((ι R).range ^ i : Submodule R (ExteriorAlgebra R M))) :
+theorem GradedAlgebra.lift_ι_eq (i : ℕ)
+    (x : ((ι R : M →ₗ[R] ExteriorAlgebra R M).range ^ i : Submodule R (ExteriorAlgebra R M))) :
     GradedAlgebra.liftι R M x = DirectSum.of (fun i => ↥((ι R).range ^ i : Submodule R (ExteriorAlgebra R M))) i x := by
   cases' x with x hx
-  dsimp' only [← Subtype.coe_mk, ← DirectSum.lof_eq_of]
+  dsimp' only [Subtype.coe_mk, DirectSum.lof_eq_of]
   refine' Submodule.pow_induction_on_left' _ (fun r => _) (fun x y i hx hy ihx ihy => _) (fun m hm i x hx ih => _) hx
   · rw [AlgHom.commutes, DirectSum.algebra_map_apply]
     rfl
@@ -76,7 +77,7 @@ instance gradedAlgebra : GradedAlgebra ((· ^ ·) (ι R : M →ₗ[R] ExteriorAl
     (-- the proof from here onward is identical to the `tensor_algebra` case
     by
       ext m
-      dsimp' only [← LinearMap.comp_apply, ← AlgHom.to_linear_map_apply, ← AlgHom.comp_apply, ← AlgHom.id_apply, ←
+      dsimp' only [LinearMap.comp_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply, AlgHom.id_apply,
         graded_algebra.lift_ι]
       rw [lift_ι_apply, graded_algebra.ι_apply R M, DirectSum.coe_alg_hom_of, Subtype.coe_mk])
     (by

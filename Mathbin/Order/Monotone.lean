@@ -399,21 +399,21 @@ theorem strict_mono_id [Preorderₓ α] : StrictMono (id : α → α) := fun a b
 
 theorem strict_mono_on_id [Preorderₓ α] {s : Set α} : StrictMonoOn id s := fun a ha b hb => id
 
-theorem monotone_const [Preorderₓ α] [Preorderₓ β] {c : β} : Monotone fun a : α => c := fun a b _ => le_rfl
+theorem monotone_const [Preorderₓ α] [Preorderₓ β] {c : β} : Monotone fun a : α => c := fun a b _ => le_rflₓ
 
 theorem monotone_on_const [Preorderₓ α] [Preorderₓ β] {c : β} {s : Set α} : MonotoneOn (fun a : α => c) s :=
-  fun a _ b _ _ => le_rfl
+  fun a _ b _ _ => le_rflₓ
 
 theorem antitone_const [Preorderₓ α] [Preorderₓ β] {c : β} : Antitone fun a : α => c := fun a b _ => le_reflₓ c
 
 theorem antitone_on_const [Preorderₓ α] [Preorderₓ β] {c : β} {s : Set α} : AntitoneOn (fun a : α => c) s :=
-  fun a _ b _ _ => le_rfl
+  fun a _ b _ _ => le_rflₓ
 
 theorem strict_mono_of_le_iff_le [Preorderₓ α] [Preorderₓ β] {f : α → β} (h : ∀ x y, x ≤ y ↔ f x ≤ f y) :
-    StrictMono f := fun a b => (lt_iff_lt_of_le_iff_le' (h _ _) (h _ _)).1
+    StrictMono f := fun a b => (lt_iff_lt_of_le_iff_le'ₓ (h _ _) (h _ _)).1
 
 theorem strict_anti_of_le_iff_le [Preorderₓ α] [Preorderₓ β] {f : α → β} (h : ∀ x y, x ≤ y ↔ f y ≤ f x) :
-    StrictAnti f := fun a b => (lt_iff_lt_of_le_iff_le' (h _ _) (h _ _)).1
+    StrictAnti f := fun a b => (lt_iff_lt_of_le_iff_le'ₓ (h _ _) (h _ _)).1
 
 theorem injective_of_lt_imp_ne [LinearOrderₓ α] {f : α → β} (h : ∀ x y, x < y → f x ≠ f y) : Injective f := by
   intro x y hxy
@@ -454,12 +454,12 @@ protected theorem StrictMono.ite' (hf : StrictMono f) (hg : StrictMono g) {p : �
   intro x y h
   by_cases' hy : p y
   · have hx : p x := hp h hy
-    simpa [← hx, ← hy] using hf h
+    simpa [hx, hy] using hf h
     
   by_cases' hx : p x
-  · simpa [← hx, ← hy] using hfg hx hy h
+  · simpa [hx, hy] using hfg hx hy h
     
-  · simpa [← hx, ← hy] using hg h
+  · simpa [hx, hy] using hg h
     
 
 protected theorem StrictMono.ite (hf : StrictMono f) (hg : StrictMono g) {p : α → Prop} [DecidablePred p]
@@ -583,7 +583,7 @@ theorem AntitoneOn.reflect_lt (hf : AntitoneOn f s) {a b : α} (ha : a ∈ s) (h
 
 theorem StrictMonoOn.le_iff_le (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) : f a ≤ f b ↔ a ≤ b :=
   ⟨fun h => le_of_not_gtₓ fun h' => (hf hb ha h').not_le h, fun h =>
-    h.lt_or_eq_dec.elim (fun h' => (hf ha hb h').le) fun h' => h' ▸ le_rfl⟩
+    h.lt_or_eq_dec.elim (fun h' => (hf ha hb h').le) fun h' => h' ▸ le_rflₓ⟩
 
 theorem StrictAntiOn.le_iff_le (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) : f a ≤ f b ↔ b ≤ a :=
   hf.dual_right.le_iff_le hb ha
@@ -694,11 +694,11 @@ theorem Nat.rel_of_forall_rel_succ_of_le_of_le (r : β → β → Prop) [IsRefl 
 
 theorem Nat.rel_of_forall_rel_succ_of_lt (r : β → β → Prop) [IsTrans β r] {f : ℕ → β} (h : ∀ n, r (f n) (f (n + 1)))
     ⦃a b : ℕ⦄ (hab : a < b) : r (f a) (f b) :=
-  Nat.rel_of_forall_rel_succ_of_le_of_lt r (fun n _ => h n) le_rfl hab
+  Nat.rel_of_forall_rel_succ_of_le_of_lt r (fun n _ => h n) le_rflₓ hab
 
 theorem Nat.rel_of_forall_rel_succ_of_le (r : β → β → Prop) [IsRefl β r] [IsTrans β r] {f : ℕ → β}
     (h : ∀ n, r (f n) (f (n + 1))) ⦃a b : ℕ⦄ (hab : a ≤ b) : r (f a) (f b) :=
-  Nat.rel_of_forall_rel_succ_of_le_of_le r (fun n _ => h n) le_rfl hab
+  Nat.rel_of_forall_rel_succ_of_le_of_le r (fun n _ => h n) le_rflₓ hab
 
 theorem monotone_nat_of_le_succ {f : ℕ → α} (hf : ∀ n, f n ≤ f (n + 1)) : Monotone f :=
   Nat.rel_of_forall_rel_succ_of_le (· ≤ ·) hf
@@ -855,11 +855,11 @@ section PartialOrderₓ
 variable [PartialOrderₓ α] [PartialOrderₓ β] [Preorderₓ γ] [Preorderₓ δ] {f : α → γ} {g : β → δ}
 
 theorem StrictMono.prod_map (hf : StrictMono f) (hg : StrictMono g) : StrictMono (Prod.map f g) := fun a b => by
-  simp_rw [Prod.lt_iff]
+  simp_rw [Prod.lt_iffₓ]
   exact Or.imp (And.imp hf.imp hg.monotone.imp) (And.imp hf.monotone.imp hg.imp)
 
 theorem StrictAnti.prod_map (hf : StrictAnti f) (hg : StrictAnti g) : StrictAnti (Prod.map f g) := fun a b => by
-  simp_rw [Prod.lt_iff]
+  simp_rw [Prod.lt_iffₓ]
   exact Or.imp (And.imp hf.imp hg.antitone.imp) (And.imp hf.antitone.imp hg.imp)
 
 end PartialOrderₓ

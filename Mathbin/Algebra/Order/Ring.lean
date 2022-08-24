@@ -93,55 +93,9 @@ universe u
 
 variable {α : Type u}
 
-namespace OrderDual
-
 /-! Note that `order_dual` does not satisfy any of the ordered ring typeclasses due to the
 `zero_le_one` field. -/
 
-
-instance [h : Distribₓ α] : Distribₓ αᵒᵈ :=
-  h
-
-instance [Mul α] [h : HasDistribNeg α] : HasDistribNeg αᵒᵈ :=
-  h
-
-instance [h : NonUnitalNonAssocSemiringₓ α] : NonUnitalNonAssocSemiringₓ αᵒᵈ :=
-  h
-
-instance [h : NonUnitalSemiringₓ α] : NonUnitalSemiringₓ αᵒᵈ :=
-  h
-
-instance [h : NonAssocSemiringₓ α] : NonAssocSemiringₓ αᵒᵈ :=
-  h
-
-instance [h : Semiringₓ α] : Semiringₓ αᵒᵈ :=
-  h
-
-instance [h : NonUnitalCommSemiring α] : NonUnitalCommSemiring αᵒᵈ :=
-  h
-
-instance [h : CommSemiringₓ α] : CommSemiringₓ αᵒᵈ :=
-  h
-
-instance [h : NonUnitalNonAssocRing α] : NonUnitalNonAssocRing αᵒᵈ :=
-  h
-
-instance [h : NonUnitalRing α] : NonUnitalRing αᵒᵈ :=
-  h
-
-instance [h : NonAssocRing α] : NonAssocRing αᵒᵈ :=
-  h
-
-instance [h : Ringₓ α] : Ringₓ αᵒᵈ :=
-  h
-
-instance [h : NonUnitalCommRing α] : NonUnitalCommRing αᵒᵈ :=
-  h
-
-instance [h : CommRingₓ α] : CommRingₓ αᵒᵈ :=
-  h
-
-end OrderDual
 
 theorem add_one_le_two_mul [LE α] [Semiringₓ α] [CovariantClass α α (· + ·) (· ≤ ·)] {a : α} (a1 : 1 ≤ a) :
     a + 1 ≤ 2 * a :=
@@ -236,10 +190,10 @@ theorem mul_lt_of_lt_one_right (ha : 0 < a) (hb : b < 1) : a * b < a :=
 protected theorem Decidable.mul_le_mul_of_nonneg_left [@DecidableRel α (· ≤ ·)] (h₁ : a ≤ b) (h₂ : 0 ≤ c) :
     c * a ≤ c * b := by
   by_cases' ba : b ≤ a
-  · simp [← ba.antisymm h₁]
+  · simp [ba.antisymm h₁]
     
   by_cases' c0 : c ≤ 0
-  · simp [← c0.antisymm h₂]
+  · simp [c0.antisymm h₂]
     
   exact (mul_lt_mul_of_pos_left (h₁.lt_of_not_le ba) (h₂.lt_of_not_le c0)).le
 
@@ -250,10 +204,10 @@ theorem mul_le_mul_of_nonneg_left : a ≤ b → 0 ≤ c → c * a ≤ c * b := b
 protected theorem Decidable.mul_le_mul_of_nonneg_right [@DecidableRel α (· ≤ ·)] (h₁ : a ≤ b) (h₂ : 0 ≤ c) :
     a * c ≤ b * c := by
   by_cases' ba : b ≤ a
-  · simp [← ba.antisymm h₁]
+  · simp [ba.antisymm h₁]
     
   by_cases' c0 : c ≤ 0
-  · simp [← c0.antisymm h₂]
+  · simp [c0.antisymm h₂]
     
   exact (mul_lt_mul_of_pos_right (h₁.lt_of_not_le ba) (h₂.lt_of_not_le c0)).le
 
@@ -275,7 +229,7 @@ theorem mul_le_mul : a ≤ c → b ≤ d → 0 ≤ b → 0 ≤ c → a * b ≤ c
 -- See Note [decidable namespace]
 protected theorem Decidable.mul_nonneg_le_one_le {α : Type _} [OrderedSemiring α] [@DecidableRel α (· ≤ ·)] {a b c : α}
     (h₁ : 0 ≤ c) (h₂ : a ≤ c) (h₃ : 0 ≤ b) (h₄ : b ≤ 1) : a * b ≤ c := by
-  simpa only [← mul_oneₓ] using Decidable.mul_le_mul h₂ h₄ h₃ h₁
+  simpa only [mul_oneₓ] using Decidable.mul_le_mul h₂ h₄ h₃ h₁
 
 theorem mul_nonneg_le_one_le {α : Type _} [OrderedSemiring α] {a b c : α} : 0 ≤ c → a ≤ c → 0 ≤ b → b ≤ 1 → a * b ≤ c :=
   by
@@ -412,7 +366,7 @@ theorem le_mul_of_one_le_left : 0 ≤ b → 1 ≤ a → b ≤ a * b := by
 protected theorem Decidable.lt_mul_of_one_lt_right [@DecidableRel α (· ≤ ·)] (hb : 0 < b) (h : 1 < a) : b < b * a :=
   suffices b * 1 < b * a by
     rwa [mul_oneₓ] at this
-  Decidable.mul_lt_mul' le_rfl h zero_le_one hb
+  Decidable.mul_lt_mul' le_rflₓ h zero_le_one hb
 
 theorem lt_mul_of_one_lt_right : 0 < b → 1 < a → b < b * a := by
   classical <;> exact Decidable.lt_mul_of_one_lt_right
@@ -421,7 +375,7 @@ theorem lt_mul_of_one_lt_right : 0 < b → 1 < a → b < b * a := by
 protected theorem Decidable.lt_mul_of_one_lt_left [@DecidableRel α (· ≤ ·)] (hb : 0 < b) (h : 1 < a) : b < a * b :=
   suffices 1 * b < a * b by
     rwa [one_mulₓ] at this
-  Decidable.mul_lt_mul h le_rfl hb (zero_le_one.trans h.le)
+  Decidable.mul_lt_mul h le_rflₓ hb (zero_le_one.trans h.le)
 
 theorem lt_mul_of_one_lt_left : 0 < b → 1 < a → b < a * b := by
   classical <;> exact Decidable.lt_mul_of_one_lt_left
@@ -461,6 +415,79 @@ protected theorem Decidable.one_le_mul_of_one_le_of_one_le [@DecidableRel α (·
 theorem one_le_mul_of_one_le_of_one_le {a b : α} : 1 ≤ a → 1 ≤ b → (1 : α) ≤ a * b := by
   classical <;> exact Decidable.one_le_mul_of_one_le_of_one_le
 
+namespace Decidable
+
+variable {β : Type _} [@DecidableRel α (· ≤ ·)] [Preorderₓ β] {f g : β → α}
+
+theorem monotone_mul_left_of_nonneg (ha : 0 ≤ a) : Monotone fun x => a * x := fun b c b_le_c =>
+  Decidable.mul_le_mul_of_nonneg_left b_le_c ha
+
+theorem monotone_mul_right_of_nonneg (ha : 0 ≤ a) : Monotone fun x => x * a := fun b c b_le_c =>
+  Decidable.mul_le_mul_of_nonneg_right b_le_c ha
+
+theorem monotone_mul {β : Type _} [Preorderₓ β] {f g : β → α} (hf : Monotone f) (hg : Monotone g) (hf0 : ∀ x, 0 ≤ f x)
+    (hg0 : ∀ x, 0 ≤ g x) : Monotone fun x => f x * g x := fun x y h =>
+  Decidable.mul_le_mul (hf h) (hg h) (hg0 x) (hf0 y)
+
+theorem strict_mono_mul_monotone (hf : StrictMono f) (hg : Monotone g) (hf0 : ∀ x, 0 ≤ f x) (hg0 : ∀ x, 0 < g x) :
+    StrictMono fun x => f x * g x := fun x y h => Decidable.mul_lt_mul (hf h) (hg h.le) (hg0 x) (hf0 y)
+
+theorem monotone_mul_strict_mono (hf : Monotone f) (hg : StrictMono g) (hf0 : ∀ x, 0 < f x) (hg0 : ∀ x, 0 ≤ g x) :
+    StrictMono fun x => f x * g x := fun x y h => Decidable.mul_lt_mul' (hf h.le) (hg h) (hg0 x) (hf0 y)
+
+theorem strict_mono_mul (hf : StrictMono f) (hg : StrictMono g) (hf0 : ∀ x, 0 ≤ f x) (hg0 : ∀ x, 0 ≤ g x) :
+    StrictMono fun x => f x * g x := fun x y h => Decidable.mul_lt_mul'' (hf h) (hg h) (hf0 x) (hg0 x)
+
+end Decidable
+
+section Mono
+
+open Classical
+
+variable {β : Type _} [Preorderₓ β] {f g : β → α}
+
+theorem monotone_mul_left_of_nonneg (ha : 0 ≤ a) : Monotone fun x => a * x :=
+  Decidable.monotone_mul_left_of_nonneg ha
+
+theorem monotone_mul_right_of_nonneg (ha : 0 ≤ a) : Monotone fun x => x * a :=
+  Decidable.monotone_mul_right_of_nonneg ha
+
+theorem Monotone.mul_const (hf : Monotone f) (ha : 0 ≤ a) : Monotone fun x => f x * a :=
+  (monotone_mul_right_of_nonneg ha).comp hf
+
+theorem Monotone.const_mul (hf : Monotone f) (ha : 0 ≤ a) : Monotone fun x => a * f x :=
+  (monotone_mul_left_of_nonneg ha).comp hf
+
+theorem Monotone.mul (hf : Monotone f) (hg : Monotone g) (hf0 : ∀ x, 0 ≤ f x) (hg0 : ∀ x, 0 ≤ g x) :
+    Monotone fun x => f x * g x :=
+  Decidable.monotone_mul hf hg hf0 hg0
+
+theorem strict_mono_mul_left_of_pos (ha : 0 < a) : StrictMono fun x => a * x := fun b c b_lt_c =>
+  mul_lt_mul_of_pos_left b_lt_c ha
+
+theorem strict_mono_mul_right_of_pos (ha : 0 < a) : StrictMono fun x => x * a := fun b c b_lt_c =>
+  mul_lt_mul_of_pos_right b_lt_c ha
+
+theorem StrictMono.mul_const (hf : StrictMono f) (ha : 0 < a) : StrictMono fun x => f x * a :=
+  (strict_mono_mul_right_of_pos ha).comp hf
+
+theorem StrictMono.const_mul (hf : StrictMono f) (ha : 0 < a) : StrictMono fun x => a * f x :=
+  (strict_mono_mul_left_of_pos ha).comp hf
+
+theorem StrictMono.mul_monotone (hf : StrictMono f) (hg : Monotone g) (hf0 : ∀ x, 0 ≤ f x) (hg0 : ∀ x, 0 < g x) :
+    StrictMono fun x => f x * g x :=
+  Decidable.strict_mono_mul_monotone hf hg hf0 hg0
+
+theorem Monotone.mul_strict_mono (hf : Monotone f) (hg : StrictMono g) (hf0 : ∀ x, 0 < f x) (hg0 : ∀ x, 0 ≤ g x) :
+    StrictMono fun x => f x * g x :=
+  Decidable.monotone_mul_strict_mono hf hg hf0 hg0
+
+theorem StrictMono.mul (hf : StrictMono f) (hg : StrictMono g) (hf0 : ∀ x, 0 ≤ f x) (hg0 : ∀ x, 0 ≤ g x) :
+    StrictMono fun x => f x * g x :=
+  Decidable.strict_mono_mul hf hg hf0 hg0
+
+end Mono
+
 /-- Pullback an `ordered_semiring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -472,7 +499,7 @@ def Function.Injective.orderedSemiring {β : Type _} [Zero β] [One β] [Add β]
   { hf.OrderedCancelAddCommMonoid f zero add nsmul, hf.Semiring f zero one add mul nsmul npow nat_cast with
     zero_le_one :=
       show f 0 ≤ f 1 by
-        simp only [← zero, ← one, ← zero_le_one],
+        simp only [zero, one, zero_le_one],
     mul_lt_mul_of_pos_left := fun a b c ab c0 =>
       show f (c * a) < f (c * b) by
         rw [mul, mul]
@@ -492,7 +519,7 @@ theorem bit1_pos (h : 0 ≤ a) : 0 < bit1 a :=
   lt_add_of_le_of_pos (add_nonneg h h) zero_lt_one
 
 theorem lt_add_one (a : α) : a < a + 1 :=
-  lt_add_of_le_of_pos le_rfl zero_lt_one
+  lt_add_of_le_of_pos le_rflₓ zero_lt_one
 
 theorem lt_one_add (a : α) : a < 1 + a := by
   rw [add_commₓ]
@@ -556,7 +583,7 @@ theorem mul_le_of_le_one_right : 0 ≤ a → b ≤ 1 → a * b ≤ a := by
 -- See Note [decidable namespace]
 protected theorem Decidable.mul_le_of_le_one_left [@DecidableRel α (· ≤ ·)] (hb : 0 ≤ b) (ha1 : a ≤ 1) : a * b ≤ b :=
   calc
-    a * b ≤ 1 * b := Decidable.mul_le_mul ha1 le_rfl hb zero_le_one
+    a * b ≤ 1 * b := Decidable.mul_le_mul ha1 le_rflₓ hb zero_le_one
     _ = b := one_mulₓ b
     
 
@@ -659,6 +686,8 @@ section LinearOrderedSemiring
 
 variable [LinearOrderedSemiring α] {a b c d : α}
 
+attribute [local instance] LinearOrderedSemiring.decidableLe
+
 -- `norm_num` expects the lemma stating `0 < 1` to have a single typeclass argument
 -- (see `norm_num.prove_pos_nat`).
 -- Rather than working out how to relax that assumption,
@@ -668,48 +697,36 @@ theorem zero_lt_one' : 0 < (1 : α) :=
   zero_lt_one
 
 theorem lt_of_mul_lt_mul_left (h : c * a < c * b) (hc : 0 ≤ c) : a < b :=
-  haveI := @LinearOrderₓ.decidableLe α _
-  lt_of_not_geₓ fun h1 : b ≤ a =>
-    have h2 : c * b ≤ c * a := Decidable.mul_le_mul_of_nonneg_left h1 hc
-    h2.not_lt h
+  (Decidable.monotone_mul_left_of_nonneg hc).reflect_lt h
 
 theorem lt_of_mul_lt_mul_right (h : a * c < b * c) (hc : 0 ≤ c) : a < b :=
-  haveI := @LinearOrderₓ.decidableLe α _
-  lt_of_not_geₓ fun h1 : b ≤ a =>
-    have h2 : b * c ≤ a * c := Decidable.mul_le_mul_of_nonneg_right h1 hc
-    h2.not_lt h
+  (Decidable.monotone_mul_right_of_nonneg hc).reflect_lt h
 
 theorem le_of_mul_le_mul_left (h : c * a ≤ c * b) (hc : 0 < c) : a ≤ b :=
-  le_of_not_gtₓ fun h1 : b < a =>
-    have h2 : c * b < c * a := mul_lt_mul_of_pos_left h1 hc
-    h2.not_le h
+  (strict_mono_mul_left_of_pos hc).le_iff_le.1 h
 
 theorem le_of_mul_le_mul_right (h : a * c ≤ b * c) (hc : 0 < c) : a ≤ b :=
-  le_of_not_gtₓ fun h1 : b < a =>
-    have h2 : b * c < a * c := mul_lt_mul_of_pos_right h1 hc
-    h2.not_le h
+  (strict_mono_mul_right_of_pos hc).le_iff_le.1 h
 
 theorem pos_and_pos_or_neg_and_neg_of_mul_pos (hab : 0 < a * b) : 0 < a ∧ 0 < b ∨ a < 0 ∧ b < 0 := by
-  haveI := @LinearOrderₓ.decidableLe α _
   rcases lt_trichotomyₓ 0 a with (ha | rfl | ha)
-  · refine' Or.inl ⟨ha, lt_imp_lt_of_le_imp_le (fun hb => _) hab⟩
+  · refine' Or.inl ⟨ha, lt_imp_lt_of_le_imp_leₓ (fun hb => _) hab⟩
     exact Decidable.mul_nonpos_of_nonneg_of_nonpos ha.le hb
     
   · rw [zero_mul] at hab
     exact hab.false.elim
     
-  · refine' Or.inr ⟨ha, lt_imp_lt_of_le_imp_le (fun hb => _) hab⟩
+  · refine' Or.inr ⟨ha, lt_imp_lt_of_le_imp_leₓ (fun hb => _) hab⟩
     exact Decidable.mul_nonpos_of_nonpos_of_nonneg ha.le hb
     
 
 theorem nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg (hab : 0 ≤ a * b) : 0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b ≤ 0 := by
-  haveI := @LinearOrderₓ.decidableLe α _
   refine' Decidable.or_iff_not_and_not.2 _
-  simp only [← not_and, ← not_leₓ]
+  simp only [not_and, not_leₓ]
   intro ab nab
-  apply not_lt_of_le hab _
+  apply not_lt_of_leₓ hab _
   rcases lt_trichotomyₓ 0 a with (ha | rfl | ha)
-  exacts[mul_neg_of_pos_of_neg ha (ab ha.le), ((ab le_rfl).asymm (nab le_rfl)).elim,
+  exacts[mul_neg_of_pos_of_neg ha (ab ha.le), ((ab le_rflₓ).asymm (nab le_rflₓ)).elim,
     mul_neg_of_neg_of_pos ha (nab ha.le)]
 
 theorem pos_of_mul_pos_left (h : 0 < a * b) (hb : 0 ≤ b) : 0 < a :=
@@ -737,12 +754,10 @@ theorem nonneg_of_mul_nonneg_right (h : 0 ≤ a * b) (ha : 0 < a) : 0 ≤ b :=
   le_of_not_gtₓ fun hb => (mul_neg_of_pos_of_neg ha hb).not_le h
 
 theorem neg_of_mul_neg_left (h : a * b < 0) (hb : 0 ≤ b) : a < 0 :=
-  haveI := @LinearOrderₓ.decidableLe α _
-  lt_of_not_geₓ fun ha : a ≥ 0 => (Decidable.mul_nonneg ha hb).not_lt h
+  lt_of_not_geₓ fun ha => (Decidable.mul_nonneg ha hb).not_lt h
 
 theorem neg_of_mul_neg_right (h : a * b < 0) (ha : 0 ≤ a) : b < 0 :=
-  haveI := @LinearOrderₓ.decidableLe α _
-  lt_of_not_geₓ fun hb : b ≥ 0 => (Decidable.mul_nonneg ha hb).not_lt h
+  lt_of_not_geₓ fun hb => (Decidable.mul_nonneg ha hb).not_lt h
 
 theorem nonpos_of_mul_nonpos_left (h : a * b ≤ 0) (hb : 0 < b) : a ≤ 0 :=
   le_of_not_gtₓ fun ha : a > 0 => (mul_pos ha hb).not_le h
@@ -752,24 +767,19 @@ theorem nonpos_of_mul_nonpos_right (h : a * b ≤ 0) (ha : 0 < a) : b ≤ 0 :=
 
 @[simp]
 theorem mul_le_mul_left (h : 0 < c) : c * a ≤ c * b ↔ a ≤ b :=
-  haveI := @LinearOrderₓ.decidableLe α _
-  ⟨fun h' => le_of_mul_le_mul_left h' h, fun h' => Decidable.mul_le_mul_of_nonneg_left h' h.le⟩
+  (strict_mono_mul_left_of_pos h).le_iff_le
 
 @[simp]
 theorem mul_le_mul_right (h : 0 < c) : a * c ≤ b * c ↔ a ≤ b :=
-  haveI := @LinearOrderₓ.decidableLe α _
-  ⟨fun h' => le_of_mul_le_mul_right h' h, fun h' => Decidable.mul_le_mul_of_nonneg_right h' h.le⟩
+  (strict_mono_mul_right_of_pos h).le_iff_le
 
 @[simp]
 theorem mul_lt_mul_left (h : 0 < c) : c * a < c * b ↔ a < b :=
-  haveI := @LinearOrderₓ.decidableLe α _
-  ⟨lt_imp_lt_of_le_imp_le fun h' => Decidable.mul_le_mul_of_nonneg_left h' h.le, fun h' => mul_lt_mul_of_pos_left h' h⟩
+  (strict_mono_mul_left_of_pos h).lt_iff_lt
 
 @[simp]
 theorem mul_lt_mul_right (h : 0 < c) : a * c < b * c ↔ a < b :=
-  haveI := @LinearOrderₓ.decidableLe α _
-  ⟨lt_imp_lt_of_le_imp_le fun h' => Decidable.mul_le_mul_of_nonneg_right h' h.le, fun h' =>
-    mul_lt_mul_of_pos_right h' h⟩
+  (strict_mono_mul_right_of_pos h).lt_iff_lt
 
 @[simp]
 theorem zero_le_mul_left (h : 0 < c) : 0 ≤ c * b ↔ 0 ≤ b := by
@@ -892,14 +902,14 @@ theorem mul_le_iff_le_one_left (hb : 0 < b) : a * b ≤ b ↔ a ≤ 1 :=
     le_of_not_ltₓ (mt (lt_mul_iff_one_lt_left hb).1 h.not_lt)⟩
 
 theorem mul_lt_iff_lt_one_left (hb : 0 < b) : a * b < b ↔ a < 1 :=
-  lt_iff_lt_of_le_iff_le <| le_mul_iff_one_le_left hb
+  lt_iff_lt_of_le_iff_leₓ <| le_mul_iff_one_le_left hb
 
 theorem mul_le_iff_le_one_right (hb : 0 < b) : b * a ≤ b ↔ a ≤ 1 :=
   ⟨fun h => le_of_not_ltₓ (mt (lt_mul_iff_one_lt_right hb).2 h.not_lt), fun h =>
     le_of_not_ltₓ (mt (lt_mul_iff_one_lt_right hb).1 h.not_lt)⟩
 
 theorem mul_lt_iff_lt_one_right (hb : 0 < b) : b * a < b ↔ a < 1 :=
-  lt_iff_lt_of_le_iff_le <| le_mul_iff_one_le_right hb
+  lt_iff_lt_of_le_iff_leₓ <| le_mul_iff_one_le_right hb
 
 theorem nonpos_of_mul_nonneg_left (h : 0 ≤ a * b) (hb : b < 0) : a ≤ 0 :=
   le_of_not_gtₓ fun ha => absurd h (mul_neg_of_pos_of_neg ha hb).not_le
@@ -941,58 +951,6 @@ instance (priority := 100) LinearOrderedSemiring.to_char_zero : CharZero α :=
 
 end LinearOrderedSemiring
 
-section Mono
-
-variable {β : Type _} [LinearOrderedSemiring α] [Preorderₓ β] {f g : β → α} {a : α}
-
-theorem monotone_mul_left_of_nonneg (ha : 0 ≤ a) : Monotone fun x => a * x :=
-  haveI := @LinearOrderₓ.decidableLe α _
-  fun b c b_le_c => Decidable.mul_le_mul_of_nonneg_left b_le_c ha
-
-theorem monotone_mul_right_of_nonneg (ha : 0 ≤ a) : Monotone fun x => x * a :=
-  haveI := @LinearOrderₓ.decidableLe α _
-  fun b c b_le_c => Decidable.mul_le_mul_of_nonneg_right b_le_c ha
-
-theorem Monotone.mul_const (hf : Monotone f) (ha : 0 ≤ a) : Monotone fun x => f x * a :=
-  (monotone_mul_right_of_nonneg ha).comp hf
-
-theorem Monotone.const_mul (hf : Monotone f) (ha : 0 ≤ a) : Monotone fun x => a * f x :=
-  (monotone_mul_left_of_nonneg ha).comp hf
-
-theorem Monotone.mul (hf : Monotone f) (hg : Monotone g) (hf0 : ∀ x, 0 ≤ f x) (hg0 : ∀ x, 0 ≤ g x) :
-    Monotone fun x => f x * g x :=
-  haveI := @LinearOrderₓ.decidableLe α _
-  fun x y h => Decidable.mul_le_mul (hf h) (hg h) (hg0 x) (hf0 y)
-
-theorem strict_mono_mul_left_of_pos (ha : 0 < a) : StrictMono fun x => a * x := fun b c b_lt_c =>
-  (mul_lt_mul_left ha).2 b_lt_c
-
-theorem strict_mono_mul_right_of_pos (ha : 0 < a) : StrictMono fun x => x * a := fun b c b_lt_c =>
-  (mul_lt_mul_right ha).2 b_lt_c
-
-theorem StrictMono.mul_const (hf : StrictMono f) (ha : 0 < a) : StrictMono fun x => f x * a :=
-  (strict_mono_mul_right_of_pos ha).comp hf
-
-theorem StrictMono.const_mul (hf : StrictMono f) (ha : 0 < a) : StrictMono fun x => a * f x :=
-  (strict_mono_mul_left_of_pos ha).comp hf
-
-theorem StrictMono.mul_monotone (hf : StrictMono f) (hg : Monotone g) (hf0 : ∀ x, 0 ≤ f x) (hg0 : ∀ x, 0 < g x) :
-    StrictMono fun x => f x * g x :=
-  haveI := @LinearOrderₓ.decidableLe α _
-  fun x y h => Decidable.mul_lt_mul (hf h) (hg h.le) (hg0 x) (hf0 y)
-
-theorem Monotone.mul_strict_mono (hf : Monotone f) (hg : StrictMono g) (hf0 : ∀ x, 0 < f x) (hg0 : ∀ x, 0 ≤ g x) :
-    StrictMono fun x => f x * g x :=
-  haveI := @LinearOrderₓ.decidableLe α _
-  fun x y h => Decidable.mul_lt_mul' (hf h.le) (hg h) (hg0 x) (hf0 y)
-
-theorem StrictMono.mul (hf : StrictMono f) (hg : StrictMono g) (hf0 : ∀ x, 0 ≤ f x) (hg0 : ∀ x, 0 ≤ g x) :
-    StrictMono fun x => f x * g x :=
-  haveI := @LinearOrderₓ.decidableLe α _
-  fun x y h => Decidable.mul_lt_mul'' (hf h) (hg h) (hf0 x) (hg0 x)
-
-end Mono
-
 section LinearOrderedSemiring
 
 variable [LinearOrderedSemiring α] {a b c : α}
@@ -1026,10 +984,10 @@ variable [OrderedRing α] {a b c : α}
 protected theorem Decidable.OrderedRing.mul_nonneg [@DecidableRel α (· ≤ ·)] {a b : α} (h₁ : 0 ≤ a) (h₂ : 0 ≤ b) :
     0 ≤ a * b := by
   by_cases' ha : a ≤ 0
-  · simp [← le_antisymmₓ ha h₁]
+  · simp [le_antisymmₓ ha h₁]
     
   by_cases' hb : b ≤ 0
-  · simp [← le_antisymmₓ hb h₂]
+  · simp [le_antisymmₓ hb h₂]
     
   exact (le_not_le_of_ltₓ (OrderedRing.mul_pos a b (h₁.lt_of_not_le ha) (h₂.lt_of_not_le hb))).1
 
@@ -1119,6 +1077,24 @@ theorem mul_lt_mul_of_neg_right {a b c : α} (h : b < a) (hc : c < 0) : a * c < 
 theorem mul_pos_of_neg_of_neg {a b : α} (ha : a < 0) (hb : b < 0) : 0 < a * b := by
   have : 0 * b < a * b := mul_lt_mul_of_neg_right ha hb
   rwa [zero_mul] at this
+
+theorem Decidable.antitone_mul_left [@DecidableRel α (· ≤ ·)] {a : α} (ha : a ≤ 0) : Antitone ((· * ·) a) :=
+  fun b c b_le_c => Decidable.mul_le_mul_of_nonpos_left b_le_c ha
+
+theorem antitone_mul_left {a : α} (ha : a ≤ 0) : Antitone ((· * ·) a) := fun b c b_le_c =>
+  mul_le_mul_of_nonpos_left b_le_c ha
+
+theorem Decidable.antitone_mul_right [@DecidableRel α (· ≤ ·)] {a : α} (ha : a ≤ 0) : Antitone fun x => x * a :=
+  fun b c b_le_c => Decidable.mul_le_mul_of_nonpos_right b_le_c ha
+
+theorem antitone_mul_right {a : α} (ha : a ≤ 0) : Antitone fun x => x * a := fun b c b_le_c =>
+  mul_le_mul_of_nonpos_right b_le_c ha
+
+theorem strict_anti_mul_left {a : α} (ha : a < 0) : StrictAnti ((· * ·) a) := fun b c b_lt_c =>
+  mul_lt_mul_of_neg_left b_lt_c ha
+
+theorem strict_anti_mul_right {a : α} (ha : a < 0) : StrictAnti fun x => x * a := fun b c b_lt_c =>
+  mul_lt_mul_of_neg_right b_lt_c ha
 
 /-- Pullback an `ordered_ring` under an injective map.
 See note [reducible non-instances]. -/
@@ -1218,6 +1194,8 @@ section LinearOrderedRing
 
 variable [LinearOrderedRing α] {a b c : α}
 
+attribute [local instance] LinearOrderedRing.decidableLe LinearOrderedRing.decidableLt
+
 -- see Note [lower instance priority]
 instance (priority := 100) LinearOrderedRing.toLinearOrderedSemiring : LinearOrderedSemiring α :=
   { ‹LinearOrderedRing α› with mul_zero := mul_zero, zero_mul := zero_mul, add_left_cancel := @add_left_cancelₓ α _,
@@ -1248,8 +1226,7 @@ theorem abs_mul (a b : α) : abs (a * b) = abs a * abs b := by
   rw [abs_eq (Decidable.mul_nonneg (abs_nonneg a) (abs_nonneg b))]
   cases' le_totalₓ a 0 with ha ha <;>
     cases' le_totalₓ b 0 with hb hb <;>
-      simp only [← abs_of_nonpos, ← abs_of_nonneg, ← true_orₓ, ← or_trueₓ, ← eq_self_iff_true, ← neg_mul, ← mul_neg, ←
-        neg_negₓ, *]
+      simp only [abs_of_nonpos, abs_of_nonneg, true_orₓ, or_trueₓ, eq_self_iff_true, neg_mul, mul_neg, neg_negₓ, *]
 
 /-- `abs` as a `monoid_with_zero_hom`. -/
 def absHom : α →*₀ α :=
@@ -1288,11 +1265,11 @@ theorem mul_self_nonneg (a : α) : 0 ≤ a * a :=
 
 @[simp]
 theorem neg_le_self_iff : -a ≤ a ↔ 0 ≤ a := by
-  simp [← neg_le_iff_add_nonneg, two_mul, ← mul_nonneg_iff, ← zero_le_one, ← (@zero_lt_two α _ _).not_le]
+  simp [neg_le_iff_add_nonneg, ← two_mul, mul_nonneg_iff, zero_le_one, (@zero_lt_two α _ _).not_le]
 
 @[simp]
 theorem neg_lt_self_iff : -a < a ↔ 0 < a := by
-  simp [← neg_lt_iff_pos_add, two_mul, ← mul_pos_iff, ← zero_lt_one, ← (@zero_lt_two α _ _).not_lt]
+  simp [neg_lt_iff_pos_add, ← two_mul, mul_pos_iff, zero_lt_one, (@zero_lt_two α _ _).not_lt]
 
 @[simp]
 theorem le_neg_self_iff : a ≤ -a ↔ a ≤ 0 :=
@@ -1314,11 +1291,11 @@ theorem lt_neg_self_iff : a < -a ↔ a < 0 :=
 
 @[simp]
 theorem abs_eq_self : abs a = a ↔ 0 ≤ a := by
-  simp [← abs_eq_max_neg]
+  simp [abs_eq_max_neg]
 
 @[simp]
 theorem abs_eq_neg_self : abs a = -a ↔ a ≤ 0 := by
-  simp [← abs_eq_max_neg]
+  simp [abs_eq_max_neg]
 
 /-- For an element `a` of a linear ordered ring, either `abs a = a` and `0 ≤ a`,
     or `abs a = -a` and `a < 0`.
@@ -1336,7 +1313,7 @@ theorem abs_cases (a : α) : abs a = a ∧ 0 ≤ a ∨ abs a = -a ∧ a < 0 := b
 @[simp]
 theorem max_zero_add_max_neg_zero_eq_abs_self (a : α) : max a 0 + max (-a) 0 = abs a := by
   symm
-  rcases le_totalₓ 0 a with (ha | ha) <;> simp [← ha]
+  rcases le_totalₓ 0 a with (ha | ha) <;> simp [ha]
 
 theorem gt_of_mul_lt_mul_neg_left (h : c * a < c * b) (hc : c ≤ 0) : b < a :=
   have nhc : 0 ≤ -c := neg_nonneg_of_nonpos hc
@@ -1356,22 +1333,19 @@ theorem neg_one_lt_zero : -1 < (0 : α) :=
 
 @[simp]
 theorem mul_le_mul_left_of_neg {a b c : α} (h : c < 0) : c * a ≤ c * b ↔ b ≤ a :=
-  haveI := @LinearOrderₓ.decidableLe α _
-  ⟨le_imp_le_of_lt_imp_ltₓ fun h' => mul_lt_mul_of_neg_left h' h, fun h' => Decidable.mul_le_mul_of_nonpos_left h' h.le⟩
+  (strict_anti_mul_left h).le_iff_le
 
 @[simp]
 theorem mul_le_mul_right_of_neg {a b c : α} (h : c < 0) : a * c ≤ b * c ↔ b ≤ a :=
-  haveI := @LinearOrderₓ.decidableLe α _
-  ⟨le_imp_le_of_lt_imp_ltₓ fun h' => mul_lt_mul_of_neg_right h' h, fun h' =>
-    Decidable.mul_le_mul_of_nonpos_right h' h.le⟩
+  (strict_anti_mul_right h).le_iff_le
 
 @[simp]
 theorem mul_lt_mul_left_of_neg {a b c : α} (h : c < 0) : c * a < c * b ↔ b < a :=
-  lt_iff_lt_of_le_iff_le (mul_le_mul_left_of_neg h)
+  (strict_anti_mul_left h).lt_iff_lt
 
 @[simp]
 theorem mul_lt_mul_right_of_neg {a b c : α} (h : c < 0) : a * c < b * c ↔ b < a :=
-  lt_iff_lt_of_le_iff_le (mul_le_mul_right_of_neg h)
+  (strict_anti_mul_right h).lt_iff_lt
 
 theorem sub_one_lt (a : α) : a - 1 < a :=
   sub_lt_iff_lt_add.2 (lt_add_one a)
@@ -1433,7 +1407,7 @@ theorem abs_le_iff_mul_self_le : abs a ≤ abs b ↔ a * a ≤ b * b := by
   exact mul_self_le_mul_self_iff (abs_nonneg a) (abs_nonneg b)
 
 theorem abs_le_one_iff_mul_self_le_one : abs a ≤ 1 ↔ a * a ≤ 1 := by
-  simpa only [← abs_one, ← one_mulₓ] using @abs_le_iff_mul_self_le α _ a 1
+  simpa only [abs_one, one_mulₓ] using @abs_le_iff_mul_self_le α _ a 1
 
 /-- Pullback a `linear_ordered_ring` under an injective map.
 See note [reducible non-instances]. -/
@@ -1476,14 +1450,13 @@ theorem max_mul_mul_le_max_mul_max (b c : α) (ha : 0 ≤ a) (hd : 0 ≤ d) : ma
     Decidable.mul_le_mul (le_max_rightₓ a c) (le_max_rightₓ b d) hd (le_transₓ ha (le_max_leftₓ a c))
   max_leₓ
     (by
-      simpa [← mul_comm, ← max_commₓ] using ba)
+      simpa [mul_comm, max_commₓ] using ba)
     (by
-      simpa [← mul_comm, ← max_commₓ] using cd)
+      simpa [mul_comm, max_commₓ] using cd)
 
 theorem abs_sub_sq (a b : α) : abs (a - b) * abs (a - b) = a * a + b * b - (1 + 1) * a * b := by
   rw [abs_mul_abs_self]
-  simp only [← mul_addₓ, ← add_commₓ, ← add_left_commₓ, ← mul_comm, ← sub_eq_add_neg, ← mul_oneₓ, ← mul_neg, ←
-    neg_add_rev, ← neg_negₓ]
+  simp only [mul_addₓ, add_commₓ, add_left_commₓ, mul_comm, sub_eq_add_neg, mul_oneₓ, mul_neg, neg_add_rev, neg_negₓ]
 
 end LinearOrderedCommRing
 
@@ -1493,14 +1466,14 @@ variable [Ringₓ α] [LinearOrderₓ α] {a b : α}
 
 @[simp]
 theorem abs_dvd (a b : α) : abs a ∣ b ↔ a ∣ b := by
-  cases' abs_choice a with h h <;> simp only [← h, ← neg_dvd]
+  cases' abs_choice a with h h <;> simp only [h, neg_dvd]
 
 theorem abs_dvd_self (a : α) : abs a ∣ a :=
   (abs_dvd a a).mpr (dvd_refl a)
 
 @[simp]
 theorem dvd_abs (a b : α) : a ∣ abs b ↔ a ∣ b := by
-  cases' abs_choice b with h h <;> simp only [← h, ← dvd_neg]
+  cases' abs_choice b with h h <;> simp only [h, dvd_neg]
 
 theorem self_dvd_abs (a : α) : a ∣ abs a :=
   (dvd_abs a a).mpr (dvd_refl a)
@@ -1539,16 +1512,16 @@ structure PositiveCone (α : Type _) [Ringₓ α] extends AddCommGroupₓ.Positi
   mul_pos : ∀ a b, Pos a → Pos b → Pos (a * b)
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident positive_cone.to_positive_cone]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident positive_cone.to_positive_cone]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- A positive cone in a ring induces a linear order if `1` is a positive element. -/
 @[nolint has_nonempty_instance]
 structure TotalPositiveCone (α : Type _) [Ringₓ α] extends PositiveCone α, AddCommGroupₓ.TotalPositiveCone α where
   one_pos : Pos 1
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident total_positive_cone.to_positive_cone]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident total_positive_cone.to_positive_cone]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident total_positive_cone.to_total_positive_cone]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident total_positive_cone.to_total_positive_cone]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 end Ringₓ
 
 namespace OrderedRing
@@ -1634,7 +1607,7 @@ theorem zero_lt_one [Nontrivial α] : (0 : α) < 1 :=
 
 @[simp]
 theorem mul_pos : 0 < a * b ↔ 0 < a ∧ 0 < b := by
-  simp only [← pos_iff_ne_zero, ← Ne.def, ← mul_eq_zero, ← not_or_distrib]
+  simp only [pos_iff_ne_zero, Ne.def, mul_eq_zero, not_or_distrib]
 
 end CanonicallyOrderedCommSemiring
 
@@ -1657,7 +1630,7 @@ protected theorem mul_tsub (h : AddLeCancellable (a * c)) : a * (b - c) = a * b 
     
 
 protected theorem tsub_mul (h : AddLeCancellable (b * c)) : (a - b) * c = a * c - b * c := by
-  simp only [← mul_comm _ c] at *
+  simp only [mul_comm _ c] at *
   exact h.mul_tsub
 
 end AddLeCancellable
@@ -1701,11 +1674,11 @@ theorem mul_def {a b : WithTop α} : a * b = if a = 0 ∨ b = 0 then 0 else a.bi
 
 @[simp]
 theorem mul_top {a : WithTop α} (h : a ≠ 0) : a * ⊤ = ⊤ := by
-  cases a <;> simp [← mul_def, ← h] <;> rfl
+  cases a <;> simp [mul_def, h] <;> rfl
 
 @[simp]
 theorem top_mul {a : WithTop α} (h : a ≠ 0) : ⊤ * a = ⊤ := by
-  cases a <;> simp [← mul_def, ← h] <;> rfl
+  cases a <;> simp [mul_def, h] <;> rfl
 
 @[simp]
 theorem top_mul_top : (⊤ * ⊤ : WithTop α) = ⊤ :=
@@ -1720,40 +1693,40 @@ variable [MulZeroClassₓ α]
 @[norm_cast]
 theorem coe_mul {a b : α} : (↑(a * b) : WithTop α) = a * b :=
   (Decidable.byCases fun this : a = 0 => by
-      simp [← this])
+      simp [this])
     fun ha =>
     (Decidable.byCases fun this : b = 0 => by
-        simp [← this])
+        simp [this])
       fun hb => by
-      simp [*, ← mul_def]
+      simp [*, mul_def]
       rfl
 
 theorem mul_coe {b : α} (hb : b ≠ 0) : ∀ {a : WithTop α}, a * b = a.bind fun a : α => ↑(a * b)
   | none =>
     show (if (⊤ : WithTop α) = 0 ∨ (b : WithTop α) = 0 then 0 else ⊤ : WithTop α) = ⊤ by
-      simp [← hb]
+      simp [hb]
   | some a => show ↑a * ↑b = ↑(a * b) from coe_mul.symm
 
 @[simp]
 theorem mul_eq_top_iff {a b : WithTop α} : a * b = ⊤ ↔ a ≠ 0 ∧ b = ⊤ ∨ a = ⊤ ∧ b ≠ 0 := by
-  cases a <;> cases b <;> simp only [← none_eq_top, ← some_eq_coe]
-  · simp [coe_mul]
+  cases a <;> cases b <;> simp only [none_eq_top, some_eq_coe]
+  · simp [← coe_mul]
     
   · suffices ⊤ * (b : WithTop α) = ⊤ ↔ b ≠ 0 by
       simpa
-    by_cases' hb : b = 0 <;> simp [← hb]
+    by_cases' hb : b = 0 <;> simp [hb]
     
   · suffices (a : WithTop α) * ⊤ = ⊤ ↔ a ≠ 0 by
       simpa
-    by_cases' ha : a = 0 <;> simp [← ha]
+    by_cases' ha : a = 0 <;> simp [ha]
     
-  · simp [coe_mul]
+  · simp [← coe_mul]
     
 
 theorem mul_lt_top [Preorderₓ α] {a b : WithTop α} (ha : a ≠ ⊤) (hb : b ≠ ⊤) : a * b < ⊤ := by
   lift a to α using ha
   lift b to α using hb
-  simp only [coe_mul, ← coe_lt_top]
+  simp only [← coe_mul, coe_lt_top]
 
 @[simp]
 theorem untop'_zero_mul (a b : WithTop α) : (a * b).untop' 0 = a.untop' 0 * b.untop' 0 := by
@@ -1783,7 +1756,7 @@ instance [MulZeroOneClassₓ α] [Nontrivial α] : MulZeroOneClassₓ (WithTop �
           simp [-WithTop.coe_one]
       | some a =>
         show ((1 : α) : WithTop α) * a = a by
-          simp [← coe_mul.symm, -WithTop.coe_one],
+          simp [coe_mul.symm, -WithTop.coe_one],
     mul_one := fun a =>
       match a with
       | none =>
@@ -1791,7 +1764,7 @@ instance [MulZeroOneClassₓ α] [Nontrivial α] : MulZeroOneClassₓ (WithTop �
           simp [-WithTop.coe_one]
       | some a =>
         show ↑a * ((1 : α) : WithTop α) = a by
-          simp [← coe_mul.symm, -WithTop.coe_one] }
+          simp [coe_mul.symm, -WithTop.coe_one] }
 
 /-- A version of `with_top.map` for `monoid_with_zero_hom`s. -/
 @[simps (config := { fullyApplied := false })]
@@ -1808,32 +1781,32 @@ protected def _root_.monoid_with_zero_hom.with_top_map {R S : Type _} [MulZeroOn
       · simp
         
       induction x using WithTop.recTopCoe
-      · simp [← hy, ← this]
+      · simp [hy, this]
         
       induction y using WithTop.recTopCoe
       · have : (f x : WithTop S) ≠ 0 := by
-          simpa [← hf.eq_iff' (map_zero f)] using hx
-        simp [← hx, ← this]
+          simpa [hf.eq_iff' (map_zero f)] using hx
+        simp [hx, this]
         
-      simp [coe_mul] }
+      simp [← coe_mul] }
 
 instance [MulZeroClassₓ α] [NoZeroDivisors α] : NoZeroDivisors (WithTop α) :=
   ⟨fun a b => by
-    cases a <;> cases b <;> dsimp' [← mul_def] <;> split_ifs <;> simp_all [← none_eq_top, ← some_eq_coe, ← mul_eq_zero]⟩
+    cases a <;> cases b <;> dsimp' [mul_def] <;> split_ifs <;> simp_all [none_eq_top, some_eq_coe, mul_eq_zero]⟩
 
 instance [SemigroupWithZeroₓ α] [NoZeroDivisors α] : SemigroupWithZeroₓ (WithTop α) :=
   { WithTop.mulZeroClass with mul := (· * ·), zero := 0,
     mul_assoc := fun a b c => by
       cases a
-      · by_cases' hb : b = 0 <;> by_cases' hc : c = 0 <;> simp [*, ← none_eq_top]
+      · by_cases' hb : b = 0 <;> by_cases' hc : c = 0 <;> simp [*, none_eq_top]
         
       cases b
-      · by_cases' ha : a = 0 <;> by_cases' hc : c = 0 <;> simp [*, ← none_eq_top, ← some_eq_coe]
+      · by_cases' ha : a = 0 <;> by_cases' hc : c = 0 <;> simp [*, none_eq_top, some_eq_coe]
         
       cases c
-      · by_cases' ha : a = 0 <;> by_cases' hb : b = 0 <;> simp [*, ← none_eq_top, ← some_eq_coe]
+      · by_cases' ha : a = 0 <;> by_cases' hb : b = 0 <;> simp [*, none_eq_top, some_eq_coe]
         
-      simp [← some_eq_coe, ← coe_mul.symm, ← mul_assoc] }
+      simp [some_eq_coe, coe_mul.symm, mul_assoc] }
 
 instance [MonoidWithZeroₓ α] [NoZeroDivisors α] [Nontrivial α] : MonoidWithZeroₓ (WithTop α) :=
   { WithTop.mulZeroOneClass, WithTop.semigroupWithZero with }
@@ -1842,25 +1815,25 @@ instance [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] : CommMonoi
   { WithTop.monoidWithZero with mul := (· * ·), zero := 0,
     mul_comm := fun a b => by
       by_cases' ha : a = 0
-      · simp [← ha]
+      · simp [ha]
         
       by_cases' hb : b = 0
-      · simp [← hb]
+      · simp [hb]
         
-      simp [← ha, ← hb, ← mul_def, ← Option.bind_comm a b, ← mul_comm] }
+      simp [ha, hb, mul_def, Option.bind_comm a b, mul_comm] }
 
 variable [CanonicallyOrderedCommSemiring α]
 
 private theorem distrib' (a b c : WithTop α) : (a + b) * c = a * c + b * c := by
   cases c
   · show (a + b) * ⊤ = a * ⊤ + b * ⊤
-    by_cases' ha : a = 0 <;> simp [← ha]
+    by_cases' ha : a = 0 <;> simp [ha]
     
   · show (a + b) * c = a * c + b * c
     by_cases' hc : c = 0
-    · simp [← hc]
+    · simp [hc]
       
-    simp [← mul_coe hc]
+    simp [mul_coe hc]
     cases a <;> cases b
     repeat'
       first |
@@ -1927,12 +1900,12 @@ variable [MulZeroClassₓ α]
 @[norm_cast]
 theorem coe_mul {a b : α} : (↑(a * b) : WithBot α) = a * b :=
   (Decidable.byCases fun this : a = 0 => by
-      simp [← this])
+      simp [this])
     fun ha =>
     (Decidable.byCases fun this : b = 0 => by
-        simp [← this])
+        simp [this])
       fun hb => by
-      simp [*, ← mul_def]
+      simp [*, mul_def]
       rfl
 
 theorem mul_coe {b : α} (hb : b ≠ 0) {a : WithBot α} : a * b = a.bind fun a : α => ↑(a * b) :=
@@ -1945,7 +1918,7 @@ theorem mul_eq_bot_iff {a b : WithBot α} : a * b = ⊥ ↔ a ≠ 0 ∧ b = ⊥ 
 theorem bot_lt_mul [Preorderₓ α] {a b : WithBot α} (ha : ⊥ < a) (hb : ⊥ < b) : ⊥ < a * b := by
   lift a to α using ne_bot_of_gt ha
   lift b to α using ne_bot_of_gt hb
-  simp only [coe_mul, ← bot_lt_coe]
+  simp only [← coe_mul, bot_lt_coe]
 
 end MulZeroClassₓ
 
@@ -1971,7 +1944,7 @@ instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : CommSemiringₓ (
 instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : ZeroLt.PosMulMono (WithBot α) :=
   ⟨by
     rintro ⟨x, x0⟩ a b h
-    simp only [← Subtype.coe_mk]
+    simp only [Subtype.coe_mk]
     induction x using WithBot.recBotCoe
     · have := bot_lt_coe (0 : α)
       rw [coe_zero] at this
@@ -1983,7 +1956,7 @@ instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : ZeroLt.PosMulMono
       induction b using WithBot.recBotCoe
       · exact absurd h (bot_lt_coe a).not_le
         
-      · simp only [coe_mul, ← coe_le_coe] at *
+      · simp only [← coe_mul, coe_le_coe] at *
         exact ZeroLt.mul_le_mul_left h (zero_le x)
         
       ⟩

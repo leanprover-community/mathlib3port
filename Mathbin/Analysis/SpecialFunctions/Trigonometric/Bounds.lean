@@ -75,7 +75,7 @@ theorem sin_gt_sub_cube {x : ℝ} (h : 0 < x) (h' : x ≤ 1) : x - x ^ 3 / 4 < s
   rw [le_sub_iff_add_le, hx] at this
   refine' lt_of_lt_of_leₓ _ this
   have : x ^ 3 / 4 - x ^ 3 / 6 = x ^ 3 * 12⁻¹ := by
-    norm_num[← div_eq_mul_inv, mul_sub]
+    norm_num[div_eq_mul_inv, ← mul_sub]
   rw [add_commₓ, sub_add, sub_neg_eq_add, sub_lt_sub_iff_left, ← lt_sub_iff_add_lt', this]
   refine'
     mul_lt_mul' _
@@ -110,26 +110,26 @@ theorem lt_tan (x : ℝ) (h1 : 0 < x) (h2 : x < π / 2) : x < tan x := by
   have tan_cts_U : ContinuousOn tan U := by
     apply ContinuousOn.mono continuous_on_tan
     intro z hz
-    simp only [← mem_set_of_eq]
+    simp only [mem_set_of_eq]
     exact (cos_pos hz).ne'
   have tan_minus_id_cts : ContinuousOn (fun y : ℝ => tan y - y) U := tan_cts_U.sub continuous_on_id
   have deriv_pos : ∀ y : ℝ, y ∈ Interior U → 0 < deriv (fun y' : ℝ => tan y' - y') y := by
     intro y hy
     have := cos_pos (interior_subset hy)
-    simp only [← deriv_tan_sub_id y this.ne', ← one_div, ← gt_iff_lt, ← sub_pos]
+    simp only [deriv_tan_sub_id y this.ne', one_div, gt_iff_ltₓ, sub_pos]
     have bd2 : cos y ^ 2 < 1 := by
       apply lt_of_le_of_neₓ y.cos_sq_le_one
       rw [cos_sq']
-      simpa only [← Ne.def, ← sub_eq_self, ← pow_eq_zero_iff, ← Nat.succ_pos'] using (sin_pos hy).ne'
+      simpa only [Ne.def, sub_eq_self, pow_eq_zero_iff, Nat.succ_pos'] using (sin_pos hy).ne'
     rwa [lt_inv, inv_one]
     · exact zero_lt_one
       
-    simpa only [← sq, ← mul_self_pos] using this.ne'
+    simpa only [sq, mul_self_pos] using this.ne'
   have mono := Convex.strict_mono_on_of_deriv_pos (convex_Ico 0 (π / 2)) tan_minus_id_cts deriv_pos
   have zero_in_U : (0 : ℝ) ∈ U := by
     rwa [left_mem_Ico]
   have x_in_U : x ∈ U := ⟨h1.le, h2⟩
-  simpa only [← tan_zero, ← sub_zero, ← sub_pos] using mono zero_in_U x_in_U h1
+  simpa only [tan_zero, sub_zero, sub_pos] using mono zero_in_U x_in_U h1
 
 end Real
 

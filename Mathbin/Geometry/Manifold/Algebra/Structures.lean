@@ -20,7 +20,7 @@ section SmoothRing
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedAddCommGroup E]
   [NormedSpace 𝕜 E]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:304:40: warning: unsupported option default_priority
+-- ./././Mathport/Syntax/Translate/Basic.lean:335:40: warning: unsupported option default_priority
 set_option default_priority 100
 
 -- see Note [default priority]
@@ -40,7 +40,7 @@ instance SmoothRing.to_lie_add_group (I : ModelWithCorners 𝕜 E H) (R : Type _
   compatible := fun e e' => HasGroupoid.compatible (contDiffGroupoid ⊤ I)
   smooth_add := smooth_add I
   smooth_neg := by
-    simpa only [← neg_one_mul] using @smooth_mul_left 𝕜 _ H _ E _ _ I R _ _ _ _ (-1)
+    simpa only [neg_one_mul] using @smooth_mul_left 𝕜 _ H _ E _ _ I R _ _ _ _ (-1)
 
 end SmoothRing
 
@@ -49,7 +49,7 @@ instance field_smooth_ring {𝕜 : Type _} [NontriviallyNormedField 𝕜] : Smoo
     smooth_mul := by
       rw [smooth_iff]
       refine' ⟨continuous_mul, fun x y => _⟩
-      simp' only [← Prod.mk.eta] with mfld_simps
+      simp' only [Prod.mk.eta] with mfld_simps
       rw [cont_diff_on_univ]
       exact cont_diff_mul }
 

@@ -38,7 +38,7 @@ universe u₀ u₁ v₀ v₁ v₂ w w₀ w₁
 
 variable {s : Type u₀} {s' : Type u₁} {r r' w w' : Type _}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`congr] []
+-- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`congr] []
 /-- Given a universe polymorphic type family `M.{u} : Type u₁ → Type
 u₂`, this class convert between instantiations, from
 `M.{u} : Type u₁ → Type u₂` to `M.{v} : Type v₁ → Type v₂` and back -/

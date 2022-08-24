@@ -121,7 +121,7 @@ theorem sl_non_abelian [Fintype n] [Nontrivial R] (h : 1 < Fintype.card n) : ¬I
   have c' : A.val ⬝ B.val = B.val ⬝ A.val := by
     rw [← sub_eq_zero, ← sl_bracket, c.trivial]
     rfl
-  simpa [← std_basis_matrix, ← Matrix.mul_apply, ← hij] using congr_fun (congr_fun c' i) i
+  simpa [std_basis_matrix, Matrix.mul_apply, hij] using congr_fun (congr_fun c' i) i
 
 end SpecialLinear
 
@@ -148,7 +148,7 @@ def so [Fintype n] : LieSubalgebra R (Matrix n n R) :=
 @[simp]
 theorem mem_so [Fintype n] (A : Matrix n n R) : A ∈ so n R ↔ Aᵀ = -A := by
   erw [mem_skew_adjoint_matrices_submodule]
-  simp only [← Matrix.IsSkewAdjoint, ← Matrix.IsAdjointPair, ← Matrix.mul_one, ← Matrix.one_mul]
+  simp only [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair, Matrix.mul_one, Matrix.one_mul]
 
 /-- The indefinite diagonal matrix with `p` 1s and `q` -1s. -/
 def indefiniteDiagonal : Matrix (Sum p q) (Sum p q) R :=
@@ -171,17 +171,17 @@ theorem Pso_inv {i : R} (hi : i * i = -1) : pso p q R i * pso p q R (-i) = 1 := 
   rcases x with ⟨⟩ <;> rcases y with ⟨⟩
   · -- x y : p
       by_cases' h : x = y <;>
-      simp [← Pso, ← indefinite_diagonal, ← h]
+      simp [Pso, indefinite_diagonal, h]
     
   · -- x : p, y : q
-    simp [← Pso, ← indefinite_diagonal]
+    simp [Pso, indefinite_diagonal]
     
   · -- x : q, y : p
-    simp [← Pso, ← indefinite_diagonal]
+    simp [Pso, indefinite_diagonal]
     
   · -- x y : q
       by_cases' h : x = y <;>
-      simp [← Pso, ← indefinite_diagonal, ← h, ← hi]
+      simp [Pso, indefinite_diagonal, h, hi]
     
 
 /-- There is a constructive inverse of `Pso p q R i`. -/
@@ -194,17 +194,17 @@ theorem indefinite_diagonal_transform {i : R} (hi : i * i = -1) :
   rcases x with ⟨⟩ <;> rcases y with ⟨⟩
   · -- x y : p
       by_cases' h : x = y <;>
-      simp [← Pso, ← indefinite_diagonal, ← h]
+      simp [Pso, indefinite_diagonal, h]
     
   · -- x : p, y : q
-    simp [← Pso, ← indefinite_diagonal]
+    simp [Pso, indefinite_diagonal]
     
   · -- x : q, y : p
-    simp [← Pso, ← indefinite_diagonal]
+    simp [Pso, indefinite_diagonal]
     
   · -- x y : q
       by_cases' h : x = y <;>
-      simp [← Pso, ← indefinite_diagonal, ← h, ← hi]
+      simp [Pso, indefinite_diagonal, h, hi]
     
 
 /-- An equivalence between the indefinite and definite orthogonal Lie algebras, over a ring
@@ -259,15 +259,15 @@ theorem S_as_blocks : s l R = Matrix.fromBlocks 1 0 0 (-1) := by
 
 theorem JD_transform [Fintype l] : (pD l R)ᵀ ⬝ jD l R ⬝ pD l R = (2 : R) • s l R := by
   have h : (PD l R)ᵀ ⬝ JD l R = Matrix.fromBlocks 1 1 1 (-1) := by
-    simp [← PD, ← JD, ← Matrix.from_blocks_transpose, ← Matrix.from_blocks_multiply]
+    simp [PD, JD, Matrix.from_blocks_transpose, Matrix.from_blocks_multiply]
   erw [h, S_as_blocks, Matrix.from_blocks_multiply, Matrix.from_blocks_smul]
-  congr <;> simp [← two_smul]
+  congr <;> simp [two_smul]
 
 theorem PD_inv [Fintype l] [Invertible (2 : R)] : pD l R * ⅟ (2 : R) • (pD l R)ᵀ = 1 := by
   have h : ⅟ (2 : R) • (1 : Matrix l l R) + ⅟ (2 : R) • 1 = 1 := by
     rw [← smul_add, ← two_smul R _, smul_smul, inv_of_mul_self, one_smul]
   erw [Matrix.from_blocks_transpose, Matrix.from_blocks_smul, Matrix.mul_eq_mul, Matrix.from_blocks_multiply]
-  simp [← h]
+  simp [h]
 
 instance invertiblePD [Fintype l] [Invertible (2 : R)] : Invertible (pD l R) :=
   invertibleOfRightInverse _ _ (PD_inv l R)
@@ -328,14 +328,13 @@ variable [Fintype l]
 
 theorem PB_inv [Invertible (2 : R)] : pB l R * Matrix.fromBlocks 1 0 0 (⅟ (pD l R)) = 1 := by
   rw [PB, Matrix.mul_eq_mul, Matrix.from_blocks_multiply, Matrix.mul_inv_of_self]
-  simp only [← Matrix.mul_zero, ← Matrix.mul_one, ← Matrix.zero_mul, ← zero_addₓ, ← add_zeroₓ, ← Matrix.from_blocks_one]
+  simp only [Matrix.mul_zero, Matrix.mul_one, Matrix.zero_mul, zero_addₓ, add_zeroₓ, Matrix.from_blocks_one]
 
 instance invertiblePB [Invertible (2 : R)] : Invertible (pB l R) :=
   invertibleOfRightInverse _ _ (PB_inv l R)
 
 theorem JB_transform : (pB l R)ᵀ ⬝ jB l R ⬝ pB l R = (2 : R) • Matrix.fromBlocks 1 0 0 (s l R) := by
-  simp [← PB, ← JB, ← JD_transform, ← Matrix.from_blocks_transpose, ← Matrix.from_blocks_multiply, ←
-    Matrix.from_blocks_smul]
+  simp [PB, JB, JD_transform, Matrix.from_blocks_transpose, Matrix.from_blocks_multiply, Matrix.from_blocks_smul]
 
 theorem indefinite_diagonal_assoc :
     indefiniteDiagonal (Sum Unit l) l R =
@@ -344,11 +343,11 @@ theorem indefinite_diagonal_assoc :
   ext i j
   rcases i with ⟨⟨i₁ | i₂⟩ | i₃⟩ <;>
     rcases j with ⟨⟨j₁ | j₂⟩ | j₃⟩ <;>
-      simp only [← indefinite_diagonal, ← Matrix.diagonalₓ, ← Equivₓ.sum_assoc_apply_inl_inl, ←
-          Matrix.reindex_lie_equiv_apply, ← Matrix.minor_apply, ← Equivₓ.symm_symm, ← Matrix.reindex_apply, ←
-          Sum.elim_inl, ← if_true, ← eq_self_iff_true, ← Matrix.one_apply_eq, ← Matrix.from_blocks_apply₁₁, ←
-          Dmatrix.zero_apply, ← Equivₓ.sum_assoc_apply_inl_inr, ← if_false, ← Matrix.from_blocks_apply₁₂, ←
-          Matrix.from_blocks_apply₂₁, ← Matrix.from_blocks_apply₂₂, ← Equivₓ.sum_assoc_apply_inr, ← Sum.elim_inr] <;>
+      simp only [indefinite_diagonal, Matrix.diagonalₓ, Equivₓ.sum_assoc_apply_inl_inl, Matrix.reindex_lie_equiv_apply,
+          Matrix.submatrix_apply, Equivₓ.symm_symm, Matrix.reindex_apply, Sum.elim_inl, if_true, eq_self_iff_true,
+          Matrix.one_apply_eq, Matrix.from_blocks_apply₁₁, Dmatrix.zero_apply, Equivₓ.sum_assoc_apply_inl_inr, if_false,
+          Matrix.from_blocks_apply₁₂, Matrix.from_blocks_apply₂₁, Matrix.from_blocks_apply₂₂,
+          Equivₓ.sum_assoc_apply_inr, Sum.elim_inr] <;>
         congr
 
 /-- An equivalence between two possible definitions of the classical Lie algebra of type B. -/
@@ -365,7 +364,7 @@ def typeBEquivSo' [Invertible (2 : R)] : typeB l R ≃ₗ⁅R⁆ so' (Sum Unit l
   ext A
   rw [JB_transform, ← coe_unit_of_invertible (2 : R), ← Units.smul_def, LieSubalgebra.mem_coe, LieSubalgebra.mem_coe,
     mem_skew_adjoint_matrices_lie_subalgebra_unit_smul]
-  simpa [← indefinite_diagonal_assoc]
+  simpa [indefinite_diagonal_assoc]
 
 end Orthogonal
 

@@ -29,11 +29,11 @@ def exactPairingOfFaithful [Faithful F.toFunctor] {X Y : C} (eval : Y ⊗ X ⟶ 
   evaluation_coevaluation' :=
     F.toFunctor.map_injective
       (by
-        simp [← map_eval, ← map_coeval, ← monoidal_functor.map_tensor])
+        simp [map_eval, map_coeval, monoidal_functor.map_tensor])
   coevaluation_evaluation' :=
     F.toFunctor.map_injective
       (by
-        simp [← map_eval, ← map_coeval, ← monoidal_functor.map_tensor])
+        simp [map_eval, map_coeval, monoidal_functor.map_tensor])
 
 /-- Given a pair of objects which are sent by a fully faithful functor to a pair of objects
 with an exact pairing, we get an exact pairing.

@@ -85,7 +85,7 @@ variable {k G n}
 
 theorem to_tensor_aux_single (f : Gⁿ⁺¹) (m : k) :
     toTensorAux k G n (single f m) = single (f 0) m ⊗ₜ single (fun i => (f i)⁻¹ * f i.succ) 1 := by
-  simp only [← to_tensor_aux, ← lift_apply, ← sum_single_index, ← TensorProduct.smul_tmul']
+  simp only [to_tensor_aux, lift_apply, sum_single_index, TensorProduct.smul_tmul']
   · simp
     
 
@@ -93,18 +93,18 @@ theorem to_tensor_aux_of_mul_action (g : G) (x : Gⁿ⁺¹) :
     toTensorAux k G n (ofMulAction k G Gⁿ⁺¹ g (single x 1)) =
       TensorProduct.map (ofMulAction k G G g) 1 (toTensorAux k G n (single x 1)) :=
   by
-  simp [← of_mul_action_def, ← to_tensor_aux_single, ← mul_assoc, ← inv_mul_cancel_leftₓ]
+  simp [of_mul_action_def, to_tensor_aux_single, mul_assoc, inv_mul_cancel_leftₓ]
 
 theorem of_tensor_aux_single (g : G) (m : k) (x : Gⁿ →₀ k) :
     ofTensorAux k G n (single g m ⊗ₜ x) = Finsupp.lift (Gⁿ⁺¹ →₀ k) k Gⁿ (fun f => single (g • partialProd f) m) x := by
-  simp [← of_tensor_aux, ← sum_single_index, ← smul_sum, ← mul_comm m]
+  simp [of_tensor_aux, sum_single_index, smul_sum, mul_comm m]
 
 theorem of_tensor_aux_comm_of_mul_action (g h : G) (x : Gⁿ) :
     ofTensorAux k G n
         (TensorProduct.map (ofMulAction k G G g) (1 : Module.End k (Gⁿ →₀ k)) (single h (1 : k) ⊗ₜ single x (1 : k))) =
       ofMulAction k G Gⁿ⁺¹ g (ofTensorAux k G n (single h 1 ⊗ₜ single x 1)) :=
   by
-  simp [← of_mul_action_def, ← of_tensor_aux_single, ← mul_smul]
+  simp [of_mul_action_def, of_tensor_aux_single, mul_smul]
 
 theorem to_tensor_aux_left_inv (x : Gⁿ⁺¹ →₀ k) : ofTensorAux _ _ _ (toTensorAux _ _ _ x) = x := by
   refine'
@@ -124,14 +124,14 @@ theorem to_tensor_aux_right_inv (x : (G →₀ k) ⊗[k] (Gⁿ →₀ k)) : toTe
       (by
         simp )
       (fun y z => _) fun z w hz hw => by
-      simp [← hz, ← hw]
+      simp [hz, hw]
   rw [← Finsupp.sum_single y, Finsupp.sum, TensorProduct.sum_tmul]
-  simp only [← Finset.smul_sum, ← LinearMap.map_sum]
+  simp only [Finset.smul_sum, LinearMap.map_sum]
   refine' Finset.sum_congr rfl fun f hf => _
-  simp only [← of_tensor_aux_single, ← Finsupp.lift_apply, ← Finsupp.smul_single', ← LinearMap.map_finsupp_sum, ←
-    to_tensor_aux_single, ← Finₓ.partial_prod_right_inv]
+  simp only [of_tensor_aux_single, Finsupp.lift_apply, Finsupp.smul_single', LinearMap.map_finsupp_sum,
+    to_tensor_aux_single, Finₓ.partial_prod_right_inv]
   dsimp'
-  simp only [← Finₓ.partial_prod_zero, ← mul_oneₓ]
+  simp only [Finₓ.partial_prod_zero, mul_oneₓ]
   conv_rhs => rw [← Finsupp.sum_single z, Finsupp.sum, TensorProduct.tmul_sum]
   exact
     Finset.sum_congr rfl fun g hg =>
@@ -182,7 +182,7 @@ theorem of_tensor_single (g : G) (m : k) (x : Gⁿ →₀ k) :
 
 theorem of_tensor_single' (g : G →₀ k) (x : Gⁿ) (m : k) :
     (ofTensor k G n).hom (g ⊗ₜ single x m) = Finsupp.lift _ k G (fun a => single (a • partialProd x) m) g := by
-  simp [← of_tensor, ← of_tensor_aux]
+  simp [of_tensor, of_tensor_aux]
 
 variable (k G n)
 
@@ -219,9 +219,9 @@ def ofMulActionBasisAux :
       rw [RingHom.id_apply, LinearEquiv.to_fun_eq_coe, ← LinearEquiv.map_smul]
       congr 1
       refine' x.induction_on _ (fun x y => _) fun y z hy hz => _
-      · simp only [← smul_zero]
+      · simp only [smul_zero]
         
-      · simp only [← TensorProduct.smul_tmul']
+      · simp only [TensorProduct.smul_tmul']
         show (r * x) ⊗ₜ y = _
         rw [← of_mul_action_self_smul_eq_mul, smul_tprod_one_as_module]
         

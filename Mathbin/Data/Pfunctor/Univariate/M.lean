@@ -99,7 +99,7 @@ theorem truncate_eq_of_agree {n : ℕ} (x : CofixA F n) (y : CofixA F (succ n)) 
     
   · cases' h with _ _ _ _ _ h₀ h₁
     cases h
-    simp only [← truncate, ← Function.comp, ← true_andₓ, ← eq_self_iff_true, ← heq_iff_eq]
+    simp only [truncate, Function.comp, true_andₓ, eq_self_iff_true, heq_iff_eq]
     ext y
     apply n_ih
     apply h₁
@@ -141,12 +141,12 @@ instance : Subsingleton (CofixA F 0) :=
 theorem head_succ' (n m : ℕ) (x : ∀ n, CofixA F n) (Hconsistent : AllAgree x) :
     head' (x (succ n)) = head' (x (succ m)) := by
   suffices ∀ n, head' (x (succ n)) = head' (x 1) by
-    simp [← this]
+    simp [this]
   clear m n
   intro
   cases' h₀ : x (succ n) with _ i₀ f₀
   cases' h₁ : x 1 with _ i₁ f₁
-  dsimp' only [← head']
+  dsimp' only [head']
   induction' n with n
   · rw [h₁] at h₀
     cases h₀
@@ -160,7 +160,7 @@ theorem head_succ' (n m : ℕ) (x : ∀ n, CofixA F n) (Hconsistent : AllAgree x
     cases' H with _ _ _ _ _ _ hagree
     congr
     funext j
-    dsimp' only [← comp_app]
+    dsimp' only [comp_app]
     rw [truncate_eq_of_agree]
     apply hagree
     
@@ -224,7 +224,7 @@ def children (x : M F) (i : F.B (head x)) : M F :=
       children' (x.1 _)
         (cast
           (congr_arg _ <| by
-            simp only [← head, ← H] <;> rfl)
+            simp only [head, H] <;> rfl)
           i),
     consistent := by
       intro
@@ -242,7 +242,7 @@ def ichildren [Inhabited (M F)] [DecidableEq F.A] (i : F.Idx) (x : M F) : M F :=
     children x
       (cast
         (congr_arg _ <| by
-          simp only [← head, ← H'] <;> rfl)
+          simp only [head, H'] <;> rfl)
         i.2)
   else default
 
@@ -294,12 +294,12 @@ inductive Agree' : ℕ → M F → M F → Prop
 @[simp]
 theorem dest_mk (x : F.Obj <| M F) : dest (M.mk x) = x := by
   funext i
-  dsimp' only [← M.mk, ← dest]
+  dsimp' only [M.mk, dest]
   cases' x with x ch
   congr with i
   cases h : ch i
-  simp only [← children, ← M.approx.s_mk, ← children', ← cast_eq]
-  dsimp' only [← M.approx.s_mk, ← children']
+  simp only [children, M.approx.s_mk, children', cast_eq]
+  dsimp' only [M.approx.s_mk, children']
   congr
   rw [h]
 
@@ -307,11 +307,11 @@ theorem dest_mk (x : F.Obj <| M F) : dest (M.mk x) = x := by
 theorem mk_dest (x : M F) : M.mk (dest x) = x := by
   apply ext'
   intro n
-  dsimp' only [← M.mk]
+  dsimp' only [M.mk]
   induction' n with n
   · apply Subsingleton.elimₓ
     
-  dsimp' only [← approx.s_mk, ← dest, ← head]
+  dsimp' only [approx.s_mk, dest, head]
   cases' h : x.approx (succ n) with _ hd ch
   have h' : hd = head' (x.approx 1) := by
     rw [← head_succ' n, h, head']
@@ -321,7 +321,7 @@ theorem mk_dest (x : M F) : M.mk (dest x) = x := by
   intros
   congr
   · ext a
-    dsimp' only [← children]
+    dsimp' only [children]
     h_generalize! hh : a = a''
     rw [h]
     intros
@@ -370,7 +370,7 @@ theorem agree_iff_agree' {n : ℕ} (x y : M F) : Agree (x.approx n) (y.approx <|
     constructor
     · induction x using Pfunctor.M.casesOn'
       induction y using Pfunctor.M.casesOn'
-      simp only [← approx_mk] at h
+      simp only [approx_mk] at h
       cases' h with _ _ _ _ _ _ hagree
       constructor <;>
         try
@@ -385,7 +385,7 @@ theorem agree_iff_agree' {n : ℕ} (x y : M F) : Agree (x.approx n) (y.approx <|
     · cases h
       induction x using Pfunctor.M.casesOn'
       induction y using Pfunctor.M.casesOn'
-      simp only [← approx_mk]
+      simp only [approx_mk]
       have h_a_1 := mk_inj ‹M.mk ⟨x_a, x_f⟩ = M.mk ⟨h_a, h_x⟩›
       cases h_a_1
       replace h_a_2 := mk_inj ‹M.mk ⟨y_a, y_f⟩ = M.mk ⟨h_a, h_y⟩›
@@ -400,15 +400,15 @@ theorem agree_iff_agree' {n : ℕ} (x y : M F) : Agree (x.approx n) (y.approx <|
 @[simp]
 theorem cases_mk {r : M F → Sort _} (x : F.Obj <| M F) (f : ∀ x : F.Obj <| M F, r (M.mk x)) :
     Pfunctor.M.cases f (M.mk x) = f x := by
-  dsimp' only [← M.mk, ← Pfunctor.M.cases, ← dest, ← head, ← approx.s_mk, ← head']
+  dsimp' only [M.mk, Pfunctor.M.cases, dest, head, approx.s_mk, head']
   cases x
-  dsimp' only [← approx.s_mk]
+  dsimp' only [approx.s_mk]
   apply eq_of_heq
   apply rec_heq_of_heq
   congr with x
-  dsimp' only [← children, ← approx.s_mk, ← children']
+  dsimp' only [children, approx.s_mk, children']
   cases h : x_snd x
-  dsimp' only [← head]
+  dsimp' only [head]
   congr with n
   change (x_snd x).approx n = _
   rw [h]
@@ -473,10 +473,10 @@ theorem iselect_eq_default [DecidableEq F.A] [Inhabited (M F)] (ps : Path F) (x 
     
   · cases' ps_hd with a i
     induction x using Pfunctor.M.casesOn'
-    simp only [← iselect, ← isubtree] at ps_ih⊢
+    simp only [iselect, isubtree] at ps_ih⊢
     by_cases' h'' : a = x_a
     subst x_a
-    · simp only [← dif_pos, ← eq_self_iff_true, ← cases_on_mk']
+    · simp only [dif_pos, eq_self_iff_true, cases_on_mk']
       rw [ps_ih]
       intro h'
       apply h
@@ -512,17 +512,17 @@ theorem children_mk {a} (x : F.B a → M F) (i : F.B (head (M.mk ⟨a, x⟩))) :
 @[simp]
 theorem ichildren_mk [DecidableEq F.A] [Inhabited (M F)] (x : F.Obj (M F)) (i : F.Idx) :
     ichildren i (M.mk x) = x.iget i := by
-  dsimp' only [← ichildren, ← Pfunctor.Obj.iget]
+  dsimp' only [ichildren, Pfunctor.Obj.iget]
   congr with h
   apply ext'
-  dsimp' only [← children', ← M.mk, ← approx.s_mk]
+  dsimp' only [children', M.mk, approx.s_mk]
   intros
   rfl
 
 @[simp]
 theorem isubtree_cons [DecidableEq F.A] [Inhabited (M F)] (ps : Path F) {a} (f : F.B a → M F) {i : F.B a} :
     isubtree (⟨_, i⟩ :: ps) (M.mk ⟨a, f⟩) = isubtree ps (f i) := by
-  simp only [← isubtree, ← ichildren_mk, ← Pfunctor.Obj.iget, ← dif_pos, ← isubtree, ← M.cases_on_mk'] <;> rfl
+  simp only [isubtree, ichildren_mk, Pfunctor.Obj.iget, dif_pos, isubtree, M.cases_on_mk'] <;> rfl
 
 @[simp]
 theorem iselect_nil [DecidableEq F.A] [Inhabited (M F)] {a} (f : F.B a → M F) : iselect nil (M.mk ⟨a, f⟩) = a := by
@@ -531,18 +531,18 @@ theorem iselect_nil [DecidableEq F.A] [Inhabited (M F)] {a} (f : F.B a → M F) 
 @[simp]
 theorem iselect_cons [DecidableEq F.A] [Inhabited (M F)] (ps : Path F) {a} (f : F.B a → M F) {i} :
     iselect (⟨a, i⟩ :: ps) (M.mk ⟨a, f⟩) = iselect ps (f i) := by
-  simp only [← iselect, ← isubtree_cons]
+  simp only [iselect, isubtree_cons]
 
 theorem corec_def {X} (f : X → F.Obj X) (x₀ : X) : M.corec f x₀ = M.mk (M.corec f <$> f x₀) := by
-  dsimp' only [← M.corec, ← M.mk]
+  dsimp' only [M.corec, M.mk]
   congr with n
   cases' n with n
-  · dsimp' only [← s_corec, ← approx.s_mk]
+  · dsimp' only [s_corec, approx.s_mk]
     rfl
     
-  · dsimp' only [← s_corec, ← approx.s_mk]
+  · dsimp' only [s_corec, approx.s_mk]
     cases h : f x₀
-    dsimp' only [← (· <$> ·), ← Pfunctor.map]
+    dsimp' only [(· <$> ·), Pfunctor.map]
     congr
     
 
@@ -552,9 +552,9 @@ theorem ext_aux [Inhabited (M F)] [DecidableEq F.A] {n : ℕ} (x y z : M F) (hx 
   · specialize hrec [] rfl
     induction x using Pfunctor.M.casesOn'
     induction y using Pfunctor.M.casesOn'
-    simp only [← iselect_nil] at hrec
+    simp only [iselect_nil] at hrec
     subst hrec
-    simp only [← approx_mk, ← true_andₓ, ← eq_self_iff_true, ← heq_iff_eq]
+    simp only [approx_mk, true_andₓ, eq_self_iff_true, heq_iff_eq]
     apply Subsingleton.elimₓ
     
   · cases hx
@@ -566,7 +566,7 @@ theorem ext_aux [Inhabited (M F)] [DecidableEq F.A] {n : ℕ} (x y z : M F) (hx 
       have := mk_inj ‹_›
       repeat'
         cases this
-    simp only [← approx_mk, ← true_andₓ, ← eq_self_iff_true, ← heq_iff_eq]
+    simp only [approx_mk, true_andₓ, eq_self_iff_true, heq_iff_eq]
     ext i
     apply n_ih
     · solve_by_elim
@@ -575,7 +575,7 @@ theorem ext_aux [Inhabited (M F)] [DecidableEq F.A] {n : ℕ} (x y z : M F) (hx 
       
     introv h
     specialize hrec (⟨_, i⟩ :: ps) (congr_arg _ h)
-    simp only [← iselect_cons] at hrec
+    simp only [iselect_cons] at hrec
     exact hrec
     
 
@@ -601,7 +601,7 @@ theorem ext [Inhabited (M F)] (x y : M F) (H : ∀ ps : Path F, iselect ps x = i
       apply y.consistent
       
     introv H'
-    dsimp' only [← iselect]  at H
+    dsimp' only [iselect]  at H
     cases H'
     apply H ps
     
@@ -637,11 +637,11 @@ theorem nth_of_bisim [Inhabited (M F)] (bisim : IsBisimulation R) (s₁ s₂) (p
   cases' i with a' i
   obtain rfl : a = a' := by
     cases hh <;> cases is_path_cons hh <;> rfl
-  dsimp' only [← iselect]  at ps_ih⊢
+  dsimp' only [iselect]  at ps_ih⊢
   have h₁ := bisim.tail h₀ i
   induction' h : f i using Pfunctor.M.casesOn' with a₀ f₀
   induction' h' : f' i using Pfunctor.M.casesOn' with a₁ f₁
-  simp only [← h, ← h', ← isubtree_cons] at ps_ih⊢
+  simp only [h, h', isubtree_cons] at ps_ih⊢
   rw [h, h'] at h₁
   obtain rfl : a₀ = a₁ := bisim.head h₁
   apply ps_ih _ _ _ h₁
@@ -659,7 +659,7 @@ theorem eq_of_bisim [Nonempty (M F)] (bisim : IsBisimulation R) : ∀ s₁ s₂,
     
   · rw [not_or_distrib] at h
     cases' h with h₀ h₁
-    simp only [← iselect_eq_default, *, ← not_false_iff]
+    simp only [iselect_eq_default, *, not_false_iff]
     
 
 end Bisim
@@ -685,10 +685,10 @@ theorem bisim (R : M P → M P → Prop)
   constructor <;> introv ih <;> rcases h _ _ ih with ⟨a'', g, g', h₀, h₁, h₂⟩ <;> clear h
   · replace h₀ := congr_arg Sigma.fst h₀
     replace h₁ := congr_arg Sigma.fst h₁
-    simp only [← dest_mk] at h₀ h₁
+    simp only [dest_mk] at h₀ h₁
     rw [h₀, h₁]
     
-  · simp only [← dest_mk] at h₀ h₁
+  · simp only [dest_mk] at h₀ h₁
     cases h₀
     cases h₁
     apply h₂

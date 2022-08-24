@@ -68,15 +68,15 @@ instance locallyDiscreteBicategory : Bicategory (LocallyDiscrete C) where
   associator := fun W X Y Z f g h =>
     eq_to_iso <| by
       unfold_projs
-      simp only [← category.assoc]
+      simp only [category.assoc]
   leftUnitor := fun X Y f =>
     eq_to_iso <| by
       unfold_projs
-      simp only [← category.id_comp, ← mk_as]
+      simp only [category.id_comp, mk_as]
   rightUnitor := fun X Y f =>
     eq_to_iso <| by
       unfold_projs
-      simp only [← category.comp_id, ← mk_as]
+      simp only [category.comp_id, mk_as]
 
 /-- A locally discrete bicategory is strict. -/
 instance locallyDiscreteBicategory.strict : Strict (LocallyDiscrete C) where

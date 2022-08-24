@@ -187,7 +187,7 @@ variable [CommRingₓ K] [Algebra R K] [IsFractionRing R K] [Algebra A K] [IsFra
 
 @[simp, mono]
 theorem coe_submodule_le_coe_submodule {I J : Ideal R} : coeSubmodule K I ≤ coeSubmodule K J ↔ I ≤ J :=
-  IsLocalization.coe_submodule_le_coe_submodule le_rfl
+  IsLocalization.coe_submodule_le_coe_submodule le_rflₓ
 
 @[mono]
 theorem coe_submodule_strict_mono : StrictMono (coeSubmodule K : Ideal R → Submodule R K) :=
@@ -200,7 +200,7 @@ theorem coe_submodule_injective : Function.Injective (coeSubmodule K : Ideal R �
 
 @[simp]
 theorem coe_submodule_is_principal {I : Ideal R} : (coeSubmodule K I).IsPrincipal ↔ I.IsPrincipal :=
-  IsLocalization.coe_submodule_is_principal _ le_rfl
+  IsLocalization.coe_submodule_is_principal _ le_rflₓ
 
 end CommRingₓ
 

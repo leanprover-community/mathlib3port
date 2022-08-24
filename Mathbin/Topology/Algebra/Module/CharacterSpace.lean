@@ -48,39 +48,44 @@ section NonUnitalNonAssocSemiringₓ
 variable [CommSemiringₓ 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜] [HasContinuousConstSmul 𝕜 𝕜]
   [NonUnitalNonAssocSemiringₓ A] [TopologicalSpace A] [Module 𝕜 A]
 
-theorem coe_apply (φ : CharacterSpace 𝕜 A) (x : A) : (φ : WeakDual 𝕜 A) x = φ x :=
+@[simp, norm_cast, protected]
+theorem coe_coe (φ : CharacterSpace 𝕜 A) : ⇑(φ : WeakDual 𝕜 A) = φ :=
   rfl
+
+/-- Elements of the character space are continuous linear maps. -/
+instance : ContinuousLinearMapClass (CharacterSpace 𝕜 A) 𝕜 A 𝕜 where
+  coe := fun φ => (φ : A → 𝕜)
+  coe_injective' := fun φ ψ h => by
+    ext
+    exact congr_fun h x
+  map_smulₛₗ := fun φ => (φ : WeakDual 𝕜 A).map_smul
+  map_add := fun φ => (φ : WeakDual 𝕜 A).map_add
+  map_continuous := fun φ => (φ : WeakDual 𝕜 A).cont
 
 /-- An element of the character space, as a continuous linear map. -/
 def toClm (φ : CharacterSpace 𝕜 A) : A →L[𝕜] 𝕜 :=
   (φ : WeakDual 𝕜 A)
 
-theorem to_clm_apply (φ : CharacterSpace 𝕜 A) (x : A) : φ x = toClm φ x :=
+@[simp]
+theorem coe_to_clm (φ : CharacterSpace 𝕜 A) : ⇑(toClm φ) = φ :=
   rfl
 
+/-- Elements of the character space are non-unital algebra homomorphisms. -/
+instance : NonUnitalAlgHomClass (CharacterSpace 𝕜 A) 𝕜 A 𝕜 :=
+  { CharacterSpace.continuousLinearMapClass with map_smul := fun φ => map_smul φ, map_zero := fun φ => map_zero φ,
+    map_mul := fun φ => φ.Prop.2 }
+
 /-- An element of the character space, as an non-unital algebra homomorphism. -/
-@[simps]
 def toNonUnitalAlgHom (φ : CharacterSpace 𝕜 A) : A →ₙₐ[𝕜] 𝕜 where
   toFun := (φ : A → 𝕜)
-  map_mul' := φ.Prop.2
-  map_smul' := (toClm φ).map_smul
-  map_zero' := ContinuousLinearMap.map_zero _
-  map_add' := ContinuousLinearMap.map_add _
+  map_mul' := map_mul φ
+  map_smul' := map_smul φ
+  map_zero' := map_zero φ
+  map_add' := map_add φ
 
-theorem map_zero (φ : CharacterSpace 𝕜 A) : φ 0 = 0 :=
-  (toNonUnitalAlgHom φ).map_zero
-
-theorem map_add (φ : CharacterSpace 𝕜 A) (x y : A) : φ (x + y) = φ x + φ y :=
-  (toNonUnitalAlgHom φ).map_add _ _
-
-theorem map_smul (φ : CharacterSpace 𝕜 A) (r : 𝕜) (x : A) : φ (r • x) = r • φ x :=
-  (toClm φ).map_smul _ _
-
-theorem map_mul (φ : CharacterSpace 𝕜 A) (x y : A) : φ (x * y) = φ x * φ y :=
-  (toNonUnitalAlgHom φ).map_mul _ _
-
-theorem continuous (φ : CharacterSpace 𝕜 A) : Continuous φ :=
-  (toClm φ).Continuous
+@[simp]
+theorem coe_to_non_unital_alg_hom (φ : CharacterSpace 𝕜 A) : ⇑(toNonUnitalAlgHom φ) = φ :=
+  rfl
 
 end NonUnitalNonAssocSemiringₓ
 
@@ -89,32 +94,37 @@ section Unital
 variable [CommRingₓ 𝕜] [NoZeroDivisors 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜] [HasContinuousConstSmul 𝕜 𝕜]
   [TopologicalSpace A] [Semiringₓ A] [Algebra 𝕜 A]
 
-theorem map_one (φ : CharacterSpace 𝕜 A) : φ 1 = 1 := by
-  have h₁ : φ 1 * (1 - φ 1) = 0 := by
-    rw [mul_sub, sub_eq_zero, mul_oneₓ, ← map_mul φ, one_mulₓ]
-  rcases mul_eq_zero.mp h₁ with (h₂ | h₂)
-  · exfalso
-    apply φ.prop.1
-    ext
-    rw [ContinuousLinearMap.zero_apply, ← one_mulₓ x, coe_apply, map_mul φ, h₂, zero_mul]
-    
-  · rw [sub_eq_zero] at h₂
-    exact h₂.symm
-    
-
-/-- An element of the character space, as an algebra homomorphism. -/
-@[simps]
-def toAlgHom (φ : CharacterSpace 𝕜 A) : A →ₐ[𝕜] 𝕜 :=
-  { toNonUnitalAlgHom φ with map_one' := map_one φ,
-    commutes' := fun r => by
+/-- In a unital algebra, elements of the character space are algebra homomorphisms. -/
+instance : AlgHomClass (CharacterSpace 𝕜 A) 𝕜 A 𝕜 :=
+  have map_one' : ∀ φ : CharacterSpace 𝕜 A, φ 1 = 1 := fun φ => by
+    have h₁ : φ 1 * (1 - φ 1) = 0 := by
+      rw [mul_sub, sub_eq_zero, mul_oneₓ, ← map_mul φ, one_mulₓ]
+    rcases mul_eq_zero.mp h₁ with (h₂ | h₂)
+    · have : ∀ a, φ (a * 1) = 0 := fun a => by
+        simp only [map_mul φ, h₂, mul_zero]
+      exact
+        False.elim
+          (φ.prop.1 <|
+            ContinuousLinearMap.ext <| by
+              simpa only [mul_oneₓ] using this)
+      
+    · exact (sub_eq_zero.mp h₂).symm
+      
+  { CharacterSpace.nonUnitalAlgHomClass with map_one := map_one',
+    commutes := fun φ r => by
       rw [Algebra.algebra_map_eq_smul_one, Algebra.id.map_eq_id, RingHom.id_apply]
       change ((φ : WeakDual 𝕜 A) : A →L[𝕜] 𝕜) (r • 1) = r
-      rw [ContinuousLinearMap.map_smul, Algebra.id.smul_eq_mul, coe_apply, map_one φ, mul_oneₓ] }
+      rw [map_smul, Algebra.id.smul_eq_mul, character_space.coe_coe, map_one' φ, mul_oneₓ] }
+
+/-- An element of the character space of a unital algebra, as an algebra homomorphism. -/
+@[simps]
+def toAlgHom (φ : CharacterSpace 𝕜 A) : A →ₐ[𝕜] 𝕜 :=
+  { toNonUnitalAlgHom φ with map_one' := map_one φ, commutes' := AlgHomClass.commutes φ }
 
 theorem eq_set_map_one_map_mul [Nontrivial 𝕜] :
     CharacterSpace 𝕜 A = { φ : WeakDual 𝕜 A | φ 1 = 1 ∧ ∀ x y : A, φ (x * y) = φ x * φ y } := by
   ext x
-  refine' ⟨fun h => ⟨map_one ⟨x, h⟩, h.2⟩, fun h => ⟨_, h.2⟩⟩
+  refine' ⟨fun h => ⟨map_one (⟨x, h⟩ : character_space 𝕜 A), h.2⟩, fun h => ⟨_, h.2⟩⟩
   rintro rfl
   simpa using h.1
 

@@ -181,13 +181,13 @@ def limitObjIsoLimitCompEvaluation [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (k
 @[simp, reassoc]
 theorem limit_obj_iso_limit_comp_evaluation_hom_π [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J) (k : K) :
     (limitObjIsoLimitCompEvaluation F k).Hom ≫ limit.π (F ⋙ (evaluation K C).obj k) j = (limit.π F j).app k := by
-  dsimp' [← limit_obj_iso_limit_comp_evaluation]
+  dsimp' [limit_obj_iso_limit_comp_evaluation]
   simp
 
 @[simp, reassoc]
 theorem limit_obj_iso_limit_comp_evaluation_inv_π_app [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J) (k : K) :
     (limitObjIsoLimitCompEvaluation F k).inv ≫ (limit.π F j).app k = limit.π (F ⋙ (evaluation K C).obj k) j := by
-  dsimp' [← limit_obj_iso_limit_comp_evaluation]
+  dsimp' [limit_obj_iso_limit_comp_evaluation]
   rw [iso.inv_comp_eq]
   simp
 
@@ -232,14 +232,14 @@ def colimitObjIsoColimitCompEvaluation [HasColimitsOfShape J C] (F : J ⥤ K ⥤
 theorem colimit_obj_iso_colimit_comp_evaluation_ι_inv [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J) (k : K) :
     colimit.ι (F ⋙ (evaluation K C).obj k) j ≫ (colimitObjIsoColimitCompEvaluation F k).inv = (colimit.ι F j).app k :=
   by
-  dsimp' [← colimit_obj_iso_colimit_comp_evaluation]
+  dsimp' [colimit_obj_iso_colimit_comp_evaluation]
   simp
 
 @[simp, reassoc]
 theorem colimit_obj_iso_colimit_comp_evaluation_ι_app_hom [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J) (k : K) :
     (colimit.ι F j).app k ≫ (colimitObjIsoColimitCompEvaluation F k).Hom = colimit.ι (F ⋙ (evaluation K C).obj k) j :=
   by
-  dsimp' [← colimit_obj_iso_colimit_comp_evaluation]
+  dsimp' [colimit_obj_iso_colimit_comp_evaluation]
   rw [← iso.eq_comp_inv]
   simp
 

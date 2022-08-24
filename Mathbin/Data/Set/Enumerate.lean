@@ -37,9 +37,9 @@ def enumerate : Set α → ℕ → Option α
 
 theorem enumerate_eq_none_of_sel {s : Set α} (h : sel s = none) : ∀ {n}, enumerate s n = none
   | 0 => by
-    simp [← h, ← enumerate] <;> rfl
+    simp [h, enumerate] <;> rfl
   | n + 1 => by
-    simp [← h, ← enumerate] <;> rfl
+    simp [h, enumerate] <;> rfl
 
 theorem enumerate_eq_none : ∀ {s n₁ n₂}, enumerate s n₁ = none → n₁ ≤ n₂ → enumerate s n₂ = none
   | s, 0, m => fun h _ => enumerate_eq_none_of_sel h
@@ -52,7 +52,7 @@ theorem enumerate_eq_none : ∀ {s n₁ n₂}, enumerate s n₁ = none → n₁ 
         have : n + 1 = 0 := Nat.eq_zero_of_le_zeroₓ hm
         contradiction
       case nat.succ m' =>
-        simp [← hs, ← enumerate] at h⊢
+        simp [hs, enumerate] at h⊢
         have hm : n ≤ m' := Nat.le_of_succ_le_succₓ hm
         exact enumerate_eq_none h hm
       
@@ -62,9 +62,9 @@ theorem enumerate_mem (h_sel : ∀ s a, sel s = some a → a ∈ s) : ∀ {s n a
   | s, n + 1, a => by
     cases h : sel s
     case none =>
-      simp [← enumerate_eq_none_of_sel, ← h]
+      simp [enumerate_eq_none_of_sel, h]
     case some a' =>
-      simp [← enumerate, ← h]
+      simp [enumerate, h]
       exact fun h' : enumerate _ (s \ {a'}) n = some a =>
         have : a ∈ s \ {a'} := enumerate_mem h'
         this.left
@@ -81,12 +81,12 @@ theorem enumerate_inj {n₁ n₂ : ℕ} {a : α} {s : Set α} (h_sel : ∀ s a, 
         rfl
       case nat.succ m =>
         have : enumerate sel (s \ {a}) m = some a := by
-          simp_all [← enumerate]
+          simp_all [enumerate]
         have : a ∈ s \ {a} := enumerate_mem _ h_sel this
         · simpa
           
     case nat.succ =>
-      cases h : sel s <;> simp_all [← enumerate, ← Nat.add_succ, ← add_commₓ] <;> tauto
+      cases h : sel s <;> simp_all [enumerate, Nat.add_succ, add_commₓ] <;> tauto
     
 
 end Enumerate

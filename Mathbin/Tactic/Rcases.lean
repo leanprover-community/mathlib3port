@@ -787,7 +787,7 @@ patt_med ::= (patt_hi "|")* patt_hi
 unsafe def rcases_patt_parse_list :=
   with_desc "patt_med" rcases_patt_parse_list'
 
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
 /-- Parse the optional depth argument `(: n)?` of `rcases?` and `rintro?`, with default depth 5. -/
 unsafe def rcases_parse_depth : parser Nat := do
   let o ← «expr ?» (tk ":" *> small_nat)
@@ -805,8 +805,8 @@ unsafe inductive rcases_args
   | rcases_many (tgt : listΠ pexpr) (pat : rcases_patt)
   deriving has_reflect
 
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
 /-- Syntax for a `rcases` pattern:
 * `rcases? expr (: n)?`
 * `rcases (h :)? expr (with patt_list (: expr)?)?`. -/
@@ -832,7 +832,7 @@ unsafe def rcases_parse : parser rcases_args :=
         let depth ← rcases_parse_depth
         pure <| rcases_args.hint p depth
 
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr *»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr *»
 mutual
   /-- `rintro_patt_parse_hi` and `rintro_patt_parse` are like `rcases_patt_parse`, but is used for
   parsing top level `rintro` patterns, which allow sequences like `(x y : t)` in addition to simple
@@ -1035,8 +1035,8 @@ add_tactic_doc
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
 /-- Parses `patt? (: expr)? (:= expr)?`, the arguments for `obtain`.
  (This is almost the same as `rcases_patt_parse`,
 but it allows the pattern part to be empty.) -/
@@ -1094,6 +1094,27 @@ unsafe def obtain : parse obtain_parse → tactic Unit
 
 add_tactic_doc
   { Name := "obtain", category := DocCategory.tactic, declNames := [`tactic.interactive.obtain], tags := ["induction"] }
+
+/-- The `rsuffices` tactic is an alternative version of `suffices`, that allows the usage
+of any syntax that would be valid in an `obtain` block. This tactic just calls `obtain`
+on the expression, and then `rotate 1`.
+-/
+unsafe def rsuffices (h : parse obtain_parse) : tactic Unit :=
+  focus1 <| obtain h >> tactic.rotate 1
+
+add_tactic_doc
+  { Name := "rsuffices", category := DocCategory.tactic, declNames := [`tactic.interactive.rsuffices],
+    tags := ["induction"] }
+
+/-- The `rsufficesI` tactic is an instance-cache aware version of `rsuffices`; it resets the instance
+cache on the resulting goals.
+-/
+unsafe def rsufficesI (h : parse obtain_parse) : tactic Unit :=
+  andthen (rsuffices h) resetI
+
+add_tactic_doc
+  { Name := "rsufficesI", category := DocCategory.tactic, declNames := [`tactic.interactive.rsufficesI],
+    tags := ["induction", "type class"] }
 
 end Interactive
 

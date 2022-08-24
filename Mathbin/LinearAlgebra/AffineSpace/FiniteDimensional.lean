@@ -96,7 +96,7 @@ theorem AffineIndependent.finrank_vector_span_image_finset {p : ι → P} (hi : 
   have hc' : (s.image p).card = n + 1 := by
     rwa [s.card_image_of_injective hi.injective]
   have hn : (s.image p).Nonempty := by
-    simp [← hc', Finset.card_pos]
+    simp [hc', ← Finset.card_pos]
   rcases hn with ⟨p₁, hp₁⟩
   have hp₁' : p₁ ∈ p '' s := by
     simpa using hp₁
@@ -150,14 +150,14 @@ theorem finrank_vector_span_range_le [Fintype ι] (p : ι → P) {n : ℕ} (hc :
 theorem affine_independent_iff_finrank_vector_span_eq [Fintype ι] (p : ι → P) {n : ℕ} (hc : Fintype.card ι = n + 1) :
     AffineIndependent k p ↔ finrank k (vectorSpan k (Set.Range p)) = n := by
   have hn : Nonempty ι := by
-    simp [Fintype.card_pos_iff, ← hc]
+    simp [← Fintype.card_pos_iff, hc]
   cases' hn with i₁
   rw [affine_independent_iff_linear_independent_vsub _ _ i₁, linear_independent_iff_card_eq_finrank_span, eq_comm,
     vector_span_range_eq_span_range_vsub_right_ne k p i₁]
   congr
   rw [← Finset.card_univ] at hc
   rw [Fintype.subtype_card]
-  simp [← Finset.filter_ne', ← Finset.card_erase_of_mem, ← hc]
+  simp [Finset.filter_ne', Finset.card_erase_of_mem, hc]
 
 /-- `n + 1` points are affinely independent if and only if their
 `vector_span` has dimension at least `n`. -/
@@ -281,7 +281,7 @@ theorem collinear_singleton (p : P) : Collinear k ({p} : Set P) := by
 only if the points can all be expressed as multiples of the same
 vector, added to `p₀`. -/
 theorem collinear_iff_of_mem {s : Set P} {p₀ : P} (h : p₀ ∈ s) :
-    Collinear k s ↔ ∃ v : V, ∀, ∀ p ∈ s, ∀, ∃ r : k, p = r • v +ᵥ p₀ := by
+    Collinear k s ↔ ∃ v : V, ∀ p ∈ s, ∃ r : k, p = r • v +ᵥ p₀ := by
   simp_rw [collinear_iff_dim_le_one, dim_submodule_le_one_iff', Submodule.le_span_singleton_iff]
   constructor
   · rintro ⟨v₀, hv⟩
@@ -312,9 +312,9 @@ theorem collinear_iff_of_mem {s : Set P} {p₀ : P} (h : p₀ ∈ s) :
 expressed as multiples of the same vector, added to the same base
 point. -/
 theorem collinear_iff_exists_forall_eq_smul_vadd (s : Set P) :
-    Collinear k s ↔ ∃ (p₀ : P)(v : V), ∀, ∀ p ∈ s, ∀, ∃ r : k, p = r • v +ᵥ p₀ := by
+    Collinear k s ↔ ∃ (p₀ : P)(v : V), ∀ p ∈ s, ∃ r : k, p = r • v +ᵥ p₀ := by
   rcases Set.eq_empty_or_nonempty s with (rfl | ⟨⟨p₁, hp₁⟩⟩)
-  · simp [← collinear_empty]
+  · simp [collinear_empty]
     
   · rw [collinear_iff_of_mem k hp₁]
     constructor
@@ -326,7 +326,7 @@ theorem collinear_iff_exists_forall_eq_smul_vadd (s : Set P) :
       rcases hv p₂ hp₂ with ⟨r, rfl⟩
       rcases hv p₁ hp₁ with ⟨r₁, rfl⟩
       use r - r₁
-      simp [← vadd_vadd, add_smul]
+      simp [vadd_vadd, ← add_smul]
       
     
 
@@ -338,10 +338,10 @@ theorem collinear_pair (p₁ p₂ : P) : Collinear k ({p₁, p₂} : Set P) := b
   rw [Set.mem_insert_iff, Set.mem_singleton_iff] at hp
   cases hp
   · use 0
-    simp [← hp]
+    simp [hp]
     
   · use 1
-    simp [← hp]
+    simp [hp]
     
 
 /-- Three points are affinely independent if and only if they are not

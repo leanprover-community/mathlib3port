@@ -39,7 +39,7 @@ def invertibleOfCharPNotDvd {p : ℕ} [CharP K p] {t : ℕ} (not_dvd : ¬p ∣ t
 
 instance invertibleOfPos [CharZero K] (n : ℕ) [h : Fact (0 < n)] : Invertible (n : K) :=
   invertibleOfNonzero <| by
-    simpa [← pos_iff_ne_zero] using h.out
+    simpa [pos_iff_ne_zero] using h.out
 
 end Field
 

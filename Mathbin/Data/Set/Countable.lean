@@ -69,7 +69,7 @@ def enumerateCountable {s : Set α} (h : s.Countable) (default : α) : ℕ → �
 theorem subset_range_enumerate {s : Set α} (h : s.Countable) (default : α) : s ⊆ Range (enumerateCountable h default) :=
   fun x hx =>
   ⟨@Encodable.encode s h.toEncodable ⟨x, hx⟩, by
-    simp [← enumerate_countable, ← Encodable.encodek]⟩
+    simp [enumerate_countable, Encodable.encodek]⟩
 
 end Enumerate
 
@@ -130,7 +130,7 @@ protected theorem Countable.preimage {s : Set β} (hs : s.Countable) {f : α →
   hs.preimage_of_inj_on (hf.InjOn _)
 
 theorem exists_seq_supr_eq_top_iff_countable [CompleteLattice α] {p : α → Prop} (h : ∃ x, p x) :
-    (∃ s : ℕ → α, (∀ n, p (s n)) ∧ (⨆ n, s n) = ⊤) ↔ ∃ S : Set α, S.Countable ∧ (∀, ∀ s ∈ S, ∀, p s) ∧ sup S = ⊤ := by
+    (∃ s : ℕ → α, (∀ n, p (s n)) ∧ (⨆ n, s n) = ⊤) ↔ ∃ S : Set α, S.Countable ∧ (∀ s ∈ S, p s) ∧ sup S = ⊤ := by
   constructor
   · rintro ⟨s, hps, hs⟩
     refine' ⟨range s, countable_range s, forall_range_iff.2 hps, _⟩
@@ -151,7 +151,7 @@ theorem exists_seq_supr_eq_top_iff_countable [CompleteLattice α] {p : α → Pr
 
 theorem exists_seq_cover_iff_countable {p : Set α → Prop} (h : ∃ s, p s) :
     (∃ s : ℕ → Set α, (∀ n, p (s n)) ∧ (⋃ n, s n) = univ) ↔
-      ∃ S : Set (Set α), S.Countable ∧ (∀, ∀ s ∈ S, ∀, p s) ∧ ⋃₀S = univ :=
+      ∃ S : Set (Set α), S.Countable ∧ (∀ s ∈ S, p s) ∧ ⋃₀S = univ :=
   exists_seq_supr_eq_top_iff_countable h
 
 theorem countable_of_injective_of_countable_image {s : Set α} {f : α → β} (hf : InjOn f s) (hs : (f '' s).Countable) :
@@ -168,13 +168,12 @@ theorem countable_Union {t : ι → Set α} [Countable ι] (ht : ∀ i, (t i).Co
 theorem countable_Union_iff [Countable ι] {t : ι → Set α} : (⋃ i, t i).Countable ↔ ∀ i, (t i).Countable :=
   ⟨fun h i => h.mono <| subset_Union _ _, countable_Union⟩
 
-theorem Countable.bUnion_iff {s : Set α} {t : ∀, ∀ a ∈ s, ∀, Set β} (hs : s.Countable) :
-    (⋃ a ∈ s, t a ‹_›).Countable ↔ ∀, ∀ a ∈ s, ∀, (t a ‹_›).Countable := by
+theorem Countable.bUnion_iff {s : Set α} {t : ∀ a ∈ s, Set β} (hs : s.Countable) :
+    (⋃ a ∈ s, t a ‹_›).Countable ↔ ∀ a ∈ s, (t a ‹_›).Countable := by
   haveI := hs.to_subtype
   rw [bUnion_eq_Union, countable_Union_iff, SetCoe.forall']
 
-theorem Countable.sUnion_iff {s : Set (Set α)} (hs : s.Countable) :
-    (⋃₀s).Countable ↔ ∀, ∀ a ∈ s, ∀, (a : _).Countable := by
+theorem Countable.sUnion_iff {s : Set (Set α)} (hs : s.Countable) : (⋃₀s).Countable ↔ ∀ a ∈ s, (a : _).Countable := by
   rw [sUnion_eq_bUnion, hs.bUnion_iff]
 
 alias countable.bUnion_iff ↔ _ countable.bUnion
@@ -183,14 +182,14 @@ alias countable.sUnion_iff ↔ _ countable.sUnion
 
 @[simp]
 theorem countable_union {s t : Set α} : (s ∪ t).Countable ↔ s.Countable ∧ t.Countable := by
-  simp [← union_eq_Union, ← And.comm]
+  simp [union_eq_Union, And.comm]
 
 theorem Countable.union {s t : Set α} (hs : s.Countable) (ht : t.Countable) : (s ∪ t).Countable :=
   countable_union.2 ⟨hs, ht⟩
 
 @[simp]
 theorem countable_insert {s : Set α} {a : α} : (insert a s).Countable ↔ s.Countable := by
-  simp only [← insert_eq, ← countable_union, ← countable_singleton, ← true_andₓ]
+  simp only [insert_eq, countable_union, countable_singleton, true_andₓ]
 
 theorem Countable.insert {s : Set α} (a : α) (h : s.Countable) : (insert a s).Countable :=
   countable_insert.2 h
@@ -228,7 +227,7 @@ theorem countable_univ_pi {π : α → Type _} [Finite α] {s : ∀ a, Set (π a
 
 theorem countable_pi {π : α → Type _} [Finite α] {s : ∀ a, Set (π a)} (hs : ∀ a, (s a).Countable) :
     { f : ∀ a, π a | ∀ a, f a ∈ s a }.Countable := by
-  simpa only [mem_univ_pi] using countable_univ_pi hs
+  simpa only [← mem_univ_pi] using countable_univ_pi hs
 
 protected theorem Countable.prod {s : Set α} {t : Set β} (hs : s.Countable) (ht : t.Countable) :
     Set.Countable (s ×ˢ t) := by

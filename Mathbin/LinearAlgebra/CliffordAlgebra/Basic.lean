@@ -65,12 +65,12 @@ inductive Rel : TensorAlgebra R M → TensorAlgebra R M → Prop
 
 end CliffordAlgebra
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler algebra R
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler algebra R
 /-- The Clifford algebra of an `R`-module `M` equipped with a quadratic_form `Q`.
 -/
 def CliffordAlgebra :=
   RingQuot (CliffordAlgebra.Rel Q)deriving Inhabited, Ringₓ,
-  «./././Mathport/Syntax/Translate/Basic.lean:1160:9: unsupported derive handler algebra R»
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler algebra R»
 
 namespace CliffordAlgebra
 
@@ -109,12 +109,12 @@ def lift : { f : M →ₗ[R] A // ∀ m, f m * f m = algebraMap _ _ (Q m) } ≃ 
       rw [LinearMap.comp_apply, AlgHom.to_linear_map_apply, comp_ι_sq_scalar]⟩
   left_inv := fun f => by
     ext
-    simp only [← ι, ← AlgHom.to_linear_map_apply, ← Function.comp_app, ← LinearMap.coe_comp, ← Subtype.coe_mk, ←
-      RingQuot.lift_alg_hom_mk_alg_hom_apply, ← TensorAlgebra.lift_ι_apply]
+    simp only [ι, AlgHom.to_linear_map_apply, Function.comp_app, LinearMap.coe_comp, Subtype.coe_mk,
+      RingQuot.lift_alg_hom_mk_alg_hom_apply, TensorAlgebra.lift_ι_apply]
   right_inv := fun F => by
     ext
-    simp only [← ι, ← AlgHom.comp_to_linear_map, ← AlgHom.to_linear_map_apply, ← Function.comp_app, ←
-      LinearMap.coe_comp, ← Subtype.coe_mk, ← RingQuot.lift_alg_hom_mk_alg_hom_apply, ← TensorAlgebra.lift_ι_apply]
+    simp only [ι, AlgHom.comp_to_linear_map, AlgHom.to_linear_map_apply, Function.comp_app, LinearMap.coe_comp,
+      Subtype.coe_mk, RingQuot.lift_alg_hom_mk_alg_hom_apply, TensorAlgebra.lift_ι_apply]
 
 variable {Q}
 
@@ -148,7 +148,7 @@ theorem hom_ext {A : Type _} [Semiringₓ A] [Algebra R A] {f g : CliffordAlgebr
   intro h
   apply (lift Q).symm.Injective
   rw [lift_symm_apply, lift_symm_apply]
-  simp only [← h]
+  simp only [h]
 
 -- This proof closely follows `tensor_algebra.induction`
 /-- If `C` holds for the `algebra_map` of `r : R` into `clifford_algebra Q`, the `ι` of `x : M`,
@@ -168,7 +168,7 @@ theorem induction {C : CliffordAlgebra Q → Prop} (h_grade0 : ∀ r, C (algebra
   -- the mapping through the subalgebra is the identity
   have of_id : AlgHom.id R (CliffordAlgebra Q) = s.val.comp (lift Q of) := by
     ext
-    simp [← of]
+    simp [of]
   -- finding a proof is finding an element of the subalgebra
   convert Subtype.prop (lift Q of a)
   exact AlgHom.congr_fun of_id a
@@ -225,7 +225,7 @@ theorem map_id : (map Q₁ Q₁ (LinearMap.id : M₁ →ₗ[R] M₁) fun m => rf
 theorem map_comp_map (f : M₂ →ₗ[R] M₃) (hf) (g : M₁ →ₗ[R] M₂) (hg) :
     (map Q₂ Q₃ f hf).comp (map Q₁ Q₂ g hg) = map Q₁ Q₃ (f.comp g) fun m => (hf _).trans <| hg m := by
   ext m
-  dsimp' only [← LinearMap.comp_apply, ← AlgHom.comp_apply, ← AlgHom.to_linear_map_apply, ← AlgHom.id_apply]
+  dsimp' only [LinearMap.comp_apply, AlgHom.comp_apply, AlgHom.to_linear_map_apply, AlgHom.id_apply]
   rw [map_apply_ι, map_apply_ι, map_apply_ι, LinearMap.comp_apply]
 
 @[simp]
@@ -299,7 +299,7 @@ def toClifford : TensorAlgebra R M →ₐ[R] CliffordAlgebra Q :=
 
 @[simp]
 theorem to_clifford_ι (m : M) : (TensorAlgebra.ι R m).toClifford = CliffordAlgebra.ι Q m := by
-  simp [← to_clifford]
+  simp [to_clifford]
 
 end TensorAlgebra
 

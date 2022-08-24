@@ -81,7 +81,7 @@ theorem exists_integer_multiple (a : S) : ∃ b : M, IsInteger R ((b : R) • a)
 
 /-- We can clear the denominators of a `finset`-indexed family of fractions. -/
 theorem exist_integer_multiples {ι : Type _} (s : Finset ι) (f : ι → S) :
-    ∃ b : M, ∀, ∀ i ∈ s, ∀, IsLocalization.IsInteger R ((b : R) • f i) := by
+    ∃ b : M, ∀ i ∈ s, IsLocalization.IsInteger R ((b : R) • f i) := by
   haveI := Classical.propDecidable
   refine' ⟨∏ i in s, (sec M (f i)).2, fun i hi => ⟨_, _⟩⟩
   · exact (∏ j in s.erase i, (sec M (f j)).2) * (sec M (f i)).1
@@ -99,7 +99,7 @@ theorem exist_integer_multiples_of_fintype {ι : Type _} [Fintype ι] (f : ι �
   exact ⟨b, fun i => hb i (Finset.mem_univ _)⟩
 
 /-- We can clear the denominators of a finite set of fractions. -/
-theorem exist_integer_multiples_of_finset (s : Finset S) : ∃ b : M, ∀, ∀ a ∈ s, ∀, IsInteger R ((b : R) • a) :=
+theorem exist_integer_multiples_of_finset (s : Finset S) : ∃ b : M, ∀ a ∈ s, IsInteger R ((b : R) • a) :=
   exist_integer_multiples M s id
 
 /-- A choice of a common multiple of the denominators of a `finset`-indexed family of fractions. -/

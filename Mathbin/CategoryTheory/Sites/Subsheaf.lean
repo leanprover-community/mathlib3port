@@ -106,7 +106,7 @@ def Subpresheaf.lift (f : F' ⟶ F) (hf : ∀ U x, f.app U x ∈ G.obj U) : F' �
     have := elementwise_of f.naturality
     intros
     ext
-    simp [← this]
+    simp [this]
 
 @[simp, reassoc]
 theorem Subpresheaf.lift_ι (f : F' ⟶ F) (hf : ∀ U x, f.app U x ∈ G.obj U) : G.lift f hf ≫ G.ι = f := by
@@ -183,7 +183,7 @@ theorem Subpresheaf.sheafify_is_sheaf (hF : Presieve.IsSheaf J F) : Presieve.IsS
     intro s
     constructor
     · intro H V i hi
-      dsimp' only [← x'']
+      dsimp' only [x'']
       conv_lhs => rw [← h₂ hi]
       rw [← H _ (hi₂ hi)]
       exact functor_to_types.map_comp_apply F (i₂ hi).op (i₁ hi).op _
@@ -204,7 +204,7 @@ theorem Subpresheaf.sheafify_is_sheaf (hF : Presieve.IsSheaf J F) : Presieve.IsS
       congr_arg Subtype.val
         (hx (g₁ ≫ i₁ S₁) (g₂ ≫ i₁ S₂) (hi₂ S₁) (hi₂ S₂)
           (by
-            simp only [← category.assoc, ← h₂, ← e]))
+            simp only [category.assoc, h₂, e]))
   obtain ⟨t, ht, ht'⟩ := hF _ (J.bind_covering hS fun V i hi => (x i hi).2) _ this
   refine' ⟨⟨t, _⟩, (H ⟨t, _⟩).mpr ht, fun y hy => Subtype.ext (ht' _ ((H _).mp hy))⟩
   show G.sieve_of_section t ∈ J _
@@ -221,7 +221,7 @@ theorem Subpresheaf.is_sheaf_iff (h : Presieve.IsSheaf J F) :
     Presieve.IsSheaf J G.toPresheaf ↔ ∀ (U) (s : F.obj U), G.sieveOfSection s ∈ J (unop U) → s ∈ G.obj U := by
   rw [← G.eq_sheafify_iff h]
   change _ ↔ G.sheafify J ≤ G
-  exact ⟨Eq.ge, (G.le_sheafify J).antisymm⟩
+  exact ⟨Eq.geₓ, (G.le_sheafify J).antisymm⟩
 
 theorem Subpresheaf.sheafify_sheafify (h : Presieve.IsSheaf J F) : (G.sheafify J).sheafify J = G.sheafify J :=
   ((Subpresheaf.eq_sheafify_iff _ h).mpr <| G.sheafify_is_sheaf h).symm
@@ -243,7 +243,7 @@ noncomputable def Subpresheaf.sheafifyLift (f : G.toPresheaf ⟶ F') (h : Presie
     · dsimp'  at hj⊢
       rwa [functor_to_types.map_comp_apply]
       
-    · dsimp' [← presieve.family_of_elements.comp_presheaf_map]
+    · dsimp' [presieve.family_of_elements.comp_presheaf_map]
       congr 1
       ext1
       exact (functor_to_types.map_comp_apply _ _ _ _).symm
@@ -396,7 +396,7 @@ noncomputable def imageFactorization {F F' : Sheaf J (Type max v u)} (f : F ⟶ 
           ,
       lift_fac' := fun I => by
         ext1
-        dsimp' [← image_mono_factorization]
+        dsimp' [image_mono_factorization]
         generalize_proofs h
         rw [← subpresheaf.hom_of_le_ι h, category.assoc]
         congr 1

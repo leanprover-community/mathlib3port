@@ -37,7 +37,7 @@ theorem coe_mul {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H' G] [H
 @[simp, to_additive]
 theorem mul_comp {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H' G] [HasSmoothMul I' G]
     (f g : C^∞⟮I'', N'; I', G⟯) (h : C^∞⟮I, N; I'', N'⟯) : (f * g).comp h = f.comp h * g.comp h := by
-  ext <;> simp only [← ContMdiffMap.comp_apply, ← coe_mul, ← Pi.mul_apply]
+  ext <;> simp only [ContMdiffMap.comp_apply, coe_mul, Pi.mul_apply]
 
 @[to_additive]
 instance hasOne {G : Type _} [Monoidₓ G] [TopologicalSpace G] [ChartedSpace H' G] : One C^∞⟮I, N; I', G⟯ :=

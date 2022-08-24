@@ -181,7 +181,7 @@ theorem add_left (hx : SameRay R x z) (hy : SameRay R y z) : SameRay R (x + y) z
   refine' Or.inr (Or.inr ⟨rx * ry, ry * rz₁ + rx * rz₂, mul_pos hrx hry, _, _⟩)
   · apply_rules [add_pos, mul_pos]
     
-  · simp only [← mul_smul, ← smul_add, ← add_smul, Hx, Hy]
+  · simp only [mul_smul, smul_add, add_smul, ← Hx, ← Hy]
     rw [smul_comm]
     
 
@@ -347,7 +347,7 @@ variable {M N : Type _} [AddCommGroupₓ M] [AddCommGroupₓ N] [Module R M] [Mo
 /-- `same_ray.neg` as an `iff`. -/
 @[simp]
 theorem same_ray_neg_iff : SameRay R (-x) (-y) ↔ SameRay R x y := by
-  simp only [← SameRay, ← neg_eq_zero, ← smul_neg, ← neg_inj]
+  simp only [SameRay, neg_eq_zero, smul_neg, neg_inj]
 
 alias same_ray_neg_iff ↔ SameRay.of_neg SameRay.neg
 
@@ -359,7 +359,7 @@ theorem eq_zero_of_same_ray_neg_smul_right [NoZeroSmulDivisors R M] {r : R} (hr 
   rcases h with (rfl | h₀ | ⟨r₁, r₂, hr₁, hr₂, h⟩)
   · rfl
     
-  · simpa [← hr.ne] using h₀
+  · simpa [hr.ne] using h₀
     
   · rw [← sub_eq_zero, smul_smul, ← sub_smul, smul_eq_zero] at h
     refine' h.resolve_left (ne_of_gtₓ <| sub_pos.2 _)
@@ -427,7 +427,7 @@ theorem ne_neg_self [NoZeroSmulDivisors R M] (x : Module.Ray R M) : x ≠ -x := 
 
 theorem neg_units_smul (u : Rˣ) (v : Module.Ray R M) : -u • v = -(u • v) := by
   induction v using Module.Ray.ind
-  simp only [← smul_ray_of_ne_zero, ← Units.smul_def, ← Units.coe_neg, ← neg_smul, ← neg_ray_of_ne_zero]
+  simp only [smul_ray_of_ne_zero, Units.smul_def, Units.coe_neg, neg_smul, neg_ray_of_ne_zero]
 
 /-- Scaling by a negative unit is negation. -/
 theorem units_smul_of_neg (u : Rˣ) (hu : (u : R) < 0) (v : Module.Ray R M) : u • v = -v := by
@@ -470,7 +470,7 @@ theorem same_ray_smul_right_iff {v : M} {r : R} : SameRay R v (r • v) ↔ 0 �
 /-- A nonzero vector is in the same ray as a multiple of itself if and only if that multiple
 is positive. -/
 theorem same_ray_smul_right_iff_of_ne {v : M} (hv : v ≠ 0) {r : R} (hr : r ≠ 0) : SameRay R v (r • v) ↔ 0 < r := by
-  simp only [← same_ray_smul_right_iff, ← hv, ← or_falseₓ, ← hr.symm.le_iff_lt]
+  simp only [same_ray_smul_right_iff, hv, or_falseₓ, hr.symm.le_iff_lt]
 
 @[simp]
 theorem same_ray_smul_left_iff {v : M} {r : R} : SameRay R (r • v) v ↔ 0 ≤ r ∨ v = 0 :=
@@ -487,7 +487,7 @@ theorem same_ray_neg_smul_right_iff {v : M} {r : R} : SameRay R (-v) (r • v) �
 
 theorem same_ray_neg_smul_right_iff_of_ne {v : M} {r : R} (hv : v ≠ 0) (hr : r ≠ 0) : SameRay R (-v) (r • v) ↔ r < 0 :=
   by
-  simp only [← same_ray_neg_smul_right_iff, ← hv, ← or_falseₓ, ← hr.le_iff_lt]
+  simp only [same_ray_neg_smul_right_iff, hv, or_falseₓ, hr.le_iff_lt]
 
 @[simp]
 theorem same_ray_neg_smul_left_iff {v : M} {r : R} : SameRay R (r • v) (-v) ↔ r ≤ 0 ∨ v = 0 :=
@@ -499,7 +499,7 @@ theorem same_ray_neg_smul_left_iff_of_ne {v : M} {r : R} (hv : v ≠ 0) (hr : r 
 @[simp]
 theorem units_smul_eq_self_iff {u : Rˣ} {v : Module.Ray R M} : u • v = v ↔ (0 : R) < u := by
   induction' v using Module.Ray.ind with v hv
-  simp only [← smul_ray_of_ne_zero, ← ray_eq_iff, ← Units.smul_def, ← same_ray_smul_left_iff_of_ne hv u.ne_zero]
+  simp only [smul_ray_of_ne_zero, ray_eq_iff, Units.smul_def, same_ray_smul_left_iff_of_ne hv u.ne_zero]
 
 @[simp]
 theorem units_smul_eq_neg_iff {u : Rˣ} {v : Module.Ray R M} : u • v = -v ↔ ↑u < (0 : R) := by
@@ -510,10 +510,10 @@ second, if and only if they are not linearly independent. -/
 theorem same_ray_or_same_ray_neg_iff_not_linear_independent {x y : M} :
     SameRay R x y ∨ SameRay R x (-y) ↔ ¬LinearIndependent R ![x, y] := by
   by_cases' hx : x = 0
-  · simp [← hx, ← fun h : LinearIndependent R ![0, y] => h.ne_zero 0 rfl]
+  · simp [hx, fun h : LinearIndependent R ![0, y] => h.ne_zero 0 rfl]
     
   by_cases' hy : y = 0
-  · simp [← hy, ← fun h : LinearIndependent R ![x, 0] => h.ne_zero 1 rfl]
+  · simp [hy, fun h : LinearIndependent R ![x, 0] => h.ne_zero 1 rfl]
     
   simp_rw [Fintype.not_linear_independent_iff, Finₓ.sum_univ_two, Finₓ.exists_fin_two]
   refine' ⟨fun h => _, fun h => _⟩
@@ -523,14 +523,14 @@ theorem same_ray_or_same_ray_neg_iff_not_linear_independent {x y : M} :
     · exact False.elim (hy hy0)
       
     · refine' ⟨![r₁, -r₂], _⟩
-      simp [← h, ← hr₁.ne.symm]
+      simp [h, hr₁.ne.symm]
       
     · exact False.elim (hx hx0)
       
     · exact False.elim (hy (neg_eq_zero.1 hy0))
       
     · refine' ⟨![r₁, r₂], _⟩
-      simp [← h, ← hr₁.ne.symm]
+      simp [h, hr₁.ne.symm]
       
     
   · rcases h with ⟨m, hm, hmne⟩
@@ -538,30 +538,30 @@ theorem same_ray_or_same_ray_neg_iff_not_linear_independent {x y : M} :
     rw [add_eq_zero_iff_eq_neg] at hm
     rcases lt_trichotomyₓ (m 0) 0 with (hm0 | hm0 | hm0) <;> rcases lt_trichotomyₓ (m 1) 0 with (hm1 | hm1 | hm1)
     · refine' Or.inr (Or.inr (Or.inr ⟨-m 0, -m 1, Left.neg_pos_iff.2 hm0, Left.neg_pos_iff.2 hm1, _⟩))
-      simp [← hm]
+      simp [hm]
       
     · exfalso
-      simpa [← hm1, ← hx, ← hm0.ne] using hm
+      simpa [hm1, hx, hm0.ne] using hm
       
     · refine' Or.inl (Or.inr (Or.inr ⟨-m 0, m 1, Left.neg_pos_iff.2 hm0, hm1, _⟩))
-      simp [← hm]
+      simp [hm]
       
     · exfalso
-      simpa [← hm0, ← hy, ← hm1.ne] using hm
+      simpa [hm0, hy, hm1.ne] using hm
       
     · refine' False.elim (not_and_distrib.2 hmne ⟨hm0, hm1⟩)
       
     · exfalso
-      simpa [← hm0, ← hy, ← hm1.ne.symm] using hm
+      simpa [hm0, hy, hm1.ne.symm] using hm
       
     · refine' Or.inl (Or.inr (Or.inr ⟨m 0, -m 1, hm0, Left.neg_pos_iff.2 hm1, _⟩))
-      simp [← hm]
+      simp [hm]
       
     · exfalso
-      simpa [← hm1, ← hx, ← hm0.ne.symm] using hm
+      simpa [hm1, hx, hm0.ne.symm] using hm
       
     · refine' Or.inr (Or.inr (Or.inr ⟨m 0, m 1, hm0, hm1, _⟩))
-      simp [← hm]
+      simp [hm]
       
     
 
@@ -571,9 +571,9 @@ theorem same_ray_or_ne_zero_and_same_ray_neg_iff_not_linear_independent {x y : M
     SameRay R x y ∨ x ≠ 0 ∧ y ≠ 0 ∧ SameRay R x (-y) ↔ ¬LinearIndependent R ![x, y] := by
   rw [← same_ray_or_same_ray_neg_iff_not_linear_independent]
   by_cases' hx : x = 0
-  · simp [← hx]
+  · simp [hx]
     
-  by_cases' hy : y = 0 <;> simp [← hx, ← hy]
+  by_cases' hy : y = 0 <;> simp [hx, hy]
 
 end
 
@@ -597,7 +597,7 @@ theorem exists_pos_right (h : SameRay R x y) (hx : x ≠ 0) (hy : y ≠ 0) : ∃
 some nonnegative `c`. -/
 theorem exists_nonneg_left (h : SameRay R x y) (hx : x ≠ 0) : ∃ r : R, 0 ≤ r ∧ r • x = y := by
   obtain rfl | hy := eq_or_ne y 0
-  · exact ⟨0, le_rfl, zero_smul _ _⟩
+  · exact ⟨0, le_rflₓ, zero_smul _ _⟩
     
   · exact (h.exists_pos_left hx hy).imp fun _ => And.imp_left le_of_ltₓ
     

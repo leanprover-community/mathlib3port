@@ -96,7 +96,7 @@ theorem mul_add_mul : a * b + b * a = 0 := by
       _ = a * a + a * b + (b * a + b * b) := by
         rw [add_mulₓ, mul_addₓ, mul_addₓ]
       _ = a + a * b + (b * a + b) := by
-        simp only [← mul_self]
+        simp only [mul_self]
       _ = a + b + (a * b + b * a) := by
         abel
       
@@ -183,27 +183,27 @@ BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.hasSup
 localized [BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.hasInf
 
 theorem sup_comm (a b : α) : a⊔b = b⊔a := by
-  dsimp' only [← (·⊔·)]
+  dsimp' only [(·⊔·)]
   ring
 
 theorem inf_comm (a b : α) : a⊓b = b⊓a := by
-  dsimp' only [← (·⊓·)]
+  dsimp' only [(·⊓·)]
   ring
 
 theorem sup_assoc (a b c : α) : a⊔b⊔c = a⊔(b⊔c) := by
-  dsimp' only [← (·⊔·)]
+  dsimp' only [(·⊔·)]
   ring
 
 theorem inf_assoc (a b c : α) : a⊓b⊓c = a⊓(b⊓c) := by
-  dsimp' only [← (·⊓·)]
+  dsimp' only [(·⊓·)]
   ring
 
 theorem sup_inf_self (a b : α) : a⊔a⊓b = a := by
-  dsimp' only [← (·⊔·), ← (·⊓·)]
+  dsimp' only [(·⊔·), (·⊓·)]
   assoc_rw [mul_self, add_self, add_zeroₓ]
 
 theorem inf_sup_self (a b : α) : a⊓(a⊔b) = a := by
-  dsimp' only [← (·⊔·), ← (·⊓·)]
+  dsimp' only [(·⊔·), (·⊓·)]
   rw [mul_addₓ, mul_addₓ, mul_self, ← mul_assoc, mul_self, add_assocₓ, add_self, add_zeroₓ]
 
 theorem le_sup_inf_aux (a b c : α) : (a + b + a * b) * (a + c + a * c) = a + b * c + a * (b * c) :=
@@ -213,11 +213,11 @@ theorem le_sup_inf_aux (a b c : α) : (a + b + a * b) * (a + c + a * c) = a + b 
       by
       ring
     _ = a + b * c + a * (b * c) := by
-      simp only [← mul_self, ← add_self, ← add_zeroₓ]
+      simp only [mul_self, add_self, add_zeroₓ]
     
 
 theorem le_sup_inf (a b c : α) : (a⊔b)⊓(a⊔c)⊔(a⊔b⊓c) = a⊔b⊓c := by
-  dsimp' only [← (·⊔·), ← (·⊓·)]
+  dsimp' only [(·⊔·), (·⊓·)]
   rw [le_sup_inf_aux, add_self, mul_self, zero_addₓ]
 
 /-- The Boolean algebra structure on a Boolean ring.
@@ -243,10 +243,10 @@ def toBooleanAlgebra : BooleanAlgebra α :=
     compl := fun a => 1 + a,
     inf_compl_le_bot := fun a =>
       show a * (1 + a) + 0 + a * (1 + a) * 0 = 0 by
-        norm_num[← mul_addₓ, ← mul_self, ← add_self],
+        norm_num[mul_addₓ, mul_self, add_self],
     top_le_sup_compl := fun a => by
       change 1 + (a + (1 + a) + a * (1 + a)) + 1 * (a + (1 + a) + a * (1 + a)) = a + (1 + a) + a * (1 + a)
-      norm_num[← mul_addₓ, ← mul_self]
+      norm_num[mul_addₓ, mul_self]
       rw [← add_assocₓ, add_self] }
 
 localized [BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.toBooleanAlgebra
@@ -285,7 +285,7 @@ private theorem of_boolalg_symm_diff_aux (a b : α) : (a + b + a * b) * (1 + a *
     (a + b + a * b) * (1 + a * b) = a + b + (a * b + a * b * (a * b)) + (a * (b * b) + a * a * b) := by
       ring
     _ = a + b := by
-      simp only [← mul_self, ← add_self, ← add_zeroₓ]
+      simp only [mul_self, add_self, add_zeroₓ]
     
 
 @[simp]

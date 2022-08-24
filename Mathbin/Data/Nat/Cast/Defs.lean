@@ -125,7 +125,7 @@ theorem cast_oneₓ [AddMonoidWithOneₓ R] : ((1 : ℕ) : R) = 1 := by
 
 @[simp, norm_cast]
 theorem cast_addₓ [AddMonoidWithOneₓ R] (m n : ℕ) : ((m + n : ℕ) : R) = m + n := by
-  induction n <;> simp [← add_succ, ← add_assocₓ, ← Nat.add_zero, *]
+  induction n <;> simp [add_succ, add_assocₓ, Nat.add_zero, *]
 
 /-- Computationally friendlier cast than `nat.unary_cast`, using binary representation. -/
 protected def binCast [Zero R] [One R] [Add R] (n : ℕ) : R :=
@@ -139,7 +139,7 @@ theorem bin_cast_eq [AddMonoidWithOneₓ R] (n : ℕ) : (Nat.binCast n : R) = ((
     
   · intro b k h
     rw [binary_rec_eq, h]
-    · cases b <;> simp [← bit, ← bit0, ← bit1]
+    · cases b <;> simp [bit, bit0, bit1]
       
     · simp
       
@@ -170,9 +170,9 @@ protected def AddMonoidWithOneₓ.unary {R : Type _} [AddMonoidₓ R] [One R] : 
 protected def AddMonoidWithOneₓ.binary {R : Type _} [AddMonoidₓ R] [One R] : AddMonoidWithOneₓ R :=
   { ‹One R›, ‹AddMonoidₓ R› with natCast := Nat.binCast,
     nat_cast_zero := by
-      simp [← Nat.binCast, ← Nat.castₓ],
+      simp [Nat.binCast, Nat.castₓ],
     nat_cast_succ := fun n => by
-      simp only [← Nat.castₓ]
+      simp only [Nat.castₓ]
       letI : AddMonoidWithOneₓ R := AddMonoidWithOneₓ.unary
       erw [Nat.bin_cast_eq, Nat.bin_cast_eq, Nat.cast_succₓ]
       rfl }

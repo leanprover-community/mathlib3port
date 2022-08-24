@@ -61,7 +61,7 @@ def toContinuousMapAlgHom (R : Type _) [CommSemiringₓ R] [Semiringₓ Y] [Alge
     simp
   commutes' := fun r => by
     ext x
-    simp [← Algebra.smul_def]
+    simp [Algebra.smul_def]
 
 end LocallyConstant
 

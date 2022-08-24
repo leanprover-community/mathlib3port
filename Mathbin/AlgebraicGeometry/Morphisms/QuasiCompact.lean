@@ -94,7 +94,7 @@ theorem quasi_compact_iff_forall_affine :
   refine' ⟨fun H U hU => H U U.Prop hU.IsCompact, _⟩
   intro H U hU hU'
   obtain ⟨S, hS, rfl⟩ := (is_compact_open_iff_eq_finset_affine_union U).mp ⟨hU', hU⟩
-  simp only [← Set.preimage_Union, ← Subtype.val_eq_coe]
+  simp only [Set.preimage_Union, Subtype.val_eq_coe]
   exact hS.compact_bUnion fun i _ => H i i.Prop
 
 @[simp]
@@ -166,8 +166,8 @@ theorem QuasiCompact.affine_property_is_local : (QuasiCompact.AffineProperty : _
     rw [← is_compact_univ_iff]
     change IsCompact ((opens.map f.val.base).obj ⊤).1
     rw [← hS]
-    dsimp' [← opens.map]
-    simp only [← opens.coe_supr, ← Set.preimage_Union, ← Subtype.val_eq_coe]
+    dsimp' [opens.map]
+    simp only [opens.coe_supr, Set.preimage_Union, Subtype.val_eq_coe]
     exacts[compact_Union fun i => is_compact_iff_compact_space.mpr (hS' i), top_is_affine_open _]
     
 
@@ -234,7 +234,7 @@ theorem compact_open_induction_on {P : Opens X.Carrier → Prop} (S : Opens X.Ca
         ⟨s, hs, by
           simp ⟩
     convert h₂ _ this x h₄
-    simp only [← coe_coe]
+    simp only [coe_coe]
     rw [supr_subtype, sup_comm]
     conv_rhs => rw [supr_subtype]
     exact supr_insert

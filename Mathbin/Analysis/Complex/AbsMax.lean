@@ -107,7 +107,7 @@ theorem norm_max_aux₁ [CompleteSpace F] {f : ℂ → F} {z w : ℂ} (hd : Diff
     (hz : IsMaxOn (norm ∘ f) (ClosedBall z (dist w z)) z) : ∥f w∥ = ∥f z∥ := by
   -- Consider a circle of radius `r = dist w z`.
   set r : ℝ := dist w z
-  have hw : w ∈ closed_ball z r := mem_closed_ball.2 le_rfl
+  have hw : w ∈ closed_ball z r := mem_closed_ball.2 le_rflₓ
   -- Assume the converse. Since `∥f w∥ ≤ ∥f z∥`, we have `∥f w∥ < ∥f z∥`.
   refine' (is_max_on_iff.1 hz _ hw).antisymm (not_ltₓ.1 _)
   rintro hw_lt : ∥f w∥ < ∥f z∥
@@ -117,7 +117,7 @@ theorem norm_max_aux₁ [CompleteSpace F] {f : ℂ → F} {z w : ℂ} (hd : Diff
     refine' this.ne _
     have A : (∮ ζ in C(z, r), (ζ - z)⁻¹ • f ζ) = (2 * π * I : ℂ) • f z :=
       hd.circle_integral_sub_inv_smul (mem_ball_self hr)
-    simp [← A, ← norm_smul, ← real.pi_pos.le]
+    simp [A, norm_smul, real.pi_pos.le]
   suffices ∥∮ ζ in C(z, r), (ζ - z)⁻¹ • f ζ∥ < 2 * π * r * (∥f z∥ / r) by
     rwa [mul_assoc, mul_div_cancel' _ hr.ne'] at this
   /- This inequality is true because `∥(ζ - z)⁻¹ • f ζ∥ ≤ ∥f z∥ / r` for all `ζ` on the circle and
@@ -128,7 +128,7 @@ theorem norm_max_aux₁ [CompleteSpace F] {f : ℂ → F} {z w : ℂ} (hd : Diff
   · refine' ((continuous_on_id.sub continuous_on_const).inv₀ _).smul (hd.continuous_on_ball.mono hsub)
     exact fun ζ hζ => sub_ne_zero.2 (ne_of_mem_sphere hζ hr.ne')
     
-  show ∀, ∀ ζ ∈ sphere z r, ∀, ∥(ζ - z)⁻¹ • f ζ∥ ≤ ∥f z∥ / r
+  show ∀ ζ ∈ sphere z r, ∥(ζ - z)⁻¹ • f ζ∥ ≤ ∥f z∥ / r
   · rintro ζ (hζ : abs (ζ - z) = r)
     rw [le_div_iff hr, norm_smul, norm_inv, norm_eq_abs, hζ, mul_comm, mul_inv_cancel_left₀ hr.ne']
     exact hz (hsub hζ)
@@ -148,9 +148,9 @@ theorem norm_max_aux₂ {f : ℂ → F} {z w : ℂ} (hd : DiffContOnCl ℂ f (Ba
   set e : F →L[ℂ] F̂ := UniformSpace.Completion.toComplL
   have he : ∀ x, ∥e x∥ = ∥x∥ := UniformSpace.Completion.norm_coe
   replace hz : IsMaxOn (norm ∘ e ∘ f) (closed_ball z (dist w z)) z
-  · simpa only [← IsMaxOn, ← (· ∘ ·), ← he] using hz
+  · simpa only [IsMaxOn, (· ∘ ·), he] using hz
     
-  simpa only [← he] using norm_max_aux₁ (e.differentiable.comp_diff_cont_on_cl hd) hz
+  simpa only [he] using norm_max_aux₁ (e.differentiable.comp_diff_cont_on_cl hd) hz
 
 /-!
 Then we replace the assumption `is_max_on (norm ∘ f) (closed_ball z r) z` with a seemingly weaker
@@ -193,12 +193,12 @@ theorem norm_eq_on_closed_ball_of_is_max_on {f : E → F} {z : E} {r : ℝ} (hd 
   set e : ℂ → E := line_map z w
   have hde : Differentiable ℂ e := (differentiable_id.smul_const (w - z)).AddConst z
   suffices ∥(f ∘ e) (1 : ℂ)∥ = ∥(f ∘ e) (0 : ℂ)∥ by
-    simpa [← e]
+    simpa [e]
   have hr : dist (1 : ℂ) 0 = 1 := by
     simp
   have hball : maps_to e (ball 0 1) (ball z r) := by
     refine' ((lipschitz_with_line_map z w).maps_to_ball (mt nndist_eq_zero.1 hne) 0 1).mono subset.rfl _
-    simpa only [← line_map_apply_zero, ← mul_oneₓ, ← coe_nndist] using ball_subset_ball hw
+    simpa only [line_map_apply_zero, mul_oneₓ, coe_nndist] using ball_subset_ball hw
   exact norm_max_aux₃ hr (hd.comp hde.diff_cont_on_cl hball) (hz.comp_maps_to hball (line_map_apply_zero z w))
 
 /-- **Maximum modulus principle**: if `f : E → F` is complex differentiable on a set `s`, the norm
@@ -206,7 +206,7 @@ of `f` takes it maximum on `s` at `z`, and `w` is a point such that the closed b
 and radius `dist w z` is included in `s`, then `∥f w∥ = ∥f z∥`. -/
 theorem norm_eq_norm_of_is_max_on_of_ball_subset {f : E → F} {s : Set E} {z w : E} (hd : DiffContOnCl ℂ f s)
     (hz : IsMaxOn (norm ∘ f) s z) (hsub : Ball z (dist w z) ⊆ s) : ∥f w∥ = ∥f z∥ :=
-  norm_eq_on_closed_ball_of_is_max_on (hd.mono hsub) (hz.on_subset hsub) (mem_closed_ball.2 le_rfl)
+  norm_eq_on_closed_ball_of_is_max_on (hd.mono hsub) (hz.on_subset hsub) (mem_closed_ball.2 le_rflₓ)
 
 /-- **Maximum modulus principle**: if `f : E → F` is complex differentiable in a neighborhood of `c`
 and the norm `∥f z∥` has a local maximum at `c`, then `∥f z∥` is locally constant in a neighborhood
@@ -236,11 +236,11 @@ theorem norm_eq_on_of_is_preconnected_of_is_max_on {f : E → F} {U : Set E} {c 
     (ho : IsOpen U) (hd : DifferentiableOn ℂ f U) (hcU : c ∈ U) (hm : IsMaxOn (norm ∘ f) U c) :
     EqOn (norm ∘ f) (const E ∥f c∥) U := by
   set V := U ∩ { z | IsMaxOn (norm ∘ f) U z }
-  have hV : ∀, ∀ x ∈ V, ∀, ∥f x∥ = ∥f c∥ := fun x hx => le_antisymmₓ (hm hx.1) (hx.2 hcU)
+  have hV : ∀ x ∈ V, ∥f x∥ = ∥f c∥ := fun x hx => le_antisymmₓ (hm hx.1) (hx.2 hcU)
   suffices : U ⊆ V
   exact fun x hx => hV x (this hx)
   have hVo : IsOpen V := by
-    simpa only [← ho.mem_nhds_iff, ← set_of_and, ← set_of_mem_eq] using is_open_set_of_mem_nhds_and_is_max_on_norm hd
+    simpa only [ho.mem_nhds_iff, set_of_and, set_of_mem_eq] using is_open_set_of_mem_nhds_and_is_max_on_norm hd
   have hVne : (U ∩ V).Nonempty := ⟨c, hcU, hcU, hm⟩
   set W := U ∩ { z | ∥f z∥ ≠ ∥f c∥ }
   have hWo : IsOpen W := hd.continuous_on.norm.preimage_open_of_open ho is_open_ne
@@ -288,7 +288,7 @@ theorem eq_on_of_is_preconnected_of_is_max_on_norm {f : E → F} {U : Set E} {c 
   have H₂ : ∥f x + f c∥ = ∥f c + f c∥ :=
     norm_eq_on_of_is_preconnected_of_is_max_on hc ho (hd.AddConst _) hcU hm.norm_add_self hx
   eq_of_norm_eq_of_norm_add_eq H₁ <| by
-    simp only [← H₂, ← same_ray.rfl.norm_add, ← H₁]
+    simp only [H₂, same_ray.rfl.norm_add, H₁]
 
 /-- **Maximum modulus principle** on a connected set. Let `U` be a (pre)connected open set in a
 complex normed space.  Let `f : E → F` be a function that is complex differentiable on `U` and is
@@ -310,7 +310,7 @@ theorem eq_of_is_max_on_of_ball_subset {f : E → F} {s : Set E} {z w : E} (hd :
   have H₁ : ∥f w∥ = ∥f z∥ := norm_eq_norm_of_is_max_on_of_ball_subset hd hz hsub
   have H₂ : ∥f w + f z∥ = ∥f z + f z∥ := norm_eq_norm_of_is_max_on_of_ball_subset (hd.AddConst _) hz.norm_add_self hsub
   eq_of_norm_eq_of_norm_add_eq H₁ <| by
-    simp only [← H₂, ← same_ray.rfl.norm_add, ← H₁]
+    simp only [H₂, same_ray.rfl.norm_add, H₁]
 
 /-- **Maximum modulus principle** on a closed ball. Suppose that a function `f : E → F` from a
 normed complex space to a strictly convex normed complex space has the following properties:
@@ -373,7 +373,7 @@ theorem exists_mem_frontier_is_max_on_norm [FiniteDimensional ℂ E] {f : E → 
 /-- **Maximum modulus principle**: if `f : E → F` is complex differentiable on a bounded set `U` and
 `∥f z∥ ≤ C` for any `z ∈ frontier U`, then the same is true for any `z ∈ closure U`. -/
 theorem norm_le_of_forall_mem_frontier_norm_le {f : E → F} {U : Set E} (hU : Bounded U) (hd : DiffContOnCl ℂ f U)
-    {C : ℝ} (hC : ∀, ∀ z ∈ Frontier U, ∀, ∥f z∥ ≤ C) {z : E} (hz : z ∈ Closure U) : ∥f z∥ ≤ C := by
+    {C : ℝ} (hC : ∀ z ∈ Frontier U, ∥f z∥ ≤ C) {z : E} (hz : z ∈ Closure U) : ∥f z∥ ≤ C := by
   rw [closure_eq_self_union_frontier, union_comm, mem_union_eq] at hz
   cases hz
   · exact hC z hz
@@ -388,11 +388,11 @@ theorem norm_le_of_forall_mem_frontier_norm_le {f : E → F} {U : Set E} (hU : B
   replace hd : DiffContOnCl ℂ (f ∘ e) (e ⁻¹' U)
   exact hd.comp hde.diff_cont_on_cl (maps_to_preimage _ _)
   have h₀ : (0 : ℂ) ∈ e ⁻¹' U := by
-    simpa only [← e, ← mem_preimage, ← line_map_apply_zero]
+    simpa only [e, mem_preimage, line_map_apply_zero]
   rcases exists_mem_frontier_is_max_on_norm (hL.bounded_preimage hU) ⟨0, h₀⟩ hd with ⟨ζ, hζU, hζ⟩
   calc
     ∥f z∥ = ∥f (e 0)∥ := by
-      simp only [← e, ← line_map_apply_zero]
+      simp only [e, line_map_apply_zero]
     _ ≤ ∥f (e ζ)∥ := hζ (subset_closure h₀)
     _ ≤ C := hC _ (hde.continuous.frontier_preimage_subset _ hζU)
     
@@ -401,11 +401,11 @@ theorem norm_le_of_forall_mem_frontier_norm_le {f : E → F} {U : Set E} (hU : B
 `U`, then they are equal on `closure U`. -/
 theorem eq_on_closure_of_eq_on_frontier {f g : E → F} {U : Set E} (hU : Bounded U) (hf : DiffContOnCl ℂ f U)
     (hg : DiffContOnCl ℂ g U) (hfg : EqOn f g (Frontier U)) : EqOn f g (Closure U) := by
-  suffices H : ∀, ∀ z ∈ Closure U, ∀, ∥(f - g) z∥ ≤ 0
-  · simpa [← sub_eq_zero] using H
+  suffices H : ∀ z ∈ Closure U, ∥(f - g) z∥ ≤ 0
+  · simpa [sub_eq_zero] using H
     
   refine' fun z hz => norm_le_of_forall_mem_frontier_norm_le hU (hf.sub hg) (fun w hw => _) hz
-  simp [← hfg hw]
+  simp [hfg hw]
 
 /-- If two complex differentiable functions `f g : E → F` are equal on the boundary of a bounded set
 `U`, then they are equal on `U`. -/

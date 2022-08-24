@@ -133,8 +133,7 @@ theorem extend_along_yoneda_map {X Y : Cᵒᵖ ⥤ Type u₁} (f : X ⟶ Y) :
     (extendAlongYoneda A).map f = colimit.pre ((categoryOfElements.π Y).leftOp ⋙ A) (categoryOfElements.map f).op := by
   ext J
   erw [colimit.ι_pre ((category_of_elements.π Y).leftOp ⋙ A) (category_of_elements.map f).op]
-  dsimp' only [← extend_along_yoneda, ← restrict_yoneda_hom_equiv, ← is_colimit.hom_iso', ← is_colimit.hom_iso, ←
-    ulift_trivial]
+  dsimp' only [extend_along_yoneda, restrict_yoneda_hom_equiv, is_colimit.hom_iso', is_colimit.hom_iso, ulift_trivial]
   simpa
 
 /-- Show `extend_along_yoneda` is left adjoint to `restricted_yoneda`.
@@ -156,7 +155,7 @@ def isInitial (A : C) : IsInitial (Elements.initial A) where
   desc := fun s => ⟨s.x.2.op, comp_id _⟩
   uniq' := fun s m w => by
     simp_rw [← m.2]
-    dsimp' [← elements.initial]
+    dsimp' [elements.initial]
     simp
   fac' := by
     rintro s ⟨⟨⟩⟩
@@ -203,7 +202,7 @@ def extendAlongYonedaIsoKanApp (X) : (extendAlongYoneda A).obj X ≅ ((lan yoned
       · exact congr_arg functor.op (category_of_elements.from_to_costructured_arrow_eq X)
         
       · ext
-        simp only [← colimit.ι_pre]
+        simp only [colimit.ι_pre]
         erw [category.comp_id]
         congr
         ,
@@ -214,7 +213,7 @@ def extendAlongYonedaIsoKanApp (X) : (extendAlongYoneda A).obj X ≅ ((lan yoned
       · exact category_of_elements.to_from_costructured_arrow_eq X
         
       · ext
-        simp only [← colimit.ι_pre]
+        simp only [colimit.ι_pre]
         erw [category.comp_id]
         congr
          }
@@ -288,7 +287,7 @@ theorem cocone_of_representable_naturality {P₁ P₂ : Cᵒᵖ ⥤ Type u₁} (
     (coconeOfRepresentable P₁).ι.app j ≫ α = (coconeOfRepresentable P₂).ι.app ((categoryOfElements.map α).op.obj j) :=
   by
   ext T f
-  simpa [← cocone_of_representable_ι_app] using functor_to_types.naturality _ _ α f.op _
+  simpa [cocone_of_representable_ι_app] using functor_to_types.naturality _ _ α f.op _
 
 /-- The cocone with point `P` given by `the_cocone` is a colimit: that is, we have exhibited an
 arbitrary presheaf `P` as a colimit of representables.
@@ -317,7 +316,7 @@ def natIsoOfNatIsoOnRepresentables (L₁ L₂ : (Cᵒᵖ ⥤ Type u₁) ⥤ ℰ)
   · intro P₁ P₂ f
     apply (is_colimit_of_preserves L₁ (colimit_of_representable P₁)).hom_ext
     intro j
-    dsimp' only [← id.def, ← is_colimit.cocone_points_iso_of_nat_iso_hom, ← iso_whisker_left_hom]
+    dsimp' only [id.def, is_colimit.cocone_points_iso_of_nat_iso_hom, iso_whisker_left_hom]
     have :
       (L₁.map_cocone (cocone_of_representable P₁)).ι.app j ≫ L₁.map f =
         (L₁.map_cocone (cocone_of_representable P₂)).ι.app ((category_of_elements.map f).op.obj j) :=

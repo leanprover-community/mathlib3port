@@ -81,7 +81,7 @@ theorem well_founded_on_iff {s : Set α} {r : α → α → Prop} :
     
 
 theorem WellFoundedOn.induction {s : Set α} {r : α → α → Prop} (hs : s.WellFoundedOn r) {x : α} (hx : x ∈ s)
-    {P : α → Prop} (hP : ∀, ∀ y ∈ s, ∀, (∀, ∀ z ∈ s, ∀, r z y → P z) → P y) : P x := by
+    {P : α → Prop} (hP : ∀ y ∈ s, (∀ z ∈ s, r z y → P z) → P y) : P x := by
   let Q : s → Prop := fun y => P y
   change Q ⟨x, hx⟩
   refine' WellFounded.induction hs ⟨x, hx⟩ _
@@ -99,8 +99,8 @@ theorem well_founded_on_iff_no_descending_seq {s : Set α} {r : α → α → Pr
   refine'
     ⟨fun h f con => by
       refine' h.elim' ⟨⟨f, f.injective⟩, fun a b => _⟩
-      simp only [← con (mem_range_self a), ← con (mem_range_self b), ← and_trueₓ, ← gt_iff_lt, ←
-        Function.Embedding.coe_fn_mk, ← f.map_rel_iff],
+      simp only [con (mem_range_self a), con (mem_range_self b), and_trueₓ, gt_iff_ltₓ, Function.Embedding.coe_fn_mk,
+        f.map_rel_iff],
       fun h => ⟨fun con => _⟩⟩
   rcases con with ⟨f, hf⟩
   have hfs' : ∀ n : ℕ, f n ∈ s := fun n => (hf.2 n.lt_succ_self).2.2
@@ -126,7 +126,7 @@ theorem is_wf_empty : IsWf (∅ : Set α) :=
   well_founded_of_empty _
 
 theorem is_wf_univ_iff : IsWf (Univ : Set α) ↔ WellFounded ((· < ·) : α → α → Prop) := by
-  simp [← is_wf, ← well_founded_on_iff]
+  simp [is_wf, well_founded_on_iff]
 
 variable {s t : Set α}
 
@@ -239,7 +239,7 @@ theorem _root_.is_antichain.partially_well_ordered_on_iff {s : Set α} {r : α �
     (hs : IsAntichain r s) : s.PartiallyWellOrderedOn r ↔ s.Finite :=
   ⟨hs.finite_of_partially_well_ordered_on, Finite.partially_well_ordered_on⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem partially_well_ordered_on_iff_finite_antichains {s : Set α} {r : α → α → Prop} [IsRefl α r] [IsSymm α r] :
     s.PartiallyWellOrderedOn r ↔ ∀ (t) (_ : t ⊆ s), IsAntichain r t → t.Finite := by
   refine' ⟨fun h t ht hrt => hrt.finite_of_partially_well_ordered_on (h.mono ht), _⟩
@@ -311,7 +311,7 @@ theorem IsPwo.is_wf (h : s.IsPwo) : s.IsWf := by
   rw [is_wf]
   convert h.well_founded_on
   ext x y
-  rw [lt_iff_le_and_ne]
+  rw [lt_iff_le_and_neₓ]
 
 theorem IsPwo.exists_monotone_subseq (h : s.IsPwo) (f : ℕ → α) (hf : Range f ⊆ s) : ∃ g : ℕ ↪o ℕ, Monotone (f ∘ g) :=
   h.exists_monotone_subseq f hf
@@ -328,7 +328,7 @@ theorem IsPwo.prod (hs : s.IsPwo) (ht : t.IsPwo) : (s ×ˢ t).IsPwo := by
   · rw [range_comp, image_subset_iff]
     refine' subset.trans hf _
     rintro ⟨x1, x2⟩ hx
-    simp only [← mem_preimage, ← hx.1]
+    simp only [mem_preimage, hx.1]
     
   obtain ⟨g2, h2⟩ := ht (Prod.snd ∘ f ∘ g1) _
   refine' ⟨g2.trans g1, fun m n mn => _⟩
@@ -336,9 +336,9 @@ theorem IsPwo.prod (hs : s.IsPwo) (ht : t.IsPwo) : (s ×ˢ t).IsPwo := by
   · rw [range_comp, image_subset_iff]
     refine' subset.trans (range_comp_subset_range _ _) (subset.trans hf _)
     rintro ⟨x1, x2⟩ hx
-    simp only [← mem_preimage, ← hx.2]
+    simp only [mem_preimage, hx.2]
     
-  simp only [← RelEmbedding.coe_trans, ← Function.comp_app]
+  simp only [RelEmbedding.coe_trans, Function.comp_app]
   exact ⟨h1 (g2.le_iff_le.2 mn), h2 mn⟩
 
 theorem IsPwo.image_of_monotone {β : Type _} [PartialOrderₓ β] (hs : s.IsPwo) {f : α → β} (hf : Monotone f) :
@@ -530,7 +530,7 @@ theorem iff_forall_not_is_bad_seq (r : α → α → Prop) (s : Set α) : s.Part
   by
   rw [Set.PartiallyWellOrderedOn]
   apply forall_congrₓ fun f => _
-  simp [← is_bad_seq]
+  simp [is_bad_seq]
 
 /-- This indicates that every bad sequence `g` that agrees with `f` on the first `n`
   terms has `rk (f n) ≤ rk (g n)`. -/
@@ -584,7 +584,7 @@ theorem exists_min_bad_of_exists_bad (r : α → α → Prop) (rk : α → ℕ) 
     rw [← Subtype.val_eq_coe, h m n (le_of_ltₓ mn)]
     convert (fs n).2.1.2 m n mn
     
-  · convert (fs n).2.2 g (fun m mn => Eq.trans _ (hg1 m mn)) (lt_of_lt_of_leₓ hg2 le_rfl)
+  · convert (fs n).2.2 g (fun m mn => Eq.trans _ (hg1 m mn)) (lt_of_lt_of_leₓ hg2 le_rflₓ)
     rw [← h m n (le_of_ltₓ mn)]
     
 
@@ -618,12 +618,12 @@ theorem partially_well_ordered_on_sublist_forall₂ (r : α → α → Prop) [Is
   have hnil : ∀ n, f n ≠ List.nil := fun n con => hf1.2 n n.succ n.lt_succ_self (con.symm ▸ List.SublistForall₂.nil)
   obtain ⟨g, hg⟩ := h.exists_monotone_subseq (List.headₓ ∘ f) _
   swap
-  · simp only [← Set.range_subset_iff, ← Function.comp_applyₓ]
+  · simp only [Set.range_subset_iff, Function.comp_applyₓ]
     exact fun n => hf1.1 (Set.mem_range_self n) _ (List.head_mem_self (hnil n))
     
   have hf' := hf2 (g 0) (fun n => if n < g 0 then f n else List.tail (f (g (n - g 0)))) (fun m hm => (if_pos hm).symm) _
   swap
-  · simp only [← if_neg (lt_irreflₓ (g 0)), ← tsub_self]
+  · simp only [if_neg (lt_irreflₓ (g 0)), tsub_self]
     rw [List.length_tail, ← Nat.pred_eq_sub_one]
     exact Nat.pred_ltₓ fun con => hnil _ (List.length_eq_zero.1 con)
     
@@ -730,7 +730,7 @@ variable [OrderedCancelCommMonoid α] (s t : Set α) (a : α)
 theorem eq_of_fst_le_fst_of_snd_le_snd {x y : MulAntidiagonal s t a} (h1 : (x : α × α).fst ≤ (y : α × α).fst)
     (h2 : (x : α × α).snd ≤ (y : α × α).snd) : x = y := by
   apply eq_of_fst_eq_fst
-  cases' eq_or_lt_of_le h1 with heq hlt
+  cases' eq_or_lt_of_leₓ h1 with heq hlt
   · exact HEq
     
   exfalso
@@ -797,7 +797,7 @@ variable {hs} {ht} {u : Set α} {hu : u.IsPwo} {a} {x : α × α}
 
 @[simp, to_additive]
 theorem mem_mul_antidiagonal : x ∈ mulAntidiagonal hs ht a ↔ x.1 * x.2 = a ∧ x.1 ∈ s ∧ x.2 ∈ t := by
-  simp [← mul_antidiagonal]
+  simp [mul_antidiagonal]
 
 @[to_additive]
 theorem mul_antidiagonal_mono_left (hus : u ⊆ s) : Finset.mulAntidiagonal hu ht a ⊆ Finset.mulAntidiagonal hs ht a :=
@@ -829,7 +829,7 @@ theorem mul_antidiagonal_min_mul_min {α} [LinearOrderedCancelCommMonoid α] {s 
   rw [mem_mul_antidiagonal, Finset.mem_singleton, Prod.ext_iff]
   constructor
   · rintro ⟨hast, has, hat⟩
-    cases' eq_or_lt_of_le (hs.min_le hns has) with heq hlt
+    cases' eq_or_lt_of_leₓ (hs.min_le hns has) with heq hlt
     · refine' ⟨HEq.symm, _⟩
       rw [HEq] at hast
       exact mul_left_cancelₓ hast
@@ -865,11 +865,11 @@ theorem Pi.is_pwo {σ : Type _} {α : σ → Type _} [∀ s, LinearOrderₓ (α 
       ∀ f : ℕ → ∀ s, α s,
         Set.Range f ⊆ Set.Univ → ∃ g : ℕ ↪o ℕ, ∀ ⦃a b : ℕ⦄, a ≤ b → ∀ (x : σ) (hs : x ∈ s), (f ∘ g) a x ≤ (f ∘ g) b x
     by
-    simpa only [← forall_true_left, ← Finset.mem_univ] using this Finset.univ
+    simpa only [forall_true_left, Finset.mem_univ] using this Finset.univ
   apply' Finset.induction
   · intro f hf
     exists RelEmbedding.refl (· ≤ ·)
-    simp only [← IsEmpty.forall_iff, ← implies_true_iff, ← forall_const, ← Finset.not_mem_empty]
+    simp only [IsEmpty.forall_iff, implies_true_iff, forall_const, Finset.not_mem_empty]
     
   · intro x s hx ih f hf
     obtain ⟨g, hg⟩ :=
@@ -877,7 +877,7 @@ theorem Pi.is_pwo {σ : Type _} {α : σ → Type _} [∀ s, LinearOrderₓ (α 
         (Set.subset_univ _)
     obtain ⟨g', hg'⟩ := ih (f ∘ g) (Set.subset_univ _)
     refine' ⟨g'.trans g, fun a b hab => _⟩
-    simp only [← Finset.mem_insert, ← RelEmbedding.coe_trans, ← Function.comp_app, ← forall_eq_or_imp]
+    simp only [Finset.mem_insert, RelEmbedding.coe_trans, Function.comp_app, forall_eq_or_imp]
     exact ⟨hg (OrderHomClass.mono g' hab), hg' hab⟩
     
 

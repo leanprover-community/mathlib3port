@@ -34,11 +34,11 @@ namespace CliffordAlgebra
 instance : StarRing (CliffordAlgebra Q) where
   star := fun x => reverse (involute x)
   star_involutive := fun x => by
-    simp only [← reverse_involute_commute.eq, ← reverse_reverse, ← involute_involute]
+    simp only [reverse_involute_commute.eq, reverse_reverse, involute_involute]
   star_mul := fun x y => by
-    simp only [← map_mul, ← reverse.map_mul]
+    simp only [map_mul, reverse.map_mul]
   star_add := fun x y => by
-    simp only [← map_add]
+    simp only [map_add]
 
 theorem star_def (x : CliffordAlgebra Q) : star x = reverse (involute x) :=
   rfl

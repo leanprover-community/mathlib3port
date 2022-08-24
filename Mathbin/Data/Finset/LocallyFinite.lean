@@ -97,19 +97,19 @@ theorem Ioo_eq_empty_of_le (h : b ≤ a) : ioo a b = ∅ :=
 
 @[simp]
 theorem left_mem_Icc : a ∈ icc a b ↔ a ≤ b := by
-  simp only [← mem_Icc, ← true_andₓ, ← le_rfl]
+  simp only [mem_Icc, true_andₓ, le_rflₓ]
 
 @[simp]
 theorem left_mem_Ico : a ∈ ico a b ↔ a < b := by
-  simp only [← mem_Ico, ← true_andₓ, ← le_reflₓ]
+  simp only [mem_Ico, true_andₓ, le_reflₓ]
 
 @[simp]
 theorem right_mem_Icc : b ∈ icc a b ↔ a ≤ b := by
-  simp only [← mem_Icc, ← and_trueₓ, ← le_rfl]
+  simp only [mem_Icc, and_trueₓ, le_rflₓ]
 
 @[simp]
 theorem right_mem_Ioc : b ∈ ioc a b ↔ a < b := by
-  simp only [← mem_Ioc, ← and_trueₓ, ← le_rfl]
+  simp only [mem_Ioc, and_trueₓ, le_rflₓ]
 
 @[simp]
 theorem left_not_mem_Ioc : a ∉ ioc a b := fun h => lt_irreflₓ _ (mem_Ioc.1 h).1
@@ -124,40 +124,40 @@ theorem right_not_mem_Ico : b ∉ ico a b := fun h => lt_irreflₓ _ (mem_Ico.1 
 theorem right_not_mem_Ioo : b ∉ ioo a b := fun h => lt_irreflₓ _ (mem_Ioo.1 h).2
 
 theorem Icc_subset_Icc (ha : a₂ ≤ a₁) (hb : b₁ ≤ b₂) : icc a₁ b₁ ⊆ icc a₂ b₂ := by
-  simpa [coe_subset] using Set.Icc_subset_Icc ha hb
+  simpa [← coe_subset] using Set.Icc_subset_Icc ha hb
 
 theorem Ico_subset_Ico (ha : a₂ ≤ a₁) (hb : b₁ ≤ b₂) : ico a₁ b₁ ⊆ ico a₂ b₂ := by
-  simpa [coe_subset] using Set.Ico_subset_Ico ha hb
+  simpa [← coe_subset] using Set.Ico_subset_Ico ha hb
 
 theorem Ioc_subset_Ioc (ha : a₂ ≤ a₁) (hb : b₁ ≤ b₂) : ioc a₁ b₁ ⊆ ioc a₂ b₂ := by
-  simpa [coe_subset] using Set.Ioc_subset_Ioc ha hb
+  simpa [← coe_subset] using Set.Ioc_subset_Ioc ha hb
 
 theorem Ioo_subset_Ioo (ha : a₂ ≤ a₁) (hb : b₁ ≤ b₂) : ioo a₁ b₁ ⊆ ioo a₂ b₂ := by
-  simpa [coe_subset] using Set.Ioo_subset_Ioo ha hb
+  simpa [← coe_subset] using Set.Ioo_subset_Ioo ha hb
 
 theorem Icc_subset_Icc_left (h : a₁ ≤ a₂) : icc a₂ b ⊆ icc a₁ b :=
-  Icc_subset_Icc h le_rfl
+  Icc_subset_Icc h le_rflₓ
 
 theorem Ico_subset_Ico_left (h : a₁ ≤ a₂) : ico a₂ b ⊆ ico a₁ b :=
-  Ico_subset_Ico h le_rfl
+  Ico_subset_Ico h le_rflₓ
 
 theorem Ioc_subset_Ioc_left (h : a₁ ≤ a₂) : ioc a₂ b ⊆ ioc a₁ b :=
-  Ioc_subset_Ioc h le_rfl
+  Ioc_subset_Ioc h le_rflₓ
 
 theorem Ioo_subset_Ioo_left (h : a₁ ≤ a₂) : ioo a₂ b ⊆ ioo a₁ b :=
-  Ioo_subset_Ioo h le_rfl
+  Ioo_subset_Ioo h le_rflₓ
 
 theorem Icc_subset_Icc_right (h : b₁ ≤ b₂) : icc a b₁ ⊆ icc a b₂ :=
-  Icc_subset_Icc le_rfl h
+  Icc_subset_Icc le_rflₓ h
 
 theorem Ico_subset_Ico_right (h : b₁ ≤ b₂) : ico a b₁ ⊆ ico a b₂ :=
-  Ico_subset_Ico le_rfl h
+  Ico_subset_Ico le_rflₓ h
 
 theorem Ioc_subset_Ioc_right (h : b₁ ≤ b₂) : ioc a b₁ ⊆ ioc a b₂ :=
-  Ioc_subset_Ioc le_rfl h
+  Ioc_subset_Ioc le_rflₓ h
 
 theorem Ioo_subset_Ioo_right (h : b₁ ≤ b₂) : ioo a b₁ ⊆ ioo a b₂ :=
-  Ioo_subset_Ioo le_rfl h
+  Ioo_subset_Ioo le_rflₓ h
 
 theorem Ico_subset_Ioo_left (h : a₁ < a₂) : ico a₂ b ⊆ ioo a₁ b := by
   rw [← coe_subset, coe_Ico, coe_Ioo]
@@ -293,16 +293,16 @@ section LocallyFiniteOrderTop
 variable [LocallyFiniteOrderTop α]
 
 theorem Icc_subset_Ici_self : icc a b ⊆ ici a := by
-  simpa [coe_subset] using Set.Icc_subset_Ici_self
+  simpa [← coe_subset] using Set.Icc_subset_Ici_self
 
 theorem Ico_subset_Ici_self : ico a b ⊆ ici a := by
-  simpa [coe_subset] using Set.Ico_subset_Ici_self
+  simpa [← coe_subset] using Set.Ico_subset_Ici_self
 
 theorem Ioc_subset_Ioi_self : ioc a b ⊆ ioi a := by
-  simpa [coe_subset] using Set.Ioc_subset_Ioi_self
+  simpa [← coe_subset] using Set.Ioc_subset_Ioi_self
 
 theorem Ioo_subset_Ioi_self : ioo a b ⊆ ioi a := by
-  simpa [coe_subset] using Set.Ioo_subset_Ioi_self
+  simpa [← coe_subset] using Set.Ioo_subset_Ioi_self
 
 theorem Ioc_subset_Ici_self : ioc a b ⊆ ici a :=
   Ioc_subset_Icc_self.trans Icc_subset_Ici_self
@@ -317,16 +317,16 @@ section LocallyFiniteOrderBot
 variable [LocallyFiniteOrderBot α]
 
 theorem Icc_subset_Iic_self : icc a b ⊆ iic b := by
-  simpa [coe_subset] using Set.Icc_subset_Iic_self
+  simpa [← coe_subset] using Set.Icc_subset_Iic_self
 
 theorem Ioc_subset_Iic_self : ioc a b ⊆ iic b := by
-  simpa [coe_subset] using Set.Ioc_subset_Iic_self
+  simpa [← coe_subset] using Set.Ioc_subset_Iic_self
 
 theorem Ico_subset_Iio_self : ico a b ⊆ iio b := by
-  simpa [coe_subset] using Set.Ico_subset_Iio_self
+  simpa [← coe_subset] using Set.Ico_subset_Iio_self
 
 theorem Ioo_subset_Iio_self : ioo a b ⊆ iio b := by
-  simpa [coe_subset] using Set.Ioo_subset_Iio_self
+  simpa [← coe_subset] using Set.Ioo_subset_Iio_self
 
 theorem Ico_subset_Iic_self : ico a b ⊆ iic b :=
   Ico_subset_Icc_self.trans Icc_subset_Iic_self
@@ -343,7 +343,7 @@ section LocallyFiniteOrderTop
 variable [LocallyFiniteOrderTop α] {a : α}
 
 theorem Ioi_subset_Ici_self : ioi a ⊆ ici a := by
-  simpa [coe_subset] using Set.Ioi_subset_Ici_self
+  simpa [← coe_subset] using Set.Ioi_subset_Ici_self
 
 theorem _root_.bdd_below.finite {s : Set α} (hs : BddBelow s) : s.Finite :=
   let ⟨a, ha⟩ := hs
@@ -366,7 +366,7 @@ section LocallyFiniteOrderBot
 variable [LocallyFiniteOrderBot α] {a : α}
 
 theorem Iio_subset_Iic_self : iio a ⊆ iic a := by
-  simpa [coe_subset] using Set.Iio_subset_Iic_self
+  simpa [← coe_subset] using Set.Iio_subset_Iic_self
 
 theorem _root_.bdd_above.finite {s : Set α} (hs : BddAbove s) : s.Finite :=
   hs.dual.Finite
@@ -408,23 +408,23 @@ variable [DecidableEq α]
 
 @[simp]
 theorem Icc_erase_left (a b : α) : (icc a b).erase a = ioc a b := by
-  simp [coe_inj]
+  simp [← coe_inj]
 
 @[simp]
 theorem Icc_erase_right (a b : α) : (icc a b).erase b = ico a b := by
-  simp [coe_inj]
+  simp [← coe_inj]
 
 @[simp]
 theorem Ico_erase_left (a b : α) : (ico a b).erase a = ioo a b := by
-  simp [coe_inj]
+  simp [← coe_inj]
 
 @[simp]
 theorem Ioc_erase_right (a b : α) : (ioc a b).erase b = ioo a b := by
-  simp [coe_inj]
+  simp [← coe_inj]
 
 @[simp]
 theorem Icc_diff_both (a b : α) : icc a b \ {a, b} = ioo a b := by
-  simp [coe_inj]
+  simp [← coe_inj]
 
 @[simp]
 theorem Ico_insert_right (h : a ≤ b) : insert b (ico a b) = icc a b := by
@@ -444,23 +444,23 @@ theorem Ioo_insert_right (h : a < b) : insert b (ioo a b) = ioc a b := by
 
 @[simp]
 theorem Icc_diff_Ico_self (h : a ≤ b) : icc a b \ ico a b = {b} := by
-  simp [coe_inj, ← h]
+  simp [← coe_inj, h]
 
 @[simp]
 theorem Icc_diff_Ioc_self (h : a ≤ b) : icc a b \ ioc a b = {a} := by
-  simp [coe_inj, ← h]
+  simp [← coe_inj, h]
 
 @[simp]
 theorem Icc_diff_Ioo_self (h : a ≤ b) : icc a b \ ioo a b = {a, b} := by
-  simp [coe_inj, ← h]
+  simp [← coe_inj, h]
 
 @[simp]
 theorem Ico_diff_Ioo_self (h : a < b) : ico a b \ ioo a b = {a} := by
-  simp [coe_inj, ← h]
+  simp [← coe_inj, h]
 
 @[simp]
 theorem Ioc_diff_Ioo_self (h : a < b) : ioc a b \ ioo a b = {b} := by
-  simp [coe_inj, ← h]
+  simp [← coe_inj, h]
 
 @[simp]
 theorem Ico_inter_Ico_consecutive (a b c : α) : ico a b ∩ ico b c = ∅ := by
@@ -634,7 +634,7 @@ variable [Fintype α] [LocallyFiniteOrderTop α] [LocallyFiniteOrderBot α]
 theorem Ioi_disj_union_Iio (a : α) :
     (ioi a).disjUnion (iio a) (disjoint_left.1 <| disjoint_Ioi_Iio a) = ({a} : Finset α)ᶜ := by
   ext
-  simp [← eq_comm]
+  simp [eq_comm]
 
 end LinearOrderₓ
 

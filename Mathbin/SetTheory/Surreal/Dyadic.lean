@@ -96,7 +96,7 @@ theorem pow_half_succ_le_pow_half (n : ℕ) : powHalf (n + 1) ≤ powHalf n :=
 
 theorem pow_half_le_one (n : ℕ) : powHalf n ≤ 1 := by
   induction' n with n hn
-  · exact le_rfl
+  · exact le_rflₓ
     
   · exact (pow_half_succ_le_pow_half n).trans hn
     
@@ -139,7 +139,7 @@ theorem add_pow_half_succ_self_eq_pow_half (n) : powHalf (n + 1) + powHalf (n + 
         _ ≈ pow_half n := hn _ (Nat.lt_succ_selfₓ n)
         
       
-    · simp only [← pow_half_move_left, ← forall_const]
+    · simp only [pow_half_move_left, forall_const]
       apply lf_of_lt
       calc
         0 ≈ 0 + 0 := (add_zero_equiv 0).symm
@@ -186,7 +186,7 @@ theorem double_pow_half_succ_eq_pow_half (n : ℕ) : 2 • powHalf n.succ = powH
 @[simp]
 theorem nsmul_pow_two_pow_half (n : ℕ) : 2 ^ n • powHalf n = 1 := by
   induction' n with n hn
-  · simp only [← nsmul_one, ← pow_half_zero, ← Nat.cast_oneₓ, ← pow_zeroₓ]
+  · simp only [nsmul_one, pow_half_zero, Nat.cast_oneₓ, pow_zeroₓ]
     
   · rw [← hn, ← double_pow_half_succ_eq_pow_half n, smul_smul (2 ^ n) 2 (pow_half n.succ), mul_comm, pow_succₓ]
     
@@ -194,8 +194,7 @@ theorem nsmul_pow_two_pow_half (n : ℕ) : 2 ^ n • powHalf n = 1 := by
 @[simp]
 theorem nsmul_pow_two_pow_half' (n k : ℕ) : 2 ^ n • powHalf (n + k) = powHalf k := by
   induction' k with k hk
-  · simp only [← add_zeroₓ, ← Surreal.nsmul_pow_two_pow_half, ← Nat.nat_zero_eq_zero, ← eq_self_iff_true, ←
-      Surreal.pow_half_zero]
+  · simp only [add_zeroₓ, Surreal.nsmul_pow_two_pow_half, Nat.nat_zero_eq_zero, eq_self_iff_true, Surreal.pow_half_zero]
     
   · rw [← double_pow_half_succ_eq_pow_half (n + k), ← double_pow_half_succ_eq_pow_half k, smul_algebra_smul_comm] at hk
     rwa [← zsmul_eq_zsmul_iff' two_ne_zero]
@@ -227,7 +226,7 @@ def dyadicMap : Localization.Away (2 : ℤ) →+ Surreal where
     (Localization.liftOn x fun x y => x • powHalf (Submonoid.log y)) <| by
       intro m₁ m₂ n₁ n₂ h₁
       obtain ⟨⟨n₃, y₃, hn₃⟩, h₂⟩ := localization.r_iff_exists.mp h₁
-      simp only [← Subtype.coe_mk, ← mul_eq_mul_right_iff] at h₂
+      simp only [Subtype.coe_mk, mul_eq_mul_right_iff] at h₂
       cases h₂
       · simp only
         obtain ⟨a₁, ha₁⟩ := n₁.prop
@@ -256,9 +255,9 @@ def dyadicMap : Localization.Away (2 : ℤ) →+ Surreal where
         (2 ^ b' * c + 2 ^ d' * a) • pow_half (b' + d') =
             (c * 2 ^ b') • pow_half (b' + d') + (a * 2 ^ d') • pow_half (d' + b') :=
           by
-          simp only [← add_smul, ← mul_comm, ← add_commₓ]
+          simp only [add_smul, mul_comm, add_commₓ]
         _ = c • pow_half d' + a • pow_half b' := by
-          simp only [← zsmul_pow_two_pow_half]
+          simp only [zsmul_pow_two_pow_half]
         _ = a • pow_half b' + c • pow_half d' := add_commₓ _ _
         
 

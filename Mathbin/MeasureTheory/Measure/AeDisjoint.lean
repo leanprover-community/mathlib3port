@@ -26,7 +26,7 @@ def AeDisjoint (s t : Set α) :=
 
 variable {μ} {s t u v : Set α}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ≠ » i)
 /-- If `s : ι → set α` is a countable family of pairwise a.e. disjoint sets, then there exists a
 family of measurable null sets `t i` such that `s i \ t i` are pairwise disjoint. -/
 theorem exists_null_pairwise_disjoint_diff [Encodable ι] {s : ι → Set α} (hd : Pairwise (AeDisjoint μ on s)) :
@@ -34,13 +34,13 @@ theorem exists_null_pairwise_disjoint_diff [Encodable ι] {s : ι → Set α} (h
   refine'
     ⟨fun i => to_measurable μ (s i ∩ ⋃ j ∈ ({i}ᶜ : Set ι), s j), fun i => measurable_set_to_measurable _ _, fun i => _,
       _⟩
-  · simp only [← measure_to_measurable, ← inter_Union]
+  · simp only [measure_to_measurable, inter_Union]
     exact (measure_bUnion_null_iff <| to_countable _).2 fun j hj => hd _ _ (Ne.symm hj)
     
-  · simp only [← Pairwise, ← disjoint_left, ← on_fun, ← mem_diff, ← not_and, ← and_imp, ← not_not]
+  · simp only [Pairwise, disjoint_left, on_fun, mem_diff, not_and, and_imp, not_not]
     intro i j hne x hi hU hj
     replace hU : x ∉ s i ∩ ⋃ (j) (_ : j ≠ i), s j := fun h => hU (subset_to_measurable _ _ h)
-    simp only [← mem_inter_eq, ← mem_Union, ← not_and, ← not_exists] at hU
+    simp only [mem_inter_eq, mem_Union, not_and, not_exists] at hU
     exact (hU hi j hne.symm hj).elim
     
 
@@ -77,19 +77,19 @@ theorem mono (h : AeDisjoint μ s t) (hu : u ⊆ s) (hv : v ⊆ t) : AeDisjoint 
 
 @[simp]
 theorem Union_left_iff [Encodable ι] {s : ι → Set α} : AeDisjoint μ (⋃ i, s i) t ↔ ∀ i, AeDisjoint μ (s i) t := by
-  simp only [← ae_disjoint, ← Union_inter, ← measure_Union_null_iff]
+  simp only [ae_disjoint, Union_inter, measure_Union_null_iff]
 
 @[simp]
 theorem Union_right_iff [Encodable ι] {t : ι → Set α} : AeDisjoint μ s (⋃ i, t i) ↔ ∀ i, AeDisjoint μ s (t i) := by
-  simp only [← ae_disjoint, ← inter_Union, ← measure_Union_null_iff]
+  simp only [ae_disjoint, inter_Union, measure_Union_null_iff]
 
 @[simp]
 theorem union_left_iff : AeDisjoint μ (s ∪ t) u ↔ AeDisjoint μ s u ∧ AeDisjoint μ t u := by
-  simp [← union_eq_Union, ← And.comm]
+  simp [union_eq_Union, And.comm]
 
 @[simp]
 theorem union_right_iff : AeDisjoint μ s (t ∪ u) ↔ AeDisjoint μ s t ∧ AeDisjoint μ s u := by
-  simp [← union_eq_Union, ← And.comm]
+  simp [union_eq_Union, And.comm]
 
 theorem union_left (hs : AeDisjoint μ s u) (ht : AeDisjoint μ t u) : AeDisjoint μ (s ∪ t) u :=
   union_left_iff.mpr ⟨hs, ht⟩

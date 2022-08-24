@@ -42,13 +42,13 @@ instance [MulOneClassₓ M] [CommMonoidₓ N] : CommMonoidₓ (M →* N) where
       map_one' := by
         simp ,
       map_mul' := fun x y => by
-        simp [← mul_powₓ] }
+        simp [mul_powₓ] }
   npow_zero' := fun f => by
     ext x
     simp
   npow_succ' := fun n f => by
     ext x
-    simp [← pow_succₓ]
+    simp [pow_succₓ]
 
 /-- If `G` is a commutative group, then `M →* G` is a commutative group too. -/
 @[to_additive "If `G` is an additive commutative group, then `M →+ G` is an additive commutative\ngroup too."]
@@ -65,13 +65,13 @@ instance {M G} [MulOneClassₓ M] [CommGroupₓ G] : CommGroupₓ (M →* G) :=
         map_one' := by
           simp ,
         map_mul' := fun x y => by
-          simp [← mul_zpow] },
+          simp [mul_zpow] },
     zpow_zero' := fun f => by
       ext x
       simp ,
     zpow_succ' := fun n f => by
       ext x
-      simp [← zpow_of_nat, ← pow_succₓ],
+      simp [zpow_of_nat, pow_succₓ],
     zpow_neg' := fun n f => by
       ext x
       simp }

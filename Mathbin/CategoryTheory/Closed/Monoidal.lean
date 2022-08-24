@@ -223,7 +223,7 @@ theorem coev_app_comp_pre_app (f : B ⟶ A) :
 
 @[simp]
 theorem pre_id (A : C) [Closed A] : pre (𝟙 A) = 𝟙 _ := by
-  simp only [← pre, ← Functor.map_id]
+  simp only [pre, Functor.map_id]
   dsimp'
   simp
 

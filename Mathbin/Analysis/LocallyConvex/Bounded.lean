@@ -61,7 +61,7 @@ theorem is_vonN_bounded_empty : IsVonNBounded 𝕜 (∅ : Set E) := fun _ _ => a
 
 variable {𝕜 E}
 
-theorem is_vonN_bounded_iff (s : Set E) : IsVonNBounded 𝕜 s ↔ ∀, ∀ V ∈ 𝓝 (0 : E), ∀, Absorbs 𝕜 V s :=
+theorem is_vonN_bounded_iff (s : Set E) : IsVonNBounded 𝕜 s ↔ ∀ V ∈ 𝓝 (0 : E), Absorbs 𝕜 V s :=
   Iff.rfl
 
 theorem _root_.filter.has_basis.is_vonN_bounded_basis_iff {q : ι → Prop} {s : ι → Set E} {A : Set E}
@@ -112,7 +112,7 @@ theorem IsVonNBounded.image {σ : 𝕜₁ →+* 𝕜₂} [RingHomSurjective σ] 
   refine' ⟨r, hrpos, fun a ha => _⟩
   rw [← σ'.apply_symm_apply a]
   have hanz : a ≠ 0 := norm_pos_iff.mp (hrpos.trans_le ha)
-  have : σ'.symm a ≠ 0 := (RingHom.map_ne_zero σ'.symm.to_ring_hom).mpr hanz
+  have : σ'.symm a ≠ 0 := (map_ne_zero σ'.symm.to_ring_hom).mpr hanz
   change _ ⊆ σ _ • _
   rw [Set.image_subset_iff, preimage_smul_setₛₗ _ _ _ f this.is_unit]
   refine' hr (σ'.symm a) _
@@ -177,7 +177,7 @@ theorem TotallyBounded.is_vonN_bounded {s : Set E} (hs : TotallyBounded s) : Bor
     intro z hz
     rcases set.mem_add.mp hz with ⟨z1, z2, hz1, hz2, hz⟩
     have hz' : (z1, z2) ∈ x.fst ×ˢ x.snd := ⟨hz1, hz2⟩
-    simpa only [← hz] using h'' hz'
+    simpa only [hz] using h'' hz'
   refine' fun y hy => Absorbs.mono_left _ hx_fstsnd
   rw [← Set.singleton_vadd, vadd_eq_add]
   exact (absorbent_nhds_zero hx.1.1).Absorbs.add hx.2.2.absorbs_self
@@ -218,7 +218,7 @@ def LinearMap.clmOfExistsBoundedImage (f : E →ₗ[𝕜] F)
         x⁻¹ • V ⊆ x⁻¹ • f ⁻¹' (f '' V) := Set.smul_set_mono (Set.subset_preimage_image (⇑f) V)
         _ ⊆ x⁻¹ • f ⁻¹' (x • U) := Set.smul_set_mono (Set.preimage_mono h)
         _ = f ⁻¹' (x⁻¹ • x • U) := by
-          ext <;> simp only [← Set.mem_inv_smul_set_iff₀ x_ne, ← Set.mem_preimage, ← LinearMap.map_smul]
+          ext <;> simp only [Set.mem_inv_smul_set_iff₀ x_ne, Set.mem_preimage, LinearMap.map_smul]
         _ ⊆ f ⁻¹' U := by
           rw [inv_smul_smul₀ x_ne _]
         

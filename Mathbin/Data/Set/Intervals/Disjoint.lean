@@ -29,18 +29,18 @@ section Preorderₓ
 variable [Preorderₓ α] {a b c : α}
 
 @[simp]
-theorem Iic_disjoint_Ioi (h : a ≤ b) : Disjoint (Iic a) (Ioi b) := fun x ⟨ha, hb⟩ => not_le_of_lt (h.trans_lt hb) ha
+theorem Iic_disjoint_Ioi (h : a ≤ b) : Disjoint (Iic a) (Ioi b) := fun x ⟨ha, hb⟩ => not_le_of_ltₓ (h.trans_lt hb) ha
 
 @[simp]
 theorem Iic_disjoint_Ioc (h : a ≤ b) : Disjoint (Iic a) (Ioc b c) :=
-  (Iic_disjoint_Ioi h).mono le_rfl fun _ => And.left
+  (Iic_disjoint_Ioi h).mono le_rflₓ fun _ => And.left
 
 @[simp]
 theorem Ioc_disjoint_Ioc_same {a b c : α} : Disjoint (Ioc a b) (Ioc b c) :=
-  (Iic_disjoint_Ioc (le_reflₓ b)).mono (fun _ => And.right) le_rfl
+  (Iic_disjoint_Ioc (le_reflₓ b)).mono (fun _ => And.right) le_rflₓ
 
 @[simp]
-theorem Ico_disjoint_Ico_same {a b c : α} : Disjoint (Ico a b) (Ico b c) := fun x hx => not_le_of_lt hx.1.2 hx.2.1
+theorem Ico_disjoint_Ico_same {a b c : α} : Disjoint (Ico a b) (Ico b c) := fun x hx => not_le_of_ltₓ hx.1.2 hx.2.1
 
 @[simp]
 theorem Ici_disjoint_Iic : Disjoint (Ici a) (Iic b) ↔ ¬a ≤ b := by
@@ -60,19 +60,19 @@ theorem Union_Ici : (⋃ a : α, Ici a) = univ :=
 
 @[simp]
 theorem Union_Icc_right (a : α) : (⋃ b, Icc a b) = Ici a := by
-  simp only [Ici_inter_Iic, inter_Union, ← Union_Iic, ← inter_univ]
+  simp only [← Ici_inter_Iic, ← inter_Union, Union_Iic, inter_univ]
 
 @[simp]
 theorem Union_Ioc_right (a : α) : (⋃ b, Ioc a b) = Ioi a := by
-  simp only [Ioi_inter_Iic, inter_Union, ← Union_Iic, ← inter_univ]
+  simp only [← Ioi_inter_Iic, ← inter_Union, Union_Iic, inter_univ]
 
 @[simp]
 theorem Union_Icc_left (b : α) : (⋃ a, Icc a b) = Iic b := by
-  simp only [Ici_inter_Iic, Union_inter, ← Union_Ici, ← univ_inter]
+  simp only [← Ici_inter_Iic, ← Union_inter, Union_Ici, univ_inter]
 
 @[simp]
 theorem Union_Ico_left (b : α) : (⋃ a, Ico a b) = Iio b := by
-  simp only [Ici_inter_Iio, Union_inter, ← Union_Ici, ← univ_inter]
+  simp only [← Ici_inter_Iio, ← Union_inter, Union_Ici, univ_inter]
 
 @[simp]
 theorem Union_Iio [NoMaxOrder α] : (⋃ a : α, Iio a) = univ :=
@@ -84,19 +84,19 @@ theorem Union_Ioi [NoMinOrder α] : (⋃ a : α, Ioi a) = univ :=
 
 @[simp]
 theorem Union_Ico_right [NoMaxOrder α] (a : α) : (⋃ b, Ico a b) = Ici a := by
-  simp only [Ici_inter_Iio, inter_Union, ← Union_Iio, ← inter_univ]
+  simp only [← Ici_inter_Iio, ← inter_Union, Union_Iio, inter_univ]
 
 @[simp]
 theorem Union_Ioo_right [NoMaxOrder α] (a : α) : (⋃ b, Ioo a b) = Ioi a := by
-  simp only [Ioi_inter_Iio, inter_Union, ← Union_Iio, ← inter_univ]
+  simp only [← Ioi_inter_Iio, ← inter_Union, Union_Iio, inter_univ]
 
 @[simp]
 theorem Union_Ioc_left [NoMinOrder α] (b : α) : (⋃ a, Ioc a b) = Iic b := by
-  simp only [Ioi_inter_Iic, Union_inter, ← Union_Ioi, ← univ_inter]
+  simp only [← Ioi_inter_Iic, ← Union_inter, Union_Ioi, univ_inter]
 
 @[simp]
 theorem Union_Ioo_left [NoMinOrder α] (b : α) : (⋃ a, Ioo a b) = Iio b := by
-  simp only [Ioi_inter_Iio, Union_inter, ← Union_Ioi, ← univ_inter]
+  simp only [← Ioi_inter_Iio, ← Union_inter, Union_Ioi, univ_inter]
 
 end Preorderₓ
 
@@ -111,7 +111,7 @@ theorem Ico_disjoint_Ico : Disjoint (Ico a₁ a₂) (Ico b₁ b₂) ↔ min a₂
 @[simp]
 theorem Ioc_disjoint_Ioc : Disjoint (Ioc a₁ a₂) (Ioc b₁ b₂) ↔ min a₂ b₂ ≤ max a₁ b₁ := by
   have h : _ ↔ min (toDual a₁) (toDual b₁) ≤ max (toDual a₂) (toDual b₂) := Ico_disjoint_Ico
-  simpa only [← dual_Ico] using h
+  simpa only [dual_Ico] using h
 
 /-- If two half-open intervals are disjoint and the endpoint of one lies in the other,
   then it must be equal to the endpoint of the other. -/
@@ -119,25 +119,25 @@ theorem eq_of_Ico_disjoint {x₁ x₂ y₁ y₂ : α} (h : Disjoint (Ico x₁ x�
     (h2 : x₂ ∈ Ico y₁ y₂) : y₁ = x₂ := by
   rw [Ico_disjoint_Ico, min_eq_leftₓ (le_of_ltₓ h2.2), le_max_iff] at h
   apply le_antisymmₓ h2.1
-  exact h.elim (fun h => absurd hx (not_lt_of_le h)) id
+  exact h.elim (fun h => absurd hx (not_lt_of_leₓ h)) id
 
 @[simp]
-theorem Union_Ico_eq_Iio_self_iff {f : ι → α} {a : α} : (⋃ i, Ico (f i) a) = Iio a ↔ ∀, ∀ x < a, ∀, ∃ i, f i ≤ x := by
-  simp [Ici_inter_Iio, Union_inter, ← subset_def]
+theorem Union_Ico_eq_Iio_self_iff {f : ι → α} {a : α} : (⋃ i, Ico (f i) a) = Iio a ↔ ∀ x < a, ∃ i, f i ≤ x := by
+  simp [← Ici_inter_Iio, ← Union_inter, subset_def]
 
 @[simp]
 theorem Union_Ioc_eq_Ioi_self_iff {f : ι → α} {a : α} : (⋃ i, Ioc a (f i)) = Ioi a ↔ ∀ x, a < x → ∃ i, x ≤ f i := by
-  simp [Ioi_inter_Iic, inter_Union, ← subset_def]
+  simp [← Ioi_inter_Iic, ← inter_Union, subset_def]
 
 @[simp]
 theorem bUnion_Ico_eq_Iio_self_iff {p : ι → Prop} {f : ∀ i, p i → α} {a : α} :
-    (⋃ (i) (hi : p i), Ico (f i hi) a) = Iio a ↔ ∀, ∀ x < a, ∀, ∃ i hi, f i hi ≤ x := by
-  simp [Ici_inter_Iio, Union_inter, ← subset_def]
+    (⋃ (i) (hi : p i), Ico (f i hi) a) = Iio a ↔ ∀ x < a, ∃ i hi, f i hi ≤ x := by
+  simp [← Ici_inter_Iio, ← Union_inter, subset_def]
 
 @[simp]
 theorem bUnion_Ioc_eq_Ioi_self_iff {p : ι → Prop} {f : ∀ i, p i → α} {a : α} :
     (⋃ (i) (hi : p i), Ioc a (f i hi)) = Ioi a ↔ ∀ x, a < x → ∃ i hi, x ≤ f i hi := by
-  simp [Ioi_inter_Iic, inter_Union, ← subset_def]
+  simp [← Ioi_inter_Iic, ← inter_Union, subset_def]
 
 end LinearOrderₓ
 

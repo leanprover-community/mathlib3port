@@ -35,7 +35,7 @@ instance : NormedSpace 𝕜 (Completion E) :=
   { Completion.module with smul := (· • ·),
     norm_smul_le := fun c x =>
       (induction_on x (is_closed_le (continuous_const_smul _).norm (continuous_const.mul continuous_norm))) fun y => by
-        simp only [coe_smul, ← norm_coe, ← norm_smul] }
+        simp only [← coe_smul, norm_coe, norm_smul] }
 
 variable {𝕜 E}
 
@@ -81,7 +81,7 @@ instance [SemiNormedRing A] : NormedRing (Completion A) :=
             (Continuous.comp Real.continuous_mul (Continuous.prod_map continuous_norm continuous_norm))
         
       · intro x y
-        simp only [coe_mul, ← norm_coe]
+        simp only [← coe_mul, norm_coe]
         exact norm_mul_le x y
          }
 
@@ -95,7 +95,7 @@ instance [SemiNormedCommRing A] [NormedAlgebra 𝕜 A] [HasUniformContinuousCons
             (Continuous.comp (continuous_mul_left _) continuous_norm)
         
       · intro x
-        simp only [coe_smul, ← norm_coe]
+        simp only [← coe_smul, norm_coe]
         exact NormedSpace.norm_smul_le r x
          }
 

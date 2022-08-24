@@ -354,7 +354,7 @@ instance : MulAction F (LeftTransversals (H : Set G)) where
         
       · rintro ⟨-, t', ht', rfl⟩ h
         replace h := quotient_action.inv_mul_mem f⁻¹ h
-        simp only [← Subtype.ext_iff, ← Subtype.coe_mk, ← smul_left_cancel_iff, ← inv_smul_smul] at h⊢
+        simp only [Subtype.ext_iff, Subtype.coe_mk, smul_left_cancel_iff, inv_smul_smul] at h⊢
         exact subtype.ext_iff.mp (ht2 ⟨t', ht'⟩ h)
         ⟩
   one_smul := fun T => Subtype.ext (one_smul F T)

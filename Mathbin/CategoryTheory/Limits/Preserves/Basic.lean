@@ -241,7 +241,7 @@ def preservesLimitsOfShapeOfEquiv {J' : Type w₂} [Category.{w₂'} J'] (e : J 
         apply ((is_limit.postcompose_hom_equiv equ _).symm this).ofIsoLimit
         refine' cones.ext (iso.refl _) fun j => _
         · dsimp'
-          simp [functor.map_comp]
+          simp [← functor.map_comp]
            }
 
 -- See library note [dsimp, simp].
@@ -296,7 +296,7 @@ def preservesColimitsOfShapeOfEquiv {J' : Type w₂} [Category.{w₂'} J'] (e : 
         apply ((is_colimit.precompose_inv_equiv equ _).symm this).ofIsoColimit
         refine' cocones.ext (iso.refl _) fun j => _
         · dsimp'
-          simp [functor.map_comp]
+          simp [← functor.map_comp]
            }
 
 -- See library note [dsimp, simp].

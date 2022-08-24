@@ -90,7 +90,7 @@ theorem AtPrime.local_ring [IsLocalization.AtPrime S I] : LocalRing S :=
       rw [← hrx] at hx
       rw [← hry] at hy
       obtain ⟨t, ht⟩ := IsLocalization.eq.1 hxyz
-      simp only [← mul_oneₓ, ← one_mulₓ, ← Submonoid.coe_mul, ← Subtype.coe_mk] at ht
+      simp only [mul_oneₓ, one_mulₓ, Submonoid.coe_mul, Subtype.coe_mk] at ht
       suffices : ↑sx * ↑sy * ↑sz * ↑t ∈ I
       exact
         not_orₓ (mt hp.mem_or_mem <| not_orₓ sx.2 sy.2) sz.2 (hp.mem_or_mem <| (hp.mem_or_mem this).resolve_right t.2)
@@ -135,7 +135,7 @@ theorem is_unit_to_map_iff (x : R) : IsUnit ((algebraMap R S) x) ↔ x ∈ I.pri
 theorem to_map_mem_maximal_iff (x : R) (h : LocalRing S := local_ring S I) :
     algebraMap R S x ∈ LocalRing.maximalIdeal S ↔ x ∈ I :=
   not_iff_not.mp <| by
-    simpa only [← LocalRing.mem_maximal_ideal, ← mem_nonunits_iff, ← not_not] using is_unit_to_map_iff S I x
+    simpa only [LocalRing.mem_maximal_ideal, mem_nonunits_iff, not_not] using is_unit_to_map_iff S I x
 
 theorem is_unit_mk'_iff (x : R) (y : I.primeCompl) : IsUnit (mk' S x y) ↔ x ∈ I.primeCompl :=
   ⟨fun h hx => mk'_mem_iff.mpr ((to_map_mem_maximal_iff S I x).mpr hx) h, fun h =>
@@ -144,7 +144,7 @@ theorem is_unit_mk'_iff (x : R) (y : I.primeCompl) : IsUnit (mk' S x y) ↔ x �
 theorem mk'_mem_maximal_iff (x : R) (y : I.primeCompl) (h : LocalRing S := local_ring S I) :
     mk' S x y ∈ LocalRing.maximalIdeal S ↔ x ∈ I :=
   not_iff_not.mp <| by
-    simpa only [← LocalRing.mem_maximal_ideal, ← mem_nonunits_iff, ← not_not] using is_unit_mk'_iff S I x y
+    simpa only [LocalRing.mem_maximal_ideal, mem_nonunits_iff, not_not] using is_unit_mk'_iff S I x y
 
 end AtPrime
 
@@ -166,7 +166,7 @@ variable {I}
 theorem AtPrime.comap_maximal_ideal :
     Ideal.comap (algebraMap R (Localization.AtPrime I)) (LocalRing.maximalIdeal (Localization I.primeCompl)) = I :=
   Ideal.ext fun x => by
-    simpa only [← Ideal.mem_comap] using at_prime.to_map_mem_maximal_iff _ I x
+    simpa only [Ideal.mem_comap] using at_prime.to_map_mem_maximal_iff _ I x
 
 /-- The image of `I` in the localization at `I.prime_compl` is a maximal ideal, and in particular
 it is the unique maximal ideal given by the local ring structure `at_prime.local_ring` -/
@@ -191,7 +191,7 @@ that `I = J.comap f`. This can be useful when `I` is not definitionally equal to
  -/
 noncomputable def localRingHom (J : Ideal P) [hJ : J.IsPrime] (f : R →+* P) (hIJ : I = J.comap f) :
     Localization.AtPrime I →+* Localization.AtPrime J :=
-  IsLocalization.map (Localization.AtPrime J) f (le_comap_prime_compl_iff.mpr (ge_of_eq hIJ))
+  IsLocalization.map (Localization.AtPrime J) f (le_comap_prime_compl_iff.mpr (ge_of_eqₓ hIJ))
 
 theorem local_ring_hom_to_map (J : Ideal P) [hJ : J.IsPrime] (f : R →+* P) (hIJ : I = J.comap f) (x : R) :
     localRingHom I J f hIJ (algebraMap _ _ x) = algebraMap _ _ (f x) :=
@@ -201,7 +201,7 @@ theorem local_ring_hom_mk' (J : Ideal P) [hJ : J.IsPrime] (f : R →+* P) (hIJ :
     (y : I.primeCompl) :
     localRingHom I J f hIJ (IsLocalization.mk' _ x y) =
       IsLocalization.mk' (Localization.AtPrime J) (f x)
-        (⟨f y, le_comap_prime_compl_iff.mpr (ge_of_eq hIJ) y.2⟩ : J.primeCompl) :=
+        (⟨f y, le_comap_prime_compl_iff.mpr (ge_of_eqₓ hIJ) y.2⟩ : J.primeCompl) :=
   map_mk' _ _ _
 
 instance is_local_ring_hom_local_ring_hom (J : Ideal P) [hJ : J.IsPrime] (f : R →+* P) (hIJ : I = J.comap f) :
@@ -229,7 +229,7 @@ theorem local_ring_hom_comp {S : Type _} [CommSemiringₓ S] (J : Ideal S) [hJ :
           rw [hIJ, hJK, Ideal.comap_comap f g]) =
       (localRingHom J K g hJK).comp (localRingHom I J f hIJ) :=
   local_ring_hom_unique _ _ _ _ fun r => by
-    simp only [← Function.comp_app, ← RingHom.coe_comp, ← local_ring_hom_to_map]
+    simp only [Function.comp_app, RingHom.coe_comp, local_ring_hom_to_map]
 
 end Localization
 

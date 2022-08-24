@@ -32,11 +32,11 @@ instance Endofunctor.algebraPreadditive : Preadditive (Endofunctor.Algebra F) wh
     { add := fun α β =>
         { f := α.f + β.f,
           h' := by
-            simp only [← functor.map_add, ← add_comp, ← endofunctor.algebra.hom.h, ← comp_add] },
+            simp only [functor.map_add, add_comp, endofunctor.algebra.hom.h, comp_add] },
       zero :=
         { f := 0,
           h' := by
-            simp only [← functor.map_zero, ← zero_comp, ← comp_zero] },
+            simp only [functor.map_zero, zero_comp, comp_zero] },
       nsmul := fun n α =>
         { f := n • α.f,
           h' := by
@@ -44,11 +44,11 @@ instance Endofunctor.algebraPreadditive : Preadditive (Endofunctor.Algebra F) wh
       neg := fun α =>
         { f := -α.f,
           h' := by
-            simp only [← functor.map_neg, ← neg_comp, ← endofunctor.algebra.hom.h, ← comp_neg] },
+            simp only [functor.map_neg, neg_comp, endofunctor.algebra.hom.h, comp_neg] },
       sub := fun α β =>
         { f := α.f - β.f,
           h' := by
-            simp only [← functor.map_sub, ← sub_comp, ← endofunctor.algebra.hom.h, ← comp_sub] },
+            simp only [functor.map_sub, sub_comp, endofunctor.algebra.hom.h, comp_sub] },
       zsmul := fun r α =>
         { f := r • α.f,
           h' := by
@@ -85,12 +85,12 @@ instance Endofunctor.algebraPreadditive : Preadditive (Endofunctor.Algebra F) wh
         intros
         ext
         dsimp'
-        simp only [← coe_nat_zsmul, ← succ_nsmul]
+        simp only [coe_nat_zsmul, succ_nsmul]
         rfl,
       zsmul_neg' := by
         intros
         ext
-        simp only [← zsmul_neg_succ_of_nat, ← neg_inj, ← nsmul_eq_smul_cast ℤ],
+        simp only [zsmul_neg_succ_of_nat, neg_inj, nsmul_eq_smul_cast ℤ],
       add_left_neg := by
         intros
         ext
@@ -116,11 +116,11 @@ instance Endofunctor.coalgebraPreadditive : Preadditive (Endofunctor.Coalgebra F
     { add := fun α β =>
         { f := α.f + β.f,
           h' := by
-            simp only [← functor.map_add, ← comp_add, ← endofunctor.coalgebra.hom.h, ← add_comp] },
+            simp only [functor.map_add, comp_add, endofunctor.coalgebra.hom.h, add_comp] },
       zero :=
         { f := 0,
           h' := by
-            simp only [← functor.map_zero, ← zero_comp, ← comp_zero] },
+            simp only [functor.map_zero, zero_comp, comp_zero] },
       nsmul := fun n α =>
         { f := n • α.f,
           h' := by
@@ -128,11 +128,11 @@ instance Endofunctor.coalgebraPreadditive : Preadditive (Endofunctor.Coalgebra F
       neg := fun α =>
         { f := -α.f,
           h' := by
-            simp only [← functor.map_neg, ← comp_neg, ← endofunctor.coalgebra.hom.h, ← neg_comp] },
+            simp only [functor.map_neg, comp_neg, endofunctor.coalgebra.hom.h, neg_comp] },
       sub := fun α β =>
         { f := α.f - β.f,
           h' := by
-            simp only [← functor.map_sub, ← comp_sub, ← endofunctor.coalgebra.hom.h, ← sub_comp] },
+            simp only [functor.map_sub, comp_sub, endofunctor.coalgebra.hom.h, sub_comp] },
       zsmul := fun r α =>
         { f := r • α.f,
           h' := by
@@ -169,12 +169,12 @@ instance Endofunctor.coalgebraPreadditive : Preadditive (Endofunctor.Coalgebra F
         intros
         ext
         dsimp'
-        simp only [← coe_nat_zsmul, ← succ_nsmul]
+        simp only [coe_nat_zsmul, succ_nsmul]
         rfl,
       zsmul_neg' := by
         intros
         ext
-        simp only [← zsmul_neg_succ_of_nat, ← neg_inj, ← nsmul_eq_smul_cast ℤ],
+        simp only [zsmul_neg_succ_of_nat, neg_inj, nsmul_eq_smul_cast ℤ],
       add_left_neg := by
         intros
         ext

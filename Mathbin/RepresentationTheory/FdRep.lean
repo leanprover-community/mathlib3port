@@ -33,7 +33,7 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1406:31: unsupported: @[derive] abbrev
+-- ./././Mathport/Syntax/Translate/Command.lean:276:31: unsupported: @[derive] abbrev
 --, has_limits, has_colimits
 /-- The category of finite dimensional `k`-linear representations of a monoid `G`. -/
 abbrev FdRep (k G : Type u) [Field k] [Monoidₓ G] :=

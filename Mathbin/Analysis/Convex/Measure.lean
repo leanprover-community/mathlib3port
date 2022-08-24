@@ -54,8 +54,8 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (Frontier s) = 0 := by
     set N : ℕ := ⌊dist y x⌋₊
     refine' mem_Union.2 ⟨N, _⟩
     have hN : y ∈ B N := by
-      simp only [← B, ← N]
-      simp [← Nat.lt_floor_add_one]
+      simp only [B, N]
+      simp [Nat.lt_floor_add_one]
     suffices : y ∈ Frontier (s ∩ B N) ∩ B N
     exact this.1
     rw [frontier_inter_open_inter is_open_ball]

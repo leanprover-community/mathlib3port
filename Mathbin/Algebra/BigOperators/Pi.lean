@@ -52,7 +52,7 @@ theorem prod_mk_prod {α β γ : Type _} [CommMonoidₓ α] [CommMonoidₓ β] (
   haveI := Classical.decEq γ
   Finset.induction_on s rfl
     (by
-      simp (config := { contextual := true })[← Prod.ext_iff])
+      simp (config := { contextual := true })[Prod.ext_iff])
 
 section Single
 
@@ -65,16 +65,17 @@ theorem Finset.univ_sum_single [Fintype I] (f : ∀ i, Z i) : (∑ i, Pi.single 
   ext a
   simp
 
-theorem AddMonoidHom.functions_ext [Fintype I] (G : Type _) [AddCommMonoidₓ G] (g h : (∀ i, Z i) →+ G)
-    (w : ∀ (i : I) (x : Z i), g (Pi.single i x) = h (Pi.single i x)) : g = h := by
+theorem AddMonoidHom.functions_ext [Finite I] (G : Type _) [AddCommMonoidₓ G] (g h : (∀ i, Z i) →+ G)
+    (H : ∀ i x, g (Pi.single i x) = h (Pi.single i x)) : g = h := by
+  cases nonempty_fintype I
   ext k
   rw [← Finset.univ_sum_single k, g.map_sum, h.map_sum]
-  simp only [← w]
+  simp only [H]
 
 /-- This is used as the ext lemma instead of `add_monoid_hom.functions_ext` for reasons explained in
 note [partially-applied ext lemmas]. -/
 @[ext]
-theorem AddMonoidHom.functions_ext' [Fintype I] (M : Type _) [AddCommMonoidₓ M] (g h : (∀ i, Z i) →+ M)
+theorem AddMonoidHom.functions_ext' [Finite I] (M : Type _) [AddCommMonoidₓ M] (g h : (∀ i, Z i) →+ M)
     (H : ∀ i, g.comp (AddMonoidHom.single Z i) = h.comp (AddMonoidHom.single Z i)) : g = h :=
   have := fun i => AddMonoidHom.congr_fun (H i)
   -- elab without an expected type
@@ -92,9 +93,9 @@ variable {I : Type _} [DecidableEq I] {f : I → Type _}
 variable [∀ i, NonAssocSemiringₓ (f i)]
 
 @[ext]
-theorem RingHom.functions_ext [Fintype I] (G : Type _) [NonAssocSemiringₓ G] (g h : (∀ i, f i) →+* G)
-    (w : ∀ (i : I) (x : f i), g (single i x) = h (single i x)) : g = h :=
-  RingHom.coe_add_monoid_hom_injective <| @AddMonoidHom.functions_ext I _ f _ _ G _ (g : (∀ i, f i) →+ G) h w
+theorem RingHom.functions_ext [Finite I] (G : Type _) [NonAssocSemiringₓ G] (g h : (∀ i, f i) →+* G)
+    (H : ∀ (i : I) (x : f i), g (single i x) = h (single i x)) : g = h :=
+  RingHom.coe_add_monoid_hom_injective <| @AddMonoidHom.functions_ext I _ f _ _ G _ (g : (∀ i, f i) →+ G) h H
 
 end RingHom
 

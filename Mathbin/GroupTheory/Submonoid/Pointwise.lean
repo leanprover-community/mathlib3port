@@ -356,7 +356,7 @@ theorem mem_one {x : R} : x ∈ (1 : AddSubmonoid R) ↔ ∃ n : ℕ, ↑n = x :
   Iff.rfl
 
 theorem one_eq_closure : (1 : AddSubmonoid R) = closure {1} := by
-  simp only [← closure_singleton_eq, ← mul_oneₓ, ← one_eq_mrange]
+  simp only [closure_singleton_eq, mul_oneₓ, one_eq_mrange]
   congr 1 with n
   simp
 
@@ -377,16 +377,16 @@ instance : Mul (AddSubmonoid R) :=
 theorem mul_mem_mul {M N : AddSubmonoid R} {m n : R} (hm : m ∈ M) (hn : n ∈ N) : m * n ∈ M * N :=
   (le_supr _ ⟨m, hm⟩ : _ ≤ M * N) ⟨n, hn, rfl⟩
 
-theorem mul_le {M N P : AddSubmonoid R} : M * N ≤ P ↔ ∀, ∀ m ∈ M, ∀, ∀ n ∈ N, ∀, m * n ∈ P :=
+theorem mul_le {M N P : AddSubmonoid R} : M * N ≤ P ↔ ∀ m ∈ M, ∀ n ∈ N, m * n ∈ P :=
   ⟨fun H m hm n hn => H <| mul_mem_mul hm hn, fun H =>
     supr_le fun ⟨m, hm⟩ => map_le_iff_le_comap.2 fun n hn => H m hm n hn⟩
 
 @[elabAsElim]
 protected theorem mul_induction_on {M N : AddSubmonoid R} {C : R → Prop} {r : R} (hr : r ∈ M * N)
-    (hm : ∀, ∀ m ∈ M, ∀, ∀ n ∈ N, ∀, C (m * n)) (ha : ∀ x y, C x → C y → C (x + y)) : C r :=
+    (hm : ∀ m ∈ M, ∀ n ∈ N, C (m * n)) (ha : ∀ x y, C x → C y → C (x + y)) : C r :=
   (@mul_le _ _ _ _
         ⟨C, ha, by
-          simpa only [← zero_mul] using hm _ (zero_mem _) _ (zero_mem _)⟩).2
+          simpa only [zero_mul] using hm _ (zero_mem _) _ (zero_mem _)⟩).2
     hm hr
 
 open Pointwise
@@ -405,8 +405,8 @@ theorem closure_mul_closure (S T : Set R) : closure S * closure T = closure (S *
         exact subset_closure ⟨_, _, ‹_›, ‹_›, rfl⟩
     all_goals
       intros
-      simp only [← mul_zero, ← zero_mul, ← zero_mem, ← left_distrib, ← right_distrib, ← mul_smul_comm, ← smul_mul_assoc]
-      solve_by_elim(config := { max_depth := 4, discharger := tactic.interactive.apply_instance }) [← add_mem _ _, ←
+      simp only [mul_zero, zero_mul, zero_mem, left_distrib, right_distrib, mul_smul_comm, smul_mul_assoc]
+      solve_by_elim(config := { max_depth := 4, discharger := tactic.interactive.apply_instance }) [add_mem _ _,
         zero_mem _]
     
   · rw [closure_le]
@@ -457,7 +457,7 @@ protected def hasDistribNeg : HasDistribNeg (AddSubmonoid R) :=
     neg_mul := fun x y => by
       refine'
           le_antisymmₓ (mul_le.2 fun m hm n hn => _) ((AddSubmonoid.neg_le _ _).2 <| mul_le.2 fun m hm n hn => _) <;>
-        simp only [← AddSubmonoid.mem_neg, neg_mul] at *
+        simp only [AddSubmonoid.mem_neg, ← neg_mul] at *
       · exact mul_mem_mul hm hn
         
       · exact mul_mem_mul (neg_mem_neg.2 hm) hn
@@ -465,7 +465,7 @@ protected def hasDistribNeg : HasDistribNeg (AddSubmonoid R) :=
     mul_neg := fun x y => by
       refine'
           le_antisymmₓ (mul_le.2 fun m hm n hn => _) ((AddSubmonoid.neg_le _ _).2 <| mul_le.2 fun m hm n hn => _) <;>
-        simp only [← AddSubmonoid.mem_neg, mul_neg] at *
+        simp only [AddSubmonoid.mem_neg, ← mul_neg] at *
       · exact mul_mem_mul hm hn
         
       · exact mul_mem_mul hm (neg_mem_neg.2 hn)

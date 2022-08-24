@@ -45,7 +45,7 @@ theorem to_finset_some {a : α} : (some a).toFinset = {a} :=
 
 @[simp]
 theorem mem_to_finset {a : α} {o : Option α} : a ∈ o.toFinset ↔ a ∈ o := by
-  cases o <;> simp [← eq_comm]
+  cases o <;> simp [eq_comm]
 
 theorem card_to_finset (o : Option α) : o.toFinset.card = o.elim 0 1 := by
   cases o <;> rfl
@@ -65,7 +65,7 @@ def insertNone : Finset α ↪o Finset (Option α) :=
 /-⟨none ::ₘ s.1.map some, multiset.nodup_cons.2
   ⟨by simp, s.nodup.map $ λ a b, option.some.inj⟩⟩-/
 @[simp]
-theorem mem_insert_none {s : Finset α} : ∀ {o : Option α}, o ∈ s.insertNone ↔ ∀, ∀ a ∈ o, ∀, a ∈ s
+theorem mem_insert_none {s : Finset α} : ∀ {o : Option α}, o ∈ s.insertNone ↔ ∀ a ∈ o, a ∈ s
   | none =>
     iff_of_true (Multiset.mem_cons_self _ _) fun a h => by
       cases h
@@ -78,7 +78,7 @@ theorem some_mem_insert_none {s : Finset α} {a : α} : some a ∈ s.insertNone 
 
 @[simp]
 theorem card_insert_none (s : Finset α) : s.insertNone.card = s.card + 1 := by
-  simp [← insert_none]
+  simp [insert_none]
 
 /-- Given `s : finset (option α)`, `s.erase_none : finset α` is the set of `x : α` such that
 `some x ∈ s`. -/
@@ -87,7 +87,7 @@ def eraseNone : Finset (Option α) →o Finset α :=
 
 @[simp]
 theorem mem_erase_none {s : Finset (Option α)} {x : α} : x ∈ s.eraseNone ↔ some x ∈ s := by
-  simp [← erase_none]
+  simp [erase_none]
 
 theorem erase_none_eq_bUnion [DecidableEq α] (s : Finset (Option α)) : s.eraseNone = s.bUnion Option.toFinset := by
   ext
@@ -100,7 +100,7 @@ theorem erase_none_map_some (s : Finset α) : (s.map Embedding.some).eraseNone =
 
 @[simp]
 theorem erase_none_image_some [DecidableEq (Option α)] (s : Finset α) : (s.Image some).eraseNone = s := by
-  simpa only [← map_eq_image] using erase_none_map_some s
+  simpa only [map_eq_image] using erase_none_map_some s
 
 @[simp]
 theorem coe_erase_none (s : Finset (Option α)) : (s.eraseNone : Set α) = some ⁻¹' s :=

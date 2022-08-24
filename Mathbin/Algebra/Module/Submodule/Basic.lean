@@ -39,9 +39,9 @@ structure Submodule (R : Type u) (M : Type v) [Semiringₓ R] [AddCommMonoidₓ 
   SubMulAction R M : Type v
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident submodule.to_add_submonoid]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident submodule.to_add_submonoid]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident submodule.to_sub_mul_action]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident submodule.to_sub_mul_action]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace Submodule
 
 variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
@@ -167,11 +167,10 @@ theorem smul_mem (r : R) (h : x ∈ p) : r • x ∈ p :=
 theorem smul_of_tower_mem [HasSmul S R] [HasSmul S M] [IsScalarTower S R M] (r : S) (h : x ∈ p) : r • x ∈ p :=
   p.toSubMulAction.smul_of_tower_mem r h
 
-protected theorem sum_mem {t : Finset ι} {f : ι → M} : (∀, ∀ c ∈ t, ∀, f c ∈ p) → (∑ i in t, f i) ∈ p :=
+protected theorem sum_mem {t : Finset ι} {f : ι → M} : (∀ c ∈ t, f c ∈ p) → (∑ i in t, f i) ∈ p :=
   sum_mem
 
-theorem sum_smul_mem {t : Finset ι} {f : ι → M} (r : ι → R) (hyp : ∀, ∀ c ∈ t, ∀, f c ∈ p) :
-    (∑ i in t, r i • f i) ∈ p :=
+theorem sum_smul_mem {t : Finset ι} {f : ι → M} (r : ι → R) (hyp : ∀ c ∈ t, f c ∈ p) : (∑ i in t, r i • f i) ∈ p :=
   sum_mem fun i hi => smul_mem _ _ (hyp i hi)
 
 @[simp]
@@ -244,7 +243,7 @@ instance module' [Semiringₓ S] [HasSmul S R] [Module S M] [IsScalarTower S R M
   refine' { p.to_sub_mul_action.mul_action' with smul := (· • ·).. } <;>
     · intros
       apply SetCoe.ext
-      simp [← smul_add, ← add_smul, ← mul_smul]
+      simp [smul_add, add_smul, mul_smul]
       
 
 instance : Module R p :=
@@ -257,7 +256,7 @@ instance no_zero_smul_divisors [NoZeroSmulDivisors R M] : NoZeroSmulDivisors R p
 
 /-- Embedding of a submodule `p` to the ambient space `M`. -/
 protected def subtype : p →ₗ[R] M := by
-  refine' { toFun := coe.. } <;> simp [← coe_smul]
+  refine' { toFun := coe.. } <;> simp [coe_smul]
 
 theorem subtype_apply (x : p) : p.Subtype x = x :=
   rfl
@@ -323,7 +322,7 @@ def restrictScalarsEmbedding : Submodule R M ↪o Submodule S M where
   toFun := restrictScalars S
   inj' := restrict_scalars_injective S R M
   map_rel_iff' := fun p q => by
-    simp [← SetLike.le_def]
+    simp [SetLike.le_def]
 
 /-- Turning `p : submodule R M` into an `S`-submodule gives the same module structure
 as turning it into a type and adding a module structure. -/
@@ -419,12 +418,12 @@ variable [Ringₓ R] [IsDomain R]
 
 variable [AddCommGroupₓ M] [Module R M] {b : ι → M}
 
-theorem not_mem_of_ortho {x : M} {N : Submodule R M} (ortho : ∀ (c : R), ∀ y ∈ N, ∀, c • x + y = (0 : M) → c = 0) :
+theorem not_mem_of_ortho {x : M} {N : Submodule R M} (ortho : ∀ (c : R), ∀ y ∈ N, c • x + y = (0 : M) → c = 0) :
     x ∉ N := by
   intro hx
   simpa using ortho (-1) x hx
 
-theorem ne_zero_of_ortho {x : M} {N : Submodule R M} (ortho : ∀ (c : R), ∀ y ∈ N, ∀, c • x + y = (0 : M) → c = 0) :
+theorem ne_zero_of_ortho {x : M} {N : Submodule R M} (ortho : ∀ (c : R), ∀ y ∈ N, c • x + y = (0 : M) → c = 0) :
     x ≠ 0 :=
   mt (fun h => show x ∈ N from h.symm ▸ N.zero_mem) (not_mem_of_ortho ortho)
 

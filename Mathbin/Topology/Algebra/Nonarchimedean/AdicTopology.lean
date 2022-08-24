@@ -118,7 +118,7 @@ theorem adic_module_basis : I.RingFilterBasis.SubmodulesBasis fun n : ℕ => I ^
     smul := fun m i =>
       ⟨(I ^ i • ⊤ : Ideal R), ⟨i, rfl⟩, fun a a_in => by
         replace a_in : a ∈ I ^ i := by
-          simpa [← (I ^ i).mul_top] using a_in
+          simpa [(I ^ i).mul_top] using a_in
         exact smul_mem_smul a_in mem_top⟩ }
 
 /-- The topology on a `R`-module `M` associated to an ideal `M`. Submodules $I^n M$,
@@ -149,7 +149,7 @@ def IsAdic [H : TopologicalSpace R] (J : Ideal R) : Prop :=
 open neighborhoods of zero. -/
 theorem is_adic_iff [top : TopologicalSpace R] [TopologicalRing R] {J : Ideal R} :
     IsAdic J ↔
-      (∀ n : ℕ, IsOpen ((J ^ n : Ideal R) : Set R)) ∧ ∀, ∀ s ∈ 𝓝 (0 : R), ∀, ∃ n : ℕ, ((J ^ n : Ideal R) : Set R) ⊆ s :=
+      (∀ n : ℕ, IsOpen ((J ^ n : Ideal R) : Set R)) ∧ ∀ s ∈ 𝓝 (0 : R), ∃ n : ℕ, ((J ^ n : Ideal R) : Set R) ⊆ s :=
   by
   constructor
   · intro H
@@ -220,7 +220,7 @@ theorem is_bot_adic_iff {A : Type _} [CommRingₓ A] [TopologicalSpace A] [Topol
       
     · intro U U_nhds
       use 1
-      simp [← mem_of_mem_nhds U_nhds]
+      simp [mem_of_mem_nhds U_nhds]
       
     
 

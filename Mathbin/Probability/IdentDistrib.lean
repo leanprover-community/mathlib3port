@@ -179,14 +179,14 @@ theorem integral_eq [NormedAddCommGroup γ] [NormedSpace ℝ γ] [CompleteSpace 
 theorem snorm_eq [NormedAddCommGroup γ] [OpensMeasurableSpace γ] (h : IdentDistrib f g μ ν) (p : ℝ≥0∞) :
     snorm f p μ = snorm g p ν := by
   by_cases' h0 : p = 0
-  · simp [← h0]
+  · simp [h0]
     
   by_cases' h_top : p = ∞
-  · simp only [← h_top, ← snorm, ← snorm_ess_sup, ← Ennreal.top_ne_zero, ← eq_self_iff_true, ← if_true, ← if_false]
+  · simp only [h_top, snorm, snorm_ess_sup, Ennreal.top_ne_zero, eq_self_iff_true, if_true, if_false]
     apply ess_sup_eq
     exact h.comp (measurable_coe_nnreal_ennreal.comp measurable_nnnorm)
     
-  simp only [← snorm_eq_snorm' h0 h_top, ← snorm', ← one_div]
+  simp only [snorm_eq_snorm' h0 h_top, snorm', one_div]
   congr 1
   apply lintegral_eq
   exact h.comp (Measurable.pow_const (measurable_coe_nnreal_ennreal.comp measurable_nnnorm) p.to_real)
@@ -283,7 +283,7 @@ theorem Memℒp.uniform_integrable_of_ident_distrib_aux {ι : Type _} {f : ι �
       (fun x : E => if (⟨C, hC₁.le⟩ : ℝ≥0 ) ≤ ∥x∥₊ then x else 0) ∘ f i :=
     by
     ext x
-    simp only [← Set.indicatorₓ, ← Set.mem_set_of_eq]
+    simp only [Set.indicatorₓ, Set.mem_set_of_eq]
   simp_rw [coe_nnnorm, this]
   rw [← snorm_map_measure _ (hf i).ae_measurable_fst, (hf i).map_eq, snorm_map_measure _ (hf j).ae_measurable_fst]
   · rfl

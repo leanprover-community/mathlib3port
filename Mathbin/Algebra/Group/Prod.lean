@@ -279,7 +279,7 @@ theorem snd_comp_prod (f : M →ₙ* N) (g : M →ₙ* P) : (snd N P).comp (f.Pr
 @[simp, to_additive prod_unique]
 theorem prod_unique (f : M →ₙ* N × P) : ((fst N P).comp f).Prod ((snd N P).comp f) = f :=
   ext fun x => by
-    simp only [← prod_apply, ← coe_fst, ← coe_snd, ← comp_apply, ← Prod.mk.eta]
+    simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
 
 end Prod
 
@@ -421,7 +421,7 @@ theorem snd_comp_prod (f : M →* N) (g : M →* P) : (snd N P).comp (f.Prod g) 
 @[simp, to_additive prod_unique]
 theorem prod_unique (f : M →* N × P) : ((fst N P).comp f).Prod ((snd N P).comp f) = f :=
   ext fun x => by
-    simp only [← prod_apply, ← coe_fst, ← coe_snd, ← comp_apply, ← Prod.mk.eta]
+    simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
 
 end Prod
 
@@ -466,17 +466,17 @@ theorem coprod_apply (p : M × N) : f.coprod g p = f p.1 * g p.2 :=
 @[simp, to_additive]
 theorem coprod_comp_inl : (f.coprod g).comp (inl M N) = f :=
   ext fun x => by
-    simp [← coprod_apply]
+    simp [coprod_apply]
 
 @[simp, to_additive]
 theorem coprod_comp_inr : (f.coprod g).comp (inr M N) = g :=
   ext fun x => by
-    simp [← coprod_apply]
+    simp [coprod_apply]
 
 @[simp, to_additive]
 theorem coprod_unique (f : M × N →* P) : (f.comp (inl M N)).coprod (f.comp (inr M N)) = f :=
   ext fun x => by
-    simp [← coprod_apply, ← inl_apply, ← inr_apply, map_mul]
+    simp [coprod_apply, inl_apply, inr_apply, ← map_mul]
 
 @[simp, to_additive]
 theorem coprod_inl_inr {M N : Type _} [CommMonoidₓ M] [CommMonoidₓ N] : (inl M N).coprod (inr M N) = id (M × N) :=
@@ -548,7 +548,7 @@ def prodUnits : (M × N)ˣ ≃* Mˣ × Nˣ where
   left_inv := fun u => by
     simp
   right_inv := fun ⟨u₁, u₂⟩ => by
-    simp [← Units.map]
+    simp [Units.map]
   map_mul' := MonoidHom.map_mul _
 
 end
@@ -567,9 +567,9 @@ Used mainly to define the natural topology of `αˣ`. -/
 def embedProduct (α : Type _) [Monoidₓ α] : αˣ →* α × αᵐᵒᵖ where
   toFun := fun x => ⟨x, op ↑x⁻¹⟩
   map_one' := by
-    simp only [← inv_one, ← eq_self_iff_true, ← Units.coe_one, ← op_one, ← Prod.mk_eq_one, ← and_selfₓ]
+    simp only [inv_one, eq_self_iff_true, Units.coe_one, op_one, Prod.mk_eq_one, and_selfₓ]
   map_mul' := fun x y => by
-    simp only [← mul_inv_rev, ← op_mul, ← Units.coe_mul, ← Prod.mk_mul_mk]
+    simp only [mul_inv_rev, op_mul, Units.coe_mul, Prod.mk_mul_mk]
 
 @[to_additive]
 theorem embed_product_injective (α : Type _) [Monoidₓ α] : Function.Injective (embedProduct α) := fun a₁ a₂ h =>

@@ -435,9 +435,9 @@ protected def mulOneClass : MulOneClassₓ (Filter α) where
   one := 1
   mul := (· * ·)
   one_mul := fun f => by
-    simp only [pure_one, map₂_mul, ← map₂_pure_left, ← one_mulₓ, ← map_id']
+    simp only [← pure_one, ← map₂_mul, map₂_pure_left, one_mulₓ, map_id']
   mul_one := fun f => by
-    simp only [pure_one, map₂_mul, ← map₂_pure_right, ← mul_oneₓ, ← map_id']
+    simp only [← pure_one, ← map₂_mul, map₂_pure_right, mul_oneₓ, map_id']
 
 localized [Pointwise]
   attribute [instance]
@@ -506,14 +506,14 @@ theorem bot_pow {n : ℕ} (hn : n ≠ 0) : (⊥ : Filter α) ^ n = ⊥ := by
 @[to_additive]
 theorem mul_top_of_one_le (hf : 1 ≤ f) : f * ⊤ = ⊤ := by
   refine' top_le_iff.1 fun s => _
-  simp only [← mem_mul, ← mem_top, ← exists_and_distrib_left, ← exists_eq_left]
+  simp only [mem_mul, mem_top, exists_and_distrib_left, exists_eq_left]
   rintro ⟨t, ht, hs⟩
   rwa [mul_univ_of_one_mem (mem_one.1 <| hf ht), univ_subset_iff] at hs
 
 @[to_additive]
 theorem top_mul_of_one_le (hf : 1 ≤ f) : ⊤ * f = ⊤ := by
   refine' top_le_iff.1 fun s => _
-  simp only [← mem_mul, ← mem_top, ← exists_and_distrib_left, ← exists_eq_left]
+  simp only [mem_mul, mem_top, exists_and_distrib_left, exists_eq_left]
   rintro ⟨t, ht, hs⟩
   rwa [univ_mul_of_one_mem (mem_one.1 <| hf ht), univ_subset_iff] at hs
 
@@ -680,7 +680,7 @@ theorem is_unit_pure (a : α) : IsUnit (pure a : Filter α) :=
 
 @[simp]
 theorem is_unit_iff_singleton : IsUnit f ↔ ∃ a, f = pure a := by
-  simp only [← is_unit_iff, ← Groupₓ.is_unit, ← and_trueₓ]
+  simp only [is_unit_iff, Groupₓ.is_unit, and_trueₓ]
 
 include β
 
@@ -970,7 +970,7 @@ instance smul_comm_class [HasSmul α γ] [HasSmul β γ] [SmulCommClass α β γ
 instance is_scalar_tower [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
     IsScalarTower α β (Filter γ) :=
   ⟨fun a b f => by
-    simp only [map_smul, ← map_map, ← smul_assoc]⟩
+    simp only [← map_smul, map_map, smul_assoc]⟩
 
 @[to_additive]
 instance is_scalar_tower' [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
@@ -1002,9 +1002,9 @@ protected def mulAction [Monoidₓ α] [MulAction α β] : MulAction (Filter α)
 @[to_additive "An additive action of an additive monoid on a type `β` gives an additive action on\n`filter β`."]
 protected def mulActionFilter [Monoidₓ α] [MulAction α β] : MulAction α (Filter β) where
   mul_smul := fun a b f => by
-    simp only [map_smul, ← map_map, ← Function.comp, mul_smul]
+    simp only [← map_smul, map_map, Function.comp, ← mul_smul]
   one_smul := fun f => by
-    simp only [map_smul, ← one_smul, ← map_id']
+    simp only [← map_smul, one_smul, map_id']
 
 localized [Pointwise]
   attribute [instance] Filter.mulAction Filter.addAction Filter.mulActionFilter Filter.addActionFilter

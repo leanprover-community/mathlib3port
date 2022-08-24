@@ -24,15 +24,15 @@ def pushNeg : Preform → Preform
   | ¬* p => p
   | p => ¬* p
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 theorem push_neg_equiv : ∀ {p : Preform}, Preform.Equiv (pushNeg p) (¬* p) := by
   run_tac
     preform.induce sorry
-  · simp only [← not_not, ← preform.holds, ← push_neg]
+  · simp only [not_not, preform.holds, push_neg]
     
-  · simp only [← preform.holds, ← push_neg, ← not_or_distrib, ← ihp v, ← ihq v]
+  · simp only [preform.holds, push_neg, not_or_distrib, ihp v, ihq v]
     
-  · simp only [← preform.holds, ← push_neg, ← not_and_distrib, ← ihp v, ← ihq v]
+  · simp only [preform.holds, push_neg, not_and_distrib, ihp v, ihq v]
     
 
 /-- NNF transformation -/
@@ -52,7 +52,7 @@ def IsNnf : Preform → Prop
   | p ∧* q => is_nnf p ∧ is_nnf q
   | _ => False
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 theorem is_nnf_push_neg : ∀ p : Preform, IsNnf p → IsNnf (pushNeg p) := by
   run_tac
     preform.induce sorry
@@ -78,7 +78,7 @@ theorem is_nnf_push_neg : ∀ p : Preform, IsNnf p → IsNnf (pushNeg p) := by
       assumption
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 theorem is_nnf_nnf : ∀ p : Preform, IsNnf (nnf p) := by
   run_tac
     preform.induce sorry
@@ -89,7 +89,7 @@ theorem is_nnf_nnf : ∀ p : Preform, IsNnf (nnf p) := by
   · constructor <;> assumption
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 theorem nnf_equiv : ∀ {p : Preform}, Preform.Equiv (nnf p) p := by
   run_tac
     preform.induce sorry
@@ -110,7 +110,7 @@ def negElimCore : Preform → Preform
   | p ∧* q => neg_elim_core p ∧* neg_elim_core q
   | p => p
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 theorem neg_free_neg_elim_core : ∀ p, IsNnf p → (negElimCore p).NegFree := by
   run_tac
     preform.induce sorry
@@ -146,7 +146,7 @@ theorem le_and_le_iff_eq {α : Type} [PartialOrderₓ α] {a b : α} : a ≤ b �
   · constructor <;> apply le_of_eqₓ <;> rw [h1]
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 theorem implies_neg_elim_core : ∀ {p : Preform}, Preform.Implies p (negElimCore p) := by
   run_tac
     preform.induce sorry
@@ -154,11 +154,11 @@ theorem implies_neg_elim_core : ∀ {p : Preform}, Preform.Implies p (negElimCor
       try
         apply h
     · apply Or.symm
-      simpa only [← preform.holds, ← le_and_le_iff_eq.symm, ← not_and_distrib, ← not_leₓ] using h
+      simpa only [preform.holds, le_and_le_iff_eq.symm, not_and_distrib, not_leₓ] using h
       
-    simpa only [← preform.holds, ← not_leₓ, ← Int.add_one_le_iff] using h
+    simpa only [preform.holds, not_leₓ, Int.add_one_le_iff] using h
     
-  · simp only [← neg_elim_core]
+  · simp only [neg_elim_core]
     cases h <;>
         [· left
           apply ihp

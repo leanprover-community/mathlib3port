@@ -32,26 +32,26 @@ def expLocalHomeomorph : LocalHomeomorph ℂ ℂ :=
         refine' (not_or_of_imp fun hz => _).symm
         obtain rfl : y = 0 := by
           rw [exp_im] at hz
-          simpa [← (Real.exp_pos _).ne', ← Real.sin_eq_zero_iff_of_lt_of_lt h₁ h₂] using hz
+          simpa [(Real.exp_pos _).ne', Real.sin_eq_zero_iff_of_lt_of_lt h₁ h₂] using hz
         rw [mem_set_of_eq, ← of_real_def, exp_of_real_re]
         exact Real.exp_pos x,
       map_target' := fun z h =>
         suffices 0 ≤ z.re ∨ z.im ≠ 0 by
-          simpa [← log_im, ← neg_pi_lt_arg, ← (arg_le_pi _).lt_iff_ne, ← arg_eq_pi_iff, ← not_and_distrib]
+          simpa [log_im, neg_pi_lt_arg, (arg_le_pi _).lt_iff_ne, arg_eq_pi_iff, not_and_distrib]
         h.imp (fun h => le_of_ltₓ h) id,
       left_inv' := fun x hx => log_exp hx.1 (le_of_ltₓ hx.2),
       right_inv' := fun x hx =>
         exp_log <| by
           rintro rfl
-          simpa [← lt_irreflₓ] using hx }
+          simpa [lt_irreflₓ] using hx }
     continuous_exp.ContinuousOn is_open_map_exp (is_open_Ioo.Preimage continuous_im)
 
 theorem has_strict_deriv_at_log {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) : HasStrictDerivAt log x⁻¹ x :=
   have h0 : x ≠ 0 := by
     rintro rfl
-    simpa [← lt_irreflₓ] using h
+    simpa [lt_irreflₓ] using h
   expLocalHomeomorph.has_strict_deriv_at_symm h h0 <| by
-    simpa [← exp_log h0] using has_strict_deriv_at_exp (log x)
+    simpa [exp_log h0] using has_strict_deriv_at_exp (log x)
 
 theorem has_strict_fderiv_at_log_real {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) :
     HasStrictFderivAt log (x⁻¹ • (1 : ℂ →L[ℝ] ℂ)) x :=
@@ -81,7 +81,7 @@ theorem HasStrictDerivAt.clog {f : ℂ → ℂ} {f' x : ℂ} (h₁ : HasStrictDe
 
 theorem HasStrictDerivAt.clog_real {f : ℝ → ℂ} {x : ℝ} {f' : ℂ} (h₁ : HasStrictDerivAt f f' x)
     (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasStrictDerivAt (fun t => log (f t)) (f' / f x) x := by
-  simpa only [← div_eq_inv_mul] using (has_strict_fderiv_at_log_real h₂).comp_has_strict_deriv_at x h₁
+  simpa only [div_eq_inv_mul] using (has_strict_fderiv_at_log_real h₂).comp_has_strict_deriv_at x h₁
 
 theorem HasFderivAt.clog {f : E → ℂ} {f' : E →L[ℂ] ℂ} {x : E} (h₁ : HasFderivAt f f' x)
     (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasFderivAt (fun t => log (f t)) ((f x)⁻¹ • f') x :=
@@ -94,7 +94,7 @@ theorem HasDerivAt.clog {f : ℂ → ℂ} {f' x : ℂ} (h₁ : HasDerivAt f f' x
 
 theorem HasDerivAt.clog_real {f : ℝ → ℂ} {x : ℝ} {f' : ℂ} (h₁ : HasDerivAt f f' x) (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) :
     HasDerivAt (fun t => log (f t)) (f' / f x) x := by
-  simpa only [← div_eq_inv_mul] using (has_strict_fderiv_at_log_real h₂).HasFderivAt.comp_has_deriv_at x h₁
+  simpa only [div_eq_inv_mul] using (has_strict_fderiv_at_log_real h₂).HasFderivAt.comp_has_deriv_at x h₁
 
 theorem DifferentiableAt.clog {f : E → ℂ} {x : E} (h₁ : DifferentiableAt ℂ f x) (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) :
     DifferentiableAt ℂ (fun t => log (f t)) x :=
@@ -111,14 +111,14 @@ theorem HasDerivWithinAt.clog {f : ℂ → ℂ} {f' x : ℂ} {s : Set ℂ} (h₁
 
 theorem HasDerivWithinAt.clog_real {f : ℝ → ℂ} {s : Set ℝ} {x : ℝ} {f' : ℂ} (h₁ : HasDerivWithinAt f f' s x)
     (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasDerivWithinAt (fun t => log (f t)) (f' / f x) s x := by
-  simpa only [← div_eq_inv_mul] using (has_strict_fderiv_at_log_real h₂).HasFderivAt.comp_has_deriv_within_at x h₁
+  simpa only [div_eq_inv_mul] using (has_strict_fderiv_at_log_real h₂).HasFderivAt.comp_has_deriv_within_at x h₁
 
 theorem DifferentiableWithinAt.clog {f : E → ℂ} {s : Set E} {x : E} (h₁ : DifferentiableWithinAt ℂ f s x)
     (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : DifferentiableWithinAt ℂ (fun t => log (f t)) s x :=
   (h₁.HasFderivWithinAt.clog h₂).DifferentiableWithinAt
 
 theorem DifferentiableOn.clog {f : E → ℂ} {s : Set E} (h₁ : DifferentiableOn ℂ f s)
-    (h₂ : ∀, ∀ x ∈ s, ∀, 0 < (f x).re ∨ (f x).im ≠ 0) : DifferentiableOn ℂ (fun t => log (f t)) s := fun x hx =>
+    (h₂ : ∀ x ∈ s, 0 < (f x).re ∨ (f x).im ≠ 0) : DifferentiableOn ℂ (fun t => log (f t)) s := fun x hx =>
   (h₁ x hx).clog (h₂ x hx)
 
 theorem Differentiable.clog {f : E → ℂ} (h₁ : Differentiable ℂ f) (h₂ : ∀ x, 0 < (f x).re ∨ (f x).im ≠ 0) :

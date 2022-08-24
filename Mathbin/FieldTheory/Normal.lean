@@ -71,7 +71,7 @@ theorem Normal.exists_is_splitting_field [h : Normal F K] [FiniteDimensional F K
   refine' fun x =>
     Algebra.subset_adjoin
       (multiset.mem_to_finset.mpr <|
-        (mem_roots <| mt (map_eq_zero <| algebraMap F K).1 <| Finset.prod_ne_zero_iff.2 fun x hx => _).2 _)
+        (mem_roots <| mt (Polynomial.map_eq_zero <| algebraMap F K).1 <| Finset.prod_ne_zero_iff.2 fun x hx => _).2 _)
   · exact minpoly.ne_zero (h.is_integral (s x))
     
   rw [is_root.def, eval_map, ← aeval_def, AlgHom.map_prod]
@@ -197,7 +197,7 @@ theorem Normal.of_is_splitting_field (p : F[X]) [hFEp : IsSplittingField F E p] 
   suffices (Algebra.adjoin C S).restrictScalars F = (Algebra.adjoin E {AdjoinRoot.root q}).restrictScalars F by
     rw [AdjoinRoot.adjoin_root_eq_top, Subalgebra.restrict_scalars_top, ← @Subalgebra.restrict_scalars_top F C] at this
     exact top_le_iff.mpr (Subalgebra.restrict_scalars_injective F this)
-  dsimp' only [← S]
+  dsimp' only [S]
   rw [← Finset.image_to_finset, Finset.coe_image]
   apply Eq.trans (Algebra.adjoin_res_eq_adjoin_res F E C D hFEp.adjoin_roots AdjoinRoot.adjoin_root_eq_top)
   rw [Set.image_singleton, RingHom.algebra_map_to_algebra, AdjoinRoot.lift_root]
@@ -283,7 +283,7 @@ theorem AlgHom.restrict_normal_comp [Normal F E] :
   AlgHom.ext fun _ =>
     (algebraMap E K₃).Injective
       (by
-        simp only [← AlgHom.comp_apply, ← AlgHom.restrict_normal_commutes])
+        simp only [AlgHom.comp_apply, AlgHom.restrict_normal_commutes])
 
 /-- Restrict algebra isomorphism to a normal subfield -/
 def AlgEquiv.restrictNormal [h : Normal F E] : E ≃ₐ[F] E :=
@@ -299,7 +299,7 @@ theorem AlgEquiv.restrict_normal_trans [Normal F E] :
   AlgEquiv.ext fun _ =>
     (algebraMap E K₃).Injective
       (by
-        simp only [← AlgEquiv.trans_apply, ← AlgEquiv.restrict_normal_commutes])
+        simp only [AlgEquiv.trans_apply, AlgEquiv.restrict_normal_commutes])
 
 /-- Restriction to an normal subfield as a group homomorphism -/
 def AlgEquiv.restrictNormalHom [Normal F E] : (K₁ ≃ₐ[F] K₁) →* E ≃ₐ[F] E :=
@@ -315,10 +315,10 @@ def Normal.algHomEquivAut [Normal F E] : (E →ₐ[F] K₁) ≃ E ≃ₐ[F] E wh
   invFun := fun σ => (IsScalarTower.toAlgHom F E K₁).comp σ.toAlgHom
   left_inv := fun σ => by
     ext
-    simp [← AlgHom.restrictNormal']
+    simp [AlgHom.restrictNormal']
   right_inv := fun σ => by
     ext
-    simp only [← AlgHom.restrictNormal', ← AlgEquiv.to_alg_hom_eq_coe, ← AlgEquiv.coe_of_bijective]
+    simp only [AlgHom.restrictNormal', AlgEquiv.to_alg_hom_eq_coe, AlgEquiv.coe_of_bijective]
     apply NoZeroSmulDivisors.algebra_map_injective E K₁
     rw [AlgHom.restrict_normal_commutes]
     simp

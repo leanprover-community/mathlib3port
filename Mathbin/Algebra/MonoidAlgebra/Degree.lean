@@ -137,7 +137,7 @@ theorem sup_support_finset_prod_le (degb0 : degb 0 ≤ 0) (degbm : ∀ a b, degb
 
 theorem le_inf_support_finset_prod (degt0 : 0 ≤ degt 0) (degtm : ∀ a b, degt a + degt b ≤ degt (a + b)) (s : Finset ι)
     (f : ι → AddMonoidAlgebra R A) : (∑ i in s, (f i).Support.inf degt) ≤ (∏ i in s, f i).Support.inf degt :=
-  le_of_eq_of_le
+  le_of_eq_of_leₓ
     (by
       rw [Multiset.map_map] <;> rfl)
     (le_inf_support_multiset_prod degt0 degtm _)

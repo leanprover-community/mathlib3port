@@ -47,10 +47,10 @@ theorem set_of_liouville_with_subset_aux :
         y ∈ Ico (0 : ℝ) 1 →
           ∃ᶠ b : ℕ in at_top, ∃ a ∈ Finset.icc (0 : ℤ) b, abs (y - a / b) < 1 / b ^ (2 + 1 / (n + 1 : ℕ) : ℝ)
     by
-    simp only [← mem_Union, ← mem_preimage]
+    simp only [mem_Union, mem_preimage]
     have hx : x + ↑(-⌊x⌋) ∈ Ico (0 : ℝ) 1 := by
-      simp only [← Int.floor_le, ← Int.lt_floor_add_one, ← add_neg_lt_iff_le_add', ← zero_addₓ, ← and_selfₓ, ← mem_Ico,
-        ← Int.cast_neg, ← le_add_neg_iff_add_le]
+      simp only [Int.floor_le, Int.lt_floor_add_one, add_neg_lt_iff_le_add', zero_addₓ, and_selfₓ, mem_Ico,
+        Int.cast_neg, le_add_neg_iff_add_le]
     refine' ⟨-⌊x⌋, n + 1, n.succ_pos, this _ (hxp.add_int _) hx⟩
   clear hxp x
   intro x hxp hx01
@@ -75,7 +75,7 @@ theorem set_of_liouville_with_subset_aux :
     @Int.cast_lt ℝ]
   push_cast
   refine' ⟨lt_of_le_of_ltₓ _ hlt.1, hlt.2.trans_le _⟩
-  · simp only [← mul_nonneg hx01.left b.cast_nonneg, ← neg_le_sub_iff_le_add, ← le_add_iff_nonneg_left]
+  · simp only [mul_nonneg hx01.left b.cast_nonneg, neg_le_sub_iff_le_add, le_add_iff_nonneg_left]
     
   · rw [add_le_add_iff_left]
     calc
@@ -88,7 +88,7 @@ theorem set_of_liouville_with_subset_aux :
 measure zero. -/
 @[simp]
 theorem volume_Union_set_of_liouville_with : volume (⋃ (p : ℝ) (hp : 2 < p), { x : ℝ | LiouvilleWith p x }) = 0 := by
-  simp only [set_of_exists]
+  simp only [← set_of_exists]
   refine' measure_mono_null set_of_liouville_with_subset_aux _
   rw [measure_Union_null_iff]
   intro m
@@ -97,11 +97,11 @@ theorem volume_Union_set_of_liouville_with : volume (⋃ (p : ℝ) (hp : 2 < p),
   refine' (measure_bUnion_null_iff <| to_countable _).2 fun n (hn : 1 ≤ n) => _
   generalize hr : (2 + 1 / n : ℝ) = r
   replace hr : 2 < r
-  · simp [hr, ← zero_lt_one.trans_le hn]
+  · simp [← hr, zero_lt_one.trans_le hn]
     
   clear hn n
   refine' measure_set_of_frequently_eq_zero _
-  simp only [← set_of_exists, Real.dist_eq, mem_ball, ← set_of_mem_eq]
+  simp only [set_of_exists, ← Real.dist_eq, ← mem_ball, set_of_mem_eq]
   set B : ℤ → ℕ → Set ℝ := fun a b => ball (a / b) (1 / b ^ r)
   have hB : ∀ a b, volume (B a b) = ↑(2 / b ^ r : ℝ≥0 ) := by
     intro a b
@@ -113,19 +113,19 @@ theorem volume_Union_set_of_liouville_with : volume (⋃ (p : ℝ) (hp : 2 < p),
       volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ ∑ a in Finset.icc (0 : ℤ) b, volume (B a b) :=
         measure_bUnion_finset_le _ _
       _ = ((b + 1) * (2 / b ^ r) : ℝ≥0 ) := by
-        simp only [← hB, ← Int.card_Icc, ← Finset.sum_const, ← nsmul_eq_mul, ← sub_zero, Int.coe_nat_succ, ←
-          Int.to_nat_coe_nat, Nat.cast_succₓ, ← Ennreal.coe_mul, ← Ennreal.coe_nat]
+        simp only [hB, Int.card_Icc, Finset.sum_const, nsmul_eq_mul, sub_zero, ← Int.coe_nat_succ, Int.to_nat_coe_nat, ←
+          Nat.cast_succₓ, Ennreal.coe_mul, Ennreal.coe_nat]
       _ = _ := _
       
     have : 1 - r ≠ 0 := by
       linarith
     rw [Ennreal.coe_eq_coe]
-    simp [← add_mulₓ, ← div_eq_mul_inv, ← Nnreal.rpow_neg, ← Nnreal.rpow_sub' _ this, ← mul_addₓ, ← mul_left_commₓ]
+    simp [add_mulₓ, div_eq_mul_inv, Nnreal.rpow_neg, Nnreal.rpow_sub' _ this, mul_addₓ, mul_left_commₓ]
   refine' ne_top_of_le_ne_top (Ennreal.tsum_coe_ne_top_iff_summable.2 _) (Ennreal.tsum_le_tsum this)
-  refine' (Summable.add _ _).mul_left _ <;> simp only [← Nnreal.summable_rpow] <;> linarith
+  refine' (Summable.add _ _).mul_left _ <;> simp only [Nnreal.summable_rpow] <;> linarith
 
-theorem ae_not_liouville_with : ∀ᵐ x, ∀, ∀ p > (2 : ℝ), ∀, ¬LiouvilleWith p x := by
-  simpa only [← ae_iff, ← not_forall, ← not_not, ← set_of_exists] using volume_Union_set_of_liouville_with
+theorem ae_not_liouville_with : ∀ᵐ x, ∀ p > (2 : ℝ), ¬LiouvilleWith p x := by
+  simpa only [ae_iff, not_forall, not_not, set_of_exists] using volume_Union_set_of_liouville_with
 
 theorem ae_not_liouville : ∀ᵐ x, ¬Liouville x :=
   ae_not_liouville_with.mono fun x h₁ h₂ =>
@@ -137,7 +137,7 @@ theorem ae_not_liouville : ∀ᵐ x, ¬Liouville x :=
 /-- The set of Liouville numbers has Lebesgue measure zero. -/
 @[simp]
 theorem volume_set_of_liouville : volume { x : ℝ | Liouville x } = 0 := by
-  simpa only [← ae_iff, ← not_not] using ae_not_liouville
+  simpa only [ae_iff, not_not] using ae_not_liouville
 
 /-- The filters `residual ℝ` and `volume.ae` are disjoint. This means that there exists a residual
 set of Lebesgue measure zero (e.g., the set of Liouville numbers). -/

@@ -60,7 +60,7 @@ theorem HomotopyEquiv.to_quasi_iso {W : Type _} [Category W] [Preadditive W] [Ha
     QuasiIso e.Hom :=
   ⟨fun i => by
     refine' ⟨⟨(homologyFunctor W c i).map e.inv, _⟩⟩
-    simp only [functor.map_comp, (homologyFunctor W c i).map_id]
+    simp only [← functor.map_comp, ← (homologyFunctor W c i).map_id]
     constructor <;> apply homology_map_eq_of_homotopy
     exacts[e.homotopy_hom_inv_id, e.homotopy_inv_hom_id]⟩
 

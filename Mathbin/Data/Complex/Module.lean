@@ -49,10 +49,10 @@ variable [HasSmul R ℝ]
 instance : HasSmul R ℂ where smul := fun r x => ⟨r • x.re - 0 * x.im, r • x.im + 0 * x.re⟩
 
 theorem smul_re (r : R) (z : ℂ) : (r • z).re = r • z.re := by
-  simp [← (· • ·)]
+  simp [(· • ·)]
 
 theorem smul_im (r : R) (z : ℂ) : (r • z).im = r • z.im := by
-  simp [← (· • ·)]
+  simp [(· • ·)]
 
 @[simp]
 theorem real_smul {x : ℝ} {z : ℂ} : x • z = x * z :=
@@ -62,44 +62,44 @@ end
 
 instance [HasSmul R ℝ] [HasSmul S ℝ] [SmulCommClass R S ℝ] :
     SmulCommClass R S ℂ where smul_comm := fun r s x => by
-    ext <;> simp [← smul_re, ← smul_im, ← smul_comm]
+    ext <;> simp [smul_re, smul_im, smul_comm]
 
 instance [HasSmul R S] [HasSmul R ℝ] [HasSmul S ℝ] [IsScalarTower R S ℝ] :
     IsScalarTower R S ℂ where smul_assoc := fun r s x => by
-    ext <;> simp [← smul_re, ← smul_im, ← smul_assoc]
+    ext <;> simp [smul_re, smul_im, smul_assoc]
 
 instance [HasSmul R ℝ] [HasSmul Rᵐᵒᵖ ℝ] [IsCentralScalar R ℝ] :
     IsCentralScalar R ℂ where op_smul_eq_smul := fun r x => by
-    ext <;> simp [← smul_re, ← smul_im, ← op_smul_eq_smul]
+    ext <;> simp [smul_re, smul_im, op_smul_eq_smul]
 
 instance [Monoidₓ R] [MulAction R ℝ] : MulAction R ℂ where
   one_smul := fun x => by
-    ext <;> simp [← smul_re, ← smul_im, ← one_smul]
+    ext <;> simp [smul_re, smul_im, one_smul]
   mul_smul := fun r s x => by
-    ext <;> simp [← smul_re, ← smul_im, ← mul_smul]
+    ext <;> simp [smul_re, smul_im, mul_smul]
 
 instance [Semiringₓ R] [DistribMulAction R ℝ] : DistribMulAction R ℂ where
   smul_add := fun r x y => by
-    ext <;> simp [← smul_re, ← smul_im, ← smul_add]
+    ext <;> simp [smul_re, smul_im, smul_add]
   smul_zero := fun r => by
-    ext <;> simp [← smul_re, ← smul_im, ← smul_zero]
+    ext <;> simp [smul_re, smul_im, smul_zero]
 
 instance [Semiringₓ R] [Module R ℝ] : Module R ℂ where
   add_smul := fun r s x => by
-    ext <;> simp [← smul_re, ← smul_im, ← add_smul]
+    ext <;> simp [smul_re, smul_im, add_smul]
   zero_smul := fun r => by
-    ext <;> simp [← smul_re, ← smul_im, ← zero_smul]
+    ext <;> simp [smul_re, smul_im, zero_smul]
 
 instance [CommSemiringₓ R] [Algebra R ℝ] : Algebra R ℂ :=
   { Complex.ofReal.comp (algebraMap R ℝ) with smul := (· • ·),
     smul_def' := fun r x => by
-      ext <;> simp [← smul_re, ← smul_im, ← Algebra.smul_def],
+      ext <;> simp [smul_re, smul_im, Algebra.smul_def],
     commutes' := fun r ⟨xr, xi⟩ => by
-      ext <;> simp [← smul_re, ← smul_im, ← Algebra.commutes] }
+      ext <;> simp [smul_re, smul_im, Algebra.commutes] }
 
 instance : StarModule ℝ ℂ :=
   ⟨fun r x => by
-    simp only [← star_def, ← star_trivial, ← real_smul, ← map_mul, ← conj_of_real]⟩
+    simp only [star_def, star_trivial, real_smul, map_mul, conj_of_real]⟩
 
 @[simp]
 theorem coe_algebra_map : (algebraMap ℝ ℂ : ℝ → ℂ) = coe :=
@@ -119,7 +119,7 @@ theorem _root_.alg_hom.map_coe_real_complex (f : ℂ →ₐ[ℝ] A) (x : ℝ) : 
 @[ext]
 theorem alg_hom_ext ⦃f g : ℂ →ₐ[ℝ] A⦄ (h : f i = g i) : f = g := by
   ext ⟨x, y⟩
-  simp only [← mk_eq_add_mul_I, ← AlgHom.map_add, ← AlgHom.map_coe_real_complex, ← AlgHom.map_mul, ← h]
+  simp only [mk_eq_add_mul_I, AlgHom.map_add, AlgHom.map_coe_real_complex, AlgHom.map_mul, h]
 
 end
 
@@ -130,8 +130,8 @@ open ComplexOrder
 protected theorem ordered_smul : OrderedSmul ℝ ℂ :=
   OrderedSmul.mk' fun a b r hab hr =>
     ⟨by
-      simp [← hr, ← hab.1.le], by
-      simp [← hab.2]⟩
+      simp [hr, hab.1.le], by
+      simp [hab.2]⟩
 
 localized [ComplexOrder] attribute [instance] Complex.ordered_smul
 
@@ -152,7 +152,7 @@ noncomputable def basisOneI : Basis (Finₓ 2) ℝ ℂ :=
       map_add' := fun z z' => by
         simp ,-- why does `simp` not know how to apply `smul_cons`, which is a `@[simp]` lemma, here?
       map_smul' := fun c z => by
-        simp [← Matrix.smul_cons c z.re, ← Matrix.smul_cons c z.im] }
+        simp [Matrix.smul_cons c z.re, Matrix.smul_cons c z.im] }
 
 @[simp]
 theorem coe_basis_one_I_repr (z : ℂ) : ⇑(basisOneI.repr z) = ![z.re, z.im] :=
@@ -167,10 +167,9 @@ theorem coe_basis_one_I : ⇑basis_one_I = ![1, i] :=
       Finsupp.ext fun j => by
         fin_cases i <;>
           fin_cases j <;>
-            simp only [← coe_basis_one_I_repr, ← Finsupp.single_eq_same, ← Finsupp.single_eq_of_ne, ←
-              Matrix.cons_val_zero, ← Matrix.cons_val_one, ← Matrix.head_cons, ← Nat.one_ne_zero, ←
-              Finₓ.one_eq_zero_iff, ← Finₓ.zero_eq_one_iff, ← Ne.def, ← not_false_iff, ← one_re, ← one_im, ← I_re, ←
-              I_im]
+            simp only [coe_basis_one_I_repr, Finsupp.single_eq_same, Finsupp.single_eq_of_ne, Matrix.cons_val_zero,
+              Matrix.cons_val_one, Matrix.head_cons, Nat.one_ne_zero, Finₓ.one_eq_zero_iff, Finₓ.zero_eq_one_iff,
+              Ne.def, not_false_iff, one_re, one_im, I_re, I_im]
 
 instance : FiniteDimensional ℝ ℂ :=
   of_fintype_basis basisOneI
@@ -181,10 +180,10 @@ theorem finrank_real_complex : FiniteDimensional.finrank ℝ ℂ = 2 := by
 
 @[simp]
 theorem dim_real_complex : Module.rank ℝ ℂ = 2 := by
-  simp [finrank_eq_dim, ← finrank_real_complex]
+  simp [← finrank_eq_dim, finrank_real_complex]
 
 theorem dim_real_complex'.{u} : Cardinal.lift.{u} (Module.rank ℝ ℂ) = 2 := by
-  simp [finrank_eq_dim, ← finrank_real_complex, ← bit0]
+  simp [← finrank_eq_dim, finrank_real_complex, bit0]
 
 /-- `fact` version of the dimension of `ℂ` over `ℝ`, locally useful in the definition of the
 circle. -/
@@ -212,7 +211,7 @@ instance (priority := 100) FiniteDimensional.complex_to_real (E : Type _) [AddCo
 theorem dim_real_of_complex (E : Type _) [AddCommGroupₓ E] [Module ℂ E] : Module.rank ℝ E = 2 * Module.rank ℂ E :=
   Cardinal.lift_inj.1 <| by
     rw [← dim_mul_dim' ℝ ℂ E, Complex.dim_real_complex]
-    simp [← bit0]
+    simp [bit0]
 
 theorem finrank_real_of_complex (E : Type _) [AddCommGroupₓ E] [Module ℂ E] :
     FiniteDimensional.finrank ℝ E = 2 * FiniteDimensional.finrank ℂ E := by
@@ -268,16 +267,16 @@ theorem conj_ae_coe : ⇑conj_ae = conj :=
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
--- ./././Mathport/Syntax/Translate/Basic.lean:973:4: warning: unsupported notation `«expr!![ »
--- ./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ »
+-- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation
 /-- The matrix representation of `conj_ae`. -/
 @[simp]
 theorem to_matrix_conj_ae :
     LinearMap.toMatrix basisOneI basisOneI conjAe.toLinearMap =
-      «expr!![ » "./././Mathport/Syntax/Translate/Basic.lean:1151:14: unsupported user notation matrix.notation" :=
+      «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
   by
   ext i j
-  simp [← LinearMap.to_matrix_apply]
+  simp [LinearMap.to_matrix_apply]
   fin_cases i <;> fin_cases j <;> simp
 
 section lift

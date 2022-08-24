@@ -182,7 +182,7 @@ theorem Zero.mass : (0 : FiniteMeasure α).mass = 0 :=
 theorem mass_zero_iff (μ : FiniteMeasure α) : μ.mass = 0 ↔ μ = 0 := by
   refine'
     ⟨fun μ_mass => _, fun hμ => by
-      simp only [← hμ, ← zero.mass]⟩
+      simp only [hμ, zero.mass]⟩
   ext1
   apply measure.measure_univ_eq_zero.mp
   rwa [← ennreal_mass, Ennreal.coe_eq_zero]
@@ -195,7 +195,7 @@ theorem mass_nonzero_iff (μ : FiniteMeasure α) : μ.mass ≠ 0 ↔ μ ≠ 0 :=
 theorem extensionality (μ ν : FiniteMeasure α) (h : ∀ s : Set α, MeasurableSet s → μ s = ν s) : μ = ν := by
   ext1
   ext1 s s_mble
-  simpa [← ennreal_coe_fn_eq_coe_fn_to_measure] using congr_arg (coe : ℝ≥0 → ℝ≥0∞) (h s s_mble)
+  simpa [ennreal_coe_fn_eq_coe_fn_to_measure] using congr_arg (coe : ℝ≥0 → ℝ≥0∞) (h s s_mble)
 
 instance : Inhabited (FiniteMeasure α) :=
   ⟨0⟩
@@ -228,13 +228,13 @@ theorem coe_fn_zero : (⇑(0 : FiniteMeasure α) : Set α → ℝ≥0 ) = (0 : S
 @[simp, norm_cast]
 theorem coe_fn_add (μ ν : FiniteMeasure α) : (⇑(μ + ν) : Set α → ℝ≥0 ) = (⇑μ + ⇑ν : Set α → ℝ≥0 ) := by
   funext
-  simp [Ennreal.coe_eq_coe]
+  simp [← Ennreal.coe_eq_coe]
 
 @[simp, norm_cast]
 theorem coe_fn_smul [IsScalarTower R ℝ≥0 ℝ≥0 ] (c : R) (μ : FiniteMeasure α) :
     (⇑(c • μ) : Set α → ℝ≥0 ) = c • (⇑μ : Set α → ℝ≥0 ) := by
   funext
-  simp [Ennreal.coe_eq_coe, ← Ennreal.coe_smul]
+  simp [← Ennreal.coe_eq_coe, Ennreal.coe_smul]
 
 instance : AddCommMonoidₓ (FiniteMeasure α) :=
   coe_injective.AddCommMonoid coe coe_zero coe_add fun _ _ => coe_smul _ _
@@ -252,7 +252,7 @@ instance {α : Type _} [MeasurableSpace α] : Module ℝ≥0 (FiniteMeasure α) 
 @[simp]
 theorem coe_fn_smul_apply [IsScalarTower R ℝ≥0 ℝ≥0 ] (c : R) (μ : FiniteMeasure α) (s : Set α) : (c • μ) s = c • μ s :=
   by
-  simp only [← coe_fn_smul, ← Pi.smul_apply]
+  simp only [coe_fn_smul, Pi.smul_apply]
 
 variable [TopologicalSpace α]
 
@@ -275,7 +275,7 @@ theorem _root_.measure_theory.lintegral_lt_top_of_bounded_continuous_to_nnreal (
   rw [Ennreal.coe_le_coe]
   have eq : nndist f 0 = ⟨dist f 0, dist_nonneg⟩ := by
     ext
-    simp only [← Real.coe_to_nnreal', ← max_eq_left_iff, ← Subtype.coe_mk, ← coe_nndist]
+    simp only [Real.coe_to_nnreal', max_eq_left_iff, Subtype.coe_mk, coe_nndist]
   rwa [Eq] at key
 
 @[simp]
@@ -285,55 +285,54 @@ theorem test_against_nn_coe_eq {μ : FiniteMeasure α} {f : α →ᵇ ℝ≥0 } 
 
 theorem test_against_nn_const (μ : FiniteMeasure α) (c : ℝ≥0 ) :
     μ.testAgainstNn (BoundedContinuousFunction.const α c) = c * μ.mass := by
-  simp [Ennreal.coe_eq_coe]
+  simp [← Ennreal.coe_eq_coe]
 
 theorem test_against_nn_mono (μ : FiniteMeasure α) {f g : α →ᵇ ℝ≥0 } (f_le_g : (f : α → ℝ≥0 ) ≤ g) :
     μ.testAgainstNn f ≤ μ.testAgainstNn g := by
-  simp only [Ennreal.coe_le_coe, ← test_against_nn_coe_eq]
+  simp only [← Ennreal.coe_le_coe, test_against_nn_coe_eq]
   exact lintegral_mono fun x => Ennreal.coe_mono (f_le_g x)
 
 @[simp]
 theorem test_against_nn_zero (μ : FiniteMeasure α) : μ.testAgainstNn 0 = 0 := by
-  simpa only [← zero_mul] using μ.test_against_nn_const 0
+  simpa only [zero_mul] using μ.test_against_nn_const 0
 
 @[simp]
 theorem test_against_nn_one (μ : FiniteMeasure α) : μ.testAgainstNn 1 = μ.mass := by
-  simp only [← test_against_nn, ← coe_one, ← Pi.one_apply, ← Ennreal.coe_one, ← lintegral_one]
+  simp only [test_against_nn, coe_one, Pi.one_apply, Ennreal.coe_one, lintegral_one]
   rfl
 
 @[simp]
 theorem Zero.test_against_nn_apply (f : α →ᵇ ℝ≥0 ) : (0 : FiniteMeasure α).testAgainstNn f = 0 := by
-  simp only [← test_against_nn, ← coe_zero, ← lintegral_zero_measure, ← Ennreal.zero_to_nnreal]
+  simp only [test_against_nn, coe_zero, lintegral_zero_measure, Ennreal.zero_to_nnreal]
 
 theorem Zero.test_against_nn : (0 : FiniteMeasure α).testAgainstNn = 0 := by
   funext
-  simp only [← zero.test_against_nn_apply, ← Pi.zero_apply]
+  simp only [zero.test_against_nn_apply, Pi.zero_apply]
 
 @[simp]
 theorem smul_test_against_nn_apply (c : ℝ≥0 ) (μ : FiniteMeasure α) (f : α →ᵇ ℝ≥0 ) :
     (c • μ).testAgainstNn f = c • μ.testAgainstNn f := by
-  simp only [← test_against_nn, ← coe_smul, ← smul_eq_mul, Ennreal.smul_to_nnreal, ← Ennreal.smul_def, ←
-    lintegral_smul_measure]
+  simp only [test_against_nn, coe_smul, smul_eq_mul, ← Ennreal.smul_to_nnreal, Ennreal.smul_def, lintegral_smul_measure]
 
 variable [OpensMeasurableSpace α]
 
 theorem test_against_nn_add (μ : FiniteMeasure α) (f₁ f₂ : α →ᵇ ℝ≥0 ) :
     μ.testAgainstNn (f₁ + f₂) = μ.testAgainstNn f₁ + μ.testAgainstNn f₂ := by
-  simp only [Ennreal.coe_eq_coe, ← BoundedContinuousFunction.coe_add, ← Ennreal.coe_add, ← Pi.add_apply, ←
+  simp only [← Ennreal.coe_eq_coe, BoundedContinuousFunction.coe_add, Ennreal.coe_add, Pi.add_apply,
     test_against_nn_coe_eq]
   exact lintegral_add_left (BoundedContinuousFunction.Nnreal.to_ennreal_comp_measurable _) _
 
 theorem test_against_nn_smul [IsScalarTower R ℝ≥0 ℝ≥0 ] [PseudoMetricSpace R] [Zero R] [HasBoundedSmul R ℝ≥0 ]
     (μ : FiniteMeasure α) (c : R) (f : α →ᵇ ℝ≥0 ) : μ.testAgainstNn (c • f) = c • μ.testAgainstNn f := by
-  simp only [Ennreal.coe_eq_coe, ← BoundedContinuousFunction.coe_smul, ← test_against_nn_coe_eq, ← Ennreal.coe_smul]
+  simp only [← Ennreal.coe_eq_coe, BoundedContinuousFunction.coe_smul, test_against_nn_coe_eq, Ennreal.coe_smul]
   simp_rw [← smul_one_smul ℝ≥0∞ c (f _ : ℝ≥0∞), ← smul_one_smul ℝ≥0∞ c (lintegral _ _ : ℝ≥0∞), smul_eq_mul]
   exact
     @lintegral_const_mul _ _ (μ : Measureₓ α) (c • 1) _ (BoundedContinuousFunction.Nnreal.to_ennreal_comp_measurable f)
 
 theorem test_against_nn_lipschitz_estimate (μ : FiniteMeasure α) (f g : α →ᵇ ℝ≥0 ) :
     μ.testAgainstNn f ≤ μ.testAgainstNn g + nndist f g * μ.mass := by
-  simp only [μ.test_against_nn_const (nndist f g), test_against_nn_add, Ennreal.coe_le_coe, ←
-    BoundedContinuousFunction.coe_add, ← const_apply, ← Ennreal.coe_add, ← Pi.add_apply, ← coe_nnreal_ennreal_nndist, ←
+  simp only [← μ.test_against_nn_const (nndist f g), ← test_against_nn_add, ← Ennreal.coe_le_coe,
+    BoundedContinuousFunction.coe_add, const_apply, Ennreal.coe_add, Pi.add_apply, coe_nnreal_ennreal_nndist,
     test_against_nn_coe_eq]
   apply lintegral_mono
   have le_dist : ∀ x, dist (f x) (g x) ≤ nndist f g := BoundedContinuousFunction.dist_coe_le_dist
@@ -441,7 +440,7 @@ theorem tendsto_zero_test_against_nn_of_tendsto_zero_mass {γ : Type _} {F : Fil
   simp_rw [test_against_nn_zero, zero_addₓ] at obs
   simp_rw
     [show ∀ i, dist ((μs i).testAgainstNn f) 0 = (μs i).testAgainstNn f by
-      simp only [← dist_nndist, ← Nnreal.nndist_zero_eq_val', ← eq_self_iff_true, ← implies_true_iff]]
+      simp only [dist_nndist, Nnreal.nndist_zero_eq_val', eq_self_iff_true, implies_true_iff]]
   refine' squeeze_zero (fun i => Nnreal.coe_nonneg _) obs _
   simp_rw [Nnreal.coe_mul]
   have lim_pair : tendsto (fun i => (⟨nndist f 0, (μs i).mass⟩ : ℝ × ℝ)) F (𝓝 ⟨nndist f 0, 0⟩) := by
@@ -499,9 +498,9 @@ theorem tendsto_lintegral_nn_filter_of_le_const {ι : Type _} {L : Filter ι} [L
     tendsto_lintegral_filter_of_dominated_convergence (fun _ => c)
       (eventually_of_forall fun i => (ennreal.continuous_coe.comp (fs i).Continuous).Measurable) _
       (@lintegral_const_lt_top _ _ (μ : Measureₓ α) _ _ (@Ennreal.coe_ne_top c)).Ne _
-  · simpa only [← Ennreal.coe_le_coe] using fs_le_const
+  · simpa only [Ennreal.coe_le_coe] using fs_le_const
     
-  · simpa only [← Ennreal.tendsto_coe] using fs_lim
+  · simpa only [Ennreal.tendsto_coe] using fs_lim
     
 
 /-- A bounded convergence theorem for a finite measure:
@@ -573,7 +572,7 @@ variable {α : Type _} [MeasurableSpace α] [TopologicalSpace α] [OpensMeasurab
 theorem integrable_of_bounded_continuous_to_nnreal (μ : Measure α) [IsFiniteMeasure μ] (f : α →ᵇ ℝ≥0 ) :
     Integrable ((coe : ℝ≥0 → ℝ) ∘ ⇑f) μ := by
   refine' ⟨(nnreal.continuous_coe.comp f.continuous).Measurable.AeStronglyMeasurable, _⟩
-  simp only [← has_finite_integral, ← Nnreal.nnnorm_eq]
+  simp only [has_finite_integral, Nnreal.nnnorm_eq]
   exact lintegral_lt_top_of_bounded_continuous_to_nnreal _ f
 
 theorem integrable_of_bounded_continuous_to_real (μ : Measure α) [IsFiniteMeasure μ] (f : α →ᵇ ℝ) : Integrable (⇑f) μ :=
@@ -581,7 +580,7 @@ theorem integrable_of_bounded_continuous_to_real (μ : Measure α) [IsFiniteMeas
   refine' ⟨f.continuous.measurable.ae_strongly_measurable, _⟩
   have aux : (coe : ℝ≥0 → ℝ) ∘ ⇑f.nnnorm = fun x => ∥f x∥ := by
     ext x
-    simp only [← Function.comp_app, ← BoundedContinuousFunction.nnnorm_coe_fun_eq, ← coe_nnnorm]
+    simp only [Function.comp_app, BoundedContinuousFunction.nnnorm_coe_fun_eq, coe_nnnorm]
   apply (has_finite_integral_iff_norm ⇑f).mpr
   rw [← of_real_integral_eq_lintegral_of_real]
   · exact Ennreal.of_real_lt_top
@@ -593,7 +592,7 @@ theorem integrable_of_bounded_continuous_to_real (μ : Measure α) [IsFiniteMeas
 
 theorem _root_.bounded_continuous_function.integral_eq_integral_nnreal_part_sub (μ : Measure α) [IsFiniteMeasure μ]
     (f : α →ᵇ ℝ) : (∫ x, f x ∂μ) = (∫ x, f.nnrealPart x ∂μ) - ∫ x, (-f).nnrealPart x ∂μ := by
-  simp only [← f.self_eq_nnreal_part_sub_nnreal_part_neg, ← Pi.sub_apply, ← integral_sub, ←
+  simp only [f.self_eq_nnreal_part_sub_nnreal_part_neg, Pi.sub_apply, integral_sub,
     integrable_of_bounded_continuous_to_nnreal]
 
 theorem lintegral_lt_top_of_bounded_continuous_to_real {α : Type _} [MeasurableSpace α] [TopologicalSpace α]
@@ -609,28 +608,28 @@ theorem tendsto_of_forall_integral_tendsto {γ : Type _} {F : Filter γ} {μs : 
     @Ennreal.tendsto_to_real_iff _ F _
       (fun i => (lintegral_lt_top_of_bounded_continuous_to_nnreal (μs i : Measureₓ α) f).Ne) _
       (lintegral_lt_top_of_bounded_continuous_to_nnreal (μ : Measureₓ α) f).Ne
-  simp only [← Ennreal.of_real_coe_nnreal] at key
+  simp only [Ennreal.of_real_coe_nnreal] at key
   apply key.mp
   have lip : LipschitzWith 1 (coe : ℝ≥0 → ℝ) := isometry_subtype_coe.lipschitz
   set f₀ := BoundedContinuousFunction.comp _ lip f with def_f₀
   have f₀_eq : ⇑f₀ = (coe : ℝ≥0 → ℝ) ∘ ⇑f := by
     rfl
   have f₀_nn : 0 ≤ ⇑f₀ := fun _ => by
-    simp only [← f₀_eq, ← Pi.zero_apply, ← Nnreal.zero_le_coe]
+    simp only [f₀_eq, Pi.zero_apply, Nnreal.zero_le_coe]
   have f₀_ae_nn : 0 ≤ᵐ[(μ : Measureₓ α)] ⇑f₀ := eventually_of_forall f₀_nn
   have f₀_ae_nns : ∀ i, 0 ≤ᵐ[(μs i : Measureₓ α)] ⇑f₀ := fun i => eventually_of_forall f₀_nn
   have aux := integral_eq_lintegral_of_nonneg_ae f₀_ae_nn f₀.continuous.measurable.ae_strongly_measurable
   have auxs := fun i => integral_eq_lintegral_of_nonneg_ae (f₀_ae_nns i) f₀.continuous.measurable.ae_strongly_measurable
-  simp only [← f₀_eq, ← Ennreal.of_real_coe_nnreal] at aux auxs
-  simpa only [aux, auxs] using h f₀
+  simp only [f₀_eq, Ennreal.of_real_coe_nnreal] at aux auxs
+  simpa only [← aux, ← auxs] using h f₀
 
 theorem _root_.bounded_continuous_function.nnreal.to_real_lintegral_eq_integral (f : α →ᵇ ℝ≥0 ) (μ : Measure α) :
     (∫⁻ x, (f x : ℝ≥0∞) ∂μ).toReal = ∫ x, f x ∂μ := by
   rw [integral_eq_lintegral_of_nonneg_ae _ (nnreal.continuous_coe.comp f.continuous).Measurable.AeStronglyMeasurable]
-  · simp only [← Ennreal.of_real_coe_nnreal]
+  · simp only [Ennreal.of_real_coe_nnreal]
     
   · apply eventually_of_forall
-    simp only [← Pi.zero_apply, ← Nnreal.zero_le_coe, ← implies_true_iff]
+    simp only [Pi.zero_apply, Nnreal.zero_le_coe, implies_true_iff]
     
 
 /-- A characterization of weak convergence in terms of integrals of bounded continuous
@@ -742,7 +741,7 @@ theorem ennreal_coe_fn_eq_coe_fn_to_measure (ν : ProbabilityMeasure α) (s : Se
 theorem extensionality (μ ν : ProbabilityMeasure α) (h : ∀ s : Set α, MeasurableSet s → μ s = ν s) : μ = ν := by
   ext1
   ext1 s s_mble
-  simpa [← ennreal_coe_fn_eq_coe_fn_to_measure] using congr_arg (coe : ℝ≥0 → ℝ≥0∞) (h s s_mble)
+  simpa [ennreal_coe_fn_eq_coe_fn_to_measure] using congr_arg (coe : ℝ≥0 → ℝ≥0∞) (h s s_mble)
 
 @[simp]
 theorem mass_to_finite_measure (μ : ProbabilityMeasure α) : μ.toFiniteMeasure.mass = 1 :=
@@ -826,7 +825,7 @@ theorem tendsto_iff_forall_integral_tendsto {γ : Type _} {F : Filter γ} {μs :
   by
   rw [tendsto_nhds_iff_to_finite_measures_tendsto_nhds]
   rw [finite_measure.tendsto_iff_forall_integral_tendsto]
-  simp only [← coe_comp_to_finite_measure_eq_coe]
+  simp only [coe_comp_to_finite_measure_eq_coe]
 
 end ProbabilityMeasure
 
@@ -858,7 +857,7 @@ def normalize : ProbabilityMeasure α :=
     { val := μ.mass⁻¹ • μ,
       property := by
         refine' ⟨_⟩
-        simp only [← mass, ← measure.coe_nnreal_smul_apply, ennreal_coe_fn_eq_coe_fn_to_measure μ univ]
+        simp only [mass, measure.coe_nnreal_smul_apply, ← ennreal_coe_fn_eq_coe_fn_to_measure μ univ]
         norm_cast
         exact inv_mul_cancel zero }
 
@@ -866,14 +865,14 @@ def normalize : ProbabilityMeasure α :=
 theorem self_eq_mass_mul_normalize (s : Set α) : μ s = μ.mass * μ.normalize s := by
   by_cases' μ = 0
   · rw [h]
-    simp only [← zero.mass, ← coe_fn_zero, ← Pi.zero_apply, ← zero_mul]
+    simp only [zero.mass, coe_fn_zero, Pi.zero_apply, zero_mul]
     
   have mass_nonzero : μ.mass ≠ 0 := by
     rwa [μ.mass_nonzero_iff]
-  simp only [← show μ ≠ 0 from h, ← mass_nonzero, ← normalize, ← not_false_iff, ← dif_neg]
+  simp only [show μ ≠ 0 from h, mass_nonzero, normalize, not_false_iff, dif_neg]
   change μ s = μ.mass * (μ.mass⁻¹ • μ) s
   rw [coe_fn_smul_apply]
-  simp only [← mass_nonzero, ← Algebra.id.smul_eq_mul, ← mul_inv_cancel_left₀, ← Ne.def, ← not_false_iff]
+  simp only [mass_nonzero, Algebra.id.smul_eq_mul, mul_inv_cancel_left₀, Ne.def, not_false_iff]
 
 theorem self_eq_mass_smul_normalize : μ = μ.mass • μ.normalize.toFiniteMeasure := by
   ext s s_mble
@@ -881,26 +880,24 @@ theorem self_eq_mass_smul_normalize : μ = μ.mass • μ.normalize.toFiniteMeas
   rfl
 
 theorem normalize_eq_of_nonzero (nonzero : μ ≠ 0) (s : Set α) : μ.normalize s = μ.mass⁻¹ * μ s := by
-  simp only [← μ.self_eq_mass_mul_normalize, ← μ.mass_nonzero_iff.mpr nonzero, ← inv_mul_cancel_left₀, ← Ne.def, ←
-    not_false_iff]
+  simp only [μ.self_eq_mass_mul_normalize, μ.mass_nonzero_iff.mpr nonzero, inv_mul_cancel_left₀, Ne.def, not_false_iff]
 
 theorem normalize_eq_inv_mass_smul_of_nonzero (nonzero : μ ≠ 0) : μ.normalize.toFiniteMeasure = μ.mass⁻¹ • μ := by
   nth_rw 2[μ.self_eq_mass_smul_normalize]
   rw [← smul_assoc]
-  simp only [← μ.mass_nonzero_iff.mpr nonzero, ← Algebra.id.smul_eq_mul, ← inv_mul_cancel, ← Ne.def, ← not_false_iff, ←
-    one_smul]
+  simp only [μ.mass_nonzero_iff.mpr nonzero, Algebra.id.smul_eq_mul, inv_mul_cancel, Ne.def, not_false_iff, one_smul]
 
 theorem coe_normalize_eq_of_nonzero (nonzero : μ ≠ 0) : (μ.normalize : Measure α) = μ.mass⁻¹ • μ := by
   ext1 s s_mble
-  simp only [μ.normalize.ennreal_coe_fn_eq_coe_fn_to_measure s, ← μ.normalize_eq_of_nonzero nonzero s, ←
-    Ennreal.coe_mul, ← ennreal_coe_fn_eq_coe_fn_to_measure, ← measure.coe_nnreal_smul_apply]
+  simp only [← μ.normalize.ennreal_coe_fn_eq_coe_fn_to_measure s, μ.normalize_eq_of_nonzero nonzero s, Ennreal.coe_mul,
+    ennreal_coe_fn_eq_coe_fn_to_measure, measure.coe_nnreal_smul_apply]
 
 @[simp]
 theorem _root_.probability_measure.to_finite_measure_normalize_eq_self {m0 : MeasurableSpace α}
     (μ : ProbabilityMeasure α) : μ.toFiniteMeasure.normalize = μ := by
   ext s s_mble
   rw [μ.to_finite_measure.normalize_eq_of_nonzero μ.to_finite_measure_nonzero s]
-  simp only [← probability_measure.mass_to_finite_measure, ← inv_one, ← one_mulₓ]
+  simp only [probability_measure.mass_to_finite_measure, inv_one, one_mulₓ]
   rfl
 
 /-- Averaging with respect to a finite measure is the same as integraing against
@@ -909,7 +906,7 @@ theorem average_eq_integral_normalize {E : Type _} [NormedAddCommGroup E] [Norme
     (nonzero : μ ≠ 0) (f : α → E) : average (μ : Measure α) f = ∫ x, f x ∂(μ.normalize : Measure α) := by
   rw [μ.coe_normalize_eq_of_nonzero nonzero, average]
   congr
-  simp only [← RingHom.to_fun_eq_coe, ← Ennreal.coe_of_nnreal_hom, ← Ennreal.coe_inv (μ.mass_nonzero_iff.mpr nonzero), ←
+  simp only [RingHom.to_fun_eq_coe, Ennreal.coe_of_nnreal_hom, Ennreal.coe_inv (μ.mass_nonzero_iff.mpr nonzero),
     ennreal_mass]
 
 variable [TopologicalSpace α]
@@ -922,7 +919,7 @@ theorem test_against_nn_eq_mass_mul (f : α →ᵇ ℝ≥0 ) :
 
 theorem normalize_test_against_nn (nonzero : μ ≠ 0) (f : α →ᵇ ℝ≥0 ) :
     μ.normalize.toFiniteMeasure.testAgainstNn f = μ.mass⁻¹ * μ.testAgainstNn f := by
-  simp [← μ.test_against_nn_eq_mass_mul, ← μ.mass_nonzero_iff.mpr nonzero]
+  simp [μ.test_against_nn_eq_mass_mul, μ.mass_nonzero_iff.mpr nonzero]
 
 variable [OpensMeasurableSpace α]
 
@@ -933,7 +930,7 @@ theorem tendsto_test_against_nn_of_tendsto_normalize_test_against_nn_of_tendsto_
     (mass_lim : Tendsto (fun i => (μs i).mass) F (𝓝 μ.mass)) (f : α →ᵇ ℝ≥0 ) :
     Tendsto (fun i => (μs i).testAgainstNn f) F (𝓝 (μ.testAgainstNn f)) := by
   by_cases' h_mass : μ.mass = 0
-  · simp only [← μ.mass_zero_iff.mp h_mass, ← zero.test_against_nn_apply, ← zero.mass, ← eq_self_iff_true] at *
+  · simp only [μ.mass_zero_iff.mp h_mass, zero.test_against_nn_apply, zero.mass, eq_self_iff_true] at *
     exact tendsto_zero_test_against_nn_of_tendsto_zero_mass mass_lim f
     
   simp_rw [fun i => (μs i).test_against_nn_eq_mass_mul f, μ.test_against_nn_eq_mass_mul f]
@@ -1035,9 +1032,9 @@ theorem measure_of_cont_bdd_of_tendsto_filter_indicator {ι : Type _} {L : Filte
     Tendsto (fun n => lintegral μ fun a => fs n a) L (𝓝 (μ E)) := by
   convert finite_measure.tendsto_lintegral_nn_filter_of_le_const μ fs_bdd fs_lim
   have aux : ∀ a, indicator E (fun x => (1 : ℝ≥0∞)) a = ↑(indicator E (fun x => (1 : ℝ≥0 )) a) := fun a => by
-    simp only [← Ennreal.coe_indicator, ← Ennreal.coe_one]
+    simp only [Ennreal.coe_indicator, Ennreal.coe_one]
   simp_rw [← aux, lintegral_indicator _ E_mble]
-  simp only [← lintegral_one, ← measure.restrict_apply, ← MeasurableSet.univ, ← univ_inter]
+  simp only [lintegral_one, measure.restrict_apply, MeasurableSet.univ, univ_inter]
 
 /-- If a sequence of bounded continuous functions tends to the indicator of a measurable set and
 the functions are uniformly bounded, then their integrals against a finite measure tend to the
@@ -1081,7 +1078,7 @@ theorem FiniteMeasure.limsup_measure_closed_le_of_tendsto {α ι : Type _} {L : 
     (μs_lim : Tendsto μs L (𝓝 μ)) {F : Set α} (F_closed : IsClosed F) :
     (L.limsup fun i => (μs i : Measure α) F) ≤ (μ : Measure α) F := by
   by_cases' L = ⊥
-  · simp only [← h, ← limsup, ← Filter.map_bot, ← Limsup_bot, ← Ennreal.bot_eq_zero, ← zero_le]
+  · simp only [h, limsup, Filter.map_bot, Limsup_bot, Ennreal.bot_eq_zero, zero_le]
     
   apply Ennreal.le_of_forall_pos_le_add
   intro ε ε_pos μ_F_finite
@@ -1110,7 +1107,7 @@ theorem FiniteMeasure.limsup_measure_closed_le_of_tendsto {α ι : Type _} {L : 
   have : ne_bot L := ⟨h⟩
   rw [limsup_const]
   apply le_transₓ (add_le_add (hM M rfl.le).le (le_reflₓ (ε / 2 : ℝ≥0∞)))
-  simp only [← add_assocₓ, ← Ennreal.add_halves, ← le_reflₓ]
+  simp only [add_assocₓ, Ennreal.add_halves, le_reflₓ]
 
 end ConvergenceImpliesLimsupClosedLe
 

@@ -120,8 +120,8 @@ theorem disjointed_unique {f d : ℕ → α} (hdisj : Pairwise (Disjoint on d)) 
   · rw [h, hsups, partial_sups_succ, disjointed_succ, sup_sdiff, sdiff_self, bot_sup_eq]
     
   rw [partial_sups_succ, sup_sdiff, sdiff_self, bot_sup_eq, eq_comm, sdiff_eq_self_iff_disjoint]
-  suffices h : ∀, ∀ m ≤ n, ∀, Disjoint (partialSups d m) (d n.succ)
-  · exact h n le_rfl
+  suffices h : ∀ m ≤ n, Disjoint (partialSups d m) (d n.succ)
+  · exact h n le_rflₓ
     
   rintro m hm
   induction' m with m ih
@@ -167,5 +167,5 @@ theorem disjointed_eq_inter_compl (f : ℕ → Set α) (n : ℕ) : disjointed f 
 theorem preimage_find_eq_disjointed (s : ℕ → Set α) (H : ∀ x, ∃ n, x ∈ s n) [∀ x n, Decidable (x ∈ s n)] (n : ℕ) :
     (fun x => Nat.findₓ (H x)) ⁻¹' {n} = disjointed s n := by
   ext x
-  simp [← Nat.find_eq_iff, ← disjointed_eq_inter_compl]
+  simp [Nat.find_eq_iff, disjointed_eq_inter_compl]
 

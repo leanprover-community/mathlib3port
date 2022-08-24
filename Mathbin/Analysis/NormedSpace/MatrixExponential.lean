@@ -137,8 +137,7 @@ theorem exp_add_of_commute (A B : Matrix m m 𝔸) (h : Commute A B) : exp 𝕂 
   letI : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
   exact exp_add_of_commute h
 
-theorem exp_sum_of_commute {ι} (s : Finset ι) (f : ι → Matrix m m 𝔸)
-    (h : ∀, ∀ i ∈ s, ∀, ∀ j ∈ s, ∀, Commute (f i) (f j)) :
+theorem exp_sum_of_commute {ι} (s : Finset ι) (f : ι → Matrix m m 𝔸) (h : ∀ i ∈ s, ∀ j ∈ s, Commute (f i) (f j)) :
     exp 𝕂 (∑ i in s, f i) = s.noncommProd (fun i => exp 𝕂 (f i)) fun i hi j hj => (h i hi j hj).exp 𝕂 := by
   letI : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
   letI : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
@@ -193,12 +192,12 @@ theorem exp_zsmul (z : ℤ) (A : Matrix m m 𝔸) : exp 𝕂 (z • A) = exp �
 theorem exp_conj (U : Matrix m m 𝔸) (A : Matrix m m 𝔸) (hy : IsUnit U) : exp 𝕂 (U ⬝ A ⬝ U⁻¹) = U ⬝ exp 𝕂 A ⬝ U⁻¹ :=
   let ⟨u, hu⟩ := hy
   hu ▸ by
-    simpa only [← Matrix.coe_units_inv] using exp_units_conj 𝕂 u A
+    simpa only [Matrix.coe_units_inv] using exp_units_conj 𝕂 u A
 
 theorem exp_conj' (U : Matrix m m 𝔸) (A : Matrix m m 𝔸) (hy : IsUnit U) : exp 𝕂 (U⁻¹ ⬝ A ⬝ U) = U⁻¹ ⬝ exp 𝕂 A ⬝ U :=
   let ⟨u, hu⟩ := hy
   hu ▸ by
-    simpa only [← Matrix.coe_units_inv] using exp_units_conj' 𝕂 u A
+    simpa only [Matrix.coe_units_inv] using exp_units_conj' 𝕂 u A
 
 end NormedComm
 

@@ -73,14 +73,14 @@ theorem product_subset_product_right (ht : t ⊆ t') : s ×ˢ t ⊆ s ×ˢ t' :=
 theorem product_eq_bUnion [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
     s ×ˢ t = s.bUnion fun a => t.Image fun b => (a, b) :=
   ext fun ⟨x, y⟩ => by
-    simp only [← mem_product, ← mem_bUnion, ← mem_image, ← exists_prop, ← Prod.mk.inj_iff, ← And.left_comm, ←
-      exists_and_distrib_left, ← exists_eq_right, ← exists_eq_left]
+    simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iff, And.left_comm, exists_and_distrib_left,
+      exists_eq_right, exists_eq_left]
 
 theorem product_eq_bUnion_right [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
     s ×ˢ t = t.bUnion fun b => s.Image fun a => (a, b) :=
   ext fun ⟨x, y⟩ => by
-    simp only [← mem_product, ← mem_bUnion, ← mem_image, ← exists_prop, ← Prod.mk.inj_iff, ← And.left_comm, ←
-      exists_and_distrib_left, ← exists_eq_right, ← exists_eq_left]
+    simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iff, And.left_comm, exists_and_distrib_left,
+      exists_eq_right, exists_eq_left]
 
 /-- See also `finset.sup_product_left`. -/
 @[simp]
@@ -96,7 +96,7 @@ theorem card_product (s : Finset α) (t : Finset β) : card (s ×ˢ t) = card s 
 theorem filter_product (p : α → Prop) (q : β → Prop) [DecidablePred p] [DecidablePred q] :
     ((s ×ˢ t).filter fun x : α × β => p x.1 ∧ q x.2) = s.filter p ×ˢ t.filter q := by
   ext ⟨a, b⟩
-  simp only [← mem_filter, ← mem_product]
+  simp only [mem_filter, mem_product]
   exact and_and_and_comm (a ∈ s) (b ∈ t) (p a) (q b)
 
 theorem filter_product_card (s : Finset α) (t : Finset β) (p : α → Prop) (q : β → Prop) [DecidablePred p]
@@ -108,21 +108,20 @@ theorem filter_product_card (s : Finset α) (t : Finset β) (p : α → Prop) (q
   rw [← card_product, ← card_product, ← filter_product, ← filter_product, ← card_union_eq]
   · apply congr_arg
     ext ⟨a, b⟩
-    simp only [← filter_union_right, ← mem_filter, ← mem_product]
+    simp only [filter_union_right, mem_filter, mem_product]
     constructor <;> intro h <;> use h.1
-    simp only [← Function.comp_app, ← and_selfₓ, ← h.2, ← em (q b)]
+    simp only [Function.comp_app, and_selfₓ, h.2, em (q b)]
     cases h.2 <;>
       · try
           simp at h_1
-        simp [← h_1]
+        simp [h_1]
         
     
   · rw [disjoint_iff]
     change _ ∩ _ = ∅
     ext ⟨a, b⟩
     rw [mem_inter]
-    simp only [← and_imp, ← mem_filter, ← not_and, ← not_not, ← Function.comp_app, ← iff_falseₓ, ← mem_product, ←
-      not_mem_empty]
+    simp only [and_imp, mem_filter, not_and, not_not, Function.comp_app, iff_falseₓ, mem_product, not_mem_empty]
     intros
     assumption
     
@@ -158,25 +157,25 @@ theorem product_eq_empty {s : Finset α} {t : Finset β} : s ×ˢ t = ∅ ↔ s 
 @[simp]
 theorem singleton_product {a : α} : ({a} : Finset α) ×ˢ t = t.map ⟨Prod.mk a, Prod.mk.inj_left _⟩ := by
   ext ⟨x, y⟩
-  simp [← And.left_comm, ← eq_comm]
+  simp [And.left_comm, eq_comm]
 
 @[simp]
 theorem product_singleton {b : β} : s ×ˢ {b} = s.map ⟨fun i => (i, b), Prod.mk.inj_right _⟩ := by
   ext ⟨x, y⟩
-  simp [← And.left_comm, ← eq_comm]
+  simp [And.left_comm, eq_comm]
 
 theorem singleton_product_singleton {a : α} {b : β} : ({a} : Finset α) ×ˢ ({b} : Finset β) = {(a, b)} := by
-  simp only [← product_singleton, ← Function.Embedding.coe_fn_mk, ← map_singleton]
+  simp only [product_singleton, Function.Embedding.coe_fn_mk, map_singleton]
 
 @[simp]
 theorem union_product [DecidableEq α] [DecidableEq β] : (s ∪ s') ×ˢ t = s ×ˢ t ∪ s' ×ˢ t := by
   ext ⟨x, y⟩
-  simp only [← or_and_distrib_right, ← mem_union, ← mem_product]
+  simp only [or_and_distrib_right, mem_union, mem_product]
 
 @[simp]
 theorem product_union [DecidableEq α] [DecidableEq β] : s ×ˢ (t ∪ t') = s ×ˢ t ∪ s ×ˢ t' := by
   ext ⟨x, y⟩
-  simp only [← and_or_distrib_left, ← mem_union, ← mem_product]
+  simp only [and_or_distrib_left, mem_union, mem_product]
 
 end Prod
 
@@ -196,15 +195,15 @@ def offDiag :=
 
 @[simp]
 theorem mem_diag (x : α × α) : x ∈ s.diag ↔ x.1 ∈ s ∧ x.1 = x.2 := by
-  simp only [← diag, ← mem_filter, ← mem_product]
-  constructor <;> intro h <;> simp only [← h, ← and_trueₓ, ← eq_self_iff_true, ← and_selfₓ]
+  simp only [diag, mem_filter, mem_product]
+  constructor <;> intro h <;> simp only [h, and_trueₓ, eq_self_iff_true, and_selfₓ]
   rw [← h.2]
   exact h.1
 
 @[simp]
 theorem mem_off_diag (x : α × α) : x ∈ s.offDiag ↔ x.1 ∈ s ∧ x.2 ∈ s ∧ x.1 ≠ x.2 := by
-  simp only [← off_diag, ← mem_filter, ← mem_product]
-  constructor <;> intro h <;> simp only [← h, ← Ne.def, ← not_false_iff, ← and_selfₓ]
+  simp only [off_diag, mem_filter, mem_product]
+  constructor <;> intro h <;> simp only [h, Ne.def, not_false_iff, and_selfₓ]
 
 @[simp]
 theorem diag_card : (diag s).card = s.card := by
@@ -227,7 +226,7 @@ theorem diag_card : (diag s).card = s.card := by
 theorem off_diag_card : (offDiag s).card = s.card * s.card - s.card := by
   suffices (diag s).card + (off_diag s).card = s.card * s.card by
     nth_rw 2[← s.diag_card]
-    simp only [← diag_card] at *
+    simp only [diag_card] at *
     rw [tsub_eq_of_eq_add_rev]
     rw [this]
   rw [← card_product]
@@ -257,7 +256,7 @@ theorem product_sdiff_off_diag : s ×ˢ s \ s.offDiag = s.diag := by
 
 theorem diag_union : (s ∪ t).diag = s.diag ∪ t.diag := by
   ext ⟨i, j⟩
-  simp only [← mem_diag, ← mem_union, ← or_and_distrib_right]
+  simp only [mem_diag, mem_union, or_and_distrib_right]
 
 variable {s t}
 
@@ -265,7 +264,7 @@ theorem off_diag_union (h : Disjoint s t) : (s ∪ t).offDiag = s.offDiag ∪ t.
   rw [off_diag, union_product, product_union, product_union, union_comm _ (t ×ˢ t), union_assoc,
     union_left_comm (s ×ˢ t), ← union_assoc, filter_union, filter_union, ← off_diag, ← off_diag, filter_true_of_mem, ←
     union_assoc]
-  simp only [← mem_union, ← mem_product, ← Ne.def, ← Prod.forall]
+  simp only [mem_union, mem_product, Ne.def, Prod.forall]
   rintro i j (⟨hi, hj⟩ | ⟨hi, hj⟩)
   · exact h.forall_ne_finset hi hj
     
@@ -276,7 +275,7 @@ variable (a : α)
 
 @[simp]
 theorem off_diag_singleton : ({a} : Finset α).offDiag = ∅ := by
-  simp [Finset.card_eq_zero]
+  simp [← Finset.card_eq_zero]
 
 theorem diag_singleton : ({a} : Finset α).diag = {(a, a)} := by
   rw [← product_sdiff_off_diag, off_diag_singleton, sdiff_empty, singleton_product_singleton]

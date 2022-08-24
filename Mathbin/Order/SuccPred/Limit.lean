@@ -47,7 +47,7 @@ protected theorem _root_.is_min.is_succ_limit (h : IsMin a) : IsSuccLimit a := b
 theorem is_succ_limit_of_succ_ne (h : ∀ b, succ b ≠ a) : IsSuccLimit a := fun b hb => (h _ hb).elim
 
 theorem not_is_succ_limit_iff : ¬IsSuccLimit a ↔ ∃ b, ¬IsMax b ∧ succ b = a := by
-  simp [← is_succ_limit, ← and_comm]
+  simp [is_succ_limit, and_comm]
 
 /-- See `order.not_is_succ_limit_iff` for a version that states that `a` is a successor of a value
 other than itself. -/
@@ -55,7 +55,7 @@ theorem mem_range_succ_of_not_is_succ_limit (h : ¬IsSuccLimit a) : a ∈ Range 
   cases' not_is_succ_limit_iff.1 h with b hb
   exact ⟨b, hb.2⟩
 
-theorem is_succ_limit_of_succ_lt (H : ∀, ∀ a < b, ∀, succ a < b) : IsSuccLimit b := by
+theorem is_succ_limit_of_succ_lt (H : ∀ a < b, succ a < b) : IsSuccLimit b := by
   rintro a rfl
   by_contra ha
   exact (H a <| lt_succ_of_not_is_max ha).False
@@ -112,7 +112,7 @@ variable [IsSuccArchimedean α]
 
 theorem IsSuccLimit.is_min_of_no_max [NoMaxOrder α] (h : IsSuccLimit a) : IsMin a := fun b hb => by
   rcases hb.exists_succ_iterate with ⟨_ | n, rfl⟩
-  · exact le_rfl
+  · exact le_rflₓ
     
   · rw [iterate_succ_apply'] at h
     exact (not_is_succ_limit_succ _ h).elim
@@ -137,7 +137,7 @@ theorem IsSuccLimit.succ_lt (hb : IsSuccLimit b) (ha : a < b) : succ a < b := by
   by_cases' h : IsMax a
   · rwa [h.succ_eq]
     
-  · rw [lt_iff_le_and_ne, succ_le_iff_of_not_is_max h]
+  · rw [lt_iff_le_and_neₓ, succ_le_iff_of_not_is_max h]
     refine' ⟨ha, fun hab => _⟩
     subst hab
     exact (h hb.is_max).elim
@@ -146,7 +146,7 @@ theorem IsSuccLimit.succ_lt (hb : IsSuccLimit b) (ha : a < b) : succ a < b := by
 theorem IsSuccLimit.succ_lt_iff (hb : IsSuccLimit b) : succ a < b ↔ a < b :=
   ⟨fun h => (le_succ a).trans_lt h, hb.succ_lt⟩
 
-theorem is_succ_limit_iff_succ_lt : IsSuccLimit b ↔ ∀, ∀ a < b, ∀, succ a < b :=
+theorem is_succ_limit_iff_succ_lt : IsSuccLimit b ↔ ∀ a < b, succ a < b :=
   ⟨fun hb a => hb.succ_lt, is_succ_limit_of_succ_lt⟩
 
 theorem is_succ_limit_rec_on_succ' {C : α → Sort _} (hs : ∀ a, ¬IsMax a → C (succ a)) (hl : ∀ a, IsSuccLimit a → C a)
@@ -154,7 +154,7 @@ theorem is_succ_limit_rec_on_succ' {C : α → Sort _} (hs : ∀ a, ¬IsMax a �
   have hb' := not_is_succ_limit_succ_of_not_is_max hb
   have H := Classical.some_spec (not_is_succ_limit_iff.1 hb')
   rw [is_succ_limit_rec_on]
-  simp only [← cast_eq_iff_heq, ← hb', ← not_false_iff, ← eq_mpr_eq_cast, ← dif_neg]
+  simp only [cast_eq_iff_heq, hb', not_false_iff, eq_mpr_eq_cast, dif_neg]
   congr
   · exact (succ_eq_succ_iff_of_not_is_max H.1 hb).1 H.2
     
@@ -178,7 +178,7 @@ variable [IsSuccArchimedean α]
 
 protected theorem IsSuccLimit.is_min (h : IsSuccLimit a) : IsMin a := fun b hb => by
   revert h
-  refine' Succ.rec (fun _ => le_rfl) (fun c hbc H hc => _) hb
+  refine' Succ.rec (fun _ => le_rflₓ) (fun c hbc H hc => _) hb
   have := hc.is_max.succ_eq
   rw [this] at hc⊢
   exact H hc
@@ -223,7 +223,7 @@ other than itself. -/
 theorem mem_range_pred_of_not_is_pred_limit : ¬IsPredLimit a → a ∈ Range (@pred α _ _) :=
   @mem_range_succ_of_not_is_succ_limit αᵒᵈ _ _ _
 
-theorem is_pred_limit_of_lt_pred : (∀, ∀ b > a, ∀, a < pred b) → IsPredLimit a :=
+theorem is_pred_limit_of_lt_pred : (∀ b > a, a < pred b) → IsPredLimit a :=
   @is_succ_limit_of_succ_lt αᵒᵈ a _ _
 
 /-- A value can be built by building it on predecessors and predecessor limits.
@@ -293,7 +293,7 @@ theorem IsPredLimit.lt_pred : ∀ ha : IsPredLimit a, a < b → a < pred b :=
 theorem IsPredLimit.lt_pred_iff : ∀ ha : IsPredLimit a, a < pred b ↔ a < b :=
   @IsSuccLimit.succ_lt_iff αᵒᵈ b a _ _
 
-theorem is_pred_limit_iff_lt_pred : IsPredLimit a ↔ ∀, ∀ b > a, ∀, a < pred b :=
+theorem is_pred_limit_iff_lt_pred : IsPredLimit a ↔ ∀ b > a, a < pred b :=
   @is_succ_limit_iff_succ_lt αᵒᵈ a _ _
 
 theorem is_pred_limit_rec_on_pred' :

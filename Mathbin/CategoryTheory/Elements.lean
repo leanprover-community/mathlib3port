@@ -110,7 +110,7 @@ def map {F₁ F₂ : C ⥤ Type w} (α : F₁ ⟶ F₂) : F₁.Elements ⥤ F₂
   obj := fun t => ⟨t.1, α.app t.1 t.2⟩
   map := fun t₁ t₂ k =>
     ⟨k.1, by
-      simpa [k.2] using (functor_to_types.naturality _ _ α k.1 t₁.2).symm⟩
+      simpa [← k.2] using (functor_to_types.naturality _ _ α k.1 t₁.2).symm⟩
 
 @[simp]
 theorem map_π {F₁ F₂ : C ⥤ Type w} (α : F₁ ⟶ F₂) : map α ⋙ π F₂ = π F₁ :=
@@ -175,8 +175,8 @@ def toCostructuredArrow (F : Cᵒᵖ ⥤ Type v) : F.Elementsᵒᵖ ⥤ Costruct
     fapply costructured_arrow.hom_mk
     exact f.unop.val.unop
     ext y
-    simp only [← costructured_arrow.mk_hom_eq_self, ← yoneda_map_app, ← functor_to_types.comp, ← op_comp, ←
-      yoneda_sections_inv_app, ← functor_to_types.map_comp_apply, ← Quiver.Hom.op_unop, ← Subtype.val_eq_coe]
+    simp only [costructured_arrow.mk_hom_eq_self, yoneda_map_app, functor_to_types.comp, op_comp,
+      yoneda_sections_inv_app, functor_to_types.map_comp_apply, Quiver.Hom.op_unop, Subtype.val_eq_coe]
     congr
     exact f.unop.2
 
@@ -189,13 +189,13 @@ def fromCostructuredArrow (F : Cᵒᵖ ⥤ Type v) : (CostructuredArrow yoneda F
   map := fun X Y f =>
     ⟨f.unop.1.op, by
       convert (congr_fun ((unop X).Hom.naturality f.unop.left.op) (𝟙 _)).symm
-      simp only [← Equivₓ.to_fun_as_coe, ← Quiver.Hom.unop_op, ← yoneda_equiv_apply, ← types_comp_apply, ←
-        category.comp_id, ← yoneda_obj_map]
+      simp only [Equivₓ.to_fun_as_coe, Quiver.Hom.unop_op, yoneda_equiv_apply, types_comp_apply, category.comp_id,
+        yoneda_obj_map]
       have : yoneda.map f.unop.left ≫ (unop X).Hom = (unop Y).Hom := by
         convert f.unop.3
         erw [category.comp_id]
       erw [← this]
-      simp only [← yoneda_map_app, ← functor_to_types.comp]
+      simp only [yoneda_map_app, functor_to_types.comp]
       erw [category.id_comp]⟩
 
 @[simp]
@@ -219,7 +219,7 @@ theorem from_to_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
     cases H
     rfl
   ext
-  simp [← this]
+  simp [this]
   tidy
 
 /-- The counit of the equivalence `F.elementsᵒᵖ ≅ (yoneda, F)` is indeed iso. -/
@@ -229,29 +229,28 @@ theorem to_from_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
   · intro X
     cases X
     cases X_right
-    simp only [← functor.id_obj, ← functor.right_op_obj, ← to_costructured_arrow_obj, ← functor.comp_obj, ←
-      costructured_arrow.mk]
+    simp only [functor.id_obj, functor.right_op_obj, to_costructured_arrow_obj, functor.comp_obj, costructured_arrow.mk]
     congr
     ext x f
     convert congr_fun (X_hom.naturality f.op).symm (𝟙 X_left)
-    simp only [← Quiver.Hom.unop_op, ← yoneda_obj_map]
+    simp only [Quiver.Hom.unop_op, yoneda_obj_map]
     erw [category.comp_id]
     
   intro X Y f
   rcases X with ⟨X_left, ⟨⟨⟩⟩⟩
   rcases Y with ⟨Y_left, ⟨⟨⟩⟩⟩
   cases f
-  simp [← costructured_arrow.hom_mk]
+  simp [costructured_arrow.hom_mk]
   delta' costructured_arrow.mk
   congr
   · ext x f
     convert congr_fun (X_hom.naturality f.op).symm (𝟙 X_left)
-    simp only [← Quiver.Hom.unop_op, ← CategoryTheory.yoneda_obj_map]
+    simp only [Quiver.Hom.unop_op, CategoryTheory.yoneda_obj_map]
     erw [category.comp_id]
     
   · ext x f
     convert congr_fun (Y_hom.naturality f.op).symm (𝟙 Y_left)
-    simp only [← Quiver.Hom.unop_op, ← CategoryTheory.yoneda_obj_map]
+    simp only [Quiver.Hom.unop_op, CategoryTheory.yoneda_obj_map]
     erw [category.comp_id]
     
   simp
@@ -269,7 +268,7 @@ theorem costructured_arrow_yoneda_equivalence_naturality {F₁ F₂ : Cᵒᵖ �
     (map α).op ⋙ toCostructuredArrow F₂ = toCostructuredArrow F₁ ⋙ CostructuredArrow.map α := by
   fapply Functor.ext
   · intro X
-    simp only [← costructured_arrow.map_mk, ← to_costructured_arrow_obj, ← functor.op_obj, ← functor.comp_obj]
+    simp only [costructured_arrow.map_mk, to_costructured_arrow_obj, functor.op_obj, functor.comp_obj]
     congr
     ext x f
     simpa using congr_fun (α.naturality f.op).symm (unop X).snd
@@ -286,7 +285,7 @@ theorem costructured_arrow_yoneda_equivalence_naturality {F₁ F₂ : Cᵒᵖ �
       fun _ _ _ H => by
       cases H
       rfl
-    simp [← this]
+    simp [this]
     
 
 end CategoryOfElements

@@ -145,7 +145,7 @@ def lift : Quotient r ⥤ D where
     Quot.liftOn hf (fun f => F.map f)
       (by
         rintro _ _ ⟨_, _, _, _, _, _, h⟩
-        simp [← H _ _ _ _ h])
+        simp [H _ _ _ _ h])
   map_id' := fun a => F.map_id a.as
   map_comp' := by
     rintro a b c ⟨f⟩ ⟨g⟩

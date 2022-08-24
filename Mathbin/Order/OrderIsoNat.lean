@@ -97,7 +97,7 @@ theorem order_embedding_of_set_apply {n : ℕ} : orderEmbeddingOfSet s n = Subty
 
 @[simp]
 theorem Subtype.order_iso_of_nat_apply {n : ℕ} : Subtype.orderIsoOfNat s n = Subtype.ofNat s n := by
-  simp [← subtype.order_iso_of_nat]
+  simp [subtype.order_iso_of_nat]
 
 variable (s)
 
@@ -108,8 +108,8 @@ theorem exists_subseq_of_forall_mem_union {s t : Set α} (e : ℕ → α) (he : 
     ∃ g : ℕ ↪o ℕ, (∀ n, e (g n) ∈ s) ∨ ∀ n, e (g n) ∈ t := by
   classical
   have : Infinite (e ⁻¹' s) ∨ Infinite (e ⁻¹' t) := by
-    simp only [← Set.infinite_coe_iff, Set.infinite_union, Set.preimage_union, ←
-      Set.eq_univ_of_forall fun n => Set.mem_preimage.2 (he n), ← Set.infinite_univ]
+    simp only [Set.infinite_coe_iff, ← Set.infinite_union, ← Set.preimage_union,
+      Set.eq_univ_of_forall fun n => Set.mem_preimage.2 (he n), Set.infinite_univ]
   cases this
   exacts[⟨Nat.orderEmbeddingOfSet (e ⁻¹' s), Or.inl fun n => (Nat.Subtype.ofNat (e ⁻¹' s) _).2⟩,
     ⟨Nat.orderEmbeddingOfSet (e ⁻¹' t), Or.inr fun n => (Nat.Subtype.ofNat (e ⁻¹' t) _).2⟩]
@@ -139,7 +139,7 @@ theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f :
     have h : ∀ n : ℕ, ∃ n' : ℕ, n < n' ∧ r (f (n + m)) (f (n' + m)) := by
       intro n
       have h := hm _ (le_add_of_nonneg_left n.zero_le)
-      simp only [← exists_prop, ← not_not, ← Set.mem_set_of_eq, ← not_forall] at h
+      simp only [exists_prop, not_not, Set.mem_set_of_eq, not_forall] at h
       obtain ⟨n', hn1, hn2⟩ := h
       obtain ⟨x, hpos, rfl⟩ := exists_pos_add_of_lt hn1
       refine' ⟨n + x, add_lt_add_left hpos n, _⟩
@@ -183,15 +183,15 @@ theorem WellFounded.monotone_chain_condition' [Preorderₓ α] :
     exact hn n.succ n.lt_succ_self.le ((RelEmbedding.map_rel_iff _).2 n.lt_succ_self)
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]]
 /-- The "monotone chain condition" below is sometimes a convenient form of well foundedness. -/
 theorem WellFounded.monotone_chain_condition [PartialOrderₓ α] :
     WellFounded ((· > ·) : α → α → Prop) ↔ ∀ a : ℕ →o α, ∃ n, ∀ m, n ≤ m → a n = a m :=
   WellFounded.monotone_chain_condition'.trans <| by
     trace
-      "./././Mathport/Syntax/Translate/Basic.lean:649:16: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]]"
-    rw [lt_iff_le_and_ne]
-    simp [← a.mono h]
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]]"
+    rw [lt_iff_le_and_neₓ]
+    simp [a.mono h]
 
 /-- Given an eventually-constant monotone sequence `a₀ ≤ a₁ ≤ a₂ ≤ ...` in a partially-ordered
 type, `monotonic_sequence_limit_index a` is the least natural number `n` for which `aₙ` reaches the

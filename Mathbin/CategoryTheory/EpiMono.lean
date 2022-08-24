@@ -102,7 +102,7 @@ theorem is_iso_of_epi_of_is_split_mono {X Y : C} (f : X ⟶ Y) [IsSplitMono f] [
   ⟨⟨retraction f,
       ⟨by
         simp , by
-        simp [cancel_epi f]⟩⟩⟩
+        simp [← cancel_epi f]⟩⟩⟩
 
 /-- The chosen section of a split epimorphism.
 (Note that `section` is a reserved keyword, so we append an underscore.)
@@ -125,7 +125,7 @@ instance section_is_split_mono {X Y : C} (f : X ⟶ Y) [hf : IsSplitEpi f] : IsS
 theorem is_iso_of_mono_of_is_split_epi {X Y : C} (f : X ⟶ Y) [Mono f] [IsSplitEpi f] : IsIso f :=
   ⟨⟨section_ f,
       ⟨by
-        simp [cancel_mono f], by
+        simp [← cancel_mono f], by
         simp ⟩⟩⟩
 
 /-- Every iso is a split mono. -/

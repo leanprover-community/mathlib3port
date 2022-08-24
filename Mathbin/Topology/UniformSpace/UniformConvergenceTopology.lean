@@ -199,10 +199,9 @@ protected theorem gc : GaloisConnection lower_adjoint fun 𝓕 => UniformConverg
   calc
     𝓐 ≤ UniformConvergence.filter α β 𝓕 ↔ (UniformConvergence.basis α β 𝓕).Sets ⊆ 𝓐.sets := by
       rw [UniformConvergence.filter, ← FilterBasis.generate, sets_iff_generate]
-    _ ↔ ∀, ∀ U ∈ 𝓕, ∀, UniformConvergence.Gen α β U ∈ 𝓐 := image_subset_iff
-    _ ↔ ∀, ∀ U ∈ 𝓕, ∀, { uv | ∀ x, (uv, x) ∈ { t : ((α → β) × (α → β)) × α | (t.1.1 t.2, t.1.2 t.2) ∈ U } } ∈ 𝓐 :=
-      Iff.rfl
-    _ ↔ ∀, ∀ U ∈ 𝓕, ∀, { uvx : ((α → β) × (α → β)) × α | (uvx.1.1 uvx.2, uvx.1.2 uvx.2) ∈ U } ∈ 𝓐 ×ᶠ (⊤ : Filter α) :=
+    _ ↔ ∀ U ∈ 𝓕, UniformConvergence.Gen α β U ∈ 𝓐 := image_subset_iff
+    _ ↔ ∀ U ∈ 𝓕, { uv | ∀ x, (uv, x) ∈ { t : ((α → β) × (α → β)) × α | (t.1.1 t.2, t.1.2 t.2) ∈ U } } ∈ 𝓐 := Iff.rfl
+    _ ↔ ∀ U ∈ 𝓕, { uvx : ((α → β) × (α → β)) × α | (uvx.1.1 uvx.2, uvx.1.2 uvx.2) ∈ U } ∈ 𝓐 ×ᶠ (⊤ : Filter α) :=
       forall₂_congrₓ fun U hU => mem_prod_top.symm
     _ ↔ lower_adjoint 𝓐 ≤ 𝓕 := Iff.rfl
     
@@ -458,7 +457,7 @@ protected theorem topological_space_eq :
     UniformConvergenceOn.topologicalSpace α β 𝔖 =
       ⨅ (s : Set α) (hs : s ∈ 𝔖), TopologicalSpace.induced s.restrict (UniformConvergence.topologicalSpace s β) :=
   by
-  simp only [← UniformConvergenceOn.topologicalSpace, ← to_topological_space_infi, ← to_topological_space_infi, ←
+  simp only [UniformConvergenceOn.topologicalSpace, to_topological_space_infi, to_topological_space_infi,
     to_topological_space_comap]
   rfl
 
@@ -618,8 +617,7 @@ protected theorem le_Pi_of_covering (h : ⋃₀𝔖 = univ) : 𝒱(α,β,𝔖,_)
 /-- Convergence in the topology of `𝔖`-convergence means uniform convergence on `S` (in the sense
 of `tendsto_uniformly_on`) for all `S ∈ 𝔖`. -/
 protected theorem tendsto_iff_tendsto_uniformly_on :
-    Tendsto F p (@nhds _ (UniformConvergenceOn.topologicalSpace α β 𝔖) f) ↔ ∀, ∀ s ∈ 𝔖, ∀, TendstoUniformlyOn F f p s :=
-  by
+    Tendsto F p (@nhds _ (UniformConvergenceOn.topologicalSpace α β 𝔖) f) ↔ ∀ s ∈ 𝔖, TendstoUniformlyOn F f p s := by
   letI : UniformSpace (α → β) := 𝒱(α,β,𝔖,_)
   rw [UniformConvergenceOn.topological_space_eq, nhds_infi, tendsto_infi]
   refine' forall_congrₓ fun s => _

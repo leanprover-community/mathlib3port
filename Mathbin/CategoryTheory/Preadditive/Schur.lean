@@ -48,7 +48,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
   ⟨fun I => by
     intro h
     apply id_nonzero X
-    simp only [is_iso.hom_inv_id f, ← h, ← zero_comp], fun w => is_iso_of_hom_simple w⟩
+    simp only [← is_iso.hom_inv_id f, h, zero_comp], fun w => is_iso_of_hom_simple w⟩
 
 /-- In any preadditive category with kernels,
 the endomorphisms of a simple object form a division ring.
@@ -82,7 +82,7 @@ theorem finrank_hom_simple_simple_eq_zero_of_not_iso [HasKernels C] [Linear 𝕜
   haveI :=
     subsingleton_of_forall_eq (0 : X ⟶ Y) fun f => by
       have p := not_congr (is_iso_iff_nonzero f)
-      simp only [← not_not, ← Ne.def] at p
+      simp only [not_not, Ne.def] at p
       refine' p.mp fun _ => h (as_iso f)
   exact finrank_zero_of_subsingleton
 
@@ -153,7 +153,7 @@ noncomputable def fieldEndOfFiniteDimensional (X : C) [Simple X] [I : FiniteDime
         mul_comm := fun f g => by
           obtain ⟨c, rfl⟩ := endomorphism_simple_eq_smul_id 𝕜 f
           obtain ⟨d, rfl⟩ := endomorphism_simple_eq_smul_id 𝕜 g
-          simp [mul_smul, ← mul_comm c d] }
+          simp [← mul_smul, mul_comm c d] }
 
 -- There is a symmetric argument that uses `[finite_dimensional 𝕜 (Y ⟶ Y)]` instead,
 -- but we don't bother proving that here.

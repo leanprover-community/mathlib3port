@@ -76,11 +76,11 @@ theorem reindex_linear_equiv_comp_apply (e₁ : m ≃ m') (e₂ : n ≃ n') (e�
     (M : Matrix m n A) :
     (reindexLinearEquiv R A e₁' e₂') (reindexLinearEquiv R A e₁ e₂ M) =
       reindexLinearEquiv R A (e₁.trans e₁') (e₂.trans e₂') M :=
-  minor_minor _ _ _ _ _
+  submatrix_submatrix _ _ _ _ _
 
 theorem reindex_linear_equiv_one [DecidableEq m] [DecidableEq m'] [One A] (e : m ≃ m') :
     reindexLinearEquiv R A e e (1 : Matrix m m A) = 1 :=
-  minor_one_equiv e.symm
+  submatrix_one_equiv e.symm
 
 end AddCommMonoidₓ
 
@@ -91,12 +91,12 @@ variable [Semiringₓ R] [Semiringₓ A] [Module R A]
 theorem reindex_linear_equiv_mul [Fintype n] [Fintype n'] (eₘ : m ≃ m') (eₙ : n ≃ n') (eₒ : o ≃ o') (M : Matrix m n A)
     (N : Matrix n o A) :
     reindexLinearEquiv R A eₘ eₙ M ⬝ reindexLinearEquiv R A eₙ eₒ N = reindexLinearEquiv R A eₘ eₒ (M ⬝ N) :=
-  minor_mul_equiv M N _ _ _
+  submatrix_mul_equiv M N _ _ _
 
 theorem mul_reindex_linear_equiv_one [Fintype n] [Fintype o] [DecidableEq o] (e₁ : o ≃ n) (e₂ : o ≃ n')
     (M : Matrix m n A) :
     M.mul (reindexLinearEquiv R A e₁ e₂ 1) = reindexLinearEquiv R A (Equivₓ.refl m) (e₁.symm.trans e₂) M :=
-  mul_minor_one _ _ _
+  mul_submatrix_one _ _ _
 
 end Semiringₓ
 
@@ -111,7 +111,7 @@ def reindexAlgEquiv (e : m ≃ n) : Matrix m m R ≃ₐ[R] Matrix n n R :=
   { reindexLinearEquiv R R e e with toFun := reindex e e,
     map_mul' := fun a b => (reindex_linear_equiv_mul R R e e e a b).symm,
     commutes' := fun r => by
-      simp [← algebraMap, ← Algebra.toRingHom, ← minor_smul] }
+      simp [algebraMap, Algebra.toRingHom, submatrix_smul] }
 
 @[simp]
 theorem reindex_alg_equiv_apply (e : m ≃ n) (M : Matrix m m R) : reindexAlgEquiv R e M = reindex e e M :=
@@ -133,7 +133,7 @@ end Algebra
 
 /-- Reindexing both indices along the same equivalence preserves the determinant.
 
-For the `simp` version of this lemma, see `det_minor_equiv_self`.
+For the `simp` version of this lemma, see `det_submatrix_equiv_self`.
 -/
 theorem det_reindex_linear_equiv_self [CommRingₓ R] [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] (e : m ≃ n)
     (M : Matrix m m R) : det (reindexLinearEquiv R R e e M) = det M :=
@@ -141,7 +141,7 @@ theorem det_reindex_linear_equiv_self [CommRingₓ R] [Fintype m] [DecidableEq m
 
 /-- Reindexing both indices along the same equivalence preserves the determinant.
 
-For the `simp` version of this lemma, see `det_minor_equiv_self`.
+For the `simp` version of this lemma, see `det_submatrix_equiv_self`.
 -/
 theorem det_reindex_alg_equiv [CommRingₓ R] [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] (e : m ≃ n)
     (A : Matrix m m R) : det (reindexAlgEquiv R e A) = det A :=

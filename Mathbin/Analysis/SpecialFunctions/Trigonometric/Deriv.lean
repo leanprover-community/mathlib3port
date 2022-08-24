@@ -31,12 +31,12 @@ namespace Complex
 
 /-- The complex sine function is everywhere strictly differentiable, with the derivative `cos x`. -/
 theorem has_strict_deriv_at_sin (x : ℂ) : HasStrictDerivAt sin (cos x) x := by
-  simp only [← cos, ← div_eq_mul_inv]
+  simp only [cos, div_eq_mul_inv]
   convert
     ((((has_strict_deriv_at_id x).neg.mul_const I).cexp.sub ((has_strict_deriv_at_id x).mul_const I).cexp).mul_const
           I).mul_const
       (2 : ℂ)⁻¹
-  simp only [← Function.comp, ← id]
+  simp only [Function.comp, id]
   rw [sub_mul, mul_assoc, mul_assoc, I_mul_I, neg_one_mul, neg_negₓ, mul_oneₓ, one_mulₓ, mul_assoc, I_mul_I,
     mul_neg_one, sub_neg_eq_add, add_commₓ]
 
@@ -59,11 +59,11 @@ theorem deriv_sin : deriv sin = cos :=
 /-- The complex cosine function is everywhere strictly differentiable, with the derivative
 `-sin x`. -/
 theorem has_strict_deriv_at_cos (x : ℂ) : HasStrictDerivAt cos (-sin x) x := by
-  simp only [← sin, ← div_eq_mul_inv, ← neg_mul_eq_neg_mulₓ]
+  simp only [sin, div_eq_mul_inv, neg_mul_eq_neg_mulₓ]
   convert
     (((has_strict_deriv_at_id x).mul_const I).cexp.add ((has_strict_deriv_at_id x).neg.mul_const I).cexp).mul_const
       (2 : ℂ)⁻¹
-  simp only [← Function.comp, ← id]
+  simp only [Function.comp, id]
   ring
 
 /-- The complex cosine function is everywhere differentiable, with the derivative `-sin x`. -/
@@ -88,7 +88,7 @@ theorem deriv_cos' : deriv cos = fun x => -sin x :=
 /-- The complex hyperbolic sine function is everywhere strictly differentiable, with the derivative
 `cosh x`. -/
 theorem has_strict_deriv_at_sinh (x : ℂ) : HasStrictDerivAt sinh (cosh x) x := by
-  simp only [← cosh, ← div_eq_mul_inv]
+  simp only [cosh, div_eq_mul_inv]
   convert ((has_strict_deriv_at_exp x).sub (has_strict_deriv_at_id x).neg.cexp).mul_const (2 : ℂ)⁻¹
   rw [id, mul_neg_one, sub_eq_add_neg, neg_negₓ]
 
@@ -112,7 +112,7 @@ theorem deriv_sinh : deriv sinh = cosh :=
 /-- The complex hyperbolic cosine function is everywhere strictly differentiable, with the
 derivative `sinh x`. -/
 theorem has_strict_deriv_at_cosh (x : ℂ) : HasStrictDerivAt cosh (sinh x) x := by
-  simp only [← sinh, ← div_eq_mul_inv]
+  simp only [sinh, div_eq_mul_inv]
   convert ((has_strict_deriv_at_exp x).add (has_strict_deriv_at_id x).neg.cexp).mul_const (2 : ℂ)⁻¹
   rw [id, mul_neg_one, sub_eq_add_neg]
 
@@ -559,19 +559,19 @@ theorem sinh_lt_sinh : sinh x < sinh y ↔ x < y :=
 
 @[simp]
 theorem sinh_pos_iff : 0 < sinh x ↔ 0 < x := by
-  simpa only [← sinh_zero] using @sinh_lt_sinh 0 x
+  simpa only [sinh_zero] using @sinh_lt_sinh 0 x
 
 @[simp]
 theorem sinh_nonpos_iff : sinh x ≤ 0 ↔ x ≤ 0 := by
-  simpa only [← sinh_zero] using @sinh_le_sinh x 0
+  simpa only [sinh_zero] using @sinh_le_sinh x 0
 
 @[simp]
 theorem sinh_neg_iff : sinh x < 0 ↔ x < 0 := by
-  simpa only [← sinh_zero] using @sinh_lt_sinh x 0
+  simpa only [sinh_zero] using @sinh_lt_sinh x 0
 
 @[simp]
 theorem sinh_nonneg_iff : 0 ≤ sinh x ↔ 0 ≤ x := by
-  simpa only [← sinh_zero] using @sinh_le_sinh 0 x
+  simpa only [sinh_zero] using @sinh_le_sinh 0 x
 
 theorem cosh_strict_mono_on : StrictMonoOn cosh (Ici 0) :=
   ((convex_Ici _).strict_mono_on_of_deriv_pos continuous_cosh.ContinuousOn) fun x hx => by
@@ -584,21 +584,21 @@ theorem cosh_le_cosh : cosh x ≤ cosh y ↔ abs x ≤ abs y :=
 
 @[simp]
 theorem cosh_lt_cosh : cosh x < cosh y ↔ abs x < abs y :=
-  lt_iff_lt_of_le_iff_le cosh_le_cosh
+  lt_iff_lt_of_le_iff_leₓ cosh_le_cosh
 
 @[simp]
 theorem one_le_cosh (x : ℝ) : 1 ≤ cosh x :=
   cosh_zero ▸
     cosh_le_cosh.2
       (by
-        simp only [← _root_.abs_zero, ← _root_.abs_nonneg])
+        simp only [_root_.abs_zero, _root_.abs_nonneg])
 
 @[simp]
 theorem one_lt_cosh : 1 < cosh x ↔ x ≠ 0 :=
   cosh_zero ▸
     cosh_lt_cosh.trans
       (by
-        simp only [← _root_.abs_zero, ← abs_pos])
+        simp only [_root_.abs_zero, abs_pos])
 
 theorem sinh_sub_id_strict_mono : StrictMono fun x => sinh x - x := by
   refine'
@@ -632,11 +632,11 @@ theorem sinh_le_self_iff : sinh x ≤ x ↔ x ≤ 0 :=
 
 @[simp]
 theorem self_lt_sinh_iff : x < sinh x ↔ 0 < x :=
-  lt_iff_lt_of_le_iff_le sinh_le_self_iff
+  lt_iff_lt_of_le_iff_leₓ sinh_le_self_iff
 
 @[simp]
 theorem sinh_lt_self_iff : sinh x < x ↔ x < 0 :=
-  lt_iff_lt_of_le_iff_le self_le_sinh_iff
+  lt_iff_lt_of_le_iff_leₓ self_le_sinh_iff
 
 end Real
 

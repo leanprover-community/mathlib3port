@@ -83,11 +83,11 @@ instance : Preadditive SemiNormedGroup.{u} where
   add_comp' := by
     intros
     ext
-    simp only [← NormedAddGroupHom.add_apply, ← CategoryTheory.comp_apply, ← map_add]
+    simp only [NormedAddGroupHom.add_apply, CategoryTheory.comp_apply, map_add]
   comp_add' := by
     intros
     ext
-    simp only [← NormedAddGroupHom.add_apply, ← CategoryTheory.comp_apply, ← map_add]
+    simp only [NormedAddGroupHom.add_apply, CategoryTheory.comp_apply, map_add]
 
 instance : Functor.Additive completion where map_add' := fun X Y => (completion.mapHom _ _).map_add
 

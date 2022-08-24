@@ -84,14 +84,13 @@ theorem mem_restrict_total_degree (p : MvPolynomial σ R) : p ∈ restrictTotalD
   rfl
 
 theorem mem_restrict_degree (p : MvPolynomial σ R) (n : ℕ) :
-    p ∈ restrictDegree σ R n ↔ ∀, ∀ s ∈ p.support, ∀, ∀ i, (s : σ →₀ ℕ) i ≤ n := by
+    p ∈ restrictDegree σ R n ↔ ∀ s ∈ p.support, ∀ i, (s : σ →₀ ℕ) i ≤ n := by
   rw [restrict_degree, Finsupp.mem_supported]
   rfl
 
 theorem mem_restrict_degree_iff_sup (p : MvPolynomial σ R) (n : ℕ) :
     p ∈ restrictDegree σ R n ↔ ∀ i, p.degrees.count i ≤ n := by
-  simp only [← mem_restrict_degree, ← degrees, ← Multiset.count_finset_sup, ← Finsupp.count_to_multiset, ←
-    Finset.sup_le_iff]
+  simp only [mem_restrict_degree, degrees, Multiset.count_finset_sup, Finsupp.count_to_multiset, Finset.sup_le_iff]
   exact ⟨fun h n s hs => h s hs n, fun h s hs n => h n s hs⟩
 
 variable (σ R)

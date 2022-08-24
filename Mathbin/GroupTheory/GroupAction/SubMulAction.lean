@@ -107,7 +107,7 @@ variable (p)
 
 /-- Embedding of a submodule `p` to the ambient space `M`. -/
 protected def subtype : p →[R] M := by
-  refine' { toFun := coe.. } <;> simp [← coe_smul]
+  refine' { toFun := coe.. } <;> simp [coe_smul]
 
 @[simp]
 theorem subtype_apply (x : p) : p.Subtype x = x :=
@@ -179,7 +179,7 @@ lemma orbit_of_sub_mul {p : sub_mul_action R M} (m : p) :
 theorem StabilizerOfSubMul.submonoid {p : SubMulAction R M} (m : p) :
     MulAction.Stabilizer.submonoid R m = MulAction.Stabilizer.submonoid R (m : M) := by
   ext
-  simp only [← MulAction.mem_stabilizer_submonoid_iff, SubMulAction.coe_smul, ← SetLike.coe_eq_coe]
+  simp only [MulAction.mem_stabilizer_submonoid_iff, ← SubMulAction.coe_smul, SetLike.coe_eq_coe]
 
 end MulActionMonoid
 

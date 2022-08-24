@@ -20,7 +20,7 @@ open Function
 
 /-- Given `δ : α → Type*`, `pi.empty δ` is the trivial dependent function out of the empty
 multiset. -/
-def Pi.emptyₓ (δ : α → Type _) : ∀, ∀ a ∈ (0 : Multiset α), ∀, δ a :=
+def Pi.emptyₓ (δ : α → Type _) : ∀ a ∈ (0 : Multiset α), δ a :=
   fun.
 
 variable [DecidableEq α] {δ : α → Type _}
@@ -28,18 +28,18 @@ variable [DecidableEq α] {δ : α → Type _}
 /-- Given `δ : α → Type*`, a multiset `m` and a term `a`, as well as a term `b : δ a` and a
 function `f` such that `f a' : δ a'` for all `a'` in `m`, `pi.cons m a b f` is a function `g` such
 that `g a'' : δ a''` for all `a''` in `a ::ₘ m`. -/
-def Pi.cons (m : Multiset α) (a : α) (b : δ a) (f : ∀, ∀ a ∈ m, ∀, δ a) : ∀, ∀ a' ∈ a ::ₘ m, ∀, δ a' := fun a' ha' =>
+def Pi.cons (m : Multiset α) (a : α) (b : δ a) (f : ∀ a ∈ m, δ a) : ∀ a' ∈ a ::ₘ m, δ a' := fun a' ha' =>
   if h : a' = a then Eq.ndrec b h.symm else f a' <| (mem_cons.1 ha').resolve_left h
 
-theorem Pi.cons_same {m : Multiset α} {a : α} {b : δ a} {f : ∀, ∀ a ∈ m, ∀, δ a} (h : a ∈ a ::ₘ m) :
+theorem Pi.cons_same {m : Multiset α} {a : α} {b : δ a} {f : ∀ a ∈ m, δ a} (h : a ∈ a ::ₘ m) :
     Pi.cons m a b f a h = b :=
   dif_pos rfl
 
-theorem Pi.cons_ne {m : Multiset α} {a a' : α} {b : δ a} {f : ∀, ∀ a ∈ m, ∀, δ a} (h' : a' ∈ a ::ₘ m) (h : a' ≠ a) :
+theorem Pi.cons_ne {m : Multiset α} {a a' : α} {b : δ a} {f : ∀ a ∈ m, δ a} (h' : a' ∈ a ::ₘ m) (h : a' ≠ a) :
     Pi.cons m a b f a' h' = f a' ((mem_cons.1 h').resolve_left h) :=
   dif_neg h
 
-theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : ∀, ∀ a ∈ m, ∀, δ a} (h : a ≠ a') :
+theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : ∀ a ∈ m, δ a} (h : a ≠ a') :
     HEq (Pi.cons (a' ::ₘ m) a b (Pi.cons m a' b' f)) (Pi.cons (a ::ₘ m) a' b' (Pi.cons m a b f)) := by
   apply hfunext rfl
   rintro a'' _ rfl
@@ -51,17 +51,17 @@ theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : 
   rcases ne_or_eq a'' a with (h₁ | rfl)
   rcases eq_or_ne a'' a' with (rfl | h₂)
   all_goals
-    simp [*, ← pi.cons_same, ← pi.cons_ne]
+    simp [*, pi.cons_same, pi.cons_ne]
 
 /-- `pi m t` constructs the Cartesian product over `t` indexed by `m`. -/
-def pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : Multiset (∀, ∀ a ∈ m, ∀, δ a) :=
-  m.recOn {Pi.emptyₓ δ} (fun a m (p : Multiset (∀, ∀ a ∈ m, ∀, δ a)) => (t a).bind fun b => p.map <| Pi.cons m a b)
+def pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : Multiset (∀ a ∈ m, δ a) :=
+  m.recOn {Pi.emptyₓ δ} (fun a m (p : Multiset (∀ a ∈ m, δ a)) => (t a).bind fun b => p.map <| Pi.cons m a b)
     (by
       intro a a' m n
       by_cases' eq : a = a'
       · subst Eq
         
-      · simp [← map_bind, ← bind_bind (t a') (t a)]
+      · simp [map_bind, bind_bind (t a') (t a)]
         apply bind_hcongr
         · rw [cons_swap a a']
           
@@ -106,10 +106,10 @@ theorem card_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : card (pi m t) =
     (by
       simp )
     (by
-      simp (config := { contextual := true })[← mul_comm])
+      simp (config := { contextual := true })[mul_comm])
 
 protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} :
-    Nodup s → (∀, ∀ a ∈ s, ∀, Nodup (t a)) → Nodup (pi s t) :=
+    Nodup s → (∀ a ∈ s, Nodup (t a)) → Nodup (pi s t) :=
   Multiset.induction_on s (fun _ _ => nodup_singleton _)
     (by
       intro a s ih hs ht
@@ -129,7 +129,7 @@ protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} :
               rwa [pi.cons_same, pi.cons_same] at this)
 
 @[simp]
-theorem pi.cons_ext {m : Multiset α} {a : α} (f : ∀, ∀ a' ∈ a ::ₘ m, ∀, δ a') :
+theorem pi.cons_ext {m : Multiset α} {a : α} (f : ∀ a' ∈ a ::ₘ m, δ a') :
     (Pi.cons m a (f _ (mem_cons_self _ _)) fun a' ha' => f a' (mem_cons_of_mem ha')) = f := by
   ext a' h'
   by_cases' a' = a
@@ -140,7 +140,7 @@ theorem pi.cons_ext {m : Multiset α} {a : α} (f : ∀, ∀ a' ∈ a ::ₘ m, �
     
 
 theorem mem_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) :
-    ∀ f : ∀, ∀ a ∈ m, ∀, δ a, f ∈ pi m t ↔ ∀ (a) (h : a ∈ m), f a h ∈ t a := by
+    ∀ f : ∀ a ∈ m, δ a, f ∈ pi m t ↔ ∀ (a) (h : a ∈ m), f a h ∈ t a := by
   intro f
   induction' m using Multiset.induction_on with a m ih
   · simpa using

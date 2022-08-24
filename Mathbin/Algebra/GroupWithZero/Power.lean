@@ -23,7 +23,7 @@ theorem pow_sub₀ (a : G₀) {m n : ℕ} (ha : a ≠ 0) (h : n ≤ m) : a ^ (m 
   have h1 : m - n + n = m := tsub_add_cancel_of_le h
   have h2 : a ^ (m - n) * a ^ n = a ^ m := by
     rw [← pow_addₓ, h1]
-  simpa only [← div_eq_mul_inv] using eq_div_of_mul_eq (pow_ne_zero _ ha) h2
+  simpa only [div_eq_mul_inv] using eq_div_of_mul_eq (pow_ne_zero _ ha) h2
 
 theorem pow_sub_of_lt (a : G₀) {m n : ℕ} (h : n < m) : a ^ (m - n) = a ^ m * (a ^ n)⁻¹ := by
   obtain rfl | ha := eq_or_ne a 0
@@ -69,7 +69,7 @@ theorem zero_zpow_eq (n : ℤ) : (0 : G₀) ^ n = if n = 0 then 1 else 0 := by
 
 theorem zpow_add_one₀ {a : G₀} (ha : a ≠ 0) : ∀ n : ℤ, a ^ (n + 1) = a ^ n * a
   | (n : ℕ) => by
-    simp only [Int.coe_nat_succ, ← zpow_coe_nat, ← pow_succ'ₓ]
+    simp only [← Int.coe_nat_succ, zpow_coe_nat, pow_succ'ₓ]
   | -[1+ 0] => by
     erw [zpow_zero, zpow_neg_succ_of_nat, pow_oneₓ, inv_mul_cancel ha]
   | -[1+ n + 1] => by
@@ -88,21 +88,21 @@ theorem zpow_add₀ {a : G₀} (ha : a ≠ 0) (m n : ℤ) : a ^ (m + n) = a ^ m 
   induction' n using Int.induction_on with n ihn n ihn
   case hz =>
     simp
-  · simp only [add_assocₓ, ← zpow_add_one₀ ha, ← ihn, ← mul_assoc]
+  · simp only [← add_assocₓ, zpow_add_one₀ ha, ihn, mul_assoc]
     
   · rw [zpow_sub_one₀ ha, ← mul_assoc, ← ihn, ← zpow_sub_one₀ ha, add_sub_assoc]
     
 
 theorem zpow_add' {a : G₀} {m n : ℤ} (h : a ≠ 0 ∨ m + n ≠ 0 ∨ m = 0 ∧ n = 0) : a ^ (m + n) = a ^ m * a ^ n := by
   by_cases' hm : m = 0
-  · simp [← hm]
+  · simp [hm]
     
   by_cases' hn : n = 0
-  · simp [← hn]
+  · simp [hn]
     
   by_cases' ha : a = 0
   · subst a
-    simp only [← false_orₓ, ← eq_self_iff_true, ← not_true, ← Ne.def, ← hm, ← hn, ← false_andₓ, ← or_falseₓ] at h
+    simp only [false_orₓ, eq_self_iff_true, not_true, Ne.def, hm, hn, false_andₓ, or_falseₓ] at h
     rw [zero_zpow _ h, zero_zpow _ hm, zero_mul]
     
   · exact zpow_add₀ ha m n
@@ -113,9 +113,9 @@ theorem zpow_one_add₀ {a : G₀} (h : a ≠ 0) (i : ℤ) : a ^ (1 + i) = a * a
 
 theorem SemiconjBy.zpow_right₀ {a x y : G₀} (h : SemiconjBy a x y) : ∀ m : ℤ, SemiconjBy a (x ^ m) (y ^ m)
   | (n : ℕ) => by
-    simp [← h.pow_right n]
+    simp [h.pow_right n]
   | -[1+ n] => by
-    simp [← (h.pow_right (n + 1)).inv_right₀]
+    simp [(h.pow_right (n + 1)).inv_right₀]
 
 theorem Commute.zpow_right₀ {a b : G₀} (h : Commute a b) : ∀ m : ℤ, Commute a (b ^ m) :=
   h.zpow_right₀
@@ -176,7 +176,7 @@ variable {G₀ : Type _} [CommGroupWithZero G₀]
 
 theorem div_sq_cancel (a b : G₀) : a ^ 2 * b / a = a * b := by
   by_cases' ha : a = 0
-  · simp [← ha]
+  · simp [ha]
     
   rw [sq, mul_assoc, mul_div_cancel_left _ ha]
 

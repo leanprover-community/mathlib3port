@@ -52,7 +52,7 @@ instance : CovariantClass (lp E p μ) (lp E p μ) (· + ·) (· ≤ ·) := by
   rw [← coe_fn_le] at hg₁₂⊢
   filter_upwards [coe_fn_add f g₁, coe_fn_add f g₂, hg₁₂] with _ h1 h2 h3
   rw [h1, h2, Pi.add_apply, Pi.add_apply]
-  exact add_le_add le_rfl h3
+  exact add_le_add le_rflₓ h3
 
 instance : OrderedAddCommGroup (lp E p μ) :=
   { Subtype.partialOrder _, AddSubgroup.toAddCommGroup _ with add_le_add_left := fun f g => add_le_add_left }

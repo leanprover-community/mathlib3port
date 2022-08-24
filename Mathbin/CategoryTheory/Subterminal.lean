@@ -91,7 +91,7 @@ The converse of `is_subterminal.is_iso_diag`.
 -/
 theorem is_subterminal_of_is_iso_diag [HasBinaryProduct A A] [IsIso (diag A)] : IsSubterminal A := fun Z f g => by
   have : (limits.prod.fst : A ⨯ A ⟶ _) = limits.prod.snd := by
-    simp [cancel_epi (diag A)]
+    simp [← cancel_epi (diag A)]
   rw [← prod.lift_fst f g, this, prod.lift_snd]
 
 /-- If `A` is subterminal, it is isomorphic to `A ⨯ A`. -/

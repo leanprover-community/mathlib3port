@@ -149,13 +149,13 @@ def adj : T.free ⊣ T.forget :=
             { f := T.map f ≫ Y.a,
               h' := by
                 dsimp'
-                simp [Y.assoc, T.μ.naturality_assoc] },
+                simp [← Y.assoc, ← T.μ.naturality_assoc] },
           left_inv := fun f => by
             ext
             dsimp'
             simp ,
           right_inv := fun f => by
-            dsimp' only [← forget_obj, ← monad_to_functor_eq_coe]
+            dsimp' only [forget_obj, monad_to_functor_eq_coe]
             rw [← T.η.naturality_assoc, Y.unit]
             apply category.comp_id } }
 
@@ -203,10 +203,10 @@ def algebraFunctorOfMonadHom {T₁ T₂ : Monad C} (h : T₂ ⟶ T₁) : Algebra
     { a := A.a, a := h.app A.a ≫ A.a,
       unit' := by
         dsimp'
-        simp [← A.unit],
+        simp [A.unit],
       assoc' := by
         dsimp'
-        simp [← A.assoc] }
+        simp [A.assoc] }
   map := fun A₁ A₂ f => { f := f.f }
 
 /-- The identity monad morphism induces the identity functor from the category of algebras to itself.
@@ -253,7 +253,7 @@ def algebraFunctorOfMonadHomEq {T₁ T₂ : Monad C} {f g : T₁ ⟶ T₂} (h : 
       Algebra.isoMk (Iso.refl _)
         (by
           dsimp'
-          simp [← h]))
+          simp [h]))
     fun X Y f => by
     ext
     dsimp'
@@ -400,7 +400,7 @@ def adj : G.forget ⊣ G.cofree :=
             { f := X.a ≫ G.map f,
               h' := by
                 dsimp'
-                simp [coalgebra.coassoc_assoc] },
+                simp [← coalgebra.coassoc_assoc] },
           invFun := fun g => g.f ≫ G.ε.app Y,
           left_inv := fun f => by
             dsimp'

@@ -55,7 +55,7 @@ namespace CompleteLattice
 
 variable (α)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (a b «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (a b «expr ∈ » s)
 /-- A compactness property for a complete lattice is that any `sup`-closed non-empty subset
 contains its `Sup`. -/
 def IsSupClosedCompact : Prop :=
@@ -109,7 +109,7 @@ theorem is_compact_element_iff_le_of_directed_Sup_le (k : α) :
   · intro hk s hne hdir hsup
     obtain ⟨t, ht⟩ := hk s hsup
     -- certainly every element of t is below something in s, since ↑t ⊆ s.
-    have t_below_s : ∀, ∀ x ∈ t, ∀, ∃ y ∈ s, x ≤ y := fun x hxt => ⟨x, ht.left hxt, le_rfl⟩
+    have t_below_s : ∀ x ∈ t, ∃ y ∈ s, x ≤ y := fun x hxt => ⟨x, ht.left hxt, le_rflₓ⟩
     obtain ⟨x, ⟨hxs, hsupx⟩⟩ := Finset.sup_le_of_le_directed s hne hdir t t_below_s
     exact ⟨x, ⟨hxs, le_transₓ ht.right hsupx⟩⟩
     
@@ -123,23 +123,23 @@ theorem is_compact_element_iff_le_of_directed_Sup_le (k : α) :
       constructor
       · use c ∪ d
         constructor
-        · simp only [← hc.left, ← hd.left, ← Set.union_subset_iff, ← Finset.coe_union, ← and_selfₓ]
+        · simp only [hc.left, hd.left, Set.union_subset_iff, Finset.coe_union, and_selfₓ]
           
-        · simp only [← hc.right, ← hd.right, ← Finset.sup_union]
+        · simp only [hc.right, hd.right, Finset.sup_union]
           
         
-      simp only [← and_selfₓ, ← le_sup_left, ← le_sup_right]
+      simp only [and_selfₓ, le_sup_left, le_sup_right]
     have sup_S : Sup s ≤ Sup S := by
       apply Sup_le_Sup
       intro x hx
       use {x}
-      simpa only [← and_trueₓ, ← id.def, ← Finset.coe_singleton, ← eq_self_iff_true, ← Finset.sup_singleton, ←
+      simpa only [and_trueₓ, id.def, Finset.coe_singleton, eq_self_iff_true, Finset.sup_singleton,
         Set.singleton_subset_iff]
     have Sne : S.nonempty := by
       suffices : ⊥ ∈ S
       exact Set.nonempty_of_mem this
       use ∅
-      simp only [← Set.empty_subset, ← Finset.coe_empty, ← Finset.sup_empty, ← eq_self_iff_true, ← and_selfₓ]
+      simp only [Set.empty_subset, Finset.coe_empty, Finset.sup_empty, eq_self_iff_true, and_selfₓ]
     -- Now apply the defn of compact and finish.
     obtain ⟨j, ⟨hjS, hjk⟩⟩ := hk S Sne dir_US (le_transₓ hsup sup_S)
     obtain ⟨t, ⟨htS, htsup⟩⟩ := hjS
@@ -160,7 +160,7 @@ theorem IsCompactElement.exists_finset_of_le_supr {k : α} (hk : IsCompactElemen
         supr_le_supr_of_subset (Finset.subset_union_right s t)⟩
   have h2 : k ≤ Sup (Set.Range g) :=
     h.trans
-      (supr_le fun i => le_Sup_of_le ⟨{i}, rfl⟩ (le_supr_of_le i (le_supr_of_le (Finset.mem_singleton_self i) le_rfl)))
+      (supr_le fun i => le_Sup_of_le ⟨{i}, rfl⟩ (le_supr_of_le i (le_supr_of_le (Finset.mem_singleton_self i) le_rflₓ)))
   obtain ⟨-, ⟨s, rfl⟩, hs⟩ :=
     (is_compact_element_iff_le_of_directed_Sup_le α k).mp hk (Set.Range g) (Set.range_nonempty g) h1 h2
   exact ⟨s, hs⟩
@@ -168,7 +168,7 @@ theorem IsCompactElement.exists_finset_of_le_supr {k : α} (hk : IsCompactElemen
 /-- A compact element `k` has the property that any directed set lying strictly below `k` has
 its Sup strictly below `k`. -/
 theorem IsCompactElement.directed_Sup_lt_of_lt {α : Type _} [CompleteLattice α] {k : α} (hk : IsCompactElement k)
-    {s : Set α} (hemp : s.Nonempty) (hdir : DirectedOn (· ≤ ·) s) (hbelow : ∀, ∀ x ∈ s, ∀, x < k) : sup s < k := by
+    {s : Set α} (hemp : s.Nonempty) (hdir : DirectedOn (· ≤ ·) s) (hbelow : ∀ x ∈ s, x < k) : sup s < k := by
   rw [is_compact_element_iff_le_of_directed_Sup_le] at hk
   by_contra
   have sSup : Sup s ≤ k := Sup_le fun s hs => (hbelow s hs).le
@@ -178,7 +178,7 @@ theorem IsCompactElement.directed_Sup_lt_of_lt {α : Type _} [CompleteLattice α
   exact hxk.ne (hxk.le.antisymm hkx)
 
 theorem finset_sup_compact_of_compact {α β : Type _} [CompleteLattice α] {f : β → α} (s : Finset β)
-    (h : ∀, ∀ x ∈ s, ∀, IsCompactElement (f x)) : IsCompactElement (s.sup f) := by
+    (h : ∀ x ∈ s, IsCompactElement (f x)) : IsCompactElement (s.sup f) := by
   classical
   rw [is_compact_element_iff_le_of_directed_Sup_le]
   intro d hemp hdir hsup
@@ -190,7 +190,7 @@ theorem finset_sup_compact_of_compact {α β : Type _} [CompleteLattice α] {f :
   specialize h p hps
   rw [is_compact_element_iff_le_of_directed_Sup_le] at h
   specialize h d hemp hdir (le_transₓ (Finset.le_sup hps) hsup)
-  simpa only [← exists_prop]
+  simpa only [exists_prop]
 
 theorem WellFounded.is_Sup_finite_compact (h : WellFounded ((· > ·) : α → α → Prop)) : IsSupFiniteCompact α := by
   intro s
@@ -200,7 +200,7 @@ theorem WellFounded.is_Sup_finite_compact (h : WellFounded ((· > ·) : α → �
     simp
   obtain ⟨m, ⟨t, ⟨ht₁, ht₂⟩⟩, hm⟩ := well_founded.well_founded_iff_has_max'.mp h p hp
   use t
-  simp only [← ht₁, ← ht₂, ← true_andₓ]
+  simp only [ht₁, ht₂, true_andₓ]
   apply le_antisymmₓ
   · apply Sup_le
     intro y hy
@@ -228,7 +228,7 @@ theorem IsSupFiniteCompact.is_sup_closed_compact (h : IsSupFiniteCompact α) : I
   · subst h
     rw [Finset.sup_empty] at ht₂
     rw [ht₂]
-    simp [← eq_singleton_bot_of_Sup_eq_bot_of_nonempty ht₂ hne]
+    simp [eq_singleton_bot_of_Sup_eq_bot_of_nonempty ht₂ hne]
     
   · rw [ht₂]
     exact t.sup_closed_of_sup_closed h ht₁ hsc
@@ -240,7 +240,7 @@ theorem IsSupClosedCompact.well_founded (h : IsSupClosedCompact α) : WellFounde
     obtain ⟨n, hn⟩ := set.mem_range.mp this
     have h' : Sup (Set.Range a) < a (n + 1) := by
       change _ > _
-      simp [hn, ← a.map_rel_iff]
+      simp [← hn, a.map_rel_iff]
     apply lt_irreflₓ (a (n + 1))
     apply lt_of_le_of_ltₓ _ h'
     apply le_Sup
@@ -268,7 +268,7 @@ theorem is_Sup_finite_compact_iff_all_elements_compact : IsSupFiniteCompact α �
     have : Sup s = t.sup id := by
       suffices t.sup id ≤ Sup s by
         apply le_antisymmₓ <;> assumption
-      simp only [← id.def, ← Finset.sup_le_iff]
+      simp only [id.def, Finset.sup_le_iff]
       intro x hx
       exact le_Sup (hts hx)
     use t, hts, this
@@ -319,17 +319,17 @@ theorem WellFounded.finite_of_set_independent (h : WellFounded ((· > ·) : α �
     obtain ⟨x, hx₁, hx₂⟩ := this.nonempty
     exact
       ⟨x, hx₁, by
-        simpa [← not_or_distrib] using hx₂⟩
+        simpa [not_or_distrib] using hx₂⟩
     
   obtain ⟨x, hx₀, hx₁, hx₂⟩ := contra
   replace hs : x⊓Sup s = ⊥
   · have :=
       hs.mono
         (by
-          simp [← ht₁, ← hx₀, -Set.union_singleton] : ↑t ∪ {x} ≤ s)
+          simp [ht₁, hx₀, -Set.union_singleton] : ↑t ∪ {x} ≤ s)
         (by
           simp : x ∈ _)
-    simpa [← Disjoint, ← hx₂, t.sup_id_eq_Sup, ht₂] using this
+    simpa [Disjoint, hx₂, ← t.sup_id_eq_Sup, ← ht₂] using this
     
   apply hx₁
   rw [← hs, eq_comm, inf_eq_left]
@@ -345,7 +345,7 @@ end CompleteLattice
 /-- A complete lattice is said to be compactly generated if any
 element is the `Sup` of compact elements. -/
 class IsCompactlyGenerated (α : Type _) [CompleteLattice α] : Prop where
-  exists_Sup_eq : ∀ x : α, ∃ s : Set α, (∀, ∀ x ∈ s, ∀, CompleteLattice.IsCompactElement x) ∧ sup s = x
+  exists_Sup_eq : ∀ x : α, ∃ s : Set α, (∀ x ∈ s, CompleteLattice.IsCompactElement x) ∧ sup s = x
 
 section
 
@@ -379,7 +379,7 @@ theorem inf_Sup_eq_of_directed_on (h : DirectedOn (· ≤ ·) s) : a⊓sup s = �
         exact (le_inf hcinf.1 cd).trans (le_supr₂ d ds)
         
       · rw [Set.not_nonempty_iff_eq_empty] at hs
-        simp [← hs]
+        simp [hs]
         )
     supr_inf_le_inf_Sup
 
@@ -426,7 +426,7 @@ theorem CompleteLattice.set_independent_Union_of_directed {η : Type _} {s : η 
     
 
 theorem CompleteLattice.independent_sUnion_of_directed {s : Set (Set α)} (hs : DirectedOn (· ⊆ ·) s)
-    (h : ∀, ∀ a ∈ s, ∀, CompleteLattice.SetIndependent a) : CompleteLattice.SetIndependent (⋃₀s) := by
+    (h : ∀ a ∈ s, CompleteLattice.SetIndependent a) : CompleteLattice.SetIndependent (⋃₀s) := by
   rw [Set.sUnion_eq_Union] <;>
     exact
       CompleteLattice.set_independent_Union_of_directed hs.directed_coe
@@ -449,7 +449,7 @@ theorem Iic_coatomic_of_compact_element {k : α} (h : IsCompactElement k) : IsCo
     by_cases' htriv : b = k
     · left
       ext
-      simp only [← htriv, ← Set.Iic.coe_top, ← Subtype.coe_mk]
+      simp only [htriv, Set.Iic.coe_top, Subtype.coe_mk]
       
     right
     obtain ⟨a, a₀, ba, h⟩ := zorn_nonempty_partial_order₀ (Set.Iio k) _ b (lt_of_le_of_neₓ hbk htriv)
@@ -463,8 +463,8 @@ theorem Iic_coatomic_of_compact_element {k : α} (h : IsCompactElement k) : IsCo
         
       exact
         ⟨b, lt_of_le_of_neₓ hbk htriv, by
-          simp only [← set.not_nonempty_iff_eq_empty.mp hS, ← Set.mem_empty_eq, ← forall_const, ← forall_prop_of_false,
-            ← not_false_iff]⟩
+          simp only [set.not_nonempty_iff_eq_empty.mp hS, Set.mem_empty_eq, forall_const, forall_prop_of_false,
+            not_false_iff]⟩
       ⟩
 
 theorem coatomic_of_top_compact (h : IsCompactElement (⊤ : α)) : IsCoatomic α :=
@@ -491,7 +491,7 @@ instance (priority := 100) is_atomic_of_is_complemented [IsComplemented α] : Is
       obtain con | ⟨a, ha, hac⟩ := eq_bot_or_exists_atom_le (⟨c, le_reflₓ c⟩ : Set.Iic c)
       · exfalso
         apply hcbot
-        simp only [← Subtype.ext_iff, ← Set.Iic.coe_bot, ← Subtype.coe_mk] at con
+        simp only [Subtype.ext_iff, Set.Iic.coe_bot, Subtype.coe_mk] at con
         exact con
         
       rw [← Subtype.coe_le_coe, Subtype.coe_mk] at hac
@@ -521,7 +521,7 @@ instance (priority := 100) is_atomistic_of_is_complemented [IsComplemented α] :
 theorem is_complemented_of_Sup_atoms_eq_top (h : sup { a : α | IsAtom a } = ⊤) : IsComplemented α :=
   ⟨fun b => by
     obtain ⟨s, ⟨s_ind, b_inf_Sup_s, s_atoms⟩, s_max⟩ :=
-      zorn_subset { s : Set α | CompleteLattice.SetIndependent s ∧ b⊓Sup s = ⊥ ∧ ∀, ∀ a ∈ s, ∀, IsAtom a } _
+      zorn_subset { s : Set α | CompleteLattice.SetIndependent s ∧ b⊓Sup s = ⊥ ∧ ∀ a ∈ s, IsAtom a } _
     · refine' ⟨Sup s, le_of_eqₓ b_inf_Sup_s, h.symm.trans_le <| Sup_le_iff.2 fun a ha => _⟩
       rw [← inf_eq_left]
       refine' (ha.le_iff.mp inf_le_left).resolve_left fun con => ha.1 _
@@ -534,11 +534,11 @@ theorem is_complemented_of_Sup_atoms_eq_top (h : sup { a : α | IsAtom a } = ⊤
         
       · rw [Set.mem_union, Set.mem_singleton_iff] at hx
         by_cases' xa : x = a
-        · simp only [← xa, ← Set.mem_singleton, ← Set.insert_diff_of_mem, ← Set.union_singleton]
+        · simp only [xa, Set.mem_singleton, Set.insert_diff_of_mem, Set.union_singleton]
           exact con.mono_right (le_transₓ (Sup_le_Sup (Set.diff_subset s {a})) le_sup_right)
           
         · have h : (s ∪ {a}) \ {x} = s \ {x} ∪ {a} := by
-            simp only [← Set.union_singleton]
+            simp only [Set.union_singleton]
             rw [Set.insert_diff_of_not_mem]
             rw [Set.mem_singleton_iff]
             exact Ne.symm xa

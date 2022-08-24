@@ -83,9 +83,9 @@ theorem pullback_diagonal_map_snd_fst_fst :
           pullback (diagonal f)
               (map (i₁ ≫ snd) (i₂ ≫ snd) f f (i₁ ≫ fst) (i₂ ≫ fst) i
                 (by
-                  simp [← condition])
+                  simp [condition])
                 (by
-                  simp [← condition])) ⟶
+                  simp [condition])) ⟶
             _) ≫
         fst ≫ i₁ ≫ fst =
       pullback.fst :=
@@ -99,9 +99,9 @@ theorem pullback_diagonal_map_snd_snd_fst :
           pullback (diagonal f)
               (map (i₁ ≫ snd) (i₂ ≫ snd) f f (i₁ ≫ fst) (i₂ ≫ fst) i
                 (by
-                  simp [← condition])
+                  simp [condition])
                 (by
-                  simp [← condition])) ⟶
+                  simp [condition])) ⟶
             _) ≫
         snd ≫ i₂ ≫ fst =
       pullback.fst :=
@@ -127,27 +127,27 @@ def pullbackDiagonalMapIso :
     pullback (diagonal f)
         (map (i₁ ≫ snd) (i₂ ≫ snd) f f (i₁ ≫ fst) (i₂ ≫ fst) i
           (by
-            simp [← condition])
+            simp [condition])
           (by
-            simp [← condition])) ≅
+            simp [condition])) ≅
       pullback i₁ i₂ where
   Hom :=
     pullback.lift (pullback.snd ≫ pullback.fst) (pullback.snd ≫ pullback.snd)
       (by
         ext <;>
-          simp only [← category.assoc, ← pullback.condition, ← pullback_diagonal_map_snd_fst_fst, ←
+          simp only [category.assoc, pullback.condition, pullback_diagonal_map_snd_fst_fst,
             pullback_diagonal_map_snd_snd_fst])
   inv :=
     pullback.lift (pullback.fst ≫ i₁ ≫ pullback.fst)
       (pullback.map _ _ _ _ (𝟙 _) (𝟙 _) pullback.snd (Category.id_comp _).symm (Category.id_comp _).symm)
       (by
         ext <;>
-          simp only [← diagonal_fst, ← diagonal_snd, ← category.comp_id, ← pullback.condition_assoc, ← category.assoc, ←
-            lift_fst, ← lift_fst_assoc, ← lift_snd, ← lift_snd_assoc])
+          simp only [diagonal_fst, diagonal_snd, category.comp_id, pullback.condition_assoc, category.assoc, lift_fst,
+            lift_fst_assoc, lift_snd, lift_snd_assoc])
   hom_inv_id' := by
     ext <;>
-      simp only [← category.id_comp, ← category.assoc, ← lift_fst_assoc, ← pullback_diagonal_map_snd_fst_fst, ←
-        lift_fst, ← lift_snd, ← category.comp_id]
+      simp only [category.id_comp, category.assoc, lift_fst_assoc, pullback_diagonal_map_snd_fst_fst, lift_fst,
+        lift_snd, category.comp_id]
   inv_hom_id' := by
     ext <;> simp
 
@@ -186,12 +186,12 @@ theorem pullback_fst_map_snd_is_pullback :
       (map i₁ i₂ (i₁ ≫ snd) (i₂ ≫ snd) _ _ _ (Category.id_comp _).symm (Category.id_comp _).symm) (diagonal f)
       (map (i₁ ≫ snd) (i₂ ≫ snd) f f (i₁ ≫ fst) (i₂ ≫ fst) i
         (by
-          simp [← condition])
+          simp [condition])
         (by
-          simp [← condition])) :=
+          simp [condition])) :=
   IsPullback.of_iso_pullback
     ⟨by
-      ext <;> simp [← condition_assoc]⟩
+      ext <;> simp [condition_assoc]⟩
     (pullbackDiagonalMapIso f i i₁ i₂).symm (pullback_diagonal_map_iso_inv_fst f i i₁ i₂)
     (by
       ext1 <;> simp )
@@ -290,7 +290,7 @@ theorem pullback_map_diagonal_is_pullback :
   · ext <;> simp
     
   · constructor
-    ext <;> simp [← condition]
+    ext <;> simp [condition]
     
 
 /-- The diagonal object of `X ×[Z] Y ⟶ X` is isomorphic to `Δ_{Y/Z} ×[Z] X`. -/
@@ -393,10 +393,10 @@ def pullbackFstFstIso {X Y S X' Y' S' : C} (f : X ⟶ S) (g : Y ⟶ S) (f' : X' 
         rw [pullback.lift_fst, pullback.lift_fst])
   hom_inv_id' := by
     ext <;>
-      simp only [← category.assoc, ← category.id_comp, ← lift_fst, ← lift_snd, ← lift_fst_assoc, ← lift_snd_assoc, ←
-        condition, condition_assoc]
+      simp only [category.assoc, category.id_comp, lift_fst, lift_snd, lift_fst_assoc, lift_snd_assoc, condition, ←
+        condition_assoc]
   inv_hom_id' := by
-    ext <;> simp only [← category.assoc, ← category.id_comp, ← lift_fst, ← lift_snd, ← lift_fst_assoc, ← lift_snd_assoc]
+    ext <;> simp only [category.assoc, category.id_comp, lift_fst, lift_snd, lift_fst_assoc, lift_snd_assoc]
 
 theorem pullback_map_eq_pullback_fst_fst_iso_inv {X Y S X' Y' S' : C} (f : X ⟶ S) (g : Y ⟶ S) (f' : X' ⟶ S')
     (g' : Y' ⟶ S') (i₁ : X ⟶ X') (i₂ : Y ⟶ Y') (i₃ : S ⟶ S') (e₁ : f ≫ i₃ = i₁ ≫ f') (e₂ : g ≫ i₃ = i₂ ≫ g') [Mono i₃] :
@@ -404,8 +404,8 @@ theorem pullback_map_eq_pullback_fst_fst_iso_inv {X Y S X' Y' S' : C} (f : X ⟶
       (pullbackFstFstIso f g f' g' i₁ i₂ i₃ e₁ e₂).inv ≫ pullback.snd ≫ pullback.fst :=
   by
   ext <;>
-    simp only [← category.assoc, ← category.id_comp, ← lift_fst, ← lift_snd, ← lift_fst_assoc, ← lift_snd_assoc, ←
-      pullback_fst_fst_iso_inv, pullback.condition, pullback.condition_assoc]
+    simp only [category.assoc, category.id_comp, lift_fst, lift_snd, lift_fst_assoc, lift_snd_assoc,
+      pullback_fst_fst_iso_inv, ← pullback.condition, ← pullback.condition_assoc]
 
 theorem pullback_lift_map_is_pullback {X Y S X' Y' S' : C} (f : X ⟶ S) (g : Y ⟶ S) (f' : X' ⟶ S') (g' : Y' ⟶ S')
     (i₁ : X ⟶ X') (i₂ : Y ⟶ Y') (i₃ : S ⟶ S') (e₁ : f ≫ i₃ = i₁ ≫ f') (e₂ : g ≫ i₃ = i₂ ≫ g') [Mono i₃] :

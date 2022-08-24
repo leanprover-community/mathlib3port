@@ -84,10 +84,10 @@ theorem absorbs_union : Absorbs 𝕜 s (u ∪ v) ↔ Absorbs 𝕜 s u ∧ Absorb
   ⟨fun h => ⟨h.mono_right <| subset_union_left _ _, h.mono_right <| subset_union_right _ _⟩, fun h => h.1.union h.2⟩
 
 theorem absorbs_Union_finset {ι : Type _} {t : Finset ι} {f : ι → Set E} :
-    Absorbs 𝕜 s (⋃ i ∈ t, f i) ↔ ∀, ∀ i ∈ t, ∀, Absorbs 𝕜 s (f i) := by
+    Absorbs 𝕜 s (⋃ i ∈ t, f i) ↔ ∀ i ∈ t, Absorbs 𝕜 s (f i) := by
   classical
   induction' t using Finset.induction_on with i t ht hi
-  · simp only [← Finset.not_mem_empty, ← Set.Union_false, ← Set.Union_empty, ← absorbs_empty, ← IsEmpty.forall_iff, ←
+  · simp only [Finset.not_mem_empty, Set.Union_false, Set.Union_empty, absorbs_empty, IsEmpty.forall_iff,
       implies_true_iff]
     
   rw [Finset.set_bUnion_insert, absorbs_union, hi]
@@ -100,9 +100,9 @@ theorem absorbs_Union_finset {ι : Type _} {t : Finset ι} {f : ι → Set E} :
   exact ⟨h i (Finset.mem_insert_self i t), fun i' hi' => h i' (Finset.mem_insert_of_mem hi')⟩
 
 theorem Set.Finite.absorbs_Union {ι : Type _} {s : Set E} {t : Set ι} {f : ι → Set E} (hi : t.Finite) :
-    Absorbs 𝕜 s (⋃ i ∈ t, f i) ↔ ∀, ∀ i ∈ t, ∀, Absorbs 𝕜 s (f i) := by
+    Absorbs 𝕜 s (⋃ i ∈ t, f i) ↔ ∀ i ∈ t, Absorbs 𝕜 s (f i) := by
   lift t to Finset ι using hi
-  simp only [← Finset.mem_coe]
+  simp only [Finset.mem_coe]
   exact absorbs_Union_finset
 
 variable (𝕜)
@@ -162,14 +162,14 @@ theorem Balanced.inter (hA : Balanced 𝕜 A) (hB : Balanced 𝕜 B) : Balanced 
 theorem balanced_Union {f : ι → Set E} (h : ∀ i, Balanced 𝕜 (f i)) : Balanced 𝕜 (⋃ i, f i) := fun a ha =>
   (smul_set_Union _ _).Subset.trans <| Union_mono fun _ => h _ _ ha
 
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 theorem balanced_Union₂ {f : ∀ i, κ i → Set E} (h : ∀ i j, Balanced 𝕜 (f i j)) : Balanced 𝕜 (⋃ (i) (j), f i j) :=
   balanced_Union fun _ => balanced_Union <| h _
 
 theorem balanced_Inter {f : ι → Set E} (h : ∀ i, Balanced 𝕜 (f i)) : Balanced 𝕜 (⋂ i, f i) := fun a ha =>
   (smul_set_Inter_subset _ _).trans <| Inter_mono fun _ => h _ _ ha
 
--- ./././Mathport/Syntax/Translate/Basic.lean:855:6: warning: expanding binder group (i j)
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 theorem balanced_Inter₂ {f : ∀ i, κ i → Set E} (h : ∀ i j, Balanced 𝕜 (f i j)) : Balanced 𝕜 (⋂ (i) (j), f i j) :=
   balanced_Inter fun _ => balanced_Inter <| h _
 
@@ -185,10 +185,10 @@ section Module
 variable [AddCommGroupₓ E] [Module 𝕜 E] {s s₁ s₂ t t₁ t₂ : Set E}
 
 theorem Absorbs.neg : Absorbs 𝕜 s t → Absorbs 𝕜 (-s) (-t) :=
-  Exists.imp fun r => And.imp_right <| forall₂_imp fun _ _ h => (neg_subset_neg.2 h).trans Set.smul_set_neg.Superset
+  Exists.imp fun r => And.imp_right <| forall₂_imp fun _ _ h => (neg_subset_neg.2 h).trans (smul_set_neg _ _).Superset
 
 theorem Balanced.neg : Balanced 𝕜 s → Balanced 𝕜 (-s) :=
-  forall₂_imp fun _ _ h => smul_set_neg.Subset.trans <| neg_subset_neg.2 h
+  forall₂_imp fun _ _ h => (smul_set_neg _ _).Subset.trans <| neg_subset_neg.2 h
 
 theorem Absorbs.add : Absorbs 𝕜 s₁ t₁ → Absorbs 𝕜 s₂ t₂ → Absorbs 𝕜 (s₁ + s₂) (t₁ + t₂) :=
   fun ⟨r₁, hr₁, h₁⟩ ⟨r₂, hr₂, h₂⟩ =>
@@ -266,11 +266,11 @@ theorem Balanced.mem_smul_iff (hs : Balanced 𝕜 s) (h : ∥a∥ = ∥b∥) : a
     intro h' <;> [rw [← inv_mul_cancel_right₀ ha b], rw [← inv_mul_cancel_right₀ hb a]] <;>
       · rw [← smul_eq_mul, smul_assoc]
         refine' hs.smul_mem _ h'
-        simp [h, ← ha]
+        simp [← h, ha]
         
 
 theorem Balanced.neg_mem_iff (hs : Balanced 𝕜 s) : -x ∈ s ↔ x ∈ s := by
-  convert hs.mem_smul_iff (norm_neg 1) <;> simp only [← neg_smul, ← one_smul]
+  convert hs.mem_smul_iff (norm_neg 1) <;> simp only [neg_smul, one_smul]
 
 theorem Absorbs.inter (hs : Absorbs 𝕜 s u) (ht : Absorbs 𝕜 t u) : Absorbs 𝕜 (s ∩ t) u := by
   obtain ⟨a, ha, hs⟩ := hs

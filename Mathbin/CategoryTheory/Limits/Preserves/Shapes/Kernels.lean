@@ -48,13 +48,13 @@ def isLimitMapConeForkEquiv' :
       IsLimit
         (KernelFork.ofι (G.map h)
           (by
-            simp only [G.map_comp, ← w, ← functor.map_zero]) :
+            simp only [← G.map_comp, w, functor.map_zero]) :
           Fork (G.map f) 0) :=
   by
   refine' (is_limit.postcompose_hom_equiv _ _).symm.trans (is_limit.equiv_iso_limit _)
   refine' parallel_pair.ext (iso.refl _) (iso.refl _) _ _ <;> simp
   refine' fork.ext (iso.refl _) _
-  simp [← fork.ι]
+  simp [fork.ι]
 
 /-- The property of preserving kernels expressed in terms of kernel forks.
 
@@ -65,7 +65,7 @@ def isLimitForkMapOfIsLimit' [PreservesLimit (parallelPair f 0) G] (l : IsLimit 
     IsLimit
       (KernelFork.ofι (G.map h)
         (by
-          simp only [G.map_comp, ← w, ← functor.map_zero]) :
+          simp only [← G.map_comp, w, functor.map_zero]) :
         Fork (G.map f) 0) :=
   isLimitMapConeForkEquiv' G w (PreservesLimit.preserves l)
 
@@ -78,7 +78,7 @@ def isLimitOfHasKernelOfPreservesLimit [PreservesLimit (parallelPair f 0) G] :
     IsLimit
       (Fork.ofι (G.map (kernel.ι f))
         (by
-          simp only [G.map_comp, ← equalizer.condition, ← comp_zero, ← functor.map_zero]) :
+          simp only [← G.map_comp, equalizer.condition, comp_zero, functor.map_zero]) :
         Fork (G.map f) 0) :=
   isLimitForkMapOfIsLimit' G (kernel.condition f) (kernelIsKernel f)
 
@@ -130,14 +130,14 @@ def isColimitMapCoconeCoforkEquiv' :
       IsColimit
         (CokernelCofork.ofπ (G.map h)
           (by
-            simp only [G.map_comp, ← w, ← functor.map_zero]) :
+            simp only [← G.map_comp, w, functor.map_zero]) :
           Cofork (G.map f) 0) :=
   by
   refine' (is_colimit.precompose_hom_equiv _ _).symm.trans (is_colimit.equiv_iso_colimit _)
   refine' parallel_pair.ext (iso.refl _) (iso.refl _) _ _ <;> simp
   refine' cofork.ext (iso.refl _) _
-  simp only [← cofork.π, ← iso.refl_hom, ← id_comp, ← cocones.precompose_obj_ι, ← nat_trans.comp_app, ←
-    parallel_pair.ext_hom_app, ← functor.map_cocone_ι_app, ← cofork.of_π_ι_app]
+  simp only [cofork.π, iso.refl_hom, id_comp, cocones.precompose_obj_ι, nat_trans.comp_app, parallel_pair.ext_hom_app,
+    functor.map_cocone_ι_app, cofork.of_π_ι_app]
   apply category.comp_id
 
 /-- The property of preserving cokernels expressed in terms of cokernel coforks.
@@ -149,7 +149,7 @@ def isColimitCoforkMapOfIsColimit' [PreservesColimit (parallelPair f 0) G] (l : 
     IsColimit
       (CokernelCofork.ofπ (G.map h)
         (by
-          simp only [G.map_comp, ← w, ← functor.map_zero]) :
+          simp only [← G.map_comp, w, functor.map_zero]) :
         Cofork (G.map f) 0) :=
   isColimitMapCoconeCoforkEquiv' G w (PreservesColimit.preserves l)
 
@@ -162,7 +162,7 @@ def isColimitOfHasCokernelOfPreservesColimit [PreservesColimit (parallelPair f 0
     IsColimit
       (Cofork.ofπ (G.map (cokernel.π f))
         (by
-          simp only [G.map_comp, ← coequalizer.condition, ← zero_comp, ← functor.map_zero]) :
+          simp only [← G.map_comp, coequalizer.condition, zero_comp, functor.map_zero]) :
         Cofork (G.map f) 0) :=
   isColimitCoforkMapOfIsColimit' G (cokernel.condition f) (cokernelIsCokernel f)
 

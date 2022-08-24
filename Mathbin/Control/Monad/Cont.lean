@@ -87,8 +87,7 @@ instance [Monadₓ m] : HasMonadLift m (ContT r m) where monadLift := fun α => 
 theorem monad_lift_bind [Monadₓ m] [IsLawfulMonad m] {α β} (x : m α) (f : α → m β) :
     (monadLift (x >>= f) : ContT r m β) = monadLift x >>= monad_lift ∘ f := by
   ext
-  simp only [← monad_lift, ← HasMonadLift.monadLift, ← (· ∘ ·), ← (· >>= ·), ← bind_assoc, ← id.def, ← run, ←
-    ContT.monadLift]
+  simp only [monad_lift, HasMonadLift.monadLift, (· ∘ ·), (· >>= ·), bind_assoc, id.def, run, ContT.monadLift]
 
 instance : MonadCont (ContT r m) where callCc := fun α β f g => f ⟨fun x h => g x⟩ g
 
@@ -125,19 +124,19 @@ instance {ε} [MonadCont m] : MonadCont (ExceptTₓ ε m) where callCc := fun α
 instance {ε} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (ExceptTₓ ε m) where
   call_cc_bind_right := by
     intros
-    simp [← call_cc, ← ExceptTₓ.callCc, ← call_cc_bind_right]
+    simp [call_cc, ExceptTₓ.callCc, call_cc_bind_right]
     ext
     dsimp'
-    congr with ⟨⟩ <;> simp [← ExceptTₓ.bindCont, ← @call_cc_dummy m _]
+    congr with ⟨⟩ <;> simp [ExceptTₓ.bindCont, @call_cc_dummy m _]
   call_cc_bind_left := by
     intros
-    simp [← call_cc, ← ExceptTₓ.callCc, ← call_cc_bind_right, ← ExceptTₓ.goto_mk_label, ← map_eq_bind_pure_comp, ←
-      bind_assoc, ← @call_cc_bind_left m _]
+    simp [call_cc, ExceptTₓ.callCc, call_cc_bind_right, ExceptTₓ.goto_mk_label, map_eq_bind_pure_comp, bind_assoc,
+      @call_cc_bind_left m _]
     ext
     rfl
   call_cc_dummy := by
     intros
-    simp [← call_cc, ← ExceptTₓ.callCc, ← @call_cc_dummy m _]
+    simp [call_cc, ExceptTₓ.callCc, @call_cc_dummy m _]
     ext
     rfl
 
@@ -156,19 +155,19 @@ instance [MonadCont m] : MonadCont (OptionTₓ m) where callCc := fun α β => O
 instance [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (OptionTₓ m) where
   call_cc_bind_right := by
     intros
-    simp [← call_cc, ← OptionTₓ.callCc, ← call_cc_bind_right]
+    simp [call_cc, OptionTₓ.callCc, call_cc_bind_right]
     ext
     dsimp'
-    congr with ⟨⟩ <;> simp [← OptionTₓ.bindCont, ← @call_cc_dummy m _]
+    congr with ⟨⟩ <;> simp [OptionTₓ.bindCont, @call_cc_dummy m _]
   call_cc_bind_left := by
     intros
-    simp [← call_cc, ← OptionTₓ.callCc, ← call_cc_bind_right, ← OptionTₓ.goto_mk_label, ← map_eq_bind_pure_comp, ←
-      bind_assoc, ← @call_cc_bind_left m _]
+    simp [call_cc, OptionTₓ.callCc, call_cc_bind_right, OptionTₓ.goto_mk_label, map_eq_bind_pure_comp, bind_assoc,
+      @call_cc_bind_left m _]
     ext
     rfl
   call_cc_dummy := by
     intros
-    simp [← call_cc, ← OptionTₓ.callCc, ← @call_cc_dummy m _]
+    simp [call_cc, OptionTₓ.callCc, @call_cc_dummy m _]
     ext
     rfl
 
@@ -200,19 +199,19 @@ instance {σ} [MonadCont m] : MonadCont (StateTₓ σ m) where callCc := fun α 
 instance {σ} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (StateTₓ σ m) where
   call_cc_bind_right := by
     intros
-    simp [← call_cc, ← StateTₓ.callCc, ← call_cc_bind_right, ← (· >>= ·), ← StateTₓ.bind]
+    simp [call_cc, StateTₓ.callCc, call_cc_bind_right, (· >>= ·), StateTₓ.bind]
     ext
     dsimp'
     congr with ⟨x₀, x₁⟩
     rfl
   call_cc_bind_left := by
     intros
-    simp [← call_cc, ← StateTₓ.callCc, ← call_cc_bind_left, ← (· >>= ·), ← StateTₓ.bind, ← StateTₓ.goto_mk_label]
+    simp [call_cc, StateTₓ.callCc, call_cc_bind_left, (· >>= ·), StateTₓ.bind, StateTₓ.goto_mk_label]
     ext
     rfl
   call_cc_dummy := by
     intros
-    simp [← call_cc, ← StateTₓ.callCc, ← call_cc_bind_right, ← (· >>= ·), ← StateTₓ.bind, ← @call_cc_dummy m _]
+    simp [call_cc, StateTₓ.callCc, call_cc_bind_right, (· >>= ·), StateTₓ.bind, @call_cc_dummy m _]
     ext
     rfl
 
@@ -231,17 +230,17 @@ instance {ρ} [MonadCont m] : MonadCont (ReaderTₓ ρ m) where callCc := fun α
 instance {ρ} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (ReaderTₓ ρ m) where
   call_cc_bind_right := by
     intros
-    simp [← call_cc, ← ReaderTₓ.callCc, ← call_cc_bind_right]
+    simp [call_cc, ReaderTₓ.callCc, call_cc_bind_right]
     ext
     rfl
   call_cc_bind_left := by
     intros
-    simp [← call_cc, ← ReaderTₓ.callCc, ← call_cc_bind_left, ← ReaderTₓ.goto_mk_label]
+    simp [call_cc, ReaderTₓ.callCc, call_cc_bind_left, ReaderTₓ.goto_mk_label]
     ext
     rfl
   call_cc_dummy := by
     intros
-    simp [← call_cc, ← ReaderTₓ.callCc, ← @call_cc_dummy m _]
+    simp [call_cc, ReaderTₓ.callCc, @call_cc_dummy m _]
     ext
     rfl
 

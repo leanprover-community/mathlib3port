@@ -119,7 +119,7 @@ theorem not_frequently_of_upcrossings_lt_top (hab : a < b) (hω : upcrossings a 
   push_neg
   intro k
   induction' k with k ih
-  · simp only [← zero_le', ← exists_const]
+  · simp only [zero_le', exists_const]
     
   · obtain ⟨N, hN⟩ := ih
     obtain ⟨N₁, hN₁, hN₁'⟩ := h₁ N
@@ -170,7 +170,7 @@ theorem Submartingale.upcrossings_ae_lt_top' [IsFiniteMeasure μ] (hf : Submarti
           exact nnnorm_add_le _ _
           
         · simp_rw [lintegral_add_right _ measurable_const, lintegral_const]
-          exact add_le_add (hbdd _) le_rfl
+          exact add_le_add (hbdd _) le_rflₓ
           
       refine'
         ne_of_ltₓ
@@ -186,20 +186,20 @@ theorem Submartingale.upcrossings_ae_lt_top' [IsFiniteMeasure μ] (hf : Submarti
       · rw [LatticeOrderedCommGroup.pos_of_nonpos _ (not_leₓ.1 hnonneg).le]
         exact norm_nonneg _
         
-      · simp only [← Ne.def, ← Ennreal.coe_ne_top, ← not_false_iff]
+      · simp only [Ne.def, Ennreal.coe_ne_top, not_false_iff]
         
       
-    · simp only [← hab, ← Ne.def, ← Ennreal.of_real_eq_zero, ← sub_nonpos, ← not_leₓ]
+    · simp only [hab, Ne.def, Ennreal.of_real_eq_zero, sub_nonpos, not_leₓ]
       
     
-  · simp only [← hab, ← Ne.def, ← Ennreal.of_real_eq_zero, ← sub_nonpos, ← not_leₓ, ← true_orₓ]
+  · simp only [hab, Ne.def, Ennreal.of_real_eq_zero, sub_nonpos, not_leₓ, true_orₓ]
     
-  · simp only [← Ne.def, ← Ennreal.of_real_ne_top, ← not_false_iff, ← true_orₓ]
+  · simp only [Ne.def, Ennreal.of_real_ne_top, not_false_iff, true_orₓ]
     
 
 theorem Submartingale.upcrossings_ae_lt_top [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ)
     (hbdd : ∀ n, snorm (f n) 1 μ ≤ R) : ∀ᵐ ω ∂μ, ∀ a b : ℚ, a < b → upcrossings a b f ω < ∞ := by
-  simp only [← ae_all_iff, ← eventually_imp_distrib_left]
+  simp only [ae_all_iff, eventually_imp_distrib_left]
   rintro a b hab
   exact hf.upcrossings_ae_lt_top' hbdd (Rat.cast_lt.2 hab)
 
@@ -207,7 +207,7 @@ theorem Submartingale.upcrossings_ae_lt_top [IsFiniteMeasure μ] (hf : Submartin
 theorem Submartingale.exists_ae_tendsto_of_bdd [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ)
     (hbdd : ∀ n, snorm (f n) 1 μ ≤ R) : ∀ᵐ ω ∂μ, ∃ c, Tendsto (fun n => f n ω) atTop (𝓝 c) := by
   filter_upwards [hf.upcrossings_ae_lt_top hbdd,
-    ae_bdd_liminf_at_top_of_snorm_bdd one_ne_zero (fun n => (hf.strongly_measurable n).Measurable.mono (ℱ.le n) le_rfl)
+    ae_bdd_liminf_at_top_of_snorm_bdd one_ne_zero (fun n => (hf.strongly_measurable n).Measurable.mono (ℱ.le n) le_rflₓ)
       hbdd] with ω h₁ h₂
   exact tendsto_of_uncrossing_lt_top h₂ h₁
 
@@ -221,7 +221,7 @@ theorem Submartingale.exists_ae_trim_tendsto_of_bdd [IsFiniteMeasure μ] (hf : S
   · exact
       MeasurableSet.compl
         (@measurable_set_exists_tendsto _ _ _ _ _ _ (⨆ n, ℱ n) _ _ _ _ _ fun n =>
-          (hf.strongly_measurable n).Measurable.mono (le_Sup ⟨n, rfl⟩) le_rfl)
+          (hf.strongly_measurable n).Measurable.mono (le_Sup ⟨n, rfl⟩) le_rflₓ)
     
 
 /-- **Almost everywhere martingale convergence theorem**: An L¹-bounded submartingale converges
@@ -240,7 +240,7 @@ theorem Submartingale.ae_tendsto_limit_process [IsFiniteMeasure μ] (hf : Submar
     exact hω.some_spec
   have hg'm : @ae_strongly_measurable _ _ _ (⨆ n, ℱ n) g' (μ.trim hle) :=
     (@ae_measurable_of_tendsto_metrizable_ae' _ _ (⨆ n, ℱ n) _ _ _ _ _ _ _
-        (fun n => ((hf.strongly_measurable n).Measurable.mono (le_Sup ⟨n, rfl⟩ : ℱ n ≤ ⨆ n, ℱ n) le_rfl).AeMeasurable)
+        (fun n => ((hf.strongly_measurable n).Measurable.mono (le_Sup ⟨n, rfl⟩ : ℱ n ≤ ⨆ n, ℱ n) le_rflₓ).AeMeasurable)
         hg').AeStronglyMeasurable
   obtain ⟨g, hgm, hae⟩ := hg'm
   have hg : ∀ᵐ ω ∂μ.trim hle, tendsto (fun n => f n ω) at_top (𝓝 (g ω)) := by
@@ -332,7 +332,7 @@ theorem Submartingale.tendsto_snorm_one_limit_process (hf : Submartingale f ℱ 
   have hmeas : ∀ n, ae_strongly_measurable (f n) μ := fun n =>
     ((hf.strongly_measurable n).mono (ℱ.le _)).AeStronglyMeasurable
   exact
-    tendsto_Lp_of_tendsto_in_measure _ le_rfl Ennreal.one_ne_top hmeas (mem_ℒp_limit_process_of_snorm_bdd hmeas hR)
+    tendsto_Lp_of_tendsto_in_measure _ le_rflₓ Ennreal.one_ne_top hmeas (mem_ℒp_limit_process_of_snorm_bdd hmeas hR)
       hunif.2.1 (tendsto_in_measure_of_tendsto_ae hmeas <| hf.ae_tendsto_limit_process hR)
 
 theorem Submartingale.ae_tendsto_limit_process_of_uniform_integrable (hf : Submartingale f ℱ μ)
@@ -353,10 +353,10 @@ theorem Martingale.eq_condexp_of_tendsto_snorm {μ : Measure Ω} (hf : Martingal
     exact
       tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hgtends (fun m => zero_le _) fun m =>
         snorm_one_condexp_le_snorm _
-  have hev : ∀, ∀ m ≥ n, ∀, snorm (μ[f m - g|ℱ n]) 1 μ = snorm (f n - μ[g|ℱ n]) 1 μ := by
+  have hev : ∀ m ≥ n, snorm (μ[f m - g|ℱ n]) 1 μ = snorm (f n - μ[g|ℱ n]) 1 μ := by
     refine' fun m hm => snorm_congr_ae ((condexp_sub (hf.integrable m) hg).trans _)
     filter_upwards [hf.2 n m hm] with x hx
-    simp only [← hx, ← Pi.sub_apply]
+    simp only [hx, Pi.sub_apply]
   exact tendsto_nhds_unique (tendsto_at_top_of_eventually_const hev) ht
 
 /-- Part b of the **L¹ martingale convergence theorem**: if `f` is a uniformly integrable martingale
@@ -365,7 +365,7 @@ expectation of its limiting process wrt. `ℱ n`. -/
 theorem Martingale.ae_eq_condexp_limit_process (hf : Martingale f ℱ μ) (hbdd : UniformIntegrable f 1 μ) (n : ℕ) :
     f n =ᵐ[μ] μ[ℱ.limitProcess f μ|ℱ n] :=
   let ⟨R, hR⟩ := hbdd.2.2
-  hf.eq_condexp_of_tendsto_snorm ((mem_ℒp_limit_process_of_snorm_bdd hbdd.1 hR).Integrable le_rfl)
+  hf.eq_condexp_of_tendsto_snorm ((mem_ℒp_limit_process_of_snorm_bdd hbdd.1 hR).Integrable le_rflₓ)
     (hf.Submartingale.tendsto_snorm_one_limit_process hbdd) n
 
 /-- Part c of the **L¹ martingale convergnce theorem**: Given a integrable function `g` which
@@ -380,7 +380,7 @@ theorem Integrable.tendsto_ae_condexp (hg : Integrable g μ) (hgmeas : strongly_
   have hunif : uniform_integrable (fun n => μ[g|ℱ n]) 1 μ := hg.uniform_integrable_condexp_filtration
   obtain ⟨R, hR⟩ := hunif.2.2
   have hlimint : integrable (ℱ.limit_process (fun n => μ[g|ℱ n]) μ) μ :=
-    (mem_ℒp_limit_process_of_snorm_bdd hunif.1 hR).Integrable le_rfl
+    (mem_ℒp_limit_process_of_snorm_bdd hunif.1 hR).Integrable le_rflₓ
   suffices g =ᵐ[μ] ℱ.limit_process (fun n x => (μ[g|ℱ n]) x) μ by
     filter_upwards [this, (martingale_condexp g ℱ μ).Submartingale.ae_tendsto_limit_process hR] with x heq ht
     rwa [HEq]
@@ -404,8 +404,7 @@ theorem Integrable.tendsto_ae_condexp (hg : Integrable g μ) (hgmeas : strongly_
     · exact ⟨n, hs.inter (ℱ.mono (not_leₓ.1 hnm).le _ ht)⟩
       
     
-  · simp only [← measure_empty, ← WithTop.zero_lt_top, ← measure.restrict_empty, ← integral_zero_measure, ←
-      forall_true_left]
+  · simp only [measure_empty, WithTop.zero_lt_top, measure.restrict_empty, integral_zero_measure, forall_true_left]
     
   · rintro t ⟨n, ht⟩ -
     exact this n _ ht
@@ -435,7 +434,7 @@ This martingale also converges to `g` almost everywhere and this result is provi
 `measure_theory.integrable.tendsto_ae_condexp` -/
 theorem Integrable.tendsto_snorm_condexp (hg : Integrable g μ) (hgmeas : strongly_measurable[⨆ n, ℱ n] g) :
     Tendsto (fun n => snorm (μ[g|ℱ n] - g) 1 μ) atTop (𝓝 0) :=
-  tendsto_Lp_of_tendsto_in_measure _ le_rfl Ennreal.one_ne_top
+  tendsto_Lp_of_tendsto_in_measure _ le_rflₓ Ennreal.one_ne_top
     (fun n => (strongly_measurable_condexp.mono (ℱ.le n)).AeStronglyMeasurable) (mem_ℒp_one_iff_integrable.2 hg)
     hg.uniform_integrable_condexp_filtration.2.1
     (tendsto_in_measure_of_tendsto_ae (fun n => (strongly_measurable_condexp.mono (ℱ.le n)).AeStronglyMeasurable)
@@ -461,7 +460,7 @@ theorem tendsto_snorm_condexp (g : Ω → ℝ) : Tendsto (fun n => snorm (μ[g|�
     condexp_condexp_of_le (le_supr _ n) (supr_le fun n => ℱ.le n)
   refine' ht.congr fun n => snorm_congr_ae _
   filter_upwards [HEq n] with x hxeq
-  simp only [← hxeq, ← Pi.sub_apply]
+  simp only [hxeq, Pi.sub_apply]
 
 end L1Convergence
 

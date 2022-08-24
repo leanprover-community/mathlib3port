@@ -86,7 +86,7 @@ instance (priority := 100) SubfieldClass.toSubgroupClass : SubgroupClass S K :=
 variable {S}
 
 theorem coe_rat_mem (s : S) (x : ℚ) : (x : K) ∈ s := by
-  simpa only [← Rat.cast_def] using div_mem (coe_int_mem s x.num) (coe_nat_mem s x.denom)
+  simpa only [Rat.cast_def] using div_mem (coe_int_mem s x.num) (coe_nat_mem s x.denom)
 
 instance (s : S) : HasRatCast s :=
   ⟨fun x => ⟨↑x, coe_rat_mem s x⟩⟩
@@ -96,7 +96,7 @@ theorem coe_rat_cast (s : S) (x : ℚ) : ((x : s) : K) = x :=
   rfl
 
 theorem rat_smul_mem (s : S) (a : ℚ) (x : s) : (a • x : K) ∈ s := by
-  simpa only [← Rat.smul_def] using mul_mem (coe_rat_mem s a) x.prop
+  simpa only [Rat.smul_def] using mul_mem (coe_rat_mem s a) x.prop
 
 instance (s : S) : HasSmul ℚ s :=
   ⟨fun a x => ⟨a • x, rat_smul_mem s a x⟩⟩
@@ -130,10 +130,10 @@ end SubfieldClass
   multiplicative submonoid and an additive subgroup. Note in particular that it shares the
   same 0 and 1 as R. -/
 structure Subfield (K : Type u) [Field K] extends Subring K where
-  inv_mem' : ∀, ∀ x ∈ carrier, ∀, x⁻¹ ∈ carrier
+  inv_mem' : ∀ x ∈ carrier, x⁻¹ ∈ carrier
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1780:43: in add_decl_doc #[[ident subfield.to_subring]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident subfield.to_subring]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 namespace Subfield
 
 /-- The underlying `add_subgroup` of a subfield. -/
@@ -201,7 +201,7 @@ theorem mem_to_subring (s : Subfield K) (x : K) : x ∈ s.toSubring ↔ x ∈ s 
 end Subfield
 
 /-- A `subring` containing inverses is a `subfield`. -/
-def Subring.toSubfield (s : Subring K) (hinv : ∀, ∀ x ∈ s, ∀, x⁻¹ ∈ s) : Subfield K :=
+def Subring.toSubfield (s : Subring K) (hinv : ∀ x ∈ s, x⁻¹ ∈ s) : Subfield K :=
   { s with inv_mem' := hinv }
 
 namespace Subfield
@@ -243,27 +243,27 @@ protected theorem div_mem {x y : K} : x ∈ s → y ∈ s → x / y ∈ s :=
   div_mem
 
 /-- Product of a list of elements in a subfield is in the subfield. -/
-protected theorem list_prod_mem {l : List K} : (∀, ∀ x ∈ l, ∀, x ∈ s) → l.Prod ∈ s :=
+protected theorem list_prod_mem {l : List K} : (∀ x ∈ l, x ∈ s) → l.Prod ∈ s :=
   list_prod_mem
 
 /-- Sum of a list of elements in a subfield is in the subfield. -/
-protected theorem list_sum_mem {l : List K} : (∀, ∀ x ∈ l, ∀, x ∈ s) → l.Sum ∈ s :=
+protected theorem list_sum_mem {l : List K} : (∀ x ∈ l, x ∈ s) → l.Sum ∈ s :=
   list_sum_mem
 
 /-- Product of a multiset of elements in a subfield is in the subfield. -/
-protected theorem multiset_prod_mem (m : Multiset K) : (∀, ∀ a ∈ m, ∀, a ∈ s) → m.Prod ∈ s :=
+protected theorem multiset_prod_mem (m : Multiset K) : (∀ a ∈ m, a ∈ s) → m.Prod ∈ s :=
   multiset_prod_mem m
 
 /-- Sum of a multiset of elements in a `subfield` is in the `subfield`. -/
-protected theorem multiset_sum_mem (m : Multiset K) : (∀, ∀ a ∈ m, ∀, a ∈ s) → m.Sum ∈ s :=
+protected theorem multiset_sum_mem (m : Multiset K) : (∀ a ∈ m, a ∈ s) → m.Sum ∈ s :=
   multiset_sum_mem m
 
 /-- Product of elements of a subfield indexed by a `finset` is in the subfield. -/
-protected theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀, ∀ c ∈ t, ∀, f c ∈ s) : (∏ i in t, f i) ∈ s :=
+protected theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀ c ∈ t, f c ∈ s) : (∏ i in t, f i) ∈ s :=
   prod_mem h
 
 /-- Sum of elements in a `subfield` indexed by a `finset` is in the `subfield`. -/
-protected theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀, ∀ c ∈ t, ∀, f c ∈ s) : (∑ i in t, f i) ∈ s :=
+protected theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀ c ∈ t, f c ∈ s) : (∑ i in t, f i) ∈ s :=
   sum_mem h
 
 protected theorem pow_mem {x : K} (hx : x ∈ s) (n : ℕ) : x ^ n ∈ s :=
@@ -279,7 +279,7 @@ theorem zpow_mem {x : K} (hx : x ∈ s) (n : ℤ) : x ^ n ∈ s := by
   cases n
   · simpa using s.pow_mem hx n
     
-  · simpa [← pow_succₓ] using s.inv_mem (s.mul_mem hx (s.pow_mem hx n))
+  · simpa [pow_succₓ] using s.inv_mem (s.mul_mem hx (s.pow_mem hx n))
     
 
 instance : Ringₓ s :=
@@ -469,7 +469,7 @@ theorem field_range_eq_map : f.fieldRange = Subfield.map f ⊤ := by
   simp
 
 theorem map_field_range : f.fieldRange.map g = (g.comp f).fieldRange := by
-  simpa only [← field_range_eq_map] using (⊤ : Subfield K).map_map g f
+  simpa only [field_range_eq_map] using (⊤ : Subfield K).map_map g f
 
 /-- The range of a morphism of fields is a fintype, if the domain is a fintype.
 
@@ -518,9 +518,9 @@ theorem coe_Inf (S : Set (Subfield K)) : ((inf S : Subfield K) : Set K) = ⋂ s 
         fun h s s' ⟨⟨s'', s''_mem, s_eq⟩, (s'_eq : ↑s = s')⟩ =>
         h s'' _
           ⟨s''_mem, by
-            simp [s_eq, s'_eq]⟩⟩
+            simp [← s_eq, ← s'_eq]⟩⟩
 
-theorem mem_Inf {S : Set (Subfield K)} {x : K} : x ∈ inf S ↔ ∀, ∀ p ∈ S, ∀, x ∈ p :=
+theorem mem_Inf {S : Set (Subfield K)} {x : K} : x ∈ inf S ↔ ∀ p ∈ S, x ∈ p :=
   Subring.mem_Inf.trans ⟨fun h p hp => h p.toSubring ⟨p, hp, rfl⟩, fun h p ⟨p', hp', p_eq⟩ => p_eq ▸ h p' hp'⟩
 
 @[simp]
@@ -550,11 +550,11 @@ instance : CompleteLattice (Subfield K) :=
 /-! # subfield closure of a subset -/
 
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1129:4: unsupported set replacement {(«expr / »(x, y)) | (x «expr ∈ » subring.closure s) (y «expr ∈ » subring.closure s)}
+-- ./././Mathport/Syntax/Translate/Expr.lean:368:4: unsupported set replacement {(«expr / »(x, y)) | (x «expr ∈ » subring.closure s) (y «expr ∈ » subring.closure s)}
 /-- The `subfield` generated by a set. -/
 def closure (s : Set K) : Subfield K where
   Carrier :=
-    "./././Mathport/Syntax/Translate/Basic.lean:1129:4: unsupported set replacement {(«expr / »(x, y)) | (x «expr ∈ » subring.closure s) (y «expr ∈ » subring.closure s)}"
+    "./././Mathport/Syntax/Translate/Expr.lean:368:4: unsupported set replacement {(«expr / »(x, y)) | (x «expr ∈ » subring.closure s) (y «expr ∈ » subring.closure s)}"
   zero_mem' := ⟨0, Subring.zero_mem _, 1, Subring.one_mem _, div_one _⟩
   one_mem' := ⟨1, Subring.one_mem _, 1, Subring.one_mem _, div_one _⟩
   neg_mem' := fun x ⟨y, hy, z, hz, x_eq⟩ => ⟨-y, Subring.neg_mem _ hy, z, hz, x_eq ▸ neg_div _ _⟩
@@ -611,7 +611,7 @@ theorem closure_eq_of_le {s : Set K} {t : Subfield K} (h₁ : s ⊆ t) (h₂ : t
 of `s`, and is preserved under addition, negation, and multiplication, then `p` holds for all
 elements of the closure of `s`. -/
 @[elabAsElim]
-theorem closure_induction {s : Set K} {p : K → Prop} {x} (h : x ∈ closure s) (Hs : ∀, ∀ x ∈ s, ∀, p x) (H1 : p 1)
+theorem closure_induction {s : Set K} {p : K → Prop} {x} (h : x ∈ closure s) (Hs : ∀ x ∈ s, p x) (H1 : p 1)
     (Hadd : ∀ x y, p x → p y → p (x + y)) (Hneg : ∀ x, p x → p (-x)) (Hinv : ∀ x, p x → p x⁻¹)
     (Hmul : ∀ x y, p x → p y → p (x * y)) : p x :=
   (@closure_le _ _ _ ⟨p, Hmul, H1, Hadd, @add_neg_selfₓ K _ 1 ▸ Hadd _ _ H1 (Hneg _ H1), Hneg, Hinv⟩).2 Hs h
@@ -675,7 +675,7 @@ theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subfield K} (h
     (x ∈ ⨆ i, S i) ↔ ∃ i, x ∈ S i := by
   refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supr S i) hi⟩
   suffices x ∈ closure (⋃ i, (S i : Set K)) → ∃ i, x ∈ S i by
-    simpa only [← closure_Union, ← closure_eq]
+    simpa only [closure_Union, closure_eq]
   refine' fun hx => closure_induction hx (fun x => set.mem_Union.mp) _ _ _ _ _
   · exact hι.elim fun i => ⟨i, (S i).one_mem⟩
     
@@ -697,17 +697,17 @@ theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subfield K} (h
 theorem coe_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subfield K} (hS : Directed (· ≤ ·) S) :
     ((⨆ i, S i : Subfield K) : Set K) = ⋃ i, ↑(S i) :=
   Set.ext fun x => by
-    simp [← mem_supr_of_directed hS]
+    simp [mem_supr_of_directed hS]
 
 theorem mem_Sup_of_directed_on {S : Set (Subfield K)} (Sne : S.Nonempty) (hS : DirectedOn (· ≤ ·) S) {x : K} :
     x ∈ sup S ↔ ∃ s ∈ S, x ∈ s := by
   haveI : Nonempty S := Sne.to_subtype
-  simp only [← Sup_eq_supr', ← mem_supr_of_directed hS.directed_coe, ← SetCoe.exists, ← Subtype.coe_mk]
+  simp only [Sup_eq_supr', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
 
 theorem coe_Sup_of_directed_on {S : Set (Subfield K)} (Sne : S.Nonempty) (hS : DirectedOn (· ≤ ·) S) :
     (↑(sup S) : Set K) = ⋃ s ∈ S, ↑s :=
   Set.ext fun x => by
-    simp [← mem_Sup_of_directed_on Sne hS]
+    simp [mem_Sup_of_directed_on Sne hS]
 
 end Subfield
 

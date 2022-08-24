@@ -98,14 +98,14 @@ theorem mem_pos_tangent_cone_at_of_segment_subset {s : Set E} {x y : E} (h : Seg
   show tendsto (fun n => c n • d n) at_top (𝓝 (y - x))
   · convert tendsto_const_nhds
     ext n
-    simp only [← d, ← smul_smul]
+    simp only [d, smul_smul]
     rw [mul_inv_cancel, one_smul]
     exact pow_ne_zero _ two_ne_zero
     
 
 theorem mem_pos_tangent_cone_at_of_segment_subset' {s : Set E} {x y : E} (h : Segment ℝ x (x + y) ⊆ s) :
     y ∈ PosTangentConeAt s x := by
-  simpa only [← add_sub_cancel'] using mem_pos_tangent_cone_at_of_segment_subset h
+  simpa only [add_sub_cancel'] using mem_pos_tangent_cone_at_of_segment_subset h
 
 theorem pos_tangent_cone_at_univ : PosTangentConeAt Univ a = univ :=
   eq_univ_of_forall fun x => mem_pos_tangent_cone_at_of_segment_subset' (subset_univ _)
@@ -128,7 +128,7 @@ theorem IsLocalMaxOn.has_fderiv_within_at_nonpos {s : Set E} (h : IsLocalMaxOn f
   replace hc : ∀ᶠ n in at_top, 0 ≤ c n
   exact mem_map.1 (hc (mem_at_top (0 : ℝ)))
   filter_upwards [h, hc]
-  simp only [← smul_eq_mul, ← mem_preimage, ← subset_def]
+  simp only [smul_eq_mul, mem_preimage, subset_def]
   intro n hnf hn
   exact mul_nonpos_of_nonneg_of_nonpos hn (sub_nonpos.2 hnf)
 
@@ -257,13 +257,13 @@ theorem exists_Ioo_extr_on_Icc (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (h
     ∃ c ∈ Ioo a b, IsExtrOn f (Icc a b) c := by
   have ne : (Icc a b).Nonempty := nonempty_Icc.2 (le_of_ltₓ hab)
   -- Consider absolute min and max points
-  obtain ⟨c, cmem, cle⟩ : ∃ c ∈ Icc a b, ∀, ∀ x ∈ Icc a b, ∀, f c ≤ f x
+  obtain ⟨c, cmem, cle⟩ : ∃ c ∈ Icc a b, ∀ x ∈ Icc a b, f c ≤ f x
   exact is_compact_Icc.exists_forall_le Ne hfc
-  obtain ⟨C, Cmem, Cge⟩ : ∃ C ∈ Icc a b, ∀, ∀ x ∈ Icc a b, ∀, f x ≤ f C
+  obtain ⟨C, Cmem, Cge⟩ : ∃ C ∈ Icc a b, ∀ x ∈ Icc a b, f x ≤ f C
   exact is_compact_Icc.exists_forall_ge Ne hfc
   by_cases' hc : f c = f a
   · by_cases' hC : f C = f a
-    · have : ∀, ∀ x ∈ Icc a b, ∀, f x = f a := fun x hx => le_antisymmₓ (hC ▸ Cge x hx) (hc ▸ cle x hx)
+    · have : ∀ x ∈ Icc a b, f x = f a := fun x hx => le_antisymmₓ (hC ▸ Cge x hx) (hc ▸ cle x hx)
       -- `f` is a constant, so we can take any point in `Ioo a b`
       rcases exists_between hab with ⟨c', hc'⟩
       refine' ⟨c', hc', Or.inl _⟩
@@ -292,7 +292,7 @@ theorem exists_local_extr_Ioo (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hf
 
 /-- **Rolle's Theorem** `has_deriv_at` version -/
 theorem exists_has_deriv_at_eq_zero (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b)
-    (hff' : ∀, ∀ x ∈ Ioo a b, ∀, HasDerivAt f (f' x) x) : ∃ c ∈ Ioo a b, f' c = 0 :=
+    (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x) : ∃ c ∈ Ioo a b, f' c = 0 :=
   let ⟨c, cmem, hc⟩ := exists_local_extr_Ioo f hab hfc hfI
   ⟨c, cmem, hc.has_deriv_at_eq_zero <| hff' c cmem⟩
 
@@ -308,7 +308,7 @@ variable {f f'} {l : ℝ}
 on `(a, b)` and has the same limit `l` at `𝓝[>] a` and `𝓝[<] b`, then `f' c = 0`
 for some `c ∈ (a, b)`.  -/
 theorem exists_has_deriv_at_eq_zero' (hab : a < b) (hfa : Tendsto f (𝓝[>] a) (𝓝 l)) (hfb : Tendsto f (𝓝[<] b) (𝓝 l))
-    (hff' : ∀, ∀ x ∈ Ioo a b, ∀, HasDerivAt f (f' x) x) : ∃ c ∈ Ioo a b, f' c = 0 := by
+    (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x) : ∃ c ∈ Ioo a b, f' c = 0 := by
   have : ContinuousOn f (Ioo a b) := fun x hx => (hff' x hx).ContinuousAt.ContinuousWithinAt
   have hcont := continuous_on_Icc_extend_from_Ioo hab.ne this hfa hfb
   obtain ⟨c, hc, hcextr⟩ : ∃ c ∈ Ioo a b, IsLocalExtr (extendFrom (Ioo a b) f) c := by
@@ -327,9 +327,9 @@ differentiable at `c`. -/
 theorem exists_deriv_eq_zero' (hab : a < b) (hfa : Tendsto f (𝓝[>] a) (𝓝 l)) (hfb : Tendsto f (𝓝[<] b) (𝓝 l)) :
     ∃ c ∈ Ioo a b, deriv f c = 0 :=
   Classical.by_cases
-    (fun h : ∀, ∀ x ∈ Ioo a b, ∀, DifferentiableAt ℝ f x =>
+    (fun h : ∀ x ∈ Ioo a b, DifferentiableAt ℝ f x =>
       show ∃ c ∈ Ioo a b, deriv f c = 0 from exists_has_deriv_at_eq_zero' hab hfa hfb fun x hx => (h x hx).HasDerivAt)
-    fun h : ¬∀, ∀ x ∈ Ioo a b, ∀, DifferentiableAt ℝ f x =>
+    fun h : ¬∀ x ∈ Ioo a b, DifferentiableAt ℝ f x =>
     have h : ∃ x, x ∈ Ioo a b ∧ ¬DifferentiableAt ℝ f x := by
       push_neg  at h
       exact h

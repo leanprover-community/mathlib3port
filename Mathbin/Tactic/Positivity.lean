@@ -67,7 +67,7 @@ unsafe inductive positivity.strictness : Type
 export Positivity.Strictness (positive nonnegative)
 
 private theorem lt_of_lt_of_eq'' {α} [Preorderₓ α] {b b' a : α} : b = b' → a < b' → a < b := fun h1 h2 =>
-  lt_of_lt_of_eq h2 h1.symm
+  lt_of_lt_of_eqₓ h2 h1.symm
 
 /-- First base case of the `positivity` tactic.  We try `norm_num` to prove directly that an
 expression `e` is positive or nonnegative. -/
@@ -82,7 +82,7 @@ unsafe def norm_num.positivity (e : expr) : tactic strictness := do
       pure (positive p)
     else
       if e'' = 0 then do
-        let p' ← mk_app `` ge_of_eq [p]
+        let p' ← mk_app `` ge_of_eqₓ [p]
         pure (nonnegative p')
       else failed
 

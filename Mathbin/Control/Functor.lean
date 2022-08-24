@@ -181,11 +181,11 @@ variable {α β γ : Type v}
 
 protected theorem id_map : ∀ x : Comp F G α, Comp.map id x = x
   | comp.mk x => by
-    simp [← comp.map, ← Functor.map_id]
+    simp [comp.map, Functor.map_id]
 
 protected theorem comp_map (g' : α → β) (h : β → γ) : ∀ x : Comp F G α, Comp.map (h ∘ g') x = Comp.map h (Comp.map g' x)
   | comp.mk x => by
-    simp' [← comp.map, ← Functor.map_comp_map g' h] with functor_norm
+    simp' [comp.map, Functor.map_comp_map g' h] with functor_norm
 
 instance : IsLawfulFunctor (Comp F G) where
   id_map := @Comp.id_map F G _ _ _ _
@@ -253,7 +253,7 @@ def Liftr {α : Type u} (r : α → α → Prop) (x y : F α) : Prop :=
 def Supp {α : Type u} (x : F α) : Set α :=
   { y : α | ∀ ⦃p⦄, Liftp p x → p y }
 
-theorem of_mem_supp {α : Type u} {x : F α} {p : α → Prop} (h : Liftp p x) : ∀, ∀ y ∈ Supp x, ∀, p y := fun y hy => hy h
+theorem of_mem_supp {α : Type u} {x : F α} {p : α → Prop} (h : Liftp p x) : ∀ y ∈ Supp x, p y := fun y hy => hy h
 
 end Functor
 

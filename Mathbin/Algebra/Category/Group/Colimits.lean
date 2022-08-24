@@ -333,23 +333,23 @@ noncomputable def cokernelIsoQuotient {G H : AddCommGroupₓₓ.{u}} (f : G ⟶ 
         apply left_rel_apply.mpr
         fconstructor
         exact -x
-        simp only [← add_zeroₓ, ← AddMonoidHom.map_neg])
+        simp only [add_zeroₓ, AddMonoidHom.map_neg])
   inv :=
     QuotientAddGroup.lift _ (cokernel.π f)
       (by
         intro x H_1
         cases H_1
         induction H_1_h
-        simp only [← cokernel.condition_apply, ← zero_apply])
+        simp only [cokernel.condition_apply, zero_apply])
   -- obviously can take care of the next goals, but it is really slow
   hom_inv_id' := by
     ext1
-    simp only [← coequalizer_as_cokernel, ← category.comp_id, ← cokernel.π_desc_assoc]
+    simp only [coequalizer_as_cokernel, category.comp_id, cokernel.π_desc_assoc]
     ext1
     rfl
   inv_hom_id' := by
     ext x : 2
-    simp only [← colimit.ι_desc_apply, ← id_apply, ← lift_mk, ← mk'_apply, ← cofork.of_π_ι_app, ← comp_apply, ←
+    simp only [colimit.ι_desc_apply, id_apply, lift_mk, mk'_apply, cofork.of_π_ι_app, comp_apply,
       AddMonoidHom.comp_apply]
 
 end AddCommGroupₓₓ

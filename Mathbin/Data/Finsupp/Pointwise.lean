@@ -3,7 +3,7 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Data.Finsupp.Basic
+import Mathbin.Data.Finsupp.Defs
 
 /-!
 # The pointwise product on `finsupp`.
@@ -46,8 +46,8 @@ theorem mul_apply {g₁ g₂ : α →₀ β} {a : α} : (g₁ * g₂) a = g₁ a
 
 theorem support_mul [DecidableEq α] {g₁ g₂ : α →₀ β} : (g₁ * g₂).Support ⊆ g₁.Support ∩ g₂.Support := by
   intro a h
-  simp only [← mul_apply, ← mem_support_iff] at h
-  simp only [← mem_support_iff, ← mem_inter, ← Ne.def]
+  simp only [mul_apply, mem_support_iff] at h
+  simp only [mem_support_iff, mem_inter, Ne.def]
   rw [← not_or_distrib]
   intro w
   apply h
@@ -91,8 +91,7 @@ instance pointwiseScalar [Semiringₓ β] :
     Finsupp.ofSupportFinite (fun a => f a • g a)
       (by
         apply Set.Finite.subset g.finite_support
-        simp only [← Function.support_subset_iff, ← Finsupp.mem_support_iff, ← Ne.def, ← Finsupp.fun_support_eq, ←
-          Finset.mem_coe]
+        simp only [Function.support_subset_iff, Finsupp.mem_support_iff, Ne.def, Finsupp.fun_support_eq, Finset.mem_coe]
         intro x hx h
         apply hx
         rw [h, smul_zero])

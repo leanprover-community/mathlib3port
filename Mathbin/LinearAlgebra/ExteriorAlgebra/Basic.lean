@@ -133,7 +133,7 @@ variable (M)
 
 theorem algebra_map_left_inverse : Function.LeftInverse algebraMapInv (algebraMap R <| ExteriorAlgebra R M) := fun x =>
   by
-  simp [← algebra_map_inv]
+  simp [algebra_map_inv]
 
 @[simp]
 theorem algebra_map_inj (x y : R) :
@@ -167,7 +167,7 @@ def ιInv : ExteriorAlgebra R M →ₗ[R] M :=
   (TrivSqZeroExt.sndHom R M).comp toTrivSqZeroExt.toLinearMap
 
 theorem ι_left_inverse : Function.LeftInverse ιInv (ι R : M → ExteriorAlgebra R M) := fun x => by
-  simp [← ι_inv]
+  simp [ι_inv]
 
 variable (R)
 
@@ -199,7 +199,8 @@ theorem ι_ne_one [Nontrivial R] (x : M) : ι R x ≠ 1 := by
   exact one_ne_zero ∘ And.right
 
 /-- The generators of the exterior algebra are disjoint from its scalars. -/
-theorem ι_range_disjoint_one : Disjoint (ι R).range (1 : Submodule R (ExteriorAlgebra R M)) := by
+theorem ι_range_disjoint_one :
+    Disjoint (LinearMap.range (ι R : M →ₗ[R] ExteriorAlgebra R M)) (1 : Submodule R (ExteriorAlgebra R M)) := by
   rw [Submodule.disjoint_def]
   rintro _ ⟨x, hx⟩ ⟨r, rfl : algebraMap _ _ _ = _⟩
   rw [ι_eq_algebra_map_iff x] at hx
@@ -209,7 +210,7 @@ theorem ι_range_disjoint_one : Disjoint (ι R).range (1 : Submodule R (Exterior
 theorem ι_add_mul_swap (x y : M) : ι R x * ι R y + ι R y * ι R x = 0 :=
   calc
     _ = ι R (x + y) * ι R (x + y) := by
-      simp [← mul_addₓ, ← add_mulₓ]
+      simp [mul_addₓ, add_mulₓ]
     _ = _ := ι_sq_zero _
     
 
@@ -258,7 +259,7 @@ def ιMulti (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Finₓ n) :=
           refine'
             hn (fun i => f <| Finₓ.succ i) (x.pred hx) (y.pred (ne_of_ltₓ <| lt_of_le_of_ltₓ x.zero_le h).symm)
               (fin.pred_lt_pred_iff.mpr h) _
-          simp only [← Finₓ.succ_pred]
+          simp only [Finₓ.succ_pred]
           exact hfxy
           
         ,
@@ -297,7 +298,7 @@ def toExterior : TensorAlgebra R M →ₐ[R] ExteriorAlgebra R M :=
 
 @[simp]
 theorem to_exterior_ι (m : M) : (TensorAlgebra.ι R m).toExterior = ExteriorAlgebra.ι R m := by
-  simp [← to_exterior]
+  simp [to_exterior]
 
 end TensorAlgebra
 

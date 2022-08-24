@@ -28,7 +28,7 @@ instance mulActionClosedBallBall : MulAction (ClosedBall (0 : 𝕜) 1) (Ball (0 
   smul := fun c x =>
     ⟨(c : 𝕜) • x,
       mem_ball_zero_iff.2 <| by
-        simpa only [← norm_smul, ← one_mulₓ] using
+        simpa only [norm_smul, one_mulₓ] using
           mul_lt_mul' (mem_closed_ball_zero_iff.1 c.2) (mem_ball_zero_iff.1 x.2) (norm_nonneg _) one_pos⟩
   one_smul := fun x => Subtype.ext <| one_smul 𝕜 _
   mul_smul := fun c₁ c₂ x => Subtype.ext <| mul_smul _ _ _
@@ -41,7 +41,7 @@ instance mulActionClosedBallClosedBall : MulAction (ClosedBall (0 : 𝕜) 1) (Cl
   smul := fun c x =>
     ⟨(c : 𝕜) • x,
       mem_closed_ball_zero_iff.2 <| by
-        simpa only [← norm_smul, ← one_mulₓ] using
+        simpa only [norm_smul, one_mulₓ] using
           mul_le_mul (mem_closed_ball_zero_iff.1 c.2) (mem_closed_ball_zero_iff.1 x.2) (norm_nonneg _) zero_le_one⟩
   one_smul := fun x => Subtype.ext <| one_smul 𝕜 _
   mul_smul := fun c₁ c₂ x => Subtype.ext <| mul_smul _ _ _

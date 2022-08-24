@@ -52,7 +52,7 @@ def mapTop (f : X ⟶ Y) [Mono f] : (map f).obj ⊤ ≅ mk' f :=
   isoOfBothWays (homMk (𝟙 _) rfl)
     (homMk (𝟙 _)
       (by
-        simp [← id_comp f]))
+        simp [id_comp f]))
 
 section
 
@@ -196,9 +196,9 @@ def supLe {A : C} (f g h : MonoOver A) : (f ⟶ h) → (g ⟶ h) → ((sup.obj f
   apply image.lift ⟨_, h.arrow, coprod.desc k₁.left k₂.left, _⟩
   · dsimp'
     ext1
-    · simp [← w k₁]
+    · simp [w k₁]
       
-    · simp [← w k₂]
+    · simp [w k₂]
       
     
   · apply image.lift_fac
@@ -226,7 +226,7 @@ theorem top_eq_id (B : C) : (⊤ : Subobject B) = Subobject.mk (𝟙 B) :=
 
 theorem underlying_iso_top_hom {B : C} : (underlyingIso (𝟙 B)).Hom = (⊤ : Subobject B).arrow := by
   convert underlying_iso_hom_comp_eq_mk (𝟙 B)
-  simp only [← comp_id]
+  simp only [comp_id]
 
 instance top_arrow_is_iso {B : C} : IsIso (⊤ : Subobject B).arrow := by
   rw [← underlying_iso_top_hom]
@@ -328,10 +328,10 @@ theorem bot_factors_iff_zero {A B : C} (f : A ⟶ B) : (⊥ : Subobject B).Facto
 
 theorem mk_eq_bot_iff_zero {f : X ⟶ Y} [Mono f] : Subobject.mk f = ⊥ ↔ f = 0 :=
   ⟨fun h => by
-    simpa [← h, ← bot_factors_iff_zero] using mk_factors_self f, fun h =>
+    simpa [h, bot_factors_iff_zero] using mk_factors_self f, fun h =>
     mk_eq_mk_of_comm _ _ ((isoZeroOfMonoEqZero h).trans HasZeroObject.zeroIsoInitial)
       (by
-        simp [← h])⟩
+        simp [h])⟩
 
 end ZeroOrderBot
 
@@ -399,13 +399,13 @@ theorem inf_arrow_factors_right {B : C} (X Y : Subobject B) : Y.Factors (X⊓Y).
 
 @[simp]
 theorem finset_inf_factors {I : Type _} {A B : C} {s : Finset I} {P : I → Subobject B} (f : A ⟶ B) :
-    (s.inf P).Factors f ↔ ∀, ∀ i ∈ s, ∀, (P i).Factors f := by
+    (s.inf P).Factors f ↔ ∀ i ∈ s, (P i).Factors f := by
   classical
   apply Finset.induction_on s
-  · simp [← top_factors]
+  · simp [top_factors]
     
   · intro i s nm ih
-    simp [← ih]
+    simp [ih]
     
 
 -- `i` is explicit here because often we'd like to defer a proof of `m`
@@ -418,7 +418,7 @@ theorem finset_inf_arrow_factors {I : Type _} {B : C} (s : Finset I) (P : I → 
     
   · intro i s nm ih j m
     rw [Finset.inf_insert]
-    simp only [← Finset.mem_insert] at m
+    simp only [Finset.mem_insert] at m
     rcases m with (rfl | m)
     · rw [← factor_thru_arrow _ _ (inf_arrow_factors_left _ _)]
       exact factors_comp_arrow _
@@ -498,7 +498,7 @@ theorem finset_sup_factors {I : Type _} {A B : C} {s : Finset I} {P : I → Subo
   · rintro ⟨_, ⟨⟨⟩, _⟩⟩
     
   · rintro i s nm ih ⟨j, ⟨m, h⟩⟩
-    simp only [← Finset.sup_insert]
+    simp only [Finset.sup_insert]
     simp at m
     rcases m with (rfl | m)
     · exact sup_factors_of_factors_left h
@@ -539,7 +539,7 @@ theorem wide_cospan_map_term {A : C} (s : Set (Subobject A)) (j) :
   rfl
 
 /-- Auxiliary construction of a cone for `le_Inf`. -/
-def leInfCone {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀, ∀ g ∈ s, ∀, f ≤ g) : Cone (wideCospan s) :=
+def leInfCone {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s, f ≤ g) : Cone (wideCospan s) :=
   WidePullbackShape.mkCone f.arrow
     (fun j =>
       underlying.map
@@ -552,7 +552,7 @@ def leInfCone {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀, ∀ g 
       tidy)
 
 @[simp]
-theorem le_Inf_cone_π_app_none {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀, ∀ g ∈ s, ∀, f ≤ g) :
+theorem le_Inf_cone_π_app_none {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s, f ≤ g) :
     (leInfCone s f k).π.app none = f.arrow :=
   rfl
 
@@ -585,7 +585,7 @@ instance wide_pullback_ι_mono {A : C} (s : Set (Subobject A)) : Mono (widePullb
 def infₓ {A : C} (s : Set (Subobject A)) : Subobject A :=
   Subobject.mk (widePullbackι s)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (f «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (f «expr ∈ » s)
 theorem Inf_le {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : infₓ s ≤ f := by
   fapply le_of_comm
   · refine'
@@ -595,17 +595,17 @@ theorem Inf_le {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : infₓ s ≤ 
     apply congr_arg fun X : subobject A => (X : C)
     exact Equivₓ.symm_apply_apply _ _
     
-  · dsimp' [← Inf]
-    simp only [← category.comp_id, ← category.assoc, underlying_iso_hom_comp_eq_mk, ← subobject.arrow_congr, ←
-      congr_arg_mpr_hom_left, ← iso.cancel_iso_hom_left]
+  · dsimp' [Inf]
+    simp only [category.comp_id, category.assoc, ← underlying_iso_hom_comp_eq_mk, subobject.arrow_congr,
+      congr_arg_mpr_hom_left, iso.cancel_iso_hom_left]
     convert limit.w (wide_cospan s) (wide_pullback_shape.hom.term _)
     
 
-theorem le_Inf {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀, ∀ g ∈ s, ∀, f ≤ g) : f ≤ infₓ s := by
+theorem le_Inf {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s, f ≤ g) : f ≤ infₓ s := by
   fapply le_of_comm
   · exact limits.limit.lift _ (le_Inf_cone s f k) ≫ (underlying_iso _).inv
     
-  · dsimp' [← Inf, ← wide_pullback_ι]
+  · dsimp' [Inf, wide_pullback_ι]
     simp
     
 
@@ -631,19 +631,19 @@ variable [HasImages C]
 def supₓ {A : C} (s : Set (Subobject A)) : Subobject A :=
   Subobject.mk (image.ι (smallCoproductDesc s))
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (f «expr ∈ » s)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (f «expr ∈ » s)
 theorem le_Sup {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : f ≤ supₓ s := by
   fapply le_of_comm
-  · dsimp' [← Sup]
+  · dsimp' [Sup]
     refine' _ ≫ factor_thru_image _ ≫ (underlying_iso _).inv
     refine'
       _ ≫
         sigma.ι _
           ⟨equivShrink _ f, by
-            simpa [← Set.mem_image] using H⟩
+            simpa [Set.mem_image] using H⟩
     exact eq_to_hom (congr_arg (fun X : subobject A => (X : C)) (Equivₓ.symm_apply_apply _ _).symm)
     
-  · dsimp' [← Sup, ← small_coproduct_desc]
+  · dsimp' [Sup, small_coproduct_desc]
     simp
     dsimp'
     simp
@@ -657,24 +657,24 @@ theorem symm_apply_mem_iff_mem_image {α β : Type _} (e : α ≃ β) (s : Set �
     rintro ⟨a, m, rfl⟩
     simpa using m⟩
 
-theorem Sup_le {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀, ∀ g ∈ s, ∀, g ≤ f) : supₓ s ≤ f := by
+theorem Sup_le {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s, g ≤ f) : supₓ s ≤ f := by
   fapply le_of_comm
-  · dsimp' [← Sup]
+  · dsimp' [Sup]
     refine' (underlying_iso _).Hom ≫ image.lift ⟨_, f.arrow, _, _⟩
     · refine' sigma.desc _
       rintro ⟨g, m⟩
       refine' underlying.map (hom_of_le (k _ _))
-      simpa [← symm_apply_mem_iff_mem_image] using m
+      simpa [symm_apply_mem_iff_mem_image] using m
       
     · ext j
       rcases j with ⟨j, m⟩
-      dsimp' [← small_coproduct_desc]
+      dsimp' [small_coproduct_desc]
       simp
       dsimp'
       simp
       
     
-  · dsimp' [← Sup]
+  · dsimp' [Sup]
     simp
     
 
@@ -728,7 +728,7 @@ def subobjectOrderIso {X : C} (Y : Subobject X) : Subobject (Y : C) ≃o Set.Iic
       (mk_eq_of_comm _ (underlyingIso _)
         (by
           dsimp'
-          simp [iso.eq_inv_comp]))
+          simp [← iso.eq_inv_comp]))
   map_rel_iff' := fun W Z =>
     ⟨fun h =>
       le_of_comm ((underlyingIso _).inv ≫ ofLe _ _ (Subtype.mk_le_mk.mp h) ≫ (underlyingIso _).Hom)

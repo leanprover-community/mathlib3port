@@ -98,7 +98,7 @@ structure PartitionOfUnity (ι X : Type _) [TopologicalSpace X] (s : Set X := Un
   toFun : ι → C(X, ℝ)
   locally_finite' : LocallyFinite fun i => Support (to_fun i)
   nonneg' : 0 ≤ to_fun
-  sum_eq_one' : ∀, ∀ x ∈ s, ∀, (∑ᶠ i, to_fun i x) = 1
+  sum_eq_one' : ∀ x ∈ s, (∑ᶠ i, to_fun i x) = 1
   sum_le_one' : ∀ x, (∑ᶠ i, to_fun i x) ≤ 1
 
 /-- A `bump_covering ι X s` is an indexed family of functions `f i`, `i : ι`, such that
@@ -121,7 +121,7 @@ structure BumpCovering (ι X : Type _) [TopologicalSpace X] (s : Set X := Univ) 
   locally_finite' : LocallyFinite fun i => Support (to_fun i)
   nonneg' : 0 ≤ to_fun
   le_one' : to_fun ≤ 1
-  eventually_eq_one' : ∀, ∀ x ∈ s, ∀, ∃ i, to_fun i =ᶠ[𝓝 x] 1
+  eventually_eq_one' : ∀ x ∈ s, ∃ i, to_fun i =ᶠ[𝓝 x] 1
 
 variable {ι : Type u} {X : Type v} [TopologicalSpace X]
 
@@ -150,7 +150,7 @@ that `0 < f i x`. -/
 theorem exists_pos {x : X} (hx : x ∈ s) : ∃ i, 0 < f i x := by
   have H := f.sum_eq_one hx
   contrapose! H
-  simpa only [← fun i => (H i).antisymm (f.nonneg i x), ← finsum_zero] using zero_ne_one
+  simpa only [fun i => (H i).antisymm (f.nonneg i x), finsum_zero] using zero_ne_one
 
 theorem sum_le_one (x : X) : (∑ᶠ i, f i x) ≤ 1 :=
   f.sum_le_one' x
@@ -163,7 +163,7 @@ theorem le_one (i : ι) (x : X) : f i x ≤ 1 :=
 
 /-- If `f` is a partition of unity on `s : set X` and `g : X → E` is continuous at every point of
 the topological support of some `f i`, then `λ x, f i x • g x` is continuous on the whole space. -/
-theorem continuous_smul {g : X → E} {i : ι} (hg : ∀, ∀ x ∈ Tsupport (f i), ∀, ContinuousAt g x) :
+theorem continuous_smul {g : X → E} {i : ι} (hg : ∀ x ∈ Tsupport (f i), ContinuousAt g x) :
     Continuous fun x => f i x • g x :=
   continuous_of_tsupport fun x hx => ((f i).ContinuousAt x).smul <| hg x <| tsupport_smul_subset_left _ _ hx
 
@@ -171,7 +171,7 @@ theorem continuous_smul {g : X → E} {i : ι} (hg : ∀, ∀ x ∈ Tsupport (f 
 such that each `g i` is continuous at every point of the topological support of `f i`, then the sum
 `λ x, ∑ᶠ i, f i x • g i x` is continuous on the whole space. -/
 theorem continuous_finsum_smul [HasContinuousAdd E] {g : ι → X → E}
-    (hg : ∀ (i), ∀ x ∈ Tsupport (f i), ∀, ContinuousAt (g i) x) : Continuous fun x => ∑ᶠ i, f i x • g i x :=
+    (hg : ∀ (i), ∀ x ∈ Tsupport (f i), ContinuousAt (g i) x) : Continuous fun x => ∑ᶠ i, f i x • g i x :=
   (continuous_finsum fun i => f.continuous_smul (hg i)) <| f.LocallyFinite.Subset fun i => support_smul_subset_left _ _
 
 /-- A partition of unity `f i` is subordinate to a family of sets `U i` indexed by the same type if
@@ -182,8 +182,7 @@ def IsSubordinate (U : ι → Set X) : Prop :=
 variable {f}
 
 theorem exists_finset_nhd_support_subset {U : ι → Set X} (hso : f.IsSubordinate U) (ho : ∀ i, IsOpen (U i)) (x : X) :
-    ∃ (is : Finset ι)(n : Set X)(hn₁ : n ∈ 𝓝 x)(hn₂ : n ⊆ ⋂ i ∈ is, U i),
-      ∀, ∀ z ∈ n, ∀, (Support fun i => f i z) ⊆ is :=
+    ∃ (is : Finset ι)(n : Set X)(hn₁ : n ∈ 𝓝 x)(hn₂ : n ⊆ ⋂ i ∈ is, U i), ∀ z ∈ n, (Support fun i => f i z) ⊆ is :=
   f.LocallyFinite.exists_finset_nhd_support_subset hso ho x
 
 /-- If `f` is a partition of unity that is subordinate to a family of open sets `U i` and
@@ -227,9 +226,9 @@ protected def single (i : ι) (s : Set X) : BumpCovering ι X s where
     rintro j ⟨x, hx, -⟩
     contrapose! hx
     rw [mem_singleton_iff] at hx
-    simp [← hx]
-  nonneg' := le_update_iff.2 ⟨fun x => zero_le_one, fun _ _ => le_rfl⟩
-  le_one' := update_le_iff.2 ⟨le_rfl, fun _ _ _ => zero_le_one⟩
+    simp [hx]
+  nonneg' := le_update_iffₓ.2 ⟨fun x => zero_le_one, fun _ _ => le_rflₓ⟩
+  le_one' := update_le_iffₓ.2 ⟨le_rflₓ, fun _ _ _ => zero_le_one⟩
   eventually_eq_one' := fun x _ =>
     ⟨i, by
       simp ⟩
@@ -367,14 +366,14 @@ theorem exists_finset_to_pou_fun_eventually_eq (i : ι) (x : X) :
   rcases f.locally_finite x with ⟨U, hU, hf⟩
   use hf.to_finset
   filter_upwards [hU] with y hyU
-  simp only [← Pi.mul_apply, ← Finset.prod_apply]
+  simp only [Pi.mul_apply, Finset.prod_apply]
   apply to_pou_fun_eq_mul_prod
   intro j hji hj
   exact hf.mem_to_finset.2 ⟨y, ⟨hj, hyU⟩⟩
 
 theorem continuous_to_pou_fun (i : ι) : Continuous (f.toPouFun i) := by
   refine' (f i).Continuous.mul <| continuous_finprod_cond (fun j _ => continuous_const.sub (f j).Continuous) _
-  simp only [← mul_support_one_sub]
+  simp only [mul_support_one_sub]
   exact f.locally_finite
 
 /-- The partition of unity defined by a `bump_covering`.
@@ -390,15 +389,15 @@ def toPartitionOfUnity : PartitionOfUnity ι X s where
   locally_finite' := f.LocallyFinite.Subset f.support_to_pou_fun_subset
   nonneg' := fun i x => mul_nonneg (f.Nonneg i x) (finprod_cond_nonneg fun j hj => sub_nonneg.2 <| f.le_one j x)
   sum_eq_one' := fun x hx => by
-    simp only [← ContinuousMap.coe_mk, ← sum_to_pou_fun_eq, ← sub_eq_self]
+    simp only [ContinuousMap.coe_mk, sum_to_pou_fun_eq, sub_eq_self]
     apply finprod_eq_zero (fun i => 1 - f i x) (f.ind x hx)
-    · simp only [← f.ind_apply x hx, ← sub_self]
+    · simp only [f.ind_apply x hx, sub_self]
       
     · rw [mul_support_one_sub]
       exact f.point_finite x
       
   sum_le_one' := fun x => by
-    simp only [← ContinuousMap.coe_mk, ← sum_to_pou_fun_eq, ← sub_le_self_iff]
+    simp only [ContinuousMap.coe_mk, sum_to_pou_fun_eq, sub_le_self_iff]
     exact finprod_nonneg fun i => sub_nonneg.2 <| f.le_one i x
 
 theorem to_partition_of_unity_apply (i : ι) (x : X) :

@@ -31,17 +31,17 @@ open Pointwise
 /-- An topological additive group is nonarchimedean if every neighborhood of 0
   contains an open subgroup. -/
 class NonarchimedeanAddGroup (G : Type _) [AddGroupₓ G] [TopologicalSpace G] extends TopologicalAddGroup G : Prop where
-  is_nonarchimedean : ∀, ∀ U ∈ nhds (0 : G), ∀, ∃ V : OpenAddSubgroup G, (V : Set G) ⊆ U
+  is_nonarchimedean : ∀ U ∈ nhds (0 : G), ∃ V : OpenAddSubgroup G, (V : Set G) ⊆ U
 
 /-- A topological group is nonarchimedean if every neighborhood of 1 contains an open subgroup. -/
 @[to_additive]
 class NonarchimedeanGroup (G : Type _) [Groupₓ G] [TopologicalSpace G] extends TopologicalGroup G : Prop where
-  is_nonarchimedean : ∀, ∀ U ∈ nhds (1 : G), ∀, ∃ V : OpenSubgroup G, (V : Set G) ⊆ U
+  is_nonarchimedean : ∀ U ∈ nhds (1 : G), ∃ V : OpenSubgroup G, (V : Set G) ⊆ U
 
 /-- An topological ring is nonarchimedean if its underlying topological additive
   group is nonarchimedean. -/
 class NonarchimedeanRing (R : Type _) [Ringₓ R] [TopologicalSpace R] extends TopologicalRing R : Prop where
-  is_nonarchimedean : ∀, ∀ U ∈ nhds (0 : R), ∀, ∃ V : OpenAddSubgroup R, (V : Set R) ⊆ U
+  is_nonarchimedean : ∀ U ∈ nhds (0 : R), ∃ V : OpenAddSubgroup R, (V : Set R) ⊆ U
 
 -- see Note [lower instance priority]
 /-- Every nonarchimedean ring is naturally a nonarchimedean additive group. -/
@@ -128,11 +128,11 @@ theorem mul_subset (U : OpenAddSubgroup R) : ∃ V : OpenAddSubgroup R, (V : Set
     prod_self_subset
       (IsOpen.mem_nhds (IsOpen.preimage continuous_mul U.IsOpen)
         (by
-          simpa only [← Set.mem_preimage, ← OpenAddSubgroup.mem_coe, ← Prod.snd_zero, ← mul_zero] using U.zero_mem))
+          simpa only [Set.mem_preimage, OpenAddSubgroup.mem_coe, Prod.snd_zero, mul_zero] using U.zero_mem))
   use V
   rintro v ⟨a, b, ha, hb, hv⟩
   have hy := H (Set.mk_mem_prod ha hb)
-  simp only [← Set.mem_preimage, ← OpenAddSubgroup.mem_coe] at hy
+  simp only [Set.mem_preimage, OpenAddSubgroup.mem_coe] at hy
   rwa [hv] at hy
 
 end NonarchimedeanRing

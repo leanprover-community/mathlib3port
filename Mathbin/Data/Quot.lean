@@ -48,10 +48,10 @@ protected def hrecOn₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ ⟦a⟧ �
     (Quot.induction_on qb) fun b =>
       calc
         HEq (@Quot.hrecOn _ _ (φ _) ⟦b⟧ (f a₁) (@cb _)) (f a₁ b) := by
-          simp [← heq_self_iff_true]
+          simp [heq_self_iff_true]
         HEq _ (f a₂ b) := ca pa
         HEq _ (@Quot.hrecOn _ _ (φ _) ⟦b⟧ (f a₂) (@cb _)) := by
-          simp [← heq_self_iff_true]
+          simp [heq_self_iff_true]
         
 
 /-- Map a function `f : α → β` such that `ra x y` implies `rb (f x) (f y)`

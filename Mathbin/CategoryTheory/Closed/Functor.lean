@@ -66,7 +66,7 @@ instance frobenius_morphism_iso_of_preserves_binary_products (h : L ⊣ F) (A : 
     [PreservesLimitsOfShape (Discrete WalkingPair) L] [Full F] [Faithful F] : IsIso (frobeniusMorphism F h A) := by
   apply nat_iso.is_iso_of_is_iso_app _
   intro B
-  dsimp' [← frobenius_morphism]
+  dsimp' [frobenius_morphism]
   infer_instance
 
 variable [CartesianClosed C] [CartesianClosed D]
@@ -124,8 +124,8 @@ theorem frobenius_morphism_mate (h : L ⊣ F) (A : C) :
   by
   rw [← Equivₓ.eq_symm_apply]
   ext B : 2
-  dsimp' [← frobenius_morphism, ← transfer_nat_trans_self, ← transfer_nat_trans, ← adjunction.comp]
-  simp only [← id_comp, ← comp_id]
+  dsimp' [frobenius_morphism, transfer_nat_trans_self, transfer_nat_trans, adjunction.comp]
+  simp only [id_comp, comp_id]
   rw [← L.map_comp_assoc, prod.map_id_comp, assoc, exp_comparison_ev, prod.map_id_comp, assoc, ← F.map_id, ←
     prod_comparison_inv_natural_assoc, ← F.map_comp, exp.ev_coev, F.map_id (A ⨯ L.obj B), comp_id]
   apply prod.hom_ext

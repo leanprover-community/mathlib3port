@@ -28,7 +28,7 @@ variable {α : Type _} {β : Type _} [Encodable β]
 
 theorem supr_decode₂ [CompleteLattice α] (f : β → α) : (⨆ (i : ℕ) (b ∈ decode₂ β i), f b) = ⨆ b, f b := by
   rw [supr_comm]
-  simp [← mem_decode₂]
+  simp [mem_decode₂]
 
 theorem Union_decode₂ (f : β → Set α) : (⋃ (i : ℕ) (b ∈ decode₂ β i), f b) = ⋃ b, f b :=
   supr_decode₂ f
@@ -42,13 +42,13 @@ theorem Union_decode₂_cases {f : β → Set α} {C : Set α → Prop} (H0 : C 
     apply H0
   | some b => by
     convert H1 b
-    simp [← ext_iff]
+    simp [ext_iff]
 
 theorem Union_decode₂_disjoint_on {f : β → Set α} (hd : Pairwise (Disjoint on f)) :
     Pairwise (Disjoint on fun i => ⋃ b ∈ decode₂ β i, f b) := by
   rintro i j ij x
   suffices ∀ a, encode a = i → x ∈ f a → ∀ b, encode b = j → x ∉ f b by
-    simpa [← decode₂_eq_some]
+    simpa [decode₂_eq_some]
   rintro a rfl ha b rfl hb
   exact hd a b (mt (congr_arg encode) ij) ⟨ha, hb⟩
 

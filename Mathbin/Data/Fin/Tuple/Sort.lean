@@ -55,12 +55,12 @@ mapping `i` to `(f i, i)`. -/
 def graphEquiv₁ (f : Finₓ n → α) : Finₓ n ≃ graph f where
   toFun := fun i =>
     ⟨(f i, i), by
-      simp [← graph]⟩
+      simp [graph]⟩
   invFun := fun p => p.1.2
   left_inv := fun i => by
     simp
   right_inv := fun ⟨⟨x, i⟩, h⟩ => by
-    simpa [← graph] using h
+    simpa [graph] using h
 
 @[simp]
 theorem proj_equiv₁' (f : Finₓ n → α) : graph.proj ∘ graphEquiv₁ f = f :=
@@ -85,7 +85,7 @@ theorem monotone_proj (f : Finₓ n → α) : Monotone (graph.proj : graph f →
   rintro ⟨⟨x, i⟩, hx⟩ ⟨⟨y, j⟩, hy⟩ (h | h)
   · exact le_of_ltₓ ‹_›
     
-  · simp [← graph.proj]
+  · simp [graph.proj]
     
 
 theorem monotone_sort (f : Finₓ n → α) : Monotone (f ∘ sort f) := by

@@ -8,6 +8,7 @@ import Mathbin.Algebra.SmulWithZero
 import Mathbin.Data.Rat.Cast
 import Mathbin.GroupTheory.GroupAction.BigOperators
 import Mathbin.GroupTheory.GroupAction.Group
+import Mathbin.Tactic.Abel
 
 /-!
 # Modules over a ring
@@ -101,10 +102,10 @@ protected def Function.Injective.module [AddCommMonoidₓ M₂] [HasSmul R M₂]
   { hf.DistribMulAction f smul with smul := (· • ·),
     add_smul := fun c₁ c₂ x =>
       hf <| by
-        simp only [← smul, ← f.map_add, ← add_smul],
+        simp only [smul, f.map_add, add_smul],
     zero_smul := fun x =>
       hf <| by
-        simp only [← smul, ← zero_smul, ← f.map_zero] }
+        simp only [smul, zero_smul, f.map_zero] }
 
 /-- Pushforward a `module` structure along a surjective additive monoid homomorphism. -/
 protected def Function.Surjective.module [AddCommMonoidₓ M₂] [HasSmul R M₂] (f : M →+ M₂) (hf : Surjective f)
@@ -112,10 +113,10 @@ protected def Function.Surjective.module [AddCommMonoidₓ M₂] [HasSmul R M₂
   { hf.DistribMulAction f smul with smul := (· • ·),
     add_smul := fun c₁ c₂ x => by
       rcases hf x with ⟨x, rfl⟩
-      simp only [← add_smul, smul, f.map_add],
+      simp only [add_smul, ← smul, ← f.map_add],
     zero_smul := fun x => by
       rcases hf x with ⟨x, rfl⟩
-      simp only [f.map_zero, smul, ← zero_smul] }
+      simp only [← f.map_zero, ← smul, zero_smul] }
 
 /-- Push forward the action of `R` on `M` along a compatible surjective map `f : R →+* S`.
 
@@ -129,7 +130,7 @@ def Function.Surjective.moduleLeft {R S M : Type _} [Semiringₓ R] [AddCommMono
       rw [← f.map_zero, hsmul, zero_smul],
     add_smul :=
       hf.Forall₂.mpr fun a b x => by
-        simp only [f.map_add, ← hsmul, ← add_smul] }
+        simp only [← f.map_add, hsmul, add_smul] }
 
 variable {R} (M)
 
@@ -141,7 +142,7 @@ def Module.compHom [Semiringₓ S] (f : S →+* R) : Module S M :=
   { MulActionWithZero.compHom M f.toMonoidWithZeroHom, DistribMulAction.compHom M (f : S →* R) with
     smul := HasSmul.Comp.smul f,
     add_smul := fun r s x => by
-      simp [← add_smul] }
+      simp [add_smul] }
 
 variable (R) (M)
 
@@ -156,7 +157,7 @@ def Module.toAddMonoidEnd : R →+* AddMonoidₓ.End M :=
         simp ,
     map_add' := fun x y =>
       AddMonoidHom.ext fun r => by
-        simp [← add_smul] }
+        simp [add_smul] }
 
 /-- A convenience alias for `module.to_add_monoid_End` as an `add_monoid_hom`, usually to allow the
 use of `add_monoid_hom.flip`. -/
@@ -233,6 +234,15 @@ def Module.ofCore (H : Module.Core R M) : Module R M :=
   { H with zero_smul := fun x => (AddMonoidHom.mk' (fun r : R => r • x) fun r s => H.add_smul r s x).map_zero,
     smul_zero := fun r => (AddMonoidHom.mk' ((· • ·) r) (H.smul_add r)).map_zero }
 
+theorem Convex.combo_eq_smul_sub_add [Module R M] {x y : M} {a b : R} (h : a + b = 1) :
+    a • x + b • y = b • (y - x) + x :=
+  calc
+    a • x + b • y = b • y - b • x + (a • x + b • x) := by
+      abel
+    _ = b • (y - x) + x := by
+      rw [smul_sub, Convex.combo_self h]
+    
+
 end AddCommGroupₓ
 
 -- We'll later use this to show `module ℕ M` and `module ℤ M` are subsingletons.
@@ -274,7 +284,7 @@ theorem neg_one_smul (x : M) : (-1 : R) • x = -x := by
 variable {R}
 
 theorem sub_smul (r s : R) (y : M) : (r - s) • y = r • y - s • y := by
-  simp [← add_smul, ← sub_eq_add_neg]
+  simp [add_smul, sub_eq_add_neg]
 
 end Module
 
@@ -360,9 +370,9 @@ instance AddCommMonoidₓ.nat_is_scalar_tower :
     IsScalarTower ℕ R M where smul_assoc := fun n x y =>
     Nat.recOn n
       (by
-        simp only [← zero_smul])
+        simp only [zero_smul])
       fun n ih => by
-      simp only [← Nat.succ_eq_add_one, ← add_smul, ← one_smul, ← ih]
+      simp only [Nat.succ_eq_add_one, add_smul, one_smul, ih]
 
 end AddCommMonoidₓ
 
@@ -400,28 +410,28 @@ end AddCommGroupₓ
 theorem map_int_cast_smul [AddCommGroupₓ M] [AddCommGroupₓ M₂] {F : Type _} [AddMonoidHomClass F M M₂] (f : F)
     (R S : Type _) [Ringₓ R] [Ringₓ S] [Module R M] [Module S M₂] (x : ℤ) (a : M) : f ((x : R) • a) = (x : S) • f a :=
   by
-  simp only [zsmul_eq_smul_cast, ← map_zsmul]
+  simp only [← zsmul_eq_smul_cast, map_zsmul]
 
 theorem map_nat_cast_smul [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] {F : Type _} [AddMonoidHomClass F M M₂] (f : F)
     (R S : Type _) [Semiringₓ R] [Semiringₓ S] [Module R M] [Module S M₂] (x : ℕ) (a : M) :
     f ((x : R) • a) = (x : S) • f a := by
-  simp only [nsmul_eq_smul_cast, ← map_nsmul]
+  simp only [← nsmul_eq_smul_cast, map_nsmul]
 
 theorem map_inv_int_cast_smul [AddCommGroupₓ M] [AddCommGroupₓ M₂] {F : Type _} [AddMonoidHomClass F M M₂] (f : F)
     (R S : Type _) [DivisionRing R] [DivisionRing S] [Module R M] [Module S M₂] (n : ℤ) (x : M) :
     f ((n⁻¹ : R) • x) = (n⁻¹ : S) • f x := by
   by_cases' hR : (n : R) = 0 <;> by_cases' hS : (n : S) = 0
-  · simp [← hR, ← hS]
+  · simp [hR, hS]
     
   · suffices ∀ y, f y = 0 by
-      simp [← this]
+      simp [this]
     clear x
     intro x
     rw [← inv_smul_smul₀ hS (f x), ← map_int_cast_smul f R S]
-    simp [← hR]
+    simp [hR]
     
   · suffices ∀ y, f y = 0 by
-      simp [← this]
+      simp [this]
     clear x
     intro x
     rw [← smul_inv_smul₀ hR x, map_int_cast_smul f R S, hS, zero_smul]
@@ -538,7 +548,7 @@ theorem smul_eq_zero [NoZeroSmulDivisors R M] {c : R} {x : M} : c • x = 0 ↔ 
   ⟨eq_zero_or_eq_zero_of_smul_eq_zero, fun h => h.elim (fun h => h.symm ▸ zero_smul R x) fun h => h.symm ▸ smul_zero c⟩
 
 theorem smul_ne_zero [NoZeroSmulDivisors R M] {c : R} {x : M} : c • x ≠ 0 ↔ c ≠ 0 ∧ x ≠ 0 := by
-  simp only [← Ne.def, ← smul_eq_zero, ← not_or_distrib]
+  simp only [Ne.def, smul_eq_zero, not_or_distrib]
 
 section Nat
 
@@ -555,7 +565,7 @@ theorem Nat.no_zero_smul_divisors : NoZeroSmulDivisors ℕ M :=
 @[simp]
 theorem two_nsmul_eq_zero {v : M} : 2 • v = 0 ↔ v = 0 := by
   haveI := Nat.no_zero_smul_divisors R M
-  simp [← smul_eq_zero]
+  simp [smul_eq_zero]
 
 end Nat
 

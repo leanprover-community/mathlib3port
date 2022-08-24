@@ -49,7 +49,7 @@ localized [Omega.Nat] notation t " -* " s => Omega.Nat.Preterm.sub t s
 
 namespace Preterm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 /-- Helper tactic for proof by induction over preterms -/
 unsafe def induce (tac : tactic Unit := tactic.skip) : tactic Unit :=
   sorry
@@ -67,7 +67,7 @@ theorem val_const {v : Nat → Nat} {m : Nat} : (&m).val v = m :=
 
 @[simp]
 theorem val_var {v : Nat → Nat} {m n : Nat} : (m ** n).val v = m * v n := by
-  simp only [← val]
+  simp only [val]
   by_cases' h1 : m = 1
   rw [if_pos h1, h1, one_mulₓ]
   rw [if_neg h1, mul_comm]
@@ -89,19 +89,19 @@ def freshIndex : Preterm → Nat
 
 /-- If variable assignments `v` and `w` agree on all variables that occur
 in term `t`, the value of `t` under `v` and `w` are identical. -/
-theorem val_constant (v w : Nat → Nat) : ∀ t : Preterm, (∀, ∀ x < t.freshIndex, ∀, v x = w x) → t.val v = t.val w
+theorem val_constant (v w : Nat → Nat) : ∀ t : Preterm, (∀ x < t.freshIndex, v x = w x) → t.val v = t.val w
   | &n, h1 => rfl
   | m ** n, h1 => by
-    simp only [← val_var]
+    simp only [val_var]
     apply congr_arg fun y => m * y
     apply h1 _ (lt_add_one _)
   | t +* s, h1 => by
-    simp only [← val_add]
+    simp only [val_add]
     have ht := val_constant t fun x hx => h1 _ (lt_of_lt_of_leₓ hx (le_max_leftₓ _ _))
     have hs := val_constant s fun x hx => h1 _ (lt_of_lt_of_leₓ hx (le_max_rightₓ _ _))
     rw [ht, hs]
   | t -* s, h1 => by
-    simp only [← val_sub]
+    simp only [val_sub]
     have ht := val_constant t fun x hx => h1 _ (lt_of_lt_of_leₓ hx (le_max_leftₓ _ _))
     have hs := val_constant s fun x hx => h1 _ (lt_of_lt_of_leₓ hx (le_max_rightₓ _ _))
     rw [ht, hs]
@@ -140,12 +140,11 @@ def canonize : Preterm → Term
 @[simp]
 theorem val_canonize {v : Nat → Nat} : ∀ {t : Preterm}, t.SubFree → ((canonize t).val fun x => ↑(v x)) = t.val v
   | &i, h1 => by
-    simp only [← canonize, ← preterm.val_const, ← term.val, ← coeffs.val_nil, ← add_zeroₓ]
+    simp only [canonize, preterm.val_const, term.val, coeffs.val_nil, add_zeroₓ]
   | i ** n, h1 => by
-    simp only [← preterm.val_var, ← coeffs.val_set, ← term.val, ← zero_addₓ, ← Int.coe_nat_mul, ← canonize]
+    simp only [preterm.val_var, coeffs.val_set, term.val, zero_addₓ, Int.coe_nat_mul, canonize]
   | t +* s, h1 => by
-    simp only [← val_canonize h1.left, ← val_canonize h1.right, ← Int.coe_nat_add, ← canonize, ← term.val_add, ←
-      preterm.val_add]
+    simp only [val_canonize h1.left, val_canonize h1.right, Int.coe_nat_add, canonize, term.val_add, preterm.val_add]
 
 end Nat
 

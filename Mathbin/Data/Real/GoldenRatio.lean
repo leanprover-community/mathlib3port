@@ -49,7 +49,7 @@ theorem inv_gold : φ⁻¹ = -ψ := by
         real.sqrt_pos.mpr
           (by
             norm_num))
-  field_simp [← sub_mul, ← mul_addₓ]
+  field_simp [sub_mul, mul_addₓ]
   norm_num
 
 /-- The opposite of the golden ratio is the inverse of its conjugate. -/
@@ -107,7 +107,7 @@ theorem gold_ne_zero : φ ≠ 0 :=
 
 theorem one_lt_gold : 1 < φ := by
   refine' lt_of_mul_lt_mul_left _ (le_of_ltₓ gold_pos)
-  simp [sq, ← gold_pos, ← zero_lt_one]
+  simp [← sq, gold_pos, zero_lt_one]
 
 theorem gold_conj_neg : ψ < 0 := by
   linarith [one_sub_gold_conj, one_lt_gold]
@@ -173,7 +173,7 @@ open Polynomial
 /-- The characteristic polynomial of `fib_rec` is `X² - (X + 1)`. -/
 theorem fib_rec_char_poly_eq {β : Type _} [CommRingₓ β] : fibRec.charPoly = X ^ 2 - (X + (1 : Polynomial β)) := by
   rw [fibRec, LinearRecurrence.charPoly]
-  simp [← Finset.sum_fin_eq_sum_range, ← Finset.sum_range_succ', ← monomial_eq_smul_X]
+  simp [Finset.sum_fin_eq_sum_range, Finset.sum_range_succ', monomial_eq_smul_X]
 
 end Poly
 
@@ -183,17 +183,17 @@ theorem fib_is_sol_fib_rec : fibRec.IsSolution (fun x => x.fib : ℕ → α) := 
   intro n
   simp only
   rw [Nat.fib_add_two, add_commₓ]
-  simp [← Finset.sum_fin_eq_sum_range, ← Finset.sum_range_succ']
+  simp [Finset.sum_fin_eq_sum_range, Finset.sum_range_succ']
 
 /-- The geometric sequence `λ n, φ^n` is a solution of `fib_rec`. -/
 theorem geom_gold_is_sol_fib_rec : fibRec.IsSolution (pow φ) := by
   rw [fib_rec.geom_sol_iff_root_char_poly, fib_rec_char_poly_eq]
-  simp [← sub_eq_zero]
+  simp [sub_eq_zero]
 
 /-- The geometric sequence `λ n, ψ^n` is a solution of `fib_rec`. -/
 theorem geom_gold_conj_is_sol_fib_rec : fibRec.IsSolution (pow ψ) := by
   rw [fib_rec.geom_sol_iff_root_char_poly, fib_rec_char_poly_eq]
-  simp [← sub_eq_zero]
+  simp [sub_eq_zero]
 
 end Fibrec
 
@@ -205,7 +205,7 @@ theorem Real.coe_fib_eq' : (fun n => Nat.fib n : ℕ → ℝ) = fun n => (φ ^ n
     fin_cases hi
     · simp
       
-    · simp only [← goldenRatio, ← goldenConj]
+    · simp only [goldenRatio, goldenConj]
       ring_exp
       rw [mul_inv_cancel] <;> norm_num
       

@@ -39,8 +39,8 @@ def cokernelCocone {X Y : SemiNormedGroup₁.{u}} (f : X ⟶ Y) : Cofork f 0 :=
       (NormedAddGroupHom.is_quotient_quotient _).norm_le)
     (by
       ext
-      simp only [← comp_apply, ← limits.zero_comp, ← NormedAddGroupHom.zero_apply, ← SemiNormedGroup₁.mk_hom_apply, ←
-        SemiNormedGroup₁.zero_apply, NormedAddGroupHom.mem_ker, ← f.1.range.ker_normed_mk, ← f.1.mem_range]
+      simp only [comp_apply, limits.zero_comp, NormedAddGroupHom.zero_apply, SemiNormedGroup₁.mk_hom_apply,
+        SemiNormedGroup₁.zero_apply, ← NormedAddGroupHom.mem_ker, f.1.range.ker_normed_mk, f.1.mem_range]
       use x
       rfl)
 
@@ -86,9 +86,8 @@ def fork {V W : SemiNormedGroup.{u}} (f g : V ⟶ W) : Fork f g :=
   @Fork.ofι _ _ _ _ _ _ (of (f - g).ker) (NormedAddGroupHom.incl (f - g).ker) <| by
     ext v
     have : v.1 ∈ (f - g).ker := v.2
-    simpa only [← NormedAddGroupHom.incl_apply, ← Pi.zero_apply, ← coe_comp, ← NormedAddGroupHom.coe_zero, ←
-      Subtype.val_eq_coe, ← NormedAddGroupHom.mem_ker, ← NormedAddGroupHom.coe_sub, ← Pi.sub_apply, ← sub_eq_zero] using
-      this
+    simpa only [NormedAddGroupHom.incl_apply, Pi.zero_apply, coe_comp, NormedAddGroupHom.coe_zero, Subtype.val_eq_coe,
+      NormedAddGroupHom.mem_ker, NormedAddGroupHom.coe_sub, Pi.sub_apply, sub_eq_zero] using this
 
 instance has_limit_parallel_pair {V W : SemiNormedGroup.{u}} (f g : V ⟶ W) :
     HasLimit
@@ -124,8 +123,8 @@ def cokernelCocone {X Y : SemiNormedGroup.{u}} (f : X ⟶ Y) : Cofork f 0 :=
   @Cofork.ofπ _ _ _ _ _ _ (SemiNormedGroup.of (Y ⧸ NormedAddGroupHom.range f)) f.range.normedMk
     (by
       ext
-      simp only [← comp_apply, ← limits.zero_comp, ← NormedAddGroupHom.zero_apply, NormedAddGroupHom.mem_ker, ←
-        f.range.ker_normed_mk, ← f.mem_range, ← exists_apply_eq_applyₓ])
+      simp only [comp_apply, limits.zero_comp, NormedAddGroupHom.zero_apply, ← NormedAddGroupHom.mem_ker,
+        f.range.ker_normed_mk, f.mem_range, exists_apply_eq_applyₓ])
 
 /-- Auxiliary definition for `has_cokernels SemiNormedGroup`. -/
 def cokernelLift {X Y : SemiNormedGroup.{u}} (f : X ⟶ Y) (s : CokernelCofork f) : (cokernelCocone f).x ⟶ s.x :=
@@ -167,7 +166,7 @@ def explicitCokernelDesc {X Y Z : SemiNormedGroup.{u}} {f : X ⟶ Y} {g : Y ⟶ 
   (isColimitCokernelCocone f).desc
     (Cofork.ofπ g
       (by
-        simp [← w]))
+        simp [w]))
 
 /-- The projection from `Y` to the explicit cokernel of `X ⟶ Y`. -/
 def explicitCokernelπ {X Y : SemiNormedGroup.{u}} (f : X ⟶ Y) : Y ⟶ explicitCokernel f :=
@@ -206,7 +205,7 @@ theorem explicit_cokernel_desc_unique {X Y Z : SemiNormedGroup.{u}} {f : X ⟶ Y
     (is_colimit_cokernel_cocone f).uniq
       (cofork.of_π g
         (by
-          simp [← w]))
+          simp [w]))
   rintro (_ | _)
   · convert w.symm
     simp
@@ -272,11 +271,11 @@ theorem explicit_cokernel_desc_norm_noninc {X Y Z : SemiNormedGroup.{u}} {f : X 
 theorem explicit_cokernel_desc_comp_eq_zero {X Y Z W : SemiNormedGroup.{u}} {f : X ⟶ Y} {g : Y ⟶ Z} {h : Z ⟶ W}
     (cond : f ≫ g = 0) (cond2 : g ≫ h = 0) : explicitCokernelDesc cond ≫ h = 0 := by
   rw [← cancel_epi (explicit_cokernel_π f), ← category.assoc, explicit_cokernel_π_desc]
-  simp [← cond2]
+  simp [cond2]
 
 theorem explicit_cokernel_desc_norm_le {X Y Z : SemiNormedGroup.{u}} {f : X ⟶ Y} {g : Y ⟶ Z} (w : f ≫ g = 0) :
     ∥explicitCokernelDesc w∥ ≤ ∥g∥ :=
-  explicit_cokernel_desc_norm_le_of_norm_le w ∥g∥₊ le_rfl
+  explicit_cokernel_desc_norm_le_of_norm_le w ∥g∥₊ le_rflₓ
 
 /-- The explicit cokernel is isomorphic to the usual cokernel. -/
 def explicitCokernelIso {X Y : SemiNormedGroup.{u}} (f : X ⟶ Y) : explicitCokernel f ≅ cokernel f :=
@@ -285,25 +284,24 @@ def explicitCokernelIso {X Y : SemiNormedGroup.{u}} (f : X ⟶ Y) : explicitCoke
 @[simp]
 theorem explicit_cokernel_iso_hom_π {X Y : SemiNormedGroup.{u}} (f : X ⟶ Y) :
     explicitCokernelπ f ≫ (explicitCokernelIso f).hom = cokernel.π _ := by
-  simp [← explicit_cokernel_π, ← explicit_cokernel_iso, ← is_colimit.cocone_point_unique_up_to_iso]
+  simp [explicit_cokernel_π, explicit_cokernel_iso, is_colimit.cocone_point_unique_up_to_iso]
 
 @[simp]
 theorem explicit_cokernel_iso_inv_π {X Y : SemiNormedGroup.{u}} (f : X ⟶ Y) :
     cokernel.π f ≫ (explicitCokernelIso f).inv = explicitCokernelπ f := by
-  simp [← explicit_cokernel_π, ← explicit_cokernel_iso]
+  simp [explicit_cokernel_π, explicit_cokernel_iso]
 
 @[simp]
 theorem explicit_cokernel_iso_hom_desc {X Y Z : SemiNormedGroup.{u}} {f : X ⟶ Y} {g : Y ⟶ Z} (w : f ≫ g = 0) :
     (explicitCokernelIso f).hom ≫ cokernel.desc f g w = explicitCokernelDesc w := by
   ext1
-  simp [← explicit_cokernel_desc, ← explicit_cokernel_π, ← explicit_cokernel_iso, ←
-    is_colimit.cocone_point_unique_up_to_iso]
+  simp [explicit_cokernel_desc, explicit_cokernel_π, explicit_cokernel_iso, is_colimit.cocone_point_unique_up_to_iso]
 
 /-- A special case of `category_theory.limits.cokernel.map` adapted to `explicit_cokernel`. -/
 noncomputable def explicitCokernel.map {A B C D : SemiNormedGroup.{u}} {fab : A ⟶ B} {fbd : B ⟶ D} {fac : A ⟶ C}
     {fcd : C ⟶ D} (h : fab ≫ fbd = fac ≫ fcd) : explicitCokernel fab ⟶ explicitCokernel fcd :=
   @explicitCokernelDesc _ _ _ fab (fbd ≫ explicitCokernelπ _) <| by
-    simp [← reassoc_of h]
+    simp [reassoc_of h]
 
 /-- A special case of `category_theory.limits.cokernel.map_desc` adapted to `explicit_cokernel`. -/
 theorem ExplicitCoker.map_desc {A B C D B' D' : SemiNormedGroup.{u}} {fab : A ⟶ B} {fbd : B ⟶ D} {fac : A ⟶ C}
@@ -311,7 +309,7 @@ theorem ExplicitCoker.map_desc {A B C D B' D' : SemiNormedGroup.{u}} {fab : A �
     {condd : fcd ≫ fdd' = 0} {g : B' ⟶ D'} (h' : fbb' ≫ g = fbd ≫ fdd') :
     explicitCokernelDesc condb ≫ g = explicitCokernel.map h ≫ explicitCokernelDesc condd := by
   delta' explicit_cokernel.map
-  simp [cancel_epi (explicit_cokernel_π fab), ← category.assoc, ← explicit_cokernel_π_desc, ← h']
+  simp [← cancel_epi (explicit_cokernel_π fab), category.assoc, explicit_cokernel_π_desc, h']
 
 end ExplicitCokernel
 

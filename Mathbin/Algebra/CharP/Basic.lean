@@ -20,7 +20,7 @@ universe u v
 
 variable (R : Type u)
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1454:30: infer kinds are unsupported in Lean 4: #[`cast_eq_zero_iff] []
+-- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: #[`cast_eq_zero_iff] []
 /-- The generator of the kernel of the unique homomorphism ℕ → R for a semiring R.
 
 *Warning*: for a semiring `R`, `char_p R 0` and `char_zero R` need not coincide.
@@ -48,7 +48,7 @@ theorem CharP.int_cast_eq_zero_iff [AddGroupWithOneₓ R] (p : ℕ) [CharP R p] 
     lift -a to ℕ using neg_nonneg.mpr (le_of_ltₓ h) with b
     rw [Int.cast_coe_nat, CharP.cast_eq_zero_iff R p, Int.coe_nat_dvd]
     
-  · simp only [← Int.cast_zeroₓ, ← eq_self_iff_true, ← dvd_zero]
+  · simp only [Int.cast_zeroₓ, eq_self_iff_true, dvd_zero]
     
   · lift a to ℕ using le_of_ltₓ h with b
     rw [Int.cast_coe_nat, CharP.cast_eq_zero_iff R p, Int.coe_nat_dvd]
@@ -145,7 +145,7 @@ theorem add_pow_char_of_commute [Semiringₓ R] {p : ℕ} [Fact p.Prime] [CharP 
   rw [Nat.cast_oneₓ, mul_oneₓ, mul_oneₓ]
   congr 1
   convert Finset.sum_eq_single 0 _ _
-  · simp only [← mul_oneₓ, ← one_mulₓ, ← Nat.choose_zero_right, ← tsub_zero, ← Nat.cast_oneₓ, ← pow_zeroₓ]
+  · simp only [mul_oneₓ, one_mulₓ, Nat.choose_zero_right, tsub_zero, Nat.cast_oneₓ, pow_zeroₓ]
     
   · intro b h1 h2
     suffices (p.choose b : R) = 0 by
@@ -234,7 +234,7 @@ theorem CharP.neg_one_pow_char_pow [CommRingₓ R] (p n : ℕ) [CharP R p] [Fact
 
 theorem RingHom.char_p_iff_char_p {K L : Type _} [DivisionRing K] [Semiringₓ L] [Nontrivial L] (f : K →+* L) (p : ℕ) :
     CharP K p ↔ CharP L p := by
-  simp only [← char_p_iff, f.injective.eq_iff, ← map_nat_cast f, ← f.map_zero]
+  simp only [char_p_iff, ← f.injective.eq_iff, map_nat_cast f, f.map_zero]
 
 section frobenius
 
@@ -337,9 +337,12 @@ theorem frobenius_inj [CommRingₓ R] [IsReduced R] (p : ℕ) [Fact p.Prime] [Ch
 
 /-- If `ring_char R = 2`, where `R` is a finite reduced commutative ring,
 then every `a : R` is a square. -/
-theorem is_square_of_char_two' {R : Type _} [Fintype R] [CommRingₓ R] [IsReduced R] [CharP R 2] (a : R) : IsSquare a :=
-  (exists_imp_exists fun b h => pow_two b ▸ Eq.symm h) <|
-    ((Fintype.bijective_iff_injective_and_card _).mpr ⟨frobenius_inj R 2, rfl⟩).Surjective a
+theorem is_square_of_char_two' {R : Type _} [Finite R] [CommRingₓ R] [IsReduced R] [CharP R 2] (a : R) : IsSquare a :=
+  by
+  cases nonempty_fintype R
+  exact
+    exists_imp_exists (fun b h => pow_two b ▸ Eq.symm h)
+      (((Fintype.bijective_iff_injective_and_card _).mpr ⟨frobenius_inj R 2, rfl⟩).Surjective a)
 
 namespace CharP
 
@@ -355,7 +358,7 @@ theorem cast_eq_mod (p : ℕ) [CharP R p] (k : ℕ) : (k : R) = (k % p : ℕ) :=
     (k : R) = ↑(k % p + p * (k / p)) := by
       rw [Nat.mod_add_divₓ]
     _ = ↑(k % p) := by
-      simp [← cast_eq_zero]
+      simp [cast_eq_zero]
     
 
 /-- The characteristic of a finite ring cannot be zero. -/
@@ -405,7 +408,7 @@ section NoZeroDivisors
 
 variable [NoZeroDivisors R]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:712:2: warning: expanding binder collection (d «expr ∣ » p)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (d «expr ∣ » p)
 theorem char_is_prime_of_two_le (p : ℕ) [hc : CharP R p] (hp : 2 ≤ p) : Nat.Prime p :=
   suffices ∀ (d) (_ : d ∣ p), d = 1 ∨ d = p from Nat.prime_def_lt''.mpr ⟨hp, this⟩
   fun (d : ℕ) (hdvd : ∃ e, p = d * e) =>
@@ -527,7 +530,7 @@ section
 
 variable (R) [NonAssocRing R] [Fintype R] (n : ℕ)
 
-theorem char_p_of_ne_zero (hn : Fintype.card R = n) (hR : ∀, ∀ i < n, ∀, (i : R) = 0 → i = 0) : CharP R n :=
+theorem char_p_of_ne_zero (hn : Fintype.card R = n) (hR : ∀ i < n, (i : R) = 0 → i = 0) : CharP R n :=
   { cast_eq_zero_iff := by
       have H : (n : R) = 0 := by
         rw [← hn, CharP.cast_card_eq_zero]
@@ -545,7 +548,7 @@ theorem char_p_of_ne_zero (hn : Fintype.card R = n) (hR : ∀, ∀ i < n, ∀, (
          }
 
 theorem char_p_of_prime_pow_injective (R) [Ringₓ R] [Fintype R] (p : ℕ) [hp : Fact p.Prime] (n : ℕ)
-    (hn : Fintype.card R = p ^ n) (hR : ∀, ∀ i ≤ n, ∀, (p ^ i : R) = 0 → i = n) : CharP R (p ^ n) := by
+    (hn : Fintype.card R = p ^ n) (hR : ∀ i ≤ n, (p ^ i : R) = 0 → i = n) : CharP R (p ^ n) := by
   obtain ⟨c, hc⟩ := CharP.exists R
   skip
   have hcpn : c ∣ p ^ n := by
@@ -567,7 +570,7 @@ variable (S : Type v) [Semiringₓ R] [Semiringₓ S] (p q : ℕ) [CharP R p]
 characteristics of the two rings. -/
 instance [CharP S q] :
     CharP (R × S) (Nat.lcmₓ p q) where cast_eq_zero_iff := by
-    simp [← Prod.ext_iff, ← CharP.cast_eq_zero_iff R p, ← CharP.cast_eq_zero_iff S q, ← Nat.lcm_dvd_iff]
+    simp [Prod.ext_iff, CharP.cast_eq_zero_iff R p, CharP.cast_eq_zero_iff S q, Nat.lcm_dvd_iff]
 
 /-- The characteristic of the product of two rings of the same characteristic
   is the same as the characteristic of the rings -/

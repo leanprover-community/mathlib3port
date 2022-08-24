@@ -60,7 +60,7 @@ theorem LocallyConvexSpace.convex_basis_zero [LocallyConvexSpace 𝕜 E] :
   LocallyConvexSpace.convex_basis 0
 
 theorem locally_convex_space_iff_exists_convex_subset :
-    LocallyConvexSpace 𝕜 E ↔ ∀ x : E, ∀, ∀ U ∈ 𝓝 x, ∀, ∃ S ∈ 𝓝 x, Convex 𝕜 S ∧ S ⊆ U :=
+    LocallyConvexSpace 𝕜 E ↔ ∀ x : E, ∀ U ∈ 𝓝 x, ∃ S ∈ 𝓝 x, Convex 𝕜 S ∧ S ⊆ U :=
   (locally_convex_space_iff 𝕜 E).trans (forall_congrₓ fun x => has_basis_self)
 
 end Semimodule
@@ -83,7 +83,7 @@ theorem locally_convex_space_iff_zero :
     LocallyConvexSpace.of_basis_zero 𝕜 E _ _ h fun s => And.right⟩
 
 theorem locally_convex_space_iff_exists_convex_subset_zero :
-    LocallyConvexSpace 𝕜 E ↔ ∀, ∀ U ∈ (𝓝 0 : Filter E), ∀, ∃ S ∈ (𝓝 0 : Filter E), Convex 𝕜 S ∧ S ⊆ U :=
+    LocallyConvexSpace 𝕜 E ↔ ∀ U ∈ (𝓝 0 : Filter E), ∃ S ∈ (𝓝 0 : Filter E), Convex 𝕜 S ∧ S ⊆ U :=
   (locally_convex_space_iff_zero 𝕜 E).trans has_basis_self
 
 -- see Note [lower instance priority]
@@ -99,13 +99,12 @@ section LatticeOps
 variable {ι : Sort _} {𝕜 E F : Type _} [OrderedSemiring 𝕜] [AddCommMonoidₓ E] [Module 𝕜 E] [AddCommMonoidₓ F]
   [Module 𝕜 F]
 
-theorem locally_convex_space_Inf {ts : Set (TopologicalSpace E)} (h : ∀, ∀ t ∈ ts, ∀, @LocallyConvexSpace 𝕜 E _ _ _ t) :
+theorem locally_convex_space_Inf {ts : Set (TopologicalSpace E)} (h : ∀ t ∈ ts, @LocallyConvexSpace 𝕜 E _ _ _ t) :
     @LocallyConvexSpace 𝕜 E _ _ _ (inf ts) := by
   letI : TopologicalSpace E := Inf ts
   refine'
     LocallyConvexSpace.of_bases 𝕜 E (fun x => fun If : Set ts × (ts → Set E) => ⋂ i ∈ If.1, If.2 i)
-      (fun x => fun If : Set ts × (ts → Set E) =>
-        If.1.Finite ∧ ∀, ∀ i ∈ If.1, ∀, If.2 i ∈ @nhds _ (↑i) x ∧ Convex 𝕜 (If.2 i))
+      (fun x => fun If : Set ts × (ts → Set E) => If.1.Finite ∧ ∀ i ∈ If.1, If.2 i ∈ @nhds _ (↑i) x ∧ Convex 𝕜 (If.2 i))
       (fun x => _) fun x If hif => convex_Inter fun i => convex_Inter fun hi => (hif.2 i hi).2
   rw [nhds_Inf, ← infi_subtype'']
   exact has_basis_infi' fun i : ts => (@locally_convex_space_iff 𝕜 E _ _ _ ↑i).mp (h (↑i) i.2) x

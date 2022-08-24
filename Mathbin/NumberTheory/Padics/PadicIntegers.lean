@@ -192,7 +192,7 @@ def inv : ℤ_[p] → ℤ_[p]
   | ⟨k, _⟩ =>
     if h : ∥k∥ = 1 then
       ⟨1 / k, by
-        simp [← h]⟩
+        simp [h]⟩
     else 0
 
 instance :
@@ -261,7 +261,7 @@ variable (p)
 instance : NormedCommRing ℤ_[p] :=
   { PadicInt.commRing, PadicInt.metricSpace p with dist_eq := fun ⟨_, _⟩ ⟨_, _⟩ => rfl,
     norm_mul := by
-      simp [← norm_def],
+      simp [norm_def],
     norm := norm }
 
 instance : NormOneClass ℤ_[p] :=
@@ -270,10 +270,10 @@ instance : NormOneClass ℤ_[p] :=
 instance is_absolute_value : IsAbsoluteValue fun z : ℤ_[p] => ∥z∥ where
   abv_nonneg := norm_nonneg
   abv_eq_zero := fun ⟨_, _⟩ => by
-    simp [← norm_eq_zero]
+    simp [norm_eq_zero]
   abv_add := fun ⟨_, _⟩ ⟨_, _⟩ => norm_add_le _ _
   abv_mul := fun _ _ => by
-    simp only [← norm_def, ← padicNormE.mul, ← PadicInt.coe_mul]
+    simp only [norm_def, padicNormE.mul, PadicInt.coe_mul]
 
 variable {p}
 
@@ -294,7 +294,7 @@ theorem norm_le_one (z : ℤ_[p]) : ∥z∥ ≤ 1 :=
 
 @[simp]
 theorem norm_mul (z1 z2 : ℤ_[p]) : ∥z1 * z2∥ = ∥z1∥ * ∥z2∥ := by
-  simp [← norm_def]
+  simp [norm_def]
 
 @[simp]
 theorem norm_pow (z : ℤ_[p]) : ∀ n : ℕ, ∥z ^ n∥ = ∥z∥ ^ n
@@ -327,10 +327,10 @@ theorem norm_eq_of_norm_add_lt_left {z1 z2 : ℤ_[p]} (h : ∥z1 + z2∥ < ∥z1
 
 @[simp]
 theorem padic_norm_e_of_padic_int (z : ℤ_[p]) : ∥(↑z : ℚ_[p])∥ = ∥z∥ := by
-  simp [← norm_def]
+  simp [norm_def]
 
 theorem norm_int_cast_eq_padic_norm (z : ℤ) : ∥(z : ℤ_[p])∥ = ∥(z : ℚ_[p])∥ := by
-  simp [← norm_def]
+  simp [norm_def]
 
 @[simp]
 theorem norm_eq_padic_norm {q : ℚ_[p]} (hq : ∥q∥ ≤ 1) : @norm ℤ_[p] _ ⟨q, hq⟩ = ∥q∥ :=
@@ -346,7 +346,7 @@ theorem norm_p_pow (n : ℕ) : ∥(p : ℤ_[p]) ^ n∥ = p ^ (-n : ℤ) :=
 
 private def cau_seq_to_rat_cau_seq (f : CauSeq ℤ_[p] norm) : CauSeq ℚ_[p] fun a => ∥a∥ :=
   ⟨fun n => f n, fun _ hε => by
-    simpa [← norm, ← norm_def] using f.cauchy hε⟩
+    simpa [norm, norm_def] using f.cauchy hε⟩
 
 variable (p)
 
@@ -354,7 +354,7 @@ instance complete : CauSeq.IsComplete ℤ_[p] norm :=
   ⟨fun f =>
     have hqn : ∥CauSeq.lim (cauSeqToRatCauSeq f)∥ ≤ 1 := padic_norm_e_lim_le zero_lt_one fun _ => norm_le_one _
     ⟨⟨_, hqn⟩, fun ε => by
-      simpa [← norm, ← norm_def] using CauSeq.equiv_lim (cau_seq_to_rat_cau_seq f) ε⟩⟩
+      simpa [norm, norm_def] using CauSeq.equiv_lim (cau_seq_to_rat_cau_seq f) ε⟩⟩
 
 end PadicInt
 
@@ -399,7 +399,7 @@ theorem norm_int_lt_one_iff_dvd (k : ℤ) : ∥(k : ℤ_[p])∥ < 1 ↔ ↑p ∣
 
 theorem norm_int_le_pow_iff_dvd {k : ℤ} {n : ℕ} : ∥(k : ℤ_[p])∥ ≤ ↑p ^ (-n : ℤ) ↔ ↑p ^ n ∣ k :=
   suffices ∥(k : ℚ_[p])∥ ≤ ↑p ^ (-n : ℤ) ↔ ↑(p ^ n) ∣ k by
-    simpa [← norm_int_cast_eq_padic_norm]
+    simpa [norm_int_cast_eq_padic_norm]
   padicNormE.norm_int_le_pow_iff_dvd _ _
 
 /-! ### Valuation on `ℤ_[p]` -/
@@ -424,11 +424,11 @@ theorem valuation_one : valuation (1 : ℤ_[p]) = 0 :=
 
 @[simp]
 theorem valuation_p : valuation (p : ℤ_[p]) = 1 := by
-  simp [← Valuation]
+  simp [Valuation]
 
 theorem valuation_nonneg (x : ℤ_[p]) : 0 ≤ x.Valuation := by
   by_cases' hx : x = 0
-  · simp [← hx]
+  · simp [hx]
     
   have h : (1 : ℝ) < p := by
     exact_mod_cast hp_prime.1.one_lt
@@ -469,12 +469,12 @@ theorem mul_inv : ∀ {z : ℤ_[p]}, ∥z∥ = 1 → z * z.inv = 1
     have hk : k ≠ 0 := fun h' =>
       @zero_ne_one ℚ_[p] _ _
         (by
-          simpa [← h'] using h)
+          simpa [h'] using h)
     unfold PadicInt.inv
     rw [norm_eq_padic_norm] at h
     rw [dif_pos h]
     apply Subtype.ext_iff_val.2
-    simp [← mul_inv_cancel hk]
+    simp [mul_inv_cancel hk]
 
 theorem inv_mul {z : ℤ_[p]} (hz : ∥z∥ = 1) : z.inv * z = 1 := by
   rw [mul_comm, mul_inv hz]
@@ -498,7 +498,7 @@ theorem norm_lt_one_mul {z1 z2 : ℤ_[p]} (hz2 : ∥z2∥ < 1) : ∥z1 * z2∥ <
 
 @[simp]
 theorem mem_nonunits {z : ℤ_[p]} : z ∈ Nonunits ℤ_[p] ↔ ∥z∥ < 1 := by
-  rw [lt_iff_le_and_ne] <;> simp [← norm_le_one z, ← Nonunits, ← is_unit_iff]
+  rw [lt_iff_le_and_neₓ] <;> simp [norm_le_one z, Nonunits, is_unit_iff]
 
 /-- A `p`-adic number `u` with `∥u∥ = 1` is a unit of `ℤ_[p]`. -/
 def mkUnits {u : ℚ_[p]} (h : ∥u∥ = 1) : ℤ_[p]ˣ :=
@@ -519,12 +519,12 @@ See `unit_coeff_spec`. -/
 def unitCoeff {x : ℤ_[p]} (hx : x ≠ 0) : ℤ_[p]ˣ :=
   let u : ℚ_[p] := x * p ^ -x.Valuation
   have hu : ∥u∥ = 1 := by
-    simp [← hx, ←
+    simp [hx,
       Nat.zpow_ne_zero_of_pos
         (by
           exact_mod_cast hp_prime.1.Pos)
         x.valuation,
-      ← norm_eq_pow_val, ← zpow_neg, ← inv_mul_cancel]
+      norm_eq_pow_val, zpow_neg, inv_mul_cancel]
   mkUnits hu
 
 @[simp]
@@ -553,7 +553,7 @@ section NormLeIff
 theorem norm_le_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) : ∥x∥ ≤ p ^ (-n : ℤ) ↔ ↑n ≤ x.Valuation := by
   rw [norm_eq_pow_val hx]
   lift x.valuation to ℕ using x.valuation_nonneg with k hk
-  simp only [← Int.coe_nat_le, ← zpow_neg, ← zpow_coe_nat]
+  simp only [Int.coe_nat_le, zpow_neg, zpow_coe_nat]
   have aux : ∀ n : ℕ, 0 < (p ^ n : ℝ) := by
     apply pow_pos
     exact_mod_cast hp_prime.1.Pos
@@ -562,7 +562,7 @@ theorem norm_le_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) : �
   rw [← this]
   norm_cast
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:92:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([2]) }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([2]) }
 theorem mem_span_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) :
     x ∈ (Ideal.span {p ^ n} : Ideal ℤ_[p]) ↔ ↑n ≤ x.Valuation := by
   rw [Ideal.mem_span_singleton]
@@ -576,17 +576,17 @@ theorem mem_span_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) :
     
   · rw [unit_coeff_spec hx]
     lift x.valuation to ℕ using x.valuation_nonneg with k hk
-    simp only [← Int.nat_abs_of_nat, ← Units.is_unit, ← IsUnit.dvd_mul_left, ← Int.coe_nat_le]
+    simp only [Int.nat_abs_of_nat, Units.is_unit, IsUnit.dvd_mul_left, Int.coe_nat_le]
     intro H
     obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le H
-    simp only [← pow_addₓ, ← dvd_mul_right]
+    simp only [pow_addₓ, dvd_mul_right]
     
 
 theorem norm_le_pow_iff_mem_span_pow (x : ℤ_[p]) (n : ℕ) :
     ∥x∥ ≤ p ^ (-n : ℤ) ↔ x ∈ (Ideal.span {p ^ n} : Ideal ℤ_[p]) := by
   by_cases' hx : x = 0
   · subst hx
-    simp only [← norm_zero, ← zpow_neg, ← zpow_coe_nat, ← inv_nonneg, ← iff_trueₓ, ← Submodule.zero_mem]
+    simp only [norm_zero, zpow_neg, zpow_coe_nat, inv_nonneg, iff_trueₓ, Submodule.zero_mem]
     exact_mod_cast Nat.zero_leₓ _
     
   rw [norm_le_pow_iff_le_valuation x hx, mem_span_pow_iff_le_valuation x hx]
@@ -602,7 +602,7 @@ theorem norm_lt_one_iff_dvd (x : ℤ_[p]) : ∥x∥ < 1 ↔ ↑p ∣ x := by
   have := norm_le_pow_iff_mem_span_pow x 1
   rw [Ideal.mem_span_singleton, pow_oneₓ] at this
   rw [← this, norm_le_pow_iff_norm_lt_pow_add_one]
-  simp only [← zpow_zero, ← Int.coe_nat_zero, ← Int.coe_nat_succ, ← add_left_negₓ, ← zero_addₓ]
+  simp only [zpow_zero, Int.coe_nat_zero, Int.coe_nat_succ, add_left_negₓ, zero_addₓ]
 
 @[simp]
 theorem pow_p_dvd_int_iff (n : ℕ) (a : ℤ) : (p ^ n : ℤ_[p]) ∣ a ↔ ↑p ^ n ∣ a := by
@@ -617,19 +617,19 @@ section Dvr
 
 instance : LocalRing ℤ_[p] :=
   LocalRing.of_nonunits_add <| by
-    simp only [← mem_nonunits] <;> exact fun x y => norm_lt_one_add
+    simp only [mem_nonunits] <;> exact fun x y => norm_lt_one_add
 
 theorem p_nonnunit : (p : ℤ_[p]) ∈ Nonunits ℤ_[p] := by
   have : (p : ℝ)⁻¹ < 1 :=
     inv_lt_one <| by
       exact_mod_cast hp_prime.1.one_lt
-  simp [← this]
+  simp [this]
 
 theorem maximal_ideal_eq_span_p : maximalIdeal ℤ_[p] = Ideal.span {p} := by
   apply le_antisymmₓ
   · intro x hx
     rw [Ideal.mem_span_singleton]
-    simp only [← LocalRing.mem_maximal_ideal, ← mem_nonunits] at hx
+    simp only [LocalRing.mem_maximal_ideal, mem_nonunits] at hx
     rwa [← norm_lt_one_iff_dvd]
     
   · rw [Ideal.span_le, Set.singleton_subset_iff]
@@ -659,8 +659,8 @@ open CauSeq
 
 instance :
     IsAdicComplete (maximalIdeal ℤ_[p]) ℤ_[p] where prec' := fun x hx => by
-    simp only [Ideal.one_eq_top, ← smul_eq_mul, ← mul_oneₓ, ← Smodeq.sub_mem, ← maximal_ideal_eq_span_p, ←
-      Ideal.span_singleton_pow, norm_le_pow_iff_mem_span_pow] at hx⊢
+    simp only [← Ideal.one_eq_top, smul_eq_mul, mul_oneₓ, Smodeq.sub_mem, maximal_ideal_eq_span_p,
+      Ideal.span_singleton_pow, ← norm_le_pow_iff_mem_span_pow] at hx⊢
     let x' : CauSeq ℤ_[p] norm := ⟨x, _⟩
     swap
     · intro ε hε
@@ -675,10 +675,10 @@ instance :
         exact_mod_cast hp_prime.1.Pos
       obtain ⟨i, hi⟩ := equiv_def₃ (equiv_lim x') this
       by_cases' hin : i ≤ n
-      · exact (hi i le_rfl n hin).le
+      · exact (hi i le_rflₓ n hin).le
         
       · push_neg  at hin
-        specialize hi i le_rfl i le_rfl
+        specialize hi i le_rflₓ i le_rflₓ
         specialize hx hin.le
         have := nonarchimedean (x n - x i) (x i - x'.lim)
         rw [sub_add_sub_cancel] at this

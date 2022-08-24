@@ -69,10 +69,10 @@ private def remove_none_aux (x : α) : β :=
 
 private theorem remove_none_aux_some {x : α} (h : ∃ x', e (some x) = some x') : some (removeNoneAux e x) = e (some x) :=
   by
-  simp [← remove_none_aux, ← option.is_some_iff_exists.mpr h]
+  simp [remove_none_aux, option.is_some_iff_exists.mpr h]
 
 private theorem remove_none_aux_none {x : α} (h : e (some x) = none) : some (removeNoneAux e x) = e none := by
-  simp [← remove_none_aux, ← option.not_is_some_iff_eq_none.mpr h]
+  simp [remove_none_aux, option.not_is_some_iff_eq_none.mpr h]
 
 private theorem remove_none_aux_inv (x : α) : removeNoneAux e.symm (removeNoneAux e x) = x :=
   Option.some_injective _
@@ -124,8 +124,8 @@ theorem some_remove_none_iff {x : α} : some (removeNone e x) = e none ↔ e.sym
   · rw [remove_none_some _ ⟨a, h⟩]
     have := congr_arg e.symm h
     rw [symm_apply_apply] at this
-    simp only [← false_iffₓ, ← apply_eq_iff_eq]
-    simp [← this]
+    simp only [false_iffₓ, apply_eq_iff_eq]
+    simp [this]
     
 
 @[simp]
@@ -134,7 +134,7 @@ theorem remove_none_option_congr (e : α ≃ β) : removeNone e.optionCongr = e 
     Option.some_injective _ <|
       remove_none_some _
         ⟨e x, by
-          simp [← EquivFunctor.map]⟩
+          simp [EquivFunctor.map]⟩
 
 end RemoveNone
 

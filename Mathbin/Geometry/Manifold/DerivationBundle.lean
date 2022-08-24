@@ -78,7 +78,7 @@ theorem smul_def (x : M) (f : C^∞⟮I,M;𝕜⟯⟨x⟩) (k : 𝕜) : f • k =
 
 instance (x : M) :
     IsScalarTower 𝕜 C^∞⟮I,M;𝕜⟯⟨x⟩ 𝕜 where smul_assoc := fun k f h => by
-    simp only [← smul_def, ← Algebra.id.smul_eq_mul, ← SmoothMap.coe_smul, ← Pi.smul_apply, ← mul_assoc]
+    simp only [smul_def, Algebra.id.smul_eq_mul, SmoothMap.coe_smul, Pi.smul_apply, mul_assoc]
 
 end PointedSmoothMap
 
@@ -126,10 +126,10 @@ def hfdifferential {f : C^∞⟮I, M; I', M'⟯} {x : M} {y : M'} (h : f x = y) 
         map_add' := fun g g' => by
           rw [SmoothMap.add_comp, Derivation.map_add],
         map_smul' := fun k g => by
-          simp only [← SmoothMap.smul_comp, ← Derivation.map_smul, ← RingHom.id_apply] }
+          simp only [SmoothMap.smul_comp, Derivation.map_smul, RingHom.id_apply] }
       fun g g' => by
-      simp only [← Derivation.leibniz, ← SmoothMap.mul_comp, ← LinearMap.coe_mk, ← PointedSmoothMap.smul_def, ←
-        ContMdiffMap.comp_apply, ← h]
+      simp only [Derivation.leibniz, SmoothMap.mul_comp, LinearMap.coe_mk, PointedSmoothMap.smul_def,
+        ContMdiffMap.comp_apply, h]
   map_smul' := fun k v => rfl
   map_add' := fun v w => rfl
 

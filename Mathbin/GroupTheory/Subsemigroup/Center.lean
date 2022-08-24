@@ -41,11 +41,11 @@ instance decidableMemCenter [Mul M] [DecidableEq M] [Fintype M] : DecidablePred 
 
 @[simp, to_additive zero_mem_add_center]
 theorem one_mem_center [MulOneClassₓ M] : (1 : M) ∈ Set.Center M := by
-  simp [← mem_center_iff]
+  simp [mem_center_iff]
 
 @[simp]
 theorem zero_mem_center [MulZeroClassₓ M] : (0 : M) ∈ Set.Center M := by
-  simp [← mem_center_iff]
+  simp [mem_center_iff]
 
 variable {M}
 

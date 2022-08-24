@@ -48,13 +48,13 @@ variable {i p}
 
 theorem op (h : HasLiftingProperty i p) : HasLiftingProperty p.op i.op :=
   ⟨fun f g sq => by
-    simp only [← comm_sq.has_lift.iff_unop, ← Quiver.Hom.unop_op]
+    simp only [comm_sq.has_lift.iff_unop, Quiver.Hom.unop_op]
     infer_instance⟩
 
 theorem unop {A B X Y : Cᵒᵖ} {i : A ⟶ B} {p : X ⟶ Y} (h : HasLiftingProperty i p) : HasLiftingProperty p.unop i.unop :=
   ⟨fun f g sq => by
     rw [comm_sq.has_lift.iff_op]
-    simp only [← Quiver.Hom.op_unop]
+    simp only [Quiver.Hom.op_unop]
     infer_instance⟩
 
 theorem iff_op : HasLiftingProperty i p ↔ HasLiftingProperty p.op i.op :=
@@ -70,18 +70,18 @@ instance (priority := 100) of_left_iso [IsIso i] : HasLiftingProperty i p :=
     CommSq.HasLift.mk'
       { l := inv i ≫ f,
         fac_left' := by
-          simp only [← is_iso.hom_inv_id_assoc],
+          simp only [is_iso.hom_inv_id_assoc],
         fac_right' := by
-          simp only [← sq.w, ← assoc, ← is_iso.inv_hom_id_assoc] }⟩
+          simp only [sq.w, assoc, is_iso.inv_hom_id_assoc] }⟩
 
 instance (priority := 100) of_right_iso [IsIso p] : HasLiftingProperty i p :=
   ⟨fun f g sq =>
     CommSq.HasLift.mk'
       { l := g ≫ inv p,
         fac_left' := by
-          simp only [sq.w_assoc, ← is_iso.hom_inv_id, ← comp_id],
+          simp only [← sq.w_assoc, is_iso.hom_inv_id, comp_id],
         fac_right' := by
-          simp only [← assoc, ← is_iso.inv_hom_id, ← comp_id] }⟩
+          simp only [assoc, is_iso.inv_hom_id, comp_id] }⟩
 
 instance of_comp_left [HasLiftingProperty i p] [HasLiftingProperty i' p] : HasLiftingProperty (i ≫ i') p :=
   ⟨fun f g sq => by
@@ -91,9 +91,9 @@ instance of_comp_left [HasLiftingProperty i p] [HasLiftingProperty i' p] : HasLi
       comm_sq.has_lift.mk'
         { l := (comm_sq.mk (comm_sq.mk fac).fac_right).lift,
           fac_left' := by
-            simp only [← assoc, ← comm_sq.fac_left],
+            simp only [assoc, comm_sq.fac_left],
           fac_right' := by
-            simp only [← comm_sq.fac_right] }⟩
+            simp only [comm_sq.fac_right] }⟩
 
 instance of_comp_right [HasLiftingProperty i p] [HasLiftingProperty i p'] : HasLiftingProperty i (p ≫ p') :=
   ⟨fun f g sq => by
@@ -104,9 +104,9 @@ instance of_comp_right [HasLiftingProperty i p] [HasLiftingProperty i p'] : HasL
       comm_sq.has_lift.mk'
         { l := (comm_sq.mk (comm_sq.mk fac).fac_left.symm).lift,
           fac_left' := by
-            simp only [← comm_sq.fac_left],
+            simp only [comm_sq.fac_left],
           fac_right' := by
-            simp only [← comm_sq.fac_right_assoc, ← comm_sq.fac_right] }⟩
+            simp only [comm_sq.fac_right_assoc, comm_sq.fac_right] }⟩
 
 end HasLiftingProperty
 

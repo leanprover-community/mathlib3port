@@ -68,7 +68,7 @@ theorem dist_vadd_cancel_right (v₁ v₂ : V) (x : P) : dist (v₁ +ᵥ x) (v�
 
 @[simp]
 theorem dist_vadd_left (v : V) (x : P) : dist (v +ᵥ x) x = ∥v∥ := by
-  simp [← dist_eq_norm_vsub V _ x]
+  simp [dist_eq_norm_vsub V _ x]
 
 @[simp]
 theorem dist_vadd_right (v : V) (x : P) : dist x (v +ᵥ x) = ∥v∥ := by
@@ -134,17 +134,17 @@ theorem dist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) : dist (p₁ -ᵥ p₂) (p�
   exact norm_sub_le _ _
 
 theorem nndist_vadd_vadd_le (v v' : V) (p p' : P) : nndist (v +ᵥ p) (v' +ᵥ p') ≤ nndist v v' + nndist p p' := by
-  simp only [Nnreal.coe_le_coe, ← Nnreal.coe_add, dist_nndist, ← dist_vadd_vadd_le]
+  simp only [← Nnreal.coe_le_coe, Nnreal.coe_add, ← dist_nndist, dist_vadd_vadd_le]
 
 theorem nndist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) : nndist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ nndist p₁ p₃ + nndist p₂ p₄ := by
-  simp only [Nnreal.coe_le_coe, ← Nnreal.coe_add, dist_nndist, ← dist_vsub_vsub_le]
+  simp only [← Nnreal.coe_le_coe, Nnreal.coe_add, ← dist_nndist, dist_vsub_vsub_le]
 
 theorem edist_vadd_vadd_le (v v' : V) (p p' : P) : edist (v +ᵥ p) (v' +ᵥ p') ≤ edist v v' + edist p p' := by
-  simp only [← edist_nndist]
+  simp only [edist_nndist]
   apply_mod_cast nndist_vadd_vadd_le
 
 theorem edist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) : edist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ edist p₁ p₃ + edist p₂ p₄ := by
-  simp only [← edist_nndist]
+  simp only [edist_nndist]
   apply_mod_cast nndist_vsub_vsub_le
 
 omit V
@@ -158,7 +158,7 @@ def pseudoMetricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [SeminormedA
   dist_self := fun x => by
     simp
   dist_comm := fun x y => by
-    simp only [neg_vsub_eq_vsub_rev y x, ← norm_neg]
+    simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
   dist_triangle := by
     intro x y z
     change ∥x -ᵥ z∥ ≤ ∥x -ᵥ y∥ + ∥y -ᵥ z∥
@@ -176,7 +176,7 @@ def metricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [NormedAddCommGrou
   eq_of_dist_eq_zero := fun x y h => by
     simpa using h
   dist_comm := fun x y => by
-    simp only [neg_vsub_eq_vsub_rev y x, ← norm_neg]
+    simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
   dist_triangle := by
     intro x y z
     change ∥x -ᵥ z∥ ≤ ∥x -ᵥ y∥ + ∥y -ᵥ z∥

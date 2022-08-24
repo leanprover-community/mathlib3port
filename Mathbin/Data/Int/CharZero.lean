@@ -45,7 +45,7 @@ theorem cast_ne_zero [AddGroupWithOneₓ α] [CharZero α] {n : ℤ} : (n : α) 
 theorem cast_div_char_zero {k : Type _} [Field k] [CharZero k] {m n : ℤ} (n_dvd : n ∣ m) : ((m / n : ℤ) : k) = m / n :=
   by
   rcases eq_or_ne n 0 with (rfl | hn)
-  · simp [← Int.div_zero]
+  · simp [Int.div_zero]
     
   · exact cast_div n_dvd (cast_ne_zero.mpr hn)
     

@@ -72,7 +72,7 @@ def torsionOf (x : M) : Ideal R :=
 
 @[simp]
 theorem torsion_of_zero : torsionOf R M (0 : M) = ⊤ := by
-  simp [← torsion_of]
+  simp [torsion_of]
 
 variable {R M}
 
@@ -86,7 +86,7 @@ variable (R)
 theorem torsion_of_eq_top_iff (m : M) : torsionOf R M m = ⊤ ↔ m = 0 := by
   refine'
     ⟨fun h => _, fun h => by
-      simp [← h]⟩
+      simp [h]⟩
   rw [← one_smul R m, ← mem_torsion_of_iff m (1 : R), h]
   exact Submodule.mem_top
 
@@ -108,7 +108,7 @@ theorem CompleteLattice.Independent.linear_independent' {ι R M : Type _} {v : �
     LinearIndependent R v := by
   refine' linear_independent_iff_not_smul_mem_span.mpr fun i r hi => _
   replace hv := complete_lattice.independent_def.mp hv i
-  simp only [← supr_subtype', Submodule.span_range_eq_supr, ← disjoint_iff] at hv
+  simp only [supr_subtype', ← Submodule.span_range_eq_supr, disjoint_iff] at hv
   have : r • v i ∈ ⊥ := by
     rw [← hv, Submodule.mem_inf]
     refine' ⟨submodule.mem_span_singleton.mpr ⟨r, rfl⟩, _⟩
@@ -152,7 +152,7 @@ namespace Submodule
   `a • x = 0`. -/
 @[simps]
 def torsionBy (a : R) : Submodule R M :=
-  (DistribMulAction.toLinearMap _ _ a).ker
+  (DistribMulAction.toLinearMap R M a).ker
 
 /-- The submodule containing all elements `x` of `M` such that `a • x = 0` for all `a` in `s`. -/
 @[simps]
@@ -236,7 +236,7 @@ theorem mem_torsion_by_set_iff (x : M) : x ∈ torsionBySet R M s ↔ ∀ a : s,
 @[simp]
 theorem torsion_by_singleton_eq : torsionBySet R M {a} = torsionBy R M a := by
   ext x
-  simp only [← mem_torsion_by_set_iff, ← SetCoe.forall, ← Subtype.coe_mk, ← Set.mem_singleton_iff, ← forall_eq, ←
+  simp only [mem_torsion_by_set_iff, SetCoe.forall, Subtype.coe_mk, Set.mem_singleton_iff, forall_eq,
     mem_torsion_by_iff]
 
 theorem torsion_by_set_le_torsion_by_set_of_subset {s t : Set R} (st : s ⊆ t) :
@@ -377,7 +377,7 @@ theorem supr_torsion_by_ideal_eq_torsion_by_infi :
         exact Ideal.mul_mem_right _ _ ha
         
       · have := coe_mem (μ i)
-        simp only [← mem_infi] at this
+        simp only [mem_infi] at this
         exact Ideal.mul_mem_left _ _ (this j hj ij)
         
       

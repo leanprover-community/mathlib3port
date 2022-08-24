@@ -32,7 +32,7 @@ open TopologicalSpace
 
 theorem integral_exp_neg_Ioi : (∫ x : ℝ in Ioi 0, exp (-x)) = 1 := by
   refine' tendsto_nhds_unique (interval_integral_tendsto_integral_Ioi _ _ tendsto_id) _
-  · simpa only [← neg_mul, ← one_mulₓ] using exp_neg_integrable_on_Ioi 0 zero_lt_one
+  · simpa only [neg_mul, one_mulₓ] using exp_neg_integrable_on_Ioi 0 zero_lt_one
     
   · simpa using tendsto_exp_neg_at_top_nhds_0.const_sub 1
     
@@ -47,7 +47,7 @@ theorem Gamma_integrand_is_o (s : ℝ) : (fun x : ℝ => exp (-x) * x ^ s) =o[at
     
   have : (fun x : ℝ => exp (-x) * x ^ s / exp (-(1 / 2) * x)) = (fun x : ℝ => exp (1 / 2 * x) / x ^ s)⁻¹ := by
     ext1 x
-    field_simp [← exp_ne_zero, ← exp_neg, Real.exp_add]
+    field_simp [exp_ne_zero, exp_neg, ← Real.exp_add]
     left
     ring
   rw [this]
@@ -79,7 +79,7 @@ theorem Gamma_integral_convergent {s : ℝ} (h : 0 < s) : IntegrableOn (fun x : 
     
 
 theorem Gamma_integral_one : gammaIntegral 1 = 1 := by
-  simpa only [← Gamma_integral, ← sub_self, ← rpow_zero, ← mul_oneₓ] using integral_exp_neg_Ioi
+  simpa only [Gamma_integral, sub_self, rpow_zero, mul_oneₓ] using integral_exp_neg_Ioi
 
 end Real
 
@@ -158,9 +158,9 @@ private theorem Gamma_integrand_deriv_integrable_A {s : ℂ} (hs : 0 < s.re) {X 
     IntervalIntegrable (fun x => -((-x).exp * x ^ s) : ℝ → ℂ) volume 0 X := by
   convert (Gamma_integrand_interval_integrable (s + 1) _ hX).neg
   · ext1
-    simp only [← add_sub_cancel, ← Pi.neg_apply]
+    simp only [add_sub_cancel, Pi.neg_apply]
     
-  · simp only [← add_re, ← one_re]
+  · simp only [add_re, one_re]
     linarith
     
 
@@ -209,10 +209,9 @@ theorem partial_Gamma_add_one {s : ℂ} (hs : 0 < s.re) {X : ℝ} (hX : 0 ≤ X)
       simp
     have d2 : HasDerivAt (fun y : ℝ => ↑y ^ s) (s * x ^ (s - 1)) x := by
       have t := @HasDerivAt.cpow_const _ _ _ s (has_deriv_at_id ↑x)
-      simp only [← id.def, ← of_real_re, ← of_real_im, ← Ne.def, ← eq_self_iff_true, ← not_true, ← or_falseₓ, ←
-        mul_oneₓ] at t
+      simp only [id.def, of_real_re, of_real_im, Ne.def, eq_self_iff_true, not_true, or_falseₓ, mul_oneₓ] at t
       simpa using HasDerivAt.comp x (t hx.left) of_real_clm.has_deriv_at
-    simpa only [← of_real_neg, ← neg_mul] using d1b.mul d2
+    simpa only [of_real_neg, neg_mul] using d1b.mul d2
   have cont := (continuous_of_real.comp continuous_neg.exp).mul (continuous_of_real_cpow_const hs)
   have der_ible := (Gamma_integrand_deriv_integrable_A hs hX).add (Gamma_integrand_deriv_integrable_B hs hX)
   have int_eval := integral_eq_sub_of_has_deriv_at_of_le hX cont.continuous_on F_der_I der_ible
@@ -224,7 +223,7 @@ theorem partial_Gamma_add_one {s : ℂ} (hs : 0 < s.re) {X : ℝ} (hX : 0 ≤ X)
     intervalIntegral.integral_neg, neg_add, neg_negₓ] at int_eval
   replace int_eval := eq_sub_of_add_eq int_eval
   rw [int_eval, sub_neg_eq_add, neg_sub, add_commₓ, add_sub]
-  simp only [← sub_left_inj, ← add_left_injₓ]
+  simp only [sub_left_inj, add_left_injₓ]
   have : (fun x => (-x).exp * (s * x ^ (s - 1)) : ℝ → ℂ) = (fun x => s * (-x).exp * x ^ (s - 1) : ℝ → ℂ) := by
     ext1
     ring
@@ -279,15 +278,15 @@ noncomputable def gammaAux : ℕ → ℂ → ℂ
 
 theorem Gamma_aux_recurrence1 (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) : gammaAux n s = gammaAux n (s + 1) / s := by
   induction' n with n hn generalizing s
-  · simp only [← Nat.cast_zeroₓ, ← neg_lt_zero] at h1
-    dsimp' only [← Gamma_aux]
+  · simp only [Nat.cast_zeroₓ, neg_lt_zero] at h1
+    dsimp' only [Gamma_aux]
     rw [Gamma_integral_add_one h1]
     rw [mul_comm, mul_div_cancel]
     contrapose! h1
     rw [h1]
     simp
     
-  · dsimp' only [← Gamma_aux]
+  · dsimp' only [Gamma_aux]
     have hh1 : -(s + 1).re < n := by
       rw [Nat.succ_eq_add_one, Nat.cast_addₓ, Nat.cast_oneₓ] at h1
       rw [add_re, one_re]
@@ -297,14 +296,14 @@ theorem Gamma_aux_recurrence1 (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) : gammaAux
 
 theorem Gamma_aux_recurrence2 (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) : gammaAux n s = gammaAux (n + 1) s := by
   cases n
-  · simp only [← Nat.cast_zeroₓ, ← neg_lt_zero] at h1
-    dsimp' only [← Gamma_aux]
+  · simp only [Nat.cast_zeroₓ, neg_lt_zero] at h1
+    dsimp' only [Gamma_aux]
     rw [Gamma_integral_add_one h1, mul_div_cancel_left]
     rintro rfl
     rw [zero_re] at h1
     exact h1.false
     
-  · dsimp' only [← Gamma_aux]
+  · dsimp' only [Gamma_aux]
     have : Gamma_aux n (s + 1 + 1) / (s + 1) = Gamma_aux n (s + 1) := by
       have hh1 : -(s + 1).re < n := by
         rw [Nat.succ_eq_add_one, Nat.cast_addₓ, Nat.cast_oneₓ] at h1
@@ -322,13 +321,13 @@ theorem Gamma_eq_Gamma_aux (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) : gamma s = g
   have u : ∀ k : ℕ, Gamma_aux (⌊1 - s.re⌋₊ + k) s = Gamma s := by
     intro k
     induction' k with k hk
-    · simp [← Gamma]
+    · simp [Gamma]
       
     · rw [← hk, Nat.succ_eq_add_one, ← add_assocₓ]
       refine' (Gamma_aux_recurrence2 s (⌊1 - s.re⌋₊ + k) _).symm
       rw [Nat.cast_addₓ]
       have i0 := Nat.sub_one_lt_floor (1 - s.re)
-      simp only [← sub_sub_cancel_left] at i0
+      simp only [sub_sub_cancel_left] at i0
       refine' lt_add_of_lt_of_nonneg i0 _
       rw [← Nat.cast_zeroₓ, Nat.cast_le]
       exact Nat.zero_leₓ k
@@ -351,7 +350,7 @@ theorem Gamma_eq_Gamma_aux (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) : gamma s = g
 theorem Gamma_add_one (s : ℂ) (h2 : s ≠ 0) : gamma (s + 1) = s * gamma s := by
   let n := ⌊1 - s.re⌋₊
   have t1 : -s.re < n := by
-    simpa only [← sub_sub_cancel_left] using Nat.sub_one_lt_floor (1 - s.re)
+    simpa only [sub_sub_cancel_left] using Nat.sub_one_lt_floor (1 - s.re)
   have t2 : -(s + 1).re < n := by
     rw [add_re, one_re]
     linarith
@@ -373,7 +372,7 @@ theorem Gamma_nat_eq_factorial (n : ℕ) : gamma (n + 1) = Nat.factorial n := by
     simp
     
   rw [Gamma_add_one n.succ <| nat.cast_ne_zero.mpr <| Nat.succ_ne_zero n]
-  · simp only [← Nat.cast_succₓ, ← Nat.factorial_succ, ← Nat.cast_mulₓ]
+  · simp only [Nat.cast_succₓ, Nat.factorial_succ, Nat.cast_mulₓ]
     congr
     exact hn
     
@@ -413,14 +412,14 @@ theorem dGamma_integrand_is_o_at_top (s : ℝ) :
     have : exp x = exp (x / 2) * exp (x / 2) := by
       rw [← Real.exp_add, add_halves]
     rw [this]
-    field_simp [← hx.ne', ← exp_ne_zero (x / 2)]
+    field_simp [hx.ne', exp_ne_zero (x / 2)]
     ring
   refine' tendsto.congr' this.symm (tendsto.inv_tendsto_at_top _)
   apply tendsto.at_top_mul_at_top (tendsto_exp_mul_div_rpow_at_top s (1 / 2) one_half_pos)
   refine' tendsto.congr' _ ((tendsto_exp_div_pow_at_top 1).comp tendsto_log_at_top)
   apply eventually_eq_of_mem (Ioi_mem_at_top (0 : ℝ))
   intro x hx
-  simp [← exp_log hx]
+  simp [exp_log hx]
 
 /-- Absolute convergence of the integral which will give the derivative of the `Γ` function on
 `1 < re s`. -/
@@ -517,7 +516,7 @@ theorem has_deriv_at_Gamma_integral {s : ℂ} (hs : 1 < s.re) :
     refine' ContinuousOn.ae_strongly_measurable _ measurable_set_Ioi
     have : dGammaIntegrand s = (fun x => Real.exp (-x) * x ^ (s - 1) * Real.log x : ℝ → ℂ) := by
       ext1
-      simp only [← dGammaIntegrand]
+      simp only [dGammaIntegrand]
       ring
     rw [this]
     refine' ContinuousOn.mul (cont s) (ContinuousAt.continuous_on _)
@@ -530,7 +529,7 @@ theorem has_deriv_at_Gamma_integral {s : ℂ} (hs : 1 < s.re) :
     rw [Complex.sub_re, @abs_sub_lt_iff ℝ _ t.re s.re ((s.re - 1) / 2)] at ht
     refine' loc_unif_bound_dGamma_integrand _ _ hx
     all_goals
-      simp only [← ε]
+      simp only [ε]
       linarith
   have bound_integrable : integrable bound μ := by
     apply integrable.add
@@ -553,7 +552,7 @@ theorem has_deriv_at_Gamma_integral {s : ℂ} (hs : 1 < s.re) :
     refine' (ae_restrict_iff' measurable_set_Ioi).mpr (ae_of_all _ fun x hx => _)
     intro t ht
     rw [mem_Ioi] at hx
-    simp only [← dGammaIntegrand]
+    simp only [dGammaIntegrand]
     rw [mul_assoc]
     apply HasDerivAt.const_mul
     rw [of_real_log hx.le, mul_comm]
@@ -570,7 +569,7 @@ theorem differentiable_at_Gamma_aux (s : ℂ) (n : ℕ) (h1 : 1 - s.re < n) (h2 
     rw [Nat.cast_zeroₓ] at h1
     linarith
     
-  · dsimp' only [← Gamma_aux]
+  · dsimp' only [Gamma_aux]
     specialize hn (s + 1)
     have a : 1 - (s + 1).re < ↑n := by
       rw [Nat.cast_succₓ] at h1

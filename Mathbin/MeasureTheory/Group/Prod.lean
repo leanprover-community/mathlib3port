@@ -134,7 +134,7 @@ theorem quasi_measure_preserving_inv : QuasiMeasurePreserving (Inv.inv : G → G
   have hf : Measurable fun z : G × G => (z.2 * z.1, z.1⁻¹) :=
     (measurable_snd.mul measurable_fst).prod_mk measurable_fst.inv
   suffices map (fun z : G × G => (z.2 * z.1, z.1⁻¹)) (μ.prod μ) (s⁻¹ ×ˢ s⁻¹) = 0 by
-    simpa only [← map_prod_mul_inv_eq μ μ, ← prod_prod, ← mul_eq_zero, ← or_selfₓ] using this
+    simpa only [map_prod_mul_inv_eq μ μ, prod_prod, mul_eq_zero, or_selfₓ] using this
   have hsm' : MeasurableSet (s⁻¹ ×ˢ s⁻¹) := hsm.inv.prod hsm.inv
   simp_rw [map_apply hf hsm', prod_apply_symm (hf hsm'), preimage_preimage, mk_preimage_prod, inv_preimage, inv_invₓ,
     measure_mono_null (inter_subset_right _ _) hμs, lintegral_zero]
@@ -172,7 +172,7 @@ theorem measure_mul_right_null (y : G) : μ ((fun x => x * y) ⁻¹' E) = 0 ↔ 
     μ ((fun x => x * y) ⁻¹' E) = 0 ↔ μ ((fun x => y⁻¹ * x) ⁻¹' E⁻¹)⁻¹ = 0 := by
       simp_rw [← inv_preimage, preimage_preimage, mul_inv_rev, inv_invₓ]
     _ ↔ μ E = 0 := by
-      simp only [← measure_inv_null μ, ← measure_preimage_mul]
+      simp only [measure_inv_null μ, measure_preimage_mul]
     
 
 @[to_additive]
@@ -249,7 +249,7 @@ theorem ae_measure_preimage_mul_right_lt_top [IsMulLeftInvariant ν] (Em : Measu
     ∀ᵐ x ∂μ, ν ((fun y => y * x) ⁻¹' E) < ∞ := by
   refine' ae_of_forall_measure_lt_top_ae_restrict' ν.inv _ _
   intro A hA h2A h3A
-  simp only [← ν.inv_apply] at h3A
+  simp only [ν.inv_apply] at h3A
   apply ae_lt_top (measurable_measure_mul_right ν Em)
   have h1 := measure_mul_lintegral_eq μ ν Em (A⁻¹.indicator 1) (measurable_one.indicator hA.inv)
   rw [lintegral_indicator _ hA.inv] at h1

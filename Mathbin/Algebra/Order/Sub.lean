@@ -60,10 +60,10 @@ theorem tsub_le_iff_right : a - b ≤ c ↔ a ≤ c + b :=
 
 /-- See `add_tsub_cancel_right` for the equality if `contravariant_class α α (+) (≤)`. -/
 theorem add_tsub_le_right : a + b - b ≤ a :=
-  tsub_le_iff_right.mpr le_rfl
+  tsub_le_iff_right.mpr le_rflₓ
 
 theorem le_tsub_add : b ≤ b - a + a :=
-  tsub_le_iff_right.mp le_rfl
+  tsub_le_iff_right.mp le_rflₓ
 
 theorem AddHom.le_map_tsub [Preorderₓ β] [Add β] [Sub β] [HasOrderedSub β] (f : AddHom α β) (hf : Monotone f)
     (a b : α) : f a - f b ≤ f (a - b) := by
@@ -76,7 +76,7 @@ theorem le_mul_tsub {R : Type _} [Distribₓ R] [Preorderₓ R] [Sub R] [HasOrde
 
 theorem le_tsub_mul {R : Type _} [CommSemiringₓ R] [Preorderₓ R] [Sub R] [HasOrderedSub R]
     [CovariantClass R R (· * ·) (· ≤ ·)] {a b c : R} : a * c - b * c ≤ (a - b) * c := by
-  simpa only [← mul_comm _ c] using le_mul_tsub
+  simpa only [mul_comm _ c] using le_mul_tsub
 
 end Add
 
@@ -108,11 +108,11 @@ theorem tsub_le_iff_left : a - b ≤ c ↔ a ≤ b + c := by
   rw [tsub_le_iff_right, add_commₓ]
 
 theorem le_add_tsub : a ≤ b + (a - b) :=
-  tsub_le_iff_left.mp le_rfl
+  tsub_le_iff_left.mp le_rflₓ
 
 /-- See `add_tsub_cancel_left` for the equality if `contravariant_class α α (+) (≤)`. -/
 theorem add_tsub_le_left : a + b - a ≤ b :=
-  tsub_le_iff_left.mpr le_rfl
+  tsub_le_iff_left.mpr le_rflₓ
 
 theorem tsub_le_tsub_right (h : a ≤ b) (c : α) : a - c ≤ b - c :=
   tsub_le_iff_left.mpr <| h.trans le_add_tsub
@@ -293,16 +293,16 @@ protected theorem add_tsub_cancel_left (ha : AddLeCancellable a) : a + b - a = b
   ha.tsub_eq_of_eq_add <| add_commₓ a b
 
 protected theorem lt_add_of_tsub_lt_left (hb : AddLeCancellable b) (h : a - b < c) : a < b + c := by
-  rw [lt_iff_le_and_ne, ← tsub_le_iff_left]
+  rw [lt_iff_le_and_neₓ, ← tsub_le_iff_left]
   refine' ⟨h.le, _⟩
   rintro rfl
-  simpa [← hb] using h
+  simpa [hb] using h
 
 protected theorem lt_add_of_tsub_lt_right (hc : AddLeCancellable c) (h : a - c < b) : a < b + c := by
-  rw [lt_iff_le_and_ne, ← tsub_le_iff_right]
+  rw [lt_iff_le_and_neₓ, ← tsub_le_iff_right]
   refine' ⟨h.le, _⟩
   rintro rfl
-  simpa [← hc] using h
+  simpa [hc] using h
 
 protected theorem lt_tsub_of_add_lt_right (hc : AddLeCancellable c) (h : a + c < b) : a < b - c :=
   (hc.le_tsub_of_add_le_right h.le).lt_of_ne <| by
@@ -381,15 +381,15 @@ variable {a b c d : α} [LinearOrderₓ α] [AddCommSemigroupₓ α] [Sub α] [H
 
 /-- See `lt_of_tsub_lt_tsub_right_of_le` for a weaker statement in a partial order. -/
 theorem lt_of_tsub_lt_tsub_right (h : a - c < b - c) : a < b :=
-  lt_imp_lt_of_le_imp_le (fun h => tsub_le_tsub_right h c) h
+  lt_imp_lt_of_le_imp_leₓ (fun h => tsub_le_tsub_right h c) h
 
 /-- See `lt_tsub_iff_right_of_le` for a weaker statement in a partial order. -/
 theorem lt_tsub_iff_right : a < b - c ↔ a + c < b :=
-  lt_iff_lt_of_le_iff_le tsub_le_iff_right
+  lt_iff_lt_of_le_iff_leₓ tsub_le_iff_right
 
 /-- See `lt_tsub_iff_left_of_le` for a weaker statement in a partial order. -/
 theorem lt_tsub_iff_left : a < b - c ↔ c + a < b :=
-  lt_iff_lt_of_le_iff_le tsub_le_iff_left
+  lt_iff_lt_of_le_iff_leₓ tsub_le_iff_left
 
 theorem lt_tsub_comm : a < b - c ↔ c < b - a :=
   lt_tsub_iff_left.trans lt_tsub_iff_right.symm
@@ -400,7 +400,7 @@ variable [CovariantClass α α (· + ·) (· ≤ ·)]
 
 /-- See `lt_of_tsub_lt_tsub_left_of_le` for a weaker statement in a partial order. -/
 theorem lt_of_tsub_lt_tsub_left (h : a - b < a - c) : c < b :=
-  lt_imp_lt_of_le_imp_le (fun h => tsub_le_tsub_left h a) h
+  lt_imp_lt_of_le_imp_leₓ (fun h => tsub_le_tsub_left h a) h
 
 end Cov
 
@@ -658,11 +658,11 @@ attribute [simp] tsub_eq_zero_of_le
 
 @[simp]
 theorem tsub_self (a : α) : a - a = 0 :=
-  tsub_eq_zero_of_le le_rfl
+  tsub_eq_zero_of_le le_rflₓ
 
 @[simp]
 theorem tsub_le_self : a - b ≤ a :=
-  tsub_le_iff_left.mpr <| le_add_left le_rfl
+  tsub_le_iff_left.mpr <| le_add_left le_rflₓ
 
 @[simp]
 theorem zero_tsub (a : α) : 0 - a = 0 :=
@@ -719,7 +719,7 @@ def CanonicallyOrderedAddMonoid.toAddCancelCommMonoid : AddCancelCommMonoid α :
   { (by
       infer_instance : AddCommMonoidₓ α) with
     add_left_cancel := fun a b c h => by
-      simpa only [← add_tsub_cancel_left] using congr_arg (fun x => x - a) h }
+      simpa only [add_tsub_cancel_left] using congr_arg (fun x => x - a) h }
 
 end Contra
 
@@ -746,10 +746,10 @@ theorem tsub_eq_tsub_min (a b : α) : a - b = a - min a b := by
 namespace AddLeCancellable
 
 protected theorem lt_tsub_iff_right (hc : AddLeCancellable c) : a < b - c ↔ a + c < b :=
-  ⟨lt_imp_lt_of_le_imp_le tsub_le_iff_right.mpr, hc.lt_tsub_of_add_lt_right⟩
+  ⟨lt_imp_lt_of_le_imp_leₓ tsub_le_iff_right.mpr, hc.lt_tsub_of_add_lt_right⟩
 
 protected theorem lt_tsub_iff_left (hc : AddLeCancellable c) : a < b - c ↔ c + a < b :=
-  ⟨lt_imp_lt_of_le_imp_le tsub_le_iff_left.mpr, hc.lt_tsub_of_add_lt_left⟩
+  ⟨lt_imp_lt_of_le_imp_leₓ tsub_le_iff_left.mpr, hc.lt_tsub_of_add_lt_left⟩
 
 protected theorem tsub_lt_tsub_iff_right (hc : AddLeCancellable c) (h : c ≤ a) : a - c < b - c ↔ a < b := by
   rw [hc.lt_tsub_iff_left, add_tsub_cancel_of_le h]
@@ -768,7 +768,7 @@ protected theorem tsub_lt_self_iff (ha : AddLeCancellable a) : a - b < a ↔ 0 <
 /-- See `lt_tsub_iff_left_of_le_of_le` for a weaker statement in a partial order. -/
 protected theorem tsub_lt_tsub_iff_left_of_le (ha : AddLeCancellable a) (hb : AddLeCancellable b) (h : b ≤ a) :
     a - b < a - c ↔ c < b :=
-  lt_iff_lt_of_le_iff_le <| ha.tsub_le_tsub_iff_left hb h
+  lt_iff_lt_of_le_iff_leₓ <| ha.tsub_le_tsub_iff_left hb h
 
 end AddLeCancellable
 

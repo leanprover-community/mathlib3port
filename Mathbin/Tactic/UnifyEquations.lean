@@ -273,7 +273,7 @@ open UnifyEquations
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
--- ./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- If `equ` is the display name of a local constant with type `t = u` or `t == u`,
 then `unify_equation_once equ` simplifies it once using
 `unify_equations.unify_homogeneous` or `unify_equations.unify_heterogeneous`.
@@ -293,7 +293,7 @@ unsafe def unify_equation_once (equ : Name) : tactic unification_step_result := 
       let rhs_whnf ← whnf_ginductive rhs
       unify_heterogeneous eque lhs_type rhs_type lhs rhs lhs_whnf rhs_whnf u
     | _ =>
-      "./././Mathport/Syntax/Translate/Basic.lean:1150:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
+      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
 
 /-- Given a list of display names of local hypotheses that are (homogeneous or
 heterogeneous) equations, `unify_equations` performs first-order unification on

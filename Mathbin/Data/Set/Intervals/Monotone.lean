@@ -30,7 +30,7 @@ protected theorem StrictMonoOn.Iic_union_Ici (h₁ : StrictMonoOn f (Iic a)) (h�
   intro x y hxy
   cases' lt_or_leₓ a x with hax hxa <;> [skip, cases' le_or_ltₓ y a with hya hay]
   exacts[h₂ hax.le (hax.trans hxy).le hxy, h₁ hxa hya hxy,
-    (h₁.monotone_on hxa le_rfl hxa).trans_lt (h₂ le_rfl hay.le hay)]
+    (h₁.monotone_on hxa le_rflₓ hxa).trans_lt (h₂ le_rflₓ hay.le hay)]
 
 /-- If `f` is strictly antitone both on `(-∞, a]` and `[a, ∞)`, then it is strictly antitone on the
 whole line. -/
@@ -41,7 +41,7 @@ protected theorem StrictAntiOn.Iic_union_Ici (h₁ : StrictAntiOn f (Iic a)) (h�
 protected theorem MonotoneOn.Iic_union_Ici (h₁ : MonotoneOn f (Iic a)) (h₂ : MonotoneOn f (Ici a)) : Monotone f := by
   intro x y hxy
   cases' le_totalₓ x a with hxa hax <;> [cases' le_totalₓ y a with hya hay, skip]
-  exacts[h₁ hxa hya hxy, (h₁ hxa le_rfl hxa).trans (h₂ le_rfl hay hay), h₂ hax (hax.trans hxy) hxy]
+  exacts[h₁ hxa hya hxy, (h₁ hxa le_rflₓ hxa).trans (h₂ le_rflₓ hay hay), h₂ hax (hax.trans hxy) hxy]
 
 protected theorem AntitoneOn.Iic_union_Ici (h₁ : AntitoneOn f (Iic a)) (h₂ : AntitoneOn f (Ici a)) : Antitone f :=
   (h₁.dual_right.Iic_union_Ici h₂.dual_right).dual_right
@@ -81,16 +81,16 @@ irreducible_def orderIsoIooNegOneOne (k : Type _) [LinearOrderedField k] : k ≃
     
   · refine' (strict_mono_of_odd_strict_mono_on_nonneg _ _).codRestrict _
     · intro x
-      simp only [← abs_neg, ← neg_div]
+      simp only [abs_neg, neg_div]
       
     · rintro x (hx : 0 ≤ x) y (hy : 0 ≤ y) hxy
-      simp [← abs_of_nonneg, ← mul_addₓ, ← mul_comm x y, ← div_lt_div_iff, ← hx.trans_lt (lt_one_add _), ←
+      simp [abs_of_nonneg, mul_addₓ, mul_comm x y, div_lt_div_iff, hx.trans_lt (lt_one_add _),
         hy.trans_lt (lt_one_add _), *]
       
     
   · refine' fun x => Subtype.ext _
     have : 0 < 1 - abs (x : k) := sub_pos.2 (abs_lt.2 x.2)
-    field_simp [← abs_div, ← this.ne', ← abs_of_pos this]
+    field_simp [abs_div, this.ne', abs_of_pos this]
     
 
 section Ixx
@@ -231,18 +231,17 @@ open Order
 variable {α β : Type _} [PartialOrderₓ α]
 
 theorem StrictMonoOn.Iic_id_le [SuccOrder α] [IsSuccArchimedean α] [OrderBot α] {n : α} {φ : α → α}
-    (hφ : StrictMonoOn φ (Set.Iic n)) : ∀, ∀ m ≤ n, ∀, m ≤ φ m := by
+    (hφ : StrictMonoOn φ (Set.Iic n)) : ∀ m ≤ n, m ≤ φ m := by
   revert hφ
-  refine'
-    Succ.rec_bot (fun n => StrictMonoOn φ (Set.Iic n) → ∀, ∀ m ≤ n, ∀, m ≤ φ m) (fun _ _ hm => hm.trans bot_le) _ _
+  refine' Succ.rec_bot (fun n => StrictMonoOn φ (Set.Iic n) → ∀ m ≤ n, m ≤ φ m) (fun _ _ hm => hm.trans bot_le) _ _
   rintro k ih hφ m hm
   by_cases' hk : IsMax k
   · rw [succ_eq_iff_is_max.2 hk] at hm
     exact ih (hφ.mono <| Iic_subset_Iic.2 (le_succ _)) _ hm
     
   obtain rfl | h := le_succ_iff_eq_or_le.1 hm
-  · specialize ih (StrictMonoOn.mono hφ fun x hx => le_transₓ hx (le_succ _)) k le_rfl
-    refine' le_transₓ (succ_mono ih) (succ_le_of_lt (hφ (le_succ _) le_rfl _))
+  · specialize ih (StrictMonoOn.mono hφ fun x hx => le_transₓ hx (le_succ _)) k le_rflₓ
+    refine' le_transₓ (succ_mono ih) (succ_le_of_lt (hφ (le_succ _) le_rflₓ _))
     rw [lt_succ_iff_eq_or_lt_of_not_is_max hk]
     exact Or.inl rfl
     
@@ -268,7 +267,7 @@ theorem strict_mono_on_Iic_of_lt_succ [SuccOrder α] [IsSuccArchimedean α] {n :
   · exact hψ _ (lt_of_lt_of_leₓ hxy hy)
     
   rw [Set.mem_Iic] at *
-  simp only [← Function.iterate_succ', ← Function.comp_applyₓ] at ih hxy hy⊢
+  simp only [Function.iterate_succ', Function.comp_applyₓ] at ih hxy hy⊢
   by_cases' hmax : IsMax ((succ^[k]) x)
   · rw [succ_eq_iff_is_max.2 hmax] at hxy⊢
     exact ih (le_transₓ (le_succ _) hy) hxy

@@ -248,38 +248,38 @@ theorem cseval_atom {α} [CommSemiringₓ α] (t : Tree α) (n : PosNum) :
     (atom n).IsCs ∧ cseval t (atom n) = t.getOrZero n :=
   ⟨⟨⟨1, rfl⟩, ⟨0, rfl⟩⟩, (Tactic.Ring.horner_atomₓ _).symm⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
 theorem cseval_add_const {α} [CommSemiringₓ α] (t : Tree α) (k : Num) {e : HornerExpr} (cs : e.IsCs) :
     (addConst k.toZnum e).IsCs ∧ cseval t (addConst k.toZnum e) = k + cseval t e := by
-  simp [← add_const]
+  simp [add_const]
   cases k <;> simp [*]
-  simp [←
-    show Znum.pos k ≠ 0 by
+  simp
+    [show Znum.pos k ≠ 0 by
       decide]
   induction' e with n a x n b A B <;> simp [*]
   · rcases cs with ⟨n, rfl⟩
     refine'
       ⟨⟨n + Num.pos k, by
-          simp [← add_commₓ] <;> rfl⟩,
+          simp [add_commₓ] <;> rfl⟩,
         _⟩
     cases n <;> simp
     
   · rcases B cs.2 with ⟨csb, h⟩
-    simp [*, ← cs.1]
+    simp [*, cs.1]
     rw [← Tactic.Ring.horner_add_constₓ, add_commₓ]
     rw [add_commₓ]
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
 theorem cseval_horner' {α} [CommSemiringₓ α] (t : Tree α) (a x n b) (h₁ : IsCs a) (h₂ : IsCs b) :
     (horner' a x n b).IsCs ∧
       cseval t (horner' a x n b) = Tactic.Ring.hornerₓ (cseval t a) (t.getOrZero x) n (cseval t b) :=
   by
-  cases' a with n₁ a₁ x₁ n₁ b₁ <;> simp [← horner'] <;> split_ifs
-  · simp [*, ← Tactic.Ring.hornerₓ]
+  cases' a with n₁ a₁ x₁ n₁ b₁ <;> simp [horner'] <;> split_ifs
+  · simp [*, Tactic.Ring.hornerₓ]
     
   · exact ⟨⟨h₁, h₂⟩, rfl⟩
     
@@ -291,12 +291,12 @@ theorem cseval_horner' {α} [CommSemiringₓ α] (t : Tree α) (a x n b) (h₁ :
   · exact ⟨⟨h₁, h₂⟩, rfl⟩
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
 theorem cseval_add {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerExpr} (cs₁ : e₁.IsCs) (cs₂ : e₂.IsCs) :
     (add e₁ e₂).IsCs ∧ cseval t (add e₁ e₂) = cseval t e₁ + cseval t e₂ := by
   induction' e₁ with n₁ a₁ x₁ n₁ b₁ A₁ B₁ generalizing e₂ <;> simp
@@ -305,7 +305,7 @@ theorem cseval_add {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerEx
     
   induction' e₂ with n₂ a₂ x₂ n₂ b₂ A₂ B₂ generalizing n₁ b₁
   · rcases cs₂ with ⟨n₂, rfl⟩
-    simp [← cseval_add_const t n₂ cs₁, ← add_commₓ]
+    simp [cseval_add_const t n₂ cs₁, add_commₓ]
     
   cases' cs₁ with csa₁ csb₁
   cases' id cs₂ with csa₂ csb₂
@@ -339,7 +339,7 @@ theorem cseval_add {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerEx
       all_goals
         simp [*]
       
-    · simp [← B₁ csb₁ csb₂, ← add_commₓ]
+    · simp [B₁ csb₁ csb₂, add_commₓ]
       rcases A₂ csa₂ _ _ B0 ⟨csa₁, 0, rfl⟩ with ⟨csh, h⟩
       refine' ⟨csh, Eq.symm _⟩
       rw [show id = add 0 from rfl, h]
@@ -354,7 +354,7 @@ theorem cseval_add {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerEx
         
       
     · have : (horner a₂ x₁ (Num.pos k) 0).IsCs := ⟨csa₂, 0, rfl⟩
-      simp [← B₁ csb₁ csb₂, ← A₁ csa₁ this]
+      simp [B₁ csb₁ csb₂, A₁ csa₁ this]
       symm
       apply Tactic.Ring.horner_add_horner_ltₓ
       · change (_ + k : ℕ) = _
@@ -368,14 +368,14 @@ theorem cseval_add {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerEx
   · rcases B₂ csb₂ _ _ B₁ ⟨csa₁, csb₁⟩ with ⟨csh, h⟩
     refine' ⟨⟨csa₂, csh⟩, Eq.symm _⟩
     apply Tactic.Ring.const_add_hornerₓ
-    simp [← h]
+    simp [h]
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
 theorem cseval_mul_const {α} [CommSemiringₓ α] (t : Tree α) (k : Num) {e : HornerExpr} (cs : e.IsCs) :
     (mulConst k.toZnum e).IsCs ∧ cseval t (mulConst k.toZnum e) = cseval t e * k := by
-  simp [← mul_const]
+  simp [mul_const]
   split_ifs with h h
   · cases (Num.to_znum_inj.1 h : k = 0)
     exact ⟨⟨0, rfl⟩, (mul_zero _).symm⟩
@@ -399,16 +399,16 @@ theorem cseval_mul_const {α} [CommSemiringₓ α] (t : Tree α) (k : Num) {e : 
     apply Tactic.Ring.horner_mul_constₓ <;> rfl
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
 theorem cseval_mul {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerExpr} (cs₁ : e₁.IsCs) (cs₂ : e₂.IsCs) :
     (mul e₁ e₂).IsCs ∧ cseval t (mul e₁ e₂) = cseval t e₁ * cseval t e₂ := by
   induction' e₁ with n₁ a₁ x₁ n₁ b₁ A₁ B₁ generalizing e₂ <;> simp
   · rcases cs₁ with ⟨n₁, rfl⟩
-    simpa [← mul_comm] using cseval_mul_const t n₁ cs₂
+    simpa [mul_comm] using cseval_mul_const t n₁ cs₂
     
   induction' e₂ with n₂ a₂ x₂ n₂ b₂ A₂ B₂
   · rcases cs₂ with ⟨n₂, rfl⟩
@@ -420,7 +420,7 @@ theorem cseval_mul {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerEx
   have C := PosNum.cmp_to_nat x₁ x₂
   cases' A₂ csa₂ with csA₂ hA₂
   cases PosNum.cmp x₁ x₂ <;> simp
-  · simp [← A₁ csa₁ cs₂, ← B₁ csb₁ cs₂]
+  · simp [A₁ csa₁ cs₂, B₁ csb₁ cs₂]
     symm
     apply Tactic.Ring.horner_mul_constₓ <;> rfl
     
@@ -432,7 +432,7 @@ theorem cseval_mul {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerEx
       apply Tactic.Ring.horner_mul_horner_zeroₓ <;>
         try
           rfl
-      simp [← hA₂]
+      simp [hA₂]
       
     · cases' A₁ csa₁ csb₂ with csA₁ hA₁
       cases' cseval_add t csh₁ _ with csh₂ h₂
@@ -445,7 +445,7 @@ theorem cseval_mul {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerEx
       exact ⟨csA₁, (B₁ csb₁ csb₂).1⟩
       
     
-  · simp [← A₂ csa₂, ← B₂ csb₂]
+  · simp [A₂ csa₂, B₂ csb₂]
     rw [mul_comm, eq_comm]
     apply Tactic.Ring.horner_const_mulₓ
     · apply mul_comm
@@ -458,23 +458,23 @@ theorem cseval_pow {α} [CommSemiringₓ α] (t : Tree α) {x : HornerExpr} (cs 
     ∀ n : Num, (pow x n).IsCs ∧ cseval t (pow x n) = cseval t x ^ (n : ℕ)
   | 0 => ⟨⟨1, rfl⟩, (pow_zeroₓ _).symm⟩
   | Num.pos p => by
-    simp [← pow]
+    simp [pow]
     induction' p with p ep p ep
     · simp [*]
       
-    · simp [← pow_bit1]
+    · simp [pow_bit1]
       cases' cseval_mul t ep.1 ep.1 with cs₀ h₀
       cases' cseval_mul t cs₀ cs with cs₁ h₁
       simp [*]
       
-    · simp [← pow_bit0]
+    · simp [pow_bit0]
       cases' cseval_mul t ep.1 ep.1 with cs₀ h₀
       simp [*]
       
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:353:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
 /-- For any given tree `t` of atoms and any reflected expression `r`,
 the Horner form of `r` is a valid csring expression, and under `t`,
 the Horner form evaluates to the same thing as `r`. -/
@@ -489,18 +489,18 @@ theorem cseval_of_csexpr {α} [CommSemiringₓ α] (t : Tree α) :
     let ⟨cs₂, h₂⟩ := cseval_of_csexpr y
     let ⟨cs, h⟩ := cseval_add t cs₁ cs₂
     ⟨cs, by
-      simp [← h, *]⟩
+      simp [h, *]⟩
   | csring_expr.mul x y =>
     let ⟨cs₁, h₁⟩ := cseval_of_csexpr x
     let ⟨cs₂, h₂⟩ := cseval_of_csexpr y
     let ⟨cs, h⟩ := cseval_mul t cs₁ cs₂
     ⟨cs, by
-      simp [← h, *]⟩
+      simp [h, *]⟩
   | csring_expr.pow x n =>
     let ⟨cs, h⟩ := cseval_of_csexpr x
     let ⟨cs, h⟩ := cseval_pow t cs n
     ⟨cs, by
-      simp [← h, *]⟩
+      simp [h, *]⟩
 
 end HornerExpr
 
@@ -575,7 +575,7 @@ open Tactic.Ring2
 -- mathport name: «expr ?»
 local postfix:1024 "?" => optionalₓ
 
--- ./././Mathport/Syntax/Translate/Basic.lean:1093:4: warning: unsupported (TODO): `[tacs]
+-- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 /-- `ring2` solves equations in the language of rings.
 
 It supports only the commutative semiring operations, i.e. it does not normalize subtraction or

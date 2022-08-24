@@ -218,19 +218,19 @@ theorem neg_le_one_iff {a : α} : a⁻ ≤ 1 ↔ a⁻¹ ≤ 1 := by
 @[to_additive]
 theorem pos_eq_one_iff {a : α} : a⁺ = 1 ↔ a ≤ 1 := by
   rw [le_antisymm_iffₓ]
-  simp only [← one_le_pos, ← and_trueₓ]
+  simp only [one_le_pos, and_trueₓ]
   exact pos_le_one_iff
 
 @[to_additive]
 theorem neg_eq_one_iff' {a : α} : a⁻ = 1 ↔ a⁻¹ ≤ 1 := by
   rw [le_antisymm_iffₓ]
-  simp only [← one_le_neg, ← and_trueₓ]
+  simp only [one_le_neg, and_trueₓ]
   rw [neg_le_one_iff]
 
 @[to_additive]
 theorem neg_eq_one_iff [CovariantClass α α Mul.mul LE.le] {a : α} : a⁻ = 1 ↔ 1 ≤ a := by
   rw [le_antisymm_iffₓ]
-  simp only [← one_le_neg, ← and_trueₓ]
+  simp only [one_le_neg, and_trueₓ]
   rw [neg_le_one_iff, inv_le_one']
 
 @[to_additive le_pos]
@@ -251,7 +251,7 @@ theorem neg_eq_pos_inv (a : α) : a⁻ = a⁻¹⁺ :=
 -- a⁺ = (-a)⁻
 @[to_additive]
 theorem pos_eq_neg_inv (a : α) : a⁺ = a⁻¹⁻ := by
-  simp [← neg_eq_pos_inv]
+  simp [neg_eq_pos_inv]
 
 -- We use this in Bourbaki A.VI.12  Prop 9 a)
 -- c + (a ⊓ b) = (c + a) ⊓ (c + b)
@@ -537,7 +537,7 @@ theorem m_Birkhoff_inequalities [CovariantClass α α (· * ·) (· ≤ ·)] (a 
 -- Banasiak Proposition 2.12, Zaanen 2nd lecture
 /-- The absolute value satisfies the triangle inequality.
 -/
-@[to_additive abs_add_le]
+@[to_additive abs_add_le "The absolute value satisfies the triangle inequality."]
 theorem mabs_mul_le [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : abs (a * b) ≤ abs a * abs b := by
   apply sup_le
   · exact mul_le_mul' (le_mabs a) (le_mabs b)

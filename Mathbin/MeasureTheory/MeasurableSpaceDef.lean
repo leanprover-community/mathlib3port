@@ -106,7 +106,7 @@ theorem MeasurableSet.Union [Encodable β] ⦃f : β → Set α⦄ (h : ∀ b, M
   rw [← Encodable.Union_decode₂]
   exact ‹MeasurableSpace α›.measurable_set_Union _ (MeasurableSet.bUnion_decode₂ h)
 
-theorem MeasurableSet.bUnion {f : β → Set α} {s : Set β} (hs : s.Countable) (h : ∀, ∀ b ∈ s, ∀, MeasurableSet (f b)) :
+theorem MeasurableSet.bUnion {f : β → Set α} {s : Set β} (hs : s.Countable) (h : ∀ b ∈ s, MeasurableSet (f b)) :
     MeasurableSet (⋃ b ∈ s, f b) := by
   rw [bUnion_eq_Union]
   haveI := hs.to_encodable
@@ -116,25 +116,25 @@ theorem MeasurableSet.bUnion {f : β → Set α} {s : Set β} (hs : s.Countable)
         simpa using h)
 
 theorem Set.Finite.measurable_set_bUnion {f : β → Set α} {s : Set β} (hs : s.Finite)
-    (h : ∀, ∀ b ∈ s, ∀, MeasurableSet (f b)) : MeasurableSet (⋃ b ∈ s, f b) :=
+    (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋃ b ∈ s, f b) :=
   MeasurableSet.bUnion hs.Countable h
 
-theorem Finset.measurable_set_bUnion {f : β → Set α} (s : Finset β) (h : ∀, ∀ b ∈ s, ∀, MeasurableSet (f b)) :
+theorem Finset.measurable_set_bUnion {f : β → Set α} (s : Finset β) (h : ∀ b ∈ s, MeasurableSet (f b)) :
     MeasurableSet (⋃ b ∈ s, f b) :=
   s.finite_to_set.measurable_set_bUnion h
 
-theorem MeasurableSet.sUnion {s : Set (Set α)} (hs : s.Countable) (h : ∀, ∀ t ∈ s, ∀, MeasurableSet t) :
+theorem MeasurableSet.sUnion {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, MeasurableSet t) :
     MeasurableSet (⋃₀s) := by
   rw [sUnion_eq_bUnion]
   exact MeasurableSet.bUnion hs h
 
-theorem Set.Finite.measurable_set_sUnion {s : Set (Set α)} (hs : s.Finite) (h : ∀, ∀ t ∈ s, ∀, MeasurableSet t) :
+theorem Set.Finite.measurable_set_sUnion {s : Set (Set α)} (hs : s.Finite) (h : ∀ t ∈ s, MeasurableSet t) :
     MeasurableSet (⋃₀s) :=
   MeasurableSet.sUnion hs.Countable h
 
 theorem MeasurableSet.Union_Prop {p : Prop} {f : p → Set α} (hf : ∀ b, MeasurableSet (f b)) :
     MeasurableSet (⋃ b, f b) := by
-  by_cases' p <;> simp [← h, ← hf, ← MeasurableSet.empty]
+  by_cases' p <;> simp [h, hf, MeasurableSet.empty]
 
 theorem MeasurableSet.Inter [Encodable β] {f : β → Set α} (h : ∀ b, MeasurableSet (f b)) : MeasurableSet (⋂ b, f b) :=
   MeasurableSet.compl_iff.1 <| by
@@ -155,32 +155,32 @@ theorem MeasurableSet.Inter_fintype [Fintype β] {f : β → Set α} (h : ∀ b,
 
 end Fintype
 
-theorem MeasurableSet.bInter {f : β → Set α} {s : Set β} (hs : s.Countable) (h : ∀, ∀ b ∈ s, ∀, MeasurableSet (f b)) :
+theorem MeasurableSet.bInter {f : β → Set α} {s : Set β} (hs : s.Countable) (h : ∀ b ∈ s, MeasurableSet (f b)) :
     MeasurableSet (⋂ b ∈ s, f b) :=
   MeasurableSet.compl_iff.1 <| by
     rw [compl_Inter₂]
     exact MeasurableSet.bUnion hs fun b hb => (h b hb).compl
 
 theorem Set.Finite.measurable_set_bInter {f : β → Set α} {s : Set β} (hs : s.Finite)
-    (h : ∀, ∀ b ∈ s, ∀, MeasurableSet (f b)) : MeasurableSet (⋂ b ∈ s, f b) :=
+    (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋂ b ∈ s, f b) :=
   MeasurableSet.bInter hs.Countable h
 
-theorem Finset.measurable_set_bInter {f : β → Set α} (s : Finset β) (h : ∀, ∀ b ∈ s, ∀, MeasurableSet (f b)) :
+theorem Finset.measurable_set_bInter {f : β → Set α} (s : Finset β) (h : ∀ b ∈ s, MeasurableSet (f b)) :
     MeasurableSet (⋂ b ∈ s, f b) :=
   s.finite_to_set.measurable_set_bInter h
 
-theorem MeasurableSet.sInter {s : Set (Set α)} (hs : s.Countable) (h : ∀, ∀ t ∈ s, ∀, MeasurableSet t) :
+theorem MeasurableSet.sInter {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, MeasurableSet t) :
     MeasurableSet (⋂₀ s) := by
   rw [sInter_eq_bInter]
   exact MeasurableSet.bInter hs h
 
-theorem Set.Finite.measurable_set_sInter {s : Set (Set α)} (hs : s.Finite) (h : ∀, ∀ t ∈ s, ∀, MeasurableSet t) :
+theorem Set.Finite.measurable_set_sInter {s : Set (Set α)} (hs : s.Finite) (h : ∀ t ∈ s, MeasurableSet t) :
     MeasurableSet (⋂₀ s) :=
   MeasurableSet.sInter hs.Countable h
 
 theorem MeasurableSet.Inter_Prop {p : Prop} {f : p → Set α} (hf : ∀ b, MeasurableSet (f b)) :
     MeasurableSet (⋂ b, f b) := by
-  by_cases' p <;> simp [← h, ← hf, ← MeasurableSet.univ]
+  by_cases' p <;> simp [h, hf, MeasurableSet.univ]
 
 @[simp]
 theorem MeasurableSet.union {s₁ s₂ : Set α} (h₁ : MeasurableSet s₁) (h₂ : MeasurableSet s₂) : MeasurableSet (s₁ ∪ s₂) :=
@@ -220,7 +220,7 @@ theorem MeasurableSet.disjointed {f : ℕ → Set α} (h : ∀ i, MeasurableSet 
 
 @[simp]
 theorem MeasurableSet.const (p : Prop) : MeasurableSet { a : α | p } := by
-  by_cases' p <;> simp [← h, ← MeasurableSet.empty] <;> apply MeasurableSet.univ
+  by_cases' p <;> simp [h, MeasurableSet.empty] <;> apply MeasurableSet.univ
 
 /-- Every set has a measurable superset. Declare this as local instance as needed. -/
 theorem nonempty_measurable_superset (s : Set α) : Nonempty { t // s ⊆ t ∧ MeasurableSet t } :=
@@ -301,7 +301,7 @@ instance : PartialOrderₓ (MeasurableSpace α) :=
 
 /-- The smallest σ-algebra containing a collection `s` of basic sets -/
 inductive GenerateMeasurable (s : Set (Set α)) : Set α → Prop
-  | basic : ∀, ∀ u ∈ s, ∀, generate_measurable u
+  | basic : ∀ u ∈ s, generate_measurable u
   | Empty : generate_measurable ∅
   | compl : ∀ s, generate_measurable s → generate_measurable (sᶜ)
   | union : ∀ f : ℕ → Set α, (∀ n, generate_measurable (f n)) → generate_measurable (⋃ i, f i)
@@ -317,13 +317,13 @@ theorem measurable_set_generate_from {s : Set (Set α)} {t : Set α} (ht : t ∈
   GenerateMeasurable.basic t ht
 
 @[elabAsElim]
-theorem generate_from_induction (p : Set α → Prop) (C : Set (Set α)) (hC : ∀, ∀ t ∈ C, ∀, p t) (h_empty : p ∅)
+theorem generate_from_induction (p : Set α → Prop) (C : Set (Set α)) (hC : ∀ t ∈ C, p t) (h_empty : p ∅)
     (h_compl : ∀ t, p t → p (tᶜ)) (h_Union : ∀ f : ℕ → Set α, (∀ n, p (f n)) → p (⋃ i, f i)) {s : Set α}
     (hs : measurable_set[generateFrom C] s) : p s := by
   induction hs
   exacts[hC _ hs_H, h_empty, h_compl _ hs_ih, h_Union hs_f hs_ih]
 
-theorem generate_from_le {s : Set (Set α)} {m : MeasurableSpace α} (h : ∀, ∀ t ∈ s, ∀, measurable_set[m] t) :
+theorem generate_from_le {s : Set (Set α)} {m : MeasurableSpace α} (h : ∀ t ∈ s, measurable_set[m] t) :
     generateFrom s ≤ m := fun t (ht : GenerateMeasurable s t) =>
   ht.recOn h (measurable_set_empty m) (fun s _ hs => measurable_set_compl m s hs) fun f _ hf =>
     measurable_set_Union m f hf
@@ -357,7 +357,7 @@ theorem mk_of_closure_sets {s : Set (Set α)} {hs : { t | measurable_set[generat
 def giGenerateFrom : GaloisInsertion (@generateFrom α) fun m => { t | @MeasurableSet α m t } where
   gc := fun s => generate_from_le_iff
   le_l_u := fun m s => measurable_set_generate_from
-  choice := fun g hg => MeasurableSpace.mkOfClosure g <| le_antisymmₓ hg <| (generate_from_le_iff _).1 le_rfl
+  choice := fun g hg => MeasurableSpace.mkOfClosure g <| le_antisymmₓ hg <| (generate_from_le_iff _).1 le_rflₓ
   choice_eq := fun g hg => mk_of_closure_sets
 
 instance : CompleteLattice (MeasurableSpace α) :=
@@ -401,7 +401,7 @@ theorem measurable_set_bot_iff {s : Set α} : @MeasurableSet α ⊥ s ↔ s = �
   let b : MeasurableSpace α :=
     { MeasurableSet' := fun s => s = ∅ ∨ s = univ, measurable_set_empty := Or.inl rfl,
       measurable_set_compl := by
-        simp (config := { contextual := true })[← or_imp_distrib],
+        simp (config := { contextual := true })[or_imp_distrib],
       measurable_set_Union := fun f hf =>
         Classical.by_cases
           (fun h : ∃ i, f i = univ =>
@@ -431,7 +431,7 @@ theorem measurable_set_inf {m₁ m₂ : MeasurableSpace α} {s : Set α} :
 
 @[simp]
 theorem measurable_set_Inf {ms : Set (MeasurableSpace α)} {s : Set α} :
-    @MeasurableSet _ (inf ms) s ↔ ∀, ∀ m ∈ ms, ∀, @MeasurableSet _ m s :=
+    @MeasurableSet _ (inf ms) s ↔ ∀ m ∈ ms, @MeasurableSet _ m s :=
   show s ∈ ⋂₀ _ ↔ _ by
     simp
 
@@ -447,11 +447,11 @@ theorem measurable_set_sup {m₁ m₂ : MeasurableSpace α} {s : Set α} :
 theorem measurable_set_Sup {ms : Set (MeasurableSpace α)} {s : Set α} :
     measurable_set[sup ms] s ↔ GenerateMeasurable { s : Set α | ∃ m ∈ ms, measurable_set[m] s } s := by
   change @measurable_set' _ (generate_from <| ⋃₀_) _ ↔ _
-  simp [← generate_from, set_of_exists]
+  simp [generate_from, ← set_of_exists]
 
 theorem measurable_set_supr {ι} {m : ι → MeasurableSpace α} {s : Set α} :
     @MeasurableSet _ (supr m) s ↔ GenerateMeasurable { s : Set α | ∃ i, measurable_set[m i] s } s := by
-  simp only [← supr, ← measurable_set_Sup, ← exists_range_iff]
+  simp only [supr, measurable_set_Sup, exists_range_iff]
 
 theorem measurable_space_supr_eq (m : ι → MeasurableSpace α) :
     (⨆ n, m n) = MeasurableSpace.generateFrom { s | ∃ n, measurable_set[m n] s } := by

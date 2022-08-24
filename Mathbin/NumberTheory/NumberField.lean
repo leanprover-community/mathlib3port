@@ -94,16 +94,16 @@ def ringOfIntegersAlgebra [Algebra K L] : Algebra (𝓞 K) (𝓞 L) :=
     { toFun := fun k => ⟨algebraMap K L k, IsIntegral.algebra_map k.2⟩,
       map_zero' :=
         Subtype.ext <| by
-          simp only [← Subtype.coe_mk, ← Subalgebra.coe_zero, ← map_zero],
+          simp only [Subtype.coe_mk, Subalgebra.coe_zero, map_zero],
       map_one' :=
         Subtype.ext <| by
-          simp only [← Subtype.coe_mk, ← Subalgebra.coe_one, ← map_one],
+          simp only [Subtype.coe_mk, Subalgebra.coe_one, map_one],
       map_add' := fun x y =>
         Subtype.ext <| by
-          simp only [← map_add, ← Subalgebra.coe_add, ← Subtype.coe_mk],
+          simp only [map_add, Subalgebra.coe_add, Subtype.coe_mk],
       map_mul' := fun x y =>
         Subtype.ext <| by
-          simp only [← Subalgebra.coe_mul, ← map_mul, ← Subtype.coe_mk] }
+          simp only [Subalgebra.coe_mul, map_mul, Subtype.coe_mk] }
 
 namespace RingOfIntegers
 
@@ -222,7 +222,7 @@ theorem range_eq_roots (F K A : Type _) [Field F] [NumberField F] [Field K] [Num
   · rintro ⟨ψ, hψ⟩
     rw [mem_root_set_iff, ← hψ]
     · rw [aeval_alg_hom_apply ψ x (minpoly F x)]
-      simp only [← minpoly.aeval, ← map_zero]
+      simp only [minpoly.aeval, map_zero]
       
     exact minpoly.ne_zero hx
     

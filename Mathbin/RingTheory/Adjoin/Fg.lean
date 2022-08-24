@@ -167,7 +167,7 @@ theorem induction_on_adjoin [IsNoetherian R A] (P : Subalgebra R A → Prop) (ba
     
   intro x t hxt h
   rw [Finset.coe_insert]
-  simpa only [← Algebra.adjoin_insert_adjoin] using ih _ x h
+  simpa only [Algebra.adjoin_insert_adjoin] using ih _ x h
 
 end Subalgebra
 

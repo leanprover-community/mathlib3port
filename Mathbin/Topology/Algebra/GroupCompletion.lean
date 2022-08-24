@@ -164,7 +164,7 @@ instance {M} [Monoidₓ M] [DistribMulAction M α] [HasUniformContinuousConstSmu
         (is_closed_eq ((continuous_fst.add continuous_snd).const_smul _)
           ((continuous_fst.const_smul _).add (continuous_snd.const_smul _)))
         fun a b => by
-        simp only [coe_add, coe_smul, ← smul_add],
+        simp only [← coe_add, ← coe_smul, smul_add],
     smul_zero := fun r => by
       rw [← coe_zero, ← coe_smul, smul_zero r] }
 
@@ -248,10 +248,10 @@ theorem AddMonoidHom.completion_zero : (0 : α →+ β).Completion continuous_co
   ext x
   apply completion.induction_on x
   · apply is_closed_eq ((0 : α →+ β).continuous_completion continuous_const)
-    simp [← continuous_const]
+    simp [continuous_const]
     
   · intro a
-    simp [← (0 : α →+ β).completion_coe continuous_const, ← coe_zero]
+    simp [(0 : α →+ β).completion_coe continuous_const, coe_zero]
     
 
 theorem AddMonoidHom.completion_add {γ : Type _} [AddCommGroupₓ γ] [UniformSpace γ] [UniformAddGroup γ] (f g : α →+ γ)
@@ -263,7 +263,7 @@ theorem AddMonoidHom.completion_add {γ : Type _} [AddCommGroupₓ γ] [UniformS
       is_closed_eq ((f + g).continuous_completion hfg) ((f.continuous_completion hf).add (g.continuous_completion hg))
     
   · intro a
-    simp [← (f + g).completion_coe hfg, ← coe_add, ← f.completion_coe hf, ← g.completion_coe hg]
+    simp [(f + g).completion_coe hfg, coe_add, f.completion_coe hf, g.completion_coe hg]
     
 
 end AddMonoidHom

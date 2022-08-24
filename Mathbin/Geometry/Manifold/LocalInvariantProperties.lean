@@ -69,7 +69,7 @@ structure LocalInvariantProp (P : (H → H') → Set H → H → Prop) : Prop wh
   is_local : ∀ {s x u} {f : H → H'}, IsOpen u → x ∈ u → (P f s x ↔ P f (s ∩ u) x)
   right_invariance' :
     ∀ {s x f} {e : LocalHomeomorph H H}, e ∈ G → x ∈ e.Source → P f s x → P (f ∘ e.symm) (e.symm ⁻¹' s) (e x)
-  congr_of_forall : ∀ {s x} {f g : H → H'}, (∀, ∀ y ∈ s, ∀, f y = g y) → f x = g x → P f s x → P g s x
+  congr_of_forall : ∀ {s x} {f g : H → H'}, (∀ y ∈ s, f y = g y) → f x = g x → P f s x → P g s x
   left_invariance' :
     ∀ {s x f} {e' : LocalHomeomorph H' H'}, e' ∈ G' → s ⊆ f ⁻¹' e'.Source → f x ∈ e'.Source → P f s x → P (e' ∘ f) s x
 
@@ -162,7 +162,7 @@ def LiftPropWithinAt (P : (H → H') → Set H → H → Prop) (f : M → M') (s
 a corresponding property of functions on sets in a charted space, by requiring that it holds
 around each point of the set, in the preferred charts. -/
 def LiftPropOn (P : (H → H') → Set H → H → Prop) (f : M → M') (s : Set M) :=
-  ∀, ∀ x ∈ s, ∀, LiftPropWithinAt P f s x
+  ∀ x ∈ s, LiftPropWithinAt P f s x
 
 /-- Given a property of germs of functions and sets in the model space, then one defines
 a corresponding property of a function at a point in a charted space, by requiring that it holds
@@ -198,7 +198,7 @@ theorem lift_prop_within_at_univ : LiftPropWithinAt P g Univ x ↔ LiftPropAt P 
   Iff.rfl
 
 theorem lift_prop_on_univ : LiftPropOn P g Univ ↔ LiftProp P g := by
-  simp [← lift_prop_on, ← lift_prop, ← lift_prop_at]
+  simp [lift_prop_on, lift_prop, lift_prop_at]
 
 theorem lift_prop_within_at_self {f : H → H'} {s : Set H} {x : H} :
     LiftPropWithinAt P f s x ↔ ContinuousWithinAt f s x ∧ P f s x :=
@@ -236,7 +236,7 @@ theorem lift_prop_within_at_indep_chart_source_aux (g : M → H') (he : e ∈ G.
     P (g ∘ e.symm) (e.symm ⁻¹' s) (e x) ↔ P (g ∘ e'.symm) (e'.symm ⁻¹' s) (e' x) := by
   rw [← hG.right_invariance (compatible_of_mem_maximal_atlas he he')]
   swap
-  · simp' only [← xe, ← xe'] with mfld_simps
+  · simp' only [xe, xe'] with mfld_simps
     
   simp_rw [LocalHomeomorph.trans_apply, e.left_inv xe]
   rw [hG.congr_iff]
@@ -260,11 +260,11 @@ theorem lift_prop_within_at_indep_chart_target_aux2 (g : H → M') {x : H} {s : 
   rw [←
     hG.left_invariance (compatible_of_mem_maximal_atlas hf hf') hcont
       (by
-        simp' only [← xf, ← xf'] with mfld_simps)]
+        simp' only [xf, xf'] with mfld_simps)]
   refine'
     hG.congr_iff_nhds_within _
       (by
-        simp' only [← xf] with mfld_simps)
+        simp' only [xf] with mfld_simps)
   exact (hgs.eventually <| f.eventually_left_inverse xf).mono fun y => congr_arg f'
 
 theorem lift_prop_within_at_indep_chart_target_aux {g : X → M'} {e : LocalHomeomorph X H} {x : X} {s : Set X}
@@ -352,7 +352,7 @@ theorem lift_prop_within_at_of_lift_prop_at_of_mem_nhds (h : LiftPropAt P g x) (
     LiftPropWithinAt P g s x := by
   rwa [← univ_inter s, hG.lift_prop_within_at_inter hs]
 
-theorem lift_prop_on_of_locally_lift_prop_on (h : ∀, ∀ x ∈ s, ∀, ∃ u, IsOpen u ∧ x ∈ u ∧ LiftPropOn P g (s ∩ u)) :
+theorem lift_prop_on_of_locally_lift_prop_on (h : ∀ x ∈ s, ∃ u, IsOpen u ∧ x ∈ u ∧ LiftPropOn P g (s ∩ u)) :
     LiftPropOn P g s := by
   intro x hx
   rcases h x hx with ⟨u, u_open, xu, hu⟩
@@ -363,7 +363,7 @@ theorem lift_prop_on_of_locally_lift_prop_on (h : ∀, ∀ x ∈ s, ∀, ∃ u, 
 theorem lift_prop_of_locally_lift_prop_on (h : ∀ x, ∃ u, IsOpen u ∧ x ∈ u ∧ LiftPropOn P g u) : LiftProp P g := by
   rw [← lift_prop_on_univ]
   apply hG.lift_prop_on_of_locally_lift_prop_on fun x hx => _
-  simp [← h x]
+  simp [h x]
 
 theorem lift_prop_within_at_congr_of_eventually_eq (h : LiftPropWithinAt P g s x) (h₁ : g' =ᶠ[𝓝[s] x] g)
     (hx : g' x = g x) : LiftPropWithinAt P g' s x := by
@@ -385,11 +385,11 @@ theorem lift_prop_within_at_congr_iff_of_eventually_eq (h₁ : g' =ᶠ[𝓝[s] x
   ⟨fun h => hG.lift_prop_within_at_congr_of_eventually_eq h h₁.symm hx.symm, fun h =>
     hG.lift_prop_within_at_congr_of_eventually_eq h h₁ hx⟩
 
-theorem lift_prop_within_at_congr_iff (h₁ : ∀, ∀ y ∈ s, ∀, g' y = g y) (hx : g' x = g x) :
+theorem lift_prop_within_at_congr_iff (h₁ : ∀ y ∈ s, g' y = g y) (hx : g' x = g x) :
     LiftPropWithinAt P g' s x ↔ LiftPropWithinAt P g s x :=
   hG.lift_prop_within_at_congr_iff_of_eventually_eq (eventually_nhds_within_of_forall h₁) hx
 
-theorem lift_prop_within_at_congr (h : LiftPropWithinAt P g s x) (h₁ : ∀, ∀ y ∈ s, ∀, g' y = g y) (hx : g' x = g x) :
+theorem lift_prop_within_at_congr (h : LiftPropWithinAt P g s x) (h₁ : ∀ y ∈ s, g' y = g y) (hx : g' x = g x) :
     LiftPropWithinAt P g' s x :=
   (hG.lift_prop_within_at_congr_iff h₁ hx).mpr h
 
@@ -402,10 +402,10 @@ theorem lift_prop_at_congr_iff_of_eventually_eq (h₁ : g' =ᶠ[𝓝 x] g) : Lif
 theorem lift_prop_at_congr_of_eventually_eq (h : LiftPropAt P g x) (h₁ : g' =ᶠ[𝓝 x] g) : LiftPropAt P g' x :=
   (hG.lift_prop_at_congr_iff_of_eventually_eq h₁).mpr h
 
-theorem lift_prop_on_congr (h : LiftPropOn P g s) (h₁ : ∀, ∀ y ∈ s, ∀, g' y = g y) : LiftPropOn P g' s := fun x hx =>
+theorem lift_prop_on_congr (h : LiftPropOn P g s) (h₁ : ∀ y ∈ s, g' y = g y) : LiftPropOn P g' s := fun x hx =>
   hG.lift_prop_within_at_congr (h x hx) h₁ (h₁ x hx)
 
-theorem lift_prop_on_congr_iff (h₁ : ∀, ∀ y ∈ s, ∀, g' y = g y) : LiftPropOn P g' s ↔ LiftPropOn P g s :=
+theorem lift_prop_on_congr_iff (h₁ : ∀ y ∈ s, g' y = g y) : LiftPropOn P g' s ↔ LiftPropOn P g s :=
   ⟨fun h => hG.lift_prop_on_congr h fun y hy => (h₁ y hy).symm, fun h => hG.lift_prop_on_congr h h₁⟩
 
 omit hG
@@ -415,7 +415,7 @@ theorem lift_prop_within_at_mono (mono : ∀ ⦃s x t⦄ ⦃f : H → H'⦄, t �
   refine' ⟨h.1.mono hst, _⟩
   apply mono (fun y hy => _) h.2
   simp' only with mfld_simps  at hy
-  simp' only [← hy, ← hst _] with mfld_simps
+  simp' only [hy, hst _] with mfld_simps
 
 theorem lift_prop_within_at_of_lift_prop_at (mono : ∀ ⦃s x t⦄ ⦃f : H → H'⦄, t ⊆ s → P f s x → P f t x)
     (h : LiftPropAt P g x) : LiftPropWithinAt P g s x := by
@@ -448,10 +448,10 @@ theorem lift_prop_at_symm_of_mem_maximal_atlas [HasGroupoid M G] {x : H} (hG : G
   · have A : e.symm ⁻¹' e.source ∩ e.target = e.target := by
       mfld_set_tac
     have : e.symm x ∈ e.source := by
-      simp' only [← hx] with mfld_simps
+      simp' only [hx] with mfld_simps
     rw [lift_prop_at, hG.lift_prop_within_at_indep_chart G.id_mem_maximal_atlas (mem_univ _) he this]
     refine' ⟨(e.symm.continuous_at hx).ContinuousWithinAt, _⟩
-    simp' only [← h] with mfld_simps
+    simp' only [h] with mfld_simps
     
   exact hG.congr' (e.eventually_right_inverse hx) (hQ x)
 
@@ -517,22 +517,22 @@ theorem is_local_structomorph_within_at_local_invariant_prop [ClosedUnderRestric
           
         · have : s ∩ u ∩ e.source = s ∩ (e.source ∩ u) := by
             mfld_set_tac
-          simpa only [← this, ← interior_interior, ← hu.interior_eq] with mfld_simps using hef
+          simpa only [this, interior_interior, hu.interior_eq] with mfld_simps using hef
           
-        · simp' only [*, ← interior_interior, ← hu.interior_eq] with mfld_simps
+        · simp' only [*, interior_interior, hu.interior_eq] with mfld_simps
           
         ,
     right_invariance' := by
       intro s x f e' he'G he'x h hx
       have hxs : x ∈ s := by
-        simpa only [← e'.left_inv he'x] with mfld_simps using hx
+        simpa only [e'.left_inv he'x] with mfld_simps using hx
       rcases h hxs with ⟨e, heG, hef, hex⟩
       refine' ⟨e'.symm.trans e, G.trans (G.symm he'G) heG, _, _⟩
       · intro y hy
         simp' only with mfld_simps  at hy
-        simp' only [← hef ⟨hy.1, hy.2.2⟩] with mfld_simps
+        simp' only [hef ⟨hy.1, hy.2.2⟩] with mfld_simps
         
-      · simp' only [← hex, ← he'x] with mfld_simps
+      · simp' only [hex, he'x] with mfld_simps
         ,
     congr_of_forall := by
       intro s x f g hfgs hfg' h hx
@@ -546,9 +546,9 @@ theorem is_local_structomorph_within_at_local_invariant_prop [ClosedUnderRestric
       refine' ⟨e.trans e', G.trans heG he'G, _, _⟩
       · intro y hy
         simp' only with mfld_simps  at hy
-        simp' only [← hef ⟨hy.1, hy.2.1⟩] with mfld_simps
+        simp' only [hef ⟨hy.1, hy.2.1⟩] with mfld_simps
         
-      · simpa only [← hex, ← hef ⟨hx, hex⟩] with mfld_simps using hfx
+      · simpa only [hex, hef ⟨hx, hex⟩] with mfld_simps using hfx
          }
 
 end LocalStructomorph

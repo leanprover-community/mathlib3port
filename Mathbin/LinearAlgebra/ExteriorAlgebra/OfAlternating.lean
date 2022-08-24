@@ -50,12 +50,12 @@ def liftAlternating : (∀ i, AlternatingMap R M N (Finₓ i)) →ₗ[R] Exterio
         fun c m f => _
     all_goals
       ext i : 1
-      simp only [← map_smul, ← map_add, ← Pi.add_apply, ← Pi.smul_apply, ← AlternatingMap.curry_left_add, ←
-        AlternatingMap.curry_left_smul, ← map_add, ← map_smul, ← LinearMap.add_apply, ← LinearMap.smul_apply]
+      simp only [map_smul, map_add, Pi.add_apply, Pi.smul_apply, AlternatingMap.curry_left_add,
+        AlternatingMap.curry_left_smul, map_add, map_smul, LinearMap.add_apply, LinearMap.smul_apply]
     
   · -- when applied twice with the same `m`, this recursive step produces 0
     intro m x
-    dsimp' only [← LinearMap.mk₂_apply, ← QuadraticForm.coe_fn_zero, ← Pi.zero_apply]
+    dsimp' only [LinearMap.mk₂_apply, QuadraticForm.coe_fn_zero, Pi.zero_apply]
     simp_rw [zero_smul]
     ext i : 1
     exact AlternatingMap.curry_left_same _ _
@@ -63,20 +63,20 @@ def liftAlternating : (∀ i, AlternatingMap R M N (Finₓ i)) →ₗ[R] Exterio
 
 @[simp]
 theorem lift_alternating_ι (f : ∀ i, AlternatingMap R M N (Finₓ i)) (m : M) : liftAlternating f (ι R m) = f 1 ![m] := by
-  dsimp' [← lift_alternating]
+  dsimp' [lift_alternating]
   rw [foldl_ι, LinearMap.mk₂_apply, AlternatingMap.curry_left_apply_apply]
   congr
 
 theorem lift_alternating_ι_mul (f : ∀ i, AlternatingMap R M N (Finₓ i)) (m : M) (x : ExteriorAlgebra R M) :
     liftAlternating f (ι R m * x) = liftAlternating (fun i => (f i.succ).curryLeft m) x := by
-  dsimp' [← lift_alternating]
+  dsimp' [lift_alternating]
   rw [foldl_mul, foldl_ι]
   rfl
 
 @[simp]
 theorem lift_alternating_one (f : ∀ i, AlternatingMap R M N (Finₓ i)) :
     liftAlternating f (1 : ExteriorAlgebra R M) = f 0 0 := by
-  dsimp' [← lift_alternating]
+  dsimp' [lift_alternating]
   rw [foldl_one]
 
 @[simp]

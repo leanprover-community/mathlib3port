@@ -362,7 +362,7 @@ theorem submartingale_of_set_integral_le_succ [IsFiniteMeasure μ] {f : ℕ → 
     Submartingale f 𝒢 μ := by
   refine' submartingale_of_set_integral_le hadp hint fun i j hij s hs => _
   induction' hij with k hk₁ hk₂
-  · exact le_rfl
+  · exact le_rflₓ
     
   · exact le_transₓ hk₂ (hf k s (𝒢.mono hk₁ _ hs))
     
@@ -373,7 +373,7 @@ theorem supermartingale_of_set_integral_succ_le [IsFiniteMeasure μ] {f : ℕ �
     Supermartingale f 𝒢 μ := by
   rw [← neg_negₓ f]
   refine' (submartingale_of_set_integral_le_succ hadp.neg (fun i => (hint i).neg) _).neg
-  simpa only [← integral_neg, ← Pi.neg_apply, ← neg_le_neg_iff]
+  simpa only [integral_neg, Pi.neg_apply, neg_le_neg_iff]
 
 theorem martingale_of_set_integral_eq_succ [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
     (hint : ∀ i, Integrable (f i) μ)
@@ -414,7 +414,7 @@ theorem supermartingale_of_condexp_sub_nonneg_nat [IsFiniteMeasure μ] {f : ℕ 
     (hint : ∀ i, Integrable (f i) μ) (hf : ∀ i, 0 ≤ᵐ[μ] μ[f i - f (i + 1)|𝒢 i]) : Supermartingale f 𝒢 μ := by
   rw [← neg_negₓ f]
   refine' (submartingale_of_condexp_sub_nonneg_nat hadp.neg (fun i => (hint i).neg) _).neg
-  simpa only [← Pi.zero_apply, ← Pi.neg_apply, ← neg_sub_neg]
+  simpa only [Pi.zero_apply, Pi.neg_apply, neg_sub_neg]
 
 theorem martingale_of_condexp_sub_eq_zero_nat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
     (hint : ∀ i, Integrable (f i) μ) (hf : ∀ i, μ[f (i + 1) - f i|𝒢 i] =ᵐ[μ] 0) : Martingale f 𝒢 μ := by
@@ -425,7 +425,7 @@ theorem martingale_of_condexp_sub_eq_zero_nat [IsFiniteMeasure μ] {f : ℕ → 
   rw [← neg_sub]
   refine' (eventually_eq.trans _ (condexp_neg _).symm).le
   filter_upwards [hf i] with x hx
-  simpa only [← Pi.zero_apply, ← Pi.neg_apply, ← zero_eq_neg]
+  simpa only [Pi.zero_apply, Pi.neg_apply, zero_eq_neg]
 
 namespace Submartingale
 
@@ -442,7 +442,7 @@ theorem expected_stopped_value_mono [SigmaFiniteFiltration μ 𝒢] {f : ℕ →
     (hτ : IsStoppingTime 𝒢 τ) (hπ : IsStoppingTime 𝒢 π) (hle : τ ≤ π) {N : ℕ} (hbdd : ∀ x, π x ≤ N) :
     μ[stoppedValue f τ] ≤ μ[stoppedValue f π] := by
   rw [← sub_nonneg, ← integral_sub', stopped_value_sub_eq_sum' hle hbdd]
-  · simp only [← Finset.sum_apply]
+  · simp only [Finset.sum_apply]
     have : ∀ i, measurable_set[𝒢 i] { ω : Ω | τ ω ≤ i ∧ i < π ω } := by
       intro i
       refine' (hτ i).inter _
@@ -483,7 +483,7 @@ theorem submartingale_of_expected_stopped_value_mono [IsFiniteMeasure μ] {f : �
   classical
   specialize
     hf (s.piecewise (fun _ => i) fun _ => j) _ (is_stopping_time_piecewise_const hij hs) (is_stopping_time_const 𝒢 j)
-      (fun x => (ite_le_sup _ _ _).trans (max_eq_rightₓ hij).le) ⟨j, fun x => le_rfl⟩
+      (fun x => (ite_le_sup _ _ _).trans (max_eq_rightₓ hij).le) ⟨j, fun x => le_rflₓ⟩
   rwa [stopped_value_const, stopped_value_piecewise_const,
     integral_piecewise (𝒢.le _ _ hs) (hint _).IntegrableOn (hint _).IntegrableOn, ←
     integral_add_compl (𝒢.le _ _ hs) (hint j), add_le_add_iff_right] at hf
@@ -522,7 +522,7 @@ theorem smul_le_stopped_value_hitting [IsFiniteMeasure μ] {f : ℕ → Ω → �
     intro x hx
     simp_rw [le_sup'_iff, mem_range, Nat.lt_succ_iffₓ] at hx
     refine' stopped_value_hitting_mem _
-    simp only [← Set.mem_set_of_eq, ← exists_prop, ← hn]
+    simp only [Set.mem_set_of_eq, exists_prop, hn]
     exact
       let ⟨j, hj₁, hj₂⟩ := hx
       ⟨j, hj₁, hj₂⟩
@@ -571,7 +571,7 @@ theorem maximal_ineq [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hsub : Subma
         convert rfl
         ext ω
         change (ε : ℝ) ≤ _ ∨ _ < (ε : ℝ) ↔ _
-        simp only [← le_or_ltₓ, ← true_iffₓ]
+        simp only [le_or_ltₓ, true_iffₓ]
         
       · rintro ω ⟨hω₁ : _ ≤ _, hω₂ : _ < _⟩
         exact (not_leₓ.2 hω₂) hω₁
@@ -608,8 +608,8 @@ theorem maximal_ineq [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hsub : Subma
       intro ω hω
       rw [Set.mem_set_of_eq] at hω
       have : hitting f { y : ℝ | ↑ε ≤ y } 0 n ω = n := by
-        simp only [← hitting, ← Set.mem_set_of_eq, ← exists_prop, ← Pi.coe_nat, ← Nat.cast_id, ← ite_eq_right_iff, ←
-          forall_exists_index, ← and_imp]
+        simp only [hitting, Set.mem_set_of_eq, exists_prop, Pi.coe_nat, Nat.cast_id, ite_eq_right_iff,
+          forall_exists_index, and_imp]
         intro m hm hεm
         exact False.elim ((not_leₓ.2 hω) ((le_sup'_iff _).2 ⟨m, mem_range.2 (Nat.lt_succ_of_leₓ hm.2), hεm⟩))
       simp_rw [stopped_value, this]
@@ -619,7 +619,7 @@ theorem maximal_ineq [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hsub : Subma
         convert rfl
         ext ω
         change _ ↔ (ε : ℝ) ≤ _ ∨ _ < (ε : ℝ)
-        simp only [← le_or_ltₓ, ← iff_trueₓ]
+        simp only [le_or_ltₓ, iff_trueₓ]
         
       · rintro ω ⟨hω₁ : _ ≤ _, hω₂ : _ < _⟩
         exact (not_leₓ.2 hω₂) hω₁
@@ -645,7 +645,7 @@ theorem maximal_ineq [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hsub : Subma
       rw [← stopped_value_const f n]
       exact
         hsub.expected_stopped_value_mono (hitting_is_stopping_time hsub.adapted measurable_set_Ici)
-          (is_stopping_time_const _ _) (fun ω => hitting_le ω) (fun ω => le_rfl : ∀ ω, n ≤ n)
+          (is_stopping_time_const _ _) (fun ω => hitting_le ω) (fun ω => le_rflₓ : ∀ ω, n ≤ n)
     
 
 end Maximal
@@ -667,8 +667,8 @@ theorem Submartingale.sum_mul_sub [IsFiniteMeasure μ] {R : ℝ} {ξ f : ℕ →
       (hξ.strongly_measurable_le hi.le).mul
         ((hf.adapted.strongly_measurable_le (Nat.succ_le_of_ltₓ hi)).sub (hf.adapted.strongly_measurable_le hi.le))
   refine' submartingale_of_condexp_sub_nonneg_nat hadp hint fun i => _
-  simp only [Finset.sum_Ico_eq_sub _ (Nat.le_succₓ _), ← Finset.sum_apply, ← Pi.mul_apply, ← Pi.sub_apply, ←
-    Nat.Ico_succ_singleton, ← Finset.sum_singleton]
+  simp only [← Finset.sum_Ico_eq_sub _ (Nat.le_succₓ _), Finset.sum_apply, Pi.mul_apply, Pi.sub_apply,
+    Nat.Ico_succ_singleton, Finset.sum_singleton]
   exact
     eventually_le.trans
       (eventually_le.mul_nonneg (eventually_of_forall (hnonneg _)) (hf.condexp_sub_nonneg (Nat.le_succₓ _)))

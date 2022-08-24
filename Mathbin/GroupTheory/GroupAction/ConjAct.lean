@@ -144,13 +144,13 @@ theorem units_smul_def (g : ConjAct Mˣ) (h : M) : g • h = ofConjAct g * h * �
 instance unitsMulDistribMulAction : MulDistribMulAction (ConjAct Mˣ) M where
   smul := (· • ·)
   one_smul := by
-    simp [← units_smul_def]
+    simp [units_smul_def]
   mul_smul := by
-    simp [← units_smul_def, ← mul_assoc, ← mul_inv_rev]
+    simp [units_smul_def, mul_assoc, mul_inv_rev]
   smul_mul := by
-    simp [← units_smul_def, ← mul_assoc]
+    simp [units_smul_def, mul_assoc]
   smul_one := by
-    simp [← units_smul_def]
+    simp [units_smul_def]
 
 instance units_smul_comm_class [HasSmul α M] [SmulCommClass α M M] [IsScalarTower α M M] :
     SmulCommClass α (ConjAct Mˣ) M where smul_comm := fun a um m => by
@@ -170,9 +170,9 @@ variable [Semiringₓ R]
 instance unitsMulSemiringAction : MulSemiringAction (ConjAct Rˣ) R :=
   { ConjAct.unitsMulDistribMulAction with smul := (· • ·),
     smul_zero := by
-      simp [← units_smul_def],
+      simp [units_smul_def],
     smul_add := by
-      simp [← units_smul_def, ← mul_addₓ, ← add_mulₓ] }
+      simp [units_smul_def, mul_addₓ, add_mulₓ] }
 
 end Semiringₓ
 
@@ -193,9 +193,9 @@ theorem to_conj_act_zero : toConjAct (0 : G₀) = 0 :=
 instance mulAction₀ : MulAction (ConjAct G₀) G₀ where
   smul := (· • ·)
   one_smul := by
-    simp [← smul_def]
+    simp [smul_def]
   mul_smul := by
-    simp [← smul_def, ← mul_assoc, ← mul_inv_rev]
+    simp [smul_def, mul_assoc, mul_inv_rev]
 
 instance smul_comm_class₀ [HasSmul α G₀] [SmulCommClass α G₀ G₀] [IsScalarTower α G₀ G₀] :
     SmulCommClass α (ConjAct G₀) G₀ where smul_comm := fun a ug g => by
@@ -215,9 +215,9 @@ variable [DivisionRing K]
 instance distribMulAction₀ : DistribMulAction (ConjAct K) K :=
   { ConjAct.mulAction₀ with smul := (· • ·),
     smul_zero := by
-      simp [← smul_def],
+      simp [smul_def],
     smul_add := by
-      simp [← smul_def, ← mul_addₓ, ← add_mulₓ] }
+      simp [smul_def, mul_addₓ, add_mulₓ] }
 
 end DivisionRing
 
@@ -226,13 +226,13 @@ variable [Groupₓ G]
 instance : MulDistribMulAction (ConjAct G) G where
   smul := (· • ·)
   smul_mul := by
-    simp [← smul_def, ← mul_assoc]
+    simp [smul_def, mul_assoc]
   smul_one := by
-    simp [← smul_def]
+    simp [smul_def]
   one_smul := by
-    simp [← smul_def]
+    simp [smul_def]
   mul_smul := by
-    simp [← smul_def, ← mul_assoc]
+    simp [smul_def, mul_assoc]
 
 instance smul_comm_class [HasSmul α G] [SmulCommClass α G G] [IsScalarTower α G G] :
     SmulCommClass α (ConjAct G) G where smul_comm := fun a ug g => by
@@ -249,7 +249,7 @@ theorem smul_eq_mul_aut_conj (g : ConjAct G) (h : G) : g • h = MulAut.conj (of
 /-- The set of fixed points of the conjugation action of `G` on itself is the center of `G`. -/
 theorem fixed_points_eq_center : FixedPoints (ConjAct G) G = center G := by
   ext x
-  simp [← mem_center_iff, ← smul_def, ← mul_inv_eq_iff_eq_mul]
+  simp [mem_center_iff, smul_def, mul_inv_eq_iff_eq_mul]
 
 /-- As normal subgroups are closed under conjugation, they inherit the conjugation action
   of the underlying group. -/

@@ -70,9 +70,9 @@ instance (priority := 100) preserves_zero_morphisms_of_is_left_adjoint (F : C �
     · rw [adjunction.left_triangle_components]
       exact (category.comp_id _).symm
       
-    · simp only [category.assoc, F.map_comp, ← zero_comp]
+    · simp only [← category.assoc, ← F.map_comp, zero_comp]
       
-    · simp only [← adjunction.counit_naturality, ← comp_zero]
+    · simp only [adjunction.counit_naturality, comp_zero]
       
 
 instance (priority := 100) preserves_zero_morphisms_of_is_right_adjoint (G : C ⥤ D) [IsRightAdjoint G] :
@@ -85,9 +85,9 @@ instance (priority := 100) preserves_zero_morphisms_of_is_right_adjoint (G : C �
       
     · rw [adjunction.right_triangle_components_assoc]
       
-    · simp only [G.map_comp, ← comp_zero]
+    · simp only [← G.map_comp, comp_zero]
       
-    · simp only [← adjunction.unit_naturality_assoc, ← zero_comp]
+    · simp only [adjunction.unit_naturality_assoc, zero_comp]
       
 
 instance (priority := 100) preserves_zero_morphisms_of_full (F : C ⥤ D) [Full F] :
@@ -129,7 +129,7 @@ theorem preserves_zero_morphisms_of_map_zero_object (i : F.obj 0 ≅ 0) : Preser
         _ = F.map 0 ≫ (i.Hom ≫ i.inv) ≫ F.map 0 := by
           rw [iso.hom_inv_id, category.id_comp]
         _ = 0 := by
-          simp only [← zero_of_to_zero i.hom, ← zero_comp, ← comp_zero]
+          simp only [zero_of_to_zero i.hom, zero_comp, comp_zero]
          }
 
 instance (priority := 100) preserves_zero_morphisms_of_preserves_initial_object

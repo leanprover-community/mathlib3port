@@ -35,7 +35,7 @@ section
 variable {α F : Type _} {m : MeasurableSpace α} {μ : Measure α} [NormedAddCommGroup F]
 
 theorem Memℒp.integrable_sq {f : α → ℝ} (h : Memℒp f 2 μ) : Integrable (fun x => f x ^ 2) μ := by
-  simpa [mem_ℒp_one_iff_integrable] using h.norm_rpow Ennreal.two_ne_zero Ennreal.two_ne_top
+  simpa [← mem_ℒp_one_iff_integrable] using h.norm_rpow Ennreal.two_ne_zero Ennreal.two_ne_top
 
 theorem mem_ℒp_two_iff_integrable_sq_norm {f : α → F} (hf : AeStronglyMeasurable f μ) :
     Memℒp f 2 μ ↔ Integrable (fun x => ∥f x∥ ^ 2) μ := by
@@ -64,7 +64,7 @@ local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
 theorem snorm_rpow_two_norm_lt_top (f : lp F 2 μ) : snorm (fun x => ∥f x∥ ^ (2 : ℝ)) 1 μ < ∞ := by
   have h_two : Ennreal.ofReal (2 : ℝ) = 2 := by
-    simp [← zero_le_one]
+    simp [zero_le_one]
   rw [snorm_norm_rpow f zero_lt_two, one_mulₓ, h_two]
   exact Ennreal.rpow_lt_top_of_nonneg zero_le_two (Lp.snorm_ne_top f)
 
@@ -85,12 +85,12 @@ theorem snorm_inner_lt_top (f g : α →₂[μ] E) : snorm (fun x : α => ⟪f x
     refine' (le_div_iff (@zero_lt_two ℝ _ _)).mpr ((le_of_eqₓ _).trans (two_mul_le_add_sq _ _))
     ring
   simp_rw [← IsROrC.norm_eq_abs, ← Real.rpow_nat_cast] at h'
-  refine' (snorm_mono_ae (ae_of_all _ h')).trans_lt ((snorm_add_le _ _ le_rfl).trans_lt _)
+  refine' (snorm_mono_ae (ae_of_all _ h')).trans_lt ((snorm_add_le _ _ le_rflₓ).trans_lt _)
   · exact ((Lp.ae_strongly_measurable f).norm.AeMeasurable.pow_const _).AeStronglyMeasurable
     
   · exact ((Lp.ae_strongly_measurable g).norm.AeMeasurable.pow_const _).AeStronglyMeasurable
     
-  simp only [← Nat.cast_bit0, ← Ennreal.add_lt_top, ← Nat.cast_oneₓ]
+  simp only [Nat.cast_bit0, Ennreal.add_lt_top, Nat.cast_oneₓ]
   exact ⟨snorm_rpow_two_norm_lt_top f, snorm_rpow_two_norm_lt_top g⟩
 
 section InnerProductSpace
