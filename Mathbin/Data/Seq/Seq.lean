@@ -3,6 +3,7 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
+import Mathbin.Data.List.Basic
 import Mathbin.Data.LazyList
 import Mathbin.Data.Nat.Basic
 import Mathbin.Data.Stream.Init
@@ -53,6 +54,26 @@ def cons (a : α) (s : Seqₓₓ α) : Seqₓₓ α :=
 /-- Get the nth element of a sequence (if it exists) -/
 def nth : Seqₓₓ α → ℕ → Option α :=
   Subtype.val
+
+@[simp]
+theorem nth_mk (f hf) : @nth α ⟨f, hf⟩ = f :=
+  rfl
+
+@[simp]
+theorem nth_nil (n : ℕ) : (@nil α).nth n = none :=
+  rfl
+
+@[simp]
+theorem nth_cons_zero (a : α) (s : Seqₓₓ α) : (cons a s).nth 0 = some a :=
+  rfl
+
+@[simp]
+theorem nth_cons_succ (a : α) (s : Seqₓₓ α) (n : ℕ) : (cons a s).nth (n + 1) = s.nth n :=
+  rfl
+
+@[ext]
+protected theorem ext {s t : Seqₓₓ α} (h : ∀ n : ℕ, s.nth n = t.nth n) : s = t :=
+  Subtype.eq <| funext h
 
 /-- A sequence has terminated at position `n` if the value at position `n` equals `none`. -/
 def TerminatedAt (s : Seqₓₓ α) (n : ℕ) : Prop :=
@@ -193,6 +214,10 @@ theorem tail_nil : tail (nil : Seqₓₓ α) = nil :=
 theorem tail_cons (a : α) (s) : tail (cons a s) = s := by
   cases' s with f al <;> apply Subtype.eq <;> dsimp' [tail, cons] <;> rw [Streamₓ.tail_cons]
 
+@[simp]
+theorem nth_tail (s : Seqₓₓ α) (n) : nth (tail s) n = nth s (n + 1) :=
+  rfl
+
 def casesOn {C : Seqₓₓ α → Sort v} (s : Seqₓₓ α) (h1 : C nil) (h2 : ∀ x s, C (cons x s)) : C s := by
   induction' H : destruct s with v v
   · rw [destruct_eq_nil H]
@@ -277,21 +302,6 @@ theorem corec_eq (f : β → Option (α × β)) (b : β) : destruct (corec f b) 
   rw [h]
   rfl
 
-/-- Embed a list as a sequence -/
-def ofList (l : List α) : Seqₓₓ α :=
-  ⟨List.nth l, fun n h => by
-    induction' l with a l IH generalizing n
-    rfl
-    dsimp' [List.nth]
-    cases' n with n <;> dsimp' [List.nth]  at h
-    · contradiction
-      
-    · apply IH _ h
-      ⟩
-
-instance coeList : Coe (List α) (Seqₓₓ α) :=
-  ⟨ofList⟩
-
 section Bisim
 
 variable (R : Seqₓₓ α → Seqₓₓ α → Prop)
@@ -362,6 +372,27 @@ theorem coinduction2 (s) (f g : Seqₓₓ α → Seqₓₓ β)
   rcases h with ⟨s, h1, h2⟩
   rw [h1, h2]
   apply H
+
+/-- Embed a list as a sequence -/
+def ofList (l : List α) : Seqₓₓ α :=
+  ⟨List.nth l, fun n h => by
+    rw [List.nth_eq_none_iff] at h⊢
+    exact h.trans (Nat.le_succₓ n)⟩
+
+instance coeList : Coe (List α) (Seqₓₓ α) :=
+  ⟨ofList⟩
+
+@[simp]
+theorem of_list_nil : ofList [] = (nil : Seqₓₓ α) :=
+  rfl
+
+@[simp]
+theorem of_list_nth (l : List α) (n : ℕ) : (ofList l).nth n = l.nth n :=
+  rfl
+
+@[simp]
+theorem of_list_cons (a : α) (l : List α) : ofList (a :: l) = cons a (ofList l) := by
+  ext1 (_ | n) <;> rfl
 
 /-- Embed an infinite stream as a sequence -/
 def ofStream (s : Streamₓ α) : Seqₓₓ α :=
@@ -722,14 +753,6 @@ theorem join_append (S T : Seqₓₓ (Seq1 α)) : join (append S T) = append (jo
     
 
 @[simp]
-theorem of_list_nil : ofList [] = (nil : Seqₓₓ α) :=
-  rfl
-
-@[simp]
-theorem of_list_cons (a : α) (l) : ofList (a :: l) = cons a (ofList l) := by
-  ext (_ | n) : 2 <;> simp [of_list, cons, Streamₓ.nth, Streamₓ.cons]
-
-@[simp]
 theorem of_stream_cons (a : α) (s) : ofStream (a :: s) = cons a (ofStream s) := by
   apply Subtype.eq <;> simp [of_stream, cons] <;> rw [Streamₓ.map_cons]
 
@@ -758,29 +781,6 @@ theorem dropn_add (s : Seqₓₓ α) (m) : ∀ n, drop s (m + n) = drop (drop s 
 
 theorem dropn_tail (s : Seqₓₓ α) (n) : drop (tail s) n = drop s (n + 1) := by
   rw [add_commₓ] <;> symm <;> apply dropn_add
-
-theorem nth_tail : ∀ (s : Seqₓₓ α) (n), nth (tail s) n = nth s (n + 1)
-  | ⟨f, al⟩, n => rfl
-
-@[ext]
-protected theorem ext (s s' : Seqₓₓ α) (hyp : ∀ n : ℕ, s.nth n = s'.nth n) : s = s' := by
-  let ext := fun s s' : Seqₓₓ α => ∀ n, s.nth n = s'.nth n
-  apply Seqₓₓ.eq_of_bisim ext _ hyp
-  -- we have to show that ext is a bisimulation
-  clear hyp s s'
-  intro s s'(hyp : ext s s')
-  unfold Seqₓₓ.destruct
-  rw [hyp 0]
-  cases s'.nth 0
-  · simp [Seqₓₓ.BisimO]
-    
-  -- option.none
-  · -- option.some
-    suffices ext s.tail s'.tail by
-      simpa
-    intro n
-    simp only [Seqₓₓ.nth_tail _ n, hyp <| n + 1]
-    
 
 @[simp]
 theorem head_dropn (s : Seqₓₓ α) (n) : head (drop s n) = nth s n := by

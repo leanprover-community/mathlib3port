@@ -212,8 +212,8 @@ theorem has_strict_fderiv_at_rpow_of_neg (p : ℝ × ℝ) (hp : p.1 < 0) :
   congr 2 <;> ring
 
 /-- The function `λ (x, y), x ^ y` is infinitely smooth at `(x, y)` unless `x = 0`. -/
-theorem cont_diff_at_rpow_of_ne (p : ℝ × ℝ) (hp : p.1 ≠ 0) {n : WithTop ℕ} :
-    ContDiffAt ℝ n (fun p : ℝ × ℝ => p.1 ^ p.2) p := by
+theorem cont_diff_at_rpow_of_ne (p : ℝ × ℝ) (hp : p.1 ≠ 0) {n : ℕ∞} : ContDiffAt ℝ n (fun p : ℝ × ℝ => p.1 ^ p.2) p :=
+  by
   cases' hp.lt_or_lt with hneg hpos
   exacts[(((cont_diff_at_fst.log hneg.ne).mul cont_diff_at_snd).exp.mul
           (cont_diff_at_snd.mul cont_diff_at_const).cos).congr_of_eventually_eq
@@ -279,7 +279,7 @@ theorem deriv_rpow_const {x p : ℝ} (h : x ≠ 0 ∨ 1 ≤ p) : deriv (fun x : 
 theorem deriv_rpow_const' {p : ℝ} (h : 1 ≤ p) : (deriv fun x : ℝ => x ^ p) = fun x => p * x ^ (p - 1) :=
   funext fun x => deriv_rpow_const (Or.inr h)
 
-theorem cont_diff_at_rpow_const_of_ne {x p : ℝ} {n : WithTop ℕ} (h : x ≠ 0) : ContDiffAt ℝ n (fun x => x ^ p) x :=
+theorem cont_diff_at_rpow_const_of_ne {x p : ℝ} {n : ℕ∞} (h : x ≠ 0) : ContDiffAt ℝ n (fun x => x ^ p) x :=
   (cont_diff_at_rpow_of_ne (x, p) h).comp x (cont_diff_at_id.Prod cont_diff_at_const)
 
 theorem cont_diff_rpow_const_of_le {p : ℝ} {n : ℕ} (h : ↑n ≤ p) : ContDiff ℝ n fun x : ℝ => x ^ p := by
@@ -322,7 +322,7 @@ open Real
 section fderiv
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f g : E → ℝ} {f' g' : E →L[ℝ] ℝ} {x : E} {s : Set E}
-  {c p : ℝ} {n : WithTop ℕ}
+  {c p : ℝ} {n : ℕ∞}
 
 theorem HasFderivWithinAt.rpow (hf : HasFderivWithinAt f f' s x) (hg : HasFderivWithinAt g g' s x) (h : 0 < f x) :
     HasFderivWithinAt (fun x => f x ^ g x) ((g x * f x ^ (g x - 1)) • f' + (f x ^ g x * log (f x)) • g') s x :=

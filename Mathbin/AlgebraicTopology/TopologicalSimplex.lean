@@ -64,9 +64,8 @@ theorem coe_to_Top_map {x y : SimplexCategory} (f : x ⟶ y) (g : x.ToTopObj) (i
 
 @[continuity]
 theorem continuous_to_Top_map {x y : SimplexCategory} (f : x ⟶ y) : Continuous (toTopMap f) :=
-  continuous_subtype_mk _ <|
-    continuous_pi fun i =>
-      (continuous_finset_sum _) fun j hj => Continuous.comp (continuous_apply _) continuous_subtype_val
+  Continuous.subtype_mk
+    (continuous_pi fun i => (continuous_finset_sum _) fun j hj => (continuous_apply _).comp continuous_subtype_val) _
 
 /-- The functor associating the topological `n`-simplex to `[n] : simplex_category`. -/
 @[simps]

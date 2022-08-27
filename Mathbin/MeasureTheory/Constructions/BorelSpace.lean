@@ -280,7 +280,7 @@ theorem measurable_set_of_continuous_at {β} [EmetricSpace β] (f : α → β) :
   (is_Gδ_set_of_continuous_at f).MeasurableSet
 
 theorem IsClosed.measurable_set (h : IsClosed s) : MeasurableSet s :=
-  h.is_open_compl.MeasurableSet.of_compl
+  h.is_open_compl.MeasurableSet.ofCompl
 
 theorem IsCompact.measurable_set [T2Space α] (h : IsCompact s) : MeasurableSet s :=
   h.IsClosed.MeasurableSet

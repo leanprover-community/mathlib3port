@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 -/
 import Mathbin.Algebra.Order.Ring
+import Mathbin.Algebra.Order.WithZero
 
 /-!
 # Basic operations on the natural numbers
@@ -258,9 +259,6 @@ theorem eq_zero_of_double_le {a : ℕ} (h : 2 * a ≤ a) : a = 0 :=
 theorem eq_zero_of_mul_le {a b : ℕ} (hb : 2 ≤ b) (h : b * a ≤ a) : a = 0 :=
   eq_zero_of_double_le <| le_transₓ (Nat.mul_le_mul_rightₓ _ hb) h
 
-theorem le_zero_iffₓ {i : ℕ} : i ≤ 0 ↔ i = 0 :=
-  ⟨Nat.eq_zero_of_le_zeroₓ, fun h => h ▸ le_reflₓ i⟩
-
 theorem zero_max {m : ℕ} : max 0 m = m :=
   max_eq_rightₓ (zero_le _)
 
@@ -406,7 +404,7 @@ theorem succ_lt_succ_iff {m n : ℕ} : succ m < succ n ↔ m < n :=
 
 @[simp]
 theorem lt_one_iff {n : ℕ} : n < 1 ↔ n = 0 :=
-  lt_succ_iffₓ.trans le_zero_iffₓ
+  lt_succ_iffₓ.trans le_zero_iff
 
 theorem div_le_iff_le_mul_add_pred {m n k : ℕ} (n0 : 0 < n) : m / n ≤ k ↔ m ≤ n * k + (n - 1) := by
   rw [← lt_succ_iff, div_lt_iff_lt_mul n0, succ_mul, mul_comm]
@@ -1466,7 +1464,7 @@ theorem div_eq_self {a b : ℕ} : a / b = a ↔ a = 0 ∨ b = 1 := by
 theorem lt_iff_le_pred : ∀ {m n : ℕ}, 0 < n → (m < n ↔ m ≤ n - 1)
   | m, n + 1, _ => lt_succ_iffₓ
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([2]) }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) }
 theorem div_eq_sub_mod_div {m n : ℕ} : m / n = (m - m % n) / n := by
   by_cases' n0 : n = 0
   · rw [n0, Nat.div_zeroₓ, Nat.div_zeroₓ]

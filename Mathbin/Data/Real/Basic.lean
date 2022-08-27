@@ -366,7 +366,7 @@ instance : PartialOrderₓ ℝ where
 instance : Preorderₓ ℝ := by
   infer_instance
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible[tactic.transparency.semireducible] }
 theorem rat_cast_lt {x y : ℚ} : (x : ℝ) < (y : ℝ) ↔ x < y := by
   rw [mk_lt]
   exact const_lt
@@ -490,7 +490,7 @@ converging to the same number may be printed differently.
 -/
 unsafe instance : HasRepr ℝ where repr := fun r => "real.of_cauchy " ++ reprₓ r.cauchy
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible[tactic.transparency.semireducible] }
 theorem le_mk_of_forall_le {f : CauSeq ℚ abs} : (∃ i, ∀ j ≥ i, x ≤ f j) → x ≤ mk f := by
   intro h
   induction' x using Real.ind_mk with x

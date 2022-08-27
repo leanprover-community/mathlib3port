@@ -564,7 +564,7 @@ class HasCompl (α : Type _) where
 
 export HasCompl (compl)
 
--- ./././Mathport/Syntax/Translate/Command.lean:405:9: unsupported: advanced prec syntax «expr + »(max, 1)
+-- ./././Mathport/Syntax/Translate/Command.lean:405:9: unsupported: advanced prec syntax «expr + »(max[], 1)
 -- mathport name: «expr ᶜ»
 postfix:999 "ᶜ" => compl
 
@@ -649,6 +649,14 @@ theorem min_rec' (p : α → Prop) (hx : p x) (hy : p y) : p (min x y) :=
 
 theorem max_rec' (p : α → Prop) (hx : p x) (hy : p y) : p (max x y) :=
   max_rec (fun _ => hx) fun _ => hy
+
+theorem min_def' (x y : α) : min x y = if x < y then x else y := by
+  rw [min_commₓ, min_def, ← ite_not]
+  simp only [not_leₓ]
+
+theorem max_def' (x y : α) : max x y = if y < x then x else y := by
+  rw [max_commₓ, max_def, ← ite_not]
+  simp only [not_leₓ]
 
 end MinMaxRec
 

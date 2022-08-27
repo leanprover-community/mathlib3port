@@ -1281,6 +1281,21 @@ theorem smul_top_eq_map {R S : Type _} [CommSemiringₓ R] [CommSemiringₓ S] [
     exact Submodule.add_mem _ hx hy
     
 
+@[simp]
+theorem coe_restrict_scalars {R S : Type _} [CommSemiringₓ R] [Semiringₓ S] [Algebra R S] (I : Ideal S) :
+    (I.restrictScalars R : Set S) = ↑I :=
+  rfl
+
+/-- The smallest `S`-submodule that contains all `x ∈ I * y ∈ J`
+is also the smallest `R`-submodule that does so. -/
+@[simp]
+theorem restrict_scalars_mul {R S : Type _} [CommSemiringₓ R] [CommSemiringₓ S] [Algebra R S] (I J : Ideal S) :
+    (I * J).restrictScalars R = I.restrictScalars R * J.restrictScalars R :=
+  le_antisymmₓ
+    (fun x hx =>
+      Submodule.mul_induction_on hx (fun x hx y hy => Submodule.mul_mem_mul hx hy) fun x y => Submodule.add_mem _)
+    (Submodule.mul_le.mpr fun x hx y hy => Ideal.mul_mem_mul hx hy)
+
 section Surjective
 
 variable (hf : Function.Surjective f)
@@ -1945,6 +1960,10 @@ instance Quotient.is_scalar_tower [HasSmul R₁ R₂] [IsScalarTower R₁ R₂ A
 `A`, where `A` is an `R₁`-algebra. -/
 def Quotient.mkₐ (I : Ideal A) : A →ₐ[R₁] A ⧸ I :=
   ⟨fun a => Submodule.Quotient.mk a, rfl, fun _ _ => rfl, rfl, fun _ _ => rfl, fun _ => rfl⟩
+
+theorem Quotient.alg_hom_ext {I : Ideal A} {S} [Semiringₓ S] [Algebra R₁ S] ⦃f g : A ⧸ I →ₐ[R₁] S⦄
+    (h : f.comp (Quotient.mkₐ R₁ I) = g.comp (Quotient.mkₐ R₁ I)) : f = g :=
+  AlgHom.ext fun x => Quotientₓ.induction_on' x <| AlgHom.congr_fun h
 
 theorem Quotient.alg_map_eq (I : Ideal A) : algebraMap R₁ (A ⧸ I) = (algebraMap A (A ⧸ I)).comp (algebraMap R₁ A) :=
   rfl

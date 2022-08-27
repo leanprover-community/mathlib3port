@@ -17,9 +17,10 @@ and verify that they provide an equivalence of categories
 
 namespace CategoryTheory
 
-universe v₁ v₂ v₃ u₁ u₂ u₃
+universe v₁ v₂ v₃ v₄ u₁ u₂ u₃ u₄
 
-variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D] {E : Type u₃} [Category.{v₃} E]
+variable {B : Type u₁} [Category.{v₁} B] {C : Type u₂} [Category.{v₂} C] {D : Type u₃} [Category.{v₃} D] {E : Type u₄}
+  [Category.{v₄} E]
 
 /-- The uncurrying functor, taking a functor `C ⥤ (D ⥤ E)` and producing a functor `(C × D) ⥤ E`.
 -/
@@ -109,6 +110,15 @@ def uncurryObjFlip (F : C ⥤ D ⥤ E) : uncurry.obj F.flip ≅ prod.swap _ _ �
   NatIso.ofComponents (fun p => Iso.refl _)
     (by
       tidy)
+
+variable (B C D E)
+
+/-- A version of `category_theory.whiskering_right` for bifunctors, obtained by uncurrying,
+applying `whiskering_right` and currying back
+-/
+@[simps]
+def whiskeringRight₂ : (C ⥤ D ⥤ E) ⥤ (B ⥤ C) ⥤ (B ⥤ D) ⥤ B ⥤ E :=
+  uncurry ⋙ whiskeringRight _ _ _ ⋙ (whiskeringLeft _ _ _).obj (prodFunctorToFunctorProd _ _ _) ⋙ curry
 
 end CategoryTheory
 

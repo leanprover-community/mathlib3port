@@ -25,13 +25,14 @@ open Polynomial
 
 variable {n : ℕ}
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr + »(«expr * »(«expr - »(«expr - »(«expr - »(1, z), «expr ^ »(z, 2)), «expr ^ »(z, n)), h1), «expr * »(«expr - »(«expr ^ »(z, n), 2), h2))],
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr + »(«expr * »(«expr - »(«expr - »(«expr - »(1, z), «expr ^ »(z, 2)), «expr ^ »(z, n)), h1),
+    «expr * »(«expr - »(«expr ^ »(z, n), 2), h2))],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args
 theorem X_pow_sub_X_sub_one_irreducible_aux (z : ℂ) : ¬(z ^ n = z + 1 ∧ z ^ n + z ^ 2 = 0) := by
   rintro ⟨h1, h2⟩
   replace h3 : z ^ 3 = 1
   · trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr + »(«expr * »(«expr - »(«expr - »(«expr - »(1, z), «expr ^ »(z, 2)), «expr ^ »(z, n)), h1), «expr * »(«expr - »(«expr ^ »(z, n), 2), h2))],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr + »(«expr * »(«expr - »(«expr - »(«expr - »(1, z), «expr ^ »(z, 2)), «expr ^ »(z, n)), h1),\n    «expr * »(«expr - »(«expr ^ »(z, n), 2), h2))],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args"
     
   -- thanks polyrith!
   have key : z ^ n = 1 ∨ z ^ n = z ∨ z ^ n = z ^ 2 := by

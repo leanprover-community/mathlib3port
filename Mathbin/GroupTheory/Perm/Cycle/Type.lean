@@ -222,7 +222,7 @@ theorem is_cycle_of_prime_order {σ : Perm α} (h1 : (orderOf σ).Prime) (h2 : �
     σ.IsCycle := by
   obtain ⟨n, hn⟩ := cycle_type_prime_order h1
   rw [← σ.sum_cycle_type, hn, Multiset.sum_repeat, nsmul_eq_mul, Nat.cast_id, mul_lt_mul_right (order_of_pos σ),
-    Nat.succ_lt_succ_iff, Nat.lt_succ_iffₓ, Nat.le_zero_iffₓ] at h2
+    Nat.succ_lt_succ_iff, Nat.lt_succ_iffₓ, le_zero_iff] at h2
   rw [← card_cycle_type_eq_one, hn, card_repeat, h2]
 
 theorem cycle_type_le_of_mem_cycle_factors_finset {f g : Perm α} (hf : f ∈ g.cycleFactorsFinset) :

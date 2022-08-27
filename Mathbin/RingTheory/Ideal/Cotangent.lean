@@ -28,11 +28,11 @@ variable {R S S' : Type _} [CommRingₓ R] [CommSemiringₓ S] [Algebra S R]
 
 variable [CommSemiringₓ S'] [Algebra S' R] [Algebra S S'] [IsScalarTower S S' R] (I : Ideal R)
 
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module «expr ⧸ »(R, I)
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] «expr ⧸ »(R, I)
 /-- `I ⧸ I ^ 2` as a quotient of `I`. -/
 def Cotangent : Type _ :=
   I ⧸ (I • ⊤ : Submodule R I)deriving AddCommGroupₓ,
-  ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module «expr ⧸ »(R, I)
+  ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] «expr ⧸ »(R, I)
 
 instance : Inhabited I.Cotangent :=
   ⟨0⟩

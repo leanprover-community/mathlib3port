@@ -167,7 +167,7 @@ theorem has_deriv_at_arsinh (x : ℝ) : HasDerivAt arsinh (sqrt (1 + x ^ 2))⁻�
 
 theorem differentiable_arsinh : Differentiable ℝ arsinh := fun x => (has_deriv_at_arsinh x).DifferentiableAt
 
-theorem cont_diff_arsinh {n : WithTop ℕ} : ContDiff ℝ n arsinh :=
+theorem cont_diff_arsinh {n : ℕ∞} : ContDiff ℝ n arsinh :=
   sinhHomeomorph.cont_diff_symm_deriv (fun x => (cosh_pos x).ne') has_deriv_at_sinh cont_diff_sinh
 
 @[continuity]
@@ -202,8 +202,7 @@ end Continuous
 
 section fderiv
 
-variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ} {s : Set E} {a : E} {f' : E →L[ℝ] ℝ}
-  {n : WithTop ℕ}
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ} {s : Set E} {a : E} {f' : E →L[ℝ] ℝ} {n : ℕ∞}
 
 theorem HasStrictFderivAt.arsinh (hf : HasStrictFderivAt f f' a) :
     HasStrictFderivAt (fun x => arsinh (f x)) ((sqrt (1 + f a ^ 2))⁻¹ • f') a :=

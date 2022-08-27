@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.AlgebraicGeometry.Spec
+import Mathbin.Algebra.Category.Ring.Constructions
 
 /-!
 # The category of schemes
@@ -45,10 +46,16 @@ structure Scheme extends
 
 namespace Scheme
 
+-- There isn't nessecarily a morphism between two schemes.
+/-- A morphism between schemes is a morphism between the underlying locally ringed spaces. -/
+@[nolint has_nonempty_instance]
+def Hom (X Y : Scheme) : Type _ :=
+  X.toLocallyRingedSpace ⟶ Y.toLocallyRingedSpace
+
 /-- Schemes are a full subcategory of locally ringed spaces.
 -/
 instance : Category Scheme :=
-  InducedCategory.category Scheme.toLocallyRingedSpace
+  { InducedCategory.category Scheme.toLocallyRingedSpace with Hom := Hom }
 
 /-- The structure sheaf of a Scheme. -/
 protected abbrev sheaf (X : Scheme) :=
@@ -69,19 +76,13 @@ theorem forget_to_LocallyRingedSpace_preimage {X Y : Scheme} (f : X ⟶ Y) :
 def forgetToTop : Scheme ⥤ Top :=
   Scheme.forget_to_LocallyRingedSpace ⋙ LocallyRingedSpace.forget_to_Top
 
-instance {X Y : Scheme} : HasLiftT (X ⟶ Y) (X.toSheafedSpace ⟶ Y.toSheafedSpace) :=
-  @coeToLift <| @coeBaseₓ coeSubtype
-
-theorem id_val_base (X : Scheme) : (Subtype.val (𝟙 X)).base = 𝟙 _ :=
-  rfl
-
 @[simp]
-theorem id_coe_base (X : Scheme) : (↑(𝟙 X) : X.toSheafedSpace ⟶ X.toSheafedSpace).base = 𝟙 _ :=
+theorem id_val_base (X : Scheme) : (𝟙 X : _).1.base = 𝟙 _ :=
   rfl
 
 @[simp]
 theorem id_app {X : Scheme} (U : (Opens X.Carrier)ᵒᵖ) :
-    (Subtype.val (𝟙 X)).c.app U =
+    (𝟙 X : _).val.c.app U =
       X.Presheaf.map
         (eqToHom
           (by
@@ -95,8 +96,7 @@ theorem comp_val {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).val = 
   rfl
 
 @[reassoc, simp]
-theorem comp_coe_base {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) :
-    (↑(f ≫ g) : X.toSheafedSpace ⟶ Z.toSheafedSpace).base = f.val.base ≫ g.val.base :=
+theorem comp_coe_base {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).val.base = f.val.base ≫ g.val.base :=
   rfl
 
 @[reassoc, elementwise]
@@ -181,10 +181,15 @@ def spec : CommRingₓₓᵒᵖ ⥤ Scheme where
   map_comp' := fun R S T f g => by
     rw [unop_comp, Spec_map_comp]
 
-/-- The empty scheme, as `Spec 0`.
+/-- The empty scheme.
 -/
-def empty : Scheme :=
-  specObj (CommRingₓₓ.of PUnit)
+@[simps]
+def empty.{u} : Scheme.{u} where
+  Carrier := Top.of Pempty
+  Presheaf := (CategoryTheory.Functor.const _).obj (CommRingₓₓ.of PUnit)
+  IsSheaf := Presheaf.is_sheaf_of_is_terminal _ CommRingₓₓ.punitIsTerminal
+  LocalRing := fun x => Pempty.elimₓ x
+  local_affine := fun x => Pempty.elimₓ x
 
 instance : EmptyCollection Scheme :=
   ⟨empty⟩
@@ -243,14 +248,9 @@ theorem basic_open_res_eq (i : op U ⟶ op V) [IsIso i] : X.basicOpen (X.Preshea
 theorem basic_open_subset : X.basicOpen f ⊆ U :=
   RingedSpace.basic_open_subset _ _
 
+@[simp]
 theorem preimage_basic_open {X Y : Scheme} (f : X ⟶ Y) {U : Opens Y.Carrier} (r : Y.Presheaf.obj <| op U) :
     (Opens.map f.1.base).obj (Y.basicOpen r) = @Scheme.basicOpen X ((Opens.map f.1.base).obj U) (f.1.c.app _ r) :=
-  LocallyRingedSpace.preimage_basic_open f r
-
-@[simp]
-theorem preimage_basic_open' {X Y : Scheme} (f : X ⟶ Y) {U : Opens Y.Carrier} (r : Y.Presheaf.obj <| op U) :
-    (Opens.map (↑f : X.toSheafedSpace ⟶ Y.toSheafedSpace).base).obj (Y.basicOpen r) =
-      @Scheme.basicOpen X ((Opens.map f.1.base).obj U) (f.1.c.app _ r) :=
   LocallyRingedSpace.preimage_basic_open f r
 
 @[simp]
@@ -261,7 +261,6 @@ theorem basic_open_zero (U : Opens X.Carrier) : X.basicOpen (0 : X.Presheaf.obj 
 theorem basic_open_mul : X.basicOpen (f * g) = X.basicOpen f⊓X.basicOpen g :=
   RingedSpace.basic_open_mul _ _ _
 
-@[simp]
 theorem basic_open_of_is_unit {f : X.Presheaf.obj (op U)} (hf : IsUnit f) : X.basicOpen f = U :=
   RingedSpace.basic_open_of_is_unit _ hf
 

@@ -824,7 +824,13 @@ end CommGroupₓ
 
 section LinearOrderₓ
 
-variable [Groupₓ α] [LinearOrderₓ α] [CovariantClass α α (· * ·) (· ≤ ·)]
+variable [Groupₓ α] [LinearOrderₓ α]
+
+@[simp, to_additive cmp_sub_zero]
+theorem cmp_div_one' [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (a b : α) : cmp (a / b) 1 = cmp a b := by
+  rw [← cmp_mul_right' _ _ b, one_mulₓ, div_mul_cancel']
+
+variable [CovariantClass α α (· * ·) (· ≤ ·)]
 
 section VariableNames
 

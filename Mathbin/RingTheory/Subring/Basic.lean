@@ -1105,8 +1105,10 @@ variable {s : Set R}
 
 attribute [local reducible] closure
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident L, ",", ident HL', ",", ident HP, "|", ident HP, "⟩", ":", expr «expr∃ , »((L : list R), «expr ∧ »(∀
-     x «expr ∈ » L, «expr ∈ »(x, s), «expr ∨ »(«expr = »(list.prod hd, list.prod L), «expr = »(list.prod hd, «expr- »(list.prod L)))))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident L, ",", ident HL', ",", ident HP, "|", ident HP, "⟩", ":", expr «expr∃ , »((L : list R),
+    «expr ∧ »(∀ x «expr ∈ » L,
+     «expr ∈ »(x, s),
+     «expr ∨ »(«expr = »(list.prod hd, list.prod L), «expr = »(list.prod hd, «expr- »(list.prod L)))))]]
 @[elabAsElim]
 protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure s) (h1 : C 1) (hneg1 : C (-1))
     (hs : ∀ z ∈ s, ∀ n, C n → C (z * n)) (ha : ∀ {x y}, C x → C y → C (x + y)) : C x := by
@@ -1123,7 +1125,7 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure 
   replace HL := HL.1
   clear ih tl
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident L, \",\", ident HL', \",\", ident HP, \"|\", ident HP, \"⟩\", \":\", expr «expr∃ , »((L : list R), «expr ∧ »(∀\n     x «expr ∈ » L, «expr ∈ »(x, s), «expr ∨ »(«expr = »(list.prod hd, list.prod L), «expr = »(list.prod hd, «expr- »(list.prod L)))))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident L, \",\", ident HL', \",\", ident HP, \"|\", ident HP, \"⟩\", \":\", expr «expr∃ , »((L : list R),\n    «expr ∧ »(∀ x «expr ∈ » L,\n     «expr ∈ »(x, s),\n     «expr ∨ »(«expr = »(list.prod hd, list.prod L), «expr = »(list.prod hd, «expr- »(list.prod L)))))]]"
   · rw [HP]
     clear HP HL hd
     induction' L with hd tl ih

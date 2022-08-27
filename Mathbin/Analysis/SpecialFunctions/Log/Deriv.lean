@@ -67,13 +67,13 @@ theorem deriv_log (x : ℝ) : deriv log x = x⁻¹ :=
 theorem deriv_log' : deriv log = Inv.inv :=
   funext deriv_log
 
-theorem cont_diff_on_log {n : WithTop ℕ} : ContDiffOn ℝ n log ({0}ᶜ) := by
+theorem cont_diff_on_log {n : ℕ∞} : ContDiffOn ℝ n log ({0}ᶜ) := by
   suffices : ContDiffOn ℝ ⊤ log ({0}ᶜ)
   exact this.of_le le_top
   refine' (cont_diff_on_top_iff_deriv_of_open is_open_compl_singleton).2 _
   simp [differentiable_on_log, cont_diff_on_inv]
 
-theorem cont_diff_at_log {n : WithTop ℕ} : ContDiffAt ℝ n log x ↔ x ≠ 0 :=
+theorem cont_diff_at_log {n : ℕ∞} : ContDiffAt ℝ n log x ↔ x ≠ 0 :=
   ⟨fun h => continuous_at_log_iff.1 h.ContinuousAt, fun hx =>
     (cont_diff_on_log x hx).ContDiffAt <| IsOpen.mem_nhds is_open_compl_singleton hx⟩
 

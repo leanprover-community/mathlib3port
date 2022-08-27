@@ -188,7 +188,7 @@ end Unital
 
 end CstarRing
 
-theorem nnnorm_pow_two_pow_of_self_adjoint [NormedRing E] [StarRing E] [CstarRing E] {x : E} (hx : x ∈ selfAdjoint E)
+theorem IsSelfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing E] {x : E} (hx : IsSelfAdjoint x)
     (n : ℕ) : ∥x ^ 2 ^ n∥₊ = ∥x∥₊ ^ 2 ^ n := by
   induction' n with k hk
   · simp only [pow_zeroₓ, pow_oneₓ]
@@ -200,7 +200,7 @@ theorem nnnorm_pow_two_pow_of_self_adjoint [NormedRing E] [StarRing E] [CstarRin
 
 theorem selfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing E] (x : selfAdjoint E) (n : ℕ) :
     ∥x ^ 2 ^ n∥₊ = ∥x∥₊ ^ 2 ^ n :=
-  nnnorm_pow_two_pow_of_self_adjoint x.property _
+  x.Prop.nnnorm_pow_two_pow _
 
 section starₗᵢ
 

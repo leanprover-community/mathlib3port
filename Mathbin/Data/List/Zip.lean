@@ -459,9 +459,9 @@ variable [CommMonoidₓ α]
 theorem prod_mul_prod_eq_prod_zip_with_mul_prod_drop :
     ∀ L L' : List α, L.Prod * L'.Prod = (zipWithₓ (· * ·) L L').Prod * (L.drop L'.length).Prod * (L'.drop L.length).Prod
   | [], ys => by
-    simp
+    simp [@zero_le' ℕ]
   | xs, [] => by
-    simp
+    simp [@zero_le' ℕ]
   | x :: xs, y :: ys => by
     simp only [drop, length, zip_with_cons_cons, prod_cons]
     rw [mul_assoc x, mul_comm xs.prod, mul_assoc y, mul_comm ys.prod,

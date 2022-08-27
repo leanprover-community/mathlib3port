@@ -54,12 +54,12 @@ inductive Rel : FreeAlgebra R M → FreeAlgebra R M → Prop-- force `ι` to be 
 
 end TensorAlgebra
 
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler algebra R
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler algebra[algebra] R
 /-- The tensor algebra of the module `M` over the commutative semiring `R`.
 -/
 def TensorAlgebra :=
   RingQuot (TensorAlgebra.Rel R M)deriving Inhabited, Semiringₓ,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler algebra R»
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler algebra[algebra] R»
 
 namespace TensorAlgebra
 

@@ -562,7 +562,9 @@ theorem norm_set_to_simple_func_le_sum_mul_norm (T : Set α → F →L[ℝ] F') 
       · rw [hb]
         simp
         
-      rw [_root_.mul_le_mul_right _]
+      refine' (ZeroLt.mul_le_mul_right _).mpr _
+      swap
+      -- remove swap or inline the second subcase
       · exact hT_norm _ (simple_func.measurable_set_fiber _ _)
         
       · exact lt_of_le_of_neₓ (norm_nonneg _) (Ne.symm hb)
@@ -582,7 +584,9 @@ theorem norm_set_to_simple_func_le_sum_mul_norm_of_integrable (T : Set α → E 
       · rw [hb]
         simp
         
-      rw [_root_.mul_le_mul_right _]
+      refine' (ZeroLt.mul_le_mul_right _).mpr _
+      swap
+      -- remove swap or inline the second subcase
       · refine'
           hT_norm _ (simple_func.measurable_set_fiber _ _) (simple_func.measure_preimage_lt_top_of_integrable _ hf _)
         rwa [norm_eq_zero] at hb

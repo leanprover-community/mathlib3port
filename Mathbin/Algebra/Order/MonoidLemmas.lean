@@ -1020,6 +1020,16 @@ theorem StrictAnti.mul_antitone' (hf : StrictAnti f) (hg : Antitone g) : StrictA
 theorem StrictAntiOn.mul_antitone' (hf : StrictAntiOn f s) (hg : AntitoneOn g s) :
     StrictAntiOn (fun x => f x * g x) s := fun x hx y hy h => mul_lt_mul_of_lt_of_le (hf hx hy h) (hg hx hy h.le)
 
+@[simp, to_additive cmp_add_left]
+theorem cmp_mul_left' {α : Type _} [Mul α] [LinearOrderₓ α] [CovariantClass α α (· * ·) (· < ·)] (a b c : α) :
+    cmp (a * b) (a * c) = cmp b c :=
+  (strict_mono_id.const_mul' a).cmp_map_eq b c
+
+@[simp, to_additive cmp_add_right]
+theorem cmp_mul_right' {α : Type _} [Mul α] [LinearOrderₓ α] [CovariantClass α α (swap (· * ·)) (· < ·)] (a b c : α) :
+    cmp (a * c) (b * c) = cmp a b :=
+  (strict_mono_id.mul_const' c).cmp_map_eq a b
+
 end Mono
 
 /-- An element `a : α` is `mul_le_cancellable` if `x ↦ a * x` is order-reflecting.

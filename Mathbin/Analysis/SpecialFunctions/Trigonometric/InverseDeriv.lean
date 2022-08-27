@@ -60,7 +60,7 @@ theorem has_strict_deriv_at_arcsin {x : ℝ} (h₁ : x ≠ -1) (h₂ : x ≠ 1) 
 theorem has_deriv_at_arcsin {x : ℝ} (h₁ : x ≠ -1) (h₂ : x ≠ 1) : HasDerivAt arcsin (1 / sqrt (1 - x ^ 2)) x :=
   (has_strict_deriv_at_arcsin h₁ h₂).HasDerivAt
 
-theorem cont_diff_at_arcsin {x : ℝ} (h₁ : x ≠ -1) (h₂ : x ≠ 1) {n : WithTop ℕ} : ContDiffAt ℝ n arcsin x :=
+theorem cont_diff_at_arcsin {x : ℝ} (h₁ : x ≠ -1) (h₂ : x ≠ 1) {n : ℕ∞} : ContDiffAt ℝ n arcsin x :=
   (deriv_arcsin_aux h₁ h₂).2.ofLe le_top
 
 theorem has_deriv_within_at_arcsin_Ici {x : ℝ} (h : x ≠ -1) :
@@ -118,13 +118,12 @@ theorem deriv_arcsin : deriv arcsin = fun x => 1 / sqrt (1 - x ^ 2) := by
 theorem differentiable_on_arcsin : DifferentiableOn ℝ arcsin ({-1, 1}ᶜ) := fun x hx =>
   (differentiable_at_arcsin.2 ⟨fun h => hx (Or.inl h), fun h => hx (Or.inr h)⟩).DifferentiableWithinAt
 
-theorem cont_diff_on_arcsin {n : WithTop ℕ} : ContDiffOn ℝ n arcsin ({-1, 1}ᶜ) := fun x hx =>
+theorem cont_diff_on_arcsin {n : ℕ∞} : ContDiffOn ℝ n arcsin ({-1, 1}ᶜ) := fun x hx =>
   (cont_diff_at_arcsin (mt Or.inl hx) (mt Or.inr hx)).ContDiffWithinAt
 
-theorem cont_diff_at_arcsin_iff {x : ℝ} {n : WithTop ℕ} : ContDiffAt ℝ n arcsin x ↔ n = 0 ∨ x ≠ -1 ∧ x ≠ 1 :=
+theorem cont_diff_at_arcsin_iff {x : ℝ} {n : ℕ∞} : ContDiffAt ℝ n arcsin x ↔ n = 0 ∨ x ≠ -1 ∧ x ≠ 1 :=
   ⟨fun h =>
-    or_iff_not_imp_left.2 fun hn =>
-      differentiable_at_arcsin.1 <| h.DifferentiableAt <| WithTop.one_le_iff_pos.2 (pos_iff_ne_zero.2 hn),
+    or_iff_not_imp_left.2 fun hn => differentiable_at_arcsin.1 <| h.DifferentiableAt <| Enat.one_le_iff_ne_zero.2 hn,
     fun h =>
     (h.elim fun hn => hn.symm ▸ (cont_diff_zero.2 continuous_arcsin).ContDiffAt) fun hx =>
       cont_diff_at_arcsin hx.1 hx.2⟩
@@ -140,7 +139,7 @@ theorem has_strict_deriv_at_arccos {x : ℝ} (h₁ : x ≠ -1) (h₂ : x ≠ 1) 
 theorem has_deriv_at_arccos {x : ℝ} (h₁ : x ≠ -1) (h₂ : x ≠ 1) : HasDerivAt arccos (-(1 / sqrt (1 - x ^ 2))) x :=
   (has_deriv_at_arcsin h₁ h₂).const_sub (π / 2)
 
-theorem cont_diff_at_arccos {x : ℝ} (h₁ : x ≠ -1) (h₂ : x ≠ 1) {n : WithTop ℕ} : ContDiffAt ℝ n arccos x :=
+theorem cont_diff_at_arccos {x : ℝ} (h₁ : x ≠ -1) (h₂ : x ≠ 1) {n : ℕ∞} : ContDiffAt ℝ n arccos x :=
   cont_diff_at_const.sub (cont_diff_at_arcsin h₁ h₂)
 
 theorem has_deriv_within_at_arccos_Ici {x : ℝ} (h : x ≠ -1) :
@@ -169,10 +168,10 @@ theorem deriv_arccos : deriv arccos = fun x => -(1 / sqrt (1 - x ^ 2)) :=
 theorem differentiable_on_arccos : DifferentiableOn ℝ arccos ({-1, 1}ᶜ) :=
   differentiable_on_arcsin.const_sub _
 
-theorem cont_diff_on_arccos {n : WithTop ℕ} : ContDiffOn ℝ n arccos ({-1, 1}ᶜ) :=
+theorem cont_diff_on_arccos {n : ℕ∞} : ContDiffOn ℝ n arccos ({-1, 1}ᶜ) :=
   cont_diff_on_const.sub cont_diff_on_arcsin
 
-theorem cont_diff_at_arccos_iff {x : ℝ} {n : WithTop ℕ} : ContDiffAt ℝ n arccos x ↔ n = 0 ∨ x ≠ -1 ∧ x ≠ 1 := by
+theorem cont_diff_at_arccos_iff {x : ℝ} {n : ℕ∞} : ContDiffAt ℝ n arccos x ↔ n = 0 ∨ x ≠ -1 ∧ x ≠ 1 := by
   refine' Iff.trans ⟨fun h => _, fun h => _⟩ cont_diff_at_arcsin_iff <;>
     simpa [arccos] using (@cont_diff_at_const _ _ _ _ _ _ _ _ _ _ (π / 2)).sub h
 

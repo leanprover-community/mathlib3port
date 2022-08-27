@@ -101,7 +101,7 @@ theorem hamming_dist_ne_zero {x y : ∀ i, β i} : hammingDist x y ≠ 0 ↔ x �
 /-- Corresponds to `dist_pos`. -/
 @[simp]
 theorem hamming_dist_pos {x y : ∀ i, β i} : 0 < hammingDist x y ↔ x ≠ y := by
-  rw [← hamming_dist_ne_zero, iff_not_comm, not_ltₓ, Nat.le_zero_iffₓ]
+  rw [← hamming_dist_ne_zero, iff_not_comm, not_ltₓ, le_zero_iff]
 
 @[simp]
 theorem hamming_dist_lt_one {x y : ∀ i, β i} : hammingDist x y < 1 ↔ x = y := by

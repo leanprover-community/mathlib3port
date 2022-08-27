@@ -134,7 +134,7 @@ theorem prod_is_unit : ∀ {L : List M} (u : ∀ m ∈ L, IsUnit m), IsUnit L.Pr
 @[simp, to_additive]
 theorem prod_take_mul_prod_drop : ∀ (L : List M) (i : ℕ), (L.take i).Prod * (L.drop i).Prod = L.Prod
   | [], i => by
-    simp
+    simp [@zero_le' ℕ]
   | L, 0 => by
     simp
   | h :: t, n + 1 => by
@@ -180,7 +180,7 @@ theorem prod_update_nth :
   | x :: xs, i + 1, a => by
     simp [update_nth, prod_update_nth xs i a, mul_assoc]
   | [], _, _ => by
-    simp [update_nth, (Nat.zero_leₓ _).not_lt]
+    simp [update_nth, (Nat.zero_leₓ _).not_lt, @zero_le' ℕ]
 
 open MulOpposite
 

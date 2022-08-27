@@ -151,7 +151,8 @@ theorem cyclotomic_pos' (n : ℕ) {R} [LinearOrderedCommRing R] {x : R} (hx : 1 
 theorem cyclotomic_nonneg (n : ℕ) {R} [LinearOrderedCommRing R] {x : R} (hx : 1 ≤ x) : 0 ≤ eval x (cyclotomic n R) :=
   (cyclotomic_pos_and_nonneg n x).2 hx
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["(", ident h, "|", ident h, ")", ":", expr «expr ∨ »(«expr = »(eval 1 (cyclotomic n exprℤ()), 1), «expr = »(eval 1 (cyclotomic n exprℤ()), «expr- »(1)))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["(", ident h, "|", ident h, ")", ":", expr «expr ∨ »(«expr = »(eval 1 (cyclotomic n exprℤ()), 1),
+    «expr = »(eval 1 (cyclotomic n exprℤ()), «expr- »(1)))]]
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 theorem eval_one_cyclotomic_not_prime_pow {R : Type _} [Ringₓ R] {n : ℕ} (h : ∀ {p : ℕ}, p.Prime → ∀ k : ℕ, p ^ k ≠ n) :
     eval 1 (cyclotomic n R) = 1 := by
@@ -160,7 +161,7 @@ theorem eval_one_cyclotomic_not_prime_pow {R : Type _} [Ringₓ R] {n : ℕ} (h 
     
   have hn : 1 < n := one_lt_iff_ne_zero_and_ne_one.mpr ⟨hn'.ne', (h Nat.prime_two 0).symm⟩
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"(\", ident h, \"|\", ident h, \")\", \":\", expr «expr ∨ »(«expr = »(eval 1 (cyclotomic n exprℤ()), 1), «expr = »(eval 1 (cyclotomic n exprℤ()), «expr- »(1)))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"(\", ident h, \"|\", ident h, \")\", \":\", expr «expr ∨ »(«expr = »(eval 1 (cyclotomic n exprℤ()), 1),\n    «expr = »(eval 1 (cyclotomic n exprℤ()), «expr- »(1)))]]"
   · have := eval_int_cast_map (Int.castRingHom R) (cyclotomic n ℤ) 1
     simpa only [map_cyclotomic, Int.cast_oneₓ, h, eq_int_cast] using this
     

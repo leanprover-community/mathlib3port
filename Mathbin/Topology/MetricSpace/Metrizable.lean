@@ -5,6 +5,7 @@ Authors: Yury Kudryashov
 -/
 import Mathbin.Topology.UrysohnsLemma
 import Mathbin.Topology.ContinuousFunction.Bounded
+import Mathbin.Topology.UniformSpace.Cauchy
 
 /-!
 # Metrizability of a T₃ topological space with second countable topology
@@ -55,6 +56,15 @@ theorem _root_.inducing.pseudo_metrizable_space [PseudoMetrizableSpace Y] {f : X
     PseudoMetrizableSpace X := by
   letI : PseudoMetricSpace Y := pseudo_metrizable_space_pseudo_metric Y
   exact ⟨⟨hf.comap_pseudo_metric_space, rfl⟩⟩
+
+/-- Every pseudo-metrizable space is first countable. -/
+instance (priority := 100) PseudoMetrizableSpace.first_countable_topology [h : PseudoMetrizableSpace X] :
+    TopologicalSpace.FirstCountableTopology X := by
+  rcases h with ⟨_, hm⟩
+  rw [← hm]
+  exact
+    @UniformSpace.first_countable_topology X PseudoMetricSpace.toUniformSpace
+      Emetric.Uniformity.Filter.is_countably_generated
 
 instance PseudoMetrizableSpace.subtype [PseudoMetrizableSpace X] (s : Set X) : PseudoMetrizableSpace s :=
   inducing_coe.PseudoMetrizableSpace

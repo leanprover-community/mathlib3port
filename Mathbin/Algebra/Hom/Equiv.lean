@@ -540,10 +540,6 @@ def toUnits [Groupₓ G] : G ≃* Gˣ where
 theorem coe_to_units [Groupₓ G] (g : G) : (toUnits g : G) = g :=
   rfl
 
-@[to_additive]
-protected theorem Groupₓ.is_unit {G} [Groupₓ G] (x : G) : IsUnit x :=
-  (toUnits x).IsUnit
-
 namespace Units
 
 variable [Monoidₓ M] [Monoidₓ N] [Monoidₓ P]

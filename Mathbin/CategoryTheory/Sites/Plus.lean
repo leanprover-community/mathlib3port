@@ -263,20 +263,25 @@ theorem plus_map_to_plus : J.plusMap (J.toPlus P) = J.toPlus (J.plusObj P) := by
     rfl
     
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[[":", expr ∀ X, is_iso ((J.to_plus P).app X)]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[[":", expr is_iso (colimit.ι (J.diagram P X.unop) (op «expr⊤»()))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[[":", expr ∀ (S T : «expr ᵒᵖ»(J.cover X.unop)) (f : «expr ⟶ »(S, T)), is_iso ((J.diagram P X.unop).map f)]]
 theorem is_iso_to_plus_of_is_sheaf (hP : Presheaf.IsSheaf J P) : IsIso (J.toPlus P) := by
   rw [presheaf.is_sheaf_iff_multiequalizer] at hP
-  skip
-  suffices ∀ X, is_iso ((J.to_plus P).app X) by
-    skip
-    apply nat_iso.is_iso_of_is_iso_app
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[[\":\", expr ∀ X, is_iso ((J.to_plus P).app X)]]"
+  · apply nat_iso.is_iso_of_is_iso_app
+    
   intro X
   dsimp'
-  suffices is_iso (colimit.ι (J.diagram P X.unop) (op ⊤)) by
-    skip
-    apply is_iso.comp_is_iso
-  suffices ∀ (S T : (J.cover X.unop)ᵒᵖ) (f : S ⟶ T), is_iso ((J.diagram P X.unop).map f) by
-    skip
-    apply is_iso_ι_of_is_initial (initial_op_of_terminal is_terminal_top)
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[[\":\", expr is_iso (colimit.ι (J.diagram P X.unop) (op «expr⊤»()))]]"
+  · apply is_iso.comp_is_iso
+    
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[[\":\", expr ∀ (S T : «expr ᵒᵖ»(J.cover X.unop)) (f : «expr ⟶ »(S, T)), is_iso ((J.diagram P X.unop).map f)]]"
+  · apply is_iso_ι_of_is_initial (initial_op_of_terminal is_terminal_top)
+    
   intro S T e
   have : S.unop.to_multiequalizer P ≫ (J.diagram P X.unop).map e = T.unop.to_multiequalizer P := by
     ext

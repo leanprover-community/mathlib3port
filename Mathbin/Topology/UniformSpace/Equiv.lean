@@ -197,15 +197,15 @@ protected theorem uniform_embedding (h : α ≃ᵤ β) : UniformEmbedding h :=
 
 /-- Uniform equiv given a uniform embedding. -/
 noncomputable def ofUniformEmbedding (f : α → β) (hf : UniformEmbedding f) : α ≃ᵤ Set.Range f where
-  uniform_continuous_to_fun := uniform_continuous_subtype_mk hf.to_uniform_inducing.UniformContinuous _
+  uniform_continuous_to_fun := hf.to_uniform_inducing.UniformContinuous.subtype_mk _
   uniform_continuous_inv_fun := by
     simp [hf.to_uniform_inducing.uniform_continuous_iff, uniform_continuous_subtype_coe]
   toEquiv := Equivₓ.ofInjective f hf.inj
 
 /-- If two sets are equal, then they are uniformly equivalent. -/
 def setCongr {s t : Set α} (h : s = t) : s ≃ᵤ t where
-  uniform_continuous_to_fun := uniform_continuous_subtype_mk uniform_continuous_subtype_val _
-  uniform_continuous_inv_fun := uniform_continuous_subtype_mk uniform_continuous_subtype_val _
+  uniform_continuous_to_fun := uniform_continuous_subtype_val.subtype_mk _
+  uniform_continuous_inv_fun := uniform_continuous_subtype_val.subtype_mk _
   toEquiv := Equivₓ.setCongr h
 
 /-- Product of two uniform isomorphisms. -/
@@ -293,12 +293,8 @@ def finTwoArrow : (Finₓ 2 → α) ≃ᵤ α × α :=
 /-- A subset of a uniform space is uniformly isomorphic to its image under a uniform isomorphism.
 -/
 def image (e : α ≃ᵤ β) (s : Set α) : s ≃ᵤ e '' s where
-  uniform_continuous_to_fun :=
-    uniform_continuous_subtype_mk (e.UniformContinuous.comp uniform_continuous_subtype_val) fun x =>
-      mem_image_of_mem _ x.2
-  uniform_continuous_inv_fun :=
-    uniform_continuous_subtype_mk (e.symm.UniformContinuous.comp uniform_continuous_subtype_val) fun x => by
-      simpa using mem_image_of_mem e.symm x.2
+  uniform_continuous_to_fun := (e.UniformContinuous.comp uniform_continuous_subtype_val).subtype_mk _
+  uniform_continuous_inv_fun := (e.symm.UniformContinuous.comp uniform_continuous_subtype_val).subtype_mk _
   toEquiv := e.toEquiv.Image s
 
 end UniformEquiv

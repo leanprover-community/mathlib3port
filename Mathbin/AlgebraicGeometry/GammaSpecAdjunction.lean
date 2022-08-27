@@ -187,10 +187,10 @@ theorem to_stalk_stalk_map_to_Γ_Spec (x : X) :
   apply germ_res
 
 /-- The canonical morphism from `X` to the spectrum of its global sections. -/
-@[simps coeBase]
+@[simps val_base]
 def toΓSpec : X ⟶ Spec.locallyRingedSpaceObj (Γ.obj (op X)) where
   val := X.toΓSpecSheafedSpace
-  property := by
+  Prop := by
     intro x
     let p : PrimeSpectrum (Γ.obj (op X)) := X.to_Γ_Spec_fun x
     constructor
@@ -246,8 +246,8 @@ def identityToΓSpec : 𝟭 LocallyRingedSpace.{u} ⟶ Γ.rightOp ⋙ Spec.to_Lo
     apply LocallyRingedSpace.comp_ring_hom_ext
     · ext1 x
       dsimp' [Spec.Top_map, LocallyRingedSpace.to_Γ_Spec_fun]
-      rw [← Subtype.val_eq_coe, ← LocalRing.comap_closed_point (PresheafedSpace.stalk_map _ x), ←
-        PrimeSpectrum.comap_comp_apply, ← PrimeSpectrum.comap_comp_apply]
+      rw [← LocalRing.comap_closed_point (PresheafedSpace.stalk_map _ x), ← PrimeSpectrum.comap_comp_apply, ←
+        PrimeSpectrum.comap_comp_apply]
       congr 2
       exact (PresheafedSpace.stalk_map_germ f.1 ⊤ ⟨x, trivialₓ⟩).symm
       infer_instance

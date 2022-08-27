@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
 import Mathbin.CategoryTheory.EpiMono
+import Mathbin.CategoryTheory.Limits.Shapes.StrongEpi
+import Mathbin.CategoryTheory.LiftingProperties.Adjunction
 
 /-!
 # Preservation and reflection of monomorphisms and epimorphisms
@@ -66,6 +68,22 @@ instance reflects_monomorphisms_comp (F : C ⥤ D) (G : D ⥤ E) [ReflectsMonomo
 
 instance reflects_epimorphisms_comp (F : C ⥤ D) (G : D ⥤ E) [ReflectsEpimorphisms F] [ReflectsEpimorphisms G] :
     ReflectsEpimorphisms (F ⋙ G) where reflects := fun X Y f h => F.epi_of_epi_map (G.epi_of_epi_map h)
+
+theorem preserves_epimorphisms_of_preserves_of_reflects (F : C ⥤ D) (G : D ⥤ E) [PreservesEpimorphisms (F ⋙ G)]
+    [ReflectsEpimorphisms G] : PreservesEpimorphisms F :=
+  ⟨fun X Y f hf => G.epi_of_epi_map <| show Epi ((F ⋙ G).map f) from inferInstance⟩
+
+theorem preserves_monomorphisms_of_preserves_of_reflects (F : C ⥤ D) (G : D ⥤ E) [PreservesMonomorphisms (F ⋙ G)]
+    [ReflectsMonomorphisms G] : PreservesMonomorphisms F :=
+  ⟨fun X Y f hf => G.mono_of_mono_map <| show Mono ((F ⋙ G).map f) from inferInstance⟩
+
+theorem reflects_epimorphisms_of_preserves_of_reflects (F : C ⥤ D) (G : D ⥤ E) [PreservesEpimorphisms G]
+    [ReflectsEpimorphisms (F ⋙ G)] : ReflectsEpimorphisms F :=
+  ⟨fun X Y f hf => (F ⋙ G).epi_of_epi_map <| show Epi (G.map (F.map f)) from inferInstance⟩
+
+theorem reflects_monomorphisms_of_preserves_of_reflects (F : C ⥤ D) (G : D ⥤ E) [PreservesMonomorphisms G]
+    [ReflectsMonomorphisms (F ⋙ G)] : ReflectsMonomorphisms F :=
+  ⟨fun X Y f hf => (F ⋙ G).mono_of_mono_map <| show Mono (G.map (F.map f)) from inferInstance⟩
 
 theorem PreservesMonomorphisms.of_iso {F G : C ⥤ D} [PreservesMonomorphisms F] (α : F ≅ G) : PreservesMonomorphisms G :=
   { preserves := fun X Y f h => by
@@ -164,6 +182,16 @@ def splitEpiEquiv [Full F] [Faithful F] : SplitEpi f ≃ SplitEpi (F.map f) wher
   right_inv := by
     tidy
 
+@[simp]
+theorem is_split_epi_iff [Full F] [Faithful F] : IsSplitEpi (F.map f) ↔ IsSplitEpi f := by
+  constructor
+  · intro h
+    exact is_split_epi.mk' ((split_epi_equiv F f).invFun h.exists_split_epi.some)
+    
+  · intro h
+    exact is_split_epi.mk' ((split_epi_equiv F f).toFun h.exists_split_epi.some)
+    
+
 /-- If `F` is a fully faithful functor, split monomorphisms are preserved and reflected by `F`. -/
 def splitMonoEquiv [Full F] [Faithful F] : SplitMono f ≃ SplitMono (F.map f) where
   toFun := fun f => f.map F
@@ -176,6 +204,16 @@ def splitMonoEquiv [Full F] [Faithful F] : SplitMono f ≃ SplitMono (F.map f) w
     tidy
   right_inv := by
     tidy
+
+@[simp]
+theorem is_split_mono_iff [Full F] [Faithful F] : IsSplitMono (F.map f) ↔ IsSplitMono f := by
+  constructor
+  · intro h
+    exact is_split_mono.mk' ((split_mono_equiv F f).invFun h.exists_split_mono.some)
+    
+  · intro h
+    exact is_split_mono.mk' ((split_mono_equiv F f).toFun h.exists_split_mono.some)
+    
 
 @[simp]
 theorem epi_map_iff_epi [hF₁ : PreservesEpimorphisms F] [hF₂ : ReflectsEpimorphisms F] : Epi (F.map f) ↔ Epi f := by
@@ -197,6 +235,40 @@ theorem mono_map_iff_mono [hF₁ : PreservesMonomorphisms F] [hF₂ : ReflectsMo
     
 
 end
+
+end CategoryTheory.Functor
+
+namespace CategoryTheory.Adjunction
+
+variable {C D : Type _} [Category C] [Category D] {F : C ⥤ D} {F' : D ⥤ C} {A B : C}
+
+theorem strong_epi_map_of_strong_epi (adj : F ⊣ F') (f : A ⟶ B) [h₁ : F'.PreservesMonomorphisms]
+    [h₂ : F.PreservesEpimorphisms] [StrongEpi f] : StrongEpi (F.map f) :=
+  ⟨inferInstance, fun X Y Z => by
+    intro
+    rw [adj.has_lifting_property_iff]
+    infer_instance⟩
+
+instance strong_epi_map_of_is_equivalence [IsEquivalence F] (f : A ⟶ B) [h : StrongEpi f] : StrongEpi (F.map f) :=
+  F.asEquivalence.toAdjunction.strong_epi_map_of_strong_epi f
+
+end CategoryTheory.Adjunction
+
+namespace CategoryTheory.Functor
+
+variable {C D : Type _} [Category C] [Category D] {F : C ⥤ D} {A B : C} (f : A ⟶ B)
+
+@[simp]
+theorem strong_epi_map_iff_strong_epi_of_is_equivalence [IsEquivalence F] : StrongEpi (F.map f) ↔ StrongEpi f := by
+  constructor
+  · intro
+    have e : arrow.mk f ≅ arrow.mk (F.inv.map (F.map f)) := arrow.iso_of_nat_iso F.as_equivalence.unit_iso (arrow.mk f)
+    rw [strong_epi.iff_of_arrow_iso e]
+    infer_instance
+    
+  · intro
+    infer_instance
+    
 
 end CategoryTheory.Functor
 

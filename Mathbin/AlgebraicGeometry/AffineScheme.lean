@@ -137,7 +137,7 @@ def Scheme.AffineOpens (X : Scheme) : Set (Opens X.Carrier) :=
   { U : Opens X.Carrier | IsAffineOpen U }
 
 theorem range_is_affine_open_of_open_immersion {X Y : Scheme} [IsAffine X] (f : X ⟶ Y) [H : IsOpenImmersion f] :
-    IsAffineOpen ⟨Set.Range f.1.base, H.base_open.open_range⟩ := by
+    IsAffineOpen f.opensRange := by
   refine' is_affine_of_iso (is_open_immersion.iso_of_range_eq f (Y.of_restrict _) _).inv
   exact subtype.range_coe.symm
   infer_instance
@@ -202,7 +202,7 @@ theorem IsAffineOpen.is_compact {X : Scheme} {U : Opens X.Carrier} (hU : IsAffin
   exact Set.image_univ
 
 theorem IsAffineOpen.image_is_open_immersion {X Y : Scheme} {U : Opens X.Carrier} (hU : IsAffineOpen U) (f : X ⟶ Y)
-    [H : IsOpenImmersion f] : IsAffineOpen (H.openFunctor.obj U) := by
+    [H : IsOpenImmersion f] : IsAffineOpen (f.opensFunctor.obj U) := by
   haveI : is_affine _ := hU
   convert range_is_affine_open_of_open_immersion (X.of_restrict U.open_embedding ≫ f)
   ext1
@@ -297,7 +297,7 @@ theorem IsAffineOpen.basic_open_is_affine {X : Scheme} {U : Opens X.Carrier} (hU
     by
     rw [Set.image_preimage_eq_inter_range, Set.inter_eq_left_iff_subset, hU.from_Spec_range]
     exact Scheme.basic_open_subset _ _
-  rw [Subtype.coe_mk, Scheme.comp_val_base, ← this, coe_comp, Set.range_comp]
+  rw [Scheme.hom.opens_range_coe, Scheme.comp_val_base, ← this, coe_comp, Set.range_comp]
   congr 1
   refine' (congr_arg coe <| Scheme.preimage_basic_open hU.from_Spec f).trans _
   refine' Eq.trans _ (PrimeSpectrum.localization_away_comap_range (Localization.Away f) f).symm
@@ -379,7 +379,7 @@ theorem IsAffineOpen.exists_basic_open_subset {X : Scheme} {U : Opens X.Carrier}
     U.open_embedding.is_open_map.functor.obj ((X.restrict U.open_embedding).basicOpen r) =
       X.basic_open (X.presheaf.map (eq_to_hom U.open_embedding_obj_top.symm).op r) :=
     by
-    refine' (is_open_immersion.image_basic_open (X.of_restrict U.open_embedding) r).trans _
+    refine' (Scheme.image_basic_open (X.of_restrict U.open_embedding) r).trans _
     erw [← Scheme.basic_open_res_eq _ _ (eq_to_hom U.open_embedding_obj_top).op]
     rw [← comp_apply, ← CategoryTheory.Functor.map_comp, ← op_comp, eq_to_hom_trans, eq_to_hom_refl, op_id,
       CategoryTheory.Functor.map_id]

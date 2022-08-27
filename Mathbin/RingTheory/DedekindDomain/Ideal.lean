@@ -181,7 +181,7 @@ theorem inv_one : (1⁻¹ : FractionalIdeal R₁⁰ K) = 1 :=
 
 end FractionalIdeal
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal «expr ⁰»(A) (fraction_ring A)))
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal[fractional_ideal] «expr ⁰»(A) (fraction_ring[fraction_ring] A)))
 /-- A Dedekind domain is an integral domain such that every fractional ideal has an inverse.
 
 This is equivalent to `is_dedekind_domain`.
@@ -196,7 +196,7 @@ open FractionalIdeal
 
 variable {R A K}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal «expr ⁰»(A) K))
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal[fractional_ideal] «expr ⁰»(A) K))
 theorem is_dedekind_domain_inv_iff [Algebra A K] [IsFractionRing A K] :
     IsDedekindDomainInv A ↔ ∀ (I) (_ : I ≠ (⊥ : FractionalIdeal A⁰ K)), I * I⁻¹ = 1 := by
   let h := FractionalIdeal.mapEquiv (FractionRing.algEquiv A K)

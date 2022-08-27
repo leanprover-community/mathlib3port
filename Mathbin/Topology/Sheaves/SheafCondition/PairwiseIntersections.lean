@@ -33,7 +33,7 @@ We express this in two equivalent ways, as
 
 noncomputable section
 
-universe v u
+universe w v u
 
 open TopologicalSpace
 
@@ -47,9 +47,11 @@ open CategoryTheory.Limits
 
 namespace Top.Presheaf
 
-variable {X : Top.{v}}
-
 variable {C : Type u} [Category.{v} C]
+
+section
+
+variable {X : Top.{w}}
 
 /-- An alternative formulation of the sheaf condition
 (which we prove equivalent to the usual one below as
@@ -59,7 +61,7 @@ A presheaf is a sheaf if `F` sends the cone `(pairwise.cocone U).op` to a limit 
 (Recall `pairwise.cocone U` has cone point `supr U`, mapping down to the `U i` and the `U i ⊓ U j`.)
 -/
 def IsSheafPairwiseIntersections (F : Presheaf C X) : Prop :=
-  ∀ ⦃ι : Type v⦄ (U : ι → Opens X), Nonempty (IsLimit (F.mapCone (Pairwise.cocone U).op))
+  ∀ ⦃ι : Type w⦄ (U : ι → Opens X), Nonempty (IsLimit (F.mapCone (Pairwise.cocone U).op))
 
 /-- An alternative formulation of the sheaf condition
 (which we prove equivalent to the usual one below as
@@ -70,7 +72,9 @@ A presheaf is a sheaf if `F` preserves the limit of `pairwise.diagram U`.
 `U i ⊓ U j` mapping into the open sets `U i`. This diagram has limit `supr U`.)
 -/
 def IsSheafPreservesLimitPairwiseIntersections (F : Presheaf C X) : Prop :=
-  ∀ ⦃ι : Type v⦄ (U : ι → Opens X), Nonempty (PreservesLimit (Pairwise.diagram U).op F)
+  ∀ ⦃ι : Type w⦄ (U : ι → Opens X), Nonempty (PreservesLimit (Pairwise.diagram U).op F)
+
+end
 
 /-!
 The remainder of this file shows that these conditions are equivalent
@@ -78,7 +82,7 @@ to the usual sheaf condition.
 -/
 
 
-variable [HasProducts.{v} C]
+variable {X : Top.{v}} [HasProducts.{v} C]
 
 namespace SheafConditionPairwiseIntersections
 

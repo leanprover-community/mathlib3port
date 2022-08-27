@@ -294,6 +294,10 @@ theorem inv_unique {u₁ u₂ : αˣ} (h : (↑u₁ : α) = ↑u₂) : (↑u₁�
   Units.inv_eq_of_mul_eq_one_right <| by
     rw [h, u₂.mul_inv]
 
+@[simp, to_additive]
+theorem coe_inv {M : Type _} [DivisionMonoid M] (u : Units M) : ↑u⁻¹ = (u⁻¹ : M) :=
+  Eq.symm <| inv_eq_of_mul_eq_one_right u.mul_inv
+
 end Units
 
 /-- For `a, b` in a `comm_monoid` such that `a * b = 1`, makes a unit out of `a`. -/
@@ -521,70 +525,87 @@ theorem is_unit_of_mul_is_unit_right [CommMonoidₓ M] {x y : M} (hu : IsUnit (x
   @is_unit_of_mul_is_unit_left _ _ y x <| by
     rwa [mul_comm]
 
+namespace IsUnit
+
 @[simp, to_additive]
-theorem IsUnit.mul_iff [CommMonoidₓ M] {x y : M} : IsUnit (x * y) ↔ IsUnit x ∧ IsUnit y :=
+theorem mul_iff [CommMonoidₓ M] {x y : M} : IsUnit (x * y) ↔ IsUnit x ∧ IsUnit y :=
   ⟨fun h => ⟨is_unit_of_mul_is_unit_left h, is_unit_of_mul_is_unit_right h⟩, fun h => IsUnit.mul h.1 h.2⟩
-
-/-- The element of the group of units, corresponding to an element of a monoid which is a unit. When
-`α` is a `division_monoid`, use `is_unit.unit'` instead. -/
-@[to_additive
-      "The element of the additive group of additive units, corresponding to an element of\nan additive monoid which is an additive unit. When `α` is a `subtraction_monoid`, use\n`is_add_unit.add_unit'` instead."]
-noncomputable def IsUnit.unit [Monoidₓ M] {a : M} (h : IsUnit a) : Mˣ :=
-  (Classical.some h).copy a (Classical.some_spec h).symm _ rfl
-
-@[simp, to_additive]
-theorem IsUnit.unit_of_coe_units [Monoidₓ M] {a : Mˣ} (h : IsUnit (a : M)) : h.Unit = a :=
-  Units.ext <| rfl
-
-@[simp, to_additive]
-theorem IsUnit.unit_spec [Monoidₓ M] {a : M} (h : IsUnit a) : ↑h.Unit = a :=
-  rfl
-
-@[simp, to_additive]
-theorem IsUnit.coe_inv_mul [Monoidₓ M] {a : M} (h : IsUnit a) : ↑h.Unit⁻¹ * a = 1 :=
-  Units.mul_inv _
-
-@[simp, to_additive]
-theorem IsUnit.mul_coe_inv [Monoidₓ M] {a : M} (h : IsUnit a) : a * ↑h.Unit⁻¹ = 1 := by
-  convert Units.mul_inv _
-  simp [h.unit_spec]
-
-/-- `is_unit x` is decidable if we can decide if `x` comes from `Mˣ`. -/
-instance [Monoidₓ M] (x : M) [h : Decidable (∃ u : Mˣ, ↑u = x)] : Decidable (IsUnit x) :=
-  h
 
 section Monoidₓ
 
 variable [Monoidₓ M] {a b c : M}
 
+/-- The element of the group of units, corresponding to an element of a monoid which is a unit. When
+`α` is a `division_monoid`, use `is_unit.unit'` instead. -/
+@[to_additive
+      "The element of the additive group of additive units, corresponding to an element of\nan additive monoid which is an additive unit. When `α` is a `subtraction_monoid`, use\n`is_add_unit.add_unit'` instead."]
+protected noncomputable def unit (h : IsUnit a) : Mˣ :=
+  (Classical.some h).copy a (Classical.some_spec h).symm _ rfl
+
+@[simp, to_additive]
+theorem unit_of_coe_units {a : Mˣ} (h : IsUnit (a : M)) : h.Unit = a :=
+  Units.ext <| rfl
+
+@[simp, to_additive]
+theorem unit_spec (h : IsUnit a) : ↑h.Unit = a :=
+  rfl
+
+@[simp, to_additive]
+theorem coe_inv_mul (h : IsUnit a) : ↑h.Unit⁻¹ * a = 1 :=
+  Units.mul_inv _
+
+@[simp, to_additive]
+theorem mul_coe_inv (h : IsUnit a) : a * ↑h.Unit⁻¹ = 1 := by
+  convert h.unit.mul_inv
+
+/-- `is_unit x` is decidable if we can decide if `x` comes from `Mˣ`. -/
+instance (x : M) [h : Decidable (∃ u : Mˣ, ↑u = x)] : Decidable (IsUnit x) :=
+  h
+
 @[to_additive]
-theorem IsUnit.mul_left_inj (h : IsUnit a) : b * a = c * a ↔ b = c :=
+theorem mul_left_inj (h : IsUnit a) : b * a = c * a ↔ b = c :=
   let ⟨u, hu⟩ := h
   hu ▸ u.mul_left_inj
 
 @[to_additive]
-theorem IsUnit.mul_right_inj (h : IsUnit a) : a * b = a * c ↔ b = c :=
+theorem mul_right_inj (h : IsUnit a) : a * b = a * c ↔ b = c :=
   let ⟨u, hu⟩ := h
   hu ▸ u.mul_right_inj
 
 @[to_additive]
-protected theorem IsUnit.mul_left_cancel (h : IsUnit a) : a * b = a * c → b = c :=
+protected theorem mul_left_cancel (h : IsUnit a) : a * b = a * c → b = c :=
   h.mul_right_inj.1
 
 @[to_additive]
-protected theorem IsUnit.mul_right_cancel (h : IsUnit b) : a * b = c * b → a = c :=
+protected theorem mul_right_cancel (h : IsUnit b) : a * b = c * b → a = c :=
   h.mul_left_inj.1
 
 @[to_additive]
-protected theorem IsUnit.mul_right_injective (h : IsUnit a) : Injective ((· * ·) a) := fun _ _ => h.mul_left_cancel
+protected theorem mul_right_injective (h : IsUnit a) : Injective ((· * ·) a) := fun _ _ => h.mul_left_cancel
 
 @[to_additive]
-protected theorem IsUnit.mul_left_injective (h : IsUnit b) : Injective (· * b) := fun _ _ => h.mul_right_cancel
+protected theorem mul_left_injective (h : IsUnit b) : Injective (· * b) := fun _ _ => h.mul_right_cancel
 
 end Monoidₓ
 
+variable [DivisionMonoid M] {a : M}
+
+@[simp, to_additive]
+protected theorem inv_mul_cancel : IsUnit a → a⁻¹ * a = 1 := by
+  rintro ⟨u, rfl⟩
+  rw [← Units.coe_inv, Units.inv_mul]
+
+@[simp, to_additive]
+protected theorem mul_inv_cancel : IsUnit a → a * a⁻¹ = 1 := by
+  rintro ⟨u, rfl⟩
+  rw [← Units.coe_inv, Units.mul_inv]
+
 end IsUnit
 
+-- namespace
+end IsUnit
+
+-- section
 section NoncomputableDefs
 
 variable {M : Type _}

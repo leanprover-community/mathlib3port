@@ -372,7 +372,7 @@ theorem continuous_comp {G : β → γ} {C : ℝ≥0 } (H : LipschitzWith C G) :
 
 /-- Restriction (in the target) of a bounded continuous function taking values in a subset -/
 def codRestrict (s : Set β) (f : α →ᵇ β) (H : ∀ x, f x ∈ s) : α →ᵇ s :=
-  ⟨⟨s.codRestrict f H, continuous_subtype_mk _ f.Continuous⟩, f.Bounded⟩
+  ⟨⟨s.codRestrict f H, f.Continuous.subtype_mk _⟩, f.Bounded⟩
 
 section Extend
 

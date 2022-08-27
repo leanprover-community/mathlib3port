@@ -476,7 +476,7 @@ theorem prod_finset_product_right' (r : Finset (α × γ)) (s : Finset γ) (t : 
     (∏ p in r, f p.1 p.2) = ∏ c in s, ∏ a in t c, f a c :=
   prod_finset_product_right r s t h
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([2]) }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) }
 @[to_additive]
 theorem prod_fiberwise_of_maps_to [DecidableEq γ] {s : Finset α} {t : Finset γ} {g : α → γ} (h : ∀ x ∈ s, g x ∈ t)
     (f : α → β) : (∏ y in t, ∏ x in s.filter fun x => g x = y, f x) = ∏ x in s, f x := by
@@ -982,7 +982,7 @@ theorem eventually_constant_prod {u : ℕ → β} {N : ℕ} (hu : ∀ n ≥ N, u
   · simp
     
   erw [prod_range_succ, hm]
-  simp [hu]
+  simp [hu, @zero_le' ℕ]
 
 @[to_additive]
 theorem prod_range_add (f : ℕ → β) (n m : ℕ) :

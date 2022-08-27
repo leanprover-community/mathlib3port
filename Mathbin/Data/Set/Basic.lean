@@ -1458,11 +1458,11 @@ theorem diff_inter_self {a b : Set α} : b \ a ∩ a = ∅ :=
 
 @[simp]
 theorem diff_inter_self_eq_diff {s t : Set α} : s \ (t ∩ s) = s \ t :=
-  sdiff_inf_self_right
+  sdiff_inf_self_right _ _
 
 @[simp]
 theorem diff_self_inter {s t : Set α} : s \ (s ∩ t) = s \ t :=
-  sdiff_inf_self_left
+  sdiff_inf_self_left _ _
 
 @[simp]
 theorem diff_eq_self {s t : Set α} : s \ t = s ↔ t ∩ s ⊆ ∅ :=

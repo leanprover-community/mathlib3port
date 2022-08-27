@@ -37,6 +37,16 @@ theorem same_ray_iff : SameRay ℝ x y ↔ x = 0 ∨ y = 0 ∨ x.arg = y.arg := 
   field_simp [hx, hy]
   rw [mul_comm, eq_comm]
 
+theorem same_ray_iff_arg_div_eq_zero : SameRay ℝ x y ↔ arg (x / y) = 0 := by
+  rw [← Real.Angle.to_real_zero, ← arg_coe_angle_eq_iff_eq_to_real, same_ray_iff]
+  by_cases' hx : x = 0
+  · simp [hx]
+    
+  by_cases' hy : y = 0
+  · simp [hy]
+    
+  simp [hx, hy, arg_div_coe_angle, sub_eq_zero]
+
 theorem abs_add_eq_iff : (x + y).abs = x.abs + y.abs ↔ x = 0 ∨ y = 0 ∨ x.arg = y.arg :=
   same_ray_iff_norm_add.symm.trans same_ray_iff
 

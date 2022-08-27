@@ -434,13 +434,20 @@ local notation "↑ₐ" => algebraMap 𝕜 A
 
 /-- An algebra homomorphism into the base field, as a continuous linear map (since it is
 automatically bounded). -/
-@[simps]
-def toContinuousLinearMap [NormOneClass A] (φ : A →ₐ[𝕜] 𝕜) : A →L[𝕜] 𝕜 :=
-  φ.toLinearMap.mkContinuousOfExistsBound <|
-    ⟨1, fun a => (one_mulₓ ∥a∥).symm ▸ Spectrum.norm_le_norm_of_mem (φ.apply_mem_spectrum _)⟩
+instance [NormOneClass A] : ContinuousLinearMapClass (A →ₐ[𝕜] 𝕜) 𝕜 A 𝕜 :=
+  { AlgHomClass.linearMapClass with
+    map_continuous := fun φ =>
+      (AddMonoidHomClass.continuous_of_bound φ 1) fun a =>
+        (one_mulₓ ∥a∥).symm ▸ Spectrum.norm_le_norm_of_mem (apply_mem_spectrum φ _) }
 
-theorem continuous [NormOneClass A] (φ : A →ₐ[𝕜] 𝕜) : Continuous φ :=
-  φ.toContinuousLinearMap.Continuous
+/-- An algebra homomorphism into the base field, as a continuous linear map (since it is
+automatically bounded). -/
+def toContinuousLinearMap [NormOneClass A] (φ : A →ₐ[𝕜] 𝕜) : A →L[𝕜] 𝕜 :=
+  { φ.toLinearMap with cont := map_continuous φ }
+
+@[simp]
+theorem coe_to_continuous_linear_map [NormOneClass A] (φ : A →ₐ[𝕜] 𝕜) : ⇑φ.toContinuousLinearMap = φ :=
+  rfl
 
 end NormedField
 
@@ -454,8 +461,8 @@ local notation "↑ₐ" => algebraMap 𝕜 A
 @[simp]
 theorem to_continuous_linear_map_norm [NormOneClass A] (φ : A →ₐ[𝕜] 𝕜) : ∥φ.toContinuousLinearMap∥ = 1 :=
   ContinuousLinearMap.op_norm_eq_of_bounds zero_le_one
-    (fun a => (one_mulₓ ∥a∥).symm ▸ Spectrum.norm_le_norm_of_mem (φ.apply_mem_spectrum _)) fun _ _ h => by
-    simpa only [to_continuous_linear_map_apply, mul_oneₓ, map_one, norm_one] using h 1
+    (fun a => (one_mulₓ ∥a∥).symm ▸ Spectrum.norm_le_norm_of_mem (apply_mem_spectrum φ _)) fun _ _ h => by
+    simpa only [coe_to_continuous_linear_map, map_one, norm_one, mul_oneₓ] using h 1
 
 end NontriviallyNormedField
 

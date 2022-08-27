@@ -405,6 +405,43 @@ theorem sub_algebra_map {B : Type _} [CommRingₓ B] [Algebra A B] {x : B} (hx :
     minpoly A (x - algebraMap A B a) = (minpoly A x).comp (X + c a) := by
   simpa [sub_eq_add_neg] using add_algebra_map hx (-a)
 
+section AlgHomFintype
+
+/-- A technical finiteness result. -/
+noncomputable def Fintype.subtypeProd {E : Type _} {X : Set E} (hX : X.Finite) {L : Type _} (F : E → Multiset L) :
+    Fintype (∀ x : X, { l : L // l ∈ F x }) :=
+  let hX := Finite.fintype hX
+  Pi.fintype
+
+variable (F E K : Type _) [Field F] [Ringₓ E] [CommRingₓ K] [IsDomain K] [Algebra F E] [Algebra F K]
+  [FiniteDimensional F E]
+
+-- Marked as `noncomputable!` since this definition takes multiple seconds to compile,
+-- and isn't very computable in practice (since neither `finrank` nor `fin_basis` are).
+/-- Function from Hom_K(E,L) to pi type Π (x : basis), roots of min poly of x -/
+noncomputable def rootsOfMinPolyPiType (φ : E →ₐ[F] K) (x : Range (FiniteDimensional.finBasis F E : _ → E)) :
+    { l : K // l ∈ (((minpoly F x.1).map (algebraMap F K)).roots : Multiset K) } :=
+  ⟨φ x, by
+    rw [mem_roots_map (minpoly.ne_zero_of_finite_field_extension F x.val), Subtype.val_eq_coe, ← aeval_def,
+      aeval_alg_hom_apply, minpoly.aeval, map_zero]⟩
+
+theorem aux_inj_roots_of_min_poly : Injective (rootsOfMinPolyPiType F E K) := by
+  intro f g h
+  suffices (f : E →ₗ[F] K) = g by
+    rwa [FunLike.ext'_iff] at this⊢
+  rw [funext_iff] at h
+  exact LinearMap.ext_on (FiniteDimensional.finBasis F E).span_eq fun e he => subtype.ext_iff.mp (h ⟨e, he⟩)
+
+/-- Given field extensions `E/F` and `K/F`, with `E/F` finite, there are finitely many `F`-algebra
+  homomorphisms `E →ₐ[K] K`. -/
+noncomputable instance AlgHom.fintype : Fintype (E →ₐ[F] K) :=
+  @Fintype.ofInjective _ _
+    (Fintype.subtypeProd (finite_range (FiniteDimensional.finBasis F E)) fun e =>
+      ((minpoly F e).map (algebraMap F K)).roots)
+    _ (aux_inj_roots_of_min_poly F E K)
+
+end AlgHomFintype
+
 section GcdDomain
 
 variable {R S : Type _} (K L : Type _) [CommRingₓ R] [IsDomain R] [NormalizedGcdMonoid R] [Field K] [CommRingₓ S]

@@ -114,7 +114,7 @@ theorem AnalyticOn.iterated_fderiv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) (
     
 
 /-- An analytic function is infinitely differentiable. -/
-theorem AnalyticOn.cont_diff_on [CompleteSpace F] (h : AnalyticOn 𝕜 f s) {n : WithTop ℕ} : ContDiffOn 𝕜 n f s := by
+theorem AnalyticOn.cont_diff_on [CompleteSpace F] (h : AnalyticOn 𝕜 f s) {n : ℕ∞} : ContDiffOn 𝕜 n f s := by
   let t := { x | AnalyticAt 𝕜 f x }
   suffices : ContDiffOn 𝕜 n f t
   exact this.mono h

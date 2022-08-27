@@ -573,6 +573,9 @@ theorem sinh_neg_iff : sinh x < 0 ↔ x < 0 := by
 theorem sinh_nonneg_iff : 0 ≤ sinh x ↔ 0 ≤ x := by
   simpa only [sinh_zero] using @sinh_le_sinh 0 x
 
+theorem abs_sinh (x : ℝ) : abs (sinh x) = sinh (abs x) := by
+  cases le_totalₓ x 0 <;> simp [abs_of_nonneg, abs_of_nonpos, *]
+
 theorem cosh_strict_mono_on : StrictMonoOn cosh (Ici 0) :=
   ((convex_Ici _).strict_mono_on_of_deriv_pos continuous_cosh.ContinuousOn) fun x hx => by
     rw [interior_Ici, mem_Ioi] at hx

@@ -85,7 +85,7 @@ theorem derived_series_of_ideal_add (k l : ℕ) : D (k + l) I = D k (D l I) := b
 theorem derived_series_of_ideal_le {I J : LieIdeal R L} {k l : ℕ} (h₁ : I ≤ J) (h₂ : l ≤ k) : D k I ≤ D l J := by
   revert l
   induction' k with k ih <;> intro l h₂
-  · rw [Nat.le_zero_iffₓ] at h₂
+  · rw [le_zero_iff] at h₂
     rw [h₂, derived_series_of_ideal_zero]
     exact h₁
     

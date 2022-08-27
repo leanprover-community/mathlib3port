@@ -684,7 +684,7 @@ end NormedAddCommGroup
 
 namespace ContDiffBumpOfInner
 
-variable {n : WithTop ℕ}
+variable {n : ℕ∞}
 
 variable [NormedSpace ℝ E']
 
@@ -763,7 +763,7 @@ variable [NormedSpace 𝕜 E'']
 
 variable [NormedSpace ℝ F] [NormedSpace 𝕜 F]
 
-variable {n : WithTop ℕ}
+variable {n : ℕ∞}
 
 variable [CompleteSpace F]
 
@@ -865,7 +865,7 @@ theorem HasCompactSupport.has_fderiv_at_convolution_left [IsNegInvariant μ] (hc
 
 theorem HasCompactSupport.cont_diff_convolution_right [FiniteDimensional 𝕜 G] (hcg : HasCompactSupport g)
     (hf : LocallyIntegrable f μ) (hg : ContDiff 𝕜 n g) : ContDiff 𝕜 n (f ⋆[L, μ] g) := by
-  induction' n using WithTop.nat_induction with n ih ih generalizing g
+  induction' n using Enat.nat_induction with n ih ih generalizing g
   · rw [cont_diff_zero] at hg⊢
     exact hcg.continuous_convolution_right L hf hg
     
@@ -914,7 +914,7 @@ variable [NormedSpace ℝ F] [NormedSpace 𝕜 F]
 
 variable {f₀ : 𝕜 → E} {g₀ : 𝕜 → E'}
 
-variable {n : WithTop ℕ}
+variable {n : ℕ∞}
 
 variable (L : E →L[𝕜] E' →L[𝕜] F)
 

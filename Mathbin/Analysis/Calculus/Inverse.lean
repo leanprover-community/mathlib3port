@@ -737,40 +737,39 @@ variable [CompleteSpace E'] (f : E' → F') {f' : E' ≃L[𝕂] F'} {a : E'}
 
 /-- Given a `cont_diff` function over `𝕂` (which is `ℝ` or `ℂ`) with an invertible
 derivative at `a`, returns a `local_homeomorph` with `to_fun = f` and `a ∈ source`. -/
-def toLocalHomeomorph {n : WithTop ℕ} (hf : ContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a)
-    (hn : 1 ≤ n) : LocalHomeomorph E' F' :=
+def toLocalHomeomorph {n : ℕ∞} (hf : ContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a) (hn : 1 ≤ n) :
+    LocalHomeomorph E' F' :=
   (hf.has_strict_fderiv_at' hf' hn).toLocalHomeomorph f
 
 variable {f}
 
 @[simp]
-theorem to_local_homeomorph_coe {n : WithTop ℕ} (hf : ContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a)
+theorem to_local_homeomorph_coe {n : ℕ∞} (hf : ContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a)
     (hn : 1 ≤ n) : (hf.toLocalHomeomorph f hf' hn : E' → F') = f :=
   rfl
 
-theorem mem_to_local_homeomorph_source {n : WithTop ℕ} (hf : ContDiffAt 𝕂 n f a)
-    (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a) (hn : 1 ≤ n) : a ∈ (hf.toLocalHomeomorph f hf' hn).Source :=
+theorem mem_to_local_homeomorph_source {n : ℕ∞} (hf : ContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a)
+    (hn : 1 ≤ n) : a ∈ (hf.toLocalHomeomorph f hf' hn).Source :=
   (hf.has_strict_fderiv_at' hf' hn).mem_to_local_homeomorph_source
 
-theorem image_mem_to_local_homeomorph_target {n : WithTop ℕ} (hf : ContDiffAt 𝕂 n f a)
+theorem image_mem_to_local_homeomorph_target {n : ℕ∞} (hf : ContDiffAt 𝕂 n f a)
     (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a) (hn : 1 ≤ n) : f a ∈ (hf.toLocalHomeomorph f hf' hn).Target :=
   (hf.has_strict_fderiv_at' hf' hn).image_mem_to_local_homeomorph_target
 
 /-- Given a `cont_diff` function over `𝕂` (which is `ℝ` or `ℂ`) with an invertible derivative
 at `a`, returns a function that is locally inverse to `f`. -/
-def localInverse {n : WithTop ℕ} (hf : ContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a) (hn : 1 ≤ n) :
-    F' → E' :=
+def localInverse {n : ℕ∞} (hf : ContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a) (hn : 1 ≤ n) : F' → E' :=
   (hf.has_strict_fderiv_at' hf' hn).localInverse f f' a
 
-theorem local_inverse_apply_image {n : WithTop ℕ} (hf : ContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a)
+theorem local_inverse_apply_image {n : ℕ∞} (hf : ContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a)
     (hn : 1 ≤ n) : hf.localInverse hf' hn (f a) = a :=
   (hf.has_strict_fderiv_at' hf' hn).local_inverse_apply_image
 
 /-- Given a `cont_diff` function over `𝕂` (which is `ℝ` or `ℂ`) with an invertible derivative
 at `a`, the inverse function (produced by `cont_diff.to_local_homeomorph`) is
 also `cont_diff`. -/
-theorem to_local_inverse {n : WithTop ℕ} (hf : ContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a)
-    (hn : 1 ≤ n) : ContDiffAt 𝕂 n (hf.localInverse hf' hn) (f a) := by
+theorem to_local_inverse {n : ℕ∞} (hf : ContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a) (hn : 1 ≤ n) :
+    ContDiffAt 𝕂 n (hf.localInverse hf' hn) (f a) := by
   have := hf.local_inverse_apply_image hf' hn
   apply (hf.to_local_homeomorph f hf' hn).cont_diff_at_symm (image_mem_to_local_homeomorph_target hf hf' hn)
   · convert hf'

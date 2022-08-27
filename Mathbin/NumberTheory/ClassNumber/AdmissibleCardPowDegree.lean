@@ -178,8 +178,11 @@ theorem card_pow_degree_anti_archimedean {x y z : Fq[X]} {a : ℤ} (hxy : cardPo
   convert degree_add_le (x - y) (y - z) using 2
   exact (sub_add_sub_cancel _ _ _).symm
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident j, ",", ident hj, "⟩", ":", expr «expr∃ , »((j), ∀
-    i, «expr ↔ »(«expr = »(t' i, j), «expr < »((card_pow_degree «expr - »(«expr % »(A 0, b), «expr % »(A i.succ, b)) : exprℝ()), «expr • »(card_pow_degree b, ε))))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident j, ",", ident hj, "⟩", ":", expr «expr∃ , »((j),
+    ∀ i,
+    «expr ↔ »(«expr = »(t' i, j),
+     «expr < »((card_pow_degree «expr - »(«expr % »(A 0, b), «expr % »(A i.succ, b)) : exprℝ()),
+      «expr • »(card_pow_degree b, ε))))]]
 /-- A slightly stronger version of `exists_partition` on which we perform induction on `n`:
 for all `ε > 0`, we can partition the remainders of any family of polynomials `A`
 into equivalence classes, where the equivalence(!) relation is "closer than `ε`". -/
@@ -205,7 +208,7 @@ theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b :
     exact card_pow_degree_anti_archimedean
   obtain ⟨t', ht'⟩ := ih (Finₓ.tail A)
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident j, \",\", ident hj, \"⟩\", \":\", expr «expr∃ , »((j), ∀\n    i, «expr ↔ »(«expr = »(t' i, j), «expr < »((card_pow_degree «expr - »(«expr % »(A 0, b), «expr % »(A i.succ, b)) : exprℝ()), «expr • »(card_pow_degree b, ε))))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident j, \",\", ident hj, \"⟩\", \":\", expr «expr∃ , »((j),\n    ∀ i,\n    «expr ↔ »(«expr = »(t' i, j),\n     «expr < »((card_pow_degree «expr - »(«expr % »(A 0, b), «expr % »(A i.succ, b)) : exprℝ()),\n      «expr • »(card_pow_degree b, ε))))]]"
   · refine' ⟨Finₓ.cons j t', fun i₀ i₁ => _⟩
     refine' Finₓ.cases _ (fun i₀ => _) i₀ <;> refine' Finₓ.cases _ (fun i₁ => _) i₁
     · simpa using hbε

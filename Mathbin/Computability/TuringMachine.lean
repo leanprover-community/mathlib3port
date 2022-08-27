@@ -2572,7 +2572,8 @@ theorem tr_respects_aux {q v T k} {S : ∀ k, List (Γ k)}
 
 attribute [local simp] respects TM2.step TM2.step_aux tr_normal
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident b, ",", ident c, ",", ident r, "⟩", ":", expr «expr∃ , »((b), «expr ∧ »(_, reaches (TM1.step (tr M)) _ _))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident b, ",", ident c, ",", ident r, "⟩", ":", expr «expr∃ , »((b),
+    «expr ∧ »(_, reaches (TM1.step (tr M)) _ _))]]
 theorem tr_respects : Respects (TM2.step M) (TM1.step tr) tr_cfg := fun c₁ c₂ h => by
   cases' h with l v S L hT
   clear h
@@ -2581,7 +2582,7 @@ theorem tr_respects : Respects (TM2.step M) (TM1.step tr) tr_cfg := fun c₁ c�
     
   simp only [TM2.step, respects, Option.map_some'ₓ]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident b, \",\", ident c, \",\", ident r, \"⟩\", \":\", expr «expr∃ , »((b), «expr ∧ »(_, reaches (TM1.step (tr M)) _ _))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident b, \",\", ident c, \",\", ident r, \"⟩\", \":\", expr «expr∃ , »((b),\n    «expr ∧ »(_, reaches (TM1.step (tr M)) _ _))]]"
   · exact ⟨b, c, trans_gen.head' rfl r⟩
     
   rw [tr]

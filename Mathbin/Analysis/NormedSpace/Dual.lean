@@ -50,11 +50,11 @@ variable (E : Type _) [SeminormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 variable (F : Type _) [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler normed_space 𝕜
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler normed_space[normed_space] 𝕜
 /-- The topological dual of a seminormed space `E`. -/
 def Dual :=
   E →L[𝕜] 𝕜 deriving Inhabited, SeminormedAddCommGroup,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler normed_space 𝕜»
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler normed_space[normed_space] 𝕜»
 
 instance : ContinuousLinearMapClass (Dual 𝕜 E) 𝕜 E 𝕜 :=
   ContinuousLinearMap.continuousSemilinearMapClass

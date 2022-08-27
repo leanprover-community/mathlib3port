@@ -48,11 +48,11 @@ variable (R : Type _) (M : Type _)
 
 variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module R
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] R
 /-- The dual space of an R-module M is the R-module of linear maps `M → R`. -/
 def Dual :=
   M →ₗ[R] R deriving AddCommMonoidₓ,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module R»
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] R»
 
 instance {S : Type _} [CommRingₓ S] {N : Type _} [AddCommGroupₓ N] [Module S N] : AddCommGroupₓ (Dual S N) :=
   LinearMap.addCommGroup

@@ -408,7 +408,8 @@ theorem IsLocalization.smul_mem_finset_integer_multiple_span [Algebra R S] [Alge
     exact Algebra.smul_def _ _
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident t, ",", ident ht, "⟩", ":", expr «expr∃ , »((t : M), «expr ∈ »(«expr • »(t, x), submodule.span R (s' : set S)))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident t, ",", ident ht, "⟩", ":", expr «expr∃ , »((t : M),
+    «expr ∈ »(«expr • »(t, x), submodule.span R (s' : set S)))]]
 /-- If `S` is an `R' = M⁻¹R` algebra, and `x ∈ span R' s`,
 then `t • x ∈ span R s` for some `t : M`.-/
 theorem multiple_mem_span_of_mem_localization_span [Algebra R' S] [Algebra R S] [IsScalarTower R R' S]
@@ -416,7 +417,7 @@ theorem multiple_mem_span_of_mem_localization_span [Algebra R' S] [Algebra R S] 
   classical
   obtain ⟨s', hss', hs'⟩ := Submodule.mem_span_finite_of_mem_span hx
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident t, \",\", ident ht, \"⟩\", \":\", expr «expr∃ , »((t : M), «expr ∈ »(«expr • »(t, x), submodule.span R (s' : set S)))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident t, \",\", ident ht, \"⟩\", \":\", expr «expr∃ , »((t : M),\n    «expr ∈ »(«expr • »(t, x), submodule.span R (s' : set S)))]]"
   · exact ⟨t, Submodule.span_mono hss' ht⟩
     
   clear hx hss' s

@@ -57,7 +57,7 @@ theorem has_strict_fderiv_at_log_real {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) :
     HasStrictFderivAt log (x⁻¹ • (1 : ℂ →L[ℝ] ℂ)) x :=
   (has_strict_deriv_at_log h).complex_to_real_fderiv
 
-theorem cont_diff_at_log {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) {n : WithTop ℕ} : ContDiffAt ℂ n log x :=
+theorem cont_diff_at_log {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) {n : ℕ∞} : ContDiffAt ℂ n log x :=
   expLocalHomeomorph.cont_diff_at_symm_deriv (exp_ne_zero <| log x) h (has_deriv_at_exp _) cont_diff_exp.ContDiffAt
 
 end Complex

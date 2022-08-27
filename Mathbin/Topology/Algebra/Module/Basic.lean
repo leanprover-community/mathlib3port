@@ -918,7 +918,7 @@ theorem range_prod_le [Module R₁ M₂] [Module R₁ M₃] (f : M₁ →L[R₁]
 
 /-- Restrict codomain of a continuous linear map. -/
 def codRestrict (f : M₁ →SL[σ₁₂] M₂) (p : Submodule R₂ M₂) (h : ∀ x, f x ∈ p) : M₁ →SL[σ₁₂] p where
-  cont := continuous_subtype_mk h f.Continuous
+  cont := f.Continuous.subtype_mk _
   toLinearMap := (f : M₁ →ₛₗ[σ₁₂] M₂).codRestrict p h
 
 @[norm_cast]
@@ -1125,16 +1125,19 @@ variable (R φ)
 /-- If `I` and `J` are complementary index sets, the product of the kernels of the `J`th projections
 of `φ` is linearly equivalent to the product over `I`. -/
 def infiKerProjEquiv {I J : Set ι} [DecidablePred fun i => i ∈ I] (hd : Disjoint I J) (hu : Set.Univ ⊆ I ∪ J) :
-    (⨅ i ∈ J, ker (proj i) : Submodule R (∀ i, φ i)) ≃L[R] ∀ i : I, φ i :=
-  ⟨LinearMap.infiKerProjEquiv R φ hd hu,
+    (⨅ i ∈ J, ker (proj i) : Submodule R (∀ i, φ i)) ≃L[R] ∀ i : I, φ i where
+  toLinearEquiv := LinearMap.infiKerProjEquiv R φ hd hu
+  continuous_to_fun :=
     continuous_pi fun i => by
       have := @continuous_subtype_coe _ _ fun x => x ∈ (⨅ i ∈ J, ker (proj i) : Submodule R (∀ i, φ i))
       have := Continuous.comp (continuous_apply i) this
-      exact this,
-    continuous_subtype_mk _
+      exact this
+  continuous_inv_fun :=
+    Continuous.subtype_mk
       (continuous_pi fun i => by
         dsimp'
-        split_ifs <;> [apply continuous_apply, exact continuous_zero])⟩
+        split_ifs <;> [apply continuous_apply, exact continuous_zero])
+      _
 
 end Pi
 

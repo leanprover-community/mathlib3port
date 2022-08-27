@@ -486,7 +486,7 @@ theorem padic_val_nat_dvd_iff (p : ℕ) [hp : Fact p.Prime] (n : ℕ) (a : ℕ) 
     · rw [PartEnat.coe_le_iff]
       exact fun hn => Or.inr (hn _)
       
-    · simp only [true_andₓ, not_ltₓ, Ne.def, not_false_iff, Nat.le_zero_iffₓ, hp.out.ne_one] at h
+    · simp only [true_andₓ, not_ltₓ, Ne.def, not_false_iff, le_zero_iff, hp.out.ne_one] at h
       exact fun hn => Or.inl h
       
     

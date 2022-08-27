@@ -210,7 +210,7 @@ theorem local_ring_hom_comp_stalk_iso {R S : CommRingₓₓ} (f : R ⟶ S) (p : 
 @[simps]
 def Spec.locallyRingedSpaceMap {R S : CommRingₓₓ} (f : R ⟶ S) :
     Spec.locallyRingedSpaceObj S ⟶ Spec.locallyRingedSpaceObj R :=
-  (Subtype.mk (Spec.sheafedSpaceMap f)) fun p =>
+  (LocallyRingedSpace.Hom.mk (Spec.sheafedSpaceMap f)) fun p =>
     IsLocalRingHom.mk fun a ha => by
       -- Here, we are showing that the map on prime spectra induced by `f` is really a morphism of
       -- *locally* ringed spaces, i.e. that the induced map on the stalks is a local ring homomorphism.
@@ -224,14 +224,14 @@ def Spec.locallyRingedSpaceMap {R S : CommRingₓₓ} (f : R ⟶ S) :
 @[simp]
 theorem Spec.LocallyRingedSpace_map_id (R : CommRingₓₓ) :
     Spec.locallyRingedSpaceMap (𝟙 R) = 𝟙 (Spec.locallyRingedSpaceObj R) :=
-  Subtype.ext <| by
-    rw [Spec.LocallyRingedSpace_map_coe, Spec.SheafedSpace_map_id]
+  LocallyRingedSpace.Hom.ext _ _ <| by
+    rw [Spec.LocallyRingedSpace_map_val, Spec.SheafedSpace_map_id]
     rfl
 
 theorem Spec.LocallyRingedSpace_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S ⟶ T) :
     Spec.locallyRingedSpaceMap (f ≫ g) = Spec.locallyRingedSpaceMap g ≫ Spec.locallyRingedSpaceMap f :=
-  Subtype.ext <| by
-    rw [Spec.LocallyRingedSpace_map_coe, Spec.SheafedSpace_map_comp]
+  LocallyRingedSpace.Hom.ext _ _ <| by
+    rw [Spec.LocallyRingedSpace_map_val, Spec.SheafedSpace_map_comp]
     rfl
 
 /-- Spec, as a contravariant functor from commutative rings to locally ringed spaces.

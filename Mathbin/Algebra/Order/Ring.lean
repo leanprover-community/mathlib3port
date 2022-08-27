@@ -180,12 +180,6 @@ alias zero_lt_four ← four_pos
 
 end Nontrivial
 
-theorem mul_lt_of_lt_one_left (hb : 0 < b) (ha : a < 1) : a * b < b :=
-  (mul_lt_mul_of_pos_right ha hb).trans_le (one_mulₓ _).le
-
-theorem mul_lt_of_lt_one_right (ha : 0 < a) (hb : b < 1) : a * b < a :=
-  (mul_lt_mul_of_pos_left hb ha).trans_le (mul_oneₓ _).le
-
 -- See Note [decidable namespace]
 protected theorem Decidable.mul_le_mul_of_nonneg_left [@DecidableRel α (· ≤ ·)] (h₁ : a ≤ b) (h₂ : 0 ≤ c) :
     c * a ≤ c * b := by
@@ -196,9 +190,6 @@ protected theorem Decidable.mul_le_mul_of_nonneg_left [@DecidableRel α (· ≤ 
   · simp [c0.antisymm h₂]
     
   exact (mul_lt_mul_of_pos_left (h₁.lt_of_not_le ba) (h₂.lt_of_not_le c0)).le
-
-theorem mul_le_mul_of_nonneg_left : a ≤ b → 0 ≤ c → c * a ≤ c * b := by
-  classical <;> exact Decidable.mul_le_mul_of_nonneg_left
 
 -- See Note [decidable namespace]
 protected theorem Decidable.mul_le_mul_of_nonneg_right [@DecidableRel α (· ≤ ·)] (h₁ : a ≤ b) (h₂ : 0 ≤ c) :
@@ -211,9 +202,6 @@ protected theorem Decidable.mul_le_mul_of_nonneg_right [@DecidableRel α (· ≤
     
   exact (mul_lt_mul_of_pos_right (h₁.lt_of_not_le ba) (h₂.lt_of_not_le c0)).le
 
-theorem mul_le_mul_of_nonneg_right : a ≤ b → 0 ≤ c → a * c ≤ b * c := by
-  classical <;> exact Decidable.mul_le_mul_of_nonneg_right
-
 -- TODO: there are four variations, depending on which variables we assume to be nonneg
 -- See Note [decidable namespace]
 protected theorem Decidable.mul_le_mul [@DecidableRel α (· ≤ ·)] (hac : a ≤ c) (hbd : b ≤ d) (nn_b : 0 ≤ b)
@@ -223,25 +211,15 @@ protected theorem Decidable.mul_le_mul [@DecidableRel α (· ≤ ·)] (hac : a �
     _ ≤ c * d := Decidable.mul_le_mul_of_nonneg_left hbd nn_c
     
 
-theorem mul_le_mul : a ≤ c → b ≤ d → 0 ≤ b → 0 ≤ c → a * b ≤ c * d := by
-  classical <;> exact Decidable.mul_le_mul
-
 -- See Note [decidable namespace]
 protected theorem Decidable.mul_nonneg_le_one_le {α : Type _} [OrderedSemiring α] [@DecidableRel α (· ≤ ·)] {a b c : α}
     (h₁ : 0 ≤ c) (h₂ : a ≤ c) (h₃ : 0 ≤ b) (h₄ : b ≤ 1) : a * b ≤ c := by
   simpa only [mul_oneₓ] using Decidable.mul_le_mul h₂ h₄ h₃ h₁
 
-theorem mul_nonneg_le_one_le {α : Type _} [OrderedSemiring α] {a b c : α} : 0 ≤ c → a ≤ c → 0 ≤ b → b ≤ 1 → a * b ≤ c :=
-  by
-  classical <;> exact Decidable.mul_nonneg_le_one_le
-
 -- See Note [decidable namespace]
 protected theorem Decidable.mul_nonneg [@DecidableRel α (· ≤ ·)] (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a * b := by
   have h : 0 * b ≤ a * b := Decidable.mul_le_mul_of_nonneg_right ha hb
   rwa [zero_mul] at h
-
-theorem mul_nonneg : 0 ≤ a → 0 ≤ b → 0 ≤ a * b := by
-  classical <;> exact Decidable.mul_nonneg
 
 @[simp]
 theorem pow_nonneg (H : 0 ≤ a) : ∀ n : ℕ, 0 ≤ a ^ n
@@ -258,17 +236,11 @@ protected theorem Decidable.mul_nonpos_of_nonneg_of_nonpos [@DecidableRel α (·
   have h : a * b ≤ a * 0 := Decidable.mul_le_mul_of_nonneg_left hb ha
   rwa [mul_zero] at h
 
-theorem mul_nonpos_of_nonneg_of_nonpos : 0 ≤ a → b ≤ 0 → a * b ≤ 0 := by
-  classical <;> exact Decidable.mul_nonpos_of_nonneg_of_nonpos
-
 -- See Note [decidable namespace]
 protected theorem Decidable.mul_nonpos_of_nonpos_of_nonneg [@DecidableRel α (· ≤ ·)] (ha : a ≤ 0) (hb : 0 ≤ b) :
     a * b ≤ 0 := by
   have h : a * b ≤ 0 * b := Decidable.mul_le_mul_of_nonneg_right ha hb
   rwa [zero_mul] at h
-
-theorem mul_nonpos_of_nonpos_of_nonneg : a ≤ 0 → 0 ≤ b → a * b ≤ 0 := by
-  classical <;> exact Decidable.mul_nonpos_of_nonpos_of_nonneg
 
 -- See Note [decidable namespace]
 protected theorem Decidable.mul_lt_mul [@DecidableRel α (· ≤ ·)] (hac : a < c) (hbd : b ≤ d) (pos_b : 0 < b)
@@ -292,10 +264,6 @@ protected theorem Decidable.mul_lt_mul' [@DecidableRel α (· ≤ ·)] (h1 : a �
 theorem mul_lt_mul' : a ≤ c → b < d → 0 ≤ b → 0 < c → a * b < c * d := by
   classical <;> exact Decidable.mul_lt_mul'
 
-theorem mul_pos (ha : 0 < a) (hb : 0 < b) : 0 < a * b := by
-  have h : 0 * b < a * b := mul_lt_mul_of_pos_right ha hb
-  rwa [zero_mul] at h
-
 @[simp]
 theorem pow_pos (H : 0 < a) : ∀ n : ℕ, 0 < a ^ n
   | 0 => by
@@ -305,14 +273,6 @@ theorem pow_pos (H : 0 < a) : ∀ n : ℕ, 0 < a ^ n
   | n + 1 => by
     rw [pow_succₓ]
     exact mul_pos H (pow_pos _)
-
-theorem mul_neg_of_pos_of_neg (ha : 0 < a) (hb : b < 0) : a * b < 0 := by
-  have h : a * b < a * 0 := mul_lt_mul_of_pos_left hb ha
-  rwa [mul_zero] at h
-
-theorem mul_neg_of_neg_of_pos (ha : a < 0) (hb : 0 < b) : a * b < 0 := by
-  have h : a * b < 0 * b := mul_lt_mul_of_pos_right ha hb
-  rwa [zero_mul] at h
 
 -- See Note [decidable namespace]
 protected theorem Decidable.mul_self_lt_mul_self [@DecidableRel α (· ≤ ·)] (h1 : 0 ≤ a) (h2 : a < b) : a * a < b * b :=
@@ -350,17 +310,11 @@ protected theorem Decidable.le_mul_of_one_le_right [@DecidableRel α (· ≤ ·)
     rwa [mul_oneₓ] at this
   Decidable.mul_le_mul_of_nonneg_left h hb
 
-theorem le_mul_of_one_le_right : 0 ≤ b → 1 ≤ a → b ≤ b * a := by
-  classical <;> exact Decidable.le_mul_of_one_le_right
-
 -- See Note [decidable namespace]
 protected theorem Decidable.le_mul_of_one_le_left [@DecidableRel α (· ≤ ·)] (hb : 0 ≤ b) (h : 1 ≤ a) : b ≤ a * b :=
   suffices 1 * b ≤ a * b by
     rwa [one_mulₓ] at this
   Decidable.mul_le_mul_of_nonneg_right h hb
-
-theorem le_mul_of_one_le_left : 0 ≤ b → 1 ≤ a → b ≤ a * b := by
-  classical <;> exact Decidable.le_mul_of_one_le_left
 
 -- See Note [decidable namespace]
 protected theorem Decidable.lt_mul_of_one_lt_right [@DecidableRel α (· ≤ ·)] (hb : 0 < b) (h : 1 < a) : b < b * a :=
@@ -368,31 +322,17 @@ protected theorem Decidable.lt_mul_of_one_lt_right [@DecidableRel α (· ≤ ·)
     rwa [mul_oneₓ] at this
   Decidable.mul_lt_mul' le_rflₓ h zero_le_one hb
 
-theorem lt_mul_of_one_lt_right : 0 < b → 1 < a → b < b * a := by
-  classical <;> exact Decidable.lt_mul_of_one_lt_right
-
 -- See Note [decidable namespace]
 protected theorem Decidable.lt_mul_of_one_lt_left [@DecidableRel α (· ≤ ·)] (hb : 0 < b) (h : 1 < a) : b < a * b :=
   suffices 1 * b < a * b by
     rwa [one_mulₓ] at this
   Decidable.mul_lt_mul h le_rflₓ hb (zero_le_one.trans h.le)
 
-theorem lt_mul_of_one_lt_left : 0 < b → 1 < a → b < a * b := by
-  classical <;> exact Decidable.lt_mul_of_one_lt_left
-
-theorem lt_two_mul_self [Nontrivial α] (ha : 0 < a) : a < 2 * a :=
-  lt_mul_of_one_lt_left ha one_lt_two
-
-theorem lt_mul_left (hn : 0 < a) (hm : 1 < b) : a < b * a := by
-  convert mul_lt_mul_of_pos_right hm hn
-  rw [one_mulₓ]
-
-theorem lt_mul_right (hn : 0 < a) (hm : 1 < b) : a < a * b := by
-  convert mul_lt_mul_of_pos_left hm hn
-  rw [mul_oneₓ]
+theorem lt_two_mul_self (ha : 0 < a) : a < 2 * a :=
+  lt_mul_of_one_lt_left ha (@one_lt_two α _ (nontrivial_of_ne 0 a ha.Ne))
 
 theorem lt_mul_self (hn : 1 < a) : a < a * a :=
-  lt_mul_left (hn.trans_le' zero_le_one) hn
+  lt_mul_of_one_lt_left (hn.trans_le' zero_le_one) hn
 
 -- See Note [decidable namespace]
 protected theorem Decidable.add_le_mul_two_add [@DecidableRel α (· ≤ ·)] {a b : α} (a2 : 2 ≤ a) (b0 : 0 ≤ b) :
@@ -577,18 +517,12 @@ protected theorem Decidable.mul_le_of_le_one_right [@DecidableRel α (· ≤ ·)
     _ = a := mul_oneₓ a
     
 
-theorem mul_le_of_le_one_right : 0 ≤ a → b ≤ 1 → a * b ≤ a := by
-  classical <;> exact Decidable.mul_le_of_le_one_right
-
 -- See Note [decidable namespace]
 protected theorem Decidable.mul_le_of_le_one_left [@DecidableRel α (· ≤ ·)] (hb : 0 ≤ b) (ha1 : a ≤ 1) : a * b ≤ b :=
   calc
     a * b ≤ 1 * b := Decidable.mul_le_mul ha1 le_rflₓ hb zero_le_one
     _ = b := one_mulₓ b
     
-
-theorem mul_le_of_le_one_left : 0 ≤ b → a ≤ 1 → a * b ≤ b := by
-  classical <;> exact Decidable.mul_le_of_le_one_left
 
 -- See Note [decidable namespace]
 protected theorem Decidable.mul_lt_one_of_nonneg_of_lt_one_left [@DecidableRel α (· ≤ ·)] (ha0 : 0 ≤ a) (ha : a < 1)
@@ -696,29 +630,11 @@ attribute [local instance] LinearOrderedSemiring.decidableLe
 theorem zero_lt_one' : 0 < (1 : α) :=
   zero_lt_one
 
-theorem lt_of_mul_lt_mul_left (h : c * a < c * b) (hc : 0 ≤ c) : a < b :=
-  (Decidable.monotone_mul_left_of_nonneg hc).reflect_lt h
-
-theorem lt_of_mul_lt_mul_right (h : a * c < b * c) (hc : 0 ≤ c) : a < b :=
-  (Decidable.monotone_mul_right_of_nonneg hc).reflect_lt h
-
 theorem le_of_mul_le_mul_left (h : c * a ≤ c * b) (hc : 0 < c) : a ≤ b :=
   (strict_mono_mul_left_of_pos hc).le_iff_le.1 h
 
 theorem le_of_mul_le_mul_right (h : a * c ≤ b * c) (hc : 0 < c) : a ≤ b :=
   (strict_mono_mul_right_of_pos hc).le_iff_le.1 h
-
-theorem pos_and_pos_or_neg_and_neg_of_mul_pos (hab : 0 < a * b) : 0 < a ∧ 0 < b ∨ a < 0 ∧ b < 0 := by
-  rcases lt_trichotomyₓ 0 a with (ha | rfl | ha)
-  · refine' Or.inl ⟨ha, lt_imp_lt_of_le_imp_leₓ (fun hb => _) hab⟩
-    exact Decidable.mul_nonpos_of_nonneg_of_nonpos ha.le hb
-    
-  · rw [zero_mul] at hab
-    exact hab.false.elim
-    
-  · refine' Or.inr ⟨ha, lt_imp_lt_of_le_imp_leₓ (fun hb => _) hab⟩
-    exact Decidable.mul_nonpos_of_nonpos_of_nonneg ha.le hb
-    
 
 theorem nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg (hab : 0 ≤ a * b) : 0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b ≤ 0 := by
   refine' Decidable.or_iff_not_and_not.2 _
@@ -728,24 +644,6 @@ theorem nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg (hab : 0 ≤ a * b
   rcases lt_trichotomyₓ 0 a with (ha | rfl | ha)
   exacts[mul_neg_of_pos_of_neg ha (ab ha.le), ((ab le_rflₓ).asymm (nab le_rflₓ)).elim,
     mul_neg_of_neg_of_pos ha (nab ha.le)]
-
-theorem pos_of_mul_pos_left (h : 0 < a * b) (hb : 0 ≤ b) : 0 < a :=
-  ((pos_and_pos_or_neg_and_neg_of_mul_pos h).resolve_right fun h => h.2.not_le hb).1
-
-theorem pos_of_mul_pos_right (h : 0 < a * b) (ha : 0 ≤ a) : 0 < b :=
-  ((pos_and_pos_or_neg_and_neg_of_mul_pos h).resolve_right fun h => h.1.not_le ha).2
-
-theorem pos_iff_pos_of_mul_pos (hab : 0 < a * b) : 0 < a ↔ 0 < b :=
-  ⟨pos_of_mul_pos_right hab ∘ le_of_ltₓ, pos_of_mul_pos_left hab ∘ le_of_ltₓ⟩
-
-theorem neg_of_mul_pos_left (h : 0 < a * b) (ha : b ≤ 0) : a < 0 :=
-  ((pos_and_pos_or_neg_and_neg_of_mul_pos h).resolve_left fun h => h.2.not_le ha).1
-
-theorem neg_of_mul_pos_right (h : 0 < a * b) (ha : a ≤ 0) : b < 0 :=
-  ((pos_and_pos_or_neg_and_neg_of_mul_pos h).resolve_left fun h => h.1.not_le ha).2
-
-theorem neg_iff_neg_of_mul_pos (hab : 0 < a * b) : a < 0 ↔ b < 0 :=
-  ⟨neg_of_mul_pos_right hab ∘ le_of_ltₓ, neg_of_mul_pos_left hab ∘ le_of_ltₓ⟩
 
 theorem nonneg_of_mul_nonneg_left (h : 0 ≤ a * b) (hb : 0 < b) : 0 ≤ a :=
   le_of_not_gtₓ fun ha => (mul_neg_of_neg_of_pos ha hb).not_le h
@@ -766,22 +664,6 @@ theorem nonpos_of_mul_nonpos_right (h : a * b ≤ 0) (ha : 0 < a) : b ≤ 0 :=
   le_of_not_gtₓ fun hb : b > 0 => (mul_pos ha hb).not_le h
 
 @[simp]
-theorem mul_le_mul_left (h : 0 < c) : c * a ≤ c * b ↔ a ≤ b :=
-  (strict_mono_mul_left_of_pos h).le_iff_le
-
-@[simp]
-theorem mul_le_mul_right (h : 0 < c) : a * c ≤ b * c ↔ a ≤ b :=
-  (strict_mono_mul_right_of_pos h).le_iff_le
-
-@[simp]
-theorem mul_lt_mul_left (h : 0 < c) : c * a < c * b ↔ a < b :=
-  (strict_mono_mul_left_of_pos h).lt_iff_lt
-
-@[simp]
-theorem mul_lt_mul_right (h : 0 < c) : a * c < b * c ↔ a < b :=
-  (strict_mono_mul_right_of_pos h).lt_iff_lt
-
-@[simp]
 theorem zero_le_mul_left (h : 0 < c) : 0 ≤ c * b ↔ 0 ≤ b := by
   convert mul_le_mul_left h
   simp
@@ -789,16 +671,6 @@ theorem zero_le_mul_left (h : 0 < c) : 0 ≤ c * b ↔ 0 ≤ b := by
 @[simp]
 theorem zero_le_mul_right (h : 0 < c) : 0 ≤ b * c ↔ 0 ≤ b := by
   convert mul_le_mul_right h
-  simp
-
-@[simp]
-theorem zero_lt_mul_left (h : 0 < c) : 0 < c * b ↔ 0 < b := by
-  convert mul_lt_mul_left h
-  simp
-
-@[simp]
-theorem zero_lt_mul_right (h : 0 < c) : 0 < b * c ↔ 0 < b := by
-  convert mul_lt_mul_right h
   simp
 
 theorem add_le_mul_of_left_le_right (a2 : 2 ≤ a) (ab : a ≤ b) : a + b ≤ a * b :=
@@ -869,26 +741,6 @@ theorem zero_lt_bit0 : (0 : α) < bit0 a ↔ 0 < a := by
 
 end
 
-theorem le_mul_iff_one_le_left (hb : 0 < b) : b ≤ a * b ↔ 1 ≤ a :=
-  suffices 1 * b ≤ a * b ↔ 1 ≤ a by
-    rwa [one_mulₓ] at this
-  mul_le_mul_right hb
-
-theorem lt_mul_iff_one_lt_left (hb : 0 < b) : b < a * b ↔ 1 < a :=
-  suffices 1 * b < a * b ↔ 1 < a by
-    rwa [one_mulₓ] at this
-  mul_lt_mul_right hb
-
-theorem le_mul_iff_one_le_right (hb : 0 < b) : b ≤ b * a ↔ 1 ≤ a :=
-  suffices b * 1 ≤ b * a ↔ 1 ≤ a by
-    rwa [mul_oneₓ] at this
-  mul_le_mul_left hb
-
-theorem lt_mul_iff_one_lt_right (hb : 0 < b) : b < b * a ↔ 1 < a :=
-  suffices b * 1 < b * a ↔ 1 < a by
-    rwa [mul_oneₓ] at this
-  mul_lt_mul_left hb
-
 theorem mul_nonneg_iff_right_nonneg_of_pos (ha : 0 < a) : 0 ≤ a * b ↔ 0 ≤ b :=
   haveI := @LinearOrderₓ.decidableLe α _
   ⟨fun h => nonneg_of_mul_nonneg_right h ha, fun h => Decidable.mul_nonneg ha.le h⟩
@@ -896,20 +748,6 @@ theorem mul_nonneg_iff_right_nonneg_of_pos (ha : 0 < a) : 0 ≤ a * b ↔ 0 ≤ 
 theorem mul_nonneg_iff_left_nonneg_of_pos (hb : 0 < b) : 0 ≤ a * b ↔ 0 ≤ a :=
   haveI := @LinearOrderₓ.decidableLe α _
   ⟨fun h => nonneg_of_mul_nonneg_left h hb, fun h => Decidable.mul_nonneg h hb.le⟩
-
-theorem mul_le_iff_le_one_left (hb : 0 < b) : a * b ≤ b ↔ a ≤ 1 :=
-  ⟨fun h => le_of_not_ltₓ (mt (lt_mul_iff_one_lt_left hb).2 h.not_lt), fun h =>
-    le_of_not_ltₓ (mt (lt_mul_iff_one_lt_left hb).1 h.not_lt)⟩
-
-theorem mul_lt_iff_lt_one_left (hb : 0 < b) : a * b < b ↔ a < 1 :=
-  lt_iff_lt_of_le_iff_leₓ <| le_mul_iff_one_le_left hb
-
-theorem mul_le_iff_le_one_right (hb : 0 < b) : b * a ≤ b ↔ a ≤ 1 :=
-  ⟨fun h => le_of_not_ltₓ (mt (lt_mul_iff_one_lt_right hb).2 h.not_lt), fun h =>
-    le_of_not_ltₓ (mt (lt_mul_iff_one_lt_right hb).1 h.not_lt)⟩
-
-theorem mul_lt_iff_lt_one_right (hb : 0 < b) : b * a < b ↔ a < 1 :=
-  lt_iff_lt_of_le_iff_leₓ <| le_mul_iff_one_le_right hb
 
 theorem nonpos_of_mul_nonneg_left (h : 0 ≤ a * b) (hb : b < 0) : a ≤ 0 :=
   le_of_not_gtₓ fun ha => absurd h (mul_neg_of_pos_of_neg ha hb).not_le
@@ -950,6 +788,20 @@ instance (priority := 100) LinearOrderedSemiring.to_char_zero : CharZero α :=
   OrderedSemiring.to_char_zero
 
 end LinearOrderedSemiring
+
+section Mono
+
+variable [LinearOrderedSemiring α] {a : α}
+
+attribute [local instance] LinearOrderedSemiring.decidableLt
+
+theorem cmp_mul_pos_left (ha : 0 < a) (b c : α) : cmp (a * b) (a * c) = cmp b c :=
+  (strict_mono_mul_left_of_pos ha).cmp_map_eq b c
+
+theorem cmp_mul_pos_right (ha : 0 < a) (b c : α) : cmp (b * a) (c * a) = cmp b c :=
+  (strict_mono_mul_right_of_pos ha).cmp_map_eq b c
+
+end Mono
 
 section LinearOrderedSemiring
 
@@ -1346,6 +1198,12 @@ theorem mul_lt_mul_left_of_neg {a b c : α} (h : c < 0) : c * a < c * b ↔ b < 
 @[simp]
 theorem mul_lt_mul_right_of_neg {a b c : α} (h : c < 0) : a * c < b * c ↔ b < a :=
   (strict_anti_mul_right h).lt_iff_lt
+
+theorem cmp_mul_neg_left {a : α} (ha : a < 0) (b c : α) : cmp (a * b) (a * c) = cmp c b :=
+  (strict_anti_mul_left ha).cmp_map_eq b c
+
+theorem cmp_mul_neg_right {a : α} (ha : a < 0) (b c : α) : cmp (b * a) (c * a) = cmp c b :=
+  (strict_anti_mul_right ha).cmp_map_eq b c
 
 theorem sub_one_lt (a : α) : a - 1 < a :=
   sub_lt_iff_lt_add.2 (lt_add_one a)
@@ -1957,7 +1815,7 @@ instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : ZeroLt.PosMulMono
       · exact absurd h (bot_lt_coe a).not_le
         
       · simp only [← coe_mul, coe_le_coe] at *
-        exact ZeroLt.mul_le_mul_left h (zero_le x)
+        exact mul_le_mul_left' h x
         
       ⟩
 

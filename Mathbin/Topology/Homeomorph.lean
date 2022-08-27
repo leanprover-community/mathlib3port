@@ -213,10 +213,11 @@ protected theorem embedding (h : α ≃ₜ β) : Embedding h :=
   ⟨h.Inducing, h.Injective⟩
 
 /-- Homeomorphism given an embedding. -/
-noncomputable def ofEmbedding (f : α → β) (hf : Embedding f) : α ≃ₜ Set.Range f :=
-  { Equivₓ.ofInjective f hf.inj with continuous_to_fun := continuous_subtype_mk _ hf.Continuous,
-    continuous_inv_fun := by
-      simp [hf.continuous_iff, continuous_subtype_coe] }
+noncomputable def ofEmbedding (f : α → β) (hf : Embedding f) : α ≃ₜ Set.Range f where
+  continuous_to_fun := hf.Continuous.subtype_mk _
+  continuous_inv_fun := by
+    simp [hf.continuous_iff, continuous_subtype_coe]
+  toEquiv := Equivₓ.ofInjective f hf.inj
 
 protected theorem second_countable_topology [TopologicalSpace.SecondCountableTopology β] (h : α ≃ₜ β) :
     TopologicalSpace.SecondCountableTopology α :=
@@ -373,8 +374,8 @@ theorem comp_is_open_map_iff' (h : α ≃ₜ β) {f : β → γ} : IsOpenMap (f 
 
 /-- If two sets are equal, then they are homeomorphic. -/
 def setCongr {s t : Set α} (h : s = t) : s ≃ₜ t where
-  continuous_to_fun := continuous_subtype_mk _ continuous_subtype_val
-  continuous_inv_fun := continuous_subtype_mk _ continuous_subtype_val
+  continuous_to_fun := continuous_inclusion h.Subset
+  continuous_inv_fun := continuous_inclusion h.symm.Subset
   toEquiv := Equivₓ.setCongr h
 
 /-- Sum of two homeomorphisms. -/
@@ -504,18 +505,14 @@ def image (e : α ≃ₜ β) (s : Set α) : s ≃ₜ e '' s where
 def Set.univ (α : Type _) [TopologicalSpace α] : (Univ : Set α) ≃ₜ α where
   toEquiv := Equivₓ.Set.univ α
   continuous_to_fun := continuous_subtype_coe
-  continuous_inv_fun := continuous_subtype_mk _ continuous_id
+  continuous_inv_fun := continuous_id.subtype_mk _
 
 /-- `s ×ˢ t` is homeomorphic to `s × t`. -/
 @[simps]
 def Set.prod (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ₜ s × t where
   toEquiv := Equivₓ.Set.prod s t
-  continuous_to_fun :=
-    Continuous.prod_mk (continuous_subtype_mk _ (continuous_fst.comp continuous_induced_dom))
-      (continuous_subtype_mk _ (continuous_snd.comp continuous_induced_dom))
-  continuous_inv_fun :=
-    continuous_subtype_mk _
-      (Continuous.prod_mk (continuous_induced_dom.comp continuous_fst) (continuous_induced_dom.comp continuous_snd))
+  continuous_to_fun := (continuous_subtype_coe.fst.subtype_mk _).prod_mk (continuous_subtype_coe.snd.subtype_mk _)
+  continuous_inv_fun := (continuous_subtype_coe.fst'.prod_mk continuous_subtype_coe.snd').subtype_mk _
 
 end Homeomorph
 

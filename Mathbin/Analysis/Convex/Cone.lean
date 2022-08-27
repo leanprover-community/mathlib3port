@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Frédéric Dupuis
 -/
 import Mathbin.Analysis.Convex.Hull
-import Mathbin.Analysis.InnerProductSpace.Basic
+import Mathbin.Analysis.InnerProductSpace.Projection
 
 /-!
 # Convex cones
@@ -16,7 +16,7 @@ images (`convex_cone.map`) and preimages (`convex_cone.comap`) under linear maps
 We define pointed, blunt, flat and salient cones, and prove the correspondence between
 convex cones and ordered modules.
 
-We also define `convex.to_cone` to be the minimal cone that includes a given convex set.
+We define `convex.to_cone` to be the minimal cone that includes a given convex set.
 
 We define `set.inner_dual_cone` to be the cone consisting of all points `y` such that for
 all points `x` in a given set `0 ≤ ⟪ x, y ⟫`.
@@ -36,6 +36,18 @@ We prove two extension theorems:
   then `f` can be extended to the whole space to a linear map `g` such that `g x ≤ N x`
   for all `x`
 
+We prove the following theorems:
+* `convex_cone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem`:
+  This variant of the
+  [hyperplane separation theorem](https://en.wikipedia.org/wiki/Hyperplane_separation_theorem)
+  states that given a nonempty, closed, convex cone `K` in a complete, real inner product space `H`
+  and a point `b` disjoint from it, there is a vector `y` which separates `b` from `K` in the sense
+  that for all points `x` in `K`, `0 ≤ ⟪x, y⟫_ℝ` and `⟪y, b⟫_ℝ < 0`. This is also a geometric
+  interpretation of the
+  [Farkas lemma](https://en.wikipedia.org/wiki/Farkas%27_lemma#Geometric_interpretation).
+* `convex_cone.inner_dual_cone_of_inner_dual_cone_eq_self`:
+  The `inner_dual_cone` of the `inner_dual_cone` of a nonempty, closed, convex cone is itself.
+
 ## Implementation notes
 
 While `convex 𝕜` is a predicate on sets, `convex_cone 𝕜 E` is a bundled convex cone.
@@ -43,6 +55,8 @@ While `convex 𝕜` is a predicate on sets, `convex_cone 𝕜 E` is a bundled co
 ## References
 
 * https://en.wikipedia.org/wiki/Convex_cone
+* [Stephen P. Boyd and Lieven Vandenberghe, *Convex Optimization*][boydVandenberghe2004]
+* [Emo Welzl and Bernd Gärtner, *Cone Programming*][welzl_garter]
 -/
 
 
@@ -376,6 +390,28 @@ def toOrderedAddCommGroup (h₁ : S.Pointed) (h₂ : S.Salient) : OrderedAddComm
       exact hab }
 
 end AddCommGroupₓ
+
+section Module
+
+variable [AddCommMonoidₓ E] [Module 𝕜 E]
+
+instance : Zero (ConvexCone 𝕜 E) :=
+  ⟨⟨0, fun _ _ => by
+      simp , fun _ => by
+      simp ⟩⟩
+
+@[simp]
+theorem mem_zero (x : E) : x ∈ (0 : ConvexCone 𝕜 E) ↔ x = 0 :=
+  Iff.rfl
+
+@[simp]
+theorem coe_zero : ((0 : ConvexCone 𝕜 E) : Set E) = 0 :=
+  rfl
+
+theorem pointed_zero : (0 : ConvexCone 𝕜 E).Pointed := by
+  rw [pointed, mem_zero]
+
+end Module
 
 end OrderedSemiring
 
@@ -717,6 +753,20 @@ theorem mem_inner_dual_cone (y : H) (s : Set H) : y ∈ s.innerDualCone ↔ ∀ 
 theorem inner_dual_cone_empty : (∅ : Set H).innerDualCone = ⊤ :=
   eq_top_iff.mpr fun x hy y => False.elim
 
+/-- Dual cone of the convex cone {0} is the total space. -/
+@[simp]
+theorem inner_dual_cone_zero : (0 : Set H).innerDualCone = ⊤ :=
+  eq_top_iff.mpr fun x hy y (hy : y = 0) => hy.symm ▸ inner_zero_left.Ge
+
+/-- Dual cone of the total space is the convex cone {0}. -/
+@[simp]
+theorem inner_dual_cone_univ : (Univ : Set H).innerDualCone = 0 := by
+  suffices ∀ x : H, x ∈ (univ : Set H).innerDualCone → x = 0 by
+    apply SetLike.coe_injective
+    exact eq_singleton_iff_unique_mem.mpr ⟨fun x hx => inner_zero_right.ge, this⟩
+  exact fun x hx => by
+    simpa [← real_inner_self_nonpos] using hx (-x) (mem_univ _)
+
 theorem inner_dual_cone_le_inner_dual_cone (h : t ⊆ s) : s.innerDualCone ≤ t.innerDualCone := fun y hy x hx =>
   hy x (h hx)
 
@@ -765,6 +815,85 @@ theorem is_closed_inner_dual_cone : IsClosed (s.innerDualCone : Set H) := by
     is_closed_Ici.preimage
       (by
         continuity)
+
+theorem ConvexCone.pointed_of_nonempty_of_is_closed (K : ConvexCone ℝ H) (ne : (K : Set H).Nonempty)
+    (hc : IsClosed (K : Set H)) : K.Pointed := by
+  obtain ⟨x, hx⟩ := Ne
+  let f : ℝ → H := (· • x)
+  -- f (0, ∞) is a subset of K
+  have fI : f '' Set.Ioi 0 ⊆ (K : Set H) := by
+    rintro _ ⟨_, h, rfl⟩
+    exact K.smul_mem (Set.mem_Ioi.1 h) hx
+  -- closure of f (0, ∞) is a subset of K
+  have clf : Closure (f '' Set.Ioi 0) ⊆ (K : Set H) := hc.closure_subset_iff.2 fI
+  -- f is continuous at 0 from the right
+  have fc : ContinuousWithinAt f (Set.Ioi (0 : ℝ)) 0 := (continuous_id.smul continuous_const).ContinuousWithinAt
+  -- 0 belongs to the closure of the f (0, ∞)
+  have mem₀ :=
+    fc.mem_closure_image
+      (by
+        rw [closure_Ioi (0 : ℝ), mem_Ici])
+  -- as 0 ∈ closure f (0, ∞) and closure f (0, ∞) ⊆ K, 0 ∈ K.
+  have f₀ : f 0 = 0 := zero_smul ℝ x
+  simpa only [f₀, ConvexCone.Pointed, ← SetLike.mem_coe] using mem_of_subset_of_mem clf mem₀
+
+section CompleteSpace
+
+variable [CompleteSpace H]
+
+/-- This is a stronger version of the Hahn-Banach separation theorem for closed convex cones. This
+is also the geometric interpretation of Farkas' lemma. -/
+theorem ConvexCone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem (K : ConvexCone ℝ H)
+    (ne : (K : Set H).Nonempty) (hc : IsClosed (K : Set H)) {b : H} (disj : b ∉ K) :
+    ∃ y : H, (∀ x : H, x ∈ K → 0 ≤ ⟪x, y⟫_ℝ) ∧ ⟪y, b⟫_ℝ < 0 := by
+  -- let `z` be the point in `K` closest to `b`
+  obtain ⟨z, hzK, infi⟩ := exists_norm_eq_infi_of_complete_convex Ne hc.is_complete K.convex b
+  -- for any `w` in `K`, we have `⟪b - z, w - z⟫_ℝ ≤ 0`
+  have hinner := (norm_eq_infi_iff_real_inner_le_zero K.convex hzK).1 infi
+  -- set `y := z - b`
+  use z - b
+  constructor
+  · -- the rest of the proof is a straightforward calculation
+    rintro x hxK
+    specialize hinner _ (K.add_mem hxK hzK)
+    rwa [add_sub_cancel, real_inner_comm, ← neg_nonneg, neg_eq_neg_one_mul, ← real_inner_smul_right, neg_smul, one_smul,
+      neg_sub] at hinner
+    
+  · -- as `K` is closed and non-empty, it is pointed
+    have hinner₀ := hinner 0 (K.pointed_of_nonempty_of_is_closed Ne hc)
+    -- the rest of the proof is a straightforward calculation
+    rw [zero_sub, inner_neg_right, Right.neg_nonpos_iff] at hinner₀
+    have hbz : b - z ≠ 0 := by
+      rw [sub_ne_zero]
+      contrapose! hzK
+      rwa [← hzK]
+    rw [← neg_zero, lt_neg, ← neg_one_mul, ← real_inner_smul_left, smul_sub, neg_smul, one_smul, neg_smul, neg_sub_neg,
+      one_smul]
+    calc
+      0 < ⟪b - z, b - z⟫_ℝ := lt_of_not_le ((Iff.not real_inner_self_nonpos).2 hbz)
+      _ = ⟪b - z, b - z⟫_ℝ + 0 := (add_zeroₓ _).symm
+      _ ≤ ⟪b - z, b - z⟫_ℝ + ⟪b - z, z⟫_ℝ := add_le_add rfl.ge hinner₀
+      _ = ⟪b - z, b - z + z⟫_ℝ := inner_add_right.symm
+      _ = ⟪b - z, b⟫_ℝ := by
+        rw [sub_add_cancel]
+      
+    
+
+/-- The inner dual of inner dual of a non-empty, closed convex cone is itself.  -/
+theorem ConvexCone.inner_dual_cone_of_inner_dual_cone_eq_self (K : ConvexCone ℝ H) (ne : (K : Set H).Nonempty)
+    (hc : IsClosed (K : Set H)) : ((K : Set H).innerDualCone : Set H).innerDualCone = K := by
+  ext x
+  constructor
+  · rw [mem_inner_dual_cone, ← SetLike.mem_coe]
+    contrapose!
+    exact K.hyperplane_separation_of_nonempty_of_is_closed_of_nmem Ne hc
+    
+  · rintro hxK y h
+    specialize h x hxK
+    rwa [real_inner_comm]
+    
+
+end CompleteSpace
 
 end Dual
 

@@ -40,7 +40,7 @@ open Classical
 
 open Function
 
-variable {α M₀ G₀ M₀' G₀' F : Type _}
+variable {α M₀ G₀ M₀' G₀' F F' : Type _}
 
 section
 
@@ -1128,7 +1128,8 @@ end Commute
 
 section MonoidWithZeroₓ
 
-variable [GroupWithZeroₓ G₀] [MonoidWithZeroₓ M₀] [Nontrivial M₀] [MonoidWithZeroHomClass F G₀ M₀] (f : F) {a : G₀}
+variable [GroupWithZeroₓ G₀] [MonoidWithZeroₓ M₀] [Nontrivial M₀] [MonoidWithZeroₓ M₀'] [MonoidWithZeroHomClass F G₀ M₀]
+  [MonoidWithZeroHomClass F' G₀ M₀'] (f : F) {a : G₀}
 
 include M₀
 
@@ -1138,6 +1139,17 @@ theorem map_ne_zero : f a ≠ 0 ↔ a ≠ 0 :=
 @[simp]
 theorem map_eq_zero : f a = 0 ↔ a = 0 :=
   not_iff_not.1 (map_ne_zero f)
+
+omit M₀
+
+include M₀'
+
+theorem eq_on_inv₀ (f g : F') (h : f a = g a) : f a⁻¹ = g a⁻¹ := by
+  rcases eq_or_ne a 0 with (rfl | ha)
+  · rw [inv_zero, map_zero, map_zero]
+    
+  · exact (IsUnit.mk0 a ha).eq_on_inv f g h
+    
 
 end MonoidWithZeroₓ
 

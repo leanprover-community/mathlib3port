@@ -254,35 +254,6 @@ theorem unop_nat_cast (n : ℕ) : unop (n : αᵐᵒᵖ) = n :=
 
 end MulOpposite
 
-namespace WithTop
-
-variable [AddMonoidWithOneₓ α]
-
-theorem add_one_le_of_lt {i n : WithTop ℕ} (h : i < n) : i + 1 ≤ n := by
-  cases n
-  · exact le_top
-    
-  cases i
-  · exact (not_le_of_ltₓ h le_top).elim
-    
-  exact WithTop.coe_le_coe.2 (WithTop.coe_lt_coe.1 h)
-
-theorem one_le_iff_pos {n : WithTop ℕ} : 1 ≤ n ↔ 0 < n :=
-  ⟨lt_of_lt_of_leₓ (coe_lt_coe.mpr zero_lt_one), fun h => by
-    simpa only [zero_addₓ] using add_one_le_of_lt h⟩
-
-@[elabAsElim]
-theorem nat_induction {P : WithTop ℕ → Prop} (a : WithTop ℕ) (h0 : P 0) (hsuc : ∀ n : ℕ, P n → P n.succ)
-    (htop : (∀ n : ℕ, P n) → P ⊤) : P a := by
-  have A : ∀ n : ℕ, P n := fun n => Nat.recOn n h0 hsuc
-  cases a
-  · exact htop A
-    
-  · exact A a
-    
-
-end WithTop
-
 namespace Pi
 
 variable {π : α → Type _} [∀ a, HasNatCast (π a)]

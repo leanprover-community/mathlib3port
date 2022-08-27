@@ -108,6 +108,26 @@ instance of_comp_right [HasLiftingProperty i p] [HasLiftingProperty i p'] : HasL
           fac_right' := by
             simp only [comm_sq.fac_right_assoc, comm_sq.fac_right] }⟩
 
+theorem of_arrow_iso_left {A B A' B' X Y : C} {i : A ⟶ B} {i' : A' ⟶ B'} (e : Arrow.mk i ≅ Arrow.mk i') (p : X ⟶ Y)
+    [hip : HasLiftingProperty i p] : HasLiftingProperty i' p := by
+  rw [arrow.iso_w' e]
+  infer_instance
+
+theorem of_arrow_iso_right {A B X Y X' Y' : C} (i : A ⟶ B) {p : X ⟶ Y} {p' : X' ⟶ Y'} (e : Arrow.mk p ≅ Arrow.mk p')
+    [hip : HasLiftingProperty i p] : HasLiftingProperty i p' := by
+  rw [arrow.iso_w' e]
+  infer_instance
+
+theorem iff_of_arrow_iso_left {A B A' B' X Y : C} {i : A ⟶ B} {i' : A' ⟶ B'} (e : Arrow.mk i ≅ Arrow.mk i')
+    (p : X ⟶ Y) : HasLiftingProperty i p ↔ HasLiftingProperty i' p := by
+  constructor <;> intro
+  exacts[of_arrow_iso_left e p, of_arrow_iso_left e.symm p]
+
+theorem iff_of_arrow_iso_right {A B X Y X' Y' : C} (i : A ⟶ B) {p : X ⟶ Y} {p' : X' ⟶ Y'}
+    (e : Arrow.mk p ≅ Arrow.mk p') : HasLiftingProperty i p ↔ HasLiftingProperty i p' := by
+  constructor <;> intro
+  exacts[of_arrow_iso_right i e, of_arrow_iso_right i e.symm]
+
 end HasLiftingProperty
 
 end CategoryTheory

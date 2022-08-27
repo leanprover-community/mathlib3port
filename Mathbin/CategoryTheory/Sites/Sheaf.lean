@@ -240,6 +240,10 @@ theorem is_sheaf_of_iso_iff {P P' : Cᵒᵖ ⥤ A} (e : P ≅ P') : IsSheaf J P 
 
 variable (J)
 
+theorem is_sheaf_of_is_terminal {X : A} (hX : IsTerminal X) :
+    Presheaf.IsSheaf J ((CategoryTheory.Functor.const _).obj X) := fun _ _ _ _ _ _ =>
+  ⟨hX.from _, fun _ _ _ => hX.hom_ext _ _, fun _ _ => hX.hom_ext _ _⟩
+
 end Presheaf
 
 variable {C : Type u₁} [Category.{v₁} C]

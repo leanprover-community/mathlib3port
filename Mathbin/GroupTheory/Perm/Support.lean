@@ -522,7 +522,7 @@ theorem card_support_ne_one (f : Perm α) : f.support.card ≠ 1 := by
 
 @[simp]
 theorem card_support_le_one {f : Perm α} : f.support.card ≤ 1 ↔ f = 1 := by
-  rw [le_iff_lt_or_eqₓ, Nat.lt_succ_iffₓ, Nat.le_zero_iffₓ, card_support_eq_zero, or_iff_not_imp_right,
+  rw [le_iff_lt_or_eqₓ, Nat.lt_succ_iffₓ, le_zero_iff, card_support_eq_zero, or_iff_not_imp_right,
     imp_iff_right f.card_support_ne_one]
 
 theorem two_le_card_support_of_ne_one {f : Perm α} (h : f ≠ 1) : 2 ≤ f.support.card :=

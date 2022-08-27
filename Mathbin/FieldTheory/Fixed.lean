@@ -293,53 +293,6 @@ theorem cardinal_mk_alg_hom (K : Type u) (V : Type v) (W : Type w) [Field K] [Fi
     Cardinal.mk (V →ₐ[K] W) ≤ finrank W (V →ₗ[K] W) :=
   cardinal_mk_le_finrank_of_linear_independent <| linear_independent_to_linear_map K V W
 
-section AlgHomFintype
-
-/-- A technical finiteness result. -/
-noncomputable def Fintype.subtypeProd {E : Type _} {X : Set E} (hX : X.Finite) {L : Type _} (F : E → Multiset L) :
-    Fintype (∀ x : X, { l : L // l ∈ F x }) := by
-  classical
-  letI : Fintype X := Set.Finite.fintype hX
-  exact Pi.fintype
-
-variable (E K : Type _) [Field E] [Field K] [Algebra F E] [Algebra F K] [FiniteDimensional F E]
-
--- Marked as `noncomputable!` since this definition takes multiple seconds to compile,
--- and isn't very computable in practice (since neither `finrank` nor `fin_basis` are).
-/-- Function from Hom_K(E,L) to pi type Π (x : basis), roots of min poly of x -/
-noncomputable def rootsOfMinPolyPiType (φ : E →ₐ[F] K) (x : Set.Range (FiniteDimensional.finBasis F E : _ → E)) :
-    { l : K // l ∈ (((minpoly F x.1).map (algebraMap F K)).roots : Multiset K) } :=
-  ⟨φ x, by
-    rw [Polynomial.mem_roots_map (minpoly.ne_zero_of_finite_field_extension F x.val), ←
-      Polynomial.alg_hom_eval₂_algebra_map, ← φ.map_zero]
-    exact congr_arg φ (minpoly.aeval F (x : E))⟩
-
-theorem aux_inj_roots_of_min_poly : Function.Injective (rootsOfMinPolyPiType F E K) := by
-  intro f g h
-  suffices (f : E →ₗ[F] K) = g by
-    rw [LinearMap.ext_iff] at this
-    ext x
-    exact this x
-  rw [Function.funext_iffₓ] at h
-  apply LinearMap.ext_on (FiniteDimensional.finBasis F E).span_eq
-  rintro e he
-  have := h ⟨e, he⟩
-  apply_fun Subtype.val  at this
-  exact this
-
-/-- Given field extensions `E/F` and `K/F`, with `E/F` finite, there are finitely many `F`-algebra
-  homomorphisms `E →ₐ[K] K`. -/
-noncomputable instance AlgHom.fintype : Fintype (E →ₐ[F] K) := by
-  let n := FiniteDimensional.finrank F E
-  let B : Basis (Finₓ n) F E := FiniteDimensional.finBasis F E
-  let X := Set.Range (B : Finₓ n → E)
-  have hX : X.finite := Set.finite_range ⇑B
-  refine'
-    @Fintype.ofInjective _ _ (Fintype.subtypeProd hX fun e => ((minpoly F e).map (algebraMap F K)).roots) _
-      (aux_inj_roots_of_min_poly F E K)
-
-end AlgHomFintype
-
 noncomputable instance AlgEquiv.fintype (K : Type u) (V : Type v) [Field K] [Field V] [Algebra K V]
     [FiniteDimensional K V] : Fintype (V ≃ₐ[K] V) :=
   Fintype.ofEquiv (V →ₐ[K] V) (algEquivEquivAlgHom K V).symm

@@ -386,7 +386,7 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
   by
   by_cases' hp : p = 0
   · simp_rw [hp, root_set_zero, set.to_finset_eq_empty_iff.mpr rfl, Finset.card_empty, zero_addₓ]
-    refine' Eq.symm (nat.le_zero_iff.mp ((Finset.card_le_univ _).trans (le_of_eqₓ _)))
+    refine' Eq.symm (le_zero_iff.mp ((Finset.card_le_univ _).trans (le_of_eqₓ _)))
     simp_rw [hp, root_set_zero, Fintype.card_eq_zero_iff]
     infer_instance
     

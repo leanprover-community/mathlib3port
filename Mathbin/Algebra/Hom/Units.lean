@@ -80,10 +80,6 @@ section DivisionMonoid
 variable [DivisionMonoid α]
 
 @[simp, norm_cast, to_additive]
-theorem coe_inv : ∀ u : αˣ, ↑u⁻¹ = (u⁻¹ : α) :=
-  (Units.coeHom α).map_inv
-
-@[simp, norm_cast, to_additive]
 theorem coe_div : ∀ u₁ u₂ : αˣ, ↑(u₁ / u₂) = (u₁ / u₂ : α) :=
   (Units.coeHom α).map_div
 
@@ -135,13 +131,9 @@ then its image lies in the units of `M`,
 and `f.to_hom_units` is the corresponding monoid homomorphism from `G` to `Mˣ`. -/
 @[to_additive
       "If `f` is a homomorphism from an additive group `G` to an additive monoid `M`,\nthen its image lies in the `add_units` of `M`,\nand `f.to_hom_units` is the corresponding homomorphism from `G` to `add_units M`."]
-def toHomUnits {G M : Type _} [Groupₓ G] [Monoidₓ M] (f : G →* M) : G →* Mˣ where
-  toFun := fun g =>
-    ⟨f g, f g⁻¹, by
-      rw [← f.map_mul, mul_inv_selfₓ, f.map_one], by
-      rw [← f.map_mul, inv_mul_selfₓ, f.map_one]⟩
-  map_one' := Units.ext f.map_one
-  map_mul' := fun _ _ => Units.ext (f.map_mul _ _)
+def toHomUnits {G M : Type _} [Groupₓ G] [Monoidₓ M] (f : G →* M) : G →* Mˣ :=
+  Units.liftRight f (fun g => ⟨f g, f g⁻¹, map_mul_eq_one f (mul_inv_selfₓ _), map_mul_eq_one f (inv_mul_selfₓ _)⟩)
+    fun g => rfl
 
 @[simp]
 theorem coe_to_hom_units {G M : Type _} [Groupₓ G] [Monoidₓ M] (f : G →* M) (g : G) : (f.toHomUnits g : M) = f g :=
@@ -185,16 +177,6 @@ end Monoidₓ
 section DivisionMonoid
 
 variable [DivisionMonoid α] {a b c : α}
-
-@[simp, to_additive]
-protected theorem inv_mul_cancel : IsUnit a → a⁻¹ * a = 1 := by
-  rintro ⟨u, rfl⟩
-  rw [← Units.coe_inv, Units.inv_mul]
-
-@[simp, to_additive]
-protected theorem mul_inv_cancel : IsUnit a → a * a⁻¹ = 1 := by
-  rintro ⟨u, rfl⟩
-  rw [← Units.coe_inv, Units.mul_inv]
 
 /-- The element of the group of units, corresponding to an element of a monoid which is a unit. As
 opposed to `is_unit.unit`, the inverse is computable and comes from the inversion on `α`. This is

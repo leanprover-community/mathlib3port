@@ -41,7 +41,7 @@ namespace Top
 
 /-- The category of `C`-valued presheaves on a (bundled) topological space `X`. -/
 @[nolint has_nonempty_instance]
-def Presheaf (X : Top.{w}) :=
+def Presheaf (X : Top.{w}) : Type max u v w :=
   (Opens X)ᵒᵖ ⥤ C deriving Category
 
 variable {C}
@@ -253,16 +253,16 @@ variable (C)
 
 /-- The pushforward functor.
 -/
-def pushforward {X Y : Top.{v}} (f : X ⟶ Y) : X.Presheaf C ⥤ Y.Presheaf C where
+def pushforward {X Y : Top.{w}} (f : X ⟶ Y) : X.Presheaf C ⥤ Y.Presheaf C where
   obj := pushforwardObj f
   map := @pushforwardMap _ _ X Y f
 
 @[simp]
-theorem pushforward_map_app' {X Y : Top.{v}} (f : X ⟶ Y) {ℱ 𝒢 : X.Presheaf C} (α : ℱ ⟶ 𝒢) {U : (Opens Y)ᵒᵖ} :
+theorem pushforward_map_app' {X Y : Top.{w}} (f : X ⟶ Y) {ℱ 𝒢 : X.Presheaf C} (α : ℱ ⟶ 𝒢) {U : (Opens Y)ᵒᵖ} :
     ((pushforward C f).map α).app U = α.app (op <| (Opens.map f).obj U.unop) :=
   rfl
 
-theorem id_pushforward {X : Top.{v}} : pushforward C (𝟙 X) = 𝟭 (X.Presheaf C) := by
+theorem id_pushforward {X : Top.{w}} : pushforward C (𝟙 X) = 𝟭 (X.Presheaf C) := by
   apply CategoryTheory.Functor.ext
   · intros
     ext U

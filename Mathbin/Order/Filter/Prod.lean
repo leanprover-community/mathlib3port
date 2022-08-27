@@ -95,6 +95,11 @@ theorem mem_prod_top {f : Filter α} {s : Set (α × β)} : s ∈ f ×ᶠ (⊤ :
   rw [← principal_univ, mem_prod_principal]
   simp only [mem_univ, forall_true_left]
 
+theorem eventually_prod_principal_iff {p : α × β → Prop} {s : Set β} :
+    (∀ᶠ x : α × β in f ×ᶠ 𝓟 s, p x) ↔ ∀ᶠ x : α in f, ∀ y : β, y ∈ s → p (x, y) := by
+  rw [eventually_iff, eventually_iff, mem_prod_principal]
+  simp only [mem_set_of_eq]
+
 theorem comap_prod (f : α → β × γ) (b : Filter β) (c : Filter γ) :
     comap f (b ×ᶠ c) = comap (Prod.fst ∘ f) b⊓comap (Prod.snd ∘ f) c := by
   erw [comap_inf, Filter.comap_comap, Filter.comap_comap]
@@ -160,6 +165,22 @@ theorem Eventually.diag_of_prod {f : Filter α} {p : α × α → Prop} (h : ∀
   obtain ⟨t, ht, s, hs, hst⟩ := eventually_prod_iff.1 h
   apply (ht.and hs).mono fun x hx => hst hx.1 hx.2
 
+theorem Eventually.diag_of_prod_left {f : Filter α} {g : Filter γ} {p : (α × α) × γ → Prop} :
+    (∀ᶠ x in f ×ᶠ f ×ᶠ g, p x) → ∀ᶠ x : α × γ in f ×ᶠ g, p ((x.1, x.1), x.2) := by
+  intro h
+  obtain ⟨t, ht, s, hs, hst⟩ := eventually_prod_iff.1 h
+  refine'
+    (ht.diag_of_prod.prod_mk hs).mono fun x hx => by
+      simp only [hst hx.1 hx.2, Prod.mk.eta]
+
+theorem Eventually.diag_of_prod_right {f : Filter α} {g : Filter γ} {p : α × γ × γ → Prop} :
+    (∀ᶠ x in f ×ᶠ (g ×ᶠ g), p x) → ∀ᶠ x : α × γ in f ×ᶠ g, p (x.1, x.2, x.2) := by
+  intro h
+  obtain ⟨t, ht, s, hs, hst⟩ := eventually_prod_iff.1 h
+  refine'
+    (ht.prod_mk hs.diag_of_prod).mono fun x hx => by
+      simp only [hst hx.1 hx.2, Prod.mk.eta]
+
 theorem tendsto_diag : Tendsto (fun i => (i, i)) f (f ×ᶠ f) :=
   tendsto_iff_eventually.mpr fun _ hpr => hpr.diag_of_prod
 
@@ -175,6 +196,12 @@ theorem prod_infi_right [Nonempty ι] {f : Filter α} {g : ι → Filter β} : (
 theorem prod_mono {f₁ f₂ : Filter α} {g₁ g₂ : Filter β} (hf : f₁ ≤ f₂) (hg : g₁ ≤ g₂) : f₁ ×ᶠ g₁ ≤ f₂ ×ᶠ g₂ :=
   inf_le_inf (comap_mono hf) (comap_mono hg)
 
+theorem prod_mono_left (g : Filter β) {f₁ f₂ : Filter α} (hf : f₁ ≤ f₂) : f₁ ×ᶠ g ≤ f₂ ×ᶠ g :=
+  Filter.prod_mono hf rfl.le
+
+theorem prod_mono_right (f : Filter α) {g₁ g₂ : Filter β} (hf : g₁ ≤ g₂) : f ×ᶠ g₁ ≤ f ×ᶠ g₂ :=
+  Filter.prod_mono rfl.le hf
+
 theorem prod_comap_comap_eq.{u, v, w, x} {α₁ : Type u} {α₂ : Type v} {β₁ : Type w} {β₂ : Type x} {f₁ : Filter α₁}
     {f₂ : Filter α₂} {m₁ : β₁ → α₁} {m₂ : β₂ → α₂} :
     comap m₁ f₁ ×ᶠ comap m₂ f₂ = comap (fun p : β₁ × β₂ => (m₁ p.1, m₂ p.2)) (f₁ ×ᶠ f₂) := by
@@ -186,6 +213,10 @@ theorem prod_comm' : f ×ᶠ g = comap Prod.swap (g ×ᶠ f) := by
 theorem prod_comm : f ×ᶠ g = map (fun p : β × α => (p.2, p.1)) (g ×ᶠ f) := by
   rw [prod_comm', ← map_swap_eq_comap_swap]
   rfl
+
+theorem eventually_swap_iff {p : α × β → Prop} : (∀ᶠ x : α × β in f ×ᶠ g, p x) ↔ ∀ᶠ y : β × α in g ×ᶠ f, p y.swap := by
+  rw [prod_comm, eventually_map]
+  simpa
 
 theorem prod_assoc (f : Filter α) (g : Filter β) (h : Filter γ) :
     map (Equivₓ.prodAssoc α β γ) (f ×ᶠ g ×ᶠ h) = f ×ᶠ (g ×ᶠ h) := by

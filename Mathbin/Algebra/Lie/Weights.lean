@@ -89,7 +89,8 @@ theorem exists_pre_weight_space_zero_le_ker_of_is_noetherian [IsNoetherian R M] 
 
 variable {R} (L)
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident k, ",", ident hk, "⟩", ":", expr «expr∃ , »((k), «expr = »(«expr ^ »(«expr + »(f₁, f₂), k) «expr ⊗ₜ »(m₁, m₂), 0))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident k, ",", ident hk, "⟩", ":", expr «expr∃ , »((k),
+    «expr = »(«expr ^ »(«expr + »(f₁, f₂), k) «expr ⊗ₜ »(m₁, m₂), 0))]]
 /-- See also `bourbaki1975b` Chapter VII §1.1, Proposition 2 (ii). -/
 protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w₂) (M₃ : Type w₃) [AddCommGroupₓ M₁]
     [Module R M₁] [LieRingModule L M₁] [LieModule R L M₁] [AddCommGroupₓ M₂] [Module R M₂] [LieRingModule L M₂]
@@ -132,7 +133,7 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
       algebra_tensor_module.curry_apply, curry_apply, LinearMap.to_fun_eq_coe, LinearMap.coe_restrict_scalars_eq_coe]
     abel
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident k, \",\", ident hk, \"⟩\", \":\", expr «expr∃ , »((k), «expr = »(«expr ^ »(«expr + »(f₁, f₂), k) «expr ⊗ₜ »(m₁, m₂), 0))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident k, \",\", ident hk, \"⟩\", \":\", expr «expr∃ , »((k),\n    «expr = »(«expr ^ »(«expr + »(f₁, f₂), k) «expr ⊗ₜ »(m₁, m₂), 0))]]"
   · use k
     rw [← LinearMap.comp_apply, LinearMap.commute_pow_left_of_commute h_comm_square, LinearMap.comp_apply, hk,
       LinearMap.map_zero]

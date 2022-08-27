@@ -61,7 +61,7 @@ theorem deriv_sqrt_aux {x : ℝ} (hx : x ≠ 0) : HasStrictDerivAt sqrt (1 / (2 
 theorem has_strict_deriv_at_sqrt {x : ℝ} (hx : x ≠ 0) : HasStrictDerivAt sqrt (1 / (2 * sqrt x)) x :=
   (deriv_sqrt_aux hx).1
 
-theorem cont_diff_at_sqrt {x : ℝ} {n : WithTop ℕ} (hx : x ≠ 0) : ContDiffAt ℝ n sqrt x :=
+theorem cont_diff_at_sqrt {x : ℝ} {n : ℕ∞} (hx : x ≠ 0) : ContDiffAt ℝ n sqrt x :=
   (deriv_sqrt_aux hx).2 n
 
 theorem has_deriv_at_sqrt {x : ℝ} (hx : x ≠ 0) : HasDerivAt sqrt (1 / (2 * sqrt x)) x :=
@@ -100,8 +100,7 @@ end deriv
 
 section fderiv
 
-variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ} {n : WithTop ℕ} {s : Set E} {x : E}
-  {f' : E →L[ℝ] ℝ}
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ} {n : ℕ∞} {s : Set E} {x : E} {f' : E →L[ℝ] ℝ}
 
 theorem HasFderivAt.sqrt (hf : HasFderivAt f f' x) (hx : f x ≠ 0) :
     HasFderivAt (fun y => sqrt (f y)) ((1 / (2 * sqrt (f x))) • f') x :=

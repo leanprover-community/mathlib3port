@@ -108,12 +108,12 @@ theorem has_sum_iff_has_sum {g : γ → α}
     HasSum f a ↔ HasSum g a :=
   ⟨HasSum.has_sum_of_sum_eq h₂, HasSum.has_sum_of_sum_eq h₁⟩
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ∉ » set.range g)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ∉ » set.range[set.range] g)
 theorem Function.Injective.has_sum_iff {g : γ → β} (hg : Injective g) (hf : ∀ (x) (_ : x ∉ Set.Range g), f x = 0) :
     HasSum (f ∘ g) a ↔ HasSum f a := by
   simp only [HasSum, tendsto, hg.map_at_top_finset_sum_eq hf]
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ∉ » set.range g)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ∉ » set.range[set.range] g)
 theorem Function.Injective.summable_iff {g : γ → β} (hg : Injective g) (hf : ∀ (x) (_ : x ∉ Set.Range g), f x = 0) :
     Summable (f ∘ g) ↔ Summable f :=
   exists_congr fun _ => hg.has_sum_iff hf
@@ -1013,7 +1013,7 @@ theorem has_sum_le_of_sum_le (hf : HasSum f a) (h : ∀ s : Finset β, (∑ b in
 theorem le_has_sum_of_le_sum (hf : HasSum f a) (h : ∀ s : Finset β, a₂ ≤ ∑ b in s, f b) : a₂ ≤ a :=
   ge_of_tendsto' hf h
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (c «expr ∉ » set.range i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (c «expr ∉ » set.range[set.range] i)
 theorem has_sum_le_inj {g : γ → α} (i : β → γ) (hi : Injective i) (hs : ∀ (c) (_ : c ∉ Set.Range i), 0 ≤ g c)
     (h : ∀ b, f b ≤ g (i b)) (hf : HasSum f a₁) (hg : HasSum g a₂) : a₁ ≤ a₂ := by
   have : HasSum (fun c => (partialInv i c).casesOn' 0 f) a₁ := by
@@ -1043,7 +1043,7 @@ theorem has_sum_le_inj {g : γ → α} (i : β → γ) (hi : Injective i) (hs : 
     exact hs _ h
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (c «expr ∉ » set.range i)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (c «expr ∉ » set.range[set.range] i)
 theorem tsum_le_tsum_of_inj {g : γ → α} (i : β → γ) (hi : Injective i) (hs : ∀ (c) (_ : c ∉ Set.Range i), 0 ≤ g c)
     (h : ∀ b, f b ≤ g (i b)) (hf : Summable f) (hg : Summable g) : tsum f ≤ tsum g :=
   has_sum_le_inj i hi hs h hf.HasSum hg.HasSum

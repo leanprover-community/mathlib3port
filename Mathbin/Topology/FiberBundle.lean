@@ -756,7 +756,8 @@ noncomputable def disjointUnion (e e' : Trivialization F proj) (H : Disjoint e.B
       
 
 -- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident d, ",", ident hdcb, ",", ident hd, "⟩", ":", expr «expr∃ , »((d «expr ∈ » Ioc c b)
-    (e : trivialization F proj), «expr ⊆ »(Icc a d, e.base_set))]]
+    (e : trivialization F proj),
+    «expr ⊆ »(Icc a d, e.base_set))]]
 /-- If `h` is a topological fiber bundle over a conditionally complete linear order,
 then it is trivial over any closed interval. -/
 theorem _root_.is_topological_fiber_bundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinearOrder B]
@@ -805,7 +806,7 @@ theorem _root_.is_topological_fiber_bundle.exists_trivialization_Icc_subset [Con
   · exact ⟨ec, HEq ▸ hec⟩
     
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident d, \",\", ident hdcb, \",\", ident hd, \"⟩\", \":\", expr «expr∃ , »((d «expr ∈ » Ioc c b)\n    (e : trivialization F proj), «expr ⊆ »(Icc a d, e.base_set))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident d, \",\", ident hdcb, \",\", ident hd, \"⟩\", \":\", expr «expr∃ , »((d «expr ∈ » Ioc c b)\n    (e : trivialization F proj),\n    «expr ⊆ »(Icc a d, e.base_set))]]"
   · exact ((hsc.1 ⟨⟨hc.1.trans hdcb.1.le, hdcb.2⟩, hd⟩).not_lt hdcb.1).elim
     
   /- Since the base set of `ec` is open, it includes `[c, d)` (hence, `[a, d)`) for some

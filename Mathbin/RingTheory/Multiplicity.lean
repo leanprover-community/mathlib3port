@@ -258,7 +258,7 @@ theorem dvd_iff_multiplicity_pos {a b : α} : (0 : PartEnat) < multiplicity a b 
           rwa [pow_oneₓ a])⟩
 
 theorem finite_nat_iff {a b : ℕ} : Finite a b ↔ a ≠ 1 ∧ 0 < b := by
-  rw [← not_iff_not, not_finite_iff_forall, not_and_distrib, Ne.def, not_not, not_ltₓ, Nat.le_zero_iffₓ]
+  rw [← not_iff_not, not_finite_iff_forall, not_and_distrib, Ne.def, not_not, not_ltₓ, le_zero_iff]
   exact
     ⟨fun h =>
       or_iff_not_imp_right.2 fun hb =>

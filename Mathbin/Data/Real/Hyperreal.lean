@@ -132,7 +132,7 @@ theorem epsilon_pos : 0 < ε := by
   suffices ∀ᶠ i in hyperfilter ℕ, (0 : ℝ) < (i : ℕ)⁻¹ by
     rwa [lt_def]
   have h0' : { n : ℕ | ¬0 < n } = {0} := by
-    simp only [not_ltₓ, Set.set_of_eq_eq_singleton.symm] <;> ext <;> exact Nat.le_zero_iffₓ
+    simp only [not_ltₓ, Set.set_of_eq_eq_singleton.symm] <;> ext <;> exact le_bot_iff
   simp only [inv_pos, Nat.cast_pos]
   exact
     mem_hyperfilter_of_finite_compl

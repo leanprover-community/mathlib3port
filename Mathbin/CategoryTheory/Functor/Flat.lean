@@ -108,13 +108,15 @@ attribute [instance] representably_flat.cofiltered
 
 attribute [local instance] is_cofiltered.nonempty
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[[":", expr is_cofiltered_or_empty (structured_arrow X («expr𝟭»() C))]]
 instance RepresentablyFlat.id : RepresentablyFlat (𝟭 C) := by
   constructor
   intro X
   haveI : Nonempty (structured_arrow X (𝟭 C)) := ⟨structured_arrow.mk (𝟙 _)⟩
-  suffices is_cofiltered_or_empty (structured_arrow X (𝟭 C)) by
-    skip
-    constructor
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[[\":\", expr is_cofiltered_or_empty (structured_arrow X («expr𝟭»() C))]]"
+  · constructor
+    
   constructor
   · intro Y Z
     use structured_arrow.mk (𝟙 _)
@@ -137,6 +139,7 @@ instance RepresentablyFlat.id : RepresentablyFlat (𝟭 C) := by
     trans Z.hom <;> simp
     
 
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[[":", expr is_cofiltered_or_empty (structured_arrow X «expr ⋙ »(F, G))]]
 instance RepresentablyFlat.comp (F : C ⥤ D) (G : D ⥤ E) [RepresentablyFlat F] [RepresentablyFlat G] :
     RepresentablyFlat (F ⋙ G) := by
   constructor
@@ -145,9 +148,10 @@ instance RepresentablyFlat.comp (F : C ⥤ D) (G : D ⥤ E) [RepresentablyFlat F
     have f₁ : structured_arrow X G := Nonempty.some inferInstance
     have f₂ : structured_arrow f₁.right F := Nonempty.some inferInstance
     exact ⟨structured_arrow.mk (f₁.hom ≫ G.map f₂.hom)⟩
-  suffices is_cofiltered_or_empty (structured_arrow X (F ⋙ G)) by
-    skip
-    constructor
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[[\":\", expr is_cofiltered_or_empty (structured_arrow X «expr ⋙ »(F, G))]]"
+  · constructor
+    
   constructor
   · intro Y Z
     let W := @is_cofiltered.min (structured_arrow X G) _ _ (structured_arrow.mk Y.hom) (structured_arrow.mk Z.hom)

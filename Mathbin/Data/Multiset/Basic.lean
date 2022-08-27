@@ -1219,9 +1219,9 @@ theorem sizeof_lt_sizeof_of_mem [SizeOf α] {x : α} {s : Multiset α} (hx : x �
 theorem pmap_eq_map (p : α → Prop) (f : α → β) (s : Multiset α) : ∀ H, @pmap _ _ p (fun a _ => f a) s H = map f s :=
   (Quot.induction_on s) fun l H => congr_arg coe <| pmap_eq_map p f l H
 
-theorem pmap_congr {p q : α → Prop} {f : ∀ a, p a → β} {g : ∀ a, q a → β} (s : Multiset α) {H₁ H₂}
-    (h : ∀ a h₁ h₂, f a h₁ = g a h₂) : pmap f s H₁ = pmap g s H₂ :=
-  Quot.induction_on s (fun l H₁ H₂ => congr_arg coe <| pmap_congr l h) H₁ H₂
+theorem pmap_congr {p q : α → Prop} {f : ∀ a, p a → β} {g : ∀ a, q a → β} (s : Multiset α) {H₁ H₂} :
+    (∀ a ∈ s, ∀ (h₁ h₂), f a h₁ = g a h₂) → pmap f s H₁ = pmap g s H₂ :=
+  Quot.induction_on s (fun l H₁ H₂ h => congr_arg coe <| pmap_congr l h) H₁ H₂
 
 theorem map_pmap {p : α → Prop} (g : β → γ) (f : ∀ a, p a → β) (s) :
     ∀ H, map g (pmap f s H) = pmap (fun a h => g (f a h)) s H :=
@@ -1259,7 +1259,7 @@ theorem attach_cons (a : α) (m : Multiset α) :
   (Quotientₓ.induction_on m) fun l =>
     congr_arg coe <|
       congr_arg (List.cons _) <| by
-        rw [List.map_pmap] <;> exact List.pmap_congr _ fun a' h₁ h₂ => Subtype.eq rfl
+        rw [List.map_pmap] <;> exact List.pmap_congr _ fun _ _ _ _ => Subtype.eq rfl
 
 section DecidablePiExists
 

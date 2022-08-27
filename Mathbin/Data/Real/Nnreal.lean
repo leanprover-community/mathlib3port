@@ -727,7 +727,7 @@ theorem lt_inv_iff_mul_lt {r p : ℝ≥0 } (h : p ≠ 0) : r < p⁻¹ ↔ r * p 
 
 theorem mul_le_iff_le_inv {a b r : ℝ≥0 } (hr : r ≠ 0) : r * a ≤ b ↔ a ≤ r⁻¹ * b := by
   have : 0 < r := lt_of_le_of_neₓ (zero_le r) hr.symm
-  rw [← @mul_le_mul_left _ _ a _ r this, ← mul_assoc, mul_inv_cancel hr, one_mulₓ]
+  rw [← mul_le_mul_left (inv_pos.mpr this), ← mul_assoc, inv_mul_cancel hr, one_mulₓ]
 
 theorem le_div_iff_mul_le {a b r : ℝ≥0 } (hr : r ≠ 0) : a ≤ b / r ↔ a * r ≤ b := by
   rw [div_eq_inv_mul, ← mul_le_iff_le_inv hr, mul_comm]

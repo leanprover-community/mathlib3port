@@ -473,7 +473,9 @@ namespace AlgHom
 
 section CommSemiringₓ
 
-variable {R : Type _} {A B : Type _} [CommRingₓ R] [Ringₓ A] [Algebra R A] [Ringₓ B] [Algebra R B]
+variable {F R A B : Type _} [CommRingₓ R] [Ringₓ A] [Algebra R A] [Ringₓ B] [Algebra R B]
+
+variable [AlgHomClass F R A B]
 
 -- mathport name: «exprσ»
 local notation "σ" => Spectrum R
@@ -481,17 +483,19 @@ local notation "σ" => Spectrum R
 -- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap R A
 
-theorem mem_resolvent_set_apply (φ : A →ₐ[R] B) {a : A} {r : R} (h : r ∈ ResolventSet R a) : r ∈ ResolventSet R (φ a) :=
-  by
-  simpa only [map_sub, commutes] using h.map φ
+theorem mem_resolvent_set_apply (φ : F) {a : A} {r : R} (h : r ∈ ResolventSet R a) :
+    r ∈ ResolventSet R ((φ : A → B) a) := by
+  simpa only [map_sub, AlgHomClass.commutes] using h.map φ
 
-theorem spectrum_apply_subset (φ : A →ₐ[R] B) (a : A) : σ (φ a) ⊆ σ a := fun _ => mt (mem_resolvent_set_apply φ)
+theorem spectrum_apply_subset (φ : F) (a : A) : σ ((φ : A → B) a) ⊆ σ a := fun _ => mt (mem_resolvent_set_apply φ)
 
 end CommSemiringₓ
 
 section CommRingₓ
 
-variable {R : Type _} {A B : Type _} [CommRingₓ R] [Ringₓ A] [Algebra R A] [Ringₓ B] [Algebra R B]
+variable {F R A B : Type _} [CommRingₓ R] [Ringₓ A] [Algebra R A] [Ringₓ B] [Algebra R B]
+
+variable [AlgHomClass F R A R]
 
 -- mathport name: «exprσ»
 local notation "σ" => Spectrum R
@@ -499,11 +503,11 @@ local notation "σ" => Spectrum R
 -- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap R A
 
-theorem apply_mem_spectrum [Nontrivial R] (φ : A →ₐ[R] R) (a : A) : φ a ∈ σ a := by
-  have h : ↑ₐ (φ a) - a ∈ φ.to_ring_hom.ker := by
-    simp only [RingHom.mem_ker, coe_to_ring_hom, commutes, Algebra.id.map_eq_id, to_ring_hom_eq_coe, RingHom.id_apply,
-      sub_self, map_sub]
-  simp only [Spectrum.mem_iff, ← mem_nonunits_iff, coe_subset_nonunits φ.to_ring_hom.ker_ne_top h]
+theorem apply_mem_spectrum [Nontrivial R] (φ : F) (a : A) : φ a ∈ σ a := by
+  have h : ↑ₐ (φ a) - a ∈ (φ : A →+* R).ker := by
+    simp only [RingHom.mem_ker, map_sub, RingHom.coe_coe, AlgHomClass.commutes, Algebra.id.map_eq_id, RingHom.id_apply,
+      sub_self]
+  simp only [Spectrum.mem_iff, ← mem_nonunits_iff, coe_subset_nonunits (φ : A →+* R).ker_ne_top h]
 
 end CommRingₓ
 

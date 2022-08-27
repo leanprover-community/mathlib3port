@@ -88,7 +88,7 @@ theorem as_algebra_hom_single_one (g : G) : asAlgebraHom ρ (Finsupp.single g 1)
 theorem as_algebra_hom_of (g : G) : asAlgebraHom ρ (of k G g) = ρ g := by
   simp only [MonoidAlgebra.of_apply, as_algebra_hom_single, one_smul]
 
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module (module.End k V)
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] (module.End[module.End] k V)
 /-- If `ρ : representation k G V`, then `ρ.as_module` is a type synonym for `V`,
 which we equip with an instance `module (monoid_algebra k G) ρ.as_module`.
 
@@ -97,7 +97,7 @@ You should use `as_module_equiv : ρ.as_module ≃+ V` to translate terms.
 @[nolint unused_arguments]
 def AsModule (ρ : Representation k G V) :=
   V deriving AddCommMonoidₓ,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module (module.End k V)»
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] (module.End[module.End] k V)»
 
 instance : Inhabited ρ.AsModule :=
   ⟨0⟩

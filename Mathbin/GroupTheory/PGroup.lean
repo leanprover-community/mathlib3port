@@ -139,7 +139,7 @@ theorem card_modeq_card_fixed_points [Fintype (FixedPoints G α)] : card α ≡ 
         rw [key, mem_fixed_points_iff_card_orbit_eq_one.mp a.2])
   obtain ⟨k, hk⟩ := hG.card_orbit b
   have : k = 0 :=
-    Nat.le_zero_iffₓ.1
+    le_zero_iff.1
       (Nat.le_of_lt_succₓ
         (lt_of_not_geₓ
           (mt (pow_dvd_pow p)

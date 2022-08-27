@@ -207,14 +207,15 @@ def prec (f g : Code) : Code :=
 
 attribute [-simp] Part.bind_eq_bind Part.map_eq_map Part.pure_eq_some
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident cg, ",", ident hg, "⟩", ":", expr «expr∃ , »((c : code), ∀
-    v : vector exprℕ() m, «expr = »(c.eval v.1, «expr <$> »(subtype.val, vector.m_of_fn (λ i, g i v))))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident cg, ",", ident hg, "⟩", ":", expr «expr∃ , »((c : code),
+    ∀ v : vector exprℕ() m,
+    «expr = »(c.eval v.1, «expr <$> »(subtype.val, vector.m_of_fn (λ i, g i v))))]]
 theorem ExistsCode.comp {m n} {f : Vector ℕ n →. ℕ} {g : Finₓ n → Vector ℕ m →. ℕ}
     (hf : ∃ c : Code, ∀ v : Vector ℕ n, c.eval v.1 = pure <$> f v)
     (hg : ∀ i, ∃ c : Code, ∀ v : Vector ℕ m, c.eval v.1 = pure <$> g i v) :
     ∃ c : Code, ∀ v : Vector ℕ m, c.eval v.1 = pure <$> ((Vector.mOfFnₓ fun i => g i v) >>= f) := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident cg, \",\", ident hg, \"⟩\", \":\", expr «expr∃ , »((c : code), ∀\n    v : vector exprℕ() m, «expr = »(c.eval v.1, «expr <$> »(subtype.val, vector.m_of_fn (λ i, g i v))))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident cg, \",\", ident hg, \"⟩\", \":\", expr «expr∃ , »((c : code),\n    ∀ v : vector exprℕ() m,\n    «expr = »(c.eval v.1, «expr <$> »(subtype.val, vector.m_of_fn (λ i, g i v))))]]"
   · obtain ⟨cf, hf⟩ := hf
     exact
       ⟨cf.comp cg, fun v => by

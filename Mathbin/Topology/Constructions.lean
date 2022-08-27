@@ -876,12 +876,16 @@ theorem IsClosed.closed_embedding_subtype_coe {s : Set α} (hs : IsClosed s) :
   { induced := rfl, inj := Subtype.coe_injective, closed_range := (Subtype.range_coe : Range coe = s).symm ▸ hs }
 
 @[continuity]
-theorem continuous_subtype_mk {f : β → α} (hp : ∀ x, p (f x)) (h : Continuous f) :
+theorem Continuous.subtype_mk {f : β → α} (h : Continuous f) (hp : ∀ x, p (f x)) :
     Continuous fun x => (⟨f x, hp x⟩ : Subtype p) :=
   continuous_induced_rng.2 h
 
+theorem Continuous.subtype_map {f : α → β} (h : Continuous f) {q : β → Prop} (hpq : ∀ x, p x → q (f x)) :
+    Continuous (Subtype.map f hpq) :=
+  (h.comp continuous_subtype_coe).subtype_mk _
+
 theorem continuous_inclusion {s t : Set α} (h : s ⊆ t) : Continuous (inclusion h) :=
-  continuous_subtype_mk _ continuous_subtype_coe
+  continuous_id.subtypeMap h
 
 theorem continuous_at_subtype_coe {p : α → Prop} {a : Subtype p} : ContinuousAt (coe : Subtype p → α) a :=
   continuous_iff_continuous_at.mp continuous_subtype_coe _
@@ -954,7 +958,7 @@ theorem ContinuousAt.restrict_preimage {f : α → β} {s : Set β} {x : f ⁻¹
 @[continuity]
 theorem Continuous.cod_restrict {f : α → β} {s : Set β} (hf : Continuous f) (hs : ∀ a, f a ∈ s) :
     Continuous (s.codRestrict f hs) :=
-  continuous_subtype_mk hs hf
+  hf.subtype_mk hs
 
 theorem Inducing.cod_restrict {e : α → β} (he : Inducing e) {s : Set β} (hs : ∀ x, e x ∈ s) :
     Inducing (codRestrict e s hs) :=

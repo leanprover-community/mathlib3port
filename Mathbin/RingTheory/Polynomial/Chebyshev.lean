@@ -248,7 +248,11 @@ theorem add_one_mul_T_eq_poly_in_U (n : ℕ) :
 
 variable (R)
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr - »(«expr - »(«expr - »(«expr + »(«expr * »(«expr * »(2, T R «expr + »(«expr + »(m, k), 2)), h₁), «expr * »(«expr * »(2, X), H₁)), H₂), h₂), h₃)],
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr - »(«expr - »(«expr - »(«expr + »(«expr * »(«expr * »(2, T R «expr + »(«expr + »(m, k), 2)), h₁),
+       «expr * »(«expr * »(2, X), H₁)),
+      H₂),
+     h₂),
+    h₃)],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args
 /-- The product of two Chebyshev polynomials is the sum of two other Chebyshev polynomials. -/
 theorem mul_T : ∀ m k, 2 * t R m * t R (m + k) = t R (2 * m + k) + t R k
@@ -285,7 +289,7 @@ theorem mul_T : ∀ m k, 2 * t R m * t R (m + k) = t R (2 * m + k) + t R k
     have h₂ := T_add_two R (2 * m + k + 2)
     have h₃ := T_add_two R k
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr - »(«expr - »(«expr - »(«expr + »(«expr * »(«expr * »(2, T R «expr + »(«expr + »(m, k), 2)), h₁), «expr * »(«expr * »(2, X), H₁)), H₂), h₂), h₃)],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr - »(«expr - »(«expr - »(«expr + »(«expr * »(«expr * »(2, T R «expr + »(«expr + »(m, k), 2)), h₁),\n       «expr * »(«expr * »(2, X), H₁)),\n      H₂),\n     h₂),\n    h₃)],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args"
 
 /-- The `(m * n)`-th Chebyshev polynomial is the composition of the `m`-th and `n`-th -/
 theorem T_mul : ∀ m n, t R (m * n) = (t R m).comp (t R n)

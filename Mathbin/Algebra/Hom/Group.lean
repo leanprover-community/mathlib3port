@@ -352,6 +352,10 @@ attribute [to_additive_reorder 8, to_additive] map_zpow
 
 end mul_oneₓ
 
+@[to_additive]
+theorem Groupₓ.is_unit [Groupₓ G] (g : G) : IsUnit g :=
+  ⟨⟨g, g⁻¹, mul_inv_selfₓ g, inv_mul_selfₓ g⟩, rfl⟩
+
 section MulZeroOne
 
 variable [MulZeroOneClassₓ M] [MulZeroOneClassₓ N]
@@ -1198,11 +1202,20 @@ theorem comp_mul [MulOneClassₓ M] [CommMonoidₓ N] [CommMonoidₓ P] (g : N �
   ext
   simp only [mul_apply, Function.comp_app, map_mul, coe_comp]
 
+/-- If two homomorphisms from a division monoid to a monoid are equal at a unit `x`, then they are
+equal at `x⁻¹`. -/
+@[to_additive
+      "If two homomorphisms from a subtraction monoid to an additive monoid are equal at an\nadditive unit `x`, then they are equal at `-x`."]
+theorem _root_.is_unit.eq_on_inv {G N} [DivisionMonoid G] [Monoidₓ N] [MonoidHomClass F G N] {x : G} (hx : IsUnit x)
+    (f g : F) (h : f x = g x) : f x⁻¹ = g x⁻¹ :=
+  left_inv_eq_right_invₓ (map_mul_eq_one f hx.inv_mul_cancel) <| h.symm ▸ map_mul_eq_one g <| hx.mul_inv_cancel
+
 /-- If two homomorphism from a group to a monoid are equal at `x`, then they are equal at `x⁻¹`. -/
 @[to_additive
       "If two homomorphism from an additive group to an additive monoid are equal at `x`,\nthen they are equal at `-x`."]
-theorem eq_on_inv {G} [Groupₓ G] [Monoidₓ M] [MonoidHomClass F G M] {f g : F} {x : G} (h : f x = g x) : f x⁻¹ = g x⁻¹ :=
-  left_inv_eq_right_invₓ (map_mul_eq_one f <| inv_mul_selfₓ x) <| h.symm ▸ map_mul_eq_one g <| mul_inv_selfₓ x
+theorem _root_.eq_on_inv {G} [Groupₓ G] [Monoidₓ M] [MonoidHomClass F G M] (f g : F) {x : G} (h : f x = g x) :
+    f x⁻¹ = g x⁻¹ :=
+  (Groupₓ.is_unit x).eq_on_inv f g h
 
 /-- Group homomorphisms preserve inverse. -/
 @[to_additive "Additive group homomorphisms preserve negation."]

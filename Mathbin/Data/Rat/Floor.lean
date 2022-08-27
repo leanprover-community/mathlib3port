@@ -75,7 +75,7 @@ theorem ceil_cast (x : ℚ) : ⌈(x : α)⌉ = ⌈x⌉ := by
 theorem round_cast (x : ℚ) : round (x : α) = round x := by
   have : ((x + 1 / 2 : ℚ) : α) = x + 1 / 2 := by
     simp
-  rw [round, round, ← this, floor_cast]
+  rw [round_eq, round_eq, ← this, floor_cast]
 
 @[simp, norm_cast]
 theorem cast_fract (x : ℚ) : (↑(fract x) : α) = fract x := by

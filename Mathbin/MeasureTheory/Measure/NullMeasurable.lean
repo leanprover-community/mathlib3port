@@ -117,7 +117,7 @@ theorem compl (h : NullMeasurableSet s μ) : NullMeasurableSet (sᶜ) μ :=
   h.compl
 
 theorem of_compl (h : NullMeasurableSet (sᶜ) μ) : NullMeasurableSet s μ :=
-  h.of_compl
+  h.ofCompl
 
 @[simp]
 theorem compl_iff : NullMeasurableSet (sᶜ) μ ↔ NullMeasurableSet s μ :=

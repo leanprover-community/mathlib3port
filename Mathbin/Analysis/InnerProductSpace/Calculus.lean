@@ -59,7 +59,7 @@ theorem differentiable_inner : Differentiable ℝ fun p : E × E => ⟪p.1, p.2�
   is_bounded_bilinear_map_inner.DifferentiableAt
 
 variable {G : Type _} [NormedAddCommGroup G] [NormedSpace ℝ G] {f g : G → E} {f' g' : G →L[ℝ] E} {s : Set G} {x : G}
-  {n : WithTop ℕ}
+  {n : ℕ∞}
 
 include 𝕜
 
@@ -258,20 +258,20 @@ theorem has_fderiv_within_at_euclidean :
   rw [← (EuclideanSpace.equiv ι 𝕜).comp_has_fderiv_within_at_iff, has_fderiv_within_at_pi']
   rfl
 
-theorem cont_diff_within_at_euclidean {n : WithTop ℕ} :
+theorem cont_diff_within_at_euclidean {n : ℕ∞} :
     ContDiffWithinAt 𝕜 n f t y ↔ ∀ i, ContDiffWithinAt 𝕜 n (fun x => f x i) t y := by
   rw [← (EuclideanSpace.equiv ι 𝕜).comp_cont_diff_within_at_iff, cont_diff_within_at_pi]
   rfl
 
-theorem cont_diff_at_euclidean {n : WithTop ℕ} : ContDiffAt 𝕜 n f y ↔ ∀ i, ContDiffAt 𝕜 n (fun x => f x i) y := by
+theorem cont_diff_at_euclidean {n : ℕ∞} : ContDiffAt 𝕜 n f y ↔ ∀ i, ContDiffAt 𝕜 n (fun x => f x i) y := by
   rw [← (EuclideanSpace.equiv ι 𝕜).comp_cont_diff_at_iff, cont_diff_at_pi]
   rfl
 
-theorem cont_diff_on_euclidean {n : WithTop ℕ} : ContDiffOn 𝕜 n f t ↔ ∀ i, ContDiffOn 𝕜 n (fun x => f x i) t := by
+theorem cont_diff_on_euclidean {n : ℕ∞} : ContDiffOn 𝕜 n f t ↔ ∀ i, ContDiffOn 𝕜 n (fun x => f x i) t := by
   rw [← (EuclideanSpace.equiv ι 𝕜).comp_cont_diff_on_iff, cont_diff_on_pi]
   rfl
 
-theorem cont_diff_euclidean {n : WithTop ℕ} : ContDiff 𝕜 n f ↔ ∀ i, ContDiff 𝕜 n fun x => f x i := by
+theorem cont_diff_euclidean {n : ℕ∞} : ContDiff 𝕜 n f ↔ ∀ i, ContDiff 𝕜 n fun x => f x i := by
   rw [← (EuclideanSpace.equiv ι 𝕜).comp_cont_diff_iff, cont_diff_pi]
   rfl
 
@@ -281,7 +281,7 @@ section DiffeomorphUnitBall
 
 open Metric hiding mem_nhds_iff
 
-variable {n : WithTop ℕ} {E : Type _} [InnerProductSpace ℝ E]
+variable {n : ℕ∞} {E : Type _} [InnerProductSpace ℝ E]
 
 -- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]
 theorem cont_diff_homeomorph_unit_ball : (ContDiff ℝ n) fun x : E => (homeomorphUnitBall x : E) := by

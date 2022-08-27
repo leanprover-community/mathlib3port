@@ -1986,6 +1986,26 @@ instance IsCommutative.commGroup [h : H.IsCommutative] : CommGroupₓ H :=
 instance center.is_commutative : (center G).IsCommutative :=
   ⟨⟨fun a b => Subtype.ext (b.2 a)⟩⟩
 
+@[to_additive]
+instance map_is_commutative {G' : Type _} [Groupₓ G'] (f : G →* G') [H.IsCommutative] : (H.map f).IsCommutative :=
+  ⟨⟨by
+      rintro ⟨-, a, ha, rfl⟩ ⟨-, b, hb, rfl⟩
+      rw [Subtype.ext_iff, coe_mul, coe_mul, Subtype.coe_mk, Subtype.coe_mk, ← map_mul, ← map_mul]
+      exact congr_arg f (subtype.ext_iff.mp (mul_comm ⟨a, ha⟩ ⟨b, hb⟩))⟩⟩
+
+@[to_additive]
+theorem comap_injective_is_commutative {G' : Type _} [Groupₓ G'] {f : G' →* G} (hf : Function.Injective f)
+    [H.IsCommutative] : (H.comap f).IsCommutative :=
+  ⟨⟨fun a b =>
+      Subtype.ext
+        (by
+          have := mul_comm (⟨f a, a.2⟩ : H) (⟨f b, b.2⟩ : H)
+          rwa [Subtype.ext_iff, coe_mul, coe_mul, coe_mk, coe_mk, ← map_mul, ← map_mul, hf.eq_iff] at this)⟩⟩
+
+@[to_additive]
+instance subgroup_of_is_commutative [H.IsCommutative] : (H.subgroupOf K).IsCommutative :=
+  H.comap_injective_is_commutative Subtype.coe_injective
+
 end Subgroup
 
 namespace Groupₓ
@@ -2819,6 +2839,10 @@ theorem zpowers_le {g : G} {H : Subgroup G} : zpowers g ≤ H ↔ g ∈ H := by
 @[simp, to_additive zmultiples_eq_bot]
 theorem zpowers_eq_bot {g : G} : zpowers g = ⊥ ↔ g = 1 := by
   rw [eq_bot_iff, zpowers_le, mem_bot]
+
+@[simp, to_additive zmultiples_zero_eq_bot]
+theorem zpowers_one_eq_bot : Subgroup.zpowers (1 : G) = ⊥ :=
+  Subgroup.zpowers_eq_bot.mpr rfl
 
 end Subgroup
 

@@ -60,12 +60,8 @@ instance : TopologicalSpace ℝ≥0 :=
 
 -- short-circuit type class inference
 instance : TopologicalSemiring ℝ≥0 where
-  continuous_mul :=
-    continuous_subtype_mk _ <|
-      (continuous_subtype_val.comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd)
-  continuous_add :=
-    continuous_subtype_mk _ <|
-      (continuous_subtype_val.comp continuous_fst).add (continuous_subtype_val.comp continuous_snd)
+  continuous_mul := (continuous_subtype_val.fst'.mul continuous_subtype_val.snd').subtype_mk _
+  continuous_add := (continuous_subtype_val.fst'.add continuous_subtype_val.snd').subtype_mk _
 
 instance : SecondCountableTopology ℝ≥0 :=
   TopologicalSpace.Subtype.second_countable_topology _ _
@@ -80,7 +76,7 @@ variable {α : Type _}
 open Filter Finset
 
 theorem _root_.continuous_real_to_nnreal : Continuous Real.toNnreal :=
-  continuous_subtype_mk _ <| continuous_id.max continuous_const
+  (continuous_id.max continuous_const).subtype_mk _
 
 theorem continuous_coe : Continuous (coe : ℝ≥0 → ℝ) :=
   continuous_subtype_val
@@ -93,7 +89,7 @@ def _root_.continuous_map.coe_nnreal_real : C( ℝ≥0 , ℝ) :=
 instance {X : Type _} [TopologicalSpace X] : CanLift C(X, ℝ) C(X, ℝ≥0 ) where
   coe := ContinuousMap.coeNnrealReal.comp
   cond := fun f => ∀ x, 0 ≤ f x
-  prf := fun f hf => ⟨⟨fun x => ⟨f x, hf x⟩, continuous_subtype_mk _ f.2⟩, FunLike.ext' rfl⟩
+  prf := fun f hf => ⟨⟨fun x => ⟨f x, hf x⟩, f.2.subtype_mk _⟩, FunLike.ext' rfl⟩
 
 @[simp, norm_cast]
 theorem tendsto_coe {f : Filter α} {m : α → ℝ≥0 } {x : ℝ≥0 } :
@@ -128,8 +124,7 @@ theorem nhds_zero_basis : (𝓝 (0 : ℝ≥0 )).HasBasis (fun a : ℝ≥0 => 0 <
   nhds_bot_basis
 
 instance : HasContinuousSub ℝ≥0 :=
-  ⟨continuous_subtype_mk _ <|
-      ((continuous_coe.comp continuous_fst).sub (continuous_coe.comp continuous_snd)).max continuous_const⟩
+  ⟨((continuous_coe.fst'.sub continuous_coe.snd').max continuous_const).subtype_mk _⟩
 
 instance : HasContinuousInv₀ ℝ≥0 :=
   ⟨fun x hx => tendsto_coe.1 <| (Real.tendsto_inv <| Nnreal.coe_ne_zero.2 hx).comp continuous_coe.ContinuousAt⟩
@@ -137,8 +132,7 @@ instance : HasContinuousInv₀ ℝ≥0 :=
 instance :
     HasContinuousSmul ℝ≥0
       ℝ where continuous_smul :=
-    Continuous.comp Real.continuous_mul <|
-      Continuous.prod_mk (Continuous.comp continuous_subtype_val continuous_fst) continuous_snd
+    Real.continuous_mul.comp <| (continuous_subtype_val.comp continuous_fst).prod_mk continuous_snd
 
 @[norm_cast]
 theorem has_sum_coe {f : α → ℝ≥0 } {r : ℝ≥0 } : HasSum (fun a => (f a : ℝ)) (r : ℝ) ↔ HasSum f r := by

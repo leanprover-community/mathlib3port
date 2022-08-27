@@ -11,7 +11,7 @@ import Mathbin.Data.Fintype.Basic
 In this file we prove a few induction principles for functions `Π i : ι, finset (α i)` defined on a
 finite type.
 
-* `finset.induction_on_pi` is a generic lemma that requires only `[fintype ι]`, `[decidable_eq ι]`,
+* `finset.induction_on_pi` is a generic lemma that requires only `[finite ι]`, `[decidable_eq ι]`,
   and `[Π i, decidable_eq (α i)]`; this version can be seen as a direct generalization of
   `finset.induction_on`.
 
@@ -26,7 +26,7 @@ finite set, finite type, induction, function
 
 open Function
 
-variable {ι : Type _} {α : ι → Type _} [Fintype ι] [DecidableEq ι] [∀ i, DecidableEq (α i)]
+variable {ι : Type _} {α : ι → Type _} [Finite ι] [DecidableEq ι] [∀ i, DecidableEq (α i)]
 
 namespace Finset
 
@@ -36,6 +36,7 @@ theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
     (f : ∀ i, Finset (α i)) (h0 : p fun _ => ∅)
     (step : ∀ (g : ∀ i, Finset (α i)) (i : ι) (x : α i), r i x (g i) → p g → p (update g i (insert x (g i)))) : p f :=
   by
+  cases nonempty_fintype ι
   induction' hs : univ.sigma f using Finset.strongInductionOn with s ihs generalizing f
   subst s
   cases' eq_empty_or_nonempty (univ.sigma f) with he hne

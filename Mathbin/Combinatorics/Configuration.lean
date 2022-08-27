@@ -137,7 +137,7 @@ theorem Nondegenerate.exists_injective_of_card_le [Nondegenerate P L] [Fintype P
     obtain ⟨l₁, l₂, hl₁, hl₂, hl₃⟩ := finset.one_lt_card_iff.mp (nat.one_lt_iff_ne_zero_and_ne_one.mpr ⟨hs₀, hs₁⟩)
     exact (eq_or_eq (hp₁ l₁ hl₁) (hp₂ l₁ hl₁) (hp₁ l₂ hl₂) (hp₂ l₂ hl₂)).resolve_right hl₃
   by_cases' hs₃ : sᶜ.card = 0
-  · rw [hs₃, Nat.le_zero_iffₓ]
+  · rw [hs₃, le_zero_iff]
     rw [Finset.card_compl, tsub_eq_zero_iff_le, LE.le.le_iff_eqₓ (Finset.card_le_univ _), eq_comm,
       Finset.card_eq_iff_eq_univ] at hs₃⊢
     rw [hs₃]

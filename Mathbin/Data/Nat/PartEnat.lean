@@ -5,14 +5,14 @@ Authors: Chris Hughes
 -/
 import Mathbin.Algebra.Hom.Equiv
 import Mathbin.Data.Part
-import Mathbin.Data.Nat.Lattice
+import Mathbin.Data.Nat.Enat
 import Mathbin.Tactic.NormNum
 
 /-!
 # Natural numbers with infinity
 
 The natural numbers and an extra `top` element `⊤`. This implementation uses `part ℕ` as an
-implementation. Use `with_top ℕ` instead unless you care about computability.
+implementation. Use `ℕ∞` instead unless you care about computability.
 
 ## Main definitions
 
@@ -24,11 +24,11 @@ The following instances are defined:
 There is no additive analogue of `monoid_with_zero`; if there were then `part_enat` could
 be an `add_monoid_with_top`.
 
-* `to_with_top` : the map from `part_enat` to `with_top ℕ`, with theorems that it plays well
+* `to_with_top` : the map from `part_enat` to `ℕ∞`, with theorems that it plays well
 with `+` and `≤`.
 
-* `with_top_add_equiv : part_enat ≃+ with_top ℕ`
-* `with_top_order_iso : part_enat ≃o with_top ℕ`
+* `with_top_add_equiv : part_enat ≃+ ℕ∞`
+* `with_top_order_iso : part_enat ≃o ℕ∞`
 
 ## Implementation details
 
@@ -45,7 +45,7 @@ followed by `@[simp] lemma to_with_top_zero'` whose proof uses `convert`.
 
 ## Tags
 
-part_enat, with_top ℕ
+part_enat, ℕ∞
 -/
 
 
@@ -457,8 +457,8 @@ protected theorem add_left_cancel_iff {a b c : PartEnat} (ha : a ≠ ⊤) : a + 
 
 section WithTop
 
-/-- Computably converts an `part_enat` to a `with_top ℕ`. -/
-def toWithTop (x : PartEnat) [Decidable x.Dom] : WithTop ℕ :=
+/-- Computably converts an `part_enat` to a `ℕ∞`. -/
+def toWithTop (x : PartEnat) [Decidable x.Dom] : ℕ∞ :=
   x.toOption
 
 theorem to_with_top_top : toWithTop ⊤ = ⊤ :=
@@ -509,11 +509,11 @@ open Classical
 
 @[simp]
 theorem to_with_top_add {x y : PartEnat} : toWithTop (x + y) = toWithTop x + toWithTop y := by
-  apply PartEnat.cases_on y <;> apply PartEnat.cases_on x <;> simp [← Nat.cast_addₓ, ← WithTop.coe_add]
+  apply PartEnat.cases_on y <;> apply PartEnat.cases_on x <;> simp [← Nat.cast_addₓ, ← Enat.coe_add]
 
-/-- `equiv` between `part_enat` and `with_top ℕ` (for the order isomorphism see
+/-- `equiv` between `part_enat` and `ℕ∞` (for the order isomorphism see
 `with_top_order_iso`). -/
-noncomputable def withTopEquiv : PartEnat ≃ WithTop ℕ where
+noncomputable def withTopEquiv : PartEnat ≃ ℕ∞ where
   toFun := fun x => toWithTop x
   invFun := fun x =>
     match x with
@@ -544,8 +544,8 @@ theorem with_top_equiv_le {x y : PartEnat} : withTopEquiv x ≤ withTopEquiv y �
 theorem with_top_equiv_lt {x y : PartEnat} : withTopEquiv x < withTopEquiv y ↔ x < y :=
   to_with_top_lt
 
-/-- `to_with_top` induces an order isomorphism between `part_enat` and `with_top ℕ`. -/
-noncomputable def withTopOrderIso : PartEnat ≃o WithTop ℕ :=
+/-- `to_with_top` induces an order isomorphism between `part_enat` and `ℕ∞`. -/
+noncomputable def withTopOrderIso : PartEnat ≃o ℕ∞ :=
   { withTopEquiv with map_rel_iff' := fun _ _ => with_top_equiv_le }
 
 @[simp]
@@ -561,15 +561,15 @@ theorem with_top_equiv_symm_zero : withTopEquiv.symm 0 = 0 :=
   rfl
 
 @[simp]
-theorem with_top_equiv_symm_le {x y : WithTop ℕ} : withTopEquiv.symm x ≤ withTopEquiv.symm y ↔ x ≤ y := by
+theorem with_top_equiv_symm_le {x y : ℕ∞} : withTopEquiv.symm x ≤ withTopEquiv.symm y ↔ x ≤ y := by
   rw [← with_top_equiv_le] <;> simp
 
 @[simp]
-theorem with_top_equiv_symm_lt {x y : WithTop ℕ} : withTopEquiv.symm x < withTopEquiv.symm y ↔ x < y := by
+theorem with_top_equiv_symm_lt {x y : ℕ∞} : withTopEquiv.symm x < withTopEquiv.symm y ↔ x < y := by
   rw [← with_top_equiv_lt] <;> simp
 
-/-- `to_with_top` induces an additive monoid isomorphism between `part_enat` and `with_top ℕ`. -/
-noncomputable def withTopAddEquiv : PartEnat ≃+ WithTop ℕ :=
+/-- `to_with_top` induces an additive monoid isomorphism between `part_enat` and `ℕ∞`. -/
+noncomputable def withTopAddEquiv : PartEnat ≃+ ℕ∞ :=
   { withTopEquiv with
     map_add' := fun x y => by
       simp only [with_top_equiv] <;> convert to_with_top_add }

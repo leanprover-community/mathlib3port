@@ -83,7 +83,7 @@ end
 
 section
 
-variable {f g : M → G} {s : Set M} {x : M} {n : WithTop ℕ}
+variable {f g : M → G} {s : Set M} {x : M} {n : ℕ∞}
 
 @[to_additive]
 theorem ContMdiffWithinAt.mul (hf : ContMdiffWithinAt I' I n f s x) (hg : ContMdiffWithinAt I' I n g s x) :
@@ -249,7 +249,7 @@ variable {ι 𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [Topolog
   [NormedAddCommGroup E] [NormedSpace 𝕜 E] {I : ModelWithCorners 𝕜 E H} {G : Type _} [CommMonoidₓ G]
   [TopologicalSpace G] [ChartedSpace H G] [HasSmoothMul I G] {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E']
   {H' : Type _} [TopologicalSpace H'] {I' : ModelWithCorners 𝕜 E' H'} {M : Type _} [TopologicalSpace M]
-  [ChartedSpace H' M] {s : Set M} {x : M} {t : Finset ι} {f : ι → M → G} {n : WithTop ℕ} {p : ι → Prop}
+  [ChartedSpace H' M] {s : Set M} {x : M} {t : Finset ι} {f : ι → M → G} {n : ℕ∞} {p : ι → Prop}
 
 @[to_additive]
 theorem cont_mdiff_within_at_finset_prod' (h : ∀ i ∈ t, ContMdiffWithinAt I' I n (f i) s x) :

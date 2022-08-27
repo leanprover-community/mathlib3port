@@ -32,7 +32,7 @@ namespace Nat
 instance : WfDvdMonoid ℕ :=
   ⟨by
     refine'
-      RelHomClass.well_founded (⟨fun x : ℕ => if x = 0 then (⊤ : WithTop ℕ) else x, _⟩ : DvdNotUnit →r (· < ·))
+      RelHomClass.well_founded (⟨fun x : ℕ => if x = 0 then (⊤ : ℕ∞) else x, _⟩ : DvdNotUnit →r (· < ·))
         (WithTop.well_founded_lt Nat.lt_wf)
     intro a b h
     cases a

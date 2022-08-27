@@ -530,6 +530,10 @@ end CanonicallyOrderedMonoid
 theorem pos_of_gt {M : Type _} [CanonicallyOrderedAddMonoid M] {n m : M} (h : n < m) : 0 < m :=
   lt_of_le_of_ltₓ (zero_le _) h
 
+instance (priority := 100) CanonicallyOrderedAddMonoid.zeroLeOneClass {M : Type _} [CanonicallyOrderedAddMonoid M]
+    [One M] : ZeroLeOneClass M :=
+  ⟨zero_le 1⟩
+
 /-- A canonically linear-ordered additive monoid is a canonically ordered additive monoid
     whose ordering is a linear order. -/
 @[protect_proj, ancestor CanonicallyOrderedAddMonoid LinearOrderₓ]

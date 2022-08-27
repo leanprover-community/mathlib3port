@@ -299,7 +299,7 @@ instance (c : E) : Inhabited (ContDiffBumpOfInner c) :=
 
 variable [InnerProductSpace ℝ E] [NormedAddCommGroup X] [NormedSpace ℝ X]
 
-variable {c : E} (f : ContDiffBumpOfInner c) {x : E} {n : WithTop ℕ}
+variable {c : E} (f : ContDiffBumpOfInner c) {x : E} {n : ℕ∞}
 
 /-- The function defined by `f : cont_diff_bump_of_inner c`. Use automatic coercion to
 function instead. -/
@@ -413,7 +413,7 @@ theorem normed_def {μ : Measureₓ E} (x : E) : f.normed μ x = f x / ∫ x, f 
 theorem nonneg_normed (x : E) : 0 ≤ f.normed μ x :=
   div_nonneg f.Nonneg <| integral_nonneg f.nonneg'
 
-theorem cont_diff_normed {n : WithTop ℕ} : ContDiff ℝ n (f.normed μ) :=
+theorem cont_diff_normed {n : ℕ∞} : ContDiff ℝ n (f.normed μ) :=
   f.ContDiff.div_const
 
 theorem continuous_normed : Continuous (f.normed μ) :=

@@ -681,7 +681,7 @@ theorem exists_retraction_subtype_of_is_closed {s : Set (∀ n, E n)} (hs : IsCl
     intro x
     apply subtype.coe_injective.eq_iff.1
     simpa only using fs x.val x.property
-  exact ⟨cod_restrict f s A, B, fun x => ⟨x, B x⟩, continuous_subtype_mk _ f_cont⟩
+  exact ⟨cod_restrict f s A, B, fun x => ⟨x, B x⟩, f_cont.subtype_mk _⟩
 
 end PiNat
 

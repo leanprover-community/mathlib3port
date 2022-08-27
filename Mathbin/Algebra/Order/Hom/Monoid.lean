@@ -161,6 +161,22 @@ instance [OrderMonoidWithZeroHomClass F α β] : CoeTₓ F (α →*₀o β) :=
 
 end MonoidWithZeroₓ
 
+section OrderedAddCommMonoid
+
+variable [OrderedAddCommMonoid α] [OrderedAddCommMonoid β] [OrderAddMonoidHomClass F α β] (f : F) {a : α}
+
+include β
+
+theorem map_nonneg (ha : 0 ≤ a) : 0 ≤ f a := by
+  rw [← map_zero f]
+  exact OrderHomClass.mono _ ha
+
+theorem map_nonpos (ha : a ≤ 0) : f a ≤ 0 := by
+  rw [← map_zero f]
+  exact OrderHomClass.mono _ ha
+
+end OrderedAddCommMonoid
+
 namespace OrderMonoidHom
 
 section Preorderₓ

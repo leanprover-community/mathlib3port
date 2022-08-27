@@ -118,6 +118,20 @@ abbrev isoMk' {W X Y Z : T} (f : W ⟶ X) (g : Y ⟶ Z) (e₁ : W ≅ Y) (e₂ :
     Arrow.mk f ≅ Arrow.mk g :=
   Arrow.isoMk e₁ e₂ h
 
+theorem Hom.congr_left {f g : Arrow T} {φ₁ φ₂ : f ⟶ g} (h : φ₁ = φ₂) : φ₁.left = φ₂.left := by
+  rw [h]
+
+theorem Hom.congr_right {f g : Arrow T} {φ₁ φ₂ : f ⟶ g} (h : φ₁ = φ₂) : φ₁.right = φ₂.right := by
+  rw [h]
+
+theorem iso_w {f g : Arrow T} (e : f ≅ g) : g.Hom = e.inv.left ≫ f.Hom ≫ e.Hom.right := by
+  have eq := arrow.hom.congr_right e.inv_hom_id
+  dsimp'  at eq
+  erw [w_assoc, Eq, category.comp_id]
+
+theorem iso_w' {W X Y Z : T} {f : W ⟶ X} {g : Y ⟶ Z} (e : Arrow.mk f ≅ Arrow.mk g) : g = e.inv.left ≫ f ≫ e.Hom.right :=
+  iso_w e
+
 section
 
 variable {f g : Arrow T} (sq : f ⟶ g)
@@ -240,6 +254,14 @@ def mapArrow (F : C ⥤ D) : Arrow C ⥤ Arrow D where
         simp only [← F.map_comp, w] }
 
 end Functor
+
+/-- The images of `f : arrow C` by two isomorphic functors `F : C ⥤ D` are
+isomorphic arrows in `D`. -/
+def Arrow.isoOfNatIso {C D : Type _} [Category C] [Category D] {F G : C ⥤ D} (e : F ≅ G) (f : Arrow C) :
+    F.mapArrow.obj f ≅ G.mapArrow.obj f :=
+  Arrow.isoMk (e.app f.left) (e.app f.right)
+    (by
+      simp )
 
 end CategoryTheory
 

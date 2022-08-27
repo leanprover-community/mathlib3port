@@ -663,6 +663,8 @@ end Fintype
 
 namespace Set
 
+variable {s t : Set α}
+
 /-- Construct a finset enumerating a set `s`, given a `fintype` instance.  -/
 def toFinset (s : Set α) [Fintype s] : Finset α :=
   ⟨(@Finset.univ s _).1.map Subtype.val, Finset.univ.Nodup.map fun a b => Subtype.eq⟩
@@ -703,12 +705,12 @@ theorem to_finset_inj {s t : Set α} [Fintype s] [Fintype t] : s.toFinset = t.to
     simp [h] <;> congr ⟩
 
 @[simp, mono]
-theorem to_finset_mono {s t : Set α} [Fintype s] [Fintype t] : s.toFinset ⊆ t.toFinset ↔ s ⊆ t := by
+theorem to_finset_subset [Fintype s] [Fintype t] : s.toFinset ⊆ t.toFinset ↔ s ⊆ t := by
   simp [Finset.subset_iff, Set.subset_def]
 
 @[simp, mono]
-theorem to_finset_strict_mono {s t : Set α} [Fintype s] [Fintype t] : s.toFinset ⊂ t.toFinset ↔ s ⊂ t := by
-  simp only [Finset.ssubset_def, to_finset_mono, ssubset_def]
+theorem to_finset_ssubset [Fintype s] [Fintype t] : s.toFinset ⊂ t.toFinset ↔ s ⊂ t := by
+  simp only [Finset.ssubset_def, to_finset_subset, ssubset_def]
 
 @[simp]
 theorem to_finset_disjoint_iff [DecidableEq α] {s t : Set α} [Fintype s] [Fintype t] :
@@ -1090,7 +1092,10 @@ that `sum.inr` is an injection, but there's no clear inverse if `β` is empty. -
 noncomputable def Fintype.sumRight {α β} [Fintype (Sum α β)] : Fintype β :=
   Fintype.ofInjective (Sum.inr : β → Sum α β) Sum.inr_injective
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", "⟨", ident a, ",", ident rfl, "⟩", ",", "⟨", ident b, ",", ident hb, "⟩", "⟩", ":", expr «expr ∧ »(«expr∃ , »((a : α), «expr = »(sum.inl a, x)), «expr∃ , »((b : β), «expr = »(sum.inr b, x)))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", "⟨", ident a, ",", ident rfl, "⟩", ",", "⟨", ident b, ",", ident hb, "⟩", "⟩", ":", expr «expr ∧ »(«expr∃ , »((a :
+      α),
+     «expr = »(sum.inl a, x)),
+    «expr∃ , »((b : β), «expr = »(sum.inr b, x)))]]
 @[simp]
 theorem Fintype.card_sum [Fintype α] [Fintype β] : Fintype.card (Sum α β) = Fintype.card α + Fintype.card β := by
   classical
@@ -1099,7 +1104,7 @@ theorem Fintype.card_sum [Fintype α] [Fintype β] : Fintype.card (Sum α β) = 
     
   · intro x hx
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", \"⟨\", ident a, \",\", ident rfl, \"⟩\", \",\", \"⟨\", ident b, \",\", ident hb, \"⟩\", \"⟩\", \":\", expr «expr ∧ »(«expr∃ , »((a : α), «expr = »(sum.inl a, x)), «expr∃ , »((b : β), «expr = »(sum.inr b, x)))]]"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", \"⟨\", ident a, \",\", ident rfl, \"⟩\", \",\", \"⟨\", ident b, \",\", ident hb, \"⟩\", \"⟩\", \":\", expr «expr ∧ »(«expr∃ , »((a :\n      α),\n     «expr = »(sum.inl a, x)),\n    «expr∃ , »((b : β), «expr = »(sum.inr b, x)))]]"
     · simpa using hb
       
     simpa using hx

@@ -112,7 +112,7 @@ theorem Real.continuous_inv : Continuous fun a : { r : ℝ // r ≠ 0 } => a.val
 theorem Real.Continuous.inv [TopologicalSpace α] {f : α → ℝ} (h : ∀ a, f a ≠ 0) (hf : Continuous f) :
     Continuous fun a => (f a)⁻¹ :=
   show Continuous ((Inv.inv ∘ @Subtype.val ℝ fun r => r ≠ 0) ∘ fun a => ⟨f a, h a⟩) from
-    Real.continuous_inv.comp (continuous_subtype_mk _ hf)
+    Real.continuous_inv.comp (hf.subtype_mk _)
 
 theorem Real.uniform_continuous_const_mul {x : ℝ} : UniformContinuous ((· * ·) x) :=
   uniform_continuous_const_smul x

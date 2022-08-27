@@ -1253,7 +1253,7 @@ theorem uniform_continuous_subtype_coe {p : α → Prop} [UniformSpace α] :
     UniformContinuous (coe : { a : α // p a } → α) :=
   uniform_continuous_subtype_val
 
-theorem uniform_continuous_subtype_mk {p : α → Prop} [UniformSpace α] [UniformSpace β] {f : β → α}
+theorem UniformContinuous.subtype_mk {p : α → Prop} [UniformSpace α] [UniformSpace β] {f : β → α}
     (hf : UniformContinuous f) (h : ∀ x, p (f x)) : UniformContinuous (fun x => ⟨f x, h x⟩ : β → Subtype p) :=
   uniform_continuous_comap' hf
 

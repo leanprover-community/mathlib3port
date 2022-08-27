@@ -49,7 +49,7 @@ namespace IsPrimitiveRoot
 
 variable [CommRingₓ L] [IsDomain L] (hμ : IsPrimitiveRoot μ n) [Algebra K L] [IsCyclotomicExtension {n} K L]
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([2]) }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) }
 /-- `is_primitive_root.aut_to_pow` is injective in the case that it's considered over a cyclotomic
 field extension. -/
 theorem aut_to_pow_injective : Function.Injective <| hμ.autToPow K := by
@@ -89,7 +89,7 @@ variable (h : Irreducible (cyclotomic n K)) {K} (L)
 
 include h
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([1, 5]) }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1, 5]) }
 /-- The `mul_equiv` that takes an automorphism `f` to the element `k : (zmod n)ˣ` such that
   `f μ = μ ^ k`. A stronger version of `is_primitive_root.aut_to_pow`. -/
 @[simps]
@@ -139,7 +139,7 @@ noncomputable def fromZetaAut : L ≃ₐ[K] L :=
     Zmod.unitOfCoprime hζ.some <|
       ((zeta_spec n K L).pow_iff_coprime n.Pos hζ.some).mp <| hζ.some_spec.some_spec.symm ▸ hμ
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([4]) }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([4]) }
 theorem from_zeta_aut_spec : fromZetaAut hμ h (zeta n K L) = μ := by
   simp_rw [from_zeta_aut, aut_equiv_pow_symm_apply]
   generalize_proofs _ hζ h _ hμ _

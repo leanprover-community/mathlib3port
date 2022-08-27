@@ -3,11 +3,7 @@ Copyright (c) 2020 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Yaël Dillies
 -/
-import Mathbin.Algebra.Module.Pi
-import Mathbin.Algebra.Module.Prod
-import Mathbin.Algebra.Order.Pi
 import Mathbin.Algebra.Order.Smul
-import Mathbin.Data.Set.Pointwise
 
 /-!
 # Ordered module
@@ -28,13 +24,9 @@ open Pointwise
 
 variable {k M N : Type _}
 
-namespace OrderDual
-
 instance [Semiringₓ k] [OrderedAddCommMonoid M] [Module k M] : Module k Mᵒᵈ where
   add_smul := fun r s x => OrderDual.rec (add_smul _ _) x
   zero_smul := fun m => OrderDual.rec (zero_smul _) m
-
-end OrderDual
 
 section Semiringₓ
 
@@ -160,51 +152,10 @@ def OrderIso.smulLeftDual {c : k} (hc : c < 0) : M ≃o Mᵒᵈ where
   right_inv := smul_inv_smul₀ hc.Ne
   map_rel_iff' := fun b₁ b₂ => smul_le_smul_iff_of_neg hc
 
-variable {M} [OrderedAddCommGroup N] [Module k N] [OrderedSmul k N]
-
--- TODO: solve `prod.has_lt` and `prod.has_le` misalignment issue
-instance Prod.ordered_smul : OrderedSmul k (M × N) :=
-  OrderedSmul.mk' fun (v u : M × N) (c : k) h hc =>
-    ⟨smul_le_smul_of_nonneg h.1.1 hc.le, smul_le_smul_of_nonneg h.1.2 hc.le⟩
-
-instance Pi.smulWithZero'' {ι : Type _} {M : ι → Type _} [∀ i, OrderedAddCommGroup (M i)]
-    [∀ i, MulActionWithZero k (M i)] : SmulWithZero k (∀ i : ι, M i) := by
-  infer_instance
-
-instance Pi.ordered_smul {ι : Type _} {M : ι → Type _} [∀ i, OrderedAddCommGroup (M i)] [∀ i, MulActionWithZero k (M i)]
-    [∀ i, OrderedSmul k (M i)] : OrderedSmul k (∀ i : ι, M i) := by
-  refine' OrderedSmul.mk' fun v u c h hc i => _
-  change c • v i ≤ c • u i
-  exact smul_le_smul_of_nonneg (h.le i) hc.le
-
--- Sometimes Lean fails to apply the dependent version to non-dependent functions,
--- so we define another instance
-instance Pi.ordered_smul' {ι : Type _} {M : Type _} [OrderedAddCommGroup M] [MulActionWithZero k M] [OrderedSmul k M] :
-    OrderedSmul k (ι → M) :=
-  Pi.ordered_smul
-
 end Field
 
 /-! ### Upper/lower bounds -/
 
-
-section OrderedSemiring
-
-variable [OrderedSemiring k] [OrderedAddCommMonoid M] [SmulWithZero k M] [OrderedSmul k M] {s : Set M} {c : k}
-
-theorem smul_lower_bounds_subset_lower_bounds_smul (hc : 0 ≤ c) : c • LowerBounds s ⊆ LowerBounds (c • s) :=
-  (monotone_smul_left hc).image_lower_bounds_subset_lower_bounds_image
-
-theorem smul_upper_bounds_subset_upper_bounds_smul (hc : 0 ≤ c) : c • UpperBounds s ⊆ UpperBounds (c • s) :=
-  (monotone_smul_left hc).image_upper_bounds_subset_upper_bounds_image
-
-theorem BddBelow.smul_of_nonneg (hs : BddBelow s) (hc : 0 ≤ c) : BddBelow (c • s) :=
-  (monotone_smul_left hc).map_bdd_below hs
-
-theorem BddAbove.smul_of_nonneg (hs : BddAbove s) (hc : 0 ≤ c) : BddAbove (c • s) :=
-  (monotone_smul_left hc).map_bdd_above hs
-
-end OrderedSemiring
 
 section OrderedRing
 
@@ -226,33 +177,7 @@ end OrderedRing
 
 section LinearOrderedField
 
-variable [LinearOrderedField k] [OrderedAddCommGroup M]
-
-section MulActionWithZero
-
-variable [MulActionWithZero k M] [OrderedSmul k M] {s t : Set M} {c : k}
-
-@[simp]
-theorem lower_bounds_smul_of_pos (hc : 0 < c) : LowerBounds (c • s) = c • LowerBounds s :=
-  (OrderIso.smulLeft _ hc).lower_bounds_image
-
-@[simp]
-theorem upper_bounds_smul_of_pos (hc : 0 < c) : UpperBounds (c • s) = c • UpperBounds s :=
-  (OrderIso.smulLeft _ hc).upper_bounds_image
-
-@[simp]
-theorem bdd_below_smul_iff_of_pos (hc : 0 < c) : BddBelow (c • s) ↔ BddBelow s :=
-  (OrderIso.smulLeft _ hc).bdd_below_image
-
-@[simp]
-theorem bdd_above_smul_iff_of_pos (hc : 0 < c) : BddAbove (c • s) ↔ BddAbove s :=
-  (OrderIso.smulLeft _ hc).bdd_above_image
-
-end MulActionWithZero
-
-section Module
-
-variable [Module k M] [OrderedSmul k M] {s t : Set M} {c : k}
+variable [LinearOrderedField k] [OrderedAddCommGroup M] [Module k M] [OrderedSmul k M] {s : Set M} {c : k}
 
 @[simp]
 theorem lower_bounds_smul_of_neg (hc : c < 0) : LowerBounds (c • s) = c • UpperBounds s :=
@@ -269,8 +194,6 @@ theorem bdd_below_smul_iff_of_neg (hc : c < 0) : BddBelow (c • s) ↔ BddAbove
 @[simp]
 theorem bdd_above_smul_iff_of_neg (hc : c < 0) : BddAbove (c • s) ↔ BddBelow s :=
   (OrderIso.smulLeftDual M hc).bdd_below_image
-
-end Module
 
 end LinearOrderedField
 

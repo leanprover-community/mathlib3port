@@ -279,15 +279,16 @@ open UniformSpace Prod
 
 variable [UniformSpace X] {s : Set X}
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident n, ",", ident hn, "⟩", ":", expr «expr∃ , »((n), ∀
-    x «expr ∈ » s, «expr∃ , »((i), «expr ⊆ »(ball x (V n), c i)))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident n, ",", ident hn, "⟩", ":", expr «expr∃ , »((n),
+    ∀ x «expr ∈ » s,
+    «expr∃ , »((i), «expr ⊆ »(ball x (V n), c i)))]]
 theorem lebesgue_number_lemma_seq {ι : Type _} [IsCountablyGenerated (𝓤 X)] {c : ι → Set X} (hs : IsSeqCompact s)
     (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i, c i) : ∃ V ∈ 𝓤 X, SymmetricRel V ∧ ∀ x ∈ s, ∃ i, Ball x V ⊆ c i := by
   classical
   obtain ⟨V, hV, Vsymm⟩ : ∃ V : ℕ → Set (X × X), (𝓤 X).HasAntitoneBasis V ∧ ∀ n, swap ⁻¹' V n = V n
   exact UniformSpace.has_seq_basis X
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident n, \",\", ident hn, \"⟩\", \":\", expr «expr∃ , »((n), ∀\n    x «expr ∈ » s, «expr∃ , »((i), «expr ⊆ »(ball x (V n), c i)))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident n, \",\", ident hn, \"⟩\", \":\", expr «expr∃ , »((n),\n    ∀ x «expr ∈ » s,\n    «expr∃ , »((i), «expr ⊆ »(ball x (V n), c i)))]]"
   · exact ⟨V n, hV.to_has_basis.mem_of_mem trivialₓ, Vsymm n, hn⟩
     
   by_contra H

@@ -152,7 +152,7 @@ theorem aux_calc (n : ℕ) {m : ℝ} (hm : 2 ≤ m) : (1 - 1 / m)⁻¹ * (1 / m 
       apply (div_le_div_iff _ _).mpr
       conv_rhs => rw [one_mulₓ, mul_addₓ, pow_addₓ, mul_oneₓ, pow_mulₓ, mul_comm, ← pow_mulₓ]
       -- the second factors coincide, so we prove the inequality of the first factors*
-      apply (mul_le_mul_right _).mpr
+      refine' (mul_le_mul_right _).mpr _
       any_goals {
       }
       -- `2 ≤ m ^ n!` is a consequence of monotonicity of exponentiation at `2 ≤ m`.

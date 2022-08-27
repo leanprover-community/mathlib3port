@@ -522,7 +522,7 @@ theorem mem_ℒp_top_of_bound {f : α → E} (hf : AeStronglyMeasurable f μ) (C
 
 theorem Memℒp.of_bound [IsFiniteMeasure μ] {f : α → E} (hf : AeStronglyMeasurable f μ) (C : ℝ)
     (hfC : ∀ᵐ x ∂μ, ∥f x∥ ≤ C) : Memℒp f p μ :=
-  (mem_ℒp_const C).of_le hf (hfC.mono fun x hx => le_transₓ hx (le_abs_self _))
+  (mem_ℒp_const C).ofLe hf (hfC.mono fun x hx => le_transₓ hx (le_abs_self _))
 
 @[mono]
 theorem snorm'_mono_measure (f : α → F) (hμν : ν ≤ μ) (hq : 0 ≤ q) : snorm' f q ν ≤ snorm' f q μ := by
@@ -631,7 +631,7 @@ theorem Memℒp.right_of_add_measure {f : α → E} (h : Memℒp f p (μ + ν)) 
   h.mono_measure <| measure.le_add_left <| le_reflₓ _
 
 theorem Memℒp.norm {f : α → E} (h : Memℒp f p μ) : Memℒp (fun x => ∥f x∥) p μ :=
-  h.of_le h.AeStronglyMeasurable.norm
+  h.ofLe h.AeStronglyMeasurable.norm
     (eventually_of_forall fun x => by
       simp )
 
@@ -2329,7 +2329,8 @@ theorem cauchy_seq_Lp_iff_cauchy_seq_ℒp {ι} [Nonempty ι] [SemilatticeSup ι]
   exact snorm_ne_top _
 
 -- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident f_lim, ",", ident hf_lim_meas, ",", ident h_tendsto, "⟩", ":", expr «expr∃ , »((f_lim : α → E)
-    (hf_lim_meas : mem_ℒp f_lim p μ), at_top.tendsto (λ n, snorm «expr - »(f n, f_lim) p μ) (expr𝓝() 0))]]
+    (hf_lim_meas : mem_ℒp f_lim p μ),
+    at_top.tendsto (λ n, snorm «expr - »(f n, f_lim) p μ) (expr𝓝() 0))]]
 theorem complete_space_Lp_of_cauchy_complete_ℒp [hp : Fact (1 ≤ p)]
     (H :
       ∀ (f : ℕ → α → E) (hf : ∀ n, Memℒp (f n) p μ) (B : ℕ → ℝ≥0∞) (hB : (∑' i, B i) < ∞)
@@ -2340,7 +2341,7 @@ theorem complete_space_Lp_of_cauchy_complete_ℒp [hp : Fact (1 ≤ p)]
   have hB_pos : ∀ n, 0 < B n := fun n => pow_pos (div_pos zero_lt_one zero_lt_two) n
   refine' Metric.complete_of_convergent_controlled_sequences B hB_pos fun f hf => _
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident f_lim, \",\", ident hf_lim_meas, \",\", ident h_tendsto, \"⟩\", \":\", expr «expr∃ , »((f_lim : α → E)\n    (hf_lim_meas : mem_ℒp f_lim p μ), at_top.tendsto (λ n, snorm «expr - »(f n, f_lim) p μ) (expr𝓝() 0))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident f_lim, \",\", ident hf_lim_meas, \",\", ident h_tendsto, \"⟩\", \":\", expr «expr∃ , »((f_lim : α → E)\n    (hf_lim_meas : mem_ℒp f_lim p μ),\n    at_top.tendsto (λ n, snorm «expr - »(f n, f_lim) p μ) (expr𝓝() 0))]]"
   · exact ⟨hf_lim_meas.to_Lp f_lim, tendsto_Lp_of_tendsto_ℒp f_lim hf_lim_meas h_tendsto⟩
     
   have hB : Summable B := summable_geometric_two

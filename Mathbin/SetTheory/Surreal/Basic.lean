@@ -54,9 +54,6 @@ The branch `surreal_mul` contains some progress on this proof.
 
 universe u
 
--- mathport name: «expr ≈ »
-local infixl:0 " ≈ " => Pgame.Equiv
-
 -- mathport name: «expr ⧏ »
 local infixl:50 " ⧏ " => Pgame.Lf
 
@@ -162,7 +159,7 @@ theorem lt_def {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
 theorem not_fuzzy {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : ¬Fuzzy x y := fun h =>
   not_lf.2 ((lf_of_fuzzy h).le ox oy) h.2
 
-theorem lt_or_equiv_or_gt {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : x < y ∨ (x ≈ y) ∨ y < x :=
+theorem lt_or_equiv_or_gt {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : x < y ∨ x ≈ y ∨ y < x :=
   ((lf_or_equiv_or_gf x y).imp fun h => h.lt ox oy) <| Or.imp_rightₓ fun h => h.lt oy ox
 
 theorem numeric_of_is_empty (x : Pgame) [IsEmpty x.LeftMoves] [IsEmpty x.RightMoves] : Numeric x :=
@@ -187,13 +184,13 @@ theorem Numeric.neg : ∀ {x : Pgame} (o : Numeric x), Numeric (-x)
 namespace Numeric
 
 theorem move_left_lt {x : Pgame} (o : Numeric x) (i) : x.moveLeft i < x :=
-  (Pgame.move_left_lf i).lt (o.moveLeft i) o
+  (move_left_lf i).lt (o.moveLeft i) o
 
 theorem move_left_le {x : Pgame} (o : Numeric x) (i) : x.moveLeft i ≤ x :=
   (o.move_left_lt i).le
 
 theorem lt_move_right {x : Pgame} (o : Numeric x) (j) : x < x.moveRight j :=
-  (Pgame.lf_move_right j).lt o (o.moveRight j)
+  (lf_move_right j).lt o (o.moveRight j)
 
 theorem le_move_right {x : Pgame} (o : Numeric x) (j) : x ≤ x.moveRight j :=
   (o.lt_move_right j).le
@@ -205,11 +202,11 @@ theorem add : ∀ {x y : Pgame} (ox : Numeric x) (oy : Numeric y), Numeric (x + 
       · exact add_lt_add_right (ox.1 ix jx) _
         
       · exact
-          (add_lf_add_of_lf_of_le (Pgame.lf_mk _ _ ix) (oy.le_move_right jy)).lt ((ox.move_left ix).add oy)
+          (add_lf_add_of_lf_of_le (lf_mk _ _ ix) (oy.le_move_right jy)).lt ((ox.move_left ix).add oy)
             (ox.add (oy.move_right jy))
         
       · exact
-          (add_lf_add_of_lf_of_le (Pgame.mk_lf _ _ jx) (oy.move_left_le iy)).lt (ox.add (oy.move_left iy))
+          (add_lf_add_of_lf_of_le (mk_lf _ _ jx) (oy.move_left_le iy)).lt (ox.add (oy.move_left iy))
             ((ox.move_right jx).add oy)
         
       · exact add_lt_add_left (oy.1 iy jy) ⟨xl, xr, xL, xR⟩
@@ -246,10 +243,6 @@ theorem numeric_to_pgame (o : Ordinal) : o.toPgame.Numeric := by
   simpa using fun i => IH _ (Ordinal.to_left_moves_to_pgame_symm_lt i)
 
 end Pgame
-
-/-- The equivalence on numeric pre-games. -/
-def Surreal.Equiv (x y : { x // Pgame.Numeric x }) : Prop :=
-  x.1.Equiv y.1
 
 open Pgame
 
@@ -298,12 +291,12 @@ instance : LT Surreal :=
 the sum of `x = {xL | xR}` and `y = {yL | yR}` is `{xL + y, x + yL | xR + y, x + yR}`. -/
 instance : Add Surreal :=
   ⟨Surreal.lift₂ (fun (x y : Pgame) ox oy => ⟦⟨x + y, ox.add oy⟩⟧) fun x₁ y₁ x₂ y₂ _ _ _ _ hx hy =>
-      Quotientₓ.sound (Pgame.add_congr hx hy)⟩
+      Quotientₓ.sound (add_congr hx hy)⟩
 
 /-- Negation for surreal numbers is inherited from pre-game negation:
 the negation of `{L | R}` is `{-R | -L}`. -/
 instance : Neg Surreal :=
-  ⟨Surreal.lift (fun x ox => ⟦⟨-x, ox.neg⟩⟧) fun _ _ _ _ a => Quotientₓ.sound (Pgame.neg_equiv_neg_iff.2 a)⟩
+  ⟨Surreal.lift (fun x ox => ⟦⟨-x, ox.neg⟩⟧) fun _ _ _ _ a => Quotientₓ.sound (neg_equiv_neg_iff.2 a)⟩
 
 instance : OrderedAddCommGroup Surreal where
   add := (· + ·)
@@ -313,17 +306,17 @@ instance : OrderedAddCommGroup Surreal where
   zero := 0
   zero_add := by
     rintro ⟨_⟩
-    exact Quotientₓ.sound (Pgame.zero_add_equiv a)
+    exact Quotientₓ.sound (zero_add_equiv a)
   add_zero := by
     rintro ⟨_⟩
-    exact Quotientₓ.sound (Pgame.add_zero_equiv a)
+    exact Quotientₓ.sound (add_zero_equiv a)
   neg := Neg.neg
   add_left_neg := by
     rintro ⟨_⟩
-    exact Quotientₓ.sound (Pgame.add_left_neg_equiv a)
+    exact Quotientₓ.sound (add_left_neg_equiv a)
   add_comm := by
     rintro ⟨_⟩ ⟨_⟩
-    exact Quotientₓ.sound Pgame.add_comm_equiv
+    exact Quotientₓ.sound add_comm_equiv
   le := (· ≤ ·)
   lt := (· < ·)
   le_refl := by

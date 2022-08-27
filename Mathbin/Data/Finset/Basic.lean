@@ -1553,11 +1553,11 @@ theorem sdiff_inter_distrib_right (s t u : Finset α) : s \ (t ∩ u) = s \ t �
 
 @[simp]
 theorem sdiff_inter_self_left (s t : Finset α) : s \ (s ∩ t) = s \ t :=
-  sdiff_inf_self_left
+  sdiff_inf_self_left _ _
 
 @[simp]
 theorem sdiff_inter_self_right (s t : Finset α) : s \ (t ∩ s) = s \ t :=
-  sdiff_inf_self_right
+  sdiff_inf_self_right _ _
 
 @[simp]
 theorem sdiff_empty : s \ ∅ = s :=

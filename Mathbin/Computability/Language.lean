@@ -22,14 +22,15 @@ universe v
 
 variable {α β γ : Type _}
 
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_mem (list α)
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_singleton (list α)
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_insert (list α)
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_mem[has_mem] (list[list] α)
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_singleton[has_singleton] (list[list] α)
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_insert[has_insert] (list[list] α)
 /-- A language is a set of strings over an alphabet. -/
 def Language (α) :=
-  Set (List α)deriving «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_mem (list α)»,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_singleton (list α)»,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_insert (list α)»,
+  Set (List α)deriving
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_mem[has_mem] (list[list] α)»,
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_singleton[has_singleton] (list[list] α)»,
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_insert[has_insert] (list[list] α)»,
   CompleteBooleanAlgebra
 
 namespace Language

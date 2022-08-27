@@ -318,12 +318,13 @@ theorem of_le (f : Filter α) [NeBot f] : ↑(of f) ≤ f :=
 theorem of_coe (f : Ultrafilter α) : of ↑f = f :=
   coe_inj.1 <| f.unique (of_le f)
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[["⟨", ident F, ",", ident cond, ",", ident hF, "⟩", ":", expr «expr∃ , »((F : filter α), «expr ∧ »(ne_bot F, «expr ⊆ »(S, F.sets)))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[["⟨", ident F, ",", ident cond, ",", ident hF, "⟩", ":", expr «expr∃ , »((F : filter α),
+    «expr ∧ »(ne_bot F, «expr ⊆ »(S, F.sets)))]]
 theorem exists_ultrafilter_of_finite_inter_nonempty (S : Set (Set α))
     (cond : ∀ T : Finset (Set α), (↑T : Set (Set α)) ⊆ S → (⋂₀ (↑T : Set (Set α))).Nonempty) :
     ∃ F : Ultrafilter α, S ⊆ F.Sets := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[[\"⟨\", ident F, \",\", ident cond, \",\", ident hF, \"⟩\", \":\", expr «expr∃ , »((F : filter α), «expr ∧ »(ne_bot F, «expr ⊆ »(S, F.sets)))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[[\"⟨\", ident F, \",\", ident cond, \",\", ident hF, \"⟩\", \":\", expr «expr∃ , »((F : filter α),\n    «expr ∧ »(ne_bot F, «expr ⊆ »(S, F.sets)))]]"
   · obtain ⟨G : Ultrafilter α, h1 : ↑G ≤ F⟩ := exists_le F
     exact ⟨G, fun T hT => h1 (hF hT)⟩
     

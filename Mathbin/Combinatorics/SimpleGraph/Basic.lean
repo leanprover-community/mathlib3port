@@ -1027,7 +1027,7 @@ theorem Adj.card_common_neighbors_lt_degree {G : SimpleGraph V} [DecidableRel G.
     constructor
     · simpa
       
-    · rw [neighbor_finset, Set.to_finset_mono]
+    · rw [neighbor_finset, Set.to_finset_subset]
       exact G.common_neighbors_subset_neighbor_set_left _ _
       
     
@@ -1038,7 +1038,7 @@ theorem card_common_neighbors_top [DecidableEq V] {v w : V} (h : v ≠ w) :
   rw [Finset.card_sdiff]
   · simp [Finset.card_univ, h]
     
-  · simp only [Set.to_finset_mono, Set.subset_univ]
+  · simp only [Set.to_finset_subset, Set.subset_univ]
     
 
 end Finite

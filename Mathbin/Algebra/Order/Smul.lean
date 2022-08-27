@@ -3,9 +3,12 @@ Copyright (c) 2020 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 -/
+import Mathbin.Algebra.Module.Pi
+import Mathbin.Algebra.Module.Prod
 import Mathbin.Algebra.Order.Field
-import Mathbin.Algebra.SmulWithZero
-import Mathbin.GroupTheory.GroupAction.Group
+import Mathbin.Algebra.Order.Pi
+import Mathbin.Data.Set.Pointwise
+import Mathbin.Tactic.Positivity
 
 /-!
 # Ordered scalar product
@@ -35,6 +38,8 @@ ordered module, ordered scalar, ordered smul, ordered action, ordered vector spa
 -/
 
 
+open Pointwise
+
 /-- The ordered scalar product property is when an ordered additive commutative monoid
 with a partial order has a scalar multiplication which is compatible with the order.
 -/
@@ -43,9 +48,9 @@ class OrderedSmul (R M : Type _) [OrderedSemiring R] [OrderedAddCommMonoid M] [S
   smul_lt_smul_of_pos : ∀ {a b : M}, ∀ {c : R}, a < b → 0 < c → c • a < c • b
   lt_of_smul_lt_smul_of_pos : ∀ {a b : M}, ∀ {c : R}, c • a < c • b → 0 < c → a < b
 
-namespace OrderDual
+variable {ι 𝕜 R M N : Type _}
 
-variable {R M : Type _}
+namespace OrderDual
 
 instance [Zero R] [AddZeroClassₓ M] [h : SmulWithZero R M] : SmulWithZero R Mᵒᵈ :=
   { OrderDual.hasSmul with zero_smul := fun m => OrderDual.rec (zero_smul _) m,
@@ -70,8 +75,7 @@ end OrderDual
 
 section OrderedSmul
 
-variable {R M : Type _} [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M] {a b : M}
-  {c : R}
+variable [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M] {s : Set M} {a b : M} {c : R}
 
 theorem smul_lt_smul_of_pos : a < b → 0 < c → c • a < c • b :=
   OrderedSmul.smul_lt_smul_of_pos
@@ -124,40 +128,67 @@ theorem monotone_smul_left (hc : 0 ≤ c) : Monotone (HasSmul.smul c : M → M) 
 theorem strict_mono_smul_left (hc : 0 < c) : StrictMono (HasSmul.smul c : M → M) := fun a b h =>
   smul_lt_smul_of_pos h hc
 
+theorem smul_lower_bounds_subset_lower_bounds_smul (hc : 0 ≤ c) : c • LowerBounds s ⊆ LowerBounds (c • s) :=
+  (monotone_smul_left hc).image_lower_bounds_subset_lower_bounds_image
+
+theorem smul_upper_bounds_subset_upper_bounds_smul (hc : 0 ≤ c) : c • UpperBounds s ⊆ UpperBounds (c • s) :=
+  (monotone_smul_left hc).image_upper_bounds_subset_upper_bounds_image
+
+theorem BddBelow.smul_of_nonneg (hs : BddBelow s) (hc : 0 ≤ c) : BddBelow (c • s) :=
+  (monotone_smul_left hc).map_bdd_below hs
+
+theorem BddAbove.smul_of_nonneg (hs : BddAbove s) (hc : 0 ≤ c) : BddAbove (c • s) :=
+  (monotone_smul_left hc).map_bdd_above hs
+
 end OrderedSmul
-
-/-- If `R` is a linear ordered semifield, then it suffices to verify only the first axiom of
-`ordered_smul`. Moreover, it suffices to verify that `a < b` and `0 < c` imply
-`c • a ≤ c • b`. We have no semifields in `mathlib`, so we use the assumption `∀ c ≠ 0, is_unit c`
-instead. -/
-theorem OrderedSmul.mk'' {R M : Type _} [LinearOrderedSemiring R] [OrderedAddCommMonoid M] [MulActionWithZero R M]
-    (hR : ∀ {c : R}, c ≠ 0 → IsUnit c) (hlt : ∀ ⦃a b : M⦄ ⦃c : R⦄, a < b → 0 < c → c • a ≤ c • b) : OrderedSmul R M :=
-  by
-  have hlt' : ∀ ⦃a b : M⦄ ⦃c : R⦄, a < b → 0 < c → c • a < c • b := by
-    refine' fun a b c hab hc => (hlt hab hc).lt_of_ne _
-    rw [Ne.def, (hR hc.ne').smul_left_cancel]
-    exact hab.ne
-  refine' { smul_lt_smul_of_pos := hlt'.. }
-  intro a b c h hc
-  rcases hR hc.ne' with ⟨c, rfl⟩
-  rw [← inv_smul_smul c a, ← inv_smul_smul c b]
-  refine' hlt' h (pos_of_mul_pos_right _ hc.le)
-  simp only [c.mul_inv, zero_lt_one]
-
-/-- If `R` is a linear ordered field, then it suffices to verify only the first axiom of
-`ordered_smul`. -/
-theorem OrderedSmul.mk' {k M : Type _} [LinearOrderedField k] [OrderedAddCommMonoid M] [MulActionWithZero k M]
-    (hlt : ∀ ⦃a b : M⦄ ⦃c : k⦄, a < b → 0 < c → c • a ≤ c • b) : OrderedSmul k M :=
-  OrderedSmul.mk'' (fun c hc => IsUnit.mk0 _ hc) hlt
 
 instance LinearOrderedSemiring.to_ordered_smul {R : Type _} [LinearOrderedSemiring R] : OrderedSmul R R where
   smul_lt_smul_of_pos := OrderedSemiring.mul_lt_mul_of_pos_left
   lt_of_smul_lt_smul_of_pos := fun _ _ _ h hc => lt_of_mul_lt_mul_left h hc.le
 
-section Field
+section LinearOrderedSemifield
 
-variable {k M : Type _} [LinearOrderedField k] [OrderedAddCommGroup M] [MulActionWithZero k M] [OrderedSmul k M]
-  {a b : M} {c : k}
+variable [LinearOrderedSemifield 𝕜]
+
+section OrderedAddCommMonoid
+
+variable [OrderedAddCommMonoid M] [OrderedAddCommMonoid N] [MulActionWithZero 𝕜 M] [MulActionWithZero 𝕜 N]
+
+/-- To prove that a vector space over a linear ordered field is ordered, it suffices to verify only
+the first axiom of `ordered_smul`. -/
+theorem OrderedSmul.mk' (h : ∀ ⦃a b : M⦄ ⦃c : 𝕜⦄, a < b → 0 < c → c • a ≤ c • b) : OrderedSmul 𝕜 M := by
+  have hlt' : ∀ ⦃a b : M⦄ ⦃c : 𝕜⦄, a < b → 0 < c → c • a < c • b := by
+    refine' fun a b c hab hc => (h hab hc).lt_of_ne _
+    rw [Ne.def, hc.ne'.is_unit.smul_left_cancel]
+    exact hab.ne
+  refine' { smul_lt_smul_of_pos := hlt'.. }
+  intro a b c hab hc
+  obtain ⟨c, rfl⟩ := hc.ne'.is_unit
+  rw [← inv_smul_smul c a, ← inv_smul_smul c b]
+  refine' hlt' hab (pos_of_mul_pos_right _ hc.le)
+  simp only [c.mul_inv, zero_lt_one]
+
+instance [OrderedSmul 𝕜 M] [OrderedSmul 𝕜 N] : OrderedSmul 𝕜 (M × N) :=
+  OrderedSmul.mk' fun a b c h hc => ⟨smul_le_smul_of_nonneg h.1.1 hc.le, smul_le_smul_of_nonneg h.1.2 hc.le⟩
+
+instance Pi.ordered_smul {M : ι → Type _} [∀ i, OrderedAddCommMonoid (M i)] [∀ i, MulActionWithZero 𝕜 (M i)]
+    [∀ i, OrderedSmul 𝕜 (M i)] : OrderedSmul 𝕜 (∀ i, M i) :=
+  OrderedSmul.mk' fun v u c h hc i => smul_le_smul_of_nonneg (h.le i) hc.le
+
+/- Sometimes Lean fails to apply the dependent version to non-dependent functions, so we define
+another instance. -/
+instance Pi.ordered_smul' [OrderedSmul 𝕜 M] : OrderedSmul 𝕜 (ι → M) :=
+  Pi.ordered_smul
+
+-- Sometimes Lean fails to unify the module with the scalars, so we define another instance.
+instance Pi.ordered_smul'' : OrderedSmul 𝕜 (ι → 𝕜) :=
+  @Pi.ordered_smul' ι 𝕜 𝕜 _ _ _ _
+
+end OrderedAddCommMonoid
+
+section OrderedAddCommGroup
+
+variable [OrderedAddCommGroup M] [MulActionWithZero 𝕜 M] [OrderedSmul 𝕜 M] {s : Set M} {a b : M} {c : 𝕜}
 
 theorem smul_le_smul_iff_of_pos (hc : 0 < c) : c • a ≤ c • b ↔ a ≤ b :=
   ⟨fun h => inv_smul_smul₀ hc.ne' a ▸ inv_smul_smul₀ hc.ne' b ▸ smul_le_smul_of_nonneg h (inv_nonneg.2 hc.le), fun h =>
@@ -195,12 +226,60 @@ variable (M)
 
 /-- Left scalar multiplication as an order isomorphism. -/
 @[simps]
-def OrderIso.smulLeft {c : k} (hc : 0 < c) : M ≃o M where
+def OrderIso.smulLeft (hc : 0 < c) : M ≃o M where
   toFun := fun b => c • b
   invFun := fun b => c⁻¹ • b
   left_inv := inv_smul_smul₀ hc.ne'
   right_inv := smul_inv_smul₀ hc.ne'
   map_rel_iff' := fun b₁ b₂ => smul_le_smul_iff_of_pos hc
 
-end Field
+variable {M}
+
+@[simp]
+theorem lower_bounds_smul_of_pos (hc : 0 < c) : LowerBounds (c • s) = c • LowerBounds s :=
+  (OrderIso.smulLeft _ hc).lower_bounds_image
+
+@[simp]
+theorem upper_bounds_smul_of_pos (hc : 0 < c) : UpperBounds (c • s) = c • UpperBounds s :=
+  (OrderIso.smulLeft _ hc).upper_bounds_image
+
+@[simp]
+theorem bdd_below_smul_iff_of_pos (hc : 0 < c) : BddBelow (c • s) ↔ BddBelow s :=
+  (OrderIso.smulLeft _ hc).bdd_below_image
+
+@[simp]
+theorem bdd_above_smul_iff_of_pos (hc : 0 < c) : BddAbove (c • s) ↔ BddAbove s :=
+  (OrderIso.smulLeft _ hc).bdd_above_image
+
+end OrderedAddCommGroup
+
+end LinearOrderedSemifield
+
+namespace Tactic
+
+variable [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M] {a : R} {b : M}
+
+private theorem smul_nonneg_of_pos_of_nonneg (ha : 0 < a) (hb : 0 ≤ b) : 0 ≤ a • b :=
+  smul_nonneg ha.le hb
+
+private theorem smul_nonneg_of_nonneg_of_pos (ha : 0 ≤ a) (hb : 0 < b) : 0 ≤ a • b :=
+  smul_nonneg ha hb.le
+
+open Positivity
+
+/-- Extension for the `positivity` tactic: scalar multiplication is nonnegative if both sides are
+nonnegative, and strictly positive if both sides are. -/
+@[positivity]
+unsafe def positivity_smul : expr → tactic strictness
+  | quote.1 ((%%ₓa) • %%ₓb) => do
+    let strictness_a ← core a
+    let strictness_b ← core b
+    match strictness_a, strictness_b with
+      | positive pa, positive pb => positive <$> mk_app `` smul_pos [pa, pb]
+      | positive pa, nonnegative pb => nonnegative <$> mk_app `` smul_nonneg_of_pos_of_nonneg [pa, pb]
+      | nonnegative pa, positive pb => nonnegative <$> mk_app `` smul_nonneg_of_nonneg_of_pos [pa, pb]
+      | nonnegative pa, nonnegative pb => nonnegative <$> mk_app `` smul_nonneg [pa, pb]
+  | _ => failed
+
+end Tactic
 

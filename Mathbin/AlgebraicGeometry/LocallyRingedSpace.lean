@@ -69,15 +69,13 @@ def 𝒪 : Sheaf CommRingₓₓ X.toTop :=
 
 /-- A morphism of locally ringed spaces is a morphism of ringed spaces
  such that the morphims induced on stalks are local ring homomorphisms. -/
-def Hom (X Y : LocallyRingedSpace) : Type _ :=
-  { f : X.toSheafedSpace ⟶ Y.toSheafedSpace // ∀ x, IsLocalRingHom (PresheafedSpace.stalkMap f x) }
+@[ext]
+structure Hom (X Y : LocallyRingedSpace.{u}) : Type u where
+  val : X.toSheafedSpace ⟶ Y.toSheafedSpace
+  Prop : ∀ x, IsLocalRingHom (PresheafedSpace.stalkMap val x)
 
 instance : Quiver LocallyRingedSpace :=
   ⟨Hom⟩
-
-@[ext]
-theorem hom_ext {X Y : LocallyRingedSpace} (f g : Hom X Y) (w : f.1 = g.1) : f = g :=
-  Subtype.eq w
 
 -- TODO perhaps we should make a bundled `LocalRing` and return one here?
 -- TODO define `sheaf.stalk` so we can write `X.𝒪.stalk` here?
@@ -109,7 +107,6 @@ instance (X : LocallyRingedSpace) : Inhabited (Hom X X) :=
   ⟨id X⟩
 
 /-- Composition of morphisms of locally ringed spaces. -/
-@[simps]
 def comp {X Y Z : LocallyRingedSpace} (f : Hom X Y) (g : Hom Y Z) : Hom X Z :=
   ⟨f.val ≫ g.val, fun x => by
     erw [PresheafedSpace.stalk_map.comp]
@@ -123,15 +120,15 @@ instance : Category LocallyRingedSpace where
   comp_id' := by
     intros
     ext1
-    simp
+    simp [comp]
   id_comp' := by
     intros
     ext1
-    simp
+    simp [comp]
   assoc' := by
     intros
     ext1
-    simp
+    simp [comp]
 
 /-- The forgetful functor from `LocallyRingedSpace` to `SheafedSpace CommRing`. -/
 @[simps]
@@ -151,7 +148,7 @@ theorem comp_val {X Y Z : LocallyRingedSpace} (f : X ⟶ Y) (g : Y ⟶ Z) : (f �
   rfl
 
 @[simp]
-theorem comp_val_c {X Y Z : LocallyRingedSpace} (f : X ⟶ Y) (g : Y ⟶ Z) :
+theorem comp_val_c {X Y Z : LocallyRingedSpace.{u}} (f : X ⟶ Y) (g : Y ⟶ Z) :
     (f ≫ g).val.c = g.val.c ≫ (Presheaf.pushforward _ g.val.base).map f.val.c :=
   rfl
 
@@ -167,7 +164,7 @@ See also `iso_of_SheafedSpace_iso`.
 @[simps]
 def homOfSheafedSpaceHomOfIsIso {X Y : LocallyRingedSpace} (f : X.toSheafedSpace ⟶ Y.toSheafedSpace) [IsIso f] :
     X ⟶ Y :=
-  (Subtype.mk f) fun x =>
+  (Hom.mk f) fun x =>
     -- Here we need to see that the stalk maps are really local ring homomorphisms.
     -- This can be solved by type class inference, because stalk maps of isomorphisms are isomorphisms
     -- and isomorphisms are local ring homomorphisms.
@@ -184,15 +181,15 @@ _locally_ ringed spaces.
 def isoOfSheafedSpaceIso {X Y : LocallyRingedSpace} (f : X.toSheafedSpace ≅ Y.toSheafedSpace) : X ≅ Y where
   Hom := homOfSheafedSpaceHomOfIsIso f.Hom
   inv := homOfSheafedSpaceHomOfIsIso f.inv
-  hom_inv_id' := hom_ext _ _ f.hom_inv_id
-  inv_hom_id' := hom_ext _ _ f.inv_hom_id
+  hom_inv_id' := Hom.ext _ _ f.hom_inv_id
+  inv_hom_id' := Hom.ext _ _ f.inv_hom_id
 
 instance :
     ReflectsIsomorphisms
       forgetToSheafedSpace where reflects := fun X Y f i =>
     { out :=
         ⟨hom_of_SheafedSpace_hom_of_is_iso (CategoryTheory.inv (forget_to_SheafedSpace.map f)),
-          hom_ext _ _ (is_iso.hom_inv_id _), hom_ext _ _ (is_iso.inv_hom_id _)⟩ }
+          hom.ext _ _ (is_iso.hom_inv_id _), hom.ext _ _ (is_iso.inv_hom_id _)⟩ }
 
 instance is_SheafedSpace_iso {X Y : LocallyRingedSpace} (f : X ⟶ Y) [IsIso f] : IsIso f.1 :=
   LocallyRingedSpace.forgetToSheafedSpace.map_is_iso f

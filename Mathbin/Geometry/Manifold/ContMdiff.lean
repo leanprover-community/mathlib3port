@@ -73,12 +73,12 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜]
   {N' : Type _} [TopologicalSpace N'] [ChartedSpace G' N'] [J's : SmoothManifoldWithCorners J' N']
   -- declare functions, sets, points and smoothness indices
   {f f₁ : M → M'}
-  {s s₁ t : Set M} {x : M} {m n : WithTop ℕ}
+  {s s₁ t : Set M} {x : M} {m n : ℕ∞}
 
 /-- Property in the model space of a model with corners of being `C^n` within at set at a point,
 when read in the model vector space. This property will be lifted to manifolds to define smooth
 functions between manifolds. -/
-def ContDiffWithinAtProp (n : WithTop ℕ) (f : H → H') (s : Set H) (x : H) : Prop :=
+def ContDiffWithinAtProp (n : ℕ∞) (f : H → H') (s : Set H) (x : H) : Prop :=
   ContDiffWithinAt 𝕜 n (I' ∘ f ∘ I.symm) (I.symm ⁻¹' s ∩ Range I) (I x)
 
 theorem cont_diff_within_at_prop_self_source {f : E → H'} {s : Set E} {x : E} :
@@ -96,7 +96,7 @@ theorem cont_diff_within_at_prop_self_target {f : H → E'} {s : Set H} {x : H} 
 
 /-- Being `Cⁿ` in the model space is a local property, invariant under smooth maps. Therefore,
 it will lift nicely to manifolds. -/
-theorem cont_diff_within_at_local_invariant_prop (n : WithTop ℕ) :
+theorem cont_diff_within_at_local_invariant_prop (n : ℕ∞) :
     (contDiffGroupoid ∞ I).LocalInvariantProp (contDiffGroupoid ∞ I') (ContDiffWithinAtProp I I' n) :=
   { is_local := by
       intro s x u f u_open xu
@@ -151,7 +151,7 @@ theorem cont_diff_within_at_local_invariant_prop (n : WithTop ℕ) :
         simpa only [hy] with mfld_simps using hs hy.1
          }
 
-theorem cont_diff_within_at_prop_mono (n : WithTop ℕ) ⦃s x t⦄ ⦃f : H → H'⦄ (hts : t ⊆ s)
+theorem cont_diff_within_at_prop_mono (n : ℕ∞) ⦃s x t⦄ ⦃f : H → H'⦄ (hts : t ⊆ s)
     (h : ContDiffWithinAtProp I I' n f s x) : ContDiffWithinAtProp I I' n f t x := by
   apply h.mono fun y hy => _
   simp' only with mfld_simps  at hy
@@ -169,7 +169,7 @@ theorem cont_diff_within_at_prop_id (x : H) : ContDiffWithinAtProp I I ∞ id Un
 /-- A function is `n` times continuously differentiable within a set at a point in a manifold if
 it is continuous and it is `n` times continuously differentiable in this set around this point, when
 read in the preferred chart at this point. -/
-def ContMdiffWithinAt (n : WithTop ℕ) (f : M → M') (s : Set M) (x : M) :=
+def ContMdiffWithinAt (n : ℕ∞) (f : M → M') (s : Set M) (x : M) :=
   LiftPropWithinAt (ContDiffWithinAtProp I I' n) f s x
 
 /-- Abbreviation for `cont_mdiff_within_at I I' ⊤ f s x`. See also documentation for `smooth`.
@@ -181,10 +181,10 @@ def SmoothWithinAt (f : M → M') (s : Set M) (x : M) :=
 /-- A function is `n` times continuously differentiable at a point in a manifold if
 it is continuous and it is `n` times continuously differentiable around this point, when
 read in the preferred chart at this point. -/
-def ContMdiffAt (n : WithTop ℕ) (f : M → M') (x : M) :=
+def ContMdiffAt (n : ℕ∞) (f : M → M') (x : M) :=
   ContMdiffWithinAt I I' n f Univ x
 
-theorem cont_mdiff_at_iff {n : WithTop ℕ} {f : M → M'} {x : M} :
+theorem cont_mdiff_at_iff {n : ℕ∞} {f : M → M'} {x : M} :
     ContMdiffAt I I' n f x ↔
       ContinuousAt f x ∧
         ContDiffWithinAt 𝕜 n (extChartAt I' (f x) ∘ f ∘ (extChartAt I x).symm) (Range I) (extChartAt I x x) :=
@@ -200,7 +200,7 @@ def SmoothAt (f : M → M') (x : M) :=
 /-- A function is `n` times continuously differentiable in a set of a manifold if it is continuous
 and, for any pair of points, it is `n` times continuously differentiable on this set in the charts
 around these points. -/
-def ContMdiffOn (n : WithTop ℕ) (f : M → M') (s : Set M) :=
+def ContMdiffOn (n : ℕ∞) (f : M → M') (s : Set M) :=
   ∀ x ∈ s, ContMdiffWithinAt I I' n f s x
 
 /-- Abbreviation for `cont_mdiff_on I I' ⊤ f s`. See also documentation for `smooth`. -/
@@ -211,7 +211,7 @@ def SmoothOn (f : M → M') (s : Set M) :=
 /-- A function is `n` times continuously differentiable in a manifold if it is continuous
 and, for any pair of points, it is `n` times continuously differentiable in the charts
 around these points. -/
-def ContMdiff (n : WithTop ℕ) (f : M → M') :=
+def ContMdiff (n : ℕ∞) (f : M → M') :=
   ∀ x, ContMdiffAt I I' n f x
 
 /-- Abbreviation for `cont_mdiff I I' ⊤ f`.
@@ -698,7 +698,7 @@ theorem cont_mdiff_top : Smooth I I' f ↔ ∀ n : ℕ, ContMdiff I I' n f :=
   ⟨fun h n => h.of_le le_top, fun h x => cont_mdiff_within_at_top.2 fun n => h n x⟩
 
 theorem cont_mdiff_within_at_iff_nat :
-    ContMdiffWithinAt I I' n f s x ↔ ∀ m : ℕ, (m : WithTop ℕ) ≤ n → ContMdiffWithinAt I I' m f s x := by
+    ContMdiffWithinAt I I' n f s x ↔ ∀ m : ℕ, (m : ℕ∞) ≤ n → ContMdiffWithinAt I I' m f s x := by
   refine' ⟨fun h m hm => h.of_le hm, fun h => _⟩
   cases n
   · exact cont_mdiff_within_at_top.2 fun n => h n le_top
@@ -1551,7 +1551,7 @@ variable (Z : BasicSmoothVectorBundleCore I M E')
 
 /-- A version of `cont_mdiff_at_iff_target` when the codomain is the total space of
   a `basic_smooth_vector_bundle_core`. The continuity condition in the RHS is weaker. -/
-theorem cont_mdiff_at_iff_target {f : N → Z.toTopologicalVectorBundleCore.TotalSpace} {x : N} {n : WithTop ℕ} :
+theorem cont_mdiff_at_iff_target {f : N → Z.toTopologicalVectorBundleCore.TotalSpace} {x : N} {n : ℕ∞} :
     ContMdiffAt J (I.Prod 𝓘(𝕜, E')) n f x ↔
       ContinuousAt (Bundle.TotalSpace.proj ∘ f) x ∧
         ContMdiffAt J 𝓘(𝕜, E × E') n (extChartAt (I.Prod 𝓘(𝕜, E')) (f x) ∘ f) x :=

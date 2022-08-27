@@ -87,6 +87,26 @@ def toNonUnitalAlgHom (φ : CharacterSpace 𝕜 A) : A →ₙₐ[𝕜] 𝕜 wher
 theorem coe_to_non_unital_alg_hom (φ : CharacterSpace 𝕜 A) : ⇑(toNonUnitalAlgHom φ) = φ :=
   rfl
 
+variable (𝕜 A)
+
+theorem union_zero : CharacterSpace 𝕜 A ∪ {0} = { φ : WeakDual 𝕜 A | ∀ x y : A, φ (x * y) = φ x * φ y } :=
+  le_antisymmₓ
+    (by
+      rintro φ (hφ | h₀)
+      · exact hφ.2
+        
+      · exact fun x y => by
+          simp [Set.eq_of_mem_singleton h₀]
+        )
+    fun φ hφ => Or.elim (em <| φ = 0) (fun h₀ => Or.inr h₀) fun h₀ => Or.inl ⟨h₀, hφ⟩
+
+/-- The `character_space 𝕜 A` along with `0` is always a closed set in `weak_dual 𝕜 A`. -/
+theorem union_zero_is_closed [T2Space 𝕜] [HasContinuousMul 𝕜] : IsClosed (CharacterSpace 𝕜 A ∪ {0}) := by
+  simp only [union_zero, Set.set_of_forall]
+  exact
+    is_closed_Inter fun x =>
+      is_closed_Inter fun y => is_closed_eq (eval_continuous _) <| (eval_continuous _).mul (eval_continuous _)
+
 end NonUnitalNonAssocSemiringₓ
 
 section Unital
@@ -128,14 +148,12 @@ theorem eq_set_map_one_map_mul [Nontrivial 𝕜] :
   rintro rfl
   simpa using h.1
 
+/-- under suitable mild assumptions on `𝕜`, the character space is a closed set in
+`weak_dual 𝕜 A`. -/
 theorem is_closed [Nontrivial 𝕜] [T2Space 𝕜] [HasContinuousMul 𝕜] : IsClosed (CharacterSpace 𝕜 A) := by
-  rw [eq_set_map_one_map_mul]
+  rw [eq_set_map_one_map_mul, Set.set_of_and]
   refine' IsClosed.inter (is_closed_eq (eval_continuous _) continuous_const) _
-  change IsClosed { φ : WeakDual 𝕜 A | ∀ x y : A, φ (x * y) = φ x * φ y }
-  rw [Set.set_of_forall]
-  refine' is_closed_Inter fun a => _
-  rw [Set.set_of_forall]
-  exact is_closed_Inter fun _ => is_closed_eq (eval_continuous _) ((eval_continuous _).mul (eval_continuous _))
+  simpa only [(union_zero 𝕜 A).symm] using union_zero_is_closed _ _
 
 end Unital
 
@@ -145,7 +163,7 @@ variable [CommRingₓ 𝕜] [NoZeroDivisors 𝕜] [TopologicalSpace 𝕜] [HasCo
   [TopologicalSpace A] [Ringₓ A] [Algebra 𝕜 A]
 
 theorem apply_mem_spectrum [Nontrivial 𝕜] (φ : CharacterSpace 𝕜 A) (a : A) : φ a ∈ Spectrum 𝕜 a :=
-  (toAlgHom φ).apply_mem_spectrum a
+  AlgHom.apply_mem_spectrum φ a
 
 end Ringₓ
 

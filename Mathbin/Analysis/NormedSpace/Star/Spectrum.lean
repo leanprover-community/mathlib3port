@@ -7,6 +7,7 @@ import Mathbin.Analysis.NormedSpace.Star.Basic
 import Mathbin.Analysis.NormedSpace.Spectrum
 import Mathbin.Algebra.Star.Module
 import Mathbin.Analysis.NormedSpace.Star.Exponential
+import Mathbin.Algebra.Star.StarAlgHom
 
 /-! # Spectral properties in C⋆-algebras
 In this file, we establish various propreties related to the spectrum of elements in C⋆-algebras.
@@ -51,26 +52,20 @@ variable {A : Type _} [NormedRing A] [NormedAlgebra ℂ A] [CompleteSpace A] [St
 -- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap ℂ A
 
-theorem spectral_radius_eq_nnnorm_of_self_adjoint [NormOneClass A] {a : A} (ha : a ∈ selfAdjoint A) :
+theorem IsSelfAdjoint.spectral_radius_eq_nnnorm [NormOneClass A] {a : A} (ha : IsSelfAdjoint a) :
     spectralRadius ℂ a = ∥a∥₊ := by
   have hconst : tendsto (fun n : ℕ => (∥a∥₊ : ℝ≥0∞)) at_top _ := tendsto_const_nhds
   refine' tendsto_nhds_unique _ hconst
   convert
     (Spectrum.pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius (a : A)).comp
-      (Nat.tendsto_pow_at_top_at_top_of_one_lt
-        (by
-          linarith : 1 < 2))
+      (Nat.tendsto_pow_at_top_at_top_of_one_lt one_lt_two)
   refine' funext fun n => _
-  rw [Function.comp_app, nnnorm_pow_two_pow_of_self_adjoint ha, Ennreal.coe_pow, ← rpow_nat_cast, ← rpow_mul]
+  rw [Function.comp_app, ha.nnnorm_pow_two_pow, Ennreal.coe_pow, ← rpow_nat_cast, ← rpow_mul]
   simp
 
-theorem spectral_radius_eq_nnnorm_of_star_normal [NormOneClass A] (a : A) [IsStarNormal a] :
-    spectralRadius ℂ a = ∥a∥₊ := by
+theorem IsStarNormal.spectral_radius_eq_nnnorm [NormOneClass A] (a : A) [IsStarNormal a] : spectralRadius ℂ a = ∥a∥₊ :=
+  by
   refine' (Ennreal.pow_strict_mono two_ne_zero).Injective _
-  have ha : a⋆ * a ∈ selfAdjoint A :=
-    self_adjoint.mem_iff.mpr
-      (by
-        simpa only [star_star] using star_mul a⋆ a)
   have heq :
     (fun n : ℕ => (∥(a⋆ * a) ^ n∥₊ ^ (1 / n : ℝ) : ℝ≥0∞)) =
       (fun x => x ^ 2) ∘ fun n : ℕ => (∥a ^ n∥₊ ^ (1 / n : ℝ) : ℝ≥0∞) :=
@@ -83,10 +78,10 @@ theorem spectral_radius_eq_nnnorm_of_star_normal [NormOneClass A] (a : A) [IsSta
       (Spectrum.pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius a)
   rw [← HEq] at h₂
   convert tendsto_nhds_unique h₂ (pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius (a⋆ * a))
-  rw [spectral_radius_eq_nnnorm_of_self_adjoint ha, sq, nnnorm_star_mul_self, coe_mul]
+  rw [(IsSelfAdjoint.star_mul_self a).spectral_radius_eq_nnnorm, sq, nnnorm_star_mul_self, coe_mul]
 
 /-- Any element of the spectrum of a selfadjoint is real. -/
-theorem selfAdjoint.mem_spectrum_eq_re [StarModule ℂ A] [Nontrivial A] {a : A} (ha : a ∈ selfAdjoint A) {z : ℂ}
+theorem IsSelfAdjoint.mem_spectrum_eq_re [StarModule ℂ A] [Nontrivial A] {a : A} (ha : IsSelfAdjoint a) {z : ℂ}
     (hz : z ∈ Spectrum ℂ a) : z = z.re := by
   let Iu := Units.mk0 I I_ne_zero
   have : exp ℂ (I • z) ∈ Spectrum ℂ (exp ℂ (I • a)) := by
@@ -95,25 +90,59 @@ theorem selfAdjoint.mem_spectrum_eq_re [StarModule ℂ A] [Nontrivial A] {a : A}
     Complex.ext (of_real_re _)
       (by
         simpa only [← Complex.exp_eq_exp_ℂ, mem_sphere_zero_iff_norm, norm_eq_abs, abs_exp, Real.exp_eq_one_iff,
-          smul_eq_mul, I_mul, neg_eq_zero] using
-          Spectrum.subset_circle_of_unitary (selfAdjoint.exp_i_smul_unitary ha) this)
+          smul_eq_mul, I_mul, neg_eq_zero] using Spectrum.subset_circle_of_unitary ha.exp_i_smul_unitary this)
 
 /-- Any element of the spectrum of a selfadjoint is real. -/
-theorem selfAdjoint.mem_spectrum_eq_re' [StarModule ℂ A] [Nontrivial A] (a : selfAdjoint A) {z : ℂ}
+theorem selfAdjoint.mem_spectrum_eq_re [StarModule ℂ A] [Nontrivial A] (a : selfAdjoint A) {z : ℂ}
     (hz : z ∈ Spectrum ℂ (a : A)) : z = z.re :=
-  selfAdjoint.mem_spectrum_eq_re a.property hz
+  a.Prop.mem_spectrum_eq_re hz
 
 /-- The spectrum of a selfadjoint is real -/
-theorem selfAdjoint.coe_re_map_spectrum [StarModule ℂ A] [Nontrivial A] {a : A} (ha : a ∈ selfAdjoint A) :
+theorem IsSelfAdjoint.coe_re_map_spectrum [StarModule ℂ A] [Nontrivial A] {a : A} (ha : IsSelfAdjoint a) :
     Spectrum ℂ a = (coe ∘ re '' Spectrum ℂ a : Set ℂ) :=
-  le_antisymmₓ (fun z hz => ⟨z, hz, (selfAdjoint.mem_spectrum_eq_re ha hz).symm⟩) fun z => by
+  le_antisymmₓ (fun z hz => ⟨z, hz, (ha.mem_spectrum_eq_re hz).symm⟩) fun z => by
     rintro ⟨z, hz, rfl⟩
-    simpa only [(selfAdjoint.mem_spectrum_eq_re ha hz).symm, Function.comp_app] using hz
+    simpa only [(ha.mem_spectrum_eq_re hz).symm, Function.comp_app] using hz
 
 /-- The spectrum of a selfadjoint is real -/
-theorem selfAdjoint.coe_re_map_spectrum' [StarModule ℂ A] [Nontrivial A] (a : selfAdjoint A) :
+theorem selfAdjoint.coe_re_map_spectrum [StarModule ℂ A] [Nontrivial A] (a : selfAdjoint A) :
     Spectrum ℂ (a : A) = (coe ∘ re '' Spectrum ℂ (a : A) : Set ℂ) :=
-  selfAdjoint.coe_re_map_spectrum a.property
+  a.property.coe_re_map_spectrum
 
 end ComplexScalars
+
+namespace StarAlgHom
+
+variable {F A B : Type _} [NormedRing A] [NormedAlgebra ℂ A] [NormOneClass A] [CompleteSpace A] [StarRing A]
+  [CstarRing A] [NormedRing B] [NormedAlgebra ℂ B] [NormOneClass B] [CompleteSpace B] [StarRing B] [CstarRing B]
+  [hF : StarAlgHomClass F ℂ A B] (φ : F)
+
+include hF
+
+/-- A star algebra homomorphism of complex C⋆-algebras is norm contractive. -/
+theorem nnnorm_apply_le (a : A) : ∥(φ a : B)∥₊ ≤ ∥a∥₊ := by
+  suffices ∀ s : A, IsSelfAdjoint s → ∥φ s∥₊ ≤ ∥s∥₊ by
+    exact
+      nonneg_le_nonneg_of_sq_le_sq zero_le'
+        (by
+          simpa only [nnnorm_star_mul_self, map_star, map_mul] using this _ (IsSelfAdjoint.star_mul_self a))
+  · intro s hs
+    simpa only [hs.spectral_radius_eq_nnnorm, (hs.star_hom_apply φ).spectral_radius_eq_nnnorm, coe_le_coe] using
+      show spectralRadius ℂ (φ s) ≤ spectralRadius ℂ s from supr_le_supr_of_subset (AlgHom.spectrum_apply_subset φ s)
+    
+
+/-- A star algebra homomorphism of complex C⋆-algebras is norm contractive. -/
+theorem norm_apply_le (a : A) : ∥(φ a : B)∥ ≤ ∥a∥ :=
+  nnnorm_apply_le φ a
+
+/-- Star algebra homomorphisms between C⋆-algebras are continuous linear maps.
+See note [lower instance priority] -/
+noncomputable instance (priority := 100) : ContinuousLinearMapClass F ℂ A B :=
+  { AlgHomClass.linearMapClass with
+    map_continuous := fun φ =>
+      AddMonoidHomClass.continuous_of_bound φ 1
+        (by
+          simpa only [one_mulₓ] using nnnorm_apply_le φ) }
+
+end StarAlgHom
 

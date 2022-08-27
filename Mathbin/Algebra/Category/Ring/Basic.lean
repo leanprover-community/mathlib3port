@@ -86,10 +86,10 @@ namespace Ringₓₓ
 instance : BundledHom.ParentProjection @Ringₓ.toSemiring :=
   ⟨⟩
 
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler λ Ring, has_coe_to_sort Ring (Type*)
-deriving instance
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler λ Ring, has_coe_to_sort Ring (Type*)»,
-  LargeCategory, ConcreteCategory for Ringₓₓ
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler λ Ring,
+has_coe_to_sort[has_coe_to_sort] Ring (Type*)
+deriving instance «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler λ Ring,
+  has_coe_to_sort[has_coe_to_sort] Ring (Type*)», LargeCategory, ConcreteCategory for Ringₓₓ
 
 /-- Construct a bundled Ring from the underlying type and typeclass. -/
 def of (R : Type u) [Ringₓ R] : Ringₓₓ :=

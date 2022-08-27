@@ -294,9 +294,9 @@ instance : Pow (selfAdjoint R) ℤ where pow := fun x z => ⟨x ^ z, x.Prop.zpow
 theorem coe_zpow (x : selfAdjoint R) (z : ℤ) : ↑(x ^ z) = (x : R) ^ z :=
   rfl
 
-theorem rat_cast_mem : ∀ x : ℚ, (x : R) ∈ selfAdjoint R
+theorem rat_cast_mem : ∀ x : ℚ, IsSelfAdjoint (x : R)
   | ⟨a, b, h1, h2⟩ => by
-    rw [mem_iff, Rat.cast_mk', star_mul', star_inv', star_nat_cast, star_int_cast]
+    rw [IsSelfAdjoint, Rat.cast_mk', star_mul', star_inv', star_nat_cast, star_int_cast]
 
 instance : HasRatCast (selfAdjoint R) :=
   ⟨fun n => ⟨n, rat_cast_mem n⟩⟩

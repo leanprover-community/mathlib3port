@@ -5,8 +5,8 @@ Authors: Johan Commelin, Floris van Doorn
 -/
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Data.Fin.Tuple.Basic
-import Mathbin.Data.Set.Finite
 import Mathbin.GroupTheory.Submonoid.Basic
+import Mathbin.Order.WellFoundedSet
 
 /-!
 # Pointwise operations of sets
@@ -34,6 +34,13 @@ pointwise scaling and repeated pointwise addition; the former has `(2 : ℕ) •
 the latter has `(2 : ℕ) • {1, 2} = {2, 3, 4}`. See note [pointwise nat action].
 
 Appropriate definitions and results are also transported to the additive theory via `to_additive`.
+
+### Definitions for Hahn series
+
+* `set.add_antidiagonal s t a`, `set.mul_antidiagonal s t a`: Sets of pairs of elements of `s` and
+  `t` that add/multiply to `a`.
+* `finset.add_antidiagonal`, `finset.mul_antidiagonal`: Finset versions of the above when `s` and
+  `t` are well-founded.
 
 ## Implementation notes
 
@@ -1975,4 +1982,185 @@ theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k
   rwa [set.mem_singleton_iff.mp hb, inv_mul_cancel_leftₓ]
 
 end Groupₓ
+
+namespace Set
+
+variable {s t : Set α}
+
+@[to_additive]
+theorem IsPwo.mul [OrderedCancelCommMonoid α] (hs : s.IsPwo) (ht : t.IsPwo) : IsPwo (s * t) := by
+  rw [← image_mul_prod]
+  exact (hs.prod ht).image_of_monotone (monotone_fst.mul' monotone_snd)
+
+variable [LinearOrderedCancelCommMonoid α]
+
+@[to_additive]
+theorem IsWf.mul (hs : s.IsWf) (ht : t.IsWf) : IsWf (s * t) :=
+  (hs.IsPwo.mul ht.IsPwo).IsWf
+
+@[to_additive]
+theorem IsWf.min_mul (hs : s.IsWf) (ht : t.IsWf) (hsn : s.Nonempty) (htn : t.Nonempty) :
+    (hs.mul ht).min (hsn.mul htn) = hs.min hsn * ht.min htn := by
+  refine' le_antisymmₓ (is_wf.min_le _ _ (mem_mul.2 ⟨_, _, hs.min_mem _, ht.min_mem _, rfl⟩)) _
+  rw [is_wf.le_min_iff]
+  rintro _ ⟨x, y, hx, hy, rfl⟩
+  exact mul_le_mul' (hs.min_le _ hx) (ht.min_le _ hy)
+
+end Set
+
+/-! ### Multiplication antidiagonal -/
+
+
+namespace Set
+
+section Mul
+
+variable [Mul α] {s s₁ s₂ t t₁ t₂ : Set α} {a : α} {x : α × α}
+
+/-- `set.mul_antidiagonal s t a` is the set of all pairs of an element in `s` and an element in `t`
+that multiply to `a`. -/
+@[to_additive
+      "`set.add_antidiagonal s t a` is the set of all pairs of an element in `s` and an\nelement in `t` that add to `a`."]
+def MulAntidiagonal (s t : Set α) (a : α) : Set (α × α) :=
+  { x | x.1 ∈ s ∧ x.2 ∈ t ∧ x.1 * x.2 = a }
+
+@[simp, to_additive]
+theorem mem_mul_antidiagonal : x ∈ MulAntidiagonal s t a ↔ x.1 ∈ s ∧ x.2 ∈ t ∧ x.1 * x.2 = a :=
+  Iff.rfl
+
+@[to_additive]
+theorem mul_antidiagonal_mono_left (h : s₁ ⊆ s₂) : MulAntidiagonal s₁ t a ⊆ MulAntidiagonal s₂ t a := fun x hx =>
+  ⟨h hx.1, hx.2.1, hx.2.2⟩
+
+@[to_additive]
+theorem mul_antidiagonal_mono_right (h : t₁ ⊆ t₂) : MulAntidiagonal s t₁ a ⊆ MulAntidiagonal s t₂ a := fun x hx =>
+  ⟨hx.1, h hx.2.1, hx.2.2⟩
+
+end Mul
+
+@[simp, to_additive]
+theorem swap_mem_mul_antidiagonal [CommSemigroupₓ α] {s t : Set α} {a : α} {x : α × α} :
+    x.swap ∈ Set.MulAntidiagonal s t a ↔ x ∈ Set.MulAntidiagonal t s a := by
+  simp [mul_comm, And.left_comm]
+
+namespace MulAntidiagonal
+
+section CancelCommMonoid
+
+variable [CancelCommMonoid α] {s t : Set α} {a : α} {x y : MulAntidiagonal s t a}
+
+@[to_additive]
+theorem fst_eq_fst_iff_snd_eq_snd : (x : α × α).1 = (y : α × α).1 ↔ (x : α × α).2 = (y : α × α).2 :=
+  ⟨fun h =>
+    mul_left_cancelₓ
+      (y.Prop.2.2.trans <| by
+          rw [← h]
+          exact x.2.2.2.symm).symm,
+    fun h =>
+    mul_right_cancelₓ
+      (y.Prop.2.2.trans <| by
+          rw [← h]
+          exact x.2.2.2.symm).symm⟩
+
+@[to_additive]
+theorem eq_of_fst_eq_fst (h : (x : α × α).fst = (y : α × α).fst) : x = y :=
+  Subtype.ext <| Prod.extₓ h <| fst_eq_fst_iff_snd_eq_snd.1 h
+
+@[to_additive]
+theorem eq_of_snd_eq_snd (h : (x : α × α).snd = (y : α × α).snd) : x = y :=
+  Subtype.ext <| Prod.extₓ (fst_eq_fst_iff_snd_eq_snd.2 h) h
+
+end CancelCommMonoid
+
+section OrderedCancelCommMonoid
+
+variable [OrderedCancelCommMonoid α] (s t : Set α) (a : α) {x y : MulAntidiagonal s t a}
+
+@[to_additive]
+theorem eq_of_fst_le_fst_of_snd_le_snd (h₁ : (x : α × α).1 ≤ (y : α × α).1) (h₂ : (x : α × α).2 ≤ (y : α × α).2) :
+    x = y :=
+  eq_of_fst_eq_fst <|
+    h₁.eq_of_not_lt fun hlt =>
+      (mul_lt_mul_of_lt_of_le hlt h₂).Ne <| (mem_mul_antidiagonal.1 x.2).2.2.trans (mem_mul_antidiagonal.1 y.2).2.2.symm
+
+variable {s t}
+
+@[to_additive]
+theorem finite_of_is_pwo (hs : s.IsPwo) (ht : t.IsPwo) (a) : (MulAntidiagonal s t a).Finite := by
+  refine' not_infinite.1 fun h => _
+  have h1 : (mul_antidiagonal s t a).PartiallyWellOrderedOn (Prod.fst ⁻¹'o (· ≤ ·)) := fun f hf =>
+    hs (Prod.fst ∘ f) fun n => (mem_mul_antidiagonal.1 (hf n)).1
+  have h2 : (mul_antidiagonal s t a).PartiallyWellOrderedOn (Prod.snd ⁻¹'o (· ≤ ·)) := fun f hf =>
+    ht (Prod.snd ∘ f) fun n => (mem_mul_antidiagonal.1 (hf n)).2.1
+  obtain ⟨g, hg⟩ := h1.exists_monotone_subseq (fun n => h.nat_embedding _ n) fun n => (h.nat_embedding _ n).2
+  obtain ⟨m, n, mn, h2'⟩ := h2 (fun x => (h.nat_embedding _) (g x)) fun n => (h.nat_embedding _ _).2
+  refine' mn.ne (g.injective <| (h.nat_embedding _).Injective _)
+  exact eq_of_fst_le_fst_of_snd_le_snd _ _ _ (hg _ _ mn.le) h2'
+
+end OrderedCancelCommMonoid
+
+@[to_additive]
+theorem finite_of_is_wf [LinearOrderedCancelCommMonoid α] {s t : Set α} (hs : s.IsWf) (ht : t.IsWf) (a) :
+    (MulAntidiagonal s t a).Finite :=
+  finite_of_is_pwo hs.IsPwo ht.IsPwo a
+
+end MulAntidiagonal
+
+end Set
+
+namespace Finset
+
+variable [OrderedCancelCommMonoid α] {s t : Set α} (hs : s.IsPwo) (ht : t.IsPwo) (a : α)
+
+/-- `finset.mul_antidiagonal_of_is_wf hs ht a` is the set of all pairs of an element in `s` and an
+element in `t` that multiply to `a`, but its construction requires proofs that `s` and `t` are
+well-ordered. -/
+@[to_additive
+      "`finset.add_antidiagonal_of_is_wf hs ht a` is the set of all pairs of an element in\n`s` and an element in `t` that add to `a`, but its construction requires proofs that `s` and `t` are\nwell-ordered."]
+noncomputable def mulAntidiagonal : Finset (α × α) :=
+  (Set.MulAntidiagonal.finite_of_is_pwo hs ht a).toFinset
+
+variable {hs ht a} {u : Set α} {hu : u.IsPwo} {x : α × α}
+
+@[simp, to_additive]
+theorem mem_mul_antidiagonal : x ∈ mulAntidiagonal hs ht a ↔ x.1 ∈ s ∧ x.2 ∈ t ∧ x.1 * x.2 = a := by
+  simp [mul_antidiagonal, and_rotate]
+
+@[to_additive]
+theorem mul_antidiagonal_mono_left (h : u ⊆ s) : mulAntidiagonal hu ht a ⊆ mulAntidiagonal hs ht a :=
+  Finite.to_finset_subset.2 <| Set.mul_antidiagonal_mono_left h
+
+@[to_additive]
+theorem mul_antidiagonal_mono_right (h : u ⊆ t) : mulAntidiagonal hs hu a ⊆ mulAntidiagonal hs ht a :=
+  Finite.to_finset_subset.2 <| Set.mul_antidiagonal_mono_right h
+
+@[simp, to_additive]
+theorem swap_mem_mul_antidiagonal : x.swap ∈ Finset.mulAntidiagonal hs ht a ↔ x ∈ Finset.mulAntidiagonal ht hs a := by
+  simp [mul_comm, And.left_comm]
+
+@[to_additive]
+theorem support_mul_antidiagonal_subset_mul : { a | (mulAntidiagonal hs ht a).Nonempty } ⊆ s * t := fun a ⟨b, hb⟩ => by
+  rw [mem_mul_antidiagonal] at hb
+  exact ⟨b.1, b.2, hb⟩
+
+@[to_additive]
+theorem is_pwo_support_mul_antidiagonal : { a | (mulAntidiagonal hs ht a).Nonempty }.IsPwo :=
+  (hs.mul ht).mono support_mul_antidiagonal_subset_mul
+
+@[to_additive]
+theorem mul_antidiagonal_min_mul_min {α} [LinearOrderedCancelCommMonoid α] {s t : Set α} (hs : s.IsWf) (ht : t.IsWf)
+    (hns : s.Nonempty) (hnt : t.Nonempty) :
+    mulAntidiagonal hs.IsPwo ht.IsPwo (hs.min hns * ht.min hnt) = {(hs hns, ht hnt)} := by
+  ext ⟨a, b⟩
+  simp only [mem_mul_antidiagonal, mem_singleton, Prod.ext_iff]
+  constructor
+  · rintro ⟨has, hat, hst⟩
+    obtain rfl := (hs.min_le hns has).eq_of_not_lt fun hlt => (mul_lt_mul_of_lt_of_le hlt <| ht.min_le hnt hat).ne' hst
+    exact ⟨rfl, mul_left_cancelₓ hst⟩
+    
+  · rintro ⟨rfl, rfl⟩
+    exact ⟨hs.min_mem _, ht.min_mem _, rfl⟩
+    
+
+end Finset
 

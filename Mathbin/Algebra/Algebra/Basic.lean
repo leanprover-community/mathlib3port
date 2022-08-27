@@ -532,6 +532,21 @@ theorem ker_algebra_map_End (K : Type u) (V : Type v) [Field K] [AddCommGroupₓ
 
 end Module
 
+namespace LinearMap
+
+variable {R : Type _} {A : Type _} {B : Type _} [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B] [Algebra R A]
+  [Algebra R B]
+
+/-- An alternate statement of `linear_map.map_smul` for when `algebra_map` is more convenient to
+work with than `•`. -/
+theorem map_algebra_map_mul (f : A →ₗ[R] B) (a : A) (r : R) : f (algebraMap R A r * a) = algebraMap R B r * f a := by
+  rw [← Algebra.smul_def, ← Algebra.smul_def, map_smul]
+
+theorem map_mul_algebra_map (f : A →ₗ[R] B) (a : A) (r : R) : f (a * algebraMap R A r) = f a * algebraMap R B r := by
+  rw [← Algebra.commutes, ← Algebra.commutes, map_algebra_map_mul]
+
+end LinearMap
+
 /-- Defining the homomorphism in the category R-Alg. -/
 @[nolint has_nonempty_instance]
 structure AlgHom (R : Type u) (A : Type v) (B : Type w) [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B] [Algebra R A]

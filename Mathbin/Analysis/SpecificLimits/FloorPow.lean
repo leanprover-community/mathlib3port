@@ -57,7 +57,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
         u (c n) - c n * l = (u (c n) / c n - l) * c n := by
           simp' only [cnpos.ne', Ne.def, Nat.cast_eq_zero, not_false_iff] with field_simps
         _ ≤ ε * c n := by
-          apply mul_le_mul_of_nonneg_right _ (Nat.cast_nonneg _)
+          refine' mul_le_mul_of_nonneg_right _ (Nat.cast_nonneg _)
           simp only [mul_oneₓ, Real.norm_eq_abs, abs_one] at hn
           exact le_transₓ (le_abs_self _) hn
         
@@ -129,7 +129,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
         (c n : ℝ) * l - u (c n) = -(u (c n) / c n - l) * c n := by
           simp' only [cnpos.ne', Ne.def, Nat.cast_eq_zero, not_false_iff, neg_sub] with field_simps
         _ ≤ ε * c n := by
-          apply mul_le_mul_of_nonneg_right _ (Nat.cast_nonneg _)
+          refine' mul_le_mul_of_nonneg_right _ (Nat.cast_nonneg _)
           simp only [mul_oneₓ, Real.norm_eq_abs, abs_one] at hn
           exact le_transₓ (neg_le_abs_self _) hn
         

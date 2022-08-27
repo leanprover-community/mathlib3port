@@ -147,5 +147,11 @@ instance minimal_period_pos [Fintype <| Orbit (zpowers a) b] : NeZero <| minimal
     rw [minimal_period_eq_card]
     exact Fintype.card_ne_zero⟩
 
+/-- See also `order_eq_card_zpowers`. -/
+@[to_additive add_order_eq_card_zmultiples' "See also `add_order_eq_card_zmultiples`."]
+theorem _root_.order_eq_card_zpowers' : orderOf a = Nat.card (zpowers a) := by
+  have := Nat.card_congr (MulAction.orbitZpowersEquiv a (1 : α))
+  rwa [Nat.card_zmod, orbit_subgroup_one_eq_self, eq_comm] at this
+
 end MulAction
 

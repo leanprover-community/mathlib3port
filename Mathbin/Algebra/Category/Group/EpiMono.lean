@@ -334,6 +334,22 @@ theorem epi_iff_range_eq_top : Epi f ↔ f.range = ⊤ :=
 
 end AddGroupₓₓ
 
+namespace Groupₓₓ
+
+variable {A B : Groupₓₓ.{u}} (f : A ⟶ B)
+
+@[to_additive]
+instance forget_Group_preserves_mono :
+    (forget Groupₓₓ).PreservesMonomorphisms where preserves := fun X Y f e => by
+    rwa [mono_iff_injective, ← CategoryTheory.mono_iff_injective] at e
+
+@[to_additive]
+instance forget_Group_preserves_epi :
+    (forget Groupₓₓ).PreservesEpimorphisms where preserves := fun X Y f e => by
+    rwa [epi_iff_surjective, ← CategoryTheory.epi_iff_surjective] at e
+
+end Groupₓₓ
+
 namespace CommGroupₓₓ
 
 variable {A B : CommGroupₓₓ.{u}} (f : A ⟶ B)
@@ -365,9 +381,14 @@ theorem epi_iff_surjective : Epi f ↔ Function.Surjective f := by
   rw [epi_iff_range_eq_top, MonoidHom.range_top_iff_surjective]
 
 @[to_additive]
-instance :
-    Functor.PreservesEpimorphisms (forget₂ CommGroupₓₓ Groupₓₓ) where preserves := fun X Y f e => by
-    rwa [epi_iff_surjective, ← @Groupₓₓ.epi_iff_surjective ⟨X⟩ ⟨Y⟩ f] at e
+instance forget_CommGroup_preserves_mono :
+    (forget CommGroupₓₓ).PreservesMonomorphisms where preserves := fun X Y f e => by
+    rwa [mono_iff_injective, ← CategoryTheory.mono_iff_injective] at e
+
+@[to_additive]
+instance forget_CommGroup_preserves_epi :
+    (forget CommGroupₓₓ).PreservesEpimorphisms where preserves := fun X Y f e => by
+    rwa [epi_iff_surjective, ← CategoryTheory.epi_iff_surjective] at e
 
 end CommGroupₓₓ
 

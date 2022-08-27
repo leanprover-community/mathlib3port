@@ -248,6 +248,18 @@ theorem of_iso_pullback (h : CommSq fst snd f g) [HasPullback f g] (i : P ≅ pu
     (Limits.IsLimit.ofIsoLimit (limit.isLimit _)
       (@PullbackCone.ext _ _ _ _ _ _ _ (PullbackCone.mk _ _ _) _ i w₁.symm w₂.symm).symm)
 
+theorem of_horiz_is_iso [IsIso fst] [IsIso g] (sq : CommSq fst snd f g) : IsPullback fst snd f g :=
+  of_is_limit' sq
+    (by
+      refine'
+        pullback_cone.is_limit.mk _ (fun s => s.fst ≫ inv fst)
+          (by
+            tidy)
+          (fun s => _)
+          (by
+            tidy)
+      simp only [← cancel_mono g, category.assoc, ← sq.w, is_iso.inv_hom_id_assoc, s.condition])
+
 end IsPullback
 
 namespace IsPushout
@@ -415,6 +427,9 @@ theorem unop {P X Y Z : Cᵒᵖ} {fst : P ⟶ X} {snd : P ⟶ Y} {f : X ⟶ Z} {
   IsPushout.of_is_colimit
     (IsColimit.ofIsoColimit (Limits.PullbackCone.isLimitEquivIsColimitUnop h.flip.Cone h.flip.IsLimit)
       h.to_comm_sq.flip.coneUnop)
+
+theorem of_vert_is_iso [IsIso snd] [IsIso f] (sq : CommSq fst snd f g) : IsPullback fst snd f g :=
+  IsPullback.flip (of_horiz_is_iso sq.flip)
 
 end IsPullback
 

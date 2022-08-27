@@ -609,7 +609,7 @@ theorem balance_eq_balance' {l x r} (hl : Balanced l) (hr : Balanced r) (sl : Si
         
       · have : size rrl = 0 ∧ size rrr = 0 := by
           have := balanced_sz_zero.1 hr.1.symm
-          rwa [size, sr.2.2.1, Nat.succ_le_succ_iff, Nat.le_zero_iffₓ, add_eq_zero_iff] at this
+          rwa [size, sr.2.2.1, Nat.succ_le_succ_iff, le_zero_iff, add_eq_zero_iff] at this
         cases sr.2.2.2.1.size_eq_zero.1 this.1
         cases sr.2.2.2.2.size_eq_zero.1 this.2
         obtain rfl : rrs = 1 := sr.2.2.1
@@ -622,7 +622,7 @@ theorem balance_eq_balance' {l x r} (hl : Balanced l) (hr : Balanced r) (sl : Si
         
       · have : size rll = 0 ∧ size rlr = 0 := by
           have := balanced_sz_zero.1 hr.1
-          rwa [size, sr.2.1.1, Nat.succ_le_succ_iff, Nat.le_zero_iffₓ, add_eq_zero_iff] at this
+          rwa [size, sr.2.1.1, Nat.succ_le_succ_iff, le_zero_iff, add_eq_zero_iff] at this
         cases sr.2.1.2.1.size_eq_zero.1 this.1
         cases sr.2.1.2.2.size_eq_zero.1 this.2
         obtain rfl : rls = 1 := sr.2.1.1
@@ -656,7 +656,7 @@ theorem balance_eq_balance' {l x r} (hl : Balanced l) (hr : Balanced r) (sl : Si
         
       · have : size lrl = 0 ∧ size lrr = 0 := by
           have := balanced_sz_zero.1 hl.1.symm
-          rwa [size, sl.2.2.1, Nat.succ_le_succ_iff, Nat.le_zero_iffₓ, add_eq_zero_iff] at this
+          rwa [size, sl.2.2.1, Nat.succ_le_succ_iff, le_zero_iff, add_eq_zero_iff] at this
         cases sl.2.2.2.1.size_eq_zero.1 this.1
         cases sl.2.2.2.2.size_eq_zero.1 this.2
         obtain rfl : lrs = 1 := sl.2.2.1
@@ -669,7 +669,7 @@ theorem balance_eq_balance' {l x r} (hl : Balanced l) (hr : Balanced r) (sl : Si
         
       · have : size lll = 0 ∧ size llr = 0 := by
           have := balanced_sz_zero.1 hl.1
-          rwa [size, sl.2.1.1, Nat.succ_le_succ_iff, Nat.le_zero_iffₓ, add_eq_zero_iff] at this
+          rwa [size, sl.2.1.1, Nat.succ_le_succ_iff, le_zero_iff, add_eq_zero_iff] at this
         cases sl.2.1.2.1.size_eq_zero.1 this.1
         cases sl.2.1.2.2.size_eq_zero.1 this.2
         obtain rfl : lls = 1 := sl.2.1.1
@@ -764,7 +764,7 @@ theorem balance_l_eq_balance {l x r} (sl : Sized l) (sr : Sized r) (H1 : size l 
   · cases' l with ls ll lx lr
     · have : size rl = 0 ∧ size rr = 0 := by
         have := H1 rfl
-        rwa [size, sr.1, Nat.succ_le_succ_iff, Nat.le_zero_iffₓ, add_eq_zero_iff] at this
+        rwa [size, sr.1, Nat.succ_le_succ_iff, le_zero_iff, add_eq_zero_iff] at this
       cases sr.2.1.size_eq_zero.1 this.1
       cases sr.2.2.size_eq_zero.1 this.2
       rw [sr.eq_node']
@@ -1179,7 +1179,7 @@ theorem Valid'.node4_l {l x m y r o₁ o₂} (hl : Valid' o₁ l ↑x) (hm : Val
       
     rcases hm.3.1.resolve_left mm with ⟨mm₁, mm₂⟩
     cases' Nat.eq_zero_or_posₓ (size ml) with ml0 ml0
-    · rw [ml0, mul_zero, Nat.le_zero_iffₓ] at mm₂
+    · rw [ml0, mul_zero, le_zero_iff] at mm₂
       rw [ml0, mm₂] at mm
       cases
         mm
@@ -1304,12 +1304,12 @@ theorem Valid'.rotate_l {l x r o₁ o₂} (hl : Valid' o₁ l ↑x) (hr : Valid'
       
     
   · cases' Nat.eq_zero_or_posₓ (size rl) with rl0 rl0
-    · rw [rl0, not_ltₓ, Nat.le_zero_iffₓ, Nat.mul_eq_zero] at h
+    · rw [rl0, not_ltₓ, le_zero_iff, Nat.mul_eq_zero] at h
       replace h :=
         h.resolve_left
           (by
             decide)
-      rw [rl0, h, Nat.le_zero_iffₓ, Nat.mul_eq_zero] at H2
+      rw [rl0, h, le_zero_iff, Nat.mul_eq_zero] at H2
       rw [hr.2.size_eq, rl0, h,
         H2.resolve_left
           (by

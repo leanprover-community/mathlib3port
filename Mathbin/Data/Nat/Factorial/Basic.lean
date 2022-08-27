@@ -158,7 +158,7 @@ theorem add_factorial_succ_le_factorial_add_succ (i : ℕ) (n : ℕ) : i + (n + 
   · rw [← add_assocₓ, factorial_succ (1 + n), add_mulₓ, one_mulₓ, add_commₓ 1 n]
     exact (add_le_add_iff_right _).mpr (one_le_mul (Nat.le_add_leftₓ 1 n) (n + 1).factorial_pos)
     
-  rw [nat.le_zero_iff.mp (nat.succ_le_succ_iff.mp i0), zero_addₓ, zero_addₓ]
+  rw [le_zero_iff.mp (nat.succ_le_succ_iff.mp i0), zero_addₓ, zero_addₓ]
 
 theorem add_factorial_le_factorial_add (i : ℕ) {n : ℕ} (n1 : 1 ≤ n) : i + n ! ≤ (i + n)! := by
   cases' n1 with h

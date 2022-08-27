@@ -247,8 +247,7 @@ theorem AffineTargetMorphismProperty.IsLocal.affine_open_cover_tfae {P : AffineT
   tfae_have 1 → 5
   · intro H
     refine'
-      ⟨Y.carrier, fun x => is_open_immersion.opens_range (Y.affine_cover.map x), _, fun i =>
-        range_is_affine_open_of_open_immersion _, _⟩
+      ⟨Y.carrier, fun x => (Y.affine_cover.map x).opensRange, _, fun i => range_is_affine_open_of_open_immersion _, _⟩
     · rw [eq_top_iff]
       intro x _
       erw [opens.mem_supr]
@@ -395,7 +394,7 @@ theorem PropertyIsLocalAtTarget.open_cover_tfae {P : MorphismProperty Scheme} (h
   tfae_have 4 → 3
   · intro H 𝒰 i
     rw [← hP.1.arrow_mk_iso_iff (morphism_restrict_opens_range f _)]
-    exact H (is_open_immersion.opens_range <| 𝒰.map i)
+    exact H (𝒰.map i).opensRange
     
   tfae_have 3 → 2
   · exact fun H => ⟨Y.affine_cover, H Y.affine_cover⟩
@@ -457,32 +456,34 @@ theorem IsLocal.target_affine_locally_pullback_fst_of_right_of_stable_under_base
   apply hP' <;> assumption
 
 theorem IsLocal.stable_under_base_change {P : AffineTargetMorphismProperty} (hP : P.IsLocal)
-    (hP' : P.StableUnderBaseChange) : (TargetAffineLocally P).StableUnderBaseChange := by
-  introv X H
-  rw [(hP.target_affine_locally_is_local.open_cover_tfae (pullback.fst : pullback f g ⟶ X)).out 0 1]
-  use S.affine_cover.pullback_cover f
-  intro i
-  rw [(hP.affine_open_cover_tfae g).out 0 3] at H
-  let e : pullback (pullback.fst : pullback f g ⟶ _) ((S.affine_cover.pullback_cover f).map i) ≅ _ := by
-    refine'
-      pullback_symmetry _ _ ≪≫
-        pullback_right_pullback_fst_iso f g _ ≪≫
-          _ ≪≫
-            (pullback_right_pullback_fst_iso (S.affine_cover.map i) g
-                (pullback.snd : pullback f (S.affine_cover.map i) ⟶ _)).symm
-    exact
-      as_iso
-        (pullback.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _)
-          (by
-            simpa using pullback.condition)
-          (by
-            simp ))
-  have : e.hom ≫ pullback.fst = pullback.snd := by
-    simp
-  rw [← this, (target_affine_locally_respects_iso hP.1).cancel_left_is_iso]
-  apply hP.target_affine_locally_pullback_fst_of_right_of_stable_under_base_change hP'
-  rw [← pullback_symmetry_hom_comp_snd, affine_cancel_left_is_iso hP.1]
-  apply H
+    (hP' : P.StableUnderBaseChange) : (TargetAffineLocally P).StableUnderBaseChange :=
+  MorphismProperty.StableUnderBaseChange.mk (target_affine_locally_respects_iso hP.RespectsIso)
+    (by
+      intro X Y S f g H
+      rw [(hP.target_affine_locally_is_local.open_cover_tfae (pullback.fst : pullback f g ⟶ X)).out 0 1]
+      use S.affine_cover.pullback_cover f
+      intro i
+      rw [(hP.affine_open_cover_tfae g).out 0 3] at H
+      let e : pullback (pullback.fst : pullback f g ⟶ _) ((S.affine_cover.pullback_cover f).map i) ≅ _ := by
+        refine'
+          pullback_symmetry _ _ ≪≫
+            pullback_right_pullback_fst_iso f g _ ≪≫
+              _ ≪≫
+                (pullback_right_pullback_fst_iso (S.affine_cover.map i) g
+                    (pullback.snd : pullback f (S.affine_cover.map i) ⟶ _)).symm
+        exact
+          as_iso
+            (pullback.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _)
+              (by
+                simpa using pullback.condition)
+              (by
+                simp ))
+      have : e.hom ≫ pullback.fst = pullback.snd := by
+        simp
+      rw [← this, (target_affine_locally_respects_iso hP.1).cancel_left_is_iso]
+      apply hP.target_affine_locally_pullback_fst_of_right_of_stable_under_base_change hP'
+      rw [← pullback_symmetry_hom_comp_snd, affine_cancel_left_is_iso hP.1]
+      apply H)
 
 end AffineTargetMorphismProperty
 

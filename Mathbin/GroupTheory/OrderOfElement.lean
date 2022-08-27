@@ -615,7 +615,8 @@ theorem zpowers_equiv_zpowers_apply [Finite G] (h : orderOf x = orderOf y) (n : 
 
 variable [Fintype G]
 
-@[to_additive add_order_eq_card_zmultiples]
+/-- See also `order_eq_card_zpowers'`. -/
+@[to_additive add_order_eq_card_zmultiples "See also `add_order_eq_card_zmultiples'`."]
 theorem order_eq_card_zpowers : orderOf x = Fintype.card (zpowers x) :=
   (Fintype.card_fin (orderOf x)).symm.trans (Fintype.card_eq.2 ⟨finEquivZpowers x⟩)
 

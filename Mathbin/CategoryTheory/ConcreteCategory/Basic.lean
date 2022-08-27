@@ -133,6 +133,11 @@ theorem ConcreteCategory.mono_of_injective {X Y : C} (f : X ⟶ Y) (i : Function
 theorem ConcreteCategory.epi_of_surjective {X Y : C} (f : X ⟶ Y) (s : Function.Surjective f) : Epi f :=
   (forget C).epi_of_epi_map ((epi_iff_surjective f).2 s)
 
+theorem ConcreteCategory.bijective_of_is_iso {X Y : C} (f : X ⟶ Y) [IsIso f] : Function.Bijective ((forget C).map f) :=
+  by
+  rw [← is_iso_iff_bijective]
+  infer_instance
+
 @[simp]
 theorem ConcreteCategory.has_coe_to_fun_Type {X Y : Type u} (f : X ⟶ Y) : coeFn f = f :=
   rfl
@@ -156,9 +161,23 @@ def forget₂ (C : Type v) (D : Type v') [Category C] [ConcreteCategory C] [Cate
     [HasForget₂ C D] : C ⥤ D :=
   has_forget₂.forget₂
 
-instance forget_faithful (C : Type v) (D : Type v') [Category C] [ConcreteCategory C] [Category D] [ConcreteCategory D]
+instance forget₂_faithful (C : Type v) (D : Type v') [Category C] [ConcreteCategory C] [Category D] [ConcreteCategory D]
     [HasForget₂ C D] : Faithful (forget₂ C D) :=
   HasForget₂.forget_comp.faithful_of_comp
+
+instance forget₂_preserves_monomorphisms (C : Type v) (D : Type v') [Category C] [ConcreteCategory C] [Category D]
+    [ConcreteCategory D] [HasForget₂ C D] [(forget C).PreservesMonomorphisms] : (forget₂ C D).PreservesMonomorphisms :=
+  have : (forget₂ C D ⋙ forget D).PreservesMonomorphisms := by
+    simp only [has_forget₂.forget_comp]
+    infer_instance
+  functor.preserves_monomorphisms_of_preserves_of_reflects _ (forget D)
+
+instance forget₂_preserves_epimorphisms (C : Type v) (D : Type v') [Category C] [ConcreteCategory C] [Category D]
+    [ConcreteCategory D] [HasForget₂ C D] [(forget C).PreservesEpimorphisms] : (forget₂ C D).PreservesEpimorphisms :=
+  have : (forget₂ C D ⋙ forget D).PreservesEpimorphisms := by
+    simp only [has_forget₂.forget_comp]
+    infer_instance
+  functor.preserves_epimorphisms_of_preserves_of_reflects _ (forget D)
 
 instance InducedCategory.concreteCategory {C : Type v} {D : Type v'} [Category D] [ConcreteCategory D] (f : C → D) :
     ConcreteCategory (InducedCategory D f) where forget := inducedFunctor f ⋙ forget D
@@ -186,7 +205,9 @@ def HasForget₂.mk' {C : Type v} {D : Type v'} [Category C] [ConcreteCategory C
   forget_comp := by
     apply faithful.div_comp
 
-instance hasForgetToType (C : Type v) [Category C] [ConcreteCategory C] : HasForget₂ C (Type u) where
+/-- Every forgetful functor factors through the identity functor. This is not a global instance as
+    it is prone to creating type class resolution loops. -/
+def hasForgetToType (C : Type v) [Category C] [ConcreteCategory C] : HasForget₂ C (Type u) where
   forget₂ := forget C
   forget_comp := Functor.comp_id _
 

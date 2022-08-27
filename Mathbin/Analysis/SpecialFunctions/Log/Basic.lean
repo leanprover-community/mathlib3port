@@ -269,7 +269,7 @@ theorem tendsto_log_nhds_within_zero : Tendsto log (𝓝[≠] 0) atBot := by
 theorem continuous_on_log : ContinuousOn log ({0}ᶜ) := by
   rw [continuous_on_iff_continuous_restrict, restrict]
   conv in log _ => rw [log_of_ne_zero (show (x : ℝ) ≠ 0 from x.2)]
-  exact exp_order_iso.symm.continuous.comp (continuous_subtype_mk _ continuous_subtype_coe.norm)
+  exact exp_order_iso.symm.continuous.comp (continuous_subtype_coe.norm.subtype_mk _)
 
 @[continuity]
 theorem continuous_log : Continuous fun x : { x : ℝ // x ≠ 0 } => log x :=

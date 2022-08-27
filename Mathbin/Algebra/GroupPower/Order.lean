@@ -14,14 +14,24 @@ depend on this file.
 -/
 
 
+open Function
+
 variable {A G M R : Type _}
+
+section Monoidₓ
+
+variable [Monoidₓ M]
 
 section Preorderₓ
 
-variable [Monoidₓ M] [Preorderₓ M] [CovariantClass M M (· * ·) (· ≤ ·)]
+variable [Preorderₓ M]
+
+section Left
+
+variable [CovariantClass M M (· * ·) (· ≤ ·)] {x : M}
 
 @[to_additive nsmul_le_nsmul_of_le_right, mono]
-theorem pow_le_pow_of_le_left' [CovariantClass M M (Function.swap (· * ·)) (· ≤ ·)] {a b : M} (hab : a ≤ b) :
+theorem pow_le_pow_of_le_left' [CovariantClass M M (swap (· * ·)) (· ≤ ·)] {a b : M} (hab : a ≤ b) :
     ∀ i : ℕ, a ^ i ≤ b ^ i
   | 0 => by
     simp
@@ -83,11 +93,69 @@ theorem pow_lt_pow' [CovariantClass M M (· * ·) (· < ·)] {a : M} {n m : ℕ}
 theorem pow_strict_mono_left [CovariantClass M M (· * ·) (· < ·)] {a : M} (ha : 1 < a) :
     StrictMono ((· ^ ·) a : ℕ → M) := fun m n => pow_lt_pow' ha
 
+@[to_additive Left.pow_nonneg]
+theorem Left.one_le_pow_of_le (hx : 1 ≤ x) : ∀ {n : ℕ}, 1 ≤ x ^ n
+  | 0 => (pow_zeroₓ x).Ge
+  | n + 1 => by
+    rw [pow_succₓ]
+    exact Left.one_le_mul hx Left.one_le_pow_of_le
+
+@[to_additive Left.pow_nonpos]
+theorem Left.pow_le_one_of_le (hx : x ≤ 1) : ∀ {n : ℕ}, x ^ n ≤ 1
+  | 0 => (pow_zeroₓ _).le
+  | n + 1 => by
+    rw [pow_succₓ]
+    exact Left.mul_le_one hx Left.pow_le_one_of_le
+
+end Left
+
+section Right
+
+variable [CovariantClass M M (swap (· * ·)) (· ≤ ·)] {x : M}
+
+@[to_additive Right.pow_nonneg]
+theorem Right.one_le_pow_of_le (hx : 1 ≤ x) : ∀ {n : ℕ}, 1 ≤ x ^ n
+  | 0 => (pow_zeroₓ _).Ge
+  | n + 1 => by
+    rw [pow_succₓ]
+    exact Right.one_le_mul hx Right.one_le_pow_of_le
+
+@[to_additive Right.pow_nonpos]
+theorem Right.pow_le_one_of_le (hx : x ≤ 1) : ∀ {n : ℕ}, x ^ n ≤ 1
+  | 0 => (pow_zeroₓ _).le
+  | n + 1 => by
+    rw [pow_succₓ]
+    exact Right.mul_le_one hx Right.pow_le_one_of_le
+
+end Right
+
+@[to_additive Left.pow_neg]
+theorem Left.pow_lt_one_of_lt [CovariantClass M M (· * ·) (· < ·)] {n : ℕ} {x : M} (hn : 0 < n) (h : x < 1) :
+    x ^ n < 1 :=
+  Nat.le_induction ((pow_oneₓ _).trans_lt h)
+    (fun n _ ih => by
+      rw [pow_succₓ]
+      exact mul_lt_one h ih)
+    _ (Nat.succ_le_iff.2 hn)
+
+@[to_additive Right.pow_neg]
+theorem Right.pow_lt_one_of_lt [CovariantClass M M (swap (· * ·)) (· < ·)] {n : ℕ} {x : M} (hn : 0 < n) (h : x < 1) :
+    x ^ n < 1 :=
+  Nat.le_induction ((pow_oneₓ _).trans_lt h)
+    (fun n _ ih => by
+      rw [pow_succₓ]
+      exact Right.mul_lt_one h ih)
+    _ (Nat.succ_le_iff.2 hn)
+
 end Preorderₓ
 
 section LinearOrderₓ
 
-variable [Monoidₓ M] [LinearOrderₓ M] [CovariantClass M M (· * ·) (· ≤ ·)]
+variable [LinearOrderₓ M]
+
+section CovariantLe
+
+variable [CovariantClass M M (· * ·) (· ≤ ·)]
 
 @[to_additive nsmul_nonneg_iff]
 theorem one_le_pow_iff {x : M} {n : ℕ} (hn : n ≠ 0) : 1 ≤ x ^ n ↔ 1 ≤ x :=
@@ -119,7 +187,26 @@ theorem pow_le_pow_iff' (ha : 1 < a) : a ^ m ≤ a ^ n ↔ m ≤ n :=
 theorem pow_lt_pow_iff' (ha : 1 < a) : a ^ m < a ^ n ↔ m < n :=
   (pow_strict_mono_left ha).lt_iff_lt
 
+end CovariantLe
+
+@[to_additive Left.nsmul_neg_iff]
+theorem Left.pow_lt_one_iff [CovariantClass M M (· * ·) (· < ·)] {n : ℕ} {x : M} (hn : 0 < n) : x ^ n < 1 ↔ x < 1 := by
+  haveI := Mul.to_covariant_class_left M
+  exact pow_lt_one_iff hn.ne'
+
+@[to_additive Right.nsmul_neg_iff]
+theorem Right.pow_lt_one_iff [CovariantClass M M (swap (· * ·)) (· < ·)] {n : ℕ} {x : M} (hn : 0 < n) :
+    x ^ n < 1 ↔ x < 1 :=
+  ⟨fun H =>
+    not_leₓ.mp fun k =>
+      H.not_le <| by
+        haveI := Mul.to_covariant_class_right M
+        exact Right.one_le_pow_of_le k,
+    Right.pow_lt_one_of_lt hn⟩
+
 end LinearOrderₓ
+
+end Monoidₓ
 
 section DivInvMonoidₓ
 
@@ -432,4 +519,44 @@ theorem two_mul_le_add_sq (a b : R) : 2 * a * b ≤ a ^ 2 + b ^ 2 :=
 alias two_mul_le_add_sq ← two_mul_le_add_pow_two
 
 end LinearOrderedCommRing
+
+section LinearOrderedCommMonoidWithZero
+
+variable [LinearOrderedCommMonoidWithZero M] [NoZeroDivisors M] {a : M} {n : ℕ}
+
+theorem pow_pos_iff (hn : 0 < n) : 0 < a ^ n ↔ 0 < a := by
+  simp_rw [zero_lt_iff, pow_ne_zero_iff hn]
+
+end LinearOrderedCommMonoidWithZero
+
+section LinearOrderedCommGroupWithZero
+
+variable [LinearOrderedCommGroupWithZero M] {a : M} {m n : ℕ}
+
+theorem pow_lt_pow_succ (ha : 1 < a) : a ^ n < a ^ n.succ := by
+  rw [← one_mulₓ (a ^ n), pow_succₓ]
+  exact mul_lt_right₀ _ ha (pow_ne_zero _ (zero_lt_one₀.trans ha).ne')
+
+theorem pow_lt_pow₀ (ha : 1 < a) (hmn : m < n) : a ^ m < a ^ n := by
+  induction' hmn with n hmn ih
+  exacts[pow_lt_pow_succ ha, lt_transₓ ih (pow_lt_pow_succ ha)]
+
+end LinearOrderedCommGroupWithZero
+
+namespace MonoidHom
+
+variable [Ringₓ R] [Monoidₓ M] [LinearOrderₓ M] [CovariantClass M M (· * ·) (· ≤ ·)] (f : R →* M)
+
+theorem map_neg_one : f (-1) = 1 :=
+  (pow_eq_one_iff (Nat.succ_ne_zero 1)).1 <| by
+    rw [← map_pow, neg_one_sq, map_one]
+
+@[simp]
+theorem map_neg (x : R) : f (-x) = f x := by
+  rw [← neg_one_mul, map_mul, map_neg_one, one_mulₓ]
+
+theorem map_sub_swap (x y : R) : f (x - y) = f (y - x) := by
+  rw [← map_neg, neg_sub]
+
+end MonoidHom
 

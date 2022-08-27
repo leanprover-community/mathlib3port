@@ -91,7 +91,7 @@ theorem differentiable_arctan : Differentiable ℝ arctan :=
 theorem deriv_arctan : deriv arctan = fun x => 1 / (1 + x ^ 2) :=
   funext fun x => (has_deriv_at_arctan x).deriv
 
-theorem cont_diff_arctan {n : WithTop ℕ} : ContDiff ℝ n arctan :=
+theorem cont_diff_arctan {n : ℕ∞} : ContDiff ℝ n arctan :=
   cont_diff_iff_cont_diff_at.2 fun x =>
     have : cos (arctan x) ≠ 0 := (cos_arctan_pos x).ne'
     tanLocalHomeomorph.cont_diff_at_symm_deriv
@@ -139,8 +139,7 @@ end deriv
 
 section fderiv
 
-variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ} {f' : E →L[ℝ] ℝ} {x : E} {s : Set E}
-  {n : WithTop ℕ}
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ} {f' : E →L[ℝ] ℝ} {x : E} {s : Set E} {n : ℕ∞}
 
 theorem HasStrictFderivAt.arctan (hf : HasStrictFderivAt f f' x) :
     HasStrictFderivAt (fun x => arctan (f x)) ((1 / (1 + f x ^ 2)) • f') x :=

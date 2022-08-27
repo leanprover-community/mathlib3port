@@ -824,7 +824,6 @@ theorem is_closed_proj_of_is_compact {X : Type _} [TopologicalSpace X] [CompactS
       _ = 𝓝 y⊓𝓟 (πY '' C) := by
         rw [map_principal]
       
-  skip
   obtain ⟨x, hx⟩ : ∃ x, ClusterPt x (map πX (comap πY (𝓝 y)⊓𝓟 C))
   exact cluster_point_of_compact _
   refine'

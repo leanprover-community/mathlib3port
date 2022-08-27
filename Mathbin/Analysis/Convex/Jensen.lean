@@ -72,15 +72,16 @@ section MaximumPrinciple
 variable [LinearOrderedField 𝕜] [AddCommGroupₓ E] [LinearOrderedAddCommGroup β] [Module 𝕜 E] [Module 𝕜 β]
   [OrderedSmul 𝕜 β] {s : Set E} {f : E → β} {t : Finset ι} {w : ι → 𝕜} {p : ι → E}
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident i, ",", ident hi, ",", ident hfi, "⟩", ":", expr «expr∃ , »((i «expr ∈ » t.filter (λ
-      i, «expr ≠ »(w i, 0))), «expr ≤ »(«expr • »(w i, f y), «expr • »(w i, «expr ∘ »(f, p) i)))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident i, ",", ident hi, ",", ident hfi, "⟩", ":", expr «expr∃ , »((i «expr ∈ » t.filter
+     (λ i, «expr ≠ »(w i, 0))),
+    «expr ≤ »(«expr • »(w i, f y), «expr • »(w i, «expr ∘ »(f, p) i)))]]
 /-- If a function `f` is convex on `s`, then the value it takes at some center of mass of points of
 `s` is less than the value it takes on one of those points. -/
 theorem ConvexOn.exists_ge_of_center_mass (h : ConvexOn 𝕜 s f) (hw₀ : ∀ i ∈ t, 0 ≤ w i) (hw₁ : 0 < ∑ i in t, w i)
     (hp : ∀ i ∈ t, p i ∈ s) : ∃ i ∈ t, f (t.centerMass w p) ≤ f (p i) := by
   set y := t.center_mass w p
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident i, \",\", ident hi, \",\", ident hfi, \"⟩\", \":\", expr «expr∃ , »((i «expr ∈ » t.filter (λ\n      i, «expr ≠ »(w i, 0))), «expr ≤ »(«expr • »(w i, f y), «expr • »(w i, «expr ∘ »(f, p) i)))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident i, \",\", ident hi, \",\", ident hfi, \"⟩\", \":\", expr «expr∃ , »((i «expr ∈ » t.filter\n     (λ i, «expr ≠ »(w i, 0))),\n    «expr ≤ »(«expr • »(w i, f y), «expr • »(w i, «expr ∘ »(f, p) i)))]]"
   · rw [mem_filter] at hi
     exact ⟨i, hi.1, (smul_le_smul_iff_of_pos <| (hw₀ i hi.1).lt_of_ne hi.2.symm).1 hfi⟩
     

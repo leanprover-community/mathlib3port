@@ -50,7 +50,7 @@ theorem factorization_choose_le_log : (choose n k).factorization p ≤ log p n :
 -/
 theorem pow_factorization_choose_le (hn : 0 < n) : p ^ (choose n k).factorization p ≤ n := by
   cases le_or_ltₓ p 1
-  · exact (pow_le_pow_of_le h).trans ((le_of_eqₓ (one_pow _)).trans hn)
+  · exact (pow_le_pow_of_le_left' h _).trans ((le_of_eqₓ (one_pow _)).trans hn)
     
   · exact (pow_le_iff_le_log h hn).mpr factorization_choose_le_log
     

@@ -651,6 +651,11 @@ instance (priority := 100) DivisionRing.to_no_zero_smul_divisors : NoZeroSmulDiv
 
 end DivisionRing
 
+-- see note [lower instance priority]
+instance (priority := 100) RatModule.no_zero_smul_divisors [AddCommGroupₓ M] [Module ℚ M] : NoZeroSmulDivisors ℤ M :=
+  ⟨fun k x h => by
+    simpa [zsmul_eq_smul_cast ℚ k x] using h⟩
+
 end NoZeroSmulDivisors
 
 @[simp]

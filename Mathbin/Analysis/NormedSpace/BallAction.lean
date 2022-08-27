@@ -34,8 +34,7 @@ instance mulActionClosedBallBall : MulAction (ClosedBall (0 : 𝕜) 1) (Ball (0 
   mul_smul := fun c₁ c₂ x => Subtype.ext <| mul_smul _ _ _
 
 instance has_continuous_smul_closed_ball_ball : HasContinuousSmul (ClosedBall (0 : 𝕜) 1) (Ball (0 : E) r) :=
-  ⟨continuous_subtype_mk _ <|
-      (continuous_subtype_val.comp continuous_fst).smul (continuous_subtype_val.comp continuous_snd)⟩
+  ⟨(continuous_subtype_val.fst'.smul continuous_subtype_val.snd').subtype_mk _⟩
 
 instance mulActionClosedBallClosedBall : MulAction (ClosedBall (0 : 𝕜) 1) (ClosedBall (0 : E) r) where
   smul := fun c x =>
@@ -48,8 +47,7 @@ instance mulActionClosedBallClosedBall : MulAction (ClosedBall (0 : 𝕜) 1) (Cl
 
 instance has_continuous_smul_closed_ball_closed_ball :
     HasContinuousSmul (ClosedBall (0 : 𝕜) 1) (ClosedBall (0 : E) r) :=
-  ⟨continuous_subtype_mk _ <|
-      (continuous_subtype_val.comp continuous_fst).smul (continuous_subtype_val.comp continuous_snd)⟩
+  ⟨(continuous_subtype_val.fst'.smul continuous_subtype_val.snd').subtype_mk _⟩
 
 end ClosedBall
 
@@ -61,8 +59,7 @@ instance mulActionSphereBall : MulAction (Sphere (0 : 𝕜) 1) (Ball (0 : E) r) 
   mul_smul := fun c₁ c₂ x => Subtype.ext <| mul_smul _ _ _
 
 instance has_continuous_smul_sphere_ball : HasContinuousSmul (Sphere (0 : 𝕜) 1) (Ball (0 : E) r) :=
-  ⟨continuous_subtype_mk _ <|
-      (continuous_subtype_val.comp continuous_fst).smul (continuous_subtype_val.comp continuous_snd)⟩
+  ⟨(continuous_subtype_val.fst'.smul continuous_subtype_val.snd').subtype_mk _⟩
 
 instance mulActionSphereClosedBall : MulAction (Sphere (0 : 𝕜) 1) (ClosedBall (0 : E) r) where
   smul := fun c x => inclusion sphere_subset_closed_ball c • x
@@ -70,8 +67,7 @@ instance mulActionSphereClosedBall : MulAction (Sphere (0 : 𝕜) 1) (ClosedBall
   mul_smul := fun c₁ c₂ x => Subtype.ext <| mul_smul _ _ _
 
 instance has_continuous_smul_sphere_closed_ball : HasContinuousSmul (Sphere (0 : 𝕜) 1) (ClosedBall (0 : E) r) :=
-  ⟨continuous_subtype_mk _ <|
-      (continuous_subtype_val.comp continuous_fst).smul (continuous_subtype_val.comp continuous_snd)⟩
+  ⟨(continuous_subtype_val.fst'.smul continuous_subtype_val.snd').subtype_mk _⟩
 
 instance mulActionSphereSphere : MulAction (Sphere (0 : 𝕜) 1) (Sphere (0 : E) r) where
   smul := fun c x =>
@@ -82,8 +78,7 @@ instance mulActionSphereSphere : MulAction (Sphere (0 : 𝕜) 1) (Sphere (0 : E)
   mul_smul := fun c₁ c₂ x => Subtype.ext <| mul_smul _ _ _
 
 instance has_continuous_smul_sphere_sphere : HasContinuousSmul (Sphere (0 : 𝕜) 1) (Sphere (0 : E) r) :=
-  ⟨continuous_subtype_mk _ <|
-      (continuous_subtype_val.comp continuous_fst).smul (continuous_subtype_val.comp continuous_snd)⟩
+  ⟨(continuous_subtype_val.fst'.smul continuous_subtype_val.snd').subtype_mk _⟩
 
 end Sphere
 

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 -/
 import Mathbin.RingTheory.Localization.Basic
+import Mathbin.RingTheory.AdjoinRoot
 
 /-!
 # Localizations away from an element
@@ -22,6 +23,8 @@ localization, ring localization, commutative ring localization, characteristic p
 commutative ring, field of fractions
 -/
 
+
+section CommSemiringₓ
 
 variable {R : Type _} [CommSemiringₓ R] (M : Submonoid R) {S : Type _} [CommSemiringₓ S]
 
@@ -45,6 +48,12 @@ variable [IsLocalization.Away x S]
 /-- Given `x : R` and a localization map `F : R →+* S` away from `x`, `inv_self` is `(F x)⁻¹`. -/
 noncomputable def invSelf : S :=
   mk' S (1 : R) ⟨x, Submonoid.mem_powers _⟩
+
+@[simp]
+theorem mul_inv_self : algebraMap R S x * invSelf x = 1 := by
+  convert IsLocalization.mk'_mul_mk'_eq_one _ 1
+  symm
+  apply IsLocalization.mk'_one
 
 variable {g : R →+* P}
 
@@ -164,4 +173,30 @@ noncomputable abbrev awayMap (f : R →+* P) (r : R) : Localization.Away r →+*
   IsLocalization.Away.map _ _ f r
 
 end Localization
+
+end CommSemiringₓ
+
+open Polynomial AdjoinRoot Localization
+
+variable {R : Type _} [CommRingₓ R]
+
+attribute [local instance] IsLocalization.alg_hom_subsingleton AdjoinRoot.alg_hom_subsingleton
+
+/-- The `R`-`alg_equiv` between the localization of `R` away from `r` and
+    `R` with an inverse of `r` adjoined. -/
+noncomputable def Localization.awayEquivAdjoin (r : R) : Away r ≃ₐ[R] AdjoinRoot (c r * X - 1) :=
+  AlgEquiv.ofAlgHom
+    { awayLift _ r _ with
+      commutes' := IsLocalization.Away.AwayMap.lift_eq r (is_unit_of_mul_eq_one _ _ <| root_is_inv r) }
+    (liftHom _ (IsLocalization.Away.invSelf r) <| by
+      simp only [map_sub, map_mul, aeval_C, aeval_X, IsLocalization.Away.mul_inv_self, aeval_one, sub_self])
+    (Subsingleton.elimₓ _ _) (Subsingleton.elimₓ _ _)
+
+theorem IsLocalization.adjoin_inv (r : R) : IsLocalization.Away r (AdjoinRoot <| c r * X - 1) :=
+  IsLocalization.is_localization_of_alg_equiv _ (Localization.awayEquivAdjoin r)
+
+theorem IsLocalization.Away.finite_presentation (r : R) {S} [CommRingₓ S] [Algebra R S] [IsLocalization.Away r S] :
+    Algebra.FinitePresentation R S :=
+  (AdjoinRoot.finite_presentation _).Equiv <|
+    (Localization.awayEquivAdjoin r).symm.trans <| IsLocalization.algEquiv (Submonoid.powers r) _ _
 

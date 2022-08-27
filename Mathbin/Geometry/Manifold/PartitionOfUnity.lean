@@ -123,7 +123,7 @@ variable {ι I M}
 
 namespace SmoothPartitionOfUnity
 
-variable {s : Set M} (f : SmoothPartitionOfUnity ι I M s) {n : WithTop ℕ}
+variable {s : Set M} (f : SmoothPartitionOfUnity ι I M s) {n : ℕ∞}
 
 instance {s : Set M} : CoeFun (SmoothPartitionOfUnity ι I M s) fun _ => ι → C^∞⟮I, M; 𝓘(ℝ), ℝ⟯ :=
   ⟨SmoothPartitionOfUnity.toFun⟩
@@ -445,7 +445,7 @@ theorem exists_is_subordinate {s : Set M} (hs : IsClosed s) (U : ι → Set M) (
 
 end SmoothPartitionOfUnity
 
-variable [SigmaCompactSpace M] [T2Space M] {t : M → Set F} {n : WithTop ℕ}
+variable [SigmaCompactSpace M] [T2Space M] {t : M → Set F} {n : ℕ∞}
 
 /-- Let `M` be a σ-compact Hausdorff finite dimensional topological manifold. Let `t : M → set F`
 be a family of convex sets. Suppose that for each point `x : M` there exists a neighborhood

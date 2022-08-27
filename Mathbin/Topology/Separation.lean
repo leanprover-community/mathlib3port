@@ -986,7 +986,7 @@ instance Sigma.t2_space {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSp
         tidy⟩
     
 
-variable [TopologicalSpace β]
+variable {γ : Type _} [TopologicalSpace β] [TopologicalSpace γ]
 
 theorem is_closed_eq [T2Space α] {f g : β → α} (hf : Continuous f) (hg : Continuous g) :
     IsClosed { x : β | f x = g x } :=
@@ -1006,6 +1006,19 @@ theorem Set.EqOn.closure [T2Space α] {s : Set β} {f g : β → α} (h : EqOn f
 theorem Continuous.ext_on [T2Space α] {s : Set β} (hs : Dense s) {f g : β → α} (hf : Continuous f) (hg : Continuous g)
     (h : EqOn f g s) : f = g :=
   funext fun x => h.closure hf hg (hs x)
+
+theorem eq_on_closure₂' [T2Space α] {s : Set β} {t : Set γ} {f g : β → γ → α} (h : ∀ x ∈ s, ∀ y ∈ t, f x y = g x y)
+    (hf₁ : ∀ x, Continuous (f x)) (hf₂ : ∀ y, Continuous fun x => f x y) (hg₁ : ∀ x, Continuous (g x))
+    (hg₂ : ∀ y, Continuous fun x => g x y) : ∀ x ∈ Closure s, ∀ y ∈ Closure t, f x y = g x y :=
+  suffices Closure s ⊆ ⋂ y ∈ Closure t, { x | f x y = g x y } by
+    simpa only [subset_def, mem_Inter]
+  (closure_minimal fun x hx => mem_Inter₂.2 <| Set.EqOn.closure (h x hx) (hf₁ _) (hg₁ _)) <|
+    is_closed_bInter fun y hy => is_closed_eq (hf₂ _) (hg₂ _)
+
+theorem eq_on_closure₂ [T2Space α] {s : Set β} {t : Set γ} {f g : β → γ → α} (h : ∀ x ∈ s, ∀ y ∈ t, f x y = g x y)
+    (hf : Continuous (uncurry f)) (hg : Continuous (uncurry g)) : ∀ x ∈ Closure s, ∀ y ∈ Closure t, f x y = g x y :=
+  eq_on_closure₂' h (fun x => continuous_uncurry_left x hf) (fun x => continuous_uncurry_right x hf)
+    (fun y => continuous_uncurry_left y hg) fun y => continuous_uncurry_right y hg
 
 /-- If `f x = g x` for all `x ∈ s` and `f`, `g` are continuous on `t`, `s ⊆ t ⊆ closure s`, then
 `f x = g x` for all `x ∈ t`. See also `set.eq_on.closure`. -/
@@ -1428,7 +1441,8 @@ theorem normal_space_of_t3_second_countable [SecondCountableTopology α] [T3Spac
 
 end Normality
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident Z, ",", ident H, "⟩", ":", expr «expr∃ , »((Z : set α), «expr ∧ »(is_clopen Z, «expr ∧ »(«expr ∈ »(x, Z), «expr ⊆ »(Z, «expr ∪ »(u, v)))))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident Z, ",", ident H, "⟩", ":", expr «expr∃ , »((Z : set α),
+    «expr ∧ »(is_clopen Z, «expr ∧ »(«expr ∈ »(x, Z), «expr ⊆ »(Z, «expr ∪ »(u, v)))))]]
 /-- In a compact t2 space, the connected component of a point equals the intersection of all
 its clopen neighbourhoods. -/
 theorem connected_component_eq_Inter_clopen [T2Space α] [CompactSpace α] (x : α) :
@@ -1448,7 +1462,7 @@ theorem connected_component_eq_Inter_clopen [T2Space α] [CompactSpace α] (x : 
   -- "descend" this to show that it is a subset of either a or b.
   rcases normal_separation ha hb ab_disj with ⟨u, v, hu, hv, hau, hbv, huv⟩
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident Z, \",\", ident H, \"⟩\", \":\", expr «expr∃ , »((Z : set α), «expr ∧ »(is_clopen Z, «expr ∧ »(«expr ∈ »(x, Z), «expr ⊆ »(Z, «expr ∪ »(u, v)))))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident Z, \",\", ident H, \"⟩\", \":\", expr «expr∃ , »((Z : set α),\n    «expr ∧ »(is_clopen Z, «expr ∧ »(«expr ∈ »(x, Z), «expr ⊆ »(Z, «expr ∪ »(u, v)))))]]"
   · have H1 := is_clopen_inter_of_disjoint_cover_clopen H.1 H.2.2 hu hv huv
     rw [union_comm] at H
     have H2 := is_clopen_inter_of_disjoint_cover_clopen H.1 H.2.2 hv hu huv.symm
@@ -1533,7 +1547,8 @@ theorem compact_t2_tot_disc_iff_tot_sep : TotallyDisconnectedSpace α ↔ Totall
 
 variable [TotallyDisconnectedSpace α]
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", "⟨", ident s, ",", ident hs, ",", ident hs', "⟩", ",", ident hs'', "⟩", ":", expr «expr∃ , »((Z : N), «expr ⊆ »(Z.val, U))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", "⟨", ident s, ",", ident hs, ",", ident hs', "⟩", ",", ident hs'', "⟩", ":", expr «expr∃ , »((Z : N),
+    «expr ⊆ »(Z.val, U))]]
 theorem nhds_basis_clopen (x : α) : (𝓝 x).HasBasis (fun s : Set α => x ∈ s ∧ IsClopen s) id :=
   ⟨fun U => by
     constructor
@@ -1542,7 +1557,7 @@ theorem nhds_basis_clopen (x : α) : (𝓝 x).HasBasis (fun s : Set α => x ∈ 
       intro hU
       let N := { Z // IsClopen Z ∧ x ∈ Z }
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", \"⟨\", ident s, \",\", ident hs, \",\", ident hs', \"⟩\", \",\", ident hs'', \"⟩\", \":\", expr «expr∃ , »((Z : N), «expr ⊆ »(Z.val, U))]]"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", \"⟨\", ident s, \",\", ident hs, \",\", ident hs', \"⟩\", \",\", ident hs'', \"⟩\", \":\", expr «expr∃ , »((Z : N),\n    «expr ⊆ »(Z.val, U))]]"
       · exact ⟨s, ⟨hs', hs⟩, hs''⟩
         
       haveI : Nonempty N := ⟨⟨univ, is_clopen_univ, mem_univ x⟩⟩

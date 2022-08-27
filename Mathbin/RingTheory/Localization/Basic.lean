@@ -440,6 +440,14 @@ theorem monoid_hom_ext ⦃j k : S →* P⦄ (h : j.comp (algebraMap R S : R →*
 theorem ring_hom_ext ⦃j k : S →+* P⦄ (h : j.comp (algebraMap R S) = k.comp (algebraMap R S)) : j = k :=
   RingHom.coe_monoid_hom_injective <| monoid_hom_ext M <| MonoidHom.ext <| RingHom.congr_fun h
 
+/- This is not an instance because the submonoid `M` would become a metavariable
+  in typeclass search. -/
+theorem alg_hom_subsingleton [Algebra R P] : Subsingleton (S →ₐ[R] P) :=
+  ⟨fun f g =>
+    AlgHom.coe_ring_hom_injective <|
+      IsLocalization.ring_hom_ext M <| by
+        rw [f.comp_algebra_map, g.comp_algebra_map]⟩
+
 /-- To show `j` and `k` agree on the whole localization, it suffices to show they agree
 on the image of the base ring, if they preserve `1` and `*`. -/
 protected theorem ext (j k : S → P) (hj1 : j 1 = 1) (hk1 : k 1 = 1) (hjm : ∀ a b, j (a * b) = j a * j b)

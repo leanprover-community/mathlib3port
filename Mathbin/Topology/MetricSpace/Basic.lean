@@ -1393,13 +1393,14 @@ theorem cauchy_seq_of_le_tendsto_0 {s : β → α} (b : β → ℝ) (h : ∀ n m
     (h₀ : Tendsto b atTop (𝓝 0)) : CauchySeq s :=
   cauchy_seq_of_le_tendsto_0' b (fun n m hnm => h _ _ _ le_rflₓ hnm) h₀
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident R, ",", ident R0, ",", ident H, "⟩", ":", expr «expr∃ , »((R «expr > » 0), ∀
-    n, «expr < »(dist (u n) (u N), R))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident R, ",", ident R0, ",", ident H, "⟩", ":", expr «expr∃ , »((R «expr > » 0),
+    ∀ n,
+    «expr < »(dist (u n) (u N), R))]]
 /-- A Cauchy sequence on the natural numbers is bounded. -/
 theorem cauchy_seq_bdd {u : ℕ → α} (hu : CauchySeq u) : ∃ R > 0, ∀ m n, dist (u m) (u n) < R := by
   rcases Metric.cauchy_seq_iff'.1 hu 1 zero_lt_one with ⟨N, hN⟩
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident R, \",\", ident R0, \",\", ident H, \"⟩\", \":\", expr «expr∃ , »((R «expr > » 0), ∀\n    n, «expr < »(dist (u n) (u N), R))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident R, \",\", ident R0, \",\", ident H, \"⟩\", \":\", expr «expr∃ , »((R «expr > » 0),\n    ∀ n,\n    «expr < »(dist (u n) (u N), R))]]"
   · exact ⟨_, add_pos R0 R0, fun m n => lt_of_le_of_ltₓ (dist_triangle_right _ _ _) (add_lt_add (H m) (H n))⟩
     
   let R := Finset.sup (Finset.range N) fun n => nndist (u n) (u N)
@@ -1658,7 +1659,7 @@ theorem tendsto_iff_dist_tendsto_zero {f : β → α} {x : Filter β} {a : α} :
   rw [← nhds_comap_dist a, tendsto_comap_iff]
 
 theorem uniform_continuous_nndist : UniformContinuous fun p : α × α => nndist p.1 p.2 :=
-  uniform_continuous_subtype_mk uniform_continuous_dist _
+  uniform_continuous_dist.subtype_mk _
 
 theorem UniformContinuous.nndist [UniformSpace β] {f g : β → α} (hf : UniformContinuous f) (hg : UniformContinuous g) :
     UniformContinuous fun b => nndist (f b) (g b) :=

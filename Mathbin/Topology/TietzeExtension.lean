@@ -406,7 +406,7 @@ theorem exists_extension_forall_mem_of_closed_embedding (f : C(X, ℝ)) {t : Set
   have hFt : ∀ x, F x ∈ t' := fun x => mem_image_of_mem _ (hf x)
   rcases F.exists_extension_forall_mem_of_closed_embedding hFt (hne.image _) he with ⟨G, hG, hGF⟩
   set g : C(Y, ℝ) :=
-    ⟨h.symm ∘ cod_restrict G _ fun y => ht_sub (hG y), h.symm.continuous.comp <| continuous_subtype_mk _ G.continuous⟩
+    ⟨h.symm ∘ cod_restrict G _ fun y => ht_sub (hG y), h.symm.continuous.comp <| G.continuous.subtype_mk _⟩
   have hgG : ∀ {y a}, g y = a ↔ G y = h a := fun y a => h.to_equiv.symm_apply_eq.trans Subtype.ext_iff
   refine' ⟨g, fun y => _, _⟩
   · rcases hG y with ⟨a, ha, hay⟩

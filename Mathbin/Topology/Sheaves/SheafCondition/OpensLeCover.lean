@@ -26,7 +26,7 @@ or equivalently whether we're looking at the first or second object in an equali
 -/
 
 
-universe v u
+universe w v u
 
 noncomputable section
 
@@ -44,7 +44,7 @@ namespace Top
 
 variable {C : Type u} [Category.{v} C]
 
-variable {X : Top.{v}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
+variable {X : Top.{w}} (F : Presheaf C X) {ι : Type w} (U : ι → Opens X)
 
 namespace Presheaf
 
@@ -52,7 +52,7 @@ namespace SheafCondition
 
 /-- The category of open sets contained in some element of the cover.
 -/
-def OpensLeCover : Type v :=
+def OpensLeCover : Type w :=
   FullSubcategory fun V : Opens X => ∃ i, V ≤ U i deriving Category
 
 instance [Inhabited ι] : Inhabited (OpensLeCover U) :=
@@ -95,7 +95,7 @@ A presheaf is a sheaf if `F` sends the cone `(opens_le_cover_cocone U).op` to a 
 mapping down to any `V` which is contained in some `U i`.)
 -/
 def IsSheafOpensLeCover : Prop :=
-  ∀ ⦃ι : Type v⦄ (U : ι → Opens X), Nonempty (IsLimit (F.mapCone (opensLeCoverCocone U).op))
+  ∀ ⦃ι : Type w⦄ (U : ι → Opens X), Nonempty (IsLimit (F.mapCone (opensLeCoverCocone U).op))
 
 namespace SheafCondition
 
@@ -209,7 +209,7 @@ in terms of a limit diagram over all `{ V : opens X // ∃ i, V ≤ U i }`
 is equivalent to the reformulation
 in terms of a limit diagram over `U i` and `U i ⊓ U j`.
 -/
-theorem is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections (F : Presheaf C X) :
+theorem is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections {X : Top.{v}} (F : Presheaf C X) :
     F.IsSheafOpensLeCover ↔ F.IsSheafPairwiseIntersections :=
   forall₂_congrₓ fun ι U =>
     Equivₓ.nonempty_congr <|

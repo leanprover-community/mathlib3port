@@ -244,7 +244,11 @@ theorem c₆_eq : (E.changeOfVariable u r s t).c₆ = ↑u⁻¹ ^ 6 * E.c₆ := 
 theorem Δ_eq : (E.changeOfVariable u r s t).Δ = u⁻¹ ^ 12 * E.Δ :=
   rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr * »(«expr * »(«expr↑ »(«expr ⁻¹»(E.Δ)), «expr ^ »(«expr - »(«expr ^ »(«expr + »(«expr ^ »(E.a₁, 2), «expr * »(4, E.a₂)), 2), «expr * »(24, «expr + »(«expr * »(2, E.a₄), «expr * »(E.a₁, E.a₃)))), 3)), hu)],
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr * »(«expr * »(«expr↑ »(«expr ⁻¹»(E.Δ)),
+     «expr ^ »(«expr - »(«expr ^ »(«expr + »(«expr ^ »(E.a₁, 2), «expr * »(4, E.a₂)), 2),
+       «expr * »(24, «expr + »(«expr * »(2, E.a₄), «expr * »(E.a₁, E.a₃)))),
+      3)),
+    hu)],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args
 @[simp]
 theorem j_eq : (E.changeOfVariable u r s t).j = E.j := by
@@ -252,7 +256,7 @@ theorem j_eq : (E.changeOfVariable u r s t).j = E.j := by
   have hu : (u * ↑u⁻¹ : R) ^ 12 = 1 := by
     rw [u.mul_inv, one_pow]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr * »(«expr * »(«expr↑ »(«expr ⁻¹»(E.Δ)), «expr ^ »(«expr - »(«expr ^ »(«expr + »(«expr ^ »(E.a₁, 2), «expr * »(4, E.a₂)), 2), «expr * »(24, «expr + »(«expr * »(2, E.a₄), «expr * »(E.a₁, E.a₃)))), 3)), hu)],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr * »(«expr * »(«expr↑ »(«expr ⁻¹»(E.Δ)),\n     «expr ^ »(«expr - »(«expr ^ »(«expr + »(«expr ^ »(E.a₁, 2), «expr * »(4, E.a₂)), 2),\n       «expr * »(24, «expr + »(«expr * »(2, E.a₄), «expr * »(E.a₁, E.a₃)))),\n      3)),\n    hu)],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args"
 
 end ChangeOfVariable
 

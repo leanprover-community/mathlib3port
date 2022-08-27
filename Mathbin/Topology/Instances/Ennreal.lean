@@ -143,7 +143,7 @@ theorem tendsto_to_real {a : ℝ≥0∞} (ha : a ≠ ⊤) : Tendsto Ennreal.toRe
 /-- The set of finite `ℝ≥0∞` numbers is homeomorphic to `ℝ≥0`. -/
 def neTopHomeomorphNnreal : { a | a ≠ ∞ } ≃ₜ ℝ≥0 :=
   { neTopEquivNnreal with continuous_to_fun := continuous_on_iff_continuous_restrict.1 continuous_on_to_nnreal,
-    continuous_inv_fun := continuous_subtype_mk _ continuous_coe }
+    continuous_inv_fun := continuous_coe.subtype_mk _ }
 
 /-- The set of finite `ℝ≥0∞` numbers is homeomorphic to `ℝ≥0`. -/
 def ltTopHomeomorphNnreal : { a | a < ∞ } ≃ₜ ℝ≥0 := by

@@ -137,7 +137,7 @@ theorem uniformity_translate_mul (a : α) : ((𝓤 α).map fun x : α × α => (
         Filter.map_mono (uniform_continuous_id.mul uniform_continuous_const)
       )
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([1]) }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) }
 @[to_additive]
 theorem uniform_embedding_translate_mul (a : α) : UniformEmbedding fun x : α => x * a :=
   { comap_uniformity := by
@@ -226,6 +226,14 @@ theorem uniformity_eq_comap_nhds_one : 𝓤 α = comap (fun x : α × α => x.2 
 theorem uniformity_eq_comap_nhds_one_swapped : 𝓤 α = comap (fun x : α × α => x.1 / x.2) (𝓝 (1 : α)) := by
   rw [← comap_swap_uniformity, uniformity_eq_comap_nhds_one, comap_comap, (· ∘ ·)]
   rfl
+
+variable {α}
+
+@[to_additive]
+theorem UniformGroup.uniformity_countably_generated [(𝓝 (1 : α)).IsCountablyGenerated] : (𝓤 α).IsCountablyGenerated :=
+  by
+  rw [uniformity_eq_comap_nhds_one]
+  exact Filter.comap.is_countably_generated _ _
 
 open MulOpposite
 
@@ -346,7 +354,17 @@ theorem totally_bounded_iff_subset_finite_Union_nhds_one {s : Set α} :
 
 section UniformConvergence
 
-variable {ι : Type _} {l : Filter ι} {f f' : ι → β → α} {g g' : β → α} {s : Set β}
+variable {ι : Type _} {l : Filter ι} {l' : Filter β} {f f' : ι → β → α} {g g' : β → α} {s : Set β}
+
+@[to_additive]
+theorem TendstoUniformlyOnFilter.mul (hf : TendstoUniformlyOnFilter f g l l')
+    (hf' : TendstoUniformlyOnFilter f' g' l l') : TendstoUniformlyOnFilter (f * f') (g * g') l l' := fun u hu =>
+  ((uniform_continuous_mul.comp_tendsto_uniformly_on_filter (hf.Prod hf')) u hu).diag_of_prod_left
+
+@[to_additive]
+theorem TendstoUniformlyOnFilter.div (hf : TendstoUniformlyOnFilter f g l l')
+    (hf' : TendstoUniformlyOnFilter f' g' l l') : TendstoUniformlyOnFilter (f / f') (g / g') l l' := fun u hu =>
+  ((uniform_continuous_div.comp_tendsto_uniformly_on_filter (hf.Prod hf')) u hu).diag_of_prod_left
 
 @[to_additive]
 theorem TendstoUniformlyOn.mul (hf : TendstoUniformlyOn f g l s) (hf' : TendstoUniformlyOn f' g' l s) :
@@ -357,6 +375,16 @@ theorem TendstoUniformlyOn.mul (hf : TendstoUniformlyOn f g l s) (hf' : TendstoU
 theorem TendstoUniformlyOn.div (hf : TendstoUniformlyOn f g l s) (hf' : TendstoUniformlyOn f' g' l s) :
     TendstoUniformlyOn (f / f') (g / g') l s := fun u hu =>
   ((uniform_continuous_div.comp_tendsto_uniformly_on (hf.Prod hf')) u hu).diag_of_prod
+
+@[to_additive]
+theorem TendstoUniformly.mul (hf : TendstoUniformly f g l) (hf' : TendstoUniformly f' g' l) :
+    TendstoUniformly (f * f') (g * g') l := fun u hu =>
+  ((uniform_continuous_mul.comp_tendsto_uniformly (hf.Prod hf')) u hu).diag_of_prod
+
+@[to_additive]
+theorem TendstoUniformly.div (hf : TendstoUniformly f g l) (hf' : TendstoUniformly f' g' l) :
+    TendstoUniformly (f / f') (g / g') l := fun u hu =>
+  ((uniform_continuous_div.comp_tendsto_uniformly (hf.Prod hf')) u hu).diag_of_prod
 
 @[to_additive]
 theorem UniformCauchySeqOn.mul (hf : UniformCauchySeqOn f l s) (hf' : UniformCauchySeqOn f' l s) :

@@ -111,6 +111,12 @@ theorem algebra_map_eq' [CommSemiringₓ S] [Algebra S R] : algebraMap S (Adjoin
 
 variable {S}
 
+theorem finite_type : Algebra.FiniteType R (AdjoinRoot f) :=
+  (Algebra.FiniteType.polynomial R).ofSurjective _ (Ideal.Quotient.mkₐ_surjective R _)
+
+theorem finite_presentation : Algebra.FinitePresentation R (AdjoinRoot f) :=
+  (Algebra.FinitePresentation.polynomial R).Quotient (Submodule.fg_span_singleton f)
+
 /-- The adjoined root. -/
 def root : AdjoinRoot f :=
   mk f x
@@ -119,6 +125,13 @@ variable {f}
 
 instance hasCoeT : CoeTₓ R (AdjoinRoot f) :=
   ⟨of f⟩
+
+/-- Two `R`-`alg_hom` from `adjoin_root f` to the same `R`-algebra are the same iff
+    they agree on `root f`. -/
+@[ext]
+theorem alg_hom_ext [Semiringₓ S] [Algebra R S] {g₁ g₂ : AdjoinRoot f →ₐ[R] S} (h : g₁ (root f) = g₂ (root f)) :
+    g₁ = g₂ :=
+  Ideal.Quotient.alg_hom_ext R <| Polynomial.alg_hom_ext h
 
 @[simp]
 theorem mk_eq_mk {g h : R[X]} : mk f g = mk f h ↔ f ∣ g - h :=
@@ -231,6 +244,25 @@ theorem lift_hom_root : liftHom f a hfx (root f) = a :=
 @[simp]
 theorem lift_hom_of {x : R} : liftHom f a hfx (of f x) = algebraMap _ _ x :=
   lift_of hfx
+
+section AdjoinInv
+
+@[simp]
+theorem root_is_inv (r : R) : of _ r * root (c r * X - 1) = 1 := by
+  convert sub_eq_zero.1 ((eval₂_sub _).symm.trans <| eval₂_root <| C r * X - 1) <;>
+    simp only [eval₂_mul, eval₂_C, eval₂_X, eval₂_one]
+
+theorem alg_hom_subsingleton {S : Type _} [CommRingₓ S] [Algebra R S] {r : R} :
+    Subsingleton (AdjoinRoot (c r * X - 1) →ₐ[R] S) :=
+  ⟨fun f g =>
+    alg_hom_ext
+      (@inv_unique _ _ (algebraMap R S r) _ _
+        (by
+          rw [← f.commutes, ← f.map_mul, algebra_map_eq, root_is_inv, map_one])
+        (by
+          rw [← g.commutes, ← g.map_mul, algebra_map_eq, root_is_inv, map_one]))⟩
+
+end AdjoinInv
 
 end CommRingₓ
 

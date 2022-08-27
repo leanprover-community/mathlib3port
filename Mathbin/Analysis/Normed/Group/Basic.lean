@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 -/
 import Mathbin.Algebra.Module.Ulift
+import Mathbin.Analysis.Normed.Group.Seminorm
 import Mathbin.Order.LiminfLimsup
 import Mathbin.Topology.Algebra.UniformGroup
 import Mathbin.Topology.MetricSpace.Algebra
@@ -424,6 +425,18 @@ theorem ne_zero_of_mem_sphere {r : ℝ} (hr : r ≠ 0) (x : Sphere (0 : E) r) : 
 
 theorem ne_zero_of_mem_unit_sphere (x : Sphere (0 : E) 1) : (x : E) ≠ 0 :=
   ne_zero_of_mem_sphere one_ne_zero _
+
+variable (E)
+
+/-- The norm of a seminormed group as an additive group seminorm. -/
+def normAddGroupSeminorm : AddGroupSeminorm E :=
+  ⟨norm, norm_zero, norm_add_le, norm_neg⟩
+
+@[simp]
+theorem coe_norm_add_group_seminorm : ⇑(normAddGroupSeminorm E) = norm :=
+  rfl
+
+variable {E}
 
 namespace Isometric
 
@@ -983,20 +996,6 @@ theorem squeeze_zero_norm {f : α → E} {g : α → ℝ} {t₀ : Filter α} (h 
 theorem tendsto_norm_sub_self (x : E) : Tendsto (fun g : E => ∥g - x∥) (𝓝 x) (𝓝 0) := by
   simpa [dist_eq_norm] using tendsto_id.dist (tendsto_const_nhds : tendsto (fun g => (x : E)) (𝓝 x) _)
 
-theorem tendsto_norm {x : E} : Tendsto (fun g : E => ∥g∥) (𝓝 x) (𝓝 ∥x∥) := by
-  simpa using tendsto_id.dist (tendsto_const_nhds : tendsto (fun g => (0 : E)) _ _)
-
-theorem tendsto_norm_zero : Tendsto (fun g : E => ∥g∥) (𝓝 0) (𝓝 0) := by
-  simpa using tendsto_norm_sub_self (0 : E)
-
-@[continuity]
-theorem continuous_norm : Continuous fun g : E => ∥g∥ := by
-  simpa using continuous_id.dist (continuous_const : Continuous fun g => (0 : E))
-
-@[continuity]
-theorem continuous_nnnorm : Continuous fun a : E => ∥a∥₊ :=
-  continuous_subtype_mk _ continuous_norm
-
 theorem lipschitz_with_one_norm : LipschitzWith 1 (norm : E → ℝ) := by
   simpa only [dist_zero_left] using LipschitzWith.dist_right (0 : E)
 
@@ -1007,7 +1006,21 @@ theorem uniform_continuous_norm : UniformContinuous (norm : E → ℝ) :=
   lipschitz_with_one_norm.UniformContinuous
 
 theorem uniform_continuous_nnnorm : UniformContinuous fun a : E => ∥a∥₊ :=
-  uniform_continuous_subtype_mk uniform_continuous_norm _
+  uniform_continuous_norm.subtype_mk _
+
+@[continuity]
+theorem continuous_norm : Continuous fun g : E => ∥g∥ :=
+  uniform_continuous_norm.Continuous
+
+@[continuity]
+theorem continuous_nnnorm : Continuous fun a : E => ∥a∥₊ :=
+  uniform_continuous_nnnorm.Continuous
+
+theorem tendsto_norm {x : E} : Tendsto (fun g : E => ∥g∥) (𝓝 x) (𝓝 ∥x∥) :=
+  continuous_norm.ContinuousAt
+
+theorem tendsto_norm_zero : Tendsto (fun g : E => ∥g∥) (𝓝 0) (𝓝 0) :=
+  continuous_norm.tendsto' 0 0 norm_zero
 
 /-- A helper lemma used to prove that the (scalar or usual) product of a function that tends to zero
 and a bounded function tends to zero. This lemma is formulated for any binary operation

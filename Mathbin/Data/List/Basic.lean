@@ -1478,7 +1478,7 @@ theorem nth_le_of_eq {L L' : List α} (h : L = L') {i : ℕ} (hi : i < L.length)
 
 @[simp]
 theorem nth_le_singleton (a : α) {n : ℕ} (hn : n < 1) : nthLe [a] n hn = a := by
-  have hn0 : n = 0 := le_zero_iffₓ.1 (le_of_lt_succₓ hn)
+  have hn0 : n = 0 := le_zero_iff.1 (le_of_lt_succₓ hn)
   subst hn0 <;> rfl
 
 theorem nth_le_zero [Inhabited α] {L : List α} (h : 0 < L.length) : L.nthLe 0 h = L.head := by
@@ -3168,8 +3168,12 @@ theorem pmap_eq_map (p : α → Prop) (f : α → β) (l : List α) (H) : @pmap 
   induction l <;> [rfl, simp only [*, pmap, map]] <;> constructor <;> rfl
 
 theorem pmap_congr {p q : α → Prop} {f : ∀ a, p a → β} {g : ∀ a, q a → β} (l : List α) {H₁ H₂}
-    (h : ∀ a h₁ h₂, f a h₁ = g a h₂) : pmap f l H₁ = pmap g l H₂ := by
-  induction' l with _ _ ih <;> [rfl, rw [pmap, pmap, h, ih]]
+    (h : ∀ a ∈ l, ∀ (h₁ h₂), f a h₁ = g a h₂) : pmap f l H₁ = pmap g l H₂ := by
+  induction' l with _ _ ih
+  · rfl
+    
+  · rw [pmap, pmap, h _ (mem_cons_self _ _), ih fun a ha => h a (mem_cons_of_mem _ ha)]
+    
 
 theorem map_pmap {p : α → Prop} (g : β → γ) (f : ∀ a, p a → β) (l H) :
     map g (pmap f l H) = pmap (fun a h => g (f a h)) l H := by
@@ -3181,7 +3185,7 @@ theorem pmap_map {p : β → Prop} (g : ∀ b, p b → γ) (f : α → β) (l H)
 
 theorem pmap_eq_map_attach {p : α → Prop} (f : ∀ a, p a → β) (l H) :
     pmap f l H = l.attach.map fun x => f x.1 (H _ x.2) := by
-  rw [attach, map_pmap] <;> exact pmap_congr l fun a h₁ h₂ => rfl
+  rw [attach, map_pmap] <;> exact pmap_congr l fun _ _ _ _ => rfl
 
 theorem attach_map_val (l : List α) : l.attach.map Subtype.val = l := by
   rw [attach, map_pmap] <;> exact (pmap_eq_map _ _ _ _).trans (map_id l)

@@ -28,7 +28,7 @@ variable {A : Type _} [NormedRing A] [NormedAlgebra ℂ A] [StarRing A] [HasCont
 
 open Complex
 
-theorem selfAdjoint.exp_i_smul_unitary {a : A} (ha : a ∈ selfAdjoint A) : exp ℂ (I • a) ∈ unitary A := by
+theorem IsSelfAdjoint.exp_i_smul_unitary {a : A} (ha : IsSelfAdjoint a) : exp ℂ (I • a) ∈ unitary A := by
   rw [unitary.mem_iff, star_exp]
   simp only [star_smul, IsROrC.star_def, self_adjoint.mem_iff.mp ha, conj_I, neg_smul]
   rw [← @exp_add_of_commute ℂ A _ _ _ _ _ _ (Commute.refl (I • a)).neg_left]
@@ -39,7 +39,7 @@ theorem selfAdjoint.exp_i_smul_unitary {a : A} (ha : a ∈ selfAdjoint A) : exp 
 over ℂ. -/
 @[simps]
 noncomputable def selfAdjoint.expUnitary (a : selfAdjoint A) : unitary A :=
-  ⟨exp ℂ (I • a), selfAdjoint.exp_i_smul_unitary a.property⟩
+  ⟨exp ℂ (I • a), a.Prop.exp_i_smul_unitary⟩
 
 open selfAdjoint
 

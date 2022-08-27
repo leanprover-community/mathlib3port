@@ -1115,18 +1115,19 @@ theorem map_is_func {f : Setₓ → Setₓ} [H : Definable 1 f] {x y : Setₓ} :
 
 end Setₓ
 
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_sep Set
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_insert Set
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_sep[has_sep] Set[Set]
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_insert[has_insert] Set[Set]
 /-- The collection of all classes.
 
 We define `Class` as `set Set`, as this allows us to get many instances automatically. However, in
 practice, we treat it as (the definitionally equal) `Set → Prop`. This means, the preferred way to
 state that `x : Set` belongs to `A : Class` is to write `A x`. -/
 def Class :=
-  Set Setₓ deriving Subset, «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_sep Set»,
+  Set Setₓ deriving Subset,
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_sep[has_sep] Set[Set]»,
   EmptyCollection, Inhabited,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_insert Set», Union, Inter,
-  HasCompl, Sdiff
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_insert[has_insert] Set[Set]»,
+  Union, Inter, HasCompl, Sdiff
 
 namespace Class
 

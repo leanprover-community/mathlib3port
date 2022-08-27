@@ -6,7 +6,7 @@ Authors: Calle Sönne
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathbin.Algebra.CharZero.Quotient
 import Mathbin.Algebra.Order.ToIntervalMod
-import Mathbin.Data.Sign
+import Mathbin.Topology.Instances.Sign
 
 /-!
 # The type of angles
@@ -550,6 +550,23 @@ theorem eq_iff_sign_eq_and_abs_to_real_eq {θ ψ : Angle} : θ = ψ ↔ θ.sign 
 
 theorem eq_iff_abs_to_real_eq_of_sign_eq {θ ψ : Angle} (h : θ.sign = ψ.sign) : θ = ψ ↔ abs θ.toReal = abs ψ.toReal := by
   simpa [h] using @eq_iff_sign_eq_and_abs_to_real_eq θ ψ
+
+theorem continuous_at_sign {θ : Angle} (h0 : θ ≠ 0) (hpi : θ ≠ π) : ContinuousAt sign θ :=
+  (continuous_at_sign_of_ne_zero (sin_ne_zero_iff.2 ⟨h0, hpi⟩)).comp continuous_sin.ContinuousAt
+
+theorem _root_.continuous_on.angle_sign_comp {α : Type _} [TopologicalSpace α] {f : α → Angle} {s : Set α}
+    (hf : ContinuousOn f s) (hs : ∀ z ∈ s, f z ≠ 0 ∧ f z ≠ π) : ContinuousOn (sign ∘ f) s := by
+  refine' (ContinuousAt.continuous_on fun θ hθ => _).comp hf (Set.maps_to_image f s)
+  obtain ⟨z, hz, rfl⟩ := hθ
+  exact continuous_at_sign (hs _ hz).1 (hs _ hz).2
+
+/-- Suppose a function to angles is continuous on a connected set and never takes the values `0`
+or `π` on that set. Then the values of the function on that set all have the same sign. -/
+theorem sign_eq_of_continuous_on {α : Type _} [TopologicalSpace α] {f : α → Angle} {s : Set α} {x y : α}
+    (hc : IsConnected s) (hf : ContinuousOn f s) (hs : ∀ z ∈ s, f z ≠ 0 ∧ f z ≠ π) (hx : x ∈ s) (hy : y ∈ s) :
+    (f y).sign = (f x).sign :=
+  (hc.Image _ (hf.angle_sign_comp hs)).IsPreconnected.Subsingleton (Set.mem_image_of_mem _ hy)
+    (Set.mem_image_of_mem _ hx)
 
 end Angle
 

@@ -29,6 +29,7 @@ unsafe def distrib_not : tactic Unit := do
               replace h (pquote.1 (Decidable.not_and_distrib'.mp (%%ₓh))) <|>
                 replace h (pquote.1 (Decidable.not_and_distrib.mp (%%ₓh)))
             | quote.1 ¬(_ ∨ _) => replace h (pquote.1 (not_or_distrib.mp (%%ₓh)))
+            | quote.1 ¬_ ≠ _ => replace h (pquote.1 (Decidable.of_not_not (%%ₓh)))
             | quote.1 ¬¬_ => replace h (pquote.1 (Decidable.of_not_not (%%ₓh)))
             | quote.1 ¬(_ → (_ : Prop)) => replace h (pquote.1 (Decidable.not_imp.mp (%%ₓh)))
             | quote.1 ¬(_ ↔ _) => replace h (pquote.1 (Decidable.not_iff.mp (%%ₓh)))

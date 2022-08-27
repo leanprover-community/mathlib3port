@@ -86,9 +86,10 @@ noncomputable def coproductCofanIsColimit : IsColimit (coproductCofan F) where
       haveI : IsLocalRingHom (PresheafedSpace.stalk_map ((forget_to_SheafedSpace.map_cocone s).ι.app i) y) :=
         (s.ι.app i).2 y
       infer_instance⟩
-  fac' := fun s j => Subtype.eq (colimit.ι_desc _ _)
+  fac' := fun s j => LocallyRingedSpace.Hom.ext _ _ (colimit.ι_desc _ _)
   uniq' := fun s f h =>
-    Subtype.eq (IsColimit.uniq _ (forgetToSheafedSpace.mapCocone s) f.1 fun j => congr_arg Subtype.val (h j))
+    LocallyRingedSpace.Hom.ext _ _
+      (IsColimit.uniq _ (forgetToSheafedSpace.mapCocone s) f.1 fun j => congr_arg LocallyRingedSpace.Hom.val (h j))
 
 instance : HasCoproducts.{u} LocallyRingedSpace.{u} := fun ι => ⟨fun F => ⟨⟨⟨_, coproductCofanIsColimit F⟩⟩⟩⟩
 
@@ -218,7 +219,7 @@ noncomputable def coequalizer : LocallyRingedSpace where
 /-- The explicit coequalizer cofork of locally ringed spaces. -/
 noncomputable def coequalizerCofork : Cofork f g :=
   @Cofork.ofπ _ _ _ _ f g (coequalizer f g) ⟨coequalizer.π f.1 g.1, inferInstance⟩
-    (Subtype.eq (coequalizer.condition f.1 g.1))
+    (LocallyRingedSpace.Hom.ext _ _ (coequalizer.condition f.1 g.1))
 
 theorem is_local_ring_hom_stalk_map_congr {X Y : RingedSpace} (f g : X ⟶ Y) (H : f = g) (x)
     (h : IsLocalRingHom (PresheafedSpace.stalkMap f x)) : IsLocalRingHom (PresheafedSpace.stalkMap g x) := by
@@ -241,12 +242,13 @@ noncomputable def coequalizerCoforkIsColimit : IsColimit (coequalizerCofork f g)
     infer_instance
     
   constructor
-  exact Subtype.eq (coequalizer.π_desc _ _)
+  · exact LocallyRingedSpace.hom.ext _ _ (coequalizer.π_desc _ _)
+    
   intro m h
   replace h : (coequalizer_cofork f g).π.1 ≫ m.1 = s.π.1 := by
     rw [← h]
     rfl
-  apply Subtype.eq
+  apply LocallyRingedSpace.hom.ext
   apply (colimit.is_colimit (parallel_pair f.1 g.1)).uniq (cofork.of_π s.π.1 e) m.1
   rintro ⟨⟩
   · rw [← (colimit.cocone (parallel_pair f.val g.val)).w walking_parallel_pair_hom.left, category.assoc]

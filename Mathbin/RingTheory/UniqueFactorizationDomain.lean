@@ -284,7 +284,7 @@ theorem WfDvdMonoid.of_exists_prime_factors : WfDvdMonoid α :=
   ⟨by
     classical
     refine'
-      RelHomClass.well_founded (RelHom.mk _ _ : (DvdNotUnit : α → α → Prop) →r ((· < ·) : WithTop ℕ → WithTop ℕ → Prop))
+      RelHomClass.well_founded (RelHom.mk _ _ : (DvdNotUnit : α → α → Prop) →r ((· < ·) : ℕ∞ → ℕ∞ → Prop))
         (WithTop.well_founded_lt Nat.lt_wf)
     · intro a
       by_cases' h : a = 0

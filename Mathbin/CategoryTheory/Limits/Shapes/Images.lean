@@ -226,8 +226,8 @@ theorem e_iso_ext_inv : F'.e ≫ (isoExt hF hF').inv = F.e := by
 gives a mono factorisation of `g` that is an image -/
 @[simps]
 def ofArrowIso {f g : Arrow C} {F : MonoFactorisation f.Hom} (hF : IsImage F) (sq : f ⟶ g) [IsIso sq] :
-    IsImage (F.ofArrowIso sq) where
-  lift := fun F' => hF.lift (F'.ofArrowIso (inv sq))
+    IsImage (F.of_arrow_iso sq) where
+  lift := fun F' => hF.lift (F'.of_arrow_iso (inv sq))
   lift_fac' := fun F' => by
     simpa only [mono_factorisation.of_arrow_iso_m, arrow.inv_right, ← category.assoc, is_iso.comp_inv_eq] using
       hF.lift_fac (F'.of_arrow_iso (inv sq))
@@ -250,8 +250,8 @@ instance [Mono f] : Inhabited (ImageFactorisation f) :=
 gives an image factorisation of `g` -/
 @[simps]
 def ofArrowIso {f g : Arrow C} (F : ImageFactorisation f.Hom) (sq : f ⟶ g) [IsIso sq] : ImageFactorisation g.Hom where
-  f := F.f.ofArrowIso sq
-  IsImage := F.IsImage.ofArrowIso sq
+  f := F.f.of_arrow_iso sq
+  IsImage := F.IsImage.of_arrow_iso sq
 
 end ImageFactorisation
 
@@ -263,7 +263,7 @@ theorem HasImage.mk {f : X ⟶ Y} (F : ImageFactorisation f) : HasImage f :=
   ⟨Nonempty.intro F⟩
 
 theorem HasImage.of_arrow_iso {f g : Arrow C} [h : HasImage f.Hom] (sq : f ⟶ g) [IsIso sq] : HasImage g.Hom :=
-  ⟨⟨h.exists_image.some.ofArrowIso sq⟩⟩
+  ⟨⟨h.exists_image.some.of_arrow_iso sq⟩⟩
 
 instance (priority := 100) mono_has_image (f : X ⟶ Y) [Mono f] : HasImage f :=
   HasImage.mk ⟨_, IsImage.self f⟩
@@ -623,7 +623,7 @@ def HasImageMap.imageMap {f g : Arrow C} [HasImage f.Hom] [HasImage g.Hom] (sq :
 instance (priority := 100) has_image_map_of_is_iso {f g : Arrow C} [HasImage f.Hom] [HasImage g.Hom] (sq : f ⟶ g)
     [IsIso sq] : HasImageMap sq :=
   HasImageMap.mk
-    { map := image.lift ((Image.monoFactorisation g.Hom).ofArrowIso (inv sq)),
+    { map := image.lift ((Image.monoFactorisation g.Hom).of_arrow_iso (inv sq)),
       map_ι' := by
         erw [← cancel_mono (inv sq).right, category.assoc, ← mono_factorisation.of_arrow_iso_m, image.lift_fac,
           category.assoc, ← comma.comp_right, is_iso.hom_inv_id, comma.id_right, category.comp_id] }

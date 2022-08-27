@@ -89,8 +89,8 @@ theorem dist_of_prenndist_le (d : X → X → ℝ≥0 ) (dist_self : ∀ x, d x 
     (cinfi_le (OrderBot.bdd_below _) []).trans_eq <| by
       simp
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident z, ",", ident z', ",", ident hxz, ",", ident hzz', ",", ident hz'y, "⟩", ":", expr «expr∃ , »((z
-     z' : X), «expr ∧ »(«expr ≤ »(d x z, L.sum), «expr ∧ »(«expr ≤ »(d z z', L.sum), «expr ≤ »(d z' y, L.sum))))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident z, ",", ident z', ",", ident hxz, ",", ident hzz', ",", ident hz'y, "⟩", ":", expr «expr∃ , »((z z' : X),
+    «expr ∧ »(«expr ≤ »(d x z, L.sum), «expr ∧ »(«expr ≤ »(d z z', L.sum), «expr ≤ »(d z' y, L.sum))))]]
 /-- Consider a function `d : X → X → ℝ≥0` such that `d x x = 0` and `d x y = d y x` for all `x`,
 `y`. Let `dist` be the largest pseudometric distance such that `dist x y ≤ d x y`, see
 `pseudo_metric_space.of_prenndist`. Suppose that `d` satisfies the following triangle-like
@@ -122,7 +122,7 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0 ) (dist_self : ∀
   · simp only [hd₀, zero_le]
     
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident z, \",\", ident z', \",\", ident hxz, \",\", ident hzz', \",\", ident hz'y, \"⟩\", \":\", expr «expr∃ , »((z\n     z' : X), «expr ∧ »(«expr ≤ »(d x z, L.sum), «expr ∧ »(«expr ≤ »(d z z', L.sum), «expr ≤ »(d z' y, L.sum))))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident z, \",\", ident z', \",\", ident hxz, \",\", ident hzz', \",\", ident hz'y, \"⟩\", \":\", expr «expr∃ , »((z z' : X),\n    «expr ∧ »(«expr ≤ »(d x z, L.sum), «expr ∧ »(«expr ≤ »(d z z', L.sum), «expr ≤ »(d z' y, L.sum))))]]"
   · exact (hd x z z' y).trans (mul_le_mul_left' (max_leₓ hxz (max_leₓ hzz' hz'y)) _)
     
   set s : Set ℕ := { m : ℕ | 2 * (take m L).Sum ≤ L.sum }

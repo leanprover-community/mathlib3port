@@ -66,6 +66,10 @@ def pInfty : K[X] ⟶ K[X] :=
           rfl),
       alternating_face_map_complex.obj_d_eq] using (P (n + 1)).comm (n + 1) n
 
+@[simp]
+theorem P_infty_f_0 : (pInfty.f 0 : X _[0] ⟶ X _[0]) = 𝟙 _ :=
+  rfl
+
 theorem P_infty_f (n : ℕ) : (pInfty.f n : X _[n] ⟶ X _[n]) = (p n).f n :=
   rfl
 

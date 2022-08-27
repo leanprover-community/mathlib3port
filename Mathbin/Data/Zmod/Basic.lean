@@ -770,7 +770,7 @@ theorem neg_val {n : ℕ} [Fact (0 < n)] (a : Zmod n) : (-a).val = if a = 0 then
   apply Nat.mod_eq_of_ltₓ
   apply Nat.sub_ltₓ (Fact.out (0 < n))
   contrapose! h
-  rwa [Nat.le_zero_iffₓ, val_eq_zero] at h
+  rwa [le_zero_iff, val_eq_zero] at h
 
 /-- `val_min_abs x` returns the integer in the same equivalence class as `x` that is closest to `0`,
   The result will be in the interval `(-n/2, n/2]`. -/

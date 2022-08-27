@@ -169,12 +169,12 @@ universe u
 
 variable (σ : Type u) (K : Type u) [Fintype K]
 
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module K
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] K
 /-- The submodule of multivariate polynomials whose degree of each variable is strictly less
 than the cardinality of K. -/
 def R [CommRingₓ K] : Type u :=
   restrictDegree σ K (Fintype.card K - 1)deriving AddCommGroupₓ,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module K», Inhabited
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] K», Inhabited
 
 /-- Evaluation in the `mv_polynomial.R` subtype. -/
 def evalᵢ [CommRingₓ K] : R σ K →ₗ[K] (σ → K) → K :=

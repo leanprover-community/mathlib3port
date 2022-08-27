@@ -132,6 +132,8 @@ theorem finite_or_infinite {s : Set α} : s.Finite ∨ s.Infinite :=
 
 section FiniteToFinset
 
+variable {s t : Set α}
+
 @[simp]
 theorem Finite.coe_to_finset {s : Set α} (h : s.Finite) : (h.toFinset : Set α) = s :=
   @Set.coe_to_finset _ s h.Fintype
@@ -164,12 +166,11 @@ theorem finite_to_finset_eq_empty_iff {s : Set α} {h : s.Finite} : h.toFinset =
   simp only [← Finset.coe_inj, finite.coe_to_finset, Finset.coe_empty]
 
 @[simp, mono]
-theorem Finite.to_finset_mono {s t : Set α} {hs : s.Finite} {ht : t.Finite} : hs.toFinset ⊆ ht.toFinset ↔ s ⊆ t := by
+theorem Finite.to_finset_subset {hs : s.Finite} {ht : t.Finite} : hs.toFinset ⊆ ht.toFinset ↔ s ⊆ t := by
   simp only [← Finset.coe_subset, finite.coe_to_finset]
 
 @[simp, mono]
-theorem Finite.to_finset_strict_mono {s t : Set α} {hs : s.Finite} {ht : t.Finite} :
-    hs.toFinset ⊂ ht.toFinset ↔ s ⊂ t := by
+theorem Finite.to_finset_ssubset {hs : s.Finite} {ht : t.Finite} : hs.toFinset ⊂ ht.toFinset ↔ s ⊂ t := by
   simp only [← Finset.coe_ssubset, finite.coe_to_finset]
 
 end FiniteToFinset
@@ -1006,9 +1007,9 @@ theorem Infinite.exists_lt_map_eq_of_maps_to [LinearOrderₓ α] {s : Set α} {t
   let ⟨x, hx, y, hy, hxy, hf⟩ := hs.exists_ne_map_eq_of_maps_to hf ht
   hxy.lt_or_lt.elim (fun hxy => ⟨x, hx, y, hy, hxy, hf⟩) fun hyx => ⟨y, hy, x, hx, hyx, hf.symm⟩
 
-theorem Finite.exists_lt_map_eq_of_range_subset [LinearOrderₓ α] [Infinite α] {t : Set β} {f : α → β} (hf : Range f ⊆ t)
+theorem Finite.exists_lt_map_eq_of_forall_mem [LinearOrderₓ α] [Infinite α] {t : Set β} {f : α → β} (hf : ∀ a, f a ∈ t)
     (ht : t.Finite) : ∃ a b, a < b ∧ f a = f b := by
-  rw [range_subset_iff, ← maps_univ_to] at hf
+  rw [← maps_univ_to] at hf
   obtain ⟨a, -, b, -, h⟩ := (@infinite_univ α _).exists_lt_map_eq_of_maps_to hf ht
   exact ⟨a, b, h⟩
 

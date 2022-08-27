@@ -39,6 +39,9 @@ theorem succ_eq_succ : Order.succ = succ :=
 theorem pred_eq_pred : Order.pred = pred :=
   rfl
 
+theorem pos_iff_one_le {a : ℤ} : 0 < a ↔ 1 ≤ a :=
+  Order.succ_le_iff.symm
+
 theorem succ_iterate (a : ℤ) : ∀ n, (succ^[n]) a = a + n
   | 0 => (add_zeroₓ a).symm
   | n + 1 => by

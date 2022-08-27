@@ -391,7 +391,7 @@ instance NonemptyCompacts.second_countable_topology [SecondCountableTopology α]
       -- we have proved that `d` is a good approximation of `t` as requested
       exact ⟨d, ‹d ∈ v›, Dtc⟩
       
-  apply UniformSpace.second_countable_of_separable
+  exact UniformSpace.second_countable_of_separable (nonempty_compacts α)
 
 end
 

@@ -84,7 +84,7 @@ theorem range_quadrant (n : ℕ) : (Range fun x : EuclideanQuadrant n => x.val) 
 
 end
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (i «expr ∈ » ({0} : set (fin n)))
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (i «expr ∈ » ({0} : set[set] (fin[fin] n)))
 /-- Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_half_space n)`, used as
 a model for manifolds with boundary. In the locale `manifold`, use the shortcut `𝓡∂ n`.
 -/
@@ -108,7 +108,7 @@ def modelWithCornersEuclideanHalfSpace (n : ℕ) [Zero (Finₓ n)] :
       UniqueDiffOn.pi (Finₓ n) (fun _ => ℝ) _ _ fun i (_ : i ∈ ({0} : Set (Finₓ n))) => unique_diff_on_Ici 0
     simpa only [singleton_pi] using this
   continuous_to_fun := continuous_subtype_val
-  continuous_inv_fun := continuous_subtype_mk _ <| continuous_id.update 0 <| (continuous_apply 0).max continuous_const
+  continuous_inv_fun := (continuous_id.update 0 <| (continuous_apply 0).max continuous_const).subtype_mk _
 
 /-- Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_quadrant n)`, used as a
 model for manifolds with corners -/
@@ -135,7 +135,7 @@ def modelWithCornersEuclideanQuadrant (n : ℕ) :
     simpa only [pi_univ_Ici] using this
   continuous_to_fun := continuous_subtype_val
   continuous_inv_fun :=
-    continuous_subtype_mk _ <| continuous_pi fun i => (continuous_id.max continuous_const).comp (continuous_apply i)
+    Continuous.subtype_mk (continuous_pi fun i => (continuous_id.max continuous_const).comp (continuous_apply i)) _
 
 -- mathport name: «expr𝓡 »
 localized [Manifold]
@@ -189,13 +189,13 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclide
     exact this.preimage continuous_subtype_val
   continuous_to_fun := by
     apply Continuous.continuous_on
-    apply continuous_subtype_mk
+    apply Continuous.subtype_mk
     have : Continuous fun (z : ℝ) (i : Finₓ 1) => z - x :=
       Continuous.sub (continuous_pi fun i => continuous_id) continuous_const
     exact this.comp continuous_subtype_val
   continuous_inv_fun := by
     apply Continuous.continuous_on
-    apply continuous_subtype_mk
+    apply Continuous.subtype_mk
     have A : Continuous fun z : ℝ => min (z + x) y := (continuous_id.add continuous_const).min continuous_const
     have B : Continuous fun z : EuclideanSpace ℝ (Finₓ 1) => z 0 := continuous_apply 0
     exact (A.comp B).comp continuous_subtype_val
@@ -241,12 +241,12 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclid
     exact this.preimage continuous_subtype_val
   continuous_to_fun := by
     apply Continuous.continuous_on
-    apply continuous_subtype_mk
+    apply Continuous.subtype_mk
     have : Continuous fun (z : ℝ) (i : Finₓ 1) => y - z := continuous_const.sub (continuous_pi fun i => continuous_id)
     exact this.comp continuous_subtype_val
   continuous_inv_fun := by
     apply Continuous.continuous_on
-    apply continuous_subtype_mk
+    apply Continuous.subtype_mk
     have A : Continuous fun z : ℝ => max (y - z) x := (continuous_const.sub continuous_id).max continuous_const
     have B : Continuous fun z : EuclideanSpace ℝ (Finₓ 1) => z 0 := continuous_apply 0
     exact (A.comp B).comp continuous_subtype_val

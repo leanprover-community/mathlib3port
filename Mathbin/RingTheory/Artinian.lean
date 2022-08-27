@@ -226,8 +226,9 @@ theorem surjective_of_injective_endomorphism (f : M →ₗ[R] M) (s : Injective 
 theorem bijective_of_injective_endomorphism (f : M →ₗ[R] M) (s : Injective f) : Bijective f :=
   ⟨s, surjective_of_injective_endomorphism f s⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident n, ",", ident w, "⟩", ":", expr «expr∃ , »((n : exprℕ()), ∀
-    m, «expr ≤ »(n, m) → «expr = »(order_dual.to_dual f «expr + »(m, 1), «expr⊤»()))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident n, ",", ident w, "⟩", ":", expr «expr∃ , »((n : exprℕ()),
+    ∀ m,
+    «expr ≤ »(n, m) → «expr = »(order_dual.to_dual f «expr + »(m, 1), «expr⊤»()))]]
 /-- A sequence `f` of submodules of a artinian module,
 with the supremum `f (n+1)` and the infinum of `f 0`, ..., `f n` being ⊤,
 is eventually ⊤.
@@ -236,7 +237,7 @@ theorem disjoint_partial_infs_eventually_top (f : ℕ → Submodule R M)
     (h : ∀ n, Disjoint (partialSups (OrderDual.toDual ∘ f) n) (OrderDual.toDual (f (n + 1)))) :
     ∃ n : ℕ, ∀ m, n ≤ m → f m = ⊤ := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident n, \",\", ident w, \"⟩\", \":\", expr «expr∃ , »((n : exprℕ()), ∀\n    m, «expr ≤ »(n, m) → «expr = »(order_dual.to_dual f «expr + »(m, 1), «expr⊤»()))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident n, \",\", ident w, \"⟩\", \":\", expr «expr∃ , »((n : exprℕ()),\n    ∀ m,\n    «expr ≤ »(n, m) → «expr = »(order_dual.to_dual f «expr + »(m, 1), «expr⊤»()))]]"
   · use n + 1
     rintro (_ | m) p
     · cases p

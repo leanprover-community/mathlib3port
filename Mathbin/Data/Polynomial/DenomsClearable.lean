@@ -41,7 +41,7 @@ theorem denoms_clearable_zero (N : ℕ) (a : R) (bu : bi * i b = 1) : DenomsClea
   ⟨0, bi, bu, by
     simp only [eval_zero, RingHom.map_zero, mul_zero, Polynomial.map_zero]⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([2]) }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) }
 theorem denoms_clearable_C_mul_X_pow {N : ℕ} (a : R) (bu : bi * i b = 1) {n : ℕ} (r : R) (nN : n ≤ N) :
     DenomsClearable a b N (c r * X ^ n) i := by
   refine' ⟨r * a ^ n * b ^ (N - n), bi, bu, _⟩

@@ -149,14 +149,14 @@ open Isocrystal
 def FractionRing.module : Module K(p,k) K(p,k) :=
   Semiringₓ.toModule
 
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module «exprK( , )»(p, k)
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] «exprK( , )»(p, k)
 /-- Type synonym for `K(p, k)` to carry the standard 1-dimensional isocrystal structure
 of slope `m : ℤ`.
 -/
 @[nolint unused_arguments has_nonempty_instance]
 def StandardOneDimIsocrystal (m : ℤ) : Type _ :=
   K(p,k)deriving AddCommGroupₓ,
-  ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module «exprK( , )»(p, k)
+  ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] «exprK( , )»(p, k)
 
 section PerfectRing
 

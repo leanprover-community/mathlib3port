@@ -5,6 +5,7 @@ Authors: Andrew Yang
 -/
 import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
 import Mathbin.CategoryTheory.Arrow
+import Mathbin.CategoryTheory.Limits.Shapes.CommSq
 
 /-!
 # Properties of morphisms
@@ -15,7 +16,8 @@ The following meta-properties are defined
 * `respects_iso`: `P` respects isomorphisms if `P f → P (e ≫ f)` and `P f → P (f ≫ e)`, where
   `e` is an isomorphism.
 * `stable_under_composition`: `P` is stable under composition if `P f → P g → P (f ≫ g)`.
-* `stable_under_base_change`: `P` is stable under base change if `P (Y ⟶ S) → P (X ×[S] Y ⟶ X)`.
+* `stable_under_base_change`: `P` is stable under base change if in all pullback
+  squares, the left map satisfies `P` if the right map satisfies it.
 
 -/
 
@@ -57,8 +59,8 @@ def StableUnderInverse (P : MorphismProperty C) : Prop :=
 
 /-- A morphism property is `stable_under_base_change` if the base change of such a morphism
 still falls in the class. -/
-def StableUnderBaseChange [HasPullbacks C] (P : MorphismProperty C) : Prop :=
-  ∀ ⦃X Y S : C⦄ (f : X ⟶ S) (g : Y ⟶ S), P g → P (pullback.fst : pullback f g ⟶ X)
+def StableUnderBaseChange (P : MorphismProperty C) : Prop :=
+  ∀ ⦃X Y Y' S : C⦄ ⦃f : X ⟶ S⦄ ⦃g : Y ⟶ S⦄ ⦃f' : Y' ⟶ Y⦄ ⦃g' : Y' ⟶ X⦄ (sq : IsPullback f' g' g f) (hg : P g), P g'
 
 theorem StableUnderComposition.respects_iso {P : MorphismProperty C} (hP : StableUnderComposition P)
     (hP' : ∀ {X Y} (e : X ≅ Y), P e.Hom) : RespectsIso P :=
@@ -83,34 +85,55 @@ theorem RespectsIso.arrow_mk_iso_iff {P : MorphismProperty C} (hP : RespectsIso 
     (e : Arrow.mk f ≅ Arrow.mk g) : P f ↔ P g :=
   hP.arrow_iso_iff e
 
--- This is here to mirror `stable_under_base_change.snd`.
-@[nolint unused_arguments]
-theorem StableUnderBaseChange.fst [HasPullbacks C] {P : MorphismProperty C} (hP : StableUnderBaseChange P)
-    (hP' : RespectsIso P) {X Y S : C} (f : X ⟶ S) (g : Y ⟶ S) (H : P g) : P (pullback.fst : pullback f g ⟶ X) :=
-  hP f g H
+theorem RespectsIso.of_respects_arrow_iso (P : MorphismProperty C)
+    (hP : ∀ (f g : Arrow C) (e : f ≅ g) (hf : P f.Hom), P g.Hom) : RespectsIso P := by
+  constructor
+  · intro X Y Z e f hf
+    refine' hP (arrow.mk f) (arrow.mk (e.hom ≫ f)) (arrow.iso_mk e.symm (iso.refl _) _) hf
+    dsimp'
+    simp only [iso.inv_hom_id_assoc, category.comp_id]
+    
+  · intro X Y Z e f hf
+    refine' hP (arrow.mk f) (arrow.mk (f ≫ e.hom)) (arrow.iso_mk (iso.refl _) e _) hf
+    dsimp'
+    simp only [category.id_comp]
+    
 
-theorem StableUnderBaseChange.snd [HasPullbacks C] {P : MorphismProperty C} (hP : StableUnderBaseChange P)
-    (hP' : RespectsIso P) {X Y S : C} (f : X ⟶ S) (g : Y ⟶ S) (H : P f) : P (pullback.snd : pullback f g ⟶ Y) := by
-  rw [← pullback_symmetry_hom_comp_fst, hP'.cancel_left_is_iso]
-  exact hP g f H
+theorem StableUnderBaseChange.mk {P : MorphismProperty C} [HasPullbacks C] (hP₁ : RespectsIso P)
+    (hP₂ : ∀ (X Y S : C) (f : X ⟶ S) (g : Y ⟶ S) (hg : P g), P (pullback.fst : pullback f g ⟶ X)) :
+    StableUnderBaseChange P := fun X Y Y' S f g f' g' sq hg => by
+  let e := sq.flip.iso_pullback
+  rw [← hP₁.cancel_left_is_iso e.inv, sq.flip.iso_pullback_inv_fst]
+  exact hP₂ _ _ _ f g hg
+
+theorem StableUnderBaseChange.respects_iso {P : MorphismProperty C} (hP : StableUnderBaseChange P) : RespectsIso P := by
+  apply respects_iso.of_respects_arrow_iso
+  intro f g e
+  exact hP (is_pullback.of_horiz_is_iso (comm_sq.mk e.inv.w))
+
+theorem StableUnderBaseChange.fst {P : MorphismProperty C} (hP : StableUnderBaseChange P) {X Y S : C} (f : X ⟶ S)
+    (g : Y ⟶ S) [HasPullback f g] (H : P g) : P (pullback.fst : pullback f g ⟶ X) :=
+  hP (IsPullback.of_has_pullback f g).flip H
+
+theorem StableUnderBaseChange.snd {P : MorphismProperty C} (hP : StableUnderBaseChange P) {X Y S : C} (f : X ⟶ S)
+    (g : Y ⟶ S) [HasPullback f g] (H : P f) : P (pullback.snd : pullback f g ⟶ Y) :=
+  hP (IsPullback.of_has_pullback f g) H
 
 theorem StableUnderBaseChange.base_change_obj [HasPullbacks C] {P : MorphismProperty C} (hP : StableUnderBaseChange P)
-    (hP' : RespectsIso P) {S S' : C} (f : S' ⟶ S) (X : Over S) (H : P X.Hom) : P ((baseChange f).obj X).Hom :=
-  hP.snd hP' X.Hom f H
+    {S S' : C} (f : S' ⟶ S) (X : Over S) (H : P X.Hom) : P ((baseChange f).obj X).Hom :=
+  hP.snd X.Hom f H
 
 theorem StableUnderBaseChange.base_change_map [HasPullbacks C] {P : MorphismProperty C} (hP : StableUnderBaseChange P)
-    (hP' : RespectsIso P) {S S' : C} (f : S' ⟶ S) {X Y : Over S} (g : X ⟶ Y) (H : P g.left) :
-    P ((baseChange f).map g).left := by
+    {S S' : C} (f : S' ⟶ S) {X Y : Over S} (g : X ⟶ Y) (H : P g.left) : P ((baseChange f).map g).left := by
   let e := pullback_right_pullback_fst_iso Y.hom f g.left ≪≫ pullback.congr_hom (g.w.trans (category.comp_id _)) rfl
   have : e.inv ≫ pullback.snd = ((base_change f).map g).left := by
     apply pullback.hom_ext <;> dsimp' <;> simp
-  rw [← this, hP'.cancel_left_is_iso]
-  apply hP.snd hP'
-  exact H
+  rw [← this, hP.respects_iso.cancel_left_is_iso]
+  exact hP.snd _ _ H
 
 theorem StableUnderBaseChange.pullback_map [HasPullbacks C] {P : MorphismProperty C} (hP : StableUnderBaseChange P)
-    (hP' : RespectsIso P) (hP'' : StableUnderComposition P) {S X X' Y Y' : C} {f : X ⟶ S} {g : Y ⟶ S} {f' : X' ⟶ S}
-    {g' : Y' ⟶ S} {i₁ : X ⟶ X'} {i₂ : Y ⟶ Y'} (h₁ : P i₁) (h₂ : P i₂) (e₁ : f = i₁ ≫ f') (e₂ : g = i₂ ≫ g') :
+    (hP' : StableUnderComposition P) {S X X' Y Y' : C} {f : X ⟶ S} {g : Y ⟶ S} {f' : X' ⟶ S} {g' : Y' ⟶ S} {i₁ : X ⟶ X'}
+    {i₂ : Y ⟶ Y'} (h₁ : P i₁) (h₂ : P i₂) (e₁ : f = i₁ ≫ f') (e₂ : g = i₂ ≫ g') :
     P (pullback.map f g f' g' i₁ i₂ (𝟙 _) ((Category.comp_id _).trans e₁) ((Category.comp_id _).trans e₂)) := by
   have :
     pullback.map f g f' g' i₁ i₂ (𝟙 _) ((category.comp_id _).trans e₁) ((category.comp_id _).trans e₂) =
@@ -119,9 +142,9 @@ theorem StableUnderBaseChange.pullback_map [HasPullbacks C] {P : MorphismPropert
     by
     apply pullback.hom_ext <;> dsimp' <;> simp
   rw [this]
-  apply hP'' <;> rw [hP'.cancel_left_is_iso]
-  exacts[hP.base_change_map hP' _ (over.hom_mk _ e₂.symm : over.mk g ⟶ over.mk g') h₂,
-    hP.base_change_map hP' _ (over.hom_mk _ e₁.symm : over.mk f ⟶ over.mk f') h₁]
+  apply hP' <;> rw [hP.respects_iso.cancel_left_is_iso]
+  exacts[hP.base_change_map _ (over.hom_mk _ e₂.symm : over.mk g ⟶ over.mk g') h₂,
+    hP.base_change_map _ (over.hom_mk _ e₁.symm : over.mk f ⟶ over.mk f') h₁]
 
 /-- If `P : morphism_property C` and `F : C ⥤ D`, then
 `P.is_inverted_by F` means that all morphisms in `P` are mapped by `F`

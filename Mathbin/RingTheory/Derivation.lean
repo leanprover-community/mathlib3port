@@ -682,9 +682,9 @@ theorem KaehlerDifferential.span_range_eq_ideal :
     exact Submodule.subset_span
     
 
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module R
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module S
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module «expr ⊗[ ] »(S, R, S)
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] R
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] S
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] «expr ⊗[ ] »(S, R, S)
 /-- The module of Kähler differentials (Kahler differentials, Kaehler differentials).
 This is implemented as `I / I ^ 2` with `I` the kernel of the multiplication map `S ⊗[R] S →ₐ[R] S`.
 To view elements as a linear combination of the form `s • D s'`, use
@@ -695,9 +695,9 @@ Note that the slash is `\textfractionsolidus`.
 -/
 def KaehlerDifferential : Type _ :=
   (KaehlerDifferential.ideal R S).Cotangent deriving AddCommGroupₓ,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module R»,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module S»,
-  ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module «expr ⊗[ ] »(S, R, S)
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] R»,
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] S»,
+  ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] «expr ⊗[ ] »(S, R, S)
 
 -- mathport name: «exprΩ[ ⁄ ]»
 notation:100 "Ω[ " S " ⁄ " R " ]" => KaehlerDifferential R S

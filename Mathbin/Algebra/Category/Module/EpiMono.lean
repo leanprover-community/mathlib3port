@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.LinearAlgebra.Quotient
-import Mathbin.CategoryTheory.EpiMono
+import Mathbin.Algebra.Category.Group.EpiMono
 import Mathbin.Algebra.Category.Module.Basic
 
 /-!
@@ -56,6 +56,14 @@ instance mono_as_hom'_subtype (U : Submodule R X) : Mono (↾U.Subtype) :=
 
 instance epi_as_hom''_mkq (U : Submodule R X) : Epi (↿U.mkq) :=
   (epi_iff_range_eq_top _).mpr <| Submodule.range_mkq _
+
+instance forget_preserves_epimorphisms :
+    (forget (ModuleCat.{v} R)).PreservesEpimorphisms where preserves := fun X Y f hf => by
+    rwa [forget_map_eq_coe, CategoryTheory.epi_iff_surjective, ← epi_iff_surjective]
+
+instance forget_preserves_monomorphisms :
+    (forget (ModuleCat.{v} R)).PreservesMonomorphisms where preserves := fun X Y f hf => by
+    rwa [forget_map_eq_coe, CategoryTheory.mono_iff_injective, ← mono_iff_injective]
 
 end ModuleCat
 

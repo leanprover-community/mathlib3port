@@ -98,7 +98,7 @@ theorem ball_mem_nhds {x : E} {r : ℝ} (hr : 0 < r) : Ball x r ∈ 𝓝 x :=
 
 end Euclidean
 
-variable {F : Type _} [NormedAddCommGroup F] [NormedSpace ℝ F] {f g : F → E} {n : WithTop ℕ}
+variable {F : Type _} [NormedAddCommGroup F] [NormedSpace ℝ F] {f g : F → E} {n : ℕ∞}
 
 theorem ContDiff.euclidean_dist (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) (h : ∀ x, f x ≠ g x) :
     ContDiff ℝ n fun x => Euclidean.dist (f x) (g x) := by

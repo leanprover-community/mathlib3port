@@ -61,14 +61,13 @@ theorem HasDerivAt.real_of_complex (h : HasDerivAt e e' z) : HasDerivAt (fun x :
   have C : HasFderivAt re re_clm (e (of_real_clm z)) := re_clm.has_fderiv_at
   simpa using (C.comp z (B.comp z A)).HasDerivAt
 
-theorem ContDiffAt.real_of_complex {n : WithTop ℕ} (h : ContDiffAt ℂ n e z) :
-    ContDiffAt ℝ n (fun x : ℝ => (e x).re) z := by
+theorem ContDiffAt.real_of_complex {n : ℕ∞} (h : ContDiffAt ℂ n e z) : ContDiffAt ℝ n (fun x : ℝ => (e x).re) z := by
   have A : ContDiffAt ℝ n (coe : ℝ → ℂ) z := of_real_clm.cont_diff.cont_diff_at
   have B : ContDiffAt ℝ n e z := h.restrict_scalars ℝ
   have C : ContDiffAt ℝ n re (e z) := re_clm.cont_diff.cont_diff_at
   exact C.comp z (B.comp z A)
 
-theorem ContDiff.real_of_complex {n : WithTop ℕ} (h : ContDiff ℂ n e) : ContDiff ℝ n fun x : ℝ => (e x).re :=
+theorem ContDiff.real_of_complex {n : ℕ∞} (h : ContDiff ℂ n e) : ContDiff ℝ n fun x : ℝ => (e x).re :=
   cont_diff_iff_cont_diff_at.2 fun x => h.ContDiffAt.real_of_complex
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E]

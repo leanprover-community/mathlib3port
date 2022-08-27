@@ -117,7 +117,7 @@ theorem pred_true_of_cond_count_eq_one (h : condCount s t = 1) : s ⊆ t := by
   suffices s ∩ t = s by
     exact this ▸ fun x hx => hx.2
   rw [← @Set.Finite.to_finset_inj _ _ _ (hsf.inter_of_left _) hsf]
-  exact Finset.eq_of_subset_of_card_le (Set.Finite.to_finset_mono.2 (s.inter_subset_left t)) h.symm.le
+  exact Finset.eq_of_subset_of_card_le (Set.Finite.to_finset_subset.2 (s.inter_subset_left t)) h.symm.le
 
 theorem cond_count_eq_zero_iff (hs : s.Finite) : condCount s t = 0 ↔ s ∩ t = ∅ := by
   simp [cond_count, cond_apply _ hs.measurable_set, measure.count_apply_eq_top, Set.not_infinite.2 hs,

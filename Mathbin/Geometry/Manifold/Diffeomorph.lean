@@ -54,8 +54,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
   {J' : ModelWithCorners 𝕜 F G'}
 
 variable {M : Type _} [TopologicalSpace M] [ChartedSpace H M] {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M']
-  {N : Type _} [TopologicalSpace N] [ChartedSpace G N] {N' : Type _} [TopologicalSpace N'] [ChartedSpace G' N']
-  {n : WithTop ℕ}
+  {N : Type _} [TopologicalSpace N] [ChartedSpace G N] {N' : Type _} [TopologicalSpace N'] [ChartedSpace G' N'] {n : ℕ∞}
 
 section Defs
 

@@ -527,12 +527,12 @@ def toWord {i j} (w : Neword M i j) : Word M where
       exact w_hne
       
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident i, ",", ident j, ",", ident w, ",", ident h, "⟩", ":", expr «expr∃ , »((i j)
-    (w' : neword M i j), «expr = »(w'.to_word.to_list, w.to_list))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident i, ",", ident j, ",", ident w, ",", ident h, "⟩", ":", expr «expr∃ , »((i j) (w' : neword M i j),
+    «expr = »(w'.to_word.to_list, w.to_list))]]
 /-- Every nonempty `word M` can be constructed as a `neword M i j` -/
 theorem of_word (w : Word M) (h : w ≠ Empty) : ∃ (i j : _)(w' : Neword M i j), w'.toWord = w := by
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident i, \",\", ident j, \",\", ident w, \",\", ident h, \"⟩\", \":\", expr «expr∃ , »((i j)\n    (w' : neword M i j), «expr = »(w'.to_word.to_list, w.to_list))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident i, \",\", ident j, \",\", ident w, \",\", ident h, \"⟩\", \":\", expr «expr∃ , »((i j) (w' : neword M i j),\n    «expr = »(w'.to_word.to_list, w.to_list))]]"
   · refine' ⟨i, j, w, _⟩
     ext
     rw [h]

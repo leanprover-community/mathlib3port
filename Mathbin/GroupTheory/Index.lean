@@ -184,6 +184,23 @@ theorem card_mul_index : Nat.card H * H.index = Nat.card G := by
   exact relindex_mul_index bot_le
 
 @[to_additive]
+theorem nat_card_dvd_of_injective {G H : Type _} [Groupₓ G] [Groupₓ H] (f : G →* H) (hf : Function.Injective f) :
+    Nat.card G ∣ Nat.card H := by
+  rw [Nat.card_congr (MonoidHom.ofInjective hf).toEquiv]
+  exact Dvd.intro f.range.index f.range.card_mul_index
+
+@[to_additive]
+theorem nat_card_dvd_of_surjective {G H : Type _} [Groupₓ G] [Groupₓ H] (f : G →* H) (hf : Function.Surjective f) :
+    Nat.card H ∣ Nat.card G := by
+  rw [← Nat.card_congr (QuotientGroup.quotientKerEquivOfSurjective f hf).toEquiv]
+  exact Dvd.intro_left (Nat.card f.ker) f.ker.card_mul_index
+
+@[to_additive]
+theorem card_dvd_of_surjective {G H : Type _} [Groupₓ G] [Groupₓ H] [Fintype G] [Fintype H] (f : G →* H)
+    (hf : Function.Surjective f) : Fintype.card H ∣ Fintype.card G := by
+  simp only [← Nat.card_eq_fintype_card, nat_card_dvd_of_surjective f hf]
+
+@[to_additive]
 theorem index_map {G' : Type _} [Groupₓ G'] (f : G →* G') : (H.map f).index = (H⊔f.ker).index * f.range.index := by
   rw [← comap_map_eq, index_comap, relindex_mul_index (H.map_le_range f)]
 

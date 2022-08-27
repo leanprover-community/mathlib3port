@@ -165,7 +165,7 @@ theorem continuous_on_to_real : ContinuousOn Ereal.toReal ({⊥, ⊤}ᶜ : Set E
 /-- The set of finite `ereal` numbers is homeomorphic to `ℝ`. -/
 def neBotTopHomeomorphReal : ({⊥, ⊤}ᶜ : Set Ereal) ≃ₜ ℝ :=
   { neTopBotEquivReal with continuous_to_fun := continuous_on_iff_continuous_restrict.1 continuous_on_to_real,
-    continuous_inv_fun := continuous_subtype_mk _ continuous_coe_real_ereal }
+    continuous_inv_fun := continuous_coe_real_ereal.subtype_mk _ }
 
 /-! ### ennreal coercion -/
 

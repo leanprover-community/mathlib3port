@@ -72,6 +72,9 @@ theorem norm_smul [NormedSpace α β] (s : α) (x : β) : ∥s • x∥ = ∥s�
       
     
 
+theorem norm_zsmul (α) [NormedField α] [NormedSpace α β] (n : ℤ) (x : β) : ∥n • x∥ = ∥(n : α)∥ * ∥x∥ := by
+  rw [← norm_smul, ← Int.smul_one_eq_coe, smul_assoc, one_smul]
+
 @[simp]
 theorem abs_norm_eq_norm (z : β) : abs ∥z∥ = ∥z∥ :=
   (abs_eq (norm_nonneg z)).mpr (Or.inl rfl)
@@ -162,6 +165,22 @@ theorem frontier_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0
   by
   rw [Frontier, closure_closed_ball, interior_closed_ball x hr, closed_ball_diff_ball]
 
+instance {E : Type _} [NormedAddCommGroup E] [NormedSpace ℚ E] (e : E) : DiscreteTopology <| AddSubgroup.zmultiples e :=
+  by
+  rcases eq_or_ne e 0 with (rfl | he)
+  · rw [AddSubgroup.zmultiples_zero_eq_bot]
+    infer_instance
+    
+  · rw [discrete_topology_iff_open_singleton_zero, is_open_induced_iff]
+    refine' ⟨Metric.Ball 0 ∥e∥, Metric.is_open_ball, _⟩
+    ext ⟨x, hx⟩
+    obtain ⟨k, rfl⟩ := add_subgroup.mem_zmultiples_iff.mp hx
+    rw [mem_preimage, mem_ball_zero_iff, AddSubgroup.coe_mk, mem_singleton_iff, Subtype.ext_iff, AddSubgroup.coe_mk,
+      AddSubgroup.coe_zero, norm_zsmul ℚ k e, Int.norm_cast_rat, Int.norm_eq_abs, ← Int.cast_abs,
+      ZeroLt.mul_lt_iff_lt_one_left (norm_pos_iff.mpr he), ← @Int.cast_oneₓ ℝ _, Int.cast_lt, Int.abs_lt_one_iff,
+      smul_eq_zero, or_iff_left he]
+    
+
 -- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]
 -- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]
 -- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]
@@ -192,16 +211,15 @@ def homeomorphUnitBall [NormedSpace ℝ E] : E ≃ₜ Ball (0 : E) 1 where
     have : 0 < 1 - ∥(y : E)∥ ^ 2 := by
       nlinarith [norm_nonneg (y : E), (mem_ball_zero_iff.1 y.2 : ∥(y : E)∥ < 1)]
     field_simp [norm_smul, smul_smul, this.ne', Real.sq_sqrt this.le, ← Real.sqrt_div this.le]
-  continuous_to_fun :=
-    continuous_subtype_mk _ <| by
-      suffices Continuous fun x => (1 + ∥x∥ ^ 2).sqrt⁻¹ by
-        exact this.smul continuous_id
-      refine'
-        Continuous.inv₀ _ fun x =>
-          real.sqrt_ne_zero'.mpr
-            (by
-              trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]")
-      continuity
+  continuous_to_fun := by
+    suffices : Continuous fun x => (1 + ∥x∥ ^ 2).sqrt⁻¹
+    exact (this.smul continuous_id).subtype_mk _
+    refine'
+      Continuous.inv₀ _ fun x =>
+        real.sqrt_ne_zero'.mpr
+          (by
+            trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]")
+    continuity
   continuous_inv_fun := by
     suffices ∀ y : ball (0 : E) 1, (1 - ∥(y : E)∥ ^ 2).sqrt ≠ 0 by
       continuity

@@ -17,8 +17,9 @@ We also state a corresponding lemma guaranteeing that a subset of `M` contains a
 
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (m m' «expr ∈ » N)
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident N, ",", "⟨", ident N_closed, ",", "⟨", ident m, ",", ident hm, "⟩", ",", ident N_mul, "⟩", ",", ident N_minimal, "⟩", ":", expr «expr∃ , »((N «expr ∈ » S), ∀
-    N' «expr ∈ » S, «expr ⊆ »(N', N) → «expr = »(N', N))]]
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident N, ",", "⟨", ident N_closed, ",", "⟨", ident m, ",", ident hm, "⟩", ",", ident N_mul, "⟩", ",", ident N_minimal, "⟩", ":", expr «expr∃ , »((N «expr ∈ » S),
+    ∀ N' «expr ∈ » S,
+    «expr ⊆ »(N', N) → «expr = »(N', N))]]
 /-- Any nonempty compact Hausdorff semigroup where right-multiplication is continuous contains
 an idempotent, i.e. an `m` such that `m * m = m`. -/
 @[to_additive
@@ -29,7 +30,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
   any minimal element is `{m}` for an idempotent `m : M`. -/
   let S : Set (Set M) := { N | IsClosed N ∧ N.Nonempty ∧ ∀ (m m') (_ : m ∈ N) (_ : m' ∈ N), m * m' ∈ N }
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident N, \",\", \"⟨\", ident N_closed, \",\", \"⟨\", ident m, \",\", ident hm, \"⟩\", \",\", ident N_mul, \"⟩\", \",\", ident N_minimal, \"⟩\", \":\", expr «expr∃ , »((N «expr ∈ » S), ∀\n    N' «expr ∈ » S, «expr ⊆ »(N', N) → «expr = »(N', N))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident N, \",\", \"⟨\", ident N_closed, \",\", \"⟨\", ident m, \",\", ident hm, \"⟩\", \",\", ident N_mul, \"⟩\", \",\", ident N_minimal, \"⟩\", \":\", expr «expr∃ , »((N «expr ∈ » S),\n    ∀ N' «expr ∈ » S,\n    «expr ⊆ »(N', N) → «expr = »(N', N))]]"
   · use m
     /- We now have an element `m : M` of a minimal subsemigroup `N`, and want to show `m + m = m`.
     We first show that every element of `N` is of the form `m' + m`.-/
@@ -92,8 +93,7 @@ theorem exists_idempotent_in_compact_subsemigroup {M} [Semigroupₓ M] [Topologi
     { mul := fun p q => ⟨p.1 * q.1, s_add _ p.2 _ q.2⟩, mul_assoc := fun p q r => Subtype.eq (mul_assoc _ _ _) }
   haveI : CompactSpace M' := is_compact_iff_compact_space.mp s_compact
   haveI : Nonempty M' := nonempty_subtype.mpr snemp
-  have : ∀ p : M', Continuous (· * p) := fun p =>
-    continuous_subtype_mk _ ((continuous_mul_left p.1).comp continuous_subtype_val)
+  have : ∀ p : M', Continuous (· * p) := fun p => ((continuous_mul_left p.1).comp continuous_subtype_val).subtype_mk _
   obtain ⟨⟨m, hm⟩, idem⟩ := exists_idempotent_of_compact_t2_of_continuous_mul_left this
   exact ⟨m, hm, subtype.ext_iff.mp idem⟩
 

@@ -28,7 +28,7 @@ variable [TopologicalSpace α] [OrderTopology α] [TopologicalSpace β]
 
 @[continuity]
 theorem continuous_proj_Icc : Continuous (projIcc a b h) :=
-  continuous_subtype_mk _ <| continuous_const.max <| continuous_const.min continuous_id
+  (continuous_const.max <| continuous_const.min continuous_id).subtype_mk _
 
 theorem quotient_map_proj_Icc : QuotientMap (projIcc a b h) :=
   quotient_map_iff.2
