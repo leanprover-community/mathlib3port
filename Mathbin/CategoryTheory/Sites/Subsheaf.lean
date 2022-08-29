@@ -319,7 +319,7 @@ instance {F F' : Cᵒᵖ ⥤ Type max v w} (f : F ⟶ F') [hf : Mono f] : IsIso 
   rw [is_iso_iff_bijective]
   constructor
   · intro x y e
-    have := (nat_trans.mono_iff_app_mono _ _).mp hf X
+    have := (nat_trans.mono_iff_mono_app _ _).mp hf X
     rw [mono_iff_injective] at this
     exact this (congr_arg Subtype.val e : _)
     

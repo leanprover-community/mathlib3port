@@ -933,19 +933,19 @@ theorem CompositionAsSet.to_composition_blocks (c : CompositionAsSet n) : c.toCo
 theorem CompositionAsSet.to_composition_boundaries (c : CompositionAsSet n) :
     c.toComposition.boundaries = c.boundaries := by
   ext j
-  simp [c.mem_boundaries_iff_exists_blocks_sum_take_eq, c.card_boundaries_eq_succ_length, Composition.boundary,
-    Finₓ.ext_iff, Composition.sizeUpTo, exists_prop, Finset.mem_univ, take, exists_prop_of_true, Finset.mem_image,
-    CompositionAsSet.to_composition_blocks, Composition.boundaries]
+  simp only [c.mem_boundaries_iff_exists_blocks_sum_take_eq, Composition.boundaries, Finset.mem_map]
   constructor
-  · rintro ⟨i, hi⟩
-    refine' ⟨i.1, _, hi⟩
-    convert i.2
-    simp
+  · rintro ⟨i, _, hi⟩
+    refine' ⟨i.1, _, _⟩
+    simpa [c.card_boundaries_eq_succ_length] using i.2
+    simp [Composition.boundary, Composition.sizeUpTo, ← hi]
     
   · rintro ⟨i, i_lt, hi⟩
-    have : i < c.to_composition.length + 1 := by
-      simpa using i_lt
-    exact ⟨⟨i, this⟩, hi⟩
+    refine'
+      ⟨i, by
+        simp , _⟩
+    rw [c.card_boundaries_eq_succ_length] at i_lt
+    simp [Composition.boundary, Nat.mod_eq_of_ltₓ i_lt, Composition.sizeUpTo, hi]
     
 
 @[simp]

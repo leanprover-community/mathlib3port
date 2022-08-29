@@ -130,6 +130,11 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' (h_meas_f : AeMea
   apply lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun h_meas_f.measurable_mk h_meas_g.measurable_mk
   exact h_indep_fun.ae_eq h_meas_f.ae_eq_mk h_meas_g.ae_eq_mk
 
+theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' (h_meas_f : AeMeasurable f μ)
+    (h_meas_g : AeMeasurable g μ) (h_indep_fun : IndepFunₓ f g μ) :
+    (∫⁻ ω, f ω * g ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ :=
+  lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' h_meas_f h_meas_g h_indep_fun
+
 /-- The product of two independent, integrable, real_valued random variables is integrable. -/
 theorem IndepFunₓ.integrable_mul {β : Type _} [MeasurableSpace β] {X Y : Ω → β} [NormedDivisionRing β] [BorelSpace β]
     (hXY : IndepFunₓ X Y μ) (hX : Integrable X μ) (hY : Integrable Y μ) : Integrable (X * Y) μ := by
@@ -144,6 +149,48 @@ theorem IndepFunₓ.integrable_mul {β : Type _} [MeasurableSpace β] {X Y : Ω 
   refine' ⟨hX.1.mul hY.1, _⟩
   simp_rw [has_finite_integral, Pi.mul_apply, nnnorm_mul, Ennreal.coe_mul, hmul]
   exact ennreal.mul_lt_top_iff.mpr (Or.inl ⟨hX.2, hY.2⟩)
+
+/-- If the product of two independent real_valued random variables is integrable and
+the second one is not almost everywhere zero, then the first one is integrable. -/
+theorem IndepFunₓ.integrable_left_of_integrable_mul {β : Type _} [MeasurableSpace β] {X Y : Ω → β}
+    [NormedDivisionRing β] [BorelSpace β] (hXY : IndepFunₓ X Y μ) (h'XY : Integrable (X * Y) μ)
+    (hX : AeStronglyMeasurable X μ) (hY : AeStronglyMeasurable Y μ) (h'Y : ¬Y =ᵐ[μ] 0) : Integrable X μ := by
+  refine' ⟨hX, _⟩
+  have I : (∫⁻ ω, ∥Y ω∥₊ ∂μ) ≠ 0 := by
+    intro H
+    have I : (fun ω => ↑∥Y ω∥₊) =ᵐ[μ] 0 := (lintegral_eq_zero_iff' hY.ennnorm).1 H
+    apply h'Y
+    filter_upwards [I] with ω hω
+    simpa using hω
+  apply lt_top_iff_ne_top.2 fun H => _
+  have J : indep_fun (fun ω => ↑∥X ω∥₊) (fun ω => ↑∥Y ω∥₊) μ := by
+    have M : Measurable fun x : β => (∥x∥₊ : ℝ≥0∞) := measurable_nnnorm.coe_nnreal_ennreal
+    apply indep_fun.comp hXY M M
+  have A : (∫⁻ ω, ∥X ω * Y ω∥₊ ∂μ) < ∞ := h'XY.2
+  simp only [nnnorm_mul, Ennreal.coe_mul] at A
+  rw [lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' hX.ennnorm hY.ennnorm J, H] at A
+  simpa [Ennreal.top_mul, I] using A
+
+/-- If the product of two independent real_valued random variables is integrable and the
+first one is not almost everywhere zero, then the second one is integrable. -/
+theorem IndepFunₓ.integrable_right_of_integrable_mul {β : Type _} [MeasurableSpace β] {X Y : Ω → β}
+    [NormedDivisionRing β] [BorelSpace β] (hXY : IndepFunₓ X Y μ) (h'XY : Integrable (X * Y) μ)
+    (hX : AeStronglyMeasurable X μ) (hY : AeStronglyMeasurable Y μ) (h'X : ¬X =ᵐ[μ] 0) : Integrable Y μ := by
+  refine' ⟨hY, _⟩
+  have I : (∫⁻ ω, ∥X ω∥₊ ∂μ) ≠ 0 := by
+    intro H
+    have I : (fun ω => ↑∥X ω∥₊) =ᵐ[μ] 0 := (lintegral_eq_zero_iff' hX.ennnorm).1 H
+    apply h'X
+    filter_upwards [I] with ω hω
+    simpa using hω
+  apply lt_top_iff_ne_top.2 fun H => _
+  have J : indep_fun (fun ω => ↑∥X ω∥₊) (fun ω => ↑∥Y ω∥₊) μ := by
+    have M : Measurable fun x : β => (∥x∥₊ : ℝ≥0∞) := measurable_nnnorm.coe_nnreal_ennreal
+    apply indep_fun.comp hXY M M
+  have A : (∫⁻ ω, ∥X ω * Y ω∥₊ ∂μ) < ∞ := h'XY.2
+  simp only [nnnorm_mul, Ennreal.coe_mul] at A
+  rw [lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' hX.ennnorm hY.ennnorm J, H] at A
+  simpa [Ennreal.top_mul, I] using A
 
 /-- The (Bochner) integral of the product of two independent, nonnegative random
   variables is the product of their integrals. The proof is just plumbing around
@@ -207,9 +254,39 @@ theorem IndepFunₓ.integral_mul_of_integrable (hXY : IndepFunₓ X Y μ) (hX : 
     hi3.integral_mul_of_nonneg hp1 hp4 hm1 hm4, hi4.integral_mul_of_nonneg hp2 hp4 hm2 hm4]
   ring
 
-theorem IndepFunₓ.integral_mul_of_integrable' (hXY : IndepFunₓ X Y μ) (hX : Integrable X μ) (hY : Integrable Y μ) :
-    (integral μ fun x => X x * Y x) = integral μ X * integral μ Y :=
-  hXY.integral_mul_of_integrable hX hY
+/-- The (Bochner) integral of the product of two independent random
+  variables is the product of their integrals. -/
+theorem IndepFunₓ.integral_mul (hXY : IndepFunₓ X Y μ) (hX : AeStronglyMeasurable X μ) (hY : AeStronglyMeasurable Y μ) :
+    integral μ (X * Y) = integral μ X * integral μ Y := by
+  by_cases' h'X : X =ᵐ[μ] 0
+  · have h' : X * Y =ᵐ[μ] 0 := by
+      filter_upwards [h'X] with ω hω
+      simp [hω]
+    simp only [integral_congr_ae h'X, integral_congr_ae h', Pi.zero_apply, integral_const, Algebra.id.smul_eq_mul,
+      mul_zero, zero_mul]
+    
+  by_cases' h'Y : Y =ᵐ[μ] 0
+  · have h' : X * Y =ᵐ[μ] 0 := by
+      filter_upwards [h'Y] with ω hω
+      simp [hω]
+    simp only [integral_congr_ae h'Y, integral_congr_ae h', Pi.zero_apply, integral_const, Algebra.id.smul_eq_mul,
+      mul_zero, zero_mul]
+    
+  by_cases' h : integrable (X * Y) μ
+  · have HX : integrable X μ := hXY.integrable_left_of_integrable_mul h hX hY h'Y
+    have HY : integrable Y μ := hXY.integrable_right_of_integrable_mul h hX hY h'X
+    exact hXY.integral_mul_of_integrable HX HY
+    
+  · have I : ¬(integrable X μ ∧ integrable Y μ) := by
+      rintro ⟨HX, HY⟩
+      exact h (hXY.integrable_mul HX HY)
+    rw [not_and_distrib] at I
+    cases I <;> simp [integral_undef, I, h]
+    
+
+theorem IndepFunₓ.integral_mul' (hXY : IndepFunₓ X Y μ) (hX : AeStronglyMeasurable X μ)
+    (hY : AeStronglyMeasurable Y μ) : (integral μ fun ω => X ω * Y ω) = integral μ X * integral μ Y :=
+  hXY.integral_mul hX hY
 
 /-- Independence of functions `f` and `g` into arbitrary types is characterized by the relation
   `E[(φ ∘ f) * (ψ ∘ g)] = E[φ ∘ f] * E[ψ ∘ g]` for all measurable `φ` and `ψ` with values in `ℝ`

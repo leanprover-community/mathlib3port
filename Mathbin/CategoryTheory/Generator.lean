@@ -52,13 +52,13 @@ We
 -/
 
 
-universe w v u
+universe w v₁ v₂ u₁ u₂
 
 open CategoryTheory.Limits Opposite
 
 namespace CategoryTheory
 
-variable {C : Type u} [Category.{v} C]
+variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 
 /-- We say that `𝒢` is a separating set if the functors `C(G, -)` for `G ∈ 𝒢` are collectively
     faithful, i.e., if `h ≫ f = h ≫ g` for all `h` with domain in `𝒢` implies `f = g`. -/
@@ -254,10 +254,10 @@ theorem is_coseparating_iff_mono (𝒢 : Set C) [∀ A : C, HasProduct fun f : �
     category with a small coseparating set has an initial object.
 
     In fact, it follows from the Special Adjoint Functor Theorem that `C` is already cocomplete. -/
-theorem has_initial_of_is_cosepatating [WellPowered C] [HasLimits C] {𝒢 : Set C} [Small.{v} 𝒢] (h𝒢 : IsCoseparating 𝒢) :
-    HasInitial C := by
+theorem has_initial_of_is_coseparating [WellPowered C] [HasLimits C] {𝒢 : Set C} [Small.{v₁} 𝒢]
+    (h𝒢 : IsCoseparating 𝒢) : HasInitial C := by
   haveI := has_products_of_shape_of_small C 𝒢
-  haveI := fun A => has_products_of_shape_of_small.{v} C (ΣG : 𝒢, A ⟶ (G : C))
+  haveI := fun A => has_products_of_shape_of_small.{v₁} C (ΣG : 𝒢, A ⟶ (G : C))
   letI := completeLatticeOfCompleteSemilatticeInf (subobject (pi_obj (coe : 𝒢 → C)))
   suffices ∀ A : C, Unique (((⊥ : subobject (pi_obj (coe : 𝒢 → C))) : C) ⟶ A) by
     exact has_initial_of_unique ((⊥ : subobject (pi_obj (coe : 𝒢 → C))) : C)
@@ -281,11 +281,11 @@ theorem has_initial_of_is_cosepatating [WellPowered C] [HasLimits C] {𝒢 : Set
     category with a small separating set has a terminal object.
 
     In fact, it follows from the Special Adjoint Functor Theorem that `C` is already complete. -/
-theorem has_terminal_of_is_separating [WellPowered Cᵒᵖ] [HasColimits C] {𝒢 : Set C} [Small.{v} 𝒢]
+theorem has_terminal_of_is_separating [WellPowered Cᵒᵖ] [HasColimits C] {𝒢 : Set C} [Small.{v₁} 𝒢]
     (h𝒢 : IsSeparating 𝒢) : HasTerminal C := by
   haveI : has_limits Cᵒᵖ := has_limits_op_of_has_colimits
-  haveI : Small.{v} 𝒢.op := small_of_injective (Set.opEquivSelf 𝒢).Injective
-  haveI : has_initial Cᵒᵖ := has_initial_of_is_cosepatating ((is_coseparating_op_iff _).2 h𝒢)
+  haveI : Small.{v₁} 𝒢.op := small_of_injective (Set.opEquivSelf 𝒢).Injective
+  haveI : has_initial Cᵒᵖ := has_initial_of_is_coseparating ((is_coseparating_op_iff _).2 h𝒢)
   exact has_terminal_of_has_initial_op
 
 section WellPowered
@@ -324,7 +324,7 @@ theorem eq_of_is_detecting [HasPullbacks C] {𝒢 : Set C} (h𝒢 : IsDetecting 
 end Subobject
 
 /-- A category with pullbacks and a small detecting set is well-powered. -/
-theorem well_powered_of_is_detecting [HasPullbacks C] {𝒢 : Set C} [Small.{v} 𝒢] (h𝒢 : IsDetecting 𝒢) : WellPowered C :=
+theorem well_powered_of_is_detecting [HasPullbacks C] {𝒢 : Set C} [Small.{v₁} 𝒢] (h𝒢 : IsDetecting 𝒢) : WellPowered C :=
   ⟨fun X =>
     (@small_of_injective _ _ _ fun P : Subobject X => { f : ΣG : 𝒢, G.1 ⟶ X | P.Factors f.2 }) fun P Q h =>
       Subobject.eq_of_is_detecting h𝒢 _ _
@@ -332,6 +332,26 @@ theorem well_powered_of_is_detecting [HasPullbacks C] {𝒢 : Set C} [Small.{v} 
           simpa [Set.ext_iff] using h)⟩
 
 end WellPowered
+
+namespace StructuredArrow
+
+variable (S : D) (T : C ⥤ D)
+
+theorem is_coseparating_proj_preimage {𝒢 : Set C} (h𝒢 : IsCoseparating 𝒢) : IsCoseparating ((proj S T).obj ⁻¹' 𝒢) := by
+  refine' fun X Y f g hfg => ext _ _ (h𝒢 _ _ fun G hG h => _)
+  exact congr_arg comma_morphism.right (hfg (mk (Y.hom ≫ T.map h)) hG (hom_mk h rfl))
+
+end StructuredArrow
+
+namespace CostructuredArrow
+
+variable (S : C ⥤ D) (T : D)
+
+theorem is_separating_proj_preimage {𝒢 : Set C} (h𝒢 : IsSeparating 𝒢) : IsSeparating ((proj S T).obj ⁻¹' 𝒢) := by
+  refine' fun X Y f g hfg => ext _ _ (h𝒢 _ _ fun G hG h => _)
+  convert congr_arg comma_morphism.left (hfg (mk (S.map h ≫ X.hom)) hG (hom_mk h rfl))
+
+end CostructuredArrow
 
 /-- We say that `G` is a separator if the functor `C(G, -)` is faithful. -/
 def IsSeparator (G : C) : Prop :=

@@ -134,6 +134,8 @@ theorem tsub_le_tsub_left (h : a ≤ b) (c : α) : c - b ≤ c - a :=
 theorem tsub_le_tsub (hab : a ≤ b) (hcd : c ≤ d) : a - d ≤ b - c :=
   (tsub_le_tsub_right hab _).trans <| tsub_le_tsub_left hcd _
 
+theorem antitone_const_tsub : Antitone fun x => c - x := fun x y hxy => tsub_le_tsub rfl.le hxy
+
 /-- See `add_tsub_assoc_of_le` for the equality. -/
 theorem add_tsub_le_assoc : a + b - c ≤ a + (b - c) := by
   rw [tsub_le_iff_left, add_left_commₓ]

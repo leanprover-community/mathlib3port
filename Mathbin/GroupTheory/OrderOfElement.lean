@@ -741,7 +741,7 @@ def subgroupOfIdempotent {G : Type _} [Groupₓ G] [Fintype G] (S : Set G) (hS1 
         rw [← one_mulₓ a⁻¹, ← pow_oneₓ a, ← pow_order_of_eq_one a, ← pow_sub a (order_of_pos a)]
         exact pow_mem ha (orderOf a - 1) }
 
--- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Interactive.lean:71:16: TODO classical! not yet supported
+-- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Interactive.lean:72:16: TODO classical! not yet supported
 /-- If `S` is a nonempty subset of a finite group `G`, then `S ^ |G|` is a subgroup -/
 @[to_additive smulCardAddSubgroup
       "If `S` is a nonempty subset of a finite add group `G`,\n  then `|G| • S` is a subgroup",

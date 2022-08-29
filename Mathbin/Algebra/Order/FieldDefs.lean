@@ -31,6 +31,8 @@ The lemmata are instead located there.
 -/
 
 
+variable {α : Type _}
+
 /-- A linear ordered semifield is a field with a linear order respecting the operations. -/
 @[protect_proj]
 class LinearOrderedSemifield (α : Type _) extends LinearOrderedSemiring α, Semifield α
@@ -39,8 +41,19 @@ class LinearOrderedSemifield (α : Type _) extends LinearOrderedSemiring α, Sem
 @[protect_proj]
 class LinearOrderedField (α : Type _) extends LinearOrderedCommRing α, Field α
 
+/-- A canonically linear ordered field is a linear ordered field in which `a ≤ b` iff there exists
+`c` with `b = a + c`. -/
+@[protect_proj]
+class CanonicallyLinearOrderedSemifield (α : Type _) extends CanonicallyOrderedCommSemiring α, LinearOrderedSemifield α
+
 -- See note [lower instance priority]
-instance (priority := 100) LinearOrderedField.toLinearOrderedSemifield {α} [LinearOrderedField α] :
+instance (priority := 100) LinearOrderedField.toLinearOrderedSemifield [LinearOrderedField α] :
     LinearOrderedSemifield α :=
   { LinearOrderedRing.toLinearOrderedSemiring, ‹LinearOrderedField α› with }
+
+-- See note [lower instance priority]
+instance (priority := 100) CanonicallyLinearOrderedSemifield.toLinearOrderedCommGroupWithZero
+    [CanonicallyLinearOrderedSemifield α] : LinearOrderedCommGroupWithZero α :=
+  { ‹CanonicallyLinearOrderedSemifield α› with
+    mul_le_mul_left := fun a b h c => mul_le_mul_of_nonneg_left h <| zero_le _ }
 

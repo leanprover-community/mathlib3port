@@ -45,11 +45,7 @@ instance (priority := 10) has_finite_products_of_has_finite_limits [HasFiniteLim
     infer_instance⟩
 
 instance has_fintype_products [HasFiniteProducts C] (ι : Type w) [Fintype ι] : HasLimitsOfShape (Discrete ι) C :=
-  has_limits_of_shape_of_equivalence
-    (Discrete.equivalence
-      (show ULift.{0} (Finₓ (Fintype.card ι)) ≃ Finₓ (Fintype.card ι) by
-            tidy.trans
-        (Fintype.equivFin ι).symm))
+  has_limits_of_shape_of_equivalence (Discrete.equivalence (Equivₓ.ulift.{0}.trans (Fintype.equivFin ι).symm))
 
 /-- We can now write this for powers. -/
 noncomputable example [HasFiniteProducts C] (X : C) : C :=
@@ -80,11 +76,7 @@ instance (priority := 10) has_finite_coproducts_of_has_finite_colimits [HasFinit
     infer_instance⟩
 
 instance has_fintype_coproducts [HasFiniteCoproducts C] (ι : Type w) [Fintype ι] : HasColimitsOfShape (Discrete ι) C :=
-  has_colimits_of_shape_of_equivalence
-    (Discrete.equivalence
-      (show ULift.{0} (Finₓ (Fintype.card ι)) ≃ Finₓ (Fintype.card ι) by
-            tidy.trans
-        (Fintype.equivFin ι).symm))
+  has_colimits_of_shape_of_equivalence (Discrete.equivalence (Equivₓ.ulift.{0}.trans (Fintype.equivFin ι).symm))
 
 /-- If a category has all coproducts then in particular it has finite coproducts.
 -/

@@ -1948,7 +1948,7 @@ theorem card_pow_eq_card_pow_card_univ_aux {f : ℕ → ℕ} (h1 : Monotone f) {
 
 variable {G : Type _} [Groupₓ G] [Fintype G] (S : Set G)
 
--- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Interactive.lean:71:16: TODO classical! not yet supported
+-- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Interactive.lean:72:16: TODO classical! not yet supported
 @[to_additive]
 theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k)] :
     ∀ k, Fintype.card G ≤ k → Fintype.card ↥(S ^ k) = Fintype.card ↥(S ^ Fintype.card G) := by

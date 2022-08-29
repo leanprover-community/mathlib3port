@@ -563,6 +563,9 @@ theorem indep_fun_iff_indep_set_preimage {mβ : MeasurableSpace β} {mβ' : Meas
   · rwa [← indep_set_iff_measure_inter_eq_mul (hf hs) (hg ht) μ]
     
 
+theorem IndepFunₓ.symm {mβ : MeasurableSpace β} {f g : Ω → β} (hfg : IndepFunₓ f g μ) : IndepFunₓ g f μ :=
+  hfg.symm
+
 theorem IndepFunₓ.ae_eq {mβ : MeasurableSpace β} {f g f' g' : Ω → β} (hfg : IndepFunₓ f g μ) (hf : f =ᵐ[μ] f')
     (hg : g =ᵐ[μ] g') : IndepFunₓ f' g' μ := by
   rintro _ _ ⟨A, hA, rfl⟩ ⟨B, hB, rfl⟩

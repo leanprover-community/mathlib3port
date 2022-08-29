@@ -4,9 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
 import Mathbin.Algebra.Order.Archimedean
-import Mathbin.Algebra.Order.Floor
-import Mathbin.Algebra.Order.Sub
-import Mathbin.Algebra.Order.WithZero
 import Mathbin.Order.LatticeIntervals
 import Mathbin.Order.CompleteLatticeIntervals
 
@@ -231,41 +228,6 @@ def coeRingHom [OrderedSemiring α] : { x : α // 0 ≤ x } →+* α :=
 protected theorem coe_nat_cast [OrderedSemiring α] (n : ℕ) : ((↑n : { x : α // 0 ≤ x }) : α) = n :=
   map_nat_cast (coeRingHom : { x : α // 0 ≤ x } →+* α) n
 
-instance hasInv [LinearOrderedField α] : Inv { x : α // 0 ≤ x } where inv := fun x => ⟨x⁻¹, inv_nonneg.mpr x.2⟩
-
-@[simp, norm_cast]
-protected theorem coe_inv [LinearOrderedField α] (a : { x : α // 0 ≤ x }) : ((a⁻¹ : { x : α // 0 ≤ x }) : α) = a⁻¹ :=
-  rfl
-
-@[simp]
-theorem inv_mk [LinearOrderedField α] {x : α} (hx : 0 ≤ x) :
-    (⟨x, hx⟩ : { x : α // 0 ≤ x })⁻¹ = ⟨x⁻¹, inv_nonneg.mpr hx⟩ :=
-  rfl
-
-instance linearOrderedCommGroupWithZero [LinearOrderedField α] : LinearOrderedCommGroupWithZero { x : α // 0 ≤ x } :=
-  { Nonneg.nontrivial, Nonneg.hasInv, Nonneg.linearOrderedCommMonoidWithZero with
-    inv_zero := by
-      ext
-      exact inv_zero,
-    mul_inv_cancel := by
-      intro a ha
-      ext
-      refine' mul_inv_cancel (mt (fun h => _) ha)
-      ext
-      exact h }
-
-instance hasDiv [LinearOrderedField α] : Div { x : α // 0 ≤ x } where div := fun x y => ⟨x / y, div_nonneg x.2 y.2⟩
-
-@[simp, norm_cast]
-protected theorem coe_div [LinearOrderedField α] (a b : { x : α // 0 ≤ x }) :
-    ((a / b : { x : α // 0 ≤ x }) : α) = a / b :=
-  rfl
-
-@[simp]
-theorem mk_div_mk [LinearOrderedField α] {x y : α} (hx : 0 ≤ x) (hy : 0 ≤ y) :
-    (⟨x, hx⟩ : { x : α // 0 ≤ x }) / ⟨y, hy⟩ = ⟨x / y, div_nonneg hx hy⟩ :=
-  rfl
-
 instance canonicallyOrderedAddMonoid [OrderedRing α] : CanonicallyOrderedAddMonoid { x : α // 0 ≤ x } :=
   { Nonneg.orderedAddCommMonoid, Nonneg.orderBot with le_self_add := fun a b => le_add_of_nonneg_right b.2,
     exists_add_of_le := fun a b h => ⟨⟨b - a, sub_nonneg_of_le h⟩, Subtype.ext (add_sub_cancel'_right _ _).symm⟩ }
@@ -280,6 +242,66 @@ instance canonicallyOrderedCommSemiring [OrderedCommRing α] [NoZeroDivisors α]
 instance canonicallyLinearOrderedAddMonoid [LinearOrderedRing α] :
     CanonicallyLinearOrderedAddMonoid { x : α // 0 ≤ x } :=
   { Subtype.linearOrder _, Nonneg.canonicallyOrderedAddMonoid with }
+
+section LinearOrderedSemifield
+
+variable [LinearOrderedSemifield α] {x y : α}
+
+instance hasInv : Inv { x : α // 0 ≤ x } :=
+  ⟨fun x => ⟨x⁻¹, inv_nonneg.mpr x.2⟩⟩
+
+@[simp, norm_cast]
+protected theorem coe_inv (a : { x : α // 0 ≤ x }) : ((a⁻¹ : { x : α // 0 ≤ x }) : α) = a⁻¹ :=
+  rfl
+
+@[simp]
+theorem inv_mk (hx : 0 ≤ x) : (⟨x, hx⟩ : { x : α // 0 ≤ x })⁻¹ = ⟨x⁻¹, inv_nonneg.mpr hx⟩ :=
+  rfl
+
+instance hasDiv : Div { x : α // 0 ≤ x } :=
+  ⟨fun x y => ⟨x / y, div_nonneg x.2 y.2⟩⟩
+
+@[simp, norm_cast]
+protected theorem coe_div (a b : { x : α // 0 ≤ x }) : ((a / b : { x : α // 0 ≤ x }) : α) = a / b :=
+  rfl
+
+@[simp]
+theorem mk_div_mk (hx : 0 ≤ x) (hy : 0 ≤ y) : (⟨x, hx⟩ : { x : α // 0 ≤ x }) / ⟨y, hy⟩ = ⟨x / y, div_nonneg hx hy⟩ :=
+  rfl
+
+instance hasZpow : Pow { x : α // 0 ≤ x } ℤ :=
+  ⟨fun a n => ⟨a ^ n, zpow_nonneg a.2 _⟩⟩
+
+@[simp, norm_cast]
+protected theorem coe_zpow (a : { x : α // 0 ≤ x }) (n : ℤ) : ((a ^ n : { x : α // 0 ≤ x }) : α) = a ^ n :=
+  rfl
+
+@[simp]
+theorem mk_zpow (hx : 0 ≤ x) (n : ℤ) : (⟨x, hx⟩ : { x : α // 0 ≤ x }) ^ n = ⟨x ^ n, zpow_nonneg hx n⟩ :=
+  rfl
+
+instance linearOrderedSemifield : LinearOrderedSemifield { x : α // 0 ≤ x } :=
+  Subtype.coe_injective.LinearOrderedSemifield _ Nonneg.coe_zero Nonneg.coe_one Nonneg.coe_add Nonneg.coe_mul
+    Nonneg.coe_inv Nonneg.coe_div (fun _ _ => rfl) Nonneg.coe_pow Nonneg.coe_zpow Nonneg.coe_nat_cast (fun _ _ => rfl)
+    fun _ _ => rfl
+
+end LinearOrderedSemifield
+
+instance linearOrderedCommGroupWithZero [LinearOrderedField α] : LinearOrderedCommGroupWithZero { x : α // 0 ≤ x } :=
+  { Nonneg.nontrivial, Nonneg.hasInv, Nonneg.linearOrderedCommMonoidWithZero with
+    inv_zero := by
+      ext
+      exact inv_zero,
+    mul_inv_cancel := by
+      intro a ha
+      ext
+      refine' mul_inv_cancel (mt (fun h => _) ha)
+      ext
+      exact h }
+
+instance canonicallyLinearOrderedSemifield [LinearOrderedField α] :
+    CanonicallyLinearOrderedSemifield { x : α // 0 ≤ x } :=
+  { Nonneg.linearOrderedSemifield, Nonneg.canonicallyOrderedCommSemiring with }
 
 instance floorSemiring [OrderedSemiring α] [FloorSemiring α] : FloorSemiring { r : α // 0 ≤ r } where
   floor := fun a => ⌊(a : α)⌋₊

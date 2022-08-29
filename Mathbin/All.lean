@@ -1363,6 +1363,7 @@ import Mathbin.Data.Rat.Defs
 import Mathbin.Data.Rat.Denumerable
 import Mathbin.Data.Rat.Floor
 import Mathbin.Data.Rat.MetaDefs
+import Mathbin.Data.Rat.Nnrat
 import Mathbin.Data.Rat.Order
 import Mathbin.Data.Rat.Sqrt
 import Mathbin.Data.Rbmap.Basic

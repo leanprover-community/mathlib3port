@@ -207,18 +207,50 @@ theorem IndepFunₓ.exp_mul {X Y : Ω → ℝ} (h_indep : IndepFunₓ X Y μ) (s
   change indep_fun ((fun x => exp (s * x)) ∘ X) ((fun x => exp (t * x)) ∘ Y) μ
   exact indep_fun.comp h_indep (h_meas s) (h_meas t)
 
-theorem IndepFunₓ.mgf_add {X Y : Ω → ℝ} (h_indep : IndepFunₓ X Y μ) (h_int_X : Integrable (fun ω => exp (t * X ω)) μ)
-    (h_int_Y : Integrable (fun ω => exp (t * Y ω)) μ) : mgf (X + Y) μ t = mgf X μ t * mgf Y μ t := by
+theorem IndepFunₓ.mgf_add {X Y : Ω → ℝ} (h_indep : IndepFunₓ X Y μ)
+    (hX : AeStronglyMeasurable (fun ω => exp (t * X ω)) μ) (hY : AeStronglyMeasurable (fun ω => exp (t * Y ω)) μ) :
+    mgf (X + Y) μ t = mgf X μ t * mgf Y μ t := by
   simp_rw [mgf, Pi.add_apply, mul_addₓ, exp_add]
-  exact (h_indep.exp_mul t t).integral_mul_of_integrable' h_int_X h_int_Y
+  exact (h_indep.exp_mul t t).integral_mul hX hY
+
+theorem IndepFunₓ.mgf_add' {X Y : Ω → ℝ} (h_indep : IndepFunₓ X Y μ) (hX : AeStronglyMeasurable X μ)
+    (hY : AeStronglyMeasurable Y μ) : mgf (X + Y) μ t = mgf X μ t * mgf Y μ t := by
+  have A : Continuous fun x : ℝ => exp (t * x) := by
+    continuity
+  have h'X : ae_strongly_measurable (fun ω => exp (t * X ω)) μ :=
+    A.ae_strongly_measurable.comp_ae_measurable hX.ae_measurable
+  have h'Y : ae_strongly_measurable (fun ω => exp (t * Y ω)) μ :=
+    A.ae_strongly_measurable.comp_ae_measurable hY.ae_measurable
+  exact h_indep.mgf_add h'X h'Y
 
 theorem IndepFunₓ.cgf_add {X Y : Ω → ℝ} (h_indep : IndepFunₓ X Y μ) (h_int_X : Integrable (fun ω => exp (t * X ω)) μ)
     (h_int_Y : Integrable (fun ω => exp (t * Y ω)) μ) : cgf (X + Y) μ t = cgf X μ t + cgf Y μ t := by
   by_cases' hμ : μ = 0
   · simp [hμ]
     
-  simp only [cgf, h_indep.mgf_add h_int_X h_int_Y]
+  simp only [cgf, h_indep.mgf_add h_int_X.ae_strongly_measurable h_int_Y.ae_strongly_measurable]
   exact log_mul (mgf_pos' hμ h_int_X).ne' (mgf_pos' hμ h_int_Y).ne'
+
+theorem ae_strongly_measurable_exp_mul_add {X Y : Ω → ℝ} (h_int_X : AeStronglyMeasurable (fun ω => exp (t * X ω)) μ)
+    (h_int_Y : AeStronglyMeasurable (fun ω => exp (t * Y ω)) μ) :
+    AeStronglyMeasurable (fun ω => exp (t * (X + Y) ω)) μ := by
+  simp_rw [Pi.add_apply, mul_addₓ, exp_add]
+  exact ae_strongly_measurable.mul h_int_X h_int_Y
+
+theorem ae_strongly_measurable_exp_mul_sum {X : ι → Ω → ℝ} {s : Finset ι}
+    (h_int : ∀ i ∈ s, AeStronglyMeasurable (fun ω => exp (t * X i ω)) μ) :
+    AeStronglyMeasurable (fun ω => exp (t * (∑ i in s, X i) ω)) μ := by
+  classical
+  induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
+  · simp only [Pi.zero_apply, sum_apply, sum_empty, mul_zero, exp_zero]
+    exact ae_strongly_measurable_const
+    
+  · have : ∀ i : ι, i ∈ s → ae_strongly_measurable (fun ω : Ω => exp (t * X i ω)) μ := fun i hi =>
+      h_int i (mem_insert_of_mem hi)
+    specialize h_rec this
+    rw [sum_insert hi_notin_s]
+    apply ae_strongly_measurable_exp_mul_add (h_int i (mem_insert_self _ _)) h_rec
+    
 
 theorem IndepFunₓ.integrable_exp_mul_add {X Y : Ω → ℝ} (h_indep : IndepFunₓ X Y μ)
     (h_int_X : Integrable (fun ω => exp (t * X ω)) μ) (h_int_Y : Integrable (fun ω => exp (t * Y ω)) μ) :
@@ -243,18 +275,17 @@ theorem IndepFun.integrable_exp_mul_sum [IsProbabilityMeasure μ] {X : ι → Ω
     
 
 theorem IndepFun.mgf_sum [IsProbabilityMeasure μ] {X : ι → Ω → ℝ} (h_indep : IndepFun (fun i => inferInstance) X μ)
-    (h_meas : ∀ i, Measurable (X i)) {s : Finset ι} (h_int : ∀ i ∈ s, Integrable (fun ω => exp (t * X i ω)) μ) :
-    mgf (∑ i in s, X i) μ t = ∏ i in s, mgf (X i) μ t := by
+    (h_meas : ∀ i, Measurable (X i)) (s : Finset ι) : mgf (∑ i in s, X i) μ t = ∏ i in s, mgf (X i) μ t := by
   classical
   induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
   · simp only [sum_empty, mgf_zero_fun, measure_univ, Ennreal.one_to_real, prod_empty]
     
-  · have h_int' : ∀ i : ι, i ∈ s → integrable (fun ω : Ω => exp (t * X i ω)) μ := fun i hi =>
-      h_int i (mem_insert_of_mem hi)
+  · have h_int' : ∀ i : ι, ae_strongly_measurable (fun ω : Ω => exp (t * X i ω)) μ := fun i =>
+      ((h_meas i).const_mul t).exp.AeStronglyMeasurable
     rw [sum_insert hi_notin_s,
-      indep_fun.mgf_add (h_indep.indep_fun_finset_sum_of_not_mem h_meas hi_notin_s).symm (h_int i (mem_insert_self _ _))
-        (h_indep.integrable_exp_mul_sum h_meas h_int'),
-      h_rec h_int', prod_insert hi_notin_s]
+      indep_fun.mgf_add (h_indep.indep_fun_finset_sum_of_not_mem h_meas hi_notin_s).symm (h_int' i)
+        (ae_strongly_measurable_exp_mul_sum fun i hi => h_int' i),
+      h_rec, prod_insert hi_notin_s]
     
 
 theorem IndepFun.cgf_sum [IsProbabilityMeasure μ] {X : ι → Ω → ℝ} (h_indep : IndepFun (fun i => inferInstance) X μ)
@@ -262,7 +293,7 @@ theorem IndepFun.cgf_sum [IsProbabilityMeasure μ] {X : ι → Ω → ℝ} (h_in
     cgf (∑ i in s, X i) μ t = ∑ i in s, cgf (X i) μ t := by
   simp_rw [cgf]
   rw [← log_prod _ _ fun j hj => _]
-  · rw [h_indep.mgf_sum h_meas h_int]
+  · rw [h_indep.mgf_sum h_meas]
     
   · exact (mgf_pos (h_int j hj)).ne'
     

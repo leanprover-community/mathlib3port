@@ -77,13 +77,13 @@ theorem naturality_app {F G : C ⥤ D ⥤ E} (T : F ⟶ G) (Z : D) {X Y : C} (f 
   congr_fun (congr_arg app (T.naturality f)) Z
 
 /-- A natural transformation is a monomorphism if each component is. -/
-theorem mono_app_of_mono (α : F ⟶ G) [∀ X : C, Mono (α.app X)] : Mono α :=
+theorem mono_of_mono_app (α : F ⟶ G) [∀ X : C, Mono (α.app X)] : Mono α :=
   ⟨fun H g h eq => by
     ext X
     rw [← cancel_mono (α.app X), ← comp_app, Eq, comp_app]⟩
 
 /-- A natural transformation is an epimorphism if each component is. -/
-theorem epi_app_of_epi (α : F ⟶ G) [∀ X : C, Epi (α.app X)] : Epi α :=
+theorem epi_of_epi_app (α : F ⟶ G) [∀ X : C, Epi (α.app X)] : Epi α :=
   ⟨fun H g h eq => by
     ext X
     rw [← cancel_epi (α.app X), ← comp_app, Eq, comp_app]⟩

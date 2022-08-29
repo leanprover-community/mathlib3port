@@ -159,7 +159,7 @@ instance : IsFractionRing A K where
         simpa using h⟩,
       fun ⟨c, h⟩ => congr_arg coe ((mul_eq_mul_right_iff.1 h).resolve_right (nonZeroDivisors.ne_zero c.2))⟩
 
-/-- The value group of the valuation associated to `A`. -/
+/-- The value group of the valuation associated to `A`. Note: it is actually a group with zero. -/
 def ValueGroup :=
   ValuationRing.ValueGroup A K deriving LinearOrderedCommGroupWithZero
 

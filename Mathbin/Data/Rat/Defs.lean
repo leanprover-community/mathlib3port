@@ -1058,6 +1058,14 @@ theorem mk_pnat_pnat_denom_eq (x : ℚ) : mkPnat x.num x.pnatDenom = x := by
 theorem pnat_denom_eq_iff_denom_eq {x : ℚ} {n : ℕ+} : x.pnatDenom = n ↔ x.denom = ↑n :=
   Subtype.ext_iff
 
+@[simp]
+theorem pnat_denom_one : (1 : ℚ).pnatDenom = 1 :=
+  rfl
+
+@[simp]
+theorem pnat_denom_zero : (0 : ℚ).pnatDenom = 1 :=
+  rfl
+
 end PnatDenom
 
 end Rat

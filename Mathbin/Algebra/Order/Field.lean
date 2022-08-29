@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 -/
 import Mathbin.Algebra.Order.FieldDefs
+import Mathbin.Algebra.Order.WithZero
 
 /-!
 # Linear ordered (semi)fields
@@ -875,4 +876,13 @@ theorem Nat.cast_le_pow_div_sub (H : 1 < a) (n : ℕ) : (n : α) ≤ a ^ n / (a 
   (n.cast_le_pow_sub_div_sub H).trans <| div_le_div_of_le (sub_nonneg.2 H.le) (sub_le_self _ zero_le_one)
 
 end
+
+section CanonicallyLinearOrderedSemifield
+
+variable [CanonicallyLinearOrderedSemifield α] [Sub α] [HasOrderedSub α]
+
+theorem tsub_div (a b c : α) : (a - b) / c = a / c - b / c := by
+  simp_rw [div_eq_mul_inv, tsub_mul]
+
+end CanonicallyLinearOrderedSemifield
 
