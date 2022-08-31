@@ -68,7 +68,7 @@ theorem variance_smul' {A : Type _} [CommSemiringₓ A] [Algebra A ℝ] {Ω : Ty
   · simp only [Algebra.smul_def, map_pow]
     
 
--- mathport name: «exprVar[ ]»
+-- mathport name: probability_theory.variance
 localized [ProbabilityTheory] notation "Var[" X "]" => ProbabilityTheory.variance X MeasureTheory.MeasureSpace.volume
 
 variable {Ω : Type _} [MeasureSpace Ω] [IsProbabilityMeasure (volume : Measureₓ Ω)]

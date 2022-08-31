@@ -106,9 +106,9 @@ theorem fst_surjectiveₓ [h : Nonempty β] : Function.Surjective (@fst α β) :
 
 theorem snd_surjective [h : Nonempty α] : Function.Surjective (@snd α β) := fun y => h.elim fun x => ⟨⟨x, y⟩, rfl⟩
 
-theorem fst_injectiveₓ [Subsingleton β] : Function.Injective (@fst α β) := fun x y h => extₓ h (Subsingleton.elimₓ _ _)
+theorem fst_injectiveₓ [Subsingleton β] : Function.Injective (@fst α β) := fun x y h => extₓ h (Subsingleton.elim _ _)
 
-theorem snd_injective [Subsingleton α] : Function.Injective (@snd α β) := fun x y h => extₓ (Subsingleton.elimₓ _ _) h
+theorem snd_injective [Subsingleton α] : Function.Injective (@snd α β) := fun x y h => extₓ (Subsingleton.elim _ _) h
 
 /-- Swap the factors of a product. `swap (a, b) = (b, a)` -/
 def swap : α × β → β × α := fun p => (p.2, p.1)

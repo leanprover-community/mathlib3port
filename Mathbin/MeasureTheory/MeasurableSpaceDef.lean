@@ -65,8 +65,8 @@ section
 def MeasurableSet [MeasurableSpace α] : Set α → Prop :=
   ‹MeasurableSpace α›.MeasurableSet'
 
--- mathport name: «exprmeasurable_set[ ]»
-localized [MeasureTheory] notation "measurable_set[" m "]" => @MeasurableSet _ m
+-- mathport name: measurable_set_of
+localized [MeasureTheory] notation "measurable_set[" m "]" => @MeasurableSet hole! m
 
 @[simp]
 theorem MeasurableSet.empty [MeasurableSpace α] : MeasurableSet (∅ : Set α) :=
@@ -101,10 +101,11 @@ theorem MeasurableSet.bUnion_decode₂ [Encodable β] ⦃f : β → Set α⦄ (h
     MeasurableSet (⋃ b ∈ decode₂ β n, f b) :=
   Encodable.Union_decode₂_cases MeasurableSet.empty h
 
-theorem MeasurableSet.Union [Encodable β] ⦃f : β → Set α⦄ (h : ∀ b, MeasurableSet (f b)) : MeasurableSet (⋃ b, f b) :=
+theorem MeasurableSet.Union [Countable ι] ⦃f : ι → Set α⦄ (h : ∀ b, MeasurableSet (f b)) : MeasurableSet (⋃ b, f b) :=
   by
-  rw [← Encodable.Union_decode₂]
-  exact ‹MeasurableSpace α›.measurable_set_Union _ (MeasurableSet.bUnion_decode₂ h)
+  cases nonempty_encodable (Plift ι)
+  rw [← Union_plift_down, ← Encodable.Union_decode₂]
+  exact ‹MeasurableSpace α›.measurable_set_Union _ (MeasurableSet.bUnion_decode₂ fun _ => h _)
 
 theorem MeasurableSet.bUnion {f : β → Set α} {s : Set β} (hs : s.Countable) (h : ∀ b ∈ s, MeasurableSet (f b)) :
     MeasurableSet (⋃ b ∈ s, f b) := by
@@ -132,28 +133,10 @@ theorem Set.Finite.measurable_set_sUnion {s : Set (Set α)} (hs : s.Finite) (h :
     MeasurableSet (⋃₀s) :=
   MeasurableSet.sUnion hs.Countable h
 
-theorem MeasurableSet.Union_Prop {p : Prop} {f : p → Set α} (hf : ∀ b, MeasurableSet (f b)) :
-    MeasurableSet (⋃ b, f b) := by
-  by_cases' p <;> simp [h, hf, MeasurableSet.empty]
-
-theorem MeasurableSet.Inter [Encodable β] {f : β → Set α} (h : ∀ b, MeasurableSet (f b)) : MeasurableSet (⋂ b, f b) :=
+theorem MeasurableSet.Inter [Countable ι] {f : ι → Set α} (h : ∀ b, MeasurableSet (f b)) : MeasurableSet (⋂ b, f b) :=
   MeasurableSet.compl_iff.1 <| by
     rw [compl_Inter]
     exact MeasurableSet.Union fun b => (h b).compl
-
-section Fintype
-
-attribute [local instance] Fintype.toEncodable
-
-theorem MeasurableSet.Union_fintype [Fintype β] {f : β → Set α} (h : ∀ b, MeasurableSet (f b)) :
-    MeasurableSet (⋃ b, f b) :=
-  MeasurableSet.Union h
-
-theorem MeasurableSet.Inter_fintype [Fintype β] {f : β → Set α} (h : ∀ b, MeasurableSet (f b)) :
-    MeasurableSet (⋂ b, f b) :=
-  MeasurableSet.Inter h
-
-end Fintype
 
 theorem MeasurableSet.bInter {f : β → Set α} {s : Set β} (hs : s.Countable) (h : ∀ b ∈ s, MeasurableSet (f b)) :
     MeasurableSet (⋂ b ∈ s, f b) :=
@@ -177,10 +160,6 @@ theorem MeasurableSet.sInter {s : Set (Set α)} (hs : s.Countable) (h : ∀ t �
 theorem Set.Finite.measurable_set_sInter {s : Set (Set α)} (hs : s.Finite) (h : ∀ t ∈ s, MeasurableSet t) :
     MeasurableSet (⋂₀ s) :=
   MeasurableSet.sInter hs.Countable h
-
-theorem MeasurableSet.Inter_Prop {p : Prop} {f : p → Set α} (hf : ∀ b, MeasurableSet (f b)) :
-    MeasurableSet (⋂ b, f b) := by
-  by_cases' p <;> simp [h, hf, MeasurableSet.univ]
 
 @[simp]
 theorem MeasurableSet.union {s₁ s₂ : Set α} (h₁ : MeasurableSet s₁) (h₂ : MeasurableSet s₂) : MeasurableSet (s₁ ∪ s₂) :=
@@ -472,8 +451,8 @@ open MeasurableSpace
 def Measurable [MeasurableSpace α] [MeasurableSpace β] (f : α → β) : Prop :=
   ∀ ⦃t : Set β⦄, MeasurableSet t → MeasurableSet (f ⁻¹' t)
 
--- mathport name: «exprmeasurable[ ]»
-localized [MeasureTheory] notation "measurable[" m "]" => @Measurable _ _ m _
+-- mathport name: measurable_of
+localized [MeasureTheory] notation "measurable[" m "]" => @Measurable hole! hole! m hole!
 
 theorem measurable_id {ma : MeasurableSpace α} : Measurable (@id α) := fun t => id
 

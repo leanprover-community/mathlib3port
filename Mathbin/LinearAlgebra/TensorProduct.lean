@@ -86,10 +86,10 @@ def TensorProduct : Type _ :=
 
 variable {R}
 
--- mathport name: «expr ⊗ »
-localized [TensorProduct] infixl:100 " ⊗ " => TensorProduct _
+-- mathport name: tensor_product.infer
+localized [TensorProduct] infixl:100 " ⊗ " => TensorProduct hole!
 
--- mathport name: «expr ⊗[ ] »
+-- mathport name: tensor_product
 localized [TensorProduct] notation:100 M " ⊗[" R "] " N:100 => TensorProduct R M N
 
 namespace TensorProduct

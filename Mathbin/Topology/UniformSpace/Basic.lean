@@ -146,7 +146,7 @@ theorem id_rel_subset {s : Set (α × α)} : IdRel ⊆ s ↔ ∀ a, (a, a) ∈ s
 def CompRel {α : Type u} (r₁ r₂ : Set (α × α)) :=
   { p : α × α | ∃ z : α, (p.1, z) ∈ r₁ ∧ (z, p.2) ∈ r₂ }
 
--- mathport name: «expr ○ »
+-- mathport name: uniformity.comp_rel
 localized [uniformity] infixl:55 " ○ " => CompRel
 
 @[simp]
@@ -329,7 +329,7 @@ variable [UniformSpace α]
 def uniformity (α : Type u) [UniformSpace α] : Filter (α × α) :=
   (@UniformSpace.toCore α _).uniformity
 
--- mathport name: «expr𝓤»
+-- mathport name: uniformity
 localized [uniformity] notation "𝓤" => uniformity
 
 theorem is_open_uniformity {s : Set α} : IsOpen s ↔ ∀ x ∈ s, { p : α × α | p.1 = x → p.2 ∈ s } ∈ 𝓤 α :=
@@ -547,6 +547,7 @@ theorem mem_comp_of_mem_ball {V W : Set (β × β)} {x y z : β} (hV : Symmetric
 theorem UniformSpace.is_open_ball (x : α) {V : Set (α × α)} (hV : IsOpen V) : IsOpen (Ball x V) :=
   hV.Preimage <| continuous_const.prod_mk continuous_id
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem mem_comp_comp {V W M : Set (β × β)} (hW' : SymmetricRel W) {p : β × β} :
     p ∈ V ○ M ○ W ↔ (Ball p.1 V ×ˢ Ball p.2 W ∩ M).Nonempty := by
   cases' p with x y
@@ -655,6 +656,7 @@ theorem UniformSpace.mem_closure_iff_ball {s : Set α} {x} : x ∈ Closure s ↔
   by
   simp [mem_closure_iff_nhds_basis' (nhds_basis_uniformity' (𝓤 α).basis_sets)]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem UniformSpace.has_basis_nhds_prod (x y : α) :
     (HasBasis (𝓝 (x, y)) fun s => s ∈ 𝓤 α ∧ SymmetricRel s) fun s => Ball x s ×ˢ Ball y s := by
   rw [nhds_prod_eq]
@@ -698,6 +700,7 @@ theorem lift_nhds_right {x : α} {g : Set α → Filter β} (hg : Monotone g) :
       simp [image_swap_eq_preimage_swap]
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem nhds_nhds_eq_uniformity_uniformity_prod {a b : α} :
     𝓝 a ×ᶠ 𝓝 b =
       (𝓤 α).lift fun s : Set (α × α) =>
@@ -711,6 +714,7 @@ theorem nhds_nhds_eq_uniformity_uniformity_prod {a b : α} :
   · exact monotone_preimage
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem nhds_eq_uniformity_prod {a b : α} :
     𝓝 (a, b) = (𝓤 α).lift' fun s : Set (α × α) => { y : α | (y, a) ∈ s } ×ˢ { y : α | (b, y) ∈ s } := by
   rw [nhds_prod_eq, nhds_nhds_eq_uniformity_uniformity_prod, lift_lift'_same_eq_lift']
@@ -740,6 +744,7 @@ theorem nhdset_of_mem_uniformity {d : Set (α × α)} (s : Set (α × α)) (hd :
       simp <;> exact ⟨a, b, hp, (ht (a, b) hp).right.right⟩,
       Union_subset fun p => Union_subset fun hp => (ht p hp).left⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Entourages are neighborhoods of the diagonal. -/
 theorem nhds_le_uniformity (x : α) : 𝓝 (x, x) ≤ 𝓤 α := by
   intro V V_in
@@ -896,6 +901,7 @@ as `(x, y)` tends to the diagonal. In other words, if `x` is sufficiently close 
 def UniformContinuous [UniformSpace β] (f : α → β) :=
   Tendsto (fun x : α × α => (f x.1, f x.2)) (𝓤 α) (𝓤 β)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- A function `f : α → β` is *uniformly continuous* on `s : set α` if `(f x, f y)` tends to
 the diagonal as `(x, y)` tends to the diagonal while remaining in `s ×ˢ s`.
 In other words, if `x` is sufficiently close to `y`, then `f x` is close to
@@ -937,6 +943,7 @@ theorem Filter.HasBasis.uniform_continuous_iff [UniformSpace β] {p : γ → Pro
   (ha.tendsto_iff hb).trans <| by
     simp only [Prod.forall]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x y «expr ∈ » S)
 theorem Filter.HasBasis.uniform_continuous_on_iff [UniformSpace β] {p : γ → Prop} {s : γ → Set (α × α)}
     (ha : (𝓤 α).HasBasis p s) {q : δ → Prop} {t : δ → Set (β × β)} (hb : (𝓤 β).HasBasis q t) {f : α → β} {S : Set α} :
@@ -1594,10 +1601,10 @@ open set `U`, we can find an (open) entourage `V` such that the ball of size `V`
 `K` is contained in `U`. -/
 theorem lebesgue_number_of_compact_open [UniformSpace α] {K U : Set α} (hK : IsCompact K) (hU : IsOpen U)
     (hKU : K ⊆ U) : ∃ V ∈ 𝓤 α, IsOpen V ∧ ∀ x ∈ K, UniformSpace.Ball x V ⊆ U := by
-  let W : K → Set (α × α) := fun k => Classical.some <| is_open_iff_open_ball_subset.mp hU k.1 <| hKU k.2
+  let W : K → Set (α × α) := fun k => Classical.choose <| is_open_iff_open_ball_subset.mp hU k.1 <| hKU k.2
   have hW : ∀ k, W k ∈ 𝓤 α ∧ IsOpen (W k) ∧ UniformSpace.Ball k.1 (W k) ⊆ U := by
     intro k
-    obtain ⟨h₁, h₂, h₃⟩ := Classical.some_spec (is_open_iff_open_ball_subset.mp hU k.1 (hKU k.2))
+    obtain ⟨h₁, h₂, h₃⟩ := Classical.choose_spec (is_open_iff_open_ball_subset.mp hU k.1 (hKU k.2))
     exact ⟨h₁, h₂, h₃⟩
   let c : K → Set α := fun k => UniformSpace.Ball k.1 (W k)
   have hc₁ : ∀ k, IsOpen (c k) := fun k => UniformSpace.is_open_ball k.1 (hW k).2.1

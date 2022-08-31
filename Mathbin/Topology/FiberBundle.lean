@@ -162,6 +162,7 @@ section TopologicalFiberBundle
 
 variable (F) {Z : Type _} [TopologicalSpace B] [TopologicalSpace F] {proj : Z → B}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- This structure contains the information left for a local trivialization (which is implemented
 below as `trivialization F proj`) if the total space has not been given a topology, but we
 have a topology on both the fiber and the base space. Through the construction
@@ -244,6 +245,8 @@ theorem preimage_symm_proj_base_set : e.toLocalEquiv.symm ⁻¹' (proj ⁻¹' e.
   simp only [mem_preimage, LocalEquiv.inv_fun_as_coe, e.proj_symm_apply hx]
   exact e.mem_target.mp hx
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp, mfld_simps]
 theorem preimage_symm_proj_inter (s : Set B) :
     e.toLocalEquiv.symm ⁻¹' (proj ⁻¹' s) ∩ e.BaseSet ×ˢ univ = (s ∩ e.BaseSet) ×ˢ univ := by
@@ -253,10 +256,12 @@ theorem preimage_symm_proj_inter (s : Set B) :
   intro h
   rw [e.proj_symm_apply' h]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem target_inter_preimage_symm_source_eq (e f : Pretrivialization F proj) :
     f.Target ∩ f.toLocalEquiv.symm ⁻¹' e.Source = (e.BaseSet ∩ f.BaseSet) ×ˢ univ := by
   rw [inter_comm, f.target_eq, e.source_eq, f.preimage_symm_proj_inter]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem trans_source (e f : Pretrivialization F proj) :
     (f.toLocalEquiv.symm.trans e.toLocalEquiv).Source = (e.BaseSet ∩ f.BaseSet) ×ˢ univ := by
   rw [LocalEquiv.trans_source, LocalEquiv.symm_source, e.target_inter_preimage_symm_source_eq]
@@ -265,11 +270,13 @@ theorem symm_trans_symm (e e' : Pretrivialization F proj) :
     (e.toLocalEquiv.symm.trans e'.toLocalEquiv).symm = e'.toLocalEquiv.symm.trans e.toLocalEquiv := by
   rw [LocalEquiv.trans_symm_eq_symm_trans_symm, LocalEquiv.symm_symm]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem symm_trans_source_eq (e e' : Pretrivialization F proj) :
     (e.toLocalEquiv.symm.trans e'.toLocalEquiv).Source = (e.BaseSet ∩ e'.BaseSet) ×ˢ univ := by
   rw [LocalEquiv.trans_source, e'.source_eq, LocalEquiv.symm_source, e.target_eq, inter_comm,
     e.preimage_symm_proj_inter, inter_comm]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem symm_trans_target_eq (e e' : Pretrivialization F proj) :
     (e.toLocalEquiv.symm.trans e'.toLocalEquiv).Target = (e.BaseSet ∩ e'.BaseSet) ×ˢ univ := by
   rw [← LocalEquiv.symm_source, symm_trans_symm, symm_trans_source_eq, inter_comm]
@@ -278,6 +285,7 @@ end TopologicalFiberBundle.Pretrivialization
 
 variable [TopologicalSpace Z]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- A structure extending local homeomorphisms, defining a local trivialization of a projection
 `proj : Z → B` with fiber `F`, as a local homeomorphism between `Z` and `B × F` defined between two
 sets of the form `proj ⁻¹' base_set` and `base_set × F`, acting trivially on the first coordinate.
@@ -366,10 +374,12 @@ theorem apply_symm_apply' {b : B} {x : F} (hx : b ∈ e.BaseSet) : e (e.toLocalH
 theorem symm_apply_mk_proj (ex : x ∈ e.Source) : e.toLocalHomeomorph.symm (proj x, (e x).2) = x :=
   e.toPretrivialization.symm_apply_mk_proj ex
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem symm_trans_source_eq (e e' : Trivialization F proj) :
     (e.toLocalEquiv.symm.trans e'.toLocalEquiv).Source = (e.BaseSet ∩ e'.BaseSet) ×ˢ univ :=
   Pretrivialization.symm_trans_source_eq e.toPretrivialization e'
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem symm_trans_target_eq (e e' : Trivialization F proj) :
     (e.toLocalEquiv.symm.trans e'.toLocalEquiv).Target = (e.BaseSet ∩ e'.BaseSet) ×ˢ univ :=
   Pretrivialization.symm_trans_target_eq e.toPretrivialization e'
@@ -651,6 +661,7 @@ end Comap
 
 namespace TopologicalFiberBundle.Trivialization
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem is_image_preimage_prod (e : Trivialization F proj) (s : Set B) :
     e.toLocalHomeomorph.IsImage (proj ⁻¹' s) (s ×ˢ univ) := fun x hx => by
   simp [e.coe_fst', hx]
@@ -674,6 +685,7 @@ theorem frontier_preimage (e : Trivialization F proj) (s : Set B) :
   rw [← (e.is_image_preimage_prod s).Frontier.preimage_eq, frontier_prod_univ_eq,
     (e.is_image_preimage_prod _).preimage_eq, e.source_eq, preimage_inter]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Given two bundle trivializations `e`, `e'` of `proj : Z → B` and a set `s : set B` such that
 the base sets of `e` and `e'` intersect `frontier s` on the same set and `e p = e' p` whenever
 `proj p ∈ e.base_set ∩ frontier s`, `e.piecewise e' s Hs Heq` is the bundle trivialization over
@@ -859,6 +871,7 @@ instance [t₁ : TopologicalSpace B] [t₂ : TopologicalSpace F] : TopologicalSp
 
 end Bundle
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Core data defining a locally trivial topological bundle with fiber `F` over a topological
 space `B`. Note that "bundle" is used in its mathematical sense. This is the (computer science)
 bundled version, i.e., all the relevant data is contained in the following structure. A family of
@@ -926,6 +939,8 @@ def TotalSpace :=
 def proj : Z.TotalSpace → B :=
   Bundle.TotalSpace.proj
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Local homeomorphism version of the trivialization change. -/
 def trivChange (i j : ι) : LocalHomeomorph (B × F) (B × F) where
   Source := (Z.BaseSet i ∩ Z.BaseSet j) ×ˢ univ
@@ -964,6 +979,7 @@ theorem mem_triv_change_source (i j : ι) (p : B × F) :
   erw [mem_prod]
   simp
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Associate to a trivialization index `i : ι` the corresponding trivialization, i.e., a bijection
 between `proj ⁻¹ (base_set i)` and `base_set i × F`. As the fiber above `x` is `F` but read in the
 chart with index `index_at x`, the trivialization in the fiber above x is by definition the
@@ -1038,6 +1054,7 @@ instance toTopologicalSpace : TopologicalSpace (Bundle.TotalSpace Z.Fiber) :=
 
 variable {ι}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem open_source' (i : ι) : IsOpen (Z.localTrivAsLocalEquiv i).Source := by
   apply TopologicalSpace.GenerateOpen.basic
   simp only [exists_prop, mem_Union, mem_singleton_iff]
@@ -1301,6 +1318,7 @@ theorem continuous_proj : @Continuous _ _ a.totalSpaceTopology _ proj := by
   letI := a.total_space_topology
   exact a.is_topological_fiber_bundle.continuous_proj
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- For a fiber bundle `Z` over `B` constructed using the `topological_fiber_prebundle` mechanism,
 continuity of a function `Z → X` on an open set `s` can be checked by precomposing at each point
 with the pretrivialization used for the construction at that point. -/

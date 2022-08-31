@@ -41,7 +41,7 @@ open BigOperators
 
 section
 
--- mathport name: «expr𝓚»
+-- mathport name: expr𝓚
 local notation "𝓚" => algebraMap ℝ _
 
 open ComplexConjugate
@@ -596,10 +596,10 @@ theorem im_eq_conj_sub (z : K) : ↑(im z) = I * (conj z - z) / 2 := by
 noncomputable def abs (z : K) : ℝ :=
   (normSq z).sqrt
 
--- mathport name: «exprabs'»
+-- mathport name: exprabs'
 local notation "abs'" => HasAbs.abs
 
--- mathport name: «exprabsK»
+-- mathport name: exprabsK
 local notation "absK" => @abs K _
 
 @[simp, norm_cast]
@@ -923,19 +923,19 @@ open ComplexConjugate
 
 section CleanupLemmas
 
--- mathport name: «exprreR»
+-- mathport name: exprreR
 local notation "reR" => @IsROrC.re ℝ _
 
--- mathport name: «exprimR»
+-- mathport name: exprimR
 local notation "imR" => @IsROrC.im ℝ _
 
--- mathport name: «exprIR»
+-- mathport name: exprIR
 local notation "IR" => @IsROrC.i ℝ _
 
--- mathport name: «exprabsR»
+-- mathport name: exprabsR
 local notation "absR" => @IsROrC.abs ℝ _
 
--- mathport name: «exprnorm_sqR»
+-- mathport name: exprnorm_sqR
 local notation "norm_sqR" => @IsROrC.normSq ℝ _
 
 @[simp, is_R_or_C_simps]

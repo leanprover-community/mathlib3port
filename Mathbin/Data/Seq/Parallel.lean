@@ -20,14 +20,16 @@ open Wseq
 
 variable {α : Type u} {β : Type v}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 def Parallel.aux2 : List (Computation α) → Sum α (List (Computation α)) :=
   List.foldr
     (fun c o =>
       match o with
       | Sum.inl a => Sum.inl a
-      | Sum.inr ls => rmap (fun c' => c' :: ls) (destruct c))
+      | Sum.inr ls => rmap (fun c' => c'::ls) (destruct c))
     (Sum.inr [])
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 def Parallel.aux1 : List (Computation α) × Wseq (Computation α) → Sum α (List (Computation α) × Wseq (Computation α))
   | (l, S) =>
     rmap
@@ -35,7 +37,7 @@ def Parallel.aux1 : List (Computation α) × Wseq (Computation α) → Sum α (L
         match Seqₓₓ.destruct S with
         | none => (l', nil)
         | some (none, S') => (l', S')
-        | some (some c, S') => (c :: l', S'))
+        | some (some c, S') => (c::l', S'))
       (Parallel.aux2 l)
 
 /-- Parallel computation of an infinite stream of computations,
@@ -362,6 +364,7 @@ theorem parallel_congr_lem {S T : Wseq (Computation α)} {a} (H : S.LiftRel Equi
     let ⟨t, tT, se⟩ := Wseq.exists_of_lift_rel_left H sS
     (promises_congr se _).2 (h2 _ tT)⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- The parallel operation is only deterministic when all computation paths lead to the same value
 theorem parallel_congr_left {S T : Wseq (Computation α)} {a} (h1 : ∀ s ∈ S, s ~> a) (H : S.LiftRel Equiv T) :
     parallel S ~ parallel T :=
@@ -386,6 +389,7 @@ theorem parallel_congr_left {S T : Wseq (Computation α)} {a} (h1 : ∀ s ∈ S,
             let aT := (st _).2 as
             mem_parallel h1 tT aT⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem parallel_congr_right {S T : Wseq (Computation α)} {a} (h2 : ∀ t ∈ T, t ~> a) (H : S.LiftRel Equiv T) :
     parallel S ~ parallel T :=
   parallel_congr_left ((parallel_congr_lem H).2 h2) H

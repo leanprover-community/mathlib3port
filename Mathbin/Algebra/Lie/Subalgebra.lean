@@ -65,7 +65,7 @@ instance : SetLike (LieSubalgebra R L) L where
     congr
 
 instance : AddSubgroupClass (LieSubalgebra R L) L where
-  add_mem := fun L' => L'.add_mem'
+  add_mem := fun L' _ _ => L'.add_mem'
   zero_mem := fun L' => L'.zero_mem'
   neg_mem := fun L' x hx => show -x ∈ (L' : Submodule R L) from neg_mem hx
 
@@ -325,7 +325,7 @@ end LieHom
 theorem Submodule.exists_lie_subalgebra_coe_eq_iff (p : Submodule R L) :
     (∃ K : LieSubalgebra R L, ↑K = p) ↔ ∀ x y : L, x ∈ p → y ∈ p → ⁅x,y⁆ ∈ p := by
   constructor
-  · rintro ⟨K, rfl⟩
+  · rintro ⟨K, rfl⟩ _ _
     exact K.lie_mem'
     
   · intro h

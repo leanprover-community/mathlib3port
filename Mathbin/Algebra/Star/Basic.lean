@@ -278,8 +278,8 @@ def starRingEnd [CommSemiringₓ R] [StarRing R] : R →+* R :=
 
 variable {R}
 
--- mathport name: «exprconj»
-localized [ComplexConjugate] notation "conj" => starRingEnd _
+-- mathport name: star_ring_end
+localized [ComplexConjugate] notation "conj" => starRingEnd hole!
 
 /-- This is not a simp lemma, since we usually want simp to keep `star_ring_end` bundled.
  For example, for complex conjugation, we don't want simp to turn `conj x`

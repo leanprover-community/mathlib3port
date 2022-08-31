@@ -202,7 +202,7 @@ theorem _root_.intermediate_field.adjoin_simple.norm_gen_eq_one {x : L} (hx : ¬
   contrapose! hx
   obtain ⟨s, ⟨b⟩⟩ := hx
   refine' is_integral_of_mem_of_fg K⟮⟯.toSubalgebra _ x _
-  · exact (Submodule.fg_iff_finite_dimensional _).mpr (of_finset_basis b)
+  · exact (Submodule.fg_iff_finite_dimensional _).mpr (of_fintype_basis b)
     
   · exact IntermediateField.subset_adjoin K _ (Set.mem_singleton x)
     

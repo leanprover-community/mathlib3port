@@ -371,20 +371,20 @@ namespace Subsingleton
 variable [Preorderₓ α] [Preorderₓ β]
 
 protected theorem monotone [Subsingleton α] (f : α → β) : Monotone f := fun a b _ =>
-  (congr_arg _ <| Subsingleton.elimₓ _ _).le
+  (congr_arg _ <| Subsingleton.elim _ _).le
 
 protected theorem antitone [Subsingleton α] (f : α → β) : Antitone f := fun a b _ =>
-  (congr_arg _ <| Subsingleton.elimₓ _ _).le
+  (congr_arg _ <| Subsingleton.elim _ _).le
 
-theorem monotone' [Subsingleton β] (f : α → β) : Monotone f := fun a b _ => (Subsingleton.elimₓ _ _).le
+theorem monotone' [Subsingleton β] (f : α → β) : Monotone f := fun a b _ => (Subsingleton.elim _ _).le
 
-theorem antitone' [Subsingleton β] (f : α → β) : Antitone f := fun a b _ => (Subsingleton.elimₓ _ _).le
+theorem antitone' [Subsingleton β] (f : α → β) : Antitone f := fun a b _ => (Subsingleton.elim _ _).le
 
 protected theorem strict_mono [Subsingleton α] (f : α → β) : StrictMono f := fun a b h =>
-  (h.Ne <| Subsingleton.elimₓ _ _).elim
+  (h.Ne <| Subsingleton.elim _ _).elim
 
 protected theorem strict_anti [Subsingleton α] (f : α → β) : StrictAnti f := fun a b h =>
-  (h.Ne <| Subsingleton.elimₓ _ _).elim
+  (h.Ne <| Subsingleton.elim _ _).elim
 
 end Subsingleton
 

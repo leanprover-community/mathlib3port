@@ -169,7 +169,7 @@ export HasMeasurablePow (measurable_pow)
 /-- `monoid.has_pow` is measurable. -/
 instance Monoidₓ.hasMeasurablePow (M : Type _) [Monoidₓ M] [MeasurableSpace M] [HasMeasurableMul₂ M] :
     HasMeasurablePow M ℕ :=
-  ⟨measurable_from_prod_encodable fun n => by
+  ⟨measurable_from_prod_countable fun n => by
       induction' n with n ih
       · simp only [pow_zeroₓ, ← Pi.one_def, measurable_one]
         
@@ -316,8 +316,8 @@ theorem measurable_set_eq_fun {m : MeasurableSpace α} {E} [MeasurableSpace E] [
   ext
   simp_rw [Set.mem_set_of_eq, Pi.sub_apply, sub_eq_zero]
 
-theorem measurable_set_eq_fun_of_encodable {m : MeasurableSpace α} {E} [MeasurableSpace E] [MeasurableSingletonClass E]
-    [Encodable E] {f g : α → E} (hf : Measurable f) (hg : Measurable g) : MeasurableSet { x | f x = g x } := by
+theorem measurable_set_eq_fun_of_countable {m : MeasurableSpace α} {E} [MeasurableSpace E] [MeasurableSingletonClass E]
+    [Countable E] {f g : α → E} (hf : Measurable f) (hg : Measurable g) : MeasurableSet { x | f x = g x } := by
   have : { x | f x = g x } = ⋃ j, { x | f x = j } ∩ { x | g x = j } := by
     ext1 x
     simp only [Set.mem_set_of_eq, Set.mem_Union, Set.mem_inter_eq, exists_eq_right']
@@ -418,7 +418,7 @@ end Inv
 /-- `div_inv_monoid.has_pow` is measurable. -/
 instance DivInvMonoidₓ.hasMeasurableZpow (G : Type u) [DivInvMonoidₓ G] [MeasurableSpace G] [HasMeasurableMul₂ G]
     [HasMeasurableInv G] : HasMeasurablePow G ℤ :=
-  ⟨measurable_from_prod_encodable fun n => by
+  ⟨measurable_from_prod_countable fun n => by
       cases' n with n n
       · simp_rw [zpow_of_nat]
         exact measurable_id.pow_const _
@@ -553,7 +553,7 @@ instance AddMonoidₓ.has_measurable_smul_nat₂ (M : Type _) [AddMonoidₓ M] [
   ⟨by
     suffices Measurable fun p : M × ℕ => p.2 • p.1 by
       apply this.comp measurable_swap
-    refine' measurable_from_prod_encodable fun n => _
+    refine' measurable_from_prod_countable fun n => _
     induction' n with n ih
     · simp only [zero_smul, ← Pi.zero_def, measurable_zero]
       
@@ -567,7 +567,7 @@ instance SubNegMonoidₓ.has_measurable_smul_int₂ (M : Type _) [SubNegMonoid�
   ⟨by
     suffices Measurable fun p : M × ℤ => p.2 • p.1 by
       apply this.comp measurable_swap
-    refine' measurable_from_prod_encodable fun n => _
+    refine' measurable_from_prod_countable fun n => _
     induction' n with n n ih
     · simp only [of_nat_zsmul]
       exact measurable_const_smul _

@@ -48,13 +48,13 @@ variable {τ : Type _} {α : Type _} {β : Type _} {ι : Type _}
 def OmegaLimit [TopologicalSpace β] (f : Filter τ) (ϕ : τ → α → β) (s : Set α) : Set β :=
   ⋂ u ∈ f, Closure (Image2 ϕ u s)
 
--- mathport name: «exprω»
+-- mathport name: omega_limit
 localized [OmegaLimit] notation "ω" => OmegaLimit
 
--- mathport name: «exprω⁺»
+-- mathport name: omega_limit.at_top
 localized [OmegaLimit] notation "ω⁺" => OmegaLimit Filter.atTop
 
--- mathport name: «exprω⁻»
+-- mathport name: omega_limit.at_bot
 localized [OmegaLimit] notation "ω⁻" => OmegaLimit Filter.atBot
 
 variable [TopologicalSpace β]

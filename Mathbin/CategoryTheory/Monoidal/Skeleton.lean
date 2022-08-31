@@ -23,6 +23,7 @@ universe v u
 
 variable {C : Type u} [Category.{v} C] [MonoidalCategory C]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- If `C` is monoidal and skeletal, it is a monoid.
 See note [reducible non-instances]. -/
 @[reducible]

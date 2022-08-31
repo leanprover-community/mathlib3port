@@ -469,10 +469,10 @@ def Fd : Set ℍ :=
 def Fdo : Set ℍ :=
   { z | 1 < (z : ℂ).normSq ∧ abs z.re < (1 : ℝ) / 2 }
 
--- mathport name: «expr𝒟»
+-- mathport name: modular_group.fd
 localized [Modular] notation "𝒟" => ModularGroup.Fd
 
--- mathport name: «expr𝒟ᵒ»
+-- mathport name: modular_group.fdo
 localized [Modular] notation "𝒟ᵒ" => ModularGroup.Fdo
 
 theorem abs_two_mul_re_lt_one_of_mem_fdo (h : z ∈ 𝒟ᵒ) : abs (2 * z.re) < 1 := by

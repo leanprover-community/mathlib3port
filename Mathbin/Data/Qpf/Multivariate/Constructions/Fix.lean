@@ -191,6 +191,7 @@ instance Fix.mvfunctor : Mvfunctor (Fix F) where map := @Fix.map _ _ _ _
 
 variable {α : Typevec.{u} n}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Recursor for `fix F` -/
 def Fix.rec {β : Type u} (g : F (α ::: β) → β) : Fix F α → β :=
   Quot.lift (recF g) (recF_eq_of_Wequiv α g)
@@ -317,6 +318,8 @@ instance mvqpfFix : Mvqpf (Fix F) where
     apply Quot.sound
     apply Wequiv.refl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Dependent recursor for `fix F` -/
 def Fix.drec {β : Fix F α → Type u} (g : ∀ x : F (α ::: Sigma β), β (fix.mk <| (id ::: Sigma.fst) <$$> x))
     (x : Fix F α) : β x :=

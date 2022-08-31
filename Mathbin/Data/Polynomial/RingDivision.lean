@@ -325,7 +325,7 @@ theorem exists_multiset_roots :
 /-- `roots p` noncomputably gives a multiset containing all the roots of `p`,
 including their multiplicities. -/
 noncomputable def roots (p : R[X]) : Multiset R :=
-  if h : p = 0 then ∅ else Classical.some (exists_multiset_roots h)
+  if h : p = 0 then ∅ else Classical.choose (exists_multiset_roots h)
 
 @[simp]
 theorem roots_zero : (0 : R[X]).roots = 0 :=
@@ -334,7 +334,7 @@ theorem roots_zero : (0 : R[X]).roots = 0 :=
 theorem card_roots (hp0 : p ≠ 0) : ((roots p).card : WithBot ℕ) ≤ degree p := by
   unfold roots
   rw [dif_neg hp0]
-  exact (Classical.some_spec (exists_multiset_roots hp0)).1
+  exact (Classical.choose_spec (exists_multiset_roots hp0)).1
 
 theorem card_roots' (p : R[X]) : p.roots.card ≤ natDegree p := by
   by_cases' hp0 : p = 0
@@ -363,7 +363,7 @@ theorem count_roots (p : R[X]) : p.roots.count a = rootMultiplicity a p := by
   · simp [hp]
     
   rw [roots, dif_neg hp]
-  exact (Classical.some_spec (exists_multiset_roots hp)).2 a
+  exact (Classical.choose_spec (exists_multiset_roots hp)).2 a
 
 @[simp]
 theorem mem_roots (hp : p ≠ 0) : a ∈ p.roots ↔ IsRoot p a := by

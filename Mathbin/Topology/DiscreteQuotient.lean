@@ -386,8 +386,8 @@ noncomputable instance [CompactSpace X] : Fintype S := by
   have h :=
     @cond S (fun s => S.proj ⁻¹' {s}) (fun s => fiber_open _ _) fun x hx =>
       ⟨S.proj ⁻¹' {S.proj x}, ⟨S.proj x, rfl⟩, rfl⟩
-  let T := Classical.some h
-  have hT := Classical.some_spec h
+  let T := Classical.choose h
+  have hT := Classical.choose_spec h
   refine' ⟨T, fun s => _⟩
   rcases S.proj_surjective s with ⟨x, rfl⟩
   rcases hT

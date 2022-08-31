@@ -146,11 +146,13 @@ protected def equiv (f : α ≃ₜ β) : Compacts α ≃ Compacts β where
 theorem equiv_to_fun_val (f : α ≃ₜ β) (K : Compacts α) : (Compacts.equiv f K).1 = f.symm ⁻¹' K.1 :=
   congr_fun (image_eq_preimage_of_inverse f.left_inv f.right_inv) K.1
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The product of two `compacts`, as a `compacts` in the product space. -/
 protected def prod (K : Compacts α) (L : Compacts β) : Compacts (α × β) where
   Carrier := K ×ˢ L
   compact' := IsCompact.prod K.2 L.2
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem coe_prod (K : Compacts α) (L : Compacts β) : (K.Prod L : Set (α × β)) = K ×ˢ L :=
   rfl
@@ -230,6 +232,7 @@ instance to_nonempty {s : NonemptyCompacts α} : Nonempty s :=
 protected def prod (K : NonemptyCompacts α) (L : NonemptyCompacts β) : NonemptyCompacts (α × β) :=
   { K.toCompacts.Prod L.toCompacts with nonempty' := K.Nonempty.Prod L.Nonempty }
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem coe_prod (K : NonemptyCompacts α) (L : NonemptyCompacts β) : (K.Prod L : Set (α × β)) = K ×ˢ L :=
   rfl
@@ -318,6 +321,7 @@ protected def prod (K : PositiveCompacts α) (L : PositiveCompacts β) : Positiv
       simp only [compacts.carrier_eq_coe, compacts.coe_prod, interior_prod_eq]
       exact K.interior_nonempty.prod L.interior_nonempty }
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem coe_prod (K : PositiveCompacts α) (L : PositiveCompacts β) : (K.Prod L : Set (α × β)) = K ×ˢ L :=
   rfl
@@ -443,6 +447,7 @@ theorem coe_map {f : α → β} (hf : Continuous f) (hf' : IsOpenMap f) (s : Com
 protected def prod (K : CompactOpens α) (L : CompactOpens β) : CompactOpens (α × β) :=
   { K.toCompacts.Prod L.toCompacts with open' := K.open.Prod L.open }
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem coe_prod (K : CompactOpens α) (L : CompactOpens β) : (K.Prod L : Set (α × β)) = K ×ˢ L :=
   rfl

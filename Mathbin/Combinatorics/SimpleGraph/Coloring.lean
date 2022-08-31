@@ -260,7 +260,7 @@ theorem chromatic_number_le_one_of_subsingleton (G : SimpleGraph V) [Subsingleto
   fconstructor
   refine' coloring.mk (fun _ => 0) _
   intro v w
-  rw [Subsingleton.elimₓ v w]
+  rw [Subsingleton.elim v w]
   simp
 
 theorem chromatic_number_eq_zero_of_isempty (G : SimpleGraph V) [IsEmpty V] : G.chromaticNumber = 0 := by

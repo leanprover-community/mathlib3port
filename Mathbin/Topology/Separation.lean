@@ -1184,6 +1184,16 @@ theorem exists_open_superset_and_is_compact_closure [LocallyCompactSpace α] [T2
   rcases exists_compact_superset hK with ⟨K', hK', hKK'⟩
   refine' ⟨Interior K', is_open_interior, hKK', compact_closure_of_subset_compact hK' interior_subset⟩
 
+/-- In a locally compact T₂ space, given a compact set `K` inside an open set `U`, we can find a
+open set `V` between these sets with compact closure: `K ⊆ V` and the closure of `V` is inside `U`.
+-/
+theorem exists_open_between_and_is_compact_closure [LocallyCompactSpace α] [T2Space α] {K U : Set α} (hK : IsCompact K)
+    (hU : IsOpen U) (hKU : K ⊆ U) : ∃ V, IsOpen V ∧ K ⊆ V ∧ Closure V ⊆ U ∧ IsCompact (Closure V) := by
+  rcases exists_compact_between hK hU hKU with ⟨V, hV, hKV, hVU⟩
+  exact
+    ⟨Interior V, is_open_interior, hKV, (closure_minimal interior_subset hV.is_closed).trans hVU,
+      compact_closure_of_subset_compact hV interior_subset⟩
+
 theorem is_preirreducible_iff_subsingleton [T2Space α] (S : Set α) : IsPreirreducible S ↔ S.Subsingleton := by
   refine' ⟨fun h x hx y hy => _, Set.Subsingleton.is_preirreducible⟩
   by_contra e
@@ -1284,8 +1294,8 @@ instance (priority := 100) T3Space.t2_5_space [T3Space α] : T25Space α :=
 
 variable {α}
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (U₁ V₁ «expr ∈ » expr𝓝() x)
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (U₂ V₂ «expr ∈ » expr𝓝() y)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (U₁ V₁ «expr ∈ » nhds() x)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (U₂ V₂ «expr ∈ » nhds() y)
 /-- Given two points `x ≠ y`, we can find neighbourhoods `x ∈ V₁ ⊆ U₁` and `y ∈ V₂ ⊆ U₂`,
 with the `Vₖ` closed and the `Uₖ` open, such that the `Uₖ` are disjoint. -/
 theorem disjoint_nested_nhds [T3Space α] {x y : α} (h : x ≠ y) :
@@ -1297,39 +1307,6 @@ theorem disjoint_nested_nhds [T3Space α] {x y : α} (h : x ≠ y) :
   rcases nhds_is_closed (IsOpen.mem_nhds U₂_op y_in) with ⟨V₂, V₂_in, h₂, V₂_closed⟩
   use U₁, mem_of_superset V₁_in h₁, V₁, V₁_in, U₂, mem_of_superset V₂_in h₂, V₂, V₂_in
   tauto
-
-/-- In a locally compact T₃ space, given a compact set `K` inside an open set `U`, we can find a
-compact set `K'` between these sets: `K` is inside the interior of `K'` and `K' ⊆ U`.
--/
-theorem exists_compact_between [LocallyCompactSpace α] [T3Space α] {K U : Set α} (hK : IsCompact K) (hU : IsOpen U)
-    (hKU : K ⊆ U) : ∃ K', IsCompact K' ∧ K ⊆ Interior K' ∧ K' ⊆ U := by
-  choose C hxC hCU hC using fun x : K => nhds_is_closed (hU.mem_nhds <| hKU x.2)
-  choose L hL hxL using fun x : K => exists_compact_mem_nhds (x : α)
-  have : K ⊆ ⋃ x, Interior (L x) ∩ Interior (C x) := fun x hx =>
-    mem_Union.mpr ⟨⟨x, hx⟩, ⟨mem_interior_iff_mem_nhds.mpr (hxL _), mem_interior_iff_mem_nhds.mpr (hxC _)⟩⟩
-  rcases hK.elim_finite_subcover _ _ this with ⟨t, ht⟩
-  · refine' ⟨⋃ x ∈ t, L x ∩ C x, t.compact_bUnion fun x _ => (hL x).inter_right (hC x), fun x hx => _, _⟩
-    · obtain ⟨y, hyt, hy : x ∈ Interior (L y) ∩ Interior (C y)⟩ := mem_Union₂.mp (ht hx)
-      rw [← interior_inter] at hy
-      refine' interior_mono (subset_bUnion_of_mem hyt) hy
-      
-    · simp_rw [Union_subset_iff]
-      rintro x -
-      exact (inter_subset_right _ _).trans (hCU _)
-      
-    
-  · exact fun _ => is_open_interior.inter is_open_interior
-    
-
-/-- In a locally compact regular space, given a compact set `K` inside an open set `U`, we can find a
-open set `V` between these sets with compact closure: `K ⊆ V` and the closure of `V` is inside `U`.
--/
-theorem exists_open_between_and_is_compact_closure [LocallyCompactSpace α] [T3Space α] {K U : Set α} (hK : IsCompact K)
-    (hU : IsOpen U) (hKU : K ⊆ U) : ∃ V, IsOpen V ∧ K ⊆ V ∧ Closure V ⊆ U ∧ IsCompact (Closure V) := by
-  rcases exists_compact_between hK hU hKU with ⟨V, hV, hKV, hVU⟩
-  refine'
-    ⟨Interior V, is_open_interior, hKV, (closure_minimal interior_subset hV.is_closed).trans hVU,
-      compact_closure_of_subset_compact hV interior_subset⟩
 
 end T3
 

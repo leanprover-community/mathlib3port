@@ -613,11 +613,12 @@ theorem total_degree_monomial (s : σ →₀ ℕ) {c : R} (hc : c ≠ 0) :
 theorem total_degree_X_pow [Nontrivial R] (s : σ) (n : ℕ) : (x s ^ n : MvPolynomial σ R).totalDegree = n := by
   simp [X_pow_eq_monomial, one_ne_zero]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem total_degree_list_prod :
     ∀ s : List (MvPolynomial σ R), s.Prod.totalDegree ≤ (s.map MvPolynomial.totalDegree).Sum
   | [] => by
     rw [@List.prod_nil (MvPolynomial σ R) _, total_degree_one] <;> rfl
-  | p :: ps => by
+  | p::ps => by
     rw [@List.prod_cons (MvPolynomial σ R) _, List.map, List.sum_cons]
     exact le_transₓ (total_degree_mul _ _) (add_le_add_left (total_degree_list_prod ps) _)
 

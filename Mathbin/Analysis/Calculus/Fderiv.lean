@@ -172,12 +172,12 @@ def DifferentiableAt (f : E → F) (x : E) :=
 /-- If `f` has a derivative at `x` within `s`, then `fderiv_within 𝕜 f s x` is such a derivative.
 Otherwise, it is set to `0`. -/
 def fderivWithin (f : E → F) (s : Set E) (x : E) : E →L[𝕜] F :=
-  if h : ∃ f', HasFderivWithinAt f f' s x then Classical.some h else 0
+  if h : ∃ f', HasFderivWithinAt f f' s x then Classical.choose h else 0
 
 /-- If `f` has a derivative at `x`, then `fderiv 𝕜 f x` is such a derivative. Otherwise, it is
 set to `0`. -/
 def fderiv (f : E → F) (x : E) : E →L[𝕜] F :=
-  if h : ∃ f', HasFderivAt f f' x then Classical.some h else 0
+  if h : ∃ f', HasFderivAt f f' x then Classical.choose h else 0
 
 /-- `differentiable_on 𝕜 f s` means that `f` is differentiable within `s` at any point of `s`. -/
 def DifferentiableOn (f : E → F) (s : Set E) :=
@@ -410,13 +410,13 @@ theorem DifferentiableWithinAt.has_fderiv_within_at (h : DifferentiableWithinAt 
   dunfold fderivWithin
   dunfold DifferentiableWithinAt  at h
   rw [dif_pos h]
-  exact Classical.some_spec h
+  exact Classical.choose_spec h
 
 theorem DifferentiableAt.has_fderiv_at (h : DifferentiableAt 𝕜 f x) : HasFderivAt f (fderiv 𝕜 f x) x := by
   dunfold fderiv
   dunfold DifferentiableAt  at h
   rw [dif_pos h]
-  exact Classical.some_spec h
+  exact Classical.choose_spec h
 
 theorem DifferentiableOn.has_fderiv_at (h : DifferentiableOn 𝕜 f s) (hs : s ∈ 𝓝 x) : HasFderivAt f (fderiv 𝕜 f x) x :=
   ((h x (mem_of_mem_nhds hs)).DifferentiableAt hs).HasFderivAt

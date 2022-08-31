@@ -150,7 +150,7 @@ if `R` is a GCD domain and `S` is its fraction ring. -/
 theorem repr_pow_is_integral [IsDomain S] {x : A} (hx : ∀ i, IsIntegral R (B.Basis.repr x i))
     (hmin : minpoly S B.gen = (minpoly R B.gen).map (algebraMap R S)) (n : ℕ) :
     ∀ i, IsIntegral R (B.Basis.repr (x ^ n) i) := by
-  nontriviality A using Subsingleton.elimₓ (x ^ n) 0, is_integral_zero
+  nontriviality A using Subsingleton.elim (x ^ n) 0, is_integral_zero
   revert hx
   refine' Nat.case_strong_induction_onₓ n _ fun n hn => _
   · intro hx i

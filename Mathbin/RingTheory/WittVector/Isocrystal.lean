@@ -61,7 +61,7 @@ variable (p : ℕ) [Fact p.Prime]
 
 variable (k : Type _) [CommRingₓ k]
 
--- mathport name: «exprK( , )»
+-- mathport name: witt_vector.fraction_ring
 localized [Isocrystal] notation "K(" p "," k ")" => FractionRing (WittVector p k)
 
 section PerfectRing
@@ -79,7 +79,7 @@ def FractionRing.frobenius : K(p,k) ≃+* K(p,k) :=
 def FractionRing.frobeniusRingHom : K(p,k) →+* K(p,k) :=
   FractionRing.frobenius p k
 
--- mathport name: «exprφ( , )»
+-- mathport name: witt_vector.frobenius_ring_hom
 localized [Isocrystal] notation "φ(" p "," k ")" => WittVector.FractionRing.frobeniusRingHom p k
 
 instance inv_pair₁ : RingHomInvPair φ(p,k) _ :=
@@ -88,11 +88,11 @@ instance inv_pair₁ : RingHomInvPair φ(p,k) _ :=
 instance inv_pair₂ : RingHomInvPair ((FractionRing.frobenius p k).symm : K(p,k) →+* K(p,k)) _ :=
   RingHomInvPair.of_ring_equiv (FractionRing.frobenius p k).symm
 
--- mathport name: «expr →ᶠˡ[ , ] »
+-- mathport name: frobenius_ring_hom.linear_map
 localized [Isocrystal]
   notation:50 M " →ᶠˡ[" p "," k "] " M₂ => LinearMap (WittVector.FractionRing.frobeniusRingHom p k) M M₂
 
--- mathport name: «expr ≃ᶠˡ[ , ] »
+-- mathport name: frobenius_ring_hom.linear_equiv
 localized [Isocrystal]
   notation:50 M " ≃ᶠˡ[" p "," k "] " M₂ => LinearEquiv (WittVector.FractionRing.frobeniusRingHom p k) M M₂
 
@@ -131,10 +131,10 @@ structure IsocrystalHom extends V →ₗ[K(p,k)] V₂ where
 structure IsocrystalEquiv extends V ≃ₗ[K(p,k)] V₂ where
   frob_equivariant : ∀ x : V, Φ(p,k) (to_linear_equiv x) = to_linear_equiv (Φ(p,k) x)
 
--- mathport name: «expr →ᶠⁱ[ , ] »
+-- mathport name: isocrystal_hom
 localized [Isocrystal] notation:50 M " →ᶠⁱ[" p "," k "] " M₂ => WittVector.IsocrystalHom p k M M₂
 
--- mathport name: «expr ≃ᶠⁱ[ , ] »
+-- mathport name: isocrystal_equiv
 localized [Isocrystal] notation:50 M " ≃ᶠⁱ[" p "," k "] " M₂ => WittVector.IsocrystalEquiv p k M M₂
 
 end PerfectRing
@@ -149,14 +149,14 @@ open Isocrystal
 def FractionRing.module : Module K(p,k) K(p,k) :=
   Semiringₓ.toModule
 
--- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] «exprK( , )»(p, k)
+-- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] witt_vector.fraction_ring(p, k)
 /-- Type synonym for `K(p, k)` to carry the standard 1-dimensional isocrystal structure
 of slope `m : ℤ`.
 -/
 @[nolint unused_arguments has_nonempty_instance]
 def StandardOneDimIsocrystal (m : ℤ) : Type _ :=
   K(p,k)deriving AddCommGroupₓ,
-  ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] «exprK( , )»(p, k)
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] witt_vector.fraction_ring(p, k)»
 
 section PerfectRing
 
@@ -177,7 +177,7 @@ theorem StandardOneDimIsocrystal.frobenius_apply (m : ℤ) (x : StandardOneDimIs
 
 end PerfectRing
 
--- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr * »(«exprφ( , )»(p, k) c, hmb)], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr * »(witt_vector.frobenius_ring_hom(p, k) c, hmb)], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args
 /-- A one-dimensional isocrystal over an algebraically closed field
 admits an isomorphism to one of the standard (indexed by `m : ℤ`) one-dimensional isocrystals. -/
 theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP k p] (V : Type _) [AddCommGroupₓ V]
@@ -217,7 +217,7 @@ theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP 
   simp only [← mul_smul]
   congr 1
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr * »(«exprφ( , )»(p, k) c, hmb)], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in linear_combination #[[expr «expr * »(witt_vector.frobenius_ring_hom(p, k) c, hmb)], []]: ./././Mathport/Syntax/Translate/Basic.lean:350:22: unsupported: too many args"
 
 end WittVector
 

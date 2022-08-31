@@ -269,7 +269,7 @@ theorem ne_zero_of_norm_ne_zero {g : E} : ∥g∥ ≠ 0 → g ≠ 0 :=
 
 @[nontriviality]
 theorem norm_of_subsingleton [Subsingleton E] (x : E) : ∥x∥ = 0 := by
-  rw [Subsingleton.elimₓ x 0, norm_zero]
+  rw [Subsingleton.elim x 0, norm_zero]
 
 theorem norm_sum_le (s : Finset ι) (f : ι → E) : ∥∑ i in s, f i∥ ≤ ∑ i in s, ∥f i∥ :=
   s.le_sum_of_subadditive norm norm_zero norm_add_le f

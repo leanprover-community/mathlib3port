@@ -89,7 +89,7 @@ theorem lift_alternating_apply_ι_multi {n : ℕ} (f : ∀ i, AlternatingMap R M
     liftAlternating f (ιMulti R n v) = f n v := by
   rw [ι_multi_apply]
   induction' n with n ih generalizing f v
-  · rw [List.of_fn_zero, List.prod_nil, lift_alternating_one, Subsingleton.elimₓ 0 v]
+  · rw [List.of_fn_zero, List.prod_nil, lift_alternating_one, Subsingleton.elim 0 v]
     
   · rw [List.of_fn_succ, List.prod_cons, lift_alternating_ι_mul, ih, AlternatingMap.curry_left_apply_apply]
     congr

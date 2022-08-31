@@ -350,7 +350,7 @@ protected theorem ext_iff {f g : lp E p} : f = g ↔ (f : ∀ i, E i) = g :=
   Subtype.ext_iff
 
 theorem eq_zero' [IsEmpty α] (f : lp E p) : f = 0 :=
-  Subsingleton.elimₓ f 0
+  Subsingleton.elim f 0
 
 protected theorem monotone {p q : ℝ≥0∞} (hpq : q ≤ p) : lp E q ≤ lp E p := fun f hf => Memℓp.of_exponent_ge hf hpq
 

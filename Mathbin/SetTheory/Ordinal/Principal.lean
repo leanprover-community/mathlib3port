@@ -33,7 +33,7 @@ open Order
 
 namespace Ordinal
 
--- mathport name: «expr ^ »
+-- mathport name: ordinal.pow
 local infixr:0 "^" => @pow Ordinal Ordinal Ordinal.hasPow
 
 /-! ### Principal ordinals -/

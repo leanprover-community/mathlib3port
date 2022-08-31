@@ -120,6 +120,7 @@ theorem star_convex_sUnion {S : Set (Set E)} (hS : ∀ s ∈ S, StarConvex 𝕜 
   rw [sUnion_eq_Union]
   exact star_convex_Union fun s => hS _ s.2
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem StarConvex.prod {y : F} {s : Set E} {t : Set F} (hs : StarConvex 𝕜 x s) (ht : StarConvex 𝕜 y t) :
     StarConvex 𝕜 (x, y) (s ×ˢ t) := fun y hy a b ha hb hab => ⟨hs hy.1 ha hb hab, ht hy.2 ha hb hab⟩
 

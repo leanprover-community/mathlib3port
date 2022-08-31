@@ -80,6 +80,7 @@ def Prod.toFun' : TotalSpace (E₁×ᵇE₂) → B × F₁ × F₂ := fun p => �
 
 variable {e₁ e₂}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Prod.continuous_to_fun :
     ContinuousOn (Prod.toFun' e₁ e₂) (@TotalSpace.proj B (E₁×ᵇE₂) ⁻¹' (e₁.BaseSet ∩ e₂.BaseSet)) := by
   let f₁ : total_space (E₁×ᵇE₂) → total_space E₁ × total_space E₂ := fun p =>
@@ -116,12 +117,14 @@ theorem Prod.left_inv {x : TotalSpace (E₁×ᵇE₂)} (h : x ∈ @TotalSpace.pr
   obtain ⟨h₁ : x ∈ e₁.base_set, h₂ : x ∈ e₂.base_set⟩ := h
   simp only [prod.to_fun', prod.inv_fun', symm_apply_apply_mk, h₁, h₂]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Prod.right_inv {x : B × F₁ × F₂} (h : x ∈ (e₁.BaseSet ∩ e₂.BaseSet) ×ˢ (Univ : Set (F₁ × F₂))) :
     Prod.toFun' e₁ e₂ (Prod.invFun' e₁ e₂ x) = x := by
   obtain ⟨x, w₁, w₂⟩ := x
   obtain ⟨⟨h₁ : x ∈ e₁.base_set, h₂ : x ∈ e₂.base_set⟩, -⟩ := h
   simp only [prod.to_fun', prod.inv_fun', apply_mk_symm, h₁, h₂]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Prod.continuous_inv_fun : ContinuousOn (Prod.invFun' e₁ e₂) ((e₁.BaseSet ∩ e₂.BaseSet) ×ˢ univ) := by
   rw [(prod.inducing_diag E₁ E₂).continuous_on_iff]
   have H₁ : Continuous fun p : B × F₁ × F₂ => ((p.1, p.2.1), (p.1, p.2.2)) :=
@@ -134,6 +137,7 @@ variable (e₁ e₂)
 variable [∀ x : B, TopologicalSpace (E₁ x)] [∀ x : B, TopologicalSpace (E₂ x)] [TopologicalVectorBundle R F₁ E₁]
   [TopologicalVectorBundle R F₂ E₂]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Given trivializations `e₁`, `e₂` for vector bundles `E₁`, `E₂` over a base `B`, the induced
 trivialization for the direct sum of `E₁` and `E₂`, whose base set is `e₁.base_set ∩ e₂.base_set`.
 -/
@@ -182,6 +186,7 @@ open Trivialization
 variable [∀ x : B, TopologicalSpace (E₁ x)] [∀ x : B, TopologicalSpace (E₂ x)] [TopologicalVectorBundle R F₁ E₁]
   [TopologicalVectorBundle R F₂ E₂]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The product of two vector bundles is a vector bundle. -/
 instance _root_.bundle.prod.topological_vector_bundle : TopologicalVectorBundle R (F₁ × F₂) (E₁×ᵇE₂) where
   total_space_mk_inducing := fun b => by

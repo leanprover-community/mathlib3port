@@ -54,16 +54,16 @@ def LeftCoset [Mul α] (a : α) (s : Set α) : Set α :=
 def RightCoset [Mul α] (s : Set α) (a : α) : Set α :=
   (fun x => x * a) '' s
 
--- mathport name: «expr *l »
+-- mathport name: left_coset
 localized [Coset] infixl:70 " *l " => LeftCoset
 
--- mathport name: «expr +l »
+-- mathport name: left_add_coset
 localized [Coset] infixl:70 " +l " => LeftAddCoset
 
--- mathport name: «expr *r »
+-- mathport name: right_coset
 localized [Coset] infixl:70 " *r " => RightCoset
 
--- mathport name: «expr +r »
+-- mathport name: right_add_coset
 localized [Coset] infixl:70 " +r " => RightAddCoset
 
 section CosetMul

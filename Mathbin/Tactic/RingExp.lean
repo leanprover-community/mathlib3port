@@ -453,6 +453,9 @@ unsafe def ex_info.proof_term (ps : ex_info) : ring_exp_m expr :=
 unsafe def ex.proof_term {et : ExType} (ps : ex et) : ring_exp_m expr :=
   ps.info.proof_term
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- If all `ex_info` have trivial proofs, return a trivial proof.
 Otherwise, construct all proof terms.
 
@@ -461,16 +464,16 @@ most importantly to pass to `mk_proof_or_refl`.
 -/
 unsafe def none_or_proof_term : List ex_info → ring_exp_m (Option (List expr))
   | [] => pure none
-  | x :: xs => do
+  | x::xs => do
     let xs_pfs ← none_or_proof_term xs
     match (x, xs_pfs) with
       | (none, none) => pure none
       | (some x_pf, none) => do
         let xs_pfs ← traverse ex_info.proof_term xs
-        pure (some (x_pf :: xs_pfs))
+        pure (some (x_pf::xs_pfs))
       | (_, some xs_pfs) => do
         let x_pf ← x
-        pure (some (x_pf :: xs_pfs))
+        pure (some (x_pf::xs_pfs))
 
 /-- Use the proof terms as arguments to the given lemma.
 If the lemma could reduce to reflexivity, consider using `mk_proof_or_refl.`
@@ -1237,6 +1240,8 @@ unsafe def ex.simple : ∀ {et : ExType}, ex et → ring_exp_m (expr × expr)
     Prod.mk <$> mk_pow [p_p, ps_p] <*> mk_app_csr `` exp_congr [p, p_p, ps, ps_p, p_pf, ps_pf]
   | et, ps => Prod.mk ps.pretty <$> lift (mk_eq_refl ps.pretty)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Performs a lookup of the atom `a` in the list of known atoms,
 or allocates a new one.
 
@@ -1251,11 +1256,11 @@ unsafe def resolve_atom_aux (a : expr) : List atom → ℕ → ring_exp_m (atom 
   | [], n =>
     let atm : atom := ⟨a, n⟩
     pure (atm, [atm])
-  | bas@(b :: as), n => do
+  | bas@(b::as), n => do
     let ctx ← get_context
     (lift <| is_def_eq a b ctx >> pure (b, bas)) <|> do
         let (atm, as') ← resolve_atom_aux as (succ n)
-        pure (atm, b :: as')
+        pure (atm, b::as')
 
 /-- Convert the expression to an atom:
 either look up a definitionally equal atom,
@@ -1481,7 +1486,7 @@ namespace Tactic.Interactive
 
 open Interactive Interactive.Types Lean.Parser Tactic Tactic.RingExp
 
--- mathport name: «expr ?»
+-- mathport name: parser.optional
 local postfix:1024 "?" => optionalₓ
 
 /-- Tactic for solving equations of *commutative* (semi)rings,
@@ -1543,7 +1548,7 @@ open Tactic.Interactive (ring_exp_eq)
 
 open Tactic.RingExp (normalize)
 
--- mathport name: «expr ?»
+-- mathport name: parser.optional
 local postfix:1024 "?" => optionalₓ
 
 /-- Normalises expressions in commutative (semi-)rings inside of a `conv` block using the tactic

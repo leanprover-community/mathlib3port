@@ -6,6 +6,8 @@ Authors: Robert Y. Lewis
 import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Polynomial.Inductions
+import Mathbin.RingTheory.Polynomial.Vieta
+import Mathbin.FieldTheory.SplittingField
 
 /-!
 # Polynomials and limits
@@ -123,6 +125,95 @@ theorem exists_forall_norm_le [ProperSpace R] (p : R[X]) : ∃ x, ∀ y, ∥p.ev
   else
     ⟨p.coeff 0, by
       rw [eq_C_of_degree_le_zero (le_of_not_gtₓ hp0)] <;> simp ⟩
+
+section Roots
+
+open Polynomial
+
+open Nnreal
+
+variable {F K : Type _} [Field F] [NormedField K]
+
+open Multiset
+
+theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 : p.Monic) (h2 : Splits f p)
+    (h3 : ∀ z ∈ (map f p).roots, ∥z∥ ≤ B) : ∥(map f p).coeff i∥ ≤ B ^ (p.natDegree - i) * p.natDegree.choose i := by
+  have hcd : card (map f p).roots = p.nat_degree := (nat_degree_eq_card_roots h2).symm
+  by_cases' hB : 0 ≤ B
+  · by_cases' hi : i ≤ p.nat_degree
+    · rw [eq_prod_roots_of_splits h2, monic.def.mp h1, RingHom.map_one, RingHom.map_one, one_mulₓ]
+      rw [prod_X_sub_C_coeff]
+      swap
+      rwa [hcd]
+      rw [norm_mul,
+        (by
+          norm_num : ∥(-1 : K) ^ (card (map f p).roots - i)∥ = 1),
+        one_mulₓ]
+      apply le_transₓ (le_sum_of_subadditive norm _ _ _)
+      rotate_left
+      exact norm_zero
+      exact norm_add_le
+      rw [Multiset.map_map]
+      suffices
+        ∀ r ∈ Multiset.map (normHom ∘ Prod) (powerset_len (card (map f p).roots - i) (map f p).roots),
+          r ≤ B ^ (p.nat_degree - i)
+        by
+        convert sum_le_sum_sum _ this
+        simp only [hi, hcd, Multiset.map_const, card_map, card_powerset_len, Nat.choose_symm, sum_repeat, nsmul_eq_mul,
+          mul_comm]
+      · intro r hr
+        obtain ⟨t, ht⟩ := multiset.mem_map.mp hr
+        have hbounds : ∀ x ∈ Multiset.map normHom t, 0 ≤ x ∧ x ≤ B := by
+          intro x hx
+          obtain ⟨z, hz⟩ := multiset.mem_map.mp hx
+          rw [← hz.right]
+          exact ⟨norm_nonneg z, h3 z (mem_of_le (mem_powerset_len.mp ht.left).left hz.left)⟩
+        lift B to ℝ≥0 using hB
+        lift Multiset.map normHom t to Multiset ℝ≥0 using fun x hx => (hbounds x hx).left with normt hn
+        rw
+          [(by
+            rw_mod_cast[← ht.right, Function.comp_applyₓ, ← prod_hom t normHom, ← hn] : r = normt.prod)]
+        convert Multiset.prod_le_pow_card normt _ _
+        · rw [(_ : card normt = card (Multiset.map coe normt))]
+          rwa [hn, ← hcd, card_map, (mem_powerset_len.mp ht.left).right.symm]
+          rwa [card_map]
+          
+        · intro x hx
+          have xmem : (x : ℝ) ∈ Multiset.map coe normt := mem_map_of_mem _ hx
+          exact (hbounds x xmem).right
+          
+        
+      
+    · push_neg  at hi
+      rw [Nat.choose_eq_zero_of_lt hi, coeff_eq_zero_of_nat_degree_lt, norm_zero]
+      rw_mod_cast[mul_zero]
+      · rwa [monic.nat_degree_map h1]
+        infer_instance
+        
+      
+    
+  · push_neg  at hB
+    have noroots : (map f p).roots = 0 := by
+      contrapose! hB
+      obtain ⟨z, hz⟩ := exists_mem_of_ne_zero hB
+      exact le_transₓ (norm_nonneg z) (h3 z hz)
+    suffices p.nat_degree = 0 by
+      by_cases' hi : i = 0
+      · rw [this, hi, (monic.nat_degree_eq_zero_iff_eq_one h1).mp this]
+        simp only [Polynomial.map_one, coeff_one_zero, norm_one, pow_zeroₓ, Nat.choose_self, Nat.cast_oneₓ, mul_oneₓ]
+        
+      · replace hi := zero_lt_iff.mpr hi
+        rw [← this] at hi
+        rw [Nat.choose_eq_zero_of_lt hi, coeff_eq_zero_of_nat_degree_lt, norm_zero]
+        rw_mod_cast[mul_zero]
+        · rwa [monic.nat_degree_map h1]
+          infer_instance
+          
+        
+    rw [← hcd, noroots, card_zero]
+    
+
+end Roots
 
 end Polynomial
 

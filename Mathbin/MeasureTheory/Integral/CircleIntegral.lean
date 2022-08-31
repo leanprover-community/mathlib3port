@@ -258,7 +258,6 @@ theorem ContinuousOn.circle_integrable {f : ℂ → E} {c : ℂ} {R : ℝ} (hR :
     CircleIntegrable f c R :=
   ContinuousOn.circle_integrable' <| (abs_of_nonneg hR).symm ▸ hf
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 /-- The function `λ z, (z - w) ^ n`, `n : ℤ`, is circle integrable on the circle with center `c` and
 radius `|R|` if and only if `R = 0` or `0 ≤ n`, or `w` does not belong to this circle. -/
 @[simp]
@@ -271,7 +270,7 @@ theorem circle_integrable_sub_zpow_iff {c w : ℂ} {R : ℝ} {n : ℤ} :
     simp only [circle_integrable_iff R, deriv_circle_map]
     rw [← image_circle_map_Ioc] at hw
     rcases hw with ⟨θ, hθ, rfl⟩
-    replace hθ : θ ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)"
+    replace hθ : θ ∈ [0, 2 * π]
     exact Icc_subset_interval (Ioc_subset_Icc_self hθ)
     refine' not_interval_integrable_of_sub_inv_is_O_punctured _ real.two_pi_pos.ne hθ
     set f : ℝ → ℂ := fun θ' => circleMap c R θ' - circleMap c R θ

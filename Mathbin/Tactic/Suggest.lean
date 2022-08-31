@@ -370,7 +370,7 @@ open SolveByElim
 initialize
   registerTraceClass.1 `silence_suggest
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 -- Turn off `Try this: exact/refine ...` trace messages for `suggest`
 /-- `suggest` tries to apply suitable theorems/defs from the library, and generates
 a list of `exact ...` or `refine ...` scripts that could be used at this step.
@@ -395,7 +395,7 @@ end
 ```
 You can also use `suggest with attr` to include all lemmas with the attribute `attr`.
 -/
-unsafe def suggest (n : parse («expr ?» (with_desc "n" small_nat))) (hs : parse simp_arg_list)
+unsafe def suggest (n : parse (parser.optional (with_desc "n" small_nat))) (hs : parse simp_arg_list)
     (attr_names : parse with_ident_list) (use : parse <| tk "using" *> many ident_ <|> return [])
     (opt : suggest_opt := {  }) : tactic Unit := do
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set false hs attr_names

@@ -41,6 +41,9 @@ def MonoidalSingleObj (C : Type _) [Category C] [MonoidalCategory C] :=
 
 open MonoidalCategory
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance : Bicategory (MonoidalSingleObj C) where
   Hom := fun _ _ => C
   id := fun _ => 𝟙_ C

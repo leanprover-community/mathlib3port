@@ -326,7 +326,7 @@ variable (R M)
 @[simps]
 def ofSubsingleton [Subsingleton ι] (i : ι) : AlternatingMap R M M ι :=
   { MultilinearMap.ofSubsingleton R M i with toFun := Function.eval i,
-    map_eq_zero_of_eq' := fun v i j hv hij => (hij <| Subsingleton.elimₓ _ _).elim }
+    map_eq_zero_of_eq' := fun v i j hv hij => (hij <| Subsingleton.elim _ _).elim }
 
 /-- The constant map is alternating when `ι` is empty. -/
 @[simps (config := { fullyApplied := false })]
@@ -1070,7 +1070,7 @@ def constLinearEquivOfIsEmpty [IsEmpty ι] : N'' ≃ₗ[R'] AlternatingMap R' M'
   map_smul' := fun t x => rfl
   invFun := fun f => f 0
   left_inv := fun _ => rfl
-  right_inv := fun f => ext fun x => AlternatingMap.congr_arg f <| Subsingleton.elimₓ _ _
+  right_inv := fun f => ext fun x => AlternatingMap.congr_arg f <| Subsingleton.elim _ _
 
 end AlternatingMap
 

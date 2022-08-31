@@ -84,7 +84,7 @@ theorem skolem₁_reduct_is_elementary (S : (L.Sum L.skolem₁).Substructure M) 
 
 /-- Any `L.sum L.skolem₁`-substructure is an elementary `L`-substructure. -/
 noncomputable def elementarySkolem₁Reduct (S : (L.Sum L.skolem₁).Substructure M) : L.ElementarySubstructure M :=
-  ⟨Lhom.sumInl.substructureReduct S, fun _ => S.skolem₁_reduct_is_elementary⟩
+  ⟨Lhom.sumInl.substructureReduct S, S.skolem₁_reduct_is_elementary⟩
 
 theorem coe_sort_elementary_skolem₁_reduct (S : (L.Sum L.skolem₁).Substructure M) :
     (S.elementarySkolem₁Reduct : Type w) = S :=

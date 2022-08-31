@@ -315,7 +315,7 @@ def uniqueOfSurjectiveOne (α : Type _) {β : Type _} [One β] (h : Function.Sur
 theorem Subsingleton.pi_mul_single_eq {α : Type _} [DecidableEq I] [Subsingleton I] [One α] (i : I) (x : α) :
     Pi.mulSingle i x = fun _ => x :=
   funext fun j => by
-    rw [Subsingleton.elimₓ j i, Pi.mul_single_eq_same]
+    rw [Subsingleton.elim j i, Pi.mul_single_eq_same]
 
 namespace Sum
 

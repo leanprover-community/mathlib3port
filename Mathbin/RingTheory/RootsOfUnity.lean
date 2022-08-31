@@ -319,7 +319,7 @@ variable {ζ : M} {f : F} (h : IsPrimitiveRoot ζ k)
 
 @[nontriviality]
 theorem of_subsingleton [Subsingleton M] (x : M) : IsPrimitiveRoot x 1 :=
-  ⟨Subsingleton.elimₓ _ _, fun _ _ => one_dvd _⟩
+  ⟨Subsingleton.elim _ _, fun _ _ => one_dvd _⟩
 
 theorem pow_eq_one_iff_dvd (l : ℕ) : ζ ^ l = 1 ↔ k ∣ l :=
   ⟨h.dvd_of_pow_eq_one l, by
@@ -576,7 +576,8 @@ theorem ne_zero' {n : ℕ+} (hζ : IsPrimitiveRoot ζ n) : NeZero ((n : ℕ) : R
   obtain ⟨m, hm⟩ := multiplicity.exists_eq_pow_mul_and_not_dvd hfin
   by_cases' hp : p ∣ n
   · obtain ⟨k, hk⟩ := Nat.exists_eq_succ_of_ne_zero (multiplicity.pos_of_dvd hfin hp).ne'
-    haveI hpri : Fact p.prime := @CharP.char_is_prime_of_pos R _ _ _ p ⟨Nat.pos_of_dvd_of_posₓ hp n.pos⟩ _
+    haveI : NeZero p := NeZero.of_pos (Nat.pos_of_dvd_of_posₓ hp n.pos)
+    haveI hpri : Fact p.prime := CharP.char_is_prime_of_pos R p
     have := hζ.pow_eq_one
     rw [hm.1, hk, pow_succₓ, mul_assoc, pow_mul', ← frobenius_def, ← frobenius_one p] at this
     exfalso
@@ -683,7 +684,6 @@ variable [IsDomain R]
 
 theorem zpowers_eq {k : ℕ+} {ζ : Rˣ} (h : IsPrimitiveRoot ζ k) : Subgroup.zpowers ζ = rootsOfUnity k R := by
   apply SetLike.coe_injective
-  haveI : Fact (0 < (k : ℕ)) := ⟨k.pos⟩
   haveI F : Fintype (Subgroup.zpowers ζ) := Fintype.ofEquiv _ h.zmod_equiv_zpowers.toEquiv
   refine'
     @Set.eq_of_subset_of_card_le Rˣ (Subgroup.zpowers ζ) (rootsOfUnity k R) F (rootsOfUnity.fintype R k)
@@ -748,7 +748,6 @@ theorem is_primitive_root_iff {k : ℕ} {ζ ξ : R} (h : IsPrimitiveRoot ζ k) (
     
 
 theorem card_roots_of_unity' {n : ℕ+} (h : IsPrimitiveRoot ζ n) : Fintype.card (rootsOfUnity n R) = n := by
-  haveI : Fact (0 < ↑n) := ⟨n.pos⟩
   let e := h.zmod_equiv_zpowers
   haveI F : Fintype (Subgroup.zpowers ζ) := Fintype.ofEquiv _ e.to_equiv
   calc

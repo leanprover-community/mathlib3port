@@ -507,6 +507,7 @@ def Set.univ (α : Type _) [TopologicalSpace α] : (Univ : Set α) ≃ₜ α whe
   continuous_to_fun := continuous_subtype_coe
   continuous_inv_fun := continuous_id.subtype_mk _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `s ×ˢ t` is homeomorphic to `s × t`. -/
 @[simps]
 def Set.prod (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ₜ s × t where

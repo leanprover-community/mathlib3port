@@ -382,7 +382,7 @@ notation. -/
 def angle (p1 p2 p3 : P) : ℝ :=
   angle (p1 -ᵥ p2 : V) (p3 -ᵥ p2)
 
--- mathport name: «expr∠»
+-- mathport name: angle
 localized [EuclideanGeometry] notation "∠" => EuclideanGeometry.angle
 
 theorem continuous_at_angle {x : P × P × P} (hx12 : x.1 ≠ x.2.1) (hx32 : x.2.2 ≠ x.2.1) :
@@ -701,7 +701,7 @@ definition is only intended for use in setting up the bundled version
 `orthogonal_projection` and should not be used once that is
 defined. -/
 def orthogonalProjectionFn (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] (p : P) : P :=
-  Classical.some <|
+  Classical.choose <|
     inter_eq_singleton_of_nonempty_of_is_compl (nonempty_subtype.mp ‹_›) (mk'_nonempty p s.directionᗮ)
       (by
         rw [direction_mk' p s.directionᗮ]
@@ -714,7 +714,7 @@ setting up the bundled version and should not be used once that is
 defined. -/
 theorem inter_eq_singleton_orthogonal_projection_fn {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction]
     (p : P) : (s : Set P) ∩ mk' p s.directionᗮ = {orthogonalProjectionFn s p} :=
-  Classical.some_spec <|
+  Classical.choose_spec <|
     inter_eq_singleton_of_nonempty_of_is_compl (nonempty_subtype.mp ‹_›) (mk'_nonempty p s.directionᗮ)
       (by
         rw [direction_mk' p s.directionᗮ]

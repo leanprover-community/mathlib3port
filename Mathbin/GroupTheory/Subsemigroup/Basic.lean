@@ -126,7 +126,7 @@ theorem ext {S T : Subsemigroup M} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
 @[to_additive "Copy an additive subsemigroup replacing `carrier` with a set that is equal to\nit."]
 protected def copy (S : Subsemigroup M) (s : Set M) (hs : s = S) : Subsemigroup M where
   Carrier := s
-  mul_mem' := hs.symm ▸ S.mul_mem'
+  mul_mem' := fun _ _ => hs.symm ▸ S.mul_mem'
 
 variable {S : Subsemigroup M}
 
@@ -233,7 +233,7 @@ instance : CompleteLattice (Subsemigroup M) :=
 theorem subsingleton_of_subsingleton [Subsingleton (Subsemigroup M)] : Subsingleton M := by
   constructor <;> intro x y
   have : ∀ a : M, a ∈ (⊥ : Subsemigroup M) := by
-    simp [Subsingleton.elimₓ (⊥ : Subsemigroup M) ⊤]
+    simp [Subsingleton.elim (⊥ : Subsemigroup M) ⊤]
   exact absurd (this x) not_mem_bot
 
 @[to_additive]

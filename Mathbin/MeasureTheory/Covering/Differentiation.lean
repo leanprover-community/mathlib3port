@@ -237,7 +237,7 @@ theorem ae_tendsto_div : ∀ᵐ x ∂μ, ∃ c, Tendsto (fun a => ρ a / μ a) (
     ∀ᵐ x ∂μ,
       ∀ c ∈ w, ∀ d ∈ w, c < d → ¬((∃ᶠ a in v.filter_at x, ρ a / μ a < c) ∧ ∃ᶠ a in v.filter_at x, d < ρ a / μ a) :=
     by
-    simpa only [ae_ball_iff w_count, ae_imp_iff]
+    simpa only [ae_ball_iff w_count, ae_all_iff]
   filter_upwards [B]
   intro x hx
   exact tendsto_of_no_upcrossings w_dense hx

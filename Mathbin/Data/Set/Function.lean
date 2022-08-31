@@ -797,10 +797,10 @@ attribute [local instance] Classical.propDecidable
 /-- Construct the inverse for a function `f` on domain `s`. This function is a right inverse of `f`
 on `f '' s`. For a computable version, see `function.injective.inv_of_mem_range`. -/
 noncomputable def invFunOn (f : α → β) (s : Set α) (b : β) : α :=
-  if h : ∃ a, a ∈ s ∧ f a = b then Classical.some h else Classical.choice ‹Nonempty α›
+  if h : ∃ a, a ∈ s ∧ f a = b then Classical.choose h else Classical.choice ‹Nonempty α›
 
 theorem inv_fun_on_posₓ (h : ∃ a ∈ s, f a = b) : invFunOn f s b ∈ s ∧ f (invFunOn f s b) = b := by
-  rw [bex_def] at h <;> rw [inv_fun_on, dif_pos h] <;> exact Classical.some_spec h
+  rw [bex_def] at h <;> rw [inv_fun_on, dif_pos h] <;> exact Classical.choose_spec h
 
 theorem inv_fun_on_memₓ (h : ∃ a ∈ s, f a = b) : invFunOn f s b ∈ s :=
   (inv_fun_on_posₓ h).left
@@ -852,7 +852,7 @@ theorem surj_on_iff_exists_bij_on_subset : SurjOn f s t ↔ ∃ (s' : _)(_ : s' 
     · exact fun _ => ⟨∅, empty_subset _, bij_on_empty f⟩
       
     · intro h
-      haveI : Nonempty α := ⟨Classical.some (h.comap_nonempty ht)⟩
+      haveI : Nonempty α := ⟨Classical.choose (h.comap_nonempty ht)⟩
       exact ⟨_, h.maps_to_inv_fun_on.image_subset, h.bij_on_subset⟩
       
     

@@ -37,7 +37,7 @@ def Transcendental (x : A) : Prop :=
   ¬IsAlgebraic R x
 
 theorem is_transcendental_of_subsingleton [Subsingleton R] (x : A) : Transcendental R x := fun ⟨p, h, _⟩ =>
-  h <| Subsingleton.elimₓ p 0
+  h <| Subsingleton.elim p 0
 
 variable {R}
 

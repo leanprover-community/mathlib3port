@@ -230,10 +230,6 @@ structure PrimitiveAddChar (R : Type u) [CommRingₓ R] [Fintype R] (R' : Type v
 
 variable {C : Type v} [CommRingₓ C]
 
--- For `n : ℕ+`, automatically generate instance `fact (0 < (n : ℕ))`.
--- This is needed for the API for `zmod n` (until that gets refactored to use `ne_zero`).
-attribute [local instance] Pnat.fact_pos
-
 section ZmodCharDef
 
 open Multiplicative

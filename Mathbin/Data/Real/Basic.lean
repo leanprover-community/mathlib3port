@@ -26,7 +26,7 @@ numbers. -/
 structure Real where of_cauchy ::
   cauchy : @CauSeq.Completion.Cauchy ℚ _ _ _ abs _
 
--- mathport name: «exprℝ»
+-- mathport name: exprℝ
 notation "ℝ" => Real
 
 attribute [pp_using_anonymous_constructor] Real
@@ -609,15 +609,15 @@ theorem exists_is_lub (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃
     
 
 noncomputable instance : HasSupₓ ℝ :=
-  ⟨fun S => if h : S.Nonempty ∧ BddAbove S then Classical.some (exists_is_lub S h.1 h.2) else 0⟩
+  ⟨fun S => if h : S.Nonempty ∧ BddAbove S then Classical.choose (exists_is_lub S h.1 h.2) else 0⟩
 
 theorem Sup_def (S : Set ℝ) :
-    sup S = if h : S.Nonempty ∧ BddAbove S then Classical.some (exists_is_lub S h.1 h.2) else 0 :=
+    sup S = if h : S.Nonempty ∧ BddAbove S then Classical.choose (exists_is_lub S h.1 h.2) else 0 :=
   rfl
 
 protected theorem is_lub_Sup (S : Set ℝ) (h₁ : S.Nonempty) (h₂ : BddAbove S) : IsLub S (sup S) := by
   simp only [Sup_def, dif_pos (And.intro h₁ h₂)]
-  apply Classical.some_spec
+  apply Classical.choose_spec
 
 noncomputable instance : HasInfₓ ℝ :=
   ⟨fun S => -sup (-S)⟩

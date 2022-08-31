@@ -916,10 +916,10 @@ end AddValuation
 
 section ValuationNotation
 
--- mathport name: «exprℕₘ₀»
+-- mathport name: nat.multiplicative_zero
 localized [DiscreteValuation] notation "ℕₘ₀" => WithZero (Multiplicative ℕ)
 
--- mathport name: «exprℤₘ₀»
+-- mathport name: int.multiplicative_zero
 localized [DiscreteValuation] notation "ℤₘ₀" => WithZero (Multiplicative ℤ)
 
 end ValuationNotation

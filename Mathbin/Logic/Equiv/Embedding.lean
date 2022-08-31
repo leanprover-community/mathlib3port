@@ -98,7 +98,7 @@ def sumEmbeddingEquivSigmaEmbeddingRestricted {α β γ : Type _} : (Sum α β �
 /-- Embeddings from a single-member type are equivalent to members of the target type. -/
 def uniqueEmbeddingEquivResult {α β : Type _} [Unique α] : (α ↪ β) ≃ β where
   toFun := fun f => f default
-  invFun := fun x => ⟨fun _ => x, fun _ _ _ => Subsingleton.elimₓ _ _⟩
+  invFun := fun x => ⟨fun _ => x, fun _ _ _ => Subsingleton.elim _ _⟩
   left_inv := fun _ => by
     ext
     simp_rw [Function.Embedding.coe_fn_mk]

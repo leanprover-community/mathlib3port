@@ -395,7 +395,7 @@ theorem Ioo_subset_coe (I : Box ι) : I.Ioo ⊆ I := fun x hx i => Ioo_subset_Io
 protected theorem Ioo_subset_Icc (I : Box ι) : I.Ioo ⊆ I.Icc :=
   I.Ioo_subset_coe.trans coe_subset_Icc
 
-theorem Union_Ioo_of_tendsto [Fintype ι] {I : Box ι} {J : ℕ → Box ι} (hJ : Monotone J)
+theorem Union_Ioo_of_tendsto [Finite ι] {I : Box ι} {J : ℕ → Box ι} (hJ : Monotone J)
     (hl : Tendsto (lower ∘ J) atTop (𝓝 I.lower)) (hu : Tendsto (upper ∘ J) atTop (𝓝 I.upper)) :
     (⋃ n, (J n).Ioo) = I.Ioo :=
   have hl' : ∀ i, Antitone fun n => (J n).lower i := fun i =>

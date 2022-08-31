@@ -190,40 +190,54 @@ theorem mul_zero {α : Type} [Ringₓ α] (x : Holor α ds₁) : x ⊗ (0 : Holo
 theorem mul_scalar_mul [Monoidₓ α] (x : Holor α []) (y : Holor α ds) : x ⊗ y = x ⟨[], Forall₂.nil⟩ • y := by
   simp [mul, HasSmul.smul, HolorIndex.take, HolorIndex.drop]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- holor slices
 /-- A slice is a subholor consisting of all entries with initial index i. -/
-def slice (x : Holor α (d :: ds)) (i : ℕ) (h : i < d) : Holor α ds := fun is : HolorIndex ds =>
-  x ⟨i :: is.1, Forall₂.cons h is.2⟩
+def slice (x : Holor α (d::ds)) (i : ℕ) (h : i < d) : Holor α ds := fun is : HolorIndex ds =>
+  x ⟨i::is.1, Forall₂.cons h is.2⟩
 
 /-- The 1-dimensional "unit" holor with 1 in the `j`th position. -/
 def unitVec [Monoidₓ α] [AddMonoidₓ α] (d : ℕ) (j : ℕ) : Holor α [d] := fun ti => if ti.1 = [j] then 1 else 0
 
-theorem holor_index_cons_decomp (p : HolorIndex (d :: ds) → Prop) :
-    ∀ t : HolorIndex (d :: ds),
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem holor_index_cons_decomp (p : HolorIndex (d::ds) → Prop) :
+    ∀ t : HolorIndex (d::ds),
       (∀ i is,
-          ∀ h : t.1 = i :: is,
+          ∀ h : t.1 = i::is,
             p
-              ⟨i :: is, by
+              ⟨i::is, by
                 rw [← h]
                 exact t.2⟩) →
         p t
   | ⟨[], hforall₂⟩, hp => absurd (forall₂_nil_left_iff.1 hforall₂) (cons_ne_nil d ds)
-  | ⟨i :: is, hforall₂⟩, hp => hp i is rfl
+  | ⟨i::is, hforall₂⟩, hp => hp i is rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Two holors are equal if all their slices are equal. -/
-theorem slice_eq (x : Holor α (d :: ds)) (y : Holor α (d :: ds)) (h : slice x = slice y) : x = y :=
-  funext fun t : HolorIndex (d :: ds) =>
+theorem slice_eq (x : Holor α (d::ds)) (y : Holor α (d::ds)) (h : slice x = slice y) : x = y :=
+  funext fun t : HolorIndex (d::ds) =>
     (holor_index_cons_decomp (fun t => x t = y t) t) fun i is hiis =>
-      have hiisdds : Forall₂ (· < ·) (i :: is) (d :: ds) := by
+      have hiisdds : Forall₂ (· < ·) (i::is) (d::ds) := by
         rw [← hiis]
         exact t.2
       have hid : i < d := (forall₂_cons.1 hiisdds).1
       have hisds : Forall₂ (· < ·) is ds := (forall₂_cons.1 hiisdds).2
       calc
-        x ⟨i :: is, _⟩ = slice x i hid ⟨is, hisds⟩ := congr_arg (fun t => x t) (Subtype.eq rfl)
+        x ⟨i::is, _⟩ = slice x i hid ⟨is, hisds⟩ := congr_arg (fun t => x t) (Subtype.eq rfl)
         _ = slice y i hid ⟨is, hisds⟩ := by
           rw [h]
-        _ = y ⟨i :: is, _⟩ := congr_arg (fun t => y t) (Subtype.eq rfl)
+        _ = y ⟨i::is, _⟩ := congr_arg (fun t => y t) (Subtype.eq rfl)
         
 
 theorem slice_unit_vec_mul [Ringₓ α] {i : ℕ} {j : ℕ} (hid : i < d) (x : Holor α ds) :
@@ -234,15 +248,19 @@ theorem slice_unit_vec_mul [Ringₓ α] {i : ℕ} {j : ℕ} (hid : i < d) (x : H
     else by
       simp [slice, mul, HolorIndex.take, unit_vec, HolorIndex.drop, h] <;> rfl
 
-theorem slice_add [Add α] (i : ℕ) (hid : i < d) (x : Holor α (d :: ds)) (y : Holor α (d :: ds)) :
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem slice_add [Add α] (i : ℕ) (hid : i < d) (x : Holor α (d::ds)) (y : Holor α (d::ds)) :
     slice x i hid + slice y i hid = slice (x + y) i hid :=
   funext fun t => by
     simp [slice, (· + ·)]
 
-theorem slice_zero [Zero α] (i : ℕ) (hid : i < d) : slice (0 : Holor α (d :: ds)) i hid = 0 :=
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem slice_zero [Zero α] (i : ℕ) (hid : i < d) : slice (0 : Holor α (d::ds)) i hid = 0 :=
   rfl
 
-theorem slice_sum [AddCommMonoidₓ α] {β : Type} (i : ℕ) (hid : i < d) (s : Finset β) (f : β → Holor α (d :: ds)) :
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem slice_sum [AddCommMonoidₓ α] {β : Type} (i : ℕ) (hid : i < d) (s : Finset β) (f : β → Holor α (d::ds)) :
     (∑ x in s, slice (f x) i hid) = slice (∑ x in s, f x) i hid := by
   letI := Classical.decEq β
   refine' Finset.induction_on s _ _
@@ -252,10 +270,11 @@ theorem slice_sum [AddCommMonoidₓ α] {β : Type} (i : ℕ) (hid : i < d) (s :
     rw [Finset.sum_insert h_not_in, ih, slice_add, Finset.sum_insert h_not_in]
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The original holor can be recovered from its slices by multiplying with unit vectors and
 summing up. -/
 @[simp]
-theorem sum_unit_vec_mul_slice [Ringₓ α] (x : Holor α (d :: ds)) :
+theorem sum_unit_vec_mul_slice [Ringₓ α] (x : Holor α (d::ds)) :
     (∑ i in (Finset.range d).attach, unitVec d i ⊗ slice x i (Nat.succ_le_of_ltₓ (Finset.mem_range.1 i.Prop))) = x := by
   apply slice_eq _ _ _
   ext i hid
@@ -336,9 +355,10 @@ theorem cprank_max_sum [Ringₓ α] {β} {n : ℕ} (s : Finset β) (f : β → H
         simp only [h_cprank, Finset.mem_insert_of_mem, h_x_in_s]
       exact cprank_max_add (h_cprank x (Finset.mem_insert_self x s)) ih')
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem cprank_max_upper_bound [Ringₓ α] : ∀ {ds}, ∀ x : Holor α ds, CprankMax ds.Prod x
   | [], x => cprank_max_nil x
-  | d :: ds, x => by
+  | d::ds, x => by
     have h_summands :
       ∀ i : { x // x ∈ Finset.range d }, CprankMax ds.Prod (unitVec d i.1 ⊗ slice x i.1 (mem_range.1 i.2)) := fun i =>
       cprank_max_mul _ _ _ (cprank_max_upper_bound (slice x i.1 (mem_range.1 i.2)))

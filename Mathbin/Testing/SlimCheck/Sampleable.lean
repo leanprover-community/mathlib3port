@@ -224,6 +224,7 @@ instance SampleableExtₓ.bifunctor {α β} {F} [Bifunctor F] [SampleableBifunct
 
 end Prio
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `nat.shrink' k n` creates a list of smaller natural numbers by
 successively dividing `n` by 2 and subtracting the difference from
 `k`. For example, `nat.shrink 100 = [50, 75, 88, 94, 97, 99]`. -/
@@ -247,8 +248,10 @@ def Nat.shrink' (k : ℕ) :
       have h₃ : 0 < m := by
         simp only [m, lt_iff_add_one_le, zero_addₓ] <;> rw [Nat.le_div_iff_mul_leₓ] <;> linarith
       have h₁ : k - m < k := Nat.sub_ltₓ (lt_of_lt_of_leₓ h₂ hn) h₃
-      nat.shrink' m h₀ (⟨k - m, h₁⟩ :: ls)
+      nat.shrink' m h₀ (⟨k - m, h₁⟩::ls)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `nat.shrink n` creates a list of smaller natural numbers by
 successively dividing by 2 and subtracting the difference from
 `n`. For example, `nat.shrink 100 = [50, 75, 88, 94, 97, 99]`. -/
@@ -262,12 +265,10 @@ def Nat.shrinkₓ (n : ℕ) : List { m : ℕ // HasWellFounded.R m n } :=
     ⟨n / 11,
         this _
           (by
-            norm_num)⟩ ::
-      ⟨n / 3,
+            norm_num)⟩::⟨n / 3,
           this _
             (by
-              norm_num)⟩ ::
-        Nat.shrink' n n le_rflₓ []
+              norm_num)⟩::Nat.shrink' n n le_rflₓ []
   else []
 
 open Gen
@@ -306,7 +307,7 @@ def iterateShrink {α} [HasToString α] [Sampleable α] (p : α → Prop) [Decid
     let y ← (shrink x).find fun a => p a
     f_rec y y <|> some y
 
-instance Fin.sampleable {n} [Fact <| 0 < n] : Sampleable (Finₓ n) :=
+instance Fin.sampleable {n : ℕ} [NeZero n] : Sampleable (Finₓ n) :=
   (Sampleable.lift ℕ Finₓ.ofNat' Subtype.val) fun i => (mod_leₓ _ _ : i % n ≤ i)
 
 instance (priority := 100) Fin.sampleable' {n} : Sampleable (Finₓ (succ n)) :=
@@ -458,6 +459,7 @@ section ListShrink
 
 variable [SizeOf α] (shr : ∀ x : α, LazyList { y : α // SizeofLt y x })
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem List.sizeof_drop_lt_sizeof_of_lt_length {xs : List α} {k} (hk : 0 < k) (hk' : k < xs.length) :
     sizeof (List.dropₓ k xs) < sizeof xs := by
   induction' xs with x xs generalizing k
@@ -466,7 +468,7 @@ theorem List.sizeof_drop_lt_sizeof_of_lt_length {xs : List α} {k} (hk : 0 < k) 
   cases k
   · cases hk
     
-  have : sizeof xs < sizeof (x :: xs) := by
+  have : sizeof xs < sizeof (x::xs) := by
     unfold_wf
   cases k
   · simp only [this, List.dropₓ]
@@ -479,12 +481,16 @@ theorem List.sizeof_drop_lt_sizeof_of_lt_length {xs : List α} {k} (hk : 0 < k) 
       
     
 
-theorem List.sizeof_cons_lt_right (a b : α) {xs : List α} (h : sizeof a < sizeof b) :
-    sizeof (a :: xs) < sizeof (b :: xs) := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem List.sizeof_cons_lt_right (a b : α) {xs : List α} (h : sizeof a < sizeof b) : sizeof (a::xs) < sizeof (b::xs) :=
+  by
   unfold_wf <;> assumption
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem List.sizeof_cons_lt_left (x : α) {xs xs' : List α} (h : sizeof xs < sizeof xs') :
-    sizeof (x :: xs) < sizeof (x :: xs') := by
+    sizeof (x::xs) < sizeof (x::xs') := by
   unfold_wf <;> assumption
 
 theorem List.sizeof_append_lt_left {xs ys ys' : List α} (h : sizeof ys < sizeof ys') :
@@ -539,14 +545,17 @@ def List.shrinkRemoves (k : ℕ) (hk : 0 < k) :
             intro a h <;> rw [← List.take_append_dropₓ k xs, ← h₃, ← h₄] <;> solve_by_elim [list.sizeof_append_lt_left]
           LazyList.cons ⟨xs₂, this⟩ <| Subtype.map ((· ++ ·) xs₁) h₅ <$> list.shrink_removes xs₂ (n - k) h₁
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation
 /-- `list.shrink_one xs` shrinks list `xs` by shrinking only one item in
 the list.
 -/
 def List.shrinkOne : ShrinkFn (List α)
   | [] => LazyList.nil
-  | x :: xs =>
-    LazyList.append ((Subtype.map (fun x' => x' :: xs) fun a => List.sizeof_cons_lt_right _ _) <$> shr x)
-      ((Subtype.map ((· :: ·) x) fun _ => List.sizeof_cons_lt_left _) <$> list.shrink_one xs)
+  | x::xs =>
+    LazyList.append ((Subtype.map (fun x' => x'::xs) fun a => List.sizeof_cons_lt_right _ _) <$> shr x)
+      ((Subtype.map ((·::·) x) fun _ => List.sizeof_cons_lt_left _) <$> list.shrink_one xs)
 
 /-- `list.shrink_with shrink_f xs` shrinks `xs` by first
 considering `xs` with chunks removed in the middle (starting with

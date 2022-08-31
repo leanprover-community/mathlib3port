@@ -48,7 +48,7 @@ The notation `ℙ K V` is preferred. -/
 def Projectivization :=
   Quotientₓ (projectivizationSetoid K V)
 
--- mathport name: «exprℙ»
+-- mathport name: exprℙ
 notation "ℙ" => Projectivization
 
 namespace Projectivization

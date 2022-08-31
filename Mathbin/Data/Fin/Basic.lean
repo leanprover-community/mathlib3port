@@ -3,9 +3,10 @@ Copyright (c) 2017 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Keeley Hoek
 -/
-import Mathbin.Tactic.ApplyFun
+import Mathbin.Algebra.NeZero
 import Mathbin.Data.Nat.Cast
 import Mathbin.Order.RelIso
+import Mathbin.Tactic.ApplyFun
 import Mathbin.Tactic.Localized
 
 /-!
@@ -54,7 +55,7 @@ This file expands on the development in the core library.
 
 ### Other casts
 
-* `fin.of_nat'`: given a positive number `n` (deduced from `[fact (0 < n)]`), `fin.of_nat' i` is
+* `fin.of_nat'`: given a positive number `n` (deduced from `[ne_zero n]`), `fin.of_nat' i` is
   `i % n` interpreted as an element of `fin n`;
 * `fin.cast_lt i h` : embed `i` into a `fin` where `h` proves it belongs into;
 * `fin.pred_above (p : fin n) i` : embed `i : fin (n+1)` into `fin n` by subtracting one if `p < i`;
@@ -79,26 +80,6 @@ open Finₓ Nat Function
 /-- Elimination principle for the empty set `fin 0`, dependent version. -/
 def finZeroElim {α : Finₓ 0 → Sort u} (x : Finₓ 0) : α x :=
   x.elim0
-
-theorem Fact.Succ.pos {n} : Fact (0 < succ n) :=
-  ⟨zero_lt_succₓ _⟩
-
-theorem Fact.Bit0.pos {n} [h : Fact (0 < n)] : Fact (0 < bit0 n) :=
-  ⟨Nat.zero_lt_bit0 <| ne_of_gtₓ h.1⟩
-
-theorem Fact.Bit1.pos {n} : Fact (0 < bit1 n) :=
-  ⟨Nat.zero_lt_bit1 _⟩
-
-theorem Fact.Pow.pos {p n : ℕ} [h : Fact <| 0 < p] : Fact (0 < p ^ n) :=
-  ⟨pow_pos h.1 _⟩
-
-localized [FinFact] attribute [instance] Fact.Succ.pos
-
-localized [FinFact] attribute [instance] Fact.Bit0.pos
-
-localized [FinFact] attribute [instance] Fact.Bit1.pos
-
-localized [FinFact] attribute [instance] Fact.Pow.pos
 
 namespace Finₓ
 
@@ -359,7 +340,7 @@ instance orderIsoUnique : Unique (Finₓ n ≃o Finₓ n) :=
 /-- Two strictly monotone functions from `fin n` are equal provided that their ranges
 are equal. -/
 theorem strict_mono_unique {f g : Finₓ n → α} (hf : StrictMono f) (hg : StrictMono g) (h : Range f = Range g) : f = g :=
-  have : (hf.OrderIso f).trans (OrderIso.setCongr _ _ h) = hg.OrderIso g := Subsingleton.elimₓ _ _
+  have : (hf.OrderIso f).trans (OrderIso.setCongr _ _ h) = hg.OrderIso g := Subsingleton.elim _ _
   congr_arg (Function.comp (coe : Range g → α)) (funext <| RelIso.ext_iff.1 this)
 
 /-- Two order embeddings of `fin n` are equal provided that their ranges are equal. -/
@@ -378,8 +359,8 @@ section Add
 
 
 /-- Given a positive `n`, `fin.of_nat' i` is `i % n` as an element of `fin n`. -/
-def ofNat' [h : Fact (0 < n)] (i : ℕ) : Finₓ n :=
-  ⟨i % n, mod_ltₓ _ h.1⟩
+def ofNat' [NeZero n] (i : ℕ) : Finₓ n :=
+  ⟨i % n, mod_ltₓ _ <| NeZero.pos n⟩
 
 theorem one_val {n : ℕ} : (1 : Finₓ (n + 1)).val = 1 % (n + 1) :=
   rfl
@@ -472,7 +453,7 @@ theorem coe_add_one_of_lt {n : ℕ} {i : Finₓ n.succ} (h : i < last _) : (↑(
 
 @[simp]
 theorem last_add_one : ∀ n, last n + 1 = 0
-  | 0 => Subsingleton.elimₓ _ _
+  | 0 => Subsingleton.elim _ _
   | n + 1 => by
     ext
     rw [coe_add, coe_zero, coe_last, coe_one, Nat.mod_selfₓ]
@@ -1402,7 +1383,7 @@ protected theorem coe_sub (a b : Finₓ n) : ((a - b : Finₓ n) : ℕ) = (a + (
 
 @[simp]
 theorem coe_fin_one (a : Finₓ 1) : ↑a = 0 := by
-  rw [Subsingleton.elimₓ a 0, Finₓ.coe_zero]
+  rw [Subsingleton.elim a 0, Finₓ.coe_zero]
 
 @[simp]
 theorem coe_neg_one : ↑(-1 : Finₓ (n + 1)) = n := by
@@ -1726,7 +1707,7 @@ theorem cast_pred_zero : castPred (0 : Finₓ (n + 2)) = 0 :=
 @[simp]
 theorem cast_pred_one : castPred (1 : Finₓ (n + 2)) = 1 := by
   cases n
-  apply Subsingleton.elimₓ
+  apply Subsingleton.elim
   rfl
 
 @[simp]
@@ -1897,7 +1878,7 @@ theorem coe_of_nat_eq_mod (m n : ℕ) : ((n : Finₓ (succ m)) : ℕ) = n % succ
   rw [← of_nat_eq_coe] <;> rfl
 
 @[simp]
-theorem coe_of_nat_eq_mod' (m n : ℕ) [I : Fact (0 < m)] : (@Finₓ.ofNat' _ I n : ℕ) = n % m :=
+theorem coe_of_nat_eq_mod' (m n : ℕ) [I : NeZero m] : (@Finₓ.ofNat' _ I n : ℕ) = n % m :=
   rfl
 
 section Mul

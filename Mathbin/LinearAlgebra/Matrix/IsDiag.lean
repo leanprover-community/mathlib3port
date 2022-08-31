@@ -53,7 +53,7 @@ theorem is_diag_iff_diagonal_diag [Zero α] [DecidableEq n] (A : Matrix n n α) 
 
 /-- Every matrix indexed by a subsingleton is diagonal. -/
 theorem is_diag_of_subsingleton [Zero α] [Subsingleton n] (A : Matrix n n α) : A.IsDiag := fun i j h =>
-  (h <| Subsingleton.elimₓ i j).elim
+  (h <| Subsingleton.elim i j).elim
 
 /-- Every zero matrix is diagonal. -/
 @[simp]

@@ -489,16 +489,19 @@ namespace List
 
 variable {α : Type _}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem nth_rotate : ∀ {l : List α} {n m : ℕ} (hml : m < l.length), (l.rotate n).nth m = l.nth ((m + n) % l.length)
   | [], n, m, hml => (Nat.not_lt_zeroₓ _ hml).elim
   | l, 0, m, hml => by
     simp [Nat.mod_eq_of_ltₓ hml]
-  | a :: l, n + 1, m, hml =>
+  | a::l, n + 1, m, hml =>
     have h₃ : m < List.length (l ++ [a]) := by
       simpa using hml
     (lt_or_eq_of_leₓ (Nat.le_of_lt_succₓ <| Nat.mod_ltₓ (m + n) (lt_of_le_of_ltₓ (Nat.zero_leₓ _) hml))).elim
       (fun hml' => by
-        have h₁ : (m + (n + 1)) % (a :: l : List α).length = (m + n) % (a :: l : List α).length + 1 :=
+        have h₁ : (m + (n + 1)) % (a::l : List α).length = (m + n) % (a::l : List α).length + 1 :=
           calc
             (m + (n + 1)) % (l.length + 1) = ((m + n) % (l.length + 1) + 1) % (l.length + 1) :=
               add_assocₓ m n 1 ▸ Nat.Modeq.add_right 1 (Nat.mod_modₓ _ _).symm
@@ -519,6 +522,10 @@ theorem nth_rotate : ∀ {l : List α} {n m : ℕ} (hml : m < l.length), (l.rota
           zero_addₓ, hml', h₁, List.nth_concat_length] <;>
         rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem rotate_eq_self_iff_eq_repeat [hα : Nonempty α] :
     ∀ {l : List α}, (∀ n, l.rotate n = l) ↔ ∃ a, l = List.repeat a l.length
   | [] =>
@@ -528,7 +535,7 @@ theorem rotate_eq_self_iff_eq_repeat [hα : Nonempty α] :
           simp ⟩,
       by
       simp ⟩
-  | a :: l =>
+  | a::l =>
     ⟨fun h =>
       ⟨a,
         (List.ext_le
@@ -536,7 +543,7 @@ theorem rotate_eq_self_iff_eq_repeat [hα : Nonempty α] :
               simp ))
           fun n hn h₁ => by
           rw [← Option.some_inj, ← List.nth_le_nth]
-          conv => lhs rw [← h (List.length (a :: l) - n)]
+          conv => lhs rw [← h (List.length (a::l) - n)]
           rw [nth_rotate hn, add_tsub_cancel_of_le (le_of_ltₓ hn), Nat.mod_selfₓ, nth_le_repeat]
           rfl⟩,
       fun ⟨a, ha⟩ n =>
@@ -545,7 +552,7 @@ theorem rotate_eq_self_iff_eq_repeat [hα : Nonempty α] :
           (by
             simp )
           fun m hm h => by
-          have hm' : (m + n) % (List.repeat a (List.length (a :: l))).length < List.length (a :: l) := by
+          have hm' : (m + n) % (List.repeat a (List.length (a::l))).length < List.length (a::l) := by
             rw [List.length_repeat] <;> exact Nat.mod_ltₓ _ (Nat.succ_posₓ _)
           rw [nth_le_repeat, ← Option.some_inj, ← List.nth_le_nth, nth_rotate h, List.nth_le_nth, nth_le_repeat] <;>
             simp_all ⟩

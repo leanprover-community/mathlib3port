@@ -41,10 +41,10 @@ structure ZeroAtInftyContinuousMap (α : Type u) (β : Type v) [TopologicalSpace
   ContinuousMap α β : Type max u v where
   zero_at_infty' : Tendsto to_fun (cocompact α) (𝓝 0)
 
--- mathport name: «exprC₀( , )»
+-- mathport name: zero_at_infty_continuous_map
 localized [ZeroAtInfty] notation (priority := 2000) "C₀(" α ", " β ")" => ZeroAtInftyContinuousMap α β
 
--- mathport name: «expr →C₀ »
+-- mathport name: zero_at_infty_continuous_map.arrow
 localized [ZeroAtInfty] notation α " →C₀ " β => ZeroAtInftyContinuousMap α β
 
 /-- `zero_at_infty_continuous_map_class F α β` states that `F` is a type of continuous maps which

@@ -1859,6 +1859,7 @@ theorem mul_tendsto_nhds_zero_right (x : α) : Tendsto (uncurry ((· * ·) : α 
       linarith
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem mul_tendsto_nhds_zero_left (x : α) : Tendsto (uncurry ((· * ·) : α → α → α)) (𝓝 x ×ᶠ 𝓝 0) <| 𝓝 0 := by
   intro s hs
   have := mul_tendsto_nhds_zero_right x hs

@@ -133,14 +133,14 @@ theorem map_injective {f : α → β} (hf : Function.Injective f) : Function.Inj
 def transposeₓ (M : Matrix m n α) : Matrix n m α
   | x, y => M y x
 
--- mathport name: «expr ᵀ»
+-- mathport name: matrix.transpose
 localized [Matrix] postfix:1024 "ᵀ" => Matrix.transposeₓ
 
 /-- The conjugate transpose of a matrix defined in term of `star`. -/
 def conjTranspose [HasStar α] (M : Matrix m n α) : Matrix n m α :=
   M.transpose.map star
 
--- mathport name: «expr ᴴ»
+-- mathport name: matrix.conj_transpose
 localized [Matrix] postfix:1024 "ᴴ" => Matrix.conjTranspose
 
 /-- `matrix.col u` is the column matrix whose entries are given by `u`. -/
@@ -531,7 +531,7 @@ variable [Fintype m] [Fintype n]
 def dotProduct [Mul α] [AddCommMonoidₓ α] (v w : m → α) : α :=
   ∑ i, v i * w i
 
--- mathport name: «expr ⬝ᵥ »
+-- mathport name: matrix.dot_product
 /- The precedence of 72 comes immediately after ` • ` for `has_smul.smul`,
    so that `r₁ • a ⬝ᵥ r₂ • b` is parsed as `(r₁ • a) ⬝ᵥ (r₂ • b)` here. -/
 localized [Matrix] infixl:72 " ⬝ᵥ " => Matrix.dotProduct
@@ -683,7 +683,7 @@ This is currently only defined when `m` is finite. -/
 protected def mul [Fintype m] [Mul α] [AddCommMonoidₓ α] (M : Matrix l m α) (N : Matrix m n α) : Matrix l n α :=
   fun i k => (fun j => M i j) ⬝ᵥ fun j => N j k
 
--- mathport name: «expr ⬝ »
+-- mathport name: matrix.mul
 localized [Matrix] infixl:75 " ⬝ " => Matrix.mul
 
 theorem mul_apply [Fintype m] [Mul α] [AddCommMonoidₓ α] {M : Matrix l m α} {N : Matrix m n α} {i k} :
@@ -2199,13 +2199,13 @@ theorem update_column_apply [DecidableEq n] {j' : n} : updateColumn M j c i j' =
 theorem update_column_subsingleton [Subsingleton n] (A : Matrix m n R) (i : n) (b : m → R) :
     A.updateColumn i b = (colₓ b).submatrix id (Function.const n ()) := by
   ext x y
-  simp [update_column_apply, Subsingleton.elimₓ i y]
+  simp [update_column_apply, Subsingleton.elim i y]
 
 @[simp]
 theorem update_row_subsingleton [Subsingleton m] (A : Matrix m n R) (i : m) (b : n → R) :
     A.updateRow i b = (rowₓ b).submatrix (Function.const m ()) id := by
   ext x y
-  simp [update_column_apply, Subsingleton.elimₓ i x]
+  simp [update_column_apply, Subsingleton.elim i x]
 
 theorem map_update_row [DecidableEq m] (f : α → β) : map (updateRow M i b) f = updateRow (M.map f) i (f ∘ b) := by
   ext i' j'

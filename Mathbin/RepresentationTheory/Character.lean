@@ -48,6 +48,7 @@ theorem char_mul_comm (V : FdRep k G) (g : G) (h : G) : V.character (h * g) = V.
 theorem char_one (V : FdRep k G) : V.character 1 = FiniteDimensional.finrank k V := by
   simp only [character, map_one, trace_one]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The character is multiplicative under the tensor product. -/
 @[simp]
 theorem char_tensor (V W : FdRep k G) : (V ⊗ W).character = V.character * W.character := by

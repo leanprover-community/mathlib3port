@@ -230,10 +230,10 @@ theorem roots_ne_zero_of_splits {f : K[X]} (hs : Splits i f) (hf0 : natDegree f 
 
 /-- Pick a root of a polynomial that splits. -/
 def rootOfSplits {f : K[X]} (hf : f.Splits i) (hfd : f.degree ≠ 0) : L :=
-  Classical.some <| exists_root_of_splits i hf hfd
+  Classical.choose <| exists_root_of_splits i hf hfd
 
 theorem map_root_of_splits {f : K[X]} (hf : f.Splits i) (hfd) : f.eval₂ i (rootOfSplits i hf hfd) = 0 :=
-  Classical.some_spec <| exists_root_of_splits i hf hfd
+  Classical.choose_spec <| exists_root_of_splits i hf hfd
 
 theorem nat_degree_eq_card_roots {p : K[X]} {i : K →+* L} (hsplit : Splits i p) : p.natDegree = (p.map i).roots.card :=
   by
@@ -471,12 +471,12 @@ section SplittingField
 
 /-- Non-computably choose an irreducible factor from a polynomial. -/
 def factor (f : K[X]) : K[X] :=
-  if H : ∃ g, Irreducible g ∧ g ∣ f then Classical.some H else x
+  if H : ∃ g, Irreducible g ∧ g ∣ f then Classical.choose H else x
 
 theorem irreducible_factor (f : K[X]) : Irreducible (factor f) := by
   rw [factor]
   split_ifs with H
-  · exact (Classical.some_spec H).1
+  · exact (Classical.choose_spec H).1
     
   · exact irreducible_X
     
@@ -493,7 +493,7 @@ theorem factor_dvd_of_not_is_unit {f : K[X]} (hf1 : ¬IsUnit f) : factor f ∣ f
     exact dvd_zero _
     
   rw [factor, dif_pos (WfDvdMonoid.exists_irreducible_factor hf1 hf2)]
-  exact (Classical.some_spec <| WfDvdMonoid.exists_irreducible_factor hf1 hf2).2
+  exact (Classical.choose_spec <| WfDvdMonoid.exists_irreducible_factor hf1 hf2).2
 
 theorem factor_dvd_of_degree_ne_zero {f : K[X]} (hf : f.degree ≠ 0) : factor f ∣ f :=
   factor_dvd_of_not_is_unit (mt degree_eq_zero_of_is_unit hf)
@@ -710,9 +710,9 @@ variable [Algebra K L] (hb : Splits (algebraMap K L) f)
 
 /-- Embeds the splitting field into any other field that splits the polynomial. -/
 def lift : SplittingField f →ₐ[K] L :=
-  { Classical.some (SplittingFieldAux.exists_lift _ _ _ _ hb) with
+  { Classical.choose (SplittingFieldAux.exists_lift _ _ _ _ hb) with
     commutes' := fun r => by
-      have := Classical.some_spec (splitting_field_aux.exists_lift _ _ rfl _ hb)
+      have := Classical.choose_spec (splitting_field_aux.exists_lift _ _ rfl _ hb)
       exact RingHom.ext_iff.1 this r }
 
 theorem adjoin_roots :

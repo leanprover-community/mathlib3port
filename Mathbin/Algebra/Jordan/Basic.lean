@@ -121,10 +121,10 @@ instance (priority := 100) CommSemigroupₓ.isCommJordan [CommSemigroupₓ A] : 
   mul_comm := mul_comm
   lmul_comm_rmul_rmul := fun a b => mul_assoc _ _ _
 
--- mathport name: «exprL»
+-- mathport name: exprL
 local notation "L" => AddMonoidₓ.End.mulLeft
 
--- mathport name: «exprR»
+-- mathport name: exprR
 local notation "R" => AddMonoidₓ.End.mulRight
 
 /-!

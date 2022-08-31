@@ -138,7 +138,7 @@ theorem witt_structure_rat_prop (Φ : MvPolynomial idx ℚ) (n : ℕ) :
         bind₁ (fun k => bind₁ (fun i => (rename (Prod.mk i)) (W_ ℚ k)) Φ) (bind₁ (xInTermsOfW p ℚ) (W_ ℚ n)) :=
       by
       rw [bind₁_bind₁]
-      apply eval₂_hom_congr (RingHom.ext_rat _ _) rfl rfl
+      exact eval₂_hom_congr (RingHom.ext_rat _ _) rfl rfl
     _ = bind₁ (fun i => rename (Prod.mk i) (W_ ℚ n)) Φ := by
       rw [bind₁_X_in_terms_of_W_witt_polynomial p _ n, bind₁_X_right]
     
@@ -380,6 +380,7 @@ theorem constant_coeff_witt_structure_int (Φ : MvPolynomial idx ℤ) (h : const
 
 variable (R)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- we could relax the fintype on `idx`, but then we need to cast from finset to set.
 -- for our applications `idx` is always finite.
 theorem witt_structure_rat_vars [Fintype idx] (Φ : MvPolynomial idx ℚ) (n : ℕ) :
@@ -395,6 +396,7 @@ theorem witt_structure_rat_vars [Fintype idx] (Φ : MvPolynomial idx ℚ) (n : �
   rw [Finset.mem_range] at hk
   exact lt_of_lt_of_leₓ hj hk
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- we could relax the fintype on `idx`, but then we need to cast from finset to set.
 -- for our applications `idx` is always finite.
 theorem witt_structure_int_vars [Fintype idx] (Φ : MvPolynomial idx ℤ) (n : ℕ) :

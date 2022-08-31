@@ -47,12 +47,14 @@ def piFinTwoEquiv (α : Finₓ 2 → Type u) : (∀ i, α i) ≃ α 0 × α 1 wh
   left_inv := fun f => funext <| Finₓ.forall_fin_two.2 ⟨rfl, rfl⟩
   right_inv := fun ⟨x, y⟩ => rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Finₓ.preimage_apply_01_prod {α : Finₓ 2 → Type u} (s : Set (α 0)) (t : Set (α 1)) :
     (fun f : ∀ i, α i => (f 0, f 1)) ⁻¹' s ×ˢ t = Set.Pi Set.Univ (Finₓ.cons s <| Finₓ.cons t Finₓ.elim0) := by
   ext f
   have : (Finₓ.cons s (Finₓ.cons t Finₓ.elim0) : ∀ i, Set (α i)) 1 = t := rfl
   simp [Finₓ.forall_fin_two, this]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Finₓ.preimage_apply_01_prod' {α : Type u} (s t : Set α) :
     (fun f : Finₓ 2 → α => (f 0, f 1)) ⁻¹' s ×ˢ t = Set.Pi Set.Univ ![s, t] :=
   Finₓ.preimage_apply_01_prod s t
@@ -334,7 +336,7 @@ theorem fin_rotate_zero : finRotate 0 = Equivₓ.refl _ :=
 
 @[simp]
 theorem fin_rotate_one : finRotate 1 = Equivₓ.refl _ :=
-  Subsingleton.elimₓ _ _
+  Subsingleton.elim _ _
 
 @[simp]
 theorem fin_rotate_succ_apply {n : ℕ} (i : Finₓ n.succ) : finRotate n.succ i = i + 1 := by

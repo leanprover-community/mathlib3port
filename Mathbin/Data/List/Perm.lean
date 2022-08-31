@@ -40,7 +40,7 @@ inductive Perm : List α → List α → Prop
 
 open Perm (swap)
 
--- mathport name: «expr ~ »
+-- mathport name: list.perm
 infixl:50 " ~ " => Perm
 
 @[refl]
@@ -243,7 +243,7 @@ theorem filter_append_perm (p : α → Prop) [DecidablePred p] (l : List α) :
       
     
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (l₁' «expr ~ » l₁)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (l₁' list.perm l₁)
 theorem exists_perm_sublist {l₁ l₂ l₂' : List α} (s : l₁ <+ l₂) (p : l₂ ~ l₂') :
     ∃ (l₁' : _)(_ : l₁' ~ l₁), l₁' <+ l₂' := by
   induction' p with x l₂ l₂' p IH x y l₂ l₂ m₂ r₂ p₁ p₂ IH₁ IH₂ generalizing l₁ s
@@ -350,7 +350,7 @@ end Rel
 
 section Subperm
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (l «expr ~ » l₁)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (l list.perm l₁)
 /-- `subperm l₁ l₂`, denoted `l₁ <+~ l₂`, means that `l₁` is a sublist of
   a permutation of `l₂`. This is an analogue of `l₁ ⊆ l₂` which respects
   multiplicities of elements, and is used for the `≤` relation on multisets. -/
@@ -488,10 +488,10 @@ section
 
 variable {op : α → α → α} [IsAssociative α op] [IsCommutative α op]
 
--- mathport name: «expr * »
+-- mathport name: op
 local notation a "*" b => op a b
 
--- mathport name: «expr <*> »
+-- mathport name: foldl
 local notation l "<*>" a => foldlₓ op a l
 
 theorem Perm.fold_op_eq {l₁ l₂ : List α} {a : α} (h : l₁ ~ l₂) : (l₁<*>a) = l₂<*>a :=
@@ -1319,13 +1319,13 @@ theorem length_permutations_aux :
 theorem length_permutations (l : List α) : length (permutations l) = (length l)! :=
   length_permutations_aux l []
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (ts' «expr ~ » «expr[ ,]»([]))
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (ts' list.perm «expr[ ,]»([]))
 theorem mem_permutations_of_perm_lemma {is l : List α}
     (H : l ~ [] ++ is → (∃ (ts' : _)(_ : ts' ~ []), l = ts' ++ is) ∨ l ∈ permutationsAux is []) :
     l ~ is → l ∈ permutations is := by
   simpa [permutations, perm_nil] using H
 
--- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (is' «expr ~ » is)
+-- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (is' list.perm is)
 theorem mem_permutations_aux_of_perm :
     ∀ {ts is l : List α}, l ~ is ++ ts → (∃ (is' : _)(_ : is' ~ is), l = is' ++ ts) ∨ l ∈ permutationsAux ts is := by
   refine'

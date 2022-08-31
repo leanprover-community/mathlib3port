@@ -98,7 +98,7 @@ theorem to_prefunctor_obj : (F : Prefunctor B C).obj = F.obj :=
   rfl
 
 @[simp]
-theorem to_prefunctor_map : (F : Prefunctor B C).map = F.map :=
+theorem to_prefunctor_map : @Prefunctor.map B _ C _ F = @map _ _ _ _ _ _ F :=
   rfl
 
 /-- The identity prelax functor. -/
@@ -172,7 +172,7 @@ structure OplaxFunctor (B : Type u₁) [Bicategory.{w₁, v₁} B] (C : Type u�
       obviously
   map₂_associator' :
     ∀ {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d),
-      OplaxFunctor.Map₂AssociatorAux obj (fun a b => map) (fun a b f g => map₂) (fun a b c => map_comp) f g h := by
+      OplaxFunctor.Map₂AssociatorAux obj (fun _ _ => map) (fun a b f g => map₂) (fun a b c => map_comp) f g h := by
     run_tac
       obviously
   map₂_left_unitor' :
@@ -225,11 +225,11 @@ theorem to_prelax_functor_obj : (F : PrelaxFunctor B C).obj = F.obj :=
   rfl
 
 @[simp]
-theorem to_prelax_functor_map : (F : PrelaxFunctor B C).map = F.map :=
+theorem to_prelax_functor_map : @PrelaxFunctor.map B _ _ C _ _ F = @map _ _ _ _ F :=
   rfl
 
 @[simp]
-theorem to_prelax_functor_map₂ : (F : PrelaxFunctor B C).map₂ = F.map₂ :=
+theorem to_prelax_functor_map₂ : @PrelaxFunctor.map₂ B _ _ C _ _ F = @map₂ _ _ _ _ F :=
   rfl
 
 /-- Function between 1-morphisms as a functor. -/
@@ -395,11 +395,11 @@ theorem to_prelax_functor_obj : (F : PrelaxFunctor B C).obj = F.obj :=
   rfl
 
 @[simp]
-theorem to_prelax_functor_map : (F : PrelaxFunctor B C).map = F.map :=
+theorem to_prelax_functor_map : @PrelaxFunctor.map B _ _ C _ _ F = @map _ _ _ _ F :=
   rfl
 
 @[simp]
-theorem to_prelax_functor_map₂ : (F : PrelaxFunctor B C).map₂ = F.map₂ :=
+theorem to_prelax_functor_map₂ : @PrelaxFunctor.map₂ B _ _ C _ _ F = @map₂ _ _ _ _ F :=
   rfl
 
 /-- The oplax functor associated with a pseudofunctor. -/
@@ -419,11 +419,11 @@ theorem to_oplax_obj : (F : OplaxFunctor B C).obj = F.obj :=
   rfl
 
 @[simp]
-theorem to_oplax_map : (F : OplaxFunctor B C).map = F.map :=
+theorem to_oplax_map : @OplaxFunctor.map B _ C _ F = @map _ _ _ _ F :=
   rfl
 
 @[simp]
-theorem to_oplax_map₂ : (F : OplaxFunctor B C).map₂ = F.map₂ :=
+theorem to_oplax_map₂ : @OplaxFunctor.map₂ B _ C _ F = @map₂ _ _ _ _ F :=
   rfl
 
 @[simp]
@@ -459,7 +459,7 @@ def comp (F : Pseudofunctor B C) (G : Pseudofunctor C D) : Pseudofunctor B D :=
 -/
 @[simps]
 def mkOfOplax (F : OplaxFunctor B C) (F' : F.PseudoCore) : Pseudofunctor B C :=
-  { (F : PrelaxFunctor B C) with map_id := F'.mapIdIso, map_comp := F'.mapCompIso,
+  { (F : PrelaxFunctor B C) with map_id := F'.mapIdIso, map_comp := fun _ _ _ => F'.mapCompIso,
     map₂_whisker_left' := fun a b c f g h η => by
       dsimp'
       rw [F'.map_comp_iso_hom f g, ← F.map_comp_naturality_right_assoc, ← F'.map_comp_iso_hom f h, hom_inv_id, comp_id],

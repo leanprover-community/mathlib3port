@@ -107,16 +107,16 @@ namespace Relations
 
 open Function
 
--- mathport name: «exprH»
+-- mathport name: exprH
 local notation "H" => FreeLieAlgebra.of R ∘ generators.H
 
--- mathport name: «exprE»
+-- mathport name: exprE
 local notation "E" => FreeLieAlgebra.of R ∘ generators.E
 
--- mathport name: «exprF»
+-- mathport name: exprF
 local notation "F" => FreeLieAlgebra.of R ∘ generators.F
 
--- mathport name: «exprad»
+-- mathport name: exprad
 local notation "ad" => LieAlgebra.ad R (FreeLieAlgebra R (Generators B))
 
 /-- The terms correpsonding to the `⁅H, H⁆`-relations. -/

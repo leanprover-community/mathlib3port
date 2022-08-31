@@ -42,7 +42,7 @@ It is a square-zero extension because `M^2 = 0`.
 def TrivSqZeroExt (R : Type u) (M : Type v) :=
   R × M
 
--- mathport name: «exprtsze»
+-- mathport name: exprtsze
 local notation "tsze" => TrivSqZeroExt
 
 namespace TrivSqZeroExt

@@ -170,7 +170,7 @@ def ringEquivOfUnique {M N} [Unique M] [Unique N] [Add M] [Mul M] [Add N] [Mul N
 
 instance {M N} [Unique M] [Unique N] [Add M] [Mul M] [Add N] [Mul N] : Unique (M ≃+* N) where
   default := ringEquivOfUnique
-  uniq := fun _ => ext fun x => Subsingleton.elimₓ _ _
+  uniq := fun _ => ext fun x => Subsingleton.elim _ _
 
 variable (R)
 

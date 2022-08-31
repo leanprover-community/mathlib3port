@@ -325,12 +325,12 @@ is linear (take for instance the map from `E` to `E/F` where `F` is a closed sub
 without a closed complement. Then it doesn't have a continuous linear right inverse.) -/
 noncomputable irreducible_def nonlinearRightInverseOfSurjective (f : E →L[𝕜] F) (hsurj : f.range = ⊤) :
   NonlinearRightInverse f :=
-  Classical.some (exists_nonlinear_right_inverse_of_surjective f hsurj)
+  Classical.choose (exists_nonlinear_right_inverse_of_surjective f hsurj)
 
 theorem nonlinear_right_inverse_of_surjective_nnnorm_pos (f : E →L[𝕜] F) (hsurj : f.range = ⊤) :
     0 < (nonlinearRightInverseOfSurjective f hsurj).nnnorm := by
   rw [nonlinear_right_inverse_of_surjective]
-  exact Classical.some_spec (exists_nonlinear_right_inverse_of_surjective f hsurj)
+  exact Classical.choose_spec (exists_nonlinear_right_inverse_of_surjective f hsurj)
 
 end ContinuousLinearMap
 

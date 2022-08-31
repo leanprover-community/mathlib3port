@@ -38,24 +38,31 @@ open MeasureTheory
 
 namespace Box
 
-theorem measure_Icc_lt_top (I : Box ι) (μ : Measureₓ (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I.Icc < ∞ :=
+variable (I : Box ι)
+
+theorem measure_Icc_lt_top (μ : Measureₓ (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I.Icc < ∞ :=
   show μ (Icc I.lower I.upper) < ∞ from I.is_compact_Icc.measure_lt_top
 
-theorem measure_coe_lt_top (I : Box ι) (μ : Measureₓ (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I < ∞ :=
+theorem measure_coe_lt_top (μ : Measureₓ (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I < ∞ :=
   (measure_mono <| coe_subset_Icc).trans_lt (I.measure_Icc_lt_top μ)
 
-variable [Fintype ι] (I : Box ι)
+section Countable
+
+variable [Countable ι]
 
 theorem measurable_set_coe : MeasurableSet (I : Set (ι → ℝ)) := by
   rw [coe_eq_pi]
-  haveI := Fintype.toEncodable ι
   exact MeasurableSet.univ_pi fun i => measurable_set_Ioc
 
 theorem measurable_set_Icc : MeasurableSet I.Icc :=
   measurable_set_Icc
 
 theorem measurable_set_Ioo : MeasurableSet I.Ioo :=
-  (measurable_set_pi (Set.to_finite _).Countable).2 <| Or.inl fun i hi => measurable_set_Ioo
+  MeasurableSet.univ_pi fun i => measurable_set_Ioo
+
+end Countable
+
+variable [Fintype ι]
 
 theorem coe_ae_eq_Icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.Icc := by
   rw [coe_eq_pi]
@@ -66,7 +73,7 @@ theorem Ioo_ae_eq_Icc : I.Ioo =ᵐ[volume] I.Icc :=
 
 end Box
 
-theorem Prepartition.measure_Union_to_real [Fintype ι] {I : Box ι} (π : Prepartition I) (μ : Measureₓ (ι → ℝ))
+theorem Prepartition.measure_Union_to_real [Finite ι] {I : Box ι} (π : Prepartition I) (μ : Measureₓ (ι → ℝ))
     [IsLocallyFiniteMeasure μ] : (μ π.Union).toReal = ∑ J in π.boxes, (μ J).toReal := by
   erw [← Ennreal.to_real_sum, π.Union_def, measure_bUnion_finset π.pairwise_disjoint]
   exacts[fun J hJ => J.measurable_set_coe, fun J hJ => (J.measure_coe_lt_top μ).Ne]

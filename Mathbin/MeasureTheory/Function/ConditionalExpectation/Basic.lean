@@ -1799,7 +1799,7 @@ irreducible_def condexp (m : MeasurableSpace α) {m0 : MeasurableSpace α} (μ :
     else 0
   else 0
 
--- mathport name: «expr [ | ]»
+-- mathport name: measure_theory.condexp
 -- We define notation `μ[f|m]` for the conditional expectation of `f` with respect to `m`.
 localized [MeasureTheory] notation μ "[" f "|" m "]" => MeasureTheory.condexp m μ f
 
@@ -1975,6 +1975,18 @@ theorem condexp_add (hf : Integrable f μ) (hg : Integrable g μ) : μ[f + g|m] 
   rw [condexp_L1_add hf hg]
   exact (coe_fn_add _ _).trans ((condexp_ae_eq_condexp_L1 hm _).symm.add (condexp_ae_eq_condexp_L1 hm _).symm)
 
+theorem condexp_finset_sum {ι : Type _} {s : Finset ι} {f : ι → α → F'} (hf : ∀ i ∈ s, Integrable (f i) μ) :
+    μ[∑ i in s, f i|m] =ᵐ[μ] ∑ i in s, μ[f i|m] := by
+  induction' s using Finset.induction_on with i s his heq hf
+  · rw [Finset.sum_empty, Finset.sum_empty, condexp_zero]
+    
+  · rw [Finset.sum_insert his, Finset.sum_insert his]
+    exact
+      (condexp_add (hf i <| Finset.mem_insert_self i s) <|
+            integrable_finset_sum' _ fun j hmem => hf j <| Finset.mem_insert_of_mem hmem).trans
+        ((eventually_eq.refl _ _).add (HEq fun j hmem => hf j <| Finset.mem_insert_of_mem hmem))
+    
+
 theorem condexp_smul (c : 𝕜) (f : α → F') : μ[c • f|m] =ᵐ[μ] c • μ[f|m] := by
   by_cases' hm : m ≤ m0
   swap
@@ -2042,6 +2054,24 @@ theorem condexp_mono {E} [NormedLatticeAddCommGroup E] [CompleteSpace E] [Normed
   haveI : sigma_finite (μ.trim hm) := hμm
   exact
     (condexp_ae_eq_condexp_L1 hm _).trans_le ((condexp_L1_mono hf hg hfg).trans_eq (condexp_ae_eq_condexp_L1 hm _).symm)
+
+theorem condexp_nonneg {E} [NormedLatticeAddCommGroup E] [CompleteSpace E] [NormedSpace ℝ E] [OrderedSmul ℝ E]
+    {f : α → E} (hf : 0 ≤ᵐ[μ] f) : 0 ≤ᵐ[μ] μ[f|m] := by
+  by_cases' hfint : integrable f μ
+  · rw [(condexp_zero.symm : (0 : α → E) = μ[0|m])]
+    exact condexp_mono (integrable_zero _ _ _) hfint hf
+    
+  · exact eventually_eq.le (condexp_undef hfint).symm
+    
+
+theorem condexp_nonpos {E} [NormedLatticeAddCommGroup E] [CompleteSpace E] [NormedSpace ℝ E] [OrderedSmul ℝ E]
+    {f : α → E} (hf : f ≤ᵐ[μ] 0) : μ[f|m] ≤ᵐ[μ] 0 := by
+  by_cases' hfint : integrable f μ
+  · rw [(condexp_zero.symm : (0 : α → E) = μ[0|m])]
+    exact condexp_mono hfint (integrable_zero _ _ _) hf
+    
+  · exact eventually_eq.le (condexp_undef hfint)
+    
 
 /-- **Lebesgue dominated convergence theorem**: sufficient conditions under which almost
   everywhere convergence of a sequence of functions implies the convergence of their image by

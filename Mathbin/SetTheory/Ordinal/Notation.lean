@@ -822,7 +822,7 @@ theorem repr_opow_aux₁ {e a} [Ne : NF e] [Na : NF a] {a' : Ordinal} (e0 : repr
 
 section
 
--- mathport name: «expr ^ »
+-- mathport name: ordinal.pow
 local infixr:0 "^" => @pow Ordinal.{0} Ordinal Ordinal.hasPow
 
 theorem repr_opow_aux₂ {a0 a'} [N0 : NF a0] [Na' : NF a'] (m : ℕ) (d : ω ∣ repr a') (e0 : repr a0 ≠ 0)
@@ -993,7 +993,7 @@ private theorem exists_lt_mul_omega' {o : Ordinal} ⦃a⦄ (h : a < o * ω) : �
   obtain ⟨i, rfl⟩ := lt_omega.1 hi
   exact ⟨i, h'.trans_le (le_add_right _ _)⟩
 
--- mathport name: «expr ^ »
+-- mathport name: ordinal.pow
 local infixr:0 "^" => @pow Ordinal Ordinal Ordinal.hasPow
 
 private theorem exists_lt_omega_opow' {α} {o b : Ordinal} (hb : 1 < b) (ho : o.IsLimit) {f : α → Ordinal}
@@ -1146,7 +1146,7 @@ theorem fast_growing_one : fastGrowing 1 = fun n => 2 * n := by
 
 section
 
--- mathport name: «expr ^ »
+-- mathport name: pow
 local infixr:0 "^" => pow
 
 @[simp]

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
 import Mathbin.Data.Bool.Set
+import Mathbin.Data.Ulift
 import Mathbin.Data.Nat.Basic
 import Mathbin.Order.Bounds
 
@@ -516,6 +517,12 @@ theorem supr_congr_Prop {p q : Prop} {f₁ : p → α} {f₂ : q → α} (pq : p
   congr with x
   apply f
 
+theorem supr_plift_up (f : Plift ι → α) : (⨆ i, f (Plift.up i)) = ⨆ i, f i :=
+  (Plift.up_surjective.supr_congr _) fun _ => rfl
+
+theorem supr_plift_down (f : ι → α) : (⨆ i, f (Plift.down i)) = ⨆ i, f i :=
+  (Plift.down_surjective.supr_congr _) fun _ => rfl
+
 theorem supr_range' (g : β → α) (f : ι → β) : (⨆ b : Range f, g b) = ⨆ i, g (f i) := by
   rw [supr, supr, ← image_eq_range, ← range_comp]
 
@@ -554,6 +561,12 @@ protected theorem Equivₓ.infi_congr {g : ι' → α} (e : ι ≃ ι') (h : ∀
 theorem infi_congr_Prop {p q : Prop} {f₁ : p → α} {f₂ : q → α} (pq : p ↔ q) (f : ∀ x, f₁ (pq.mpr x) = f₂ x) :
     infi f₁ = infi f₂ :=
   @supr_congr_Prop αᵒᵈ _ p q f₁ f₂ pq f
+
+theorem infi_plift_up (f : Plift ι → α) : (⨅ i, f (Plift.up i)) = ⨅ i, f i :=
+  (Plift.up_surjective.infi_congr _) fun _ => rfl
+
+theorem infi_plift_down (f : ι → α) : (⨅ i, f (Plift.down i)) = ⨅ i, f i :=
+  (Plift.down_surjective.infi_congr _) fun _ => rfl
 
 theorem infi_range' (g : β → α) (f : ι → β) : (⨅ b : Range f, g b) = ⨅ i, g (f i) :=
   @supr_range' αᵒᵈ _ _ _ _ _
@@ -1214,10 +1227,12 @@ theorem supr_prod {f : β × γ → α} : (⨆ x, f x) = ⨆ (i) (j), f (i, j) :
 theorem infi_prod {f : β × γ → α} : (⨅ x, f x) = ⨅ (i) (j), f (i, j) :=
   @supr_prod αᵒᵈ _ _ _ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem bsupr_prod {f : β × γ → α} {s : Set β} {t : Set γ} : (⨆ x ∈ s ×ˢ t, f x) = ⨆ (a ∈ s) (b ∈ t), f (a, b) := by
   simp_rw [supr_prod, mem_prod, supr_and]
   exact supr_congr fun _ => supr_comm
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem binfi_prod {f : β × γ → α} {s : Set β} {t : Set γ} : (⨅ x ∈ s ×ˢ t, f x) = ⨅ (a ∈ s) (b ∈ t), f (a, b) :=
   @bsupr_prod αᵒᵈ _ _ _ _ _ _
 

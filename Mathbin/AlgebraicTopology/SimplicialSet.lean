@@ -50,7 +50,7 @@ is the Yoneda embedding of `n`. -/
 def standardSimplex : SimplexCategory ⥤ SSet :=
   yoneda
 
--- mathport name: «exprΔ[ ]»
+-- mathport name: standard_simplex
 localized [Simplicial] notation "Δ[" n "]" => SSet.standardSimplex.obj (SimplexCategory.mk n)
 
 instance : Inhabited SSet :=
@@ -76,7 +76,7 @@ def boundary (n : ℕ) : SSet where
       apply α.property
       exact Function.Surjective.of_comp h⟩
 
--- mathport name: «expr∂Δ[ ]»
+-- mathport name: sSet.boundary
 localized [Simplicial] notation "∂Δ[" n "]" => SSet.boundary n
 
 /-- The inclusion of the boundary of the `n`-th standard simplex into that standard simplex. -/
@@ -98,7 +98,7 @@ def horn (n : ℕ) (i : Finₓ (n + 1)) : SSet where
       intro hj
       exact Set.range_comp_subset_range _ _ hj⟩
 
--- mathport name: «exprΛ[ , ]»
+-- mathport name: sSet.horn
 localized [Simplicial] notation "Λ[" n ", " i "]" => SSet.horn (n : ℕ) i
 
 /-- The inclusion of the `i`-th horn of the `n`-th standard simplex into that standard simplex. -/

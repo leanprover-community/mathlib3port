@@ -42,6 +42,10 @@ theorem CharP.cast_eq_zero [AddMonoidWithOneₓ R] (p : ℕ) [CharP R p] : (p : 
 theorem CharP.cast_card_eq_zero [AddGroupWithOneₓ R] [Fintype R] : (Fintype.card R : R) = 0 := by
   rw [← nsmul_one, card_nsmul_eq_zero]
 
+theorem CharP.add_order_of_one (R) [Semiringₓ R] : CharP R (addOrderOf (1 : R)) :=
+  ⟨fun n => by
+    rw [← Nat.smul_one_eq_coe, add_order_of_dvd_iff_nsmul_eq_zero]⟩
+
 theorem CharP.int_cast_eq_zero_iff [AddGroupWithOneₓ R] (p : ℕ) [CharP R p] (a : ℤ) : (a : R) = 0 ↔ (p : ℤ) ∣ a := by
   rcases lt_trichotomyₓ a 0 with (h | rfl | h)
   · rw [← neg_eq_zero, ← Int.cast_neg, ← dvd_neg]
@@ -102,18 +106,18 @@ theorem CharP.congr {R : Type u} [AddMonoidWithOneₓ R] {p : ℕ} (q : ℕ) [hq
 
 /-- Noncomputable function that outputs the unique characteristic of a semiring. -/
 noncomputable def ringChar [NonAssocSemiringₓ R] : ℕ :=
-  Classical.some (CharP.exists_unique R)
+  Classical.choose (CharP.exists_unique R)
 
 namespace ringChar
 
 variable [NonAssocSemiringₓ R]
 
 theorem spec : ∀ x : ℕ, (x : R) = 0 ↔ ringChar R ∣ x := by
-  letI := (Classical.some_spec (CharP.exists_unique R)).1 <;>
+  letI := (Classical.choose_spec (CharP.exists_unique R)).1 <;>
     unfold ringChar <;> exact CharP.cast_eq_zero_iff R (ringChar R)
 
 theorem eq (p : ℕ) [C : CharP R p] : ringChar R = p :=
-  ((Classical.some_spec (CharP.exists_unique R)).2 p C).symm
+  ((Classical.choose_spec (CharP.exists_unique R)).2 p C).symm
 
 instance char_p : CharP R (ringChar R) :=
   ⟨spec R⟩
@@ -438,8 +442,8 @@ theorem char_is_prime_or_zero (p : ℕ) [hc : CharP R p] : Nat.Prime p ∨ p = 0
   | 1, hc => absurd (Eq.refl (1 : ℕ)) (@char_ne_one R _ _ (1 : ℕ) hc)
   | m + 2, hc => Or.inl (@char_is_prime_of_two_le R _ _ (m + 2) hc (Nat.le_add_leftₓ 2 m))
 
-theorem char_is_prime_of_pos (p : ℕ) [h : Fact (0 < p)] [CharP R p] : Fact p.Prime :=
-  ⟨(CharP.char_is_prime_or_zero R _).resolve_right (pos_iff_ne_zero.1 h.1)⟩
+theorem char_is_prime_of_pos (p : ℕ) [NeZero p] [CharP R p] : Fact p.Prime :=
+  ⟨(CharP.char_is_prime_or_zero R _).resolve_right <| NeZero.ne p⟩
 
 end Nontrivial
 
@@ -633,4 +637,16 @@ theorem Int.cast_inj_on_of_ring_char_ne_two {R : Type _} [NonAssocRing R] [Nontr
     
 
 end
+
+namespace NeZero
+
+variable (R) [AddMonoidWithOneₓ R] {r : R} {n p : ℕ} {a : ℕ+}
+
+theorem of_not_dvd [CharP R p] (h : ¬p ∣ n) : NeZero (n : R) :=
+  ⟨(CharP.cast_eq_zero_iff R p n).Not.mpr h⟩
+
+theorem not_char_dvd (p : ℕ) [CharP R p] (k : ℕ) [h : NeZero (k : R)] : ¬p ∣ k := by
+  rwa [← CharP.cast_eq_zero_iff R p k, ← Ne.def, ← ne_zero_iff]
+
+end NeZero
 

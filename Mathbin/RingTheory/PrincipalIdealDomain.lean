@@ -80,13 +80,13 @@ variable [Ringₓ R] [Module R M]
 
 /-- `generator I`, if `I` is a principal submodule, is an `x ∈ M` such that `span R {x} = I` -/
 noncomputable def generator (S : Submodule R M) [S.IsPrincipal] : M :=
-  Classical.some (principal S)
+  Classical.choose (principal S)
 
 theorem span_singleton_generator (S : Submodule R M) [S.IsPrincipal] : span R {generator S} = S :=
-  Eq.symm (Classical.some_spec (principal S))
+  Eq.symm (Classical.choose_spec (principal S))
 
 theorem _root_.ideal.span_singleton_generator (I : Ideal R) [I.IsPrincipal] : Ideal.span ({generator I} : Set R) = I :=
-  Eq.symm (Classical.some_spec (principal I))
+  Eq.symm (Classical.choose_spec (principal I))
 
 @[simp]
 theorem generator_mem (S : Submodule R M) [S.IsPrincipal] : generator S ∈ S := by
@@ -114,7 +114,7 @@ theorem mem_iff_generator_dvd (S : Ideal R) [S.IsPrincipal] {x : R} : x ∈ S �
 theorem prime_generator_of_is_prime (S : Ideal R) [Submodule.IsPrincipal S] [is_prime : S.IsPrime] (ne_bot : S ≠ ⊥) :
     Prime (generator S) :=
   ⟨fun h => ne_bot ((eq_bot_iff_generator_eq_zero S).2 h), fun h =>
-    is_prime.ne_top (S.eq_top_of_is_unit_mem (generator_mem S) h), by
+    is_prime.ne_top (S.eq_top_of_is_unit_mem (generator_mem S) h), fun _ _ => by
     simpa only [← mem_iff_generator_dvd S] using is_prime.2⟩
 
 -- Note that the converse may not hold if `ϕ` is not injective.
@@ -241,12 +241,12 @@ open Classical
 
 /-- `factors a` is a multiset of irreducible elements whose product is `a`, up to units -/
 noncomputable def factors (a : R) : Multiset R :=
-  if h : a = 0 then ∅ else Classical.some (WfDvdMonoid.exists_factors a h)
+  if h : a = 0 then ∅ else Classical.choose (WfDvdMonoid.exists_factors a h)
 
 theorem factors_spec (a : R) (h : a ≠ 0) : (∀ b ∈ factors a, Irreducible b) ∧ Associated (factors a).Prod a := by
   unfold factors
   rw [dif_neg h]
-  exact Classical.some_spec (WfDvdMonoid.exists_factors a h)
+  exact Classical.choose_spec (WfDvdMonoid.exists_factors a h)
 
 theorem ne_zero_of_mem_factors {R : Type v} [CommRingₓ R] [IsDomain R] [IsPrincipalIdealRing R] {a b : R} (ha : a ≠ 0)
     (hb : b ∈ factors a) : b ≠ 0 :=

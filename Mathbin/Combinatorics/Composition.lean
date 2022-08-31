@@ -591,12 +591,14 @@ namespace List
 
 variable {α : Type _}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Auxiliary for `list.split_wrt_composition`. -/
 def splitWrtCompositionAux : List α → List ℕ → List (List α)
   | l, [] => []
-  | l, n :: ns =>
+  | l, n::ns =>
     let (l₁, l₂) := l.splitAt n
-    l₁ :: split_wrt_composition_aux l₂ ns
+    l₁::split_wrt_composition_aux l₂ ns
 
 /-- Given a list of length `n` and a composition `[i₁, ..., iₖ]` of `n`, split `l` into a list of
 `k` lists corresponding to the blocks of the composition, of respective lengths `i₁`, ..., `iₖ`.
@@ -606,9 +608,11 @@ def splitWrtComposition (l : List α) (c : Composition n) : List (List α) :=
 
 attribute [local simp] split_wrt_composition_aux.equations._eqn_1
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[local simp]
 theorem split_wrt_composition_aux_cons (l : List α) (n ns) :
-    l.splitWrtCompositionAux (n :: ns) = takeₓ n l :: (dropₓ n l).splitWrtCompositionAux ns := by
+    l.splitWrtCompositionAux (n::ns) = takeₓ n l::(dropₓ n l).splitWrtCompositionAux ns := by
   simp [split_wrt_composition_aux]
 
 theorem length_split_wrt_composition_aux (l : List α) (ns) : length (l.splitWrtCompositionAux ns) = ns.length := by

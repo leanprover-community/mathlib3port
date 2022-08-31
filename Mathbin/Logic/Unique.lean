@@ -72,7 +72,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 def uniqueOfSubsingleton {α : Sort _} [Subsingleton α] (a : α) : Unique α where
   default := a
-  uniq := fun _ => Subsingleton.elimₓ _ _
+  uniq := fun _ => Subsingleton.elim _ _
 
 instance PUnit.unique : Unique PUnit.{u} where
   default := PUnit.unit
@@ -149,7 +149,7 @@ instance subsingleton_unique : Subsingleton (Unique α) :=
 a loop in the class inheritance graph. -/
 @[reducible]
 def mk' (α : Sort u) [h₁ : Inhabited α] [Subsingleton α] : Unique α :=
-  { h₁ with uniq := fun x => Subsingleton.elimₓ _ _ }
+  { h₁ with uniq := fun x => Subsingleton.elim _ _ }
 
 end Unique
 
@@ -179,11 +179,11 @@ instance Pi.uniqueOfIsEmpty [IsEmpty α] (β : α → Sort v) : Unique (∀ a, �
 
 theorem eq_const_of_unique [Unique α] (f : α → β) : f = Function.const α (f default) := by
   ext x
-  rw [Subsingleton.elimₓ x default]
+  rw [Subsingleton.elim x default]
 
 theorem heq_const_of_unique [Unique α] {β : α → Sort v} (f : ∀ a, β a) : HEq f (Function.const α (f default)) :=
   (Function.hfunext rfl) fun i _ _ => by
-    rw [Subsingleton.elimₓ i default]
+    rw [Subsingleton.elim i default]
 
 namespace Function
 
@@ -192,12 +192,12 @@ variable {f : α → β}
 /-- If the codomain of an injective function is a subsingleton, then the domain
 is a subsingleton as well. -/
 protected theorem Injective.subsingleton (hf : Injective f) [Subsingleton β] : Subsingleton α :=
-  ⟨fun x y => hf <| Subsingleton.elimₓ _ _⟩
+  ⟨fun x y => hf <| Subsingleton.elim _ _⟩
 
 /-- If the domain of a surjective function is a subsingleton, then the codomain is a subsingleton as
 well. -/
 protected theorem Surjective.subsingleton [Subsingleton α] (hf : Surjective f) : Subsingleton β :=
-  ⟨hf.Forall₂.2 fun x y => congr_arg f <| Subsingleton.elimₓ x y⟩
+  ⟨hf.Forall₂.2 fun x y => congr_arg f <| Subsingleton.elim x y⟩
 
 /-- If the domain of a surjective function is a singleton,
 then the codomain is a singleton as well. -/
@@ -223,7 +223,7 @@ namespace Option
 
 /-- `option α` is a `subsingleton` if and only if `α` is empty. -/
 theorem subsingleton_iff_is_empty {α} : Subsingleton (Option α) ↔ IsEmpty α :=
-  ⟨fun h => ⟨fun x => Option.noConfusion <| @Subsingleton.elimₓ _ h x none⟩, fun h =>
+  ⟨fun h => ⟨fun x => Option.noConfusion <| @Subsingleton.elim _ h x none⟩, fun h =>
     ⟨fun x y => Option.casesOn x (Option.casesOn y rfl fun x => h.elim x) fun x => h.elim x⟩⟩
 
 instance {α} [IsEmpty α] : Unique (Option α) :=

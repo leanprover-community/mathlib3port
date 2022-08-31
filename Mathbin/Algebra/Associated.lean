@@ -545,7 +545,7 @@ section UniqueUnits
 variable [Monoidₓ α] [Unique αˣ]
 
 theorem units_eq_one (u : αˣ) : u = 1 :=
-  Subsingleton.elimₓ u 1
+  Subsingleton.elim u 1
 
 theorem associated_iff_eq {x y : α} : x ~ᵤ y ↔ x = y := by
   constructor

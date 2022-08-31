@@ -518,7 +518,7 @@ theorem op_norm_subsingleton [Subsingleton E] : ∥f∥ = 0 := by
   refine' le_antisymmₓ _ (norm_nonneg _)
   apply op_norm_le_bound _ rfl.ge
   intro x
-  simp [Subsingleton.elimₓ x 0]
+  simp [Subsingleton.elim x 0]
 
 end OpNorm
 
@@ -1575,7 +1575,7 @@ section
 
 variable {N : ℝ≥0 } (h_e : ∀ x, ∥x∥ ≤ N * ∥e x∥) [RingHomIsometric σ₁₂]
 
--- mathport name: «exprψ»
+-- mathport name: exprψ
 local notation "ψ" => f.extend e h_dense (uniform_embedding_of_bound _ h_e).to_uniform_inducing
 
 /-- If a dense embedding `e : E →L[𝕜] G` expands the norm by a constant factor `N⁻¹`, then the

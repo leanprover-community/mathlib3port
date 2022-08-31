@@ -14,15 +14,19 @@ open List.Func
 
 namespace Omega
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Divide linear combinations into three groups by the coefficient of the
     `m`th variable in their resultant terms: negative, zero, or positive. -/
 unsafe def trisect (m : Nat) :
     List (List Nat × term) → List (List Nat × term) × List (List Nat × term) × List (List Nat × term)
   | [] => ([], [], [])
-  | (p, t) :: pts =>
+  | (p, t)::pts =>
     let (neg, zero, Pos) := trisect pts
-    if get m t.snd < 0 then ((p, t) :: neg, zero, Pos)
-    else if get m t.snd = 0 then (neg, (p, t) :: zero, Pos) else (neg, zero, (p, t) :: Pos)
+    if get m t.snd < 0 then ((p, t)::neg, zero, Pos)
+    else if get m t.snd = 0 then (neg, (p, t)::zero, Pos) else (neg, zero, (p, t)::Pos)
 
 /-- Use two linear combinations to obtain a third linear combination
     whose resultant term does not include the `m`th variable. -/
@@ -43,12 +47,13 @@ unsafe def elim_var (m : Nat) (neg pos : List (List Nat × term)) : tactic (List
   let pairs := List.product neg Pos
   Monadₓ.mapm (elim_var_aux m) pairs
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Search through a list of (linear combination × resultant term) pairs,
     find the first pair whose resultant term has a negative constant term,
     and return its linear combination -/
 unsafe def find_neg_const : List (List Nat × term) → tactic (List Nat)
   | [] => tactic.failed
-  | (π, ⟨c, _⟩) :: l => if c < 0 then return π else find_neg_const l
+  | (π, ⟨c, _⟩)::l => if c < 0 then return π else find_neg_const l
 
 /-- First, eliminate all variables by Fourier–Motzkin elimination.
     When all variables have been eliminated, find and return the

@@ -29,6 +29,9 @@ def cons (a : α) (s : Streamₓ α) : Streamₓ α
   | 0 => a
   | n + 1 => s n
 
+-- mathport name: stream.cons
+notation h "::" t => cons h t
+
 /-- Head of a stream: `stream.head s = stream.nth 0 s`. -/
 def head (s : Streamₓ α) : α :=
   s 0
@@ -99,10 +102,11 @@ def even (s : Streamₓ α) : Streamₓ α :=
 def odd (s : Streamₓ α) : Streamₓ α :=
   even (tail s)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Append a stream to a list. -/
 def appendStream : List α → Streamₓ α → Streamₓ α
   | [], s => s
-  | List.cons a l, s => a :: append_stream l s
+  | List.cons a l, s => a::append_stream l s
 
 -- mathport name: «expr ++ₛ »
 infixl:65 " ++ₛ " => appendStream

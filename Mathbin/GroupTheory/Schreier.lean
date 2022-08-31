@@ -100,6 +100,7 @@ theorem closure_mul_image_eq_top' [DecidableEq G] {R S : Finset G} (hR : (R : Se
   rw [Finset.coe_image, Finset.coe_mul]
   exact closure_mul_image_eq_top hR hR1 hS
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem exists_finset_card_le_mul (hH : H.index ≠ 0) {S : Finset G} (hS : closure (S : Set G) = ⊤) :
     ∃ T : Finset H, T.card ≤ H.index * S.card ∧ closure (T : Set H) = ⊤ := by
   haveI : DecidableEq G := Classical.decEq G

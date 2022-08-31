@@ -613,6 +613,8 @@ end Bornology
 
 section TubeLemma
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `nhds_contain_boxes s t` means that any open neighborhood of `s × t` in `α × β` includes
 a product of an open neighborhood of `s` by an open neighborhood of `t`. -/
 def NhdsContainBoxes (s : Set α) (t : Set β) : Prop :=
@@ -639,6 +641,10 @@ theorem nhds_contain_boxes_of_singleton {x : α} {y : β} : NhdsContainBoxes ({x
     simpa, by
     simpa, hp'⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem nhds_contain_boxes_of_compact {s : Set α} (hs : IsCompact s) (t : Set β)
     (H : ∀ x ∈ s, NhdsContainBoxes ({x} : Set α) t) : NhdsContainBoxes s t := fun n hn hp =>
   have : ∀ x : s, ∃ uv : Set α × Set β, IsOpen uv.1 ∧ IsOpen uv.2 ∧ {↑x} ⊆ uv.1 ∧ t ⊆ uv.2 ∧ uv.1 ×ˢ uv.2 ⊆ n :=
@@ -670,6 +676,8 @@ theorem nhds_contain_boxes_of_compact {s : Set α} (hs : IsCompact s) (t : Set �
     (h i).2.2.2.2 ⟨hi, (bInter_subset_of_mem is0 : v ⊆ (uvs i).2) hy'⟩
   ⟨u, v, ‹IsOpen u›, ‹IsOpen v›, s0_cover, ‹t ⊆ v›, ‹u ×ˢ v ⊆ n›⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- If `s` and `t` are compact sets and `n` is an open neighborhood of `s × t`, then there exist
 open neighborhoods `u ⊇ s` and `v ⊇ t` such that `u × v ⊆ n`. -/
 theorem generalized_tube_lemma {s : Set α} (hs : IsCompact s) {t : Set β} (ht : IsCompact t) {n : Set (α × β)}
@@ -907,6 +915,7 @@ protected theorem ClosedEmbedding.compact_space [h : CompactSpace β] {f : α �
   rw [not_compact_space_iff] at h⊢
   exact hf.noncompact_space
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem IsCompact.prod {s : Set α} {t : Set β} (hs : IsCompact s) (ht : IsCompact t) : IsCompact (s ×ˢ t) := by
   rw [is_compact_iff_ultrafilter_le_nhds] at hs ht⊢
   intro f hfs
@@ -940,6 +949,7 @@ instance [Finite ι] [∀ i, TopologicalSpace (π i)] [∀ i, CompactSpace (π i
   rw [sigma.univ]
   exact compact_Union fun i => is_compact_range continuous_sigma_mk
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The coproduct of the cocompact filters on two topological spaces is the cocompact filter on
 their product. -/
 theorem Filter.coprod_cocompact : (Filter.cocompact α).coprod (Filter.cocompact β) = Filter.cocompact (α × β) := by
@@ -1108,18 +1118,23 @@ theorem exists_compact_mem_nhds [LocallyCompactSpace α] (x : α) : ∃ K, IsCom
   let ⟨K, hKc, hx, H⟩ := exists_compact_subset is_open_univ (mem_univ x)
   ⟨K, hKc, mem_interior_iff_mem_nhds.1 hx⟩
 
+/-- In a locally compact space, for every containement `K ⊆ U` of a compact set `K` in an open
+  set `U`, there is a compact neighborhood `L` such that `K ⊆ L ⊆ U`: equivalently, there is a
+  compact `L` such that `K ⊆ interior L` and `L ⊆ U`. -/
+theorem exists_compact_between [hα : LocallyCompactSpace α] {K U : Set α} (hK : IsCompact K) (hU : IsOpen U)
+    (h_KU : K ⊆ U) : ∃ L, IsCompact L ∧ K ⊆ Interior L ∧ L ⊆ U := by
+  choose V hVc hxV hKV using fun x : K => exists_compact_subset hU (h_KU x.2)
+  have : K ⊆ ⋃ x, Interior (V x) := fun x hx => mem_Union.2 ⟨⟨x, hx⟩, hxV _⟩
+  rcases hK.elim_finite_subcover _ (fun x => @is_open_interior α _ (V x)) this with ⟨t, ht⟩
+  refine' ⟨_, t.compact_bUnion fun x _ => hVc x, fun x hx => _, Set.Union₂_subset fun i _ => hKV i⟩
+  rcases mem_Union₂.1 (ht hx) with ⟨y, hyt, hy⟩
+  exact interior_mono (subset_bUnion_of_mem hyt) hy
+
 /-- In a locally compact space, every compact set is contained in the interior of a compact set. -/
 theorem exists_compact_superset [LocallyCompactSpace α] {K : Set α} (hK : IsCompact K) :
-    ∃ K', IsCompact K' ∧ K ⊆ Interior K' := by
-  choose U hUc hxU using fun x : K => exists_compact_mem_nhds (x : α)
-  have : K ⊆ ⋃ x, Interior (U x) := fun x hx => mem_Union.2 ⟨⟨x, hx⟩, mem_interior_iff_mem_nhds.2 (hxU _)⟩
-  rcases hK.elim_finite_subcover _ _ this with ⟨t, ht⟩
-  · refine' ⟨_, t.compact_bUnion fun x _ => hUc x, fun x hx => _⟩
-    rcases mem_Union₂.1 (ht hx) with ⟨y, hyt, hy⟩
-    exact interior_mono (subset_bUnion_of_mem hyt) hy
-    
-  · exact fun _ => is_open_interior
-    
+    ∃ K', IsCompact K' ∧ K ⊆ Interior K' :=
+  let ⟨L, hLc, hKL, _⟩ := exists_compact_between hK is_open_univ K.subset_univ
+  ⟨L, hLc, hKL⟩
 
 protected theorem ClosedEmbedding.locally_compact_space [LocallyCompactSpace β] {f : α → β} (hf : ClosedEmbedding f) :
     LocallyCompactSpace α := by
@@ -1233,11 +1248,11 @@ def CompactCovering : ℕ → Set α :=
   Accumulate exists_compact_covering.some
 
 theorem is_compact_compact_covering (n : ℕ) : IsCompact (CompactCovering α n) :=
-  compact_accumulate (Classical.some_spec SigmaCompactSpace.exists_compact_covering).1 n
+  compact_accumulate (Classical.choose_spec SigmaCompactSpace.exists_compact_covering).1 n
 
 theorem Union_compact_covering : (⋃ n, CompactCovering α n) = univ := by
   rw [CompactCovering, Union_accumulate]
-  exact (Classical.some_spec SigmaCompactSpace.exists_compact_covering).2
+  exact (Classical.choose_spec SigmaCompactSpace.exists_compact_covering).2
 
 @[mono]
 theorem compact_covering_subset ⦃m n : ℕ⦄ (h : m ≤ n) : CompactCovering α m ⊆ CompactCovering α n :=
@@ -1424,6 +1439,7 @@ theorem is_clopen_compl_iff {s : Set α} : IsClopen (sᶜ) ↔ IsClopen s :=
 theorem IsClopen.diff {s t : Set α} (hs : IsClopen s) (ht : IsClopen t) : IsClopen (s \ t) :=
   hs.inter ht.compl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem IsClopen.prod {s : Set α} {t : Set β} (hs : IsClopen s) (ht : IsClopen t) : IsClopen (s ×ˢ t) :=
   ⟨hs.1.Prod ht.1, hs.2.Prod ht.2⟩
 
@@ -1536,13 +1552,13 @@ theorem exists_preirreducible (s : Set α) (H : IsPreirreducible s) :
 
 /-- A maximal irreducible set that contains a given point. -/
 def IrreducibleComponent (x : α) : Set α :=
-  Classical.some (exists_preirreducible {x} is_irreducible_singleton.IsPreirreducible)
+  Classical.choose (exists_preirreducible {x} is_irreducible_singleton.IsPreirreducible)
 
 theorem irreducible_component_property (x : α) :
     IsPreirreducible (IrreducibleComponent x) ∧
       {x} ⊆ IrreducibleComponent x ∧
         ∀ u, IsPreirreducible u → IrreducibleComponent x ⊆ u → u = IrreducibleComponent x :=
-  Classical.some_spec (exists_preirreducible {x} is_irreducible_singleton.IsPreirreducible)
+  Classical.choose_spec (exists_preirreducible {x} is_irreducible_singleton.IsPreirreducible)
 
 theorem mem_irreducible_component {x : α} : x ∈ IrreducibleComponent x :=
   singleton_subset_iff.1 (irreducible_component_property x).2.1

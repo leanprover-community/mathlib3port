@@ -68,9 +68,10 @@ theorem nfp_family_le {a b} : (∀ l, List.foldr f a l ≤ b) → nfpFamily f a 
 theorem nfp_family_monotone (hf : ∀ i, Monotone (f i)) : Monotone (nfpFamily f) := fun a b h =>
   sup_le fun l => (List.foldr_monotone hf l h).trans (le_sup _ l)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem apply_lt_nfp_family (H : ∀ i, IsNormal (f i)) {a b} (hb : b < nfpFamily f a) (i) : f i b < nfpFamily f a :=
   let ⟨l, hl⟩ := lt_nfp_family.1 hb
-  lt_sup.2 ⟨i :: l, (H i).StrictMono hl⟩
+  lt_sup.2 ⟨i::l, (H i).StrictMono hl⟩
 
 theorem apply_lt_nfp_family_iff [Nonempty ι] (H : ∀ i, IsNormal (f i)) {a b} :
     (∀ i, f i b < nfpFamily f a) ↔ b < nfpFamily f a :=
@@ -99,11 +100,12 @@ theorem nfp_family_le_fp (H : ∀ i, Monotone (f i)) {a b} (ab : a ≤ b) (h : �
       exact (H i (IH ab)).trans (h i)
       
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem nfp_family_fp {i} (H : IsNormal (f i)) (a) : f i (nfpFamily f a) = nfpFamily f a := by
   unfold nfp_family
   rw [@is_normal.sup _ H _ _ ⟨[]⟩]
   apply le_antisymmₓ <;> refine' Ordinal.sup_le fun l => _
-  · exact le_sup _ (i :: l)
+  · exact le_sup _ (i::l)
     
   · exact (H.self_le _).trans (le_sup _ _)
     
@@ -521,7 +523,7 @@ theorem deriv_add_eq_mul_omega_add (a b : Ordinal.{u}) : deriv ((· + ·) a) b =
 /-! ### Fixed points of multiplication -/
 
 
--- mathport name: «expr ^ »
+-- mathport name: ordinal.pow
 local infixr:0 "^" => @pow Ordinal Ordinal Ordinal.hasPow
 
 @[simp]

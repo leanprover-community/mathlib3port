@@ -278,7 +278,7 @@ parameter {α : Type u}(lt : α → α → Prop)
 
 attribute [local simp] mem balance1_node balance2_node
 
--- mathport name: «expr ∈ »
+-- mathport name: mem
 local infixl:0 "∈" => Mem lt
 
 theorem mem_balance1_node_of_mem_left {x s} (v) (t : Rbnode α) : (x∈s) → (x∈balance1Node s v t) := by

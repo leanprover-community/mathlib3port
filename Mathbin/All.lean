@@ -268,6 +268,8 @@ import Mathbin.Algebra.Order.MonoidLemmasZeroLt
 import Mathbin.Algebra.Order.Nonneg
 import Mathbin.Algebra.Order.Pi
 import Mathbin.Algebra.Order.Pointwise
+import Mathbin.Algebra.Order.Positive.Field
+import Mathbin.Algebra.Order.Positive.Ring
 import Mathbin.Algebra.Order.Rearrangement
 import Mathbin.Algebra.Order.Ring
 import Mathbin.Algebra.Order.Smul
@@ -743,6 +745,7 @@ import Mathbin.CategoryTheory.Limits.ExactFunctor
 import Mathbin.CategoryTheory.Limits.FilteredColimitCommutesFiniteLimit
 import Mathbin.CategoryTheory.Limits.Final
 import Mathbin.CategoryTheory.Limits.Fubini
+import Mathbin.CategoryTheory.Limits.FullSubcategory
 import Mathbin.CategoryTheory.Limits.FunctorCategory
 import Mathbin.CategoryTheory.Limits.HasLimits
 import Mathbin.CategoryTheory.Limits.IsLimit
@@ -1182,6 +1185,7 @@ import Mathbin.Data.List.Permutation
 import Mathbin.Data.List.Prime
 import Mathbin.Data.List.ProdSigma
 import Mathbin.Data.List.Range
+import Mathbin.Data.List.Rdrop
 import Mathbin.Data.List.Rotate
 import Mathbin.Data.List.Sections
 import Mathbin.Data.List.Sigma
@@ -2022,6 +2026,7 @@ import Mathbin.Order.GaloisConnection
 import Mathbin.Order.GameAdd
 import Mathbin.Order.Grade
 import Mathbin.Order.Heyting.Basic
+import Mathbin.Order.Heyting.Regular
 import Mathbin.Order.Hom.Basic
 import Mathbin.Order.Hom.Bounded
 import Mathbin.Order.Hom.CompleteLattice

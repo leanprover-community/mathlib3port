@@ -187,8 +187,9 @@ linear equiv maps Haar measure to Haar measure.
 -/
 
 
-theorem map_linear_map_add_haar_pi_eq_smul_add_haar {ι : Type _} [Fintype ι] {f : (ι → ℝ) →ₗ[ℝ] ι → ℝ} (hf : f.det ≠ 0)
+theorem map_linear_map_add_haar_pi_eq_smul_add_haar {ι : Type _} [Finite ι] {f : (ι → ℝ) →ₗ[ℝ] ι → ℝ} (hf : f.det ≠ 0)
     (μ : Measure (ι → ℝ)) [IsAddHaarMeasure μ] : Measure.map f μ = Ennreal.ofReal (abs f.det⁻¹) • μ := by
+  cases nonempty_fintype ι
   /- We have already proved the result for the Lebesgue product measure, using matrices.
     We deduce it for any Haar measure by uniqueness (up to scalar multiplication). -/
   have := add_haar_measure_unique μ (pi_Icc01 ι)

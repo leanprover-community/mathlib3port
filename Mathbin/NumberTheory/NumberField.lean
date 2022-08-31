@@ -71,7 +71,7 @@ is the integral closure of ℤ in the number field. -/
 def ringOfIntegers :=
   integralClosure ℤ K
 
--- mathport name: «expr𝓞»
+-- mathport name: ring_of_integers
 localized [NumberField] notation "𝓞" => NumberField.ringOfIntegers
 
 theorem mem_ring_of_integers (x : K) : x ∈ 𝓞 K ↔ IsIntegral ℤ x :=

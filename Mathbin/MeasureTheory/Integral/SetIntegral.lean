@@ -164,7 +164,7 @@ theorem integral_piecewise [DecidablePred (· ∈ s)] (hs : MeasurableSet s) {f 
   rw [← Set.indicator_add_compl_eq_piecewise, integral_add' (hf.indicator hs) (hg.indicator hs.compl),
     integral_indicator hs, integral_indicator hs.compl]
 
-theorem tendsto_set_integral_of_monotone {ι : Type _} [Encodable ι] [SemilatticeSup ι] {s : ι → Set α} {f : α → E}
+theorem tendsto_set_integral_of_monotone {ι : Type _} [Countable ι] [SemilatticeSup ι] {s : ι → Set α} {f : α → E}
     (hsm : ∀ i, MeasurableSet (s i)) (h_mono : Monotone s) (hfi : IntegrableOn f (⋃ n, s n) μ) :
     Tendsto (fun i => ∫ a in s i, f a ∂μ) atTop (𝓝 (∫ a in ⋃ n, s n, f a ∂μ)) := by
   have hfi' : (∫⁻ x in ⋃ n, s n, ∥f x∥₊ ∂μ) < ∞ := hfi.2
@@ -184,23 +184,23 @@ theorem tendsto_set_integral_of_monotone {ι : Type _} [Encodable ι] [Semilatti
   rw [← with_density_apply _ (hSm.diff (hsm _)), ← hν, measure_diff hsub (hsm _)]
   exacts[tsub_le_iff_tsub_le.mp hi.1, (hi.2.trans_lt <| Ennreal.add_lt_top.2 ⟨hfi', Ennreal.coe_lt_top⟩).Ne]
 
-theorem has_sum_integral_Union_ae {ι : Type _} [Encodable ι] {s : ι → Set α} {f : α → E}
+theorem has_sum_integral_Union_ae {ι : Type _} [Countable ι] {s : ι → Set α} {f : α → E}
     (hm : ∀ i, NullMeasurableSet (s i) μ) (hd : Pairwise (AeDisjoint μ on s)) (hfi : IntegrableOn f (⋃ i, s i) μ) :
     HasSum (fun n => ∫ a in s n, f a ∂μ) (∫ a in ⋃ n, s n, f a ∂μ) := by
   simp only [integrable_on, measure.restrict_Union_ae hd hm] at hfi⊢
   exact has_sum_integral_measure hfi
 
-theorem has_sum_integral_Union {ι : Type _} [Encodable ι] {s : ι → Set α} {f : α → E} (hm : ∀ i, MeasurableSet (s i))
+theorem has_sum_integral_Union {ι : Type _} [Countable ι] {s : ι → Set α} {f : α → E} (hm : ∀ i, MeasurableSet (s i))
     (hd : Pairwise (Disjoint on s)) (hfi : IntegrableOn f (⋃ i, s i) μ) :
     HasSum (fun n => ∫ a in s n, f a ∂μ) (∫ a in ⋃ n, s n, f a ∂μ) :=
   has_sum_integral_Union_ae (fun i => (hm i).NullMeasurableSet) (hd.mono fun i j h => h.AeDisjoint) hfi
 
-theorem integral_Union {ι : Type _} [Encodable ι] {s : ι → Set α} {f : α → E} (hm : ∀ i, MeasurableSet (s i))
+theorem integral_Union {ι : Type _} [Countable ι] {s : ι → Set α} {f : α → E} (hm : ∀ i, MeasurableSet (s i))
     (hd : Pairwise (Disjoint on s)) (hfi : IntegrableOn f (⋃ i, s i) μ) :
     (∫ a in ⋃ n, s n, f a ∂μ) = ∑' n, ∫ a in s n, f a ∂μ :=
   (HasSum.tsum_eq (has_sum_integral_Union hm hd hfi)).symm
 
-theorem integral_Union_ae {ι : Type _} [Encodable ι] {s : ι → Set α} {f : α → E} (hm : ∀ i, NullMeasurableSet (s i) μ)
+theorem integral_Union_ae {ι : Type _} [Countable ι] {s : ι → Set α} {f : α → E} (hm : ∀ i, NullMeasurableSet (s i) μ)
     (hd : Pairwise (AeDisjoint μ on s)) (hfi : IntegrableOn f (⋃ i, s i) μ) :
     (∫ a in ⋃ n, s n, f a ∂μ) = ∑' n, ∫ a in s n, f a ∂μ :=
   (HasSum.tsum_eq (has_sum_integral_Union_ae hm hd hfi)).symm

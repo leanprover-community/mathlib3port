@@ -34,7 +34,7 @@ open IsROrC
 
 variable {𝕜 : Type _} [IsROrC 𝕜] {F : Type _} [SeminormedAddCommGroup F] [NormedSpace 𝕜 F]
 
--- mathport name: «exprabs𝕜»
+-- mathport name: exprabs𝕜
 local notation "abs𝕜" => @IsROrC.abs 𝕜 _
 
 /-- Extend `fr : F →ₗ[ℝ] ℝ` to `F →ₗ[𝕜] 𝕜` in a way that will also be continuous and have its norm

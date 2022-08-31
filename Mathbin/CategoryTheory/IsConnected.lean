@@ -97,7 +97,7 @@ The converse of `any_functor_const_on_obj`.
 theorem IsConnected.of_any_functor_const_on_obj [Nonempty J]
     (h : ∀ {α : Type u₁} (F : J ⥤ Discrete α), ∀ j j' : J, F.obj j = F.obj j') : IsConnected J :=
   { iso_constant := fun α F j' =>
-      ⟨NatIso.ofComponents (fun j => eqToIso (h F j j')) fun _ _ _ => Subsingleton.elimₓ _ _⟩ }
+      ⟨NatIso.ofComponents (fun j => eqToIso (h F j j')) fun _ _ _ => Subsingleton.elim _ _⟩ }
 
 /-- If `J` is connected, then given any function `F` such that the presence of a
 morphism `j₁ ⟶ j₂` implies `F j₁ = F j₂`, we have that `F` is constant.
@@ -224,7 +224,7 @@ instance is_preconnected_op [IsPreconnected J] :
               (Discrete.eq_of_hom
                 ((Nonempty.some (IsPreconnected.iso_constant (F.rightOp ⋙ (Discrete.opposite α).Functor) (unop X))).app
                     (unop Y)).hom)))
-        fun Y Z f => Subsingleton.elimₓ _ _⟩
+        fun Y Z f => Subsingleton.elim _ _⟩
 
 /-- If `J` is connected, then `Jᵒᵖ` is connected as well. -/
 instance is_connected_op [IsConnected J] :

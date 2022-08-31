@@ -164,7 +164,7 @@ corresponding coefficients in the Cantor normal forms of `a` and `b`. -/
 noncomputable def nadd : Ordinal → Ordinal → Ordinal
   | a, b => max ((blsub.{u, u} a) fun a' h => nadd a' b) ((blsub.{u, u} b) fun b' h => nadd a b')
 
--- mathport name: «expr ♯ »
+-- mathport name: ordinal.nadd
 localized [NaturalOps] infixl:65 " ♯ " => Ordinal.nadd
 
 theorem nadd_def (a b : Ordinal) :

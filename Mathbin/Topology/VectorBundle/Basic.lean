@@ -372,6 +372,8 @@ theorem apply_mk_symm (e : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet) 
     e (totalSpaceMk b (e.symm b y)) = (b, y) :=
   e.toPretrivialization.apply_mk_symm hb y
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem continuous_on_symm (e : Trivialization R F E) :
     ContinuousOn (fun z : B × F => totalSpaceMk z.1 (e.symm z.1 z.2)) (e.BaseSet ×ˢ univ) := by
   have :
@@ -504,6 +506,8 @@ variable (B)
 variable [NontriviallyNormedField R] [∀ x, AddCommMonoidₓ (E x)] [∀ x, Module R (E x)] [NormedAddCommGroup F]
   [NormedSpace R F] [TopologicalSpace B] [TopologicalSpace (TotalSpace E)] [∀ x, TopologicalSpace (E x)]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The valid transition functions for a topological vector bundle over `B` modelled on
 a normed space `F`: a transition function must be a local homeomorphism of `B × F` with source and
 target both `s ×ˢ univ`, which on this set is of the form `λ (b, v), (b, ε b v)` for some continuous
@@ -937,6 +941,7 @@ theorem local_triv_at_apply_mk (b : B) (a : F) : (Z.localTrivAt b) ⟨b, a⟩ = 
 theorem mem_local_triv_at_base_set : b ∈ (Z.localTrivAt b).BaseSet :=
   TopologicalFiberBundleCore.mem_local_triv_at_base_set Z b
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance : TopologicalVectorBundle R F Z.Fiber where
   total_space_mk_inducing := fun b =>
     ⟨by
@@ -1026,17 +1031,17 @@ variable {R E F}
   the field `exists_coord_change`. -/
 def coordChange (a : TopologicalVectorPrebundle R F E) {e e' : Pretrivialization R F E}
     (he : e ∈ a.PretrivializationAtlas) (he' : e' ∈ a.PretrivializationAtlas) (b : B) : F →L[R] F :=
-  Classical.some (a.exists_coord_change e he e' he') b
+  Classical.choose (a.exists_coord_change e he e' he') b
 
 theorem continuous_on_coord_change (a : TopologicalVectorPrebundle R F E) {e e' : Pretrivialization R F E}
     (he : e ∈ a.PretrivializationAtlas) (he' : e' ∈ a.PretrivializationAtlas) :
     ContinuousOn (a.coordChange he he') (e.BaseSet ∩ e'.BaseSet) :=
-  (Classical.some_spec (a.exists_coord_change e he e' he')).1
+  (Classical.choose_spec (a.exists_coord_change e he e' he')).1
 
 theorem coord_change_apply (a : TopologicalVectorPrebundle R F E) {e e' : Pretrivialization R F E}
     (he : e ∈ a.PretrivializationAtlas) (he' : e' ∈ a.PretrivializationAtlas) {b : B} (hb : b ∈ e.BaseSet ∩ e'.BaseSet)
     (v : F) : a.coordChange he he' b v = (e' (totalSpaceMk b (e.symm b v))).2 :=
-  (Classical.some_spec (a.exists_coord_change e he e' he')).2 b hb v
+  (Classical.choose_spec (a.exists_coord_change e he e' he')).2 b hb v
 
 theorem mk_coord_change (a : TopologicalVectorPrebundle R F E) {e e' : Pretrivialization R F E}
     (he : e ∈ a.PretrivializationAtlas) (he' : e' ∈ a.PretrivializationAtlas) {b : B} (hb : b ∈ e.BaseSet ∩ e'.BaseSet)
@@ -1049,6 +1054,7 @@ theorem mk_coord_change (a : TopologicalVectorPrebundle R F E) {e e' : Pretrivia
   · exact a.coord_change_apply he he' hb v
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Natural identification of `topological_vector_prebundle` as a `topological_fiber_prebundle`. -/
 def toTopologicalFiberPrebundle (a : TopologicalVectorPrebundle R F E) :
     TopologicalFiberPrebundle F (@TotalSpace.proj B E) :=

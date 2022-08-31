@@ -580,7 +580,7 @@ def revzipₓ (l : List α) : List (α × α) :=
 def product (l₁ : List α) (l₂ : List β) : List (α × β) :=
   l₁.bind fun a => l₂.map <| Prod.mk a
 
--- mathport name: «expr ×ˢ »
+-- mathport name: list.product
 infixr:82
   " ×ˢ " =>-- This notation binds more strongly than (pre)images, unions and intersections.
   List.product

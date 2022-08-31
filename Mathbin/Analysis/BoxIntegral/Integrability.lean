@@ -100,7 +100,7 @@ theorem has_integral_zero_of_ae_eq_zero {l : IntegrationParams} {I : Box ι} {f 
   refine' has_integral_iff.2 fun ε ε0 => _
   lift ε to ℝ≥0 using ε0.lt.le
   rw [gt_iff_ltₓ, Nnreal.coe_pos] at ε0
-  rcases Nnreal.exists_pos_sum_of_encodable ε0.ne' ℕ with ⟨δ, δ0, c, hδc, hcε⟩
+  rcases Nnreal.exists_pos_sum_of_countable ε0.ne' ℕ with ⟨δ, δ0, c, hδc, hcε⟩
   haveI := Fact.mk (I.measure_coe_lt_top μ)
   change μ.restrict I { x | f x ≠ 0 } = 0 at hf
   set N : (ι → ℝ) → ℕ := fun x => ⌈∥f x∥⌉₊
@@ -240,7 +240,7 @@ theorem IntegrableOn.has_box_integral [CompleteSpace E] {f : (ι → ℝ) → E}
     exact ((eventually_ge_at_top N₀).And <| this <| closed_ball_mem_nhds _ ε0).exists
   choose Nx hNx hNxε
   -- We also choose a convergent series with `∑' i : ℕ, δ i < ε`.
-  rcases Nnreal.exists_pos_sum_of_encodable ε0.ne' ℕ with ⟨δ, δ0, c, hδc, hcε⟩
+  rcases Nnreal.exists_pos_sum_of_countable ε0.ne' ℕ with ⟨δ, δ0, c, hδc, hcε⟩
   /- Since each simple function `fᵢ` is integrable, there exists `rᵢ : ℝⁿ → (0, ∞)` such that
     the integral sum of `f` over any tagged prepartition is `δᵢ`-close to the sum of integrals
     of `fᵢ` over the boxes of this prepartition. For each `x`, we choose `r (Nx x)` as the radius

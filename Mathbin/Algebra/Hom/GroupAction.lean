@@ -73,7 +73,7 @@ structure MulActionHom where
   toFun : X → Y
   map_smul' : ∀ (m : M') (x : X), to_fun (m • x) = m • to_fun x
 
--- mathport name: «expr →[ ] »
+-- mathport name: mul_action_hom
 notation:25 X " →[" M:25 "] " Y:0 => MulActionHom M X Y
 
 /-- `smul_hom_class F M X Y` states that `F` is a type of morphisms preserving

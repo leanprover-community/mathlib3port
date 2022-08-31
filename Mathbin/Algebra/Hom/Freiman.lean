@@ -65,10 +65,10 @@ structure FreimanHom (A : Set α) (β : Type _) [CommMonoidₓ α] [CommMonoid�
   map_prod_eq_map_prod' {s t : Multiset α} (hsA : ∀ ⦃x⦄, x ∈ s → x ∈ A) (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A) (hs : s.card = n)
     (ht : t.card = n) (h : s.Prod = t.Prod) : (s.map to_fun).Prod = (t.map to_fun).Prod
 
--- mathport name: «expr →+[ ] »
+-- mathport name: add_freiman_hom
 notation:25 A " →+[" n:25 "] " β:0 => AddFreimanHom A β n
 
--- mathport name: «expr →*[ ] »
+-- mathport name: freiman_hom
 notation:25 A " →*[" n:25 "] " β:0 => FreimanHom A β n
 
 /-- `add_freiman_hom_class F s β n` states that `F` is a type of `n`-ary sums-preserving morphisms.

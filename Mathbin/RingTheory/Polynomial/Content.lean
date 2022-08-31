@@ -225,13 +225,13 @@ section PrimPart
 /-- The primitive part of a polynomial `p` is the primitive polynomial gained by dividing `p` by
   `p.content`. If `p = 0`, then `p.prim_part = 1`.  -/
 def primPart (p : R[X]) : R[X] :=
-  if p = 0 then 1 else Classical.some (C_content_dvd p)
+  if p = 0 then 1 else Classical.choose (C_content_dvd p)
 
 theorem eq_C_content_mul_prim_part (p : R[X]) : p = c p.content * p.primPart := by
   by_cases' h : p = 0
   · simp [h]
     
-  rw [prim_part, if_neg h, ← Classical.some_spec (C_content_dvd p)]
+  rw [prim_part, if_neg h, ← Classical.choose_spec (C_content_dvd p)]
 
 @[simp]
 theorem prim_part_zero : primPart (0 : R[X]) = 1 :=

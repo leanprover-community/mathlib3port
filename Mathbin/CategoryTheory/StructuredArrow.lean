@@ -100,7 +100,7 @@ def isoMk {f f' : StructuredArrow S T} (g : f.right ≅ f'.right) (w : f.Hom ≫
       simpa [eq_to_hom_map] using w.symm)
 
 theorem ext {A B : StructuredArrow S T} (f g : A ⟶ B) : f.right = g.right → f = g :=
-  CommaMorphism.ext _ _ (Subsingleton.elimₓ _ _)
+  CommaMorphism.ext _ _ (Subsingleton.elim _ _)
 
 theorem ext_iff {A B : StructuredArrow S T} (f g : A ⟶ B) : f = g ↔ f.right = g.right :=
   ⟨fun h => h ▸ rfl, ext f g⟩
@@ -279,7 +279,7 @@ def isoMk {f f' : CostructuredArrow S T} (g : f.left ≅ f'.left) (w : S.map g.H
       simpa [eq_to_hom_map] using w)
 
 theorem ext {A B : CostructuredArrow S T} (f g : A ⟶ B) (h : f.left = g.left) : f = g :=
-  CommaMorphism.ext _ _ h (Subsingleton.elimₓ _ _)
+  CommaMorphism.ext _ _ h (Subsingleton.elim _ _)
 
 theorem ext_iff {A B : CostructuredArrow S T} (f g : A ⟶ B) : f = g ↔ f.left = g.left :=
   ⟨fun h => h ▸ rfl, ext f g⟩

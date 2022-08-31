@@ -71,7 +71,7 @@ theorem derived_series_def (k : ℕ) : derivedSeries R L k = derivedSeriesOfIdea
 
 variable {R L}
 
--- mathport name: «exprD»
+-- mathport name: exprD
 local notation "D" => derivedSeriesOfIdeal R L
 
 theorem derived_series_of_ideal_add (k l : ℕ) : D (k + l) I = D k (D l I) := by
@@ -198,7 +198,7 @@ class IsSolvable : Prop where
   solvable : ∃ k, derivedSeries R L k = ⊥
 
 instance is_solvable_bot : IsSolvable R ↥(⊥ : LieIdeal R L) :=
-  ⟨⟨0, Subsingleton.elimₓ _ ⊥⟩⟩
+  ⟨⟨0, Subsingleton.elim _ ⊥⟩⟩
 
 instance is_solvable_add {I J : LieIdeal R L} [hI : IsSolvable R I] [hJ : IsSolvable R J] : IsSolvable R ↥(I + J) := by
   obtain ⟨k, hk⟩ := id hI

@@ -70,7 +70,7 @@ variable {α β : Type _} [NormedAddCommGroup β]
 def IsEquivalent (l : Filter α) (u v : α → β) :=
   (u - v) =o[l] v
 
--- mathport name: «expr ~[ ] »
+-- mathport name: asymptotics.is_equivalent
 localized [Asymptotics] notation:50 u " ~[" l:50 "] " v:50 => Asymptotics.IsEquivalent l u v
 
 variable {u v w : α → β} {l : Filter α}

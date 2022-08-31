@@ -41,7 +41,7 @@ namespace WittVector
 
 variable (p : ℕ) [hp : Fact p.Prime]
 
--- mathport name: «expr𝕎»
+-- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
 namespace RecursionMain
@@ -109,11 +109,11 @@ theorem root_exists (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Finₓ (n + 1) → k) (
 
 /-- This is the `n+1`st coefficient of our solution, projected from `root_exists`. -/
 def succNthVal (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Finₓ (n + 1) → k) (ha₁ : a₁.coeff 0 ≠ 0) (ha₂ : a₂.coeff 0 ≠ 0) : k :=
-  Classical.some (root_exists p n a₁ a₂ bs ha₁ ha₂)
+  Classical.choose (root_exists p n a₁ a₂ bs ha₁ ha₂)
 
 theorem succ_nth_val_spec (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Finₓ (n + 1) → k) (ha₁ : a₁.coeff 0 ≠ 0) (ha₂ : a₂.coeff 0 ≠ 0) :
     (succNthDefiningPoly p n a₁ a₂ bs).IsRoot (succNthVal p n a₁ a₂ bs ha₁ ha₂) :=
-  Classical.some_spec (root_exists p n a₁ a₂ bs ha₁ ha₂)
+  Classical.choose_spec (root_exists p n a₁ a₂ bs ha₁ ha₂)
 
 theorem succ_nth_val_spec' (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Finₓ (n + 1) → k) (ha₁ : a₁.coeff 0 ≠ 0) (ha₂ : a₂.coeff 0 ≠ 0) :
     succNthVal p n a₁ a₂ bs ha₁ ha₂ ^ p * a₁.coeff 0 ^ p ^ (n + 1) + a₁.coeff (n + 1) * (bs 0 ^ p) ^ p ^ (n + 1) +
@@ -145,10 +145,10 @@ theorem solution_pow (a₁ a₂ : 𝕎 k) : ∃ x : k, x ^ (p - 1) = a₂.coeff 
 
 /-- The base case (0th coefficient) of our solution vector. -/
 def solution (a₁ a₂ : 𝕎 k) : k :=
-  Classical.some <| solution_pow p a₁ a₂
+  Classical.choose <| solution_pow p a₁ a₂
 
 theorem solution_spec (a₁ a₂ : 𝕎 k) : solution p a₁ a₂ ^ (p - 1) = a₂.coeff 0 / a₁.coeff 0 :=
-  Classical.some_spec <| solution_pow p a₁ a₂
+  Classical.choose_spec <| solution_pow p a₁ a₂
 
 theorem solution_nonzero {a₁ a₂ : 𝕎 k} (ha₁ : a₁.coeff 0 ≠ 0) (ha₂ : a₂.coeff 0 ≠ 0) : solution p a₁ a₂ ≠ 0 := by
   intro h
@@ -218,7 +218,7 @@ theorem frobenius_frobenius_rotation {a₁ a₂ : 𝕎 k} (ha₁ : a₁.coeff 0 
     rfl
     
 
--- mathport name: «exprφ»
+-- mathport name: exprφ
 local notation "φ" => IsFractionRing.fieldEquivOfRingEquiv (frobeniusEquiv p k)
 
 theorem exists_frobenius_solution_fraction_ring_aux (m n : ℕ) (r' q' : 𝕎 k) (hr' : r'.coeff 0 ≠ 0)

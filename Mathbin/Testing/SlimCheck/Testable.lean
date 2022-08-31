@@ -294,12 +294,13 @@ def convertCounterExample {p q : Prop} (h : q → p) :
 def convertCounterExample' {p q : Prop} (h : p ↔ q) (r : TestResultₓ p) : TestResultₓ q :=
   convertCounterExample h.2 r (PSum.inr h.1)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- When we assign a value to a universally quantified variable,
 we record that value using this function so that our counter-examples
 can be informative. -/
 def addToCounterExample (x : Stringₓ) {p q : Prop} (h : q → p) :
     TestResultₓ p → optParam (PSum Unit (p → q)) (PSum.inl ()) → TestResultₓ q
-  | failure Hce xs n, _ => failure (mt h Hce) (x :: xs) n
+  | failure Hce xs n, _ => failure (mt h Hce) (x::xs) n
   | r, hpq => convertCounterExample h r hpq
 
 /-- Add some formatting to the information recorded by `add_to_counter_example`. -/
@@ -397,6 +398,7 @@ def traceIfGiveupₓ {p α β} [HasRepr α] (tracing_enabled : Bool) (var : Stri
   | test_result.gave_up _ => if tracing_enabled then trace s! " {var } := {reprₓ val}" else (· <| ())
   | _ => (· <| ())
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- testable instance for a property iterating over the element of a list -/
 instance (priority := 5000) testForallInList [∀ x, Testableₓ (β x)] [HasRepr α] :
     ∀ xs : List α, Testableₓ (NamedBinderₓ var <| ∀ x, NamedBinderₓ var' <| x ∈ xs → β x)
@@ -408,7 +410,7 @@ instance (priority := 5000) testForallInList [∀ x, Testableₓ (β x)] [HasRep
             (by
               introv x h
               cases h)⟩
-  | x :: xs =>
+  | x::xs =>
     ⟨fun cfg min => do
       let r ← Testableₓ.run (β x) cfg min
       trace_if_giveup cfg var x r <|

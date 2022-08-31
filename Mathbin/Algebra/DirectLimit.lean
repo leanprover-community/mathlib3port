@@ -703,10 +703,10 @@ open Classical
 
 /-- Noncomputable multiplicative inverse in a direct limit of fields. -/
 noncomputable def inv (p : Ringₓ.DirectLimit G f) : Ringₓ.DirectLimit G f :=
-  if H : p = 0 then 0 else Classical.some (DirectLimit.exists_inv G f H)
+  if H : p = 0 then 0 else Classical.choose (DirectLimit.exists_inv G f H)
 
 protected theorem mul_inv_cancel {p : Ringₓ.DirectLimit G f} (hp : p ≠ 0) : p * inv G f p = 1 := by
-  rw [inv, dif_neg hp, Classical.some_spec (direct_limit.exists_inv G f hp)]
+  rw [inv, dif_neg hp, Classical.choose_spec (direct_limit.exists_inv G f hp)]
 
 protected theorem inv_mul_cancel {p : Ringₓ.DirectLimit G f} (hp : p ≠ 0) : inv G f p * p = 1 := by
   rw [_root_.mul_comm, direct_limit.mul_inv_cancel G f hp]

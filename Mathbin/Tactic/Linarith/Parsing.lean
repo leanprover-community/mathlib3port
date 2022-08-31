@@ -92,9 +92,10 @@ unsafe def var (n : ℕ) : sum :=
 /-! ### Parsing algorithms -/
 
 
--- mathport name: «exprexmap»
+-- mathport name: exprexmap
 local notation "exmap" => List (expr × ℕ)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `linear_form_of_atom red map e` is the atomic case for `linear_form_of_expr`.
 If `e` appears with index `k` in `map`, it returns the singleton sum `var k`.
 Otherwise it updates `map`, adding `e` with index `n`, and returns the singleton sum `var n`.
@@ -104,7 +105,7 @@ unsafe def linear_form_of_atom (red : Transparency) (m : exmap) (e : expr) : tac
       let (_, k) ← m.find_defeq red e
       return (m, var k)) <|>
     let n := m.length + 1
-    return ((e, n) :: m, var n)
+    return ((e, n)::m, var n)
 
 /-- `linear_form_of_expr red map e` computes the linear form of `e`.
 
@@ -171,16 +172,18 @@ unsafe def to_comp (red : Transparency) (e : expr) (e_map : exmap) (monom_map : 
   let ⟨nm, mm'⟩ := sum_to_lf comp' monom_map
   return ⟨⟨iq, mm'⟩, m', nm⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `to_comp_fold red e_map exprs monom_map` folds `to_comp` over `exprs`,
 updating `e_map` and `monom_map` as it goes.
  -/
 unsafe def to_comp_fold (red : Transparency) :
     exmap → List expr → rb_map monom ℕ → tactic (List Comp × exmap × rb_map monom ℕ)
   | m, [], mm => return ([], m, mm)
-  | m, h :: t, mm => do
+  | m, h::t, mm => do
     let (c, m', mm') ← to_comp red h m mm
     let (l, mp, mm') ← to_comp_fold m' t mm'
-    return (c :: l, mp, mm')
+    return (c::l, mp, mm')
 
 /-- `linear_forms_and_vars red pfs` is the main interface for computing the linear forms of a list
 of expressions. Given a list `pfs` of proofs of comparisons, it produces a list `c` of `comps` of

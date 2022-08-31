@@ -116,10 +116,10 @@ noncomputable def epsilon : ℝ* :=
 noncomputable def omega : ℝ* :=
   ofSeq coe
 
--- mathport name: «exprε»
+-- mathport name: hyperreal.epsilon
 localized [Hyperreal] notation "ε" => Hyperreal.epsilon
 
--- mathport name: «exprω»
+-- mathport name: hyperreal.omega
 localized [Hyperreal] notation "ω" => Hyperreal.omega
 
 theorem epsilon_eq_inv_omega : ε = ω⁻¹ :=
@@ -180,7 +180,7 @@ def IsSt (x : ℝ*) (r : ℝ) :=
   ∀ δ : ℝ, 0 < δ → (r - δ : ℝ*) < x ∧ x < r + δ
 
 /-- Standard part function: like a "round" to ℝ instead of ℤ -/
-noncomputable def st : ℝ* → ℝ := fun x => if h : ∃ r, IsSt x r then Classical.some h else 0
+noncomputable def st : ℝ* → ℝ := fun x => if h : ∃ r, IsSt x r then Classical.choose h else 0
 
 /-- A hyperreal number is infinitesimal if its standard part is 0 -/
 def Infinitesimal (x : ℝ*) :=
@@ -250,7 +250,7 @@ theorem exists_st_of_not_infinite {x : ℝ*} (hni : ¬Infinite x) : ∃ r : ℝ,
 theorem st_eq_Sup {x : ℝ*} : st x = sup { y : ℝ | (y : ℝ*) < x } := by
   unfold st
   split_ifs
-  · exact is_st_unique (Classical.some_spec h) (is_st_Sup (not_infinite_of_exists_st h))
+  · exact is_st_unique (Classical.choose_spec h) (is_st_Sup (not_infinite_of_exists_st h))
     
   · cases' not_imp_comm.mp exists_st_of_not_infinite h with H H
     · rw [(Set.ext fun i => ⟨fun hi => Set.mem_univ i, fun hi => H i⟩ : { y : ℝ | (y : ℝ*) < x } = Set.Univ)]
@@ -281,7 +281,7 @@ theorem st_infinite {x : ℝ*} (hi : Infinite x) : st x = 0 := by
 theorem st_of_is_st {x : ℝ*} {r : ℝ} (hxr : IsSt x r) : st x = r := by
   unfold st
   split_ifs
-  · exact is_st_unique (Classical.some_spec h) hxr
+  · exact is_st_unique (Classical.choose_spec h) hxr
     
   · exact False.elim (h ⟨r, hxr⟩)
     
@@ -295,7 +295,7 @@ theorem is_st_st_of_exists_st {x : ℝ*} (hx : ∃ r : ℝ, IsSt x r) : IsSt x (
 theorem is_st_st {x : ℝ*} (hx : st x ≠ 0) : IsSt x (st x) := by
   unfold st
   split_ifs
-  · exact Classical.some_spec h
+  · exact Classical.choose_spec h
     
   · exact
       False.elim

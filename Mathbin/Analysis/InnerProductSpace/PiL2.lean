@@ -590,15 +590,15 @@ theorem _root_.exists_orthonormal_basis : ∃ (w : Finset E)(b : OrthonormalBasi
 
 /-- Index for an arbitrary orthonormal basis on a finite-dimensional `inner_product_space`. -/
 def orthonormalBasisIndex : Finset E :=
-  Classical.some (exists_orthonormal_basis 𝕜 E)
+  Classical.choose (exists_orthonormal_basis 𝕜 E)
 
 /-- A finite-dimensional `inner_product_space` has an orthonormal basis. -/
 def stdOrthonormalBasis : OrthonormalBasis (orthonormalBasisIndex 𝕜 E) 𝕜 E :=
-  Classical.some (Classical.some_spec (exists_orthonormal_basis 𝕜 E))
+  Classical.choose (Classical.choose_spec (exists_orthonormal_basis 𝕜 E))
 
 @[simp]
 theorem coe_std_orthonormal_basis : ⇑(stdOrthonormalBasis 𝕜 E) = coe :=
-  Classical.some_spec (Classical.some_spec (exists_orthonormal_basis 𝕜 E))
+  Classical.choose_spec (Classical.choose_spec (exists_orthonormal_basis 𝕜 E))
 
 variable {𝕜 E}
 

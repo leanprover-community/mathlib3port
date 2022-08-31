@@ -168,11 +168,12 @@ end Powers
 
 namespace IsSubmonoid
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The product of a list of elements of a submonoid is an element of the submonoid. -/
 @[to_additive "The sum of a list of elements of an `add_submonoid` is an element of the\n`add_submonoid`."]
 theorem list_prod_mem (hs : IsSubmonoid s) : ∀ {l : List M}, (∀ x ∈ l, x ∈ s) → l.Prod ∈ s
   | [], h => hs.one_mem
-  | a :: l, h =>
+  | a::l, h =>
     suffices a * l.Prod ∈ s by
       simpa
     have : a ∈ s ∧ ∀ x ∈ l, x ∈ s := by
@@ -328,9 +329,9 @@ end Monoidₓ
 /-- Create a bundled submonoid from a set `s` and `[is_submonoid s]`. -/
 @[to_additive "Create a bundled additive submonoid from a set `s` and `[is_add_submonoid s]`."]
 def Submonoid.of {s : Set M} (h : IsSubmonoid s) : Submonoid M :=
-  ⟨s, h.2, h.1⟩
+  ⟨s, fun _ _ => h.2, h.1⟩
 
 @[to_additive]
 theorem Submonoid.is_submonoid (S : Submonoid M) : IsSubmonoid (S : Set M) :=
-  ⟨S.3, S.2⟩
+  ⟨S.3, fun _ _ => S.2⟩
 

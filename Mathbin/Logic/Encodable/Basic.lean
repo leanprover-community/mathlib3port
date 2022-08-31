@@ -387,6 +387,9 @@ theorem nonempty_encodable : Nonempty (Encodable α) ↔ Countable α :=
 
 end Encodable
 
+theorem nonempty_encodable (α : Type _) [Countable α] : Nonempty (Encodable α) :=
+  ⟨Encodable.ofCountable _⟩
+
 instance : Countable ℕ+ :=
   Subtype.countable
 
@@ -532,23 +535,23 @@ protected noncomputable def sequence {r : β → β → Prop} (f : α → β) (h
   | n + 1 =>
     let p := sequence n
     match decode α n with
-    | none => Classical.some (hf p p)
-    | some a => Classical.some (hf p a)
+    | none => Classical.choose (hf p p)
+    | some a => Classical.choose (hf p a)
 
 theorem sequence_mono_nat {r : β → β → Prop} {f : α → β} (hf : Directed r f) (n : ℕ) :
     r (f (hf.sequence f n)) (f (hf.sequence f (n + 1))) := by
   dsimp' [Directed.sequence]
   generalize eq : hf.sequence f n = p
   cases' h : decode α n with a
-  · exact (Classical.some_spec (hf p p)).1
+  · exact (Classical.choose_spec (hf p p)).1
     
-  · exact (Classical.some_spec (hf p a)).1
+  · exact (Classical.choose_spec (hf p a)).1
     
 
 theorem rel_sequence {r : β → β → Prop} {f : α → β} (hf : Directed r f) (a : α) :
     r (f a) (f (hf.sequence f (encode a + 1))) := by
   simp only [Directed.sequence, encodek]
-  exact (Classical.some_spec (hf _ a)).2
+  exact (Classical.choose_spec (hf _ a)).2
 
 variable [Preorderₓ β] {f : α → β} (hf : Directed (· ≤ ·) f)
 

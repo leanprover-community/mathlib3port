@@ -146,22 +146,6 @@ instance Nat.cancelCommMonoidWithZero : CancelCommMonoidWithZero ℕ :=
 attribute [simp]
   Nat.not_lt_zeroₓ Nat.succ_ne_zero Nat.succ_ne_self Nat.zero_ne_one Nat.one_ne_zero Nat.zero_ne_bit1 Nat.bit1_ne_zero Nat.bit0_ne_one Nat.one_ne_bit0 Nat.bit0_ne_bit1 Nat.bit1_ne_bit0
 
-/-!
-Inject some simple facts into the type class system.
-This `fact` should not be confused with the factorial function `nat.fact`!
--/
-
-
-section Facts
-
-instance succ_pos'' (n : ℕ) : Fact (0 < n.succ) :=
-  ⟨n.succ_pos⟩
-
-instance pos_of_one_lt (n : ℕ) [h : Fact (1 < n)] : Fact (0 < n) :=
-  ⟨lt_transₓ zero_lt_one h.1⟩
-
-end Facts
-
 variable {m n k : ℕ}
 
 namespace Nat
@@ -732,7 +716,7 @@ def leRecOn {C : ℕ → Sort u} {n : ℕ} : ∀ {m : ℕ}, n ≤ m → (∀ {k}
     Or.byCases (of_le_succ H) (fun h : n ≤ m => next <| le_rec_on h (@next) x) fun h : n = m + 1 => Eq.recOnₓ h x
 
 theorem le_rec_on_self {C : ℕ → Sort u} {n} {h : n ≤ n} {next} (x : C n) : (leRecOn h next x : C n) = x := by
-  cases n <;> unfold le_rec_on Or.byCases <;> rw [dif_neg n.not_succ_le_self, dif_pos rfl]
+  cases n <;> unfold le_rec_on Or.byCases <;> rw [dif_neg n.not_succ_le_self]
 
 theorem le_rec_on_succ {C : ℕ → Sort u} {n m} (h1 : n ≤ m) {h2 : n ≤ m + 1} {next} (x : C n) :
     (leRecOn h2 (@next) x : C (m + 1)) = next (leRecOn h1 (@next) x : C m) := by
@@ -751,7 +735,7 @@ theorem le_rec_on_trans {C : ℕ → Sort u} {n m k} (hnm : n ≤ m) (hmk : m �
 
 theorem le_rec_on_succ_left {C : ℕ → Sort u} {n m} (h1 : n ≤ m) (h2 : n + 1 ≤ m) {next : ∀ ⦃k⦄, C k → C (k + 1)}
     (x : C n) : (leRecOn h2 next (next x) : C m) = (leRecOn h1 next x : C m) := by
-  rw [Subsingleton.elimₓ h1 (le_transₓ (le_succ n) h2), le_rec_on_trans (le_succ n) h2, le_rec_on_succ']
+  rw [Subsingleton.elim h1 (le_transₓ (le_succ n) h2), le_rec_on_trans (le_succ n) h2, le_rec_on_succ']
 
 theorem le_rec_on_injective {C : ℕ → Sort u} {n m} (hnm : n ≤ m) (next : ∀ n, C n → C (n + 1))
     (Hnext : ∀ n, Function.Injective (next n)) : Function.Injective (leRecOn hnm next) := by
@@ -829,7 +813,7 @@ theorem decreasing_induction_trans {P : ℕ → Sort _} (h : ∀ n, P (n + 1) �
 
 theorem decreasing_induction_succ_left {P : ℕ → Sort _} (h : ∀ n, P (n + 1) → P n) {m n : ℕ} (smn : m + 1 ≤ n)
     (mn : m ≤ n) (hP : P n) : (decreasingInduction h mn hP : P m) = h m (decreasingInduction h smn hP) := by
-  rw [Subsingleton.elimₓ mn (le_transₓ (le_succ m) smn), decreasing_induction_trans, decreasing_induction_succ']
+  rw [Subsingleton.elim mn (le_transₓ (le_succ m) smn), decreasing_induction_trans, decreasing_induction_succ']
 
 /-- Recursion principle on even and odd numbers: if we have `P 0`, and for all `i : ℕ` we can
 extend from `P i` to both `P (2 * i)` and `P (2 * i + 1)`, then we have `P n` for all `n : ℕ`.

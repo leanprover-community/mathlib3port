@@ -290,7 +290,7 @@ theorem WfDvdMonoid.of_exists_prime_factors : WfDvdMonoid α :=
       by_cases' h : a = 0
       · exact ⊤
         
-      exact (Classical.some (pf a h)).card
+      exact (Classical.choose (pf a h)).card
       
     rintro a b ⟨ane0, ⟨c, hc, b_eq⟩⟩
     rw [dif_neg ane0]
@@ -302,25 +302,25 @@ theorem WfDvdMonoid.of_exists_prime_factors : WfDvdMonoid α :=
       refine' mt (fun con => _) h
       rw [b_eq, Con, mul_zero]
     calc
-      Multiset.card (Classical.some (pf a ane0)) < _ + Multiset.card (Classical.some (pf c cne0)) :=
+      Multiset.card (Classical.choose (pf a ane0)) < _ + Multiset.card (Classical.choose (pf c cne0)) :=
         lt_add_of_pos_right _ (multiset.card_pos.mpr fun con => hc (associated_one_iff_is_unit.mp _))
-      _ = Multiset.card (Classical.some (pf a ane0) + Classical.some (pf c cne0)) := (Multiset.card_add _ _).symm
-      _ = Multiset.card (Classical.some (pf b h)) :=
-        Multiset.card_eq_card_of_rel (prime_factors_unique _ (Classical.some_spec (pf _ h)).1 _)
+      _ = Multiset.card (Classical.choose (pf a ane0) + Classical.choose (pf c cne0)) := (Multiset.card_add _ _).symm
+      _ = Multiset.card (Classical.choose (pf b h)) :=
+        Multiset.card_eq_card_of_rel (prime_factors_unique _ (Classical.choose_spec (pf _ h)).1 _)
       
-    · convert (Classical.some_spec (pf c cne0)).2.symm
+    · convert (Classical.choose_spec (pf c cne0)).2.symm
       rw [Con, Multiset.prod_zero]
       
     · intro x hadd
       rw [Multiset.mem_add] at hadd
-      cases hadd <;> apply (Classical.some_spec (pf _ _)).1 _ hadd
+      cases hadd <;> apply (Classical.choose_spec (pf _ _)).1 _ hadd
       
     · rw [Multiset.prod_add]
       trans a * c
-      · apply Associated.mul_mul <;> apply (Classical.some_spec (pf _ _)).2
+      · apply Associated.mul_mul <;> apply (Classical.choose_spec (pf _ _)).2
         
       · rw [← b_eq]
-        apply (Classical.some_spec (pf _ _)).2.symm
+        apply (Classical.choose_spec (pf _ _)).2.symm
         
       ⟩
 
@@ -433,11 +433,11 @@ variable [UniqueFactorizationMonoid α]
 
 /-- Noncomputably determines the multiset of prime factors. -/
 noncomputable def factors (a : α) : Multiset α :=
-  if h : a = 0 then 0 else Classical.some (UniqueFactorizationMonoid.exists_prime_factors a h)
+  if h : a = 0 then 0 else Classical.choose (UniqueFactorizationMonoid.exists_prime_factors a h)
 
 theorem factors_prod {a : α} (ane0 : a ≠ 0) : Associated (factors a).Prod a := by
   rw [factors, dif_neg ane0]
-  exact (Classical.some_spec (exists_prime_factors a ane0)).2
+  exact (Classical.choose_spec (exists_prime_factors a ane0)).2
 
 theorem ne_zero_of_mem_factors {p a : α} (h : p ∈ factors a) : a ≠ 0 := by
   intro ha
@@ -450,7 +450,7 @@ theorem dvd_of_mem_factors {p a : α} (h : p ∈ factors a) : p ∣ a :=
 theorem prime_of_factor {a : α} (x : α) (hx : x ∈ factors a) : Prime x := by
   have ane0 := ne_zero_of_mem_factors hx
   rw [factors, dif_neg ane0] at hx
-  exact (Classical.some_spec (UniqueFactorizationMonoid.exists_prime_factors a ane0)).1 x hx
+  exact (Classical.choose_spec (UniqueFactorizationMonoid.exists_prime_factors a ane0)).1 x hx
 
 theorem irreducible_of_factor {a : α} : ∀ x : α, x ∈ factors a → Irreducible x := fun x h =>
   (prime_of_factor x h).Irreducible
@@ -530,7 +530,7 @@ theorem factors_eq_normalized_factors {M : Type _} [CancelCommMonoidWithZero M] 
 
 theorem normalized_factors_prod {a : α} (ane0 : a ≠ 0) : Associated (normalizedFactors a).Prod a := by
   rw [normalized_factors, factors, dif_neg ane0]
-  refine' Associated.trans _ (Classical.some_spec (exists_prime_factors a ane0)).2
+  refine' Associated.trans _ (Classical.choose_spec (exists_prime_factors a ane0)).2
   rw [← Associates.mk_eq_mk_iff_associated, ← Associates.prod_mk, ← Associates.prod_mk, Multiset.map_map]
   congr 2
   ext
@@ -544,7 +544,7 @@ theorem prime_of_normalized_factor {a : α} : ∀ x : α, x ∈ normalizedFactor
   intro x hx
   rcases Multiset.mem_map.1 hx with ⟨y, ⟨hy, rfl⟩⟩
   rw [(normalize_associated _).prime_iff]
-  exact (Classical.some_spec (UniqueFactorizationMonoid.exists_prime_factors a ane0)).1 y hy
+  exact (Classical.choose_spec (UniqueFactorizationMonoid.exists_prime_factors a ane0)).1 y hy
 
 theorem irreducible_of_normalized_factor {a : α} : ∀ x : α, x ∈ normalizedFactors a → Irreducible x := fun x h =>
   (prime_of_normalized_factor x h).Irreducible
@@ -651,6 +651,19 @@ theorem dvd_iff_normalized_factors_le_normalized_factors {x y : α} (hx : x ≠ 
     apply Multiset.prod_dvd_prod_of_le
     
 
+theorem associated_iff_normalized_factors_eq_normalized_factors {x y : α} (hx : x ≠ 0) (hy : y ≠ 0) :
+    x ~ᵤ y ↔ normalizedFactors x = normalizedFactors y := by
+  refine'
+    ⟨fun h => _, fun h =>
+      (normalized_factors_prod hx).symm.trans
+        (trans
+          (by
+            rw [h])
+          (normalized_factors_prod hy))⟩
+  apply le_antisymmₓ <;> rw [← dvd_iff_normalized_factors_le_normalized_factors]
+  all_goals
+    simp [*, h.dvd, h.symm.dvd]
+
 theorem normalized_factors_of_irreducible_pow {p : α} (hp : Irreducible p) (k : ℕ) :
     normalizedFactors (p ^ k) = Multiset.repeat (normalize p) k := by
   rw [normalized_factors_pow, normalized_factors_irreducible hp, Multiset.nsmul_singleton]
@@ -699,7 +712,7 @@ protected def normalizationMonoid : NormalizationMonoid α :=
   normalizationMonoidOfMonoidHomRightInverse
     { toFun := fun a : Associates α =>
         if a = 0 then 0
-        else ((normalizedFactors a).map (Classical.some mk_surjective.HasRightInverse : Associates α → α)).Prod,
+        else ((normalizedFactors a).map (Classical.choose mk_surjective.HasRightInverse : Associates α → α)).Prod,
       map_one' := by
         simp ,
       map_mul' := fun x y => by
@@ -717,10 +730,11 @@ protected def normalizationMonoid : NormalizationMonoid α :=
       · simp [hx]
         
       have h :
-        Associates.mkMonoidHom ∘ Classical.some mk_surjective.has_right_inverse = (id : Associates α → Associates α) :=
+        Associates.mkMonoidHom ∘ Classical.choose mk_surjective.has_right_inverse =
+          (id : Associates α → Associates α) :=
         by
         ext x
-        rw [Function.comp_applyₓ, mk_monoid_hom_apply, Classical.some_spec mk_surjective.has_right_inverse x]
+        rw [Function.comp_applyₓ, mk_monoid_hom_apply, Classical.choose_spec mk_surjective.has_right_inverse x]
         rfl
       rw [if_neg hx, ← mk_monoid_hom_apply, MonoidHom.map_multiset_prod, map_map, h, map_id, ← associated_iff_eq]
       apply normalized_factors_prod hx)
@@ -1240,7 +1254,7 @@ omit dec_irr
 @[simp]
 theorem factors_mul (a b : Associates α) : (a * b).factors = a.factors + b.factors := by
   cases subsingleton_or_nontrivial α
-  · simp [Subsingleton.elimₓ a 0]
+  · simp [Subsingleton.elim a 0]
     
   refine' eq_of_prod_eq_prod (eq_of_factors_eq_factors _)
   rw [prod_add, factors_prod, factors_prod, factors_prod]
@@ -1772,10 +1786,8 @@ theorem factorization_pow {x : α} {n : ℕ} : factorization (x ^ n) = n • fac
 
 theorem associated_of_factorization_eq (a b : α) (ha : a ≠ 0) (hb : b ≠ 0) (h : factorization a = factorization b) :
     Associated a b := by
-  simp only [factorization, AddEquiv.apply_eq_iff_eq] at h
-  have ha' := normalized_factors_prod ha
-  rw [h] at ha'
-  exact Associated.trans ha'.symm (normalized_factors_prod hb)
+  simp_rw [factorization, AddEquiv.apply_eq_iff_eq] at h
+  rwa [associated_iff_normalized_factors_eq_normalized_factors ha hb]
 
 end Finsupp
 

@@ -410,11 +410,10 @@ theorem integral_eq_of_has_deriv_within_at_off_countable_of_le (f f' : ℝ → E
         
     _ = f b - f a := by
       simp only [Finₓ.sum_univ_one, e_symm]
-      have : ∀ c : ℝ, const (Finₓ 0) c = isEmptyElim := fun c => Subsingleton.elimₓ _ _
+      have : ∀ c : ℝ, const (Finₓ 0) c = isEmptyElim := fun c => Subsingleton.elim _ _
       simp [this, volume_pi, measure.pi_of_empty fun _ : Finₓ 0 => volume]
     
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 /-- **Fundamental theorem of calculus, part 2**. This version assumes that `f` is continuous on the
 interval and is differentiable off a countable set `s`.
 
@@ -422,9 +421,8 @@ See also `measure_theory.interval_integral.integral_eq_sub_of_has_deriv_right` f
 only assumes right differentiability of `f`.
 -/
 theorem integral_eq_of_has_deriv_within_at_off_countable (f f' : ℝ → E) {a b : ℝ} {s : Set ℝ} (hs : s.Countable)
-    (Hc : ContinuousOn f "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")
-    (Hd : ∀ x ∈ ioo (min a b) (max a b) \ s, HasDerivAt f (f' x) x) (Hi : IntervalIntegrable f' volume a b) :
-    (∫ x in a..b, f' x) = f b - f a := by
+    (Hc : ContinuousOn f [a, b]) (Hd : ∀ x ∈ ioo (min a b) (max a b) \ s, HasDerivAt f (f' x) x)
+    (Hi : IntervalIntegrable f' volume a b) : (∫ x in a..b, f' x) = f b - f a := by
   cases' le_totalₓ a b with hab hab
   · simp only [interval_of_le hab, min_eq_leftₓ hab, max_eq_rightₓ hab] at *
     exact integral_eq_of_has_deriv_within_at_off_countable_of_le f f' hab hs Hc Hd Hi
@@ -434,6 +432,8 @@ theorem integral_eq_of_has_deriv_within_at_off_countable (f f' : ℝ → E) {a b
     exact integral_eq_of_has_deriv_within_at_off_countable_of_le f f' hab hs Hc Hd Hi.symm
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- **Divergence theorem** for functions on the plane along rectangles. It is formulated in terms of
 two functions `f g : ℝ × ℝ → E` and an integral over `Icc a b = [a.1, b.1] × [a.2, b.2]`, where
 `a b : ℝ × ℝ`, `a ≤ b`. When thinking of `f` and `g` as the two coordinates of a single function
@@ -497,12 +497,12 @@ theorem integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le
       abel
     
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- **Divergence theorem** for functions on the plane. It is formulated in terms of two functions
 `f g : ℝ × ℝ → E` and iterated integral `∫ x in a₁..b₁, ∫ y in a₂..b₂, _`, where
 `a₁ a₂ b₁ b₂ : ℝ`. When thinking of `f` and `g` as the two coordinates of a single function
@@ -514,20 +514,10 @@ See also `measure_theory.integral_divergence_prod_Icc_of_has_fderiv_within_at_of
 for a version that uses an integral over `Icc a b`, where `a b : ℝ × ℝ`, `a ≤ b`. -/
 theorem integral2_divergence_prod_of_has_fderiv_within_at_off_countable (f g : ℝ × ℝ → E)
     (f' g' : ℝ × ℝ → ℝ × ℝ →L[ℝ] E) (a₁ a₂ b₁ b₂ : ℝ) (s : Set (ℝ × ℝ)) (hs : s.Countable)
-    (Hcf :
-      ContinuousOn f
-        ("./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ×ˢ
-          "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)"))
-    (Hcg :
-      ContinuousOn g
-        ("./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ×ˢ
-          "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)"))
+    (Hcf : ContinuousOn f ([a₁, b₁] ×ˢ [a₂, b₂])) (Hcg : ContinuousOn g ([a₁, b₁] ×ˢ [a₂, b₂]))
     (Hdf : ∀ x ∈ ioo (min a₁ b₁) (max a₁ b₁) ×ˢ ioo (min a₂ b₂) (max a₂ b₂) \ s, HasFderivAt f (f' x) x)
     (Hdg : ∀ x ∈ ioo (min a₁ b₁) (max a₁ b₁) ×ˢ ioo (min a₂ b₂) (max a₂ b₂) \ s, HasFderivAt g (g' x) x)
-    (Hi :
-      IntegrableOn (fun x => f' x (1, 0) + g' x (0, 1))
-        ("./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ×ˢ
-          "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")) :
+    (Hi : IntegrableOn (fun x => f' x (1, 0) + g' x (0, 1)) ([a₁, b₁] ×ˢ [a₂, b₂])) :
     (∫ x in a₁..b₁, ∫ y in a₂..b₂, f' (x, y) (1, 0) + g' (x, y) (0, 1)) =
       (((∫ x in a₁..b₁, g (x, b₂)) - ∫ x in a₁..b₁, g (x, a₂)) + ∫ y in a₂..b₂, f (b₁, y)) - ∫ y in a₂..b₂, f (a₁, y) :=
   by

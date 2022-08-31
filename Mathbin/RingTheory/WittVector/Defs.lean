@@ -51,7 +51,7 @@ structure WittVector (p : ℕ) (R : Type _) where mk ::
 
 variable {p : ℕ}
 
--- mathport name: «expr𝕎»
+-- mathport name: expr𝕎
 /- We cannot make this `localized` notation, because the `p` on the RHS doesn't occur on the left
 Hiding the `p` in the notation is very convenient, so we opt for repeating the `local notation`
 in other files that use Witt vectors. -/
@@ -351,24 +351,31 @@ theorem mul_coeff_zero (x y : 𝕎 R) : (x * y).coeff 0 = x.coeff 0 * y.coeff 0 
 
 end Coeff
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem witt_add_vars (n : ℕ) : (wittAdd p n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem witt_sub_vars (n : ℕ) : (wittSub p n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem witt_mul_vars (n : ℕ) : (wittMul p n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem witt_neg_vars (n : ℕ) : (wittNeg p n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem witt_nsmul_vars (m : ℕ) (n : ℕ) : (wittNsmul p m n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem witt_zsmul_vars (m : ℤ) (n : ℕ) : (wittZsmul p m n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem witt_pow_vars (m : ℕ) (n : ℕ) : (wittPow p m n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
   witt_structure_int_vars _ _ _
 

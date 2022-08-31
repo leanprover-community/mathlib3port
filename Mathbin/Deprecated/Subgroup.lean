@@ -52,14 +52,14 @@ theorem IsSubgroup.div_mem {s : Set G} (hs : IsSubgroup s) {x y : G} (hx : x ∈
   simpa only [div_eq_mul_inv] using hs.mul_mem hx (hs.inv_mem hy)
 
 theorem Additive.is_add_subgroup {s : Set G} (hs : IsSubgroup s) : @IsAddSubgroup (Additive G) _ s :=
-  @IsAddSubgroup.mk (Additive G) _ _ (Additive.is_add_submonoid hs.to_is_submonoid) hs.inv_mem
+  (@IsAddSubgroup.mk (Additive G) _ _ (Additive.is_add_submonoid hs.to_is_submonoid)) fun _ => hs.inv_mem
 
 theorem Additive.is_add_subgroup_iff {s : Set G} : @IsAddSubgroup (Additive G) _ s ↔ IsSubgroup s :=
   ⟨by
     rintro ⟨⟨h₁, h₂⟩, h₃⟩ <;> exact @IsSubgroup.mk G _ _ ⟨h₁, @h₂⟩ @h₃, fun h => Additive.is_add_subgroup h⟩
 
 theorem Multiplicative.is_subgroup {s : Set A} (hs : IsAddSubgroup s) : @IsSubgroup (Multiplicative A) _ s :=
-  @IsSubgroup.mk (Multiplicative A) _ _ (Multiplicative.is_submonoid hs.to_is_add_submonoid) hs.neg_mem
+  (@IsSubgroup.mk (Multiplicative A) _ _ (Multiplicative.is_submonoid hs.to_is_add_submonoid)) fun _ => hs.neg_mem
 
 theorem Multiplicative.is_subgroup_iff {s : Set A} : @IsSubgroup (Multiplicative A) _ s ↔ IsAddSubgroup s :=
   ⟨by
@@ -501,7 +501,8 @@ theorem mclosure_inv_subset {s : Set G} : Monoidₓ.Closure (Inv.inv ⁻¹' s) �
 theorem closure_eq_mclosure {s : Set G} : Closure s = Monoidₓ.Closure (s ∪ Inv.inv ⁻¹' s) :=
   Set.Subset.antisymm
     (@closure_subset _ _ _ (Monoidₓ.Closure (s ∪ Inv.inv ⁻¹' s))
-      { one_mem := (Monoidₓ.Closure.is_submonoid _).one_mem, mul_mem := (Monoidₓ.Closure.is_submonoid _).mul_mem,
+      { one_mem := (Monoidₓ.Closure.is_submonoid _).one_mem,
+        mul_mem := fun _ _ => (Monoidₓ.Closure.is_submonoid _).mul_mem,
         inv_mem := fun x hx =>
           Monoidₓ.InClosure.rec_on hx
             (fun x hx =>
@@ -615,12 +616,12 @@ end Groupₓ
 def Subgroup.of [Groupₓ G] {s : Set G} (h : IsSubgroup s) : Subgroup G where
   Carrier := s
   one_mem' := h.1.1
-  mul_mem' := h.1.2
-  inv_mem' := h.2
+  mul_mem' := fun _ _ => h.1.2
+  inv_mem' := fun _ => h.2
 
 @[to_additive]
 theorem Subgroup.is_subgroup [Groupₓ G] (K : Subgroup G) : IsSubgroup (K : Set G) :=
-  { one_mem := K.one_mem', mul_mem := K.mul_mem', inv_mem := K.inv_mem' }
+  { one_mem := K.one_mem', mul_mem := fun _ _ => K.mul_mem', inv_mem := fun _ => K.inv_mem' }
 
 -- this will never fire if it's an instance
 @[to_additive]

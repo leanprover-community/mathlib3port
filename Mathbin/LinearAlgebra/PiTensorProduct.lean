@@ -107,7 +107,7 @@ def PiTensorProduct : Type _ :=
 
 variable {R}
 
--- mathport name: «expr⨂[ ] , »
+-- mathport name: pi_tensor_product
 -- This enables the notation `⨂[R] i : ι, s i` for the pi tensor product, given `s : ι → Type*`.
 localized [TensorProduct] notation3:100"⨂["R"] "(...)", "r:(scoped f => PiTensorProduct R f) => r
 
@@ -500,7 +500,7 @@ def isEmptyEquiv [IsEmpty ι] : (⨂[R] i : ι, M) ≃ₗ[R] R where
   left_inv := fun x => by
     apply x.induction_on
     · intro r f
-      have := Subsingleton.elimₓ f isEmptyElim
+      have := Subsingleton.elim f isEmptyElim
       simp [this]
       
     · simp only
@@ -529,7 +529,7 @@ def subsingletonEquiv [Subsingleton ι] (i₀ : ι) : (⨂[R] i : ι, M) ≃ₗ[
     have : ∀ (f : ι → M) (z : M), (fun i : ι => z) = update f i₀ z := by
       intro f z
       ext i
-      rw [Subsingleton.elimₓ i i₀, Function.update_same]
+      rw [Subsingleton.elim i i₀, Function.update_same]
     apply x.induction_on
     · intro r f
       simp only [LinearMap.map_smul, lift.tprod, of_subsingleton_apply, Function.eval, this f, MultilinearMap.map_smul,

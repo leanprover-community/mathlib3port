@@ -152,7 +152,7 @@ variable {K : Type _} [Field K] {Γ₀ : Type _} [LinearOrderedCommGroupWithZero
 
 include hv
 
--- mathport name: «exprhat»
+-- mathport name: exprhat
 local notation "hat " => Completion
 
 /-- A valued field is completable. -/

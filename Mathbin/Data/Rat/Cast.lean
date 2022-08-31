@@ -410,55 +410,45 @@ theorem map_rat_cast [DivisionRing α] [DivisionRing β] [RingHomClass F α β] 
 theorem eq_rat_cast {k} [DivisionRing k] [RingHomClass F ℚ k] (f : F) (r : ℚ) : f r = r := by
   rw [← map_rat_cast f, Rat.cast_id]
 
-theorem RingHom.ext_rat {R : Type _} [Semiringₓ R] (f g : ℚ →+* R) : f = g := by
-  ext r
-  refine' Rat.numDenomCasesOn' r _
-  intro a b b0
-  let φ : ℤ →+* R := f.comp (Int.castRingHom ℚ)
-  let ψ : ℤ →+* R := g.comp (Int.castRingHom ℚ)
-  rw [Rat.mk_eq_div, Int.cast_coe_nat]
-  have b0' : (b : ℚ) ≠ 0 := Nat.cast_ne_zero.2 b0
-  have : ∀ n : ℤ, f n = g n := fun n =>
-    show φ n = ψ n by
-      rw [φ.ext_int ψ]
-  calc
-    f (a * b⁻¹) = f a * f b⁻¹ * (g (b : ℤ) * g b⁻¹) := by
-      rw [Int.cast_coe_nat, ← g.map_mul, mul_inv_cancel b0', g.map_one, mul_oneₓ, f.map_mul]
-    _ = g a * f b⁻¹ * (f (b : ℤ) * g b⁻¹) := by
-      rw [this a, ← this b]
-    _ = g (a * b⁻¹) := by
-      rw [Int.cast_coe_nat, mul_assoc, ← mul_assoc (f b⁻¹), ← f.map_mul, inv_mul_cancel b0', f.map_one, one_mulₓ,
-        g.map_mul]
-    
-
-instance Rat.subsingleton_ring_hom {R : Type _} [Semiringₓ R] : Subsingleton (ℚ →+* R) :=
-  ⟨RingHom.ext_rat⟩
-
 namespace MonoidWithZeroHom
 
-variable {M : Type _} [GroupWithZeroₓ M]
+variable {M₀ : Type _} [MonoidWithZeroₓ M₀] [MonoidWithZeroHomClass F ℚ M₀] {f g : F}
+
+include M₀
+
+/-- If `f` and `g` agree on the integers then they are equal `φ`. -/
+theorem ext_rat' (h : ∀ m : ℤ, f m = g m) : f = g :=
+  (FunLike.ext f g) fun r => by
+    rw [← r.num_div_denom, div_eq_mul_inv, map_mul, map_mul, h, ← Int.cast_coe_nat, eq_on_inv₀ f g (h _)]
 
 /-- If `f` and `g` agree on the integers then they are equal `φ`.
 
 See note [partially-applied ext lemmas] for why `comp` is used here. -/
 @[ext]
-theorem ext_rat {f g : ℚ →*₀ M}
-    (same_on_int : f.comp (Int.castRingHom ℚ).toMonoidWithZeroHom = g.comp (Int.castRingHom ℚ).toMonoidWithZeroHom) :
-    f = g := by
-  have same_on_int' : ∀ k : ℤ, f k = g k := congr_fun same_on_int
-  ext x
-  rw [← @Rat.num_denom x, Rat.mk_eq_div, map_div₀ f, map_div₀ g, same_on_int' x.num, same_on_int' x.denom]
+theorem ext_rat {f g : ℚ →*₀ M₀} (h : f.comp (Int.castRingHom ℚ : ℤ →*₀ ℚ) = g.comp (Int.castRingHom ℚ)) : f = g :=
+  ext_rat' <| congr_fun h
 
 /-- Positive integer values of a morphism `φ` and its value on `-1` completely determine `φ`. -/
-theorem ext_rat_on_pnat {f g : ℚ →*₀ M} (same_on_neg_one : f (-1) = g (-1))
-    (same_on_pnat : ∀ n : ℕ, 0 < n → f n = g n) : f = g :=
-  ext_rat <|
-    ext_int'
-      (by
-        simpa)
-      ‹_›
+theorem ext_rat_on_pnat (same_on_neg_one : f (-1) = g (-1)) (same_on_pnat : ∀ n : ℕ, 0 < n → f n = g n) : f = g :=
+  ext_rat' <|
+    FunLike.congr_fun <|
+      show (f : ℚ →*₀ M₀).comp (Int.castRingHom ℚ : ℤ →*₀ ℚ) = (g : ℚ →*₀ M₀).comp (Int.castRingHom ℚ : ℤ →*₀ ℚ) from
+        ext_int'
+          (by
+            simpa)
+          (by
+            simpa)
 
 end MonoidWithZeroHom
+
+/-- Any two ring homomorphisms from `ℚ` to a semiring are equal. If the codomain is a division ring,
+then this lemma follows from `eq_rat_cast`. -/
+theorem RingHom.ext_rat {R : Type _} [Semiringₓ R] [RingHomClass F ℚ R] (f g : F) : f = g :=
+  MonoidWithZeroHom.ext_rat' <|
+    RingHom.congr_fun <| ((f : ℚ →+* R).comp (Int.castRingHom ℚ)).ext_int ((g : ℚ →+* R).comp (Int.castRingHom ℚ))
+
+instance Rat.subsingleton_ring_hom {R : Type _} [Semiringₓ R] : Subsingleton (ℚ →+* R) :=
+  ⟨RingHom.ext_rat⟩
 
 namespace MulOpposite
 

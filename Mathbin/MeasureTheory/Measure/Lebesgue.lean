@@ -317,7 +317,7 @@ theorem smul_map_diagonal_volume_pi [DecidableEq ι] {D : ι → ℝ} (h : det (
     Ennreal.ofReal (abs (det (diagonalₓ D))) • Measure.map (diagonalₓ D).toLin' volume = volume := by
   refine' (measure.pi_eq fun s hs => _).symm
   simp only [det_diagonal, measure.coe_smul, Algebra.id.smul_eq_mul, Pi.smul_apply]
-  rw [measure.map_apply _ (MeasurableSet.univ_pi_fintype hs)]
+  rw [measure.map_apply _ (MeasurableSet.univ_pi hs)]
   swap
   · exact Continuous.measurable (LinearMap.continuous_on_pi _)
     
@@ -435,6 +435,7 @@ variable {α : Type _}
 def RegionBetween (f g : α → ℝ) (s : Set α) : Set (α × ℝ) :=
   { p : α × ℝ | p.1 ∈ s ∧ p.2 ∈ Ioo (f p.1) (g p.1) }
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem region_between_subset (f g : α → ℝ) (s : Set α) : RegionBetween f g s ⊆ s ×ˢ univ := by
   simpa only [prod_univ, RegionBetween, Set.Preimage, set_of_subset_set_of] using fun a => And.left
 

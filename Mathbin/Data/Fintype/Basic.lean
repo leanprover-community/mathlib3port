@@ -133,7 +133,7 @@ theorem univ_eq_empty [IsEmpty α] : (univ : Finset α) = ∅ :=
 
 @[simp]
 theorem univ_unique [Unique α] : (univ : Finset α) = {default} :=
-  Finset.ext fun x => iff_of_true (mem_univ _) <| mem_singleton.2 <| Subsingleton.elimₓ x default
+  Finset.ext fun x => iff_of_true (mem_univ _) <| mem_singleton.2 <| Subsingleton.elim x default
 
 @[simp]
 theorem subset_univ (s : Finset α) : s ⊆ univ := fun a _ => mem_univ a
@@ -625,7 +625,7 @@ theorem card_eq {α β} [F : Fintype α] [G : Fintype β] : card α = card β �
 
 /-- Any subsingleton type with a witness is a fintype (with one term). -/
 def ofSubsingleton (a : α) [Subsingleton α] : Fintype α :=
-  ⟨{a}, fun b => Finset.mem_singleton.2 (Subsingleton.elimₓ _ _)⟩
+  ⟨{a}, fun b => Finset.mem_singleton.2 (Subsingleton.elim _ _)⟩
 
 @[simp]
 theorem univ_of_subsingleton (a : α) [Subsingleton α] : @univ _ (ofSubsingleton a) = {a} :=
@@ -640,7 +640,7 @@ theorem card_of_subsingleton (a : α) [Subsingleton α] : @Fintype.card _ (ofSub
 
 @[simp]
 theorem card_unique [Unique α] [h : Fintype α] : Fintype.card α = 1 :=
-  Subsingleton.elimₓ (ofSubsingleton default) h ▸ card_of_subsingleton _
+  Subsingleton.elim (ofSubsingleton default) h ▸ card_of_subsingleton _
 
 -- see Note [lower instance priority]
 instance (priority := 100) ofIsEmpty [IsEmpty α] : Fintype α :=
@@ -1012,10 +1012,12 @@ theorem Finset.univ_sigma_univ {α : Type _} {β : α → Type _} [Fintype α] [
     ((univ : Finset α).Sigma fun a => (univ : Finset (β a))) = univ :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance (α β : Type _) [Fintype α] [Fintype β] : Fintype (α × β) :=
   ⟨univ ×ˢ univ, fun ⟨a, b⟩ => by
     simp ⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem Finset.univ_product_univ {α β : Type _} [Fintype α] [Fintype β] :
     (univ : Finset α) ×ˢ (univ : Finset β) = univ :=
@@ -1237,8 +1239,8 @@ theorem exists_ne_map_eq_of_card_lt (f : α → β) (h : Fintype.card β < Finty
 theorem card_eq_one_iff : card α = 1 ↔ ∃ x : α, ∀ y, y = x := by
   rw [← card_unit, card_eq] <;>
     exact
-      ⟨fun ⟨a⟩ => ⟨a.symm (), fun y => a.Injective (Subsingleton.elimₓ _ _)⟩, fun ⟨x, hx⟩ =>
-        ⟨⟨fun _ => (), fun _ => x, fun _ => (hx _).trans (hx _).symm, fun _ => Subsingleton.elimₓ _ _⟩⟩⟩
+      ⟨fun ⟨a⟩ => ⟨a.symm (), fun y => a.Injective (Subsingleton.elim _ _)⟩, fun ⟨x, hx⟩ =>
+        ⟨⟨fun _ => (), fun _ => x, fun _ => (hx _).trans (hx _).symm, fun _ => Subsingleton.elim _ _⟩⟩⟩
 
 theorem card_eq_zero_iff : card α = 0 ↔ IsEmpty α := by
   rw [card, Finset.card_eq_zero, univ_eq_empty_iff]
@@ -1810,6 +1812,7 @@ theorem mem_image_univ_iff_mem_range {α β : Type _} [Fintype α] [DecidableEq 
     b ∈ univ.Image f ↔ b ∈ Set.Range f := by
   simp
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- An auxiliary function for `quotient.fin_choice`.  Given a
 collection of setoids indexed by a type `ι`, a (finite) list `l` of
 indices, and a function that for each `i ∈ l` gives a term of the
@@ -1822,7 +1825,7 @@ def Quotientₓ.finChoiceAux {ι : Type _} [DecidableEq ι] {α : ι → Type _}
           (by
             infer_instance)
   | [], f => ⟦fun i => False.elim⟧
-  | i :: l, f => by
+  | i::l, f => by
     refine'
       Quotientₓ.liftOn₂ (f i (List.mem_cons_selfₓ _ _))
         (Quotientₓ.finChoiceAux l fun j h => f j (List.mem_cons_of_memₓ _ h)) _ _
@@ -1839,10 +1842,11 @@ def Quotientₓ.finChoiceAux {ι : Type _} [DecidableEq ι] {α : ι → Type _}
     · exact h₂ _ _
       
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Quotientₓ.fin_choice_aux_eq {ι : Type _} [DecidableEq ι] {α : ι → Type _} [S : ∀ i, Setoidₓ (α i)] :
     ∀ (l : List ι) (f : ∀ i ∈ l, α i), (Quotientₓ.finChoiceAux l fun i h => ⟦f i h⟧) = ⟦f⟧
   | [], f => Quotientₓ.sound fun i h => h.elim
-  | i :: l, f => by
+  | i::l, f => by
     simp [Quotientₓ.finChoiceAux, Quotientₓ.fin_choice_aux_eq l]
     refine' Quotientₓ.sound fun j h => _
     by_cases' e : j = i <;> simp [e]
@@ -1891,14 +1895,16 @@ open List Equivₓ Equivₓ.Perm
 
 variable [DecidableEq α] [DecidableEq β]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Given a list, produce a list of all permutations of its elements. -/
 def permsOfList : List α → List (Perm α)
   | [] => [1]
-  | a :: l => permsOfList l ++ l.bind fun b => (permsOfList l).map fun f => swap a b * f
+  | a::l => permsOfList l ++ l.bind fun b => (permsOfList l).map fun f => swap a b * f
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem length_perms_of_list : ∀ l : List α, length (permsOfList l) = l.length !
   | [] => rfl
-  | a :: l => by
+  | a::l => by
     rw [length_cons, Nat.factorial_succ]
     simp [permsOfList, length_bind, length_perms_of_list, Function.comp, Nat.succ_mul]
     cc
@@ -1930,12 +1936,13 @@ theorem mem_perms_of_list_of_mem {l : List α} {f : Perm α} (h : ∀ x, f x ≠
   · rw [← mul_assoc, mul_def (swap a (f a)) (swap a (f a)), swap_swap, ← perm.one_def, one_mulₓ]
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem mem_of_mem_perms_of_list : ∀ {l : List α} {f : Perm α}, f ∈ permsOfList l → ∀ {x}, f x ≠ x → x ∈ l
   | [], f, h => by
     have : f = 1 := by
       simpa [permsOfList] using h
     rw [this] <;> simp
-  | a :: l, f, h =>
+  | a::l, f, h =>
     (mem_appendₓ.1 h).elim (fun h x hx => mem_cons_of_memₓ _ (mem_of_mem_perms_of_list h hx)) fun h x hx =>
       let ⟨y, hy, hy'⟩ := List.mem_bindₓ.1 h
       let ⟨g, hg₁, hg₂⟩ := List.mem_mapₓ.1 hy'
@@ -1954,10 +1961,11 @@ theorem mem_of_mem_perms_of_list : ∀ {l : List α} {f : Perm α}, f ∈ permsO
 theorem mem_perms_of_list_iff {l : List α} {f : Perm α} : f ∈ permsOfList l ↔ ∀ {x}, f x ≠ x → x ∈ l :=
   ⟨mem_of_mem_perms_of_list, mem_perms_of_list_of_mem⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem nodup_perms_of_list : ∀ {l : List α} (hl : l.Nodup), (permsOfList l).Nodup
   | [], hl => by
     simp [permsOfList]
-  | a :: l, hl => by
+  | a::l, hl => by
     have hl' : l.Nodup := hl.of_cons
     have hln' : (permsOfList l).Nodup := nodup_perms_of_list hl'
     have hmeml : ∀ {f : Perm α}, f ∈ permsOfList l → f a = a := fun f hf =>
@@ -2019,7 +2027,7 @@ instance [Fintype α] [Fintype β] : Fintype (α ≃ β) :=
   else ⟨∅, fun x => False.elim (h (Fintype.card_eq.2 ⟨x.symm⟩))⟩
 
 theorem Fintype.card_perm [Fintype α] : Fintype.card (Perm α) = (Fintype.card α)! :=
-  Subsingleton.elimₓ (@fintypePerm α _ _) (@Equivₓ.fintype α α _ _ _ _) ▸ card_perms_of_finset _
+  Subsingleton.elim (@fintypePerm α _ _) (@Equivₓ.fintype α α _ _ _ _) ▸ card_perms_of_finset _
 
 theorem Fintype.card_equiv [Fintype α] [Fintype β] (e : α ≃ β) : Fintype.card (α ≃ β) = (Fintype.card α)! :=
   Fintype.card_congr (equivCongr (Equivₓ.refl α) e) ▸ Fintype.card_perm
@@ -2268,7 +2276,7 @@ namespace Infinite
 private noncomputable def nat_embedding_aux (α : Type _) [Infinite α] : ℕ → α
   | n =>
     letI := Classical.decEq α
-    Classical.some
+    Classical.choose
       (exists_not_mem_finset
         ((Multiset.range n).pmap (fun m (hm : m < n) => nat_embedding_aux m) fun _ => Multiset.mem_range.1).toFinset)
 
@@ -2279,7 +2287,7 @@ private theorem nat_embedding_aux_injective (α : Type _) [Infinite α] : Functi
   by_contra hmn
   have hmn : m < n := lt_of_le_of_neₓ hmlen hmn
   refine'
-    (Classical.some_spec
+    (Classical.choose_spec
         (exists_not_mem_finset
           ((Multiset.range n).pmap (fun m (hm : m < n) => nat_embedding_aux α m) fun _ =>
               Multiset.mem_range.1).toFinset))
@@ -2369,6 +2377,7 @@ theorem not_surjective_finite_infinite [Finite α] [Infinite β] (f : α → β)
 
 section Trunc
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- For `s : multiset α`, we can lift the existential statement that `∃ x, x ∈ s` to a `trunc α`.
 -/
 def truncOfMultisetExistsMem {α} (s : Multiset α) : (∃ x, x ∈ s) → Trunc α :=
@@ -2378,7 +2387,7 @@ def truncOfMultisetExistsMem {α} (s : Multiset α) : (∃ x, x ∈ s) → Trunc
       False.elim
         (by
           tauto)
-    | a :: _, _ => Trunc.mk a
+    | a::_, _ => Trunc.mk a
 
 /-- A `nonempty` `fintype` constructively contains an element.
 -/
@@ -2474,7 +2483,7 @@ theorem Finite.induction_empty_option {P : Type u → Prop} (of_equiv : ∀ {α 
 noncomputable def seqOfForallFinsetExistsAux {α : Type _} [DecidableEq α] (P : α → Prop) (r : α → α → Prop)
     (h : ∀ s : Finset α, ∃ y, (∀ x ∈ s, P x) → P y ∧ ∀ x ∈ s, r x y) : ℕ → α
   | n =>
-    Classical.some (h (Finset.image (fun i : Finₓ n => seqOfForallFinsetExistsAux i) (Finset.univ : Finset (Finₓ n))))
+    Classical.choose (h (Finset.image (fun i : Finₓ n => seqOfForallFinsetExistsAux i) (Finset.univ : Finset (Finₓ n))))
 
 /-- Induction principle to build a sequence, by adding one point at a time satisfying a given
 relation with respect to all the previously chosen points.
@@ -2502,14 +2511,14 @@ theorem exists_seq_of_forall_finset_exists {α : Type _} (P : α → Prop) (r : 
     have IH' : ∀ x : Finₓ n, P (f x) := fun n => IH n.1 n.2
     rw [hf, seqOfForallFinsetExistsAux]
     exact
-      (Classical.some_spec (h' (Finset.image (fun i : Finₓ n => f i) (Finset.univ : Finset (Finₓ n))))
+      (Classical.choose_spec (h' (Finset.image (fun i : Finₓ n => f i) (Finset.univ : Finset (Finₓ n))))
           (by
             simp [IH'])).1
   refine' ⟨f, A, fun m n hmn => _⟩
   nth_rw 1[hf]
   rw [seqOfForallFinsetExistsAux]
   apply
-    (Classical.some_spec (h' (Finset.image (fun i : Finₓ n => f i) (Finset.univ : Finset (Finₓ n))))
+    (Classical.choose_spec (h' (Finset.image (fun i : Finₓ n => f i) (Finset.univ : Finset (Finₓ n))))
         (by
           simp [A])).2
   exact Finset.mem_image.2 ⟨⟨m, hmn⟩, Finset.mem_univ _, rfl⟩

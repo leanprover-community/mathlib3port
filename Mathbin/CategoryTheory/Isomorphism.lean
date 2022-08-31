@@ -225,17 +225,17 @@ class IsIso (f : X ⟶ Y) : Prop where
 /-- The inverse of a morphism `f` when we have `[is_iso f]`.
 -/
 noncomputable def inv (f : X ⟶ Y) [I : IsIso f] :=
-  Classical.some I.1
+  Classical.choose I.1
 
 namespace IsIso
 
 @[simp, reassoc]
 theorem hom_inv_id (f : X ⟶ Y) [I : IsIso f] : f ≫ inv f = 𝟙 X :=
-  (Classical.some_spec I.1).left
+  (Classical.choose_spec I.1).left
 
 @[simp, reassoc]
 theorem inv_hom_id (f : X ⟶ Y) [I : IsIso f] : inv f ≫ f = 𝟙 Y :=
-  (Classical.some_spec I.1).right
+  (Classical.choose_spec I.1).right
 
 end IsIso
 

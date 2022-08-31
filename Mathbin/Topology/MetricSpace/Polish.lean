@@ -99,8 +99,9 @@ instance (priority := 100) t2_space (α : Type _) [TopologicalSpace α] [PolishS
   infer_instance
 
 /-- A countable product of Polish spaces is Polish. -/
-instance pi_countable {ι : Type _} [Encodable ι] {E : ι → Type _} [∀ i, TopologicalSpace (E i)]
+instance pi_countable {ι : Type _} [Countable ι] {E : ι → Type _} [∀ i, TopologicalSpace (E i)]
     [∀ i, PolishSpace (E i)] : PolishSpace (∀ i, E i) := by
+  cases nonempty_encodable ι
   letI := fun i => upgradePolishSpace (E i)
   letI : MetricSpace (∀ i, E i) := PiCountable.metricSpace
   infer_instance
@@ -110,7 +111,7 @@ instance nat_fun [TopologicalSpace α] [PolishSpace α] : PolishSpace (ℕ → �
   infer_instance
 
 /-- A countable disjoint union of Polish spaces is Polish. -/
-instance sigma {ι : Type _} [Encodable ι] {E : ι → Type _} [∀ n, TopologicalSpace (E n)] [∀ n, PolishSpace (E n)] :
+instance sigma {ι : Type _} [Countable ι] {E : ι → Type _} [∀ n, TopologicalSpace (E n)] [∀ n, PolishSpace (E n)] :
     PolishSpace (Σn, E n) := by
   letI := fun n => upgradePolishSpace (E n)
   letI : MetricSpace (Σn, E n) := sigma.metric_space
@@ -161,7 +162,7 @@ def AuxCopy (α : Type _) {ι : Type _} (i : ι) : Type _ :=
 
 /-- Given a Polish space, and countably many finer Polish topologies, there exists another Polish
 topology which is finer than all of them. -/
-theorem exists_polish_space_forall_le {ι : Type _} [Encodable ι] [t : TopologicalSpace α] [p : PolishSpace α]
+theorem exists_polish_space_forall_le {ι : Type _} [Countable ι] [t : TopologicalSpace α] [p : PolishSpace α]
     (m : ι → TopologicalSpace α) (hm : ∀ n, m n ≤ t) (h'm : ∀ n, @PolishSpace α (m n)) :
     ∃ t' : TopologicalSpace α, (∀ n, t' ≤ m n) ∧ t' ≤ t ∧ @PolishSpace α t' := by
   rcases is_empty_or_nonempty ι with (hι | hι)

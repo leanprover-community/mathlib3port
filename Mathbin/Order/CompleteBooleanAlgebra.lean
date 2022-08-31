@@ -94,11 +94,13 @@ theorem inf_bsupr_eq {f : ∀ i, κ i → α} (a : α) : (a⊓⨆ (i) (j), f i j
 theorem supr_inf_supr {ι ι' : Type _} {f : ι → α} {g : ι' → α} : ((⨆ i, f i)⊓⨆ j, g j) = ⨆ i : ι × ι', f i.1⊓g i.2 := by
   simp only [inf_supr_eq, supr_inf_eq, supr_prod]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem bsupr_inf_bsupr {ι ι' : Type _} {f : ι → α} {g : ι' → α} {s : Set ι} {t : Set ι'} :
     ((⨆ i ∈ s, f i)⊓⨆ j ∈ t, g j) = ⨆ p ∈ s ×ˢ t, f (p : ι × ι').1⊓g p.2 := by
   simp only [supr_subtype', supr_inf_supr]
   exact (Equivₓ.surjective _).supr_congr (Equivₓ.Set.prod s t).symm fun x => rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Sup_inf_Sup : sup s⊓sup t = ⨆ p ∈ s ×ˢ t, (p : α × α).1⊓p.2 := by
   simp only [Sup_eq_supr, bsupr_inf_bsupr]
 
@@ -178,10 +180,12 @@ theorem sup_binfi_eq {f : ∀ i, κ i → α} (a : α) : (a⊔⨅ (i) (j), f i j
 theorem infi_sup_infi {ι ι' : Type _} {f : ι → α} {g : ι' → α} : ((⨅ i, f i)⊔⨅ i, g i) = ⨅ i : ι × ι', f i.1⊔g i.2 :=
   @supr_inf_supr αᵒᵈ _ _ _ _ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem binfi_sup_binfi {ι ι' : Type _} {f : ι → α} {g : ι' → α} {s : Set ι} {t : Set ι'} :
     ((⨅ i ∈ s, f i)⊔⨅ j ∈ t, g j) = ⨅ p ∈ s ×ˢ t, f (p : ι × ι').1⊔g p.2 :=
   @bsupr_inf_bsupr αᵒᵈ _ _ _ _ _ _ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Inf_sup_Inf : inf s⊔inf t = ⨅ p ∈ s ×ˢ t, (p : α × α).1⊔p.2 :=
   @Sup_inf_Sup αᵒᵈ _ _ _
 

@@ -164,7 +164,7 @@ theorem integrable_on_singleton_iff {x : α} [MeasurableSingletonClass α] : Int
   simp
 
 @[simp]
-theorem integrable_on_finite_Union {s : Set β} (hs : s.Finite) {t : β → Set α} :
+theorem integrable_on_finite_bUnion {s : Set β} (hs : s.Finite) {t : β → Set α} :
     IntegrableOn f (⋃ i ∈ s, t i) μ ↔ ∀ i ∈ s, IntegrableOn f (t i) μ := by
   apply hs.induction_on
   · simp
@@ -176,11 +176,12 @@ theorem integrable_on_finite_Union {s : Set β} (hs : s.Finite) {t : β → Set 
 @[simp]
 theorem integrable_on_finset_Union {s : Finset β} {t : β → Set α} :
     IntegrableOn f (⋃ i ∈ s, t i) μ ↔ ∀ i ∈ s, IntegrableOn f (t i) μ :=
-  integrable_on_finite_Union s.finite_to_set
+  integrable_on_finite_bUnion s.finite_to_set
 
 @[simp]
-theorem integrable_on_fintype_Union [Fintype β] {t : β → Set α} :
+theorem integrable_on_finite_Union [Finite β] {t : β → Set α} :
     IntegrableOn f (⋃ i, t i) μ ↔ ∀ i, IntegrableOn f (t i) μ := by
+  cases nonempty_fintype β
   simpa using @integrable_on_finset_Union _ _ _ _ _ f μ Finset.univ t
 
 theorem IntegrableOn.add_measure (hμ : IntegrableOn f s μ) (hν : IntegrableOn f s ν) : IntegrableOn f s (μ + ν) := by

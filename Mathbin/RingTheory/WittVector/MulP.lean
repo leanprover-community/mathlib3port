@@ -28,7 +28,7 @@ namespace WittVector
 
 variable {p : ℕ} {R : Type _} [hp : Fact p.Prime] [CommRingₓ R]
 
--- mathport name: «expr𝕎»
+-- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
 -- type as `\bbW`

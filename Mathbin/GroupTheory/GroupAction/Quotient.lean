@@ -177,7 +177,7 @@ theorem stabilizer_quotient {G} [Groupₓ G] (H : Subgroup G) : MulAction.stabil
 
 variable (β)
 
--- mathport name: «exprΩ»
+-- mathport name: exprΩ
 local notation "Ω" => Quotientₓ <| orbitRel α β
 
 /-- **Class formula** : given `G` a group acting on `X` and `φ` a function mapping each orbit of `X`

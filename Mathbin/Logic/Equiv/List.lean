@@ -24,11 +24,13 @@ section List
 
 variable [Encodable α]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Explicit encoding function for `list α` -/
 def encodeList : List α → ℕ
   | [] => 0
-  | a :: l => succ (mkpair (encode a) (encode_list l))
+  | a::l => succ (mkpair (encode a) (encode_list l))
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation
 /-- Explicit decoding function for `list α` -/
 def decodeList : ℕ → Option (List α)
   | 0 => some []
@@ -36,7 +38,7 @@ def decodeList : ℕ → Option (List α)
     match unpair v, unpair_right_le v with
     | (v₁, v₂), h =>
       have : v₂ < succ v := lt_succ_of_leₓ h
-      (· :: ·) <$> decode α v₁ <*> decode_list v₂
+      (·::·) <$> decode α v₁ <*> decode_list v₂
 
 /-- If `α` is encodable, then so is `list α`. This uses the `mkpair` and `unpair` functions from
 `data.nat.pairing`. -/
@@ -52,8 +54,9 @@ instance _root_.list.countable {α : Type _} [Countable α] : Countable (List α
 theorem encode_list_nil : encode (@nil α) = 0 :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem encode_list_cons (a : α) (l : List α) : encode (a :: l) = succ (mkpair (encode a) (encode l)) :=
+theorem encode_list_cons (a : α) (l : List α) : encode (a::l) = succ (mkpair (encode a) (encode l)) :=
   rfl
 
 @[simp]
@@ -61,17 +64,19 @@ theorem decode_list_zero : decode (List α) 0 = some [] :=
   show decodeList 0 = some [] by
     rw [decode_list]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation
 @[simp]
 theorem decode_list_succ (v : ℕ) :
-    decode (List α) (succ v) = (· :: ·) <$> decode α v.unpair.1 <*> decode (List α) v.unpair.2 :=
+    decode (List α) (succ v) = (·::·) <$> decode α v.unpair.1 <*> decode (List α) v.unpair.2 :=
   show decodeList (succ v) = _ by
     cases' e : unpair v with v₁ v₂
     simp [decode_list, e]
     rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem length_le_encode : ∀ l : List α, length l ≤ encode l
   | [] => zero_le _
-  | a :: l => succ_le_succ <| (length_le_encode l).trans (right_le_mkpair _ _)
+  | a::l => succ_le_succ <| (length_le_encode l).trans (right_le_mkpair _ _)
 
 end List
 
@@ -216,6 +221,7 @@ open Encodable
 
 section List
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem denumerable_list_aux : ∀ n : ℕ, ∃ a ∈ @decodeList α _ n, encodeList a = n
   | 0 => by
     rw [decode_list] <;> exact ⟨_, rfl, rfl⟩
@@ -227,7 +233,7 @@ theorem denumerable_list_aux : ∀ n : ℕ, ∃ a ∈ @decodeList α _ n, encode
       denumerable_list_aux v₂ with
       ⟨a, h₁, h₂⟩
     rw [Option.mem_def] at h₁
-    use of_nat α v₁ :: a
+    use of_nat α v₁::a
     simp [decode_list, e, h₂, h₁, encode_list, mkpair_unpair' e]
 
 /-- If `α` is denumerable, then so is `list α`. -/
@@ -238,8 +244,9 @@ instance denumerableList : Denumerable (List α) :=
 theorem list_of_nat_zero : ofNat (List α) 0 = [] := by
   rw [← @encode_list_nil α, of_nat_encode]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem list_of_nat_succ (v : ℕ) : ofNat (List α) (succ v) = ofNat α v.unpair.1 :: ofNat (List α) v.unpair.2 :=
+theorem list_of_nat_succ (v : ℕ) : ofNat (List α) (succ v) = ofNat α v.unpair.1::ofNat (List α) v.unpair.2 :=
   of_nat_of_decode <|
     show decodeList (succ v) = _ by
       cases' e : unpair v with v₁ v₂
@@ -250,37 +257,46 @@ end List
 
 section Multiset
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Outputs the list of differences of the input list, that is
 `lower [a₁, a₂, ...] n = [a₁ - n, a₂ - a₁, ...]` -/
 def lower : List ℕ → ℕ → List ℕ
   | [], n => []
-  | m :: l, n => (m - n) :: lower l m
+  | m::l, n => (m - n)::lower l m
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Outputs the list of partial sums of the input list, that is
 `raise [a₁, a₂, ...] n = [n + a₁, n + a₁ + a₂, ...]` -/
 def raise : List ℕ → ℕ → List ℕ
   | [], n => []
-  | m :: l, n => (m + n) :: raise l (m + n)
+  | m::l, n => (m + n)::raise l (m + n)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem lower_raise : ∀ l n, lower (raise l n) n = l
   | [], n => rfl
-  | m :: l, n => by
+  | m::l, n => by
     rw [raise, lower, add_tsub_cancel_right, lower_raise]
 
-theorem raise_lower : ∀ {l n}, List.Sorted (· ≤ ·) (n :: l) → raise (lower l n) n = l
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem raise_lower : ∀ {l n}, List.Sorted (· ≤ ·) (n::l) → raise (lower l n) n = l
   | [], n, h => rfl
-  | m :: l, n, h => by
+  | m::l, n, h => by
     have : n ≤ m := List.rel_of_sorted_cons h _ (l.mem_cons_self _)
     simp [raise, lower, tsub_add_cancel_of_le this, raise_lower h.of_cons]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem raise_chain : ∀ l n, List.Chain (· ≤ ·) n (raise l n)
   | [], n => List.Chain.nil
-  | m :: l, n => List.Chain.cons (Nat.le_add_leftₓ _ _) (raise_chain _ _)
+  | m::l, n => List.Chain.cons (Nat.le_add_leftₓ _ _) (raise_chain _ _)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `raise l n` is an non-decreasing sequence. -/
 theorem raise_sorted : ∀ l n, List.Sorted (· ≤ ·) (raise l n)
   | [], n => List.sorted_nil
-  | m :: l, n => List.chain_iff_pairwise.1 (raise_chain _ _)
+  | m::l, n => List.chain_iff_pairwise.1 (raise_chain _ _)
 
 /-- If `α` is denumerable, then so is `multiset α`. Warning: this is *not* the same encoding as used
 in `multiset.encodable`. -/
@@ -297,39 +313,47 @@ end Multiset
 
 section Finset
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Outputs the list of differences minus one of the input list, that is
 `lower' [a₁, a₂, a₃, ...] n = [a₁ - n, a₂ - a₁ - 1, a₃ - a₂ - 1, ...]`. -/
 def lower' : List ℕ → ℕ → List ℕ
   | [], n => []
-  | m :: l, n => (m - n) :: lower' l (m + 1)
+  | m::l, n => (m - n)::lower' l (m + 1)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Outputs the list of partial sums plus one of the input list, that is
 `raise [a₁, a₂, a₃, ...] n = [n + a₁, n + a₁ + a₂ + 1, n + a₁ + a₂ + a₃ + 2, ...]`. Adding one each
 time ensures the elements are distinct. -/
 def raise' : List ℕ → ℕ → List ℕ
   | [], n => []
-  | m :: l, n => (m + n) :: raise' l (m + n + 1)
+  | m::l, n => (m + n)::raise' l (m + n + 1)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem lower_raise' : ∀ l n, lower' (raise' l n) n = l
   | [], n => rfl
-  | m :: l, n => by
+  | m::l, n => by
     simp [raise', lower', add_tsub_cancel_right, lower_raise']
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem raise_lower' : ∀ {l n}, (∀ m ∈ l, n ≤ m) → List.Sorted (· < ·) l → raise' (lower' l n) n = l
   | [], n, h₁, h₂ => rfl
-  | m :: l, n, h₁, h₂ => by
+  | m::l, n, h₁, h₂ => by
     have : n ≤ m := h₁ _ (l.mem_cons_self _)
     simp [raise', lower', tsub_add_cancel_of_le this,
       raise_lower' (List.rel_of_sorted_cons h₂ : ∀ a ∈ l, m < a) h₂.of_cons]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem raise'_chain : ∀ (l) {m n}, m < n → List.Chain (· < ·) m (raise' l n)
   | [], m, n, h => List.Chain.nil
-  | a :: l, m, n, h => List.Chain.cons (lt_of_lt_of_leₓ h (Nat.le_add_leftₓ _ _)) (raise'_chain _ (lt_succ_selfₓ _))
+  | a::l, m, n, h => List.Chain.cons (lt_of_lt_of_leₓ h (Nat.le_add_leftₓ _ _)) (raise'_chain _ (lt_succ_selfₓ _))
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `raise' l n` is a strictly increasing sequence. -/
 theorem raise'_sorted : ∀ l n, List.Sorted (· < ·) (raise' l n)
   | [], n => List.sorted_nil
-  | m :: l, n => List.chain_iff_pairwise.1 (raise'_chain _ (lt_succ_selfₓ _))
+  | m::l, n => List.chain_iff_pairwise.1 (raise'_chain _ (lt_succ_selfₓ _))
 
 /-- Makes `raise' l n` into a finset. Elements are distinct thanks to `raise'_sorted`. -/
 def raise'Finset (l : List ℕ) (n : ℕ) : Finset ℕ :=

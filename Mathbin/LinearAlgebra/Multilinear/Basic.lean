@@ -239,10 +239,10 @@ variable (R M₂)
 def ofSubsingleton [Subsingleton ι] (i' : ι) : MultilinearMap R (fun _ : ι => M₂) M₂ where
   toFun := Function.eval i'
   map_add' := fun m i x y => by
-    rw [Subsingleton.elimₓ i i']
+    rw [Subsingleton.elim i i']
     simp only [Function.eval, Function.update_same]
   map_smul' := fun m i r x => by
-    rw [Subsingleton.elimₓ i i']
+    rw [Subsingleton.elim i i']
     simp only [Function.eval, Function.update_same]
 
 variable {M₂}
@@ -866,7 +866,7 @@ def constLinearEquivOfIsEmpty [IsEmpty ι] : M₂ ≃ₗ[R] MultilinearMap R M�
   map_smul' := fun t x => rfl
   invFun := fun f => f 0
   left_inv := fun _ => rfl
-  right_inv := fun f => ext fun x => MultilinearMap.congr_arg f <| Subsingleton.elimₓ _ _
+  right_inv := fun f => ext fun x => MultilinearMap.congr_arg f <| Subsingleton.elim _ _
 
 end Module
 

@@ -24,7 +24,7 @@ instances for `Prop` and `fun`.
 * `with_<top/bot> α`: Equips `option α` with the order on `α` plus `none` as the top/bottom element.
 * `is_compl x y`: In a bounded lattice, predicate for "`x` is a complement of `y`". Note that in a
   non distributive lattice, an element can have several complements.
-* `is_complemented α`: Typeclass stating that any element of a lattice has a complement.
+* `complemented_lattice α`: Typeclass stating that any element of a lattice has a complement.
 
 ## Common lattices
 
@@ -88,7 +88,7 @@ noncomputable def topOrderOrNoTopOrder (α : Type _) [LE α] : PSum (OrderTop α
   · exact PSum.inr ⟨H⟩
     
   · push_neg  at H
-    exact PSum.inl ⟨_, Classical.some_spec H⟩
+    exact PSum.inl ⟨_, Classical.choose_spec H⟩
     
 
 section LE
@@ -232,7 +232,7 @@ noncomputable def botOrderOrNoBotOrder (α : Type _) [LE α] : PSum (OrderBot α
   · exact PSum.inr ⟨H⟩
     
   · push_neg  at H
-    exact PSum.inl ⟨_, Classical.some_spec H⟩
+    exact PSum.inl ⟨_, Classical.choose_spec H⟩
     
 
 section LE
@@ -630,7 +630,7 @@ theorem subsingleton_of_bot_eq_top (hα : (⊥ : α) = (⊤ : α)) : Subsingleto
   subsingleton_of_top_le_bot (ge_of_eqₓ hα)
 
 theorem subsingleton_iff_bot_eq_top : (⊥ : α) = (⊤ : α) ↔ Subsingleton α :=
-  ⟨subsingleton_of_bot_eq_top, fun h => Subsingleton.elimₓ ⊥ ⊤⟩
+  ⟨subsingleton_of_bot_eq_top, fun h => Subsingleton.elim ⊥ ⊤⟩
 
 end Subsingleton
 
@@ -2254,21 +2254,21 @@ end
 
 /-- A complemented bounded lattice is one where every element has a (not necessarily unique)
 complement. -/
-class IsComplemented (α) [Lattice α] [BoundedOrder α] : Prop where
+class ComplementedLattice (α) [Lattice α] [BoundedOrder α] : Prop where
   exists_is_compl : ∀ a : α, ∃ b : α, IsCompl a b
 
-export IsComplemented (exists_is_compl)
+export ComplementedLattice (exists_is_compl)
 
-namespace IsComplemented
+namespace ComplementedLattice
 
-variable [Lattice α] [BoundedOrder α] [IsComplemented α]
+variable [Lattice α] [BoundedOrder α] [ComplementedLattice α]
 
-instance : IsComplemented αᵒᵈ :=
+instance : ComplementedLattice αᵒᵈ :=
   ⟨fun a =>
     let ⟨b, hb⟩ := exists_is_compl (show α from a)
     ⟨b, hb.dual⟩⟩
 
-end IsComplemented
+end ComplementedLattice
 
 end IsCompl
 

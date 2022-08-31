@@ -62,7 +62,7 @@ instance (priority := 100) : PathConnectedSpace X :=
 
 /-- In a simply connected space, any two paths are homotopic -/
 theorem paths_homotopic {x y : X} (p₁ p₂ : Path x y) : Path.Homotopic p₁ p₂ := by
-  simpa using @Subsingleton.elimₓ (Path.Homotopic.Quotient x y) _ ⟦p₁⟧ ⟦p₂⟧
+  simpa using @Subsingleton.elim (Path.Homotopic.Quotient x y) _ ⟦p₁⟧ ⟦p₂⟧
 
 instance (priority := 100) of_contractible (Y : Type _) [TopologicalSpace Y] [ContractibleSpace Y] :
     SimplyConnectedSpace Y where equiv_unit :=

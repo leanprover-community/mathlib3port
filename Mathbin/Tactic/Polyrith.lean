@@ -460,18 +460,22 @@ unsafe def component_to_lc_format : expr × expr → tactic (Bool × format)
     let f ← add_parens cf
     Prod.mk ff <$> f!"{(← f)} * {← ex}"
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 private unsafe def intersperse_ops_aux : List (Bool × format) → format
   | [] => ""
-  | (ff, fmt) :: t => " +" ++ format.soft_break ++ fmt ++ intersperse_ops_aux t
-  | (tt, fmt) :: t => " -" ++ format.soft_break ++ fmt ++ intersperse_ops_aux t
+  | (ff, fmt)::t => " +" ++ format.soft_break ++ fmt ++ intersperse_ops_aux t
+  | (tt, fmt)::t => " -" ++ format.soft_break ++ fmt ++ intersperse_ops_aux t
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Given a `list (bool × format)`, this function uses `+` and `-` to conjoin the
 `format`s in the list. A `format` is negated if its corresponding `bool` is `tt`.
 -/
 unsafe def intersperse_ops : List (Bool × format) → format
   | [] => ""
-  | (ff, fmt) :: t => fmt ++ intersperse_ops_aux t
-  | (tt, fmt) :: t => "-" ++ fmt ++ intersperse_ops_aux t
+  | (ff, fmt)::t => fmt ++ intersperse_ops_aux t
+  | (tt, fmt)::t => "-" ++ fmt ++ intersperse_ops_aux t
 
 /-- This tactic repeats the process above for a `list` of pairs of `expr`s.-/
 unsafe def components_to_lc_format (components : List (expr × expr)) : tactic format :=
@@ -487,13 +491,14 @@ The following section contains code that allows lean to communicate with a pytho
 initialize
   registerTraceClass.1 `polyrith
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The first half of `tactic.polyrith` produces a list of arguments to be sent to Sage.
 -/
 unsafe def create_args (only_on : Bool) (hyps : List pexpr) : tactic (List expr × List expr × expr × List Stringₓ) := do
   let (m, p, R) ← parse_target_to_poly
   let (eq_names, m, polys) ← parse_ctx_to_polys R m only_on hyps
   let args := [toString R, toString m.length, (polys.map poly.mk_string).toString, p.mk_string]
-  return <| (eq_names, m, R, toString (is_trace_enabled_for `polyrith) :: args)
+  return <| (eq_names, m, R, toString (is_trace_enabled_for `polyrith)::args)
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument

@@ -54,6 +54,7 @@ theorem mem_map₂_iff : u ∈ map₂ m f g ↔ ∃ s t, s ∈ f ∧ t ∈ g ∧
 theorem image2_mem_map₂ (hs : s ∈ f) (ht : t ∈ g) : Image2 m s t ∈ map₂ m f g :=
   ⟨_, _, hs, ht, Subset.rfl⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem map_prod_eq_map₂ (m : α → β → γ) (f : Filter α) (g : Filter β) :
     Filter.map (fun p : α × β => m p.1 p.2) (f ×ᶠ g) = map₂ m f g := by
   ext s

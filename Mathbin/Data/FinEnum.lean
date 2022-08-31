@@ -95,6 +95,7 @@ instance punit : FinEnum PUnit :=
   ofList [PUnit.unit] fun x => by
     cases x <;> simp
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance prod {β} [FinEnum α] [FinEnum β] : FinEnum (α × β) :=
   ofList (toList α ×ˢ toList β) fun x => by
     cases x <;> simp
@@ -111,10 +112,11 @@ instance fin {n} : FinEnum (Finₓ n) :=
 instance Quotient.enum [FinEnum α] (s : Setoidₓ α) [DecidableRel ((· ≈ ·) : α → α → Prop)] : FinEnum (Quotientₓ s) :=
   FinEnum.ofSurjective Quotientₓ.mk fun x => Quotientₓ.induction_on x fun x => ⟨x, rfl⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- enumerate all finite sets of a given type -/
 def Finset.enum [DecidableEq α] : List α → List (Finset α)
   | [] => [∅]
-  | x :: xs => do
+  | x::xs => do
     let r ← finset.enum xs
     [r, {x} ∪ r]
 
@@ -198,9 +200,10 @@ instance (priority := 100) [FinEnum α] : Fintype α where
   complete := by
     intros <;> simp <;> exists Equivₓ α x <;> simp
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- For `pi.cons x xs y f` create a function where every `i ∈ xs` is mapped to `f i` and
 `x` is mapped to `y`  -/
-def Pi.cons [DecidableEq α] (x : α) (xs : List α) (y : β x) (f : ∀ a, a ∈ xs → β a) : ∀ a, a ∈ (x :: xs : List α) → β a
+def Pi.cons [DecidableEq α] (x : α) (xs : List α) (y : β x) (f : ∀ a, a ∈ xs → β a) : ∀ a, a ∈ (x::xs : List α) → β a
   | b, h =>
     if h' : b = x then
       cast
@@ -209,15 +212,17 @@ def Pi.cons [DecidableEq α] (x : α) (xs : List α) (y : β x) (f : ∀ a, a �
         y
     else f b (List.mem_of_ne_of_memₓ h' h)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Given `f` a function whose domain is `x :: xs`, produce a function whose domain
 is restricted to `xs`.  -/
-def Pi.tail {x : α} {xs : List α} (f : ∀ a, a ∈ (x :: xs : List α) → β a) : ∀ a, a ∈ xs → β a
+def Pi.tail {x : α} {xs : List α} (f : ∀ a, a ∈ (x::xs : List α) → β a) : ∀ a, a ∈ xs → β a
   | a, h => f a (List.mem_cons_of_memₓ _ h)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `pi xs f` creates the list of functions `g` such that, for `x ∈ xs`, `g x ∈ f x` -/
 def pi {β : α → Type max u v} [DecidableEq α] : ∀ xs : List α, (∀ a, List (β a)) → List (∀ a, a ∈ xs → β a)
   | [], fs => [fun x h => h.elim]
-  | x :: xs, fs => FinEnum.Pi.cons x xs <$> fs x <*> pi xs fs
+  | x::xs, fs => FinEnum.Pi.cons x xs <$> fs x <*> pi xs fs
 
 theorem mem_pi {β : α → Type max u v} [FinEnum α] [∀ a, FinEnum (β a)] (xs : List α) (f : ∀ a, a ∈ xs → β a) :
     f ∈ pi xs fun x => toList (β x) := by

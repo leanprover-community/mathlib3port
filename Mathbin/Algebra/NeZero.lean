@@ -3,7 +3,9 @@ Copyright (c) 2021 Eric Rodriguez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 -/
-import Mathbin.Data.Zmod.Basic
+import Mathbin.Data.Nat.Cast
+import Mathbin.Data.Pnat.Basic
+import Mathbin.Algebra.GroupPower.Ring
 
 /-!
 # `ne_zero` typeclass
@@ -33,6 +35,9 @@ theorem ne_zero_iff {R : Type _} [Zero R] {n : R} : NeZero n ↔ n ≠ 0 :=
 theorem not_ne_zero {R : Type _} [Zero R] {n : R} : ¬NeZero n ↔ n = 0 := by
   simp [ne_zero_iff]
 
+theorem eq_zero_or_ne_zero {α} [Zero α] (a : α) : a = 0 ∨ NeZero a :=
+  (eq_or_ne a 0).imp_right NeZero.mk
+
 namespace NeZero
 
 variable {R S M F : Type _} {r : R} {x y : M} {n p : ℕ} {a : ℕ+}
@@ -43,17 +48,38 @@ instance pnat : NeZero (a : ℕ) :=
 instance succ : NeZero (n + 1) :=
   ⟨n.succ_ne_zero⟩
 
+instance one (R) [MulZeroOneClassₓ R] [Nontrivial R] : NeZero (1 : R) :=
+  ⟨one_ne_zero⟩
+
+theorem pos (r : R) [CanonicallyOrderedAddMonoid R] [NeZero r] : 0 < r :=
+  (zero_le r).lt_of_ne <| NeZero.out.symm
+
 theorem of_pos [Preorderₓ M] [Zero M] (h : 0 < x) : NeZero x :=
   ⟨h.ne'⟩
 
 theorem of_gt [CanonicallyOrderedAddMonoid M] (h : x < y) : NeZero y :=
   of_pos <| pos_of_gt h
 
-instance char_zero [NeZero n] [AddMonoidWithOneₓ M] [CharZero M] : NeZero (n : M) :=
-  ⟨Nat.cast_ne_zero.mpr <| NeZero.ne n⟩
+-- 1 < p is still an often-used `fact`, due to `nat.prime` implying it, and it implying `nontrivial`
+-- on `zmod`'s ring structure. We cannot just set this to be any `x < y`, else that becomes a
+-- metavariable and it will hugely slow down typeclass inference.
+instance (priority := 10) of_gt' [CanonicallyOrderedAddMonoid M] [One M] [Fact (1 < y)] : NeZero y :=
+  of_gt <| Fact.out <| 1 < y
 
-instance (priority := 100) invertible [MulZeroOneClassₓ M] [Nontrivial M] [Invertible x] : NeZero x :=
-  ⟨nonzero_of_invertible x⟩
+instance bit0 [CanonicallyOrderedAddMonoid M] [NeZero x] : NeZero (bit0 x) :=
+  of_pos <| bit0_pos <| NeZero.pos x
+
+instance bit1 [CanonicallyOrderedCommSemiring M] [Nontrivial M] : NeZero (bit1 x) :=
+  ⟨mt (fun h => le_iff_exists_add'.2 ⟨_, h.symm⟩) CanonicallyOrderedCommSemiring.zero_lt_one.not_le⟩
+
+instance pow [MonoidWithZeroₓ M] [NoZeroDivisors M] [NeZero x] : NeZero (x ^ n) :=
+  ⟨pow_ne_zero n out⟩
+
+instance mul [Zero M] [Mul M] [NoZeroDivisors M] [NeZero x] [NeZero y] : NeZero (x * y) :=
+  ⟨mul_ne_zero out out⟩
+
+instance char_zero [NeZero n] [AddMonoidWithOneₓ M] [CharZero M] : NeZero (n : M) :=
+  ⟨Nat.cast_ne_zero.mpr out⟩
 
 instance coe_trans [Zero M] [Coe R S] [CoeTₓ S M] [h : NeZero (r : M)] : NeZero ((r : S) : M) :=
   ⟨h.out⟩
@@ -84,17 +110,7 @@ theorem nat_of_injective [NonAssocSemiringₓ M] [NonAssocSemiringₓ R] [h : Ne
       hf <| by
         simpa⟩
 
-theorem pos (r : R) [CanonicallyOrderedAddMonoid R] [NeZero r] : 0 < r :=
-  (zero_le r).lt_of_ne <| NeZero.out.symm
-
 variable (R M)
-
-theorem of_not_dvd [AddMonoidWithOneₓ M] [CharP M p] (h : ¬p ∣ n) : NeZero (n : M) :=
-  ⟨(not_iff_not.mpr <| CharP.cast_eq_zero_iff M p n).mpr h⟩
-
-theorem of_no_zero_smul_divisors (n : ℕ) [CommRingₓ R] [NeZero (n : R)] [Ringₓ M] [Nontrivial M] [Algebra R M]
-    [NoZeroSmulDivisors R M] : NeZero (n : M) :=
-  nat_of_injective <| NoZeroSmulDivisors.algebra_map_injective R M
 
 theorem of_ne_zero_coe [AddMonoidWithOneₓ R] [h : NeZero (n : R)] : NeZero n :=
   ⟨by
@@ -103,21 +119,8 @@ theorem of_ne_zero_coe [AddMonoidWithOneₓ R] [h : NeZero (n : R)] : NeZero n :
     · simpa using h
       ⟩
 
-theorem not_char_dvd [AddMonoidWithOneₓ R] (p : ℕ) [CharP R p] (k : ℕ) [h : NeZero (k : R)] : ¬p ∣ k := by
-  rwa [← not_iff_not.mpr <| CharP.cast_eq_zero_iff R p k, ← Ne.def, ← ne_zero_iff]
-
 theorem pos_of_ne_zero_coe [AddMonoidWithOneₓ R] [NeZero (n : R)] : 0 < n :=
   (NeZero.of_ne_zero_coe R).out.bot_lt
 
 end NeZero
-
-theorem eq_zero_or_ne_zero {α} [Zero α] (a : α) : a = 0 ∨ NeZero a :=
-  (eq_or_ne a 0).imp_right NeZero.mk
-
-namespace Zmod
-
-instance fintype' (n : ℕ) [NeZero n] : Fintype (Zmod n) :=
-  @Zmod.fintype n ⟨NeZero.pos n⟩
-
-end Zmod
 

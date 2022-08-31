@@ -42,11 +42,16 @@ variable (V : Type v) [Category.{w} V] [MonoidalCategory V]
 
 -- ./././Mathport/Syntax/Translate/Command.lean:337:24: unsupported: (notation) in structure
 -- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] »
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] »
 -- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] »
 -- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] »
 -- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] »
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] »
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- A `V`-category is a category enriched in a monoidal category `V`.
 
 Note that we do not assume that `V` is a concrete category,
@@ -66,7 +71,7 @@ class EnrichedCategory (C : Type u₁) where
     run_tac
       obviously
 
--- mathport name: «expr ⟶[ ] »
+-- mathport name: enriched_category.hom
 notation X " ⟶[" V "] " Y:10 => (EnrichedCategory.hom X Y : V)
 
 variable (V) {C : Type u₁} [EnrichedCategory V C]
@@ -76,20 +81,25 @@ variable (V) {C : Type u₁} [EnrichedCategory V C]
 def eId (X : C) : 𝟙_ V ⟶ X ⟶[V] X :=
   EnrichedCategory.id X
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The composition `V`-morphism for a `V`-enriched category.
 -/
 def eComp (X Y Z : C) : ((X ⟶[V] Y) ⊗ Y ⟶[V] Z) ⟶ X ⟶[V] Z :=
   EnrichedCategory.comp X Y Z
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- We don't just use `restate_axiom` here; that would leave `V` as an implicit argument.
 @[simp, reassoc]
 theorem e_id_comp (X Y : C) : (λ_ (X ⟶[V] Y)).inv ≫ (eId V X ⊗ 𝟙 _) ≫ eComp V X X Y = 𝟙 (X ⟶[V] Y) :=
   EnrichedCategory.id_comp X Y
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp, reassoc]
 theorem e_comp_id (X Y : C) : (ρ_ (X ⟶[V] Y)).inv ≫ (𝟙 _ ⊗ eId V Y) ≫ eComp V X Y Y = 𝟙 (X ⟶[V] Y) :=
   EnrichedCategory.comp_id X Y
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp, reassoc]
 theorem e_assoc (W X Y Z : C) :
     (α_ _ _ _).inv ≫ (eComp V W X Y ⊗ 𝟙 _) ≫ eComp V W Y Z = (𝟙 _ ⊗ eComp V X Y Z) ≫ eComp V W X Z :=
@@ -251,6 +261,7 @@ theorem forget_enrichment_id (X : ForgetEnrichment W C) :
 theorem forget_enrichment_id' (X : C) : ForgetEnrichment.homOf W (eId W X) = 𝟙 (ForgetEnrichment.of W X : C) :=
   (forget_enrichment_id W (ForgetEnrichment.of W X)).symm
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Composition in the "underlying" category of an enriched category. -/
 @[simp]
 theorem forget_enrichment_comp {X Y Z : ForgetEnrichment W C} (f : X ⟶ Y) (g : Y ⟶ Z) :
@@ -260,6 +271,7 @@ theorem forget_enrichment_comp {X Y Z : ForgetEnrichment W C} (f : X ⟶ Y) (g :
 
 end
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- A `V`-functor `F` between `V`-enriched categories
 has a `V`-morphism from `X ⟶[V] Y` to `F.obj X ⟶[V] F.obj Y`,
 satisfying the usual axioms.
@@ -375,6 +387,8 @@ coming from the ambient braiding on `V`.)
 -/
 
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The type of `A`-graded natural transformations between `V`-functors `F` and `G`.
 This is the type of morphisms in `V` from `A` to the `V`-object of natural transformations.
 -/

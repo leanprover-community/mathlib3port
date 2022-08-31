@@ -126,7 +126,7 @@ theorem nodup_antidiagonal_tuple (k n : ℕ) : List.Nodupₓ (antidiagonalTuple 
     
 
 theorem antidiagonal_tuple_zero_right : ∀ k, antidiagonalTuple k 0 = [0]
-  | 0 => (congr_arg fun x => [x]) <| Subsingleton.elimₓ _ _
+  | 0 => (congr_arg fun x => [x]) <| Subsingleton.elim _ _
   | k + 1 => by
     rw [antidiagonal_tuple, antidiagonal_zero, List.bind_singleton, antidiagonal_tuple_zero_right k, List.map_singleton]
     exact congr_arg (fun x => [x]) Matrix.cons_zero_zero

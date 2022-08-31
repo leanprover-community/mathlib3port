@@ -68,6 +68,7 @@ theorem nonarchimedean_of_emb (f : G →* H) (emb : OpenEmbedding f) : Nonarchim
       let ⟨V, hV⟩ := is_nonarchimedean (f ⁻¹' U) h₁
       ⟨{ Subgroup.map f V with is_open' := emb.IsOpenMap _ V.IsOpen }, Set.image_subset_iff.2 hV⟩ }
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- An open neighborhood of the identity in the cartesian product of two nonarchimedean groups
 contains the cartesian product of an open neighborhood in each group. -/
 @[to_additive NonarchimedeanAddGroup.prod_subset
@@ -84,6 +85,7 @@ theorem prod_subset {U} (hU : U ∈ nhds (1 : G × K)) :
   intro x hX y hY
   exact Set.Subset.trans (Set.prod_mono hV hW) h (Set.mem_sep hX hY)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- An open neighborhood of the identity in the cartesian square of a nonarchimedean group
 contains the cartesian square of an open neighborhood in the group. -/
 @[to_additive NonarchimedeanAddGroup.prod_self_subset

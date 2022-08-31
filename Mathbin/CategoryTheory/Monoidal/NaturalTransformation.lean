@@ -33,6 +33,8 @@ open MonoidalCategory
 variable {C : Type u₁} [Category.{v₁} C] [MonoidalCategory.{v₁} C] {D : Type u₂} [Category.{v₂} D]
   [MonoidalCategory.{v₂} D]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- A monoidal natural transformation is a natural transformation between (lax) monoidal functors
 additionally satisfying:
 `F.μ X Y ≫ app (X ⊗ Y) = (app X ⊗ app Y) ≫ G.μ X Y`
@@ -92,6 +94,8 @@ theorem comp_to_nat_trans {F G H : MonoidalFunctor C D} {α : F ⟶ G} {β : G �
 
 variable {E : Type u₃} [Category.{v₃} E] [MonoidalCategory.{v₃} E]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Horizontal composition of monoidal natural transformations.
 -/
 @[simps]
@@ -124,6 +128,8 @@ namespace MonoidalNatIso
 
 variable {F G : LaxMonoidalFunctor C D}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Construct a monoidal natural isomorphism from object level isomorphisms,
 and the monoidal naturality in the forward direction.
 -/
@@ -158,6 +164,7 @@ end MonoidalNatIso
 
 noncomputable section
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The unit of a monoidal equivalence can be upgraded to a monoidal natural transformation. -/
 @[simps]
 def monoidalUnit (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] :
@@ -184,6 +191,7 @@ instance (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] : IsIso (monoidal
     infer_instance
   exact monoidal_nat_iso.is_iso_of_is_iso_app _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The counit of a monoidal equivalence can be upgraded to a monoidal natural transformation. -/
 @[simps]
 def monoidalCounit (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] :

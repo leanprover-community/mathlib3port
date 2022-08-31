@@ -529,7 +529,7 @@ theorem ne_of_mem_sphere (h : y ∈ Sphere x ε) (hε : ε ≠ 0) : y ≠ x := b
   simpa [hε] using h
 
 theorem sphere_eq_empty_of_subsingleton [Subsingleton α] (hε : ε ≠ 0) : Sphere x ε = ∅ :=
-  Set.eq_empty_iff_forall_not_mem.mpr fun y hy => ne_of_mem_sphere hy hε (Subsingleton.elimₓ _ _)
+  Set.eq_empty_iff_forall_not_mem.mpr fun y hy => ne_of_mem_sphere hy hε (Subsingleton.elim _ _)
 
 theorem sphere_is_empty_of_subsingleton [Subsingleton α] (hε : ε ≠ 0) : IsEmpty (Sphere x ε) := by
   simp only [sphere_eq_empty_of_subsingleton hε, Set.hasEmptyc.Emptyc.is_empty α]
@@ -1600,10 +1600,12 @@ theorem dist_prod_same_left {x : α} {y₁ y₂ : β} : dist (x, y₁) (x, y₂)
 theorem dist_prod_same_right {x₁ x₂ : α} {y : β} : dist (x₁, y) (x₂, y) = dist x₁ x₂ := by
   simp [Prod.dist_eq, dist_nonneg]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem ball_prod_same (x : α) (y : β) (r : ℝ) : Ball x r ×ˢ Ball y r = Ball (x, y) r :=
   ext fun z => by
     simp [Prod.dist_eq]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem closed_ball_prod_same (x : α) (y : β) (r : ℝ) : ClosedBall x r ×ˢ ClosedBall y r = ClosedBall (x, y) r :=
   ext fun z => by
     simp [Prod.dist_eq]
@@ -1736,8 +1738,7 @@ be contained in `s`. -/
 theorem _root_.topological_space.is_separable.separable_space {s : Set α} (hs : IsSeparable s) : SeparableSpace s := by
   classical
   rcases eq_empty_or_nonempty s with (rfl | ⟨⟨x₀, x₀s⟩⟩)
-  · haveI : Encodable (∅ : Set α) := Fintype.toEncodable ↥∅
-    exact encodable.to_separable_space
+  · infer_instance
     
   rcases hs with ⟨c, hc, h'c⟩
   haveI : Encodable c := hc.to_encodable
@@ -2213,6 +2214,8 @@ theorem bounded_bUnion {I : Set β} {s : β → Set α} (H : I.Finite) : Bounded
     fun x I _ _ IH => by
     simp [or_imp_distrib, forall_and_distrib, IH]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 protected theorem Bounded.prod [PseudoMetricSpace β] {s : Set α} {t : Set β} (hs : Bounded s) (ht : Bounded t) :
     Bounded (s ×ˢ t) := by
   refine' bounded_iff_mem_bounded.mpr fun x hx => _
@@ -2772,18 +2775,18 @@ instance : MetricSpace Empty where
   dist := fun _ _ => 0
   dist_self := fun _ => rfl
   dist_comm := fun _ _ => rfl
-  eq_of_dist_eq_zero := fun _ _ _ => Subsingleton.elimₓ _ _
+  eq_of_dist_eq_zero := fun _ _ _ => Subsingleton.elim _ _
   dist_triangle := fun _ _ _ =>
     show (0 : ℝ) ≤ 0 + 0 by
       rw [add_zeroₓ]
   toUniformSpace := Empty.uniformSpace
-  uniformity_dist := Subsingleton.elimₓ _ _
+  uniformity_dist := Subsingleton.elim _ _
 
 instance : MetricSpace PUnit.{u + 1} where
   dist := fun _ _ => 0
   dist_self := fun _ => rfl
   dist_comm := fun _ _ => rfl
-  eq_of_dist_eq_zero := fun _ _ _ => Subsingleton.elimₓ _ _
+  eq_of_dist_eq_zero := fun _ _ _ => Subsingleton.elim _ _
   dist_triangle := fun _ _ _ =>
     show (0 : ℝ) ≤ 0 + 0 by
       rw [add_zeroₓ]

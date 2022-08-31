@@ -239,7 +239,7 @@ def substₓ : L.term α → (α → L.term β) → L.term β
 
 end Term
 
--- mathport name: «expr& »
+-- mathport name: language.term.var
 localized [FirstOrder] prefix:arg "&" => FirstOrder.Language.Term.var ∘ Sum.inr
 
 namespace Lhom
@@ -878,25 +878,25 @@ def onSentence (φ : L ≃ᴸ L') : L.Sentence ≃ L'.Sentence :=
 
 end Lequiv
 
--- mathport name: «expr =' »
+-- mathport name: term.bd_equal
 localized [FirstOrder] infixl:88 " =' " => FirstOrder.Language.Term.bdEqual
 
--- mathport name: «expr ⟹ »
+-- mathport name: bounded_formula.imp
 -- input \~- or \simeq
 localized [FirstOrder] infixr:62 " ⟹ " => FirstOrder.Language.BoundedFormula.imp
 
--- mathport name: «expr∀' »
+-- mathport name: bounded_formula.all
 -- input \==>
 localized [FirstOrder] prefix:110 "∀'" => FirstOrder.Language.BoundedFormula.all
 
--- mathport name: «expr∼ »
+-- mathport name: bounded_formula.not
 localized [FirstOrder] prefix:arg "∼" => FirstOrder.Language.BoundedFormula.not
 
--- mathport name: «expr ⇔ »
+-- mathport name: bounded_formula.iff
 -- input \~, the ASCII character ~ has too low precedence
 localized [FirstOrder] infixl:61 " ⇔ " => FirstOrder.Language.BoundedFormula.iff
 
--- mathport name: «expr∃' »
+-- mathport name: bounded_formula.ex
 -- input \<=>
 localized [FirstOrder] prefix:110 "∃'" => FirstOrder.Language.BoundedFormula.ex
 
@@ -976,6 +976,7 @@ def InfiniteTheory : L.Theory :=
 def NonemptyTheory : L.Theory :=
   {Sentence.cardGe L 1}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- A theory indicating that each of a set of constants is distinct. -/
 def DistinctConstantsTheory (s : Set α) : L[[α]].Theory :=
   (fun ab : α × α => ((L.con ab.1).term.equal (L.con ab.2).term).Not) '' (s ×ˢ s ∩ Set.Diagonal αᶜ)

@@ -66,6 +66,7 @@ def IsFinitelySatisfiable : Prop :=
 
 variable {T} {T' : L.Theory}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Model.is_satisfiable (M : Type w) [n : Nonempty M] [S : L.Structure M] [M ⊨ T] : T.IsSatisfiable :=
   ⟨((⊥ : Substructure _ (ModelCat.of T M)).elementarySkolem₁Reduct.toModel T).Shrink⟩
 
@@ -74,6 +75,7 @@ theorem IsSatisfiable.mono (h : T'.IsSatisfiable) (hs : T ⊆ T') : T.IsSatisfia
 
 theorem IsSatisfiable.is_finitely_satisfiable (h : T.IsSatisfiable) : T.IsFinitelySatisfiable := fun _ => h.mono
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The Compactness Theorem of first-order logic: A theory is satisfiable if and only if it is
 finitely satisfiable. -/
 theorem is_satisfiable_iff_is_finitely_satisfiable {T : L.Theory} : T.IsSatisfiable ↔ T.IsFinitelySatisfiable :=
@@ -103,6 +105,8 @@ theorem is_satisfiable_directed_union_iff {ι : Type _} [Nonempty ι] {T : ι �
   obtain ⟨i, hi⟩ := h.exists_mem_subset_of_finset_subset_bUnion hT0
   exact (h' i).mono hi
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem is_satisfiable_union_distinct_constants_theory_of_card_le (T : L.Theory) (s : Set α) (M : Type w') [Nonempty M]
     [L.Structure M] [M ⊨ T] (h : Cardinal.lift.{w'} (# s) ≤ Cardinal.lift.{w} (# M)) :
     ((L.lhomWithConstants α).OnTheory T ∪ L.DistinctConstantsTheory s).IsSatisfiable := by
@@ -120,6 +124,7 @@ theorem is_satisfiable_union_distinct_constants_theory_of_card_le (T : L.Theory)
           (ab.trans (Function.extend_applyₓ Subtype.coe_injective h.some default ⟨b, bs⟩)))
   exact model.is_satisfiable M
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem is_satisfiable_union_distinct_constants_theory_of_infinite (T : L.Theory) (s : Set α) (M : Type w')
     [L.Structure M] [M ⊨ T] [Infinite M] :
     ((L.lhomWithConstants α).OnTheory T ∪ L.DistinctConstantsTheory s).IsSatisfiable := by
@@ -134,6 +139,8 @@ theorem is_satisfiable_union_distinct_constants_theory_of_infinite (T : L.Theory
     exact set.monotone_image.comp fun _ _ => Finset.coe_subset.2
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Any theory with an infinite model has arbitrarily large models. -/
 theorem exists_large_model_of_infinite_model (T : L.Theory) (κ : Cardinal.{w}) (M : Type w') [L.Structure M] [M ⊨ T]
     [Infinite M] : ∃ N : ModelCat.{_, _, max u v w} T, Cardinal.lift.{max u v w} κ ≤ # N := by
@@ -170,6 +177,7 @@ theorem exists_elementary_embedding_card_eq_of_le (M : Type w') [L.Structure M] 
       lift_inj.1 (trans _ hS)⟩
   simp only [Equivₓ.bundled_induced_α, lift_mk_shrink']
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The Upward Löwenheim–Skolem Theorem: If `κ` is a cardinal greater than the cardinalities of `L`
 and an infinite `L`-structure `M`, then `M` has an elementary extension of cardinality `κ`. -/
 theorem exists_elementary_embedding_card_eq_of_ge (M : Type w') [L.Structure M] [iM : Infinite M] (κ : Cardinal.{w})
@@ -238,25 +246,33 @@ variable (T)
 def ModelsBoundedFormula (φ : L.BoundedFormula α n) : Prop :=
   ∀ (M : ModelCat.{u, v, max u v} T) (v : α → M) (xs : Finₓ n → M), φ.realize v xs
 
--- mathport name: «expr ⊨ »
-infixl:51 " ⊨ " => ModelsBoundedFormula
+-- mathport name: models_bounded_formula
+infixl:51
+  " ⊨ " =>-- input using \|= or \vDash, but not using \models
+  ModelsBoundedFormula
 
--- input using \|= or \vDash, but not using \models
 variable {T}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem models_formula_iff {φ : L.Formula α} : T ⊨ φ ↔ ∀ (M : ModelCat.{u, v, max u v} T) (v : α → M), φ.realize v :=
   forall_congrₓ fun M => forall_congrₓ fun v => Unique.forall_iff
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem models_sentence_iff {φ : L.Sentence} : T ⊨ φ ↔ ∀ M : ModelCat.{u, v, max u v} T, M ⊨ φ :=
   models_formula_iff.trans (forall_congrₓ fun M => Unique.forall_iff)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem models_sentence_of_mem {φ : L.Sentence} (h : φ ∈ T) : T ⊨ φ :=
   models_sentence_iff.2 fun _ => realize_sentence_of_mem T h
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- A theory is complete when it is satisfiable and models each sentence or its negation. -/
 def IsComplete (T : L.Theory) : Prop :=
   T.IsSatisfiable ∧ ∀ φ : L.Sentence, T ⊨ φ ∨ T ⊨ φ.Not
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Two (bounded) formulas are semantically equivalent over a theory `T` when they have the same
 interpretation in every model of `T`. (This is also known as logical equivalence, which also has a
 proof-theoretic definition.) -/

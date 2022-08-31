@@ -121,6 +121,52 @@ theorem nnnorm_star_mul_self {x : E} : ∥x⋆ * x∥₊ = ∥x∥₊ * ∥x∥�
 
 end NonUnital
 
+section ProdPi
+
+variable {ι R₁ R₂ : Type _} {R : ι → Type _}
+
+variable [NonUnitalNormedRing R₁] [StarRing R₁] [CstarRing R₁]
+
+variable [NonUnitalNormedRing R₂] [StarRing R₂] [CstarRing R₂]
+
+variable [∀ i, NonUnitalNormedRing (R i)] [∀ i, StarRing (R i)]
+
+/-- This instance exists to short circuit type class resolution because of problems with
+inference involving Π-types. -/
+instance _root_.pi.star_ring' : StarRing (∀ i, R i) :=
+  inferInstance
+
+variable [Fintype ι] [∀ i, CstarRing (R i)]
+
+instance _root_.prod.cstar_ring :
+    CstarRing (R₁ × R₂) where norm_star_mul_self := fun x => by
+    unfold norm
+    simp only [Prod.fst_mul, Prod.fst_star, Prod.snd_mul, Prod.snd_star, norm_star_mul_self, ← sq]
+    refine' le_antisymmₓ _ _
+    · refine' max_leₓ _ _ <;> rw [sq_le_sq, abs_of_nonneg (norm_nonneg _)]
+      exact (le_max_leftₓ _ _).trans (le_abs_self _)
+      exact (le_max_rightₓ _ _).trans (le_abs_self _)
+      
+    · rw [le_max_iff]
+      rcases le_totalₓ ∥x.fst∥ ∥x.snd∥ with (h | h) <;> simp [h]
+      
+
+instance _root_.pi.cstar_ring :
+    CstarRing (∀ i, R i) where norm_star_mul_self := fun x => by
+    simp only [norm, Pi.mul_apply, Pi.star_apply, nnnorm_star_mul_self, ← sq]
+    norm_cast
+    exact
+      (Finset.comp_sup_eq_sup_comp_of_is_total (fun x : Nnreal => x ^ 2)
+          (fun x y h => by
+            simpa only [sq] using mul_le_mul' h h)
+          (by
+            simp )).symm
+
+instance _root_.pi.cstar_ring' : CstarRing (ι → R₁) :=
+  Pi.cstar_ring
+
+end ProdPi
+
 section Unital
 
 variable [NormedRing E] [StarRing E] [CstarRing E]

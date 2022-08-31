@@ -39,7 +39,7 @@ structure BoundedContinuousFunction (α : Type u) (β : Type v) [TopologicalSpac
   ContinuousMap α β : Type max u v where
   map_bounded' : ∃ C, ∀ x y, dist (to_fun x) (to_fun y) ≤ C
 
--- mathport name: «expr →ᵇ »
+-- mathport name: bounded_continuous_function
 localized [BoundedContinuousFunction] infixr:25 " →ᵇ " => BoundedContinuousFunction
 
 /-- `bounded_continuous_map_class F α β` states that `F` is a type of bounded continuous maps.
@@ -653,15 +653,15 @@ instance :
       (α →ᵇ
         β) where add := fun f g =>
     BoundedContinuousFunction.mkOfBound (f.toContinuousMap + g.toContinuousMap)
-      (↑(HasLipschitzAdd.c β) * max (Classical.some f.Bounded) (Classical.some g.Bounded))
+      (↑(HasLipschitzAdd.c β) * max (Classical.choose f.Bounded) (Classical.choose g.Bounded))
       (by
         intro x y
         refine' le_transₓ (lipschitz_with_lipschitz_const_add ⟨f x, g x⟩ ⟨f y, g y⟩) _
         rw [Prod.dist_eq]
         refine' mul_le_mul_of_nonneg_left _ (HasLipschitzAdd.c β).coe_nonneg
         apply max_le_max
-        exact Classical.some_spec f.bounded x y
-        exact Classical.some_spec g.bounded x y)
+        exact Classical.choose_spec f.bounded x y
+        exact Classical.choose_spec g.bounded x y)
 
 @[simp]
 theorem coe_add : ⇑(f + g) = f + g :=

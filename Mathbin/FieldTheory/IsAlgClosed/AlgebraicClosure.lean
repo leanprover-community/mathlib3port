@@ -83,13 +83,13 @@ theorem span_eval_ne_top : spanEval k ≠ ⊤ := by
 
 /-- A random maximal ideal that contains `span_eval k` -/
 def maxIdeal : Ideal (MvPolynomial (MonicIrreducible k) k) :=
-  Classical.some <| Ideal.exists_le_maximal _ <| span_eval_ne_top k
+  Classical.choose <| Ideal.exists_le_maximal _ <| span_eval_ne_top k
 
 instance maxIdeal.is_maximal : (maxIdeal k).IsMaximal :=
-  (Classical.some_spec <| Ideal.exists_le_maximal _ <| span_eval_ne_top k).1
+  (Classical.choose_spec <| Ideal.exists_le_maximal _ <| span_eval_ne_top k).1
 
 theorem le_max_ideal : spanEval k ≤ maxIdeal k :=
-  (Classical.some_spec <| Ideal.exists_le_maximal _ <| span_eval_ne_top k).2
+  (Classical.choose_spec <| Ideal.exists_le_maximal _ <| span_eval_ne_top k).2
 
 /-- The first step of constructing `algebraic_closure`: adjoin a root of all monic polynomials -/
 def AdjoinMonic : Type u :=

@@ -40,91 +40,65 @@ variable {α : Type u} [LinearOrderₓ α] {a a₁ a₂ b b₁ b₂ c x : α}
 def Interval (a b : α) :=
   Icc (min a b) (max a b)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
+-- mathport name: set.interval
+localized [Interval] notation "[" a ", " b "]" => Set.Interval a b
+
 @[simp]
-theorem interval_of_le (h : a ≤ b) :
-    "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" = Icc a b := by
+theorem interval_of_le (h : a ≤ b) : [a, b] = Icc a b := by
   rw [interval, min_eq_leftₓ h, max_eq_rightₓ h]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[simp]
-theorem interval_of_ge (h : b ≤ a) :
-    "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" = Icc b a := by
+theorem interval_of_ge (h : b ≤ a) : [a, b] = Icc b a := by
   rw [interval, min_eq_rightₓ h, max_eq_leftₓ h]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem interval_swap (a b : α) :
-    "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" =
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem interval_swap (a b : α) : [a, b] = [b, a] := by
   rw [interval, interval, min_commₓ, max_commₓ]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem interval_of_lt (h : a < b) :
-    "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" = Icc a b :=
+theorem interval_of_lt (h : a < b) : [a, b] = Icc a b :=
   interval_of_le (le_of_ltₓ h)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem interval_of_gt (h : b < a) :
-    "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" = Icc b a :=
+theorem interval_of_gt (h : b < a) : [a, b] = Icc b a :=
   interval_of_ge (le_of_ltₓ h)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem interval_of_not_le (h : ¬a ≤ b) :
-    "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" = Icc b a :=
+theorem interval_of_not_le (h : ¬a ≤ b) : [a, b] = Icc b a :=
   interval_of_gt (lt_of_not_geₓ h)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem interval_of_not_ge (h : ¬b ≤ a) :
-    "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" = Icc a b :=
+theorem interval_of_not_ge (h : ¬b ≤ a) : [a, b] = Icc a b :=
   interval_of_lt (lt_of_not_geₓ h)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[simp]
-theorem interval_self : "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" = {a} :=
+theorem interval_self : [a, a] = {a} :=
   Set.ext <| by
     simp [le_antisymm_iffₓ, and_comm]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[simp]
-theorem nonempty_interval : Set.Nonempty "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem nonempty_interval : Set.Nonempty [a, b] := by
   simp only [interval, min_le_iff, le_max_iff, nonempty_Icc]
   left
   left
   rfl
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[simp]
-theorem left_mem_interval : a ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" := by
+theorem left_mem_interval : a ∈ [a, b] := by
   rw [interval, mem_Icc]
   exact ⟨min_le_leftₓ _ _, le_max_leftₓ _ _⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[simp]
-theorem right_mem_interval : b ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" := by
+theorem right_mem_interval : b ∈ [a, b] := by
   rw [interval_swap]
   exact left_mem_interval
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem Icc_subset_interval : Icc a b ⊆ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
+theorem Icc_subset_interval : Icc a b ⊆ [a, b] :=
   Icc_subset_Icc (min_le_leftₓ _ _) (le_max_rightₓ _ _)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem Icc_subset_interval' : Icc b a ⊆ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem Icc_subset_interval' : Icc b a ⊆ [a, b] := by
   rw [interval_swap]
   apply Icc_subset_interval
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem mem_interval_of_le (ha : a ≤ x) (hb : x ≤ b) :
-    x ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
+theorem mem_interval_of_le (ha : a ≤ x) (hb : x ≤ b) : x ∈ [a, b] :=
   Icc_subset_interval ⟨ha, hb⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem mem_interval_of_ge (hb : b ≤ x) (ha : x ≤ a) :
-    x ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
+theorem mem_interval_of_ge (hb : b ≤ x) (ha : x ≤ a) : x ∈ [a, b] :=
   Icc_subset_interval' ⟨hb, ha⟩
 
 theorem not_mem_interval_of_lt (ha : c < a) (hb : c < b) : c ∉ Interval a b :=
@@ -133,70 +107,27 @@ theorem not_mem_interval_of_lt (ha : c < a) (hb : c < b) : c ∉ Interval a b :=
 theorem not_mem_interval_of_gt (ha : a < c) (hb : b < c) : c ∉ Interval a b :=
   not_mem_Icc_of_gt <| max_lt_iff.mpr ⟨ha, hb⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem interval_subset_interval
-    (h₁ : a₁ ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")
-    (h₂ : b₁ ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") :
-    "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ⊆
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
+theorem interval_subset_interval (h₁ : a₁ ∈ [a₂, b₂]) (h₂ : b₁ ∈ [a₂, b₂]) : [a₁, b₁] ⊆ [a₂, b₂] :=
   Icc_subset_Icc (le_minₓ h₁.1 h₂.1) (max_leₓ h₁.2 h₂.2)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem interval_subset_Icc (ha : a₁ ∈ Icc a₂ b₂) (hb : b₁ ∈ Icc a₂ b₂) :
-    "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ⊆ Icc a₂ b₂ :=
+theorem interval_subset_Icc (ha : a₁ ∈ Icc a₂ b₂) (hb : b₁ ∈ Icc a₂ b₂) : [a₁, b₁] ⊆ Icc a₂ b₂ :=
   Icc_subset_Icc (le_minₓ ha.1 hb.1) (max_leₓ ha.2 hb.2)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem interval_subset_interval_iff_mem :
-    "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ⊆
-        "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ↔
-      a₁ ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ∧
-        b₁ ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
+theorem interval_subset_interval_iff_mem : [a₁, b₁] ⊆ [a₂, b₂] ↔ a₁ ∈ [a₂, b₂] ∧ b₁ ∈ [a₂, b₂] :=
   Iff.intro (fun h => ⟨h left_mem_interval, h right_mem_interval⟩) fun h => interval_subset_interval h.1 h.2
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem interval_subset_interval_iff_le :
-    "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ⊆
-        "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ↔
-      min a₂ b₂ ≤ min a₁ b₁ ∧ max a₁ b₁ ≤ max a₂ b₂ :=
-  by
+theorem interval_subset_interval_iff_le : [a₁, b₁] ⊆ [a₂, b₂] ↔ min a₂ b₂ ≤ min a₁ b₁ ∧ max a₁ b₁ ≤ max a₂ b₂ := by
   rw [interval, interval, Icc_subset_Icc_iff]
   exact min_le_max
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem interval_subset_interval_right
-    (h : x ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") :
-    "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ⊆
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
+theorem interval_subset_interval_right (h : x ∈ [a, b]) : [x, b] ⊆ [a, b] :=
   interval_subset_interval h right_mem_interval
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem interval_subset_interval_left
-    (h : x ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") :
-    "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ⊆
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
+theorem interval_subset_interval_left (h : x ∈ [a, b]) : [a, x] ⊆ [a, b] :=
   interval_subset_interval left_mem_interval h
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 /-- A sort of triangle inequality. -/
-theorem interval_subset_interval_union_interval :
-    "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ⊆
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ∪
-        "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem interval_subset_interval_union_interval : [a, c] ⊆ [a, b] ∪ [b, c] := by
   rintro x hx
   obtain hac | hac := le_totalₓ a c
   · rw [interval_of_le hac] at hx
@@ -214,10 +145,7 @@ theorem interval_subset_interval_union_interval :
       
     
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem bdd_below_bdd_above_iff_subset_interval (s : Set α) :
-    BddBelow s ∧ BddAbove s ↔ ∃ a b, s ⊆ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem bdd_below_bdd_above_iff_subset_interval (s : Set α) : BddBelow s ∧ BddAbove s ↔ ∃ a b, s ⊆ [a, b] := by
   rw [bdd_below_bdd_above_iff_subset_Icc]
   constructor
   · rintro ⟨a, b, h⟩
@@ -230,7 +158,7 @@ theorem bdd_below_bdd_above_iff_subset_interval (s : Set α) :
 /-- The open-closed interval with unordered bounds. -/
 def IntervalOc : α → α → Set α := fun a b => Ioc (min a b) (max a b)
 
--- mathport name: «exprΙ»
+-- mathport name: exprΙ
 -- Below is a capital iota
 localized [Interval] notation "Ι" => Set.IntervalOc
 
@@ -246,12 +174,7 @@ theorem interval_oc_eq_union : Ι a b = Ioc a b ∪ Ioc b a := by
 theorem forall_interval_oc_iff {P : α → Prop} : (∀ x ∈ Ι a b, P x) ↔ (∀ x ∈ Ioc a b, P x) ∧ ∀ x ∈ Ioc b a, P x := by
   simp only [interval_oc_eq_union, mem_union_eq, or_imp_distrib, forall_and_distrib]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem interval_oc_subset_interval_oc_of_interval_subset_interval {a b c d : α}
-    (h :
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ⊆
-        "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") :
+theorem interval_oc_subset_interval_oc_of_interval_subset_interval {a b c d : α} (h : [a, b] ⊆ [c, d]) :
     Ι a b ⊆ Ι c d :=
   Ioc_subset_Ioc (interval_subset_interval_iff_le.1 h).1 (interval_subset_interval_iff_le.1 h).2
 
@@ -272,125 +195,63 @@ section OrderedAddCommGroup
 
 variable {α : Type u} [LinearOrderedAddCommGroup α] (a b c x y : α)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[simp]
-theorem preimage_const_add_interval :
-    (fun x => a + x) ⁻¹' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" =
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem preimage_const_add_interval : (fun x => a + x) ⁻¹' [b, c] = [b - a, c - a] := by
   simp only [interval, preimage_const_add_Icc, min_sub_sub_right, max_sub_sub_right]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[simp]
-theorem preimage_add_const_interval :
-    (fun x => x + a) ⁻¹' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" =
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem preimage_add_const_interval : (fun x => x + a) ⁻¹' [b, c] = [b - a, c - a] := by
   simpa only [add_commₓ] using preimage_const_add_interval a b c
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[simp]
-theorem preimage_neg_interval :
-    -"./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" =
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem preimage_neg_interval : -[a, b] = [-a, -b] := by
   simp only [interval, preimage_neg_Icc, min_neg_neg, max_neg_neg]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[simp]
-theorem preimage_sub_const_interval :
-    (fun x => x - a) ⁻¹' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" =
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem preimage_sub_const_interval : (fun x => x - a) ⁻¹' [b, c] = [b + a, c + a] := by
   simp [sub_eq_add_neg]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[simp]
-theorem preimage_const_sub_interval :
-    (fun x => a - x) ⁻¹' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" =
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem preimage_const_sub_interval : (fun x => a - x) ⁻¹' [b, c] = [a - b, a - c] := by
   rw [interval, interval, preimage_const_sub_Icc]
   simp only [sub_eq_add_neg, min_add_add_left, max_add_add_left, min_neg_neg, max_neg_neg]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[simp]
-theorem image_const_add_interval :
-    (fun x => a + x) '' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" =
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem image_const_add_interval : (fun x => a + x) '' [b, c] = [a + b, a + c] := by
   simp [add_commₓ]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[simp]
-theorem image_add_const_interval :
-    (fun x => x + a) '' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" =
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem image_add_const_interval : (fun x => x + a) '' [b, c] = [b + a, c + a] := by
   simp
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[simp]
-theorem image_const_sub_interval :
-    (fun x => a - x) '' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" =
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem image_const_sub_interval : (fun x => a - x) '' [b, c] = [a - b, a - c] := by
   simp [sub_eq_add_neg, image_comp (fun x => a + x) fun x => -x]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[simp]
-theorem image_sub_const_interval :
-    (fun x => x - a) '' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" =
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem image_sub_const_interval : (fun x => x - a) '' [b, c] = [b - a, c - a] := by
   simp [sub_eq_add_neg, add_commₓ]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem image_neg_interval :
-    Neg.neg '' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" =
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem image_neg_interval : Neg.neg '' [a, b] = [-a, -b] := by
   simp
 
 variable {a b c x y}
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 /-- If `[x, y]` is a subinterval of `[a, b]`, then the distance between `x` and `y`
 is less than or equal to that of `a` and `b` -/
-theorem abs_sub_le_of_subinterval
-    (h :
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ⊆
-        "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") :
-    abs (y - x) ≤ abs (b - a) := by
+theorem abs_sub_le_of_subinterval (h : [x, y] ⊆ [a, b]) : abs (y - x) ≤ abs (b - a) := by
   rw [← max_sub_min_eq_abs, ← max_sub_min_eq_abs]
   rw [interval_subset_interval_iff_le] at h
   exact sub_le_sub h.2 h.1
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 /-- If `x ∈ [a, b]`, then the distance between `a` and `x` is less than or equal to
 that of `a` and `b`  -/
-theorem abs_sub_left_of_mem_interval
-    (h : x ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") :
-    abs (x - a) ≤ abs (b - a) :=
+theorem abs_sub_left_of_mem_interval (h : x ∈ [a, b]) : abs (x - a) ≤ abs (b - a) :=
   abs_sub_le_of_subinterval (interval_subset_interval_left h)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 /-- If `x ∈ [a, b]`, then the distance between `x` and `b` is less than or equal to
 that of `a` and `b`  -/
-theorem abs_sub_right_of_mem_interval
-    (h : x ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") :
-    abs (b - x) ≤ abs (b - a) :=
+theorem abs_sub_right_of_mem_interval (h : x ∈ [a, b]) : abs (b - x) ≤ abs (b - a) :=
   abs_sub_le_of_subinterval (interval_subset_interval_right h)
 
 end OrderedAddCommGroup
@@ -399,75 +260,40 @@ section LinearOrderedField
 
 variable {k : Type u} [LinearOrderedField k] {a : k}
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[simp]
-theorem preimage_mul_const_interval (ha : a ≠ 0) (b c : k) :
-    (fun x => x * a) ⁻¹' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" =
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
+theorem preimage_mul_const_interval (ha : a ≠ 0) (b c : k) : (fun x => x * a) ⁻¹' [b, c] = [b / a, c / a] :=
   (lt_or_gt_of_neₓ ha).elim
     (fun ha => by
       simp [interval, ha, ha.le, min_div_div_right_of_nonpos, max_div_div_right_of_nonpos])
     fun ha : 0 < a => by
     simp [interval, ha, ha.le, min_div_div_right, max_div_div_right]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[simp]
-theorem preimage_const_mul_interval (ha : a ≠ 0) (b c : k) :
-    (fun x => a * x) ⁻¹' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" =
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem preimage_const_mul_interval (ha : a ≠ 0) (b c : k) : (fun x => a * x) ⁻¹' [b, c] = [b / a, c / a] := by
   simp only [← preimage_mul_const_interval ha, mul_comm]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[simp]
-theorem preimage_div_const_interval (ha : a ≠ 0) (b c : k) :
-    (fun x => x / a) ⁻¹' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" =
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem preimage_div_const_interval (ha : a ≠ 0) (b c : k) : (fun x => x / a) ⁻¹' [b, c] = [b * a, c * a] := by
   simp only [div_eq_mul_inv, preimage_mul_const_interval (inv_ne_zero ha), inv_invₓ]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[simp]
-theorem image_mul_const_interval (a b c : k) :
-    (fun x => x * a) '' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" =
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
+theorem image_mul_const_interval (a b c : k) : (fun x => x * a) '' [b, c] = [b * a, c * a] :=
   if ha : a = 0 then by
     simp [ha]
   else
     calc
-      (fun x => x * a) '' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" =
-          (fun x => x * a⁻¹) ⁻¹' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-        (Units.mk0 a ha).mul_right.image_eq_preimage _
-      _ = (fun x => x / a) ⁻¹' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" := by
+      (fun x => x * a) '' [b, c] = (fun x => x * a⁻¹) ⁻¹' [b, c] := (Units.mk0 a ha).mul_right.image_eq_preimage _
+      _ = (fun x => x / a) ⁻¹' [b, c] := by
         simp only [div_eq_mul_inv]
-      _ = "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-        preimage_div_const_interval ha _ _
+      _ = [b * a, c * a] := preimage_div_const_interval ha _ _
       
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[simp]
-theorem image_const_mul_interval (a b c : k) :
-    (fun x => a * x) '' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" =
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem image_const_mul_interval (a b c : k) : (fun x => a * x) '' [b, c] = [a * b, a * c] := by
   simpa only [mul_comm] using image_mul_const_interval a b c
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[simp]
-theorem image_div_const_interval (a b c : k) :
-    (fun x => x / a) '' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" =
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem image_div_const_interval (a b c : k) : (fun x => x / a) '' [b, c] = [b / a, c / a] := by
   simp only [div_eq_mul_inv, image_mul_const_interval]
 
 end LinearOrderedField

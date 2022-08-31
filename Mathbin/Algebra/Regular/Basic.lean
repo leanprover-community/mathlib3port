@@ -162,7 +162,7 @@ theorem IsRegular.subsingleton (h : IsRegular (0 : R)) : Subsingleton R :=
 theorem is_left_regular_zero_iff_subsingleton : IsLeftRegular (0 : R) ↔ Subsingleton R := by
   refine' ⟨fun h => h.Subsingleton, _⟩
   intro H a b h
-  exact @Subsingleton.elimₓ _ H a b
+  exact @Subsingleton.elim _ H a b
 
 /-- In a non-trivial `mul_zero_class`, the `0` element is not left-regular. -/
 theorem not_is_left_regular_zero_iff : ¬IsLeftRegular (0 : R) ↔ Nontrivial R := by
@@ -174,7 +174,7 @@ theorem not_is_left_regular_zero_iff : ¬IsLeftRegular (0 : R) ↔ Nontrivial R 
 theorem is_right_regular_zero_iff_subsingleton : IsRightRegular (0 : R) ↔ Subsingleton R := by
   refine' ⟨fun h => h.Subsingleton, _⟩
   intro H a b h
-  exact @Subsingleton.elimₓ _ H a b
+  exact @Subsingleton.elim _ H a b
 
 /-- In a non-trivial `mul_zero_class`, the `0` element is not right-regular. -/
 theorem not_is_right_regular_zero_iff : ¬IsRightRegular (0 : R) ↔ Nontrivial R := by

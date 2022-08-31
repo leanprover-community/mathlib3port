@@ -443,7 +443,7 @@ def IsUnit [Monoidₓ M] (a : M) : Prop :=
 
 @[nontriviality, to_additive]
 theorem is_unit_of_subsingleton [Monoidₓ M] [Subsingleton M] (a : M) : IsUnit a :=
-  ⟨⟨a, a, Subsingleton.elimₓ _ _, Subsingleton.elimₓ _ _⟩, rfl⟩
+  ⟨⟨a, a, Subsingleton.elim _ _, Subsingleton.elim _ _⟩, rfl⟩
 
 attribute [nontriviality] is_add_unit_of_subsingleton
 
@@ -456,7 +456,7 @@ instance [Monoidₓ M] : CanLift M Mˣ where
 @[to_additive]
 instance [Monoidₓ M] [Subsingleton M] : Unique Mˣ where
   default := 1
-  uniq := fun a => Units.coe_eq_one.mp <| Subsingleton.elimₓ (a : M) 1
+  uniq := fun a => Units.coe_eq_one.mp <| Subsingleton.elim (a : M) 1
 
 @[simp, to_additive is_add_unit_add_unit]
 protected theorem Units.is_unit [Monoidₓ M] (u : Mˣ) : IsUnit (u : M) :=
@@ -540,7 +540,7 @@ variable [Monoidₓ M] {a b c : M}
 @[to_additive
       "The element of the additive group of additive units, corresponding to an element of\nan additive monoid which is an additive unit. When `α` is a `subtraction_monoid`, use\n`is_add_unit.add_unit'` instead."]
 protected noncomputable def unit (h : IsUnit a) : Mˣ :=
-  (Classical.some h).copy a (Classical.some_spec h).symm _ rfl
+  (Classical.choose h).copy a (Classical.choose_spec h).symm _ rfl
 
 @[simp, to_additive]
 theorem unit_of_coe_units {a : Mˣ} (h : IsUnit (a : M)) : h.Unit = a :=

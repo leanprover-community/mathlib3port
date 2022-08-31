@@ -362,8 +362,8 @@ instance : Archimedean ℚ :=
 /-- A linear ordered archimedean ring is a floor ring. This is not an `instance` because in some
 cases we have a computable `floor` function. -/
 noncomputable def Archimedean.floorRing (α) [LinearOrderedRing α] [Archimedean α] : FloorRing α :=
-  FloorRing.ofFloor α (fun a => Classical.some (exists_floor a)) fun z a =>
-    (Classical.some_spec (exists_floor a) z).symm
+  FloorRing.ofFloor α (fun a => Classical.choose (exists_floor a)) fun z a =>
+    (Classical.choose_spec (exists_floor a) z).symm
 
 /-- A linear ordered field that is a floor ring is archimedean. -/
 theorem FloorRing.archimedean (α) [LinearOrderedField α] [FloorRing α] : Archimedean α := by

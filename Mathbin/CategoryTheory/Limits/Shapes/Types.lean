@@ -260,15 +260,15 @@ The converse of `unique_of_type_equalizer`.
 noncomputable def typeEqualizerOfUnique (t : ∀ y : Y, g y = h y → ∃! x : X, f x = y) : IsLimit (Fork.ofι _ w) :=
   (Fork.IsLimit.mk' _) fun s => by
     refine' ⟨fun i => _, _, _⟩
-    · apply Classical.some (t (s.ι i) _)
+    · apply Classical.choose (t (s.ι i) _)
       apply congr_fun s.condition i
       
     · ext i
-      apply (Classical.some_spec (t (s.ι i) _)).1
+      apply (Classical.choose_spec (t (s.ι i) _)).1
       
     · intro m hm
       ext i
-      apply (Classical.some_spec (t (s.ι i) _)).2
+      apply (Classical.choose_spec (t (s.ι i) _)).2
       apply congr_fun hm i
       
 

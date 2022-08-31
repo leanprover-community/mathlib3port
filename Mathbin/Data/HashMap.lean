@@ -248,7 +248,7 @@ section
 parameter
   {n : ℕ+}{bkts : BucketArray α β n}{bidx : Finₓ n}{f : List (Σa, β a) → List (Σa, β a)}(u v1 v2 w : List (Σa, β a))
 
--- mathport name: «exprL»
+-- mathport name: exprL
 local notation "L" => Arrayₓ.read bkts bidx
 
 private def bkts' : BucketArray α β n :=

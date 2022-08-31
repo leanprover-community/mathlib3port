@@ -75,7 +75,7 @@ variable {G} (P : G.partition)
 
 /-- The part in the partition that `v` belongs to -/
 def PartOfVertex (v : V) : Set V :=
-  Classical.some (P.IsPartition.2 v)
+  Classical.choose (P.IsPartition.2 v)
 
 theorem part_of_vertex_mem (v : V) : P.PartOfVertex v ∈ P.parts := by
   obtain ⟨h, -⟩ := (P.is_partition.2 v).some_spec.1

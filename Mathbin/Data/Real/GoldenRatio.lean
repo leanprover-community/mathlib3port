@@ -33,10 +33,10 @@ def goldenRatio :=
 def goldenConj :=
   (1 - Real.sqrt 5) / 2
 
--- mathport name: «exprφ»
+-- mathport name: golden_ratio
 localized [Real] notation "φ" => goldenRatio
 
--- mathport name: «exprψ»
+-- mathport name: golden_conj
 localized [Real] notation "ψ" => goldenConj
 
 /-- The inverse of the golden ratio is the opposite of its conjugate. -/

@@ -90,7 +90,7 @@ theorem monic_X_add_C (x : R) : Monic (X + c x) :=
 theorem Monic.mul (hp : Monic p) (hq : Monic q) : Monic (p * q) :=
   if h0 : (0 : R) = 1 then
     haveI := subsingleton_of_zero_eq_one h0
-    Subsingleton.elimₓ _ _
+    Subsingleton.elim _ _
   else by
     have : leadingCoeff p * leadingCoeff q ≠ 0 := by
       simp [monic.def.1 hp, monic.def.1 hq, Ne.symm h0]

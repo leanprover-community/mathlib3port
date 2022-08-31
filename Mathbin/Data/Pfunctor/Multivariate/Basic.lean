@@ -233,6 +233,7 @@ def last : Pfunctor where
   A := P.A
   B := fun a => (P.B a).last
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- append arrows of a polynomial functor application -/
 @[reducible]
 def appendContents {α : Typevec n} {β : Type _} {a : P.A} (f' : P.drop.B a ⟹ α) (f : P.last.B a → β) :

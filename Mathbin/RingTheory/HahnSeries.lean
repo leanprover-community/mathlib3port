@@ -102,7 +102,7 @@ instance : Inhabited (HahnSeries Γ R) :=
   ⟨0⟩
 
 instance [Subsingleton R] : Subsingleton (HahnSeries Γ R) :=
-  ⟨fun a b => a.ext b (Subsingleton.elimₓ _ _)⟩
+  ⟨fun a b => a.ext b (Subsingleton.elim _ _)⟩
 
 @[simp]
 theorem zero_coeff {a : Γ} : (0 : HahnSeries Γ R).coeff a = 0 :=
@@ -227,7 +227,7 @@ variable {Γ' : Type _} [PartialOrderₓ Γ']
 
 /-- Extends the domain of a `hahn_series` by an `order_embedding`. -/
 def embDomain (f : Γ ↪o Γ') : HahnSeries Γ R → HahnSeries Γ' R := fun x =>
-  { coeff := fun b : Γ' => if h : b ∈ f '' x.Support then x.coeff (Classical.some h) else 0,
+  { coeff := fun b : Γ' => if h : b ∈ f '' x.Support then x.coeff (Classical.choose h) else 0,
     is_pwo_support' :=
       (x.is_pwo_support.image_of_monotone f.Monotone).mono fun b hb => by
         contrapose! hb
@@ -239,7 +239,7 @@ theorem emb_domain_coeff {f : Γ ↪o Γ'} {x : HahnSeries Γ R} {a : Γ} : (emb
   dsimp' only
   by_cases' ha : a ∈ x.support
   · rw [dif_pos (Set.mem_image_of_mem f ha)]
-    exact congr rfl (f.injective (Classical.some_spec (Set.mem_image_of_mem f ha)).2)
+    exact congr rfl (f.injective (Classical.choose_spec (Set.mem_image_of_mem f ha)).2)
     
   · rw [dif_neg, not_not.1 fun c => ha ((mem_support _ _).2 c)]
     contrapose! ha
@@ -543,7 +543,7 @@ theorem support_one [MulZeroOneClassₓ R] [Nontrivial R] : Support (1 : HahnSer
 @[simp]
 theorem order_one [MulZeroOneClassₓ R] : order (1 : HahnSeries Γ R) = 0 := by
   cases' subsingleton_or_nontrivial R with h h <;> haveI := h
-  · rw [Subsingleton.elimₓ (1 : HahnSeries Γ R) 0, order_zero]
+  · rw [Subsingleton.elim (1 : HahnSeries Γ R) 0, order_zero]
     
   · exact order_single one_ne_zero
     
@@ -1578,12 +1578,12 @@ variable [PartialOrderₓ Γ] [AddCommMonoidₓ R] {α β : Type _}
 
 /-- A summable family can be reindexed by an embedding without changing its sum. -/
 def embDomain (s : SummableFamily Γ R α) (f : α ↪ β) : SummableFamily Γ R β where
-  toFun := fun b => if h : b ∈ Set.Range f then s (Classical.some h) else 0
+  toFun := fun b => if h : b ∈ Set.Range f then s (Classical.choose h) else 0
   is_pwo_Union_support' := by
     refine' s.is_pwo_Union_support.mono (Set.Union_subset fun b g h => _)
     by_cases' hb : b ∈ Set.Range f
     · rw [dif_pos hb] at h
-      exact Set.mem_Union.2 ⟨Classical.some hb, h⟩
+      exact Set.mem_Union.2 ⟨Classical.choose hb, h⟩
       
     · contrapose! h
       simp [hb]
@@ -1594,7 +1594,7 @@ def embDomain (s : SummableFamily Γ R α) (f : α ↪ β) : SummableFamily Γ R
         intro b h
         by_cases' hb : b ∈ Set.Range f
         · simp only [Ne.def, Set.mem_set_of_eq, dif_pos hb] at h
-          exact ⟨Classical.some hb, h, Classical.some_spec hb⟩
+          exact ⟨Classical.choose hb, h, Classical.choose_spec hb⟩
           
         · contrapose! h
           simp only [Ne.def, Set.mem_set_of_eq, dif_neg hb, not_not, zero_coeff]
@@ -1602,13 +1602,13 @@ def embDomain (s : SummableFamily Γ R α) (f : α ↪ β) : SummableFamily Γ R
 
 variable (s : SummableFamily Γ R α) (f : α ↪ β) {a : α} {b : β}
 
-theorem emb_domain_apply : s.embDomain f b = if h : b ∈ Set.Range f then s (Classical.some h) else 0 :=
+theorem emb_domain_apply : s.embDomain f b = if h : b ∈ Set.Range f then s (Classical.choose h) else 0 :=
   rfl
 
 @[simp]
 theorem emb_domain_image : s.embDomain f (f a) = s a := by
   rw [emb_domain_apply, dif_pos (Set.mem_range_self a)]
-  exact congr rfl (f.injective (Classical.some_spec (Set.mem_range_self a)))
+  exact congr rfl (f.injective (Classical.choose_spec (Set.mem_range_self a)))
 
 @[simp]
 theorem emb_domain_notin_range (h : b ∉ Set.Range f) : s.embDomain f b = 0 := by

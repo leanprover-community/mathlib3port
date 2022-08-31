@@ -243,7 +243,7 @@ unsafe def tautology (cfg : tauto_cfg := {  }) : tactic Unit :=
 
 namespace Interactive
 
--- mathport name: «expr ?»
+-- mathport name: parser.optional
 local postfix:1024 "?" => optionalₓ
 
 setup_tactic_parser

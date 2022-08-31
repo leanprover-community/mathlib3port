@@ -131,7 +131,7 @@ protected theorem congr (hs : NullMeasurableSet s μ) (h : s =ᵐ[μ] t) : NullM
   let ⟨s', hm, hs'⟩ := hs
   ⟨s', hm, h.symm.trans hs'⟩
 
-protected theorem Union [Encodable ι] {s : ι → Set α} (h : ∀ i, NullMeasurableSet (s i) μ) :
+protected theorem Union {ι : Sort _} [Countable ι] {s : ι → Set α} (h : ∀ i, NullMeasurableSet (s i) μ) :
     NullMeasurableSet (⋃ i, s i) μ :=
   MeasurableSet.Union h
 
@@ -148,14 +148,7 @@ protected theorem sUnion {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s,
   rw [sUnion_eq_bUnion]
   exact MeasurableSet.bUnion hs h
 
-theorem Union_Prop {p : Prop} {f : p → Set α} (hf : ∀ i, NullMeasurableSet (f i) μ) : NullMeasurableSet (⋃ i, f i) μ :=
-  MeasurableSet.Union_Prop hf
-
-theorem Union_fintype [Fintype ι] {f : ι → Set α} (h : ∀ b, NullMeasurableSet (f b) μ) :
-    NullMeasurableSet (⋃ b, f b) μ :=
-  MeasurableSet.Union_fintype h
-
-protected theorem Inter [Encodable ι] {f : ι → Set α} (h : ∀ i, NullMeasurableSet (f i) μ) :
+protected theorem Inter {ι : Sort _} [Countable ι] {f : ι → Set α} (h : ∀ i, NullMeasurableSet (f i) μ) :
     NullMeasurableSet (⋂ i, f i) μ :=
   MeasurableSet.Inter h
 
@@ -166,13 +159,6 @@ protected theorem bInter {f : β → Set α} {s : Set β} (hs : s.Countable) (h 
 protected theorem sInter {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, NullMeasurableSet t μ) :
     NullMeasurableSet (⋂₀ s) μ :=
   MeasurableSet.sInter hs h
-
-theorem Inter_Prop {p : Prop} {f : p → Set α} (hf : ∀ b, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋂ b, f b) μ :=
-  MeasurableSet.Inter_Prop hf
-
-theorem Inter_fintype [Fintype ι] {f : ι → Set α} (h : ∀ b, NullMeasurableSet (f b) μ) :
-    NullMeasurableSet (⋂ b, f b) μ :=
-  MeasurableSet.Inter_fintype h
 
 @[simp]
 protected theorem union (hs : NullMeasurableSet s μ) (ht : NullMeasurableSet t μ) : NullMeasurableSet (s ∪ t) μ :=
@@ -235,7 +221,7 @@ end NullMeasurableSet
 /-- If `sᵢ` is a countable family of (null) measurable pairwise `μ`-a.e. disjoint sets, then there
 exists a subordinate family `tᵢ ⊆ sᵢ` of measurable pairwise disjoint sets such that
 `tᵢ =ᵐ[μ] sᵢ`. -/
-theorem exists_subordinate_pairwise_disjoint [Encodable ι] {s : ι → Set α} (h : ∀ i, NullMeasurableSet (s i) μ)
+theorem exists_subordinate_pairwise_disjoint [Countable ι] {s : ι → Set α} (h : ∀ i, NullMeasurableSet (s i) μ)
     (hd : Pairwise (AeDisjoint μ on s)) :
     ∃ t : ι → Set α, (∀ i, t i ⊆ s i) ∧ (∀ i, s i =ᵐ[μ] t i) ∧ (∀ i, MeasurableSet (t i)) ∧ Pairwise (Disjoint on t) :=
   by
@@ -246,7 +232,7 @@ theorem exists_subordinate_pairwise_disjoint [Encodable ι] {s : ι → Set α} 
       (ht_eq _).symm.trans (diff_null_ae_eq_self (hu₀ i)).symm, fun i => (htm i).diff (hum i),
       hud.mono fun i j h => h.mono (diff_subset_diff_left (ht_sub i)) (diff_subset_diff_left (ht_sub j))⟩
 
-theorem measure_Union {m0 : MeasurableSpace α} {μ : Measure α} [Encodable ι] {f : ι → Set α}
+theorem measure_Union {m0 : MeasurableSpace α} {μ : Measure α} [Countable ι] {f : ι → Set α}
     (hn : Pairwise (Disjoint on f)) (h : ∀ i, MeasurableSet (f i)) : μ (⋃ i, f i) = ∑' i, μ (f i) := by
   rw [measure_eq_extend (MeasurableSet.Union h), extend_Union MeasurableSet.empty _ MeasurableSet.Union _ hn h]
   · simp [measure_eq_extend, h]
@@ -256,7 +242,7 @@ theorem measure_Union {m0 : MeasurableSpace α} {μ : Measure α} [Encodable ι]
   · exact μ.m_Union
     
 
-theorem measure_Union₀ [Encodable ι] {f : ι → Set α} (hd : Pairwise (AeDisjoint μ on f))
+theorem measure_Union₀ [Countable ι] {f : ι → Set α} (hd : Pairwise (AeDisjoint μ on f))
     (h : ∀ i, NullMeasurableSet (f i) μ) : μ (⋃ i, f i) = ∑' i, μ (f i) := by
   rcases exists_subordinate_pairwise_disjoint h hd with ⟨t, ht_sub, ht_eq, htm, htd⟩
   calc

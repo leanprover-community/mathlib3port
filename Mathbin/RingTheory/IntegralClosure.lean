@@ -211,6 +211,7 @@ theorem is_noetherian_adjoin_finset [IsNoetherianRing R] (s : Finset A) (hs : �
     IsNoetherian R (Algebra.adjoin R (↑s : Set A)) :=
   is_noetherian_of_fg_of_noetherian _ (fg_adjoin_of_finite s.finite_to_set hs)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- If `S` is a sub-`R`-algebra of `A` and `S` is finitely-generated as an `R`-module,
   then all elements of `S` are integral over `R`. -/
 theorem is_integral_of_mem_of_fg (S : Subalgebra R A) (HS : S.toSubmodule.Fg) (x : A) (hx : x ∈ S) : IsIntegral R x :=
@@ -689,11 +690,11 @@ variable {R} (A) {B}
 
 /-- If `x : B` is integral over `R`, then it is an element of the integral closure of `R` in `B`. -/
 noncomputable def mk' (x : B) (hx : IsIntegral R x) : A :=
-  Classical.some (is_integral_iff.mp hx)
+  Classical.choose (is_integral_iff.mp hx)
 
 @[simp]
 theorem algebra_map_mk' (x : B) (hx : IsIntegral R x) : algebraMap A B (mk' A x hx) = x :=
-  Classical.some_spec (is_integral_iff.mp hx)
+  Classical.choose_spec (is_integral_iff.mp hx)
 
 @[simp]
 theorem mk'_one (h : IsIntegral R (1 : B) := is_integral_one) : mk' A 1 h = 1 :=

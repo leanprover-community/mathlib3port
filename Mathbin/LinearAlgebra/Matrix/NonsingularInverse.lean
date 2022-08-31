@@ -136,8 +136,8 @@ equivalence, although both sides of the equiv are subsingleton anyway. -/
 def invertibleEquivDetInvertible : Invertible A ≃ Invertible A.det where
   toFun := @detInvertibleOfInvertible _ _ _ _ _ A
   invFun := @invertibleOfDetInvertible _ _ _ _ _ A
-  left_inv := fun _ => Subsingleton.elimₓ _ _
-  right_inv := fun _ => Subsingleton.elimₓ _ _
+  left_inv := fun _ => Subsingleton.elim _ _
+  right_inv := fun _ => Subsingleton.elim _ _
 
 variable {A B}
 
@@ -470,7 +470,7 @@ theorem inv_of_diagonal_eq {α} [Semiringₓ α] (v : n → α) [Invertible v] [
     ⅟ (diagonalₓ v) = diagonalₓ (⅟ v) := by
   letI := diagonal_invertible v
   convert (rfl : ⅟ (diagonal v) = _)
-  convert Subsingleton.elimₓ _ _
+  convert Subsingleton.elim _ _
   apply Invertible.subsingleton
 
 /-- `v` is invertible if `diagonal v` is -/
@@ -497,8 +497,8 @@ equivalence, although both sides of the equiv are subsingleton anyway. -/
 def diagonalInvertibleEquivInvertible (v : n → α) : Invertible (diagonalₓ v) ≃ Invertible v where
   toFun := @invertibleOfDiagonalInvertible _ _ _ _ _ _
   invFun := @diagonalInvertible _ _ _ _ _ _
-  left_inv := fun _ => Subsingleton.elimₓ _ _
-  right_inv := fun _ => Subsingleton.elimₓ _ _
+  left_inv := fun _ => Subsingleton.elim _ _
+  right_inv := fun _ => Subsingleton.elim _ _
 
 /-- When lowered to a prop, `matrix.diagonal_invertible_equiv_invertible` forms an `iff`. -/
 @[simp]
@@ -529,11 +529,12 @@ theorem mul_inv_rev (A B : Matrix n n α) : (A ⬝ B)⁻¹ = B⁻¹ ⬝ A⁻¹ :
   simp only [inv_def]
   rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul, det_mul, adjugate_mul_distrib, Ring.mul_inverse_rev]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- A version of `list.prod_inv_reverse` for `matrix.has_inv`. -/
 theorem list_prod_inv_reverse : ∀ l : List (Matrix n n α), l.Prod⁻¹ = (l.reverse.map Inv.inv).Prod
   | [] => by
     rw [List.reverse_nil, List.map_nil, List.prod_nil, inv_one]
-  | A :: Xs => by
+  | A::Xs => by
     rw [List.reverse_cons', List.map_concat, List.prod_concat, List.prod_cons, Matrix.mul_eq_mul, Matrix.mul_eq_mul,
       mul_inv_rev, list_prod_inv_reverse]
 

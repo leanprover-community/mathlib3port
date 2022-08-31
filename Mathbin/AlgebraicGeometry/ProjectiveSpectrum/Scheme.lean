@@ -78,7 +78,7 @@ open CategoryTheory Opposite
 
 open ProjectiveSpectrum.StructureSheaf
 
--- mathport name: «exprProj»
+-- mathport name: exprProj
 local notation "Proj" => Proj.toLocallyRingedSpace 𝒜
 
 -- mathport name: «exprProj.T»
@@ -227,7 +227,7 @@ theorem MemCarrier.clear_denominator [DecidableEq (Away f)] {z : A⁰_f_deg} (hz
     ∃ (c : algebraMap A (Away f) '' x.1.asHomogeneousIdeal →₀ Away f)(N : ℕ)(acd : ∀ y ∈ c.Support.Image c, A),
       f ^ N • ↑z =
         algebraMap A (Away f)
-          (∑ i in c.Support.attach, acd (c i) (Finset.mem_image.mpr ⟨i, ⟨i.2, rfl⟩⟩) * Classical.some i.1.2) :=
+          (∑ i in c.Support.attach, acd (c i) (Finset.mem_image.mpr ⟨i, ⟨i.2, rfl⟩⟩) * Classical.choose i.1.2) :=
   by
   rw [mem_carrier_iff, ← submodule_span_eq, Finsupp.span_eq_range_total, LinearMap.mem_range] at hz
   rcases hz with ⟨c, eq1⟩
@@ -242,7 +242,7 @@ theorem MemCarrier.clear_denominator [DecidableEq (Away f)] {z : A⁰_f_deg} (hz
   rw [← eq1, smul_sum, map_sum, ← sum_attach]
   congr 1
   ext i
-  rw [_root_.map_mul, hacd, (Classical.some_spec i.1.2).2, smul_eq_mul, smul_mul_assoc]
+  rw [_root_.map_mul, hacd, (Classical.choose_spec i.1.2).2, smul_eq_mul, smul_mul_assoc]
   rfl
 
 theorem disjoint : Disjoint (x.1.asHomogeneousIdeal.toIdeal : Set A) (Submonoid.powers f : Set A) := by
@@ -279,7 +279,7 @@ theorem carrier_ne_top : carrier f_deg x ≠ ⊤ := by
       ⟨N + M, by
         rw [pow_addₓ]⟩⟩
   generalize_proofs h
-  exact (Classical.some_spec h).1
+  exact (Classical.choose_spec h).1
 
 /-- The function between the basic open set `D(f)` in `Proj` to the corresponding basic open set in
 `Spec A⁰_f`. This is bundled into a continuous map in `Top_component.forward`.
@@ -323,7 +323,7 @@ def toFun (x : Proj.T| pbo f) : Spec.T A⁰_f_deg :=
     · rw [mul_comm _ (f ^ N), eq1]
       refine' mul_mem_right _ _ (mul_mem_right _ _ (sum_mem _ fun i hi => mul_mem_left _ _ _))
       generalize_proofs h
-      exact (Classical.some_spec h).1
+      exact (Classical.choose_spec h).1
       ⟩
 
 /-
@@ -373,7 +373,7 @@ theorem preimage_eq (a : A) (n : ℕ) (a_mem_degree_zero : (mk a ⟨f ^ n, ⟨n,
     · rw [mul_comm _ (f ^ N), eq1]
       refine' mul_mem_right _ _ (mul_mem_right _ _ (sum_mem _ fun i hi => mul_mem_left _ _ _))
       generalize_proofs h
-      exact (Classical.some_spec h).1
+      exact (Classical.choose_spec h).1
       
     
 

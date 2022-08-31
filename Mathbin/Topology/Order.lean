@@ -606,10 +606,10 @@ theorem nhds_top {a : α} : @nhds α ⊤ a = ⊤ :=
 theorem is_open_sup {t₁ t₂ : TopologicalSpace α} {s : Set α} : @IsOpen α (t₁⊔t₂) s ↔ @IsOpen α t₁ s ∧ @IsOpen α t₂ s :=
   Iff.rfl
 
--- mathport name: «exprcont»
+-- mathport name: exprcont
 local notation "cont" => @Continuous _ _
 
--- mathport name: «exprtspace»
+-- mathport name: exprtspace
 local notation "tspace" => TopologicalSpace
 
 open TopologicalSpace

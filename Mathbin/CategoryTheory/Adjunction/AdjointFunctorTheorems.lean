@@ -5,11 +5,13 @@ Authors: Bhavik Mehta
 -/
 import Mathbin.CategoryTheory.Adjunction.Basic
 import Mathbin.CategoryTheory.Adjunction.Comma
+import Mathbin.CategoryTheory.Generator
 import Mathbin.CategoryTheory.Limits.Constructions.WeaklyInitial
 import Mathbin.CategoryTheory.Limits.Preserves.Basic
 import Mathbin.CategoryTheory.Limits.Creates
 import Mathbin.CategoryTheory.Limits.Comma
 import Mathbin.CategoryTheory.Punit
+import Mathbin.CategoryTheory.Subobject.Comma
 
 /-!
 # Adjoint functor theorem
@@ -26,10 +28,15 @@ We define the *solution set condition* for the functor `G : D ⥤ C` to mean, fo
 `A : C`, there is a set-indexed family ${f_i : A ⟶ G (B_i)}$ such that any morphism `A ⟶ G X`
 factors through one of the `f_i`.
 
+This file also proves the special adjoint functor theorem, in the form:
+* If `G : D ⥤ C` preserves limits and `D` is complete, well-powered and has a small coseparating
+  set, then `G` has a left adjoint: `is_right_adjoint_of_preserves_limits_of_is_coseparating`
+
+
 -/
 
 
-universe v u
+universe v u u'
 
 namespace CategoryTheory
 
@@ -52,9 +59,9 @@ def SolutionSetCondition {D : Type u} [Category.{v} D] (G : D ⥤ C) : Prop :=
     ∃ (ι : Type v)(B : ι → D)(f : ∀ i : ι, A ⟶ G.obj (B i)),
       ∀ (X) (h : A ⟶ G.obj X), ∃ (i : ι)(g : B i ⟶ X), f i ≫ G.map g = h
 
-variable {D : Type u} [Category.{v} D]
-
 section GeneralAdjointFunctorTheorem
+
+variable {D : Type u} [Category.{v} D]
 
 variable (G : D ⥤ C)
 
@@ -84,6 +91,30 @@ noncomputable def isRightAdjointOfPreservesLimitsOfSolutionSetCondition [HasLimi
   apply has_initial_of_weakly_initial_and_has_wide_equalizers hT
 
 end GeneralAdjointFunctorTheorem
+
+section SpecialAdjointFunctorTheorem
+
+variable {D : Type u'} [Category.{v} D]
+
+/-- The special adjoint functor theorem: if `G : D ⥤ C` preserves limits and `D` is complete,
+well-powered and has a small coseparating set, then `G` has a left adjoint.
+-/
+noncomputable def isRightAdjointOfPreservesLimitsOfIsCoseparating [HasLimits D] [WellPowered D] {𝒢 : Set D}
+    [Small.{v} 𝒢] (h𝒢 : IsCoseparating 𝒢) (G : D ⥤ C) [PreservesLimits G] : IsRightAdjoint G :=
+  have : ∀ A, HasInitial (StructuredArrow A G) := fun A =>
+    has_initial_of_is_coseparating (StructuredArrow.is_coseparating_proj_preimage A G h𝒢)
+  is_right_adjoint_of_structured_arrow_initials _
+
+/-- The special adjoint functor theorem: if `F : C ⥤ D` preserves colimits and `C` is cocomplete,
+well-copowered and has a small separating set, then `F` has a right adjoint.
+-/
+noncomputable def isLeftAdjointOfPreservesColimitsOfIsSeparatig [HasColimits C] [WellPowered Cᵒᵖ] {𝒢 : Set C}
+    [Small.{v} 𝒢] (h𝒢 : IsSeparating 𝒢) (F : C ⥤ D) [PreservesColimits F] : IsLeftAdjoint F :=
+  have : ∀ A, HasTerminal (CostructuredArrow F A) := fun A =>
+    has_terminal_of_is_separating (CostructuredArrow.is_separating_proj_preimage F A h𝒢)
+  is_left_adjoint_of_costructured_arrow_terminals _
+
+end SpecialAdjointFunctorTheorem
 
 end CategoryTheory
 

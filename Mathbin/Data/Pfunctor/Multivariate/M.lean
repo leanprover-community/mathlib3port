@@ -140,6 +140,7 @@ def M.dest' {α : Typevec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last
     (f' : M.Path P x ⟹ α) : P.Obj (α.Append1 (P.M α)) :=
   ⟨a, splitFun (M.pathDestLeft P h f') fun x => ⟨f x, M.pathDestRight P h f' x⟩⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Destructor for M-types -/
 def M.dest {α : Typevec n} (x : P.M α) : P.Obj (α ::: P.M α) :=
   M.dest' P (Sigma.eta <| Pfunctor.M.dest x.fst).symm x.snd
@@ -214,6 +215,8 @@ theorem M.bisim {α : Typevec n} (R : P.M α → P.M α → Prop)
   · exact IH _ _ (h'' _)
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem M.bisim₀ {α : Typevec n} (R : P.M α → P.M α → Prop) (h₀ : Equivalenceₓ R)
     (h : ∀ x y, R x y → (id ::: Quot.mk R) <$$> M.dest _ x = (id ::: Quot.mk R) <$$> M.dest _ y) (x y) (r : R x y) :
     x = y := by
@@ -243,6 +246,8 @@ theorem M.bisim₀ {α : Typevec n} (R : P.M α → P.M α → Prop) (h₀ : Equ
   rw [h₀.eqv_gen_iff] at h₁
   exact h₁
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem M.bisim' {α : Typevec n} (R : P.M α → P.M α → Prop)
     (h : ∀ x y, R x y → (id ::: Quot.mk R) <$$> M.dest _ x = (id ::: Quot.mk R) <$$> M.dest _ y) (x y) (r : R x y) :
     x = y := by
@@ -269,6 +274,8 @@ theorem M.dest_map {α β : Typevec n} (g : α ⟹ β) (x : P.M α) :
   conv => rhs rw [M.dest, M.dest', map_eq, append_fun_comp_split_fun]
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem M.map_dest {α β : Typevec n} (g : (α ::: P.M α) ⟹ (β ::: P.M β)) (x : P.M α)
     (h : ∀ x : P.M α, lastFun g x = (dropFun g <$$> x : P.M β)) : g <$$> M.dest P x = M.dest P (dropFun g <$$> x) := by
   rw [M.dest_map]

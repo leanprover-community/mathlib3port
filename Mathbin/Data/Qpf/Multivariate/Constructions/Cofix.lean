@@ -146,12 +146,16 @@ def Cofix.repr {α} : Cofix F α → q.p.M α :=
 def Cofix.corec'₁ {α : Typevec n} {β : Type u} (g : ∀ {X}, (β → X) → F (α.Append1 X)) (x : β) : Cofix F α :=
   Cofix.corec (fun x => g id) x
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- More flexible corecursor for `cofix F`. Allows the return of a fully formed
 value instead of making a recursive call -/
 def Cofix.corec' {α : Typevec n} {β : Type u} (g : β → F (α.Append1 (Sum (Cofix F α) β))) (x : β) : Cofix F α :=
   let f : (α ::: Cofix F α) ⟹ (α ::: Sum (Cofix F α) β) := id ::: Sum.inl
   Cofix.corec (Sum.elim (Mvfunctor.map f ∘ cofix.dest) g) (Sum.inr x : Sum (Cofix F α) β)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Corecursor for `cofix F`. The shape allows recursive calls to
 look like recursive calls. -/
 def Cofix.corec₁ {α : Typevec n} {β : Type u} (g : ∀ {X}, (Cofix F α → X) → (β → X) → β → F (α ::: X)) (x : β) :
@@ -324,6 +328,7 @@ theorem Cofix.dest_mk {α : Typevec n} (x : F (α.Append1 <| Cofix F α)) : Cofi
 theorem Cofix.ext {α : Typevec n} (x y : Cofix F α) (h : x.dest = y.dest) : x = y := by
   rw [← cofix.mk_dest x, h, cofix.mk_dest]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Cofix.ext_mk {α : Typevec n} (x y : F (α ::: Cofix F α)) (h : Cofix.mk x = Cofix.mk y) : x = y := by
   rw [← cofix.dest_mk x, h, cofix.dest_mk]
 
@@ -349,6 +354,16 @@ theorem liftr_map {α β : Typevec n} {F' : Typevec n → Type u} [Mvfunctor F']
 
 open Function
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem liftr_map_last [IsLawfulMvfunctor F] {α : Typevec n} {ι ι'} (R : ι' → ι' → Prop) (x : F (α ::: ι))
     (f g : ι → ι') (hh : ∀ x : ι, R (f x) (g x)) : Liftr' (relLast' _ R) ((id ::: f) <$$> x) ((id ::: g) <$$> x) :=
   let h : ι → { x : ι' × ι' // uncurry R x } := fun x => ⟨(f x, g x), hh x⟩
@@ -376,6 +391,8 @@ theorem liftr_map_last [IsLawfulMvfunctor F] {α : Typevec n} {ι ι'} (R : ι' 
     rfl
   liftr_map _ _ _ _ (toSubtype _ ⊚ from_append1_drop_last ⊚ c ⊚ b) hh
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem liftr_map_last' [IsLawfulMvfunctor F] {α : Typevec n} {ι} (R : ι → ι → Prop) (x : F (α ::: ι)) (f : ι → ι)
     (hh : ∀ x : ι, R (f x) x) : Liftr' (relLast' _ R) ((id ::: f) <$$> x) x := by
   have := liftr_map_last R x f id hh
@@ -383,6 +400,7 @@ theorem liftr_map_last' [IsLawfulMvfunctor F] {α : Typevec n} {ι} (R : ι → 
 
 end LiftrMap
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Cofix.abs_repr {α} (x : Cofix F α) : Quot.mk _ (Cofix.repr x) = x := by
   let R := fun x y : cofix F α => cofix.abs (cofix.repr y) = x
   refine' cofix.bisim₂ R _ _ _ rfl
@@ -422,6 +440,7 @@ open Tactic
 
 omit q
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- tactic for proof by bisimulation -/
 unsafe def mv_bisim (e : parse texpr) (ids : parse with_ident_list) : tactic Unit := do
   let e ← to_expr e
@@ -442,7 +461,7 @@ unsafe def mv_bisim (e : parse texpr) (ids : parse with_ident_list) : tactic Uni
   refine (pquote.1 (Cofix.bisim₂ (%%ₓR) _ _ _ ⟨_, rfl, rfl⟩))
   let f (a b : Name) : Name := if a = `_ then b else a
   let ids := (ids ++ List.repeat `_ 5).zipWith f [`a, `b, `x, `Ha, `Hb]
-  let (ids₀, w :: ids₁) ← pure <| List.splitAtₓ 2 ids
+  let (ids₀, w::ids₁) ← pure <| List.splitAtₓ 2 ids
   intro_lst ids₀
   let h ← intro1
   let [(_, [w, h], _)] ← cases_core h [w]
@@ -454,6 +473,8 @@ run_cmd
 
 end Tactic
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem corec_roll {α : Typevec n} {X Y} {x₀ : X} (f : X → Y) (g : Y → F (α ::: X)) :
     Cofix.corec (g ∘ f) x₀ = Cofix.corec (Mvfunctor.map (id ::: f) ∘ g) (f x₀) := by
   mv_bisim x₀
@@ -483,6 +504,7 @@ theorem Cofix.dest_corec' {α : Typevec n} {β : Type u} (g : β → F (α.Appen
     simp [Mvfunctor.id_map]
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Cofix.dest_corec₁ {α : Typevec n} {β : Type u} (g : ∀ {X}, (Cofix F α → X) → (β → X) → β → F (α.Append1 X))
     (x : β)
     (h : ∀ (X Y) (f : Cofix F α → X) (f' : β → X) (k : X → Y), g (k ∘ f) (k ∘ f') x = (id ::: k) <$$> g f f' x) :

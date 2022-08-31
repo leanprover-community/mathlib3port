@@ -390,12 +390,15 @@ theorem seq_right_eq_fail {p : Parser α} {q : Parser β} :
   by
   simp [seq_right_eq, seq_eq_fail]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem mmap_eq_done {f : α → Parser β} {a : α} {l : List α} {b : β} {l' : List β} :
-    (a :: l).mmap f cb n = done n' (b :: l') ↔ ∃ np : ℕ, f a cb n = done np b ∧ l.mmap f cb np = done n' l' := by
+    (a::l).mmap f cb n = done n' (b::l') ↔ ∃ np : ℕ, f a cb n = done np b ∧ l.mmap f cb np = done n' l' := by
   simp [mmap, And.comm, And.assoc, And.left_comm, pure_eq_done]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem mmap'_eq_done {f : α → Parser β} {a : α} {l : List α} :
-    (a :: l).mmap' f cb n = done n' () ↔ ∃ (np : ℕ)(b : β), f a cb n = done np b ∧ l.mmap' f cb np = done n' () := by
+    (a::l).mmap' f cb n = done n' () ↔ ∃ (np : ℕ)(b : β), f a cb n = done np b ∧ l.mmap' f cb np = done n' () := by
   simp [mmap']
 
 theorem guard_eq_done {p : Prop} [Decidable p] {u : Unit} : @guardₓ Parser _ p _ cb n = done n' u ↔ p ∧ n = n' := by
@@ -438,9 +441,10 @@ instance map [p.mono] {f : α → β} : (f <$> p).mono :=
 instance seq {f : Parser (α → β)} [f.mono] [p.mono] : (f <*> p).mono :=
   mono.bind
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance mmap : ∀ {l : List α} {f : α → Parser β} [∀ a ∈ l, (f a).mono], (l.mmap f).mono
   | [], _, _ => Mono.pure
-  | a :: l, f, h => by
+  | a::l, f, h => by
     convert mono.bind
     · exact h _ (List.mem_cons_selfₓ _ _)
       
@@ -450,9 +454,10 @@ instance mmap : ∀ {l : List α} {f : α → Parser β} [∀ a ∈ l, (f a).mon
       exact fun _ ha => h _ (List.mem_cons_of_memₓ _ ha)
       
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance mmap' : ∀ {l : List α} {f : α → Parser β} [∀ a ∈ l, (f a).mono], (l.mmap' f).mono
   | [], _, _ => Mono.pure
-  | a :: l, f, h => by
+  | a::l, f, h => by
     convert mono.and_then
     · exact h _ (List.mem_cons_selfₓ _ _)
       
@@ -854,8 +859,9 @@ theorem many_eq_done_nil {p : Parser α} :
   by
   simp [many, foldr_eq_done]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem many_eq_done {p : Parser α} {x : α} {xs : List α} :
-    many p cb n = done n' (x :: xs) ↔
+    many p cb n = done n' (x::xs) ↔
       ∃ np : ℕ, p cb n = done np x ∧ foldrCore List.cons p [] (cb.size - n) cb np = done n' xs :=
   by
   simp [many, foldr_eq_done, And.comm, And.assoc, And.left_comm]
@@ -889,11 +895,13 @@ theorem many_char_eq_many_of_to_list {p : Parser Charₓ} {s : Stringₓ} :
     manyChar p cb n = done n' s ↔ many p cb n = done n' s.toList := by
   simp [many_char, List.as_string_eq]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem many'_eq_done {p : Parser α} :
     many' p cb n = done n' u ↔
       many p cb n = done n' [] ∨
         ∃ (np : ℕ)(a : α)(l : List α),
-          many p cb n = done n' (a :: l) ∧
+          many p cb n = done n' (a::l) ∧
             p cb n = done np a ∧ foldrCore List.cons p [] (Buffer.size cb - n) cb np = done n' l :=
   by
   simp only [many', eps_eq_done, many, foldr, and_then_eq_bind, exists_and_distrib_right, bind_eq_done, exists_eq_right]
@@ -911,7 +919,7 @@ theorem many'_eq_done {p : Parser α} :
   · rintro (h | ⟨np, a, l, hp, h⟩)
     · exact ⟨[], h⟩
       
-    · refine' ⟨a :: l, hp⟩
+    · refine' ⟨a::l, hp⟩
       
     
 
@@ -919,8 +927,9 @@ theorem many'_eq_done {p : Parser α} :
 theorem many1_ne_done_nil {p : Parser α} : many1 p cb n ≠ done n' [] := by
   simp [many1, seq_eq_done]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem many1_eq_done {p : Parser α} {l : List α} :
-    many1 p cb n = done n' (a :: l) ↔ ∃ np : ℕ, p cb n = done np a ∧ many p cb np = done n' l := by
+    many1 p cb n = done n' (a::l) ↔ ∃ np : ℕ, p cb n = done np a ∧ many p cb np = done n' l := by
   simp [many1, seq_eq_done, map_eq_done]
 
 theorem many1_eq_fail {p : Parser α} {err : Dlist Stringₓ} :
@@ -941,8 +950,9 @@ theorem many_char1_eq_done {p : Parser Charₓ} {s : Stringₓ} (h : s ≠ "") :
 theorem sep_by1_ne_done_nil {sep : Parser Unit} {p : Parser α} : sepBy1 sep p cb n ≠ done n' [] := by
   simp [sep_by1, seq_eq_done]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem sep_by1_eq_done {sep : Parser Unit} {p : Parser α} {l : List α} :
-    sepBy1 sep p cb n = done n' (a :: l) ↔ ∃ np : ℕ, p cb n = done np a ∧ (sep >> p).many cb np = done n' l := by
+    sepBy1 sep p cb n = done n' (a::l) ↔ ∃ np : ℕ, p cb n = done np a ∧ (sep >> p).many cb np = done n' l := by
   simp [sep_by1, seq_eq_done]
 
 theorem sep_by_eq_done_nil {sep : Parser Unit} {p : Parser α} :
@@ -1019,9 +1029,10 @@ instance map [p.Static] {f : α → β} : (f <$> p).Static :=
 instance seq {f : Parser (α → β)} [f.Static] [p.Static] : (f <*> p).Static :=
   static.bind
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance mmap : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static], (l.mmap f).Static
   | [], _, _ => Static.pure
-  | a :: l, _, h => by
+  | a::l, _, h => by
     convert static.bind
     · exact h _
       
@@ -1034,9 +1045,10 @@ instance mmap : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static], 
         
       
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance mmap' : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static], (l.mmap' f).Static
   | [], _, _ => Static.pure
-  | a :: l, _, h => by
+  | a::l, _, h => by
     convert static.and_then
     · exact h _
       
@@ -1115,11 +1127,13 @@ theorem char_buf_iff {cb' : CharBuffer} : Static (charBuf cb') ↔ cb' = Buffer.
     simpa [Nat.succ_ne_zero] using not_of_ne this (Nat.succ_ne_zero n).symm
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem one_of_iff {cs : List Charₓ} : Static (oneOf cs) ↔ cs = [] := by
   cases' cs with hd tl
   · simp [one_of, static.decorate_errors]
     
-  · have : one_of (hd :: tl) (hd :: tl).toBuffer 0 = done 1 hd := by
+  · have : one_of (hd::tl) (hd::tl).toBuffer 0 = done 1 hd := by
       simp [one_of_eq_done]
     simpa using not_of_ne this zero_ne_one
     
@@ -1128,11 +1142,13 @@ instance one_of : Static (oneOf []) := by
   apply one_of_iff.mpr
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem one_of'_iff {cs : List Charₓ} : Static (oneOf' cs) ↔ cs = [] := by
   cases' cs with hd tl
   · simp [one_of', static.bind]
     
-  · have : one_of' (hd :: tl) (hd :: tl).toBuffer 0 = done 1 () := by
+  · have : one_of' (hd::tl) (hd::tl).toBuffer 0 = done 1 () := by
       simp [one_of'_eq_done]
     simpa using not_of_ne this zero_ne_one
     
@@ -1280,10 +1296,12 @@ instance map [p.Bounded] {f : α → β} : (f <$> p).Bounded :=
 instance seq {f : Parser (α → β)} [f.Bounded] : (f <*> p).Bounded :=
   bounded.bind
 
-instance mmap {a : α} {l : List α} {f : α → Parser β} [∀ a, (f a).Bounded] : ((a :: l).mmap f).Bounded :=
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+instance mmap {a : α} {l : List α} {f : α → Parser β} [∀ a, (f a).Bounded] : ((a::l).mmap f).Bounded :=
   bounded.bind
 
-instance mmap' {a : α} {l : List α} {f : α → Parser β} [∀ a, (f a).Bounded] : ((a :: l).mmap' f).Bounded :=
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+instance mmap' {a : α} {l : List α} {f : α → Parser β} [∀ a, (f a).Bounded] : ((a::l).mmap' f).Bounded :=
   bounded.and_then
 
 instance failure : @Parser.Bounded α failure :=
@@ -1667,9 +1685,10 @@ instance seq {f : Parser (α → β)} [f.Static] [f.ErrStatic] [p.ErrStatic] : (
 instance seq_of_unfailing {f : Parser (α → β)} [f.ErrStatic] [p.Unfailing] : (f <*> p).ErrStatic :=
   err_static.bind_of_unfailing
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance mmap : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static] [∀ a, (f a).ErrStatic], (l.mmap f).ErrStatic
   | [], _, _, _ => ErrStatic.pure
-  | a :: l, _, h, h' => by
+  | a::l, _, h, h' => by
     convert err_static.bind
     · exact h _
       
@@ -1690,10 +1709,11 @@ instance mmap : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static] [
         
       
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance mmap_of_unfailing :
     ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Unfailing] [∀ a, (f a).ErrStatic], (l.mmap f).ErrStatic
   | [], _, _, _ => ErrStatic.pure
-  | a :: l, _, h, h' => by
+  | a::l, _, h, h' => by
     convert err_static.bind_of_unfailing
     · exact h' _
       
@@ -1706,9 +1726,10 @@ instance mmap_of_unfailing :
         
       
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance mmap' : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static] [∀ a, (f a).ErrStatic], (l.mmap' f).ErrStatic
   | [], _, _, _ => ErrStatic.pure
-  | a :: l, _, h, h' => by
+  | a::l, _, h, h' => by
     convert err_static.and_then
     · exact h _
       
@@ -1721,10 +1742,11 @@ instance mmap' : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static] 
         
       
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance mmap'_of_unfailing :
     ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Unfailing] [∀ a, (f a).ErrStatic], (l.mmap' f).ErrStatic
   | [], _, _, _ => ErrStatic.pure
-  | a :: l, _, h, h' => by
+  | a::l, _, h, h' => by
     convert err_static.and_then_of_unfailing
     · exact h' _
       
@@ -1992,9 +2014,12 @@ section Step
 variable {α β : Type} {p q : Parser α} {msgs : Thunkₓ (List Stringₓ)} {msg : Thunkₓ Stringₓ} {cb : CharBuffer}
   {n' n : ℕ} {err : Dlist Stringₓ} {a : α} {b : β} {sep : Parser Unit}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem many1_eq_done_iff_many_eq_done [p.step] [p.Bounded] {x : α} {xs : List α} :
-    many1 p cb n = done n' (x :: xs) ↔ many p cb n = done n' (x :: xs) := by
-  induction' hx : x :: xs with hd tl IH generalizing x xs n n'
+    many1 p cb n = done n' (x::xs) ↔ many p cb n = done n' (x::xs) := by
+  induction' hx : x::xs with hd tl IH generalizing x xs n n'
   · simpa using hx
     
   constructor
@@ -2084,13 +2109,15 @@ instance map [p.Prog] {f : α → β} : (f <$> p).Prog :=
 instance seq {f : Parser (α → β)} [f.Prog] [p.mono] : (f <*> p).Prog :=
   prog.bind
 
-instance mmap {l : List α} {f : α → Parser β} [(f a).Prog] [∀ a, (f a).mono] : ((a :: l).mmap f).Prog := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+instance mmap {l : List α} {f : α → Parser β} [(f a).Prog] [∀ a, (f a).mono] : ((a::l).mmap f).Prog := by
   constructor
   simp only [and_imp, bind_eq_done, return_eq_pure, mmap, exists_imp_distrib, pure_eq_done]
   rintro _ _ _ _ _ _ h _ _ hp rfl rfl
   exact lt_of_lt_of_leₓ (of_done h) (mono.of_done hp)
 
-instance mmap' {l : List α} {f : α → Parser β} [(f a).Prog] [∀ a, (f a).mono] : ((a :: l).mmap' f).Prog := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+instance mmap' {l : List α} {f : α → Parser β} [(f a).Prog] [∀ a, (f a).mono] : ((a::l).mmap' f).Prog := by
   constructor
   simp only [and_imp, bind_eq_done, mmap', exists_imp_distrib, and_then_eq_bind]
   intro _ _ _ _ _ _ h hm
@@ -2653,6 +2680,7 @@ theorem nat_of_done_bounded {val : ℕ} (h : nat cb n = done n' val) :
     
 
 -- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:526:6: unsupported: specialize @hyp
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The `val : ℕ` produced by a successful parse of a `cb : char_buffer` is the numerical value
 represented by the string of decimal digits (possibly padded with 0s on the left)
 starting from the parsing position `n` and ending at position `n'`, where `n < n'`. The number
@@ -2793,7 +2821,7 @@ theorem nat_eq_done {val : ℕ} :
       obtain ⟨l, hdl, hvl⟩ := IH
       -- Of course, the parsed in list from position `n` would be `l` prepended with the result
       -- of parsing in `hd`, which is provided explicitly.
-      use (hd.to_nat - '0'.toNat) :: l
+      use (hd.to_nat - '0'.toNat)::l
       -- We case on `l : list ℕ` so that we can make statements about the fold on `l`
       cases' l with lhd ltl
       · -- As before, if `l = []` then `many1` produced a `[]` success, which is a contradiction.

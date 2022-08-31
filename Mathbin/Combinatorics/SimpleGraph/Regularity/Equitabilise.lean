@@ -200,7 +200,7 @@ theorem card_parts_equitabilise (hm : m ≠ 0) : (P.equitabilise h).parts.card =
 
 theorem card_parts_equitabilise_subset_le :
     t ∈ P.parts → (t \ ((P.equitabilise h).parts.filter fun u => u ⊆ t).bUnion id).card ≤ m :=
-  (Classical.some_spec <| P.equitabilise_aux h).2.1 t
+  (Classical.choose_spec <| P.equitabilise_aux h).2.1 t
 
 variable (s)
 

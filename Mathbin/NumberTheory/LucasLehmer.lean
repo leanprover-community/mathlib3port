@@ -169,10 +169,6 @@ def LucasLehmerTest (p : ℕ) : Prop :=
 def q (p : ℕ) : ℕ+ :=
   ⟨Nat.minFac (mersenne p), Nat.min_fac_pos (mersenne p)⟩
 
-@[local instance]
-theorem fact_pnat_pos (q : ℕ+) : Fact (0 < (q : ℕ)) :=
-  ⟨q.2⟩
-
 -- It would be nice to define this as (ℤ/qℤ)[x] / (x^2 - 3),
 -- obtaining the ring structure for free,
 -- but that seems to be more trouble than it's worth;

@@ -143,11 +143,11 @@ names. -/
 def smoothRightMul : C^∞⟮I, G; I, G⟯ :=
   ⟨rightMul g, smooth_mul_right⟩
 
--- mathport name: «expr𝑳»
+-- mathport name: smooth_left_mul
 -- Left multiplication. The abbreviation is `MIL`.
 localized [LieGroup] notation "𝑳" => smoothLeftMul
 
--- mathport name: «expr𝑹»
+-- mathport name: smooth_right_mul
 -- Right multiplication. The abbreviation is `MIR`.
 localized [LieGroup] notation "𝑹" => smoothRightMul
 

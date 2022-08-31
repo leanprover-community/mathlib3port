@@ -112,7 +112,7 @@ variable {𝒜 : Finset (Finset α)} {A A₁ A₂ : Finset α} {r r₁ r₂ : �
 def slice (𝒜 : Finset (Finset α)) (r : ℕ) : Finset (Finset α) :=
   𝒜.filter fun i => i.card = r
 
--- mathport name: «expr # »
+-- mathport name: finset.slice
 localized [FinsetFamily] infixl:90 " # " => Finset.slice
 
 /-- `A` is in the `r`-th slice of `𝒜` iff it's in `𝒜` and has cardinality `r`. -/

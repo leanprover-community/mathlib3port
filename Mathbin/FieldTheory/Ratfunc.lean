@@ -620,7 +620,7 @@ def liftMonoidWithZeroHom (φ : R[X] →*₀ G₀) (hφ : R[X]⁰ ≤ G₀⁰.co
   toFun := fun f =>
     (Ratfunc.liftOn f fun p q => φ p / φ q) fun p q p' q' hq hq' h => by
       cases subsingleton_or_nontrivial R
-      · rw [Subsingleton.elimₓ p q, Subsingleton.elimₓ p' q, Subsingleton.elimₓ q' q]
+      · rw [Subsingleton.elim p q, Subsingleton.elim p' q, Subsingleton.elim q' q]
         
       rw [div_eq_div_iff, ← map_mul, h, map_mul] <;> exact nonZeroDivisors.ne_zero (hφ ‹_›)
   map_one' := by
@@ -670,7 +670,7 @@ def liftRingHom (φ : R[X] →+* L) (hφ : R[X]⁰ ≤ L⁰.comap φ) : Ratfunc 
     map_add' := fun x y => by
       simp only [MonoidWithZeroHom.to_fun_eq_coe]
       cases subsingleton_or_nontrivial R
-      · rw [Subsingleton.elimₓ (x + y) y, Subsingleton.elimₓ x 0, map_zero, zero_addₓ]
+      · rw [Subsingleton.elim (x + y) y, Subsingleton.elim x 0, map_zero, zero_addₓ]
         
       cases x
       cases y

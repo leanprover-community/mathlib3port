@@ -40,7 +40,7 @@ private unsafe def parse_name_list (e : expr) : List Name :=
 
 attribute [local instance] reflect_name_list
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr *»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
 /-- Defines the user attribute `nolint` for skipping `#lint` -/
 @[user_attribute]
 unsafe def nolint_attr : user_attribute (name_map (List Name)) (List Name) where
@@ -57,7 +57,7 @@ unsafe def nolint_attr : user_attribute (name_map (List Name)) (List Name) where
         List.mfoldl
           (fun cache d => native.rb_map.insert cache d <$> parse_name_list <$> nolint_attr.get_param_untyped d)
           mk_name_map }
-  parser := «expr *» ident
+  parser := parser.many ident
 
 end
 

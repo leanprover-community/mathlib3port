@@ -149,7 +149,7 @@ end GenLoop
 def HomotopyGroup (n : ℕ) (x : X) : Type _ :=
   Quotientₓ (GenLoop.Homotopic.setoid n x)deriving Inhabited
 
--- mathport name: «exprπ»
+-- mathport name: exprπ
 local notation "π" => HomotopyGroup
 
 /-- The 0-dimensional generalized loops based at `x` are in 1-1 correspondence with `X`. -/
@@ -158,7 +158,7 @@ def genLoopZeroEquiv : GenLoop 0 x ≃ X where
   invFun := fun x => ⟨ContinuousMap.const _ x, fun _ ⟨f0, _⟩ => f0.elim0⟩
   left_inv := fun f => by
     ext1
-    exact congr_arg f (Subsingleton.elimₓ _ _)
+    exact congr_arg f (Subsingleton.elim _ _)
   right_inv := fun _ => rfl
 
 /-- The 0th homotopy "group" is equivalent to the path components of `X`, aka the `zeroth_homotopy`.

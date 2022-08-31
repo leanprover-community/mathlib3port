@@ -97,11 +97,11 @@ theorem stationary {f : CauSeq ℚ (padicNorm p)} (hf : ¬f ≈ 0) :
 
 /-- For all n ≥ stationary_point f hf, the p-adic norm of f n is the same. -/
 def stationaryPoint {f : PadicSeq p} (hf : ¬f ≈ 0) : ℕ :=
-  Classical.some <| stationary hf
+  Classical.choose <| stationary hf
 
 theorem stationary_point_spec {f : PadicSeq p} (hf : ¬f ≈ 0) :
     ∀ {m n}, stationaryPoint hf ≤ m → stationaryPoint hf ≤ n → padicNorm p (f n) = padicNorm p (f m) :=
-  Classical.some_spec <| stationary hf
+  Classical.choose_spec <| stationary hf
 
 /-- Since the norm of the entries of a Cauchy sequence is eventually stationary,
 we can lift the norm to sequences. -/
@@ -710,11 +710,11 @@ private theorem div_nat_pos (n : ℕ) : 0 < 1 / (n + 1 : ℚ) :=
 
 /-- `lim_seq f`, for `f` a Cauchy sequence of `p`-adic numbers,
 is a sequence of rationals with the same limit point as `f`. -/
-def limSeq : ℕ → ℚ := fun n => Classical.some (rat_dense' (f n) (div_nat_pos n))
+def limSeq : ℕ → ℚ := fun n => Classical.choose (rat_dense' (f n) (div_nat_pos n))
 
 theorem exi_rat_seq_conv {ε : ℚ} (hε : 0 < ε) : ∃ N, ∀ i ≥ N, padicNormE (f i - ((limSeq f) i : ℚ_[p])) < ε := by
   refine' (exists_nat_gt (1 / ε)).imp fun N hN i hi => _
-  have h := Classical.some_spec (rat_dense' (f i) (div_nat_pos i))
+  have h := Classical.choose_spec (rat_dense' (f i) (div_nat_pos i))
   refine'
     lt_of_lt_of_leₓ h
       ((div_le_iff' <| by
@@ -948,10 +948,10 @@ protected theorem is_rat (q : ℚ_[p]) : ∃ q' : ℚ, ∥q∥ = ↑q' :=
 
 The lemma `padic_norm_e.eq_rat_norm` asserts `∥q∥ = rat_norm q`. -/
 def ratNorm (q : ℚ_[p]) : ℚ :=
-  Classical.some (padicNormE.is_rat q)
+  Classical.choose (padicNormE.is_rat q)
 
 theorem eq_rat_norm (q : ℚ_[p]) : ∥q∥ = ratNorm q :=
-  Classical.some_spec (padicNormE.is_rat q)
+  Classical.choose_spec (padicNormE.is_rat q)
 
 theorem norm_rat_le_one : ∀ {q : ℚ} (hq : ¬p ∣ q.denom), ∥(q : ℚ_[p])∥ ≤ 1
   | ⟨n, d, hn, hd⟩ => fun hq : ¬p ∣ d =>

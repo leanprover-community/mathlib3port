@@ -195,10 +195,10 @@ variable [IsDomain R]
 such that every nonzero element is associated to a power of `p` is a unique factorization domain.
 See `discrete_valuation_ring.of_has_unit_mul_pow_irreducible_factorization`. -/
 theorem to_unique_factorization_monoid : UniqueFactorizationMonoid R :=
-  let p := Classical.some hR
-  let spec := Classical.some_spec hR
+  let p := Classical.choose hR
+  let spec := Classical.choose_spec hR
   UniqueFactorizationMonoid.of_exists_prime_factors fun x hx => by
-    use Multiset.repeat p (Classical.some (spec.2 hx))
+    use Multiset.repeat p (Classical.choose (spec.2 hx))
     constructor
     · intro q hq
       have hpq := Multiset.eq_of_mem_repeat hq
@@ -223,7 +223,7 @@ theorem to_unique_factorization_monoid : UniqueFactorizationMonoid R :=
       apply dvd_mul_of_dvd_left dvd_rfl _
       
     · rw [Multiset.prod_repeat]
-      exact Classical.some_spec (spec.2 hx)
+      exact Classical.choose_spec (spec.2 hx)
       
 
 omit hR
@@ -398,11 +398,11 @@ open multiplicity
 
 /-- The `part_enat`-valued additive valuation on a DVR -/
 noncomputable def addVal (R : Type u) [CommRingₓ R] [IsDomain R] [DiscreteValuationRing R] : AddValuation R PartEnat :=
-  AddValuation (Classical.some_spec (exists_prime R))
+  AddValuation (Classical.choose_spec (exists_prime R))
 
 theorem add_val_def (r : R) (u : Rˣ) {ϖ : R} (hϖ : Irreducible ϖ) (n : ℕ) (hr : r = u * ϖ ^ n) : addVal R r = n := by
   rw [add_val, add_valuation_apply, hr,
-    eq_of_associated_left (associated_of_irreducible R hϖ (Classical.some_spec (exists_prime R)).Irreducible),
+    eq_of_associated_left (associated_of_irreducible R hϖ (Classical.choose_spec (exists_prime R)).Irreducible),
     eq_of_associated_right (Associated.symm ⟨u, mul_comm _ _⟩),
     multiplicity_pow_self_of_prime (PrincipalIdealRing.irreducible_iff_prime.1 hϖ)]
 
@@ -433,7 +433,7 @@ theorem _root_.irreducible.add_val_pow {ϖ : R} (h : Irreducible ϖ) (n : ℕ) :
   rw [add_val_pow, add_val_uniformizer h, nsmul_one]
 
 theorem add_val_eq_top_iff {a : R} : addVal R a = ⊤ ↔ a = 0 := by
-  have hi := (Classical.some_spec (exists_prime R)).Irreducible
+  have hi := (Classical.choose_spec (exists_prime R)).Irreducible
   constructor
   · contrapose
     intro h
@@ -447,7 +447,7 @@ theorem add_val_eq_top_iff {a : R} : addVal R a = ⊤ ↔ a = 0 := by
     
 
 theorem add_val_le_iff_dvd {a b : R} : addVal R a ≤ addVal R b ↔ a ∣ b := by
-  have hp := Classical.some_spec (exists_prime R)
+  have hp := Classical.choose_spec (exists_prime R)
   constructor <;> intro h
   · by_cases' ha0 : a = 0
     · rw [ha0, add_val_zero, top_le_iff, add_val_eq_top_iff] at h

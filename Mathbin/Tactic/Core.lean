@@ -1940,7 +1940,7 @@ It does *not* use the `namespace` command, so it will typically be used after
 @[user_command]
 unsafe def setup_tactic_parser_cmd (_ : interactive.parse <| tk "setup_tactic_parser") : lean.parser Unit :=
   emit_code_here
-    "\nopen _root_.lean\nopen _root_.lean.parser\nopen _root_.interactive _root_.interactive.types\n\nlocal postfix `?`:9001 := optional\nlocal postfix *:9001 := many .\n"
+    "\nopen _root_.lean\nopen _root_.lean.parser\nopen _root_.interactive _root_.interactive.types\n\nlocal postfix (name := parser.optional) `?`:9001 := optional\nlocal postfix (name := parser.many) *:9001 := many .\n"
 
 /-- `finally tac finalizer` runs `tac` first, then runs `finalizer` even if
 `tac` fails. `finally tac finalizer` fails if either `tac` or `finalizer` fails. -/

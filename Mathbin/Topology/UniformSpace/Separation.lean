@@ -93,7 +93,7 @@ variable [UniformSpace α] [UniformSpace β] [UniformSpace γ]
 protected def SeparationRel (α : Type u) [u : UniformSpace α] :=
   ⋂₀ (𝓤 α).Sets
 
--- mathport name: «expr𝓢»
+-- mathport name: separation_rel
 localized [uniformity] notation "𝓢" => SeparationRel
 
 theorem separated_equiv : Equivalenceₓ fun x y => (x, y) ∈ 𝓢 α :=
@@ -183,6 +183,8 @@ theorem separated_iff_t2 : SeparatedSpace α ↔ T2Space α := by
     exact ⟨r, hrU, fun H => h ⟨hr H, hy⟩⟩
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- see Note [lower instance priority]
 instance (priority := 100) separated_t3 [SeparatedSpace α] : T3Space α :=
   { @T2Space.t1_space _ _ (separated_iff_t2.mp ‹_›) with
@@ -245,6 +247,7 @@ def IsSeparated (s : Set α) : Prop :=
 theorem is_separated_def (s : Set α) : IsSeparated s ↔ ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), (x, y) ∈ 𝓢 α → x = y :=
   Iff.rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem is_separated_def' (s : Set α) : IsSeparated s ↔ s ×ˢ s ∩ 𝓢 α ⊆ IdRel := by
   rw [is_separated_def]
   constructor
@@ -521,6 +524,7 @@ instance Separated.prod [SeparatedSpace α] [SeparatedSpace β] : SeparatedSpace
     Prod.extₓ (eq_of_separated_of_uniform_continuous uniform_continuous_fst H)
       (eq_of_separated_of_uniform_continuous uniform_continuous_snd H)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem _root_.is_separated.prod {s : Set α} {t : Set β} (hs : IsSeparated s) (ht : IsSeparated t) :
     IsSeparated (s ×ˢ t) :=
   (is_separated_def _).mpr fun x hx y hy H =>

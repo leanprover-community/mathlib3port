@@ -207,6 +207,8 @@ theorem is_topological_basis_opens : IsTopologicalBasis { U : Set α | IsOpen U 
     (by
       tauto)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation
 protected theorem IsTopologicalBasis.prod {β} [TopologicalSpace β] {B₁ : Set (Set α)} {B₂ : Set (Set β)}
     (h₁ : IsTopologicalBasis B₁) (h₂ : IsTopologicalBasis B₂) : IsTopologicalBasis (Image2 (· ×ˢ ·) B₁ B₂) := by
   refine' is_topological_basis_of_open_of_nhds _ _
@@ -286,19 +288,19 @@ theorem exists_dense_seq [SeparableSpace α] [Nonempty α] : ∃ u : ℕ → α,
 
 If `α` might be empty, then `exists_countable_dense` is the main way to use separability of `α`. -/
 def denseSeq [SeparableSpace α] [Nonempty α] : ℕ → α :=
-  Classical.some (exists_dense_seq α)
+  Classical.choose (exists_dense_seq α)
 
 /-- The sequence `dense_seq α` has dense range. -/
 @[simp]
 theorem dense_range_dense_seq [SeparableSpace α] [Nonempty α] : DenseRange (denseSeq α) :=
-  Classical.some_spec (exists_dense_seq α)
+  Classical.choose_spec (exists_dense_seq α)
 
 variable {α}
 
-instance (priority := 100) Encodable.to_separable_space [Encodable α] :
+instance (priority := 100) Countable.to_separable_space [Countable α] :
     SeparableSpace α where exists_countable_dense := ⟨Set.Univ, Set.countable_univ, dense_univ⟩
 
-theorem separable_space_of_dense_range {ι : Type _} [Encodable ι] (u : ι → α) (hu : DenseRange u) : SeparableSpace α :=
+theorem separable_space_of_dense_range {ι : Type _} [Countable ι] (u : ι → α) (hu : DenseRange u) : SeparableSpace α :=
   ⟨⟨Range u, countable_range u, hu⟩⟩
 
 /-- In a separable space, a family of nonempty disjoint open sets is countable. -/
@@ -342,7 +344,7 @@ theorem IsSeparable.closure {s : Set α} (hs : IsSeparable s) : IsSeparable (Clo
     ⟨c, c_count, by
       simpa using closure_mono hs⟩
 
-theorem is_separable_Union {ι : Type _} [Encodable ι] {s : ι → Set α} (hs : ∀ i, IsSeparable (s i)) :
+theorem is_separable_Union {ι : Type _} [Countable ι] {s : ι → Set α} (hs : ∀ i, IsSeparable (s i)) :
     IsSeparable (⋃ i, s i) := by
   choose c hc h'c using hs
   refine' ⟨⋃ i, c i, countable_Union hc, Union_subset_iff.2 fun i => _⟩
@@ -619,7 +621,6 @@ instance {β : Type _} [TopologicalSpace β] [SecondCountableTopology α] [Secon
 
 instance {ι : Type _} {π : ι → Type _} [Countable ι] [t : ∀ a, TopologicalSpace (π a)]
     [∀ a, SecondCountableTopology (π a)] : SecondCountableTopology (∀ a, π a) := by
-  haveI := Encodable.ofCountable ι
   have : t = fun a => generate_from (countable_basis (π a)) :=
     funext fun a => (is_basis_countable_basis (π a)).eq_generate_from
   rw [this, pi_generate_from_eq]
@@ -729,7 +730,7 @@ theorem IsTopologicalBasis.sigma {s : ∀ i : ι, Set (Set (E i))} (hs : ∀ i, 
     
 
 /-- A countable disjoint union of second countable spaces is second countable. -/
-instance [Encodable ι] [∀ i, SecondCountableTopology (E i)] : SecondCountableTopology (Σi, E i) := by
+instance [Countable ι] [∀ i, SecondCountableTopology (E i)] : SecondCountableTopology (Σi, E i) := by
   let b := ⋃ i : ι, (fun u => (Sigma.mk i '' u : Set (Σi, E i))) '' countable_basis (E i)
   have A : is_topological_basis b := is_topological_basis.sigma fun i => is_basis_countable_basis _
   have B : b.countable := countable_Union fun i => countable.image (countable_countable_basis _) _

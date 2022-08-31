@@ -84,7 +84,7 @@ def PreservesTerminal.ofIsoComparison [i : IsIso (terminalComparison G)] : Prese
 
 /-- If there is any isomorphism `G.obj ⊤ ⟶ ⊤`, then `G` preserves terminal objects. -/
 def preservesTerminalOfIsIso (f : G.obj (⊤_ C) ⟶ ⊤_ D) [i : IsIso f] : PreservesLimit (Functor.empty C) G := by
-  rw [Subsingleton.elimₓ f (terminal_comparison G)] at i
+  rw [Subsingleton.elim f (terminal_comparison G)] at i
   exact preserves_terminal.of_iso_comparison G
 
 /-- If there is any isomorphism `G.obj ⊤ ≅ ⊤`, then `G` preserves terminal objects. -/
@@ -159,7 +159,7 @@ def PreservesInitial.ofIsoComparison [i : IsIso (initialComparison G)] : Preserv
 
 /-- If there is any isomorphism `⊥ ⟶ G.obj ⊥`, then `G` preserves initial objects. -/
 def preservesInitialOfIsIso (f : ⊥_ D ⟶ G.obj (⊥_ C)) [i : IsIso f] : PreservesColimit (Functor.empty C) G := by
-  rw [Subsingleton.elimₓ f (initial_comparison G)] at i
+  rw [Subsingleton.elim f (initial_comparison G)] at i
   exact preserves_initial.of_iso_comparison G
 
 /-- If there is any isomorphism `⊥ ≅ G.obj ⊥ `, then `G` preserves initial objects. -/

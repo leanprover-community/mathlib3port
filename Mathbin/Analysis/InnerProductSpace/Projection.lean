@@ -50,7 +50,7 @@ variable [InnerProductSpace 𝕜 E] [InnerProductSpace ℝ F]
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
--- mathport name: «exprabsR»
+-- mathport name: exprabsR
 local notation "absR" => HasAbs.abs
 
 /-! ### Orthogonal projection in inner product spaces -/
@@ -76,8 +76,8 @@ theorem exists_norm_eq_infi_of_complete_convex {K : Set F} (ne : K.Nonempty) (h�
   have exists_seq : ∃ w : ℕ → K, ∀ n, ∥u - w n∥ < δ + 1 / (n + 1) := by
     have hδ : ∀ n : ℕ, δ < δ + 1 / (n + 1) := fun n => lt_add_of_le_of_pos le_rflₓ Nat.one_div_pos_of_nat
     have h := fun n => exists_lt_of_cinfi_lt (hδ n)
-    let w : ℕ → K := fun n => Classical.some (h n)
-    exact ⟨w, fun n => Classical.some_spec (h n)⟩
+    let w : ℕ → K := fun n => Classical.choose (h n)
+    exact ⟨w, fun n => Classical.choose_spec (h n)⟩
   rcases exists_seq with ⟨w, hw⟩
   have norm_tendsto : tendsto (fun n => ∥u - w n∥) at_top (nhds δ) := by
     have h : tendsto (fun n : ℕ => δ) at_top (nhds δ) := tendsto_const_nhds
@@ -1045,6 +1045,7 @@ theorem finrank_orthogonal_span_singleton {n : ℕ} [_i : Fact (finrank 𝕜 E =
   Submodule.finrank_add_finrank_orthogonal' <| by
     simp [finrank_span_singleton hv, _i.elim, add_commₓ]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- An element `φ` of the orthogonal group of `F` can be factored as a product of reflections, and
 specifically at most as many reflections as the dimension of the complement of the fixed subspace
 of `φ`. -/
@@ -1120,7 +1121,7 @@ theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ 
     obtain ⟨l, hl, hφl⟩ := IH (ρ * φ) this
     -- Prepend `ρ` to the factorization into reflections obtained for `φ.trans ρ`; this gives a
     -- factorization into reflections for `φ`.
-    refine' ⟨x :: l, Nat.succ_le_succₓ hl, _⟩
+    refine' ⟨x::l, Nat.succ_le_succₓ hl, _⟩
     rw [List.map_cons, List.prod_cons]
     have := congr_arg ((· * ·) ρ) hφl
     rwa [← mul_assoc, reflection_mul_reflection, one_mulₓ] at this

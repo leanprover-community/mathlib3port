@@ -57,7 +57,7 @@ to this basis.
 
 TODO Restate this result for affine spaces (instead of vector spaces) once the definition of
 convexity is generalised to this setting. -/
-theorem interior_convex_hull_aff_basis {ι E : Type _} [Fintype ι] [NormedAddCommGroup E] [NormedSpace ℝ E]
+theorem interior_convex_hull_aff_basis {ι E : Type _} [Finite ι] [NormedAddCommGroup E] [NormedSpace ℝ E]
     (b : AffineBasis ι ℝ E) : Interior (convexHull ℝ (Range b.points)) = { x | ∀ i, 0 < b.Coord i x } := by
   cases subsingleton_or_nontrivial ι
   · -- The zero-dimensional case.

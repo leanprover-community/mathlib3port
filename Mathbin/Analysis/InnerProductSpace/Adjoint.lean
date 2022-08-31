@@ -104,7 +104,7 @@ def adjoint : (E →L[𝕜] F) ≃ₗᵢ⋆[𝕜] F →L[𝕜] E :=
   LinearIsometryEquiv.ofSurjective { adjointAux with norm_map' := adjoint_aux_norm } fun A =>
     ⟨adjointAux A, adjoint_aux_adjoint_aux A⟩
 
--- mathport name: «expr †»
+-- mathport name: adjoint
 localized [InnerProduct] postfix:1000 "†" => ContinuousLinearMap.adjoint
 
 /-- The fundamental property of the adjoint. -/

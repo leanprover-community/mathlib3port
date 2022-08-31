@@ -100,10 +100,10 @@ noncomputable irreducible_def finprod (f : α → M) : M :=
 
 end
 
--- mathport name: «expr∑ᶠ , »
+-- mathport name: finsum
 localized [BigOperators] notation3"∑ᶠ "(...)", "r:(scoped f => finsum f) => r
 
--- mathport name: «expr∏ᶠ , »
+-- mathport name: finprod
 localized [BigOperators] notation3"∏ᶠ "(...)", "r:(scoped f => finprod f) => r
 
 @[to_additive]
@@ -950,14 +950,14 @@ theorem finprod_dmem {s : Set α} [DecidablePred (· ∈ s)] (f : ∀ a : α, a 
 
 @[to_additive]
 theorem finprod_emb_domain' {f : α → β} (hf : Injective f) [DecidablePred (· ∈ Set.Range f)] (g : α → M) :
-    (∏ᶠ b : β, if h : b ∈ Set.Range f then g (Classical.some h) else 1) = ∏ᶠ a : α, g a := by
+    (∏ᶠ b : β, if h : b ∈ Set.Range f then g (Classical.choose h) else 1) = ∏ᶠ a : α, g a := by
   simp_rw [← finprod_eq_dif]
   rw [finprod_dmem, finprod_mem_range hf, finprod_congr fun a => _]
-  rw [dif_pos (Set.mem_range_self a), hf (Classical.some_spec (Set.mem_range_self a))]
+  rw [dif_pos (Set.mem_range_self a), hf (Classical.choose_spec (Set.mem_range_self a))]
 
 @[to_additive]
 theorem finprod_emb_domain (f : α ↪ β) [DecidablePred (· ∈ Set.Range f)] (g : α → M) :
-    (∏ᶠ b : β, if h : b ∈ Set.Range f then g (Classical.some h) else 1) = ∏ᶠ a : α, g a :=
+    (∏ᶠ b : β, if h : b ∈ Set.Range f then g (Classical.choose h) else 1) = ∏ᶠ a : α, g a :=
   finprod_emb_domain' f.Injective g
 
 end Type

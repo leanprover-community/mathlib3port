@@ -69,7 +69,7 @@ noncomputable def isSuccLimitRecOn {C : α → Sort _} (b) (hs : ∀ a, ¬IsMax 
   by_cases' hb : is_succ_limit b
   · exact hl b hb
     
-  · have H := Classical.some_spec (not_is_succ_limit_iff.1 hb)
+  · have H := Classical.choose_spec (not_is_succ_limit_iff.1 hb)
     rw [← H.2]
     exact hs _ H.1
     
@@ -152,7 +152,7 @@ theorem is_succ_limit_iff_succ_lt : IsSuccLimit b ↔ ∀ a < b, succ a < b :=
 theorem is_succ_limit_rec_on_succ' {C : α → Sort _} (hs : ∀ a, ¬IsMax a → C (succ a)) (hl : ∀ a, IsSuccLimit a → C a)
     {b : α} (hb : ¬IsMax b) : @isSuccLimitRecOn α _ _ C (succ b) hs hl = hs b hb := by
   have hb' := not_is_succ_limit_succ_of_not_is_max hb
-  have H := Classical.some_spec (not_is_succ_limit_iff.1 hb')
+  have H := Classical.choose_spec (not_is_succ_limit_iff.1 hb')
   rw [is_succ_limit_rec_on]
   simp only [cast_eq_iff_heq, hb', not_false_iff, eq_mpr_eq_cast, dif_neg]
   congr

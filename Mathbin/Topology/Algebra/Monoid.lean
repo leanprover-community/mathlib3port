@@ -6,6 +6,7 @@ Authors: Johannes Hölzl, Mario Carneiro
 import Mathbin.Algebra.BigOperators.Finprod
 import Mathbin.Data.Set.Pointwise
 import Mathbin.Topology.Algebra.MulAction
+import Mathbin.Algebra.BigOperators.Pi
 
 /-!
 # Theory of topological monoids
@@ -251,6 +252,8 @@ section HasContinuousMul
 
 variable [TopologicalSpace M] [Monoidₓ M] [HasContinuousMul M]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive]
 theorem Submonoid.top_closure_mul_self_subset (s : Submonoid M) : Closure (s : Set M) * Closure s ⊆ Closure s :=
   calc
@@ -335,13 +338,14 @@ theorem IsCompact.mul {s t : Set M} (hs : IsCompact s) (ht : IsCompact t) : IsCo
   rw [← image_mul_prod]
   exact (hs.prod ht).Image continuous_mul
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive]
 theorem tendsto_list_prod {f : ι → α → M} {x : Filter α} {a : ι → M} :
     ∀ l : List ι,
       (∀ i ∈ l, Tendsto (f i) x (𝓝 (a i))) → Tendsto (fun b => (l.map fun c => f c b).Prod) x (𝓝 (l.map a).Prod)
   | [], _ => by
     simp [tendsto_const_nhds]
-  | f :: l, h => by
+  | f::l, h => by
     simp only [List.map_cons, List.prod_cons]
     exact (h f (List.mem_cons_selfₓ _ _)).mul (tendsto_list_prod l fun c hc => h c (List.mem_cons_of_memₓ _ hc))
 
@@ -481,6 +485,15 @@ theorem continuous_multiset_prod {f : ι → X → M} (s : Multiset ι) :
 theorem continuous_finset_prod {f : ι → X → M} (s : Finset ι) :
     (∀ i ∈ s, Continuous (f i)) → Continuous fun a => ∏ i in s, f i a :=
   continuous_multiset_prod _
+
+@[to_additive]
+theorem eventually_eq_prod {X M : Type _} [CommMonoidₓ M] {s : Finset ι} {l : Filter X} {f g : ι → X → M}
+    (hs : ∀ i ∈ s, f i =ᶠ[l] g i) : (∏ i in s, f i) =ᶠ[l] ∏ i in s, g i := by
+  replace hs : ∀ᶠ x in l, ∀ i ∈ s, f i x = g i x
+  · rwa [eventually_all_finset]
+    
+  filter_upwards [hs] with x hx
+  simp only [Finset.prod_apply, Finset.prod_congr rfl hx]
 
 open Function
 

@@ -189,8 +189,8 @@ such that `s = j.to_signed_measure`. This property is known as the Jordan decomp
 theorem, and is shown by
 `measure_theory.signed_measure.to_signed_measure_to_jordan_decomposition`. -/
 def toJordanDecomposition (s : SignedMeasure α) : JordanDecomposition α :=
-  let i := some s.exists_compl_positive_negative
-  let hi := some_spec s.exists_compl_positive_negative
+  let i := choose s.exists_compl_positive_negative
+  let hi := choose_spec s.exists_compl_positive_negative
   { posPart := s.toMeasureOfZeroLe i hi.1 hi.2.1, negPart := s.toMeasureOfLeZero (iᶜ) hi.1.compl hi.2.2,
     pos_part_finite := inferInstance, neg_part_finite := inferInstance,
     MutuallySingular := by

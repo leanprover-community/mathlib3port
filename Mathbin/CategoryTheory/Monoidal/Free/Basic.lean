@@ -47,7 +47,7 @@ inductive FreeMonoidalCategory : Type u
 
 end
 
--- mathport name: «exprF»
+-- mathport name: exprF
 local notation "F" => FreeMonoidalCategory
 
 namespace FreeMonoidalCategory
@@ -199,6 +199,7 @@ theorem mk_l_hom {X : F C} : ⟦Hom.l_hom X⟧ = (λ_ X).Hom :=
 theorem mk_l_inv {X : F C} : ⟦Hom.l_inv X⟧ = (λ_ X).inv :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem tensor_eq_tensor {X Y : F C} : X.tensor Y = X ⊗ Y :=
   rfl
@@ -211,6 +212,7 @@ section Functor
 
 variable {D : Type u'} [Category.{v'} D] [MonoidalCategory D] (f : C → D)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Auxiliary definition for `free_monoidal_category.project`. -/
 def projectObjₓ : F C → D
   | free_monoidal_category.of X => f X
@@ -221,6 +223,7 @@ section
 
 open Hom
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Auxiliary definition for `free_monoidal_category.project`. -/
 @[simp]
 def projectMapAuxₓ : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (projectObjₓ f X ⟶ projectObjₓ f Y)

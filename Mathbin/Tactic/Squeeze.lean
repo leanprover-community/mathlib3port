@@ -240,9 +240,9 @@ unsafe def squeeze_scope (tac : itactic) : tactic Unit := do
           mk_suggestion p pre post (suggs List.unionₓ []) tt
           pure ()
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- `squeeze_simp`, `squeeze_simpa` and `squeeze_dsimp` perform the same
 task with the difference that `squeeze_simp` relates to `simp` while
 `squeeze_simpa` relates to `simpa` and `squeeze_dsimp` relates to
@@ -297,10 +297,10 @@ Known limitation(s):
     resulting proof. `squeeze_simp` won't know to try that lemma unless it is called as
     `squeeze_simp?`
 -/
-unsafe def squeeze_simp (key : parse cur_pos) (slow_and_accurate : parse («expr ?» (tk "?")))
-    (use_iota_eqn : parse («expr ?» (tk "!"))) (no_dflt : parse only_flag) (hs : parse simp_arg_list)
-    (attr_names : parse with_ident_list) (locat : parse location) (cfg : parse («expr ?» struct_inst)) : tactic Unit :=
-  do
+unsafe def squeeze_simp (key : parse cur_pos) (slow_and_accurate : parse (parser.optional (tk "?")))
+    (use_iota_eqn : parse (parser.optional (tk "!"))) (no_dflt : parse only_flag) (hs : parse simp_arg_list)
+    (attr_names : parse with_ident_list) (locat : parse location) (cfg : parse (parser.optional struct_inst)) :
+    tactic Unit := do
   let (cfg', c) ← parse_config cfg
   squeeze_simp_core slow_and_accurate no_dflt hs
       (fun l_no_dft l_args => simp use_iota_eqn none l_no_dft l_args attr_names locat cfg') fun args =>
@@ -309,15 +309,15 @@ unsafe def squeeze_simp (key : parse cur_pos) (slow_and_accurate : parse («expr
       let loc := loc.to_string locat
       mk_suggestion (key 1) (s! "Try this: simp{use_iota_eqn} only") (s! "{attrs }{loc }{c}") args
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- see `squeeze_simp` -/
-unsafe def squeeze_simpa (key : parse cur_pos) (slow_and_accurate : parse («expr ?» (tk "?")))
-    (use_iota_eqn : parse («expr ?» (tk "!"))) (no_dflt : parse only_flag) (hs : parse simp_arg_list)
-    (attr_names : parse with_ident_list) (tgt : parse («expr ?» (tk "using" *> texpr)))
-    (cfg : parse («expr ?» struct_inst)) : tactic Unit := do
+unsafe def squeeze_simpa (key : parse cur_pos) (slow_and_accurate : parse (parser.optional (tk "?")))
+    (use_iota_eqn : parse (parser.optional (tk "!"))) (no_dflt : parse only_flag) (hs : parse simp_arg_list)
+    (attr_names : parse with_ident_list) (tgt : parse (parser.optional (tk "using" *> texpr)))
+    (cfg : parse (parser.optional struct_inst)) : tactic Unit := do
   let (cfg', c) ← parse_config cfg
   let tgt' ←
     traverse
@@ -332,17 +332,17 @@ unsafe def squeeze_simpa (key : parse cur_pos) (slow_and_accurate : parse («exp
       let tgt' := tgt' ""
       mk_suggestion (key 1) (s! "Try this: simpa{use_iota_eqn} only") (s! "{attrs }{tgt' }{c}") args
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- `squeeze_dsimp` behaves like `dsimp` (including all its arguments)
 and prints a `dsimp only` invocation to skip the search through the
 `simp` lemma list. See the doc string of `squeeze_simp` for examples.
  -/
-unsafe def squeeze_dsimp (key : parse cur_pos) (slow_and_accurate : parse («expr ?» (tk "?")))
-    (use_iota_eqn : parse («expr ?» (tk "!"))) (no_dflt : parse only_flag) (hs : parse simp_arg_list)
-    (attr_names : parse with_ident_list) (locat : parse location) (cfg : parse («expr ?» struct_inst)) : tactic Unit :=
-  do
+unsafe def squeeze_dsimp (key : parse cur_pos) (slow_and_accurate : parse (parser.optional (tk "?")))
+    (use_iota_eqn : parse (parser.optional (tk "!"))) (no_dflt : parse only_flag) (hs : parse simp_arg_list)
+    (attr_names : parse with_ident_list) (locat : parse location) (cfg : parse (parser.optional struct_inst)) :
+    tactic Unit := do
   let (cfg', c) ← parse_dsimp_config cfg
   squeeze_simp_core slow_and_accurate no_dflt hs (fun l_no_dft l_args => dsimp l_no_dft l_args attr_names locat cfg')
       fun args =>

@@ -206,7 +206,7 @@ theorem IsPure.min {s t : Semiquot α} (h : IsPure t) : s ≤ t ↔ s = t :=
     le_of_eqₓ⟩
 
 theorem is_pure_of_subsingleton [Subsingleton α] (q : Semiquot α) : IsPure q
-  | a, b, aq, bq => Subsingleton.elimₓ _ _
+  | a, b, aq, bq => Subsingleton.elim _ _
 
 /-- `univ : semiquot α` represents an unspecified element of `univ : set α`. -/
 def univ [Inhabited α] : Semiquot α :=

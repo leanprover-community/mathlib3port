@@ -58,7 +58,7 @@ variable {q} {f : F[X]} (hf : HasSeparableContraction q f)
 
 /-- A choice of a separable contraction. -/
 def HasSeparableContraction.contraction : F[X] :=
-  Classical.some hf
+  Classical.choose hf
 
 /-- The separable degree of a polynomial is the degree of a given separable contraction. -/
 def HasSeparableContraction.degree : ℕ :=
@@ -72,7 +72,7 @@ theorem IsSeparableContraction.dvd_degree' {g} (hf : IsSeparableContraction q f 
   rw [nat_degree_expand]
 
 theorem HasSeparableContraction.dvd_degree' : ∃ m : ℕ, hf.degree * q ^ m = f.natDegree :=
-  (Classical.some_spec hf).dvd_degree'
+  (Classical.choose_spec hf).dvd_degree'
 
 /-- The separable degree divides the degree. -/
 theorem HasSeparableContraction.dvd_degree : hf.degree ∣ f.natDegree :=
@@ -151,13 +151,13 @@ theorem IsSeparableContraction.degree_eq [hF : ExpChar F q] (g : F[X]) (hg : IsS
     rw [hm]
     
   · rcases hg with ⟨hg, m, hm⟩
-    let g' := Classical.some hf
-    cases' (Classical.some_spec hf).2 with m' hm'
+    let g' := Classical.choose hf
+    cases' (Classical.choose_spec hf).2 with m' hm'
     haveI : Fact q.prime := fact_iff.2 hF_hprime
     apply contraction_degree_eq_or_insep q g g' m m'
     rw [hm, hm']
     exact hg
-    exact (Classical.some_spec hf).1
+    exact (Classical.choose_spec hf).1
     
 
 end Field

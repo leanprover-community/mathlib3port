@@ -152,7 +152,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
       simpa [sq] using hk.1⟩
   let m := Nat.findₓ hm
   let ⟨a, b, c, d, (habcd : a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = m * p)⟩ := (Nat.find_specₓ hm).snd.2
-  haveI hm0 : _root_.fact (0 < m) := ⟨(Nat.find_specₓ hm).snd.1⟩
+  haveI hm0 : NeZero m := NeZero.of_pos (Nat.find_specₓ hm).snd.1
   have hmp : m < p := (Nat.find_specₓ hm).fst
   m.mod_two_eq_zero_or_one.elim
     (fun hm2 : m % 2 = 0 =>
@@ -226,7 +226,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
           have hmdvdp : m ∣ p :=
             Int.coe_nat_dvd.1
               ⟨ma ^ 2 + mb ^ 2 + mc ^ 2 + md ^ 2,
-                (mul_right_inj' (show (m : ℤ) ≠ 0 from Int.coe_nat_ne_zero_iff_pos.2 hm0.1)).1 <| by
+                (mul_right_inj' (show (m : ℤ) ≠ 0 from Int.coe_nat_ne_zero.2 hm0.1)).1 <| by
                   rw [← habcd, hma, hmb, hmc, hmd]
                   ring⟩
           (hp.1.eq_one_or_self_of_dvd _ hmdvdp).elim hm1 fun hmeqp => by
@@ -261,7 +261,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
                 refine' add_nonneg _ _
               try
                 exact sq_nonneg _)
-          (Int.coe_nat_pos.2 hm0.1)
+          (Int.coe_nat_pos.2 <| NeZero.pos m)
       have hnm : n.natAbs < m :=
         Int.coe_nat_lt.1
           (lt_of_mul_lt_mul_left
@@ -270,7 +270,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
               exact hwxyzlt)
             (Int.coe_nat_nonneg m))
       have hstuv : s ^ 2 + t ^ 2 + u ^ 2 + v ^ 2 = n.natAbs * p :=
-        (mul_right_inj' (show (m ^ 2 : ℤ) ≠ 0 from pow_ne_zero 2 (Int.coe_nat_ne_zero_iff_pos.2 hm0.1))).1 <|
+        (mul_right_inj' (show (m ^ 2 : ℤ) ≠ 0 from pow_ne_zero 2 (Int.coe_nat_ne_zero.2 hm0.1))).1 <|
           calc
             (m : ℤ) ^ 2 * (s ^ 2 + t ^ 2 + u ^ 2 + v ^ 2) =
                 ((m : ℕ) * s) ^ 2 + ((m : ℕ) * t) ^ 2 + ((m : ℕ) * u) ^ 2 + ((m : ℕ) * v) ^ 2 :=

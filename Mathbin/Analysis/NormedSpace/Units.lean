@@ -272,6 +272,8 @@ namespace Units
 
 open MulOpposite Filter NormedRing
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- In a normed ring, the coercion from `Rˣ` (equipped with the induced topology from the
 embedding in `R × R`) to `R` is an open map. -/
 theorem is_open_map_coe : IsOpenMap (coe : Rˣ → R) := by

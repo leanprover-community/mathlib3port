@@ -725,7 +725,7 @@ theorem himp_eq : x ⇨ y = y⊔xᶜ :=
 theorem top_sdiff : ⊤ \ x = xᶜ := by
   rw [sdiff_eq, top_inf_eq]
 
-instance (priority := 100) BooleanAlgebra.to_is_complemented : IsComplemented α :=
+instance (priority := 100) BooleanAlgebra.to_complemented_lattice : ComplementedLattice α :=
   ⟨fun x => ⟨xᶜ, is_compl_compl⟩⟩
 
 -- see Note [lower instance priority]
@@ -938,5 +938,5 @@ instance : BooleanAlgebra PUnit := by
     intros <;>
       first |
         trivial|
-        exact Subsingleton.elimₓ _ _
+        exact Subsingleton.elim _ _
 

@@ -32,6 +32,7 @@ open Iso
 
 variable {C : Type u} [Category.{v} C] [MonoidalCategory C] (P : C → Prop)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- A property `C → Prop` is a monoidal predicate if it is closed under `𝟙_` and `⊗`.
 -/
 class MonoidalPredicate : Prop where
@@ -50,6 +51,10 @@ open MonoidalPredicate
 
 variable [MonoidalPredicate P]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- When `P` is a monoidal predicate, the full subcategory for `P` inherits the monoidal structure of
   `C`.
 -/

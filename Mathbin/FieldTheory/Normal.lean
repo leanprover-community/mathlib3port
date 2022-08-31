@@ -134,7 +134,7 @@ theorem Normal.of_is_splitting_field (p : F[X]) [hFEp : IsSplittingField F E p] 
   by_cases' hp : p = 0
   · have : is_splitting_field F F p := by
       rw [hp]
-      exact ⟨splits_zero _, Subsingleton.elimₓ _ _⟩
+      exact ⟨splits_zero _, Subsingleton.elim _ _⟩
     exact
       (AlgEquiv.transfer_normal ((is_splitting_field.alg_equiv F p).trans (is_splitting_field.alg_equiv E p).symm)).mp
         (normal_self F)
@@ -229,6 +229,12 @@ instance normal_supr {ι : Type _} (t : ι → IntermediateField F K) [h : ∀ i
   have := hF.splits ⟨x, hx⟩
   rw [minpoly_eq, Subtype.coe_mk, ← minpoly_eq] at this
   exact Polynomial.splits_comp_of_splits _ (inclusion hE).toRingHom this
+
+variable {F K} {L : Type _} [Field L] [Algebra F L] [Algebra K L] [IsScalarTower F K L]
+
+@[simp]
+theorem restrict_scalars_normal {E : IntermediateField K L} : Normal F (E.restrictScalars F) ↔ Normal F E :=
+  Iff.rfl
 
 end IntermediateField
 
@@ -390,4 +396,59 @@ theorem is_solvable_of_is_scalar_tower [Normal F K₁] [h1 : IsSolvable (K₁ �
   exact Eq.trans (ϕ.restrict_normal_commutes K₁ x).symm (congr_arg _ (alg_equiv.ext_iff.mp hϕ x))
 
 end lift
+
+section normalClosure
+
+open IntermediateField
+
+variable (F K) (L : Type _) [Field L] [Algebra F L] [Algebra K L] [IsScalarTower F K L]
+
+/-- The normal closure of `K` in `L`. -/
+noncomputable def normalClosure : IntermediateField K L :=
+  { (⨆ f : K →ₐ[F] L, f.fieldRange).toSubfield with
+    algebra_map_mem' := fun r => le_supr (fun f : K →ₐ[F] L => f.fieldRange) (IsScalarTower.toAlgHom F K L) ⟨r, rfl⟩ }
+
+namespace normalClosure
+
+theorem restrict_scalars_eq_supr_adjoin [h : Normal F L] :
+    (normalClosure F K L).restrictScalars F = ⨆ x : K, adjoin F ((minpoly F x).RootSet L) := by
+  refine' le_antisymmₓ (supr_le _) (supr_le fun x => adjoin_le_iff.mpr fun y hy => _)
+  · rintro f _ ⟨x, rfl⟩
+    refine' le_supr (fun x => adjoin F ((minpoly F x).RootSet L)) x (subset_adjoin F ((minpoly F x).RootSet L) _)
+    rw [Polynomial.mem_root_set, AlgHom.to_ring_hom_eq_coe, AlgHom.coe_to_ring_hom, Polynomial.aeval_alg_hom_apply,
+      minpoly.aeval, map_zero]
+    exact
+      minpoly.ne_zero ((is_integral_algebra_map_iff (algebraMap K L).Injective).mp (h.is_integral (algebraMap K L x)))
+    
+  · rw [Polynomial.RootSet, Finset.mem_coe, Multiset.mem_to_finset] at hy
+    let g :=
+      (alg_hom_adjoin_integral_equiv F
+            ((is_integral_algebra_map_iff (algebraMap K L).Injective).mp (h.is_integral (algebraMap K L x)))).symm
+        ⟨y, hy⟩
+    refine'
+      le_supr (fun f : K →ₐ[F] L => f.fieldRange) ((g.lift_normal L).comp (IsScalarTower.toAlgHom F K L))
+        ⟨x, (g.lift_normal_commutes L (adjoin_simple.gen F x)).trans _⟩
+    rw [Algebra.id.map_eq_id, RingHom.id_apply]
+    apply PowerBasis.lift_gen
+    
+
+instance normal [h : Normal F L] : Normal F (normalClosure F K L) := by
+  let ϕ := algebraMap K L
+  rw [← IntermediateField.restrict_scalars_normal, restrict_scalars_eq_supr_adjoin]
+  apply IntermediateField.normal_supr F L _
+  intro x
+  apply Normal.of_is_splitting_field (minpoly F x)
+  exact
+    adjoin_root_set_is_splitting_field
+      ((minpoly.eq_of_algebra_map_eq ϕ.injective ((is_integral_algebra_map_iff ϕ.injective).mp (h.is_integral (ϕ x)))
+            rfl).symm ▸
+        h.splits _)
+
+instance is_finite_dimensional [FiniteDimensional F K] : FiniteDimensional F (normalClosure F K L) := by
+  haveI : ∀ f : K →ₐ[F] L, FiniteDimensional F f.fieldRange := fun f => f.to_linear_map.finite_dimensional_range
+  apply IntermediateField.finite_dimensional_supr_of_finite
+
+end normalClosure
+
+end normalClosure
 

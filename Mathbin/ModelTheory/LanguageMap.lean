@@ -43,8 +43,8 @@ variable (L : Language.{u, v}) (L' : Language.{u', v'}) {M : Type w} [L.Structur
 
 /-- A language homomorphism maps the symbols of one language to symbols of another. -/
 structure Lhom where
-  onFunction : ∀ {n}, L.Functions n → L'.Functions n
-  onRelation : ∀ {n}, L.Relations n → L'.Relations n
+  onFunction : ∀ ⦃n⦄, L.Functions n → L'.Functions n
+  onRelation : ∀ ⦃n⦄, L.Relations n → L'.Relations n
 
 -- mathport name: «expr →ᴸ »
 infixl:10 " →ᴸ " => Lhom
@@ -104,7 +104,7 @@ protected theorem funext {F G : L →ᴸ L'} (h_fun : F.onFunction = G.onFunctio
   exact And.intro h_fun h_rel
 
 instance [L.IsAlgebraic] [L.IsRelational] : Unique (L →ᴸ L') :=
-  ⟨⟨Lhom.ofIsEmpty L L'⟩, fun _ => Lhom.funext (Subsingleton.elimₓ _ _) (Subsingleton.elimₓ _ _)⟩
+  ⟨⟨Lhom.ofIsEmpty L L'⟩, fun _ => Lhom.funext (Subsingleton.elim _ _) (Subsingleton.elim _ _)⟩
 
 theorem mk₂_funext {c f₁ f₂ : Type u} {r₁ r₂ : Type v} {F G : Language.mk₂ c f₁ f₂ r₁ r₂ →ᴸ L'}
     (h0 : ∀ c : (Language.mk₂ c f₁ f₂ r₁ r₂).Constants, F.onFunction c = G.onFunction c)
@@ -125,7 +125,7 @@ theorem mk₂_funext {c f₁ f₂ : Type u} {r₁ r₂ : Type v} {F G : Language
 def comp (g : L' →ᴸ L'') (f : L →ᴸ L') : L →ᴸ L'' :=
   ⟨fun n F => g.1 (f.1 F), fun _ R => g.2 (f.2 R)⟩
 
--- mathport name: «expr ∘ »
+-- mathport name: Lhom.comp
 local infixl:60 " ∘ " => Lhom.comp
 
 @[simp]
@@ -187,8 +187,8 @@ end SumMap
 
 /-- A language homomorphism is injective when all the maps between symbol types are. -/
 protected structure Injective : Prop where
-  onFunction {n} : Function.Injective (onFunction ϕ : L.Functions n → L'.Functions n)
-  onRelation {n} : Function.Injective (onRelation ϕ : L.Relations n → L'.Relations n)
+  onFunction {n} : Function.Injective fun f : L.Functions n => onFunction ϕ f
+  onRelation {n} : Function.Injective fun R : L.Relations n => onRelation ϕ R
 
 /-- A language homomorphism is an expansion on a structure if it commutes with the interpretation of
 all symbols on that structure. -/
@@ -365,7 +365,7 @@ variable (α : Type w')
 def withConstants : Language.{max u w', v} :=
   L.Sum (constantsOn α)
 
--- mathport name: «expr [[ ]]»
+-- mathport name: language.with_constants
 localized [FirstOrder] notation:95 L "[[" α "]]" => L.withConstants α
 
 @[simp]
@@ -403,7 +403,7 @@ def Lequiv.addEmptyConstants [ie : IsEmpty α] : L ≃ᴸ L[[α]] where
     rw [Lhom_with_constants, Lhom.sum_elim_comp_inl]
   right_inv := by
     simp only [Lhom.comp_sum_elim, Lhom_with_constants, Lhom.comp_id]
-    exact trans (congr rfl (Subsingleton.elimₓ _ _)) Lhom.sum_elim_inl_inr
+    exact trans (congr rfl (Subsingleton.elim _ _)) Lhom.sum_elim_inl_inr
 
 variable {α} {β : Type _}
 

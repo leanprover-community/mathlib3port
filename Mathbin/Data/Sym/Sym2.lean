@@ -287,11 +287,11 @@ theorem ball {p : α → Prop} {a b : α} : (∀ c ∈ ⟦(a, b)⟧, p c) ↔ p 
 See also `mem.other'` for the computable version.
 -/
 noncomputable def Mem.other {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
-  Classical.some h
+  Classical.choose h
 
 @[simp]
 theorem other_spec {a : α} {z : Sym2 α} (h : a ∈ z) : ⟦(a, h.other)⟧ = z := by
-  erw [← Classical.some_spec h]
+  erw [← Classical.choose_spec h]
 
 theorem other_mem {a : α} {z : Sym2 α} (h : a ∈ z) : h.other ∈ z := by
   convert mem_mk_right a h.other
@@ -682,6 +682,7 @@ theorem other_invol {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other ∈ z) 
   convert other_invol' ha hb
   rw [other_eq_other']
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem filter_image_quotient_mk_is_diag [DecidableEq α] (s : Finset α) :
     ((s ×ˢ s).Image Quotientₓ.mk).filter IsDiag = s.diag.Image Quotientₓ.mk := by
   ext z
@@ -698,6 +699,7 @@ theorem filter_image_quotient_mk_is_diag [DecidableEq α] (s : Finset α) :
     exact ⟨⟨a, a, ⟨ha, ha⟩, rfl⟩, rfl⟩
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem filter_image_quotient_mk_not_is_diag [DecidableEq α] (s : Finset α) :
     (((s ×ˢ s).Image Quotientₓ.mk).filter fun a : Sym2 α => ¬a.IsDiag) = s.offDiag.Image Quotientₓ.mk := by
   ext z

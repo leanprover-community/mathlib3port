@@ -310,7 +310,7 @@ variable {E}
 
 theorem card_le_multiplicity_of_δ {s : Finset E} (hs : ∀ c ∈ s, ∥c∥ ≤ 2)
     (h's : ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 - goodδ E ≤ ∥c - d∥) : s.card ≤ multiplicity E :=
-  (Classical.some_spec (exists_good_δ E)).2.2 s hs h's
+  (Classical.choose_spec (exists_good_δ E)).2.2 s hs h's
 
 theorem le_multiplicity_of_δ_of_fin {n : ℕ} (f : Finₓ n → E) (h : ∀ i, ∥f i∥ ≤ 2)
     (h' : ∀ i j, i ≠ j → 1 - goodδ E ≤ ∥f i - f j∥) : n ≤ multiplicity E := by

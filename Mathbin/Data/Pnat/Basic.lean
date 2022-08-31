@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Neil Strickland
 -/
 import Mathbin.Data.Nat.Basic
+import Mathbin.Algebra.Order.Positive.Ring
 
 /-!
 # The positive natural numbers
@@ -16,7 +17,8 @@ This file defines the type `ℕ+` or `pnat`, the subtype of natural numbers that
   and the VM representation of `ℕ+` is the same as `ℕ` because the proof
   is not stored. -/
 def Pnat :=
-  { n : ℕ // 0 < n }deriving LinearOrderₓ
+  { n : ℕ // 0 < n }deriving DecidableEq, AddLeftCancelSemigroup, AddRightCancelSemigroup, AddCommSemigroupₓ,
+  LinearOrderedCancelCommMonoid, LinearOrderₓ, Add, Mul, One, Distribₓ
 
 -- mathport name: «exprℕ+»
 notation "ℕ+" => Pnat
@@ -141,9 +143,6 @@ open Nat
  obvious way, but there are a few things to be said about
  subtraction, division and powers.
 -/
-instance : DecidableEq ℕ+ := fun a b : ℕ+ => by
-  infer_instance
-
 @[simp]
 theorem mk_le_mk (n k : ℕ) (hn : 0 < n) (hk : 0 < k) : (⟨n, hn⟩ : ℕ+) ≤ ⟨k, hk⟩ ↔ n ≤ k :=
   Iff.rfl
@@ -164,10 +163,6 @@ theorem coe_lt_coe (n k : ℕ+) : (n : ℕ) < k ↔ n < k :=
 theorem pos (n : ℕ+) : 0 < (n : ℕ) :=
   n.2
 
--- see note [fact non_instances]
-theorem fact_pos (n : ℕ+) : Fact (0 < ↑n) :=
-  ⟨n.Pos⟩
-
 theorem eq {m n : ℕ+} : (m : ℕ) = n → m = n :=
   Subtype.eq
 
@@ -182,12 +177,6 @@ theorem coe_injective : Function.Injective (coe : ℕ+ → ℕ) :=
 theorem mk_coe (n h) : ((⟨n, h⟩ : ℕ+) : ℕ) = n :=
   rfl
 
-instance : Add ℕ+ :=
-  ⟨fun a b => ⟨(a + b : ℕ), add_pos a.Pos b.Pos⟩⟩
-
-instance : AddCommSemigroupₓ ℕ+ :=
-  coe_injective.AddCommSemigroup coe fun _ _ => rfl
-
 @[simp]
 theorem add_coe (m n : ℕ+) : ((m + n : ℕ+) : ℕ) = m + n :=
   rfl
@@ -197,11 +186,17 @@ def coeAddHom : AddHom ℕ+ ℕ where
   toFun := coe
   map_add' := add_coe
 
-instance : AddLeftCancelSemigroup ℕ+ :=
-  coe_injective.AddLeftCancelSemigroup coe fun _ _ => rfl
+instance : CovariantClass ℕ+ ℕ+ (· + ·) (· ≤ ·) :=
+  Positive.covariant_class_add_le
 
-instance : AddRightCancelSemigroup ℕ+ :=
-  coe_injective.AddRightCancelSemigroup coe fun _ _ => rfl
+instance : CovariantClass ℕ+ ℕ+ (· + ·) (· < ·) :=
+  Positive.covariant_class_add_lt
+
+instance : ContravariantClass ℕ+ ℕ+ (· + ·) (· ≤ ·) :=
+  Positive.contravariant_class_add_le
+
+instance : ContravariantClass ℕ+ ℕ+ (· + ·) (· < ·) :=
+  Positive.contravariant_class_add_lt
 
 /-- An equivalence between `ℕ+` and `ℕ` given by `pnat.nat_pred` and `nat.succ_pnat`. -/
 @[simps (config := { fullyApplied := false })]
@@ -221,11 +216,6 @@ def _root_.order_iso.pnat_iso_nat : ℕ+ ≃o ℕ where
 theorem _root_.order_iso.pnat_iso_nat_symm_apply : ⇑OrderIso.pnatIsoNat.symm = Nat.succPnat :=
   rfl
 
-instance (priority := 10) : CovariantClass ℕ+ ℕ+ (· + ·) (· ≤ ·) :=
-  ⟨by
-    rintro ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩
-    simp [← Pnat.coe_le_coe]⟩
-
 @[simp]
 theorem ne_zero (n : ℕ+) : (n : ℕ) ≠ 0 :=
   n.2.ne'
@@ -236,18 +226,6 @@ theorem to_pnat'_coe {n : ℕ} : 0 < n → (n.toPnat' : ℕ) = n :=
 @[simp]
 theorem coe_to_pnat' (n : ℕ+) : (n : ℕ).toPnat' = n :=
   eq (to_pnat'_coe n.Pos)
-
-instance : Mul ℕ+ :=
-  ⟨fun m n => ⟨m.1 * n.1, mul_pos m.2 n.2⟩⟩
-
-instance : One ℕ+ :=
-  ⟨succPnat 0⟩
-
-instance : Pow ℕ+ ℕ :=
-  ⟨fun x n => ⟨x ^ n, pow_pos x.2 n⟩⟩
-
-instance : CommMonoidₓ ℕ+ :=
-  coe_injective.CommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 
 theorem lt_add_one_iff : ∀ {a b : ℕ+}, a < b + 1 ↔ a ≤ b := fun a b => Nat.lt_add_one_iff
 
@@ -327,8 +305,8 @@ theorem coe_coe_monoid_hom : (coeMonoidHom : ℕ+ → ℕ) = coe :=
   rfl
 
 @[simp]
-theorem coe_eq_one_iff {m : ℕ+} : (m : ℕ) = 1 ↔ m = 1 := by
-  rw [← one_coe, coe_inj]
+theorem coe_eq_one_iff {m : ℕ+} : (m : ℕ) = 1 ↔ m = 1 :=
+  Subtype.coe_injective.eq_iff' one_coe
 
 @[simp]
 theorem le_one_iff {n : ℕ+} : n ≤ 1 ↔ n = 1 :=
@@ -351,22 +329,6 @@ theorem coe_bit1 (a : ℕ+) : ((bit1 a : ℕ+) : ℕ) = bit1 (a : ℕ) :=
 @[simp]
 theorem pow_coe (m : ℕ+) (n : ℕ) : ((m ^ n : ℕ+) : ℕ) = (m : ℕ) ^ n :=
   rfl
-
-instance : OrderedCancelCommMonoid ℕ+ :=
-  { Pnat.commMonoid, Pnat.linearOrder with
-    mul_le_mul_left := by
-      intros
-      apply Nat.mul_le_mul_leftₓ
-      assumption,
-    le_of_mul_le_mul_left := by
-      intro a b c h
-      apply Nat.le_of_mul_le_mul_leftₓ h a.property,
-    mul_left_cancel := fun a b c h => by
-      replace h := congr_arg (coe : ℕ+ → ℕ) h
-      exact Eq ((Nat.mul_right_inj a.pos).mp h) }
-
-instance : Distribₓ ℕ+ :=
-  coe_injective.Distrib coe (fun _ _ => rfl) fun _ _ => rfl
 
 /-- Subtraction a - b is defined in the obvious way when
   a > b, and by a - b = 1 if a ≤ b.

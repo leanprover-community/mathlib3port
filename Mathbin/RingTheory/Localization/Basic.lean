@@ -156,7 +156,7 @@ variable (M)
 /-- Given a localization map `f : M →* N`, a section function sending `z : N` to some
 `(x, y) : M × S` such that `f x * (f y)⁻¹ = z`. -/
 noncomputable def sec (z : S) : R × M :=
-  Classical.some <| IsLocalization.surj _ z
+  Classical.choose <| IsLocalization.surj _ z
 
 @[simp]
 theorem to_localization_map_sec : (toLocalizationMap M S).sec = sec M :=
@@ -165,7 +165,7 @@ theorem to_localization_map_sec : (toLocalizationMap M S).sec = sec M :=
 /-- Given `z : S`, `is_localization.sec M z` is defined to be a pair `(x, y) : R × M` such
 that `z * f y = f x` (so this lemma is true by definition). -/
 theorem sec_spec (z : S) : z * algebraMap R S (IsLocalization.sec M z).2 = algebraMap R S (IsLocalization.sec M z).1 :=
-  Classical.some_spec <| IsLocalization.surj _ z
+  Classical.choose_spec <| IsLocalization.surj _ z
 
 /-- Given `z : S`, `is_localization.sec M z` is defined to be a pair `(x, y) : R × M` such
 that `z * f y = f x`, so this lemma is just an application of `S`'s commutativity. -/

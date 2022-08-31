@@ -228,6 +228,7 @@ unsafe def find_squares : rb_set (expr × Bool) → expr → tactic (rb_set <| e
     else e.mfoldl find_squares s
   | s, e => e.mfoldl find_squares s
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `nlinarith_extras` is the preprocessor corresponding to the `nlinarith` tactic.
 
 * For every term `t` such that `t^2` or `t*t` appears in the input, adds a proof of `t^2 ≥ 0`
@@ -244,7 +245,7 @@ unsafe def nlinarith_extras : global_preprocessor where
       (s.mfold ([] : List expr)) fun ⟨e, is_sq⟩ new_es =>
           (do
               let p ← mk_app (if is_sq then `` sq_nonneg else `` mul_self_nonneg) [e]
-              return <| p :: new_es) <|>
+              return <| p::new_es) <|>
             return new_es
     let new_es ← make_comp_with_zero.globalize.transform new_es
     linarith_trace "nlinarith preprocessing found squares"
@@ -272,6 +273,7 @@ unsafe def nlinarith_extras : global_preprocessor where
     let products ← make_comp_with_zero.globalize.transform products.reduceOption
     return <| new_es ++ ls ++ products
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `remove_ne_aux` case splits on any proof `h : a ≠ b` in the input, turning it into `a < b ∨ a > b`.
 This produces `2^n` branches when there are `n` such hypotheses in the input.
 -/
@@ -286,7 +288,7 @@ unsafe def remove_ne_aux : List expr → tactic (List branch) := fun hs =>
           set_goals [g]
           let h ← intro1
           let ls ← remove_ne_aux <| hs.removeAll [e]
-          return <| ls fun b : branch => (b.1, h :: b.2)
+          return <| ls fun b : branch => (b.1, h::b.2)
         (· ++ ·) <$> do_goal ng1 <*> do_goal ng2) <|>
     do
     let g ← get_goal

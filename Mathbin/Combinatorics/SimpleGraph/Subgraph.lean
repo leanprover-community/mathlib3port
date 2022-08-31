@@ -203,8 +203,8 @@ def copy (G' : Subgraph G) (V'' : Set V) (hV : V'' = G'.Verts) (adj' : V → V �
     Subgraph G where
   Verts := V''
   Adj := adj'
-  adj_sub := hadj.symm ▸ G'.adj_sub
-  edge_vert := hV.symm ▸ hadj.symm ▸ G'.edge_vert
+  adj_sub := fun _ _ => hadj.symm ▸ G'.adj_sub
+  edge_vert := fun _ _ => hV.symm ▸ hadj.symm ▸ G'.edge_vert
   symm := hadj.symm ▸ G'.symm
 
 theorem copy_eq (G' : Subgraph G) (V'' : Set V) (hV : V'' = G'.Verts) (adj' : V → V → Prop) (hadj : adj' = G'.Adj) :

@@ -115,20 +115,20 @@ theorem exists_cos_eq_zero : 0 ∈ cos '' Icc (1 : ℝ) 2 :=
 /-- The number π = 3.14159265... Defined here using choice as twice a zero of cos in [1,2], from
 which one can derive all its properties. For explicit bounds on π, see `data.real.pi.bounds`. -/
 protected noncomputable def pi : ℝ :=
-  2 * Classical.some exists_cos_eq_zero
+  2 * Classical.choose exists_cos_eq_zero
 
--- mathport name: «exprπ»
+-- mathport name: real.pi
 localized [Real] notation "π" => Real.pi
 
 @[simp]
 theorem cos_pi_div_two : cos (π / 2) = 0 := by
-  rw [Real.pi, mul_div_cancel_left _ (@two_ne_zero' ℝ _ _)] <;> exact (Classical.some_spec exists_cos_eq_zero).2
+  rw [Real.pi, mul_div_cancel_left _ (@two_ne_zero' ℝ _ _)] <;> exact (Classical.choose_spec exists_cos_eq_zero).2
 
 theorem one_le_pi_div_two : (1 : ℝ) ≤ π / 2 := by
-  rw [Real.pi, mul_div_cancel_left _ (@two_ne_zero' ℝ _ _)] <;> exact (Classical.some_spec exists_cos_eq_zero).1.1
+  rw [Real.pi, mul_div_cancel_left _ (@two_ne_zero' ℝ _ _)] <;> exact (Classical.choose_spec exists_cos_eq_zero).1.1
 
 theorem pi_div_two_le_two : π / 2 ≤ 2 := by
-  rw [Real.pi, mul_div_cancel_left _ (@two_ne_zero' ℝ _ _)] <;> exact (Classical.some_spec exists_cos_eq_zero).1.2
+  rw [Real.pi, mul_div_cancel_left _ (@two_ne_zero' ℝ _ _)] <;> exact (Classical.choose_spec exists_cos_eq_zero).1.2
 
 theorem two_le_pi : (2 : ℝ) ≤ π :=
   (div_le_div_right

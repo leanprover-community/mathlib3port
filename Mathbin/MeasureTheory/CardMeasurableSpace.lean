@@ -33,7 +33,7 @@ open Cardinal
 
 open Cardinal Set
 
--- mathport name: «exprω₁»
+-- mathport name: exprω₁
 local notation "ω₁" => (aleph 1 : Cardinal.{u}).ord.out.α
 
 namespace MeasurableSpace

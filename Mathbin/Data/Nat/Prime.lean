@@ -529,6 +529,7 @@ theorem factors_lemma {k} : (k + 2) / minFac (k + 2) < k + 2 :=
         (by
           decide)).one_lt
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `factors n` is the prime factorization of `n`, listed in increasing order. -/
 def factors : ℕ → List ℕ
   | 0 => []
@@ -536,7 +537,7 @@ def factors : ℕ → List ℕ
   | n@(k + 2) =>
     let m := minFac n
     have : n / m < n := factors_lemma
-    m :: factors (n / m)
+    m::factors (n / m)
 
 @[simp]
 theorem factors_zero : factors 0 = [] := by
@@ -618,14 +619,16 @@ theorem factors_chain : ∀ {n a}, (∀ p, Prime p → p ∣ n → a ≤ p) → 
 theorem factors_chain_2 (n) : List.Chain (· ≤ ·) 2 (factors n) :=
   factors_chain fun p pp _ => pp.two_le
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem factors_chain' (n) : List.Chain' (· ≤ ·) (factors n) :=
-  @List.Chain'.tail _ _ (_ :: _) (factors_chain_2 _)
+  @List.Chain'.tail _ _ (_::_) (factors_chain_2 _)
 
 theorem factors_sorted (n : ℕ) : List.Sorted (· ≤ ·) (factors n) :=
   List.chain'_iff_pairwise.1 (factors_chain' _)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `factors` can be constructed inductively by extracting `min_fac`, for sufficiently large `n`. -/
-theorem factors_add_two (n : ℕ) : factors (n + 2) = minFac (n + 2) :: factors ((n + 2) / minFac (n + 2)) := by
+theorem factors_add_two (n : ℕ) : factors (n + 2) = minFac (n + 2)::factors ((n + 2) / minFac (n + 2)) := by
   rw [factors]
 
 @[simp]
@@ -1116,31 +1119,37 @@ theorem factors_helper_nil (a : ℕ) : FactorsHelper 1 a [] := fun pa =>
   ⟨List.Chain.nil, by
     rintro _ ⟨⟩, List.prod_nil⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem factors_helper_cons' (n m a b : ℕ) (l : List ℕ) (h₁ : b * m = n) (h₂ : a ≤ b) (h₃ : Nat.minFac b = b)
-    (H : FactorsHelper m b l) : FactorsHelper n a (b :: l) := fun pa =>
+    (H : FactorsHelper m b l) : FactorsHelper n a (b::l) := fun pa =>
   have pb : b.Prime := Nat.prime_def_min_fac.2 ⟨le_transₓ pa.two_le h₂, h₃⟩
   let ⟨f₁, f₂, f₃⟩ := H pb
   ⟨List.Chain.cons h₂ f₁, fun c h => h.elim (fun e => e.symm ▸ pb) (f₂ _), by
     rw [List.prod_cons, f₃, h₁]⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem factors_helper_cons (n m a b : ℕ) (l : List ℕ) (h₁ : b * m = n) (h₂ : a < b) (h₃ : Nat.minFac b = b)
-    (H : FactorsHelper m b l) : FactorsHelper n a (b :: l) :=
+    (H : FactorsHelper m b l) : FactorsHelper n a (b::l) :=
   factors_helper_cons' _ _ _ _ _ h₁ h₂.le h₃ H
 
 theorem factors_helper_sn (n a : ℕ) (h₁ : a < n) (h₂ : Nat.minFac n = n) : FactorsHelper n a [n] :=
   factors_helper_cons _ _ _ _ _ (mul_oneₓ _) h₁ h₂ (factors_helper_nil _)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem factors_helper_same (n m a : ℕ) (l : List ℕ) (h : a * m = n) (H : FactorsHelper m a l) :
-    FactorsHelper n a (a :: l) := fun pa => factors_helper_cons' _ _ _ _ _ h le_rflₓ (Nat.prime_def_min_fac.1 pa).2 H pa
+    FactorsHelper n a (a::l) := fun pa => factors_helper_cons' _ _ _ _ _ h le_rflₓ (Nat.prime_def_min_fac.1 pa).2 H pa
 
 theorem factors_helper_same_sn (a : ℕ) : FactorsHelper a a [a] :=
   factors_helper_same _ _ _ _ (mul_oneₓ _) (factors_helper_nil _)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem factors_helper_end (n : ℕ) (l : List ℕ) (H : FactorsHelper n 2 l) : Nat.factors n = l :=
   let ⟨h₁, h₂, h₃⟩ := H Nat.prime_two
-  have := List.chain'_iff_pairwise.1 (@List.Chain'.tail _ _ (_ :: _) h₁)
+  have := List.chain'_iff_pairwise.1 (@List.Chain'.tail _ _ (_::_) h₁)
   (List.eq_of_perm_of_sorted (Nat.factors_unique h₃ h₂) this (Nat.factors_sorted _)).symm
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Given `n` and `a` natural numerals, returns `(l, ⊢ factors_helper n a l)`. -/
 unsafe def prove_factors_aux : instance_cache → expr → expr → ℕ → ℕ → tactic (instance_cache × expr × expr)
   | c, en, ea, n, a =>
@@ -1151,7 +1160,7 @@ unsafe def prove_factors_aux : instance_cache → expr → expr → ℕ → ℕ 
       if b = a then do
           let (c, _, p₁) ← prove_mul_nat c ea em
           let (c, l, p₂) ← prove_factors_aux c em ea m a
-          pure (c, quote.1 ((%%ₓea) :: %%ₓl : List ℕ), (quote.1 factors_helper_same).mk_app [en, em, ea, l, p₁, p₂])
+          pure (c, quote.1 ((%%ₓea)::%%ₓl : List ℕ), (quote.1 factors_helper_same).mk_app [en, em, ea, l, p₁, p₂])
         else do
           let (c, eb) ← c b
           let (c, _, p₁) ← prove_mul_nat c eb em
@@ -1159,7 +1168,7 @@ unsafe def prove_factors_aux : instance_cache → expr → expr → ℕ → ℕ 
           let (c, _, p₃) ← prove_min_fac c eb
           let (c, l, p₄) ← prove_factors_aux c em eb m b
           pure
-              (c, quote.1 ((%%ₓeb) :: %%ₓl : List ℕ),
+              (c, quote.1 ((%%ₓeb)::%%ₓl : List ℕ),
                 (quote.1 factors_helper_cons).mk_app [en, em, ea, eb, l, p₁, p₂, p₃, p₄])
     else
       if b = a then pure (c, quote.1 ([%%ₓea] : List ℕ), (quote.1 factors_helper_same_sn).mk_app [ea])

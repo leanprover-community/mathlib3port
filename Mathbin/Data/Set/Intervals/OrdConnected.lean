@@ -169,51 +169,32 @@ section LinearOrderₓ
 
 variable {α : Type _} [LinearOrderₓ α] {s : Set α} {x : α}
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 @[instance]
-theorem ord_connected_interval {a b : α} :
-    OrdConnected "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
+theorem ord_connected_interval {a b : α} : OrdConnected [a, b] :=
   ord_connected_Icc
 
 @[instance]
 theorem ord_connected_interval_oc {a b : α} : OrdConnected (Ι a b) :=
   ord_connected_Ioc
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem OrdConnected.interval_subset (hs : OrdConnected s) ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s) :
-    "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ⊆ s :=
+theorem OrdConnected.interval_subset (hs : OrdConnected s) ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s) : [x, y] ⊆ s :=
   hs.out (min_rec' (· ∈ s) hx hy) (max_rec' (· ∈ s) hx hy)
 
 theorem OrdConnected.interval_oc_subset (hs : OrdConnected s) ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s) : Ι x y ⊆ s :=
   Ioc_subset_Icc_self.trans <| hs.interval_subset hx hy
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem ord_connected_iff_interval_subset :
-    OrdConnected s ↔
-      ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s),
-        "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ⊆ s :=
+theorem ord_connected_iff_interval_subset : OrdConnected s ↔ ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), [x, y] ⊆ s :=
   ⟨fun h => h.interval_subset, fun H => ⟨fun x hx y hy => Icc_subset_interval.trans <| H hx hy⟩⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem ord_connected_iff_interval_subset_left (hx : x ∈ s) :
-    OrdConnected s ↔ ∀ ⦃y⦄, y ∈ s → "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ⊆ s :=
-  by
+theorem ord_connected_iff_interval_subset_left (hx : x ∈ s) : OrdConnected s ↔ ∀ ⦃y⦄, y ∈ s → [x, y] ⊆ s := by
   refine' ⟨fun hs => hs.interval_subset hx, fun hs => ord_connected_iff_interval_subset.2 fun y hy z hz => _⟩
-  suffices h :
-    "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ∪
-        "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ⊆
-      s
+  suffices h : [y, x] ∪ [x, z] ⊆ s
   · exact interval_subset_interval_union_interval.trans h
     
   rw [interval_swap, union_subset_iff]
   exact ⟨hs hy, hs hz⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem ord_connected_iff_interval_subset_right (hx : x ∈ s) :
-    OrdConnected s ↔ ∀ ⦃y⦄, y ∈ s → "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ⊆ s :=
-  by
+theorem ord_connected_iff_interval_subset_right (hx : x ∈ s) : OrdConnected s ↔ ∀ ⦃y⦄, y ∈ s → [y, x] ⊆ s := by
   simp_rw [ord_connected_iff_interval_subset_left hx, interval_swap]
 
 end LinearOrderₓ

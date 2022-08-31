@@ -122,9 +122,9 @@ the universal property is expressed as in `is_free_group.unique_lift`.  -/
 noncomputable def ofUniqueLift {G : Type u} [Groupₓ G] (X : Type u) (of : X → G)
     (h : ∀ {H : Type u} [Groupₓ H] (f : X → H), ∃! F : G →* H, ∀ a, F (of a) = f a) : IsFreeGroup G :=
   let lift {H : Type u} [Groupₓ H] : (X → H) ≃ (G →* H) :=
-    { toFun := fun f => Classical.some (h f), invFun := fun F => F ∘ of,
-      left_inv := fun f => funext (Classical.some_spec (h f)).left,
-      right_inv := fun F => ((Classical.some_spec (h (F ∘ of))).right F fun _ => rfl).symm }
+    { toFun := fun f => Classical.choose (h f), invFun := fun F => F ∘ of,
+      left_inv := fun f => funext (Classical.choose_spec (h f)).left,
+      right_inv := fun F => ((Classical.choose_spec (h (F ∘ of))).right F fun _ => rfl).symm }
   let lift_of {H : Type u} [Groupₓ H] (f : X → H) (a : X) : lift f (of a) = f a := congr_fun (lift.symm_apply_apply f) a
   ofLift X of @lift @lift_of
 

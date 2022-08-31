@@ -49,11 +49,19 @@ variable {X : Type _}
 
 namespace PseudoMetricSpace
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The maximal pseudo metric space structure on `X` such that `dist x y ≤ d x y` for all `x y`,
 where `d : X → X → ℝ≥0` is a function such that `d x x = 0` and `d x y = d y x` for all `x`, `y`. -/
 noncomputable def ofPrenndist (d : X → X → ℝ≥0 ) (dist_self : ∀ x, d x x = 0) (dist_comm : ∀ x y, d x y = d y x) :
     PseudoMetricSpace X where
-  dist := fun x y => ↑(⨅ l : List X, ((x :: l).zipWith d (l ++ [y])).Sum : ℝ≥0 )
+  dist := fun x y => ↑(⨅ l : List X, ((x::l).zipWith d (l ++ [y])).Sum : ℝ≥0 )
   dist_self := fun x =>
     (Nnreal.coe_eq_zero _).2 <|
       nonpos_iff_eq_zero.1 <|
@@ -69,17 +77,17 @@ noncomputable def ofPrenndist (d : X → X → ℝ≥0 ) (dist_self : ∀ x, d x
     rw [← Nnreal.coe_add, Nnreal.coe_le_coe]
     refine' Nnreal.le_infi_add_infi fun lxy lyz => _
     calc
-      (⨅ l, (zip_with d (x :: l) (l ++ [z])).Sum) ≤
-          (zip_with d (x :: (lxy ++ y :: lyz)) (lxy ++ y :: lyz ++ [z])).Sum :=
-        cinfi_le (OrderBot.bdd_below _) (lxy ++ y :: lyz)
-      _ = (zip_with d (x :: lxy) (lxy ++ [y])).Sum + (zip_with d (y :: lyz) (lyz ++ [z])).Sum := _
+      (⨅ l, (zip_with d (x::l) (l ++ [z])).Sum) ≤ (zip_with d (x::lxy ++ y::lyz) ((lxy ++ y::lyz) ++ [z])).Sum :=
+        cinfi_le (OrderBot.bdd_below _) (lxy ++ y::lyz)
+      _ = (zip_with d (x::lxy) (lxy ++ [y])).Sum + (zip_with d (y::lyz) (lyz ++ [z])).Sum := _
       
     rw [← sum_append, ← zip_with_append, cons_append, ← @singleton_append _ y, append_assoc, append_assoc, append_assoc]
     rw [length_cons, length_append, length_singleton]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem dist_of_prenndist (d : X → X → ℝ≥0 ) (dist_self : ∀ x, d x x = 0) (dist_comm : ∀ x y, d x y = d y x) (x y : X) :
     @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPrenndist d dist_self dist_comm)) x y =
-      ↑(⨅ l : List X, ((x :: l).zipWith d (l ++ [y])).Sum : ℝ≥0 ) :=
+      ↑(⨅ l : List X, ((x::l).zipWith d (l ++ [y])).Sum : ℝ≥0 ) :=
   rfl
 
 theorem dist_of_prenndist_le (d : X → X → ℝ≥0 ) (dist_self : ∀ x, d x x = 0) (dist_comm : ∀ x y, d x y = d y x)
@@ -89,8 +97,11 @@ theorem dist_of_prenndist_le (d : X → X → ℝ≥0 ) (dist_self : ∀ x, d x 
     (cinfi_le (OrderBot.bdd_below _) []).trans_eq <| by
       simp
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident z, ",", ident z', ",", ident hxz, ",", ident hzz', ",", ident hz'y, "⟩", ":", expr «expr∃ , »((z z' : X),
     «expr ∧ »(«expr ≤ »(d x z, L.sum), «expr ∧ »(«expr ≤ »(d z z', L.sum), «expr ≤ »(d z' y, L.sum))))]]
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Consider a function `d : X → X → ℝ≥0` such that `d x x = 0` and `d x y = d y x` for all `x`,
 `y`. Let `dist` be the largest pseudometric distance such that `dist x y ≤ d x y`, see
 `pseudo_metric_space.of_prenndist`. Suppose that `d` satisfies the following triangle-like
@@ -115,7 +126,7 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0 ) (dist_self : ∀
   induction' hn : length l using Nat.strong_induction_onₓ with n ihn generalizing x y l
   simp only at ihn
   subst n
-  set L := zip_with d (x :: l) (l ++ [y])
+  set L := zip_with d (x::l) (l ++ [y])
   have hL_len : length L = length l + 1 := by
     simp
   cases' eq_or_ne (d x y) 0 with hd₀ hd₀
@@ -144,9 +155,9 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0 ) (dist_self : ∀
     exact ⟨Sup s, cSup_le hsne hs_ub, ⟨Nat.Sup_mem hsne hs_bdd, fun k => le_cSup hs_bdd⟩⟩
   have hM_lt : M < length L := by
     rwa [hL_len, Nat.lt_succ_iffₓ]
-  have hM_ltx : M < length (x :: l) := lt_length_left_of_zip_with hM_lt
+  have hM_ltx : M < length (x::l) := lt_length_left_of_zip_with hM_lt
   have hM_lty : M < length (l ++ [y]) := lt_length_right_of_zip_with hM_lt
-  refine' ⟨(x :: l).nthLe M hM_ltx, (l ++ [y]).nthLe M hM_lty, _, _, _⟩
+  refine' ⟨(x::l).nthLe M hM_ltx, (l ++ [y]).nthLe M hM_lty, _, _, _⟩
   · cases M
     · simp [dist_self]
       

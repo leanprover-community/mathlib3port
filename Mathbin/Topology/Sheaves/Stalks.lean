@@ -393,7 +393,7 @@ theorem section_ext (F : Sheaf C X) (U : Opens X) (s t : F.1.obj (op U))
     exact ⟨⟨x, hxU⟩, m ⟨x, hxU⟩⟩
     
   · intro x
-    rw [HEq, Subsingleton.elimₓ (i₁ x) (i₂ x)]
+    rw [HEq, Subsingleton.elim (i₁ x) (i₂ x)]
     
 
 /-

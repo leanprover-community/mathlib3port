@@ -288,7 +288,7 @@ theorem typein_lt_typein (r : α → α → Prop) [IsWellOrder α r] {a b : α} 
       let f' := PrincipalSeg.ofElement r a
       let g' := f.trans (PrincipalSeg.ofElement r b)
       have : g'.top = f'.top := by
-        rw [Subsingleton.elimₓ f' g']
+        rw [Subsingleton.elim f' g']
       exact this
     rw [← this]
     exact f.top.2, fun h =>
@@ -660,7 +660,7 @@ theorem lift.initial_seg_coe : (lift.initialSeg : Ordinal → Ordinal) = lift :=
 def omega : Ordinal.{u} :=
   lift <| @type ℕ (· < ·) _
 
--- mathport name: «exprω»
+-- mathport name: ordinal.omega
 localized [Ordinal] notation "ω" => Ordinal.omega
 
 /-- Note that the presence of this lemma makes `simp [omega]` form a loop. -/

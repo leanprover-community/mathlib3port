@@ -338,9 +338,10 @@ theorem unpair : Primrec Nat.unpair :=
   (pair (nat_iff.2 Nat.Primrec.left) (nat_iff.2 Nat.Primrec.right)).of_eq fun n => by
     simp
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem list_nth₁ : ∀ l : List α, Primrec l.nth
   | [] => dom_denumerable.2 zero
-  | a :: l =>
+  | a::l =>
     dom_denumerable.2 <|
       (cases1 (encode a).succ <| dom_denumerable.1 <| list_nth₁ l).of_eq fun n => by
         cases n <;> simp
@@ -674,10 +675,11 @@ protected theorem decode₂ : Primrec (decode₂ α) :=
   option_bind Primrec.decode <|
     option_guard ((@Primrec.eq _ _ Nat.decidableEq).comp (encode_iff.2 snd) (fst.comp fst)) snd
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem list_find_index₁ {p : α → β → Prop} [∀ a b, Decidable (p a b)] (hp : PrimrecRel p) :
     ∀ l : List β, Primrec fun a => l.findIndex (p a)
   | [] => const 0
-  | a :: l => ite (hp.comp Primrec.id (const a)) (const 0) (succ.comp (list_find_index₁ l))
+  | a::l => ite (hp.comp Primrec.id (const a)) (const 0) (succ.comp (list_find_index₁ l))
 
 theorem list_index_of₁ [DecidableEq α] (l : List α) : Primrec fun a => l.indexOf a :=
   list_find_index₁ Primrec.eq l
@@ -835,12 +837,13 @@ private theorem list_cons' :
   letI := prim H
   encode_iff.1 (succ.comp <| primrec₂.mkpair.comp (encode_iff.2 fst) (encode_iff.2 snd))
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 private theorem list_reverse' :
     haveI := prim H
     Primrec (@List.reverse β) :=
   letI := prim H
   (list_foldl' H Primrec.id (const []) <| to₂ <| ((list_cons' H).comp snd fst).comp snd).of_eq
-    (suffices ∀ l r, List.foldlₓ (fun (s : List β) (b : β) => b :: s) r l = List.reverseCore l r from fun l => this l []
+    (suffices ∀ l r, List.foldlₓ (fun (s : List β) (b : β) => b::s) r l = List.reverseCore l r from fun l => this l []
     fun l => by
     induction l <;> simp [*, List.reverseCore])
 
@@ -953,9 +956,10 @@ theorem list_tail : Primrec (@List.tail α) :=
   (list_cases Primrec.id (const []) (snd.comp snd).to₂).of_eq fun l => by
     cases l <;> rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem list_rec {f : α → List β} {g : α → σ} {h : α → β × List β × σ → σ} (hf : Primrec f) (hg : Primrec g)
     (hh : Primrec₂ h) : @Primrec _ σ _ _ fun a => List.recOn (f a) (g a) fun b l IH => h a (b, l, IH) :=
-  let F (a : α) := (f a).foldr (fun (b : β) (s : List β × σ) => (b :: s.1, h a (b, s))) ([], g a)
+  let F (a : α) := (f a).foldr (fun (b : β) (s : List β × σ) => (b::s.1, h a (b, s))) ([], g a)
   have : Primrec F :=
     list_foldr hf (pair (const []) hg) <| to₂ <| pair ((list_cons.comp fst (fst.comp snd)).comp snd) hh
   (snd.comp this).of_eq fun a => by
@@ -964,6 +968,7 @@ theorem list_rec {f : α → List β} {g : α → σ} {h : α → β × List β 
     simp [F]
     induction' f a with b l IH <;> simp [*]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem list_nth : Primrec₂ (@List.nth α) :=
   let F (l : List α) (n : ℕ) :=
     l.foldl (fun (s : Sum ℕ α) (a : α) => Sum.casesOn s (@Nat.cases (Sum ℕ α) (Sum.inr a) Sum.inl) Sum.inr) (Sum.inl n)
@@ -981,7 +986,7 @@ theorem list_nth : Primrec₂ (@List.nth α) :=
     · rfl
       
     cases' n with n
-    · rw [(_ : F (a :: l) 0 = Sum.inr a)]
+    · rw [(_ : F (a::l) 0 = Sum.inr a)]
       · rfl
         
       clear IH
@@ -1182,8 +1187,9 @@ theorem vector_cons {n} : Primrec₂ (@Vector.cons α n) :=
 theorem vector_length {n} : Primrec (@Vector.length α n) :=
   const _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem vector_head {n} : Primrec (@Vector.head α n) :=
-  option_some_iff.1 <| (list_head'.comp vector_to_list).of_eq fun ⟨a :: l, h⟩ => rfl
+  option_some_iff.1 <| (list_head'.comp vector_to_list).of_eq fun ⟨a::l, h⟩ => rfl
 
 theorem vector_tail {n} : Primrec (@Vector.tail α n) :=
   vector_to_list_iff.1 <|
@@ -1353,11 +1359,12 @@ theorem mkpair : @Primrec' 2 fun v => v.head.mkpair v.tail.head :=
   if_lt head (tail head) (add.comp₂ _ (tail <| mul.comp₂ _ head head) head)
     (add.comp₂ _ (add.comp₂ _ (mul.comp₂ _ head head) head) (tail head))
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 protected theorem encode : ∀ {n}, @Primrec' n encode
   | 0 =>
     (const 0).of_eq fun v => by
       rw [v.eq_nil] <;> rfl
-  | n + 1 => (succ.comp₁ _ (mkpair.comp₂ _ head (tail encode))).of_eq fun ⟨a :: l, e⟩ => rfl
+  | n + 1 => (succ.comp₁ _ (mkpair.comp₂ _ head (tail encode))).of_eq fun ⟨a::l, e⟩ => rfl
 
 theorem sqrt : @Primrec' 1 fun v => v.head.sqrt := by
   suffices H : ∀ n : ℕ, n.sqrt = n.elim 0 fun x y => if x.succ < y.succ * y.succ then y else y.succ

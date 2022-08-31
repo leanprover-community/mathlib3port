@@ -52,6 +52,7 @@ theorem sum_mul : (∑ x in s, f x) * b = ∑ x in s, f x * b :=
 theorem mul_sum : (b * ∑ x in s, f x) = ∑ x in s, b * f x :=
   AddMonoidHom.map_sum (AddMonoidHom.mulLeft b) _ s
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem sum_mul_sum {ι₁ : Type _} {ι₂ : Type _} (s₁ : Finset ι₁) (s₂ : Finset ι₂) (f₁ : ι₁ → β) (f₂ : ι₂ → β) :
     ((∑ x₁ in s₁, f₁ x₁) * ∑ x₂ in s₂, f₂ x₂) = ∑ p in s₁ ×ˢ s₂, f₁ p.1 * f₂ p.2 := by
   rw [sum_product, sum_mul, sum_congr rfl]

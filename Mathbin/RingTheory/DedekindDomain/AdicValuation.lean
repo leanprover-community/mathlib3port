@@ -300,8 +300,8 @@ theorem valuation_exists_uniformizer : ∃ π : K, v.Valuation π = Multiplicati
   exact hr
 
 /-- Uniformizers are nonzero. -/
-theorem valuation_uniformizer_ne_zero : Classical.some (v.valuation_exists_uniformizer K) ≠ 0 := by
-  have hu := Classical.some_spec (v.valuation_exists_uniformizer K)
+theorem valuation_uniformizer_ne_zero : Classical.choose (v.valuation_exists_uniformizer K) ≠ 0 := by
+  have hu := Classical.choose_spec (v.valuation_exists_uniformizer K)
   exact (Valuation.ne_zero_iff _).mp (ne_of_eq_of_ne hu WithZero.coe_ne_zero)
 
 /-! ### Completions with respect to adic valuations

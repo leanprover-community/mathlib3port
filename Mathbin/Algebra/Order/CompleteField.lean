@@ -374,7 +374,7 @@ instance Real.RingHom.unique : Unique (ℝ →+* ℝ) where
   default := RingHom.id ℝ
   uniq := fun f =>
     congr_arg OrderRingHom.toRingHom
-      (Subsingleton.elimₓ ⟨f, ring_hom_monotone (fun r hr => ⟨Real.sqrt r, sq_sqrt hr⟩) f⟩ default)
+      (Subsingleton.elim ⟨f, ring_hom_monotone (fun r hr => ⟨Real.sqrt r, sq_sqrt hr⟩) f⟩ default)
 
 end Real
 

@@ -48,7 +48,7 @@ range of `f`. -/
 structure InitialSeg {α β : Type _} (r : α → α → Prop) (s : β → β → Prop) extends r ↪r s where
   init : ∀ a b, s b (to_rel_embedding a) → ∃ a', to_rel_embedding a' = b
 
--- mathport name: «expr ≼i »
+-- mathport name: initial_seg
 localized [InitialSeg] infixl:25 " ≼i " => InitialSeg
 
 namespace InitialSeg
@@ -133,10 +133,10 @@ theorem unique_of_trichotomous_of_irrefl [IsTrichotomous β s] [IsIrrefl β s] :
 
 instance [IsWellOrder β s] : Subsingleton (r ≼i s) :=
   ⟨fun a =>
-    @Subsingleton.elimₓ _ (unique_of_trichotomous_of_irrefl (@RelEmbedding.well_founded _ _ r s a IsWellFounded.wf)) a⟩
+    @Subsingleton.elim _ (unique_of_trichotomous_of_irrefl (@RelEmbedding.well_founded _ _ r s a IsWellFounded.wf)) a⟩
 
 protected theorem eq [IsWellOrder β s] (f g : r ≼i s) (a) : f a = g a := by
-  rw [Subsingleton.elimₓ f g]
+  rw [Subsingleton.elim f g]
 
 theorem Antisymm.aux [IsWellOrder α r] (f : r ≼i s) (g : s ≼i r) : LeftInverse g f :=
   InitialSeg.eq (f.trans g) (InitialSeg.refl _)
@@ -145,7 +145,7 @@ theorem Antisymm.aux [IsWellOrder α r] (f : r ≼i s) (g : s ≼i r) : LeftInve
 is a well-order then `α` and `β` are order-isomorphic. -/
 def antisymm [IsWellOrder β s] (f : r ≼i s) (g : s ≼i r) : r ≃r s :=
   haveI := f.to_rel_embedding.is_well_order
-  ⟨⟨f, g, antisymm.aux f g, antisymm.aux g f⟩, f.map_rel_iff'⟩
+  ⟨⟨f, g, antisymm.aux f g, antisymm.aux g f⟩, fun _ _ => f.map_rel_iff'⟩
 
 @[simp]
 theorem antisymm_to_fun [IsWellOrder β s] (f : r ≼i s) (g : s ≼i r) : (antisymm f g : α → β) = f :=
@@ -210,7 +210,7 @@ structure PrincipalSeg {α β : Type _} (r : α → α → Prop) (s : β → β 
   top : β
   down' : ∀ b, s b top ↔ ∃ a, to_rel_embedding a = b
 
--- mathport name: «expr ≺i »
+-- mathport name: principal_seg
 localized [InitialSeg] infixl:25 " ≺i " => PrincipalSeg
 
 namespace PrincipalSeg
@@ -320,7 +320,7 @@ instance [IsWellOrder β s] : Subsingleton (r ≺i s) :=
   ⟨fun f g => by
     have ef : (f : α → β) = g := by
       show ((f : r ≼i s) : α → β) = g
-      rw [@Subsingleton.elimₓ _ _ (f : r ≼i s) g]
+      rw [@Subsingleton.elim _ _ (f : r ≼i s) g]
       rfl
     have et : f.top = g.top := by
       refine' extensional_of_trichotomous_of_irrefl s fun x => _
@@ -330,11 +330,11 @@ instance [IsWellOrder β s] : Subsingleton (r ≺i s) :=
     have := RelEmbedding.coe_fn_injective ef <;> congr⟩
 
 theorem top_eq [IsWellOrder γ t] (e : r ≃r s) (f : r ≺i t) (g : s ≺i t) : f.top = g.top := by
-  rw [Subsingleton.elimₓ f (PrincipalSeg.equivLt e g)] <;> rfl
+  rw [Subsingleton.elim f (PrincipalSeg.equivLt e g)] <;> rfl
 
 theorem top_lt_top {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop} [IsWellOrder γ t] (f : PrincipalSeg r s)
     (g : PrincipalSeg s t) (h : PrincipalSeg r t) : t h.top g.top := by
-  rw [Subsingleton.elimₓ h (f.trans g)]
+  rw [Subsingleton.elim h (f.trans g)]
   apply PrincipalSeg.lt_top
 
 /-- Any element of a well order yields a principal segment -/
@@ -390,7 +390,7 @@ noncomputable def InitialSeg.ltOrEq [IsWellOrder β s] (f : r ≼i s) : Sum (r �
   · exact Sum.inr (RelIso.ofSurjective f h)
     
   · have h' : _ := (InitialSeg.eq_or_principal f).resolve_left h
-    exact Sum.inl ⟨f, Classical.some h', Classical.some_spec h'⟩
+    exact Sum.inl ⟨f, Classical.choose h', Classical.choose_spec h'⟩
     
 
 theorem InitialSeg.lt_or_eq_apply_left [IsWellOrder β s] (f : r ≼i s) (g : r ≺i s) (a : α) : g a = f a :=

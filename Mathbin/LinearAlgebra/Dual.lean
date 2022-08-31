@@ -759,11 +759,11 @@ theorem dual_pairing_nondegenerate : (dualPairing K V).Nondegenerate := by
   contrapose
   rintro hx : x ≠ 0
   rw [not_forall]
-  let f : V →ₗ[K] K := Classical.some (LinearPmap.mkSpanSingleton x 1 hx).toFun.exists_extend
+  let f : V →ₗ[K] K := Classical.choose (LinearPmap.mkSpanSingleton x 1 hx).toFun.exists_extend
   use f
   refine' ne_zero_of_eq_one _
   have h : f.comp (K∙x).Subtype = (LinearPmap.mkSpanSingleton x 1 hx).toFun :=
-    Classical.some_spec (LinearPmap.mkSpanSingleton x (1 : K) hx).toFun.exists_extend
+    Classical.choose_spec (LinearPmap.mkSpanSingleton x (1 : K) hx).toFun.exists_extend
   exact (FunLike.congr_fun h _).trans (LinearPmap.mk_span_singleton_apply _ hx _)
 
 end Field

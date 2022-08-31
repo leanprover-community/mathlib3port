@@ -48,15 +48,15 @@ If you're working with a nonempty linear order, consider defining a
 `conditionally_complete_linear_order_bot` instance via
 `well_founded.conditionally_complete_linear_order_with_bot` and using `Inf` instead. -/
 noncomputable def min {r : α → α → Prop} (H : WellFounded r) (s : Set α) (h : s.Nonempty) : α :=
-  Classical.some (H.has_min s h)
+  Classical.choose (H.has_min s h)
 
 theorem min_mem {r : α → α → Prop} (H : WellFounded r) (s : Set α) (h : s.Nonempty) : H.min s h ∈ s :=
-  let ⟨h, _⟩ := Classical.some_spec (H.has_min s h)
+  let ⟨h, _⟩ := Classical.choose_spec (H.has_min s h)
   h
 
 theorem not_lt_min {r : α → α → Prop} (H : WellFounded r) (s : Set α) (h : s.Nonempty) {x} (hx : x ∈ s) :
     ¬r x (H.min s h) :=
-  let ⟨_, h'⟩ := Classical.some_spec (H.has_min s h)
+  let ⟨_, h'⟩ := Classical.choose_spec (H.has_min s h)
   h' _ hx
 
 theorem well_founded_iff_has_min {r : α → α → Prop} :

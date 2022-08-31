@@ -75,8 +75,8 @@ variable [Mul M]
 /-- Subsemigroups of semigroup `M` are isomorphic to additive subsemigroups of `additive M`. -/
 @[simps]
 def Subsemigroup.toAddSubsemigroup : Subsemigroup M ≃o AddSubsemigroup (Additive M) where
-  toFun := fun S => { Carrier := Additive.toMul ⁻¹' S, add_mem' := S.mul_mem' }
-  invFun := fun S => { Carrier := Additive.ofMul ⁻¹' S, mul_mem' := S.add_mem' }
+  toFun := fun S => { Carrier := Additive.toMul ⁻¹' S, add_mem' := fun _ _ => S.mul_mem' }
+  invFun := fun S => { Carrier := Additive.ofMul ⁻¹' S, mul_mem' := fun _ _ => S.add_mem' }
   left_inv := fun x => by
     cases x <;> rfl
   right_inv := fun x => by
@@ -110,8 +110,8 @@ variable {A : Type _} [Add A]
 multiplicative subsemigroups of `multiplicative A`. -/
 @[simps]
 def AddSubsemigroup.toSubsemigroup : AddSubsemigroup A ≃o Subsemigroup (Multiplicative A) where
-  toFun := fun S => { Carrier := Multiplicative.toAdd ⁻¹' S, mul_mem' := S.add_mem' }
-  invFun := fun S => { Carrier := Multiplicative.ofAdd ⁻¹' S, add_mem' := S.mul_mem' }
+  toFun := fun S => { Carrier := Multiplicative.toAdd ⁻¹' S, mul_mem' := fun _ _ => S.add_mem' }
+  invFun := fun S => { Carrier := Multiplicative.ofAdd ⁻¹' S, add_mem' := fun _ _ => S.mul_mem' }
   left_inv := fun x => by
     cases x <;> rfl
   right_inv := fun x => by
@@ -472,6 +472,7 @@ theorem closure_closure_coe_preimage {s : Set M} : closure ((coe : closure s →
       · exact Subsemigroup.mul_mem _
         
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Given `subsemigroup`s `s`, `t` of semigroups `M`, `N` respectively, `s × t` as a subsemigroup
 of `M × N`. -/
 @[to_additive Prod
@@ -480,6 +481,7 @@ def prod (s : Subsemigroup M) (t : Subsemigroup N) : Subsemigroup (M × N) where
   Carrier := s ×ˢ t
   mul_mem' := fun p q hp hq => ⟨s.mul_mem hp.1 hq.1, t.mul_mem hp.2 hq.2⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive coe_prod]
 theorem coe_prod (s : Subsemigroup M) (t : Subsemigroup N) : (s.Prod t : Set (M × N)) = s ×ˢ t :=
   rfl

@@ -94,12 +94,12 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
 instance (X : Type u₁) [Nonempty X] :
     Injective X where Factors := fun Y Z g f mono =>
     ⟨fun z => by
-      classical <;> exact if h : z ∈ Set.Range f then g (Classical.some h) else Nonempty.some inferInstance, by
+      classical <;> exact if h : z ∈ Set.Range f then g (Classical.choose h) else Nonempty.some inferInstance, by
       ext y
       change dite _ _ _ = _
       split_ifs
       · rw [mono_iff_injective] at mono
-        rw [mono (Classical.some_spec h)]
+        rw [mono (Classical.choose_spec h)]
         
       · exact False.elim (h ⟨y, rfl⟩)
         ⟩
@@ -210,6 +210,32 @@ theorem injective_of_adjoint (adj : L ⊣ R) (J : D) [Injective J] : injective <
           simp )⟩⟩
 
 end Adjunction
+
+section Preadditive
+
+variable [Preadditive C]
+
+theorem injective_iff_preserves_epimorphisms_preadditive_yoneda_obj (J : C) :
+    Injective J ↔ (preadditiveYoneda.obj J).PreservesEpimorphisms := by
+  rw [injective_iff_preserves_epimorphisms_yoneda_obj]
+  refine' ⟨fun h : (preadditive_yoneda.obj J ⋙ forget _).PreservesEpimorphisms => _, _⟩
+  · exact functor.preserves_epimorphisms_of_preserves_of_reflects (preadditive_yoneda.obj J) (forget _)
+    
+  · intro
+    exact (inferInstance : (preadditive_yoneda.obj J ⋙ forget _).PreservesEpimorphisms)
+    
+
+theorem injective_iff_preserves_epimorphisms_preadditive_yoneda_obj' (J : C) :
+    Injective J ↔ (preadditiveYonedaObj J).PreservesEpimorphisms := by
+  rw [injective_iff_preserves_epimorphisms_yoneda_obj]
+  refine' ⟨fun h : (preadditive_yoneda_obj J ⋙ forget _).PreservesEpimorphisms => _, _⟩
+  · exact functor.preserves_epimorphisms_of_preserves_of_reflects (preadditive_yoneda_obj J) (forget _)
+    
+  · intro
+    exact (inferInstance : (preadditive_yoneda_obj J ⋙ forget _).PreservesEpimorphisms)
+    
+
+end Preadditive
 
 section EnoughInjectives
 

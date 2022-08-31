@@ -51,31 +51,39 @@ def Linexp : Type :=
 
 namespace Linexp
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Add two `linexp`s together componentwise.
 Preserves sorting and uniqueness of the first argument.
 -/
 unsafe def add : Linexp → Linexp → Linexp
   | [], a => a
   | a, [] => a
-  | a@(n1, z1) :: t1, b@(n2, z2) :: t2 =>
-    if n1 < n2 then b :: add (a :: t1) t2
+  | a@(n1, z1)::t1, b@(n2, z2)::t2 =>
+    if n1 < n2 then b::add (a::t1) t2
     else
-      if n2 < n1 then a :: add t1 (b :: t2)
+      if n2 < n1 then a::add t1 (b::t2)
       else
         let sum := z1 + z2
-        if Sum = 0 then add t1 t2 else (n1, Sum) :: add t1 t2
+        if Sum = 0 then add t1 t2 else (n1, Sum)::add t1 t2
 
 /-- `l.scale c` scales the values in `l` by `c` without modifying the order or keys. -/
 def scale (c : ℤ) (l : Linexp) : Linexp :=
   if c = 0 then [] else if c = 1 then l else l.map fun ⟨n, z⟩ => (n, z * c)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `l.get n` returns the value in `l` associated with key `n`, if it exists, and `none` otherwise.
 This function assumes that `l` is sorted in decreasing order of the first argument,
 that is, it will return `none` as soon as it finds a key smaller than `n`.
 -/
 def get (n : ℕ) : Linexp → Option ℤ
   | [] => none
-  | (a, b) :: t => if a < n then none else if a = n then some b else get t
+  | (a, b)::t => if a < n then none else if a = n then some b else get t
 
 /-- `l.contains n` is true iff `n` is the first element of a pair in `l`.
 -/
@@ -93,13 +101,15 @@ def zfind (n : ℕ) (l : Linexp) : ℤ :=
 def vars (l : Linexp) : List ℕ :=
   l.map Prod.fst
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Defines a lex ordering on `linexp`. This function is performance critical.
 -/
 def cmp : Linexp → Linexp → Ordering
   | [], [] => Ordering.eq
   | [], _ => Ordering.lt
   | _, [] => Ordering.gt
-  | (n1, z1) :: t1, (n2, z2) :: t2 =>
+  | (n1, z1)::t1, (n2, z2)::t2 =>
     if n1 < n2 then Ordering.lt
     else if n2 < n1 then Ordering.gt else if z1 < z2 then Ordering.lt else if z2 < z1 then Ordering.gt else cmp t1 t2
 

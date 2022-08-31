@@ -47,7 +47,7 @@ theorem factors_congr {X : C} {f g : MonoOver X} {Y : C} (h : Y ⟶ X) (e : f �
 /-- `P.factor_thru f h` provides a factorisation of `f : X ⟶ Y` through some `P : mono_over Y`,
 given the evidence `h : P.factors f` that such a factorisation exists. -/
 def factorThru {X Y : C} (P : MonoOver Y) (f : X ⟶ Y) (h : Factors P f) : X ⟶ (P : C) :=
-  Classical.some h
+  Classical.choose h
 
 end MonoOver
 
@@ -118,11 +118,11 @@ theorem factors_of_le {Y Z : C} {P Q : Subobject Y} (f : Z ⟶ Y) (h : P ≤ Q) 
 /-- `P.factor_thru f h` provides a factorisation of `f : X ⟶ Y` through some `P : subobject Y`,
 given the evidence `h : P.factors f` that such a factorisation exists. -/
 def factorThru {X Y : C} (P : Subobject Y) (f : X ⟶ Y) (h : Factors P f) : X ⟶ P :=
-  Classical.some ((factors_iff _ _).mp h)
+  Classical.choose ((factors_iff _ _).mp h)
 
 @[simp, reassoc]
 theorem factor_thru_arrow {X Y : C} (P : Subobject Y) (f : X ⟶ Y) (h : Factors P f) : P.factorThru f h ≫ P.arrow = f :=
-  Classical.some_spec ((factors_iff _ _).mp h)
+  Classical.choose_spec ((factors_iff _ _).mp h)
 
 @[simp]
 theorem factor_thru_self {X : C} (P : Subobject X) (h) : P.factorThru P.arrow h = 𝟙 P := by

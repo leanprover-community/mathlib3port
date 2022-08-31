@@ -18,6 +18,8 @@ variable {C D : Type _} [Category C] [Category D] [MonoidalCategory C] [Monoidal
 
 variable (F : MonoidalFunctor C D)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Given candidate data for an exact pairing,
 which is sent by a faithful monoidal functor to an exact pairing,
 the equations holds automatically. -/
@@ -47,6 +49,7 @@ def exactPairingOfFullyFaithful [Full F.toFunctor] [Faithful F.toFunctor] (X Y :
     (by
       simp )
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Pull back a left dual along an equivalence. -/
 def hasLeftDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasLeftDual (F.obj X)] : HasLeftDual X where
   leftDual := F.toFunctor.inv.obj (ᘁF.obj X)
@@ -56,6 +59,7 @@ def hasLeftDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasLeftDual (F
     dsimp'
     infer_instance
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Pull back a right dual along an equivalence. -/
 def hasRightDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasRightDual (F.obj X)] : HasRightDual X where
   rightDual := F.toFunctor.inv.obj (F.obj Xᘁ)

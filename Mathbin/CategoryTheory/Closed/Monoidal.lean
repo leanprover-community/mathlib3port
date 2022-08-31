@@ -41,6 +41,7 @@ attribute [instance] monoidal_closed.closed'
 
 variable {C : Type u} [Category.{v} C] [MonoidalCategory.{v} C]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- If `X` and `Y` are closed then `X ⊗ Y` is.
 This isn't an instance because it's not usually how we want to construct internal homs,
 we'll usually prove all objects are closed uniformly.
@@ -103,17 +104,22 @@ theorem ihom_adjunction_counit : (ihom.adjunction A).counit = ev A :=
 theorem ihom_adjunction_unit : (ihom.adjunction A).Unit = coev A :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp, reassoc]
 theorem ev_naturality {X Y : C} (f : X ⟶ Y) : (𝟙 A ⊗ (ihom A).map f) ≫ (ev A).app Y = (ev A).app X ≫ f :=
   (ev A).naturality f
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp, reassoc]
 theorem coev_naturality {X Y : C} (f : X ⟶ Y) : f ≫ (coev A).app Y = (coev A).app X ≫ (ihom A).map (𝟙 A ⊗ f) :=
   (coev A).naturality f
 
--- mathport name: «expr ⟶[ ] »
+-- mathport name: ihom
 notation A " ⟶[" C "] " B:10 => (@ihom C _ _ A _).obj B
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp, reassoc]
 theorem ev_coev : (𝟙 A ⊗ (coev A).app B) ≫ (ev A).app (A ⊗ B) = 𝟙 (A ⊗ B) :=
   Adjunction.left_triangle_components (ihom.adjunction A)
@@ -134,14 +140,17 @@ variable {A}
 -- Wrap these in a namespace so we don't clash with the core versions.
 namespace MonoidalClosed
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Currying in a monoidal closed category. -/
 def curry : (A ⊗ Y ⟶ X) → (Y ⟶ A ⟶[C] X) :=
   (ihom.adjunction A).homEquiv _ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Uncurrying in a monoidal closed category. -/
 def uncurry : (Y ⟶ A ⟶[C] X) → (A ⊗ Y ⟶ X) :=
   ((ihom.adjunction A).homEquiv _ _).symm
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem hom_equiv_apply_eq (f : A ⊗ Y ⟶ X) : (ihom.adjunction A).homEquiv _ _ f = curry f :=
   rfl
@@ -150,10 +159,13 @@ theorem hom_equiv_apply_eq (f : A ⊗ Y ⟶ X) : (ihom.adjunction A).homEquiv _ 
 theorem hom_equiv_symm_apply_eq (f : Y ⟶ A ⟶[C] X) : ((ihom.adjunction A).homEquiv _ _).symm f = uncurry f :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[reassoc]
 theorem curry_natural_left (f : X ⟶ X') (g : A ⊗ X' ⟶ Y) : curry ((𝟙 _ ⊗ f) ≫ g) = f ≫ curry g :=
   Adjunction.hom_equiv_naturality_left _ _ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[reassoc]
 theorem curry_natural_right (f : A ⊗ X ⟶ Y) (g : Y ⟶ Y') : curry (f ≫ g) = curry f ≫ (ihom _).map g :=
   Adjunction.hom_equiv_naturality_right _ _ _
@@ -162,10 +174,12 @@ theorem curry_natural_right (f : A ⊗ X ⟶ Y) (g : Y ⟶ Y') : curry (f ≫ g)
 theorem uncurry_natural_right (f : X ⟶ A ⟶[C] Y) (g : Y ⟶ Y') : uncurry (f ≫ (ihom _).map g) = uncurry f ≫ g :=
   Adjunction.hom_equiv_naturality_right_symm _ _ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[reassoc]
 theorem uncurry_natural_left (f : X ⟶ X') (g : X' ⟶ A ⟶[C] Y) : uncurry (f ≫ g) = (𝟙 _ ⊗ f) ≫ uncurry g :=
   Adjunction.hom_equiv_naturality_left_symm _ _ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem uncurry_curry (f : A ⊗ X ⟶ Y) : uncurry (curry f) = f :=
   (Closed.isAdj.adj.homEquiv _ _).left_inv f
@@ -174,22 +188,28 @@ theorem uncurry_curry (f : A ⊗ X ⟶ Y) : uncurry (curry f) = f :=
 theorem curry_uncurry (f : X ⟶ A ⟶[C] Y) : curry (uncurry f) = f :=
   (Closed.isAdj.adj.homEquiv _ _).right_inv f
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem curry_eq_iff (f : A ⊗ Y ⟶ X) (g : Y ⟶ A ⟶[C] X) : curry f = g ↔ f = uncurry g :=
   Adjunction.hom_equiv_apply_eq _ f g
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem eq_curry_iff (f : A ⊗ Y ⟶ X) (g : Y ⟶ A ⟶[C] X) : g = curry f ↔ uncurry g = f :=
   Adjunction.eq_hom_equiv_apply _ f g
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- I don't think these two should be simp.
 theorem uncurry_eq (g : Y ⟶ A ⟶[C] X) : uncurry g = (𝟙 A ⊗ g) ≫ (ihom.ev A).app X :=
   Adjunction.hom_equiv_counit _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem curry_eq (g : A ⊗ Y ⟶ X) : curry g = (ihom.coev A).app Y ≫ (ihom A).map g :=
   Adjunction.hom_equiv_unit _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem curry_injective : Function.Injective (curry : (A ⊗ Y ⟶ X) → (Y ⟶ A ⟶[C] X)) :=
   (Closed.isAdj.adj.homEquiv _ _).Injective
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem uncurry_injective : Function.Injective (uncurry : (Y ⟶ A ⟶[C] X) → (A ⊗ Y ⟶ X)) :=
   (Closed.isAdj.adj.homEquiv _ _).symm.Injective
 
@@ -198,6 +218,7 @@ variable (A X)
 theorem uncurry_id_eq_ev : uncurry (𝟙 (A ⟶[C] X)) = (ihom.ev A).app X := by
   rw [uncurry_eq, tensor_id, id_comp]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem curry_id_eq_coev : curry (𝟙 _) = (ihom.coev A).app X := by
   rw [curry_eq, (ihom A).map_id (A ⊗ _)]
   apply comp_id
@@ -210,13 +231,18 @@ variable {A B} [Closed B]
 def pre (f : B ⟶ A) : ihom A ⟶ ihom B :=
   transferNatTransSelf (ihom.adjunction _) (ihom.adjunction _) ((tensoringLeft C).map f)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem id_tensor_pre_app_comp_ev (f : B ⟶ A) (X : C) :
     (𝟙 B ⊗ (pre f).app X) ≫ (ihom.ev B).app X = (f ⊗ 𝟙 (A ⟶[C] X)) ≫ (ihom.ev A).app X :=
   transfer_nat_trans_self_counit _ _ ((tensoringLeft C).map f) X
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem uncurry_pre (f : B ⟶ A) (X : C) : MonoidalClosed.uncurry ((pre f).app X) = (f ⊗ 𝟙 _) ≫ (ihom.ev A).app X := by
   rw [uncurry_eq, id_tensor_pre_app_comp_ev]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem coev_app_comp_pre_app (f : B ⟶ A) :
     (ihom.coev A).app X ≫ (pre f).app (A ⊗ X) = (ihom.coev B).app X ≫ (ihom B).map (f ⊗ 𝟙 _) :=
   unit_transfer_nat_trans_self _ _ ((tensoringLeft C).map f) X

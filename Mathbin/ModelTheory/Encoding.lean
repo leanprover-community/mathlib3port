@@ -46,23 +46,29 @@ open Computability List Structure Cardinal Finₓ
 
 namespace Term
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Encodes a term as a list of variables and function symbols. -/
 def listEncodeₓ : L.term α → List (Sum α (Σi, L.Functions i))
   | var i => [Sum.inl i]
-  | func f ts => Sum.inr (⟨_, f⟩ : Σi, L.Functions i) :: (List.finRange _).bind fun i => (ts i).listEncode
+  | func f ts => Sum.inr (⟨_, f⟩ : Σi, L.Functions i)::(List.finRange _).bind fun i => (ts i).listEncode
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Decodes a list of variables and function symbols as a list of terms. -/
 def listDecodeₓ : List (Sum α (Σi, L.Functions i)) → List (Option (L.term α))
   | [] => []
-  | Sum.inl a :: l => some (var a) :: list_decode l
-  | Sum.inr ⟨n, f⟩ :: l =>
+  | Sum.inl a::l => some (var a)::list_decode l
+  | Sum.inr ⟨n, f⟩::l =>
     if h : ∀ i : Finₓ n, ((list_decode l).nth i).join.isSome then
-      (func f fun i => Option.getₓ (h i)) :: (list_decode l).drop n
+      (func f fun i => Option.getₓ (h i))::(list_decode l).drop n
     else [none]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem list_decode_encode_list (l : List (L.term α)) : listDecodeₓ (l.bind listEncodeₓ) = l.map Option.some := by
   suffices h :
-    ∀ (t : L.term α) (l : List (Sum α (Σi, L.functions i))), list_decode (t.listEncode ++ l) = some t :: list_decode l
+    ∀ (t : L.term α) (l : List (Sum α (Σi, L.functions i))), list_decode (t.listEncode ++ l) = some t::list_decode l
   · induction' l with t l lih
     · rfl
       
@@ -187,13 +193,15 @@ end Term
 
 namespace BoundedFormula
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Encodes a bounded formula as a list of symbols. -/
 def listEncodeₓ : ∀ {n : ℕ}, L.BoundedFormula α n → List (Sum (Σk, L.term (Sum α (Finₓ k))) (Sum (Σn, L.Relations n) ℕ))
   | n, falsum => [Sum.inr (Sum.inr (n + 2))]
   | n, equal t₁ t₂ => [Sum.inl ⟨_, t₁⟩, Sum.inl ⟨_, t₂⟩]
   | n, rel R ts => [Sum.inr (Sum.inl ⟨_, R⟩), Sum.inr (Sum.inr n)] ++ (List.finRange _).map fun i => Sum.inl ⟨n, ts i⟩
-  | n, imp φ₁ φ₂ => Sum.inr (Sum.inr 0) :: φ₁.listEncode ++ φ₂.listEncode
-  | n, all φ => Sum.inr (Sum.inr 1) :: φ.listEncode
+  | n, imp φ₁ φ₂ => (Sum.inr (Sum.inr 0)::φ₁.listEncode) ++ φ₂.listEncode
+  | n, all φ => Sum.inr (Sum.inr 1)::φ.listEncode
 
 /-- Applies the `forall` quantifier to an element of `(Σ n, L.bounded_formula α n)`,
 or returns `default` if not possible. -/
@@ -214,14 +222,21 @@ def sigmaImpₓ : (Σn, L.BoundedFormula α n) → (Σn, L.BoundedFormula α n) 
             ψ)⟩
     else default
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Decodes a list of symbols as a list of formulas. -/
 @[simp]
 def listDecodeₓ :
     ∀ l : List (Sum (Σk, L.term (Sum α (Finₓ k))) (Sum (Σn, L.Relations n) ℕ)),
       (Σn, L.BoundedFormula α n) ×
         { l' : List (Sum (Σk, L.term (Sum α (Finₓ k))) (Sum (Σn, L.Relations n) ℕ)) // l'.sizeof ≤ max 1 l.sizeof }
-  | Sum.inr (Sum.inr (n + 2)) :: l => ⟨⟨n, falsum⟩, l, le_max_of_le_right le_add_self⟩
-  | Sum.inl ⟨n₁, t₁⟩ :: Sum.inl ⟨n₂, t₂⟩ :: l =>
+  | Sum.inr (Sum.inr (n + 2))::l => ⟨⟨n, falsum⟩, l, le_max_of_le_right le_add_self⟩
+  | Sum.inl ⟨n₁, t₁⟩::Sum.inl ⟨n₂, t₂⟩::l =>
     ⟨if h : n₁ = n₂ then
         ⟨n₁,
           equal t₁
@@ -233,7 +248,7 @@ def listDecodeₓ :
       l, by
       simp only [List.sizeof, ← add_assocₓ]
       exact le_max_of_le_right le_add_self⟩
-  | Sum.inr (Sum.inl ⟨n, R⟩) :: Sum.inr (Sum.inr k) :: l =>
+  | Sum.inr (Sum.inl ⟨n, R⟩)::Sum.inr (Sum.inr k)::l =>
     ⟨if h : ∀ i : Finₓ n, ((l.map Sum.getLeft).nth i).join.isSome then
         if h' : ∀ i, (Option.getₓ (h i)).1 = k then
           ⟨k,
@@ -245,7 +260,7 @@ def listDecodeₓ :
         else default
       else default,
       l.drop n, le_max_of_le_right (le_add_left (le_add_left (List.drop_sizeof_le _ _)))⟩
-  | Sum.inr (Sum.inr 0) :: l =>
+  | Sum.inr (Sum.inr 0)::l =>
     have :
       (↑(list_decode l).2 : List (Sum (Σk, L.term (Sum α (Finₓ k))) (Sum (Σn, L.Relations n) ℕ))).sizeof <
         1 + (1 + 1) + l.sizeof :=
@@ -263,7 +278,7 @@ def listDecodeₓ :
         (trans (list_decode _).2.2
           (max_leₓ (le_add_right le_self_add)
             (trans (list_decode _).2.2 (max_leₓ (le_add_right le_self_add) le_add_self))))⟩
-  | Sum.inr (Sum.inr 1) :: l =>
+  | Sum.inr (Sum.inr 1)::l =>
     ⟨sigmaAllₓ (list_decode l).1, (list_decode l).2, (list_decode l).2.2.trans (max_le_max le_rflₓ le_add_self)⟩
   | _ => ⟨default, [], le_max_leftₓ _ _⟩
 

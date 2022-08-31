@@ -57,6 +57,7 @@ theorem CNF_rec_pos (b : Ordinal) {o : Ordinal} {C : Ordinal → Sort _} (ho : o
     (H : ∀ o, o ≠ 0 → C (o % b ^ log b o) → C o) : @cNFRec b C H0 H o = H o ho (@cNFRec b C H0 H _) := by
   rw [CNF_rec, dif_neg ho]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The Cantor normal form of an ordinal `o` is the list of coefficients and exponents in the
 base-`b` expansion of `o`.
 
@@ -65,14 +66,15 @@ We special-case `CNF 0 o = CNF 1 o = [(0, o)]` for `o ≠ 0`.
 `CNF b (b ^ u₁ * v₁ + b ^ u₂ * v₂) = [(u₁, v₁), (u₂, v₂)]` -/
 @[pp_nodot]
 def cNF (b o : Ordinal) : List (Ordinal × Ordinal) :=
-  cNFRec b [] (fun o ho IH => (log b o, o / b ^ log b o) :: IH) o
+  cNFRec b [] (fun o ho IH => (log b o, o / b ^ log b o)::IH) o
 
 @[simp]
 theorem CNF_zero (b : Ordinal) : cNF b 0 = [] :=
   CNF_rec_zero b _ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Recursive definition for the Cantor normal form. -/
-theorem CNF_ne_zero {b o : Ordinal} (ho : o ≠ 0) : cNF b o = (log b o, o / b ^ log b o) :: cNF b (o % b ^ log b o) :=
+theorem CNF_ne_zero {b o : Ordinal} (ho : o ≠ 0) : cNF b o = (log b o, o / b ^ log b o)::cNF b (o % b ^ log b o) :=
   CNF_rec_pos b ho _ _
 
 theorem zero_CNF {o : Ordinal} (ho : o ≠ 0) : cNF 0 o = [⟨0, o⟩] := by

@@ -373,15 +373,15 @@ section ToList
 /-- Produces a list of the elements in the multiset using choice. -/
 @[reducible]
 noncomputable def toList {α : Type _} (s : Multiset α) :=
-  Classical.some (Quotientₓ.exists_rep s)
+  Classical.choose (Quotientₓ.exists_rep s)
 
 @[simp]
 theorem to_list_zero {α : Type _} : (Multiset.toList 0 : List α) = [] :=
-  (Multiset.coe_eq_zero _).1 (Classical.some_spec (Quotientₓ.exists_rep Multiset.zero))
+  (Multiset.coe_eq_zero _).1 (Classical.choose_spec (Quotientₓ.exists_rep Multiset.zero))
 
 @[simp, norm_cast]
 theorem coe_to_list {α : Type _} (s : Multiset α) : (s.toList : Multiset α) = s :=
-  Classical.some_spec (Quotientₓ.exists_rep _)
+  Classical.choose_spec (Quotientₓ.exists_rep _)
 
 @[simp]
 theorem mem_to_list {α : Type _} (a : α) (s : Multiset α) : a ∈ s.toList ↔ a ∈ s := by
@@ -2572,7 +2572,7 @@ variable (α)
 def subsingletonEquiv [Subsingleton α] : List α ≃ Multiset α where
   toFun := coe
   invFun :=
-    (Quot.lift id) fun (a b : List α) (h : a ~ b) => (List.ext_le h.length_eq) fun n h₁ h₂ => Subsingleton.elimₓ _ _
+    (Quot.lift id) fun (a b : List α) (h : a ~ b) => (List.ext_le h.length_eq) fun n h₁ h₂ => Subsingleton.elim _ _
   left_inv := fun l => rfl
   right_inv := fun m => (Quot.induction_on m) fun l => rfl
 

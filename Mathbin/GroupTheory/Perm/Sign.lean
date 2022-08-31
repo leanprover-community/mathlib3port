@@ -191,6 +191,8 @@ theorem support_pow_coprime {σ : Perm α} {n : ℕ} (h : Nat.Coprime n (orderOf
 
 end Fintype
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Given a list `l : list α` and a permutation `f : perm α` such that the nonfixed points of `f`
   are in `l`, recursively factors `f` as a product of transpositions. -/
 def swapFactorsAux :
@@ -202,7 +204,7 @@ def swapFactorsAux :
         exact (not_not.1 (mt h (List.not_mem_nilₓ _))).symm,
       by
       simp ⟩
-  | x :: l => fun f h =>
+  | x::l => fun f h =>
     if hfx : x = f x then
       swap_factors_aux l f fun y hy =>
         List.mem_of_ne_of_memₓ
@@ -214,7 +216,7 @@ def swapFactorsAux :
         swap_factors_aux l (swap x (f x) * f) fun y hy =>
           have : f y ≠ y ∧ y ≠ x := ne_and_ne_of_swap_mul_apply_ne_self hy
           List.mem_of_ne_of_memₓ this.2 (h this.1)
-      ⟨swap x (f x) :: m.1, by
+      ⟨swap x (f x)::m.1, by
         rw [List.prod_cons, m.2.1, ← mul_assoc, mul_def (swap x (f x)), swap_swap, ← one_def, one_mulₓ], fun g hg =>
         ((List.mem_cons_iffₓ _ _ _).1 hg).elim (fun h => ⟨x, f x, hfx, h⟩) (m.2.2 _)⟩
 
@@ -447,19 +449,21 @@ theorem sign_aux_swap : ∀ {n : ℕ} {x y : Finₓ n} (hxy : x ≠ y), signAux 
           (by
             decide))
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- When the list `l : list α` contains all nonfixed points of the permutation `f : perm α`,
   `sign_aux2 l f` recursively calculates the sign of `f`. -/
 def signAux2 : List α → Perm α → ℤˣ
   | [], f => 1
-  | x :: l, f => if x = f x then sign_aux2 l f else -sign_aux2 l (swap x (f x) * f)
+  | x::l, f => if x = f x then sign_aux2 l f else -sign_aux2 l (swap x (f x) * f)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem sign_aux_eq_sign_aux2 {n : ℕ} :
     ∀ (l : List α) (f : Perm α) (e : α ≃ Finₓ n) (h : ∀ x, f x ≠ x → x ∈ l),
       signAux ((e.symm.trans f).trans e) = signAux2 l f
   | [], f, e, h => by
     have : f = 1 := Equivₓ.ext fun y => not_not.1 (mt (h y) (List.not_mem_nilₓ _))
     rw [this, one_def, Equivₓ.trans_refl, Equivₓ.symm_trans_self, ← one_def, sign_aux_one, sign_aux2]
-  | x :: l, f, e, h => by
+  | x::l, f, e, h => by
     rw [sign_aux2]
     by_cases' hfx : x = f x
     · rw [if_pos hfx]

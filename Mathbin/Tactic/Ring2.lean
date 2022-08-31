@@ -572,7 +572,7 @@ open Interactive Interactive.Types Lean.Parser
 
 open Tactic.Ring2
 
--- mathport name: «expr ?»
+-- mathport name: parser.optional
 local postfix:1024 "?" => optionalₓ
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]

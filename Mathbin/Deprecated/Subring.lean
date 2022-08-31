@@ -41,10 +41,10 @@ structure IsSubring (S : Set R) extends IsAddSubgroup S, IsSubmonoid S : Prop
 def IsSubring.subring {S : Set R} (hs : IsSubring S) : Subring R where
   Carrier := S
   one_mem' := hs.one_mem
-  mul_mem' := hs.mul_mem
+  mul_mem' := fun _ _ => hs.mul_mem
   zero_mem' := hs.zero_mem
-  add_mem' := hs.add_mem
-  neg_mem' := hs.neg_mem
+  add_mem' := fun _ _ => hs.add_mem
+  neg_mem' := fun _ => hs.neg_mem
 
 namespace RingHom
 
@@ -116,6 +116,8 @@ theorem exists_list_of_mem_closure {a : R} (h : a ∈ Closure s) :
     «expr ∧ »(∀ x «expr ∈ » L,
      «expr ∈ »(x, s),
      «expr ∨ »(«expr = »(list.prod hd, list.prod L), «expr = »(list.prod hd, «expr- »(list.prod L)))))]]
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[elabAsElim]
 protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ Closure s) (h1 : C 1) (hneg1 : C (-1))
     (hs : ∀ z ∈ s, ∀ n, C n → C (z * n)) (ha : ∀ {x y}, C x → C y → C (x + y)) : C x := by
@@ -157,7 +159,7 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ Closure 
   rw [List.forall_mem_consₓ] at HL
   rcases ih HL.2 with ⟨L, HL', HP | HP⟩ <;> cases' HL.1 with hhd hhd
   · exact
-      ⟨hd :: L, List.forall_mem_consₓ.2 ⟨hhd, HL'⟩,
+      ⟨hd::L, List.forall_mem_consₓ.2 ⟨hhd, HL'⟩,
         Or.inl <| by
           rw [List.prod_cons, List.prod_cons, HP]⟩
     
@@ -167,7 +169,7 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ Closure 
           rw [List.prod_cons, hhd, neg_one_mul, HP]⟩
     
   · exact
-      ⟨hd :: L, List.forall_mem_consₓ.2 ⟨hhd, HL'⟩,
+      ⟨hd::L, List.forall_mem_consₓ.2 ⟨hhd, HL'⟩,
         Or.inr <| by
           rw [List.prod_cons, List.prod_cons, HP, neg_mul_eq_mul_neg]⟩
     

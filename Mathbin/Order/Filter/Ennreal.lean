@@ -105,7 +105,7 @@ theorem limsup_const_mul [CountableInterFilter f] {u : α → ℝ≥0∞} {a : �
 theorem limsup_add_le [CountableInterFilter f] (u v : α → ℝ≥0∞) : f.limsup (u + v) ≤ f.limsup u + f.limsup v :=
   Inf_le ((eventually_le_limsup u).mp ((eventually_le_limsup v).mono fun _ hxg hxf => add_le_add hxf hxg))
 
-theorem limsup_liminf_le_liminf_limsup {β} [Encodable β] {f : Filter α} [CountableInterFilter f] {g : Filter β}
+theorem limsup_liminf_le_liminf_limsup {β} [Countable β] {f : Filter α} [CountableInterFilter f] {g : Filter β}
     (u : α → β → ℝ≥0∞) :
     (f.limsup fun a : α => g.liminf fun b : β => u a b) ≤ g.liminf fun b => f.limsup fun a => u a b := by
   have h1 : ∀ᶠ a in f, ∀ b, u a b ≤ f.limsup fun a' => u a' b := by

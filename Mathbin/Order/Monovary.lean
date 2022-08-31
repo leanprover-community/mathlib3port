@@ -85,16 +85,16 @@ theorem monovary_self (f : ι → α) : Monovary f f := fun i j => le_of_ltₓ
 theorem monovary_on_self (f : ι → α) (s : Set ι) : MonovaryOn f f s := fun i _ j _ => le_of_ltₓ
 
 protected theorem Subsingleton.monovary [Subsingleton ι] (f : ι → α) (g : ι → β) : Monovary f g := fun i j h =>
-  (ne_of_apply_ne _ h.Ne <| Subsingleton.elimₓ _ _).elim
+  (ne_of_apply_ne _ h.Ne <| Subsingleton.elim _ _).elim
 
 protected theorem Subsingleton.antivary [Subsingleton ι] (f : ι → α) (g : ι → β) : Antivary f g := fun i j h =>
-  (ne_of_apply_ne _ h.Ne <| Subsingleton.elimₓ _ _).elim
+  (ne_of_apply_ne _ h.Ne <| Subsingleton.elim _ _).elim
 
 protected theorem Subsingleton.monovary_on [Subsingleton ι] (f : ι → α) (g : ι → β) (s : Set ι) : MonovaryOn f g s :=
-  fun i _ j _ h => (ne_of_apply_ne _ h.Ne <| Subsingleton.elimₓ _ _).elim
+  fun i _ j _ h => (ne_of_apply_ne _ h.Ne <| Subsingleton.elim _ _).elim
 
 protected theorem Subsingleton.antivary_on [Subsingleton ι] (f : ι → α) (g : ι → β) (s : Set ι) : AntivaryOn f g s :=
-  fun i _ j _ h => (ne_of_apply_ne _ h.Ne <| Subsingleton.elimₓ _ _).elim
+  fun i _ j _ h => (ne_of_apply_ne _ h.Ne <| Subsingleton.elim _ _).elim
 
 theorem monovary_on_const_left (g : ι → β) (a : α) (s : Set ι) : MonovaryOn (const ι a) g s := fun i _ j _ _ => le_rflₓ
 

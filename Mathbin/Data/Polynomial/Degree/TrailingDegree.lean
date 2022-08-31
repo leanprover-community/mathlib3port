@@ -273,6 +273,10 @@ theorem nat_trailing_degree_eq_support_min' (h : p ≠ 0) :
     exact mem_support_iff.mpr (trailing_coeff_nonzero_iff_nonzero.mpr h)
     
 
+theorem le_nat_trailing_degree (hp : p ≠ 0) (hn : ∀ m < n, p.coeff m = 0) : n ≤ p.natTrailingDegree := by
+  rw [nat_trailing_degree_eq_support_min' hp]
+  exact Finset.le_min' _ _ _ fun m hm => not_ltₓ.1 fun hmn => mem_support_iff.1 hm <| hn _ hmn
+
 theorem nat_trailing_degree_le_nat_degree (p : R[X]) : p.natTrailingDegree ≤ p.natDegree := by
   by_cases' hp : p = 0
   · rw [hp, nat_degree_zero, nat_trailing_degree_zero]

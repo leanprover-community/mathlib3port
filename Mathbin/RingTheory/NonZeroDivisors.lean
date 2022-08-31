@@ -32,7 +32,7 @@ def nonZeroDivisors (R : Type _) [MonoidWithZeroₓ R] : Submonoid R where
       rwa [mul_assoc]
     hx₁ z <| hx₂ (z * x₁) this
 
--- mathport name: «expr ⁰»
+-- mathport name: non_zero_divisors
 localized [nonZeroDivisors] notation:9000 R "⁰" => nonZeroDivisors R
 
 variable {M M' M₁ R R' F : Type _} [MonoidWithZeroₓ M] [MonoidWithZeroₓ M'] [CommMonoidWithZero M₁] [Ringₓ R]
@@ -126,7 +126,7 @@ theorem powers_le_non_zero_divisors_of_no_zero_divisors [NoZeroDivisors M] {a : 
 theorem map_le_non_zero_divisors_of_injective [NoZeroDivisors M'] [MonoidWithZeroHomClass F M M'] (f : F)
     (hf : Function.Injective f) {S : Submonoid M} (hS : S ≤ M⁰) : S.map f ≤ M'⁰ := by
   cases subsingleton_or_nontrivial M
-  · simp [Subsingleton.elimₓ S ⊥]
+  · simp [Subsingleton.elim S ⊥]
     
   · exact
       le_non_zero_divisors_of_no_zero_divisors fun h =>

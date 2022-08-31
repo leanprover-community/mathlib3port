@@ -214,10 +214,10 @@ theorem cof_eq_Inf_lsub (o : Ordinal.{u}) :
     refine'
       (cof_type_le fun a => _).trans
         (@mk_le_of_injective _ _
-          (fun s : typein ((· < ·) : o.out.α → o.out.α → Prop) ⁻¹' Set.Range f => Classical.some s.Prop) fun s t hst =>
-          by
+          (fun s : typein ((· < ·) : o.out.α → o.out.α → Prop) ⁻¹' Set.Range f => Classical.choose s.Prop)
+          fun s t hst => by
           let H := congr_arg f hst
-          rwa [Classical.some_spec s.prop, Classical.some_spec t.prop, typein_inj, Subtype.coe_inj] at H)
+          rwa [Classical.choose_spec s.prop, Classical.choose_spec t.prop, typein_inj, Subtype.coe_inj] at H)
     have := typein_lt_self a
     simp_rw [← hf, lt_lsub_iff] at this
     cases' this with i hi
@@ -513,7 +513,7 @@ theorem cof_eq_one_iff_is_succ {o} : cof.{u} o = 1 ↔ ∃ a, o = succ a :=
             
           refine' congr_arg Subtype.val (_ : a = ⟨a', aS⟩)
           haveI := le_one_iff_subsingleton.1 (le_of_eqₓ e)
-          apply Subsingleton.elimₓ
+          apply Subsingleton.elim
           
         ,
     fun ⟨a, e⟩ => by
@@ -533,7 +533,7 @@ protected theorem cof_eq (hf : IsFundamentalSequence a o f) : a.cof.ord = o :=
     rw [← hf.2.2]
     exact (ord_le_ord.2 (cof_blsub_le f)).trans (ord_card_le o)
 
-protected theorem strict_mono (hf : IsFundamentalSequence a o f) : ∀ {i j} (hi) (hj), i < j → f i hi < f j hj :=
+protected theorem strict_mono (hf : IsFundamentalSequence a o f) {i j} : ∀ hi hj, i < j → f i hi < f j hj :=
   hf.2.1
 
 theorem blsub_eq (hf : IsFundamentalSequence a o f) : blsub.{u, u} o f = a :=
@@ -835,7 +835,7 @@ namespace Cardinal
 
 open Ordinal
 
--- mathport name: «expr ^ »
+-- mathport name: cardinal.pow
 local infixr:0 "^" => @pow Cardinal.{u} Cardinal Cardinal.hasPow
 
 /-- A cardinal is a limit if it is not zero or a successor

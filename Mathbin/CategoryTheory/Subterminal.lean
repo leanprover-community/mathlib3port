@@ -70,11 +70,11 @@ The converse of `is_subterminal.mono_terminal_from`.
 theorem is_subterminal_of_mono_terminal_from [HasTerminal C] [Mono (terminal.from A)] : IsSubterminal A := fun Z f g =>
   by
   rw [← cancel_mono (terminal.from A)]
-  apply Subsingleton.elimₓ
+  apply Subsingleton.elim
 
 theorem is_subterminal_of_is_terminal {T : C} (hT : IsTerminal T) : IsSubterminal T := fun Z f g => hT.hom_ext _ _
 
-theorem is_subterminal_of_terminal [HasTerminal C] : IsSubterminal (⊤_ C) := fun Z f g => Subsingleton.elimₓ _ _
+theorem is_subterminal_of_terminal [HasTerminal C] : IsSubterminal (⊤_ C) := fun Z f g => Subsingleton.elim _ _
 
 /-- If `A` is subterminal, its diagonal morphism is an isomorphism.
 The converse of `is_subterminal_of_is_iso_diag`.
@@ -136,7 +136,7 @@ def subterminalsEquivMonoOverTerminal [HasTerminal C] : Subterminals C ≌ MonoO
     { obj := fun X =>
         ⟨X.obj.left, fun Z f g => by
           rw [← cancel_mono X.arrow]
-          apply Subsingleton.elimₓ⟩,
+          apply Subsingleton.elim⟩,
       map := fun X Y f => f.1 }
   unitIso := { Hom := { app := fun X => 𝟙 _ }, inv := { app := fun X => 𝟙 _ } }
   counitIso := { Hom := { app := fun X => Over.homMk (𝟙 _) }, inv := { app := fun X => Over.homMk (𝟙 _) } }

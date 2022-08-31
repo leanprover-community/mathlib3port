@@ -278,6 +278,7 @@ theorem mem_mul : a ∈ s * t ↔ ∃ x y, x ∈ s ∧ y ∈ t ∧ x * y = a :=
 theorem mul_mem_mul : a ∈ s → b ∈ t → a * b ∈ s * t :=
   mem_image2_of_mem
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive add_image_prod]
 theorem image_mul_prod : (fun x : α × α => x.fst * x.snd) '' s ×ˢ t = s * t :=
   image_prod _
@@ -462,6 +463,7 @@ theorem mem_div : a ∈ s / t ↔ ∃ x y, x ∈ s ∧ y ∈ t ∧ x / y = a :=
 theorem div_mem_div : a ∈ s → b ∈ t → a / b ∈ s / t :=
   mem_image2_of_mem
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive add_image_prod]
 theorem image_div_prod : (fun x : α × α => x.fst / x.snd) '' s ×ˢ t = s / t :=
   image_prod _
@@ -1192,6 +1194,7 @@ variable {ι : Sort _} {κ : ι → Sort _} [HasSmul α β] {s s₁ s₂ : Set �
 theorem image2_smul : Image2 HasSmul.smul s t = s • t :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive add_image_prod]
 theorem image_smul_prod : (fun x : α × β => x.fst • x.snd) '' s ×ˢ t = s • t :=
   image_prod _
@@ -1554,6 +1557,7 @@ instance hasVsub : HasVsub (Set α) (Set β) :=
 theorem image2_vsub : (Image2 HasVsub.vsub s t : Set α) = s -ᵥ t :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem image_vsub_prod : (fun x : β × β => x.fst -ᵥ x.snd) '' s ×ˢ t = s -ᵥ t :=
   image_prod _
 
@@ -1739,6 +1743,7 @@ section LeftCancelSemigroup
 
 variable [LeftCancelSemigroup α] {s t : Set α}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive]
 theorem pairwise_disjoint_smul_iff : s.PairwiseDisjoint (· • t) ↔ (s ×ˢ t).InjOn fun p => p.1 * p.2 :=
   pairwise_disjoint_image_right_iff fun _ _ => mul_right_injective _

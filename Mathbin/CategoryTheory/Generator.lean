@@ -208,13 +208,13 @@ theorem thin_of_is_separating_empty (h : IsSeparating (∅ : Set C)) (X Y : C) :
   ⟨fun f g => (h _ _) fun G => False.elim⟩
 
 theorem is_separating_empty_of_thin [∀ X Y : C, Subsingleton (X ⟶ Y)] : IsSeparating (∅ : Set C) := fun X Y f g hfg =>
-  Subsingleton.elimₓ _ _
+  Subsingleton.elim _ _
 
 theorem thin_of_is_coseparating_empty (h : IsCoseparating (∅ : Set C)) (X Y : C) : Subsingleton (X ⟶ Y) :=
   ⟨fun f g => (h _ _) fun G => False.elim⟩
 
 theorem is_coseparating_empty_of_thin [∀ X Y : C, Subsingleton (X ⟶ Y)] : IsCoseparating (∅ : Set C) :=
-  fun X Y f g hfg => Subsingleton.elimₓ _ _
+  fun X Y f g hfg => Subsingleton.elim _ _
 
 theorem groupoid_of_is_detecting_empty (h : IsDetecting (∅ : Set C)) {X Y : C} (f : X ⟶ Y) : IsIso f :=
   (h _) fun G => False.elim

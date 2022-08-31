@@ -70,8 +70,8 @@ def slash : ℤ → GL(2, ℝ)⁺ → (ℍ → ℂ) → ℍ → ℂ := fun k γ 
 
 variable {Γ : Subgroup SL(2, ℤ)} {k : ℤ} (f : ℍ → ℂ)
 
--- mathport name: «expr ∣[ ] »
-localized [ModularForms] notation:100 f " ∣[" k "]" γ:100 => slash k γ f
+-- mathport name: modular_forms.slash
+localized [ModularForms] notation:100 f " ∣[" k "]" γ:100 => ModularForms.slash k γ f
 
 theorem slash_right_action (k : ℤ) (A B : GL(2, ℝ)⁺) (f : ℍ → ℂ) : (f ∣[k]A) ∣[k]B = f ∣[k](A * B) := by
   ext1

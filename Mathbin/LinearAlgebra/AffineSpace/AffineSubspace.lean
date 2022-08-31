@@ -1179,6 +1179,14 @@ theorem mem_map {f : P₁ →ᵃ[k] P₂} {x : P₂} {s : AffineSubspace k P₁}
 theorem map_bot : (⊥ : AffineSubspace k P₁).map f = ⊥ :=
   coe_injective <| image_empty f
 
+@[simp]
+theorem map_eq_bot_iff {s : AffineSubspace k P₁} : s.map f = ⊥ ↔ s = ⊥ := by
+  refine' ⟨fun h => _, fun h => _⟩
+  · rwa [← coe_eq_bot_iff, coe_map, image_eq_empty, coe_eq_bot_iff] at h
+    
+  · rw [h, map_bot]
+    
+
 omit V₂
 
 @[simp]

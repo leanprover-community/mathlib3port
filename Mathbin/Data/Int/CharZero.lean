@@ -53,5 +53,5 @@ theorem cast_div_char_zero {k : Type _} [Field k] [CharZero k] {m n : ℤ} (n_dv
 end Int
 
 theorem RingHom.injective_int {α : Type _} [NonAssocRing α] (f : ℤ →+* α) [CharZero α] : Function.Injective f :=
-  Subsingleton.elimₓ (Int.castRingHom _) f ▸ Int.cast_injective
+  Subsingleton.elim (Int.castRingHom _) f ▸ Int.cast_injective
 

@@ -236,7 +236,7 @@ instance uniqueOfLeft [Subsingleton M] : Unique (M →ₛₗ[σ₁₂] M₂) :=
   { LinearMap.inhabited with
     uniq := fun f =>
       ext fun x => by
-        rw [Subsingleton.elimₓ x 0, map_zero, map_zero] }
+        rw [Subsingleton.elim x 0, map_zero, map_zero] }
 
 instance uniqueOfRight [Subsingleton M₂] : Unique (M →ₛₗ[σ₁₂] M₂) :=
   coe_injective.unique
@@ -613,7 +613,7 @@ theorem nontrivial_iff : Nontrivial (Submodule R M) ↔ Nontrivial M :=
 variable {R}
 
 instance [Subsingleton M] : Unique (Submodule R M) :=
-  ⟨⟨⊥⟩, fun a => @Subsingleton.elimₓ _ ((subsingleton_iff R).mpr ‹_›) a _⟩
+  ⟨⟨⊥⟩, fun a => @Subsingleton.elim _ ((subsingleton_iff R).mpr ‹_›) a _⟩
 
 instance unique' [Subsingleton R] : Unique (Submodule R M) := by
   haveI := Module.subsingleton R M <;> infer_instance
@@ -1636,8 +1636,8 @@ include σ₂₁
 
 /-- Between two zero modules, the zero map is an equivalence. -/
 instance : Zero (M ≃ₛₗ[σ₁₂] M₂) :=
-  ⟨{ (0 : M →ₛₗ[σ₁₂] M₂) with toFun := 0, invFun := 0, right_inv := fun x => Subsingleton.elimₓ _ _,
-      left_inv := fun x => Subsingleton.elimₓ _ _ }⟩
+  ⟨{ (0 : M →ₛₗ[σ₁₂] M₂) with toFun := 0, invFun := 0, right_inv := fun x => Subsingleton.elim _ _,
+      left_inv := fun x => Subsingleton.elim _ _ }⟩
 
 omit σ₂₁
 
@@ -1658,7 +1658,7 @@ theorem zero_apply (x : M) : (0 : M ≃ₛₗ[σ₁₂] M₂) x = 0 :=
 
 /-- Between two zero modules, the zero map is the only equivalence. -/
 instance : Unique (M ≃ₛₗ[σ₁₂] M₂) where
-  uniq := fun f => to_linear_map_injective (Subsingleton.elimₓ _ _)
+  uniq := fun f => to_linear_map_injective (Subsingleton.elim _ _)
   default := 0
 
 omit σ₂₁
@@ -2009,7 +2009,7 @@ variable (f)
 between `M` and `f.range`. See also `linear_map.of_left_inverse`. -/
 noncomputable def ofInjective [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂] (h : Injective f) :
     M ≃ₛₗ[σ₁₂] f.range :=
-  of_left_inverse <| Classical.some_spec h.HasLeftInverse
+  of_left_inverse <| Classical.choose_spec h.HasLeftInverse
 
 @[simp]
 theorem of_injective_apply [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂] {h : Injective f} (x : M) :

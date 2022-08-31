@@ -264,39 +264,49 @@ theorem prod_of_fn {n : ℕ} {f : Finₓ n → α} : (ofFnₓ f).Prod = ∏ i, f
 
 end CommMonoidₓ
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem alternating_sum_eq_finset_sum {G : Type _} [AddCommGroupₓ G] :
     ∀ L : List G, alternatingSum L = ∑ i : Finₓ L.length, (-1 : ℤ) ^ (i : ℕ) • L.nthLe i i.is_lt
   | [] => by
     rw [alternating_sum, Finset.sum_eq_zero]
     rintro ⟨i, ⟨⟩⟩
-  | g :: [] => by
+  | g::[] => by
     simp
-  | g :: h :: L =>
+  | g::h::L =>
     calc
       g + -h + L.alternatingSum = g + -h + ∑ i : Finₓ L.length, (-1 : ℤ) ^ (i : ℕ) • L.nthLe i i.2 :=
         congr_arg _ (alternating_sum_eq_finset_sum _)
-      _ = ∑ i : Finₓ (L.length + 2), (-1 : ℤ) ^ (i : ℕ) • List.nthLe (g :: h :: L) i _ := by
+      _ = ∑ i : Finₓ (L.length + 2), (-1 : ℤ) ^ (i : ℕ) • List.nthLe (g::h::L) i _ := by
         rw [Finₓ.sum_univ_succ, Finₓ.sum_univ_succ, add_assocₓ]
         unfold_coes
         simp [Nat.succ_eq_add_one, pow_addₓ]
         rfl
       
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive]
 theorem alternating_prod_eq_finset_prod {G : Type _} [CommGroupₓ G] :
     ∀ L : List G, alternatingProd L = ∏ i : Finₓ L.length, L.nthLe i i.2 ^ (-1 : ℤ) ^ (i : ℕ)
   | [] => by
     rw [alternating_prod, Finset.prod_eq_one]
     rintro ⟨i, ⟨⟩⟩
-  | g :: [] => by
+  | g::[] => by
     show g = ∏ i : Finₓ 1, [g].nthLe i i.2 ^ (-1 : ℤ) ^ (i : ℕ)
     rw [Finₓ.prod_univ_succ]
     simp
-  | g :: h :: L =>
+  | g::h::L =>
     calc
       g * h⁻¹ * L.alternatingProd = g * h⁻¹ * ∏ i : Finₓ L.length, L.nthLe i i.2 ^ (-1 : ℤ) ^ (i : ℕ) :=
         congr_arg _ (alternating_prod_eq_finset_prod _)
-      _ = ∏ i : Finₓ (L.length + 2), List.nthLe (g :: h :: L) i _ ^ (-1 : ℤ) ^ (i : ℕ) := by
+      _ = ∏ i : Finₓ (L.length + 2), List.nthLe (g::h::L) i _ ^ (-1 : ℤ) ^ (i : ℕ) := by
         rw [Finₓ.prod_univ_succ, Finₓ.prod_univ_succ, mul_assoc]
         unfold_coes
         simp [Nat.succ_eq_add_one, pow_addₓ]

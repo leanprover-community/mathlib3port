@@ -65,7 +65,7 @@ theorem germ_injective_of_is_integral [IsIntegral X] {U : Opens X.Carrier} (x : 
   intro y hy
   rw [← (X.presheaf.germ x).map_zero] at hy
   obtain ⟨W, hW, iU, iV, e⟩ := X.presheaf.germ_eq _ x.prop x.prop _ _ hy
-  cases show iU = iV from Subsingleton.elimₓ _ _
+  cases show iU = iV from Subsingleton.elim _ _
   haveI : Nonempty W := ⟨⟨_, hW⟩⟩
   exact map_injective_of_is_integral X iU e
 

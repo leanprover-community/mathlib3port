@@ -44,45 +44,24 @@ open MeasureTheory TopologicalSpace Set Filter Asymptotics intervalIntegral
 variable {E F : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [SecondCountableTopology E] [CompleteSpace E]
   [NormedAddCommGroup F]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 /-- If `f` is eventually differentiable along a nontrivial filter `l : filter ℝ` that is generated
 by convex sets, the norm of `f` tends to infinity along `l`, and `f' = O(g)` along `l`, where `f'`
 is the derivative of `f`, then `g` is not integrable on any interval `a..b` such that
 `[a, b] ∈ l`. -/
 theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter {f : ℝ → E} {g : ℝ → F} {a b : ℝ}
-    (l : Filter ℝ) [NeBot l] [TendstoIxxClass Icc l l]
-    (hl : "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ∈ l)
-    (hd : ∀ᶠ x in l, DifferentiableAt ℝ f x) (hf : Tendsto (fun x => ∥f x∥) l atTop) (hfg : deriv f =O[l] g) :
-    ¬IntervalIntegrable g volume a b := by
+    (l : Filter ℝ) [NeBot l] [TendstoIxxClass Icc l l] (hl : [a, b] ∈ l) (hd : ∀ᶠ x in l, DifferentiableAt ℝ f x)
+    (hf : Tendsto (fun x => ∥f x∥) l atTop) (hfg : deriv f =O[l] g) : ¬IntervalIntegrable g volume a b := by
   intro hgi
   obtain ⟨C, hC₀, s, hsl, hsub, hfd, hg⟩ :
     ∃ (C : ℝ)(hC₀ : 0 ≤ C),
       ∃ s ∈ l,
-        (∀ x ∈ s,
-            ∀ y ∈ s,
-              "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ⊆
-                "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") ∧
-          (∀ x ∈ s,
-              ∀ y ∈ s,
-                ∀ z ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)",
-                  DifferentiableAt ℝ f z) ∧
-            ∀ x ∈ s,
-              ∀ y ∈ s,
-                ∀ z ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)",
-                  ∥deriv f z∥ ≤ C * ∥g z∥ :=
+        (∀ x ∈ s, ∀ y ∈ s, [x, y] ⊆ [a, b]) ∧
+          (∀ x ∈ s, ∀ y ∈ s, ∀ z ∈ [x, y], DifferentiableAt ℝ f z) ∧
+            ∀ x ∈ s, ∀ y ∈ s, ∀ z ∈ [x, y], ∥deriv f z∥ ≤ C * ∥g z∥ :=
     by
     rcases hfg.exists_nonneg with ⟨C, C₀, hC⟩
     have h :
-      ∀ᶠ x : ℝ × ℝ in l.prod l,
-        ∀ y ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)",
-          (DifferentiableAt ℝ f y ∧ ∥deriv f y∥ ≤ C * ∥g y∥) ∧
-            y ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
+      ∀ᶠ x : ℝ × ℝ in l.prod l, ∀ y ∈ [x.1, x.2], (DifferentiableAt ℝ f y ∧ ∥deriv f y∥ ≤ C * ∥g y∥) ∧ y ∈ [a, b] :=
       (tendsto_fst.interval tendsto_snd).Eventually ((hd.and hC.bound).And hl).smallSets
     rcases mem_prod_self_iff.1 h with ⟨s, hsl, hs⟩
     simp only [prod_subset_iff, mem_set_of_eq] at hs
@@ -117,30 +96,15 @@ theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter {f :
       set_integral_mono_set hgi.def ((ae_of_all _) fun x => mul_nonneg hC₀ (norm_nonneg _)) hsub'.eventually_le
     
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 /-- If `a ≠ b`, `c ∈ [a, b]`, `f` is differentiable in the neighborhood of `c` within
 `[a, b] \ {c}`, `∥f x∥ → ∞` as `x → c` within `[a, b] \ {c}`, and `f' = O(g)` along
 `𝓝[[a, b] \ {c}] c`, where `f'` is the derivative of `f`, then `g` is not interval integrable on
 `a..b`. -/
 theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_within_diff_singleton {f : ℝ → E} {g : ℝ → F}
-    {a b c : ℝ} (hne : a ≠ b) (hc : c ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")
-    (h_deriv :
-      ∀ᶠ x in 𝓝["./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" \ {c}] c,
-        DifferentiableAt ℝ f x)
-    (h_infty :
-      Tendsto (fun x => ∥f x∥) (𝓝["./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" \ {c}] c)
-        atTop)
-    (hg : deriv f =O[𝓝["./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" \ {c}] c] g) :
+    {a b c : ℝ} (hne : a ≠ b) (hc : c ∈ [a, b]) (h_deriv : ∀ᶠ x in 𝓝[[a, b] \ {c}] c, DifferentiableAt ℝ f x)
+    (h_infty : Tendsto (fun x => ∥f x∥) (𝓝[[a, b] \ {c}] c) atTop) (hg : deriv f =O[𝓝[[a, b] \ {c}] c] g) :
     ¬IntervalIntegrable g volume a b := by
-  obtain ⟨l, hl, hl', hle, hmem⟩ :
-    ∃ l : Filter ℝ,
-      tendsto_Ixx_class Icc l l ∧
-        l.ne_bot ∧ l ≤ 𝓝 c ∧ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" \ {c} ∈ l :=
+  obtain ⟨l, hl, hl', hle, hmem⟩ : ∃ l : Filter ℝ, tendsto_Ixx_class Icc l l ∧ l.ne_bot ∧ l ≤ 𝓝 c ∧ [a, b] \ {c} ∈ l :=
     by
     cases' (min_lt_max.2 hne).lt_or_lt c with hlt hlt
     · refine' ⟨𝓝[<] c, inferInstance, inferInstance, inf_le_left, _⟩
@@ -152,35 +116,26 @@ theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_within_diff
       exact diff_mem_nhds_within_diff (Icc_mem_nhds_within_Ici ⟨hc.1, hlt⟩) _
       
   skip
-  have : l ≤ 𝓝["./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" \ {c}] c :=
-    le_inf hle (le_principal_iff.2 hmem)
+  have : l ≤ 𝓝[[a, b] \ {c}] c := le_inf hle (le_principal_iff.2 hmem)
   exact
     not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter l (mem_of_superset hmem (diff_subset _ _))
       (h_deriv.filter_mono this) (h_infty.mono_left this) (hg.mono this)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 /-- If `f` is differentiable in a punctured neighborhood of `c`, `∥f x∥ → ∞` as `x → c` (more
 formally, along the filter `𝓝[≠] c`), and `f' = O(g)` along `𝓝[≠] c`, where `f'` is the derivative
 of `f`, then `g` is not interval integrable on any nontrivial interval `a..b` such that
 `c ∈ [a, b]`. -/
 theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_punctured {f : ℝ → E} {g : ℝ → F} {a b c : ℝ}
     (h_deriv : ∀ᶠ x in 𝓝[≠] c, DifferentiableAt ℝ f x) (h_infty : Tendsto (fun x => ∥f x∥) (𝓝[≠] c) atTop)
-    (hg : deriv f =O[𝓝[≠] c] g) (hne : a ≠ b)
-    (hc : c ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") :
-    ¬IntervalIntegrable g volume a b :=
-  have : 𝓝["./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" \ {c}] c ≤ 𝓝[≠] c :=
-    nhds_within_mono _ (inter_subset_right _ _)
+    (hg : deriv f =O[𝓝[≠] c] g) (hne : a ≠ b) (hc : c ∈ [a, b]) : ¬IntervalIntegrable g volume a b :=
+  have : 𝓝[[a, b] \ {c}] c ≤ 𝓝[≠] c := nhds_within_mono _ (inter_subset_right _ _)
   not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_within_diff_singleton hne hc (h_deriv.filter_mono this)
     (h_infty.mono_left this) (hg.mono this)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 /-- If `f` grows in the punctured neighborhood of `c : ℝ` at least as fast as `1 / (x - c)`,
 then it is not interval integrable on any nontrivial interval `a..b`, `c ∈ [a, b]`. -/
 theorem not_interval_integrable_of_sub_inv_is_O_punctured {f : ℝ → F} {a b c : ℝ}
-    (hf : (fun x => (x - c)⁻¹) =O[𝓝[≠] c] f) (hne : a ≠ b)
-    (hc : c ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") :
-    ¬IntervalIntegrable f volume a b := by
+    (hf : (fun x => (x - c)⁻¹) =O[𝓝[≠] c] f) (hne : a ≠ b) (hc : c ∈ [a, b]) : ¬IntervalIntegrable f volume a b := by
   have A : ∀ᶠ x in 𝓝[≠] c, HasDerivAt (fun x => Real.log (x - c)) (x - c)⁻¹ x := by
     filter_upwards [self_mem_nhds_within] with x hx
     simpa using ((has_deriv_at_id x).sub_const c).log (sub_ne_zero.2 hx)
@@ -192,13 +147,10 @@ theorem not_interval_integrable_of_sub_inv_is_O_punctured {f : ℝ → F} {a b c
     not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_punctured (A.mono fun x hx => hx.DifferentiableAt) B
       (hf.congr' (A.mono fun x hx => hx.deriv.symm) eventually_eq.rfl) hne hc
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 /-- The function `λ x, (x - c)⁻¹` is integrable on `a..b` if and only if `a = b` or `c ∉ [a, b]`. -/
 @[simp]
 theorem interval_integrable_sub_inv_iff {a b c : ℝ} :
-    IntervalIntegrable (fun x => (x - c)⁻¹) volume a b ↔
-      a = b ∨ c ∉ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+    IntervalIntegrable (fun x => (x - c)⁻¹) volume a b ↔ a = b ∨ c ∉ [a, b] := by
   constructor
   · refine' fun h => or_iff_not_imp_left.2 fun hne hc => _
     exact not_interval_integrable_of_sub_inv_is_O_punctured (is_O_refl _ _) hne hc h
@@ -209,12 +161,9 @@ theorem interval_integrable_sub_inv_iff {a b c : ℝ} :
         (continuous_on_id.sub continuous_on_const)]
     
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 /-- The function `λ x, x⁻¹` is integrable on `a..b` if and only if `a = b` or `0 ∉ [a, b]`. -/
 @[simp]
 theorem interval_integrable_inv_iff {a b : ℝ} :
-    IntervalIntegrable (fun x => x⁻¹) volume a b ↔
-      a = b ∨ (0 : ℝ) ∉ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+    IntervalIntegrable (fun x => x⁻¹) volume a b ↔ a = b ∨ (0 : ℝ) ∉ [a, b] := by
   simp only [← interval_integrable_sub_inv_iff, sub_zero]
 

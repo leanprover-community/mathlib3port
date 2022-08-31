@@ -153,11 +153,11 @@ theorem cons_induction_cons {P : (∀ i : Finₓ n.succ, α i) → Sort v} (h : 
 
 @[simp]
 theorem forall_fin_zero_pi {α : Finₓ 0 → Sort _} {P : (∀ i, α i) → Prop} : (∀ x, P x) ↔ P finZeroElim :=
-  ⟨fun h => h _, fun h x => Subsingleton.elimₓ finZeroElim x ▸ h⟩
+  ⟨fun h => h _, fun h x => Subsingleton.elim finZeroElim x ▸ h⟩
 
 @[simp]
 theorem exists_fin_zero_pi {α : Finₓ 0 → Sort _} {P : (∀ i, α i) → Prop} : (∃ x, P x) ↔ P finZeroElim :=
-  ⟨fun ⟨x, h⟩ => Subsingleton.elimₓ x finZeroElim ▸ h, fun h => ⟨_, h⟩⟩
+  ⟨fun ⟨x, h⟩ => Subsingleton.elim x finZeroElim ▸ h, fun h => ⟨_, h⟩⟩
 
 theorem forall_fin_succ_pi {P : (∀ i, α i) → Prop} : (∀ x, P x) ↔ ∀ a v, P (Finₓ.cons a v) :=
   ⟨fun h a v => h (Finₓ.cons a v), consInduction⟩

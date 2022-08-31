@@ -46,6 +46,8 @@ variable {A C}
 
 variable [AddMonoidₓ A] (F : MonoidalFunctor (Discrete A) (C ⥤ C))
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp, reassoc]
 theorem eq_to_hom_μ_app {i j i' j' : A} (h₁ : i = i') (h₂ : j = j') (X : C) :
     eqToHom
@@ -85,7 +87,7 @@ a self-equivalence of `C` for each `n : A`. -/
 @[simps Functor inverse unit_iso_hom unit_iso_inv counit_iso_hom counit_iso_inv]
 def addNegEquiv [AddGroupₓ A] (F : MonoidalFunctor (Discrete A) (C ⥤ C)) (n : A) : C ≌ C :=
   equivOfTensorIsoUnit F ⟨n⟩ ⟨(-n : A)⟩ (Discrete.eqToIso (add_neg_selfₓ n)) (Discrete.eqToIso (neg_add_selfₓ n))
-    (Subsingleton.elimₓ _ _)
+    (Subsingleton.elim _ _)
 
 section Defs
 

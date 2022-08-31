@@ -356,7 +356,7 @@ def imageForgetAdj : image ⊣ forget X :=
             refine' over.hom_mk _ _
             refine' image.lift { i := g.obj.left, m := g.arrow, e := k.left, fac' := over.w k }
             apply image.lift_fac,
-          left_inv := fun k => Subsingleton.elimₓ _ _,
+          left_inv := fun k => Subsingleton.elim _ _,
           right_inv := fun k => by
             ext1
             change factor_thru_image _ ≫ image.lift _ = _

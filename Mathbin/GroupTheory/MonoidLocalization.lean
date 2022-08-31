@@ -487,11 +487,11 @@ theorem eq_iff_exists (f : LocalizationMap S N) {x y} : f.toMap x = f.toMap y �
 @[to_additive
       "Given a localization map `f : M →+ N`, a section function sending `z : N`\nto some `(x, y) : M × S` such that `f x - f y = z`."]
 noncomputable def sec (f : LocalizationMap S N) (z : N) : M × S :=
-  Classical.some <| f.surj z
+  Classical.choose <| f.surj z
 
 @[to_additive]
 theorem sec_spec {f : LocalizationMap S N} (z : N) : z * f.toMap (f.sec z).2 = f.toMap (f.sec z).1 :=
-  Classical.some_spec <| f.surj z
+  Classical.choose_spec <| f.surj z
 
 @[to_additive]
 theorem sec_spec' {f : LocalizationMap S N} (z : N) : f.toMap (f.sec z).1 = f.toMap (f.sec z).2 * z := by

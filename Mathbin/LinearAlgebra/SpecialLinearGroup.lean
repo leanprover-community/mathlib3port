@@ -66,7 +66,7 @@ def SpecialLinearGroup :=
 
 end
 
--- mathport name: «exprSL( , )»
+-- mathport name: special_linear_group.fin
 localized [MatrixGroups] notation "SL(" n "," R ")" => Matrix.SpecialLinearGroup (Finₓ n) R
 
 namespace SpecialLinearGroup

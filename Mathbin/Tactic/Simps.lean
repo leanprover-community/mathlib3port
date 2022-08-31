@@ -126,8 +126,8 @@ unsafe def simps_str_attr : user_attribute Unit (List Name × List projection_da
   descr := "An attribute specifying the projection of the given structure."
   parser := failed
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- The `@[notation_class]` attribute specifies that this is a notation class,
   and this notation should be used instead of projections by @[simps].
   * The first argument `tt` for notation classes and `ff` for classes applied to the structure,
@@ -139,7 +139,7 @@ unsafe def simps_str_attr : user_attribute Unit (List Name × List projection_da
 unsafe def notation_class_attr : user_attribute Unit (Bool × Option Name) where
   Name := `notation_class
   descr := "An attribute specifying that this is a notation class. Used by @[simps]."
-  parser := Prod.mk <$> Option.isNone <$> «expr ?» (tk "*") <*> «expr ?» ident
+  parser := Prod.mk <$> Option.isNone <$> parser.optional (tk "*") <*> parser.optional ident
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 -- ./././Mathport/Syntax/Translate/Command.lean:96:19: in notation_class: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
@@ -413,12 +413,12 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
               {← (raw_univs, projs)}")
       return (raw_univs, projs)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- Parse a rule for `initialize_simps_projections`. It is either `<name>→<name>` or `-<name>`,
   possibly following by `as_prefix`.-/
 unsafe def simps_parse_rule : parser ProjectionRule :=
   Prod.mk <$> ((fun x y => inl (x, y)) <$> ident <*> (tk "->" >> ident) <|> inr <$> (tk "-" >> ident)) <*>
-    is_some <$> «expr ?» (tk "as_prefix")
+    is_some <$> parser.optional (tk "as_prefix")
 
 library_note "custom simps projection"/-- You can specify custom projections for the `@[simps]` attribute.
 To do this for the projection `my_structure.original_projection` by adding a declaration
@@ -439,9 +439,9 @@ composite of multiple projections).
 -/
 
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr *»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- This command specifies custom names and custom projections for the simp attribute `simps_attr`.
 * You can specify custom names by writing e.g.
   `initialize_simps_projections equiv (to_fun → apply, inv_fun → symm_apply)`.
@@ -520,8 +520,8 @@ Some common uses:
 @[user_command]
 unsafe def initialize_simps_projections_cmd (_ : parse <| tk "initialize_simps_projections") : parser Unit := do
   let env ← get_env
-  let trc ← is_some <$> «expr ?» (tk "?")
-  let ns ← «expr *» (Prod.mk <$> ident <*> «expr ?» (tk "(" >> sep_by (tk ",") simps_parse_rule <* tk ")"))
+  let trc ← is_some <$> parser.optional (tk "?")
+  let ns ← parser.many (Prod.mk <$> ident <*> parser.optional (tk "(" >> sep_by (tk ",") simps_parse_rule <* tk ")"))
   ns fun data => do
       let nm ← resolve_constant data.1
       simps_get_raw_projections env nm tt (data.2.getOrElse []) trc
@@ -847,15 +847,15 @@ unsafe def simps_tac (nm : Name) (cfg : SimpsCfg := {  }) (todo : List Stringₓ
       else return cfg
   simps_add_projections e nm d lhs d [] d tt cfg todo []
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- The parser for the `@[simps]` attribute. -/
 unsafe def simps_parser : parser (Bool × List Stringₓ × SimpsCfg) := do
   -- note: we don't check whether the user has written a nonsense namespace in an argument.
         Prod.mk <$>
-        is_some <$> «expr ?» (tk "?") <*>
+        is_some <$> parser.optional (tk "?") <*>
       (Prod.mk <$> many (name.last <$> ident) <*> do
-        let some e ← «expr ?» parser.pexpr | return {  }
+        let some e ← parser.optional parser.pexpr | return {  }
         eval_pexpr SimpsCfg e)
 
 /- If one of the fields is a partially applied constructor, we will eta-expand it

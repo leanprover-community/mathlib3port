@@ -61,7 +61,7 @@ def Summable (f : β → α) : Prop :=
 
 /-- `∑' i, f i` is the sum of `f` it exists, or 0 otherwise -/
 irreducible_def tsum {β} (f : β → α) :=
-  if h : Summable f then Classical.some h else 0
+  if h : Summable f then Classical.choose h else 0
 
 -- mathport name: «expr∑' , »
 notation3"∑' "-- see Note [operator precedence of big operators]
@@ -399,7 +399,7 @@ theorem tsum_zero' (hz : IsClosed ({0} : Set α)) : (∑' b : β, (0 : α)) = 0 
   classical
   rw [tsum, dif_pos summable_zero]
   suffices ∀ x : α, HasSum (fun b : β => (0 : α)) x → x = 0 by
-    exact this _ (Classical.some_spec _)
+    exact this _ (Classical.choose_spec _)
   intro x hx
   contrapose! hx
   simp only [HasSum, tendsto_nhds, Finset.sum_const_zero, Filter.mem_at_top_sets, ge_iff_leₓ, Finset.le_eq_subset,
@@ -554,9 +554,9 @@ theorem tsum_star : star (∑' b, f b) = ∑' b, star (f b) := by
 
 end HasContinuousStar
 
-section Encodable
-
 open Encodable
+
+section Encodable
 
 variable [Encodable γ]
 
@@ -602,6 +602,8 @@ theorem tsum_Union_decode₂ (m : Set β → α) (m0 : m ∅ = 0) (s : γ → Se
     (∑' i, m (⋃ b ∈ decode₂ γ i, s b)) = ∑' b, m (s b) :=
   tsum_supr_decode₂ m m0 s
 
+end Encodable
+
 /-! Some properties about measure-like functions.
   These could also be functions defined on complete sublattices of sets, with the property
   that they are countably sub-additive.
@@ -609,10 +611,15 @@ theorem tsum_Union_decode₂ (m : Set β → α) (m0 : m ∅ = 0) (s : γ → Se
 -/
 
 
-/-- If a function is countably sub-additive then it is sub-additive on encodable types -/
+section Countable
+
+variable [Countable γ]
+
+/-- If a function is countably sub-additive then it is sub-additive on countable types -/
 theorem rel_supr_tsum [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : α → α → Prop)
     (m_supr : ∀ s : ℕ → β, R (m (⨆ i, s i)) (∑' i, m (s i))) (s : γ → β) : R (m (⨆ b : γ, s b)) (∑' b : γ, m (s b)) :=
   by
+  cases nonempty_encodable γ
   rw [← supr_decode₂, ← tsum_supr_decode₂ _ m0 s]
   exact m_supr _
 
@@ -620,11 +627,8 @@ theorem rel_supr_tsum [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R :
 theorem rel_supr_sum [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : α → α → Prop)
     (m_supr : ∀ s : ℕ → β, R (m (⨆ i, s i)) (∑' i, m (s i))) (s : δ → β) (t : Finset δ) :
     R (m (⨆ d ∈ t, s d)) (∑ d in t, m (s d)) := by
-  cases t.nonempty_encodable
-  rw [supr_subtype']
-  convert rel_supr_tsum m m0 R m_supr _
-  rw [← Finset.tsum_subtype]
-  assumption
+  rw [supr_subtype', ← Finset.tsum_subtype]
+  exact rel_supr_tsum m m0 R m_supr _
 
 /-- If a function is countably sub-additive then it is binary sub-additive -/
 theorem rel_sup_add [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : α → α → Prop)
@@ -635,7 +639,7 @@ theorem rel_sup_add [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : �
   · rw [tsum_fintype, Fintype.sum_bool, cond, cond]
     
 
-end Encodable
+end Countable
 
 variable [HasContinuousAdd α]
 

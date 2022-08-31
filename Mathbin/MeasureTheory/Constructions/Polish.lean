@@ -138,7 +138,7 @@ theorem AnalyticSet.image_of_continuous {β : Type _} [TopologicalSpace β] {s :
   hs.image_of_continuous_on hf.ContinuousOn
 
 /-- A countable intersection of analytic sets is analytic. -/
-theorem AnalyticSet.Inter [hι : Nonempty ι] [Encodable ι] [T2Space α] {s : ι → Set α} (hs : ∀ n, AnalyticSet (s n)) :
+theorem AnalyticSet.Inter [hι : Nonempty ι] [Countable ι] [T2Space α] {s : ι → Set α} (hs : ∀ n, AnalyticSet (s n)) :
     AnalyticSet (⋂ n, s n) := by
   rcases hι with ⟨i₀⟩
   /- For the proof, write each `s n` as the continuous image under a map `f n` of a
@@ -180,7 +180,7 @@ theorem AnalyticSet.Inter [hι : Nonempty ι] [Encodable ι] [T2Space α] {s : �
   exact analytic_set_range_of_polish_space F_cont
 
 /-- A countable union of analytic sets is analytic. -/
-theorem AnalyticSet.Union [Encodable ι] {s : ι → Set α} (hs : ∀ n, AnalyticSet (s n)) : AnalyticSet (⋃ n, s n) := by
+theorem AnalyticSet.Union [Countable ι] {s : ι → Set α} (hs : ∀ n, AnalyticSet (s n)) : AnalyticSet (⋃ n, s n) := by
   /- For the proof, write each `s n` as the continuous image under a map `f n` of a
     Polish space `β n`. The union space `γ = Σ n, β n` is also Polish, and the map `F : γ → α` which
     coincides with `f n` on `β n` sends it to `⋃ n, s n`. -/
@@ -256,7 +256,7 @@ This is mostly interesting for Borel-separable sets. -/
 def MeasurablySeparable {α : Type _} [MeasurableSpace α] (s t : Set α) : Prop :=
   ∃ u, s ⊆ u ∧ Disjoint t u ∧ MeasurableSet u
 
-theorem MeasurablySeparable.Union [Encodable ι] {α : Type _} [MeasurableSpace α] {s t : ι → Set α}
+theorem MeasurablySeparable.Union [Countable ι] {α : Type _} [MeasurableSpace α] {s t : ι → Set α}
     (h : ∀ m n, MeasurablySeparable (s m) (t n)) : MeasurablySeparable (⋃ n, s n) (⋃ m, t m) := by
   choose u hsu htu hu using h
   refine' ⟨⋃ m, ⋂ n, u m n, _, _, _⟩
@@ -474,11 +474,11 @@ theorem measurable_set_range_of_continuous_injective {β : Type _} [TopologicalS
       intro b
       refine' is_closed_closure.measurable_set.inter _
       refine' MeasurableSet.Inter fun s => _
-      exact MeasurableSet.Inter_Prop fun hs => (q_meas _).diff (q_meas _)
+      exact MeasurableSet.Inter fun hs => (q_meas _).diff (q_meas _)
     have F_meas : ∀ n, MeasurableSet (F n) := by
       intro n
       refine' MeasurableSet.Union fun s => _
-      exact MeasurableSet.Union_Prop fun hs => E_meas _
+      exact MeasurableSet.Union fun hs => E_meas _
     rw [this]
     exact MeasurableSet.Inter fun n => F_meas n
   -- we check both inclusions.
@@ -686,6 +686,7 @@ theorem is_clopenable_iff_measurable_set : IsClopenable s ↔ MeasurableSet s :=
 
 omit hγb
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The set of points for which a measurable sequence of functions converges is measurable. -/
 @[measurability]
 theorem measurable_set_exists_tendsto [hγ : OpensMeasurableSpace γ] [Countable ι] {l : Filter ι}

@@ -89,6 +89,7 @@ def circleTransformBoundingFunction (R : ℝ) (z : ℂ) (w : ℂ × ℝ) : ℂ :
   circleTransformDeriv R z w.1 (fun x => 1) w.2
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem continuous_on_prod_circle_transform_function {R r : ℝ} (hr : r < R) {z : ℂ} :
     ContinuousOn (fun w : ℂ × ℝ => (circleMap z R w.snd - w.fst)⁻¹ ^ 2) (ClosedBall z r ×ˢ univ) := by
   simp_rw [← one_div]
@@ -103,8 +104,10 @@ theorem continuous_on_prod_circle_transform_function {R r : ℝ} (hr : r < R) {z
     linarith
   exact sub_ne_zero.2 (circle_map_ne_mem_ball ha2 b)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem continuous_on_abs_circle_transform_bounding_function {R r : ℝ} (hr : r < R) (z : ℂ) :
     ContinuousOn (abs ∘ fun t => circleTransformBoundingFunction R z t) (ClosedBall z r ×ˢ univ) := by
   have : ContinuousOn (circle_transform_bounding_function R z) (closed_ball z r ×ˢ (⊤ : Set ℝ)) := by
@@ -118,18 +121,17 @@ theorem continuous_on_abs_circle_transform_bounding_function {R r : ℝ} (hr : r
   show maps_to _ _ (⊤ : Set ℂ)
   simp [maps_to]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:63:9: parse error
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem abs_circle_transform_bounding_function_le {R r : ℝ} (hr : r < R) (hr' : 0 ≤ r) (z : ℂ) :
-    ∃ x : ClosedBall z r ×ˢ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)",
-      ∀ y : ClosedBall z r ×ˢ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)",
+    ∃ x : ClosedBall z r ×ˢ [0, 2 * π],
+      ∀ y : ClosedBall z r ×ˢ [0, 2 * π],
         abs (circleTransformBoundingFunction R z y) ≤ abs (circleTransformBoundingFunction R z x) :=
   by
   have cts := continuous_on_abs_circle_transform_bounding_function hr z
-  have comp :
-    IsCompact (closed_ball z r ×ˢ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") := by
+  have comp : IsCompact (closed_ball z r ×ˢ [0, 2 * π]) := by
     apply_rules [IsCompact.prod, ProperSpace.is_compact_closed_ball z r, is_compact_interval]
   have none := (nonempty_closed_ball.2 hr').Prod nonempty_interval
   simpa using
@@ -140,7 +142,6 @@ theorem abs_circle_transform_bounding_function_le {R r : ℝ} (hr : r < R) (hr' 
           simp
           tauto))
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 /-- The derivative of a `circle_transform` is locally bounded. -/
 theorem circle_transform_deriv_bound {R : ℝ} (hR : 0 < R) {z x : ℂ} {f : ℂ → ℂ} (hx : x ∈ Ball z R)
     (hf : ContinuousOn f (Sphere z R)) :
@@ -160,7 +161,7 @@ theorem circle_transform_deriv_bound {R : ℝ} (hR : 0 < R) {z x : ℂ} {f : ℂ
   refine' ⟨abs (V b a) * abs (f X), ε', hε', subset.trans H (ball_subset_ball hr.le), _⟩
   intro y v hv
   obtain ⟨y1, hy1, hfun⟩ := periodic.exists_mem_Ico₀ (circle_transform_deriv_periodic R z v f) Real.two_pi_pos y
-  have hy2 : y1 ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" := by
+  have hy2 : y1 ∈ [0, 2 * π] := by
     convert Ico_subset_Icc_self hy1
     simp [interval_of_le real.two_pi_pos.le]
   have :=

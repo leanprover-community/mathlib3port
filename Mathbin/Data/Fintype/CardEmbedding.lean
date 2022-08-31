@@ -14,10 +14,10 @@ This file establishes the cardinality of `α ↪ β` in full generality.
 -/
 
 
--- mathport name: «expr| |»
+-- mathport name: finset.card
 local notation "|" x "|" => Finset.card x
 
--- mathport name: «expr‖ ‖»
+-- mathport name: fintype.card
 local notation "‖" x "‖" => Fintype.card x
 
 open Function

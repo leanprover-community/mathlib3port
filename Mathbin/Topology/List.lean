@@ -21,6 +21,7 @@ variable {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 instance : TopologicalSpace (List α) :=
   TopologicalSpace.mkOfNhds (traverse nhds)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem nhds_list (as : List α) : 𝓝 as = traverse 𝓝 as := by
   refine' nhds_mk_of_nhds _ _ _ _
   · intro l
@@ -43,7 +44,7 @@ theorem nhds_list (as : List α) : 𝓝 as = traverse 𝓝 as := by
       case list.forall₂.cons a s as ss ht h ih t hts =>
         rcases mem_nhds_iff.1 ht with ⟨u, hut, hu⟩
         rcases ih (subset.refl _) with ⟨v, hv, hvss⟩
-        exact ⟨u :: v, List.Forall₂.cons hu hv, subset.trans (Set.seq_mono (Set.image_subset _ hut) hvss) hts⟩
+        exact ⟨u::v, List.Forall₂.cons hu hv, subset.trans (Set.seq_mono (Set.image_subset _ hut) hvss) hts⟩
     rcases this with ⟨v, hv, hvs⟩
     refine' ⟨sequence v, mem_traverse _ _ _, hvs, _⟩
     · exact hv.imp fun a s ⟨hs, ha⟩ => IsOpen.mem_nhds hs ha
@@ -64,35 +65,46 @@ theorem nhds_list (as : List α) : 𝓝 as = traverse 𝓝 as := by
 theorem nhds_nil : 𝓝 ([] : List α) = pure [] := by
   rw [nhds_list, List.traverse_nil _] <;> infer_instance
 
-theorem nhds_cons (a : α) (l : List α) : 𝓝 (a :: l) = List.cons <$> 𝓝 a <*> 𝓝 l := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem nhds_cons (a : α) (l : List α) : 𝓝 (a::l) = List.cons <$> 𝓝 a <*> 𝓝 l := by
   rw [nhds_list, List.traverse_cons _, ← nhds_list] <;> infer_instance
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem List.tendsto_cons {a : α} {l : List α} :
-    Tendsto (fun p : α × List α => List.cons p.1 p.2) (𝓝 a ×ᶠ 𝓝 l) (𝓝 (a :: l)) := by
+    Tendsto (fun p : α × List α => List.cons p.1 p.2) (𝓝 a ×ᶠ 𝓝 l) (𝓝 (a::l)) := by
   rw [nhds_cons, tendsto, Filter.map_prod] <;> exact le_rflₓ
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Filter.Tendsto.cons {α : Type _} {f : α → β} {g : α → List β} {a : Filter α} {b : β} {l : List β}
-    (hf : Tendsto f a (𝓝 b)) (hg : Tendsto g a (𝓝 l)) : Tendsto (fun a => List.cons (f a) (g a)) a (𝓝 (b :: l)) :=
+    (hf : Tendsto f a (𝓝 b)) (hg : Tendsto g a (𝓝 l)) : Tendsto (fun a => List.cons (f a) (g a)) a (𝓝 (b::l)) :=
   List.tendsto_cons.comp (Tendsto.prod_mk hf hg)
 
 namespace List
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem tendsto_cons_iff {β : Type _} {f : List α → β} {b : Filter β} {a : α} {l : List α} :
-    Tendsto f (𝓝 (a :: l)) b ↔ Tendsto (fun p : α × List α => f (p.1 :: p.2)) (𝓝 a ×ᶠ 𝓝 l) b := by
-  have : 𝓝 (a :: l) = (𝓝 a ×ᶠ 𝓝 l).map fun p : α × List α => p.1 :: p.2 := by
+    Tendsto f (𝓝 (a::l)) b ↔ Tendsto (fun p : α × List α => f (p.1::p.2)) (𝓝 a ×ᶠ 𝓝 l) b := by
+  have : 𝓝 (a::l) = (𝓝 a ×ᶠ 𝓝 l).map fun p : α × List α => p.1::p.2 := by
     simp only [nhds_cons, Filter.prod_eq, (Filter.map_def _ _).symm, (Filter.seq_eq_filter_seq _ _).symm]
     simp' [-Filter.seq_eq_filter_seq, -Filter.map_def, (· ∘ ·)] with functor_norm
   rw [this, Filter.tendsto_map'_iff]
 
-theorem continuous_cons : Continuous fun x : α × List α => (x.1 :: x.2 : List α) :=
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem continuous_cons : Continuous fun x : α × List α => (x.1::x.2 : List α) :=
   continuous_iff_continuous_at.mpr fun ⟨x, y⟩ => continuous_at_fst.cons continuous_at_snd
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem tendsto_nhds {β : Type _} {f : List α → β} {r : List α → Filter β} (h_nil : Tendsto f (pure []) (r []))
-    (h_cons : ∀ l a, Tendsto f (𝓝 l) (r l) → Tendsto (fun p : α × List α => f (p.1 :: p.2)) (𝓝 a ×ᶠ 𝓝 l) (r (a :: l))) :
+    (h_cons : ∀ l a, Tendsto f (𝓝 l) (r l) → Tendsto (fun p : α × List α => f (p.1::p.2)) (𝓝 a ×ᶠ 𝓝 l) (r (a::l))) :
     ∀ l, Tendsto f (𝓝 l) (r l)
   | [] => by
     rwa [nhds_nil]
-  | a :: l => by
+  | a::l => by
     rw [tendsto_cons_iff] <;> exact h_cons l a (tendsto_nhds l)
 
 theorem continuous_at_length : ∀ l : List α, ContinuousAt List.length l := by
@@ -106,13 +118,16 @@ theorem continuous_at_length : ∀ l : List α, ContinuousAt List.length l := by
     refine' tendsto.comp ih tendsto_snd
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem tendsto_insert_nth' {a : α} :
     ∀ {n : ℕ} {l : List α}, Tendsto (fun p : α × List α => insertNthₓ n p.1 p.2) (𝓝 a ×ᶠ 𝓝 l) (𝓝 (insertNthₓ n a l))
   | 0, l => tendsto_cons
   | n + 1, [] => by
     simp
-  | n + 1, a' :: l => by
-    have : 𝓝 a ×ᶠ 𝓝 (a' :: l) = (𝓝 a ×ᶠ (𝓝 a' ×ᶠ 𝓝 l)).map fun p : α × α × List α => (p.1, p.2.1 :: p.2.2) := by
+  | n + 1, a'::l => by
+    have : 𝓝 a ×ᶠ 𝓝 (a'::l) = (𝓝 a ×ᶠ (𝓝 a' ×ᶠ 𝓝 l)).map fun p : α × α × List α => (p.1, p.2.1::p.2.2) := by
       simp only [nhds_cons, Filter.prod_eq, ← Filter.map_def, ← Filter.seq_eq_filter_seq]
       simp' [-Filter.seq_eq_filter_seq, -Filter.map_def, (· ∘ ·)] with functor_norm
     rw [this, tendsto_map'_iff]
@@ -129,12 +144,14 @@ theorem continuous_insert_nth {n : ℕ} : Continuous fun p : α × List α => in
   continuous_iff_continuous_at.mpr fun ⟨a, l⟩ => by
     rw [ContinuousAt, nhds_prod_eq] <;> exact tendsto_insert_nth'
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem tendsto_remove_nth : ∀ {n : ℕ} {l : List α}, Tendsto (fun l => removeNthₓ l n) (𝓝 l) (𝓝 (removeNthₓ l n))
   | _, [] => by
     rw [nhds_nil] <;> exact tendsto_pure_nhds _ _
-  | 0, a :: l => by
+  | 0, a::l => by
     rw [tendsto_cons_iff] <;> exact tendsto_snd
-  | n + 1, a :: l => by
+  | n + 1, a::l => by
     rw [tendsto_cons_iff]
     dsimp' [remove_nth]
     exact tendsto_fst.cons ((@tendsto_remove_nth n l).comp tendsto_snd)

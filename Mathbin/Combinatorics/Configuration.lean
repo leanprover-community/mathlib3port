@@ -315,15 +315,15 @@ noncomputable def HasLines.hasPoints [HasLines P L] [Fintype P] [Fintype L] (h :
     have key' := ((Fintype.bijective_iff_injective_and_card f).mpr ⟨hf, key'⟩).2
     obtain ⟨q, hq⟩ := key' ⟨l₁, hl₁⟩
     exact ⟨q, (congr_arg _ (subtype.ext_iff.mp hq)).mp (mk_line_ax (this q)).2, q.2⟩
-  { mkPoint := fun l₁ l₂ hl => Classical.some (this l₁ l₂ hl),
-    mk_point_ax := fun l₁ l₂ hl => Classical.some_spec (this l₁ l₂ hl) }
+  { mkPoint := fun l₁ l₂ hl => Classical.choose (this l₁ l₂ hl),
+    mk_point_ax := fun l₁ l₂ hl => Classical.choose_spec (this l₁ l₂ hl) }
 
 /-- If a nondegenerate configuration has a unique point on any two lines, and if `|P| = |L|`,
   then there is a unique line through any two points. -/
 noncomputable def HasPoints.hasLines [HasPoints P L] [Fintype P] [Fintype L] (h : Fintype.card P = Fintype.card L) :
     HasLines P L :=
   let this := @HasLines.hasPoints (Dual L) (Dual P) _ _ _ _ h.symm
-  { mkLine := this.mkPoint, mk_line_ax := this.mk_point_ax }
+  { mkLine := fun _ _ => this.mkPoint, mk_line_ax := fun _ _ => this.mk_point_ax }
 
 variable (P L)
 
@@ -360,7 +360,7 @@ instance : ProjectivePlane (Dual L) (Dual P) :=
 /-- The order of a projective plane is one less than the number of lines through an arbitrary point.
 Equivalently, it is one less than the number of points on an arbitrary line. -/
 noncomputable def order : ℕ :=
-  lineCount L (Classical.some (@exists_config P L _ _)) - 1
+  lineCount L (Classical.choose (@exists_config P L _ _)) - 1
 
 theorem card_points_eq_card_lines [Fintype P] [Fintype L] : Fintype.card P = Fintype.card L :=
   le_antisymmₓ (HasLines.card_le P L) (HasPoints.card_le P L)
@@ -408,9 +408,9 @@ variable {P} (L)
 
 theorem line_count_eq [Finite P] [Finite L] (p : P) : lineCount L p = order P L + 1 := by
   classical
-  obtain ⟨q, -, -, l, -, -, -, -, h, -⟩ := Classical.some_spec (@exists_config P L _ _)
+  obtain ⟨q, -, -, l, -, -, -, -, h, -⟩ := Classical.choose_spec (@exists_config P L _ _)
   cases nonempty_fintype { l : L // q ∈ l }
-  rw [order, line_count_eq_line_count L p q, line_count_eq_line_count L (Classical.some _) q, line_count,
+  rw [order, line_count_eq_line_count L p q, line_count_eq_line_count L (Classical.choose _) q, line_count,
     Nat.card_eq_fintype_card, Nat.sub_add_cancelₓ]
   exact fintype.card_pos_iff.mpr ⟨⟨l, h⟩⟩
 

@@ -78,8 +78,8 @@ theorem to_subsemiring_inj {S U : Subalgebra R A} : S.toSubsemiring = U.toSubsem
 equalities. -/
 protected def copy (S : Subalgebra R A) (s : Set A) (hs : s = ↑S) : Subalgebra R A where
   Carrier := s
-  add_mem' := hs.symm ▸ S.add_mem'
-  mul_mem' := hs.symm ▸ S.mul_mem'
+  add_mem' := fun _ _ => hs.symm ▸ S.add_mem'
+  mul_mem' := fun _ _ => hs.symm ▸ S.mul_mem'
   algebra_map_mem' := hs.symm ▸ S.algebra_map_mem'
 
 @[simp]
@@ -580,7 +580,7 @@ theorem of_left_inverse_symm_apply {g : B → A} {f : A →ₐ[R] B} (h : Functi
 
 /-- Restrict an injective algebra homomorphism to an algebra isomorphism -/
 noncomputable def ofInjective (f : A →ₐ[R] B) (hf : Function.Injective f) : A ≃ₐ[R] f.range :=
-  ofLeftInverse (Classical.some_spec hf.HasLeftInverse)
+  ofLeftInverse (Classical.choose_spec hf.HasLeftInverse)
 
 @[simp]
 theorem of_injective_apply (f : A →ₐ[R] B) (hf : Function.Injective f) (x : A) : ↑(ofInjective f hf x) = f x :=
@@ -813,21 +813,21 @@ def topEquiv : (⊤ : Subalgebra R A) ≃ₐ[R] A :=
 instance subsingleton_of_subsingleton [Subsingleton A] : Subsingleton (Subalgebra R A) :=
   ⟨fun B C =>
     ext fun x => by
-      simp only [Subsingleton.elimₓ x 0, zero_mem B, zero_mem C]⟩
+      simp only [Subsingleton.elim x 0, zero_mem B, zero_mem C]⟩
 
 instance _root_.alg_hom.subsingleton [Subsingleton (Subalgebra R A)] : Subsingleton (A →ₐ[R] B) :=
   ⟨fun f g =>
     AlgHom.ext fun a =>
-      have : a ∈ (⊥ : Subalgebra R A) := Subsingleton.elimₓ (⊤ : Subalgebra R A) ⊥ ▸ mem_top
+      have : a ∈ (⊥ : Subalgebra R A) := Subsingleton.elim (⊤ : Subalgebra R A) ⊥ ▸ mem_top
       let ⟨x, hx⟩ := Set.mem_range.mp (mem_bot.mp this)
       hx ▸ (f.commutes _).trans (g.commutes _).symm⟩
 
 instance _root_.alg_equiv.subsingleton_left [Subsingleton (Subalgebra R A)] : Subsingleton (A ≃ₐ[R] B) :=
-  ⟨fun f g => AlgEquiv.ext fun x => AlgHom.ext_iff.mp (Subsingleton.elimₓ f.toAlgHom g.toAlgHom) x⟩
+  ⟨fun f g => AlgEquiv.ext fun x => AlgHom.ext_iff.mp (Subsingleton.elim f.toAlgHom g.toAlgHom) x⟩
 
 instance _root_.alg_equiv.subsingleton_right [Subsingleton (Subalgebra R B)] : Subsingleton (A ≃ₐ[R] B) :=
   ⟨fun f g => by
-    rw [← f.symm_symm, Subsingleton.elimₓ f.symm g.symm, g.symm_symm]⟩
+    rw [← f.symm_symm, Subsingleton.elim f.symm g.symm, g.symm_symm]⟩
 
 theorem range_val : S.val.range = S :=
   ext <| Set.ext_iff.1 <| S.val.coe_range.trans Subtype.range_val
@@ -899,11 +899,13 @@ section Prod
 
 variable (S₁ : Subalgebra R B)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The product of two subalgebras is a subalgebra. -/
 def prod : Subalgebra R (A × B) :=
   { S.toSubsemiring.Prod S₁.toSubsemiring with Carrier := S ×ˢ S₁,
     algebra_map_mem' := fun r => ⟨algebra_map_mem _ _, algebra_map_mem _ _⟩ }
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem coe_prod : (prod S S₁ : Set (A × B)) = S ×ˢ S₁ :=
   rfl

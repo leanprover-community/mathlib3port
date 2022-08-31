@@ -48,6 +48,7 @@ def divisors : Finset ℕ :=
 def properDivisors : Finset ℕ :=
   Finset.filter (fun x : ℕ => x ∣ n) (Finset.ico 1 n)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `divisors_antidiagonal n` is the `finset` of pairs `(x,y)` such that `x * y = n`.
   As a special case, `divisors_antidiagonal 0 = ∅`. -/
 def divisorsAntidiagonal : Finset (ℕ × ℕ) :=

@@ -71,7 +71,7 @@ variable {R : Type _} [CommRingₓ R]
 
 @[simp]
 theorem ι_eq_zero : ι (0 : QuadraticForm R Unit) = 0 :=
-  Subsingleton.elimₓ _ _
+  Subsingleton.elim _ _
 
 /-- Since the vector space is empty the ring is commutative. -/
 instance : CommRingₓ (CliffordAlgebra (0 : QuadraticForm R Unit)) :=

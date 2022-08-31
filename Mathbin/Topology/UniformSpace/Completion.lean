@@ -90,6 +90,10 @@ private theorem symm_gen : map Prod.swap ((𝓤 α).lift' gen) ≤ (𝓤 α).lif
           exact le_rflₓ)
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 private theorem comp_rel_gen_gen_subset_gen_comp_rel {s t : Set (α × α)} :
     CompRel (gen s) (gen t) ⊆ (gen (CompRel s t) : Set (Cauchyₓ α × Cauchyₓ α)) := fun ⟨f, g⟩ ⟨h, h₁, h₂⟩ =>
   let ⟨t₁, (ht₁ : t₁ ∈ f), t₂, (ht₂ : t₂ ∈ h), (h₁ : t₁ ×ˢ t₂ ⊆ s)⟩ := mem_prod_iff.mp h₁
@@ -146,6 +150,7 @@ theorem uniform_inducing_pure_cauchy : UniformInducing (pure_cauchy : α → Cau
 theorem uniform_embedding_pure_cauchy : UniformEmbedding (pure_cauchy : α → Cauchyₓ α) :=
   { uniform_inducing_pure_cauchy with inj := fun a₁ a₂ h => pure_injective <| Subtype.ext_iff_val.1 h }
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem dense_range_pure_cauchy : DenseRange pure_cauchy := fun f => by
   have h_ex : ∀ s ∈ 𝓤 (Cauchyₓ α), ∃ y : α, (f, pure_cauchy y) ∈ s := fun s hs =>
     let ⟨t'', ht''₁, (ht''₂ : gen t'' ⊆ s)⟩ := (mem_lift'_sets monotone_gen).mp hs
@@ -188,6 +193,7 @@ section
 -- ./././Mathport/Syntax/Translate/Basic.lean:335:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance : CompleteSpace (Cauchyₓ α) :=
   (complete_space_extension uniform_inducing_pure_cauchy dense_range_pure_cauchy) fun f hf =>
     let f' : Cauchyₓ α := ⟨f, hf⟩

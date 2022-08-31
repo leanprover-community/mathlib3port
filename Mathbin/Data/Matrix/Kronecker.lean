@@ -184,7 +184,7 @@ open Matrix
 def kronecker [Mul α] : Matrix l m α → Matrix n p α → Matrix (l × n) (m × p) α :=
   kroneckerMapₓ (· * ·)
 
--- mathport name: «expr ⊗ₖ »
+-- mathport name: matrix.kronecker_map.mul
 localized [Kronecker] infixl:100 " ⊗ₖ " => Matrix.kroneckerMapₓ (· * ·)
 
 @[simp]
@@ -266,10 +266,10 @@ Prefer the notation `⊗ₖₜ` rather than this definition. -/
 def kroneckerTmul : Matrix l m α → Matrix n p β → Matrix (l × n) (m × p) (α ⊗[R] β) :=
   kroneckerMapₓ (· ⊗ₜ ·)
 
--- mathport name: «expr ⊗ₖₜ »
+-- mathport name: matrix.kronecker_map.tmul
 localized [Kronecker] infixl:100 " ⊗ₖₜ " => Matrix.kroneckerMapₓ (· ⊗ₜ ·)
 
--- mathport name: «expr ⊗ₖₜ[ ] »
+-- mathport name: matrix.kronecker_map.tmul'
 localized [Kronecker] notation:100 x " ⊗ₖₜ[" R "] " y:100 => Matrix.kroneckerMapₓ (TensorProduct.tmul R) x y
 
 @[simp]

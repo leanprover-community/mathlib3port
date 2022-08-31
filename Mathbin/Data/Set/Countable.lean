@@ -36,7 +36,7 @@ protected def Countable (s : Set α) : Prop :=
 
 @[simp]
 theorem countable_coe_iff {s : Set α} : Countable s ↔ s.Countable :=
-  nonempty_encodable.symm
+  Encodable.nonempty_encodable.symm
 
 /-- Prove `set.countable` from a `countable` instance on the subtype. -/
 theorem to_countable (s : Set α) [Countable s] : s.Countable :=
@@ -141,7 +141,7 @@ theorem exists_seq_supr_eq_top_iff_countable [CompleteLattice α] {p : α → Pr
     · rw [Sup_empty] at hS
       haveI := subsingleton_of_bot_eq_top hS
       rcases h with ⟨x, hx⟩
-      exact ⟨fun n => x, fun n => hx, Subsingleton.elimₓ _ _⟩
+      exact ⟨fun n => x, fun n => hx, Subsingleton.elim _ _⟩
       
     · rcases(Set.countable_iff_exists_surjective hne).1 hSc with ⟨s, hs⟩
       refine' ⟨fun n => s n, fun n => hps _ (s n).coe_prop, _⟩
@@ -229,6 +229,7 @@ theorem countable_pi {π : α → Type _} [Finite α] {s : ∀ a, Set (π a)} (h
     { f : ∀ a, π a | ∀ a, f a ∈ s a }.Countable := by
   simpa only [← mem_univ_pi] using countable_univ_pi hs
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 protected theorem Countable.prod {s : Set α} {t : Set β} (hs : s.Countable) (ht : t.Countable) :
     Set.Countable (s ×ˢ t) := by
   haveI : Countable s := hs.to_subtype

@@ -356,13 +356,13 @@ def fundamentalGroupoidFunctor : Top ⥤ CategoryTheory.Groupoidₓ where
     simp only [Quotientₓ.map_mk, Path.map_map, Quotientₓ.eq]
     rfl
 
--- mathport name: «exprπ»
+-- mathport name: fundamental_groupoid_functor
 localized [FundamentalGroupoid] notation "π" => FundamentalGroupoid.fundamentalGroupoidFunctor
 
--- mathport name: «exprπₓ»
+-- mathport name: fundamental_groupoid_functor.obj
 localized [FundamentalGroupoid] notation "πₓ" => FundamentalGroupoid.fundamentalGroupoidFunctor.obj
 
--- mathport name: «exprπₘ»
+-- mathport name: fundamental_groupoid_functor.map
 localized [FundamentalGroupoid] notation "πₘ" => FundamentalGroupoid.fundamentalGroupoidFunctor.map
 
 theorem map_eq {X Y : Top} {x₀ x₁ : X} (f : C(X, Y)) (p : Path.Homotopic.Quotient x₀ x₁) : (πₘ f).map p = p.mapFn f :=

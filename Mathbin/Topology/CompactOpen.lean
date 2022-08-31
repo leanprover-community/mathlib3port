@@ -109,12 +109,33 @@ theorem continuous_comp_left : Continuous (fun g => g.comp f : C(β, γ) → C(�
     rw [hm, image_gen f hs hu]
     exact ContinuousMap.is_open_gen (hs.image f.2) hu
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/-- Composition is a continuous map from `C(α, β) × C(β, γ)` to `C(α, γ)`, provided that `β` is
+  locally compact. This is Prop. 9 of Chap. X, §3, №. 4 of Bourbaki's *Topologie Générale*. -/
+theorem continuous_comp' [LocallyCompactSpace β] : Continuous fun x : C(α, β) × C(β, γ) => x.2.comp x.1 :=
+  continuous_generated_from
+    (by
+      rintro M ⟨K, hK, U, hU, rfl⟩
+      conv => congr rw [compact_open.gen, preimage_set_of_eq]congr ext rw [coe_comp, image_comp, image_subset_iff]
+      rw [is_open_iff_forall_mem_open]
+      rintro ⟨φ₀, ψ₀⟩ H
+      obtain ⟨L, hL, hKL, hLU⟩ := exists_compact_between (hK.image φ₀.2) (hU.preimage ψ₀.2) H
+      use { φ : C(α, β) | φ '' K ⊆ Interior L } ×ˢ { ψ : C(β, γ) | ψ '' L ⊆ U }
+      use fun ⟨φ, ψ⟩ ⟨hφ, hψ⟩ => subset_trans hφ (interior_subset.trans <| image_subset_iff.mp hψ)
+      use (ContinuousMap.is_open_gen hK is_open_interior).Prod (ContinuousMap.is_open_gen hL hU)
+      exact mem_prod.mpr ⟨hKL, image_subset_iff.mpr hLU⟩)
+
+theorem continuous.comp' {X : Type _} [TopologicalSpace X] [LocallyCompactSpace β] {f : X → C(α, β)} {g : X → C(β, γ)}
+    (hf : Continuous f) (hg : Continuous g) : Continuous fun x => (g x).comp (f x) :=
+  continuous_comp'.comp (hf.prod_mk hg : Continuous fun x => (f x, g x))
+
 end Functorial
 
 section Ev
 
 variable {α β}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The evaluation map `C(α, β) × α → β` is continuous if `α` is locally compact.
 
 See also `continuous_map.continuous_eval` -/
@@ -273,6 +294,7 @@ def coev (b : β) : C(α, β × α) :=
 
 variable {α β}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem image_coev {y : β} (s : Set α) : coev α β y '' s = ({y} : Set β) ×ˢ s := by
   tidy
 

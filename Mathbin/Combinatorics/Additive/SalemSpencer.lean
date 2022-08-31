@@ -82,6 +82,7 @@ theorem Set.Subsingleton.mul_salem_spencer (hs : s.Subsingleton) : MulSalemSpenc
 theorem mul_salem_spencer_singleton (a : α) : MulSalemSpencer ({a} : Set α) :=
   subsingleton_singleton.MulSalemSpencer
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive AddSalemSpencer.prod]
 theorem MulSalemSpencer.prod {t : Set β} (hs : MulSalemSpencer s) (ht : MulSalemSpencer t) : MulSalemSpencer (s ×ˢ t) :=
   fun a b c ha hb hc h => Prod.extₓ (hs ha.1 hb.1 hc.1 (Prod.ext_iff.1 h).1) (ht ha.2 hb.2 hc.2 (Prod.ext_iff.1 h).2)
@@ -342,6 +343,7 @@ theorem mul_roth_number_union_le (s t : Finset α) : mulRothNumber (s ∪ t) ≤
         ((hu.mono <| inter_subset_left _ _).le_mul_roth_number <| inter_subset_right _ _)
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive]
 theorem le_mul_roth_number_product (s : Finset α) (t : Finset β) :
     mulRothNumber s * mulRothNumber t ≤ mulRothNumber (s ×ˢ t) := by

@@ -170,6 +170,10 @@ section Closure
 variable {R : Type u} {M : Type v} [Semiringₓ R] [TopologicalSpace R] [TopologicalSpace M] [AddCommMonoidₓ M]
   [Module R M] [HasContinuousSmul R M]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Submodule.closure_smul_self_subset (s : Submodule R M) :
     (fun p : R × M => p.1 • p.2) '' Set.Univ ×ˢ Closure s ⊆ Closure s :=
   calc
@@ -185,6 +189,7 @@ theorem Submodule.closure_smul_self_subset (s : Submodule R M) :
       simp [s.smul_mem c hy]
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Submodule.closure_smul_self_eq (s : Submodule R M) :
     (fun p : R × M => p.1 • p.2) '' Set.Univ ×ˢ Closure s = Closure s :=
   s.closure_smul_self_subset.antisymm fun x hx => ⟨⟨1, x⟩, ⟨Set.mem_univ _, hx⟩, one_smul R _⟩
@@ -2211,7 +2216,7 @@ variable [AddCommMonoidₓ M] [Module R M]
 but one needs a fully (rather than partially) defined inverse function for some purposes, including
 for calculus. -/
 noncomputable def inverse : (M →L[R] M₂) → M₂ →L[R] M := fun f =>
-  if h : ∃ e : M ≃L[R] M₂, (e : M →L[R] M₂) = f then ((Classical.some h).symm : M₂ →L[R] M) else 0
+  if h : ∃ e : M ≃L[R] M₂, (e : M →L[R] M₂) = f then ((Classical.choose h).symm : M₂ →L[R] M) else 0
 
 /-- By definition, if `f` is invertible then `inverse f = f.symm`. -/
 @[simp]
@@ -2219,7 +2224,7 @@ theorem inverse_equiv (e : M ≃L[R] M₂) : inverse (e : M →L[R] M₂) = e.sy
   have h : ∃ e' : M ≃L[R] M₂, (e' : M →L[R] M₂) = ↑e := ⟨e, rfl⟩
   simp only [inverse, dif_pos h]
   congr
-  exact_mod_cast Classical.some_spec h
+  exact_mod_cast Classical.choose_spec h
 
 /-- By definition, if `f` is not invertible then `inverse f = 0`. -/
 @[simp]

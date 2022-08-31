@@ -135,6 +135,7 @@ namespace Set
 
 open List
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- A product of sets in `tprod α l`. -/
 @[simp]
 protected def Tprodₓ : ∀ (l : List ι) (t : ∀ i, Set (α i)), Set (Tprod α l)

@@ -47,7 +47,7 @@ def alternatingGroup : Subgroup (Perm α) :=
   sign.ker deriving Fintype
 
 instance [Subsingleton α] : Unique (alternatingGroup α) :=
-  ⟨⟨1⟩, fun ⟨p, hp⟩ => Subtype.eq (Subsingleton.elimₓ p _)⟩
+  ⟨⟨1⟩, fun ⟨p, hp⟩ => Subtype.eq (Subsingleton.elim p _)⟩
 
 variable {α}
 

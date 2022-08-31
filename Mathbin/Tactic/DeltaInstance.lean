@@ -22,11 +22,11 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr *»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
 /-- `delta_instance id₁ id₂ ...` tries to solve the goal by calling `apply_instance`,
 first unfolding the definitions in `idᵢ`.
 -/
-unsafe def delta_instance (ids : parse («expr *» ident)) : itactic :=
+unsafe def delta_instance (ids : parse (parser.many ident)) : itactic :=
   tactic.delta_instance ids
 
 end Interactive

@@ -111,10 +111,12 @@ variable [FiniteDimensional k V] [FiniteDimensional k W]
 
 variable (ρV : Representation k G V) (ρW : Representation k G W)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Auxiliary definition for `fdRep.dual_tensor_iso_lin_hom`. -/
 noncomputable def dualTensorIsoLinHomAux : (FdRep.of ρV.dual ⊗ FdRep.of ρW).V ≅ (FdRep.of (linHom ρV ρW)).V :=
   (dualTensorHomEquiv k V W).toFinVectIso
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- When `V` and `W` are finite dimensional representations of a group `G`, the isomorphism
 `dual_tensor_hom_equiv k V W` of vector spaces induces an isomorphism of representations. -/
 noncomputable def dualTensorIsoLinHom : FdRep.of ρV.dual ⊗ FdRep.of ρW ≅ FdRep.of (linHom ρV ρW) := by

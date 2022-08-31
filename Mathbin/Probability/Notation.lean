@@ -27,25 +27,25 @@ We note that the notation `∂P/∂Q` applies to three different cases, namely,
 
 open MeasureTheory
 
--- mathport name: «expr𝔼[ | ]»
+-- mathport name: condexp.volume
 -- We define notations `𝔼[f|m]` for the conditional expectation of `f` with respect to `m`.
 localized [ProbabilityTheory] notation "𝔼[" X "|" m "]" => MeasureTheory.condexp m MeasureTheory.MeasureSpace.volume X
 
--- mathport name: «expr [ ]»
+-- mathport name: condexp.probability
 localized [ProbabilityTheory] notation P "[" X "]" => ∫ x, X x ∂P
 
--- mathport name: «expr𝔼[ ]»
+-- mathport name: expected_value
 localized [ProbabilityTheory] notation "𝔼[" X "]" => ∫ a, X a
 
--- mathport name: «expr =ₐₛ »
+-- mathport name: eq_ae_volume
 localized [ProbabilityTheory] notation:50 X " =ₐₛ " Y:50 => X =ᵐ[MeasureTheory.MeasureSpace.volume] Y
 
--- mathport name: «expr ≤ₐₛ »
+-- mathport name: le_ae_volume
 localized [ProbabilityTheory] notation:50 X " ≤ₐₛ " Y:50 => X ≤ᵐ[MeasureTheory.MeasureSpace.volume] Y
 
--- mathport name: «expr∂ /∂ »
+-- mathport name: rn_deriv
 localized [ProbabilityTheory] notation "∂" P "/∂" Q:50 => P.rnDeriv Q
 
--- mathport name: «exprℙ»
+-- mathport name: measure_space.volume
 localized [ProbabilityTheory] notation "ℙ" => MeasureTheory.MeasureSpace.volume
 

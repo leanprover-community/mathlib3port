@@ -54,7 +54,7 @@ structure Finmap (β : α → Type v) : Type max u v where
 def Alist.toFinmap (s : Alist β) : Finmap β :=
   ⟨s.entries, s.Nodupkeys⟩
 
--- mathport name: «expr⟦ ⟧»
+-- mathport name: to_finmap
 local notation:arg "⟦" a "⟧" => Alist.toFinmap a
 
 theorem Alist.to_finmap_eq {s₁ s₂ : Alist β} : ⟦s₁⟧ = ⟦s₂⟧ ↔ s₁.entries ~ s₂.entries := by

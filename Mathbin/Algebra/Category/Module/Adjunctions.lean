@@ -74,38 +74,50 @@ def ε : 𝟙_ (ModuleCat.{u} R) ⟶ (free R).obj (𝟙_ (Type u)) :=
 theorem ε_apply (r : R) : ε R r = Finsupp.single PUnit.unit r :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- (Implementation detail) The tensorator for `free R`. -/
 def μ (α β : Type u) : (free R).obj α ⊗ (free R).obj β ≅ (free R).obj (α ⊗ β) :=
   (finsuppTensorFinsupp' R α β).toModuleIso
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem μ_natural {X Y X' Y' : Type u} (f : X ⟶ Y) (g : X' ⟶ Y') :
-    (free R).map f ⊗ (free R).map g ≫ (μ R Y Y').Hom = (μ R X X').Hom ≫ (free R).map (f ⊗ g) := by
+    ((free R).map f ⊗ (free R).map g) ≫ (μ R Y Y').Hom = (μ R X X').Hom ≫ (free R).map (f ⊗ g) := by
   intros
   ext x x' ⟨y, y'⟩
   dsimp' [μ]
   simp_rw [Finsupp.map_domain_single, finsupp_tensor_finsupp'_single_tmul_single, mul_oneₓ, Finsupp.map_domain_single,
     CategoryTheory.tensor_apply]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem left_unitality (X : Type u) :
-    (λ_ ((free R).obj X)).Hom = ε R ⊗ 𝟙 ((free R).obj X) ≫ (μ R (𝟙_ (Type u)) X).Hom ≫ map (free R).obj (λ_ X).Hom := by
+    (λ_ ((free R).obj X)).Hom = (ε R ⊗ 𝟙 ((free R).obj X)) ≫ (μ R (𝟙_ (Type u)) X).Hom ≫ map (free R).obj (λ_ X).Hom :=
+  by
   intros
   ext
   dsimp' [ε, μ]
   simp_rw [finsupp_tensor_finsupp'_single_tmul_single, ModuleCat.monoidalCategory.left_unitor_hom_apply,
     Finsupp.smul_single', mul_oneₓ, Finsupp.map_domain_single, CategoryTheory.left_unitor_hom_apply]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem right_unitality (X : Type u) :
-    (ρ_ ((free R).obj X)).Hom = 𝟙 ((free R).obj X) ⊗ ε R ≫ (μ R X (𝟙_ (Type u))).Hom ≫ map (free R).obj (ρ_ X).Hom := by
+    (ρ_ ((free R).obj X)).Hom = (𝟙 ((free R).obj X) ⊗ ε R) ≫ (μ R X (𝟙_ (Type u))).Hom ≫ map (free R).obj (ρ_ X).Hom :=
+  by
   intros
   ext
   dsimp' [ε, μ]
   simp_rw [finsupp_tensor_finsupp'_single_tmul_single, ModuleCat.monoidalCategory.right_unitor_hom_apply,
     Finsupp.smul_single', mul_oneₓ, Finsupp.map_domain_single, CategoryTheory.right_unitor_hom_apply]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem associativity (X Y Z : Type u) :
-    (μ R X Y).Hom ⊗ 𝟙 ((free R).obj Z) ≫ (μ R (X ⊗ Y) Z).Hom ≫ map (free R).obj (α_ X Y Z).Hom =
+    ((μ R X Y).Hom ⊗ 𝟙 ((free R).obj Z)) ≫ (μ R (X ⊗ Y) Z).Hom ≫ map (free R).obj (α_ X Y Z).Hom =
       (α_ ((free R).obj X) ((free R).obj Y) ((free R).obj Z)).Hom ≫
-        𝟙 ((free R).obj X) ⊗ (μ R Y Z).Hom ≫ (μ R X (Y ⊗ Z)).Hom :=
+        (𝟙 ((free R).obj X) ⊗ (μ R Y Z).Hom) ≫ (μ R X (Y ⊗ Z)).Hom :=
   by
   intros
   ext
@@ -148,6 +160,7 @@ def monoidalFree : MonoidalFunctor (Type u) (ModuleCat.{u} R) :=
       dsimp'
       infer_instance }
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 example (X Y : Type u) : (free R).obj (X × Y) ≅ (free R).obj X ⊗ (free R).obj Y :=
   ((monoidalFree R).μIso X Y).symm
 

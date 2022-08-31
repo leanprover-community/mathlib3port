@@ -129,9 +129,23 @@ theorem pos_of_mem_factorization {n p : ℕ} (hp : p ∈ n.factorization.Support
 theorem le_of_mem_factorization {n p : ℕ} (h : p ∈ n.factorization.Support) : p ≤ n :=
   le_of_mem_factors (factor_iff_mem_factorization.mp h)
 
+/-! ## Lemmas characterising when `n.factorization p = 0` -/
+
+
+theorem factorization_eq_zero_iff (n p : ℕ) : n.factorization p = 0 ↔ ¬p.Prime ∨ ¬p ∣ n ∨ n = 0 := by
+  rw [← not_mem_support_iff, support_factorization, mem_to_finset]
+  rcases eq_or_ne n 0 with (rfl | hn)
+  · simp
+    
+  · simp [hn, Nat.mem_factors, not_and_distrib]
+    
+
 @[simp]
-theorem factorization_eq_zero_of_non_prime (n : ℕ) {p : ℕ} (hp : ¬p.Prime) : n.factorization p = 0 :=
-  not_mem_support_iff.1 (mt prime_of_mem_factorization hp)
+theorem factorization_eq_zero_of_non_prime (n : ℕ) {p : ℕ} (hp : ¬p.Prime) : n.factorization p = 0 := by
+  simp [factorization_eq_zero_iff, hp]
+
+theorem factorization_eq_zero_of_not_dvd {n p : ℕ} (h : ¬p ∣ n) : n.factorization p = 0 := by
+  simp [factorization_eq_zero_iff, h]
 
 theorem factorization_eq_zero_of_lt {n p : ℕ} (h : n < p) : n.factorization p = 0 :=
   Finsupp.not_mem_support_iff.mp (mt le_of_mem_factorization (not_le_of_ltₓ h))
@@ -150,18 +164,29 @@ theorem dvd_of_factorization_pos {n p : ℕ} (hn : n.factorization p ≠ 0) : p 
 theorem Prime.factorization_pos_of_dvd {n p : ℕ} (hp : p.Prime) (hn : n ≠ 0) (h : p ∣ n) : 0 < n.factorization p := by
   rwa [← factors_count_eq, count_pos, mem_factors_iff_dvd hn hp]
 
+theorem factorization_eq_zero_of_remainder {p r : ℕ} (i : ℕ) (hr : ¬p ∣ r) : (p * i + r).factorization p = 0 := by
+  apply factorization_eq_zero_of_not_dvd
+  rwa [← Nat.dvd_add_iff_right (Dvd.intro i rfl)]
+
+theorem factorization_eq_zero_iff_remainder {p r : ℕ} (i : ℕ) (pp : p.Prime) (hr0 : r ≠ 0) :
+    ¬p ∣ r ↔ (p * i + r).factorization p = 0 := by
+  refine' ⟨factorization_eq_zero_of_remainder i, fun h => _⟩
+  rw [factorization_eq_zero_iff] at h
+  contrapose! h
+  refine' ⟨pp, _, _⟩
+  · rwa [← Nat.dvd_add_iff_right (Dvd.intro i rfl)]
+    
+  · contrapose! hr0
+    exact (_root_.add_eq_zero_iff.mp hr0).2
+    
+
 /-- The only numbers with empty prime factorization are `0` and `1` -/
-theorem factorization_eq_zero_iff (n : ℕ) : n.factorization = 0 ↔ n = 0 ∨ n = 1 := by
+theorem factorization_eq_zero_iff' (n : ℕ) : n.factorization = 0 ↔ n = 0 ∨ n = 1 := by
   rw [factorization_eq_factors_multiset n]
   simp [factorization, AddEquiv.map_eq_zero_iff, Multiset.coe_eq_zero]
 
-theorem factorization_eq_zero_iff' (n p : ℕ) : n.factorization p = 0 ↔ ¬p.Prime ∨ ¬p ∣ n ∨ n = 0 := by
-  rw [← not_mem_support_iff, support_factorization, mem_to_finset]
-  rcases eq_or_ne n 0 with (rfl | hn)
-  · simp
-    
-  · simp [hn, Nat.mem_factors, not_and_distrib]
-    
+/-! ## Lemmas about factorizations of products and powers -/
+
 
 /-- For nonzero `a` and `b`, the power of `p` in `a * b` is the sum of the powers in `a` and `b` -/
 @[simp]
@@ -175,38 +200,6 @@ theorem factorization_mul_support {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
   ext q
   simp only [Finset.mem_union, factor_iff_mem_factorization]
   exact mem_factors_mul ha hb
-
-/-- For any `p`, the power of `p` in `n^k` is `k` times the power in `n` -/
-@[simp]
-theorem factorization_pow (n k : ℕ) : factorization (n ^ k) = k • n.factorization := by
-  induction' k with k ih
-  · simp
-    
-  rcases eq_or_ne n 0 with (rfl | hn)
-  · simp
-    
-  rw [pow_succₓ, factorization_mul hn (pow_ne_zero _ hn), ih, succ_eq_one_add, add_smul, one_smul]
-
-/-- The only prime factor of prime `p` is `p` itself, with multiplicity `1` -/
-@[simp]
-theorem Prime.factorization {p : ℕ} (hp : Prime p) : p.factorization = single p 1 := by
-  ext q
-  rw [← factors_count_eq, factors_prime hp, single_apply, count_singleton', if_congr eq_comm] <;> rfl
-
-/-- The only prime factor of prime `p` is `p` itself, with multiplicity `1` -/
-@[simp]
-theorem Prime.factorization_self {p : ℕ} (hp : Prime p) : p.factorization p = 1 := by
-  simp [hp]
-
-/-- For prime `p` the only prime factor of `p^k` is `p` with multiplicity `k` -/
-theorem Prime.factorization_pow {p k : ℕ} (hp : Prime p) : factorization (p ^ k) = single p k := by
-  simp [hp]
-
-/-- If the factorization of `n` contains just one number `p` then `n` is a power of `p` -/
-theorem eq_pow_of_factorization_eq_single {n p k : ℕ} (hn : n ≠ 0) (h : n.factorization = Finsupp.single p k) :
-    n = p ^ k := by
-  rw [← Nat.factorization_prod_pow_eq_self hn, h]
-  simp
 
 /-- If a product over `n.factorization` doesn't use the multiplicities of the prime factors
 then it's equal to the corresponding product over `n.factors.to_finset` -/
@@ -229,6 +222,45 @@ theorem factorization_prod {α : Type _} {S : Finset α} {g : α → ℕ} (hS : 
     have hT : T.prod g ≠ 0 := prod_ne_zero_iff.mpr fun x hx => hS x (hTS hx)
     simp [prod_insert hxT, sum_insert hxT, ← IH, factorization_mul (hS x hxS) hT]
     
+
+/-- For any `p`, the power of `p` in `n^k` is `k` times the power in `n` -/
+@[simp]
+theorem factorization_pow (n k : ℕ) : factorization (n ^ k) = k • n.factorization := by
+  induction' k with k ih
+  · simp
+    
+  rcases eq_or_ne n 0 with (rfl | hn)
+  · simp
+    
+  rw [pow_succₓ, factorization_mul hn (pow_ne_zero _ hn), ih, succ_eq_one_add, add_smul, one_smul]
+
+/-! ## Lemmas about factorizations of primes and prime powers -/
+
+
+/-- The only prime factor of prime `p` is `p` itself, with multiplicity `1` -/
+@[simp]
+theorem Prime.factorization {p : ℕ} (hp : Prime p) : p.factorization = single p 1 := by
+  ext q
+  rw [← factors_count_eq, factors_prime hp, single_apply, count_singleton', if_congr eq_comm] <;> rfl
+
+/-- The multiplicity of prime `p` in `p` is `1` -/
+@[simp]
+theorem Prime.factorization_self {p : ℕ} (hp : Prime p) : p.factorization p = 1 := by
+  simp [hp]
+
+/-- For prime `p` the only prime factor of `p^k` is `p` with multiplicity `k` -/
+theorem Prime.factorization_pow {p k : ℕ} (hp : Prime p) : factorization (p ^ k) = single p k := by
+  simp [hp]
+
+/-- If the factorization of `n` contains just one number `p` then `n` is a power of `p` -/
+theorem eq_pow_of_factorization_eq_single {n p k : ℕ} (hn : n ≠ 0) (h : n.factorization = Finsupp.single p k) :
+    n = p ^ k := by
+  rw [← Nat.factorization_prod_pow_eq_self hn, h]
+  simp
+
+/-- The only prime factor of prime `p` is `p` itself. -/
+theorem Prime.eq_of_factorization_pos {p q : ℕ} (hp : Prime p) (h : p.factorization q ≠ 0) : p = q := by
+  simpa [hp.factorization, single_apply] using h
 
 /-! ### Equivalence between `ℕ+` and `ℕ →₀ ℕ` with support in the primes. -/
 
@@ -455,7 +487,7 @@ theorem factorization_ord_compl (n p : ℕ) : (ord_compl[p]n).factorization = n.
     
   ext q
   rcases eq_or_ne q p with (rfl | hqp)
-  · simp only [Finsupp.erase_same, factorization_eq_zero_iff', not_dvd_ord_compl pp hn]
+  · simp only [Finsupp.erase_same, factorization_eq_zero_iff, not_dvd_ord_compl pp hn]
     simp
     
   · rw [Finsupp.erase_ne hqp, factorization_div (ord_proj_dvd n p)]
@@ -474,7 +506,7 @@ theorem dvd_ord_compl_of_dvd_not_dvd {p d n : ℕ} (hdn : d ∣ n) (hpd : ¬p �
   rw [← factorization_le_iff_dvd hd0 (ord_compl_pos p hn0).ne', factorization_ord_compl]
   intro q
   rcases eq_or_ne q p with (rfl | hqp)
-  · simp [factorization_eq_zero_iff', hpd]
+  · simp [factorization_eq_zero_iff, hpd]
     
   · simp [hqp, (factorization_le_iff_dvd hd0 hn0).2 hdn q]
     

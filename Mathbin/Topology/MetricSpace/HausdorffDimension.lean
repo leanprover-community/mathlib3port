@@ -443,7 +443,7 @@ variable {E : Type _} [Fintype ι] [NormedAddCommGroup E] [NormedSpace ℝ E] [F
 theorem dimH_ball_pi (x : ι → ℝ) {r : ℝ} (hr : 0 < r) : dimH (Metric.Ball x r) = Fintype.card ι := by
   cases is_empty_or_nonempty ι
   · rwa [dimH_subsingleton, eq_comm, Nat.cast_eq_zero, Fintype.card_eq_zero_iff]
-    exact fun x _ y _ => Subsingleton.elimₓ x y
+    exact fun x _ y _ => Subsingleton.elim x y
     
   · rw [← Ennreal.coe_nat]
     have : μH[Fintype.card ι] (Metric.Ball x r) = Ennreal.ofReal ((2 * r) ^ Fintype.card ι) := by

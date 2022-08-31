@@ -77,6 +77,7 @@ variable [AddMonoidₓ A] [AddMonoidₓ B] [CovariantClass B B (· + ·) (· ≤
   [CovariantClass B B (Function.swap (· + ·)) (· ≤ ·)] [AddMonoidₓ T] [CovariantClass T T (· + ·) (· ≤ ·)]
   [CovariantClass T T (Function.swap (· + ·)) (· ≤ ·)] {degb : A → B} {degt : A → T}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem sup_support_list_prod_le (degb0 : degb 0 ≤ 0) (degbm : ∀ a b, degb (a + b) ≤ degb a + degb b) :
     ∀ l : List (AddMonoidAlgebra R A),
       l.Prod.Support.sup degb ≤ (l.map fun f : AddMonoidAlgebra R A => f.Support.sup degb).Sum
@@ -84,7 +85,7 @@ theorem sup_support_list_prod_le (degb0 : degb 0 ≤ 0) (degbm : ∀ a b, degb (
     rw [List.map_nil, Finset.sup_le_iff, List.prod_nil, List.sum_nil]
     exact fun a ha => by
       rwa [finset.mem_singleton.mp (Finsupp.support_single_subset ha)]
-  | f :: fs => by
+  | f::fs => by
     rw [List.prod_cons, List.map_cons, List.sum_cons]
     exact (sup_support_mul_le degbm _ _).trans (add_le_add_left (sup_support_list_prod_le _) _)
 

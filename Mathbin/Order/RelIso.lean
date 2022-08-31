@@ -111,7 +111,7 @@ instance : CoeFun (r →r s) fun _ => α → β :=
 
 initialize_simps_projections RelHom (toFun → apply)
 
-protected theorem map_rel (f : r →r s) : ∀ {a b}, r a b → s (f a) (f b) :=
+protected theorem map_rel (f : r →r s) {a b} : r a b → s (f a) (f b) :=
   f.map_rel'
 
 @[simp]
@@ -178,13 +178,13 @@ theorem Surjective.well_founded_iff {f : α → β} (hf : Surjective f) (o : ∀
   Iff.intro
     (by
       refine' RelHomClass.well_founded (RelHom.mk _ _ : s →r r)
-      · exact Classical.some hf.has_right_inverse
+      · exact Classical.choose hf.has_right_inverse
         
       intro a b h
       apply o.2
       convert h
       iterate 2 
-        apply Classical.some_spec hf.has_right_inverse)
+        apply Classical.choose_spec hf.has_right_inverse)
     (RelHomClass.well_founded (⟨f, fun _ _ => o.1⟩ : r →r s))
 
 /-- A relation embedding with respect to a given pair of relations `r` and `s`
@@ -247,7 +247,7 @@ theorem injective (f : r ↪r s) : Injective f :=
 theorem inj (f : r ↪r s) {a b} : f a = f b ↔ a = b :=
   f.Injective.eq_iff
 
-theorem map_rel_iff (f : r ↪r s) : ∀ {a b}, s (f a) (f b) ↔ r a b :=
+theorem map_rel_iff (f : r ↪r s) {a b} : s (f a) (f b) ↔ r a b :=
   f.map_rel_iff'
 
 @[simp]
@@ -501,7 +501,7 @@ namespace RelIso
 but often it is easier to write `f.to_rel_embedding` than to write explicitly `r` and `s`
 in the target type. -/
 def toRelEmbedding (f : r ≃r s) : r ↪r s :=
-  ⟨f.toEquiv.toEmbedding, f.map_rel_iff'⟩
+  ⟨f.toEquiv.toEmbedding, fun _ _ => f.map_rel_iff'⟩
 
 theorem to_equiv_injective : Injective (toEquiv : r ≃r s → α ≃ β)
   | ⟨e₁, o₁⟩, ⟨e₂, o₂⟩, h => by
@@ -529,7 +529,7 @@ theorem to_rel_embedding_eq_coe (f : r ≃r s) : f.toRelEmbedding = f :=
 theorem coe_coe_fn (f : r ≃r s) : ((f : r ↪r s) : α → β) = f :=
   rfl
 
-theorem map_rel_iff (f : r ≃r s) : ∀ {a b}, s (f a) (f b) ↔ r a b :=
+theorem map_rel_iff (f : r ≃r s) {a b} : s (f a) (f b) ↔ r a b :=
   f.map_rel_iff'
 
 @[simp]
@@ -767,7 +767,7 @@ end Subrel
 
 /-- Restrict the codomain of a relation embedding. -/
 def RelEmbedding.codRestrict (p : Set β) (f : r ↪r s) (H : ∀ a, f a ∈ p) : r ↪r Subrel s p :=
-  ⟨f.toEmbedding.codRestrict p H, f.map_rel_iff'⟩
+  ⟨f.toEmbedding.codRestrict p H, fun _ _ => f.map_rel_iff'⟩
 
 @[simp]
 theorem RelEmbedding.cod_restrict_apply (p) (f : r ↪r s) (H a) : RelEmbedding.codRestrict p f H a = ⟨f a, H a⟩ :=

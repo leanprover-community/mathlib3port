@@ -221,10 +221,12 @@ protected def hasMul : Mul (Finset α) :=
 
 localized [Pointwise] attribute [instance] Finset.hasMul Finset.hasAdd
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive]
 theorem mul_def : s * t = (s ×ˢ t).Image fun p : α × α => p.1 * p.2 :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive]
 theorem image_mul_product : ((s ×ˢ t).Image fun x : α × α => x.fst * x.snd) = s * t :=
   rfl
@@ -245,6 +247,7 @@ theorem mul_mem_mul : a ∈ s → b ∈ t → a * b ∈ s * t :=
 theorem card_mul_le : (s * t).card ≤ s.card * t.card :=
   card_image₂_le _ _ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive]
 theorem card_mul_iff : (s * t).card = s.card * t.card ↔ (s ×ˢ t : Set (α × α)).InjOn fun p => p.1 * p.2 :=
   card_image₂_iff
@@ -365,10 +368,12 @@ protected def hasDiv : Div (Finset α) :=
 
 localized [Pointwise] attribute [instance] Finset.hasDiv Finset.hasSub
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive]
 theorem div_def : s / t = (s ×ˢ t).Image fun p : α × α => p.1 / p.2 :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive add_image_prod]
 theorem image_div_prod : ((s ×ˢ t).Image fun x : α × α => x.fst / x.snd) = s / t :=
   rfl
@@ -898,10 +903,12 @@ protected def hasSmul : HasSmul (Finset α) (Finset β) :=
 
 localized [Pointwise] attribute [instance] Finset.hasSmul Finset.hasVadd
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive]
 theorem smul_def : s • t = (s ×ˢ t).Image fun p : α × β => p.1 • p.2 :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive]
 theorem image_smul_product : ((s ×ˢ t).Image fun x : α × β => x.fst • x.snd) = s • t :=
   rfl
@@ -1306,6 +1313,7 @@ section LeftCancelSemigroup
 
 variable [LeftCancelSemigroup α] [DecidableEq α] (s t : Finset α) (a : α)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive]
 theorem pairwise_disjoint_smul_iff {s : Set α} {t : Finset α} :
     s.PairwiseDisjoint (· • t) ↔ (s ×ˢ t : Set (α × α)).InjOn fun p => p.1 * p.2 := by

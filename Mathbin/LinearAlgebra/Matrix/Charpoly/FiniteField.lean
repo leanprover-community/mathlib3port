@@ -45,7 +45,7 @@ theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintype K] 
     · exact (C M).commute_X
       
     
-  · exact congr_arg _ (Subsingleton.elimₓ _ _)
+  · exact congr_arg _ (Subsingleton.elim _ _)
     
 
 @[simp]

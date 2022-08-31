@@ -185,6 +185,9 @@ def Sym' (α : Type _) (n : ℕ) :=
 def cons' {α : Type _} {n : ℕ} : α → Sym' α n → Sym' α (Nat.succ n) := fun a =>
   Quotientₓ.map (Vector.cons a) fun ⟨l₁, h₁⟩ ⟨l₂, h₂⟩ h => List.Perm.cons _ h
 
+-- mathport name: sym.cons'
+notation a "::" b => cons' a b
+
 /-- Multisets of cardinality n are equivalent to length-n vectors up to permutations.
 -/
 def symEquivSym' {α : Type _} {n : ℕ} : Sym α n ≃ Sym' α n :=
@@ -194,8 +197,9 @@ def symEquivSym' {α : Type _} {n : ℕ} : Sym α n ≃ Sym' α n :=
     fun _ _ => by
     rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem cons_equiv_eq_equiv_cons (α : Type _) (n : ℕ) (a : α) (s : Sym α n) :
-    a :: symEquivSym' s = symEquivSym' (a ::ₛ s) := by
+    (a::symEquivSym' s) = symEquivSym' (a ::ₛ s) := by
   rcases s with ⟨⟨l⟩, _⟩
   rfl
 
@@ -242,7 +246,7 @@ theorem eq_repeat {a : α} {n : ℕ} {s : Sym α n} : s = repeat a n ↔ ∀ b �
   Subtype.ext_iff.trans <| Multiset.eq_repeat.trans <| and_iff_right s.Prop
 
 theorem eq_repeat_of_subsingleton [Subsingleton α] (a : α) {n : ℕ} (s : Sym α n) : s = repeat a n :=
-  eq_repeat.2 fun b hb => Subsingleton.elimₓ _ _
+  eq_repeat.2 fun b hb => Subsingleton.elim _ _
 
 instance [Subsingleton α] (n : ℕ) : Subsingleton (Sym α n) :=
   ⟨by

@@ -235,9 +235,9 @@ namespace Subsingleton
 
 variable [Subsingleton α]
 
-protected theorem is_bot (a : α) : IsBot a := fun _ => (Subsingleton.elimₓ _ _).le
+protected theorem is_bot (a : α) : IsBot a := fun _ => (Subsingleton.elim _ _).le
 
-protected theorem is_top (a : α) : IsTop a := fun _ => (Subsingleton.elimₓ _ _).le
+protected theorem is_top (a : α) : IsTop a := fun _ => (Subsingleton.elim _ _).le
 
 protected theorem is_min (a : α) : IsMin a :=
   (Subsingleton.is_bot _).IsMin

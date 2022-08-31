@@ -40,9 +40,9 @@ def SimplicialObject :=
 
 namespace SimplicialObject
 
--- mathport name: «expr _[ ]»
+-- mathport name: simplicial_object.at
 localized [Simplicial]
-  notation:1000 X "_[" n "]" => (X : CategoryTheory.SimplicialObject _).obj (Opposite.op (SimplexCategory.mk n))
+  notation:1000 X "_[" n "]" => (X : CategoryTheory.SimplicialObject hole!).obj (Opposite.op (SimplexCategory.mk n))
 
 instance {J : Type v} [SmallCategory J] [HasLimitsOfShape J C] : HasLimitsOfShape J (SimplicialObject C) := by
   dsimp' [simplicial_object]
@@ -240,7 +240,7 @@ end Augmented
 
 open Simplicial
 
-/-- Aaugment a simplicial object with an object. -/
+/-- Augment a simplicial object with an object. -/
 @[simps]
 def augment (X : SimplicialObject C) (X₀ : C) (f : X _[0] ⟶ X₀)
     (w : ∀ (i : SimplexCategory) (g₁ g₂ : [0] ⟶ i), X.map g₁.op ≫ f = X.map g₂.op ≫ f) :
@@ -270,9 +270,9 @@ def CosimplicialObject :=
 
 namespace CosimplicialObject
 
--- mathport name: «expr _[ ]»
+-- mathport name: cosimplicial_object.at
 localized [Simplicial]
-  notation:1000 X "_[" n "]" => (X : CategoryTheory.CosimplicialObject _).obj (SimplexCategory.mk n)
+  notation:1000 X "_[" n "]" => (X : CategoryTheory.CosimplicialObject hole!).obj (SimplexCategory.mk n)
 
 instance {J : Type v} [SmallCategory J] [HasLimitsOfShape J C] : HasLimitsOfShape J (CosimplicialObject C) := by
   dsimp' [cosimplicial_object]

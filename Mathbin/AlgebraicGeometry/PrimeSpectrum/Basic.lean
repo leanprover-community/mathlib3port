@@ -78,7 +78,7 @@ instance is_prime (x : PrimeSpectrum R) : x.asIdeal.IsPrime :=
 /-- The prime spectrum of the zero ring is empty.
 -/
 theorem punit (x : PrimeSpectrum PUnit) : False :=
-  x.1.ne_top_iff_one.1 x.2.1 <| Subsingleton.elimₓ (0 : PUnit) 1 ▸ x.1.zero_mem
+  x.1.ne_top_iff_one.1 x.2.1 <| Subsingleton.elim (0 : PUnit) 1 ▸ x.1.zero_mem
 
 section
 
@@ -346,8 +346,8 @@ instance zariskiTopology : TopologicalSpace (PrimeSpectrum R) :=
     (by
       intro Zs h
       rw [Set.sInter_eq_Inter]
-      let f : Zs → Set R := fun i => Classical.some (h i.2)
-      have hf : ∀ i : Zs, ↑i = zero_locus (f i) := fun i => (Classical.some_spec (h i.2)).symm
+      let f : Zs → Set R := fun i => Classical.choose (h i.2)
+      have hf : ∀ i : Zs, ↑i = zero_locus (f i) := fun i => (Classical.choose_spec (h i.2)).symm
       simp only [hf]
       exact ⟨_, zero_locus_Union _⟩)
     (by

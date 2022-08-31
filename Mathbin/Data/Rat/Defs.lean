@@ -48,7 +48,7 @@ structure Rat where mk' ::
   Pos : 0 < denom
   cop : num.natAbs.Coprime denom
 
--- mathport name: «exprℚ»
+-- mathport name: exprℚ
 notation "ℚ" => Rat
 
 namespace Rat
@@ -124,7 +124,7 @@ def mk : ℤ → ℤ → ℚ
   | n, (d : ℕ) => mkNat n d
   | n, -[1+ d] => mkPnat (-n) d.succPnat
 
--- mathport name: «expr /. »
+-- mathport name: rat.mk
 localized [Rat] infixl:70 " /. " => Rat.mk
 
 theorem mk_pnat_eq (n d h) : mkPnat n ⟨d, h⟩ = n /. d := by

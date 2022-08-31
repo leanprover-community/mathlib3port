@@ -155,7 +155,7 @@ theorem AlgHom.algebraic_independent_iff (f : A →ₐ[R] A') (hf : Injective f)
 
 @[nontriviality]
 theorem algebraic_independent_of_subsingleton [Subsingleton R] : AlgebraicIndependent R x :=
-  algebraic_independent_iff.2 fun l hl => Subsingleton.elimₓ _ _
+  algebraic_independent_iff.2 fun l hl => Subsingleton.elim _ _
 
 theorem algebraic_independent_equiv (e : ι ≃ ι') {f : ι' → A} :
     AlgebraicIndependent R (f ∘ e) ↔ AlgebraicIndependent R f :=

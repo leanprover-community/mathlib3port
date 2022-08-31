@@ -865,7 +865,7 @@ def filter (p : α → Prop) (f : α →₀ M) : α →₀ M where
         
 
 theorem filter_apply (a : α) [D : Decidable (p a)] : f.filter p a = if p a then f a else 0 := by
-  rw [Subsingleton.elimₓ D] <;> rfl
+  rw [Subsingleton.elim D] <;> rfl
 
 theorem filter_eq_indicator : ⇑(f.filter p) = Set.indicatorₓ { x | p x } f :=
   rfl
@@ -886,7 +886,7 @@ theorem filter_apply_neg {a : α} (h : ¬p a) : f.filter p a = 0 :=
 
 @[simp]
 theorem support_filter [D : DecidablePred p] : (f.filter p).Support = f.Support.filter p := by
-  rw [Subsingleton.elimₓ D] <;> rfl
+  rw [Subsingleton.elim D] <;> rfl
 
 theorem filter_zero : (0 : α →₀ M).filter p = 0 := by
   rw [← support_eq_empty, support_filter, support_zero, Finset.filter_empty]
@@ -966,7 +966,7 @@ def subtypeDomain (p : α → Prop) (f : α →₀ M) : Subtype p →₀ M :=
 @[simp]
 theorem support_subtype_domain [D : DecidablePred p] {f : α →₀ M} : (subtypeDomain p f).Support = f.Support.Subtype p :=
   by
-  rw [Subsingleton.elimₓ D] <;> rfl
+  rw [Subsingleton.elim D] <;> rfl
 
 @[simp]
 theorem subtype_domain_apply {a : Subtype p} {v : α →₀ M} : (subtypeDomain p v) a = v a.val :=
@@ -1038,7 +1038,7 @@ theorem filter_eq_sum (p : α → Prop) [D : DecidablePred p] (f : α →₀ M) 
   (f.filter p).sum_single.symm.trans <|
     (Finset.sum_congr
         (by
-          rw [Subsingleton.elimₓ D] <;> rfl))
+          rw [Subsingleton.elim D] <;> rfl))
       fun x hx => by
       rw [filter_apply_pos _ _ (mem_filter.1 hx).2]
 

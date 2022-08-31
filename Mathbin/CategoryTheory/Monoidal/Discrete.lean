@@ -53,6 +53,7 @@ def Discrete.monoidalFunctor (F : M →* N) : MonoidalFunctor (Discrete M) (Disc
 
 variable {K : Type u} [Monoidₓ K]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The monoidal natural isomorphism corresponding to composing two multiplicative morphisms.
 -/
 @[to_additive Discrete.addMonoidalFunctorComp

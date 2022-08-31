@@ -33,7 +33,8 @@ instance Pi.canLift (ι : Sort _) (α β : ι → Sort _) [∀ i : ι, CanLift (
   coe := fun f i => CanLift.coe (f i)
   cond := fun f => ∀ i, CanLift.Cond (β i) (f i)
   prf := fun f hf =>
-    ⟨fun i => Classical.some (CanLift.prf (f i) (hf i)), funext fun i => Classical.some_spec (CanLift.prf (f i) (hf i))⟩
+    ⟨fun i => Classical.choose (CanLift.prf (f i) (hf i)),
+      funext fun i => Classical.choose_spec (CanLift.prf (f i) (hf i))⟩
 
 theorem Subtype.exists_pi_extension {ι : Sort _} {α : ι → Sort _} [ne : ∀ i, Nonempty (α i)] {p : ι → Prop}
     (f : ∀ i : Subtype p, α i) : ∃ g : ∀ i : ι, α i, (fun i : Subtype p => g i) = f := by
@@ -161,10 +162,10 @@ unsafe def lift (p : pexpr) (t : pexpr) (h : Option pexpr) (n : List Name) : tac
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- Parses an optional token "using" followed by a trailing `pexpr`. -/
 unsafe def using_texpr :=
-  «expr ?» (tk "using" *> texpr)
+  parser.optional (tk "using" *> texpr)
 
 /-- Parses a token "to" followed by a trailing `pexpr`. -/
 unsafe def to_texpr :=

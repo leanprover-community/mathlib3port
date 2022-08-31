@@ -502,7 +502,7 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- `clarify [h1,...,hn] using [e1,...,en]` negates the goal, normalizes hypotheses
 (by splitting conjunctions, eliminating existentials, pushing negations inwards,
 and calling `simp` with the supplied lemmas `h1,...,hn`), and then tries `contradiction`.
@@ -517,12 +517,12 @@ Either of the supplied simp lemmas or the supplied ematch lemmas are optional.
 
 `clarify` will fail if it produces more than one goal.
 -/
-unsafe def clarify (hs : parse simp_arg_list) (ps : parse («expr ?» (tk "using" *> pexpr_list_or_texpr)))
+unsafe def clarify (hs : parse simp_arg_list) (ps : parse (parser.optional (tk "using" *> pexpr_list_or_texpr)))
     (cfg : AutoConfig := {  }) : tactic Unit := do
   let s ← mk_simp_set false [] hs
   auto.clarify s (ps []) cfg
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- `safe [h1,...,hn] using [e1,...,en]` negates the goal, normalizes hypotheses
 (by splitting conjunctions, eliminating existentials, pushing negations inwards,
 and calling `simp` with the supplied lemmas `h1,...,hn`), and then tries `contradiction`.
@@ -537,12 +537,12 @@ Either of the supplied simp lemmas or the supplied ematch lemmas are optional.
 
 `safe` ignores the number of goals it produces, and should never fail.
 -/
-unsafe def safe (hs : parse simp_arg_list) (ps : parse («expr ?» (tk "using" *> pexpr_list_or_texpr)))
+unsafe def safe (hs : parse simp_arg_list) (ps : parse (parser.optional (tk "using" *> pexpr_list_or_texpr)))
     (cfg : AutoConfig := {  }) : tactic Unit := do
   let s ← mk_simp_set false [] hs
   auto.safe s (ps []) cfg
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- `finish [h1,...,hn] using [e1,...,en]` negates the goal, normalizes hypotheses
 (by splitting conjunctions, eliminating existentials, pushing negations inwards,
 and calling `simp` with the supplied lemmas `h1,...,hn`), and then tries `contradiction`.
@@ -557,7 +557,7 @@ Either of the supplied simp lemmas or the supplied ematch lemmas are optional.
 
 `finish` will fail if it does not close the goal.
 -/
-unsafe def finish (hs : parse simp_arg_list) (ps : parse («expr ?» (tk "using" *> pexpr_list_or_texpr)))
+unsafe def finish (hs : parse simp_arg_list) (ps : parse (parser.optional (tk "using" *> pexpr_list_or_texpr)))
     (cfg : AutoConfig := {  }) : tactic Unit := do
   let s ← mk_simp_set false [] hs
   auto.finish s (ps []) cfg

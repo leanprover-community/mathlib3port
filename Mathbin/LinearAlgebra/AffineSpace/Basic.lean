@@ -38,6 +38,6 @@ Some key definitions are not yet present.
  -/
 
 
--- mathport name: «expraffine_space»
+-- mathport name: add_torsor
 localized [Affine] notation "affine_space" => AddTorsor
 

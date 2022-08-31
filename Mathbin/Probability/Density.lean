@@ -83,7 +83,7 @@ def pdf {m : MeasurableSpace Ω} (X : Ω → E) (ℙ : Measure Ω)
     (μ : Measure E := by
       run_tac
         volume_tac) :=
-  if hX : HasPdf X ℙ μ then Classical.some hX.pdf'.2 else 0
+  if hX : HasPdf X ℙ μ then Classical.choose hX.pdf'.2 else 0
 
 theorem pdf_undef {m : MeasurableSpace Ω} {ℙ : Measure Ω} {μ : Measure E} {X : Ω → E} (h : ¬HasPdf X ℙ μ) :
     pdf X ℙ μ = 0 := by
@@ -112,7 +112,7 @@ theorem measurable_pdf {m : MeasurableSpace Ω} (X : Ω → E) (ℙ : Measure Ω
     Measurable (pdf X ℙ μ) := by
   by_cases' hX : has_pdf X ℙ μ
   · rw [pdf, dif_pos hX]
-    exact (Classical.some_spec hX.pdf'.2).1
+    exact (Classical.choose_spec hX.pdf'.2).1
     
   · rw [pdf, dif_neg hX]
     exact measurable_zero
@@ -124,7 +124,7 @@ theorem map_eq_with_density_pdf {m : MeasurableSpace Ω} (X : Ω → E) (ℙ : M
         volume_tac)
     [hX : HasPdf X ℙ μ] : Measure.map X ℙ = μ.withDensity (pdf X ℙ μ) := by
   rw [pdf, dif_pos hX]
-  exact (Classical.some_spec hX.pdf'.2).2
+  exact (Classical.choose_spec hX.pdf'.2).2
 
 theorem map_eq_set_lintegral_pdf {m : MeasurableSpace Ω} (X : Ω → E) (ℙ : Measure Ω)
     (μ : Measure E := by

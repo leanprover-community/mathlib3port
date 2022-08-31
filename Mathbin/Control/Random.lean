@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
 import Mathbin.Control.Monad.Basic
+import Mathbin.Control.Uliftable
+import Mathbin.Data.Bitvec.Basic
 import Mathbin.Data.Int.Basic
 import Mathbin.Data.Stream.Defs
-import Mathbin.Control.Uliftable
 import Mathbin.Tactic.NormNum
-import Mathbin.Data.Bitvec.Basic
 
 /-!
 # Rand Monad and Random Class
@@ -232,7 +232,7 @@ open Nat
 
 namespace Finₓ
 
-variable {n : ℕ} [Fact (0 < n)]
+variable {n : ℕ} [NeZero n]
 
 /-- generate a `fin` randomly -/
 protected def random : RandGₓ g (Finₓ n) :=
@@ -264,7 +264,7 @@ instance intBoundedRandom :
             le_transₓ (Int.coe_nat_le_coe_nat_of_le h₁)
               (le_of_eqₓ <| Int.of_nat_nat_abs_eq_of_nonneg (Int.sub_nonneg_of_leₓ hxy))⟩
 
-instance finRandom (n : ℕ) [Fact (0 < n)] : Randomₓ (Finₓ n) where Random := fun g inst => @Finₓ.random g inst _ _
+instance finRandom (n : ℕ) [NeZero n] : Randomₓ (Finₓ n) where Random := fun g inst => @Finₓ.random g inst _ _
 
 instance finBoundedRandom (n : ℕ) :
     BoundedRandomₓ (Finₓ n) where randomR := fun g inst (x y : Finₓ n) p => do
@@ -294,8 +294,6 @@ instance :
       Bool where randomR := fun g _inst x y p =>
     Subtype.map Bool.ofNat (bool_of_nat_mem_Icc_of_mem_Icc_to_nat x y) <$>
       @BoundedRandomₓ.randomR ℕ _ _ g _inst x.toNat y.toNat (Bool.to_nat_le_to_nat p)
-
-open FinFact
 
 /-- generate a random bit vector of length `n` -/
 def Bitvec.random (n : ℕ) : RandGₓ g (Bitvec n) :=

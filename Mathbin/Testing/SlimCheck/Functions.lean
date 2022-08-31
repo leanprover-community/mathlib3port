@@ -262,9 +262,10 @@ the identity function when no entries are found for a given function -/
 def List.applyId [DecidableEq α] (xs : List (α × α)) (x : α) : α :=
   ((xs.map Prod.toSigma).lookup x).getOrElse x
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem List.apply_id_cons [DecidableEq α] (xs : List (α × α)) (x y z : α) :
-    List.applyId ((y, z) :: xs) x = if y = x then z else List.applyId xs x := by
+    List.applyId ((y, z)::xs) x = if y = x then z else List.applyId xs x := by
   simp only [list.apply_id, List.lookupₓ, eq_rec_constant, Prod.toSigma, List.map] <;> split_ifs <;> rfl
 
 open Function _Root_.List

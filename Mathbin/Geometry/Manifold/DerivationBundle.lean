@@ -38,7 +38,7 @@ which is defined as `f • r = f(x) * r`. -/
 def PointedSmoothMap (x : M) :=
   C^n⟮I, M; 𝕜⟯
 
--- mathport name: «exprC^ ⟮ , ; ⟯⟨ ⟩»
+-- mathport name: pointed_smooth_map
 localized [Derivation] notation "C^" n "⟮" I "," M ";" 𝕜 "⟯⟨" x "⟩" => PointedSmoothMap 𝕜 I M n x
 
 variable {𝕜 M}
@@ -137,11 +137,11 @@ def hfdifferential {f : C^∞⟮I, M; I', M'⟯} {x : M} {y : M'} (h : f x = y) 
 def fdifferential (f : C^∞⟮I, M; I', M'⟯) (x : M) : PointDerivation I x →ₗ[𝕜] PointDerivation I' (f x) :=
   hfdifferential (rfl : f x = f x)
 
--- mathport name: «expr𝒅»
+-- mathport name: fdifferential
 -- Standard notation for the differential. The abbreviation is `MId`.
 localized [Manifold] notation "𝒅" => fdifferential
 
--- mathport name: «expr𝒅ₕ»
+-- mathport name: hfdifferential
 -- Standard notation for the differential. The abbreviation is `MId`.
 localized [Manifold] notation "𝒅ₕ" => hfdifferential
 

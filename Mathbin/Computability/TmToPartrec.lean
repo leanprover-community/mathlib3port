@@ -80,6 +80,9 @@ inductive Code
   | fix : code → code
   deriving DecidableEq, Inhabited
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The semantics of the `code` primitives, as partial functions `list ℕ →. list ℕ`. By convention
 we functions that return a single result return a singleton `[n]`, or in some cases `n :: v` where
 `v` will be ignored by a subsequent function.
@@ -108,15 +111,15 @@ we functions that return a single result return a singleton `[n]`, or in some ca
 -/
 @[simp]
 def Code.eval : Code → List ℕ →. List ℕ
-  | code.zero' => fun v => pure (0 :: v)
+  | code.zero' => fun v => pure (0::v)
   | code.succ => fun v => pure [v.head.succ]
   | code.tail => fun v => pure v.tail
   | code.cons f fs => fun v => do
     let n ← code.eval f v
     let ns ← code.eval fs v
-    pure (n :: ns)
+    pure (n::ns)
   | code.comp f g => fun v => g.eval v >>= f.eval
-  | code.case f g => fun v => v.head.elim (f.eval v.tail) fun y _ => g.eval (y :: v.tail)
+  | code.case f g => fun v => v.head.elim (f.eval v.tail) fun y _ => g.eval (y::v.tail)
   | code.fix f => Pfun.fix fun v => (f.eval v).map fun v => if v.head = 0 then Sum.inl v.tail else Sum.inr v.tail
 
 namespace Code
@@ -236,6 +239,29 @@ theorem ExistsCode.comp {m n} {f : Vector ℕ n →. ℕ} {g : Finₓ n → Vect
         rfl⟩
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
     ∃ c : Code, ∀ v : Vector ℕ n, c.eval v.1 = pure <$> f v := by
   induction' hf with n f hf
@@ -275,14 +301,13 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
     suffices
       ∀ a b,
         a + b = n →
-          (n.succ ::
-              0 :: g (n ::ᵥ Nat.elim (f v.tail) (fun y IH => g (y ::ᵥ IH ::ᵥ v.tail)) n ::ᵥ v.tail) :: v.val.tail :
+          (n.succ::0::g (n ::ᵥ Nat.elim (f v.tail) (fun y IH => g (y ::ᵥ IH ::ᵥ v.tail)) n ::ᵥ v.tail)::v.val.tail :
               List ℕ) ∈
             Pfun.fix
               (fun v : List ℕ => do
-                let x ← cg.eval (v.head :: v.tail.tail)
-                pure <| if v = 0 then Sum.inl (v :: v :: x.head :: v : List ℕ) else Sum.inr (v :: v :: x.head :: v))
-              (a :: b :: Nat.elim (f v.tail) (fun y IH => g (y ::ᵥ IH ::ᵥ v.tail)) a :: v.val.tail)
+                let x ← cg.eval (v.head::v.tail.tail)
+                pure <| if v = 0 then Sum.inl (v::v::x.head::v : List ℕ) else Sum.inr (v::v::x.head::v))
+              (a::b::Nat.elim (f v.tail) (fun y IH => g (y ::ᵥ IH ::ᵥ v.tail)) a::v.val.tail)
       by
       rw [(_ : Pfun.fix _ _ = pure _)]
       swap
@@ -324,11 +349,10 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
               Pfun.fix
                 (fun v =>
                   (cf.eval v).bind fun y =>
-                    Part.some <|
-                      if y.head = 0 then Sum.inl (v.head.succ :: v.tail) else Sum.inr (v.head.succ :: v.tail))
+                    Part.some <| if y.head = 0 then Sum.inl (v.head.succ::v.tail) else Sum.inr (v.head.succ::v.tail))
                 v₁ →
             ∀ n,
-              v₁ = n :: v.val →
+              (v₁ = n::v.val) →
                 (∀ m < n, ¬f (m ::ᵥ v) = 0) →
                   ∃ a : ℕ, (f (a ::ᵥ v) = 0 ∧ ∀ {m : ℕ}, m < a → ¬f (m ::ᵥ v) = 0) ∧ [a] = [v'.head.pred]
         by
@@ -349,7 +373,7 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
         exact ⟨_, ⟨h, hm⟩, rfl⟩
         
       · refine'
-          IH (n.succ :: v.val)
+          IH (n.succ::v.val)
             (by
               simp_all )
             _ rfl fun m h' => _
@@ -358,19 +382,19 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
         
       
     · rintro ⟨n, ⟨hn, hm⟩, rfl⟩
-      refine' ⟨n.succ :: v.1, _, rfl⟩
+      refine' ⟨n.succ::v.1, _, rfl⟩
       have :
-        (n.succ :: v.1 : List ℕ) ∈
+        (n.succ::v.1 : List ℕ) ∈
           Pfun.fix
             (fun v =>
               (cf.eval v).bind fun y =>
-                Part.some <| if y.head = 0 then Sum.inl (v.head.succ :: v.tail) else Sum.inr (v.head.succ :: v.tail))
-            (n :: v.val) :=
+                Part.some <| if y.head = 0 then Sum.inl (v.head.succ::v.tail) else Sum.inr (v.head.succ::v.tail))
+            (n::v.val) :=
         Pfun.mem_fix_iff.2
           (Or.inl
             (by
               simp [hf, hn, -Subtype.val_eq_coe]))
-      generalize (n.succ :: v.1 : List ℕ) = w  at this⊢
+      generalize (n.succ::v.1 : List ℕ) = w  at this⊢
       clear hn
       induction' n with n IH
       · exact this
@@ -428,13 +452,15 @@ inductive Cont
   | fix : Code → cont → cont
   deriving Inhabited
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The semantics of a continuation. -/
 def Cont.eval : Cont → List ℕ →. List ℕ
   | cont.halt => pure
   | cont.cons₁ fs as k => fun v => do
     let ns ← Code.eval fs as
-    cont.eval k (v :: ns)
-  | cont.cons₂ ns k => fun v => cont.eval k (ns.head :: v)
+    cont.eval k (v::ns)
+  | cont.cons₂ ns k => fun v => cont.eval k (ns.head::v)
   | cont.comp f k => fun v => Code.eval f v >>= cont.eval k
   | cont.fix f k => fun v => if v.head = 0 then k.eval v.tail else f.fix.eval v.tail >>= k.eval
 
@@ -450,6 +476,8 @@ inductive Cfg
   | ret : Cont → List ℕ → cfg
   deriving Inhabited
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Evaluating `c : code` in a continuation `k : cont` and input `v : list ℕ`. This goes by
 recursion on `c`, building an augmented continuation and a value to pass to it.
 
@@ -467,14 +495,15 @@ recursion on `c`, building an augmented continuation and a value to pass to it.
   `cont.fix f k`)
 -/
 def stepNormal : Code → Cont → List ℕ → Cfg
-  | code.zero', k, v => Cfg.ret k (0 :: v)
+  | code.zero', k, v => Cfg.ret k (0::v)
   | code.succ, k, v => Cfg.ret k [v.head.succ]
   | code.tail, k, v => Cfg.ret k v.tail
   | code.cons f fs, k, v => step_normal f (Cont.cons₁ fs v k) v
   | code.comp f g, k, v => step_normal g (Cont.comp f k) v
-  | code.case f g, k, v => v.head.elim (step_normal f k v.tail) fun y _ => step_normal g k (y :: v.tail)
+  | code.case f g, k, v => v.head.elim (step_normal f k v.tail) fun y _ => step_normal g k (y::v.tail)
   | code.fix f, k, v => step_normal f (Cont.fix f k) v
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Evaluating a continuation `k : cont` on input `v : list ℕ`. This is the second part of
 evaluation, when we receive results from continuations built by `step_normal`.
 
@@ -491,7 +520,7 @@ evaluation, when we receive results from continuations built by `step_normal`.
 def stepRet : Cont → List ℕ → Cfg
   | cont.halt, v => Cfg.halt v
   | cont.cons₁ fs as k, v => stepNormal fs (Cont.cons₂ v k) as
-  | cont.cons₂ ns k, v => step_ret k (ns.head :: v)
+  | cont.cons₂ ns k, v => step_ret k (ns.head::v)
   | cont.comp f k, v => stepNormal f k v
   | cont.fix f k, v => if v.head = 0 then step_ret k v.tail else stepNormal f (Cont.fix f k) v.tail
 
@@ -1053,6 +1082,8 @@ def trCont : Cont → Cont'
   | cont.comp c k => Cont'.comp c (tr_cont k)
   | cont.fix c k => Cont'.fix c (tr_cont k)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- We use `pos_num` to define the translation of binary natural numbers. A natural number is
 represented as a little-endian list of `bit0` and `bit1` elements:
 
@@ -1064,8 +1095,8 @@ represented as a little-endian list of `bit0` and `bit1` elements:
 In particular, this representation guarantees no trailing `bit0`'s at the end of the list. -/
 def trPosNum : PosNum → List Γ'
   | PosNum.one => [Γ'.bit1]
-  | PosNum.bit0 n => Γ'.bit0 :: tr_pos_num n
-  | PosNum.bit1 n => Γ'.bit1 :: tr_pos_num n
+  | PosNum.bit0 n => Γ'.bit0::tr_pos_num n
+  | PosNum.bit1 n => Γ'.bit1::tr_pos_num n
 
 /-- We use `num` to define the translation of binary natural numbers. Positive numbers are
 translated using `tr_pos_num`, and `tr_num 0 = []`. So there are never any trailing `bit0`'s in
@@ -1095,6 +1126,8 @@ theorem tr_nat_zero : trNat 0 = [] := by
 theorem tr_nat_default : trNat default = [] :=
   tr_nat_zero
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Lists are translated with a `cons` after each encoded number.
 For example:
 
@@ -1106,8 +1139,10 @@ For example:
 @[simp]
 def trList : List ℕ → List Γ'
   | [] => []
-  | n :: ns => trNat n ++ Γ'.cons :: tr_list ns
+  | n::ns => trNat n ++ Γ'.cons::tr_list ns
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Lists of lists are translated with a `Cons` after each encoded list.
 For example:
 
@@ -1120,15 +1155,17 @@ For example:
 @[simp]
 def trLlist : List (List ℕ) → List Γ'
   | [] => []
-  | l :: ls => trList l ++ Γ'.Cons :: tr_llist ls
+  | l::ls => trList l ++ Γ'.Cons::tr_llist ls
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The data part of a continuation is a list of lists, which is encoded on the `stack` stack
 using `tr_llist`. -/
 @[simp]
 def contStack : Cont → List (List ℕ)
   | cont.halt => []
-  | cont.cons₁ _ ns k => ns :: cont_stack k
-  | cont.cons₂ ns k => ns :: cont_stack k
+  | cont.cons₁ _ ns k => ns::cont_stack k
+  | cont.cons₂ ns k => ns::cont_stack k
   | cont.comp _ k => cont_stack k
   | cont.fix _ k => cont_stack k
 
@@ -1176,25 +1213,29 @@ def TrCfg : Cfg → Cfg' → Prop
   | cfg.ret k v, c' => ∃ s, c' = ⟨some (Λ'.ret (trCont k)), s, K'.elim (trList v) [] [] (trContStack k)⟩
   | cfg.halt v, c' => c' = halt v
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- This could be a general list definition, but it is also somewhat specialized to this
 application. `split_at_pred p L` will search `L` for the first element satisfying `p`.
 If it is found, say `L = l₁ ++ a :: l₂` where `a` satisfies `p` but `l₁` does not, then it returns
 `(l₁, some a, l₂)`. Otherwise, if there is no such element, it returns `(L, none, [])`. -/
 def splitAtPred {α} (p : α → Bool) : List α → List α × Option α × List α
   | [] => ([], none, [])
-  | a :: as =>
+  | a::as =>
     cond (p a) ([], some a, as) <|
       let ⟨l₁, o, l₂⟩ := split_at_pred as
-      ⟨a :: l₁, o, l₂⟩
+      ⟨a::l₁, o, l₂⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem split_at_pred_eq {α} (p : α → Bool) :
     ∀ L l₁ o l₂,
       (∀ x ∈ l₁, p x = ff) →
-        Option.elimₓ (L = l₁ ∧ l₂ = []) (fun a => p a = tt ∧ L = l₁ ++ a :: l₂) o → splitAtPred p L = (l₁, o, l₂)
+        Option.elimₓ (L = l₁ ∧ l₂ = []) (fun a => p a = tt ∧ L = l₁ ++ a::l₂) o → splitAtPred p L = (l₁, o, l₂)
   | [], _, none, _, _, ⟨rfl, rfl⟩ => rfl
   | [], l₁, some o, l₂, h₁, ⟨h₂, h₃⟩ => by
     simp at h₃ <;> contradiction
-  | a :: L, l₁, o, l₂, h₁, h₂ => by
+  | a::L, l₁, o, l₂, h₁, h₂ => by
     rw [split_at_pred]
     have IH := split_at_pred_eq L
     cases o
@@ -1215,6 +1256,7 @@ theorem split_at_pred_eq {α} (p : α → Bool) :
 theorem split_at_pred_ff {α} (L : List α) : splitAtPred (fun _ => false) L = (L, none, []) :=
   split_at_pred_eq _ _ _ _ _ (fun _ _ => rfl) ⟨rfl, rfl⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem move_ok {p k₁ k₂ q s L₁ o L₂} {S : K' → List Γ'} (h₁ : k₁ ≠ k₂) (e : splitAtPred p (S k₁) = (L₁, o, L₂)) :
     Reaches₁ (TM2.step tr) ⟨some (Λ'.move p k₁ k₂ q), s, S⟩
       ⟨some q, o, update (update S k₁ L₂) k₂ (L₁.reverseCore (S k₂))⟩ :=
@@ -1253,7 +1295,7 @@ theorem move_ok {p k₁ k₂ q s L₁ o L₂} {S : K' → List Γ'} (h₁ : k₁
     rw [e₃, split_at_pred] at e
     cases e
     simp [e₂]
-    convert @IH (update (update S k₁ Sk) k₂ (a :: S k₂)) _ _ using 2 <;>
+    convert @IH (update (update S k₁ Sk) k₂ (a::S k₂)) _ _ using 2 <;>
       simp [Function.update_noteq, h₁, h₁.symm, e₃, List.reverseCore]
     simp [Function.update_comm h₁.symm]
     
@@ -1351,8 +1393,9 @@ theorem tr_num_nat_end : ∀ (n), ∀ x ∈ trNum n, natEnd x = ff
 theorem tr_nat_nat_end (n) : ∀ x ∈ trNat n, natEnd x = ff :=
   tr_num_nat_end _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem tr_list_ne_Cons : ∀ (l), ∀ x ∈ trList l, x ≠ Γ'.Cons
-  | a :: l, x, h => by
+  | a::l, x, h => by
     simp [tr_list] at h
     obtain h | rfl | h := h
     · rintro rfl
@@ -1387,9 +1430,12 @@ theorem head_main_ok {q s L} {c d : List Γ'} :
   convert unrev_ok
   simp [List.reverse_core_eq]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem head_stack_ok {q s L₁ L₂ L₃} :
-    Reaches₁ (TM2.step tr) ⟨some (head stack q), s, K'.elim (trList L₁) [] [] (trList L₂ ++ Γ'.Cons :: L₃)⟩
-      ⟨some q, none, K'.elim (trList (L₂.head :: L₁)) [] [] L₃⟩ :=
+    Reaches₁ (TM2.step tr) ⟨some (head stack q), s, K'.elim (trList L₁) [] [] (trList L₂ ++ Γ'.Cons::L₃)⟩
+      ⟨some q, none, K'.elim (trList (L₂.head::L₁)) [] [] L₃⟩ :=
   by
   cases' L₂ with a L₂
   · refine'
@@ -1411,7 +1457,7 @@ theorem head_stack_ok {q s L₁ L₂ L₃} :
         (move_ok
           (by
             decide)
-          (split_at_pred_eq _ _ (tr_nat a) (some Γ'.cons) (tr_list L₂ ++ Γ'.Cons :: L₃) (tr_nat_nat_end _)
+          (split_at_pred_eq _ _ (tr_nat a) (some Γ'.cons) (tr_list L₂ ++ Γ'.Cons::L₃) (tr_nat_nat_end _)
             ⟨rfl, by
               simp ⟩))
         (trans_gen.head rfl (trans_gen.head rfl _))
@@ -1427,6 +1473,8 @@ theorem head_stack_ok {q s L₁ L₂ L₃} :
     simp [List.reverse_core_eq]
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem succ_ok {q s n} {c d : List Γ'} :
     Reaches₁ (TM2.step tr) ⟨some (Λ'.succ q), s, K'.elim (trList [n]) [] c d⟩
       ⟨some q, none, K'.elim (trList [n.succ]) [] c d⟩ :=
@@ -1459,10 +1507,10 @@ theorem succ_ok {q s n} {c d : List Γ'} :
     convert unrev_ok using 2
     simp [e, List.reverse_core_eq]
   induction' a with m IH m IH generalizing s <;> intro l₁
-  · refine' ⟨Γ'.bit0 :: l₁, [Γ'.bit1], some Γ'.cons, rfl, trans_gen.head rfl (trans_gen.single _)⟩
+  · refine' ⟨Γ'.bit0::l₁, [Γ'.bit1], some Γ'.cons, rfl, trans_gen.head rfl (trans_gen.single _)⟩
     simp [tr_pos_num]
     
-  · obtain ⟨l₁', l₂', s', e, h⟩ := IH (Γ'.bit0 :: l₁)
+  · obtain ⟨l₁', l₂', s', e, h⟩ := IH (Γ'.bit0::l₁)
     refine' ⟨l₁', l₂', s', e, trans_gen.head _ h⟩
     swap
     simp [PosNum.succ, tr_pos_num]
@@ -1472,11 +1520,18 @@ theorem succ_ok {q s n} {c d : List Γ'} :
     rfl
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem pred_ok (q₁ q₂ s v) (c d : List Γ') :
     ∃ s',
       Reaches₁ (TM2.step tr) ⟨some (Λ'.pred q₁ q₂), s, K'.elim (trList v) [] c d⟩
         (v.head.elim ⟨some q₁, s', K'.elim (trList v.tail) [] c d⟩ fun n _ =>
-          ⟨some q₂, s', K'.elim (trList (n :: v.tail)) [] c d⟩) :=
+          ⟨some q₂, s', K'.elim (trList (n::v.tail)) [] c d⟩) :=
   by
   rcases v with (_ | ⟨_ | n, v⟩)
   · refine' ⟨none, trans_gen.single _⟩
@@ -1500,8 +1555,8 @@ theorem pred_ok (q₁ q₂ s v) (c d : List Γ') :
     ∀ l₁,
       ∃ l₁' l₂' s',
         List.reverseCore l₁ (tr_pos_num a) = List.reverseCore l₁' l₂' ∧
-          reaches₁ (TM2.step tr) ⟨some (q₁.pred q₂), s, K'.elim (tr_pos_num a.succ ++ Γ'.cons :: tr_list v) l₁ c d⟩
-            ⟨some (unrev q₂), s', K'.elim (l₂' ++ Γ'.cons :: tr_list v) l₁' c d⟩
+          reaches₁ (TM2.step tr) ⟨some (q₁.pred q₂), s, K'.elim (tr_pos_num a.succ ++ Γ'.cons::tr_list v) l₁ c d⟩
+            ⟨some (unrev q₂), s', K'.elim (l₂' ++ Γ'.cons::tr_list v) l₁' c d⟩
     by
     obtain ⟨l₁', l₂', s', e, h⟩ := this []
     simp [List.reverseCore] at e
@@ -1509,17 +1564,17 @@ theorem pred_ok (q₁ q₂ s v) (c d : List Γ') :
     convert unrev_ok using 2
     simp [e, List.reverse_core_eq]
   induction' a with m IH m IH generalizing s <;> intro l₁
-  · refine' ⟨Γ'.bit1 :: l₁, [], some Γ'.cons, rfl, trans_gen.head rfl (trans_gen.single _)⟩
+  · refine' ⟨Γ'.bit1::l₁, [], some Γ'.cons, rfl, trans_gen.head rfl (trans_gen.single _)⟩
     simp [tr_pos_num, show pos_num.one.succ = pos_num.one.bit0 from rfl]
     
-  · obtain ⟨l₁', l₂', s', e, h⟩ := IH (some Γ'.bit0) (Γ'.bit1 :: l₁)
+  · obtain ⟨l₁', l₂', s', e, h⟩ := IH (some Γ'.bit0) (Γ'.bit1::l₁)
     refine' ⟨l₁', l₂', s', e, trans_gen.head _ h⟩
     simp
     rfl
     
-  · obtain ⟨a, l, e, h⟩ : ∃ a l, tr_pos_num m = a :: l ∧ nat_end a = ff := by
+  · obtain ⟨a, l, e, h⟩ : ∃ a l, (tr_pos_num m = a::l) ∧ nat_end a = ff := by
       cases m <;> refine' ⟨_, _, rfl, rfl⟩
-    refine' ⟨Γ'.bit0 :: l₁, _, some a, rfl, trans_gen.single _⟩
+    refine' ⟨Γ'.bit0::l₁, _, some a, rfl, trans_gen.single _⟩
     simp [tr_pos_num, PosNum.succ, e, h, nat_end,
       show some Γ'.bit1 ≠ some Γ'.bit0 by
         decide]
@@ -1573,6 +1628,8 @@ theorem tr_normal_respects (c k v s) :
   case fix f IH =>
     apply IH
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem tr_ret_respects (k v s) :
     ∃ b₂,
       TrCfg (stepRet k v) b₂ ∧
@@ -1617,7 +1674,7 @@ theorem tr_ret_respects (k v s) :
     simp
     exact h₂
   case cons₂ ns k IH =>
-    obtain ⟨c, h₁, h₂⟩ := IH (ns.head :: v) none
+    obtain ⟨c, h₁, h₂⟩ := IH (ns.head::v) none
     exact ⟨c, h₁, trans_gen.head rfl <| head_stack_ok.trans h₂⟩
   case comp f k IH =>
     obtain ⟨s', h₁, h₂⟩ := tr_normal_respects f k v s
@@ -1626,7 +1683,7 @@ theorem tr_ret_respects (k v s) :
     rw [step_ret]
     have :
       if v.head = 0 then nat_end (tr_list v).head'.iget = tt ∧ (tr_list v).tail = tr_list v.tail
-      else nat_end (tr_list v).head'.iget = ff ∧ (tr_list v).tail = (tr_nat v.head).tail ++ Γ'.cons :: tr_list v.tail :=
+      else nat_end (tr_list v).head'.iget = ff ∧ (tr_list v).tail = (tr_nat v.head).tail ++ Γ'.cons::tr_list v.tail :=
       by
       cases' v with n
       · exact ⟨rfl, rfl⟩

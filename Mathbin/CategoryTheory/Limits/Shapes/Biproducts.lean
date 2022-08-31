@@ -175,7 +175,7 @@ structure IsBilimit {F : J → C} (B : Bicone F) where
 attribute [local ext] bicone.is_bilimit
 
 instance subsingleton_is_bilimit {f : J → C} {c : Bicone f} : Subsingleton c.IsBilimit :=
-  ⟨fun h h' => Bicone.IsBilimit.ext _ _ (Subsingleton.elimₓ _ _) (Subsingleton.elimₓ _ _)⟩
+  ⟨fun h h' => Bicone.IsBilimit.ext _ _ (Subsingleton.elim _ _) (Subsingleton.elim _ _)⟩
 
 section Whisker
 
@@ -2084,7 +2084,7 @@ instance subsingleton_preadditive_of_has_binary_biproducts {C : Type u} [Categor
         (by
           convert (inferInstance : has_binary_biproduct X X))
     refine' h₁.trans (Eq.trans _ h₂.symm)
-    congr 2 <;> exact Subsingleton.elimₓ _ _
+    congr 2 <;> exact Subsingleton.elim _ _
 
 end
 

@@ -43,11 +43,11 @@ variable [L.Structure M] [L.Structure N] [L.Structure P] [L.Structure Q]
   realizations of formulas. -/
 structure ElementaryEmbedding where
   toFun : M → N
-  map_formula' : ∀ {n} (φ : L.Formula (Finₓ n)) (x : Finₓ n → M), φ.realize (to_fun ∘ x) ↔ φ.realize x := by
+  map_formula' : ∀ ⦃n⦄ (φ : L.Formula (Finₓ n)) (x : Finₓ n → M), φ.realize (to_fun ∘ x) ↔ φ.realize x := by
     run_tac
       obviously
 
--- mathport name: «expr ↪ₑ[ ] »
+-- mathport name: elementary_embedding
 localized [FirstOrder] notation:25 A " ↪ₑ[" L "] " B => FirstOrder.Language.ElementaryEmbedding L A B
 
 variable {L} {M} {N}
@@ -90,9 +90,13 @@ theorem map_bounded_formula (f : M ↪ₑ[L] N) {α : Type} {n : ℕ} (φ : L.Bo
 theorem map_formula (f : M ↪ₑ[L] N) {α : Type} (φ : L.Formula α) (x : α → M) : φ.realize (f ∘ x) ↔ φ.realize x := by
   rw [formula.realize, formula.realize, ← f.map_bounded_formula, Unique.eq_default (f ∘ default)]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem map_sentence (f : M ↪ₑ[L] N) (φ : L.Sentence) : M ⊨ φ ↔ N ⊨ φ := by
   rw [sentence.realize, sentence.realize, ← f.map_formula, Unique.eq_default (f ∘ default)]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Theory_model_iff (f : M ↪ₑ[L] N) (T : L.Theory) : M ⊨ T ↔ N ⊨ T := by
   simp only [Theory.model_iff, f.map_sentence]
 
@@ -195,6 +199,7 @@ variable (L) (M)
 abbrev ElementaryDiagram : L[[M]].Theory :=
   L[[M]].CompleteTheory M
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The canonical elementary embedding of an `L`-structure into any model of its elementary diagram
 -/
 @[simps]
@@ -309,11 +314,11 @@ theorem realize_formula_top {α : Type _} {φ : L.Formula α} {v : α → (⊤ :
 /-- A substructure is elementary when every formula applied to a tuple in the subtructure
   agrees with its value in the overall structure. -/
 def IsElementary (S : L.Substructure M) : Prop :=
-  ∀ {n} (φ : L.Formula (Finₓ n)) (x : Finₓ n → S), φ.realize ((coe : _ → M) ∘ x) ↔ φ.realize x
+  ∀ ⦃n⦄ (φ : L.Formula (Finₓ n)) (x : Finₓ n → S), φ.realize ((coe : _ → M) ∘ x) ↔ φ.realize x
 
 end Substructure
 
-variable (L) (M)
+variable (L M)
 
 /-- An elementary substructure is one in which every formula applied to a tuple in the subtructure
   agrees with its value in the overall structure. -/
@@ -321,7 +326,7 @@ structure ElementarySubstructure where
   toSubstructure : L.Substructure M
   is_elementary' : to_substructure.IsElementary
 
-variable {L} {M}
+variable {L M}
 
 namespace ElementarySubstructure
 
@@ -343,7 +348,7 @@ theorem is_elementary (S : L.ElementarySubstructure M) : (S : L.Substructure M).
 /-- The natural embedding of an `L.substructure` of `M` into `M`. -/
 def subtype (S : L.ElementarySubstructure M) : S ↪ₑ[L] M where
   toFun := coe
-  map_formula' := fun n => S.IsElementary
+  map_formula' := S.IsElementary
 
 @[simp]
 theorem coe_subtype {S : L.ElementarySubstructure M} : ⇑S.Subtype = coe :=
@@ -364,14 +369,20 @@ theorem mem_top (x : M) : x ∈ (⊤ : L.ElementarySubstructure M) :=
 theorem coe_top : ((⊤ : L.ElementarySubstructure M) : Set M) = Set.Univ :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem realize_sentence (S : L.ElementarySubstructure M) (φ : L.Sentence) : S ⊨ φ ↔ M ⊨ φ :=
   S.Subtype.map_sentence φ
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem Theory_model_iff (S : L.ElementarySubstructure M) (T : L.Theory) : S ⊨ T ↔ M ⊨ T := by
   simp only [Theory.model_iff, realize_sentence]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance Theory_model {T : L.Theory} [h : M ⊨ T] {S : L.ElementarySubstructure M} : S ⊨ T :=
   (Theory_model_iff S T).2 h
 
@@ -401,7 +412,7 @@ def toElementarySubstructure (S : L.Substructure M)
         φ.realize default (Finₓ.snoc (coe ∘ x) a : _ → M) →
           ∃ b : S, φ.realize default (Finₓ.snoc (coe ∘ x) b : _ → M)) :
     L.ElementarySubstructure M :=
-  ⟨S, fun _ => S.is_elementary_of_exists htv⟩
+  ⟨S, S.is_elementary_of_exists htv⟩
 
 end Substructure
 

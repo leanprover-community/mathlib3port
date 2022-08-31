@@ -425,10 +425,10 @@ def Subtype.val (p : α → Prop) : Subtype p →o α :=
 /-- There is a unique monotone map from a subsingleton to itself. -/
 instance unique [Subsingleton α] : Unique (α →o α) where
   default := OrderHom.id
-  uniq := fun a => ext _ _ (Subsingleton.elimₓ _ _)
+  uniq := fun a => ext _ _ (Subsingleton.elim _ _)
 
 theorem order_hom_eq_id [Subsingleton α] (g : α →o α) : g = OrderHom.id :=
-  Subsingleton.elimₓ _ _
+  Subsingleton.elim _ _
 
 /-- Reinterpret a bundled monotone function as a monotone function between dual orders. -/
 @[simps]
@@ -611,7 +611,7 @@ instance : OrderIsoClass (α ≃o β) α β where
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
-  map_le_map_iff := fun f => f.map_rel_iff'
+  map_le_map_iff := fun f _ _ => f.map_rel_iff'
 
 @[simp]
 theorem to_fun_eq_coe {f : α ≃o β} : f.toFun = f :=
@@ -1149,18 +1149,18 @@ theorem OrderIso.is_compl {x y : α} (h : IsCompl x y) : IsCompl (f x) (f y) :=
 theorem OrderIso.is_compl_iff {x y : α} : IsCompl x y ↔ IsCompl (f x) (f y) :=
   ⟨f.IsCompl, fun h => f.symm_apply_apply x ▸ f.symm_apply_apply y ▸ f.symm.IsCompl h⟩
 
-theorem OrderIso.is_complemented [IsComplemented α] : IsComplemented β :=
+theorem OrderIso.complemented_lattice [ComplementedLattice α] : ComplementedLattice β :=
   ⟨fun x => by
     obtain ⟨y, hy⟩ := exists_is_compl (f.symm x)
     rw [← f.symm_apply_apply y] at hy
     refine' ⟨f y, f.symm.is_compl_iff.2 hy⟩⟩
 
-theorem OrderIso.is_complemented_iff : IsComplemented α ↔ IsComplemented β :=
+theorem OrderIso.complemented_lattice_iff : ComplementedLattice α ↔ ComplementedLattice β :=
   ⟨by
     intro
-    exact f.is_complemented, by
+    exact f.complemented_lattice, by
     intro
-    exact f.symm.is_complemented⟩
+    exact f.symm.complemented_lattice⟩
 
 end BoundedOrder
 

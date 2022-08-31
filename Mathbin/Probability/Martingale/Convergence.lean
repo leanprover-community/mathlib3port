@@ -231,7 +231,7 @@ theorem Submartingale.ae_tendsto_limit_process [IsFiniteMeasure μ] (hf : Submar
   classical
   suffices ∃ g, strongly_measurable[⨆ n, ℱ n] g ∧ ∀ᵐ ω ∂μ, tendsto (fun n => f n ω) at_top (𝓝 (g ω)) by
     rw [limit_process, dif_pos this]
-    exact (Classical.some_spec this).2
+    exact (Classical.choose_spec this).2
   set g' : Ω → ℝ := fun ω => if h : ∃ c, tendsto (fun n => f n ω) at_top (𝓝 c) then h.some else 0
   have hle : (⨆ n, ℱ n) ≤ m0 := Sup_le fun m ⟨n, hn⟩ => hn ▸ ℱ.le _
   have hg' : ∀ᵐ ω ∂μ.trim hle, tendsto (fun n => f n ω) at_top (𝓝 (g' ω)) := by

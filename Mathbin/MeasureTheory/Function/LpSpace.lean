@@ -1387,10 +1387,10 @@ def lp {α} (E : Type _) {m : MeasurableSpace α} [NormedAddCommGroup E] (p : �
   neg_mem' := fun f hf => by
     rwa [Set.mem_set_of_eq, snorm_congr_ae (ae_eq_fun.coe_fn_neg _), snorm_neg]
 
--- mathport name: «expr →₁[ ] »
+-- mathport name: measure_theory.L1
 localized [MeasureTheory] notation:25 α " →₁[" μ "] " E => MeasureTheory.lp E 1 μ
 
--- mathport name: «expr →₂[ ] »
+-- mathport name: measure_theory.L2
 localized [MeasureTheory] notation:25 α " →₂[" μ "] " E => MeasureTheory.lp E 2 μ
 
 namespace Memℒp
@@ -2261,7 +2261,7 @@ theorem snorm_exponent_top_lim_eq_ess_sup_liminf {ι} [Nonempty ι] [LinearOrder
   rw [Ennreal.tendsto_coe]
   exact (continuous_nnnorm.tendsto (f_lim x)).comp hx
 
-theorem snorm_exponent_top_lim_le_liminf_snorm_exponent_top {ι} [Nonempty ι] [Encodable ι] [LinearOrderₓ ι]
+theorem snorm_exponent_top_lim_le_liminf_snorm_exponent_top {ι} [Nonempty ι] [Countable ι] [LinearOrderₓ ι]
     {f : ι → α → F} {f_lim : α → F} (h_lim : ∀ᵐ x : α ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (f_lim x))) :
     snorm f_lim ∞ μ ≤ atTop.liminf fun n => snorm (f n) ∞ μ := by
   rw [snorm_exponent_top_lim_eq_ess_sup_liminf h_lim]
@@ -2330,7 +2330,7 @@ theorem cauchy_seq_Lp_iff_cauchy_seq_ℒp {ι} [Nonempty ι] [SemilatticeSup ι]
 
 -- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident f_lim, ",", ident hf_lim_meas, ",", ident h_tendsto, "⟩", ":", expr «expr∃ , »((f_lim : α → E)
     (hf_lim_meas : mem_ℒp f_lim p μ),
-    at_top.tendsto (λ n, snorm «expr - »(f n, f_lim) p μ) (expr𝓝() 0))]]
+    at_top.tendsto (λ n, snorm «expr - »(f n, f_lim) p μ) (nhds() 0))]]
 theorem complete_space_Lp_of_cauchy_complete_ℒp [hp : Fact (1 ≤ p)]
     (H :
       ∀ (f : ℕ → α → E) (hf : ∀ n, Memℒp (f n) p μ) (B : ℕ → ℝ≥0∞) (hB : (∑' i, B i) < ∞)
@@ -2341,7 +2341,7 @@ theorem complete_space_Lp_of_cauchy_complete_ℒp [hp : Fact (1 ≤ p)]
   have hB_pos : ∀ n, 0 < B n := fun n => pow_pos (div_pos zero_lt_one zero_lt_two) n
   refine' Metric.complete_of_convergent_controlled_sequences B hB_pos fun f hf => _
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident f_lim, \",\", ident hf_lim_meas, \",\", ident h_tendsto, \"⟩\", \":\", expr «expr∃ , »((f_lim : α → E)\n    (hf_lim_meas : mem_ℒp f_lim p μ),\n    at_top.tendsto (λ n, snorm «expr - »(f n, f_lim) p μ) (expr𝓝() 0))]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[[\"⟨\", ident f_lim, \",\", ident hf_lim_meas, \",\", ident h_tendsto, \"⟩\", \":\", expr «expr∃ , »((f_lim : α → E)\n    (hf_lim_meas : mem_ℒp f_lim p μ),\n    at_top.tendsto (λ n, snorm «expr - »(f n, f_lim) p μ) (nhds() 0))]]"
   · exact ⟨hf_lim_meas.to_Lp f_lim, tendsto_Lp_of_tendsto_ℒp f_lim hf_lim_meas h_tendsto⟩
     
   have hB : Summable B := summable_geometric_two
@@ -2509,7 +2509,7 @@ theorem ae_tendsto_of_cauchy_snorm [CompleteSpace E] {f : ℕ → α → E} (hf 
   by_cases' hp_top : p = ∞
   · simp_rw [hp_top] at *
     have h_cau_ae : ∀ᵐ x ∂μ, ∀ N n m, N ≤ n → N ≤ m → (∥(f n - f m) x∥₊ : ℝ≥0∞) < B N := by
-      simp_rw [ae_all_iff, ae_imp_iff]
+      simp_rw [ae_all_iff]
       exact fun N n m hnN hmN => ae_lt_of_ess_sup_lt (h_cau N n m hnN hmN)
     simp_rw [snorm_exponent_top, snorm_ess_sup] at h_cau
     refine' h_cau_ae.mono fun x hx => cauchy_seq_tendsto_of_complete _

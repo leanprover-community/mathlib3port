@@ -319,6 +319,7 @@ theorem partially_well_ordered_on_iff_exists_monotone_subseq :
     exact ⟨g 0, g 1, g.lt_iff_lt.2 zero_lt_one, gmon _ _ zero_le_one⟩
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 protected theorem PartiallyWellOrderedOn.prod {t : Set β} (hs : PartiallyWellOrderedOn s r)
     (ht : PartiallyWellOrderedOn t r') : PartiallyWellOrderedOn (s ×ˢ t) fun x y : α × β => r x.1 y.1 ∧ r' x.2 y.2 := by
   intro f hf
@@ -361,6 +362,7 @@ theorem is_pwo_iff_exists_monotone_subseq : s.IsPwo ↔ ∀ f : ℕ → α, (∀
 protected theorem IsPwo.is_wf (h : s.IsPwo) : s.IsWf := by
   simpa only [← lt_iff_le_not_leₓ] using h.well_founded_on
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem IsPwo.prod {t : Set β} (hs : s.IsPwo) (ht : t.IsPwo) : IsPwo (s ×ˢ t) :=
   hs.Prod ht
 
@@ -610,9 +612,9 @@ noncomputable def minBadSeqOfBadSeq (r : α → α → Prop) (rk : α → ℕ) (
   classical
   have h : ∃ (k : ℕ)(g : ℕ → α), (∀ m, m < n → f m = g m) ∧ is_bad_seq r s g ∧ rk (g n) = k :=
     ⟨_, f, fun _ _ => rfl, hf, rfl⟩
-  obtain ⟨h1, h2, h3⟩ := Classical.some_spec (Nat.find_specₓ h)
+  obtain ⟨h1, h2, h3⟩ := Classical.choose_spec (Nat.find_specₓ h)
   refine'
-    ⟨Classical.some (Nat.find_specₓ h), h1, by
+    ⟨Classical.choose (Nat.find_specₓ h), h1, by
       convert h2, fun g hg1 hg2 con => _⟩
   refine'
     Nat.find_minₓ h _

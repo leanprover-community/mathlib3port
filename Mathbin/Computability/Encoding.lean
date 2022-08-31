@@ -75,11 +75,13 @@ theorem left_inverse_section_inclusion : Function.LeftInverse sectionΓ'Bool inc
 theorem inclusion_bool_Γ'_injective : Function.Injective inclusionBoolΓ' :=
   Function.HasLeftInverse.injective (Exists.intro sectionΓ'Bool left_inverse_section_inclusion)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- An encoding function of the positive binary numbers in bool. -/
 def encodePosNum : PosNum → List Bool
   | PosNum.one => [true]
-  | PosNum.bit0 n => ff :: encode_pos_num n
-  | PosNum.bit1 n => tt :: encode_pos_num n
+  | PosNum.bit0 n => ff::encode_pos_num n
+  | PosNum.bit1 n => tt::encode_pos_num n
 
 /-- An encoding function of the binary numbers in bool. -/
 def encodeNum : Num → List Bool
@@ -90,10 +92,12 @@ def encodeNum : Num → List Bool
 def encodeNat (n : ℕ) : List Bool :=
   encodeNum n
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- A decoding function from `list bool` to the positive binary numbers. -/
 def decodePosNum : List Bool → PosNum
-  | ff :: l => PosNum.bit0 (decode_pos_num l)
-  | tt :: l => ite (l = []) PosNum.one (PosNum.bit1 (decode_pos_num l))
+  | ff::l => PosNum.bit0 (decode_pos_num l)
+  | tt::l => ite (l = []) PosNum.one (PosNum.bit1 (decode_pos_num l))
   | _ => PosNum.one
 
 /-- A decoding function from `list bool` to the binary numbers. -/
@@ -154,10 +158,11 @@ def encodingNatΓ' : Encoding ℕ where
 def finEncodingNatΓ' : FinEncoding ℕ :=
   ⟨encodingNatΓ', Γ'.fintype⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- A unary encoding function of ℕ in bool. -/
 def unaryEncodeNat : Nat → List Bool
   | 0 => []
-  | n + 1 => tt :: unary_encode_nat n
+  | n + 1 => tt::unary_encode_nat n
 
 /-- A unary decoding function from `list bool` to ℕ. -/
 def unaryDecodeNat : List Bool → Nat :=
@@ -178,9 +183,10 @@ def unaryFinEncodingNat : FinEncoding ℕ where
 def encodeBool : Bool → List Bool :=
   List.ret
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- A decoding function from `list bool` to bool. -/
 def decodeBool : List Bool → Bool
-  | b :: _ => b
+  | b::_ => b
   | _ => arbitrary Bool
 
 theorem decode_encode_bool : ∀ b, decodeBool (encodeBool b) = b := fun b => Bool.casesOn b rfl rfl

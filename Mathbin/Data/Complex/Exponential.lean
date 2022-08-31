@@ -16,7 +16,7 @@ hyperbolic sine, hyperbolic cosine, and hyperbolic tangent functions.
 -/
 
 
--- mathport name: «exprabs'»
+-- mathport name: exprabs'
 local notation "abs'" => HasAbs.abs
 
 open IsAbsoluteValue

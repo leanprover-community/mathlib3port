@@ -148,11 +148,11 @@ def ofSelfIso (M : ModuleCat R) : ModuleCat.of R M ≅ M where
 theorem is_zero_of_subsingleton (M : ModuleCat R) [Subsingleton M] : IsZero M := by
   refine' ⟨fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩
   · ext
-    have : x = 0 := Subsingleton.elimₓ _ _
+    have : x = 0 := Subsingleton.elim _ _
     rw [this, map_zero, map_zero]
     
   · ext
-    apply Subsingleton.elimₓ
+    apply Subsingleton.elim
     
 
 instance : HasZeroObject (ModuleCat.{v} R) :=
@@ -182,7 +182,7 @@ def ModuleCat.asHom [AddCommGroupₓ X₁] [Module R X₁] [AddCommGroupₓ X₂
     (X₁ →ₗ[R] X₂) → (ModuleCat.of R X₁ ⟶ ModuleCat.of R X₂) :=
   id
 
--- mathport name: «expr↟ »
+-- mathport name: Module.as_hom
 localized [ModuleCat] notation "↟" f:1024 => ModuleCat.asHom f
 
 /-- Reinterpreting a linear map in the category of `R`-modules. -/
@@ -190,7 +190,7 @@ def ModuleCat.asHomRight [AddCommGroupₓ X₁] [Module R X₁] {X₂ : ModuleCa
     (X₁ →ₗ[R] X₂) → (ModuleCat.of R X₁ ⟶ X₂) :=
   id
 
--- mathport name: «expr↾ »
+-- mathport name: Module.as_hom_right
 localized [ModuleCat] notation "↾" f:1024 => ModuleCat.asHomRight f
 
 /-- Reinterpreting a linear map in the category of `R`-modules. -/
@@ -198,7 +198,7 @@ def ModuleCat.asHomLeft {X₁ : ModuleCat.{v} R} [AddCommGroupₓ X₂] [Module 
     (X₁ →ₗ[R] X₂) → (X₁ ⟶ ModuleCat.of R X₂) :=
   id
 
--- mathport name: «expr↿ »
+-- mathport name: Module.as_hom_left
 localized [ModuleCat] notation "↿" f:1024 => ModuleCat.asHomLeft f
 
 /-- Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s. -/

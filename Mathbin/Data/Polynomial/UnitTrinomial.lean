@@ -98,7 +98,7 @@ theorem trinomial_trailing_coeff (hkm : k < m) (hmn : m < n) (hu : u ≠ 0) : (t
 
 theorem trinomial_monic (hkm : k < m) (hmn : m < n) : (trinomial k m n u v 1).Monic := by
   cases' subsingleton_or_nontrivial R with h h
-  · apply Subsingleton.elimₓ
+  · apply Subsingleton.elim
     
   · exact trinomial_leading_coeff hkm hmn one_ne_zero
     

@@ -37,8 +37,6 @@ it is always a subgroup, and if the `n`th cyclotomic polynomial is irreducible, 
 -/
 
 
-attribute [local instance] Pnat.fact_pos
-
 variable {n : ℕ+} (K : Type _) [Field K] {L : Type _} {μ : L}
 
 open Polynomial IsCyclotomicExtension

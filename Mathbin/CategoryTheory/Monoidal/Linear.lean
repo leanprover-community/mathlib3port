@@ -26,6 +26,10 @@ variable (C : Type _) [Category C] [Preadditive C] [Linear R C]
 
 variable [MonoidalCategory C] [MonoidalPreadditive C]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- A category is `monoidal_linear R` if tensoring is `R`-linear in both factors.
 -/
 class MonoidalLinear where

@@ -176,10 +176,10 @@ convergence on `α`. -/
 protected def filter (𝓕 : Filter <| β × β) : Filter ((α → β) × (α → β)) :=
   (UniformConvergence.basis α β 𝓕).filter
 
--- mathport name: «exprΦ»
+-- mathport name: exprΦ
 local notation "Φ" => fun (α β : Type _) (uvx : ((α → β) × (α → β)) × α) => (uvx.1.1 uvx.2, uvx.1.2 uvx.2)
 
--- mathport name: «exprlower_adjoint»
+-- mathport name: exprlower_adjoint
 /- This is a lower adjoint to `uniform_convergence.filter` (see `uniform_convergence.gc`).
 The exact definition of the lower adjoint `l` is not interesting; we will only use that it exists
 (in `uniform_convergence.mono` and `uniform_convergence.infi_eq`) and that

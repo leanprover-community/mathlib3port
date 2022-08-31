@@ -367,13 +367,13 @@ protected theorem congr_fun {f g : MulEquiv M N} (h : f = g) (x : M) : f x = g x
 /-- The `mul_equiv` between two monoids with a unique element. -/
 @[to_additive "The `add_equiv` between two add_monoids with a unique element."]
 def mulEquivOfUnique {M N} [Unique M] [Unique N] [Mul M] [Mul N] : M ≃* N :=
-  { Equivₓ.equivOfUnique M N with map_mul' := fun _ _ => Subsingleton.elimₓ _ _ }
+  { Equivₓ.equivOfUnique M N with map_mul' := fun _ _ => Subsingleton.elim _ _ }
 
 /-- There is a unique monoid homomorphism between two monoids with a unique element. -/
 @[to_additive "There is a unique additive monoid homomorphism between two additive monoids with\na unique element."]
 instance {M N} [Unique M] [Unique N] [Mul M] [Mul N] : Unique (M ≃* N) where
   default := mulEquivOfUnique
-  uniq := fun _ => ext fun x => Subsingleton.elimₓ _ _
+  uniq := fun _ => ext fun x => Subsingleton.elim _ _
 
 /-!
 ## Monoids

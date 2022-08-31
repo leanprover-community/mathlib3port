@@ -60,10 +60,10 @@ section SpectrumCompact
 
 variable [NormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A]
 
--- mathport name: «exprσ»
+-- mathport name: exprσ
 local notation "σ" => Spectrum 𝕜
 
--- mathport name: «exprρ»
+-- mathport name: exprρ
 local notation "ρ" => ResolventSet 𝕜
 
 -- mathport name: «expr↑ₐ»
@@ -136,7 +136,7 @@ open Filter Asymptotics
 
 variable [NontriviallyNormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [CompleteSpace A]
 
--- mathport name: «exprρ»
+-- mathport name: exprρ
 local notation "ρ" => ResolventSet 𝕜
 
 -- mathport name: «expr↑ₐ»
@@ -366,7 +366,7 @@ section GelfandMazurIsomorphism
 
 variable [NormedDivisionRing A] [NormedAlgebra ℂ A]
 
--- mathport name: «exprσ»
+-- mathport name: exprσ
 local notation "σ" => Spectrum ℂ
 
 theorem algebra_map_eq_of_mem {a : A} {z : ℂ} (h : z ∈ σ a) : algebraMap ℂ A z = a := by

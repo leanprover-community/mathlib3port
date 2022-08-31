@@ -55,10 +55,10 @@ alias step_bound_pos_iff ↔ _ step_bound_pos
 
 variable {α : Type _} [DecidableEq α] [Fintype α] {P : Finpartition (univ : Finset α)} {u : Finset α} {ε : ℝ}
 
--- mathport name: «exprm»
+-- mathport name: exprm
 local notation "m" => (card α / stepBound P.parts.card : ℕ)
 
--- mathport name: «expra»
+-- mathport name: expra
 local notation "a" => (card α / P.parts.card - m * 4 ^ P.parts.card : ℕ)
 
 theorem m_pos [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) : 0 < m :=

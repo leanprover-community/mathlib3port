@@ -41,7 +41,7 @@ noncomputable section
 
 variable {p : ℕ} [hp : Fact p.Prime] (n : ℕ) (R : Type _)
 
--- mathport name: «expr𝕎»
+-- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
 -- type as `\bbW`

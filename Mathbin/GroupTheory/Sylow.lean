@@ -72,9 +72,9 @@ instance : SetLike (Sylow p G) G where
   coe_injective' := fun P Q h => ext (SetLike.coe_injective h)
 
 instance : SubgroupClass (Sylow p G) G where
-  mul_mem := fun s => s.mul_mem'
+  mul_mem := fun s _ _ => s.mul_mem'
   one_mem := fun s => s.one_mem'
-  inv_mem := fun s => s.inv_mem'
+  inv_mem := fun s _ => s.inv_mem'
 
 variable (P : Sylow p G)
 
@@ -158,8 +158,8 @@ theorem Sylow.exists_comap_subtype_eq {H : Subgroup G} (P : Sylow p H) :
 noncomputable def Sylow.fintypeOfKerIsPGroup {H : Type _} [Groupₓ H] {f : H →* G} (hf : IsPGroup p f.ker)
     [Fintype (Sylow p G)] : Fintype (Sylow p H) :=
   let h_exists := fun P : Sylow p H => P.exists_comap_eq_of_ker_is_p_group hf
-  let g : Sylow p H → Sylow p G := fun P => Classical.some (h_exists P)
-  let hg : ∀ P : Sylow p H, (g P).1.comap f = P := fun P => Classical.some_spec (h_exists P)
+  let g : Sylow p H → Sylow p G := fun P => Classical.choose (h_exists P)
+  let hg : ∀ P : Sylow p H, (g P).1.comap f = P := fun P => Classical.choose_spec (h_exists P)
   Fintype.ofInjective g fun P Q h =>
     Sylow.ext
       (by
@@ -302,8 +302,8 @@ def Sylow.equivSmul (P : Sylow p G) (g : G) : P ≃* (g • P : Sylow p G) :=
 
 /-- Sylow subgroups are isomorphic -/
 noncomputable def Sylow.equiv [Fact p.Prime] [Finite (Sylow p G)] (P Q : Sylow p G) : P ≃* Q := by
-  rw [← Classical.some_spec (exists_smul_eq G P Q)]
-  exact P.equiv_smul (Classical.some (exists_smul_eq G P Q))
+  rw [← Classical.choose_spec (exists_smul_eq G P Q)]
+  exact P.equiv_smul (Classical.choose (exists_smul_eq G P Q))
 
 @[simp]
 theorem Sylow.orbit_eq_top [Fact p.Prime] [Finite (Sylow p G)] (P : Sylow p G) : Orbit G P = ⊤ :=

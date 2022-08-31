@@ -43,7 +43,7 @@ def DiscretePresieve (α : Type u) : Presieve α := fun β f => ∃ x : β, ∀ 
 
 theorem generate_discrete_presieve_mem (α : Type u) :
     Sieve.generate (DiscretePresieve α) ∈ typesGrothendieckTopology α := fun x =>
-  ⟨PUnit, id, fun _ => x, ⟨PUnit.unit, fun _ => Subsingleton.elimₓ _ _⟩, rfl⟩
+  ⟨PUnit, id, fun _ => x, ⟨PUnit.unit, fun _ => Subsingleton.elim _ _⟩, rfl⟩
 
 open Presieve
 
@@ -79,16 +79,16 @@ def eval (P : Type uᵒᵖ ⥤ Type u) (α : Type u) (s : P.obj (op α)) (x : α
 noncomputable def typesGlue (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesGrothendieckTopology S) (α : Type u)
     (f : α → S.obj (op PUnit)) : S.obj (op α) :=
   (hs.IsSheafFor _ _ (generate_discrete_presieve_mem α)).amalgamate
-    (fun β g hg => S.map (↾fun x => PUnit.unit).op <| f <| g <| Classical.some hg) fun β γ δ g₁ g₂ f₁ f₂ hf₁ hf₂ h =>
+    (fun β g hg => S.map (↾fun x => PUnit.unit).op <| f <| g <| Classical.choose hg) fun β γ δ g₁ g₂ f₁ f₂ hf₁ hf₂ h =>
     (hs.IsSheafFor _ _ (generate_discrete_presieve_mem δ)).IsSeparatedFor.ext fun ε g ⟨x, hx⟩ => by
-      have : f₁ (Classical.some hf₁) = f₂ (Classical.some hf₂) :=
-        Classical.some_spec hf₁ (g₁ <| g x) ▸ Classical.some_spec hf₂ (g₂ <| g x) ▸ congr_fun h _
+      have : f₁ (Classical.choose hf₁) = f₂ (Classical.choose hf₂) :=
+        Classical.choose_spec hf₁ (g₁ <| g x) ▸ Classical.choose_spec hf₂ (g₂ <| g x) ▸ congr_fun h _
       simp_rw [← functor_to_types.map_comp_apply, this, ← op_comp]
       rfl
 
 theorem eval_types_glue {S hs α} (f) : eval.{u} S α (typesGlue S hs α f) = f :=
   funext fun x =>
-    (IsSheafFor.valid_glue _ _ _ <| ⟨PUnit.unit, fun _ => Subsingleton.elimₓ _ _⟩).trans <| by
+    (IsSheafFor.valid_glue _ _ _ <| ⟨PUnit.unit, fun _ => Subsingleton.elim _ _⟩).trans <| by
       convert functor_to_types.map_id_apply _ _
       rw [← op_id]
       congr
@@ -99,7 +99,7 @@ theorem types_glue_eval {S hs α} (s) : typesGlue.{u} S hs α (eval S α s) = s 
       (FunctorToTypes.map_comp_apply _ _ _ _).symm.trans <| by
         rw [← op_comp]
         congr 2
-        exact funext fun x => congr_arg f (Classical.some_spec hf x).symm
+        exact funext fun x => congr_arg f (Classical.choose_spec hf x).symm
 
 /-- Given a sheaf `S`, construct an equivalence `S(α) ≃ (α → S(*))`. -/
 @[simps]

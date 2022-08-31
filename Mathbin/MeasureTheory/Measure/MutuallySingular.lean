@@ -37,7 +37,7 @@ such that `μ s = 0` and `ν sᶜ = 0`. -/
 def MutuallySingular {m0 : MeasurableSpace α} (μ ν : Measure α) : Prop :=
   ∃ s : Set α, MeasurableSet s ∧ μ s = 0 ∧ ν (sᶜ) = 0
 
--- mathport name: «expr ⊥ₘ »
+-- mathport name: measure.mutually_singular
 localized [MeasureTheory] infixl:60 " ⊥ₘ " => MeasureTheory.Measure.MutuallySingular
 
 namespace MutuallySingular
@@ -71,7 +71,7 @@ theorem mono (h : μ₁ ⊥ₘ ν₁) (hμ : μ₂ ≤ μ₁) (hν : ν₂ ≤ �
   h.mono_ac hμ.AbsolutelyContinuous hν.AbsolutelyContinuous
 
 @[simp]
-theorem sum_left {ι : Type _} [Encodable ι] {μ : ι → Measure α} : sum μ ⊥ₘ ν ↔ ∀ i, μ i ⊥ₘ ν := by
+theorem sum_left {ι : Type _} [Countable ι] {μ : ι → Measure α} : sum μ ⊥ₘ ν ↔ ∀ i, μ i ⊥ₘ ν := by
   refine' ⟨fun h i => h.mono (le_sum _ _) le_rflₓ, fun H => _⟩
   choose s hsm hsμ hsν using H
   refine' ⟨⋂ i, s i, MeasurableSet.Inter hsm, _, _⟩
@@ -82,7 +82,7 @@ theorem sum_left {ι : Type _} [Encodable ι] {μ : ι → Measure α} : sum μ 
     
 
 @[simp]
-theorem sum_right {ι : Type _} [Encodable ι] {ν : ι → Measure α} : μ ⊥ₘ sum ν ↔ ∀ i, μ ⊥ₘ ν i :=
+theorem sum_right {ι : Type _} [Countable ι] {ν : ι → Measure α} : μ ⊥ₘ sum ν ↔ ∀ i, μ ⊥ₘ ν i :=
   comm.trans <| sum_left.trans <| forall_congrₓ fun i => comm
 
 @[simp]

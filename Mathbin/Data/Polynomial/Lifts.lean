@@ -212,9 +212,9 @@ theorem lifts_and_degree_eq_and_monic [Nontrivial S] {p : S[X]} (hlifts : p ∈ 
 theorem lifts_and_nat_degree_eq_and_monic {p : S[X]} (hlifts : p ∈ lifts f) (hp : p.Monic) :
     ∃ q : R[X], map f q = p ∧ q.natDegree = p.natDegree ∧ q.Monic := by
   cases' subsingleton_or_nontrivial S with hR hR
-  · obtain rfl : p = 1 := Subsingleton.elimₓ _ _
+  · obtain rfl : p = 1 := Subsingleton.elim _ _
     refine'
-      ⟨1, Subsingleton.elimₓ _ _, by
+      ⟨1, Subsingleton.elim _ _, by
         simp , by
         simp ⟩
     

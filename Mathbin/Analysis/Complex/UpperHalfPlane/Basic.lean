@@ -47,7 +47,7 @@ def UpperHalfPlane :=
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler λ α,
   has_coe[has_coe] α exprℂ()»
 
--- mathport name: «exprℍ»
+-- mathport name: upper_half_plane
 localized [UpperHalfPlane] notation "ℍ" => UpperHalfPlane
 
 namespace UpperHalfPlane

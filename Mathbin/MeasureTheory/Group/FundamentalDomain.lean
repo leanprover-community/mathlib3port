@@ -157,7 +157,7 @@ theorem smul_of_comm {G' : Type _} [Groupₓ G'] [MulAction G' α] [MeasurableSp
     IsFundamentalDomain G (g • s) μ :=
   h.image_of_equiv (MeasurableEquiv.smul g) (measure_preserving_smul _ _) (Equivₓ.refl _) <| smul_comm g
 
-variable [Encodable G] {ν : Measure α}
+variable [Countable G] {ν : Measure α}
 
 @[to_additive]
 theorem sum_restrict_of_ac (h : IsFundamentalDomain G s μ) (hν : ν ≪ μ) : (Sum fun g : G => ν.restrict (g • s)) = ν :=

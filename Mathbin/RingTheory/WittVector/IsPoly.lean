@@ -159,7 +159,7 @@ universe u
 
 variable {p : ℕ} {R S : Type u} {σ idx : Type _} [hp : Fact p.Prime] [CommRingₓ R] [CommRingₓ S]
 
--- mathport name: «expr𝕎»
+-- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
 -- type as `\bbW`

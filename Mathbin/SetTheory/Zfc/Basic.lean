@@ -378,8 +378,12 @@ theorem mem_powerset : ∀ {x y : PSet}, y ∈ powerset x ↔ y ⊆ x
 def sUnion (a : PSet) : PSet :=
   ⟨Σx, (a.func x).type, fun ⟨x, y⟩ => (a.func x).func y⟩
 
+-- mathport name: pSet.sUnion
+prefix:110 "⋃₀ " => PSet.sUnion
+
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem mem_sUnion : ∀ {x y : PSet.{u}}, y ∈ ⋃₀x ↔ ∃ z ∈ x, y ∈ z
+theorem mem_sUnion : ∀ {x y : PSet.{u}}, y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z
   | ⟨α, A⟩, y =>
     ⟨fun ⟨⟨a, c⟩, (e : Equivₓ y ((A a).func c))⟩ =>
       have : func (A a) c ∈ mk (A a).type (A a).func := Mem.mk (A a).func c
@@ -394,8 +398,10 @@ theorem mem_sUnion : ∀ {x y : PSet.{u}}, y ∈ ⋃₀x ↔ ∃ z ∈ x, y ∈ 
         let ⟨c, bc⟩ := βt b
         ⟨⟨a, c⟩, yb.trans bc⟩⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem to_set_sUnion (x : PSet.{u}) : (⋃₀x).ToSet = ⋃₀(to_set '' x.ToSet) := by
+theorem to_set_sUnion (x : PSet.{u}) : (⋃₀ x).ToSet = ⋃₀ (to_set '' x.ToSet) := by
   ext
   simp
 
@@ -523,7 +529,7 @@ open PSet
 noncomputable def allDefinable : ∀ {n} (F : Arity Setₓ.{u} n), Definable n F
   | 0, F =>
     let p := @Quotientₓ.exists_rep PSet _ F
-    Definable.eqMk ⟨some p, Equiv.rfl⟩ (some_spec p)
+    Definable.eqMk ⟨choose p, Equiv.rfl⟩ (choose_spec p)
   | n + 1, (F : Arity Setₓ.{u} (n + 1)) => by
     have I := fun x => all_definable (F x)
     refine' definable.eq_mk ⟨fun x : PSet => (@definable.resp _ _ (I ⟦x⟧)).1, _⟩ _
@@ -832,16 +838,22 @@ def sUnion : Setₓ → Setₓ :=
         Exists.elim (sUnion_lem B A (fun b => Exists.elim (βα b) fun c hc => ⟨c, PSet.Equiv.symm hc⟩) a) fun b hb =>
           ⟨b, PSet.Equiv.symm hb⟩⟩⟩
 
+-- mathport name: Set.sUnion
+prefix:110 "⋃₀ " => Setₓ.sUnion
+
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem mem_sUnion {x y : Setₓ.{u}} : y ∈ ⋃₀x ↔ ∃ z ∈ x, y ∈ z :=
+theorem mem_sUnion {x y : Setₓ.{u}} : y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z :=
   Quotientₓ.induction_on₂ x y fun x y =>
     Iff.trans mem_sUnion ⟨fun ⟨z, h⟩ => ⟨⟦z⟧, h⟩, fun ⟨z, h⟩ => Quotientₓ.induction_on z (fun z h => ⟨z, h⟩) h⟩
 
-theorem mem_sUnion_of_mem {x y z : Setₓ} (hy : y ∈ z) (hz : z ∈ x) : y ∈ ⋃₀x :=
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem mem_sUnion_of_mem {x y z : Setₓ} (hy : y ∈ z) (hz : z ∈ x) : y ∈ ⋃₀ x :=
   mem_sUnion.2 ⟨z, hz, hy⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem sUnion_singleton {x : Setₓ.{u}} : ⋃₀({x} : Setₓ) = x :=
+theorem sUnion_singleton {x : Setₓ.{u}} : ⋃₀ ({x} : Setₓ) = x :=
   ext fun y => by
     simp_rw [mem_sUnion, exists_prop, mem_singleton, exists_eq_left]
 
@@ -853,14 +865,17 @@ theorem singleton_injective : Function.Injective (@singleton Setₓ Setₓ _) :=
 theorem singleton_inj {x y : Setₓ} : ({x} : Setₓ) = {y} ↔ x = y :=
   singleton_injective.eq_iff
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem to_set_sUnion (x : Setₓ.{u}) : (⋃₀x).ToSet = ⋃₀(to_set '' x.ToSet) := by
+theorem to_set_sUnion (x : Setₓ.{u}) : (⋃₀ x).ToSet = ⋃₀ (to_set '' x.ToSet) := by
   ext
   simp
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The binary union operation -/
 protected def union (x y : Setₓ.{u}) : Setₓ.{u} :=
-  ⋃₀{x, y}
+  ⋃₀ {x, y}
 
 /-- The binary intersection operation -/
 protected def inter (x y : Setₓ.{u}) : Setₓ.{u} :=
@@ -1195,9 +1210,13 @@ def ClassToCong (x : Class.{u}) : Set Class.{u} :=
 def Powerset (x : Class) : Class :=
   CongToClass (Set.Powerset x)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The union of a class is the class of all members of ZFC sets in the class -/
 def SUnion (x : Class) : Class :=
-  ⋃₀ClassToCong x
+  ⋃₀ ClassToCong x
+
+-- mathport name: Class.sUnion
+prefix:110 "⋃₀ " => Class.SUnion
 
 theorem OfSet.inj {x y : Setₓ.{u}} (h : (x : Class.{u}) = y) : x = y :=
   Setₓ.ext fun z => by
@@ -1249,15 +1268,18 @@ theorem diff_hom (x y : Setₓ.{u}) : (x : Class.{u}) \ y = (x \ y : Setₓ.{u})
 theorem powerset_hom (x : Setₓ.{u}) : Powerset.{u} x = Setₓ.powerset x :=
   Set.ext fun z => Iff.symm Setₓ.mem_powerset
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem sUnion_hom (x : Setₓ.{u}) : ⋃₀(x : Class.{u}) = ⋃₀x :=
+theorem sUnion_hom (x : Setₓ.{u}) : ⋃₀ (x : Class.{u}) = ⋃₀ x :=
   Set.ext fun z => by
     refine' Iff.trans _ Set.mem_sUnion.symm
     exact ⟨fun ⟨_, ⟨a, rfl, ax⟩, za⟩ => ⟨a, ax, za⟩, fun ⟨a, ax, za⟩ => ⟨_, ⟨a, rfl, ax⟩, za⟩⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The definite description operator, which is `{x}` if `{y | A y} = {x}` and `∅` otherwise. -/
 def Iota (A : Class) : Class :=
-  ⋃₀{ x | ∀ y, A y ↔ y = x }
+  ⋃₀ { x | ∀ y, A y ↔ y = x }
 
 theorem iota_val (A : Class) (x : Setₓ) (H : ∀ y, A y ↔ y = x) : Iota A = ↑x :=
   Set.ext fun y =>
@@ -1312,7 +1334,8 @@ theorem choice_mem_aux (y : Setₓ.{u}) (yx : y ∈ x) : (Classical.epsilon fun 
       h <| by
         rwa [← (eq_empty y).2 fun z zx => n ⟨z, zx⟩]
 
-theorem choice_is_func : IsFunc x (⋃₀x) (choice x) :=
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem choice_is_func : IsFunc x (⋃₀ x) (choice x) :=
   (@map_is_func _ (Classical.allDefinable _) _ _).2 fun y yx => mem_sUnion.2 ⟨y, yx, choice_mem_aux x h y yx⟩
 
 theorem choice_mem (y : Setₓ.{u}) (yx : y ∈ x) : (choice x′y : Class.{u}) ∈ (y : Class.{u}) := by

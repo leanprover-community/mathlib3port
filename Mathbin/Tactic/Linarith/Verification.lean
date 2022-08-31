@@ -32,17 +32,19 @@ When elaborated, the coefficient will be a native numeral of the same type as `e
 unsafe def mul_expr (n : ℕ) (e : expr) : pexpr :=
   if n = 1 then pquote.1 (%%ₓe) else pquote.1 ((%%ₓnat.to_pexpr n) * %%ₓe)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 private unsafe def add_exprs_aux : pexpr → List pexpr → pexpr
   | p, [] => p
   | p, [a] => pquote.1 ((%%ₓp) + %%ₓa)
-  | p, h :: t => add_exprs_aux (pquote.1 ((%%ₓp) + %%ₓh)) t
+  | p, h::t => add_exprs_aux (pquote.1 ((%%ₓp) + %%ₓh)) t
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `add_exprs l` creates a `pexpr` representing the sum of the elements of `l`, associated left.
 If `l` is empty, it will be the `pexpr` 0. Otherwise, it does not include 0 in the sum.
 -/
 unsafe def add_exprs : List pexpr → pexpr
   | [] => pquote.1 0
-  | h :: t => add_exprs_aux h t
+  | h::t => add_exprs_aux h t
 
 /-- If our goal is to add together two inequalities `t1 R1 0` and `t2 R2 0`,
 `ineq_const_nm R1 R2` produces the strength of the inequality in the sum `R`,
@@ -68,6 +70,7 @@ unsafe def mk_lt_zero_pf_aux (c : Ineq) (pf npf : expr) (coeff : ℕ) : tactic (
   let (nm, niq) := ineq_const_nm c iq
   Prod.mk niq <$> mk_app nm [pf, h']
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `mk_lt_zero_pf coeffs pfs` takes a list of proofs of the form `tᵢ Rᵢ 0`,
 paired with coefficients `cᵢ`.
 It produces a proof that `∑cᵢ * tᵢ R 0`, where `R` is as strong as possible.
@@ -75,7 +78,7 @@ It produces a proof that `∑cᵢ * tᵢ R 0`, where `R` is as strong as possibl
 unsafe def mk_lt_zero_pf : List (expr × ℕ) → tactic expr
   | [] => fail "no linear hypotheses found"
   | [(h, c)] => Prod.snd <$> mk_single_comp_zero_pf c h
-  | (h, c) :: t => do
+  | (h, c)::t => do
     let (iq, h') ← mk_single_comp_zero_pf c h
     Prod.snd <$> t (fun pr ce => mk_lt_zero_pf_aux pr.1 pr.2 ce.1 ce.2) (iq, h')
 
@@ -105,23 +108,28 @@ unsafe def prove_eq_zero_using (tac : tactic Unit) (e : expr) : tactic expr := d
   let tgt ← to_expr (pquote.1 ((%%ₓe) = 0))
   Prod.snd <$> solve_aux tgt (tac >> done)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `add_neg_eq_pfs l` inspects the list of proofs `l` for proofs of the form `t = 0`. For each such
 proof, it adds a proof of `-t = 0` to the list.
 -/
 unsafe def add_neg_eq_pfs : List expr → tactic (List expr)
   | [] => return []
-  | h :: t => do
+  | h::t => do
     let some (iq, tp) ← parse_into_comp_and_expr <$> infer_type h
     match iq with
       | ineq.eq => do
         let nep ← mk_neg_eq_zero_pf h
         let tl ← add_neg_eq_pfs t
-        return <| h :: nep :: tl
+        return <| h::nep::tl
       | _ => List.cons h <$> add_neg_eq_pfs t
 
 /-! #### The main method -/
 
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `prove_false_by_linarith` is the main workhorse of `linarith`.
 Given a list `l` of proofs of `tᵢ Rᵢ 0`,
 it tries to derive a contradiction from `l` and use this to produce a proof of `false`.
@@ -147,14 +155,14 @@ set of hypotheses.
 -/
 unsafe def prove_false_by_linarith (cfg : linarith_config) : List expr → tactic expr
   | [] => fail "no args to linarith"
-  | l@(h :: t) => do
+  | l@(h::t) => do
     let l'
       ←-- for the elimination to work properly, we must add a proof of `-1 < 0` to the list,
           -- along with negated equality proofs.
           add_neg_eq_pfs
           l
     let hz ← ineq_prf_tp h >>= mk_neg_one_lt_zero_pf
-    let inputs := hz :: l'
+    let inputs := hz::l'
     let-- perform the elimination and fail if no contradiction is found.
       (comps, max_var)
       ← linear_forms_and_max_var cfg.Transparency inputs

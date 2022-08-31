@@ -301,13 +301,13 @@ theorem eq_of_chain {c : Chain (Part α)} {a b : α} (ha : some a ∈ c) (hb : s
 
 /-- The (noncomputable) `ωSup` definition for the `ω`-CPO structure on `part α`. -/
 protected noncomputable def ωSup (c : Chain (Part α)) : Part α :=
-  if h : ∃ a, some a ∈ c then some (Classical.some h) else none
+  if h : ∃ a, some a ∈ c then some (Classical.choose h) else none
 
 theorem ωSup_eq_some {c : Chain (Part α)} {a : α} (h : some a ∈ c) : Part.ωSup c = some a :=
   have : ∃ a, some a ∈ c := ⟨a, h⟩
-  have a' : some (Classical.some this) ∈ c := Classical.some_spec this
+  have a' : some (Classical.choose this) ∈ c := Classical.choose_spec this
   calc
-    Part.ωSup c = some (Classical.some this) := dif_pos this
+    Part.ωSup c = some (Classical.choose this) := dif_pos this
     _ = some a := congr_arg _ (eq_of_chain a' h)
     
 
@@ -317,7 +317,7 @@ theorem ωSup_eq_none {c : Chain (Part α)} (h : ¬∃ a, some a ∈ c) : Part.�
 theorem mem_chain_of_mem_ωSup {c : Chain (Part α)} {a : α} (h : a ∈ Part.ωSup c) : some a ∈ c := by
   simp [Part.ωSup] at h
   split_ifs  at h
-  · have h' := Classical.some_spec h_1
+  · have h' := Classical.choose_spec h_1
     rw [← eq_some_iff] at h
     rw [← h]
     exact h'
@@ -350,7 +350,7 @@ theorem mem_ωSup (x : α) (c : Chain (Part α)) : x ∈ ωSup c ↔ some x ∈ 
     swap
     rintro ⟨⟨⟩⟩
     intro h'
-    have hh := Classical.some_spec h
+    have hh := Classical.choose_spec h
     simp at h'
     subst x
     exact hh
@@ -358,7 +358,7 @@ theorem mem_ωSup (x : α) (c : Chain (Part α)) : x ∈ ωSup c ↔ some x ∈ 
   · intro h
     have h' : ∃ a : α, some a ∈ c := ⟨_, h⟩
     rw [dif_pos h']
-    have hh := Classical.some_spec h'
+    have hh := Classical.choose_spec h'
     rw [eq_of_chain hh h]
     simp
     

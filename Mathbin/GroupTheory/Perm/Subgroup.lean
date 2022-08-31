@@ -58,7 +58,7 @@ theorem subtypeCongrHom.card_range {α : Type _} (p : α → Prop) [DecidablePre
 recovers the usual statement of Cayley's theorem via `right_cancel_monoid.to_has_faithful_smul` -/
 noncomputable def subgroupOfMulAction (G H : Type _) [Groupₓ G] [MulAction G H] [HasFaithfulSmul G H] :
     G ≃* (MulAction.toPermHom G H).range :=
-  MulEquiv.ofLeftInverse' _ (Classical.some_spec MulAction.to_perm_injective.HasLeftInverse)
+  MulEquiv.ofLeftInverse' _ (Classical.choose_spec MulAction.to_perm_injective.HasLeftInverse)
 
 end Perm
 

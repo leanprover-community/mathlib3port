@@ -438,6 +438,7 @@ theorem beth_ne_zero (o : Ordinal) : beth o ≠ 0 :=
 /-! ### Properties of `mul` -/
 
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- If `α` is an infinite type, then `α × α` and `α` have the same cardinality. -/
 theorem mul_eq_self {c : Cardinal} (h : ℵ₀ ≤ c) : c * c = c := by
   refine'
@@ -990,7 +991,7 @@ theorem mk_bounded_set_le_of_infinite (α : Type u) [Infinite α] (c : Cardinal)
     apply mk_range_le
     
   rintro ⟨s, ⟨g⟩⟩
-  use fun y => if h : ∃ x : s, g x = y then Sum.inl (Classical.some h).val else Sum.inr ⟨⟩
+  use fun y => if h : ∃ x : s, g x = y then Sum.inl (Classical.choose h).val else Sum.inr ⟨⟩
   apply Subtype.eq
   ext
   constructor
@@ -999,7 +1000,7 @@ theorem mk_bounded_set_le_of_infinite (α : Type u) [Infinite α] (c : Cardinal)
     by_cases' h' : ∃ z : s, g z = y
     · rw [dif_pos h'] at h
       cases Sum.inl.injₓ h
-      exact (Classical.some h').2
+      exact (Classical.choose h').2
       
     · rw [dif_neg h'] at h
       cases h
@@ -1011,10 +1012,10 @@ theorem mk_bounded_set_le_of_infinite (α : Type u) [Infinite α] (c : Cardinal)
     dsimp' only
     rw [dif_pos this]
     congr
-    suffices : Classical.some this = ⟨x, h⟩
+    suffices : Classical.choose this = ⟨x, h⟩
     exact congr_arg Subtype.val this
     apply g.2
-    exact Classical.some_spec this
+    exact Classical.choose_spec this
     
 
 theorem mk_bounded_set_le (α : Type u) (c : Cardinal) : # { t : Set α // # t ≤ c } ≤ max (# α) ℵ₀ ^ c := by
@@ -1057,9 +1058,10 @@ theorem mk_compl_eq_mk_compl_infinite {α : Type _} [Infinite α] {s t : Set α}
     # (sᶜ : Set α) = # (tᶜ : Set α) := by
   rw [mk_compl_of_infinite s hs, mk_compl_of_infinite t ht]
 
-theorem mk_compl_eq_mk_compl_finite_lift {α : Type u} {β : Type v} [Fintype α] {s : Set α} {t : Set β}
+theorem mk_compl_eq_mk_compl_finite_lift {α : Type u} {β : Type v} [Finite α] {s : Set α} {t : Set β}
     (h1 : lift.{max v w} (# α) = lift.{max u w} (# β)) (h2 : lift.{max v w} (# s) = lift.{max u w} (# t)) :
     lift.{max v w} (# (sᶜ : Set α)) = lift.{max u w} (# (tᶜ : Set β)) := by
+  cases nonempty_fintype α
   rcases lift_mk_eq.1 h1 with ⟨e⟩
   letI : Fintype β := Fintype.ofEquiv α e
   replace h1 : Fintype.card α = Fintype.card β := (Fintype.of_equiv_card _).symm
@@ -1070,12 +1072,12 @@ theorem mk_compl_eq_mk_compl_finite_lift {α : Type u} {β : Type v} [Fintype α
   simp only [← Finset.coe_compl, Finset.coe_sort_coe, mk_coe_finset, Finset.card_compl, lift_nat_cast, Nat.cast_inj, h1,
     h2]
 
-theorem mk_compl_eq_mk_compl_finite {α β : Type u} [Fintype α] {s : Set α} {t : Set β} (h1 : # α = # β)
-    (h : # s = # t) : # (sᶜ : Set α) = # (tᶜ : Set β) := by
+theorem mk_compl_eq_mk_compl_finite {α β : Type u} [Finite α] {s : Set α} {t : Set β} (h1 : # α = # β) (h : # s = # t) :
+    # (sᶜ : Set α) = # (tᶜ : Set β) := by
   rw [← lift_inj]
   apply mk_compl_eq_mk_compl_finite_lift <;> rwa [lift_inj]
 
-theorem mk_compl_eq_mk_compl_finite_same {α : Type _} [Fintype α] {s t : Set α} (h : # s = # t) :
+theorem mk_compl_eq_mk_compl_finite_same {α : Type _} [Finite α] {s t : Set α} (h : # s = # t) :
     # (sᶜ : Set α) = # (tᶜ : Set α) :=
   mk_compl_eq_mk_compl_finite rfl h
 
@@ -1093,7 +1095,7 @@ theorem extend_function {α β : Type _} {s : Set α} (f : s ↪ β) (h : Nonemp
   rintro ⟨x, hx⟩
   simp [set.sum_compl_symm_apply_of_mem, hx]
 
-theorem extend_function_finite {α β : Type _} [Fintype α] {s : Set α} (f : s ↪ β) (h : Nonempty (α ≃ β)) :
+theorem extend_function_finite {α β : Type _} [Finite α] {s : Set α} (f : s ↪ β) (h : Nonempty (α ≃ β)) :
     ∃ g : α ≃ β, ∀ x : s, g x = f x := by
   apply extend_function f
   cases' id h with g

@@ -125,11 +125,11 @@ open Classical
 /-- Given a set `s`, if there exists a chain `t` strictly including `s`, then `succ_chain s`
 is one of these chains. Otherwise it is `s`. -/
 def SuccChain (r : α → α → Prop) (s : Set α) : Set α :=
-  if h : ∃ t, IsChain r s ∧ SuperChain r s t then some h else s
+  if h : ∃ t, IsChain r s ∧ SuperChain r s t then choose h else s
 
 theorem succ_chain_spec (h : ∃ t, IsChain r s ∧ SuperChain r s t) : SuperChain r s (SuccChain r s) := by
   let ⟨t, hc'⟩ := h
-  have : IsChain r s ∧ SuperChain r s (some h) := @some_spec _ (fun t => IsChain r s ∧ SuperChain r s t) _
+  have : IsChain r s ∧ SuperChain r s (choose h) := @choose_spec _ (fun t => IsChain r s ∧ SuperChain r s t) _
   simp [SuccChain, dif_pos, h, this.right]
 
 theorem IsChain.succ (hs : IsChain r s) : IsChain r (SuccChain r s) :=

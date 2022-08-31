@@ -374,6 +374,7 @@ noncomputable def bUnionEqSigmaOfDisjoint {s : Set ι} {f : ι → Set α} (h : 
   (Equivₓ.setCongr (bUnion_eq_Union _ _)).trans <|
     Union_eq_sigma_of_disjoint fun ⟨i, hi⟩ ⟨j, hj⟩ ne => (h hi hj) fun eq => Ne <| Subtype.eq Eq
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The partial images of a binary function `f` whose partial evaluations are injective are pairwise
 disjoint iff `f` is injective . -/
 theorem pairwise_disjoint_image_right_iff {f : α → β → γ} {s : Set α} {t : Set β} (hf : ∀ a ∈ s, Injective (f a)) :
@@ -393,6 +394,7 @@ theorem pairwise_disjoint_image_right_iff {f : α → β → γ} {s : Set α} {t
     exact h (congr_arg Prod.fst <| hs (mk_mem_prod hx ha) (mk_mem_prod hy hb) hab)
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The partial images of a binary function `f` whose partial evaluations are injective are pairwise
 disjoint iff `f` is injective . -/
 theorem pairwise_disjoint_image_left_iff {f : α → β → γ} {s : Set α} {t : Set β}

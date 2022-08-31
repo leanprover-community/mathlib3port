@@ -22,7 +22,7 @@ namespace Conv.Interactive
 
 open Interactive Interactive.Types Lean.Parser
 
--- mathport name: «expr ?»
+-- mathport name: parser.optional
 local postfix:1024 "?" => optionalₓ
 
 /-- Apply a congruence lemma inside `conv` mode.

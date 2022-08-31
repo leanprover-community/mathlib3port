@@ -127,12 +127,16 @@ unsafe def sum_equalities (h_equality1 h_equality2 : expr) : tactic expr :=
 unsafe def sum_two_hyps_one_mul_helper (h_equality1 h_equality2 : expr) (coeff_for_eq2 : pexpr) : tactic expr :=
   mul_equality_expr h_equality2 coeff_for_eq2 >>= sum_equalities h_equality1
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 -- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:66:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 -- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Given that `l_sum1 = r_sum1`, `l_h1 = r_h1`, ..., `l_hn = r_hn`, and given
   coefficients `c_1`, ..., `c_n`, this tactic returns an `expr` proving that
     `l_sum1 + (c_1 * l_h1) + ... + (c_n * l_hn)`
@@ -153,7 +157,7 @@ unsafe def make_sum_of_hyps_helper (expected_tp : expr) : Option (tactic expr) �
   | none, [], [] => to_expr (pquote.1 (rfl : (0 : %%ₓexpected_tp) = 0))
   | some tactic_hcombo, [], [] => do
     tactic_hcombo
-  | none, h_equality :: h_eqs_names, coeff :: coeffs => do
+  | none, h_equality::h_eqs_names, coeff::coeffs => do
     let-- This is the first equality, and we do not have anything to add to it
         -- h_equality ← get_local h_equality_nam,
         quote.1
@@ -163,7 +167,7 @@ unsafe def make_sum_of_hyps_helper (expected_tp : expr) : Option (tactic expr) �
     is_def_eq eqtp expected_tp <|>
         "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
     make_sum_of_hyps_helper (some (mul_equality_expr h_equality coeff)) h_eqs_names coeffs
-  | some tactic_hcombo, h_equality :: h_eqs_names, coeff :: coeffs => do
+  | some tactic_hcombo, h_equality::h_eqs_names, coeff::coeffs => do
     let hcombo
       ←-- h_equality ← get_local h_equality_nam,
         tactic_hcombo
@@ -300,12 +304,15 @@ unsafe def linear_combination (h_eqs_names : List pexpr) (coeffs : List pexpr)
   set_goal_to_hleft_sub_tleft hsum_on_left
   normalize_if_desired config
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `mk_mul [p₀, p₁, ..., pₙ]` produces the pexpr `p₀ * p₁ * ... * pₙ`. -/
 unsafe def mk_mul : List pexpr → pexpr
   | [] => pquote.1 1
   | [e] => e
-  | e :: es => pquote.1 ((%%ₓe) * %%ₓmk_mul es)
+  | e::es => pquote.1 ((%%ₓe) * %%ₓmk_mul es)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `as_linear_combo neg ms e` is used to parse the argument to `linear_combination`.
 This argument is a sequence of literals `x`, `-x`, or `c*x` combined with `+` or `-`,
 given by the pexpr `e`.
@@ -318,8 +325,8 @@ unsafe def as_linear_combo : Bool → List pexpr → pexpr → List (pexpr × pe
     match head.get_frozen_name, args with
     | `` Add.add, [e1, e2] => as_linear_combo neg ms e1 ++ as_linear_combo neg ms e2
     | `` Sub.sub, [e1, e2] => as_linear_combo neg ms e1 ++ as_linear_combo (bnot neg) ms e2
-    | `` Mul.mul, [e1, e2] => as_linear_combo neg (e1 :: ms) e2
-    | `` Div.div, [e1, e2] => as_linear_combo neg (pquote.1 (%%ₓe2)⁻¹ :: ms) e1
+    | `` Mul.mul, [e1, e2] => as_linear_combo neg (e1::ms) e2
+    | `` Div.div, [e1, e2] => as_linear_combo neg (pquote.1 (%%ₓe2)⁻¹::ms) e1
     | `` Neg.neg, [e1] => as_linear_combo (bnot neg) ms e1
     | _, _ =>
       let m := mk_mul ms

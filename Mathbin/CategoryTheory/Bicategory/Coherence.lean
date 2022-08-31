@@ -70,7 +70,7 @@ See `inclusion`.
 def preinclusion (B : Type u) [Quiver.{v + 1} B] : PrelaxFunctor (LocallyDiscrete (Paths B)) (FreeBicategory B) where
   obj := id
   map := fun a b => (inclusionPath a b).obj
-  map₂ := fun a b => (inclusionPath a b).map
+  map₂ := fun a b f g η => (inclusionPath a b).map η
 
 @[simp]
 theorem preinclusion_obj (a : B) : (preinclusion B).obj a = a :=
@@ -213,7 +213,7 @@ def normalizeEquiv (a b : B) : Hom a b ≌ Discrete (Path.{v + 1} a b) :=
 
 /-- The coherence theorem for bicategories. -/
 instance locally_thin {a b : FreeBicategory B} (f g : a ⟶ b) : Subsingleton (f ⟶ g) :=
-  ⟨fun η θ => (normalizeEquiv a b).Functor.map_injective (Subsingleton.elimₓ _ _)⟩
+  ⟨fun η θ => (normalizeEquiv a b).Functor.map_injective (Subsingleton.elim _ _)⟩
 
 /-- Auxiliary definition for `inclusion`. -/
 def inclusionMapCompAuxₓ {a b : B} :

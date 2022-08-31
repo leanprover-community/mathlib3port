@@ -120,7 +120,7 @@ noncomputable def mulInitial (X : C) [HasBinaryProduct X (⊥_ C)] : X ⨯ ⊥_ 
 
 @[simp]
 theorem mul_initial_inv (X : C) [HasBinaryProduct X (⊥_ C)] : (mulInitial X).inv = initial.to _ :=
-  Subsingleton.elimₓ _ _
+  Subsingleton.elim _ _
 
 /-- The product of `X` with an initial object in a category with strict initial objects is itself
 initial.
@@ -132,7 +132,7 @@ noncomputable def initialMul (X : C) [HasBinaryProduct (⊥_ C) X] : (⊥_ C) �
 
 @[simp]
 theorem initial_mul_inv (X : C) [HasBinaryProduct (⊥_ C) X] : (initialMul X).inv = initial.to _ :=
-  Subsingleton.elimₓ _ _
+  Subsingleton.elim _ _
 
 end
 
@@ -198,7 +198,7 @@ theorem limit_π_is_iso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
     split_ifs
     · cases h
       cases h_1
-      obtain rfl : f = 𝟙 _ := Subsingleton.elimₓ _ _
+      obtain rfl : f = 𝟙 _ := Subsingleton.elim _ _
       simpa
       
     · cases h

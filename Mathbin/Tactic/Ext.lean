@@ -481,10 +481,10 @@ unsafe def ext (xs : List rcases_patt) (fuel : Option ℕ) (cfg : ApplyCfg := { 
   when trace <| tactic.trace <| "Try this: " ++ ", ".intercalate σ
   pure σ
 
--- mathport name: «expr ?»
+-- mathport name: parser.optional
 local postfix:1024 "?" => optionalₓ
 
--- mathport name: «expr *»
+-- mathport name: parser.many
 local postfix:1024 "*" => many
 
 /-- `ext1 id` selects and apply one extensionality lemma (with attribute

@@ -175,7 +175,7 @@ theorem ext {S T : Submonoid M} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
 protected def copy (S : Submonoid M) (s : Set M) (hs : s = S) : Submonoid M where
   Carrier := s
   one_mem' := hs.symm ▸ S.one_mem'
-  mul_mem' := hs.symm ▸ S.mul_mem'
+  mul_mem' := fun _ _ => hs.symm ▸ S.mul_mem'
 
 variable {S : Submonoid M}
 
@@ -289,12 +289,12 @@ instance : CompleteLattice (Submonoid M) :=
 theorem subsingleton_iff : Subsingleton (Submonoid M) ↔ Subsingleton M :=
   ⟨fun h =>
     ⟨fun x y =>
-      have : ∀ i : M, i = 1 := fun i => mem_bot.mp <| Subsingleton.elimₓ (⊤ : Submonoid M) ⊥ ▸ mem_top i
+      have : ∀ i : M, i = 1 := fun i => mem_bot.mp <| Subsingleton.elim (⊤ : Submonoid M) ⊥ ▸ mem_top i
       (this x).trans (this y).symm⟩,
     fun h =>
     ⟨fun x y =>
       Submonoid.ext fun i =>
-        Subsingleton.elimₓ 1 i ▸ by
+        Subsingleton.elim 1 i ▸ by
           simp [Submonoid.one_mem]⟩⟩
 
 @[simp, to_additive]
@@ -303,7 +303,7 @@ theorem nontrivial_iff : Nontrivial (Submonoid M) ↔ Nontrivial M :=
 
 @[to_additive]
 instance [Subsingleton M] : Unique (Submonoid M) :=
-  ⟨⟨⊥⟩, fun a => @Subsingleton.elimₓ _ (subsingleton_iff.mpr ‹_›) a _⟩
+  ⟨⟨⊥⟩, fun a => @Subsingleton.elim _ (subsingleton_iff.mpr ‹_›) a _⟩
 
 @[to_additive]
 instance [Nontrivial M] : Nontrivial (Submonoid M) :=

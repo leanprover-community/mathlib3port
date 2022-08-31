@@ -112,10 +112,10 @@ theorem ne_of_irrefl' {r} [IsIrrefl α r] : ∀ {x y : α}, r x y → y ≠ x
   | _, _, h, rfl => irrefl _ h
 
 theorem not_rel_of_subsingleton (r) [IsIrrefl α r] [Subsingleton α] (x y) : ¬r x y :=
-  Subsingleton.elimₓ x y ▸ irrefl x
+  Subsingleton.elim x y ▸ irrefl x
 
 theorem rel_of_subsingleton (r) [IsRefl α r] [Subsingleton α] (x y) : r x y :=
-  Subsingleton.elimₓ x y ▸ refl x
+  Subsingleton.elim x y ▸ refl x
 
 @[simp]
 theorem empty_relation_apply (a b : α) : EmptyRelation a b ↔ False :=
@@ -416,7 +416,7 @@ def IsWellOrder.toHasWellFounded [LT α] [hwo : IsWellOrder α (· < ·)] : HasW
 
 -- This isn't made into an instance as it loops with `is_irrefl α r`.
 theorem Subsingleton.is_well_order [Subsingleton α] (r : α → α → Prop) [hr : IsIrrefl α r] : IsWellOrder α r :=
-  { hr with trichotomous := fun a b => Or.inr <| Or.inl <| Subsingleton.elimₓ a b,
+  { hr with trichotomous := fun a b => Or.inr <| Or.inl <| Subsingleton.elim a b,
     trans := fun a b c h => (not_rel_of_subsingleton r a b h).elim,
     wf := ⟨fun a => ⟨_, fun y h => (not_rel_of_subsingleton r y a h).elim⟩⟩ }
 

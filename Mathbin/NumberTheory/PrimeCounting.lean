@@ -50,10 +50,10 @@ def primeCounting' : ℕ → ℕ :=
 def primeCounting (n : ℕ) : ℕ :=
   primeCounting' (n + 1)
 
--- mathport name: «exprπ»
+-- mathport name: prime_counting
 localized [Nat] notation "π" => Nat.primeCounting
 
--- mathport name: «exprπ'»
+-- mathport name: prime_counting'
 localized [Nat] notation "π'" => Nat.primeCounting'
 
 theorem monotone_prime_counting' : Monotone primeCounting' :=

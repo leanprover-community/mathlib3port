@@ -37,7 +37,7 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Finₓ n) R} (h : ∀ x 
       rw [← this]
       simp only [coe_eval₂_hom, is_empty_ring_equiv_apply, RingEquiv.trans_apply, aeval_eq_eval₂_hom]
       congr
-    exact eval₂_hom_congr rfl (Subsingleton.elimₓ _ _) rfl
+    exact eval₂_hom_congr rfl (Subsingleton.elim _ _) rfl
     
   · let e := (finSuccEquiv R n).toRingEquiv
     apply e.injective

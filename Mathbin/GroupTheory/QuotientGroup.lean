@@ -118,7 +118,7 @@ instance {G : Type _} [CommGroupₓ G] (N : Subgroup G) : CommGroupₓ (G ⧸ N)
 
 include nN
 
--- mathport name: «exprQ»
+-- mathport name: exprQ
 local notation " Q " => G ⧸ N
 
 @[simp, to_additive QuotientAddGroup.coe_zero]
@@ -482,7 +482,7 @@ theorem subsingleton_quotient_top : Subsingleton (G ⧸ (⊤ : Subgroup G)) := b
       "If the quotient by an additive subgroup gives a singleton then the additive subgroup\nis the whole additive group."]
 theorem subgroup_eq_top_of_subsingleton (H : Subgroup G) (h : Subsingleton (G ⧸ H)) : H = ⊤ :=
   top_unique fun x _ => by
-    have this : 1⁻¹ * x ∈ H := QuotientGroup.eq.1 (Subsingleton.elimₓ _ _)
+    have this : 1⁻¹ * x ∈ H := QuotientGroup.eq.1 (Subsingleton.elim _ _)
     rwa [inv_one, one_mulₓ] at this
 
 end trivialₓ

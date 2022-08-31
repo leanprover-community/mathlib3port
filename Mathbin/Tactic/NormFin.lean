@@ -46,7 +46,7 @@ def NormalizeFinLt (n : ℕ) (a : Finₓ n) (b : ℕ) :=
 theorem NormalizeFinLt.coe {n} {a : Finₓ n} {b : ℕ} (h : NormalizeFinLt n a b) : ↑a = b :=
   h
 
-theorem normalize_fin_iff {n} [Fact (0 < n)] {a b} : NormalizeFin n a b ↔ a = Finₓ.ofNat' b :=
+theorem normalize_fin_iff {n : ℕ} [NeZero n] {a b} : NormalizeFin n a b ↔ a = Finₓ.ofNat' b :=
   Iff.symm (Finₓ.eq_iff_veq _ _)
 
 theorem NormalizeFinLt.mk {n a b n'} (hn : n = n') (h : NormalizeFin n a b) (h2 : b < n') : NormalizeFinLt n a b :=

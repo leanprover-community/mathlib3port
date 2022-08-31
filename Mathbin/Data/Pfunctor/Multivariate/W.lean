@@ -220,6 +220,7 @@ theorem W_map_W_mk {α β : Typevec n} (g : α ⟹ β) (a : P.A) (f' : P.drop.B 
   have h := Mvpfunctor.map_eq P.Wp g
   rw [h, comp_W_path_cases_on]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- TODO: this technical theorem is used in one place in constructing the initial algebra.
 -- Can it be avoided?
 /-- Constructor of a value of `P.obj (α ::: β)` from components.
@@ -239,6 +240,7 @@ the qpf axioms are expressed in terms of `map` on `P`.
 -/
 
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Constructor for the W-type of `P` -/
 def wMk' {α : Typevec n} : P.Obj (α ::: P.W α) → P.W α
   | ⟨a, f⟩ => P.wMk a (dropFun f) (lastFun f)

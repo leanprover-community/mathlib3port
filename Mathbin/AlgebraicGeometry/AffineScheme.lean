@@ -268,7 +268,7 @@ theorem IsAffineOpen.Spec_Γ_identity_hom_app_from_Spec {X : Scheme} {U : Opens 
   have e₃ :
     U.open_embedding.is_open_map.adjunction.counit.app U ≫ eq_to_hom U.open_embedding_obj_top.symm =
       U.open_embedding.is_open_map.functor.map (eq_to_hom U.inclusion_map_eq_top) :=
-    Subsingleton.elimₓ _ _
+    Subsingleton.elim _ _
   have e₄ : X.presheaf.map _ ≫ _ = _ :=
     (as_iso (Γ_Spec.adjunction.unit.app (X.restrict U.open_embedding))).inv.1.c.naturality_assoc
       (eq_to_hom U.inclusion_map_eq_top).op _

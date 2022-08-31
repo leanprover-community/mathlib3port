@@ -70,11 +70,11 @@ theorem zero_apply {V W : SemiNormedGroup} (x : V) : (0 : V ⟶ W) x = 0 :=
 theorem is_zero_of_subsingleton (V : SemiNormedGroup) [Subsingleton V] : Limits.IsZero V := by
   refine' ⟨fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩
   · ext
-    have : x = 0 := Subsingleton.elimₓ _ _
+    have : x = 0 := Subsingleton.elim _ _
     simp only [this, map_zero]
     
   · ext
-    apply Subsingleton.elimₓ
+    apply Subsingleton.elim
     
 
 instance has_zero_object : Limits.HasZeroObject SemiNormedGroup.{u} :=
@@ -187,12 +187,12 @@ theorem zero_apply {V W : SemiNormedGroup₁} (x : V) : (0 : V ⟶ W) x = 0 :=
 theorem is_zero_of_subsingleton (V : SemiNormedGroup₁) [Subsingleton V] : Limits.IsZero V := by
   refine' ⟨fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩
   · ext
-    have : x = 0 := Subsingleton.elimₓ _ _
+    have : x = 0 := Subsingleton.elim _ _
     simp only [this, map_zero]
     exact map_zero f.1
     
   · ext
-    apply Subsingleton.elimₓ
+    apply Subsingleton.elim
     
 
 instance has_zero_object : Limits.HasZeroObject SemiNormedGroup₁.{u} :=

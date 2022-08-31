@@ -1100,7 +1100,7 @@ theorem is_o_log_rpow_nhds_zero {r : ℝ} (hr : r < 0) : log =o[𝓝[>] 0] fun x
 theorem tendsto_log_div_rpow_nhds_zero {r : ℝ} (hr : r < 0) : Tendsto (fun x => log x / x ^ r) (𝓝[>] 0) (𝓝 0) :=
   (is_o_log_rpow_nhds_zero hr).tendsto_div_nhds_zero
 
-theorem tensdto_log_mul_rpow_nhds_zero {r : ℝ} (hr : 0 < r) : Tendsto (fun x => log x * x ^ r) (𝓝[>] 0) (𝓝 0) :=
+theorem tendsto_log_mul_rpow_nhds_zero {r : ℝ} (hr : 0 < r) : Tendsto (fun x => log x * x ^ r) (𝓝[>] 0) (𝓝 0) :=
   (tendsto_log_div_rpow_nhds_zero <| neg_lt_zero.2 hr).congr' <|
     eventually_mem_nhds_within.mono fun x hx => by
       rw [rpow_neg hx.out.le, div_inv_eq_mul]

@@ -201,7 +201,7 @@ theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = ofReal (f b - f a) := by
   let δ := ε / 2
   have δpos : 0 < (δ : ℝ≥0∞) := by
     simpa using εpos.ne'
-  rcases Ennreal.exists_pos_sum_of_encodable δpos.ne' ℕ with ⟨ε', ε'0, hε⟩
+  rcases Ennreal.exists_pos_sum_of_countable δpos.ne' ℕ with ⟨ε', ε'0, hε⟩
   obtain ⟨a', ha', aa'⟩ : ∃ a', f a' - f a < δ ∧ a < a' := by
     have A : ContinuousWithinAt (fun r => f r - f a) (Ioi a) a := by
       refine' ContinuousWithinAt.sub _ continuous_within_at_const
@@ -268,7 +268,7 @@ theorem outer_trim : f.outer.trim = f.outer := by
   refine' le_antisymmₓ (fun s => _) (outer_measure.le_trim _)
   rw [outer_measure.trim_eq_infi]
   refine' le_infi fun t => le_infi fun ht => Ennreal.le_of_forall_pos_le_add fun ε ε0 h => _
-  rcases Ennreal.exists_pos_sum_of_encodable (Ennreal.coe_pos.2 ε0).ne' ℕ with ⟨ε', ε'0, hε⟩
+  rcases Ennreal.exists_pos_sum_of_countable (Ennreal.coe_pos.2 ε0).ne' ℕ with ⟨ε', ε'0, hε⟩
   refine' le_transₓ _ (add_le_add_left (le_of_ltₓ hε) _)
   rw [← Ennreal.tsum_add]
   choose g hg using

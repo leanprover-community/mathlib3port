@@ -81,7 +81,7 @@ unsafe def choose1 (nondep : Bool) (h : expr) (data : Name) (spec : Name) : tact
       let spec ← mk_local_def spec (t' ctxt)
       let (value_proof, spec_proof) ←
         nonemp pure (fun nonemp => mk_sometimes u α nonemp p ctxt)
-            (expr.const `` Classical.some [u] α p (h ctxt), expr.const `` Classical.some_spec [u] α p (h ctxt))
+            (expr.const `` Classical.choose [u] α p (h ctxt), expr.const `` Classical.choose_spec [u] α p (h ctxt))
       dependent_pose_core [(value, value_proof ctxt'), (spec, spec_proof ctxt)]
       try (tactic.clear h)
       intro1
@@ -129,9 +129,9 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr *»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- `choose a b h h' using hyp` takes an hypothesis `hyp` of the form
 `∀ (x : X) (y : Y), ∃ (a : A) (b : B), P x y a b ∧ Q x y a b`
 for some `P Q : X → Y → A → B → Prop` and outputs
@@ -170,8 +170,8 @@ begin
 end
 ```
 -/
-unsafe def choose (nondep : parse («expr ?» (tk "!"))) (first : parse ident) (names : parse («expr *» ident))
-    (tgt : parse («expr ?» (tk "using" *> texpr))) : tactic Unit := do
+unsafe def choose (nondep : parse (parser.optional (tk "!"))) (first : parse ident) (names : parse (parser.many ident))
+    (tgt : parse (parser.optional (tk "using" *> texpr))) : tactic Unit := do
   let tgt ←
     match tgt with
       | none => get_local `this

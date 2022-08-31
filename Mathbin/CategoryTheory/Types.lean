@@ -74,7 +74,7 @@ theorem inv_hom_id_apply {X Y : Type u} (f : X ≅ Y) (y : Y) : f.Hom (f.inv y) 
 abbrev asHom {α β : Type u} (f : α → β) : α ⟶ β :=
   f
 
--- mathport name: «expr↾ »
+-- mathport name: category_theory.as_hom
 -- If you don't mind some notation you can use fewer keystrokes:
 localized [CategoryTheory.Type] notation "↾" f:200 => CategoryTheory.asHom f
 

@@ -39,7 +39,7 @@ open Set UniformSpace UniformSpace.Completion Filter
 
 variable (K : Type _) [Field K] [UniformSpace K]
 
--- mathport name: «exprhat»
+-- mathport name: exprhat
 local notation "hat" => Completion
 
 /-- A topological field is completable if it is separated and the image under

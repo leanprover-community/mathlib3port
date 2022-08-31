@@ -63,7 +63,7 @@ class IsCyclic (α : Type u) [Groupₓ α] : Prop where
 @[to_additive is_add_cyclic_of_subsingleton]
 instance (priority := 100) is_cyclic_of_subsingleton [Groupₓ α] [Subsingleton α] : IsCyclic α :=
   ⟨⟨1, fun x => by
-      rw [Subsingleton.elimₓ x 1]
+      rw [Subsingleton.elim x 1]
       exact mem_zpowers 1⟩⟩
 
 /-- A cyclic group is always commutative. This is not an `instance` because often we have a better

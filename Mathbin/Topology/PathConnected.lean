@@ -752,10 +752,10 @@ theorem JoinedIn.target_mem (h : JoinedIn F x y) : y ∈ F :=
 
 /-- When `x` and `y` are joined in `F`, choose a path from `x` to `y` inside `F` -/
 def JoinedIn.somePath (h : JoinedIn F x y) : Path x y :=
-  Classical.some h
+  Classical.choose h
 
 theorem JoinedIn.some_path_mem (h : JoinedIn F x y) (t : I) : h.somePath t ∈ F :=
-  Classical.some_spec h t
+  Classical.choose_spec h t
 
 /-- If `x` and `y` are joined in the set `F`, then they are joined in the subtype `F`. -/
 theorem JoinedIn.joined_subtype (h : JoinedIn F x y) : Joined (⟨x, h.source_mem⟩ : F) (⟨y, h.target_mem⟩ : F) :=
@@ -1017,7 +1017,7 @@ theorem path_connected_space_iff_zeroth_homotopy :
   · unfold ZerothHomotopy
     rintro ⟨h, h'⟩
     skip
-    exact ⟨(nonempty_quotient_iff _).mp h, fun x y => Quotientₓ.exact <| Subsingleton.elimₓ ⟦x⟧ ⟦y⟧⟩
+    exact ⟨(nonempty_quotient_iff _).mp h, fun x y => Quotientₓ.exact <| Subsingleton.elim ⟦x⟧ ⟦y⟧⟩
     
 
 namespace PathConnectedSpace

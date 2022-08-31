@@ -188,7 +188,7 @@ theorem exists_measurable_superset (μ : Measure α) (s : Set α) : ∃ t, s ⊆
 
 /-- For every set `s` and a countable collection of measures `μ i` there exists a measurable
 superset `t ⊇ s` such that each measure `μ i` takes the same value on `s` and `t`. -/
-theorem exists_measurable_superset_forall_eq {ι} [Encodable ι] (μ : ι → Measure α) (s : Set α) :
+theorem exists_measurable_superset_forall_eq {ι} [Countable ι] (μ : ι → Measure α) (s : Set α) :
     ∃ t, s ⊆ t ∧ MeasurableSet t ∧ ∀ i, μ i t = μ i s := by
   simpa only [← measure_eq_trim] using
     outer_measure.exists_measurable_superset_forall_eq_trim (fun i => (μ i).toOuterMeasure) s
@@ -203,11 +203,11 @@ theorem exists_measurable_superset_of_null (h : μ s = 0) : ∃ t, s ⊆ t ∧ M
 theorem exists_measurable_superset_iff_measure_eq_zero : (∃ t, s ⊆ t ∧ MeasurableSet t ∧ μ t = 0) ↔ μ s = 0 :=
   ⟨fun ⟨t, hst, _, ht⟩ => measure_mono_null hst ht, exists_measurable_superset_of_null⟩
 
-theorem measure_Union_le [Encodable β] (s : β → Set α) : μ (⋃ i, s i) ≤ ∑' i, μ (s i) :=
+theorem measure_Union_le [Countable β] (s : β → Set α) : μ (⋃ i, s i) ≤ ∑' i, μ (s i) :=
   μ.toOuterMeasure.Union _
 
 theorem measure_bUnion_le {s : Set β} (hs : s.Countable) (f : β → Set α) : μ (⋃ b ∈ s, f b) ≤ ∑' p : s, μ (f p) := by
-  haveI := hs.to_encodable
+  haveI := hs.to_subtype
   rw [bUnion_eq_Union]
   apply measure_Union_le
 
@@ -228,11 +228,11 @@ theorem measure_bUnion_lt_top {s : Set β} {f : β → Set α} (hs : s.Finite) (
   apply Ennreal.sum_lt_top
   simpa only [finite.mem_to_finset]
 
-theorem measure_Union_null [Encodable β] {s : β → Set α} : (∀ i, μ (s i) = 0) → μ (⋃ i, s i) = 0 :=
+theorem measure_Union_null [Countable β] {s : β → Set α} : (∀ i, μ (s i) = 0) → μ (⋃ i, s i) = 0 :=
   μ.toOuterMeasure.Union_null
 
 @[simp]
-theorem measure_Union_null_iff [Encodable ι] {s : ι → Set α} : μ (⋃ i, s i) = 0 ↔ ∀ i, μ (s i) = 0 :=
+theorem measure_Union_null_iff [Countable ι] {s : ι → Set α} : μ (⋃ i, s i) = 0 ↔ ∀ i, μ (s i) = 0 :=
   μ.toOuterMeasure.Union_null_iff
 
 theorem measure_bUnion_null_iff {s : Set ι} (hs : s.Countable) {t : ι → Set α} :
@@ -272,7 +272,7 @@ theorem measure_union_eq_top_iff : μ (s ∪ t) = ∞ ↔ μ s = ∞ ∨ μ t = 
   not_iff_not.1 <| by
     simp only [← lt_top_iff_ne_top, ← Ne.def, not_or_distrib, measure_union_lt_top_iff]
 
-theorem exists_measure_pos_of_not_measure_Union_null [Encodable β] {s : β → Set α} (hs : μ (⋃ n, s n) ≠ 0) :
+theorem exists_measure_pos_of_not_measure_Union_null [Countable β] {s : β → Set α} (hs : μ (⋃ n, s n) ≠ 0) :
     ∃ n, 0 < μ (s n) := by
   contrapose! hs
   exact measure_Union_null fun n => nonpos_iff_eq_zero.1 (hs n)
@@ -343,10 +343,7 @@ instance : CountableInterFilter μ.ae :=
     rw [mem_ae_iff, compl_sInter, sUnion_image]
     exact (measure_bUnion_null_iff hSc).2 hS⟩
 
-theorem ae_imp_iff {p : α → Prop} {q : Prop} : (∀ᵐ x ∂μ, q → p x) ↔ q → ∀ᵐ x ∂μ, p x :=
-  Filter.eventually_imp_distrib_left
-
-theorem ae_all_iff [Encodable ι] {p : α → ι → Prop} : (∀ᵐ a ∂μ, ∀ i, p a i) ↔ ∀ i, ∀ᵐ a ∂μ, p a i :=
+theorem ae_all_iff {ι : Sort _} [Countable ι] {p : α → ι → Prop} : (∀ᵐ a ∂μ, ∀ i, p a i) ↔ ∀ i, ∀ᵐ a ∂μ, p a i :=
   eventually_countable_forall
 
 theorem ae_ball_iff {S : Set ι} (hS : S.Countable) {p : ∀ (x : α), ∀ i ∈ S, Prop} :
@@ -534,13 +531,13 @@ namespace AeMeasurable
 that coincides with it almost everywhere. `f` is explicit in the definition to make sure that
 it shows in pretty-printing. -/
 def mk (f : α → β) (h : AeMeasurable f μ) : α → β :=
-  Classical.some h
+  Classical.choose h
 
 theorem measurable_mk (h : AeMeasurable f μ) : Measurable (h.mk f) :=
-  (Classical.some_spec h).1
+  (Classical.choose_spec h).1
 
 theorem ae_eq_mk (h : AeMeasurable f μ) : f =ᵐ[μ] h.mk f :=
-  (Classical.some_spec h).2
+  (Classical.choose_spec h).2
 
 theorem congr (hf : AeMeasurable f μ) (h : f =ᵐ[μ] g) : AeMeasurable g μ :=
   ⟨hf.mk f, hf.measurable_mk, h.symm.trans hf.ae_eq_mk⟩

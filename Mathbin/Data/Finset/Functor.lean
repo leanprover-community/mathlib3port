@@ -128,6 +128,7 @@ instance : IsLawfulApplicative Finset :=
         exact ⟨g, hg, f a, ⟨f, hf, a, ha, rfl⟩, rfl⟩
          }
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance : IsCommApplicative Finset :=
   { Finset.is_lawful_applicative with
     commutative_prod := fun α β s t => by

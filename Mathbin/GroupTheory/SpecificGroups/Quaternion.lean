@@ -169,16 +169,9 @@ def quaternionGroupZeroEquivDihedralGroupZero : QuaternionGroup 0 ≃* DihedralG
         simp
         
 
-/-- Some of the lemmas on `zmod m` require that `m` is positive, as `m = 2 * n` is the case relevant
-in this file but we don't want to write `[fact (0 < 2 * n)]` we make this lemma a local instance. -/
-private theorem succ_mul_pos_fact {m : ℕ} [hn : Fact (0 < n)] : Fact (0 < Nat.succ m * n) :=
-  ⟨Nat.succ_mul_pos m hn.1⟩
-
-attribute [local instance] succ_mul_pos_fact
-
 /-- If `0 < n`, then `quaternion_group n` is a finite group.
 -/
-instance [Fact (0 < n)] : Fintype (QuaternionGroup n) :=
+instance [NeZero n] : Fintype (QuaternionGroup n) :=
   Fintype.ofEquiv _ fintypeHelper
 
 instance : Nontrivial (QuaternionGroup n) :=
@@ -187,7 +180,7 @@ instance : Nontrivial (QuaternionGroup n) :=
 
 /-- If `0 < n`, then `quaternion_group n` has `4n` elements.
 -/
-theorem card [Fact (0 < n)] : Fintype.card (QuaternionGroup n) = 4 * n := by
+theorem card [NeZero n] : Fintype.card (QuaternionGroup n) = 4 * n := by
   rw [← fintype.card_eq.mpr ⟨fintype_helper⟩, Fintype.card_sum, Zmod.card, two_mul]
   ring
 
@@ -223,7 +216,7 @@ theorem xa_pow_four (i : Zmod (2 * n)) : xa i ^ 4 = 1 := by
 /-- If `0 < n`, then `xa i` has order 4.
 -/
 @[simp]
-theorem order_of_xa [hpos : Fact (0 < n)] (i : Zmod (2 * n)) : orderOf (xa i) = 4 := by
+theorem order_of_xa [NeZero n] (i : Zmod (2 * n)) : orderOf (xa i) = 4 := by
   change _ = 2 ^ 2
   haveI : Fact (Nat.Prime 2) := Fact.mk Nat.prime_two
   apply order_of_eq_prime_pow
@@ -232,7 +225,8 @@ theorem order_of_xa [hpos : Fact (0 < n)] (i : Zmod (2 * n)) : orderOf (xa i) = 
     injection h with h'
     apply_fun Zmod.val  at h'
     apply_fun (· / n)  at h'
-    simp only [Zmod.val_nat_cast, Zmod.val_zero, Nat.zero_divₓ, Nat.mod_mul_left_div_self, Nat.div_selfₓ hpos.1] at h'
+    simp only [Zmod.val_nat_cast, Zmod.val_zero, Nat.zero_divₓ, Nat.mod_mul_left_div_self,
+      Nat.div_selfₓ (NeZero.pos n)] at h'
     norm_num at h'
     
   · norm_num
@@ -248,16 +242,16 @@ theorem quaternion_group_one_is_cyclic : IsCyclic (QuaternionGroup 1) := by
 -/
 @[simp]
 theorem order_of_a_one : orderOf (a 1 : QuaternionGroup n) = 2 * n := by
-  rcases n.eq_zero_or_pos with (rfl | hn)
-  · simp_rw [mul_zero, order_of_eq_zero_iff']
-    intro n hn
+  cases' eq_zero_or_ne_zero n with hn hn
+  · subst hn
+    simp_rw [mul_zero, order_of_eq_zero_iff']
+    intro n h
     rw [one_def, a_one_pow]
     apply mt a.inj
     haveI : CharZero (Zmod (2 * 0)) := Zmod.char_zero
-    simpa using hn.ne'
+    simpa using h.ne'
     
-  haveI := Fact.mk hn
-  apply (Nat.le_of_dvdₓ (Nat.succ_mul_pos _ hn) (order_of_dvd_of_pow_eq_one (@a_one_pow_n n))).lt_or_eq.resolve_left
+  apply (Nat.le_of_dvdₓ (NeZero.pos _) (order_of_dvd_of_pow_eq_one (@a_one_pow_n n))).lt_or_eq.resolve_left
   intro h
   have h1 : (a 1 : QuaternionGroup n) ^ orderOf (a 1) = 1 := pow_order_of_eq_one _
   rw [a_one_pow] at h1
@@ -267,18 +261,18 @@ theorem order_of_a_one : orderOf (a 1 : QuaternionGroup n) = 2 * n := by
 
 /-- If `0 < n`, then `a i` has order `(2 * n) / gcd (2 * n) i`.
 -/
-theorem order_of_a [Fact (0 < n)] (i : Zmod (2 * n)) : orderOf (a i) = 2 * n / Nat.gcdₓ (2 * n) i.val := by
+theorem order_of_a [NeZero n] (i : Zmod (2 * n)) : orderOf (a i) = 2 * n / Nat.gcdₓ (2 * n) i.val := by
   conv_lhs => rw [← Zmod.nat_cast_zmod_val i]
   rw [← a_one_pow, order_of_pow, order_of_a_one]
 
 theorem exponent : Monoidₓ.exponent (QuaternionGroup n) = 2 * lcm n 2 := by
   rw [← normalize_eq 2, ← lcm_mul_left, normalize_eq]
   norm_num
-  rcases n.eq_zero_or_pos with (rfl | hn)
-  · simp only [lcm_zero_left, mul_zero]
+  cases' eq_zero_or_ne_zero n with hn hn
+  · subst hn
+    simp only [lcm_zero_left, mul_zero]
     exact Monoidₓ.exponent_eq_zero_of_order_zero order_of_a_one
     
-  haveI := Fact.mk hn
   apply Nat.dvd_antisymm
   · apply Monoidₓ.exponent_dvd_of_forall_pow_eq_one
     rintro (m | m)

@@ -557,6 +557,7 @@ theorem exists_is_two_block_diagonal_of_ne_zero (hM : M (inr star) (inr star) �
   rw [A, B]
   exact is_two_block_diagonal_list_transvec_col_mul_mul_list_transvec_row M hM
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- There exist two lists of `transvection_struct` such that multiplying by them on the left and
 on the right makes a matrix block-diagonal. -/
 theorem exists_is_two_block_diagonal_list_transvec_mul_mul_list_transvec
@@ -610,8 +611,7 @@ theorem exists_is_two_block_diagonal_list_transvec_mul_mul_list_transvec
     refine'
       ⟨L,
         ⟨inl i, inr star, by
-            simp , 1⟩ ::
-          L',
+            simp , 1⟩::L',
         _⟩
     simp only [← Matrix.mul_assoc, to_matrix_mk, List.prod_cons, mul_eq_mul, List.map]
     rw [Matrix.mul_assoc (L.map to_matrix).Prod]

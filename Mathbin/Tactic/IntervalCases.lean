@@ -209,7 +209,7 @@ setup_tactic_parser
 
 namespace Interactive
 
--- mathport name: «expr ?»
+-- mathport name: parser.optional
 local postfix:1024 "?" => optionalₓ
 
 /-- `interval_cases n` searches for upper and lower bounds on a variable `n`,

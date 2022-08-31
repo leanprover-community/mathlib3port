@@ -74,10 +74,10 @@ def cond (s : Set Ω) : Measureₓ Ω :=
 
 end Definitions
 
--- mathport name: «expr [ | ]»
+-- mathport name: probability_theory.cond
 localized [ProbabilityTheory] notation μ "[" s "|" t "]" => ProbabilityTheory.cond μ t s
 
--- mathport name: «expr [| ]»
+-- mathport name: probability_theory.cond_fn
 localized [ProbabilityTheory] notation:60 μ "[|" t "]" => ProbabilityTheory.cond μ t
 
 /-- The conditional probability measure of any finite measure on any set of positive measure

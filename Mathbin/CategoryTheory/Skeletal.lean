@@ -53,7 +53,7 @@ variable {C D}
 /-- If `C` is thin and skeletal, then any naturally isomorphic functors to `C` are equal. -/
 theorem Functor.eq_of_iso {F₁ F₂ : D ⥤ C} [∀ X Y : C, Subsingleton (X ⟶ Y)] (hC : Skeletal C) (hF : F₁ ≅ F₂) :
     F₁ = F₂ :=
-  Functor.ext (fun X => hC ⟨hF.app X⟩) fun _ _ _ => Subsingleton.elimₓ _ _
+  Functor.ext (fun X => hC ⟨hF.app X⟩) fun _ _ _ => Subsingleton.elim _ _
 
 /-- If `C` is thin and skeletal, `D ⥤ C` is skeletal.
 `category_theory.functor_thin` shows it is thin also.

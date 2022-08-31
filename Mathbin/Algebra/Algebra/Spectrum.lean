@@ -97,7 +97,7 @@ variable {R : Type u} {A : Type v}
 
 variable [CommSemiringₓ R] [Ringₓ A] [Algebra R A]
 
--- mathport name: «exprσ»
+-- mathport name: exprσ
 local notation "σ" => Spectrum R
 
 -- mathport name: «expr↑ₐ»
@@ -121,7 +121,7 @@ theorem mem_resolvent_set_iff {r : R} {a : A} : r ∈ ResolventSet R a ↔ IsUni
 
 @[simp]
 theorem resolvent_set_of_subsingleton [Subsingleton A] (a : A) : ResolventSet R a = Set.Univ := by
-  simp_rw [ResolventSet, Subsingleton.elimₓ (algebraMap R A _ - a) 1, is_unit_one, Set.set_of_true]
+  simp_rw [ResolventSet, Subsingleton.elim (algebraMap R A _ - a) 1, is_unit_one, Set.set_of_true]
 
 @[simp]
 theorem of_subsingleton [Subsingleton A] (a : A) : Spectrum R a = ∅ := by
@@ -274,7 +274,7 @@ variable {R : Type u} {A : Type v}
 
 variable [CommRingₓ R] [Ringₓ A] [Algebra R A]
 
--- mathport name: «exprσ»
+-- mathport name: exprσ
 local notation "σ" => Spectrum R
 
 -- mathport name: «expr↑ₐ»
@@ -307,7 +307,7 @@ variable {𝕜 : Type u} {A : Type v}
 
 variable [Field 𝕜] [Ringₓ A] [Algebra 𝕜 A]
 
--- mathport name: «exprσ»
+-- mathport name: exprσ
 local notation "σ" => Spectrum 𝕜
 
 -- mathport name: «expr↑ₐ»
@@ -477,7 +477,7 @@ variable {F R A B : Type _} [CommRingₓ R] [Ringₓ A] [Algebra R A] [Ringₓ B
 
 variable [AlgHomClass F R A B]
 
--- mathport name: «exprσ»
+-- mathport name: exprσ
 local notation "σ" => Spectrum R
 
 -- mathport name: «expr↑ₐ»
@@ -497,7 +497,7 @@ variable {F R A B : Type _} [CommRingₓ R] [Ringₓ A] [Algebra R A] [Ringₓ B
 
 variable [AlgHomClass F R A R]
 
--- mathport name: «exprσ»
+-- mathport name: exprσ
 local notation "σ" => Spectrum R
 
 -- mathport name: «expr↑ₐ»

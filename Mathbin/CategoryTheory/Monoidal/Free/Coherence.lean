@@ -58,10 +58,10 @@ inductive NormalMonoidalObject : Type u
 
 end
 
--- mathport name: «exprF»
+-- mathport name: exprF
 local notation "F" => FreeMonoidalCategory
 
--- mathport name: «exprN»
+-- mathport name: exprN
 local notation "N" => discrete ∘ normal_monoidal_object
 
 -- mathport name: «expr ⟶ᵐ »
@@ -89,6 +89,7 @@ def normalizeObj : F C → NormalMonoidalObject C → N C
 theorem normalize_obj_unitor (n : NormalMonoidalObject C) : normalizeObj (𝟙_ (F C)) n = ⟨n⟩ :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem normalize_obj_tensor (X Y : F C) (n : NormalMonoidalObject C) :
     normalizeObj (X ⊗ Y) n = normalizeObj Y (normalizeObj X n).as :=
@@ -173,6 +174,8 @@ def fullNormalize : F C ⥤ N C where
   obj := fun X => ((normalize C).obj X).obj ⟨NormalMonoidalObject.unit⟩
   map := fun X Y f => ((normalize C).map f).app ⟨NormalMonoidalObject.unit⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Given an object `X` of the free monoidal category and an object `n` in normal form, taking
     the tensor product `n ⊗ X` in the free monoidal category is functorial in both `X` and `n`. -/
 @[simp]
@@ -183,9 +186,11 @@ def tensorFunc : F C ⥤ N C ⥤ F C where
       rintro ⟨X⟩ ⟨Y⟩
       tidy⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem tensor_func_map_app {X Y : F C} (f : X ⟶ Y) (n) : ((tensorFunc C).map f).app n = 𝟙 _ ⊗ f :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem tensor_func_obj_map (Z : F C) {n n' : N C} (f : n ⟶ n') :
     ((tensorFunc C).obj Z).map f = inclusion.map f ⊗ 𝟙 Z := by
   cases n
@@ -200,6 +205,7 @@ def normalizeIsoApp : ∀ (X : F C) (n : N C), ((tensorFunc C).obj X).obj n ≅ 
   | Unit, n => ρ_ _
   | tensor X Y, n => (α_ _ _ _).symm ≪≫ tensorIso (normalize_iso_app X n) (Iso.refl _) ≪≫ normalize_iso_app _ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem normalize_iso_app_tensor (X Y : F C) (n : N C) :
     normalizeIsoApp C (X ⊗ Y) n =
@@ -329,7 +335,7 @@ end
 /-- The monoidal coherence theorem. -/
 instance subsingleton_hom {X Y : F C} : Subsingleton (X ⟶ Y) :=
   ⟨fun f g => by
-    have : (fullNormalize C).map f = (fullNormalize C).map g := Subsingleton.elimₓ _ _
+    have : (fullNormalize C).map f = (fullNormalize C).map g := Subsingleton.elim _ _
     rw [← functor.id_map f, ← functor.id_map g]
     simp [← nat_iso.naturality_2 (fullNormalizeIso.{u} C), this]⟩
 

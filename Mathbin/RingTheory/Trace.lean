@@ -231,7 +231,7 @@ theorem trace_gen_eq_zero {x : L} (hx : ¬IsIntegral K x) : Algebra.trace K K⟮
   contrapose! hx
   obtain ⟨s, ⟨b⟩⟩ := hx
   refine' is_integral_of_mem_of_fg K⟮⟯.toSubalgebra _ x _
-  · exact (Submodule.fg_iff_finite_dimensional _).mpr (FiniteDimensional.of_finset_basis b)
+  · exact (Submodule.fg_iff_finite_dimensional _).mpr (FiniteDimensional.of_fintype_basis b)
     
   · exact subset_adjoin K _ (Set.mem_singleton x)
     

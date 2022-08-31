@@ -528,7 +528,7 @@ open Interactive Interactive.Types Expr Lean.Parser
 -- mathport name: «expr ?»
 local postfix:1024 "?" => optionalₓ
 
--- mathport name: «expr *»
+-- mathport name: parser.many
 local postfix:1024 "*" => many
 
 unsafe def coinduction (corec_name : parse ident) (ns : parse with_ident_list)

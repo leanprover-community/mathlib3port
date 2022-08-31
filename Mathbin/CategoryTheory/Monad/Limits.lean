@@ -327,8 +327,7 @@ theorem has_colimits_of_shape_of_reflective (R : D ⥤ C) [Reflective R] [HasCol
     HasColimitsOfShape J D :=
   { HasColimit := fun F => by
       let c := (left_adjoint R).mapCocone (colimit.cocone (F ⋙ R))
-      let h := (adjunction.of_right_adjoint R).leftAdjointPreservesColimits.1
-      letI := @h J _
+      letI : preserves_colimits_of_shape J _ := (adjunction.of_right_adjoint R).leftAdjointPreservesColimits.1
       let t : is_colimit c := is_colimit_of_preserves (left_adjoint R) (colimit.is_colimit _)
       apply has_colimit.mk ⟨_, (is_colimit.precompose_inv_equiv _ _).symm t⟩
       apply (iso_whisker_left F (as_iso (adjunction.of_right_adjoint R).counit) : _) ≪≫ F.right_unitor }

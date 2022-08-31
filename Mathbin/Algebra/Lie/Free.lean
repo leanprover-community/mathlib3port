@@ -55,7 +55,7 @@ noncomputable section
 
 variable (R : Type u) (X : Type v) [CommRingₓ R]
 
--- mathport name: «exprlib»
+-- mathport name: exprlib
 /- We save characters by using Bourbaki's name `lib` (as in «libre») for
 `free_non_unital_non_assoc_algebra` in this file. -/
 local notation "lib" => FreeNonUnitalNonAssocAlgebra

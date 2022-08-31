@@ -722,9 +722,9 @@ theorem is_coatom_iff_is_atom : IsCoatom a ↔ IsAtom b :=
 
 end IsCompl
 
-variable [IsComplemented α]
+variable [ComplementedLattice α]
 
-theorem is_coatomic_of_is_atomic_of_is_complemented_of_is_modular [IsAtomic α] : IsCoatomic α :=
+theorem is_coatomic_of_is_atomic_of_complemented_lattice_of_is_modular [IsAtomic α] : IsCoatomic α :=
   ⟨fun x => by
     rcases exists_is_compl x with ⟨y, xy⟩
     apply (eq_bot_or_exists_atom_le y).imp _ _
@@ -738,12 +738,12 @@ theorem is_coatomic_of_is_atomic_of_is_complemented_of_is_modular [IsAtomic α] 
       apply ha.Iic
       ⟩
 
-theorem is_atomic_of_is_coatomic_of_is_complemented_of_is_modular [IsCoatomic α] : IsAtomic α :=
-  is_coatomic_dual_iff_is_atomic.1 is_coatomic_of_is_atomic_of_is_complemented_of_is_modular
+theorem is_atomic_of_is_coatomic_of_complemented_lattice_of_is_modular [IsCoatomic α] : IsAtomic α :=
+  is_coatomic_dual_iff_is_atomic.1 is_coatomic_of_is_atomic_of_complemented_lattice_of_is_modular
 
 theorem is_atomic_iff_is_coatomic : IsAtomic α ↔ IsCoatomic α :=
-  ⟨fun h => @is_coatomic_of_is_atomic_of_is_complemented_of_is_modular _ _ _ _ _ h, fun h =>
-    @is_atomic_of_is_coatomic_of_is_complemented_of_is_modular _ _ _ _ _ h⟩
+  ⟨fun h => @is_coatomic_of_is_atomic_of_complemented_lattice_of_is_modular _ _ _ _ _ h, fun h =>
+    @is_atomic_of_is_coatomic_of_complemented_lattice_of_is_modular _ _ _ _ _ h⟩
 
 end IsModularLattice
 

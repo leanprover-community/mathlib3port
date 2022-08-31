@@ -214,12 +214,12 @@ def uniqueOfZeroEqOne (h : (0 : M₀) = 1) : Unique M₀ where
 /-- In a monoid with zero, zero equals one if and only if all elements of that semiring
 are equal. -/
 theorem subsingleton_iff_zero_eq_one : (0 : M₀) = 1 ↔ Subsingleton M₀ :=
-  ⟨fun h => @Unique.subsingleton _ (uniqueOfZeroEqOne h), fun h => @Subsingleton.elimₓ _ h _ _⟩
+  ⟨fun h => @Unique.subsingleton _ (uniqueOfZeroEqOne h), fun h => @Subsingleton.elim _ h _ _⟩
 
 alias subsingleton_iff_zero_eq_one ↔ subsingleton_of_zero_eq_one _
 
 theorem eq_of_zero_eq_one (h : (0 : M₀) = 1) (a b : M₀) : a = b :=
-  @Subsingleton.elimₓ _ (subsingleton_of_zero_eq_one h) a b
+  @Subsingleton.elim _ (subsingleton_of_zero_eq_one h) a b
 
 /-- In a monoid with zero, either zero and one are nonequal, or zero is the only element. -/
 theorem zero_ne_one_or_forall_eq_0 : (0 : M₀) ≠ 1 ∨ ∀ a : M₀, a = 0 :=

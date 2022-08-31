@@ -728,15 +728,19 @@ theorem Tendsto.basis_both (H : Tendsto f la lb) (hla : la.HasBasis pa sa) (hlb 
     ∀ (ib) (hib : pb ib), ∃ (ia : _)(hia : pa ia), ∀ x ∈ sa ia, f x ∈ sb ib :=
   (hla.tendsto_iff hlb).1 H
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem HasBasis.prod_pprod (hla : la.HasBasis pa sa) (hlb : lb.HasBasis pb sb) :
     (la ×ᶠ lb).HasBasis (fun i : PProd ι ι' => pa i.1 ∧ pb i.2) fun i => sa i.1 ×ˢ sb i.2 :=
   (hla.comap Prod.fst).inf' (hlb.comap Prod.snd)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem HasBasis.prod {ι ι' : Type _} {pa : ι → Prop} {sa : ι → Set α} {pb : ι' → Prop} {sb : ι' → Set β}
     (hla : la.HasBasis pa sa) (hlb : lb.HasBasis pb sb) :
     (la ×ᶠ lb).HasBasis (fun i : ι × ι' => pa i.1 ∧ pb i.2) fun i => sa i.1 ×ˢ sb i.2 :=
   (hla.comap Prod.fst).inf (hlb.comap Prod.snd)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem HasBasis.prod_same_index {p : ι → Prop} {sb : ι → Set β} (hla : la.HasBasis p sa) (hlb : lb.HasBasis p sb)
     (h_dir : ∀ {i j}, p i → p j → ∃ k, p k ∧ sa k ⊆ sa i ∧ sb k ⊆ sb j) : (la ×ᶠ lb).HasBasis p fun i => sa i ×ˢ sb i :=
   by
@@ -750,6 +754,7 @@ theorem HasBasis.prod_same_index {p : ι → Prop} {sb : ι → Set β} (hla : l
     exact ⟨⟨i, i⟩, ⟨hi, hi⟩, h⟩
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem HasBasis.prod_same_index_mono {ι : Type _} [LinearOrderₓ ι] {p : ι → Prop} {sa : ι → Set α} {sb : ι → Set β}
     (hla : la.HasBasis p sa) (hlb : lb.HasBasis p sb) (hsa : MonotoneOn sa { i | p i })
     (hsb : MonotoneOn sb { i | p i }) : (la ×ᶠ lb).HasBasis p fun i => sa i ×ˢ sb i :=
@@ -757,18 +762,22 @@ theorem HasBasis.prod_same_index_mono {ι : Type _} [LinearOrderₓ ι] {p : ι 
     have : p (min i j) := min_rec' _ hi hj
     ⟨min i j, this, hsa this hi <| min_le_leftₓ _ _, hsb this hj <| min_le_rightₓ _ _⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem HasBasis.prod_same_index_anti {ι : Type _} [LinearOrderₓ ι] {p : ι → Prop} {sa : ι → Set α} {sb : ι → Set β}
     (hla : la.HasBasis p sa) (hlb : lb.HasBasis p sb) (hsa : AntitoneOn sa { i | p i })
     (hsb : AntitoneOn sb { i | p i }) : (la ×ᶠ lb).HasBasis p fun i => sa i ×ˢ sb i :=
   @HasBasis.prod_same_index_mono _ _ _ _ ιᵒᵈ _ _ _ _ hla hlb hsa.dual_left hsb.dual_left
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem HasBasis.prod_self (hl : la.HasBasis pa sa) : (la ×ᶠ la).HasBasis pa fun i => sa i ×ˢ sa i :=
   (hl.prod_same_index hl) fun i j hi hj => by
     simpa only [exists_prop, subset_inter_iff] using hl.mem_iff.1 (inter_mem (hl.mem_of_mem hi) (hl.mem_of_mem hj))
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem mem_prod_self_iff {s} : s ∈ la ×ᶠ la ↔ ∃ t ∈ la, t ×ˢ t ⊆ s :=
   la.basis_sets.prod_self.mem_iff
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem HasAntitoneBasis.prod {ι : Type _} [LinearOrderₓ ι] {f : Filter α} {g : Filter β} {s : ι → Set α}
     {t : ι → Set β} (hf : HasAntitoneBasis f s) (hg : HasAntitoneBasis g t) :
     HasAntitoneBasis (f ×ᶠ g) fun n => s n ×ˢ t n :=
@@ -940,7 +949,7 @@ instance coprod.is_countably_generated (la : Filter α) (lb : Filter β) [IsCoun
 
 end IsCountablyGenerated
 
-theorem is_countably_generated_seq [Encodable β] (x : β → Set α) : IsCountablyGenerated (⨅ i, 𝓟 <| x i) := by
+theorem is_countably_generated_seq [Countable β] (x : β → Set α) : IsCountablyGenerated (⨅ i, 𝓟 <| x i) := by
   use range x, countable_range x
   rw [generate_eq_binfi, infi_range]
 
@@ -986,7 +995,6 @@ instance Infi.is_countably_generated {ι : Sort _} [Countable ι] (f : ι → Fi
   choose s hs using fun i => exists_antitone_basis (f i)
   rw [← plift.down_surjective.infi_comp]
   refine' has_countable_basis.is_countably_generated ⟨has_basis_infi fun n => (hs _).to_has_basis, _⟩
-  haveI := Encodable.ofCountable (Plift ι)
   refine' (countable_range <| Sigma.map (coe : Finset (Plift ι) → Set (Plift ι)) fun _ => id).mono _
   rintro ⟨I, f⟩ ⟨hI, -⟩
   lift I to Finset (Plift ι) using hI

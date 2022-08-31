@@ -89,7 +89,8 @@ section Basic
 theorem iff_adjoin_eq_top :
     IsCyclotomicExtension S A B ↔
       (∀ a : ℕ+, a ∈ S → ∃ r : B, IsPrimitiveRoot r a) ∧ adjoin A { b : B | ∃ a : ℕ+, a ∈ S ∧ b ^ (a : ℕ) = 1 } = ⊤ :=
-  ⟨fun h => ⟨h.exists_prim_root, Algebra.eq_top_iff.2 h.adjoin_roots⟩, fun h => ⟨h.1, Algebra.eq_top_iff.1 h.2⟩⟩
+  ⟨fun h => ⟨fun _ => h.exists_prim_root, Algebra.eq_top_iff.2 h.adjoin_roots⟩, fun h =>
+    ⟨h.1, Algebra.eq_top_iff.1 h.2⟩⟩
 
 /-- A reformulation of `is_cyclotomic_extension` in the case `S` is a singleton. -/
 theorem iff_singleton :
@@ -503,9 +504,7 @@ instance is_cyclotomic_extension [NeZero ((n : ℕ) : A)] : IsCyclotomicExtensio
     subst a
     haveI := NeZero.of_no_zero_smul_divisors A K n
     haveI := NeZero.of_no_zero_smul_divisors A (CyclotomicField n K) n
-    obtain ⟨μ, hμ⟩ :=
-      let h := (CyclotomicField.is_cyclotomic_extension n K).exists_prim_root
-      h <| mem_singleton n
+    obtain ⟨μ, hμ⟩ := (CyclotomicField.is_cyclotomic_extension n K).exists_prim_root (mem_singleton n)
     refine' ⟨⟨μ, subset_adjoin _⟩, _⟩
     · apply (is_root_of_unity_iff n.pos (CyclotomicField n K)).mpr
       refine' ⟨n, Nat.mem_divisors_self _ n.ne_zero, _⟩
@@ -589,7 +588,7 @@ variable [IsAlgClosed K]
 /-- Algebraically closed fields are `S`-cyclotomic extensions over themselves if
 `ne_zero ((a : ℕ) : K))` for all `a ∈ S`. -/
 theorem IsAlgClosed.is_cyclotomic_extension (h : ∀ a ∈ S, NeZero ((a : ℕ) : K)) : IsCyclotomicExtension S K K := by
-  refine' ⟨fun a ha => _, algebra.eq_top_iff.mp <| Subsingleton.elimₓ _ _⟩
+  refine' ⟨fun a ha => _, algebra.eq_top_iff.mp <| Subsingleton.elim _ _⟩
   obtain ⟨r, hr⟩ := IsAlgClosed.exists_aeval_eq_zero K _ (degree_cyclotomic_pos a K a.pos).ne'
   refine' ⟨r, _⟩
   haveI := h a ha

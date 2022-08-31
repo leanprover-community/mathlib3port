@@ -70,7 +70,7 @@ instance [Countable α] : Countable (Plift α) :=
   Equivₓ.plift.Injective.Countable
 
 instance (priority := 100) Subsingleton.to_countable [Subsingleton α] : Countable α :=
-  ⟨⟨fun _ => 0, fun x y h => Subsingleton.elimₓ x y⟩⟩
+  ⟨⟨fun _ => 0, fun x y h => Subsingleton.elim x y⟩⟩
 
 instance (priority := 500) [Countable α] {p : α → Prop} : Countable { x // p x } :=
   Subtype.val_injective.Countable

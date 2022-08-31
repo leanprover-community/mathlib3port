@@ -252,7 +252,7 @@ def principal (s : Set α) : Filter α where
   sets_of_superset := fun x y hx => Subset.trans hx
   inter_sets := fun x y => subset_inter
 
--- mathport name: «expr𝓟»
+-- mathport name: filter.principal
 localized [Filter] notation "𝓟" => Filter.principal
 
 instance : Inhabited (Filter α) :=
@@ -675,7 +675,7 @@ theorem nontrivial_iff_nonempty : Nontrivial (Filter α) ↔ Nonempty α :=
     by_contra fun h =>
       hfg <|
         haveI : IsEmpty α := not_nonempty_iff.1 h
-        Subsingleton.elimₓ _ _,
+        Subsingleton.elim _ _,
     fun ⟨x⟩ =>
     ⟨⟨⊤, ⊥,
         ne_bot.ne <|
@@ -1470,9 +1470,16 @@ theorem EventuallyLe.diff {s t s' t' : Set α} {l : Filter α} (h : s ≤ᶠ[l] 
     (s \ s' : Set α) ≤ᶠ[l] (t \ t' : Set α) :=
   h.inter h'.compl
 
-theorem EventuallyLe.mul_le_mul [OrderedSemiring β] {l : Filter α} {f₁ f₂ g₁ g₂ : α → β} (hf : f₁ ≤ᶠ[l] f₂)
-    (hg : g₁ ≤ᶠ[l] g₂) (hg₀ : 0 ≤ᶠ[l] g₁) (hf₀ : 0 ≤ᶠ[l] f₂) : f₁ * g₁ ≤ᶠ[l] f₂ * g₂ := by
+theorem EventuallyLe.mul_le_mul [MulZeroClassₓ β] [PartialOrderₓ β] [PosMulMono β] [MulPosMono β] {l : Filter α}
+    {f₁ f₂ g₁ g₂ : α → β} (hf : f₁ ≤ᶠ[l] f₂) (hg : g₁ ≤ᶠ[l] g₂) (hg₀ : 0 ≤ᶠ[l] g₁) (hf₀ : 0 ≤ᶠ[l] f₂) :
+    f₁ * g₁ ≤ᶠ[l] f₂ * g₂ := by
   filter_upwards [hf, hg, hg₀, hf₀] with x using mul_le_mul
+
+@[to_additive EventuallyLe.add_le_add]
+theorem EventuallyLe.mul_le_mul' [Mul β] [Preorderₓ β] [CovariantClass β β (· * ·) (· ≤ ·)]
+    [CovariantClass β β (swap (· * ·)) (· ≤ ·)] {l : Filter α} {f₁ f₂ g₁ g₂ : α → β} (hf : f₁ ≤ᶠ[l] f₂)
+    (hg : g₁ ≤ᶠ[l] g₂) : f₁ * g₁ ≤ᶠ[l] f₂ * g₂ := by
+  filter_upwards [hf, hg] with x hfx hgx using mul_le_mul' hfx hgx
 
 theorem EventuallyLe.mul_nonneg [OrderedSemiring β] {l : Filter α} {f g : α → β} (hf : 0 ≤ᶠ[l] f) (hg : 0 ≤ᶠ[l] g) :
     0 ≤ᶠ[l] f * g := by
@@ -1899,6 +1906,7 @@ theorem _root_.function.surjective.filter_map_top {f : α → β} (hf : Surjecti
 theorem subtype_coe_map_comap (s : Set α) (f : Filter α) : map (coe : s → α) (comap (coe : s → α) f) = f⊓𝓟 s := by
   rw [map_comap, Subtype.range_coe]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem subtype_coe_map_comap_prod (s : Set α) (f : Filter (α × α)) :
     map (coe : s × s → α × α) (comap (coe : s × s → α × α) f) = f⊓𝓟 (s ×ˢ s) := by
   have : (coe : s × s → α × α) = fun x => (x.1, x.2) := by
@@ -2328,17 +2336,22 @@ section ListTraverse
    equality requirements in `traverse` -/
 open List
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem sequence_mono : ∀ as bs : List (Filter α), Forall₂ (· ≤ ·) as bs → sequence as ≤ sequence bs
   | [], [], forall₂.nil => le_rflₓ
-  | a :: as, b :: bs, forall₂.cons h hs => seq_mono (map_mono h) (sequence_mono as bs hs)
+  | a::as, b::bs, forall₂.cons h hs => seq_mono (map_mono h) (sequence_mono as bs hs)
 
 variable {α' β' γ' : Type u} {f : β' → Filter α'} {s : γ' → Set α'}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem mem_traverse :
     ∀ (fs : List β') (us : List γ'), Forall₂ (fun b c => s c ∈ f b) fs us → traverse s us ∈ traverse f fs
   | [], [], forall₂.nil => mem_pure.2 <| mem_singletonₓ _
-  | f :: fs, u :: us, forall₂.cons h hs => seq_mem_seq (image_mem_map h) (mem_traverse fs us hs)
+  | f::fs, u::us, forall₂.cons h hs => seq_mem_seq (image_mem_map h) (mem_traverse fs us hs)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem mem_traverse_iff (fs : List β') (t : Set (List α')) :
     t ∈ traverse f fs ↔ ∃ us : List (Set α'), Forall₂ (fun b (s : Set α') => s ∈ f b) fs us ∧ sequence us ⊆ t := by
   constructor
@@ -2351,7 +2364,7 @@ theorem mem_traverse_iff (fs : List β') (t : Set (List α')) :
       rcases mem_seq_iff.1 ht with ⟨u, hu, v, hv, ht⟩
       rcases mem_map_iff_exists_image.1 hu with ⟨w, hw, hwu⟩
       rcases ih v hv with ⟨us, hus, hu⟩
-      exact ⟨w :: us, forall₂.cons hw hus, (Set.seq_mono hwu hu).trans ht⟩
+      exact ⟨w::us, forall₂.cons hw hus, (Set.seq_mono hwu hu).trans ht⟩
     
   · rintro ⟨us, hus, hs⟩
     exact mem_of_superset (mem_traverse _ _ hus) hs

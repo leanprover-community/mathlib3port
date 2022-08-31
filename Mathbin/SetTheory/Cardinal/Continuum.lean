@@ -27,7 +27,7 @@ open Cardinal
 def continuum : Cardinal.{u} :=
   2 ^ aleph_0.{u}
 
--- mathport name: «expr𝔠»
+-- mathport name: cardinal.continuum
 localized [Cardinal] notation "𝔠" => Cardinal.continuum
 
 @[simp]

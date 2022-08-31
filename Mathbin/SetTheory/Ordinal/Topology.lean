@@ -95,7 +95,7 @@ theorem is_open_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.Ioo
       
     
   · let f : s → Set Ordinal := fun o =>
-      if ho : is_limit o.val then Set.Ioo (Classical.some (h o.val o.Prop ho)) (o + 1) else {o.val}
+      if ho : is_limit o.val then Set.Ioo (Classical.choose (h o.val o.Prop ho)) (o + 1) else {o.val}
     have : ∀ a, IsOpen (f a) := fun a => by
       change IsOpen (dite _ _ _)
       split_ifs
@@ -108,7 +108,7 @@ theorem is_open_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.Ioo
     refine' ⟨fun ho => Set.mem_Union.2 ⟨⟨o, ho⟩, _⟩, _⟩
     · split_ifs with ho'
       · refine' ⟨_, lt_succ o⟩
-        cases' Classical.some_spec (h o ho ho') with H
+        cases' Classical.choose_spec (h o ho ho') with H
         exact H
         
       · exact Set.mem_singleton o
@@ -117,7 +117,7 @@ theorem is_open_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.Ioo
     · rintro ⟨t, ⟨a, ht⟩, hoa⟩
       change dite _ _ _ = t at ht
       split_ifs  at ht with ha <;> subst ht
-      · cases' Classical.some_spec (h a.val a.prop ha) with H has
+      · cases' Classical.choose_spec (h a.val a.prop ha) with H has
         rcases lt_or_eq_of_leₓ (le_of_lt_succ hoa.2) with (hoa' | rfl)
         · exact has ⟨hoa.1, hoa'⟩
           
@@ -138,8 +138,8 @@ theorem mem_closure_iff_sup :
           infer_instance, fun _ => a, fun _ => has, sup_const a⟩
       
     · have H := fun b (hba : b < a) => h _ (@is_open_Ioo _ _ _ _ b (a + 1)) ⟨hba, lt_succ a⟩
-      let f : a.out.α → Ordinal := fun i => Classical.some (H (typein (· < ·) i) (typein_lt_self i))
-      have hf : ∀ i, f i ∈ Set.Ioo (typein (· < ·) i) (a + 1) ∩ s := fun i => Classical.some_spec (H _ _)
+      let f : a.out.α → Ordinal := fun i => Classical.choose (H (typein (· < ·) i) (typein_lt_self i))
+      have hf : ∀ i, f i ∈ Set.Ioo (typein (· < ·) i) (a + 1) ∩ s := fun i => Classical.choose_spec (H _ _)
       rcases eq_zero_or_pos a with (rfl | ha₀)
       · rcases h _ (is_open_singleton_iff.2 not_zero_is_limit) rfl with ⟨b, hb, hb'⟩
         rw [Set.mem_singleton_iff.1 hb] at *

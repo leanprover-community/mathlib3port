@@ -2136,42 +2136,42 @@ variable (f₄ : X₃ ⟶ Y₂) [HasPullback f₁ f₂] [HasPullback f₃ f₄]
 
 include f₁ f₂ f₃ f₄
 
--- mathport name: «exprZ₁»
+-- mathport name: exprZ₁
 local notation "Z₁" => pullback f₁ f₂
 
--- mathport name: «exprZ₂»
+-- mathport name: exprZ₂
 local notation "Z₂" => pullback f₃ f₄
 
--- mathport name: «exprg₁»
+-- mathport name: exprg₁
 local notation "g₁" => (pullback.fst : Z₁ ⟶ X₁)
 
--- mathport name: «exprg₂»
+-- mathport name: exprg₂
 local notation "g₂" => (pullback.snd : Z₁ ⟶ X₂)
 
--- mathport name: «exprg₃»
+-- mathport name: exprg₃
 local notation "g₃" => (pullback.fst : Z₂ ⟶ X₂)
 
--- mathport name: «exprg₄»
+-- mathport name: exprg₄
 local notation "g₄" => (pullback.snd : Z₂ ⟶ X₃)
 
--- mathport name: «exprW»
+-- mathport name: exprW
 local notation "W" => pullback (g₂ ≫ f₃) f₄
 
--- mathport name: «exprW'»
+-- mathport name: exprW'
 local notation "W'" => pullback f₁ (g₃ ≫ f₂)
 
--- mathport name: «exprl₁»
+-- mathport name: exprl₁
 local notation "l₁" => (pullback.fst : W ⟶ Z₁)
 
--- mathport name: «exprl₂»
+-- mathport name: exprl₂
 local notation "l₂" =>
   (pullback.lift (pullback.fst ≫ g₂) pullback.snd ((Category.assoc _ _ _).trans pullback.condition) : W ⟶ Z₂)
 
--- mathport name: «exprl₁'»
+-- mathport name: exprl₁'
 local notation "l₁'" =>
   (pullback.lift pullback.fst (pullback.snd ≫ g₃) (pullback.condition.trans (Category.assoc _ _ _).symm) : W' ⟶ Z₁)
 
--- mathport name: «exprl₂'»
+-- mathport name: exprl₂'
 local notation "l₂'" => (pullback.snd : W' ⟶ Z₂)
 
 /-- `(X₁ ×[Y₁] X₂) ×[Y₂] X₃` is the pullback `(X₁ ×[Y₁] X₂) ×[X₂] (X₂ ×[Y₂] X₃)`. -/
@@ -2326,41 +2326,41 @@ variable (g₄ : Z₂ ⟶ X₃) [HasPushout g₁ g₂] [HasPushout g₃ g₄]
 
 include g₁ g₂ g₃ g₄
 
--- mathport name: «exprY₁»
+-- mathport name: exprY₁
 local notation "Y₁" => pushout g₁ g₂
 
--- mathport name: «exprY₂»
+-- mathport name: exprY₂
 local notation "Y₂" => pushout g₃ g₄
 
--- mathport name: «exprf₁»
+-- mathport name: exprf₁
 local notation "f₁" => (pushout.inl : X₁ ⟶ Y₁)
 
--- mathport name: «exprf₂»
+-- mathport name: exprf₂
 local notation "f₂" => (pushout.inr : X₂ ⟶ Y₁)
 
--- mathport name: «exprf₃»
+-- mathport name: exprf₃
 local notation "f₃" => (pushout.inl : X₂ ⟶ Y₂)
 
--- mathport name: «exprf₄»
+-- mathport name: exprf₄
 local notation "f₄" => (pushout.inr : X₃ ⟶ Y₂)
 
--- mathport name: «exprW»
+-- mathport name: exprW
 local notation "W" => pushout g₁ (g₂ ≫ f₃)
 
--- mathport name: «exprW'»
+-- mathport name: exprW'
 local notation "W'" => pushout (g₃ ≫ f₂) g₄
 
--- mathport name: «exprl₁»
+-- mathport name: exprl₁
 local notation "l₁" =>
   (pushout.desc pushout.inl (f₃ ≫ pushout.inr) (pushout.condition.trans (Category.assoc _ _ _)) : Y₁ ⟶ W)
 
--- mathport name: «exprl₂»
+-- mathport name: exprl₂
 local notation "l₂" => (pushout.inr : Y₂ ⟶ W)
 
--- mathport name: «exprl₁'»
+-- mathport name: exprl₁'
 local notation "l₁'" => (pushout.inl : Y₁ ⟶ W')
 
--- mathport name: «exprl₂'»
+-- mathport name: exprl₂'
 local notation "l₂'" =>
   (pushout.desc (f₂ ≫ pushout.inl) pushout.inr ((Category.assoc _ _ _).symm.trans pushout.condition) : Y₂ ⟶ W')
 

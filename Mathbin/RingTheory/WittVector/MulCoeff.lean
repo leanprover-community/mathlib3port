@@ -34,7 +34,7 @@ variable (p : ℕ) [hp : Fact p.Prime]
 
 variable {k : Type _} [CommRingₓ k]
 
--- mathport name: «expr𝕎»
+-- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
 open Finset MvPolynomial
@@ -51,6 +51,7 @@ def wittPolyProd (n : ℕ) : MvPolynomial (Finₓ 2 × ℕ) ℤ :=
 
 include hp
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem witt_poly_prod_vars (n : ℕ) : (wittPolyProd p n).vars ⊆ univ ×ˢ range (n + 1) := by
   rw [witt_poly_prod]
   apply subset.trans (vars_mul _ _)
@@ -63,6 +64,7 @@ theorem witt_poly_prod_vars (n : ℕ) : (wittPolyProd p n).vars ⊆ univ ×ˢ ra
 def wittPolyProdRemainder (n : ℕ) : MvPolynomial (Finₓ 2 × ℕ) ℤ :=
   ∑ i in range n, p ^ i * wittMul p i ^ p ^ (n - i)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem witt_poly_prod_remainder_vars (n : ℕ) : (wittPolyProdRemainder p n).vars ⊆ univ ×ˢ range n := by
   rw [witt_poly_prod_remainder]
   apply subset.trans (vars_sum_subset _ _)
@@ -95,6 +97,7 @@ def remainder (n : ℕ) : MvPolynomial (Finₓ 2 × ℕ) ℤ :=
 
 include hp
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem remainder_vars (n : ℕ) : (remainder p n).vars ⊆ univ ×ˢ range (n + 1) := by
   rw [remainder]
   apply subset.trans (vars_mul _ _)
@@ -188,6 +191,7 @@ theorem mul_poly_of_interest_aux5 (n : ℕ) :
   rw [mul_poly_of_interest_aux4 p n]
   ring
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem mul_poly_of_interest_vars (n : ℕ) :
     ((p ^ (n + 1) : MvPolynomial (Finₓ 2 × ℕ) ℤ) * polyOfInterest p n).vars ⊆ univ ×ˢ range (n + 1) := by
   rw [mul_poly_of_interest_aux5]
@@ -211,6 +215,7 @@ theorem poly_of_interest_vars_eq (n : ℕ) :
   apply pow_ne_zero
   exact_mod_cast hp.out.ne_zero
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem poly_of_interest_vars (n : ℕ) : (polyOfInterest p n).vars ⊆ univ ×ˢ range (n + 1) := by
   rw [poly_of_interest_vars_eq] <;> apply mul_poly_of_interest_vars
 
@@ -310,13 +315,13 @@ variable {k}
 /-- Produces the "remainder function" of the `n+1`st coefficient, which does not depend on the `n+1`st
 coefficients of the inputs. -/
 def nthRemainder (n : ℕ) : (Finₓ (n + 1) → k) → (Finₓ (n + 1) → k) → k :=
-  Classical.some (nth_mul_coeff p k n)
+  Classical.choose (nth_mul_coeff p k n)
 
 theorem nth_remainder_spec (n : ℕ) (x y : 𝕎 k) :
     (x * y).coeff (n + 1) =
       x.coeff (n + 1) * y.coeff 0 ^ p ^ (n + 1) + y.coeff (n + 1) * x.coeff 0 ^ p ^ (n + 1) +
         nthRemainder p n (truncateFun (n + 1) x) (truncateFun (n + 1) y) :=
-  Classical.some_spec (nth_mul_coeff p k n) _ _
+  Classical.choose_spec (nth_mul_coeff p k n) _ _
 
 end WittVector
 

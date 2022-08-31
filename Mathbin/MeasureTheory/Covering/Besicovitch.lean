@@ -141,12 +141,12 @@ class HasBesicovitchCovering (α : Type _) [MetricSpace α] : Prop where
 /-- There is always a satellite configuration with a single point. -/
 instance {α : Type _} {τ : ℝ} [Inhabited α] [MetricSpace α] : Inhabited (Besicovitch.SatelliteConfig α 0 τ) :=
   ⟨{ c := default, R := fun i => 1, rpos := fun i => zero_lt_one,
-      h := fun i j hij => (hij (Subsingleton.elimₓ i j)).elim,
+      h := fun i j hij => (hij (Subsingleton.elim i j)).elim,
       hlast := fun i hi => by
-        rw [Subsingleton.elimₓ i (last 0)] at hi
+        rw [Subsingleton.elim i (last 0)] at hi
         exact (lt_irreflₓ _ hi).elim,
       inter := fun i hi => by
-        rw [Subsingleton.elimₓ i (last 0)] at hi
+        rw [Subsingleton.elim i (last 0)] at hi
         exact (lt_irreflₓ _ hi).elim }⟩
 
 namespace Besicovitch
@@ -654,7 +654,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measureₓ α) [IsFinite
     swap
     · apply MeasurableSet.inter _ omeas
       haveI : Encodable (u i) := (u_count i).toEncodable
-      exact MeasurableSet.Union fun b => MeasurableSet.Union_Prop fun hb => measurable_set_closed_ball
+      exact MeasurableSet.Union fun b => MeasurableSet.Union fun hb => measurable_set_closed_ball
       
     calc
       μ o = 1 / (N + 1) * μ s + N / (N + 1) * μ s := by

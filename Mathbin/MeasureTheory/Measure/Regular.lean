@@ -311,7 +311,7 @@ protected theorem FiniteSpanningSetsIn.outer_regular [OpensMeasurableSpace α] {
         (inter_subset_right _ _).trans (disjointed_subset _ _),
         (disjoint_disjointed s.set).mono fun k l hkl => hkl.mono inf_le_right inf_le_right, _⟩
     rw [← inter_Union, Union_disjointed, s.spanning, inter_univ]
-  rcases Ennreal.exists_pos_sum_of_encodable' (tsub_pos_iff_lt.2 hr).ne' ℕ with ⟨δ, δ0, hδε⟩
+  rcases Ennreal.exists_pos_sum_of_countable' (tsub_pos_iff_lt.2 hr).ne' ℕ with ⟨δ, δ0, hδε⟩
   rw [lt_tsub_iff_right, add_commₓ] at hδε
   have : ∀ n, ∃ (U : _)(_ : U ⊇ A n), IsOpen U ∧ μ U < μ (A n) + δ n := by
     intro n
@@ -400,7 +400,7 @@ theorem weakly_regular_of_finite [BorelSpace α] (μ : Measure α) [IsFiniteMeas
   -- check for disjoint unions
   · intro s hsd hsm H ε ε0
     have ε0' : ε / 2 ≠ 0 := (Ennreal.half_pos ε0).ne'
-    rcases Ennreal.exists_pos_sum_of_encodable' ε0' ℕ with ⟨δ, δ0, hδε⟩
+    rcases Ennreal.exists_pos_sum_of_countable' ε0' ℕ with ⟨δ, δ0, hδε⟩
     choose F hFs U hsU hFc hUo hF hU using fun n => H n (δ n) (δ0 n).ne'
     -- the approximating closed set is constructed by considering finitely many sets `s i`, which
     -- cover all the measure up to `ε/2`, approximating each of these by a closed set `F i`, and

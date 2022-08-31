@@ -158,7 +158,7 @@ theorem aeval_minpoly_gen (pb : PowerBasis A S) : aeval pb.gen (minpolyGen pb) =
 
 theorem dim_le_nat_degree_of_root (h : PowerBasis A S) {p : A[X]} (ne_zero : p ≠ 0) (root : aeval h.gen p = 0) :
     h.dim ≤ p.natDegree := by
-  refine' le_of_not_ltₓ fun hlt => ne_zero _
+  refine' le_of_not_ltₓ fun hlt => NeZero _
   let p_coeff : Finₓ h.dim → A := fun i => p.coeff i
   suffices ∀ i, p_coeff i = 0 by
     ext i
@@ -180,8 +180,8 @@ theorem dim_le_nat_degree_of_root (h : PowerBasis A S) {p : A[X]} (ne_zero : p �
 
 theorem dim_le_degree_of_root (h : PowerBasis A S) {p : A[X]} (ne_zero : p ≠ 0) (root : aeval h.gen p = 0) :
     ↑h.dim ≤ p.degree := by
-  rw [degree_eq_nat_degree ne_zero, WithBot.coe_le_coe]
-  exact h.dim_le_nat_degree_of_root ne_zero root
+  rw [degree_eq_nat_degree NeZero, WithBot.coe_le_coe]
+  exact h.dim_le_nat_degree_of_root NeZero root
 
 variable [IsDomain A]
 

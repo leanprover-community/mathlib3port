@@ -95,9 +95,12 @@ variable [LinearOrderedCommGroupWithZero α]
 theorem zero_lt_one₀ : (0 : α) < 1 :=
   lt_of_le_of_neₓ zero_le_one zero_ne_one
 
+-- TODO: Do we really need the following two?
+/-- Alias of `mul_le_one'` for unification. -/
 theorem mul_le_one₀ (ha : a ≤ 1) (hb : b ≤ 1) : a * b ≤ 1 :=
   mul_le_one' ha hb
 
+/-- Alias of `one_le_mul'` for unification. -/
 theorem one_le_mul₀ (ha : 1 ≤ a) (hb : 1 ≤ b) : 1 ≤ a * b :=
   one_le_mul ha hb
 
@@ -203,18 +206,6 @@ theorem le_div_iff₀ (hc : c ≠ 0) : a ≤ b / c ↔ a * c ≤ b := by
 
 theorem div_le_iff₀ (hc : c ≠ 0) : a / c ≤ b ↔ a ≤ b * c := by
   rw [div_eq_mul_inv, mul_inv_le_iff₀ hc]
-
-theorem eq_one_of_mul_eq_one_left (ha : a ≤ 1) (hb : b ≤ 1) (hab : a * b = 1) : a = 1 :=
-  le_antisymmₓ ha <| (inv_le_one₀ <| left_ne_zero_of_mul_eq_one hab).mp <| eq_inv_of_mul_eq_one_right hab ▸ hb
-
-theorem eq_one_of_mul_eq_one_right (ha : a ≤ 1) (hb : b ≤ 1) (hab : a * b = 1) : b = 1 :=
-  le_antisymmₓ hb <| (inv_le_one₀ <| right_ne_zero_of_mul_eq_one hab).mp <| eq_inv_of_mul_eq_one_left hab ▸ ha
-
-theorem eq_one_of_mul_eq_one_left' (ha : 1 ≤ a) (hb : 1 ≤ b) (hab : a * b = 1) : a = 1 :=
-  le_antisymmₓ ((one_le_inv₀ <| left_ne_zero_of_mul_eq_one hab).mp <| eq_inv_of_mul_eq_one_right hab ▸ hb) ha
-
-theorem eq_one_of_mul_eq_one_right' (ha : 1 ≤ a) (hb : 1 ≤ b) (hab : a * b = 1) : b = 1 :=
-  le_antisymmₓ ((one_le_inv₀ <| right_ne_zero_of_mul_eq_one hab).mp <| eq_inv_of_mul_eq_one_left hab ▸ ha) hb
 
 /-- `equiv.mul_left₀` as an order_iso on a `linear_ordered_comm_group_with_zero.`.
 

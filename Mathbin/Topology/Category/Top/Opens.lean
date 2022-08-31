@@ -330,7 +330,7 @@ theorem inclusion_top_functor (X : Top) : (@Opens.open_embedding X ⊤).IsOpenMa
     ext
     exact ⟨fun ⟨⟨_, _⟩, h, rfl⟩ => h, fun h => ⟨⟨x, trivialₓ⟩, h, rfl⟩⟩
   intros
-  apply Subsingleton.helimₓ
+  apply Subsingleton.helim
   congr 1
   iterate 2 
     apply inclusion_top_functor.obj_eq

@@ -34,12 +34,12 @@ theorem Small.mk' {α : Type v} {S : Type w} (e : α ≃ S) : Small.{w} α :=
 -/
 @[nolint has_nonempty_instance]
 def Shrink (α : Type v) [Small.{w} α] : Type w :=
-  Classical.some (@Small.equiv_small α _)
+  Classical.choose (@Small.equiv_small α _)
 
 /-- The noncomputable equivalence between a `w`-small type and a model.
 -/
 noncomputable def equivShrink (α : Type v) [Small.{w} α] : α ≃ Shrink α :=
-  Nonempty.some (Classical.some_spec (@Small.equiv_small α _))
+  Nonempty.some (Classical.choose_spec (@Small.equiv_small α _))
 
 instance (priority := 100) small_self (α : Type v) : Small.{v} α :=
   Small.mk' <| Equivₓ.refl α

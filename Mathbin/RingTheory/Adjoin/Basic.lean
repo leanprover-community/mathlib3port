@@ -193,6 +193,7 @@ theorem adjoin_insert_adjoin (x : A) : adjoin R (insert x ↑(adjoin R s)) = adj
     (adjoin_le (Set.insert_subset.mpr ⟨subset_adjoin (Set.mem_insert _ _), adjoin_mono (Set.subset_insert _ _)⟩))
     (Algebra.adjoin_mono (Set.insert_subset_insert Algebra.subset_adjoin))
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem adjoin_prod_le (s : Set A) (t : Set B) : adjoin R (s ×ˢ t) ≤ (adjoin R s).Prod (adjoin R t) :=
   adjoin_le <| Set.prod_mono subset_adjoin subset_adjoin
 

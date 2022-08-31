@@ -42,28 +42,28 @@ namespace Tactic
 @[nolint unused_arguments]
 def congrmFun1 {α ρ} {r : ρ} : α → ρ := fun _ => r
 
--- mathport name: «expr_₁»
+-- mathport name: expr_₁
 notation "_₁" => congrmFun1
 
 /-- A generic function with two arguments.  It is the "function underscore" input to `congrm`. -/
 @[nolint unused_arguments]
 def congrmFun2 {α β ρ} {r : ρ} : α → β → ρ := fun _ _ => r
 
--- mathport name: «expr_₂»
+-- mathport name: expr_₂
 notation "_₂" => congrmFun2
 
 /-- A generic function with three arguments.  It is the "function underscore" input to `congrm`. -/
 @[nolint unused_arguments]
 def congrmFun3 {α β γ ρ} {r : ρ} : α → β → γ → ρ := fun _ _ _ => r
 
--- mathport name: «expr_₃»
+-- mathport name: expr_₃
 notation "_₃" => congrmFun3
 
 /-- A generic function with four arguments.  It is the "function underscore" input to `congrm`. -/
 @[nolint unused_arguments]
 def congrmFun4 {α β γ δ ρ} {r : ρ} : α → β → γ → δ → ρ := fun _ _ _ _ => r
 
--- mathport name: «expr_₄»
+-- mathport name: expr_₄
 notation "_₄" => congrmFun4
 
 /-- Replaces a "function underscore" input to `congrm` into the correct expression,
@@ -99,7 +99,7 @@ Calls `set_goals []` at the end.
 -/
 unsafe def equate_with_pattern_core : expr → tactic (List expr)
   | pat =>
-    applyc `` Subsingleton.elimₓ >> pure [] <|>
+    applyc `` Subsingleton.elim >> pure [] <|>
       applyc `` rfl >> pure [] <|>
         if pat.is_mvar || pat.get_delayed_abstraction_locals.isSome then do
           try <| applyc `` _root_.propext

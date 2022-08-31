@@ -83,18 +83,18 @@ class HaveLebesgueDecomposition (μ ν : Measure α) : Prop where
 measure from `have_lebesgue_decomposition`, otherwise it returns the zero measure. For sigma-finite
 measures, `μ = μ.singular_part ν + ν.with_density (μ.rn_deriv ν)`. -/
 irreducible_def singularPart (μ ν : Measure α) : Measure α :=
-  if h : HaveLebesgueDecomposition μ ν then (Classical.some h.lebesgue_decomposition).1 else 0
+  if h : HaveLebesgueDecomposition μ ν then (Classical.choose h.lebesgue_decomposition).1 else 0
 
 /-- If a pair of measures `have_lebesgue_decomposition`, then `rn_deriv` chooses the
 measurable function from `have_lebesgue_decomposition`, otherwise it returns the zero function.
 For sigma-finite measures, `μ = μ.singular_part ν + ν.with_density (μ.rn_deriv ν)`.-/
 irreducible_def rnDeriv (μ ν : Measure α) : α → ℝ≥0∞ :=
-  if h : HaveLebesgueDecomposition μ ν then (Classical.some h.lebesgue_decomposition).2 else 0
+  if h : HaveLebesgueDecomposition μ ν then (Classical.choose h.lebesgue_decomposition).2 else 0
 
 theorem have_lebesgue_decomposition_spec (μ ν : Measure α) [h : HaveLebesgueDecomposition μ ν] :
     Measurable (μ.rnDeriv ν) ∧ μ.singularPart ν ⊥ₘ ν ∧ μ = μ.singularPart ν + ν.withDensity (μ.rnDeriv ν) := by
   rw [singular_part, rn_deriv, dif_pos h, dif_pos h]
-  exact Classical.some_spec h.lebesgue_decomposition
+  exact Classical.choose_spec h.lebesgue_decomposition
 
 theorem have_lebesgue_decomposition_add (μ ν : Measure α) [HaveLebesgueDecomposition μ ν] :
     μ = μ.singularPart ν + ν.withDensity (μ.rnDeriv ν) :=

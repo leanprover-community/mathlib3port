@@ -27,7 +27,7 @@ quaternion, normed ring, normed space, normed algebra
 -/
 
 
--- mathport name: «exprℍ»
+-- mathport name: quaternion.real
 localized [Quaternion] notation "ℍ" => Quaternion ℝ
 
 open RealInnerProductSpace

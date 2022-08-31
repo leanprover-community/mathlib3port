@@ -85,7 +85,7 @@ section Principal
 
 variable {p : R}
 
--- mathport name: «exprP»
+-- mathport name: exprP
 local notation "P" => Submodule.span R {p}
 
 theorem exists_mem_adjoin_mul_eq_pow_nat_degree {x : S} (hx : aeval x f = 0) (hmo : f.Monic)
@@ -201,7 +201,7 @@ theorem _root_.polynomial.monic.is_eisenstein_at_of_mem_of_not_mem (hf : f.Monic
 include hf
 
 theorem is_weakly_eisenstein_at : IsWeaklyEisensteinAt f 𝓟 :=
-  ⟨hf.Mem⟩
+  ⟨fun _ => hf.Mem⟩
 
 theorem coeff_mem {n : ℕ} (hn : n ≠ f.natDegree) : f.coeff n ∈ 𝓟 := by
   cases ne_iff_lt_or_gtₓ.1 hn
@@ -233,7 +233,7 @@ section Cyclotomic
 
 variable (p : ℕ)
 
--- mathport name: «expr𝓟»
+-- mathport name: expr𝓟
 local notation "𝓟" => Submodule.span ℤ {p}
 
 open Polynomial
@@ -343,7 +343,7 @@ variable [Algebra K L] [Algebra R L] [Algebra R K] [IsScalarTower R K L] [IsSepa
 
 variable [IsDomain R] [NormalizedGcdMonoid R] [IsFractionRing R K] [IsIntegrallyClosed R]
 
--- mathport name: «expr𝓟»
+-- mathport name: expr𝓟
 local notation "𝓟" => Submodule.span R {p}
 
 open IsIntegrallyClosed PowerBasis Nat Polynomial IsScalarTower

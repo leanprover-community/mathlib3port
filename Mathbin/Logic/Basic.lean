@@ -72,7 +72,7 @@ instance PSum.inhabitedRight {α β} [Inhabited β] : Inhabited (PSum α β) :=
   ⟨PSum.inr default⟩
 
 instance (priority := 10) decidableEqOfSubsingleton {α} [Subsingleton α] : DecidableEq α
-  | a, b => isTrue (Subsingleton.elimₓ a b)
+  | a, b => isTrue (Subsingleton.elim a b)
 
 @[simp]
 theorem eq_iff_true_of_subsingleton {α : Sort _} [Subsingleton α] (x y : α) : x = y ↔ True := by
@@ -83,11 +83,11 @@ theorem subsingleton_of_forall_eq {α : Sort _} (x : α) (h : ∀ y, y = x) : Su
   ⟨fun a b => (h a).symm ▸ (h b).symm ▸ rfl⟩
 
 theorem subsingleton_iff_forall_eq {α : Sort _} (x : α) : Subsingleton α ↔ ∀ y, y = x :=
-  ⟨fun h y => @Subsingleton.elimₓ _ h y x, subsingleton_of_forall_eq x⟩
+  ⟨fun h y => @Subsingleton.elim _ h y x, subsingleton_of_forall_eq x⟩
 
 instance Subtype.subsingleton (α : Sort _) [Subsingleton α] (p : α → Prop) : Subsingleton (Subtype p) :=
   ⟨fun ⟨x, _⟩ ⟨y, _⟩ => by
-    have : x = y := Subsingleton.elimₓ _ _
+    have : x = y := Subsingleton.elim _ _
     cases this
     rfl⟩
 
@@ -1198,12 +1198,12 @@ theorem exists_imp_distrib : (∃ x, p x) → b ↔ ∀ x, p x → b :=
 -/
 @[reducible]
 noncomputable def Exists.some {p : α → Prop} (P : ∃ a, p a) : α :=
-  Classical.some P
+  Classical.choose P
 
 /-- Show that an element extracted from `P : ∃ a, p a` using `P.some` satisfies `p`.
 -/
 theorem Exists.some_spec {p : α → Prop} (P : ∃ a, p a) : p P.some :=
-  Classical.some_spec P
+  Classical.choose_spec P
 
 --theorem forall_not_of_not_exists (h : ¬ ∃ x, p x) : ∀ x, ¬ p x :=
 --forall_imp_of_exists_imp h
@@ -1270,7 +1270,7 @@ theorem ExistsUnique.exists {α : Sort _} {p : α → Prop} (h : ∃! x, p x) : 
 
 @[simp]
 theorem exists_unique_iff_exists {α : Sort _} [Subsingleton α] {p : α → Prop} : (∃! x, p x) ↔ ∃ x, p x :=
-  ⟨fun h => h.exists, Exists.imp fun x hx => ⟨hx, fun y _ => Subsingleton.elimₓ y x⟩⟩
+  ⟨fun h => h.exists, Exists.imp fun x hx => ⟨hx, fun y _ => Subsingleton.elim y x⟩⟩
 
 @[simp]
 theorem forall_const (α : Sort _) [i : Nonempty α] : α → b ↔ b :=
@@ -1572,14 +1572,14 @@ noncomputable def decEq (α : Sort _) : DecidableEq α := by
 satisfying the predicate. -/
 @[elabAsElim]
 noncomputable def existsCases.{u} {C : Sort u} (H0 : C) (H : ∀ a, p a → C) : C :=
-  if h : ∃ a, p a then H (Classical.some h) (Classical.some_spec h) else H0
+  if h : ∃ a, p a then H (Classical.choose h) (Classical.choose_spec h) else H0
 
-theorem some_spec2 {α : Sort _} {p : α → Prop} {h : ∃ a, p a} (q : α → Prop) (hpq : ∀ a, p a → q a) : q (some h) :=
-  hpq _ <| some_spec _
+theorem some_spec2 {α : Sort _} {p : α → Prop} {h : ∃ a, p a} (q : α → Prop) (hpq : ∀ a, p a → q a) : q (choose h) :=
+  hpq _ <| choose_spec _
 
 /-- A version of classical.indefinite_description which is definitionally equal to a pair -/
 noncomputable def subtypeOfExists {α : Type _} {P : α → Prop} (h : ∃ x, P x) : { x // P x } :=
-  ⟨Classical.some h, Classical.some_spec h⟩
+  ⟨Classical.choose h, Classical.choose_spec h⟩
 
 /-- A version of `by_contradiction` that uses types instead of propositions. -/
 protected noncomputable def byContradiction' {α : Sort _} (H : ¬(α → False)) : α :=
@@ -1595,7 +1595,7 @@ but `exists.rec_on` can only eliminate into Prop, while this version eliminates 
 using the axiom of choice. -/
 @[elabAsElim]
 noncomputable def Exists.classicalRecOn.{u} {α} {p : α → Prop} (h : ∃ a, p a) {C : Sort u} (H : ∀ a, p a → C) : C :=
-  H (Classical.some h) (Classical.some_spec h)
+  H (Classical.choose h) (Classical.choose_spec h)
 
 /-! ### Declarations about bounded quantifiers -/
 

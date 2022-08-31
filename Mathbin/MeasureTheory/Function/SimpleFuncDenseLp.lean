@@ -553,7 +553,7 @@ section ToSimpleFunc
 
 /-- Find a representative of a `Lp.simple_func`. -/
 def toSimpleFunc (f : lp.simpleFunc E p μ) : α →ₛ E :=
-  Classical.some f.2
+  Classical.choose f.2
 
 /-- `(to_simple_func f)` is measurable. -/
 @[measurability]
@@ -573,18 +573,18 @@ protected theorem ae_strongly_measurable (f : lp.simpleFunc E p μ) : AeStrongly
 theorem to_simple_func_eq_to_fun (f : lp.simpleFunc E p μ) : toSimpleFunc f =ᵐ[μ] f :=
   show ⇑(toSimpleFunc f) =ᵐ[μ] ⇑(f : α →ₘ[μ] E) by
     convert (ae_eq_fun.coe_fn_mk (to_simple_func f) (to_simple_func f).AeStronglyMeasurable).symm using 2
-    exact (Classical.some_spec f.2).symm
+    exact (Classical.choose_spec f.2).symm
 
 /-- `to_simple_func f` satisfies the predicate `mem_ℒp`. -/
 protected theorem mem_ℒp (f : lp.simpleFunc E p μ) : Memℒp (toSimpleFunc f) p μ :=
   Memℒp.ae_eq (to_simple_func_eq_to_fun f).symm <| mem_Lp_iff_mem_ℒp.mp (f : lp E p μ).2
 
 theorem to_Lp_to_simple_func (f : lp.simpleFunc E p μ) : toLp (toSimpleFunc f) (simpleFunc.mem_ℒp f) = f :=
-  simpleFunc.eq' (Classical.some_spec f.2)
+  simpleFunc.eq' (Classical.choose_spec f.2)
 
 theorem to_simple_func_to_Lp (f : α →ₛ E) (hfi : Memℒp f p μ) : toSimpleFunc (toLp f hfi) =ᵐ[μ] f := by
   rw [← ae_eq_fun.mk_eq_mk]
-  exact Classical.some_spec (to_Lp f hfi).2
+  exact Classical.choose_spec (to_Lp f hfi).2
 
 variable (E μ)
 

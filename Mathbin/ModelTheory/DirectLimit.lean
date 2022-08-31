@@ -114,12 +114,12 @@ noncomputable def sigmaStructure [IsDirected ι (· ≤ ·)] [Nonempty ι] : L.S
   funMap := fun n F x =>
     ⟨_,
       funMap F
-        (unify f x (Classical.some (Fintype.bdd_above_range fun a => (x a).1))
-          (Classical.some_spec (Fintype.bdd_above_range fun a => (x a).1)))⟩
+        (unify f x (Classical.choose (Fintype.bdd_above_range fun a => (x a).1))
+          (Classical.choose_spec (Fintype.bdd_above_range fun a => (x a).1)))⟩
   rel_map := fun n R x =>
     RelMap R
-      (unify f x (Classical.some (Fintype.bdd_above_range fun a => (x a).1))
-        (Classical.some_spec (Fintype.bdd_above_range fun a => (x a).1)))
+      (unify f x (Classical.choose (Fintype.bdd_above_range fun a => (x a).1))
+        (Classical.choose_spec (Fintype.bdd_above_range fun a => (x a).1)))
 
 end DirectLimit
 
@@ -176,12 +176,12 @@ theorem exists_unify_eq {α : Type _} [Fintype α] {x y : α → Σi, G i} (xy :
 theorem fun_map_equiv_unify {n : ℕ} (F : L.Functions n) (x : Finₓ n → Σi, G i) (i : ι)
     (hi : i ∈ UpperBounds (Range (Sigma.fst ∘ x))) :
     @funMap _ _ (sigmaStructure G f) _ F x ≈ ⟨_, funMap F (unify f x i hi)⟩ :=
-  fun_map_unify_equiv G f F x (Classical.some (Fintype.bdd_above_range fun a => (x a).1)) i _ hi
+  fun_map_unify_equiv G f F x (Classical.choose (Fintype.bdd_above_range fun a => (x a).1)) i _ hi
 
 theorem rel_map_equiv_unify {n : ℕ} (R : L.Relations n) (x : Finₓ n → Σi, G i) (i : ι)
     (hi : i ∈ UpperBounds (Range (Sigma.fst ∘ x))) :
     @RelMap _ _ (sigmaStructure G f) _ R x = RelMap R (unify f x i hi) :=
-  rel_map_unify_equiv G f R x (Classical.some (Fintype.bdd_above_range fun a => (x a).1)) i _ hi
+  rel_map_unify_equiv G f R x (Classical.choose (Fintype.bdd_above_range fun a => (x a).1)) i _ hi
 
 /-- The direct limit `setoid` respects the structure `sigma_structure`, so quotienting by it
   gives rise to a valid structure. -/
@@ -206,7 +206,7 @@ noncomputable instance structure : L.Structure (DirectLimit G f) :=
 theorem fun_map_quotient_mk_sigma_mk {n : ℕ} {F : L.Functions n} {i : ι} {x : Finₓ n → G i} :
     (funMap F fun a => (⟦⟨i, x a⟩⟧ : DirectLimit G f)) = ⟦⟨i, funMap F x⟩⟧ := by
   simp only [Function.comp_app, fun_map_quotient_mk, Quotientₓ.eq]
-  obtain ⟨k, ik, jk⟩ := directed_of (· ≤ ·) i (Classical.some (Fintype.bdd_above_range fun a : Finₓ n => i))
+  obtain ⟨k, ik, jk⟩ := directed_of (· ≤ ·) i (Classical.choose (Fintype.bdd_above_range fun a : Finₓ n => i))
   refine' ⟨k, jk, ik, _⟩
   simp only [embedding.map_fun, comp_unify]
   rfl
@@ -215,7 +215,7 @@ theorem fun_map_quotient_mk_sigma_mk {n : ℕ} {F : L.Functions n} {i : ι} {x :
 theorem rel_map_quotient_mk_sigma_mk {n : ℕ} {R : L.Relations n} {i : ι} {x : Finₓ n → G i} :
     (RelMap R fun a => (⟦⟨i, x a⟩⟧ : DirectLimit G f)) = RelMap R x := by
   rw [rel_map_quotient_mk]
-  obtain ⟨k, ik, jk⟩ := directed_of (· ≤ ·) i (Classical.some (Fintype.bdd_above_range fun a : Finₓ n => i))
+  obtain ⟨k, ik, jk⟩ := directed_of (· ≤ ·) i (Classical.choose (Fintype.bdd_above_range fun a : Finₓ n => i))
   rw [rel_map_equiv_unify G f R (fun a => ⟨i, x a⟩) i, unify_sigma_mk_self]
 
 theorem exists_quotient_mk_sigma_mk_eq {α : Type _} [Fintype α] (x : α → DirectLimit G f) :
@@ -320,8 +320,8 @@ theorem lift_unique (F : DirectLimit G f ↪[L] P) (x) :
 theorem cg {ι : Type _} [Encodable ι] [Preorderₓ ι] [IsDirected ι (· ≤ ·)] [Nonempty ι] {G : ι → Type w}
     [∀ i, L.Structure (G i)] (f : ∀ i j, i ≤ j → G i ↪[L] G j) (h : ∀ i, Structure.Cg L (G i))
     [DirectedSystem G fun i j h => f i j h] : Structure.Cg L (DirectLimit G f) := by
-  refine' ⟨⟨⋃ i, direct_limit.of L ι G f i '' Classical.some (h i).out, _, _⟩⟩
-  · exact Set.countable_Union fun i => Set.Countable.image (Classical.some_spec (h i).out).1 _
+  refine' ⟨⟨⋃ i, direct_limit.of L ι G f i '' Classical.choose (h i).out, _, _⟩⟩
+  · exact Set.countable_Union fun i => Set.Countable.image (Classical.choose_spec (h i).out).1 _
     
   · rw [eq_top_iff, substructure.closure_Union]
     simp_rw [← embedding.coe_to_hom, substructure.closure_image]
@@ -329,7 +329,7 @@ theorem cg {ι : Type _} [Encodable ι] [Preorderₓ ι] [IsDirected ι (· ≤ 
     intro S hS x hx
     let out := @Quotientₓ.out _ (direct_limit.setoid G f)
     refine' hS (out x).1 ⟨(out x).2, _, _⟩
-    · rw [(Classical.some_spec (h (out x).1).out).2]
+    · rw [(Classical.choose_spec (h (out x).1).out).2]
       simp only [substructure.coe_top]
       
     · simp only [embedding.coe_to_hom, direct_limit.of_apply, Sigma.eta, Quotientₓ.out_eq]

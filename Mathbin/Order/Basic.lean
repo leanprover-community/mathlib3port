@@ -451,7 +451,7 @@ theorem LinearOrderₓ.to_partial_order_injective {α : Type _} : Function.Injec
   injection h
   obtain rfl : A_le = B_le := ‹_›
   obtain rfl : A_lt = B_lt := ‹_›
-  obtain rfl : A_decidable_le = B_decidable_le := Subsingleton.elimₓ _ _
+  obtain rfl : A_decidable_le = B_decidable_le := Subsingleton.elim _ _
   obtain rfl : A_max = B_max := A_max_def.trans B_max_def.symm
   obtain rfl : A_min = B_min := A_min_def.trans B_min_def.symm
   congr

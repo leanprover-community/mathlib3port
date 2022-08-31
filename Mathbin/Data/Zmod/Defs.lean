@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 -/
 import Mathbin.Data.Int.Modeq
+import Mathbin.Algebra.NeZero
 
 /-!
 # Definition of `zmod n` + basic results.
@@ -88,8 +89,8 @@ instance Zmod.hasRepr : ∀ n : ℕ, HasRepr (Zmod n)
 
 namespace Zmod
 
-instance fintype : ∀ (n : ℕ) [Fact (0 < n)], Fintype (Zmod n)
-  | 0, h => (lt_irreflₓ _ h.1).elim
+instance fintype : ∀ (n : ℕ) [NeZero n], Fintype (Zmod n)
+  | 0, h => (NeZero.ne 0 rfl).elim
   | n + 1, _ => Finₓ.fintype (n + 1)
 
 instance infinite : Infinite (Zmod 0) :=

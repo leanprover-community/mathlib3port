@@ -788,7 +788,7 @@ theorem zip_with_apply {f : M → N → P} {hf : f 0 0 = 0} {g₁ : α →₀ M}
 
 theorem support_zip_with [D : DecidableEq α] {f : M → N → P} {hf : f 0 0 = 0} {g₁ : α →₀ M} {g₂ : α →₀ N} :
     (zipWith f hf g₁ g₂).Support ⊆ g₁.Support ∪ g₂.Support := by
-  rw [Subsingleton.elimₓ D] <;> exact support_on_finset_subset
+  rw [Subsingleton.elim D] <;> exact support_on_finset_subset
 
 end ZipWith
 

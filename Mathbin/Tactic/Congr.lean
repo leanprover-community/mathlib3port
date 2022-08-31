@@ -76,10 +76,10 @@ unsafe def congr' : Option ℕ → tactic Unit
 
 namespace Interactive
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr *»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- Same as the `congr` tactic, but takes an optional argument which gives
 the depth of recursive applications.
 * This is useful when `congr` is too aggressive in breaking down the goal.
@@ -90,13 +90,15 @@ the depth of recursive applications.
   For example, if the goal is `⊢ f '' s = g '' s` then `congr' with x` generates the goal
   `x : α ⊢ f x = g x`.
 -/
-unsafe def congr' (n : parse («expr ?» (with_desc "n" small_nat))) :
-    parse («expr ?» (tk "with" *> Prod.mk <$> «expr *» rintro_patt_parse_hi <*> «expr ?» (tk ":" *> small_nat))) →
+unsafe def congr' (n : parse (parser.optional (with_desc "n" small_nat))) :
+    parse
+        (parser.optional
+          (tk "with" *> Prod.mk <$> parser.many rintro_patt_parse_hi <*> parser.optional (tk ":" *> small_nat))) →
       tactic Unit
   | none => tactic.congr' n
   | some ⟨p, m⟩ => focus1 (tactic.congr' n >> all_goals' (tactic.ext p.join m $> ()))
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr *»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
 /-- Repeatedly and apply `congr'` and `ext`, using the given patterns as arguments for `ext`.
 
 There are two ways this tactic stops:
@@ -123,7 +125,7 @@ and `congr' with x` (or `congr', ext x`) would produce
 x : α ⊢ f x + 3 = g x + 3
 ```
 -/
-unsafe def rcongr : parse (List.join <$> «expr *» rintro_patt_parse_hi) → tactic Unit
+unsafe def rcongr : parse (List.join <$> parser.many rintro_patt_parse_hi) → tactic Unit
   | ps => do
     let t ← target
     let qs ← try_core (tactic.ext ps none)
@@ -141,8 +143,8 @@ add_tactic_doc
     declNames := [`tactic.interactive.congr', `tactic.interactive.congr, `tactic.interactive.rcongr],
     tags := ["congruence"], inheritDescriptionFrom := `tactic.interactive.congr' }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- The `exact e` and `refine e` tactics require a term `e` whose type is
 definitionally equal to the goal. `convert e` is similar to `refine e`,
 but the type of `e` is not required to exactly match the
@@ -183,8 +185,8 @@ the goal equals the type of `e`, then simplifying it using
 depth of matching (like `congr' n`). In the example, `convert e using
 1` would produce a new goal `⊢ n + n + 1 = 2 * n + 1`.
 -/
-unsafe def convert (sym : parse (with_desc "←" («expr ?» (tk "<-")))) (r : parse texpr)
-    (n : parse («expr ?» (tk "using" *> small_nat))) : tactic Unit := do
+unsafe def convert (sym : parse (with_desc "←" (parser.optional (tk "<-")))) (r : parse texpr)
+    (n : parse (parser.optional (tk "using" *> small_nat))) : tactic Unit := do
   let tgt ← target
   let u ← infer_type tgt
   let r ← i_to_expr (pquote.1 (%%ₓr : (_ : %%ₓu)))
@@ -205,7 +207,7 @@ add_tactic_doc
     tags := ["congruence"] }
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- `convert_to g using n` attempts to change the current goal to `g`, but unlike `change`,
 it will generate equality proof obligations using `congr' n` to resolve discrepancies.
 `convert_to g` defaults to using `congr' 1`.
@@ -214,13 +216,13 @@ it will generate equality proof obligations using `congr' n` to resolve discrepa
 `convert` takes a proof term.
 That is, `convert_to g using n` is equivalent to `convert (_ : g) using n`.
 -/
-unsafe def convert_to (r : parse texpr) (n : parse («expr ?» (tk "using" *> small_nat))) : tactic Unit :=
+unsafe def convert_to (r : parse texpr) (n : parse (parser.optional (tk "using" *> small_nat))) : tactic Unit :=
   match n with
   | none => convert_to_core r >> sorry
   | some 0 => convert_to_core r
   | some o => convert_to_core r >> tactic.congr' o
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- `ac_change g using n` is `convert_to g using n` followed by `ac_refl`. It is useful for
 rearranging/reassociating e.g. sums:
 ```lean
@@ -231,7 +233,7 @@ begin
 end
 ```
 -/
-unsafe def ac_change (r : parse texpr) (n : parse («expr ?» (tk "using" *> small_nat))) : tactic Unit :=
+unsafe def ac_change (r : parse texpr) (n : parse (parser.optional (tk "using" *> small_nat))) : tactic Unit :=
   andthen (convert_to r n) (try ac_refl)
 
 add_tactic_doc

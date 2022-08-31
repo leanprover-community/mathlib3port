@@ -268,7 +268,7 @@ variable [Mul α] [Add α] [LE α] [Mul β] [Add β] [LE β] [Mul γ] [Add γ] [
 
 /-- Reinterpret an ordered ring isomorphism as an order isomorphism. -/
 def toOrderIso (f : α ≃+*o β) : α ≃o β :=
-  ⟨f.toRingEquiv.toEquiv, f.map_le_map_iff'⟩
+  ⟨f.toRingEquiv.toEquiv, fun _ _ => f.map_le_map_iff'⟩
 
 instance : OrderRingIsoClass (α ≃+*o β) α β where
   coe := fun f => f.toFun
@@ -279,7 +279,7 @@ instance : OrderRingIsoClass (α ≃+*o β) α β where
     congr
   map_add := fun f => f.map_add'
   map_mul := fun f => f.map_mul'
-  map_le_map_iff := fun f => f.map_le_map_iff'
+  map_le_map_iff := fun f _ _ => f.map_le_map_iff'
   left_inv := fun f => f.left_inv
   right_inv := fun f => f.right_inv
 

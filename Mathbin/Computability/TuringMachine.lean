@@ -228,9 +228,10 @@ def ListBlank.cons {Γ} [Inhabited Γ] (a : Γ) (l : ListBlank Γ) : ListBlank �
       rintro _ _ ⟨i, rfl⟩
       exact Quotientₓ.sound' (Or.inl ⟨i, rfl⟩))
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem ListBlank.cons_mk {Γ} [Inhabited Γ] (a : Γ) (l : List Γ) :
-    ListBlank.cons a (ListBlank.mk l) = ListBlank.mk (a :: l) :=
+    ListBlank.cons a (ListBlank.mk l) = ListBlank.mk (a::l) :=
   rfl
 
 @[simp]
@@ -412,11 +413,12 @@ theorem ListBlank.map_modify_nth {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (F : Po
   induction' n with n IH generalizing L <;>
     simp only [*, list_blank.head_map, list_blank.modify_nth, list_blank.map_cons, list_blank.tail_map]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Append a list on the left side of a list_blank. -/
 @[simp]
 def ListBlank.append {Γ} [Inhabited Γ] : List Γ → ListBlank Γ → ListBlank Γ
   | [], L => L
-  | a :: l, L => ListBlank.cons a (list_blank.append l L)
+  | a::l, L => ListBlank.cons a (list_blank.append l L)
 
 @[simp]
 theorem ListBlank.append_mk {Γ} [Inhabited Γ] (l₁ l₂ : List Γ) :
@@ -1326,13 +1328,13 @@ parameter {Λ : Type _}[Inhabited Λ]
 
 parameter {σ : Type _}[Inhabited σ]
 
--- mathport name: «exprstmt₁»
+-- mathport name: exprstmt₁
 local notation "stmt₁" => TM1.Stmt Γ Λ σ
 
--- mathport name: «exprcfg₁»
+-- mathport name: exprcfg₁
 local notation "cfg₁" => TM1.Cfg Γ Λ σ
 
--- mathport name: «exprstmt₀»
+-- mathport name: exprstmt₀
 local notation "stmt₀" => TM0.Stmt Γ
 
 parameter (M : Λ → stmt₁)
@@ -1368,7 +1370,7 @@ def trAux (s : Γ) : stmt₁ → σ → Λ' × stmt₀
   | TM1.stmt.goto l, v => ((some (M (l s v)), v), write s)
   | TM1.stmt.halt, v => ((none, v), write s)
 
--- mathport name: «exprcfg₀»
+-- mathport name: exprcfg₀
 local notation "cfg₀" => TM0.Cfg Γ Λ'
 
 /-- The translated TM0 machine (given the TM1 machine input). -/
@@ -1424,6 +1426,7 @@ theorem tr_eval (l : List Γ) : TM0.eval tr l = TM1.eval M l :=
 
 variable [Fintype σ]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Given a finite set of accessible `Λ` machine states, there is a finite set of accessible
 machine states in the target (even though the type `Λ'` is infinite). -/
 noncomputable def trStmts (S : Finset Λ) : Finset Λ' :=
@@ -1534,10 +1537,10 @@ parameter {Λ : Type _}[Inhabited Λ]
 
 parameter {σ : Type _}[Inhabited σ]
 
--- mathport name: «exprstmt₁»
+-- mathport name: exprstmt₁
 local notation "stmt₁" => Stmt Γ Λ σ
 
--- mathport name: «exprcfg₁»
+-- mathport name: exprcfg₁
 local notation "cfg₁" => Cfg Γ Λ σ
 
 /-- The configuration state of the TM. -/
@@ -1548,10 +1551,10 @@ inductive Λ' : Type max u_1 u_2 u_3
 instance : Inhabited Λ' :=
   ⟨Λ'.normal default⟩
 
--- mathport name: «exprstmt'»
+-- mathport name: exprstmt'
 local notation "stmt'" => Stmt Bool Λ' σ
 
--- mathport name: «exprcfg'»
+-- mathport name: exprcfg'
 local notation "cfg'" => Cfg Bool Λ' σ
 
 /-- Read a vector of length `n` from the tape. -/
@@ -1572,10 +1575,11 @@ then return to the original position with `n` moves to the left. -/
 def read (f : Γ → stmt') : stmt' :=
   read_aux n fun v => move Dir.left <| f (dec v)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Write a list of bools on the tape. -/
 def write : List Bool → stmt' → stmt'
   | [], q => q
-  | a :: l, q => (Stmt.write fun _ _ => a) <| Stmt.move Dir.right <| write l q
+  | a::l, q => (Stmt.write fun _ _ => a) <| Stmt.move Dir.right <| write l q
 
 /-- Translate a normal instruction. For the `write` command, we use a `goto` indirection so that
 we can access the current value of the tape. -/
@@ -1884,13 +1888,13 @@ inductive Λ'
 instance : Inhabited Λ' :=
   ⟨Λ'.normal default⟩
 
--- mathport name: «exprcfg₀»
+-- mathport name: exprcfg₀
 local notation "cfg₀" => TM0.Cfg Γ Λ
 
--- mathport name: «exprstmt₁»
+-- mathport name: exprstmt₁
 local notation "stmt₁" => TM1.Stmt Γ Λ' Unit
 
--- mathport name: «exprcfg₁»
+-- mathport name: exprcfg₁
 local notation "cfg₁" => TM1.Cfg Γ Λ' Unit
 
 parameter (M : TM0.Machine Γ Λ)
@@ -2019,10 +2023,11 @@ instance Cfg.inhabited [Inhabited σ] : Inhabited cfg :=
 
 parameter {Γ Λ σ K}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The step function for the TM2 model. -/
 @[simp]
 def stepAux : stmt → σ → (∀ k, List (Γ k)) → cfg
-  | push k f q, v, S => step_aux q v (update S k (f v :: S k))
+  | push k f q, v, S => step_aux q v (update S k (f v::S k))
   | peek k f q, v, S => step_aux q (f v (S k).head') S
   | pop k f q, v, S => step_aux q (f v (S k).head') (update S k (S k).tail)
   | load a q, v, S => step_aux q (a v) S
@@ -2220,10 +2225,10 @@ parameter {Λ : Type _}[Inhabited Λ]
 
 parameter {σ : Type _}[Inhabited σ]
 
--- mathport name: «exprstmt₂»
+-- mathport name: exprstmt₂
 local notation "stmt₂" => TM2.Stmt Γ Λ σ
 
--- mathport name: «exprcfg₂»
+-- mathport name: exprcfg₂
 local notation "cfg₂" => TM2.Cfg Γ Λ σ
 
 -- [decidable_eq K]: Because K is a parameter, we cannot easily skip
@@ -2299,9 +2304,10 @@ def stVar {k : K} (v : σ) (l : List (Γ k)) : st_act k → σ
   | peek f => f v l.head'
   | pop f => f v l.head'
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The effect of a stack action on the stack. -/
 def stWrite {k : K} (v : σ) (l : List (Γ k)) : st_act k → List (Γ k)
-  | push f => f v :: l
+  | push f => f v::l
   | peek f => l
   | pop f => l.tail
 
@@ -2340,10 +2346,10 @@ open Λ'
 instance Λ'.inhabited : Inhabited Λ' :=
   ⟨normal default⟩
 
--- mathport name: «exprstmt₁»
+-- mathport name: exprstmt₁
 local notation "stmt₁" => TM1.Stmt Γ' Λ' σ
 
--- mathport name: «exprcfg₁»
+-- mathport name: exprcfg₁
 local notation "cfg₁" => TM1.Cfg Γ' Λ' σ
 
 open TM1.Stmt
@@ -2357,11 +2363,12 @@ def trStAct {k} (q : stmt₁) : st_act k → stmt₁
     branch (fun a _ => a.1) (load (fun a s => f s none) q)
       (move Dir.left <| (load fun a s => f s (a.2 k)) <| write (fun a s => (a.1, update a.2 k none)) q)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The initial state for the TM2 emulator, given an initial TM2 state. All stacks start out empty
 except for the input stack, and the stack bottom mark is set at the head. -/
 def trInit (k) (L : List (Γ k)) : List Γ' :=
   let L' : List Γ' := L.reverse.map fun a => (false, update (fun _ => none) k a)
-  (true, L'.head.2) :: L'.tail
+  (true, L'.head.2)::L'.tail
 
 theorem step_run {k : K} (q v S) :
     ∀ s : st_act k, TM2.stepAux (st_run s q) v S = TM2.stepAux q (st_var v (S k) s) (update S k (st_write v (S k) s))

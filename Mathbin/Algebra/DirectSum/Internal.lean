@@ -130,6 +130,7 @@ theorem DirectSum.coe_ring_hom_of [AddMonoidₓ ι] [Semiringₓ R] [SetLike σ 
     [SetLike.GradedMonoid A] (i : ι) (x : A i) : DirectSum.coeRingHom A (DirectSum.of (fun i => A i) i x) = x :=
   DirectSum.to_semiring_of _ _ _ _ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem DirectSum.coe_mul_apply [AddMonoidₓ ι] [Semiringₓ R] [SetLike σ R] [AddSubmonoidClass σ R] (A : ι → σ)
     [SetLike.GradedMonoid A] [∀ (i : ι) (x : A i), Decidable (x ≠ 0)] (r r' : ⨁ i, A i) (i : ι) :
     ((r * r') i : R) = ∑ ij in (r.support ×ˢ r'.support).filter fun ij : ι × ι => ij.1 + ij.2 = i, r ij.1 * r' ij.2 :=

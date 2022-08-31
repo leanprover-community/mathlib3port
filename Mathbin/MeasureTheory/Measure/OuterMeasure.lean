@@ -5,6 +5,7 @@ Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Analysis.SpecificLimits.Basic
 import Mathbin.MeasureTheory.PiSystem
+import Mathbin.Data.Countable.Basic
 import Mathbin.Data.Fin.VecNotation
 import Mathbin.Topology.Algebra.InfiniteSum
 
@@ -53,7 +54,7 @@ outer measure, Carathéodory-measurable, Carathéodory's criterion
 
 noncomputable section
 
-open Set Finset Function Filter Encodable
+open Set Finset Function Filter
 
 open TopologicalSpace (SecondCountableTopology)
 
@@ -94,14 +95,14 @@ theorem mono_null (m : OuterMeasure α) {s t} (h : s ⊆ t) (ht : m t = 0) : m s
 theorem pos_of_subset_ne_zero (m : OuterMeasure α) {a b : Set α} (hs : a ⊆ b) (hnz : m a ≠ 0) : 0 < m b :=
   lt_of_lt_of_leₓ (pos_iff_ne_zero.mpr hnz) (m.mono hs)
 
-protected theorem Union (m : OuterMeasure α) {β} [Encodable β] (s : β → Set α) : m (⋃ i, s i) ≤ ∑' i, m (s i) :=
+protected theorem Union (m : OuterMeasure α) {β} [Countable β] (s : β → Set α) : m (⋃ i, s i) ≤ ∑' i, m (s i) :=
   rel_supr_tsum m m.Empty (· ≤ ·) m.Union_nat s
 
-theorem Union_null [Encodable β] (m : OuterMeasure α) {s : β → Set α} (h : ∀ i, m (s i) = 0) : m (⋃ i, s i) = 0 := by
+theorem Union_null [Countable β] (m : OuterMeasure α) {s : β → Set α} (h : ∀ i, m (s i) = 0) : m (⋃ i, s i) = 0 := by
   simpa [h] using m.Union s
 
 @[simp]
-theorem Union_null_iff [Encodable β] (m : OuterMeasure α) {s : β → Set α} : m (⋃ i, s i) = 0 ↔ ∀ i, m (s i) = 0 :=
+theorem Union_null_iff [Countable β] (m : OuterMeasure α) {s : β → Set α} : m (⋃ i, s i) = 0 ↔ ∀ i, m (s i) = 0 :=
   ⟨fun h i => m.mono_null (subset_Union _ _) h, m.Union_null⟩
 
 theorem bUnion_null_iff (m : OuterMeasure α) {s : Set β} (hs : s.Countable) {t : β → Set α} :
@@ -580,7 +581,7 @@ protected def ofFunction : OuterMeasure α :=
     Union_nat := fun s =>
       Ennreal.le_of_forall_pos_le_add <| by
         intro ε hε(hb : (∑' i, μ (s i)) < ∞)
-        rcases Ennreal.exists_pos_sum_of_encodable (Ennreal.coe_pos.2 hε).ne' ℕ with ⟨ε', hε', hl⟩
+        rcases Ennreal.exists_pos_sum_of_countable (Ennreal.coe_pos.2 hε).ne' ℕ with ⟨ε', hε', hl⟩
         refine' le_transₓ _ (add_le_add_left (le_of_ltₓ hl) _)
         rw [← Ennreal.tsum_add]
         choose f hf using
@@ -1243,8 +1244,9 @@ section Unions
 
 include P0 m0 PU mU
 
-theorem extend_Union {β} [Encodable β] {f : β → Set α} (hd : Pairwise (Disjoint on f)) (hm : ∀ i, P (f i)) :
+theorem extend_Union {β} [Countable β] {f : β → Set α} (hd : Pairwise (Disjoint on f)) (hm : ∀ i, P (f i)) :
     extend m (⋃ i, f i) = ∑' i, extend m (f i) := by
+  cases nonempty_encodable β
   rw [← Encodable.Union_decode₂, ← tsum_Union_decode₂]
   · exact
       extend_Union_nat PU (fun n => Encodable.Union_decode₂_cases P0 hm) (mU _ (Encodable.Union_decode₂_disjoint_on hd))
@@ -1496,7 +1498,7 @@ theorem exists_measurable_superset_of_trim_eq_zero {m : OuterMeasure α} {s : Se
 
 /-- If `μ i` is a countable family of outer measures, then for every set `s` there exists
 a measurable set `t ⊇ s` such that `μ i t = (μ i).trim s` for all `i`. -/
-theorem exists_measurable_superset_forall_eq_trim {ι} [Encodable ι] (μ : ι → OuterMeasure α) (s : Set α) :
+theorem exists_measurable_superset_forall_eq_trim {ι} [Countable ι] (μ : ι → OuterMeasure α) (s : Set α) :
     ∃ t, s ⊆ t ∧ MeasurableSet t ∧ ∀ i, μ i t = (μ i).trim s := by
   choose t hst ht hμt using fun i => (μ i).exists_measurable_superset_eq_trim s
   replace hst := subset_Inter hst
@@ -1532,9 +1534,12 @@ theorem trim_sup (m₁ m₂ : OuterMeasure α) : (m₁⊔m₂).trim = m₁.trim�
 
 /-- `trim` sends the supremum of a countable family of outer measures to the supremum
 of the trimmed measures. -/
-theorem trim_supr {ι} [Encodable ι] (μ : ι → OuterMeasure α) : trim (⨆ i, μ i) = ⨆ i, trim (μ i) := by
+theorem trim_supr {ι} [Countable ι] (μ : ι → OuterMeasure α) : trim (⨆ i, μ i) = ⨆ i, trim (μ i) := by
+  simp_rw [← @supr_plift_down _ ι]
   ext1 s
-  rcases exists_measurable_superset_forall_eq_trim (Option.elimₓ (supr μ) μ) s with ⟨t, hst, ht, hμt⟩
+  haveI : Countable (Option <| Plift ι) := @Option.countable (Plift ι) _
+  obtain ⟨t, hst, ht, hμt⟩ :=
+    exists_measurable_superset_forall_eq_trim (Option.elimₓ (⨆ i, μ (Plift.down i)) (μ ∘ Plift.down)) s
   simp only [Option.forall, Option.elimₓ] at hμt
   simp only [supr_apply, ← hμt.1, ← hμt.2]
 

@@ -484,8 +484,9 @@ theorem foldr_cons_eq_to_list : ∀ (t : Ordnode α) (r : List α), t.foldr List
 theorem to_list_nil : toList (@nil α) = [] :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem to_list_node (s l x r) : toList (@node α s l x r) = toList l ++ x :: toList r := by
+theorem to_list_node (s l x r) : toList (@node α s l x r) = toList l ++ x::toList r := by
   rw [to_list, foldr, foldr_cons_eq_to_list] <;> rfl
 
 theorem emem_iff_mem_to_list {x : α} {t} : Emem x t ↔ x ∈ toList t := by

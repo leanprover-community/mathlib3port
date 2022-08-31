@@ -200,20 +200,13 @@ section LinearOrderₓ
 
 variable [LinearOrderₓ α]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-instance tendsto_Icc_interval_interval {a b : α} :
-    TendstoIxxClass Icc (𝓟 "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")
-      (𝓟 "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") :=
+instance tendsto_Icc_interval_interval {a b : α} : TendstoIxxClass Icc (𝓟 [a, b]) (𝓟 [a, b]) :=
   Filter.tendsto_Icc_Icc_Icc
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-instance tendsto_Ioc_interval_interval {a b : α} :
-    TendstoIxxClass Ioc (𝓟 "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")
-      (𝓟 "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") :=
+instance tendsto_Ioc_interval_interval {a b : α} : TendstoIxxClass Ioc (𝓟 [a, b]) (𝓟 [a, b]) :=
   Filter.tendsto_Ioc_Icc_Icc
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance tendsto_interval_of_Icc {l : Filter α} [TendstoIxxClass Icc l l] : TendstoIxxClass Interval l l := by
   refine' ⟨fun s hs => mem_map.2 <| mem_prod_self_iff.2 _⟩
   obtain ⟨t, htl, hts⟩ : ∃ t ∈ l, ∀ p ∈ (t : Set α) ×ˢ t, Icc (p : α × α).1 p.2 ∈ s
@@ -227,10 +220,8 @@ instance tendsto_interval_of_Icc {l : Filter α} [TendstoIxxClass Icc l l] : Ten
     exact hts ⟨p.2, p.1⟩ ⟨hp.2, hp.1⟩
     
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 theorem Tendsto.interval {l : Filter α} [TendstoIxxClass Icc l l] {f g : β → α} {lb : Filter β} (hf : Tendsto f lb l)
-    (hg : Tendsto g lb l) :
-    Tendsto (fun x => "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") lb l.smallSets :=
+    (hg : Tendsto g lb l) : Tendsto (fun x => [f x, g x]) lb l.smallSets :=
   TendstoIxxClass.tendsto_Ixx.comp <| hf.prod_mk hg
 
 end LinearOrderₓ

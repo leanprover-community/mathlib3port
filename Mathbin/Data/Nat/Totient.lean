@@ -30,7 +30,7 @@ coprime with `n`. -/
 def totient (n : ℕ) : ℕ :=
   ((range n).filter n.Coprime).card
 
--- mathport name: «exprφ»
+-- mathport name: nat.totient
 localized [Nat] notation "φ" => Nat.totient
 
 @[simp]
@@ -105,12 +105,11 @@ open Zmod
 /-- Note this takes an explicit `fintype ((zmod n)ˣ)` argument to avoid trouble with instance
 diamonds. -/
 @[simp]
-theorem _root_.zmod.card_units_eq_totient (n : ℕ) [h : Fact (0 < n)] [Fintype (Zmod n)ˣ] :
-    Fintype.card (Zmod n)ˣ = φ n :=
+theorem _root_.zmod.card_units_eq_totient (n : ℕ) [NeZero n] [Fintype (Zmod n)ˣ] : Fintype.card (Zmod n)ˣ = φ n :=
   calc
     Fintype.card (Zmod n)ˣ = Fintype.card { x : Zmod n // x.val.Coprime n } := Fintype.card_congr Zmod.unitsEquivCoprime
     _ = φ n := by
-      obtain ⟨m, rfl⟩ : ∃ m, n = m + 1 := exists_eq_succ_of_ne_zero h.out.ne'
+      obtain ⟨m, rfl⟩ : ∃ m, n = m + 1 := exists_eq_succ_of_ne_zero NeZero.out
       simp only [totient, Finset.card_eq_sum_ones, Fintype.card_subtype, Finset.sum_filter, ←
         Finₓ.sum_univ_eq_sum_range, @Nat.coprime_commₓ (m + 1)]
       rfl
@@ -118,6 +117,7 @@ theorem _root_.zmod.card_units_eq_totient (n : ℕ) [h : Fact (0 < n)] [Fintype 
 
 theorem totient_even {n : ℕ} (hn : 2 < n) : Even n.totient := by
   haveI : Fact (1 < n) := ⟨one_lt_two.trans hn⟩
+  haveI : NeZero n := NeZero.of_gt hn
   suffices 2 = orderOf (-1 : (Zmod n)ˣ) by
     rw [← Zmod.card_units_eq_totient, even_iff_two_dvd, this]
     exact order_of_dvd_card_univ
@@ -127,9 +127,9 @@ theorem totient_mul {m n : ℕ} (h : m.Coprime n) : φ (m * n) = φ m * φ n :=
   if hmn0 : m * n = 0 then by
     cases' Nat.mul_eq_zero.1 hmn0 with h h <;> simp only [totient_zero, mul_zero, zero_mul, h]
   else by
-    haveI : Fact (0 < m * n) := ⟨Nat.pos_of_ne_zeroₓ hmn0⟩
-    haveI : Fact (0 < m) := ⟨Nat.pos_of_ne_zeroₓ <| left_ne_zero_of_mul hmn0⟩
-    haveI : Fact (0 < n) := ⟨Nat.pos_of_ne_zeroₓ <| right_ne_zero_of_mul hmn0⟩
+    haveI : NeZero (m * n) := ⟨hmn0⟩
+    haveI : NeZero m := ⟨left_ne_zero_of_mul hmn0⟩
+    haveI : NeZero n := ⟨right_ne_zero_of_mul hmn0⟩
     simp only [← Zmod.card_units_eq_totient]
     rw [Fintype.card_congr (Units.mapEquiv (Zmod.chineseRemainder h).toMulEquiv).toEquiv,
       Fintype.card_congr (@MulEquiv.prodUnits (Zmod m) (Zmod n) _ _).toEquiv, Fintype.card_prod]
@@ -231,12 +231,12 @@ theorem totient_eq_iff_prime {p : ℕ} (hp : 0 < p) : p.totient = p - 1 ↔ p.Pr
   rwa [succ_le_iff, pos_iff_ne_zero]
 
 theorem card_units_zmod_lt_sub_one {p : ℕ} (hp : 1 < p) [Fintype (Zmod p)ˣ] : Fintype.card (Zmod p)ˣ ≤ p - 1 := by
-  haveI : Fact (0 < p) := ⟨zero_lt_one.trans hp⟩
+  haveI : NeZero p := ⟨(pos_of_gt hp).ne'⟩
   rw [Zmod.card_units_eq_totient p]
   exact Nat.le_pred_of_ltₓ (Nat.totient_lt p hp)
 
 theorem prime_iff_card_units (p : ℕ) [Fintype (Zmod p)ˣ] : p.Prime ↔ Fintype.card (Zmod p)ˣ = p - 1 := by
-  by_cases' hp : p = 0
+  cases' eq_zero_or_ne_zero p with hp hp
   · subst hp
     simp only [Zmod, not_prime_zero, false_iffₓ, zero_tsub]
     -- the substI created an non-defeq but subsingleton instance diamond; resolve it
@@ -244,8 +244,7 @@ theorem prime_iff_card_units (p : ℕ) [Fintype (Zmod p)ˣ] : p.Prime ↔ Fintyp
       convert this
     simp
     
-  haveI : Fact (0 < p) := ⟨Nat.pos_of_ne_zeroₓ hp⟩
-  rw [Zmod.card_units_eq_totient, Nat.totient_eq_iff_prime (Fact.out (0 < p))]
+  rw [Zmod.card_units_eq_totient, Nat.totient_eq_iff_prime <| NeZero.pos p]
 
 @[simp]
 theorem totient_two : φ 2 = 1 :=

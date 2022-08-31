@@ -418,8 +418,8 @@ section mul_addₓ
 /-- Supgroups of a group `G` are isomorphic to additive subgroups of `additive G`. -/
 @[simps]
 def Subgroup.toAddSubgroup : Subgroup G ≃o AddSubgroup (Additive G) where
-  toFun := fun S => { S.toSubmonoid.toAddSubmonoid with neg_mem' := S.inv_mem' }
-  invFun := fun S => { S.toAddSubmonoid.toSubmonoid' with inv_mem' := S.neg_mem' }
+  toFun := fun S => { S.toSubmonoid.toAddSubmonoid with neg_mem' := fun _ => S.inv_mem' }
+  invFun := fun S => { S.toAddSubmonoid.toSubmonoid' with inv_mem' := fun _ => S.neg_mem' }
   left_inv := fun x => by
     cases x <;> rfl
   right_inv := fun x => by
@@ -434,8 +434,8 @@ abbrev AddSubgroup.toSubgroup' : AddSubgroup (Additive G) ≃o Subgroup G :=
 -/
 @[simps]
 def AddSubgroup.toSubgroup : AddSubgroup A ≃o Subgroup (Multiplicative A) where
-  toFun := fun S => { S.toAddSubmonoid.toSubmonoid with inv_mem' := S.neg_mem' }
-  invFun := fun S => { S.toSubmonoid.toAddSubmonoid' with neg_mem' := S.inv_mem' }
+  toFun := fun S => { S.toAddSubmonoid.toSubmonoid with inv_mem' := fun _ => S.neg_mem' }
+  invFun := fun S => { S.toSubmonoid.toAddSubmonoid' with neg_mem' := fun _ => S.inv_mem' }
   left_inv := fun x => by
     cases x <;> rfl
   right_inv := fun x => by
@@ -460,8 +460,8 @@ equalities.-/
 protected def copy (K : Subgroup G) (s : Set G) (hs : s = K) : Subgroup G where
   Carrier := s
   one_mem' := hs.symm ▸ K.one_mem'
-  mul_mem' := hs.symm ▸ K.mul_mem'
-  inv_mem' := hs.symm ▸ K.inv_mem'
+  mul_mem' := fun _ _ => hs.symm ▸ K.mul_mem'
+  inv_mem' := fun _ => hs.symm ▸ K.inv_mem'
 
 @[simp, to_additive]
 theorem coe_copy (K : Subgroup G) (s : Set G) (hs : s = ↑K) : (K.copy s hs : Set G) = s :=
@@ -755,7 +755,7 @@ theorem eq_bot_iff_forall : H = ⊥ ↔ ∀ x ∈ H, x = (1 : G) := by
 theorem eq_bot_of_subsingleton [Subsingleton H] : H = ⊥ := by
   rw [Subgroup.eq_bot_iff_forall]
   intro y hy
-  rw [← Subgroup.coe_mk H y hy, Subsingleton.elimₓ (⟨y, hy⟩ : H) 1, Subgroup.coe_one]
+  rw [← Subgroup.coe_mk H y hy, Subsingleton.elim (⟨y, hy⟩ : H) 1, Subgroup.coe_one]
 
 @[to_additive]
 theorem coe_eq_univ {H : Subgroup G} : (H : Set G) = Set.Univ ↔ H = ⊤ :=
@@ -912,12 +912,12 @@ theorem mem_Sup_of_mem {S : Set (Subgroup G)} {s : Subgroup G} (hs : s ∈ S) : 
 theorem subsingleton_iff : Subsingleton (Subgroup G) ↔ Subsingleton G :=
   ⟨fun h =>
     ⟨fun x y =>
-      have : ∀ i : G, i = 1 := fun i => mem_bot.mp <| Subsingleton.elimₓ (⊤ : Subgroup G) ⊥ ▸ mem_top i
+      have : ∀ i : G, i = 1 := fun i => mem_bot.mp <| Subsingleton.elim (⊤ : Subgroup G) ⊥ ▸ mem_top i
       (this x).trans (this y).symm⟩,
     fun h =>
     ⟨fun x y =>
       Subgroup.ext fun i =>
-        Subsingleton.elimₓ 1 i ▸ by
+        Subsingleton.elim 1 i ▸ by
           simp [Subgroup.one_mem]⟩⟩
 
 @[simp, to_additive]
@@ -926,7 +926,7 @@ theorem nontrivial_iff : Nontrivial (Subgroup G) ↔ Nontrivial G :=
 
 @[to_additive]
 instance [Subsingleton G] : Unique (Subgroup G) :=
-  ⟨⟨⊥⟩, fun a => @Subsingleton.elimₓ _ (subsingleton_iff.mpr ‹_›) a _⟩
+  ⟨⟨⊥⟩, fun a => @Subsingleton.elim _ (subsingleton_iff.mpr ‹_›) a _⟩
 
 @[to_additive]
 instance [Nontrivial G] : Nontrivial (Subgroup G) :=
@@ -1402,11 +1402,11 @@ theorem top_subgroup_of : (⊤ : Subgroup G).subgroupOf H = ⊤ :=
 
 @[to_additive]
 theorem subgroup_of_bot_eq_bot : H.subgroupOf ⊥ = ⊥ :=
-  Subsingleton.elimₓ _ _
+  Subsingleton.elim _ _
 
 @[to_additive]
 theorem subgroup_of_bot_eq_top : H.subgroupOf ⊥ = ⊤ :=
-  Subsingleton.elimₓ _ _
+  Subsingleton.elim _ _
 
 @[simp, to_additive]
 theorem subgroup_of_self : H.subgroupOf H = ⊤ :=
@@ -1418,6 +1418,7 @@ theorem subgroup_of_self : H.subgroupOf H = ⊤ :=
 def prod (H : Subgroup G) (K : Subgroup N) : Subgroup (G × N) :=
   { Submonoid.prod H.toSubmonoid K.toSubmonoid with inv_mem' := fun _ hx => ⟨H.inv_mem' hx.1, K.inv_mem' hx.2⟩ }
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive coe_prod]
 theorem coe_prod (H : Subgroup G) (K : Subgroup N) : (H.Prod K : Set (G × N)) = H ×ˢ K :=
   rfl
@@ -3342,6 +3343,10 @@ def oppositeEquiv (H : Subgroup G) : H ≃ H.opposite :=
 @[to_additive]
 instance (H : Subgroup G) [Encodable H] : Encodable H.opposite :=
   Encodable.ofEquiv H H.oppositeEquiv.symm
+
+@[to_additive]
+instance (H : Subgroup G) [Countable H] : Countable H.opposite :=
+  Countable.of_equiv H H.oppositeEquiv
 
 @[to_additive]
 theorem smul_opposite_mul {H : Subgroup G} (x g : G) (h : H.opposite) : h • (g * x) = g * h • x := by

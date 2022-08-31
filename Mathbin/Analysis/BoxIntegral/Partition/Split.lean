@@ -271,7 +271,7 @@ theorem not_disjoint_imp_le_of_subset_of_mem_split_many {I J Js : Box ι} {s : F
 
 section Fintype
 
-variable [Fintype ι]
+variable [Finite ι]
 
 /-- Let `s` be a finite set of boxes in `ℝⁿ = ι → ℝ`. Then there exists a finite set `t₀` of
 hyperplanes (namely, the set of all hyperfaces of boxes in `s`) such that for any `t ⊇ t₀`
@@ -282,6 +282,7 @@ theorem eventually_not_disjoint_imp_le_of_mem_split_many (s : Finset (Box ι)) :
     ∀ᶠ t : Finset (ι × ℝ) in at_top,
       ∀ (I : Box ι), ∀ J ∈ s, ∀ J' ∈ splitMany I t, ¬Disjoint (J : WithBot (Box ι)) J' → J' ≤ J :=
   by
+  cases nonempty_fintype ι
   refine'
     eventually_at_top.2
       ⟨s.bUnion fun J => finset.univ.bUnion fun i => {(i, J i), (i, J.upper i)}, fun t ht I J hJ J' hJ' =>

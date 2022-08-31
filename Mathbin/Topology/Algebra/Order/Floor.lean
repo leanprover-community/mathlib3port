@@ -143,11 +143,14 @@ theorem tendsto_fract_right [OrderClosedTopology α] [TopologicalAddGroup α] (n
   tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ (tendsto_fract_right' _)
     (eventually_of_forall fract_nonneg)
 
--- mathport name: «exprI»
+-- mathport name: exprI
 local notation "I" => (Icc 0 1 : Set α)
 
 variable [OrderTopology α] [TopologicalAddGroup α] [TopologicalSpace β] [TopologicalSpace γ]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Do not use this, use `continuous_on.comp_fract` instead. -/
 theorem ContinuousOn.comp_fract' {f : β → α → γ} (h : ContinuousOn (uncurry f) <| univ ×ˢ I) (hf : ∀ s, f s 0 = f s 1) :
     Continuous fun st : β × α => f st.1 <| fract st.2 := by
@@ -199,6 +202,7 @@ theorem ContinuousOn.comp_fract' {f : β → α → γ} (h : ContinuousOn (uncur
           (eventually_of_forall fun x => ⟨fract_nonneg _, (fract_lt_one _).le⟩))
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem ContinuousOn.comp_fract {s : β → α} {f : β → α → γ} (h : ContinuousOn (uncurry f) <| univ ×ˢ Icc 0 1)
     (hs : Continuous s) (hf : ∀ s, f s 0 = f s 1) : Continuous fun x : β => f x <| Int.fract (s x) :=
   (h.comp_fract' hf).comp (continuous_id.prod_mk hs)

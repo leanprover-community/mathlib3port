@@ -128,10 +128,11 @@ theorem ext {s t : VectorMeasure α M} (h : ∀ i : Set α, MeasurableSet i → 
 
 variable [T2Space M] {v : VectorMeasure α M} {f : ℕ → Set α}
 
-theorem has_sum_of_disjoint_Union [Encodable β] {f : β → Set α} (hf₁ : ∀ i, MeasurableSet (f i))
+theorem has_sum_of_disjoint_Union [Countable β] {f : β → Set α} (hf₁ : ∀ i, MeasurableSet (f i))
     (hf₂ : Pairwise (Disjoint on f)) : HasSum (fun i => v (f i)) (v (⋃ i, f i)) := by
+  cases nonempty_encodable β
   set g := fun i : ℕ => ⋃ (b : β) (H : b ∈ Encodable.decode₂ β i), f b with hg
-  have hg₁ : ∀ i, MeasurableSet (g i) := fun _ => MeasurableSet.Union fun b => MeasurableSet.Union_Prop fun _ => hf₁ b
+  have hg₁ : ∀ i, MeasurableSet (g i) := fun _ => MeasurableSet.Union fun b => MeasurableSet.Union fun _ => hf₁ b
   have hg₂ : Pairwise (Disjoint on g) := Encodable.Union_decode₂_disjoint_on hf₂
   have := v.of_disjoint_Union_nat hg₁ hg₂
   rw [hg, Encodable.Union_decode₂] at this
@@ -166,7 +167,7 @@ theorem has_sum_of_disjoint_Union [Encodable β] {f : β → Set α} (hf₁ : �
       
     
 
-theorem of_disjoint_Union [Encodable β] {f : β → Set α} (hf₁ : ∀ i, MeasurableSet (f i))
+theorem of_disjoint_Union [Countable β] {f : β → Set α} (hf₁ : ∀ i, MeasurableSet (f i))
     (hf₂ : Pairwise (Disjoint on f)) : v (⋃ i, f i) = ∑' i, v (f i) :=
   (has_sum_of_disjoint_Union hf₁ hf₂).tsum_eq.symm
 
@@ -837,7 +838,7 @@ theorem le_iff' : v ≤ w ↔ ∀ i, v i ≤ w i := by
 
 end
 
--- mathport name: «expr ≤[ ] »
+-- mathport name: vector_measure.restrict
 localized [MeasureTheory]
   notation:50 v " ≤[" i:50 "] " w:50 =>
     MeasureTheory.VectorMeasure.restrict v i ≤ MeasureTheory.VectorMeasure.restrict w i
@@ -947,8 +948,9 @@ theorem restrict_le_restrict_Union {f : ℕ → Set α} (hf₁ : ∀ n, Measurab
   · exact fun n => ha₁.inter (MeasurableSet.disjointed hf₁ n)
     
 
-theorem restrict_le_restrict_encodable_Union [Encodable β] {f : β → Set α} (hf₁ : ∀ b, MeasurableSet (f b))
+theorem restrict_le_restrict_countable_Union [Countable β] {f : β → Set α} (hf₁ : ∀ b, MeasurableSet (f b))
     (hf₂ : ∀ b, v ≤[f b] w) : v ≤[⋃ b, f b] w := by
+  cases nonempty_encodable β
   rw [← Encodable.Union_decode₂]
   refine' restrict_le_restrict_Union v w _ _
   · intro n
@@ -965,7 +967,7 @@ theorem restrict_le_restrict_encodable_Union [Encodable β] {f : β → Set α} 
 theorem restrict_le_restrict_union (hi₁ : MeasurableSet i) (hi₂ : v ≤[i] w) (hj₁ : MeasurableSet j) (hj₂ : v ≤[j] w) :
     v ≤[i ∪ j] w := by
   rw [union_eq_Union]
-  refine' restrict_le_restrict_encodable_Union v w _ _
+  refine' restrict_le_restrict_countable_Union v w _ _
   · measurability
     
   · rintro (_ | _) <;> simpa
@@ -1061,7 +1063,7 @@ include m
 def AbsolutelyContinuous (v : VectorMeasure α M) (w : VectorMeasure α N) :=
   ∀ ⦃s : Set α⦄, w s = 0 → v s = 0
 
--- mathport name: «expr ≪ᵥ »
+-- mathport name: vector_measure.absolutely_continuous
 localized [MeasureTheory] infixl:50 " ≪ᵥ " => MeasureTheory.VectorMeasure.AbsolutelyContinuous
 
 open MeasureTheory
@@ -1151,7 +1153,7 @@ to use. This is equivalent to the definition which requires measurability. To pr
 def MutuallySingular (v : VectorMeasure α M) (w : VectorMeasure α N) : Prop :=
   ∃ s : Set α, MeasurableSet s ∧ (∀ (t) (_ : t ⊆ s), v t = 0) ∧ ∀ (t) (_ : t ⊆ sᶜ), w t = 0
 
--- mathport name: «expr ⊥ᵥ »
+-- mathport name: vector_measure.mutually_singular
 localized [MeasureTheory] infixl:60 " ⊥ᵥ " => MeasureTheory.VectorMeasure.MutuallySingular
 
 namespace MutuallySingular

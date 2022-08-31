@@ -42,9 +42,10 @@ def nil : Seqₓₓ α :=
 instance : Inhabited (Seqₓₓ α) :=
   ⟨nil⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Prepend an element to a sequence -/
 def cons (a : α) (s : Seqₓₓ α) : Seqₓₓ α :=
-  ⟨some a :: s.1, by
+  ⟨some a::s.1, by
     rintro (n | _) h
     · contradiction
       
@@ -306,7 +307,7 @@ section Bisim
 
 variable (R : Seqₓₓ α → Seqₓₓ α → Prop)
 
--- mathport name: «expr ~ »
+-- mathport name: R
 local infixl:50 " ~ " => R
 
 def BisimO : Option (Seq1 α) → Option (Seq1 α) → Prop
@@ -390,8 +391,9 @@ theorem of_list_nil : ofList [] = (nil : Seqₓₓ α) :=
 theorem of_list_nth (l : List α) (n : ℕ) : (ofList l).nth n = l.nth n :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem of_list_cons (a : α) (l : List α) : ofList (a :: l) = cons a (ofList l) := by
+theorem of_list_cons (a : α) (l : List α) : ofList (a::l) = cons a (ofList l) := by
   ext1 (_ | n) <;> rfl
 
 /-- Embed an infinite stream as a sequence -/
@@ -752,8 +754,9 @@ theorem join_append (S T : Seqₓₓ (Seq1 α)) : join (append S T) = append (jo
   · refine' ⟨nil, S, T, _, _⟩ <;> simp
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem of_stream_cons (a : α) (s) : ofStream (a :: s) = cons a (ofStream s) := by
+theorem of_stream_cons (a : α) (s) : ofStream (a::s) = cons a (ofStream s) := by
   apply Subtype.eq <;> simp [of_stream, cons] <;> rw [Streamₓ.map_cons]
 
 @[simp]
@@ -764,6 +767,7 @@ theorem of_list_append (l l' : List α) : ofList (l ++ l') = append (ofList l) (
 theorem of_stream_append (l : List α) (s : Streamₓ α) : ofStream (l ++ₛ s) = append (ofList l) (ofStream s) := by
   induction l <;> simp [*, Streamₓ.nil_append_stream, Streamₓ.cons_append_stream]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Convert a sequence into a list, embedded in a computation to allow for
   the possibility of infinite sequences (in which case the computation
   never returns anything). -/
@@ -772,7 +776,7 @@ def toList' {α} (s : Seqₓₓ α) : Computation (List α) :=
     (fun ⟨l, s⟩ =>
       match destruct s with
       | none => Sum.inl l.reverse
-      | some (a, s') => Sum.inr (a :: l, s'))
+      | some (a, s') => Sum.inr (a::l, s'))
     ([], s)
 
 theorem dropn_add (s : Seqₓₓ α) (m) : ∀ n, drop s (m + n) = drop (drop s m) n

@@ -137,7 +137,7 @@ variable {R φ}
 
 section Ext
 
-variable [Fintype ι] [DecidableEq ι] [AddCommMonoidₓ M] [Module R M] {f g : (∀ i, φ i) →ₗ[R] M}
+variable [Finite ι] [DecidableEq ι] [AddCommMonoidₓ M] [Module R M] {f g : (∀ i, φ i) →ₗ[R] M}
 
 theorem pi_ext (h : ∀ i x, f (Pi.single i x) = g (Pi.single i x)) : f = g :=
   to_add_monoid_hom_injective <| AddMonoidHom.functions_ext _ _ _ h
@@ -259,8 +259,9 @@ theorem infi_comap_proj : (⨅ i, comap (proj i : (∀ i, φ i) →ₗ[R] φ i) 
   ext x
   simp
 
-theorem supr_map_single [DecidableEq ι] [Fintype ι] :
+theorem supr_map_single [DecidableEq ι] [Finite ι] :
     (⨆ i, map (LinearMap.single i : φ i →ₗ[R] ∀ i, φ i) (p i)) = pi Set.Univ p := by
+  cases nonempty_fintype ι
   refine' (supr_le fun i => _).antisymm _
   · rintro _ ⟨x, hx : x ∈ p i, rfl⟩ j -
     rcases em (j = i) with (rfl | hj) <;> simp [*]
@@ -442,8 +443,8 @@ variable [Module R M] [Module R M₂] [Module R M₃]
 /-- The linear map defeq to `matrix.vec_empty` -/
 def LinearMap.vecEmpty : M →ₗ[R] Finₓ 0 → M₃ where
   toFun := fun m => Matrix.vecEmpty
-  map_add' := fun x y => Subsingleton.elimₓ _ _
-  map_smul' := fun r x => Subsingleton.elimₓ _ _
+  map_add' := fun x y => Subsingleton.elim _ _
+  map_smul' := fun r x => Subsingleton.elim _ _
 
 @[simp]
 theorem LinearMap.vec_empty_apply (m : M) : (LinearMap.vecEmpty : M →ₗ[R] Finₓ 0 → M₃) m = ![] :=
@@ -475,8 +476,8 @@ variable [Module R M] [Module R M₂] [Module R M₃]
 @[simps]
 def LinearMap.vecEmpty₂ : M →ₗ[R] M₂ →ₗ[R] Finₓ 0 → M₃ where
   toFun := fun m => LinearMap.vecEmpty
-  map_add' := fun x y => LinearMap.ext fun z => Subsingleton.elimₓ _ _
-  map_smul' := fun r x => LinearMap.ext fun z => Subsingleton.elimₓ _ _
+  map_add' := fun x y => LinearMap.ext fun z => Subsingleton.elim _ _
+  map_smul' := fun r x => LinearMap.ext fun z => Subsingleton.elim _ _
 
 /-- A bilinear map into `fin n.succ → M₃` can be built out of a map into `M₃` and a map into
 `fin n → M₃` -/

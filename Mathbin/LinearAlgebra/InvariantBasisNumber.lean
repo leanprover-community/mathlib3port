@@ -175,7 +175,7 @@ theorem nontrivial_of_invariant_basis_number : Nontrivial R := by
   by_contra h
   refine' zero_ne_one (eq_of_fin_equiv R _)
   haveI := not_nontrivial_iff_subsingleton.1 h
-  haveI : Subsingleton (Finₓ 1 → R) := ⟨fun a b => funext fun x => Subsingleton.elimₓ _ _⟩
+  haveI : Subsingleton (Finₓ 1 → R) := ⟨fun a b => funext fun x => Subsingleton.elim _ _⟩
   refine' { .. } <;>
     first |
       · intros

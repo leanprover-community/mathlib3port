@@ -173,7 +173,7 @@ theorem LieAlgebra.is_engelian_of_subsingleton [Subsingleton L] : LieAlgebra.IsE
   suffices (⊤ : LieIdeal R L) = ⊥ by
     simp [this]
   haveI := (LieSubmodule.subsingleton_iff R L L).mpr inferInstance
-  apply Subsingleton.elimₓ
+  apply Subsingleton.elim
 
 theorem Function.Surjective.is_engelian {f : L →ₗ⁅R⁆ L₂} (hf : Function.Surjective f)
     (h : LieAlgebra.IsEngelian.{u₁, u₂, u₄} R L) : LieAlgebra.IsEngelian.{u₁, u₃, u₄} R L₂ := by

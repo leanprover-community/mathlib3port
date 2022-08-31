@@ -54,16 +54,3 @@ theorem Union_decode₂_disjoint_on {f : β → Set α} (hd : Pairwise (Disjoint
 
 end Encodable
 
-namespace Finset
-
-theorem nonempty_encodable {α} (t : Finset α) : Nonempty <| Encodable { i // i ∈ t } := by
-  classical
-  induction' t using Finset.induction with x t hx ih
-  · refine' ⟨⟨fun _ => 0, fun _ => none, fun ⟨x, y⟩ => y.rec _⟩⟩
-    
-  · cases' ih with ih
-    exact ⟨Encodable.ofEquiv _ (Finset.subtypeInsertEquivOption hx)⟩
-    
-
-end Finset
-

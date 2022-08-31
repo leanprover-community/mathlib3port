@@ -1462,7 +1462,7 @@ def relIsoOfBijective : Ideal S ≃o Ideal R where
   left_inv := (relIsoOfSurjective f hf.right).left_inv
   right_inv := fun J =>
     Subtype.ext_iff.1 ((relIsoOfSurjective f hf.right).right_inv ⟨J, comap_bot_le_of_injective f hf.left⟩)
-  map_rel_iff' := (relIsoOfSurjective f hf.right).map_rel_iff'
+  map_rel_iff' := fun _ _ => (relIsoOfSurjective f hf.right).map_rel_iff'
 
 theorem comap_le_iff_le_map {I : Ideal R} {K : Ideal S} : comap f K ≤ I ↔ K ≤ map f I :=
   ⟨fun h => le_map_of_comap_le_of_surjective f hf.right h, fun h => (relIsoOfBijective f hf).right_inv I ▸ comap_mono h⟩
@@ -1772,7 +1772,7 @@ theorem quotientKerEquivOfRightInverse.Symm.apply {g : S → R} (hf : Function.R
 
 /-- The **first isomorphism theorem** for commutative rings. -/
 noncomputable def quotientKerEquivOfSurjective (hf : Function.Surjective f) : R ⧸ f.ker ≃+* S :=
-  quotientKerEquivOfRightInverse (Classical.some_spec hf.HasRightInverse)
+  quotientKerEquivOfRightInverse (Classical.choose_spec hf.HasRightInverse)
 
 end CommRingₓ
 
@@ -2063,7 +2063,7 @@ theorem QuotientKerAlgEquivOfRightInverseSymm.apply {f : A →ₐ[R₁] B} {g : 
 /-- The **first isomorphism theorem** for algebras. -/
 noncomputable def quotientKerAlgEquivOfSurjective {f : A →ₐ[R₁] B} (hf : Function.Surjective f) :
     (A ⧸ f.toRingHom.ker) ≃ₐ[R₁] B :=
-  quotientKerAlgEquivOfRightInverse (Classical.some_spec hf.HasRightInverse)
+  quotientKerAlgEquivOfRightInverse (Classical.choose_spec hf.HasRightInverse)
 
 /-- The ring hom `R/I →+* S/J` induced by a ring hom `f : R →+* S` with `I ≤ f⁻¹(J)` -/
 def quotientMap {I : Ideal R} (J : Ideal S) (f : R →+* S) (hIJ : I ≤ J.comap f) : R ⧸ I →+* S ⧸ J :=

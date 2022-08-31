@@ -44,7 +44,7 @@ protected def TensorPower (R : Type _) (n : ℕ) (M : Type _) [CommSemiringₓ R
 
 variable {R : Type _} {M : Type _} [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
--- mathport name: «expr⨂[ ]^ »
+-- mathport name: tensor_power
 localized [TensorProduct] notation:100 "⨂[" R "]^" n:arg => TensorPower R n
 
 namespace TensorPower
@@ -56,7 +56,7 @@ open PiTensorProduct
 /-- As a graded monoid, `⨂[R]^i M` has a `1 : ⨂[R]^0 M`. -/
 instance ghasOne : GradedMonoid.GhasOne fun i => (⨂[R]^i) M where one := tprod R Finₓ.elim0
 
--- mathport name: «exprₜ1»
+-- mathport name: exprₜ1
 local notation "ₜ1" => @GradedMonoid.GhasOne.one ℕ (fun i => (⨂[R]^i) M) _ _
 
 theorem ghas_one_def : ₜ1 = tprod R Finₓ.elim0 :=

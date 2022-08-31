@@ -188,19 +188,19 @@ theorem at_top_basis_Ioi [Nonempty α] [SemilatticeSup α] [NoMaxOrder α] : (@a
   (at_top_basis.to_has_basis fun a ha => ⟨a, ha, Ioi_subset_Ici_self⟩) fun a ha =>
     (exists_gt a).imp fun b hb => ⟨ha, Ici_subset_Ioi.2 hb⟩
 
-theorem at_top_countable_basis [Nonempty α] [SemilatticeSup α] [Encodable α] :
+theorem at_top_countable_basis [Nonempty α] [SemilatticeSup α] [Countable α] :
     HasCountableBasis (atTop : Filter α) (fun _ => True) Ici :=
   { at_top_basis with Countable := to_countable _ }
 
-theorem at_bot_countable_basis [Nonempty α] [SemilatticeInf α] [Encodable α] :
+theorem at_bot_countable_basis [Nonempty α] [SemilatticeInf α] [Countable α] :
     HasCountableBasis (atBot : Filter α) (fun _ => True) Iic :=
   { at_bot_basis with Countable := to_countable _ }
 
-instance (priority := 200) atTop.is_countably_generated [Preorderₓ α] [Encodable α] :
+instance (priority := 200) atTop.is_countably_generated [Preorderₓ α] [Countable α] :
     (atTop : Filter <| α).IsCountablyGenerated :=
   is_countably_generated_seq _
 
-instance (priority := 200) atBot.is_countably_generated [Preorderₓ α] [Encodable α] :
+instance (priority := 200) atBot.is_countably_generated [Preorderₓ α] [Countable α] :
     (atBot : Filter <| α).IsCountablyGenerated :=
   is_countably_generated_seq _
 
@@ -214,7 +214,7 @@ theorem OrderBot.at_bot_eq (α) [PartialOrderₓ α] [OrderBot α] : (atBot : Fi
 @[nontriviality]
 theorem Subsingleton.at_top_eq (α) [Subsingleton α] [Preorderₓ α] : (atTop : Filter α) = ⊤ := by
   refine' top_unique fun s hs x => _
-  letI : Unique α := ⟨⟨x⟩, fun y => Subsingleton.elimₓ y x⟩
+  letI : Unique α := ⟨⟨x⟩, fun y => Subsingleton.elim y x⟩
   rw [at_top, infi_unique, Unique.default_eq x, mem_principal] at hs
   exact hs left_mem_Ici
 

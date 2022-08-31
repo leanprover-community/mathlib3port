@@ -83,7 +83,7 @@ equalities. -/
 protected def copy (p : Submodule R M) (s : Set M) (hs : s = ↑p) : Submodule R M where
   Carrier := s
   zero_mem' := hs.symm ▸ p.zero_mem'
-  add_mem' := hs.symm ▸ p.add_mem'
+  add_mem' := fun _ _ => hs.symm ▸ p.add_mem'
   smul_mem' := hs.symm ▸ p.smul_mem'
 
 @[simp]

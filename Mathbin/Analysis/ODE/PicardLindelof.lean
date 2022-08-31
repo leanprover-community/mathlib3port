@@ -73,6 +73,8 @@ protected theorem lipschitz_on_with {t} (ht : t ∈ Icc v.tMin v.tMax) :
     LipschitzOnWith v.l (v t) (ClosedBall v.x₀ v.r) :=
   v.lipschitz' t ht
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 protected theorem continuous_on : ContinuousOn (uncurry v) (Icc v.tMin v.tMax ×ˢ ClosedBall v.x₀ v.r) :=
   have : ContinuousOn (uncurry (flip v)) (ClosedBall v.x₀ v.r ×ˢ Icc v.tMin v.tMax) :=
     continuous_on_prod_of_continuous_on_lipschitz_on _ v.l v.cont v.lipschitz'

@@ -470,8 +470,9 @@ theorem has_compl_iff {a} : d.Has (aᶜ) ↔ d.Has a :=
 theorem has_univ : d.Has Univ := by
   simpa using d.has_compl d.has_empty
 
-theorem has_Union {β} [Encodable β] {f : β → Set α} (hd : Pairwise (Disjoint on f)) (h : ∀ i, d.Has (f i)) :
+theorem has_Union {β} [Countable β] {f : β → Set α} (hd : Pairwise (Disjoint on f)) (h : ∀ i, d.Has (f i)) :
     d.Has (⋃ i, f i) := by
+  cases nonempty_encodable β
   rw [← Encodable.Union_decode₂]
   exact d.has_Union_nat (Encodable.Union_decode₂_disjoint_on hd) fun n => Encodable.Union_decode₂_cases d.has_empty h
 

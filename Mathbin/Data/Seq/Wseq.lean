@@ -122,6 +122,7 @@ attribute [simp] drop
 def nth (s : Wseq α) (n : ℕ) : Computation (Option α) :=
   head (drop s n)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Convert `s` to a list (if it is finite and completes in finite time). -/
 def toList (s : Wseq α) : Computation (List α) :=
   @Computation.corec (List α) (List α × Wseq α)
@@ -129,7 +130,7 @@ def toList (s : Wseq α) : Computation (List α) :=
       match Seqₓₓ.destruct s with
       | none => Sum.inl l.reverse
       | some (none, s') => Sum.inr (l, s')
-      | some (some a, s') => Sum.inr (a :: l, s'))
+      | some (some a, s') => Sum.inr (a::l, s'))
     ([], s)
 
 /-- Get the length of `s` (if it is finite and completes in finite time). -/
@@ -278,6 +279,7 @@ def take (s : Wseq α) (n : ℕ) : Wseq α :=
       | m + 1, some (some a, s') => some (some a, m, s'))
     (n, s)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Split the sequence at position `n` into a finite initial segment
   and the weak sequence tail -/
 def splitAt (s : Wseq α) (n : ℕ) : Computation (List α × Wseq α) :=
@@ -287,7 +289,7 @@ def splitAt (s : Wseq α) (n : ℕ) : Computation (List α × Wseq α) :=
       | 0, _ => Sum.inl (l.reverse, s)
       | m + 1, none => Sum.inl (l.reverse, s)
       | m + 1, some (none, s') => Sum.inr (n, l, s')
-      | m + 1, some (some a, s') => Sum.inr (m, a :: l, s'))
+      | m + 1, some (some a, s') => Sum.inr (m, a::l, s'))
     (n, [], s)
 
 /-- Returns `tt` if any element of `s` satisfies `p` -/
@@ -423,12 +425,16 @@ theorem lift_rel_destruct_iff {R : α → β → Prop} {s : Wseq α} {t : Wseq �
       intro s t
       apply Or.inl⟩⟩
 
--- mathport name: «expr ~ »
+-- mathport name: equiv
 infixl:50 " ~ " => Equiv
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation
 theorem destruct_congr {s t : Wseq α} : s ~ t → Computation.LiftRel (BisimO (· ~ ·)) (destruct s) (destruct t) :=
   lift_rel_destruct
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation
 theorem destruct_congr_iff {s t : Wseq α} : s ~ t ↔ Computation.LiftRel (BisimO (· ~ ·)) (destruct s) (destruct t) :=
   lift_rel_destruct_iff
 
@@ -507,14 +513,20 @@ theorem LiftRel.trans (R : α → α → Prop) (H : Transitive R) : Transitive (
 theorem LiftRel.equiv (R : α → α → Prop) : Equivalenceₓ R → Equivalenceₓ (LiftRel R)
   | ⟨refl, symm, trans⟩ => ⟨LiftRel.refl R refl, LiftRel.symm R symm, LiftRel.trans R trans⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[refl]
 theorem Equiv.refl : ∀ s : Wseq α, s ~ s :=
   LiftRel.refl (· = ·) Eq.refl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[symm]
 theorem Equiv.symm : ∀ {s t : Wseq α}, s ~ t → t ~ s :=
   LiftRel.symm (· = ·) (@Eq.symm _)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[trans]
 theorem Equiv.trans : ∀ {s t u : Wseq α}, s ~ t → t ~ u → s ~ u :=
   LiftRel.trans (· = ·) (@Eq.trans _)
@@ -524,7 +536,7 @@ theorem Equiv.equivalence : Equivalenceₓ (@Equiv α) :=
 
 open Computation
 
--- mathport name: «exprreturn»
+-- mathport name: exprreturn
 local notation "return" => Computation.return
 
 @[simp]
@@ -794,10 +806,11 @@ theorem mem_rec_on {C : Wseq α → Prop} {a s} (M : a ∈ s) (h1 : ∀ b s', a 
     injection h
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem mem_think (s : Wseq α) (a) : a ∈ think s ↔ a ∈ s := by
   cases' s with f al
-  change some (some a) ∈ some none :: f ↔ some (some a) ∈ f
+  change (some (some a) ∈ some none::f) ↔ some (some a) ∈ f
   constructor <;> intro h
   · apply (Streamₓ.eq_or_mem_of_mem_cons h).resolve_left
     intro
@@ -971,15 +984,23 @@ theorem lift_rel_think_left (R : α → β → Prop) (s t) : LiftRel R (think s)
 theorem lift_rel_think_right (R : α → β → Prop) (s t) : LiftRel R s (think t) ↔ LiftRel R s t := by
   rw [lift_rel_destruct_iff, lift_rel_destruct_iff] <;> simp
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem cons_congr {s t : Wseq α} (a : α) (h : s ~ t) : cons a s ~ cons a t := by
   unfold Equivₓ <;> simp <;> exact h
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem think_equiv (s : Wseq α) : think s ~ s := by
   unfold Equivₓ <;> simp <;> apply Equivₓ.refl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem think_congr {s t : Wseq α} (a : α) (h : s ~ t) : think s ~ think t := by
   unfold Equivₓ <;> simp <;> exact h
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem head_congr : ∀ {s t : Wseq α}, s ~ t → head s ~ head t := by
   suffices ∀ {s t : Wseq α}, s ~ t → ∀ {o}, o ∈ head s → o ∈ head t from fun s t h o => ⟨this h, this h.symm⟩
   intro s t h o ho
@@ -1002,6 +1023,7 @@ theorem head_congr : ∀ {s t : Wseq α}, s ~ t → head s ~ head t := by
     exact @mem_map _ _ (@Functor.map _ _ (α × Wseq α) _ Prod.fst) _ (destruct t) dtm
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem flatten_equiv {c : Computation (Wseq α)} {s} (h : s ∈ c) : flatten c ~ s := by
   apply Computation.memRecOn h
   · simp
@@ -1026,9 +1048,12 @@ theorem lift_rel_flatten {R : α → β → Prop} {c1 : Computation (Wseq α)} {
       intro s t h
       refine' ⟨return s, return t, _, _, _⟩ <;> simp [h]⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem flatten_congr {c1 c2 : Computation (Wseq α)} : Computation.LiftRel Equiv c1 c2 → flatten c1 ~ flatten c2 :=
   lift_rel_flatten
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem tail_congr {s t : Wseq α} (h : s ~ t) : tail s ~ tail t := by
   apply flatten_congr
   unfold Functor.map
@@ -1049,21 +1074,32 @@ theorem tail_congr {s t : Wseq α} (h : s ~ t) : tail s ~ tail t := by
     exact h.right
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem dropn_congr {s t : Wseq α} (h : s ~ t) (n) : drop s n ~ drop t n := by
   induction n <;> simp [*, tail_congr]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem nth_congr {s t : Wseq α} (h : s ~ t) (n) : nth s n ~ nth t n :=
   head_congr (dropn_congr h _)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem mem_congr {s t : Wseq α} (h : s ~ t) (a) : a ∈ s ↔ a ∈ t :=
   suffices ∀ {s t : Wseq α}, s ~ t → a ∈ s → a ∈ t from ⟨this h, this h.symm⟩
   fun s t h as =>
   let ⟨n, hn⟩ := exists_nth_of_mem as
   nth_mem ((nth_congr h _ _).1 hn)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem productive_congr {s t : Wseq α} (h : s ~ t) : Productive s ↔ Productive t := by
   simp only [productive_iff] <;> exact forall_congrₓ fun n => terminates_congr <| nth_congr h _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Equiv.ext {s t : Wseq α} (h : ∀ n, nth s n ~ nth t n) : s ~ t :=
   ⟨fun s t => ∀ n, nth s n ~ nth t n, h, fun s t h => by
     refine' lift_rel_def.2 ⟨_, _⟩
@@ -1090,6 +1126,7 @@ theorem Equiv.ext {s t : Wseq α} (h : ∀ n, nth s n ~ nth t n) : s ~ t :=
         
       ⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem length_eq_map (s : Wseq α) : length s = Computation.map List.length (toList s) := by
   refine'
     eq_of_bisim
@@ -1103,7 +1140,7 @@ theorem length_eq_map (s : Wseq α) : length s = Computation.map List.length (to
   apply s.cases_on _ (fun a s => _) fun s => _ <;>
     repeat'
       simp [to_list, nil, cons, think, length]
-  · refine' ⟨a :: l, s, _, _⟩ <;> simp
+  · refine' ⟨a::l, s, _, _⟩ <;> simp
     
   · refine' ⟨l, s, _, _⟩ <;> simp
     
@@ -1112,18 +1149,21 @@ theorem length_eq_map (s : Wseq α) : length s = Computation.map List.length (to
 theorem of_list_nil : ofList [] = (nil : Wseq α) :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem of_list_cons (a : α) (l) : ofList (a :: l) = cons a (ofList l) :=
-  show Seqₓₓ.map some (Seqₓₓ.ofList (a :: l)) = Seqₓₓ.cons (some a) (Seqₓₓ.map some (Seqₓₓ.ofList l)) by
+theorem of_list_cons (a : α) (l) : ofList (a::l) = cons a (ofList l) :=
+  show Seqₓₓ.map some (Seqₓₓ.ofList (a::l)) = Seqₓₓ.cons (some a) (Seqₓₓ.map some (Seqₓₓ.ofList l)) by
     simp
 
 @[simp]
 theorem to_list'_nil (l : List α) : corec ToList._match2 (l, nil) = return l.reverse :=
   destruct_eq_ret rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem to_list'_cons (l : List α) (s : Wseq α) (a : α) :
-    corec ToList._match2 (l, cons a s) = (corec ToList._match2 (a :: l, s)).think :=
+    corec ToList._match2 (l, cons a s) = (corec ToList._match2 (a::l, s)).think :=
   destruct_eq_think <| by
     simp [to_list, cons]
 
@@ -1133,6 +1173,7 @@ theorem to_list'_think (l : List α) (s : Wseq α) :
   destruct_eq_think <| by
     simp [to_list, think]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem to_list'_map (l : List α) (s : Wseq α) : corec ToList._match2 (l, s) = (· ++ ·) l.reverse <$> toList s := by
   refine'
     eq_of_bisim
@@ -1147,7 +1188,7 @@ theorem to_list'_map (l : List α) (s : Wseq α) : corec ToList._match2 (l, s) =
   apply s.cases_on _ (fun a s => _) fun s => _ <;>
     repeat'
       simp [to_list, nil, cons, think, length]
-  · refine' ⟨a :: l', s, _, _⟩ <;> simp
+  · refine' ⟨a::l', s, _, _⟩ <;> simp
     
   · refine' ⟨l', s, _, _⟩ <;> simp
     
@@ -1355,6 +1396,8 @@ theorem lift_rel_map {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 
         exact ⟨h2 r, s, rfl, t, rfl, h⟩
         ⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem map_congr (f : α → β) {s t : Wseq α} (h : s ~ t) : map f s ~ map f t :=
   lift_rel_map _ _ h fun _ _ => congr_arg _
 
@@ -1520,6 +1563,7 @@ theorem lift_rel_join (R : α → β → Prop) {S : Wseq (Wseq α)} {T : Wseq (W
             
           ⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem join_congr {S T : Wseq (Wseq α)} (h : LiftRel Equiv S T) : join S ~ join T :=
   lift_rel_join _ h
 
@@ -1528,15 +1572,20 @@ theorem lift_rel_bind {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1
     LiftRel S (bind s1 f1) (bind s2 f2) :=
   lift_rel_join _ (lift_rel_map _ _ h1 @h2)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem bind_congr {s1 s2 : Wseq α} {f1 f2 : α → Wseq β} (h1 : s1 ~ s2) (h2 : ∀ a, f1 a ~ f2 a) :
     bind s1 f1 ~ bind s2 f2 :=
   lift_rel_bind _ _ h1 fun a b h => by
     rw [h] <;> apply h2
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem join_ret (s : Wseq α) : join (ret s) ~ s := by
   simp [ret] <;> apply think_equiv
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem join_map_ret (s : Wseq α) : join (map ret s) ~ s := by
   refine' ⟨fun s1 s2 => join (map ret s2) = s1, rfl, _⟩
@@ -1554,6 +1603,7 @@ theorem join_map_ret (s : Wseq α) : join (map ret s) ~ s := by
   · exact ⟨s, rfl, rfl⟩
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem join_append (S T : Wseq (Wseq α)) : join (append S T) ~ append (join S) (join T) := by
   refine'
@@ -1594,6 +1644,7 @@ theorem join_append (S T : Wseq (Wseq α)) : join (append S T) ~ append (join S)
       · exact ⟨s, S, T, rfl, rfl⟩
         
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem bind_ret (f : α → β) (s) : bind s (ret ∘ f) ~ map f s := by
   dsimp' [bind]
@@ -1601,6 +1652,7 @@ theorem bind_ret (f : α → β) (s) : bind s (ret ∘ f) ~ map f s := by
   rw [map_comp]
   apply join_map_ret
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem ret_bind (a : α) (f : α → Wseq β) : bind (ret a) f ~ f a := by
   simp [bind]
@@ -1627,6 +1679,7 @@ theorem map_join (f : α → β) (S) : map f (join S) = join (map (map f) S) := 
   · refine' ⟨nil, S, _, _⟩ <;> simp
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem join_join (SS : Wseq (Wseq (Wseq α))) : join (join SS) ~ join (map join SS) := by
   refine'
@@ -1671,6 +1724,7 @@ theorem join_join (SS : Wseq (Wseq (Wseq α))) : join (join SS) ~ join (map join
       · exact ⟨s, S, SS, rfl, rfl⟩
         
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem bind_assoc (s : Wseq α) (f : α → Wseq β) (g : β → Wseq γ) :
     bind (bind s f) g ~ bind s fun x : α => bind (f x) g := by

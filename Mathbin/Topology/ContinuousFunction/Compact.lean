@@ -293,14 +293,14 @@ theorem uniform_continuity (f : C(α, β)) (ε : ℝ) (h : 0 < ε) : ∃ δ > 0,
 /-- An arbitrarily chosen modulus of uniform continuity for a given function `f` and `ε > 0`.
 -/
 def modulus (f : C(α, β)) (ε : ℝ) (h : 0 < ε) : ℝ :=
-  Classical.some (uniform_continuity f ε h)
+  Classical.choose (uniform_continuity f ε h)
 
 theorem modulus_pos (f : C(α, β)) {ε : ℝ} {h : 0 < ε} : 0 < f.modulus ε h :=
-  (Classical.some_spec (uniform_continuity f ε h)).fst
+  (Classical.choose_spec (uniform_continuity f ε h)).fst
 
 theorem dist_lt_of_dist_lt_modulus (f : C(α, β)) (ε : ℝ) (h : 0 < ε) {a b : α} (w : dist a b < f.modulus ε h) :
     dist (f a) (f b) < ε :=
-  (Classical.some_spec (uniform_continuity f ε h)).snd w
+  (Classical.choose_spec (uniform_continuity f ε h)).snd w
 
 end UniformContinuity
 

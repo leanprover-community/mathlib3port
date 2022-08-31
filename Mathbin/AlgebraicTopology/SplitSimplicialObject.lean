@@ -13,7 +13,8 @@ import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts
 In this file, we introduce the notion of split simplicial object.
 If `C` is a category that has finite coproducts, a splitting
 `s : splitting X` of a simplical object `X` in `C` consists
-of the datum of a sequence of objects `s.N : ℕ → C` and a
+of the datum of a sequence of objects `s.N : ℕ → C` (which
+we shall refer to as "nondegenerate simplices") and a
 sequence of morphisms `s.ι n : s.N n → X _[n]` that have
 the property that a certain canonical map identifies `X _[n]`
 with the coproduct of objects `s.N i` indexed by all possible
@@ -21,6 +22,9 @@ epimorphisms `[n] ⟶ [i]` in `simplex_category`. (We do not
 assume that the morphisms `s.ι n` are monomorphisms: in the
 most common categories, this would be a consequence of the
 axioms.)
+
+Simplicial objects equipped with a splitting form a category
+`simplicial_object.split C`.
 
 ## References
 * [Stacks: Splitting simplicial objects] https://stacks.math.columbia.edu/tag/017O
@@ -231,7 +235,133 @@ theorem ι_desc {Z : C} (Δ : SimplexCategoryᵒᵖ) (F : ∀ A : IndexSet Δ, s
   simp only [assoc, iso.hom_inv_id_assoc, ι_coprod]
   erw [colimit.ι_desc, cofan.mk_ι_app]
 
+/-- A simplicial object that is isomorphic to a split simplicial object is split. -/
+@[simps]
+def ofIso (e : X ≅ Y) : Splitting Y where
+  n := s.n
+  ι := fun n => s.ι n ≫ e.Hom.app (op [n])
+  map_is_iso' := fun Δ => by
+    convert (inferInstance : is_iso ((s.iso Δ).Hom ≫ e.hom.app Δ))
+    tidy
+
 end Splitting
+
+variable (C)
+
+/-- The category `simplicial_object.split C` is the category of simplicial objects
+in `C` equipped with a splitting, and morphisms are morphisms of simplicial objects
+which are compatible with the splittings. -/
+@[ext, nolint has_nonempty_instance]
+structure Split where
+  x : SimplicialObject C
+  s : Splitting X
+
+namespace Split
+
+variable {C}
+
+/-- The object in `simplicial_object.split C` attached to a splitting `s : splitting X`
+of a simplicial object `X`. -/
+@[simps]
+def mk' {X : SimplicialObject C} (s : Splitting X) : Split C :=
+  ⟨X, s⟩
+
+/-- Morphisms in `simplicial_object.split C` are morphisms of simplicial objects that
+are compatible with the splittings. -/
+@[nolint has_nonempty_instance]
+structure Hom (S₁ S₂ : Split C) where
+  f : S₁.x ⟶ S₂.x
+  f : ∀ n : ℕ, S₁.s.n n ⟶ S₂.s.n n
+  comm' : ∀ n : ℕ, S₁.s.ι n ≫ F.app (op [n]) = f n ≫ S₂.s.ι n
+
+@[ext]
+theorem Hom.ext {S₁ S₂ : Split C} (Φ₁ Φ₂ : Hom S₁ S₂) (h : ∀ n : ℕ, Φ₁.f n = Φ₂.f n) : Φ₁ = Φ₂ := by
+  rcases Φ₁ with ⟨F₁, f₁, c₁⟩
+  rcases Φ₂ with ⟨F₂, f₂, c₂⟩
+  have h' : f₁ = f₂ := by
+    ext
+    apply h
+  subst h'
+  simp only [eq_self_iff_true, and_trueₓ]
+  apply S₁.s.hom_ext
+  intro n
+  dsimp'
+  rw [c₁, c₂]
+
+restate_axiom hom.comm'
+
+attribute [simp, reassoc] hom.comm
+
+end Split
+
+instance : Category (Split C) where
+  Hom := Split.Hom
+  id := fun S =>
+    { f := 𝟙 _, f := fun n => 𝟙 _,
+      comm' := by
+        tidy }
+  comp := fun S₁ S₂ S₃ Φ₁₂ Φ₂₃ =>
+    { f := Φ₁₂.f ≫ Φ₂₃.f, f := fun n => Φ₁₂.f n ≫ Φ₂₃.f n,
+      comm' := by
+        tidy }
+
+variable {C}
+
+namespace Split
+
+theorem congr_F {S₁ S₂ : Split C} {Φ₁ Φ₂ : S₁ ⟶ S₂} (h : Φ₁ = Φ₂) : Φ₁.f = Φ₂.f := by
+  rw [h]
+
+theorem congr_f {S₁ S₂ : Split C} {Φ₁ Φ₂ : S₁ ⟶ S₂} (h : Φ₁ = Φ₂) (n : ℕ) : Φ₁.f n = Φ₂.f n := by
+  rw [h]
+
+@[simp]
+theorem id_F (S : Split C) : (𝟙 S : S ⟶ S).f = 𝟙 S.x :=
+  rfl
+
+@[simp]
+theorem id_f (S : Split C) (n : ℕ) : (𝟙 S : S ⟶ S).f n = 𝟙 (S.s.n n) :=
+  rfl
+
+@[simp]
+theorem comp_F {S₁ S₂ S₃ : Split C} (Φ₁₂ : S₁ ⟶ S₂) (Φ₂₃ : S₂ ⟶ S₃) : (Φ₁₂ ≫ Φ₂₃).f = Φ₁₂.f ≫ Φ₂₃.f :=
+  rfl
+
+@[simp]
+theorem comp_f {S₁ S₂ S₃ : Split C} (Φ₁₂ : S₁ ⟶ S₂) (Φ₂₃ : S₂ ⟶ S₃) (n : ℕ) : (Φ₁₂ ≫ Φ₂₃).f n = Φ₁₂.f n ≫ Φ₂₃.f n :=
+  rfl
+
+@[simp, reassoc]
+theorem ι_summand_naturality_symm {S₁ S₂ : Split C} (Φ : S₁ ⟶ S₂) {Δ : SimplexCategoryᵒᵖ} (A : Splitting.IndexSet Δ) :
+    S₁.s.ιSummand A ≫ Φ.f.app Δ = Φ.f A.1.unop.len ≫ S₂.s.ιSummand A := by
+  rw [S₁.s.ι_summand_eq, S₂.s.ι_summand_eq, assoc, Φ.F.naturality, ← Φ.comm_assoc]
+
+variable (C)
+
+/-- The functor `simplicial_object.split C ⥤ simplicial_object C` which forgets
+the splitting. -/
+@[simps]
+def forget : Split C ⥤ SimplicialObject C where
+  obj := fun S => S.x
+  map := fun S₁ S₂ Φ => Φ.f
+
+/-- The functor `simplicial_object.split C ⥤ C` which sends a simplicial object equipped
+with a splitting to its nondegenerate `n`-simplices. -/
+@[simps]
+def evalN (n : ℕ) : Split C ⥤ C where
+  obj := fun S => S.s.n n
+  map := fun S₁ S₂ Φ => Φ.f n
+
+/-- The inclusion of each summand in the coproduct decomposition of simplices
+in split simplicial objects is a natural transformation of functors
+`simplicial_object.split C ⥤ C` -/
+@[simps]
+def natTransιSummand {Δ : SimplexCategoryᵒᵖ} (A : Splitting.IndexSet Δ) :
+    evalN C A.1.unop.len ⟶ forget C ⋙ (evaluation SimplexCategoryᵒᵖ C).obj Δ where
+  app := fun S => S.s.ιSummand A
+  naturality' := fun S₁ S₂ Φ => (ι_summand_naturality_symm Φ A).symm
+
+end Split
 
 end SimplicialObject
 

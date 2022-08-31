@@ -33,12 +33,12 @@ where `pi univ s` is the product of the sets `{s i | i : ι}`.
 We then show that this induces a product of measures, called `measure_theory.measure.pi`.
 For a collection of σ-finite measures `μ` and a collection of measurable sets `s` we show that
 `measure.pi μ (pi univ s) = ∏ i, m i (s i)`. To do this, we follow the following steps:
-* We know that there is some ordering on `ι`, given by an element of `[encodable ι]`.
+* We know that there is some ordering on `ι`, given by an element of `[countable ι]`.
 * Using this, we have an equivalence `measurable_equiv.pi_measurable_equiv_tprod` between
   `Π ι, α i` and an iterated product of `α i`, called `list.tprod α l` for some list `l`.
 * On this iterated product we can easily define a product measure `measure_theory.measure.tprod`
   by iterating `measure_theory.measure.prod`
-* Using the previous two steps we construct `measure_theory.measure.pi'` on `Π ι, α i` for encodable
+* Using the previous two steps we construct `measure_theory.measure.pi'` on `Π ι, α i` for countable
   `ι`.
 * We know that `measure_theory.measure.pi'` sends products of sets to products of measures, and
   since `measure_theory.measure.pi` is the maximal such measure (or at least, it comes from an outer
@@ -77,13 +77,15 @@ theorem is_pi_system_pi [∀ i, MeasurableSpace (α i)] :
     IsPiSystem (pi Univ '' pi Univ fun i => { s : Set (α i) | MeasurableSet s }) :=
   IsPiSystem.pi fun i => is_pi_system_measurable_set
 
-variable [Fintype ι] [Fintype ι']
+section Finite
+
+variable [Finite ι] [Finite ι']
 
 /-- Boxes of countably spanning sets are countably spanning. -/
 theorem IsCountablySpanning.pi {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountablySpanning (C i)) :
     IsCountablySpanning (pi Univ '' pi Univ C) := by
   choose s h1s h2s using hC
-  haveI := Fintype.toEncodable ι
+  cases nonempty_encodable (ι → ℕ)
   let e : ℕ → ι → ℕ := fun n => (decode (ι → ℕ) n).iget
   refine' ⟨fun n => pi univ fun i => s i (e n i), fun n => mem_image_of_mem _ fun i _ => h1s i _, _⟩
   simp_rw [(surjective_decode_iget (ι → ℕ)).Union_comp fun x => pi univ fun i => s i (x i), Union_univ_pi s, h2s,
@@ -93,7 +95,7 @@ theorem IsCountablySpanning.pi {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCoun
   are countably spanning. -/
 theorem generate_from_pi_eq {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountablySpanning (C i)) :
     (@MeasurableSpace.pi _ _ fun i => generateFrom (C i)) = generateFrom (pi Univ '' pi Univ C) := by
-  haveI := Fintype.toEncodable ι
+  cases nonempty_encodable ι
   apply le_antisymmₓ
   · refine' supr_le _
     intro i
@@ -154,9 +156,11 @@ theorem generate_from_pi [∀ i, MeasurableSpace (α i)] :
     generateFrom (pi Univ '' pi Univ fun i => { s : Set (α i) | MeasurableSet s }) = MeasurableSpace.pi :=
   generate_from_eq_pi (fun i => generate_from_measurable_set) fun i => is_countably_spanning_measurable_set
 
+end Finite
+
 namespace MeasureTheory
 
-variable {m : ∀ i, OuterMeasure (α i)}
+variable [Fintype ι] {m : ∀ i, OuterMeasure (α i)}
 
 /-- An upper bound for the measure in a finite product space.
   It is defined to by taking the image of the set under all projections, and taking the product
@@ -241,9 +245,10 @@ protected def tprod (l : List δ) (μ : ∀ i, Measure (π i)) : Measure (Tprod 
 theorem tprod_nil (μ : ∀ i, Measure (π i)) : Measure.tprod [] μ = dirac PUnit.unit :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem tprod_cons (i : δ) (l : List δ) (μ : ∀ i, Measure (π i)) :
-    Measure.tprod (i :: l) μ = (μ i).Prod (Measure.tprod l μ) :=
+    Measure.tprod (i::l) μ = (μ i).Prod (Measure.tprod l μ) :=
   rfl
 
 instance sigma_finite_tprod (l : List δ) (μ : ∀ i, Measure (π i)) [∀ i, SigmaFinite (μ i)] :
@@ -316,12 +321,12 @@ protected irreducible_def pi : Measure (∀ i, α i) :=
 theorem pi_pi_aux [∀ i, SigmaFinite (μ i)] (s : ∀ i, Set (α i)) (hs : ∀ i, MeasurableSet (s i)) :
     Measure.pi μ (pi Univ s) = ∏ i, μ i (s i) := by
   refine' le_antisymmₓ _ _
-  · rw [measure.pi, to_measure_apply _ _ (MeasurableSet.pi_fintype fun i _ => hs i)]
+  · rw [measure.pi, to_measure_apply _ _ (MeasurableSet.pi countable_univ fun i _ => hs i)]
     apply outer_measure.pi_pi_le
     
   · haveI : Encodable ι := Fintype.toEncodable ι
     rw [← pi'_pi μ s]
-    simp_rw [← pi'_pi μ s, measure.pi, to_measure_apply _ _ (MeasurableSet.pi_fintype fun i _ => hs i), ←
+    simp_rw [← pi'_pi μ s, measure.pi, to_measure_apply _ _ (MeasurableSet.pi countable_univ fun i _ => hs i), ←
       to_outer_measure_apply]
     suffices (pi' μ).toOuterMeasure ≤ outer_measure.pi fun i => (μ i).toOuterMeasure by
       exact this _
@@ -540,8 +545,7 @@ instance pi.is_mul_left_invariant [∀ i, Groupₓ (α i)] [∀ i, HasMeasurable
   have h : Mul.mul x ⁻¹' pi univ s = Set.Pi univ fun i => (fun y => x i * y) ⁻¹' s i := by
     ext
     simp
-  simp_rw [measure.map_apply (measurable_const_mul x) (MeasurableSet.univ_pi_fintype hs), h, pi_pi,
-    measure_preimage_mul]
+  simp_rw [measure.map_apply (measurable_const_mul x) (MeasurableSet.univ_pi hs), h, pi_pi, measure_preimage_mul]
 
 @[to_additive]
 instance pi.is_inv_invariant [∀ i, Groupₓ (α i)] [∀ i, HasMeasurableInv (α i)] [∀ i, IsInvInvariant (μ i)] :
@@ -550,8 +554,7 @@ instance pi.is_inv_invariant [∀ i, Groupₓ (α i)] [∀ i, HasMeasurableInv (
   have A : Inv.inv ⁻¹' pi univ s = Set.Pi univ fun i => Inv.inv ⁻¹' s i := by
     ext
     simp
-  simp_rw [measure.inv, measure.map_apply measurable_inv (MeasurableSet.univ_pi_fintype hs), A, pi_pi,
-    measure_preimage_inv]
+  simp_rw [measure.inv, measure.map_apply measurable_inv (MeasurableSet.univ_pi hs), A, pi_pi, measure_preimage_inv]
 
 end Measureₓ
 
@@ -604,6 +607,7 @@ measures of corresponding sets (images or preimages) have equal measures and fun
 
 section MeasurePreserving
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem measure_preserving_pi_equiv_pi_subtype_prod {ι : Type u} {α : ι → Type v} [Fintype ι]
     {m : ∀ i, MeasurableSpace (α i)} (μ : ∀ i, Measure (α i)) [∀ i, SigmaFinite (μ i)] (p : ι → Prop)
     [DecidablePred p] :

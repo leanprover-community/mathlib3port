@@ -309,7 +309,7 @@ theorem mk_dest (x : M F) : M.mk (dest x) = x := by
   intro n
   dsimp' only [M.mk]
   induction' n with n
-  · apply Subsingleton.elimₓ
+  · apply Subsingleton.elim
     
   dsimp' only [approx.s_mk, dest, head]
   cases' h : x.approx (succ n) with _ hd ch
@@ -423,32 +423,36 @@ theorem cases_on_mk' {r : M F → Sort _} {a} (x : F.B a → M F) (f : ∀ (a) (
     Pfunctor.M.casesOn' (M.mk ⟨a, x⟩) f = f a x :=
   cases_mk ⟨_, x⟩ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `is_path p x` tells us if `p` is a valid path through `x` -/
 inductive IsPath : Path F → M F → Prop
   | nil (x : M F) : is_path [] x
   | cons (xs : Path F) {a} (x : M F) (f : F.B a → M F) (i : F.B a) :
-    x = M.mk ⟨a, f⟩ → is_path xs (f i) → is_path (⟨a, i⟩ :: xs) x
+    x = M.mk ⟨a, f⟩ → is_path xs (f i) → is_path (⟨a, i⟩::xs) x
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem is_path_cons {xs : Path F} {a a'} {f : F.B a → M F} {i : F.B a'} :
-    IsPath (⟨a', i⟩ :: xs) (M.mk ⟨a, f⟩) → a = a' := by
+    IsPath (⟨a', i⟩::xs) (M.mk ⟨a, f⟩) → a = a' := by
   generalize h : M.mk ⟨a, f⟩ = x
   rintro (_ | ⟨_, _, _, _, _, rfl, _⟩)
   cases mk_inj h
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem is_path_cons' {xs : Path F} {a} {f : F.B a → M F} {i : F.B a} :
-    IsPath (⟨a, i⟩ :: xs) (M.mk ⟨a, f⟩) → IsPath xs (f i) := by
+    IsPath (⟨a, i⟩::xs) (M.mk ⟨a, f⟩) → IsPath xs (f i) := by
   generalize h : M.mk ⟨a, f⟩ = x
   rintro (_ | ⟨_, _, _, _, _, rfl, hp⟩)
   cases mk_inj h
   exact hp
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- follow a path through a value of `M F` and return the subtree
 found at the end of the path if it is a valid path for that value and
 return a default tree -/
 def isubtree [DecidableEq F.A] [Inhabited (M F)] : Path F → M F → M F
   | [], x => x
-  | ⟨a, i⟩ :: ps, x =>
+  | ⟨a, i⟩::ps, x =>
     Pfunctor.M.casesOn' x fun a' f =>
       (if h : a = a' then
         isubtree ps
@@ -519,18 +523,20 @@ theorem ichildren_mk [DecidableEq F.A] [Inhabited (M F)] (x : F.Obj (M F)) (i : 
   intros
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem isubtree_cons [DecidableEq F.A] [Inhabited (M F)] (ps : Path F) {a} (f : F.B a → M F) {i : F.B a} :
-    isubtree (⟨_, i⟩ :: ps) (M.mk ⟨a, f⟩) = isubtree ps (f i) := by
+    isubtree (⟨_, i⟩::ps) (M.mk ⟨a, f⟩) = isubtree ps (f i) := by
   simp only [isubtree, ichildren_mk, Pfunctor.Obj.iget, dif_pos, isubtree, M.cases_on_mk'] <;> rfl
 
 @[simp]
 theorem iselect_nil [DecidableEq F.A] [Inhabited (M F)] {a} (f : F.B a → M F) : iselect nil (M.mk ⟨a, f⟩) = a := by
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem iselect_cons [DecidableEq F.A] [Inhabited (M F)] (ps : Path F) {a} (f : F.B a → M F) {i} :
-    iselect (⟨a, i⟩ :: ps) (M.mk ⟨a, f⟩) = iselect ps (f i) := by
+    iselect (⟨a, i⟩::ps) (M.mk ⟨a, f⟩) = iselect ps (f i) := by
   simp only [iselect, isubtree_cons]
 
 theorem corec_def {X} (f : X → F.Obj X) (x₀ : X) : M.corec f x₀ = M.mk (M.corec f <$> f x₀) := by
@@ -546,6 +552,7 @@ theorem corec_def {X} (f : X → F.Obj X) (x₀ : X) : M.corec f x₀ = M.mk (M.
     congr
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem ext_aux [Inhabited (M F)] [DecidableEq F.A] {n : ℕ} (x y z : M F) (hx : Agree' n z x) (hy : Agree' n z y)
     (hrec : ∀ ps : Path F, n = ps.length → iselect ps x = iselect ps y) : x.approx (n + 1) = y.approx (n + 1) := by
   induction' n with n generalizing x y z
@@ -555,7 +562,7 @@ theorem ext_aux [Inhabited (M F)] [DecidableEq F.A] {n : ℕ} (x y z : M F) (hx 
     simp only [iselect_nil] at hrec
     subst hrec
     simp only [approx_mk, true_andₓ, eq_self_iff_true, heq_iff_eq]
-    apply Subsingleton.elimₓ
+    apply Subsingleton.elim
     
   · cases hx
     cases hy
@@ -574,7 +581,7 @@ theorem ext_aux [Inhabited (M F)] [DecidableEq F.A] {n : ℕ} (x y z : M F) (hx 
     · solve_by_elim
       
     introv h
-    specialize hrec (⟨_, i⟩ :: ps) (congr_arg _ h)
+    specialize hrec (⟨_, i⟩::ps) (congr_arg _ h)
     simp only [iselect_cons] at hrec
     exact hrec
     

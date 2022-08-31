@@ -467,11 +467,11 @@ instance :
     HasImageMap.transport st (monoFactorisation f.Hom) (isImage g.Hom)
       (fun x =>
         ⟨st.right x.1,
-          ⟨st.left (Classical.some x.2), by
+          ⟨st.left (Classical.choose x.2), by
             have p := st.w
-            replace p := congr_fun p (Classical.some x.2)
+            replace p := congr_fun p (Classical.choose x.2)
             simp only [functor.id_map, types_comp_apply, Subtype.val_eq_coe] at p
-            erw [p, Classical.some_spec x.2]⟩⟩)
+            erw [p, Classical.choose_spec x.2]⟩⟩)
       rfl
 
 end CategoryTheory.Limits.Types

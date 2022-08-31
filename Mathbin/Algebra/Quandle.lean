@@ -109,13 +109,13 @@ class Rack (α : Type u) extends Shelf α where
   left_inv : ∀ x, Function.LeftInverse (inv_act x) (act x)
   right_inv : ∀ x, Function.RightInverse (inv_act x) (act x)
 
--- mathport name: «expr ◃ »
+-- mathport name: shelf.act
 localized [Quandles] infixr:65 " ◃ " => Shelf.act
 
--- mathport name: «expr ◃⁻¹ »
+-- mathport name: rack.inv_act
 localized [Quandles] infixr:65 " ◃⁻¹ " => Rack.invAct
 
--- mathport name: «expr →◃ »
+-- mathport name: shelf_hom
 localized [Quandles] infixr:25 " →◃ " => ShelfHom
 
 open Quandles

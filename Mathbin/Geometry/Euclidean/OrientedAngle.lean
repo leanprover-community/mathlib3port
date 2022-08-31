@@ -1013,7 +1013,7 @@ variable [hd2 : Fact (finrank ℝ V = 2)] (o : Orientation ℝ V (Finₓ 2))
 
 include hd2 o
 
--- mathport name: «exprob»
+-- mathport name: exprob
 local notation "ob" =>
   o.fin_orthonormal_basis_orthonormal
     (by

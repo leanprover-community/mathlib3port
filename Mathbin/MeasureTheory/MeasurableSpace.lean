@@ -229,7 +229,7 @@ theorem measurable_const' {f : β → α} (hf : ∀ x y, f x = f y) : Measurable
     exact funext fun x => hf x h.some
     
 
-theorem measurable_of_fintype [Fintype α] [MeasurableSingletonClass α] (f : α → β) : Measurable f := fun s hs =>
+theorem measurable_of_finite [Finite α] [MeasurableSingletonClass α] (f : α → β) : Measurable f := fun s hs =>
   (f ⁻¹' s).to_finite.MeasurableSet
 
 end TypeclassMeasurableSpace
@@ -331,11 +331,11 @@ instance : MeasurableSingletonClass ℤ :=
 instance : MeasurableSingletonClass ℚ :=
   ⟨fun _ => trivialₓ⟩
 
-theorem measurable_to_encodable [MeasurableSpace α] [Encodable α] [MeasurableSpace β] {f : β → α}
+theorem measurable_to_countable [MeasurableSpace α] [Countable α] [MeasurableSpace β] {f : β → α}
     (h : ∀ y, MeasurableSet (f ⁻¹' {f y})) : Measurable f := by
   intro s hs
   rw [← bUnion_preimage_singleton]
-  refine' MeasurableSet.Union fun y => MeasurableSet.Union_Prop fun hy => _
+  refine' MeasurableSet.Union fun y => MeasurableSet.Union fun hy => _
   by_cases' hyf : y ∈ range f
   · rcases hyf with ⟨y, rfl⟩
     apply h
@@ -356,7 +356,7 @@ theorem measurable_from_nat {f : ℕ → α} : Measurable f :=
   measurable_from_top
 
 theorem measurable_to_nat {f : α → ℕ} : (∀ y, MeasurableSet (f ⁻¹' {f y})) → Measurable f :=
-  measurable_to_encodable
+  measurable_to_countable
 
 theorem measurable_find_greatest' {p : α → ℕ → Prop} [∀ x, DecidablePred (p x)] {N : ℕ}
     (hN : ∀ k ≤ N, MeasurableSet { x | Nat.findGreatest (p x) N = k }) : Measurable fun x => Nat.findGreatest (p x) N :=
@@ -368,8 +368,7 @@ theorem measurable_find_greatest {p : α → ℕ → Prop} [∀ x, DecidablePred
   refine' measurable_find_greatest' fun k hk => _
   simp only [Nat.find_greatest_eq_iff, set_of_and, set_of_forall, ← compl_set_of]
   repeat'
-    apply_rules [MeasurableSet.inter, MeasurableSet.const, MeasurableSet.Inter, MeasurableSet.Inter_Prop,
-        MeasurableSet.compl, hN] <;>
+    apply_rules [MeasurableSet.inter, MeasurableSet.const, MeasurableSet.Inter, MeasurableSet.compl, hN] <;>
       try
         intros
 
@@ -495,7 +494,7 @@ theorem Measurable.dite [∀ x, Decidable (x ∈ s)] {f : s → β} (hf : Measur
 theorem measurable_of_measurable_on_compl_finite [MeasurableSingletonClass α] {f : α → β} (s : Set α) (hs : s.Finite)
     (hf : Measurable (sᶜ.restrict f)) : Measurable f := by
   letI : Fintype s := finite.fintype hs
-  exact measurable_of_restrict_of_restrict_compl hs.measurable_set (measurable_of_fintype _) hf
+  exact measurable_of_restrict_of_restrict_compl hs.measurable_set (measurable_of_finite _) hf
 
 theorem measurable_of_measurable_on_compl_singleton [MeasurableSingletonClass α] {f : α → β} (a : α)
     (hf : Measurable ({ x | x ≠ a }.restrict f)) : Measurable f :=
@@ -581,11 +580,16 @@ theorem measurable_swap_iff {mγ : MeasurableSpace γ} {f : α × β → γ} : M
     ext ⟨x, y⟩
     rfl, fun hf => hf.comp measurable_swap⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[measurability]
 theorem MeasurableSet.prod {s : Set α} {t : Set β} (hs : MeasurableSet s) (ht : MeasurableSet t) :
     MeasurableSet (s ×ˢ t) :=
   MeasurableSet.inter (measurable_fst hs) (measurable_snd ht)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem measurable_set_prod_of_nonempty {s : Set α} {t : Set β} (h : (s ×ˢ t).Nonempty) :
     MeasurableSet (s ×ˢ t) ↔ MeasurableSet s ∧ MeasurableSet t := by
   rcases h with ⟨⟨x, y⟩, hx, hy⟩
@@ -594,6 +598,8 @@ theorem measurable_set_prod_of_nonempty {s : Set α} {t : Set β} (h : (s ×ˢ t
   have : MeasurableSet (Prod.mk x ⁻¹' s ×ˢ t) := measurable_prod_mk_left hst
   simp_all
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem measurable_set_prod {s : Set α} {t : Set β} :
     MeasurableSet (s ×ˢ t) ↔ MeasurableSet s ∧ MeasurableSet t ∨ s = ∅ ∨ t = ∅ := by
   cases' (s ×ˢ t).eq_empty_or_nonempty with h h
@@ -608,7 +614,8 @@ theorem measurable_set_swap_iff {s : Set (α × β)} : MeasurableSet (Prod.swap 
     ext ⟨x, y⟩
     rfl, fun hs => measurable_swap hs⟩
 
-theorem measurable_from_prod_encodable [Encodable β] [MeasurableSingletonClass β] {mγ : MeasurableSpace γ}
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem measurable_from_prod_countable [Countable β] [MeasurableSingletonClass β] {mγ : MeasurableSpace γ}
     {f : α × β → γ} (hf : ∀ y, Measurable fun x => f (x, y)) : Measurable f := by
   intro s hs
   have : f ⁻¹' s = ⋃ y, ((fun x => f (x, y)) ⁻¹' s) ×ˢ ({y} : Set β) := by
@@ -622,7 +629,7 @@ theorem measurable_from_prod_encodable [Encodable β] [MeasurableSingletonClass 
 theorem Measurable.find {m : MeasurableSpace α} {f : ℕ → α → β} {p : ℕ → α → Prop} [∀ n, DecidablePred (p n)]
     (hf : ∀ n, Measurable (f n)) (hp : ∀ n, MeasurableSet { x | p n x }) (h : ∀ x, ∃ n, p n x) :
     Measurable fun x => f (Nat.findₓ (h x)) x := by
-  have : Measurable fun p : α × ℕ => f p.2 p.1 := measurable_from_prod_encodable fun n => hf n
+  have : Measurable fun p : α × ℕ => f p.2 p.1 := measurable_from_prod_countable fun n => hf n
   exact this.comp (Measurable.prod_mk measurable_id (measurable_find h hp))
 
 /-- Given countably many disjoint measurable sets `t n` and countably many measurable
@@ -710,7 +717,7 @@ theorem MeasurableSet.pi {s : Set δ} {t : ∀ i : δ, Set (π i)} (hs : s.Count
   rw [pi_def]
   exact MeasurableSet.bInter hs fun i hi => measurable_pi_apply _ (ht i hi)
 
-theorem MeasurableSet.univ_pi [Encodable δ] {t : ∀ i : δ, Set (π i)} (ht : ∀ i, MeasurableSet (t i)) :
+theorem MeasurableSet.univ_pi [Countable δ] {t : ∀ i : δ, Set (π i)} (ht : ∀ i, MeasurableSet (t i)) :
     MeasurableSet (Pi Univ t) :=
   MeasurableSet.pi (to_countable _) fun i _ => ht i
 
@@ -730,8 +737,6 @@ theorem measurable_set_pi {s : Set δ} {t : ∀ i, Set (π i)} (hs : s.Countable
     
   · simp [measurable_set_pi_of_nonempty hs, h, ← not_nonempty_iff_eq_empty]
     
-
-section
 
 variable (π)
 
@@ -758,28 +763,13 @@ theorem measurable_pi_equiv_pi_subtype_prod (p : δ → Prop) [DecidablePred p] 
       simp only [pi_equiv_pi_subtype_prod_apply, measurable_pi_apply]
       
 
-end
-
-section Fintype
-
-attribute [local instance] Fintype.toEncodable
-
-theorem MeasurableSet.pi_fintype [Fintype δ] {s : Set δ} {t : ∀ i, Set (π i)} (ht : ∀ i ∈ s, MeasurableSet (t i)) :
-    MeasurableSet (Pi s t) :=
-  MeasurableSet.pi (to_countable _) ht
-
-theorem MeasurableSet.univ_pi_fintype [Fintype δ] {t : ∀ i, Set (π i)} (ht : ∀ i, MeasurableSet (t i)) :
-    MeasurableSet (Pi Univ t) :=
-  MeasurableSet.pi_fintype fun i _ => ht i
-
-end Fintype
-
 end Pi
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance Tprod.measurableSpaceₓ (π : δ → Type _) [∀ x, MeasurableSpace (π x)] :
     ∀ l : List δ, MeasurableSpace (List.Tprod π l)
   | [] => PUnit.measurableSpace
-  | i :: is => @Prod.measurableSpace _ _ _ (Tprod.measurableSpaceₓ is)
+  | i::is => @Prod.measurableSpace _ _ _ (Tprod.measurableSpaceₓ is)
 
 section Tprod
 
@@ -794,9 +784,10 @@ theorem measurable_tprod_mk (l : List δ) : Measurable (@Tprod.mkₓ δ π l) :=
   · exact (measurable_pi_apply i).prod_mk ih
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem measurable_tprod_elim [DecidableEq δ] :
     ∀ {l : List δ} {i : δ} (hi : i ∈ l), Measurable fun v : Tprod π l => v.elim hi
-  | i :: is, j, hj => by
+  | i::is, j, hj => by
     by_cases' hji : j = i
     · subst hji
       simp [measurable_fst]
@@ -1162,6 +1153,7 @@ def sumCongr (ab : α ≃ᵐ β) (cd : γ ≃ᵐ δ) : Sum α γ ≃ᵐ Sum β �
     cases cd'
     refine' measurable_sum (measurable_inl.comp abm) (measurable_inr.comp cdm)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `s ×ˢ t ≃ (s × t)` as measurable spaces. -/
 def Set.prod (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ᵐ s × t where
   toEquiv := Equivₓ.Set.prod s t
@@ -1245,6 +1237,8 @@ def Set.rangeInr : (Range Sum.inr : Set (Sum α β)) ≃ᵐ β where
     simp [set.range_inr._match_1]
   measurable_inv_fun := Measurable.subtype_mk measurable_inr
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Products distribute over sums (on the right) as measurable spaces. -/
 def sumProdDistrib (α β γ) [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] :
     Sum α β × γ ≃ᵐ Sum (α × γ) (β × γ) where

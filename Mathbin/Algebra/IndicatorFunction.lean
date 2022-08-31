@@ -529,6 +529,7 @@ theorem inter_indicator_one {s t : Set α} : (s ∩ t).indicator (1 : _ → M) =
   funext fun _ => by
     simpa only [← inter_indicator_mul, Pi.mul_apply, Pi.one_apply, one_mulₓ]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem indicator_prod_one {s : Set α} {t : Set β} {x : α} {y : β} :
     (s ×ˢ t).indicator (1 : _ → M) (x, y) = s.indicator 1 x * t.indicator 1 y := by
   classical

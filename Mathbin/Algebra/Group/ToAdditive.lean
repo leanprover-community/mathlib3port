@@ -65,7 +65,7 @@ end PerformanceHack
 
 section ExtraAttributes
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr *»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
 /-- An attribute that tells `@[to_additive]` that certain arguments of this definition are not
 involved when using `@[to_additive]`.
 This helps the heuristic of `@[to_additive]` by also transforming definitions if `ℕ` or another
@@ -85,7 +85,7 @@ unsafe def ignore_args_attr : user_attribute (name_map <| List ℕ) (List ℕ) w
               dict n (param expr.to_nat).iget)
         mk_name_map,
       []⟩
-  parser := «expr *» lean.parser.small_nat
+  parser := parser.many lean.parser.small_nat
 
 /-- An attribute that is automatically added to declarations tagged with `@[to_additive]`, if needed.
 
@@ -125,7 +125,7 @@ unsafe def relevant_arg_attr : user_attribute (name_map ℕ) ℕ where
       []⟩
   parser := lean.parser.small_nat
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr *»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many
 /-- An attribute that stores all the declarations that needs their arguments reordered when
 applying `@[to_additive]`. Currently, we only support swapping consecutive arguments.
 The list of the natural numbers contains the positions of the first of the two arguments
@@ -149,7 +149,7 @@ unsafe def reorder_attr : user_attribute (name_map <| List ℕ) (List ℕ) where
         mk_name_map,
       []⟩
   parser := do
-    let l ← «expr *» lean.parser.small_nat
+    let l ← parser.many lean.parser.small_nat
     guardₓ (l (· ≠ 0)) <|> exceptional.fail "The reorder positions must be positive"
     return l
 
@@ -281,16 +281,16 @@ unsafe def target_name (src tgt : Name) (dict : name_map Name) (allow_auto_name 
           " to itself.\nGive the desired additive name explicitly using `@[to_additive additive_name]`. ")
     else pure res
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- the parser for the arguments to `to_additive`. -/
 unsafe def parser : lean.parser ValueTypeₓ := do
-  let bang ← Option.isSome <$> «expr ?» (tk "!")
-  let ques ← Option.isSome <$> «expr ?» (tk "?")
-  let tgt ← «expr ?» ident
-  let e ← «expr ?» texpr
+  let bang ← Option.isSome <$> parser.optional (tk "!")
+  let ques ← Option.isSome <$> parser.optional (tk "?")
+  let tgt ← parser.optional ident
+  let e ← parser.optional texpr
   let doc ←
     match e with
       | some pe => some <$> (to_expr pe >>= eval_expr Stringₓ : tactic Stringₓ)

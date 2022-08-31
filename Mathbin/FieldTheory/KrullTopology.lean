@@ -149,7 +149,7 @@ def galGroupBasis (K L : Type _) [Field K] [Field L] [Algebra K L] : GroupFilter
   inv' := fun U hU =>
     ⟨U, hU, by
       rcases hU with ⟨H, hH, rfl⟩
-      exact H.inv_mem'⟩
+      exact fun _ => H.inv_mem'⟩
   conj' := by
     rintro σ U ⟨H, ⟨E, hE, rfl⟩, rfl⟩
     let F : IntermediateField K L := E.map σ.symm.to_alg_hom

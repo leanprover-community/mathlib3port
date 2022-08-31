@@ -56,7 +56,7 @@ theorem zero_right (x : M) : SameRay R x 0 :=
 
 @[nontriviality]
 theorem of_subsingleton [Subsingleton M] (x y : M) : SameRay R x y := by
-  rw [Subsingleton.elimₓ x 0]
+  rw [Subsingleton.elim x 0]
   exact zero_left _
 
 @[nontriviality]

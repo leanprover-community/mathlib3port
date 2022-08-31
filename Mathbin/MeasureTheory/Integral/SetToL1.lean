@@ -610,7 +610,7 @@ theorem set_to_simple_func_indicator (T : Set α → F →L[ℝ] F') (hT_empty :
       have : Subsingleton (Set α) := by
         unfold Set
         infer_instance
-      exact Subsingleton.elimₓ s ∅
+      exact Subsingleton.elim s ∅
       
     simp [hs_univ, set_to_simple_func]
     
@@ -647,7 +647,7 @@ theorem set_to_simple_func_const' [Nonempty α] (T : Set α → F →L[ℝ] F') 
 theorem set_to_simple_func_const (T : Set α → F →L[ℝ] F') (hT_empty : T ∅ = 0) (x : F) {m : MeasurableSpace α} :
     SimpleFunc.setToSimpleFunc T (SimpleFunc.const α x) = T univ x := by
   cases hα : is_empty_or_nonempty α
-  · have h_univ_empty : (univ : Set α) = ∅ := Subsingleton.elimₓ _ _
+  · have h_univ_empty : (univ : Set α) = ∅ := Subsingleton.elim _ _
     rw [h_univ_empty, hT_empty]
     simp only [set_to_simple_func, ContinuousLinearMap.zero_apply, sum_empty, range_eq_empty_of_is_empty]
     

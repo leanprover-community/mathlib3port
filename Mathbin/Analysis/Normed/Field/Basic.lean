@@ -243,11 +243,13 @@ theorem Nat.norm_cast_le : ∀ n : ℕ, ∥(n : α)∥ ≤ n * ∥(1 : α)∥
     rw [n.cast_succ, n.cast_succ, add_mulₓ, one_mulₓ]
     exact norm_add_le_of_le (Nat.norm_cast_le n) le_rflₓ
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem List.norm_prod_le' : ∀ {l : List α}, l ≠ [] → ∥l.Prod∥ ≤ (l.map norm).Prod
   | [], h => (h rfl).elim
   | [a], _ => by
     simp
-  | a :: b :: l, _ => by
+  | a::b::l, _ => by
     rw [List.map_cons, List.prod_cons, @List.prod_cons _ _ _ ∥a∥]
     refine' le_transₓ (norm_mul_le _ _) (mul_le_mul_of_nonneg_left _ (norm_nonneg _))
     exact List.norm_prod_le' (List.cons_ne_nil b l)
@@ -256,10 +258,11 @@ theorem List.nnnorm_prod_le' {l : List α} (hl : l ≠ []) : ∥l.Prod∥₊ ≤
   (List.norm_prod_le' hl).trans_eq <| by
     simp [Nnreal.coe_list_prod, List.map_mapₓ]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem List.norm_prod_le [NormOneClass α] : ∀ l : List α, ∥l.Prod∥ ≤ (l.map norm).Prod
   | [] => by
     simp
-  | a :: l => List.norm_prod_le' (List.cons_ne_nil a l)
+  | a::l => List.norm_prod_le' (List.cons_ne_nil a l)
 
 theorem List.nnnorm_prod_le [NormOneClass α] (l : List α) : ∥l.Prod∥₊ ≤ (l.map nnnorm).Prod :=
   l.norm_prod_le.trans_eq <| by
@@ -827,6 +830,7 @@ open Finset
 
 open Classical
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Summable.mul_of_nonneg {f : ι → ℝ} {g : ι' → ℝ} (hf : Summable f) (hg : Summable g) (hf' : 0 ≤ f)
     (hg' : 0 ≤ g) : Summable fun x : ι × ι' => f x.1 * g x.2 :=
   let ⟨s, hf⟩ := hf

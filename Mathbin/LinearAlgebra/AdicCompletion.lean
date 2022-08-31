@@ -113,7 +113,7 @@ protected theorem subsingleton (h : IsHausdorff (⊤ : Ideal R) M) : Subsingleto
 variable (M)
 
 instance (priority := 100) of_subsingleton [Subsingleton M] : IsHausdorff I M :=
-  ⟨fun x _ => Subsingleton.elimₓ _ _⟩
+  ⟨fun x _ => Subsingleton.elim _ _⟩
 
 variable {I M}
 
@@ -197,7 +197,7 @@ instance top : IsPrecomplete (⊤ : Ideal R) M :=
 instance (priority := 100) of_subsingleton [Subsingleton M] : IsPrecomplete I M :=
   ⟨fun f hf =>
     ⟨0, fun n => by
-      rw [Subsingleton.elimₓ (f n) 0]⟩⟩
+      rw [Subsingleton.elim (f n) 0]⟩⟩
 
 end IsPrecomplete
 

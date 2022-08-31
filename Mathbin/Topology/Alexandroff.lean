@@ -64,7 +64,7 @@ namespace Alexandroff
 def infty : Alexandroff X :=
   none
 
--- mathport name: «expr∞»
+-- mathport name: alexandroff.infty
 localized [Alexandroff] notation "∞" => Alexandroff.infty
 
 instance : CoeTₓ X (Alexandroff X) :=

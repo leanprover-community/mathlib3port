@@ -251,7 +251,7 @@ add_tactic_doc
   { Name := "mk_iff_of_inductive_prop", category := DocCategory.cmd, declNames := [`` mk_iff_of_inductive_prop_cmd],
     tags := ["logic", "environment"] }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- Applying the `mk_iff` attribute to an inductively-defined proposition `mk_iff` makes an `iff` rule
 `r` with the shape `∀ps is, i as ↔ ⋁_j, ∃cs, is = cs`, where `ps` are the type parameters, `is` are
 the indices, `j` ranges over all possible constructors, the `cs` are the parameters for each of the
@@ -292,7 +292,7 @@ See also the user command `mk_iff_of_inductive_prop`.
 unsafe def mk_iff_attr : user_attribute Unit (Option Name) where
   Name := `mk_iff
   descr := "Generate an `iff` lemma for an inductive `Prop`."
-  parser := «expr ?» ident
+  parser := parser.optional ident
   after_set :=
     some fun n _ _ => do
       let tgt ← mk_iff_attr.get_param n

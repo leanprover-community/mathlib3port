@@ -314,11 +314,11 @@ instance is_modular_lattice_Iic : IsModularLattice (Set.Iic a) :=
 instance is_modular_lattice_Ici : IsModularLattice (Set.Ici a) :=
   ⟨fun x y z xz => (sup_inf_le_assoc_of_le (y : α) xz : (↑x⊔↑y)⊓↑z ≤ ↑x⊔↑y⊓↑z)⟩
 
-section IsComplemented
+section ComplementedLattice
 
-variable [BoundedOrder α] [IsComplemented α]
+variable [BoundedOrder α] [ComplementedLattice α]
 
-instance is_complemented_Iic : IsComplemented (Set.Iic a) :=
+instance complemented_lattice_Iic : ComplementedLattice (Set.Iic a) :=
   ⟨fun ⟨x, hx⟩ =>
     let ⟨y, hy⟩ := exists_is_compl x
     ⟨⟨y⊓a, Set.mem_Iic.2 inf_le_right⟩, by
@@ -333,7 +333,7 @@ instance is_complemented_Iic : IsComplemented (Set.Iic a) :=
         rw [← sup_inf_assoc_of_le _ (Set.mem_Iic.1 hx), top_le_iff.1 hy.2, top_inf_eq]
         ⟩⟩
 
-instance is_complemented_Ici : IsComplemented (Set.Ici a) :=
+instance complemented_lattice_Ici : ComplementedLattice (Set.Ici a) :=
   ⟨fun ⟨x, hx⟩ =>
     let ⟨y, hy⟩ := exists_is_compl x
     ⟨⟨y⊔a, Set.mem_Ici.2 le_sup_right⟩, by
@@ -348,7 +348,7 @@ instance is_complemented_Ici : IsComplemented (Set.Ici a) :=
         exact le_transₓ hy.2 le_sup_left
         ⟩⟩
 
-end IsComplemented
+end ComplementedLattice
 
 end IsModularLattice
 

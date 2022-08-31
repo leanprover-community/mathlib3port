@@ -24,7 +24,7 @@ open MeasureTheory
 
 open Classical
 
-variable {α β γ ι : Type _} [MeasurableSpace α] [MeasurableSpace β] {f : ι → α → β} {μ : Measureₓ α}
+variable {ι : Sort _} {α β γ : Type _} [MeasurableSpace α] [MeasurableSpace β] {f : ι → α → β} {μ : Measureₓ α}
   {p : α → (ι → β) → Prop}
 
 /-- If we have the additional hypothesis `∀ᵐ x ∂μ, p x (λ n, f n x)`, this is a measurable set
@@ -84,14 +84,14 @@ theorem ae_seq_set_measurable_set {hf : ∀ i, AeMeasurable (f i) μ} : Measurab
 theorem measurable (hf : ∀ i, AeMeasurable (f i) μ) (p : α → (ι → β) → Prop) (i : ι) : Measurable (aeSeq hf p i) :=
   Measurable.ite ae_seq_set_measurable_set (hf i).measurable_mk <| measurable_const' fun x y => rfl
 
-theorem measure_compl_ae_seq_set_eq_zero [Encodable ι] (hf : ∀ i, AeMeasurable (f i) μ)
+theorem measure_compl_ae_seq_set_eq_zero [Countable ι] (hf : ∀ i, AeMeasurable (f i) μ)
     (hp : ∀ᵐ x ∂μ, p x fun n => f n x) : μ (AeSeqSet hf pᶜ) = 0 := by
   rw [AeSeqSet, compl_compl, measure_to_measurable]
   have hf_eq := fun i => (hf i).ae_eq_mk
   simp_rw [Filter.EventuallyEq, ← ae_all_iff] at hf_eq
   exact Filter.Eventually.and hf_eq hp
 
-theorem ae_seq_eq_mk_ae [Encodable ι] (hf : ∀ i, AeMeasurable (f i) μ) (hp : ∀ᵐ x ∂μ, p x fun n => f n x) :
+theorem ae_seq_eq_mk_ae [Countable ι] (hf : ∀ i, AeMeasurable (f i) μ) (hp : ∀ᵐ x ∂μ, p x fun n => f n x) :
     ∀ᵐ a : α ∂μ, ∀ i : ι, aeSeq hf p i a = (hf i).mk (f i) a := by
   have h_ss : AeSeqSet hf p ⊆ { a : α | ∀ i, aeSeq hf p i a = (hf i).mk (f i) a } := fun x hx i => by
     simp only [aeSeq, hx, if_true]
@@ -100,17 +100,17 @@ theorem ae_seq_eq_mk_ae [Encodable ι] (hf : ∀ i, AeMeasurable (f i) μ) (hp :
       (le_transₓ (measure_mono (set.compl_subset_compl.mpr h_ss)) (le_of_eqₓ (measure_compl_ae_seq_set_eq_zero hf hp)))
       (zero_le _)
 
-theorem ae_seq_eq_fun_ae [Encodable ι] (hf : ∀ i, AeMeasurable (f i) μ) (hp : ∀ᵐ x ∂μ, p x fun n => f n x) :
+theorem ae_seq_eq_fun_ae [Countable ι] (hf : ∀ i, AeMeasurable (f i) μ) (hp : ∀ᵐ x ∂μ, p x fun n => f n x) :
     ∀ᵐ a : α ∂μ, ∀ i : ι, aeSeq hf p i a = f i a := by
   have h_ss : { a : α | ¬∀ i : ι, aeSeq hf p i a = f i a } ⊆ AeSeqSet hf pᶜ := fun x =>
     mt fun hx i => ae_seq_eq_fun_of_mem_ae_seq_set hf hx i
   exact measure_mono_null h_ss (measure_compl_ae_seq_set_eq_zero hf hp)
 
-theorem ae_seq_n_eq_fun_n_ae [Encodable ι] (hf : ∀ i, AeMeasurable (f i) μ) (hp : ∀ᵐ x ∂μ, p x fun n => f n x) (n : ι) :
+theorem ae_seq_n_eq_fun_n_ae [Countable ι] (hf : ∀ i, AeMeasurable (f i) μ) (hp : ∀ᵐ x ∂μ, p x fun n => f n x) (n : ι) :
     aeSeq hf p n =ᵐ[μ] f n :=
   ae_all_iff.mp (ae_seq_eq_fun_ae hf hp) n
 
-theorem supr [CompleteLattice β] [Encodable ι] (hf : ∀ i, AeMeasurable (f i) μ) (hp : ∀ᵐ x ∂μ, p x fun n => f n x) :
+theorem supr [CompleteLattice β] [Countable ι] (hf : ∀ i, AeMeasurable (f i) μ) (hp : ∀ᵐ x ∂μ, p x fun n => f n x) :
     (⨆ n, aeSeq hf p n) =ᵐ[μ] ⨆ n, f n := by
   simp_rw [Filter.EventuallyEq, ae_iff, supr_apply]
   have h_ss : AeSeqSet hf p ⊆ { a : α | (⨆ i : ι, aeSeq hf p i a) = ⨆ i : ι, f i a } := by

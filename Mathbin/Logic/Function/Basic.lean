@@ -67,7 +67,7 @@ theorem hfunext {α α' : Sort u} {β : α → Sort v} {β' : α' → Sort v} {f
     exact h a a (HEq.refl a)
   have : β = β' := by
     funext a
-    exact type_eq_of_heqₓ (this a)
+    exact type_eq_of_heq (this a)
   subst this
   apply heq_of_eq
   funext a
@@ -122,7 +122,7 @@ theorem Injective.of_comp_iff' (f : α → β) {g : γ → α} (hg : Bijective g
 theorem Injective.comp_left {g : β → γ} (hg : Function.Injective g) :
     Function.Injective ((· ∘ ·) g : (α → β) → α → γ) := fun f₁ f₂ hgf => funext fun i => hg <| (congr_fun hgf i : _)
 
-theorem injective_of_subsingleton [Subsingleton α] (f : α → β) : Injective f := fun a b ab => Subsingleton.elimₓ _ _
+theorem injective_of_subsingleton [Subsingleton α] (f : α → β) : Injective f := fun a b ab => Subsingleton.elim _ _
 
 theorem Injective.dite (p : α → Prop) [DecidablePred p] {f : { a : α // p a } → β} {f' : { a : α // ¬p a } → β}
     (hf : Injective f) (hf' : Injective f')
@@ -341,7 +341,7 @@ attribute [local instance] Classical.propDecidable
 /-- We can use choice to construct explicitly a partial inverse for
   a given injective function `f`. -/
 noncomputable def partialInv {α β} (f : α → β) (b : β) : Option α :=
-  if h : ∃ a, f a = b then some (Classical.some h) else none
+  if h : ∃ a, f a = b then some (Classical.choose h) else none
 
 theorem partial_inv_of_injective {α β} {f : α → β} (I : Injective f) : IsPartialInv f (partialInv f)
   | a, b =>
@@ -350,13 +350,13 @@ theorem partial_inv_of_injective {α β} {f : α → β} (I : Injective f) : IsP
         rw [partial_inv, dif_pos h'] at h
         injection h with h
         subst h
-        apply Classical.some_spec h'
+        apply Classical.choose_spec h'
       else by
         rw [partial_inv, dif_neg h'] at h <;> contradiction,
       fun e =>
       e ▸
         have h : ∃ a', f a' = f a := ⟨_, rfl⟩
-        (dif_pos h).trans (congr_arg _ (I <| Classical.some_spec h))⟩
+        (dif_pos h).trans (congr_arg _ (I <| Classical.choose_spec h))⟩
 
 theorem partial_inv_left {α β} {f : α → β} (I : Injective f) : ∀ x, partialInv f (f x) = some x :=
   is_partial_inv_left (partial_inv_of_injective I)
@@ -412,10 +412,10 @@ variable {α : Sort u} {β : Sort v} {γ : Sort w} {f : α → β}
 /-- The inverse of a surjective function. (Unlike `inv_fun`, this does not require
   `α` to be inhabited.) -/
 noncomputable def surjInv {f : α → β} (h : Surjective f) (b : β) : α :=
-  Classical.some (h b)
+  Classical.choose (h b)
 
 theorem surj_inv_eq (h : Surjective f) (b) : f (surjInv h b) = b :=
-  Classical.some_spec (h b)
+  Classical.choose_spec (h b)
 
 theorem right_inverse_surj_inv (hf : Surjective f) : RightInverse (surjInv hf) f :=
   surj_inv_eq hf
@@ -438,7 +438,7 @@ theorem injective_surj_inv (h : Surjective f) : Injective (surjInv h) :=
 
 theorem surjective_to_subsingleton [na : Nonempty α] [Subsingleton β] (f : α → β) : Surjective f := fun y =>
   let ⟨a⟩ := na
-  ⟨a, Subsingleton.elimₓ _ _⟩
+  ⟨a, Subsingleton.elim _ _⟩
 
 /-- Composition by an surjective function on the left is itself surjective. -/
 theorem Surjective.comp_left {g : β → γ} (hg : Surjective g) : Surjective ((· ∘ ·) g : (α → β) → α → γ) := fun f =>
@@ -580,17 +580,17 @@ and the values of an auxiliary function `e' : β → γ` elsewhere.
 
 Mostly useful when `f` is injective. -/
 def extendₓ (f : α → β) (g : α → γ) (e' : β → γ) : β → γ := fun b =>
-  if h : ∃ a, f a = b then g (Classical.some h) else e' b
+  if h : ∃ a, f a = b then g (Classical.choose h) else e' b
 
 theorem extend_defₓ (f : α → β) (g : α → γ) (e' : β → γ) (b : β) [Decidable (∃ a, f a = b)] :
-    extendₓ f g e' b = if h : ∃ a, f a = b then g (Classical.some h) else e' b := by
+    extendₓ f g e' b = if h : ∃ a, f a = b then g (Classical.choose h) else e' b := by
   unfold extend
   congr
 
 @[simp]
 theorem extend_applyₓ (hf : Injective f) (g : α → γ) (e' : β → γ) (a : α) : extendₓ f g e' (f a) = g a := by
   simp only [extend_def, dif_pos, exists_apply_eq_applyₓ]
-  exact congr_arg g (hf <| Classical.some_spec (exists_apply_eq_applyₓ f a))
+  exact congr_arg g (hf <| Classical.choose_spec (exists_apply_eq_applyₓ f a))
 
 @[simp]
 theorem extend_apply' (g : α → γ) (e' : β → γ) (b : β) (hb : ¬∃ a, f a = b) : extendₓ f g e' b = e' b := by
@@ -678,7 +678,7 @@ class HasUncurry (α : Type _) (β : outParam (Type _)) (γ : outParam (Type _))
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 -- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident has_uncurry.uncurry]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
--- mathport name: «expr↿ »
+-- mathport name: uncurry
 notation:arg "↿" x:arg => HasUncurry.uncurry x
 
 instance hasUncurryBase : HasUncurry (α → β) α β :=

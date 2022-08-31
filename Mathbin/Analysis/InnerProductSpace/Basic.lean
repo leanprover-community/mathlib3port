@@ -91,10 +91,10 @@ notation "⟪" x ", " y "⟫_ℂ" => @inner ℂ _ _ x y
 
 section Notations
 
--- mathport name: «expr⟪ , ⟫»
+-- mathport name: inner.real
 localized [RealInnerProductSpace] notation "⟪" x ", " y "⟫" => @inner ℝ _ _ x y
 
--- mathport name: «expr⟪ , ⟫»
+-- mathport name: inner.complex
 localized [ComplexInnerProductSpace] notation "⟪" x ", " y "⟫" => @inner ℂ _ _ x y
 
 end Notations
@@ -160,16 +160,16 @@ include c
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 F _ x y
 
--- mathport name: «exprnorm_sqK»
+-- mathport name: exprnorm_sqK
 local notation "norm_sqK" => @IsROrC.normSq 𝕜 _
 
--- mathport name: «exprreK»
+-- mathport name: exprreK
 local notation "reK" => @IsROrC.re 𝕜 _
 
--- mathport name: «exprabsK»
+-- mathport name: exprabsK
 local notation "absK" => @IsROrC.abs 𝕜 _
 
--- mathport name: «exprext_iff»
+-- mathport name: exprext_iff
 local notation "ext_iff" => @IsROrC.ext_iff 𝕜 _
 
 -- mathport name: «expr †»
@@ -184,7 +184,7 @@ attribute [local instance] to_has_inner
 def normSq (x : F) :=
   reK ⟪x, x⟫
 
--- mathport name: «exprnorm_sqF»
+-- mathport name: exprnorm_sqF
 local notation "norm_sqF" => @normSq 𝕜 F _ _ _ _
 
 theorem inner_conj_sym (x y : F) : ⟪y, x⟫† = ⟪x, y⟫ :=
@@ -422,13 +422,13 @@ variable [dec_E : DecidableEq E]
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
--- mathport name: «exprIK»
+-- mathport name: exprIK
 local notation "IK" => @IsROrC.i 𝕜 _
 
--- mathport name: «exprabsR»
+-- mathport name: exprabsR
 local notation "absR" => HasAbs.abs
 
--- mathport name: «exprabsK»
+-- mathport name: exprabsK
 local notation "absK" => @IsROrC.abs 𝕜 _
 
 -- mathport name: «expr †»

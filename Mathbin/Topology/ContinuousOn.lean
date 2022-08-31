@@ -234,11 +234,14 @@ theorem insert_mem_nhds_iff {a : α} {s : Set α} : insert a s ∈ 𝓝 a ↔ s 
 theorem nhds_within_compl_singleton_sup_pure (a : α) : 𝓝[≠] a⊔pure a = 𝓝 a := by
   rw [← nhds_within_singleton, ← nhds_within_union, compl_union_self, nhds_within_univ]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem nhds_within_prod_eq {α : Type _} [TopologicalSpace α] {β : Type _} [TopologicalSpace β] (a : α) (b : β)
     (s : Set α) (t : Set β) : 𝓝[s ×ˢ t] (a, b) = 𝓝[s] a ×ᶠ 𝓝[t] b := by
   delta' nhdsWithin
   rw [nhds_prod_eq, ← Filter.prod_inf_prod, Filter.prod_principal_principal]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem nhds_within_prod {α : Type _} [TopologicalSpace α] {β : Type _} [TopologicalSpace β] {s u : Set α} {t v : Set β}
     {a : α} {b : β} (hu : u ∈ 𝓝[s] a) (hv : v ∈ 𝓝[t] b) : u ×ˢ v ∈ 𝓝[s ×ˢ t] (a, b) := by
   rw [nhds_within_prod_eq]
@@ -419,6 +422,7 @@ theorem ContinuousWithinAt.tendsto_nhds_within_image {f : α → β} {x : α} {s
     Tendsto f (𝓝[s] x) (𝓝[f '' s] f x) :=
   h.tendsto_nhds_within (maps_to_image _ _)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem ContinuousWithinAt.prod_map {f : α → γ} {g : β → δ} {s : Set α} {t : Set β} {x : α} {y : β}
     (hf : ContinuousWithinAt f s x) (hg : ContinuousWithinAt g t y) :
     ContinuousWithinAt (Prod.map f g) (s ×ˢ t) (x, y) := by
@@ -496,6 +500,7 @@ theorem continuous_on_iff_is_closed {f : α → β} {s : Set α} :
     simp only [Subtype.preimage_coe_eq_preimage_coe_iff, eq_comm]
   rw [continuous_on_iff_continuous_restrict, continuous_iff_is_closed] <;> simp only [this]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem ContinuousOn.prod_map {f : α → γ} {g : β → δ} {s : Set α} {t : Set β} (hf : ContinuousOn f s)
     (hg : ContinuousOn g t) : ContinuousOn (Prod.map f g) (s ×ˢ t) := fun ⟨x, y⟩ ⟨hx, hy⟩ =>
   ContinuousWithinAt.prod_map (hf x hx) (hg y hy)

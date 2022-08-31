@@ -82,7 +82,7 @@ noncomputable def zeta : B :=
 /-- `zeta n A B` is a primitive `n`-th root of unity. -/
 @[simp]
 theorem zeta_spec : IsPrimitiveRoot (zeta n A B) n :=
-  Classical.some_spec (exists_prim_root A (Set.mem_singleton n) : ∃ r : B, IsPrimitiveRoot r n)
+  Classical.choose_spec (exists_prim_root A (Set.mem_singleton n) : ∃ r : B, IsPrimitiveRoot r n)
 
 theorem aeval_zeta [IsDomain B] [NeZero ((n : ℕ) : B)] : aeval (zeta n A B) (cyclotomic n A) = 0 := by
   rw [aeval_def, ← eval_map, ← is_root.def, map_cyclotomic, is_root_cyclotomic_iff]

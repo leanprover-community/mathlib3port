@@ -248,12 +248,12 @@ theorem right_eq_zero_of_add_eq_zero {a b : Ordinal} (h : a + b = 0) : b = 0 :=
 /-- The ordinal predecessor of `o` is `o'` if `o = succ o'`,
   and `o` otherwise. -/
 def pred (o : Ordinal) : Ordinal :=
-  if h : ∃ a, o = succ a then Classical.some h else o
+  if h : ∃ a, o = succ a then Classical.choose h else o
 
 @[simp]
 theorem pred_succ (o) : pred (succ o) = o := by
   have h : ∃ a, succ o = succ a := ⟨_, rfl⟩ <;>
-    simpa only [pred, dif_pos h] using (succ_injective <| Classical.some_spec h).symm
+    simpa only [pred, dif_pos h] using (succ_injective <| Classical.choose_spec h).symm
 
 theorem pred_le_self (o) : pred o ≤ o :=
   if h : ∃ a, o = succ a then by
@@ -1815,9 +1815,9 @@ theorem mex_lt_ord_succ_mk {ι} (f : ι → Ordinal) : mex f < (succ (# ι)).ord
   by_contra' h
   apply (lt_succ (# ι)).not_le
   have H := fun a => exists_of_lt_mex ((typein_lt_self a).trans_le h)
-  let g : (succ (# ι)).ord.out.α → ι := fun a => Classical.some (H a)
+  let g : (succ (# ι)).ord.out.α → ι := fun a => Classical.choose (H a)
   have hg : injective g := fun a b h' => by
-    have Hf : ∀ x, f (g x) = typein (· < ·) x := fun a => Classical.some_spec (H a)
+    have Hf : ∀ x, f (g x) = typein (· < ·) x := fun a => Classical.choose_spec (H a)
     apply_fun f  at h'
     rwa [Hf, Hf, typein_inj] at h'
   convert Cardinal.mk_le_of_injective hg
@@ -2019,7 +2019,7 @@ end
 instance : Pow Ordinal Ordinal :=
   ⟨fun a b => if a = 0 then 1 - b else limitRecOn b 1 (fun _ IH => IH * a) fun b _ => bsup.{u, u} b⟩
 
--- mathport name: «expr ^ »
+-- mathport name: ordinal.pow
 local infixr:0 "^" => @pow Ordinal Ordinal Ordinal.hasPow
 
 theorem opow_def (a b : Ordinal) :
@@ -2636,7 +2636,7 @@ theorem sup_mul_nat (o : Ordinal) : (sup fun n : ℕ => o * n) = o * ω := by
   · exact (mul_is_normal ho).apply_omega
     
 
--- mathport name: «expr ^ »
+-- mathport name: ordinal.pow
 local infixr:0 "^" => @pow Ordinal Ordinal Ordinal.hasPow
 
 theorem sup_opow_nat {o : Ordinal} (ho : 0 < o) : (sup fun n : ℕ => o^n) = (o^ω) := by

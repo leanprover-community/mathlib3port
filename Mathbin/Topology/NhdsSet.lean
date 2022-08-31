@@ -35,7 +35,7 @@ variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {s t s₁ 
 def nhdsSet (s : Set α) : Filter α :=
   sup (nhds '' s)
 
--- mathport name: «expr𝓝ˢ»
+-- mathport name: nhds_set
 localized [TopologicalSpace] notation "𝓝ˢ" => nhdsSet
 
 theorem mem_nhds_set_iff_forall : s ∈ 𝓝ˢ t ↔ ∀ x : α, x ∈ t → s ∈ 𝓝 x := by

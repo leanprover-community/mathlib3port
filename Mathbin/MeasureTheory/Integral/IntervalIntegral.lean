@@ -265,10 +265,7 @@ theorem integrable_on_Ici_iff_integrable_on_Ioi {E : Type _} [NormedAddCommGroup
 theorem MeasureTheory.Integrable.interval_integrable (hf : Integrable f μ) : IntervalIntegrable f μ a b :=
   ⟨hf.IntegrableOn, hf.IntegrableOn⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem MeasureTheory.IntegrableOn.interval_integrable
-    (hf : IntegrableOn f "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" μ) :
-    IntervalIntegrable f μ a b :=
+theorem MeasureTheory.IntegrableOn.interval_integrable (hf : IntegrableOn f [a, b] μ) : IntervalIntegrable f μ a b :=
   ⟨MeasureTheory.IntegrableOn.mono_set hf (Ioc_subset_Icc_self.trans Icc_subset_interval),
     MeasureTheory.IntegrableOn.mono_set hf (Ioc_subset_Icc_self.trans Icc_subset_interval')⟩
 
@@ -327,22 +324,10 @@ theorem norm (h : IntervalIntegrable f μ a b) : IntervalIntegrable (fun x => �
 theorem abs {f : ℝ → ℝ} (h : IntervalIntegrable f μ a b) : IntervalIntegrable (fun x => abs (f x)) μ a b :=
   h.norm
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem mono (hf : IntervalIntegrable f ν a b)
-    (h1 :
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ⊆
-        "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")
-    (h2 : μ ≤ ν) : IntervalIntegrable f μ c d :=
+theorem mono (hf : IntervalIntegrable f ν a b) (h1 : [c, d] ⊆ [a, b]) (h2 : μ ≤ ν) : IntervalIntegrable f μ c d :=
   interval_integrable_iff.mpr <| hf.def.mono (interval_oc_subset_interval_oc_of_interval_subset_interval h1) h2
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem mono_set (hf : IntervalIntegrable f μ a b)
-    (h :
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" ⊆
-        "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") :
-    IntervalIntegrable f μ c d :=
+theorem mono_set (hf : IntervalIntegrable f μ a b) (h : [c, d] ⊆ [a, b]) : IntervalIntegrable f μ c d :=
   hf.mono h rfl.le
 
 theorem mono_measure (hf : IntervalIntegrable f ν a b) (h : μ ≤ ν) : IntervalIntegrable f μ a b :=
@@ -390,16 +375,12 @@ theorem sum (s : Finset ι) {f : ι → ℝ → E} (h : ∀ i ∈ s, IntervalInt
     IntervalIntegrable (∑ i in s, f i) μ a b :=
   ⟨integrable_finset_sum' s fun i hi => (h i hi).1, integrable_finset_sum' s fun i hi => (h i hi).2⟩
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem mul_continuous_on {f g : ℝ → ℝ} (hf : IntervalIntegrable f μ a b)
-    (hg : ContinuousOn g "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") :
+theorem mul_continuous_on {f g : ℝ → ℝ} (hf : IntervalIntegrable f μ a b) (hg : ContinuousOn g [a, b]) :
     IntervalIntegrable (fun x => f x * g x) μ a b := by
   rw [interval_integrable_iff] at hf⊢
   exact hf.mul_continuous_on_of_subset hg measurable_set_Ioc is_compact_interval Ioc_subset_Icc_self
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem continuous_on_mul {f g : ℝ → ℝ} (hf : IntervalIntegrable f μ a b)
-    (hg : ContinuousOn g "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") :
+theorem continuous_on_mul {f g : ℝ → ℝ} (hf : IntervalIntegrable f μ a b) (hg : ContinuousOn g [a, b]) :
     IntervalIntegrable (fun x => g x * f x) μ a b := by
   simpa [mul_comm] using hf.mul_continuous_on hg
 
@@ -837,11 +818,8 @@ section OrderClosedTopology
 
 variable {a b c d : ℝ} {f g : ℝ → E} {μ : Measureₓ ℝ}
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 /-- If two functions are equal in the relevant interval, their interval integrals are also equal. -/
-theorem integral_congr {a b : ℝ}
-    (h : EqOn f g "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") :
-    (∫ x in a..b, f x ∂μ) = ∫ x in a..b, g x ∂μ := by
+theorem integral_congr {a b : ℝ} (h : EqOn f g [a, b]) : (∫ x in a..b, f x ∂μ) = ∫ x in a..b, g x ∂μ := by
   cases' le_totalₓ a b with hab hab <;>
     simpa [hab, integral_of_le, integral_of_ge] using set_integral_congr measurable_set_Ioc (h.mono Ioc_subset_Icc_self)
 
@@ -969,7 +947,7 @@ theorem tendsto_integral_filter_of_dominated_convergence {ι} {l : Filter ι} [l
       (tendsto_integral_filter_of_dominated_convergence bound hF_meas h_bound bound_integrable h_lim)
 
 /-- Lebesgue dominated convergence theorem for series. -/
-theorem has_sum_integral_of_dominated_convergence {ι} [Encodable ι] {F : ι → ℝ → E} (bound : ι → ℝ → ℝ)
+theorem has_sum_integral_of_dominated_convergence {ι} [Countable ι] {F : ι → ℝ → E} (bound : ι → ℝ → ℝ)
     (hF_meas : ∀ n, AeStronglyMeasurable (F n) (μ.restrict (Ι a b)))
     (h_bound : ∀ n, ∀ᵐ t ∂μ, t ∈ Ι a b → ∥F n t∥ ≤ bound n t)
     (bound_summable : ∀ᵐ t ∂μ, t ∈ Ι a b → Summable fun n => bound n t)
@@ -1132,14 +1110,9 @@ theorem continuous_on_primitive_Icc [HasNoAtoms μ] (h_int : IntegrableOn f (Icc
       exact integral_Icc_eq_integral_Ioc]
   exact continuous_on_primitive h_int
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 /-- Note: this assumes that `f` is `interval_integrable`, in contrast to some other lemmas here. -/
-theorem continuous_on_primitive_interval' [HasNoAtoms μ] (h_int : IntervalIntegrable f μ b₁ b₂)
-    (ha : a ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") :
-    ContinuousOn (fun b => ∫ x in a..b, f x ∂μ)
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem continuous_on_primitive_interval' [HasNoAtoms μ] (h_int : IntervalIntegrable f μ b₁ b₂) (ha : a ∈ [b₁, b₂]) :
+    ContinuousOn (fun b => ∫ x in a..b, f x ∂μ) [b₁, b₂] := by
   intro b₀ hb₀
   refine' continuous_within_at_primitive (measure_singleton _) _
   rw [min_eq_rightₓ ha.1, max_eq_rightₓ ha.2]
@@ -1389,14 +1362,7 @@ instance nhds_Icc {x a b : ℝ} [h : Fact (x ∈ Icc a b)] : FTCFilter x (𝓝[I
   pure_le := pure_le_nhds_within h.out
   le_nhds := inf_le_left
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-instance nhds_interval {x a b : ℝ}
-    [h : Fact (x ∈ "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")] :
-    FTCFilter x (𝓝["./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)"] x)
-      (𝓝["./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)"] x) :=
-  by
+instance nhds_interval {x a b : ℝ} [h : Fact (x ∈ [a, b])] : FTCFilter x (𝓝[[a, b]] x) (𝓝[[a, b]] x) := by
   haveI : Fact (x ∈ Set.Icc (min a b) (max a b)) := h
   exact FTC_filter.nhds_Icc
 
@@ -1900,6 +1866,7 @@ theorem deriv_integral_left (hf : IntervalIntegrable f volume a b) (hmeas : Stro
 -/
 
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Let `f` be a measurable function integrable on `a..b`. The function `(u, v) ↦ ∫ x in u..v, f x`
 has derivative `(u, v) ↦ v • cb - u • ca` within `s × t` at `(a, b)`, where
 `s ∈ {Iic a, {a}, Ici a, univ}` and `t ∈ {Iic b, {b}, Ici b, univ}` provided that `f` tends to `ca`
@@ -1931,6 +1898,7 @@ theorem integral_has_fderiv_within_at_of_tendsto_ae (hf : IntervalIntegrable f v
   · exact is_O_fst_prod.norm_left.add is_O_snd_prod.norm_left
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Let `f` be a measurable function integrable on `a..b`. The function `(u, v) ↦ ∫ x in u..v, f x`
 has derivative `(u, v) ↦ v • f b - u • f a` within `s × t` at `(a, b)`, where
 `s ∈ {Iic a, {a}, Ici a, univ}` and `t ∈ {Iic b, {b}, Ici b, univ}` provided that `f` tends to
@@ -1957,6 +1925,7 @@ theorem integral_has_fderiv_within_at (hf : IntervalIntegrable f volume a b) (hm
 unsafe def unique_diff_within_at_Ici_Iic_univ : tactic Unit :=
   sorry
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Let `f` be a measurable function integrable on `a..b`. Choose `s ∈ {Iic a, Ici a, univ}`
 and `t ∈ {Iic b, Ici b, univ}`. Suppose that `f` tends to `ca` and `cb` almost surely at the filters
 `la` and `lb` from the table below. Then `fderiv_within ℝ (λ p, ∫ x in p.1..p.2, f x) (s ×ˢ t)`
@@ -2422,12 +2391,6 @@ theorem integral_mul_deriv_eq_deriv_mul {u v u' v' : ℝ → ℝ} (hu : ∀ x �
 
 section Smul
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 /-- Change of variables, general form. If `f` is continuous on `[a, b]` and has
 continuous right-derivative `f'` in `(a, b)`, and `g` is continuous on `f '' [a, b]` then we can
 substitute `u = f x` to get `∫ x in a..b, f' x • (g ∘ f) x = ∫ u in f a..f b, g u`.
@@ -2436,16 +2399,10 @@ We could potentially slightly weaken the conditions, by not requiring that `f'` 
 continuous on the endpoints of these intervals, but in that case we need to additionally assume that
 the functions are integrable on that interval.
 -/
-theorem integral_comp_smul_deriv'' {f f' : ℝ → ℝ} {g : ℝ → E}
-    (hf : ContinuousOn f "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")
-    (hff' : ∀ x ∈ Ioo (min a b) (max a b), HasDerivWithinAt f (f' x) (Ioi x) x)
-    (hf' : ContinuousOn f' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")
-    (hg : ContinuousOn g (f '' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")) :
-    (∫ x in a..b, f' x • (g ∘ f) x) = ∫ u in f a..f b, g u := by
-  have h_cont :
-    ContinuousOn (fun u => ∫ t in f a..f u, g t)
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-    by
+theorem integral_comp_smul_deriv'' {f f' : ℝ → ℝ} {g : ℝ → E} (hf : ContinuousOn f [a, b])
+    (hff' : ∀ x ∈ Ioo (min a b) (max a b), HasDerivWithinAt f (f' x) (Ioi x) x) (hf' : ContinuousOn f' [a, b])
+    (hg : ContinuousOn g (f '' [a, b])) : (∫ x in a..b, f' x • (g ∘ f) x) = ∫ u in f a..f b, g u := by
+  have h_cont : ContinuousOn (fun u => ∫ t in f a..f u, g t) [a, b] := by
     rw [hf.image_interval] at hg
     refine' (continuous_on_primitive_interval' hg.interval_integrable _).comp hf _
     · rw [← hf.image_interval]
@@ -2457,8 +2414,8 @@ theorem integral_comp_smul_deriv'' {f f' : ℝ → ℝ} {g : ℝ → E}
   have h_der :
     ∀ x ∈ Ioo (min a b) (max a b), HasDerivWithinAt (fun u => ∫ t in f a..f u, g t) (f' x • (g ∘ f) x) (Ioi x) x := by
     intro x hx
-    let I := "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)"
-    have hI : f '' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" = I := hf.image_interval
+    let I := [Inf (f '' [a, b]), Sup (f '' [a, b])]
+    have hI : f '' [a, b] = I := hf.image_interval
     have h2x : f x ∈ I := by
       rw [← hI]
       exact mem_image_of_mem f (Ioo_subset_Icc_self hx)
@@ -2478,7 +2435,6 @@ theorem integral_comp_smul_deriv'' {f f' : ℝ → ℝ} {g : ℝ → E}
     (hf'.smul (hg.comp hf <| subset_preimage_image f _)).IntervalIntegrable
   simp_rw [integral_eq_sub_of_has_deriv_right h_cont h_der h_int, integral_same, sub_zero]
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 /-- Change of variables. If `f` is has continuous derivative `f'` on `[a, b]`,
 and `g` is continuous on `f '' [a, b]`, then we can substitute `u = f x` to get
 `∫ x in a..b, f' x • (g ∘ f) x = ∫ u in f a..f b, g u`.
@@ -2486,8 +2442,7 @@ Compared to `interval_integral.integral_comp_smul_deriv` we only require that `g
 `f '' [a, b]`.
 -/
 theorem integral_comp_smul_deriv' {f f' : ℝ → ℝ} {g : ℝ → E} (h : ∀ x ∈ Interval a b, HasDerivAt f (f' x) x)
-    (h' : ContinuousOn f' (Interval a b))
-    (hg : ContinuousOn g (f '' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")) :
+    (h' : ContinuousOn f' (Interval a b)) (hg : ContinuousOn g (f '' [a, b])) :
     (∫ x in a..b, f' x • (g ∘ f) x) = ∫ x in f a..f b, g x :=
   integral_comp_smul_deriv'' (fun x hx => (h x hx).ContinuousAt.ContinuousWithinAt)
     (fun x hx => (h x <| Ioo_subset_Icc_self hx).HasDerivWithinAt) h' hg
@@ -2501,18 +2456,11 @@ theorem integral_comp_smul_deriv {f f' : ℝ → ℝ} {g : ℝ → E} (h : ∀ x
     (∫ x in a..b, f' x • (g ∘ f) x) = ∫ x in f a..f b, g x :=
   integral_comp_smul_deriv' h h' hg.ContinuousOn
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem integral_deriv_comp_smul_deriv' {f f' : ℝ → ℝ} {g g' : ℝ → E}
-    (hf : ContinuousOn f "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")
-    (hff' : ∀ x ∈ Ioo (min a b) (max a b), HasDerivWithinAt f (f' x) (Ioi x) x)
-    (hf' : ContinuousOn f' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")
-    (hg : ContinuousOn g "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")
+theorem integral_deriv_comp_smul_deriv' {f f' : ℝ → ℝ} {g g' : ℝ → E} (hf : ContinuousOn f [a, b])
+    (hff' : ∀ x ∈ Ioo (min a b) (max a b), HasDerivWithinAt f (f' x) (Ioi x) x) (hf' : ContinuousOn f' [a, b])
+    (hg : ContinuousOn g [f a, f b])
     (hgg' : ∀ x ∈ Ioo (min (f a) (f b)) (max (f a) (f b)), HasDerivWithinAt g (g' x) (Ioi x) x)
-    (hg' : ContinuousOn g' (f '' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")) :
-    (∫ x in a..b, f' x • (g' ∘ f) x) = (g ∘ f) b - (g ∘ f) a := by
+    (hg' : ContinuousOn g' (f '' [a, b])) : (∫ x in a..b, f' x • (g' ∘ f) x) = (g ∘ f) b - (g ∘ f) a := by
   rw [integral_comp_smul_deriv'' hf hff' hf' hg',
     integral_eq_sub_of_has_deriv_right hg hgg' (hg'.mono _).IntervalIntegrable]
   exact intermediate_value_interval hf
@@ -2527,22 +2475,15 @@ end Smul
 
 section Mul
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 /-- Change of variables, general form for scalar functions. If `f` is continuous on `[a, b]` and has
 continuous right-derivative `f'` in `(a, b)`, and `g` is continuous on `f '' [a, b]` then we can
 substitute `u = f x` to get `∫ x in a..b, (g ∘ f) x * f' x = ∫ u in f a..f b, g u`.
 -/
-theorem integral_comp_mul_deriv'' {f f' g : ℝ → ℝ}
-    (hf : ContinuousOn f "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")
-    (hff' : ∀ x ∈ Ioo (min a b) (max a b), HasDerivWithinAt f (f' x) (Ioi x) x)
-    (hf' : ContinuousOn f' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")
-    (hg : ContinuousOn g (f '' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")) :
-    (∫ x in a..b, (g ∘ f) x * f' x) = ∫ u in f a..f b, g u := by
+theorem integral_comp_mul_deriv'' {f f' g : ℝ → ℝ} (hf : ContinuousOn f [a, b])
+    (hff' : ∀ x ∈ Ioo (min a b) (max a b), HasDerivWithinAt f (f' x) (Ioi x) x) (hf' : ContinuousOn f' [a, b])
+    (hg : ContinuousOn g (f '' [a, b])) : (∫ x in a..b, (g ∘ f) x * f' x) = ∫ u in f a..f b, g u := by
   simpa [mul_comm] using integral_comp_smul_deriv'' hf hff' hf' hg
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
 /-- Change of variables. If `f` is has continuous derivative `f'` on `[a, b]`,
 and `g` is continuous on `f '' [a, b]`, then we can substitute `u = f x` to get
 `∫ x in a..b, (g ∘ f) x * f' x = ∫ u in f a..f b, g u`.
@@ -2550,8 +2491,7 @@ Compared to `interval_integral.integral_comp_mul_deriv` we only require that `g`
 `f '' [a, b]`.
 -/
 theorem integral_comp_mul_deriv' {f f' g : ℝ → ℝ} (h : ∀ x ∈ Interval a b, HasDerivAt f (f' x) x)
-    (h' : ContinuousOn f' (Interval a b))
-    (hg : ContinuousOn g (f '' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")) :
+    (h' : ContinuousOn f' (Interval a b)) (hg : ContinuousOn g (f '' [a, b])) :
     (∫ x in a..b, (g ∘ f) x * f' x) = ∫ x in f a..f b, g x := by
   simpa [mul_comm] using integral_comp_smul_deriv' h h' hg
 
@@ -2564,18 +2504,11 @@ theorem integral_comp_mul_deriv {f f' g : ℝ → ℝ} (h : ∀ x ∈ Interval a
     (∫ x in a..b, (g ∘ f) x * f' x) = ∫ x in f a..f b, g x :=
   integral_comp_mul_deriv' h h' hg.ContinuousOn
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem integral_deriv_comp_mul_deriv' {f f' g g' : ℝ → ℝ}
-    (hf : ContinuousOn f "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")
-    (hff' : ∀ x ∈ Ioo (min a b) (max a b), HasDerivWithinAt f (f' x) (Ioi x) x)
-    (hf' : ContinuousOn f' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")
-    (hg : ContinuousOn g "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")
+theorem integral_deriv_comp_mul_deriv' {f f' g g' : ℝ → ℝ} (hf : ContinuousOn f [a, b])
+    (hff' : ∀ x ∈ Ioo (min a b) (max a b), HasDerivWithinAt f (f' x) (Ioi x) x) (hf' : ContinuousOn f' [a, b])
+    (hg : ContinuousOn g [f a, f b])
     (hgg' : ∀ x ∈ Ioo (min (f a) (f b)) (max (f a) (f b)), HasDerivWithinAt g (g' x) (Ioi x) x)
-    (hg' : ContinuousOn g' (f '' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")) :
-    (∫ x in a..b, (g' ∘ f) x * f' x) = (g ∘ f) b - (g ∘ f) a := by
+    (hg' : ContinuousOn g' (f '' [a, b])) : (∫ x in a..b, (g' ∘ f) x * f' x) = (g ∘ f) b - (g ∘ f) a := by
   simpa [mul_comm] using integral_deriv_comp_smul_deriv' hf hff' hf' hg hgg' hg'
 
 theorem integral_deriv_comp_mul_deriv {f f' g g' : ℝ → ℝ} (hf : ∀ x ∈ Interval a b, HasDerivAt f (f' x) x)

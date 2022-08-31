@@ -93,7 +93,7 @@ instance [Subsingleton α] : Subsingleton (Discrete α) :=
   ⟨by
     intros
     ext
-    apply Subsingleton.elimₓ⟩
+    apply Subsingleton.elim⟩
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 /-- A simple tactic to run `cases` on any `discrete α` hypotheses. -/

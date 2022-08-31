@@ -55,7 +55,7 @@ variable {p : ℕ} {R S T : Type _} [hp : Fact p.Prime] [CommRingₓ R] [CommRin
 
 variable {α : Type _} {β : Type _}
 
--- mathport name: «expr𝕎»
+-- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
 -- type as `\bbW`
@@ -73,10 +73,10 @@ theorem injective (f : α → β) (hf : Injective f) : Injective (mapFun f : �
   ext fun n => hf (congr_arg (fun x => coeff x n) h : _)
 
 theorem surjective (f : α → β) (hf : Surjective f) : Surjective (mapFun f : 𝕎 α → 𝕎 β) := fun x =>
-  ⟨mk _ fun n => Classical.some <| hf <| x.coeff n, by
+  ⟨mk _ fun n => Classical.choose <| hf <| x.coeff n, by
     ext n
     dsimp' [map_fun]
-    rw [Classical.some_spec (hf (x.coeff n))]⟩
+    rw [Classical.choose_spec (hf (x.coeff n))]⟩
 
 variable (f : R →+* S) (x y : 𝕎 R)
 

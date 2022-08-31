@@ -215,7 +215,7 @@ theorem ext {S T : Subring R} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
 /-- Copy of a subring with a new `carrier` equal to the old one. Useful to fix definitional
 equalities. -/
 protected def copy (S : Subring R) (s : Set R) (hs : s = ↑S) : Subring R :=
-  { S.toSubsemiring.copy s hs with Carrier := s, neg_mem' := hs.symm ▸ S.neg_mem' }
+  { S.toSubsemiring.copy s hs with Carrier := s, neg_mem' := fun _ => hs.symm ▸ S.neg_mem' }
 
 @[simp]
 theorem coe_copy (S : Subring R) (s : Set R) (hs : s = ↑S) : (S.copy s hs : Set R) = s :=
@@ -896,11 +896,13 @@ theorem map_bot (f : R →+* S) : (⊥ : Subring R).map f = ⊥ :=
 theorem comap_top (f : R →+* S) : (⊤ : Subring S).comap f = ⊤ :=
   (gc_map_comap f).u_top
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Given `subring`s `s`, `t` of rings `R`, `S` respectively, `s.prod t` is `s ×̂ t`
 as a subring of `R × S`. -/
 def prod (s : Subring R) (t : Subring S) : Subring (R × S) :=
   { s.toSubmonoid.Prod t.toSubmonoid, s.toAddSubgroup.Prod t.toAddSubgroup with Carrier := s ×ˢ t }
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[norm_cast]
 theorem coe_prod (s : Subring R) (t : Subring S) : (s.Prod t : Set (R × S)) = s ×ˢ t :=
   rfl
@@ -1109,6 +1111,8 @@ attribute [local reducible] closure
     «expr ∧ »(∀ x «expr ∈ » L,
      «expr ∈ »(x, s),
      «expr ∨ »(«expr = »(list.prod hd, list.prod L), «expr = »(list.prod hd, «expr- »(list.prod L)))))]]
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[elabAsElim]
 protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure s) (h1 : C 1) (hneg1 : C (-1))
     (hs : ∀ z ∈ s, ∀ n, C n → C (z * n)) (ha : ∀ {x y}, C x → C y → C (x + y)) : C x := by
@@ -1150,7 +1154,7 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure 
   rw [List.forall_mem_consₓ] at HL
   rcases ih HL.2 with ⟨L, HL', HP | HP⟩ <;> cases' HL.1 with hhd hhd
   · exact
-      ⟨hd :: L, List.forall_mem_consₓ.2 ⟨hhd, HL'⟩,
+      ⟨hd::L, List.forall_mem_consₓ.2 ⟨hhd, HL'⟩,
         Or.inl <| by
           rw [List.prod_cons, List.prod_cons, HP]⟩
     
@@ -1160,7 +1164,7 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure 
           rw [List.prod_cons, hhd, neg_one_mul, HP]⟩
     
   · exact
-      ⟨hd :: L, List.forall_mem_consₓ.2 ⟨hhd, HL'⟩,
+      ⟨hd::L, List.forall_mem_consₓ.2 ⟨hhd, HL'⟩,
         Or.inr <| by
           rw [List.prod_cons, List.prod_cons, HP, neg_mul_eq_mul_neg]⟩
     

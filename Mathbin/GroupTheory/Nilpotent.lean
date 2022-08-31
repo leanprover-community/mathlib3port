@@ -458,7 +458,7 @@ theorem Subgroup.nilpotency_class_le (H : Subgroup G) [hG : IsNilpotent G] :
   exact eq_bot_iff.mpr fun x hx => Subtype.ext (this x hx)
 
 instance (priority := 100) is_nilpotent_of_subsingleton [Subsingleton G] : IsNilpotent G :=
-  nilpotent_iff_lower_central_series.2 ⟨0, Subsingleton.elimₓ ⊤ ⊥⟩
+  nilpotent_iff_lower_central_series.2 ⟨0, Subsingleton.elim ⊤ ⊥⟩
 
 theorem upperCentralSeries.map {H : Type _} [Groupₓ H] {f : G →* H} (h : Function.Surjective f) (n : ℕ) :
     Subgroup.map f (upperCentralSeries G n) ≤ upperCentralSeries H n := by
@@ -801,7 +801,7 @@ theorem normalizer_condition_of_is_nilpotent [h : IsNilpotent G] : NormalizerCon
   rw [normalizer_condition_iff_only_full_group_self_normalizing]
   apply nilpotent_center_quotient_ind G <;> clear! G
   · intro G _ _ H _
-    apply Subsingleton.elimₓ
+    apply Subsingleton.elim
     
   · intro G _ _ ih H hH
     have hch : center G ≤ H := subgroup.center_le_normalizer.trans (le_of_eqₓ hH)

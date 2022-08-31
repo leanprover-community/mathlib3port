@@ -149,7 +149,7 @@ theorem ContinuousLinearMap.continuous_det : Continuous fun f : E →L[𝕜] E =
   change Continuous fun f : E →L[𝕜] E => (f : E →ₗ[𝕜] E).det
   by_cases' h : ∃ s : Finset E, Nonempty (Basis (↥s) 𝕜 E)
   · rcases h with ⟨s, ⟨b⟩⟩
-    haveI : FiniteDimensional 𝕜 E := FiniteDimensional.of_finset_basis b
+    haveI : FiniteDimensional 𝕜 E := FiniteDimensional.of_fintype_basis b
     simp_rw [LinearMap.det_eq_det_to_matrix_of_finset b]
     refine' Continuous.matrix_det _
     exact ((LinearMap.toMatrix b b).toLinearMap.comp (ContinuousLinearMap.coeLm 𝕜)).continuous_of_finite_dimensional
@@ -209,8 +209,9 @@ theorem LinearMap.exists_antilipschitz_with [FiniteDimensional 𝕜 E] (f : E �
     exact ⟨_, e.nnnorm_symm_pos, e.antilipschitz⟩
     
 
-protected theorem LinearIndependent.eventually {ι} [Fintype ι] {f : ι → E} (hf : LinearIndependent 𝕜 f) :
+protected theorem LinearIndependent.eventually {ι} [Finite ι] {f : ι → E} (hf : LinearIndependent 𝕜 f) :
     ∀ᶠ g in 𝓝 f, LinearIndependent 𝕜 g := by
+  cases nonempty_fintype ι
   simp only [Fintype.linear_independent_iff'] at hf⊢
   rcases LinearMap.exists_antilipschitz_with _ hf with ⟨K, K0, hK⟩
   have : tendsto (fun g : ι → E => ∑ i, ∥g i - f i∥) (𝓝 f) (𝓝 <| ∑ i, ∥f i - f i∥) :=
@@ -231,7 +232,7 @@ protected theorem LinearIndependent.eventually {ι} [Fintype ι] {f : ι → E} 
   rw [norm_smul, mul_comm]
   exact mul_le_mul_of_nonneg_left (norm_le_pi_norm (v - u) i) (norm_nonneg _)
 
-theorem is_open_set_of_linear_independent {ι : Type _} [Fintype ι] : IsOpen { f : ι → E | LinearIndependent 𝕜 f } :=
+theorem is_open_set_of_linear_independent {ι : Type _} [Finite ι] : IsOpen { f : ι → E | LinearIndependent 𝕜 f } :=
   is_open_iff_mem_nhds.2 fun f => LinearIndependent.eventually
 
 theorem is_open_set_of_nat_le_rank (n : ℕ) : IsOpen { f : E →L[𝕜] F | ↑n ≤ rank (f : E →ₗ[𝕜] F) } := by
@@ -318,13 +319,15 @@ theorem Basis.op_norm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) {u : E
   simpa using nnreal.coe_le_coe.mpr (v.op_nnnorm_le ⟨M, hM⟩ hu)
 
 /-- A weaker version of `basis.op_nnnorm_le` that abstracts away the value of `C`. -/
-theorem Basis.exists_op_nnnorm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) :
-    ∃ C > (0 : ℝ≥0 ), ∀ {u : E →L[𝕜] F} (M : ℝ≥0 ), (∀ i, ∥u (v i)∥₊ ≤ M) → ∥u∥₊ ≤ C * M :=
-  ⟨max (Fintype.card ι • ∥v.equivFunL.toContinuousLinearMap∥₊) 1, zero_lt_one.trans_le (le_max_rightₓ _ _),
-    fun u M hu => (v.op_nnnorm_le M hu).trans <| mul_le_mul_of_nonneg_right (le_max_leftₓ _ _) (zero_le M)⟩
+theorem Basis.exists_op_nnnorm_le {ι : Type _} [Finite ι] (v : Basis ι 𝕜 E) :
+    ∃ C > (0 : ℝ≥0 ), ∀ {u : E →L[𝕜] F} (M : ℝ≥0 ), (∀ i, ∥u (v i)∥₊ ≤ M) → ∥u∥₊ ≤ C * M := by
+  cases nonempty_fintype ι <;>
+    exact
+      ⟨max (Fintype.card ι • ∥v.equiv_funL.to_continuous_linear_map∥₊) 1, zero_lt_one.trans_le (le_max_rightₓ _ _),
+        fun u M hu => (v.op_nnnorm_le M hu).trans <| mul_le_mul_of_nonneg_right (le_max_leftₓ _ _) (zero_le M)⟩
 
 /-- A weaker version of `basis.op_norm_le` that abstracts away the value of `C`. -/
-theorem Basis.exists_op_norm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) :
+theorem Basis.exists_op_norm_le {ι : Type _} [Finite ι] (v : Basis ι 𝕜 E) :
     ∃ C > (0 : ℝ), ∀ {u : E →L[𝕜] F} {M : ℝ}, 0 ≤ M → (∀ i, ∥u (v i)∥ ≤ M) → ∥u∥ ≤ C * M :=
   let ⟨C, hC, h⟩ := v.exists_op_nnnorm_le
   ⟨C, hC, fun u => Subtype.forall'.mpr h⟩

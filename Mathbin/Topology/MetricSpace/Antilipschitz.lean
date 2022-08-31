@@ -160,7 +160,7 @@ theorem subtype_coe (s : Set α) : AntilipschitzWith 1 (coe : s → α) :=
   AntilipschitzWith.id.restrict s
 
 theorem of_subsingleton [Subsingleton α] {K : ℝ≥0 } : AntilipschitzWith K f := fun x y => by
-  simp only [Subsingleton.elimₓ x y, edist_self, zero_le]
+  simp only [Subsingleton.elim x y, edist_self, zero_le]
 
 /-- If `f : α → β` is `0`-antilipschitz, then `α` is a `subsingleton`. -/
 protected theorem subsingleton {α β} [EmetricSpace α] [PseudoEmetricSpace β] {f : α → β} (h : AntilipschitzWith 0 f) :

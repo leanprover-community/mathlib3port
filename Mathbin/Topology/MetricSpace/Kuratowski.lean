@@ -19,7 +19,7 @@ open Set Metric TopologicalSpace
 
 open Ennreal
 
--- mathport name: «exprℓ_infty_ℝ»
+-- mathport name: exprℓ_infty_ℝ
 local notation "ℓ_infty_ℝ" => lp (fun n : ℕ => ℝ) ∞
 
 universe u v w
@@ -113,12 +113,12 @@ open TopologicalSpace kuratowskiEmbedding
 
 /-- The Kuratowski embedding is an isometric embedding of a separable metric space in `ℓ^∞(ℝ)`. -/
 def kuratowskiEmbedding (α : Type u) [MetricSpace α] [SeparableSpace α] : α → ℓ_infty_ℝ :=
-  Classical.some (KuratowskiEmbedding.exists_isometric_embedding α)
+  Classical.choose (KuratowskiEmbedding.exists_isometric_embedding α)
 
 /-- The Kuratowski embedding is an isometry. -/
 protected theorem kuratowskiEmbedding.isometry (α : Type u) [MetricSpace α] [SeparableSpace α] :
     Isometry (kuratowskiEmbedding α) :=
-  Classical.some_spec (exists_isometric_embedding α)
+  Classical.choose_spec (exists_isometric_embedding α)
 
 /-- Version of the Kuratowski embedding for nonempty compacts -/
 def NonemptyCompacts.kuratowskiEmbedding (α : Type u) [MetricSpace α] [CompactSpace α] [Nonempty α] :

@@ -57,7 +57,7 @@ instance : SetLike (LieSubmodule R L M) M where
     cases N <;> cases O <;> congr
 
 instance : AddSubgroupClass (LieSubmodule R L M) M where
-  add_mem := fun N => N.add_mem'
+  add_mem := fun N _ _ => N.add_mem'
   zero_mem := fun N => N.zero_mem'
   neg_mem := fun N x hx => show -x ∈ N.toSubmodule from neg_mem hx
 
@@ -135,9 +135,9 @@ equalities. -/
 protected def copy (s : Set M) (hs : s = ↑N) : LieSubmodule R L M where
   Carrier := s
   zero_mem' := hs.symm ▸ N.zero_mem'
-  add_mem' := hs.symm ▸ N.add_mem'
+  add_mem' := fun _ _ => hs.symm ▸ N.add_mem'
   smul_mem' := hs.symm ▸ N.smul_mem'
-  lie_mem := hs.symm ▸ N.lie_mem
+  lie_mem := fun _ _ => hs.symm ▸ N.lie_mem
 
 @[simp]
 theorem coe_copy (S : LieSubmodule R L M) (s : Set M) (hs : s = ↑S) : (S.copy s hs : Set M) = s :=
@@ -272,7 +272,7 @@ variable {R M}
 theorem Submodule.exists_lie_submodule_coe_eq_iff (p : Submodule R M) :
     (∃ N : LieSubmodule R L M, ↑N = p) ↔ ∀ (x : L) (m : M), m ∈ p → ⁅x,m⁆ ∈ p := by
   constructor
-  · rintro ⟨N, rfl⟩
+  · rintro ⟨N, rfl⟩ _ _
     exact N.lie_mem
     
   · intro h

@@ -97,14 +97,14 @@ noncomputable def nontrivialPsumUnique (α : Type _) [Inhabited α] : PSum (Nont
 theorem subsingleton_iff : Subsingleton α ↔ ∀ x y : α, x = y :=
   ⟨by
     intro h
-    exact Subsingleton.elimₓ, fun h => ⟨h⟩⟩
+    exact Subsingleton.elim, fun h => ⟨h⟩⟩
 
 theorem not_nontrivial_iff_subsingleton : ¬Nontrivial α ↔ Subsingleton α := by
   rw [nontrivial_iff, subsingleton_iff]
   push_neg
   rfl
 
-theorem not_nontrivial (α) [Subsingleton α] : ¬Nontrivial α := fun ⟨⟨x, y, h⟩⟩ => h <| Subsingleton.elimₓ x y
+theorem not_nontrivial (α) [Subsingleton α] : ¬Nontrivial α := fun ⟨⟨x, y, h⟩⟩ => h <| Subsingleton.elim x y
 
 theorem not_subsingleton (α) [h : Nontrivial α] : ¬Subsingleton α :=
   let ⟨⟨x, y, hxy⟩⟩ := h
@@ -117,7 +117,7 @@ theorem subsingleton_or_nontrivial (α : Type _) : Subsingleton α ∨ Nontrivia
 
 theorem false_of_nontrivial_of_subsingleton (α : Type _) [Nontrivial α] [Subsingleton α] : False :=
   let ⟨x, y, h⟩ := exists_pair_ne α
-  h <| Subsingleton.elimₓ x y
+  h <| Subsingleton.elim x y
 
 instance Option.nontrivial [Nonempty α] : Nontrivial (Option α) := by
   inhabit α
@@ -179,7 +179,7 @@ instance Function.nontrivial [h : Nonempty α] [Nontrivial β] : Nontrivial (α 
 mk_simp_attribute nontriviality := "Simp lemmas for `nontriviality` tactic"
 
 protected theorem Subsingleton.le [Preorderₓ α] [Subsingleton α] (x y : α) : x ≤ y :=
-  le_of_eqₓ (Subsingleton.elimₓ x y)
+  le_of_eqₓ (Subsingleton.elim x y)
 
 attribute [nontriviality] eq_iff_true_of_subsingleton Subsingleton.le
 

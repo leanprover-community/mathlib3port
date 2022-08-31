@@ -876,19 +876,19 @@ def Lifts.upperBoundIntermediateField {c : Set (Lifts F E K)} (hc : IsChain (· 
 /-- The lift on the upper bound on a chain of lifts -/
 noncomputable def Lifts.upperBoundAlgHom {c : Set (Lifts F E K)} (hc : IsChain (· ≤ ·) c) :
     Lifts.upperBoundIntermediateField hc →ₐ[F] K where
-  toFun := fun s => (Classical.some s.Mem).2 ⟨s, (Classical.some_spec s.Mem).2⟩
+  toFun := fun s => (Classical.choose s.Mem).2 ⟨s, (Classical.choose_spec s.Mem).2⟩
   map_zero' := AlgHom.map_zero _
   map_one' := AlgHom.map_one _
   map_add' := fun s t => by
     obtain ⟨w, hw, hxw, hyw, hzw⟩ :=
-      lifts.exists_max_three hc (Classical.some_spec s.mem).1 (Classical.some_spec t.mem).1
-        (Classical.some_spec (s + t).Mem).1
+      lifts.exists_max_three hc (Classical.choose_spec s.mem).1 (Classical.choose_spec t.mem).1
+        (Classical.choose_spec (s + t).Mem).1
     rw [lifts.eq_of_le hxw, lifts.eq_of_le hyw, lifts.eq_of_le hzw, ← w.2.map_add]
     rfl
   map_mul' := fun s t => by
     obtain ⟨w, hw, hxw, hyw, hzw⟩ :=
-      lifts.exists_max_three hc (Classical.some_spec s.mem).1 (Classical.some_spec t.mem).1
-        (Classical.some_spec (s * t).Mem).1
+      lifts.exists_max_three hc (Classical.choose_spec s.mem).1 (Classical.choose_spec t.mem).1
+        (Classical.choose_spec (s * t).Mem).1
     rw [lifts.eq_of_le hxw, lifts.eq_of_le hyw, lifts.eq_of_le hzw, ← w.2.map_mul]
     rfl
   commutes' := fun _ => AlgHom.commutes _ _
@@ -904,8 +904,8 @@ theorem Lifts.exists_upper_bound (c : Set (Lifts F E K)) (hc : IsChain (· ≤ �
     · exact fun s hs => ⟨x, Set.mem_insert_of_mem ⊥ hx, hs⟩
       
     · intro s t hst
-      change x.2 s = (Classical.some t.mem).2 ⟨t, (Classical.some_spec t.mem).2⟩
-      obtain ⟨z, hz, hxz, hyz⟩ := lifts.exists_max_two hc (Set.mem_insert_of_mem ⊥ hx) (Classical.some_spec t.mem).1
+      change x.2 s = (Classical.choose t.mem).2 ⟨t, (Classical.choose_spec t.mem).2⟩
+      obtain ⟨z, hz, hxz, hyz⟩ := lifts.exists_max_two hc (Set.mem_insert_of_mem ⊥ hx) (Classical.choose_spec t.mem).1
       rw [lifts.eq_of_le hxz, lifts.eq_of_le hyz]
       exact congr_arg z.2 (Subtype.ext hst)
       ⟩

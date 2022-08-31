@@ -10,6 +10,10 @@ Linear combination of constraints.
 -/
 namespace Omega
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Linear combination of constraints. The second
     argument is the list of constraints, and the first
     argument is the list of conefficients by which the
@@ -17,18 +21,22 @@ namespace Omega
 @[simp]
 def linComb : List Nat → List Term → Term
   | [], [] => ⟨0, []⟩
-  | [], _ :: _ => ⟨0, []⟩
-  | _ :: _, [] => ⟨0, []⟩
-  | n :: ns, t :: ts => Term.add (t.mul ↑n) (lin_comb ns ts)
+  | [], _::_ => ⟨0, []⟩
+  | _::_, [] => ⟨0, []⟩
+  | n::ns, t::ts => Term.add (t.mul ↑n) (lin_comb ns ts)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem lin_comb_holds {v : Nat → Int} : ∀ {ts} (ns), (∀ t ∈ ts, 0 ≤ Term.val v t) → 0 ≤ (linComb ns ts).val v
   | [], [], h => by
     simp only [add_zeroₓ, term.val, lin_comb, coeffs.val_nil]
-  | [], _ :: _, h => by
+  | [], _::_, h => by
     simp only [add_zeroₓ, term.val, lin_comb, coeffs.val_nil]
-  | _ :: _, [], h => by
+  | _::_, [], h => by
     simp only [add_zeroₓ, term.val, lin_comb, coeffs.val_nil]
-  | t :: ts, n :: ns, h => by
+  | t::ts, n::ns, h => by
     have : 0 ≤ ↑n * term.val v t + term.val v (lin_comb ns ts) := by
       apply add_nonneg
       · apply mul_nonneg

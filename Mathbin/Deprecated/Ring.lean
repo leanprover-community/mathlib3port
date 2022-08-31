@@ -133,7 +133,7 @@ theorem to_is_semiring_hom (hf : IsRingHom f) : IsSemiringHom f :=
   { ‹IsRingHom f› with map_zero := map_zero hf }
 
 theorem to_is_add_group_hom (hf : IsRingHom f) : IsAddGroupHom f :=
-  { map_add := hf.map_add }
+  { map_add := fun _ _ => hf.map_add }
 
 end IsRingHom
 

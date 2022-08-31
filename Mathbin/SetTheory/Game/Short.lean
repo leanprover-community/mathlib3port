@@ -39,10 +39,10 @@ instance subsingleton_short : ∀ x : Pgame, Subsingleton (Short x)
       cases b
       congr
       · funext
-        apply @Subsingleton.elimₓ _ (subsingleton_short (xL x))
+        apply @Subsingleton.elim _ (subsingleton_short (xL x))
         
       · funext
-        apply @Subsingleton.elimₓ _ (subsingleton_short (xR x))
+        apply @Subsingleton.elim _ (subsingleton_short (xR x))
         ⟩
 
 /-- A synonym for `short.mk` that specifies the pgame in an implicit argument. -/
@@ -144,22 +144,25 @@ instance short1 : Short 1 :=
     fun j => by
     cases j
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Evidence that every `pgame` in a list is `short`. -/
 inductive ListShort : List Pgame.{u} → Type (u + 1)
   | nil : list_short []
-  | cons : ∀ (hd : Pgame.{u}) [Short hd] (tl : List Pgame.{u}) [list_short tl], list_short (hd :: tl)
+  | cons : ∀ (hd : Pgame.{u}) [Short hd] (tl : List Pgame.{u}) [list_short tl], list_short (hd::tl)
 
 attribute [class] list_short
 
 attribute [instance] list_short.nil list_short.cons
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance listShortNthLe :
     ∀ (L : List Pgame.{u}) [ListShort L] (i : Finₓ (List.length L)), Short (List.nthLe L i i.is_lt)
   | [], _, n => by
     exfalso
     rcases n with ⟨_, ⟨⟩⟩
-  | hd :: tl, @list_short.cons _ S _ _, ⟨0, _⟩ => S
-  | hd :: tl, @list_short.cons _ _ _ S, ⟨n + 1, h⟩ => @list_short_nth_le tl S ⟨n, (add_lt_add_iff_right 1).mp h⟩
+  | hd::tl, @list_short.cons _ S _ _, ⟨0, _⟩ => S
+  | hd::tl, @list_short.cons _ _ _ S, ⟨n + 1, h⟩ => @list_short_nth_le tl S ⟨n, (add_lt_add_iff_right 1).mp h⟩
 
 instance shortOfLists : ∀ (L R : List Pgame) [ListShort L] [ListShort R], Short (Pgame.ofLists L R)
   | L, R, _, _ => by

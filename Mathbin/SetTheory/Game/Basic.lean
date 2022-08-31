@@ -126,7 +126,7 @@ theorem _root_.pgame.lf_iff_game_lf {x y : Pgame} : Pgame.Lf x y ↔ ⟦x⟧ ⧏
 theorem _root_.pgame.lt_iff_game_lt {x y : Pgame} : x < y ↔ ⟦x⟧ < ⟦y⟧ :=
   Iff.rfl
 
-theorem _root_.pgame.equiv_iff_game_eq {x y : Pgame} : x ≈ y ↔ ⟦x⟧ = ⟦y⟧ :=
+theorem _root_.pgame.equiv_iff_game_eq {x y : Pgame} : (x ≈ y) ↔ ⟦x⟧ = ⟦y⟧ :=
   (@Quotientₓ.eq _ _ x y).symm
 
 /-- The fuzzy, confused, or incomparable relation on games.

@@ -141,7 +141,8 @@ variable [TopologicalGroup G]
 
 /-- If `K` is compact and `V` has nonempty interior, then the index `(K : V)` is well-defined,
   there is a finite set `t` satisfying the desired properties. -/
-@[to_additive add_index_defined]
+@[to_additive add_index_defined
+      "If `K` is compact and `V` has nonempty interior, then the index\n`(K : V)` is well-defined, there is a finite set `t` satisfying the desired properties."]
 theorem index_defined {K V : Set G} (hK : IsCompact K) (hV : (Interior V).Nonempty) :
     ∃ n : ℕ, n ∈ Finset.card '' { t : Finset G | K ⊆ ⋃ g ∈ t, (fun h => g * h) ⁻¹' V } := by
   rcases compact_covered_by_mul_left_translates hK hV with ⟨t, ht⟩
@@ -410,16 +411,16 @@ theorem nonempty_Inter_cl_prehaar (K₀ : PositiveCompacts G) :
   `haar_measure K₀ (interior K) ≤ chaar K₀ K ≤ haar_measure K₀ K`. -/
 @[to_additive add_chaar "additive version of `measure_theory.measure.haar.chaar`"]
 def chaar (K₀ : PositiveCompacts G) (K : Compacts G) : ℝ :=
-  Classical.some (nonempty_Inter_cl_prehaar K₀) K
+  Classical.choose (nonempty_Inter_cl_prehaar K₀) K
 
 @[to_additive add_chaar_mem_add_haar_product]
 theorem chaar_mem_haar_product (K₀ : PositiveCompacts G) : chaar K₀ ∈ HaarProduct (K₀ : Set G) :=
-  (Classical.some_spec (nonempty_Inter_cl_prehaar K₀)).1
+  (Classical.choose_spec (nonempty_Inter_cl_prehaar K₀)).1
 
 @[to_additive add_chaar_mem_cl_add_prehaar]
 theorem chaar_mem_cl_prehaar (K₀ : PositiveCompacts G) (V : OpenNhdsOf (1 : G)) : chaar K₀ ∈ ClPrehaar (K₀ : Set G) V :=
   by
-  have := (Classical.some_spec (nonempty_Inter_cl_prehaar K₀)).2
+  have := (Classical.choose_spec (nonempty_Inter_cl_prehaar K₀)).2
   rw [mem_Inter] at this
   exact this V
 
@@ -589,13 +590,13 @@ theorem haar_content_apply (K₀ : PositiveCompacts G) (K : Compacts G) :
   rfl
 
 /-- The variant of `chaar_self` for `haar_content` -/
-@[to_additive]
+@[to_additive "The variant of `add_chaar_self` for `add_haar_content`."]
 theorem haar_content_self {K₀ : PositiveCompacts G} : haarContent K₀ K₀.toCompacts = 1 := by
   simp_rw [← Ennreal.coe_one, haar_content_apply, Ennreal.coe_eq_coe, chaar_self]
   rfl
 
 /-- The variant of `is_left_invariant_chaar` for `haar_content` -/
-@[to_additive]
+@[to_additive "The variant of `is_left_invariant_add_chaar` for `add_haar_content`"]
 theorem is_left_invariant_haar_content {K₀ : PositiveCompacts G} (g : G) (K : Compacts G) :
     haarContent K₀ (K.map _ <| continuous_mul_left g) = haarContent K₀ K := by
   simpa only [Ennreal.coe_eq_coe, ← Nnreal.coe_eq, haar_content_apply] using is_left_invariant_chaar g K
@@ -650,7 +651,7 @@ theorem haar_measure_self {K₀ : PositiveCompacts G} : haarMeasure K₀ K₀ = 
     
 
 /-- The Haar measure is regular. -/
-@[to_additive]
+@[to_additive "The additive Haar measure is regular."]
 instance regular_haar_measure {K₀ : PositiveCompacts G} : (haarMeasure K₀).regular := by
   haveI : LocallyCompactSpace G := K₀.locally_compact_space_of_group
   apply regular.smul
@@ -658,7 +659,7 @@ instance regular_haar_measure {K₀ : PositiveCompacts G} : (haarMeasure K₀).r
   exact haar_content_outer_measure_self_pos.ne'
 
 /-- The Haar measure is sigma-finite in a second countable group. -/
-@[to_additive]
+@[to_additive "The additive Haar measure is sigma-finite in a second countable group."]
 instance sigma_finite_haar_measure [SecondCountableTopology G] {K₀ : PositiveCompacts G} :
     SigmaFinite (haarMeasure K₀) := by
   haveI : LocallyCompactSpace G := K₀.locally_compact_space_of_group
@@ -666,7 +667,8 @@ instance sigma_finite_haar_measure [SecondCountableTopology G] {K₀ : PositiveC
 
 /-- The Haar measure is a Haar measure, i.e., it is invariant and gives finite mass to compact
 sets and positive mass to nonempty open sets. -/
-@[to_additive]
+@[to_additive
+      "The additive Haar measure is an additive Haar measure, i.e., it is invariant and\ngives  finite mass to compact sets and positive mass to nonempty open sets."]
 instance is_haar_measure_haar_measure (K₀ : PositiveCompacts G) : IsHaarMeasure (haarMeasure K₀) := by
   apply is_haar_measure_of_is_compact_nonempty_interior (haar_measure K₀) K₀ K₀.compact K₀.interior_nonempty
   · simp only [haar_measure_self]
@@ -689,7 +691,8 @@ variable [SecondCountableTopology G]
   is a scalar multiple of the Haar measure.
   This is slightly weaker than assuming that `μ` is a Haar measure (in particular we don't require
   `μ ≠ 0`). -/
-@[to_additive]
+@[to_additive
+      "The additive Haar measure is unique up to scaling. More precisely: every σ-finite\nleft invariant measure is a scalar multiple of the additive Haar measure. This is slightly weaker\nthan assuming that `μ` is an additive Haar measure (in particular we don't require `μ ≠ 0`)."]
 theorem haar_measure_unique (μ : Measure G) [SigmaFinite μ] [IsMulLeftInvariant μ] (K₀ : PositiveCompacts G) :
     μ = μ K₀ • haarMeasure K₀ :=
   (measure_eq_div_smul μ (haarMeasure K₀) K₀.compact.MeasurableSet
@@ -703,7 +706,8 @@ example [LocallyCompactSpace G] (μ : Measure G) [IsHaarMeasure μ] (K₀ : Posi
 
 /-- To show that an invariant σ-finite measure is regular it is sufficient to show that it is finite
   on some compact set with non-empty interior. -/
-@[to_additive]
+@[to_additive
+      "To show that an invariant σ-finite measure is regular it is sufficient to show that\nit is finite on some compact set with non-empty interior."]
 theorem regular_of_is_mul_left_invariant {μ : Measure G} [SigmaFinite μ] [IsMulLeftInvariant μ] {K : Set G}
     (hK : IsCompact K) (h2K : (Interior K).Nonempty) (hμK : μ K ≠ ∞) : Regular μ := by
   rw [haar_measure_unique μ ⟨⟨K, hK⟩, h2K⟩]
@@ -795,7 +799,7 @@ theorem div_mem_nhds_one_of_haar_pos (μ : Measure G) [IsHaarMeasure μ] [Locall
 end SecondCountable
 
 /-- Any Haar measure is invariant under inversion in a commutative group. -/
-@[to_additive]
+@[to_additive "Any additive Haar measure is invariant under negation in a commutative group."]
 theorem map_haar_inv {G : Type _} [CommGroupₓ G] [TopologicalSpace G] [TopologicalGroup G] [T2Space G]
     [MeasurableSpace G] [BorelSpace G] [LocallyCompactSpace G] [SecondCountableTopology G] (μ : Measure G)
     [IsHaarMeasure μ] : Measure.map Inv.inv μ = μ := by

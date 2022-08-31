@@ -110,9 +110,10 @@ unsafe def normal_expr.term' (c : context) (n : expr × ℤ) (x : expr) (a : nor
 unsafe def normal_expr.zero' (c : context) : normal_expr :=
   normal_expr.zero c.α0
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 unsafe def normal_expr.to_list : normal_expr → List (ℤ × expr)
   | normal_expr.zero _ => []
-  | normal_expr.nterm _ (_, n) x a => (n, x) :: a.toList
+  | normal_expr.nterm _ (_, n) x a => (n, x)::a.toList
 
 open NormalExpr
 

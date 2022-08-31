@@ -134,6 +134,8 @@ theorem coord_change_continuous (i j : Atlas H M) : ContinuousOn (Z.coordChange 
   · exact maps_to_image I _
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem coord_change_smooth (i j : Atlas H M) :
     ContDiffOn 𝕜 ∞ (fun p : E × F => Z.coordChange i j (I.symm p.1) p.2) ((I '' (i.1.symm.trans j.1).Source) ×ˢ univ) :=
   by
@@ -177,6 +179,7 @@ def toTopologicalVectorBundleCore : TopologicalVectorBundleCore 𝕜 M F (Atlas 
 theorem base_set (i : Atlas H M) : (Z.toTopologicalVectorBundleCore.localTriv i).BaseSet = i.1.Source :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp, mfld_simps]
 theorem target (i : Atlas H M) : (Z.toTopologicalVectorBundleCore.localTriv i).Target = i.1.Source ×ˢ univ :=
   rfl
@@ -193,6 +196,7 @@ theorem chart_source (e : LocalHomeomorph M H) (he : e ∈ Atlas H M) :
   simp only [chart, mem_prod]
   mfld_set_tac
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp, mfld_simps]
 theorem chart_target (e : LocalHomeomorph M H) (he : e ∈ Atlas H M) : (Z.chart he).Target = e.Target ×ˢ univ := by
   simp only [chart]
@@ -236,6 +240,10 @@ theorem coe_chart_at_symm_fst (p : H × F) (q : Z.toTopologicalVectorBundleCore.
     ((chartAt (ModelProd H F) q).symm p).1 = ((chartAt H q.1).symm : H → M) p.1 :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Smooth manifold structure on the total space of a basic smooth bundle -/
 instance to_smooth_manifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z.toTopologicalVectorBundleCore.TotalSpace :=
   by
@@ -307,6 +315,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
   [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
   [SmoothManifoldWithCorners I M]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Basic smooth bundle core version of the tangent bundle of a smooth manifold `M` modelled over a
 model with corners `I` on `(E, H)`. The fibers are equal to `E`, and the coordinate change in the
 fiber corresponds to the derivative of the coordinate change in `M`. -/
@@ -490,7 +499,7 @@ variable (M)
 def TangentBundle :=
   Bundle.TotalSpace (TangentSpace I : M → Type _)
 
--- mathport name: «exprTM»
+-- mathport name: exprTM
 local notation "TM" => TangentBundle I M
 
 /-- The projection from the tangent bundle of a smooth manifold to the manifold. As the tangent

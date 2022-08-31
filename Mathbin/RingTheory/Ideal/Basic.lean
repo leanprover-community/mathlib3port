@@ -180,12 +180,12 @@ class IsPrime (I : Ideal α) : Prop where
   mem_or_mem' : ∀ {x y : α}, x * y ∈ I → x ∈ I ∨ y ∈ I
 
 theorem is_prime_iff {I : Ideal α} : IsPrime I ↔ I ≠ ⊤ ∧ ∀ {x y : α}, x * y ∈ I → x ∈ I ∨ y ∈ I :=
-  ⟨fun h => ⟨h.1, h.2⟩, fun h => ⟨h.1, h.2⟩⟩
+  ⟨fun h => ⟨h.1, fun _ _ => h.2⟩, fun h => ⟨h.1, fun _ _ => h.2⟩⟩
 
 theorem IsPrime.ne_top {I : Ideal α} (hI : I.IsPrime) : I ≠ ⊤ :=
   hI.1
 
-theorem IsPrime.mem_or_mem {I : Ideal α} (hI : I.IsPrime) : ∀ {x y : α}, x * y ∈ I → x ∈ I ∨ y ∈ I :=
+theorem IsPrime.mem_or_mem {I : Ideal α} (hI : I.IsPrime) {x y : α} : x * y ∈ I → x ∈ I ∨ y ∈ I :=
   hI.2
 
 theorem IsPrime.mem_or_mem_of_mul_eq_zero {I : Ideal α} (hI : I.IsPrime) {x y : α} (h : x * y = 0) : x ∈ I ∨ y ∈ I :=
@@ -585,7 +585,7 @@ namespace Ringₓ
 variable {R : Type _} [CommRingₓ R]
 
 theorem not_is_field_of_subsingleton {R : Type _} [Ringₓ R] [Subsingleton R] : ¬IsField R := fun ⟨⟨x, y, hxy⟩, _, _⟩ =>
-  hxy (Subsingleton.elimₓ x y)
+  hxy (Subsingleton.elim x y)
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ≠ » (0 : R))
 theorem exists_not_is_unit_of_not_is_field [Nontrivial R] (hf : ¬IsField R) : ∃ (x : _)(_ : x ≠ (0 : R)), ¬IsUnit x :=
@@ -607,7 +607,7 @@ theorem not_is_field_iff_exists_ideal_bot_lt_and_lt_top [Nontrivial R] : ¬IsFie
   · rintro ⟨I, bot_lt, lt_top⟩ hf
     obtain ⟨x, mem, ne_zero⟩ := SetLike.exists_of_lt bot_lt
     rw [Submodule.mem_bot] at ne_zero
-    obtain ⟨y, hy⟩ := hf.mul_inv_cancel ne_zero
+    obtain ⟨y, hy⟩ := hf.mul_inv_cancel NeZero
     rw [lt_top_iff_ne_top, Ne.def, Ideal.eq_top_iff_one, ← hy] at lt_top
     exact lt_top (I.mul_mem_right _ mem)
     

@@ -193,7 +193,7 @@ theorem exists_coeff_mem_comap_sdiff_comap_of_root_mem_sdiff [IsPrime I] (hIJ : 
     exact trans (eval₂_map _ _ _) (hom_eval₂ p f (Quotientₓ.mk I) r).symm
   obtain ⟨i, ne_zero, mem⟩ := exists_coeff_ne_zero_mem_comap_of_root_mem rbar_ne_zero rbar_mem_J p_ne_zero rbar_root
   rw [coeff_map] at ne_zero mem
-  refine' ⟨i, (mem_quotient_iff_mem hIJ).mp _, mt _ ne_zero⟩
+  refine' ⟨i, (mem_quotient_iff_mem hIJ).mp _, mt _ NeZero⟩
   · simpa using mem
     
   simp [quotient.eq_zero_iff_mem]

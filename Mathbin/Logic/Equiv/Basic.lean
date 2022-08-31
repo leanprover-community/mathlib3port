@@ -192,16 +192,16 @@ theorem subsingleton_congr (e : α ≃ β) : Subsingleton α ↔ Subsingleton β
   ⟨fun h => e.symm.subsingleton, fun h => e.subsingleton⟩
 
 instance equiv_subsingleton_cod [Subsingleton β] : Subsingleton (α ≃ β) :=
-  ⟨fun f g => Equivₓ.ext fun x => Subsingleton.elimₓ _ _⟩
+  ⟨fun f g => Equivₓ.ext fun x => Subsingleton.elim _ _⟩
 
 instance equiv_subsingleton_dom [Subsingleton α] : Subsingleton (α ≃ β) :=
-  ⟨fun f g => Equivₓ.ext fun x => @Subsingleton.elimₓ _ (Equivₓ.subsingleton.symm f) _ _⟩
+  ⟨fun f g => Equivₓ.ext fun x => @Subsingleton.elim _ (Equivₓ.subsingleton.symm f) _ _⟩
 
 instance permUnique [Subsingleton α] : Unique (Perm α) :=
   uniqueOfSubsingleton (Equivₓ.refl α)
 
 theorem Perm.subsingleton_eq_refl [Subsingleton α] (e : Perm α) : e = Equivₓ.refl α :=
-  Subsingleton.elimₓ _ _
+  Subsingleton.elim _ _
 
 /-- Transfer `decidable_eq` across an equivalence. -/
 protected def decidableEq (e : α ≃ β) [DecidableEq β] : DecidableEq α :=
@@ -469,8 +469,8 @@ def propEquivPempty {p : Prop} (h : ¬p) : p ≃ Pempty :=
 def equivOfUnique (α β : Sort _) [Unique α] [Unique β] : α ≃ β where
   toFun := default
   invFun := default
-  left_inv := fun _ => Subsingleton.elimₓ _ _
-  right_inv := fun _ => Subsingleton.elimₓ _ _
+  left_inv := fun _ => Subsingleton.elim _ _
+  right_inv := fun _ => Subsingleton.elim _ _
 
 /-- If `α` has a unique element, then it is equivalent to any `punit`. -/
 def equivPunit (α : Sort _) [Unique α] : α ≃ PUnit.{v} :=
@@ -671,10 +671,10 @@ i` is equivalent to `β i`. -/
 @[simps]
 def piSubsingleton {α} (β : α → Sort _) [Subsingleton α] (a : α) : (∀ a', β a') ≃ β a where
   toFun := eval a
-  invFun := fun x b => cast (congr_arg β <| Subsingleton.elimₓ a b) x
+  invFun := fun x b => cast (congr_arg β <| Subsingleton.elim a b) x
   left_inv := fun f =>
     funext fun b => by
-      rw [Subsingleton.elimₓ b a]
+      rw [Subsingleton.elim b a]
       rfl
   right_inv := fun b => rfl
 
@@ -1669,8 +1669,8 @@ def listEquivOfEquiv {α β : Type _} (e : α ≃ β) : List α ≃ List β wher
 def uniqueCongr (e : α ≃ β) : Unique α ≃ Unique β where
   toFun := fun h => @Equivₓ.unique _ _ h e.symm
   invFun := fun h => @Equivₓ.unique _ _ h e
-  left_inv := fun _ => Subsingleton.elimₓ _ _
-  right_inv := fun _ => Subsingleton.elimₓ _ _
+  left_inv := fun _ => Subsingleton.elim _ _
+  right_inv := fun _ => Subsingleton.elim _ _
 
 /-- If `α` is equivalent to `β`, then `is_empty α` is equivalent to `is_empty β`. -/
 theorem is_empty_congr (e : α ≃ β) : IsEmpty α ↔ IsEmpty β :=
@@ -2421,16 +2421,16 @@ theorem Function.Injective.swap_comp [DecidableEq α] [DecidableEq β] {f : α �
 def subsingletonProdSelfEquiv {α : Type _} [Subsingleton α] : α × α ≃ α where
   toFun := fun p => p.1
   invFun := fun a => (a, a)
-  left_inv := fun p => Subsingleton.elimₓ _ _
-  right_inv := fun p => Subsingleton.elimₓ _ _
+  left_inv := fun p => Subsingleton.elim _ _
+  right_inv := fun p => Subsingleton.elim _ _
 
 /-- To give an equivalence between two subsingleton types, it is sufficient to give any two
     functions between them. -/
 def equivOfSubsingletonOfSubsingleton [Subsingleton α] [Subsingleton β] (f : α → β) (g : β → α) : α ≃ β where
   toFun := f
   invFun := g
-  left_inv := fun _ => Subsingleton.elimₓ _ _
-  right_inv := fun _ => Subsingleton.elimₓ _ _
+  left_inv := fun _ => Subsingleton.elim _ _
+  right_inv := fun _ => Subsingleton.elim _ _
 
 /-- A nonempty subsingleton type is (noncomputably) equivalent to `punit`. -/
 noncomputable def Equivₓ.punitOfNonemptyOfSubsingleton {α : Sort _} [h : Nonempty α] [Subsingleton α] : α ≃ PUnit.{v} :=
@@ -2439,7 +2439,7 @@ noncomputable def Equivₓ.punitOfNonemptyOfSubsingleton {α : Sort _} [h : None
 /-- `unique (unique α)` is equivalent to `unique α`. -/
 def uniqueUniqueEquiv : Unique (Unique α) ≃ Unique α :=
   equivOfSubsingletonOfSubsingleton (fun h => h.default) fun h =>
-    { default := h, uniq := fun _ => Subsingleton.elimₓ _ _ }
+    { default := h, uniq := fun _ => Subsingleton.elim _ _ }
 
 namespace Quot
 

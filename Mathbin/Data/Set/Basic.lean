@@ -373,10 +373,10 @@ theorem not_nonempty_empty : ¬(∅ : Set α).Nonempty := fun h => h.ne_empty rf
 /-- Extract a witness from `s.nonempty`. This function might be used instead of case analysis
 on the argument. Note that it makes a proof depend on the `classical.choice` axiom. -/
 protected noncomputable def Nonempty.some (h : s.Nonempty) : α :=
-  Classical.some h
+  Classical.choose h
 
 protected theorem Nonempty.some_mem (h : s.Nonempty) : h.some ∈ s :=
-  Classical.some_spec h
+  Classical.choose_spec h
 
 theorem Nonempty.mono (ht : s ⊆ t) (hs : s.Nonempty) : t.Nonempty :=
   hs.imp ht
@@ -555,7 +555,7 @@ theorem not_subset_iff_exists_mem_not_mem {α : Type _} {s t : Set α} : ¬s ⊆
   simp [subset_def]
 
 theorem univ_unique [Unique α] : @Set.Univ α = {default} :=
-  Set.ext fun x => iff_of_true trivialₓ <| Subsingleton.elimₓ x default
+  Set.ext fun x => iff_of_true trivialₓ <| Subsingleton.elim x default
 
 instance nontrivial_of_nonempty [Nonempty α] : Nontrivial (Set α) :=
   ⟨⟨∅, Univ, empty_ne_univ⟩⟩
@@ -2068,7 +2068,7 @@ theorem Subsingleton.induction_on {p : Set α → Prop} (hs : s.Subsingleton) (h
   rcases hs.eq_empty_or_singleton with (rfl | ⟨x, rfl⟩)
   exacts[he, h₁ _]
 
-theorem subsingleton_univ [Subsingleton α] : (Univ : Set α).Subsingleton := fun x hx y hy => Subsingleton.elimₓ x y
+theorem subsingleton_univ [Subsingleton α] : (Univ : Set α).Subsingleton := fun x hx y hy => Subsingleton.elim x y
 
 theorem subsingleton_of_univ_subsingleton (h : (Univ : Set α).Subsingleton) : Subsingleton α :=
   ⟨fun a b => h (mem_univ a) (mem_univ b)⟩
@@ -2099,7 +2099,7 @@ theorem exists_eq_singleton_iff_nonempty_subsingleton : (∃ a : α, s = {a}) �
 theorem subsingleton_coe (s : Set α) : Subsingleton s ↔ s.Subsingleton := by
   constructor
   · refine' fun h => fun a ha b hb => _
-    exact SetCoe.ext_iff.2 (@Subsingleton.elimₓ s h ⟨a, ha⟩ ⟨b, hb⟩)
+    exact SetCoe.ext_iff.2 (@Subsingleton.elim s h ⟨a, ha⟩ ⟨b, hb⟩)
     
   · exact fun h => Subsingleton.intro fun a b => SetCoe.ext (h a.property b.property)
     
@@ -3345,14 +3345,14 @@ namespace Subsingleton
 variable {α : Type _} [Subsingleton α]
 
 theorem eq_univ_of_nonempty {s : Set α} : s.Nonempty → s = univ := fun ⟨x, hx⟩ =>
-  eq_univ_of_forall fun y => Subsingleton.elimₓ x y ▸ hx
+  eq_univ_of_forall fun y => Subsingleton.elim x y ▸ hx
 
 @[elabAsElim]
 theorem set_cases {p : Set α → Prop} (h0 : p ∅) (h1 : p Univ) (s) : p s :=
   (s.eq_empty_or_nonempty.elim fun h => h.symm ▸ h0) fun h => (eq_univ_of_nonempty h).symm ▸ h1
 
 theorem mem_iff_nonempty {α : Type _} [Subsingleton α] {s : Set α} {x : α} : x ∈ s ↔ s.Nonempty :=
-  ⟨fun hx => ⟨x, hx⟩, fun ⟨y, hy⟩ => Subsingleton.elimₓ y x ▸ hy⟩
+  ⟨fun hx => ⟨x, hx⟩, fun ⟨y, hy⟩ => Subsingleton.elim y x ▸ hy⟩
 
 end Subsingleton
 

@@ -1128,6 +1128,8 @@ theorem ContDiffWithinAt.fderiv_within (hf : ContDiffWithinAt 𝕜 n f s x) (hs 
       exact eventually_of_mem self_mem_nhds_within hs)
     hmn
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- If a function is at least `C^1`, its bundled derivative (mapping `(x, v)` to `Df(x) v`) is
 continuous. -/
 theorem ContDiffOn.continuous_on_fderiv_within_apply (h : ContDiffOn 𝕜 n f s) (hs : UniqueDiffOn 𝕜 s) (hn : 1 ≤ n) :
@@ -1561,22 +1563,22 @@ theorem cont_diff_within_at_const {c : F} : ContDiffWithinAt 𝕜 n (fun x : E =
 
 @[nontriviality]
 theorem cont_diff_of_subsingleton [Subsingleton F] : ContDiff 𝕜 n f := by
-  rw [Subsingleton.elimₓ f fun _ => 0]
+  rw [Subsingleton.elim f fun _ => 0]
   exact cont_diff_const
 
 @[nontriviality]
 theorem cont_diff_at_of_subsingleton [Subsingleton F] : ContDiffAt 𝕜 n f x := by
-  rw [Subsingleton.elimₓ f fun _ => 0]
+  rw [Subsingleton.elim f fun _ => 0]
   exact cont_diff_at_const
 
 @[nontriviality]
 theorem cont_diff_within_at_of_subsingleton [Subsingleton F] : ContDiffWithinAt 𝕜 n f s x := by
-  rw [Subsingleton.elimₓ f fun _ => 0]
+  rw [Subsingleton.elim f fun _ => 0]
   exact cont_diff_within_at_const
 
 @[nontriviality]
 theorem cont_diff_on_of_subsingleton [Subsingleton F] : ContDiffOn 𝕜 n f s := by
-  rw [Subsingleton.elimₓ f fun _ => 0]
+  rw [Subsingleton.elim f fun _ => 0]
   exact cont_diff_on_const
 
 /-! ### Smoothness of linear functions -/
@@ -2140,6 +2142,9 @@ theorem cont_diff_prod_assoc_symm : ContDiff 𝕜 ⊤ <| (Equivₓ.prodAssoc E F
 /-! ### Bundled derivatives -/
 
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The bundled derivative of a `C^{n+1}` function is `C^n`. -/
 theorem cont_diff_on_fderiv_within_apply {m n : WithTop ℕ} {s : Set E} {f : E → F} (hf : ContDiffOn 𝕜 n f s)
     (hs : UniqueDiffOn 𝕜 s) (hmn : m + 1 ≤ n) :
@@ -2607,6 +2612,7 @@ variable {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E']
 
 variable {F' : Type _} [NormedAddCommGroup F'] [NormedSpace 𝕜 F']
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The product map of two `C^n` functions within a set at a point is `C^n`
 within the product set at the product point. -/
 theorem ContDiffWithinAt.prod_map' {s : Set E} {t : Set E'} {f : E → F} {g : E' → F'} {p : E × E'}
@@ -2615,11 +2621,13 @@ theorem ContDiffWithinAt.prod_map' {s : Set E} {t : Set E'} {f : E → F} {g : E
   (hf.comp p cont_diff_within_at_fst (prod_subset_preimage_fst _ _)).Prod
     (hg.comp p cont_diff_within_at_snd (prod_subset_preimage_snd _ _))
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem ContDiffWithinAt.prod_map {s : Set E} {t : Set E'} {f : E → F} {g : E' → F'} {x : E} {y : E'}
     (hf : ContDiffWithinAt 𝕜 n f s x) (hg : ContDiffWithinAt 𝕜 n g t y) :
     ContDiffWithinAt 𝕜 n (Prod.map f g) (s ×ˢ t) (x, y) :=
   ContDiffWithinAt.prod_map' hf hg
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The product map of two `C^n` functions on a set is `C^n` on the product set. -/
 theorem ContDiffOn.prod_map {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {F' : Type _}
     [NormedAddCommGroup F'] [NormedSpace 𝕜 F'] {s : Set E} {t : Set E'} {f : E → F} {g : E' → F'}

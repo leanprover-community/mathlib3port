@@ -383,13 +383,13 @@ We also assume that either `E = {0}`, or `c < ∥f'⁻¹∥⁻¹`. We use `N` as
 
 variable {f' : E ≃L[𝕜] F} {s : Set E} {c : ℝ≥0 }
 
--- mathport name: «exprN»
+-- mathport name: exprN
 local notation "N" => ∥(f'.symm : F →L[𝕜] E)∥₊
 
 protected theorem antilipschitz (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Subsingleton E ∨ c < N⁻¹) :
     AntilipschitzWith (N⁻¹ - c)⁻¹ (s.restrict f) := by
   cases' hc with hE hc
-  · haveI : Subsingleton s := ⟨fun x y => Subtype.eq <| @Subsingleton.elimₓ _ hE _ _⟩
+  · haveI : Subsingleton s := ⟨fun x y => Subtype.eq <| @Subsingleton.elim _ hE _ _⟩
     exact AntilipschitzWith.of_subsingleton
     
   convert (f'.antilipschitz.restrict s).add_lipschitz_with hf.lipschitz_sub hc
@@ -558,7 +558,7 @@ theorem approximates_deriv_on_nhds {f : E → F} {f' : E →L[𝕜] F} {a : E} (
     (hc : Subsingleton E ∨ 0 < c) : ∃ s ∈ 𝓝 a, ApproximatesLinearOn f f' s c := by
   cases' hc with hE hc
   · refine' ⟨univ, IsOpen.mem_nhds is_open_univ trivialₓ, fun x hx y hy => _⟩
-    simp [@Subsingleton.elimₓ E hE x y]
+    simp [@Subsingleton.elim E hE x y]
     
   have := hf.def hc
   rw [nhds_prod_eq, Filter.Eventually, mem_prod_same_iff] at this
@@ -596,10 +596,10 @@ with `to_fun = f` and `a ∈ source`. This is a part of the inverse function the
 The other part `has_strict_fderiv_at.to_local_inverse` states that the inverse function
 of this `local_homeomorph` has derivative `f'.symm`. -/
 def toLocalHomeomorph (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) : LocalHomeomorph E F :=
-  ApproximatesLinearOn.toLocalHomeomorph f (Classical.some hf.approximates_deriv_on_open_nhds)
-    (Classical.some_spec hf.approximates_deriv_on_open_nhds).snd
+  ApproximatesLinearOn.toLocalHomeomorph f (Classical.choose hf.approximates_deriv_on_open_nhds)
+    (Classical.choose_spec hf.approximates_deriv_on_open_nhds).snd
     ((f'.subsingleton_or_nnnorm_symm_pos.imp id) fun hf' => Nnreal.half_lt_self <| ne_of_gtₓ <| Nnreal.inv_pos.2 <| hf')
-    (Classical.some_spec hf.approximates_deriv_on_open_nhds).fst.2
+    (Classical.choose_spec hf.approximates_deriv_on_open_nhds).fst.2
 
 variable {f}
 
@@ -609,7 +609,7 @@ theorem to_local_homeomorph_coe (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) 
 
 theorem mem_to_local_homeomorph_source (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) :
     a ∈ (hf.toLocalHomeomorph f).Source :=
-  (Classical.some_spec hf.approximates_deriv_on_open_nhds).fst.1
+  (Classical.choose_spec hf.approximates_deriv_on_open_nhds).fst.1
 
 theorem image_mem_to_local_homeomorph_target (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) :
     f a ∈ (hf.toLocalHomeomorph f).Target :=

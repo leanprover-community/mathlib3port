@@ -49,7 +49,7 @@ namespace WittVector
 
 variable {p : ℕ} {R S : Type _} [hp : Fact p.Prime] [CommRingₓ R] [CommRingₓ S]
 
--- mathport name: «expr𝕎»
+-- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
 -- type as `\bbW`
@@ -80,7 +80,7 @@ for `multiplicity p n`. -/
 private def pnat_multiplicity (n : ℕ+) : ℕ :=
   (multiplicity p n).get <| multiplicity.finite_nat_iff.mpr <| ⟨ne_of_gtₓ hp.1.one_lt, n.2⟩
 
--- mathport name: «exprv»
+-- mathport name: exprv
 local notation "v" => pnatMultiplicity
 
 /-- An auxiliary polynomial over the integers, that satisfies

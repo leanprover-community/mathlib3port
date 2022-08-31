@@ -298,7 +298,7 @@ theorem length_injective_iff : Injective (List.length : List α → ℕ) ↔ Sub
     · cases hl
       
     congr
-    exact Subsingleton.elimₓ _ _
+    exact Subsingleton.elim _ _
     apply l1_ih
     simpa using hl
     
@@ -2870,10 +2870,10 @@ section
 
 variable {op : α → α → α} [ha : IsAssociative α op] [hc : IsCommutative α op]
 
--- mathport name: «expr * »
+-- mathport name: op
 local notation a "*" b => op a b
 
--- mathport name: «expr <*> »
+-- mathport name: foldl
 local notation l "<*>" a => foldlₓ op a l
 
 include ha

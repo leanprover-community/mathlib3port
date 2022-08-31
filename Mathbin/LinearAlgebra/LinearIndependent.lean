@@ -165,7 +165,7 @@ theorem Fintype.not_linear_independent_iff [Fintype ι] :
   simpa using not_iff_not.2 Fintype.linear_independent_iff
 
 theorem linear_independent_empty_type [IsEmpty ι] : LinearIndependent R v :=
-  linear_independent_iff.mpr fun v hv => Subsingleton.elimₓ v 0
+  linear_independent_iff.mpr fun v hv => Subsingleton.elim v 0
 
 theorem LinearIndependent.ne_zero [Nontrivial R] (i : ι) (hv : LinearIndependent R v) : v i ≠ 0 := fun h =>
   @zero_ne_one R _ _ <|
@@ -232,7 +232,7 @@ protected theorem LinearMap.linear_independent_iff (f : M →ₗ[R] M') (hf_inj 
 
 @[nontriviality]
 theorem linear_independent_of_subsingleton [Subsingleton R] : LinearIndependent R v :=
-  linear_independent_iff.2 fun l hl => Subsingleton.elimₓ _ _
+  linear_independent_iff.2 fun l hl => Subsingleton.elim _ _
 
 theorem linear_independent_equiv (e : ι ≃ ι') {f : ι' → M} : LinearIndependent R (f ∘ e) ↔ LinearIndependent R f :=
   ⟨fun h => Function.comp.right_id f ▸ e.self_comp_symm ▸ h.comp _ e.symm.Injective, fun h => h.comp _ e.Injective⟩
@@ -1231,26 +1231,26 @@ variable {K t}
 /-- `linear_independent.extend` adds vectors to a linear independent set `s ⊆ t` until it spans
 all elements of `t`. -/
 noncomputable def LinearIndependent.Extend (hs : LinearIndependent K (fun x => x : s → V)) (hst : s ⊆ t) : Set V :=
-  Classical.some (exists_linear_independent_extension hs hst)
+  Classical.choose (exists_linear_independent_extension hs hst)
 
 theorem LinearIndependent.extend_subset (hs : LinearIndependent K (fun x => x : s → V)) (hst : s ⊆ t) :
     hs.extend hst ⊆ t :=
-  let ⟨hbt, hsb, htb, hli⟩ := Classical.some_spec (exists_linear_independent_extension hs hst)
+  let ⟨hbt, hsb, htb, hli⟩ := Classical.choose_spec (exists_linear_independent_extension hs hst)
   hbt
 
 theorem LinearIndependent.subset_extend (hs : LinearIndependent K (fun x => x : s → V)) (hst : s ⊆ t) :
     s ⊆ hs.extend hst :=
-  let ⟨hbt, hsb, htb, hli⟩ := Classical.some_spec (exists_linear_independent_extension hs hst)
+  let ⟨hbt, hsb, htb, hli⟩ := Classical.choose_spec (exists_linear_independent_extension hs hst)
   hsb
 
 theorem LinearIndependent.subset_span_extend (hs : LinearIndependent K (fun x => x : s → V)) (hst : s ⊆ t) :
     t ⊆ span K (hs.extend hst) :=
-  let ⟨hbt, hsb, htb, hli⟩ := Classical.some_spec (exists_linear_independent_extension hs hst)
+  let ⟨hbt, hsb, htb, hli⟩ := Classical.choose_spec (exists_linear_independent_extension hs hst)
   htb
 
 theorem LinearIndependent.linear_independent_extend (hs : LinearIndependent K (fun x => x : s → V)) (hst : s ⊆ t) :
     LinearIndependent K (coe : hs.extend hst → V) :=
-  let ⟨hbt, hsb, htb, hli⟩ := Classical.some_spec (exists_linear_independent_extension hs hst)
+  let ⟨hbt, hsb, htb, hli⟩ := Classical.choose_spec (exists_linear_independent_extension hs hst)
   hli
 
 variable {K V}

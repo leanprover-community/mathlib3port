@@ -1338,7 +1338,7 @@ theorem ContinuousMultilinearMap.uncurry0_apply (f : G[×0]→L[𝕜] G') : f.un
 theorem ContinuousMultilinearMap.apply_zero_curry0 (f : G[×0]→L[𝕜] G') {x : Finₓ 0 → G} :
     ContinuousMultilinearMap.curry0 𝕜 G (f x) = f := by
   ext m
-  simp [(Subsingleton.elimₓ _ _ : x = m)]
+  simp [(Subsingleton.elim _ _ : x = m)]
 
 theorem ContinuousMultilinearMap.uncurry0_curry0 (f : G[×0]→L[𝕜] G') :
     ContinuousMultilinearMap.curry0 𝕜 G f.uncurry0 = f := by
@@ -1364,7 +1364,7 @@ variable {𝕜 G}
 
 @[simp]
 theorem ContinuousMultilinearMap.fin0_apply_norm (f : G[×0]→L[𝕜] G') {x : Finₓ 0 → G} : ∥f x∥ = ∥f∥ := by
-  obtain rfl : x = 0 := Subsingleton.elimₓ _ _
+  obtain rfl : x = 0 := Subsingleton.elim _ _
   refine'
     le_antisymmₓ
       (by

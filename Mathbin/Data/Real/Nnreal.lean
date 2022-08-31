@@ -62,7 +62,7 @@ def Nnreal :=
   OrderBot, CanonicallyLinearOrderedAddMonoid, LinearOrderedCommGroupWithZero, Archimedean, LinearOrderedSemiring,
   OrderedCommSemiring, CanonicallyOrderedCommSemiring, Sub, HasOrderedSub, Div, Inhabited
 
--- mathport name: «exprℝ≥0»
+-- mathport name: nnreal
 localized [Nnreal] notation " ℝ≥0 " => Nnreal
 
 namespace Nnreal

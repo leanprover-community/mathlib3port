@@ -154,7 +154,7 @@ function `g ≥ f` with integral arbitrarily close to that of `f`. Formulation i
 Auxiliary lemma for Vitali-Carathéodory theorem `exists_lt_lower_semicontinuous_integral_lt`. -/
 theorem exists_le_lower_semicontinuous_lintegral_ge (f : α → ℝ≥0∞) (hf : Measurable f) {ε : ℝ≥0∞} (εpos : ε ≠ 0) :
     ∃ g : α → ℝ≥0∞, (∀ x, f x ≤ g x) ∧ LowerSemicontinuous g ∧ (∫⁻ x, g x ∂μ) ≤ (∫⁻ x, f x ∂μ) + ε := by
-  rcases Ennreal.exists_pos_sum_of_encodable' εpos ℕ with ⟨δ, δpos, hδ⟩
+  rcases Ennreal.exists_pos_sum_of_countable' εpos ℕ with ⟨δ, δpos, hδ⟩
   have :
     ∀ n,
       ∃ g : α → ℝ≥0 ,

@@ -43,7 +43,7 @@ theorem map_diagram : Pairwise.diagram U ⋙ Opens.map f = Pairwise.diagram ((Op
     intro i
     cases i <;> rfl
   intro i j g
-  apply Subsingleton.helimₓ
+  apply Subsingleton.helim
   iterate 2 
     rw [map_diagram.obj_eq]
 
@@ -54,7 +54,7 @@ theorem map_cocone : HEq ((Opens.map f).mapCocone (Pairwise.cocone U)) (Pairwise
   iterate 2 
     rw [map_diagram]
     rw [opens.map_supr]
-  apply Subsingleton.helimₓ
+  apply Subsingleton.helim
   rw [map_diagram, opens.map_supr]
   apply proof_irrel_heq
 

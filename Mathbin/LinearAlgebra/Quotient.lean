@@ -373,8 +373,8 @@ theorem span_preimage_eq [RingHomSurjective τ₁₂] {f : M →ₛₗ[τ₁₂]
   suffices (span R₂ s).comap f ≤ span R (f ⁻¹' s) by
     exact le_antisymmₓ (span_preimage_le f s) this
   have hk : ker f ≤ span R (f ⁻¹' s) := by
-    let y := Classical.some h₀
-    have hy : y ∈ s := Classical.some_spec h₀
+    let y := Classical.choose h₀
+    have hy : y ∈ s := Classical.choose_spec h₀
     rw [ker_le_iff]
     use y, h₁ hy
     rw [← Set.singleton_subset_iff] at hy

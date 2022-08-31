@@ -31,14 +31,14 @@ namespace Quot
 
 variable {ra : α → α → Prop} {rb : β → β → Prop} {φ : Quot ra → Quot rb → Sort _}
 
--- mathport name: «expr⟦ ⟧»
+-- mathport name: mk
 local notation:arg "⟦" a "⟧" => Quot.mk _ a
 
 instance (r : α → α → Prop) [Inhabited α] : Inhabited (Quot r) :=
   ⟨⟦default⟧⟩
 
 instance [Subsingleton α] : Subsingleton (Quot ra) :=
-  ⟨fun x => Quot.induction_on x fun y => Quot.ind fun b => congr_arg _ (Subsingleton.elimₓ _ _)⟩
+  ⟨fun x => Quot.induction_on x fun y => Quot.ind fun b => congr_arg _ (Subsingleton.elim _ _)⟩
 
 /-- Recursion on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
 protected def hrecOn₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ ⟦a⟧ ⟦b⟧)
@@ -273,7 +273,7 @@ theorem surjective_quotient_mk (α : Sort _) [s : Setoidₓ α] : Function.Surje
 /-- Choose an element of the equivalence class using the axiom of choice.
   Sound but noncomputable. -/
 noncomputable def Quot.out {r : α → α → Prop} (q : Quot r) : α :=
-  Classical.some (Quot.exists_rep q)
+  Classical.choose (Quot.exists_rep q)
 
 /-- Unwrap the VM representation of a quotient to obtain an element of the equivalence class.
   Computable but unsound. -/
@@ -282,7 +282,7 @@ unsafe def quot.unquot {r : α → α → Prop} : Quot r → α :=
 
 @[simp]
 theorem Quot.out_eq {r : α → α → Prop} (q : Quot r) : Quot.mk r q.out = q :=
-  Classical.some_spec (Quot.exists_rep q)
+  Classical.choose_spec (Quot.exists_rep q)
 
 /-- Choose an element of the equivalence class using the axiom of choice.
   Sound but noncomputable. -/
@@ -436,7 +436,7 @@ protected def recOn (q : Trunc α) (f : ∀ a, C (mk a))
 /-- A version of `trunc.rec_on` assuming the codomain is a `subsingleton`. -/
 @[reducible, elabAsElim]
 protected def recOnSubsingleton [∀ a, Subsingleton (C (mk a))] (q : Trunc α) (f : ∀ a, C (mk a)) : C q :=
-  Trunc.rec f (fun a b => Subsingleton.elimₓ _ (f b)) q
+  Trunc.rec f (fun a b => Subsingleton.elim _ (f b)) q
 
 /-- Noncomputably extract a representative of `trunc α` (using the axiom of choice). -/
 noncomputable def out : Trunc α → α :=

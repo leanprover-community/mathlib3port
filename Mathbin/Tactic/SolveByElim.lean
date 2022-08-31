@@ -260,7 +260,7 @@ setup_tactic_parser
 
 namespace Interactive
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- `apply_assumption` looks for an assumption of the form `... → ∀ _, ... → head`
 where `head` matches the current goal.
 
@@ -276,7 +276,7 @@ Optional arguments:
   this tactic fails, the corresponding assumption will be rejected and
   the next one will be attempted.
 -/
-unsafe def apply_assumption (lemmas : parse («expr ?» pexpr_list)) (opt : apply_any_opt := {  })
+unsafe def apply_assumption (lemmas : parse (parser.optional pexpr_list)) (opt : apply_any_opt := {  })
     (tac : tactic Unit := skip) : tactic Unit := do
   let lemmas ←
     match lemmas with
@@ -288,7 +288,7 @@ add_tactic_doc
   { Name := "apply_assumption", category := DocCategory.tactic, declNames := [`tactic.interactive.apply_assumption],
     tags := ["context management", "lemma application"] }
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- `solve_by_elim` calls `apply` on the main goal to find an assumption whose head matches
 and then repeatedly calls `apply` on the generated subgoals until no subgoals remain,
 performing at most `max_depth` recursive steps.
@@ -325,8 +325,9 @@ optional arguments passed via a configuration argument as `solve_by_elim { ... }
     or filtering complete results
     (by testing for the absence of metavariables, and then the filtering condition).
 -/
-unsafe def solve_by_elim (all_goals : parse <| «expr ?» (tk "*")) (no_dflt : parse only_flag) (hs : parse simp_arg_list)
-    (attr_names : parse with_ident_list) (opt : solve_by_elim.opt := {  }) : tactic Unit := do
+unsafe def solve_by_elim (all_goals : parse <| parser.optional (tk "*")) (no_dflt : parse only_flag)
+    (hs : parse simp_arg_list) (attr_names : parse with_ident_list) (opt : solve_by_elim.opt := {  }) : tactic Unit :=
+  do
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set no_dflt hs attr_names
   tactic.solve_by_elim { opt with backtrack_all_goals := all_goals ∨ opt, lemma_thunks := some lemma_thunks, ctx_thunk }
 

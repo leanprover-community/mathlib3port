@@ -1245,6 +1245,12 @@ theorem ContMdiffOn.continuous_on_tangent_map_within_aux {f : H → H'} {s : Set
   convert hs.unique_diff_on_target_inter x using 1
   simp' only [inter_comm] with mfld_simps
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- If a function is `C^n` on a domain with unique derivatives, then its bundled derivative is
 `C^m` when `m+1 ≤ n`. In this auxiliary lemma, we prove this fact when the source and target space
 are model spaces in models with corners. The general fact is proved in
@@ -1896,6 +1902,7 @@ section prod_map
 
 variable {g : N → N'} {r : Set N} {y : N}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The product map of two `C^n` functions within a set at a point is `C^n`
 within the product set at the product point. -/
 theorem ContMdiffWithinAt.prod_map' {p : M × N} (hf : ContMdiffWithinAt I I' n f s p.1)
@@ -1903,6 +1910,7 @@ theorem ContMdiffWithinAt.prod_map' {p : M × N} (hf : ContMdiffWithinAt I I' n 
   (hf.comp p cont_mdiff_within_at_fst (prod_subset_preimage_fst _ _)).prod_mk <|
     hg.comp p cont_mdiff_within_at_snd (prod_subset_preimage_snd _ _)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem ContMdiffWithinAt.prod_map (hf : ContMdiffWithinAt I I' n f s x) (hg : ContMdiffWithinAt J J' n g r y) :
     ContMdiffWithinAt (I.Prod J) (I'.Prod J') n (Prod.map f g) (s ×ˢ r) (x, y) :=
   ContMdiffWithinAt.prod_map' hf hg
@@ -1918,6 +1926,7 @@ theorem ContMdiffAt.prod_map' {p : M × N} (hf : ContMdiffAt I I' n f p.1) (hg :
   rcases p with ⟨⟩
   exact hf.prod_map hg
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem ContMdiffOn.prod_map (hf : ContMdiffOn I I' n f s) (hg : ContMdiffOn J J' n g r) :
     ContMdiffOn (I.Prod J) (I'.Prod J') n (Prod.map f g) (s ×ˢ r) :=
   (hf.comp cont_mdiff_on_fst (prod_subset_preimage_fst _ _)).prod_mk <|
@@ -1928,6 +1937,7 @@ theorem ContMdiff.prod_map (hf : ContMdiff I I' n f) (hg : ContMdiff J J' n g) :
   intro p
   exact (hf p.1).prod_map' (hg p.2)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem SmoothWithinAt.prod_map (hf : SmoothWithinAt I I' f s x) (hg : SmoothWithinAt J J' g r y) :
     SmoothWithinAt (I.Prod J) (I'.Prod J') (Prod.map f g) (s ×ˢ r) (x, y) :=
   hf.prod_map hg
@@ -1936,6 +1946,7 @@ theorem SmoothAt.prod_map (hf : SmoothAt I I' f x) (hg : SmoothAt J J' g y) :
     SmoothAt (I.Prod J) (I'.Prod J') (Prod.map f g) (x, y) :=
   hf.prod_map hg
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem SmoothOn.prod_map (hf : SmoothOn I I' f s) (hg : SmoothOn J J' g r) :
     SmoothOn (I.Prod J) (I'.Prod J') (Prod.map f g) (s ×ˢ r) :=
   hf.prod_map hg

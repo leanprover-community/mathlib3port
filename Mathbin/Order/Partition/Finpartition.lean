@@ -242,6 +242,7 @@ section Inf
 
 variable [DecidableEq α] {a b c : α}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance : HasInf (Finpartition a) :=
   ⟨fun P Q =>
     ofErase ((P.parts ×ˢ Q.parts).Image fun bc => bc.1⊓bc.2)
@@ -265,6 +266,7 @@ instance : HasInf (Finpartition a) :=
         · rw [P.sup_parts, Q.sup_parts, inf_idem]
           )⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem parts_inf (P Q : Finpartition a) :
     (P⊓Q).parts = ((P.parts ×ˢ Q.parts).Image fun bc : α × α => bc.1⊓bc.2).erase ⊥ :=

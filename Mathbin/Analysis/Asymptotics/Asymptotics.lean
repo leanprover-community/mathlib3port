@@ -234,7 +234,7 @@ theorem is_o_iff_nat_mul_le' : f' =o[l] g ↔ ∀ n : ℕ, ∀ᶠ x in l, ↑n *
 @[nontriviality]
 theorem is_o_of_subsingleton [Subsingleton E'] : f' =o[l] g' :=
   is_o.of_bound fun c hc => by
-    simp [Subsingleton.elimₓ (f' _) 0, mul_nonneg hc.le]
+    simp [Subsingleton.elim (f' _) 0, mul_nonneg hc.le]
 
 @[nontriviality]
 theorem is_O_of_subsingleton [Subsingleton E'] : f' =O[l] g' :=

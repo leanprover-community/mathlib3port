@@ -142,13 +142,15 @@ theorem bounded_formula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedForm
 theorem realize_formula_cast {β : Type _} (φ : L.Formula β) (x : β → ∀ a, M a) :
     (φ.realize fun i => (x i : (u : Filter α).product M)) ↔ ∀ᶠ a : α in u, φ.realize fun i => x i a := by
   simp_rw [formula.realize, ← bounded_formula_realize_cast φ x, iff_eq_eq]
-  exact congr rfl (Subsingleton.elimₓ _ _)
+  exact congr rfl (Subsingleton.elim _ _)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Łoś's Theorem : A sentence is true in an ultraproduct if and only if the set of structures it is
   true in is in the ultrafilter. -/
 theorem sentence_realize (φ : L.Sentence) : (u : Filter α).product M ⊨ φ ↔ ∀ᶠ a : α in u, M a ⊨ φ := by
   simp_rw [sentence.realize, ← realize_formula_cast φ, iff_eq_eq]
-  exact congr rfl (Subsingleton.elimₓ _ _)
+  exact congr rfl (Subsingleton.elim _ _)
 
 instance : Nonempty ((u : Filter α).product M) := by
   letI : ∀ a, Inhabited (M a) := fun _ => Classical.inhabitedOfNonempty'

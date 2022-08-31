@@ -162,6 +162,7 @@ variable (𝕜) [NontriviallyNormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 
 
 variable [UniformSpace E] [UniformAddGroup E] [HasContinuousSmul 𝕜 E]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem TotallyBounded.is_vonN_bounded {s : Set E} (hs : TotallyBounded s) : Bornology.IsVonNBounded 𝕜 s := by
   rw [totally_bounded_iff_subset_finite_Union_nhds_zero] at hs
   intro U hU

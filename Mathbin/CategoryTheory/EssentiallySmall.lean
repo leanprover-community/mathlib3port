@@ -42,17 +42,17 @@ theorem EssentiallySmall.mk' {C : Type u} [Category.{v} C] {S : Type w} [SmallCa
 -/
 @[nolint has_nonempty_instance]
 def SmallModel (C : Type u) [Category.{v} C] [EssentiallySmall.{w} C] : Type w :=
-  Classical.some (@EssentiallySmall.equiv_small_category C _ _)
+  Classical.choose (@EssentiallySmall.equiv_small_category C _ _)
 
 noncomputable instance smallCategorySmallModel (C : Type u) [Category.{v} C] [EssentiallySmall.{w} C] :
     SmallCategory (SmallModel C) :=
-  Classical.some (Classical.some_spec (@EssentiallySmall.equiv_small_category C _ _))
+  Classical.choose (Classical.choose_spec (@EssentiallySmall.equiv_small_category C _ _))
 
 /-- The (noncomputable) categorical equivalence between
 an essentially small category and its small model.
 -/
 noncomputable def equivSmallModel (C : Type u) [Category.{v} C] [EssentiallySmall.{w} C] : C ≌ SmallModel C :=
-  Nonempty.some (Classical.some_spec (Classical.some_spec (@EssentiallySmall.equiv_small_category C _ _)))
+  Nonempty.some (Classical.choose_spec (Classical.choose_spec (@EssentiallySmall.equiv_small_category C _ _)))
 
 theorem essentially_small_congr {C : Type u} [Category.{v} C] {D : Type u'} [Category.{v'} D] (e : C ≌ D) :
     EssentiallySmall.{w} C ↔ EssentiallySmall.{w} D := by

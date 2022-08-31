@@ -81,7 +81,7 @@ theorem mono_iff_injective : Mono f ↔ Function.Injective f :=
 
 namespace SurjectiveOfEpiAuxs
 
--- mathport name: «exprX»
+-- mathport name: exprX
 local notation "X" => Set.Range (Function.swap LeftCoset f.range.Carrier)
 
 /-- Define `X'` to be the set of all left cosets with an extra point at "infinity".
@@ -95,13 +95,13 @@ open XWithInfinity Equivₓ.Perm
 
 open Coset
 
--- mathport name: «exprX'»
+-- mathport name: exprX'
 local notation "X'" => XWithInfinity f
 
 -- mathport name: «expr∞»
 local notation "∞" => XWithInfinity.infinity
 
--- mathport name: «exprSX'»
+-- mathport name: exprSX'
 local notation "SX'" => Equivₓ.Perm X'
 
 instance :
@@ -153,7 +153,7 @@ instance : DecidableEq X' :=
 noncomputable def tau : SX' :=
   Equivₓ.swap (from_coset ⟨f.range.Carrier, ⟨1, one_left_coset _⟩⟩) ∞
 
--- mathport name: «exprτ»
+-- mathport name: exprτ
 local notation "τ" => tau f
 
 theorem τ_apply_infinity : τ ∞ = from_coset ⟨f.range.Carrier, ⟨1, one_left_coset _⟩⟩ :=
@@ -190,7 +190,7 @@ def g : B →* SX' where
     ext
     simp [mul_smul]
 
--- mathport name: «exprg»
+-- mathport name: exprg
 local notation "g" => g f
 
 /-- Define `h : B ⟶ S(X')` to be `τ g τ⁻¹`
@@ -204,7 +204,7 @@ def h : B →* SX' where
     ext
     simp
 
--- mathport name: «exprh»
+-- mathport name: exprh
 local notation "h" => h f
 
 /-!

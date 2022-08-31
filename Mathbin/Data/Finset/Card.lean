@@ -505,7 +505,7 @@ theorem card_le_one_iff_subset_singleton [Nonempty α] : s.card ≤ 1 ↔ ∃ x 
 
 /-- A `finset` of a subsingleton type has cardinality at most one. -/
 theorem card_le_one_of_subsingleton [Subsingleton α] (s : Finset α) : s.card ≤ 1 :=
-  Finset.card_le_one_iff.2 fun _ _ _ _ => Subsingleton.elimₓ _ _
+  Finset.card_le_one_iff.2 fun _ _ _ _ => Subsingleton.elim _ _
 
 theorem one_lt_card : 1 < s.card ↔ ∃ a ∈ s, ∃ b ∈ s, a ≠ b := by
   rw [← not_iff_not]

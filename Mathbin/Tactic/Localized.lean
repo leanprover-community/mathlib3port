@@ -72,11 +72,11 @@ locale.
 
 * Declare notation which is localized to a locale using:
 ```lean
-localized "infix ` ⊹ `:60 := my_add" in my.add
+localized "infix (name := my_add) ` ⊹ `:60 := my_add" in my.add
 ```
 
 * After this command it will be available in the same section/namespace/file, just as if you wrote
-  `local infix ` ⊹ `:60 := my_add`
+  `local infix (name := my_add) ` ⊹ `:60 := my_add`
 
 * You can open it in other places. The following command will declare the notation again as local
   notation in that section/namespace/file:
@@ -108,6 +108,20 @@ run_cmd do
 
 * Warning: You have to give full names of all declarations used in localized notation,
   so that the localized notation also works when the appropriate namespaces are not opened.
+
+* Note: In mathlib, you should always provide names for localized notations using the
+  `(name := ...)` parameter. This prevents issues if the localized notation overrides
+  an existing notation when it gets opened.
+
+* Warning: Due to limitations in the implementation, you cannot use `_` in localized notations.
+  (Otherwise `open_locale foo` will fail if `foo` is already opened or partially opened.)
+  Instead, you should use the `hole!` notation as a drop-in replacement. For example:
+```lean
+-- BAD
+-- localized "infix (name := my_add) ` ⊹[` R `] ` := my_add _ R" in foo
+-- GOOD
+localized "infix (name := my_add) ` ⊹[` R `] ` := my_add hole! R" in foo
+```
 -/
 add_tactic_doc
   { Name := "localized notation", category := DocCategory.cmd, declNames := [`localized_cmd, `open_locale_cmd],
@@ -118,6 +132,12 @@ unsafe def print_localized_commands (ns : List Name) : tactic Unit := do
   let cmds ← get_localized ns
   cmds trace
 
+-- mathport name: exprhole!
+notation
+  "hole!" =>-- This should be used instead of `_` inside localized commands,
+  -- because otherwise `open_locale` will fail if some of the notations are already available.
+  _
+
 localized [-- you can run `open_locale classical` to get the decidability of all propositions, and downgrade
 -- the priority of decidability instances that make Lean run through all the algebraic hierarchy
 -- whenever it wants to solve a decidability question
@@ -125,9 +145,9 @@ Classical] attribute [instance] Classical.propDecidable
 
 localized [Classical] attribute [instance] Eq.decidable
 
--- mathport name: «expr ?»
+-- mathport name: parser.optional
 localized [Parser] postfix:1024 "?" => optionalₓ
 
--- mathport name: «expr *»
+-- mathport name: parser.many
 localized [Parser] postfix:1024 "*" => lean.parser.many
 

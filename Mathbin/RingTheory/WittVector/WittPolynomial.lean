@@ -89,13 +89,13 @@ theorem witt_polynomial_eq_sum_C_mul_X_pow (n : ℕ) :
 This allows us to simply write `W n` or `W_ ℤ n`. -/
 
 
--- mathport name: «exprW_»
+-- mathport name: witt_polynomial
 -- Notation with ring of coefficients explicit
 localized [Witt] notation "W_" => wittPolynomial p
 
--- mathport name: «exprW»
+-- mathport name: witt_polynomial.infer
 -- Notation with ring of coefficients implicit
-localized [Witt] notation "W" => wittPolynomial p _
+localized [Witt] notation "W" => wittPolynomial p hole!
 
 open Witt
 
@@ -154,17 +154,16 @@ theorem witt_polynomial_zmod_self (n : ℕ) : W_ (Zmod (p ^ (n + 1))) (n + 1) = 
 
 section PPrime
 
--- in fact, `0 < p` would be sufficient
-variable [hp : Fact p.Prime]
+variable [hp : NeZero p]
 
 include hp
 
 theorem witt_polynomial_vars [CharZero R] (n : ℕ) : (wittPolynomial p R n).vars = range (n + 1) := by
   have : ∀ i, (monomial (Finsupp.single i (p ^ (n - i))) (p ^ i : R)).vars = {i} := by
     intro i
-    refine' vars_monomial_single i (pow_ne_zero _ hp.1.ne_zero) _
+    refine' vars_monomial_single i (pow_ne_zero _ hp.1) _
     rw [← Nat.cast_powₓ, Nat.cast_ne_zero]
-    exact pow_ne_zero i hp.1.ne_zero
+    exact pow_ne_zero i hp.1
   rw [wittPolynomial, vars_sum_of_disjoint]
   · simp only [this, bUnion_singleton_eq_self]
     

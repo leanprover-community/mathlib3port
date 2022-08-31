@@ -28,40 +28,58 @@ instance typesMonoidal : MonoidalCategory.{u} (Type u) :=
 instance typesSymmetric : SymmetricCategory.{u} (Type u) :=
   symmetricOfChosenFiniteProducts Types.terminalLimitCone Types.binaryProductLimitCone
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem tensor_apply {W X Y Z : Type u} (f : W ⟶ X) (g : Y ⟶ Z) (p : W ⊗ Y) : (f ⊗ g) p = (f p.1, g p.2) :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem left_unitor_hom_apply {X : Type u} {x : X} {p : PUnit} : ((λ_ X).Hom : 𝟙_ (Type u) ⊗ X → X) (p, x) = x :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem left_unitor_inv_apply {X : Type u} {x : X} : ((λ_ X).inv : X ⟶ 𝟙_ (Type u) ⊗ X) x = (PUnit.unit, x) :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem right_unitor_hom_apply {X : Type u} {x : X} {p : PUnit} : ((ρ_ X).Hom : X ⊗ 𝟙_ (Type u) → X) (x, p) = x :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem right_unitor_inv_apply {X : Type u} {x : X} : ((ρ_ X).inv : X ⟶ X ⊗ 𝟙_ (Type u)) x = (x, PUnit.unit) :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem associator_hom_apply {X Y Z : Type u} {x : X} {y : Y} {z : Z} :
     ((α_ X Y Z).Hom : (X ⊗ Y) ⊗ Z → X ⊗ Y ⊗ Z) ((x, y), z) = (x, (y, z)) :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem associator_inv_apply {X Y Z : Type u} {x : X} {y : Y} {z : Z} :
     ((α_ X Y Z).inv : X ⊗ Y ⊗ Z → (X ⊗ Y) ⊗ Z) (x, (y, z)) = ((x, y), z) :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem braiding_hom_apply {X Y : Type u} {x : X} {y : Y} : ((β_ X Y).Hom : X ⊗ Y → Y ⊗ X) (x, y) = (y, x) :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem braiding_inv_apply {X Y : Type u} {x : X} {y : Y} : ((β_ X Y).inv : Y ⊗ X → X ⊗ Y) (y, x) = (x, y) :=
   rfl
@@ -70,6 +88,7 @@ open Opposite
 
 open MonoidalCategory
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `(𝟙_ C ⟶ -)` is a lax monoidal functor to `Type`. -/
 def coyonedaTensorUnit (C : Type u) [Category.{v} C] [MonoidalCategory C] : LaxMonoidalFunctor C (Type v) :=
   { coyoneda.obj (op (𝟙_ C)) with ε := fun p => 𝟙 _, μ := fun X Y p => (λ_ (𝟙_ C)).inv ≫ (p.1 ⊗ p.2),
@@ -95,6 +114,7 @@ def coyonedaTensorUnit (C : Type u) [Category.{v} C] [MonoidalCategory C] : LaxM
 
 noncomputable section
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- We don't yet have an API for tensor products indexed by finite ordered types,
 -- but it would be nice to state how monoidal functors preserve these.
 /-- If `F` is a monoidal functor out of `Type`, it takes the (n+1)st cartesian power

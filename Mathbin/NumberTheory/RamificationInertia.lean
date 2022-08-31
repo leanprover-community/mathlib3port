@@ -459,7 +459,7 @@ end FinrankQuotientMap
 
 section FactLeComap
 
--- mathport name: «expre»
+-- mathport name: expre
 local notation "e" => ramificationIdx f p P
 
 /-- `R / p` has a canonical map to `S / (P ^ e)`, where `e` is the ramification index
@@ -472,7 +472,7 @@ theorem Quotient.algebra_map_quotient_pow_ramification_idx (x : R) :
     algebraMap (R ⧸ p) (S ⧸ P ^ e) (Ideal.Quotient.mk p x) = Ideal.Quotient.mk _ (f x) :=
   rfl
 
-variable [hfp : Fact (ramificationIdx f p P ≠ 0)]
+variable [hfp : NeZero (ramificationIdx f p P)]
 
 include hfp
 
@@ -648,7 +648,7 @@ theorem dim_prime_pow_ramification_idx [IsDomain S] [IsDedekindDomain S] [p.IsMa
         @Module.rank (R ⧸ p) (S ⧸ P) _ _
           (@Algebra.toModule _ _ _ _ <| @Quotient.algebraQuotientOfRamificationIdxNeZero _ _ _ _ _ ⟨he⟩) :=
   by
-  letI : Fact (e ≠ 0) := ⟨he⟩
+  letI : NeZero e := ⟨he⟩
   have := dim_pow_quot f p P hP0 0 (Nat.zero_leₓ e)
   rw [pow_zeroₓ, Nat.sub_zero, Ideal.one_eq_top, Ideal.map_top] at this
   exact (dim_top (R ⧸ p) _).symm.trans this
@@ -662,7 +662,7 @@ theorem finrank_prime_pow_ramification_idx [IsDomain S] [IsDedekindDomain S] (hP
         @finrank (R ⧸ p) (S ⧸ P) _ _
           (@Algebra.toModule _ _ _ _ <| @Quotient.algebraQuotientOfRamificationIdxNeZero _ _ _ _ _ ⟨he⟩) :=
   by
-  letI : Fact (e ≠ 0) := ⟨he⟩
+  letI : NeZero e := ⟨he⟩
   letI : Algebra (R ⧸ p) (S ⧸ P) := quotient.algebra_quotient_of_ramification_idx_ne_zero f p P
   letI := Ideal.Quotient.field p
   have hdim := dim_prime_pow_ramification_idx _ _ _ hP0 he
@@ -698,7 +698,7 @@ theorem Factors.ramification_idx_ne_zero (P : (factors (map (algebraMap R S) p))
     (Factors.is_prime p P) (Ideal.le_of_dvd (dvd_of_mem_factors (Multiset.mem_to_finset.mp P.2)))
 
 instance Factors.fact_ramification_idx_ne_zero (P : (factors (map (algebraMap R S) p)).toFinset) :
-    Fact (ramificationIdx (algebraMap R S) p P ≠ 0) :=
+    NeZero (ramificationIdx (algebraMap R S) p P) :=
   ⟨Factors.ramification_idx_ne_zero p P⟩
 
 attribute [local instance] quotient.algebra_quotient_of_ramification_idx_ne_zero

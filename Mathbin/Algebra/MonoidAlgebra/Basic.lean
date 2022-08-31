@@ -300,6 +300,8 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
   rw [mul_def]
   simp only [Finsupp.sum_apply, single_apply]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem mul_apply_antidiagonal [Mul G] (f g : MonoidAlgebra k G) (x : G) (s : Finset (G × G))
     (hs : ∀ {p : G × G}, p ∈ s ↔ p.1 * p.2 = x) : (f * g) x = ∑ p in s, f p.1 * g p.2 :=
   let F : G × G → k := fun p => by
@@ -908,7 +910,7 @@ def submoduleOfSmulMem (W : Submodule k V) (h : ∀ (g : G) (v : V), v ∈ W →
     Submodule (MonoidAlgebra k G) V where
   Carrier := W
   zero_mem' := W.zero_mem'
-  add_mem' := W.add_mem'
+  add_mem' := fun _ _ => W.add_mem'
   smul_mem' := by
     intro f v hv
     rw [← Finsupp.sum_single f, Finsupp.sum, Finset.sum_smul]

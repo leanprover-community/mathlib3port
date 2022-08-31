@@ -76,6 +76,7 @@ open Interactive
 
 open Interactive.Types
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Parse the entries of a matrix -/
 unsafe def entry_parser {α : Type} (p : parser α) : parser (Σm n, Finₓ m → Finₓ n → α) := do
   let-- a list of lists if the matrix has at least one row, or the number of columns if the matrix has
@@ -90,7 +91,7 @@ unsafe def entry_parser {α : Type} (p : parser α) : parser (Σm n, Finₓ m �
       p
   match which with
     | Sum.inl l => do
-      let h :: tl ← pure l
+      let h::tl ← pure l
       let n := h
       let l : List (Vector α n) ←
         l fun row =>

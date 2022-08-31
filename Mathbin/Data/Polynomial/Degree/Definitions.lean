@@ -62,7 +62,7 @@ def Monic (p : R[X]) :=
 
 @[nontriviality]
 theorem monic_of_subsingleton [Subsingleton R] (p : R[X]) : Monic p :=
-  Subsingleton.elimₓ _ _
+  Subsingleton.elim _ _
 
 theorem Monic.def : Monic p ↔ leadingCoeff p = 1 :=
   Iff.rfl
@@ -94,11 +94,11 @@ theorem degree_eq_bot : degree p = ⊥ ↔ p = 0 :=
 
 @[nontriviality]
 theorem degree_of_subsingleton [Subsingleton R] : degree p = ⊥ := by
-  rw [Subsingleton.elimₓ p 0, degree_zero]
+  rw [Subsingleton.elim p 0, degree_zero]
 
 @[nontriviality]
 theorem nat_degree_of_subsingleton [Subsingleton R] : natDegree p = 0 := by
-  rw [Subsingleton.elimₓ p 0, nat_degree_zero]
+  rw [Subsingleton.elim p 0, nat_degree_zero]
 
 theorem degree_eq_nat_degree (hp : p ≠ 0) : degree p = (natDegree p : WithBot ℕ) := by
   let ⟨n, hn⟩ := not_forall.1 (mt Option.eq_none_iff_forall_not_mem.2 (mt degree_eq_bot.1 hp))

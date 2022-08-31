@@ -310,10 +310,10 @@ alias exists_le ← _root_.filter.exists_ultrafilter_le
   The ultrafilter lemma is the assertion that such a filter exists;
   we use the axiom of choice to pick one. -/
 noncomputable def of (f : Filter α) [NeBot f] : Ultrafilter α :=
-  Classical.some (exists_le f)
+  Classical.choose (exists_le f)
 
 theorem of_le (f : Filter α) [NeBot f] : ↑(of f) ≤ f :=
-  Classical.some_spec (exists_le f)
+  Classical.choose_spec (exists_le f)
 
 theorem of_coe (f : Ultrafilter α) : of ↑f = f :=
   coe_inj.1 <| f.unique (of_le f)

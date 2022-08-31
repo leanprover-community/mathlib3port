@@ -71,17 +71,20 @@ def binaryRecFromOne {C : ℕ → Sort _} (z₀ : C 0) (z₁ : C 1) (f : ∀ b n
 theorem zero_bits : bits 0 = [] := by
   simp [Nat.bits]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem bits_append_bit (n : ℕ) (b : Bool) (hn : n = 0 → b = tt) : (bit b n).bits = b :: n.bits := by
+theorem bits_append_bit (n : ℕ) (b : Bool) (hn : n = 0 → b = tt) : (bit b n).bits = b::n.bits := by
   rw [Nat.bits, binary_rec_eq']
   simpa
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem bit0_bits (n : ℕ) (hn : n ≠ 0) : (bit0 n).bits = ff :: n.bits :=
+theorem bit0_bits (n : ℕ) (hn : n ≠ 0) : (bit0 n).bits = ff::n.bits :=
   bits_append_bit n false fun hn' => absurd hn' hn
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem bit1_bits (n : ℕ) : (bit1 n).bits = tt :: n.bits :=
+theorem bit1_bits (n : ℕ) : (bit1 n).bits = tt::n.bits :=
   bits_append_bit n true fun _ => rfl
 
 @[simp]

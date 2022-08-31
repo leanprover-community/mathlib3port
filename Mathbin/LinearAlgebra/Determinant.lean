@@ -233,7 +233,7 @@ theorem det_smul {𝕜 : Type _} [Field 𝕜] {M : Type _} [AddCommGroupₓ M] [
   by_cases' H : ∃ s : Finset M, Nonempty (Basis s 𝕜 M)
   · have : FiniteDimensional 𝕜 M := by
       rcases H with ⟨s, ⟨hs⟩⟩
-      exact FiniteDimensional.of_finset_basis hs
+      exact FiniteDimensional.of_fintype_basis hs
     simp only [← det_to_matrix (FiniteDimensional.finBasis 𝕜 M), LinearEquiv.map_smul, Fintype.card_fin, det_smul]
     
   · classical
@@ -287,7 +287,7 @@ theorem finite_dimensional_of_det_ne_one {𝕜 : Type _} [Field 𝕜] [Module �
     FiniteDimensional 𝕜 M := by
   by_cases' H : ∃ s : Finset M, Nonempty (Basis s 𝕜 M)
   · rcases H with ⟨s, ⟨hs⟩⟩
-    exact FiniteDimensional.of_finset_basis hs
+    exact FiniteDimensional.of_fintype_basis hs
     
   · classical
     simp [LinearMap.coe_det, H] at hf

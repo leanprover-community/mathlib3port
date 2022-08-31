@@ -229,7 +229,7 @@ theorem HasIntegral.mono {l₁ l₂ : IntegrationParams} (h : HasIntegral I l₁
 
 protected theorem Integrable.has_integral (h : Integrable I l f vol) : HasIntegral I l f vol (integral I l f vol) := by
   rw [integral, dif_pos h]
-  exact Classical.some_spec h
+  exact Classical.choose_spec h
 
 theorem Integrable.mono {l'} (h : Integrable I l f vol) (hle : l' ≤ l) : Integrable I l' f vol :=
   ⟨_, h.HasIntegral.mono hle⟩

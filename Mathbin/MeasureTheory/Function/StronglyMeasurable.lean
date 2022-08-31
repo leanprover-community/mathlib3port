@@ -82,7 +82,7 @@ instance (priority := 100) second_countable_topology_either_of_right (α β : Ty
       (by
         infer_instance)
 
-variable {α β γ ι : Type _} [Encodable ι]
+variable {α β γ ι : Type _} [Countable ι]
 
 namespace MeasureTheory
 
@@ -97,7 +97,7 @@ variable [TopologicalSpace β]
 def StronglyMeasurable [MeasurableSpace α] (f : α → β) : Prop :=
   ∃ fs : ℕ → α →ₛ β, ∀ x, Tendsto (fun n => fs n x) atTop (𝓝 (f x))
 
--- mathport name: «exprstrongly_measurable[ ]»
+-- mathport name: strongly_measurable_of
 localized [MeasureTheory] notation "strongly_measurable[" m "]" => @MeasureTheory.StronglyMeasurable _ _ _ m
 
 /-- A function is `fin_strongly_measurable` with respect to a measure if it is the limit of simple
@@ -171,7 +171,7 @@ theorem strongly_measurable_const' {α β} {m : MeasurableSpace α} [Topological
 theorem Subsingleton.strongly_measurable' {α β} [MeasurableSpace α] [TopologicalSpace β] [Subsingleton α] (f : α → β) :
     StronglyMeasurable f :=
   strongly_measurable_const' fun x y => by
-    rw [Subsingleton.elimₓ x y]
+    rw [Subsingleton.elim x y]
 
 namespace StronglyMeasurable
 
@@ -1731,14 +1731,13 @@ theorem measurable_uncurry_of_continuous_of_measurable {α β ι : Type _} [Topo
     rw [tendsto_pi_nhds]
     exact fun p => ht_sf p.fst p.snd
   refine' measurable_of_tendsto_metrizable (fun n => _) h_tendsto
-  have : Encodable (t_sf n).range := Fintype.toEncodable ↥(t_sf n).range
   have h_meas : Measurable fun p : (t_sf n).range × α => u (↑p.fst) p.snd := by
     have :
       (fun p : ↥(t_sf n).range × α => u (↑p.fst) p.snd) =
         (fun p : α × (t_sf n).range => u (↑p.snd) p.fst) ∘ Prod.swap :=
       rfl
     rw [this, @measurable_swap_iff α (↥(t_sf n).range) β m]
-    exact measurable_from_prod_encodable fun j => h j
+    exact measurable_from_prod_countable fun j => h j
   have :
     (fun p : ι × α => u (t_sf n p.fst) p.snd) =
       (fun p : ↥(t_sf n).range × α => u p.fst p.snd) ∘ fun p : ι × α =>
@@ -1763,7 +1762,6 @@ theorem strongly_measurable_uncurry_of_continuous_of_strongly_measurable {α β 
     rw [tendsto_pi_nhds]
     exact fun p => ht_sf p.fst p.snd
   refine' strongly_measurable_of_tendsto _ (fun n => _) h_tendsto
-  have : Encodable (t_sf n).range := Fintype.toEncodable ↥(t_sf n).range
   have h_str_meas : strongly_measurable fun p : (t_sf n).range × α => u (↑p.fst) p.snd := by
     refine' strongly_measurable_iff_measurable_separable.2 ⟨_, _⟩
     · have :
@@ -1771,7 +1769,7 @@ theorem strongly_measurable_uncurry_of_continuous_of_strongly_measurable {α β 
           (fun p : α × (t_sf n).range => u (↑p.snd) p.fst) ∘ Prod.swap :=
         rfl
       rw [this, measurable_swap_iff]
-      exact measurable_from_prod_encodable fun j => (h j).Measurable
+      exact measurable_from_prod_countable fun j => (h j).Measurable
       
     · have : IsSeparable (⋃ i : (t_sf n).range, range (u i)) := is_separable_Union fun i => (h i).is_separable_range
       apply this.mono

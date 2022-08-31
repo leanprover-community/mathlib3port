@@ -119,11 +119,11 @@ section Preserves
 variable (η : ApplicativeTransformation F G)
 
 @[functor_norm]
-theorem preserves_pure : ∀ {α} (x : α), η (pure x) = pure x :=
+theorem preserves_pure {α} : ∀ x : α, η (pure x) = pure x :=
   η.preserves_pure'
 
 @[functor_norm]
-theorem preserves_seq : ∀ {α β : Type u} (x : F (α → β)) (y : F α), η (x <*> y) = η x <*> η y :=
+theorem preserves_seq {α β : Type u} : ∀ (x : F (α → β)) (y : F α), η (x <*> y) = η x <*> η y :=
   η.preserves_seq'
 
 @[functor_norm]

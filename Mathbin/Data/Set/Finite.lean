@@ -341,6 +341,8 @@ in src/order/locally_finite. -/
 def Nat.fintypeIio (n : ℕ) : Fintype (Iio n) :=
   Set.fintypeLtNat n
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance fintypeProd (s : Set α) (t : Set β) [Fintype s] [Fintype t] : Fintype (s ×ˢ t : Set (α × β)) :=
   Fintype.ofFinset (s.toFinset ×ˢ t.toFinset) <| by
     simp
@@ -490,6 +492,7 @@ instance finite_replacement [Finite α] (f : α → β) :
     Finite "./././Mathport/Syntax/Translate/Expr.lean:368:4: unsupported set replacement {(f x) | x : α}" :=
   Finite.Set.finite_range f
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance finite_prod (s : Set α) (t : Set β) [Finite s] [Finite t] : Finite (s ×ˢ t : Set (α × β)) :=
   Finite.of_equiv _ (Equivₓ.Set.prod s t).symm
 
@@ -649,6 +652,7 @@ theorem finite_lt_nat (n : ℕ) : Set.Finite { i | i < n } :=
 theorem finite_le_nat (n : ℕ) : Set.Finite { i | i ≤ n } :=
   to_finite _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Finite.prod {s : Set α} {t : Set β} (hs : s.Finite) (ht : t.Finite) : (s ×ˢ t : Set (α × β)).Finite := by
   cases hs
   cases ht
@@ -826,12 +830,12 @@ theorem seq_of_forall_finite_exists {γ : Type _} {P : γ → Set γ → Prop} (
     ∃ u : ℕ → γ, ∀ n, P (u n) (u '' Iio n) :=
   ⟨fun n =>
     (@Nat.strongRecOn' (fun _ => γ) n) fun n ih =>
-      Classical.some <| h (range fun m : Iio n => ih m.1 m.2) (finite_range _),
+      Classical.choose <| h (range fun m : Iio n => ih m.1 m.2) (finite_range _),
     fun n => by
     classical
     refine' Nat.strongRecOn' n fun n ih => _
     rw [Nat.strong_rec_on_beta']
-    convert Classical.some_spec (h _ _)
+    convert Classical.choose_spec (h _ _)
     ext x
     constructor
     · rintro ⟨m, hmn, rfl⟩

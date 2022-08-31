@@ -24,17 +24,21 @@ variable {α : Type u} {β : Type v} {δ : Type w}
 instance {α} [Inhabited α] : Inhabited (Streamₓ α) :=
   ⟨Streamₓ.const default⟩
 
-protected theorem eta (s : Streamₓ α) : head s :: tail s = s :=
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+protected theorem eta (s : Streamₓ α) : (head s::tail s) = s :=
   funext fun i => by
     cases i <;> rfl
 
-theorem nth_zero_cons (a : α) (s : Streamₓ α) : nth (a :: s) 0 = a :=
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem nth_zero_cons (a : α) (s : Streamₓ α) : nth (a::s) 0 = a :=
   rfl
 
-theorem head_cons (a : α) (s : Streamₓ α) : head (a :: s) = a :=
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem head_cons (a : α) (s : Streamₓ α) : head (a::s) = a :=
   rfl
 
-theorem tail_cons (a : α) (s : Streamₓ α) : tail (a :: s) = s :=
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem tail_cons (a : α) (s : Streamₓ α) : tail (a::s) = s :=
   rfl
 
 theorem tail_drop (n : Nat) (s : Streamₓ α) : tail (drop n s) = drop n (tail s) :=
@@ -72,15 +76,18 @@ theorem all_def (p : α → Prop) (s : Streamₓ α) : All p s = ∀ n, p (nth s
 theorem any_def (p : α → Prop) (s : Streamₓ α) : Any p s = ∃ n, p (nth s n) :=
   rfl
 
-theorem mem_cons (a : α) (s : Streamₓ α) : a ∈ a :: s :=
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem mem_cons (a : α) (s : Streamₓ α) : a ∈ a::s :=
   Exists.introₓ 0 rfl
 
-theorem mem_cons_of_mem {a : α} {s : Streamₓ α} (b : α) : a ∈ s → a ∈ b :: s := fun ⟨n, h⟩ =>
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem mem_cons_of_mem {a : α} {s : Streamₓ α} (b : α) : a ∈ s → a ∈ b::s := fun ⟨n, h⟩ =>
   Exists.introₓ (succ n)
     (by
       rw [nth_succ, tail_cons, h])
 
-theorem eq_or_mem_of_mem_cons {a b : α} {s : Streamₓ α} : a ∈ b :: s → a = b ∨ a ∈ s := fun ⟨n, h⟩ => by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem eq_or_mem_of_mem_cons {a b : α} {s : Streamₓ α} : (a ∈ b::s) → a = b ∨ a ∈ s := fun ⟨n, h⟩ => by
   cases' n with n'
   · left
     exact h
@@ -109,11 +116,15 @@ theorem tail_map (s : Streamₓ α) : tail (map f s) = map f (tail s) := by
 theorem head_map (s : Streamₓ α) : head (map f s) = f (head s) :=
   rfl
 
-theorem map_eq (s : Streamₓ α) : map f s = f (head s) :: map f (tail s) := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem map_eq (s : Streamₓ α) : map f s = f (head s)::map f (tail s) := by
   rw [← Streamₓ.eta (map f s), tail_map, head_map]
 
-theorem map_cons (a : α) (s : Streamₓ α) : map f (a :: s) = f a :: map f s := by
-  rw [← Streamₓ.eta (map f (a :: s)), map_eq]
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem map_cons (a : α) (s : Streamₓ α) : map f (a::s) = f a::map f s := by
+  rw [← Streamₓ.eta (map f (a::s)), map_eq]
   rfl
 
 theorem map_id (s : Streamₓ α) : map id s = s :=
@@ -151,8 +162,8 @@ theorem head_zip (s₁ : Streamₓ α) (s₂ : Streamₓ β) : head (zip f s₁ 
 theorem tail_zip (s₁ : Streamₓ α) (s₂ : Streamₓ β) : tail (zip f s₁ s₂) = zip f (tail s₁) (tail s₂) :=
   rfl
 
-theorem zip_eq (s₁ : Streamₓ α) (s₂ : Streamₓ β) : zip f s₁ s₂ = f (head s₁) (head s₂) :: zip f (tail s₁) (tail s₂) :=
-  by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem zip_eq (s₁ : Streamₓ α) (s₂ : Streamₓ β) : zip f s₁ s₂ = f (head s₁) (head s₂)::zip f (tail s₁) (tail s₂) := by
   rw [← Streamₓ.eta (zip f s₁ s₂)]
   rfl
 
@@ -161,13 +172,15 @@ end Zip
 theorem mem_const (a : α) : a ∈ const a :=
   Exists.introₓ 0 rfl
 
-theorem const_eq (a : α) : const a = a :: const a := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem const_eq (a : α) : const a = a::const a := by
   apply Streamₓ.ext
   intro n
   cases n <;> rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem tail_const (a : α) : tail (const a) = const a :=
-  suffices tail (a :: const a) = const a by
+  suffices tail (a::const a) = const a by
     rwa [← const_eq] at this
   rfl
 
@@ -197,7 +210,8 @@ theorem tail_iterate (f : α → α) (a : α) : tail (iterate f a) = iterate f (
     rw [ih]
     
 
-theorem iterate_eq (f : α → α) (a : α) : iterate f a = a :: iterate f (f a) := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem iterate_eq (f : α → α) (a : α) : iterate f a = a::iterate f (f a) := by
   rw [← Streamₓ.eta (iterate f a)]
   rw [tail_iterate]
   rfl
@@ -281,7 +295,8 @@ section Corec
 theorem corec_def (f : α → β) (g : α → α) (a : α) : corec f g a = map f (iterate g a) :=
   rfl
 
-theorem corec_eq (f : α → β) (g : α → α) (a : α) : corec f g a = f a :: corec f g (g a) := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem corec_eq (f : α → β) (g : α → α) (a : α) : corec f g a = f a::corec f g (g a) := by
   rw [corec_def, map_eq, head_iterate, tail_iterate]
   rfl
 
@@ -295,12 +310,14 @@ end Corec
 
 section Corec'
 
-theorem corec'_eq (f : α → β × α) (a : α) : corec' f a = (f a).1 :: corec' f (f a).2 :=
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem corec'_eq (f : α → β × α) (a : α) : corec' f a = (f a).1::corec' f (f a).2 :=
   corec_eq _ _ _
 
 end Corec'
 
-theorem unfolds_eq (g : α → β) (f : α → α) (a : α) : unfolds g f a = g a :: unfolds g f (f a) := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem unfolds_eq (g : α → β) (f : α → α) (a : α) : unfolds g f a = g a::unfolds g f (f a) := by
   unfold unfolds
   rw [corec_eq]
 
@@ -317,7 +334,9 @@ theorem nth_unfolds_head_tail : ∀ (n : Nat) (s : Streamₓ α), nth (unfolds h
 theorem unfolds_head_eq : ∀ s : Streamₓ α, unfolds head tail s = s := fun s =>
   Streamₓ.ext fun n => nth_unfolds_head_tail n s
 
-theorem interleave_eq (s₁ s₂ : Streamₓ α) : s₁ ⋈ s₂ = head s₁ :: head s₂ :: (tail s₁ ⋈ tail s₂) := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem interleave_eq (s₁ s₂ : Streamₓ α) : s₁ ⋈ s₂ = head s₁::head s₂::tail s₁ ⋈ tail s₂ := by
   unfold interleave corec_on
   rw [corec_eq]
   dsimp'
@@ -368,7 +387,10 @@ theorem tail_even (s : Streamₓ α) : tail (even s) = even (tail (tail s)) := b
   rw [corec_eq]
   rfl
 
-theorem even_cons_cons (a₁ a₂ : α) (s : Streamₓ α) : even (a₁ :: a₂ :: s) = a₁ :: even s := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem even_cons_cons (a₁ a₂ : α) (s : Streamₓ α) : even (a₁::a₂::s) = a₁::even s := by
   unfold even
   rw [corec_eq]
   rfl
@@ -424,7 +446,9 @@ theorem mem_of_mem_odd (a : α) (s : Streamₓ α) : a ∈ odd s → a ∈ s := 
 theorem nil_append_stream (s : Streamₓ α) : appendStream [] s = s :=
   rfl
 
-theorem cons_append_stream (a : α) (l : List α) (s : Streamₓ α) : appendStream (a :: l) s = a :: appendStream l s :=
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem cons_append_stream (a : α) (l : List α) (s : Streamₓ α) : appendStream (a::l) s = a::appendStream l s :=
   rfl
 
 theorem append_append_stream : ∀ (l₁ l₂ : List α) (s : Streamₓ α), l₁ ++ l₂ ++ₛ s = l₁ ++ₛ (l₂ ++ₛ s)
@@ -462,8 +486,9 @@ theorem mem_append_stream_left : ∀ {a : α} {l : List α} (s : Streamₓ α), 
 theorem take_zero (s : Streamₓ α) : take 0 s = [] :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem take_succ (n : Nat) (s : Streamₓ α) : take (succ n) s = head s :: take n (tail s) :=
+theorem take_succ (n : Nat) (s : Streamₓ α) : take (succ n) s = head s::take n (tail s) :=
   rfl
 
 @[simp]
@@ -502,17 +527,19 @@ theorem take_theorem (s₁ s₂ : Streamₓ α) : (∀ n : Nat, take n s₁ = ta
     injection h₁
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 protected theorem cycle_g_cons (a : α) (a₁ : α) (l₁ : List α) (a₀ : α) (l₀ : List α) :
-    Streamₓ.cycleG (a, a₁ :: l₁, a₀, l₀) = (a₁, l₁, a₀, l₀) :=
+    Streamₓ.cycleG (a, a₁::l₁, a₀, l₀) = (a₁, l₁, a₀, l₀) :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem cycle_eq : ∀ (l : List α) (h : l ≠ []), cycle l h = l ++ₛ cycle l h
   | [], h => absurd rfl h
   | List.cons a l, h =>
     have gen :
       ∀ l' a',
         corec Streamₓ.cycleF Streamₓ.cycleG (a', l', a, l) =
-          a' :: l' ++ₛ corec Streamₓ.cycleF Streamₓ.cycleG (a, l, a, l) :=
+          (a'::l') ++ₛ corec Streamₓ.cycleF Streamₓ.cycleG (a, l, a, l) :=
       by
       intro l'
       induction' l' with a₁ l₁ ih
@@ -534,7 +561,8 @@ theorem cycle_singleton (a : α) (h : [a] ≠ []) : cycle [a] h = const a :=
   coinduction rfl fun β fr ch => by
     rwa [cycle_eq, const_eq]
 
-theorem tails_eq (s : Streamₓ α) : tails s = tail s :: tails (tail s) := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem tails_eq (s : Streamₓ α) : tails s = tail s::tails (tail s) := by
   unfold tails <;> rw [corec_eq] <;> rfl
 
 theorem nth_tails : ∀ (n : Nat) (s : Streamₓ α), nth (tails s) n = drop n (tail s) := by
@@ -550,7 +578,8 @@ theorem nth_tails : ∀ (n : Nat) (s : Streamₓ α), nth (tails s) n = drop n (
 theorem tails_eq_iterate (s : Streamₓ α) : tails s = iterate tail (tail s) :=
   rfl
 
-theorem inits_core_eq (l : List α) (s : Streamₓ α) : initsCore l s = l :: initsCore (l ++ [head s]) (tail s) := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem inits_core_eq (l : List α) (s : Streamₓ α) : initsCore l s = l::initsCore (l ++ [head s]) (tail s) := by
   unfold inits_core corec_on
   rw [corec_eq]
   rfl
@@ -563,15 +592,18 @@ theorem tail_inits (s : Streamₓ α) : tail (inits s) = initsCore [head s, head
 theorem inits_tail (s : Streamₓ α) : inits (tail s) = initsCore [head (tail s)] (tail (tail s)) :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem cons_nth_inits_core :
-    ∀ (a : α) (n : Nat) (l : List α) (s : Streamₓ α), a :: nth (initsCore l s) n = nth (initsCore (a :: l) s) n := by
+    ∀ (a : α) (n : Nat) (l : List α) (s : Streamₓ α), (a::nth (initsCore l s) n) = nth (initsCore (a::l) s) n := by
   intro a n
   induction' n with n' ih
   · intros
     rfl
     
   · intro l s
-    rw [nth_succ, inits_core_eq, tail_cons, ih, inits_core_eq (a :: l) s]
+    rw [nth_succ, inits_core_eq, tail_cons, ih, inits_core_eq (a::l) s]
     rfl
     
 
@@ -585,7 +617,8 @@ theorem nth_inits : ∀ (n : Nat) (s : Streamₓ α), nth (inits s) n = take (su
     rw [nth_succ, take_succ, ← ih, tail_inits, inits_tail, cons_nth_inits_core]
     
 
-theorem inits_eq (s : Streamₓ α) : inits s = [head s] :: map (List.cons (head s)) (inits (tail s)) := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem inits_eq (s : Streamₓ α) : inits s = [head s]::map (List.cons (head s)) (inits (tail s)) := by
   apply Streamₓ.ext
   intro n
   cases n
@@ -618,7 +651,8 @@ theorem map_eq_apply (f : α → β) (s : Streamₓ α) : map f s = pure f ⊛ s
 theorem nth_nats (n : Nat) : nth nats n = n :=
   rfl
 
-theorem nats_eq : nats = 0 :: map succ nats := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem nats_eq : nats = 0::map succ nats := by
   apply Streamₓ.ext
   intro n
   cases n

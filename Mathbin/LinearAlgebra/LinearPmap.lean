@@ -104,16 +104,16 @@ noncomputable def mkSpanSingleton' (x : E) (y : F) (H : ∀ c : R, c • x = 0 �
       intro c₁ c₂ h
       rw [← sub_eq_zero, ← sub_smul] at h⊢
       exact H _ h
-    { toFun := fun z => Classical.some (mem_span_singleton.1 z.Prop) • y,
+    { toFun := fun z => Classical.choose (mem_span_singleton.1 z.Prop) • y,
       map_add' := fun y z => by
         rw [← add_smul]
         apply H
-        simp only [add_smul, sub_smul, Classical.some_spec (mem_span_singleton.1 _)]
+        simp only [add_smul, sub_smul, Classical.choose_spec (mem_span_singleton.1 _)]
         apply coe_add,
       map_smul' := fun c z => by
         rw [smul_smul]
         apply H
-        simp only [mul_smul, Classical.some_spec (mem_span_singleton.1 _)]
+        simp only [mul_smul, Classical.choose_spec (mem_span_singleton.1 _)]
         apply coe_smul }
 
 @[simp]
@@ -128,7 +128,7 @@ theorem mk_span_singleton'_apply (x : E) (y : F) (H : ∀ c : R, c • x = 0 →
   rw [← sub_eq_zero, ← sub_smul]
   apply H
   simp only [sub_smul, one_smul, sub_eq_zero]
-  apply Classical.some_spec (mem_span_singleton.1 h)
+  apply Classical.choose_spec (mem_span_singleton.1 h)
 
 @[simp]
 theorem mk_span_singleton'_apply_self (x : E) (y : F) (H : ∀ c : R, c • x = 0 → c • y = 0) (h) :
@@ -269,7 +269,7 @@ private theorem sup_aux (f g : E →ₗ.[R] F) (h : ∀ (x : f.domain) (y : g.do
 with `f` and `g`. -/
 protected noncomputable def sup (f g : E →ₗ.[R] F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
     E →ₗ.[R] F :=
-  ⟨_, Classical.some (sup_aux f g h)⟩
+  ⟨_, Classical.choose (sup_aux f g h)⟩
 
 @[simp]
 theorem domain_sup (f g : E →ₗ.[R] F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
@@ -278,7 +278,7 @@ theorem domain_sup (f g : E →ₗ.[R] F) (h : ∀ (x : f.domain) (y : g.domain)
 
 theorem sup_apply {f g : E →ₗ.[R] F} (H : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) (x y z)
     (hz : (↑x : E) + ↑y = ↑z) : f.sup g H z = f x + g y :=
-  Classical.some_spec (sup_aux f g H) x y z hz
+  Classical.choose_spec (sup_aux f g H) x y z hz
 
 protected theorem left_le_sup (f g : E →ₗ.[R] F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
     f ≤ f.sup g h := by
@@ -399,11 +399,11 @@ private theorem Sup_aux (c : Set (E →ₗ.[R] F)) (hc : DirectedOn (· ≤ ·) 
 /-- Glue a collection of partially defined linear maps to a linear map defined on `Sup`
 of these submodules. -/
 protected noncomputable def supₓ (c : Set (E →ₗ.[R] F)) (hc : DirectedOn (· ≤ ·) c) : E →ₗ.[R] F :=
-  ⟨_, Classical.some <| Sup_aux c hc⟩
+  ⟨_, Classical.choose <| Sup_aux c hc⟩
 
 protected theorem le_Sup {c : Set (E →ₗ.[R] F)} (hc : DirectedOn (· ≤ ·) c) {f : E →ₗ.[R] F} (hf : f ∈ c) :
     f ≤ LinearPmap.supₓ c hc :=
-  Classical.some_spec (Sup_aux c hc) hf
+  Classical.choose_spec (Sup_aux c hc) hf
 
 protected theorem Sup_le {c : Set (E →ₗ.[R] F)} (hc : DirectedOn (· ≤ ·) c) {g : E →ₗ.[R] F} (hg : ∀ f ∈ c, f ≤ g) :
     LinearPmap.supₓ c hc ≤ g :=
@@ -416,7 +416,7 @@ protected theorem Sup_le {c : Set (E →ₗ.[R] F)} (hc : DirectedOn (· ≤ ·)
 protected theorem Sup_apply {c : Set (E →ₗ.[R] F)} (hc : DirectedOn (· ≤ ·) c) {l : E →ₗ.[R] F} (hl : l ∈ c)
     (x : l.domain) : (LinearPmap.supₓ c hc) ⟨x, (LinearPmap.le_Sup hc hl).1 x.2⟩ = l x := by
   symm
-  apply (Classical.some_spec (Sup_aux c hc) hl).2
+  apply (Classical.choose_spec (Sup_aux c hc) hl).2
   rfl
 
 end LinearPmap

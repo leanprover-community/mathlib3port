@@ -199,10 +199,10 @@ theorem exists_mem_range : ∃ n : ℕ, n < p ∧ x - n ∈ maximalIdeal ℤ_[p]
 satisfying `∥(x - zmod_repr x : ℤ_[p])∥ < 1`.
 -/
 def zmodRepr : ℕ :=
-  Classical.some (exists_mem_range x)
+  Classical.choose (exists_mem_range x)
 
 theorem zmod_repr_spec : zmodRepr x < p ∧ x - zmodRepr x ∈ maximalIdeal ℤ_[p] :=
-  Classical.some_spec (exists_mem_range x)
+  Classical.choose_spec (exists_mem_range x)
 
 theorem zmod_repr_lt_p : zmodRepr x < p :=
   (zmod_repr_spec _).1
@@ -516,8 +516,6 @@ theorem pow_dvd_nth_hom_sub (r : R) (i j : ℕ) (h : i ≤ j) : ↑p ^ i ∣ nth
   rw [← Int.coe_nat_pow, ← Zmod.int_coe_zmod_eq_zero_iff_dvd, Int.cast_sub]
   dsimp' [nth_hom]
   rw [← f_compat, RingHom.comp_apply]
-  haveI : Fact (p ^ i > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
-  haveI : Fact (p ^ j > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
   simp only [Zmod.cast_id, Zmod.cast_hom_apply, sub_self, Zmod.nat_cast_val, Zmod.int_cast_cast]
 
 theorem is_cau_seq_nth_hom (r : R) : IsCauSeq (padicNorm p) fun n => nthHom f r n := by
@@ -537,6 +535,7 @@ The `n`th value of the sequence is `((f n r).val : ℚ)`.
 def nthHomSeq (r : R) : PadicSeq p :=
   ⟨fun n => nthHom f r n, is_cau_seq_nth_hom f_compat r⟩
 
+-- this lemma ran into issues after changing to `ne_zero` and I'm not sure why.
 theorem nth_hom_seq_one : nthHomSeq f_compat 1 ≈ 1 := by
   intro ε hε
   change _ < _ at hε
@@ -547,7 +546,9 @@ theorem nth_hom_seq_one : nthHomSeq f_compat 1 ≈ 1 := by
         (by
           linarith)
         hp_prime.1.one_lt⟩
-  simp [nth_hom_seq, nth_hom, Zmod.val_one, hε]
+  suffices ((1 : Zmod (p ^ j)) : ℚ) = 1 by
+    simp [nth_hom_seq, nth_hom, this, hε]
+  rw [Zmod.cast_eq_val, Zmod.val_one, Nat.cast_oneₓ]
 
 theorem nth_hom_seq_add (r s : R) : nthHomSeq f_compat (r + s) ≈ nthHomSeq f_compat r + nthHomSeq f_compat s := by
   intro ε hε
@@ -558,8 +559,6 @@ theorem nth_hom_seq_add (r s : R) : nthHomSeq f_compat (r + s) ≈ nthHomSeq f_c
   apply lt_of_le_of_ltₓ _ hn
   rw [← Int.cast_add, ← Int.cast_sub, ← padicNorm.dvd_iff_norm_le, ← Zmod.int_coe_zmod_eq_zero_iff_dvd]
   dsimp' [nth_hom]
-  haveI : Fact (p ^ n > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
-  haveI : Fact (p ^ j > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
   simp only [Zmod.nat_cast_val, RingHom.map_add, Int.cast_sub, Zmod.int_cast_cast, Int.cast_add]
   rw [Zmod.cast_add (show p ^ n ∣ p ^ j from pow_dvd_pow _ hj), sub_self]
   · infer_instance
@@ -574,8 +573,6 @@ theorem nth_hom_seq_mul (r s : R) : nthHomSeq f_compat (r * s) ≈ nthHomSeq f_c
   apply lt_of_le_of_ltₓ _ hn
   rw [← Int.cast_mul, ← Int.cast_sub, ← padicNorm.dvd_iff_norm_le, ← Zmod.int_coe_zmod_eq_zero_iff_dvd]
   dsimp' [nth_hom]
-  haveI : Fact (p ^ n > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
-  haveI : Fact (p ^ j > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
   simp only [Zmod.nat_cast_val, RingHom.map_mul, Int.cast_sub, Zmod.int_cast_cast, Int.cast_mul]
   rw [Zmod.cast_mul (show p ^ n ∣ p ^ j from pow_dvd_pow _ hj), sub_self]
   · infer_instance
@@ -642,7 +639,6 @@ See also `padic_int.lift_unique`.
 -/
 theorem lift_spec (n : ℕ) : (toZmodPow n).comp (lift f_compat) = f n := by
   ext r
-  haveI : Fact (0 < p ^ n) := ⟨pow_pos hp_prime.1.Pos n⟩
   rw [RingHom.comp_apply, ← Zmod.nat_cast_zmod_val (f n r), ← map_nat_cast <| to_zmod_pow n, ← sub_eq_zero, ←
     RingHom.map_sub, ← RingHom.mem_ker, ker_to_zmod_pow]
   apply lift_sub_val_mem_span

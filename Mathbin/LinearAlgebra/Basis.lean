@@ -766,7 +766,7 @@ protected def empty [Subsingleton M] [IsEmpty ι] : Basis ι R M :=
 
 instance emptyUnique [Subsingleton M] [IsEmpty ι] : Unique (Basis ι R M) where
   default := Basis.empty M
-  uniq := fun ⟨x⟩ => congr_arg of_repr <| Subsingleton.elimₓ _ _
+  uniq := fun ⟨x⟩ => congr_arg of_repr <| Subsingleton.elim _ _
 
 end Empty
 
@@ -1356,7 +1356,7 @@ theorem Submodule.exists_is_compl (p : Submodule K V) : ∃ q : Submodule K V, I
   let ⟨f, hf⟩ := p.Subtype.exists_left_inverse_of_injective p.ker_subtype
   ⟨f.ker, LinearMap.is_compl_of_proj <| LinearMap.ext_iff.1 hf⟩
 
-instance Module.Submodule.is_complemented : IsComplemented (Submodule K V) :=
+instance Module.Submodule.complemented_lattice : ComplementedLattice (Submodule K V) :=
   ⟨Submodule.exists_is_compl⟩
 
 theorem LinearMap.exists_right_inverse_of_surjective (f : V →ₗ[K] V') (hf_surj : f.range = ⊤) :

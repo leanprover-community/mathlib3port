@@ -119,7 +119,7 @@ instance (priority := 100) BooleanRing.toCommRing : CommRingₓ α :=
 end BooleanRing
 
 instance : BooleanRing PUnit :=
-  ⟨fun _ => Subsingleton.elimₓ _ _⟩
+  ⟨fun _ => Subsingleton.elim _ _⟩
 
 /-! ### Turning a Boolean ring into a Boolean algebra -/
 

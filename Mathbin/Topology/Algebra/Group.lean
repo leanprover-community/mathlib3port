@@ -1372,7 +1372,7 @@ instance : SemilatticeInf (GroupTopology α) :=
 instance : Inhabited (GroupTopology α) :=
   ⟨⊤⟩
 
--- mathport name: «exprcont»
+-- mathport name: exprcont
 local notation "cont" => @Continuous _ _
 
 /-- Infimum of a collection of group topologies. -/

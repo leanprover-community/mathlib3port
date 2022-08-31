@@ -714,8 +714,8 @@ theorem nnnorm_equiv_symm_const {β} [SeminormedAddCommGroup β] (hp : p ≠ ∞
     
   · have ne_zero : p.to_real ≠ 0 := (zero_lt_one.trans_le h).ne'
     simp_rw [nnnorm_eq_sum hp, equiv_symm_apply, Function.const_applyₓ, Finset.sum_const, Finset.card_univ,
-      nsmul_eq_mul, Nnreal.mul_rpow, ← Nnreal.rpow_mul, mul_one_div_cancel ne_zero, Nnreal.rpow_one,
-      Ennreal.to_real_div, Ennreal.one_to_real]
+      nsmul_eq_mul, Nnreal.mul_rpow, ← Nnreal.rpow_mul, mul_one_div_cancel NeZero, Nnreal.rpow_one, Ennreal.to_real_div,
+      Ennreal.one_to_real]
     
 
 /-- When `is_empty ι`, this lemma does not hold without the additional assumption `p ≠ ∞` because

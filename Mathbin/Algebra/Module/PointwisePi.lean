@@ -33,10 +33,10 @@ theorem smul_pi_subset [∀ i, HasSmul K (R i)] (r : K) (s : Set ι) (t : ∀ i,
 theorem smul_univ_pi [∀ i, HasSmul K (R i)] (r : K) (t : ∀ i, Set (R i)) :
     r • Pi (Univ : Set ι) t = Pi (Univ : Set ι) (r • t) :=
   (Subset.antisymm (smul_pi_subset _ _ _)) fun x h => by
-    refine' ⟨fun i => Classical.some (h i <| Set.mem_univ _), fun i hi => _, funext fun i => _⟩
-    · exact (Classical.some_spec (h i _)).left
+    refine' ⟨fun i => Classical.choose (h i <| Set.mem_univ _), fun i hi => _, funext fun i => _⟩
+    · exact (Classical.choose_spec (h i _)).left
       
-    · exact (Classical.some_spec (h i _)).right
+    · exact (Classical.choose_spec (h i _)).right
       
 
 @[to_additive]

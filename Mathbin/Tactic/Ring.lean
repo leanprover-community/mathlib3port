@@ -714,7 +714,7 @@ open Tactic.Interactive (ring.mode ring1)
 
 open Tactic.Ring (normalize normalize_mode.horner)
 
--- mathport name: «expr ?»
+-- mathport name: parser.optional
 local postfix:1024 "?" => optionalₓ
 
 /-- Normalises expressions in commutative (semi-)rings inside of a `conv` block using the tactic `ring`.

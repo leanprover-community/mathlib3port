@@ -40,6 +40,7 @@ section Sym2
 
 variable {m : Sym2 α}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Lifts a finset to `sym2 α`. `s.sym2` is the finset of all pairs with elements in `s`. -/
 protected def sym2 (s : Finset α) : Finset (Sym2 α) :=
   (s ×ˢ s).Image Quotientₓ.mk

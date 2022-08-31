@@ -287,6 +287,7 @@ theorem Continuous.exists_forall_ge_of_has_compact_mul_support [Nonempty β] [On
     (h : HasCompactMulSupport f) : ∃ x : β, ∀ y : β, f y ≤ f x :=
   @Continuous.exists_forall_le_of_has_compact_mul_support αᵒᵈ _ _ _ _ _ _ _ _ hf h
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem IsCompact.continuous_Sup {f : γ → β → α} {K : Set β} (hK : IsCompact K) (hf : Continuous ↿f) :
     Continuous fun x => sup (f x '' K) := by
   rcases eq_empty_or_nonempty K with (rfl | h0K)
@@ -334,16 +335,8 @@ theorem image_Icc (hab : a ≤ b) (h : ContinuousOn f <| Icc a b) :
   eq_Icc_of_connected_compact ⟨(nonempty_Icc.2 hab).Image f, is_preconnected_Icc.Image f h⟩
     (is_compact_Icc.image_of_continuous_on h)
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem image_interval_eq_Icc
-    (h : ContinuousOn f <| "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") :
-    f '' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" =
-      Icc (inf (f '' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)"))
-        (sup (f '' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)")) :=
-  by
+theorem image_interval_eq_Icc (h : ContinuousOn f <| [a, b]) :
+    f '' [a, b] = Icc (inf (f '' [a, b])) (sup (f '' [a, b])) := by
   cases' le_totalₓ a b with h2 h2
   · simp_rw [interval_of_le h2] at h⊢
     exact h.image_Icc h2
@@ -352,14 +345,7 @@ theorem image_interval_eq_Icc
     exact h.image_Icc h2
     
 
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
--- ./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)
-theorem image_interval
-    (h : ContinuousOn f <| "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)") :
-    f '' "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" =
-      "./././Mathport/Syntax/Translate/Expr.lean:194:47: unsupported (impossible)" :=
-  by
+theorem image_interval (h : ContinuousOn f <| [a, b]) : f '' [a, b] = [inf (f '' [a, b]), sup (f '' [a, b])] := by
   refine' h.image_interval_eq_Icc.trans (interval_of_le _).symm
   refine' cInf_le_cSup _ _ (nonempty_interval.image _) <;> rw [h.image_interval_eq_Icc]
   exacts[bdd_below_Icc, bdd_above_Icc]

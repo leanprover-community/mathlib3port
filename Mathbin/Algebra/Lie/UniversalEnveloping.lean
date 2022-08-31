@@ -40,7 +40,7 @@ variable (R : Type u₁) (L : Type u₂)
 
 variable [CommRingₓ R] [LieRing L] [LieAlgebra R L]
 
--- mathport name: «exprιₜ»
+-- mathport name: exprιₜ
 local notation "ιₜ" => TensorAlgebra.ι R
 
 namespace UniversalEnvelopingAlgebra

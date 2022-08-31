@@ -652,7 +652,7 @@ variable {f : δ →+ γ} (df : DenseInducing f)
 
 variable {φ : β →+ δ →+ G}
 
--- mathport name: «exprΦ»
+-- mathport name: exprΦ
 local notation "Φ" => fun p : β × δ => φ p.1 p.2
 
 variable (hφ : Continuous Φ)
@@ -749,6 +749,9 @@ omit W'_nhd
 
 open DenseInducing
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Bourbaki GT III.6.5 Theorem I:
 ℤ-bilinear continuous maps from dense images into a complete Hausdorff group extend by continuity.
 Note: Bourbaki assumes that α and β are also complete Hausdorff, but this is not necessary. -/

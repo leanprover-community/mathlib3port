@@ -46,7 +46,7 @@ diamonds, as `fintype` carries data.
 
 variable {K : Type _} {R : Type _}
 
--- mathport name: «exprq»
+-- mathport name: exprq
 local notation "q" => Fintype.card K
 
 open Finset Function
@@ -381,7 +381,7 @@ end Zmod
 
 namespace CharP
 
-theorem sq_add_sq (R : Type _) [CommRingₓ R] [IsDomain R] (p : ℕ) [Fact (0 < p)] [CharP R p] (x : ℤ) :
+theorem sq_add_sq (R : Type _) [CommRingₓ R] [IsDomain R] (p : ℕ) [NeZero p] [CharP R p] (x : ℤ) :
     ∃ a b : ℕ, (a ^ 2 + b ^ 2 : R) = x := by
   haveI := char_is_prime_of_pos R p
   obtain ⟨a, b, hab⟩ := Zmod.sq_add_sq p x

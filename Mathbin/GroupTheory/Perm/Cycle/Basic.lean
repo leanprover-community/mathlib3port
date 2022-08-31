@@ -145,10 +145,10 @@ noncomputable def IsCycle.zpowersEquivSupport {σ : Perm α} (hσ : IsCycle σ) 
     (↑(Subgroup.zpowers σ) : Set (Perm α)) ≃ (↑σ.support : Set α) :=
   Equivₓ.ofBijective
     (fun τ =>
-      ⟨τ (Classical.some hσ), by
+      ⟨τ (Classical.choose hσ), by
         obtain ⟨τ, n, rfl⟩ := τ
         rw [Finset.mem_coe, coe_fn_coe_base', Subtype.coe_mk, zpow_apply_mem_support, mem_support]
-        exact (Classical.some_spec hσ).1⟩)
+        exact (Classical.choose_spec hσ).1⟩)
     (by
       constructor
       · rintro ⟨a, m, rfl⟩ ⟨b, n, rfl⟩ h
@@ -156,27 +156,27 @@ noncomputable def IsCycle.zpowersEquivSupport {σ : Perm α} (hσ : IsCycle σ) 
         by_cases' hy : σ y = y
         · simp_rw [Subtype.coe_mk, zpow_apply_eq_self_of_apply_eq_self hy]
           
-        · obtain ⟨i, rfl⟩ := (Classical.some_spec hσ).2 y hy
+        · obtain ⟨i, rfl⟩ := (Classical.choose_spec hσ).2 y hy
           rw [Subtype.coe_mk, Subtype.coe_mk, zpow_apply_comm σ m i, zpow_apply_comm σ n i]
           exact congr_arg _ (subtype.ext_iff.mp h)
           
         
       · rintro ⟨y, hy⟩
         rw [Finset.mem_coe, mem_support] at hy
-        obtain ⟨n, rfl⟩ := (Classical.some_spec hσ).2 y hy
+        obtain ⟨n, rfl⟩ := (Classical.choose_spec hσ).2 y hy
         exact ⟨⟨σ ^ n, n, rfl⟩, rfl⟩
         )
 
 @[simp]
 theorem IsCycle.zpowers_equiv_support_apply {σ : Perm α} (hσ : IsCycle σ) {n : ℕ} :
     hσ.zpowersEquivSupport ⟨σ ^ n, n, rfl⟩ =
-      ⟨(σ ^ n) (Classical.some hσ), pow_apply_mem_support.2 (mem_support.2 (Classical.some_spec hσ).1)⟩ :=
+      ⟨(σ ^ n) (Classical.choose hσ), pow_apply_mem_support.2 (mem_support.2 (Classical.choose_spec hσ).1)⟩ :=
   rfl
 
 @[simp]
 theorem IsCycle.zpowers_equiv_support_symm_apply {σ : Perm α} (hσ : IsCycle σ) (n : ℕ) :
     hσ.zpowersEquivSupport.symm
-        ⟨(σ ^ n) (Classical.some hσ), pow_apply_mem_support.2 (mem_support.2 (Classical.some_spec hσ).1)⟩ =
+        ⟨(σ ^ n) (Classical.choose hσ), pow_apply_mem_support.2 (mem_support.2 (Classical.choose_spec hσ).1)⟩ =
       ⟨σ ^ n, n, rfl⟩ :=
   (Equivₓ.symm_apply_eq _).2 hσ.zpowers_equiv_support_apply
 
@@ -847,6 +847,9 @@ theorem is_cycle_cycle_of_iff [Fintype α] (f : Perm α) {x : α} : IsCycle (cyc
 -/
 
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Given a list `l : list α` and a permutation `f : perm α` whose nonfixed points are all in `l`,
   recursively factors `f` into cycles. -/
 def cycleFactorsAux [Fintype α] :
@@ -858,7 +861,7 @@ def cycleFactorsAux [Fintype α] :
         not_not, not_false_iff, List.prod_nil] at *
       ext
       simp [*]⟩
-  | x :: l, f, h =>
+  | x::l, f, h =>
     if hx : f x = x then
       cycle_factors_aux l f fun y hy =>
         List.mem_of_ne_of_memₓ
@@ -877,14 +880,14 @@ def cycleFactorsAux [Fintype α] :
             (h fun h : f y = y => by
               rw [mul_apply, h, Ne.def, inv_eq_iff_eq, cycle_of_apply] at hy
               split_ifs  at hy <;> cc)
-      ⟨cycleOf f x :: m, by
+      ⟨cycleOf f x::m, by
         rw [List.prod_cons, hm₁]
         simp , fun g hg => ((List.mem_cons_iffₓ _ _ _).1 hg).elim (fun hg => hg.symm ▸ is_cycle_cycle_of _ hx) (hm₂ g),
         List.pairwise_cons.2
           ⟨fun g hg y =>
             or_iff_not_imp_left.2 fun hfy =>
               have hxy : SameCycle f x y := not_not.1 (mt cycle_of_apply_of_not_same_cycle hfy)
-              have hgm : g :: m.erase g ~ m := List.cons_perm_iff_perm_erase.2 ⟨hg, List.Perm.refl _⟩
+              have hgm : (g::m.erase g) ~ m := List.cons_perm_iff_perm_erase.2 ⟨hg, List.Perm.refl _⟩
               have : ∀ h ∈ m.erase g, Disjoint g h :=
                 (List.pairwise_cons.1 ((hgm.pairwise_iff fun a b (h : Disjoint a b) => h.symm).2 hm₃)).1
               (Classical.by_cases id) fun hgy : g y ≠ y =>
@@ -1445,7 +1448,7 @@ theorem IsCycle.is_conj (hσ : IsCycle σ) (hτ : IsCycle τ) (h : σ.support.ca
       _
   intro x hx
   simp only [perm.mul_apply, Equivₓ.trans_apply, Equivₓ.sum_congr_apply]
-  obtain ⟨n, rfl⟩ := hσ.exists_pow_eq (Classical.some_spec hσ).1 (mem_support.1 hx)
+  obtain ⟨n, rfl⟩ := hσ.exists_pow_eq (Classical.choose_spec hσ).1 (mem_support.1 hx)
   apply Eq.trans _ (congr rfl (congr rfl (congr rfl (congr rfl (hσ.zpowers_equiv_support_symm_apply n).symm))))
   apply (congr rfl (congr rfl (congr rfl (hσ.zpowers_equiv_support_symm_apply (n + 1))))).trans _
   simp only [Ne.def, is_cycle.zpowers_equiv_support_apply, Subtype.coe_mk, zpowers_equiv_zpowers_apply]

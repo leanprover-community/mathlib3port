@@ -180,7 +180,7 @@ parameter {α : Type _}[LinearOrderedField α]
 
 parameter {β : Type _}[Field β]{abv : β → α}[IsAbsoluteValue abv]
 
--- mathport name: «exprCauchy»
+-- mathport name: exprCauchy
 local notation "Cauchy" => @Cauchy _ _ _ _ abv _
 
 instance : HasRatCast Cauchy :=
@@ -287,10 +287,10 @@ theorem complete : ∀ s : CauSeq β abv, ∃ b : β, s ≈ const abv b :=
 
 /-- The limit of a Cauchy sequence in a complete ring. Chosen non-computably. -/
 noncomputable def lim (s : CauSeq β abv) : β :=
-  Classical.some (complete s)
+  Classical.choose (complete s)
 
 theorem equiv_lim (s : CauSeq β abv) : s ≈ const abv (lim s) :=
-  Classical.some_spec (complete s)
+  Classical.choose_spec (complete s)
 
 theorem eq_lim_of_const_equiv {f : CauSeq β abv} {x : β} (h : CauSeq.const abv x ≈ f) : x = lim f :=
   const_equiv.mp <| Setoidₓ.trans h <| equiv_lim f

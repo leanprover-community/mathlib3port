@@ -26,11 +26,11 @@ namespace Groupₓₓ
 theorem is_zero_of_subsingleton (G : Groupₓₓ) [Subsingleton G] : IsZero G := by
   refine' ⟨fun X => ⟨⟨⟨1⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨1⟩, fun f => _⟩⟩⟩
   · ext
-    have : x = 1 := Subsingleton.elimₓ _ _
+    have : x = 1 := Subsingleton.elim _ _
     rw [this, map_one, map_one]
     
   · ext
-    apply Subsingleton.elimₓ
+    apply Subsingleton.elim
     
 
 @[to_additive AddGroupₓₓ.has_zero_object]
@@ -45,11 +45,11 @@ namespace CommGroupₓₓ
 theorem is_zero_of_subsingleton (G : CommGroupₓₓ) [Subsingleton G] : IsZero G := by
   refine' ⟨fun X => ⟨⟨⟨1⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨1⟩, fun f => _⟩⟩⟩
   · ext
-    have : x = 1 := Subsingleton.elimₓ _ _
+    have : x = 1 := Subsingleton.elim _ _
     rw [this, map_one, map_one]
     
   · ext
-    apply Subsingleton.elimₓ
+    apply Subsingleton.elim
     
 
 @[to_additive AddCommGroupₓₓ.has_zero_object]

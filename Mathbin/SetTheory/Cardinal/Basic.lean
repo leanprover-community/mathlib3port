@@ -59,7 +59,7 @@ We define cardinal numbers as a quotient of types under the equivalence relation
 * There is an instance `has_pow cardinal`, but this will only fire if Lean already knows that both
   the base and the exponent live in the same universe. As a workaround, you can add
   ```
-    local infixr ^ := @has_pow.pow cardinal cardinal cardinal.has_pow
+    local infixr (name := cardinal.pow) ^ := @has_pow.pow cardinal cardinal cardinal.has_pow
   ```
   to a file. This notation will work even if Lean doesn't know yet that the base and the exponent
   live in the same universe (but no exponents in other types can be used).
@@ -104,7 +104,7 @@ namespace Cardinal
 def mk : Type u → Cardinal :=
   Quotientₓ.mk
 
--- mathport name: «expr#»
+-- mathport name: cardinal.mk
 localized [Cardinal] notation "#" => Cardinal.mk
 
 instance canLiftCardinalType : CanLift Cardinal.{u} (Type u) :=
@@ -334,7 +334,7 @@ theorem mk_eq_one (α : Type u) [Unique α] : # α = 1 :=
   (Equivₓ.equivPunit α).cardinal_eq
 
 theorem le_one_iff_subsingleton {α : Type u} : # α ≤ 1 ↔ Subsingleton α :=
-  ⟨fun ⟨f⟩ => ⟨fun a b => f.Injective (Subsingleton.elimₓ _ _)⟩, fun ⟨h⟩ => ⟨⟨fun a => PUnit.unit, fun a b _ => h _ _⟩⟩⟩
+  ⟨fun ⟨f⟩ => ⟨fun a b => f.Injective (Subsingleton.elim _ _)⟩, fun ⟨h⟩ => ⟨⟨fun a => PUnit.unit, fun a b _ => h _ _⟩⟩⟩
 
 instance : Add Cardinal.{u} :=
   ⟨(map₂ Sum) fun α β γ δ => Equivₓ.sumCongr⟩
@@ -388,10 +388,10 @@ private theorem mul_comm' (a b : Cardinal.{u}) : a * b = b * a :=
 instance : Pow Cardinal.{u} Cardinal.{u} :=
   ⟨map₂ (fun α β => β → α) fun α β γ δ e₁ e₂ => e₂.arrowCongr e₁⟩
 
--- mathport name: «expr ^ »
+-- mathport name: cardinal.pow
 local infixr:0 "^" => @Pow.pow Cardinal Cardinal Cardinal.hasPow
 
--- mathport name: «expr ^ℕ »
+-- mathport name: cardinal.pow.nat
 local infixr:80 " ^ℕ " => @Pow.pow Cardinal ℕ Monoidₓ.hasPow
 
 theorem power_def (α β) : (# α^# β) = # (β → α) :=
@@ -935,7 +935,7 @@ theorem lift_supr_le_lift_supr' {ι : Type v} {ι' : Type v'} {f : ι → Cardin
 def aleph0 : Cardinal.{u} :=
   lift (# ℕ)
 
--- mathport name: «exprℵ₀»
+-- mathport name: cardinal.aleph_0
 localized [Cardinal] notation "ℵ₀" => Cardinal.aleph0
 
 theorem mk_nat : # ℕ = ℵ₀ :=
@@ -1238,18 +1238,18 @@ theorem add_le_aleph_0 {c₁ c₂ : Cardinal} : c₁ + c₂ ≤ ℵ₀ ↔ c₁ 
 /-- This function sends finite cardinals to the corresponding natural, and infinite cardinals
   to 0. -/
 def toNat : ZeroHom Cardinal ℕ :=
-  ⟨fun c => if h : c < aleph_0.{v} then Classical.some (lt_aleph_0.1 h) else 0, by
+  ⟨fun c => if h : c < aleph_0.{v} then Classical.choose (lt_aleph_0.1 h) else 0, by
     have h : 0 < ℵ₀ := nat_lt_aleph_0 0
-    rw [dif_pos h, ← Cardinal.nat_cast_inj, ← Classical.some_spec (lt_aleph_0.1 h), Nat.cast_zeroₓ]⟩
+    rw [dif_pos h, ← Cardinal.nat_cast_inj, ← Classical.choose_spec (lt_aleph_0.1 h), Nat.cast_zeroₓ]⟩
 
-theorem to_nat_apply_of_lt_aleph_0 {c : Cardinal} (h : c < ℵ₀) : c.toNat = Classical.some (lt_aleph_0.1 h) :=
+theorem to_nat_apply_of_lt_aleph_0 {c : Cardinal} (h : c < ℵ₀) : c.toNat = Classical.choose (lt_aleph_0.1 h) :=
   dif_pos h
 
 theorem to_nat_apply_of_aleph_0_le {c : Cardinal} (h : ℵ₀ ≤ c) : c.toNat = 0 :=
   dif_neg h.not_lt
 
 theorem cast_to_nat_of_lt_aleph_0 {c : Cardinal} (h : c < ℵ₀) : ↑c.toNat = c := by
-  rw [to_nat_apply_of_lt_aleph_0 h, ← Classical.some_spec (lt_aleph_0.1 h)]
+  rw [to_nat_apply_of_lt_aleph_0 h, ← Classical.choose_spec (lt_aleph_0.1 h)]
 
 theorem cast_to_nat_of_aleph_0_le {c : Cardinal} (h : ℵ₀ ≤ c) : ↑c.toNat = (0 : Cardinal) := by
   rw [to_nat_apply_of_aleph_0_le h, Nat.cast_zeroₓ]
@@ -1269,7 +1269,7 @@ theorem to_nat_lt_of_lt_of_lt_aleph_0 {c d : Cardinal} (hd : d < ℵ₀) (hcd : 
 @[simp]
 theorem to_nat_cast (n : ℕ) : Cardinal.toNat n = n := by
   rw [to_nat_apply_of_lt_aleph_0 (nat_lt_aleph_0 n), ← nat_cast_inj]
-  exact (Classical.some_spec (lt_aleph_0.1 (nat_lt_aleph_0 n))).symm
+  exact (Classical.choose_spec (lt_aleph_0.1 (nat_lt_aleph_0 n))).symm
 
 /-- `to_nat` has a right-inverse: coercion. -/
 theorem to_nat_right_inverse : Function.RightInverse (coe : ℕ → Cardinal) toNat :=
@@ -1672,7 +1672,7 @@ theorem two_le_iff : (2 : Cardinal) ≤ # α ↔ ∃ x y : α, x ≠ y := by
     by_contra h'
     rw [not_leₓ, ← Nat.cast_two, nat_succ, lt_succ_iff, Nat.cast_oneₓ, le_one_iff_subsingleton] at h'
     apply h
-    exact Subsingleton.elimₓ _ _
+    exact Subsingleton.elim _ _
     
 
 theorem two_le_iff' (x : α) : (2 : Cardinal) ≤ # α ↔ ∃ y : α, x ≠ y := by

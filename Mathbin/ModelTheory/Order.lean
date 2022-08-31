@@ -93,7 +93,7 @@ theorem order_Lhom_le_symb [L.IsOrdered] : (orderLhom L).onRelation leSymb = (le
 
 @[simp]
 theorem order_Lhom_order : orderLhom Language.order = Lhom.id Language.order :=
-  Lhom.funext (Subsingleton.elimₓ _ _) (Subsingleton.elimₓ _ _)
+  Lhom.funext (Subsingleton.elim _ _) (Subsingleton.elim _ _)
 
 instance : IsOrdered (L.Sum Language.order) :=
   ⟨Sum.inr IsOrdered.leSymb⟩
@@ -146,17 +146,20 @@ instance is_ordered_structure_has_le [LE M] : IsOrderedStructure Language.order 
   rw [is_ordered_structure_iff, order_Lhom_order]
   exact Lhom.id_is_expansion_on M
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance model_preorder [Preorderₓ M] : M ⊨ Theory.preorder := by
   simp only [Theory.preorder, Theory.model_iff, Set.mem_insert_iff, Set.mem_singleton_iff, forall_eq_or_imp,
     relations.realize_reflexive, rel_map_apply₂, forall_eq, relations.realize_transitive]
   exact ⟨le_reflₓ, fun _ _ _ => le_transₓ⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance model_partial_order [PartialOrderₓ M] : M ⊨ Theory.partial_order := by
   simp only [Theory.partial_order, Theory.model_iff, Set.mem_insert_iff, Set.mem_singleton_iff, forall_eq_or_imp,
     relations.realize_reflexive, rel_map_apply₂, relations.realize_antisymmetric, forall_eq,
     relations.realize_transitive]
   exact ⟨le_reflₓ, fun _ _ => le_antisymmₓ, fun _ _ _ => le_transₓ⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance model_linear_order [LinearOrderₓ M] : M ⊨ Theory.linear_order := by
   simp only [Theory.linear_order, Theory.model_iff, Set.mem_insert_iff, Set.mem_singleton_iff, forall_eq_or_imp,
     relations.realize_reflexive, rel_map_apply₂, relations.realize_antisymmetric, relations.realize_transitive,
@@ -189,6 +192,7 @@ section LE
 
 variable [LE M]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem realize_no_top_order_iff : M ⊨ sentence.no_top_order ↔ NoTopOrder M := by
   simp only [sentence.no_top_order, sentence.realize, formula.realize, bounded_formula.realize_all,
     bounded_formula.realize_ex, bounded_formula.realize_not, realize, term.realize_le, Sum.elim_inr]
@@ -196,10 +200,12 @@ theorem realize_no_top_order_iff : M ⊨ sentence.no_top_order ↔ NoTopOrder M 
   intro h a
   exact exists_not_le a
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem realize_no_top_order [h : NoTopOrder M] : M ⊨ sentence.no_top_order :=
   realize_no_top_order_iff.2 h
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem realize_no_bot_order_iff : M ⊨ sentence.no_bot_order ↔ NoBotOrder M := by
   simp only [sentence.no_bot_order, sentence.realize, formula.realize, bounded_formula.realize_all,
     bounded_formula.realize_ex, bounded_formula.realize_not, realize, term.realize_le, Sum.elim_inr]
@@ -207,12 +213,14 @@ theorem realize_no_bot_order_iff : M ⊨ sentence.no_bot_order ↔ NoBotOrder M 
   intro h a
   exact exists_not_ge a
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem realize_no_bot_order [h : NoBotOrder M] : M ⊨ sentence.no_bot_order :=
   realize_no_bot_order_iff.2 h
 
 end LE
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem realize_densely_ordered_iff [Preorderₓ M] : M ⊨ sentence.densely_ordered ↔ DenselyOrdered M := by
   simp only [sentence.densely_ordered, sentence.realize, formula.realize, bounded_formula.realize_imp,
     bounded_formula.realize_all, realize, term.realize_lt, Sum.elim_inr, bounded_formula.realize_ex,
@@ -221,10 +229,12 @@ theorem realize_densely_ordered_iff [Preorderₓ M] : M ⊨ sentence.densely_ord
   intro h a b ab
   exact exists_between ab
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem realize_densely_ordered [Preorderₓ M] [h : DenselyOrdered M] : M ⊨ sentence.densely_ordered :=
   realize_densely_ordered_iff.2 h
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance model_DLO [LinearOrderₓ M] [DenselyOrdered M] [NoTopOrder M] [NoBotOrder M] : M ⊨ Theory.DLO := by
   simp only [Theory.DLO, Set.union_insert, Set.union_singleton, Theory.model_iff, Set.mem_insert_iff, forall_eq_or_imp,
     realize_no_top_order, realize_no_bot_order, realize_densely_ordered, true_andₓ]

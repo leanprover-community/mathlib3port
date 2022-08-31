@@ -364,7 +364,7 @@ theorem ext' {f g : RingTopology α} (h : f.IsOpen = g.IsOpen) : f = g := by
 instance : PartialOrderₓ (RingTopology α) :=
   PartialOrderₓ.lift RingTopology.toTopologicalSpace <| ext
 
--- mathport name: «exprcont»
+-- mathport name: exprcont
 local notation "cont" => @Continuous _ _
 
 private def def_Inf (S : Set (RingTopology α)) : RingTopology α :=

@@ -72,6 +72,8 @@ theorem form_perm_disjoint_iff (hl : Nodupₓ l) (hl' : Nodupₓ l') (hn : 2 ≤
       tauto
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem is_cycle_form_perm (hl : Nodupₓ l) (hn : 2 ≤ l.length) : IsCycle (formPerm l) := by
   cases' l with x l
   · norm_num at hn
@@ -84,7 +86,7 @@ theorem is_cycle_form_perm (hl : Nodupₓ l) (hn : 2 ≤ l.length) : IsCycle (fo
     · rwa [form_perm_apply_mem_ne_self_iff _ hl _ (mem_cons_self _ _)]
       
     · intro w hw
-      have : w ∈ x :: y :: l := mem_of_form_perm_ne_self _ _ hw
+      have : w ∈ x::y::l := mem_of_form_perm_ne_self _ _ hw
       obtain ⟨k, hk, rfl⟩ := nth_le_of_mem this
       use k
       simp only [zpow_coe_nat, form_perm_pow_apply_head _ _ hl k, Nat.mod_eq_of_ltₓ hk]

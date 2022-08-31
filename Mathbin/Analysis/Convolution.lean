@@ -351,13 +351,13 @@ noncomputable def convolution [Sub G] (f : G → E) (g : G → E') (L : E →L[�
         volume_tac) :
     G → F := fun x => ∫ t, L (f t) (g (x - t)) ∂μ
 
--- mathport name: «expr ⋆[ , ] »
+-- mathport name: convolution
 localized [convolution] notation:67 f " ⋆[" L:67 ", " μ:67 "] " g:66 => convolution f g L μ
 
--- mathport name: «expr ⋆[ ] »
+-- mathport name: convolution.volume
 localized [convolution] notation:67 f " ⋆[" L:67 "]" g:66 => convolution f g L MeasureTheory.MeasureSpace.volume
 
--- mathport name: «expr ⋆ »
+-- mathport name: convolution.lsmul
 localized [convolution]
   notation:67 f " ⋆ " g:66 => convolution f g (ContinuousLinearMap.lsmul ℝ ℝ) MeasureTheory.MeasureSpace.volume
 

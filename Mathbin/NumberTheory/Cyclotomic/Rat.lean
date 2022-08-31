@@ -133,7 +133,7 @@ theorem cyclotomic_ring_is_integral_closure_of_prime_pow :
   haveI : CharZero ℚ := OrderedSemiring.to_char_zero
   have : IsCyclotomicExtension {p ^ k} ℚ (CyclotomicField (p ^ k) ℚ) := by
     convert CyclotomicField.is_cyclotomic_extension (p ^ k) _
-    · exact Subsingleton.elimₓ _ _
+    · exact Subsingleton.elim _ _
       
     · exact NeZero.char_zero
       
@@ -152,7 +152,7 @@ theorem cyclotomic_ring_is_integral_closure_of_prime_pow :
     
   · have : IsCyclotomicExtension {p ^ k} ℤ (CyclotomicRing (p ^ k) ℤ ℚ) := by
       convert CyclotomicRing.is_cyclotomic_extension _ ℤ ℚ
-      · exact Subsingleton.elimₓ _ _
+      · exact Subsingleton.elim _ _
         
       · exact NeZero.char_zero
         

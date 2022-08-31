@@ -766,6 +766,34 @@ theorem mul_eq_one_iff' [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantC
     fun ⟨ha', hb'⟩ => by
     rw [ha', hb', mul_oneₓ]
 
+section Left
+
+variable [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α}
+
+@[to_additive eq_zero_of_add_nonneg_left]
+theorem eq_one_of_one_le_mul_left (ha : a ≤ 1) (hb : b ≤ 1) (hab : 1 ≤ a * b) : a = 1 :=
+  ha.eq_of_not_lt fun h => hab.not_lt <| mul_lt_one_of_lt_of_le h hb
+
+@[to_additive]
+theorem eq_one_of_mul_le_one_left (ha : 1 ≤ a) (hb : 1 ≤ b) (hab : a * b ≤ 1) : a = 1 :=
+  ha.eq_of_not_gt fun h => hab.not_lt <| one_lt_mul_of_lt_of_le' h hb
+
+end Left
+
+section Right
+
+variable [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {a b : α}
+
+@[to_additive eq_zero_of_add_nonneg_right]
+theorem eq_one_of_one_le_mul_right (ha : a ≤ 1) (hb : b ≤ 1) (hab : 1 ≤ a * b) : b = 1 :=
+  hb.eq_of_not_lt fun h => hab.not_lt <| Right.mul_lt_one_of_le_of_lt ha h
+
+@[to_additive]
+theorem eq_one_of_mul_le_one_right (ha : 1 ≤ a) (hb : 1 ≤ b) (hab : a * b ≤ 1) : b = 1 :=
+  hb.eq_of_not_gt fun h => hab.not_lt <| Right.one_lt_mul_of_le_of_lt ha h
+
+end Right
+
 end PartialOrderₓ
 
 section LinearOrderₓ

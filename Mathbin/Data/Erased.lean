@@ -32,7 +32,7 @@ def mk {α} (a : α) : Erased α :=
 
 /-- Extracts the erased value, noncomputably. -/
 noncomputable def out {α} : Erased α → α
-  | ⟨s, h⟩ => Classical.some h
+  | ⟨s, h⟩ => Classical.choose h
 
 /-- Extracts the erased value, if it is a type.
 
@@ -49,14 +49,14 @@ theorem out_proof {p : Prop} (a : Erased p) : p :=
 @[simp]
 theorem out_mk {α} (a : α) : (mk a).out = a := by
   let h
-  show Classical.some h = a
-  have := Classical.some_spec h
+  show Classical.choose h = a
+  have := Classical.choose_spec h
   exact cast (congr_fun this a).symm rfl
 
 @[simp]
 theorem mk_out {α} : ∀ a : Erased α, mk (out a) = a
   | ⟨s, h⟩ => by
-    simp [mk] <;> congr <;> exact Classical.some_spec h
+    simp [mk] <;> congr <;> exact Classical.choose_spec h
 
 @[ext]
 theorem out_inj {α} (a b : Erased α) (h : a.out = b.out) : a = b := by

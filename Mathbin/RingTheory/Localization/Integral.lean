@@ -48,8 +48,8 @@ open Classical
 `integer_normalization p` -/
 noncomputable def coeffIntegerNormalization (p : S[X]) (i : ℕ) : R :=
   if hi : i ∈ p.support then
-    Classical.some
-      (Classical.some_spec (exist_integer_multiples_of_finset M (p.support.Image p.coeff)) (p.coeff i)
+    Classical.choose
+      (Classical.choose_spec (exist_integer_multiples_of_finset M (p.support.Image p.coeff)) (p.coeff i)
         (Finset.mem_image.mpr ⟨i, hi, rfl⟩))
   else 0
 
@@ -76,13 +76,13 @@ theorem integer_normalization_coeff (p : S[X]) (i : ℕ) :
 
 theorem integer_normalization_spec (p : S[X]) :
     ∃ b : M, ∀ i, algebraMap R S ((integerNormalization M p).coeff i) = (b : R) • p.coeff i := by
-  use Classical.some (exist_integer_multiples_of_finset M (p.support.image p.coeff))
+  use Classical.choose (exist_integer_multiples_of_finset M (p.support.image p.coeff))
   intro i
   rw [integer_normalization_coeff, coeff_integer_normalization]
   split_ifs with hi
   · exact
-      Classical.some_spec
-        (Classical.some_spec (exist_integer_multiples_of_finset M (p.support.image p.coeff)) (p.coeff i)
+      Classical.choose_spec
+        (Classical.choose_spec (exist_integer_multiples_of_finset M (p.support.image p.coeff)) (p.coeff i)
           (finset.mem_image.mpr ⟨i, hi, rfl⟩))
     
   · convert (smul_zero _).symm
@@ -279,7 +279,7 @@ theorem IsIntegral.exists_multiple_integral_of_is_localization [Algebra Rₘ S] 
     (hx : IsIntegral Rₘ x) : ∃ m : M, IsIntegral R (m • x) := by
   cases' subsingleton_or_nontrivial Rₘ with _ nontriv <;> skip
   · haveI := (algebraMap Rₘ S).codomain_trivial
-    exact ⟨1, Polynomial.x, Polynomial.monic_X, Subsingleton.elimₓ _ _⟩
+    exact ⟨1, Polynomial.x, Polynomial.monic_X, Subsingleton.elim _ _⟩
     
   obtain ⟨p, hp₁, hp₂⟩ := hx
   obtain ⟨p', hp'₁, -, hp'₂⟩ :=

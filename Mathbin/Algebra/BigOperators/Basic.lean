@@ -83,16 +83,16 @@ In practice, this means that parentheses should be placed as follows:
 -/
 
 
--- mathport name: «expr∑ , »
+-- mathport name: finset.sum_univ
 localized [BigOperators] notation3"∑ "(...)", "r:(scoped f => Finset.sum Finset.univ f) => r
 
--- mathport name: «expr∏ , »
+-- mathport name: finset.prod_univ
 localized [BigOperators] notation3"∏ "(...)", "r:(scoped f => Finset.prod Finset.univ f) => r
 
--- mathport name: «expr∑ in , »
+-- mathport name: finset.sum
 localized [BigOperators] notation3"∑ "(...)" in "s", "r:(scoped f => Finset.sum s f) => r
 
--- mathport name: «expr∏ in , »
+-- mathport name: finset.prod
 localized [BigOperators] notation3"∏ "(...)" in "s", "r:(scoped f => Finset.prod s f) => r
 
 open BigOperators
@@ -505,22 +505,28 @@ theorem prod_mul_distrib : (∏ x in s, f x * g x) = (∏ x in s, f x) * ∏ x i
       rw [one_mulₓ] <;> rfl)
     fold_op_distrib
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive]
 theorem prod_product {s : Finset γ} {t : Finset α} {f : γ × α → β} :
     (∏ x in s ×ˢ t, f x) = ∏ x in s, ∏ y in t, f (x, y) :=
   prod_finset_product (s ×ˢ t) s (fun a => t) fun p => mem_product
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- An uncurried version of `finset.prod_product`. -/
 @[to_additive "An uncurried version of `finset.sum_product`"]
 theorem prod_product' {s : Finset γ} {t : Finset α} {f : γ → α → β} :
     (∏ x in s ×ˢ t, f x.1 x.2) = ∏ x in s, ∏ y in t, f x y :=
   prod_product
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive]
 theorem prod_product_right {s : Finset γ} {t : Finset α} {f : γ × α → β} :
     (∏ x in s ×ˢ t, f x) = ∏ y in t, ∏ x in s, f (x, y) :=
   prod_finset_product_right (s ×ˢ t) t (fun a => s) fun p => mem_product.trans And.comm
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- An uncurried version of `finset.prod_product_right`. -/
 @[to_additive "An uncurried version of `finset.prod_product_right`"]
 theorem prod_product_right' {s : Finset γ} {t : Finset α} {f : γ → α → β} :
@@ -1640,12 +1646,13 @@ end Fintype
 
 namespace List
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive]
 theorem prod_to_finset {M : Type _} [DecidableEq α] [CommMonoidₓ M] (f : α → M) :
     ∀ {l : List α} (hl : l.Nodup), l.toFinset.Prod f = (l.map f).Prod
   | [], _ => by
     simp
-  | a :: l, hl => by
+  | a::l, hl => by
     let ⟨not_mem, hl⟩ := List.nodup_cons.mp hl
     simp [Finset.prod_insert (mt list.mem_to_finset.mp not_mem), prod_to_finset hl]
 

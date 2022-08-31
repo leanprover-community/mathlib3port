@@ -155,7 +155,7 @@ def bicategoricalComp {f g h i : a ⟶ b} [LiftHom g] [LiftHom h] [Bicategorical
     f ⟶ i :=
   η ≫ BicategoricalCoherence.hom g h ≫ θ
 
--- mathport name: «expr ⊗≫ »
+-- mathport name: bicategorical_comp
 localized [Bicategory] infixr:80 " ⊗≫ " => CategoryTheory.Bicategory.bicategoricalComp
 
 -- type as \ot \gg
@@ -165,7 +165,7 @@ def bicategoricalIsoComp {f g h i : a ⟶ b} [LiftHom g] [LiftHom h] [Bicategori
     (θ : h ≅ i) : f ≅ i :=
   η ≪≫ asIso (BicategoricalCoherence.hom g h) ≪≫ θ
 
--- mathport name: «expr ≪⊗≫ »
+-- mathport name: bicategorical_iso_comp
 localized [Bicategory] infixr:80 " ≪⊗≫ " => CategoryTheory.Bicategory.bicategoricalIsoComp
 
 -- type as \ot \gg

@@ -312,7 +312,7 @@ theorem orbitRel.Quotient.orbit_eq_orbit_out (x : orbitRel.Quotient α β) {φ :
 
 variable (α) (β)
 
--- mathport name: «exprΩ»
+-- mathport name: exprΩ
 local notation "Ω" => orbitRel.Quotient α β
 
 /-- Decomposition of a type `X` as a disjoint union of its orbits under a group action.
@@ -346,8 +346,8 @@ theorem stabilizer_smul_eq_stabilizer_map_conj (g : α) (x : β) :
 /-- A bijection between the stabilizers of two elements in the same orbit. -/
 noncomputable def stabilizerEquivStabilizerOfOrbitRel {x y : β} (h : (orbitRel α β).Rel x y) :
     stabilizer α x ≃* stabilizer α y :=
-  let g : α := Classical.some h
-  have hg : g • y = x := Classical.some_spec h
+  let g : α := Classical.choose h
+  have hg : g • y = x := Classical.choose_spec h
   have this : stabilizer α x = (stabilizer α y).map (MulAut.conj g).toMonoidHom := by
     rw [← hg, stabilizer_smul_eq_stabilizer_map_conj]
   (MulEquiv.subgroupCongr this).trans ((MulAut.conj g).subgroupMap <| stabilizer α y).symm
@@ -368,8 +368,8 @@ theorem stabilizer_vadd_eq_stabilizer_map_conj (g : α) (x : β) :
 /-- A bijection between the stabilizers of two elements in the same orbit. -/
 noncomputable def stabilizerEquivStabilizerOfOrbitRel {x y : β} (h : (orbitRel α β).Rel x y) :
     stabilizer α x ≃+ stabilizer α y :=
-  let g : α := Classical.some h
-  have hg : g +ᵥ y = x := Classical.some_spec h
+  let g : α := Classical.choose h
+  have hg : g +ᵥ y = x := Classical.choose_spec h
   have this : stabilizer α x = (stabilizer α y).map (AddAut.conj g).toAddMonoidHom := by
     rw [← hg, stabilizer_vadd_eq_stabilizer_map_conj]
   (AddEquiv.addSubgroupCongr this).trans ((AddAut.conj g).addSubgroupMap <| stabilizer α y).symm

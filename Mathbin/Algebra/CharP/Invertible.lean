@@ -37,9 +37,10 @@ theorem not_ring_char_dvd_of_invertible {t : ℕ} [Invertible (t : K)] : ¬ringC
 def invertibleOfCharPNotDvd {p : ℕ} [CharP K p] {t : ℕ} (not_dvd : ¬p ∣ t) : Invertible (t : K) :=
   invertibleOfNonzero fun h => not_dvd ((CharP.cast_eq_zero_iff K p t).mp h)
 
-instance invertibleOfPos [CharZero K] (n : ℕ) [h : Fact (0 < n)] : Invertible (n : K) :=
-  invertibleOfNonzero <| by
-    simpa [pos_iff_ne_zero] using h.out
+-- warning: this could potentially loop with `ne_zero.invertible` - if there is weird type-class
+-- loops, watch out for that.
+instance invertibleOfPos [CharZero K] (n : ℕ) [NeZero n] : Invertible (n : K) :=
+  invertibleOfNonzero <| NeZero.out
 
 end Field
 

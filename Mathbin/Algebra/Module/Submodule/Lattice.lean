@@ -123,7 +123,7 @@ def botEquivPunit : (⊥ : Submodule R M) ≃ₗ[R] PUnit where
 theorem eq_bot_of_subsingleton (p : Submodule R M) [Subsingleton p] : p = ⊥ := by
   rw [eq_bot_iff]
   intro v hv
-  exact congr_arg coe (Subsingleton.elimₓ (⟨v, hv⟩ : p) 0)
+  exact congr_arg coe (Subsingleton.elim (⟨v, hv⟩ : p) 0)
 
 /-- The universal set is the top element of the lattice of submodules. -/
 instance : HasTop (Submodule R M) :=

@@ -137,13 +137,13 @@ def modelWithCornersEuclideanQuadrant (n : ℕ) :
   continuous_inv_fun :=
     Continuous.subtype_mk (continuous_pi fun i => (continuous_id.max continuous_const).comp (continuous_apply i)) _
 
--- mathport name: «expr𝓡 »
+-- mathport name: model_with_corners_self.euclidean
 localized [Manifold]
   notation "𝓡 " n =>
     (modelWithCornersSelf ℝ (EuclideanSpace ℝ (Finₓ n)) :
       ModelWithCorners ℝ (EuclideanSpace ℝ (Finₓ n)) (EuclideanSpace ℝ (Finₓ n)))
 
--- mathport name: «expr𝓡∂ »
+-- mathport name: model_with_corners_euclidean_half_space.euclidean
 localized [Manifold]
   notation "𝓡∂ " n =>
     (modelWithCornersEuclideanHalfSpace n : ModelWithCorners ℝ (EuclideanSpace ℝ (Finₓ n)) (EuclideanHalfSpace n))
@@ -177,7 +177,7 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclide
     dsimp'  at hz h'z
     have A : x + z 0 ≤ y := by
       linarith
-    rw [Subsingleton.elimₓ i 0]
+    rw [Subsingleton.elim i 0]
     simp only [A, add_commₓ, add_sub_cancel', min_eq_leftₓ]
   open_source := by
     have : IsOpen { z : ℝ | z < y } := is_open_Iio
@@ -229,7 +229,7 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclid
     dsimp'  at hz h'z
     have A : x ≤ y - z 0 := by
       linarith
-    rw [Subsingleton.elimₓ i 0]
+    rw [Subsingleton.elim i 0]
     simp only [A, sub_sub_cancel, max_eq_leftₓ]
   open_source := by
     have : IsOpen { z : ℝ | x < z } := is_open_Ioi
@@ -293,7 +293,7 @@ instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] : SmoothManifoldWithCorn
       lt_sub_iff_add_lt] with mfld_simps  at hz₁ hz₂
     rw [min_eq_leftₓ hz₁.le, lt_add_iff_pos_left] at hz₂
     ext i
-    rw [Subsingleton.elimₓ i 0]
+    rw [Subsingleton.elim i 0]
     simp' only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, *, PiLp.add_apply, PiLp.neg_apply,
       max_eq_leftₓ, min_eq_leftₓ hz₁.le, update_same] with mfld_simps
     abel
@@ -305,7 +305,7 @@ instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] : SmoothManifoldWithCorn
       max_eq_leftₓ hz₀] with mfld_simps  at hz₁ hz₂
     rw [lt_sub] at hz₁
     ext i
-    rw [Subsingleton.elimₓ i 0]
+    rw [Subsingleton.elim i 0]
     simp' only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, PiLp.add_apply, PiLp.neg_apply,
       update_same, max_eq_leftₓ, hz₀, hz₁.le] with mfld_simps
     abel

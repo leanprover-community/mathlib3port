@@ -47,18 +47,18 @@ theorem exists_reduced_fraction (x : K) :
 
 /-- `f.num x` is the numerator of `x : f.codomain` as a reduced fraction. -/
 noncomputable def num (x : K) : A :=
-  Classical.some (exists_reduced_fraction A x)
+  Classical.choose (exists_reduced_fraction A x)
 
 /-- `f.num x` is the denominator of `x : f.codomain` as a reduced fraction. -/
 noncomputable def denom (x : K) : nonZeroDivisors A :=
-  Classical.some (Classical.some_spec (exists_reduced_fraction A x))
+  Classical.choose (Classical.choose_spec (exists_reduced_fraction A x))
 
-theorem num_denom_reduced (x : K) : ∀ {d}, d ∣ num A x → d ∣ denom A x → IsUnit d :=
-  (Classical.some_spec (Classical.some_spec (exists_reduced_fraction A x))).1
+theorem num_denom_reduced (x : K) {d} : d ∣ num A x → d ∣ denom A x → IsUnit d :=
+  (Classical.choose_spec (Classical.choose_spec (exists_reduced_fraction A x))).1
 
 @[simp]
 theorem mk'_num_denom (x : K) : mk' K (num A x) (denom A x) = x :=
-  (Classical.some_spec (Classical.some_spec (exists_reduced_fraction A x))).2
+  (Classical.choose_spec (Classical.choose_spec (exists_reduced_fraction A x))).2
 
 variable {A}
 

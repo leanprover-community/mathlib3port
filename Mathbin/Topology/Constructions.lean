@@ -455,6 +455,7 @@ theorem continuous_curry {g : α × β → γ} (a : α) (h : Continuous g) : Con
       (by
         continuity)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem IsOpen.prod {s : Set α} {t : Set β} (hs : IsOpen s) (ht : IsOpen t) : IsOpen (s ×ˢ t) :=
   (hs.Preimage continuous_fst).inter (ht.Preimage continuous_snd)
 
@@ -471,9 +472,11 @@ theorem continuous_uncurry_of_discrete_topology [DiscreteTopology α] {f : α �
   rw [nhds_prod_eq, nhds_discrete, Filter.map_pure_prod]
   exact (hf a).ContinuousAt
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem mem_nhds_prod_iff {a : α} {b : β} {s : Set (α × β)} : s ∈ 𝓝 (a, b) ↔ ∃ u ∈ 𝓝 a, ∃ v ∈ 𝓝 b, u ×ˢ v ⊆ s := by
   rw [nhds_prod_eq, mem_prod_iff]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem mem_nhds_prod_iff' {a : α} {b : β} {s : Set (α × β)} :
     s ∈ 𝓝 (a, b) ↔ ∃ (u : Set α)(v : Set β), IsOpen u ∧ a ∈ u ∧ IsOpen v ∧ b ∈ v ∧ u ×ˢ v ⊆ s := by
   rw [mem_nhds_prod_iff]
@@ -492,12 +495,14 @@ theorem _root_.prod.tendsto_iff {α} (seq : α → β × γ) {f : Filter α} (x 
   cases x
   rw [nhds_prod_eq, Filter.tendsto_prod_iff']
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Filter.HasBasis.prod_nhds {ιa ιb : Type _} {pa : ιa → Prop} {pb : ιb → Prop} {sa : ιa → Set α} {sb : ιb → Set β}
     {a : α} {b : β} (ha : (𝓝 a).HasBasis pa sa) (hb : (𝓝 b).HasBasis pb sb) :
     (𝓝 (a, b)).HasBasis (fun i : ιa × ιb => pa i.1 ∧ pb i.2) fun i => sa i.1 ×ˢ sb i.2 := by
   rw [nhds_prod_eq]
   exact ha.prod hb
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Filter.HasBasis.prod_nhds' {ιa ιb : Type _} {pa : ιa → Prop} {pb : ιb → Prop} {sa : ιa → Set α}
     {sb : ιb → Set β} {ab : α × β} (ha : (𝓝 ab.1).HasBasis pa sa) (hb : (𝓝 ab.2).HasBasis pb sb) :
     (𝓝 ab).HasBasis (fun i : ιa × ιb => pa i.1 ∧ pb i.2) fun i => sa i.1 ×ˢ sb i.2 := by
@@ -508,9 +513,11 @@ instance [DiscreteTopology α] [DiscreteTopology β] : DiscreteTopology (α × �
   ⟨eq_of_nhds_eq_nhds fun ⟨a, b⟩ => by
       rw [nhds_prod_eq, nhds_discrete α, nhds_discrete β, nhds_bot, Filter.prod_pure_pure]⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem prod_mem_nhds_iff {s : Set α} {t : Set β} {a : α} {b : β} : s ×ˢ t ∈ 𝓝 (a, b) ↔ s ∈ 𝓝 a ∧ t ∈ 𝓝 b := by
   rw [nhds_prod_eq, prod_mem_prod_iff]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem prod_mem_nhds {s : Set α} {t : Set β} {a : α} {b : β} (ha : s ∈ 𝓝 a) (hb : t ∈ 𝓝 b) : s ×ˢ t ∈ 𝓝 (a, b) :=
   prod_mem_nhds_iff.2 ⟨ha, hb⟩
 
@@ -542,6 +549,10 @@ theorem ContinuousAt.prod_map' {f : α → γ} {g : β → δ} {x : α} {y : β}
     ContinuousAt (fun p : α × β => (f p.1, g p.2)) (x, y) :=
   hf.fst'.Prod hg.snd'
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem prod_generate_from_generate_from_eq {α β : Type _} {s : Set (Set α)} {t : Set (Set β)} (hs : ⋃₀s = univ)
     (ht : ⋃₀t = univ) :
     @Prod.topologicalSpace α β (generateFrom s) (generateFrom t) = generateFrom { g | ∃ u ∈ s, ∃ v ∈ t, g = u ×ˢ v } :=
@@ -566,6 +577,7 @@ theorem prod_generate_from_generate_from_eq {α β : Type _} {s : Set (Set α)} 
             rw [← this]
             exact is_open_Union fun u => is_open_Union fun hu => generate_open.basic _ ⟨_, hu, _, hv, rfl⟩))
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem prod_eq_generate_from :
     Prod.topologicalSpace = generateFrom { g | ∃ (s : Set α)(t : Set β), IsOpen s ∧ IsOpen t ∧ g = s ×ˢ t } :=
   le_antisymmₓ (le_generate_from fun g ⟨s, t, hs, ht, g_eq⟩ => g_eq.symm ▸ hs.Prod ht)
@@ -579,6 +591,7 @@ theorem prod_eq_generate_from :
           ⟨Univ, t, by
             simpa [Set.prod_eq] using ht⟩))
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem is_open_prod_iff {s : Set (α × β)} :
     IsOpen s ↔ ∀ a b, (a, b) ∈ s → ∃ (u : Set α)(v : Set β), IsOpen u ∧ IsOpen v ∧ a ∈ u ∧ b ∈ v ∧ u ×ˢ v ⊆ s := by
   rw [is_open_iff_nhds]
@@ -599,6 +612,7 @@ theorem continuous_uncurry_of_discrete_topology_left [DiscreteTopology α] {f : 
     simp only [ContinuousAt, nhds_prod_eq, nhds_discrete α, pure_prod, tendsto_map'_iff, (· ∘ ·), Function.uncurry,
       (h a).Tendsto]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Given a neighborhood `s` of `(x, x)`, then `(x, x)` has a square open neighborhood
   that is a subset of `s`. -/
 theorem exists_nhds_square {s : Set (α × α)} {x : α} (hx : s ∈ 𝓝 (x, x)) : ∃ U : Set α, IsOpen U ∧ x ∈ U ∧ U ×ˢ U ⊆ s :=
@@ -641,6 +655,9 @@ theorem map_snd_nhds (x : α × β) : map Prod.snd (𝓝 x) = 𝓝 x.2 :=
 theorem is_open_map_snd : IsOpenMap (@Prod.snd α β) :=
   is_open_map_iff_nhds_le.2 fun x => (map_snd_nhds x).Ge
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- A product set is open in a product space if and only if each factor is open, or one of them is
 empty -/
 theorem is_open_prod_iff' {s : Set α} {t : Set β} : IsOpen (s ×ˢ t) ↔ IsOpen s ∧ IsOpen t ∨ s = ∅ ∨ t = ∅ := by
@@ -666,28 +683,41 @@ theorem is_open_prod_iff' {s : Set α} {t : Set β} : IsOpen (s ×ˢ t) ↔ IsOp
       
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem closure_prod_eq {s : Set α} {t : Set β} : Closure (s ×ˢ t) = Closure s ×ˢ Closure t :=
   Set.ext fun ⟨a, b⟩ => by
     have : (𝓝 a ×ᶠ 𝓝 b)⊓𝓟 (s ×ˢ t) = 𝓝 a⊓𝓟 s ×ᶠ 𝓝 b⊓𝓟 t := by
       rw [← prod_inf_prod, prod_principal_principal]
     simp [closure_eq_cluster_pts, ClusterPt, nhds_prod_eq, this] <;> exact prod_ne_bot
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem interior_prod_eq (s : Set α) (t : Set β) : Interior (s ×ˢ t) = Interior s ×ˢ Interior t :=
   Set.ext fun ⟨a, b⟩ => by
     simp only [mem_interior_iff_mem_nhds, mem_prod, prod_mem_nhds_iff]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem frontier_prod_eq (s : Set α) (t : Set β) :
     Frontier (s ×ˢ t) = Closure s ×ˢ Frontier t ∪ Frontier s ×ˢ Closure t := by
   simp only [Frontier, closure_prod_eq, interior_prod_eq, prod_diff_prod]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem frontier_prod_univ_eq (s : Set α) : Frontier (s ×ˢ (Univ : Set β)) = Frontier s ×ˢ univ := by
   simp [frontier_prod_eq]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem frontier_univ_prod_eq (s : Set β) : Frontier ((Univ : Set α) ×ˢ s) = univ ×ˢ Frontier s := by
   simp [frontier_prod_eq]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem map_mem_closure2 {s : Set α} {t : Set β} {u : Set γ} {f : α → β → γ} {a : α} {b : β}
     (hf : Continuous fun p : α × β => f p.1 p.2) (ha : a ∈ Closure s) (hb : b ∈ Closure t)
     (hu : ∀ a b, a ∈ s → b ∈ t → f a b ∈ u) : f a b ∈ Closure u :=
@@ -696,10 +726,12 @@ theorem map_mem_closure2 {s : Set α} {t : Set β} {u : Set γ} {f : α → β �
   show (fun p : α × β => f p.1 p.2) (a, b) ∈ Closure u from
     (map_mem_closure hf this) fun ⟨a, b⟩ ⟨ha, hb⟩ => hu a b ha hb
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem IsClosed.prod {s₁ : Set α} {s₂ : Set β} (h₁ : IsClosed s₁) (h₂ : IsClosed s₂) : IsClosed (s₁ ×ˢ s₂) :=
   closure_eq_iff_is_closed.mp <| by
     simp only [h₁.closure_eq, h₂.closure_eq, closure_prod_eq]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The product of two dense sets is a dense set. -/
 theorem Dense.prod {s : Set α} {t : Set β} (hs : Dense s) (ht : Dense t) : Dense (s ×ˢ t) := fun x => by
   rw [closure_prod_eq]
@@ -1361,6 +1393,7 @@ theorem mem_closure_of_continuous [TopologicalSpace α] [TopologicalSpace β] {f
     _ ⊆ Closure t := closure_minimal h.image_subset is_closed_closure
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem mem_closure_of_continuous2 [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] {f : α → β → γ}
     {a : α} {b : β} {s : Set α} {t : Set β} {u : Set γ} (hf : Continuous fun p : α × β => f p.1 p.2)
     (ha : a ∈ Closure s) (hb : b ∈ Closure t) (h : ∀ a ∈ s, ∀ b ∈ t, f a b ∈ Closure u) : f a b ∈ Closure u :=

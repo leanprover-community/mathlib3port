@@ -190,7 +190,7 @@ noncomputable def Localization.awayEquivAdjoin (r : R) : Away r ≃ₐ[R] Adjoin
       commutes' := IsLocalization.Away.AwayMap.lift_eq r (is_unit_of_mul_eq_one _ _ <| root_is_inv r) }
     (liftHom _ (IsLocalization.Away.invSelf r) <| by
       simp only [map_sub, map_mul, aeval_C, aeval_X, IsLocalization.Away.mul_inv_self, aeval_one, sub_self])
-    (Subsingleton.elimₓ _ _) (Subsingleton.elimₓ _ _)
+    (Subsingleton.elim _ _) (Subsingleton.elim _ _)
 
 theorem IsLocalization.adjoin_inv (r : R) : IsLocalization.Away r (AdjoinRoot <| c r * X - 1) :=
   IsLocalization.is_localization_of_alg_equiv _ (Localization.awayEquivAdjoin r)

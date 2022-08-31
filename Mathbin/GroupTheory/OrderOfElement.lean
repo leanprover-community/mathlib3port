@@ -632,13 +632,13 @@ theorem order_of_dvd_card_univ : orderOf x ∣ Fintype.card G := by
   have eq₁ : Fintype.card G = @Fintype.card _ ft_cosets * @Fintype.card _ ft_s :=
     calc
       Fintype.card G = @Fintype.card _ ft_prod := @Fintype.card_congr _ _ _ ft_prod group_equiv_quotient_times_subgroup
-      _ = @Fintype.card _ (@Prod.fintype _ _ ft_cosets ft_s) := congr_arg (@Fintype.card _) <| Subsingleton.elimₓ _ _
+      _ = @Fintype.card _ (@Prod.fintype _ _ ft_cosets ft_s) := congr_arg (@Fintype.card _) <| Subsingleton.elim _ _
       _ = @Fintype.card _ ft_cosets * @Fintype.card _ ft_s := @Fintype.card_prod _ _ ft_cosets ft_s
       
   have eq₂ : orderOf x = @Fintype.card _ ft_s :=
     calc
       orderOf x = _ := order_eq_card_zpowers
-      _ = _ := congr_arg (@Fintype.card _) <| Subsingleton.elimₓ _ _
+      _ = _ := congr_arg (@Fintype.card _) <| Subsingleton.elim _ _
       
   exact
     Dvd.intro (@Fintype.card (G ⧸ Subgroup.zpowers x) ft_cosets)

@@ -75,6 +75,7 @@ def finVectDual : FinVect K :=
 
 open CategoryTheory.MonoidalCategory
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The coevaluation map is defined in `linear_algebra.coevaluation`. -/
 def finVectCoevaluation : 𝟙_ (FinVect K) ⟶ V ⊗ finVectDual K V := by
   apply coevaluation K V.obj
@@ -86,6 +87,7 @@ theorem FinVect_coevaluation_apply_one :
   by
   apply coevaluation_apply_one K V.obj
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The evaluation morphism is given by the contraction map. -/
 def finVectEvaluation : finVectDual K V ⊗ V ⟶ 𝟙_ (FinVect K) := by
   apply contractLeft K V.obj
@@ -95,14 +97,18 @@ theorem FinVect_evaluation_apply (f : (finVectDual K V).obj) (x : V.obj) :
     (finVectEvaluation K V) (f ⊗ₜ x) = f.toFun x := by
   apply contract_left_apply f x
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 private theorem coevaluation_evaluation :
     let V' : FinVect K := finVectDual K V
-    𝟙 V' ⊗ finVectCoevaluation K V ≫ (α_ V' V V').inv ≫ finVectEvaluation K V ⊗ 𝟙 V' = (ρ_ V').Hom ≫ (λ_ V').inv :=
+    (𝟙 V' ⊗ finVectCoevaluation K V) ≫ (α_ V' V V').inv ≫ (finVectEvaluation K V ⊗ 𝟙 V') = (ρ_ V').Hom ≫ (λ_ V').inv :=
   by
   apply contract_left_assoc_coevaluation K V.obj
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 private theorem evaluation_coevaluation :
-    finVectCoevaluation K V ⊗ 𝟙 V ≫ (α_ V (finVectDual K V) V).Hom ≫ 𝟙 V ⊗ finVectEvaluation K V =
+    (finVectCoevaluation K V ⊗ 𝟙 V) ≫ (α_ V (finVectDual K V) V).Hom ≫ (𝟙 V ⊗ finVectEvaluation K V) =
       (λ_ V).Hom ≫ (ρ_ V).inv :=
   by
   apply contract_left_assoc_coevaluation' K V.obj

@@ -142,7 +142,7 @@ theorem exists_nat_measure_lt_two_inv (hfg : TendstoInMeasure μ f atTop g) (n :
 `seq_tendsto_ae_seq_aux` is a sequence such that
 `∀ m ≥ seq_tendsto_ae_seq_aux n, μ {x | 2⁻¹ ^ n ≤ dist (f m x) (g x)} ≤ 2⁻¹ ^ n`. -/
 noncomputable def seqTendstoAeSeqAux (hfg : TendstoInMeasure μ f atTop g) (n : ℕ) :=
-  Classical.some (exists_nat_measure_lt_two_inv hfg n)
+  Classical.choose (exists_nat_measure_lt_two_inv hfg n)
 
 /-- Transformation of `seq_tendsto_ae_seq_aux` to makes sure it is strictly monotone. -/
 noncomputable def seqTendstoAeSeq (hfg : TendstoInMeasure μ f atTop g) : ℕ → ℕ
@@ -156,9 +156,9 @@ theorem seq_tendsto_ae_seq_succ (hfg : TendstoInMeasure μ f atTop g) {n : ℕ} 
 theorem seq_tendsto_ae_seq_spec (hfg : TendstoInMeasure μ f atTop g) (n k : ℕ) (hn : seqTendstoAeSeq hfg n ≤ k) :
     μ { x | 2⁻¹ ^ n ≤ dist (f k x) (g x) } ≤ 2⁻¹ ^ n := by
   cases n
-  · exact Classical.some_spec (exists_nat_measure_lt_two_inv hfg 0) k hn
+  · exact Classical.choose_spec (exists_nat_measure_lt_two_inv hfg 0) k hn
     
-  · exact Classical.some_spec (exists_nat_measure_lt_two_inv hfg _) _ (le_transₓ (le_max_leftₓ _ _) hn)
+  · exact Classical.choose_spec (exists_nat_measure_lt_two_inv hfg _) _ (le_transₓ (le_max_leftₓ _ _) hn)
     
 
 theorem seq_tendsto_ae_seq_strict_mono (hfg : TendstoInMeasure μ f atTop g) : StrictMono (seqTendstoAeSeq hfg) := by

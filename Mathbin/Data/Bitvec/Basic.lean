@@ -22,12 +22,7 @@ theorem of_fin_val {n : ℕ} (i : Finₓ <| 2 ^ n) : (ofFin i).toNat = i.val := 
 
 /-- convert `bitvec` to `fin` -/
 def toFin {n : ℕ} (i : Bitvec n) : Finₓ <| 2 ^ n :=
-  @Finₓ.ofNat' _
-    ⟨pow_pos
-        (by
-          norm_num)
-        _⟩
-    i.toNat
+  Finₓ.ofNat' i.toNat
 
 theorem add_lsb_eq_twice_add_one {x b} : addLsb x b = 2 * x + cond b 1 0 := by
   simp [add_lsb, two_mul]

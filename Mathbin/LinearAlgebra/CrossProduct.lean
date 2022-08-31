@@ -58,7 +58,7 @@ def crossProduct : (Finₓ 3 → R) →ₗ[R] (Finₓ 3 → R) →ₗ[R] Finₓ 
     simp [smul_vec3 (_ : R) (_ : R), mul_comm, mul_assoc, mul_left_commₓ, mul_addₓ, sub_eq_add_neg]
     
 
--- mathport name: «expr ×₃ »
+-- mathport name: cross_product
 localized [Matrix] infixl:74 " ×₃ " => crossProduct
 
 theorem cross_apply (a b : Finₓ 3 → R) :

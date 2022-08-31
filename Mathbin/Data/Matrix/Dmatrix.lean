@@ -57,7 +57,7 @@ theorem map_map {M : Dmatrix m n α} {β : m → n → Type w} {γ : m → n →
 def transposeₓ (M : Dmatrix m n α) : Dmatrix n m fun j i => α i j
   | x, y => M y x
 
--- mathport name: «expr ᵀ»
+-- mathport name: dmatrix.transpose
 localized [Dmatrix] postfix:1024 "ᵀ" => Dmatrix.transposeₓ
 
 /-- `dmatrix.col u` is the column matrix whose entries are given by `u`. -/

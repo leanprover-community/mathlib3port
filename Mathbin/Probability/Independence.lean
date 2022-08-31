@@ -600,7 +600,7 @@ theorem IndepFun.indep_fun_finset [IsProbabilityMeasure μ] {ι : Type _} {β : 
     · congr with s
       simp only [Set.mem_image, Set.mem_set_of_eq, exists_prop]
       
-    · exact Finset.fintypeCoeSort S
+    · infer_instance
       
   let πTβ := Set.Pi (Set.Univ : Set T) '' Set.Pi (Set.Univ : Set T) fun i => { s : Set (β i) | measurable_set[m i] s }
   let πT := { s : Set Ω | ∃ t ∈ πTβ, (fun a (i : T) => f i a) ⁻¹' t = s }
@@ -610,7 +610,7 @@ theorem IndepFun.indep_fun_finset [IsProbabilityMeasure μ] {ι : Type _} {β : 
     · congr with s
       simp only [Set.mem_image, Set.mem_set_of_eq, exists_prop]
       
-    · exact Finset.fintypeCoeSort T
+    · infer_instance
       
   -- To prove independence, we prove independence of the generating π-systems.
   refine'

@@ -71,7 +71,7 @@ theorem dom_inv : r.inv.Dom = r.Codom := by
 /-- Composition of relation; note that it follows the `category_theory/` order of arguments. -/
 def Comp (r : Rel α β) (s : Rel β γ) : Rel α γ := fun x z => ∃ y, r x y ∧ s y z
 
--- mathport name: «expr ∘ »
+-- mathport name: rel.comp
 local infixr:0 " ∘ " => Rel.Comp
 
 theorem comp_assoc (r : Rel α β) (s : Rel β γ) (t : Rel γ δ) : ((r ∘ s) ∘ t) = (r ∘ s ∘ t) := by

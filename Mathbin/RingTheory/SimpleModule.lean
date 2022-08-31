@@ -36,7 +36,7 @@ abbrev IsSimpleModule :=
 /-- A module is semisimple when every submodule has a complement, or equivalently, the module
   is a direct sum of simple modules. -/
 abbrev IsSemisimpleModule :=
-  IsComplemented (Submodule R M)
+  ComplementedLattice (Submodule R M)
 
 -- Making this an instance causes the linter to complain of "dangerous instances"
 theorem IsSimpleModule.nontrivial [IsSimpleModule R M] : Nontrivial M :=
@@ -65,7 +65,7 @@ end IsSimpleModule
 
 theorem is_semisimple_of_Sup_simples_eq_top (h : sup { m : Submodule R M | IsSimpleModule R m } = ⊤) :
     IsSemisimpleModule R M :=
-  is_complemented_of_Sup_atoms_eq_top
+  complemented_lattice_of_Sup_atoms_eq_top
     (by
       simp_rw [← h, is_simple_module_iff_is_atom])
 
@@ -79,7 +79,7 @@ theorem Sup_simples_eq_top : sup { m : Submodule R M | IsSimpleModule R m } = �
 
 instance is_semisimple_submodule {m : Submodule R M} : IsSemisimpleModule R m := by
   have f : Submodule R m ≃o Set.Iic m := Submodule.MapSubtype.relIso m
-  exact f.is_complemented_iff.2 IsModularLattice.is_complemented_Iic
+  exact f.complemented_lattice_iff.2 IsModularLattice.complemented_lattice_Iic
 
 end IsSemisimpleModule
 

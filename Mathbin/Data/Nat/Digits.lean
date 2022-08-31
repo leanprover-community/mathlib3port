@@ -39,18 +39,20 @@ def digitsAux0 : ℕ → List ℕ
 def digitsAux1 (n : ℕ) : List ℕ :=
   List.repeat 1 n
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- (Impl.) An auxiliary definition for `digits`, to help get the desired definitional unfolding. -/
 def digitsAux (b : ℕ) (h : 2 ≤ b) : ℕ → List ℕ
   | 0 => []
   | n + 1 =>
     have : (n + 1) / b < n + 1 := Nat.div_lt_selfₓ (Nat.succ_posₓ _) h
-    (n + 1) % b :: digits_aux ((n + 1) / b)
+    ((n + 1) % b)::digits_aux ((n + 1) / b)
 
 @[simp]
 theorem digits_aux_zero (b : ℕ) (h : 2 ≤ b) : digitsAux b h 0 = [] := by
   rw [digits_aux]
 
-theorem digits_aux_def (b : ℕ) (h : 2 ≤ b) (n : ℕ) (w : 0 < n) : digitsAux b h n = n % b :: digitsAux b h (n / b) := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem digits_aux_def (b : ℕ) (h : 2 ≤ b) (n : ℕ) (w : 0 < n) : digitsAux b h n = (n % b)::digitsAux b h (n / b) := by
   cases n
   · cases w
     
@@ -101,17 +103,20 @@ theorem digits_zero_succ' : ∀ {n : ℕ} (w : 0 < n), digits 0 n = [n]
 theorem digits_one (n : ℕ) : digits 1 n = List.repeat 1 n :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem digits_one_succ (n : ℕ) : digits 1 (n + 1) = 1 :: digits 1 n :=
+theorem digits_one_succ (n : ℕ) : digits 1 (n + 1) = 1::digits 1 n :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem digits_add_two_add_one (b n : ℕ) :
-    digits (b + 2) (n + 1) = (n + 1) % (b + 2) :: digits (b + 2) ((n + 1) / (b + 2)) := by
+    digits (b + 2) (n + 1) = ((n + 1) % (b + 2))::digits (b + 2) ((n + 1) / (b + 2)) := by
   rw [digits, digits_aux_def]
   exact succ_pos n
 
-theorem digits_def' : ∀ {b : ℕ} (h : 2 ≤ b) {n : ℕ} (w : 0 < n), digits b n = n % b :: digits b (n / b)
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem digits_def' : ∀ {b : ℕ} (h : 2 ≤ b) {n : ℕ} (w : 0 < n), digits b n = (n % b)::digits b (n / b)
   | 0, h =>
     absurd h
       (by
@@ -138,8 +143,9 @@ theorem digits_of_lt (b x : ℕ) (w₁ : 0 < x) (w₂ : x < b) : digits b x = [x
       
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem digits_add (b : ℕ) (h : 2 ≤ b) (x y : ℕ) (w : x < b) (w' : 0 < x ∨ 0 < y) :
-    digits b (x + b * y) = x :: digits b y := by
+    digits b (x + b * y) = x::digits b y := by
   cases b
   · cases h
     
@@ -163,6 +169,7 @@ theorem digits_add (b : ℕ) (h : 2 ≤ b) (x y : ℕ) (w : x < b) (w' : 0 < x �
       
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- If we had a function converting a list into a polynomial,
 -- and appropriate lemmas about that function,
 -- we could rewrite this in terms of that.
@@ -171,7 +178,7 @@ as a number in semiring, as the little-endian digits in base `b`.
 -/
 def ofDigits {α : Type _} [Semiringₓ α] (b : α) : List ℕ → α
   | [] => 0
-  | h :: t => h + b * of_digits t
+  | h::t => h + b * of_digits t
 
 theorem of_digits_eq_foldr {α : Type _} [Semiringₓ α] (b : α) (L : List ℕ) :
     ofDigits b L = L.foldr (fun x y => x + b * y) 0 := by
@@ -209,9 +216,10 @@ theorem of_digits_eq_sum_map_with_index (b : ℕ) (L : List ℕ) :
 theorem of_digits_singleton {b n : ℕ} : ofDigits b [n] = n := by
   simp [of_digits]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem of_digits_one_cons {α : Type _} [Semiringₓ α] (h : ℕ) (L : List ℕ) :
-    ofDigits (1 : α) (h :: L) = h + ofDigits 1 L := by
+    ofDigits (1 : α) (h::L) = h + ofDigits 1 L := by
   simp [of_digits]
 
 theorem of_digits_append {b : ℕ} {l1 l2 : List ℕ} :
@@ -363,7 +371,8 @@ theorem digits_eq_nil_iff_eq_zero {b n : ℕ} : digits b n = [] ↔ n = 0 := by
 theorem digits_ne_nil_iff_ne_zero {b n : ℕ} : digits b n ≠ [] ↔ n ≠ 0 :=
   not_congr digits_eq_nil_iff_eq_zero
 
-theorem digits_eq_cons_digits_div {b n : ℕ} (h : 2 ≤ b) (w : 0 < n) : digits b n = n % b :: digits b (n / b) := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem digits_eq_cons_digits_div {b n : ℕ} (h : 2 ≤ b) (w : 0 < n) : digits b n = (n % b)::digits b (n / b) := by
   rcases b with (_ | _ | b)
   · rw [digits_zero_succ' w, Nat.mod_zeroₓ, Nat.div_zeroₓ, Nat.digits_zero_zero]
     
@@ -664,11 +673,13 @@ theorem zmodeq_of_digits_digits (b b' : ℕ) (c : ℤ) (h : b' ≡ c [ZMOD b]) (
   rw [coe_int_of_digits]
   apply of_digits_zmodeq' _ _ _ h
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem of_digits_neg_one : ∀ L : List ℕ, ofDigits (-1 : ℤ) L = (L.map fun n : ℕ => (n : ℤ)).alternatingSum
   | [] => rfl
   | [n] => by
     simp [of_digits, List.alternatingSum]
-  | a :: b :: t => by
+  | a::b::t => by
     simp only [of_digits, List.alternatingSum, List.map_cons, of_digits_neg_one t]
     ring
 
@@ -729,8 +740,9 @@ theorem eleven_dvd_of_palindrome (p : (digits 10 n).Palindrome) (h : Even (digit
 
 namespace NormDigits
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem digits_succ (b n m r l) (e : r + b * m = n) (hr : r < b) (h : Nat.digits b m = l ∧ 2 ≤ b ∧ 0 < m) :
-    Nat.digits b n = r :: l ∧ 2 ≤ b ∧ 0 < n := by
+    (Nat.digits b n = r::l) ∧ 2 ≤ b ∧ 0 < n := by
   rcases h with ⟨h, b2, m0⟩
   have b0 : 0 < b := by
     linarith

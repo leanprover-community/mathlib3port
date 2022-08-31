@@ -699,7 +699,7 @@ infimum over the principal filters of all open sets containing `a`. -/
 irreducible_def nhds (a : α) : Filter α :=
   ⨅ s ∈ { s : Set α | a ∈ s ∧ IsOpen s }, 𝓟 s
 
--- mathport name: «expr𝓝»
+-- mathport name: nhds
 localized [TopologicalSpace] notation "𝓝" => nhds
 
 /-- The "neighborhood within" filter. Elements of `𝓝[s] a` are sets containing the
@@ -707,22 +707,22 @@ intersection of `s` and a neighborhood of `a`. -/
 def nhdsWithin (a : α) (s : Set α) : Filter α :=
   𝓝 a⊓𝓟 s
 
--- mathport name: «expr𝓝[ ] »
+-- mathport name: nhds_within
 localized [TopologicalSpace] notation "𝓝[" s "] " x:100 => nhdsWithin x s
 
--- mathport name: «expr𝓝[≠] »
+-- mathport name: nhds_within.ne
 localized [TopologicalSpace] notation "𝓝[≠] " x:100 => nhdsWithin x ({x}ᶜ)
 
--- mathport name: «expr𝓝[≥] »
+-- mathport name: nhds_within.ge
 localized [TopologicalSpace] notation "𝓝[≥] " x:100 => nhdsWithin x (Set.Ici x)
 
--- mathport name: «expr𝓝[≤] »
+-- mathport name: nhds_within.le
 localized [TopologicalSpace] notation "𝓝[≤] " x:100 => nhdsWithin x (Set.Iic x)
 
--- mathport name: «expr𝓝[>] »
+-- mathport name: nhds_within.gt
 localized [TopologicalSpace] notation "𝓝[>] " x:100 => nhdsWithin x (Set.Ioi x)
 
--- mathport name: «expr𝓝[<] »
+-- mathport name: nhds_within.lt
 localized [TopologicalSpace] notation "𝓝[<] " x:100 => nhdsWithin x (Set.Iio x)
 
 theorem nhds_def (a : α) : 𝓝 a = ⨅ s ∈ { s : Set α | a ∈ s ∧ IsOpen s }, 𝓟 s := by

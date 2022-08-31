@@ -96,7 +96,7 @@ namespace PresheafedSpace.IsOpenImmersion
 
 open PresheafedSpace
 
--- mathport name: «expris_open_immersion»
+-- mathport name: expris_open_immersion
 local notation "is_open_immersion" => PresheafedSpace.IsOpenImmersion
 
 attribute [instance] is_open_immersion.c_iso
@@ -276,7 +276,7 @@ instance of_restrict {X : Top} (Y : PresheafedSpace C) {f : X ⟶ Y.Carrier} (hf
       rw [Set.preimage_image_eq _ hf.inj]
       rfl
     convert show is_iso (Y.presheaf.map (𝟙 _)) from inferInstance
-    · apply Subsingleton.helimₓ
+    · apply Subsingleton.helim
       rw [this]
       
     · rw [Y.presheaf.map_id]
@@ -665,7 +665,7 @@ variable [H : SheafedSpace.IsOpenImmersion f]
 
 include H
 
--- mathport name: «exprforget»
+-- mathport name: exprforget
 local notation "forget" => SheafedSpace.forgetToPresheafedSpace
 
 open CategoryTheory.Limits.WalkingCospan
@@ -1320,7 +1320,7 @@ def OpenCover.finiteSubcover {X : Scheme} (𝒰 : OpenCover X) [H : CompactSpace
   have h : ∀ x : X.carrier, ∃ y : t, x ∈ Set.Range (𝒰.map (𝒰.f y)).1.base := by
     intro x
     have h' : x ∈ (⊤ : Set X.carrier) := trivialₓ
-    rw [← Classical.some_spec this, Set.mem_Union] at h'
+    rw [← Classical.choose_spec this, Set.mem_Union] at h'
     rcases h' with ⟨y, _, ⟨hy, rfl⟩, hy'⟩
     exact ⟨⟨y, hy⟩, hy'⟩
   exact
@@ -1466,7 +1466,7 @@ def isoRestrict : X ≅ (Z.restrict H.base_open : _) :=
 
 include H
 
--- mathport name: «exprforget»
+-- mathport name: exprforget
 local notation "forget" => Scheme.forgetToLocallyRingedSpace
 
 instance mono : Mono f :=

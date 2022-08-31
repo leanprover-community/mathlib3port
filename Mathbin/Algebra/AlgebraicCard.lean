@@ -38,7 +38,7 @@ variable (R : Type u) (A : Type v) [CommRingₓ R] [CommRingₓ A] [IsDomain A] 
 theorem cardinal_mk_lift_le_mul :
     Cardinal.lift.{u, v} (# { x : A // IsAlgebraic R x }) ≤ Cardinal.lift.{v, u} (# (Polynomial R)) * ℵ₀ := by
   rw [← mk_ulift, ← mk_ulift]
-  let g : ULift.{u} { x : A | IsAlgebraic R x } → ULift.{v} (Polynomial R) := fun x => ULift.up (Classical.some x.1.2)
+  let g : ULift.{u} { x : A | IsAlgebraic R x } → ULift.{v} (Polynomial R) := fun x => ULift.up (Classical.choose x.1.2)
   apply Cardinal.mk_le_mk_mul_of_mk_preimage_le g fun f => _
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[[\":\", expr fintype «expr ⁻¹' »(g, {f})]]"
@@ -50,7 +50,7 @@ theorem cardinal_mk_lift_le_mul :
     simp only [Set.mem_preimage, Set.mem_singleton_iff] at hx
     apply_fun ULift.down  at hx
     rw [hf] at hx
-    exact (Classical.some_spec x.1.2).1 hx
+    exact (Classical.choose_spec x.1.2).1 hx
     
   let h : g ⁻¹' {f} → f.down.root_set A := fun x =>
     ⟨x.1.1.1,
@@ -58,7 +58,7 @@ theorem cardinal_mk_lift_le_mul :
         (by
           have key' : g x = f := x.2
           simp_rw [← key']
-          exact (Classical.some_spec x.1.1.2).2)⟩
+          exact (Classical.choose_spec x.1.1.2).2)⟩
   apply Fintype.ofInjective h fun _ _ H => _
   simp only [Subtype.val_eq_coe, Subtype.mk_eq_mk] at H
   exact Subtype.ext (ULift.down_injective (Subtype.ext H))

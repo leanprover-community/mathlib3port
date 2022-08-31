@@ -214,9 +214,9 @@ theorem norm_torus_integral_le_of_norm_le_const {C : ℝ} (hf : ∀ θ, ∥f (to
 
 @[simp]
 theorem torus_integral_dim0 (f : ℂ⁰ → E) (c : ℂ⁰) (R : ℝ⁰) : (∯ x in T(c, R), f x) = f c := by
-  simp only [torusIntegral, Finₓ.prod_univ_zero, one_smul, Subsingleton.elimₓ (fun i : Finₓ 0 => 2 * π) 0, Icc_self,
+  simp only [torusIntegral, Finₓ.prod_univ_zero, one_smul, Subsingleton.elim (fun i : Finₓ 0 => 2 * π) 0, Icc_self,
     measure.restrict_singleton, volume_pi, integral_smul_measure, integral_dirac, measure.pi_of_empty _ 0,
-    measure.dirac_apply_of_mem (mem_singleton _), Subsingleton.elimₓ (torusMap c R 0) c]
+    measure.dirac_apply_of_mem (mem_singleton _), Subsingleton.elim (torusMap c R 0) c]
 
 /-- In dimension one, `torus_integral` is the same as `circle_integral`
 (up to the natural equivalence between `ℂ` and `fin 1 → ℂ`). -/
@@ -232,6 +232,7 @@ theorem torus_integral_dim1 (f : ℂ¹ → E) (c : ℂ¹) (R : ℝ¹) : (∯ x i
   simp only [torusMap, circleMap, zero_addₓ]
   rcongr
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Recurrent formula for `torus_integral`, see also `torus_integral_succ`. -/
 theorem torus_integral_succ_above {f : ℂⁿ⁺¹ → E} {c : ℂⁿ⁺¹} {R : ℝⁿ⁺¹} (hf : TorusIntegrable f c R) (i : Finₓ (n + 1)) :
     (∯ x in T(c, R), f x) = ∮ x in C(c i, R i), ∯ y in T(c ∘ i.succAbove, R ∘ i.succAbove), f (i.insertNth x y) := by

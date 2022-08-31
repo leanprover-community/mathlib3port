@@ -144,7 +144,7 @@ def compression (a : α) (𝒜 : Finset (Finset α)) : Finset (Finset α) :=
   ((𝒜.filter fun s => erase s a ∈ 𝒜).disjUnion ((𝒜.Image fun s => erase s a).filter fun s => s ∉ 𝒜)) fun s h₁ h₂ =>
     (mem_filter.1 h₂).2 (mem_filter.1 h₁).1
 
--- mathport name: «expr𝓓»
+-- mathport name: down.compression
 localized [FinsetFamily] notation "𝓓 " => Down.compression
 
 /-- `a` is in the down-compressed family iff it's in the original and its compression is in the

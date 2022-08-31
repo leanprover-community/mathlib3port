@@ -286,15 +286,17 @@ theorem exists_length_eq_zero_iff {u v : V} : (∃ p : G.Walk u v, p.length = 0)
 theorem length_eq_zero_iff {u : V} {p : G.Walk u u} : p.length = 0 ↔ p = nil := by
   cases p <;> simp
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The `support` of a walk is the list of vertices it visits in order. -/
 def support : ∀ {u v : V}, G.Walk u v → List V
   | u, v, nil => [u]
-  | u, v, cons h p => u :: p.Support
+  | u, v, cons h p => u::p.Support
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The `darts` of a walk is the list of darts it visits in order. -/
 def darts : ∀ {u v : V}, G.Walk u v → List G.Dart
   | u, v, nil => []
-  | u, v, cons h p => ⟨(u, _), h⟩ :: p.darts
+  | u, v, cons h p => ⟨(u, _), h⟩::p.darts
 
 /-- The `edges` of a walk is the list of edges it visits in order.
 This is defined to be the list of edges underlying `simple_graph.walk.darts`. -/
@@ -305,8 +307,9 @@ def edges {u v : V} (p : G.Walk u v) : List (Sym2 V) :=
 theorem support_nil {u : V} : (nil : G.Walk u u).Support = [u] :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem support_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) : (cons h p).Support = u :: p.Support :=
+theorem support_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) : (cons h p).Support = u::p.Support :=
   rfl
 
 theorem support_append {u v w : V} (p : G.Walk u v) (p' : G.Walk v w) :
@@ -324,7 +327,8 @@ theorem tail_support_append {u v w : V} (p : G.Walk u v) (p' : G.Walk v w) :
     (p.append p').Support.tail = p.Support.tail ++ p'.Support.tail := by
   rw [support_append, List.tail_append_of_ne_nil _ _ (support_ne_nil _)]
 
-theorem support_eq_cons {u v : V} (p : G.Walk u v) : p.Support = u :: p.Support.tail := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem support_eq_cons {u v : V} (p : G.Walk u v) : p.Support = u::p.Support.tail := by
   cases p <;> simp
 
 @[simp]
@@ -413,8 +417,9 @@ theorem edges_subset_edge_set : ∀ {u v : V} (p : G.Walk u v) ⦃e : Sym2 V⦄ 
 theorem darts_nil {u : V} : (nil : G.Walk u u).darts = [] :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem darts_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) : (cons h p).darts = ⟨(u, v), h⟩ :: p.darts :=
+theorem darts_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) : (cons h p).darts = ⟨(u, v), h⟩::p.darts :=
   rfl
 
 @[simp]
@@ -429,7 +434,8 @@ theorem mem_darts_reverse {u v : V} {d : G.Dart} {p : G.Walk u v} : d ∈ p.reve
   simp
 
 -- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
-theorem cons_map_snd_darts {u v : V} (p : G.Walk u v) : u :: p.darts.map Dart.snd = p.Support := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem cons_map_snd_darts {u v : V} (p : G.Walk u v) : (u::p.darts.map Dart.snd) = p.Support := by
   induction p <;> simp [*]
 
 theorem map_snd_darts {u v : V} (p : G.Walk u v) : p.darts.map Dart.snd = p.Support.tail := by
@@ -446,8 +452,9 @@ theorem map_fst_darts {u v : V} (p : G.Walk u v) : p.darts.map Dart.fst = p.Supp
 theorem edges_nil {u : V} : (nil : G.Walk u u).edges = [] :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem edges_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) : (cons h p).edges = ⟦(u, v)⟧ :: p.edges :=
+theorem edges_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) : (cons h p).edges = ⟦(u, v)⟧::p.edges :=
   rfl
 
 @[simp]

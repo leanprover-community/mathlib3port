@@ -186,7 +186,7 @@ theorem order_emb_of_fin_last {s : Finset α} {k : ℕ} (h : s.card = k) (hz : 0
 /-- `order_emb_of_fin {a} h` sends any argument to `a`. -/
 @[simp]
 theorem order_emb_of_fin_singleton (a : α) (i : Finₓ 1) : orderEmbOfFin {a} (card_singleton a) i = a := by
-  rw [Subsingleton.elimₓ i ⟨0, zero_lt_one⟩, order_emb_of_fin_zero _ zero_lt_one, min'_singleton]
+  rw [Subsingleton.elim i ⟨0, zero_lt_one⟩, order_emb_of_fin_zero _ zero_lt_one, min'_singleton]
 
 /-- Any increasing map `f` from `fin k` to a finset of cardinality `k` has to coincide with
 the increasing bijection `order_emb_of_fin s h`. -/
@@ -237,12 +237,12 @@ theorem card_le_of_interleaved {s t : Finset α} (h : ∀ (x y) (_ : x ∈ s) (_
     h ((s.sort (· ≤ ·)).nthLe i (h0 i)) ((Finset.mem_sort (· ≤ ·)).mp (List.nth_le_mem _ _ (h0 i)))
       ((s.sort (· ≤ ·)).nthLe (i + 1) (h1 i)) ((Finset.mem_sort (· ≤ ·)).mp (List.nth_le_mem _ _ (h1 i)))
       (s.sort_sorted_lt.rel_nth_le_of_lt (h0 i) (h1 i) (Nat.lt_succ_selfₓ i))
-  let f : Finₓ (s.card - 1) → t := fun i => ⟨Classical.some (p i), (exists_prop.mp (Classical.some_spec (p i))).1⟩
+  let f : Finₓ (s.card - 1) → t := fun i => ⟨Classical.choose (p i), (exists_prop.mp (Classical.choose_spec (p i))).1⟩
   have hf : ∀ i j : Finₓ (s.card - 1), i < j → f i < f j := fun i j hij =>
     subtype.coe_lt_coe.mp
-      ((exists_prop.mp (Classical.some_spec (p i))).2.2.trans
+      ((exists_prop.mp (Classical.choose_spec (p i))).2.2.trans
         (lt_of_le_of_ltₓ ((s.sort_sorted (· ≤ ·)).rel_nth_le_of_le (h1 i) (h0 j) (nat.succ_le_iff.mpr hij))
-          (exists_prop.mp (Classical.some_spec (p j))).2.1))
+          (exists_prop.mp (Classical.choose_spec (p j))).2.1))
   have key :=
     Fintype.card_le_of_embedding
       (Function.Embedding.mk f fun i j hij =>

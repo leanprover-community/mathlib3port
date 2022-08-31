@@ -752,8 +752,8 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- A decision procedure for intuitionistic propositional logic. Unlike `finish` and `tauto!` this
 tactic never uses the law of excluded middle (without the `!` option), and the proof search is
 tailored for this use case. (`itauto!` will work as a classical SAT solver, but the algorithm is
@@ -768,8 +768,8 @@ example (p : Prop) : ¬ (p ↔ ¬ p) := by itauto
 find among the atomic propositions, and `itauto! *` will case on all propositional atoms.
 *Warning:* This can blow up the proof search, so it should be used sparingly.
 -/
-unsafe def itauto (classical : parse («expr ?» (tk "!"))) :
-    parse («expr ?» (some <$> pexpr_list <|> tk "*" *> pure none)) → tactic Unit
+unsafe def itauto (classical : parse (parser.optional (tk "!"))) :
+    parse (parser.optional (some <$> pexpr_list <|> tk "*" *> pure none)) → tactic Unit
   | none => tactic.itauto False classical.isSome []
   | some none => tactic.itauto True classical.isSome []
   | some (some ls) => ls.mmap i_to_expr >>= tactic.itauto False classical.isSome

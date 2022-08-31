@@ -179,7 +179,7 @@ theorem RingHom.char_zero_iff {ϕ : R →+* S} (hϕ : Function.Injective ϕ) : C
     fun hS => ϕ.char_zero⟩
 
 theorem RingHom.injective_nat (f : ℕ →+* R) [CharZero R] : Function.Injective f :=
-  Subsingleton.elimₓ (Nat.castRingHom _) f ▸ Nat.cast_injective
+  Subsingleton.elim (Nat.castRingHom _) f ▸ Nat.cast_injective
 
 end RingHom
 

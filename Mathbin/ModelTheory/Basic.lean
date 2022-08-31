@@ -293,7 +293,7 @@ structure Hom where
     run_tac
       obviously
 
--- mathport name: «expr →[ ] »
+-- mathport name: language.hom
 localized [FirstOrder] notation:25 A " →[" L "] " B => FirstOrder.Language.Hom L A B
 
 /-- An embedding of first-order structures is an embedding that commutes with the
@@ -307,7 +307,7 @@ structure Embedding extends M ↪ N where
     run_tac
       obviously
 
--- mathport name: «expr ↪[ ] »
+-- mathport name: language.embedding
 localized [FirstOrder] notation:25 A " ↪[" L "] " B => FirstOrder.Language.Embedding L A B
 
 /-- An equivalence of first-order structures is an equivalence that commutes with the
@@ -320,7 +320,7 @@ structure Equiv extends M ≃ N where
     run_tac
       obviously
 
--- mathport name: «expr ≃[ ] »
+-- mathport name: language.equiv
 localized [FirstOrder] notation:25 A " ≃[" L "] " B => FirstOrder.Language.Equiv L A B
 
 variable {L M N} {P : Type _} [L.Structure P] {Q : Type _} [L.Structure Q]
@@ -796,7 +796,7 @@ instance : Unique (Language.empty.Structure M) :=
     ext n f
     · exact Empty.elim f
       
-    · exact Subsingleton.elimₓ _ _
+    · exact Subsingleton.elim _ _
       ⟩
 
 instance (priority := 100) strongHomClassEmpty {F M N} [FunLike F M fun _ => N] : StrongHomClass Language.empty F M N :=

@@ -57,10 +57,10 @@ The embedding from `R` is called `C`. -/
 structure Polynomial (R : Type _) [Semiringₓ R] where of_finsupp ::
   toFinsupp : AddMonoidAlgebra R ℕ
 
--- mathport name: «expr [X]»
+-- mathport name: polynomial
 localized [Polynomial] notation:9000 R "[X]" => Polynomial R
 
-open Finsupp AddMonoidAlgebra
+open AddMonoidAlgebra Finsupp Function
 
 open BigOperators Polynomial
 
@@ -528,6 +528,14 @@ theorem X_pow_mul_monomial (k n : ℕ) (r : R) : X ^ k * monomial n r = monomial
 @[simp]
 def coeff : R[X] → ℕ → R
   | ⟨p⟩ => p
+
+theorem coeff_injective : Injective (coeff : R[X] → ℕ → R) := by
+  rintro ⟨p⟩ ⟨q⟩
+  simp only [coeff, FunLike.coe_fn_eq, imp_self]
+
+@[simp]
+theorem coeff_inj : p.coeff = q.coeff ↔ p = q :=
+  coeff_injective.eq_iff
 
 theorem coeff_monomial : coeff (monomial n a) m = if n = m then a else 0 := by
   simp only [← of_finsupp_single, coeff, LinearMap.coe_mk]

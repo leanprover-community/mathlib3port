@@ -174,10 +174,10 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected noncomputable def field (I : Ideal R) [hI : I.IsMaximal] : Field (R ⧸ I) :=
   { Quotient.commRing I, Quotient.is_domain I with
-    inv := fun a => if ha : a = 0 then 0 else Classical.some (exists_inv ha),
+    inv := fun a => if ha : a = 0 then 0 else Classical.choose (exists_inv ha),
     mul_inv_cancel := fun a (ha : a ≠ 0) =>
       show a * dite _ _ _ = _ by
-        rw [dif_neg ha] <;> exact Classical.some_spec (exists_inv ha),
+        rw [dif_neg ha] <;> exact Classical.choose_spec (exists_inv ha),
     inv_zero := dif_pos rfl }
 
 /-- If the quotient by an ideal is a field, then the ideal is maximal. -/

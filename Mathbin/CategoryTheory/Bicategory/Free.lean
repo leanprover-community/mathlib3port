@@ -71,35 +71,35 @@ section
 
 variable {B}
 
--- mathport name: «expr ≫ »
+-- mathport name: vcomp
 -- The following notations are only used in the definition of `rel` to simplify the notation.
 local infixr:0 " ≫ " => Hom₂.vcomp
 
--- mathport name: «expr𝟙»
+-- mathport name: id
 local notation "𝟙" => Hom₂.id
 
--- mathport name: «expr ◁ »
+-- mathport name: whisker_left
 local notation f " ◁ " η => Hom₂.whisker_left f η
 
--- mathport name: «expr ▷ »
+-- mathport name: whisker_right
 local notation η " ▷ " h => Hom₂.whisker_right h η
 
--- mathport name: «exprα_»
+-- mathport name: associator
 local notation "α_" => Hom₂.associator
 
--- mathport name: «exprλ_»
+-- mathport name: left_unitor
 local notation "λ_" => Hom₂.left_unitor
 
--- mathport name: «exprρ_»
+-- mathport name: right_unitor
 local notation "ρ_" => Hom₂.right_unitor
 
--- mathport name: «exprα⁻¹_»
+-- mathport name: associator_inv
 local notation "α⁻¹_" => Hom₂.associator_inv
 
--- mathport name: «exprλ⁻¹_»
+-- mathport name: left_unitor_inv
 local notation "λ⁻¹_" => Hom₂.left_unitor_inv
 
--- mathport name: «exprρ⁻¹_»
+-- mathport name: right_unitor_inv
 local notation "ρ⁻¹_" => Hom₂.right_unitor_inv
 
 /-- Relations between 2-morphisms in the free bicategory. -/

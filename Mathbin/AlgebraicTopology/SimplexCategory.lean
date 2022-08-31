@@ -54,7 +54,7 @@ attribute [local semireducible] SimplexCategory
 def mk (n : ℕ) : SimplexCategory :=
   n
 
--- mathport name: «expr[ ]»
+-- mathport name: simplex_category.mk
 localized [Simplicial] notation "[" n "]" => SimplexCategory.mk n
 
 -- TODO: Make `len` irreducible.
@@ -151,7 +151,7 @@ def mkHom {n m : ℕ} (f : Finₓ (n + 1) →o Finₓ (m + 1)) : [n] ⟶ [m] :=
 theorem hom_zero_zero (f : [0] ⟶ [0]) : f = 𝟙 _ := by
   ext : 2
   dsimp'
-  apply Subsingleton.elimₓ
+  apply Subsingleton.elim
 
 end
 

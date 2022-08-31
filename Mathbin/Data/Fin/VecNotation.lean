@@ -87,7 +87,7 @@ end MatrixNotation
 variable {m n o : ℕ} {m' n' o' : Type _}
 
 theorem empty_eq (v : Finₓ 0 → α) : v = ![] :=
-  Subsingleton.elimₓ _ _
+  Subsingleton.elim _ _
 
 section Val
 
@@ -167,7 +167,7 @@ theorem cons_fin_one (x : α) (u : Finₓ 0 → α) : vecCons x u = fun _ => x :
 unsafe instance _root_.pi_fin.reflect [reflected_univ.{u}] [reflected _ α] [has_reflect α] :
     ∀ {n}, has_reflect (Finₓ n → α)
   | 0, v =>
-    (Subsingleton.elimₓ vecEmpty v).rec
+    (Subsingleton.elim vecEmpty v).rec
       ((by
             trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `reflect_name #[]" :
             reflected _ @vecEmpty.{u}).subst

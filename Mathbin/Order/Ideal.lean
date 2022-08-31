@@ -470,13 +470,13 @@ variable (D : Cofinal P) (x : P)
 
 /-- A (noncomputable) element of a cofinal set lying above a given element. -/
 noncomputable def above : P :=
-  Classical.some <| D.mem_gt x
+  Classical.choose <| D.mem_gt x
 
 theorem above_mem : D.above x ∈ D :=
-  (Exists.elim (Classical.some_spec <| D.mem_gt x)) fun a _ => a
+  (Exists.elim (Classical.choose_spec <| D.mem_gt x)) fun a _ => a
 
 theorem le_above : x ≤ D.above x :=
-  (Exists.elim (Classical.some_spec <| D.mem_gt x)) fun _ b => b
+  (Exists.elim (Classical.choose_spec <| D.mem_gt x)) fun _ b => b
 
 end Cofinal
 

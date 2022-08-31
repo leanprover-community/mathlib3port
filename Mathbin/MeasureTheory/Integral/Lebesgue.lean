@@ -329,6 +329,7 @@ def pair (f : α →ₛ β) (g : α →ₛ γ) : α →ₛ β × γ :=
 theorem pair_apply (f : α →ₛ β) (g : α →ₛ γ) (a) : pair f g a = (f a, g a) :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem pair_preimage (f : α →ₛ β) (g : α →ₛ γ) (s : Set β) (t : Set γ) : pair f g ⁻¹' s ×ˢ t = f ⁻¹' s ∩ g ⁻¹' t :=
   rfl
 
@@ -2039,9 +2040,10 @@ section
 
 open Encodable
 
-/-- Monotone convergence for a suprema over a directed family and indexed by an encodable type -/
-theorem lintegral_supr_directed [Encodable β] {f : β → α → ℝ≥0∞} (hf : ∀ b, Measurable (f b))
+/-- Monotone convergence for a supremum over a directed family and indexed by a countable type -/
+theorem lintegral_supr_directed [Countable β] {f : β → α → ℝ≥0∞} (hf : ∀ b, Measurable (f b))
     (h_directed : Directed (· ≤ ·) f) : (∫⁻ a, ⨆ b, f b a ∂μ) = ⨆ b, ∫⁻ a, f b a ∂μ := by
+  cases nonempty_encodable β
   cases is_empty_or_nonempty β
   · simp [supr_of_empty]
     
@@ -2064,7 +2066,7 @@ theorem lintegral_supr_directed [Encodable β] {f : β → α → ℝ≥0∞} (h
 
 end
 
-theorem lintegral_tsum [Encodable β] {f : β → α → ℝ≥0∞} (hf : ∀ i, Measurable (f i)) :
+theorem lintegral_tsum [Countable β] {f : β → α → ℝ≥0∞} (hf : ∀ i, Measurable (f i)) :
     (∫⁻ a, ∑' i, f i a ∂μ) = ∑' i, ∫⁻ a, f i a ∂μ := by
   simp only [Ennreal.tsum_eq_supr_sum]
   rw [lintegral_supr_directed]
@@ -2082,11 +2084,11 @@ theorem lintegral_tsum [Encodable β] {f : β → α → ℝ≥0∞} (hf : ∀ i
 
 open Measureₓ
 
-theorem lintegral_Union₀ [Encodable β] {s : β → Set α} (hm : ∀ i, NullMeasurableSet (s i) μ)
+theorem lintegral_Union₀ [Countable β] {s : β → Set α} (hm : ∀ i, NullMeasurableSet (s i) μ)
     (hd : Pairwise (AeDisjoint μ on s)) (f : α → ℝ≥0∞) : (∫⁻ a in ⋃ i, s i, f a ∂μ) = ∑' i, ∫⁻ a in s i, f a ∂μ := by
   simp only [measure.restrict_Union_ae hd hm, lintegral_sum_measure]
 
-theorem lintegral_Union [Encodable β] {s : β → Set α} (hm : ∀ i, MeasurableSet (s i)) (hd : Pairwise (Disjoint on s))
+theorem lintegral_Union [Countable β] {s : β → Set α} (hm : ∀ i, MeasurableSet (s i)) (hd : Pairwise (Disjoint on s))
     (f : α → ℝ≥0∞) : (∫⁻ a in ⋃ i, s i, f a ∂μ) = ∑' i, ∫⁻ a in s i, f a ∂μ :=
   lintegral_Union₀ (fun i => (hm i).NullMeasurableSet) hd.AeDisjoint f
 
@@ -2110,7 +2112,7 @@ theorem lintegral_bUnion_finset {s : Finset β} {t : β → Set α} (hd : Set.Pa
     (∫⁻ a in ⋃ b ∈ s, t b, f a ∂μ) = ∑ b in s, ∫⁻ a in t b, f a ∂μ :=
   lintegral_bUnion_finset₀ hd.AeDisjoint (fun b hb => (hm b hb).NullMeasurableSet) f
 
-theorem lintegral_Union_le [Encodable β] (s : β → Set α) (f : α → ℝ≥0∞) :
+theorem lintegral_Union_le [Countable β] (s : β → Set α) (f : α → ℝ≥0∞) :
     (∫⁻ a in ⋃ i, s i, f a ∂μ) ≤ ∑' i, ∫⁻ a in s i, f a ∂μ := by
   rw [← lintegral_sum_measure]
   exact lintegral_mono' restrict_Union_le le_rflₓ
@@ -2252,7 +2254,7 @@ section Countable
 -/
 
 
-theorem lintegral_encodable [Encodable α] [MeasurableSingletonClass α] (f : α → ℝ≥0∞) :
+theorem lintegral_countable' [Countable α] [MeasurableSingletonClass α] (f : α → ℝ≥0∞) :
     (∫⁻ a, f a ∂μ) = ∑' a, f a * μ {a} := by
   conv_lhs => rw [← sum_smul_dirac μ, lintegral_sum_measure]
   congr 1 with a : 1
@@ -2736,12 +2738,12 @@ theorem exists_pos_lintegral_lt_of_sigma_finite (μ : Measure α) [SigmaFinite �
   have : ∀ n, μ (s n) < ∞ := fun n =>
     (measure_mono <| disjointed_subset _ _).trans_lt (measure_spanning_sets_lt_top μ n)
   obtain ⟨δ, δpos, δsum⟩ : ∃ δ : ℕ → ℝ≥0 , (∀ i, 0 < δ i) ∧ (∑' i, μ (s i) * δ i) < ε
-  exact Ennreal.exists_pos_tsum_mul_lt_of_encodable ε0 _ fun n => (this n).Ne
+  exact Ennreal.exists_pos_tsum_mul_lt_of_countable ε0 _ fun n => (this n).Ne
   set N : α → ℕ := spanning_sets_index μ
   have hN_meas : Measurable N := measurable_spanning_sets_index μ
   have hNs : ∀ n, N ⁻¹' {n} = s n := preimage_spanning_sets_index_singleton μ
   refine' ⟨δ ∘ N, fun x => δpos _, measurable_from_nat.comp hN_meas, _⟩
-  simpa [lintegral_comp measurable_from_nat.coe_nnreal_ennreal hN_meas, hNs, lintegral_encodable,
+  simpa [lintegral_comp measurable_from_nat.coe_nnreal_ennreal hN_meas, hNs, lintegral_countable',
     measurable_spanning_sets_index, mul_comm] using δsum
 
 theorem lintegral_trim {μ : Measure α} (hm : m ≤ m0) {f : α → ℝ≥0∞} (hf : measurable[m] f) :

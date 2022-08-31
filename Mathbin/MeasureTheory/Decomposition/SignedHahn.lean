@@ -117,14 +117,14 @@ private theorem find_exists_one_div_lt_min (hi : ¬s ≤[i] 0) {m : ℕ} (hm : m
 `k` from `exists_one_div_lt s i (find_exists_one_div_lt s i)`, otherwise, it returns the
 empty set. -/
 private def some_exists_one_div_lt (s : SignedMeasure α) (i : Set α) : Set α :=
-  if hi : ¬s ≤[i] 0 then Classical.some (find_exists_one_div_lt_spec hi) else ∅
+  if hi : ¬s ≤[i] 0 then Classical.choose (find_exists_one_div_lt_spec hi) else ∅
 
 private theorem some_exists_one_div_lt_spec (hi : ¬s ≤[i] 0) :
     SomeExistsOneDivLt s i ⊆ i ∧
       MeasurableSet (SomeExistsOneDivLt s i) ∧ (1 / (findExistsOneDivLt s i + 1) : ℝ) < s (SomeExistsOneDivLt s i) :=
   by
   rw [some_exists_one_div_lt, dif_pos hi]
-  exact Classical.some_spec (find_exists_one_div_lt_spec hi)
+  exact Classical.choose_spec (find_exists_one_div_lt_spec hi)
 
 private theorem some_exists_one_div_lt_subset : SomeExistsOneDivLt s i ⊆ i := by
   by_cases' hi : ¬s ≤[i] 0
@@ -249,14 +249,14 @@ private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ 
   set k := Nat.findₓ hn with hk₁
   have hk₂ : s ≤[i \ ⋃ l < k, restrict_nonpos_seq s i l] 0 := Nat.find_specₓ hn
   have hmeas : MeasurableSet (⋃ (l : ℕ) (H : l < k), restrict_nonpos_seq s i l) :=
-    MeasurableSet.Union fun _ => MeasurableSet.Union_Prop fun _ => restrict_nonpos_seq_measurable_set _
+    MeasurableSet.Union fun _ => MeasurableSet.Union fun _ => restrict_nonpos_seq_measurable_set _
   refine' ⟨i \ ⋃ l < k, restrict_nonpos_seq s i l, hi₁.diff hmeas, Set.diff_subset _ _, hk₂, _⟩
   rw [of_diff hmeas hi₁, s.of_disjoint_Union_nat]
   · have h₁ : ∀ l < k, 0 ≤ s (restrict_nonpos_seq s i l) := by
       intro l hl
       refine' le_of_ltₓ (measure_of_restrict_nonpos_seq h _ _)
       refine' mt (restrict_le_zero_subset _ (hi₁.diff _) (Set.Subset.refl _)) (Nat.find_minₓ hn hl)
-      exact MeasurableSet.Union fun _ => MeasurableSet.Union_Prop fun _ => restrict_nonpos_seq_measurable_set _
+      exact MeasurableSet.Union fun _ => MeasurableSet.Union fun _ => restrict_nonpos_seq_measurable_set _
     suffices 0 ≤ ∑' l : ℕ, s (⋃ H : l < k, restrict_nonpos_seq s i l) by
       rw [sub_neg]
       exact lt_of_lt_of_leₓ hi₂ this
@@ -275,7 +275,7 @@ private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ 
       
     
   · intro
-    exact MeasurableSet.Union_Prop fun _ => restrict_nonpos_seq_measurable_set _
+    exact MeasurableSet.Union fun _ => restrict_nonpos_seq_measurable_set _
     
   · intro a b hab x hx
     simp only [exists_prop, Set.mem_Union, Set.mem_inter_eq, Set.inf_eq_inter] at hx

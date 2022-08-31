@@ -375,6 +375,9 @@ theorem convex_hull_eq_union_convex_hull_finite_subsets (s : Set E) :
   · exact Union_subset fun i => Union_subset convex_hull_mono
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem mk_mem_convex_hull_prod {t : Set F} {x : E} {y : F} (hx : x ∈ convexHull R s) (hy : y ∈ convexHull R t) :
     (x, y) ∈ convexHull R (s ×ˢ t) := by
   rw [convex_hull_eq] at hx hy⊢
@@ -418,6 +421,8 @@ theorem mk_mem_convex_hull_prod {t : Set F} {x : E} {y : F} (hx : x ∈ convexHu
     rw [← Finset.sum_smul, hw', one_smul]
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem convex_hull_prod (s : Set E) (t : Set F) : convexHull R (s ×ˢ t) = convexHull R s ×ˢ convexHull R t :=
   Subset.antisymm

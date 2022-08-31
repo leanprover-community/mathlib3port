@@ -50,7 +50,7 @@ namespace ContinuousLinearMap
 
 variable (T : E →L[𝕜] E)
 
--- mathport name: «exprrayleigh_quotient»
+-- mathport name: exprrayleigh_quotient
 local notation "rayleigh_quotient" => fun x : E => T.reApplyInnerSelf x / ∥(x : E)∥ ^ 2
 
 theorem rayleigh_smul (x : E) {c : 𝕜} (hc : c ≠ 0) : rayleigh_quotient (c • x) = rayleigh_quotient x := by
@@ -112,7 +112,7 @@ theorem _root_.linear_map.is_symmetric.has_strict_fderiv_at_re_apply_inner_self 
 
 variable [CompleteSpace F] {T : F →L[ℝ] F}
 
--- mathport name: «exprrayleigh_quotient»
+-- mathport name: exprrayleigh_quotient
 local notation "rayleigh_quotient" => fun x : F => T.reApplyInnerSelf x / ∥(x : F)∥ ^ 2
 
 theorem linearly_dependent_of_is_local_extr_on (hT : IsSelfAdjoint T) {x₀ : F}
@@ -165,7 +165,7 @@ section CompleteSpace
 
 variable [CompleteSpace E] {T : E →L[𝕜] E}
 
--- mathport name: «exprrayleigh_quotient»
+-- mathport name: exprrayleigh_quotient
 local notation "rayleigh_quotient" => fun x : E => T.reApplyInnerSelf x / ∥(x : E)∥ ^ 2
 
 theorem eq_smul_self_of_is_local_extr_on (hT : IsSelfAdjoint T) {x₀ : E}

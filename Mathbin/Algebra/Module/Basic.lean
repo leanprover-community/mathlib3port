@@ -293,7 +293,7 @@ as an instance because Lean has no way to guess `R`. -/
 protected theorem Module.subsingleton (R M : Type _) [Semiringₓ R] [Subsingleton R] [AddCommMonoidₓ M] [Module R M] :
     Subsingleton M :=
   ⟨fun x y => by
-    rw [← one_smul R x, ← one_smul R y, Subsingleton.elimₓ (1 : R) 0, zero_smul, zero_smul]⟩
+    rw [← one_smul R x, ← one_smul R y, Subsingleton.elim (1 : R) 0, zero_smul, zero_smul]⟩
 
 /-- A semiring is `nontrivial` provided that there exists a nontrivial module over this semiring. -/
 protected theorem Module.nontrivial (R M : Type _) [Semiringₓ R] [Nontrivial M] [AddCommMonoidₓ M] [Module R M] :

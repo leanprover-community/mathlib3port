@@ -29,7 +29,7 @@ variable {μ} {s t u v : Set α}
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ≠ » i)
 /-- If `s : ι → set α` is a countable family of pairwise a.e. disjoint sets, then there exists a
 family of measurable null sets `t i` such that `s i \ t i` are pairwise disjoint. -/
-theorem exists_null_pairwise_disjoint_diff [Encodable ι] {s : ι → Set α} (hd : Pairwise (AeDisjoint μ on s)) :
+theorem exists_null_pairwise_disjoint_diff [Countable ι] {s : ι → Set α} (hd : Pairwise (AeDisjoint μ on s)) :
     ∃ t : ι → Set α, (∀ i, MeasurableSet (t i)) ∧ (∀ i, μ (t i) = 0) ∧ Pairwise (Disjoint on fun i => s i \ t i) := by
   refine'
     ⟨fun i => to_measurable μ (s i ∩ ⋃ j ∈ ({i}ᶜ : Set ι), s j), fun i => measurable_set_to_measurable _ _, fun i => _,
@@ -76,11 +76,11 @@ theorem mono (h : AeDisjoint μ s t) (hu : u ⊆ s) (hv : v ⊆ t) : AeDisjoint 
   h.mono_ae hu.EventuallyLe hv.EventuallyLe
 
 @[simp]
-theorem Union_left_iff [Encodable ι] {s : ι → Set α} : AeDisjoint μ (⋃ i, s i) t ↔ ∀ i, AeDisjoint μ (s i) t := by
+theorem Union_left_iff [Countable ι] {s : ι → Set α} : AeDisjoint μ (⋃ i, s i) t ↔ ∀ i, AeDisjoint μ (s i) t := by
   simp only [ae_disjoint, Union_inter, measure_Union_null_iff]
 
 @[simp]
-theorem Union_right_iff [Encodable ι] {t : ι → Set α} : AeDisjoint μ s (⋃ i, t i) ↔ ∀ i, AeDisjoint μ s (t i) := by
+theorem Union_right_iff [Countable ι] {t : ι → Set α} : AeDisjoint μ s (⋃ i, t i) ↔ ∀ i, AeDisjoint μ s (t i) := by
   simp only [ae_disjoint, inter_Union, measure_Union_null_iff]
 
 @[simp]

@@ -62,7 +62,7 @@ instance (priority := 900) is_reduced_of_no_zero_divisors [MonoidWithZeroₓ R] 
   ⟨fun _ ⟨_, hn⟩ => pow_eq_zero hn⟩
 
 instance (priority := 900) is_reduced_of_subsingleton [Zero R] [Pow R ℕ] [Subsingleton R] : IsReduced R :=
-  ⟨fun _ _ => Subsingleton.elimₓ _ _⟩
+  ⟨fun _ _ => Subsingleton.elim _ _⟩
 
 theorem IsNilpotent.eq_zero [Zero R] [Pow R ℕ] [IsReduced R] (h : IsNilpotent x) : x = 0 :=
   IsReduced.eq_zero x h
@@ -208,7 +208,7 @@ theorem Ideal.IsNilpotent.induction_on (hI : IsNilpotent I) {P : ∀ ⦃S : Type
   cases n
   · rw [pow_zeroₓ, Ideal.one_eq_top] at hI
     haveI := subsingleton_of_bot_eq_top hI.symm
-    exact (hI' (Subsingleton.elimₓ _ _)).elim
+    exact (hI' (Subsingleton.elim _ _)).elim
     
   cases n
   · rw [pow_oneₓ] at hI

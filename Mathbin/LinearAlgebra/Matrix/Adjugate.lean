@@ -259,7 +259,7 @@ theorem mul_vec_cramer (A : Matrix n n α) (b : n → α) : A.mulVec (cramer A b
 
 theorem adjugate_subsingleton [Subsingleton n] (A : Matrix n n α) : adjugate A = 1 := by
   ext i j
-  simp [Subsingleton.elimₓ i j, adjugate_apply, det_eq_elem_of_subsingleton _ i]
+  simp [Subsingleton.elim i j, adjugate_apply, det_eq_elem_of_subsingleton _ i]
 
 theorem adjugate_eq_one_of_card_eq_one {A : Matrix n n α} (h : Fintype.card n = 1) : adjugate A = 1 := by
   haveI : Subsingleton n := fintype.card_le_one_iff_subsingleton.mp h.le
@@ -333,7 +333,7 @@ theorem det_adjugate (A : Matrix n n α) : (adjugate A).det = A.det ^ (Fintype.c
 
 @[simp]
 theorem adjugate_fin_zero (A : Matrix (Finₓ 0) (Finₓ 0) α) : adjugate A = 0 :=
-  Subsingleton.elimₓ _ _
+  Subsingleton.elim _ _
 
 @[simp]
 theorem adjugate_fin_one (A : Matrix (Finₓ 1) (Finₓ 1) α) : adjugate A = 1 :=
@@ -436,7 +436,7 @@ theorem adjugate_adjugate (A : Matrix n n α) (h : Fintype.card n ≠ 1) :
   -- get rid of the `- 2`
   cases' h_card : Fintype.card n with n'
   · haveI : IsEmpty n := fintype.card_eq_zero_iff.mp h_card
-    apply Subsingleton.elimₓ
+    apply Subsingleton.elim
     
   cases n'
   · exact (h h_card).elim

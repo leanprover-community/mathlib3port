@@ -1639,6 +1639,7 @@ unsafe def tactic.norm_num1 (step : expr → tactic (expr × expr)) (loc : Inter
   when ¬ns <| try tactic.contradiction
   Monadₓ.unlessb success <| done <|> fail "norm_num failed to simplify"
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Normalize numerical expressions. It uses the provided `step` tactic to simplify the expression;
 use `get_step` to get the default `norm_num` set and `derive.step` for the basic builtin set of
 simplifications. -/
@@ -1647,9 +1648,10 @@ unsafe def tactic.norm_num (step : expr → tactic (expr × expr)) (hs : List si
   repeat1 <|
     orelse' (tactic.norm_num1 step l) <|
       interactive.simp_core {  } (tactic.norm_num1 step (Interactive.Loc.ns [none])) false
-          (simp_arg_type.except `` one_div :: hs) [] l >>
+          (simp_arg_type.except `` one_div::hs) [] l >>
         skip
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Carry out similar operations as `tactic.norm_num` but on an `expr` rather than a location.
 Given an expression `e`, returns `(e', ⊢ e = e')`.
 The `no_dflt`, `hs`, and `attr_names` are passed on to `simp`.
@@ -1659,7 +1661,7 @@ unsafe def _root_.expr.norm_num (step : expr → tactic (expr × expr)) (no_dflt
   let simp_step (e : expr) := do
     let (e', p, _) ←
       e.simp {  } (tactic.norm_num1 step (Interactive.Loc.ns [none])) no_dflt attr_names
-          (simp_arg_type.except `` one_div :: hs)
+          (simp_arg_type.except `` one_div::hs)
     return (e', p)
   or_refl_conv fun e => do
     let (e', p') ← norm_num.derive' step e <|> simp_step e
@@ -1749,6 +1751,7 @@ open NormNum (derive)
 unsafe def norm_num1 : conv Unit :=
   replace_lhs derive
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Normalize numerical expressions. Supports the operations
 `+` `-` `*` `/` `^` and `%` over numerical types such as
 `ℕ`, `ℤ`, `ℚ`, `ℝ`, `ℂ` and some general algebraic types,
@@ -1758,7 +1761,7 @@ It also has a relatively simple primality prover. -/
 unsafe def norm_num (hs : parse simp_arg_list) : conv Unit :=
   repeat1 <|
     orelse' norm_num1 <|
-      conv.interactive.simp false (simp_arg_type.except `` one_div :: hs) []
+      conv.interactive.simp false (simp_arg_type.except `` one_div::hs) []
         { discharger := tactic.interactive.norm_num1 (Loc.ns [none]) }
 
 end Conv.Interactive
@@ -1777,6 +1780,7 @@ setup_tactic_parser
 initialize
   registerTraceClass.1 `silence_norm_num_if_true
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The basic usage is `#norm_num e`, where `e` is an expression,
 which will print the `norm_num` form of `e`.
 
@@ -1806,7 +1810,7 @@ unsafe def norm_num_cmd (_ : parse <| tk "#norm_num") : lean.parser Unit := do
   let/- Synthesize a `tactic_state` including local variables as hypotheses under which `expr.simp`
          may be safely called with expected behaviour given the `variables` in the environment. -/
     (ts, mappings)
-    ← synthesize_tactic_state_with_variables_as_hyps (e :: hs_es)
+    ← synthesize_tactic_state_with_variables_as_hyps (e::hs_es)
   let result
     ←-- Enter the `tactic` monad, *critically* using the synthesized tactic state `ts`.
         lean.parser.of_tactic

@@ -251,6 +251,7 @@ theorem TendstoUniformlyOnFilter.prod_map {ι' α' β' : Type _} [UniformSpace �
     mem_of_mem_of_subset (set.mem_prod.mpr ⟨hxv, hxw⟩) hvw
   exact hout
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem TendstoUniformlyOn.prod_map {ι' α' β' : Type _} [UniformSpace β'] {F' : ι' → α' → β'} {f' : α' → β'}
     {p' : Filter ι'} {s' : Set α'} (h : TendstoUniformlyOn F f p s) (h' : TendstoUniformlyOn F' f' p' s') :
     TendstoUniformlyOn (fun i : ι × ι' => Prod.map (F i.1) (F' i.2)) (Prod.map f f') (p.Prod p') (s ×ˢ s') := by
@@ -326,6 +327,7 @@ theorem Filter.Tendsto.tendsto_uniformly_on_const {g : ι → β} {b : β} (hg :
     TendstoUniformlyOn (fun n : ι => fun a : α => g n) (fun a : α => b) p s :=
   tendsto_uniformly_on_iff_tendsto_uniformly_on_filter.mpr (hg.tendsto_uniformly_on_filter_const (𝓟 s))
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem UniformContinuousOn.tendsto_uniformly [UniformSpace α] [UniformSpace γ] {x : α} {U : Set α} (hU : U ∈ 𝓝 x)
     {F : α → β → γ} (hF : UniformContinuousOn (↿F) (U ×ˢ (Univ : Set β))) : TendstoUniformly F (F x) (𝓝 x) := by
   let φ := fun q : α × β => ((x, q.2), q)
@@ -469,6 +471,7 @@ uniform Cauchy sequences -/
 theorem UniformContinuous.comp_uniform_cauchy_seq_on [UniformSpace γ] {g : β → γ} (hg : UniformContinuous g)
     (hf : UniformCauchySeqOn F p s) : UniformCauchySeqOn (fun n => g ∘ F n) p s := fun u hu => hf _ (hg hu)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem UniformCauchySeqOn.prod_map {ι' α' β' : Type _} [UniformSpace β'] {F' : ι' → α' → β'} {p' : Filter ι'}
     {s' : Set α'} (h : UniformCauchySeqOn F p s) (h' : UniformCauchySeqOn F' p' s') :
     UniformCauchySeqOn (fun i : ι × ι' => Prod.map (F i.1) (F' i.2)) (p.Prod p') (s ×ˢ s') := by

@@ -125,7 +125,7 @@ theorem min {p : A[X]} (pmonic : p.Monic) (hp : Polynomial.aeval x p = 0) : degr
 @[nontriviality]
 theorem subsingleton [Subsingleton B] : minpoly A x = 1 := by
   nontriviality A
-  have := minpoly.min A x monic_one (Subsingleton.elimₓ _ _)
+  have := minpoly.min A x monic_one (Subsingleton.elim _ _)
   rw [degree_one] at this
   cases' le_or_ltₓ (minpoly A x).degree 0 with h h
   · rwa
@@ -171,11 +171,11 @@ theorem eq_X_sub_C_of_algebra_map_inj (a : A) (hf : Function.Injective (algebraM
   nontriviality A
   have hdegle : (minpoly A (algebraMap A B a)).natDegree ≤ 1 := by
     apply WithBot.coe_le_coe.1
-    rw [← degree_eq_nat_degree (ne_zero (@is_integral_algebra_map A B _ _ _ a)), WithTop.coe_one, ← degree_X_sub_C a]
+    rw [← degree_eq_nat_degree (NeZero (@is_integral_algebra_map A B _ _ _ a)), WithTop.coe_one, ← degree_X_sub_C a]
     refine' min A (algebraMap A B a) (monic_X_sub_C a) _
     simp only [aeval_C, aeval_X, AlgHom.map_sub, sub_self]
   have hdeg : (minpoly A (algebraMap A B a)).degree = 1 := by
-    apply (degree_eq_iff_nat_degree_eq (ne_zero (@is_integral_algebra_map A B _ _ _ a))).2
+    apply (degree_eq_iff_nat_degree_eq (NeZero (@is_integral_algebra_map A B _ _ _ a))).2
     apply le_antisymmₓ hdegle (nat_degree_pos (@is_integral_algebra_map A B _ _ _ a))
   have hrw := eq_X_add_C_of_degree_eq_one hdeg
   simp only [monic (@is_integral_algebra_map A B _ _ _ a), one_mulₓ, monic.leading_coeff, RingHom.map_one] at hrw
@@ -306,7 +306,7 @@ theorem unique {p : A[X]} (pmonic : p.Monic) (hp : Polynomial.aeval x p = 0)
       (by
         simp [hp])
   contrapose! this
-  apply degree_sub_lt _ (ne_zero hx)
+  apply degree_sub_lt _ (NeZero hx)
   · rw [(monic hx).leadingCoeff, pmonic.leading_coeff]
     
   · exact le_antisymmₓ (min A x pmonic hp) (pmin (minpoly A x) (monic hx) (aeval A x))
@@ -519,7 +519,7 @@ theorem gcd_domain_unique {P : R[X]} (hmo : P.Monic) (hP : Polynomial.aeval s P 
       (by
         simp [hP])
   contrapose! this
-  refine' degree_sub_lt _ (ne_zero hs) _
+  refine' degree_sub_lt _ (NeZero hs) _
   · exact le_antisymmₓ (min R s hmo hP) (Pmin (minpoly R s) (monic hs) (aeval R s))
     
   · rw [(monic hs).leadingCoeff, hmo.leading_coeff]
@@ -559,7 +559,7 @@ variable {x : B}
 
 /-- A minimal polynomial is prime. -/
 theorem prime (hx : IsIntegral A x) : Prime (minpoly A x) := by
-  refine' ⟨ne_zero hx, not_is_unit A x, _⟩
+  refine' ⟨NeZero hx, not_is_unit A x, _⟩
   rintro p q ⟨d, h⟩
   have : Polynomial.aeval x (p * q) = 0 := by
     simp [h, aeval A x]

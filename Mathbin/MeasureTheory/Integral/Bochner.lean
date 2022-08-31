@@ -521,7 +521,7 @@ def integralClm : (α →₁ₛ[μ] E) →L[ℝ] E :=
 
 variable {α E μ 𝕜}
 
--- mathport name: «exprIntegral»
+-- mathport name: simple_func.integral_clm
 local notation "Integral" => integralClm α E μ
 
 open ContinuousLinearMap
@@ -593,7 +593,7 @@ end SimpleFunc
 
 open SimpleFunc
 
--- mathport name: «exprIntegral»
+-- mathport name: simple_func.integral_clm
 local notation "Integral" => @integralClm α E _ _ _ _ _ μ _
 
 variable [NormedSpace ℝ E] [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E] [SmulCommClass ℝ 𝕜 E] [NormedSpace ℝ F]
@@ -651,10 +651,10 @@ theorem integral_sub (f g : α →₁[μ] E) : integral (f - g) = integral f - i
 theorem integral_smul (c : 𝕜) (f : α →₁[μ] E) : integral (c • f) = c • integral f :=
   show (integralClm' 𝕜) (c • f) = c • (integralClm' 𝕜) f from map_smul (integralClm' 𝕜) c f
 
--- mathport name: «exprIntegral»
+-- mathport name: integral_clm
 local notation "Integral" => @integralClm α E _ _ μ _ _
 
--- mathport name: «exprsIntegral»
+-- mathport name: simple_func.integral_clm'
 local notation "sIntegral" => @SimpleFunc.integralClm α E _ _ μ _
 
 theorem norm_Integral_le_one : ∥Integral∥ ≤ 1 :=
@@ -875,7 +875,7 @@ theorem tendsto_integral_filter_of_dominated_convergence {ι} {l : Filter ι} [l
     bound_integrable h_lim
 
 /-- Lebesgue dominated convergence theorem for series. -/
-theorem has_sum_integral_of_dominated_convergence {ι} [Encodable ι] {F : ι → α → E} {f : α → E} (bound : ι → α → ℝ)
+theorem has_sum_integral_of_dominated_convergence {ι} [Countable ι] {F : ι → α → E} {f : α → E} (bound : ι → α → ℝ)
     (hF_meas : ∀ n, AeStronglyMeasurable (F n) μ) (h_bound : ∀ n, ∀ᵐ a ∂μ, ∥F n a∥ ≤ bound n a)
     (bound_summable : ∀ᵐ a ∂μ, Summable fun n => bound n a) (bound_integrable : Integrable (fun a => ∑' n, bound n a) μ)
     (h_lim : ∀ᵐ a ∂μ, HasSum (fun n => F n a) (f a)) : HasSum (fun n => ∫ a, F n a ∂μ) (∫ a, f a ∂μ) := by

@@ -53,8 +53,11 @@ theorem form_perm_nil : formPerm ([] : List α) = 1 :=
 theorem form_perm_singleton (x : α) : formPerm [x] = 1 :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem form_perm_cons_cons (x y : α) (l : List α) : formPerm (x :: y :: l) = swap x y * formPerm (y :: l) :=
+theorem form_perm_cons_cons (x y : α) (l : List α) : formPerm (x::y::l) = swap x y * formPerm (y::l) :=
   prod_cons
 
 theorem form_perm_pair (x y : α) : formPerm [x, y] = swap x y :=
@@ -77,6 +80,7 @@ theorem form_perm_apply_of_not_mem (x : α) (l : List α) (h : x ∉ l) : formPe
 theorem mem_of_form_perm_apply_ne (x : α) (l : List α) : l.formPerm x ≠ x → x ∈ l :=
   not_imp_comm.2 <| List.form_perm_apply_of_not_mem _ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem form_perm_apply_mem_of_mem (x : α) (l : List α) (h : x ∈ l) : formPerm l x ∈ l := by
   cases' l with y l
   · simpa
@@ -84,7 +88,7 @@ theorem form_perm_apply_mem_of_mem (x : α) (l : List α) (h : x ∈ l) : formPe
   induction' l with z l IH generalizing x y
   · simpa using h
     
-  · by_cases' hx : x ∈ z :: l
+  · by_cases' hx : x ∈ z::l
     · rw [form_perm_cons_cons, mul_apply, swap_apply_def]
       split_ifs <;> simp [IH _ _ hx]
       
@@ -93,6 +97,8 @@ theorem form_perm_apply_mem_of_mem (x : α) (l : List α) (h : x ∈ l) : formPe
       
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem mem_of_form_perm_apply_mem (x : α) (l : List α) (h : l.formPerm x ∈ l) : x ∈ l := by
   cases' l with y l
   · simpa
@@ -100,7 +106,7 @@ theorem mem_of_form_perm_apply_mem (x : α) (l : List α) (h : l.formPerm x ∈ 
   induction' l with z l IH generalizing x y
   · simpa using h
     
-  · by_cases' hx : (z :: l).formPerm x ∈ z :: l
+  · by_cases' hx : (z::l).formPerm x ∈ z::l
     · rw [List.form_perm_cons_cons, mul_apply, swap_apply_def] at h
       split_ifs  at h <;> simp [IH _ _ hx]
       
@@ -117,29 +123,38 @@ theorem mem_of_form_perm_apply_mem (x : α) (l : List α) (h : l.formPerm x ∈ 
 theorem form_perm_mem_iff_mem : l.formPerm x ∈ l ↔ x ∈ l :=
   ⟨l.mem_of_form_perm_apply_mem x, l.form_perm_apply_mem_of_mem x⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem form_perm_cons_concat_apply_last (x y : α) (xs : List α) : formPerm (x :: (xs ++ [y])) y = x := by
+theorem form_perm_cons_concat_apply_last (x y : α) (xs : List α) : formPerm (x::xs ++ [y]) y = x := by
   induction' xs with z xs IH generalizing x y
   · simp
     
   · simp [IH]
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem form_perm_apply_last (x : α) (xs : List α) : formPerm (x :: xs) ((x :: xs).last (cons_ne_nil x xs)) = x := by
+theorem form_perm_apply_last (x : α) (xs : List α) : formPerm (x::xs) ((x::xs).last (cons_ne_nil x xs)) = x := by
   induction' xs using List.reverseRecOn with xs y IH generalizing x <;> simp
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem form_perm_apply_nth_le_length (x : α) (xs : List α) :
-    formPerm (x :: xs)
-        ((x :: xs).nthLe xs.length
+    formPerm (x::xs)
+        ((x::xs).nthLe xs.length
           (by
             simp )) =
       x :=
   by
   rw [nth_le_cons_length, form_perm_apply_last]
 
-theorem form_perm_apply_head (x y : α) (xs : List α) (h : Nodupₓ (x :: y :: xs)) : formPerm (x :: y :: xs) x = y := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem form_perm_apply_head (x y : α) (xs : List α) (h : Nodupₓ (x::y::xs)) : formPerm (x::y::xs) x = y := by
   simp [form_perm_apply_of_not_mem _ _ h.not_mem]
 
 theorem form_perm_apply_nth_le_zero (l : List α) (h : Nodupₓ l) (hl : 1 < l.length) :
@@ -154,11 +169,14 @@ theorem form_perm_apply_nth_le_zero (l : List α) (h : Nodupₓ l) (hl : 1 < l.l
 
 variable (l)
 
-theorem form_perm_eq_head_iff_eq_last (x y : α) : formPerm (y :: l) x = y ↔ x = last (y :: l) (cons_ne_nil _ _) :=
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem form_perm_eq_head_iff_eq_last (x y : α) : formPerm (y::l) x = y ↔ x = last (y::l) (cons_ne_nil _ _) :=
   Iff.trans
     (by
       rw [form_perm_apply_last])
-    (formPerm (y :: l)).Injective.eq_iff
+    (formPerm (y::l)).Injective.eq_iff
 
 theorem zip_with_swap_prod_support' (l l' : List α) :
     { x | (zipWithₓ swap l l').Prod x ≠ x } ≤ l.toFinset⊔l'.toFinset := by
@@ -204,6 +222,7 @@ theorem support_form_perm_le [Fintype α] : support (formPerm l) ≤ l.toFinset 
     simpa using hx
   simpa using support_form_perm_le' _ hx'
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem form_perm_apply_lt (xs : List α) (h : Nodupₓ xs) (n : ℕ) (hn : n + 1 < xs.length) :
     formPerm xs (xs.nthLe n ((Nat.lt_succ_selfₓ n).trans hn)) = xs.nthLe (n + 1) hn := by
   induction' n with n IH generalizing xs
@@ -214,7 +233,7 @@ theorem form_perm_apply_lt (xs : List α) (h : Nodupₓ xs) (n : ℕ) (hn : n + 
       
     · simp
       
-    · specialize IH (y :: l) h.of_cons _
+    · specialize IH (y::l) h.of_cons _
       · simpa [Nat.succ_lt_succ_iff] using hn
         
       simp only [swap_apply_eq_iff, coe_mul, form_perm_cons_cons, nth_le]
@@ -337,23 +356,51 @@ theorem form_perm_pow_apply_nth_le (l : List α) (h : Nodupₓ l) (n k : ℕ) (h
   · simp [pow_succₓ, mul_apply, hn, form_perm_apply_nth_le _ h, Nat.succ_eq_add_one, ← Nat.add_assoc]
     
 
-theorem form_perm_pow_apply_head (x : α) (l : List α) (h : Nodupₓ (x :: l)) (n : ℕ) :
-    (formPerm (x :: l) ^ n) x = (x :: l).nthLe (n % (x :: l).length) (Nat.mod_ltₓ _ (Nat.zero_lt_succₓ _)) := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem form_perm_pow_apply_head (x : α) (l : List α) (h : Nodupₓ (x::l)) (n : ℕ) :
+    (formPerm (x::l) ^ n) x = (x::l).nthLe (n % (x::l).length) (Nat.mod_ltₓ _ (Nat.zero_lt_succₓ _)) := by
   convert form_perm_pow_apply_nth_le _ h n 0 _ <;> simp
 
-theorem form_perm_ext_iff {x y x' y' : α} {l l' : List α} (hd : Nodupₓ (x :: y :: l)) (hd' : Nodupₓ (x' :: y' :: l')) :
-    formPerm (x :: y :: l) = formPerm (x' :: y' :: l') ↔ (x :: y :: l) ~r (x' :: y' :: l') := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem form_perm_ext_iff {x y x' y' : α} {l l' : List α} (hd : Nodupₓ (x::y::l)) (hd' : Nodupₓ (x'::y'::l')) :
+    formPerm (x::y::l) = formPerm (x'::y'::l') ↔ (x::y::l) ~r x'::y'::l' := by
   refine' ⟨fun h => _, fun hr => form_perm_eq_of_is_rotated hd hr⟩
   rw [Equivₓ.Perm.ext_iff] at h
-  have hx : x' ∈ x :: y :: l := by
-    have : x' ∈ { z | form_perm (x :: y :: l) z ≠ z } := by
+  have hx : x' ∈ x::y::l := by
+    have : x' ∈ { z | form_perm (x::y::l) z ≠ z } := by
       rw [Set.mem_set_of_eq, h x', form_perm_apply_head _ _ _ hd']
       simp only [mem_cons_iff, nodup_cons] at hd'
       push_neg  at hd'
       exact hd'.left.left.symm
     simpa using support_form_perm_le' _ this
   obtain ⟨n, hn, hx'⟩ := nth_le_of_mem hx
-  have hl : (x :: y :: l).length = (x' :: y' :: l').length := by
+  have hl : (x::y::l).length = (x'::y'::l').length := by
     rw [← dedup_eq_self.mpr hd, ← dedup_eq_self.mpr hd', ← card_to_finset, ← card_to_finset]
     refine' congr_arg Finset.card _
     rw [← Finset.coe_inj, ←
@@ -375,13 +422,13 @@ theorem form_perm_ext_iff {x y x' y' : α} {l l' : List α} (hd : Nodupₓ (x ::
     · simp_rw [Nat.zero_add, Nat.mod_eq_of_ltₓ hn]
       simpa
       
-    · have : k.succ = (k + 1) % (x' :: y' :: l').length := by
+    · have : k.succ = (k + 1) % (x'::y'::l').length := by
         rw [← Nat.succ_eq_add_one, Nat.mod_eq_of_ltₓ hk']
       simp_rw [this]
       rw [← form_perm_apply_nth_le _ hd' k (k.lt_succ_self.trans hk'), ← IH (k.lt_succ_self.trans hk), ← h,
         form_perm_apply_nth_le _ hd]
       congr 1
-      have h1 : 1 = 1 % (x' :: y' :: l').length := by
+      have h1 : 1 = 1 % (x'::y'::l').length := by
         simp
       rw [hl, Nat.mod_eq_of_ltₓ hk', h1, ← Nat.add_modₓ, Nat.succ_add]
       
@@ -414,6 +461,7 @@ theorem mem_of_form_perm_ne_self (l : List α) (x : α) (h : formPerm l x ≠ x)
 theorem form_perm_eq_self_of_not_mem (l : List α) (x : α) (h : x ∉ l) : formPerm l x = x :=
   by_contra fun H => h <| mem_of_form_perm_ne_self _ _ H
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem form_perm_eq_one_iff (hl : Nodupₓ l) : formPerm l = 1 ↔ l.length ≤ 1 := by
   cases' l with hd tl
   · simp
@@ -423,12 +471,14 @@ theorem form_perm_eq_one_iff (hl : Nodupₓ l) : formPerm l = 1 ↔ l.length ≤
     · simp (config := { contextual := true })
       
     · intro h
-      simp only [(hd :: tl).form_perm_apply_mem_eq_self_iff hl hd (mem_cons_self hd tl), add_le_iff_nonpos_left, length,
+      simp only [(hd::tl).form_perm_apply_mem_eq_self_iff hl hd (mem_cons_self hd tl), add_le_iff_nonpos_left, length,
         nonpos_iff_eq_zero, length_eq_zero] at h
       simp [h]
       
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem form_perm_eq_form_perm_iff {l l' : List α} (hl : l.Nodup) (hl' : l'.Nodup) :
     l.formPerm = l'.formPerm ↔ l ~r l' ∨ l.length ≤ 1 ∧ l'.length ≤ 1 := by
   rcases l with (_ | ⟨x, _ | ⟨y, l⟩⟩)
@@ -453,7 +503,7 @@ theorem form_perm_eq_form_perm_iff {l l' : List α} (hl : l.Nodup) (hl' : l'.Nod
   · rcases l' with (_ | ⟨x', _ | ⟨y', l'⟩⟩)
     · simp [form_perm_eq_one_iff, hl, -form_perm_cons_cons]
       
-    · suffices ¬(x :: y :: l) ~r [x'] by
+    · suffices ¬(x::y::l) ~r [x'] by
         simp [form_perm_eq_one_iff, hl, -form_perm_cons_cons]
       intro h
       simpa using h.perm.length_eq

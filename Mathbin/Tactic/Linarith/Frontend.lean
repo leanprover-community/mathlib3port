@@ -176,6 +176,7 @@ prove `false` by calling `linarith` on each list in succession. It will stop at 
 unsafe def try_linarith_on_lists (cfg : linarith_config) (ls : List (List expr)) : tactic expr :=
   (first <| ls.map <| prove_false_by_linarith cfg) <|> fail "linarith failed to find a contradiction"
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Given a list `hyps` of proofs of comparisons, `run_linarith_on_pfs cfg hyps pref_type`
 preprocesses `hyps` according to the list of preprocessors in `cfg`.
 This results in a list of branches (typically only one),
@@ -194,7 +195,7 @@ unsafe def run_linarith_on_pfs (cfg : linarith_config) (hyps : List expr) (pref_
       | some t => prove_false_by_linarith cfg (hyp_set t) <|> try_linarith_on_lists cfg (rb_map.values (hyp_set t))
       | none => try_linarith_on_lists cfg (rb_map.values hyp_set)
   let preprocessors := cfg.preprocessors.getOrElse default_preprocessors
-  let preprocessors := if cfg.split_ne then linarith.remove_ne :: preprocessors else preprocessors
+  let preprocessors := if cfg.split_ne then linarith.remove_ne::preprocessors else preprocessors
   do
   let hyps ← preprocess preprocessors hyps
   hyps fun hs => do

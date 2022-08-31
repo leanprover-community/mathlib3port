@@ -26,7 +26,7 @@ structure Complex : Type where
   re : ℝ
   im : ℝ
 
--- mathport name: «exprℂ»
+-- mathport name: exprℂ
 notation "ℂ" => Complex
 
 namespace Complex
@@ -709,7 +709,7 @@ theorem im_eq_sub_conj (z : ℂ) : (z.im : ℂ) = (z - conj z) / (2 * I) := by
 noncomputable def abs (z : ℂ) : ℝ :=
   (normSq z).sqrt
 
--- mathport name: «exprabs'»
+-- mathport name: exprabs'
 local notation "abs'" => HasAbs.abs
 
 @[simp, norm_cast]

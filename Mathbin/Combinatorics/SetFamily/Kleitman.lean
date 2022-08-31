@@ -51,7 +51,7 @@ theorem Finset.card_bUnion_le_of_intersecting (s : Finset ι) (f : ι → Finset
     by
     rintro j hj
     simp_rw [hf', dif_pos hj, ← Fintype.card_finset]
-    exact Classical.some_spec (hf j hj).exists_card_eq
+    exact Classical.choose_spec (hf j hj).exists_card_eq
   have hf₂ : ∀ j, j ∈ cons i s hi → IsUpperSet (f' j : Set (Finset α)) := by
     refine' fun j hj => (hf₁ _ hj).2.2.is_upper_set' ((hf₁ _ hj).2.2.is_max_iff_card_eq.2 _)
     rw [Fintype.card_finset]

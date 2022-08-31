@@ -64,7 +64,7 @@ open Measureₓ
 /-- A shear mapping preserves the measure `μ.prod ν`.
 This condition is part of the definition of a measurable group in [Halmos, §59].
 There, the map in this lemma is called `S`. -/
-@[to_additive map_prod_sum_eq " An additive shear mapping preserves the measure `μ.prod ν`. "]
+@[to_additive map_prod_add_eq " An additive shear mapping preserves the measure `μ.prod ν`. "]
 theorem map_prod_mul_eq [IsMulLeftInvariant ν] : map (fun z : G × G => (z.1, z.1 * z.2)) (μ.Prod ν) = μ.Prod ν :=
   ((MeasurePreserving.id μ).skew_product measurable_mul (Filter.eventually_of_forall <| map_mul_left_eq_self ν)).map_eq
 
@@ -77,6 +77,7 @@ theorem map_prod_mul_eq_swap [IsMulLeftInvariant μ] : map (fun z : G × G => (z
   simp_rw [map_map (measurable_snd.prod_mk (measurable_snd.mul measurable_fst)) measurable_swap]
   exact map_prod_mul_eq ν μ
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive]
 theorem measurable_measure_mul_right (hE : MeasurableSet E) : Measurable fun x => μ ((fun y => y * x) ⁻¹' E) := by
   suffices Measurable fun y => μ ((fun x => (x, y)) ⁻¹' ((fun z : G × G => ((1 : G), z.1 * z.2)) ⁻¹' univ ×ˢ E)) by
@@ -91,7 +92,8 @@ variable [HasMeasurableInv G]
 
 /-- The function we are mapping along is `S⁻¹` in [Halmos, §59],
   where `S` is the map in `map_prod_mul_eq`. -/
-@[to_additive map_prod_neg_add_eq]
+@[to_additive map_prod_neg_add_eq
+      "The function we are mapping along is `-S` in [Halmos, §59], where\n`S` is the map in `map_prod_add_eq`."]
 theorem map_prod_inv_mul_eq [IsMulLeftInvariant ν] : map (fun z : G × G => (z.1, z.1⁻¹ * z.2)) (μ.Prod ν) = μ.Prod ν :=
   (MeasurableEquiv.shearMulRight G).map_apply_eq_iff_map_symm_apply_eq.mp <| map_prod_mul_eq μ ν
 
@@ -107,7 +109,8 @@ variable [IsMulLeftInvariant μ]
 
 /-- The function we are mapping along is `S⁻¹R` in [Halmos, §59],
   where `S` is the map in `map_prod_mul_eq` and `R` is `prod.swap`. -/
-@[to_additive map_prod_neg_add_eq_swap]
+@[to_additive map_prod_neg_add_eq_swap
+      "The function we are mapping along is `-S + R` in\n[Halmos, §59], where `S` is the map in `map_prod_add_eq` and `R` is `prod.swap`."]
 theorem map_prod_inv_mul_eq_swap : map (fun z : G × G => (z.2, z.2⁻¹ * z.1)) (μ.Prod ν) = ν.Prod μ := by
   rw [← prod_swap]
   simp_rw [map_map (measurable_snd.prod_mk <| measurable_snd.inv.mul measurable_fst) measurable_swap]
@@ -115,7 +118,8 @@ theorem map_prod_inv_mul_eq_swap : map (fun z : G × G => (z.2, z.2⁻¹ * z.1))
 
 /-- The function we are mapping along is `S⁻¹RSR` in [Halmos, §59],
   where `S` is the map in `map_prod_mul_eq` and `R` is `prod.swap`. -/
-@[to_additive map_prod_add_neg_eq]
+@[to_additive map_prod_add_neg_eq
+      "The function we are mapping along is `-S + R + S + R ` in\n[Halmos, §59], where `S` is the map in `map_prod_add_eq` and `R` is `prod.swap`."]
 theorem map_prod_mul_inv_eq [IsMulLeftInvariant ν] : map (fun z : G × G => (z.2 * z.1, z.1⁻¹)) (μ.Prod ν) = μ.Prod ν :=
   by
   suffices map ((fun z : G × G => (z.2, z.2⁻¹ * z.1)) ∘ fun z : G × G => (z.2, z.2 * z.1)) (μ.prod ν) = μ.prod ν by
@@ -127,6 +131,8 @@ theorem map_prod_mul_inv_eq [IsMulLeftInvariant ν] : map (fun z : G × G => (z.
       (measurable_snd.prod_mk (measurable_snd.mul measurable_fst)),
     map_prod_mul_eq_swap μ ν, map_prod_inv_mul_eq_swap ν μ]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive]
 theorem quasi_measure_preserving_inv : QuasiMeasurePreserving (Inv.inv : G → G) μ μ := by
   refine' ⟨measurable_inv, absolutely_continuous.mk fun s hsm hμs => _⟩
@@ -215,7 +221,7 @@ theorem absolutely_continuous_map_div_left (g : G) : μ ≪ map (fun h => g / h)
   exact (absolutely_continuous_map_inv μ).map (measurable_const_mul g)
 
 /-- This is the computation performed in the proof of [Halmos, §60 Th. A]. -/
-@[to_additive]
+@[to_additive "This is the computation performed in the proof of [Halmos, §60 Th. A]."]
 theorem measure_mul_lintegral_eq [IsMulLeftInvariant ν] (Em : MeasurableSet E) (f : G → ℝ≥0∞) (hf : Measurable f) :
     (μ E * ∫⁻ y, f y ∂ν) = ∫⁻ x, ν ((fun z => z * x) ⁻¹' E) * f x⁻¹ ∂μ := by
   rw [← set_lintegral_one, ← lintegral_indicator _ Em, ←
@@ -276,7 +282,8 @@ theorem ae_measure_preimage_mul_right_lt_top_of_ne_zero [IsMulLeftInvariant ν] 
   `0 < ν(Ex⁻¹) < ∞`. The first inequality follows from §59, Th. D, but the second inequality is
   not justified. We prove this inequality for almost all `x` in
   `measure_theory.ae_measure_preimage_mul_right_lt_top_of_ne_zero`. -/
-@[to_additive]
+@[to_additive
+      "A technical lemma relating two different measures. This is basically\n[Halmos, §60 Th. A]. Note that if `f` is the characteristic function of a measurable set `F` this\nstates that `μ F = c * μ E` for a constant `c` that does not depend on `μ`.\n\nNote: There is a gap in the last step of the proof in [Halmos]. In the last line, the equality\n`g(-x) + ν(E - x) = f(x)` holds if we can prove that `0 < ν(E - x) < ∞`. The first inequality\nfollows from §59, Th. D, but the second inequality is not justified. We prove this inequality for\nalmost all `x` in `measure_theory.ae_measure_preimage_add_right_lt_top_of_ne_zero`."]
 theorem measure_lintegral_div_measure [IsMulLeftInvariant ν] (Em : MeasurableSet E) (h2E : ν E ≠ 0) (h3E : ν E ≠ ∞)
     (f : G → ℝ≥0∞) (hf : Measurable f) : (μ E * ∫⁻ y, f y⁻¹ / ν ((fun x => x * y⁻¹) ⁻¹' E) ∂ν) = ∫⁻ x, f x ∂μ := by
   set g := fun y => f y⁻¹ / ν ((fun x => x * y⁻¹) ⁻¹' E)

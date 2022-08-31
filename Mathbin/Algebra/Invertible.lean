@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
 import Mathbin.Algebra.Group.Units
+import Mathbin.Algebra.NeZero
 import Mathbin.Algebra.Ring.Basic
 
 /-!
@@ -249,6 +250,9 @@ theorem nonzero_of_invertible [MulZeroOneClassₓ α] (a : α) [Nontrivial α] [
         simp [ha]
       _ = 1 := inv_of_mul_self a
       
+
+instance (priority := 100) Invertible.ne_zero [MulZeroOneClassₓ α] [Nontrivial α] (a : α) [Invertible a] : NeZero a :=
+  ⟨nonzero_of_invertible a⟩
 
 section MonoidWithZeroₓ
 

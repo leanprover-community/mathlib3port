@@ -249,8 +249,8 @@ theorem coe_closure_eq_range_term_realize : (closure L s : Set M) = Range (@Term
       
     
   · simp only [mem_range] at *
-    refine' ⟨func f fun i => Classical.some (hx i), _⟩
-    simp only [term.realize, fun i => Classical.some_spec (hx i)]
+    refine' ⟨func f fun i => Classical.choose (hx i), _⟩
+    simp only [term.realize, fun i => Classical.choose_spec (hx i)]
     
 
 instance small_closure [Small.{u} s] : Small.{u} (closure L s) := by
@@ -365,9 +365,9 @@ def map (φ : M →[L] N) (S : L.Substructure M) : L.Substructure N where
   Carrier := φ '' S
   fun_mem := fun n f x hx =>
     (mem_image _ _ _).1
-      ⟨funMap f fun i => Classical.some (hx i), S.fun_mem f _ fun i => (Classical.some_spec (hx i)).1, by
+      ⟨funMap f fun i => Classical.choose (hx i), S.fun_mem f _ fun i => (Classical.choose_spec (hx i)).1, by
         simp only [hom.map_fun, SetLike.mem_coe]
-        exact congr rfl (funext fun i => (Classical.some_spec (hx i)).2)⟩
+        exact congr rfl (funext fun i => (Classical.choose_spec (hx i)).2)⟩
 
 @[simp]
 theorem mem_map {f : M →[L] N} {S : L.Substructure M} {y : N} : y ∈ S.map f ↔ ∃ x ∈ S, f x = y :=
@@ -781,12 +781,13 @@ theorem subtype_comp_cod_restrict (f : M ↪[L] N) (p : L.Substructure N) (h : �
   embedding. -/
 noncomputable def substructureEquivMap (f : M ↪[L] N) (s : L.Substructure M) : s ≃[L] s.map f.toHom where
   toFun := codRestrict (s.map f.toHom) (f.domRestrict s) fun ⟨m, hm⟩ => ⟨m, hm, rfl⟩
-  invFun := fun n => ⟨Classical.some n.2, (Classical.some_spec n.2).1⟩
+  invFun := fun n => ⟨Classical.choose n.2, (Classical.choose_spec n.2).1⟩
   left_inv := fun ⟨m, hm⟩ =>
     Subtype.mk_eq_mk.2
       (f.Injective
-        (Classical.some_spec (codRestrict (s.map f.toHom) (f.domRestrict s) (fun ⟨m, hm⟩ => ⟨m, hm, rfl⟩) ⟨m, hm⟩).2).2)
-  right_inv := fun ⟨n, hn⟩ => Subtype.mk_eq_mk.2 (Classical.some_spec hn).2
+        (Classical.choose_spec
+            (codRestrict (s.map f.toHom) (f.domRestrict s) (fun ⟨m, hm⟩ => ⟨m, hm, rfl⟩) ⟨m, hm⟩).2).2)
+  right_inv := fun ⟨n, hn⟩ => Subtype.mk_eq_mk.2 (Classical.choose_spec hn).2
 
 @[simp]
 theorem substructure_equiv_map_apply (f : M ↪[L] N) (p : L.Substructure M) (x : p) :
@@ -796,9 +797,9 @@ theorem substructure_equiv_map_apply (f : M ↪[L] N) (p : L.Substructure M) (x 
 /-- The equivalence between the domain and the range of an embedding `f`. -/
 noncomputable def equivRange (f : M ↪[L] N) : M ≃[L] f.toHom.range where
   toFun := codRestrict f.toHom.range f f.toHom.mem_range_self
-  invFun := fun n => Classical.some n.2
-  left_inv := fun m => f.Injective (Classical.some_spec (codRestrict f.toHom.range f f.toHom.mem_range_self m).2)
-  right_inv := fun ⟨n, hn⟩ => Subtype.mk_eq_mk.2 (Classical.some_spec hn)
+  invFun := fun n => Classical.choose n.2
+  left_inv := fun m => f.Injective (Classical.choose_spec (codRestrict f.toHom.range f f.toHom.mem_range_self m).2)
+  right_inv := fun ⟨n, hn⟩ => Subtype.mk_eq_mk.2 (Classical.choose_spec hn)
 
 @[simp]
 theorem equiv_range_apply (f : M ↪[L] N) (x : M) : (f.equivRange x : N) = f x :=

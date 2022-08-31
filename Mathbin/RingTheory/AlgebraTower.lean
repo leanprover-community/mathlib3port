@@ -161,6 +161,7 @@ variable [CommSemiringₓ R] [Semiringₓ S] [AddCommMonoidₓ A]
 
 variable [Algebra R S] [Module S A] [Module R A] [IsScalarTower R S A]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem linear_independent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁} {c : ι' → A} (hb : LinearIndependent R b)
     (hc : LinearIndependent S c) : LinearIndependent R fun p : ι × ι' => b p.1 • c p.2 := by
   rw [linear_independent_iff'] at hb hc

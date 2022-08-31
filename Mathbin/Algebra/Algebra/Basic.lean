@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 -/
 import Mathbin.Algebra.Module.Basic
+import Mathbin.Algebra.Module.Ulift
+import Mathbin.Algebra.NeZero
 import Mathbin.Algebra.Ring.Aut
 import Mathbin.Algebra.Ring.Ulift
-import Mathbin.Algebra.Module.Ulift
 import Mathbin.LinearAlgebra.Span
 import Mathbin.Tactic.Abel
 
@@ -1555,7 +1556,7 @@ def toIntAlgHom [Ringₓ R] [Ringₓ S] [Algebra ℤ R] [Algebra ℤ S] (f : R �
 @[simp]
 theorem map_rat_algebra_map [Ringₓ R] [Ringₓ S] [Algebra ℚ R] [Algebra ℚ S] (f : R →+* S) (r : ℚ) :
     f (algebraMap ℚ R r) = algebraMap ℚ S r :=
-  RingHom.ext_iff.1 (Subsingleton.elimₓ (f.comp (algebraMap ℚ R)) (algebraMap ℚ S)) r
+  RingHom.ext_iff.1 (Subsingleton.elim (f.comp (algebraMap ℚ R)) (algebraMap ℚ S)) r
 
 /-- Reinterpret a `ring_hom` as a `ℚ`-algebra homomorphism. This actually yields an equivalence,
 see `ring_hom.equiv_rat_alg_hom`. -/
@@ -1601,10 +1602,10 @@ example : algebraRat = Algebra.id ℚ :=
 
 @[simp]
 theorem algebra_map_rat_rat : algebraMap ℚ ℚ = RingHom.id ℚ :=
-  Subsingleton.elimₓ _ _
+  Subsingleton.elim _ _
 
 instance algebra_rat_subsingleton {α} [Semiringₓ α] : Subsingleton (Algebra ℚ α) :=
-  ⟨fun x y => Algebra.algebra_ext x y <| RingHom.congr_fun <| Subsingleton.elimₓ _ _⟩
+  ⟨fun x y => Algebra.algebra_ext x y <| RingHom.congr_fun <| Subsingleton.elim _ _⟩
 
 end Rat
 
@@ -1678,6 +1679,10 @@ theorem algebra_map_injective [CommRingₓ R] [Ringₓ A] [Nontrivial A] [Algebr
     ext
     rw [Algebra.smul_def, mul_oneₓ]
   smul_left_injective R one_ne_zero
+
+theorem _root_.ne_zero.of_no_zero_smul_divisors (n : ℕ) [CommRingₓ R] [NeZero (n : R)] [Ringₓ A] [Nontrivial A]
+    [Algebra R A] [NoZeroSmulDivisors R A] : NeZero (n : A) :=
+  NeZero.nat_of_injective <| NoZeroSmulDivisors.algebra_map_injective R A
 
 variable {R A}
 

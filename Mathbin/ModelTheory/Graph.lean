@@ -62,6 +62,7 @@ end Graph
 protected def Theory.SimpleGraph : Language.graph.Theory :=
   {adj.Irreflexive, adj.Symmetric}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem Theory.simple_graph_model_iff [Language.graph.Structure V] :
     V ⊨ Theory.simple_graph ↔
@@ -75,6 +76,7 @@ instance simple_graph_model (G : SimpleGraph V) : @Theory.Model _ V G.Structure 
 
 variable (V)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Any model of the theory of simple graphs represents a simple graph. -/
 @[simps]
 def simpleGraphOfStructure [Language.graph.Structure V] [V ⊨ Theory.simple_graph] : SimpleGraph V where
@@ -92,6 +94,7 @@ theorem _root_.simple_graph.simple_graph_of_structure (G : SimpleGraph V) :
   ext
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem Structure_simple_graph_of_structure [S : Language.graph.Structure V] [V ⊨ Theory.simple_graph] :
     (simpleGraphOfStructure V).Structure = S := by

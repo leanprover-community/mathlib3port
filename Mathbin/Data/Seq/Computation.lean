@@ -22,7 +22,7 @@ coinductive computation (α : Type u) : Type u
   An element of `computation α` is an infinite sequence of `option α` such
   that if `f n = some a` for some `n` then it is constantly `some a` after that. -/
 def Computation (α : Type u) : Type u :=
-  { f : Streamₓ (Option α) // ∀ {n a}, f n = some a → f (n + 1) = some a }
+  { f : Streamₓ (Option α) // ∀ ⦃n a⦄, f n = some a → f (n + 1) = some a }
 
 namespace Computation
 
@@ -36,11 +36,12 @@ def return (a : α) : Computation α :=
 instance : CoeTₓ α (Computation α) :=
   ⟨return⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- note [use has_coe_t]
 /-- `think c` is the computation that delays for one "tick" and then performs
   computation `c`. -/
 def think (c : Computation α) : Computation α :=
-  ⟨none :: c.1, fun n a h => by
+  ⟨none::c.1, fun n a h => by
     cases' n with n
     contradiction
     exact c.2 h⟩
@@ -61,9 +62,7 @@ def head (c : Computation α) : Option α :=
 /-- `tail c` is the remainder of computation, either `c` if `c = return a`
   or `c'` if `c = think c'`. -/
 def tail (c : Computation α) : Computation α :=
-  ⟨c.1.tail, fun n a =>
-    let t := c.2
-    t⟩
+  ⟨c.1.tail, fun n a h => c.2 h⟩
 
 /-- `empty α` is the computation that never returns, an infinite sequence of
   `think`s. -/

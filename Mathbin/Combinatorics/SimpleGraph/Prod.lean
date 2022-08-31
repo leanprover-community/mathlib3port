@@ -99,10 +99,10 @@ variable (G) {H}
 protected def boxProdRight (a : α) : H.Walk b₁ b₂ → (G □ H).Walk (a, b₁) (a, b₂) :=
   Walk.map (G.boxProdRight H a).toHom
 
-variable {G} [DecidableEq α] [DecidableEq β] [DecidableRel G.Adj] [DecidableRel H.Adj]
+variable {G}
 
 /-- Project a walk on `G □ H` to a walk on `G` by discarding the moves in the direction of `H`. -/
-def ofBoxProdLeft : ∀ {x y : α × β}, (G □ H).Walk x y → G.Walk x.1 y.1
+def ofBoxProdLeft [DecidableEq β] [DecidableRel G.Adj] : ∀ {x y : α × β}, (G □ H).Walk x y → G.Walk x.1 y.1
   | _, _, nil => nil
   | x, z, cons h w =>
     Or.byCases h (fun hG => w.ofBoxProdLeft.cons hG.1) fun hH =>
@@ -110,7 +110,7 @@ def ofBoxProdLeft : ∀ {x y : α × β}, (G □ H).Walk x y → G.Walk x.1 y.1
         rw [hH.2] <;> exact w.of_box_prod_left
 
 /-- Project a walk on `G □ H` to a walk on `H` by discarding the moves in the direction of `G`. -/
-def ofBoxProdRight : ∀ {x y : α × β}, (G □ H).Walk x y → H.Walk x.2 y.2
+def ofBoxProdRight [DecidableEq α] [DecidableRel H.Adj] : ∀ {x y : α × β}, (G □ H).Walk x y → H.Walk x.2 y.2
   | _, _, nil => nil
   | x, z, cons h w =>
     (Or.symm h).byCases (fun hH => w.ofBoxProdRight.cons hH.1) fun hG =>
@@ -118,7 +118,8 @@ def ofBoxProdRight : ∀ {x y : α × β}, (G □ H).Walk x y → H.Walk x.2 y.2
         rw [hG.2] <;> exact w.of_box_prod_right
 
 @[simp]
-theorem of_box_prod_left_box_prod_left : ∀ {a₁ a₂ : α} (w : G.Walk a₁ a₂), (w.boxProdLeft H b).ofBoxProdLeft = w
+theorem of_box_prod_left_box_prod_left [DecidableEq β] [DecidableRel G.Adj] :
+    ∀ {a₁ a₂ : α} (w : G.Walk a₁ a₂), (w.boxProdLeft H b).ofBoxProdLeft = w
   | _, _, nil => rfl
   | _, _, cons' x y z h w => by
     rw [walk.box_prod_left, map_cons, of_box_prod_left, Or.byCases, dif_pos, ← walk.box_prod_left,
@@ -126,7 +127,8 @@ theorem of_box_prod_left_box_prod_left : ∀ {a₁ a₂ : α} (w : G.Walk a₁ a
     exacts[rfl, ⟨h, rfl⟩]
 
 @[simp]
-theorem of_box_prod_left_box_prod_right : ∀ {b₁ b₂ : α} (w : G.Walk b₁ b₂), (w.boxProdRight G a).ofBoxProdRight = w
+theorem of_box_prod_left_box_prod_right [DecidableEq α] [DecidableRel G.Adj] :
+    ∀ {b₁ b₂ : α} (w : G.Walk b₁ b₂), (w.boxProdRight G a).ofBoxProdRight = w
   | _, _, nil => rfl
   | _, _, cons' x y z h w => by
     rw [walk.box_prod_right, map_cons, of_box_prod_right, Or.byCases, dif_pos, ← walk.box_prod_right,

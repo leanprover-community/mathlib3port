@@ -70,7 +70,7 @@ theorem MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets {α : Typ
         refine' (measure_Union_le _).trans _
         apply Ennreal.tsum_le_tsum fun p => _
         apply measure_Union_le _
-        exact (s_count.mono (inter_subset_left _ _)).toEncodable
+        exact (s_count.mono (inter_subset_left _ _)).to_subtype
       _ ≤ ∑' (p : s) (q : s ∩ Ioi p), μ (u p q ∩ v p q) := by
         apply Ennreal.tsum_le_tsum fun p => _
         refine' Ennreal.tsum_le_tsum fun q => measure_mono _

@@ -208,7 +208,8 @@ theorem fg_finset_sup {ι : Type _} (s : Finset ι) (N : ι → Submodule R M) (
 theorem fg_bsupr {ι : Type _} (s : Finset ι) (N : ι → Submodule R M) (h : ∀ i ∈ s, (N i).Fg) : (⨆ i ∈ s, N i).Fg := by
   simpa only [Finset.sup_eq_supr] using fg_finset_sup s N h
 
-theorem fg_supr {ι : Type _} [Fintype ι] (N : ι → Submodule R M) (h : ∀ i, (N i).Fg) : (supr N).Fg := by
+theorem fg_supr {ι : Type _} [Finite ι] (N : ι → Submodule R M) (h : ∀ i, (N i).Fg) : (supr N).Fg := by
+  cases nonempty_fintype ι
   simpa using fg_bsupr Finset.univ N fun i hi => h i
 
 variable {P : Type _} [AddCommMonoidₓ P] [Module R P]
@@ -251,7 +252,7 @@ theorem Fg.prod {sb : Submodule R M} {sc : Submodule R P} (hsb : sb.Fg) (hsc : s
     ⟨LinearMap.inl R M P '' tb ∪ LinearMap.inr R M P '' tc, (htb.1.Image _).union (htc.1.Image _), by
       rw [LinearMap.span_inl_union_inr, htb.2, htc.2]⟩
 
-theorem fg_pi {ι : Type _} {M : ι → Type _} [Fintype ι] [∀ i, AddCommMonoidₓ (M i)] [∀ i, Module R (M i)]
+theorem fg_pi {ι : Type _} {M : ι → Type _} [Finite ι] [∀ i, AddCommMonoidₓ (M i)] [∀ i, Module R (M i)]
     {p : ∀ i, Submodule R (M i)} (hsb : ∀ i, (p i).Fg) : (Submodule.pi Set.Univ p).Fg := by
   classical
   simp_rw [fg_def] at hsb⊢
@@ -574,7 +575,8 @@ instance is_noetherian_prod [IsNoetherian R M] [IsNoetherian R P] : IsNoetherian
       Submodule.map_comap_eq_self this ▸ (noetherian _).map _⟩
 
 instance is_noetherian_pi {R ι : Type _} {M : ι → Type _} [Ringₓ R] [∀ i, AddCommGroupₓ (M i)] [∀ i, Module R (M i)]
-    [Fintype ι] [∀ i, IsNoetherian R (M i)] : IsNoetherian R (∀ i, M i) := by
+    [Finite ι] [∀ i, IsNoetherian R (M i)] : IsNoetherian R (∀ i, M i) := by
+  cases nonempty_fintype ι
   haveI := Classical.decEq ι
   suffices on_finset : ∀ s : Finset ι, IsNoetherian R (∀ i : s, M i)
   · let coe_e := Equivₓ.subtypeUnivEquiv Finset.mem_univ
@@ -642,9 +644,7 @@ instance is_noetherian_pi {R ι : Type _} {M : ι → Type _} [Ringₓ R] [∀ i
       have : ¬i = a := by
         rintro rfl
         exact has his
-      dsimp' only [Or.byCases]
-      change i ∈ s at his
-      rw [dif_neg this, dif_pos his]
+      simp only [Or.byCases, this, not_false_iff, dif_neg]
       
     
   · intro f
@@ -662,7 +662,7 @@ instance is_noetherian_pi {R ι : Type _} {M : ι → Type _} [Ringₓ R] [∀ i
 /-- A version of `is_noetherian_pi` for non-dependent functions. We need this instance because
 sometimes Lean fails to apply the dependent version in non-dependent settings (e.g., it fails to
 prove that `ι → ℝ` is finite dimensional over `ℝ`). -/
-instance is_noetherian_pi' {R ι M : Type _} [Ringₓ R] [AddCommGroupₓ M] [Module R M] [Fintype ι] [IsNoetherian R M] :
+instance is_noetherian_pi' {R ι M : Type _} [Ringₓ R] [AddCommGroupₓ M] [Module R M] [Finite ι] [IsNoetherian R M] :
     IsNoetherian R (ι → M) :=
   is_noetherian_pi
 

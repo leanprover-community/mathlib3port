@@ -51,7 +51,7 @@ the base semiring has some element between `0` and `1`. -/
 def OpenSegment (x y : E) : Set E :=
   { z : E | ∃ (a b : 𝕜)(ha : 0 < a)(hb : 0 < b)(hab : a + b = 1), a • x + b • y = z }
 
--- mathport name: «expr[ -[ ] ]»
+-- mathport name: segment
 localized [Convex] notation "[" x " -[" 𝕜 "] " y "]" => Segment 𝕜 x y
 
 theorem segment_eq_image₂ (x y : E) :

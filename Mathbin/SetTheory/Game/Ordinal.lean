@@ -139,7 +139,7 @@ theorem to_pgame_lt_iff {a b : Ordinal} : a.toPgame < b.toPgame ↔ a < b :=
     exact fun h => not_lt_of_leₓ (to_pgame_le h), to_pgame_lt⟩
 
 @[simp]
-theorem to_pgame_equiv_iff {a b : Ordinal} : a.toPgame ≈ b.toPgame ↔ a = b := by
+theorem to_pgame_equiv_iff {a b : Ordinal} : (a.toPgame ≈ b.toPgame) ↔ a = b := by
   rw [Pgame.Equiv, le_antisymm_iffₓ, to_pgame_le_iff, to_pgame_le_iff]
 
 theorem to_pgame_injective : Function.Injective Ordinal.toPgame := fun a b h => to_pgame_equiv_iff.1 <| equiv_of_eq h

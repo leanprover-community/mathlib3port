@@ -484,13 +484,13 @@ private theorem exists_minimizer : ∃ f ∈ CandidatesB X Y, ∀ g ∈ Candidat
   compact_candidates_b.exists_forall_le candidates_b_nonempty HD_continuous.ContinuousOn
 
 private def optimal_GH_dist : Cb X Y :=
-  Classical.some (exists_minimizer X Y)
+  Classical.choose (exists_minimizer X Y)
 
 private theorem optimal_GH_dist_mem_candidates_b : optimalGHDist X Y ∈ CandidatesB X Y := by
-  cases Classical.some_spec (exists_minimizer X Y) <;> assumption
+  cases Classical.choose_spec (exists_minimizer X Y) <;> assumption
 
 private theorem HD_optimal_GH_dist_le (g : Cb X Y) (hg : g ∈ CandidatesB X Y) : hD (optimalGHDist X Y) ≤ hD g :=
-  let ⟨Z1, Z2⟩ := Classical.some_spec (exists_minimizer X Y)
+  let ⟨Z1, Z2⟩ := Classical.choose_spec (exists_minimizer X Y)
   Z2 g hg
 
 /-- With the optimal candidate, construct a premetric space structure on `X ⊕ Y`, on which the

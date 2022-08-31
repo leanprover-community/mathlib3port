@@ -194,7 +194,7 @@ theorem nim_fuzzy_zero_of_ne_zero {o : Ordinal} (ho : o ≠ 0) : nim o ∥ 0 := 
       simp ⟩
 
 @[simp]
-theorem nim_add_equiv_zero_iff (o₁ o₂ : Ordinal) : nim o₁ + nim o₂ ≈ 0 ↔ o₁ = o₂ := by
+theorem nim_add_equiv_zero_iff (o₁ o₂ : Ordinal) : (nim o₁ + nim o₂ ≈ 0) ↔ o₁ = o₂ := by
   constructor
   · contrapose
     intro h
@@ -222,7 +222,7 @@ theorem nim_add_fuzzy_zero_iff {o₁ o₂ : Ordinal} : nim o₁ + nim o₂ ∥ 0
   rw [iff_not_comm, impartial.not_fuzzy_zero_iff, nim_add_equiv_zero_iff]
 
 @[simp]
-theorem nim_equiv_iff_eq {o₁ o₂ : Ordinal} : nim o₁ ≈ nim o₂ ↔ o₁ = o₂ := by
+theorem nim_equiv_iff_eq {o₁ o₂ : Ordinal} : (nim o₁ ≈ nim o₂) ↔ o₁ = o₂ := by
   rw [impartial.equiv_iff_add_equiv_zero, nim_add_equiv_zero_iff]
 
 /-- The Grundy value of an impartial game, the ordinal which corresponds to the game of nim that the
@@ -271,7 +271,7 @@ theorem equiv_nim_grundy_value : ∀ (G : Pgame.{u}) [G.Impartial], G ≈ nim (g
       simpa only [hi] using impartial.add_self (nim (grundy_value (G.move_left i)))
       
 
-theorem grundy_value_eq_iff_equiv_nim {G : Pgame} [G.Impartial] {o : Ordinal} : grundyValue G = o ↔ G ≈ nim o :=
+theorem grundy_value_eq_iff_equiv_nim {G : Pgame} [G.Impartial] {o : Ordinal} : grundyValue G = o ↔ (G ≈ nim o) :=
   ⟨by
     rintro rfl
     exact equiv_nim_grundy_value G, by
@@ -283,14 +283,14 @@ theorem grundy_value_eq_iff_equiv_nim {G : Pgame} [G.Impartial] {o : Ordinal} : 
 theorem nim_grundy_value (o : Ordinal.{u}) : grundyValue (nim o) = o :=
   grundy_value_eq_iff_equiv_nim.2 Pgame.equiv_rfl
 
-theorem grundy_value_eq_iff_equiv (G H : Pgame) [G.Impartial] [H.Impartial] : grundyValue G = grundyValue H ↔ G ≈ H :=
+theorem grundy_value_eq_iff_equiv (G H : Pgame) [G.Impartial] [H.Impartial] : grundyValue G = grundyValue H ↔ (G ≈ H) :=
   grundy_value_eq_iff_equiv_nim.trans (equiv_congr_left.1 (equiv_nim_grundy_value H) _).symm
 
 @[simp]
 theorem grundy_value_zero : grundyValue 0 = 0 :=
   grundy_value_eq_iff_equiv_nim.2 nim_zero_equiv.symm
 
-theorem grundy_value_iff_equiv_zero (G : Pgame) [G.Impartial] : grundyValue G = 0 ↔ G ≈ 0 := by
+theorem grundy_value_iff_equiv_zero (G : Pgame) [G.Impartial] : grundyValue G = 0 ↔ (G ≈ 0) := by
   rw [← grundy_value_eq_iff_equiv, grundy_value_zero]
 
 @[simp]

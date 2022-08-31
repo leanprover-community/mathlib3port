@@ -258,6 +258,7 @@ theorem list_prod_of_fn_of_eq_dprod (n : ℕ) (fι : Finₓ n → ι) (fA : ∀ 
 
 open BigOperators
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- A heavily unfolded version of the definition of multiplication -/
 theorem mul_eq_sum_support_ghas_mul [∀ (i : ι) (x : A i), Decidable (x ≠ 0)] (a a' : ⨁ i, A i) :
     a * a' =
@@ -536,7 +537,7 @@ def liftRingHom :
         f GradedMonoid.GhasOne.one = 1 ∧
           ∀ {i j} (ai : A i) (aj : A j), f (GradedMonoid.GhasMul.mul ai aj) = f ai * f aj } ≃
       ((⨁ i, A i) →+* R) where
-  toFun := fun f => toSemiring f.1 f.2.1 f.2.2
+  toFun := fun f => toSemiring (fun _ => f.1) f.2.1 fun _ _ => f.2.2
   invFun := fun F =>
     ⟨fun i => (F : (⨁ i, A i) →+ R).comp (of _ i), by
       simp only [AddMonoidHom.comp_apply, RingHom.coe_add_monoid_hom]
@@ -546,7 +547,7 @@ def liftRingHom :
       rw [← F.map_mul, of_mul_of]⟩
   left_inv := fun f => by
     ext xi xv
-    exact to_add_monoid_of f.1 xi xv
+    exact to_add_monoid_of (fun _ => f.1) xi xv
   right_inv := fun F => by
     apply RingHom.coe_add_monoid_hom_injective
     ext xi xv

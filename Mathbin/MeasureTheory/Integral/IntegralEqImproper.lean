@@ -269,9 +269,9 @@ theorem AeCover.comp_tendsto {α ι ι' : Type _} [MeasurableSpace α] {μ : Mea
   { ae_eventually_mem := hφ.ae_eventually_mem.mono fun x hx => hu.Eventually hx,
     Measurable := fun i => hφ.Measurable (u i) }
 
-section AeCoverUnionInterEncodable
+section AeCoverUnionInterCountable
 
-variable {α ι : Type _} [Encodable ι] [MeasurableSpace α] {μ : Measure α}
+variable {α ι : Type _} [Countable ι] [MeasurableSpace α] {μ : Measure α}
 
 theorem AeCover.bUnion_Iic_ae_cover [Preorderₓ ι] {φ : ι → Set α} (hφ : AeCover μ atTop φ) :
     AeCover μ atTop fun n : ι => ⋃ (k) (h : k ∈ Iic n), φ k :=
@@ -291,7 +291,7 @@ theorem AeCover.bInter_Ici_ae_cover [SemilatticeSup ι] [Nonempty ι] {φ : ι �
           exact mem_bInter fun k hk => hi k (le_transₓ hj hk)),
     Measurable := fun i => MeasurableSet.bInter (to_countable _) fun n _ => hφ.Measurable n }
 
-end AeCoverUnionInterEncodable
+end AeCoverUnionInterCountable
 
 section Lintegral
 

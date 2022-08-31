@@ -118,14 +118,14 @@ universe u
 
 variable {H : Type u} {H' : Type _} {M : Type _} {M' : Type _} {M'' : Type _}
 
--- mathport name: «expr ≫ₕ »
+-- mathport name: local_homeomorph.trans
 /- Notational shortcut for the composition of local homeomorphisms and local equivs, i.e.,
 `local_homeomorph.trans` and `local_equiv.trans`.
 Note that, as is usual for equivs, the composition is from left to right, hence the direction of
 the arrow. -/
 localized [Manifold] infixr:100 " ≫ₕ " => LocalHomeomorph.trans
 
--- mathport name: «expr ≫ »
+-- mathport name: local_equiv.trans
 localized [Manifold] infixr:100 " ≫ " => LocalEquiv.trans
 
 open Set LocalHomeomorph
@@ -640,6 +640,7 @@ instance modelProdInhabited [Inhabited H] [Inhabited H'] : Inhabited (ModelProd 
 instance (H : Type _) [TopologicalSpace H] (H' : Type _) [TopologicalSpace H'] : TopologicalSpace (ModelProd H H') :=
   Prod.topologicalSpace
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- Next lemma shows up often when dealing with derivatives, register it as simp.
 @[simp, mfld_simps]
 theorem model_prod_range_prod_id {H : Type _} {H' : Type _} {α : Type _} (f : H → α) :
@@ -806,7 +807,7 @@ theorem StructureGroupoid.compatible {H : Type _} [TopologicalSpace H] (G : Stru
   HasGroupoid.compatible G he he'
 
 theorem has_groupoid_of_le {G₁ G₂ : StructureGroupoid H} (h : HasGroupoid M G₁) (hle : G₁ ≤ G₂) : HasGroupoid M G₂ :=
-  ⟨fun e e' he he' => hle ((h.compatible : _) he he')⟩
+  ⟨fun e e' he he' => hle (h.compatible he he')⟩
 
 theorem has_groupoid_of_pregroupoid (PG : Pregroupoid H)
     (h :

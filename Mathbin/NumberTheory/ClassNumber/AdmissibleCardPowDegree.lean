@@ -230,25 +230,25 @@ theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b :
     by_contra this
     push_neg  at this
     obtain ⟨j₀, j₁, j_ne, approx⟩ :=
-      exists_approx_polynomial hb hε (Finₓ.cons (A 0) fun j => A (Finₓ.succ (Classical.some (this j))))
+      exists_approx_polynomial hb hε (Finₓ.cons (A 0) fun j => A (Finₓ.succ (Classical.choose (this j))))
     revert j_ne approx
     refine' Finₓ.cases _ (fun j₀ => _) j₀ <;> refine' Finₓ.cases (fun j_ne approx => _) (fun j₁ j_ne approx => _) j₁
     · exact absurd rfl j_ne
       
     · rw [Finₓ.cons_succ, Finₓ.cons_zero, ← not_leₓ, AbsoluteValue.map_sub] at approx
-      have := (Classical.some_spec (this j₁)).2
+      have := (Classical.choose_spec (this j₁)).2
       contradiction
       
     · rw [Finₓ.cons_succ, Finₓ.cons_zero, ← not_leₓ] at approx
-      have := (Classical.some_spec (this j₀)).2
+      have := (Classical.choose_spec (this j₀)).2
       contradiction
       
     · rw [Finₓ.cons_succ, Finₓ.cons_succ] at approx
       rw [Ne.def, Finₓ.succ_inj] at j_ne
       have : j₀ = j₁ :=
-        (Classical.some_spec (this j₀)).1.symm.trans
-          (((ht' (Classical.some (this j₀)) (Classical.some (this j₁))).mpr approx).trans
-            (Classical.some_spec (this j₁)).1)
+        (Classical.choose_spec (this j₀)).1.symm.trans
+          (((ht' (Classical.choose (this j₀)) (Classical.choose (this j₁))).mpr approx).trans
+            (Classical.choose_spec (this j₁)).1)
       contradiction
       
   -- However, if one of those partitions `j` is inhabited by some `i`, then this `j` works.

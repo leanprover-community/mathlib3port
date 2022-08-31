@@ -257,6 +257,7 @@ unsafe def mk_sigma_elim_eq : ℕ → expr → tactic Unit
     mk_sigma_elim_eq n x2
   | 0, x => reflexivity
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Prove the goal `|- finset_above T enum k`, where `T` is the inductive type and `enum` is the
 discriminant function. The arguments are `args`, the parameters to the inductive type (and all
 constructors), `k`, the index of the current variant, and `cs`, the list of constructor names.
@@ -264,7 +265,7 @@ This uses `finset_above.cons` for basic variants and `finset_above.union` for va
 arguments, using the auxiliary functions `mk_sigma`, `mk_sigma_elim`, `mk_sigma_elim_inj`,
 `mk_sigma_elim_eq` to close subgoals. -/
 unsafe def mk_finset (ls : List level) (args : List expr) : ℕ → List Name → tactic Unit
-  | k, c :: cs => do
+  | k, c::cs => do
     let e := (expr.const c ls).mk_app args
     let t ← infer_type e
     if is_pi t then do
@@ -282,11 +283,13 @@ unsafe def mk_finset (ls : List level) (args : List expr) : ℕ → List Name �
         mk_finset (k + 1) cs
   | k, [] => applyc `` finset_above.nil
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Prove the goal `|- Σ' (a:A) (b: B a) (c:C a b), unit` given a list of terms `a, b, c`. -/
 unsafe def mk_sigma_mem : List expr → tactic Unit
-  | x :: xs => (fconstructor >> exact x) >> mk_sigma_mem xs
+  | x::xs => (fconstructor >> exact x) >> mk_sigma_mem xs
   | [] => fconstructor $> ()
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- This function is called to prove `a : T |- a ∈ S.1` where `S` is the `finset_above` constructed
 by `mk_finset`, after the initial cases on `a : T`, producing a list of subgoals. For each case,
 we have to navigate past all the variants that don't apply (which is what the `tac` input tactic
@@ -295,7 +298,7 @@ does), and then call either `finset_above.mem_cons_self` for trivial variants or
 is quite simple. -/
 unsafe def mk_finset_total : tactic Unit → List (Name × List expr) → tactic Unit
   | tac, [] => done
-  | tac, (_, xs) :: gs => do
+  | tac, (_, xs)::gs => do
     tac
     let b ← succeeds (applyc `` finset_above.mem_cons_self)
     if b then mk_finset_total (tac >> applyc `` finset_above.mem_cons_of_mem) gs

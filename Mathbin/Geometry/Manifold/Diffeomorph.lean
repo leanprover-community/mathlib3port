@@ -69,17 +69,17 @@ structure Diffeomorph extends M ≃ M' where
 
 end Defs
 
--- mathport name: «expr ≃ₘ^ ⟮ , ⟯ »
+-- mathport name: diffeomorph
 localized [Manifold] notation M " ≃ₘ^" n:1000 "⟮" I "," J "⟯ " N => Diffeomorph I J M N n
 
--- mathport name: «expr ≃ₘ⟮ , ⟯ »
+-- mathport name: diffeomorph.top
 localized [Manifold] notation M " ≃ₘ⟮" I "," J "⟯ " N => Diffeomorph I J M N ⊤
 
--- mathport name: «expr ≃ₘ^ [ ] »
+-- mathport name: diffeomorph.self
 localized [Manifold]
   notation E " ≃ₘ^" n:1000 "[" 𝕜 "] " E' => Diffeomorph (modelWithCornersSelf 𝕜 E) (modelWithCornersSelf 𝕜 E') E E' n
 
--- mathport name: «expr ≃ₘ[ ] »
+-- mathport name: diffeomorph.self.top
 localized [Manifold]
   notation E " ≃ₘ[" 𝕜 "] " E' => Diffeomorph (modelWithCornersSelf 𝕜 E) (modelWithCornersSelf 𝕜 E') E E' ⊤
 

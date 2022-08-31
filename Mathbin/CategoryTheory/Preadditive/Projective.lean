@@ -6,6 +6,8 @@ Authors: Markus Himmel, Scott Morrison
 import Mathbin.Algebra.Homology.Exact
 import Mathbin.CategoryTheory.Types
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
+import Mathbin.CategoryTheory.Preadditive.Yoneda
+import Mathbin.Algebra.Category.Module.EpiMono
 
 /-!
 # Projective objects and categories with enough projectives
@@ -148,6 +150,32 @@ theorem projective_iff_preserves_epimorphisms_coyoneda_obj (P : C) :
         have : Projective (unop (op P)) := hP
         ⟨factor_thru g f, factor_thru_comp _ _⟩⟩,
     fun h => ⟨fun E X f e he => (epi_iff_surjective _).1 (inferInstance : epi ((coyoneda.obj (op P)).map e)) f⟩⟩
+
+section Preadditive
+
+variable [Preadditive C]
+
+theorem projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj (P : C) :
+    Projective P ↔ (preadditiveCoyoneda.obj (op P)).PreservesEpimorphisms := by
+  rw [projective_iff_preserves_epimorphisms_coyoneda_obj]
+  refine' ⟨fun h : (preadditive_coyoneda.obj (op P) ⋙ forget _).PreservesEpimorphisms => _, _⟩
+  · exact functor.preserves_epimorphisms_of_preserves_of_reflects (preadditive_coyoneda.obj (op P)) (forget _)
+    
+  · intro
+    exact (inferInstance : (preadditive_coyoneda.obj (op P) ⋙ forget _).PreservesEpimorphisms)
+    
+
+theorem projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj' (P : C) :
+    Projective P ↔ (preadditiveCoyonedaObj (op P)).PreservesEpimorphisms := by
+  rw [projective_iff_preserves_epimorphisms_coyoneda_obj]
+  refine' ⟨fun h : (preadditive_coyoneda_obj (op P) ⋙ forget _).PreservesEpimorphisms => _, _⟩
+  · exact functor.preserves_epimorphisms_of_preserves_of_reflects (preadditive_coyoneda_obj (op P)) (forget _)
+    
+  · intro
+    exact (inferInstance : (preadditive_coyoneda_obj (op P) ⋙ forget _).PreservesEpimorphisms)
+    
+
+end Preadditive
 
 section EnoughProjectives
 

@@ -279,26 +279,29 @@ variable {M}
 
 variable [∀ i, DecidableEq (M i)]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Given a pair `(head, tail)`, we can form a word by prepending `head` to `tail`, except if `head`
 is `1 : M i` then we have to just return `word` since we need the result to be reduced. -/
 def rcons {i} (p : Pair M i) : Word M :=
   if h : p.head = 1 then p.tail
   else
-    { toList := ⟨i, p.head⟩ :: p.tail.toList,
+    { toList := ⟨i, p.head⟩::p.tail.toList,
       ne_one := by
         rintro l (rfl | hl)
         exact h
         exact p.tail.ne_one l hl,
       chain_ne := p.tail.chain_ne.cons' (fst_idx_ne_iff.mp p.fst_idx_ne) }
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Given a word of the form `⟨l :: ls, h1, h2⟩`, we can form a word of the form `⟨ls, _, _⟩`,
 dropping the first letter. -/
-private def mk_aux {l} (ls : List (Σi, M i)) (h1 : ∀ l' ∈ l :: ls, Sigma.snd l' ≠ 1) (h2 : (l :: ls).Chain' _) :
-    Word M :=
+private def mk_aux {l} (ls : List (Σi, M i)) (h1 : ∀ l' ∈ l::ls, Sigma.snd l' ≠ 1) (h2 : (l::ls).Chain' _) : Word M :=
   ⟨ls, fun l' hl => h1 _ (List.mem_cons_of_memₓ _ hl), h2.tail⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem cons_eq_rcons {i} {m : M i} {ls h1 h2} :
-    Word.mk (⟨i, m⟩ :: ls) h1 h2 = rcons ⟨m, mkAux ls h1 h2, fst_idx_ne_iff.mpr h2.rel_head'⟩ := by
+    Word.mk (⟨i, m⟩::ls) h1 h2 = rcons ⟨m, mkAux ls h1 h2, fst_idx_ne_iff.mpr h2.rel_head'⟩ := by
   rw [rcons, dif_neg]
   rfl
   exact h1 ⟨i, m⟩ (ls.mem_cons_self _)
@@ -336,6 +339,7 @@ theorem rcons_inj {i} : Function.Injective (rcons : Pair M i → Word M) := by
 
 variable [DecidableEq ι]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- This definition is computable but not very nice to look at. Thankfully we don't have to inspect
 -- it, since `rcons` is known to be injective.
 /-- Given `i : ι`, any reduced word can be decomposed into a pair `p` such that `w = rcons p`. -/
@@ -344,7 +348,7 @@ private def equiv_pair_aux (i) : ∀ w : Word M, { p : Pair M i // rcons p = w }
     ⟨⟨1, w, by
         rintro ⟨⟩⟩,
       dif_pos rfl⟩
-  | w@⟨⟨j, m⟩ :: ls, h1, h2⟩ =>
+  | w@⟨⟨j, m⟩::ls, h1, h2⟩ =>
     if ij : i = j then
       { val :=
           { head := ij.symm.rec m, tail := mkAux ls h1 h2,
@@ -384,7 +388,8 @@ theorem of_smul_def (i) (w : Word M) (m : M i) :
     of m • w = rcons { equivPair i w with head := m * (equivPair i w).head } :=
   rfl
 
-theorem cons_eq_smul {i} {m : M i} {ls h1 h2} : Word.mk (⟨i, m⟩ :: ls) h1 h2 = of m • mkAux ls h1 h2 := by
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem cons_eq_smul {i} {m : M i} {ls h1 h2} : Word.mk (⟨i, m⟩::ls) h1 h2 = of m • mkAux ls h1 h2 := by
   rw [cons_eq_rcons, of_smul_def, equiv_pair_eq_of_fst_idx_ne _] <;> simp only [mul_oneₓ]
 
 theorem smul_induction {C : Word M → Prop} (h_empty : C empty) (h_smul : ∀ (i) (m : M i) (w), C w → C (of m • w))
@@ -529,6 +534,7 @@ def toWord {i j} (w : Neword M i j) : Word M where
 
 -- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident i, ",", ident j, ",", ident w, ",", ident h, "⟩", ":", expr «expr∃ , »((i j) (w' : neword M i j),
     «expr = »(w'.to_word.to_list, w.to_list))]]
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Every nonempty `word M` can be constructed as a `neword M i j` -/
 theorem of_word (w : Word M) (h : w ≠ Empty) : ∃ (i j : _)(w' : Neword M i j), w'.toWord = w := by
   trace
@@ -551,7 +557,7 @@ theorem of_word (w : Word M) (h : w ≠ Empty) : ∃ (i j : _)(w' : Neword M i j
         hi hnot1.2 hchain.2
           (by
             rintro ⟨rfl⟩)
-      obtain ⟨i, j, w', hw' : w'.to_list = y :: l⟩ := hi
+      obtain ⟨i, j, w', hw' : w'.to_list = y::l⟩ := hi
       obtain rfl : y = ⟨i, w'.head⟩ := by
         simpa [hw'] using w'.to_list_head'
       refine' ⟨x.1, j, append (singleton x.2 hnot1.1) hchain.1 w', _⟩

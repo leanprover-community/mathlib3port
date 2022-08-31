@@ -36,6 +36,7 @@ section Asymmetric
 
 variable (r : α → β → Prop) [∀ a, DecidablePred (r a)] {s s₁ s₂ : Finset α} {t t₁ t₂ : Finset β} {a : α} {b : β} {δ : ℚ}
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Finset of edges of a relation between two finsets of vertices. -/
 def interedges (s : Finset α) (t : Finset β) : Finset (α × β) :=
   (s ×ˢ t).filter fun e => r e.1 e.2
@@ -94,6 +95,7 @@ theorem interedges_bUnion_right (s : Finset α) (t : Finset ι) (f : ι → Fins
   ext fun a => by
     simp only [mem_interedges_iff, mem_bUnion, ← exists_and_distrib_left, ← exists_and_distrib_right]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem interedges_bUnion (s : Finset ι) (t : Finset κ) (f : ι → Finset α) (g : κ → Finset β) :
     interedges r (s.bUnion f) (t.bUnion g) = (s ×ˢ t).bUnion fun ab => interedges r (f ab.1) (g ab.2) := by
   simp_rw [product_bUnion, interedges_bUnion_left, interedges_bUnion_right]
@@ -143,6 +145,7 @@ theorem card_interedges_finpartition_right [DecidableEq β] (s : Finset α) (P :
   rw [card_bUnion]
   exact fun x hx y hy h => interedges_disjoint_right r _ (P.disjoint hx hy h)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem card_interedges_finpartition [DecidableEq α] [DecidableEq β] (P : Finpartition s) (Q : Finpartition t) :
     (interedges r s t).card = ∑ ab in P.parts ×ˢ Q.parts, (interedges r ab.1 ab.2).card := by
   simp_rw [card_interedges_finpartition_left _ P, card_interedges_finpartition_right _ _ Q, sum_product]
@@ -277,6 +280,7 @@ def interedges (s t : Finset α) : Finset (α × α) :=
 def edgeDensity : Finset α → Finset α → ℚ :=
   edgeDensity G.Adj
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem interedges_def (s t : Finset α) : G.interedges s t = (s ×ˢ t).filter fun e => G.Adj e.1 e.2 :=
   rfl
 
@@ -321,10 +325,13 @@ theorem interedges_bUnion_right (s : Finset α) (t : Finset ι) (f : ι → Fins
     G.interedges s (t.bUnion f) = t.bUnion fun b => G.interedges s (f b) :=
   interedges_bUnion_right _ _ _ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem interedges_bUnion (s : Finset ι) (t : Finset κ) (f : ι → Finset α) (g : κ → Finset α) :
     G.interedges (s.bUnion f) (t.bUnion g) = (s ×ˢ t).bUnion fun ab => G.interedges (f ab.1) (g ab.2) :=
   interedges_bUnion _ _ _ _ _
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem card_interedges_add_card_interedges_compl (h : Disjoint s t) :
     (G.interedges s t).card + (Gᶜ.interedges s t).card = s.card * t.card := by
   rw [← card_product, interedges_def, interedges_def]

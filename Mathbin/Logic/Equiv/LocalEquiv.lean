@@ -107,10 +107,10 @@ structure LocalEquiv (α : Type _) (β : Type _) where
   invFun : β → α
   Source : Set α
   Target : Set β
-  map_source' : ∀ {x}, x ∈ source → to_fun x ∈ target
-  map_target' : ∀ {x}, x ∈ target → inv_fun x ∈ source
-  left_inv' : ∀ {x}, x ∈ source → inv_fun (to_fun x) = x
-  right_inv' : ∀ {x}, x ∈ target → to_fun (inv_fun x) = x
+  map_source' : ∀ ⦃x⦄, x ∈ source → to_fun x ∈ target
+  map_target' : ∀ ⦃x⦄, x ∈ target → inv_fun x ∈ source
+  left_inv' : ∀ ⦃x⦄, x ∈ source → inv_fun (to_fun x) = x
+  right_inv' : ∀ ⦃x⦄, x ∈ target → to_fun (inv_fun x) = x
 
 namespace LocalEquiv
 
@@ -733,6 +733,8 @@ theorem eq_of_eq_on_source_univ (e e' : LocalEquiv α β) (h : e ≈ e') (s : e.
 
 section Prod
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The product of two local equivs, as a local equiv on the product. -/
 def prod (e : LocalEquiv α β) (e' : LocalEquiv γ δ) : LocalEquiv (α × γ) (β × δ) where
   Source := e.Source ×ˢ e'.Source
@@ -752,10 +754,12 @@ def prod (e : LocalEquiv α β) (e' : LocalEquiv γ δ) : LocalEquiv (α × γ) 
     simp at hp
     simp [hp]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp, mfld_simps]
 theorem prod_source (e : LocalEquiv α β) (e' : LocalEquiv γ δ) : (e.Prod e').Source = e.Source ×ˢ e'.Source :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp, mfld_simps]
 theorem prod_target (e : LocalEquiv α β) (e' : LocalEquiv γ δ) : (e.Prod e').Target = e.Target ×ˢ e'.Target :=
   rfl

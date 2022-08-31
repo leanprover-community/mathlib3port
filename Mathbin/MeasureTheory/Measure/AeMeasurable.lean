@@ -57,7 +57,7 @@ theorem ae_inf_principal_eq_mk {s} (h : AeMeasurable f (μ.restrict s)) : f =ᶠ
   le_ae_restrict h.ae_eq_mk
 
 @[measurability]
-theorem sum_measure [Encodable ι] {μ : ι → Measureₓ α} (h : ∀ i, AeMeasurable f (μ i)) : AeMeasurable f (Sum μ) := by
+theorem sum_measure [Countable ι] {μ : ι → Measureₓ α} (h : ∀ i, AeMeasurable f (μ i)) : AeMeasurable f (Sum μ) := by
   nontriviality β
   inhabit β
   set s : ι → Set α := fun i => to_measurable (μ i) { x | f x ≠ (h i).mk f x }
@@ -99,7 +99,7 @@ theorem sum_measure [Encodable ι] {μ : ι → Measureₓ α} (h : ∀ i, AeMea
     
 
 @[simp]
-theorem _root_.ae_measurable_sum_measure_iff [Encodable ι] {μ : ι → Measureₓ α} :
+theorem _root_.ae_measurable_sum_measure_iff [Countable ι] {μ : ι → Measureₓ α} :
     AeMeasurable f (Sum μ) ↔ ∀ i, AeMeasurable f (μ i) :=
   ⟨fun h i => h.mono_measure (le_sum _ _), sum_measure⟩
 
@@ -113,12 +113,12 @@ theorem add_measure {f : α → β} (hμ : AeMeasurable f μ) (hν : AeMeasurabl
   ae_measurable_add_measure_iff.2 ⟨hμ, hν⟩
 
 @[measurability]
-protected theorem Union [Encodable ι] {s : ι → Set α} (h : ∀ i, AeMeasurable f (μ.restrict (s i))) :
+protected theorem Union [Countable ι] {s : ι → Set α} (h : ∀ i, AeMeasurable f (μ.restrict (s i))) :
     AeMeasurable f (μ.restrict (⋃ i, s i)) :=
   (sum_measure h).mono_measure <| restrict_Union_le
 
 @[simp]
-theorem _root_.ae_measurable_Union_iff [Encodable ι] {s : ι → Set α} :
+theorem _root_.ae_measurable_Union_iff [Countable ι] {s : ι → Set α} :
     AeMeasurable f (μ.restrict (⋃ i, s i)) ↔ ∀ i, AeMeasurable f (μ.restrict (s i)) :=
   ⟨fun h i => h.mono_measure <| restrict_mono (subset_Union _ _) le_rflₓ, AeMeasurable.Union⟩
 

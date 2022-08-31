@@ -109,6 +109,7 @@ initialize
 unsafe structure equiv_rw_cfg where
   max_depth : ℕ := 10
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 -- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 -- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
@@ -128,7 +129,7 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
             we use the `pre_apply` subtactic of `solve_by_elim` to preprocess each new goal with `intros`.
         -/
       solve_by_elim
-      { use_symmetry := False, use_exfalso := False, lemma_thunks := some (pure Eq :: equiv_congr_lemmas),
+      { use_symmetry := False, use_exfalso := False, lemma_thunks := some (pure Eq::equiv_congr_lemmas),
         ctx_thunk := pure [],
         max_depth := cfg,-- Subgoals may contain function types,
         -- and we want to continue trying to construct equivalences after the binders.
@@ -257,17 +258,19 @@ open Tactic
 
 setup_tactic_parser
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Auxiliary function to call `equiv_rw_hyp` on a `list pexpr` recursively. -/
 unsafe def equiv_rw_hyp_aux (hyp : Name) (cfg : equiv_rw_cfg) (permissive : Bool := false) : List expr → itactic
   | [] => skip
-  | e :: t => do
+  | e::t => do
     if permissive then equiv_rw_hyp hyp e cfg <|> skip else equiv_rw_hyp hyp e cfg
     equiv_rw_hyp_aux t
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Auxiliary function to call `equiv_rw_target` on a `list pexpr` recursively. -/
 unsafe def equiv_rw_target_aux (cfg : equiv_rw_cfg) (permissive : Bool) : List expr → itactic
   | [] => skip
-  | e :: t => do
+  | e::t => do
     if permissive then equiv_rw_target e cfg <|> skip else equiv_rw_target e cfg
     equiv_rw_target_aux t
 

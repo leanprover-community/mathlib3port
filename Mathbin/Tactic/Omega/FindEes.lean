@@ -66,6 +66,7 @@ unsafe def add_ee (e : Ee) : eqelim Unit := do
   let es ← get_ees
   set_ees (es ++ [e])
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Return the first equality constraint in the current list of
     equality constraints. The returned constraint is 'popped' and
     no longer available in the state. -/
@@ -73,7 +74,7 @@ unsafe def head_eq : eqelim Term := do
   let eqs ← get_eqs
   match eqs with
     | [] => abort
-    | Eq :: eqs' => set_eqs eqs' >> pure Eq
+    | Eq::eqs' => set_eqs eqs' >> pure Eq
 
 unsafe def run {α : Type} (eqs les : List Term) (r : eqelim α) : tactic α :=
   Prod.fst <$> (mk_eqelim_state eqs les >>= r.run)
@@ -93,10 +94,11 @@ local notation t1 "!>>=" t2 ";" t3 => ee_commit t1 t2 t3
 private unsafe def of_tactic {α : Type} : tactic α → eqelim α :=
   StateTₓ.lift
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- GCD of all elements of the list. -/
 def gcd : List Int → Nat
   | [] => 0
-  | i :: is => Nat.gcdₓ i.natAbs (gcd is)
+  | i::is => Nat.gcdₓ i.natAbs (gcd is)
 
 /-- GCD of all coefficients in a term. -/
 unsafe def get_gcd (t : Term) : eqelim Int :=
@@ -108,11 +110,12 @@ unsafe def get_gcd (t : Term) : eqelim Int :=
 unsafe def factor (i : Int) (t : Term) : eqelim Term :=
   if i ∣ t.fst then add_ee (Ee.factor i) >> pure (t.div i) else abort
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- If list has a nonzero element, return the minimum element
 (by absolute value) with its index. Otherwise, return none. -/
 unsafe def find_min_coeff_core : List Int → eqelim (Int × Nat)
   | [] => abort
-  | i :: is =>
+  | i::is =>
     (do
         let (j, n) ← find_min_coeff_core is
         if i ≠ 0 ∧ i ≤ j then pure (i, 0) else pure (j, n + 1)) <|>
@@ -126,6 +129,7 @@ unsafe def find_min_coeff (t : Term) : eqelim (Int × Nat × term) := do
   let (i, n) ← find_min_coeff_core t.snd
   if 0 < i then pure (i, n, t) else add_ee ee.neg >> pure (-i, n, t)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Find an appropriate equality elimination step for the
     current state and apply it. -/
 unsafe def elim_eq : eqelim Unit := do
@@ -145,7 +149,7 @@ unsafe def elim_eq : eqelim Unit := do
           do
           let eqs ← get_eqs
           let les ← get_les
-          set_eqs (v :: eqs (subst n r))
+          set_eqs (v::eqs (subst n r))
           set_les (les (subst n r))
           add_ee (ee.reduce n)
           elim_eq

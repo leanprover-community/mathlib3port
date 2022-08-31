@@ -126,6 +126,7 @@ theorem μ_inv_naturality {m n : M} {X Y : C} (f : X ⟶ Y) :
     (F.μIso m n).inv.app X ≫ (F.obj n).map ((F.obj m).map f) = (F.obj _).map f ≫ (F.μIso m n).inv.app Y :=
   ((F.μIso m n).inv.naturality f).symm
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- This is not a simp lemma since it could be proved by the lemmas later.
 @[reassoc]
 theorem μ_naturality₂ {m n m' n' : M} (f : m ⟶ m') (g : n ⟶ n') (X : C) :
@@ -136,24 +137,28 @@ theorem μ_naturality₂ {m n m' n' : M} (f : m ⟶ m') (g : n ⟶ n') (X : C) :
   dsimp'  at this
   simpa using this
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp, reassoc]
 theorem μ_naturalityₗ {m n m' : M} (f : m ⟶ m') (X : C) :
     (F.obj n).map ((F.map f).app X) ≫ (F.μ m' n).app X = (F.μ m n).app X ≫ (F.map (f ⊗ 𝟙 n)).app X := by
   rw [← μ_naturality₂ F f (𝟙 n) X]
   simp
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp, reassoc]
 theorem μ_naturalityᵣ {m n n' : M} (g : n ⟶ n') (X : C) :
     (F.map g).app ((F.obj m).obj X) ≫ (F.μ m n').app X = (F.μ m n).app X ≫ (F.map (𝟙 m ⊗ g)).app X := by
   rw [← μ_naturality₂ F (𝟙 m) g X]
   simp
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp, reassoc]
 theorem μ_inv_naturalityₗ {m n m' : M} (f : m ⟶ m') (X : C) :
     (F.μIso m n).inv.app X ≫ (F.obj n).map ((F.map f).app X) = (F.map (f ⊗ 𝟙 n)).app X ≫ (F.μIso m' n).inv.app X := by
   rw [← is_iso.comp_inv_eq, category.assoc, ← is_iso.eq_inv_comp]
   simp
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp, reassoc]
 theorem μ_inv_naturalityᵣ {m n n' : M} (g : n ⟶ n') (X : C) :
     (F.μIso m n).inv.app X ≫ (F.map g).app ((F.obj m).obj X) = (F.map (𝟙 m ⊗ g)).app X ≫ (F.μIso m n').inv.app X := by
@@ -210,6 +215,8 @@ theorem ε_inv_app_obj (n : M) (X : C) :
   rw [← cancel_mono (F.ε.app ((F.obj n).obj X)), ε_inv_hom_app]
   simpa
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[reassoc]
 theorem associativity_app (m₁ m₂ m₃ : M) (X : C) :
     (F.obj m₃).map ((F.μ m₁ m₂).app X) ≫ (F.μ (m₁ ⊗ m₂) m₃).app X ≫ (F.map (α_ m₁ m₂ m₃).Hom).app X =
@@ -219,6 +226,8 @@ theorem associativity_app (m₁ m₂ m₃ : M) (X : C) :
   dsimp'  at this
   simpa using this
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[reassoc, simp]
 theorem obj_μ_app (m₁ m₂ m₃ : M) (X : C) :
     (F.obj m₃).map ((F.μ m₁ m₂).app X) =
@@ -231,6 +240,8 @@ theorem obj_μ_app (m₁ m₂ m₃ : M) (X : C) :
   dsimp'
   simp
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[reassoc, simp]
 theorem obj_μ_inv_app (m₁ m₂ m₃ : M) (X : C) :
     (F.obj m₃).map ((F.μIso m₁ m₂).inv.app X) =
@@ -269,11 +280,16 @@ theorem obj_μ_zero_app (m₁ m₂ : M) (X : C) :
   congr
   simp
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- If `m ⊗ n ≅ 𝟙_M`, then `F.obj m` is a left inverse of `F.obj n`. -/
 @[simps]
 noncomputable def unitOfTensorIsoUnit (m n : M) (h : m ⊗ n ≅ 𝟙_ M) : F.obj m ⋙ F.obj n ≅ 𝟭 C :=
   F.μIso m n ≪≫ F.toFunctor.mapIso h ≪≫ F.εIso.symm
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- If `m ⊗ n ≅ 𝟙_M` and `n ⊗ m ≅ 𝟙_M` (subject to some commuting constraints),
   then `F.obj m` and `F.obj n` forms a self-equivalence of `C`. -/
 @[simps]

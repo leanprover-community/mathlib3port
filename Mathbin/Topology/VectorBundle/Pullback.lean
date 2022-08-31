@@ -67,6 +67,7 @@ theorem Pullback.continuous_total_space_mk [∀ x, TopologicalSpace (E x)] [Topo
 
 variable {E 𝕜 F} {K : Type _} [ContinuousMapClass K B' B]
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- A vector bundle trivialization can be pulled back to a trivialization on the pullback bundle. -/
 def TopologicalVectorBundle.Trivialization.pullback (e : Trivialization 𝕜 F E) (f : K) :
     Trivialization 𝕜 F ((f : B' → B) *ᵖ E) where

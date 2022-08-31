@@ -47,7 +47,7 @@ open Set Function Filter Asymptotics Metric Complex
 
 open TopologicalSpace Filter Real
 
--- mathport name: «exprexpR»
+-- mathport name: exprexpR
 local notation "expR" => Real.exp
 
 namespace PhragmenLindelof

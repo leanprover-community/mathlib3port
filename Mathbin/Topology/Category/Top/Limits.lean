@@ -33,7 +33,7 @@ namespace Top
 
 variable {J : Type v} [SmallCategory J]
 
--- mathport name: «exprforget»
+-- mathport name: exprforget
 local notation "forget" => forget Top
 
 /-- A choice of limit cone for a functor `F : J ⥤ Top`.

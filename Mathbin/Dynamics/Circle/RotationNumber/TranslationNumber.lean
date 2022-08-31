@@ -573,7 +573,7 @@ this way. -/
 def translationNumber : ℝ :=
   limₓ atTop f.transnumAuxSeq
 
--- mathport name: «exprτ»
+-- mathport name: exprτ
 -- TODO: choose two different symbols for `circle_deg1_lift.translation_number` and the future
 -- `circle_mono_homeo.rotation_number`, then make them `localized notation`s
 local notation "τ" => translationNumber

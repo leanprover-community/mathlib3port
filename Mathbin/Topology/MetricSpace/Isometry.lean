@@ -77,7 +77,7 @@ theorem antilipschitz (h : Isometry f) : AntilipschitzWith 1 f := fun x y => by
 /-- Any map on a subsingleton is an isometry -/
 @[nontriviality]
 theorem _root_.isometry_subsingleton [Subsingleton α] : Isometry f := fun x y => by
-  rw [Subsingleton.elimₓ x y] <;> simp
+  rw [Subsingleton.elim x y] <;> simp
 
 /-- The identity is an isometry -/
 theorem _root_.isometry_id : Isometry (id : α → α) := fun x y => rfl

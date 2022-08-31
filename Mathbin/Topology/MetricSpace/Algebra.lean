@@ -47,14 +47,14 @@ variable [Monoidₓ β]
 /-- The Lipschitz constant of a monoid `β` satisfying `has_lipschitz_mul` -/
 @[to_additive "The Lipschitz constant of an `add_monoid` `β` satisfying `has_lipschitz_add`"]
 def HasLipschitzMul.c [_i : HasLipschitzMul β] : ℝ≥0 :=
-  Classical.some _i.lipschitz_mul
+  Classical.choose _i.lipschitz_mul
 
 variable {β}
 
 @[to_additive]
 theorem lipschitz_with_lipschitz_const_mul_edist [_i : HasLipschitzMul β] :
     LipschitzWith (HasLipschitzMul.c β) fun p : β × β => p.1 * p.2 :=
-  Classical.some_spec _i.lipschitz_mul
+  Classical.choose_spec _i.lipschitz_mul
 
 variable [HasLipschitzMul β]
 

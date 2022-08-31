@@ -49,7 +49,7 @@ variable [∀ X Y : C, Subsingleton (X ⟶ Y)]
 
 /-- If `C` is a thin category, then `D ⥤ C` is a thin category. -/
 instance functor_thin (F₁ F₂ : D ⥤ C) : Subsingleton (F₁ ⟶ F₂) :=
-  ⟨fun α β => NatTrans.ext α β (funext fun _ => Subsingleton.elimₓ _ _)⟩
+  ⟨fun α β => NatTrans.ext α β (funext fun _ => Subsingleton.elim _ _)⟩
 
 /-- To show `X ≅ Y` in a thin category, it suffices to just give any morphism in each direction. -/
 def isoOfBothWays {X Y : C} (f : X ⟶ Y) (g : Y ⟶ X) : X ≅ Y where
@@ -60,7 +60,7 @@ instance subsingleton_iso {X Y : C} : Subsingleton (X ≅ Y) :=
   ⟨by
     intro i₁ i₂
     ext1
-    apply Subsingleton.elimₓ⟩
+    apply Subsingleton.elim⟩
 
 end CategoryTheory
 

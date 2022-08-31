@@ -20,8 +20,8 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
--- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ?»
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
+-- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional
 /-- If the target of the main goal is a proposition `p`,
 `by_contra'` reduces the goal to proving `false` using the additional hypothesis `h : ¬ p`.
 `by_contra' h` can be used to name the hypothesis `h : ¬ p`.
@@ -52,7 +52,8 @@ begin
 end
 ```
 -/
-unsafe def by_contra' (h : parse («expr ?» ident)) (t : parse («expr ?» (tk ":" *> texpr))) : tactic Unit := do
+unsafe def by_contra' (h : parse (parser.optional ident)) (t : parse (parser.optional (tk ":" *> texpr))) :
+    tactic Unit := do
   let h := h.getOrElse `this
   let tgt ← target
   mk_mapp `classical.by_contradiction [some tgt] >>= tactic.eapply

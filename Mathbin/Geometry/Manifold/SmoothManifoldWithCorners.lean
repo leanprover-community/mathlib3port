@@ -118,7 +118,7 @@ open Set Filter Function
 
 open Manifold Filter TopologicalSpace
 
--- mathport name: «expr∞»
+-- mathport name: with_top.nat.top
 localized [Manifold] notation "∞" => (⊤ : ℕ∞)
 
 /-! ### Models with corners. -/
@@ -151,10 +151,10 @@ def modelWithCornersSelf (𝕜 : Type _) [NontriviallyNormedField 𝕜] (E : Typ
   continuous_to_fun := continuous_id
   continuous_inv_fun := continuous_id
 
--- mathport name: «expr𝓘( , )»
+-- mathport name: model_with_corners_self
 localized [Manifold] notation "𝓘(" 𝕜 ", " E ")" => modelWithCornersSelf 𝕜 E
 
--- mathport name: «expr𝓘( )»
+-- mathport name: model_with_corners_self.self
 localized [Manifold] notation "𝓘(" 𝕜 ")" => modelWithCornersSelf 𝕜 𝕜
 
 section

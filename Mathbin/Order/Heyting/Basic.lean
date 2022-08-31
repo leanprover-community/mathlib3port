@@ -923,7 +923,7 @@ instance : BiheytingAlgebra PUnit := by
     intros <;>
       first |
         trivial|
-        exact Subsingleton.elimₓ _ _
+        exact Subsingleton.elim _ _
 
 @[simp]
 theorem top_eq : (⊤ : PUnit) = star :=

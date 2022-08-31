@@ -385,7 +385,7 @@ section Zeta
 def zeta : ArithmeticFunction ℕ :=
   ⟨fun x => ite (x = 0) 0 1, rfl⟩
 
--- mathport name: «exprζ»
+-- mathport name: arithmetic_function.zeta
 localized [ArithmeticFunction] notation "ζ" => Nat.ArithmeticFunction.zeta
 
 @[simp]
@@ -691,9 +691,9 @@ theorem pmul [CommSemiringₓ R] {f g : ArithmeticFunction R} (hf : f.IsMultipli
 
 /-- For any multiplicative function `f` and any `n > 0`,
 we can evaluate `f n` by evaluating `f` at `p ^ k` over the factorization of `n` -/
-theorem multiplicative_factorization [CommMonoidWithZero R] (f : ArithmeticFunction R) (hf : f.IsMultiplicative) :
-    ∀ {n : ℕ}, n ≠ 0 → f n = n.factorization.Prod fun p k => f (p ^ k) := fun n hn =>
-  multiplicative_factorization f hf.2 hf.1 hn
+theorem multiplicative_factorization [CommMonoidWithZero R] (f : ArithmeticFunction R) (hf : f.IsMultiplicative) {n : ℕ}
+    (hn : n ≠ 0) : f n = n.factorization.Prod fun p k => f (p ^ k) :=
+  multiplicative_factorization f (fun _ _ => hf.2) hf.1 hn
 
 /-- A recapitulation of the definition of multiplicative that is simpler for proofs -/
 theorem iff_ne_zero [MonoidWithZeroₓ R] {f : ArithmeticFunction R} :
@@ -758,7 +758,7 @@ def sigma (k : ℕ) : ArithmeticFunction ℕ :=
   ⟨fun n => ∑ d in divisors n, d ^ k, by
     simp ⟩
 
--- mathport name: «exprσ»
+-- mathport name: arithmetic_function.sigma
 localized [ArithmeticFunction] notation "σ" => Nat.ArithmeticFunction.sigma
 
 theorem sigma_apply {k n : ℕ} : σ k n = ∑ d in divisors n, d ^ k :=
@@ -824,7 +824,7 @@ def cardFactors : ArithmeticFunction ℕ :=
   ⟨fun n => n.factors.length, by
     simp ⟩
 
--- mathport name: «exprΩ»
+-- mathport name: card_factors
 localized [ArithmeticFunction] notation "Ω" => Nat.ArithmeticFunction.cardFactors
 
 theorem card_factors_apply {n : ℕ} : Ω n = n.factors.length :=
@@ -872,7 +872,7 @@ def cardDistinctFactors : ArithmeticFunction ℕ :=
   ⟨fun n => n.factors.dedup.length, by
     simp ⟩
 
--- mathport name: «exprω»
+-- mathport name: card_distinct_factors
 localized [ArithmeticFunction] notation "ω" => Nat.ArithmeticFunction.cardDistinctFactors
 
 theorem card_distinct_factors_zero : ω 0 = 0 := by
@@ -910,7 +910,7 @@ def moebius : ArithmeticFunction ℤ :=
   ⟨fun n => if Squarefree n then -1 ^ cardFactors n else 0, by
     simp ⟩
 
--- mathport name: «exprμ»
+-- mathport name: moebius
 localized [ArithmeticFunction] notation "μ" => Nat.ArithmeticFunction.moebius
 
 @[simp]

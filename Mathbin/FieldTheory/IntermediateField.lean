@@ -64,10 +64,10 @@ instance : SetLike (IntermediateField K L) L :=
     congr ⟩
 
 instance : SubfieldClass (IntermediateField K L) L where
-  add_mem := fun s => s.add_mem'
+  add_mem := fun s _ _ => s.add_mem'
   zero_mem := fun s => s.zero_mem'
   neg_mem := neg_mem'
-  mul_mem := fun s => s.mul_mem'
+  mul_mem := fun s _ _ => s.mul_mem'
   one_mem := fun s => s.one_mem'
   inv_mem := inv_mem'
 

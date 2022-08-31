@@ -48,7 +48,7 @@ open Finset FiniteField
 
 variable {K : Type _} {σ : Type _} [Fintype K] [Field K] [Fintype σ]
 
--- mathport name: «exprq»
+-- mathport name: exprq
 local notation "q" => Fintype.card K
 
 theorem MvPolynomial.sum_mv_polynomial_eq_zero [DecidableEq σ] (f : MvPolynomial σ K)

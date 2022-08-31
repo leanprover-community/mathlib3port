@@ -134,6 +134,7 @@ def elements (xs : List α) (pos : 0 < xs.length) : Genₓ α := do
   let ⟨⟨n, h₀, h₁⟩⟩ ← Uliftable.up <| chooseNat' 0 xs.length Pos
   pure <| List.nthLe xs n h₁
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- `freq_aux xs i _` takes a weighted list of generator and a number meant to select one of the
 generators.
 
@@ -143,7 +144,7 @@ number in the list of generators. Then, we check which interval 4 falls into: it
 -/
 def freqAux : ∀ (xs : List (ℕ+ × Genₓ α)) (i), i < (xs.map (Subtype.val ∘ Prod.fst)).Sum → Genₓ α
   | [], i, h => False.elim (Nat.not_lt_zeroₓ _ h)
-  | (i, x) :: xs, j, h =>
+  | (i, x)::xs, j, h =>
     if h' : j < i then x
     else
       freq_aux xs (j - i)
@@ -171,10 +172,11 @@ def freq (xs : List (ℕ+ × Genₓ α)) (pos : 0 < xs.length) : Genₓ α :=
       (by
         rcases i with ⟨i, h₀, h₁⟩ <;> rwa [le_tsub_iff_right] at h₁ <;> exact ha)
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Generate a random permutation of a given list. -/
 def permutationOf {α : Type u} : ∀ xs : List α, Genₓ (Subtype <| List.Perm xs)
   | [] => pure ⟨[], List.Perm.nil⟩
-  | x :: xs => do
+  | x::xs => do
     let ⟨xs', h⟩ ← permutation_of xs
     let ⟨⟨n, _, h'⟩⟩ ←
       Uliftable.up <|

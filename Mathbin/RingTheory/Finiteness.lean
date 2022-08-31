@@ -170,7 +170,7 @@ variable [AddCommGroupₓ N] [Module R N]
 namespace FiniteType
 
 theorem self : FiniteType R R :=
-  ⟨⟨{1}, Subsingleton.elimₓ _ _⟩⟩
+  ⟨⟨{1}, Subsingleton.elim _ _⟩⟩
 
 protected theorem polynomial : FiniteType R R[X] :=
   ⟨⟨{Polynomial.x}, by

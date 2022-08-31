@@ -375,7 +375,7 @@ theorem summable_one_div_pow_of_le {m : ℝ} {f : ℕ → ℕ} (hm : 1 < m) (fi 
   rw [div_pow, one_pow]
   refine' (one_div_le_one_div _ _).mpr (pow_le_pow hm.le (fi a)) <;> exact pow_pos (zero_lt_one.trans hm) _
 
-/-! ### Positive sequences with small sums on encodable types -/
+/-! ### Positive sequences with small sums on countable types -/
 
 
 /-- For any positive `ε`, define on an encodable type a positive sequence with sum less than `ε` -/
@@ -415,34 +415,36 @@ theorem Set.Countable.exists_pos_forall_sum_le {ι : Type _} {s : Set ι} (hs : 
 
 namespace Nnreal
 
-theorem exists_pos_sum_of_encodable {ε : ℝ≥0 } (hε : ε ≠ 0) (ι) [Encodable ι] :
-    ∃ ε' : ι → ℝ≥0 , (∀ i, 0 < ε' i) ∧ ∃ c, HasSum ε' c ∧ c < ε :=
-  let ⟨a, a0, aε⟩ := exists_between (pos_iff_ne_zero.2 hε)
-  let ⟨ε', hε', c, hc, hcε⟩ := posSumOfEncodable a0 ι
-  ⟨fun i => ⟨ε' i, le_of_ltₓ <| hε' i⟩, fun i => Nnreal.coe_lt_coe.1 <| hε' i,
-    ⟨c, has_sum_le (fun i => le_of_ltₓ <| hε' i) has_sum_zero hc⟩, Nnreal.has_sum_coe.1 hc,
-    lt_of_le_of_ltₓ (Nnreal.coe_le_coe.1 hcε) aε⟩
+theorem exists_pos_sum_of_countable {ε : ℝ≥0 } (hε : ε ≠ 0) (ι) [Countable ι] :
+    ∃ ε' : ι → ℝ≥0 , (∀ i, 0 < ε' i) ∧ ∃ c, HasSum ε' c ∧ c < ε := by
+  cases nonempty_encodable ι
+  obtain ⟨a, a0, aε⟩ := exists_between (pos_iff_ne_zero.2 hε)
+  obtain ⟨ε', hε', c, hc, hcε⟩ := posSumOfEncodable a0 ι
+  exact
+    ⟨fun i => ⟨ε' i, (hε' i).le⟩, fun i => Nnreal.coe_lt_coe.1 <| hε' i,
+      ⟨c, has_sum_le (fun i => (hε' i).le) has_sum_zero hc⟩, Nnreal.has_sum_coe.1 hc,
+      aε.trans_le' <| Nnreal.coe_le_coe.1 hcε⟩
 
 end Nnreal
 
 namespace Ennreal
 
-theorem exists_pos_sum_of_encodable {ε : ℝ≥0∞} (hε : ε ≠ 0) (ι) [Encodable ι] :
+theorem exists_pos_sum_of_countable {ε : ℝ≥0∞} (hε : ε ≠ 0) (ι) [Countable ι] :
     ∃ ε' : ι → ℝ≥0 , (∀ i, 0 < ε' i) ∧ (∑' i, (ε' i : ℝ≥0∞)) < ε := by
   rcases exists_between (pos_iff_ne_zero.2 hε) with ⟨r, h0r, hrε⟩
   rcases lt_iff_exists_coe.1 hrε with ⟨x, rfl, hx⟩
-  rcases Nnreal.exists_pos_sum_of_encodable (coe_pos.1 h0r).ne' ι with ⟨ε', hp, c, hc, hcr⟩
+  rcases Nnreal.exists_pos_sum_of_countable (coe_pos.1 h0r).ne' ι with ⟨ε', hp, c, hc, hcr⟩
   exact ⟨ε', hp, (Ennreal.tsum_coe_eq hc).symm ▸ lt_transₓ (coe_lt_coe.2 hcr) hrε⟩
 
-theorem exists_pos_sum_of_encodable' {ε : ℝ≥0∞} (hε : ε ≠ 0) (ι) [Encodable ι] :
+theorem exists_pos_sum_of_countable' {ε : ℝ≥0∞} (hε : ε ≠ 0) (ι) [Countable ι] :
     ∃ ε' : ι → ℝ≥0∞, (∀ i, 0 < ε' i) ∧ (∑' i, ε' i) < ε :=
-  let ⟨δ, δpos, hδ⟩ := exists_pos_sum_of_encodable hε ι
+  let ⟨δ, δpos, hδ⟩ := exists_pos_sum_of_countable hε ι
   ⟨fun i => δ i, fun i => Ennreal.coe_pos.2 (δpos i), hδ⟩
 
-theorem exists_pos_tsum_mul_lt_of_encodable {ε : ℝ≥0∞} (hε : ε ≠ 0) {ι} [Encodable ι] (w : ι → ℝ≥0∞)
+theorem exists_pos_tsum_mul_lt_of_countable {ε : ℝ≥0∞} (hε : ε ≠ 0) {ι} [Countable ι] (w : ι → ℝ≥0∞)
     (hw : ∀ i, w i ≠ ∞) : ∃ δ : ι → ℝ≥0 , (∀ i, 0 < δ i) ∧ (∑' i, (w i * δ i : ℝ≥0∞)) < ε := by
   lift w to ι → ℝ≥0 using hw
-  rcases exists_pos_sum_of_encodable hε ι with ⟨δ', Hpos, Hsum⟩
+  rcases exists_pos_sum_of_countable hε ι with ⟨δ', Hpos, Hsum⟩
   have : ∀ i, 0 < max 1 (w i) := fun i => zero_lt_one.trans_le (le_max_leftₓ _ _)
   refine' ⟨fun i => δ' i / max 1 (w i), fun i => Nnreal.div_pos (Hpos _) (this i), _⟩
   refine' lt_of_le_of_ltₓ (Ennreal.tsum_le_tsum fun i => _) Hsum

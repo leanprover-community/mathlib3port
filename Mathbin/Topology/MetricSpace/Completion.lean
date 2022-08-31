@@ -80,6 +80,7 @@ protected theorem dist_triangle (x y z : Completion α) : dist x z ≤ dist x y 
     exact dist_triangle a b c
     
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Elements of the uniformity (defined generally for completions) can be characterized in terms
 of the distance. -/
 protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α)) :

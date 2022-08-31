@@ -91,10 +91,12 @@ variable [HasTerminal C] [HasBinaryProducts C]
 
 attribute [local instance] monoidal_of_has_finite_products
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem tensor_obj (X Y : C) : X ⊗ Y = (X ⨯ Y) :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem tensor_hom {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) : f ⊗ g = Limits.prod.map f g :=
   rfl
@@ -176,10 +178,12 @@ variable [HasInitial C] [HasBinaryCoproducts C]
 
 attribute [local instance] monoidal_of_has_finite_coproducts
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem tensor_obj (X Y : C) : X ⊗ Y = (X ⨿ Y) :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem tensor_hom {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) : f ⊗ g = Limits.coprod.map f g :=
   rfl

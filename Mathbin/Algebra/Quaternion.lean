@@ -57,7 +57,7 @@ structure QuaternionAlgebra (R : Type _) (a b : R) where mk ::
   imJ : R
   imK : R
 
--- mathport name: «exprℍ[ , , ]»
+-- mathport name: quaternion_algebra
 localized [Quaternion] notation "ℍ[" R "," a "," b "]" => QuaternionAlgebra R a b
 
 namespace QuaternionAlgebra
@@ -455,7 +455,7 @@ end QuaternionAlgebra
 def Quaternion (R : Type _) [One R] [Neg R] :=
   QuaternionAlgebra R (-1) (-1)
 
--- mathport name: «exprℍ[ ]»
+-- mathport name: quaternion
 localized [Quaternion] notation "ℍ[" R "]" => Quaternion R
 
 /-- The equivalence between the quaternions over R and R × R × R × R. -/

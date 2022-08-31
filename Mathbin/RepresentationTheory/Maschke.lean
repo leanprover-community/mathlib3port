@@ -191,7 +191,7 @@ theorem exists_is_compl (p : Submodule (MonoidAlgebra k G) V) : ∃ q : Submodul
   ⟨f.ker, LinearMap.is_compl_of_proj <| LinearMap.ext_iff.1 hf⟩
 
 /-- This also implies an instance `is_semisimple_module (monoid_algebra k G) V`. -/
-instance is_complemented : IsComplemented (Submodule (MonoidAlgebra k G) V) :=
+instance complemented_lattice : ComplementedLattice (Submodule (MonoidAlgebra k G) V) :=
   ⟨exists_is_compl⟩
 
 end Submodule

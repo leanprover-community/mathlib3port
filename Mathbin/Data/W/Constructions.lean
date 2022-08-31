@@ -137,11 +137,12 @@ def ofList : List γ → WType (Listβ γ)
   | List.nil => ⟨Listα.nil, Pempty.elimₓ⟩
   | List.cons hd tl => ⟨Listα.cons hd, fun _ => of_list tl⟩
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The isomorphism from the `W_type` construction of lists to lists -/
 @[simp]
 def toList : WType (Listβ γ) → List γ
   | WType.mk list_α.nil f => []
-  | WType.mk (list_α.cons hd) f => hd :: to_list (f PUnit.unit)
+  | WType.mk (list_α.cons hd) f => hd::to_list (f PUnit.unit)
 
 theorem left_inv_list : Function.LeftInverse (ofList γ) (toList _)
   | WType.mk list_α.nil f => by

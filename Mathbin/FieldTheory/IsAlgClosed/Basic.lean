@@ -255,11 +255,11 @@ theorem exists_maximal_subfield_with_hom : ∃ E : SubfieldWithHom K L M hL, ∀
 
 /-- The maximal `subfield_with_hom`. We later prove that this is equal to `⊤`. -/
 noncomputable def maximalSubfieldWithHom : SubfieldWithHom K L M hL :=
-  Classical.some (exists_maximal_subfield_with_hom M hL)
+  Classical.choose (exists_maximal_subfield_with_hom M hL)
 
 theorem maximal_subfield_with_hom_is_maximal :
     ∀ N : SubfieldWithHom K L M hL, maximalSubfieldWithHom M hL ≤ N → N ≤ maximalSubfieldWithHom M hL :=
-  Classical.some_spec (exists_maximal_subfield_with_hom M hL)
+  Classical.choose_spec (exists_maximal_subfield_with_hom M hL)
 
 theorem maximal_subfield_with_hom_eq_top : (maximalSubfieldWithHom M hL).Carrier = ⊤ := by
   rw [eq_top_iff]
@@ -339,7 +339,7 @@ omit hS
 
 noncomputable instance (priority := 100) perfectRing (p : ℕ) [Fact p.Prime] [CharP k p] [IsAlgClosed k] :
     PerfectRing k p :=
-  (PerfectRing.ofSurjective k p) fun x => IsAlgClosed.exists_pow_nat_eq _ <| Fact.out _
+  (PerfectRing.ofSurjective k p) fun x => IsAlgClosed.exists_pow_nat_eq _ <| NeZero.pos p
 
 /-- Algebraically closed fields are infinite since `Xⁿ⁺¹ - 1` is separable when `#K = n` -/
 instance (priority := 500) {K : Type _} [Field K] [IsAlgClosed K] : Infinite K := by
