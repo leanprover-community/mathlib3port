@@ -618,7 +618,7 @@ theorem integral_neg : (∫ x in a..b, -f x ∂μ) = -∫ x in a..b, f x ∂μ :
 @[simp]
 theorem integral_sub (hf : IntervalIntegrable f μ a b) (hg : IntervalIntegrable g μ a b) :
     (∫ x in a..b, f x - g x ∂μ) = (∫ x in a..b, f x ∂μ) - ∫ x in a..b, g x ∂μ := by
-  simpa only [sub_eq_add_neg] using (integral_add hf hg.neg).trans (congr_arg _ integral_neg)
+  simpa only [sub_eq_add_neg] using (integral_add hf hg.neg).trans (congr_argₓ _ integral_neg)
 
 @[simp]
 theorem integral_smul {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E] [SmulCommClass ℝ 𝕜 E] (r : 𝕜)

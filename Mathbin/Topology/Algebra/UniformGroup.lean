@@ -108,7 +108,7 @@ theorem UniformContinuous.zpow_const [UniformSpace β] {f : β → α} (hf : Uni
   | (n : ℕ) => by
     simp_rw [zpow_coe_nat]
     exact hf.pow_const _
-  | -[1+ n] => by
+  | -[1 + n] => by
     simp_rw [zpow_neg_succ_of_nat]
     exact (hf.pow_const _).inv
 
@@ -143,7 +143,7 @@ theorem uniform_embedding_translate_mul (a : α) : UniformEmbedding fun x : α =
   { comap_uniformity := by
       rw [← uniformity_translate_mul a, comap_map]
       rintro ⟨p₁, p₂⟩ ⟨q₁, q₂⟩
-      simp (config := { contextual := true })[Prod.eq_iff_fst_eq_snd_eq],
+      simp (config := { contextual := true })[Prod.eq_iff_fst_eq_snd_eqₓ],
     inj := mul_left_injective a }
 
 namespace MulOpposite

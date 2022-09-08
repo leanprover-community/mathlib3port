@@ -44,7 +44,7 @@ def annihilator (N : Submodule R M) : Ideal R :=
 variable {I J : Ideal R} {N P : Submodule R M}
 
 theorem mem_annihilator {r} : r ∈ N.annihilator ↔ ∀ n ∈ N, r • n = (0 : M) :=
-  ⟨fun hr n hn => congr_arg Subtype.val (LinearMap.ext_iff.1 (LinearMap.mem_ker.1 hr) ⟨n, hn⟩), fun h =>
+  ⟨fun hr n hn => congr_argₓ Subtype.val (LinearMap.ext_iff.1 (LinearMap.mem_ker.1 hr) ⟨n, hn⟩), fun h =>
     LinearMap.mem_ker.2 <| LinearMap.ext fun n => Subtype.eq <| h n.1 n.2⟩
 
 theorem mem_annihilator' {r} : r ∈ N.annihilator ↔ N ≤ comap (r • (LinearMap.id : M →ₗ[R] M)) ⊥ :=
@@ -192,7 +192,7 @@ theorem smul_infi_le {ι : Sort _} {I : Ideal R} {t : ι → Submodule R M} : I 
 variable (S : Set R) (T : Set M)
 
 theorem span_smul_span : Ideal.span S • span R T = span R (⋃ (s ∈ S) (t ∈ T), {s • t}) :=
-  (map₂_span_span _ _ _ _).trans <| congr_arg _ <| Set.image2_eq_Union _ _ _
+  (map₂_span_span _ _ _ _).trans <| congr_argₓ _ <| Set.image2_eq_Union _ _ _
 
 theorem ideal_span_singleton_smul (r : R) (N : Submodule R M) : (Ideal.span {r} : Ideal R) • N = r • N := by
   have : span R (⋃ (t : M) (x : t ∈ N), {r • t}) = r • N := by
@@ -893,7 +893,7 @@ theorem subset_union_prime' {R : Type u} [CommRingₓ R] {s : Finset ι} {f : ι
       erw [Set.union_eq_self_of_subset_right hfji] at h
       exact h
     specialize ih a b (insert i u) hp' hn' h'
-    refine' ih.imp id (Or.imp id (exists_imp_exists fun k => _))
+    refine' ih.imp id (Or.impₓ id (exists_imp_exists fun k => _))
     simp only [exists_prop]
     exact And.imp (fun hk => Finset.insert_subset_insert i (Finset.subset_insert j u) hk) id
     
@@ -1417,14 +1417,14 @@ theorem map_eq_top_or_is_maximal_of_surjective {I : Ideal R} (H : IsMaximal I) :
 theorem comap_is_maximal_of_surjective {K : Ideal S} [H : IsMaximal K] : IsMaximal (comap f K) := by
   refine' ⟨⟨comap_ne_top _ H.1.1, fun J hJ => _⟩⟩
   suffices map f J = ⊤ by
-    replace this := congr_arg (comap f) this
+    replace this := congr_argₓ (comap f) this
     rw [comap_top, comap_map_of_surjective _ hf, eq_top_iff] at this
     rw [eq_top_iff]
     exact le_transₓ this (sup_le (le_of_eqₓ rfl) (le_transₓ (comap_mono bot_le) (le_of_ltₓ hJ)))
   refine'
     H.1.2 (map f J)
       (lt_of_le_of_neₓ (le_map_of_comap_le_of_surjective _ hf (le_of_ltₓ hJ)) fun h =>
-        ne_of_ltₓ hJ (trans (congr_arg (comap f) h) _))
+        ne_of_ltₓ hJ (trans (congr_argₓ (comap f) h) _))
   rw [comap_map_of_surjective _ hf, sup_eq_left]
   exact le_transₓ (comap_mono bot_le) (le_of_ltₓ hJ)
 
@@ -1847,7 +1847,7 @@ theorem map_Inf {A : Set (Ideal R)} {f : F} (hf : Function.Surjective f) :
 theorem map_is_prime_of_surjective {f : F} (hf : Function.Surjective f) {I : Ideal R} [H : IsPrime I]
     (hk : RingHom.ker f ≤ I) : IsPrime (map f I) := by
   refine' ⟨fun h => H.ne_top (eq_top_iff.2 _), fun x y => _⟩
-  · replace h := congr_arg (comap f) h
+  · replace h := congr_argₓ (comap f) h
     rw [comap_map_of_surjective _ hf, comap_top] at h
     exact h ▸ sup_le (le_of_eqₓ rfl) hk
     
@@ -2143,7 +2143,7 @@ theorem comp_quotient_map_eq_of_comp_eq {R' S' : Type _} [CommRingₓ R'] [CommR
   refine' RingHom.ext fun a => _
   obtain ⟨r, rfl⟩ := quotient.mk_surjective a
   simp only [RingHom.comp_apply, quotient_map_mk]
-  exact congr_arg (Quotientₓ.mk I) (trans (g'.comp_apply f r).symm (hfg ▸ f'.comp_apply g r))
+  exact congr_argₓ (Quotientₓ.mk I) (trans (g'.comp_apply f r).symm (hfg ▸ f'.comp_apply g r))
 
 /-- The algebra hom `A/I →+* B/J` induced by an algebra hom `f : A →ₐ[R₁] B` with `I ≤ f⁻¹(J)`. -/
 def quotientMapₐ {I : Ideal A} (J : Ideal B) (f : A →ₐ[R₁] B) (hIJ : I ≤ J.comap f) : A ⧸ I →ₐ[R₁] B ⧸ J :=

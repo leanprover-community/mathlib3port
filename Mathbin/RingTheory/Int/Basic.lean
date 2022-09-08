@@ -191,6 +191,18 @@ theorem gcd_eq_one_iff_coprime {a b : ℤ} : Int.gcdₓ a b = 1 ↔ IsCoprime a 
 theorem coprime_iff_nat_coprime {a b : ℤ} : IsCoprime a b ↔ Nat.Coprime a.natAbs b.natAbs := by
   rw [← gcd_eq_one_iff_coprime, Nat.coprime_iff_gcd_eq_oneₓ, gcd_eq_nat_abs]
 
+/-- If `gcd a (m * n) ≠ 1`, then `gcd a m ≠ 1` or `gcd a n ≠ 1`. -/
+theorem gcd_ne_one_iff_gcd_mul_right_ne_one {a : ℤ} {m n : ℕ} : a.gcd (m * n) ≠ 1 ↔ a.gcd m ≠ 1 ∨ a.gcd n ≠ 1 := by
+  simp only [gcd_eq_one_iff_coprime, ← not_and_distrib, not_iff_not, IsCoprime.mul_right_iff]
+
+/-- If `gcd a (m * n) = 1`, then `gcd a m = 1`. -/
+theorem gcd_eq_one_of_gcd_mul_right_eq_one_left {a : ℤ} {m n : ℕ} (h : a.gcd (m * n) = 1) : a.gcd m = 1 :=
+  Nat.dvd_one.mp <| trans_rel_left _ (gcd_dvd_gcd_mul_right_right a m n) h
+
+/-- If `gcd a (m * n) = 1`, then `gcd a n = 1`. -/
+theorem gcd_eq_one_of_gcd_mul_right_eq_one_right {a : ℤ} {m n : ℕ} (h : a.gcd (m * n) = 1) : a.gcd n = 1 :=
+  Nat.dvd_one.mp <| trans_rel_left _ (gcd_dvd_gcd_mul_left_right a n m) h
+
 theorem sq_of_gcd_eq_one {a b c : ℤ} (h : Int.gcdₓ a b = 1) (heq : a * b = c ^ 2) :
     ∃ a0 : ℤ, a = a0 ^ 2 ∨ a = -(a0 ^ 2) := by
   have h' : IsUnit (GcdMonoid.gcd a b) := by

@@ -203,7 +203,7 @@ protected theorem induction_on' {C : (⨂[R] i, s i) → Prop} (z : ⨂[R] i, s 
   simp_rw [AddCon.coe_add]
   refine' fun f y ih => Cp _ ih
   convert @C1 f.1 f.2
-  simp only [Prod.mk.eta]
+  simp only [Prod.mk.etaₓ]
 
 section DistribMulAction
 

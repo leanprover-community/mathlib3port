@@ -36,11 +36,11 @@ def asFunctor {T : Type _} [Category T] (C : HomologicalComplex (T ⥤ V) c) : T
     { x := fun i => (C.x i).obj t, d := fun i j => (C.d i j).app t,
       d_comp_d' := fun i j k hij hjk => by
         have := C.d_comp_d i j k
-        rw [nat_trans.ext_iff, Function.funext_iffₓ] at this
+        rw [nat_trans.ext_iff, Function.funext_iff] at this
         exact this t,
       shape' := fun i j h => by
         have := C.shape _ _ h
-        rw [nat_trans.ext_iff, Function.funext_iffₓ] at this
+        rw [nat_trans.ext_iff, Function.funext_iff] at this
         exact this t }
   map := fun t₁ t₂ h => { f := fun i => (C.x i).map h, comm' := fun i j hij => NatTrans.naturality _ _ }
   map_id' := fun t => by

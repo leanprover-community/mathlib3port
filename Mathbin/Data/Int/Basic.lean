@@ -130,7 +130,7 @@ theorem add_neg_one (i : ℤ) : i + -1 = i - 1 :=
 
 theorem abs_eq_nat_abs : ∀ a : ℤ, abs a = natAbs a
   | (n : ℕ) => abs_of_nonneg <| coe_zero_le _
-  | -[1+ n] => abs_of_nonpos <| le_of_ltₓ <| neg_succ_lt_zeroₓ _
+  | -[1 + n] => abs_of_nonpos <| le_of_ltₓ <| neg_succ_lt_zeroₓ _
 
 theorem nat_abs_abs (a : ℤ) : natAbs (abs a) = natAbs a := by
   rw [abs_eq_nat_abs] <;> rfl
@@ -180,40 +180,40 @@ theorem mul_def {a b : ℤ} : Int.mul a b = a * b :=
   rfl
 
 @[simp]
-theorem neg_succ_not_nonneg (n : ℕ) : 0 ≤ -[1+ n] ↔ False := by
+theorem neg_succ_not_nonneg (n : ℕ) : 0 ≤ -[1 + n] ↔ False := by
   simp only [not_leₓ, iff_falseₓ]
   exact Int.neg_succ_lt_zeroₓ n
 
 @[simp]
-theorem neg_succ_not_pos (n : ℕ) : 0 < -[1+ n] ↔ False := by
+theorem neg_succ_not_pos (n : ℕ) : 0 < -[1 + n] ↔ False := by
   simp only [not_ltₓ, iff_falseₓ]
 
 @[simp]
-theorem neg_succ_sub_one (n : ℕ) : -[1+ n] - 1 = -[1+ n + 1] :=
+theorem neg_succ_sub_one (n : ℕ) : -[1 + n] - 1 = -[1 + (n + 1)] :=
   rfl
 
 @[simp]
-theorem coe_nat_mul_neg_succ (m n : ℕ) : (m : ℤ) * -[1+ n] = -(m * succ n) :=
+theorem coe_nat_mul_neg_succ (m n : ℕ) : (m : ℤ) * -[1 + n] = -(m * succ n) :=
   rfl
 
 @[simp]
-theorem neg_succ_mul_coe_nat (m n : ℕ) : -[1+ m] * n = -(succ m * n) :=
+theorem neg_succ_mul_coe_nat (m n : ℕ) : -[1 + m] * n = -(succ m * n) :=
   rfl
 
 @[simp]
-theorem neg_succ_mul_neg_succ (m n : ℕ) : -[1+ m] * -[1+ n] = succ m * succ n :=
+theorem neg_succ_mul_neg_succ (m n : ℕ) : -[1 + m] * -[1 + n] = succ m * succ n :=
   rfl
 
-theorem coe_nat_le {m n : ℕ} : (↑m : ℤ) ≤ ↑n ↔ m ≤ n :=
+theorem coe_nat_leₓ {m n : ℕ} : (↑m : ℤ) ≤ ↑n ↔ m ≤ n :=
   coe_nat_le_coe_nat_iff m n
 
-theorem coe_nat_lt {m n : ℕ} : (↑m : ℤ) < ↑n ↔ m < n :=
+theorem coe_nat_ltₓ {m n : ℕ} : (↑m : ℤ) < ↑n ↔ m < n :=
   coe_nat_lt_coe_nat_iff m n
 
 theorem coe_nat_inj' {m n : ℕ} : (↑m : ℤ) = ↑n ↔ m = n :=
   Int.coe_nat_eq_coe_nat_iff m n
 
-theorem coe_nat_strict_mono : StrictMono (coe : ℕ → ℤ) := fun _ _ => Int.coe_nat_lt.2
+theorem coe_nat_strict_mono : StrictMono (coe : ℕ → ℤ) := fun _ _ => Int.coe_nat_ltₓ.2
 
 @[simp]
 theorem coe_nat_pos {n : ℕ} : (0 : ℤ) < n ↔ 0 < n :=
@@ -226,7 +226,7 @@ theorem coe_nat_ne_zero {n : ℕ} : (n : ℤ) ≠ 0 ↔ n ≠ 0 := by
   simp
 
 theorem coe_nat_nonneg (n : ℕ) : 0 ≤ (n : ℤ) :=
-  coe_nat_le.2 (Nat.zero_leₓ _)
+  coe_nat_leₓ.2 (Nat.zero_leₓ _)
 
 theorem le_coe_nat_sub (m n : ℕ) : (m - n : ℤ) ≤ ↑(m - n : ℕ) := by
   by_cases' h : m ≥ n
@@ -236,7 +236,7 @@ theorem le_coe_nat_sub (m n : ℕ) : (m - n : ℤ) ≤ ↑(m - n : ℕ) := by
     
 
 theorem coe_nat_ne_zero_iff_pos {n : ℕ} : (n : ℤ) ≠ 0 ↔ 0 < n :=
-  ⟨fun h => Nat.pos_of_ne_zeroₓ (coe_nat_ne_zero.1 h), fun h => (ne_of_ltₓ (coe_nat_lt.2 h)).symm⟩
+  ⟨fun h => Nat.pos_of_ne_zeroₓ (coe_nat_ne_zero.1 h), fun h => (ne_of_ltₓ (coe_nat_ltₓ.2 h)).symm⟩
 
 theorem coe_nat_succ_pos (n : ℕ) : 0 < (n.succ : ℤ) :=
   Int.coe_nat_pos.2 (succ_posₓ n)
@@ -245,10 +245,10 @@ theorem coe_nat_abs (n : ℕ) : abs (n : ℤ) = n :=
   abs_of_nonneg (coe_nat_nonneg n)
 
 @[simp]
-theorem neg_of_nat_ne_zero (n : ℕ) : -[1+ n] ≠ 0 := fun h => Int.noConfusion h
+theorem neg_of_nat_ne_zero (n : ℕ) : -[1 + n] ≠ 0 := fun h => Int.noConfusion h
 
 @[simp]
-theorem zero_ne_neg_of_nat (n : ℕ) : 0 ≠ -[1+ n] := fun h => Int.noConfusion h
+theorem zero_ne_neg_of_nat (n : ℕ) : 0 ≠ -[1 + n] := fun h => Int.noConfusion h
 
 /-! ### succ and pred -/
 
@@ -457,7 +457,7 @@ theorem nat_abs_mul_nat_abs_eq {a b : ℤ} {c : ℕ} (h : a * b = (c : ℤ)) : a
 theorem nat_abs_mul_self' (a : ℤ) : (natAbs a * natAbs a : ℤ) = a * a := by
   rw [← Int.coe_nat_mul, nat_abs_mul_self]
 
-theorem neg_succ_of_nat_eq' (m : ℕ) : -[1+ m] = -m - 1 := by
+theorem neg_succ_of_nat_eq' (m : ℕ) : -[1 + m] = -m - 1 := by
   simp [neg_succ_of_nat_eq, sub_eq_neg_add]
 
 theorem nat_abs_ne_zero_of_ne_zero {z : ℤ} (hz : z ≠ 0) : z.natAbs ≠ 0 := fun h =>
@@ -563,7 +563,7 @@ theorem of_nat_div (m n : ℕ) : ofNat (m / n) = ofNat m / ofNat n :=
 theorem coe_nat_div (m n : ℕ) : ((m / n : ℕ) : ℤ) = m / n :=
   rfl
 
-theorem neg_succ_of_nat_div (m : ℕ) {b : ℤ} (H : 0 < b) : -[1+ m] / b = -(m / b + 1) :=
+theorem neg_succ_of_nat_div (m : ℕ) {b : ℤ} (H : 0 < b) : -[1 + m] / b = -(m / b + 1) :=
   match b, eq_succ_of_zero_ltₓ H with
   | _, ⟨n, rfl⟩ => rfl
 
@@ -573,7 +573,7 @@ protected theorem zero_div : ∀ b : ℤ, 0 / b = 0
   | (n : ℕ) =>
     show ofNat _ = _ by
       simp
-  | -[1+ n] =>
+  | -[1 + n] =>
     show -ofNat _ = _ by
       simp
 
@@ -583,7 +583,7 @@ protected theorem div_zero : ∀ a : ℤ, a / 0 = 0
   | (n : ℕ) =>
     show ofNat _ = _ by
       simp
-  | -[1+ n] => rfl
+  | -[1 + n] => rfl
 
 @[simp]
 protected theorem div_neg : ∀ a b : ℤ, a / -b = -(a / b)
@@ -591,15 +591,15 @@ protected theorem div_neg : ∀ a b : ℤ, a / -b = -(a / b)
     show ofNat (m / 0) = -(m / 0 : ℕ) by
       rw [Nat.div_zeroₓ] <;> rfl
   | (m : ℕ), (n + 1 : ℕ) => rfl
-  | (m : ℕ), -[1+ n] => (neg_negₓ _).symm
-  | -[1+ m], 0 => rfl
-  | -[1+ m], (n + 1 : ℕ) => rfl
-  | -[1+ m], -[1+ n] => rfl
+  | (m : ℕ), -[1 + n] => (neg_negₓ _).symm
+  | -[1 + m], 0 => rfl
+  | -[1 + m], (n + 1 : ℕ) => rfl
+  | -[1 + m], -[1 + n] => rfl
 
 theorem div_of_neg_of_pos {a b : ℤ} (Ha : a < 0) (Hb : 0 < b) : a / b = -((-a - 1) / b + 1) :=
   match a, b, eq_neg_succ_of_lt_zeroₓ Ha, eq_succ_of_zero_ltₓ Hb with
   | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩ => by
-    change (- -[1+ m] : ℤ) with (m + 1 : ℤ) <;> rw [add_sub_cancel] <;> rfl
+    change (- -[1 + m] : ℤ) with (m + 1 : ℤ) <;> rw [add_sub_cancel] <;> rfl
 
 protected theorem div_nonneg {a b : ℤ} (Ha : 0 ≤ a) (Hb : 0 ≤ b) : 0 ≤ a / b :=
   match a, b, eq_coe_of_zero_le Ha, eq_coe_of_zero_le Hb with
@@ -615,36 +615,36 @@ theorem div_neg' {a b : ℤ} (Ha : a < 0) (Hb : 0 < b) : a / b < 0 :=
 
 @[simp]
 protected theorem div_one : ∀ a : ℤ, a / 1 = a
-  | (n : ℕ) => congr_arg ofNat (Nat.div_oneₓ _)
-  | -[1+ n] => congr_arg negSucc (Nat.div_oneₓ _)
+  | (n : ℕ) => congr_argₓ ofNat (Nat.div_oneₓ _)
+  | -[1 + n] => congr_argₓ negSucc (Nat.div_oneₓ _)
 
 theorem div_eq_zero_of_lt {a b : ℤ} (H1 : 0 ≤ a) (H2 : a < b) : a / b = 0 :=
   match a, b, eq_coe_of_zero_le H1, eq_succ_of_zero_ltₓ (lt_of_le_of_ltₓ H1 H2), H2 with
-  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩, H2 => congr_arg ofNat <| Nat.div_eq_of_ltₓ <| lt_of_coe_nat_lt_coe_nat H2
+  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩, H2 => congr_argₓ ofNat <| Nat.div_eq_of_ltₓ <| lt_of_coe_nat_lt_coe_nat H2
 
 theorem div_eq_zero_of_lt_abs {a b : ℤ} (H1 : 0 ≤ a) (H2 : a < abs b) : a / b = 0 :=
   match b, abs b, abs_eq_nat_abs b, H2 with
   | (n : ℕ), _, rfl, H2 => div_eq_zero_of_lt H1 H2
-  | -[1+ n], _, rfl, H2 =>
+  | -[1 + n], _, rfl, H2 =>
     neg_injective <| by
       rw [← Int.div_neg] <;> exact div_eq_zero_of_lt H1 H2
 
 protected theorem add_mul_div_right (a b : ℤ) {c : ℤ} (H : c ≠ 0) : (a + b * c) / c = a / c + b :=
   have : ∀ {k n : ℕ} {a : ℤ}, (a + n * k.succ) / k.succ = a / k.succ + n := fun k n a =>
     match a with
-    | (m : ℕ) => congr_arg ofNat <| Nat.add_mul_div_rightₓ _ _ k.succ_pos
-    | -[1+ m] =>
+    | (m : ℕ) => congr_argₓ ofNat <| Nat.add_mul_div_rightₓ _ _ k.succ_pos
+    | -[1 + m] =>
       show ((n * k.succ : ℕ) - m.succ : ℤ) / k.succ = n - (m / k.succ + 1 : ℕ) by
         cases' lt_or_geₓ m (n * k.succ) with h h
         · rw [← Int.coe_nat_subₓ h, ← Int.coe_nat_subₓ ((Nat.div_lt_iff_lt_mulₓ k.succ_pos).2 h)]
-          apply congr_arg of_nat
+          apply congr_argₓ of_nat
           rw [mul_comm, Nat.mul_sub_divₓ]
           rwa [mul_comm]
           
         · change (↑(n * Nat.succ k) - (m + 1) : ℤ) / ↑(Nat.succ k) = ↑n - ((m / Nat.succ k : ℕ) + 1)
           rw [← sub_sub, ← sub_sub, ← neg_sub (m : ℤ), ← neg_sub _ (n : ℤ), ← Int.coe_nat_subₓ h, ←
             Int.coe_nat_subₓ ((Nat.le_div_iff_mul_leₓ k.succ_pos).2 h), ← neg_succ_of_nat_coe', ← neg_succ_of_nat_coe']
-          · apply congr_arg neg_succ_of_nat
+          · apply congr_argₓ neg_succ_of_nat
             rw [mul_comm, Nat.sub_mul_divₓ]
             rwa [mul_comm]
             
@@ -652,7 +652,7 @@ protected theorem add_mul_div_right (a b : ℤ) {c : ℤ} (H : c ≠ 0) : (a + b
   have : ∀ {a b c : ℤ}, 0 < c → (a + b * c) / c = a / c + b := fun a b c H =>
     match c, eq_succ_of_zero_ltₓ H, b with
     | _, ⟨k, rfl⟩, (n : ℕ) => this
-    | _, ⟨k, rfl⟩, -[1+ n] =>
+    | _, ⟨k, rfl⟩, -[1 + n] =>
       show (a - n.succ * k.succ) / k.succ = a / k.succ - n.succ from
         eq_sub_of_add_eq <| by
           rw [← this, sub_add_cancel]
@@ -701,7 +701,7 @@ theorem of_nat_mod (m n : Nat) : (m % n : ℤ) = ofNat (m % n) :=
 theorem coe_nat_mod (m n : ℕ) : (↑(m % n) : ℤ) = ↑m % ↑n :=
   rfl
 
-theorem neg_succ_of_nat_mod (m : ℕ) {b : ℤ} (bpos : 0 < b) : -[1+ m] % b = b - 1 - m % b := by
+theorem neg_succ_of_nat_mod (m : ℕ) {b : ℤ} (bpos : 0 < b) : -[1 + m] % b = b - 1 - m % b := by
   rw [sub_sub, add_commₓ] <;>
     exact
       match b, eq_succ_of_zero_lt bpos with
@@ -709,8 +709,8 @@ theorem neg_succ_of_nat_mod (m : ℕ) {b : ℤ} (bpos : 0 < b) : -[1+ m] % b = b
 
 @[simp]
 theorem mod_neg : ∀ a b : ℤ, a % -b = a % b
-  | (m : ℕ), n => @congr_arg ℕ ℤ _ _ (fun i => ↑(m % i)) (nat_abs_neg _)
-  | -[1+ m], n => @congr_arg ℕ ℤ _ _ (fun i => subNatNat i (Nat.succ (m % i))) (nat_abs_neg _)
+  | (m : ℕ), n => @congr_argₓ ℕ ℤ _ _ (fun i => ↑(m % i)) (nat_abs_neg _)
+  | -[1 + m], n => @congr_argₓ ℕ ℤ _ _ (fun i => subNatNat i (Nat.succ (m % i))) (nat_abs_neg _)
 
 @[simp]
 theorem mod_abs (a b : ℤ) : a % abs b = a % b :=
@@ -724,48 +724,48 @@ theorem zero_mod (b : ℤ) : 0 % b = 0 :=
 -- Will be generalized to Euclidean domains.
 @[local simp]
 theorem mod_zero : ∀ a : ℤ, a % 0 = a
-  | (m : ℕ) => congr_arg ofNat <| Nat.mod_zeroₓ _
-  | -[1+ m] => congr_arg negSucc <| Nat.mod_zeroₓ _
+  | (m : ℕ) => congr_argₓ ofNat <| Nat.mod_zeroₓ _
+  | -[1 + m] => congr_argₓ negSucc <| Nat.mod_zeroₓ _
 
 -- Will be generalized to Euclidean domains.
 @[local simp]
 theorem mod_one : ∀ a : ℤ, a % 1 = 0
-  | (m : ℕ) => congr_arg ofNat <| Nat.mod_oneₓ _
-  | -[1+ m] =>
+  | (m : ℕ) => congr_argₓ ofNat <| Nat.mod_oneₓ _
+  | -[1 + m] =>
     show (1 - (m % 1).succ : ℤ) = 0 by
       rw [Nat.mod_oneₓ] <;> rfl
 
 theorem mod_eq_of_lt {a b : ℤ} (H1 : 0 ≤ a) (H2 : a < b) : a % b = a :=
   match a, b, eq_coe_of_zero_le H1, eq_coe_of_zero_le (le_transₓ H1 (le_of_ltₓ H2)), H2 with
-  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩, H2 => congr_arg ofNat <| Nat.mod_eq_of_ltₓ (lt_of_coe_nat_lt_coe_nat H2)
+  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩, H2 => congr_argₓ ofNat <| Nat.mod_eq_of_ltₓ (lt_of_coe_nat_lt_coe_nat H2)
 
 theorem mod_nonneg : ∀ (a : ℤ) {b : ℤ}, b ≠ 0 → 0 ≤ a % b
   | (m : ℕ), n, H => coe_zero_le _
-  | -[1+ m], n, H => sub_nonneg_of_le <| coe_nat_le_coe_nat_of_le <| Nat.mod_ltₓ _ (nat_abs_pos_of_ne_zero H)
+  | -[1 + m], n, H => sub_nonneg_of_le <| coe_nat_le_coe_nat_of_le <| Nat.mod_ltₓ _ (nat_abs_pos_of_ne_zero H)
 
 theorem mod_lt_of_pos (a : ℤ) {b : ℤ} (H : 0 < b) : a % b < b :=
   match a, b, eq_succ_of_zero_ltₓ H with
   | (m : ℕ), _, ⟨n, rfl⟩ => coe_nat_lt_coe_nat_of_lt (Nat.mod_ltₓ _ (Nat.succ_posₓ _))
-  | -[1+ m], _, ⟨n, rfl⟩ => sub_lt_self _ (coe_nat_lt_coe_nat_of_lt <| Nat.succ_posₓ _)
+  | -[1 + m], _, ⟨n, rfl⟩ => sub_lt_self _ (coe_nat_lt_coe_nat_of_lt <| Nat.succ_posₓ _)
 
 theorem mod_lt (a : ℤ) {b : ℤ} (H : b ≠ 0) : a % b < abs b := by
   rw [← mod_abs] <;> exact mod_lt_of_pos _ (abs_pos.2 H)
 
-theorem mod_add_div_aux (m n : ℕ) : (n - (m % n + 1) - (n * (m / n) + n) : ℤ) = -[1+ m] := by
+theorem mod_add_div_aux (m n : ℕ) : (n - (m % n + 1) - (n * (m / n) + n) : ℤ) = -[1 + m] := by
   rw [← sub_sub, neg_succ_of_nat_coe, sub_sub (n : ℤ)]
   apply eq_neg_of_eq_neg
   rw [neg_sub, sub_sub_self, add_right_commₓ]
-  exact @congr_arg ℕ ℤ _ _ (fun i => (i + 1 : ℤ)) (Nat.mod_add_divₓ _ _).symm
+  exact @congr_argₓ ℕ ℤ _ _ (fun i => (i + 1 : ℤ)) (Nat.mod_add_divₓ _ _).symm
 
 theorem mod_add_div : ∀ a b : ℤ, a % b + b * (a / b) = a
-  | (m : ℕ), (n : ℕ) => congr_arg ofNat (Nat.mod_add_divₓ _ _)
-  | (m : ℕ), -[1+ n] =>
+  | (m : ℕ), (n : ℕ) => congr_argₓ ofNat (Nat.mod_add_divₓ _ _)
+  | (m : ℕ), -[1 + n] =>
     show (_ + -(n + 1) * -(m / (n + 1) : ℕ) : ℤ) = _ by
-      rw [neg_mul_neg] <;> exact congr_arg of_nat (Nat.mod_add_divₓ _ _)
-  | -[1+ m], 0 => by
+      rw [neg_mul_neg] <;> exact congr_argₓ of_nat (Nat.mod_add_divₓ _ _)
+  | -[1 + m], 0 => by
     rw [mod_zero, Int.div_zero] <;> rfl
-  | -[1+ m], (n + 1 : ℕ) => mod_add_div_aux m n.succ
-  | -[1+ m], -[1+ n] => mod_add_div_aux m n.succ
+  | -[1 + m], (n + 1 : ℕ) => mod_add_div_aux m n.succ
+  | -[1 + m], -[1 + n] => mod_add_div_aux m n.succ
 
 theorem div_add_mod (a b : ℤ) : b * (a / b) + a % b = a :=
   (add_commₓ _ _).trans (mod_add_div _ _)
@@ -893,14 +893,14 @@ theorem mul_div_mul_of_pos {a : ℤ} (b c : ℤ) (H : 0 < a) : a * b / (a * c) =
     match a, eq_succ_of_zero_ltₓ H, c, eq_coe_or_neg c with
     | _, ⟨m, rfl⟩, _, ⟨k, Or.inl rfl⟩ => this _ _ _
     | _, ⟨m, rfl⟩, _, ⟨k, Or.inr rfl⟩ => by
-      rw [mul_neg, Int.div_neg, Int.div_neg] <;> apply congr_arg Neg.neg <;> apply this
+      rw [mul_neg, Int.div_neg, Int.div_neg] <;> apply congr_argₓ Neg.neg <;> apply this
   fun m k b =>
   match b, k with
-  | (n : ℕ), k => congr_arg ofNat (Nat.mul_div_mulₓ _ _ m.succ_pos)
-  | -[1+ n], 0 => by
+  | (n : ℕ), k => congr_argₓ ofNat (Nat.mul_div_mulₓ _ _ m.succ_pos)
+  | -[1 + n], 0 => by
     rw [Int.coe_nat_zero, mul_zero, Int.div_zero, Int.div_zero]
-  | -[1+ n], k + 1 =>
-    congr_arg negSucc <|
+  | -[1 + n], k + 1 =>
+    congr_argₓ negSucc <|
       show (m.succ * n + m) / (m.succ * k.succ) = n / k.succ by
         apply Nat.div_eq_of_lt_leₓ
         · refine' le_transₓ _ (Nat.le_add_rightₓ _ _)
@@ -938,8 +938,8 @@ theorem abs_div_le_abs : ∀ a b : ℤ, abs (a / b) ≤ abs a :=
       coe_nat_le_coe_nat_of_le
         (match a, n with
         | (m : ℕ), n => Nat.div_le_selfₓ _ _
-        | -[1+ m], 0 => Nat.zero_leₓ _
-        | -[1+ m], n + 1 => Nat.succ_le_succₓ (Nat.div_le_selfₓ _ _))
+        | -[1 + m], 0 => Nat.zero_leₓ _
+        | -[1 + m], n + 1 => Nat.succ_le_succₓ (Nat.div_le_selfₓ _ _))
 
 theorem div_le_self {a : ℤ} (b : ℤ) (Ha : 0 ≤ a) : a / b ≤ a := by
   have := le_transₓ (le_abs_self _) (abs_div_le_abs a b) <;> rwa [abs_of_nonneg Ha] at this
@@ -969,7 +969,7 @@ theorem mod_two_eq_zero_or_one (n : ℤ) : n % 2 = 0 ∨ n % 2 = 1 :=
     absurd h
       (by
         decide)
-  | -[1+ a] => fun _ h₁ =>
+  | -[1 + a] => fun _ h₁ =>
     absurd h₁
       (by
         decide)
@@ -1111,7 +1111,7 @@ theorem sub_div_of_dvd_sub {a b c : ℤ} (hcab : c ∣ a - b) : (a - b) / c = a 
 
 @[simp]
 protected theorem div_left_inj {a b d : ℤ} (hda : d ∣ a) (hdb : d ∣ b) : a / d = b / d ↔ a = b := by
-  refine' ⟨fun h => _, congr_arg _⟩
+  refine' ⟨fun h => _, congr_argₓ _⟩
   rw [← Int.mul_div_cancel' hda, ← Int.mul_div_cancel' hdb, h]
 
 theorem nat_abs_sign (z : ℤ) : z.sign.natAbs = if z = 0 then 0 else 1 := by
@@ -1136,7 +1136,7 @@ theorem div_sign : ∀ a b, a / sign b = a * sign b
     unfold sign <;> simp
   | a, 0 => by
     simp [sign]
-  | a, -[1+ n] => by
+  | a, -[1 + n] => by
     simp [sign]
 
 @[simp]
@@ -1146,9 +1146,9 @@ theorem sign_mul : ∀ a b, sign (a * b) = sign a * sign b
   | 0, b => by
     simp
   | (m + 1 : ℕ), (n + 1 : ℕ) => rfl
-  | (m + 1 : ℕ), -[1+ n] => rfl
-  | -[1+ m], (n + 1 : ℕ) => rfl
-  | -[1+ m], -[1+ n] => rfl
+  | (m + 1 : ℕ), -[1 + n] => rfl
+  | -[1 + m], (n + 1 : ℕ) => rfl
+  | -[1 + m], -[1 + n] => rfl
 
 protected theorem sign_eq_div_abs (a : ℤ) : sign a = a / abs a :=
   if az : a = 0 then by
@@ -1158,22 +1158,22 @@ protected theorem sign_eq_div_abs (a : ℤ) : sign a = a / abs a :=
 theorem mul_sign : ∀ i : ℤ, i * sign i = natAbs i
   | (n + 1 : ℕ) => mul_oneₓ _
   | 0 => mul_zero _
-  | -[1+ n] => mul_neg_one _
+  | -[1 + n] => mul_neg_one _
 
 @[simp]
 theorem sign_pow_bit1 (k : ℕ) : ∀ n : ℤ, n.sign ^ bit1 k = n.sign
   | (n + 1 : ℕ) => one_pow (bit1 k)
   | 0 => zero_pow (Nat.zero_lt_bit1 k)
-  | -[1+ n] => (neg_pow_bit1 1 k).trans (congr_arg (fun x => -x) (one_pow (bit1 k)))
+  | -[1 + n] => (neg_pow_bit1 1 k).trans (congr_argₓ (fun x => -x) (one_pow (bit1 k)))
 
 theorem le_of_dvd {a b : ℤ} (bpos : 0 < b) (H : a ∣ b) : a ≤ b :=
   match a, b, eq_succ_of_zero_ltₓ bpos, H with
   | (m : ℕ), _, ⟨n, rfl⟩, H => coe_nat_le_coe_nat_of_le <| Nat.le_of_dvdₓ n.succ_pos <| coe_nat_dvd.1 H
-  | -[1+ m], _, ⟨n, rfl⟩, _ => le_transₓ (le_of_ltₓ <| neg_succ_lt_zeroₓ _) (coe_zero_le _)
+  | -[1 + m], _, ⟨n, rfl⟩, _ => le_transₓ (le_of_ltₓ <| neg_succ_lt_zeroₓ _) (coe_zero_le _)
 
 theorem eq_one_of_dvd_one {a : ℤ} (H : 0 ≤ a) (H' : a ∣ 1) : a = 1 :=
   match a, eq_coe_of_zero_le H, H' with
-  | _, ⟨n, rfl⟩, H' => congr_arg coe <| Nat.eq_one_of_dvd_one <| coe_nat_dvd.1 H'
+  | _, ⟨n, rfl⟩, H' => congr_argₓ coe <| Nat.eq_one_of_dvd_one <| coe_nat_dvd.1 H'
 
 theorem eq_one_of_mul_eq_one_right {a b : ℤ} (H : 0 ≤ a) (H' : a * b = 1) : a = 1 :=
   eq_one_of_dvd_one H ⟨b, H'.symm⟩
@@ -1185,7 +1185,7 @@ theorem eq_one_of_mul_eq_one_left {a b : ℤ} (H : 0 ≤ b) (H' : a * b = 1) : b
 
 theorem of_nat_dvd_of_dvd_nat_abs {a : ℕ} : ∀ {z : ℤ} (haz : a ∣ z.natAbs), ↑a ∣ z
   | Int.ofNat _, haz => Int.coe_nat_dvd.2 haz
-  | -[1+ k], haz => by
+  | -[1 + k], haz => by
     change ↑a ∣ -(k + 1 : ℤ)
     apply dvd_neg_of_dvd
     apply Int.coe_nat_dvd.2
@@ -1193,7 +1193,7 @@ theorem of_nat_dvd_of_dvd_nat_abs {a : ℕ} : ∀ {z : ℤ} (haz : a ∣ z.natAb
 
 theorem dvd_nat_abs_of_of_nat_dvd {a : ℕ} : ∀ {z : ℤ} (haz : ↑a ∣ z), a ∣ z.natAbs
   | Int.ofNat _, haz => Int.coe_nat_dvd.1 (Int.dvd_nat_abs.2 haz)
-  | -[1+ k], haz =>
+  | -[1 + k], haz =>
     have haz' : (↑a : ℤ) ∣ (↑(k + 1) : ℤ) := dvd_of_dvd_neg haz
     Int.coe_nat_dvd.1 haz'
 
@@ -1203,7 +1203,7 @@ theorem pow_dvd_of_le_of_pow_dvd {p m n : ℕ} {k : ℤ} (hmn : m ≤ n) (hdiv :
     apply pow_dvd_of_le_of_pow_dvd hmn
     apply Int.coe_nat_dvd.1 hdiv
     
-  change -[1+ k] with -(↑(k + 1) : ℤ)
+  change -[1 + k] with -(↑(k + 1) : ℤ)
   apply dvd_neg_of_dvd
   apply Int.coe_nat_dvd.2
   apply pow_dvd_of_le_of_pow_dvd hmn
@@ -1308,21 +1308,21 @@ they are equal. -/
 theorem eq_of_mod_eq_of_nat_abs_sub_lt_nat_abs {a b c : ℤ} (h1 : a % b = c) (h2 : natAbs (a - c) < natAbs b) : a = c :=
   eq_of_sub_eq_zero (eq_zero_of_dvd_of_nat_abs_lt_nat_abs (dvd_sub_of_mod_eq h1) h2)
 
-theorem of_nat_add_neg_succ_of_nat_of_lt {m n : ℕ} (h : m < n.succ) : ofNat m + -[1+ n] = -[1+ n - m] := by
+theorem of_nat_add_neg_succ_of_nat_of_lt {m n : ℕ} (h : m < n.succ) : ofNat m + -[1 + n] = -[1 + (n - m)] := by
   change sub_nat_nat _ _ = _
   have h' : n.succ - m = (n - m).succ
   apply succ_sub
   apply le_of_lt_succ h
   simp [*, sub_nat_nat]
 
-theorem of_nat_add_neg_succ_of_nat_of_ge {m n : ℕ} (h : n.succ ≤ m) : ofNat m + -[1+ n] = ofNat (m - n.succ) := by
+theorem of_nat_add_neg_succ_of_nat_of_ge {m n : ℕ} (h : n.succ ≤ m) : ofNat m + -[1 + n] = ofNat (m - n.succ) := by
   change sub_nat_nat _ _ = _
   have h' : n.succ - m = 0
   apply tsub_eq_zero_iff_le.mpr h
   simp [*, sub_nat_nat]
 
 @[simp]
-theorem neg_add_neg (m n : ℕ) : -[1+ m] + -[1+ n] = -[1+ Nat.succ (m + n)] :=
+theorem neg_add_neg (m n : ℕ) : -[1 + m] + -[1 + n] = -[1 + Nat.succ (m + n)] :=
   rfl
 
 theorem nat_abs_le_of_dvd_ne_zero {s t : ℤ} (hst : s ∣ t) (ht : t ≠ 0) : natAbs s ≤ natAbs t :=
@@ -1351,7 +1351,7 @@ theorem dvd_div_of_mul_dvd {a b c : ℤ} (h : a * b ∣ c) : b ∣ c / a := by
 
 theorem to_nat_eq_max : ∀ a : ℤ, (toNat a : ℤ) = max a 0
   | (n : ℕ) => (max_eq_leftₓ (coe_zero_le n)).symm
-  | -[1+ n] => (max_eq_rightₓ (le_of_ltₓ (neg_succ_lt_zeroₓ n))).symm
+  | -[1 + n] => (max_eq_rightₓ (le_of_ltₓ (neg_succ_lt_zeroₓ n))).symm
 
 @[simp]
 theorem to_nat_zero : (0 : ℤ).toNat = 0 :=
@@ -1394,7 +1394,7 @@ theorem le_to_nat_iff {n : ℕ} {z : ℤ} (h : 0 ≤ z) : n ≤ z.toNat ↔ (n :
 
 @[simp]
 theorem coe_nat_nonpos_iff {n : ℕ} : (n : ℤ) ≤ 0 ↔ n = 0 :=
-  ⟨fun h => le_antisymmₓ (Int.coe_nat_le.mp (h.trans Int.coe_nat_zero.le)) n.zero_le, fun h =>
+  ⟨fun h => le_antisymmₓ (Int.coe_nat_leₓ.mp (h.trans Int.coe_nat_zero.le)) n.zero_le, fun h =>
     (coe_nat_eq_zero.mpr h).le⟩
 
 theorem to_nat_le_to_nat {a b : ℤ} (h : a ≤ b) : toNat a ≤ toNat b := by
@@ -1427,7 +1427,7 @@ theorem pred_to_nat : ∀ i : ℤ, (i - 1).toNat = i.toNat - 1
   | (0 : ℕ) => rfl
   | (n + 1 : ℕ) => by
     simp
-  | -[1+ n] => rfl
+  | -[1 + n] => rfl
 
 @[simp]
 theorem to_nat_pred_coe_of_pos {i : ℤ} (h : 0 < i) : ((i.toNat - 1 : ℕ) : ℤ) = i - 1 := by
@@ -1437,23 +1437,23 @@ theorem to_nat_pred_coe_of_pos {i : ℤ} (h : 0 < i) : ((i.toNat - 1 : ℕ) : �
 theorem to_nat_sub_to_nat_neg : ∀ n : ℤ, ↑n.toNat - ↑(-n).toNat = n
   | (0 : ℕ) => rfl
   | (n + 1 : ℕ) => show ↑(n + 1) - (0 : ℤ) = n + 1 from sub_zero _
-  | -[1+ n] => show 0 - (n + 1 : ℤ) = _ from zero_sub _
+  | -[1 + n] => show 0 - (n + 1 : ℤ) = _ from zero_sub _
 
 @[simp]
 theorem to_nat_add_to_nat_neg_eq_nat_abs : ∀ n : ℤ, n.toNat + (-n).toNat = n.natAbs
   | (0 : ℕ) => rfl
   | (n + 1 : ℕ) => show n + 1 + 0 = n + 1 from add_zeroₓ _
-  | -[1+ n] => show 0 + (n + 1) = n + 1 from zero_addₓ _
+  | -[1 + n] => show 0 + (n + 1) = n + 1 from zero_addₓ _
 
 /-- If `n : ℕ`, then `int.to_nat' n = some n`, if `n : ℤ` is negative, then `int.to_nat' n = none`.
 -/
 def toNat' : ℤ → Option ℕ
   | (n : ℕ) => some n
-  | -[1+ n] => none
+  | -[1 + n] => none
 
 theorem mem_to_nat' : ∀ (a : ℤ) (n : ℕ), n ∈ toNat' a ↔ a = n
   | (m : ℕ), n => Option.some_inj.trans coe_nat_inj'.symm
-  | -[1+ m], n => by
+  | -[1 + m], n => by
     constructor <;> intro h <;> cases h
 
 theorem to_nat_of_nonpos : ∀ {z : ℤ}, z ≤ 0 → z.toNat = 0
@@ -1462,7 +1462,7 @@ theorem to_nat_of_nonpos : ∀ {z : ℤ}, z ≤ 0 → z.toNat = 0
     (h.not_lt
         (by
           simp )).elim
-  | -[1+ n], _ => rfl
+  | -[1 + n], _ => rfl
 
 @[simp]
 theorem to_nat_neg_nat : ∀ n : ℕ, (-(n : ℤ)).toNat = 0
@@ -1476,7 +1476,7 @@ theorem to_nat_eq_zero : ∀ {n : ℤ}, n.toNat = 0 ↔ n ≤ 0
       _ ↔ n = 0 := ⟨(to_nat_coe_nat n).symm.trans, (to_nat_coe_nat n).trans⟩
       _ ↔ _ := coe_nat_nonpos_iff.symm
       
-  | -[1+ n] =>
+  | -[1 + n] =>
     show (-((n : ℤ) + 1)).toNat = 0 ↔ (-(n + 1) : ℤ) ≤ 0 from
       calc
         _ ↔ True := ⟨fun _ => trivialₓ, fun h => to_nat_neg_nat _⟩
@@ -1498,7 +1498,7 @@ theorem units_eq_one_or (u : ℤˣ) : u = 1 ∨ u = -1 := by
   simpa only [Units.ext_iff, units_nat_abs] using nat_abs_eq u
 
 theorem is_unit_eq_one_or {a : ℤ} : IsUnit a → a = 1 ∨ a = -1
-  | ⟨x, hx⟩ => hx ▸ (units_eq_one_or _).imp (congr_arg coe) (congr_arg coe)
+  | ⟨x, hx⟩ => hx ▸ (units_eq_one_or _).imp (congr_argₓ coe) (congr_argₓ coe)
 
 theorem is_unit_iff {a : ℤ} : IsUnit a ↔ a = 1 ∨ a = -1 := by
   refine' ⟨fun h => is_unit_eq_one_or h, fun h => _⟩
@@ -1610,12 +1610,12 @@ theorem bodd_add_div2 : ∀ n, cond (bodd n) 1 0 + 2 * div2 n = n
     rw
         [show (cond (bodd n) 1 0 : ℤ) = (cond (bodd n) 1 0 : ℕ) by
           cases bodd n <;> rfl] <;>
-      exact congr_arg of_nat n.bodd_add_div2
-  | -[1+ n] => by
-    refine' Eq.trans _ (congr_arg neg_succ_of_nat n.bodd_add_div2)
+      exact congr_argₓ of_nat n.bodd_add_div2
+  | -[1 + n] => by
+    refine' Eq.trans _ (congr_argₓ neg_succ_of_nat n.bodd_add_div2)
     dsimp' [bodd]
     cases Nat.bodd n <;> dsimp' [cond, bnot, div2, Int.mul]
-    · change -[1+ 2 * Nat.div2 n] = _
+    · change -[1 + 2 * Nat.div2 n] = _
       rw [zero_addₓ]
       
     · rw [zero_addₓ, add_commₓ]
@@ -1623,14 +1623,14 @@ theorem bodd_add_div2 : ∀ n, cond (bodd n) 1 0 + 2 * div2 n = n
       
 
 theorem div2_val : ∀ n, div2 n = n / 2
-  | (n : ℕ) => congr_arg ofNat n.div2_val
-  | -[1+ n] => congr_arg negSucc n.div2_val
+  | (n : ℕ) => congr_argₓ ofNat n.div2_val
+  | -[1 + n] => congr_argₓ negSucc n.div2_val
 
 theorem bit0_val (n : ℤ) : bit0 n = 2 * n :=
   (two_mul _).symm
 
 theorem bit1_val (n : ℤ) : bit1 n = 2 * n + 1 :=
-  congr_arg (· + (1 : ℤ)) (bit0_val _)
+  congr_argₓ (· + (1 : ℤ)) (bit0_val _)
 
 theorem bit_val (b n) : bit b n = 2 * n + cond b 1 0 := by
   cases b
@@ -1654,7 +1654,7 @@ theorem bit_coe_nat (b) (n : ℕ) : bit b n = Nat.bit b n := by
   rw [bit_val, Nat.bit_val] <;> cases b <;> rfl
 
 @[simp]
-theorem bit_neg_succ (b) (n : ℕ) : bit b -[1+ n] = -[1+ Nat.bit (bnot b) n] := by
+theorem bit_neg_succ (b) (n : ℕ) : bit b (-[1 + n]) = -[1 + Nat.bit (bnot b) n] := by
   rw [bit_val, Nat.bit_val] <;> cases b <;> rfl
 
 @[simp]
@@ -1682,7 +1682,7 @@ theorem div2_bit (b n) : div2 (bit b n) = n := by
     
 
 theorem bit0_ne_bit1 (m n : ℤ) : bit0 m ≠ bit1 n :=
-  mt (congr_arg bodd) <| by
+  mt (congr_argₓ bodd) <| by
     simp
 
 theorem bit1_ne_bit0 (m n : ℤ) : bit1 m ≠ bit0 n :=
@@ -1695,14 +1695,14 @@ theorem bit1_ne_zero (m : ℤ) : bit1 m ≠ 0 := by
 theorem test_bit_zero (b) : ∀ n, testBit (bit b n) 0 = b
   | (n : ℕ) => by
     rw [bit_coe_nat] <;> apply Nat.test_bit_zero
-  | -[1+ n] => by
+  | -[1 + n] => by
     rw [bit_neg_succ] <;> dsimp' [test_bit] <;> rw [Nat.test_bit_zero] <;> clear test_bit_zero <;> cases b <;> rfl
 
 @[simp]
 theorem test_bit_succ (m b) : ∀ n, testBit (bit b n) (Nat.succ m) = testBit n m
   | (n : ℕ) => by
     rw [bit_coe_nat] <;> apply Nat.test_bit_succ
-  | -[1+ n] => by
+  | -[1 + n] => by
     rw [bit_neg_succ] <;> dsimp' [test_bit] <;> rw [Nat.test_bit_succ]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
@@ -1769,7 +1769,7 @@ theorem lxor_bit (a m b n) : lxor (bit a m) (bit b n) = bit (bxor a b) (lxor m n
 theorem lnot_bit (b) : ∀ n, lnot (bit b n) = bit (bnot b) (lnot n)
   | (n : ℕ) => by
     simp [lnot]
-  | -[1+ n] => by
+  | -[1 + n] => by
     simp [lnot]
 
 @[simp]
@@ -1802,27 +1802,27 @@ theorem test_bit_lxor (m n k) : testBit (lxor m n) k = bxor (testBit m k) (testB
 theorem test_bit_lnot : ∀ n k, testBit (lnot n) k = bnot (testBit n k)
   | (n : ℕ), k => by
     simp [lnot, test_bit]
-  | -[1+ n], k => by
+  | -[1 + n], k => by
     simp [lnot, test_bit]
 
 theorem shiftl_add : ∀ (m : ℤ) (n : ℕ) (k : ℤ), shiftl m (n + k) = shiftl (shiftl m n) k
-  | (m : ℕ), n, (k : ℕ) => congr_arg ofNat (Nat.shiftl_add _ _ _)
-  | -[1+ m], n, (k : ℕ) => congr_arg negSucc (Nat.shiftl'_add _ _ _ _)
-  | (m : ℕ), n, -[1+ k] =>
+  | (m : ℕ), n, (k : ℕ) => congr_argₓ ofNat (Nat.shiftl_add _ _ _)
+  | -[1 + m], n, (k : ℕ) => congr_argₓ negSucc (Nat.shiftl'_add _ _ _ _)
+  | (m : ℕ), n, -[1 + k] =>
     sub_nat_nat_elim n k.succ (fun n k i => shiftl (↑m) i = Nat.shiftr (Nat.shiftl m n) k)
       (fun i n =>
-        congr_arg coe <| by
+        congr_argₓ coe <| by
           rw [← Nat.shiftl_sub, add_tsub_cancel_left] <;> apply Nat.le_add_rightₓ)
       fun i n =>
-      congr_arg coe <| by
+      congr_argₓ coe <| by
         rw [add_assocₓ, Nat.shiftr_add, ← Nat.shiftl_sub, tsub_self] <;> rfl
-  | -[1+ m], n, -[1+ k] =>
-    sub_nat_nat_elim n k.succ (fun n k i => shiftl -[1+ m] i = -[1+ Nat.shiftr (Nat.shiftl' true m n) k])
+  | -[1 + m], n, -[1 + k] =>
+    sub_nat_nat_elim n k.succ (fun n k i => shiftl (-[1 + m]) i = -[1 + Nat.shiftr (Nat.shiftl' true m n) k])
       (fun i n =>
-        congr_arg negSucc <| by
+        congr_argₓ negSucc <| by
           rw [← Nat.shiftl'_sub, add_tsub_cancel_left] <;> apply Nat.le_add_rightₓ)
       fun i n =>
-      congr_arg negSucc <| by
+      congr_argₓ negSucc <| by
         rw [add_assocₓ, Nat.shiftr_add, ← Nat.shiftl'_sub, tsub_self] <;> rfl
 
 theorem shiftl_sub (m : ℤ) (n : ℕ) (k : ℤ) : shiftl m (n - k) = shiftr (shiftl m n) k :=
@@ -1845,27 +1845,27 @@ theorem shiftr_coe_nat (m n : ℕ) : shiftr m n = Nat.shiftr m n := by
   cases n <;> rfl
 
 @[simp]
-theorem shiftl_neg_succ (m n : ℕ) : shiftl -[1+ m] n = -[1+ Nat.shiftl' true m n] :=
+theorem shiftl_neg_succ (m n : ℕ) : shiftl (-[1 + m]) n = -[1 + Nat.shiftl' true m n] :=
   rfl
 
 @[simp]
-theorem shiftr_neg_succ (m n : ℕ) : shiftr -[1+ m] n = -[1+ Nat.shiftr m n] := by
+theorem shiftr_neg_succ (m n : ℕ) : shiftr (-[1 + m]) n = -[1 + Nat.shiftr m n] := by
   cases n <;> rfl
 
 theorem shiftr_add : ∀ (m : ℤ) (n k : ℕ), shiftr m (n + k) = shiftr (shiftr m n) k
   | (m : ℕ), n, k => by
     rw [shiftr_coe_nat, shiftr_coe_nat, ← Int.coe_nat_add, shiftr_coe_nat, Nat.shiftr_add]
-  | -[1+ m], n, k => by
+  | -[1 + m], n, k => by
     rw [shiftr_neg_succ, shiftr_neg_succ, ← Int.coe_nat_add, shiftr_neg_succ, Nat.shiftr_add]
 
 theorem shiftl_eq_mul_pow : ∀ (m : ℤ) (n : ℕ), shiftl m n = m * ↑(2 ^ n)
-  | (m : ℕ), n => congr_arg coe (Nat.shiftl_eq_mul_pow _ _)
-  | -[1+ m], n => @congr_arg ℕ ℤ _ _ (fun i => -i) (Nat.shiftl'_tt_eq_mul_pow _ _)
+  | (m : ℕ), n => congr_argₓ coe (Nat.shiftl_eq_mul_pow _ _)
+  | -[1 + m], n => @congr_argₓ ℕ ℤ _ _ (fun i => -i) (Nat.shiftl'_tt_eq_mul_pow _ _)
 
 theorem shiftr_eq_div_pow : ∀ (m : ℤ) (n : ℕ), shiftr m n = m / ↑(2 ^ n)
   | (m : ℕ), n => by
-    rw [shiftr_coe_nat] <;> exact congr_arg coe (Nat.shiftr_eq_div_pow _ _)
-  | -[1+ m], n => by
+    rw [shiftr_coe_nat] <;> exact congr_argₓ coe (Nat.shiftr_eq_div_pow _ _)
+  | -[1 + m], n => by
     rw [shiftr_neg_succ, neg_succ_of_nat_div, Nat.shiftr_eq_div_pow]
     rfl
     exact
@@ -1876,12 +1876,12 @@ theorem shiftr_eq_div_pow : ∀ (m : ℤ) (n : ℕ), shiftr m n = m / ↑(2 ^ n)
           _)
 
 theorem one_shiftl (n : ℕ) : shiftl 1 n = (2 ^ n : ℕ) :=
-  congr_arg coe (Nat.one_shiftl _)
+  congr_argₓ coe (Nat.one_shiftl _)
 
 @[simp]
 theorem zero_shiftl : ∀ n : ℤ, shiftl 0 n = 0
-  | (n : ℕ) => congr_arg coe (Nat.zero_shiftl _)
-  | -[1+ n] => congr_arg coe (Nat.zero_shiftr _)
+  | (n : ℕ) => congr_argₓ coe (Nat.zero_shiftl _)
+  | -[1 + n] => congr_argₓ coe (Nat.zero_shiftr _)
 
 @[simp]
 theorem zero_shiftr (n) : shiftr 0 n = 0 :=

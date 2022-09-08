@@ -798,7 +798,7 @@ theorem ext_chart_at_map_nhds_within_eq_image' {y : M} (hy : y ∈ (extChartAt I
   set e := extChartAt I x <;>
     calc
       map e (𝓝[s] y) = map e (𝓝[e.source ∩ s] y) :=
-        congr_arg (map e) (nhds_within_inter_of_mem (ext_chart_at_source_mem_nhds_within' I x hy)).symm
+        congr_argₓ (map e) (nhds_within_inter_of_mem (ext_chart_at_source_mem_nhds_within' I x hy)).symm
       _ = 𝓝[e '' (e.source ∩ s)] e y :=
         ((extChartAt I x).LeftInvOn.mono <| inter_subset_left _ _).map_nhds_within_eq ((extChartAt I x).left_inv hy)
           (ext_chart_continuous_at_symm' I x hy).ContinuousWithinAt

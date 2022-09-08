@@ -323,7 +323,7 @@ protected theorem coe_int_mul (m n : ℤ) : (↑(m * n) : ℤ√d) = ↑m * ↑n
   (Int.castRingHom _).map_mul _ _
 
 protected theorem coe_int_inj {m n : ℤ} (h : (↑m : ℤ√d) = ↑n) : m = n := by
-  simpa using congr_arg re h
+  simpa using congr_argₓ re h
 
 theorem coe_int_dvd_iff (z : ℤ) (a : ℤ√d) : ↑z ∣ a ↔ z ∣ a.re ∧ z ∣ a.im := by
   constructor
@@ -445,9 +445,9 @@ theorem sq_le_mul {d x y z w : ℕ} :
   we are interested in the case `c = 1` but this is more symmetric -/
 def Nonnegg (c d : ℕ) : ℤ → ℤ → Prop
   | (a : ℕ), (b : ℕ) => True
-  | (a : ℕ), -[1+ b] => SqLe (b + 1) c a d
-  | -[1+ a], (b : ℕ) => SqLe (a + 1) d b c
-  | -[1+ a], -[1+ b] => False
+  | (a : ℕ), -[1 + b] => SqLe (b + 1) c a d
+  | -[1 + a], (b : ℕ) => SqLe (a + 1) d b c
+  | -[1 + a], -[1 + b] => False
 
 theorem nonnegg_comm {c d : ℕ} {x y : ℤ} : Nonnegg c d x y = Nonnegg d c y x := by
   induction x <;> induction y <;> rfl
@@ -464,7 +464,7 @@ theorem nonnegg_pos_neg {c d} {a b : ℕ} : Nonnegg c d a (-b) ↔ SqLe b c a d 
 
 theorem nonnegg_cases_right {c d} {a : ℕ} : ∀ {b : ℤ}, (∀ x : ℕ, b = -x → SqLe x c a d) → Nonnegg c d a b
   | (b : Nat), h => trivialₓ
-  | -[1+ b], h => h (b + 1) rfl
+  | -[1 + b], h => h (b + 1) rfl
 
 theorem nonnegg_cases_left {c d} {b : ℕ} {a : ℤ} (h : ∀ x : ℕ, a = -x → SqLe x d b c) : Nonnegg c d a b :=
   cast nonnegg_comm (nonnegg_cases_right h)
@@ -539,7 +539,7 @@ theorem norm_eq_one_iff {x : ℤ√d} : x.norm.natAbs = 1 ↔ IsUnit x :=
               norm_eq_mul_conj, neg_mul_eq_mul_neg, eq_comm] at h⟩,
     fun h => by
     let ⟨y, hy⟩ := is_unit_iff_dvd_one.1 h
-    have := congr_arg (Int.natAbs ∘ norm) hy
+    have := congr_argₓ (Int.natAbs ∘ norm) hy
     rw [Function.comp_app, Function.comp_app, norm_mul, Int.nat_abs_mul, norm_one, Int.nat_abs_one, eq_comm,
       Nat.mul_eq_one_iff] at this
     exact this.1⟩
@@ -605,9 +605,9 @@ instance decidableLe : @DecidableRel (ℤ√d) (· ≤ ·) := fun _ _ => decidab
 
 theorem nonneg_cases : ∀ {a : ℤ√d}, nonneg a → ∃ x y : ℕ, a = ⟨x, y⟩ ∨ a = ⟨x, -y⟩ ∨ a = ⟨-x, y⟩
   | ⟨(x : ℕ), (y : ℕ)⟩, h => ⟨x, y, Or.inl rfl⟩
-  | ⟨(x : ℕ), -[1+ y]⟩, h => ⟨x, y + 1, Or.inr <| Or.inl rfl⟩
-  | ⟨-[1+ x], (y : ℕ)⟩, h => ⟨x + 1, y, Or.inr <| Or.inr rfl⟩
-  | ⟨-[1+ x], -[1+ y]⟩, h => False.elim h
+  | ⟨(x : ℕ), -[1 + y]⟩, h => ⟨x, y + 1, Or.inr <| Or.inl rfl⟩
+  | ⟨-[1 + x], (y : ℕ)⟩, h => ⟨x + 1, y, Or.inr <| Or.inr rfl⟩
+  | ⟨-[1 + x], -[1 + y]⟩, h => False.elim h
 
 theorem nonneg_add_lem {x y z w : ℕ} (xy : nonneg ⟨x, -y⟩) (zw : nonneg ⟨-z, w⟩) : nonneg (⟨x, -y⟩ + ⟨-z, w⟩) :=
   have : nonneg ⟨Int.subNatNat x z, Int.subNatNat w y⟩ :=
@@ -616,7 +616,7 @@ theorem nonneg_add_lem {x y z w : ℕ} (xy : nonneg ⟨x, -y⟩) (zw : nonneg �
         Int.sub_nat_nat_elim w y (fun m n i => SqLe n d (k + j) 1 → SqLe k 1 m d → nonneg ⟨Int.ofNat j, i⟩)
           (fun m n xy zw => trivialₓ) fun m n xy zw => sq_le_cancel zw xy)
       (fun j k =>
-        Int.sub_nat_nat_elim w y (fun m n i => SqLe n d k 1 → SqLe (k + j + 1) 1 m d → nonneg ⟨-[1+ j], i⟩)
+        Int.sub_nat_nat_elim w y (fun m n i => SqLe n d k 1 → SqLe (k + j + 1) 1 m d → nonneg ⟨-[1 + j], i⟩)
           (fun m n xy zw => sq_le_cancel xy zw) fun m n xy zw =>
           let t := Nat.le_transₓ zw (sq_le_of_le (Nat.le_add_rightₓ n (m + 1)) le_rflₓ xy)
           have : k + j + 1 ≤ k :=
@@ -636,7 +636,7 @@ theorem Nonneg.add {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a +
     
   · refine' nonnegg_cases_right fun i h => sq_le_of_le _ _ (nonnegg_pos_neg.1 hb)
     · exact
-        Int.coe_nat_le.1
+        Int.coe_nat_leₓ.1
           (le_of_neg_le_neg
             (@Int.Le.intro _ _ y
               (by
@@ -647,7 +647,7 @@ theorem Nonneg.add {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a +
     
   · refine' nonnegg_cases_left fun i h => sq_le_of_le _ _ (nonnegg_neg_pos.1 hb)
     · exact
-        Int.coe_nat_le.1
+        Int.coe_nat_leₓ.1
           (le_of_neg_le_neg
             (@Int.Le.intro _ _ x
               (by
@@ -658,7 +658,7 @@ theorem Nonneg.add {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a +
     
   · refine' nonnegg_cases_right fun i h => sq_le_of_le _ _ (nonnegg_pos_neg.1 ha)
     · exact
-        Int.coe_nat_le.1
+        Int.coe_nat_leₓ.1
           (le_of_neg_le_neg
             (@Int.Le.intro _ _ w
               (by
@@ -672,7 +672,7 @@ theorem Nonneg.add {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a +
   · exact nonneg_add_lem ha hb
     
   · refine' nonnegg_cases_left fun i h => sq_le_of_le _ _ (nonnegg_neg_pos.1 ha)
-    · exact Int.coe_nat_le.1 (le_of_neg_le_neg (Int.Le.intro h))
+    · exact Int.coe_nat_leₓ.1 (le_of_neg_le_neg (Int.Le.intro h))
       
     · apply Nat.le_add_rightₓ
       
@@ -695,11 +695,11 @@ theorem le_of_le_le {x y z w : ℤ} (xz : x ≤ z) (yw : y ≤ w) : (⟨x, y⟩ 
 
 protected theorem nonneg_total : ∀ a : ℤ√d, nonneg a ∨ nonneg (-a)
   | ⟨(x : ℕ), (y : ℕ)⟩ => Or.inl trivialₓ
-  | ⟨-[1+ x], -[1+ y]⟩ => Or.inr trivialₓ
-  | ⟨0, -[1+ y]⟩ => Or.inr trivialₓ
-  | ⟨-[1+ x], 0⟩ => Or.inr trivialₓ
-  | ⟨(x + 1 : ℕ), -[1+ y]⟩ => Nat.le_totalₓ
-  | ⟨-[1+ x], (y + 1 : ℕ)⟩ => Nat.le_totalₓ
+  | ⟨-[1 + x], -[1 + y]⟩ => Or.inr trivialₓ
+  | ⟨0, -[1 + y]⟩ => Or.inr trivialₓ
+  | ⟨-[1 + x], 0⟩ => Or.inr trivialₓ
+  | ⟨(x + 1 : ℕ), -[1 + y]⟩ => Nat.le_totalₓ
+  | ⟨-[1 + x], (y + 1 : ℕ)⟩ => Nat.le_totalₓ
 
 protected theorem le_total (a b : ℤ√d) : a ≤ b ∨ b ≤ a := by
   have t := (b - a).nonneg_total
@@ -720,13 +720,13 @@ theorem le_arch (a : ℤ√d) : ∃ n : ℕ, a ≤ n := by
     show ∃ x y : ℕ, nonneg (⟨x, y⟩ + -a) from
       match -a with
       | ⟨Int.ofNat x, Int.ofNat y⟩ => ⟨0, 0, trivialₓ⟩
-      | ⟨Int.ofNat x, -[1+ y]⟩ =>
+      | ⟨Int.ofNat x, -[1 + y]⟩ =>
         ⟨0, y + 1, by
           simp [Int.neg_succ_of_nat_coe, add_assocₓ]⟩
-      | ⟨-[1+ x], Int.ofNat y⟩ =>
+      | ⟨-[1 + x], Int.ofNat y⟩ =>
         ⟨x + 1, 0, by
           simp [Int.neg_succ_of_nat_coe, add_assocₓ]⟩
-      | ⟨-[1+ x], -[1+ y]⟩ =>
+      | ⟨-[1 + x], -[1 + y]⟩ =>
         ⟨x + 1, y + 1, by
           simp [Int.neg_succ_of_nat_coe, add_assocₓ]⟩
   refine' ⟨x + d * y, h.trans _⟩
@@ -877,9 +877,9 @@ theorem not_divides_sq (x y) : (x + 1) * (x + 1) ≠ d * (y + 1) * (y + 1) := fu
 
 theorem nonneg_antisymm : ∀ {a : ℤ√d}, nonneg a → nonneg (-a) → a = 0
   | ⟨0, 0⟩, xy, yx => rfl
-  | ⟨-[1+ x], -[1+ y]⟩, xy, yx => False.elim xy
+  | ⟨-[1 + x], -[1 + y]⟩, xy, yx => False.elim xy
   | ⟨(x + 1 : Nat), (y + 1 : Nat)⟩, xy, yx => False.elim yx
-  | ⟨-[1+ x], 0⟩, xy, yx =>
+  | ⟨-[1 + x], 0⟩, xy, yx =>
     absurd xy
       (not_sq_le_succ _ _ _
         (by
@@ -889,12 +889,12 @@ theorem nonneg_antisymm : ∀ {a : ℤ√d}, nonneg a → nonneg (-a) → a = 0
       (not_sq_le_succ _ _ _
         (by
           decide))
-  | ⟨0, -[1+ y]⟩, xy, yx => absurd xy (not_sq_le_succ _ _ _ d_pos)
+  | ⟨0, -[1 + y]⟩, xy, yx => absurd xy (not_sq_le_succ _ _ _ d_pos)
   | ⟨0, (y + 1 : Nat)⟩, _, yx => absurd yx (not_sq_le_succ _ _ _ d_pos)
-  | ⟨(x + 1 : Nat), -[1+ y]⟩, (xy : sq_le _ _ _ _), (yx : sq_le _ _ _ _) => by
+  | ⟨(x + 1 : Nat), -[1 + y]⟩, (xy : sq_le _ _ _ _), (yx : sq_le _ _ _ _) => by
     let t := le_antisymmₓ yx xy
     rw [one_mulₓ] at t <;> exact absurd t (not_divides_sq _ _)
-  | ⟨-[1+ x], (y + 1 : Nat)⟩, (xy : sq_le _ _ _ _), (yx : sq_le _ _ _ _) => by
+  | ⟨-[1 + x], (y + 1 : Nat)⟩, (xy : sq_le _ _ _ _), (yx : sq_le _ _ _ _) => by
     let t := le_antisymmₓ xy yx
     rw [one_mulₓ] at t <;> exact absurd t (not_divides_sq _ _)
 

@@ -137,7 +137,7 @@ theorem type_cardinal : @type Cardinal (· < ·) _ = Ordinal.univ.{u, u + 1} := 
 
 @[simp]
 theorem mk_cardinal : # Cardinal = univ.{u, u + 1} := by
-  simpa only [card_type, card_univ] using congr_arg card type_cardinal
+  simpa only [card_type, card_univ] using congr_argₓ card type_cardinal
 
 /-- The `aleph'` function gives the cardinals listed by their ordinal
   index, and is the inverse of `aleph_idx`.
@@ -450,12 +450,12 @@ theorem mul_eq_self {c : Cardinal} (h : ℵ₀ ≤ c) : c * c = c := by
   -- consider the minimal well-order `r` on `α` (a type with cardinality `c`).
   rcases ord_eq α with ⟨r, wo, e⟩
   skip
-  letI := linearOrderOfSTO' r
+  letI := linearOrderOfSTO r
   haveI : IsWellOrder α (· < ·) := wo
   -- Define an order `s` on `α × α` by writing `(a, b) < (c, d)` if `max a b < max c d`, or
   -- the max are equal and `a < c`, or the max are equal and `a = c` and `b < d`.
   let g : α × α → α := fun p => max p.1 p.2
-  let f : α × α ↪ Ordinal × α × α := ⟨fun p : α × α => (typein (· < ·) (g p), p), fun p q => congr_arg Prod.snd⟩
+  let f : α × α ↪ Ordinal × α × α := ⟨fun p : α × α => (typein (· < ·) (g p), p), fun p q => congr_argₓ Prod.snd⟩
   let s := f ⁻¹'o Prod.Lex (· < ·) (Prod.Lex (· < ·) (· < ·))
   -- this is a well order on `α × α`.
   haveI : IsWellOrder _ s := (RelEmbedding.preimage _ _).IsWellOrder
@@ -472,7 +472,7 @@ theorem mul_eq_self {c : Cardinal} (h : ℵ₀ ≤ c) : c * c = c := by
   refine' lt_of_le_of_ltₓ (_ : _ ≤ card (succ (typein (· < ·) (g p))) * card (succ (typein (· < ·) (g p)))) _
   · have : { q | s q p } ⊆ insert (g p) { x | x < g p } ×ˢ insert (g p) { x | x < g p } := by
       intro q h
-      simp only [s, embedding.coe_fn_mk, Order.Preimage, typein_lt_typein, Prod.lex_def, typein_inj] at h
+      simp only [s, embedding.coe_fn_mk, Order.Preimage, typein_lt_typein, Prod.lex_defₓ, typein_inj] at h
       exact max_le_iff.1 (le_iff_lt_or_eqₓ.2 <| h.imp_right And.left)
     suffices H : (insert (g p) { x | r x (g p) } : Set α) ≃ Sum { x | r x (g p) } PUnit
     · exact ⟨(Set.embeddingOfSubset _ _ this).trans ((Equivₓ.Set.prod _ _).trans (H.prod_congr H)).toEmbedding⟩
@@ -1013,7 +1013,7 @@ theorem mk_bounded_set_le_of_infinite (α : Type u) [Infinite α] (c : Cardinal)
     rw [dif_pos this]
     congr
     suffices : Classical.choose this = ⟨x, h⟩
-    exact congr_arg Subtype.val this
+    exact congr_argₓ Subtype.val this
     apply g.2
     exact Classical.choose_spec this
     

@@ -64,7 +64,7 @@ theorem IsChain.mono : s ⊆ t → IsChain r t → IsChain r s :=
   Set.Pairwise.mono
 
 theorem IsChain.mono_rel {r' : α → α → Prop} (h : IsChain r s) (h_imp : ∀ x y, r x y → r' x y) : IsChain r' s :=
-  h.mono' fun x y => Or.imp (h_imp x y) (h_imp y x)
+  h.mono' fun x y => Or.impₓ (h_imp x y) (h_imp y x)
 
 /-- This can be used to turn `is_chain (≥)` into `is_chain (≤)` and vice-versa. -/
 theorem IsChain.symm (h : IsChain r s) : IsChain (flip r) s :=

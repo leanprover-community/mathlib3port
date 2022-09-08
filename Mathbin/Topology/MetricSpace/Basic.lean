@@ -242,7 +242,7 @@ def PseudoMetricSpace.ofMetrizable {α : Type _} [TopologicalSpace α] (dist : �
           refine' forall₂_congrₓ fun x x_in => _
           erw [(has_basis_binfi_principal _ nonempty_Ioi).mem_iff]
           · refine' exists₂_congrₓ fun ε ε_pos => _
-            simp only [Prod.forall, set_of_subset_set_of]
+            simp only [Prod.forallₓ, set_of_subset_set_of]
             constructor
             · rintro h _ y H rfl
               exact h y H
@@ -1303,7 +1303,7 @@ theorem Metric.uniformity_eq_comap_nhds_zero : 𝓤 α = comap (fun p : α × α
 
 theorem cauchy_seq_iff_tendsto_dist_at_top_0 [Nonempty β] [SemilatticeSup β] {u : β → α} :
     CauchySeq u ↔ Tendsto (fun n : β × β => dist (u n.1) (u n.2)) atTop (𝓝 0) := by
-  rw [cauchy_seq_iff_tendsto, Metric.uniformity_eq_comap_nhds_zero, tendsto_comap_iff, Prod.map_def]
+  rw [cauchy_seq_iff_tendsto, Metric.uniformity_eq_comap_nhds_zero, tendsto_comap_iff, Prod.map_defₓ]
 
 theorem tendsto_uniformity_iff_dist_tendsto_zero {ι : Type _} {f : ι → α × α} {p : Filter ι} :
     Tendsto f p (𝓤 α) ↔ Tendsto (fun x => dist (f x).1 (f x).2) p (𝓝 0) := by
@@ -1461,7 +1461,7 @@ def PseudoMetricSpace.induced {α β} (f : α → β) (m : PseudoMetricSpace β)
   uniformity_dist := by
     apply @uniformity_dist_of_mem_uniformity _ _ _ _ _ fun x y => dist (f x) (f y)
     refine' compl_surjective.forall.2 fun s => compl_mem_comap.trans <| mem_uniformity_dist.trans _
-    simp only [mem_compl_iff, @imp_not_comm _ (_ ∈ _), ← Prod.forall', Prod.mk.eta, ball_image_iff]
+    simp only [mem_compl_iff, @imp_not_comm _ (_ ∈ _), ← Prod.forall'ₓ, Prod.mk.etaₓ, ball_image_iff]
   toBornology := Bornology.induced f
   cobounded_sets :=
     Set.ext <|
@@ -1837,7 +1837,7 @@ theorem dist_pi_def (f g : ∀ b, π b) : dist f g = (sup univ fun b => nndist (
 
 @[simp]
 theorem dist_pi_const [Nonempty β] (a b : α) : (dist (fun x : β => a) fun _ => b) = dist a b := by
-  simpa only [dist_edist] using congr_arg Ennreal.toReal (edist_pi_const a b)
+  simpa only [dist_edist] using congr_argₓ Ennreal.toReal (edist_pi_const a b)
 
 @[simp]
 theorem nndist_pi_const [Nonempty β] (a b : α) : (nndist (fun x : β => a) fun _ => b) = nndist a b :=
@@ -2223,7 +2223,7 @@ protected theorem Bounded.prod [PseudoMetricSpace β] {s : Set α} {t : Set β} 
   rcases ht.subset_ball x.2 with ⟨rt, hrt⟩
   suffices : s ×ˢ t ⊆ closed_ball x (max rs rt)
   exact bounded_closed_ball.mono this
-  rw [← @Prod.mk.eta _ _ x, ← closed_ball_prod_same]
+  rw [← @Prod.mk.etaₓ _ _ x, ← closed_ball_prod_same]
   exact
     prod_mono (hrs.trans <| closed_ball_subset_closed_ball <| le_max_leftₓ _ _)
       (hrt.trans <| closed_ball_subset_closed_ball <| le_max_rightₓ _ _)
@@ -2826,7 +2826,7 @@ noncomputable instance Prod.metricSpaceMax [MetricSpace β] : MetricSpace (γ ×
   { Prod.pseudoMetricSpaceMax with
     eq_of_dist_eq_zero := fun x y h => by
       cases' max_le_iff.1 (le_of_eqₓ h) with h₁ h₂
-      exact Prod.ext_iff.2 ⟨dist_le_zero.1 h₁, dist_le_zero.1 h₂⟩ }
+      exact Prod.ext_iffₓ.2 ⟨dist_le_zero.1 h₁, dist_le_zero.1 h₂⟩ }
 
 end Prod
 

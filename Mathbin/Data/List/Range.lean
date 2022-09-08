@@ -31,7 +31,7 @@ variable {α : Type u}
 @[simp]
 theorem length_range' : ∀ s n : ℕ, length (range' s n) = n
   | s, 0 => rfl
-  | s, n + 1 => congr_arg succ (length_range' _ _)
+  | s, n + 1 => congr_argₓ succ (length_range' _ _)
 
 @[simp]
 theorem range'_eq_nil {s n : ℕ} : range' s n = [] ↔ n = 0 := by
@@ -49,12 +49,12 @@ theorem mem_range' {m : ℕ} : ∀ {s n : ℕ}, m ∈ range' s n ↔ s ≤ m ∧
 
 theorem map_add_range' (a) : ∀ s n : ℕ, map ((· + ·) a) (range' s n) = range' (a + s) n
   | s, 0 => rfl
-  | s, n + 1 => congr_arg (cons _) (map_add_range' (s + 1) n)
+  | s, n + 1 => congr_argₓ (cons _) (map_add_range' (s + 1) n)
 
 theorem map_sub_range' (a) : ∀ (s n : ℕ) (h : a ≤ s), map (fun x => x - a) (range' s n) = range' (s - a) n
   | s, 0, _ => rfl
   | s, n + 1, h => by
-    convert congr_arg (cons (s - a)) (map_sub_range' (s + 1) n (Nat.le_succ_of_leₓ h))
+    convert congr_argₓ (cons (s - a)) (map_sub_range' (s + 1) n (Nat.le_succ_of_leₓ h))
     rw [Nat.succ_subₓ h]
     rfl
 
@@ -235,11 +235,11 @@ theorem fin_range_eq_nil {n : ℕ} : finRange n = [] ↔ n = 0 := by
 
 @[simp]
 theorem map_coe_fin_range (n : ℕ) : (finRange n).map coe = List.range n := by
-  simp_rw [fin_range, map_pmap, Finₓ.mk, Subtype.coe_mk, pmap_eq_map]
+  simp_rw [fin_range, map_pmap, Finₓ.coe_mk, pmap_eq_map]
   exact List.map_id _
 
 theorem fin_range_succ_eq_map (n : ℕ) : finRange n.succ = 0 :: (finRange n).map Finₓ.succ := by
-  apply map_injective_iff.mpr Subtype.coe_injective
+  apply map_injective_iff.mpr Finₓ.coe_injective
   rw [map_cons, map_coe_fin_range, range_succ_eq_map, Finₓ.coe_zero, ← map_coe_fin_range, map_map, map_map,
     Function.comp, Function.comp]
   congr 2 with x
@@ -264,7 +264,7 @@ theorem prod_range_succ' {α : Type u} [Monoidₓ α] (f : ℕ → α) (n : ℕ)
 @[simp]
 theorem enum_from_map_fst : ∀ (n) (l : List α), map Prod.fst (enumFrom n l) = range' n l.length
   | n, [] => rfl
-  | n, a :: l => congr_arg (cons _) (enum_from_map_fst _ _)
+  | n, a :: l => congr_argₓ (cons _) (enum_from_map_fst _ _)
 
 @[simp]
 theorem enum_map_fst (l : List α) : map Prod.fst (enum l) = range l.length := by
@@ -294,7 +294,7 @@ theorem nth_le_range {n} (i) (H : i < (range n).length) : nthLe (range n) i H = 
 
 @[simp]
 theorem nth_le_fin_range {n : ℕ} {i : ℕ} (h) : (finRange n).nthLe i h = ⟨i, length_fin_range n ▸ h⟩ := by
-  simp only [fin_range, nth_le_range, nth_le_pmap, Finₓ.mk_eq_subtype_mk]
+  simp only [fin_range, nth_le_range, nth_le_pmap]
 
 @[simp]
 theorem map_nth_le (l : List α) : ((finRange l.length).map fun n => l.nthLe n n.2) = l :=

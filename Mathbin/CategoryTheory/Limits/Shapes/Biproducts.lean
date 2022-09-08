@@ -82,7 +82,7 @@ structure Bicone (F : J → C) where
   x : C
   π : ∀ j, X ⟶ F j
   ι : ∀ j, F j ⟶ X
-  ι_π : ∀ j j', ι j ≫ π j' = if h : j = j' then eqToHom (congr_arg F h) else 0 := by
+  ι_π : ∀ j j', ι j ≫ π j' = if h : j = j' then eqToHom (congr_argₓ F h) else 0 := by
     run_tac
       obviously
 
@@ -137,13 +137,13 @@ theorem to_cocone_ι_app_mk (B : Bicone F) (j : J) : B.toCocone.ι.app ⟨j⟩ =
 def ofLimitCone {f : J → C} {t : Cone (Discrete.functor f)} (ht : IsLimit t) : Bicone f where
   x := t.x
   π := fun j => t.π.app ⟨j⟩
-  ι := fun j => ht.lift (Fan.mk _ fun j' => if h : j = j' then eqToHom (congr_arg f h) else 0)
+  ι := fun j => ht.lift (Fan.mk _ fun j' => if h : j = j' then eqToHom (congr_argₓ f h) else 0)
   ι_π := fun j j' => by
     simp
 
 -- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]
 theorem ι_of_is_limit {f : J → C} {t : Bicone f} (ht : IsLimit t.toCone) (j : J) :
-    t.ι j = ht.lift (Fan.mk _ fun j' => if h : j = j' then eqToHom (congr_arg f h) else 0) :=
+    t.ι j = ht.lift (Fan.mk _ fun j' => if h : j = j' then eqToHom (congr_argₓ f h) else 0) :=
   ht.hom_ext fun j' => by
     rw [ht.fac]
     trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]"
@@ -153,14 +153,14 @@ theorem ι_of_is_limit {f : J → C} {t : Bicone f} (ht : IsLimit t.toCone) (j :
 @[simps]
 def ofColimitCocone {f : J → C} {t : Cocone (Discrete.functor f)} (ht : IsColimit t) : Bicone f where
   x := t.x
-  π := fun j => ht.desc (Cofan.mk _ fun j' => if h : j' = j then eqToHom (congr_arg f h) else 0)
+  π := fun j => ht.desc (Cofan.mk _ fun j' => if h : j' = j then eqToHom (congr_argₓ f h) else 0)
   ι := fun j => t.ι.app ⟨j⟩
   ι_π := fun j j' => by
     simp
 
 -- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]
 theorem π_of_is_colimit {f : J → C} {t : Bicone f} (ht : IsColimit t.toCocone) (j : J) :
-    t.π j = ht.desc (Cofan.mk _ fun j' => if h : j' = j then eqToHom (congr_arg f h) else 0) :=
+    t.π j = ht.desc (Cofan.mk _ fun j' => if h : j' = j then eqToHom (congr_argₓ f h) else 0) :=
   ht.hom_ext fun j' => by
     rw [ht.fac]
     trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `discrete_cases #[]"
@@ -348,7 +348,7 @@ theorem biproduct.bicone_ι (f : J → C) [HasBiproduct f] (b : J) : (Biproduct.
 This means you may not be able to `simp` using this lemma unless you `open_locale classical`. -/
 @[reassoc]
 theorem biproduct.ι_π [DecidableEq J] (f : J → C) [HasBiproduct f] (j j' : J) :
-    biproduct.ι f j ≫ biproduct.π f j' = if h : j = j' then eqToHom (congr_arg f h) else 0 := by
+    biproduct.ι f j ≫ biproduct.π f j' = if h : j = j' then eqToHom (congr_argₓ f h) else 0 := by
   convert (biproduct.bicone f).ι_π j j'
 
 @[simp, reassoc]
@@ -503,7 +503,7 @@ theorem biproduct.from_subtype_π [DecidablePred p] (j : J) :
   by_cases' h : p j
   · rw [dif_pos h, biproduct.ι_π]
     split_ifs with h₁ h₂ h₂
-    exacts[rfl, False.elim (h₂ (Subtype.ext h₁)), False.elim (h₁ (congr_arg Subtype.val h₂)), rfl]
+    exacts[rfl, False.elim (h₂ (Subtype.ext h₁)), False.elim (h₁ (congr_argₓ Subtype.val h₂)), rfl]
     
   · rw [dif_neg h, dif_neg (show (i : J) ≠ j from fun h₂ => h (h₂ ▸ i.2)), comp_zero]
     
@@ -521,7 +521,7 @@ theorem biproduct.from_subtype_π_subtype (j : Subtype p) :
   ext i
   rw [biproduct.from_subtype, biproduct.ι_desc_assoc, biproduct.ι_π, biproduct.ι_π]
   split_ifs with h₁ h₂ h₂
-  exacts[rfl, False.elim (h₂ (Subtype.ext h₁)), False.elim (h₁ (congr_arg Subtype.val h₂)), rfl]
+  exacts[rfl, False.elim (h₂ (Subtype.ext h₁)), False.elim (h₁ (congr_argₓ Subtype.val h₂)), rfl]
 
 @[simp, reassoc]
 theorem biproduct.to_subtype_π (j : Subtype p) :
@@ -536,7 +536,7 @@ theorem biproduct.ι_to_subtype [DecidablePred p] (j : J) :
   by_cases' h : p j
   · rw [dif_pos h, biproduct.ι_π]
     split_ifs with h₁ h₂ h₂
-    exacts[rfl, False.elim (h₂ (Subtype.ext h₁)), False.elim (h₁ (congr_arg Subtype.val h₂)), rfl]
+    exacts[rfl, False.elim (h₂ (Subtype.ext h₁)), False.elim (h₁ (congr_argₓ Subtype.val h₂)), rfl]
     
   · rw [dif_neg h, dif_neg (show j ≠ i from fun h₂ => h (h₂.symm ▸ i.2)), zero_comp]
     
@@ -554,7 +554,7 @@ theorem biproduct.ι_to_subtype_subtype (j : Subtype p) :
   ext i
   rw [biproduct.to_subtype, category.assoc, biproduct.lift_π, biproduct.ι_π, biproduct.ι_π]
   split_ifs with h₁ h₂ h₂
-  exacts[rfl, False.elim (h₂ (Subtype.ext h₁)), False.elim (h₁ (congr_arg Subtype.val h₂)), rfl]
+  exacts[rfl, False.elim (h₂ (Subtype.ext h₁)), False.elim (h₁ (congr_argₓ Subtype.val h₂)), rfl]
 
 @[simp, reassoc]
 theorem biproduct.ι_from_subtype (j : Subtype p) :
@@ -1601,8 +1601,9 @@ def biconeIsBilimitOfLimitConeOfIsLimit {f : J → C} {t : Cone (Discrete.functo
 
 /-- In a preadditive category, if the product over `f : J → C` exists,
     then the biproduct over `f` exists. -/
-theorem HasBiproduct.of_has_product (f : J → C) [HasProduct f] : HasBiproduct f :=
-  HasBiproduct.mk { Bicone := _, IsBilimit := biconeIsBilimitOfLimitConeOfIsLimit (limit.isLimit _) }
+theorem HasBiproduct.of_has_product {J : Type} [Finite J] (f : J → C) [HasProduct f] : HasBiproduct f := by
+  cases nonempty_fintype J <;>
+    exact has_biproduct.mk { Bicone := _, IsBilimit := bicone_is_bilimit_of_limit_cone_of_is_limit (limit.is_limit _) }
 
 /-- In a preadditive category, any finite bicone which is a colimit cocone is in fact a bilimit
     bicone. -/
@@ -1625,8 +1626,11 @@ def biconeIsBilimitOfColimitCoconeOfIsColimit {f : J → C} {t : Cocone (Discret
 
 /-- In a preadditive category, if the coproduct over `f : J → C` exists,
     then the biproduct over `f` exists. -/
-theorem HasBiproduct.of_has_coproduct (f : J → C) [HasCoproduct f] : HasBiproduct f :=
-  HasBiproduct.mk { Bicone := _, IsBilimit := biconeIsBilimitOfColimitCoconeOfIsColimit (colimit.isColimit _) }
+theorem HasBiproduct.of_has_coproduct {J : Type} [Finite J] (f : J → C) [HasCoproduct f] : HasBiproduct f := by
+  cases nonempty_fintype J <;>
+    exact
+      has_biproduct.mk
+        { Bicone := _, IsBilimit := bicone_is_bilimit_of_colimit_cocone_of_is_colimit (colimit.is_colimit _) }
 
 /-- A preadditive category with finite products has finite biproducts. -/
 theorem HasFiniteBiproducts.of_has_finite_products [HasFiniteProducts C] : HasFiniteBiproducts C :=

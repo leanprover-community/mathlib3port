@@ -29,7 +29,7 @@ attribute [simp] Int.of_nat_eq_coe
 /-- Default value for `add_group_with_one.int_cast`. -/
 protected def Int.castDef {R : Type u} [HasNatCast R] [Neg R] : ℤ → R
   | (n : ℕ) => n
-  | -[1+ n] => -(n + 1 : ℕ)
+  | -[1 + n] => -(n + 1 : ℕ)
 
 /-- Type class for the canonical homomorphism `ℤ → R`.
 -/
@@ -89,7 +89,7 @@ theorem cast_of_nat (n : ℕ) : (ofNat n : R) = n :=
   AddGroupWithOneₓ.int_cast_of_nat n
 
 @[simp]
-theorem cast_neg_succ_of_nat (n : ℕ) : (-[1+ n] : R) = -(n + 1 : ℕ) :=
+theorem cast_neg_succ_of_nat (n : ℕ) : (-[1 + n] : R) = -(n + 1 : ℕ) :=
   AddGroupWithOneₓ.int_cast_neg_succ_of_nat n
 
 @[simp, norm_cast]
@@ -111,7 +111,7 @@ theorem cast_neg : ∀ n, ((-n : ℤ) : R) = -n
     erw [cast_zero, neg_zero]
   | (n + 1 : ℕ) => by
     erw [cast_of_nat, cast_neg_succ_of_nat] <;> rfl
-  | -[1+ n] => by
+  | -[1 + n] => by
     erw [cast_of_nat, cast_neg_succ_of_nat, neg_negₓ]
 
 @[simp]
@@ -136,13 +136,13 @@ theorem cast_neg_of_nat (n : ℕ) : ((negOfNat n : ℤ) : R) = -n := by
 theorem cast_add : ∀ m n, ((m + n : ℤ) : R) = m + n
   | (m : ℕ), (n : ℕ) => by
     simp [← Int.coe_nat_add]
-  | (m : ℕ), -[1+ n] => by
+  | (m : ℕ), -[1 + n] => by
     erw [cast_sub_nat_nat, cast_coe_nat, cast_neg_succ_of_nat, sub_eq_add_neg]
-  | -[1+ m], (n : ℕ) => by
+  | -[1 + m], (n : ℕ) => by
     erw [cast_sub_nat_nat, cast_coe_nat, cast_neg_succ_of_nat, sub_eq_iff_eq_add, add_assocₓ, eq_neg_add_iff_add_eq, ←
       Nat.cast_addₓ, ← Nat.cast_addₓ, Nat.add_comm]
-  | -[1+ m], -[1+ n] =>
-    show (-[1+ m + n + 1] : R) = _ by
+  | -[1 + m], -[1 + n] =>
+    show (-[1 + (m + n + 1)] : R) = _ by
       rw [cast_neg_succ_of_nat, cast_neg_succ_of_nat, cast_neg_succ_of_nat, ← neg_add_rev, ← Nat.cast_addₓ,
         Nat.add_right_comm m n 1, Nat.add_assoc, Nat.add_comm]
 

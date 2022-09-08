@@ -300,7 +300,7 @@ end
 
 instance no_zero_smul_divisors_bot [NoZeroSmulDivisors R A] : NoZeroSmulDivisors R S :=
   ⟨fun c x h =>
-    have : c = 0 ∨ (x : A) = 0 := eq_zero_or_eq_zero_of_smul_eq_zero (congr_arg coe h)
+    have : c = 0 ∨ (x : A) = 0 := eq_zero_or_eq_zero_of_smul_eq_zero (congr_argₓ coe h)
     this.imp_right (@Subtype.ext_iff _ _ x 0).mpr⟩
 
 protected theorem coe_add (x y : S) : (↑(x + y) : A) = ↑x + ↑y :=
@@ -520,7 +520,7 @@ theorem coe_cod_restrict (f : A →ₐ[R] B) (S : Subalgebra R B) (hf : ∀ x, f
 
 theorem injective_cod_restrict (f : A →ₐ[R] B) (S : Subalgebra R B) (hf : ∀ x, f x ∈ S) :
     Function.Injective (f.codRestrict S hf) ↔ Function.Injective f :=
-  ⟨fun H x y hxy => H <| Subtype.eq hxy, fun H x y hxy => H (congr_arg Subtype.val hxy : _)⟩
+  ⟨fun H x y hxy => H <| Subtype.eq hxy, fun H x y hxy => H (congr_argₓ Subtype.val hxy : _)⟩
 
 /-- Restrict the codomain of a alg_hom `f` to `f.range`.
 
@@ -781,7 +781,7 @@ theorem bijective_algebra_map_iff {R A : Type _} [Field R] [Semiringₓ A] [Nont
 noncomputable def botEquivOfInjective (h : Function.Injective (algebraMap R A)) : (⊥ : Subalgebra R A) ≃ₐ[R] R :=
   AlgEquiv.symm <|
     AlgEquiv.ofBijective (Algebra.ofId R _)
-      ⟨fun x y hxy => h (congr_arg Subtype.val hxy : _), fun ⟨y, hy⟩ =>
+      ⟨fun x y hxy => h (congr_argₓ Subtype.val hxy : _), fun ⟨y, hy⟩ =>
         let ⟨x, hx⟩ := Algebra.mem_bot.1 hy
         ⟨x, Subtype.eq hx⟩⟩
 
@@ -878,7 +878,7 @@ theorem coe_inclusion {S T : Subalgebra R A} (h : S ≤ T) (s : S) : (inclusion 
 This is the `subalgebra` version of `linear_equiv.of_eq` and `equiv.set.of_eq`. -/
 @[simps apply]
 def equivOfEq (S T : Subalgebra R A) (h : S = T) : S ≃ₐ[R] T :=
-  { LinearEquiv.ofEq _ _ (congr_arg toSubmodule h) with toFun := fun x => ⟨x, h ▸ x.2⟩,
+  { LinearEquiv.ofEq _ _ (congr_argₓ toSubmodule h) with toFun := fun x => ⟨x, h ▸ x.2⟩,
     invFun := fun x => ⟨x, h.symm ▸ x.2⟩, map_mul' := fun _ _ => rfl, commutes' := fun _ => rfl }
 
 @[simp]

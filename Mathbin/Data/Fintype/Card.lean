@@ -147,7 +147,7 @@ theorem Finset.prod_univ_pi [DecidableEq α] [Fintype α] [CommMonoidₓ β] {δ
     (by
       simp )
     (by
-      simp (config := { contextual := true })[Function.funext_iffₓ])
+      simp (config := { contextual := true })[Function.funext_iff])
     fun x hx =>
     ⟨fun a _ => x a, by
       simp_all ⟩
@@ -177,12 +177,23 @@ theorem Function.Bijective.prod_comp [Fintype α] [Fintype β] [CommMonoidₓ γ
 theorem Equivₓ.prod_comp [Fintype α] [Fintype β] [CommMonoidₓ γ] (e : α ≃ β) (f : β → γ) : (∏ i, f (e i)) = ∏ i, f i :=
   e.Bijective.prod_comp f
 
+@[to_additive]
+theorem Equivₓ.prod_comp' [Fintype α] [Fintype β] [CommMonoidₓ γ] (e : α ≃ β) (f : α → γ) (g : β → γ)
+    (h : ∀ i, f i = g (e i)) : (∏ i, f i) = ∏ i, g i :=
+  (show f = g ∘ e from funext h).symm ▸ e.prod_comp _
+
 /-- It is equivalent to sum a function over `fin n` or `finset.range n`. -/
 @[to_additive]
 theorem Finₓ.prod_univ_eq_prod_range [CommMonoidₓ α] (f : ℕ → α) (n : ℕ) : (∏ i : Finₓ n, f i) = ∏ i in range n, f i :=
   calc
     (∏ i : Finₓ n, f i) = ∏ i : { x // x ∈ range n }, f i :=
-      (Equivₓ.subtypeEquivRight fun m => (@mem_range n m).symm).prod_comp (f ∘ coe)
+      (Finₓ.equivSubtype.trans
+            (Equivₓ.subtypeEquivRight
+              (by
+                simp ))).prod_comp'
+        _ _
+        (by
+          simp )
     _ = ∏ i in range n, f i := by
       rw [← attach_eq_univ, prod_attach]
     

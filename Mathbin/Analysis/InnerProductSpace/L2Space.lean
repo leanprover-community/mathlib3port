@@ -187,7 +187,7 @@ theorem inner_single_left (i : ι) (a : G i) (f : lp G 2) : ⟪lp.single 2 i a, 
     
 
 theorem inner_single_right (i : ι) (a : G i) (f : lp G 2) : ⟪f, lp.single 2 i a⟫ = ⟪f i, a⟫ := by
-  simpa [inner_conj_sym] using congr_arg conj (inner_single_left i a f)
+  simpa [inner_conj_sym] using congr_argₓ conj (inner_single_left i a f)
 
 end lp
 
@@ -504,8 +504,8 @@ theorem _root_.orthonormal.linear_isometry_equiv_symm_apply_single_one (h i) :
   rw [IsHilbertSum.linear_isometry_equiv_symm_apply_single, LinearIsometry.to_span_singleton_apply, one_smul]
 
 @[simp]
-protected theorem coe_mk (hsp : ⊤ ≤ (span 𝕜 (Set.Range v)).topologicalClosure) : ⇑(HilbertBasis.mk hv hsp) = v :=
-  funext <| Orthonormal.linear_isometry_equiv_symm_apply_single_one hv _
+protected theorem coe_mk (hsp : ⊤ ≤ (span 𝕜 (Set.Range v)).topologicalClosure) : ⇑(HilbertBasis.mk hv hsp) = v := by
+  apply funext <| Orthonormal.linear_isometry_equiv_symm_apply_single_one hv hsp
 
 /-- An orthonormal family of vectors whose span has trivial orthogonal complement is a Hilbert
 basis. -/

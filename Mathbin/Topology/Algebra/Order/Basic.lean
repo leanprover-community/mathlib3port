@@ -749,19 +749,14 @@ instance tendsto_Ioc_class_nhds (a : α) : TendstoIxxClass Ioc (𝓝 a) (𝓝 a)
 instance tendsto_Ioo_class_nhds (a : α) : TendstoIxxClass Ioo (𝓝 a) (𝓝 a) :=
   tendsto_Ixx_class_of_subset fun _ _ => Ioo_subset_Icc_self
 
-/-- Also known as squeeze or sandwich theorem. This version assumes that inequalities hold
-eventually for the filter. -/
+/-- **Squeeze theorem** (also known as **sandwich theorem**). This version assumes that inequalities
+hold eventually for the filter. -/
 theorem tendsto_of_tendsto_of_tendsto_of_le_of_le' {f g h : β → α} {b : Filter β} {a : α} (hg : Tendsto g b (𝓝 a))
     (hh : Tendsto h b (𝓝 a)) (hgf : ∀ᶠ b in b, g b ≤ f b) (hfh : ∀ᶠ b in b, f b ≤ h b) : Tendsto f b (𝓝 a) :=
-  tendsto_order.2
-    ⟨fun a' h' => by
-      have : ∀ᶠ b in b, a' < g b := (tendsto_order.1 hg).left a' h'
-      filter_upwards [this, hgf] with _ using lt_of_lt_of_leₓ, fun a' h' => by
-      have : ∀ᶠ b in b, h b < a' := (tendsto_order.1 hh).right a' h'
-      filter_upwards [this, hfh] with a h₁ h₂ using lt_of_le_of_ltₓ h₂ h₁⟩
+  (hg.Icc hh).of_small_sets <| hgf.And hfh
 
-/-- Also known as squeeze or sandwich theorem. This version assumes that inequalities hold
-everywhere. -/
+/-- **Squeeze theorem** (also known as **sandwich theorem**). This version assumes that inequalities
+hold everywhere. -/
 theorem tendsto_of_tendsto_of_tendsto_of_le_of_le {f g h : β → α} {b : Filter β} {a : α} (hg : Tendsto g b (𝓝 a))
     (hh : Tendsto h b (𝓝 a)) (hgf : g ≤ f) (hfh : f ≤ h) : Tendsto f b (𝓝 a) :=
   tendsto_of_tendsto_of_tendsto_of_le_of_le' hg hh (eventually_of_forall hgf) (eventually_of_forall hfh)
@@ -1538,8 +1533,8 @@ theorem mem_nhds_within_Ici_iff_exists_Ico_subset [NoMaxOrder α] {a : α} {s : 
 
 /-- A set is a neighborhood of `a` within `[a, +∞)` if and only if it contains an interval `[a, u]`
 with `a < u`. -/
-theorem mem_nhds_within_Ici_iff_exists_Icc_subset' [NoMaxOrder α] [DenselyOrdered α] {a : α} {s : Set α} :
-    s ∈ 𝓝[≥] a ↔ ∃ u ∈ Ioi a, Icc a u ⊆ s := by
+theorem mem_nhds_within_Ici_iff_exists_Icc_subset [NoMaxOrder α] [DenselyOrdered α] {a : α} {s : Set α} :
+    s ∈ 𝓝[≥] a ↔ ∃ u, a < u ∧ Icc a u ⊆ s := by
   rw [mem_nhds_within_Ici_iff_exists_Ico_subset]
   constructor
   · rintro ⟨u, au, as⟩
@@ -1598,39 +1593,11 @@ theorem mem_nhds_within_Iic_iff_exists_Ioc_subset [NoMinOrder α] {a : α} {s : 
 
 /-- A set is a neighborhood of `a` within `(-∞, a]` if and only if it contains an interval `[l, a]`
 with `l < a`. -/
-theorem mem_nhds_within_Iic_iff_exists_Icc_subset' [NoMinOrder α] [DenselyOrdered α] {a : α} {s : Set α} :
-    s ∈ 𝓝[≤] a ↔ ∃ l ∈ Iio a, Icc l a ⊆ s := by
-  convert @mem_nhds_within_Ici_iff_exists_Icc_subset' αᵒᵈ _ _ _ _ _ _ _
-  simp_rw [show ∀ u : αᵒᵈ, @Icc αᵒᵈ _ a u = @Icc α _ u a from fun u => dual_Icc]
-  rfl
-
-/-- A set is a neighborhood of `a` within `[a, +∞)` if and only if it contains an interval `[a, u]`
-with `a < u`. -/
-theorem mem_nhds_within_Ici_iff_exists_Icc_subset [NoMaxOrder α] [DenselyOrdered α] {a : α} {s : Set α} :
-    s ∈ 𝓝[≥] a ↔ ∃ u, a < u ∧ Icc a u ⊆ s := by
-  rw [mem_nhds_within_Ici_iff_exists_Ico_subset]
-  constructor
-  · rintro ⟨u, au, as⟩
-    rcases exists_between au with ⟨v, hv⟩
-    exact ⟨v, hv.1, fun x hx => as ⟨hx.1, lt_of_le_of_ltₓ hx.2 hv.2⟩⟩
-    
-  · rintro ⟨u, au, as⟩
-    exact ⟨u, au, subset.trans Ico_subset_Icc_self as⟩
-    
-
-/-- A set is a neighborhood of `a` within `(-∞, a]` if and only if it contains an interval `[l, a]`
-with `l < a`. -/
 theorem mem_nhds_within_Iic_iff_exists_Icc_subset [NoMinOrder α] [DenselyOrdered α] {a : α} {s : Set α} :
     s ∈ 𝓝[≤] a ↔ ∃ l, l < a ∧ Icc l a ⊆ s := by
-  rw [mem_nhds_within_Iic_iff_exists_Ioc_subset]
-  constructor
-  · rintro ⟨l, la, as⟩
-    rcases exists_between la with ⟨v, hv⟩
-    refine' ⟨v, hv.2, fun x hx => as ⟨lt_of_lt_of_leₓ hv.1 hx.1, hx.2⟩⟩
-    
-  · rintro ⟨l, la, as⟩
-    exact ⟨l, la, subset.trans Ioc_subset_Icc_self as⟩
-    
+  convert @mem_nhds_within_Ici_iff_exists_Icc_subset αᵒᵈ _ _ _ _ _ _ _
+  simp_rw [show ∀ u : αᵒᵈ, @Icc αᵒᵈ _ a u = @Icc α _ u a from fun u => dual_Icc]
+  rfl
 
 end OrderTopology
 
@@ -1848,7 +1815,7 @@ theorem mul_tendsto_nhds_zero_right (x : α) : Tendsto (uncurry ((· * ·) : α 
   rw [((nhds_basis_zero_abs_sub_lt α).Prod <| nhds_basis_abs_sub_lt x).tendsto_iff (nhds_basis_zero_abs_sub_lt α)]
   refine' fun ε ε_pos => ⟨(ε / (2 * (1 + abs x)), 1), ⟨div_pos ε_pos hx, zero_lt_one⟩, _⟩
   suffices ∀ a b : α, abs a < ε / (2 * (1 + abs x)) → abs (b - x) < 1 → abs a * abs b < ε by
-    simpa only [and_imp, Prod.forall, mem_prod, ← abs_mul]
+    simpa only [and_imp, Prod.forallₓ, mem_prod, ← abs_mul]
   intro a b h h'
   refine' lt_of_le_of_ltₓ (mul_le_mul_of_nonneg_left _ (abs_nonneg a)) ((lt_div_iff hx).1 h)
   calc
@@ -1878,7 +1845,7 @@ theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) : 𝓝 x�
     refine' ⟨i / abs x₀, div_pos hi (abs_pos.2 hx₀), fun x hx => hit _⟩
     calc
       abs (x₀ * x - x₀) = abs (x₀ * (x - 1)) :=
-        congr_arg abs
+        congr_argₓ abs
           (by
             ring_nf)
       _ = abs x₀ * abs (x - 1) := abs_mul x₀ (x - 1)
@@ -1898,7 +1865,7 @@ theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) : 𝓝 x�
     calc
       abs (x / x₀ - 1) = abs (x / x₀ - x₀ / x₀) := by
         rw [div_self hx₀]
-      _ = abs ((x - x₀) / x₀) := congr_arg abs (sub_div x x₀ x₀).symm
+      _ = abs ((x - x₀) / x₀) := congr_argₓ abs (sub_div x x₀ x₀).symm
       _ = abs (x - x₀) / abs x₀ := abs_div (x - x₀) x₀
       _ < i * abs x₀ / abs x₀ := div_lt_div_of_lt (abs_pos.2 hx₀) hx
       _ = i := by
@@ -1923,7 +1890,7 @@ theorem mul_tendsto_nhds_one_nhds_one : Tendsto (uncurry ((· * ·) : α → α 
     linarith
   have ε_pos' : 0 < ε / 2 := by
     linarith
-  simp only [and_imp, Prod.forall, mem_Ioo, Function.uncurry_apply_pair, mem_prod, Prod.exists]
+  simp only [and_imp, Prod.forallₓ, mem_Ioo, Function.uncurry_apply_pairₓ, mem_prod, Prod.existsₓ]
   refine' ⟨ε / 4, ε / 4, ⟨ε_pos, ε_pos⟩, fun a b ha ha' hb hb' => _⟩
   have ha0 : 0 ≤ a := le_transₓ hε' (le_of_ltₓ ha)
   have hb0 : 0 ≤ b := le_transₓ hε' (le_of_ltₓ hb)

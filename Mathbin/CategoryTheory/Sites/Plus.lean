@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
 import Mathbin.CategoryTheory.Sites.Sheaf
+import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
 
 /-!
 
@@ -87,6 +88,12 @@ theorem diagram_nat_trans_id (X : C) (P : Cᵒᵖ ⥤ D) : J.diagramNatTrans (�
   erw [category.comp_id]
 
 @[simp]
+theorem diagram_nat_trans_zero [Preadditive D] (X : C) (P Q : Cᵒᵖ ⥤ D) : J.diagramNatTrans (0 : P ⟶ Q) X = 0 := by
+  ext j x
+  dsimp'
+  rw [zero_comp, multiequalizer.lift_ι, comp_zero]
+
+@[simp]
 theorem diagram_nat_trans_comp {P Q R : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (γ : Q ⟶ R) (X : C) :
     J.diagramNatTrans (η ≫ γ) X = J.diagramNatTrans η X ≫ J.diagramNatTrans γ X := by
   ext
@@ -167,6 +174,11 @@ theorem plus_map_id (P : Cᵒᵖ ⥤ D) : J.plusMap (𝟙 P) = 𝟙 _ := by
   ext
   dsimp'
   simp
+
+@[simp]
+theorem plus_map_zero [Preadditive D] (P Q : Cᵒᵖ ⥤ D) : J.plusMap (0 : P ⟶ Q) = 0 := by
+  ext
+  erw [comp_zero, colimit.ι_map, J.diagram_nat_trans_zero, zero_comp]
 
 @[simp]
 theorem plus_map_comp {P Q R : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (γ : Q ⟶ R) : J.plusMap (η ≫ γ) = J.plusMap η ≫ J.plusMap γ := by
@@ -341,6 +353,12 @@ theorem plus_map_plus_lift {P Q R : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (γ : Q ⟶ R)
     J.plusMap η ≫ J.plusLift γ hR = J.plusLift (η ≫ γ) hR := by
   apply J.plus_lift_unique
   rw [← category.assoc, ← J.to_plus_naturality, category.assoc, J.to_plus_plus_lift]
+
+instance plus_functor_preserves_zero_morphisms [Preadditive D] :
+    (plusFunctor J D).PreservesZeroMorphisms where map_zero' := fun F G => by
+    ext
+    dsimp'
+    rw [J.plus_map_zero, nat_trans.app_zero]
 
 end CategoryTheory.GrothendieckTopology
 

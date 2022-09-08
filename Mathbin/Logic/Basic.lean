@@ -353,6 +353,10 @@ theorem Decidable.and_or_imp [Decidable a] : a ∧ b ∨ (a → c) ↔ a → b �
 theorem and_or_imp : a ∧ b ∨ (a → c) ↔ a → b ∨ c :=
   Decidable.and_or_imp
 
+/-- Provide modus tollens (`mt`) as dot notation for implications. -/
+protected theorem Function.mt : (a → b) → ¬b → ¬a :=
+  mt
+
 /-! ### Declarations about `not` -/
 
 
@@ -644,19 +648,19 @@ theorem Or.rotate : a ∨ b ∨ c → b ∨ c ∨ a :=
   or_rotate.1
 
 theorem or_of_or_of_imp_of_imp (h₁ : a ∨ b) (h₂ : a → c) (h₃ : b → d) : c ∨ d :=
-  Or.imp h₂ h₃ h₁
+  Or.impₓ h₂ h₃ h₁
 
 theorem or_of_or_of_imp_left (h₁ : a ∨ c) (h : a → b) : b ∨ c :=
   Or.imp_left h h₁
 
 theorem or_of_or_of_imp_right (h₁ : c ∨ a) (h : a → b) : c ∨ b :=
-  Or.imp_rightₓ h h₁
+  Or.imp_right h h₁
 
 theorem Or.elim3 (h : a ∨ b ∨ c) (ha : a → d) (hb : b → d) (hc : c → d) : d :=
   Or.elim h ha fun h₂ => Or.elim h₂ hb hc
 
 theorem Or.imp3 (had : a → d) (hbe : b → e) (hcf : c → f) : a ∨ b ∨ c → d ∨ e ∨ f :=
-  Or.imp had <| Or.imp hbe hcf
+  Or.impₓ had <| Or.impₓ hbe hcf
 
 theorem or_imp_distrib : a ∨ b → c ↔ (a → c) ∧ (b → c) :=
   ⟨fun h => ⟨fun ha => h (Or.inl ha), fun hb => h (Or.inr hb)⟩, fun ⟨ha, hb⟩ => Or.ndrec ha hb⟩
@@ -710,6 +714,10 @@ protected theorem Decidable.not_imp_not [Decidable a] : ¬a → ¬b ↔ b → a 
 theorem not_imp_not : ¬a → ¬b ↔ b → a :=
   Decidable.not_imp_not
 
+/-- Provide the reverse of modus tollens (`mt`) as dot notation for implications. -/
+protected theorem Function.mtr : (¬a → ¬b) → b → a :=
+  not_imp_not.mp
+
 -- See Note [decidable namespace]
 protected theorem Decidable.or_congr_left [Decidable c] (h : ¬c → (a ↔ b)) : a ∨ c ↔ b ∨ c := by
   rw [Decidable.or_iff_not_imp_right, Decidable.or_iff_not_imp_right]
@@ -754,7 +762,7 @@ theorem or_and_distrib_right : (a ∨ b) ∧ c ↔ a ∧ c ∨ b ∧ c :=
 /-- `∨` distributes over `∧` (on the left). -/
 theorem or_and_distrib_left : a ∨ b ∧ c ↔ (a ∨ b) ∧ (a ∨ c) :=
   ⟨Or.ndrec (fun ha => And.intro (Or.inl ha) (Or.inl ha)) (And.imp Or.inr Or.inr),
-    And.ndrec <| Or.ndrec (imp_intro ∘ Or.inl) (Or.imp_rightₓ ∘ And.intro)⟩
+    And.ndrec <| Or.ndrec (imp_intro ∘ Or.inl) (Or.imp_right ∘ And.intro)⟩
 
 /-- `∨` distributes over `∧` (on the right). -/
 theorem and_or_distrib_right : a ∧ b ∨ c ↔ (a ∨ c) ∧ (b ∨ c) :=
@@ -1013,14 +1021,14 @@ theorem ball_mem_comm {α β} [Membership α β] {s : β} {p : α → α → Pro
   ball_cond_comm
 
 theorem ne_of_apply_ne {α β : Sort _} (f : α → β) {x y : α} (h : f x ≠ f y) : x ≠ y := fun w : x = y =>
-  h (congr_arg f w)
+  h (congr_argₓ f w)
 
 theorem eq_equivalence : Equivalenceₓ (@Eq α) :=
   ⟨Eq.refl, @Eq.symm _, @Eq.trans _⟩
 
 /-- Transport through trivial families is the identity. -/
 @[simp]
-theorem eq_rec_constant {α : Sort _} {a a' : α} {β : Sort _} (y : β) (h : a = a') :
+theorem eq_rec_constantₓ {α : Sort _} {a a' : α} {β : Sort _} (y : β) (h : a = a') :
     @Eq.ndrec α a (fun a => β) y a' h = y := by
   cases h
   rfl
@@ -1038,24 +1046,24 @@ theorem cast_cast : ∀ {α β γ : Sort _} (ha : α = β) (hb : β = γ) (a : �
   | _, _, _, rfl, rfl, a => rfl
 
 @[simp]
-theorem congr_refl_left {α β : Sort _} (f : α → β) {a b : α} (h : a = b) : congr (Eq.refl f) h = congr_arg f h :=
+theorem congr_refl_left {α β : Sort _} (f : α → β) {a b : α} (h : a = b) : congr (Eq.refl f) h = congr_argₓ f h :=
   rfl
 
 @[simp]
-theorem congr_refl_right {α β : Sort _} {f g : α → β} (h : f = g) (a : α) : congr h (Eq.refl a) = congr_fun h a :=
+theorem congr_refl_right {α β : Sort _} {f g : α → β} (h : f = g) (a : α) : congr h (Eq.refl a) = congr_funₓ h a :=
   rfl
 
 @[simp]
-theorem congr_arg_refl {α β : Sort _} (f : α → β) (a : α) : congr_arg f (Eq.refl a) = Eq.refl (f a) :=
+theorem congr_arg_refl {α β : Sort _} (f : α → β) (a : α) : congr_argₓ f (Eq.refl a) = Eq.refl (f a) :=
   rfl
 
 @[simp]
-theorem congr_fun_rfl {α β : Sort _} (f : α → β) (a : α) : congr_fun (Eq.refl f) a = Eq.refl (f a) :=
+theorem congr_fun_rfl {α β : Sort _} (f : α → β) (a : α) : congr_funₓ (Eq.refl f) a = Eq.refl (f a) :=
   rfl
 
 @[simp]
 theorem congr_fun_congr_arg {α β γ : Sort _} (f : α → β → γ) {a a' : α} (p : a = a') (b : β) :
-    congr_fun (congr_arg f p) b = congr_arg (fun a => f a b) p :=
+    congr_funₓ (congr_argₓ f p) b = congr_argₓ (fun a => f a b) p :=
   rfl
 
 theorem heq_of_cast_eq : ∀ {α β : Sort _} {a : α} {a' : β} (e : α = β) (h₂ : cast e a = a'), HEq a a'
@@ -1087,10 +1095,10 @@ theorem congr_arg2ₓ {α β γ : Sort _} (f : α → β → γ) {x x' : α} {y 
 variable {β : α → Sort _} {γ : ∀ a, β a → Sort _} {δ : ∀ a b, γ a b → Sort _}
 
 theorem congr_fun₂ {f g : ∀ a b, γ a b} (h : f = g) (a : α) (b : β a) : f a b = g a b :=
-  congr_fun (congr_fun h _) _
+  congr_funₓ (congr_funₓ h _) _
 
 theorem congr_fun₃ {f g : ∀ a b c, δ a b c} (h : f = g) (a : α) (b : β a) (c : γ a b) : f a b c = g a b c :=
-  congr_fun₂ (congr_fun h _) _ _
+  congr_fun₂ (congr_funₓ h _) _ _
 
 theorem funext₂ {f g : ∀ a b, γ a b} (h : ∀ a b, f a b = g a b) : f = g :=
   funext fun _ => funext <| h _
@@ -1167,7 +1175,7 @@ end Dependent
 
 variable {ι β : Sort _} {κ : ι → Sort _} {p q : α → Prop} {b : Prop}
 
-theorem exists_imp_exists' {p : α → Prop} {q : β → Prop} (f : α → β) (hpq : ∀ a, p a → q (f a)) (hp : ∃ a, p a) :
+theorem exists_imp_exists'ₓ {p : α → Prop} {q : β → Prop} (f : α → β) (hpq : ∀ a, p a → q (f a)) (hp : ∃ a, p a) :
     ∃ b, q b :=
   Exists.elim hp fun a hp' => ⟨_, hpq _ hp'⟩
 
@@ -1774,12 +1782,12 @@ theorem ite_eq_or_eq : ite P a b = a ∨ ite P a b = b :=
   Decidable.byCases (fun h => Or.inl (if_pos h)) fun h => Or.inr (if_neg h)
 
 /-- A function applied to a `dite` is a `dite` of that function applied to each of the branches. -/
-theorem apply_dite (x : P → α) (y : ¬P → α) : f (dite P x y) = dite P (fun h => f (x h)) fun h => f (y h) := by
+theorem apply_diteₓ (x : P → α) (y : ¬P → α) : f (dite P x y) = dite P (fun h => f (x h)) fun h => f (y h) := by
   by_cases' h : P <;> simp [h]
 
 /-- A function applied to a `ite` is a `ite` of that function applied to each of the branches. -/
-theorem apply_ite : f (ite P a b) = ite P (f a) (f b) :=
-  apply_dite f P (fun _ => a) fun _ => b
+theorem apply_iteₓ : f (ite P a b) = ite P (f a) (f b) :=
+  apply_diteₓ f P (fun _ => a) fun _ => b
 
 /-- A two-argument function applied to two `dite`s is a `dite` of that two-argument function
 applied to each of the branches. -/

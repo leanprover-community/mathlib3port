@@ -465,7 +465,7 @@ theorem has_basis_infi_of_directed {ι : Type _} {ι' : Sort _} [Nonempty ι] {l
     (p : ι → ι' → Prop) (hl : ∀ i, (l i).HasBasis (p i) (s i)) (h : Directed (· ≥ ·) l) :
     (⨅ i, l i).HasBasis (fun ii' : ι × ι' => p ii'.1 ii'.2) fun ii' => s ii'.1 ii'.2 := by
   refine' ⟨fun t => _⟩
-  rw [mem_infi_of_directed h, Prod.exists]
+  rw [mem_infi_of_directed h, Prod.existsₓ]
   exact exists_congr fun i => (hl i).mem_iff
 
 theorem has_basis_binfi_of_directed' {ι : Type _} {ι' : ι → Sort _} {dom : Set ι} (hdom : dom.Nonempty)
@@ -488,7 +488,7 @@ theorem has_basis_binfi_of_directed {ι : Type _} {ι' : Sort _} {dom : Set ι} 
     (h : DirectedOn (l ⁻¹'o Ge) dom) :
     (⨅ i ∈ dom, l i).HasBasis (fun ii' : ι × ι' => ii'.1 ∈ dom ∧ p ii'.1 ii'.2) fun ii' => s ii'.1 ii'.2 := by
   refine' ⟨fun t => _⟩
-  rw [mem_binfi_of_directed h hdom, Prod.exists]
+  rw [mem_binfi_of_directed h hdom, Prod.existsₓ]
   refine' exists_congr fun i => ⟨_, _⟩
   · rintro ⟨hi, hti⟩
     rcases(hl i hi).mem_iff.mp hti with ⟨b, hb, hbt⟩

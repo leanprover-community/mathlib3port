@@ -26,7 +26,7 @@ The final goal is to develop part of the API to prove, eventually, results about
 -/
 
 
-variable {R : Type _} {a b : R}
+variable {R : Type _}
 
 section Mul
 
@@ -36,13 +36,13 @@ variable [Mul R]
 is injective. -/
 @[to_additive "An add-left-regular element is an element `c` such that addition on the left by `c`\nis injective. -/\n"]
 def IsLeftRegular (c : R) :=
-  Function.Injective ((· * ·) c)
+  ((· * ·) c).Injective
 
 /-- A right-regular element is an element `c` such that multiplication on the right by `c`
 is injective. -/
 @[to_additive "An add-right-regular element is an element `c` such that addition on the right by `c`\nis injective."]
 def IsRightRegular (c : R) :=
-  Function.Injective (· * c)
+  (· * c).Injective
 
 /-- An add-regular element is an element `c` such that addition by `c` both on the left and
 on the right is injective. -/
@@ -73,7 +73,7 @@ end Mul
 
 section Semigroupₓ
 
-variable [Semigroupₓ R]
+variable [Semigroupₓ R] {a b : R}
 
 /-- In a semigroup, the product of left-regular elements is left-regular. -/
 @[to_additive "In an additive semigroup, the sum of add-left-regular elements is add-left.regular."]
@@ -109,7 +109,7 @@ element, then `b` is right-regular. -/
 theorem IsRightRegular.of_mul (ab : IsRightRegular (b * a)) : IsRightRegular b := by
   refine' fun x y xy => ab (_ : x * (b * a) = y * (b * a))
   rw [← mul_assoc, ← mul_assoc]
-  exact congr_fun (congr_arg Mul.mul xy) a
+  exact congr_funₓ (congr_argₓ (· * ·) xy) a
 
 /-- An element is right-regular if and only if multiplying it on the right with a right-regular
 element is right-regular. -/
@@ -144,7 +144,7 @@ end Semigroupₓ
 
 section MulZeroClassₓ
 
-variable [MulZeroClassₓ R]
+variable [MulZeroClassₓ R] {a b : R}
 
 /-- The element `0` is left-regular if and only if `R` is trivial. -/
 theorem IsLeftRegular.subsingleton (h : IsLeftRegular (0 : R)) : Subsingleton R :=
@@ -159,10 +159,8 @@ theorem IsRegular.subsingleton (h : IsRegular (0 : R)) : Subsingleton R :=
   h.left.Subsingleton
 
 /-- The element `0` is left-regular if and only if `R` is trivial. -/
-theorem is_left_regular_zero_iff_subsingleton : IsLeftRegular (0 : R) ↔ Subsingleton R := by
-  refine' ⟨fun h => h.Subsingleton, _⟩
-  intro H a b h
-  exact @Subsingleton.elim _ H a b
+theorem is_left_regular_zero_iff_subsingleton : IsLeftRegular (0 : R) ↔ Subsingleton R :=
+  ⟨fun h => h.Subsingleton, fun H a b h => @Subsingleton.elim _ H a b⟩
 
 /-- In a non-trivial `mul_zero_class`, the `0` element is not left-regular. -/
 theorem not_is_left_regular_zero_iff : ¬IsLeftRegular (0 : R) ↔ Nontrivial R := by
@@ -171,10 +169,8 @@ theorem not_is_left_regular_zero_iff : ¬IsLeftRegular (0 : R) ↔ Nontrivial R 
   exact Iff.rfl
 
 /-- The element `0` is right-regular if and only if `R` is trivial. -/
-theorem is_right_regular_zero_iff_subsingleton : IsRightRegular (0 : R) ↔ Subsingleton R := by
-  refine' ⟨fun h => h.Subsingleton, _⟩
-  intro H a b h
-  exact @Subsingleton.elim _ H a b
+theorem is_right_regular_zero_iff_subsingleton : IsRightRegular (0 : R) ↔ Subsingleton R :=
+  ⟨fun h => h.Subsingleton, fun H a b h => @Subsingleton.elim _ H a b⟩
 
 /-- In a non-trivial `mul_zero_class`, the `0` element is not right-regular. -/
 theorem not_is_right_regular_zero_iff : ¬IsRightRegular (0 : R) ↔ Nontrivial R := by
@@ -232,7 +228,7 @@ end MulOneClassₓ
 
 section CommSemigroupₓ
 
-variable [CommSemigroupₓ R]
+variable [CommSemigroupₓ R] {a b : R}
 
 /-- A product is regular if and only if the factors are. -/
 @[to_additive "A sum is add-regular if and only if the summands are."]
@@ -248,12 +244,12 @@ end CommSemigroupₓ
 
 section Monoidₓ
 
-variable [Monoidₓ R]
+variable [Monoidₓ R] {a b : R}
 
 /-- An element admitting a left inverse is left-regular. -/
 @[to_additive "An element admitting a left additive opposite is add-left-regular."]
 theorem is_left_regular_of_mul_eq_one (h : b * a = 1) : IsLeftRegular a :=
-  @IsLeftRegular.of_mul R _ a _
+  @IsLeftRegular.of_mul R _ _ _
     (by
       rw [h]
       exact is_regular_one.left)
@@ -261,7 +257,7 @@ theorem is_left_regular_of_mul_eq_one (h : b * a = 1) : IsLeftRegular a :=
 /-- An element admitting a right inverse is right-regular. -/
 @[to_additive "An element admitting a right additive opposite is add-right-regular."]
 theorem is_right_regular_of_mul_eq_one (h : a * b = 1) : IsRightRegular a :=
-  @IsRightRegular.of_mul R _ a _
+  IsRightRegular.of_mul
     (by
       rw [h]
       exact is_regular_one.right)
@@ -332,7 +328,7 @@ end CancelMonoid
 
 section CancelMonoidWithZero
 
-variable [CancelMonoidWithZero R]
+variable [CancelMonoidWithZero R] {a : R}
 
 /-- Non-zero elements of an integral domain are regular. -/
 theorem is_regular_of_ne_zero (a0 : a ≠ 0) : IsRegular a :=

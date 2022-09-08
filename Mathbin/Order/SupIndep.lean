@@ -272,7 +272,7 @@ theorem Independent.comp' {ι ι' : Sort _} {t : ι → α} {f : ι' → ι} (ht
   intro i
   obtain ⟨i', rfl⟩ := hf i
   rw [← hf.supr_comp]
-  exact (ht i').mono_right (bsupr_mono fun j' hij => mt (congr_arg f) hij)
+  exact (ht i').mono_right (bsupr_mono fun j' hij => mt (congr_argₓ f) hij)
 
 theorem Independent.set_independent_range (ht : Independent t) : set_independent <| Range t := by
   rw [set_independent_iff]
@@ -317,7 +317,7 @@ theorem Independent.map_order_iso {ι : Sort _} {α β : Type _} [CompleteLattic
 theorem independent_map_order_iso_iff {ι : Sort _} {α β : Type _} [CompleteLattice α] [CompleteLattice β] (f : α ≃o β)
     {a : ι → α} : Independent (f ∘ a) ↔ Independent a :=
   ⟨fun h =>
-    have hf : f.symm ∘ f ∘ a = a := congr_arg (· ∘ a) f.left_inv.comp_eq_id
+    have hf : f.symm ∘ f ∘ a = a := congr_argₓ (· ∘ a) f.left_inv.comp_eq_id
     hf ▸ h.map_order_iso f.symm,
     fun h => h.map_order_iso f⟩
 

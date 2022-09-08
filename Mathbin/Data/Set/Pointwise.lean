@@ -214,7 +214,7 @@ theorem Finite.inv (hs : s.Finite) : s⁻¹.Finite :=
 
 @[simp, to_additive]
 theorem image_inv : Inv.inv '' s = s⁻¹ :=
-  congr_fun (image_eq_preimage_of_inverse inv_involutive.LeftInverse inv_involutive.RightInverse) _
+  congr_funₓ (image_eq_preimage_of_inverse inv_involutive.LeftInverse inv_involutive.RightInverse) _
 
 @[simp, to_additive]
 instance : HasInvolutiveInv (Set α) where
@@ -1100,9 +1100,9 @@ theorem mem_fintype_prod [Fintype ι] (f : ι → Set α) (a : α) :
 theorem list_prod_mem_list_prod (t : List ι) (f : ι → Set α) (g : ι → α) (hg : ∀ i ∈ t, g i ∈ f i) :
     (t.map g).Prod ∈ (t.map f).Prod := by
   induction' t with h tl ih
-  · simp_rw [List.map_nil, List.prod_nil, Set.mem_one]
+  · simp_rw [List.map_nilₓ, List.prod_nil, Set.mem_one]
     
-  · simp_rw [List.map_cons, List.prod_cons]
+  · simp_rw [List.map_consₓ, List.prod_cons]
     exact mul_mem_mul (hg h <| List.mem_cons_selfₓ _ _) (ih fun i hi => hg i <| List.mem_cons_of_memₓ _ hi)
     
 
@@ -1113,7 +1113,7 @@ theorem list_prod_subset_list_prod (t : List ι) (f₁ f₂ : ι → Set α) (hf
   induction' t with h tl ih
   · rfl
     
-  · simp_rw [List.map_cons, List.prod_cons]
+  · simp_rw [List.map_consₓ, List.prod_cons]
     exact mul_subset_mul (hf h <| List.mem_cons_selfₓ _ _) (ih fun i hi => hf i <| List.mem_cons_of_memₓ _ hi)
     
 
@@ -1480,7 +1480,7 @@ instance is_scalar_tower'' [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsSc
     IsScalarTower (Set α) (Set β) (Set γ) where smul_assoc := fun T T' T'' => image2_assoc smul_assoc
 
 instance is_central_scalar [HasSmul α β] [HasSmul αᵐᵒᵖ β] [IsCentralScalar α β] : IsCentralScalar α (Set β) :=
-  ⟨fun a S => (congr_arg fun f => f '' S) <| funext fun _ => op_smul_eq_smul _ _⟩
+  ⟨fun a S => (congr_argₓ fun f => f '' S) <| funext fun _ => op_smul_eq_smul _ _⟩
 
 /-- A multiplicative action of a monoid `α` on a type `β` gives a multiplicative action of `set α`
 on `set β`. -/
@@ -1780,13 +1780,13 @@ theorem set_smul_subset_set_smul_iff : a • A ⊆ a • B ↔ A ⊆ B :=
 
 @[to_additive]
 theorem set_smul_subset_iff : a • A ⊆ B ↔ A ⊆ a⁻¹ • B :=
-  image_subset_iff.trans <| iff_of_eq <| congr_arg _ <| preimage_equiv_eq_image_symm _ <| MulAction.toPerm _
+  image_subset_iff.trans <| iff_of_eq <| congr_argₓ _ <| preimage_equiv_eq_image_symm _ <| MulAction.toPerm _
 
 @[to_additive]
 theorem subset_set_smul_iff : A ⊆ a • B ↔ a⁻¹ • A ⊆ B :=
   Iff.symm <|
     image_subset_iff.trans <|
-      Iff.symm <| iff_of_eq <| congr_arg _ <| image_equiv_eq_preimage_symm _ <| MulAction.toPerm _
+      Iff.symm <| iff_of_eq <| congr_argₓ _ <| image_equiv_eq_preimage_symm _ <| MulAction.toPerm _
 
 end Groupₓ
 
@@ -1947,7 +1947,7 @@ theorem card_pow_eq_card_pow_card_univ_aux {f : ℕ → ℕ} (h1 : Monotone f) {
     replace key : ∀ k : ℕ, f (n + k) = f (n + k + 1) ∧ f (n + k) = f n := fun k =>
       Nat.rec ⟨hn2, rfl⟩ (fun k ih => ⟨h3 _ ih.1, ih.1.symm.trans ih.2⟩) k
     replace key : ∀ k : ℕ, n ≤ k → f k = f n := fun k hk =>
-      (congr_arg f (add_tsub_cancel_of_le hk)).symm.trans (key (k - n)).2
+      (congr_argₓ f (add_tsub_cancel_of_le hk)).symm.trans (key (k - n)).2
     exact fun k hk => (key k (hn1.trans hk)).trans (key B hn1).symm
     
 
@@ -2157,7 +2157,7 @@ theorem mul_antidiagonal_min_mul_min {α} [LinearOrderedCancelCommMonoid α] {s 
     (hns : s.Nonempty) (hnt : t.Nonempty) :
     mulAntidiagonal hs.IsPwo ht.IsPwo (hs.min hns * ht.min hnt) = {(hs hns, ht hnt)} := by
   ext ⟨a, b⟩
-  simp only [mem_mul_antidiagonal, mem_singleton, Prod.ext_iff]
+  simp only [mem_mul_antidiagonal, mem_singleton, Prod.ext_iffₓ]
   constructor
   · rintro ⟨has, hat, hst⟩
     obtain rfl := (hs.min_le hns has).eq_of_not_lt fun hlt => (mul_lt_mul_of_lt_of_le hlt <| ht.min_le hnt hat).ne' hst

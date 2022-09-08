@@ -680,7 +680,7 @@ theorem of_digits_neg_one : ∀ L : List ℕ, ofDigits (-1 : ℤ) L = (L.map fun
   | [n] => by
     simp [of_digits, List.alternatingSum]
   | a::b::t => by
-    simp only [of_digits, List.alternatingSum, List.map_cons, of_digits_neg_one t]
+    simp only [of_digits, List.alternatingSum, List.map_consₓ, of_digits_neg_one t]
     ring
 
 theorem modeq_eleven_digits_sum (n : ℕ) : n ≡ ((digits 10 n).map fun n : ℕ => (n : ℤ)).alternatingSum [ZMOD 11] := by

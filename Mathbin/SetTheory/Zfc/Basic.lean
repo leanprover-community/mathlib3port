@@ -858,7 +858,7 @@ theorem sUnion_singleton {x : Setₓ.{u}} : ⋃₀ ({x} : Setₓ) = x :=
     simp_rw [mem_sUnion, exists_prop, mem_singleton, exists_eq_left]
 
 theorem singleton_injective : Function.Injective (@singleton Setₓ Setₓ _) := fun x y H => by
-  let this := congr_arg sUnion H
+  let this := congr_argₓ sUnion H
   rwa [sUnion_singleton, sUnion_singleton] at this
 
 @[simp]

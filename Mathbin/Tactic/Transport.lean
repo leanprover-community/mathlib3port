@@ -25,7 +25,7 @@ mk_simp_attribute transport_simps :=
   "The simpset `transport_simps` is used by the tactic `transport`\nto simplify certain expressions involving application of equivalences,\nand trivial `eq.rec` or `ep.mpr` conversions.\nIt's probably best not to adjust it without understanding the algorithm used by `transport`."
 
 attribute [transport_simps]
-  eq_rec_constant eq_mp_eq_cast cast_eq Equivₓ.to_fun_as_coe Equivₓ.arrow_congr'_apply Equivₓ.symm_apply_apply Equivₓ.apply_eq_iff_eq_symm_apply
+  eq_rec_constantₓ eq_mp_eq_cast cast_eq Equivₓ.to_fun_as_coe Equivₓ.arrow_congr'_apply Equivₓ.symm_apply_apply Equivₓ.apply_eq_iff_eq_symm_apply
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]
 -- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs]

@@ -7,6 +7,7 @@ import Mathbin.Logic.Equiv.Nat
 import Mathbin.Order.Directed
 import Mathbin.Data.Countable.Defs
 import Mathbin.Order.RelIso
+import Mathbin.Data.Fin.Basic
 
 /-!
 # Encodable types
@@ -83,7 +84,7 @@ def ofLeftInjection [Encodable α] (f : β → α) (finv : α → Option β) (li
 
 /-- If `α` is encodable and `f : β → α` is invertible, then `β` is encodable as well. -/
 def ofLeftInverse [Encodable α] (f : β → α) (finv : α → β) (linv : ∀ b, finv (f b) = b) : Encodable β :=
-  ofLeftInjection f (some ∘ finv) fun b => congr_arg some (linv b)
+  ofLeftInjection f (some ∘ finv) fun b => congr_argₓ some (linv b)
 
 /-- Encodability is preserved by equivalence. -/
 def ofEquiv (α) [Encodable α] (e : β ≃ α) : Encodable β :=
@@ -355,7 +356,7 @@ theorem Subtype.encode_eq (a : Subtype P) : encode a = encode a.val := by
 end Subtype
 
 instance _root_.fin.encodable (n) : Encodable (Finₓ n) :=
-  Subtype.encodable
+  ofEquiv _ Finₓ.equivSubtype
 
 instance _root_.int.encodable : Encodable ℤ :=
   ofEquiv _ Equivₓ.intEquivNat
@@ -373,7 +374,7 @@ instance _root_.plift.encodable [Encodable α] : Encodable (Plift α) :=
 
 /-- If `β` is encodable and there is an injection `f : α → β`, then `α` is encodable as well. -/
 noncomputable def ofInj [Encodable β] (f : α → β) (hf : Injective f) : Encodable α :=
-  ofLeftInjection f (partialInv f) fun x => (partial_inv_of_injective hf _ _).2 rfl
+  ofLeftInjection f (partialInv f) fun x => (partial_inv_of_injectiveₓ hf _ _).2 rfl
 
 /-- If `α` is countable, then it has a (non-canonical) `encodable` structure. -/
 noncomputable def ofCountable (α : Type _) [Countable α] : Encodable α :=
@@ -580,7 +581,7 @@ theorem Quotientₓ.rep_spec (q : Quotientₓ s) : ⟦q.rep⟧ = q :=
 /-- The quotient of an encodable space by a decidable equivalence relation is encodable. -/
 def encodableQuotient : Encodable (Quotientₓ s) :=
   ⟨fun q => encode q.rep, fun n => Quotientₓ.mk <$> decode α n, by
-    rintro ⟨l⟩ <;> rw [encodek] <;> exact congr_arg some ⟦l⟧.rep_spec⟩
+    rintro ⟨l⟩ <;> rw [encodek] <;> exact congr_argₓ some ⟦l⟧.rep_spec⟩
 
 end Quotientₓ
 

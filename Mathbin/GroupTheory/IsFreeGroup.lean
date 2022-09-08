@@ -81,7 +81,7 @@ theorem lift'_eq_free_group_lift {A : Type u} : @lift (FreeGroup A) _ _ H _ = Fr
 
 @[simp]
 theorem lift_of (f : Generators G → H) (a : Generators G) : lift f (of a) = f a :=
-  congr_fun (lift.symm_apply_apply f) a
+  congr_funₓ (lift.symm_apply_apply f) a
 
 @[simp]
 theorem lift_symm_apply (f : G →* H) (a : Generators G) : (lift.symm f) a = f (of a) :=
@@ -97,7 +97,7 @@ group extends in a unique way to a homomorphism from `G`.
 Note that since `is_free_group.lift` is expressed as a bijection, it already
 expresses the universal property.  -/
 theorem unique_lift (f : Generators G → H) : ∃! F : G →* H, ∀ a, F (of a) = f a := by
-  simpa only [Function.funext_iffₓ] using lift.symm.bijective.exists_unique f
+  simpa only [Function.funext_iff] using lift.symm.bijective.exists_unique f
 
 /-- If a group satisfies the universal property of a free group, then it is a free group, where
 the universal property is expressed as in `is_free_group.lift` and its properties. -/
@@ -125,7 +125,8 @@ noncomputable def ofUniqueLift {G : Type u} [Groupₓ G] (X : Type u) (of : X �
     { toFun := fun f => Classical.choose (h f), invFun := fun F => F ∘ of,
       left_inv := fun f => funext (Classical.choose_spec (h f)).left,
       right_inv := fun F => ((Classical.choose_spec (h (F ∘ of))).right F fun _ => rfl).symm }
-  let lift_of {H : Type u} [Groupₓ H] (f : X → H) (a : X) : lift f (of a) = f a := congr_fun (lift.symm_apply_apply f) a
+  let lift_of {H : Type u} [Groupₓ H] (f : X → H) (a : X) : lift f (of a) = f a :=
+    congr_funₓ (lift.symm_apply_apply f) a
   ofLift X of @lift @lift_of
 
 /-- Being a free group transports across group isomorphisms. -/

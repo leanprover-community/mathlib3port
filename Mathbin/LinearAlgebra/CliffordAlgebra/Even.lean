@@ -209,24 +209,24 @@ def aux (f : EvenHom Q A) : CliffordAlgebra.even Q →ₗ[R] A := by
 
 @[simp]
 theorem aux_one : aux f 1 = 1 :=
-  congr_arg Prod.fst (foldr_one _ _ _ _)
+  congr_argₓ Prod.fst (foldr_one _ _ _ _)
 
 @[simp]
 theorem aux_ι (m₁ m₂ : M) : aux f ((even.ι Q).bilin m₁ m₂) = f.bilin m₁ m₂ :=
-  (congr_arg Prod.fst (foldr_mul _ _ _ _ _ _)).trans
+  (congr_argₓ Prod.fst (foldr_mul _ _ _ _ _ _)).trans
     (by
       rw [foldr_ι, foldr_ι]
       exact mul_oneₓ _)
 
 @[simp]
 theorem aux_algebra_map (r) (hr) : aux f ⟨algebraMap R _ r, hr⟩ = algebraMap R _ r :=
-  (congr_arg Prod.fst (foldr_algebra_map _ _ _ _ _)).trans (Algebra.algebra_map_eq_smul_one r).symm
+  (congr_argₓ Prod.fst (foldr_algebra_map _ _ _ _ _)).trans (Algebra.algebra_map_eq_smul_one r).symm
 
 @[simp]
 theorem aux_mul (x y : even Q) : aux f (x * y) = aux f x * aux f y := by
   cases x
   cases y
-  refine' (congr_arg Prod.fst (foldr_mul _ _ _ _ _ _)).trans _
+  refine' (congr_argₓ Prod.fst (foldr_mul _ _ _ _ _ _)).trans _
   dsimp' only
   refine' even_induction Q _ _ _ _ x_property
   · intro r

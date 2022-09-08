@@ -957,7 +957,7 @@ variable (L)
 theorem Sentence.realize_card_ge (n) : M ⊨ Sentence.cardGe L n ↔ ↑n ≤ # M := by
   rw [← lift_mk_fin, ← lift_le, lift_lift, lift_mk_le, sentence.card_ge, sentence.realize, bounded_formula.realize_exs]
   simp_rw [bounded_formula.realize_foldr_inf]
-  simp only [Function.comp_app, List.mem_mapₓ, Prod.exists, Ne.def, List.mem_product, List.mem_fin_range,
+  simp only [Function.comp_app, List.mem_mapₓ, Prod.existsₓ, Ne.def, List.mem_product, List.mem_fin_range,
     forall_exists_index, and_imp, List.mem_filterₓ, true_andₓ]
   refine' ⟨_, fun xs => ⟨xs.some, _⟩⟩
   · rintro ⟨xs, h⟩
@@ -994,7 +994,7 @@ instance model_nonempty [h : Nonempty M] : M ⊨ L.NonemptyTheory :=
 theorem model_distinct_constants_theory {M : Type w} [L[[α]].Structure M] (s : Set α) :
     M ⊨ L.DistinctConstantsTheory s ↔ Set.InjOn (fun i : α => (L.con i : M)) s := by
   simp only [distinct_constants_theory, Theory.model_iff, Set.mem_image, Set.mem_inter_eq, Set.mem_prod,
-    Set.mem_compl_eq, Prod.exists, forall_exists_index, and_imp]
+    Set.mem_compl_eq, Prod.existsₓ, forall_exists_index, and_imp]
   refine' ⟨fun h a as b bs ab => _, _⟩
   · contrapose! ab
     have h' := h _ a b as bs ab rfl

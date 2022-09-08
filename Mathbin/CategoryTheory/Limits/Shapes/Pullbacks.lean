@@ -1158,9 +1158,9 @@ instance mono_pullback_to_prod {C : Type _} [Category C] {X Y Z : C} (f : X ⟶ 
     [HasBinaryProduct X Y] : Mono (prod.lift pullback.fst pullback.snd : pullback f g ⟶ _) :=
   ⟨fun W i₁ i₂ h => by
     ext
-    · simpa using congr_arg (fun f => f ≫ Prod.fst) h
+    · simpa using congr_argₓ (fun f => f ≫ Prod.fst) h
       
-    · simpa using congr_arg (fun f => f ≫ Prod.snd) h
+    · simpa using congr_argₓ (fun f => f ≫ Prod.snd) h
       ⟩
 
 /-- Two morphisms out of a pushout are equal if their compositions with the pushout morphisms are
@@ -1196,9 +1196,9 @@ instance epi_coprod_to_pushout {C : Type _} [Category C] {X Y Z : C} (f : X ⟶ 
     [HasBinaryCoproduct Y Z] : Epi (coprod.desc pushout.inl pushout.inr : _ ⟶ pushout f g) :=
   ⟨fun W i₁ i₂ h => by
     ext
-    · simpa using congr_arg (fun f => coprod.inl ≫ f) h
+    · simpa using congr_argₓ (fun f => coprod.inl ≫ f) h
       
-    · simpa using congr_arg (fun f => coprod.inr ≫ f) h
+    · simpa using congr_argₓ (fun f => coprod.inr ≫ f) h
       ⟩
 
 instance pullback.map_is_iso {W X Y Z S T : C} (f₁ : W ⟶ S) (f₂ : X ⟶ S) [HasPullback f₁ f₂] (g₁ : Y ⟶ T) (g₂ : Z ⟶ T)
@@ -1510,7 +1510,7 @@ instance has_pullback_of_right_factors_mono (f : X ⟶ Z) : HasPullback i (f ≫
 
 instance pullback_snd_iso_of_right_factors_mono (f : X ⟶ Z) : IsIso (pullback.snd : pullback i (f ≫ i) ⟶ _) := by
   convert
-      (congr_arg is_iso
+      (congr_argₓ is_iso
             (show _ ≫ pullback.snd = _ from
               limit.iso_limit_cone_hom_π ⟨_, pullback_is_pullback_of_comp_mono (𝟙 _) f i⟩ walking_cospan.right)).mp
         inferInstance <;>
@@ -1585,7 +1585,7 @@ instance has_pullback_of_left_factors_mono (f : X ⟶ Z) : HasPullback (f ≫ i)
 
 instance pullback_snd_iso_of_left_factors_mono (f : X ⟶ Z) : IsIso (pullback.fst : pullback (f ≫ i) i ⟶ _) := by
   convert
-      (congr_arg is_iso
+      (congr_argₓ is_iso
             (show _ ≫ pullback.fst = _ from
               limit.iso_limit_cone_hom_π ⟨_, pullback_is_pullback_of_comp_mono f (𝟙 _) i⟩ walking_cospan.left)).mp
         inferInstance <;>
@@ -1670,7 +1670,7 @@ instance has_pushout_of_right_factors_epi (f : X ⟶ Y) : HasPushout h (h ≫ f)
 
 instance pushout_inr_iso_of_right_factors_epi (f : X ⟶ Y) : IsIso (pushout.inr : _ ⟶ pushout h (h ≫ f)) := by
   convert
-      (congr_arg is_iso
+      (congr_argₓ is_iso
             (show pushout.inr ≫ _ = _ from
               colimit.iso_colimit_cocone_ι_inv ⟨_, pushout_is_pushout_of_epi_comp (𝟙 _) f h⟩ walking_span.right)).mp
         inferInstance <;>
@@ -1746,7 +1746,7 @@ instance has_pushout_of_left_factors_epi (f : X ⟶ Y) : HasPushout (h ≫ f) h 
 
 instance pushout_inl_iso_of_left_factors_epi (f : X ⟶ Y) : IsIso (pushout.inl : _ ⟶ pushout (h ≫ f) h) := by
   convert
-      (congr_arg is_iso
+      (congr_argₓ is_iso
             (show pushout.inl ≫ _ = _ from
               colimit.iso_colimit_cocone_ι_inv ⟨_, pushout_is_pushout_of_epi_comp f (𝟙 _) h⟩ walking_span.left)).mp
         inferInstance <;>

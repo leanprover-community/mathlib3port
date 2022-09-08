@@ -23,7 +23,7 @@ theorem cast_eq_zero [AddGroupWithOneₓ α] [CharZero α] {n : ℤ} : (n : α) 
   ⟨fun h => by
     cases n
     · rw [Int.cast_of_nat] at h
-      exact congr_arg coe (Nat.cast_eq_zero.1 h)
+      exact congr_argₓ coe (Nat.cast_eq_zero.1 h)
       
     · rw [cast_neg_succ_of_nat, neg_eq_zero, Nat.cast_eq_zero] at h
       contradiction

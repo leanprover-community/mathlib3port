@@ -154,7 +154,7 @@ theorem diagonalization_apply_self_apply (v : E) (μ : Eigenvalues T) :
       T (hT.diagonalization.symm w) = hT.diagonalization.symm fun μ => (μ : 𝕜) • w μ
     by
     simpa [LinearIsometryEquiv.symm_apply_apply, -is_symmetric.diagonalization_symm_apply] using
-      congr_arg (fun w => hT.diagonalization w μ) (this (hT.diagonalization v))
+      congr_argₓ (fun w => hT.diagonalization w μ) (this (hT.diagonalization v))
   intro w
   have hwT : ∀ μ : eigenvalues T, T (w μ) = (μ : 𝕜) • w μ := by
     intro μ
@@ -216,7 +216,7 @@ theorem diagonalization_basis_apply_self_apply (v : E) (i : Finₓ n) :
       T ((hT.eigenvector_basis hn).repr.symm w) = (hT.eigenvector_basis hn).repr.symm fun i => hT.eigenvalues hn i * w i
     by
     simpa [OrthonormalBasis.sum_repr_symm] using
-      congr_arg (fun v => (hT.eigenvector_basis hn).repr v i) (this ((hT.eigenvector_basis hn).repr v))
+      congr_argₓ (fun v => (hT.eigenvector_basis hn).repr v i) (this ((hT.eigenvector_basis hn).repr v))
   intro w
   simp_rw [← OrthonormalBasis.sum_repr_symm, LinearMap.map_sum, LinearMap.map_smul, apply_eigenvector_basis]
   apply Fintype.sum_congr
@@ -242,7 +242,7 @@ theorem eigenvalue_nonneg_of_nonneg {μ : ℝ} {T : E →ₗ[𝕜] E} (hμ : Has
   have hpos : 0 < ∥v∥ ^ 2 := by
     simpa only [sq_pos_iff, norm_ne_zero_iff] using hv.2
   have : IsROrC.re ⟪v, T v⟫ = μ * ∥v∥ ^ 2 := by
-    exact_mod_cast congr_arg IsROrC.re (inner_product_apply_eigenvector hv.1)
+    exact_mod_cast congr_argₓ IsROrC.re (inner_product_apply_eigenvector hv.1)
   exact (zero_le_mul_right hpos).mp (this ▸ hnn v)
 
 theorem eigenvalue_pos_of_pos {μ : ℝ} {T : E →ₗ[𝕜] E} (hμ : HasEigenvalue T μ) (hnn : ∀ x : E, 0 < IsROrC.re ⟪x, T x⟫) :
@@ -251,7 +251,7 @@ theorem eigenvalue_pos_of_pos {μ : ℝ} {T : E →ₗ[𝕜] E} (hμ : HasEigenv
   have hpos : 0 < ∥v∥ ^ 2 := by
     simpa only [sq_pos_iff, norm_ne_zero_iff] using hv.2
   have : IsROrC.re ⟪v, T v⟫ = μ * ∥v∥ ^ 2 := by
-    exact_mod_cast congr_arg IsROrC.re (inner_product_apply_eigenvector hv.1)
+    exact_mod_cast congr_argₓ IsROrC.re (inner_product_apply_eigenvector hv.1)
   exact (zero_lt_mul_right hpos).mp (this ▸ hnn v)
 
 end Nonneg

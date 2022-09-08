@@ -61,6 +61,36 @@ theorem is_prime_pow_iff_card_support_factorization_eq_one {n : ℕ} : IsPrimePo
   by
   simp_rw [is_prime_pow_iff_factorization_eq_single, Finsupp.card_support_eq_one', exists_prop, pos_iff_ne_zero]
 
+theorem IsPrimePow.exists_ord_compl_eq_one {n : ℕ} (h : IsPrimePow n) : ∃ p : ℕ, p.Prime ∧ ord_compl[p]n = 1 := by
+  rcases eq_or_ne n 0 with (rfl | hn0)
+  · cases not_is_prime_pow_zero h
+    
+  rcases is_prime_pow_iff_factorization_eq_single.mp h with ⟨p, k, hk0, h1⟩
+  rcases em' p.prime with (pp | pp)
+  · refine' absurd _ hk0.ne'
+    simp [← Nat.factorization_eq_zero_of_non_prime n pp, h1]
+    
+  refine' ⟨p, pp, _⟩
+  refine'
+    Nat.eq_of_factorization_eq (Nat.ord_compl_pos p hn0).ne'
+      (by
+        simp )
+      fun q => _
+  rw [Nat.factorization_ord_compl n p, h1]
+  simp
+
+theorem exists_ord_compl_eq_one_iff_is_prime_pow {n : ℕ} (hn : n ≠ 1) :
+    IsPrimePow n ↔ ∃ p : ℕ, p.Prime ∧ ord_compl[p]n = 1 := by
+  refine' ⟨fun h => IsPrimePow.exists_ord_compl_eq_one h, fun h => _⟩
+  rcases h with ⟨p, pp, h⟩
+  rw [is_prime_pow_nat_iff]
+  rw [← Nat.eq_of_dvd_of_div_eq_one (Nat.ord_proj_dvd n p) h] at hn⊢
+  refine'
+    ⟨p, n.factorization p, pp, _, by
+      simp ⟩
+  contrapose! hn
+  simp [le_zero_iff.1 hn]
+
 /-- An equivalent definition for prime powers: `n` is a prime power iff there is a unique prime
 dividing it. -/
 theorem is_prime_pow_iff_unique_prime_dvd {n : ℕ} : IsPrimePow n ↔ ∃! p : ℕ, p.Prime ∧ p ∣ n := by
@@ -72,16 +102,9 @@ theorem is_prime_pow_iff_unique_prime_dvd {n : ℕ} : IsPrimePow n ↔ ∃! p : 
     exact (Nat.prime_dvd_prime_iff_eq hq hp).1 (hq.dvd_of_dvd_pow hq')
     
   rintro ⟨p, ⟨hp, hn⟩, hq⟩
-  -- Take care of the n = 0 case
   rcases eq_or_ne n 0 with (rfl | hn₀)
-  · obtain ⟨q, hq', hq''⟩ := Nat.exists_infinite_primes (p + 1)
-    cases
-      hq q
-        ⟨hq'', by
-          simp ⟩
-    simpa using hq'
+  · cases (hq 2 ⟨Nat.prime_two, dvd_zero 2⟩).trans (hq 3 ⟨Nat.prime_three, dvd_zero 3⟩).symm
     
-  -- So assume 0 < n
   refine' ⟨p, n.factorization p, hp, hp.factorization_pos_of_dvd hn₀ hn, _⟩
   simp only [and_imp] at hq
   apply Nat.dvd_antisymm (Nat.ord_proj_dvd _ _)

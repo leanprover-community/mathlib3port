@@ -243,7 +243,7 @@ theorem TendstoUniformlyOnFilter.prod_map {ι' α' β' : Type _} [UniformSpace �
   rw [uniformity_prod_eq_prod, mem_map, mem_prod_iff] at hu
   obtain ⟨v, hv, w, hw, hvw⟩ := hu
   apply (tendsto_swap4_prod.eventually ((h v hv).prod_mk (h' w hw))).mono
-  simp only [prod_map, and_imp, Prod.forall]
+  simp only [prod_mapₓ, and_imp, Prod.forallₓ]
   intro n n' x hxv hxw
   have hout :
     ((f x.fst, F n x.fst), (f' x.snd, F' n' x.snd)) ∈
@@ -272,7 +272,7 @@ theorem TendstoUniformlyOnFilter.prod {ι' β' : Type _} [UniformSpace β'] {F' 
 theorem TendstoUniformlyOn.prod {ι' β' : Type _} [UniformSpace β'] {F' : ι' → α → β'} {f' : α → β'} {p' : Filter ι'}
     (h : TendstoUniformlyOn F f p s) (h' : TendstoUniformlyOn F' f' p' s) :
     TendstoUniformlyOn (fun (i : ι × ι') a => (F i.1 a, F' i.2 a)) (fun a => (f a, f' a)) (p.Prod p') s :=
-  (congr_arg _ s.inter_self).mp ((h.prod_map h').comp fun a => (a, a))
+  (congr_argₓ _ s.inter_self).mp ((h.prod_map h').comp fun a => (a, a))
 
 theorem TendstoUniformly.prod {ι' β' : Type _} [UniformSpace β'] {F' : ι' → α → β'} {f' : α → β'} {p' : Filter ι'}
     (h : TendstoUniformly F f p) (h' : TendstoUniformly F' f' p') :
@@ -381,7 +381,7 @@ theorem TendstoUniformlyOnFilter.uniform_cauchy_seq_on_filter (hF : TendstoUnifo
   rcases comp_symm_of_uniformity hu with ⟨t, ht, htsymm, htmem⟩
   have := tendsto_swap4_prod.eventually ((hF t ht).prod_mk (hF t ht))
   apply this.diag_of_prod_right.mono
-  simp only [and_imp, Prod.forall]
+  simp only [and_imp, Prod.forallₓ]
   intro n1 n2 x hl hr
   exact Set.mem_of_mem_of_subset (prod_mk_mem_comp_rel (htsymm hl) hr) htmem
 
@@ -409,8 +409,8 @@ theorem UniformCauchySeqOnFilter.tendsto_uniformly_on_filter_of_tendsto [NeBot p
   rw [Filter.eventually_swap_iff]
   have := tendsto_prod_assoc.eventually (tendsto_prod_swap.eventually ((hF t ht).And hmc))
   apply this.curry.mono
-  simp only [Equivₓ.prod_assoc_apply, eventually_and, eventually_const, Prod.snd_swap, Prod.fst_swap, and_imp,
-    Prod.forall]
+  simp only [Equivₓ.prod_assoc_apply, eventually_and, eventually_const, Prod.snd_swapₓ, Prod.fst_swapₓ, and_imp,
+    Prod.forallₓ]
   -- Complete the proof
   intro x n hx hm'
   refine' Set.mem_of_mem_of_subset (mem_comp_rel.mpr _) htmem
@@ -478,7 +478,7 @@ theorem UniformCauchySeqOn.prod_map {ι' α' β' : Type _} [UniformSpace β'] {F
   intro u hu
   rw [uniformity_prod_eq_prod, mem_map, mem_prod_iff] at hu
   obtain ⟨v, hv, w, hw, hvw⟩ := hu
-  simp_rw [mem_prod, prod_map, and_imp, Prod.forall]
+  simp_rw [mem_prod, prod_mapₓ, and_imp, Prod.forallₓ]
   rw [← Set.image_subset_iff] at hvw
   apply (tendsto_swap4_prod.eventually ((h v hv).prod_mk (h' w hw))).mono
   intro x hx a b ha hb
@@ -487,7 +487,7 @@ theorem UniformCauchySeqOn.prod_map {ι' α' β' : Type _} [UniformSpace β'] {F
 theorem UniformCauchySeqOn.prod {ι' β' : Type _} [UniformSpace β'] {F' : ι' → α → β'} {p' : Filter ι'}
     (h : UniformCauchySeqOn F p s) (h' : UniformCauchySeqOn F' p' s) :
     UniformCauchySeqOn (fun (i : ι × ι') a => (F i.fst a, F' i.snd a)) (p ×ᶠ p') s :=
-  (congr_arg _ s.inter_self).mp ((h.prod_map h').comp fun a => (a, a))
+  (congr_argₓ _ s.inter_self).mp ((h.prod_map h').comp fun a => (a, a))
 
 theorem UniformCauchySeqOn.prod' {β' : Type _} [UniformSpace β'] {F' : ι → α → β'} (h : UniformCauchySeqOn F p s)
     (h' : UniformCauchySeqOn F' p s) : UniformCauchySeqOn (fun (i : ι) a => (F i a, F' i a)) p s := by

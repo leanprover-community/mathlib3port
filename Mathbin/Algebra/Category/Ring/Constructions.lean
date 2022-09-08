@@ -142,7 +142,7 @@ instance CommRing_has_strict_terminal_objects : HasStrictTerminalObjects CommRin
   have e : (0 : X) = 1 := by
     rw [← f.map_one, ← f.map_zero]
     congr
-  replace e : 0 * x = 1 * x := congr_arg (fun a => a * x) e
+  replace e : 0 * x = 1 * x := congr_argₓ (fun a => a * x) e
   rw [one_mulₓ, zero_mul, ← f.map_zero] at e
   exact e
 
@@ -243,6 +243,47 @@ instance equalizer_ι_is_local_ring_hom' (F : walking_parallel_pairᵒᵖ ⥤ Co
   infer_instance
 
 end Equalizer
+
+section Pullback
+
+/-- In the category of `CommRing`, the pullback of `f : A ⟶ C` and `g : B ⟶ C` is the `eq_locus` of
+the two maps `A × B ⟶ C`. This is the constructed pullback cone.
+-/
+def pullbackCone {A B C : CommRingₓₓ.{u}} (f : A ⟶ C) (g : B ⟶ C) : PullbackCone f g :=
+  PullbackCone.mk
+    (CommRingₓₓ.ofHom <|
+      (RingHom.fst A B).comp (RingHom.eqLocus (f.comp (RingHom.fst A B)) (g.comp (RingHom.snd A B))).Subtype)
+    (CommRingₓₓ.ofHom <|
+      (RingHom.snd A B).comp (RingHom.eqLocus (f.comp (RingHom.fst A B)) (g.comp (RingHom.snd A B))).Subtype)
+    (by
+      ext ⟨x, e⟩
+      simpa [CommRingₓₓ.ofHom] using e)
+
+/-- The constructed pullback cone is indeed the limit. -/
+def pullbackConeIsLimit {A B C : CommRingₓₓ.{u}} (f : A ⟶ C) (g : B ⟶ C) : IsLimit (pullbackCone f g) := by
+  fapply pullback_cone.is_limit.mk
+  · intro s
+    apply (s.fst.prod s.snd).codRestrict
+    intro x
+    exact congr_argₓ (fun f : s.X →+* C => f x) s.condition
+    
+  · intro s
+    ext x
+    rfl
+    
+  · intro s
+    ext x
+    rfl
+    
+  · intro s m e₁ e₂
+    ext
+    · exact (congr_argₓ (fun f : s.X →+* A => f x) e₁ : _)
+      
+    · exact (congr_argₓ (fun f : s.X →+* B => f x) e₂ : _)
+      
+    
+
+end Pullback
 
 end CommRingₓₓ
 

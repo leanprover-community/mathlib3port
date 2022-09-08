@@ -68,15 +68,17 @@ theorem rank_direct_sum {ι : Type v} (M : ι → Type w) [∀ i : ι, AddCommGr
 
 /-- The rank of a finite product is the sum of the ranks. -/
 @[simp]
-theorem rank_pi_fintype {ι : Type v} [Fintype ι] {M : ι → Type w} [∀ i : ι, AddCommGroupₓ (M i)]
-    [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] :
-    Module.rank R (∀ i, M i) = Cardinal.sum fun i => Module.rank R (M i) := by
+theorem rank_pi_finite {ι : Type v} [Finite ι] {M : ι → Type w} [∀ i : ι, AddCommGroupₓ (M i)] [∀ i : ι, Module R (M i)]
+    [∀ i : ι, Module.Free R (M i)] : Module.rank R (∀ i, M i) = Cardinal.sum fun i => Module.rank R (M i) := by
+  cases nonempty_fintype ι
   rw [← (DirectSum.linearEquivFunOnFintype _ _ M).dim_eq, rank_direct_sum]
 
 /-- If `m` and `n` are `fintype`, the rank of `m × n` matrices is `(# m).lift * (# n).lift`. -/
 @[simp]
-theorem rank_matrix (m : Type v) (n : Type w) [Fintype m] [Fintype n] :
+theorem rank_matrix (m : Type v) (n : Type w) [Finite m] [Finite n] :
     Module.rank R (Matrix m n R) = lift.{max v w u, v} (# m) * lift.{max v w u, w} (# n) := by
+  cases nonempty_fintype m
+  cases nonempty_fintype n
   have h := (Matrix.stdBasis R m n).mk_eq_dim
   rw [← lift_lift.{max v w u, max v w}, lift_inj] at h
   simpa using h.symm
@@ -84,13 +86,13 @@ theorem rank_matrix (m : Type v) (n : Type w) [Fintype m] [Fintype n] :
 /-- If `m` and `n` are `fintype` that lie in the same universe, the rank of `m × n` matrices is
   `(# n * # m).lift`. -/
 @[simp]
-theorem rank_matrix' (m n : Type v) [Fintype m] [Fintype n] : Module.rank R (Matrix m n R) = (# m * # n).lift := by
+theorem rank_matrix' (m n : Type v) [Finite m] [Finite n] : Module.rank R (Matrix m n R) = (# m * # n).lift := by
   rw [rank_matrix, lift_mul, lift_umax]
 
 /-- If `m` and `n` are `fintype` that lie in the same universe as `R`, the rank of `m × n` matrices
   is `# m * # n`. -/
 @[simp]
-theorem rank_matrix'' (m n : Type u) [Fintype m] [Fintype n] : Module.rank R (Matrix m n R) = # m * # n := by
+theorem rank_matrix'' (m n : Type u) [Finite m] [Finite n] : Module.rank R (Matrix m n R) = # m * # n := by
   simp
 
 end Ringₓ

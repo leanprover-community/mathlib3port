@@ -104,6 +104,17 @@ theorem Tendsto.small_sets_mono {s t : α → Set β} (ht : Tendsto t la lb.smal
   rw [tendsto_small_sets_iff] at ht⊢
   exact fun u hu => (ht u hu).mp (hst.mono fun a hst ht => subset.trans hst ht)
 
+/-- Generalized **squeeze theorem** (also known as **sandwich theorem**). If `s : α → set β` is a
+family of sets that tends to `filter.small_sets lb` along `la` and `f : α → β` is a function such
+that `f x ∈ s x` eventually along `la`, then `f` tends to `lb` along `la`.
+
+If `s x` is the closed interval `[g x, h x]` for some functions `g`, `h` that tend to the same limit
+`𝓝 y`, then we obtain the standard squeeze theorem, see
+`tendsto_of_tendsto_of_tendsto_of_le_of_le'`. -/
+theorem Tendsto.of_small_sets {s : α → Set β} {f : α → β} (hs : Tendsto s la lb.smallSets)
+    (hf : ∀ᶠ x in la, f x ∈ s x) : Tendsto f la lb := fun t ht =>
+  hf.mp <| (tendsto_small_sets_iff.mp hs t ht).mono fun x h₁ h₂ => h₁ h₂
+
 @[simp]
 theorem eventually_small_sets_eventually {p : α → Prop} :
     (∀ᶠ s in l.smallSets, ∀ᶠ x in l', x ∈ s → p x) ↔ ∀ᶠ x in l⊓l', p x :=

@@ -85,7 +85,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
   simp_rw [integrand_eq, ← lintegral_indicator (fun t => Ennreal.ofReal (g t)) measurable_set_Ioc, ←
     lintegral_indicator _ measurable_set_Ioi]
   rw [lintegral_lintegral_swap]
-  · apply congr_arg
+  · apply congr_argₓ
     funext s
     have aux₁ :
       (fun x => (Ioc 0 (f x)).indicator (fun t : ℝ => Ennreal.ofReal (g t)) s) = fun x =>
@@ -139,7 +139,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
     by
     funext p
     cases p
-    rw [Function.uncurry_apply_pair]
+    rw [Function.uncurry_apply_pairₓ]
     by_cases' p_snd ∈ Ioc 0 (f p_fst)
     · have h' : (p_fst, p_snd) ∈ { p : α × ℝ | p.snd ∈ Ioc 0 (f p.fst) } := h
       rw [Set.indicator_of_mem h', Set.indicator_of_mem h]

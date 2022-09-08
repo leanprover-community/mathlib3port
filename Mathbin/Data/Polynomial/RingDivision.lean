@@ -14,6 +14,18 @@ import Mathbin.Algebra.Polynomial.BigOperators
 
 This file starts looking like the ring theory of $ R[X] $
 
+## Main definitions
+
+* `polynomial.roots p`: The multiset containing all the roots of `p`, including their
+  multiplicities.
+* `polynomial.root_set p E`: The set of distinct roots of `p` in an algebra `E`.
+
+## Main statements
+
+* `polynomial.C_leading_coeff_mul_prod_multiset_X_sub_C`: If a polynomial has as many roots as its
+  degree, it can be written as the product of its leading coefficient with `∏ (X - a)` where `a`
+  ranges through its roots.
+
 -/
 
 
@@ -160,6 +172,38 @@ theorem nat_degree_sub_eq_of_prod_eq {p₁ p₂ q₁ q₂ : Polynomial R} (hp₁
   norm_cast
   rw [← nat_degree_mul hp₁ hq₂, ← nat_degree_mul hp₂ hq₁, h_eq]
 
+variable [CharZero R]
+
+@[simp]
+theorem degree_bit0_eq (p : R[X]) : degree (bit0 p) = degree p := by
+  rw [bit0_eq_two_mul, degree_mul,
+    (by
+      simp : (2 : Polynomial R) = C 2),
+    @Polynomial.degree_C R _ _ two_ne_zero', zero_addₓ]
+
+@[simp]
+theorem nat_degree_bit0_eq (p : R[X]) : natDegree (bit0 p) = natDegree p :=
+  nat_degree_eq_of_degree_eq <| degree_bit0_eq p
+
+@[simp]
+theorem nat_degree_bit1_eq (p : R[X]) : natDegree (bit1 p) = natDegree p := by
+  rw [bit1]
+  apply le_antisymmₓ
+  convert nat_degree_add_le _ _
+  · simp
+    
+  by_cases' h : p.nat_degree = 0
+  · simp [h]
+    
+  apply le_nat_degree_of_ne_zero
+  intro hh
+  apply h
+  simp_all [coeff_one, if_neg (Ne.symm h)]
+
+theorem degree_bit1_eq {p : R[X]} (hp : 0 < degree p) : degree (bit1 p) = degree p := by
+  rw [bit1, degree_add_eq_left_of_degree_lt, degree_bit0_eq]
+  rwa [degree_one, degree_bit0_eq]
+
 end NoZeroDivisors
 
 section NoZeroDivisors
@@ -197,7 +241,7 @@ theorem degree_eq_zero_of_is_unit (h : IsUnit p) : degree p = 0 := by
     simpa [hp0] using hq
   have hq0 : q ≠ 0 := fun hp0 => by
     simpa [hp0] using hq
-  have : natDegree (1 : R[X]) = natDegree (p * q) := congr_arg _ hq
+  have : natDegree (1 : R[X]) = natDegree (p * q) := congr_argₓ _ hq
   rw [nat_degree_one, nat_degree_mul hp0 hq0, eq_comm, _root_.add_eq_zero_iff, ← WithBot.coe_eq_coe, ←
       degree_eq_nat_degree hp0] at this <;>
     exact this.1
@@ -612,7 +656,7 @@ theorem comp_eq_zero_iff : p.comp q = 0 ↔ p = 0 ∨ p.eval (q.coeff 0) = 0 ∧
   · intro h
     have key : p.nat_degree = 0 ∨ q.nat_degree = 0 := by
       rw [← mul_eq_zero, ← nat_degree_comp, h, nat_degree_zero]
-    replace key := Or.imp eq_C_of_nat_degree_eq_zero eq_C_of_nat_degree_eq_zero key
+    replace key := Or.impₓ eq_C_of_nat_degree_eq_zero eq_C_of_nat_degree_eq_zero key
     cases key
     · rw [key, C_comp] at h
       exact Or.inl (key.trans h)
@@ -818,7 +862,7 @@ theorem exists_prod_multiset_X_sub_C_mul (p : R[X]) :
   · conv_rhs => rw [he]
     rw [monic_prod_multiset_X_sub_C.nat_degree_mul' hq, nat_degree_multiset_prod_X_sub_C_eq_card]
     
-  · replace he := congr_arg roots he.symm
+  · replace he := congr_argₓ roots he.symm
     rw [roots_mul, roots_multiset_prod_X_sub_C] at he
     exacts[add_right_eq_selfₓ.1 he, mul_ne_zero monic_prod_multiset_X_sub_C.ne_zero hq]
     
@@ -878,7 +922,7 @@ theorem Monic.irreducible_of_irreducible_map (f : R[X]) (h_mon : Monic f) (h_irr
   dsimp' [monic]  at h_mon
   have q := (leading_coeff_mul a b).symm
   rw [← h, h_mon] at q
-  refine' (h_irr.is_unit_or_is_unit <| (congr_arg (map φ) h).trans (Polynomial.map_mul φ)).imp _ _ <;>
+  refine' (h_irr.is_unit_or_is_unit <| (congr_argₓ (map φ) h).trans (Polynomial.map_mul φ)).imp _ _ <;>
     apply is_unit_of_is_unit_leading_coeff_of_is_unit_map <;> apply is_unit_of_mul_eq_one
   · exact q
     

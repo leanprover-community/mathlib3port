@@ -34,7 +34,7 @@ def join : Multiset (Multiset α) → Multiset α :=
 
 theorem coe_join : ∀ L : List (List α), join (L.map (@coe _ (Multiset α) _) : Multiset (Multiset α)) = L.join
   | [] => rfl
-  | l :: L => congr_arg (fun s : Multiset α => ↑l + s) (coe_join L)
+  | l :: L => congr_argₓ (fun s : Multiset α => ↑l + s) (coe_join L)
 
 @[simp]
 theorem join_zero : @join α 0 = 0 :=

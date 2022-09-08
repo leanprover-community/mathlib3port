@@ -61,7 +61,7 @@ instance funLike : FunLike (M ↪ₑ[L] N) M fun _ => N where
     cases g
     simp only
     ext x
-    exact Function.funext_iffₓ.1 h x
+    exact Function.funext_iff.1 h x
 
 instance : CoeFun (M ↪ₑ[L] N) fun _ => M → N :=
   FunLike.hasCoeToFun

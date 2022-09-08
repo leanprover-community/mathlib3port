@@ -36,7 +36,7 @@ theorem Filter.HasBasis.cauchy_iff {ι} {p : ι → Prop} {s : ι → Set (α ×
     Cauchy f ↔ NeBot f ∧ ∀ i, p i → ∃ t ∈ f, ∀ (x y) (_ : x ∈ t) (_ : y ∈ t), (x, y) ∈ s i :=
   and_congr Iff.rfl <|
     (f.basis_sets.prod_self.le_basis_iff h).trans <| by
-      simp only [subset_def, Prod.forall, mem_prod_eq, and_imp, id, ball_mem_comm]
+      simp only [subset_def, Prod.forallₓ, mem_prod_eq, and_imp, id, ball_mem_comm]
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x y «expr ∈ » t)
 theorem cauchy_iff' {f : Filter α} :
@@ -46,7 +46,7 @@ theorem cauchy_iff' {f : Filter α} :
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem cauchy_iff {f : Filter α} : Cauchy f ↔ NeBot f ∧ ∀ s ∈ 𝓤 α, ∃ t ∈ f, t ×ˢ t ⊆ s :=
   cauchy_iff'.trans <| by
-    simp only [subset_def, Prod.forall, mem_prod_eq, and_imp, id, ball_mem_comm]
+    simp only [subset_def, Prod.forallₓ, mem_prod_eq, and_imp, id, ball_mem_comm]
 
 theorem Cauchy.ultrafilter_of {l : Filter α} (h : Cauchy l) : Cauchy (@Ultrafilter.of _ l h.1 : Filter α) := by
   haveI := h.1
@@ -167,7 +167,7 @@ theorem cauchy_seq_const [SemilatticeSup β] [Nonempty β] (x : α) : CauchySeq 
 theorem cauchy_seq_iff_tendsto [Nonempty β] [SemilatticeSup β] {u : β → α} :
     CauchySeq u ↔ Tendsto (Prod.map u u) atTop (𝓤 α) :=
   cauchy_map_iff'.trans <| by
-    simp only [prod_at_top_at_top_eq, Prod.map_def]
+    simp only [prod_at_top_at_top_eq, Prod.map_defₓ]
 
 theorem CauchySeq.comp_tendsto {γ} [SemilatticeSup β] [SemilatticeSup γ] [Nonempty γ] {f : β → α} (hf : CauchySeq f)
     {g : γ → β} (hg : Tendsto g atTop atTop) : CauchySeq (f ∘ g) :=
@@ -193,7 +193,7 @@ theorem cauchy_seq_iff' {u : ℕ → α} : CauchySeq u ↔ ∀ V ∈ 𝓤 α, �
   simpa only [cauchy_seq_iff_tendsto]
 
 theorem cauchy_seq_iff {u : ℕ → α} : CauchySeq u ↔ ∀ V ∈ 𝓤 α, ∃ N, ∀ k ≥ N, ∀ l ≥ N, (u k, u l) ∈ V := by
-  simp [cauchy_seq_iff', Filter.eventually_at_top_prod_self', prod_map]
+  simp [cauchy_seq_iff', Filter.eventually_at_top_prod_self', prod_mapₓ]
 
 theorem CauchySeq.prod_map {γ δ} [UniformSpace β] [SemilatticeSup γ] [SemilatticeSup δ] {u : γ → α} {v : δ → β}
     (hu : CauchySeq u) (hv : CauchySeq v) : CauchySeq (Prod.map u v) := by
@@ -243,7 +243,7 @@ theorem Filter.HasBasis.cauchy_seq_iff {γ} [Nonempty β] [SemilatticeSup β] {u
     CauchySeq u ↔ ∀ i, p i → ∃ N, ∀ (m n) (_ : m ≥ N) (_ : n ≥ N), (u m, u n) ∈ s i := by
   rw [cauchy_seq_iff_tendsto, ← prod_at_top_at_top_eq]
   refine' (at_top_basis.prod_self.tendsto_iff h).trans _
-  simp only [exists_prop, true_andₓ, maps_to, preimage, subset_def, Prod.forall, mem_prod_eq, mem_set_of_eq, mem_Ici,
+  simp only [exists_prop, true_andₓ, maps_to, preimage, subset_def, Prod.forallₓ, mem_prod_eq, mem_set_of_eq, mem_Ici,
     and_imp, Prod.map, ge_iff_leₓ, @forall_swap (_ ≤ _) β]
 
 theorem Filter.HasBasis.cauchy_seq_iff' {γ} [Nonempty β] [SemilatticeSup β] {u : β → α} {p : γ → Prop}

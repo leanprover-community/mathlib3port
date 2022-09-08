@@ -230,7 +230,7 @@ theorem is_atomic_iff_forall_is_atomic_Iic [OrderBot α] : IsAtomic α ↔ ∀ x
   ⟨@IsAtomic.Set.Iic.is_atomic _ _ _, fun h =>
     ⟨fun x =>
       ((@eq_bot_or_exists_atom_le _ _ _ (h x)) (⊤ : Set.Iic x)).imp Subtype.mk_eq_mk.1
-        (exists_imp_exists' coe fun ⟨a, ha⟩ => And.imp_left IsAtom.of_is_atom_coe_Iic)⟩⟩
+        (exists_imp_exists'ₓ coe fun ⟨a, ha⟩ => And.imp_left IsAtom.of_is_atom_coe_Iic)⟩⟩
 
 theorem is_coatomic_iff_forall_is_coatomic_Ici [OrderTop α] : IsCoatomic α ↔ ∀ x : α, IsCoatomic (Set.Ici x) :=
   is_atomic_dual_iff_is_coatomic.symm.trans <|

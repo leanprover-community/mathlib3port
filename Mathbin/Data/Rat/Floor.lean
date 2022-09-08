@@ -34,7 +34,7 @@ protected theorem le_floor {z : ℤ} : ∀ {r : ℚ}, z ≤ Rat.floor r ↔ (z :
   | ⟨n, d, h, c⟩ => by
     simp [Rat.floor]
     rw [num_denom']
-    have h' := Int.coe_nat_lt.2 h
+    have h' := Int.coe_nat_ltₓ.2 h
     conv => rhs rw [coe_int_eq_mk, Rat.le_def zero_lt_one h', mul_oneₓ]
     exact Int.le_div_iff_mul_le h'
 

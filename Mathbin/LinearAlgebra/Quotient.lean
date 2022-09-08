@@ -117,15 +117,15 @@ theorem mk_smul (r : S) (x : M) : (mk (r • x) : M ⧸ p) = r • mk x :=
   rfl
 
 instance smul_comm_class (T : Type _) [HasSmul T R] [HasSmul T M] [IsScalarTower T R M] [SmulCommClass S T M] :
-    SmulCommClass S T (M ⧸ P) where smul_comm := fun x y => Quotientₓ.ind' fun z => congr_arg mk (smul_comm _ _ _)
+    SmulCommClass S T (M ⧸ P) where smul_comm := fun x y => Quotientₓ.ind' fun z => congr_argₓ mk (smul_comm _ _ _)
 
 instance is_scalar_tower (T : Type _) [HasSmul T R] [HasSmul T M] [IsScalarTower T R M] [HasSmul S T]
     [IsScalarTower S T M] :
-    IsScalarTower S T (M ⧸ P) where smul_assoc := fun x y => Quotientₓ.ind' fun z => congr_arg mk (smul_assoc _ _ _)
+    IsScalarTower S T (M ⧸ P) where smul_assoc := fun x y => Quotientₓ.ind' fun z => congr_argₓ mk (smul_assoc _ _ _)
 
 instance is_central_scalar [HasSmul Sᵐᵒᵖ R] [HasSmul Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] :
     IsCentralScalar S
-      (M ⧸ P) where op_smul_eq_smul := fun x => Quotientₓ.ind' fun z => congr_arg mk <| op_smul_eq_smul _ _
+      (M ⧸ P) where op_smul_eq_smul := fun x => Quotientₓ.ind' fun z => congr_argₓ mk <| op_smul_eq_smul _ _
 
 end HasSmul
 

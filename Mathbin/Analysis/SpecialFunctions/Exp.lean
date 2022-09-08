@@ -156,7 +156,7 @@ theorem tendsto_exp_nhds_0_nhds_1 : Tendsto exp (𝓝 0) (𝓝 1) := by
   simp
 
 theorem tendsto_exp_at_bot : Tendsto exp atBot (𝓝 0) :=
-  (tendsto_exp_neg_at_top_nhds_0.comp tendsto_neg_at_bot_at_top).congr fun x => congr_arg exp <| neg_negₓ x
+  (tendsto_exp_neg_at_top_nhds_0.comp tendsto_neg_at_bot_at_top).congr fun x => congr_argₓ exp <| neg_negₓ x
 
 theorem tendsto_exp_at_bot_nhds_within : Tendsto exp atBot (𝓝[>] 0) :=
   tendsto_inf.2 ⟨tendsto_exp_at_bot, tendsto_principal.2 <| eventually_of_forall exp_pos⟩

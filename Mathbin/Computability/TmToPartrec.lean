@@ -970,7 +970,7 @@ instance : DecidableEq Λ' := fun a b => by
     exact
       decidableOfIff' _
         (by
-          simp [Function.funext_iffₓ])
+          simp [Function.funext_iff])
 
 /-- The type of TM2 statements used by this machine. -/
 def Stmt' :=
@@ -1297,7 +1297,7 @@ theorem move_ok {p k₁ k₂ q s L₁ o L₂} {S : K' → List Γ'} (h₁ : k₁
     simp [e₂]
     convert @IH (update (update S k₁ Sk) k₂ (a::S k₂)) _ _ using 2 <;>
       simp [Function.update_noteq, h₁, h₁.symm, e₃, List.reverseCore]
-    simp [Function.update_comm h₁.symm]
+    simp [Function.update_commₓ h₁.symm]
     
 
 theorem unrev_ok {q s} {S : K' → List Γ'} :
@@ -1316,7 +1316,7 @@ theorem move₂_ok {p k₁ k₂ q s L₁ o L₂} {S : K' → List Γ'} (h₁ : k
   refine' (move_ok h₁.1 e).trans (trans_gen.head rfl _)
   cases o <;> simp only [Option.elimₓ, tr, id.def]
   · convert move_ok h₁.2.1.symm (split_at_pred_ff _) using 2
-    simp only [Function.update_comm h₁.1, Function.update_idem]
+    simp only [Function.update_commₓ h₁.1, Function.update_idemₓ]
     rw
       [show update S rev [] = S by
         rw [← h₂, Function.update_eq_self]]
@@ -1324,8 +1324,8 @@ theorem move₂_ok {p k₁ k₂ q s L₁ o L₂} {S : K' → List Γ'} (h₁ : k
       List.reverse_core_eq, h₂, Function.update_same, List.append_nil, List.reverse_reverse]
     
   · convert move_ok h₁.2.1.symm (split_at_pred_ff _) using 2
-    simp only [h₂, Function.update_comm h₁.1, List.reverse_core_eq, Function.update_same, List.append_nil,
-      Function.update_idem]
+    simp only [h₂, Function.update_commₓ h₁.1, List.reverse_core_eq, Function.update_same, List.append_nil,
+      Function.update_idemₓ]
     rw
       [show update S rev [] = S by
         rw [← h₂, Function.update_eq_self]]

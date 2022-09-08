@@ -418,7 +418,7 @@ theorem sup_eq_range (s t : Submonoid N) : s⊔t = (s.Subtype.coprod t.Subtype).
 
 @[to_additive]
 theorem mem_sup {s t : Submonoid N} {x : N} : x ∈ s⊔t ↔ ∃ y ∈ s, ∃ z ∈ t, y * z = x := by
-  simp only [sup_eq_range, mem_mrange, coprod_apply, Prod.exists, SetLike.exists, coeSubtype, Subtype.coe_mk]
+  simp only [sup_eq_range, mem_mrange, coprod_apply, Prod.existsₓ, SetLike.exists, coeSubtype, Subtype.coe_mk]
 
 end Submonoid
 

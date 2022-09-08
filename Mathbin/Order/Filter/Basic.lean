@@ -116,7 +116,7 @@ theorem filter_eq : ∀ {f g : Filter α}, f.Sets = g.Sets → f = g
   | ⟨a, _, _, _⟩, ⟨_, _, _, _⟩, rfl => rfl
 
 theorem filter_eq_iff : f = g ↔ f.Sets = g.Sets :=
-  ⟨congr_arg _, filter_eq⟩
+  ⟨congr_argₓ _, filter_eq⟩
 
 protected theorem ext_iff : f = g ↔ ∀ s, s ∈ f ↔ s ∈ g := by
   simp only [filter_eq_iff, ext_iff, Filter.mem_sets]
@@ -523,7 +523,7 @@ theorem supr_ne_bot {f : ι → Filter α} : (⨆ i, f i).ne_bot ↔ ∃ i, (f i
   simp [ne_bot_iff]
 
 theorem infi_eq_generate (s : ι → Filter α) : infi s = generate (⋃ i, (s i).Sets) :=
-  show generate _ = generate _ from congr_arg _ <| congr_arg sup <| (range_comp _ _).symm
+  show generate _ = generate _ from congr_argₓ _ <| congr_argₓ sup <| (range_comp _ _).symm
 
 theorem mem_infi_of_mem {f : ι → Filter α} (i : ι) : ∀ {s}, s ∈ f i → s ∈ ⨅ i, f i :=
   show (⨅ i, f i) ≤ f i from infi_le _ _
@@ -715,7 +715,7 @@ theorem infi_sets_eq {f : ι → Filter α} (h : Directed (· ≥ ·) f) [ne : N
   have : u = infi f :=
     eq_infi_of_mem_iff_exists_mem fun s => by
       simp only [Filter.mem_mk, mem_Union, Filter.mem_sets]
-  congr_arg Filter.Sets this.symm
+  congr_argₓ Filter.Sets this.symm
 
 theorem mem_infi_of_directed {f : ι → Filter α} (h : Directed (· ≥ ·) f) [Nonempty ι] (s) : s ∈ infi f ↔ ∃ i, s ∈ f i :=
   by
@@ -1071,7 +1071,7 @@ theorem eventually_Sup {p : α → Prop} {fs : Set (Filter α)} : (∀ᶠ x in s
   Iff.rfl
 
 @[simp]
-theorem eventually_supr {p : α → Prop} {fs : β → Filter α} : (∀ᶠ x in ⨆ b, fs b, p x) ↔ ∀ b, ∀ᶠ x in fs b, p x :=
+theorem eventually_supr {p : α → Prop} {fs : ι → Filter α} : (∀ᶠ x in ⨆ b, fs b, p x) ↔ ∀ b, ∀ᶠ x in fs b, p x :=
   mem_supr
 
 @[simp]
@@ -1291,7 +1291,7 @@ theorem EventuallyEq.prod_mk {l} {f f' : α → β} (hf : f =ᶠ[l] f') {g g' : 
       simp only [*]
 
 theorem EventuallyEq.fun_comp {f g : α → β} {l : Filter α} (H : f =ᶠ[l] g) (h : β → γ) : h ∘ f =ᶠ[l] h ∘ g :=
-  H.mono fun x hx => congr_arg h hx
+  H.mono fun x hx => congr_argₓ h hx
 
 theorem EventuallyEq.comp₂ {δ} {f f' : α → β} {g g' : α → γ} {l} (Hf : f =ᶠ[l] f') (h : β → γ → δ) (Hg : g =ᶠ[l] g') :
     (fun x => h (f x) (g x)) =ᶠ[l] fun x => h (f' x) (g' x) :=
@@ -1459,7 +1459,7 @@ theorem EventuallyLe.inter {s t s' t' : Set α} {l : Filter α} (h : s ≤ᶠ[l]
 @[mono]
 theorem EventuallyLe.union {s t s' t' : Set α} {l : Filter α} (h : s ≤ᶠ[l] t) (h' : s' ≤ᶠ[l] t') :
     (s ∪ s' : Set α) ≤ᶠ[l] (t ∪ t' : Set α) :=
-  h'.mp <| h.mono fun x => Or.imp
+  h'.mp <| h.mono fun x => Or.impₓ
 
 @[mono]
 theorem EventuallyLe.compl {s t : Set α} {l : Filter α} (h : s ≤ᶠ[l] t) : (tᶜ : Set α) ≤ᶠ[l] (sᶜ : Set α) :=
@@ -1568,7 +1568,7 @@ theorem map_compose : Filter.map m' ∘ Filter.map m = Filter.map (m' ∘ m) :=
 
 @[simp]
 theorem map_map : Filter.map m' (Filter.map m f) = Filter.map (m' ∘ m) f :=
-  congr_fun (@Filter.map_compose m m') f
+  congr_funₓ (@Filter.map_compose m m') f
 
 /-- If functions `m₁` and `m₂` are eventually equal at a filter `f`, then
 they map this filter to the same filter. -/
@@ -1901,7 +1901,7 @@ theorem map_comap_of_surjective {f : α → β} (hf : Surjective f) (l : Filter 
     simp only [hf.range_eq, univ_mem]
 
 theorem _root_.function.surjective.filter_map_top {f : α → β} (hf : Surjective f) : map f ⊤ = ⊤ :=
-  (congr_arg _ comap_top).symm.trans <| map_comap_of_surjective hf ⊤
+  (congr_argₓ _ comap_top).symm.trans <| map_comap_of_surjective hf ⊤
 
 theorem subtype_coe_map_comap (s : Set α) (f : Filter α) : map (coe : s → α) (comap (coe : s → α) f) = f⊓𝓟 s := by
   rw [map_comap, Subtype.range_coe]
@@ -1999,9 +1999,9 @@ theorem comap_eval_ne_bot_iff' {ι : Type _} {α : ι → Type _} {i : ι} {f : 
     (comap (eval i) f).ne_bot ↔ (∀ j, Nonempty (α j)) ∧ NeBot f := by
   cases' is_empty_or_nonempty (∀ j, α j) with H H
   · rw [filter_eq_bot_of_is_empty (f.comap _), ← not_iff_not] <;> [skip, assumption]
-    simp [← Classical.nonempty_piₓ]
+    simp [← Classical.nonempty_pi]
     
-  · have : ∀ j, Nonempty (α j) := Classical.nonempty_piₓ.1 H
+  · have : ∀ j, Nonempty (α j) := Classical.nonempty_pi.1 H
     simp [comap_ne_bot_iff_frequently, *]
     
 
@@ -2130,7 +2130,7 @@ theorem comap_equiv_symm (e : α ≃ β) (f : Filter α) : comap e.symm f = map 
   (map_eq_comap_of_inverse e.self_comp_symm e.symm_comp_self).symm
 
 theorem map_swap_eq_comap_swap {f : Filter (α × β)} : Prod.swap <$> f = comap Prod.swap f :=
-  map_eq_comap_of_inverse Prod.swap_swap_eq Prod.swap_swap_eq
+  map_eq_comap_of_inverse Prod.swap_swap_eqₓ Prod.swap_swap_eqₓ
 
 /-- A useful lemma when dealing with uniformities. -/
 theorem map_swap4_eq_comap {f : Filter ((α × β) × γ × δ)} :
@@ -2419,7 +2419,7 @@ theorem tendsto_of_is_empty [IsEmpty α] {f : α → β} {la : Filter α} {lb : 
 theorem eventually_eq_of_left_inv_of_right_inv {f : α → β} {g₁ g₂ : β → α} {fa : Filter α} {fb : Filter β}
     (hleft : ∀ᶠ x in fa, g₁ (f x) = x) (hright : ∀ᶠ y in fb, f (g₂ y) = y) (htendsto : Tendsto g₂ fb fa) :
     g₁ =ᶠ[fb] g₂ :=
-  (htendsto.Eventually hleft).mp <| hright.mono fun y hr hl => (congr_arg g₁ hr.symm).trans hl
+  (htendsto.Eventually hleft).mp <| hright.mono fun y hr hl => (congr_argₓ g₁ hr.symm).trans hl
 
 theorem tendsto_iff_comap {f : α → β} {l₁ : Filter α} {l₂ : Filter β} : Tendsto f l₁ l₂ ↔ l₁ ≤ l₂.comap f :=
   map_le_iff_le_comap

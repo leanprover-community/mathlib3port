@@ -178,10 +178,10 @@ theorem ext (f g : F) (h : ∀ x : α, f x = g x) : f = g :=
   coe_injective (funext h)
 
 theorem ext_iff {f g : F} : f = g ↔ ∀ x, f x = g x :=
-  coe_fn_eq.symm.trans Function.funext_iffₓ
+  coe_fn_eq.symm.trans Function.funext_iff
 
 protected theorem congr_fun {f g : F} (h₁ : f = g) (x : α) : f x = g x :=
-  congr_fun (congr_arg _ h₁) x
+  congr_funₓ (congr_argₓ _ h₁) x
 
 theorem ne_iff {f g : F} : f ≠ g ↔ ∃ a, f a ≠ g a :=
   ext_iff.Not.trans not_forall
@@ -205,10 +205,10 @@ include i
 namespace FunLike
 
 protected theorem congr {f g : F} {x y : α} (h₁ : f = g) (h₂ : x = y) : f x = g y :=
-  congr (congr_arg _ h₁) h₂
+  congr (congr_argₓ _ h₁) h₂
 
 protected theorem congr_arg (f : F) {x y : α} (h₂ : x = y) : f x = f y :=
-  congr_arg _ h₂
+  congr_argₓ _ h₂
 
 end FunLike
 

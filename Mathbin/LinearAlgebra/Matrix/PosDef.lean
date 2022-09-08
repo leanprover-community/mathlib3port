@@ -50,6 +50,24 @@ theorem pos_def_to_quadratic_form' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.
   simp only [to_quadratic_form', BilinForm.to_quadratic_form_apply, Matrix.to_bilin'_apply']
   apply hM.2 x hx
 
+namespace PosDef
+
+variable {M : Matrix n n ℝ} (hM : M.PosDef)
+
+include hM
+
+theorem det_pos [DecidableEq n] : 0 < det M := by
+  rw [hM.is_hermitian.det_eq_prod_eigenvalues]
+  apply Finset.prod_pos
+  intro i _
+  rw [hM.is_hermitian.eigenvalues_eq]
+  apply hM.2 _ fun h => _
+  have h_det : hM.is_hermitian.eigenvector_matrixᵀ.det = 0 :=
+    Matrix.det_eq_zero_of_row_eq_zero i fun j => congr_funₓ h j
+  simpa only [h_det, not_is_unit_zero] using is_unit_det_of_invertible hM.is_hermitian.eigenvector_matrixᵀ
+
+end PosDef
+
 end Matrix
 
 namespace QuadraticForm

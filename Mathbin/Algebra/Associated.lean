@@ -286,7 +286,7 @@ theorem irreducible_mul_is_unit {a b : α} (h : IsUnit a) : Irreducible (b * a) 
 
 theorem irreducible_mul_iff {a b : α} : Irreducible (a * b) ↔ Irreducible a ∧ IsUnit b ∨ Irreducible b ∧ IsUnit a := by
   constructor
-  · refine' fun h => Or.imp (fun h' => ⟨_, h'⟩) (fun h' => ⟨_, h'⟩) (h.is_unit_or_is_unit rfl).symm
+  · refine' fun h => Or.impₓ (fun h' => ⟨_, h'⟩) (fun h' => ⟨_, h'⟩) (h.is_unit_or_is_unit rfl).symm
     · rwa [irreducible_mul_is_unit h'] at h
       
     · rwa [irreducible_is_unit_mul h'] at h
@@ -330,6 +330,9 @@ protected theorem symm [Monoidₓ α] : ∀ {x y : α}, x ~ᵤ y → y ~ᵤ x
 
 instance [Monoidₓ α] : IsSymm α Associated :=
   ⟨fun a b => Associated.symm⟩
+
+protected theorem comm [Monoidₓ α] {x y : α} : x ~ᵤ y ↔ y ~ᵤ x :=
+  ⟨Associated.symm, Associated.symm⟩
 
 @[trans]
 protected theorem trans [Monoidₓ α] : ∀ {x y z : α}, x ~ᵤ y → y ~ᵤ z → x ~ᵤ z
@@ -390,6 +393,43 @@ theorem associated_mul_unit_right {β : Type _} [Monoidₓ β] (a u : β) (hu : 
 
 theorem associated_unit_mul_right {β : Type _} [CommMonoidₓ β] (a u : β) (hu : IsUnit u) : Associated a (u * a) :=
   (associated_unit_mul_left a u hu).symm
+
+theorem associated_mul_is_unit_left_iff {β : Type _} [Monoidₓ β] {a u b : β} (hu : IsUnit u) :
+    Associated (a * u) b ↔ Associated a b :=
+  ⟨trans (associated_mul_unit_right _ _ hu), trans (associated_mul_unit_left _ _ hu)⟩
+
+theorem associated_is_unit_mul_left_iff {β : Type _} [CommMonoidₓ β] {u a b : β} (hu : IsUnit u) :
+    Associated (u * a) b ↔ Associated a b := by
+  rw [mul_comm]
+  exact associated_mul_is_unit_left_iff hu
+
+theorem associated_mul_is_unit_right_iff {β : Type _} [Monoidₓ β] {a b u : β} (hu : IsUnit u) :
+    Associated a (b * u) ↔ Associated a b :=
+  Associated.comm.trans <| (associated_mul_is_unit_left_iff hu).trans Associated.comm
+
+theorem associated_is_unit_mul_right_iff {β : Type _} [CommMonoidₓ β] {a u b : β} (hu : IsUnit u) :
+    Associated a (u * b) ↔ Associated a b :=
+  Associated.comm.trans <| (associated_is_unit_mul_left_iff hu).trans Associated.comm
+
+@[simp]
+theorem associated_mul_unit_left_iff {β : Type _} [Monoidₓ β] {a b : β} {u : Units β} :
+    Associated (a * u) b ↔ Associated a b :=
+  associated_mul_is_unit_left_iff u.IsUnit
+
+@[simp]
+theorem associated_unit_mul_left_iff {β : Type _} [CommMonoidₓ β] {a b : β} {u : Units β} :
+    Associated (↑u * a) b ↔ Associated a b :=
+  associated_is_unit_mul_left_iff u.IsUnit
+
+@[simp]
+theorem associated_mul_unit_right_iff {β : Type _} [Monoidₓ β] {a b : β} {u : Units β} :
+    Associated a (b * u) ↔ Associated a b :=
+  associated_mul_is_unit_right_iff u.IsUnit
+
+@[simp]
+theorem associated_unit_mul_right_iff {β : Type _} [CommMonoidₓ β] {a b : β} {u : Units β} :
+    Associated a (↑u * b) ↔ Associated a b :=
+  associated_is_unit_mul_right_iff u.IsUnit
 
 theorem Associated.mul_mul [CommMonoidₓ α] {a₁ a₂ b₁ b₂ : α} : a₁ ~ᵤ b₁ → a₂ ~ᵤ b₂ → a₁ * a₂ ~ᵤ b₁ * b₂
   | ⟨c₁, h₁⟩, ⟨c₂, h₂⟩ =>
@@ -789,7 +829,7 @@ instance [Nontrivial α] : Nontrivial (Associates α) :=
       zero_ne_one this⟩⟩
 
 theorem exists_non_zero_rep {a : Associates α} : a ≠ 0 → ∃ a0 : α, a0 ≠ 0 ∧ Associates.mk a0 = a :=
-  Quotientₓ.induction_on a fun b nz => ⟨b, mt (congr_arg Quotientₓ.mk) nz, rfl⟩
+  Quotientₓ.induction_on a fun b nz => ⟨b, mt (congr_argₓ Quotientₓ.mk) nz, rfl⟩
 
 end MonoidWithZeroₓ
 

@@ -462,7 +462,7 @@ theorem norm_eq_zero_iff ⦃f : lp E p⦄ : ∥f∥ = 0 ↔ f = 0 := by
   · ext i
     have : { i : α | ¬f i = 0 } = ∅ := by
       simpa [lp.norm_eq_card_dsupport f] using h
-    have : (¬f i = 0) = False := congr_fun this i
+    have : (¬f i = 0) = False := congr_funₓ this i
     tauto
     
   · cases' is_empty_or_nonempty α with _i _i <;> skip
@@ -481,7 +481,7 @@ theorem norm_eq_zero_iff ⦃f : lp E p⦄ : ∥f∥ = 0 ↔ f = 0 := by
     rw [has_sum_zero_iff_of_nonneg this] at hf
     ext i
     have : f i = 0 ∧ p.to_real ≠ 0 := by
-      simpa [Real.rpow_eq_zero_iff_of_nonneg (norm_nonneg (f i))] using congr_fun hf i
+      simpa [Real.rpow_eq_zero_iff_of_nonneg (norm_nonneg (f i))] using congr_funₓ hf i
     exact this.1
     
 

@@ -164,7 +164,7 @@ theorem mul_poly_of_interest_aux3 (n : ℕ) :
   -- rearrange so that the first summand on rhs and lhs is `remainder`, and peel off
   conv_rhs => rw [add_commₓ]
   simp only [add_assocₓ]
-  apply congr_arg (Add.add _)
+  apply congr_argₓ (Add.add _)
   conv_rhs => rw [sum_range_succ]
   -- the rest is equal with proper unfolding and `ring`
   simp only [rename_monomial, monomial_eq_C_mul_X, map_mul, rename_C, pow_oneₓ, rename_X, mvpz]
@@ -225,7 +225,7 @@ theorem peval_poly_of_interest (n : ℕ) (x y : 𝕎 k) :
           y.coeff (n + 1) * ∑ i in range (n + 1 + 1), p ^ i * x.coeff i ^ p ^ (n + 1 - i)) -
         x.coeff (n + 1) * ∑ i in range (n + 1 + 1), p ^ i * y.coeff i ^ p ^ (n + 1 - i) :=
   by
-  simp only [poly_of_interest, peval, map_nat_cast, Matrix.head_cons, map_pow, Function.uncurry_apply_pair, aeval_X,
+  simp only [poly_of_interest, peval, map_nat_cast, Matrix.head_cons, map_pow, Function.uncurry_apply_pairₓ, aeval_X,
     Matrix.cons_val_one, map_mul, Matrix.cons_val_zero, map_sub]
   rw [sub_sub, add_commₓ (_ * _), ← sub_sub]
   have mvpz : (p : MvPolynomial ℕ ℤ) = MvPolynomial.c ↑p := by
@@ -284,7 +284,7 @@ theorem nth_mul_coeff' (n : ℕ) :
   intro x y
   dsimp' [peval]
   rw [← hf₀]
-  simp only [f, Function.uncurry_apply_pair]
+  simp only [f, Function.uncurry_apply_pairₓ]
   congr
   ext a
   cases' a with a ha

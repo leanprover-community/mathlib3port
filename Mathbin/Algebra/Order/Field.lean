@@ -474,6 +474,9 @@ theorem half_le_self (ha_nonneg : 0 ≤ a) : a / 2 ≤ a := by
 theorem one_half_lt_one : (1 / 2 : α) < 1 :=
   half_lt_self zero_lt_one
 
+theorem two_inv_lt_one : (2⁻¹ : α) < 1 :=
+  (one_div _).symm.trans_lt one_half_lt_one
+
 theorem left_lt_add_div_two : a < (a + b) / 2 ↔ a < b := by
   simp [lt_div_iff, mul_two]
 

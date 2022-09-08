@@ -632,7 +632,7 @@ variable [Monoidₓ M]
 theorem op_list_prod : ∀ l : List M, op l.Prod = (l.map op).reverse.Prod
   | [] => rfl
   | x :: xs => by
-    rw [List.prod_cons, List.map_cons, List.reverse_cons', List.prod_concat, op_mul, op_list_prod]
+    rw [List.prod_cons, List.map_consₓ, List.reverse_cons', List.prod_concat, op_mul, op_list_prod]
 
 theorem _root_.mul_opposite.unop_list_prod (l : List Mᵐᵒᵖ) : l.Prod.unop = (l.map unop).reverse.Prod := by
   rw [← op_inj, op_unop, MulOpposite.op_list_prod, map_reverse, map_map, reverse_reverse, op_comp_unop, map_id]

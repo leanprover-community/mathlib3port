@@ -371,7 +371,7 @@ instance :
 instance [T0Space X] : T0Space (Alexandroff X) := by
   refine' ⟨fun x y hxy => _⟩
   rcases inseparable_iff.1 hxy with (⟨rfl, rfl⟩ | ⟨x, rfl, y, rfl, h⟩)
-  exacts[rfl, congr_arg coe h.eq]
+  exacts[rfl, congr_argₓ coe h.eq]
 
 /-- The one point compactification of a `t1_space` space is a `t1_space`. -/
 instance [T1Space X] :

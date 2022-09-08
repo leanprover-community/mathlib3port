@@ -179,12 +179,12 @@ def toList (s : CompositionSeries X) : List X :=
 /-- Two `composition_series` are equal if they are the same length and
 have the same `i`th element for every `i` -/
 theorem ext_fun {s₁ s₂ : CompositionSeries X} (hl : s₁.length = s₂.length)
-    (h : ∀ i, s₁ i = s₂ (Finₓ.cast (congr_arg Nat.succ hl) i)) : s₁ = s₂ := by
+    (h : ∀ i, s₁ i = s₂ (Finₓ.cast (congr_argₓ Nat.succ hl) i)) : s₁ = s₂ := by
   cases s₁
   cases s₂
   dsimp'  at *
   subst hl
-  simpa [Function.funext_iffₓ] using h
+  simpa [Function.funext_iff] using h
 
 @[simp]
 theorem length_to_list (s : CompositionSeries X) : s.toList.length = s.length + 1 := by
@@ -196,8 +196,8 @@ theorem to_list_ne_nil (s : CompositionSeries X) : s.toList ≠ [] := by
 theorem to_list_injective : Function.Injective (@CompositionSeries.toList X _ _) :=
   fun s₁ s₂ (h : List.ofFnₓ s₁ = List.ofFnₓ s₂) => by
   have h₁ : s₁.length = s₂.length :=
-    Nat.succ_injective ((List.length_of_fn s₁).symm.trans <| (congr_arg List.length h).trans <| List.length_of_fn s₂)
-  have h₂ : ∀ i : Finₓ s₁.length.succ, s₁ i = s₂ (Finₓ.cast (congr_arg Nat.succ h₁) i) := by
+    Nat.succ_injective ((List.length_of_fn s₁).symm.trans <| (congr_argₓ List.length h).trans <| List.length_of_fn s₂)
+  have h₂ : ∀ i : Finₓ s₁.length.succ, s₁ i = s₂ (Finₓ.cast (congr_argₓ Nat.succ h₁) i) := by
     intro i
     rw [← List.nth_le_of_fn s₁ i, ← List.nth_le_of_fn s₂]
     simp [h]
@@ -337,7 +337,7 @@ def eraseTop (s : CompositionSeries X) : CompositionSeries X where
 theorem top_erase_top (s : CompositionSeries X) :
     s.eraseTop.top = s ⟨s.length - 1, lt_of_le_of_ltₓ tsub_le_self (Nat.lt_succ_selfₓ _)⟩ :=
   show s _ = s _ from
-    congr_arg s
+    congr_argₓ s
       (by
         ext
         simp only [erase_top_length, Finₓ.coe_last, Finₓ.coe_cast_succ, Finₓ.coe_of_nat_eq_mod, Finₓ.coe_mk, coe_coe])
@@ -404,12 +404,12 @@ theorem append_succ_cast_add_aux {s₁ s₂ : CompositionSeries X} (i : Finₓ s
             ⟨i + 1 - s₁.length, by
               simp [this]⟩ =
           s₂ 0 :=
-        congr_arg s₂
+        congr_argₓ s₂
           (by
             simp [Finₓ.ext_iff, this])
       _ = s₁ (Finₓ.last _) := h.symm
       _ = _ :=
-        congr_arg s₁
+        congr_argₓ s₁
           (by
             simp [Finₓ.ext_iff, this])
       
@@ -636,7 +636,7 @@ end Equivalent
 theorem length_eq_zero_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero {s₁ s₂ : CompositionSeries X}
     (hb : s₁.bot = s₂.bot) (ht : s₁.top = s₂.top) (hs₁ : s₁.length = 0) : s₂.length = 0 := by
   have : s₁.bot = s₁.top :=
-    congr_arg s₁
+    congr_argₓ s₁
       (Finₓ.ext
         (by
           simp [hs₁]))

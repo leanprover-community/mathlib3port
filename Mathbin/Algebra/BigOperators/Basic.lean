@@ -290,7 +290,7 @@ end ToList
 @[to_additive]
 theorem _root_.equiv.perm.prod_comp (σ : Equivₓ.Perm α) (s : Finset α) (f : α → β) (hs : { a | σ a ≠ a } ⊆ s) :
     (∏ x in s, f (σ x)) = ∏ x in s, f x := by
-  convert (prod_map _ σ.to_embedding _).symm
+  convert (prod_mapₓ _ σ.to_embedding _).symm
   exact (map_perm hs).symm
 
 @[to_additive]
@@ -346,7 +346,7 @@ theorem prod_sum_elim [DecidableEq (Sum α γ)] (s : Finset α) (t : Finset γ) 
     (∏ x in s.map Function.Embedding.inl ∪ t.map Function.Embedding.inr, Sum.elim f g x) =
       (∏ x in s, f x) * ∏ x in t, g x :=
   by
-  rw [prod_union, prod_map, prod_map]
+  rw [prod_union, prod_mapₓ, prod_mapₓ]
   · simp only [Sum.elim_inl, Function.Embedding.inl_apply, Function.Embedding.inr_apply, Sum.elim_inr]
     
   · simp only [disjoint_left, Finset.mem_map, Finset.mem_map]
@@ -404,7 +404,7 @@ theorem prod_sigma {σ : α → Type _} (s : Finset α) (t : ∀ a, Finset (σ a
           simp only [inf_eq_inter, mem_inter, mem_map, Function.Embedding.sigma_mk_apply] at hx
           rcases hx with ⟨⟨y, hy, rfl⟩, ⟨z, hz, hz'⟩⟩
           cc
-      _ = ∏ a in s, ∏ s in t a, f ⟨a, s⟩ := (prod_congr rfl) fun _ _ => prod_map _ _ _
+      _ = ∏ a in s, ∏ s in t a, f ⟨a, s⟩ := (prod_congr rfl) fun _ _ => prod_mapₓ _ _ _
       
 
 @[to_additive]
@@ -422,7 +422,7 @@ theorem prod_sigma' {σ : α → Type _} (s : Finset α) (t : ∀ a, Finset (σ 
 theorem prod_bij {s : Finset α} {t : Finset γ} {f : α → β} {g : γ → β} (i : ∀ a ∈ s, γ) (hi : ∀ a ha, i a ha ∈ t)
     (h : ∀ a ha, f a = g (i a ha)) (i_inj : ∀ a₁ a₂ ha₁ ha₂, i a₁ ha₁ = i a₂ ha₂ → a₁ = a₂)
     (i_surj : ∀ b ∈ t, ∃ a ha, b = i a ha) : (∏ x in s, f x) = ∏ x in t, g x :=
-  congr_arg Multiset.prod (Multiset.map_eq_map_of_bij_of_nodup f g s.2 t.2 i hi h i_inj i_surj)
+  congr_argₓ Multiset.prod (Multiset.map_eq_map_of_bij_of_nodup f g s.2 t.2 i hi h i_inj i_surj)
 
 /-- Reorder a product.
 
@@ -452,8 +452,8 @@ theorem prod_finset_product (r : Finset (γ × α)) (s : Finset γ) (t : γ → 
     (∏ p in r, f p) = ∏ c in s, ∏ a in t c, f (c, a) := by
   refine' Eq.trans _ (prod_sigma s t fun p => f (p.1, p.2))
   exact
-    prod_bij' (fun p hp => ⟨p.1, p.2⟩) (fun p => mem_sigma.mpr ∘ (h p).mp) (fun p hp => congr_arg f prod.mk.eta.symm)
-      (fun p hp => (p.1, p.2)) (fun p => (h (p.1, p.2)).mpr ∘ mem_sigma.mp) (fun p hp => Prod.mk.eta) fun p hp => p.eta
+    prod_bij' (fun p hp => ⟨p.1, p.2⟩) (fun p => mem_sigma.mpr ∘ (h p).mp) (fun p hp => congr_argₓ f prod.mk.eta.symm)
+      (fun p hp => (p.1, p.2)) (fun p => (h (p.1, p.2)).mpr ∘ mem_sigma.mp) (fun p hp => Prod.mk.etaₓ) fun p hp => p.eta
 
 @[to_additive]
 theorem prod_finset_product' (r : Finset (γ × α)) (s : Finset γ) (t : γ → Finset α)
@@ -467,8 +467,8 @@ theorem prod_finset_product_right (r : Finset (α × γ)) (s : Finset γ) (t : �
     (∏ p in r, f p) = ∏ c in s, ∏ a in t c, f (a, c) := by
   refine' Eq.trans _ (prod_sigma s t fun p => f (p.2, p.1))
   exact
-    prod_bij' (fun p hp => ⟨p.2, p.1⟩) (fun p => mem_sigma.mpr ∘ (h p).mp) (fun p hp => congr_arg f prod.mk.eta.symm)
-      (fun p hp => (p.2, p.1)) (fun p => (h (p.2, p.1)).mpr ∘ mem_sigma.mp) (fun p hp => Prod.mk.eta) fun p hp => p.eta
+    prod_bij' (fun p hp => ⟨p.2, p.1⟩) (fun p => mem_sigma.mpr ∘ (h p).mp) (fun p hp => congr_argₓ f prod.mk.eta.symm)
+      (fun p hp => (p.2, p.1)) (fun p => (h (p.2, p.1)).mpr ∘ mem_sigma.mp) (fun p hp => Prod.mk.etaₓ) fun p hp => p.eta
 
 @[to_additive]
 theorem prod_finset_product_right' (r : Finset (α × γ)) (s : Finset γ) (t : γ → Finset α)
@@ -684,7 +684,7 @@ theorem prod_attach {f : α → β} : (∏ x in s.attach, f x) = ∏ x in s, f x
 @[simp, to_additive "A sum over `s.subtype p` equals one over `s.filter p`."]
 theorem prod_subtype_eq_prod_filter (f : α → β) {p : α → Prop} [DecidablePred p] :
     (∏ x in s.Subtype p, f x) = ∏ x in s.filter p, f x := by
-  conv_lhs => erw [← prod_map (s.subtype p) (Function.Embedding.subtype _) f]
+  conv_lhs => erw [← prod_mapₓ (s.subtype p) (Function.Embedding.subtype _) f]
   exact prod_congr (subtype_map _) fun x hx => rfl
 
 /-- If all elements of a `finset` satisfy the predicate `p`, a product
@@ -774,8 +774,8 @@ theorem prod_apply_dite {s : Finset α} {p : α → Prop} {hp : DecidablePred p}
     _ =
         (∏ x in (s.filter p).attach, h (f x.1 (mem_filter.mp x.2).2)) *
           ∏ x in (s.filter fun x => ¬p x).attach, h (g x.1 (mem_filter.mp x.2).2) :=
-      congr_arg2ₓ _ (prod_congr rfl fun x hx => congr_arg h (dif_pos (mem_filter.mp x.2).2))
-        (prod_congr rfl fun x hx => congr_arg h (dif_neg (mem_filter.mp x.2).2))
+      congr_arg2ₓ _ (prod_congr rfl fun x hx => congr_argₓ h (dif_pos (mem_filter.mp x.2).2))
+        (prod_congr rfl fun x hx => congr_argₓ h (dif_neg (mem_filter.mp x.2).2))
     
 
 @[to_additive]
@@ -812,13 +812,13 @@ theorem prod_ite_of_true {p : α → Prop} {hp : DecidablePred p} (f g : α → 
 @[to_additive]
 theorem prod_apply_ite_of_false {p : α → Prop} {hp : DecidablePred p} (f g : α → γ) (k : γ → β) (h : ∀ x ∈ s, ¬p x) :
     (∏ x in s, k (if p x then f x else g x)) = ∏ x in s, k (g x) := by
-  simp_rw [apply_ite k]
+  simp_rw [apply_iteₓ k]
   exact prod_ite_of_false _ _ h
 
 @[to_additive]
 theorem prod_apply_ite_of_true {p : α → Prop} {hp : DecidablePred p} (f g : α → γ) (k : γ → β) (h : ∀ x ∈ s, p x) :
     (∏ x in s, k (if p x then f x else g x)) = ∏ x in s, k (f x) := by
-  simp_rw [apply_ite k]
+  simp_rw [apply_iteₓ k]
   exact prod_ite_of_true _ _ h
 
 @[to_additive]
@@ -883,7 +883,7 @@ theorem prod_ite_eq' [DecidableEq α] (s : Finset α) (a : α) (b : α → β) :
 @[to_additive]
 theorem prod_ite_index (p : Prop) [Decidable p] (s t : Finset α) (f : α → β) :
     (∏ x in if p then s else t, f x) = if p then ∏ x in s, f x else ∏ x in t, f x :=
-  apply_ite (fun s => ∏ x in s, f x) _ _ _
+  apply_iteₓ (fun s => ∏ x in s, f x) _ _ _
 
 @[simp, to_additive]
 theorem prod_ite_irrel (p : Prop) [Decidable p] (s : Finset α) (f g : α → β) :
@@ -937,7 +937,7 @@ theorem prod_dite_of_false {p : α → Prop} {hp : DecidablePred p} (h : ∀ x �
     (fun a ha => by
       dsimp'
       rw [dif_neg])
-    (fun a₁ a₂ h₁ h₂ hh => congr_arg coe hh) fun b hb =>
+    (fun a₁ a₂ h₁ h₂ hh => congr_argₓ coe hh) fun b hb =>
     ⟨b.1, b.2, by
       simp ⟩
 
@@ -950,7 +950,7 @@ theorem prod_dite_of_true {p : α → Prop} {hp : DecidablePred p} (h : ∀ x �
     (fun a ha => by
       dsimp'
       rw [dif_pos])
-    (fun a₁ a₂ h₁ h₂ hh => congr_arg coe hh) fun b hb =>
+    (fun a₁ a₂ h₁ h₂ hh => congr_argₓ coe hh) fun b hb =>
     ⟨b.1, b.2, by
       simp ⟩
 

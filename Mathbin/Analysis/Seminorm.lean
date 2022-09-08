@@ -253,7 +253,7 @@ variable [HasSmul R ℝ] [HasSmul R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ]
 /-- Composition of a seminorm with a linear map is a seminorm. -/
 def comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) : Seminorm 𝕜 E :=
   { p.toAddGroupSeminorm.comp f.toAddMonoidHom with toFun := fun x => p (f x),
-    smul' := fun _ _ => (congr_arg p (f.map_smul _ _)).trans (p.smul _ _) }
+    smul' := fun _ _ => (congr_argₓ p (f.map_smul _ _)).trans (p.smul _ _) }
 
 theorem coe_comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) : ⇑(p.comp f) = p ∘ f :=
   rfl
@@ -680,6 +680,28 @@ theorem convex_ball : Convex ℝ (Ball p x r) := by
 end Module
 
 end Convex
+
+section RestrictScalars
+
+variable (𝕜) {𝕜' : Type _} [NormedField 𝕜] [SemiNormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜'] [NormOneClass 𝕜'] [AddCommGroupₓ E]
+  [Module 𝕜' E] [HasSmul 𝕜 E] [IsScalarTower 𝕜 𝕜' E]
+
+/-- Reinterpret a seminorm over a field `𝕜'` as a seminorm over a smaller field `𝕜`. This will
+typically be used with `is_R_or_C 𝕜'` and `𝕜 = ℝ`. -/
+protected def restrictScalars (p : Seminorm 𝕜' E) : Seminorm 𝕜 E :=
+  { p with
+    smul' := fun a x => by
+      rw [← smul_one_smul 𝕜' a x, p.smul', norm_smul, norm_one, mul_oneₓ] }
+
+@[simp]
+theorem coe_restrict_scalars (p : Seminorm 𝕜' E) : (p.restrictScalars 𝕜 : E → ℝ) = p :=
+  rfl
+
+@[simp]
+theorem restrict_scalars_ball (p : Seminorm 𝕜' E) : (p.restrictScalars 𝕜).ball = p.ball :=
+  rfl
+
+end RestrictScalars
 
 end Seminorm
 

@@ -677,5 +677,5 @@ end Set
 @[to_additive]
 theorem MonoidHom.map_mul_indicator {M N : Type _} [MulOneClassₓ M] [MulOneClassₓ N] (f : M →* N) (s : Set α)
     (g : α → M) (x : α) : f (s.mulIndicator g x) = s.mulIndicator (f ∘ g) x :=
-  congr_fun (Set.mul_indicator_comp_of_one f.map_one).symm x
+  congr_funₓ (Set.mul_indicator_comp_of_one f.map_one).symm x
 

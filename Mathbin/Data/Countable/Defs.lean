@@ -76,7 +76,7 @@ instance (priority := 500) [Countable α] {p : α → Prop} : Countable { x // p
   Subtype.val_injective.Countable
 
 instance {n : ℕ} : Countable (Finₓ n) :=
-  Subtype.countable
+  Function.Injective.countable (@Finₓ.eq_of_veq n)
 
 instance (priority := 100) Finite.to_countable [Finite α] : Countable α :=
   let ⟨n, ⟨e⟩⟩ := Finite.exists_equiv_fin α

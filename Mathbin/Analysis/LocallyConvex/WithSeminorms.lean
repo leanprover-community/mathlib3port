@@ -250,7 +250,7 @@ variable {p : SeminormFamily 𝕜 E ι}
 
 theorem WithSeminorms.has_basis (hp : WithSeminorms p) : (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ p.basis_sets) id :=
   by
-  rw [congr_fun (congr_arg (@nhds E) hp.1) 0]
+  rw [congr_funₓ (congr_argₓ (@nhds E) hp.1) 0]
   exact AddGroupFilterBasis.nhds_zero_has_basis _
 
 end Topology

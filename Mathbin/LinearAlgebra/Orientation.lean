@@ -85,7 +85,20 @@ variable {M N : Type _} [AddCommGroupₓ M] [AddCommGroupₓ N] [Module R M] [Mo
 
 namespace Basis
 
-variable {ι : Type _} [Fintype ι] [DecidableEq ι]
+variable {ι : Type _} [DecidableEq ι]
+
+/-- The value of `orientation.map` when the index type has the cardinality of a basis, in terms
+of `f.det`. -/
+theorem map_orientation_eq_det_inv_smul [Finite ι] (e : Basis ι R M) (x : Orientation R M ι) (f : M ≃ₗ[R] M) :
+    Orientation.map ι f x = f.det⁻¹ • x := by
+  cases nonempty_fintype ι
+  induction' x using Module.Ray.ind with g hg
+  rw [Orientation.map_apply, smul_ray_of_ne_zero, ray_eq_iff, Units.smul_def,
+    (g.comp_linear_map ↑f.symm).eq_smul_basis_det e, g.eq_smul_basis_det e, AlternatingMap.comp_linear_map_apply,
+    AlternatingMap.smul_apply, Basis.det_comp, Basis.det_self, mul_oneₓ, smul_eq_mul, mul_comm, mul_smul,
+    LinearEquiv.coe_inv_det]
+
+variable [Fintype ι]
 
 /-- The orientation given by a basis. -/
 protected def orientation [Nontrivial R] (e : Basis ι R M) : Orientation R M ι :=
@@ -94,16 +107,6 @@ protected def orientation [Nontrivial R] (e : Basis ι R M) : Orientation R M ι
 theorem orientation_map [Nontrivial R] (e : Basis ι R M) (f : M ≃ₗ[R] N) :
     (e.map f).Orientation = Orientation.map ι f e.Orientation := by
   simp_rw [Basis.orientation, Orientation.map_apply, Basis.det_map']
-
-/-- The value of `orientation.map` when the index type has the cardinality of a basis, in terms
-of `f.det`. -/
-theorem map_orientation_eq_det_inv_smul (e : Basis ι R M) (x : Orientation R M ι) (f : M ≃ₗ[R] M) :
-    Orientation.map ι f x = f.det⁻¹ • x := by
-  induction' x using Module.Ray.ind with g hg
-  rw [Orientation.map_apply, smul_ray_of_ne_zero, ray_eq_iff, Units.smul_def,
-    (g.comp_linear_map ↑f.symm).eq_smul_basis_det e, g.eq_smul_basis_det e, AlternatingMap.comp_linear_map_apply,
-    AlternatingMap.smul_apply, Basis.det_comp, Basis.det_self, mul_oneₓ, smul_eq_mul, mul_comm, mul_smul,
-    LinearEquiv.coe_inv_det]
 
 /-- The orientation given by a basis derived using `units_smul`, in terms of the product of those
 units. -/

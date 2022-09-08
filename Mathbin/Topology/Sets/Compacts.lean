@@ -144,7 +144,7 @@ protected def equiv (f : α ≃ₜ β) : Compacts α ≃ Compacts β where
 
 /-- The image of a compact set under a homeomorphism can also be expressed as a preimage. -/
 theorem equiv_to_fun_val (f : α ≃ₜ β) (K : Compacts α) : (Compacts.equiv f K).1 = f.symm ⁻¹' K.1 :=
-  congr_fun (image_eq_preimage_of_inverse f.left_inv f.right_inv) K.1
+  congr_funₓ (image_eq_preimage_of_inverse f.left_inv f.right_inv) K.1
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The product of two `compacts`, as a `compacts` in the product space. -/

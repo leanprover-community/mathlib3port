@@ -93,10 +93,10 @@ theorem reindex_linear_equiv_mul [Fintype n] [Fintype n'] (eₘ : m ≃ m') (e�
     reindexLinearEquiv R A eₘ eₙ M ⬝ reindexLinearEquiv R A eₙ eₒ N = reindexLinearEquiv R A eₘ eₒ (M ⬝ N) :=
   submatrix_mul_equiv M N _ _ _
 
-theorem mul_reindex_linear_equiv_one [Fintype n] [Fintype o] [DecidableEq o] (e₁ : o ≃ n) (e₂ : o ≃ n')
-    (M : Matrix m n A) :
-    M.mul (reindexLinearEquiv R A e₁ e₂ 1) = reindexLinearEquiv R A (Equivₓ.refl m) (e₁.symm.trans e₂) M :=
-  mul_submatrix_one _ _ _
+theorem mul_reindex_linear_equiv_one [Fintype n] [DecidableEq o] (e₁ : o ≃ n) (e₂ : o ≃ n') (M : Matrix m n A) :
+    M.mul (reindexLinearEquiv R A e₁ e₂ 1) = reindexLinearEquiv R A (Equivₓ.refl m) (e₁.symm.trans e₂) M := by
+  haveI := Fintype.ofEquiv _ e₁.symm
+  exact mul_submatrix_one _ _ _
 
 end Semiringₓ
 

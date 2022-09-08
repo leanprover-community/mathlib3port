@@ -47,7 +47,7 @@ theorem zero_locus_anti_mono {I J : Ideal (MvPolynomial σ k)} (h : I ≤ J) : Z
   fun x hx p hp => hx p <| h hp
 
 theorem zero_locus_bot : ZeroLocus (⊥ : Ideal (MvPolynomial σ k)) = ⊤ :=
-  eq_top_iff.2 fun x hx p hp => trans (congr_arg (eval x) (mem_bot.1 hp)) (eval x).map_zero
+  eq_top_iff.2 fun x hx p hp => trans (congr_argₓ (eval x) (mem_bot.1 hp)) (eval x).map_zero
 
 theorem zero_locus_top : ZeroLocus (⊤ : Ideal (MvPolynomial σ k)) = ⊥ :=
   eq_bot_iff.2 fun x hx => one_ne_zero ((eval x).map_one ▸ hx 1 Submodule.mem_top : (1 : k) = 0)
@@ -136,10 +136,11 @@ theorem point_to_point_zero_locus_le (I : Ideal (MvPolynomial σ k)) :
   (le_transₓ (le_vanishing_ideal_zero_locus I) (hx.2 ▸ vanishing_ideal_anti_mono (Set.singleton_subset_iff.2 hx.1)) :
     I ≤ J.asIdeal)
 
-variable [IsAlgClosed k] [Fintype σ]
+variable [IsAlgClosed k] [Finite σ]
 
 theorem is_maximal_iff_eq_vanishing_ideal_singleton (I : Ideal (MvPolynomial σ k)) :
     I.IsMaximal ↔ ∃ x : σ → k, I = vanishingIdeal {x} := by
+  cases nonempty_fintype σ
   refine'
     ⟨fun hI => _, fun h =>
       let ⟨x, hx⟩ := h
@@ -163,7 +164,7 @@ theorem is_maximal_iff_eq_vanishing_ideal_singleton (I : Ideal (MvPolynomial σ 
   intro p hp
   rw [← quotient.eq_zero_iff_mem, map_mv_polynomial_eq_eval₂ (Ideal.Quotient.mk I) p, eval₂_eq']
   rw [mem_vanishing_ideal_singleton_iff, eval_eq'] at hp
-  simpa only [ϕ.map_sum, ϕ.map_mul, ϕ.map_prod, ϕ.map_pow, ϕ.map_zero, hx] using congr_arg ϕ hp
+  simpa only [ϕ.map_sum, ϕ.map_mul, ϕ.map_prod, ϕ.map_pow, ϕ.map_zero, hx] using congr_argₓ ϕ hp
 
 /-- Main statement of the Nullstellensatz -/
 @[simp]

@@ -450,7 +450,7 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
     -- use the previous estimates to see that `f (x + y) - f x - f' y` is small.
     calc
       ∥f (x + y) - f x - f' y∥ = ∥f (x + y) - f x - L e (n e) m y + (L e (n e) m - f') y∥ :=
-        congr_arg _
+        congr_argₓ _
           (by
             simp )
       _ ≤ 4 * (1 / 2) ^ e * ∥y∥ + 12 * ∥c∥ * (1 / 2) ^ e * ∥y∥ :=

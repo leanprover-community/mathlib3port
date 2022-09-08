@@ -97,10 +97,10 @@ theorem get_right_eq_none_iff : x.getRight = none ↔ x.isLeft := by
 end get
 
 theorem inl.inj_iff {a b} : (inl a : Sum α β) = inl b ↔ a = b :=
-  ⟨inl.injₓ, congr_arg _⟩
+  ⟨inl.injₓ, congr_argₓ _⟩
 
 theorem inr.inj_iff {a b} : (inr a : Sum α β) = inr b ↔ a = b :=
-  ⟨inr.injₓ, congr_arg _⟩
+  ⟨inr.injₓ, congr_argₓ _⟩
 
 theorem inl_ne_inr {a : α} {b : β} : inl a ≠ inr b :=
   fun.
@@ -191,7 +191,7 @@ theorem update_elim_inr [DecidableEq β] [DecidableEq (Sum α β)] {f : α → �
 @[simp]
 theorem update_inl_comp_inl [DecidableEq α] [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : α} {x : γ} :
     update f (inl i) x ∘ inl = update (f ∘ inl) i x :=
-  update_comp_eq_of_injective _ inl_injective _ _
+  update_comp_eq_of_injectiveₓ _ inl_injective _ _
 
 @[simp]
 theorem update_inl_apply_inl [DecidableEq α] [DecidableEq (Sum α β)] {f : Sum α β → γ} {i j : α} {x : γ} :
@@ -201,7 +201,7 @@ theorem update_inl_apply_inl [DecidableEq α] [DecidableEq (Sum α β)] {f : Sum
 @[simp]
 theorem update_inl_comp_inr [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : α} {x : γ} :
     update f (inl i) x ∘ inr = f ∘ inr :=
-  (update_comp_eq_of_forall_ne _ _) fun _ => inr_ne_inl
+  (update_comp_eq_of_forall_neₓ _ _) fun _ => inr_ne_inl
 
 @[simp]
 theorem update_inl_apply_inr [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : α} {j : β} {x : γ} :
@@ -211,7 +211,7 @@ theorem update_inl_apply_inr [DecidableEq (Sum α β)] {f : Sum α β → γ} {i
 @[simp]
 theorem update_inr_comp_inl [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : β} {x : γ} :
     update f (inr i) x ∘ inl = f ∘ inl :=
-  (update_comp_eq_of_forall_ne _ _) fun _ => inl_ne_inr
+  (update_comp_eq_of_forall_neₓ _ _) fun _ => inl_ne_inr
 
 @[simp]
 theorem update_inr_apply_inl [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : α} {j : β} {x : γ} :
@@ -221,7 +221,7 @@ theorem update_inr_apply_inl [DecidableEq (Sum α β)] {f : Sum α β → γ} {i
 @[simp]
 theorem update_inr_comp_inr [DecidableEq β] [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : β} {x : γ} :
     update f (inr i) x ∘ inr = update (f ∘ inr) i x :=
-  update_comp_eq_of_injective _ inr_injective _ _
+  update_comp_eq_of_injectiveₓ _ inr_injective _ _
 
 @[simp]
 theorem update_inr_apply_inr [DecidableEq β] [DecidableEq (Sum α β)] {f : Sum α β → γ} {i j : β} {x : γ} :
@@ -402,22 +402,22 @@ namespace Function
 
 theorem Injective.sum_elim {f : α → γ} {g : β → γ} (hf : Injective f) (hg : Injective g) (hfg : ∀ a b, f a ≠ g b) :
     Injective (Sum.elim f g)
-  | inl x, inl y, h => congr_arg inl <| hf h
+  | inl x, inl y, h => congr_argₓ inl <| hf h
   | inl x, inr y, h => (hfg x y h).elim
   | inr x, inl y, h => (hfg y x h.symm).elim
-  | inr x, inr y, h => congr_arg inr <| hg h
+  | inr x, inr y, h => congr_argₓ inr <| hg h
 
 theorem Injective.sum_map {f : α → β} {g : α' → β'} (hf : Injective f) (hg : Injective g) : Injective (Sum.map f g)
-  | inl x, inl y, h => congr_arg inl <| hf <| inl.injₓ h
-  | inr x, inr y, h => congr_arg inr <| hg <| inr.injₓ h
+  | inl x, inl y, h => congr_argₓ inl <| hf <| inl.injₓ h
+  | inr x, inr y, h => congr_argₓ inr <| hg <| inr.injₓ h
 
 theorem Surjective.sum_map {f : α → β} {g : α' → β'} (hf : Surjective f) (hg : Surjective g) : Surjective (Sum.map f g)
   | inl y =>
     let ⟨x, hx⟩ := hf y
-    ⟨inl x, congr_arg inl hx⟩
+    ⟨inl x, congr_argₓ inl hx⟩
   | inr y =>
     let ⟨x, hx⟩ := hg y
-    ⟨inr x, congr_arg inr hx⟩
+    ⟨inr x, congr_argₓ inr hx⟩
 
 end Function
 

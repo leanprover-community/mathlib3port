@@ -39,10 +39,10 @@ open Tactic
 
 
 theorem left_mul_both_sides {α} [h : Mul α] {x y : α} (z : α) (h1 : x = y) : z * x = z * y :=
-  congr_arg (Mul.mul z) h1
+  congr_argₓ (Mul.mul z) h1
 
 theorem sum_two_equations {α} [h : Add α] {x1 y1 x2 y2 : α} (h1 : x1 = y1) (h2 : x2 = y2) : x1 + x2 = y1 + y2 :=
-  congr (congr_arg Add.add h1) h2
+  congr (congr_argₓ Add.add h1) h2
 
 theorem left_minus_right {α} [h : AddGroupₓ α] {x y : α} (h1 : x = y) : x - y = 0 :=
   sub_eq_zero.mpr h1

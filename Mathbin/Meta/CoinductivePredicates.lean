@@ -42,7 +42,7 @@ theorem Monotonicity.and {p p' q q' : Prop} (hp : Implies p p') (hq : Implies q 
 
 @[monotonicity]
 theorem Monotonicity.or {p p' q q' : Prop} (hp : Implies p p') (hq : Implies q q') : Implies (p ∨ q) (p' ∨ q') :=
-  Or.imp hp hq
+  Or.impₓ hp hq
 
 @[monotonicity]
 theorem Monotonicity.not {p q : Prop} (h : Implies p q) : Implies (¬q) ¬p :=

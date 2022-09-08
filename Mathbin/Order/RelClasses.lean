@@ -180,17 +180,11 @@ def partialOrderOfSO (r) [IsStrictOrder α r] : PartialOrderₓ α where
           (asymm h)⟩,
       fun ⟨h₁, h₂⟩ => h₁.resolve_left fun e => h₂ <| e ▸ Or.inl rfl⟩
 
--- TODO: This is now exactly the same as `is_strict_total_order`, remove.
-/-- This is basically the same as `is_strict_total_order`, but that definition has a redundant
-assumption `is_incomp_trans α lt`. -/
-@[algebra]
-class IsStrictTotalOrder' (α : Type u) (lt : α → α → Prop) extends IsTrichotomous α lt, IsStrictOrder α lt : Prop
-
-/-- Construct a linear order from an `is_strict_total_order'` relation.
+/-- Construct a linear order from an `is_strict_total_order` relation.
 
 See note [reducible non-instances]. -/
 @[reducible]
-def linearOrderOfSTO' (r) [IsStrictTotalOrder' α r] [∀ x y, Decidable ¬r x y] : LinearOrderₓ α :=
+def linearOrderOfSTO (r) [IsStrictTotalOrder α r] [∀ x y, Decidable ¬r x y] : LinearOrderₓ α :=
   { partialOrderOfSO r with
     le_total := fun x y =>
       match y, trichotomous_of r x y with
@@ -202,7 +196,7 @@ def linearOrderOfSTO' (r) [IsStrictTotalOrder' α r] [∀ x y, Decidable ¬r x y
         ⟨fun h => ((trichotomous_of r y x).resolve_left h).imp Eq.symm id, fun h =>
           h.elim (fun h => h ▸ irrefl_of _ _) (asymm_of r)⟩ }
 
-theorem IsStrictTotalOrder'.swap (r) [IsStrictTotalOrder' α r] : IsStrictTotalOrder' α (swap r) :=
+theorem IsStrictTotalOrder.swap (r) [IsStrictTotalOrder α r] : IsStrictTotalOrder α (swap r) :=
   { IsTrichotomous.swap r, IsStrictOrder.swap r with }
 
 /-! ### Order connection -/
@@ -227,24 +221,14 @@ theorem is_strict_weak_order_of_is_order_connected [IsAsymm α r] [IsOrderConnec
       ⟨IsOrderConnected.neg_trans h₁ h₃, IsOrderConnected.neg_trans h₄ h₂⟩ }
 
 -- see Note [lower instance priority]
-instance (priority := 100) is_order_connected_of_is_strict_total_order' [IsStrictTotalOrder' α r] :
+instance (priority := 100) is_order_connected_of_is_strict_total_order [IsStrictTotalOrder α r] :
     IsOrderConnected α r :=
   ⟨fun a b c h => (trichotomous _ _).imp_right fun o => o.elim (fun e => e ▸ h) fun h' => trans h' h⟩
 
 -- see Note [lower instance priority]
-instance (priority := 100) is_strict_total_order_of_is_strict_total_order' [IsStrictTotalOrder' α r] :
-    IsStrictTotalOrder α r where
-
--- see Note [lower instance priority]
-instance (priority := 100) is_strict_weak_order_of_is_strict_total_order' [IsStrictTotalOrder' α r] :
+instance (priority := 100) is_strict_weak_order_of_is_strict_total_order [IsStrictTotalOrder α r] :
     IsStrictWeakOrder α r :=
   { is_strict_weak_order_of_is_order_connected with }
-
--- see Note [lower instance priority]
-instance (priority := 100) is_strict_weak_order_of_is_strict_total_order [IsStrictTotalOrder α r] :
-    IsStrictWeakOrder α r := by
-  haveI : IsStrictTotalOrder' α r := {  }
-  infer_instance
 
 /-! ### Well-order -/
 
@@ -325,13 +309,8 @@ theorem well_founded_lt_dual_iff (α : Type _) [LT α] : WellFoundedLt αᵒᵈ 
 class IsWellOrder (α : Type u) (r : α → α → Prop) extends IsTrichotomous α r, IsTrans α r, IsWellFounded α r : Prop
 
 -- see Note [lower instance priority]
-instance (priority := 100) IsWellOrder.is_strict_total_order' {α} (r : α → α → Prop) [IsWellOrder α r] :
-    IsStrictTotalOrder' α r where
-
--- see Note [lower instance priority]
 instance (priority := 100) IsWellOrder.is_strict_total_order {α} (r : α → α → Prop) [IsWellOrder α r] :
-    IsStrictTotalOrder α r := by
-  infer_instance
+    IsStrictTotalOrder α r where
 
 -- see Note [lower instance priority]
 instance (priority := 100) IsWellOrder.is_trichotomous {α} (r : α → α → Prop) [IsWellOrder α r] : IsTrichotomous α r :=
@@ -407,7 +386,7 @@ end WellFoundedGt
 /-- Construct a decidable linear order from a well-founded linear order. -/
 noncomputable def IsWellOrder.linearOrder (r : α → α → Prop) [IsWellOrder α r] : LinearOrderₓ α := by
   letI := fun x y => Classical.dec ¬r x y
-  exact linearOrderOfSTO' r
+  exact linearOrderOfSTO r
 
 /-- Derive a `has_well_founded` instance from a `is_well_order` instance. -/
 def IsWellOrder.toHasWellFounded [LT α] [hwo : IsWellOrder α (· < ·)] : HasWellFounded α where
@@ -768,10 +747,7 @@ instance [LinearOrderₓ α] : IsTrichotomous α (· ≤ ·) :=
 instance [LinearOrderₓ α] : IsTrichotomous α (· ≥ ·) :=
   IsTotal.is_trichotomous _
 
-instance [LinearOrderₓ α] : IsStrictTotalOrder α (· < ·) := by
-  infer_instance
-
-instance [LinearOrderₓ α] : IsStrictTotalOrder' α (· < ·) where
+instance [LinearOrderₓ α] : IsStrictTotalOrder α (· < ·) where
 
 instance [LinearOrderₓ α] : IsOrderConnected α (· < ·) := by
   infer_instance

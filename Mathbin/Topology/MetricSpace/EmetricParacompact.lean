@@ -48,7 +48,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
   refine' ⟨fun ι s ho hcov => _⟩
   simp only [Union_eq_univ_iff] at hcov
   -- choose a well founded order on `S`
-  letI : LinearOrderₓ ι := linearOrderOfSTO' WellOrderingRel
+  letI : LinearOrderₓ ι := linearOrderOfSTO WellOrderingRel
   have wf : WellFounded ((· < ·) : ι → ι → Prop) := @IsWellFounded.wf ι WellOrderingRel _
   -- Let `ind x` be the minimal index `s : S` such that `x ∈ s`.
   set ind : α → ι := fun x => wf.min { i : ι | x ∈ s i } (hcov x)

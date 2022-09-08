@@ -1087,7 +1087,7 @@ theorem Nondegenerate.ne_zero [Nontrivial M] {B : BilinForm R M} (h : B.Nondegen
 
 theorem Nondegenerate.congr {B : BilinForm R₂ M₂} (e : M₂ ≃ₗ[R₂] M₂') (h : B.Nondegenerate) :
     (congr e B).Nondegenerate := fun m hm =>
-  e.symm.map_eq_zero_iff.1 <| (h (e.symm m)) fun n => (congr_arg _ (e.symm_apply_apply n).symm).trans (hm (e n))
+  e.symm.map_eq_zero_iff.1 <| (h (e.symm m)) fun n => (congr_argₓ _ (e.symm_apply_apply n).symm).trans (hm (e n))
 
 @[simp]
 theorem nondegenerate_congr_iff {B : BilinForm R₂ M₂} (e : M₂ ≃ₗ[R₂] M₂') :

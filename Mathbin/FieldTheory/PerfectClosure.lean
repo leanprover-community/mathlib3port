@@ -185,22 +185,22 @@ instance : CommMonoidₓ (PerfectClosure K p) :=
       (Quot.induction_on e) fun ⟨m, x⟩ =>
         (Quot.induction_on f) fun ⟨n, y⟩ =>
           (Quot.induction_on g) fun ⟨s, z⟩ =>
-            congr_arg (Quot.mk _) <| by
+            congr_argₓ (Quot.mk _) <| by
               simp only [add_assocₓ, mul_assoc, RingHom.iterate_map_mul, ← iterate_add_apply, add_commₓ,
                 add_left_commₓ],
     one := mk K p (0, 1),
     one_mul := fun e =>
       Quot.induction_on e fun ⟨n, x⟩ =>
-        congr_arg (Quot.mk _) <| by
+        congr_argₓ (Quot.mk _) <| by
           simp only [RingHom.iterate_map_one, iterate_zero_apply, one_mulₓ, zero_addₓ],
     mul_one := fun e =>
       Quot.induction_on e fun ⟨n, x⟩ =>
-        congr_arg (Quot.mk _) <| by
+        congr_argₓ (Quot.mk _) <| by
           simp only [RingHom.iterate_map_one, iterate_zero_apply, mul_oneₓ, add_zeroₓ],
     mul_comm := fun e f =>
       Quot.induction_on e fun ⟨m, x⟩ =>
         Quot.induction_on f fun ⟨n, y⟩ =>
-          congr_arg (Quot.mk _) <| by
+          congr_argₓ (Quot.mk _) <| by
             simp only [add_commₓ, mul_comm] }
 
 theorem one_def : (1 : PerfectClosure K p) = mk K p (0, 1) :=
@@ -273,16 +273,16 @@ instance : AddCommGroupₓ (PerfectClosure K p) :=
       (Quot.induction_on e) fun ⟨m, x⟩ =>
         (Quot.induction_on f) fun ⟨n, y⟩ =>
           (Quot.induction_on g) fun ⟨s, z⟩ =>
-            congr_arg (Quot.mk _) <| by
+            congr_argₓ (Quot.mk _) <| by
               simp only [RingHom.iterate_map_add, ← iterate_add_apply, add_assocₓ, add_commₓ s _],
     zero := 0,
     zero_add := fun e =>
       Quot.induction_on e fun ⟨n, x⟩ =>
-        congr_arg (Quot.mk _) <| by
+        congr_argₓ (Quot.mk _) <| by
           simp only [RingHom.iterate_map_zero, iterate_zero_apply, zero_addₓ],
     add_zero := fun e =>
       Quot.induction_on e fun ⟨n, x⟩ =>
-        congr_arg (Quot.mk _) <| by
+        congr_argₓ (Quot.mk _) <| by
           simp only [RingHom.iterate_map_zero, iterate_zero_apply, add_zeroₓ],
     sub_eq_add_neg := fun a b => rfl,
     add_left_neg := fun e =>
@@ -291,7 +291,7 @@ instance : AddCommGroupₓ (PerfectClosure K p) :=
     add_comm := fun e f =>
       Quot.induction_on e fun ⟨m, x⟩ =>
         Quot.induction_on f fun ⟨n, y⟩ =>
-          congr_arg (Quot.mk _) <| by
+          congr_argₓ (Quot.mk _) <| by
             simp only [add_commₓ] }
 
 instance : CommRingₓ (PerfectClosure K p) :=
@@ -441,7 +441,7 @@ instance : Field (PerfectClosure K p) :=
                 (frobenius _ p).iterate_map_mul] at this⊢ <;>
               rw [mul_inv_cancel this, (frobenius _ _).iterate_map_one]),
     inv_zero :=
-      congr_arg (Quot.mk (R K p))
+      congr_argₓ (Quot.mk (R K p))
         (by
           rw [inv_zero]) }
 

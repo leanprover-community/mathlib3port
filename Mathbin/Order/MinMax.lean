@@ -141,7 +141,7 @@ theorem max_cases (a b : α) : max a b = a ∧ b ≤ a ∨ max a b = b ∧ a < b
 theorem min_eq_iff : min a b = c ↔ a = c ∧ a ≤ b ∨ b = c ∧ b ≤ a := by
   constructor
   · intro h
-    refine' Or.imp (fun h' => _) (fun h' => _) (le_totalₓ a b) <;>
+    refine' Or.impₓ (fun h' => _) (fun h' => _) (le_totalₓ a b) <;>
       exact
         ⟨by
           simpa [h'] using h, h'⟩

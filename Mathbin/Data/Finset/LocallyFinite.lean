@@ -264,6 +264,18 @@ theorem Ico_filter_le_of_left_le {a b c : α} [DecidablePred ((· ≤ ·) c)] (h
   rw [mem_filter, mem_Ico, mem_Ico, and_comm, And.left_comm]
   exact and_iff_right_of_imp fun h => hac.trans h.1
 
+theorem Icc_filter_lt_of_lt_right {a b c : α} [DecidablePred (· < c)] (h : b < c) :
+    (icc a b).filter (· < c) = icc a b :=
+  (Finset.filter_eq_self _).2 fun x hx => lt_of_le_of_ltₓ (mem_Icc.1 hx).2 h
+
+theorem Ioc_filter_lt_of_lt_right {a b c : α} [DecidablePred (· < c)] (h : b < c) :
+    (ioc a b).filter (· < c) = ioc a b :=
+  (Finset.filter_eq_self _).2 fun x hx => lt_of_le_of_ltₓ (mem_Ioc.1 hx).2 h
+
+theorem Iic_filter_lt_of_lt_right {α} [Preorderₓ α] [LocallyFiniteOrderBot α] {a c : α} [DecidablePred (· < c)]
+    (h : a < c) : (iic a).filter (· < c) = iic a :=
+  (Finset.filter_eq_self _).2 fun x hx => lt_of_le_of_ltₓ (mem_Iic.1 hx) h
+
 variable (a b) [Fintype α]
 
 theorem filter_lt_lt_eq_Ioo [DecidablePred fun j => a < j ∧ j < b] : (univ.filter fun j => a < j ∧ j < b) = ioo a b :=
@@ -606,6 +618,17 @@ theorem Ico_filter_le (a b c : α) : ((ico a b).filter fun x => c ≤ x) = ico (
     
   · rw [Ico_filter_le_of_le_left h, max_eq_leftₓ h]
     
+
+@[simp]
+theorem Ioo_filter_lt (a b c : α) : (ioo a b).filter (· < c) = ioo a (min b c) := by
+  ext
+  simp [and_assoc]
+
+@[simp]
+theorem Iio_filter_lt {α} [LinearOrderₓ α] [LocallyFiniteOrderBot α] (a b : α) :
+    (iio a).filter (· < b) = iio (min a b) := by
+  ext
+  simp [and_assoc]
 
 @[simp]
 theorem Ico_diff_Ico_left (a b c : α) : ico a b \ ico a c = ico (max a c) b := by

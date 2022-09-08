@@ -45,10 +45,10 @@ def FixedBy.subfield : Subfield F where
   Carrier := FixedBy M F m
   zero_mem' := smul_zero m
   add_mem' := fun x y hx hy => (smul_add m x y).trans <| congr_arg2ₓ _ hx hy
-  neg_mem' := fun x hx => (smul_neg m x).trans <| congr_arg _ hx
+  neg_mem' := fun x hx => (smul_neg m x).trans <| congr_argₓ _ hx
   one_mem' := smul_one m
   mul_mem' := fun x y hx hy => (smul_mul' m x y).trans <| congr_arg2ₓ _ hx hy
-  inv_mem' := fun x hx => (smul_inv'' m x).trans <| congr_arg _ hx
+  inv_mem' := fun x hx => (smul_inv'' m x).trans <| congr_argₓ _ hx
 
 section InvariantSubfields
 
@@ -132,7 +132,7 @@ theorem linear_independent_smul_of_linear_independent {s : Finset F} :
   rcases ha with ⟨l, hl, hla⟩
   rw [Finsupp.total_apply_of_mem_supported F hl] at hla
   suffices ∀ i ∈ s, l i ∈ FixedPoints.subfield G F by
-    replace hla := (sum_apply _ _ fun i => l i • to_fun G F i).symm.trans (congr_fun hla 1)
+    replace hla := (sum_apply _ _ fun i => l i • to_fun G F i).symm.trans (congr_funₓ hla 1)
     simp_rw [Pi.smul_apply, to_fun_apply, one_smul] at hla
     refine' hs.2 (hla ▸ Submodule.sum_mem _ fun c hcs => _)
     change (⟨l c, this c hcs⟩ : FixedPoints.subfield G F) • c ∈ _

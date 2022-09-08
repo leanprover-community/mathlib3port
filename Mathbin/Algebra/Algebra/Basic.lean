@@ -209,7 +209,7 @@ theorem algebra_ext {R : Type _} [CommSemiringₓ R] {A : Type _} [Semiringₓ A
   rcases Q with ⟨⟨Q⟩⟩
   congr
   · funext r a
-    replace w := congr_arg (fun s => s * a) (w r)
+    replace w := congr_argₓ (fun s => s * a) (w r)
     simp only [← smul_def''] at w
     apply w
     
@@ -657,7 +657,7 @@ theorem coe_fn_inj {φ₁ φ₂ : A →ₐ[R] B} : (φ₁ : A → B) = φ₂ ↔
   FunLike.coe_fn_eq
 
 theorem coe_ring_hom_injective : Function.Injective (coe : (A →ₐ[R] B) → A →+* B) := fun φ₁ φ₂ H =>
-  coe_fn_injective <| show ((φ₁ : A →+* B) : A → B) = ((φ₂ : A →+* B) : A → B) from congr_arg _ H
+  coe_fn_injective <| show ((φ₁ : A →+* B) : A → B) = ((φ₂ : A →+* B) : A → B) from congr_argₓ _ H
 
 theorem coe_monoid_hom_injective : Function.Injective (coe : (A →ₐ[R] B) → A →* B) :=
   RingHom.coe_monoid_hom_injective.comp coe_ring_hom_injective

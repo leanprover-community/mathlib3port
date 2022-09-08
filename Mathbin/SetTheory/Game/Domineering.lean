@@ -115,11 +115,11 @@ instance state : State Board where
   l := fun s => (left s).Image (moveLeft s)
   r := fun s => (right s).Image (moveRight s)
   left_bound := fun s t m => by
-    simp only [Finset.mem_image, Prod.exists] at m
+    simp only [Finset.mem_image, Prod.existsₓ] at m
     rcases m with ⟨_, _, ⟨h, rfl⟩⟩
     exact move_left_smaller h
   right_bound := fun s t m => by
-    simp only [Finset.mem_image, Prod.exists] at m
+    simp only [Finset.mem_image, Prod.existsₓ] at m
     rcases m with ⟨_, _, ⟨h, rfl⟩⟩
     exact move_right_smaller h
 

@@ -283,7 +283,7 @@ theorem is_integral_of_is_irreducible_is_reduced [IsReduced X] [H : IrreducibleS
     @nonempty_preirreducible_inter _ H.1 (X.basic_open a).2 (X.basic_open b).2 h.1 h.2
   replace e' := Subtype.eq e'
   subst e'
-  replace e := congr_arg (X.presheaf.germ x) e
+  replace e := congr_argₓ (X.presheaf.germ x) e
   rw [RingHom.map_mul, RingHom.map_zero] at e
   refine' @zero_ne_one (X.presheaf.stalk x.1) _ _ (is_unit_zero_iff.1 _)
   convert hx₁.mul hx₂

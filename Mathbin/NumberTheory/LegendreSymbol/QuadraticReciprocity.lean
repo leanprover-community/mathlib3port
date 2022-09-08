@@ -333,7 +333,7 @@ theorem quadratic_reciprocity' (hp : p ≠ 2) (hq : q ≠ 2) : legendreSym q p =
           exact_mod_cast nat_cast_self q),
       mul_zero]
     
-  · have qr := congr_arg (· * legendre_sym p q) (quadratic_reciprocity hp hq h)
+  · have qr := congr_argₓ (· * legendre_sym p q) (quadratic_reciprocity hp hq h)
     have : ((q : ℤ) : Zmod p) ≠ 0 := by
       exact_mod_cast prime_ne_zero p q h
     simpa only [mul_assoc, ← pow_two, legendre_sym_sq_one p this, mul_oneₓ] using qr

@@ -103,13 +103,13 @@ theorem IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at {ι : Type _} [
     ∃ (Λ : ι → ℝ)(Λ₀ : ℝ), (Λ, Λ₀) ≠ 0 ∧ (∑ i, Λ i • f' i) + Λ₀ • φ' = 0 := by
   letI := Classical.decEq ι
   replace hextr : IsLocalExtrOn φ { x | (fun i => f i x) = fun i => f i x₀ } x₀
-  · simpa only [Function.funext_iffₓ] using hextr
+  · simpa only [Function.funext_iff] using hextr
     
   rcases hextr.exists_linear_map_of_has_strict_fderiv_at (has_strict_fderiv_at_pi.2 fun i => hf' i) hφ' with
     ⟨Λ, Λ₀, h0, hsum⟩
   rcases(LinearEquiv.piRing ℝ ℝ ι ℝ).symm.Surjective Λ with ⟨Λ, rfl⟩
   refine' ⟨Λ, Λ₀, _, _⟩
-  · simpa only [Ne.def, Prod.ext_iff, LinearEquiv.map_eq_zero_iff, Prod.fst_zero] using h0
+  · simpa only [Ne.def, Prod.ext_iffₓ, LinearEquiv.map_eq_zero_iff, Prod.fst_zero] using h0
     
   · ext x
     simpa [mul_comm] using hsum x
@@ -134,6 +134,6 @@ theorem IsLocalExtrOn.linear_dependent_of_has_strict_fderiv_at {ι : Type _} [Fi
   refine' ⟨Option.elimₓ Λ₀ Λ, _, _⟩
   · simpa [add_commₓ] using hΛf
     
-  · simpa [Function.funext_iffₓ, not_and_distrib, or_comm, Option.exists] using hΛ
+  · simpa [Function.funext_iff, not_and_distrib, or_comm, Option.exists] using hΛ
     
 

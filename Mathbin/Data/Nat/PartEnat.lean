@@ -20,6 +20,7 @@ The following instances are defined:
 
 * `ordered_add_comm_monoid part_enat`
 * `canonically_ordered_add_monoid part_enat`
+* `complete_linear_order part_enat`
 
 There is no additive analogue of `monoid_with_zero`; if there were then `part_enat` could
 be an `add_monoid_with_top`.
@@ -98,7 +99,7 @@ instance : AddMonoidWithOneₓ PartEnat :=
 theorem some_eq_coe (n : ℕ) : some n = n :=
   rfl
 
-@[simp]
+@[simp, norm_cast]
 theorem coe_inj {x y : ℕ} : (x : PartEnat) = y ↔ x = y :=
   Part.some_inj
 
@@ -294,7 +295,7 @@ theorem top_eq_none : (⊤ : PartEnat) = none :=
 @[simp]
 theorem coe_lt_top (x : ℕ) : (x : PartEnat) < ⊤ :=
   Ne.lt_top fun h =>
-    absurd (congr_arg Dom h) <| by
+    absurd (congr_argₓ Dom h) <| by
       simpa only [dom_coe] using true_ne_false
 
 @[simp]

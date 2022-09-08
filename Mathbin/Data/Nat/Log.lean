@@ -126,7 +126,7 @@ theorem log_mul_base (b n : ℕ) (hb : 1 < b) (hn : 0 < n) : log b (n * b) = log
       
     have : 0 < b := zero_lt_one.trans hb
     rw [← pow_le_iff_le_log hb, pow_succ'ₓ, (strict_mono_mul_right_of_pos this).le_iff_le, pow_le_iff_le_log hb hn,
-      Nat.succ_le_succ_iff]
+      Nat.succ_le_succ_iffₓ]
     simp [hn, this]
 
 theorem lt_pow_succ_log_self {b : ℕ} (hb : 1 < b) (x : ℕ) : x < b ^ (log b x).succ := by

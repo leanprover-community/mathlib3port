@@ -123,7 +123,7 @@ theorem non_unital_ring_hom_injective {γ : Type w} [Nonempty I] [∀ i, NonUnit
     [NonUnitalNonAssocSemiringₓ γ] (g : ∀ i, γ →ₙ+* f i) (hg : ∀ i, Function.Injective (g i)) :
     Function.Injective (Pi.nonUnitalRingHom g) := fun x y h =>
   let ⟨i⟩ := ‹Nonempty I›
-  hg i ((Function.funext_iffₓ.mp h : _) i)
+  hg i ((Function.funext_iff.mp h : _) i)
 
 /-- A family of ring homomorphisms `f a : γ →+* β a` defines a ring homomorphism
 `pi.ring_hom f : γ →+* Π a, β a` given by `pi.ring_hom f x b = f b x`. -/
@@ -139,7 +139,7 @@ protected def ringHom {γ : Type w} [∀ i, NonAssocSemiringₓ (f i)] [NonAssoc
 theorem ring_hom_injective {γ : Type w} [Nonempty I] [∀ i, NonAssocSemiringₓ (f i)] [NonAssocSemiringₓ γ]
     (g : ∀ i, γ →+* f i) (hg : ∀ i, Function.Injective (g i)) : Function.Injective (Pi.ringHom g) := fun x y h =>
   let ⟨i⟩ := ‹Nonempty I›
-  hg i ((Function.funext_iffₓ.mp h : _) i)
+  hg i ((Function.funext_iff.mp h : _) i)
 
 end Pi
 

@@ -541,7 +541,7 @@ def supp : Ideal R where
   smul_mem' := fun c x hx =>
     calc
       v (c * x) = v c * v x := map_mul v c x
-      _ = v c * 0 := congr_arg _ hx
+      _ = v c * 0 := congr_argₓ _ hx
       _ = 0 := mul_zero _
       
 

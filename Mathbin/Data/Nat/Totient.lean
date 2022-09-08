@@ -181,7 +181,7 @@ theorem totient_prime_pow_succ {p : ℕ} (hp : p.Prime) (n : ℕ) : φ (p ^ (n +
   calc
     φ (p ^ (n + 1)) = ((range (p ^ (n + 1))).filter (Coprime (p ^ (n + 1)))).card := totient_eq_card_coprime _
     _ = (range (p ^ (n + 1)) \ (range (p ^ n)).Image (· * p)).card :=
-      congr_arg card
+      congr_argₓ card
         (by
           rw [sdiff_eq_filter]
           apply filter_congr

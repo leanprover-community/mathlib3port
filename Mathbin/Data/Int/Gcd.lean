@@ -140,7 +140,7 @@ end
 
 theorem exists_mul_mod_eq_gcd {k n : ℕ} (hk : gcdₓ n k < k) : ∃ m, n * m % k = gcdₓ n k := by
   have hk' := int.coe_nat_ne_zero.mpr (ne_of_gtₓ (lt_of_le_of_ltₓ (zero_le (gcd n k)) hk))
-  have key := congr_arg (fun m => Int.natModₓ m k) (gcd_eq_gcd_ab n k)
+  have key := congr_argₓ (fun m => Int.natModₓ m k) (gcd_eq_gcd_ab n k)
   simp_rw [Int.natModₓ] at key
   rw [Int.add_mul_mod_self_left, ← Int.coe_nat_mod, Int.to_nat_coe_nat, mod_eq_of_lt hk] at key
   refine' ⟨(n.gcd_a k % k).toNat, Eq.trans (Int.coe_nat_inj _) key.symm⟩
@@ -163,23 +163,23 @@ protected theorem coe_nat_gcd (m n : ℕ) : Int.gcdₓ ↑m ↑n = Nat.gcdₓ m 
 /-- The extended GCD `a` value in the equation `gcd x y = x * a + y * b`. -/
 def gcdA : ℤ → ℤ → ℤ
   | of_nat m, n => m.gcdA n.natAbs
-  | -[1+ m], n => -m.succ.gcdA n.natAbs
+  | -[1 + m], n => -m.succ.gcdA n.natAbs
 
 /-- The extended GCD `b` value in the equation `gcd x y = x * a + y * b`. -/
 def gcdB : ℤ → ℤ → ℤ
   | m, of_nat n => m.natAbs.gcdB n
-  | m, -[1+ n] => -m.natAbs.gcdB n.succ
+  | m, -[1 + n] => -m.natAbs.gcdB n.succ
 
 /-- **Bézout's lemma** -/
 theorem gcd_eq_gcd_ab : ∀ x y : ℤ, (gcdₓ x y : ℤ) = x * gcdA x y + y * gcdB x y
   | (m : ℕ), (n : ℕ) => Nat.gcd_eq_gcd_ab _ _
-  | (m : ℕ), -[1+ n] =>
+  | (m : ℕ), -[1 + n] =>
     show (_ : ℤ) = _ + -(n + 1) * -_ by
       rw [neg_mul_neg] <;> apply Nat.gcd_eq_gcd_ab
-  | -[1+ m], (n : ℕ) =>
+  | -[1 + m], (n : ℕ) =>
     show (_ : ℤ) = -(m + 1) * -_ + _ by
       rw [neg_mul_neg] <;> apply Nat.gcd_eq_gcd_ab
-  | -[1+ m], -[1+ n] =>
+  | -[1 + m], -[1 + n] =>
     show (_ : ℤ) = -(m + 1) * -_ + -(n + 1) * -_ by
       rw [neg_mul_neg, neg_mul_neg]
       apply Nat.gcd_eq_gcd_ab

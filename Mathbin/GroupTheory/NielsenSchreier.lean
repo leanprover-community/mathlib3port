@@ -272,7 +272,7 @@ theorem path_nonempty_of_hom {G} [Groupoid.{u, u} G] [IsFreeGroupoid G] {a b : G
   congr
   ext
   rw [functor.const_obj_map, id_as_one, difference_functor_map, mul_inv_eq_one]
-  apply congr_arg FreeGroup.of
+  apply congr_argₓ FreeGroup.of
   apply (weakly_connected_component.eq _ _).mpr
   exact ⟨hom.to_path (Sum.inr e)⟩
 

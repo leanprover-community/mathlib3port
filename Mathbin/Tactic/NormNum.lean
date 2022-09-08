@@ -1451,7 +1451,7 @@ theorem neg_succ_of_nat (a b : ℕ) (c : ℤ) (h₁ : a + 1 = b)
         b :
           ℤ) =
         c) :
-    -[1+ a] = -c := by
+    -[1 + a] = -c := by
   rw [← h₂, ← h₁] <;> rfl
 
 /-- Evaluates some extra numeric operations on `nat` and `int`, specifically

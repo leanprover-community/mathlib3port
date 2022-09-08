@@ -153,7 +153,7 @@ theorem sigma_lift_mono (h : ∀ ⦃i⦄ ⦃a : α i⦄ ⦃b : β i⦄, f a b �
 variable (f a b)
 
 theorem card_sigma_lift : (sigmaLift f a b).card = dite (a.1 = b.1) (fun h => (f (h.rec a.2) b.2).card) fun _ => 0 := by
-  convert apply_dite _ _ _ _
+  convert apply_diteₓ _ _ _ _
   ext h
   exact (card_map _).symm
 

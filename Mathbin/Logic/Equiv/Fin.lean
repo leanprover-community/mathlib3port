@@ -185,7 +185,7 @@ theorem fin_succ_equiv_symm_none {n : ℕ} : (finSuccEquiv n).symm none = 0 :=
 
 @[simp]
 theorem fin_succ_equiv_symm_some {n : ℕ} (m : Finₓ n) : (finSuccEquiv n).symm (some m) = m.succ :=
-  congr_fun Finₓ.succ_above_zero m
+  congr_funₓ Finₓ.succ_above_zero m
 
 @[simp]
 theorem fin_succ_equiv_symm_coe {n : ℕ} (m : Finₓ n) : (finSuccEquiv n).symm m = m.succ :=
@@ -400,7 +400,7 @@ values are retained. This is the `order_iso` version of `fin.cast_le`. -/
 def Finₓ.castLeOrderIso {n m : ℕ} (h : n ≤ m) : Finₓ n ≃o { i : Finₓ m // (i : ℕ) < n } where
   toFun := fun i =>
     ⟨Finₓ.castLe h i, by
-      simpa using i.is_lt⟩
+      simp ⟩
   invFun := fun i => ⟨i, i.Prop⟩
   left_inv := fun _ => by
     simp

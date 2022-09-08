@@ -95,7 +95,7 @@ theorem mk_quotient_equiv_of_is_compl_apply (h : IsCompl p q) (x : E ⧸ p) :
 linear map `f : E → p` such that `f x = x` for `x ∈ p` and `f x = 0` for `x ∈ q`. -/
 def prodEquivOfIsCompl (h : IsCompl p q) : (p × q) ≃ₗ[R] E := by
   apply LinearEquiv.ofBijective (p.subtype.coprod q.subtype)
-  · simp only [← ker_eq_bot, ker_eq_bot', Prod.forall, subtype_apply, Prod.mk_eq_zero, coprod_apply]
+  · simp only [← ker_eq_bot, ker_eq_bot', Prod.forallₓ, subtype_apply, Prod.mk_eq_zero, coprod_apply]
     -- TODO: if I add `submodule.forall`, it unfolds the outer `∀` but not the inner one.
     rintro ⟨x, hx⟩ ⟨y, hy⟩
     simp only [coe_mk, mk_eq_zero, ← eq_neg_iff_add_eq_zero]
@@ -188,7 +188,7 @@ theorem exists_unique_add_of_is_compl_prod (hc : IsCompl p q) (x : E) : ∃! u :
 theorem exists_unique_add_of_is_compl (hc : IsCompl p q) (x : E) :
     ∃ (u : p)(v : q), (u : E) + v = x ∧ ∀ (r : p) (s : q), (r : E) + s = x → r = u ∧ s = v :=
   let ⟨u, hu₁, hu₂⟩ := exists_unique_add_of_is_compl_prod hc x
-  ⟨u.1, u.2, hu₁, fun r s hrs => Prod.eq_iff_fst_eq_snd_eq.1 (hu₂ ⟨r, s⟩ hrs)⟩
+  ⟨u.1, u.2, hu₁, fun r s hrs => Prod.eq_iff_fst_eq_snd_eqₓ.1 (hu₂ ⟨r, s⟩ hrs)⟩
 
 theorem linear_proj_add_linear_proj_of_is_compl_eq_self (hpq : IsCompl p q) (x : E) :
     (p.linearProjOfIsCompl q hpq x + q.linearProjOfIsCompl p hpq.symm x : E) = x := by

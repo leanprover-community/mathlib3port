@@ -38,7 +38,6 @@ theorem mem_iff_nth (v : Vector α n) : a ∈ v.toList ↔ ∃ i, v.nth i = a :=
 theorem not_mem_nil : a ∉ (Vector.nil : Vector α 0).toList :=
   id
 
-@[simp]
 theorem not_mem_zero (v : Vector α 0) : a ∉ v.toList :=
   (Vector.eq_nil v).symm ▸ not_mem_nil a
 

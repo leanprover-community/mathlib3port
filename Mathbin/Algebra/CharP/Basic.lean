@@ -526,7 +526,7 @@ theorem Ringₓ.neg_one_ne_one_of_char_ne_two {R : Type _} [NonAssocRing R] [Non
 theorem Ringₓ.eq_self_iff_eq_zero_of_char_ne_two {R : Type _} [NonAssocRing R] [Nontrivial R] [NoZeroDivisors R]
     (hR : ringChar R ≠ 2) {a : R} : -a = a ↔ a = 0 :=
   ⟨fun h => (mul_eq_zero.mp <| (two_mul a).trans <| neg_eq_iff_add_eq_zero.mp h).resolve_left (Ringₓ.two_ne_zero hR),
-    fun h => ((congr_arg (fun x => -x) h).trans neg_zero).trans h.symm⟩
+    fun h => ((congr_argₓ (fun x => -x) h).trans neg_zero).trans h.symm⟩
 
 end
 
@@ -574,7 +574,7 @@ variable (S : Type v) [Semiringₓ R] [Semiringₓ S] (p q : ℕ) [CharP R p]
 characteristics of the two rings. -/
 instance [CharP S q] :
     CharP (R × S) (Nat.lcmₓ p q) where cast_eq_zero_iff := by
-    simp [Prod.ext_iff, CharP.cast_eq_zero_iff R p, CharP.cast_eq_zero_iff S q, Nat.lcm_dvd_iff]
+    simp [Prod.ext_iffₓ, CharP.cast_eq_zero_iff R p, CharP.cast_eq_zero_iff S q, Nat.lcm_dvd_iff]
 
 /-- The characteristic of the product of two rings of the same characteristic
   is the same as the characteristic of the rings -/

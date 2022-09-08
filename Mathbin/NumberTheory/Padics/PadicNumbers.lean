@@ -934,7 +934,7 @@ protected theorem image {q : ℚ_[p]} : q ≠ 0 → ∃ n : ℤ, ∥q∥ = ↑((
   (Quotientₓ.induction_on q) fun f hf =>
     have : ¬f ≈ 0 := (PadicSeq.ne_zero_iff_nequiv_zero f).1 hf
     let ⟨n, hn⟩ := PadicSeq.norm_values_discrete f this
-    ⟨n, congr_arg coe hn⟩
+    ⟨n, congr_argₓ coe hn⟩
 
 protected theorem is_rat (q : ℚ_[p]) : ∃ q' : ℚ, ∥q∥ = ↑q' :=
   if h : q = 0 then

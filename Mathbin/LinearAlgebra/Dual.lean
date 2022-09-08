@@ -183,22 +183,14 @@ theorem to_dual_inj (m : M) (a : b.toDual m = 0) : m = 0 := by
 theorem to_dual_ker : b.toDual.ker = ⊥ :=
   ker_eq_bot'.mpr b.to_dual_inj
 
-theorem to_dual_range [fin : Fintype ι] : b.toDual.range = ⊤ := by
-  rw [eq_top_iff']
-  intro f
+theorem to_dual_range [Finite ι] : b.toDual.range = ⊤ := by
+  cases nonempty_fintype ι
+  refine' eq_top_iff'.2 fun f => _
   rw [LinearMap.mem_range]
-  let lin_comb : ι →₀ R := Finsupp.onFinset fin.elems (fun i => f.to_fun (b i)) _
-  · use Finsupp.total ι M R b lin_comb
-    apply b.ext
-    · intro i
-      rw [b.to_dual_eq_repr _ i, repr_total b]
-      · rfl
-        
-      
-    
-  · intro a _
-    apply fin.complete
-    
+  let lin_comb : ι →₀ R := Finsupp.equivFunOnFintype.2 fun i => f.to_fun (b i)
+  refine' ⟨Finsupp.total ι M R b lin_comb, b.ext fun i => _⟩
+  rw [b.to_dual_eq_repr _ i, repr_total b]
+  rfl
 
 end CommSemiringₓ
 
@@ -222,21 +214,26 @@ variable [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [DecidableEq ι]
 
 variable (b : Basis ι R M)
 
+section Finite
+
+variable [Finite ι]
+
 /-- A vector space is linearly equivalent to its dual space. -/
 @[simps]
-def toDualEquiv [Fintype ι] : M ≃ₗ[R] Dual R M :=
+def toDualEquiv : M ≃ₗ[R] Dual R M :=
   LinearEquiv.ofBijective b.toDual (ker_eq_bot.mp b.to_dual_ker) (range_eq_top.mp b.to_dual_range)
 
 /-- Maps a basis for `V` to a basis for the dual space. -/
-def dualBasis [Fintype ι] : Basis ι R (Dual R M) :=
+def dualBasis : Basis ι R (Dual R M) :=
   b.map b.toDualEquiv
 
 -- We use `j = i` to match `basis.repr_self`
-theorem dual_basis_apply_self [Fintype ι] (i j : ι) : b.dualBasis i (b j) = if j = i then 1 else 0 := by
+theorem dual_basis_apply_self (i j : ι) : b.dualBasis i (b j) = if j = i then 1 else 0 := by
   convert b.to_dual_apply i j using 2
   rw [@eq_comm _ j i]
 
-theorem total_dual_basis [Fintype ι] (f : ι →₀ R) (i : ι) : Finsupp.total ι (Dual R M) R b.dualBasis f (b i) = f i := by
+theorem total_dual_basis (f : ι →₀ R) (i : ι) : Finsupp.total ι (Dual R M) R b.dualBasis f (b i) = f i := by
+  cases nonempty_fintype ι
   rw [Finsupp.total_apply, Finsupp.sum_fintype, LinearMap.sum_apply]
   · simp_rw [LinearMap.smul_apply, smul_eq_mul, dual_basis_apply_self, mul_boole, Finset.sum_ite_eq,
       if_pos (Finset.mem_univ i)]
@@ -245,25 +242,27 @@ theorem total_dual_basis [Fintype ι] (f : ι →₀ R) (i : ι) : Finsupp.total
     rw [zero_smul]
     
 
-theorem dual_basis_repr [Fintype ι] (l : Dual R M) (i : ι) : b.dualBasis.repr l i = l (b i) := by
+theorem dual_basis_repr (l : Dual R M) (i : ι) : b.dualBasis.repr l i = l (b i) := by
   rw [← total_dual_basis b, Basis.total_repr b.dual_basis l]
 
-theorem dual_basis_equiv_fun [Fintype ι] (l : Dual R M) (i : ι) : b.dualBasis.equivFun l i = l (b i) := by
-  rw [Basis.equiv_fun_apply, dual_basis_repr]
-
-theorem dual_basis_apply [Fintype ι] (i : ι) (m : M) : b.dualBasis i m = b.repr m i :=
+theorem dual_basis_apply (i : ι) (m : M) : b.dualBasis i m = b.repr m i :=
   b.to_dual_apply_right i m
 
 @[simp]
-theorem coe_dual_basis [Fintype ι] : ⇑b.dualBasis = b.Coord := by
+theorem coe_dual_basis : ⇑b.dualBasis = b.Coord := by
   ext i x
   apply dual_basis_apply
 
 @[simp]
-theorem to_dual_to_dual [Fintype ι] : b.dualBasis.toDual.comp b.toDual = Dual.eval R M := by
+theorem to_dual_to_dual : b.dualBasis.toDual.comp b.toDual = Dual.eval R M := by
   refine' b.ext fun i => b.dual_basis.ext fun j => _
   rw [LinearMap.comp_apply, to_dual_apply_left, coe_to_dual_self, ← coe_dual_basis, dual.eval_apply, Basis.repr_self,
     Finsupp.single_apply, dual_basis_apply_self]
+
+end Finite
+
+theorem dual_basis_equiv_fun [Fintype ι] (l : Dual R M) (i : ι) : b.dualBasis.equivFun l i = l (b i) := by
+  rw [Basis.equiv_fun_apply, dual_basis_repr]
 
 theorem eval_ker {ι : Type _} (b : Basis ι R M) : (Dual.eval R M).ker = ⊥ := by
   rw [ker_eq_bot']
@@ -271,17 +270,18 @@ theorem eval_ker {ι : Type _} (b : Basis ι R M) : (Dual.eval R M).ker = ⊥ :=
   simp_rw [LinearMap.ext_iff, dual.eval_apply, zero_apply] at hm
   exact (Basis.forall_coord_eq_zero_iff _).mp fun i => hm (b.coord i)
 
-theorem eval_range {ι : Type _} [Fintype ι] (b : Basis ι R M) : (eval R M).range = ⊤ := by
+theorem eval_range {ι : Type _} [Finite ι] (b : Basis ι R M) : (eval R M).range = ⊤ := by
   classical
+  cases nonempty_fintype ι
   rw [← b.to_dual_to_dual, range_comp, b.to_dual_range, map_top, to_dual_range _]
   infer_instance
 
 /-- A module with a basis is linearly equivalent to the dual of its dual space. -/
-def evalEquiv {ι : Type _} [Fintype ι] (b : Basis ι R M) : M ≃ₗ[R] Dual R (Dual R M) :=
+def evalEquiv {ι : Type _} [Finite ι] (b : Basis ι R M) : M ≃ₗ[R] Dual R (Dual R M) :=
   LinearEquiv.ofBijective (eval R M) (ker_eq_bot.mp b.eval_ker) (range_eq_top.mp b.eval_range)
 
 @[simp]
-theorem eval_equiv_to_linear_map {ι : Type _} [Fintype ι] (b : Basis ι R M) : b.evalEquiv.toLinearMap = Dual.eval R M :=
+theorem eval_equiv_to_linear_map {ι : Type _} [Finite ι] (b : Basis ι R M) : b.evalEquiv.toLinearMap = Dual.eval R M :=
   rfl
 
 section
@@ -302,15 +302,15 @@ end CommRingₓ
 
 /-- `simp` normal form version of `total_dual_basis` -/
 @[simp]
-theorem total_coord [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [Fintype ι] (b : Basis ι R M) (f : ι →₀ R) (i : ι) :
+theorem total_coord [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [Finite ι] (b : Basis ι R M) (f : ι →₀ R) (i : ι) :
     Finsupp.total ι (Dual R M) R b.Coord f (b i) = f i := by
   haveI := Classical.decEq ι
   rw [← coe_dual_basis, total_dual_basis]
 
--- TODO(jmc): generalize to rings, once `module.rank` is generalized
-theorem dual_dim_eq [Field K] [AddCommGroupₓ V] [Module K V] [Fintype ι] (b : Basis ι K V) :
+theorem dual_dim_eq [CommRingₓ K] [AddCommGroupₓ V] [Module K V] [Finite ι] (b : Basis ι K V) :
     Cardinal.lift (Module.rank K V) = Module.rank K (Dual K V) := by
   classical
+  cases nonempty_fintype ι
   have := LinearEquiv.lift_dim_eq b.to_dual_equiv
   simp only [Cardinal.lift_umax] at this
   rw [this, ← Cardinal.lift_umax]

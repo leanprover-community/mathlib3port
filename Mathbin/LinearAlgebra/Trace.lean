@@ -122,13 +122,14 @@ variable {R : Type _} [CommRingₓ R] {M : Type _} [AddCommGroupₓ M] [Module R
 
 variable (N : Type _) [AddCommGroupₓ N] [Module R N]
 
-variable {ι : Type _} [Fintype ι]
+variable {ι : Type _}
 
 /-- The trace of a linear map correspond to the contraction pairing under the isomorphism
  `End(M) ≃ M* ⊗ M`-/
-theorem trace_eq_contract_of_basis (b : Basis ι R M) : LinearMap.trace R M ∘ₗ dualTensorHom R M M = contractLeft R M :=
-  by
+theorem trace_eq_contract_of_basis [Finite ι] (b : Basis ι R M) :
+    LinearMap.trace R M ∘ₗ dualTensorHom R M M = contractLeft R M := by
   classical
+  cases nonempty_fintype ι
   apply Basis.ext (Basis.tensorProduct (Basis.dualBasis b) b)
   rintro ⟨i, j⟩
   simp only [Function.comp_app, Basis.tensor_product_apply, Basis.coe_dual_basis, coe_comp]
@@ -142,7 +143,7 @@ theorem trace_eq_contract_of_basis (b : Basis ι R M) : LinearMap.trace R M ∘�
 
 /-- The trace of a linear map correspond to the contraction pairing under the isomorphism
  `End(M) ≃ M* ⊗ M`-/
-theorem trace_eq_contract_of_basis' [DecidableEq ι] (b : Basis ι R M) :
+theorem trace_eq_contract_of_basis' [Fintype ι] [DecidableEq ι] (b : Basis ι R M) :
     LinearMap.trace R M = contractLeft R M ∘ₗ (dualTensorHomEquivOfBasis b).symm.toLinearMap := by
   simp [LinearEquiv.eq_comp_to_linear_map_symm, trace_eq_contract_of_basis b]
 

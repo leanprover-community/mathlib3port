@@ -744,7 +744,7 @@ instance add_covariant_class_le : CovariantClass Ordinal.{u} Ordinal.{u} (· + �
                 | Sum.inl a, Sum.inr b, H => (Sum.lex_inr_inl H).elim
                 | Sum.inr a, Sum.inr b, H =>
                   let ⟨w, h⟩ := fi _ _ (Sum.lex_inr_inr.1 H)
-                  ⟨Sum.inr w, congr_arg Sum.inr h⟩⟩⟩⟩
+                  ⟨Sum.inr w, congr_argₓ Sum.inr h⟩⟩⟩⟩
 
 instance add_swap_covariant_class_le : CovariantClass Ordinal.{u} Ordinal.{u} (swap (· + ·)) (· ≤ ·) :=
   ⟨fun c a b h => by
@@ -982,7 +982,7 @@ theorem lift_univ : lift.{w} univ.{u, v} = univ.{u, max v w} :=
   lift_lift _
 
 theorem univ_umax : univ.{u, max (u + 1) v} = univ.{u, v} :=
-  congr_fun lift_umax _
+  congr_funₓ lift_umax _
 
 /-- Principal segment version of the lift operation on ordinals, embedding `ordinal.{u}` in
   `ordinal.{v}` as a principal segment when `u < v`. -/
@@ -1197,7 +1197,7 @@ theorem lift_univ : lift.{w} univ.{u, v} = univ.{u, max v w} :=
   lift_lift _
 
 theorem univ_umax : univ.{u, max (u + 1) v} = univ.{u, v} :=
-  congr_fun lift_umax _
+  congr_funₓ lift_umax _
 
 theorem lift_lt_univ (c : Cardinal) : lift.{u + 1, u} c < univ.{u, u + 1} := by
   simpa only [lift.principal_seg_coe, lift_ord, lift_succ, ord_le, succ_le_iff] using

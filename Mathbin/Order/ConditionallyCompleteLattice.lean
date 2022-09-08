@@ -543,7 +543,7 @@ theorem cinfi_const [hι : Nonempty ι] {a : α} : (⨅ b : ι, a) = a :=
 
 @[simp]
 theorem supr_unique [Unique ι] {s : ι → α} : (⨆ i, s i) = s default := by
-  have : ∀ i, s i = s default := fun i => congr_arg s (Unique.eq_default i)
+  have : ∀ i, s i = s default := fun i => congr_argₓ s (Unique.eq_default i)
   simp only [this, csupr_const]
 
 @[simp]

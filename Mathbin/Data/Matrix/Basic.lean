@@ -321,7 +321,7 @@ theorem diagonal_apply_ne' [Zero α] (d : n → α) {i j : n} (h : j ≠ i) : (d
 @[simp]
 theorem diagonal_eq_diagonal_iff [Zero α] {d₁ d₂ : n → α} : diagonalₓ d₁ = diagonalₓ d₂ ↔ ∀ i, d₁ i = d₂ i :=
   ⟨fun h i => by
-    simpa using congr_arg (fun m : Matrix n n α => m i i) h, fun h => by
+    simpa using congr_argₓ (fun m : Matrix n n α => m i i) h, fun h => by
     rw [show d₁ = d₂ from funext h]⟩
 
 theorem diagonal_injective [Zero α] : Function.Injective (diagonalₓ : (n → α) → Matrix n n α) := fun d₁ d₂ h =>
@@ -707,7 +707,7 @@ theorem diagonal_neg [DecidableEq n] [AddGroupₓ α] (d : n → α) : -diagonal
 
 theorem sum_apply [AddCommMonoidₓ α] (i : m) (j : n) (s : Finset β) (g : β → Matrix m n α) :
     (∑ c in s, g c) i j = ∑ c in s, g c i j :=
-  (congr_fun (s.sum_apply i g) j).trans (s.sum_apply j _)
+  (congr_funₓ (s.sum_apply i g) j).trans (s.sum_apply j _)
 
 section AddCommMonoidₓ
 
@@ -1615,7 +1615,7 @@ variable (m α)
 def transposeRingEquiv [AddCommMonoidₓ α] [CommSemigroupₓ α] [Fintype m] : Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ :=
   { (transposeAddEquiv m m α).trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op Mᵀ,
     invFun := fun M => M.unopᵀ,
-    map_mul' := fun M N => (congr_arg MulOpposite.op (transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
+    map_mul' := fun M N => (congr_argₓ MulOpposite.op (transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
 
 variable {m α}
 
@@ -1820,7 +1820,7 @@ variable (m α)
 def conjTransposeRingEquiv [Semiringₓ α] [StarRing α] [Fintype m] : Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ :=
   { (conjTransposeAddEquiv m m α).trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op Mᴴ,
     invFun := fun M => M.unopᴴ,
-    map_mul' := fun M N => (congr_arg MulOpposite.op (conj_transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
+    map_mul' := fun M N => (congr_argₓ MulOpposite.op (conj_transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
 
 variable {m α}
 
@@ -2210,13 +2210,13 @@ theorem update_row_subsingleton [Subsingleton m] (A : Matrix m n R) (i : m) (b :
 theorem map_update_row [DecidableEq m] (f : α → β) : map (updateRow M i b) f = updateRow (M.map f) i (f ∘ b) := by
   ext i' j'
   rw [update_row_apply, map_apply, map_apply, update_row_apply]
-  exact apply_ite f _ _ _
+  exact apply_iteₓ f _ _ _
 
 theorem map_update_column [DecidableEq n] (f : α → β) : map (updateColumn M j c) f = updateColumn (M.map f) j (f ∘ c) :=
   by
   ext i' j'
   rw [update_column_apply, map_apply, map_apply, update_column_apply]
-  exact apply_ite f _ _ _
+  exact apply_iteₓ f _ _ _
 
 theorem update_row_transpose [DecidableEq n] : updateRow Mᵀ j c = (updateColumn M j c)ᵀ := by
   ext i' j

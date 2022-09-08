@@ -508,10 +508,10 @@ theorem Sum.is_connected_iff [TopologicalSpace β] {s : Set (Sum α β)} :
     let v : Set (Sum α β) := range Sum.inr
     have hu : IsOpen u := is_open_range_inl
     obtain ⟨x | x, hx⟩ := hs.nonempty
-    · have h :=
+    · have h : s ⊆ range Sum.inl :=
         IsPreconnected.subset_left_of_subset_union is_open_range_inl is_open_range_inr
           is_compl_range_inl_range_inr.disjoint
-          (show s ⊆ range Sum.inl ∪ range Sum.inr by
+          (by
             simp )
           ⟨Sum.inl x, hx, x, rfl⟩ hs.2
       refine' Or.inl ⟨Sum.inl ⁻¹' s, _, _⟩
@@ -520,10 +520,10 @@ theorem Sum.is_connected_iff [TopologicalSpace β] {s : Set (Sum α β)} :
       · exact (Set.image_preimage_eq_of_subset h).symm
         
       
-    · have h :=
+    · have h : s ⊆ range Sum.inr :=
         IsPreconnected.subset_right_of_subset_union is_open_range_inl is_open_range_inr
           is_compl_range_inl_range_inr.disjoint
-          (show s ⊆ range Sum.inl ∪ range Sum.inr by
+          (by
             simp )
           ⟨Sum.inr x, hx, x, rfl⟩ hs.2
       refine' Or.inr ⟨Sum.inr ⁻¹' s, _, _⟩
@@ -770,7 +770,7 @@ instance [∀ i, TopologicalSpace (π i)] [∀ i, PreconnectedSpace (π i)] : Pr
     exact is_preconnected_univ_pi fun i => is_preconnected_univ⟩
 
 instance [∀ i, TopologicalSpace (π i)] [∀ i, ConnectedSpace (π i)] : ConnectedSpace (∀ i, π i) :=
-  ⟨Classical.nonempty_piₓ.2 fun i => by
+  ⟨Classical.nonempty_pi.2 fun i => by
       infer_instance⟩
 
 -- see Note [lower instance priority]

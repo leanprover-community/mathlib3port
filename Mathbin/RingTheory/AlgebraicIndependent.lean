@@ -479,7 +479,7 @@ theorem AlgebraicIndependent.is_transcendence_basis_iff {ι : Type w} {R : Type 
         (by
           ext
           simp )
-    have q := congr_arg (fun s => (coe : w → A) '' s) p.range_eq
+    have q := congr_argₓ (fun s => (coe : w → A) '' s) p.range_eq
     dsimp'  at q
     rw [← image_univ, image_image] at q
     simpa using q

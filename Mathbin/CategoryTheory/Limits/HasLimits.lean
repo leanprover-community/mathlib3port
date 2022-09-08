@@ -501,7 +501,45 @@ def limYoneda : lim ⋙ yoneda ⋙ (whiskeringRight _ _ _).obj uliftFunctor.{u�
     (by
       tidy)
 
+/-- The constant functor and limit functor are adjoint to each other-/
+def constLimAdj : (const J : C ⥤ J ⥤ C) ⊣ lim where
+  homEquiv := fun c g =>
+    { toFun := fun f => limit.lift _ ⟨c, f⟩,
+      invFun := fun f =>
+        { app := fun j => f ≫ limit.π _ _,
+          naturality' := by
+            tidy },
+      left_inv := fun _ => NatTrans.ext _ _ <| funext fun j => limit.lift_π _ _,
+      right_inv := fun α => limit.hom_ext fun j => limit.lift_π _ _ }
+  Unit :=
+    { app := fun c => limit.lift _ ⟨_, 𝟙 _⟩,
+      naturality' := fun _ _ _ => by
+        tidy }
+  counit :=
+    { app := fun g =>
+        { app := limit.π _,
+          naturality' := by
+            tidy },
+      naturality' := fun _ _ _ => by
+        tidy }
+  hom_equiv_unit' := fun c g f =>
+    limit.hom_ext fun j => by
+      simp
+  hom_equiv_counit' := fun c g f => NatTrans.ext _ _ <| funext fun j => rfl
+
+instance : IsRightAdjoint (lim : (J ⥤ C) ⥤ C) :=
+  ⟨_, constLimAdj⟩
+
 end LimFunctor
+
+instance lim_map_mono' {F G : J ⥤ C} [HasLimitsOfShape J C] (α : F ⟶ G) [Mono α] : Mono (limMap α) :=
+  (lim : (J ⥤ C) ⥤ C).map_mono α
+
+instance lim_map_mono {F G : J ⥤ C} [HasLimit F] [HasLimit G] (α : F ⟶ G) [∀ j, Mono (α.app j)] : Mono (limMap α) :=
+  ⟨fun Z u v h =>
+    limit.hom_ext fun j =>
+      (cancel_mono (α.app j)).1 <| by
+        simpa using h =≫ limit.π _ j⟩
 
 /-- We can transport limits of shape `J` along an equivalence `J ≌ J'`.
 -/
@@ -988,7 +1026,46 @@ def colimCoyoneda : colim.op ⋙ coyoneda ⋙ (whiskeringRight _ _ _).obj uliftF
     (by
       tidy)
 
+/-- The colimit functor and constant functor are adjoint to each other
+-/
+def colimConstAdj : (colim : (J ⥤ C) ⥤ C) ⊣ const J where
+  homEquiv := fun f c =>
+    { toFun := fun g =>
+        { app := fun _ => colimit.ι _ _ ≫ g,
+          naturality' := by
+            tidy },
+      invFun := fun g => colimit.desc _ ⟨_, g⟩, left_inv := fun _ => colimit.hom_ext fun j => colimit.ι_desc _ _,
+      right_inv := fun _ => NatTrans.ext _ _ <| funext fun j => colimit.ι_desc _ _ }
+  Unit :=
+    { app := fun g =>
+        { app := colimit.ι _,
+          naturality' := by
+            tidy },
+      naturality' := by
+        tidy }
+  counit :=
+    { app := fun c => colimit.desc _ ⟨_, 𝟙 _⟩,
+      naturality' := by
+        tidy }
+  hom_equiv_unit' := fun _ _ _ => NatTrans.ext _ _ <| funext fun _ => rfl
+  hom_equiv_counit' := fun _ _ _ =>
+    colimit.hom_ext fun _ => by
+      simp
+
+instance : IsLeftAdjoint (colim : (J ⥤ C) ⥤ C) :=
+  ⟨_, colimConstAdj⟩
+
 end ColimFunctor
+
+instance colim_map_epi' {F G : J ⥤ C} [HasColimitsOfShape J C] (α : F ⟶ G) [Epi α] : Epi (colimMap α) :=
+  (colim : (J ⥤ C) ⥤ C).map_epi α
+
+instance colim_map_epi {F G : J ⥤ C} [HasColimit F] [HasColimit G] (α : F ⟶ G) [∀ j, Epi (α.app j)] :
+    Epi (colimMap α) :=
+  ⟨fun Z u v h =>
+    colimit.hom_ext fun j =>
+      (cancel_epi (α.app j)).1 <| by
+        simpa using colimit.ι _ j ≫= h⟩
 
 /-- We can transport colimits of shape `J` along an equivalence `J ≌ J'`.
 -/
@@ -1018,7 +1095,7 @@ section Opposite
 -/
 def IsLimit.op {t : Cone F} (P : IsLimit t) : IsColimit t.op where
   desc := fun s => (P.lift s.unop).op
-  fac' := fun s j => congr_arg Quiver.Hom.op (P.fac s.unop (unop j))
+  fac' := fun s j => congr_argₓ Quiver.Hom.op (P.fac s.unop (unop j))
   uniq' := fun s m w => by
     rw [← P.uniq s.unop m.unop]
     · rfl
@@ -1033,7 +1110,7 @@ def IsLimit.op {t : Cone F} (P : IsLimit t) : IsColimit t.op where
 -/
 def IsColimit.op {t : Cocone F} (P : IsColimit t) : IsLimit t.op where
   lift := fun s => (P.desc s.unop).op
-  fac' := fun s j => congr_arg Quiver.Hom.op (P.fac s.unop (unop j))
+  fac' := fun s j => congr_argₓ Quiver.Hom.op (P.fac s.unop (unop j))
   uniq' := fun s m w => by
     rw [← P.uniq s.unop m.unop]
     · rfl
@@ -1048,7 +1125,7 @@ def IsColimit.op {t : Cocone F} (P : IsColimit t) : IsLimit t.op where
 -/
 def IsLimit.unop {t : Cone F.op} (P : IsLimit t) : IsColimit t.unop where
   desc := fun s => (P.lift s.op).unop
-  fac' := fun s j => congr_arg Quiver.Hom.unop (P.fac s.op (op j))
+  fac' := fun s j => congr_argₓ Quiver.Hom.unop (P.fac s.op (op j))
   uniq' := fun s m w => by
     rw [← P.uniq s.op m.op]
     · rfl
@@ -1063,7 +1140,7 @@ def IsLimit.unop {t : Cone F.op} (P : IsLimit t) : IsColimit t.unop where
 -/
 def IsColimit.unop {t : Cocone F.op} (P : IsColimit t) : IsLimit t.unop where
   lift := fun s => (P.desc s.op).unop
-  fac' := fun s j => congr_arg Quiver.Hom.unop (P.fac s.op (op j))
+  fac' := fun s j => congr_argₓ Quiver.Hom.unop (P.fac s.op (op j))
   uniq' := fun s m w => by
     rw [← P.uniq s.op m.op]
     · rfl

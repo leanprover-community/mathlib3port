@@ -246,7 +246,7 @@ def coprodEquiv [Module S M₃] [SmulCommClass R S M₃] : ((M →ₗ[R] M₃) �
   toFun := fun f => f.1.coprod f.2
   invFun := fun f => (f.comp (inl _ _ _), f.comp (inr _ _ _))
   left_inv := fun f => by
-    simp only [Prod.mk.eta, coprod_inl, coprod_inr]
+    simp only [Prod.mk.etaₓ, coprod_inl, coprod_inr]
   right_inv := fun f => by
     simp only [← comp_coprod, comp_id, coprod_inl_inr]
   map_add' := fun a b => by
@@ -259,7 +259,7 @@ def coprodEquiv [Module S M₃] [SmulCommClass R S M₃] : ((M →ₗ[R] M₃) �
 
 theorem prod_ext_iff {f g : M × M₂ →ₗ[R] M₃} :
     f = g ↔ f.comp (inl _ _ _) = g.comp (inl _ _ _) ∧ f.comp (inr _ _ _) = g.comp (inr _ _ _) :=
-  (coprodEquiv ℕ).symm.Injective.eq_iff.symm.trans Prod.ext_iff
+  (coprodEquiv ℕ).symm.Injective.eq_iff.symm.trans Prod.ext_iffₓ
 
 /-- Split equality of linear maps from a product into linear maps over each component, to allow `ext`
 to apply lemmas specific to `M →ₗ M₃` and `M₂ →ₗ M₃`.
@@ -288,11 +288,11 @@ theorem ker_prod_map (f : M →ₗ[R] M₂) (g : M₃ →ₗ[R] M₄) : (LinearM
 
 @[simp]
 theorem prod_map_id : (id : M →ₗ[R] M).prod_map (id : M₂ →ₗ[R] M₂) = id :=
-  LinearMap.ext fun _ => Prod.mk.eta
+  LinearMap.ext fun _ => Prod.mk.etaₓ
 
 @[simp]
 theorem prod_map_one : (1 : M →ₗ[R] M).prod_map (1 : M₂ →ₗ[R] M₂) = 1 :=
-  LinearMap.ext fun _ => Prod.mk.eta
+  LinearMap.ext fun _ => Prod.mk.etaₓ
 
 theorem prod_map_comp (f₁₂ : M →ₗ[R] M₂) (f₂₃ : M₂ →ₗ[R] M₃) (g₁₂ : M₄ →ₗ[R] M₅) (g₂₃ : M₅ →ₗ[R] M₆) :
     f₂₃.prod_map g₂₃ ∘ₗ f₁₂.prod_map g₁₂ = (f₂₃ ∘ₗ f₁₂).prod_map (g₂₃ ∘ₗ g₁₂) :=
@@ -390,7 +390,7 @@ theorem range_coprod (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₃) : (f.copro
 theorem is_compl_range_inl_inr : IsCompl (inl R M M₂).range (inr R M M₂).range := by
   constructor
   · rintro ⟨_, _⟩ ⟨⟨x, hx⟩, ⟨y, hy⟩⟩
-    simp only [Prod.ext_iff, inl_apply, inr_apply, mem_bot] at hx hy⊢
+    simp only [Prod.ext_iffₓ, inl_apply, inr_apply, mem_bot] at hx hy⊢
     exact ⟨hy.1.symm, hx.2.symm⟩
     
   · rintro ⟨x, y⟩ -
@@ -486,7 +486,7 @@ variable (p : Submodule R M) (q : Submodule R M₂)
 @[simp]
 theorem map_inl : p.map (inl R M M₂) = prod p ⊥ := by
   ext ⟨x, y⟩
-  simp only [And.left_comm, eq_comm, mem_map, Prod.mk.inj_iff, inl_apply, mem_bot, exists_eq_left', mem_prod]
+  simp only [And.left_comm, eq_comm, mem_map, Prod.mk.inj_iffₓ, inl_apply, mem_bot, exists_eq_left', mem_prod]
 
 @[simp]
 theorem map_inr : q.map (inr R M M₂) = prod ⊥ q := by
@@ -748,10 +748,10 @@ variable [Module R M] [Module R M₂] [Module R M₃]
 theorem range_prod_eq {f : M →ₗ[R] M₂} {g : M →ₗ[R] M₃} (h : ker f⊔ker g = ⊤) :
     range (prod f g) = (range f).Prod (range g) := by
   refine' le_antisymmₓ (f.range_prod_le g) _
-  simp only [SetLike.le_def, prod_apply, mem_range, SetLike.mem_coe, mem_prod, exists_imp_distrib, and_imp, Prod.forall,
-    Pi.prod]
+  simp only [SetLike.le_def, prod_apply, mem_range, SetLike.mem_coe, mem_prod, exists_imp_distrib, and_imp,
+    Prod.forallₓ, Pi.prod]
   rintro _ _ x rfl y rfl
-  simp only [Prod.mk.inj_iff, ← sub_mem_ker_iff]
+  simp only [Prod.mk.inj_iffₓ, ← sub_mem_ker_iff]
   have : y - x ∈ ker f⊔ker g := by
     simp only [h, mem_top]
   rcases mem_sup.1 this with ⟨x', hx', y', hy', H⟩

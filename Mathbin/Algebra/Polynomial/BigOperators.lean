@@ -70,7 +70,7 @@ theorem degree_list_sum_le (l : List S[X]) : degree l.Sum ≤ (l.map natDegree).
     · congr
       
     contrapose! h
-    rw [List.map_eq_nil] at h
+    rw [List.map_eq_nilₓ] at h
     simp [h]
     
 

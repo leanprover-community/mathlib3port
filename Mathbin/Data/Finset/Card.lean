@@ -166,7 +166,7 @@ theorem Multiset.to_finset_card_le : m.toFinset.card ≤ m.card :=
   card_le_of_le <| dedup_le _
 
 theorem Multiset.to_finset_card_of_nodup {m : Multiset α} (h : m.Nodup) : m.toFinset.card = m.card :=
-  congr_arg card <| Multiset.dedup_eq_self.mpr h
+  congr_argₓ card <| Multiset.dedup_eq_self.mpr h
 
 theorem List.card_to_finset : l.toFinset.card = l.dedup.length :=
   rfl
@@ -266,7 +266,7 @@ theorem card_congr {t : Finset β} (f : ∀ a ∈ s, β) (h₁ : ∀ a ha, f a h
       _ = (s.attach.image fun a : { a // a ∈ s } => f a.1 a.2).card :=
         Eq.symm ((card_image_of_injective _) fun a b h => Subtype.eq <| h₂ _ _ _ _ h)
       _ = t.card :=
-        congr_arg card
+        congr_argₓ card
           (Finset.ext fun b =>
             ⟨fun h =>
               let ⟨a, ha₁, ha₂⟩ := mem_image.1 h

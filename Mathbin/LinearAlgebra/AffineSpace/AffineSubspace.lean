@@ -273,6 +273,14 @@ theorem vadd_mem_iff_mem_direction {s : AffineSubspace k P} (v : V) {p : P} (hp 
   ⟨fun h => by
     simpa using vsub_mem_direction h hp, fun h => vadd_mem_of_mem_direction h hp⟩
 
+/-- Adding a vector in the direction to a point produces a point in the subspace if and only if
+the original point is in the subspace. -/
+theorem vadd_mem_iff_mem_of_mem_direction {s : AffineSubspace k P} {v : V} (hv : v ∈ s.direction) {p : P} :
+    v +ᵥ p ∈ s ↔ p ∈ s := by
+  refine' ⟨fun h => _, fun h => vadd_mem_of_mem_direction hv h⟩
+  convert vadd_mem_of_mem_direction (Submodule.neg_mem _ hv) h
+  simp
+
 /-- Given a point in an affine subspace, the set of vectors in its
 direction equals the set of vectors subtracting that point on the
 right. -/
@@ -361,7 +369,10 @@ theorem ext_of_direction_eq {s1 s2 : AffineSubspace k P} (hd : s1.direction = s2
     exact vsub_mem_direction hp hq2
     
 
-instance toAddTorsor (s : AffineSubspace k P) [Nonempty s] : AddTorsor s.direction s where
+-- See note [reducible non instances]
+/-- This is not an instance because it loops with `add_torsor.nonempty`. -/
+@[reducible]
+def toAddTorsor (s : AffineSubspace k P) [Nonempty s] : AddTorsor s.direction s where
   vadd := fun a b => ⟨(a : V) +ᵥ (b : P), vadd_mem_of_mem_direction a.2 b.2⟩
   zero_vadd := by
     simp
@@ -377,6 +388,8 @@ instance toAddTorsor (s : AffineSubspace k P) [Nonempty s] : AddTorsor s.directi
   vadd_vsub' := fun a b => by
     ext
     apply AddTorsor.vadd_vsub'
+
+attribute [local instance] to_add_torsor
 
 @[simp, norm_cast]
 theorem coe_vsub (s : AffineSubspace k P) [Nonempty s] (a b : s) : ↑(a -ᵥ b) = (a : P) -ᵥ (b : P) :=

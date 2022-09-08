@@ -131,24 +131,25 @@ theorem swap_div [Div G] [Div H] (a b : G × H) : (a / b).swap = a.swap / b.swap
 
 instance [MulZeroClassₓ M] [MulZeroClassₓ N] : MulZeroClassₓ (M × N) :=
   { Prod.hasZero, Prod.hasMul with
-    zero_mul := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨zero_mul _, zero_mul _⟩,
-    mul_zero := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨mul_zero _, mul_zero _⟩ }
+    zero_mul := fun a => (Prod.recOn a) fun a b => mk.inj_iffₓ.mpr ⟨zero_mul _, zero_mul _⟩,
+    mul_zero := fun a => (Prod.recOn a) fun a b => mk.inj_iffₓ.mpr ⟨mul_zero _, mul_zero _⟩ }
 
 @[to_additive]
 instance [Semigroupₓ M] [Semigroupₓ N] : Semigroupₓ (M × N) :=
-  { Prod.hasMul with mul_assoc := fun a b c => mk.inj_iff.mpr ⟨mul_assoc _ _ _, mul_assoc _ _ _⟩ }
+  { Prod.hasMul with mul_assoc := fun a b c => mk.inj_iffₓ.mpr ⟨mul_assoc _ _ _, mul_assoc _ _ _⟩ }
 
 @[to_additive]
 instance [CommSemigroupₓ G] [CommSemigroupₓ H] : CommSemigroupₓ (G × H) :=
-  { Prod.semigroup with mul_comm := fun a b => mk.inj_iff.mpr ⟨mul_comm _ _, mul_comm _ _⟩ }
+  { Prod.semigroup with mul_comm := fun a b => mk.inj_iffₓ.mpr ⟨mul_comm _ _, mul_comm _ _⟩ }
 
 instance [SemigroupWithZeroₓ M] [SemigroupWithZeroₓ N] : SemigroupWithZeroₓ (M × N) :=
   { Prod.mulZeroClass, Prod.semigroup with }
 
 @[to_additive]
 instance [MulOneClassₓ M] [MulOneClassₓ N] : MulOneClassₓ (M × N) :=
-  { Prod.hasMul, Prod.hasOne with one_mul := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨one_mulₓ _, one_mulₓ _⟩,
-    mul_one := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨mul_oneₓ _, mul_oneₓ _⟩ }
+  { Prod.hasMul, Prod.hasOne with
+    one_mul := fun a => (Prod.recOn a) fun a b => mk.inj_iffₓ.mpr ⟨one_mulₓ _, one_mulₓ _⟩,
+    mul_one := fun a => (Prod.recOn a) fun a b => mk.inj_iffₓ.mpr ⟨mul_oneₓ _, mul_oneₓ _⟩ }
 
 @[to_additive]
 instance [Monoidₓ M] [Monoidₓ N] : Monoidₓ (M × N) :=
@@ -159,7 +160,7 @@ instance [Monoidₓ M] [Monoidₓ N] : Monoidₓ (M × N) :=
 @[to_additive Prod.subNegMonoid]
 instance [DivInvMonoidₓ G] [DivInvMonoidₓ H] : DivInvMonoidₓ (G × H) :=
   { Prod.monoid, Prod.hasInv, Prod.hasDiv with
-    div_eq_mul_inv := fun a b => mk.inj_iff.mpr ⟨div_eq_mul_inv _ _, div_eq_mul_inv _ _⟩,
+    div_eq_mul_inv := fun a b => mk.inj_iffₓ.mpr ⟨div_eq_mul_inv _ _, div_eq_mul_inv _ _⟩,
     zpow := fun z a => ⟨DivInvMonoidₓ.zpow z a.1, DivInvMonoidₓ.zpow z a.2⟩,
     zpow_zero' := fun z => extₓ (DivInvMonoidₓ.zpow_zero' _) (DivInvMonoidₓ.zpow_zero' _),
     zpow_succ' := fun z a => extₓ (DivInvMonoidₓ.zpow_succ' _ _) (DivInvMonoidₓ.zpow_succ' _ _),
@@ -169,7 +170,7 @@ instance [DivInvMonoidₓ G] [DivInvMonoidₓ H] : DivInvMonoidₓ (G × H) :=
 instance [DivisionMonoid G] [DivisionMonoid H] : DivisionMonoid (G × H) :=
   { Prod.divInvMonoid, Prod.hasInvolutiveInv with mul_inv_rev := fun a b => extₓ (mul_inv_rev _ _) (mul_inv_rev _ _),
     inv_eq_of_mul := fun a b h =>
-      extₓ (inv_eq_of_mul_eq_one_right <| congr_arg fst h) (inv_eq_of_mul_eq_one_right <| congr_arg snd h) }
+      extₓ (inv_eq_of_mul_eq_one_right <| congr_argₓ fst h) (inv_eq_of_mul_eq_one_right <| congr_argₓ snd h) }
 
 @[to_additive SubtractionCommMonoid]
 instance [DivisionCommMonoid G] [DivisionCommMonoid H] : DivisionCommMonoid (G × H) :=
@@ -177,19 +178,19 @@ instance [DivisionCommMonoid G] [DivisionCommMonoid H] : DivisionCommMonoid (G �
 
 @[to_additive]
 instance [Groupₓ G] [Groupₓ H] : Groupₓ (G × H) :=
-  { Prod.divInvMonoid with mul_left_inv := fun a => mk.inj_iff.mpr ⟨mul_left_invₓ _, mul_left_invₓ _⟩ }
+  { Prod.divInvMonoid with mul_left_inv := fun a => mk.inj_iffₓ.mpr ⟨mul_left_invₓ _, mul_left_invₓ _⟩ }
 
 @[to_additive]
 instance [LeftCancelSemigroup G] [LeftCancelSemigroup H] : LeftCancelSemigroup (G × H) :=
   { Prod.semigroup with
     mul_left_cancel := fun a b c h =>
-      Prod.extₓ (mul_left_cancelₓ (Prod.ext_iff.1 h).1) (mul_left_cancelₓ (Prod.ext_iff.1 h).2) }
+      Prod.extₓ (mul_left_cancelₓ (Prod.ext_iffₓ.1 h).1) (mul_left_cancelₓ (Prod.ext_iffₓ.1 h).2) }
 
 @[to_additive]
 instance [RightCancelSemigroup G] [RightCancelSemigroup H] : RightCancelSemigroup (G × H) :=
   { Prod.semigroup with
     mul_right_cancel := fun a b c h =>
-      Prod.extₓ (mul_right_cancelₓ (Prod.ext_iff.1 h).1) (mul_right_cancelₓ (Prod.ext_iff.1 h).2) }
+      Prod.extₓ (mul_right_cancelₓ (Prod.ext_iffₓ.1 h).1) (mul_right_cancelₓ (Prod.ext_iffₓ.1 h).2) }
 
 @[to_additive]
 instance [LeftCancelMonoid M] [LeftCancelMonoid N] : LeftCancelMonoid (M × N) :=
@@ -279,16 +280,16 @@ theorem snd_comp_prod (f : M →ₙ* N) (g : M →ₙ* P) : (snd N P).comp (f.Pr
 @[simp, to_additive prod_unique]
 theorem prod_unique (f : M →ₙ* N × P) : ((fst N P).comp f).Prod ((snd N P).comp f) = f :=
   ext fun x => by
-    simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
+    simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.etaₓ]
 
 end Prod
 
-section prod_map
+section prod_mapₓ
 
 variable {M' : Type _} {N' : Type _} [Mul M] [Mul N] [Mul M'] [Mul N'] [Mul P] (f : M →ₙ* M') (g : N →ₙ* N')
 
 /-- `prod.map` as a `monoid_hom`. -/
-@[to_additive prod_map "`prod.map` as an `add_monoid_hom`"]
+@[to_additive prod_mapₓ "`prod.map` as an `add_monoid_hom`"]
 def prodMap : M × N →ₙ* M' × N' :=
   (f.comp (fst M N)).Prod (g.comp (snd M N))
 
@@ -305,7 +306,7 @@ theorem prod_comp_prod_map (f : P →ₙ* M) (g : P →ₙ* N) (f' : M →ₙ* M
     (f'.prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
   rfl
 
-end prod_map
+end prod_mapₓ
 
 section Coprod
 
@@ -421,16 +422,16 @@ theorem snd_comp_prod (f : M →* N) (g : M →* P) : (snd N P).comp (f.Prod g) 
 @[simp, to_additive prod_unique]
 theorem prod_unique (f : M →* N × P) : ((fst N P).comp f).Prod ((snd N P).comp f) = f :=
   ext fun x => by
-    simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
+    simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.etaₓ]
 
 end Prod
 
-section prod_map
+section prod_mapₓ
 
 variable {M' : Type _} {N' : Type _} [MulOneClassₓ M'] [MulOneClassₓ N'] [MulOneClassₓ P] (f : M →* M') (g : N →* N')
 
 /-- `prod.map` as a `monoid_hom`. -/
-@[to_additive prod_map "`prod.map` as an `add_monoid_hom`"]
+@[to_additive prod_mapₓ "`prod.map` as an `add_monoid_hom`"]
 def prodMap : M × N →* M' × N' :=
   (f.comp (fst M N)).Prod (g.comp (snd M N))
 
@@ -447,7 +448,7 @@ theorem prod_comp_prod_map (f : P →* M) (g : P →* N) (f' : M →* M') (g' : 
     (f'.prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
   rfl
 
-end prod_map
+end prod_mapₓ
 
 section Coprod
 
@@ -573,7 +574,7 @@ def embedProduct (α : Type _) [Monoidₓ α] : αˣ →* α × αᵐᵒᵖ wher
 
 @[to_additive]
 theorem embed_product_injective (α : Type _) [Monoidₓ α] : Function.Injective (embedProduct α) := fun a₁ a₂ h =>
-  Units.ext <| (congr_arg Prod.fst h : _)
+  Units.ext <| (congr_argₓ Prod.fst h : _)
 
 end Units
 

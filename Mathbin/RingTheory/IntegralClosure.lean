@@ -96,7 +96,7 @@ theorem is_integral_of_submodule_noetherian (S : Subalgebra R A) (H : IsNoetheri
     (hx : x ∈ S) : IsIntegral R x := by
   suffices IsIntegral R (show S from ⟨x, hx⟩) by
     rcases this with ⟨p, hpm, hpx⟩
-    replace hpx := congr_arg S.val hpx
+    replace hpx := congr_argₓ S.val hpx
     refine' ⟨p, hpm, Eq.trans _ hpx⟩
     simp only [aeval_def, eval₂, sum_def]
     rw [S.val.map_sum]
@@ -815,7 +815,7 @@ theorem is_integral_trans_aux (x : B) {p : A[X]} (pmonic : Monic p) (hp : aeval 
       
     
   · convert hp using 1
-    replace hq := congr_arg (eval x) hq
+    replace hq := congr_argₓ (eval x) hq
     convert hq using 1 <;> symm <;> apply eval_map
     
 
@@ -897,7 +897,7 @@ theorem RingHom.is_integral_quotient_of_is_integral {I : Ideal S} (hf : f.IsInte
   rintro ⟨x⟩
   obtain ⟨p, ⟨p_monic, hpx⟩⟩ := hf x
   refine' ⟨p.map (Ideal.Quotient.mk _), ⟨p_monic.map _, _⟩⟩
-  simpa only [hom_eval₂, eval₂_map] using congr_arg (Ideal.Quotient.mk I) hpx
+  simpa only [hom_eval₂, eval₂_map] using congr_argₓ (Ideal.Quotient.mk I) hpx
 
 theorem is_integral_quotient_of_is_integral {I : Ideal A} (hRA : IsIntegral R A) :
     IsIntegral (R ⧸ I.comap (algebraMap R A)) (A ⧸ I) :=

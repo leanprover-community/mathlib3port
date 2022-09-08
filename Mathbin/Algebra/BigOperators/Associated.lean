@@ -79,7 +79,7 @@ theorem Multiset.prod_primes_dvd [CancelCommMonoidWithZero α] [∀ a : α, Deci
       refine' (b_prime.dvd_or_dvd b_div_n).resolve_left fun b_div_a => _
       have assoc := b_prime.associated_of_dvd a_prime b_div_a
       have := uniq a
-      rw [Multiset.countp_cons_of_pos _ (Associated.refl _), Nat.succ_le_succ_iff, ← not_ltₓ, Multiset.countp_pos] at
+      rw [Multiset.countp_cons_of_pos _ (Associated.refl _), Nat.succ_le_succ_iffₓ, ← not_ltₓ, Multiset.countp_pos] at
         this
       exact this ⟨b, b_in_s, assoc.symm⟩
       

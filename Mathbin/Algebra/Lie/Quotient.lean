@@ -83,7 +83,7 @@ variable (N)
 is a natural Lie algebra morphism from `L` to the linear endomorphism of the quotient `M/N`. -/
 def actionAsEndoMap : L →ₗ⁅R⁆ Module.End R (M ⧸ N) :=
   { LinearMap.comp (Submodule.mapqLinear (N : Submodule R M) ↑N) lieSubmoduleInvariant with
-    map_lie' := fun x y => Submodule.linear_map_qext _ <| LinearMap.ext fun m => congr_arg mk <| lie_lie _ _ _ }
+    map_lie' := fun x y => Submodule.linear_map_qext _ <| LinearMap.ext fun m => congr_argₓ mk <| lie_lie _ _ _ }
 
 /-- Given a Lie module `M` over a Lie algebra `L`, together with a Lie submodule `N ⊆ M`, there is
 a natural bracket action of `L` on the quotient `M/N`. -/
@@ -127,7 +127,7 @@ instance lieQuotientLieRing : LieRing (L ⧸ I) where
         rw [is_quotient_mk]|
         rw [← mk_bracket]|
         rw [← Submodule.Quotient.mk_add]
-    apply congr_arg
+    apply congr_argₓ
     apply add_lie
   lie_add := by
     intro x' y' z'
@@ -138,14 +138,14 @@ instance lieQuotientLieRing : LieRing (L ⧸ I) where
         rw [is_quotient_mk]|
         rw [← mk_bracket]|
         rw [← Submodule.Quotient.mk_add]
-    apply congr_arg
+    apply congr_argₓ
     apply lie_add
   lie_self := by
     intro x'
     apply Quotientₓ.induction_on' x'
     intro x
     rw [is_quotient_mk, ← mk_bracket]
-    apply congr_arg
+    apply congr_argₓ
     apply lie_self
   leibniz_lie := by
     intro x' y' z'
@@ -156,7 +156,7 @@ instance lieQuotientLieRing : LieRing (L ⧸ I) where
         rw [is_quotient_mk]|
         rw [← mk_bracket]|
         rw [← Submodule.Quotient.mk_add]
-    apply congr_arg
+    apply congr_argₓ
     apply leibniz_lie
 
 instance lieQuotientLieAlgebra :
@@ -169,7 +169,7 @@ instance lieQuotientLieAlgebra :
         rw [is_quotient_mk]|
         rw [← mk_bracket]|
         rw [← Submodule.Quotient.mk_smul]
-    apply congr_arg
+    apply congr_argₓ
     apply lie_smul
 
 /-- `lie_submodule.quotient.mk` as a `lie_module_hom`. -/

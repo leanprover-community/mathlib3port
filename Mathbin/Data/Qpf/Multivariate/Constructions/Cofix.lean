@@ -424,7 +424,7 @@ theorem Cofix.abs_repr {α} (x : Cofix F α) : Quot.mk _ (Cofix.repr x) = x := b
       erw [subtype_val_diag_sub]
       
     ext1
-    simp only [cofix.abs, Prod.mk.inj_iff, prod_map, Function.comp_app, last_fun_append_fun, last_fun_subtype_val,
+    simp only [cofix.abs, Prod.mk.inj_iffₓ, prod_mapₓ, Function.comp_app, last_fun_append_fun, last_fun_subtype_val,
       last_fun_comp, last_fun_split_fun]
     dsimp' [drop_fun_rel_last, last_fun, prod.diag]
     constructor <;> rfl

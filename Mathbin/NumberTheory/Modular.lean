@@ -222,7 +222,7 @@ theorem tendsto_lc_row0 {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) 
       LinearMap.GeneralLinearGroup.coe_fn_general_linear_equiv, general_linear_group.to_linear_apply,
       coe_plane_conformal_matrix, neg_negₓ, mul_vec_lin_apply, cons_val_one, head_cons, of_apply]
     
-  · convert congr_arg (fun n : ℤ => (-n : ℝ)) g.det_coe.symm using 1
+  · convert congr_argₓ (fun n : ℤ => (-n : ℝ)) g.det_coe.symm using 1
     simp only [f₁, mul_vec, dot_product, Finₓ.sum_univ_two, Matrix.det_fin_two, Function.comp_app, Subtype.coe_mk,
       lc_row0_extend_apply, cons_val_zero, LinearMap.GeneralLinearGroup.coe_fn_general_linear_equiv,
       general_linear_group.to_linear_apply, coe_plane_conformal_matrix, mul_vec_lin_apply, cons_val_one, head_cons,
@@ -245,7 +245,7 @@ theorem smul_eq_lc_row0_add {p : Finₓ 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) 
   have : (coe : ℤ → ℝ) ∘ p ≠ 0 := fun h =>
     hp.ne_zero
       (by
-        ext i <;> simpa using congr_fun h i)
+        ext i <;> simpa using congr_funₓ h i)
   have nonZ2 : (p 0 : ℂ) * z + p 1 ≠ 0 := by
     simpa using linear_ne_zero _ z this
   field_simp [nonZ1, nonZ2, denom_ne_zero, -UpperHalfPlane.denom, -denom_apply]
@@ -272,7 +272,7 @@ theorem tendsto_abs_re_smul {p : Finₓ 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) 
     ((g : SL(2, ℤ)) • z).re =
       lc_row0 p ↑(↑g : SL(2, ℝ)) / (p 0 ^ 2 + p 1 ^ 2) +
         (((p 1 : ℂ) * z - p 0) / ((p 0 ^ 2 + p 1 ^ 2) * (p 0 * z + p 1))).re
-  exact_mod_cast congr_arg Complex.re (smul_eq_lc_row0_add z hp g.2)
+  exact_mod_cast congr_argₓ Complex.re (smul_eq_lc_row0_add z hp g.2)
 
 end TendstoLemmas
 

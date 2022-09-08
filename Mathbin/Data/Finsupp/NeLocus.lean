@@ -39,6 +39,9 @@ def neLocus (f g : α →₀ N) : Finset α :=
 theorem mem_ne_locus {f g : α →₀ N} {a : α} : a ∈ f.neLocus g ↔ f a ≠ g a := by
   simpa only [ne_locus, Finset.mem_filter, Finset.mem_union, mem_support_iff, and_iff_right_iff_imp] using Ne.ne_or_ne _
 
+theorem not_mem_ne_locus {f g : α →₀ N} {a : α} : a ∉ f.neLocus g ↔ f a = g a :=
+  mem_ne_locus.Not.trans not_ne_iff
+
 @[simp]
 theorem coe_ne_locus : ↑(f.neLocus g) = { x | f x ≠ g x } := by
   ext
@@ -72,7 +75,7 @@ section NeLocusAndMaps
 
 theorem subset_map_range_ne_locus [DecidableEq N] [Zero N] [DecidableEq M] [Zero M] (f g : α →₀ N) {F : N → M}
     (F0 : F 0 = 0) : (f.map_range F F0).neLocus (g.map_range F F0) ⊆ f.neLocus g := fun x => by
-  simpa only [mem_ne_locus, map_range_apply, not_imp_not] using congr_arg F
+  simpa only [mem_ne_locus, map_range_apply, not_imp_not] using congr_argₓ F
 
 theorem zip_with_ne_locus_eq_left [DecidableEq N] [Zero M] [DecidableEq P] [Zero P] [Zero N] {F : M → N → P}
     (F0 : F 0 0 = 0) (f : α →₀ M) (g₁ g₂ : α →₀ N) (hF : ∀ f, Function.Injective fun g => F f g) :

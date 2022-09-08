@@ -303,13 +303,13 @@ theorem arg_of_im_pos {z : ℂ} (hz : 0 < z.im) : arg z = Real.arccos (z.re / ab
   arg_of_im_nonneg_of_ne_zero hz.le fun h => hz.ne' <| h.symm ▸ rfl
 
 theorem arg_of_im_neg {z : ℂ} (hz : z.im < 0) : arg z = -Real.arccos (z.re / abs z) := by
-  have h₀ : z ≠ 0 := mt (congr_arg im) hz.ne
+  have h₀ : z ≠ 0 := mt (congr_argₓ im) hz.ne
   rw [← cos_arg h₀, ← Real.cos_neg, Real.arccos_cos, neg_negₓ]
   exacts[neg_nonneg.2 (arg_neg_iff.2 hz).le, neg_le.2 (neg_pi_lt_arg z).le]
 
 theorem arg_conj (x : ℂ) : arg (conj x) = if arg x = π then π else -arg x := by
   simp_rw [arg_eq_pi_iff, arg, neg_im, conj_im, conj_re, abs_conj, neg_div, neg_negₓ, Real.arcsin_neg,
-    apply_ite Neg.neg, neg_add, neg_sub, neg_negₓ, ← sub_eq_add_neg, sub_neg_eq_add, add_commₓ π]
+    apply_iteₓ Neg.neg, neg_add, neg_sub, neg_negₓ, ← sub_eq_add_neg, sub_neg_eq_add, add_commₓ π]
   rcases lt_trichotomyₓ x.re 0 with (hr | hr | hr) <;> rcases lt_trichotomyₓ x.im 0 with (hi | hi | hi)
   · simp [hr, hr.not_le, hi.le, hi.ne, not_leₓ.2 hi]
     
@@ -592,7 +592,7 @@ theorem continuous_at_arg_coe_angle (h : x ≠ 0) : ContinuousAt (coe ∘ arg : 
   · exact real.angle.continuous_coe.continuous_at.comp (continuous_at_arg hs)
     
   · rw [← Function.comp.right_id (coe ∘ arg),
-      (Function.funext_iffₓ.2 fun _ => (neg_negₓ _).symm : (id : ℂ → ℂ) = Neg.neg ∘ Neg.neg), ← Function.comp.assoc]
+      (Function.funext_iff.2 fun _ => (neg_negₓ _).symm : (id : ℂ → ℂ) = Neg.neg ∘ Neg.neg), ← Function.comp.assoc]
     refine' ContinuousAt.comp _ continuous_neg.continuous_at
     suffices ContinuousAt (Function.update ((coe ∘ arg) ∘ Neg.neg : ℂ → Real.Angle) 0 π) (-x) by
       rwa [continuous_at_update_of_ne (neg_ne_zero.2 h)] at this

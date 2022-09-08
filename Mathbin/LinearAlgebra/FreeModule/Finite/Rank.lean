@@ -83,7 +83,7 @@ theorem finrank_pi_fintype {ι : Type v} [Fintype ι] {M : ι → Type w} [∀ i
     [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] [∀ i : ι, Module.Finite R (M i)] :
     finrank R (∀ i, M i) = ∑ i, finrank R (M i) := by
   letI := nontrivial_of_invariant_basis_number R
-  simp only [finrank, fun i => rank_eq_card_choose_basis_index R (M i), rank_pi_fintype, ← mk_sigma, mk_to_nat_eq_card,
+  simp only [finrank, fun i => rank_eq_card_choose_basis_index R (M i), rank_pi_finite, ← mk_sigma, mk_to_nat_eq_card,
     card_sigma]
 
 /-- If `m` and `n` are `fintype`, the finrank of `m × n` matrices is

@@ -138,8 +138,8 @@ variable {A} [AddMonoidₓ ι] [GhasMul A] [GhasOne A]
 /-- A default implementation of power on a graded monoid, like `npow_rec`.
 `gmonoid.gnpow` should be used instead. -/
 def gnpowRec : ∀ (n : ℕ) {i}, A i → A (n • i)
-  | 0, i, a => cast (congr_arg A (zero_nsmul i).symm) GhasOne.one
-  | n + 1, i, a => cast (congr_arg A (succ_nsmul i n).symm) (GhasMul.mul a <| gnpow_rec _ a)
+  | 0, i, a => cast (congr_argₓ A (zero_nsmul i).symm) GhasOne.one
+  | n + 1, i, a => cast (congr_argₓ A (succ_nsmul i n).symm) (GhasMul.mul a <| gnpow_rec _ a)
 
 @[simp]
 theorem gnpow_rec_zero (a : GradedMonoid A) : GradedMonoid.mk _ (gnpowRec 0 a.snd) = 1 :=
@@ -251,7 +251,7 @@ variable {A}
 
 @[simp]
 theorem mk_zero_smul {i} (a : A 0) (b : A i) : mk _ (a • b) = mk _ a * mk _ b :=
-  Sigma.ext (zero_addₓ _).symm <| eq_rec_heq _ _
+  Sigma.ext (zero_addₓ _).symm <| eq_rec_heqₓ _ _
 
 @[simp]
 theorem GradeZero.smul_eq_mul (a b : A 0) : a • b = a * b :=
@@ -269,7 +269,7 @@ variable {A}
 
 @[simp]
 theorem mk_zero_pow (a : A 0) (n : ℕ) : mk _ (a ^ n) = mk _ a ^ n :=
-  Sigma.ext (nsmul_zero n).symm <| eq_rec_heq _ _
+  Sigma.ext (nsmul_zero n).symm <| eq_rec_heqₓ _ _
 
 variable (A)
 
@@ -413,10 +413,10 @@ instance CommMonoidₓ.gcommMonoid [AddCommMonoidₓ ι] [CommMonoidₓ R] : Gra
 theorem List.dprod_monoid {α} [AddMonoidₓ ι] [Monoidₓ R] (l : List α) (fι : α → ι) (fA : α → R) :
     (l.dprod fι fA : (fun i : ι => R) _) = ((l.map fA).Prod : _) := by
   induction l
-  · rw [List.dprod_nil, List.map_nil, List.prod_nil]
+  · rw [List.dprod_nil, List.map_nilₓ, List.prod_nil]
     rfl
     
-  · rw [List.dprod_cons, List.map_cons, List.prod_cons, l_ih]
+  · rw [List.dprod_cons, List.map_consₓ, List.prod_cons, l_ih]
     rfl
     
 
@@ -483,10 +483,10 @@ theorem pow_mem_graded (n : ℕ) {r : R} {i : ι} (h : r ∈ A i) : r ^ n ∈ A 
 theorem list_prod_map_mem_graded {ι'} (l : List ι') (i : ι' → ι) (r : ι' → R) (h : ∀ j ∈ l, r j ∈ A (i j)) :
     (l.map r).Prod ∈ A (l.map i).Sum := by
   induction l
-  · rw [List.map_nil, List.map_nil, List.prod_nil, List.sum_nil]
+  · rw [List.map_nilₓ, List.map_nilₓ, List.prod_nil, List.sum_nil]
     exact one_mem_graded _
     
-  · rw [List.map_cons, List.map_cons, List.prod_cons, List.sum_cons]
+  · rw [List.map_consₓ, List.map_consₓ, List.prod_cons, List.sum_cons]
     exact mul_mem_graded (h _ <| List.mem_cons_selfₓ _ _) (l_ih fun j hj => h _ <| List.mem_cons_of_memₓ _ hj)
     
 
@@ -529,9 +529,9 @@ coercions. -/
 theorem SetLike.coe_list_dprod (A : ι → S) [SetLike.GradedMonoid A] (fι : α → ι) (fA : ∀ a, A (fι a)) (l : List α) :
     ↑(l.dprod fι fA : (fun i => ↥(A i)) _) = (List.prod (l.map fun a => fA a) : R) := by
   induction l
-  · rw [List.dprod_nil, coe_ghas_one, List.map_nil, List.prod_nil]
+  · rw [List.dprod_nil, coe_ghas_one, List.map_nilₓ, List.prod_nil]
     
-  · rw [List.dprod_cons, coe_ghas_mul, List.map_cons, List.prod_cons, l_ih]
+  · rw [List.dprod_cons, coe_ghas_mul, List.map_consₓ, List.prod_cons, l_ih]
     
 
 include R

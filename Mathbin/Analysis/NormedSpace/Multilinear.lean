@@ -275,7 +275,7 @@ theorem restr_norm_le {k n : ℕ} (f : (MultilinearMap 𝕜 (fun i : Finₓ n =>
     ∥f.restr s hk z v∥ ≤ C * ∥z∥ ^ (n - k) * ∏ i, ∥v i∥ := by
   rw [mul_right_commₓ, mul_assoc]
   convert H _ using 2
-  simp only [apply_dite norm, Fintype.prod_dite, prod_const ∥z∥, Finset.card_univ,
+  simp only [apply_diteₓ norm, Fintype.prod_dite, prod_const ∥z∥, Finset.card_univ,
     Fintype.card_of_subtype (sᶜ) fun x => mem_compl, card_compl, Fintype.card_fin, hk, mk_coe, ←
     (s.order_iso_of_fin hk).symm.Bijective.prod_comp fun x => ∥v x∥]
   rfl
@@ -399,7 +399,7 @@ theorem op_norm_smul_le (c : 𝕜') : ∥c • f∥ ≤ ∥c∥ * ∥f∥ :=
 
 theorem op_norm_neg : ∥-f∥ = ∥f∥ := by
   rw [norm_def]
-  apply congr_arg
+  apply congr_argₓ
   ext
   simp
 
@@ -745,7 +745,7 @@ theorem norm_mk_pi_algebra_fin_succ_le : ∥ContinuousMultilinearMap.mkPiAlgebra
   simp only [ContinuousMultilinearMap.mk_pi_algebra_fin_apply, one_mulₓ, List.of_fn_eq_map, Finₓ.prod_univ_def,
     Multiset.coe_map, Multiset.coe_prod]
   refine' (List.norm_prod_le' _).trans_eq _
-  · rw [Ne.def, List.map_eq_nil, List.fin_range_eq_nil]
+  · rw [Ne.def, List.map_eq_nilₓ, List.fin_range_eq_nil]
     exact Nat.succ_ne_zero _
     
   rw [List.map_mapₓ]
@@ -799,6 +799,17 @@ theorem mk_pi_field_apply_one_eq_self (f : ContinuousMultilinearMap 𝕜 (fun i 
 theorem norm_mk_pi_field (z : G) : ∥ContinuousMultilinearMap.mkPiField 𝕜 ι z∥ = ∥z∥ :=
   (MultilinearMap.mk_continuous_norm_le _ (norm_nonneg z) _).antisymm <| by
     simpa using (ContinuousMultilinearMap.mkPiField 𝕜 ι z).le_op_norm fun _ => 1
+
+theorem mk_pi_field_eq_iff {z₁ z₂ : G} :
+    ContinuousMultilinearMap.mkPiField 𝕜 ι z₁ = ContinuousMultilinearMap.mkPiField 𝕜 ι z₂ ↔ z₁ = z₂ := by
+  rw [← to_multilinear_map_inj.eq_iff]
+  exact MultilinearMap.mk_pi_ring_eq_iff
+
+theorem mk_pi_field_zero : ContinuousMultilinearMap.mkPiField 𝕜 ι (0 : G) = 0 := by
+  ext <;> rw [mk_pi_field_apply, smul_zero, ContinuousMultilinearMap.zero_apply]
+
+theorem mk_pi_field_eq_zero_iff (z : G) : ContinuousMultilinearMap.mkPiField 𝕜 ι z = 0 ↔ z = 0 := by
+  rw [← mk_pi_field_zero, mk_pi_field_eq_iff]
 
 variable (𝕜 ι G)
 
@@ -1449,11 +1460,11 @@ def domDomCongr (σ : ι ≃ ι') :
             rw [← σ.symm.prod_comp],
       left_inv := fun f =>
         ext fun m =>
-          congr_arg f <| by
+          congr_argₓ f <| by
             simp only [σ.symm_apply_apply],
       right_inv := fun f =>
         ext fun m =>
-          congr_arg f <| by
+          congr_argₓ f <| by
             simp only [σ.apply_symm_apply],
       map_add' := fun f g => rfl, map_smul' := fun c f => rfl }
     (fun f => MultilinearMap.mk_continuous_norm_le _ (norm_nonneg f) _) fun f =>
@@ -1515,7 +1526,7 @@ def currySumEquiv :
         rfl,
       left_inv := fun f => by
         ext m
-        exact congr_arg f (Sum.elim_comp_inl_inr m),
+        exact congr_argₓ f (Sum.elim_comp_inl_inr m),
       right_inv := fun f => by
         ext m₁ m₂
         change f _ _ = f _ _

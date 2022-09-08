@@ -59,7 +59,7 @@ namespace Function
 
 theorem update_star [∀ i, HasStar (f i)] [DecidableEq I] (h : ∀ i : I, f i) (i : I) (a : f i) :
     Function.update (star h) i (star a) = star (Function.update h i a) :=
-  funext fun j => (apply_update (fun i => star) h i a j).symm
+  funext fun j => (apply_updateₓ (fun i => star) h i a j).symm
 
 end Function
 

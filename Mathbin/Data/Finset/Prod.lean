@@ -87,15 +87,15 @@ theorem product_subset_product_right (ht : t ⊆ t') : s ×ˢ t ⊆ s ×ˢ t' :=
 theorem product_eq_bUnion [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
     s ×ˢ t = s.bUnion fun a => t.Image fun b => (a, b) :=
   ext fun ⟨x, y⟩ => by
-    simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iff, And.left_comm, exists_and_distrib_left,
-      exists_eq_right, exists_eq_left]
+    simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iffₓ, And.left_comm,
+      exists_and_distrib_left, exists_eq_right, exists_eq_left]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem product_eq_bUnion_right [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
     s ×ˢ t = t.bUnion fun b => s.Image fun a => (a, b) :=
   ext fun ⟨x, y⟩ => by
-    simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iff, And.left_comm, exists_and_distrib_left,
-      exists_eq_right, exists_eq_left]
+    simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iffₓ, And.left_comm,
+      exists_and_distrib_left, exists_eq_right, exists_eq_left]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- See also `finset.sup_product_left`. -/
@@ -126,7 +126,7 @@ theorem filter_product_card (s : Finset α) (t : Finset β) (p : α → Prop) (q
   by
   classical
   rw [← card_product, ← card_product, ← filter_product, ← filter_product, ← card_union_eq]
-  · apply congr_arg
+  · apply congr_argₓ
     ext ⟨a, b⟩
     simp only [filter_union_right, mem_filter, mem_product]
     constructor <;> intro h <;> use h.1
@@ -183,13 +183,13 @@ theorem product_eq_empty {s : Finset α} {t : Finset β} : s ×ˢ t = ∅ ↔ s 
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem singleton_product {a : α} : ({a} : Finset α) ×ˢ t = t.map ⟨Prod.mk a, Prod.mk.inj_left _⟩ := by
+theorem singleton_product {a : α} : ({a} : Finset α) ×ˢ t = t.map ⟨Prod.mk a, Prod.mk.inj_leftₓ _⟩ := by
   ext ⟨x, y⟩
   simp [And.left_comm, eq_comm]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem product_singleton {b : β} : s ×ˢ {b} = s.map ⟨fun i => (i, b), Prod.mk.inj_right _⟩ := by
+theorem product_singleton {b : β} : s ×ˢ {b} = s.map ⟨fun i => (i, b), Prod.mk.inj_rightₓ _⟩ := by
   ext ⟨x, y⟩
   simp [And.left_comm, eq_comm]
 
@@ -309,7 +309,7 @@ theorem off_diag_union (h : Disjoint s t) : (s ∪ t).offDiag = s.offDiag ∪ t.
   rw [off_diag, union_product, product_union, product_union, union_comm _ (t ×ˢ t), union_assoc,
     union_left_comm (s ×ˢ t), ← union_assoc, filter_union, filter_union, ← off_diag, ← off_diag, filter_true_of_mem, ←
     union_assoc]
-  simp only [mem_union, mem_product, Ne.def, Prod.forall]
+  simp only [mem_union, mem_product, Ne.def, Prod.forallₓ]
   rintro i j (⟨hi, hj⟩ | ⟨hi, hj⟩)
   · exact h.forall_ne_finset hi hj
     

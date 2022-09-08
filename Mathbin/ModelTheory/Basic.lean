@@ -509,7 +509,7 @@ instance embeddingLike : EmbeddingLike (M ↪[L] N) M N where
     cases g
     simp only
     ext x
-    exact Function.funext_iffₓ.1 h x
+    exact Function.funext_iff.1 h x
 
 instance strongHomClass : StrongHomClass L (M ↪[L] N) M N where
   map_fun := map_fun'
@@ -544,7 +544,7 @@ theorem coe_injective : @Function.Injective (M ↪[L] N) (M → N) coeFn
     cases g
     simp only
     ext x
-    exact Function.funext_iffₓ.1 h x
+    exact Function.funext_iff.1 h x
 
 @[ext]
 theorem ext ⦃f g : M ↪[L] N⦄ (h : ∀ x, f x = g x) : f = g :=
@@ -624,7 +624,7 @@ instance : EquivLike (M ≃[L] N) M N where
     cases g
     simp only
     ext x
-    exact Function.funext_iffₓ.1 h₁ x
+    exact Function.funext_iff.1 h₁ x
 
 instance : StrongHomClass L (M ≃[L] N) M N where
   map_fun := map_fun'
@@ -779,12 +779,12 @@ variable [Language.empty.Structure M] [Language.empty.Structure N]
 @[simp]
 theorem empty.nonempty_embedding_iff :
     Nonempty (M ↪[language.empty] N) ↔ Cardinal.lift.{w'} (# M) ≤ Cardinal.lift.{w} (# N) :=
-  trans ⟨Nonempty.map fun f => f.toEmbedding, Nonempty.map fun f => { toEmbedding := f }⟩ Cardinal.lift_mk_le'.symm
+  trans ⟨Nonempty.mapₓ fun f => f.toEmbedding, Nonempty.mapₓ fun f => { toEmbedding := f }⟩ Cardinal.lift_mk_le'.symm
 
 @[simp]
 theorem empty.nonempty_equiv_iff :
     Nonempty (M ≃[language.empty] N) ↔ Cardinal.lift.{w'} (# M) = Cardinal.lift.{w} (# N) :=
-  trans ⟨Nonempty.map fun f => f.toEquiv, Nonempty.map fun f => { toEquiv := f }⟩ Cardinal.lift_mk_eq'.symm
+  trans ⟨Nonempty.mapₓ fun f => f.toEquiv, Nonempty.mapₓ fun f => { toEquiv := f }⟩ Cardinal.lift_mk_eq'.symm
 
 end
 

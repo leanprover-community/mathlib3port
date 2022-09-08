@@ -105,12 +105,12 @@ theorem exists_list_of_mem_closure {a : R} (h : a ∈ Closure s) :
           simp only [List.map_mapₓ, (· ∘ ·), List.prod_cons, neg_one_mul] <;>
             exact
               List.recOn L1 neg_zero.symm fun hd tl ih => by
-                rw [List.map_cons, List.sum_cons, ih, List.map_cons, List.sum_cons, neg_add]⟩)
+                rw [List.map_consₓ, List.sum_cons, ih, List.map_consₓ, List.sum_cons, neg_add]⟩)
     fun r1 r2 hr1 hr2 ih1 ih2 =>
     match r1, r2, ih1, ih2 with
     | _, _, ⟨L1, h1, rfl⟩, ⟨L2, h2, rfl⟩ =>
       ⟨L1 ++ L2, List.forall_mem_appendₓ.2 ⟨h1, h2⟩, by
-        rw [List.map_append, List.sum_append]⟩
+        rw [List.map_appendₓ, List.sum_append]⟩
 
 -- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsuffices #[["⟨", ident L, ",", ident HL', ",", ident HP, "|", ident HP, "⟩", ":", expr «expr∃ , »((L : list R),
     «expr ∧ »(∀ x «expr ∈ » L,
@@ -129,7 +129,7 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ Closure 
     
   rw [List.forall_mem_consₓ] at HL
   suffices C (List.prod hd) by
-    rw [List.map_cons, List.sum_cons]
+    rw [List.map_consₓ, List.sum_cons]
     exact ha this (ih HL.2)
   replace HL := HL.1
   clear ih tl

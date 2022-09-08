@@ -138,7 +138,7 @@ theorem ext' {χ χ' : MulChar R R'} (h : ∀ a, χ a = χ' a) : χ = χ' := by
 
 instance : MulCharClass (MulChar R R') R R' where
   coe := fun χ => χ.toMonoidHom.toFun
-  coe_injective' := fun f g h => ext' fun a => congr_fun h a
+  coe_injective' := fun f g h => ext' fun a => congr_funₓ h a
   map_mul := fun χ => χ.map_mul'
   map_one := fun χ => χ.map_one'
   map_nonunit := fun χ => χ.map_nonunit'
@@ -327,7 +327,7 @@ theorem inv_apply {R : Type u} [CommMonoidWithZero R] (χ : MulChar R R') (a : R
 /-- When the domain has a zero, then the inverse of a multiplicative character `χ`,
 applied to `a`, is `χ` applied to the inverse of `a`. -/
 theorem inv_apply' {R : Type u} [Field R] (χ : MulChar R R') (a : R) : χ⁻¹ a = χ a⁻¹ :=
-  (inv_apply χ a).trans <| congr_arg _ (Ring.inverse_eq_inv a)
+  (inv_apply χ a).trans <| congr_argₓ _ (Ring.inverse_eq_inv a)
 
 /-- The product of a character with its inverse is the trivial character. -/
 @[simp]
@@ -489,7 +489,7 @@ theorem sum_one_eq_card_units [Fintype R] [DecidableEq R] : (∑ a, (1 : MulChar
     (∑ a, (1 : MulChar R R') a) = ∑ a : R, if IsUnit a then 1 else 0 := Finset.sum_congr rfl fun a _ => _
     _ = ((Finset.univ : Finset R).filter IsUnit).card := Finset.sum_boole
     _ = (finset.univ.map ⟨(coe : Rˣ → R), Units.ext⟩).card := _
-    _ = Fintype.card Rˣ := congr_arg _ (Finset.card_map _)
+    _ = Fintype.card Rˣ := congr_argₓ _ (Finset.card_map _)
     
   · split_ifs with h h
     · exact one_apply_coe h.unit

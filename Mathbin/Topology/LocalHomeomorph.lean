@@ -305,7 +305,7 @@ theorem image_mem_nhds {x} (hx : x ∈ e.Source) {s : Set α} (hs : s ∈ 𝓝 x
 theorem map_nhds_within_eq (e : LocalHomeomorph α β) {x} (hx : x ∈ e.Source) (s : Set α) :
     map e (𝓝[s] x) = 𝓝[e '' (e.Source ∩ s)] e x :=
   calc
-    map e (𝓝[s] x) = map e (𝓝[e.Source ∩ s] x) := congr_arg (map e) (e.nhds_within_source_inter hx _).symm
+    map e (𝓝[s] x) = map e (𝓝[e.Source ∩ s] x) := congr_argₓ (map e) (e.nhds_within_source_inter hx _).symm
     _ = 𝓝[e '' (e.Source ∩ s)] e x :=
       (e.LeftInvOn.mono <| inter_subset_left _ _).map_nhds_within_eq (e.left_inv hx)
         (e.continuous_at_symm (e.map_source hx)).ContinuousWithinAt (e.ContinuousAt hx).ContinuousWithinAt
@@ -836,8 +836,8 @@ theorem prod_eq_prod_of_nonempty {e₁ e₁' : LocalHomeomorph α β} {e₂ e₂
   haveI : Nonempty β := ⟨e₁ x⟩
   haveI : Nonempty γ := ⟨y⟩
   haveI : Nonempty δ := ⟨e₂ y⟩
-  simp_rw [LocalHomeomorph.ext_iff, prod_apply, prod_symm_apply, prod_source, Prod.ext_iff,
-    Set.prod_eq_prod_iff_of_nonempty h, forall_and_distrib, Prod.forall, forall_const, forall_forall_const, and_assoc,
+  simp_rw [LocalHomeomorph.ext_iff, prod_apply, prod_symm_apply, prod_source, Prod.ext_iffₓ,
+    Set.prod_eq_prod_iff_of_nonempty h, forall_and_distrib, Prod.forallₓ, forall_const, forall_forall_const, and_assoc,
     And.left_comm]
 
 theorem prod_eq_prod_of_nonempty' {e₁ e₁' : LocalHomeomorph α β} {e₂ e₂' : LocalHomeomorph γ δ}
@@ -980,14 +980,29 @@ theorem continuous_iff_continuous_comp_left {f : γ → α} (h : f ⁻¹' e.Sour
 
 end Continuity
 
+/-- The homeomorphism obtained by restricting a `local_homeomorph` to a subset of the source. -/
+@[simps]
+def homeomorphOfImageSubsetSource {s : Set α} {t : Set β} (hs : s ⊆ e.Source) (ht : e '' s = t) : s ≃ₜ t where
+  toFun := fun a => ⟨e a, (congr_argₓ ((· ∈ ·) (e a)) ht).mp ⟨a, a.2, rfl⟩⟩
+  invFun := fun b =>
+    ⟨e.symm b,
+      let ⟨a, ha1, ha2⟩ := (congr_argₓ ((· ∈ ·) ↑b) ht).mpr b.2
+      ha2 ▸ (e.left_inv (hs ha1)).symm ▸ ha1⟩
+  left_inv := fun a => Subtype.ext (e.left_inv (hs a.2))
+  right_inv := fun b =>
+    let ⟨a, ha1, ha2⟩ := (congr_argₓ ((· ∈ ·) ↑b) ht).mpr b.2
+    Subtype.ext (e.right_inv (ha2 ▸ e.map_source (hs ha1)))
+  continuous_to_fun := (continuous_on_iff_continuous_restrict.mp (e.ContinuousOn.mono hs)).subtype_mk _
+  continuous_inv_fun :=
+    (continuous_on_iff_continuous_restrict.mp
+          (e.continuous_on_symm.mono fun b hb =>
+            let ⟨a, ha1, ha2⟩ := show b ∈ e '' s from ht.symm ▸ hb
+            ha2 ▸ e.map_source (hs ha1))).subtype_mk
+      _
+
 /-- A local homeomrphism defines a homeomorphism between its source and target. -/
-def toHomeomorphSourceTarget : e.Source ≃ₜ e.Target where
-  toFun := e.MapsTo.restrict _ _ _
-  invFun := e.symm_maps_to.restrict _ _ _
-  left_inv := fun x => Subtype.eq <| e.left_inv x.2
-  right_inv := fun x => Subtype.eq <| e.right_inv x.2
-  continuous_to_fun := (continuous_on_iff_continuous_restrict.1 e.ContinuousOn).subtype_mk _
-  continuous_inv_fun := (continuous_on_iff_continuous_restrict.1 e.symm.ContinuousOn).subtype_mk _
+def toHomeomorphSourceTarget : e.Source ≃ₜ e.Target :=
+  e.homeomorphOfImageSubsetSource subset_rfl e.image_source_eq_target
 
 theorem second_countable_topology_source [SecondCountableTopology β] (e : LocalHomeomorph α β) :
     SecondCountableTopology e.Source :=

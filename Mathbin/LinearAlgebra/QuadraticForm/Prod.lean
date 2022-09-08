@@ -64,12 +64,12 @@ def Isometry.prod {Q₁ : QuadraticForm R M₁} {Q₂ : QuadraticForm R M₂} {Q
 theorem Equivalent.prod {Q₁ : QuadraticForm R M₁} {Q₂ : QuadraticForm R M₂} {Q₁' : QuadraticForm R N₁}
     {Q₂' : QuadraticForm R N₂} (e₁ : Q₁.Equivalent Q₁') (e₂ : Q₂.Equivalent Q₂') :
     (Q₁.Prod Q₂).Equivalent (Q₁'.Prod Q₂') :=
-  Nonempty.map2 Isometry.prod e₁ e₂
+  Nonempty.map2ₓ Isometry.prod e₁ e₂
 
 /-- If a product is anisotropic then its components must be. The converse is not true. -/
 theorem anisotropic_of_prod {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q₁ : QuadraticForm R M₁}
     {Q₂ : QuadraticForm R M₂} (h : (Q₁.Prod Q₂).Anisotropic) : Q₁.Anisotropic ∧ Q₂.Anisotropic := by
-  simp_rw [anisotropic, prod_apply, Prod.forall, Prod.mk_eq_zero] at h
+  simp_rw [anisotropic, prod_apply, Prod.forallₓ, Prod.mk_eq_zero] at h
   constructor
   · intro x hx
     refine' (h x 0 _).1
@@ -82,7 +82,7 @@ theorem anisotropic_of_prod {R} [OrderedRing R] [Module R M₁] [Module R M₂] 
 
 theorem nonneg_prod_iff {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q₁ : QuadraticForm R M₁}
     {Q₂ : QuadraticForm R M₂} : (∀ x, 0 ≤ (Q₁.Prod Q₂) x) ↔ (∀ x, 0 ≤ Q₁ x) ∧ ∀ x, 0 ≤ Q₂ x := by
-  simp_rw [Prod.forall, prod_apply]
+  simp_rw [Prod.forallₓ, prod_apply]
   constructor
   · intro h
     constructor
@@ -143,7 +143,7 @@ theorem Equivalent.pi [Fintype ι] {Q : ∀ i, QuadraticForm R (Mᵢ i)} {Q' : �
 /-- If a family is anisotropic then its components must be. The converse is not true. -/
 theorem anisotropic_of_pi [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i)] {Q : ∀ i, QuadraticForm R (Mᵢ i)}
     (h : (pi Q).Anisotropic) : ∀ i, (Q i).Anisotropic := by
-  simp_rw [anisotropic, pi_apply, Function.funext_iffₓ, Pi.zero_apply] at h
+  simp_rw [anisotropic, pi_apply, Function.funext_iff, Pi.zero_apply] at h
   intro i x hx
   classical
   have := h (Pi.single i x) _ i

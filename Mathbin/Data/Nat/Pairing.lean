@@ -81,7 +81,7 @@ theorem surjective_unpair : Surjective unpair :=
 
 @[simp]
 theorem mkpair_eq_mkpair {a b c d : ℕ} : mkpair a b = mkpair c d ↔ a = c ∧ b = d :=
-  mkpairEquiv.Injective.eq_iff.trans (@Prod.ext_iff ℕ ℕ (a, b) (c, d))
+  mkpairEquiv.Injective.eq_iff.trans (@Prod.ext_iffₓ ℕ ℕ (a, b) (c, d))
 
 theorem unpair_lt {n : ℕ} (n1 : 1 ≤ n) : (unpair n).1 < n := by
   let s := sqrt n

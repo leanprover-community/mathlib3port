@@ -999,7 +999,7 @@ theorem map_iff {g : β → γ} (hg : ∀ {b}, g b = 0 ↔ b = 0) : (f.map g).Fi
 
 protected theorem pair {g : α →ₛ γ} (hf : f.FinMeasSupp μ) (hg : g.FinMeasSupp μ) : (pair f g).FinMeasSupp μ :=
   calc
-    μ (support <| pair f g) = μ (Support f ∪ Support g) := congr_arg μ <| support_prod_mk f g
+    μ (support <| pair f g) = μ (Support f ∪ Support g) := congr_argₓ μ <| support_prod_mk f g
     _ ≤ μ (Support f) + μ (Support g) := measure_union_le _ _
     _ < _ := add_lt_top.2 ⟨hf, hg⟩
     
@@ -1912,7 +1912,7 @@ theorem lintegral_infi_ae {f : ℕ → α → ℝ≥0∞} (h_meas : ∀ n, Measu
                 
               · exact le_transₓ (h n) ih
                 
-          congr_arg supr <|
+          congr_argₓ supr <|
             funext fun n =>
               lintegral_sub (h_meas _) (ne_top_of_le_ne_top h_fin <| lintegral_mono_ae <| h_mono n) (h_mono n)
         _ = (∫⁻ a, f 0 a ∂μ) - ⨅ n, ∫⁻ a, f n a ∂μ := Ennreal.sub_infi.symm

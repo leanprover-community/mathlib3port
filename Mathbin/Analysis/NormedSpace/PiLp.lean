@@ -542,7 +542,7 @@ theorem nnnorm_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β 
 theorem norm_sq_eq_of_L2 (β : ι → Type _) [∀ i, SeminormedAddCommGroup (β i)] (x : PiLp 2 β) :
     ∥x∥ ^ 2 = ∑ i : ι, ∥x i∥ ^ 2 := by
   suffices ∥x∥₊ ^ 2 = ∑ i : ι, ∥x i∥₊ ^ 2 by
-    simpa only [Nnreal.coe_sum] using congr_arg (coe : ℝ≥0 → ℝ) this
+    simpa only [Nnreal.coe_sum] using congr_argₓ (coe : ℝ≥0 → ℝ) this
   rw [nnnorm_eq_of_L2, Nnreal.sq_sqrt]
 
 theorem dist_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (x y : PiLp 2 β) :
@@ -614,7 +614,7 @@ def equivₗᵢ : PiLp ∞ β ≃ₗᵢ[𝕜] ∀ i, β i :=
   { PiLp.equiv ∞ β with map_add' := fun f g => rfl, map_smul' := fun c f => rfl,
     norm_map' := fun f => by
       suffices (finset.univ.sup fun i => ∥f i∥₊) = ⨆ i, ∥f i∥₊ by
-        simpa only [Nnreal.coe_supr] using congr_arg (coe : ℝ≥0 → ℝ) this
+        simpa only [Nnreal.coe_supr] using congr_argₓ (coe : ℝ≥0 → ℝ) this
       refine' antisymm (Finset.sup_le fun i _ => le_csupr (Fintype.bdd_above_range fun i => ∥f i∥₊) _) _
       cases is_empty_or_nonempty ι
       · simp only [csupr_of_empty, Finset.univ_eq_empty, Finset.sup_empty]
@@ -737,7 +737,7 @@ the left-hand side simplifies to `0`, while the right-hand side simplifies to `�
 `nonempty ι`. -/
 theorem norm_equiv_symm_const {β} [SeminormedAddCommGroup β] (hp : p ≠ ∞) (b : β) :
     ∥(PiLp.equiv p fun _ : ι => β).symm (Function.const _ b)∥ = Fintype.card ι ^ (1 / p).toReal * ∥b∥ :=
-  (congr_arg coe <| nnnorm_equiv_symm_const hp b).trans <| by
+  (congr_argₓ coe <| nnnorm_equiv_symm_const hp b).trans <| by
     simp
 
 /-- When `is_empty ι`, this lemma does not hold without the additional assumption `p ≠ ∞` because
@@ -746,7 +746,7 @@ the left-hand side simplifies to `0`, while the right-hand side simplifies to `�
 for `p ≠ ∞`. -/
 theorem norm_equiv_symm_const' {β} [SeminormedAddCommGroup β] [Nonempty ι] (b : β) :
     ∥(PiLp.equiv p fun _ : ι => β).symm (Function.const _ b)∥ = Fintype.card ι ^ (1 / p).toReal * ∥b∥ :=
-  (congr_arg coe <| nnnorm_equiv_symm_const' b).trans <| by
+  (congr_argₓ coe <| nnnorm_equiv_symm_const' b).trans <| by
     simp
 
 theorem nnnorm_equiv_symm_one {β} [SeminormedAddCommGroup β] (hp : p ≠ ∞) [One β] :

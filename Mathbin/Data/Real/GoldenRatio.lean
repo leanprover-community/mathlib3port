@@ -220,5 +220,5 @@ theorem Real.coe_fib_eq' : (fun n => Nat.fib n : ℕ → ℝ) = fun n => (φ ^ n
 
 /-- Binet's formula as a dependent equality. -/
 theorem Real.coe_fib_eq : ∀ n, (Nat.fib n : ℝ) = (φ ^ n - ψ ^ n) / Real.sqrt 5 := by
-  rw [← Function.funext_iffₓ, Real.coe_fib_eq']
+  rw [← Function.funext_iff, Real.coe_fib_eq']
 

@@ -395,7 +395,7 @@ theorem IsMaximal.is_prime {I : Ideal α} (H : I.IsMaximal) : I.IsPrime :=
       cases' is_maximal_iff.1 H with _ oJ
       specialize oJ J x IJ hx xJ
       rcases submodule.mem_span_insert.mp oJ with ⟨a, b, h, oe⟩
-      obtain F : y * 1 = y * (a • x + b) := congr_arg (fun g : α => y * g) oe
+      obtain F : y * 1 = y * (a • x + b) := congr_argₓ (fun g : α => y * g) oe
       rw [← mul_oneₓ y, F, mul_addₓ, mul_comm, smul_eq_mul, mul_assoc]
       refine' Submodule.add_mem I (I.mul_mem_left a hxy) (Submodule.smul_mem I y _)
       rwa [Submodule.span_eq] at h⟩

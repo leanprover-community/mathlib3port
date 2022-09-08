@@ -240,7 +240,7 @@ protected theorem list_prod (f : ι → Function.End α) (K : ι → ℝ≥0 ) (
   | [] => by
     simpa using LipschitzWith.id
   | i::l => by
-    simp only [List.map_cons, List.prod_cons]
+    simp only [List.map_consₓ, List.prod_cons]
     exact (h i).mul (list_prod l)
 
 protected theorem pow {f : Function.End α} {K} (h : LipschitzWith K f) :

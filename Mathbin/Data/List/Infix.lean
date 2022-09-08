@@ -782,11 +782,11 @@ theorem eq_or_mem_of_mem_insertₓ (h : a ∈ insert b l) : a = b ∨ a ∈ l :=
 
 @[simp]
 theorem length_insert_of_memₓ (h : a ∈ l) : (insert a l).length = l.length :=
-  congr_arg _ <| insert_of_memₓ h
+  congr_argₓ _ <| insert_of_memₓ h
 
 @[simp]
 theorem length_insert_of_not_memₓ (h : a ∉ l) : (insert a l).length = l.length + 1 :=
-  congr_arg _ <| insert_of_not_memₓ h
+  congr_argₓ _ <| insert_of_not_memₓ h
 
 end Insert
 

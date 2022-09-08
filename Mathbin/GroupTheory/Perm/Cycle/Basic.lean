@@ -158,7 +158,7 @@ noncomputable def IsCycle.zpowersEquivSupport {σ : Perm α} (hσ : IsCycle σ) 
           
         · obtain ⟨i, rfl⟩ := (Classical.choose_spec hσ).2 y hy
           rw [Subtype.coe_mk, Subtype.coe_mk, zpow_apply_comm σ m i, zpow_apply_comm σ n i]
-          exact congr_arg _ (subtype.ext_iff.mp h)
+          exact congr_argₓ _ (subtype.ext_iff.mp h)
           
         
       · rintro ⟨y, hy⟩
@@ -209,7 +209,7 @@ theorem is_cycle_swap_mul_aux₂ {α : Type _} [DecidableEq α] :
     ∀ (n : ℤ) {b x : α} {f : Perm α} (hb : (swap x (f x) * f) b ≠ b) (h : (f ^ n) (f x) = b),
       ∃ i : ℤ, ((swap x (f x) * f) ^ i) (f x) = b
   | (n : ℕ) => fun b x f => is_cycle_swap_mul_aux₁ n
-  | -[1+ n] => fun b x f hb h =>
+  | -[1 + n] => fun b x f hb h =>
     if hfbx' : f x = b then ⟨0, hfbx'⟩
     else
       have : f b ≠ b ∧ b ≠ x := ne_and_ne_of_swap_mul_apply_ne_self hb
@@ -387,7 +387,7 @@ theorem SameCycle.nat' [Finite β] {f : Perm β} {x y : β} (h : SameCycle f x y
   have h₁ := Int.mod_nonneg k h₀.ne'
   rw [← zpow_coe_nat, Int.nat_abs_of_nonneg h₁, ← zpow_eq_mod_order_of]
   refine' ⟨_, rfl⟩
-  rw [← Int.coe_nat_lt, Int.nat_abs_of_nonneg h₁]
+  rw [← Int.coe_nat_ltₓ, Int.nat_abs_of_nonneg h₁]
   exact Int.mod_lt_of_pos _ h₀
 
 theorem SameCycle.nat'' [Finite β] {f : Perm β} {x y : β} (h : SameCycle f x y) :
@@ -405,7 +405,7 @@ instance [Fintype α] (f : Perm α) : DecidableRel (SameCycle f) := fun x y =>
     ⟨fun ⟨n, _, hn⟩ => ⟨n, hn⟩, fun ⟨i, hi⟩ =>
       ⟨(i % orderOf f).natAbs,
         List.mem_range.2
-          (Int.coe_nat_lt.1 <| by
+          (Int.coe_nat_ltₓ.1 <| by
             rw [Int.nat_abs_of_nonneg (Int.mod_nonneg _ (Int.coe_nat_ne_zero_iff_pos.2 (order_of_pos _)))]
             · refine' (Int.mod_lt _ <| Int.coe_nat_ne_zero_iff_pos.2 <| order_of_pos _).trans_le _
               simp [order_of_le_card_univ]
@@ -646,7 +646,7 @@ theorem cycle_of_pow_apply_self [Fintype α] (f : Perm α) (x : α) : ∀ n : �
 @[simp]
 theorem cycle_of_zpow_apply_self [Fintype α] (f : Perm α) (x : α) : ∀ n : ℤ, (cycleOf f x ^ n) x = (f ^ n) x
   | (n : ℕ) => cycle_of_pow_apply_self f x n
-  | -[1+ n] => by
+  | -[1 + n] => by
     rw [zpow_neg_succ_of_nat, ← inv_pow, cycle_of_inv, zpow_neg_succ_of_nat, ← inv_pow, cycle_of_pow_apply_self]
 
 theorem SameCycle.cycle_of_apply [Fintype α] {f : Perm α} {x y : α} (h : SameCycle f x y) : cycleOf f x y = f y :=
@@ -1163,7 +1163,7 @@ theorem cycle_induction_on [Finite β] (P : Perm β → Prop) (σ : Perm β) (ba
   suffices ∀ l : List (perm β), (∀ τ : perm β, τ ∈ l → τ.IsCycle) → l.Pairwise Disjoint → P l.Prod by
     classical
     let x := σ.trunc_cycle_factors.out
-    exact (congr_arg P x.2.1).mp (this x.1 x.2.2.1 x.2.2.2)
+    exact (congr_argₓ P x.2.1).mp (this x.1 x.2.2.1 x.2.2.2)
   intro l
   induction' l with σ l ih
   · exact fun _ _ => base_one
@@ -1396,7 +1396,7 @@ theorem closure_cycle_coprime_swap {n : ℕ} {σ : Perm α} (h0 : Nat.Coprime n 
   have h1' : is_cycle ((σ ^ n) ^ (m : ℤ)) := by
     rwa [← hm] at h1
   replace h1' : is_cycle (σ ^ n) :=
-    is_cycle_of_is_cycle_pow h1' (le_transₓ (support_pow_le σ n) (ge_of_eqₓ (congr_arg support hm)))
+    is_cycle_of_is_cycle_pow h1' (le_transₓ (support_pow_le σ n) (ge_of_eqₓ (congr_argₓ support hm)))
   rw [eq_top_iff, ← closure_cycle_adjacent_swap h1' h2' x, closure_le, Set.insert_subset]
   exact
     ⟨Subgroup.pow_mem (closure _) (subset_closure (Set.mem_insert σ _)) n,

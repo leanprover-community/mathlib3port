@@ -592,7 +592,7 @@ theorem Inf_le {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : infₓ s ≤ 
       (underlying_iso _).Hom ≫
         limits.limit.π (wide_cospan s) (some ⟨equivShrink _ f, Set.mem_image_of_mem (equivShrink (subobject A)) H⟩) ≫ _
     apply eq_to_hom
-    apply congr_arg fun X : subobject A => (X : C)
+    apply congr_argₓ fun X : subobject A => (X : C)
     exact Equivₓ.symm_apply_apply _ _
     
   · dsimp' [Inf]
@@ -641,7 +641,7 @@ theorem le_Sup {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : f ≤ supₓ 
         sigma.ι _
           ⟨equivShrink _ f, by
             simpa [Set.mem_image] using H⟩
-    exact eq_to_hom (congr_arg (fun X : subobject A => (X : C)) (Equivₓ.symm_apply_apply _ _).symm)
+    exact eq_to_hom (congr_argₓ (fun X : subobject A => (X : C)) (Equivₓ.symm_apply_apply _ _).symm)
     
   · dsimp' [Sup, small_coproduct_desc]
     simp

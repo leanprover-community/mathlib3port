@@ -148,6 +148,14 @@ theorem algebra_map_eq_zero_iff (x : R) : algebraMap R (ExteriorAlgebra R M) x =
 theorem algebra_map_eq_one_iff (x : R) : algebraMap R (ExteriorAlgebra R M) x = 1 ↔ x = 1 :=
   map_eq_one_iff (algebraMap _ _) (algebra_map_left_inverse _).Injective
 
+theorem is_unit_algebra_map (r : R) : IsUnit (algebraMap R (ExteriorAlgebra R M) r) ↔ IsUnit r :=
+  is_unit_map_of_left_inverse _ (algebra_map_left_inverse M)
+
+/-- Invertibility in the exterior algebra is the same as invertibility of the base ring. -/
+@[simps]
+def invertibleAlgebraMapEquiv (r : R) : Invertible (algebraMap R (ExteriorAlgebra R M) r) ≃ Invertible r :=
+  invertibleEquivOfLeftInverse _ _ _ (algebra_map_left_inverse M)
+
 variable {M}
 
 /-- The canonical map from `exterior_algebra R M` into `triv_sq_zero_ext R M` that sends
@@ -186,7 +194,7 @@ theorem ι_eq_algebra_map_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x 
   refine' ⟨fun h => _, _⟩
   · have hf0 : to_triv_sq_zero_ext (ι R x) = (0, x) := to_triv_sq_zero_ext_ι _
     rw [h, AlgHom.commutes] at hf0
-    have : r = 0 ∧ 0 = x := Prod.ext_iff.1 hf0
+    have : r = 0 ∧ 0 = x := Prod.ext_iffₓ.1 hf0
     exact this.symm.imp_left Eq.symm
     
   · rintro ⟨rfl, rfl⟩
@@ -223,7 +231,7 @@ theorem ι_mul_prod_list {n : ℕ} (f : Finₓ n → M) (i : Finₓ n) :
     by_cases' h : i = 0
     · rw [h, ι_sq_zero, zero_mul]
       
-    · replace hn := congr_arg ((· * ·) <| ι R <| f 0) (hn (fun i => f <| Finₓ.succ i) (i.pred h))
+    · replace hn := congr_argₓ ((· * ·) <| ι R <| f 0) (hn (fun i => f <| Finₓ.succ i) (i.pred h))
       simp only at hn
       rw [Finₓ.succ_pred, ← mul_assoc, mul_zero] at hn
       refine' (eq_zero_iff_eq_zero_of_add_eq_zero _).mp hn
@@ -276,7 +284,7 @@ theorem ι_multi_zero_apply (v : Finₓ 0 → M) : ιMulti R 0 v = 1 :=
 
 @[simp]
 theorem ι_multi_succ_apply {n : ℕ} (v : Finₓ n.succ → M) : ιMulti R _ v = ι R (v 0) * ιMulti R _ (Matrix.vecTail v) :=
-  (congr_arg List.prod (List.of_fn_succ _)).trans List.prod_cons
+  (congr_argₓ List.prod (List.of_fn_succ _)).trans List.prod_cons
 
 theorem ι_multi_succ_curry_left {n : ℕ} (m : M) :
     (ιMulti R n.succ).curryLeft m = (LinearMap.mulLeft R (ι R m)).compAlternatingMap (ιMulti R n) :=

@@ -186,7 +186,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
         calc
           w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 = (w.natAbs ^ 2 + x.natAbs ^ 2 + y.natAbs ^ 2 + z.natAbs ^ 2 : ℕ) := hnat_abs
           _ ≤ ((m / 2) ^ 2 + (m / 2) ^ 2 + (m / 2) ^ 2 + (m / 2) ^ 2 : ℕ) :=
-            Int.coe_nat_le.2 <|
+            Int.coe_nat_leₓ.2 <|
               add_le_add
                 (add_le_add
                   (add_le_add (Nat.pow_le_pow_of_le_leftₓ (Zmod.nat_abs_val_min_abs_le _) _)
@@ -263,7 +263,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
                 exact sq_nonneg _)
           (Int.coe_nat_pos.2 <| NeZero.pos m)
       have hnm : n.natAbs < m :=
-        Int.coe_nat_lt.1
+        Int.coe_nat_ltₓ.1
           (lt_of_mul_lt_mul_left
             (by
               rw [Int.nat_abs_of_nonneg hn_nonneg, ← hn, ← sq]

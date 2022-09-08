@@ -129,8 +129,8 @@ instance [HasSmul N X] [HasSmul M N] [HasUniformContinuousConstSmul M X] [HasUni
   ⟨fun m n x => by
     have : _ = (_ : completion X → completion X) :=
       map_comp (uniform_continuous_const_smul m) (uniform_continuous_const_smul n)
-    refine' Eq.trans _ (congr_fun this.symm x)
-    exact congr_arg (fun f => completion.map f x) (funext (smul_assoc _ _))⟩
+    refine' Eq.trans _ (congr_funₓ this.symm x)
+    exact congr_argₓ (fun f => completion.map f x) (funext (smul_assoc _ _))⟩
 
 instance [HasSmul N X] [SmulCommClass M N X] [HasUniformContinuousConstSmul M X] [HasUniformContinuousConstSmul N X] :
     SmulCommClass M N (Completion X) :=
@@ -138,12 +138,12 @@ instance [HasSmul N X] [SmulCommClass M N X] [HasUniformContinuousConstSmul M X]
     have hmn : m • n • x = (completion.map (HasSmul.smul m) ∘ completion.map (HasSmul.smul n)) x := rfl
     have hnm : n • m • x = (completion.map (HasSmul.smul n) ∘ completion.map (HasSmul.smul m)) x := rfl
     rw [hmn, hnm, map_comp, map_comp]
-    exact congr_arg (fun f => completion.map f x) (funext (smul_comm _ _))
+    exact congr_argₓ (fun f => completion.map f x) (funext (smul_comm _ _))
     repeat'
       exact uniform_continuous_const_smul _⟩
 
 instance [HasSmul Mᵐᵒᵖ X] [IsCentralScalar M X] : IsCentralScalar M (Completion X) :=
-  ⟨fun c a => (congr_arg fun f => Completion.map f a) <| funext (op_smul_eq_smul c)⟩
+  ⟨fun c a => (congr_argₓ fun f => Completion.map f a) <| funext (op_smul_eq_smul c)⟩
 
 variable {M X} [HasUniformContinuousConstSmul M X]
 

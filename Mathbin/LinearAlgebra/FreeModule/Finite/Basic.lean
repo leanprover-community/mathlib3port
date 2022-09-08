@@ -54,20 +54,20 @@ instance linear_map [Module.Finite R M] [Module.Finite R N] : Module.Free R (M �
   classical
   exact of_equiv (LinearMap.toMatrix (Module.Free.chooseBasis R M) (Module.Free.chooseBasis R N)).symm
 
-variable {R M}
+variable {R}
 
 /-- A free module with a basis indexed by a `fintype` is finite. -/
-theorem _root_.module.finite.of_basis {R : Type _} {M : Type _} {ι : Type _} [CommRingₓ R] [AddCommGroupₓ M]
-    [Module R M] [Fintype ι] (b : Basis ι R M) : Module.Finite R M := by
+theorem _root_.module.finite.of_basis {R M ι : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [Finite ι]
+    (b : Basis ι R M) : Module.Finite R M := by
+  cases nonempty_fintype ι
   classical
   refine' ⟨⟨finset.univ.image b, _⟩⟩
   simp only [Set.image_univ, Finset.coe_univ, Finset.coe_image, Basis.span_eq]
 
-instance _root_.module.finite.matrix {ι₁ : Type _} [Fintype ι₁] {ι₂ : Type _} [Fintype ι₂] :
-    Module.Finite R (Matrix ι₁ ι₂ R) :=
-  Module.Finite.of_basis <| Pi.basis fun i => Pi.basisFun R _
-
-variable (M)
+instance _root_.module.finite.matrix {ι₁ ι₂ : Type _} [Finite ι₁] [Finite ι₂] : Module.Finite R (Matrix ι₁ ι₂ R) := by
+  cases nonempty_fintype ι₁
+  cases nonempty_fintype ι₂
+  exact Module.Finite.of_basis (Pi.basis fun i => Pi.basisFun R _)
 
 instance _root_.module.finite.linear_map [Module.Finite R M] [Module.Finite R N] : Module.Finite R (M →ₗ[R] N) := by
   cases subsingleton_or_nontrivial R

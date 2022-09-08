@@ -44,7 +44,7 @@ theorem exists_clause_holds_core {v : Nat → Nat} :
     apply List.forall_mem_nilₓ
     rw [List.forall_mem_singletonₓ]
     simp only [val_canonize h0.left, val_canonize h0.right, term.val_sub, preform.holds, sub_eq_add_neg] at *
-    rw [← sub_eq_add_neg, le_sub, sub_zero, Int.coe_nat_le]
+    rw [← sub_eq_add_neg, le_sub, sub_zero, Int.coe_nat_leₓ]
     assumption
     
   · cases h1

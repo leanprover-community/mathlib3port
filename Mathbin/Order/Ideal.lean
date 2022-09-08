@@ -182,7 +182,7 @@ theorem coe_top : ((⊤ : Ideal P) : Set P) = univ :=
 theorem is_proper_of_ne_top (ne_top : I ≠ ⊤) : IsProper I :=
   ⟨fun h => ne_top <| ext h⟩
 
-theorem IsProper.ne_top (hI : IsProper I) : I ≠ ⊤ := fun h => is_proper.ne_univ <| congr_arg coe h
+theorem IsProper.ne_top (hI : IsProper I) : I ≠ ⊤ := fun h => is_proper.ne_univ <| congr_argₓ coe h
 
 theorem _root_.is_coatom.is_proper (hI : IsCoatom I) : IsProper I :=
   is_proper_of_ne_top hI.1

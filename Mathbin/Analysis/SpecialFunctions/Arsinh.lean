@@ -82,7 +82,7 @@ theorem cosh_arsinh (x : ℝ) : cosh (arsinh x) = sqrt (1 + x ^ 2) := by
 
 /-- `sinh` is surjective, `∀ b, ∃ a, sinh a = b`. In this case, we use `a = arsinh b`. -/
 theorem sinh_surjective : Surjective sinh :=
-  LeftInverse.surjectiveₓ sinh_arsinh
+  LeftInverse.surjective sinh_arsinh
 
 /-- `sinh` is bijective, both injective and surjective. -/
 theorem sinh_bijective : Bijective sinh :=

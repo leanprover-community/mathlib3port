@@ -456,13 +456,13 @@ theorem exists_list_of_mem_closure {s : Set G} {a : G} (h : a ∈ Closure s) :
       ⟨L.reverse.map Inv.inv, fun x hx =>
         let ⟨y, hy1, hy2⟩ := List.exists_of_mem_mapₓ hx
         hy2 ▸
-          Or.imp id
+          Or.impₓ id
             (by
               rw [inv_invₓ] <;> exact id)
             (HL1 _ <| List.mem_reverseₓ.1 hy1).symm,
         HL2 ▸
           List.recOn L inv_one.symm fun hd tl ih => by
-            rw [List.reverse_cons, List.map_append, List.prod_append, ih, List.map_singleton, List.prod_cons,
+            rw [List.reverse_cons, List.map_appendₓ, List.prod_append, ih, List.map_singletonₓ, List.prod_cons,
               List.prod_nil, mul_oneₓ, List.prod_cons, mul_inv_rev]⟩)
     fun x y hx hy ⟨L1, HL1, HL2⟩ ⟨L2, HL3, HL4⟩ =>
     ⟨L1 ++ L2, List.forall_mem_appendₓ.2 ⟨HL1, HL3⟩, by

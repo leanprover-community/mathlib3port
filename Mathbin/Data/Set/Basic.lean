@@ -642,7 +642,7 @@ theorem union_subset_iff {s t u : Set α} : s ∪ t ⊆ u ↔ s ⊆ u ∧ t ⊆ 
   (forall_congrₓ fun x => or_imp_distrib).trans forall_and_distrib
 
 theorem union_subset_union {s₁ s₂ t₁ t₂ : Set α} (h₁ : s₁ ⊆ s₂) (h₂ : t₁ ⊆ t₂) : s₁ ∪ t₁ ⊆ s₂ ∪ t₂ := fun x =>
-  Or.imp (@h₁ _) (@h₂ _)
+  Or.impₓ (@h₁ _) (@h₂ _)
 
 theorem union_subset_union_left {s₁ s₂ : Set α} (t) (h : s₁ ⊆ s₂) : s₁ ∪ t ⊆ s₂ ∪ t :=
   union_subset_union h Subset.rfl
@@ -887,7 +887,7 @@ theorem insert_ne_self : insert a s ≠ s ↔ a ∉ s :=
 theorem insert_subset : insert a s ⊆ t ↔ a ∈ t ∧ s ⊆ t := by
   simp only [subset_def, or_imp_distrib, forall_and_distrib, forall_eq, mem_insert_iff]
 
-theorem insert_subset_insert (h : s ⊆ t) : insert a s ⊆ insert a t := fun x => Or.imp_rightₓ (@h _)
+theorem insert_subset_insert (h : s ⊆ t) : insert a s ⊆ insert a t := fun x => Or.imp_right (@h _)
 
 theorem insert_subset_insert_iff (ha : a ∉ s) : insert a s ⊆ insert a t ↔ s ⊆ t := by
   refine' ⟨fun h x hx => _, insert_subset_insert⟩
@@ -930,7 +930,7 @@ theorem insert_union_distrib (a : α) (s t : Set α) : insert a (s ∪ t) = inse
   ext fun _ => or_or_distrib_left _ _ _
 
 theorem insert_inj (ha : a ∉ s) : insert a s = insert b s ↔ a = b :=
-  ⟨fun h => eq_of_not_mem_of_mem_insert (h.subst <| mem_insert a s) ha, congr_arg _⟩
+  ⟨fun h => eq_of_not_mem_of_mem_insert (h.subst <| mem_insert a s) ha, congr_argₓ _⟩
 
 -- useful in proofs by induction
 theorem forall_of_forall_insert {P : α → Prop} {a : α} {s : Set α} (H : ∀ x, x ∈ insert a s → P x) (x) (h : x ∈ s) :
@@ -1218,7 +1218,7 @@ theorem compl_subset_comm : sᶜ ⊆ t ↔ tᶜ ⊆ s :=
   @compl_le_iff_compl_le _ s _ _
 
 theorem subset_compl_comm : s ⊆ tᶜ ↔ t ⊆ sᶜ :=
-  @le_compl_iff_le_compl _ t _ _
+  @le_compl_iff_le_compl _ _ _ t
 
 @[simp]
 theorem compl_subset_compl : sᶜ ⊆ tᶜ ↔ t ⊆ s :=
@@ -1446,11 +1446,11 @@ theorem insert_inter_of_not_mem (h : a ∉ t) : insert a s ∩ t = s ∩ t :=
 
 @[simp]
 theorem union_diff_self {s t : Set α} : s ∪ t \ s = s ∪ t :=
-  sup_sdiff_self_right
+  sup_sdiff_self _ _
 
 @[simp]
 theorem diff_union_self {s t : Set α} : s \ t ∪ t = s ∪ t :=
-  sup_sdiff_self_left
+  sdiff_sup_self _ _
 
 @[simp]
 theorem diff_inter_self {a b : Set α} : b \ a ∩ a = ∅ :=
@@ -1971,7 +1971,7 @@ theorem compl_image : Image (compl : Set α → Set α) = Preimage compl :=
   image_eq_preimage_of_inverse compl_compl compl_compl
 
 theorem compl_image_set_of {p : Set α → Prop} : compl '' { s | p s } = { s | p (sᶜ) } :=
-  congr_fun compl_image p
+  congr_funₓ compl_image p
 
 theorem inter_preimage_subset (s : Set α) (t : Set β) (f : α → β) : s ∩ f ⁻¹' t ⊆ f ⁻¹' (f '' s ∩ t) := fun x h =>
   ⟨mem_image_of_mem _ h.left, h.right⟩
@@ -2003,7 +2003,7 @@ theorem prod_quotient_preimage_eq_image [s : Setoidₓ α] (g : Quotientₓ s �
     Set.ext fun ⟨a₁, a₂⟩ =>
       ⟨Quotientₓ.induction_on₂ a₁ a₂ fun a₁ a₂ h => ⟨(a₁, a₂), h, rfl⟩, fun ⟨⟨b₁, b₂⟩, h₁, h₂⟩ =>
         show (g a₁, g a₂) ∈ r from
-          have h₃ : ⟦b₁⟧ = a₁ ∧ ⟦b₂⟧ = a₂ := Prod.ext_iff.1 h₂
+          have h₃ : ⟦b₁⟧ = a₁ ∧ ⟦b₂⟧ = a₂ := Prod.ext_iffₓ.1 h₂
           h₃.1 ▸ h₃.2 ▸ h₁⟩
 
 theorem exists_image_iff (f : α → β) (x : Set α) (P : β → Prop) : (∃ a : f '' x, P a) ↔ ∃ a : x, P (f a) :=
@@ -2028,7 +2028,7 @@ theorem image_perm {s : Set α} {σ : Equivₓ.Perm α} (hs : { a : α | σ a �
     rwa [σ.injective (hi.trans h.symm)]
     
   · refine' iff_of_true ⟨σ.symm i, hs fun h => hi _, σ.apply_symm_apply _⟩ (hs hi)
-    convert congr_arg σ h <;> exact (σ.apply_symm_apply _).symm
+    convert congr_argₓ σ h <;> exact (σ.apply_symm_apply _).symm
     
 
 end Image
@@ -2112,7 +2112,7 @@ instance subsingleton_coe_of_subsingleton [Subsingleton α] {s : Set α} : Subsi
 
 /-- The image of a subsingleton is a subsingleton. -/
 theorem Subsingleton.image (hs : s.Subsingleton) (f : α → β) : (f '' s).Subsingleton :=
-  fun _ ⟨x, hx, Hx⟩ _ ⟨y, hy, Hy⟩ => Hx ▸ Hy ▸ congr_arg f (hs hx hy)
+  fun _ ⟨x, hx, Hx⟩ _ ⟨y, hy, Hy⟩ => Hx ▸ Hy ▸ congr_argₓ f (hs hx hy)
 
 /-- The preimage of a subsingleton under an injective map is a subsingleton. -/
 theorem Subsingleton.preimage {s : Set β} (hs : s.Subsingleton) {f : α → β} (hf : Function.Injective f) :
@@ -2128,7 +2128,7 @@ the set is a subsingleton. -/
 theorem subsingleton_of_preimage {α β : Type _} {f : α → β} (hf : Function.Surjective f) (s : Set β)
     (hs : (f ⁻¹' s).Subsingleton) : s.Subsingleton := fun fx hx fy hy => by
   rcases hf fx, hf fy with ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩
-  exact congr_arg f (hs hx hy)
+  exact congr_argₓ f (hs hx hy)
 
 /-! ### Nontrivial -/
 
@@ -2267,7 +2267,7 @@ theorem Nontrivial.preimage {s : Set β} (hs : s.Nontrivial) {f : α → β} (hf
     (f ⁻¹' s).Nontrivial := by
   rcases hs with ⟨fx, hx, fy, hy, hxy⟩
   rcases hf fx, hf fy with ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩
-  exact ⟨x, hx, y, hy, mt (congr_arg f) hxy⟩
+  exact ⟨x, hx, y, hy, mt (congr_argₓ f) hxy⟩
 
 /-- The image of a nontrivial set under an injective map is nontrivial. -/
 theorem Nontrivial.image (hs : s.Nontrivial) {f : α → β} (hf : Function.Injective f) : (f '' s).Nontrivial :=
@@ -2277,7 +2277,7 @@ theorem Nontrivial.image (hs : s.Nontrivial) {f : α → β} (hf : Function.Inje
 /-- If the image of a set is nontrivial, the set is nontrivial. -/
 theorem nontrivial_of_image (f : α → β) (s : Set α) (hs : (f '' s).Nontrivial) : s.Nontrivial :=
   let ⟨_, ⟨x, hx, rfl⟩, _, ⟨y, hy, rfl⟩, hxy⟩ := hs
-  ⟨x, hx, y, hy, mt (congr_arg f) hxy⟩
+  ⟨x, hx, y, hy, mt (congr_argₓ f) hxy⟩
 
 /-- If the preimage of a set under an injective map is nontrivial, the set is nontrivial. -/
 theorem nontrivial_of_preimage {f : α → β} (hf : Function.Injective f) (s : Set β) (hs : (f ⁻¹' s).Nontrivial) :
@@ -2309,10 +2309,10 @@ variable [Preorderₓ α] [Preorderₓ β] (f : α → β)
 
 
 protected theorem Subsingleton.monotone_on (h : s.Subsingleton) : MonotoneOn f s := fun a ha b hb _ =>
-  (congr_arg _ (h ha hb)).le
+  (congr_argₓ _ (h ha hb)).le
 
 protected theorem Subsingleton.antitone_on (h : s.Subsingleton) : AntitoneOn f s := fun a ha b hb _ =>
-  (congr_arg _ (h hb ha)).le
+  (congr_argₓ _ (h hb ha)).le
 
 protected theorem Subsingleton.strict_mono_on (h : s.Subsingleton) : StrictMonoOn f s := fun a ha b hb hlt =>
   (hlt.Ne (h ha hb)).elim
@@ -2521,11 +2521,11 @@ theorem range_id' : (Range fun x : α => x) = univ :=
 
 @[simp]
 theorem _root_.prod.range_fst [Nonempty β] : Range (Prod.fst : α × β → α) = univ :=
-  Prod.fst_surjectiveₓ.range_eq
+  Prod.fst_surjective.range_eq
 
 @[simp]
 theorem _root_.prod.range_snd [Nonempty α] : Range (Prod.snd : α × β → β) = univ :=
-  Prod.snd_surjective.range_eq
+  Prod.snd_surjectiveₓ.range_eq
 
 @[simp]
 theorem range_eval {ι : Type _} {α : ι → Sort _} [∀ i, Nonempty (α i)] (i : ι) :
@@ -2574,11 +2574,11 @@ theorem preimage_inr_range_inl : Sum.inr ⁻¹' Range (Sum.inl : α → Sum α �
 
 @[simp]
 theorem compl_range_inl : Range (Sum.inl : α → Sum α β)ᶜ = Range (Sum.inr : β → Sum α β) :=
-  is_compl_range_inl_range_inr.compl_eq
+  IsCompl.compl_eq is_compl_range_inl_range_inr
 
 @[simp]
 theorem compl_range_inr : Range (Sum.inr : β → Sum α β)ᶜ = Range (Sum.inl : α → Sum α β) :=
-  is_compl_range_inl_range_inr.symm.compl_eq
+  IsCompl.compl_eq is_compl_range_inl_range_inr.symm
 
 @[simp]
 theorem range_quot_mk (r : α → α → Prop) : Range (Quot.mk r) = univ :=
@@ -2820,7 +2820,7 @@ theorem Option.injective_iff {α β} {f : Option α → β} :
   simp only [mem_range, not_exists, (· ∘ ·)]
   refine' ⟨fun hf => ⟨hf.comp (Option.some_injective _), fun x => hf.Ne <| Option.some_ne_none _⟩, _⟩
   rintro ⟨h_some, h_none⟩ (_ | a) (_ | b) hab
-  exacts[rfl, (h_none _ hab.symm).elim, (h_none _ hab).elim, congr_arg some (h_some hab)]
+  exacts[rfl, (h_none _ hab.symm).elim, (h_none _ hab).elim, congr_argₓ some (h_some hab)]
 
 /-! ### Image and preimage on subtypes -/
 
@@ -2870,7 +2870,7 @@ theorem coe_image_univ (s : Set α) : (coe : s → α) '' Set.Univ = s :=
 
 @[simp]
 theorem image_preimage_coe (s t : Set α) : (coe : s → α) '' (coe ⁻¹' t) = t ∩ s :=
-  image_preimage_eq_inter_range.trans <| congr_arg _ range_coe
+  image_preimage_eq_inter_range.trans <| congr_argₓ _ range_coe
 
 theorem image_preimage_val (s t : Set α) : (Subtype.val : s → α) '' (Subtype.val ⁻¹' t) = t ∩ s :=
   image_preimage_coe s t

@@ -979,6 +979,54 @@ theorem Ioo_coe_coe : ioo (a : WithBot α) b = (ioo a b).map Embedding.coeOption
 
 end WithBot
 
+namespace OrderIso
+
+variable [Preorderₓ α] [Preorderₓ β]
+
+/-! #### Transfer locally finite orders across order isomorphisms -/
+
+
+-- See note [reducible non-instances]
+/-- Transfer `locally_finite_order` across an `order_iso`. -/
+@[reducible]
+def locallyFiniteOrder [LocallyFiniteOrder β] (f : α ≃o β) : LocallyFiniteOrder α where
+  finsetIcc := fun a b => (icc (f a) (f b)).map f.symm.toEquiv.toEmbedding
+  finsetIco := fun a b => (ico (f a) (f b)).map f.symm.toEquiv.toEmbedding
+  finsetIoc := fun a b => (ioc (f a) (f b)).map f.symm.toEquiv.toEmbedding
+  finsetIoo := fun a b => (ioo (f a) (f b)).map f.symm.toEquiv.toEmbedding
+  finset_mem_Icc := by
+    simp
+  finset_mem_Ico := by
+    simp
+  finset_mem_Ioc := by
+    simp
+  finset_mem_Ioo := by
+    simp
+
+-- See note [reducible non-instances]
+/-- Transfer `locally_finite_order_top` across an `order_iso`. -/
+@[reducible]
+def locallyFiniteOrderTop [LocallyFiniteOrderTop β] (f : α ≃o β) : LocallyFiniteOrderTop α where
+  finsetIci := fun a => (ici (f a)).map f.symm.toEquiv.toEmbedding
+  finsetIoi := fun a => (ioi (f a)).map f.symm.toEquiv.toEmbedding
+  finset_mem_Ici := by
+    simp
+  finset_mem_Ioi := by
+    simp
+
+-- See note [reducible non-instances]
+/-- Transfer `locally_finite_order_bot` across an `order_iso`. -/
+@[reducible]
+def locallyFiniteOrderBot [LocallyFiniteOrderBot β] (f : α ≃o β) : LocallyFiniteOrderBot α where
+  finsetIic := fun a => (iic (f a)).map f.symm.toEquiv.toEmbedding
+  finsetIio := fun a => (iio (f a)).map f.symm.toEquiv.toEmbedding
+  finset_mem_Iic := by
+    simp
+  finset_mem_Iio := by
+    simp
+
+end OrderIso
+
 /-! #### Subtype of a locally finite order -/
 
 

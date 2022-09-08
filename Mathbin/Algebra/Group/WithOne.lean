@@ -307,7 +307,7 @@ instance [Semigroupₓ α] : SemigroupWithZeroₓ (WithZero α) :=
       | none, _, _ => rfl
       | some a, none, _ => rfl
       | some a, some b, none => rfl
-      | some a, some b, some c => congr_arg some (mul_assoc _ _ _) }
+      | some a, some b, some c => congr_argₓ some (mul_assoc _ _ _) }
 
 instance [CommSemigroupₓ α] : CommSemigroupₓ (WithZero α) :=
   { WithZero.semigroupWithZero with
@@ -315,18 +315,18 @@ instance [CommSemigroupₓ α] : CommSemigroupₓ (WithZero α) :=
       match a, b with
       | none, _ => (mul_zero _).symm
       | some a, none => rfl
-      | some a, some b => congr_arg some (mul_comm _ _) }
+      | some a, some b => congr_argₓ some (mul_comm _ _) }
 
 instance [MulOneClassₓ α] : MulZeroOneClassₓ (WithZero α) :=
   { WithZero.mulZeroClass, WithZero.hasOne with
     one_mul := fun a =>
       match a with
       | none => rfl
-      | some a => congr_arg some <| one_mulₓ _,
+      | some a => congr_argₓ some <| one_mulₓ _,
     mul_one := fun a =>
       match a with
       | none => rfl
-      | some a => congr_arg some <| mul_oneₓ _ }
+      | some a => congr_argₓ some <| mul_oneₓ _ }
 
 instance [One α] [Pow α ℕ] : Pow (WithZero α) ℕ :=
   ⟨fun x n =>
@@ -344,11 +344,11 @@ instance [Monoidₓ α] : MonoidWithZeroₓ (WithZero α) :=
     npow_zero' := fun x =>
       match x with
       | none => rfl
-      | some x => congr_arg some <| pow_zeroₓ _,
+      | some x => congr_argₓ some <| pow_zeroₓ _,
     npow_succ' := fun n x =>
       match x with
       | none => rfl
-      | some x => congr_arg some <| pow_succₓ _ _ }
+      | some x => congr_argₓ some <| pow_succₓ _ _ }
 
 instance [CommMonoidₓ α] : CommMonoidWithZero (WithZero α) :=
   { WithZero.monoidWithZero, WithZero.commSemigroup with }
@@ -397,20 +397,20 @@ instance [DivInvMonoidₓ α] : DivInvMonoidₓ (WithZero α) :=
       match a, b with
       | none, _ => rfl
       | some a, none => rfl
-      | some a, some b => congr_arg some (div_eq_mul_inv _ _),
+      | some a, some b => congr_argₓ some (div_eq_mul_inv _ _),
     zpow := fun n x => x ^ n,
     zpow_zero' := fun x =>
       match x with
       | none => rfl
-      | some x => congr_arg some <| zpow_zero _,
+      | some x => congr_argₓ some <| zpow_zero _,
     zpow_succ' := fun n x =>
       match x with
       | none => rfl
-      | some x => congr_arg some <| DivInvMonoidₓ.zpow_succ' _ _,
+      | some x => congr_argₓ some <| DivInvMonoidₓ.zpow_succ' _ _,
     zpow_neg' := fun n x =>
       match x with
       | none => rfl
-      | some x => congr_arg some <| DivInvMonoidₓ.zpow_neg' _ _ }
+      | some x => congr_argₓ some <| DivInvMonoidₓ.zpow_neg' _ _ }
 
 instance [DivisionMonoid α] : DivisionMonoid (WithZero α) :=
   { WithZero.divInvMonoid, WithZero.hasInvolutiveInv with
@@ -419,7 +419,7 @@ instance [DivisionMonoid α] : DivisionMonoid (WithZero α) :=
       | none, none => rfl
       | none, some b => rfl
       | some a, none => rfl
-      | some a, some b => congr_arg some <| mul_inv_rev _ _,
+      | some a, some b => congr_argₓ some <| mul_inv_rev _ _,
     inv_eq_of_mul := fun a b =>
       match a, b with
       | none, none => fun _ => rfl
@@ -427,7 +427,7 @@ instance [DivisionMonoid α] : DivisionMonoid (WithZero α) :=
         contradiction
       | some a, none => by
         contradiction
-      | some a, some b => fun h => congr_arg some <| inv_eq_of_mul_eq_one_right <| Option.some_injective _ h }
+      | some a, some b => fun h => congr_argₓ some <| inv_eq_of_mul_eq_one_right <| Option.some_injective _ h }
 
 instance [DivisionCommMonoid α] : DivisionCommMonoid (WithZero α) :=
   { WithZero.divisionMonoid, WithZero.commSemigroup with }
@@ -476,7 +476,7 @@ instance [Semiringₓ α] : Semiringₓ (WithZero α) :=
         cases' c with c <;>
           try
             rfl
-      exact congr_arg some (left_distrib _ _ _),
+      exact congr_argₓ some (left_distrib _ _ _),
     right_distrib := fun a b c => by
       cases' c with c
       · change (a + b) * 0 = a * 0 + b * 0
@@ -486,7 +486,7 @@ instance [Semiringₓ α] : Semiringₓ (WithZero α) :=
         cases' b with b <;>
           try
             rfl
-      exact congr_arg some (right_distrib _ _ _) }
+      exact congr_argₓ some (right_distrib _ _ _) }
 
 /-- Any group is isomorphic to the units of itself adjoined with `0`. -/
 def unitsWithZeroEquiv [Groupₓ α] : (WithZero α)ˣ ≃* α where

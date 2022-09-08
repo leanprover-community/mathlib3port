@@ -49,7 +49,7 @@ instance field_smooth_ring {𝕜 : Type _} [NontriviallyNormedField 𝕜] : Smoo
     smooth_mul := by
       rw [smooth_iff]
       refine' ⟨continuous_mul, fun x y => _⟩
-      simp' only [Prod.mk.eta] with mfld_simps
+      simp' only [Prod.mk.etaₓ] with mfld_simps
       rw [cont_diff_on_univ]
       exact cont_diff_mul }
 

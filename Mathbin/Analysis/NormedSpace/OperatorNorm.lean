@@ -817,7 +817,7 @@ def prodMapL : (M₁ →L[𝕜] M₂) × (M₃ →L[𝕜] M₄) →L[𝕜] M₁ 
       rintro ⟨φ, ψ⟩
       apply ContinuousLinearMap.ext fun x => _
       simp only [add_apply, coe_comp', coe_fst', Function.comp_app, compL_apply, flip_apply, coe_snd', inl_apply,
-        inr_apply, Prod.mk_add_mk, add_zeroₓ, zero_addₓ, coe_prod_map', prod_map, Prod.mk.inj_iff, eq_self_iff_true,
+        inr_apply, Prod.mk_add_mk, add_zeroₓ, zero_addₓ, coe_prod_map', prod_mapₓ, Prod.mk.inj_iffₓ, eq_self_iff_true,
         and_selfₓ]
       rfl)
 
@@ -1107,7 +1107,7 @@ theorem ContinuousLinearEquiv.tsum_eq_iff [T2Space M] [T2Space M₂] {f : ι →
       ⟨by
         rintro rfl
         simp , fun H => by
-        simpa using congr_arg (fun z => e z) H⟩
+        simpa using congr_argₓ (fun z => e z) H⟩
     
 
 protected theorem ContinuousLinearEquiv.map_tsum [T2Space M] [T2Space M₂] {f : ι → M} (e : M ≃SL[σ] M₂) :

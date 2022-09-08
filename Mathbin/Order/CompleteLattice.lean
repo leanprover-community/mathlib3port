@@ -494,7 +494,7 @@ theorem Sup_eq_supr' (s : Set α) : sup s = ⨆ a : s, a := by
   rw [supr, Subtype.range_coe]
 
 theorem supr_congr (h : ∀ i, f i = g i) : (⨆ i, f i) = ⨆ i, g i :=
-  congr_arg _ <| funext h
+  congr_argₓ _ <| funext h
 
 theorem Function.Surjective.supr_comp {f : ι → ι'} (hf : Surjective f) (g : ι' → α) : (⨆ x, g (f x)) = ⨆ y, g y := by
   simp only [supr, hf.range_comp]
@@ -542,7 +542,7 @@ theorem Inf_eq_infi' (s : Set α) : inf s = ⨅ a : s, a :=
   @Sup_eq_supr' αᵒᵈ _ _
 
 theorem infi_congr (h : ∀ i, f i = g i) : (⨅ i, f i) = ⨅ i, g i :=
-  congr_arg _ <| funext h
+  congr_argₓ _ <| funext h
 
 theorem Function.Surjective.infi_comp {f : ι → ι'} (hf : Surjective f) (g : ι' → α) : (⨅ x, g (f x)) = ⨅ y, g y :=
   @Function.Surjective.supr_comp αᵒᵈ _ _ _ f hf g
@@ -1144,10 +1144,10 @@ theorem infi_le_infi_of_subset {f : β → α} {s t : Set β} : s ⊆ t → (⨅
   binfi_mono
 
 theorem supr_insert {f : β → α} {s : Set β} {b : β} : (⨆ x ∈ insert b s, f x) = f b⊔⨆ x ∈ s, f x :=
-  Eq.trans supr_union <| congr_arg (fun x => x⊔⨆ x ∈ s, f x) supr_supr_eq_left
+  Eq.trans supr_union <| congr_argₓ (fun x => x⊔⨆ x ∈ s, f x) supr_supr_eq_left
 
 theorem infi_insert {f : β → α} {s : Set β} {b : β} : (⨅ x ∈ insert b s, f x) = f b⊓⨅ x ∈ s, f x :=
-  Eq.trans infi_union <| congr_arg (fun x => x⊓⨅ x ∈ s, f x) infi_infi_eq_left
+  Eq.trans infi_union <| congr_argₓ (fun x => x⊓⨅ x ∈ s, f x) infi_infi_eq_left
 
 theorem supr_singleton {f : β → α} {b : β} : (⨆ x ∈ (singleton b : Set β), f x) = f b := by
   simp
@@ -1180,10 +1180,10 @@ theorem infi_extend_top {e : ι → β} (he : Injective e) (f : ι → α) : (�
 
 
 theorem supr_of_empty' {α ι} [HasSupₓ α] [IsEmpty ι] (f : ι → α) : supr f = sup (∅ : Set α) :=
-  congr_arg sup (range_eq_empty f)
+  congr_argₓ sup (range_eq_empty f)
 
 theorem infi_of_empty' {α ι} [HasInfₓ α] [IsEmpty ι] (f : ι → α) : infi f = inf (∅ : Set α) :=
-  congr_arg inf (range_eq_empty f)
+  congr_argₓ inf (range_eq_empty f)
 
 theorem supr_of_empty [IsEmpty ι] (f : ι → α) : supr f = ⊥ :=
   (supr_of_empty' f).trans Sup_empty
@@ -1221,7 +1221,7 @@ theorem infi_sigma {p : β → Type _} {f : Sigma p → α} : (⨅ x, f x) = ⨅
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 theorem supr_prod {f : β × γ → α} : (⨆ x, f x) = ⨆ (i) (j), f (i, j) :=
   eq_of_forall_ge_iffₓ fun c => by
-    simp only [supr_le_iff, Prod.forall]
+    simp only [supr_le_iff, Prod.forallₓ]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 theorem infi_prod {f : β × γ → α} : (⨅ x, f x) = ⨅ (i) (j), f (i, j) :=

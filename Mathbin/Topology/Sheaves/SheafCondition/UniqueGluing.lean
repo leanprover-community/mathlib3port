@@ -113,7 +113,7 @@ theorem compatible_iff_left_res_eq_right_res (sf : piOpens F U) :
     exact h i j
     
   · intro i j
-    convert congr_arg (limits.pi.π (fun p : ι × ι => F.obj (op (U p.1⊓U p.2))) (i, j)) h
+    convert congr_argₓ (limits.pi.π (fun p : ι × ι => F.obj (op (U p.1⊓U p.2))) (i, j)) h
     · rw [left_res, types.pi_lift_π_apply]
       rfl
       
@@ -135,7 +135,7 @@ theorem is_gluing_iff_eq_res (sf : piOpens F U) (s : F.obj (op (supr U))) :
     exact h i
     
   · intro i
-    convert congr_arg (limits.pi.π (fun i : ι => F.obj (op (U i))) i) h
+    convert congr_argₓ (limits.pi.π (fun i : ι => F.obj (op (U i))) i) h
     rw [res, types.pi_lift_π_apply]
     rfl
     
@@ -151,7 +151,7 @@ theorem is_sheaf_of_is_sheaf_unique_gluing_types (Fsh : F.IsSheafUniqueGluing) :
   have h_compatible : ∀ x : s.X, F.is_compatible U ((F.pi_opens_iso_sections_family U).Hom (s.ι x)) := by
     intro x
     rw [compatible_iff_left_res_eq_right_res]
-    convert congr_fun s.condition x
+    convert congr_funₓ s.condition x
   choose m m_spec m_uniq using fun x : s.X => Fsh U ((pi_opens_iso_sections_family F U).Hom (s.ι x)) (h_compatible x)
   refine' ⟨m, _, _⟩
   · ext ⟨i⟩ x
@@ -162,7 +162,7 @@ theorem is_sheaf_of_is_sheaf_unique_gluing_types (Fsh : F.IsSheafUniqueGluing) :
     ext x
     apply m_uniq
     rw [is_gluing_iff_eq_res]
-    exact congr_fun hl x
+    exact congr_funₓ hl x
     
 
 /-- The sheaf condition in terms of unique gluings can be obtained from the usual
@@ -251,7 +251,7 @@ theorem exists_unique_gluing' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcove
     exact gl_spec i
     
   · intro gl' gl'_spec
-    convert congr_arg _ (gl_uniq (F.1.map (eq_to_hom V_eq_supr_U.symm).op gl') fun i => _) <;>
+    convert congr_argₓ _ (gl_uniq (F.1.map (eq_to_hom V_eq_supr_U.symm).op gl') fun i => _) <;>
       rw [← comp_apply, ← F.1.map_comp]
     · rw [eq_to_hom_op, eq_to_hom_op, eq_to_hom_trans, eq_to_hom_refl, F.1.map_id, id_apply]
       
@@ -286,13 +286,30 @@ theorem eq_of_locally_eq' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcover : 
     (h : ∀ i, F.1.map (iUV i).op s = F.1.map (iUV i).op t) : s = t := by
   have V_eq_supr_U : V = supr U := le_antisymmₓ hcover (supr_le fun i => (iUV i).le)
   suffices F.1.map (eq_to_hom V_eq_supr_U.symm).op s = F.1.map (eq_to_hom V_eq_supr_U.symm).op t by
-    convert congr_arg (F.1.map (eq_to_hom V_eq_supr_U).op) this <;>
+    convert congr_argₓ (F.1.map (eq_to_hom V_eq_supr_U).op) this <;>
       rw [← comp_apply, ← F.1.map_comp, eq_to_hom_op, eq_to_hom_op, eq_to_hom_trans, eq_to_hom_refl, F.1.map_id,
         id_apply]
   apply eq_of_locally_eq
   intro i
   rw [← comp_apply, ← comp_apply, ← F.1.map_comp]
   convert h i
+
+theorem eq_of_locally_eq₂ {U₁ U₂ V : Opens X} (i₁ : U₁ ⟶ V) (i₂ : U₂ ⟶ V) (hcover : V ≤ U₁⊔U₂) (s t : F.1.obj (op V))
+    (h₁ : F.1.map i₁.op s = F.1.map i₁.op t) (h₂ : F.1.map i₂.op s = F.1.map i₂.op t) : s = t := by
+  classical
+  fapply F.eq_of_locally_eq' fun t : ULift Bool => if t.1 then U₁ else U₂
+  · exact fun i => if h : i.1 then eq_to_hom (if_pos h) ≫ i₁ else eq_to_hom (if_neg h) ≫ i₂
+    
+  · refine' le_transₓ hcover _
+    rw [sup_le_iff]
+    constructor
+    · convert le_supr (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up True)
+      
+    · convert le_supr (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up False)
+      
+    
+  · rintro ⟨_ | _⟩ <;> simp [h₁, h₂]
+    
 
 end
 

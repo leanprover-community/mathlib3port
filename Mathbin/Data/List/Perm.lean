@@ -861,7 +861,7 @@ theorem subperm_append_diff_self_of_count_le {l₁ l₂ : List α} (h : ∀ x �
     rw [perm_iff_count.mp this] at h
     by_cases' hx : x = hd
     · subst hd
-      simpa [Nat.succ_le_succ_iff] using h
+      simpa [Nat.succ_le_succ_iffₓ] using h
       
     · simpa [hx] using h
       
@@ -1081,7 +1081,7 @@ theorem revzip_sublists (l : List α) : ∀ l₁ l₂, (l₁, l₂) ∈ revzip�
     rw [sublists_concat, reverse_append, zip_append, ← map_reverse, zip_map_right, zip_map_left] at h <;> [skip,
       · simp
         ]
-    simp only [Prod.mk.inj_iff, mem_map, mem_append, Prod.map_mkₓ, Prod.exists] at h
+    simp only [Prod.mk.inj_iffₓ, mem_map, mem_append, Prod.map_mkₓ, Prod.existsₓ] at h
     rcases h with (⟨l₁, l₂', h, rfl, rfl⟩ | ⟨l₁', l₂, h, rfl, rfl⟩)
     · rw [← append_assoc]
       exact (IH _ _ h).append_right _
@@ -1116,7 +1116,7 @@ theorem range_bind_sublists_len_perm {α : Type _} (l : List α) :
   · simp_rw [range_succ_eq_map, length, cons_bind, map_bind, sublists_len_succ_cons, sublists'_cons,
       List.sublists_len_zero, List.singleton_append]
     refine' ((bind_append_perm (range (tl.length + 1)) _ _).symm.cons _).trans _
-    simp_rw [← List.bind_map, ← cons_append]
+    simp_rw [← List.bind_mapₓ, ← cons_append]
     rw [← List.singleton_append, ← List.sublists_len_zero tl]
     refine' perm.append _ (l_ih.map _)
     rw [List.range_succ, append_bind, bind_singleton, sublists_len_of_length_lt (Nat.lt_succ_selfₓ _), append_nil, ←
@@ -1488,7 +1488,7 @@ theorem injective_permutations'_aux (x : α) : Function.Injective (permutations'
   intro s t h
   apply insert_nth_injective s.length x
   have hl : s.length = t.length := by
-    simpa using congr_arg length h
+    simpa using congr_argₓ length h
   rw [←
     nth_le_permutations'_aux s x s.length
       (by

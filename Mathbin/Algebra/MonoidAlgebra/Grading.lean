@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
 import Mathbin.LinearAlgebra.Finsupp
-import Mathbin.Algebra.MonoidAlgebra.Basic
+import Mathbin.Algebra.MonoidAlgebra.Support
 import Mathbin.Algebra.DirectSum.Internal
 import Mathbin.RingTheory.GradedAlgebra.Basic
 

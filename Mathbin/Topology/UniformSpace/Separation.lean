@@ -487,7 +487,7 @@ theorem map_unique {f : α → β} (hf : UniformContinuous f) {g : SeparationQuo
   ext ⟨a⟩ <;>
     calc
       map f ⟦a⟧ = ⟦f a⟧ := map_mk hf a
-      _ = g ⟦a⟧ := congr_fun comm a
+      _ = g ⟦a⟧ := congr_funₓ comm a
       
 
 theorem map_id : map (@id α) = id :=

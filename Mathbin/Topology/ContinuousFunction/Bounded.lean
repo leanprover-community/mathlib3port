@@ -508,7 +508,7 @@ theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : Is
     
   · exact (hU x').2.2 _ hx' _ (hU x').1 hg
     
-  · have F_f_g : F (f x') = F (g x') := (congr_arg (fun f : tα → tβ => (f ⟨x', x'tα⟩ : β)) f_eq_g : _)
+  · have F_f_g : F (f x') = F (g x') := (congr_argₓ (fun f : tα → tβ => (f ⟨x', x'tα⟩ : β)) f_eq_g : _)
     calc
       dist (f x') (g x') ≤ dist (f x') (F (f x')) + dist (g x') (F (f x')) := dist_triangle_right _ _ _
       _ = dist (f x') (F (f x')) + dist (g x') (F (g x')) := by
@@ -928,7 +928,7 @@ theorem mk_of_compact_sub [CompactSpace α] (f g : C(α, β)) : mkOfCompact (f -
 theorem coe_zsmul_rec : ∀ z, ⇑(zsmulRec z f) = z • f
   | Int.ofNat n => by
     rw [zsmulRec, Int.of_nat_eq_coe, coe_nsmul_rec, coe_nat_zsmul]
-  | -[1+ n] => by
+  | -[1 + n] => by
     rw [zsmulRec, zsmul_neg_succ_of_nat, coe_neg, coe_nsmul_rec]
 
 instance hasIntScalar :

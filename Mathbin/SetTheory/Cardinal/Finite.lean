@@ -22,6 +22,8 @@ open Cardinal
 
 noncomputable section
 
+open BigOperators
+
 variable {α β : Type _}
 
 namespace Nat
@@ -82,6 +84,9 @@ theorem card_ulift (α : Type _) : Nat.card (ULift α) = Nat.card α :=
 @[simp]
 theorem card_plift (α : Type _) : Nat.card (Plift α) = Nat.card α :=
   card_congr Equivₓ.plift
+
+theorem card_pi {β : α → Type _} [Fintype α] : Nat.card (∀ a, β a) = ∏ a, Nat.card (β a) := by
+  simp_rw [Nat.card, mk_pi, prod_eq_of_fintype, to_nat_lift, to_nat_finset_prod]
 
 @[simp]
 theorem card_zmod (n : ℕ) : Nat.card (Zmod n) = n := by

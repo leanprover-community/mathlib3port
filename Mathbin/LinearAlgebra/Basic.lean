@@ -119,7 +119,7 @@ theorem linear_equiv_fun_on_fintype_symm_single [DecidableEq α] (x : α) (m : M
     (linearEquivFunOnFintype R M α).symm (Pi.single x m) = single x m := by
   ext a
   change (equiv_fun_on_fintype.symm (Pi.single x m)) a = _
-  convert congr_fun (equiv_fun_on_fintype_symm_single x m) a
+  convert congr_funₓ (equiv_fun_on_fintype_symm_single x m) a
 
 @[simp]
 theorem linear_equiv_fun_on_fintype_symm_coe (f : α →₀ M) : (linearEquivFunOnFintype R M α).symm f = f := by
@@ -1833,7 +1833,7 @@ variable (p q : Submodule R M)
 
 /-- Linear equivalence between two equal submodules. -/
 def ofEq (h : p = q) : p ≃ₗ[R] q :=
-  { Equivₓ.Set.ofEq (congr_arg _ h) with map_smul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
+  { Equivₓ.Set.ofEq (congr_argₓ _ h) with map_smul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
 
 variable {p q}
 

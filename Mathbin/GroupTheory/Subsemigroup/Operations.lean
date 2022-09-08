@@ -674,11 +674,11 @@ variable [Mul M] [Mul N] [Mul P] (S : Subsemigroup M)
 
 @[simp, to_additive]
 theorem srange_fst [Nonempty N] : (fst M N).srange = ⊤ :=
-  (fst M N).srange_top_of_surjective <| Prod.fst_surjectiveₓ
+  (fst M N).srange_top_of_surjective <| Prod.fst_surjective
 
 @[simp, to_additive]
 theorem srange_snd [Nonempty M] : (snd M N).srange = ⊤ :=
-  (snd M N).srange_top_of_surjective <| Prod.snd_surjective
+  (snd M N).srange_top_of_surjective <| Prod.snd_surjectiveₓ
 
 @[to_additive]
 theorem prod_eq_top_iff [Nonempty M] [Nonempty N] {s : Subsemigroup M} {t : Subsemigroup N} :
@@ -709,7 +709,7 @@ variable [Mul M] [Mul N] {S T : Subsemigroup M}
 @[to_additive
       "Makes the identity additive isomorphism from a proof two\nsubsemigroups of an additive semigroup are equal."]
 def subsemigroupCongr (h : S = T) : S ≃* T :=
-  { Equivₓ.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl }
+  { Equivₓ.setCongr <| congr_argₓ _ h with map_mul' := fun _ _ => rfl }
 
 -- this name is primed so that the version to `f.range` instead of `f.srange` can be unprimed.
 /-- A semigroup homomorphism `f : M →ₙ* N` with a left-inverse `g : N → M` defines a multiplicative

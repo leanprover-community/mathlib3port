@@ -85,12 +85,12 @@ theorem mul_salem_spencer_singleton (a : α) : MulSalemSpencer ({a} : Set α) :=
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[to_additive AddSalemSpencer.prod]
 theorem MulSalemSpencer.prod {t : Set β} (hs : MulSalemSpencer s) (ht : MulSalemSpencer t) : MulSalemSpencer (s ×ˢ t) :=
-  fun a b c ha hb hc h => Prod.extₓ (hs ha.1 hb.1 hc.1 (Prod.ext_iff.1 h).1) (ht ha.2 hb.2 hc.2 (Prod.ext_iff.1 h).2)
+  fun a b c ha hb hc h => Prod.extₓ (hs ha.1 hb.1 hc.1 (Prod.ext_iffₓ.1 h).1) (ht ha.2 hb.2 hc.2 (Prod.ext_iffₓ.1 h).2)
 
 @[to_additive]
 theorem mul_salem_spencer_pi {ι : Type _} {α : ι → Type _} [∀ i, Monoidₓ (α i)] {s : ∀ i, Set (α i)}
     (hs : ∀ i, MulSalemSpencer (s i)) : MulSalemSpencer ((Univ : Set ι).pi s) := fun a b c ha hb hc h =>
-  funext fun i => hs i (ha i trivialₓ) (hb i trivialₓ) (hc i trivialₓ) <| congr_fun h i
+  funext fun i => hs i (ha i trivialₓ) (hb i trivialₓ) (hc i trivialₓ) <| congr_funₓ h i
 
 end Monoidₓ
 

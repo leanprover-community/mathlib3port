@@ -136,7 +136,7 @@ theorem geom_sum₂_self {α : Type _} [CommRingₓ α] (x : α) (n : ℕ) :
       simp_rw [← pow_addₓ]
     _ = ∑ i in Finset.range n, x ^ (n - 1) :=
       Finset.sum_congr rfl fun i hi =>
-        congr_arg _ <| add_tsub_cancel_of_le <| Nat.le_pred_of_ltₓ <| Finset.mem_range.1 hi
+        congr_argₓ _ <| add_tsub_cancel_of_le <| Nat.le_pred_of_ltₓ <| Finset.mem_range.1 hi
     _ = (Finset.range n).card • x ^ (n - 1) := Finset.sum_const _
     _ = n * x ^ (n - 1) := by
       rw [Finset.card_range, nsmul_eq_mul]
@@ -182,7 +182,7 @@ theorem mul_geom_sum [Ringₓ α] (x : α) (n : ℕ) : ((x - 1) * ∑ i in range
     simpa using geom_sum_mul (op x) n
 
 theorem geom_sum_mul_neg [Ringₓ α] (x : α) (n : ℕ) : (∑ i in range n, x ^ i) * (1 - x) = 1 - x ^ n := by
-  have := congr_arg Neg.neg (geom_sum_mul x n)
+  have := congr_argₓ Neg.neg (geom_sum_mul x n)
   rw [neg_sub, ← mul_neg, neg_sub] at this
   exact this
 

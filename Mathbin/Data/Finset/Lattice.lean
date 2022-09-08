@@ -125,7 +125,7 @@ theorem sup_comm (s : Finset β) (t : Finset γ) (f : β → γ → α) :
 
 @[simp]
 theorem sup_attach (s : Finset β) (f : β → α) : (s.attach.sup fun x => f x) = s.sup f :=
-  (s.attach.sup_map (Function.Embedding.subtype _) f).symm.trans <| congr_arg _ attach_map_val
+  (s.attach.sup_map (Function.Embedding.subtype _) f).symm.trans <| congr_argₓ _ attach_map_val
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- See also `finset.product_bUnion`. -/
@@ -619,7 +619,7 @@ theorem comp_sup'_eq_sup'_comp [SemilatticeSup γ] {s : Finset β} (H : s.Nonemp
   · induction f₂ using WithBot.recBotCoe
     · rfl
       
-    · exact congr_arg coe (g_sup f₁ f₂)
+    · exact congr_argₓ coe (g_sup f₁ f₂)
       
     
 
@@ -1107,19 +1107,19 @@ theorem min'_lt_max'_of_card (h₂ : 1 < card s) :
 
 theorem map_of_dual_min (s : Finset αᵒᵈ) : s.min.map ofDual = (s.Image ofDual).max := by
   rw [max_eq_sup_with_bot, sup_image]
-  exact congr_fun Option.map_id _
+  exact congr_funₓ Option.map_id _
 
 theorem map_of_dual_max (s : Finset αᵒᵈ) : s.max.map ofDual = (s.Image ofDual).min := by
   rw [min_eq_inf_with_top, inf_image]
-  exact congr_fun Option.map_id _
+  exact congr_funₓ Option.map_id _
 
 theorem map_to_dual_min (s : Finset α) : s.min.map toDual = (s.Image toDual).max := by
   rw [max_eq_sup_with_bot, sup_image]
-  exact congr_fun Option.map_id _
+  exact congr_funₓ Option.map_id _
 
 theorem map_to_dual_max (s : Finset α) : s.max.map toDual = (s.Image toDual).min := by
   rw [min_eq_inf_with_top, inf_image]
-  exact congr_fun Option.map_id _
+  exact congr_funₓ Option.map_id _
 
 theorem of_dual_min' {s : Finset αᵒᵈ} (hs : s.Nonempty) : ofDual (min' s hs) = max' (s.Image ofDual) (hs.Image _) := by
   convert rfl

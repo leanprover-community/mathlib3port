@@ -189,7 +189,7 @@ theorem norm_sq_div_sub_div_lt_one (x y : ℤ[i]) : ((x / y : ℂ) - ((x / y : �
   calc
     ((x / y : ℂ) - ((x / y : ℤ[i]) : ℂ)).normSq =
         ((x / y : ℂ).re - ((x / y : ℤ[i]) : ℂ).re + ((x / y : ℂ).im - ((x / y : ℤ[i]) : ℂ).im) * I : ℂ).normSq :=
-      congr_arg _ <| by
+      congr_argₓ _ <| by
         apply Complex.ext <;> simp
     _ ≤ (1 / 2 + 1 / 2 * I).normSq :=
       have : abs (2⁻¹ : ℝ) = 2⁻¹ :=
@@ -226,15 +226,15 @@ theorem norm_mod_lt (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (x % y).norm < y.
       
 
 theorem nat_abs_norm_mod_lt (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (x % y).norm.natAbs < y.norm.natAbs :=
-  Int.coe_nat_lt.1
+  Int.coe_nat_ltₓ.1
     (by
-      simp [-Int.coe_nat_lt, norm_mod_lt x hy])
+      simp [-Int.coe_nat_ltₓ, norm_mod_lt x hy])
 
 theorem norm_le_norm_mul_left (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (norm x).natAbs ≤ (norm (x * y)).natAbs := by
   rw [Zsqrtd.norm_mul, Int.nat_abs_mul] <;>
     exact
       le_mul_of_one_le_right (Nat.zero_leₓ _)
-        (Int.coe_nat_le.1
+        (Int.coe_nat_leₓ.1
           (by
             rw [coe_nat_abs_norm] <;> exact Int.add_one_le_of_ltₓ (norm_pos.2 hy)))
 
@@ -312,7 +312,7 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime] (h
                 show (-1 : ℤ) ≠ 0 by
                     decide <|
                   by
-                  simpa [hx0] using congr_arg Zsqrtd.im hx
+                  simpa [hx0] using congr_argₓ Zsqrtd.im hx
             
       have hpk₂ : ¬(p : ℤ[i]) ∣ ⟨k, 1⟩ := fun ⟨x, hx⟩ =>
         lt_irreflₓ (p * x : ℤ[i]).norm.natAbs <|
@@ -326,7 +326,7 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime] (h
                 show (1 : ℤ) ≠ 0 by
                     decide <|
                   by
-                  simpa [hx0] using congr_arg Zsqrtd.im hx
+                  simpa [hx0] using congr_argₓ Zsqrtd.im hx
             
       have hpu : ¬IsUnit (p : ℤ[i]) :=
         mt norm_eq_one_iff.2

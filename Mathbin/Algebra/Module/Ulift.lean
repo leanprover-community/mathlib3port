@@ -51,7 +51,7 @@ instance is_scalar_tower'' [HasSmul R M] [HasSmul M N] [HasSmul R N] [IsScalarTo
       rw [smul_assoc]⟩
 
 instance [HasSmul R M] [HasSmul Rᵐᵒᵖ M] [IsCentralScalar R M] : IsCentralScalar R (ULift M) :=
-  ⟨fun r m => congr_arg up <| op_smul_eq_smul r m.down⟩
+  ⟨fun r m => congr_argₓ up <| op_smul_eq_smul r m.down⟩
 
 @[to_additive]
 instance mulAction [Monoidₓ R] [MulAction R M] : MulAction (ULift R) M where

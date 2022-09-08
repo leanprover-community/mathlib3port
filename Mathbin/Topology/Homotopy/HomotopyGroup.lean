@@ -158,7 +158,7 @@ def genLoopZeroEquiv : GenLoop 0 x ≃ X where
   invFun := fun x => ⟨ContinuousMap.const _ x, fun _ ⟨f0, _⟩ => f0.elim0⟩
   left_inv := fun f => by
     ext1
-    exact congr_arg f (Subsingleton.elim _ _)
+    exact congr_argₓ f (Subsingleton.elim _ _)
   right_inv := fun _ => rfl
 
 /-- The 0th homotopy "group" is equivalent to the path components of `X`, aka the `zeroth_homotopy`.
@@ -170,8 +170,8 @@ def pi0EquivPathComponents : π 0 x ≃ ZerothHomotopy X :=
       intros
       constructor <;> rintro ⟨H⟩
       exacts[⟨{ toFun := fun t => H ⟨t, Finₓ.elim0⟩,
-            source' := (H.apply_zero _).trans (congr_arg a₁ matrix.zero_empty.symm),
-            target' := (H.apply_one _).trans (congr_arg a₂ matrix.zero_empty.symm) }⟩,
+            source' := (H.apply_zero _).trans (congr_argₓ a₁ matrix.zero_empty.symm),
+            target' := (H.apply_one _).trans (congr_argₓ a₂ matrix.zero_empty.symm) }⟩,
         ⟨{ toFun := fun t0 => H t0.fst,
             map_zero_left' := fun _ => by
               convert H.source,
@@ -192,11 +192,11 @@ def genLoopOneEquivPathSelf : GenLoop 1 x ≃ Path x x where
   invFun := fun p =>
     { toFun := fun c => p c.head,
       Boundary := by
-        rintro y ⟨i, iH | iH⟩ <;> cases Unique.eq_default i <;> apply (congr_arg p iH).trans
+        rintro y ⟨i, iH | iH⟩ <;> cases Unique.eq_default i <;> apply (congr_argₓ p iH).trans
         exacts[p.source, p.target] }
   left_inv := fun p => by
     ext1
-    exact congr_arg p y.one_char.symm
+    exact congr_argₓ p y.one_char.symm
   right_inv := fun p => by
     ext
     rfl

@@ -64,7 +64,7 @@ theorem is_compl_even_odd : IsCompl { n : ℤ | Even n } { n | Odd n } := by
   simp [← Set.compl_set_of, is_compl_compl]
 
 theorem even_or_odd (n : ℤ) : Even n ∨ Odd n :=
-  Or.imp_rightₓ odd_iff_not_even.2 <| em <| Even n
+  Or.imp_right odd_iff_not_even.2 <| em <| Even n
 
 theorem even_or_odd' (n : ℤ) : ∃ k, n = 2 * k ∨ n = 2 * k + 1 := by
   simpa only [← two_mul, exists_or_distrib, ← Odd, ← Even] using even_or_odd n

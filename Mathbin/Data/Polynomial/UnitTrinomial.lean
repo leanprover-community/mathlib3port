@@ -251,7 +251,7 @@ theorem irreducible_aux2 {k m m' n : ℕ} (hkm : k < m) (hmn : m < n) (hkm' : k 
     (hp : p = trinomial k m n u v w) (hq : q = trinomial k m' n u v w) (h : p * p.mirror = q * q.mirror) :
     q = p ∨ q = p.mirror := by
   let f : ℤ[X] → ℤ[X] := fun p => ⟨Finsupp.filter (Set.Ioo (k + n) (n + n)) p.toFinsupp⟩
-  replace h := congr_arg f h
+  replace h := congr_argₓ f h
   replace h := (irreducible_aux1 hkm hmn u v w hp).trans h
   replace h := h.trans (irreducible_aux1 hkm' hmn' u v w hq).symm
   rw [(is_unit_C.mpr v.is_unit).mul_right_inj] at h
@@ -277,11 +277,11 @@ theorem irreducible_aux2 {k m m' n : ℕ} (hkm : k < m) (hmn : m < n) (hkm' : k 
 theorem irreducible_aux3 {k m m' n : ℕ} (hkm : k < m) (hmn : m < n) (hkm' : k < m') (hmn' : m' < n)
     (u v w x z : Units ℤ) (hp : p = trinomial k m n u v w) (hq : q = trinomial k m' n x v z)
     (h : p * p.mirror = q * q.mirror) : q = p ∨ q = p.mirror := by
-  have hmul := congr_arg leading_coeff h
+  have hmul := congr_argₓ leading_coeff h
   rw [leading_coeff_mul, leading_coeff_mul, mirror_leading_coeff, mirror_leading_coeff, hp, hq,
     trinomial_leading_coeff hkm hmn w.ne_zero, trinomial_leading_coeff hkm' hmn' z.ne_zero,
     trinomial_trailing_coeff hkm hmn u.ne_zero, trinomial_trailing_coeff hkm' hmn' x.ne_zero] at hmul
-  have hadd := congr_arg (eval 1) h
+  have hadd := congr_argₓ (eval 1) h
   rw [eval_mul, eval_mul, mirror_eval_one, mirror_eval_one, ← sq, ← sq, hp, hq] at hadd
   simp only [eval_add, eval_C_mul, eval_pow, eval_X, one_pow, mul_oneₓ, trinomial_def] at hadd
   rw [add_assocₓ, add_assocₓ, add_commₓ ↑u, add_commₓ ↑x, add_assocₓ, add_assocₓ] at hadd

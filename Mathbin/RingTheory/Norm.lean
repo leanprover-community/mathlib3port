@@ -49,7 +49,7 @@ variable {K L F : Type _} [Field K] [Field L] [Field F]
 
 variable [Algebra K L] [Algebra K F]
 
-variable {ι : Type w} [Fintype ι]
+variable {ι : Type w}
 
 open FiniteDimensional
 
@@ -80,13 +80,14 @@ theorem norm_eq_one_of_not_exists_basis (h : ¬∃ s : Finset S, Nonempty (Basis
 variable {R}
 
 -- Can't be a `simp` lemma because it depends on a choice of basis
-theorem norm_eq_matrix_det [DecidableEq ι] (b : Basis ι R S) (s : S) :
+theorem norm_eq_matrix_det [Fintype ι] [DecidableEq ι] (b : Basis ι R S) (s : S) :
     norm R s = Matrix.det (Algebra.leftMulMatrix b s) := by
   rwa [norm_apply, ← LinearMap.det_to_matrix b, ← to_matrix_lmul_eq]
   rfl
 
 /-- If `x` is in the base field `K`, then the norm is `x ^ [L : K]`. -/
-theorem norm_algebra_map_of_basis (b : Basis ι R S) (x : R) : norm R (algebraMap R S x) = x ^ Fintype.card ι := by
+theorem norm_algebra_map_of_basis [Fintype ι] (b : Basis ι R S) (x : R) :
+    norm R (algebraMap R S x) = x ^ Fintype.card ι := by
   haveI := Classical.decEq ι
   rw [norm_apply, ← det_to_matrix b, lmul_algebra_map]
   convert @det_diagonal _ _ _ _ _ fun i : ι => x
@@ -134,8 +135,11 @@ end EqProdRoots
 
 section EqZeroIff
 
+variable [Finite ι]
+
 theorem norm_eq_zero_iff_of_basis [IsDomain R] [IsDomain S] (b : Basis ι R S) {x : S} : Algebra.norm R x = 0 ↔ x = 0 :=
   by
+  cases nonempty_fintype ι
   have hι : Nonempty ι := b.index_nonempty
   letI := Classical.decEq ι
   rw [Algebra.norm_eq_matrix_det b]
@@ -145,7 +149,7 @@ theorem norm_eq_zero_iff_of_basis [IsDomain R] [IsDomain S] (b : Basis ι R S) {
     rw [← b.equiv_fun.apply_symm_apply v, b.equiv_fun_symm_apply, b.equiv_fun_apply,
       Algebra.left_mul_matrix_mul_vec_repr] at hv
     refine' (mul_eq_zero.mp (b.ext_elem fun i => _)).resolve_right (show (∑ i, v i • b i) ≠ 0 from _)
-    · simpa only [LinearEquiv.map_zero, Pi.zero_apply] using congr_fun hv i
+    · simpa only [LinearEquiv.map_zero, Pi.zero_apply] using congr_funₓ hv i
       
     · contrapose! v_ne with sum_eq
       apply b.equiv_fun.symm.injective

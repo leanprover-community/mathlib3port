@@ -75,7 +75,7 @@ theorem sum_boole_mul [DecidableEq α] (s : Finset α) (f : α → β) (a : α) 
 
 end Semiringₓ
 
-theorem sum_div [DivisionRing β] {s : Finset α} {f : α → β} {b : β} : (∑ x in s, f x) / b = ∑ x in s, f x / b := by
+theorem sum_div [DivisionSemiring β] {s : Finset α} {f : α → β} {b : β} : (∑ x in s, f x) / b = ∑ x in s, f x / b := by
   simp only [div_eq_mul_inv, sum_mul]
 
 section CommSemiringₓ
@@ -165,7 +165,7 @@ theorem prod_add (f g : α → β) (s : Finset α) :
         
       · intro a₁ a₂ h₁ h₂ H
         ext x
-        simp only [Function.funext_iffₓ, subset_iff, mem_powerset, eq_iff_iff] at h₁ h₂ H
+        simp only [Function.funext_iff, subset_iff, mem_powerset, eq_iff_iff] at h₁ h₂ H
         exact ⟨fun hx => (H x (h₁ hx)).1 hx, fun hx => (H x (h₂ hx)).2 hx⟩
         
       · intro f hf

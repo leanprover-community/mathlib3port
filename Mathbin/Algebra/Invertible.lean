@@ -112,7 +112,7 @@ instance [Monoidₓ α] (a : α) : Subsingleton (Invertible a) :=
     exact left_inv_eq_right_invₓ hba hac⟩
 
 /-- If `r` is invertible and `s = r`, then `s` is invertible. -/
-def Invertible.copy [Monoidₓ α] {r : α} (hr : Invertible r) (s : α) (hs : s = r) : Invertible s where
+def Invertible.copy [MulOneClassₓ α] {r : α} (hr : Invertible r) (s : α) (hs : s = r) : Invertible s where
   invOf := ⅟ r
   inv_of_mul_self := by
     rw [hs, inv_of_mul_self]
@@ -325,4 +325,30 @@ def Invertible.map {R : Type _} {S : Type _} {F : Type _} [MulOneClassₓ R] [Mu
     rw [← map_mul, inv_of_mul_self, map_one]
   mul_inv_of_self := by
     rw [← map_mul, mul_inv_of_self, map_one]
+
+/-- Note that the `invertible (f r)` argument can be satisfied by using `letI := invertible.map f r`
+before applying this lemma. -/
+theorem map_inv_of {R : Type _} {S : Type _} {F : Type _} [MulOneClassₓ R] [Monoidₓ S] [MonoidHomClass F R S] (f : F)
+    (r : R) [Invertible r] [Invertible (f r)] : f (⅟ r) = ⅟ (f r) := by
+  letI := Invertible.map f r
+  convert rfl
+
+/-- A monoid hom with a left-inverse that is also a monoid hom is invertible.
+
+The inverse is computed as `g (⅟(f r))` -/
+@[simps (config := { attrs := [] })]
+def Invertible.ofLeftInverse {R : Type _} {S : Type _} {F G : Type _} [MulOneClassₓ R] [MulOneClassₓ S]
+    [MonoidHomClass F R S] [MonoidHomClass G S R] (f : F) (g : G) (r : R) (h : Function.LeftInverse g f)
+    [Invertible (f r)] : Invertible r :=
+  (Invertible.map g (f r)).copy _ (h r).symm
+
+/-- Invertibility on either side of a monoid hom with a left-inverse is equivalent. -/
+@[simps]
+def invertibleEquivOfLeftInverse {R : Type _} {S : Type _} {F G : Type _} [Monoidₓ R] [Monoidₓ S] [MonoidHomClass F R S]
+    [MonoidHomClass G S R] (f : F) (g : G) (r : R) (h : Function.LeftInverse g f) :
+    Invertible (f r) ≃ Invertible r where
+  toFun := fun _ => Invertible.ofLeftInverse f _ _ h
+  invFun := fun _ => Invertible.map f _
+  left_inv := fun x => Subsingleton.elim _ _
+  right_inv := fun x => Subsingleton.elim _ _
 

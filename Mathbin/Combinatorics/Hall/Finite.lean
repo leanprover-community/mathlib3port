@@ -133,7 +133,7 @@ theorem hall_cond_of_restrict {ι : Type u} {t : ι → Finset α} {s : Finset �
   classical
   rw [← card_image_of_injective s' Subtype.coe_injective]
   convert ht (s'.image coe) using 1
-  apply congr_arg
+  apply congr_argₓ
   ext y
   simp
 

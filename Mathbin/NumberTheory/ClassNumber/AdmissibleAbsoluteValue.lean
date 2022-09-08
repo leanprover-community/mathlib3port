@@ -106,7 +106,7 @@ theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
       
     have : ∀ i h, (finset.univ.filter fun x => t x = s).toList.nthLe i h ∈ finset.univ.filter fun x => t x = s := by
       intro i h
-      exact (Finset.mem_to_list _).mp (List.nth_le_mem _ _ _)
+      exact finset.mem_to_list.mp (List.nth_le_mem _ _ _)
     obtain ⟨_, h₀⟩ := finset.mem_filter.mp (this i₀ _)
     obtain ⟨_, h₁⟩ := finset.mem_filter.mp (this i₁ _)
     exact h₀.trans h₁.symm

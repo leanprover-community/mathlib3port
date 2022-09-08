@@ -257,21 +257,21 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       
   refine' ⟨I, uniform_space_eq <| (uniformity_basis_dist_pow hr.1 hr.2).ext hB.to_has_basis _ _⟩
   · refine' fun n hn => ⟨n, hn, fun x hx => (hdist_le _ _).trans_lt _⟩
-    rwa [← Nnreal.coe_pow, Nnreal.coe_lt_coe, ← not_leₓ, hle_d, not_not, Prod.mk.eta]
+    rwa [← Nnreal.coe_pow, Nnreal.coe_lt_coe, ← not_leₓ, hle_d, not_not, Prod.mk.etaₓ]
     
   · refine' fun n hn => ⟨n + 1, trivialₓ, fun x hx => _⟩
     rw [mem_set_of_eq] at hx
     contrapose! hx
     refine' le_transₓ _ ((div_le_iff' (@two_pos ℝ _ _)).2 (hd_le x.1 x.2))
     rwa [← Nnreal.coe_two, ← Nnreal.coe_div, ← Nnreal.coe_pow, Nnreal.coe_le_coe, pow_succ'ₓ, mul_one_div,
-      Nnreal.div_le_iff two_ne_zero, div_mul_cancel _ (@two_ne_zero ℝ≥0 _ _), hle_d, Prod.mk.eta]
+      Nnreal.div_le_iff two_ne_zero, div_mul_cancel _ (@two_ne_zero ℝ≥0 _ _), hle_d, Prod.mk.etaₓ]
     
 
 /-- A `pseudo_metric_space` instance compatible with a given `uniform_space` structure. -/
 protected noncomputable def UniformSpace.pseudoMetricSpace (X : Type _) [UniformSpace X] [IsCountablyGenerated (𝓤 X)] :
     PseudoMetricSpace X :=
   (UniformSpace.metrizable_uniformity X).some.replaceUniformity <|
-    congr_arg _ (UniformSpace.metrizable_uniformity X).some_spec.symm
+    congr_argₓ _ (UniformSpace.metrizable_uniformity X).some_spec.symm
 
 /-- A `metric_space` instance compatible with a given `uniform_space` structure. -/
 protected noncomputable def UniformSpace.metricSpace (X : Type _) [UniformSpace X] [IsCountablyGenerated (𝓤 X)]

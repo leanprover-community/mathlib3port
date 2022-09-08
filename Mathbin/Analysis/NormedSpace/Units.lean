@@ -157,7 +157,7 @@ theorem inverse_add_nth_order (x : Rˣ) (n : ℕ) :
   refine' (hzero.eventually (inverse_one_sub_nth_order n)).mp (eventually_of_forall _)
   simp only [neg_mul, sub_neg_eq_add]
   intro t h1 h2
-  have h := congr_arg (fun a : R => a * ↑x⁻¹) h1
+  have h := congr_argₓ (fun a : R => a * ↑x⁻¹) h1
   dsimp'  at h
   convert h
   rw [add_mulₓ, mul_assoc]
@@ -222,7 +222,7 @@ theorem inverse_add_norm_diff_nth_order (x : Rˣ) (n : ℕ) :
     by
     refine' (inverse_add_nth_order x n).mp (eventually_of_forall _)
     intro t ht
-    convert congr_arg (fun a => a - (range n).Sum (pow (-↑x⁻¹ * t)) * ↑x⁻¹) ht
+    convert congr_argₓ (fun a => a - (range n).Sum (pow (-↑x⁻¹ * t)) * ↑x⁻¹) ht
     simp
   refine' h.mp (hC.mp (eventually_of_forall _))
   intro t _ hLHS

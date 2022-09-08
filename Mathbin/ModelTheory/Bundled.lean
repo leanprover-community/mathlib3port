@@ -56,7 +56,8 @@ namespace Language
 instance equivSetoid : Setoidₓ (CategoryTheory.Bundled L.Structure) where
   R := fun M N => Nonempty (M ≃[L] N)
   iseqv :=
-    ⟨fun M => ⟨Equiv.refl L M⟩, fun M N => Nonempty.map Equiv.symm, fun M N P => Nonempty.map2 fun MN NP => NP.comp MN⟩
+    ⟨fun M => ⟨Equiv.refl L M⟩, fun M N => Nonempty.mapₓ Equiv.symm, fun M N P =>
+      Nonempty.map2ₓ fun MN NP => NP.comp MN⟩
 
 variable (T : L.Theory)
 

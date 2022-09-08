@@ -215,7 +215,7 @@ theorem NoetherianSpace.finite_irreducible_components [NoetherianSpace α] :
       
     · exact
         (Set.subset_univ _).trans
-          ((congr_arg coe hS₂).trans <| by
+          ((congr_argₓ coe hS₂).trans <| by
               simp ).Subset
       
   obtain ⟨s, hs, e⟩ := finset.mem_image.mp hz

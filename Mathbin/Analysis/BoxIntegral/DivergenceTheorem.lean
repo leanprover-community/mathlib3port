@@ -18,8 +18,8 @@ equal to the sum of integrals of `f` over the faces of `I` taken with appropriat
 
 To make the proof work, we had to ban tagged partitions with “long and thin” boxes. More precisely,
 we use the following generalization of one-dimensional Henstock-Kurzweil integral to functions
-defined on a box in `ℝⁿ` (it corresponds to the value `⊥` of `box_integral.integration_params` in
-the definition of `box_integral.has_integral`).
+defined on a box in `ℝⁿ` (it corresponds to the value `box_integral.integration_params.GP = ⊥` of
+`box_integral.integration_params` in the definition of `box_integral.has_integral`).
 
 We say that `f : ℝⁿ → E` has integral `y : E` over a box `I ⊆ ℝⁿ` if for an arbitrarily small
 positive `ε` and an arbitrarily large `c`, there exists a function `r : ℝⁿ → (0, ∞)` such that for
@@ -44,6 +44,8 @@ open Classical BigOperators Nnreal Ennreal TopologicalSpace BoxIntegral
 open ContinuousLinearMap (lsmul)
 
 open Filter Set Finset Metric
+
+open BoxIntegral.IntegrationParams (gP GP_le)
 
 noncomputable section
 
@@ -155,12 +157,12 @@ we allow `f` to be non-differentiable (but still continuous) at a countable set 
 TODO: If `n > 0`, then the condition at `x ∈ s` can be replaced by a much weaker estimate but this
 requires either better integrability theorems, or usage of a filter depending on the countable set
 `s` (we need to ensure that none of the faces of a partition contain a point from `s`). -/
-theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] E) (s : Set ℝⁿ⁺¹) (hs : s.Countable)
+theorem has_integral_GP_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] E) (s : Set ℝⁿ⁺¹) (hs : s.Countable)
     (Hs : ∀ x ∈ s, ContinuousWithinAt f I.Icc x) (Hd : ∀ x ∈ I.Icc \ s, HasFderivWithinAt f (f' x) I.Icc x)
     (i : Finₓ (n + 1)) :
-    HasIntegral.{0, u, u} I ⊥ (fun x => f' x (Pi.single i 1)) BoxAdditiveMap.volume
-      (integral.{0, u, u} (I.face i) ⊥ (fun x => f (i.insertNth (I.upper i) x)) BoxAdditiveMap.volume -
-        integral.{0, u, u} (I.face i) ⊥ (fun x => f (i.insertNth (I.lower i) x)) BoxAdditiveMap.volume) :=
+    HasIntegral.{0, u, u} I gP (fun x => f' x (Pi.single i 1)) BoxAdditiveMap.volume
+      (integral.{0, u, u} (I.face i) gP (fun x => f (i.insertNth (I.upper i) x)) BoxAdditiveMap.volume -
+        integral.{0, u, u} (I.face i) gP (fun x => f (i.insertNth (I.lower i) x)) BoxAdditiveMap.volume) :=
   by
   /- Note that `f` is continuous on `I.Icc`, hence it is integrable on the faces of all boxes
     `J ≤ I`, thus the difference of integrals over `x i = J.upper i` and `x i = J.lower i` is a
@@ -170,13 +172,13 @@ theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → �
     by_cases' hxs : x ∈ s
     exacts[Hs x hxs, (Hd x ⟨hx, hxs⟩).ContinuousWithinAt]
   set fI : ℝ → box (Finₓ n) → E := fun y J =>
-    integral.{0, u, u} J ⊥ (fun x => f (i.insert_nth y x)) box_additive_map.volume
+    integral.{0, u, u} J GP (fun x => f (i.insert_nth y x)) box_additive_map.volume
   set fb : Icc (I.lower i) (I.upper i) → Finₓ n →ᵇᵃ[↑(I.face i)] E := fun x =>
-    (integrable_of_continuous_on ⊥ (box.continuous_on_face_Icc Hc x.2) volume).toBoxAdditive
+    (integrable_of_continuous_on GP (box.continuous_on_face_Icc Hc x.2) volume).toBoxAdditive
   set F : Finₓ (n + 1) →ᵇᵃ[I] E := box_additive_map.upper_sub_lower I i fI fb fun x hx J => rfl
   -- Thus our statement follows from some local estimates.
-  change has_integral I ⊥ (fun x => f' x (Pi.single i 1)) _ (F I)
-  refine' has_integral_of_le_Henstock_of_forall_is_o bot_le _ _ _ s hs _ _
+  change has_integral I GP (fun x => f' x (Pi.single i 1)) _ (F I)
+  refine' has_integral_of_le_Henstock_of_forall_is_o GP_le _ _ _ s hs _ _
   · -- We use the volume as an upper estimate.
     exact (volume : Measureₓ ℝⁿ⁺¹).toBoxAdditive.restrict _ le_top
     
@@ -220,7 +222,7 @@ theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → �
     have Hu : J.upper i ∈ Icc (J.lower i) (J.upper i) := Set.right_mem_Icc.2 (J.lower_le_upper i)
     have Hi :
       ∀ x ∈ Icc (J.lower i) (J.upper i),
-        Integrable.{0, u, u} (J.face i) ⊥ (fun y => f (i.insert_nth x y)) box_additive_map.volume :=
+        Integrable.{0, u, u} (J.face i) GP (fun y => f (i.insert_nth x y)) box_additive_map.volume :=
       fun x hx => integrable_of_continuous_on _ (box.continuous_on_face_Icc (Hc.mono <| box.le_iff_Icc.1 hJI) hx) volume
     have hJδ' : J.Icc ⊆ closed_ball x δ ∩ I.Icc := subset_inter hJδ (box.le_iff_Icc.1 hJI)
     have Hmaps : ∀ z ∈ Icc (J.lower i) (J.upper i), maps_to (i.insert_nth z) (J.face i).Icc (closed_ball x δ ∩ I.Icc) :=
@@ -288,18 +290,18 @@ the sum of integrals of `f` over the faces of `I` taken with appropriate signs.
 
 More precisely, we use a non-standard generalization of the Henstock-Kurzweil integral and
 we allow `f` to be non-differentiable (but still continuous) at a countable set of points. -/
-theorem has_integral_bot_divergence_of_forall_has_deriv_within_at (f : ℝⁿ⁺¹ → Eⁿ⁺¹) (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] Eⁿ⁺¹)
+theorem has_integral_GP_divergence_of_forall_has_deriv_within_at (f : ℝⁿ⁺¹ → Eⁿ⁺¹) (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] Eⁿ⁺¹)
     (s : Set ℝⁿ⁺¹) (hs : s.Countable) (Hs : ∀ x ∈ s, ContinuousWithinAt f I.Icc x)
     (Hd : ∀ x ∈ I.Icc \ s, HasFderivWithinAt f (f' x) I.Icc x) :
-    HasIntegral.{0, u, u} I ⊥ (fun x => ∑ i, f' x (Pi.single i 1) i) BoxAdditiveMap.volume
+    HasIntegral.{0, u, u} I gP (fun x => ∑ i, f' x (Pi.single i 1) i) BoxAdditiveMap.volume
       (∑ i,
-        integral.{0, u, u} (I.face i) ⊥ (fun x => f (i.insertNth (I.upper i) x) i) BoxAdditiveMap.volume -
-          integral.{0, u, u} (I.face i) ⊥ (fun x => f (i.insertNth (I.lower i) x) i) BoxAdditiveMap.volume) :=
+        integral.{0, u, u} (I.face i) gP (fun x => f (i.insertNth (I.upper i) x) i) BoxAdditiveMap.volume -
+          integral.{0, u, u} (I.face i) gP (fun x => f (i.insertNth (I.lower i) x) i) BoxAdditiveMap.volume) :=
   by
   refine' has_integral_sum fun i hi => _
   clear hi
   simp only [has_fderiv_within_at_pi', continuous_within_at_pi] at Hd Hs
-  convert has_integral_bot_pderiv I _ _ s hs (fun x hx => Hs x hx i) (fun x hx => Hd x hx i) i
+  convert has_integral_GP_pderiv I _ _ s hs (fun x hx => Hs x hx i) (fun x hx => Hd x hx i) i
 
 end BoxIntegral
 

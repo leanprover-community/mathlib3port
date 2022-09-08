@@ -81,7 +81,7 @@ theorem mem_antidiagonal_tuple {n : ℕ} {k : ℕ} {x : Finₓ k → ℕ} : x �
     
   · refine' Finₓ.consInduction (fun x₀ x => _) x
     simp_rw [Finₓ.sum_cons, antidiagonal_tuple, List.mem_bindₓ, List.mem_mapₓ, List.Nat.mem_antidiagonal,
-      Finₓ.cons_eq_cons, exists_eq_right_rightₓ, ih, Prod.exists]
+      Finₓ.cons_eq_cons, exists_eq_right_rightₓ, ih, Prod.existsₓ]
     constructor
     · rintro ⟨a, b, rfl, rfl, rfl⟩
       rfl
@@ -126,25 +126,26 @@ theorem nodup_antidiagonal_tuple (k n : ℕ) : List.Nodupₓ (antidiagonalTuple 
     
 
 theorem antidiagonal_tuple_zero_right : ∀ k, antidiagonalTuple k 0 = [0]
-  | 0 => (congr_arg fun x => [x]) <| Subsingleton.elim _ _
+  | 0 => (congr_argₓ fun x => [x]) <| Subsingleton.elim _ _
   | k + 1 => by
-    rw [antidiagonal_tuple, antidiagonal_zero, List.bind_singleton, antidiagonal_tuple_zero_right k, List.map_singleton]
-    exact congr_arg (fun x => [x]) Matrix.cons_zero_zero
+    rw [antidiagonal_tuple, antidiagonal_zero, List.bind_singleton, antidiagonal_tuple_zero_right k,
+      List.map_singletonₓ]
+    exact congr_argₓ (fun x => [x]) Matrix.cons_zero_zero
 
 @[simp]
 theorem antidiagonal_tuple_one (n : ℕ) : antidiagonalTuple 1 n = [![n]] := by
-  simp_rw [antidiagonal_tuple, antidiagonal, List.range_succ, List.map_append, List.map_singleton, tsub_self,
-    List.bind_append, List.bind_singleton, antidiagonal_tuple_zero_zero, List.map_singleton, List.map_bind]
+  simp_rw [antidiagonal_tuple, antidiagonal, List.range_succ, List.map_appendₓ, List.map_singletonₓ, tsub_self,
+    List.bind_append, List.bind_singleton, antidiagonal_tuple_zero_zero, List.map_singletonₓ, List.map_bind]
   conv_rhs => rw [← List.nil_append [![n]]]
   congr 1
-  simp_rw [List.bind_eq_nil, List.mem_range, List.map_eq_nil]
+  simp_rw [List.bind_eq_nil, List.mem_range, List.map_eq_nilₓ]
   intro x hx
   obtain ⟨m, rfl⟩ := Nat.exists_eq_add_of_lt hx
   rw [add_assocₓ, add_tsub_cancel_left, antidiagonal_tuple_zero_succ]
 
 theorem antidiagonal_tuple_two (n : ℕ) : antidiagonalTuple 2 n = (antidiagonal n).map fun i => ![i.1, i.2] := by
   rw [antidiagonal_tuple]
-  simp_rw [antidiagonal_tuple_one, List.map_singleton]
+  simp_rw [antidiagonal_tuple_one, List.map_singletonₓ]
   rw [List.map_eq_bind]
   rfl
 
@@ -154,7 +155,7 @@ theorem antidiagonal_tuple_pairwise_pi_lex : ∀ k n, (antidiagonalTuple k n).Pa
   | k + 1, n => by
     simp_rw [antidiagonal_tuple, List.pairwise_bind, List.pairwise_map, List.mem_mapₓ, forall_exists_index, and_imp,
       forall_apply_eq_imp_iff₂]
-    simp only [mem_antidiagonal, Prod.forall, and_imp, forall_apply_eq_imp_iff₂]
+    simp only [mem_antidiagonal, Prod.forallₓ, and_imp, forall_apply_eq_imp_iff₂]
     simp only [Finₓ.pi_lex_lt_cons_cons, eq_self_iff_true, true_andₓ, lt_self_iff_falseₓ, false_orₓ]
     refine' ⟨fun _ _ _ => antidiagonal_tuple_pairwise_pi_lex k _, _⟩
     induction n
@@ -163,7 +164,7 @@ theorem antidiagonal_tuple_pairwise_pi_lex : ∀ k n, (antidiagonalTuple k n).Pa
       
     · rw [antidiagonal_succ, List.pairwise_cons, List.pairwise_map]
       refine' ⟨fun p hp x hx y hy => _, _⟩
-      · rw [List.mem_mapₓ, Prod.exists] at hp
+      · rw [List.mem_mapₓ, Prod.existsₓ] at hp
         obtain ⟨a, b, hab, rfl : (Nat.succ a, b) = p⟩ := hp
         exact Or.inl (Nat.zero_lt_succₓ _)
         
@@ -198,14 +199,14 @@ theorem nodup_antidiagonal_tuple (k n : ℕ) : (antidiagonalTuple k n).Nodup :=
   List.Nat.nodup_antidiagonal_tuple _ _
 
 theorem antidiagonal_tuple_zero_right (k : ℕ) : antidiagonalTuple k 0 = {0} :=
-  congr_arg _ (List.Nat.antidiagonal_tuple_zero_right k)
+  congr_argₓ _ (List.Nat.antidiagonal_tuple_zero_right k)
 
 @[simp]
 theorem antidiagonal_tuple_one (n : ℕ) : antidiagonalTuple 1 n = {![n]} :=
-  congr_arg _ (List.Nat.antidiagonal_tuple_one n)
+  congr_argₓ _ (List.Nat.antidiagonal_tuple_one n)
 
 theorem antidiagonal_tuple_two (n : ℕ) : antidiagonalTuple 2 n = (antidiagonal n).map fun i => ![i.1, i.2] :=
-  congr_arg _ (List.Nat.antidiagonal_tuple_two n)
+  congr_argₓ _ (List.Nat.antidiagonal_tuple_two n)
 
 end Multiset.Nat
 

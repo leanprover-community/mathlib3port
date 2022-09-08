@@ -18,7 +18,7 @@ about this type.
 def Enat : Type :=
   WithTop ℕ deriving Zero, AddCommMonoidWithOne, CanonicallyOrderedCommSemiring, Nontrivial, LinearOrderₓ, OrderBot,
   OrderTop, HasBot, HasTop, CanonicallyLinearOrderedAddMonoid, Sub, HasOrderedSub, CompleteLinearOrder,
-  LinearOrderedAddCommMonoidWithTop, SuccOrder
+  LinearOrderedAddCommMonoidWithTop, SuccOrder, WellFoundedLt, HasWellFounded
 
 -- mathport name: «exprℕ∞»
 notation "ℕ∞" => Enat
@@ -27,6 +27,8 @@ namespace Enat
 
 instance : Inhabited ℕ∞ :=
   ⟨0⟩
+
+instance : IsWellOrder ℕ∞ (· < ·) where
 
 variable {m n : ℕ∞}
 

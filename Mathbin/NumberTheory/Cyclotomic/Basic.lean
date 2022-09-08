@@ -545,7 +545,7 @@ instance [NeZero ((n : ℕ) : A)] : IsFractionRing (CyclotomicRing n A K) (Cyclo
       replace := this.surj
       obtain ⟨⟨z, w⟩, hw⟩ := this k
       refine' ⟨⟨algebraMap A _ z, algebraMap A _ w, map_mem_non_zero_divisors _ (algebra_base_injective n A K) w.2⟩, _⟩
-      letI : IsScalarTower A K (CyclotomicField n K) := IsScalarTower.of_algebra_map_eq (congr_fun rfl)
+      letI : IsScalarTower A K (CyclotomicField n K) := IsScalarTower.of_algebra_map_eq (congr_funₓ rfl)
       rw [SetLike.coe_mk, ← IsScalarTower.algebra_map_apply, ← IsScalarTower.algebra_map_apply,
         @IsScalarTower.algebra_map_apply A K _ _ _ _ _ (_root_.cyclotomic_field.algebra n K) _ _ w, ← RingHom.map_mul,
         hw, ← IsScalarTower.algebra_map_apply]
@@ -553,13 +553,13 @@ instance [NeZero ((n : ℕ) : A)] : IsFractionRing (CyclotomicRing n A K) (Cyclo
     · rintro y z ⟨a, ha⟩ ⟨b, hb⟩
       refine' ⟨⟨a.1 * b.2 + b.1 * a.2, a.2 * b.2, mul_mem_non_zero_divisors.2 ⟨a.2.2, b.2.2⟩⟩, _⟩
       rw [SetLike.coe_mk, RingHom.map_mul, add_mulₓ, ← mul_assoc, ha, mul_comm ((algebraMap _ _) ↑a.2), ← mul_assoc, hb]
-      simp
+      simp only [map_add, map_mul]
       
     · rintro y z ⟨a, ha⟩ ⟨b, hb⟩
       refine' ⟨⟨a.1 * b.1, a.2 * b.2, mul_mem_non_zero_divisors.2 ⟨a.2.2, b.2.2⟩⟩, _⟩
       rw [SetLike.coe_mk, RingHom.map_mul, mul_comm ((algebraMap _ _) ↑a.2), mul_assoc, ← mul_assoc z, hb, ←
         mul_comm ((algebraMap _ _) ↑a.2), ← mul_assoc, ha]
-      simp
+      simp only [map_mul]
       
   eq_iff_exists := fun x y =>
     ⟨fun h =>

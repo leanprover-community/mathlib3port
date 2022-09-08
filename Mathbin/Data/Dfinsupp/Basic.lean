@@ -571,9 +571,9 @@ theorem single_eq_single_iff (i j : ι) (xi : β i) (xj : β j) :
     · subst hij
       exact Or.inl ⟨rfl, heq_of_eq (Dfinsupp.single_injective h)⟩
       
-    · have h_coe : ⇑(Dfinsupp.single i xi) = Dfinsupp.single j xj := congr_arg coeFn h
-      have hci := congr_fun h_coe i
-      have hcj := congr_fun h_coe j
+    · have h_coe : ⇑(Dfinsupp.single i xi) = Dfinsupp.single j xj := congr_argₓ coeFn h
+      have hci := congr_funₓ h_coe i
+      have hcj := congr_funₓ h_coe j
       rw [Dfinsupp.single_eq_same] at hci hcj
       rw [Dfinsupp.single_eq_of_ne (Ne.symm hij)] at hci
       rw [Dfinsupp.single_eq_of_ne hij] at hcj
@@ -595,7 +595,7 @@ theorem single_eq_zero {i : ι} {xi : β i} : single i xi = 0 ↔ xi = 0 := by
 theorem filter_single (p : ι → Prop) [DecidablePred p] (i : ι) (x : β i) :
     (single i x).filter p = if p i then single i x else 0 := by
   ext j
-  have := apply_ite (fun x : Π₀ i, β i => x j) (p i) (single i x) 0
+  have := apply_iteₓ (fun x : Π₀ i, β i => x j) (p i) (single i x) 0
   dsimp'  at this
   rw [filter_apply, this]
   obtain rfl | hij := Decidable.eq_or_ne i j
@@ -1254,7 +1254,7 @@ This is the dfinsupp version of `equiv.Pi_congr_left'`. -/
 def equivCongrLeft [∀ i, Zero (β i)] (h : ι ≃ κ) : (Π₀ i, β i) ≃ Π₀ k, β (h.symm k) where
   toFun := comapDomain' h.symm h.right_inv
   invFun := fun f =>
-    mapRange (fun i => Equivₓ.cast <| congr_arg β <| h.symm_apply_apply i)
+    mapRange (fun i => Equivₓ.cast <| congr_argₓ β <| h.symm_apply_apply i)
       (fun i =>
         (Equivₓ.cast_eq_iff_heq _).mpr <| by
           convert HEq.rfl

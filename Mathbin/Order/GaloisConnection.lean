@@ -462,7 +462,7 @@ theorem l_supr_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion
     l (⨆ i, u (f i)) = ⨆ i, f i :=
   calc
     l (⨆ i : ι, u (f i)) = ⨆ i : ι, l (u (f i)) := gi.gc.l_supr
-    _ = ⨆ i : ι, f i := congr_arg _ <| funext fun i => gi.l_u_eq (f i)
+    _ = ⨆ i : ι, f i := congr_argₓ _ <| funext fun i => gi.l_u_eq (f i)
     
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi)
@@ -477,7 +477,7 @@ theorem l_Sup_u_image [CompleteLattice α] [CompleteLattice β] (gi : GaloisInse
 
 theorem l_inf_u [SemilatticeInf α] [SemilatticeInf β] (gi : GaloisInsertion l u) (a b : β) : l (u a⊓u b) = a⊓b :=
   calc
-    l (u a⊓u b) = l (u (a⊓b)) := congr_arg l gi.gc.u_inf.symm
+    l (u a⊓u b) = l (u (a⊓b)) := congr_argₓ l gi.gc.u_inf.symm
     _ = a⊓b := by
       simp only [gi.l_u_eq]
     
@@ -485,7 +485,7 @@ theorem l_inf_u [SemilatticeInf α] [SemilatticeInf β] (gi : GaloisInsertion l 
 theorem l_infi_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x} (f : ι → β) :
     l (⨅ i, u (f i)) = ⨅ i, f i :=
   calc
-    l (⨅ i : ι, u (f i)) = l (u (⨅ i : ι, f i)) := congr_arg l gi.gc.u_infi.symm
+    l (⨅ i : ι, u (f i)) = l (u (⨅ i : ι, f i)) := congr_argₓ l gi.gc.u_infi.symm
     _ = ⨅ i : ι, f i := gi.l_u_eq _
     
 

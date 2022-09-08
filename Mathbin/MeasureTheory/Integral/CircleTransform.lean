@@ -97,7 +97,7 @@ theorem continuous_on_prod_circle_transform_function {R r : ℝ} (hr : r < R) {z
   refine'
     ((continuous_circle_map z R).ContinuousOn.comp continuous_on_snd fun _ => And.right).sub
       (continuous_on_id.comp continuous_on_fst fun _ => And.left)
-  simp only [mem_prod, Ne.def, and_imp, Prod.forall]
+  simp only [mem_prod, Ne.def, and_imp, Prod.forallₓ]
   intro a b ha hb
   have ha2 : a ∈ ball z R := by
     simp at *
@@ -171,7 +171,7 @@ theorem circle_transform_deriv_bound {R : ℝ} (hR : 0 < R) {z x : ℂ} {f : ℂ
   simp only [circle_transform_bounding_function, circle_transform_deriv, V, norm_eq_abs, Algebra.id.smul_eq_mul,
     deriv_circle_map, abs_mul, abs_circle_map_zero, abs_I, mul_oneₓ, ← mul_assoc, mul_inv_rev, inv_I, abs_neg, abs_inv,
     abs_of_real, one_mulₓ, abs_two, abs_pow, mem_ball, gt_iff_ltₓ, Subtype.coe_mk, SetCoe.forall, mem_prod,
-    mem_closed_ball, and_imp, Prod.forall, NormedSpace.sphere_nonempty, mem_sphere_iff_norm] at *
+    mem_closed_ball, and_imp, Prod.forallₓ, NormedSpace.sphere_nonempty, mem_sphere_iff_norm] at *
   exact this
 
 end Complex

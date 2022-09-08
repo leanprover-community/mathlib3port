@@ -246,7 +246,7 @@ def Free.mk : α → FreeMonoid α :=
 def Free.map (f : α → β) : FreeMonoid α →* FreeMonoid β where
   toFun := List.map f
   map_mul' := fun x y => by
-    simp only [FreeMonoid.mul_def, List.map_append, FreeAddMonoid.add_def]
+    simp only [FreeMonoid.mul_def, List.map_appendₓ, FreeAddMonoid.add_def]
   map_one' := by
     simp only [FreeMonoid.one_def, List.map, FreeAddMonoid.zero_def]
 

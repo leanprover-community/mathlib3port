@@ -76,7 +76,7 @@ protected theorem rfl : SameRay R x x :=
 /-- `same_ray` is symmetric. -/
 @[symm]
 theorem symm (h : SameRay R x y) : SameRay R y x :=
-  (Or.left_comm.1 h).imp_right <| Or.imp_rightₓ fun ⟨r₁, r₂, h₁, h₂, h⟩ => ⟨r₂, r₁, h₂, h₁, h.symm⟩
+  (Or.left_comm.1 h).imp_right <| Or.imp_right fun ⟨r₁, r₂, h₁, h₂, h⟩ => ⟨r₂, r₁, h₂, h₁, h.symm⟩
 
 /-- If `x` and `y` are nonzero vectors on the same ray, then there exist positive numbers `r₁ r₂`
 such that `r₁ • x = r₂ • y`. -/
@@ -145,18 +145,23 @@ theorem pos_smul_left {r : R} (h : SameRay R x y) (hr : 0 < r) : SameRay R (r �
 theorem map (f : M →ₗ[R] N) (h : SameRay R x y) : SameRay R (f x) (f y) :=
   (h.imp fun hx => by
       rw [hx, map_zero]) <|
-    (Or.imp fun hy => by
+    (Or.impₓ fun hy => by
         rw [hy, map_zero])
       fun ⟨r₁, r₂, hr₁, hr₂, h⟩ =>
       ⟨r₁, r₂, hr₁, hr₂, by
         rw [← f.map_smul, ← f.map_smul, h]⟩
 
+/-- The images of two vectors under an injective linear map are on the same ray if and only if the
+original vectors are on the same ray. -/
+theorem _root_.function.injective.same_ray_map_iff {F : Type _} [LinearMapClass F R M N] {f : F}
+    (hf : Function.Injective f) : SameRay R (f x) (f y) ↔ SameRay R x y := by
+  simp only [SameRay, map_zero, ← hf.eq_iff, map_smul]
+
 /-- The images of two vectors under a linear equivalence are on the same ray if and only if the
 original vectors are on the same ray. -/
 @[simp]
 theorem _root_.same_ray_map_iff (e : M ≃ₗ[R] N) : SameRay R (e x) (e y) ↔ SameRay R x y :=
-  ⟨fun h => by
-    simpa using SameRay.map e.symm.to_linear_map h, SameRay.map e.toLinearMap⟩
+  Function.Injective.same_ray_map_iff (EquivLike.injective e)
 
 /-- If two vectors are on the same ray then both scaled by the same action are also on the same
 ray. -/
@@ -236,7 +241,7 @@ theorem Module.Ray.ind {C : Module.Ray R M → Prop} (h : ∀ (v) (hv : v ≠ 0)
 variable {R}
 
 instance [Nontrivial M] : Nonempty (Module.Ray R M) :=
-  Nonempty.map Quotientₓ.mk inferInstance
+  Nonempty.mapₓ Quotientₓ.mk inferInstance
 
 /-- The rays given by two nonzero vectors are equal if and only if those vectors
 satisfy `same_ray`. -/
@@ -288,8 +293,8 @@ variable [SmulCommClass R G M]
 `G = Rˣ` -/
 instance : MulAction G (Module.Ray R M) where
   smul := fun r => Quotientₓ.map ((· • ·) r) fun a b h => h.smul _
-  mul_smul := fun a b => Quotientₓ.ind fun m => congr_arg Quotientₓ.mk <| mul_smul a b _
-  one_smul := Quotientₓ.ind fun m => congr_arg Quotientₓ.mk <| one_smul _ _
+  mul_smul := fun a b => Quotientₓ.ind fun m => congr_argₓ Quotientₓ.mk <| mul_smul a b _
+  one_smul := Quotientₓ.ind fun m => congr_argₓ Quotientₓ.mk <| one_smul _ _
 
 /-- The action via `linear_equiv.apply_distrib_mul_action` corresponds to `module.ray.map`. -/
 @[simp]
@@ -332,7 +337,7 @@ theorem some_vector_ne_zero (x : Module.Ray R M) : x.someVector ≠ 0 :=
 /-- The ray of `some_vector`. -/
 @[simp]
 theorem some_vector_ray (x : Module.Ray R M) : rayOfNeZero R _ x.some_vector_ne_zero = x :=
-  (congr_arg _ (Subtype.coe_eta _ _) : _).trans x.out_eq
+  (congr_argₓ _ (Subtype.coe_eta _ _) : _).trans x.out_eq
 
 end Module.Ray
 
@@ -415,7 +420,7 @@ variable {R}
 /-- Negating a ray twice produces the original ray. -/
 instance : HasInvolutiveNeg (Module.Ray R M) where
   neg := Neg.neg
-  neg_neg := fun x => Quotientₓ.ind (fun a => congr_arg Quotientₓ.mk <| neg_negₓ _) x
+  neg_neg := fun x => Quotientₓ.ind (fun a => congr_argₓ Quotientₓ.mk <| neg_negₓ _) x
 
 variable {R M}
 

@@ -540,10 +540,10 @@ instance prod.map_mono {C : Type _} [Category C] {W X Y Z : C} (f : W ⟶ Y) (g 
   ⟨fun A i₁ i₂ h => by
     ext
     · rw [← cancel_mono f]
-      simpa using congr_arg (fun f => f ≫ Prod.fst) h
+      simpa using congr_argₓ (fun f => f ≫ Prod.fst) h
       
     · rw [← cancel_mono g]
-      simpa using congr_arg (fun f => f ≫ Prod.snd) h
+      simpa using congr_argₓ (fun f => f ≫ Prod.snd) h
       ⟩
 
 @[simp, reassoc]
@@ -648,10 +648,10 @@ instance coprod.map_epi {C : Type _} [Category C] {W X Y Z : C} (f : W ⟶ Y) (g
   ⟨fun A i₁ i₂ h => by
     ext
     · rw [← cancel_epi f]
-      simpa using congr_arg (fun f => coprod.inl ≫ f) h
+      simpa using congr_argₓ (fun f => coprod.inl ≫ f) h
       
     · rw [← cancel_epi g]
-      simpa using congr_arg (fun f => coprod.inr ≫ f) h
+      simpa using congr_argₓ (fun f => coprod.inr ≫ f) h
       ⟩
 
 -- The simp linter says simp can prove the reassoc version of this lemma.
@@ -918,7 +918,7 @@ theorem prod_comparison_snd : prodComparison F A B ≫ Prod.snd = F.map prod.snd
 theorem prod_comparison_natural (f : A ⟶ A') (g : B ⟶ B') :
     F.map (prod.map f g) ≫ prodComparison F A' B' = prodComparison F A B ≫ prod.map (F.map f) (F.map g) := by
   rw [prod_comparison, prod_comparison, prod.lift_map, ← F.map_comp, ← F.map_comp, prod.comp_lift, ← F.map_comp,
-    Prod.map_fst, ← F.map_comp, Prod.map_sndₓ]
+    Prod.map_fstₓ, ← F.map_comp, Prod.map_sndₓ]
 
 /-- The product comparison morphism from `F(A ⨯ -)` to `FA ⨯ F-`, whose components are given by
 `prod_comparison`.

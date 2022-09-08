@@ -64,11 +64,13 @@ walks, trails, paths, circuits, cycles
 
 open Function
 
-universe u v
+universe u v w
 
 namespace SimpleGraph
 
-variable {V : Type u} {V' : Type v} (G : SimpleGraph V) (G' : SimpleGraph V')
+variable {V : Type u} {V' : Type v} {V'' : Type w}
+
+variable (G : SimpleGraph V) (G' : SimpleGraph V') (G'' : SimpleGraph V'')
 
 /-- A walk is a sequence of adjacent vertices.  For vertices `u v : V`,
 the type `walk u v` consists of all walks starting at `u` and ending at `v`.
@@ -102,6 +104,52 @@ abbrev nil' (u : V) : G.Walk u u :=
 @[matchPattern]
 abbrev cons' (u v w : V) (h : G.Adj u v) (p : G.Walk v w) : G.Walk u w :=
   Walk.cons h p
+
+/-- Change the endpoints of a walk using equalities. This is helpful for relaxing
+definitional equality constraints and to be able to state otherwise difficult-to-state
+lemmas. While this is a simple wrapper around `eq.rec`, it gives a canonical way to write it.
+
+The simp-normal form is for the `copy` to be pushed outward. That way calculations can
+occur within the "copy context." -/
+protected def copy {u v u' v'} (p : G.Walk u v) (hu : u = u') (hv : v = v') : G.Walk u' v' :=
+  Eq.ndrec (Eq.ndrec p hv) hu
+
+@[simp]
+theorem copy_rfl_rfl {u v} (p : G.Walk u v) : p.copy rfl rfl = p :=
+  rfl
+
+@[simp]
+theorem copy_copy {u v u' v' u'' v''} (p : G.Walk u v) (hu : u = u') (hv : v = v') (hu' : u' = u'') (hv' : v' = v'') :
+    (p.copy hu hv).copy hu' hv' = p.copy (hu.trans hu') (hv.trans hv') := by
+  subst_vars
+  rfl
+
+@[simp]
+theorem copy_nil {u u'} (hu : u = u') : (Walk.nil : G.Walk u u).copy hu hu = walk.nil := by
+  subst_vars
+  rfl
+
+theorem copy_cons {u v w u' w'} (h : G.Adj u v) (p : G.Walk v w) (hu : u = u') (hw : w = w') :
+    (Walk.cons h p).copy hu hw =
+      Walk.cons
+        (by
+          rwa [← hu])
+        (p.copy rfl hw) :=
+  by
+  subst_vars
+  rfl
+
+@[simp]
+theorem cons_copy {u v w v' w'} (h : G.Adj u v) (p : G.Walk v' w') (hv : v' = v) (hw : w' = w) :
+    Walk.cons h (p.copy hv hw) =
+      (Walk.cons
+            (by
+              rwa [hv])
+            p).copy
+        rfl hw :=
+  by
+  subst_vars
+  rfl
 
 theorem exists_eq_cons_of_ne :
     ∀ {u v : V} (hne : u ≠ v) (p : G.Walk u v), ∃ (w : V)(h : G.Adj u w)(p' : G.Walk w v), p = cons h p'
@@ -148,7 +196,7 @@ theorem get_vert_of_length_le {u v} (w : G.Walk u v) {i : ℕ} (hi : w.length �
   · cases i
     · cases hi
       
-    · exact IH (Nat.succ_le_succ_iff.1 hi)
+    · exact IH (Nat.succ_le_succ_iffₓ.1 hi)
       
     
 
@@ -195,6 +243,12 @@ theorem append_assoc :
     rw [append_assoc]
 
 @[simp]
+theorem append_copy_copy {u v w u' v' w'} (p : G.Walk u v) (q : G.Walk v w) (hu : u = u') (hv : v = v') (hw : w = w') :
+    (p.copy hu hv).append (q.copy hv hw) = (p.append q).copy hu hw := by
+  subst_vars
+  rfl
+
+@[simp]
 theorem reverse_nil {u : V} : (nil : G.Walk u u).reverse = nil :=
   rfl
 
@@ -231,6 +285,12 @@ theorem reverse_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) :
   simp [reverse]
 
 @[simp]
+theorem reverse_copy {u v u' v'} (p : G.Walk u v) (hu : u = u') (hv : v = v') :
+    (p.copy hu hv).reverse = p.reverse.copy hv hu := by
+  subst_vars
+  rfl
+
+@[simp]
 theorem reverse_append {u v w : V} (p : G.Walk u v) (q : G.Walk v w) :
     (p.append q).reverse = q.reverse.append p.reverse := by
   simp [reverse]
@@ -247,6 +307,11 @@ theorem length_nil {u : V} : (nil : G.Walk u u).length = 0 :=
 
 @[simp]
 theorem length_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) : (cons h p).length = p.length + 1 :=
+  rfl
+
+@[simp]
+theorem length_copy {u v u' v'} (p : G.Walk u v) (hu : u = u') (hv : v = v') : (p.copy hu hv).length = p.length := by
+  subst_vars
   rfl
 
 @[simp]
@@ -310,6 +375,11 @@ theorem support_nil {u : V} : (nil : G.Walk u u).Support = [u] :=
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem support_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) : (cons h p).Support = u::p.Support :=
+  rfl
+
+@[simp]
+theorem support_copy {u v u' v'} (p : G.Walk u v) (hu : u = u') (hv : v = v') : (p.copy hu hv).Support = p.Support := by
+  subst_vars
   rfl
 
 theorem support_append {u v w : V} (p : G.Walk u v) (p' : G.Walk v w) :
@@ -423,6 +493,11 @@ theorem darts_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) : (cons h p).dar
   rfl
 
 @[simp]
+theorem darts_copy {u v u' v'} (p : G.Walk u v) (hu : u = u') (hv : v = v') : (p.copy hu hv).darts = p.darts := by
+  subst_vars
+  rfl
+
+@[simp]
 theorem darts_append {u v w : V} (p : G.Walk u v) (p' : G.Walk v w) : (p.append p').darts = p.darts ++ p'.darts := by
   induction p <;> simp [*]
 
@@ -439,14 +514,14 @@ theorem cons_map_snd_darts {u v : V} (p : G.Walk u v) : (u::p.darts.map Dart.snd
   induction p <;> simp [*]
 
 theorem map_snd_darts {u v : V} (p : G.Walk u v) : p.darts.map Dart.snd = p.Support.tail := by
-  simpa using congr_arg List.tail (cons_map_snd_darts p)
+  simpa using congr_argₓ List.tail (cons_map_snd_darts p)
 
 -- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
 theorem map_fst_darts_append {u v : V} (p : G.Walk u v) : p.darts.map Dart.fst ++ [v] = p.Support := by
   induction p <;> simp [*]
 
 theorem map_fst_darts {u v : V} (p : G.Walk u v) : p.darts.map Dart.fst = p.Support.init := by
-  simpa! using congr_arg List.init (map_fst_darts_append p)
+  simpa! using congr_argₓ List.init (map_fst_darts_append p)
 
 @[simp]
 theorem edges_nil {u : V} : (nil : G.Walk u u).edges = [] :=
@@ -455,6 +530,11 @@ theorem edges_nil {u : V} : (nil : G.Walk u u).edges = [] :=
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem edges_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) : (cons h p).edges = ⟦(u, v)⟧::p.edges :=
+  rfl
+
+@[simp]
+theorem edges_copy {u v u' v'} (p : G.Walk u v) (hu : u = u') (hv : v = v') : (p.copy hu hv).edges = p.edges := by
+  subst_vars
   rfl
 
 @[simp]
@@ -552,14 +632,38 @@ structure IsCycle {u : V} (p : G.Walk u u) extends
 theorem is_trail_def {u v : V} (p : G.Walk u v) : p.IsTrail ↔ p.edges.Nodup :=
   ⟨IsTrail.edges_nodup, fun h => ⟨h⟩⟩
 
+@[simp]
+theorem is_trail_copy {u v u' v'} (p : G.Walk u v) (hu : u = u') (hv : v = v') : (p.copy hu hv).IsTrail ↔ p.IsTrail :=
+  by
+  subst_vars
+  rfl
+
 theorem IsPath.mk' {u v : V} {p : G.Walk u v} (h : p.Support.Nodup) : IsPath p :=
   ⟨⟨edges_nodup_of_support_nodup h⟩, h⟩
 
 theorem is_path_def {u v : V} (p : G.Walk u v) : p.IsPath ↔ p.Support.Nodup :=
   ⟨IsPath.support_nodup, IsPath.mk'⟩
 
+@[simp]
+theorem is_path_copy {u v u' v'} (p : G.Walk u v) (hu : u = u') (hv : v = v') : (p.copy hu hv).IsPath ↔ p.IsPath := by
+  subst_vars
+  rfl
+
+theorem is_circuit_def {u : V} (p : G.Walk u u) : p.IsCircuit ↔ IsTrail p ∧ p ≠ nil :=
+  Iff.intro (fun h => ⟨h.1, h.2⟩) fun h => ⟨h.1, h.2⟩
+
+@[simp]
+theorem is_circuit_copy {u u'} (p : G.Walk u u) (hu : u = u') : (p.copy hu hu).IsCircuit ↔ p.IsCircuit := by
+  subst_vars
+  rfl
+
 theorem is_cycle_def {u : V} (p : G.Walk u u) : p.IsCycle ↔ IsTrail p ∧ p ≠ nil ∧ p.Support.tail.Nodup :=
   Iff.intro (fun h => ⟨h.1.1, h.1.2, h.2⟩) fun h => ⟨⟨h.1, h.2.1⟩, h.2.2⟩
+
+@[simp]
+theorem is_cycle_copy {u u'} (p : G.Walk u u) (hu : u = u') : (p.copy hu hu).IsCycle ↔ p.IsCycle := by
+  subst_vars
+  rfl
 
 @[simp]
 theorem IsTrail.nil {u : V} : (nil : G.Walk u u).IsTrail :=
@@ -747,6 +851,30 @@ theorem count_edges_take_until_le_one {u v w : V} (p : G.Walk v w) (h : u ∈ p.
       
     
 
+@[simp]
+theorem take_until_copy {u v w v' w'} (p : G.Walk v w) (hv : v = v') (hw : w = w') (h : u ∈ (p.copy hv hw).Support) :
+    (p.copy hv hw).takeUntil u h =
+      (p.takeUntil u
+            (by
+              subst_vars
+              exact h)).copy
+        hv rfl :=
+  by
+  subst_vars
+  rfl
+
+@[simp]
+theorem drop_until_copy {u v w v' w'} (p : G.Walk v w) (hv : v = v') (hw : w = w') (h : u ∈ (p.copy hv hw).Support) :
+    (p.copy hv hw).dropUntil u h =
+      (p.dropUntil u
+            (by
+              subst_vars
+              exact h)).copy
+        rfl hw :=
+  by
+  subst_vars
+  rfl
+
 theorem support_take_until_subset {u v w : V} (p : G.Walk v w) (h : u ∈ p.Support) :
     (p.takeUntil u h).Support ⊆ p.Support := fun x hx => by
   rw [← take_spec p h, mem_support_append_iff]
@@ -775,13 +903,13 @@ theorem edges_drop_until_subset {u v w : V} (p : G.Walk v w) (h : u ∈ p.Suppor
 
 theorem length_take_until_le {u v w : V} (p : G.Walk v w) (h : u ∈ p.Support) : (p.takeUntil u h).length ≤ p.length :=
   by
-  have := congr_arg walk.length (p.take_spec h)
+  have := congr_argₓ walk.length (p.take_spec h)
   rw [length_append] at this
   exact Nat.Le.intro this
 
 theorem length_drop_until_le {u v w : V} (p : G.Walk v w) (h : u ∈ p.Support) : (p.dropUntil u h).length ≤ p.length :=
   by
-  have := congr_arg walk.length (p.take_spec h)
+  have := congr_argₓ walk.length (p.take_spec h)
   rw [length_append, add_commₓ] at this
   exact Nat.Le.intro this
 
@@ -840,7 +968,7 @@ protected theorem IsCircuit.rotate {u v : V} {c : G.Walk v v} (hc : c.IsCircuit)
   · exact (hc.ne_nil rfl).elim
     
   · intro hn
-    have hn' := congr_arg length hn
+    have hn' := congr_argₓ length hn
     rw [rotate, length_append, add_commₓ, ← length_append, take_spec] at hn'
     simpa using hn'
     
@@ -937,6 +1065,12 @@ def bypass : ∀ {u v : V}, G.Walk u v → G.Walk u v
     let p' := p.bypass
     if hs : u ∈ p'.Support then p'.dropUntil u hs else cons ha p'
 
+@[simp]
+theorem bypass_copy {u v u' v'} (p : G.Walk u v) (hu : u = u') (hv : v = v') :
+    (p.copy hu hv).bypass = p.bypass.copy hu hv := by
+  subst_vars
+  rfl
+
 -- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
 theorem bypass_is_path {u v : V} (p : G.Walk u v) : p.bypass.IsPath := by
   induction p
@@ -1024,14 +1158,14 @@ end Walk
 
 namespace Walk
 
-variable {G G'}
+variable {G G' G''}
 
 /-- Given a graph homomorphism, map walks to walks. -/
 protected def map (f : G →g G') : ∀ {u v : V}, G.Walk u v → G'.Walk (f u) (f v)
   | _, _, nil => nil
   | _, _, cons h p => cons (f.map_adj h) (map p)
 
-variable (f : G →g G') {u v : V} (p : G.Walk u v)
+variable (f : G →g G') (f' : G' →g G'') {u v u' v' : V} (p : G.Walk u v)
 
 @[simp]
 theorem map_nil : (nil : G.Walk u u).map f = nil :=
@@ -1039,6 +1173,39 @@ theorem map_nil : (nil : G.Walk u u).map f = nil :=
 
 @[simp]
 theorem map_cons {w : V} (h : G.Adj w u) : (cons h p).map f = cons (f.map_adj h) (p.map f) :=
+  rfl
+
+@[simp]
+theorem map_copy (hu : u = u') (hv : v = v') :
+    (p.copy hu hv).map f =
+      (p.map f).copy
+        (by
+          rw [hu])
+        (by
+          rw [hv]) :=
+  by
+  subst_vars
+  rfl
+
+@[simp]
+theorem map_id (p : G.Walk u v) : p.map Hom.id = p := by
+  induction p <;> simp [*]
+
+@[simp]
+theorem map_map : (p.map f).map f' = p.map (f'.comp f) := by
+  induction p <;> simp [*]
+
+/-- Unlike categories, for graphs vertex equality is an important notion, so needing to be able to
+to work with equality of graph homomorphisms is a necessary evil. -/
+theorem map_eq_of_eq {f : G →g G'} (f' : G →g G') (h : f = f') :
+    p.map f =
+      (p.map f').copy
+        (by
+          rw [h])
+        (by
+          rw [h]) :=
+  by
+  subst_vars
   rfl
 
 @[simp]
@@ -1183,6 +1350,18 @@ theorem IsPath.to_delete_edges (s : Set (Sym2 V)) {v w : V} {p : G.Walk v w} (h 
     (p.toDeleteEdges s hp).IsPath := by
   rw [← map_to_delete_edges_eq s hp] at h
   exact h.of_map
+
+@[simp]
+theorem to_delete_edges_copy (s : Set (Sym2 V)) {u v u' v'} (p : G.Walk u v) (hu : u = u') (hv : v = v') (h) :
+    (p.copy hu hv).toDeleteEdges s h =
+      (p.toDeleteEdges s
+            (by
+              subst_vars
+              exact h)).copy
+        hu hv :=
+  by
+  subst_vars
+  rfl
 
 end Walk
 

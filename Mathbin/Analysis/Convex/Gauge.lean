@@ -376,6 +376,10 @@ variable {hs₀ : Balanced 𝕜 s} {hs₁ : Convex ℝ s} {hs₂ : Absorbent ℝ
 theorem gauge_seminorm_lt_one_of_open (hs : IsOpen s) {x : E} (hx : x ∈ s) : gaugeSeminorm hs₀ hs₁ hs₂ x < 1 :=
   gauge_lt_one_of_mem_of_open hs₁ hs₂.zero_mem hs hx
 
+theorem gauge_seminorm_ball_one (hs : IsOpen s) : (gaugeSeminorm hs₀ hs₁ hs₂).ball 0 1 = s := by
+  rw [Seminorm.ball_zero_eq]
+  exact gauge_lt_one_eq_self_of_open hs₁ hs₂.zero_mem hs
+
 end IsROrC
 
 /-- Any seminorm arises as the gauge of its unit ball. -/

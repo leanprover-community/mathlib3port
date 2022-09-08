@@ -246,7 +246,7 @@ theorem read_eq_nth_le_to_list (b : Buffer α) (i) :
     b.read i =
       b.toList.nthLe i
         (by
-          simpa using i.is_lt) :=
+          simp ) :=
   by
   simp [nth_le_to_list]
 

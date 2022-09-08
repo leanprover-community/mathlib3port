@@ -87,7 +87,7 @@ def TopologicalVectorBundle.Trivialization.pullback (e : Trivialization 𝕜 F E
     simp_rw [pullback.lift, e.symm_apply_apply_mk h, total_space.eta]
   right_inv' := fun x h => by
     simp_rw [mem_prod, mem_preimage, mem_univ, and_trueₓ] at h
-    simp_rw [total_space.proj_mk, pullback.lift_mk, e.apply_mk_symm h, Prod.mk.eta]
+    simp_rw [total_space.proj_mk, pullback.lift_mk, e.apply_mk_symm h, Prod.mk.etaₓ]
   open_source := by
     simp_rw [e.source_eq, ← preimage_comp]
     exact ((map_continuous f).comp <| Pullback.continuous_proj E f).is_open_preimage _ e.open_base_set

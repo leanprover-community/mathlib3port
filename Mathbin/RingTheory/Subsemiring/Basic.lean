@@ -74,7 +74,7 @@ instance (priority := 75) toNonAssocSemiring : NonAssocSemiringₓ s :=
   Subtype.coe_injective.NonAssocSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ => rfl
 
 instance nontrivial [Nontrivial R] : Nontrivial s :=
-  (nontrivial_of_ne 0 1) fun H => zero_ne_one (congr_arg Subtype.val H)
+  (nontrivial_of_ne 0 1) fun H => zero_ne_one (congr_argₓ Subtype.val H)
 
 instance no_zero_divisors [NoZeroDivisors R] :
     NoZeroDivisors
@@ -312,7 +312,7 @@ theorem coe_mul (x y : s) : ((x * y : s) : R) = (x * y : R) :=
   rfl
 
 instance nontrivial [Nontrivial R] : Nontrivial s :=
-  (nontrivial_of_ne 0 1) fun H => zero_ne_one (congr_arg Subtype.val H)
+  (nontrivial_of_ne 0 1) fun H => zero_ne_one (congr_argₓ Subtype.val H)
 
 protected theorem pow_mem {R : Type _} [Semiringₓ R] (s : Subsemiring R) {x : R} (hx : x ∈ s) (n : ℕ) : x ^ n ∈ s :=
   pow_mem hx n
@@ -718,14 +718,14 @@ theorem mem_closure_iff_exists_list {R} [Semiringₓ R] {s : Set R} {x} :
         suffices ∃ t : List R, (∀ y ∈ t, y ∈ s) ∧ t.Prod = x from
           let ⟨t, ht1, ht2⟩ := this
           ⟨[t], List.forall_mem_singletonₓ.2 ht1, by
-            rw [List.map_singleton, List.sum_singleton, ht2]⟩
+            rw [List.map_singletonₓ, List.sum_singleton, ht2]⟩
         Submonoid.closure_induction hx (fun x hx => ⟨[x], List.forall_mem_singletonₓ.2 hx, one_mulₓ x⟩)
           ⟨[], List.forall_mem_nilₓ _, rfl⟩ fun x y ⟨t, ht1, ht2⟩ ⟨u, hu1, hu2⟩ =>
           ⟨t ++ u, List.forall_mem_appendₓ.2 ⟨ht1, hu1⟩, by
             rw [List.prod_append, ht2, hu2]⟩)
       ⟨[], List.forall_mem_nilₓ _, rfl⟩ fun x y ⟨L, HL1, HL2⟩ ⟨M, HM1, HM2⟩ =>
       ⟨L ++ M, List.forall_mem_appendₓ.2 ⟨HL1, HM1⟩, by
-        rw [List.map_append, List.sum_append, HL2, HM2]⟩,
+        rw [List.map_appendₓ, List.sum_append, HL2, HM2]⟩,
     fun ⟨L, HL1, HL2⟩ =>
     HL2 ▸
       list_sum_mem fun r hr =>
@@ -940,11 +940,11 @@ theorem srange_subtype (s : Subsemiring R) : s.Subtype.srange = s :=
 
 @[simp]
 theorem range_fst : (fst R S).srange = ⊤ :=
-  (fst R S).srange_top_of_surjective <| Prod.fst_surjectiveₓ
+  (fst R S).srange_top_of_surjective <| Prod.fst_surjective
 
 @[simp]
 theorem range_snd : (snd R S).srange = ⊤ :=
-  (snd R S).srange_top_of_surjective <| Prod.snd_surjective
+  (snd R S).srange_top_of_surjective <| Prod.snd_surjectiveₓ
 
 @[simp]
 theorem prod_bot_sup_bot_prod (s : Subsemiring R) (t : Subsemiring S) : s.Prod ⊥⊔prod ⊥ t = s.Prod t :=
@@ -962,7 +962,7 @@ variable {s t : Subsemiring R}
 /-- Makes the identity isomorphism from a proof two subsemirings of a multiplicative
     monoid are equal. -/
 def subsemiringCongr (h : s = t) : s ≃+* t :=
-  { Equivₓ.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
+  { Equivₓ.setCongr <| congr_argₓ _ h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
 
 /-- Restrict a ring homomorphism with a left inverse to a ring isomorphism to its
 `ring_hom.srange`. -/

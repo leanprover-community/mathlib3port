@@ -101,7 +101,7 @@ theorem Ideal.IsHomogeneous.is_prime_of_homogeneous_mem_or_mem {I : Ideal A} (hI
       rw [eq_sub_of_add_eq eq_add_sum.symm]
       refine' Ideal.sub_mem _ hxy (Ideal.sum_mem _ fun z H => _)
       rcases z with ⟨i, j⟩
-      simp only [mem_erase, Prod.mk.inj_iff, Ne.def, mem_filter, mem_product] at H
+      simp only [mem_erase, Prod.mk.inj_iffₓ, Ne.def, mem_filter, mem_product] at H
       rcases H with ⟨H₁, ⟨H₂, H₃⟩, H₄⟩
       have max_lt : max₁ < i ∨ max₂ < j := by
         rcases lt_trichotomyₓ max₁ i with (h | rfl | h)

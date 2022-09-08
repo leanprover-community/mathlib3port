@@ -40,7 +40,7 @@ theorem mk_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).Nonneg ↔ 0 ≤ a 
   cases' x with n₁ d₁ h₁ c₁
   rw [num_denom'] at ha
   simp [Rat.Nonneg]
-  have d0 := Int.coe_nat_lt.2 h₁
+  have d0 := Int.coe_nat_ltₓ.2 h₁
   have := (mk_eq (ne_of_gtₓ h) (ne_of_gtₓ d0)).1 ha
   constructor <;> intro h₂
   · apply nonneg_of_mul_nonneg_left _ d0
@@ -80,7 +80,7 @@ protected theorem nonneg_antisymm {a} : Rat.Nonneg a → Rat.Nonneg (-a) → a =
     exact fun h₁ h₂ => le_antisymmₓ h₂ h₁
 
 protected theorem nonneg_total : Rat.Nonneg a ∨ Rat.Nonneg (-a) := by
-  cases' a with n <;> exact Or.imp_rightₓ neg_nonneg_of_nonpos (le_totalₓ 0 n)
+  cases' a with n <;> exact Or.imp_right neg_nonneg_of_nonpos (le_totalₓ 0 n)
 
 instance decidableNonneg : Decidable (Rat.Nonneg a) := by
   cases a <;> unfold Rat.Nonneg <;> infer_instance

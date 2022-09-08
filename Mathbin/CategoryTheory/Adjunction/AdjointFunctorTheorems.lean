@@ -3,14 +3,10 @@ Copyright (c) 2021 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.Adjunction.Basic
-import Mathbin.CategoryTheory.Adjunction.Comma
 import Mathbin.CategoryTheory.Generator
+import Mathbin.CategoryTheory.Limits.ConeCategory
 import Mathbin.CategoryTheory.Limits.Constructions.WeaklyInitial
-import Mathbin.CategoryTheory.Limits.Preserves.Basic
-import Mathbin.CategoryTheory.Limits.Creates
-import Mathbin.CategoryTheory.Limits.Comma
-import Mathbin.CategoryTheory.Punit
+import Mathbin.CategoryTheory.Limits.FunctorCategory
 import Mathbin.CategoryTheory.Subobject.Comma
 
 /-!
@@ -32,6 +28,9 @@ This file also proves the special adjoint functor theorem, in the form:
 * If `G : D ⥤ C` preserves limits and `D` is complete, well-powered and has a small coseparating
   set, then `G` has a left adjoint: `is_right_adjoint_of_preserves_limits_of_is_coseparating`
 
+Finally, we prove the following corollary of the special adjoint functor theorem:
+* If `C` is complete, well-powered and has a small coseparating set, then it is cocomplete:
+  `has_colimits_of_has_limits_of_is_coseparating`
 
 -/
 
@@ -115,6 +114,25 @@ noncomputable def isLeftAdjointOfPreservesColimitsOfIsSeparatig [HasColimits C] 
   is_left_adjoint_of_costructured_arrow_terminals _
 
 end SpecialAdjointFunctorTheorem
+
+namespace Limits
+
+/-- A consequence of the special adjoint functor theorem: if `C` is complete, well-powered and
+    has a small coseparating set, then it is cocomplete. -/
+theorem has_colimits_of_has_limits_of_is_coseparating [HasLimits C] [WellPowered C] {𝒢 : Set C} [Small.{v} 𝒢]
+    (h𝒢 : IsCoseparating 𝒢) : HasColimits C :=
+  { HasColimitsOfShape := fun J hJ =>
+      has_colimits_of_shape_iff_is_right_adjoint_const.2
+        ⟨is_right_adjoint_of_preserves_limits_of_is_coseparating h𝒢 _⟩ }
+
+/-- A consequence of the special adjoint functor theorem: if `C` is cocomplete, well-copowered and
+    has a small separating set, then it is complete. -/
+theorem has_limits_of_has_colimits_of_is_separating [HasColimits C] [WellPowered Cᵒᵖ] {𝒢 : Set C} [Small.{v} 𝒢]
+    (h𝒢 : IsSeparating 𝒢) : HasLimits C :=
+  { HasLimitsOfShape := fun J hJ =>
+      has_limits_of_shape_iff_is_left_adjoint_const.2 ⟨is_left_adjoint_of_preserves_colimits_of_is_separatig h𝒢 _⟩ }
+
+end Limits
 
 end CategoryTheory
 

@@ -528,7 +528,7 @@ theorem Function.Injective.no_zero_smul_divisors {R M N : Type _} [Zero R] [Zero
     [NoZeroSmulDivisors R N] (f : M → N) (hf : Function.Injective f) (h0 : f 0 = 0)
     (hs : ∀ (c : R) (x : M), f (c • x) = c • f x) : NoZeroSmulDivisors R M :=
   ⟨fun c m h =>
-    Or.imp_rightₓ (@hf _ _) <|
+    Or.imp_right (@hf _ _) <|
       h0.symm ▸
         eq_zero_or_eq_zero_of_smul_eq_zero
           (by

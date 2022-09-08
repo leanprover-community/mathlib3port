@@ -47,8 +47,8 @@ theorem prod_top_top : prod (⊤ : Ideal R) (⊤ : Ideal S) = ⊤ :=
 theorem ideal_prod_eq (I : Ideal (R × S)) : I = Ideal.prod (map (RingHom.fst R S) I) (map (RingHom.snd R S) I) := by
   apply Ideal.ext
   rintro ⟨r, s⟩
-  rw [mem_prod, mem_map_iff_of_surjective (RingHom.fst R S) Prod.fst_surjectiveₓ,
-    mem_map_iff_of_surjective (RingHom.snd R S) Prod.snd_surjective]
+  rw [mem_prod, mem_map_iff_of_surjective (RingHom.fst R S) Prod.fst_surjective,
+    mem_map_iff_of_surjective (RingHom.snd R S) Prod.snd_surjectiveₓ]
   refine' ⟨fun h => ⟨⟨_, ⟨h, rfl⟩⟩, ⟨_, ⟨h, rfl⟩⟩⟩, _⟩
   rintro ⟨⟨⟨r, s'⟩, ⟨h₁, rfl⟩⟩, ⟨⟨r', s⟩, ⟨h₂, rfl⟩⟩⟩
   simpa using I.add_mem (I.mul_mem_left (1, 0) h₁) (I.mul_mem_left (0, 1) h₂)
@@ -56,7 +56,7 @@ theorem ideal_prod_eq (I : Ideal (R × S)) : I = Ideal.prod (map (RingHom.fst R 
 @[simp]
 theorem map_fst_prod (I : Ideal R) (J : Ideal S) : map (RingHom.fst R S) (prod I J) = I := by
   ext
-  rw [mem_map_iff_of_surjective (RingHom.fst R S) Prod.fst_surjectiveₓ]
+  rw [mem_map_iff_of_surjective (RingHom.fst R S) Prod.fst_surjective]
   exact
     ⟨by
       rintro ⟨x, ⟨h, rfl⟩⟩
@@ -65,7 +65,7 @@ theorem map_fst_prod (I : Ideal R) (J : Ideal S) : map (RingHom.fst R S) (prod I
 @[simp]
 theorem map_snd_prod (I : Ideal R) (J : Ideal S) : map (RingHom.snd R S) (prod I J) = J := by
   ext
-  rw [mem_map_iff_of_surjective (RingHom.snd R S) Prod.snd_surjective]
+  rw [mem_map_iff_of_surjective (RingHom.snd R S) Prod.snd_surjectiveₓ]
   exact
     ⟨by
       rintro ⟨x, ⟨h, rfl⟩⟩
@@ -90,7 +90,7 @@ theorem ideal_prod_equiv_symm_apply (I : Ideal R) (J : Ideal S) : idealProdEquiv
   rfl
 
 theorem prod.ext_iff {I I' : Ideal R} {J J' : Ideal S} : prod I J = prod I' J' ↔ I = I' ∧ J = J' := by
-  simp only [← ideal_prod_equiv_symm_apply, ideal_prod_equiv.symm.injective.eq_iff, Prod.mk.inj_iff]
+  simp only [← ideal_prod_equiv_symm_apply, ideal_prod_equiv.symm.injective.eq_iff, Prod.mk.inj_iffₓ]
 
 theorem is_prime_of_is_prime_prod_top {I : Ideal R} (h : (Ideal.prod I (⊤ : Ideal S)).IsPrime) : I.IsPrime := by
   constructor
@@ -113,7 +113,7 @@ theorem is_prime_ideal_prod_top {I : Ideal R} [h : I.IsPrime] : (prod I (⊤ : I
   constructor
   · rcases h with ⟨h, -⟩
     contrapose! h
-    rw [← prod_top_top, Prod.ext_iff] at h
+    rw [← prod_top_top, Prod.ext_iffₓ] at h
     exact h.1
     
   rintro ⟨r₁, s₁⟩ ⟨r₂, s₂⟩ ⟨h₁, h₂⟩
@@ -179,7 +179,7 @@ noncomputable def primeIdealsEquiv :
     Equivₓ.ofBijective primeIdealsEquivImpl
       (by
         constructor
-        · rintro (⟨I, hI⟩ | ⟨J, hJ⟩) (⟨I', hI'⟩ | ⟨J', hJ'⟩) h <;> simp [Prod.ext_iff] at h
+        · rintro (⟨I, hI⟩ | ⟨J, hJ⟩) (⟨I', hI'⟩ | ⟨J', hJ'⟩) h <;> simp [Prod.ext_iffₓ] at h
           · simp [h]
             
           · exact False.elim (hI.ne_top h.1)

@@ -6,6 +6,7 @@ Authors: Kevin Buzzard, Bhavik Mehta
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Products
 import Mathbin.CategoryTheory.Limits.Yoneda
+import Mathbin.CategoryTheory.Preadditive.FunctorCategory
 import Mathbin.CategoryTheory.Sites.SheafOfTypes
 
 /-!
@@ -130,7 +131,7 @@ theorem is_limit_iff_is_sheaf_for :
   dsimp' [is_sheaf_for]
   simp_rw [compatible_iff_sieve_compatible]
   rw [((cone.is_limit_equiv_is_terminal _).trans (is_terminal_equiv_unique _ _)).nonempty_congr]
-  rw [Classical.nonempty_piₓ]
+  rw [Classical.nonempty_pi]
   constructor
   · intro hu E x hx
     specialize hu hx.cone
@@ -315,7 +316,7 @@ theorem is_sheaf_iff_is_sheaf_of_type (P : Cᵒᵖ ⥤ Type w) : Presheaf.IsShea
   · intro hP X Y S hS z hz
     refine' ⟨fun x => (hP S hS).amalgamate (fun Z f hf => z f hf x) _, _, _⟩
     · intro Y₁ Y₂ Z g₁ g₂ f₁ f₂ hf₁ hf₂ h
-      exact congr_fun (hz g₁ g₂ hf₁ hf₂ h) x
+      exact congr_funₓ (hz g₁ g₂ hf₁ hf₂ h) x
       
     · intro Z f hf
       ext x
@@ -373,6 +374,73 @@ def Sheaf.isTerminalOfBotCover (F : Sheaf J A) (X : C) (H : ⊥ ∈ J X) : IsTer
       h.2 a
         (by
           tidy)⟩
+
+section Preadditive
+
+open Preadditive
+
+variable [Preadditive A] {P Q : Sheaf J A}
+
+instance sheafHomHasZsmul :
+    HasSmul ℤ
+      (P ⟶ Q) where smul := fun n f =>
+    Sheaf.Hom.mk
+      { app := fun U => n • f.1.app U,
+        naturality' := fun U V i => by
+          induction' n using Int.induction_on with n ih n ih
+          · simp only [zero_smul, comp_zero, zero_comp]
+            
+          · simpa only [add_zsmul, one_zsmul, comp_add, nat_trans.naturality, add_comp, add_left_injₓ]
+            
+          · simpa only [sub_smul, one_zsmul, comp_sub, nat_trans.naturality, sub_comp, sub_left_inj] using ih
+             }
+
+instance : Sub (P ⟶ Q) where sub := fun f g => Sheaf.hom.mk <| f.1 - g.1
+
+instance : Neg (P ⟶ Q) where neg := fun f => Sheaf.hom.mk <| -f.1
+
+instance sheafHomHasNsmul :
+    HasSmul ℕ
+      (P ⟶ Q) where smul := fun n f =>
+    Sheaf.Hom.mk
+      { app := fun U => n • f.1.app U,
+        naturality' := fun U V i => by
+          induction' n with n ih
+          · simp only [zero_smul, comp_zero, zero_comp]
+            
+          · simp only [Nat.succ_eq_add_one, add_smul, ih, one_nsmul, comp_add, nat_trans.naturality, add_comp]
+             }
+
+instance : Zero (P ⟶ Q) where zero := Sheaf.Hom.mk 0
+
+instance : Add (P ⟶ Q) where add := fun f g => Sheaf.hom.mk <| f.1 + g.1
+
+@[simp]
+theorem Sheaf.Hom.add_app (f g : P ⟶ Q) (U) : (f + g).1.app U = f.1.app U + g.1.app U :=
+  rfl
+
+instance : AddCommGroupₓ (P ⟶ Q) :=
+  Function.Injective.addCommGroup (fun f : Sheaf.Hom P Q => f.1) (fun _ _ h => Sheaf.Hom.ext _ _ h) rfl (fun _ _ => rfl)
+    (fun _ => rfl) (fun _ _ => rfl)
+    (fun _ _ => by
+      dsimp'  at *
+      ext
+      simpa [*] )
+    fun _ _ => by
+    dsimp'  at *
+    ext
+    simpa [*]
+
+instance : Preadditive (Sheaf J A) where
+  homGroup := fun P Q => inferInstance
+  add_comp' := fun P Q R f f' g => by
+    ext
+    simp
+  comp_add' := fun P Q R f g g' => by
+    ext
+    simp
+
+end Preadditive
 
 end CategoryTheory
 
@@ -589,10 +657,10 @@ theorem is_sheaf_iff_is_sheaf_forget (s : A ⥤ Type max v₁ u₁) [HasLimits A
   rw [← Equivₓ.nonempty_congr this]
   constructor
   · haveI := preserves_smallest_limits_of_preserves_limits s
-    exact Nonempty.map fun t => is_limit_of_preserves s t
+    exact Nonempty.mapₓ fun t => is_limit_of_preserves s t
     
   · haveI := reflects_smallest_limits_of_reflects_limits s
-    exact Nonempty.map fun t => is_limit_of_reflects s t
+    exact Nonempty.mapₓ fun t => is_limit_of_reflects s t
     
 
 end Concrete

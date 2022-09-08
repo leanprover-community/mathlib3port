@@ -125,7 +125,7 @@ def map {α α' ι} (f : α → α') (l : Line α ι) : Line α' ι where
   idxFun := fun i => (l.idxFun i).map f
   proper :=
     ⟨l.proper.some, by
-      rw [l.proper.some_spec, Option.map_none'ₓ]⟩
+      rw [l.proper.some_spec, Option.map_none']⟩
 
 /-- A point in `ι → α` and a line in `ι' → α` determine a line in `ι ⊕ ι' → α`. -/
 def vertical {α ι ι'} (v : ι → α) (l : Line α ι') : Line α (Sum ι ι') where
@@ -279,11 +279,11 @@ private theorem exists_mono_in_high_dimension' :
               Sum.elim s.focus (l'.map some none), _, _⟩,
             _⟩
       -- The vertical line is almost monochromatic.
-      · rw [vertical_apply, ← congr_fun (hl' x), line.map_apply]
+      · rw [vertical_apply, ← congr_funₓ (hl' x), line.map_apply]
         
       · refine' fun p => ⟨p.line.prod (l'.map some), p.Color, fun x => _⟩
         -- The product lines are almost monochromatic.
-        rw [line.prod_apply, line.map_apply, ← p.has_color, ← congr_fun (hl' x)]
+        rw [line.prod_apply, line.map_apply, ← p.has_color, ← congr_funₓ (hl' x)]
         
       -- Our `r+1` lines have the same endpoint.
       · simp_rw [Multiset.mem_cons, Multiset.mem_map]
@@ -342,7 +342,7 @@ theorem exists_mono_homothetic_copy {M κ : Type _} [AddCommMonoidₓ M] (S : Fi
     intro i hi
     rw [hs, Finset.sep_def, Finset.compl_filter, Finset.mem_filter] at hi
     obtain ⟨y, hy⟩ := option.ne_none_iff_exists.mp hi.right
-    simp_rw [line.apply, ← hy, Option.map_some'ₓ, Option.get_or_else_some]
+    simp_rw [line.apply, ← hy, Option.map_some', Option.get_or_else_some]
     
 
 end Combinatorics

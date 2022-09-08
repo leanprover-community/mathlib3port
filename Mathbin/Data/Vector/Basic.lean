@@ -162,12 +162,24 @@ theorem tail_of_fn {n : ℕ} (f : Finₓ n.succ → α) : tail (ofFn f) = ofFn f
     cases i
     simp
 
+@[simp]
+theorem to_list_empty (v : Vector α 0) : v.toList = [] :=
+  List.length_eq_zero.mp v.2
+
 /-- The list that makes up a `vector` made up of a single element,
 retrieved via `to_list`, is equal to the list of that single element. -/
 @[simp]
 theorem to_list_singleton (v : Vector α 1) : v.toList = [v.head] := by
   rw [← v.cons_head_tail]
   simp only [to_list_cons, to_list_nil, cons_head, eq_self_iff_true, and_selfₓ, singleton_tail]
+
+@[simp]
+theorem empty_to_list_eq_ff (v : Vector α (n + 1)) : v.toList.Empty = ff :=
+  match v with
+  | ⟨a :: as, _⟩ => rfl
+
+theorem not_empty_to_list (v : Vector α (n + 1)) : ¬v.toList.Empty := by
+  simp only [empty_to_list_eq_ff, coe_sort_ff, not_false_iff]
 
 /-- Mapping under `id` does not change a vector. -/
 @[simp]
@@ -465,7 +477,7 @@ variable {a : α}
 def insertNth (a : α) (i : Finₓ (n + 1)) (v : Vector α n) : Vector α (n + 1) :=
   ⟨v.1.insertNth i a, by
     rw [List.length_insert_nth, v.2]
-    rw [v.2, ← Nat.succ_le_succ_iff]
+    rw [v.2, ← Nat.succ_le_succ_iffₓ]
     exact i.2⟩
 
 theorem insert_nth_val {i : Finₓ (n + 1)} {v : Vector α n} : (v.insertNth a i).val = v.val.insertNth i.1 a :=

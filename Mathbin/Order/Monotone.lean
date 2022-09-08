@@ -336,16 +336,16 @@ section PartialOrderₓ
 variable [PartialOrderₓ α] [Preorderₓ β] {f : α → β} {s : Set α}
 
 theorem monotone_iff_forall_lt : Monotone f ↔ ∀ ⦃a b⦄, a < b → f a ≤ f b :=
-  forall₂_congrₓ fun a b => ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_arg _ H).le) hf⟩
+  forall₂_congrₓ fun a b => ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_argₓ _ H).le) hf⟩
 
 theorem antitone_iff_forall_lt : Antitone f ↔ ∀ ⦃a b⦄, a < b → f b ≤ f a :=
-  forall₂_congrₓ fun a b => ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_arg _ H).Ge) hf⟩
+  forall₂_congrₓ fun a b => ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_argₓ _ H).Ge) hf⟩
 
 theorem monotone_on_iff_forall_lt : MonotoneOn f s ↔ ∀ ⦃a⦄ (ha : a ∈ s) ⦃b⦄ (hb : b ∈ s), a < b → f a ≤ f b :=
-  ⟨fun hf a ha b hb h => hf ha hb h.le, fun hf a ha b hb h => h.eq_or_lt.elim (fun H => (congr_arg _ H).le) (hf ha hb)⟩
+  ⟨fun hf a ha b hb h => hf ha hb h.le, fun hf a ha b hb h => h.eq_or_lt.elim (fun H => (congr_argₓ _ H).le) (hf ha hb)⟩
 
 theorem antitone_on_iff_forall_lt : AntitoneOn f s ↔ ∀ ⦃a⦄ (ha : a ∈ s) ⦃b⦄ (hb : b ∈ s), a < b → f b ≤ f a :=
-  ⟨fun hf a ha b hb h => hf ha hb h.le, fun hf a ha b hb h => h.eq_or_lt.elim (fun H => (congr_arg _ H).Ge) (hf ha hb)⟩
+  ⟨fun hf a ha b hb h => hf ha hb h.le, fun hf a ha b hb h => h.eq_or_lt.elim (fun H => (congr_argₓ _ H).Ge) (hf ha hb)⟩
 
 -- `preorder α` isn't strong enough: if the preorder on `α` is an equivalence relation,
 -- then `strict_mono f` is vacuously true.
@@ -371,10 +371,10 @@ namespace Subsingleton
 variable [Preorderₓ α] [Preorderₓ β]
 
 protected theorem monotone [Subsingleton α] (f : α → β) : Monotone f := fun a b _ =>
-  (congr_arg _ <| Subsingleton.elim _ _).le
+  (congr_argₓ _ <| Subsingleton.elim _ _).le
 
 protected theorem antitone [Subsingleton α] (f : α → β) : Antitone f := fun a b _ =>
-  (congr_arg _ <| Subsingleton.elim _ _).le
+  (congr_argₓ _ <| Subsingleton.elim _ _).le
 
 theorem monotone' [Subsingleton β] (f : α → β) : Monotone f := fun a b _ => (Subsingleton.elim _ _).le
 
@@ -609,7 +609,7 @@ theorem StrictAnti.lt_iff_lt (hf : StrictAnti f) {a b : α} : f a < f b ↔ b < 
 protected theorem StrictMonoOn.compares (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
     ∀ {o : Ordering}, o.Compares (f a) (f b) ↔ o.Compares a b
   | Ordering.lt => hf.lt_iff_lt ha hb
-  | Ordering.eq => ⟨fun h => ((hf.le_iff_le ha hb).1 h.le).antisymm ((hf.le_iff_le hb ha).1 h.symm.le), congr_arg _⟩
+  | Ordering.eq => ⟨fun h => ((hf.le_iff_le ha hb).1 h.le).antisymm ((hf.le_iff_le hb ha).1 h.symm.le), congr_argₓ _⟩
   | Ordering.gt => hf.lt_iff_lt hb ha
 
 protected theorem StrictAntiOn.compares (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) {o : Ordering} :
@@ -856,11 +856,11 @@ variable [PartialOrderₓ α] [PartialOrderₓ β] [Preorderₓ γ] [Preorderₓ
 
 theorem StrictMono.prod_map (hf : StrictMono f) (hg : StrictMono g) : StrictMono (Prod.map f g) := fun a b => by
   simp_rw [Prod.lt_iffₓ]
-  exact Or.imp (And.imp hf.imp hg.monotone.imp) (And.imp hf.monotone.imp hg.imp)
+  exact Or.impₓ (And.imp hf.imp hg.monotone.imp) (And.imp hf.monotone.imp hg.imp)
 
 theorem StrictAnti.prod_map (hf : StrictAnti f) (hg : StrictAnti g) : StrictAnti (Prod.map f g) := fun a b => by
   simp_rw [Prod.lt_iffₓ]
-  exact Or.imp (And.imp hf.imp hg.antitone.imp) (And.imp hf.antitone.imp hg.imp)
+  exact Or.impₓ (And.imp hf.imp hg.antitone.imp) (And.imp hf.antitone.imp hg.imp)
 
 end PartialOrderₓ
 

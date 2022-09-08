@@ -153,7 +153,7 @@ def continuousLinearMap : Pretrivialization 𝕜₂ (F₁ →SL[σ] F₂) (Bundl
     ext v
     simp only [comp_apply, trivialization.symmL_continuous_linear_map_at, h₁, h₂]
   right_inv' := fun ⟨x, f⟩ ⟨⟨h₁, h₂⟩, _⟩ => by
-    simp_rw [Prod.mk.inj_iff, eq_self_iff_true, true_andₓ]
+    simp_rw [Prod.mk.inj_iffₓ, eq_self_iff_true, true_andₓ]
     ext v
     simp only [comp_apply, trivialization.continuous_linear_map_at_symmL, h₁, h₂]
   open_target := (e₁.open_base_set.inter e₂.open_base_set).Prod is_open_univ

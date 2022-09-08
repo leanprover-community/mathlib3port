@@ -299,8 +299,7 @@ theorem vanishing_ideal_Union {ι : Sort _} (t : ι → Set (PrimeSpectrum R)) :
   (gc R).u_infi
 
 theorem zero_locus_inf (I J : Ideal R) : ZeroLocus ((I⊓J : Ideal R) : Set R) = ZeroLocus I ∪ ZeroLocus J :=
-  Set.ext fun x => by
-    simpa using x.2.inf_le
+  Set.ext fun x => x.2.inf_le
 
 theorem union_zero_locus (s s' : Set R) :
     ZeroLocus s ∪ ZeroLocus s' = ZeroLocus (Ideal.span s⊓Ideal.span s' : Ideal R) := by
@@ -308,8 +307,7 @@ theorem union_zero_locus (s s' : Set R) :
   simp
 
 theorem zero_locus_mul (I J : Ideal R) : ZeroLocus ((I * J : Ideal R) : Set R) = ZeroLocus I ∪ ZeroLocus J :=
-  Set.ext fun x => by
-    simpa using x.2.mul_le
+  Set.ext fun x => x.2.mul_le
 
 theorem zero_locus_singleton_mul (f g : R) : ZeroLocus ({f * g} : Set R) = ZeroLocus {f} ∪ ZeroLocus {g} :=
   Set.ext fun x => by
@@ -383,7 +381,7 @@ theorem is_closed_singleton_iff_is_maximal (x : PrimeSpectrum R) :
           not_not.1 (mt (Ideal.exists_le_maximal I) <| not_exists.2 fun J => not_and.2 fun hJ hIJ => _)⟩⟩
     exact
       ne_of_ltₓ (lt_of_lt_of_leₓ hI hIJ)
-        (symm <| congr_arg PrimeSpectrum.asIdeal (hs.2 ⟨J, hJ.is_prime⟩ fun r hr => hIJ (le_of_ltₓ hI <| hs.1 hr)))
+        (symm <| congr_argₓ PrimeSpectrum.asIdeal (hs.2 ⟨J, hJ.is_prime⟩ fun r hr => hIJ (le_of_ltₓ hI <| hs.1 hr)))
     
   · refine' ⟨x.as_ideal.1, _⟩
     rw [eq_comm, Set.eq_singleton_iff_unique_mem]
@@ -530,7 +528,7 @@ theorem comap_injective_of_surjective (f : R →+* S) (hf : Function.Surjective 
   fun x y h =>
   PrimeSpectrum.ext.2
     (Ideal.comap_injective_of_surjective f hf
-      (congr_arg PrimeSpectrum.asIdeal h : (comap f x).asIdeal = (comap f y).asIdeal))
+      (congr_argₓ PrimeSpectrum.asIdeal h : (comap f x).asIdeal = (comap f y).asIdeal))
 
 theorem comap_singleton_is_closed_of_surjective (f : R →+* S) (hf : Function.Surjective f) (x : PrimeSpectrum S)
     (hx : IsClosed ({x} : Set (PrimeSpectrum S))) : IsClosed ({comap f x} : Set (PrimeSpectrum R)) := by
@@ -557,7 +555,7 @@ theorem localization_comap_inducing [Algebra R S] (M : Submonoid R) [IsLocalizat
     refine' ⟨_, ⟨algebraMap R S ⁻¹' Ideal.span s, rfl⟩, _⟩
     rw [preimage_comap_zero_locus, ← zero_locus_span, ← zero_locus_span s]
     congr 1
-    exact congr_arg Submodule.Carrier (IsLocalization.map_comap M S (Ideal.span s))
+    exact congr_argₓ Submodule.Carrier (IsLocalization.map_comap M S (Ideal.span s))
     
   · rintro ⟨_, ⟨t, rfl⟩, rfl⟩
     simp
@@ -566,7 +564,7 @@ theorem localization_comap_inducing [Algebra R S] (M : Submonoid R) [IsLocalizat
 theorem localization_comap_injective [Algebra R S] (M : Submonoid R) [IsLocalization M S] :
     Function.Injective (comap (algebraMap R S)) := by
   intro p q h
-  replace h := congr_arg (fun x : PrimeSpectrum R => Ideal.map (algebraMap R S) x.asIdeal) h
+  replace h := congr_argₓ (fun x : PrimeSpectrum R => Ideal.map (algebraMap R S) x.asIdeal) h
   dsimp' only  at h
   erw [IsLocalization.map_comap M S, IsLocalization.map_comap M S] at h
   ext1

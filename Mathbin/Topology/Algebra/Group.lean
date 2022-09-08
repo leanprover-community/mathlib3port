@@ -375,7 +375,7 @@ section Zpow
 theorem continuous_zpow : ∀ z : ℤ, Continuous fun a : G => a ^ z
   | Int.ofNat n => by
     simpa using continuous_pow n
-  | -[1+ n] => by
+  | -[1 + n] => by
     simpa using (continuous_pow (n + 1)).inv
 
 instance AddGroupₓ.has_continuous_const_smul_int {A} [AddGroupₓ A] [TopologicalSpace A] [TopologicalAddGroup A] :
@@ -483,7 +483,7 @@ variable (G)
 
 @[to_additive]
 theorem nhds_one_symm : comap Inv.inv (𝓝 (1 : G)) = 𝓝 (1 : G) :=
-  ((Homeomorph.inv G).comap_nhds_eq _).trans (congr_arg nhds inv_one)
+  ((Homeomorph.inv G).comap_nhds_eq _).trans (congr_argₓ nhds inv_one)
 
 /-- The map `(x, y) ↦ (x, xy)` as a homeomorphism. This is a shear mapping. -/
 @[to_additive "The map `(x, y) ↦ (x, x + y)` as a homeomorphism.\nThis is a shear mapping."]
@@ -1391,7 +1391,7 @@ theorem to_topological_space_Inf (s : Set (GroupTopology α)) :
 @[simp, to_additive]
 theorem to_topological_space_infi {ι} (s : ι → GroupTopology α) :
     (⨅ i, s i).toTopologicalSpace = ⨅ i, (s i).toTopologicalSpace :=
-  congr_arg inf (range_comp _ _).symm
+  congr_argₓ inf (range_comp _ _).symm
 
 /-- Group topologies on `γ` form a complete lattice, with `⊥` the discrete topology and `⊤` the
 indiscrete topology.

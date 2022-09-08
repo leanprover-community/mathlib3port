@@ -23,9 +23,9 @@ namespace MultilinearMap
 
 variable {ι R M₂ : Type _} {M₁ : ι → Type _}
 
-variable [DecidableEq ι]
+variable [DecidableEq ι] [Finite ι]
 
-variable [Fintype ι] [CommRingₓ R] [AddCommGroupₓ M₂] [Module R M₂]
+variable [CommRingₓ R] [AddCommGroupₓ M₂] [Module R M₂]
 
 variable [∀ i, AddCommGroupₓ (M₁ i)] [∀ i, Module R (M₁ i)]
 
@@ -43,6 +43,7 @@ private theorem free_and_finite : Module.Free R (MultilinearMap R M₁ M₂) ∧
         ∀ [∀ i, Module.Finite R (N i)] [∀ i, Module.Free R (N i)],
           Module.Free R (MultilinearMap R N M₂) ∧ Module.Finite R (MultilinearMap R N M₂)
     by
+    cases nonempty_fintype ι
     cases this _ (M₁ ∘ (Fintype.equivFin ι).symm)
     have e := dom_dom_congr_linear_equiv' R M₁ M₂ (Fintype.equivFin ι)
     exact ⟨Module.Free.of_equiv e.symm, Module.Finite.equiv e.symm⟩

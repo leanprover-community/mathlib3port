@@ -542,7 +542,7 @@ def map [MonoidHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S[X]⁰.comap �
       · exact hφ hq
         
       refine' Localization.r_of_eq _
-      simpa only [map_mul] using (congr_arg φ h).symm
+      simpa only [map_mul] using (congr_argₓ φ h).symm
   map_one' := by
     rw [← of_fraction_ring_one, ← Localization.mk_one, lift_on_of_fraction_ring_mk, dif_pos]
     · simpa using of_fraction_ring_one
@@ -964,7 +964,7 @@ def numDenom (x : Ratfunc K) : K[X] × K[X] :=
       have hpq : gcd p q ≠ 0 := mt (And.right ∘ (gcd_eq_zero_iff _ _).mp) hq
       have ha' : a.leading_coeff ≠ 0 := polynomial.leading_coeff_ne_zero.mpr ha
       have hainv : a.leading_coeff⁻¹ ≠ 0 := inv_ne_zero ha'
-      simp only [Prod.ext_iff, gcd_mul_left, normalize_apply, Polynomial.coe_norm_unit, mul_assoc,
+      simp only [Prod.ext_iffₓ, gcd_mul_left, normalize_apply, Polynomial.coe_norm_unit, mul_assoc,
         CommGroupWithZero.coe_norm_unit _ ha']
       have hdeg : (gcd p q).degree ≤ q.degree := degree_gcd_le_right _ hq
       have hdeg' : (Polynomial.c a.leading_coeff⁻¹ * gcd p q).degree ≤ q.degree := by
@@ -1432,7 +1432,7 @@ theorem int_degree_add_le {x y : Ratfunc K} (hy : y ≠ 0) (hxy : x + y ≠ 0) :
     
   rw [int_degree_add hxy, ← nat_degree_num_mul_right_sub_nat_degree_denom_mul_left_eq_int_degree hx y.denom_ne_zero,
     mul_comm y.denom, ← nat_degree_num_mul_right_sub_nat_degree_denom_mul_left_eq_int_degree hy x.denom_ne_zero,
-    le_max_iff, sub_le_sub_iff_right, Int.coe_nat_le, sub_le_sub_iff_right, Int.coe_nat_le, ← le_max_iff,
+    le_max_iff, sub_le_sub_iff_right, Int.coe_nat_leₓ, sub_le_sub_iff_right, Int.coe_nat_leₓ, ← le_max_iff,
     mul_comm y.num]
   exact nat_degree_add_le _ _
 

@@ -402,7 +402,7 @@ theorem form_perm_ext_iff {x y x' y' : α} {l l' : List α} (hd : Nodupₓ (x::y
   obtain ⟨n, hn, hx'⟩ := nth_le_of_mem hx
   have hl : (x::y::l).length = (x'::y'::l').length := by
     rw [← dedup_eq_self.mpr hd, ← dedup_eq_self.mpr hd', ← card_to_finset, ← card_to_finset]
-    refine' congr_arg Finset.card _
+    refine' congr_argₓ Finset.card _
     rw [← Finset.coe_inj, ←
       support_form_perm_of_nodup' _ hd
         (by
@@ -442,7 +442,7 @@ theorem form_perm_apply_mem_eq_self_iff (hl : Nodupₓ l) (x : α) (hx : x ∈ l
     
   · rw [hn] at hk
     cases' (Nat.le_of_lt_succₓ hk).eq_or_lt with hk' hk'
-    · simp [← hk', Nat.succ_le_succ_iff, eq_comm]
+    · simp [← hk', Nat.succ_le_succ_iffₓ, eq_comm]
       
     · simpa [Nat.mod_eq_of_ltₓ (Nat.succ_lt_succₓ hk'), Nat.succ_lt_succ_iff] using k.zero_le.trans_lt hk'
       

@@ -53,13 +53,14 @@ only that there are finitely many objects.
 -/
 
 
-variable [Fintype J]
+variable [Finite J]
 
 /-- This follows this proof from
 * Borceux, Handbook of categorical algebra 1, Theorem 2.13.4
 -/
 theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimitLimitToLimitColimit F) := by
   classical
+  cases nonempty_fintype J
   -- Suppose we have two terms `x y` in the colimit (over `K`) of the limits (over `J`),
   -- and that these have the same image under `colimit_limit_to_limit_colimit F`.
   intro x y h
@@ -69,7 +70,7 @@ theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimitLi
   dsimp'  at x y
   -- Since the images of `x` and `y` are equal in a limit, they are equal componentwise
   -- (indexed by `j : J`),
-  replace h := fun j => congr_arg (limit.π (curry.obj F ⋙ colim) j) h
+  replace h := fun j => congr_argₓ (limit.π (curry.obj F ⋙ colim) j) h
   -- and they are equations in a filtered colimit,
   -- so for each `j` we have some place `k j` to the right of both `kx` and `ky`
   simp [colimit_eq_iff.{v, v}] at h
@@ -84,7 +85,7 @@ theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimitLi
     fun j => (h j).some_spec.some_spec.some_spec
   -- We now use that `K` is filtered, picking some point to the right of all these
   -- morphisms `f j` and `g j`.
-  let O : Finset K := Finset.univ.Image k ∪ {kx, ky}
+  let O : Finset K := finset.univ.image k ∪ {kx, ky}
   have kxO : kx ∈ O :=
     finset.mem_union.mpr
       (Or.inr

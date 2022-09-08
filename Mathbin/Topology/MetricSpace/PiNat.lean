@@ -400,7 +400,7 @@ protected def metricSpaceOfDiscreteUniformity {E : ℕ → Type _} [∀ n, Unifo
               (by
                 norm_num)
               _
-          simp only [mem_principal, set_of_subset_set_of, Prod.forall]
+          simp only [mem_principal, set_of_subset_set_of, Prod.forallₓ]
           intro x y hxy
           exact apply_eq_of_dist_lt hxy le_rflₓ
            }
@@ -860,7 +860,7 @@ protected def metricSpace : MetricSpace (∀ i, F i) where
               (min ((1 / 2) ^ encode i) (dist (x i) (y i)) + min ((1 / 2) ^ encode i) (dist (y i) (z i))) :=
           by
           convert
-              congr_arg (coe : ℝ≥0 → ℝ)
+              congr_argₓ (coe : ℝ≥0 → ℝ)
                 (min_add_distrib ((1 / 2 : ℝ≥0 ) ^ encode i) (nndist (x i) (y i)) (nndist (y i) (z i))) <;>
             simp
         _ ≤ min ((1 / 2) ^ encode i) (dist (x i) (y i)) + min ((1 / 2) ^ encode i) (dist (y i) (z i)) :=
@@ -908,7 +908,7 @@ protected def metricSpace : MetricSpace (∀ i, F i) where
           { p : (∀ i : ι, F i) × ∀ i : ι, F i | dist (p.fst i) (p.snd i) < δ }
       · rintro ⟨i, hi⟩
         refine' mem_infi_of_mem δ (mem_infi_of_mem δpos _)
-        simp only [Prod.forall, imp_self, mem_principal]
+        simp only [Prod.forallₓ, imp_self, mem_principal]
         
       · rintro ⟨x, y⟩ hxy
         simp only [mem_Inter, mem_set_of_eq, SetCoe.forall, Finset.mem_range, Finset.mem_coe] at hxy
@@ -948,7 +948,7 @@ protected def metricSpace : MetricSpace (∀ i, F i) where
             simp )
           εpos
       refine' mem_infi_of_mem this _
-      simp only [and_imp, Prod.forall, set_of_subset_set_of, lt_min_iff, mem_principal]
+      simp only [and_imp, Prod.forallₓ, set_of_subset_set_of, lt_min_iff, mem_principal]
       intro x y hn hε
       calc
         dist (x i) (y i) ≤ dist x y := dist_le_dist_pi_of_dist_lt hn

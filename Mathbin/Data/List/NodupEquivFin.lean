@@ -148,7 +148,7 @@ theorem sublist_iff_exists_order_embedding_nth_eq {l l' : List α} :
       
     · obtain ⟨f, hf⟩ := IH
       refine' ⟨OrderEmbedding.ofMapLeIff (fun ix : ℕ => if ix = 0 then 0 else (f ix.pred).succ) _, _⟩
-      · rintro ⟨_ | a⟩ ⟨_ | b⟩ <;> simp [Nat.succ_le_succ_iff]
+      · rintro ⟨_ | a⟩ ⟨_ | b⟩ <;> simp [Nat.succ_le_succ_iffₓ]
         
       · rintro ⟨_ | i⟩
         · simp
@@ -258,7 +258,7 @@ theorem duplicate_iff_exists_distinct_nth_le {l : List α} {x : α} :
         
       · simp
         
-      · simp only [Nat.lt_succ_iffₓ, Nat.succ_le_succ_iff, repeat, length, nonpos_iff_eq_zero] at hi hj
+      · simp only [Nat.lt_succ_iffₓ, Nat.succ_le_succ_iffₓ, repeat, length, nonpos_iff_eq_zero] at hi hj
         simp [hi, hj]
         
       

@@ -112,13 +112,13 @@ theorem supr_range_std_basis_eq_infi_ker_proj {I J : Set ι} (hd : Disjoint I J)
   rw [Set.Finite.mem_to_finset]
   exact le_rflₓ
 
-theorem supr_range_std_basis [Fintype ι] : (⨆ i : ι, range (stdBasis R φ i)) = ⊤ := by
-  have : (Set.Univ : Set ι) ⊆ ↑(Finset.univ : Finset ι) ∪ ∅ := by
-    rw [Finset.coe_univ, Set.union_empty]
-  apply top_unique
-  convert infi_ker_proj_le_supr_range_std_basis R φ this
-  exact infi_emptyset.symm
-  exact funext fun i => ((@supr_pos _ _ _ fun h => range (std_basis R φ i)) <| Finset.mem_univ i).symm
+theorem supr_range_std_basis [Finite ι] : (⨆ i, range (stdBasis R φ i)) = ⊤ := by
+  cases nonempty_fintype ι
+  convert top_unique (infi_emptyset.ge.trans <| infi_ker_proj_le_supr_range_std_basis R φ _)
+  · exact funext fun i => ((@supr_pos _ _ _ fun h => range <| std_basis R φ i) <| Finset.mem_univ i).symm
+    
+  · rw [Finset.coe_univ, Set.union_empty]
+    
 
 theorem disjoint_std_basis_std_basis (I J : Set ι) (h : Disjoint I J) :
     Disjoint (⨆ i ∈ I, range (stdBasis R φ i)) (⨆ i ∈ J, range (stdBasis R φ i)) := by

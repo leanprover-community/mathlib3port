@@ -241,10 +241,10 @@ theorem det_smul {𝕜 : Type _} [Field 𝕜] {M : Type _} [AddCommGroupₓ M] [
     simp [coe_det, H, this]
     
 
-theorem det_zero' {ι : Type _} [Fintype ι] [Nonempty ι] (b : Basis ι A M) : LinearMap.det (0 : M →ₗ[A] M) = 0 := by
+theorem det_zero' {ι : Type _} [Finite ι] [Nonempty ι] (b : Basis ι A M) : LinearMap.det (0 : M →ₗ[A] M) = 0 := by
   haveI := Classical.decEq ι
-  rw [← det_to_matrix b, LinearEquiv.map_zero, det_zero]
-  assumption
+  cases nonempty_fintype ι
+  rwa [← det_to_matrix b, LinearEquiv.map_zero, det_zero]
 
 /-- In a finite-dimensional vector space, the zero map has determinant `1` in dimension `0`,
 and `0` otherwise. We give a formula that also works in infinite dimension, where we define
@@ -488,11 +488,14 @@ theorem AlternatingMap.eq_smul_basis_det (f : AlternatingMap R M R ι) : f = f e
   simp [AlternatingMap.map_perm, Basis.det_self]
 
 @[simp]
-theorem AlternatingMap.map_basis_eq_zero_iff (f : AlternatingMap R M R ι) : f e = 0 ↔ f = 0 :=
+theorem AlternatingMap.map_basis_eq_zero_iff {ι : Type _} [DecidableEq ι] [Finite ι] (e : Basis ι R M)
+    (f : AlternatingMap R M R ι) : f e = 0 ↔ f = 0 :=
   ⟨fun h => by
+    cases nonempty_fintype ι
     simpa [h] using f.eq_smul_basis_det e, fun h => h.symm ▸ AlternatingMap.zero_apply _⟩
 
-theorem AlternatingMap.map_basis_ne_zero_iff (f : AlternatingMap R M R ι) : f e ≠ 0 ↔ f ≠ 0 :=
+theorem AlternatingMap.map_basis_ne_zero_iff {ι : Type _} [DecidableEq ι] [Finite ι] (e : Basis ι R M)
+    (f : AlternatingMap R M R ι) : f e ≠ 0 ↔ f ≠ 0 :=
   not_congr <| f.map_basis_eq_zero_iff e
 
 variable {A : Type _} [CommRingₓ A] [Module A M]
@@ -538,7 +541,7 @@ theorem Basis.det_smul_mk_coord_eq_det_update {v : ι → M} (hli : LinearIndepe
     exact
       e.det.map_eq_zero_of_eq _
         (by
-          simp [hik, Function.update_apply])
+          simp [hik, Function.update_applyₓ])
         hik
     
 

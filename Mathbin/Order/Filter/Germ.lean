@@ -154,7 +154,7 @@ alias coe_eq ↔ _ _root_.filter.eventually_eq.germ_eq
 
 /-- Lift a function `β → γ` to a function `germ l β → germ l γ`. -/
 def map (op : β → γ) : Germ l β → Germ l γ :=
-  (map' ((· ∘ ·) op)) fun f g H => H.mono fun x H => congr_arg op H
+  (map' ((· ∘ ·) op)) fun f g H => H.mono fun x H => congr_argₓ op H
 
 @[simp]
 theorem map_coe (op : β → γ) (f : α → β) : map op (f : Germ l β) = op ∘ f :=
@@ -356,8 +356,8 @@ instance [CommMonoidₓ M] : CommMonoidₓ (Germ l M) :=
   { Germ.commSemigroup, Germ.monoid with mul := (· * ·), one := 1 }
 
 instance [AddMonoidWithOneₓ M] : AddMonoidWithOneₓ (Germ l M) :=
-  { Germ.hasOne, Germ.addMonoid with natCast := fun n => ↑(n : M), nat_cast_zero := congr_arg coe Nat.cast_zeroₓ,
-    nat_cast_succ := fun n => congr_arg coe (Nat.cast_succₓ _) }
+  { Germ.hasOne, Germ.addMonoid with natCast := fun n => ↑(n : M), nat_cast_zero := congr_argₓ coe Nat.cast_zeroₓ,
+    nat_cast_succ := fun n => congr_argₓ coe (Nat.cast_succₓ _) }
 
 @[to_additive]
 instance [Inv G] : Inv (Germ l G) :=
@@ -389,7 +389,7 @@ instance [Groupₓ G] : Groupₓ (Germ l G) :=
   { Germ.divInvMonoid with mul := (· * ·), one := 1,
     mul_left_inv := by
       rintro ⟨f⟩
-      exact congr_arg (Quot.mk _) (mul_left_invₓ f) }
+      exact congr_argₓ (Quot.mk _) (mul_left_invₓ f) }
 
 @[to_additive]
 instance [CommGroupₓ G] : CommGroupₓ (Germ l G) :=

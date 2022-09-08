@@ -1016,7 +1016,7 @@ theorem of_real_integral_eq_lintegral_of_real {f : α → ℝ} (hfi : Integrable
   apply lintegral_congr_ae
   filter_upwards [f_nn] with x hx
   exact
-    congr_arg Ennreal.ofReal
+    congr_argₓ Ennreal.ofReal
       (by
         rw [Real.norm_eq_abs, abs_eq_self.mpr hx])
 
@@ -1412,6 +1412,90 @@ theorem mul_meas_ge_le_integral_of_nonneg [IsFiniteMeasure μ] {f : α → ℝ} 
     ext1 x
     rw [abs_of_nonneg (hf_nonneg x)]
     
+
+/-- Hölder's inequality for the integral of a product of norms. The integral of the product of two
+norms of functions is bounded by the product of their `ℒp` and `ℒq` seminorms when `p` and `q` are
+conjugate exponents. -/
+theorem integral_mul_norm_le_Lp_mul_Lq {E} [NormedAddCommGroup E] {f g : α → E} {p q : ℝ}
+    (hpq : p.IsConjugateExponent q) (hf : Memℒp f (Ennreal.ofReal p) μ) (hg : Memℒp g (Ennreal.ofReal q) μ) :
+    (∫ a, ∥f a∥ * ∥g a∥ ∂μ) ≤ (∫ a, ∥f a∥ ^ p ∂μ) ^ (1 / p) * (∫ a, ∥g a∥ ^ q ∂μ) ^ (1 / q) := by
+  -- translate the Bochner integrals into Lebesgue integrals.
+  rw [integral_eq_lintegral_of_nonneg_ae, integral_eq_lintegral_of_nonneg_ae, integral_eq_lintegral_of_nonneg_ae]
+  rotate_left
+  · exact eventually_of_forall fun x => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
+    
+  · exact (hg.1.norm.AeMeasurable.pow ae_measurable_const).AeStronglyMeasurable
+    
+  · exact eventually_of_forall fun x => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
+    
+  · exact (hf.1.norm.AeMeasurable.pow ae_measurable_const).AeStronglyMeasurable
+    
+  · exact eventually_of_forall fun x => mul_nonneg (norm_nonneg _) (norm_nonneg _)
+    
+  · exact hf.1.norm.mul hg.1.norm
+    
+  rw [Ennreal.to_real_rpow, Ennreal.to_real_rpow, ← Ennreal.to_real_mul]
+  -- replace norms by nnnorm
+  have h_left : (∫⁻ a, Ennreal.ofReal (∥f a∥ * ∥g a∥) ∂μ) = ∫⁻ a, ((fun x => (∥f x∥₊ : ℝ≥0∞)) * fun x => ∥g x∥₊) a ∂μ :=
+    by
+    simp_rw [Pi.mul_apply, ← of_real_norm_eq_coe_nnnorm, Ennreal.of_real_mul (norm_nonneg _)]
+  have h_right_f : (∫⁻ a, Ennreal.ofReal (∥f a∥ ^ p) ∂μ) = ∫⁻ a, ∥f a∥₊ ^ p ∂μ := by
+    refine' lintegral_congr fun x => _
+    rw [← of_real_norm_eq_coe_nnnorm, Ennreal.of_real_rpow_of_nonneg (norm_nonneg _) hpq.nonneg]
+  have h_right_g : (∫⁻ a, Ennreal.ofReal (∥g a∥ ^ q) ∂μ) = ∫⁻ a, ∥g a∥₊ ^ q ∂μ := by
+    refine' lintegral_congr fun x => _
+    rw [← of_real_norm_eq_coe_nnnorm, Ennreal.of_real_rpow_of_nonneg (norm_nonneg _) hpq.symm.nonneg]
+  rw [h_left, h_right_f, h_right_g]
+  -- we can now apply `ennreal.lintegral_mul_le_Lp_mul_Lq` (up to the `to_real` application)
+  refine' Ennreal.to_real_mono _ _
+  · refine' Ennreal.mul_ne_top _ _
+    · convert hf.snorm_ne_top
+      rw [snorm_eq_lintegral_rpow_nnnorm]
+      · rw [Ennreal.to_real_of_real hpq.nonneg]
+        
+      · rw [Ne.def, Ennreal.of_real_eq_zero, not_leₓ]
+        exact hpq.pos
+        
+      · exact Ennreal.coe_ne_top
+        
+      
+    · convert hg.snorm_ne_top
+      rw [snorm_eq_lintegral_rpow_nnnorm]
+      · rw [Ennreal.to_real_of_real hpq.symm.nonneg]
+        
+      · rw [Ne.def, Ennreal.of_real_eq_zero, not_leₓ]
+        exact hpq.symm.pos
+        
+      · exact Ennreal.coe_ne_top
+        
+      
+    
+  · exact
+      Ennreal.lintegral_mul_le_Lp_mul_Lq μ hpq hf.1.nnnorm.AeMeasurable.coe_nnreal_ennreal
+        hg.1.nnnorm.AeMeasurable.coe_nnreal_ennreal
+    
+
+/-- Hölder's inequality for functions `α → ℝ`. The integral of the product of two nonnegative
+functions is bounded by the product of their `ℒp` and `ℒq` seminorms when `p` and `q` are conjugate
+exponents. -/
+theorem integral_mul_le_Lp_mul_Lq_of_nonneg {p q : ℝ} (hpq : p.IsConjugateExponent q) {f g : α → ℝ}
+    (hf_nonneg : 0 ≤ᵐ[μ] f) (hg_nonneg : 0 ≤ᵐ[μ] g) (hf : Memℒp f (Ennreal.ofReal p) μ)
+    (hg : Memℒp g (Ennreal.ofReal q) μ) :
+    (∫ a, f a * g a ∂μ) ≤ (∫ a, f a ^ p ∂μ) ^ (1 / p) * (∫ a, g a ^ q ∂μ) ^ (1 / q) := by
+  have h_left : (∫ a, f a * g a ∂μ) = ∫ a, ∥f a∥ * ∥g a∥ ∂μ := by
+    refine' integral_congr_ae _
+    filter_upwards [hf_nonneg, hg_nonneg] with x hxf hxg
+    rw [Real.norm_of_nonneg hxf, Real.norm_of_nonneg hxg]
+  have h_right_f : (∫ a, f a ^ p ∂μ) = ∫ a, ∥f a∥ ^ p ∂μ := by
+    refine' integral_congr_ae _
+    filter_upwards [hf_nonneg] with x hxf
+    rw [Real.norm_of_nonneg hxf]
+  have h_right_g : (∫ a, g a ^ q ∂μ) = ∫ a, ∥g a∥ ^ q ∂μ := by
+    refine' integral_congr_ae _
+    filter_upwards [hg_nonneg] with x hxg
+    rw [Real.norm_of_nonneg hxg]
+  rw [h_left, h_right_f, h_right_g]
+  exact integral_mul_norm_le_Lp_mul_Lq hpq hf hg
 
 end Properties
 

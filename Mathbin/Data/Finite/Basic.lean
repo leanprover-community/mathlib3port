@@ -52,7 +52,7 @@ namespace Finite
 
 -- see Note [lower instance priority]
 instance (priority := 100) of_subsingleton {α : Sort _} [Subsingleton α] : Finite α :=
-  of_injective (Function.const α ()) <| Function.injective_of_subsingleton _
+  of_injective (Function.const α ()) <| Function.injective_of_subsingletonₓ _
 
 -- Higher priority for `Prop`s
 @[nolint instance_priority]
@@ -68,10 +68,10 @@ instance {α β : Sort _} [Finite α] [Finite β] : Finite (PProd α β) :=
   of_equiv _ Equivₓ.pprodEquivProdPlift.symm
 
 theorem prod_left (β) [Finite (α × β)] [Nonempty β] : Finite α :=
-  of_surjective (Prod.fst : α × β → α) Prod.fst_surjectiveₓ
+  of_surjective (Prod.fst : α × β → α) Prod.fst_surjective
 
 theorem prod_right (α) [Finite (α × β)] [Nonempty α] : Finite β :=
-  of_surjective (Prod.snd : α × β → β) Prod.snd_surjective
+  of_surjective (Prod.snd : α × β → β) Prod.snd_surjectiveₓ
 
 instance [Finite α] [Finite β] : Finite (Sum α β) := by
   haveI := Fintype.ofFinite α

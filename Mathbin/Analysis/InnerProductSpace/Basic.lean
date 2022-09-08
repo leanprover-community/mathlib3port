@@ -1010,7 +1010,7 @@ section Norm
 
 theorem norm_eq_sqrt_inner (x : E) : ∥x∥ = sqrt (re ⟪x, x⟫) := by
   have h₁ : ∥x∥ ^ 2 = re ⟪x, x⟫ := norm_sq_eq_inner x
-  have h₂ := congr_arg sqrt h₁
+  have h₂ := congr_argₓ sqrt h₁
   simpa using h₂
 
 theorem norm_eq_sqrt_real_inner (x : F) : ∥x∥ = sqrt ⟪x, x⟫_ℝ := by
@@ -1181,7 +1181,7 @@ theorem dist_div_norm_sq_smul {x y : F} (hx : x ≠ 0) (hy : y ≠ 0) (R : ℝ) 
     dist ((R / ∥x∥) ^ 2 • x) ((R / ∥y∥) ^ 2 • y) = sqrt (∥(R / ∥x∥) ^ 2 • x - (R / ∥y∥) ^ 2 • y∥ ^ 2) := by
       rw [dist_eq_norm, sqrt_sq (norm_nonneg _)]
     _ = sqrt ((R ^ 2 / (∥x∥ * ∥y∥)) ^ 2 * ∥x - y∥ ^ 2) :=
-      congr_arg sqrt <| by
+      congr_argₓ sqrt <| by
         field_simp [sq, norm_sub_mul_self_real, norm_smul, real_inner_smul_left, inner_smul_right,
           Real.norm_of_nonneg (mul_self_nonneg _)]
         ring
@@ -1552,7 +1552,7 @@ theorem abs_inner_div_norm_mul_norm_eq_one_iff (x y : E) :
       rw [eq_of_div_eq_one h]
     replace h2 : ⟪r • x, r • x⟫ = ⟪t, t⟫ + ⟪t, r • x⟫ + ⟪r • x, t⟫ + ⟪r • x, r • x⟫
     · rw [sq, sq, ← inner_self_eq_norm_mul_norm, ← inner_self_eq_norm_mul_norm] at h2
-      have h2' := congr_arg (fun z : ℝ => (z : 𝕜)) h2
+      have h2' := congr_argₓ (fun z : ℝ => (z : 𝕜)) h2
       simp_rw [inner_self_re_to_K, inner_add_add_self] at h2'
       exact h2'
       
@@ -1964,7 +1964,8 @@ theorem OrthogonalFamily.inner_right_dfinsupp (l : ⨁ i, G i) (i : ι) (v : G i
     ⟪V i v, l.Sum fun j => V j⟫ = ⟪v, l i⟫ :=
   calc
     ⟪V i v, l.Sum fun j => V j⟫ = l.Sum fun j => fun w => ⟪V i v, V j w⟫ := Dfinsupp.inner_sum (fun j => V j) l (V i v)
-    _ = l.Sum fun j => fun w => ite (i = j) ⟪V i v, V j w⟫ 0 := congr_arg l.Sum <| funext fun j => funext <| hV.eq_ite v
+    _ = l.Sum fun j => fun w => ite (i = j) ⟪V i v, V j w⟫ 0 :=
+      congr_argₓ l.Sum <| funext fun j => funext <| hV.eq_ite v
     _ = ⟪v, l i⟫ := by
       simp only [Dfinsupp.sum, Submodule.coe_inner, Finset.sum_ite_eq, ite_eq_left_iff, Dfinsupp.mem_support_to_fun]
       split_ifs with h h
@@ -1983,7 +1984,7 @@ theorem OrthogonalFamily.inner_right_fintype [Fintype ι] (l : ∀ i, G i) (i : 
       ⟪V i v, ∑ j : ι, V j (l j)⟫ = ∑ j : ι, ⟪V i v, V j (l j)⟫ := by
         rw [inner_sum]
       _ = ∑ j, ite (i = j) ⟪V i v, V j (l j)⟫ 0 :=
-        congr_arg (Finset.sum Finset.univ) <| funext fun j => hV.eq_ite v (l j)
+        congr_argₓ (Finset.sum Finset.univ) <| funext fun j => hV.eq_ite v (l j)
       _ = ⟪v, l i⟫ := by
         simp
       

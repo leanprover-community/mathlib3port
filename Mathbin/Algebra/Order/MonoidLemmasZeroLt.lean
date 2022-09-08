@@ -451,10 +451,10 @@ theorem le_mul_of_le_mul_right [MulPosMono α] (h : a ≤ b * c) (hle : b ≤ d)
   h.trans (mul_le_mul_of_nonneg_right hle c0)
 
 theorem mul_left_cancel_iff_of_pos [PosMulMonoRev α] (a0 : 0 < a) : a * b = a * c ↔ b = c :=
-  ⟨fun h => (le_of_mul_le_mul_left' h.le a0).antisymm (le_of_mul_le_mul_left' h.Ge a0), congr_arg _⟩
+  ⟨fun h => (le_of_mul_le_mul_left' h.le a0).antisymm (le_of_mul_le_mul_left' h.Ge a0), congr_argₓ _⟩
 
 theorem mul_right_cancel_iff_of_pos [MulPosMonoRev α] (b0 : 0 < b) : a * b = c * b ↔ a = c :=
-  ⟨fun h => (le_of_mul_le_mul_right' h.le b0).antisymm (le_of_mul_le_mul_right' h.Ge b0), congr_arg _⟩
+  ⟨fun h => (le_of_mul_le_mul_right' h.le b0).antisymm (le_of_mul_le_mul_right' h.Ge b0), congr_argₓ _⟩
 
 theorem mul_eq_mul_iff_eq_and_eq [PosMulStrictMono α] [MulPosStrictMono α] [PosMulMonoRev α] [MulPosMonoRev α]
     (hac : a ≤ b) (hbd : c ≤ d) (a0 : 0 < a) (d0 : 0 < d) : a * c = b * d ↔ a = b ∧ c = d := by

@@ -45,10 +45,7 @@ variable {x y : ℝ≥0 }
 /-- Square root of a nonnegative real number. -/
 @[pp_nodot]
 noncomputable def sqrt : ℝ≥0 ≃o ℝ≥0 :=
-  OrderIso.symm <|
-    (StrictMono.orderIsoOfSurjective (fun x => x * x) fun x y h => mul_self_lt_mul_self x.2 h) <|
-      (continuous_id.mul continuous_id).Surjective tendsto_mul_self_at_top <| by
-        simp [order_bot.at_bot_eq]
+  OrderIso.symm <| powOrderIso 2 two_ne_zero
 
 theorem sqrt_le_sqrt_iff : sqrt x ≤ sqrt y ↔ x ≤ y :=
   sqrt.le_iff_le
@@ -56,19 +53,19 @@ theorem sqrt_le_sqrt_iff : sqrt x ≤ sqrt y ↔ x ≤ y :=
 theorem sqrt_lt_sqrt_iff : sqrt x < sqrt y ↔ x < y :=
   sqrt.lt_iff_lt
 
-theorem sqrt_eq_iff_sq_eq : sqrt x = y ↔ y * y = x :=
+theorem sqrt_eq_iff_sq_eq : sqrt x = y ↔ y ^ 2 = x :=
   sqrt.toEquiv.apply_eq_iff_eq_symm_apply.trans eq_comm
 
-theorem sqrt_le_iff : sqrt x ≤ y ↔ x ≤ y * y :=
+theorem sqrt_le_iff : sqrt x ≤ y ↔ x ≤ y ^ 2 :=
   sqrt.to_galois_connection _ _
 
-theorem le_sqrt_iff : x ≤ sqrt y ↔ x * x ≤ y :=
+theorem le_sqrt_iff : x ≤ sqrt y ↔ x ^ 2 ≤ y :=
   (sqrt.symm.to_galois_connection _ _).symm
 
 @[simp]
 theorem sqrt_eq_zero : sqrt x = 0 ↔ x = 0 :=
   sqrt_eq_iff_sq_eq.trans <| by
-    rw [eq_comm, zero_mul]
+    rw [eq_comm, sq, zero_mul]
 
 @[simp]
 theorem sqrt_zero : sqrt 0 = 0 :=
@@ -76,26 +73,26 @@ theorem sqrt_zero : sqrt 0 = 0 :=
 
 @[simp]
 theorem sqrt_one : sqrt 1 = 1 :=
-  sqrt_eq_iff_sq_eq.2 <| mul_oneₓ 1
+  sqrt_eq_iff_sq_eq.2 <| one_pow _
 
 @[simp]
-theorem mul_self_sqrt (x : ℝ≥0 ) : sqrt x * sqrt x = x :=
+theorem sq_sqrt (x : ℝ≥0 ) : sqrt x ^ 2 = x :=
   sqrt.symm_apply_apply x
 
 @[simp]
-theorem sqrt_mul_self (x : ℝ≥0 ) : sqrt (x * x) = x :=
+theorem mul_self_sqrt (x : ℝ≥0 ) : sqrt x * sqrt x = x := by
+  rw [← sq, sq_sqrt]
+
+@[simp]
+theorem sqrt_sq (x : ℝ≥0 ) : sqrt (x ^ 2) = x :=
   sqrt.apply_symm_apply x
 
 @[simp]
-theorem sq_sqrt (x : ℝ≥0 ) : sqrt x ^ 2 = x := by
-  rw [sq, mul_self_sqrt x]
-
-@[simp]
-theorem sqrt_sq (x : ℝ≥0 ) : sqrt (x ^ 2) = x := by
-  rw [sq, sqrt_mul_self x]
+theorem sqrt_mul_self (x : ℝ≥0 ) : sqrt (x * x) = x := by
+  rw [← sq, sqrt_sq x]
 
 theorem sqrt_mul (x y : ℝ≥0 ) : sqrt (x * y) = sqrt x * sqrt y := by
-  rw [sqrt_eq_iff_sq_eq, mul_mul_mul_commₓ, mul_self_sqrt, mul_self_sqrt]
+  rw [sqrt_eq_iff_sq_eq, mul_powₓ, sq_sqrt, sq_sqrt]
 
 /-- `nnreal.sqrt` as a `monoid_with_zero_hom`. -/
 noncomputable def sqrtHom : ℝ≥0 →*₀ ℝ≥0 :=
@@ -250,7 +247,7 @@ theorem sqrt_lt_sqrt (hx : 0 ≤ x) (h : x < y) : sqrt x < sqrt y :=
   (sqrt_lt_sqrt_iff hx).2 h
 
 theorem sqrt_le_left (hy : 0 ≤ y) : sqrt x ≤ y ↔ x ≤ y ^ 2 := by
-  rw [sqrt, ← Real.le_to_nnreal_iff_coe_le hy, Nnreal.sqrt_le_iff, ← Real.to_nnreal_mul hy,
+  rw [sqrt, ← Real.le_to_nnreal_iff_coe_le hy, Nnreal.sqrt_le_iff, sq, ← Real.to_nnreal_mul hy,
     Real.to_nnreal_le_to_nnreal_iff (mul_self_nonneg y), sq]
 
 theorem sqrt_le_iff : sqrt x ≤ y ↔ 0 ≤ y ∧ x ≤ y ^ 2 := by

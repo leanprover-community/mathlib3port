@@ -148,33 +148,20 @@ theorem to_block_apply (M : Matrix m n α) (p : m → Prop) (q : n → Prop) (i 
     toBlock M p q i j = M ↑i ↑j :=
   rfl
 
-/-- Let `b` map rows and columns of a square matrix `M` to blocks. Then
-  `to_square_block M b k` is the block `k` matrix. -/
-def toSquareBlock (M : Matrix m m α) {n : Nat} (b : m → Finₓ n) (k : Finₓ n) :
-    Matrix { a // b a = k } { a // b a = k } α :=
-  M.submatrix coe coe
-
-@[simp]
-theorem to_square_block_def (M : Matrix m m α) {n : Nat} (b : m → Finₓ n) (k : Finₓ n) :
-    toSquareBlock M b k = fun i j => M ↑i ↑j :=
-  rfl
-
-/-- Alternate version with `b : m → nat`. Let `b` map rows and columns of a square matrix `M` to
-  blocks. Then `to_square_block' M b k` is the block `k` matrix. -/
-def toSquareBlock' (M : Matrix m m α) (b : m → Nat) (k : Nat) : Matrix { a // b a = k } { a // b a = k } α :=
-  M.submatrix coe coe
-
-@[simp]
-theorem to_square_block_def' (M : Matrix m m α) (b : m → Nat) (k : Nat) : toSquareBlock' M b k = fun i j => M ↑i ↑j :=
-  rfl
-
 /-- Let `p` pick out certain rows and columns of a square matrix `M`. Then
   `to_square_block_prop M p` is the corresponding block matrix. -/
 def toSquareBlockProp (M : Matrix m m α) (p : m → Prop) : Matrix { a // p a } { a // p a } α :=
-  M.submatrix coe coe
+  toBlock M _ _
 
-@[simp]
 theorem to_square_block_prop_def (M : Matrix m m α) (p : m → Prop) : toSquareBlockProp M p = fun i j => M ↑i ↑j :=
+  rfl
+
+/-- Let `b` map rows and columns of a square matrix `M` to blocks. Then
+  `to_square_block M b k` is the block `k` matrix. -/
+def toSquareBlock (M : Matrix m m α) (b : m → β) (k : β) : Matrix { a // b a = k } { a // b a = k } α :=
+  toSquareBlockProp M _
+
+theorem to_square_block_def (M : Matrix m m α) (b : m → β) (k : β) : toSquareBlock M b k = fun i j => M ↑i ↑j :=
   rfl
 
 theorem from_blocks_smul [HasSmul R α] (x : R) (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α)
@@ -267,7 +254,7 @@ theorem block_diagonal_map (M : o → Matrix m n α) (f : α → β) (hf : f 0 =
     (blockDiagonalₓ M).map f = blockDiagonalₓ fun k => (M k).map f := by
   ext
   simp only [map_apply, block_diagonal_apply, eq_comm]
-  rw [apply_ite f, hf]
+  rw [apply_iteₓ f, hf]
 
 @[simp]
 theorem block_diagonal_transpose (M : o → Matrix m n α) : (blockDiagonalₓ M)ᵀ = blockDiagonalₓ fun k => (M k)ᵀ := by
@@ -294,7 +281,7 @@ theorem block_diagonal_zero : blockDiagonalₓ (0 : o → Matrix m n α) = 0 := 
 theorem block_diagonal_diagonal [DecidableEq m] (d : o → m → α) :
     (blockDiagonalₓ fun k => diagonalₓ (d k)) = diagonalₓ fun ik => d ik.2 ik.1 := by
   ext ⟨i, k⟩ ⟨j, k'⟩
-  simp only [block_diagonal_apply, diagonal, Prod.mk.inj_iff, ← ite_and]
+  simp only [block_diagonal_apply, diagonal, Prod.mk.inj_iffₓ, ← ite_and]
   congr 1
   rw [and_comm]
 
@@ -466,7 +453,7 @@ and zero elsewhere.
 
 This is the dependently-typed version of `matrix.block_diagonal`. -/
 def blockDiagonal'ₓ (M : ∀ i, Matrix (m' i) (n' i) α) : Matrix (Σi, m' i) (Σi, n' i) α
-  | ⟨k, i⟩, ⟨k', j⟩ => if h : k = k' then M k i (cast (congr_arg n' h.symm) j) else 0
+  | ⟨k, i⟩, ⟨k', j⟩ => if h : k = k' then M k i (cast (congr_argₓ n' h.symm) j) else 0
 
 theorem block_diagonal'_eq_block_diagonal (M : o → Matrix m n α) {k k'} (i j) :
     blockDiagonalₓ M (i, k) (j, k') = blockDiagonal'ₓ M ⟨k, i⟩ ⟨k', j⟩ :=
@@ -477,7 +464,7 @@ theorem block_diagonal'_submatrix_eq_block_diagonal (M : o → Matrix m n α) :
   Matrix.ext fun ⟨k, i⟩ ⟨k', j⟩ => rfl
 
 theorem block_diagonal'_apply (M : ∀ i, Matrix (m' i) (n' i) α) (ik jk) :
-    blockDiagonal'ₓ M ik jk = if h : ik.1 = jk.1 then M ik.1 ik.2 (cast (congr_arg n' h.symm) jk.2) else 0 := by
+    blockDiagonal'ₓ M ik jk = if h : ik.1 = jk.1 then M ik.1 ik.2 (cast (congr_argₓ n' h.symm) jk.2) else 0 := by
   cases ik
   cases jk
   rfl
@@ -495,7 +482,7 @@ theorem block_diagonal'_map (M : ∀ i, Matrix (m' i) (n' i) α) (f : α → β)
     (blockDiagonal'ₓ M).map f = blockDiagonal'ₓ fun k => (M k).map f := by
   ext
   simp only [map_apply, block_diagonal'_apply, eq_comm]
-  rw [apply_dite f, hf]
+  rw [apply_diteₓ f, hf]
 
 @[simp]
 theorem block_diagonal'_transpose (M : ∀ i, Matrix (m' i) (n' i) α) :

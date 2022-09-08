@@ -125,7 +125,7 @@ def typeToCat : Type u ⥤ Cat where
 instance :
     Faithful
       typeToCat.{u} where map_injective' := fun X Y f g h =>
-    funext fun x => congr_arg Discrete.as (Functor.congr_obj h ⟨x⟩)
+    funext fun x => congr_argₓ Discrete.as (Functor.congr_obj h ⟨x⟩)
 
 instance : Full typeToCat.{u} where
   Preimage := fun X Y F => discrete.as ∘ F.obj ∘ discrete.mk

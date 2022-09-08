@@ -335,6 +335,20 @@ explicit for this purpose. -/
 theorem Inter_subset_of_subset {s : ι → Set α} {t : Set α} (i : ι) (h : s i ⊆ t) : (⋂ i, s i) ⊆ t :=
   @infi_le_of_le (Set α) _ _ _ _ i h
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/-- This rather trivial consequence of `subset_Union₂` is convenient with `apply`, and has `i` and
+`j` explicit for this purpose. -/
+theorem subset_Union₂_of_subset {s : Set α} {t : ∀ i, κ i → Set α} (i : ι) (j : κ i) (h : s ⊆ t i j) :
+    s ⊆ ⋃ (i) (j), t i j :=
+  @le_supr₂_of_le (Set α) _ _ _ _ _ i j h
+
+-- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
+/-- This rather trivial consequence of `Inter₂_subset` is convenient with `apply`, and has `i` and
+`j` explicit for this purpose. -/
+theorem Inter₂_subset_of_subset {s : ∀ i, κ i → Set α} {t : Set α} (i : ι) (j : κ i) (h : s i j ⊆ t) :
+    (⋂ (i) (j), s i j) ⊆ t :=
+  @infi₂_le_of_le (Set α) _ _ _ _ _ i j h
+
 theorem Union_mono {s t : ι → Set α} (h : ∀ i, s i ⊆ t i) : (⋃ i, s i) ⊆ ⋃ i, t i :=
   @supr_mono (Set α) _ _ s t h
 
@@ -1107,7 +1121,7 @@ theorem Union_range_eq_sUnion {α β : Type _} (C : Set (Set α)) {f : ∀ s : C
   · rintro ⟨s, hs, hx⟩
     cases' hf ⟨s, hs⟩ ⟨x, hx⟩ with y hy
     refine' ⟨_, ⟨y, rfl⟩, ⟨s, hs⟩, _⟩
-    exact congr_arg Subtype.val hy
+    exact congr_argₓ Subtype.val hy
     
 
 theorem Union_range_eq_Union (C : ι → Set α) {f : ∀ x : ι, β → C x} (hf : ∀ x : ι, Surjective (f x)) :
@@ -1120,7 +1134,7 @@ theorem Union_range_eq_Union (C : ι → Set α) {f : ∀ x : ι, β → C x} (h
     
   · rintro ⟨i, hx⟩
     cases' hf i ⟨x, hx⟩ with y hy
-    exact ⟨y, i, congr_arg Subtype.val hy⟩
+    exact ⟨y, i, congr_argₓ Subtype.val hy⟩
     
 
 theorem union_distrib_Inter_left (s : ι → Set α) (t : Set α) : (t ∪ ⋂ i, s i) = ⋂ i, t ∪ s i :=
@@ -1242,7 +1256,7 @@ theorem surjective_iff_surjective_of_Union_eq_univ : Surjective f ↔ ∀ i, Sur
       (show x ∈ Set.Union U by
         rw [hU]
         triv)
-  exact ⟨_, congr_arg Subtype.val (H i ⟨x, hi⟩).some_spec⟩
+  exact ⟨_, congr_argₓ Subtype.val (H i ⟨x, hi⟩).some_spec⟩
 
 theorem bijective_iff_bijective_of_Union_eq_univ : Bijective f ↔ ∀ i, Bijective ((U i).restrictPreimage f) := by
   simp_rw [bijective, forall_and_distrib, injective_iff_injective_of_Union_eq_univ hU,
@@ -1916,7 +1930,7 @@ theorem sigma_to_Union_surjective : Surjective (sigmaToUnion t)
 
 theorem sigma_to_Union_injective (h : ∀ i j, i ≠ j → Disjoint (t i) (t j)) : Injective (sigmaToUnion t)
   | ⟨a₁, b₁, h₁⟩, ⟨a₂, b₂, h₂⟩, Eq =>
-    have b_eq : b₁ = b₂ := congr_arg Subtype.val Eq
+    have b_eq : b₁ = b₂ := congr_argₓ Subtype.val Eq
     have a_eq : a₁ = a₂ :=
       Classical.by_contradiction fun ne =>
         have : b₁ ∈ t a₁ ∩ t a₂ := ⟨h₁, b_eq.symm ▸ h₂⟩

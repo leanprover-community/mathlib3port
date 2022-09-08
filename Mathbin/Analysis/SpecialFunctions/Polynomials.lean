@@ -87,7 +87,7 @@ theorem abs_is_bounded_under_iff : (IsBoundedUnder (· ≤ ·) atTop fun x => ab
         eventually_map.mpr
           (eventually_of_forall
             (forall_imp (fun _ => le_of_eqₓ) fun x =>
-              congr_arg abs <| trans (congr_arg (eval x) (eq_C_of_degree_le_zero h)) eval_C))⟩⟩
+              congr_argₓ abs <| trans (congr_argₓ (eval x) (eq_C_of_degree_le_zero h)) eval_C))⟩⟩
   contrapose! h
   exact not_is_bounded_under_of_tendsto_at_top (abs_tendsto_at_top P h)
 
@@ -161,7 +161,7 @@ theorem div_tendsto_zero_iff_degree_lt (hQ : Q ≠ 0) :
     cases' this with h h
     · exact absurd h.2 hPQ
       
-    · rw [sub_lt_iff_lt_add, zero_addₓ, Int.coe_nat_lt] at h
+    · rw [sub_lt_iff_lt_add, zero_addₓ, Int.coe_nat_ltₓ] at h
       exact degree_lt_degree h.1
       
     

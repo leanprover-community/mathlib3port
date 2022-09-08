@@ -119,7 +119,7 @@ instance {S : Type _} [Monoidₓ S] [DistribMulAction S R] [DistribMulAction S�
     [IsCentralScalar S R] :
     IsCentralScalar S
       (FreeLieAlgebra R
-        X) where op_smul_eq_smul := fun t => Quot.ind fun a => congr_arg (Quot.mk _) (op_smul_eq_smul t a)
+        X) where op_smul_eq_smul := fun t => Quot.ind fun a => congr_argₓ (Quot.mk _) (op_smul_eq_smul t a)
 
 instance : Zero (FreeLieAlgebra R X) where zero := Quot.mk _ 0
 

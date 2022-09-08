@@ -276,7 +276,7 @@ then it is primitive. -/
 theorem zmod_char_primitive_of_eq_one_only_at_zero (n : ℕ) (ψ : AddChar (Zmod n) C) (hψ : ∀ a, ψ a = 1 → a = 0) :
     IsPrimitive ψ := by
   refine' fun a ha => (is_nontrivial_iff_ne_trivial _).mpr fun hf => _
-  have h : mul_shift ψ a 1 = (1 : AddChar (Zmod n) C) (1 : Zmod n) := congr_fun (congr_arg coeFn hf) 1
+  have h : mul_shift ψ a 1 = (1 : AddChar (Zmod n) C) (1 : Zmod n) := congr_funₓ (congr_argₓ coeFn hf) 1
   rw [mul_shift_apply, mul_oneₓ, MonoidHom.one_apply] at h
   exact ha (hψ a h)
 

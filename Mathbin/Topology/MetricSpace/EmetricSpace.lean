@@ -1018,7 +1018,7 @@ instance Prod.emetricSpaceMax [EmetricSpace β] : EmetricSpace (γ × β) :=
       cases' max_le_iff.1 (le_of_eqₓ h) with h₁ h₂
       have A : x.fst = y.fst := edist_le_zero.1 h₁
       have B : x.snd = y.snd := edist_le_zero.1 h₂
-      exact Prod.ext_iff.2 ⟨A, B⟩ }
+      exact Prod.ext_iffₓ.2 ⟨A, B⟩ }
 
 /-- Reformulation of the uniform structure in terms of the extended distance -/
 theorem uniformity_edist : 𝓤 γ = ⨅ ε > 0, 𝓟 { p : γ × γ | edist p.1 p.2 < ε } :=

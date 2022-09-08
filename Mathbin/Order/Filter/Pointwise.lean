@@ -985,7 +985,7 @@ instance is_scalar_tower'' [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsSc
   ⟨fun f g h => map₂_assoc smul_assoc⟩
 
 instance is_central_scalar [HasSmul α β] [HasSmul αᵐᵒᵖ β] [IsCentralScalar α β] : IsCentralScalar α (Filter β) :=
-  ⟨fun a f => (congr_arg fun m => map m f) <| funext fun _ => op_smul_eq_smul _ _⟩
+  ⟨fun a f => (congr_argₓ fun m => map m f) <| funext fun _ => op_smul_eq_smul _ _⟩
 
 /-- A multiplicative action of a monoid `α` on a type `β` gives a multiplicative action of
 `filter α` on `filter β`. -/

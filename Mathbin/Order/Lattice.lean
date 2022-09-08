@@ -154,30 +154,30 @@ theorem sup_le_iff : a⊔b ≤ c ↔ a ≤ c ∧ b ≤ c :=
 @[simp]
 theorem sup_eq_left : a⊔b = a ↔ b ≤ a :=
   le_antisymm_iffₓ.trans <| by
-    simp [le_reflₓ]
+    simp [le_rflₓ]
 
-theorem sup_of_le_left (h : b ≤ a) : a⊔b = a :=
-  sup_eq_left.2 h
+@[simp]
+theorem sup_eq_right : a⊔b = b ↔ a ≤ b :=
+  le_antisymm_iffₓ.trans <| by
+    simp [le_rflₓ]
 
 @[simp]
 theorem left_eq_sup : a = a⊔b ↔ b ≤ a :=
   eq_comm.trans sup_eq_left
 
 @[simp]
-theorem left_lt_sup : a < a⊔b ↔ ¬b ≤ a :=
-  le_sup_left.lt_iff_ne.trans <| not_congr left_eq_sup
-
-@[simp]
-theorem sup_eq_right : a⊔b = b ↔ a ≤ b :=
-  le_antisymm_iffₓ.trans <| by
-    simp [le_reflₓ]
-
-theorem sup_of_le_right (h : a ≤ b) : a⊔b = b :=
-  sup_eq_right.2 h
-
-@[simp]
 theorem right_eq_sup : b = a⊔b ↔ a ≤ b :=
   eq_comm.trans sup_eq_right
+
+alias sup_eq_left ↔ _ sup_of_le_left
+
+alias sup_eq_right ↔ le_of_sup_eq sup_of_le_right
+
+attribute [simp] sup_of_le_left sup_of_le_right
+
+@[simp]
+theorem left_lt_sup : a < a⊔b ↔ ¬b ≤ a :=
+  le_sup_left.lt_iff_ne.trans <| not_congr left_eq_sup
 
 @[simp]
 theorem right_lt_sup : b < a⊔b ↔ ¬a ≤ b :=
@@ -203,10 +203,6 @@ theorem sup_le_sup_left (h₁ : a ≤ b) (c) : c⊔a ≤ c⊔b :=
 
 theorem sup_le_sup_right (h₁ : a ≤ b) (c) : a⊔c ≤ b⊔c :=
   sup_le_sup h₁ le_rflₓ
-
-theorem le_of_sup_eq (h : a⊔b = b) : a ≤ b := by
-  rw [← h]
-  simp
 
 @[simp]
 theorem sup_idem : a⊔a = a := by
@@ -373,23 +369,30 @@ theorem le_inf_iff : a ≤ b⊓c ↔ a ≤ b ∧ a ≤ c :=
 @[simp]
 theorem inf_eq_left : a⊓b = a ↔ a ≤ b :=
   le_antisymm_iffₓ.trans <| by
-    simp [le_reflₓ]
+    simp [le_rflₓ]
 
 @[simp]
-theorem inf_lt_left : a⊓b < a ↔ ¬a ≤ b :=
-  @left_lt_sup αᵒᵈ _ _ _
-
-theorem inf_of_le_left (h : a ≤ b) : a⊓b = a :=
-  inf_eq_left.2 h
+theorem inf_eq_right : a⊓b = b ↔ b ≤ a :=
+  le_antisymm_iffₓ.trans <| by
+    simp [le_rflₓ]
 
 @[simp]
 theorem left_eq_inf : a = a⊓b ↔ a ≤ b :=
   eq_comm.trans inf_eq_left
 
 @[simp]
-theorem inf_eq_right : a⊓b = b ↔ b ≤ a :=
-  le_antisymm_iffₓ.trans <| by
-    simp [le_reflₓ]
+theorem right_eq_inf : b = a⊓b ↔ b ≤ a :=
+  eq_comm.trans inf_eq_right
+
+alias inf_eq_left ↔ le_of_inf_eq inf_of_le_left
+
+alias inf_eq_right ↔ _ inf_of_le_right
+
+attribute [simp] inf_of_le_left inf_of_le_right
+
+@[simp]
+theorem inf_lt_left : a⊓b < a ↔ ¬a ≤ b :=
+  @left_lt_sup αᵒᵈ _ _ _
 
 @[simp]
 theorem inf_lt_right : a⊓b < b ↔ ¬b ≤ a :=
@@ -397,13 +400,6 @@ theorem inf_lt_right : a⊓b < b ↔ ¬b ≤ a :=
 
 theorem inf_lt_left_or_right (h : a ≠ b) : a⊓b < a ∨ a⊓b < b :=
   @left_or_right_lt_sup αᵒᵈ _ _ _ h
-
-theorem inf_of_le_right (h : b ≤ a) : a⊓b = b :=
-  inf_eq_right.2 h
-
-@[simp]
-theorem right_eq_inf : b = a⊓b ↔ b ≤ a :=
-  eq_comm.trans inf_eq_right
 
 theorem inf_le_inf (h₁ : a ≤ b) (h₂ : c ≤ d) : a⊓c ≤ b⊓d :=
   @sup_le_sup αᵒᵈ _ _ _ _ _ h₁ h₂
@@ -413,9 +409,6 @@ theorem inf_le_inf_right (a : α) {b c : α} (h : b ≤ c) : b⊓a ≤ c⊓a :=
 
 theorem inf_le_inf_left (a : α) {b c : α} (h : b ≤ c) : a⊓b ≤ a⊓c :=
   inf_le_inf le_rflₓ h
-
-theorem le_of_inf_eq (h : a⊓b = a) : a ≤ b :=
-  inf_eq_left.1 h
 
 @[simp]
 theorem inf_idem : a⊓a = a :=
@@ -605,6 +598,12 @@ theorem inf_lt_sup : a⊓b < a⊔b ↔ a ≠ b := by
     refine' le_antisymmₓ _ _
     exacts[le_sup_left.trans (Heq.symm.trans_le inf_le_right), le_sup_right.trans (Heq.symm.trans_le inf_le_left)]
     
+
+@[simp]
+theorem sup_le_inf : a⊔b ≤ a⊓b ↔ a = b :=
+  ⟨fun h => le_antisymmₓ (le_sup_left.trans <| h.trans inf_le_right) (le_sup_right.trans <| h.trans inf_le_left), by
+    rintro rfl
+    simp ⟩
 
 /-!
 #### Distributivity laws

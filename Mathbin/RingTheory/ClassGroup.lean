@@ -114,7 +114,7 @@ theorem ClassGroup.mk0_eq_mk0_iff_exists_fraction_ring [IsDedekindDomain R] {I J
   · rintro ⟨_, ⟨x, rfl⟩, hx⟩
     refine' ⟨x, x.ne_zero, _⟩
     simpa only [mul_comm, coe_mk0, MonoidHom.to_fun_eq_coe, coe_to_principal_ideal, Units.coe_mul] using
-      congr_arg (coe : _ → FractionalIdeal R⁰ K) hx
+      congr_argₓ (coe : _ → FractionalIdeal R⁰ K) hx
     
   · rintro ⟨x, hx, eq_J⟩
     refine' ⟨_, ⟨Units.mk0 x hx, rfl⟩, Units.ext _⟩

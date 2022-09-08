@@ -314,7 +314,7 @@ instance fintypeImage [DecidableEq β] (s : Set α) (f : α → β) [Fintype s] 
 /-- If a function `f` has a partial inverse and sends a set `s` to a set with `[fintype]` instance,
 then `s` has a `fintype` structure as well. -/
 def fintypeOfFintypeImage (s : Set α) {f : α → β} {g} (I : IsPartialInv f g) [Fintype (f '' s)] : Fintype s :=
-  (Fintype.ofFinset ⟨_, (f '' s).toFinset.2.filterMap g <| injective_of_partial_inv_right I⟩) fun a => by
+  (Fintype.ofFinset ⟨_, (f '' s).toFinset.2.filterMap g <| injective_of_partial_inv_rightₓ I⟩) fun a => by
     suffices (∃ b x, f x = b ∧ g b = some a ∧ x ∈ s) ↔ a ∈ s by
       simpa [exists_and_distrib_left.symm, And.comm, And.left_comm, And.assoc]
     rw [exists_swap]

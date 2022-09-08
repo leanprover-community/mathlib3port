@@ -52,7 +52,7 @@ theorem prod_mk_prod {α β γ : Type _} [CommMonoidₓ α] [CommMonoidₓ β] (
   haveI := Classical.decEq γ
   Finset.induction_on s rfl
     (by
-      simp (config := { contextual := true })[Prod.ext_iff])
+      simp (config := { contextual := true })[Prod.ext_iffₓ])
 
 section Single
 

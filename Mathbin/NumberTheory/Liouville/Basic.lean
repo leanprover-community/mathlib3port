@@ -68,7 +68,7 @@ theorem irrational {x : ℝ} (h : Liouville x) : Irrational x := by
   -- Actually, the absolute value of an integer is a natural number
   lift abs (a * ↑q - ↑b * p) to ℕ using abs_nonneg (a * ↑q - ↑b * p)
   -- At a1, revert to natural numbers
-  rw [← Int.coe_nat_mul, ← Int.coe_nat_pow, ← Int.coe_nat_mul, Int.coe_nat_lt] at a1
+  rw [← Int.coe_nat_mul, ← Int.coe_nat_pow, ← Int.coe_nat_mul, Int.coe_nat_ltₓ] at a1
   -- Recall this is by contradiction: we obtained the inequality `b * q ≤ x * q ^ (b + 1)`, so
   -- we are done.
   exact not_le.mpr a1 (Nat.mul_lt_mul_pow_succ (int.coe_nat_pos.mp ap) (int.coe_nat_lt.mp q1)).le

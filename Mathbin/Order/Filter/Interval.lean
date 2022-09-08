@@ -95,7 +95,7 @@ theorem tendsto_Ixx_class_inf {l₁ l₁' l₂ l₂' : Filter α} {Ixx} [h : Ten
 
 theorem tendsto_Ixx_class_of_subset {l₁ l₂ : Filter α} {Ixx Ixx' : α → α → Set α} (h : ∀ a b, Ixx a b ⊆ Ixx' a b)
     [h' : TendstoIxxClass Ixx' l₁ l₂] : TendstoIxxClass Ixx l₁ l₂ :=
-  ⟨h'.1.small_sets_mono <| eventually_of_forall <| Prod.forall.2 h⟩
+  ⟨h'.1.small_sets_mono <| eventually_of_forall <| Prod.forallₓ.2 h⟩
 
 theorem HasBasis.tendsto_Ixx_class {ι : Type _} {p : ι → Prop} {s} {l : Filter α} (hl : l.HasBasis p s)
     {Ixx : α → α → Set α} (H : ∀ i, p i → ∀ x ∈ s i, ∀ y ∈ s i, Ixx x y ⊆ s i) : TendstoIxxClass Ixx l l :=

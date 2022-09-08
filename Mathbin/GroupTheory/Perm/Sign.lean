@@ -142,7 +142,7 @@ theorem mem_sum_congr_hom_range_of_perm_maps_to_inl {m n : Type _} [Finite m] [F
   let σ₂' := subtype_perm_of_fintype σ h3
   let σ₁ := perm_congr (Equivₓ.ofInjective _ Sum.inl_injective).symm σ₁'
   let σ₂ := perm_congr (Equivₓ.ofInjective _ Sum.inr_injective).symm σ₂'
-  rw [MonoidHom.mem_range, Prod.exists]
+  rw [MonoidHom.mem_range, Prod.existsₓ]
   use σ₁, σ₂
   rw [perm.sum_congr_hom_apply]
   ext
@@ -187,7 +187,7 @@ variable [Fintype α]
 
 theorem support_pow_coprime {σ : Perm α} {n : ℕ} (h : Nat.Coprime n (orderOf σ)) : (σ ^ n).support = σ.support := by
   obtain ⟨m, hm⟩ := exists_pow_eq_self_of_coprime h
-  exact le_antisymmₓ (support_pow_le σ n) (le_transₓ (ge_of_eqₓ (congr_arg support hm)) (support_pow_le (σ ^ n) m))
+  exact le_antisymmₓ (support_pow_le σ n) (le_transₓ (ge_of_eqₓ (congr_argₓ support hm)) (support_pow_le (σ ^ n) m))
 
 end Fintype
 
@@ -570,7 +570,7 @@ theorem sign_aux3_symm_trans_trans [DecidableEq β] [Fintype β] (f : Perm α) (
         let n := equivFin β
         rw [← sign_aux_eq_sign_aux2 _ _ n fun _ _ => h₁ _, ← sign_aux_eq_sign_aux2 _ _ (e.trans n) fun _ _ => h₂ _]
         exact
-          congr_arg sign_aux
+          congr_argₓ sign_aux
             (Equivₓ.ext fun x => by
               simp only [Equivₓ.coe_trans, apply_eq_iff_eq, symm_trans_apply]))
     ht hs
@@ -703,9 +703,9 @@ theorem prod_prod_extend_right {α : Type _} [DecidableEq α] (σ : α → Perm 
   clear mem_l
   induction' l with a' l ih
   · refine' Or.inr ⟨List.not_mem_nilₓ _, _⟩
-    rw [List.map_nil, List.prod_nil, one_apply]
+    rw [List.map_nilₓ, List.prod_nil, one_apply]
     
-  rw [List.map_cons, List.prod_cons, mul_apply]
+  rw [List.map_consₓ, List.prod_cons, mul_apply]
   rcases ih (list.nodup_cons.mp hl).2 with (⟨mem_l, prod_eq⟩ | ⟨not_mem_l, prod_eq⟩) <;> rw [prod_eq]
   · refine' Or.inl ⟨List.mem_cons_of_memₓ _ mem_l, _⟩
     rw [prod_extend_right_apply_ne _ fun h : a = a' => (list.nodup_cons.mp hl).1 (h ▸ mem_l)]

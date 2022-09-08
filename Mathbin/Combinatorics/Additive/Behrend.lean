@@ -83,7 +83,7 @@ def sphere (n d k : ℕ) : Finset (Finₓ n → ℕ) :=
   (box n d).filter fun x => (∑ i, x i ^ 2) = k
 
 theorem sphere_zero_subset : sphere n d 0 ⊆ 0 := fun x => by
-  simp (config := { contextual := true })[sphere, Function.funext_iffₓ]
+  simp (config := { contextual := true })[sphere, Function.funext_iff]
 
 @[simp]
 theorem sphere_zero_right (n k : ℕ) : sphere (n + 1) 0 k = ∅ := by
@@ -148,7 +148,7 @@ theorem map_inj_on : { x : Finₓ n → ℕ | ∀ i, x i < d }.InjOn (map d) := 
     
   ext i
   have x := (map_eq_iff hx₁ hx₂).1 h
-  refine' Finₓ.cases x.1 (congr_fun <| ih (fun _ => _) (fun _ => _) x.2) i
+  refine' Finₓ.cases x.1 (congr_funₓ <| ih (fun _ => _) (fun _ => _) x.2) i
   · exact hx₁ _
     
   · exact hx₂ _

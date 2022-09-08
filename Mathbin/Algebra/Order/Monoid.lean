@@ -95,6 +95,27 @@ export HasExistsMulOfLe (exists_mul_of_le)
 
 export HasExistsAddOfLe (exists_add_of_le)
 
+section HasExistsMulOfLe
+
+variable [LinearOrderₓ α] [DenselyOrdered α] [Monoidₓ α] [HasExistsMulOfLe α] [CovariantClass α α (· * ·) (· < ·)]
+  [ContravariantClass α α (· * ·) (· < ·)] {a b : α}
+
+@[to_additive]
+theorem le_of_forall_one_lt_le_mul (h : ∀ ε : α, 1 < ε → a ≤ b * ε) : a ≤ b :=
+  le_of_forall_le_of_denseₓ fun x hxb => by
+    obtain ⟨ε, rfl⟩ := exists_mul_of_le hxb.le
+    exact h _ ((lt_mul_iff_one_lt_right' b).1 hxb)
+
+@[to_additive]
+theorem le_of_forall_one_lt_lt_mul' (h : ∀ ε : α, 1 < ε → a < b * ε) : a ≤ b :=
+  le_of_forall_one_lt_le_mul fun ε hε => (h _ hε).le
+
+@[to_additive]
+theorem le_iff_forall_one_lt_lt_mul' : a ≤ b ↔ ∀ ε, 1 < ε → a < b * ε :=
+  ⟨fun h ε => lt_mul_of_le_of_one_lt h, le_of_forall_one_lt_lt_mul'⟩
+
+end HasExistsMulOfLe
+
 /-- A linearly ordered additive commutative monoid. -/
 @[protect_proj, ancestor LinearOrderₓ OrderedAddCommMonoid]
 class LinearOrderedAddCommMonoid (α : Type _) extends LinearOrderₓ α, OrderedAddCommMonoid α

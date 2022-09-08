@@ -111,7 +111,7 @@ theorem ExtensionOf.ext_iff {a b : ExtensionOf i f} :
   ⟨fun r =>
     r ▸
       ⟨rfl, fun x y h =>
-        congr_arg a.toFun <| by
+        congr_argₓ a.toFun <| by
           exact_mod_cast h⟩,
     fun ⟨h1, h2⟩ => ExtensionOf.ext h1 h2⟩
 
@@ -182,7 +182,7 @@ instance ExtensionOf.inhabited :
             rw [← map_add, ← (x + y).2.some_spec] at eq1
             rw [← Fact.out (Function.Injective i) eq1, map_add],
           map_smul' := fun r x => by
-            have eq1 : r • _ = (r • x).1 := congr_arg ((· • ·) r) x.2.some_spec
+            have eq1 : r • _ = (r • x).1 := congr_argₓ ((· • ·) r) x.2.some_spec
             rw [← LinearMap.map_smul, ← (r • x).2.some_spec] at eq1
             rw [RingHom.id_apply, ← Fact.out (Function.Injective i) eq1, LinearMap.map_smul] },
       le := le_reflₓ _,

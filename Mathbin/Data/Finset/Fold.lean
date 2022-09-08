@@ -90,7 +90,7 @@ theorem fold_hom {op' : γ → γ → γ} [IsCommutative γ op'] [IsAssociative 
 
 theorem fold_disj_union {s₁ s₂ : Finset α} {b₁ b₂ : β} (h) :
     (s₁.disjUnion s₂ h).fold op (b₁*b₂) f = s₁.fold op b₁ f*s₂.fold op b₂ f :=
-  (congr_arg _ <| Multiset.map_add _ _ _).trans (Multiset.fold_add _ _ _ _ _)
+  (congr_argₓ _ <| Multiset.map_add _ _ _).trans (Multiset.fold_add _ _ _ _ _)
 
 theorem fold_union_inter [DecidableEq α] {s₁ s₂ : Finset α} {b₁ b₂ : β} :
     ((s₁ ∪ s₂).fold op b₁ f*(s₁ ∩ s₂).fold op b₂ f) = s₁.fold op b₂ f*s₂.fold op b₁ f := by

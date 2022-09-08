@@ -126,7 +126,7 @@ theorem of_le (N : Submonoid R) (h₁ : M ≤ N) (h₂ : ∀ r ∈ N, IsUnit (al
         exact ⟨⟨c, h₁ c.2⟩, hc⟩
         
       · rintro ⟨c, h⟩
-        simpa only [SetLike.coe_mk, map_mul, (h₂ c c.2).mul_left_inj] using congr_arg (algebraMap R S) h
+        simpa only [SetLike.coe_mk, map_mul, (h₂ c c.2).mul_left_inj] using congr_argₓ (algebraMap R S) h
          }
 
 variable (S)
@@ -548,11 +548,11 @@ noncomputable def ringEquivOfRingEquiv (h : R ≃+* P) (H : M.map h.toMonoidHom 
     left_inv := fun x => by
       rw [map_map, map_unique _ (RingHom.id _), RingHom.id_apply]
       intro x
-      convert congr_arg (algebraMap R S) (h.symm_apply_apply x).symm,
+      convert congr_argₓ (algebraMap R S) (h.symm_apply_apply x).symm,
     right_inv := fun x => by
       rw [map_map, map_unique _ (RingHom.id _), RingHom.id_apply]
       intro x
-      convert congr_arg (algebraMap P Q) (h.apply_symm_apply x).symm }
+      convert congr_argₓ (algebraMap P Q) (h.apply_symm_apply x).symm }
 
 end
 
@@ -636,7 +636,7 @@ theorem is_localization_of_base_ring_equiv [IsLocalization M S] (h : R ≃+* P) 
   · rintro ⟨_, ⟨y, hy, rfl⟩⟩
     convert IsLocalization.map_units S ⟨y, hy⟩
     dsimp' only [RingHom.algebra_map_to_algebra, RingHom.comp_apply]
-    exact congr_arg _ (h.symm_apply_apply _)
+    exact congr_argₓ _ (h.symm_apply_apply _)
     
   · intro y
     obtain ⟨⟨x, s⟩, e⟩ := IsLocalization.surj M y

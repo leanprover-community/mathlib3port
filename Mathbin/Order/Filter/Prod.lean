@@ -174,7 +174,7 @@ theorem Eventually.diag_of_prod_left {f : Filter α} {g : Filter γ} {p : (α ×
   obtain ⟨t, ht, s, hs, hst⟩ := eventually_prod_iff.1 h
   refine'
     (ht.diag_of_prod.prod_mk hs).mono fun x hx => by
-      simp only [hst hx.1 hx.2, Prod.mk.eta]
+      simp only [hst hx.1 hx.2, Prod.mk.etaₓ]
 
 theorem Eventually.diag_of_prod_right {f : Filter α} {g : Filter γ} {p : α × γ × γ → Prop} :
     (∀ᶠ x in f ×ᶠ (g ×ᶠ g), p x) → ∀ᶠ x : α × γ in f ×ᶠ g, p (x.1, x.2, x.2) := by
@@ -182,7 +182,7 @@ theorem Eventually.diag_of_prod_right {f : Filter α} {g : Filter γ} {p : α ×
   obtain ⟨t, ht, s, hs, hst⟩ := eventually_prod_iff.1 h
   refine'
     (ht.prod_mk hs.diag_of_prod).mono fun x hx => by
-      simp only [hst hx.1 hx.2, Prod.mk.eta]
+      simp only [hst hx.1 hx.2, Prod.mk.etaₓ]
 
 theorem tendsto_diag : Tendsto (fun i => (i, i)) f (f ×ᶠ f) :=
   tendsto_iff_eventually.mpr fun _ hpr => hpr.diag_of_prod
@@ -211,7 +211,7 @@ theorem prod_comap_comap_eq.{u, v, w, x} {α₁ : Type u} {α₂ : Type v} {β�
   simp only [Filter.prod, comap_comap, eq_self_iff_true, comap_inf]
 
 theorem prod_comm' : f ×ᶠ g = comap Prod.swap (g ×ᶠ f) := by
-  simp only [Filter.prod, comap_comap, (· ∘ ·), inf_comm, Prod.fst_swap, eq_self_iff_true, Prod.snd_swap, comap_inf]
+  simp only [Filter.prod, comap_comap, (· ∘ ·), inf_comm, Prod.fst_swapₓ, eq_self_iff_true, Prod.snd_swapₓ, comap_inf]
 
 theorem prod_comm : f ×ᶠ g = map (fun p : β × α => (p.2, p.1)) (g ×ᶠ f) := by
   rw [prod_comm', ← map_swap_eq_comap_swap]

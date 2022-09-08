@@ -77,11 +77,11 @@ theorem prod_cons (a : α) (s) : prod (a ::ₘ s) = a * prod s :=
 
 @[simp, to_additive]
 theorem prod_erase [DecidableEq α] (h : a ∈ s) : a * (s.erase a).Prod = s.Prod := by
-  rw [← s.coe_to_list, coe_erase, coe_prod, coe_prod, List.prod_erase ((s.mem_to_list a).2 h)]
+  rw [← s.coe_to_list, coe_erase, coe_prod, coe_prod, List.prod_erase (mem_to_list.2 h)]
 
 @[simp, to_additive]
 theorem prod_map_erase [DecidableEq ι] {a : ι} (h : a ∈ m) : f a * ((m.erase a).map f).Prod = (m.map f).Prod := by
-  rw [← m.coe_to_list, coe_erase, coe_map, coe_map, coe_prod, coe_prod, List.prod_map_erase f ((m.mem_to_list a).2 h)]
+  rw [← m.coe_to_list, coe_erase, coe_map, coe_map, coe_prod, coe_prod, List.prod_map_erase f (mem_to_list.2 h)]
 
 @[simp, to_additive]
 theorem prod_singleton (a : α) : prod {a} = a := by

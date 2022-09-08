@@ -215,7 +215,7 @@ theorem balanced_core_mem_nhds_zero (hU : U ∈ 𝓝 (0 : E)) : BalancedCore �
     ∃ (r : ℝ)(V : Set E), 0 < r ∧ V ∈ 𝓝 (0 : E) ∧ ∀ (c : 𝕜) (y : E), ∥c∥ < r → y ∈ V → c • y ∈ U := by
     have h : Filter.Tendsto (fun x : 𝕜 × E => x.fst • x.snd) (𝓝 (0, 0)) (𝓝 0) :=
       continuous_smul.tendsto' (0, 0) _ (smul_zero _)
-    simpa only [← Prod.exists', ← Prod.forall', ← and_imp, ← And.assoc, exists_prop] using
+    simpa only [← Prod.exists'ₓ, ← Prod.forall'ₓ, ← and_imp, ← And.assoc, exists_prop] using
       h.basis_left (normed_add_comm_group.nhds_zero_basis_norm_lt.prod_nhds (𝓝 _).basis_sets) U hU
   rcases NormedField.exists_norm_lt 𝕜 hr with ⟨y, hy₀, hyr⟩
   rw [norm_pos_iff] at hy₀

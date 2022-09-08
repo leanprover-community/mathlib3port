@@ -149,9 +149,6 @@ theorem Definable.image_comp_equiv {s : Set (β → M)} (h : A.Definable L s) (f
     simp
     
 
-theorem Fin.coe_cast_add_zero {m : ℕ} : (Finₓ.castAdd 0 : Finₓ m → Finₓ (m + 0)) = id :=
-  funext fun _ => Finₓ.ext rfl
-
 /-- This lemma is only intended as a helper for `definable.image_comp. -/
 theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (Sum α (Finₓ m) → M)} (h : A.Definable L s) :
     A.Definable L ((fun g : Sum α (Finₓ m) → M => g ∘ Sum.inl) '' s) := by
@@ -159,7 +156,7 @@ theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (Sum α (Finₓ m) �
   refine' ⟨(bounded_formula.relabel id φ).exs, _⟩
   ext x
   simp only [Set.mem_image, mem_set_of_eq, bounded_formula.realize_exs, bounded_formula.realize_relabel,
-    Function.comp.right_id, fin.coe_cast_add_zero]
+    Function.comp.right_id, Finₓ.cast_add_zero, Finₓ.cast_refl]
   constructor
   · rintro ⟨y, hy, rfl⟩
     exact ⟨y ∘ Sum.inr, (congr (congr rfl (Sum.elim_comp_inl_inr y).symm) (funext finZeroElim)).mp hy⟩
@@ -169,9 +166,10 @@ theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (Sum α (Finₓ m) �
     
 
 /-- Shows that definability is closed under finite projections. -/
-theorem Definable.image_comp_embedding {s : Set (β → M)} (h : A.Definable L s) (f : α ↪ β) [Fintype β] :
+theorem Definable.image_comp_embedding {s : Set (β → M)} (h : A.Definable L s) (f : α ↪ β) [Finite β] :
     A.Definable L ((fun g : β → M => g ∘ f) '' s) := by
   classical
+  cases nonempty_fintype β
   refine'
     (congr rfl (ext fun x => _)).mp
       (((h.image_comp_equiv (Equivₓ.Set.sumCompl (range f))).image_comp_equiv
@@ -182,9 +180,11 @@ theorem Definable.image_comp_embedding {s : Set (β → M)} (h : A.Definable L s
   simp
 
 /-- Shows that definability is closed under finite projections. -/
-theorem Definable.image_comp {s : Set (β → M)} (h : A.Definable L s) (f : α → β) [Fintype α] [Fintype β] :
+theorem Definable.image_comp {s : Set (β → M)} (h : A.Definable L s) (f : α → β) [Finite α] [Finite β] :
     A.Definable L ((fun g : β → M => g ∘ f) '' s) := by
   classical
+  cases nonempty_fintype α
+  cases nonempty_fintype β
   have h :=
     (((h.image_comp_equiv (Equivₓ.Set.sumCompl (range f))).image_comp_equiv
               (Equivₓ.sumCongr (_root_.equiv.refl _) (Fintype.equivFin _).symm)).image_comp_sum_inl_fin
@@ -241,7 +241,11 @@ def DefinableSet :=
 
 namespace DefinableSet
 
-variable {L} {A} {α}
+variable {L A α} {s t : L.DefinableSet A α} {x : α → M}
+
+instance : SetLike (L.DefinableSet A α) (α → M) where
+  coe := Subtype.val
+  coe_injective' := Subtype.val_injective
 
 instance : HasTop (L.DefinableSet A α) :=
   ⟨⟨⊤, definable_univ⟩⟩
@@ -249,84 +253,74 @@ instance : HasTop (L.DefinableSet A α) :=
 instance : HasBot (L.DefinableSet A α) :=
   ⟨⟨⊥, definable_empty⟩⟩
 
+instance : HasSup (L.DefinableSet A α) :=
+  ⟨fun s t => ⟨s ∪ t, s.2.union t.2⟩⟩
+
+instance : HasInf (L.DefinableSet A α) :=
+  ⟨fun s t => ⟨s ∩ t, s.2.inter t.2⟩⟩
+
+instance : HasCompl (L.DefinableSet A α) :=
+  ⟨fun s => ⟨sᶜ, s.2.compl⟩⟩
+
+instance : Sdiff (L.DefinableSet A α) :=
+  ⟨fun s t => ⟨s \ t, s.2.sdiff t.2⟩⟩
+
 instance : Inhabited (L.DefinableSet A α) :=
   ⟨⊥⟩
 
-instance : SetLike (L.DefinableSet A α) (α → M) where
-  coe := Subtype.val
-  coe_injective' := Subtype.val_injective
+theorem le_iff : s ≤ t ↔ (s : Set (α → M)) ≤ (t : Set (α → M)) :=
+  Iff.rfl
 
 @[simp]
-theorem mem_top {x : α → M} : x ∈ (⊤ : L.DefinableSet A α) :=
+theorem mem_top : x ∈ (⊤ : L.DefinableSet A α) :=
   mem_univ x
-
-@[simp]
-theorem coe_top : ((⊤ : L.DefinableSet A α) : Set (α → M)) = ⊤ :=
-  rfl
 
 @[simp]
 theorem not_mem_bot {x : α → M} : ¬x ∈ (⊥ : L.DefinableSet A α) :=
   not_mem_empty x
 
 @[simp]
-theorem coe_bot : ((⊥ : L.DefinableSet A α) : Set (α → M)) = ⊥ :=
-  rfl
-
-instance : Lattice (L.DefinableSet A α) :=
-  Subtype.lattice (fun _ _ => Definable.union) fun _ _ => Definable.inter
-
-theorem le_iff {s t : L.DefinableSet A α} : s ≤ t ↔ (s : Set (α → M)) ≤ (t : Set (α → M)) :=
+theorem mem_sup : x ∈ s⊔t ↔ x ∈ s ∨ x ∈ t :=
   Iff.rfl
 
 @[simp]
-theorem coe_sup {s t : L.DefinableSet A α} : ((s⊔t : L.DefinableSet A α) : Set (α → M)) = s ∪ t :=
-  rfl
-
-@[simp]
-theorem mem_sup {s t : L.DefinableSet A α} {x : α → M} : x ∈ s⊔t ↔ x ∈ s ∨ x ∈ t :=
+theorem mem_inf : x ∈ s⊓t ↔ x ∈ s ∧ x ∈ t :=
   Iff.rfl
 
 @[simp]
-theorem coe_inf {s t : L.DefinableSet A α} : ((s⊓t : L.DefinableSet A α) : Set (α → M)) = s ∩ t :=
-  rfl
-
-@[simp]
-theorem mem_inf {s t : L.DefinableSet A α} {x : α → M} : x ∈ s⊓t ↔ x ∈ s ∧ x ∈ t :=
+theorem mem_compl : x ∈ sᶜ ↔ ¬x ∈ s :=
   Iff.rfl
 
-instance : BoundedOrder (L.DefinableSet A α) :=
-  { DefinableSet.hasTop, DefinableSet.hasBot with bot_le := fun s x hx => False.elim hx,
-    le_top := fun s x hx => mem_univ x }
-
-instance : DistribLattice (L.DefinableSet A α) :=
-  { DefinableSet.lattice with
-    le_sup_inf := by
-      intro s t u x
-      simp only [and_imp, mem_inter_eq, SetLike.mem_coe, coe_sup, coe_inf, mem_union_eq, Subtype.val_eq_coe]
-      tauto }
-
-/-- The complement of a definable set is also definable. -/
-@[reducible]
-instance : HasCompl (L.DefinableSet A α) :=
-  ⟨fun ⟨s, hs⟩ => ⟨sᶜ, hs.compl⟩⟩
-
 @[simp]
-theorem mem_compl {s : L.DefinableSet A α} {x : α → M} : x ∈ sᶜ ↔ ¬x ∈ s := by
-  cases' s with s hs
+theorem mem_sdiff : x ∈ s \ t ↔ x ∈ s ∧ ¬x ∈ t :=
+  Iff.rfl
+
+@[simp, norm_cast]
+theorem coe_top : ((⊤ : L.DefinableSet A α) : Set (α → M)) = univ :=
   rfl
 
-@[simp]
-theorem coe_compl {s : L.DefinableSet A α} : ((sᶜ : L.DefinableSet A α) : Set (α → M)) = sᶜ := by
-  ext
-  simp
+@[simp, norm_cast]
+theorem coe_bot : ((⊥ : L.DefinableSet A α) : Set (α → M)) = ∅ :=
+  rfl
+
+@[simp, norm_cast]
+theorem coe_sup (s t : L.DefinableSet A α) : (↑(s⊔t) : Set (α → M)) = s ∪ t :=
+  rfl
+
+@[simp, norm_cast]
+theorem coe_inf (s t : L.DefinableSet A α) : (↑(s⊓t) : Set (α → M)) = s ∩ t :=
+  rfl
+
+@[simp, norm_cast]
+theorem coe_compl (s : L.DefinableSet A α) : (↑(sᶜ) : Set (α → M)) = sᶜ :=
+  rfl
+
+@[simp, norm_cast]
+theorem coe_sdiff (s t : L.DefinableSet A α) : (↑(s \ t) : Set (α → M)) = s \ t :=
+  rfl
 
 instance : BooleanAlgebra (L.DefinableSet A α) :=
-  { DefinableSet.hasCompl, DefinableSet.boundedOrder, DefinableSet.distribLattice with sdiff := fun s t => s⊓tᶜ,
-    sdiff_eq := fun s t => rfl,
-    inf_compl_le_bot := fun ⟨s, hs⟩ => by
-      simp [le_iff],
-    top_le_sup_compl := fun ⟨s, hs⟩ => by
-      simp [le_iff] }
+  Subtype.coe_injective.BooleanAlgebra _ coe_sup coe_inf coe_top coe_bot coe_compl coe_sdiff
 
 end DefinableSet
 

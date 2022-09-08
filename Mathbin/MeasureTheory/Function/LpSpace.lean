@@ -1202,6 +1202,115 @@ theorem snorm'_smul_le_mul_snorm' {p q r : ℝ} {f : α → E} (hf : AeStronglyM
   simp_rw [snorm', Pi.smul_apply', nnnorm_smul, Ennreal.coe_mul]
   exact Ennreal.lintegral_Lp_mul_le_Lq_mul_Lr hp0_lt hpq hpqr μ hφ.ennnorm hf.ennnorm
 
+theorem snorm_smul_le_snorm_top_mul_snorm (p : ℝ≥0∞) {f : α → E} (hf : AeStronglyMeasurable f μ) (φ : α → 𝕜) :
+    snorm (φ • f) p μ ≤ snorm φ ∞ μ * snorm f p μ := by
+  by_cases' hp_top : p = ∞
+  · simp_rw [hp_top, snorm_exponent_top, snorm_ess_sup, Pi.smul_apply', nnnorm_smul, Ennreal.coe_mul]
+    exact Ennreal.ess_sup_mul_le _ _
+    
+  by_cases' hp_zero : p = 0
+  · simp only [hp_zero, snorm_exponent_zero, mul_zero, le_zero_iff]
+    
+  simp_rw [snorm_eq_lintegral_rpow_nnnorm hp_zero hp_top, snorm_exponent_top, snorm_ess_sup]
+  calc
+    (∫⁻ x, ↑∥(φ • f) x∥₊ ^ p.to_real ∂μ) ^ (1 / p.to_real) =
+        (∫⁻ x, ↑∥φ x∥₊ ^ p.to_real * ↑∥f x∥₊ ^ p.to_real ∂μ) ^ (1 / p.to_real) :=
+      by
+      congr
+      ext1 x
+      rw [Pi.smul_apply', nnnorm_smul, Ennreal.coe_mul, Ennreal.mul_rpow_of_nonneg _ _ Ennreal.to_real_nonneg]
+    _ ≤ (∫⁻ x, essSup (fun x => ↑∥φ x∥₊) μ ^ p.to_real * ↑∥f x∥₊ ^ p.to_real ∂μ) ^ (1 / p.to_real) := by
+      refine' Ennreal.rpow_le_rpow _ _
+      swap
+      · rw [one_div_nonneg]
+        exact Ennreal.to_real_nonneg
+        
+      refine' lintegral_mono_ae _
+      filter_upwards [@Ennreal.ae_le_ess_sup _ _ μ fun x => ↑∥φ x∥₊] with x hx
+      refine' Ennreal.mul_le_mul _ le_rflₓ
+      exact Ennreal.rpow_le_rpow hx Ennreal.to_real_nonneg
+    _ = essSup (fun x => ↑∥φ x∥₊) μ * (∫⁻ x, ↑∥f x∥₊ ^ p.to_real ∂μ) ^ (1 / p.to_real) := by
+      rw [lintegral_const_mul'']
+      swap
+      · exact hf.nnnorm.ae_measurable.coe_nnreal_ennreal.pow ae_measurable_const
+        
+      rw [Ennreal.mul_rpow_of_nonneg]
+      swap
+      · rw [one_div_nonneg]
+        exact Ennreal.to_real_nonneg
+        
+      rw [← Ennreal.rpow_mul, one_div, mul_inv_cancel, Ennreal.rpow_one]
+      rw [Ne.def, Ennreal.to_real_eq_zero_iff, Auto.not_or_eq]
+      exact ⟨hp_zero, hp_top⟩
+    
+
+theorem snorm_smul_le_snorm_mul_snorm_top (p : ℝ≥0∞) (f : α → E) {φ : α → 𝕜} (hφ : AeStronglyMeasurable φ μ) :
+    snorm (φ • f) p μ ≤ snorm φ p μ * snorm f ∞ μ := by
+  rw [← snorm_norm]
+  simp_rw [Pi.smul_apply', norm_smul]
+  have : (fun x => ∥φ x∥ * ∥f x∥) = (fun x => ∥f x∥) • fun x => ∥φ x∥ := by
+    rw [smul_eq_mul, mul_comm]
+    rfl
+  rw [this]
+  have h := snorm_smul_le_snorm_top_mul_snorm p hφ.norm fun x => ∥f x∥
+  refine' h.trans_eq _
+  simp_rw [snorm_norm]
+  rw [mul_comm]
+
+/-- Hölder's inequality, as an inequality on the `ℒp` seminorm of a scalar product `φ • f`. -/
+theorem snorm_smul_le_mul_snorm {p q r : ℝ≥0∞} {f : α → E} (hf : AeStronglyMeasurable f μ) {φ : α → 𝕜}
+    (hφ : AeStronglyMeasurable φ μ) (hpqr : 1 / p = 1 / q + 1 / r) : snorm (φ • f) p μ ≤ snorm φ q μ * snorm f r μ := by
+  by_cases' hp_zero : p = 0
+  · simp [hp_zero]
+    
+  have hq_ne_zero : q ≠ 0 := by
+    intro hq_zero
+    simp only [hq_zero, hp_zero, one_div, Ennreal.inv_zero, Ennreal.top_add, Ennreal.inv_eq_top] at hpqr
+    exact hpqr
+  have hr_ne_zero : r ≠ 0 := by
+    intro hr_zero
+    simp only [hr_zero, hp_zero, one_div, Ennreal.inv_zero, Ennreal.add_top, Ennreal.inv_eq_top] at hpqr
+    exact hpqr
+  by_cases' hq_top : q = ∞
+  · have hpr : p = r := by
+      simpa only [hq_top, one_div, Ennreal.div_top, zero_addₓ, inv_inj] using hpqr
+    rw [← hpr, hq_top]
+    exact snorm_smul_le_snorm_top_mul_snorm p hf φ
+    
+  by_cases' hr_top : r = ∞
+  · have hpq : p = q := by
+      simpa only [hr_top, one_div, Ennreal.div_top, add_zeroₓ, inv_inj] using hpqr
+    rw [← hpq, hr_top]
+    exact snorm_smul_le_snorm_mul_snorm_top p f hφ
+    
+  have hpq : p < q := by
+    suffices 1 / q < 1 / p by
+      rwa [one_div, one_div, Ennreal.inv_lt_inv] at this
+    rw [hpqr]
+    refine' Ennreal.lt_add_right _ _
+    · simp only [hq_ne_zero, one_div, Ne.def, Ennreal.inv_eq_top, not_false_iff]
+      
+    · simp only [hr_top, one_div, Ne.def, Ennreal.inv_eq_zero, not_false_iff]
+      
+  rw [snorm_eq_snorm' hp_zero (hpq.trans_le le_top).Ne, snorm_eq_snorm' hq_ne_zero hq_top,
+    snorm_eq_snorm' hr_ne_zero hr_top]
+  refine' snorm'_smul_le_mul_snorm' hf hφ _ _ _
+  · exact Ennreal.to_real_pos hp_zero (hpq.trans_le le_top).Ne
+    
+  · exact Ennreal.to_real_strict_mono hq_top hpq
+    
+  rw [← Ennreal.one_to_real, ← Ennreal.to_real_div, ← Ennreal.to_real_div, ← Ennreal.to_real_div, hpqr,
+    Ennreal.to_real_add]
+  · simp only [hq_ne_zero, one_div, Ne.def, Ennreal.inv_eq_top, not_false_iff]
+    
+  · simp only [hr_ne_zero, one_div, Ne.def, Ennreal.inv_eq_top, not_false_iff]
+    
+
+theorem Memℒp.smul {p q r : ℝ≥0∞} {f : α → E} {φ : α → 𝕜} (hf : Memℒp f r μ) (hφ : Memℒp φ q μ)
+    (hpqr : 1 / p = 1 / q + 1 / r) : Memℒp (φ • f) p μ :=
+  ⟨hφ.1.smul hf.1,
+    (snorm_smul_le_mul_snorm hf.1 hφ.1 hpqr).trans_lt (Ennreal.mul_lt_top hφ.snorm_ne_top hf.snorm_ne_top)⟩
+
 end NormedSpace
 
 section Monotonicity

@@ -68,7 +68,7 @@ protected theorem ext : ∀ {a1 a2 : { x // p x }}, (a1 : α) = (a2 : α) → a1
   | ⟨x, h1⟩, ⟨x, h2⟩, rfl => rfl
 
 theorem ext_iff {a1 a2 : { x // p x }} : a1 = a2 ↔ (a1 : α) = (a2 : α) :=
-  ⟨congr_arg _, Subtype.ext⟩
+  ⟨congr_argₓ _, Subtype.ext⟩
 
 theorem heq_iff_coe_eq (h : ∀ x, p x ↔ q x) {a1 : { x // p x }} {a2 : { x // q x }} : HEq a1 a2 ↔ (a1 : α) = (a2 : α) :=
   Eq.ndrec (fun a2' => heq_iff_eq.trans ext_iff) (funext fun x => propext (h x)) a2
@@ -127,14 +127,14 @@ theorem _root_.exists_subtype_mk_eq_iff {a : Subtype p} {b : α} : (∃ h : p b,
 def restrictₓ {α} {β : α → Type _} (p : α → Prop) (f : ∀ x, β x) (x : Subtype p) : β x.1 :=
   f x
 
-theorem restrict_apply {α} {β : α → Type _} (f : ∀ x, β x) (p : α → Prop) (x : Subtype p) : restrictₓ p f x = f x.1 :=
+theorem restrict_applyₓ {α} {β : α → Type _} (f : ∀ x, β x) (p : α → Prop) (x : Subtype p) : restrictₓ p f x = f x.1 :=
   by
   rfl
 
-theorem restrict_def {α β} (f : α → β) (p : α → Prop) : restrictₓ p f = f ∘ coe := by
+theorem restrict_defₓ {α β} (f : α → β) (p : α → Prop) : restrictₓ p f = f ∘ coe := by
   rfl
 
-theorem restrict_injective {α β} {f : α → β} (p : α → Prop) (h : Injective f) : Injective (restrictₓ p f) :=
+theorem restrict_injectiveₓ {α β} {f : α → β} (p : α → Prop) (h : Injective f) : Injective (restrictₓ p f) :=
   h.comp coe_injective
 
 theorem surjective_restrict {α} {β : α → Type _} [ne : ∀ a, Nonempty (β a)] (p : α → Prop) :
@@ -148,19 +148,19 @@ theorem surjective_restrict {α} {β : α → Type _} [ne : ∀ a, Nonempty (β 
 @[simps]
 def coind {α β} (f : α → β) {p : β → Prop} (h : ∀ a, p (f a)) : α → Subtype p := fun a => ⟨f a, h a⟩
 
-theorem coind_injective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : Injective f) :
+theorem coind_injectiveₓ {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : Injective f) :
     Injective (coind f h) := fun x y hxy =>
   hf <| by
-    apply congr_arg Subtype.val hxy
+    apply congr_argₓ Subtype.val hxy
 
-theorem coind_surjective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : Surjective f) :
+theorem coind_surjectiveₓ {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : Surjective f) :
     Surjective (coind f h) := fun x =>
   let ⟨a, ha⟩ := hf x
   ⟨a, coe_injective ha⟩
 
-theorem coind_bijective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : Bijective f) :
+theorem coind_bijectiveₓ {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : Bijective f) :
     Bijective (coind f h) :=
-  ⟨coind_injective h hf.1, coind_surjective h hf.2⟩
+  ⟨coind_injectiveₓ h hf.1, coind_surjectiveₓ h hf.2⟩
 
 /-- Restriction of a function to a function on subtypes. -/
 @[simps]
@@ -174,9 +174,9 @@ theorem map_compₓ {p : α → Prop} {q : β → Prop} {r : γ → Prop} {x : S
 theorem map_id {p : α → Prop} {h : ∀ a, p a → p (id a)} : map (@id α) h = id :=
   funext fun ⟨v, h⟩ => rfl
 
-theorem map_injective {p : α → Prop} {q : β → Prop} {f : α → β} (h : ∀ a, p a → q (f a)) (hf : Injective f) :
+theorem map_injectiveₓ {p : α → Prop} {q : β → Prop} {f : α → β} (h : ∀ a, p a → q (f a)) (hf : Injective f) :
     Injective (map f h) :=
-  coind_injective _ <| hf.comp coe_injective
+  coind_injectiveₓ _ <| hf.comp coe_injective
 
 theorem map_involutive {p : α → Prop} {f : α → α} (h : ∀ a, p a → p (f a)) (hf : Involutive f) : Involutive (map f h) :=
   fun x => Subtype.ext (hf x)

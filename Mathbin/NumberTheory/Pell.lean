@@ -307,7 +307,7 @@ theorem eq_pell_lem : ∀ (n) (b : ℤ√d), 1 ≤ b → is_pell b → b ≤ pel
                     (Zsqrtd.le_of_le_le (le_reflₓ 0)
                       (let t := Int.coe_nat_le_coe_nat_of_le (Nat.succ_posₓ y)
                       add_le_add t t))
-                | -[1+ y], y0l, yl2 => y0l trivialₓ
+                | -[1 + y], y0l, yl2 => y0l trivialₓ
 
 theorem eq_pell_zd (b : ℤ√d) (b1 : 1 ≤ b) (hp : is_pell b) : ∃ n, b = pell_zd n :=
   let ⟨n, h⟩ := @Zsqrtd.le_arch d b
@@ -793,11 +793,11 @@ theorem pell_zd_sub {m n} (h : n ≤ m) : pell_zd (m - n) = pell_zd m * (pell_zd
 
 theorem xz_sub {m n} (h : n ≤ m) : xz (m - n) = xz m * xz n - d * yz m * yz n := by
   rw [sub_eq_add_neg, ← mul_neg]
-  exact congr_arg Zsqrtd.re (pell_zd_sub a1 h)
+  exact congr_argₓ Zsqrtd.re (pell_zd_sub a1 h)
 
 theorem yz_sub {m n} (h : n ≤ m) : yz (m - n) = xz n * yz m - xz m * yz n := by
   rw [sub_eq_add_neg, ← mul_neg, mul_comm, add_commₓ]
-  exact congr_arg Zsqrtd.im (pell_zd_sub a1 h)
+  exact congr_argₓ Zsqrtd.im (pell_zd_sub a1 h)
 
 theorem xy_coprime (n) : (xn n).Coprime (yn n) :=
   Nat.coprime_of_dvd' fun k kp kx ky => by
@@ -918,7 +918,7 @@ theorem pell_zd_succ_succ (n) : pell_zd (n + 2) + pell_zd n = (2 * a : ℕ) * pe
     rw [Zsqrtd.ext]
     dsimp'
     constructor <;> ring
-  simpa [mul_addₓ, mul_comm, mul_left_commₓ, add_commₓ] using congr_arg (· * pell_zd a1 n) this
+  simpa [mul_addₓ, mul_comm, mul_left_commₓ, add_commₓ] using congr_argₓ (· * pell_zd a1 n) this
 
 theorem xy_succ_succ (n) : xn (n + 2) + xn n = 2 * a * xn (n + 1) ∧ yn (n + 2) + yn n = 2 * a * yn (n + 1) := by
   have := pell_zd_succ_succ a1 n
@@ -1241,7 +1241,7 @@ theorem modeq_of_xn_modeq {i j n} (ipos : 0 < i) (hin : i ≤ n) (h : xn j ≡ x
       
     rw [Nat.mul_succ, ← add_assocₓ, add_commₓ]
     exact (xn_modeq_x4n_add _ _ _).trans IH
-  Or.imp
+  Or.impₓ
     (fun ji : j' = i => by
       rwa [← ji])
     (fun ji : j' + i = 4 * n =>

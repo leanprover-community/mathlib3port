@@ -173,8 +173,8 @@ instance : Algebra R (Completion A) :=
   { (UniformSpace.Completion.coeRingHom : A →+* Completion A).comp (algebraMap R A) with
     commutes' := fun r x =>
       (Completion.induction_on x (is_closed_eq (continuous_mul_left _) (continuous_mul_right _))) fun a => by
-        simpa only [coe_mul] using congr_arg (coe : A → completion A) (Algebra.commutes r a),
-    smul_def' := fun r x => congr_fun (map_smul_eq_mul_coe A R r) x }
+        simpa only [coe_mul] using congr_argₓ (coe : A → completion A) (Algebra.commutes r a),
+    smul_def' := fun r x => congr_funₓ (map_smul_eq_mul_coe A R r) x }
 
 theorem algebra_map_def (r : R) : algebraMap R (Completion A) r = (algebraMap R A r : Completion A) :=
   rfl

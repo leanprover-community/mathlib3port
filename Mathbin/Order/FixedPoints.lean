@@ -129,8 +129,8 @@ variable [CompleteLattice α] [CompleteLattice β] (f : β →o α) (g : α →o
 
 -- Rolling rule
 theorem map_lfp_comp : f (lfp (g.comp f)) = lfp (f.comp g) :=
-  le_antisymmₓ ((f.comp g).map_lfp ▸ f.mono (lfp_le_fixed _ <| congr_arg g (f.comp g).map_lfp)) <|
-    lfp_le _ (congr_arg f (g.comp f).map_lfp).le
+  le_antisymmₓ ((f.comp g).map_lfp ▸ f.mono (lfp_le_fixed _ <| congr_argₓ g (f.comp g).map_lfp)) <|
+    lfp_le _ (congr_argₓ f (g.comp f).map_lfp).le
 
 theorem map_gfp_comp : f (g.comp f).gfp = (f.comp g).gfp :=
   f.dual.map_lfp_comp g.dual
@@ -143,7 +143,7 @@ theorem lfp_lfp (h : α →o α →o α) : lfp (lfp.comp h) = lfp h.onDiag := by
     
   have ha : (lfp ∘ h) a = a := (lfp.comp h).map_lfp
   calc
-    h a a = h a (lfp (h a)) := congr_arg (h a) ha.symm
+    h a a = h a (lfp (h a)) := congr_argₓ (h a) ha.symm
     _ = lfp (h a) := (h a).map_lfp
     _ = a := ha
     

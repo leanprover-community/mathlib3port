@@ -117,7 +117,7 @@ theorem pow_sub_mul_pow (a : M) {m n : ℕ} (h : m ≤ n) : a ^ (n - m) * a ^ m 
 /-- If `x ^ n = 1`, then `x ^ m` is the same as `x ^ (m % n)` -/
 @[to_additive nsmul_eq_mod_nsmul "If `n • x = 0`, then `m • x` is the same as `(m % n) • x`"]
 theorem pow_eq_pow_mod {M : Type _} [Monoidₓ M] {x : M} (m : ℕ) {n : ℕ} (h : x ^ n = 1) : x ^ m = x ^ (m % n) := by
-  have t := congr_arg (fun a => x ^ a) (Nat.div_add_modₓ m n).symm
+  have t := congr_argₓ (fun a => x ^ a) (Nat.div_add_modₓ m n).symm
   dsimp'  at t
   rw [t, pow_addₓ, pow_mulₓ, h, one_pow, one_mulₓ]
 
@@ -148,6 +148,21 @@ theorem pow_bit0' (a : M) (n : ℕ) : a ^ bit0 n = (a * a) ^ n := by
 @[to_additive bit1_nsmul']
 theorem pow_bit1' (a : M) (n : ℕ) : a ^ bit1 n = (a * a) ^ n * a := by
   rw [bit1, pow_succ'ₓ, pow_bit0']
+
+@[to_additive]
+theorem pow_mul_pow_eq_one {a b : M} (n : ℕ) (h : a * b = 1) : a ^ n * b ^ n = 1 := by
+  induction' n with n hn
+  · simp
+    
+  · calc
+      a ^ n.succ * b ^ n.succ = a ^ n * a * (b * b ^ n) := by
+        rw [pow_succ'ₓ, pow_succₓ]
+      _ = a ^ n * (a * b) * b ^ n := by
+        simp only [mul_assoc]
+      _ = 1 := by
+        simp [h, hn]
+      
+    
 
 theorem dvd_pow {x y : M} (hxy : x ∣ y) : ∀ {n : ℕ} (hn : n ≠ 0), x ∣ y ^ n
   | 0, hn => (hn rfl).elim
@@ -207,7 +222,7 @@ theorem zpow_two (a : G) : a ^ (2 : ℤ) = a * a := by
 
 @[to_additive neg_one_zsmul]
 theorem zpow_neg_one (x : G) : x ^ (-1 : ℤ) = x⁻¹ :=
-  (zpow_neg_succ_of_nat x 0).trans <| congr_arg Inv.inv (pow_oneₓ x)
+  (zpow_neg_succ_of_nat x 0).trans <| congr_argₓ Inv.inv (pow_oneₓ x)
 
 @[to_additive]
 theorem zpow_neg_coe_of_pos (a : G) : ∀ {n : ℕ}, 0 < n → a ^ -(n : ℤ) = (a ^ n)⁻¹
@@ -231,7 +246,7 @@ theorem inv_pow (a : α) : ∀ n : ℕ, a⁻¹ ^ n = (a ^ n)⁻¹
 theorem one_zpow : ∀ n : ℤ, (1 : α) ^ n = 1
   | (n : ℕ) => by
     rw [zpow_coe_nat, one_pow]
-  | -[1+ n] => by
+  | -[1 + n] => by
     rw [zpow_neg_succ_of_nat, one_pow, inv_one]
 
 @[simp, to_additive neg_zsmul]
@@ -240,7 +255,7 @@ theorem zpow_neg (a : α) : ∀ n : ℤ, a ^ -n = (a ^ n)⁻¹
   | 0 => by
     change a ^ (0 : ℤ) = (a ^ (0 : ℤ))⁻¹
     simp
-  | -[1+ n] => by
+  | -[1 + n] => by
     rw [zpow_neg_succ_of_nat, inv_invₓ, ← zpow_coe_nat]
     rfl
 
@@ -252,7 +267,7 @@ theorem mul_zpow_neg_one (a b : α) : (a * b) ^ (-1 : ℤ) = b ^ (-1 : ℤ) * a 
 theorem inv_zpow (a : α) : ∀ n : ℤ, a⁻¹ ^ n = (a ^ n)⁻¹
   | (n : ℕ) => by
     rw [zpow_coe_nat, zpow_coe_nat, inv_pow]
-  | -[1+ n] => by
+  | -[1 + n] => by
     rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat, inv_pow]
 
 @[simp, to_additive zsmul_neg']
@@ -271,7 +286,7 @@ theorem one_div_zpow (a : α) (n : ℤ) : (1 / a) ^ n = 1 / a ^ n := by
 protected theorem Commute.mul_zpow (h : Commute a b) : ∀ i : ℤ, (a * b) ^ i = a ^ i * b ^ i
   | (n : ℕ) => by
     simp [h.mul_pow n]
-  | -[1+ n] => by
+  | -[1 + n] => by
     simp [h.mul_pow, (h.pow_pow _ _).Eq, mul_inv_rev]
 
 end DivisionMonoid
@@ -350,7 +365,7 @@ theorem of_mul_zpow [DivInvMonoidₓ G] (x : G) (n : ℤ) : Additive.ofMul (x ^ 
 theorem SemiconjBy.zpow_right [Groupₓ G] {a x y : G} (h : SemiconjBy a x y) : ∀ m : ℤ, SemiconjBy a (x ^ m) (y ^ m)
   | (n : ℕ) => by
     simp [zpow_coe_nat, h.pow_right n]
-  | -[1+ n] => by
+  | -[1 + n] => by
     simp [(h.pow_right n.succ).inv_right]
 
 namespace Commute

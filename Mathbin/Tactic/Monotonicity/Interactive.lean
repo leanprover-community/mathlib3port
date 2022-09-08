@@ -652,7 +652,7 @@ add_tactic_doc
   { Name := "ac_mono", category := DocCategory.tactic, declNames := [`tactic.interactive.ac_mono],
     tags := ["monotonicity"] }
 
-attribute [mono] And.imp Or.imp
+attribute [mono] And.imp Or.impₓ
 
 end Tactic.Interactive
 

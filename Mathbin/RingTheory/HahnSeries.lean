@@ -285,7 +285,7 @@ theorem emb_domain_single {f : Γ ↪o Γ'} {g : Γ} {r : R} : embDomain f (sing
 theorem emb_domain_injective {f : Γ ↪o Γ'} : Function.Injective (embDomain f : HahnSeries Γ R → HahnSeries Γ' R) :=
   fun x y xy => by
   ext g
-  rw [ext_iff, Function.funext_iffₓ] at xy
+  rw [ext_iff, Function.funext_iff] at xy
   have xyg := xy (f g)
   rwa [emb_domain_coeff, emb_domain_coeff] at xyg
 
@@ -637,7 +637,7 @@ theorem single_mul_coeff_add [NonUnitalNonAssocSemiringₓ R] {r : R} {x : HahnS
   trans ∑ ij : Γ × Γ in {(b, a)}, (single b r).coeff ij.fst * x.coeff ij.snd
   · apply sum_congr _ fun _ _ => rfl
     ext ⟨a1, a2⟩
-    simp only [Set.mem_singleton_iff, Prod.mk.inj_iff, mem_add_antidiagonal, mem_singleton, Set.mem_set_of_eq]
+    simp only [Set.mem_singleton_iff, Prod.mk.inj_iffₓ, mem_add_antidiagonal, mem_singleton, Set.mem_set_of_eq]
     constructor
     · rintro ⟨rfl, h2, h1⟩
       rw [add_commₓ] at h1
@@ -671,7 +671,7 @@ theorem mul_single_coeff_add [NonUnitalNonAssocSemiringₓ R] {r : R} {x : HahnS
   trans ∑ ij : Γ × Γ in {(a, b)}, x.coeff ij.fst * (single b r).coeff ij.snd
   · apply sum_congr _ fun _ _ => rfl
     ext ⟨a1, a2⟩
-    simp only [Set.mem_singleton_iff, Prod.mk.inj_iff, mem_add_antidiagonal, mem_singleton, Set.mem_set_of_eq]
+    simp only [Set.mem_singleton_iff, Prod.mk.inj_iffₓ, mem_add_antidiagonal, mem_singleton, Set.mem_set_of_eq]
     constructor
     · rintro ⟨h2, rfl, h1⟩
       refine' ⟨add_right_cancelₓ h1, rfl⟩
@@ -731,14 +731,14 @@ private theorem mul_assoc' [NonUnitalSemiringₓ R] (x y z : HahnSeries Γ R) : 
     exact ⟨⟨nx, Set.add_mem_add ny nz, (add_assocₓ _ _ _).symm⟩, ny, nz⟩
     
   · rintro ⟨⟨i1, j1⟩, k1, l1⟩ ⟨⟨i2, j2⟩, k2, l2⟩ H1 H2 H3 H4 H5
-    simp only [Set.image2_add, Prod.mk.inj_iff, mem_add_antidiagonal, Ne.def, Set.image_prod, mem_sigma,
+    simp only [Set.image2_add, Prod.mk.inj_iffₓ, mem_add_antidiagonal, Ne.def, Set.image_prod, mem_sigma,
       Set.mem_set_of_eq, heq_iff_eq] at H1 H3 H5
     obtain ⟨⟨rfl, H⟩, rfl, rfl⟩ := H5
-    simp only [and_trueₓ, Prod.mk.inj_iff, eq_self_iff_true, heq_iff_eq, ← H1.2.2.2, ← H3.2.2.2]
+    simp only [and_trueₓ, Prod.mk.inj_iffₓ, eq_self_iff_true, heq_iff_eq, ← H1.2.2.2, ← H3.2.2.2]
     
   · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩ H1 H2
-    simp only [exists_prop, Set.image2_add, Prod.mk.inj_iff, mem_add_antidiagonal, Sigma.exists, Ne.def, Set.image_prod,
-      mem_sigma, Set.mem_set_of_eq, heq_iff_eq, Prod.exists] at H1 H2⊢
+    simp only [exists_prop, Set.image2_add, Prod.mk.inj_iffₓ, mem_add_antidiagonal, Sigma.exists, Ne.def,
+      Set.image_prod, mem_sigma, Set.mem_set_of_eq, heq_iff_eq, Prod.existsₓ] at H1 H2⊢
     obtain ⟨⟨nx, H, rfl⟩, ny, nz, rfl⟩ := H1
     exact
       ⟨i + k, l, i, k, ⟨⟨Set.add_mem_add nx ny, nz, add_assocₓ _ _ _⟩, nx, ny, rfl⟩, fun con =>
@@ -779,7 +779,7 @@ instance [NonUnitalCommSemiring R] : NonUnitalCommSemiring (HahnSeries Γ R) :=
       ext
       simp_rw [mul_coeff, mul_comm]
       refine'
-          sum_bij (fun a ha => a.swap) (fun a ha => _) (fun a ha => rfl) (fun _ _ _ _ => Prod.swap_inj.1) fun a ha =>
+          sum_bij (fun a ha => a.swap) (fun a ha => _) (fun a ha => rfl) (fun _ _ _ _ => Prod.swap_injₓ.1) fun a ha =>
             ⟨a.swap, _, a.swap_swap.symm⟩ <;>
         rwa [swap_mem_add_antidiagonal] }
 
@@ -812,7 +812,7 @@ instance {Γ} [LinearOrderedCancelAddCommMonoid Γ] [NonUnitalNonAssocSemiring�
       
     right
     contrapose! xy
-    rw [HahnSeries.ext_iff, Function.funext_iffₓ, not_forall]
+    rw [HahnSeries.ext_iff, Function.funext_iff, not_forall]
     refine' ⟨x.order + y.order, _⟩
     rw [mul_coeff_order_add_order x y, zero_coeff, mul_eq_zero]
     simp [coeff_order_ne_zero, hx, xy]
@@ -889,7 +889,7 @@ theorem C_one : c (1 : R) = (1 : HahnSeries Γ R) :=
 
 theorem C_injective : Function.Injective (c : R → HahnSeries Γ R) := by
   intro r s rs
-  rw [ext_iff, Function.funext_iffₓ] at rs
+  rw [ext_iff, Function.funext_iff] at rs
   have h := rs 0
   rwa [C_apply, single_coeff_same, C_apply, single_coeff_same] at h
 
@@ -935,8 +935,8 @@ theorem emb_domain_mul [NonUnitalNonAssocSemiringₓ R] (f : Γ ↪o Γ') (hf : 
       
     apply sum_subset
     · rintro ⟨i, j⟩ hij
-      simp only [exists_prop, mem_map, Prod.mk.inj_iff, mem_add_antidiagonal, Function.Embedding.coe_prod_map,
-        mem_support, Prod.exists] at hij
+      simp only [exists_prop, mem_map, Prod.mk.inj_iffₓ, mem_add_antidiagonal, Function.Embedding.coe_prod_map,
+        mem_support, Prod.existsₓ] at hij
       obtain ⟨i, j, ⟨hx, hy, rfl⟩, rfl, rfl⟩ := hij
       simp [hx, hy, hf]
       
@@ -944,8 +944,8 @@ theorem emb_domain_mul [NonUnitalNonAssocSemiringₓ R] (f : Γ ↪o Γ') (hf : 
       contrapose! h2
       obtain ⟨i, hi, rfl⟩ := support_emb_domain_subset (ne_zero_and_ne_zero_of_mul h2).1
       obtain ⟨j, hj, rfl⟩ := support_emb_domain_subset (ne_zero_and_ne_zero_of_mul h2).2
-      simp only [exists_prop, mem_map, Prod.mk.inj_iff, mem_add_antidiagonal, Function.Embedding.coe_prod_map,
-        mem_support, Prod.exists]
+      simp only [exists_prop, mem_map, Prod.mk.inj_iffₓ, mem_add_antidiagonal, Function.Embedding.coe_prod_map,
+        mem_support, Prod.existsₓ]
       simp only [mem_add_antidiagonal, emb_domain_coeff, mem_support, ← hf, OrderEmbedding.eq_iff_eq] at h1
       exact ⟨i, j, h1, rfl⟩
       
@@ -1008,7 +1008,7 @@ instance [Nontrivial Γ] [Nontrivial R] : Nontrivial (Subalgebra R (HahnSeries �
       refine' ⟨single a 1, _⟩
       simp only [Algebra.mem_bot, not_exists, Set.mem_range, iff_trueₓ, Algebra.mem_top]
       intro x
-      rw [ext_iff, Function.funext_iffₓ, not_forall]
+      rw [ext_iff, Function.funext_iff, not_forall]
       refine' ⟨a, _⟩
       rw [single_coeff_same, algebra_map_apply, C_apply, single_coeff_of_ne ha]
       exact zero_ne_one⟩⟩
@@ -1468,7 +1468,7 @@ instance :
           
         · obtain ⟨i, j, hi, hj, rfl⟩ := support_mul_subset_add_support ha
           simp only [exists_prop, Set.mem_Union, mem_add_antidiagonal, mul_coeff, mem_support, is_pwo_support,
-            Prod.exists]
+            Prod.existsₓ]
           exact ⟨i, j, mem_coe.2 (mem_add_antidiagonal.2 ⟨hi, Set.mem_Union.2 ⟨a, hj⟩, rfl⟩), hj⟩
            }
 
@@ -1617,7 +1617,7 @@ theorem emb_domain_notin_range (h : b ∉ Set.Range f) : s.embDomain f b = 0 := 
 @[simp]
 theorem hsum_emb_domain : (s.embDomain f).hsum = s.hsum := by
   ext g
-  simp only [hsum_coeff, emb_domain_apply, apply_dite HahnSeries.coeff, dite_apply, zero_coeff]
+  simp only [hsum_coeff, emb_domain_apply, apply_diteₓ HahnSeries.coeff, dite_apply, zero_coeff]
   exact finsum_emb_domain f fun a => (s a).coeff g
 
 end EmbDomain

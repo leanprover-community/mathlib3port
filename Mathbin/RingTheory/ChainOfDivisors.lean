@@ -96,7 +96,7 @@ theorem eq_second_of_chain_of_prime_dvd {p q r : Associates M} {n : ℕ} (hn : n
   · contradiction
     
   obtain ⟨i, rfl⟩ := h₂.1 (dvd_trans hp' hr)
-  refine' congr_arg c ((eq_of_ge_of_not_gt _) fun hi => _)
+  refine' congr_argₓ c ((eq_of_ge_of_not_gt _) fun hi => _)
   · rw [Finₓ.le_iff_coe_le_coe, Finₓ.coe_one, Nat.succ_le_iff, ← Finₓ.coe_zero, ← Finₓ.lt_iff_coe_lt_coe,
       Finₓ.pos_iff_ne_zero]
     rintro rfl
@@ -248,7 +248,7 @@ theorem pow_image_of_prime_by_factor_order_iso_dvd [DecidableEq (Associates M)] 
               simp ⟩)
           hs'⟩
   have c₂.def : ∀ t, c₂ t = d ⟨c₁ t, _⟩ := fun t => rfl
-  refine' (congr_arg (· ^ s) (c₂.def 1).symm).trans _
+  refine' (congr_argₓ (· ^ s) (c₂.def 1).symm).trans _
   refine' (eq_pow_second_of_chain_of_has_chain hs (fun t u h => _) (fun r => ⟨fun hr => _, _⟩) _).symm
   · rw [c₂.def, c₂.def, Subtype.coe_lt_coe, d.lt_iff_lt, Subtype.mk_lt_mk, hc₁'.lt_iff_lt]
     exact h

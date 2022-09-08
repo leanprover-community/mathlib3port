@@ -1639,7 +1639,7 @@ theorem HasFtaylorSeriesUpToOn.continuous_linear_map_comp (g : F →L[𝕜] G) (
   set L : ∀ m : ℕ, (E[×m]→L[𝕜] F) →L[𝕜] E[×m]→L[𝕜] G := fun m =>
     ContinuousLinearMap.compContinuousMultilinearMapL 𝕜 (fun _ => E) F G g
   constructor
-  · exact fun x hx => congr_arg g (hf.zero_eq x hx)
+  · exact fun x hx => congr_argₓ g (hf.zero_eq x hx)
     
   · intro m hm x hx
     convert (L m).HasFderivAt.comp_has_fderiv_within_at x (hf.fderiv_within m hm x hx)
@@ -2606,7 +2606,7 @@ end ConstSmul
 /-! ### Cartesian product of two functions -/
 
 
-section prod_map
+section prod_mapₓ
 
 variable {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E']
 
@@ -2662,7 +2662,7 @@ theorem cont_diff_prod_mk_left (f₀ : F) : ContDiff 𝕜 n fun e : E => (e, f�
 theorem cont_diff_prod_mk_right (e₀ : E) : ContDiff 𝕜 n fun f : F => (e₀, f) :=
   cont_diff_const.Prod cont_diff_id
 
-end prod_map
+end prod_mapₓ
 
 theorem ContDiff.clm_comp {g : X → F →L[𝕜] G} {f : X → E →L[𝕜] F} (hg : ContDiff 𝕜 n g) (hf : ContDiff 𝕜 n f) :
     ContDiff 𝕜 n fun x => (g x).comp (f x) :=

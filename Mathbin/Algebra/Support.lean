@@ -171,7 +171,7 @@ theorem mul_support_prod_mk (f : α → M) (g : α → N) : (MulSupport fun x =>
 @[to_additive support_prod_mk']
 theorem mul_support_prod_mk' (f : α → M × N) :
     MulSupport f = (MulSupport fun x => (f x).1) ∪ MulSupport fun x => (f x).2 := by
-  simp only [← mul_support_prod_mk, Prod.mk.eta]
+  simp only [← mul_support_prod_mk, Prod.mk.etaₓ]
 
 @[to_additive]
 theorem mul_support_along_fiber_subset (f : α × β → M) (a : α) :

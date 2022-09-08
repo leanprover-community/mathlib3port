@@ -1122,8 +1122,8 @@ theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ 
     -- Prepend `ρ` to the factorization into reflections obtained for `φ.trans ρ`; this gives a
     -- factorization into reflections for `φ`.
     refine' ⟨x::l, Nat.succ_le_succₓ hl, _⟩
-    rw [List.map_cons, List.prod_cons]
-    have := congr_arg ((· * ·) ρ) hφl
+    rw [List.map_consₓ, List.prod_cons]
+    have := congr_argₓ ((· * ·) ρ) hφl
     rwa [← mul_assoc, reflection_mul_reflection, one_mulₓ] at this
     
 

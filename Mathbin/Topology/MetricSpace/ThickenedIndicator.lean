@@ -232,7 +232,7 @@ theorem thickened_indicator_tendsto_indicator_closure {δseq : ℕ → ℝ} (δs
   intro x
   rw
     [show indicator (Closure E) (fun x => (1 : ℝ≥0 )) x = (indicator (Closure E) (fun x => (1 : ℝ≥0∞)) x).toNnreal by
-      refine' (congr_fun (comp_indicator_const 1 Ennreal.toNnreal zero_to_nnreal) x).symm]
+      refine' (congr_funₓ (comp_indicator_const 1 Ennreal.toNnreal zero_to_nnreal) x).symm]
   refine' tendsto.comp (tendsto_to_nnreal _) (key x)
   by_cases' x_mem : x ∈ Closure E <;> simp [x_mem]
 

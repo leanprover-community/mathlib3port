@@ -195,13 +195,13 @@ theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : N
           rw [List.map_mapₓ, ← map_add_map]
           apply fun_mono_2
           · have h5 : (fun x : Int => x) = id := by
-              rw [Function.funext_iffₓ]
+              rw [Function.funext_iff]
               intro x
               rfl
             rw [h5, List.map_id]
             
           · apply fun_mono_2 _ rfl
-            rw [Function.funext_iffₓ]
+            rw [Function.funext_iff]
             intro x
             simp only [m]
             
@@ -225,9 +225,9 @@ theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : N
         apply fun_mono_2 (h4 _)
         apply coeffs.val_except_eq_val_except <;> intro x h5
         rfl
-        apply congr_arg
+        apply congr_argₓ
         apply fun_mono_2 _ rfl
-        rw [Function.funext_iffₓ]
+        rw [Function.funext_iff]
         apply h4
       _ = (-(a_n * sgm v b as n) + sym_sym m b + coeffs.val_except n v (as.map (sym_sym m))) * m := by
         simp only [add_mulₓ _ _ m]

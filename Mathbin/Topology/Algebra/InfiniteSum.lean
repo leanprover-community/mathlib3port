@@ -92,7 +92,7 @@ theorem tsum_eq_zero_of_not_summable (h : ¬Summable f) : (∑' b, f b) = 0 := b
   simp [tsum, h]
 
 theorem summable_congr (hfg : ∀ b, f b = g b) : Summable f ↔ Summable g :=
-  iff_of_eq (congr_arg Summable <| funext hfg)
+  iff_of_eq (congr_argₓ Summable <| funext hfg)
 
 theorem Summable.congr (hf : Summable f) (hfg : ∀ b, f b = g b) : Summable g :=
   (summable_congr hfg).mp hf
@@ -432,7 +432,7 @@ theorem tsum_eq_sum {f : β → α} {s : Finset β} (hf : ∀ (b) (_ : b ∉ s),
 
 theorem tsum_congr {α β : Type _} [AddCommMonoidₓ α] [TopologicalSpace α] {f g : β → α} (hfg : ∀ b, f b = g b) :
     (∑' b, f b) = ∑' b, g b :=
-  congr_arg tsum (funext hfg)
+  congr_argₓ tsum (funext hfg)
 
 theorem tsum_fintype [Fintype β] (f : β → α) : (∑' b, f b) = ∑ b, f b :=
   (has_sum_fintype f).tsum_eq
@@ -766,7 +766,7 @@ theorem has_sum_ite_eq_extract [DecidableEq β] (hf : HasSum f a) (b : β) :
     HasSum (fun n => ite (n = b) 0 (f n)) (a - f b) := by
   convert hf.update b 0 using 1
   · ext n
-    rw [Function.update_apply]
+    rw [Function.update_applyₓ]
     
   · rw [sub_add_eq_add_sub, zero_addₓ]
     
@@ -912,7 +912,7 @@ theorem Summable.tsum_mul_right (a) (hf : Summable f) : (∑' b, f b * a) = (∑
   (hf.HasSum.mul_right _).tsum_eq
 
 theorem Commute.tsum_right (a) (h : ∀ b, Commute a (f b)) : Commute a (∑' b, f b) :=
-  if hf : Summable f then (hf.tsum_mul_left a).symm.trans ((congr_arg _ <| funext h).trans (hf.tsum_mul_right a))
+  if hf : Summable f then (hf.tsum_mul_left a).symm.trans ((congr_argₓ _ <| funext h).trans (hf.tsum_mul_right a))
   else (tsum_eq_zero_of_not_summable hf).symm ▸ Commute.zero_right _
 
 theorem Commute.tsum_left (a) (h : ∀ b, Commute (f b) a) : Commute (∑' b, f b) a :=
@@ -1309,7 +1309,7 @@ theorem Summable.sigma [T1Space α] {γ : β → Type _} {f : (Σb : β, γ b) �
   ha.sigma' fun b => ha.sigma_factor b
 
 theorem Summable.prod_factor {f : β × γ → α} (h : Summable f) (b : β) : Summable fun c => f (b, c) :=
-  h.comp_injective fun c₁ c₂ h => (Prod.ext_iff.1 h).2
+  h.comp_injective fun c₁ c₂ h => (Prod.ext_iffₓ.1 h).2
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b c)
 theorem tsum_sigma [T1Space α] {γ : β → Type _} {f : (Σb : β, γ b) → α} (ha : Summable f) :

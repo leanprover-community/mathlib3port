@@ -127,7 +127,7 @@ theorem p_pow_smul_lift {x y : M} {k : ℕ} (hM' : Module.IsTorsionBy R M (p ^ p
     dsimp' only [smul_eq_mul, f, LinearEquiv.trans_apply, Submodule.quot_equiv_of_eq_mk,
       quot_torsion_of_equiv_span_singleton_apply_mk]  at ha
     rw [smul_smul, mul_comm]
-    exact congr_arg coe ha.symm
+    exact congr_argₓ coe ha.symm
     · symm
       convert Ideal.torsion_of_eq_span_pow_p_order hp hM y
       rw [← pow_addₓ, Nat.sub_add_cancelₓ hk]
@@ -221,7 +221,7 @@ theorem torsion_by_prime_power_decomposition (hN : Module.IsTorsion' N (Submonoi
           ⟨(@hN x).some, by
             rw [← quotient.mk_smul, (@hN x).some_spec, quotient.mk_zero]⟩
       
-    · have hs' := congr_arg (Submodule.map <| mkq <| R∙s j) hs
+    · have hs' := congr_argₓ (Submodule.map <| mkq <| R∙s j) hs
       rw [Submodule.map_span, Submodule.map_top, range_mkq] at hs'
       simp only [mkq_apply] at hs'
       simp only [s']

@@ -52,7 +52,7 @@ theorem exists_eq_polynomial [Semiringₓ Fq] {d : ℕ} {m : ℕ} (hm : Fintype.
     
   -- So we only need to look for the coefficients between `0` and `deg b`.
   rw [not_leₓ] at hbj
-  apply congr_fun i_eq.symm ⟨j, _⟩
+  apply congr_funₓ i_eq.symm ⟨j, _⟩
   exact lt_of_lt_of_leₓ (coe_lt_degree.mp hbj) hb
 
 /-- If `A` is a family of enough low-degree polynomials over a finite ring,
@@ -95,7 +95,7 @@ theorem exists_approx_polynomial_aux [Ringₓ Fq] {d : ℕ} {m : ℕ} (hm : Fint
       
   have : j = b.nat_degree - (nat_degree b - j.succ).succ := by
     rw [← Nat.succ_subₓ hbj, Nat.succ_sub_succ, tsub_tsub_cancel_of_le hbj.le]
-  convert congr_fun i_eq.symm ⟨nat_degree b - j.succ, hj⟩
+  convert congr_funₓ i_eq.symm ⟨nat_degree b - j.succ, hj⟩
 
 variable [Field Fq]
 
@@ -172,7 +172,7 @@ theorem card_pow_degree_anti_archimedean {x y z : Fq[X]} {a : ℤ} (hxy : cardPo
   have : (1 : ℤ) ≤ Fintype.card Fq := by
     exact_mod_cast (@Fintype.one_lt_card Fq _ _).le
   simp only [Int.cast_pow, Int.cast_coe_nat, le_max_iff]
-  refine' Or.imp (pow_le_pow this) (pow_le_pow this) _
+  refine' Or.impₓ (pow_le_pow this) (pow_le_pow this) _
   rw [nat_degree_le_iff_degree_le, nat_degree_le_iff_degree_le, ← le_max_iff, ← degree_eq_nat_degree hxy', ←
     degree_eq_nat_degree hyz']
   convert degree_add_le (x - y) (y - z) using 2

@@ -71,7 +71,7 @@ theorem mem_cells {μ : YoungDiagram} (c : ℕ × ℕ) : c ∈ μ.cells ↔ c �
     means (i1, j1) is weakly up-and-left of (i2, j2). -/
 theorem up_left_mem (μ : YoungDiagram) {i1 i2 j1 j2 : ℕ} (hi : i1 ≤ i2) (hj : j1 ≤ j2) (hcell : (i2, j2) ∈ μ) :
     (i1, j1) ∈ μ :=
-  μ.IsLowerSet (Prod.mk_le_mk.mpr ⟨hi, hj⟩) hcell
+  μ.IsLowerSet (Prod.mk_le_mkₓ.mpr ⟨hi, hj⟩) hcell
 
 section DistribLattice
 

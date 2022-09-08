@@ -104,7 +104,7 @@ theorem kronecker_map_diagonal_diagonal [Zero α] [Zero β] [Zero γ] [Decidable
     (hf₁ : ∀ b, f 0 b = 0) (hf₂ : ∀ a, f a 0 = 0) (a : m → α) (b : n → β) :
     kroneckerMapₓ f (diagonalₓ a) (diagonalₓ b) = diagonalₓ fun mn => f (a mn.1) (b mn.2) := by
   ext ⟨i₁, i₂⟩ ⟨j₁, j₂⟩
-  simp [diagonal, apply_ite f, ite_and, ite_apply, apply_ite (f (a i₁)), hf₁, hf₂]
+  simp [diagonal, apply_iteₓ f, ite_and, ite_apply, apply_iteₓ (f (a i₁)), hf₁, hf₂]
 
 @[simp]
 theorem kronecker_map_one_one [Zero α] [Zero β] [Zero γ] [One α] [One β] [One γ] [DecidableEq m] [DecidableEq n]

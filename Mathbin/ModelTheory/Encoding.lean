@@ -95,7 +95,7 @@ theorem list_decode_encode_list (l : List (L.term α)) : listDecodeₓ (l.bind l
         by
         intro i
         rw [h, nth_append, nth_map]
-        · simp only [Option.map_eq_some', Function.comp_app, nth_eq_some]
+        · simp only [Option.map_eq_some'ₓ, Function.comp_app, nth_eq_some]
           refine' ⟨i, ⟨lt_of_lt_of_leₓ i.2 (ge_of_eqₓ (length_fin_range _)), _⟩, rfl⟩
           rw [nth_le_fin_range, Finₓ.eta]
           
@@ -289,7 +289,7 @@ theorem list_decode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
     ∀ (φ : Σn, L.bounded_formula α n) (l),
       (list_decode (list_encode φ.2 ++ l)).1 = φ ∧ (list_decode (list_encode φ.2 ++ l)).2.1 = l
   · induction' l with φ l lih
-    · rw [List.nil_bind]
+    · rw [List.nil_bindₓ]
       simp [list_decode]
       
     · rw [cons_bind, (h φ _).1, head_cons]

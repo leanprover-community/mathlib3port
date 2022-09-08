@@ -123,7 +123,7 @@ theorem congr_app {X Y : Scheme} {f g : X ⟶ Y} (e : f = g) (U) :
 theorem app_eq {X Y : Scheme} (f : X ⟶ Y) {U V : Opens Y.Carrier} (e : U = V) :
     f.val.c.app (op U) =
       Y.Presheaf.map (eqToHom e.symm).op ≫
-        f.val.c.app (op V) ≫ X.Presheaf.map (eqToHom (congr_arg (Opens.map f.val.base).obj e)).op :=
+        f.val.c.app (op V) ≫ X.Presheaf.map (eqToHom (congr_argₓ (Opens.map f.val.base).obj e)).op :=
   by
   rw [← is_iso.inv_comp_eq, ← functor.map_inv, f.val.c.naturality, presheaf.pushforward_obj_map]
   congr

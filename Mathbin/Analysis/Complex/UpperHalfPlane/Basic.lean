@@ -103,7 +103,7 @@ theorem im_ne_zero (z : ℍ) : z.im ≠ 0 :=
   z.im_pos.ne'
 
 theorem ne_zero (z : ℍ) : (z : ℂ) ≠ 0 :=
-  mt (congr_arg Complex.im) z.im_ne_zero
+  mt (congr_argₓ Complex.im) z.im_ne_zero
 
 theorem norm_sq_pos (z : ℍ) : 0 < Complex.normSq (z : ℂ) := by
   rw [Complex.norm_sq_pos]
@@ -140,7 +140,7 @@ theorem denom_ne_zero (g : GL(2, ℝ)⁺) (z : ℍ) : denom g z ≠ 0 := by
   have hz := z.prop
   simp only [general_linear_group.coe_det_apply] at DET
   have H1 : (↑ₘg 1 0 : ℝ) = 0 ∨ z.im = 0 := by
-    simpa using congr_arg Complex.im H
+    simpa using congr_argₓ Complex.im H
   cases H1
   · simp only [H1, Complex.of_real_zero, denom, coe_fn_eq_coe, zero_mul, zero_addₓ, Complex.of_real_eq_zero] at H
     rw [← coe_coe, Matrix.det_fin_two (↑g : Matrix (Finₓ 2) (Finₓ 2) ℝ)] at DET
@@ -182,8 +182,8 @@ theorem denom_cocycle (x y : GL(2, ℝ)⁺) (z : ℍ) : denom (x * y) z = denom 
   change _ = (_ * (_ / _) + _) * _
   field_simp [denom_ne_zero, -denom, -Num]
   simp only [Matrix.mul, dot_product, Finₓ.sum_univ_succ, denom, Num, coe_coe, Subgroup.coe_mul,
-    general_linear_group.coe_mul, Fintype.univ_of_subsingleton, Finₓ.mk_eq_subtype_mk, Finₓ.mk_zero,
-    Finset.sum_singleton, Finₓ.succ_zero_eq_one, Complex.of_real_add, Complex.of_real_mul]
+    general_linear_group.coe_mul, Fintype.univ_of_subsingleton, Finₓ.mk_zero, Finset.sum_singleton,
+    Finₓ.succ_zero_eq_one, Complex.of_real_add, Complex.of_real_mul]
   ring
 
 theorem mul_smul' (x y : GL(2, ℝ)⁺) (z : ℍ) : smulAux (x * y) z = smulAux x (smulAux y z) := by
@@ -192,8 +192,8 @@ theorem mul_smul' (x y : GL(2, ℝ)⁺) (z : ℍ) : smulAux (x * y) z = smulAux 
   rw [denom_cocycle]
   field_simp [denom_ne_zero, -denom, -Num]
   simp only [Matrix.mul, dot_product, Finₓ.sum_univ_succ, Num, denom, coe_coe, Subgroup.coe_mul,
-    general_linear_group.coe_mul, Fintype.univ_of_subsingleton, Finₓ.mk_eq_subtype_mk, Finₓ.mk_zero,
-    Finset.sum_singleton, Finₓ.succ_zero_eq_one, Complex.of_real_add, Complex.of_real_mul]
+    general_linear_group.coe_mul, Fintype.univ_of_subsingleton, Finₓ.mk_zero, Finset.sum_singleton,
+    Finₓ.succ_zero_eq_one, Complex.of_real_add, Complex.of_real_mul]
   ring
 
 /-- The action of ` GL_pos 2 ℝ` on the upper half-plane by fractional linear transformations. -/

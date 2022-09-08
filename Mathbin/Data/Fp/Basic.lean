@@ -13,7 +13,7 @@ import Mathbin.Data.Rat.Floor
 
 def Int.shift2 (a b : ℕ) : ℤ → ℕ × ℕ
   | Int.ofNat e => (a.shiftl e, b)
-  | -[1+ e] => (a, b.shiftl e.succ)
+  | -[1 + e] => (a, b.shiftl e.succ)
 
 namespace Fp
 
@@ -69,7 +69,7 @@ theorem Float.Zero.valid : ValidFinite emin 0 :=
     apply Int.coe_nat_le_coe_nat_of_le
     exact C.prec_pos,
     suffices prec ≤ 2 * emax by
-      rw [← Int.coe_nat_le] at this
+      rw [← Int.coe_nat_leₓ] at this
       rw [← sub_nonneg] at *
       simp only [emin, emax] at *
       ring_nf
@@ -108,7 +108,7 @@ protected def Float.neg : Float → Float
 
 def divNatLtTwoPowₓ (n d : ℕ) : ℤ → Bool
   | Int.ofNat e => n < d.shiftl e
-  | -[1+ e] => n.shiftl e.succ < d
+  | -[1 + e] => n.shiftl e.succ < d
 
 -- TODO(Mario): Prove these and drop 'meta'
 unsafe def of_pos_rat_dn (n : ℕ+) (d : ℕ+) : float × Bool := by
@@ -156,7 +156,7 @@ unsafe def of_rat_up : ℚ → Float
   | ⟨Nat.succ n, d, h, _⟩ =>
     let (f, exact) := of_pos_rat_dn n.succPnat ⟨d, h⟩
     if exact then f else next_up f
-  | ⟨-[1+ n], d, h, _⟩ => Float.neg (of_pos_rat_dn n.succPnat ⟨d, h⟩).1
+  | ⟨-[1 + n], d, h, _⟩ => Float.neg (of_pos_rat_dn n.succPnat ⟨d, h⟩).1
 
 unsafe def of_rat_dn (r : ℚ) : Float :=
   float.neg <| of_rat_up (-r)

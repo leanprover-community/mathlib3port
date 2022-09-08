@@ -75,14 +75,14 @@ instance commRing (I : Ideal R) : CommRingₓ (R ⧸ I) :=
     nat_cast_succ := by
       simp [Nat.castₓ] <;> rfl,
     mul_assoc := fun a b c =>
-      (Quotientₓ.induction_on₃' a b c) fun a b c => congr_arg Submodule.Quotient.mk (mul_assoc a b c),
-    mul_comm := fun a b => (Quotientₓ.induction_on₂' a b) fun a b => congr_arg Submodule.Quotient.mk (mul_comm a b),
-    one_mul := fun a => (Quotientₓ.induction_on' a) fun a => congr_arg Submodule.Quotient.mk (one_mulₓ a),
-    mul_one := fun a => (Quotientₓ.induction_on' a) fun a => congr_arg Submodule.Quotient.mk (mul_oneₓ a),
+      (Quotientₓ.induction_on₃' a b c) fun a b c => congr_argₓ Submodule.Quotient.mk (mul_assoc a b c),
+    mul_comm := fun a b => (Quotientₓ.induction_on₂' a b) fun a b => congr_argₓ Submodule.Quotient.mk (mul_comm a b),
+    one_mul := fun a => (Quotientₓ.induction_on' a) fun a => congr_argₓ Submodule.Quotient.mk (one_mulₓ a),
+    mul_one := fun a => (Quotientₓ.induction_on' a) fun a => congr_argₓ Submodule.Quotient.mk (mul_oneₓ a),
     left_distrib := fun a b c =>
-      (Quotientₓ.induction_on₃' a b c) fun a b c => congr_arg Submodule.Quotient.mk (left_distrib a b c),
+      (Quotientₓ.induction_on₃' a b c) fun a b c => congr_argₓ Submodule.Quotient.mk (left_distrib a b c),
     right_distrib := fun a b c =>
-      (Quotientₓ.induction_on₃' a b c) fun a b c => congr_arg Submodule.Quotient.mk (right_distrib a b c) }
+      (Quotientₓ.induction_on₃' a b c) fun a b c => congr_argₓ Submodule.Quotient.mk (right_distrib a b c) }
 
 /-- The ring homomorphism from a ring `R` to a quotient ring `R/I`. -/
 def mk (I : Ideal R) : R →+* R ⧸ I :=
@@ -266,33 +266,33 @@ instance modulePi : Module (R ⧸ I) ((ι → R) ⧸ I.pi ι) where
         exact I.mul_sub_mul_mem hc (hm i))
   one_smul := by
     rintro ⟨a⟩
-    change Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
+    convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
     congr with i
     exact one_mulₓ (a i)
   mul_smul := by
     rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
-    change Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
+    convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
     simp only [(· • ·)]
     congr with i
     exact mul_assoc a b (c i)
   smul_add := by
     rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
-    change Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
+    convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
     congr with i
     exact mul_addₓ a (b i) (c i)
   smul_zero := by
     rintro ⟨a⟩
-    change Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
+    convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
     congr with i
     exact mul_zero a
   add_smul := by
     rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
-    change Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
+    convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
     congr with i
     exact add_mulₓ a b (c i)
   zero_smul := by
     rintro ⟨a⟩
-    change Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
+    convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
     congr with i
     exact zero_mul (a i)
 
@@ -320,9 +320,10 @@ noncomputable def piQuotEquiv : ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] ι → 
 
 /-- If `f : R^n → R^m` is an `R`-linear map and `I ⊆ R` is an ideal, then the image of `I^n` is
     contained in `I^m`. -/
-theorem map_pi {ι} [Fintype ι] {ι' : Type w} (x : ι → R) (hi : ∀ i, x i ∈ I) (f : (ι → R) →ₗ[R] ι' → R) (i : ι') :
-    f x i ∈ I := by
+theorem map_pi {ι : Type _} [Finite ι] {ι' : Type w} (x : ι → R) (hi : ∀ i, x i ∈ I) (f : (ι → R) →ₗ[R] ι' → R)
+    (i : ι') : f x i ∈ I := by
   classical
+  cases nonempty_fintype ι
   rw [pi_eq_sum_univ x]
   simp only [Finset.sum_apply, smul_eq_mul, LinearMap.map_sum, Pi.smul_apply, LinearMap.map_smul]
   exact I.sum_mem fun j hj => I.mul_mem_right _ (hi j)
@@ -378,8 +379,9 @@ theorem exists_sub_one_mem_and_mem (s : Finset ι) {f : ι → Ideal R} (hf : �
   rw [quotient.eq_zero_iff_mem]
   exact hgj j hjs hji
 
-theorem exists_sub_mem [Fintype ι] {f : ι → Ideal R} (hf : ∀ i j, i ≠ j → f i⊔f j = ⊤) (g : ι → R) :
+theorem exists_sub_mem [Finite ι] {f : ι → Ideal R} (hf : ∀ i j, i ≠ j → f i⊔f j = ⊤) (g : ι → R) :
     ∃ r : R, ∀ i, r - g i ∈ f i := by
+  cases nonempty_fintype ι
   have : ∃ φ : ι → R, (∀ i, φ i - 1 ∈ f i) ∧ ∀ i j, i ≠ j → φ i ∈ f j := by
     have := exists_sub_one_mem_and_mem (Finset.univ : Finset ι) fun i _ j _ hij => hf i j hij
     choose φ hφ
@@ -409,7 +411,7 @@ def quotientInfToPiQuotient (f : ι → Ideal R) : (R ⧸ ⨅ i, f i) →+* ∀ 
     ext i
     exact quotient.eq_zero_iff_mem.2 (hr i)
 
-theorem quotient_inf_to_pi_quotient_bijective [Fintype ι] {f : ι → Ideal R} (hf : ∀ i j, i ≠ j → f i⊔f j = ⊤) :
+theorem quotient_inf_to_pi_quotient_bijective [Finite ι] {f : ι → Ideal R} (hf : ∀ i j, i ≠ j → f i⊔f j = ⊤) :
     Function.Bijective (quotientInfToPiQuotient f) :=
   ⟨fun x y =>
     (Quotientₓ.induction_on₂' x y) fun r s hrs =>
@@ -423,7 +425,7 @@ theorem quotient_inf_to_pi_quotient_bijective [Fintype ι] {f : ι → Ideal R} 
     ⟨Quotient.mk _ r, funext fun i => Quotientₓ.out_eq' (g i) ▸ Quotient.eq.2 (hr i)⟩⟩
 
 /-- Chinese Remainder Theorem. Eisenbud Ex.2.6. Similar to Atiyah-Macdonald 1.10 and Stacks 00DT -/
-noncomputable def quotientInfRingEquivPiQuotient [Fintype ι] (f : ι → Ideal R) (hf : ∀ i j, i ≠ j → f i⊔f j = ⊤) :
+noncomputable def quotientInfRingEquivPiQuotient [Finite ι] (f : ι → Ideal R) (hf : ∀ i j, i ≠ j → f i⊔f j = ⊤) :
     (R ⧸ ⨅ i, f i) ≃+* ∀ i, R ⧸ f i :=
   { Equivₓ.ofBijective _ (quotient_inf_to_pi_quotient_bijective hf), quotientInfToPiQuotient f with }
 

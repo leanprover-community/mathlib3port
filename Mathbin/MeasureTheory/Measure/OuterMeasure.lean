@@ -501,7 +501,7 @@ theorem restrict_supr {ι} (s : Set α) (m : ι → OuterMeasure α) : restrict 
 
 theorem map_comap {β} (f : α → β) (m : OuterMeasure β) : map f (comap f m) = restrict (range f) m :=
   ext fun s =>
-    congr_arg m <| by
+    congr_argₓ m <| by
       simp only [image_preimage_eq_inter_range, Subtype.range_coe]
 
 theorem map_comap_le {β} (f : α → β) (m : OuterMeasure β) : map f (comap f m) ≤ m := fun s =>
@@ -695,7 +695,7 @@ theorem comap_of_function {β} (f : β → α) (h : Monotone m ∨ Surjective f)
     rw [Set.image_subset_iff, preimage_Union] at ht
     refine' ⟨ht, Ennreal.tsum_le_tsum fun n => _⟩
     cases h
-    exacts[h (image_preimage_subset _ _), (congr_arg m (h.image_preimage (t n))).le]
+    exacts[h (image_preimage_subset _ _), (congr_argₓ m (h.image_preimage (t n))).le]
     
 
 theorem map_of_function_le {β} (f : α → β) :
@@ -1117,12 +1117,12 @@ theorem restrict_infi_restrict {ι} (s : Set α) (m : ι → OuterMeasure α) :
     restrict s (⨅ i, restrict s (m i)) = restrict (range (coe : s → α)) (⨅ i, restrict s (m i)) := by
       rw [Subtype.range_coe]
     _ = map (coe : s → α) (⨅ i, comap coe (m i)) := (map_infi Subtype.coe_injective _).symm
-    _ = restrict s (⨅ i, m i) := congr_arg (map coe) (comap_infi _ _).symm
+    _ = restrict s (⨅ i, m i) := congr_argₓ (map coe) (comap_infi _ _).symm
     
 
 theorem restrict_infi {ι} [Nonempty ι] (s : Set α) (m : ι → OuterMeasure α) :
     restrict s (⨅ i, m i) = ⨅ i, restrict s (m i) :=
-  (congr_arg (map coe) (comap_infi _ _)).trans (map_infi_comap _)
+  (congr_argₓ (map coe) (comap_infi _ _)).trans (map_infi_comap _)
 
 theorem restrict_binfi {ι} {I : Set ι} (hI : I.Nonempty) (s : Set α) (m : ι → OuterMeasure α) :
     restrict s (⨅ i ∈ I, m i) = ⨅ i ∈ I, restrict s (m i) := by
@@ -1216,7 +1216,7 @@ include PU msU
 
 theorem extend_Union_le_tsum_nat' (s : ℕ → Set α) : extend m (⋃ i, s i) ≤ ∑' i, extend m (s i) := by
   by_cases' h : ∀ i, P (s i)
-  · rw [extend_eq _ (PU h), congr_arg tsum _]
+  · rw [extend_eq _ (PU h), congr_argₓ tsum _]
     · apply msU h
       
     funext i

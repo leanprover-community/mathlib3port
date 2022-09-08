@@ -331,7 +331,7 @@ theorem _root_.wcovby.snd (h : x ⩿ y) : x.2 ⩿ y.2 :=
 theorem mk_wcovby_mk_iff_left : (a₁, b) ⩿ (a₂, b) ↔ a₁ ⩿ a₂ := by
   refine' ⟨Wcovby.fst, (And.imp mk_le_mk_iff_left.2) fun h c h₁ h₂ => _⟩
   have : c.2 = b := h₂.le.2.antisymm h₁.le.2
-  rw [← @Prod.mk.eta _ _ c, this, mk_lt_mk_iff_left] at h₁ h₂
+  rw [← @Prod.mk.etaₓ _ _ c, this, mk_lt_mk_iff_left] at h₁ h₂
   exact h h₁ h₂
 
 theorem mk_wcovby_mk_iff_right : (a, b₁) ⩿ (a, b₂) ↔ b₁ ⩿ b₂ :=

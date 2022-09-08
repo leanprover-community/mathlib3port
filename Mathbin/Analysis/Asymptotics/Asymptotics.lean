@@ -1681,8 +1681,8 @@ theorem is_O_with_congr (e : LocalHomeomorph α β) {b : β} (hb : b ∈ e.Targe
       exact (e.right_inv hb).symm,
     fun h =>
     (h.comp_tendsto (e.continuous_at_symm hb)).congr' rfl
-      ((e.eventually_right_inverse hb).mono fun x hx => congr_arg f hx)
-      ((e.eventually_right_inverse hb).mono fun x hx => congr_arg g hx)⟩
+      ((e.eventually_right_inverse hb).mono fun x hx => congr_argₓ f hx)
+      ((e.eventually_right_inverse hb).mono fun x hx => congr_argₓ g hx)⟩
 
 /-- Transfer `is_O` over a `local_homeomorph`. -/
 theorem is_O_congr (e : LocalHomeomorph α β) {b : β} (hb : b ∈ e.Target) {f : β → E} {g : β → F} :

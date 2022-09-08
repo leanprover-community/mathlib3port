@@ -978,7 +978,7 @@ theorem reduce.red : Red L (reduce L) := by
              (group
               (Tactic.tacticHave_
                "have"
-               (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `congr_arg [`List.length `h]))))
+               (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `congr_argₓ [`List.length `h]))))
               [])
              (group
               (Tactic.simp
@@ -1122,7 +1122,7 @@ theorem
       by
         dsimp'
           cases r : reduce L1
-          · dsimp' intro h have := congr_arg List.length h simp [ - add_commₓ ] at this exact absurd this by decide
+          · dsimp' intro h have := congr_argₓ List.length h simp [ - add_commₓ ] at this exact absurd this by decide
           cases' hd with y c
           by_cases' x = y ∧ b = bnot c <;> simp [ h ] <;> intro H
           · rw [ H ] at r exact @ reduce.not L1 ( y , c ) :: L2 L3 x' b' r

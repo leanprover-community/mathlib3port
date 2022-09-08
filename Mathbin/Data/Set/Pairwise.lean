@@ -289,7 +289,7 @@ theorem InjOn.pairwise_disjoint_image {g : ι' → ι} {s : Set ι'} (h : s.InjO
 theorem PairwiseDisjoint.range (g : s → ι) (hg : ∀ i : s, f (g i) ≤ f i) (ht : s.PairwiseDisjoint f) :
     (Range g).PairwiseDisjoint f := by
   rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ hxy
-  exact ((ht x.2 y.2) fun h => hxy <| congr_arg g <| Subtype.ext h).mono (hg x) (hg y)
+  exact ((ht x.2 y.2) fun h => hxy <| congr_argₓ g <| Subtype.ext h).mono (hg x) (hg y)
 
 theorem pairwise_disjoint_union :
     (s ∪ t).PairwiseDisjoint f ↔
@@ -391,7 +391,7 @@ theorem pairwise_disjoint_image_right_iff {f : α → β → γ} {s : Set α} {t
     exact mem_image_of_mem _ hy.2
     
   · rintro _ ⟨⟨a, ha, hab⟩, b, hb, rfl⟩
-    exact h (congr_arg Prod.fst <| hs (mk_mem_prod hx ha) (mk_mem_prod hy hb) hab)
+    exact h (congr_argₓ Prod.fst <| hs (mk_mem_prod hx ha) (mk_mem_prod hy hb) hab)
     
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -413,7 +413,7 @@ theorem pairwise_disjoint_image_left_iff {f : α → β → γ} {s : Set α} {t 
     exact mem_image_of_mem _ hy.1
     
   · rintro _ ⟨⟨a, ha, hab⟩, b, hb, rfl⟩
-    exact h (congr_arg Prod.snd <| ht (mk_mem_prod ha hx) (mk_mem_prod hb hy) hab)
+    exact h (congr_argₓ Prod.snd <| ht (mk_mem_prod ha hx) (mk_mem_prod hb hy) hab)
     
 
 end Set

@@ -219,16 +219,16 @@ instance : SemilatticeInf (E →ₗ.[R] F) where
       fun x ⟨y, yg, hy⟩ h => by
       apply fg_eq
       exact h⟩
-  inf_le_left := fun f g => ⟨fun x hx => hx.fst, fun x y h => congr_arg f <| Subtype.eq <| h⟩
+  inf_le_left := fun f g => ⟨fun x hx => hx.fst, fun x y h => congr_argₓ f <| Subtype.eq <| h⟩
   inf_le_right := fun f g =>
-    ⟨fun x hx => hx.snd.fst, fun ⟨x, xf, xg, hx⟩ y h => hx.trans <| congr_arg g <| Subtype.eq <| h⟩
+    ⟨fun x hx => hx.snd.fst, fun ⟨x, xf, xg, hx⟩ y h => hx.trans <| congr_argₓ g <| Subtype.eq <| h⟩
 
 instance : OrderBot (E →ₗ.[R] F) where
   bot := ⊥
   bot_le := fun f =>
     ⟨bot_le, fun x y h => by
       have hx : x = 0 := Subtype.eq ((mem_bot R).1 x.2)
-      have hy : y = 0 := Subtype.eq (h.symm.trans (congr_arg _ hx))
+      have hy : y = 0 := Subtype.eq (h.symm.trans (congr_argₓ _ hx))
       rw [hx, hy, map_zero, map_zero]⟩
 
 theorem le_of_eq_locus_ge {f g : E →ₗ.[R] F} (H : f.domain ≤ f.eqLocus g) : f ≤ g :=
@@ -305,7 +305,7 @@ theorem sup_h_of_disjoint (f g : E →ₗ.[R] F) (h : Disjoint f.domain g.domain
     (hxy : (x : E) = y) : f x = g y := by
   rw [disjoint_def] at h
   have hy : y = 0 := Subtype.eq (h y (hxy ▸ x.2) y.2)
-  have hx : x = 0 := Subtype.eq (hxy.trans <| congr_arg _ hy)
+  have hx : x = 0 := Subtype.eq (hxy.trans <| congr_argₓ _ hy)
   simp [*]
 
 section Smul
@@ -511,7 +511,7 @@ theorem mem_graph_iff' (f : E →ₗ.[R] F) {x : E × F} : x ∈ f.graph ↔ ∃
 @[simp]
 theorem mem_graph_iff (f : E →ₗ.[R] F) {x : E × F} : x ∈ f.graph ↔ ∃ y : f.domain, (↑y : E) = x.1 ∧ f y = x.2 := by
   cases x
-  simp_rw [mem_graph_iff', Prod.mk.inj_iff]
+  simp_rw [mem_graph_iff', Prod.mk.inj_iffₓ]
 
 /-- The tuple `(x, f x)` is contained in the graph of `f`. -/
 theorem mem_graph (f : E →ₗ.[R] F) (x : domain f) : ((x : E), f x) ∈ f.graph := by
@@ -529,15 +529,15 @@ theorem smul_graph (f : E →ₗ.[R] F) (z : M) :
     rcases h with ⟨y, hy, h⟩
     rw [LinearPmap.smul_apply] at h
     rw [Submodule.mem_map]
-    simp only [mem_graph_iff, LinearMap.prod_map_apply, LinearMap.id_coe, id.def, LinearMap.smul_apply, Prod.mk.inj_iff,
-      Prod.exists, exists_exists_and_eq_and]
+    simp only [mem_graph_iff, LinearMap.prod_map_apply, LinearMap.id_coe, id.def, LinearMap.smul_apply,
+      Prod.mk.inj_iffₓ, Prod.existsₓ, exists_exists_and_eq_and]
     use x_fst, y
     simp [hy, h]
     
   rw [Submodule.mem_map] at h
   rcases h with ⟨x', hx', h⟩
   cases x'
-  simp only [LinearMap.prod_map_apply, LinearMap.id_coe, id.def, LinearMap.smul_apply, Prod.mk.inj_iff] at h
+  simp only [LinearMap.prod_map_apply, LinearMap.id_coe, id.def, LinearMap.smul_apply, Prod.mk.inj_iffₓ] at h
   rw [mem_graph_iff] at hx'⊢
   rcases hx' with ⟨y, hy, hx'⟩
   use y
@@ -554,15 +554,15 @@ theorem neg_graph (f : E →ₗ.[R] F) :
     rcases h with ⟨y, hy, h⟩
     rw [LinearPmap.neg_apply] at h
     rw [Submodule.mem_map]
-    simp only [mem_graph_iff, LinearMap.prod_map_apply, LinearMap.id_coe, id.def, LinearMap.neg_apply, Prod.mk.inj_iff,
-      Prod.exists, exists_exists_and_eq_and]
+    simp only [mem_graph_iff, LinearMap.prod_map_apply, LinearMap.id_coe, id.def, LinearMap.neg_apply, Prod.mk.inj_iffₓ,
+      Prod.existsₓ, exists_exists_and_eq_and]
     use x_fst, y
     simp [hy, h]
     
   rw [Submodule.mem_map] at h
   rcases h with ⟨x', hx', h⟩
   cases x'
-  simp only [LinearMap.prod_map_apply, LinearMap.id_coe, id.def, LinearMap.neg_apply, Prod.mk.inj_iff] at h
+  simp only [LinearMap.prod_map_apply, LinearMap.id_coe, id.def, LinearMap.neg_apply, Prod.mk.inj_iffₓ] at h
   rw [mem_graph_iff] at hx'⊢
   rcases hx' with ⟨y, hy, hx'⟩
   use y
@@ -742,7 +742,7 @@ theorem to_linear_pmap_graph_eq (g : Submodule R (E × F))
   rw [LinearPmap.mem_graph_iff]
   cases x
   have hx_fst : x_fst ∈ g.map (LinearMap.fst R E F) := by
-    simp only [mem_map, LinearMap.fst_apply, Prod.exists, exists_and_distrib_right, exists_eq_right]
+    simp only [mem_map, LinearMap.fst_apply, Prod.existsₓ, exists_and_distrib_right, exists_eq_right]
     exact ⟨x_snd, hx⟩
   refine' ⟨⟨x_fst, hx_fst⟩, Subtype.coe_mk x_fst hx_fst, _⟩
   exact (exists_unique_from_graph hg hx_fst).unique (val_from_graph_mem hg hx_fst) hx

@@ -214,7 +214,7 @@ theorem nat_cast_comp_val [NeZero n] : (coe : ℕ → R) ∘ (val : Zmod n → �
 @[simp]
 theorem int_cast_comp_cast : (coe : ℤ → R) ∘ (coe : Zmod n → ℤ) = coe := by
   cases n
-  · exact congr_arg ((· ∘ ·) Int.castₓ) Zmod.cast_id'
+  · exact congr_argₓ ((· ∘ ·) Int.castₓ) Zmod.cast_id'
     
   · ext
     simp
@@ -224,17 +224,17 @@ variable {R}
 
 @[simp]
 theorem nat_cast_val [NeZero n] (i : Zmod n) : (i.val : R) = i :=
-  congr_fun (nat_cast_comp_val R) i
+  congr_funₓ (nat_cast_comp_val R) i
 
 @[simp]
 theorem int_cast_cast (i : Zmod n) : ((i : ℤ) : R) = i :=
-  congr_fun (int_cast_comp_cast R) i
+  congr_funₓ (int_cast_comp_cast R) i
 
 theorem coe_add_eq_ite {n : ℕ} (a b : Zmod n) : (↑(a + b) : ℤ) = if (n : ℤ) ≤ a + b then a + b - n else a + b := by
   cases n
   · simp
     
-  simp only [coe_coe, Finₓ.coe_add_eq_ite, ← Int.coe_nat_add, ← Int.coe_nat_succ, Int.coe_nat_le]
+  simp only [coe_coe, Finₓ.coe_add_eq_ite, ← Int.coe_nat_add, ← Int.coe_nat_succ, Int.coe_nat_leₓ]
   split_ifs with h
   · exact Int.coe_nat_subₓ h
     
@@ -512,7 +512,7 @@ attribute [local semireducible] Int.Nonneg
 theorem nat_cast_to_nat (p : ℕ) : ∀ {z : ℤ} (h : 0 ≤ z), (z.toNat : Zmod p) = z
   | (n : ℕ), h => by
     simp only [Int.cast_coe_nat, Int.to_nat_coe_nat]
-  | -[1+ n], h => False.elim h
+  | -[1 + n], h => False.elim h
 
 theorem val_injective (n : ℕ) [NeZero n] : Function.Injective (Zmod.val : Zmod n → ℕ) := by
   cases n
@@ -550,7 +550,7 @@ instance nontrivial (n : ℕ) [Fact (1 < n)] : Nontrivial (Zmod n) :=
         calc
           0 = (0 : Zmod n).val := by
             rw [val_zero]
-          _ = (1 : Zmod n).val := congr_arg Zmod.val h
+          _ = (1 : Zmod n).val := congr_argₓ Zmod.val h
           _ = 1 := val_one n
           ⟩⟩
 
@@ -593,7 +593,7 @@ theorem mul_inv_eq_gcd {n : ℕ} (a : Zmod n) : a * a⁻¹ = Nat.gcdₓ a.val n 
         push_cast
         rw [nat_cast_zmod_val]
         rfl
-      _ = Nat.gcdₓ a.val k := (congr_arg coe (Nat.gcd_eq_gcd_ab a.val k)).symm
+      _ = Nat.gcdₓ a.val k := (congr_argₓ coe (Nat.gcd_eq_gcd_ab a.val k)).symm
       
     
 
@@ -637,7 +637,7 @@ theorem val_coe_unit_coprime {n : ℕ} (u : (Zmod n)ˣ) : Nat.Coprime (u : Zmod 
 
 @[simp]
 theorem inv_coe_unit {n : ℕ} (u : (Zmod n)ˣ) : (u : Zmod n)⁻¹ = (u⁻¹ : (Zmod n)ˣ) := by
-  have := congr_arg (coe : ℕ → Zmod n) (val_coe_unit_coprime u)
+  have := congr_argₓ (coe : ℕ → Zmod n) (val_coe_unit_coprime u)
   rw [← mul_inv_eq_gcd, Nat.cast_oneₓ] at this
   let u' : (Zmod n)ˣ :=
     ⟨u, (u : Zmod n)⁻¹, this, by
@@ -682,7 +682,7 @@ def chineseRemainder {m n : ℕ} (h : m.Coprime n) : Zmod (m * n) ≃+* Zmod m �
   have inv : Function.LeftInverse inv_fun to_fun ∧ Function.RightInverse inv_fun to_fun :=
     if hmn0 : m * n = 0 then by
       rcases h.eq_of_mul_eq_zero hmn0 with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) <;>
-        simp [inv_fun, to_fun, Function.LeftInverse, Function.RightInverse, eq_int_cast, Prod.ext_iff]
+        simp [inv_fun, to_fun, Function.LeftInverse, Function.RightInverse, eq_int_cast, Prod.ext_iffₓ]
     else by
       haveI : NeZero (m * n) := ⟨hmn0⟩
       haveI : NeZero m := ⟨left_ne_zero_of_mul hmn0⟩
@@ -823,9 +823,9 @@ theorem nat_abs_val_min_abs_le {n : ℕ} [NeZero n] (x : Zmod n) : x.valMinAbs.n
   · exact h
     
   have : (x.val - n : ℤ) ≤ 0 := by
-    rw [sub_nonpos, Int.coe_nat_le]
+    rw [sub_nonpos, Int.coe_nat_leₓ]
     exact x.val_le
-  rw [← Int.coe_nat_le, Int.of_nat_nat_abs_of_nonpos this, neg_sub]
+  rw [← Int.coe_nat_leₓ, Int.of_nat_nat_abs_of_nonpos this, neg_sub]
   conv_lhs => congr rw [← Nat.mod_add_divₓ n 2, Int.coe_nat_add, Int.coe_nat_mul, Int.coe_nat_bit0, Int.coe_nat_one]
   suffices ((n % 2 : ℕ) + n / 2 : ℤ) ≤ val x by
     rw [← sub_nonneg] at this⊢
@@ -876,7 +876,7 @@ theorem val_min_abs_eq_zero {n : ℕ} (x : Zmod n) : x.valMinAbs = 0 ↔ x = 0 :
 theorem nat_cast_nat_abs_val_min_abs {n : ℕ} [NeZero n] (a : Zmod n) :
     (a.valMinAbs.natAbs : Zmod n) = if a.val ≤ (n : ℕ) / 2 then a else -a := by
   have : (a.val : ℤ) - n ≤ 0 := by
-    erw [sub_nonpos, Int.coe_nat_le]
+    erw [sub_nonpos, Int.coe_nat_leₓ]
     exact a.val_le
   rw [Zmod.val_min_abs_def_pos]
   split_ifs

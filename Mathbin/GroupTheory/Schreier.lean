@@ -117,7 +117,7 @@ theorem exists_finset_card_le_mul (hH : H.index ≠ 0) {S : Finset G} (hS : clos
     _ ≤ (R * S).card := Finset.card_image_le
     _ ≤ (R ×ˢ S).card := Finset.card_image_le
     _ = R.card * S.card := R.card_product S
-    _ = H.index * S.card := congr_arg (· * S.card) _
+    _ = H.index * S.card := congr_argₓ (· * S.card) _
     
   calc
     R.card = Fintype.card R := (Fintype.card_coe R).symm
@@ -133,17 +133,15 @@ theorem fg_of_index_ne_zero [hG : Groupₓ.Fg G] (hH : H.index ≠ 0) : Groupₓ
   obtain ⟨T, -, hT⟩ := exists_finset_card_le_mul hH hS
   exact ⟨⟨T, hT⟩⟩
 
-theorem rank_le_index_mul_rank [hG : Groupₓ.Fg G] {H : Subgroup G} (hH : H.index ≠ 0)
-    [DecidablePred fun n => ∃ S : Finset G, S.card = n ∧ Subgroup.closure (S : Set G) = ⊤]
-    [DecidablePred fun n => ∃ S : Finset H, S.card = n ∧ Subgroup.closure (S : Set H) = ⊤] :
-    @Groupₓ.rank H _ (fg_of_index_ne_zero hH) _ ≤ H.index * Groupₓ.rank G := by
+theorem rank_le_index_mul_rank [hG : Groupₓ.Fg G] {H : Subgroup G} (hH : H.index ≠ 0) :
+    @Groupₓ.rank H _ (fg_of_index_ne_zero hH) ≤ H.index * Groupₓ.rank G := by
   haveI := fg_of_index_ne_zero hH
   obtain ⟨S, hS₀, hS⟩ := Groupₓ.rank_spec G
   obtain ⟨T, hT₀, hT⟩ := exists_finset_card_le_mul hH hS
   calc
     Groupₓ.rank H ≤ T.card := Groupₓ.rank_le H hT
     _ ≤ H.index * S.card := hT₀
-    _ = H.index * Groupₓ.rank G := congr_arg ((· * ·) H.index) hS₀
+    _ = H.index * Groupₓ.rank G := congr_argₓ ((· * ·) H.index) hS₀
     
 
 end Subgroup

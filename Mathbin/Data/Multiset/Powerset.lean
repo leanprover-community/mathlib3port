@@ -81,7 +81,7 @@ def powerset (s : Multiset α) : Multiset (Multiset α) :=
   Quot.liftOn s (fun l => (powersetAux l : Multiset (Multiset α))) fun l₁ l₂ h => Quot.sound (powerset_aux_perm h)
 
 theorem powerset_coe (l : List α) : @powerset α l = ((sublists l).map coe : List (Multiset α)) :=
-  congr_arg coe powerset_aux_eq_map_coe
+  congr_argₓ coe powerset_aux_eq_map_coe
 
 @[simp]
 theorem powerset_coe' (l : List α) : @powerset α l = ((sublists' l).map coe : List (Multiset α)) :=
@@ -215,7 +215,7 @@ theorem powerset_len_coe' (n) (l : List α) : @powersetLen α n l = powersetLenA
   rfl
 
 theorem powerset_len_coe (n) (l : List α) : @powersetLen α n l = ((sublistsLen n l).map coe : List (Multiset α)) :=
-  congr_arg coe powerset_len_aux_eq_map_coe
+  congr_argₓ coe powerset_len_aux_eq_map_coe
 
 @[simp]
 theorem powerset_len_zero_left (s : Multiset α) : powersetLen 0 s = {0} :=
@@ -272,7 +272,7 @@ theorem disjoint_powerset_len (s : Multiset α) {i j : ℕ} (h : i ≠ j) :
 theorem bind_powerset_len {α : Type _} (S : Multiset α) :
     (bind (Multiset.range (S.card + 1)) fun k => S.powersetLen k) = S.Powerset := by
   induction S using Quotientₓ.induction_on
-  simp_rw [quot_mk_to_coe, powerset_coe', powerset_len_coe, ← coe_range, coe_bind, ← List.bind_map, coe_card]
+  simp_rw [quot_mk_to_coe, powerset_coe', powerset_len_coe, ← coe_range, coe_bind, ← List.bind_mapₓ, coe_card]
   exact coe_eq_coe.mpr ((List.range_bind_sublists_len_perm S).map _)
 
 end Multiset

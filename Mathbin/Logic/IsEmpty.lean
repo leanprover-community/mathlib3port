@@ -133,15 +133,15 @@ theorem is_empty_Prop {p : Prop} : IsEmpty p ↔ ¬p := by
 
 @[simp]
 theorem is_empty_pi {π : α → Sort _} : IsEmpty (∀ a, π a) ↔ ∃ a, IsEmpty (π a) := by
-  simp only [← not_nonempty_iff, Classical.nonempty_piₓ, not_forall]
+  simp only [← not_nonempty_iff, Classical.nonempty_pi, not_forall]
 
 @[simp]
 theorem is_empty_sigma {α} {E : α → Type _} : IsEmpty (Sigma E) ↔ ∀ a, IsEmpty (E a) := by
-  simp only [← not_nonempty_iff, nonempty_sigmaₓ, not_exists]
+  simp only [← not_nonempty_iff, nonempty_sigma, not_exists]
 
 @[simp]
 theorem is_empty_psigma {α} {E : α → Sort _} : IsEmpty (PSigma E) ↔ ∀ a, IsEmpty (E a) := by
-  simp only [← not_nonempty_iff, nonempty_psigmaₓ, not_exists]
+  simp only [← not_nonempty_iff, nonempty_psigma, not_exists]
 
 @[simp]
 theorem is_empty_subtype (p : α → Prop) : IsEmpty (Subtype p) ↔ ∀ x, ¬p x := by
@@ -149,23 +149,23 @@ theorem is_empty_subtype (p : α → Prop) : IsEmpty (Subtype p) ↔ ∀ x, ¬p 
 
 @[simp]
 theorem is_empty_prod {α β : Type _} : IsEmpty (α × β) ↔ IsEmpty α ∨ IsEmpty β := by
-  simp only [← not_nonempty_iff, nonempty_prod, not_and_distrib]
+  simp only [← not_nonempty_iff, nonempty_prodₓ, not_and_distrib]
 
 @[simp]
 theorem is_empty_pprod : IsEmpty (PProd α β) ↔ IsEmpty α ∨ IsEmpty β := by
-  simp only [← not_nonempty_iff, nonempty_pprod, not_and_distrib]
+  simp only [← not_nonempty_iff, nonempty_pprodₓ, not_and_distrib]
 
 @[simp]
 theorem is_empty_sum {α β} : IsEmpty (Sum α β) ↔ IsEmpty α ∧ IsEmpty β := by
-  simp only [← not_nonempty_iff, nonempty_sum, not_or_distrib]
+  simp only [← not_nonempty_iff, nonempty_sumₓ, not_or_distrib]
 
 @[simp]
 theorem is_empty_psum {α β} : IsEmpty (PSum α β) ↔ IsEmpty α ∧ IsEmpty β := by
-  simp only [← not_nonempty_iff, nonempty_psum, not_or_distrib]
+  simp only [← not_nonempty_iff, nonempty_psumₓ, not_or_distrib]
 
 @[simp]
 theorem is_empty_ulift {α} : IsEmpty (ULift α) ↔ IsEmpty α := by
-  simp only [← not_nonempty_iff, nonempty_ulift]
+  simp only [← not_nonempty_iff, nonempty_uliftₓ]
 
 @[simp]
 theorem is_empty_plift {α} : IsEmpty (Plift α) ↔ IsEmpty α := by

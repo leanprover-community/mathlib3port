@@ -89,12 +89,11 @@ theorem transvection_zero : transvection i j (0 : R) = 1 := by
 
 section
 
-variable [Fintype n]
-
 /-- A transvection matrix is obtained from the identity by adding `c` times the `j`-th row to
 the `i`-th row. -/
-theorem update_row_eq_transvection (c : R) :
+theorem update_row_eq_transvection [Finite n] (c : R) :
     updateRow (1 : Matrix n n R) i ((1 : Matrix n n R) i + c • (1 : Matrix n n R) j) = transvection i j c := by
+  cases nonempty_fintype n
   ext a b
   by_cases' ha : i = a
   by_cases' hb : j = b
@@ -108,6 +107,8 @@ theorem update_row_eq_transvection (c : R) :
       Algebra.id.smul_eq_mul, Function.update_noteq, Ne.def, not_false_iff, Dmatrix.add_apply, Pi.smul_apply, mul_zero,
       false_andₓ]
     
+
+variable [Fintype n]
 
 theorem transvection_mul_transvection_same (h : i ≠ j) (c d : R) :
     transvection i j c ⬝ transvection i j d = transvection i j (c + d) := by
@@ -392,7 +393,7 @@ theorem list_transvec_col_mul_last_col (hM : M (inr star) (inr star) ≠ 0) (i :
     by_cases' h : n' = i
     · have hni : n = i := by
         cases i
-        simp only [Subtype.mk_eq_mk] at h
+        simp only [Finₓ.mk_eq_mk] at h
         simp [h]
       rw [h, transvection_mul_apply_same, IH, list_transvec_col_mul_last_row_drop _ _ hn, ← hni]
       field_simp [hM]
@@ -454,7 +455,7 @@ theorem mul_list_transvec_row_last_row (hM : M (inr star) (inr star) ≠ 0) (i :
       simp [list_transvec_row]
     rw [← List.take_length (list_transvec_row M), A]
     have : ¬r ≤ i := by
-      simpa using i.2
+      simp
     simpa only [this, ite_eq_right_iff] using H r le_rflₓ
     
   intro k hk
@@ -474,7 +475,7 @@ theorem mul_list_transvec_row_last_row (hM : M (inr star) (inr star) ≠ 0) (i :
     by_cases' h : n' = i
     · have hni : n = i := by
         cases i
-        simp only [Subtype.mk_eq_mk] at h
+        simp only [Finₓ.mk_eq_mk] at h
         simp only [h, coe_mk]
       have : ¬n.succ ≤ i := by
         simp only [← hni, n.lt_succ_self, not_leₓ]
@@ -600,7 +601,7 @@ theorem exists_is_two_block_diagonal_list_transvec_mul_mul_list_transvec
           [⟨inr star, inl i, by
               simp , 1⟩],
         L', _⟩
-    simp only [List.map_append, List.prod_append, Matrix.mul_one, to_matrix_mk, List.prod_cons, List.prod_nil,
+    simp only [List.map_appendₓ, List.prod_append, Matrix.mul_one, to_matrix_mk, List.prod_cons, List.prod_nil,
       mul_eq_mul, List.map, Matrix.mul_assoc (L.map to_matrix).Prod]
     exact hLL'
     

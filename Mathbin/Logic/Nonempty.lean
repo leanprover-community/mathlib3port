@@ -39,11 +39,11 @@ theorem not_nonempty_iff_imp_false {α : Sort _} : ¬Nonempty α ↔ α → Fals
   ⟨fun h a => h ⟨a⟩, fun h ⟨a⟩ => h a⟩
 
 @[simp]
-theorem nonempty_sigmaₓ : Nonempty (Σa : α, γ a) ↔ ∃ a : α, Nonempty (γ a) :=
+theorem nonempty_sigma : Nonempty (Σa : α, γ a) ↔ ∃ a : α, Nonempty (γ a) :=
   Iff.intro (fun ⟨⟨a, c⟩⟩ => ⟨a, ⟨c⟩⟩) fun ⟨a, ⟨c⟩⟩ => ⟨⟨a, c⟩⟩
 
 @[simp]
-theorem nonempty_psigmaₓ {α} {β : α → Sort _} : Nonempty (PSigma β) ↔ ∃ a : α, Nonempty (β a) :=
+theorem nonempty_psigma {α} {β : α → Sort _} : Nonempty (PSigma β) ↔ ∃ a : α, Nonempty (β a) :=
   Iff.intro (fun ⟨⟨a, c⟩⟩ => ⟨a, ⟨c⟩⟩) fun ⟨a, ⟨c⟩⟩ => ⟨⟨a, c⟩⟩
 
 @[simp]
@@ -51,15 +51,15 @@ theorem nonempty_subtype {α} {p : α → Prop} : Nonempty (Subtype p) ↔ ∃ a
   Iff.intro (fun ⟨⟨a, h⟩⟩ => ⟨a, h⟩) fun ⟨a, h⟩ => ⟨⟨a, h⟩⟩
 
 @[simp]
-theorem nonempty_prod : Nonempty (α × β) ↔ Nonempty α ∧ Nonempty β :=
+theorem nonempty_prodₓ : Nonempty (α × β) ↔ Nonempty α ∧ Nonempty β :=
   Iff.intro (fun ⟨⟨a, b⟩⟩ => ⟨⟨a⟩, ⟨b⟩⟩) fun ⟨⟨a⟩, ⟨b⟩⟩ => ⟨⟨a, b⟩⟩
 
 @[simp]
-theorem nonempty_pprod {α β} : Nonempty (PProd α β) ↔ Nonempty α ∧ Nonempty β :=
+theorem nonempty_pprodₓ {α β} : Nonempty (PProd α β) ↔ Nonempty α ∧ Nonempty β :=
   Iff.intro (fun ⟨⟨a, b⟩⟩ => ⟨⟨a⟩, ⟨b⟩⟩) fun ⟨⟨a⟩, ⟨b⟩⟩ => ⟨⟨a, b⟩⟩
 
 @[simp]
-theorem nonempty_sum : Nonempty (Sum α β) ↔ Nonempty α ∨ Nonempty β :=
+theorem nonempty_sumₓ : Nonempty (Sum α β) ↔ Nonempty α ∨ Nonempty β :=
   Iff.intro
     (fun ⟨h⟩ =>
       match h with
@@ -71,7 +71,7 @@ theorem nonempty_sum : Nonempty (Sum α β) ↔ Nonempty α ∨ Nonempty β :=
     | Or.inr ⟨b⟩ => ⟨Sum.inr b⟩
 
 @[simp]
-theorem nonempty_psum {α β} : Nonempty (PSum α β) ↔ Nonempty α ∨ Nonempty β :=
+theorem nonempty_psumₓ {α β} : Nonempty (PSum α β) ↔ Nonempty α ∨ Nonempty β :=
   Iff.intro
     (fun ⟨h⟩ =>
       match h with
@@ -86,7 +86,7 @@ theorem nonempty_psum {α β} : Nonempty (PSum α β) ↔ Nonempty α ∨ Nonemp
 theorem nonempty_empty : ¬Nonempty Empty := fun ⟨h⟩ => h.elim
 
 @[simp]
-theorem nonempty_ulift : Nonempty (ULift α) ↔ Nonempty α :=
+theorem nonempty_uliftₓ : Nonempty (ULift α) ↔ Nonempty α :=
   Iff.intro (fun ⟨⟨a⟩⟩ => ⟨a⟩) fun ⟨a⟩ => ⟨⟨a⟩⟩
 
 @[simp]
@@ -120,14 +120,14 @@ protected noncomputable def Classical.arbitrary (α) [h : Nonempty α] : α :=
 
 /-- Given `f : α → β`, if `α` is nonempty then `β` is also nonempty.
   `nonempty` cannot be a `functor`, because `functor` is restricted to `Type`. -/
-theorem Nonempty.map {α β} (f : α → β) : Nonempty α → Nonempty β
+theorem Nonempty.mapₓ {α β} (f : α → β) : Nonempty α → Nonempty β
   | ⟨h⟩ => ⟨f h⟩
 
-protected theorem Nonempty.map2 {α β γ : Sort _} (f : α → β → γ) : Nonempty α → Nonempty β → Nonempty γ
+protected theorem Nonempty.map2ₓ {α β γ : Sort _} (f : α → β → γ) : Nonempty α → Nonempty β → Nonempty γ
   | ⟨x⟩, ⟨y⟩ => ⟨f x y⟩
 
-protected theorem Nonempty.congr {α β} (f : α → β) (g : β → α) : Nonempty α ↔ Nonempty β :=
-  ⟨Nonempty.map f, Nonempty.map g⟩
+protected theorem Nonempty.congrₓ {α β} (f : α → β) (g : β → α) : Nonempty α ↔ Nonempty β :=
+  ⟨Nonempty.mapₓ f, Nonempty.mapₓ g⟩
 
 theorem Nonempty.elim_to_inhabited {α : Sort _} [h : Nonempty α] {p : Prop} (f : Inhabited α → p) : p :=
   h.elim <| f ∘ Inhabited.mk
@@ -138,7 +138,7 @@ instance {α β} [h : Nonempty α] [h2 : Nonempty β] : Nonempty (α × β) :=
 instance {ι : Sort _} {α : ι → Sort _} [∀ i, Nonempty (α i)] : Nonempty (∀ i, α i) :=
   ⟨fun _ => Classical.arbitrary _⟩
 
-theorem Classical.nonempty_piₓ {ι} {α : ι → Sort _} : Nonempty (∀ i, α i) ↔ ∀ i, Nonempty (α i) :=
+theorem Classical.nonempty_pi {ι} {α : ι → Sort _} : Nonempty (∀ i, α i) ↔ ∀ i, Nonempty (α i) :=
   ⟨fun ⟨f⟩ a => ⟨f a⟩, @Pi.nonempty _ _⟩
 
 theorem subsingleton_of_not_nonempty {α : Sort _} (h : ¬Nonempty α) : Subsingleton α :=

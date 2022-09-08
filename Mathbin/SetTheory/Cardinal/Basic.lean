@@ -3,6 +3,7 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 -/
+import Mathbin.Data.Fintype.Card
 import Mathbin.Data.Finsupp.Defs
 import Mathbin.Data.Nat.PartEnat
 import Mathbin.Data.Set.Countable
@@ -77,7 +78,7 @@ Cantor's theorem, König's theorem, Konig's theorem
 
 open Function Set Order
 
-open Classical
+open BigOperators Classical
 
 noncomputable section
 
@@ -823,6 +824,23 @@ theorem lift_prod {ι : Type u} (c : ι → Cardinal.{v}) : lift.{w} (prod c) = 
   simp only [← mk_pi, ← mk_ulift]
   exact mk_congr (equiv.ulift.trans <| Equivₓ.piCongrRight fun i => equiv.ulift.symm)
 
+theorem prod_eq_of_fintype {α : Type u} [Fintype α] (f : α → Cardinal.{v}) : prod f = Cardinal.lift.{u} (∏ i, f i) := by
+  revert f
+  refine' Fintype.induction_empty_option _ _ _ α
+  · intro α β hβ e h f
+    letI := Fintype.ofEquiv β e.symm
+    rw [← e.prod_comp f, ← h]
+    exact mk_congr (e.Pi_congr_left _).symm
+    
+  · intro f
+    rw [Fintype.univ_pempty, Finset.prod_empty, lift_one, Cardinal.prod, mk_eq_one]
+    
+  · intro α hα h f
+    rw [Cardinal.prod, mk_congr Equivₓ.piOptionEquivProd, mk_prod, lift_umax', mk_out, ← Cardinal.prod, lift_prod,
+      Fintype.prod_option, lift_mul, ← h fun a => f (some a)]
+    simp only [lift_id]
+    
+
 @[simp]
 theorem lift_Inf (s : Set Cardinal) : lift (inf s) = inf (lift '' s) := by
   rcases eq_empty_or_nonempty s with (rfl | hs)
@@ -1301,8 +1319,8 @@ theorem one_to_nat : toNat 1 = 1 := by
 theorem to_nat_eq_one {c : Cardinal} : toNat c = 1 ↔ c = 1 :=
   ⟨fun h =>
     (cast_to_nat_of_lt_aleph_0 (lt_of_not_geₓ (one_ne_zero ∘ h.symm.trans ∘ to_nat_apply_of_aleph_0_le))).symm.trans
-      ((congr_arg coe h).trans Nat.cast_oneₓ),
-    fun h => (congr_arg toNat h).trans one_to_nat⟩
+      ((congr_argₓ coe h).trans Nat.cast_oneₓ),
+    fun h => (congr_argₓ toNat h).trans one_to_nat⟩
 
 theorem to_nat_eq_one_iff_unique {α : Type _} : (# α).toNat = 1 ↔ Subsingleton α ∧ Nonempty α :=
   to_nat_eq_one.trans eq_one_iff_unique
@@ -1342,6 +1360,17 @@ theorem to_nat_mul (x y : Cardinal) : (x * y).toNat = x.toNat * y.toNat := by
   · rw [to_nat_apply_of_aleph_0_le hx2, zero_mul, to_nat_apply_of_aleph_0_le]
     exact aleph_0_le_mul_iff'.2 (Or.inr ⟨hx2, hy1⟩)
     
+
+/-- `cardinal.to_nat` as a `monoid_with_zero_hom`. -/
+@[simps]
+def toNatHom : Cardinal →*₀ ℕ where
+  toFun := toNat
+  map_zero' := zero_to_nat
+  map_one' := one_to_nat
+  map_mul' := to_nat_mul
+
+theorem to_nat_finset_prod (s : Finset α) (f : α → Cardinal) : toNat (∏ i in s, f i) = ∏ i in s, toNat (f i) :=
+  map_prod toNatHom _ _
 
 @[simp]
 theorem to_nat_add_of_lt_aleph_0 {a : Cardinal.{u}} {b : Cardinal.{v}} (ha : a < ℵ₀) (hb : b < ℵ₀) :
@@ -1428,7 +1457,7 @@ theorem sum_lt_prod {ι} (f g : ι → Cardinal) (H : ∀ i, f i < g i) : sum f 
         exact ⟨embedding.of_surjective _ h⟩
     exact
       let ⟨⟨i, a⟩, h⟩ := sG C
-      hc i a (congr_fun h _)
+      hc i a (congr_funₓ h _)
 
 @[simp]
 theorem mk_empty : # Empty = 0 :=
@@ -1607,7 +1636,7 @@ theorem mk_preimage_of_injective_lift {α : Type u} {β : Type v} (f : α → β
     lift.{v} (# (f ⁻¹' s)) ≤ lift.{u} (# s) := by
   rw [lift_mk_le.{u, v, 0}]
   use Subtype.coind (fun x => f x.1) fun x => x.2
-  apply Subtype.coind_injective
+  apply Subtype.coind_injectiveₓ
   exact h.comp Subtype.val_injective
 
 theorem mk_preimage_of_subset_range_lift {α : Type u} {β : Type v} (f : α → β) (s : Set β) (h : s ⊆ Range f) :

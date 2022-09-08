@@ -283,21 +283,40 @@ variable (G)
 
 /-- The minimum number of generators of a group. -/
 @[to_additive "The minimum number of generators of an additive group"]
-def Groupₓ.rank [h : Groupₓ.Fg G]
-    [DecidablePred fun n => ∃ S : Finset G, S.card = n ∧ Subgroup.closure (S : Set G) = ⊤] :=
-  Nat.findₓ (Groupₓ.fg_iff'.mp h)
+noncomputable def Groupₓ.rank [h : Groupₓ.Fg G] :=
+  @Nat.findₓ _ (Classical.decPred _) (Groupₓ.fg_iff'.mp h)
 
 @[to_additive]
-theorem Groupₓ.rank_spec [h : Groupₓ.Fg G]
-    [DecidablePred fun n => ∃ S : Finset G, S.card = n ∧ Subgroup.closure (S : Set G) = ⊤] :
+theorem Groupₓ.rank_spec [h : Groupₓ.Fg G] :
     ∃ S : Finset G, S.card = Groupₓ.rank G ∧ Subgroup.closure (S : Set G) = ⊤ :=
-  Nat.find_specₓ (Groupₓ.fg_iff'.mp h)
+  @Nat.find_specₓ _ (Classical.decPred _) (Groupₓ.fg_iff'.mp h)
 
 @[to_additive]
-theorem Groupₓ.rank_le [Groupₓ.Fg G]
-    [DecidablePred fun n => ∃ S : Finset G, S.card = n ∧ Subgroup.closure (S : Set G) = ⊤] {S : Finset G}
-    (hS : Subgroup.closure (S : Set G) = ⊤) : Groupₓ.rank G ≤ S.card :=
-  Nat.find_le ⟨S, rfl, hS⟩
+theorem Groupₓ.rank_le [h : Groupₓ.Fg G] {S : Finset G} (hS : Subgroup.closure (S : Set G) = ⊤) :
+    Groupₓ.rank G ≤ S.card :=
+  @Nat.find_le _ _ (Classical.decPred _) (Groupₓ.fg_iff'.mp h) ⟨S, rfl, hS⟩
+
+variable {G} {G' : Type _} [Groupₓ G']
+
+@[to_additive]
+theorem Groupₓ.rank_le_of_surjective [Groupₓ.Fg G] [Groupₓ.Fg G'] (f : G →* G') (hf : Function.Surjective f) :
+    Groupₓ.rank G' ≤ Groupₓ.rank G := by
+  classical
+  obtain ⟨S, hS1, hS2⟩ := Groupₓ.rank_spec G
+  trans (S.image f).card
+  · apply Groupₓ.rank_le
+    rw [Finset.coe_image, ← MonoidHom.map_closure, hS2, Subgroup.map_top_of_surjective f hf]
+    
+  · exact finset.card_image_le.trans_eq hS1
+    
+
+@[to_additive]
+theorem Groupₓ.rank_range_le [Groupₓ.Fg G] {f : G →* G'} : Groupₓ.rank f.range ≤ Groupₓ.rank G :=
+  Groupₓ.rank_le_of_surjective f.range_restrict f.range_restrict_surjective
+
+@[to_additive]
+theorem Groupₓ.rank_congr [Groupₓ.Fg G] [Groupₓ.Fg G'] (f : G ≃* G') : Groupₓ.rank G = Groupₓ.rank G' :=
+  le_antisymmₓ (Groupₓ.rank_le_of_surjective f.symm f.symm.Surjective) (Groupₓ.rank_le_of_surjective f f.Surjective)
 
 end Groupₓ
 

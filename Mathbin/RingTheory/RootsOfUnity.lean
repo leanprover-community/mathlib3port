@@ -1108,7 +1108,6 @@ variable {S} [CommRingₓ S] [IsDomain S] {μ : S} {n : ℕ+} (hμ : IsPrimitive
 
 -- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) }
 /-- The `monoid_hom` that takes an automorphism to the power of μ that μ gets mapped to under it. -/
-@[simps (config := { attrs := [] })]
 noncomputable def autToPow : (S ≃ₐ[R] S) →* (Zmod n)ˣ :=
   let μ' := hμ.toRootsOfUnity
   have ho : orderOf μ' = n := by
@@ -1142,6 +1141,11 @@ noncomputable def autToPow : (S ≃ₐ[R] S) →* (Zmod n)ˣ :=
             (by
               simpa only [rootsOfUnity.coe_pow] using hxy)
         rw [← Nat.cast_mulₓ, Zmod.nat_coe_eq_nat_coe_iff, ← ho, ← pow_eq_pow_iff_modeq μ', hxy] }
+
+-- We are not using @[simps] in aut_to_pow to avoid a timeout.
+theorem coe_aut_to_pow_apply (f : S ≃ₐ[R] S) :
+    (autToPow R hμ f : Zmod n) = ((map_root_of_unity_eq_pow_self f hμ.toRootsOfUnity).some : Zmod n) :=
+  rfl
 
 @[simp]
 theorem aut_to_pow_spec (f : S ≃ₐ[R] S) : μ ^ (hμ.autToPow R f : Zmod n).val = f μ := by

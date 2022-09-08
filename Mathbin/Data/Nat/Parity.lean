@@ -62,7 +62,7 @@ theorem is_compl_even_odd : IsCompl { n : ℕ | Even n } { n | Odd n } := by
   simp only [← Set.compl_set_of, is_compl_compl, odd_iff_not_even]
 
 theorem even_or_odd (n : ℕ) : Even n ∨ Odd n :=
-  Or.imp_rightₓ odd_iff_not_even.2 <| em <| Even n
+  Or.imp_right odd_iff_not_even.2 <| em <| Even n
 
 theorem even_or_odd' (n : ℕ) : ∃ k, n = 2 * k ∨ n = 2 * k + 1 := by
   simpa only [← two_mul, exists_or_distrib, ← Odd, ← Even] using even_or_odd n
@@ -235,6 +235,19 @@ theorem bit0_div_bit0 : bit0 n / bit0 m = n / m := by
 theorem bit1_div_bit0 : bit1 n / bit0 m = n / m := by
   rw [bit0_eq_two_mul, ← Nat.div_div_eq_div_mulₓ, bit1_div_two]
 
+@[simp]
+theorem bit0_mod_bit0 : bit0 n % bit0 m = bit0 (n % m) := by
+  rw [bit0_eq_two_mul n, bit0_eq_two_mul m, bit0_eq_two_mul (n % m), Nat.mul_mod_mul_leftₓ]
+
+@[simp]
+theorem bit1_mod_bit0 : bit1 n % bit0 m = bit1 (n % m) := by
+  have h₁ := congr_argₓ bit1 (Nat.div_add_modₓ n m)
+  -- `∀ m n : ℕ, bit0 m * n = bit0 (m * n)` seems to be missing...
+  rw [bit1_add, bit0_eq_two_mul, ← mul_assoc, ← bit0_eq_two_mul] at h₁
+  have h₂ := Nat.div_add_modₓ (bit1 n) (bit0 m)
+  rw [bit1_div_bit0] at h₂
+  exact add_left_cancelₓ (h₂.trans h₁.symm)
+
 -- Here are examples of how `parity_simps` can be used with `nat`.
 example (m n : ℕ) (h : Even m) : ¬Even (n + 3) ↔ Even (m ^ 2 + m + n) := by
   simp' [*,
@@ -253,4 +266,25 @@ variable {R : Type _} [Monoidₓ R] [HasDistribNeg R] {n : ℕ}
 
 theorem neg_one_pow_eq_one_iff_even (h : (-1 : R) ≠ 1) : (-1 : R) ^ n = 1 ↔ Even n :=
   ⟨fun h' => of_not_not fun hn => h <| (Odd.neg_one_pow <| odd_iff_not_even.mpr hn).symm.trans h', Even.neg_one_pow⟩
+
+/-- If `a` is even, then `n` is odd iff `n % a` is odd. -/
+theorem Odd.mod_even_iff {n a : ℕ} (ha : Even a) : Odd (n % a) ↔ Odd n :=
+  ((even_sub' <| mod_leₓ n a).mp <| even_iff_two_dvd.mpr <| (even_iff_two_dvd.mp ha).trans <| dvd_sub_mod n).symm
+
+/-- If `a` is even, then `n` is even iff `n % a` is even. -/
+theorem Even.mod_even_iff {n a : ℕ} (ha : Even a) : Even (n % a) ↔ Even n :=
+  ((even_sub <| mod_leₓ n a).mp <| even_iff_two_dvd.mpr <| (even_iff_two_dvd.mp ha).trans <| dvd_sub_mod n).symm
+
+/-- If `n` is odd and `a` is even, then `n % a` is odd. -/
+theorem Odd.mod_even {n a : ℕ} (hn : Odd n) (ha : Even a) : Odd (n % a) :=
+  (Odd.mod_even_iff ha).mpr hn
+
+/-- If `n` is even and `a` is even, then `n % a` is even. -/
+theorem Even.mod_even {n a : ℕ} (hn : Even n) (ha : Even a) : Even (n % a) :=
+  (Even.mod_even_iff ha).mpr hn
+
+/-- `2` is not a prime factor of an odd natural number. -/
+theorem Odd.factors_ne_two {n p : ℕ} (hn : Odd n) (hp : p ∈ n.factors) : p ≠ 2 := by
+  rintro rfl
+  exact two_dvd_ne_zero.mpr (odd_iff.mp hn) (dvd_of_mem_factors hp)
 

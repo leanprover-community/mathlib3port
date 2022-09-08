@@ -149,7 +149,7 @@ theorem RemoveNone.fiber_some (a : α) : RemoveNone.Fiber (some a) = { f : Perm 
       cases x
       · simp
         
-      simp only [Equivₓ.option_congr_apply, Option.map_some'ₓ]
+      simp only [Equivₓ.option_congr_apply, Option.map_some']
       by_cases' x_vs_a : x = a
       · rw [x_vs_a, swap_apply_right]
         apply Option.some_ne_none

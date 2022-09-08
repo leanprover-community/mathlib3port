@@ -84,7 +84,7 @@ theorem ext : ∀ {f g : α ≃. β} (h : ∀ x, f x = g x), f = g
     simp [*, funext_iff]
 
 theorem ext_iff {f g : α ≃. β} : f = g ↔ ∀ x, f x = g x :=
-  ⟨congr_fun ∘ congr_arg _, ext⟩
+  ⟨congr_funₓ ∘ congr_argₓ _, ext⟩
 
 /-- The identity map as a partial equivalence. -/
 @[refl]
@@ -130,7 +130,7 @@ theorem symm_injective : Function.Injective (@Pequiv.symm α β) :=
   LeftInverse.injective symm_symm
 
 theorem trans_assoc (f : α ≃. β) (g : β ≃. γ) (h : γ ≃. δ) : (f.trans g).trans h = f.trans (g.trans h) :=
-  ext fun _ => Option.bind_assoc _ _ _
+  ext fun _ => Option.bind_assocₓ _ _ _
 
 theorem mem_trans (f : α ≃. β) (g : β ≃. γ) (a : α) (c : γ) : c ∈ f.trans g a ↔ ∃ b, b ∈ f a ∧ c ∈ g b :=
   Option.bind_eq_some'

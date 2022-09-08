@@ -366,10 +366,10 @@ theorem Pi.mul_single_mul_mul_single_eq_mul_single_mul_mul_single {M : Type _} [
       k = m ∧ l = n ∨ u = v ∧ k = n ∧ l = m ∨ u * v = 1 ∧ k = l ∧ m = n :=
   by
   refine' ⟨fun h => _, _⟩
-  · have hk := congr_fun h k
-    have hl := congr_fun h l
-    have hm := (congr_fun h m).symm
-    have hn := (congr_fun h n).symm
+  · have hk := congr_funₓ h k
+    have hl := congr_funₓ h l
+    have hm := (congr_funₓ h m).symm
+    have hn := (congr_funₓ h n).symm
     simp only [mul_apply, mul_single_apply, if_pos rfl] at hk hl hm hn
     rcases eq_or_ne k m with (rfl | hkm)
     · refine' Or.inl ⟨rfl, not_ne_iff.mp fun hln => (hv _).elim⟩
@@ -420,7 +420,7 @@ theorem update_mul [∀ i, Mul (f i)] [DecidableEq I] (f₁ f₂ : ∀ i, f i) (
 @[to_additive]
 theorem update_inv [∀ i, Inv (f i)] [DecidableEq I] (f₁ : ∀ i, f i) (i : I) (x₁ : f i) :
     update f₁⁻¹ i x₁⁻¹ = (update f₁ i x₁)⁻¹ :=
-  funext fun j => (apply_update (fun i => Inv.inv) f₁ i x₁ j).symm
+  funext fun j => (apply_updateₓ (fun i => Inv.inv) f₁ i x₁ j).symm
 
 @[to_additive]
 theorem update_div [∀ i, Div (f i)] [DecidableEq I] (f₁ f₂ : ∀ i, f i) (i : I) (x₁ : f i) (x₂ : f i) :

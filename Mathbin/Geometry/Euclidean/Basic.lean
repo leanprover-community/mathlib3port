@@ -396,6 +396,11 @@ theorem continuous_at_angle {x : P × P × P} (hx12 : x.1 ≠ x.2.1) (hx32 : x.2
     (InnerProductGeometry.continuous_at_angle hf1 hf2).comp
       ((continuous_fst.vsub continuous_snd.fst).prod_mk (continuous_snd.snd.vsub continuous_snd.fst)).ContinuousAt
 
+@[simp]
+theorem _root_.affine_isometry.angle_map {V₂ P₂ : Type _} [InnerProductSpace ℝ V₂] [MetricSpace P₂]
+    [NormedAddTorsor V₂ P₂] (f : P →ᵃⁱ[ℝ] P₂) (p₁ p₂ p₃ : P) : ∠ (f p₁) (f p₂) (f p₃) = ∠ p₁ p₂ p₃ := by
+  simp_rw [angle, ← AffineIsometry.map_vsub, LinearIsometry.angle_map]
+
 /-- The angle at a point does not depend on the order of the other two
 points. -/
 theorem angle_comm (p1 p2 p3 : P) : ∠ p1 p2 p3 = ∠ p3 p2 p1 :=
@@ -743,6 +748,8 @@ is defined. -/
 theorem orthogonal_projection_fn_vsub_mem_direction_orthogonal {s : AffineSubspace ℝ P} [Nonempty s]
     [CompleteSpace s.direction] (p : P) : orthogonalProjectionFn s p -ᵥ p ∈ s.directionᗮ :=
   direction_mk' p s.directionᗮ ▸ vsub_mem_direction (orthogonal_projection_fn_mem_orthogonal p) (self_mem_mk' _ _)
+
+attribute [local instance] AffineSubspace.toAddTorsor
 
 /-- The orthogonal projection of a point onto a nonempty affine
 subspace, whose direction is complete. The corresponding linear map

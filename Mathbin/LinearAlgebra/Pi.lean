@@ -326,9 +326,9 @@ def piOptionEquivProd {ι : Type _} {M : Option ι → Type _} [∀ i, AddCommGr
     (∀ i : Option ι, M i) ≃ₗ[R] M none × ∀ i : ι, M (some i) :=
   { Equivₓ.piOptionEquivProd with
     map_add' := by
-      simp [Function.funext_iffₓ],
+      simp [Function.funext_iff],
     map_smul' := by
-      simp [Function.funext_iffₓ] }
+      simp [Function.funext_iff] }
 
 variable (ι R M) (S : Type _) [Fintype ι] [DecidableEq ι] [Semiringₓ S] [AddCommMonoidₓ M] [Module R M] [Module S M]
   [SmulCommClass R S M]

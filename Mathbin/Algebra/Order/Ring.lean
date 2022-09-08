@@ -178,6 +178,10 @@ alias zero_lt_three ← three_pos
 
 alias zero_lt_four ← four_pos
 
+-- see Note [lower instance priority]
+instance (priority := 100) OrderedSemiring.to_no_max_order : NoMaxOrder α :=
+  ⟨fun a => ⟨a + 1, lt_add_of_pos_right _ one_pos⟩⟩
+
 end Nontrivial
 
 -- See Note [decidable namespace]
@@ -754,11 +758,6 @@ theorem nonpos_of_mul_nonneg_left (h : 0 ≤ a * b) (hb : b < 0) : a ≤ 0 :=
 
 theorem nonpos_of_mul_nonneg_right (h : 0 ≤ a * b) (ha : a < 0) : b ≤ 0 :=
   le_of_not_gtₓ fun hb => absurd h (mul_neg_of_neg_of_pos ha hb).not_le
-
--- see Note [lower instance priority]
-instance (priority := 100) LinearOrderedSemiring.to_no_max_order {α : Type _} [LinearOrderedSemiring α] :
-    NoMaxOrder α :=
-  ⟨fun a => ⟨a + 1, lt_add_of_pos_right _ zero_lt_one⟩⟩
 
 /-- Pullback a `linear_ordered_semiring` under an injective map.
 See note [reducible non-instances]. -/
@@ -1570,13 +1569,9 @@ theorem mul_eq_top_iff {a b : WithTop α} : a * b = ⊤ ↔ a ≠ 0 ∧ b = ⊤ 
   cases a <;> cases b <;> simp only [none_eq_top, some_eq_coe]
   · simp [← coe_mul]
     
-  · suffices ⊤ * (b : WithTop α) = ⊤ ↔ b ≠ 0 by
-      simpa
-    by_cases' hb : b = 0 <;> simp [hb]
+  · by_cases' hb : b = 0 <;> simp [hb]
     
-  · suffices (a : WithTop α) * ⊤ = ⊤ ↔ a ≠ 0 by
-      simpa
-    by_cases' ha : a = 0 <;> simp [ha]
+  · by_cases' ha : a = 0 <;> simp [ha]
     
   · simp [← coe_mul]
     
@@ -1609,20 +1604,14 @@ instance [MulZeroOneClassₓ α] [Nontrivial α] : MulZeroOneClassₓ (WithTop �
   { WithTop.mulZeroClass with mul := (· * ·), one := 1, zero := 0,
     one_mul := fun a =>
       match a with
-      | none =>
-        show ((1 : α) : WithTop α) * ⊤ = ⊤ by
-          simp [-WithTop.coe_one]
-      | some a =>
-        show ((1 : α) : WithTop α) * a = a by
-          simp [coe_mul.symm, -WithTop.coe_one],
+      | ⊤ => mul_top (mt coe_eq_coe.1 one_ne_zero)
+      | (a : α) => by
+        rw [← coe_one, ← coe_mul, one_mulₓ],
     mul_one := fun a =>
       match a with
-      | none =>
-        show ⊤ * ((1 : α) : WithTop α) = ⊤ by
-          simp [-WithTop.coe_one]
-      | some a =>
-        show ↑a * ((1 : α) : WithTop α) = a by
-          simp [coe_mul.symm, -WithTop.coe_one] }
+      | ⊤ => top_mul (mt coe_eq_coe.1 one_ne_zero)
+      | (a : α) => by
+        rw [← coe_one, ← coe_mul, mul_oneₓ] }
 
 /-- A version of `with_top.map` for `monoid_with_zero_hom`s. -/
 @[simps (config := { fullyApplied := false })]
@@ -1631,7 +1620,7 @@ protected def _root_.monoid_with_zero_hom.with_top_map {R S : Type _} [MulZeroOn
     WithTop R →*₀ WithTop S :=
   { f.toZeroHom.with_top_map, f.toMonoidHom.toOneHom.with_top_map with toFun := WithTop.map f,
     map_mul' := fun x y => by
-      have : ∀ z, map f z = 0 ↔ z = 0 := fun z => (Option.map_injective hf).eq_iff' f.to_zero_hom.with_top_map.map_zero
+      have : ∀ z, map f z = 0 ↔ z = 0 := fun z => (Option.map_injectiveₓ hf).eq_iff' f.to_zero_hom.with_top_map.map_zero
       rcases eq_or_ne x 0 with (rfl | hx)
       · simp
         
@@ -1655,16 +1644,25 @@ instance [MulZeroClassₓ α] [NoZeroDivisors α] : NoZeroDivisors (WithTop α) 
 instance [SemigroupWithZeroₓ α] [NoZeroDivisors α] : SemigroupWithZeroₓ (WithTop α) :=
   { WithTop.mulZeroClass with mul := (· * ·), zero := 0,
     mul_assoc := fun a b c => by
-      cases a
-      · by_cases' hb : b = 0 <;> by_cases' hc : c = 0 <;> simp [*, none_eq_top]
+      rcases eq_or_ne a 0 with (rfl | ha)
+      · simp only [zero_mul]
         
-      cases b
-      · by_cases' ha : a = 0 <;> by_cases' hc : c = 0 <;> simp [*, none_eq_top, some_eq_coe]
+      rcases eq_or_ne b 0 with (rfl | hb)
+      · simp only [zero_mul, mul_zero]
         
-      cases c
-      · by_cases' ha : a = 0 <;> by_cases' hb : b = 0 <;> simp [*, none_eq_top, some_eq_coe]
+      rcases eq_or_ne c 0 with (rfl | hc)
+      · simp only [mul_zero]
         
-      simp [some_eq_coe, coe_mul.symm, mul_assoc] }
+      induction a using WithTop.recTopCoe
+      · simp [hb, hc]
+        
+      induction b using WithTop.recTopCoe
+      · simp [ha, hc]
+        
+      induction c using WithTop.recTopCoe
+      · simp [ha, hb]
+        
+      simp only [← coe_mul, mul_assoc] }
 
 instance [MonoidWithZeroₓ α] [NoZeroDivisors α] [Nontrivial α] : MonoidWithZeroₓ (WithTop α) :=
   { WithTop.mulZeroOneClass, WithTop.semigroupWithZero with }
@@ -1672,23 +1670,15 @@ instance [MonoidWithZeroₓ α] [NoZeroDivisors α] [Nontrivial α] : MonoidWith
 instance [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] : CommMonoidWithZero (WithTop α) :=
   { WithTop.monoidWithZero with mul := (· * ·), zero := 0,
     mul_comm := fun a b => by
-      by_cases' ha : a = 0
-      · simp [ha]
-        
-      by_cases' hb : b = 0
-      · simp [hb]
-        
-      simp [ha, hb, mul_def, Option.bind_comm a b, mul_comm] }
+      simp only [or_comm, mul_def, Option.bind_commₓ a b, mul_comm] }
 
 variable [CanonicallyOrderedCommSemiring α]
 
 private theorem distrib' (a b c : WithTop α) : (a + b) * c = a * c + b * c := by
-  cases c
-  · show (a + b) * ⊤ = a * ⊤ + b * ⊤
-    by_cases' ha : a = 0 <;> simp [ha]
+  induction c using WithTop.recTopCoe
+  · by_cases' ha : a = 0 <;> simp [ha]
     
-  · show (a + b) * c = a * c + b * c
-    by_cases' hc : c = 0
+  · by_cases' hc : c = 0
     · simp [hc]
       
     simp [mul_coe hc]
@@ -1696,7 +1686,7 @@ private theorem distrib' (a b c : WithTop α) : (a + b) * c = a * c + b * c := b
     repeat'
       first |
         rfl|
-        exact congr_arg some (add_mulₓ _ _ _)
+        exact congr_argₓ some (add_mulₓ _ _ _)
     
 
 /-- This instance requires `canonically_ordered_comm_semiring` as it is the smallest class

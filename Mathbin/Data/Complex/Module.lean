@@ -279,6 +279,15 @@ theorem to_matrix_conj_ae :
   simp [LinearMap.to_matrix_apply]
   fin_cases i <;> fin_cases j <;> simp
 
+/-- The identity and the complex conjugation are the only two `ℝ`-algebra homomorphisms of `ℂ`. -/
+theorem real_alg_hom_eq_id_or_conj (f : ℂ →ₐ[ℝ] ℂ) : f = AlgHom.id ℝ ℂ ∨ f = conj_ae := by
+  refine'
+      (eq_or_eq_neg_of_sq_eq_sq (f I) I <| by
+            rw [← map_pow, I_sq, map_neg, map_one]).imp
+        _ _ <;>
+    refine' fun h => alg_hom_ext _
+  exacts[h, conj_I.symm ▸ h]
+
 section lift
 
 variable {A : Type _} [Ringₓ A] [Algebra ℝ A]

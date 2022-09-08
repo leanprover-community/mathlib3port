@@ -48,7 +48,7 @@ theorem compact_space_uniformity [CompactSpace α] [SeparatedSpace α] : 𝓤 α
   refine' le_antisymmₓ supr_nhds_le_uniformity _
   by_contra H
   obtain ⟨V, hV, h⟩ : ∃ V : Set (α × α), (∀ x : α, V ∈ 𝓝 (x, x)) ∧ 𝓤 α⊓𝓟 (Vᶜ) ≠ ⊥ := by
-    simpa [le_iff_forall_inf_principal_compl] using H
+    simpa only [le_iff_forall_inf_principal_compl, mem_supr, not_forall, exists_prop] using H
   let F := 𝓤 α⊓𝓟 (Vᶜ)
   haveI : ne_bot F := ⟨h⟩
   obtain ⟨⟨x, y⟩, hx⟩ : ∃ p : α × α, ClusterPt p F := cluster_point_of_compact F

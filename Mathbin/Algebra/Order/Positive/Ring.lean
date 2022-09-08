@@ -127,7 +127,7 @@ instance [LinearOrderedSemiring R] [IsCommutative R (· * ·)] [Nontrivial R] :
     mul_left_cancel := fun a b c h =>
       Subtype.ext <|
         (strict_mono_mul_left_of_pos a.2).Injective <| by
-          convert congr_arg Subtype.val h,
+          convert congr_argₓ Subtype.val h,
     le_of_mul_le_mul_left := fun a b c h => Subtype.coe_le_coe.1 <| (mul_le_mul_left a.2).1 h }
 
 end mul_comm

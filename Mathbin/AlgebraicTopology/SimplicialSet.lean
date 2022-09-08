@@ -94,7 +94,7 @@ def horn (n : ℕ) (i : Finₓ (n + 1)) : SSet where
       apply α.property
       rw [Set.eq_univ_iff_forall] at h⊢
       intro j
-      apply Or.imp _ id (h j)
+      apply Or.impₓ _ id (h j)
       intro hj
       exact Set.range_comp_subset_range _ _ hj⟩
 

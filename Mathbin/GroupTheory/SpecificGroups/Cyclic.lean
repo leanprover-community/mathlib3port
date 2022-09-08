@@ -181,7 +181,7 @@ instance Subgroup.is_cyclic {α : Type u} [Groupₓ α] [IsCyclic α] (H : Subgr
         match k, hk with
         | (k : ℕ), hk => by
           rw [Int.nat_abs_of_nat, ← zpow_coe_nat, hk] <;> exact hx₁
-        | -[1+ k], hk => by
+        | -[1 + k], hk => by
           rw [Int.nat_abs_of_neg_succ_of_nat, ← Subgroup.inv_mem_iff H] <;> simp_all ⟩
     ⟨⟨⟨g ^ Nat.findₓ hex, (Nat.find_specₓ hex).2⟩, fun ⟨x, hx⟩ =>
         let ⟨k, hk⟩ := hg x
@@ -202,7 +202,7 @@ instance Subgroup.is_cyclic {α : Type u} [Groupₓ α] [IsCyclic α] (H : Subgr
         have hk₆ : (k % (Nat.findₓ hex : ℤ)).natAbs = 0 :=
           by_contradiction fun h =>
             Nat.find_minₓ hex
-              (Int.coe_nat_lt.1 <| by
+              (Int.coe_nat_ltₓ.1 <| by
                 rw [← hk₄] <;> exact Int.mod_lt_of_pos _ (Int.coe_nat_pos.2 (Nat.find_specₓ hex).1))
               ⟨Nat.pos_of_ne_zeroₓ h, hk₅⟩
         ⟨k / (Nat.findₓ hex : ℤ),
@@ -342,7 +342,7 @@ theorem card_order_of_eq_totient_aux₂ {d : ℕ} (hd : d ∣ Fintype.card α) :
   calc
     c = ∑ m in c.divisors, (univ.filter fun a : α => orderOf a = m).card := by
       simp only [← filter_dvd_eq_divisors hc0.ne', sum_card_order_of_eq_card_pow_eq_one hc0]
-      apply congr_arg card
+      apply congr_argₓ card
       simp
     _ = ∑ m in c.divisors.erase d, (univ.filter fun a : α => orderOf a = m).card := by
       rw [eq_comm]

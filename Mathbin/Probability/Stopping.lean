@@ -1179,6 +1179,14 @@ variable [LinearOrderₓ ι]
 Intuitively, the stopped process stops evolving once the stopping time has occured. -/
 def stoppedProcess (u : ι → Ω → β) (τ : Ω → ι) : ι → Ω → β := fun i ω => u (min i (τ ω)) ω
 
+theorem stopped_process_eq_stopped_value {u : ι → Ω → β} {τ : Ω → ι} :
+    stoppedProcess u τ = fun i => stoppedValue u fun ω => min i (τ ω) :=
+  rfl
+
+theorem stopped_value_stopped_process {u : ι → Ω → β} {τ σ : Ω → ι} :
+    stoppedValue (stoppedProcess u τ) σ = stoppedValue u fun ω => min (σ ω) (τ ω) :=
+  rfl
+
 theorem stopped_process_eq_of_le {u : ι → Ω → β} {τ : Ω → ι} {i : ι} {ω : Ω} (h : i ≤ τ ω) :
     stoppedProcess u τ i ω = u i ω := by
   simp [stopped_process, min_eq_leftₓ h]

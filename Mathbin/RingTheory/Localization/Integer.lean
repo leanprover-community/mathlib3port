@@ -92,9 +92,10 @@ theorem exist_integer_multiples {ι : Type _} (s : Finset ι) (f : ι → S) :
   rw [mul_comm, ← Finset.prod_insert (s.not_mem_erase i), Finset.insert_erase hi]
   rfl
 
-/-- We can clear the denominators of a `fintype`-indexed family of fractions. -/
-theorem exist_integer_multiples_of_fintype {ι : Type _} [Fintype ι] (f : ι → S) :
+/-- We can clear the denominators of a finite indexed family of fractions. -/
+theorem exist_integer_multiples_of_finite {ι : Type _} [Finite ι] (f : ι → S) :
     ∃ b : M, ∀ i, IsLocalization.IsInteger R ((b : R) • f i) := by
+  cases nonempty_fintype ι
   obtain ⟨b, hb⟩ := exist_integer_multiples M Finset.univ f
   exact ⟨b, fun i => hb i (Finset.mem_univ _)⟩
 

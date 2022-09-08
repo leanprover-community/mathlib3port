@@ -143,7 +143,7 @@ theorem adjoin_eq_span : (adjoin R s).toSubmodule = span R (Submonoid.closure s)
     · exact zero_mem _
       
     rw [List.forall_mem_consₓ] at HL
-    rw [List.map_cons, List.sum_cons]
+    rw [List.map_consₓ, List.sum_cons]
     refine' Submodule.add_mem _ _ (ih HL.2)
     replace HL := HL.1
     clear ih tl

@@ -819,7 +819,7 @@ theorem finsupp_prod_lequiv_apply {α β R M : Type _} [Semiringₓ R] [AddCommM
 @[simp]
 theorem finsupp_prod_lequiv_symm_apply {α β R M : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
     (f : α →₀ β →₀ M) (xy) : (finsuppProdLequiv R).symm f xy = f xy.1 xy.2 := by
-  conv_rhs => rw [← (finsupp_prod_lequiv R).apply_symm_apply f, finsupp_prod_lequiv_apply, Prod.mk.eta]
+  conv_rhs => rw [← (finsupp_prod_lequiv R).apply_symm_apply f, finsupp_prod_lequiv_apply, Prod.mk.etaₓ]
 
 end Prod
 

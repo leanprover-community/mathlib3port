@@ -244,8 +244,7 @@ theorem vanishing_ideal_Union {γ : Sort _} (t : γ → Set (ProjectiveSpectrum 
     convert (gc_ideal 𝒜).u_infi <;> exact HomogeneousIdeal.to_ideal_infi _
 
 theorem zero_locus_inf (I J : Ideal A) : ZeroLocus 𝒜 ((I⊓J : Ideal A) : Set A) = ZeroLocus 𝒜 I ∪ ZeroLocus 𝒜 J :=
-  Set.ext fun x => by
-    simpa using x.2.1.inf_le
+  Set.ext fun x => x.2.1.inf_le
 
 theorem union_zero_locus (s s' : Set A) :
     ZeroLocus 𝒜 s ∪ ZeroLocus 𝒜 s' = ZeroLocus 𝒜 (Ideal.span s⊓Ideal.span s' : Ideal A) := by
@@ -254,13 +253,11 @@ theorem union_zero_locus (s s' : Set A) :
 
 theorem zero_locus_mul_ideal (I J : Ideal A) :
     ZeroLocus 𝒜 ((I * J : Ideal A) : Set A) = ZeroLocus 𝒜 I ∪ ZeroLocus 𝒜 J :=
-  Set.ext fun x => by
-    simpa using x.2.1.mul_le
+  Set.ext fun x => x.2.1.mul_le
 
 theorem zero_locus_mul_homogeneous_ideal (I J : HomogeneousIdeal 𝒜) :
     ZeroLocus 𝒜 ((I * J : HomogeneousIdeal 𝒜) : Set A) = ZeroLocus 𝒜 I ∪ ZeroLocus 𝒜 J :=
-  Set.ext fun x => by
-    simpa using x.2.1.mul_le
+  Set.ext fun x => x.2.1.mul_le
 
 theorem zero_locus_singleton_mul (f g : A) : ZeroLocus 𝒜 ({f * g} : Set A) = ZeroLocus 𝒜 {f} ∪ ZeroLocus 𝒜 {g} :=
   Set.ext fun x => by

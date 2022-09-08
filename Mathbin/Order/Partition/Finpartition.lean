@@ -248,7 +248,7 @@ instance : HasInf (Finpartition a) :=
     ofErase ((P.parts ×ˢ Q.parts).Image fun bc => bc.1⊓bc.2)
       (by
         rw [sup_indep_iff_disjoint_erase]
-        simp only [mem_image, and_imp, exists_prop, forall_exists_index, id.def, Prod.exists, mem_product,
+        simp only [mem_image, and_imp, exists_prop, forall_exists_index, id.def, Prod.existsₓ, mem_product,
           Finset.disjoint_sup_right, mem_erase, Ne.def]
         rintro _ x₁ y₁ hx₁ hy₁ rfl _ h x₂ y₂ hx₂ hy₂ rfl
         rcases eq_or_ne x₁ x₂ with (rfl | xdiff)
@@ -426,7 +426,7 @@ theorem bUnion_parts : P.parts.bUnion id = s :=
   (sup_eq_bUnion _ _).symm.trans P.sup_parts
 
 theorem sum_card_parts : (∑ i in P.parts, i.card) = s.card := by
-  convert congr_arg Finset.card P.bUnion_parts
+  convert congr_argₓ Finset.card P.bUnion_parts
   rw [card_bUnion P.sup_indep.pairwise_disjoint]
   rfl
 

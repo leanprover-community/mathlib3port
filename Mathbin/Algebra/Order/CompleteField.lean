@@ -373,7 +373,7 @@ theorem ring_hom_monotone (hR : ∀ r : R, 0 ≤ r → ∃ s : R, s ^ 2 = r) (f 
 instance Real.RingHom.unique : Unique (ℝ →+* ℝ) where
   default := RingHom.id ℝ
   uniq := fun f =>
-    congr_arg OrderRingHom.toRingHom
+    congr_argₓ OrderRingHom.toRingHom
       (Subsingleton.elim ⟨f, ring_hom_monotone (fun r hr => ⟨Real.sqrt r, sq_sqrt hr⟩) f⟩ default)
 
 end Real

@@ -175,7 +175,7 @@ theorem Normal.of_is_splitting_field (p : F[X]) [hFEp : IsSplittingField F E p] 
   haveI : IsScalarTower F C D := of_algebra_map_eq fun x => (AdjoinRoot.lift_of _).symm
   haveI : IsScalarTower F C E := of_algebra_map_eq fun x => (AdjoinRoot.lift_of _).symm
   suffices Nonempty (D →ₐ[C] E) by
-    exact Nonempty.map (AlgHom.restrictScalars F) this
+    exact Nonempty.mapₓ (AlgHom.restrictScalars F) this
   let S : Set D := ((p.map (algebraMap F E)).roots.map (algebraMap E D)).toFinset
   suffices ⊤ ≤ IntermediateField.adjoin C S by
     refine' IntermediateField.alg_hom_mk_adjoin_splits' (top_le_iff.mp this) fun y hy => _
@@ -393,7 +393,7 @@ theorem is_solvable_of_is_scalar_tower [Normal F K₁] [h1 : IsSolvable (K₁ �
   refine'
     solvable_of_ker_le_range f (AlgEquiv.restrictNormalHom K₁) fun ϕ hϕ =>
       ⟨{ ϕ with commutes' := fun x => _ }, AlgEquiv.ext fun _ => rfl⟩
-  exact Eq.trans (ϕ.restrict_normal_commutes K₁ x).symm (congr_arg _ (alg_equiv.ext_iff.mp hϕ x))
+  exact Eq.trans (ϕ.restrict_normal_commutes K₁ x).symm (congr_argₓ _ (alg_equiv.ext_iff.mp hϕ x))
 
 end lift
 

@@ -213,7 +213,7 @@ theorem colorable_iff_exists_bdd_nat_coloring (n : ℕ) : G.Colorable n ↔ ∃ 
       hc.to_coloring
         (by
           simp )
-    let f := embedding.complete_graph (Finₓ.coeEmbedding n).toEmbedding
+    let f := embedding.complete_graph Finₓ.coeEmbedding
     use f.to_hom.comp C
     intro v
     cases' C with color valid
@@ -224,7 +224,7 @@ theorem colorable_iff_exists_bdd_nat_coloring (n : ℕ) : G.Colorable n ↔ ∃ 
     · exact fun v => ⟨C v, Cf v⟩
       
     · rintro v w hvw
-      simp only [Subtype.mk_eq_mk, Ne.def]
+      simp only [Finₓ.mk_eq_mk, Ne.def]
       exact C.valid hvw
       
     

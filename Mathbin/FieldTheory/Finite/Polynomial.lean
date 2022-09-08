@@ -109,7 +109,7 @@ variable [Field K]
 
 theorem eval_indicator_apply_eq_zero (a b : σ → K) (h : a ≠ b) : eval a (indicator b) = 0 := by
   obtain ⟨i, hi⟩ : ∃ i, a i ≠ b i := by
-    rwa [(· ≠ ·), Function.funext_iffₓ, not_forall] at h
+    rwa [(· ≠ ·), Function.funext_iff, not_forall] at h
   simp only [indicator, map_prod, map_sub, map_one, map_pow, eval_X, eval_C, sub_self, Finset.prod_eq_zero_iff]
   refine' ⟨i, Finset.mem_univ _, _⟩
   rw [FiniteField.pow_card_sub_one_eq_one, sub_self]
@@ -203,7 +203,7 @@ theorem dim_R [Fintype σ] : Module.rank K (R σ K) = Fintype.card (σ → K) :=
       exact Fintype.card_pos_iff.2 ⟨0⟩
     _ = # (σ → { n // n < Fintype.card K }) :=
       (@Equivₓ.subtypePiEquivPi σ (fun _ => ℕ) fun s n => n < Fintype.card K).cardinal_eq
-    _ = # (σ → Finₓ (Fintype.card K)) := (Equivₓ.arrowCongr (Equivₓ.refl σ) (Equivₓ.refl _)).cardinal_eq
+    _ = # (σ → Finₓ (Fintype.card K)) := (Equivₓ.arrowCongr (Equivₓ.refl σ) Finₓ.equivSubtype.symm).cardinal_eq
     _ = # (σ → K) := (Equivₓ.arrowCongr (Equivₓ.refl σ) (Fintype.equivFin K).symm).cardinal_eq
     _ = Fintype.card (σ → K) := Cardinal.mk_fintype _
     
@@ -232,7 +232,7 @@ theorem eq_zero_of_eval_eq_zero [Finite σ] (p : MvPolynomial σ K) (h : ∀ v :
   let p' : R σ K := ⟨p, hp⟩
   have : p' ∈ (evalᵢ σ K).ker := funext h
   show p'.1 = (0 : R σ K).1 from
-    congr_arg _ <| by
+    congr_argₓ _ <| by
       rwa [ker_evalₗ, mem_bot] at this
 
 end MvPolynomial

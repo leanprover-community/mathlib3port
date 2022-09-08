@@ -323,7 +323,7 @@ theorem cseval_add {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerEx
       fun _ e₂ c => ⟨c, (zero_addₓ _).symm⟩
     cases' e : Num.sub' n₁ n₂ with k k <;> simp
     · have : n₁ = n₂ := by
-        have := congr_arg (coe : Znum → ℤ) e
+        have := congr_argₓ (coe : Znum → ℤ) e
         simp at this
         have := sub_eq_zero.1 this
         rw [← Num.to_nat_to_int, ← Num.to_nat_to_int] at this
@@ -346,7 +346,7 @@ theorem cseval_add {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerEx
       apply Tactic.Ring.horner_add_horner_gtₓ
       · change (_ + k : ℕ) = _
         rw [← Int.coe_nat_inj', Int.coe_nat_add, eq_comm, ← sub_eq_iff_eq_add']
-        simpa using congr_arg (coe : Znum → ℤ) e
+        simpa using congr_argₓ (coe : Znum → ℤ) e
         
       · rfl
         
@@ -359,7 +359,7 @@ theorem cseval_add {α} [CommSemiringₓ α] (t : Tree α) {e₁ e₂ : HornerEx
       apply Tactic.Ring.horner_add_horner_ltₓ
       · change (_ + k : ℕ) = _
         rw [← Int.coe_nat_inj', Int.coe_nat_add, eq_comm, ← sub_eq_iff_eq_add', ← neg_inj, neg_sub]
-        simpa using congr_arg (coe : Znum → ℤ) e
+        simpa using congr_argₓ (coe : Znum → ℤ) e
         
       all_goals
         rfl

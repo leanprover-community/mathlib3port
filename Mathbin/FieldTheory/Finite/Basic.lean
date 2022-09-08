@@ -68,7 +68,7 @@ theorem card_image_polynomial_eval [DecidableEq R] [Fintype R] {p : R[X]} (hp : 
   Finset.card_le_mul_card_image _ _ fun a _ =>
     calc
       _ = (p - c a).roots.toFinset.card :=
-        congr_arg card
+        congr_argₓ card
           (by
             simp [Finset.ext_iff, mem_roots_sub_C hp])
       _ ≤ (p - c a).roots.card := Multiset.to_finset_card_le _
@@ -102,7 +102,7 @@ theorem exists_root_sum_quadratic [Fintype R] {f g : R[X]} (hf2 : degree f = 2) 
                 rw [hf2] <;>
                   exact by
                     decide))
-            (mt (congr_arg (· % 2))
+            (mt (congr_argₓ (· % 2))
               (by
                 simp [nat_degree_eq_of_degree_eq_some hf2, hR])))
           (card_image_polynomial_eval
@@ -386,7 +386,7 @@ theorem sq_add_sq (R : Type _) [CommRingₓ R] [IsDomain R] (p : ℕ) [NeZero p]
   haveI := char_is_prime_of_pos R p
   obtain ⟨a, b, hab⟩ := Zmod.sq_add_sq p x
   refine' ⟨a.val, b.val, _⟩
-  simpa using congr_arg (Zmod.castHom dvd_rfl R) hab
+  simpa using congr_argₓ (Zmod.castHom dvd_rfl R) hab
 
 end CharP
 

@@ -182,7 +182,7 @@ def Matrix.mulVecLin [Fintype n] (M : Matrix m n R) : (n → R) →ₗ[R] m → 
 variable [Fintype n] [DecidableEq n]
 
 theorem Matrix.mul_vec_std_basis (M : Matrix m n R) (i j) : M.mulVec (stdBasis R (fun _ => R) j 1) i = M i j :=
-  (congr_fun (Matrix.mul_vec_single _ _ (1 : R)) i).trans <| mul_oneₓ _
+  (congr_funₓ (Matrix.mul_vec_single _ _ (1 : R)) i).trans <| mul_oneₓ _
 
 @[simp]
 theorem Matrix.mul_vec_std_basis_apply (M : Matrix m n R) (j) : M.mulVec (stdBasis R (fun _ => R) j 1) = Mᵀ j :=

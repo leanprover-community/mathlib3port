@@ -694,7 +694,7 @@ theorem bot_eq_top_of_dim_eq_zero (h : Module.rank K V = 0) : (⊥ : Submodule K
 theorem dim_eq_zero {S : Submodule K V} : Module.rank K S = 0 ↔ S = ⊥ :=
   ⟨fun h =>
     (Submodule.eq_bot_iff _).2 fun x hx =>
-      congr_arg Subtype.val <|
+      congr_argₓ Subtype.val <|
         ((Submodule.eq_bot_iff _).1 <| Eq.symm <| bot_eq_top_of_dim_eq_zero h) ⟨x, hx⟩ Submodule.mem_top,
     fun h => by
     rw [h, dim_bot]⟩
@@ -1002,7 +1002,7 @@ theorem mul_eq_one_of_mul_eq_one [FiniteDimensional K V] {f g : V →ₗ[K] V} (
         show (f * g) x = (1 : V →ₗ[K] V) x by
           rw [hfg] <;> rfl⟩
   let ⟨i, hi⟩ := g.exists_right_inverse_of_surjective (range_eq_top.2 (injective_iff_surjective.1 ginj))
-  have : f * (g * i) = f * 1 := congr_arg _ hi
+  have : f * (g * i) = f * 1 := congr_argₓ _ hi
   rw [← mul_assoc, hfg, one_mulₓ, mul_oneₓ] at this <;> rwa [← this]
 
 /-- In a finite-dimensional space, linear maps are inverse to each other on one side if and only if
@@ -1322,7 +1322,7 @@ theorem linear_independent_of_top_le_span_of_card_eq_finrank {ι : Type _} [Fint
           rw [Set.to_finset_card, Fintype.card_of_finset]
         _ ≤ (Set.Univ \ {i}).toFinset.card := Finset.card_image_le
         _ = (finset.univ.erase i).card :=
-          congr_arg Finset.card
+          congr_argₓ Finset.card
             (Finset.ext
               (by
                 simp [and_comm]))
@@ -1356,7 +1356,7 @@ theorem linear_independent_of_top_le_span_of_card_eq_finrank {ι : Type _} [Fint
           (g i)⁻¹ • (g i • b i + (s.erase i).Sum fun j => g j • b j) :=
         by
         rw [smul_add, ← mul_smul, inv_mul_cancel gx_ne_zero, one_smul]
-      _ = (g i)⁻¹ • 0 := congr_arg _ _
+      _ = (g i)⁻¹ • 0 := congr_argₓ _ _
       _ = 0 := smul_zero _
       
     -- And then it's just a bit of manipulation with finite sums.

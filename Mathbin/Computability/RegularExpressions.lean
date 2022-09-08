@@ -116,7 +116,7 @@ theorem matches_mul (P Q : RegularExpression α) : (P * Q).Matches = P.Matches *
 @[simp]
 theorem matches_pow (P : RegularExpression α) : ∀ n : ℕ, (P ^ n).Matches = P.Matches ^ n
   | 0 => matches_epsilon
-  | n + 1 => (matches_mul _ _).trans <| Eq.trans (congr_arg _ (matches_pow n)) (pow_succₓ _ _).symm
+  | n + 1 => (matches_mul _ _).trans <| Eq.trans (congr_argₓ _ (matches_pow n)) (pow_succₓ _ _).symm
 
 @[simp]
 theorem matches_star (P : RegularExpression α) : P.star.Matches = P.Matches.star :=
@@ -421,7 +421,7 @@ def map (f : α → β) : RegularExpression α → RegularExpression β
 @[simp]
 protected theorem map_pow (f : α → β) (P : RegularExpression α) : ∀ n : ℕ, map f (P ^ n) = map f P ^ n
   | 0 => rfl
-  | n + 1 => (congr_arg ((· * ·) (map f P)) (map_pow n) : _)
+  | n + 1 => (congr_argₓ ((· * ·) (map f P)) (map_pow n) : _)
 
 @[simp]
 theorem map_id : ∀ P : RegularExpression α, P.map id = P

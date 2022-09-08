@@ -169,12 +169,12 @@ theorem cycle_range_of_le {n : ℕ} {i j : Finₓ n.succ} (h : j ≤ i) : cycleR
   rw [this, cycle_range, of_left_inverse'_eq_of_injective, ← Function.Embedding.to_equiv_range_eq_of_injective, ←
     via_fintype_embedding, via_fintype_embedding_apply_image, RelEmbedding.coe_fn_to_embedding, coe_cast_le,
     coe_fin_rotate]
-  simp only [Finₓ.ext_iff, coe_last, coe_mk, coe_zero, Finₓ.eta, apply_ite coe, cast_le_mk]
+  simp only [Finₓ.ext_iff, coe_last, coe_mk, coe_zero, Finₓ.eta, apply_iteₓ coe, cast_le_mk]
   split_ifs with heq
   · rfl
     
   · rw [Finₓ.coe_add_one_of_lt]
-    exact lt_of_lt_of_leₓ (lt_of_le_of_neₓ h (mt (congr_arg coe) HEq)) (le_last i)
+    exact lt_of_lt_of_leₓ (lt_of_le_of_neₓ h (mt (congr_argₓ coe) HEq)) (le_last i)
     
 
 theorem coe_cycle_range_of_le {n : ℕ} {i j : Finₓ n.succ} (h : j ≤ i) :

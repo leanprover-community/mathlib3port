@@ -66,7 +66,7 @@ theorem SuperpolynomialDecay.congr' (hf : SuperpolynomialDecay l k f) (hfg : f =
   fun z => (hf z).congr' (EventuallyEq.mul (EventuallyEq.refl l _) hfg)
 
 theorem SuperpolynomialDecay.congr (hf : SuperpolynomialDecay l k f) (hfg : ∀ x, f x = g x) :
-    SuperpolynomialDecay l k g := fun z => (hf z).congr fun x => (congr_arg fun a => k x ^ z * a) <| hfg x
+    SuperpolynomialDecay l k g := fun z => (hf z).congr fun x => (congr_argₓ fun a => k x ^ z * a) <| hfg x
 
 @[simp]
 theorem superpolynomial_decay_zero (l : Filter α) (k : α → β) : SuperpolynomialDecay l k 0 := fun z => by

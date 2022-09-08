@@ -30,18 +30,17 @@ namespace Matrix
 
 section FiniteDimensional
 
-variable {m n : Type _} [Fintype m] [Fintype n]
+variable {m n : Type _} {R : Type v} [Field R]
 
-variable {R : Type v} [Field R]
-
-instance : FiniteDimensional R (Matrix m n R) :=
+instance [Finite m] [Finite n] : FiniteDimensional R (Matrix m n R) :=
   LinearEquiv.finite_dimensional (LinearEquiv.curry R m n)
 
 /-- The dimension of the space of finite dimensional matrices
 is the product of the number of rows and columns.
 -/
 @[simp]
-theorem finrank_matrix : FiniteDimensional.finrank R (Matrix m n R) = Fintype.card m * Fintype.card n := by
+theorem finrank_matrix [Fintype m] [Fintype n] :
+    FiniteDimensional.finrank R (Matrix m n R) = Fintype.card m * Fintype.card n := by
   rw [@LinearEquiv.finrank_eq R (Matrix m n R) _ _ _ _ _ _ (LinearEquiv.curry R m n).symm,
     FiniteDimensional.finrank_fintype_fun_eq_card, Fintype.card_prod]
 

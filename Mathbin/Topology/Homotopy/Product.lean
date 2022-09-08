@@ -74,7 +74,7 @@ def HomotopyRel.pi (homotopies : ∀ i : I, HomotopyRel (f i) (g i) S) : Homotop
     prop' := by
       intro t x hx
       dsimp' only [coe_mk, pi_eval, to_fun_eq_coe, homotopy_with.coe_to_continuous_map]
-      simp only [Function.funext_iffₓ, ← forall_and_distrib]
+      simp only [Function.funext_iff, ← forall_and_distrib]
       intro i
       exact (homotopies i).prop' t x hx }
 
@@ -105,7 +105,7 @@ def HomotopyRel.prod (F : HomotopyRel f₀ f₁ S) (G : HomotopyRel g₀ g₁ S)
       intro t x hx
       have hF := F.prop' t x hx
       have hG := G.prop' t x hx
-      simp only [coe_mk, prod_eval, Prod.mk.inj_iff, homotopy.prod] at hF hG⊢
+      simp only [coe_mk, prod_eval, Prod.mk.inj_iffₓ, homotopy.prod] at hF hG⊢
       exact ⟨⟨hF.1, hG.1⟩, ⟨hF.2, hG.2⟩⟩ }
 
 end Prod
@@ -130,7 +130,7 @@ def piHomotopy (γ₀ γ₁ : ∀ i, Path (as i) (bs i)) (H : ∀ i, Path.Homoto
 
 /-- The product of a family of path homotopy classes -/
 def pi (γ : ∀ i, Path.Homotopic.Quotient (as i) (bs i)) : Path.Homotopic.Quotient as bs :=
-  (Quotientₓ.map Path.pi fun x y hxy => Nonempty.map (piHomotopy x y) (Classical.nonempty_piₓ.mpr hxy))
+  (Quotientₓ.map Path.pi fun x y hxy => Nonempty.mapₓ (piHomotopy x y) (Classical.nonempty_pi.mpr hxy))
     (Quotientₓ.choice γ)
 
 theorem pi_lift (γ : ∀ i, Path (as i) (bs i)) : (Path.Homotopic.pi fun i => ⟦γ i⟧) = ⟦Path.pi γ⟧ := by
@@ -190,7 +190,7 @@ def prodHomotopy (h₁ : Path.Homotopy p₁ p₁') (h₂ : Path.Homotopy p₂ p�
 /-- The product of path classes q₁ and q₂. This is `path.prod` descended to the quotient -/
 def prod (q₁ : Path.Homotopic.Quotient a₁ a₂) (q₂ : Path.Homotopic.Quotient b₁ b₂) :
     Path.Homotopic.Quotient (a₁, b₁) (a₂, b₂) :=
-  Quotientₓ.map₂ Path.prod (fun p₁ p₁' h₁ p₂ p₂' h₂ => Nonempty.map2 prodHomotopy h₁ h₂) q₁ q₂
+  Quotientₓ.map₂ Path.prod (fun p₁ p₁' h₁ p₂ p₂' h₂ => Nonempty.map2ₓ prodHomotopy h₁ h₂) q₁ q₂
 
 variable (p₁ p₁' p₂ p₂')
 

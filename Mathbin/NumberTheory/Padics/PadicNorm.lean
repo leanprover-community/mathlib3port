@@ -46,8 +46,6 @@ def padicNorm (p : ℕ) (q : ℚ) : ℚ :=
 
 namespace padicNorm
 
-section padicNorm
-
 open padicValRat
 
 variable (p : ℕ)
@@ -309,7 +307,101 @@ theorem dvd_iff_norm_le {n : ℕ} {z : ℤ} : ↑(p ^ n) ∣ z ↔ padicNorm p z
       
     
 
-end padicNorm
+/-- The `p`-adic norm of an integer `m` is one iff `p` doesn't divide `m`. -/
+theorem int_eq_one_iff (m : ℤ) : padicNorm p m = 1 ↔ ¬(p : ℤ) ∣ m := by
+  nth_rw 1[← pow_oneₓ p]
+  simp only [dvd_iff_norm_le, Int.cast_coe_nat, Nat.cast_oneₓ, zpow_neg, zpow_one, not_leₓ]
+  constructor
+  · intro h
+    rw [h, inv_lt_one_iff_of_pos] <;> norm_cast
+    · exact Nat.Prime.one_lt (Fact.out _)
+      
+    · exact Nat.Prime.pos (Fact.out _)
+      
+    
+  · simp only [padicNorm]
+    split_ifs
+    · rw [inv_lt_zero, ← Nat.cast_zeroₓ, Nat.cast_lt]
+      intro h
+      exact (Nat.not_lt_zeroₓ p h).elim
+      
+    · have : 1 < (p : ℚ) := by
+        norm_cast <;> exact Nat.Prime.one_lt (Fact.out _ : Nat.Prime p)
+      rw [← zpow_neg_one, zpow_lt_iff_lt this]
+      have : 0 ≤ padicValRat p m
+      simp only [of_int, Nat.cast_nonneg]
+      intro h
+      rw [← zpow_zero (p : ℚ), zpow_inj] <;> linarith
+      
+    
+
+theorem int_lt_one_iff (m : ℤ) : padicNorm p m < 1 ↔ (p : ℤ) ∣ m := by
+  rw [← not_iff_not, ← int_eq_one_iff, eq_iff_le_not_ltₓ]
+  simp only [padicNorm.of_int, true_andₓ]
+
+theorem of_nat (m : ℕ) : padicNorm p m ≤ 1 :=
+  padicNorm.of_int p (m : ℤ)
+
+/-- The `p`-adic norm of a natural `m` is one iff `p` doesn't divide `m`. -/
+theorem nat_eq_one_iff (m : ℕ) : padicNorm p m = 1 ↔ ¬p ∣ m := by
+  simp only [← Int.coe_nat_dvd, ← int_eq_one_iff, Int.cast_coe_nat]
+
+theorem nat_lt_one_iff (m : ℕ) : padicNorm p m < 1 ↔ p ∣ m := by
+  simp only [← Int.coe_nat_dvd, ← int_lt_one_iff, Int.cast_coe_nat]
+
+open BigOperators
+
+theorem sum_lt {α : Type _} {F : α → ℚ} {t : ℚ} {s : Finset α} :
+    s.Nonempty → (∀ i ∈ s, padicNorm p (F i) < t) → padicNorm p (∑ i in s, F i) < t := by
+  classical
+  refine'
+    s.induction_on
+      (by
+        rintro ⟨-, ⟨⟩⟩)
+      _
+  rintro a S haS IH - ht
+  by_cases' hs : S.nonempty
+  · rw [Finset.sum_insert haS]
+    exact
+      lt_of_le_of_ltₓ (padicNorm.nonarchimedean p)
+        (max_ltₓ (ht a (Finset.mem_insert_self a S)) (IH hs fun b hb => ht b (Finset.mem_insert_of_mem hb)))
+    
+  · simp_all
+    
+
+theorem sum_le {α : Type _} {F : α → ℚ} {t : ℚ} {s : Finset α} :
+    s.Nonempty → (∀ i ∈ s, padicNorm p (F i) ≤ t) → padicNorm p (∑ i in s, F i) ≤ t := by
+  classical
+  refine'
+    s.induction_on
+      (by
+        rintro ⟨-, ⟨⟩⟩)
+      _
+  rintro a S haS IH - ht
+  by_cases' hs : S.nonempty
+  · rw [Finset.sum_insert haS]
+    exact
+      (padicNorm.nonarchimedean p).trans
+        (max_leₓ (ht a (Finset.mem_insert_self a S)) (IH hs fun b hb => ht b (Finset.mem_insert_of_mem hb)))
+    
+  · simp_all
+    
+
+theorem sum_lt' {α : Type _} {F : α → ℚ} {t : ℚ} {s : Finset α} (hF : ∀ i ∈ s, padicNorm p (F i) < t) (ht : 0 < t) :
+    padicNorm p (∑ i in s, F i) < t := by
+  obtain rfl | hs := Finset.eq_empty_or_nonempty s
+  · simp [ht]
+    
+  · exact sum_lt hs hF
+    
+
+theorem sum_le' {α : Type _} {F : α → ℚ} {t : ℚ} {s : Finset α} (hF : ∀ i ∈ s, padicNorm p (F i) ≤ t) (ht : 0 ≤ t) :
+    padicNorm p (∑ i in s, F i) ≤ t := by
+  obtain rfl | hs := Finset.eq_empty_or_nonempty s
+  · simp [ht]
+    
+  · exact sum_le hs hF
+    
 
 end padicNorm
 

@@ -128,7 +128,7 @@ instance : SubNegMonoidₓ (Completion α) :=
         (is_closed_eq (continuous_map₂ continuous_fst continuous_snd)
           (continuous_map₂ continuous_fst (Completion.continuous_map.comp continuous_snd)))
         fun a b => by
-        exact_mod_cast congr_arg coe (sub_eq_add_neg a b),
+        exact_mod_cast congr_argₓ coe (sub_eq_add_neg a b),
     zsmul := (· • ·),
     zsmul_zero' := fun a =>
       Completion.induction_on a (is_closed_eq continuous_map continuous_const) fun a => by
@@ -142,7 +142,7 @@ instance : SubNegMonoidₓ (Completion α) :=
       Completion.induction_on a (is_closed_eq continuous_map <| Completion.continuous_map.comp continuous_map) fun a =>
         by
         rw [← coe_smul, ← coe_smul, ← coe_neg,
-          show -[1+ n] • a = -((n.succ : ℤ) • a) from SubNegMonoidₓ.zsmul_neg' n a] }
+          show -[1 + n] • a = -((n.succ : ℤ) • a) from SubNegMonoidₓ.zsmul_neg' n a] }
 
 instance : AddGroupₓ (Completion α) :=
   { Completion.subNegMonoid with

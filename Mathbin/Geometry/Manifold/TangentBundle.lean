@@ -585,7 +585,7 @@ theorem tangent_bundle_model_space_chart_at (p : TangentBundle I H) :
   show (chart_at (ModelProd H E) p : TangentBundle I H → ModelProd H E) x = (Equivₓ.sigmaEquivProd H E) x
   · cases x
     simp' only [chart_at, BasicSmoothVectorBundleCore.chart, tangentBundleCore,
-      BasicSmoothVectorBundleCore.toTopologicalVectorBundleCore, A, Prod.mk.inj_iff, ContinuousLinearMap.coe_id'] with
+      BasicSmoothVectorBundleCore.toTopologicalVectorBundleCore, A, Prod.mk.inj_iffₓ, ContinuousLinearMap.coe_id'] with
       mfld_simps
     exact (tangentBundleCore I H).coord_change_self _ _ trivialₓ x_snd
     

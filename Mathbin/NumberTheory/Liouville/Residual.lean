@@ -59,7 +59,7 @@ theorem eventually_residual_liouville : ∀ᶠ x in residual ℝ, Liouville x :=
   · rintro _ ⟨r, rfl⟩
     simp only [mem_Inter, mem_Union]
     refine' fun n => ⟨r.num * 2, r.denom * 2, _, _⟩
-    · have := Int.coe_nat_le.2 r.pos
+    · have := Int.coe_nat_leₓ.2 r.pos
       rw [Int.coe_nat_one] at this
       linarith
       

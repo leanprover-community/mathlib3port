@@ -191,12 +191,38 @@ attribute [simp, reassoc] comonad_hom.app_ε comonad_hom.app_δ
 instance : Category (Monad C) where
   Hom := MonadHom
   id := fun M => { toNatTrans := 𝟙 (M : C ⥤ C) }
-  comp := fun _ _ _ f g => { toNatTrans := { app := fun X => f.app X ≫ g.app X } }
+  comp := fun _ _ _ f g =>
+    { toNatTrans :=
+        { app := fun X => f.app X ≫ g.app X,
+          naturality' := fun X Y h => by
+            rw [assoc, f.1.naturality_assoc, g.1.naturality] } }
+  id_comp' := fun _ _ _ => by
+    ext
+    apply id_comp
+  comp_id' := fun _ _ _ => by
+    ext
+    apply comp_id
+  assoc' := fun _ _ _ _ _ _ _ => by
+    ext
+    apply assoc
 
 instance : Category (Comonad C) where
   Hom := ComonadHom
   id := fun M => { toNatTrans := 𝟙 (M : C ⥤ C) }
-  comp := fun M N L f g => { toNatTrans := { app := fun X => f.app X ≫ g.app X } }
+  comp := fun _ _ _ f g =>
+    { toNatTrans :=
+        { app := fun X => f.app X ≫ g.app X,
+          naturality' := fun X Y h => by
+            rw [assoc, f.1.naturality_assoc, g.1.naturality] } }
+  id_comp' := fun _ _ _ => by
+    ext
+    apply id_comp
+  comp_id' := fun _ _ _ => by
+    ext
+    apply comp_id
+  assoc' := fun _ _ _ _ _ _ _ => by
+    ext
+    apply assoc
 
 instance {T : Monad C} : Inhabited (MonadHom T T) :=
   ⟨𝟙 T⟩

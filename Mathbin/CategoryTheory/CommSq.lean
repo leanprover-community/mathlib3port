@@ -75,7 +75,7 @@ variable (F : C ⥤ D) {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {
 
 theorem map_comm_sq (s : CommSq f g h i) : CommSq (F.map f) (F.map g) (F.map h) (F.map i) :=
   ⟨by
-    simpa using congr_arg (fun k : W ⟶ Z => F.map k) s.w⟩
+    simpa using congr_argₓ (fun k : W ⟶ Z => F.map k) s.w⟩
 
 end Functor
 
@@ -175,12 +175,12 @@ theorem iff : HasLift sq ↔ Nonempty sq.LiftStruct := by
 
 theorem iff_op : HasLift sq ↔ HasLift sq.op := by
   rw [Iff, Iff]
-  exact Nonempty.congr (lift_struct.op_equiv sq).toFun (lift_struct.op_equiv sq).invFun
+  exact Nonempty.congrₓ (lift_struct.op_equiv sq).toFun (lift_struct.op_equiv sq).invFun
 
 theorem iff_unop {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B ⟶ Y} (sq : CommSq f i p g) :
     HasLift sq ↔ HasLift sq.unop := by
   rw [Iff, Iff]
-  exact Nonempty.congr (lift_struct.unop_equiv sq).toFun (lift_struct.unop_equiv sq).invFun
+  exact Nonempty.congrₓ (lift_struct.unop_equiv sq).toFun (lift_struct.unop_equiv sq).invFun
 
 end HasLift
 

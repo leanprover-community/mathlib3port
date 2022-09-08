@@ -131,11 +131,11 @@ theorem bot_N : (⊥ : I.Filtration M).n = ⊥ :=
 
 @[simp]
 theorem supr_N {ι : Sort _} (f : ι → I.Filtration M) : (supr f).n = ⨆ i, (f i).n :=
-  congr_arg sup (Set.range_comp _ _).symm
+  congr_argₓ sup (Set.range_comp _ _).symm
 
 @[simp]
 theorem infi_N {ι : Sort _} (f : ι → I.Filtration M) : (infi f).n = ⨅ i, (f i).n :=
-  congr_arg inf (Set.range_comp _ _).symm
+  congr_argₓ inf (Set.range_comp _ _).symm
 
 instance : CompleteLattice (I.Filtration M) :=
   Function.Injective.completeLattice Ideal.Filtration.n Ideal.Filtration.ext sup_N inf_N (fun _ => Sup_image)

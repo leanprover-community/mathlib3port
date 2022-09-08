@@ -111,7 +111,7 @@ theorem EuclideanSpace.nnnorm_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fin
 
 theorem EuclideanSpace.norm_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n] (x : EuclideanSpace 𝕜 n) :
     ∥x∥ = Real.sqrt (∑ i, ∥x i∥ ^ 2) := by
-  simpa only [Real.coe_sqrt, Nnreal.coe_sum] using congr_arg (coe : ℝ≥0 → ℝ) x.nnnorm_eq
+  simpa only [Real.coe_sqrt, Nnreal.coe_sum] using congr_argₓ (coe : ℝ≥0 → ℝ) x.nnnorm_eq
 
 theorem EuclideanSpace.dist_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n] (x y : EuclideanSpace 𝕜 n) :
     dist x y = (∑ i, dist (x i) (y i) ^ 2).sqrt :=
@@ -228,11 +228,11 @@ theorem EuclideanSpace.single_apply [DecidableEq ι] (i : ι) (a : 𝕜) (j : ι
 
 theorem EuclideanSpace.inner_single_left [DecidableEq ι] (i : ι) (a : 𝕜) (v : EuclideanSpace 𝕜 ι) :
     ⟪EuclideanSpace.single i (a : 𝕜), v⟫ = conj a * v i := by
-  simp [apply_ite conj]
+  simp [apply_iteₓ conj]
 
 theorem EuclideanSpace.inner_single_right [DecidableEq ι] (i : ι) (a : 𝕜) (v : EuclideanSpace 𝕜 ι) :
     ⟪v, EuclideanSpace.single i (a : 𝕜)⟫ = a * conj (v i) := by
-  simp [apply_ite conj, mul_comm]
+  simp [apply_iteₓ conj, mul_comm]
 
 theorem EuclideanSpace.pi_Lp_congr_left_single [DecidableEq ι] {ι' : Type _} [Fintype ι'] [DecidableEq ι'] (e : ι' ≃ ι)
     (i' : ι') :
@@ -326,7 +326,7 @@ protected theorem sum_repr_symm (b : OrthonormalBasis ι 𝕜 E) (v : EuclideanS
   simpa using (b.to_basis.equiv_fun_symm_apply v).symm
 
 protected theorem sum_inner_mul_inner (b : OrthonormalBasis ι 𝕜 E) (x y : E) : (∑ i, ⟪x, b i⟫ * ⟪b i, y⟫) = ⟪x, y⟫ := by
-  have := congr_arg (@innerSL 𝕜 _ _ _ x) (b.sum_repr y)
+  have := congr_argₓ (@innerSL 𝕜 _ _ _ x) (b.sum_repr y)
   rw [map_sum] at this
   convert this
   ext i
@@ -567,7 +567,7 @@ theorem _root_.orthonormal.exists_orthonormal_basis_extension (hv : Orthonormal 
   rw [maximal_orthonormal_iff_orthogonal_complement_eq_bot hu₀] at hu₀_max
   have hu₀_finite : u₀.finite := hu₀.linear_independent.finite
   let u : Finset E := hu₀_finite.to_finset
-  let fu : ↥u ≃ ↥u₀ := Equivₓ.cast (congr_arg coeSort hu₀_finite.coe_to_finset)
+  let fu : ↥u ≃ ↥u₀ := Equivₓ.cast (congr_argₓ coeSort hu₀_finite.coe_to_finset)
   have hfu : (coe : u → E) = (coe : u₀ → E) ∘ fu := by
     ext
     simp

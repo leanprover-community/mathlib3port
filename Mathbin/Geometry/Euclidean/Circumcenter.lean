@@ -143,7 +143,7 @@ theorem exists_unique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpac
     have hu := hcccru (cc₃', cr₃')
     simp only [Prod.fst, Prod.snd] at hu
     replace hu := hu ⟨hcc₃', hcr₃'⟩
-    rw [Prod.ext_iff] at hu
+    rw [Prod.ext_iffₓ] at hu
     simp only [Prod.fst, Prod.snd] at hu
     cases' hu with hucc hucr
     substs hucc hucr
@@ -309,7 +309,7 @@ equidistant, that point is the circumcenter. -/
 theorem eq_circumcenter_of_dist_eq {n : ℕ} (s : Simplex ℝ P n) {p : P} (hp : p ∈ affineSpan ℝ (Set.Range s.points))
     {r : ℝ} (hr : ∀ i, dist (s.points i) p = r) : p = s.circumcenter := by
   have h := s.circumcenter_circumradius_unique_dist_eq.2 (p, r)
-  simp only [hp, hr, forall_const, eq_self_iff_true, and_selfₓ, Prod.ext_iff] at h
+  simp only [hp, hr, forall_const, eq_self_iff_true, and_selfₓ, Prod.ext_iffₓ] at h
   exact h.1
 
 /-- Given a point in the affine span from which all the points are
@@ -317,7 +317,7 @@ equidistant, that distance is the circumradius. -/
 theorem eq_circumradius_of_dist_eq {n : ℕ} (s : Simplex ℝ P n) {p : P} (hp : p ∈ affineSpan ℝ (Set.Range s.points))
     {r : ℝ} (hr : ∀ i, dist (s.points i) p = r) : r = s.circumradius := by
   have h := s.circumcenter_circumradius_unique_dist_eq.2 (p, r)
-  simp only [hp, hr, forall_const, eq_self_iff_true, and_selfₓ, Prod.ext_iff] at h
+  simp only [hp, hr, forall_const, eq_self_iff_true, and_selfₓ, Prod.ext_iffₓ] at h
   exact h.2
 
 /-- The circumradius is non-negative. -/
@@ -363,6 +363,8 @@ theorem circumcenter_eq_centroid (s : Simplex ℝ P 1) : s.circumcenter = Finset
     (s.eq_circumcenter_of_dist_eq (centroid_mem_affine_span_of_card_eq_add_one ℝ _ (Finset.card_fin 2)) fun i =>
         hr i (Set.mem_univ _)).symm
 
+attribute [local instance] AffineSubspace.toAddTorsor
+
 /-- The orthogonal projection of a point `p` onto the hyperplane spanned by the simplex's points. -/
 def orthogonalProjectionSpan {n : ℕ} (s : Simplex ℝ P n) : P →ᵃ[ℝ] affineSpan ℝ (Set.Range s.points) :=
   orthogonalProjection (affineSpan ℝ (Set.Range s.points))
@@ -379,7 +381,7 @@ theorem orthogonal_projection_vadd_smul_vsub_orthogonal_projection {n : ℕ} (s 
 theorem coe_orthogonal_projection_vadd_smul_vsub_orthogonal_projection {n : ℕ} {r₁ : ℝ} (s : Simplex ℝ P n) {p p₁o : P}
     (hp₁o : p₁o ∈ affineSpan ℝ (Set.Range s.points)) :
     ↑(s.orthogonalProjectionSpan (r₁ • (p -ᵥ ↑(s.orthogonalProjectionSpan p)) +ᵥ p₁o)) = p₁o :=
-  congr_arg coe (orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ _ hp₁o)
+  congr_argₓ coe (orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ _ hp₁o)
 
 theorem dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq {n : ℕ} (s : Simplex ℝ P n) {p1 : P}
     (p2 : P) (hp1 : p1 ∈ affineSpan ℝ (Set.Range s.points)) :

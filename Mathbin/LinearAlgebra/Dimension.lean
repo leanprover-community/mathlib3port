@@ -340,7 +340,7 @@ theorem union_support_maximal_linear_independent_eq_range_basis {ι : Type w} (b
     rfl
   have r' : b b' ∉ range v := by
     rintro ⟨k, p⟩
-    simpa [w] using congr_arg (fun m => (b.repr m) b') p
+    simpa [w] using congr_argₓ (fun m => (b.repr m) b') p
   have r'' : range v ≠ range v' := by
     intro e
     have p : b b' ∈ range v' := by
@@ -855,7 +855,7 @@ theorem nonempty_linear_equiv_of_lift_dim_eq
 
 /-- Two vector spaces are isomorphic if they have the same dimension. -/
 theorem nonempty_linear_equiv_of_dim_eq (cond : Module.rank K V = Module.rank K V₁) : Nonempty (V ≃ₗ[K] V₁) :=
-  nonempty_linear_equiv_of_lift_dim_eq <| congr_arg _ cond
+  nonempty_linear_equiv_of_lift_dim_eq <| congr_argₓ _ cond
 
 section
 
@@ -906,17 +906,18 @@ theorem dim_prod : Module.rank K (V × V₁) = Module.rank K V + Module.rank K V
 
 section Fintype
 
-variable [Fintype η]
-
 variable [∀ i, AddCommGroupₓ (φ i)] [∀ i, Module K (φ i)]
 
 open LinearMap
 
-theorem dim_pi : Module.rank K (∀ i, φ i) = Cardinal.sum fun i => Module.rank K (φ i) := by
+theorem dim_pi [Finite η] : Module.rank K (∀ i, φ i) = Cardinal.sum fun i => Module.rank K (φ i) := by
+  cases nonempty_fintype η
   let b := fun i => Basis.ofVectorSpace K (φ i)
   let this : Basis (Σj, _) K (∀ j, φ j) := Pi.basis b
   rw [← Cardinal.lift_inj, ← this.mk_eq_dim]
   simp [← (b _).mk_range_eq_dim]
+
+variable [Fintype η]
 
 theorem dim_fun {V η : Type u} [Fintype η] [AddCommGroupₓ V] [Module K V] :
     Module.rank K (η → V) = Fintype.card η * Module.rank K V := by
@@ -988,7 +989,7 @@ theorem dim_add_dim_split (db : V₂ →ₗ[K] V) (eb : V₃ →ₗ[K] V) (cd : 
   · rw [← range_eq_top, eq_top_iff, range_cod_restrict, ← map_le_iff_le_comap, map_top, range_subtype]
     rintro ⟨d, e⟩
     have h := eq₂ d (-e)
-    simp only [add_eq_zero_iff_eq_neg, LinearMap.prod_apply, mem_ker, SetLike.mem_coe, Prod.mk.inj_iff, coprod_apply,
+    simp only [add_eq_zero_iff_eq_neg, LinearMap.prod_apply, mem_ker, SetLike.mem_coe, Prod.mk.inj_iffₓ, coprod_apply,
       map_neg, neg_apply, LinearMap.mem_range, Pi.prod] at h⊢
     intro hde
     rcases h hde with ⟨c, h₁, h₂⟩
@@ -1009,7 +1010,7 @@ theorem dim_sup_add_dim_inf_eq (s t : Submodule K V) :
       rfl)
     (by
       rintro ⟨b₁, hb₁⟩ ⟨b₂, hb₂⟩ eq
-      obtain rfl : b₁ = b₂ := congr_arg Subtype.val Eq
+      obtain rfl : b₁ = b₂ := congr_argₓ Subtype.val Eq
       exact ⟨⟨b₁, hb₁, hb₂⟩, rfl, rfl⟩)
 
 theorem dim_add_le_dim_add_dim (s t : Submodule K V) :
@@ -1213,7 +1214,7 @@ theorem Submodule.rank_le_one_iff_is_principal (W : Submodule K V) : Module.rank
   constructor
   · rintro ⟨⟨m, hm⟩, hm'⟩
     choose f hf using hm'
-    exact ⟨m, ⟨fun v hv => ⟨f ⟨v, hv⟩, congr_arg coe (hf ⟨v, hv⟩)⟩, hm⟩⟩
+    exact ⟨m, ⟨fun v hv => ⟨f ⟨v, hv⟩, congr_argₓ coe (hf ⟨v, hv⟩)⟩, hm⟩⟩
     
   · rintro ⟨a, ⟨h, ha⟩⟩
     choose f hf using h
@@ -1239,7 +1240,7 @@ theorem le_rank_iff_exists_linear_independent {c : Cardinal} {f : V →ₗ[K] V'
     refine' ⟨g '' s, Cardinal.mk_image_eq_lift _ _ fg.injective, _⟩
     replace fg : ∀ x, f (g x) = x
     · intro x
-      convert congr_arg Subtype.val (fg x)
+      convert congr_argₓ Subtype.val (fg x)
       
     replace si : LinearIndependent K fun x : s => f (g x)
     · simpa only [fg] using si.map' _ (ker_subtype _)

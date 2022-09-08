@@ -106,7 +106,7 @@ theorem coe_injective : @Function.Injective (VectorMeasure α M) (Set α → M) 
   congr
 
 theorem ext_iff' (v w : VectorMeasure α M) : v = w ↔ ∀ i : Set α, v i = w i := by
-  rw [← coe_injective.eq_iff, Function.funext_iffₓ]
+  rw [← coe_injective.eq_iff, Function.funext_iff]
 
 theorem ext_iff (v w : VectorMeasure α M) : v = w ↔ ∀ i : Set α, MeasurableSet i → v i = w i := by
   constructor

@@ -1102,7 +1102,7 @@ theorem pi_apply (f : ∀ i, M →L[R] φ i) (c : M) (i : ι) : pi f c i = f i c
   rfl
 
 theorem pi_eq_zero (f : ∀ i, M →L[R] φ i) : pi f = 0 ↔ ∀ i, f i = 0 := by
-  simp only [ext_iff, pi_apply, Function.funext_iffₓ]
+  simp only [ext_iff, pi_apply, Function.funext_iff]
   exact forall_swap
 
 theorem pi_zero : pi (fun i => 0 : ∀ i, M →L[R] φ i) = 0 :=
@@ -1613,7 +1613,7 @@ theorem to_linear_equiv_injective : Function.Injective (toLinearEquiv : (M₁ �
 
 @[ext]
 theorem ext {f g : M₁ ≃SL[σ₁₂] M₂} (h : (f : M₁ → M₂) = g) : f = g :=
-  to_linear_equiv_injective <| LinearEquiv.ext <| congr_fun h
+  to_linear_equiv_injective <| LinearEquiv.ext <| congr_funₓ h
 
 theorem coe_injective : Function.Injective (coe : (M₁ ≃SL[σ₁₂] M₂) → M₁ →SL[σ₁₂] M₂) := fun e e' h =>
   ext <| funext <| ContinuousLinearMap.ext_iff.1 h

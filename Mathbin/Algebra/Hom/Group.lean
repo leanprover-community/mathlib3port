@@ -333,7 +333,7 @@ theorem map_zpow' [DivInvMonoidₓ G] [DivInvMonoidₓ H] [MonoidHomClass F G H]
     (a : G) : ∀ n : ℤ, f (a ^ n) = f a ^ n
   | (n : ℕ) => by
     rw [zpow_coe_nat, map_pow, zpow_coe_nat]
-  | -[1+ n] => by
+  | -[1 + n] => by
     rw [zpow_neg_succ_of_nat, hf, map_pow, ← zpow_neg_succ_of_nat]
 
 -- to_additive puts the arguments in the wrong order, so generate an auxiliary lemma, then
@@ -1358,7 +1358,7 @@ variable [Mul M] [Mul N] {a x y : M}
 
 @[simp, to_additive]
 protected theorem SemiconjBy.map [MulHomClass F M N] (h : SemiconjBy a x y) (f : F) : SemiconjBy (f a) (f x) (f y) := by
-  simpa only [SemiconjBy, map_mul] using congr_arg f h
+  simpa only [SemiconjBy, map_mul] using congr_argₓ f h
 
 @[simp, to_additive]
 protected theorem Commute.map [MulHomClass F M N] (h : Commute x y) (f : F) : Commute (f x) (f y) :=

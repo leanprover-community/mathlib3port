@@ -245,7 +245,7 @@ theorem bernoulli_generating_function (t : A) :
     Polynomial.C_eq_algebra_map, Polynomial.aeval_mul, Polynomial.aeval_C]
   -- finally cancel the Bernoulli polynomial and the algebra_map
   congr
-  apply congr_arg
+  apply congr_argₓ
   rw [mul_assoc, div_eq_mul_inv, ← mul_inv]
 
 end Polynomial

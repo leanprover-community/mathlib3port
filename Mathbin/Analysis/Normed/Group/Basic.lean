@@ -915,8 +915,8 @@ using the sup norm. -/
 noncomputable instance Pi.seminormedAddCommGroup : SeminormedAddCommGroup (∀ i, π i) where
   norm := fun f => ↑(Finset.univ.sup fun b => ∥f b∥₊)
   dist_eq := fun x y =>
-    congr_arg (coe : ℝ≥0 → ℝ) <|
-      congr_arg (Finset.sup Finset.univ) <|
+    congr_argₓ (coe : ℝ≥0 → ℝ) <|
+      congr_argₓ (Finset.sup Finset.univ) <|
         funext fun a => show nndist (x a) (y a) = ∥x a - y a∥₊ from nndist_eq_nnnorm _ _
 
 theorem Pi.norm_def : ∥f∥ = ↑(Finset.univ.sup fun b => ∥f b∥₊) :=

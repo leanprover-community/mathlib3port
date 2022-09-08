@@ -952,7 +952,7 @@ theorem MeasurableSet.exists_measurable_proj {m : MeasurableSpace α} {s : Set �
     (hne : s.Nonempty) : ∃ f : α → s, Measurable f ∧ ∀ x : s, f x = x :=
   let ⟨f, hfm, hf⟩ :=
     (MeasurableEmbedding.subtype_coe hs).exists_measurable_extend measurable_id fun _ => hne.to_subtype
-  ⟨f, hfm, congr_fun hf⟩
+  ⟨f, hfm, congr_funₓ hf⟩
 
 /-- Equivalences between measurable spaces. Main application is the simplification of measurability
 statements along measurable equivalences. -/

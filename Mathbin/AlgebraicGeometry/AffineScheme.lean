@@ -299,7 +299,7 @@ theorem IsAffineOpen.basic_open_is_affine {X : Scheme} {U : Opens X.Carrier} (hU
     exact Scheme.basic_open_subset _ _
   rw [Scheme.hom.opens_range_coe, Scheme.comp_val_base, ← this, coe_comp, Set.range_comp]
   congr 1
-  refine' (congr_arg coe <| Scheme.preimage_basic_open hU.from_Spec f).trans _
+  refine' (congr_argₓ coe <| Scheme.preimage_basic_open hU.from_Spec f).trans _
   refine' Eq.trans _ (PrimeSpectrum.localization_away_comap_range (Localization.Away f) f).symm
   congr 1
   have : (opens.map hU.from_Spec.val.base).obj U = ⊤ := by
@@ -360,11 +360,11 @@ theorem is_basis_basic_open (X : Scheme) [IsAffine X] :
   constructor
   · rintro ⟨_, ⟨x, rfl⟩, rfl⟩
     refine' ⟨_, ⟨_, ⟨x, rfl⟩, rfl⟩, _⟩
-    exact congr_arg Subtype.val (X.map_prime_spectrum_basic_open_of_affine x)
+    exact congr_argₓ Subtype.val (X.map_prime_spectrum_basic_open_of_affine x)
     
   · rintro ⟨_, ⟨_, ⟨x, rfl⟩, rfl⟩, rfl⟩
     refine' ⟨_, ⟨x, rfl⟩, _⟩
-    exact congr_arg Subtype.val (X.map_prime_spectrum_basic_open_of_affine x).symm
+    exact congr_argₓ Subtype.val (X.map_prime_spectrum_basic_open_of_affine x).symm
     
 
 theorem IsAffineOpen.exists_basic_open_subset {X : Scheme} {U : Opens X.Carrier} (hU : IsAffineOpen U)
@@ -626,9 +626,9 @@ theorem IsAffineOpen.basic_open_union_eq_self_iff {X : Scheme} {U : Opens X.Carr
   · simp only [opens.supr_def, Subtype.coe_mk, Set.preimage_Union, Subtype.val_eq_coe]
     congr 3
     · ext1 x
-      exact congr_arg Subtype.val (hU.from_Spec_map_basic_open _)
+      exact congr_argₓ Subtype.val (hU.from_Spec_map_basic_open _)
       
-    · exact congr_arg Subtype.val hU.from_Spec_base_preimage
+    · exact congr_argₓ Subtype.val hU.from_Spec_base_preimage
       
     
   · simp only [Subtype.val_eq_coe, PrimeSpectrum.basic_open_eq_zero_locus_compl]

@@ -316,7 +316,7 @@ protected def prod (f : α →o β) (g : α →o γ) : α →o β × γ :=
 
 @[mono]
 theorem prod_mono {f₁ f₂ : α →o β} (hf : f₁ ≤ f₂) {g₁ g₂ : α →o γ} (hg : g₁ ≤ g₂) : f₁.Prod g₁ ≤ f₂.Prod g₂ := fun x =>
-  Prod.le_def.2 ⟨hf _, hg _⟩
+  Prod.le_defₓ.2 ⟨hf _, hg _⟩
 
 theorem comp_prod_comp_same (f₁ f₂ : β →o γ) (g : α →o β) : (f₁.comp g).Prod (f₂.comp g) = (f₁.Prod f₂).comp g :=
   rfl
@@ -1007,7 +1007,8 @@ theorem OrderEmbedding.le_map_sup [SemilatticeSup α] [SemilatticeSup β] (f : �
 
 theorem OrderIso.map_inf [SemilatticeInf α] [SemilatticeInf β] (f : α ≃o β) (x y : α) : f (x⊓y) = f x⊓f y := by
   refine' (f.to_order_embedding.map_inf_le x y).antisymm _
-  simpa [← f.symm.le_iff_le] using f.symm.to_order_embedding.map_inf_le (f x) (f y)
+  apply f.symm.le_iff_le.1
+  simpa using f.symm.to_order_embedding.map_inf_le (f x) (f y)
 
 theorem OrderIso.map_sup [SemilatticeSup α] [SemilatticeSup β] (f : α ≃o β) (x y : α) : f (x⊔y) = f x⊔f y :=
   f.dual.map_inf x y

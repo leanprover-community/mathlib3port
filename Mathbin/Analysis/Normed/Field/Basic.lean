@@ -250,7 +250,7 @@ theorem List.norm_prod_le' : ∀ {l : List α}, l ≠ [] → ∥l.Prod∥ ≤ (l
   | [a], _ => by
     simp
   | a::b::l, _ => by
-    rw [List.map_cons, List.prod_cons, @List.prod_cons _ _ _ ∥a∥]
+    rw [List.map_consₓ, List.prod_cons, @List.prod_cons _ _ _ ∥a∥]
     refine' le_transₓ (norm_mul_le _ _) (mul_le_mul_of_nonneg_left _ (norm_nonneg _))
     exact List.norm_prod_le' (List.cons_ne_nil b l)
 
@@ -746,7 +746,7 @@ theorem Nnreal.coe_nat_abs (n : ℤ) : (n.natAbs : ℝ≥0 ) = ∥n∥₊ :=
       
 
 theorem Int.abs_le_floor_nnreal_iff (z : ℤ) (c : ℝ≥0 ) : abs z ≤ ⌊c⌋₊ ↔ ∥z∥₊ ≤ c := by
-  rw [Int.abs_eq_nat_abs, Int.coe_nat_le, Nat.le_floor_iff (zero_le c)]
+  rw [Int.abs_eq_nat_abs, Int.coe_nat_leₓ, Nat.le_floor_iff (zero_le c)]
   congr
   exact Nnreal.coe_nat_abs z
 

@@ -716,12 +716,12 @@ def LinearOrderₓ.lift {α β} [LinearOrderₓ β] [HasSup α] [HasInf α] (f :
     min_def := by
       ext x y
       apply inj
-      rw [hinf, min_def, minDefault, apply_ite f]
+      rw [hinf, min_def, minDefault, apply_iteₓ f]
       rfl,
     max_def := by
       ext x y
       apply inj
-      rw [hsup, max_def, maxDefault, apply_ite f]
+      rw [hsup, max_def, maxDefault, apply_iteₓ f]
       rfl }
 
 /-- Transfer a `linear_order` on `β` to a `linear_order` on `α` using an injective
@@ -731,7 +731,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 def LinearOrderₓ.lift' {α β} [LinearOrderₓ β] (f : α → β) (inj : Injective f) : LinearOrderₓ α :=
   @LinearOrderₓ.lift α β _ ⟨fun x y => if f y ≤ f x then x else y⟩ ⟨fun x y => if f x ≤ f y then x else y⟩ f inj
-    (fun x y => (apply_ite f _ _ _).trans (max_def _ _).symm) fun x y => (apply_ite f _ _ _).trans (min_def _ _).symm
+    (fun x y => (apply_iteₓ f _ _ _).trans (max_def _ _).symm) fun x y => (apply_iteₓ f _ _ _).trans (min_def _ _).symm
 
 /-! ### Subtype of an order -/
 
@@ -794,11 +794,11 @@ namespace Prod
 instance (α : Type u) (β : Type v) [LE α] [LE β] : LE (α × β) :=
   ⟨fun p q => p.1 ≤ q.1 ∧ p.2 ≤ q.2⟩
 
-theorem le_def [LE α] [LE β] {x y : α × β} : x ≤ y ↔ x.1 ≤ y.1 ∧ x.2 ≤ y.2 :=
+theorem le_defₓ [LE α] [LE β] {x y : α × β} : x ≤ y ↔ x.1 ≤ y.1 ∧ x.2 ≤ y.2 :=
   Iff.rfl
 
 @[simp]
-theorem mk_le_mk [LE α] [LE β] {x₁ x₂ : α} {y₁ y₂ : β} : (x₁, y₁) ≤ (x₂, y₂) ↔ x₁ ≤ x₂ ∧ y₁ ≤ y₂ :=
+theorem mk_le_mkₓ [LE α] [LE β] {x₁ x₂ : α} {y₁ y₂ : β} : (x₁, y₁) ≤ (x₂, y₂) ↔ x₁ ≤ x₂ ∧ y₁ ≤ y₂ :=
   Iff.rfl
 
 @[simp]

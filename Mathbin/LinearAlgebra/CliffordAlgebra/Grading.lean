@@ -147,7 +147,7 @@ theorem supr_ι_range_eq_top : (⨆ i : ℕ, (ι Q).range ^ i) = ⊤ := by
 theorem even_odd_is_compl : IsCompl (evenOdd Q 0) (evenOdd Q 1) :=
   (DirectSum.Decomposition.is_internal (evenOdd Q)).IsCompl zero_ne_one <| by
     have : (Finset.univ : Finset (Zmod 2)) = {0, 1} := rfl
-    simpa using congr_arg (coe : Finset (Zmod 2) → Set (Zmod 2)) this
+    simpa using congr_argₓ (coe : Finset (Zmod 2) → Set (Zmod 2)) this
 
 /-- To show a property is true on the even or odd part, it suffices to show it is true on the
 scalars or vectors (respectively), closed under addition, and under left-multiplication by a pair

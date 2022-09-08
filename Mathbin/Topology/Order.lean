@@ -42,7 +42,7 @@ finer, coarser, induced topology, coinduced topology
 -/
 
 
-open Set Filter Classical
+open Function Set Filter
 
 open Classical TopologicalSpace Filter
 
@@ -191,14 +191,13 @@ theorem generate_from_set_of_is_open (t : TopologicalSpace α) : TopologicalSpac
   (giGenerateFrom α).l_u_eq t
 
 theorem left_inverse_generate_from :
-    Function.LeftInverse TopologicalSpace.generateFrom fun t : TopologicalSpace α => { s | t.IsOpen s } :=
+    LeftInverse TopologicalSpace.generateFrom fun t : TopologicalSpace α => { s | t.IsOpen s } :=
   (giGenerateFrom α).left_inverse_l_u
 
-theorem generate_from_surjective :
-    Function.Surjective (TopologicalSpace.generateFrom : Set (Set α) → TopologicalSpace α) :=
+theorem generate_from_surjective : Surjective (TopologicalSpace.generateFrom : Set (Set α) → TopologicalSpace α) :=
   (giGenerateFrom α).l_surjective
 
-theorem set_of_is_open_injective : Function.Injective fun t : TopologicalSpace α => { s | t.IsOpen s } :=
+theorem set_of_is_open_injective : Injective fun t : TopologicalSpace α => { s | t.IsOpen s } :=
   (giGenerateFrom α).u_injective
 
 /-- The "temporary" order `tmp_order` on `topological_space α`, i.e. the inclusion order, is a
@@ -740,7 +739,7 @@ theorem induced_iff_nhds_eq [tα : TopologicalSpace α] [tβ : TopologicalSpace 
     eq_of_nhds_eq_nhds fun x => by
       rw [h, nhds_induced]⟩
 
-theorem map_nhds_induced_of_surjective [T : TopologicalSpace α] {f : β → α} (hf : Function.Surjective f) (a : β) :
+theorem map_nhds_induced_of_surjective [T : TopologicalSpace α] {f : β → α} (hf : Surjective f) (a : β) :
     map f (@nhds β (TopologicalSpace.induced f T) a) = 𝓝 (f a) := by
   rw [nhds_induced, map_comap_of_surjective hf]
 

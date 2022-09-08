@@ -37,7 +37,7 @@ theorem UniformInducing.mk' {f : α → β} (h : ∀ s, s ∈ 𝓤 α ↔ ∃ t 
 
 theorem uniform_inducing_id : UniformInducing (@id α) :=
   ⟨by
-    rw [← Prod.map_def, Prod.map_id, comap_id]⟩
+    rw [← Prod.map_defₓ, Prod.map_id, comap_id]⟩
 
 theorem UniformInducing.comp {g : β → γ} (hg : UniformInducing g) {f : α → β} (hf : UniformInducing f) :
     UniformInducing (g ∘ f) :=
@@ -57,7 +57,7 @@ theorem UniformInducing.basis_uniformity {f : α → β} (hf : UniformInducing f
 theorem uniform_inducing_of_compose {f : α → β} {g : β → γ} (hf : UniformContinuous f) (hg : UniformContinuous g)
     (hgf : UniformInducing (g ∘ f)) : UniformInducing f := by
   refine' ⟨le_antisymmₓ _ hf.le_comap⟩
-  rw [← hgf.1, ← Prod.map_def, ← Prod.map_def, ← Prod.map_comp_mapₓ f f g g, ← @comap_comap _ _ _ _ (Prod.map f f)]
+  rw [← hgf.1, ← Prod.map_defₓ, ← Prod.map_defₓ, ← Prod.map_comp_mapₓ f f g g, ← @comap_comap _ _ _ _ (Prod.map f f)]
   exact comap_mono hg.le_comap
 
 /-- A map `f : α → β` between uniform spaces is a *uniform embedding* if it is uniform inducing and

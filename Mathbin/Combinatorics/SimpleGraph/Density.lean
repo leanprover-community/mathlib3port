@@ -254,7 +254,7 @@ theorem mk_mem_interedges_comm : (a, b) ∈ interedges r s t ↔ (b, a) ∈ inte
 
 theorem card_interedges_comm (s t : Finset α) : (interedges r s t).card = (interedges r t s).card :=
   Finset.card_congr (fun (x : α × α) _ => x.swap) (fun x => (swap_mem_interedges_iff hr).2)
-    (fun _ _ _ _ h => Prod.swap_injective h) fun x h => ⟨x.swap, (swap_mem_interedges_iff hr).2 h, x.swap_swap⟩
+    (fun _ _ _ _ h => Prod.swap_injectiveₓ h) fun x h => ⟨x.swap, (swap_mem_interedges_iff hr).2 h, x.swap_swap⟩
 
 theorem edge_density_comm (s t : Finset α) : edgeDensity r s t = edgeDensity r t s := by
   rw [edge_density, mul_comm, card_interedges_comm hr, edge_density]

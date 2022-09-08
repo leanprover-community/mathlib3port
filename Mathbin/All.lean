@@ -245,6 +245,8 @@ import Mathbin.Algebra.Module.Ulift
 import Mathbin.Algebra.MonoidAlgebra.Basic
 import Mathbin.Algebra.MonoidAlgebra.Degree
 import Mathbin.Algebra.MonoidAlgebra.Grading
+import Mathbin.Algebra.MonoidAlgebra.NoZeroDivisors
+import Mathbin.Algebra.MonoidAlgebra.Support
 import Mathbin.Algebra.MonoidAlgebra.ToDirectSum
 import Mathbin.Algebra.NeZero
 import Mathbin.Algebra.Opposites
@@ -356,6 +358,7 @@ import Mathbin.AlgebraicTopology.CechNerve
 import Mathbin.AlgebraicTopology.DoldKan.Faces
 import Mathbin.AlgebraicTopology.DoldKan.FunctorN
 import Mathbin.AlgebraicTopology.DoldKan.Homotopies
+import Mathbin.AlgebraicTopology.DoldKan.HomotopyEquivalence
 import Mathbin.AlgebraicTopology.DoldKan.Normalized
 import Mathbin.AlgebraicTopology.DoldKan.Notations
 import Mathbin.AlgebraicTopology.DoldKan.PInfty
@@ -377,6 +380,7 @@ import Mathbin.Analysis.ODE.PicardLindelof
 import Mathbin.Analysis.Analytic.Basic
 import Mathbin.Analysis.Analytic.Composition
 import Mathbin.Analysis.Analytic.Inverse
+import Mathbin.Analysis.Analytic.IsolatedZeros
 import Mathbin.Analysis.Analytic.Linear
 import Mathbin.Analysis.Analytic.RadiusLiminf
 import Mathbin.Analysis.Asymptotics.AsymptoticEquivalent
@@ -437,12 +441,13 @@ import Mathbin.Analysis.Complex.RemovableSingularity
 import Mathbin.Analysis.Complex.RootsOfUnity
 import Mathbin.Analysis.Complex.Schwarz
 import Mathbin.Analysis.Complex.UpperHalfPlane.Basic
+import Mathbin.Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
 import Mathbin.Analysis.Complex.UpperHalfPlane.Topology
 import Mathbin.Analysis.Convex.Basic
 import Mathbin.Analysis.Convex.Caratheodory
 import Mathbin.Analysis.Convex.Combination
 import Mathbin.Analysis.Convex.Complex
-import Mathbin.Analysis.Convex.Cone
+import Mathbin.Analysis.Convex.Cone.Basic
 import Mathbin.Analysis.Convex.Contractible
 import Mathbin.Analysis.Convex.Exposed
 import Mathbin.Analysis.Convex.Extrema
@@ -582,6 +587,7 @@ import Mathbin.Analysis.SpecialFunctions.Polynomials
 import Mathbin.Analysis.SpecialFunctions.Pow
 import Mathbin.Analysis.SpecialFunctions.PowDeriv
 import Mathbin.Analysis.SpecialFunctions.Sqrt
+import Mathbin.Analysis.SpecialFunctions.Stirling
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Angle
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Arctan
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
@@ -1114,6 +1120,7 @@ import Mathbin.Data.Finsupp.Defs
 import Mathbin.Data.Finsupp.Fin
 import Mathbin.Data.Finsupp.Indicator
 import Mathbin.Data.Finsupp.Interval
+import Mathbin.Data.Finsupp.Lex
 import Mathbin.Data.Finsupp.Multiset
 import Mathbin.Data.Finsupp.NeLocus
 import Mathbin.Data.Finsupp.Order
@@ -1465,6 +1472,7 @@ import Mathbin.Data.Vector.Zip
 import Mathbin.Data.Vector3
 import Mathbin.Data.Zmod.Algebra
 import Mathbin.Data.Zmod.Basic
+import Mathbin.Data.Zmod.Coprime
 import Mathbin.Data.Zmod.Defs
 import Mathbin.Data.Zmod.Parity
 import Mathbin.Data.Zmod.Quotient
@@ -1831,7 +1839,7 @@ import Mathbin.MeasureTheory.Group.Prod
 import Mathbin.MeasureTheory.Integral.Average
 import Mathbin.MeasureTheory.Integral.Bochner
 import Mathbin.MeasureTheory.Integral.CircleIntegral
-import Mathbin.MeasureTheory.Integral.CircleIntegralTransform
+import Mathbin.MeasureTheory.Integral.CircleTransform
 import Mathbin.MeasureTheory.Integral.DivergenceTheorem
 import Mathbin.MeasureTheory.Integral.ExpDecay
 import Mathbin.MeasureTheory.Integral.IntegrableOn
@@ -2021,11 +2029,13 @@ import Mathbin.Order.Filter.Pointwise
 import Mathbin.Order.Filter.Prod
 import Mathbin.Order.Filter.SmallSets
 import Mathbin.Order.Filter.Ultrafilter
+import Mathbin.Order.Filter.ZeroAndBoundedAtFilter
 import Mathbin.Order.FixedPoints
 import Mathbin.Order.GaloisConnection
 import Mathbin.Order.GameAdd
 import Mathbin.Order.Grade
 import Mathbin.Order.Heyting.Basic
+import Mathbin.Order.Heyting.Boundary
 import Mathbin.Order.Heyting.Regular
 import Mathbin.Order.Hom.Basic
 import Mathbin.Order.Hom.Bounded
@@ -2035,6 +2045,7 @@ import Mathbin.Order.Hom.Order
 import Mathbin.Order.Ideal
 import Mathbin.Order.Imp
 import Mathbin.Order.InitialSeg
+import Mathbin.Order.Interval
 import Mathbin.Order.Iterate
 import Mathbin.Order.JordanHolder
 import Mathbin.Order.Lattice

@@ -124,11 +124,11 @@ instance ThinSkeleton.preorder : Preorderₓ (ThinSkeleton C) where
     Quotientₓ.lift₂ (fun X Y => Nonempty (X ⟶ Y))
       (by
         rintro _ _ _ _ ⟨i₁⟩ ⟨i₂⟩
-        exact propext ⟨Nonempty.map fun f => i₁.inv ≫ f ≫ i₂.hom, Nonempty.map fun f => i₁.hom ≫ f ≫ i₂.inv⟩)
+        exact propext ⟨Nonempty.mapₓ fun f => i₁.inv ≫ f ≫ i₂.hom, Nonempty.mapₓ fun f => i₁.hom ≫ f ≫ i₂.inv⟩)
   le_refl := by
     refine' Quotientₓ.ind fun a => _
     exact ⟨𝟙 _⟩
-  le_trans := fun a b c => (Quotientₓ.induction_on₃ a b c) fun A B C => Nonempty.map2 (· ≫ ·)
+  le_trans := fun a b c => (Quotientₓ.induction_on₃ a b c) fun A B C => Nonempty.map2ₓ (· ≫ ·)
 
 /-- The functor from a category to its thin skeleton. -/
 @[simps]

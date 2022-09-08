@@ -265,7 +265,7 @@ theorem lift_prop_within_at_indep_chart_target_aux2 (g : H → M') {x : H} {s : 
     hG.congr_iff_nhds_within _
       (by
         simp' only [xf] with mfld_simps)
-  exact (hgs.eventually <| f.eventually_left_inverse xf).mono fun y => congr_arg f'
+  exact (hgs.eventually <| f.eventually_left_inverse xf).mono fun y => congr_argₓ f'
 
 theorem lift_prop_within_at_indep_chart_target_aux {g : X → M'} {e : LocalHomeomorph X H} {x : X} {s : Set X}
     (xe : x ∈ e.Source) (hf : f ∈ G'.MaximalAtlas M') (xf : g x ∈ f.Source) (hf' : f' ∈ G'.MaximalAtlas M')

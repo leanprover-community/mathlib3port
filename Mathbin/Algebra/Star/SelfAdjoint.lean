@@ -71,7 +71,7 @@ theorem mul_star_self [Semigroupₓ R] [StarSemigroup R] (x : R) : IsSelfAdjoint
 /-- Functions in a `star_hom_class` preserve self-adjoint elements. -/
 theorem star_hom_apply {F R S : Type _} [HasStar R] [HasStar S] [StarHomClass F R S] {x : R} (hx : IsSelfAdjoint x)
     (f : F) : IsSelfAdjoint (f x) :=
-  show star (f x) = f x from map_star f x ▸ congr_arg f hx
+  show star (f x) = f x from map_star f x ▸ congr_argₓ f hx
 
 section AddGroupₓ
 

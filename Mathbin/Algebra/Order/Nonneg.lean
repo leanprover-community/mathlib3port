@@ -74,7 +74,7 @@ protected noncomputable def conditionallyCompleteLinearOrderBot [ConditionallyCo
     (h : sup ∅ ≤ a) : ConditionallyCompleteLinearOrderBot { x : α // a ≤ x } :=
   { Nonneg.orderBot, Nonneg.conditionallyCompleteLinearOrder with
     cSup_empty :=
-      (Function.funext_iffₓ.1 (@subset_Sup_def α (Set.Ici a) _ ⟨⟨a, le_rflₓ⟩⟩) ∅).trans <|
+      (Function.funext_iff.1 (@subset_Sup_def α (Set.Ici a) _ ⟨⟨a, le_rflₓ⟩⟩) ∅).trans <|
         Subtype.eq <| by
           rw [bot_eq]
           cases' h.lt_or_eq with h2 h2
@@ -208,8 +208,14 @@ instance monoidWithZero [OrderedSemiring α] : MonoidWithZeroₓ { x : α // 0 �
 instance commMonoidWithZero [OrderedCommSemiring α] : CommMonoidWithZero { x : α // 0 ≤ x } := by
   infer_instance
 
+instance semiring [OrderedSemiring α] : Semiringₓ { x : α // 0 ≤ x } :=
+  inferInstance
+
+instance commSemiring [OrderedCommSemiring α] : CommSemiringₓ { x : α // 0 ≤ x } :=
+  inferInstance
+
 instance nontrivial [LinearOrderedSemiring α] : Nontrivial { x : α // 0 ≤ x } :=
-  ⟨⟨0, 1, fun h => zero_ne_one (congr_arg Subtype.val h)⟩⟩
+  ⟨⟨0, 1, fun h => zero_ne_one (congr_argₓ Subtype.val h)⟩⟩
 
 instance linearOrderedSemiring [LinearOrderedSemiring α] : LinearOrderedSemiring { x : α // 0 ≤ x } :=
   Subtype.coe_injective.LinearOrderedSemiring _ rfl rfl (fun x y => rfl) (fun x y => rfl) (fun _ _ => rfl)

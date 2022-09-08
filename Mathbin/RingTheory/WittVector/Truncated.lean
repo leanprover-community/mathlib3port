@@ -320,7 +320,7 @@ variable (n)
 theorem mem_ker_truncate (x : 𝕎 R) : x ∈ (@truncate p _ n R _).ker ↔ ∀ i < n, x.coeff i = 0 := by
   simp only [RingHom.mem_ker, truncate, truncate_fun, RingHom.coe_mk, TruncatedWittVector.ext_iff,
     TruncatedWittVector.coeff_mk, coeff_zero]
-  exact Subtype.forall
+  exact Finₓ.forall_iff
 
 variable (p)
 

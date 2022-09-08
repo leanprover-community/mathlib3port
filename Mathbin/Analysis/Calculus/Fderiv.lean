@@ -1310,7 +1310,7 @@ theorem fderivWithin.snd (hs : UniqueDiffWithinAt 𝕜 s x) (h : DifferentiableW
 
 end Snd
 
-section prod_map
+section prod_mapₓ
 
 variable {f₂ : G → G'} {f₂' : G →L[𝕜] G'} {y : G} (p : E × G)
 
@@ -1327,7 +1327,7 @@ protected theorem DifferentiableAt.prod_map (hf : DifferentiableAt 𝕜 f p.1) (
     DifferentiableAt 𝕜 (fun p : E × G => (f p.1, f₂ p.2)) p :=
   (hf.comp p differentiable_at_fst).Prod (hf₂.comp p differentiable_at_snd)
 
-end prod_map
+end prod_mapₓ
 
 end CartesianProduct
 

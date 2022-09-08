@@ -308,7 +308,7 @@ theorem ωSup_eq_some {c : Chain (Part α)} {a : α} (h : some a ∈ c) : Part.�
   have a' : some (Classical.choose this) ∈ c := Classical.choose_spec this
   calc
     Part.ωSup c = some (Classical.choose this) := dif_pos this
-    _ = some a := congr_arg _ (eq_of_chain a' h)
+    _ = some a := congr_argₓ _ (eq_of_chain a' h)
     
 
 theorem ωSup_eq_none {c : Chain (Part α)} (h : ¬∃ a, some a ∈ c) : Part.ωSup c = none :=
@@ -388,7 +388,7 @@ variable [∀ x, OmegaCompletePartialOrder <| β x]
 variable [OmegaCompletePartialOrder γ]
 
 theorem flip₁_continuous' (f : ∀ x : α, γ → β x) (a : α) (hf : Continuous' fun x y => f y x) : Continuous' (f a) :=
-  Continuous.of_bundled _ (fun x y h => hf.to_monotone h a) fun c => congr_fun (hf.to_bundled _ c) a
+  Continuous.of_bundled _ (fun x y h => hf.to_monotone h a) fun c => congr_funₓ (hf.to_bundled _ c) a
 
 theorem flip₂_continuous' (f : γ → ∀ x, β x) (hf : ∀ x, Continuous' fun g => f g x) : Continuous' f :=
   Continuous.of_bundled _ (fun x y h a => (hf a).to_monotone h)
@@ -562,10 +562,10 @@ end
 namespace ContinuousHom
 
 theorem congr_fun {f g : α →𝒄 β} (h : f = g) (x : α) : f x = g x :=
-  congr_arg (fun h : α →𝒄 β => h x) h
+  congr_argₓ (fun h : α →𝒄 β => h x) h
 
 theorem congr_arg (f : α →𝒄 β) {x y : α} (h : x = y) : f x = f y :=
-  congr_arg (fun x : α => f x) h
+  congr_argₓ (fun x : α => f x) h
 
 protected theorem monotone (f : α →𝒄 β) : Monotone f :=
   f.monotone'
@@ -657,7 +657,7 @@ protected theorem ext (f g : α →𝒄 β) (h : ∀ x, f x = g x) : f = g := by
   cases f <;> cases g <;> congr <;> ext <;> apply h
 
 protected theorem coe_inj (f g : α →𝒄 β) (h : (f : α → β) = g) : f = g :=
-  ContinuousHom.ext _ _ <| congr_fun h
+  ContinuousHom.ext _ _ <| congr_funₓ h
 
 @[simp]
 theorem comp_id (f : β →𝒄 γ) : f.comp id = f := by

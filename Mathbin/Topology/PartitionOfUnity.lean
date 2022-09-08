@@ -340,7 +340,7 @@ theorem support_to_pou_fun_subset (i : ι) : Support (f.toPouFun i) ⊆ Support 
 
 theorem to_pou_fun_eq_mul_prod (i : ι) (x : X) (t : Finset ι) (ht : ∀ j, WellOrderingRel j i → f j x ≠ 0 → j ∈ t) :
     f.toPouFun i x = f i x * ∏ j in t.filter fun j => WellOrderingRel j i, 1 - f j x := by
-  refine' congr_arg _ (finprod_cond_eq_prod_of_cond_iff _ fun j hj => _)
+  refine' congr_argₓ _ (finprod_cond_eq_prod_of_cond_iff _ fun j hj => _)
   rw [Ne.def, sub_eq_self] at hj
   rw [Finset.mem_filter, Iff.comm, and_iff_right_iff_imp]
   exact flip (ht j) hj
@@ -354,7 +354,7 @@ theorem sum_to_pou_fun_eq (x : X) : (∑ᶠ i, f.toPouFun i x) = 1 - ∏ᶠ i, 1
   have B : (mul_support fun i => 1 - f i x) ⊆ s := by
     rw [hs, mul_support_one_sub]
     exact fun i => id
-  letI : LinearOrderₓ ι := linearOrderOfSTO' WellOrderingRel
+  letI : LinearOrderₓ ι := linearOrderOfSTO WellOrderingRel
   rw [finsum_eq_sum_of_support_subset _ A, finprod_eq_prod_of_mul_support_subset _ B, Finset.prod_one_sub_ordered,
     sub_sub_cancel]
   refine' Finset.sum_congr rfl fun i hi => _

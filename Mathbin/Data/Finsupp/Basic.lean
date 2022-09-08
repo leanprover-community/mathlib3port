@@ -1120,7 +1120,7 @@ protected def curry (f : α × β →₀ M) : α →₀ β →₀ M :=
 theorem curry_apply (f : α × β →₀ M) (x : α) (y : β) : f.curry x y = f (x, y) := by
   have : ∀ b : α × β, single b.fst (single b.snd (f b)) x y = if b = (x, y) then f b else 0 := by
     rintro ⟨b₁, b₂⟩
-    simp [single_apply, ite_apply, Prod.ext_iff, ite_and]
+    simp [single_apply, ite_apply, Prod.ext_iffₓ, ite_and]
     split_ifs <;> simp [single_apply, *]
   rw [Finsupp.curry, sum_apply, sum_apply, Finsupp.sum, Finset.sum_eq_single, this, if_pos rfl]
   · intro b hb b_ne
@@ -1157,7 +1157,7 @@ currying and uncurrying. -/
 def finsuppProdEquiv : (α × β →₀ M) ≃ (α →₀ β →₀ M) := by
   refine' ⟨Finsupp.curry, Finsupp.uncurry, fun f => _, fun f => _⟩ <;>
     simp only [Finsupp.curry, Finsupp.uncurry, sum_sum_index, sum_zero_index, sum_add_index, sum_single_index,
-      single_zero, single_add, eq_self_iff_true, forall_true_iff, forall_3_true_iff, Prod.mk.eta,
+      single_zero, single_add, eq_self_iff_true, forall_true_iff, forall_3_true_iff, Prod.mk.etaₓ,
       (single_sum _ _ _).symm, sum_single]
 
 theorem filter_curry (f : α × β →₀ M) (p : α → Prop) : (f.filter fun a : α × β => p a.1).curry = f.curry.filter p := by
@@ -1359,7 +1359,7 @@ instance [Monoidₓ R] [Nonempty α] [AddMonoidₓ M] [DistribMulAction R M] [Ha
     HasFaithfulSmul R (α →₀ M) where eq_of_smul_eq_smul := fun r₁ r₂ h =>
     let ⟨a⟩ := ‹Nonempty α›
     eq_of_smul_eq_smul fun m : M => by
-      simpa using congr_fun (h (single a m)) a
+      simpa using congr_funₓ (h (single a m)) a
 
 variable (α M)
 

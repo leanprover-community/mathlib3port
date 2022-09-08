@@ -206,8 +206,9 @@ for every finite collection of morphisms
 class HasFiniteWidePullbacks : Prop where
   out (J : Type) [Fintype J] : HasLimitsOfShape (WidePullbackShape J) C
 
-instance has_limits_of_shape_wide_pullback_shape (J : Type) [Fintype J] [HasFiniteWidePullbacks C] :
+instance has_limits_of_shape_wide_pullback_shape (J : Type) [Finite J] [HasFiniteWidePullbacks C] :
     HasLimitsOfShape (WidePullbackShape J) C := by
+  cases nonempty_fintype J
   haveI := @has_finite_wide_pullbacks.out C _ _ J
   infer_instance
 
@@ -217,8 +218,9 @@ for every finite collection of morphisms
 class HasFiniteWidePushouts : Prop where
   out (J : Type) [Fintype J] : HasColimitsOfShape (WidePushoutShape J) C
 
-instance has_colimits_of_shape_wide_pushout_shape (J : Type) [Fintype J] [HasFiniteWidePushouts C] :
+instance has_colimits_of_shape_wide_pushout_shape (J : Type) [Finite J] [HasFiniteWidePushouts C] :
     HasColimitsOfShape (WidePushoutShape J) C := by
+  cases nonempty_fintype J
   haveI := @has_finite_wide_pushouts.out C _ _ J
   infer_instance
 

@@ -125,7 +125,7 @@ theorem is_special_iff : u.IsSpecial ↔ u.IsSpecial' := by
     ring
     
   · apply Nat.succ.injₓ
-    replace h := congr_arg (coe : ℕ+ → ℕ) h
+    replace h := congr_argₓ (coe : ℕ+ → ℕ) h
     rw [mul_coe, w, z] at h
     repeat'
       rw [succ_pnat_coe, Nat.succ_eq_add_one] at h
@@ -346,7 +346,7 @@ theorem reduce_v : ∀ u : XgcdType, u.reduce.V = u.V
         rw [reduce_a h, finish_v u h])
       fun h => by
       have : sizeof u.step < sizeof u := u.step_wf h
-      rw [reduce_b h, flip_v, reduce_v (step u), step_v u h, Prod.swap_swap]
+      rw [reduce_b h, flip_v, reduce_v (step u), step_v u h, Prod.swap_swapₓ]
 
 end XgcdType
 
@@ -414,8 +414,8 @@ theorem gcd_props :
   have huv : u.v = ⟨a, b⟩ := xgcd_type.start_v a b
   let hv : Prod.mk (w * d + x * ur.b : ℕ) (y * d + z * ur.b : ℕ) = ⟨a, b⟩ := u.reduce_v.trans (xgcd_type.start_v a b)
   rw [← hb, ← add_mulₓ, ← add_mulₓ, ← ha', ← hb'] at hv
-  have ha'' : (a : ℕ) = a' * d := (congr_arg Prod.fst hv).symm
-  have hb'' : (b : ℕ) = b' * d := (congr_arg Prod.snd hv).symm
+  have ha'' : (a : ℕ) = a' * d := (congr_argₓ Prod.fst hv).symm
+  have hb'' : (b : ℕ) = b' * d := (congr_argₓ Prod.snd hv).symm
   constructor
   exact Eq ha''
   constructor

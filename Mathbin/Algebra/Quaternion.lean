@@ -95,7 +95,7 @@ theorem coe_im_j : (x : ℍ[R,c₁,c₂]).imJ = 0 :=
 theorem coe_im_k : (x : ℍ[R,c₁,c₂]).imK = 0 :=
   rfl
 
-theorem coe_injective : Function.Injective (coe : R → ℍ[R,c₁,c₂]) := fun x y h => congr_arg re h
+theorem coe_injective : Function.Injective (coe : R → ℍ[R,c₁,c₂]) := fun x y h => congr_argₓ re h
 
 @[simp]
 theorem coe_inj {x y : R} : (x : ℍ[R,c₁,c₂]) = y ↔ x = y :=
@@ -193,7 +193,7 @@ instance : AddGroupWithOneₓ ℍ[R,c₁,c₂] :=
       simp ,
     nat_cast_succ := by
       simp ,
-    intCast := fun n => ((n : R) : ℍ[R,c₁,c₂]), int_cast_of_nat := fun _ => congr_arg coe (Int.cast_of_nat _),
+    intCast := fun n => ((n : R) : ℍ[R,c₁,c₂]), int_cast_of_nat := fun _ => congr_argₓ coe (Int.cast_of_nat _),
     int_cast_neg_succ_of_nat := fun n =>
       show ↑↑_ = -↑↑_ by
         rw [Int.cast_neg, Int.cast_coe_nat, coe_neg],
@@ -853,7 +853,7 @@ theorem norm_sq_nonneg : 0 ≤ normSq a := by
 theorem norm_sq_le_zero : normSq a ≤ 0 ↔ a = 0 := by
   simpa only [le_antisymm_iffₓ, norm_sq_nonneg, and_trueₓ] using @norm_sq_eq_zero _ _ a
 
-instance : Nontrivial ℍ[R] where exists_pair_ne := ⟨0, 1, mt (congr_arg re) zero_ne_one⟩
+instance : Nontrivial ℍ[R] where exists_pair_ne := ⟨0, 1, mt (congr_argₓ re) zero_ne_one⟩
 
 instance : IsDomain ℍ[R] :=
   { Quaternion.nontrivial with

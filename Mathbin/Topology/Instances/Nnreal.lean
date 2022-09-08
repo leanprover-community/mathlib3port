@@ -218,5 +218,12 @@ theorem tendsto_tsum_compl_at_top_zero {α : Type _} (f : α → ℝ≥0 ) :
   simp_rw [← tendsto_coe, coe_tsum, Nnreal.coe_zero]
   exact tendsto_tsum_compl_at_top_zero fun a : α => (f a : ℝ)
 
+/-- `x ↦ x ^ n` as an order isomorphism of `ℝ≥0`. -/
+def powOrderIso (n : ℕ) (hn : n ≠ 0) : ℝ≥0 ≃o ℝ≥0 :=
+  (StrictMono.orderIsoOfSurjective (fun x => x ^ n) fun x y h =>
+      strict_mono_on_pow hn.bot_lt (zero_le x) (zero_le y) h) <|
+    (continuous_id.pow _).Surjective (tendsto_pow_at_top hn) <| by
+      simpa [order_bot.at_bot_eq, pos_iff_ne_zero]
+
 end Nnreal
 

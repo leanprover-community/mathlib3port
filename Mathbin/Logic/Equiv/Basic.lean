@@ -208,7 +208,7 @@ protected def decidableEq (e : α ≃ β) [DecidableEq β] : DecidableEq α :=
   e.Injective.DecidableEq
 
 theorem nonempty_congr (e : α ≃ β) : Nonempty α ↔ Nonempty β :=
-  Nonempty.congr e e.symm
+  Nonempty.congrₓ e e.symm
 
 protected theorem nonempty (e : α ≃ β) [Nonempty β] : Nonempty α :=
   e.nonempty_congr.mpr ‹_›
@@ -671,7 +671,7 @@ i` is equivalent to `β i`. -/
 @[simps]
 def piSubsingleton {α} (β : α → Sort _) [Subsingleton α] (a : α) : (∀ a', β a') ≃ β a where
   toFun := eval a
-  invFun := fun x b => cast (congr_arg β <| Subsingleton.elim a b) x
+  invFun := fun x b => cast (congr_argₓ β <| Subsingleton.elim a b) x
   left_inv := fun f =>
     funext fun b => by
       rw [Subsingleton.elim b a]
@@ -1223,8 +1223,8 @@ def psigmaEquivSigmaPlift {α} (β : α → Sort _) : (Σ'i, β i) ≃ Σi : Pli
 @[simps apply]
 def psigmaCongrRight {α} {β₁ β₂ : α → Sort _} (F : ∀ a, β₁ a ≃ β₂ a) : (Σ'a, β₁ a) ≃ Σ'a, β₂ a :=
   ⟨fun a => ⟨a.1, F a.1 a.2⟩, fun a => ⟨a.1, (F a.1).symm a.2⟩, fun ⟨a, b⟩ =>
-    congr_arg (PSigma.mk a) <| symm_apply_apply (F a) b, fun ⟨a, b⟩ =>
-    congr_arg (PSigma.mk a) <| apply_symm_apply (F a) b⟩
+    congr_argₓ (PSigma.mk a) <| symm_apply_apply (F a) b, fun ⟨a, b⟩ =>
+    congr_argₓ (PSigma.mk a) <| apply_symm_apply (F a) b⟩
 
 @[simp]
 theorem psigma_congr_right_trans {α} {β₁ β₂ β₃ : α → Sort _} (F : ∀ a, β₁ a ≃ β₂ a) (G : ∀ a, β₂ a ≃ β₃ a) :
@@ -1252,8 +1252,8 @@ theorem psigma_congr_right_refl {α} {β : α → Sort _} :
 @[simps apply]
 def sigmaCongrRight {α} {β₁ β₂ : α → Type _} (F : ∀ a, β₁ a ≃ β₂ a) : (Σa, β₁ a) ≃ Σa, β₂ a :=
   ⟨fun a => ⟨a.1, F a.1 a.2⟩, fun a => ⟨a.1, (F a.1).symm a.2⟩, fun ⟨a, b⟩ =>
-    congr_arg (Sigma.mk a) <| symm_apply_apply (F a) b, fun ⟨a, b⟩ =>
-    congr_arg (Sigma.mk a) <| apply_symm_apply (F a) b⟩
+    congr_argₓ (Sigma.mk a) <| symm_apply_apply (F a) b, fun ⟨a, b⟩ =>
+    congr_argₓ (Sigma.mk a) <| apply_symm_apply (F a) b⟩
 
 @[simp]
 theorem sigma_congr_right_trans {α} {β₁ β₂ β₃ : α → Type _} (F : ∀ a, β₁ a ≃ β₂ a) (G : ∀ a, β₂ a ≃ β₃ a) :
@@ -1325,7 +1325,7 @@ end Perm
 @[simps apply]
 def sigmaCongrLeft {α₁ α₂} {β : α₂ → Sort _} (e : α₁ ≃ α₂) : (Σa : α₁, β (e a)) ≃ Σa : α₂, β a :=
   ⟨fun a => ⟨e a.1, a.2⟩, fun a => ⟨e.symm a.1, @Eq.ndrec β a.2 (e.right_inv a.1).symm⟩, fun ⟨a, b⟩ =>
-    match (motive := ∀ (a') (h : a' = a), @Sigma.mk _ (β ∘ e) _ (@Eq.ndrec β b (congr_arg e h.symm)) = ⟨a, b⟩)
+    match (motive := ∀ (a') (h : a' = a), @Sigma.mk _ (β ∘ e) _ (@Eq.ndrec β b (congr_argₓ e h.symm)) = ⟨a, b⟩)
       e.symm (e a), e.left_inv a with
     | _, rfl => rfl,
     fun ⟨a, b⟩ =>
@@ -1500,7 +1500,7 @@ section
 /-- The type of functions to a product `α × β` is equivalent to the type of pairs of functions
 `γ → α` and `γ → β`. -/
 def arrowProdEquivProdArrow (α β γ : Type _) : (γ → α × β) ≃ (γ → α) × (γ → β) :=
-  ⟨fun f => (fun c => (f c).1, fun c => (f c).2), fun p c => (p.1 c, p.2 c), fun f => funext fun c => Prod.mk.eta,
+  ⟨fun f => (fun c => (f c).1, fun c => (f c).2), fun p c => (p.1 c, p.2 c), fun f => funext fun c => Prod.mk.etaₓ,
     fun p => by
     cases p
     rfl⟩
@@ -1804,7 +1804,7 @@ def sigmaSubtypeFiberEquivSubtype {α : Type u} {β : Type v} (f : α → β) {p
       symm
       refine' (subtype_subtype_equiv_subtype_exists _ _).trans (subtype_equiv_right _)
       intro x
-      exact ⟨fun ⟨hp, h'⟩ => congr_arg Subtype.val h', fun h' => ⟨(h x).2 (h'.symm ▸ y.2), Subtype.eq h'⟩⟩
+      exact ⟨fun ⟨hp, h'⟩ => congr_argₓ Subtype.val h', fun h' => ⟨(h x).2 (h'.symm ▸ y.2), Subtype.eq h'⟩⟩
     _ ≃ Subtype p := sigmaFiberEquiv fun x : Subtype p => (⟨f x, (h x).1 x.property⟩ : Subtype q)
     
 
@@ -2207,7 +2207,7 @@ theorem Function.Injective.map_swap {α β : Type _} [DecidableEq α] [Decidable
     
   · rw [hf h₂, Equivₓ.swap_apply_right]
     
-  · rw [Equivₓ.swap_apply_of_ne_of_ne (mt (congr_arg f) h₁) (mt (congr_arg f) h₂)]
+  · rw [Equivₓ.swap_apply_of_ne_of_ne (mt (congr_argₓ f) h₁) (mt (congr_argₓ f) h₂)]
     
 
 namespace Equivₓ
@@ -2317,14 +2317,14 @@ def piCongrLeft' : (∀ a, P a) ≃ ∀ b, P (e.symm b) where
   left_inv := fun f =>
     funext fun x =>
       eq_of_heq
-        ((eq_rec_heq _ _).trans
+        ((eq_rec_heqₓ _ _).trans
           (by
             dsimp'
             rw [e.symm_apply_apply]))
   right_inv := fun f =>
     funext fun x =>
       eq_of_heq
-        ((eq_rec_heq _ _).trans
+        ((eq_rec_heqₓ _ _).trans
           (by
             rw [e.apply_symm_apply]))
 
@@ -2508,7 +2508,7 @@ theorem update_comp_equiv {α β α' : Sort _} [DecidableEq α'] [DecidableEq α
 
 theorem update_apply_equiv_apply {α β α' : Sort _} [DecidableEq α'] [DecidableEq α] (f : α → β) (g : α' ≃ α) (a : α)
     (v : β) (a' : α') : update f a v (g a') = update (f ∘ g) (g.symm a) v a' :=
-  congr_fun (update_comp_equiv f g a v) a'
+  congr_funₓ (update_comp_equiv f g a v) a'
 
 theorem Pi_congr_left'_update [DecidableEq α] [DecidableEq β] (P : α → Sort _) (e : α ≃ β) (f : ∀ a, P a) (b : β)
     (x : P (e.symm b)) : e.piCongrLeft' P (update f (e.symm b) x) = update (e.piCongrLeft' P f) b x := by

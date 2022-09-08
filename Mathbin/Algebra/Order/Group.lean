@@ -56,10 +56,10 @@ instance (priority := 100) OrderedCommGroup.toOrderedCancelCommMonoid (α : Type
   { s with mul_left_cancel := fun a b c => (mul_right_injₓ a).mp,
     le_of_mul_le_mul_left := fun a b c => (mul_le_mul_iff_left a).mp }
 
+-- See note [lower instance priority]
 @[to_additive]
-instance (priority := 100) OrderedCommGroup.has_exists_mul_of_le (α : Type u) [OrderedCommGroup α] :
-    HasExistsMulOfLe α :=
-  ⟨fun a b hab => ⟨b * a⁻¹, (mul_inv_cancel_comm_assoc a b).symm⟩⟩
+instance (priority := 100) Groupₓ.has_exists_mul_of_le (α : Type u) [Groupₓ α] [LE α] : HasExistsMulOfLe α :=
+  ⟨fun a b hab => ⟨a⁻¹ * b, (mul_inv_cancel_left _ _).symm⟩⟩
 
 @[to_additive]
 instance [OrderedCommGroup α] : OrderedCommGroup αᵒᵈ :=
@@ -874,16 +874,8 @@ section DenselyOrdered
 variable [DenselyOrdered α] {a b c : α}
 
 @[to_additive]
-theorem le_of_forall_one_lt_le_mul (h : ∀ ε : α, 1 < ε → a ≤ b * ε) : a ≤ b :=
-  le_of_forall_le_of_denseₓ fun c hc =>
-    calc
-      a ≤ b * (b⁻¹ * c) := h _ (lt_inv_mul_iff_lt.mpr hc)
-      _ = c := mul_inv_cancel_left b c
-      
-
-@[to_additive]
 theorem le_of_forall_lt_one_mul_le (h : ∀ ε < 1, a * ε ≤ b) : a ≤ b :=
-  @le_of_forall_one_lt_le_mul αᵒᵈ _ _ _ _ _ _ h
+  @le_of_forall_one_lt_le_mul αᵒᵈ _ _ _ _ _ _ _ _ h
 
 @[to_additive]
 theorem le_of_forall_one_lt_div_le (h : ∀ ε : α, 1 < ε → a / ε ≤ b) : a ≤ b :=
@@ -1083,7 +1075,7 @@ theorem abs_eq_abs {a b : α} : abs a = abs b ↔ a = b ∨ a = -b := by
 
 theorem abs_sub_comm (a b : α) : abs (a - b) = abs (b - a) :=
   calc
-    abs (a - b) = abs (-(b - a)) := congr_arg _ (neg_sub b a).symm
+    abs (a - b) = abs (-(b - a)) := congr_argₓ _ (neg_sub b a).symm
     _ = abs (b - a) := abs_neg (b - a)
     
 
@@ -1124,13 +1116,13 @@ theorem abs_pos_of_neg (h : a < 0) : 0 < abs a :=
 theorem neg_abs_le_self (a : α) : -abs a ≤ a := by
   cases' le_totalₓ 0 a with h h
   · calc
-      -abs a = -a := congr_arg Neg.neg (abs_of_nonneg h)
+      -abs a = -a := congr_argₓ Neg.neg (abs_of_nonneg h)
       _ ≤ 0 := neg_nonpos.mpr h
       _ ≤ a := h
       
     
   · calc
-      -abs a = - -a := congr_arg Neg.neg (abs_of_nonpos h)
+      -abs a = - -a := congr_argₓ Neg.neg (abs_of_nonpos h)
       _ ≤ a := (neg_negₓ a).le
       
     

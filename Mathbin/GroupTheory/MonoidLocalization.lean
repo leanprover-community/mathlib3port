@@ -257,7 +257,7 @@ then `f` is defined on the whole `localization S`. -/
 def rec {p : Localization S → Sort u} (f : ∀ (a : M) (b : S), p (mk a b))
     (H : ∀ {a c : M} {b d : S} (h : r S (a, b) (c, d)), (Eq.ndrec (f a b) (mk_eq_mk_iff.mpr h) : p (mk c d)) = f c d)
     (x) : p x :=
-  Quot.rec (fun y => Eq.ndrec (f y.1 y.2) (Prod.mk.eta : (y.1, y.2) = y))
+  Quot.rec (fun y => Eq.ndrec (f y.1 y.2) (Prod.mk.etaₓ : (y.1, y.2) = y))
     (fun y z h => by
       cases y
       cases z
@@ -291,7 +291,7 @@ def liftOn {p : Sort u} (x : Localization S) (f : M → S → p)
     (H : ∀ {a c : M} {b d : S} (h : r S (a, b) (c, d)), f a b = f c d) : p :=
   rec f
     (fun a c b d h => by
-      rw [eq_rec_constant, H h])
+      rw [eq_rec_constantₓ, H h])
     x
 
 @[to_additive]
@@ -676,7 +676,7 @@ theorem mk'_mul_cancel_left (x) (y : S) : f.mk' ((y : M) * x) y = f.toMap x := b
 @[to_additive]
 theorem is_unit_comp (j : N →* P) (y : S) : IsUnit (j.comp f.toMap y) :=
   ⟨Units.map j <| IsUnit.liftRight (f.toMap.restrict S) f.map_units y,
-    show j _ = j _ from congr_arg j <| IsUnit.coe_lift_right (f.toMap.restrict S) f.map_units _⟩
+    show j _ = j _ from congr_argₓ j <| IsUnit.coe_lift_right (f.toMap.restrict S) f.map_units _⟩
 
 variable {g : M →* P}
 
@@ -815,7 +815,7 @@ theorem epic_of_localization_map {j k : N →* P} (h : ∀ a, j.comp f.toMap a =
 theorem lift_unique {j : N →* P} (hj : ∀ x, j (f.toMap x) = g x) : f.lift hg = j := by
   ext
   rw [lift_spec, ← hj, ← hj, ← j.map_mul]
-  apply congr_arg
+  apply congr_argₓ
   rw [← sec_spec']
 
 @[simp, to_additive]
@@ -1203,12 +1203,12 @@ theorem of_mul_equiv_of_dom_eq {k : P ≃* M} (H : T.map k.toMonoidHom = S) :
 @[to_additive]
 theorem of_mul_equiv_of_dom_comp_symm {k : P ≃* M} (H : T.map k.toMonoidHom = S) (x) :
     (f.ofMulEquivOfDom H).toMap (k.symm x) = f.toMap x :=
-  congr_arg f.toMap <| k.apply_symm_apply x
+  congr_argₓ f.toMap <| k.apply_symm_apply x
 
 @[to_additive]
 theorem of_mul_equiv_of_dom_comp {k : M ≃* P} (H : T.map k.symm.toMonoidHom = S) (x) :
     (f.ofMulEquivOfDom H).toMap (k x) = f.toMap x :=
-  congr_arg f.toMap <| k.symm_apply_apply x
+  congr_argₓ f.toMap <| k.symm_apply_apply x
 
 /-- A special case of `f ∘ id = f`, `f` a localization map. -/
 @[simp, to_additive "A special case of `f ∘ id = f`, `f` a localization map."]

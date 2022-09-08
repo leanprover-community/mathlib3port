@@ -47,11 +47,11 @@ Note that if `M` does not fit in `w`, the reverse direction of this implication 
 theorem Module.free_def [Small.{w} M] : Module.Free R M ↔ ∃ I : Type w, Nonempty (Basis I R M) :=
   ⟨fun h =>
     ⟨Shrink (Set.Range h.exists_basis.some.2), ⟨(Basis.reindexRange h.exists_basis.some.2).reindex (equivShrink _)⟩⟩,
-    fun h => ⟨(nonempty_sigmaₓ.2 h).map fun ⟨i, b⟩ => ⟨Set.Range b, b.reindexRange⟩⟩⟩
+    fun h => ⟨(nonempty_sigma.2 h).map fun ⟨i, b⟩ => ⟨Set.Range b, b.reindexRange⟩⟩⟩
 
 theorem Module.free_iff_set : Module.Free R M ↔ ∃ S : Set M, Nonempty (Basis S R M) :=
   ⟨fun h => ⟨Set.Range h.exists_basis.some.2, ⟨Basis.reindexRange h.exists_basis.some.2⟩⟩, fun ⟨S, hS⟩ =>
-    ⟨nonempty_sigmaₓ.2 ⟨S, hS⟩⟩⟩
+    ⟨nonempty_sigma.2 ⟨S, hS⟩⟩⟩
 
 variable {R M}
 

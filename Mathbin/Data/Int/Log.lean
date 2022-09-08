@@ -150,7 +150,7 @@ theorem log_mono_right {b : ℕ} {r₁ r₂ : R} (h₀ : 0 < r₁) (h : r₁ ≤
   · rw [log_of_left_le_one hb, log_of_left_le_one hb]
     
   cases' le_totalₓ r₁ 1 with h₁ h₁ <;> cases' le_totalₓ r₂ 1 with h₂ h₂
-  · rw [log_of_right_le_one _ h₁, log_of_right_le_one _ h₂, neg_le_neg_iff, Int.coe_nat_le]
+  · rw [log_of_right_le_one _ h₁, log_of_right_le_one _ h₂, neg_le_neg_iff, Int.coe_nat_leₓ]
     exact Nat.clog_mono_right _ (Nat.ceil_mono <| inv_le_inv_of_le h₀ h)
     
   · rw [log_of_right_le_one _ h₁, log_of_one_le_right _ h₂]
@@ -159,7 +159,7 @@ theorem log_mono_right {b : ℕ} {r₁ r₂ : R} (h₀ : 0 < r₁) (h : r₁ ≤
   · obtain rfl := le_antisymmₓ h (h₂.trans h₁)
     rfl
     
-  · rw [log_of_one_le_right _ h₁, log_of_one_le_right _ h₂, Int.coe_nat_le]
+  · rw [log_of_one_le_right _ h₁, log_of_one_le_right _ h₂, Int.coe_nat_leₓ]
     exact Nat.log_mono_right (Nat.floor_mono h)
     
 

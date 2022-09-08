@@ -220,7 +220,7 @@ def equivSigmaTuple : List α ≃ Σn, Finₓ n → α where
 This can be used with `induction l using list.of_fn_rec`. -/
 @[elabAsElim]
 def ofFnRec {C : List α → Sort _} (h : ∀ (n) (f : Finₓ n → α), C (List.ofFnₓ f)) (l : List α) : C l :=
-  cast (congr_arg _ l.of_fn_nth_le) <| h l.length fun i => l.nthLe (↑i) i.2
+  cast (congr_argₓ _ l.of_fn_nth_le) <| h l.length fun i => l.nthLe (↑i) i.2
 
 @[simp]
 theorem of_fn_rec_of_fn {C : List α → Sort _} (h : ∀ (n) (f : Finₓ n → α), C (List.ofFnₓ f)) {n : ℕ} (f : Finₓ n → α) :

@@ -71,7 +71,7 @@ theorem ext {x y : 𝕎 R} (h : ∀ n, x.coeff n = y.coeff n) : x = y := by
   cases x
   cases y
   simp only at h
-  simp [Function.funext_iffₓ, h]
+  simp [Function.funext_iff, h]
 
 theorem ext_iff {x y : 𝕎 R} : x = y ↔ ∀ n, x.coeff n = y.coeff n :=
   ⟨fun h n => by

@@ -646,7 +646,7 @@ theorem floor_eq_iff : ⌊a⌋ = z ↔ ↑z ≤ a ∧ a < z + 1 := by
 theorem floor_eq_on_Ico (n : ℤ) : ∀ a ∈ Set.Ico (n : α) (n + 1), ⌊a⌋ = n := fun a ⟨h₀, h₁⟩ => floor_eq_iff.mpr ⟨h₀, h₁⟩
 
 theorem floor_eq_on_Ico' (n : ℤ) : ∀ a ∈ Set.Ico (n : α) (n + 1), (⌊a⌋ : α) = n := fun a ha =>
-  congr_arg _ <| floor_eq_on_Ico n a ha
+  congr_argₓ _ <| floor_eq_on_Ico n a ha
 
 @[simp]
 theorem preimage_floor_singleton (m : ℤ) : (floor : α → ℤ) ⁻¹' {m} = Ico m (m + 1) :=

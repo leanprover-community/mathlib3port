@@ -169,7 +169,7 @@ theorem CNF_sorted (b o : Ordinal) : ((cNF b o).map Prod.fst).Sorted (· > ·) :
     · cases' lt_or_leₓ o b with hob hbo
       · simp [CNF_of_lt ho hob]
         
-      · rw [CNF_ne_zero ho, List.map_cons, List.sorted_cons]
+      · rw [CNF_ne_zero ho, List.map_consₓ, List.sorted_cons]
         refine' ⟨fun a H => _, IH⟩
         rw [List.mem_mapₓ] at H
         rcases H with ⟨⟨a, a'⟩, H, rfl⟩

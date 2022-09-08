@@ -459,7 +459,7 @@ theorem append_append_stream : ∀ (l₁ l₂ : List α) (s : Streamₓ α), l�
 theorem map_append_stream (f : α → β) : ∀ (l : List α) (s : Streamₓ α), map f (l ++ₛ s) = List.map f l ++ₛ map f s
   | [], s => rfl
   | List.cons a l, s => by
-    rw [cons_append_stream, List.map_cons, map_cons, cons_append_stream, map_append_stream]
+    rw [cons_append_stream, List.map_consₓ, map_cons, cons_append_stream, map_append_stream]
 
 theorem drop_append_stream : ∀ (l : List α) (s : Streamₓ α), drop l.length (l ++ₛ s) = s
   | [], s => by

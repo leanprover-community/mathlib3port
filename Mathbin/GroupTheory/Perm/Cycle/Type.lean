@@ -91,7 +91,7 @@ theorem one_lt_of_mem_cycle_type {σ : Perm α} {n : ℕ} (h : n ∈ σ.cycleTyp
   two_le_of_mem_cycle_type h
 
 theorem IsCycle.cycle_type {σ : Perm α} (hσ : IsCycle σ) : σ.cycleType = [σ.support.card] :=
-  cycle_type_eq [σ] (mul_oneₓ σ) (fun τ hτ => (congr_arg IsCycle (List.mem_singletonₓ.mp hτ)).mpr hσ)
+  cycle_type_eq [σ] (mul_oneₓ σ) (fun τ hτ => (congr_argₓ IsCycle (List.mem_singletonₓ.mp hτ)).mpr hσ)
     (pairwise_singleton Disjoint σ)
 
 theorem card_cycle_type_eq_one {σ : Perm α} : σ.cycleType.card = 1 ↔ σ.IsCycle := by
@@ -120,7 +120,8 @@ theorem cycle_type_inv (σ : Perm α) : σ⁻¹.cycleType = σ.cycleType :=
     fun σ τ hστ hc hσ hτ => by
     rw [mul_inv_rev, hστ.cycle_type, ← hσ, ← hτ, add_commₓ,
       disjoint.cycle_type fun x =>
-        Or.imp (fun h : τ x = x => inv_eq_iff_eq.mpr h.symm) (fun h : σ x = x => inv_eq_iff_eq.mpr h.symm) (hστ x).symm]
+        Or.impₓ (fun h : τ x = x => inv_eq_iff_eq.mpr h.symm) (fun h : σ x = x => inv_eq_iff_eq.mpr h.symm)
+          (hστ x).symm]
 
 theorem cycle_type_conj {σ τ : Perm α} : (τ * σ * τ⁻¹).cycleType = σ.cycleType := by
   revert τ
@@ -154,7 +155,7 @@ theorem sign_of_cycle_type' (σ : Perm α) : sign σ = (σ.cycleType.map fun n =
     (by
       rw [sign_one, cycle_type_one, Multiset.map_zero, prod_zero])
     (fun σ hσ => by
-      rw [hσ.sign, hσ.cycle_type, coe_map, coe_prod, List.map_singleton, List.prod_singleton])
+      rw [hσ.sign, hσ.cycle_type, coe_map, coe_prod, List.map_singletonₓ, List.prod_singleton])
     fun σ τ hστ hc hσ hτ => by
     rw [sign_mul, hσ, hτ, hστ.cycle_type, Multiset.map_add, prod_add]
 
@@ -200,7 +201,7 @@ theorem order_of_cycle_of_dvd_order_of (f : Perm α) (x : α) : orderOf (cycleOf
     
 
 theorem two_dvd_card_support {σ : Perm α} (hσ : σ ^ 2 = 1) : 2 ∣ σ.support.card :=
-  (congr_arg (Dvd.Dvd 2) σ.sum_cycle_type).mp
+  (congr_argₓ (Dvd.Dvd 2) σ.sum_cycle_type).mp
     (Multiset.dvd_sum fun n hn => by
       rw
         [le_antisymmₓ (Nat.le_of_dvdₓ zero_lt_two <| (dvd_of_mem_cycle_type hn).trans <| order_of_dvd_of_pow_eq_one hσ)
@@ -335,9 +336,9 @@ end CycleType
 theorem card_compl_support_modeq [DecidableEq α] {p n : ℕ} [hp : Fact p.Prime] {σ : Perm α} (hσ : σ ^ p ^ n = 1) :
     σ.supportᶜ.card ≡ Fintype.card α [MOD p] := by
   rw [Nat.modeq_iff_dvd' σ.supportᶜ.card_le_univ, ← Finset.card_compl, compl_compl]
-  refine' (congr_arg _ σ.sum_cycle_type).mp (Multiset.dvd_sum fun k hk => _)
+  refine' (congr_argₓ _ σ.sum_cycle_type).mp (Multiset.dvd_sum fun k hk => _)
   obtain ⟨m, -, hm⟩ := (Nat.dvd_prime_pow hp.out).mp (order_of_dvd_of_pow_eq_one hσ)
-  obtain ⟨l, -, rfl⟩ := (Nat.dvd_prime_pow hp.out).mp ((congr_arg _ hm).mp (dvd_of_mem_cycle_type hk))
+  obtain ⟨l, -, rfl⟩ := (Nat.dvd_prime_pow hp.out).mp ((congr_argₓ _ hm).mp (dvd_of_mem_cycle_type hk))
   exact
     dvd_pow_self _ fun h =>
       (one_lt_of_mem_cycle_type hk).Ne <| by
@@ -350,7 +351,7 @@ theorem exists_fixed_point_of_prime {p n : ℕ} [hp : Fact p.Prime] (hα : ¬p �
   simp_rw [← mem_support] at hα
   exact
     nat.modeq_zero_iff_dvd.mp
-      ((congr_arg _ (finset.card_eq_zero.mpr (compl_eq_bot.mpr (finset.eq_univ_iff_forall.mpr hα)))).mp
+      ((congr_argₓ _ (finset.card_eq_zero.mpr (compl_eq_bot.mpr (finset.eq_univ_iff_forall.mpr hα)))).mp
         (card_compl_support_modeq hσ).symm)
 
 theorem exists_fixed_point_of_prime' {p n : ℕ} [hp : Fact p.Prime] (hα : p ∣ Fintype.card α) {σ : Perm α}
@@ -373,7 +374,7 @@ theorem is_cycle_of_prime_order' {σ : Perm α} (h1 : (orderOf σ).Prime) (h2 : 
 
 theorem is_cycle_of_prime_order'' {σ : Perm α} (h1 : (Fintype.card α).Prime) (h2 : orderOf σ = Fintype.card α) :
     σ.IsCycle :=
-  is_cycle_of_prime_order' ((congr_arg Nat.Prime h2).mpr h1)
+  is_cycle_of_prime_order' ((congr_argₓ Nat.Prime h2).mpr h1)
     (by
       classical
       rw [← one_mulₓ (Fintype.card α), ← h2, mul_lt_mul_right (order_of_pos σ)]
@@ -456,7 +457,7 @@ theorem rotate_rotate : rotate (rotate v j) k = rotate v (j + k) :=
   Subtype.ext (Subtype.ext (v.1.1.rotate_rotate j k))
 
 theorem rotate_length : rotate v n = v :=
-  Subtype.ext (Subtype.ext ((congr_arg _ v.1.2.symm).trans v.1.1.rotate_length))
+  Subtype.ext (Subtype.ext ((congr_argₓ _ v.1.2.symm).trans v.1.1.rotate_length))
 
 end VectorsProdEqOne
 
@@ -481,7 +482,7 @@ theorem _root_.exists_prime_order_of_dvd_card {G : Type _} [Groupₓ G] [Fintype
       fun s => by
       rw [hf2, tsub_add_cancel_of_le hp.out.one_lt.le, hf3]
   have hσ : ∀ k v, (σ ^ k) v = f k v := fun k v =>
-    Nat.rec (hf1 v).symm (fun k hk => Eq.trans (congr_arg σ hk) (hf2 k 1 v)) k
+    Nat.rec (hf1 v).symm (fun k hk => Eq.trans (congr_argₓ σ hk) (hf2 k 1 v)) k
   replace hσ : σ ^ p ^ 1 = 1 :=
     perm.ext fun v => by
       rw [pow_oneₓ, hσ, hf3, one_apply]

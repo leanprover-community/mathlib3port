@@ -459,7 +459,7 @@ theorem Function.update_exp {ι : Type _} {𝔸 : ι → Type _} [Fintype ι] [D
     Function.update (exp 𝕂 x) j (exp 𝕂 xj) = exp 𝕂 (Function.update x j xj) := by
   ext i
   simp_rw [Pi.exp_def]
-  exact (Function.apply_update (fun i => exp 𝕂) x j xj i).symm
+  exact (Function.apply_updateₓ (fun i => exp 𝕂) x j xj i).symm
 
 end CompleteAlgebra
 

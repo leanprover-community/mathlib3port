@@ -56,11 +56,11 @@ localized [Convex] notation "[" x " -[" 𝕜 "] " y "]" => Segment 𝕜 x y
 
 theorem segment_eq_image₂ (x y : E) :
     [x -[𝕜] y] = (fun p : 𝕜 × 𝕜 => p.1 • x + p.2 • y) '' { p | 0 ≤ p.1 ∧ 0 ≤ p.2 ∧ p.1 + p.2 = 1 } := by
-  simp only [Segment, image, Prod.exists, mem_set_of_eq, exists_prop, and_assoc]
+  simp only [Segment, image, Prod.existsₓ, mem_set_of_eq, exists_prop, and_assoc]
 
 theorem open_segment_eq_image₂ (x y : E) :
     OpenSegment 𝕜 x y = (fun p : 𝕜 × 𝕜 => p.1 • x + p.2 • y) '' { p | 0 < p.1 ∧ 0 < p.2 ∧ p.1 + p.2 = 1 } := by
-  simp only [OpenSegment, image, Prod.exists, mem_set_of_eq, exists_prop, and_assoc]
+  simp only [OpenSegment, image, Prod.existsₓ, mem_set_of_eq, exists_prop, and_assoc]
 
 theorem segment_symm (x y : E) : [x -[𝕜] y] = [y -[𝕜] x] :=
   Set.ext fun z =>

@@ -595,7 +595,7 @@ theorem prod_eq_generate_from :
 theorem is_open_prod_iff {s : Set (α × β)} :
     IsOpen s ↔ ∀ a b, (a, b) ∈ s → ∃ (u : Set α)(v : Set β), IsOpen u ∧ IsOpen v ∧ a ∈ u ∧ b ∈ v ∧ u ×ˢ v ⊆ s := by
   rw [is_open_iff_nhds]
-  simp_rw [le_principal_iff, Prod.forall, ((nhds_basis_opens _).prod_nhds (nhds_basis_opens _)).mem_iff, Prod.exists,
+  simp_rw [le_principal_iff, Prod.forallₓ, ((nhds_basis_opens _).prod_nhds (nhds_basis_opens _)).mem_iff, Prod.existsₓ,
     exists_prop]
   simp only [and_assoc, And.left_comm]
 
@@ -946,7 +946,7 @@ theorem continuous_subtype_nhds_cover {ι : Sort _} {f : α → β} {c : ι → 
     let ⟨i, (c_sets : { x | c i x } ∈ 𝓝 x)⟩ := c_cover x
     let x' : Subtype (c i) := ⟨x, mem_of_mem_nhds c_sets⟩
     calc
-      map f (𝓝 x) = map f (map coe (𝓝 x')) := congr_arg (map f) (map_nhds_subtype_coe_eq _ <| c_sets).symm
+      map f (𝓝 x) = map f (map coe (𝓝 x')) := congr_argₓ (map f) (map_nhds_subtype_coe_eq _ <| c_sets).symm
       _ = map (fun x : Subtype (c i) => f x) (𝓝 x') := rfl
       _ ≤ 𝓝 (f x) := continuous_iff_continuous_at.mp (f_cont i) x'
       
@@ -1247,7 +1247,7 @@ instance Pi.discrete_topology : DiscreteTopology (∀ i, π i) :=
     rw
       [show {x} = ⋂ i, { y : ∀ i, π i | y i = x i } by
         ext
-        simp only [Function.funext_iffₓ, Set.mem_singleton_iff, Set.mem_Inter, Set.mem_set_of_eq]]
+        simp only [Function.funext_iff, Set.mem_singleton_iff, Set.mem_Inter, Set.mem_set_of_eq]]
     exact is_open_Inter fun i => (continuous_apply i).is_open_preimage {x i} (is_open_discrete {x i})
 
 end Pi

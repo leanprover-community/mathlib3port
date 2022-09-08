@@ -130,7 +130,7 @@ theorem pow_apply_eq_self_of_apply_eq_self {x : α} (hfx : f x = x) : ∀ n : �
 
 theorem zpow_apply_eq_self_of_apply_eq_self {x : α} (hfx : f x = x) : ∀ n : ℤ, (f ^ n) x = x
   | (n : ℕ) => pow_apply_eq_self_of_apply_eq_self hfx n
-  | -[1+ n] => by
+  | -[1 + n] => by
     rw [zpow_neg_succ_of_nat, inv_eq_iff_eq, pow_apply_eq_self_of_apply_eq_self hfx]
 
 theorem pow_apply_eq_of_apply_apply_eq_self {x : α} (hffx : f (f x) = x) : ∀ n : ℕ, (f ^ n) x = x ∨ (f ^ n) x = f x
@@ -148,7 +148,7 @@ theorem pow_apply_eq_of_apply_apply_eq_self {x : α} (hffx : f (f x) = x) : ∀ 
 
 theorem zpow_apply_eq_of_apply_apply_eq_self {x : α} (hffx : f (f x) = x) : ∀ i : ℤ, (f ^ i) x = x ∨ (f ^ i) x = f x
   | (n : ℕ) => pow_apply_eq_of_apply_apply_eq_self hffx n
-  | -[1+ n] => by
+  | -[1 + n] => by
     rw [zpow_neg_succ_of_nat, inv_eq_iff_eq, ← f.injective.eq_iff, ← mul_apply, ← pow_succₓ, eq_comm, inv_eq_iff_eq, ←
       mul_apply, ← pow_succ'ₓ, @eq_comm _ x, Or.comm]
     exact pow_apply_eq_of_apply_apply_eq_self hffx _
@@ -160,14 +160,14 @@ theorem Disjoint.mul_apply_eq_iff {σ τ : Perm α} (hστ : Disjoint σ τ) {a 
   cases' hστ a with hσ hτ
   · exact ⟨hσ, σ.injective (h.trans hσ.symm)⟩
     
-  · exact ⟨(congr_arg σ hτ).symm.trans h, hτ⟩
+  · exact ⟨(congr_argₓ σ hτ).symm.trans h, hτ⟩
     
 
 theorem Disjoint.mul_eq_one_iff {σ τ : Perm α} (hστ : Disjoint σ τ) : σ * τ = 1 ↔ σ = 1 ∧ τ = 1 := by
   simp_rw [ext_iff, one_apply, hστ.mul_apply_eq_iff, forall_and_distrib]
 
 theorem Disjoint.zpow_disjoint_zpow {σ τ : Perm α} (hστ : Disjoint σ τ) (m n : ℤ) : Disjoint (σ ^ m) (τ ^ n) := fun x =>
-  Or.imp (fun h => zpow_apply_eq_self_of_apply_eq_self h m) (fun h => zpow_apply_eq_self_of_apply_eq_self h n) (hστ x)
+  Or.impₓ (fun h => zpow_apply_eq_self_of_apply_eq_self h m) (fun h => zpow_apply_eq_self_of_apply_eq_self h n) (hστ x)
 
 theorem Disjoint.pow_disjoint_pow {σ τ : Perm α} (hστ : Disjoint σ τ) (m n : ℕ) : Disjoint (σ ^ m) (τ ^ n) :=
   hστ.zpow_disjoint_zpow m n
@@ -334,7 +334,7 @@ theorem Disjoint.support_mul (h : Disjoint f g) : (f * g).support = f.support �
   rw [mem_union, mem_support, mem_support, mem_support, mul_apply, ← not_and_distrib, not_imp_not]
   exact
     (h a).elim (fun hf h => ⟨hf, f.apply_eq_iff_eq.mp (h.trans hf.symm)⟩) fun hg h =>
-      ⟨(congr_arg f hg).symm.trans h, hg⟩
+      ⟨(congr_argₓ f hg).symm.trans h, hg⟩
 
 theorem support_prod_of_pairwise_disjoint (l : List (Perm α)) (h : l.Pairwise Disjoint) :
     l.Prod.support = (l.map support).foldr (·⊔·) ⊥ := by
@@ -350,7 +350,7 @@ theorem support_prod_le (l : List (Perm α)) : l.Prod.support ≤ (l.map support
   induction' l with hd tl hl
   · simp
     
-  · rw [List.prod_cons, List.map_cons, List.foldr_cons]
+  · rw [List.prod_cons, List.map_consₓ, List.foldr_cons]
     refine' (support_mul_le hd tl.prod).trans _
     exact sup_le_sup le_rflₓ hl
     
@@ -543,7 +543,7 @@ theorem card_support_swap {x y : α} (hxy : x ≠ y) : (swap x y).support.card =
         ⟨x ::ₘ y ::ₘ 0, by
           simp [hxy]⟩
     from
-    congr_arg card <| by
+    congr_argₓ card <| by
       simp [support_swap hxy, *, Finset.ext_iff]
 
 @[simp]
@@ -587,7 +587,7 @@ theorem card_support_prod_list_of_pairwise_disjoint {l : List (Perm α)} (h : l.
   · exact card_support_eq_zero.mpr rfl
     
   · obtain ⟨ha, ht⟩ := List.pairwise_cons.1 h
-    rw [List.prod_cons, List.map_cons, List.sum_cons, ← ih ht]
+    rw [List.prod_cons, List.map_consₓ, List.sum_cons, ← ih ht]
     exact (disjoint_prod_right _ ha).card_support_mul
     
 

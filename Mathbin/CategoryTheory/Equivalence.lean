@@ -621,7 +621,7 @@ See <https://stacks.math.columbia.edu/tag/02C3>.
 -/
 instance (priority := 100) faithful_of_equivalence (F : C ⥤ D) [IsEquivalence F] :
     Faithful F where map_injective' := fun X Y f g w => by
-    have p := congr_arg (@CategoryTheory.Functor.map _ _ _ _ F.inv _ _) w
+    have p := congr_argₓ (@CategoryTheory.Functor.map _ _ _ _ F.inv _ _) w
     simpa only [cancel_epi, cancel_mono, is_equivalence.inv_fun_map] using p
 
 -- see Note [lower instance priority]

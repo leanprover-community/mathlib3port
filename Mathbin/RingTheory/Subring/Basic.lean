@@ -842,7 +842,7 @@ theorem exists_list_of_mem_closure {s : Set R} {x : R} (h : x ∈ closure s) :
           (by
             simp )
           (by
-            simp (config := { contextual := true })[List.map_cons, add_commₓ])⟩
+            simp (config := { contextual := true })[List.map_consₓ, add_commₓ])⟩
 
 variable (R)
 
@@ -1048,11 +1048,11 @@ theorem range_subtype (s : Subring R) : s.Subtype.range = s :=
 
 @[simp]
 theorem range_fst : (fst R S).srange = ⊤ :=
-  (fst R S).srange_top_of_surjective <| Prod.fst_surjectiveₓ
+  (fst R S).srange_top_of_surjective <| Prod.fst_surjective
 
 @[simp]
 theorem range_snd : (snd R S).srange = ⊤ :=
-  (snd R S).srange_top_of_surjective <| Prod.snd_surjective
+  (snd R S).srange_top_of_surjective <| Prod.snd_surjectiveₓ
 
 @[simp]
 theorem prod_bot_sup_bot_prod (s : Subring R) (t : Subring S) : s.Prod ⊥⊔prod ⊥ t = s.Prod t :=
@@ -1070,7 +1070,7 @@ variable {s t : Subring R}
 /-- Makes the identity isomorphism from a proof two subrings of a multiplicative
     monoid are equal. -/
 def subringCongr (h : s = t) : s ≃+* t :=
-  { Equivₓ.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
+  { Equivₓ.setCongr <| congr_argₓ _ h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
 
 /-- Restrict a ring homomorphism with a left inverse to a ring isomorphism to its
 `ring_hom.range`. -/
@@ -1124,7 +1124,7 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure 
     
   rw [List.forall_mem_consₓ] at HL
   suffices C (List.prod hd) by
-    rw [List.map_cons, List.sum_cons]
+    rw [List.map_consₓ, List.sum_cons]
     exact ha this (ih HL.2)
   replace HL := HL.1
   clear ih tl

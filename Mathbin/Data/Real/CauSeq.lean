@@ -203,7 +203,7 @@ theorem const_apply (x : β) (i : ℕ) : (const x : ℕ → β) i = x :=
   rfl
 
 theorem const_inj {x y : β} : (const x : CauSeq β abv) = const y ↔ x = y :=
-  ⟨fun h => congr_arg (fun f : CauSeq β abv => (f : ℕ → β) 0) h, congr_arg _⟩
+  ⟨fun h => congr_argₓ (fun f : CauSeq β abv => (f : ℕ → β) 0) h, congr_argₓ _⟩
 
 instance : Zero (CauSeq β abv) :=
   ⟨const 0⟩
@@ -281,10 +281,10 @@ instance : AddGroupₓ (CauSeq β abv) := by
         apply ext <;> simp [add_commₓ, add_left_commₓ, sub_eq_add_neg]
 
 instance : AddGroupWithOneₓ (CauSeq β abv) :=
-  { CauSeq.addGroup with one := 1, natCast := fun n => const n, nat_cast_zero := congr_arg const Nat.cast_zeroₓ,
-    nat_cast_succ := fun n => congr_arg const (Nat.cast_succₓ n), intCast := fun n => const n,
-    int_cast_of_nat := fun n => congr_arg const (Int.cast_of_nat n),
-    int_cast_neg_succ_of_nat := fun n => congr_arg const (Int.cast_neg_succ_of_nat n) }
+  { CauSeq.addGroup with one := 1, natCast := fun n => const n, nat_cast_zero := congr_argₓ const Nat.cast_zeroₓ,
+    nat_cast_succ := fun n => congr_argₓ const (Nat.cast_succₓ n), intCast := fun n => const n,
+    int_cast_of_nat := fun n => congr_argₓ const (Int.cast_of_nat n),
+    int_cast_neg_succ_of_nat := fun n => congr_argₓ const (Int.cast_neg_succ_of_nat n) }
 
 instance : Ringₓ (CauSeq β abv) := by
   refine_struct

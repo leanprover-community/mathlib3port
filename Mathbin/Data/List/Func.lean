@@ -110,7 +110,7 @@ theorem get_eq_default_of_le : ∀ (k : ℕ) {as : List α}, as.length ≤ k →
   | k + 1, [], h1 => rfl
   | k + 1, a :: as, h1 => by
     apply get_eq_default_of_le k
-    rw [← Nat.succ_le_succ_iff]
+    rw [← Nat.succ_le_succ_iffₓ]
     apply h1
 
 @[simp]

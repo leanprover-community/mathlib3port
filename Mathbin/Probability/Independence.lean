@@ -69,13 +69,15 @@ open BigOperators Classical MeasureTheory
 
 namespace ProbabilityTheory
 
+variable {Ω ι : Type _}
+
 section Definitions
 
 /-- A family of sets of sets `π : ι → set (set Ω)` is independent with respect to a measure `μ` if
 for any finite set of indices `s = {i_1, ..., i_n}`, for any sets
 `f i_1 ∈ π i_1, ..., f i_n ∈ π i_n`, then `μ (⋂ i in s, f i) = ∏ i in s, μ (f i) `.
 It will be used for families of pi_systems. -/
-def IndepSets {Ω ι} [MeasurableSpace Ω] (π : ι → Set (Set Ω))
+def IndepSets [MeasurableSpace Ω] (π : ι → Set (Set Ω))
     (μ : Measureₓ Ω := by
       run_tac
         volume_tac) :
@@ -84,7 +86,7 @@ def IndepSets {Ω ι} [MeasurableSpace Ω] (π : ι → Set (Set Ω))
 
 /-- Two sets of sets `s₁, s₂` are independent with respect to a measure `μ` if for any sets
 `t₁ ∈ p₁, t₂ ∈ s₂`, then `μ (t₁ ∩ t₂) = μ (t₁) * μ (t₂)` -/
-def IndepSetsₓ {Ω} [MeasurableSpace Ω] (s1 s2 : Set (Set Ω))
+def IndepSetsₓ [MeasurableSpace Ω] (s1 s2 : Set (Set Ω))
     (μ : Measureₓ Ω := by
       run_tac
         volume_tac) :
@@ -96,7 +98,7 @@ measure `μ` (typically defined on a finer σ-algebra) if the family of sets of 
 define is independent. `m : ι → measurable_space Ω` is independent with respect to measure `μ` if
 for any finite set of indices `s = {i_1, ..., i_n}`, for any sets
 `f i_1 ∈ m i_1, ..., f i_n ∈ m i_n`, then `μ (⋂ i in s, f i) = ∏ i in s, μ (f i) `. -/
-def Indep {Ω ι} (m : ι → MeasurableSpace Ω) [MeasurableSpace Ω]
+def Indep (m : ι → MeasurableSpace Ω) [MeasurableSpace Ω]
     (μ : Measureₓ Ω := by
       run_tac
         volume_tac) :
@@ -106,7 +108,7 @@ def Indep {Ω ι} (m : ι → MeasurableSpace Ω) [MeasurableSpace Ω]
 /-- Two measurable space structures (or σ-algebras) `m₁, m₂` are independent with respect to a
 measure `μ` (defined on a third σ-algebra) if for any sets `t₁ ∈ m₁, t₂ ∈ m₂`,
 `μ (t₁ ∩ t₂) = μ (t₁) * μ (t₂)` -/
-def Indepₓ {Ω} (m₁ m₂ : MeasurableSpace Ω) [MeasurableSpace Ω]
+def Indepₓ (m₁ m₂ : MeasurableSpace Ω) [MeasurableSpace Ω]
     (μ : Measureₓ Ω := by
       run_tac
         volume_tac) :
@@ -115,7 +117,7 @@ def Indepₓ {Ω} (m₁ m₂ : MeasurableSpace Ω) [MeasurableSpace Ω]
 
 /-- A family of sets is independent if the family of measurable space structures they generate is
 independent. For a set `s`, the generated measurable space has measurable sets `∅, s, sᶜ, univ`. -/
-def IndepSet {Ω ι} [MeasurableSpace Ω] (s : ι → Set Ω)
+def IndepSet [MeasurableSpace Ω] (s : ι → Set Ω)
     (μ : Measureₓ Ω := by
       run_tac
         volume_tac) :
@@ -124,7 +126,7 @@ def IndepSet {Ω ι} [MeasurableSpace Ω] (s : ι → Set Ω)
 
 /-- Two sets are independent if the two measurable space structures they generate are independent.
 For a set `s`, the generated measurable space structure has measurable sets `∅, s, sᶜ, univ`. -/
-def IndepSetₓ {Ω} [MeasurableSpace Ω] (s t : Set Ω)
+def IndepSetₓ [MeasurableSpace Ω] (s t : Set Ω)
     (μ : Measureₓ Ω := by
       run_tac
         volume_tac) :
@@ -135,7 +137,7 @@ def IndepSetₓ {Ω} [MeasurableSpace Ω] (s t : Set Ω)
 spaces, each with a measurable space structure, is independent if the family of measurable space
 structures they generate on `Ω` is independent. For a function `g` with codomain having measurable
 space structure `m`, the generated measurable space structure is `measurable_space.comap g m`. -/
-def IndepFun {Ω ι} [MeasurableSpace Ω] {β : ι → Type _} (m : ∀ x : ι, MeasurableSpace (β x)) (f : ∀ x : ι, Ω → β x)
+def IndepFun [MeasurableSpace Ω] {β : ι → Type _} (m : ∀ x : ι, MeasurableSpace (β x)) (f : ∀ x : ι, Ω → β x)
     (μ : Measureₓ Ω := by
       run_tac
         volume_tac) :
@@ -145,7 +147,7 @@ def IndepFun {Ω ι} [MeasurableSpace Ω] {β : ι → Type _} (m : ∀ x : ι, 
 /-- Two functions are independent if the two measurable space structures they generate are
 independent. For a function `f` with codomain having measurable space structure `m`, the generated
 measurable space structure is `measurable_space.comap f m`. -/
-def IndepFunₓ {Ω β γ} [MeasurableSpace Ω] [mβ : MeasurableSpace β] [mγ : MeasurableSpace γ] (f : Ω → β) (g : Ω → γ)
+def IndepFunₓ {β γ} [MeasurableSpace Ω] [mβ : MeasurableSpace β] [mγ : MeasurableSpace γ] (f : Ω → β) (g : Ω → γ)
     (μ : Measureₓ Ω := by
       run_tac
         volume_tac) :
@@ -156,31 +158,45 @@ end Definitions
 
 section Indep
 
-theorem IndepSetsₓ.symm {Ω} {s₁ s₂ : Set (Set Ω)} [MeasurableSpace Ω] {μ : Measureₓ Ω} (h : IndepSetsₓ s₁ s₂ μ) :
+theorem IndepSetsₓ.symm {s₁ s₂ : Set (Set Ω)} [MeasurableSpace Ω] {μ : Measureₓ Ω} (h : IndepSetsₓ s₁ s₂ μ) :
     IndepSetsₓ s₂ s₁ μ := by
   intro t1 t2 ht1 ht2
   rw [Set.inter_comm, mul_comm]
   exact h t2 t1 ht2 ht1
 
-theorem Indepₓ.symm {Ω} {m₁ m₂ : MeasurableSpace Ω} [MeasurableSpace Ω] {μ : Measureₓ Ω} (h : Indepₓ m₁ m₂ μ) :
+theorem Indepₓ.symm {m₁ m₂ : MeasurableSpace Ω} [MeasurableSpace Ω] {μ : Measureₓ Ω} (h : Indepₓ m₁ m₂ μ) :
     Indepₓ m₂ m₁ μ :=
   IndepSetsₓ.symm h
 
-theorem indep_sets_of_indep_sets_of_le_left {Ω} {s₁ s₂ s₃ : Set (Set Ω)} [MeasurableSpace Ω] {μ : Measureₓ Ω}
+theorem indep_bot_right (m' : MeasurableSpace Ω) {m : MeasurableSpace Ω} {μ : Measureₓ Ω} [IsProbabilityMeasure μ] :
+    Indepₓ m' ⊥ μ := by
+  intro s t hs ht
+  rw [Set.mem_set_of_eq, MeasurableSpace.measurable_set_bot_iff] at ht
+  cases ht
+  · rw [ht, Set.inter_empty, measure_empty, mul_zero]
+    
+  · rw [ht, Set.inter_univ, measure_univ, mul_oneₓ]
+    
+
+theorem indep_bot_left (m' : MeasurableSpace Ω) {m : MeasurableSpace Ω} {μ : Measureₓ Ω} [IsProbabilityMeasure μ] :
+    Indepₓ ⊥ m' μ :=
+  (indep_bot_right m').symm
+
+theorem indep_sets_of_indep_sets_of_le_left {s₁ s₂ s₃ : Set (Set Ω)} [MeasurableSpace Ω] {μ : Measureₓ Ω}
     (h_indep : IndepSetsₓ s₁ s₂ μ) (h31 : s₃ ⊆ s₁) : IndepSetsₓ s₃ s₂ μ := fun t1 t2 ht1 ht2 =>
   h_indep t1 t2 (Set.mem_of_subset_of_mem h31 ht1) ht2
 
-theorem indep_sets_of_indep_sets_of_le_right {Ω} {s₁ s₂ s₃ : Set (Set Ω)} [MeasurableSpace Ω] {μ : Measureₓ Ω}
+theorem indep_sets_of_indep_sets_of_le_right {s₁ s₂ s₃ : Set (Set Ω)} [MeasurableSpace Ω] {μ : Measureₓ Ω}
     (h_indep : IndepSetsₓ s₁ s₂ μ) (h32 : s₃ ⊆ s₂) : IndepSetsₓ s₁ s₃ μ := fun t1 t2 ht1 ht2 =>
   h_indep t1 t2 ht1 (Set.mem_of_subset_of_mem h32 ht2)
 
-theorem indep_of_indep_of_le_left {Ω} {m₁ m₂ m₃ : MeasurableSpace Ω} [MeasurableSpace Ω] {μ : Measureₓ Ω}
+theorem indep_of_indep_of_le_left {m₁ m₂ m₃ : MeasurableSpace Ω} [MeasurableSpace Ω] {μ : Measureₓ Ω}
     (h_indep : Indepₓ m₁ m₂ μ) (h31 : m₃ ≤ m₁) : Indepₓ m₃ m₂ μ := fun t1 t2 ht1 ht2 => h_indep t1 t2 (h31 _ ht1) ht2
 
-theorem indep_of_indep_of_le_right {Ω} {m₁ m₂ m₃ : MeasurableSpace Ω} [MeasurableSpace Ω] {μ : Measureₓ Ω}
+theorem indep_of_indep_of_le_right {m₁ m₂ m₃ : MeasurableSpace Ω} [MeasurableSpace Ω] {μ : Measureₓ Ω}
     (h_indep : Indepₓ m₁ m₂ μ) (h32 : m₃ ≤ m₂) : Indepₓ m₁ m₃ μ := fun t1 t2 ht1 ht2 => h_indep t1 t2 ht1 (h32 _ ht2)
 
-theorem IndepSetsₓ.union {Ω} [MeasurableSpace Ω] {s₁ s₂ s' : Set (Set Ω)} {μ : Measureₓ Ω} (h₁ : IndepSetsₓ s₁ s' μ)
+theorem IndepSetsₓ.union [MeasurableSpace Ω] {s₁ s₂ s' : Set (Set Ω)} {μ : Measureₓ Ω} (h₁ : IndepSetsₓ s₁ s' μ)
     (h₂ : IndepSetsₓ s₂ s' μ) : IndepSetsₓ (s₁ ∪ s₂) s' μ := by
   intro t1 t2 ht1 ht2
   cases' (Set.mem_union _ _ _).mp ht1 with ht1₁ ht1₂
@@ -190,31 +206,31 @@ theorem IndepSetsₓ.union {Ω} [MeasurableSpace Ω] {s₁ s₂ s' : Set (Set Ω
     
 
 @[simp]
-theorem IndepSetsₓ.union_iff {Ω} [MeasurableSpace Ω] {s₁ s₂ s' : Set (Set Ω)} {μ : Measureₓ Ω} :
+theorem IndepSetsₓ.union_iff [MeasurableSpace Ω] {s₁ s₂ s' : Set (Set Ω)} {μ : Measureₓ Ω} :
     IndepSetsₓ (s₁ ∪ s₂) s' μ ↔ IndepSetsₓ s₁ s' μ ∧ IndepSetsₓ s₂ s' μ :=
   ⟨fun h =>
     ⟨indep_sets_of_indep_sets_of_le_left h (Set.subset_union_left s₁ s₂),
       indep_sets_of_indep_sets_of_le_left h (Set.subset_union_right s₁ s₂)⟩,
     fun h => IndepSetsₓ.union h.left h.right⟩
 
-theorem IndepSetsₓ.Union {Ω ι} [MeasurableSpace Ω] {s : ι → Set (Set Ω)} {s' : Set (Set Ω)} {μ : Measureₓ Ω}
+theorem IndepSetsₓ.Union [MeasurableSpace Ω] {s : ι → Set (Set Ω)} {s' : Set (Set Ω)} {μ : Measureₓ Ω}
     (hyp : ∀ n, IndepSetsₓ (s n) s' μ) : IndepSetsₓ (⋃ n, s n) s' μ := by
   intro t1 t2 ht1 ht2
   rw [Set.mem_Union] at ht1
   cases' ht1 with n ht1
   exact hyp n t1 t2 ht1 ht2
 
-theorem IndepSetsₓ.inter {Ω} [MeasurableSpace Ω] {s₁ s' : Set (Set Ω)} (s₂ : Set (Set Ω)) {μ : Measureₓ Ω}
+theorem IndepSetsₓ.inter [MeasurableSpace Ω] {s₁ s' : Set (Set Ω)} (s₂ : Set (Set Ω)) {μ : Measureₓ Ω}
     (h₁ : IndepSetsₓ s₁ s' μ) : IndepSetsₓ (s₁ ∩ s₂) s' μ := fun t1 t2 ht1 ht2 =>
   h₁ t1 t2 ((Set.mem_inter_iff _ _ _).mp ht1).left ht2
 
-theorem IndepSetsₓ.Inter {Ω ι} [MeasurableSpace Ω] {s : ι → Set (Set Ω)} {s' : Set (Set Ω)} {μ : Measureₓ Ω}
+theorem IndepSetsₓ.Inter [MeasurableSpace Ω] {s : ι → Set (Set Ω)} {s' : Set (Set Ω)} {μ : Measureₓ Ω}
     (h : ∃ n, IndepSetsₓ (s n) s' μ) : IndepSetsₓ (⋂ n, s n) s' μ := by
   intro t1 t2 ht1 ht2
   cases' h with n h
   exact h t1 t2 (set.mem_Inter.mp ht1 n) ht2
 
-theorem indep_sets_singleton_iff {Ω} [MeasurableSpace Ω] {s t : Set Ω} {μ : Measureₓ Ω} :
+theorem indep_sets_singleton_iff [MeasurableSpace Ω] {s t : Set Ω} {μ : Measureₓ Ω} :
     IndepSetsₓ {s} {t} μ ↔ μ (s ∩ t) = μ s * μ t :=
   ⟨fun h => h s t rfl rfl, fun h s1 t1 hs1 ht1 => by
     rwa [set.mem_singleton_iff.mp hs1, set.mem_singleton_iff.mp ht1]⟩
@@ -226,7 +242,7 @@ end Indep
 
 section FromIndepToIndep
 
-theorem IndepSets.indep_sets {Ω ι} {s : ι → Set (Set Ω)} [MeasurableSpace Ω] {μ : Measureₓ Ω} (h_indep : IndepSets s μ)
+theorem IndepSets.indep_sets {s : ι → Set (Set Ω)} [MeasurableSpace Ω] {μ : Measureₓ Ω} (h_indep : IndepSets s μ)
     {i j : ι} (hij : i ≠ j) : IndepSetsₓ (s i) (s j) μ := by
   intro t₁ t₂ ht₁ ht₂
   have hf_m : ∀ x : ι, x ∈ {i, j} → ite (x = i) t₁ t₂ ∈ s x := by
@@ -251,14 +267,13 @@ theorem IndepSets.indep_sets {Ω ι} {s : ι → Set (Set Ω)} [MeasurableSpace 
   nth_rw 3[h2]
   rw [← h_inter, ← h_prod, h_indep {i, j} hf_m]
 
-theorem Indep.indep {Ω ι} {m : ι → MeasurableSpace Ω} [MeasurableSpace Ω] {μ : Measureₓ Ω} (h_indep : Indep m μ)
-    {i j : ι} (hij : i ≠ j) : Indepₓ (m i) (m j) μ := by
+theorem Indep.indep {m : ι → MeasurableSpace Ω} [MeasurableSpace Ω] {μ : Measureₓ Ω} (h_indep : Indep m μ) {i j : ι}
+    (hij : i ≠ j) : Indepₓ (m i) (m j) μ := by
   change indep_sets ((fun x => measurable_set[m x]) i) ((fun x => measurable_set[m x]) j) μ
   exact Indep_sets.indep_sets h_indep hij
 
-theorem IndepFun.indep_fun {Ω ι : Type _} {m₀ : MeasurableSpace Ω} {μ : Measureₓ Ω} {β : ι → Type _}
-    {m : ∀ x, MeasurableSpace (β x)} {f : ∀ i, Ω → β i} (hf_Indep : IndepFun m f μ) {i j : ι} (hij : i ≠ j) :
-    IndepFunₓ (f i) (f j) μ :=
+theorem IndepFun.indep_fun {m₀ : MeasurableSpace Ω} {μ : Measureₓ Ω} {β : ι → Type _} {m : ∀ x, MeasurableSpace (β x)}
+    {f : ∀ i, Ω → β i} (hf_Indep : IndepFun m f μ) {i j : ι} (hij : i ≠ j) : IndepFunₓ (f i) (f j) μ :=
   hf_Indep.indep hij
 
 end FromIndepToIndep
@@ -275,11 +290,11 @@ section FromMeasurableSpacesToSetsOfSets
 /-! ### Independence of measurable space structures implies independence of generating π-systems -/
 
 
-theorem Indep.Indep_sets {Ω ι} [MeasurableSpace Ω] {μ : Measureₓ Ω} {m : ι → MeasurableSpace Ω} {s : ι → Set (Set Ω)}
+theorem Indep.Indep_sets [MeasurableSpace Ω] {μ : Measureₓ Ω} {m : ι → MeasurableSpace Ω} {s : ι → Set (Set Ω)}
     (hms : ∀ n, m n = generateFrom (s n)) (h_indep : Indep m μ) : IndepSets s μ := fun S f hfs =>
   (h_indep S) fun x hxS => ((hms x).symm ▸ measurable_set_generate_from (hfs x hxS) : measurable_set[m x] (f x))
 
-theorem Indepₓ.indep_sets {Ω} [MeasurableSpace Ω] {μ : Measureₓ Ω} {s1 s2 : Set (Set Ω)}
+theorem Indepₓ.indep_sets [MeasurableSpace Ω] {μ : Measureₓ Ω} {s1 s2 : Set (Set Ω)}
     (h_indep : Indepₓ (generateFrom s1) (generateFrom s2) μ) : IndepSetsₓ s1 s2 μ := fun t1 t2 ht1 ht2 =>
   h_indep t1 t2 (measurable_set_generate_from ht1) (measurable_set_generate_from ht2)
 
@@ -290,7 +305,7 @@ section FromPiSystemsToMeasurableSpaces
 /-! ### Independence of generating π-systems implies independence of measurable space structures -/
 
 
-private theorem indep_sets.indep_aux {Ω} {m2 : MeasurableSpace Ω} {m : MeasurableSpace Ω} {μ : Measureₓ Ω}
+private theorem indep_sets.indep_aux {m2 : MeasurableSpace Ω} {m : MeasurableSpace Ω} {μ : Measureₓ Ω}
     [IsProbabilityMeasure μ] {p1 p2 : Set (Set Ω)} (h2 : m2 ≤ m) (hp2 : IsPiSystem p2) (hpm2 : m2 = generateFrom p2)
     (hyp : IndepSetsₓ p1 p2 μ) {t1 t2 : Set Ω} (ht1 : t1 ∈ p1) (ht2m : measurable_set[m2] t2) :
     μ (t1 ∩ t2) = μ t1 * μ t2 := by
@@ -308,10 +323,9 @@ private theorem indep_sets.indep_aux {Ω} {m2 : MeasurableSpace Ω} {m : Measura
   rw [measure.restrict_apply ht2, measure.smul_apply, Set.inter_comm]
   exact hyp t1 t ht1 ht
 
-theorem IndepSetsₓ.indep {Ω} {m1 m2 : MeasurableSpace Ω} {m : MeasurableSpace Ω} {μ : Measureₓ Ω}
-    [IsProbabilityMeasure μ] {p1 p2 : Set (Set Ω)} (h1 : m1 ≤ m) (h2 : m2 ≤ m) (hp1 : IsPiSystem p1)
-    (hp2 : IsPiSystem p2) (hpm1 : m1 = generateFrom p1) (hpm2 : m2 = generateFrom p2) (hyp : IndepSetsₓ p1 p2 μ) :
-    Indepₓ m1 m2 μ := by
+theorem IndepSetsₓ.indep {m1 m2 : MeasurableSpace Ω} {m : MeasurableSpace Ω} {μ : Measureₓ Ω} [IsProbabilityMeasure μ]
+    {p1 p2 : Set (Set Ω)} (h1 : m1 ≤ m) (h2 : m2 ≤ m) (hp1 : IsPiSystem p1) (hp2 : IsPiSystem p2)
+    (hpm1 : m1 = generateFrom p1) (hpm2 : m2 = generateFrom p2) (hyp : IndepSetsₓ p1 p2 μ) : Indepₓ m1 m2 μ := by
   intro t1 t2 ht1 ht2
   let μ_inter := μ.restrict t2
   let ν := μ t2 • μ
@@ -327,7 +341,7 @@ theorem IndepSetsₓ.indep {Ω} {m1 m2 : MeasurableSpace Ω} {m : MeasurableSpac
   rw [measure.restrict_apply ht1, measure.smul_apply, smul_eq_mul, mul_comm]
   exact indep_sets.indep_aux h2 hp2 hpm2 hyp ht ht2
 
-variable {Ω ι : Type _} {m0 : MeasurableSpace Ω} {μ : Measureₓ Ω}
+variable {m0 : MeasurableSpace Ω} {μ : Measureₓ Ω}
 
 theorem IndepSets.pi_Union_Inter_singleton {π : ι → Set (Set Ω)} {a : ι} {S : Finset ι} (hp_ind : IndepSets π μ)
     (haS : a ∉ S) : IndepSetsₓ (PiUnionInter π {S}) (π a) μ := by
@@ -473,7 +487,7 @@ We prove the following equivalences on `indep_set`, for measurable sets `s, t`.
 -/
 
 
-variable {Ω : Type _} [MeasurableSpace Ω] {s t : Set Ω} (S T : Set (Set Ω))
+variable [MeasurableSpace Ω] {s t : Set Ω} (S T : Set (Set Ω))
 
 theorem indep_set_iff_indep_sets_singleton (hs_meas : MeasurableSet s) (ht_meas : MeasurableSet t)
     (μ : Measureₓ Ω := by
@@ -511,7 +525,7 @@ section IndepFun
 -/
 
 
-variable {Ω β β' γ γ' : Type _} {mΩ : MeasurableSpace Ω} {μ : Measureₓ Ω} {f : Ω → β} {g : Ω → β'}
+variable {β β' γ γ' : Type _} {mΩ : MeasurableSpace Ω} {μ : Measureₓ Ω} {f : Ω → β} {g : Ω → β'}
 
 theorem indep_fun_iff_measure_inter_preimage_eq_mul {mβ : MeasurableSpace β} {mβ' : MeasurableSpace β'} :
     IndepFunₓ f g μ ↔ ∀ s t, MeasurableSet s → MeasurableSet t → μ (f ⁻¹' s ∩ g ⁻¹' t) = μ (f ⁻¹' s) * μ (g ⁻¹' t) := by
@@ -722,7 +736,7 @@ theorem IndepFun.indep_fun_prod [IsProbabilityMeasure μ] {ι : Type _} {β : ι
         fun a (j : s) => f j a :=
     by
     ext1 a
-    simp only [Prod.mk.inj_iff]
+    simp only [Prod.mk.inj_iffₓ]
     constructor <;> rfl
   have h_meas_left :
     Measurable fun p : ∀ l : s, β l =>

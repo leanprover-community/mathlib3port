@@ -62,7 +62,7 @@ theorem zip_swap : ∀ (l₁ : List α) (l₂ : List β), (zipₓ l₁ l₂).map
   | l₁, [] => by
     rw [zip_nil_right] <;> rfl
   | a :: l₁, b :: l₂ => by
-    simp only [zip_cons_cons, map_cons, zip_swap l₁ l₂, Prod.swap_prod_mk] <;> constructor <;> rfl
+    simp only [zip_cons_cons, map_cons, zip_swap l₁ l₂, Prod.swap_prod_mkₓ] <;> constructor <;> rfl
 
 @[simp]
 theorem length_zip_with (f : α → β → γ) :
@@ -229,7 +229,7 @@ theorem unzip_zip_right {l₁ : List α} {l₂ : List β} (h : length l₂ ≤ l
   rw [← zip_swap, unzip_swap] <;> exact unzip_zip_left h
 
 theorem unzip_zip {l₁ : List α} {l₂ : List β} (h : length l₁ = length l₂) : unzip (zipₓ l₁ l₂) = (l₁, l₂) := by
-  rw [← @Prod.mk.eta _ _ (unzip (zip l₁ l₂)), unzip_zip_left (le_of_eqₓ h), unzip_zip_right (ge_of_eqₓ h)]
+  rw [← @Prod.mk.etaₓ _ _ (unzip (zip l₁ l₂)), unzip_zip_left (le_of_eqₓ h), unzip_zip_right (ge_of_eqₓ h)]
 
 theorem zip_of_prod {l : List α} {l' : List β} {lp : List (α × β)} (hl : lp.map Prod.fst = l)
     (hr : lp.map Prod.snd = l') : lp = l.zip l' := by
@@ -287,10 +287,10 @@ theorem nth_zip_with (f : α → β → γ) (l₁ : List α) (l₂ : List β) (i
   induction l₁ generalizing l₂ i
   · simp [zip_with, (· <*> ·)]
     
-  · cases l₂ <;> simp only [zip_with, Seqₓ.seq, Functor.map, nth, Option.map_none'ₓ]
+  · cases l₂ <;> simp only [zip_with, Seqₓ.seq, Functor.map, nth, Option.map_none']
     · cases (l₁_hd :: l₁_tl).nth i <;> rfl
       
-    · cases i <;> simp only [Option.map_some'ₓ, nth, Option.some_bind', *]
+    · cases i <;> simp only [Option.map_some', nth, Option.some_bind', *]
       
     
 
@@ -334,7 +334,7 @@ theorem mem_zip_inits_tails {l : List α} {init tail : List α} :
   induction l generalizing init tail <;> simp_rw [tails, inits, zip_cons_cons]
   · simp
     
-  · constructor <;> rw [mem_cons_iff, zip_map_left, mem_map, Prod.exists]
+  · constructor <;> rw [mem_cons_iff, zip_map_left, mem_map, Prod.existsₓ]
     · rintro (⟨rfl, rfl⟩ | ⟨_, _, h, rfl, rfl⟩)
       · simp
         

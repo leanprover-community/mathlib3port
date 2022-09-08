@@ -77,7 +77,7 @@ theorem _root_.list.periodic_prod [Add α] [CommMonoidₓ β] (l : List (α → 
 @[to_additive]
 theorem _root_.multiset.periodic_prod [Add α] [CommMonoidₓ β] (s : Multiset (α → β)) (hs : ∀ f ∈ s, Periodic f c) :
     Periodic s.Prod c :=
-  (s.prod_to_list ▸ s.toList.periodic_prod) fun f hf => hs f <| (Multiset.mem_to_list f s).mp hf
+  (s.prod_to_list ▸ s.toList.periodic_prod) fun f hf => hs f <| Multiset.mem_to_list.mp hf
 
 @[to_additive]
 theorem _root_.finset.periodic_prod [Add α] [CommMonoidₓ β] {ι : Type _} {f : ι → α → β} (s : Finset ι)
@@ -271,7 +271,7 @@ def Periodic.lift [AddGroupₓ α] (h : Periodic f c) (x : α ⧸ AddSubgroup.zm
   (Quotientₓ.liftOn' x f) fun a b h' => by
     rw [QuotientAddGroup.left_rel_apply] at h'
     obtain ⟨k, hk⟩ := h'
-    exact (h.zsmul k _).symm.trans (congr_arg f (add_eq_of_eq_neg_add hk))
+    exact (h.zsmul k _).symm.trans (congr_argₓ f (add_eq_of_eq_neg_add hk))
 
 @[simp]
 theorem Periodic.lift_coe [AddGroupₓ α] (h : Periodic f c) (a : α) : h.lift (a : α ⧸ AddSubgroup.zmultiples c) = f a :=

@@ -142,9 +142,36 @@ theorem BddAbove.smul_of_nonneg (hs : BddAbove s) (hc : 0 ≤ c) : BddAbove (c �
 
 end OrderedSmul
 
-instance LinearOrderedSemiring.to_ordered_smul {R : Type _} [LinearOrderedSemiring R] : OrderedSmul R R where
-  smul_lt_smul_of_pos := OrderedSemiring.mul_lt_mul_of_pos_left
-  lt_of_smul_lt_smul_of_pos := fun _ _ _ h hc => lt_of_mul_lt_mul_left h hc.le
+/-- To prove that a linear ordered monoid is an ordered module, it suffices to verify only the first
+axiom of `ordered_smul`. -/
+theorem OrderedSmul.mk'' [OrderedSemiring 𝕜] [LinearOrderedAddCommMonoid M] [SmulWithZero 𝕜 M]
+    (h : ∀ ⦃c : 𝕜⦄, 0 < c → StrictMono fun a : M => c • a) : OrderedSmul 𝕜 M :=
+  { smul_lt_smul_of_pos := fun a b c hab hc => h hc hab,
+    lt_of_smul_lt_smul_of_pos := fun a b c hab hc => (h hc).lt_iff_lt.1 hab }
+
+instance Nat.ordered_smul [LinearOrderedCancelAddCommMonoid M] : OrderedSmul ℕ M :=
+  OrderedSmul.mk'' fun n hn a b hab => by
+    cases n
+    · cases hn
+      
+    induction' n with n ih
+    · simp only [one_nsmul, hab]
+      
+    · simp only [succ_nsmul _ n.succ, add_lt_add hab (ih n.succ_pos)]
+      
+
+instance Int.ordered_smul [LinearOrderedAddCommGroup M] : OrderedSmul ℤ M :=
+  OrderedSmul.mk'' fun n hn => by
+    cases n
+    · simp only [Int.of_nat_eq_coe, Int.coe_nat_pos, coe_nat_zsmul] at hn⊢
+      exact strict_mono_smul_left hn
+      
+    · cases (Int.neg_succ_not_pos _).1 hn
+      
+
+-- TODO: `linear_ordered_field M → ordered_smul ℚ M`
+instance LinearOrderedSemiring.to_ordered_smul {R : Type _} [LinearOrderedSemiring R] : OrderedSmul R R :=
+  OrderedSmul.mk'' fun c => strict_mono_mul_left_of_pos
 
 section LinearOrderedSemifield
 

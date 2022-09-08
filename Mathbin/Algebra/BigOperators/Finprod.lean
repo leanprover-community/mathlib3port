@@ -167,7 +167,7 @@ theorem finprod_eq_if {p : Prop} [Decidable p] {x : M} : (∏ᶠ i : p, x) = if 
 
 @[to_additive]
 theorem finprod_congr {f g : α → M} (h : ∀ x, f x = g x) : finprod f = finprod g :=
-  congr_arg _ <| funext h
+  congr_argₓ _ <| funext h
 
 @[congr, to_additive]
 theorem finprod_congr_Prop {p q : Prop} {f : p → M} {g : q → M} (hpq : p = q) (hfg : ∀ h : q, f (hpq.mpr h) = g h) :
@@ -903,7 +903,7 @@ theorem finprod_mem_finset_product' [DecidableEq α] [DecidableEq β] (s : Finse
   rw [finprod_eq_prod_of_mul_support_subset _ (s.mul_support_of_fiberwise_prod_subset_image f Prod.fst), ←
     Finset.prod_fiberwise_of_maps_to _ f]
   -- `finish` could close the goal here
-  simp only [Finset.mem_image, Prod.mk.eta]
+  simp only [Finset.mem_image, Prod.mk.etaₓ]
   exact fun x hx => ⟨x, hx, rfl⟩
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b)

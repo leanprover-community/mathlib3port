@@ -184,7 +184,7 @@ theorem irreducible_of_monic {p : R[X]} (hp1 : p.Monic) (hp2 : p ≠ 1) :
       have hg : g ≠ 0 := fun hg => by
         rw [hp, hg, mul_zero] at hp1
         exact not_monic_zero hp1
-      (Or.imp (fun hf => is_unit_of_mul_eq_one _ _ hf) fun hg => is_unit_of_mul_eq_one _ _ hg) <|
+      (Or.impₓ (fun hf => is_unit_of_mul_eq_one _ _ hf) fun hg => is_unit_of_mul_eq_one _ _ hg) <|
         hp3 (f * c f.leadingCoeff⁻¹) (g * c g.leadingCoeff⁻¹) (monic_mul_leading_coeff_inv hf)
             (monic_mul_leading_coeff_inv hg) <|
           by
@@ -506,7 +506,7 @@ theorem is_coprime_of_is_root_of_eval_derivative_ne_zero {K : Type _} [Field K] 
   have key : (X - C a) * (f /ₘ (X - C a)) = f - f %ₘ (X - C a) := by
     rw [eq_sub_iff_add_eq, ← eq_sub_iff_add_eq', mod_by_monic_eq_sub_mul_div]
     exact monic_X_sub_C a
-  replace key := congr_arg derivative key
+  replace key := congr_argₓ derivative key
   simp only [derivative_X, derivative_mul, one_mulₓ, sub_zero, derivative_sub, mod_by_monic_X_sub_C_eq_C_eval,
     derivative_C] at key
   have : X - C a ∣ derivative f := key ▸ dvd_add h (dvd_mul_right _ _)

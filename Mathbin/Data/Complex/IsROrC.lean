@@ -154,7 +154,7 @@ theorem one_im : im (1 : K) = 0 := by
 @[simp, norm_cast]
 theorem of_real_inj {z w : ℝ} : (z : K) = (w : K) ↔ z = w :=
   { mp := fun h => by
-      convert congr_arg re h <;> simp only [of_real_re],
+      convert congr_argₓ re h <;> simp only [of_real_re],
     mpr := fun h => by
       rw [h] }
 
@@ -443,7 +443,7 @@ theorem norm_sq_sub (z w : K) : normSq (z - w) = normSq z + normSq w - 2 * re (z
 theorem sqrt_norm_sq_eq_norm {z : K} : Real.sqrt (normSq z) = ∥z∥ := by
   have h₂ : ∥z∥ = Real.sqrt (∥z∥ ^ 2) := (Real.sqrt_sq (norm_nonneg z)).symm
   rw [h₂]
-  exact congr_arg Real.sqrt (norm_sq_eq_def' z)
+  exact congr_argₓ Real.sqrt (norm_sq_eq_def' z)
 
 /-! ### Inversion -/
 
@@ -531,7 +531,7 @@ theorem norm_conj {z : K} : ∥conj z∥ = ∥z∥ := by
   simp only [← sqrt_norm_sq_eq_norm, norm_sq_conj]
 
 instance (priority := 100) :
-    CstarRing K where norm_star_mul_self := fun x => (norm_mul _ _).trans <| congr_arg (· * ∥x∥) norm_conj
+    CstarRing K where norm_star_mul_self := fun x => (norm_mul _ _).trans <| congr_argₓ (· * ∥x∥) norm_conj
 
 /-! ### Cast lemmas -/
 

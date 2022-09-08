@@ -74,7 +74,7 @@ theorem eq_bot_of_generator_maximal_submodule_image_eq_zero {N O : Submodule R M
     [(ϕ.submoduleImage N).IsPrincipal] (hgen : generator (ϕ.submoduleImage N) = 0) : N = ⊥ := by
   rw [Submodule.eq_bot_iff]
   intro x hx
-  refine' congr_arg coe (show (⟨x, hNO hx⟩ : O) = 0 from b.ext_elem fun i => _)
+  refine' congr_argₓ coe (show (⟨x, hNO hx⟩ : O) = 0 from b.ext_elem fun i => _)
   rw [(eq_bot_iff_generator_eq_zero _).mpr hgen] at hϕ
   rw [LinearEquiv.map_zero, Finsupp.zero_apply]
   refine' (Submodule.eq_bot_iff _).mp (hϕ (Finsupp.lapply i ∘ₗ ↑b.repr) bot_le) _ _
@@ -201,7 +201,7 @@ theorem Submodule.basis_of_pid_aux [Fintype ι] {O : Type _} [AddCommGroupₓ O]
         simp only [LinearMap.map_sum, LinearMap.map_smul]
         rfl)
   have a_smul_y' : a • y' = y := by
-    refine' congr_arg coe (show (a • ⟨y', y'M⟩ : M) = ⟨y, N_le_M yN⟩ from _)
+    refine' congr_argₓ coe (show (a • ⟨y', y'M⟩ : M) = ⟨y, N_le_M yN⟩ from _)
     rw [← b'M.sum_repr ⟨y, N_le_M yN⟩, mk_y', Finset.smul_sum]
     refine' Finset.sum_congr rfl fun i _ => _
     rw [← mul_smul, ← hc]
@@ -238,7 +238,7 @@ theorem Submodule.basis_of_pid_aux [Fintype ι] {O : Type _} [AddCommGroupₓ O]
     rw [LinearMap.mem_ker] at hx'
     have hc' : (c • ⟨y', y'M⟩ + ⟨x, xM⟩ : M) = 0 := Subtype.coe_injective hc
     simpa only [LinearMap.map_add, LinearMap.map_zero, LinearMap.map_smul, smul_eq_mul, add_zeroₓ, mul_eq_zero,
-      ϕy'_ne_zero, hx', or_falseₓ] using congr_arg ϕ hc'
+      ϕy'_ne_zero, hx', or_falseₓ] using congr_argₓ ϕ hc'
   -- And `a • y'` is orthogonal to `N'`.
   have ay'_ortho_N' : ∀ (c : R), ∀ z ∈ N', c • a • y' + z = 0 → c = 0 := by
     intro c z zN' hc
@@ -512,16 +512,18 @@ matrix.
 See also `ideal.smith_normal_form` for a version of this theorem that returns
 a `basis.smith_normal_form`.
 -/
-theorem Ideal.exists_smith_normal_form [Fintype ι] {S : Type _} [CommRingₓ S] [IsDomain S] [Algebra R S]
+theorem Ideal.exists_smith_normal_form [Finite ι] {S : Type _} [CommRingₓ S] [IsDomain S] [Algebra R S]
     (b : Basis ι R S) (I : Ideal S) (hI : I ≠ ⊥) :
-    ∃ (b' : Basis ι R S)(a : ι → R)(ab' : Basis ι R I), ∀ i, (ab' i : S) = a i • b' i :=
-  let ⟨bS, bI, f, a, snf⟩ := I.SmithNormalForm b hI
-  let e : Finₓ (Fintype.card ι) ≃ ι :=
-    Equivₓ.ofBijective f ((Fintype.bijective_iff_injective_and_card f).mpr ⟨f.Injective, Fintype.card_fin _⟩)
-  have fe : ∀ i, f (e.symm i) = i := e.apply_symm_apply
-  ⟨bS, a ∘ e.symm, (bI.reindex e).map ((restrictScalarsEquiv _ _ _ _).restrictScalars R), fun i => by
-    simp only [snf, fe, Basis.map_apply, LinearEquiv.restrict_scalars_apply, Submodule.restrict_scalars_equiv_apply,
-      Basis.coe_reindex]⟩
+    ∃ (b' : Basis ι R S)(a : ι → R)(ab' : Basis ι R I), ∀ i, (ab' i : S) = a i • b' i := by
+  cases nonempty_fintype ι <;>
+    exact
+      let ⟨bS, bI, f, a, snf⟩ := I.smith_normal_form b hI
+      let e : Finₓ (Fintype.card ι) ≃ ι :=
+        Equivₓ.ofBijective f ((Fintype.bijective_iff_injective_and_card f).mpr ⟨f.Injective, Fintype.card_fin _⟩)
+      have fe : ∀ i, f (e.symm i) = i := e.apply_symm_apply
+      ⟨bS, a ∘ e.symm, (bI.reindex e).map ((restrict_scalars_equiv _ _ _ _).restrictScalars R), fun i => by
+        simp only [snf, fe, Basis.map_apply, LinearEquiv.restrict_scalars_apply, Submodule.restrict_scalars_equiv_apply,
+          Basis.coe_reindex]⟩
 
 end SmithNormal
 

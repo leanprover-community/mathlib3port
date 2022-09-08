@@ -3,7 +3,7 @@ Copyright (c) 2022 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Mathbin.Algebra.MonoidAlgebra.Basic
+import Mathbin.Algebra.MonoidAlgebra.Support
 
 /-!
 # Lemmas about the `sup` and `inf` of the support of `add_monoid_algebra`
@@ -82,11 +82,11 @@ theorem sup_support_list_prod_le (degb0 : degb 0 ≤ 0) (degbm : ∀ a b, degb (
     ∀ l : List (AddMonoidAlgebra R A),
       l.Prod.Support.sup degb ≤ (l.map fun f : AddMonoidAlgebra R A => f.Support.sup degb).Sum
   | [] => by
-    rw [List.map_nil, Finset.sup_le_iff, List.prod_nil, List.sum_nil]
+    rw [List.map_nilₓ, Finset.sup_le_iff, List.prod_nil, List.sum_nil]
     exact fun a ha => by
       rwa [finset.mem_singleton.mp (Finsupp.support_single_subset ha)]
   | f::fs => by
-    rw [List.prod_cons, List.map_cons, List.sum_cons]
+    rw [List.prod_cons, List.map_consₓ, List.sum_cons]
     exact (sup_support_mul_le degbm _ _).trans (add_le_add_left (sup_support_list_prod_le _) _)
 
 theorem le_inf_support_list_prod (degt0 : 0 ≤ degt 0) (degtm : ∀ a b, degt a + degt b ≤ degt (a + b))
@@ -134,7 +134,7 @@ theorem le_inf_support_multiset_prod (degt0 : 0 ≤ degt 0) (degtm : ∀ a b, de
 
 theorem sup_support_finset_prod_le (degb0 : degb 0 ≤ 0) (degbm : ∀ a b, degb (a + b) ≤ degb a + degb b) (s : Finset ι)
     (f : ι → AddMonoidAlgebra R A) : (∏ i in s, f i).Support.sup degb ≤ ∑ i in s, (f i).Support.sup degb :=
-  (sup_support_multiset_prod_le degb0 degbm _).trans_eq <| congr_arg _ <| Multiset.map_map _ _ _
+  (sup_support_multiset_prod_le degb0 degbm _).trans_eq <| congr_argₓ _ <| Multiset.map_map _ _ _
 
 theorem le_inf_support_finset_prod (degt0 : 0 ≤ degt 0) (degtm : ∀ a b, degt a + degt b ≤ degt (a + b)) (s : Finset ι)
     (f : ι → AddMonoidAlgebra R A) : (∑ i in s, (f i).Support.inf degt) ≤ (∏ i in s, f i).Support.inf degt :=

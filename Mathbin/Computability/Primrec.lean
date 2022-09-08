@@ -739,7 +739,7 @@ theorem nat_div_mod : Primrec₂ fun n k : ℕ => (n / k, n % k) :=
         f (n.succ, k) = _root_.ite ((f (n, k)).2.succ = k) (Nat.succ (f (n, k)).1, 0) ((f (n, k)).1, (f (n, k)).2.succ)
         from rfl]
     by_cases' h : (f (n, k)).2.succ = k <;> simp [h]
-    · have := congr_arg Nat.succ IH.1
+    · have := congr_argₓ Nat.succ IH.1
       refine' ⟨_, fun k0 => Nat.noConfusion (h.trans k0)⟩
       rwa [← Nat.succ_add, h, add_commₓ, ← Nat.mul_succ] at this
       
@@ -902,7 +902,7 @@ instance list : Primcodable (List α) :=
         exact this _ _ (IH _ (Nat.unpair_right_le n))
         intro o p IH
         cases o <;> cases p <;> injection IH with h
-        exact congr_arg (fun k => (Nat.mkpair (encode a) k).succ.succ) h⟩
+        exact congr_argₓ (fun k => (Nat.mkpair (encode a) k).succ.succ) h⟩
 
 end Primcodable
 
@@ -1081,7 +1081,7 @@ def subtype {p : α → Prop} [DecidablePred p] (hp : PrimrecPred p) : Primcodab
           by_cases' h : p a <;> simp [h] <;> rfl⟩
 
 instance fin {n} : Primcodable (Finₓ n) :=
-  @ofEquiv _ _ (Subtype <| nat_lt.comp Primrec.id (const n)) (Equivₓ.refl _)
+  @ofEquiv _ _ (Subtype <| nat_lt.comp Primrec.id (const n)) Finₓ.equivSubtype
 
 instance vector {n} : Primcodable (Vector α n) :=
   subtype ((@Primrec.eq _ _ Nat.decidableEq).comp list_length (const _))

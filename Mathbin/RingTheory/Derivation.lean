@@ -822,7 +822,7 @@ theorem Derivation.lift_kaehler_differential_unique (f f' : Ω[ S ⁄ R ] →ₗ
     trivial
   apply Submodule.span_induction this
   · rintro _ ⟨x, rfl⟩
-    exact congr_arg (fun D : Derivation R S M => D x) hf
+    exact congr_argₓ (fun D : Derivation R S M => D x) hf
     
   · rw [map_zero, map_zero]
     

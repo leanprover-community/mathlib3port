@@ -83,7 +83,7 @@ noncomputable def ofInjective {α β} (f : α → β) [DecidableEq α] [FinEnum 
       intro x
       simp only [mem_to_list, true_andₓ, List.mem_filter_map]
       use f x
-      simp only [h, Function.partial_inv_left])
+      simp only [h, Function.partial_inv_leftₓ])
 
 instance pempty : FinEnum Pempty :=
   ofList [] fun x => Pempty.elimₓ x

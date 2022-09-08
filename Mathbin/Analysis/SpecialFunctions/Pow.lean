@@ -131,7 +131,7 @@ theorem cpow_two (x : ℂ) : x ^ (2 : ℂ) = x ^ 2 := by
 theorem cpow_int_cast (x : ℂ) : ∀ n : ℤ, x ^ (n : ℂ) = x ^ n
   | (n : ℕ) => by
     simp <;> rfl
-  | -[1+ n] => by
+  | -[1 + n] => by
     rw [zpow_neg_succ_of_nat] <;>
       simp only [Int.neg_succ_of_nat_coe, Int.cast_neg, Complex.cpow_neg, inv_eq_one_div, Int.cast_coe_nat,
         cpow_nat_cast]
@@ -1334,7 +1334,7 @@ theorem rpow_le_self_of_le_one {x : ℝ≥0 } {z : ℝ} (hx : x ≤ 1) (h_one_le
   exact Nnreal.rpow_le_rpow_of_exponent_ge h hx h_one_le
 
 theorem rpow_left_injective {x : ℝ} (hx : x ≠ 0) : Function.Injective fun y : ℝ≥0 => y ^ x := fun y z hyz => by
-  simpa only [rpow_inv_rpow_self hx] using congr_arg (fun y => y ^ (1 / x)) hyz
+  simpa only [rpow_inv_rpow_self hx] using congr_argₓ (fun y => y ^ (1 / x)) hyz
 
 theorem rpow_eq_rpow_iff {x y : ℝ≥0 } {z : ℝ} (hz : z ≠ 0) : x ^ z = y ^ z ↔ x = y :=
   (rpow_left_injective hz).eq_iff

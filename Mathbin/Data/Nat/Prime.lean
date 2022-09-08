@@ -76,7 +76,7 @@ theorem Prime.eq_one_or_self_of_dvd {p : ℕ} (pp : p.Prime) (m : ℕ) (hm : m �
   obtain ⟨n, hn⟩ := hm
   have := pp.is_unit_or_is_unit hn
   rw [Nat.is_unit_iff, Nat.is_unit_iff] at this
-  apply Or.imp_rightₓ _ this
+  apply Or.imp_right _ this
   rintro rfl
   rw [hn, mul_oneₓ]
 
@@ -86,7 +86,7 @@ theorem prime_def_lt'' {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ (m) (_ : m ∣ p)
   have h1 := one_lt_two.trans_le h.1
   refine' ⟨mt nat.is_unit_iff.mp h1.ne', fun a b hab => _⟩
   simp only [Nat.is_unit_iff]
-  apply Or.imp_rightₓ _ (h.2 a _)
+  apply Or.imp_right _ (h.2 a _)
   · rintro rfl
     rw [← Nat.mul_right_inj (pos_of_gt h1), ← hab, mul_oneₓ]
     
@@ -497,7 +497,7 @@ theorem Prime.eq_two_or_odd {p : ℕ} (hp : Prime p) : p = 2 ∨ p % 2 = 1 :=
           decide)).symm
 
 theorem Prime.eq_two_or_odd' {p : ℕ} (hp : Prime p) : p = 2 ∨ Odd p :=
-  Or.imp_rightₓ (fun h => ⟨p / 2, (div_add_modₓ p 2).symm.trans (congr_arg _ h)⟩) hp.eq_two_or_odd
+  Or.imp_right (fun h => ⟨p / 2, (div_add_modₓ p 2).symm.trans (congr_argₓ _ h)⟩) hp.eq_two_or_odd
 
 theorem Prime.even_iff {p : ℕ} (hp : Prime p) : Even p ↔ p = 2 := by
   rw [even_iff_two_dvd, prime_dvd_prime_iff_eq prime_two hp, eq_comm]

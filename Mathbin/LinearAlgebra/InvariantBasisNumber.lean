@@ -250,9 +250,10 @@ private def induced_equiv [Fintype ι'] (I : Ideal R) (e : (ι → R) ≃ₗ[R] 
     first |
       rintro ⟨a⟩ ⟨b⟩|
       rintro ⟨a⟩
-    change Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
+    convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
     congr
-    simp
+    simp only [map_add, LinearEquiv.coe_coe, LinearEquiv.map_smulₛₗ, RingHom.id_apply, LinearEquiv.symm_apply_apply,
+      LinearEquiv.apply_symm_apply]
 
 end
 

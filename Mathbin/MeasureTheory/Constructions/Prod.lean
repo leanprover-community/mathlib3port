@@ -445,7 +445,7 @@ instance {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {mα : Mea
   set L := (Prod.fst '' K) ×ˢ (Prod.snd '' K) with hL
   have : K ⊆ L := by
     rintro ⟨x, y⟩ hxy
-    simp only [prod_mk_mem_set_prod_eq, mem_image, Prod.exists, exists_and_distrib_right, exists_eq_right]
+    simp only [prod_mk_mem_set_prod_eq, mem_image, Prod.existsₓ, exists_and_distrib_right, exists_eq_right]
     exact ⟨⟨y, hxy⟩, ⟨x, hxy⟩⟩
   apply lt_of_le_of_ltₓ (measure_mono this)
   rw [hL, prod_prod]

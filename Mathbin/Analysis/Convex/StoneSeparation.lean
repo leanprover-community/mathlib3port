@@ -88,8 +88,7 @@ theorem not_disjoint_segment_convex_hull_triple {p q u v x y z : E} (hz : z ∈ 
   simp_rw [div_eq_inv_mul, hw, mul_assoc, mul_smul (az * av + bz * au)⁻¹, ← smul_add, add_assocₓ, ← mul_assoc]
   congr 3
   rw [← mul_smul, ← mul_rotate, mul_right_commₓ, mul_smul, ← mul_smul _ av, mul_rotate, mul_smul _ bz, ← smul_add]
-  simp only [List.map, List.pmap, Nat.add_def, add_zeroₓ, Finₓ.mk_eq_subtype_mk, Finₓ.mk_bit0, Finₓ.mk_one,
-    List.foldr_cons, List.foldr_nil]
+  simp only [List.map, List.pmap, Nat.add_def, add_zeroₓ, Finₓ.mk_bit0, Finₓ.mk_one, List.foldr_cons, List.foldr_nil]
   rfl
 
 /-- **Stone's Separation Theorem** -/

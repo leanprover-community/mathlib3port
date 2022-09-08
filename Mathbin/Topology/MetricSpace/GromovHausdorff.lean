@@ -807,13 +807,13 @@ instance : SecondCountableTopology GHSpace := by
         simp only [F, (E p).symm_apply_apply]
       have Ap : (F p).2 ⟨i, hip⟩ ⟨j, hjp⟩ = floor (ε⁻¹ * dist x y) := by
         rw [← this]
-        congr <;> apply (Finₓ.ext_iff _ _).2 <;> rfl
+        congr <;> apply Finₓ.ext_iff.2 <;> rfl
       -- Express `dist (Φ x) (Φ y)` in terms of `F q`
       have : (F q).2 ((E q) (Ψ x)) ((E q) (Ψ y)) = floor (ε⁻¹ * dist (Ψ x) (Ψ y)) := by
         simp only [F, (E q).symm_apply_apply]
       have Aq : (F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩ = floor (ε⁻¹ * dist (Ψ x) (Ψ y)) := by
         rw [← this]
-        congr <;> apply (Finₓ.ext_iff _ _).2 <;> [exact i', exact j']
+        congr <;> apply Finₓ.ext_iff.2 <;> [exact i', exact j']
       -- use the equality between `F p` and `F q` to deduce that the distances have equal
       -- integer parts
       have : (F p).2 ⟨i, hip⟩ ⟨j, hjp⟩ = (F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩ := by
@@ -908,7 +908,7 @@ theorem totally_bounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
   infer_instance
   -- It remains to show that if `F p = F q`, then `p` and `q` are `ε`-close
   rintro ⟨p, pt⟩ ⟨q, qt⟩ hpq
-  have Npq : N p = N q := (Finₓ.ext_iff _ _).1 (Sigma.mk.inj_iff.1 hpq).1
+  have Npq : N p = N q := Finₓ.ext_iff.1 (Sigma.mk.inj_iff.1 hpq).1
   let Ψ : s p → s q := fun x => (E q).symm (Finₓ.cast Npq ((E p) x))
   let Φ : s p → q.rep := fun x => Ψ x
   have main : GH_dist p.rep q.rep ≤ ε + ε / 2 + ε := by
@@ -974,7 +974,7 @@ theorem totally_bounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
       have Ap : ((F p).2 ⟨i, hip⟩ ⟨j, hjp⟩).1 = ⌊ε⁻¹ * dist x y⌋₊ :=
         calc
           ((F p).2 ⟨i, hip⟩ ⟨j, hjp⟩).1 = ((F p).2 ((E p) x) ((E p) y)).1 := by
-            congr <;> apply (Finₓ.ext_iff _ _).2 <;> rfl
+            congr <;> apply Finₓ.ext_iff.2 <;> rfl
           _ = min M ⌊ε⁻¹ * dist x y⌋₊ := by
             simp only [F, (E p).symm_apply_apply]
           _ = ⌊ε⁻¹ * dist x y⌋₊ := by
@@ -988,7 +988,7 @@ theorem totally_bounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
       have Aq : ((F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩).1 = ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋₊ :=
         calc
           ((F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩).1 = ((F q).2 ((E q) (Ψ x)) ((E q) (Ψ y))).1 := by
-            congr <;> apply (Finₓ.ext_iff _ _).2 <;> [exact i', exact j']
+            congr <;> apply Finₓ.ext_iff.2 <;> [exact i', exact j']
           _ = min M ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋₊ := by
             simp only [F, (E q).symm_apply_apply]
           _ = ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋₊ := by

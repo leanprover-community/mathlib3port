@@ -765,7 +765,7 @@ def compositionAsSetEquiv (n : ℕ) : CompositionAsSet n ≃ Finset (Finₓ (n -
     constructor
     · rintro ⟨j, js, hj⟩
       convert js
-      exact (Finₓ.ext_iff _ _).2 hj
+      exact Finₓ.ext_iff.2 hj
       
     · intro h
       exact ⟨i, h, rfl⟩

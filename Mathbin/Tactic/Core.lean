@@ -65,7 +65,7 @@ protected unsafe def of_nat (α : expr) : ℕ → tactic expr :=
 The output is either a numeral or the negation of a numeral. -/
 protected unsafe def of_int (α : expr) : ℤ → tactic expr
   | (n : ℕ) => expr.of_nat α n
-  | -[1+ n] => do
+  | -[1 + n] => do
     let e ← expr.of_nat α (n + 1)
     tactic.mk_app `` Neg.neg [e]
 
@@ -845,7 +845,7 @@ protected unsafe def of_nat (c : instance_cache) (n : ℕ) : tactic (instance_ca
 The output is either a numeral or the negation of a numeral. -/
 protected unsafe def of_int (c : instance_cache) : ℤ → tactic (instance_cache × expr)
   | (n : ℕ) => c.ofNat n
-  | -[1+ n] => do
+  | -[1 + n] => do
     let (c, e) ← c.ofNat (n + 1)
     c `` Neg.neg [e]
 

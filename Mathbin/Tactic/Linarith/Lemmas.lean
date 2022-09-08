@@ -51,10 +51,10 @@ theorem nat_eq_subst {n1 n2 : ℕ} {z1 z2 : ℤ} (hn : n1 = n2) (h1 : ↑n1 = z1
   simpa [Eq.symm h1, Eq.symm h2, Int.coe_nat_eq_coe_nat_iff]
 
 theorem nat_le_subst {n1 n2 : ℕ} {z1 z2 : ℤ} (hn : n1 ≤ n2) (h1 : ↑n1 = z1) (h2 : ↑n2 = z2) : z1 ≤ z2 := by
-  simpa [Eq.symm h1, Eq.symm h2, Int.coe_nat_le]
+  simpa [Eq.symm h1, Eq.symm h2, Int.coe_nat_leₓ]
 
 theorem nat_lt_subst {n1 n2 : ℕ} {z1 z2 : ℤ} (hn : n1 < n2) (h1 : ↑n1 = z1) (h2 : ↑n2 = z2) : z1 < z2 := by
-  simpa [Eq.symm h1, Eq.symm h2, Int.coe_nat_lt]
+  simpa [Eq.symm h1, Eq.symm h2, Int.coe_nat_ltₓ]
 
 theorem eq_of_eq_of_eq {α} [OrderedSemiring α] {a b : α} (ha : a = 0) (hb : b = 0) : a + b = 0 := by
   simp [*]

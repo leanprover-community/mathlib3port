@@ -241,13 +241,13 @@ theorem comap_pure {m : α → β} (a : α) (inj : Injective m) (large) : comap 
       rw [coe_pure, ← principal_singleton, ← image_singleton, preimage_image_eq _ inj]
 
 theorem pure_injective : Injective (pure : α → Ultrafilter α) := fun a b h =>
-  Filter.pure_injective (congr_arg Ultrafilter.toFilter h : _)
+  Filter.pure_injective (congr_argₓ Ultrafilter.toFilter h : _)
 
 instance [Inhabited α] : Inhabited (Ultrafilter α) :=
   ⟨pure default⟩
 
 instance [Nonempty α] : Nonempty (Ultrafilter α) :=
-  Nonempty.map pure inferInstance
+  Nonempty.mapₓ pure inferInstance
 
 theorem eq_pure_of_finite_mem (h : s.Finite) (h' : s ∈ f) : ∃ x ∈ s, (f : Filter α) = pure x := by
   rw [← bUnion_of_singleton s] at h'

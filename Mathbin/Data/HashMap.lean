@@ -220,9 +220,9 @@ theorem Valid.as_list_nodup {n} {bkts : BucketArray α β n} {sz : Nat} (v : val
   have : (bkts.to_list.enum.map Prod.fst).Nodup := by
     simp [List.nodup_range]
   refine' List.Pairwiseₓ.imp_of_mem _ ((List.pairwise_map _).1 this)
-  rw [Prod.forall]
+  rw [Prod.forallₓ]
   intro i l₁
-  rw [Prod.forall]
+  rw [Prod.forallₓ]
   intro j l₂ me₁ me₂ ij
   simp [List.Disjoint]
   intro a b ml₁ b' ml₂
@@ -281,7 +281,7 @@ theorem Valid.modify {sz : ℕ} (v : valid bkts sz) :
   rw [← v.len, e₁]
   suffices valid bkts' (u' ++ v2 ++ w').length by
     simpa [Ge, add_commₓ, add_left_commₓ, Nat.le_add_rightₓ, add_tsub_cancel_left]
-  refine' ⟨congr_arg _ e₂, fun i a => _, fun i => _⟩
+  refine' ⟨congr_argₓ _ e₂, fun i a => _, fun i => _⟩
   · by_cases' bidx = i
     · subst i
       rw [bkts', Arrayₓ.read_write, hfl]

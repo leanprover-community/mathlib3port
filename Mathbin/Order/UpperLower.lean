@@ -84,10 +84,10 @@ theorem is_lower_set_compl : IsLowerSet (sᶜ) ↔ IsUpperSet s :=
     rw [compl_compl], IsUpperSet.compl⟩
 
 theorem IsUpperSet.union (hs : IsUpperSet s) (ht : IsUpperSet t) : IsUpperSet (s ∪ t) := fun a b h =>
-  Or.imp (hs h) (ht h)
+  Or.impₓ (hs h) (ht h)
 
 theorem IsLowerSet.union (hs : IsLowerSet s) (ht : IsLowerSet t) : IsLowerSet (s ∪ t) := fun a b h =>
-  Or.imp (hs h) (ht h)
+  Or.impₓ (hs h) (ht h)
 
 theorem IsUpperSet.inter (hs : IsUpperSet s) (ht : IsUpperSet t) : IsUpperSet (s ∩ t) := fun a b h =>
   And.imp (hs h) (ht h)
@@ -413,7 +413,7 @@ namespace LowerSet
 variable {S : Set (LowerSet α)} {s t : LowerSet α} {a : α}
 
 instance : HasSup (LowerSet α) :=
-  ⟨fun s t => ⟨s ∪ t, fun a b h => Or.imp (s.lower h) (t.lower h)⟩⟩
+  ⟨fun s t => ⟨s ∪ t, fun a b h => Or.impₓ (s.lower h) (t.lower h)⟩⟩
 
 instance : HasInf (LowerSet α) :=
   ⟨fun s t => ⟨s ∩ t, fun a b h => And.imp (s.lower h) (t.lower h)⟩⟩
@@ -976,13 +976,13 @@ theorem lower_closure_univ : lowerClosure (Univ : Set α) = ⊤ :=
 
 @[simp]
 theorem upper_closure_eq_top_iff : upperClosure s = ⊤ ↔ s = ∅ :=
-  ⟨fun h => subset_empty_iff.1 <| subset_upper_closure.trans (congr_arg coe h).Subset, by
+  ⟨fun h => subset_empty_iff.1 <| subset_upper_closure.trans (congr_argₓ coe h).Subset, by
     rintro rfl
     exact upper_closure_empty⟩
 
 @[simp]
 theorem lower_closure_eq_bot_iff : lowerClosure s = ⊥ ↔ s = ∅ :=
-  ⟨fun h => subset_empty_iff.1 <| subset_lower_closure.trans (congr_arg coe h).Subset, by
+  ⟨fun h => subset_empty_iff.1 <| subset_lower_closure.trans (congr_argₓ coe h).Subset, by
     rintro rfl
     exact lower_closure_empty⟩
 

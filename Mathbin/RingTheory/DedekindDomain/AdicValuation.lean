@@ -118,7 +118,7 @@ theorem int_valuation_lt_one_iff_dvd (r : R) : v.intValuationDef r < 1 ↔ v.asI
   · simpa [hr] using WithZero.zero_lt_coe _
     
   · rw [← WithZero.coe_one, ← of_add_zero, WithZero.coe_lt_coe, of_add_lt, neg_lt_zero, ← Int.coe_nat_zero,
-      Int.coe_nat_lt, zero_lt_iff]
+      Int.coe_nat_ltₓ, zero_lt_iff]
     have h : (Ideal.span {r} : Ideal R) ≠ 0 := by
       rw [Ne.def, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
       exact hr
@@ -136,7 +136,7 @@ theorem int_valuation_le_pow_iff_dvd (r : R) (n : ℕ) :
   split_ifs with hr
   · simp_rw [hr, Ideal.dvd_span_singleton, zero_le', Submodule.zero_mem]
     
-  · rw [WithZero.coe_le_coe, of_add_le, neg_le_neg_iff, Int.coe_nat_le, Ideal.dvd_span_singleton, ←
+  · rw [WithZero.coe_le_coe, of_add_le, neg_le_neg_iff, Int.coe_nat_leₓ, Ideal.dvd_span_singleton, ←
       Associates.le_singleton_iff,
       Associates.prime_pow_dvd_iff_le (associates.mk_ne_zero'.mpr hr)
         (by
@@ -181,7 +181,7 @@ theorem IntValuation.map_mul' (x y : R) : v.intValuationDef (x * y) = v.intValua
 theorem IntValuation.le_max_iff_min_le {a b c : ℕ} :
     Multiplicative.ofAdd (-c : ℤ) ≤ max (Multiplicative.ofAdd (-a : ℤ)) (Multiplicative.ofAdd (-b : ℤ)) ↔ min a b ≤ c :=
   by
-  rw [le_max_iff, of_add_le, of_add_le, neg_le_neg_iff, neg_le_neg_iff, Int.coe_nat_le, Int.coe_nat_le, ← min_le_iff]
+  rw [le_max_iff, of_add_le, of_add_le, neg_le_neg_iff, neg_le_neg_iff, Int.coe_nat_leₓ, Int.coe_nat_leₓ, ← min_le_iff]
 
 /-- The `v`-adic valuation of a sum is bounded above by the maximum of the valuations. -/
 theorem IntValuation.map_add_le_max' (x y : R) :
@@ -247,7 +247,7 @@ theorem int_valuation_exists_uniformizer : ∃ π : R, v.intValuationDef π = Mu
     exact nmem (Submodule.zero_mem (v.as_ideal ^ 2))
   use π
   rw [int_valuation_def, if_neg (associates.mk_ne_zero'.mp hπ), WithZero.coe_inj]
-  apply congr_arg
+  apply congr_argₓ
   rw [neg_inj, ← Int.coe_nat_one, Int.coe_nat_inj']
   rw [← Ideal.dvd_span_singleton, ← Associates.mk_le_mk_iff_dvd_iff] at mem nmem
   rw [← pow_oneₓ (Associates.mk v.as_ideal), Associates.prime_pow_dvd_iff_le hπ hv] at mem

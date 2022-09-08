@@ -7,6 +7,7 @@ import Mathbin.Topology.Sheaves.SheafCondition.Sites
 import Mathbin.CategoryTheory.Limits.Preserves.Basic
 import Mathbin.CategoryTheory.Category.Pairwise
 import Mathbin.CategoryTheory.Limits.Constructions.BinaryProducts
+import Mathbin.Algebra.Category.Ring.Constructions
 
 /-!
 # Equivalent formulations of the sheaf condition
@@ -435,17 +436,17 @@ variable (F : X.Sheaf C) (U V : Opens X)
 
 open CategoryTheory.Limits
 
-/-- For a sheaf `F`, `F(U ∪ V)` is the pullback of `F(U) ⟶ F(U ∩ V)` and `F(V) ⟶ F(U ∩ V)`.
+/-- For a sheaf `F`, `F(U ⊔ V)` is the pullback of `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)`.
 This is the pullback cone. -/
 def interUnionPullbackCone :
-    PullbackCone (F.1.map (homOfLe inf_le_left : U ∩ V ⟶ _).op) (F.1.map (homOfLe inf_le_right).op) :=
+    PullbackCone (F.1.map (homOfLe inf_le_left : U⊓V ⟶ _).op) (F.1.map (homOfLe inf_le_right).op) :=
   PullbackCone.mk (F.1.map (homOfLe le_sup_left).op) (F.1.map (homOfLe le_sup_right).op)
     (by
       rw [← F.1.map_comp, ← F.1.map_comp]
       congr )
 
 @[simp]
-theorem inter_union_pullback_cone_X : (interUnionPullbackCone F U V).x = F.1.obj (op <| U ∪ V) :=
+theorem inter_union_pullback_cone_X : (interUnionPullbackCone F U V).x = F.1.obj (op <| U⊔V) :=
   rfl
 
 @[simp]
@@ -456,17 +457,17 @@ theorem inter_union_pullback_cone_fst : (interUnionPullbackCone F U V).fst = F.1
 theorem inter_union_pullback_cone_snd : (interUnionPullbackCone F U V).snd = F.1.map (homOfLe le_sup_right).op :=
   rfl
 
-variable (s : PullbackCone (F.1.map (homOfLe inf_le_left : U ∩ V ⟶ _).op) (F.1.map (homOfLe inf_le_right).op))
+variable (s : PullbackCone (F.1.map (homOfLe inf_le_left : U⊓V ⟶ _).op) (F.1.map (homOfLe inf_le_right).op))
 
 variable [HasProducts.{v} C]
 
 /-- (Implementation).
-Every cone over `F(U) ⟶ F(U ∩ V)` and `F(V) ⟶ F(U ∩ V)` factors through `F(U ∪ V)`.
+Every cone over `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)` factors through `F(U ⊔ V)`.
 TODO: generalize to `C` without products.
 -/
-def interUnionPullbackConeLift : s.x ⟶ F.1.obj (op (U ∪ V)) := by
+def interUnionPullbackConeLift : s.x ⟶ F.1.obj (op (U⊔V)) := by
   let ι : ULift.{v} walking_pair → opens X := fun j => walking_pair.cases_on j.down U V
-  have hι : U ∪ V = supr ι := by
+  have hι : U⊔V = supr ι := by
     ext
     rw [opens.coe_supr, Set.mem_Union]
     constructor
@@ -494,7 +495,7 @@ def interUnionPullbackConeLift : s.x ⟶ F.1.obj (op (U ∪ V)) := by
     rcases j with (⟨⟨_ | _⟩⟩ | ⟨⟨_ | _⟩, ⟨_⟩⟩) <;>
       rcases g with ⟨⟩ <;>
         dsimp' <;> simp only [category.id_comp, s.condition, CategoryTheory.Functor.map_id, category.comp_id]
-  · rw [← cancel_mono (F.1.map (eq_to_hom <| inf_comm : U ∩ V ⟶ _).op), category.assoc, category.assoc]
+  · rw [← cancel_mono (F.1.map (eq_to_hom <| inf_comm : U⊓V ⟶ _).op), category.assoc, category.assoc]
     erw [← F.1.map_comp, ← F.1.map_comp]
     convert s.condition.symm
     
@@ -514,10 +515,10 @@ theorem inter_union_pullback_cone_lift_right :
     (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 _).some.fac _
       (op <| pairwise.single (ULift.up walking_pair.right))
 
-/-- For a sheaf `F`, `F(U ∪ V)` is the pullback of `F(U) ⟶ F(U ∩ V)` and `F(V) ⟶ F(U ∩ V)`. -/
+/-- For a sheaf `F`, `F(U ⊔ V)` is the pullback of `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)`. -/
 def isLimitPullbackCone : IsLimit (interUnionPullbackCone F U V) := by
   let ι : ULift.{v} walking_pair → opens X := fun ⟨j⟩ => walking_pair.cases_on j U V
-  have hι : U ∪ V = supr ι := by
+  have hι : U⊔V = supr ι := by
     ext
     rw [opens.coe_supr, Set.mem_Union]
     constructor
@@ -562,10 +563,43 @@ def isLimitPullbackCone : IsLimit (interUnionPullbackCone F U V) := by
       
     
 
-/-- If `U, V` are disjoint, then `F(U ∪ V) = F(U) × F(V)`. -/
-def isProductOfDisjoint (h : U ∩ V = ⊥) :
+/-- If `U, V` are disjoint, then `F(U ⊔ V) = F(U) × F(V)`. -/
+def isProductOfDisjoint (h : U⊓V = ⊥) :
     IsLimit (BinaryFan.mk (F.1.map (homOfLe le_sup_left : _ ⟶ U⊔V).op) (F.1.map (homOfLe le_sup_right : _ ⟶ U⊔V).op)) :=
   isProductOfIsTerminalIsPullback _ _ _ _ (F.isTerminalOfEqEmpty h) (isLimitPullbackCone F U V)
+
+/-- `F(U ⊔ V)` is isomorphic to the `eq_locus` of the two maps `F(U) × F(V) ⟶ F(U ⊓ V)`. -/
+def objSupIsoProdEqLocus {X : Top} (F : X.Sheaf CommRingₓₓ) (U V : Opens X) :
+    F.1.obj (op <| U⊔V) ≅ CommRingₓₓ.of (RingHom.eqLocus _ _) :=
+  (F.isLimitPullbackCone U V).conePointUniqueUpToIso (CommRingₓₓ.pullbackConeIsLimit _ _)
+
+theorem obj_sup_iso_prod_eq_locus_hom_fst {X : Top} (F : X.Sheaf CommRingₓₓ) (U V : Opens X) (x) :
+    ((F.objSupIsoProdEqLocus U V).Hom x).1.fst = F.1.map (homOfLe le_sup_left).op x :=
+  ConcreteCategory.congr_hom
+    ((F.isLimitPullbackCone U V).cone_point_unique_up_to_iso_hom_comp (CommRingₓₓ.pullbackConeIsLimit _ _)
+      WalkingCospan.left)
+    x
+
+theorem obj_sup_iso_prod_eq_locus_hom_snd {X : Top} (F : X.Sheaf CommRingₓₓ) (U V : Opens X) (x) :
+    ((F.objSupIsoProdEqLocus U V).Hom x).1.snd = F.1.map (homOfLe le_sup_right).op x :=
+  ConcreteCategory.congr_hom
+    ((F.isLimitPullbackCone U V).cone_point_unique_up_to_iso_hom_comp (CommRingₓₓ.pullbackConeIsLimit _ _)
+      WalkingCospan.right)
+    x
+
+theorem obj_sup_iso_prod_eq_locus_inv_fst {X : Top} (F : X.Sheaf CommRingₓₓ) (U V : Opens X) (x) :
+    F.1.map (homOfLe le_sup_left).op ((F.objSupIsoProdEqLocus U V).inv x) = x.1.1 :=
+  ConcreteCategory.congr_hom
+    ((F.isLimitPullbackCone U V).cone_point_unique_up_to_iso_inv_comp (CommRingₓₓ.pullbackConeIsLimit _ _)
+      WalkingCospan.left)
+    x
+
+theorem obj_sup_iso_prod_eq_locus_inv_snd {X : Top} (F : X.Sheaf CommRingₓₓ) (U V : Opens X) (x) :
+    F.1.map (homOfLe le_sup_right).op ((F.objSupIsoProdEqLocus U V).inv x) = x.1.2 :=
+  ConcreteCategory.congr_hom
+    ((F.isLimitPullbackCone U V).cone_point_unique_up_to_iso_inv_comp (CommRingₓₓ.pullbackConeIsLimit _ _)
+      WalkingCospan.right)
+    x
 
 end Top.Sheaf
 

@@ -111,7 +111,7 @@ theorem factorial_eq_one : n ! = 1 ↔ n ≤ 1 := by
   apply lt_irreflₓ
 
 theorem factorial_inj (hn : 1 < n !) : n ! = m ! ↔ n = m := by
-  refine' ⟨fun h => _, congr_arg _⟩
+  refine' ⟨fun h => _, congr_argₓ _⟩
   obtain hnm | rfl | hnm := lt_trichotomyₓ n m
   · rw [← factorial_lt <| pos_of_gt <| one_lt_factorial.mp hn, h] at hnm
     cases lt_irreflₓ _ hnm
@@ -344,7 +344,7 @@ theorem factorial_mul_desc_factorial : ∀ {n k : ℕ}, k ≤ n → (n - k)! * n
     exact not_succ_le_zero k h
   | succ n, succ k => fun h => by
     rw [succ_desc_factorial_succ, succ_sub_succ, ← mul_assoc, mul_comm (n - k)!, mul_assoc,
-      factorial_mul_desc_factorial (Nat.succ_le_succ_iff.1 h), factorial_succ]
+      factorial_mul_desc_factorial (Nat.succ_le_succ_iffₓ.1 h), factorial_succ]
 
 /-- Avoid in favor of `nat.factorial_mul_desc_factorial` if you can. ℕ-division isn't worth it. -/
 theorem desc_factorial_eq_div {n k : ℕ} (h : k ≤ n) : n.descFactorial k = n ! / (n - k)! := by

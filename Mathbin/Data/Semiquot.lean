@@ -38,7 +38,7 @@ def mk {a : α} {s : Set α} (h : a ∈ s) : Semiquot α :=
   ⟨s, Trunc.mk ⟨a, h⟩⟩
 
 theorem ext_s {q₁ q₂ : Semiquot α} : q₁ = q₂ ↔ q₁.S = q₂.S := by
-  refine' ⟨congr_arg _, fun h => _⟩
+  refine' ⟨congr_argₓ _, fun h => _⟩
   cases q₁
   cases q₂
   cc

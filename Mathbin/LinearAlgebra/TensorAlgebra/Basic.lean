@@ -210,7 +210,7 @@ theorem ι_eq_algebra_map_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x 
   refine' ⟨fun h => _, _⟩
   · have hf0 : to_triv_sq_zero_ext (ι R x) = (0, x) := lift_ι_apply _ _
     rw [h, AlgHom.commutes] at hf0
-    have : r = 0 ∧ 0 = x := Prod.ext_iff.1 hf0
+    have : r = 0 ∧ 0 = x := Prod.ext_iffₓ.1 hf0
     exact this.symm.imp_left Eq.symm
     
   · rintro ⟨rfl, rfl⟩

@@ -999,11 +999,11 @@ theorem mrange_inr' : (inr M N).mrange = comap (fst M N) ⊥ :=
 
 @[simp, to_additive]
 theorem mrange_fst : (fst M N).mrange = ⊤ :=
-  mrange_top_of_surjective (fst M N) <| @Prod.fst_surjectiveₓ _ _ ⟨1⟩
+  mrange_top_of_surjective (fst M N) <| @Prod.fst_surjective _ _ ⟨1⟩
 
 @[simp, to_additive]
 theorem mrange_snd : (snd M N).mrange = ⊤ :=
-  mrange_top_of_surjective (snd M N) <| @Prod.snd_surjective _ _ ⟨1⟩
+  mrange_top_of_surjective (snd M N) <| @Prod.snd_surjectiveₓ _ _ ⟨1⟩
 
 @[to_additive]
 theorem prod_eq_bot_iff {s : Submonoid M} {t : Submonoid N} : s.Prod t = ⊥ ↔ s = ⊥ ∧ t = ⊥ := by
@@ -1064,7 +1064,7 @@ variable {S} {T : Submonoid M}
     monoid are equal. -/
 @[to_additive "Makes the identity additive isomorphism from a proof two\nsubmonoids of an additive monoid are equal."]
 def submonoidCongr (h : S = T) : S ≃* T :=
-  { Equivₓ.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl }
+  { Equivₓ.setCongr <| congr_argₓ _ h with map_mul' := fun _ _ => rfl }
 
 -- this name is primed so that the version to `f.range` instead of `f.mrange` can be unprimed.
 /-- A monoid homomorphism `f : M →* N` with a left-inverse `g : N → M` defines a multiplicative

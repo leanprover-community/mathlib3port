@@ -804,7 +804,7 @@ theorem exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux (μ : Meas
   have Pu : ∀ n, P (u n) := by
     intro n
     induction' n with n IH
-    · simp only [u, P, Prod.forall, id.def, Function.iterate_zero]
+    · simp only [u, P, Prod.forallₓ, id.def, Function.iterate_zero]
       simp only [Finset.not_mem_empty, IsEmpty.forall_iff, Finset.coe_empty, forall_2_true_iff, and_selfₓ,
         pairwise_disjoint_empty]
       
@@ -931,7 +931,7 @@ theorem exists_disjoint_closed_ball_covering_ae (μ : Measureₓ α) [SigmaFinit
       have : p = r x := by
         by_contra
         have A : (x, p) ≠ (x, r x) := by
-          simpa only [true_andₓ, Prod.mk.inj_iff, eq_self_iff_true, Ne.def] using h
+          simpa only [true_andₓ, Prod.mk.inj_iffₓ, eq_self_iff_true, Ne.def] using h
         have H := v_disj hxp hxrx A
         contrapose H
         rw [not_disjoint_iff_nonempty_inter]
@@ -960,7 +960,7 @@ theorem exists_disjoint_closed_ball_covering_ae (μ : Measureₓ α) [SigmaFinit
     exact μv
     
   · have A : inj_on (fun x : α => (x, r x)) t := by
-      simp (config := { contextual := true })only [inj_on, Prod.mk.inj_iff, implies_true_iff, eq_self_iff_true]
+      simp (config := { contextual := true })only [inj_on, Prod.mk.inj_iffₓ, implies_true_iff, eq_self_iff_true]
     rwa [← im_t, A.pairwise_disjoint_image] at v_disj
     
 

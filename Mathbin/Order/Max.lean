@@ -83,6 +83,30 @@ instance (priority := 100) NoMinOrder.to_no_bot_order (α : Type _) [Preorderₓ
 instance (priority := 100) NoMaxOrder.to_no_top_order (α : Type _) [Preorderₓ α] [NoMaxOrder α] : NoTopOrder α :=
   ⟨fun a => (exists_gt a).imp fun _ => not_le_of_ltₓ⟩
 
+theorem NoBotOrder.to_no_min_order (α : Type _) [LinearOrderₓ α] [NoBotOrder α] : NoMinOrder α :=
+  { exists_lt := by
+      convert fun a : α => exists_not_ge a
+      simp_rw [not_leₓ] }
+
+theorem NoTopOrder.to_no_max_order (α : Type _) [LinearOrderₓ α] [NoTopOrder α] : NoMaxOrder α :=
+  { exists_gt := by
+      convert fun a : α => exists_not_le a
+      simp_rw [not_leₓ] }
+
+theorem no_bot_order_iff_no_min_order (α : Type _) [LinearOrderₓ α] : NoBotOrder α ↔ NoMinOrder α :=
+  ⟨fun h => by
+    haveI := h
+    exact NoBotOrder.to_no_min_order α, fun h => by
+    haveI := h
+    exact NoMinOrder.to_no_bot_order α⟩
+
+theorem no_top_order_iff_no_max_order (α : Type _) [LinearOrderₓ α] : NoTopOrder α ↔ NoMaxOrder α :=
+  ⟨fun h => by
+    haveI := h
+    exact NoTopOrder.to_no_max_order α, fun h => by
+    haveI := h
+    exact NoMaxOrder.to_no_top_order α⟩
+
 theorem NoMinOrder.not_acc [LT α] [NoMinOrder α] (a : α) : ¬Acc (· < ·) a := fun h =>
   (Acc.recOnₓ h) fun x _ => (exists_lt x).recOn
 

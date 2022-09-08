@@ -176,11 +176,11 @@ theorem append_insert (a : α) (t : Vector3 α m) (v : Vector3 α n) (i : Fin2 (
   rfl
   have e' := succ_add n k
   change
-    insert a (b::t +-+ v) (Eq.recOnₓ (congr_arg succ e') (fs (add i k))) =
-      Eq.recOnₓ (congr_arg succ e') (b::t +-+ insert a v i)
+    insert a (b::t +-+ v) (Eq.recOnₓ (congr_argₓ succ e') (fs (add i k))) =
+      Eq.recOnₓ (congr_argₓ succ e') (b::t +-+ insert a v i)
   rw [←
     (Eq.drecOn e' rfl :
-      fs (Eq.recOnₓ e' (i.add k) : Fin2 (succ (n + k))) = Eq.recOnₓ (congr_arg succ e') (fs (i.add k)))]
+      fs (Eq.recOnₓ e' (i.add k) : Fin2 (succ (n + k))) = Eq.recOnₓ (congr_argₓ succ e') (fs (i.add k)))]
   simp
   rw [IH]
   exact Eq.drecOn e' rfl

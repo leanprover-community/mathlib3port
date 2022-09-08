@@ -126,7 +126,7 @@ theorem bit0_add (a b : M) : bit0 (a + b) = bit0 a + bit0 b :=
   add_add_add_commₓ _ _ _ _
 
 theorem bit1_add [One M] (a b : M) : bit1 (a + b) = bit0 a + bit1 b :=
-  (congr_arg (· + (1 : M)) <| bit0_add a b : _).trans (add_assocₓ _ _ _)
+  (congr_argₓ (· + (1 : M)) <| bit0_add a b : _).trans (add_assocₓ _ _ _)
 
 theorem bit1_add' [One M] (a b : M) : bit1 (a + b) = bit1 a + bit0 b := by
   rw [add_commₓ, bit1_add, add_commₓ]
@@ -805,7 +805,7 @@ theorem bit0_sub (a b : M) : bit0 (a - b) = bit0 a - bit0 b :=
   sub_add_sub_comm _ _ _ _
 
 theorem bit1_sub [One M] (a b : M) : bit1 (a - b) = bit1 a - bit0 b :=
-  (congr_arg (· + (1 : M)) <| bit0_sub a b : _).trans <| sub_add_eq_add_sub _ _ _
+  (congr_argₓ (· + (1 : M)) <| bit0_sub a b : _).trans <| sub_add_eq_add_sub _ _ _
 
 end SubtractionCommMonoid
 

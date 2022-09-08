@@ -51,10 +51,10 @@ instance hasLe (α β : Type _) [LT α] [LE β] : LE (α ×ₗ β) where le := P
 instance hasLt (α β : Type _) [LT α] [LT β] : LT (α ×ₗ β) where lt := Prod.Lex (· < ·) (· < ·)
 
 theorem le_iff [LT α] [LE β] (a b : α × β) : toLex a ≤ toLex b ↔ a.1 < b.1 ∨ a.1 = b.1 ∧ a.2 ≤ b.2 :=
-  Prod.lex_def (· < ·) (· ≤ ·)
+  Prod.lex_defₓ (· < ·) (· ≤ ·)
 
 theorem lt_iff [LT α] [LT β] (a b : α × β) : toLex a < toLex b ↔ a.1 < b.1 ∨ a.1 = b.1 ∧ a.2 < b.2 :=
-  Prod.lex_def (· < ·) (· < ·)
+  Prod.lex_defₓ (· < ·) (· < ·)
 
 /-- Dictionary / lexicographic preorder for pairs. -/
 instance preorder (α β : Type _) [Preorderₓ α] [Preorderₓ β] : Preorderₓ (α ×ₗ β) :=

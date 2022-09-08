@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 -/
 import Mathbin.RingTheory.Adjoin.Basic
 import Mathbin.Data.Finsupp.Antidiagonal
-import Mathbin.Algebra.MonoidAlgebra.Basic
+import Mathbin.Algebra.MonoidAlgebra.Support
 import Mathbin.Order.SymmDiff
 
 /-!
@@ -381,7 +381,7 @@ theorem alg_hom_ext' {A B : Type _} [CommSemiringₓ A] [CommSemiringₓ B] [Alg
     (h₁ :
       f.comp (IsScalarTower.toAlgHom R A (MvPolynomial σ A)) = g.comp (IsScalarTower.toAlgHom R A (MvPolynomial σ A)))
     (h₂ : ∀ i, f (x i) = g (x i)) : f = g :=
-  AlgHom.coe_ring_hom_injective (MvPolynomial.ring_hom_ext' (congr_arg AlgHom.toRingHom h₁) h₂)
+  AlgHom.coe_ring_hom_injective (MvPolynomial.ring_hom_ext' (congr_argₓ AlgHom.toRingHom h₁) h₂)
 
 @[ext]
 theorem alg_hom_ext {A : Type _} [Semiringₓ A] [Algebra R A] {f g : MvPolynomial σ R →ₐ[R] A}

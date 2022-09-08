@@ -93,10 +93,10 @@ theorem coe_mk (f : (∀ i, M₁ i) → M₂) (h₁ h₂) : ⇑(⟨f, h₁, h₂
   rfl
 
 theorem congr_fun {f g : MultilinearMap R M₁ M₂} (h : f = g) (x : ∀ i, M₁ i) : f x = g x :=
-  congr_arg (fun h : MultilinearMap R M₁ M₂ => h x) h
+  congr_argₓ (fun h : MultilinearMap R M₁ M₂ => h x) h
 
 theorem congr_arg (f : MultilinearMap R M₁ M₂) {x y : ∀ i, M₁ i} (h : x = y) : f x = f y :=
-  congr_arg (fun x : ∀ i, M₁ i => f x) h
+  congr_argₓ (fun x : ∀ i, M₁ i => f x) h
 
 theorem coe_injective : Injective (coeFn : MultilinearMap R M₁ M₂ → (∀ i, M₁ i) → M₂) := by
   intro f g h
@@ -314,11 +314,11 @@ def compLinearMap (g : MultilinearMap R M₁' M₂) (f : ∀ i, M₁ i →ₗ[R]
   toFun := fun m => g fun i => f i (m i)
   map_add' := fun m i x y => by
     have : ∀ j z, f j (update m i z j) = update (fun k => f k (m k)) i (f i z) j := fun j z =>
-      Function.apply_update (fun k => f k) _ _ _ _
+      Function.apply_updateₓ (fun k => f k) _ _ _ _
     simp [this]
   map_smul' := fun m i c x => by
     have : ∀ j z, f j (update m i z j) = update (fun k => f k (m k)) i (f i z) j := fun j z =>
-      Function.apply_update (fun k => f k) _ _ _ _
+      Function.apply_updateₓ (fun k => f k) _ _ _ _
     simp [this]
 
 @[simp]
@@ -960,6 +960,22 @@ theorem mk_pi_ring_apply_one_eq_self [Fintype ι] (f : MultilinearMap R (fun i :
     simp
   conv_rhs => rw [this, f.map_smul_univ]
   rfl
+
+theorem mk_pi_ring_eq_iff [Fintype ι] {z₁ z₂ : M₂} :
+    MultilinearMap.mkPiRing R ι z₁ = MultilinearMap.mkPiRing R ι z₂ ↔ z₁ = z₂ := by
+  simp_rw [MultilinearMap.ext_iff, mk_pi_ring_apply]
+  constructor <;> intro h
+  · simpa using h fun _ => 1
+    
+  · intro x
+    simp [h]
+    
+
+theorem mk_pi_ring_zero [Fintype ι] : MultilinearMap.mkPiRing R ι (0 : M₂) = 0 := by
+  ext <;> rw [mk_pi_ring_apply, smul_zero, MultilinearMap.zero_apply]
+
+theorem mk_pi_ring_eq_zero_iff [Fintype ι] (z : M₂) : MultilinearMap.mkPiRing R ι z = 0 ↔ z = 0 := by
+  rw [← mk_pi_ring_zero, mk_pi_ring_eq_iff]
 
 end CommSemiringₓ
 

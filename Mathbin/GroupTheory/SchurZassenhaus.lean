@@ -47,11 +47,11 @@ instance : Inhabited H.QuotientDiff :=
 theorem smul_diff_smul' [hH : Normal H] (g : Gᵐᵒᵖ) :
     diff (MonoidHom.id H) (g • α) (g • β) =
       ⟨g.unop⁻¹ * (diff (MonoidHom.id H) α β : H) * g.unop,
-        hH.mem_comm ((congr_arg (· ∈ H) (mul_inv_cancel_left _ _)).mpr (SetLike.coe_mem _))⟩ :=
+        hH.mem_comm ((congr_argₓ (· ∈ H) (mul_inv_cancel_left _ _)).mpr (SetLike.coe_mem _))⟩ :=
   by
   let ϕ : H →* H :=
     { toFun := fun h =>
-        ⟨g.unop⁻¹ * h * g.unop, hH.mem_comm ((congr_arg (· ∈ H) (mul_inv_cancel_left _ _)).mpr (SetLike.coe_mem _))⟩,
+        ⟨g.unop⁻¹ * h * g.unop, hH.mem_comm ((congr_argₓ (· ∈ H) (mul_inv_cancel_left _ _)).mpr (SetLike.coe_mem _))⟩,
       map_one' := by
         rw [Subtype.ext_iff, coe_mk, coe_one, mul_oneₓ, inv_mul_selfₓ],
       map_mul' := fun h₁ h₂ => by
@@ -76,12 +76,12 @@ instance : MulAction G H.QuotientDiff where
             Subtype.ext_iff])
   mul_smul := fun g₁ g₂ q =>
     Quotientₓ.induction_on' q fun T =>
-      congr_arg Quotientₓ.mk'
+      congr_argₓ Quotientₓ.mk'
         (by
           rw [mul_inv_rev] <;> exact mul_smul (op g₁⁻¹) (op g₂⁻¹) T)
   one_smul := fun q =>
     Quotientₓ.induction_on' q fun T =>
-      congr_arg Quotientₓ.mk'
+      congr_argₓ Quotientₓ.mk'
         (by
           rw [inv_one] <;> apply one_smul Gᵐᵒᵖ T)
 

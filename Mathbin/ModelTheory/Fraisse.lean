@@ -111,12 +111,12 @@ variable {K} (L) (M : Type w) [L.Structure M]
 
 theorem Age.is_equiv_invariant (N P : Bundled.{w} L.Structure) (h : Nonempty (N ≃[L] P)) : N ∈ L.Age M ↔ P ∈ L.Age M :=
   and_congr h.some.fg_iff
-    ⟨Nonempty.map fun x => Embedding.comp x h.some.symm.toEmbedding,
-      Nonempty.map fun x => Embedding.comp x h.some.toEmbedding⟩
+    ⟨Nonempty.mapₓ fun x => Embedding.comp x h.some.symm.toEmbedding,
+      Nonempty.mapₓ fun x => Embedding.comp x h.some.toEmbedding⟩
 
 variable {L} {M} {N : Type w} [L.Structure N]
 
-theorem Embedding.age_subset_age (MN : M ↪[L] N) : L.Age M ⊆ L.Age N := fun _ => And.imp_right (Nonempty.map MN.comp)
+theorem Embedding.age_subset_age (MN : M ↪[L] N) : L.Age M ⊆ L.Age N := fun _ => And.imp_right (Nonempty.mapₓ MN.comp)
 
 theorem Equiv.age_eq_age (MN : M ≃[L] N) : L.Age M = L.Age N :=
   le_antisymmₓ MN.toEmbedding.age_subset_age MN.symm.toEmbedding.age_subset_age

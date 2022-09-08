@@ -43,6 +43,10 @@ theorem coeff_add (p q : R[X]) (n : ℕ) : coeff (p + q) n = coeff p n + coeff q
   exact Finsupp.add_apply _ _ _
 
 @[simp]
+theorem coeff_bit0 (p : R[X]) (n : ℕ) : coeff (bit0 p) n = bit0 (coeff p n) := by
+  simp [bit0]
+
+@[simp]
 theorem coeff_smul [Monoidₓ S] [DistribMulAction S R] (r : S) (p : R[X]) (n : ℕ) : coeff (r • p) n = r • coeff p n := by
   rcases p with ⟨⟩
   simp_rw [← of_finsupp_smul, coeff]

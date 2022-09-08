@@ -15,24 +15,24 @@ This file defines `prod.swap : α × β → β × α` and proves various simple 
 variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
 @[simp]
-theorem prod_map (f : α → γ) (g : β → δ) (p : α × β) : Prod.map f g p = (f p.1, g p.2) :=
+theorem prod_mapₓ (f : α → γ) (g : β → δ) (p : α × β) : Prod.map f g p = (f p.1, g p.2) :=
   rfl
 
 namespace Prod
 
 @[simp]
-theorem forall {p : α × β → Prop} : (∀ x, p x) ↔ ∀ a b, p (a, b) :=
+theorem forallₓ {p : α × β → Prop} : (∀ x, p x) ↔ ∀ a b, p (a, b) :=
   ⟨fun h a b => h (a, b), fun h ⟨a, b⟩ => h a b⟩
 
 @[simp]
-theorem exists {p : α × β → Prop} : (∃ x, p x) ↔ ∃ a b, p (a, b) :=
+theorem existsₓ {p : α × β → Prop} : (∃ x, p x) ↔ ∃ a b, p (a, b) :=
   ⟨fun ⟨⟨a, b⟩, h⟩ => ⟨a, b, h⟩, fun ⟨a, b, h⟩ => ⟨⟨a, b⟩, h⟩⟩
 
-theorem forall' {p : α → β → Prop} : (∀ x : α × β, p x.1 x.2) ↔ ∀ a b, p a b :=
-  Prod.forall
+theorem forall'ₓ {p : α → β → Prop} : (∀ x : α × β, p x.1 x.2) ↔ ∀ a b, p a b :=
+  Prod.forallₓ
 
-theorem exists' {p : α → β → Prop} : (∃ x : α × β, p x.1 x.2) ↔ ∃ a b, p a b :=
-  Prod.exists
+theorem exists'ₓ {p : α → β → Prop} : (∃ x : α × β, p x.1 x.2) ↔ ∃ a b, p a b :=
+  Prod.existsₓ
 
 @[simp]
 theorem snd_comp_mk (x : α) : Prod.snd ∘ (Prod.mk x : β → α × β) = id :=
@@ -46,14 +46,14 @@ theorem fst_comp_mk (x : α) : Prod.fst ∘ (Prod.mk x : β → α × β) = Func
 theorem map_mkₓ (f : α → γ) (g : β → δ) (a : α) (b : β) : map f g (a, b) = (f a, g b) :=
   rfl
 
-theorem map_fst (f : α → γ) (g : β → δ) (p : α × β) : (map f g p).1 = f p.1 :=
+theorem map_fstₓ (f : α → γ) (g : β → δ) (p : α × β) : (map f g p).1 = f p.1 :=
   rfl
 
 theorem map_sndₓ (f : α → γ) (g : β → δ) (p : α × β) : (map f g p).2 = g p.2 :=
   rfl
 
-theorem map_fst' (f : α → γ) (g : β → δ) : Prod.fst ∘ map f g = f ∘ Prod.fst :=
-  funext <| map_fst f g
+theorem map_fst'ₓ (f : α → γ) (g : β → δ) : Prod.fst ∘ map f g = f ∘ Prod.fst :=
+  funext <| map_fstₓ f g
 
 theorem map_snd'ₓ (f : α → γ) (g : β → δ) : Prod.snd ∘ map f g = g ∘ Prod.snd :=
   funext <| map_sndₓ f g
@@ -73,28 +73,28 @@ theorem map_mapₓ {ε ζ : Type _} (f : α → β) (f' : γ → δ) (g : β →
   rfl
 
 @[simp]
-theorem mk.inj_iff {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) = (a₂, b₂) ↔ a₁ = a₂ ∧ b₁ = b₂ :=
+theorem mk.inj_iffₓ {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) = (a₂, b₂) ↔ a₁ = a₂ ∧ b₁ = b₂ :=
   ⟨Prod.mk.inj, by
     cc⟩
 
-theorem mk.inj_left {α β : Type _} (a : α) : Function.Injective (Prod.mk a : β → α × β) := by
+theorem mk.inj_leftₓ {α β : Type _} (a : α) : Function.Injective (Prod.mk a : β → α × β) := by
   intro b₁ b₂ h
-  simpa only [true_andₓ, Prod.mk.inj_iff, eq_self_iff_true] using h
+  simpa only [true_andₓ, Prod.mk.inj_iffₓ, eq_self_iff_true] using h
 
-theorem mk.inj_right {α β : Type _} (b : β) : Function.Injective (fun a => Prod.mk a b : α → α × β) := by
+theorem mk.inj_rightₓ {α β : Type _} (b : β) : Function.Injective (fun a => Prod.mk a b : α → α × β) := by
   intro b₁ b₂ h
   · simpa only [and_trueₓ, eq_self_iff_true, mk.inj_iff] using h
     
 
-theorem ext_iff {p q : α × β} : p = q ↔ p.1 = q.1 ∧ p.2 = q.2 := by
+theorem ext_iffₓ {p q : α × β} : p = q ↔ p.1 = q.1 ∧ p.2 = q.2 := by
   rw [← @mk.eta _ _ p, ← @mk.eta _ _ q, mk.inj_iff]
 
 @[ext]
 theorem extₓ {α β} {p q : α × β} (h₁ : p.1 = q.1) (h₂ : p.2 = q.2) : p = q :=
-  ext_iff.2 ⟨h₁, h₂⟩
+  ext_iffₓ.2 ⟨h₁, h₂⟩
 
-theorem map_def {f : α → γ} {g : β → δ} : Prod.map f g = fun p : α × β => (f p.1, g p.2) :=
-  funext fun p => extₓ (map_fst f g p) (map_sndₓ f g p)
+theorem map_defₓ {f : α → γ} {g : β → δ} : Prod.map f g = fun p : α × β => (f p.1, g p.2) :=
+  funext fun p => extₓ (map_fstₓ f g p) (map_sndₓ f g p)
 
 theorem id_prodₓ : (fun p : α × β => (p.1, p.2)) = id :=
   funext fun ⟨a, b⟩ => rfl
@@ -102,36 +102,36 @@ theorem id_prodₓ : (fun p : α × β => (p.1, p.2)) = id :=
 theorem map_id : Prod.map (@id α) (@id β) = id :=
   id_prod
 
-theorem fst_surjectiveₓ [h : Nonempty β] : Function.Surjective (@fst α β) := fun x => h.elim fun y => ⟨⟨x, y⟩, rfl⟩
+theorem fst_surjective [h : Nonempty β] : Function.Surjective (@fst α β) := fun x => h.elim fun y => ⟨⟨x, y⟩, rfl⟩
 
-theorem snd_surjective [h : Nonempty α] : Function.Surjective (@snd α β) := fun y => h.elim fun x => ⟨⟨x, y⟩, rfl⟩
+theorem snd_surjectiveₓ [h : Nonempty α] : Function.Surjective (@snd α β) := fun y => h.elim fun x => ⟨⟨x, y⟩, rfl⟩
 
-theorem fst_injectiveₓ [Subsingleton β] : Function.Injective (@fst α β) := fun x y h => extₓ h (Subsingleton.elim _ _)
+theorem fst_injective [Subsingleton β] : Function.Injective (@fst α β) := fun x y h => extₓ h (Subsingleton.elim _ _)
 
-theorem snd_injective [Subsingleton α] : Function.Injective (@snd α β) := fun x y h => extₓ (Subsingleton.elim _ _) h
+theorem snd_injectiveₓ [Subsingleton α] : Function.Injective (@snd α β) := fun x y h => extₓ (Subsingleton.elim _ _) h
 
 /-- Swap the factors of a product. `swap (a, b) = (b, a)` -/
 def swap : α × β → β × α := fun p => (p.2, p.1)
 
 @[simp]
-theorem swap_swap : ∀ x : α × β, swap (swap x) = x
+theorem swap_swapₓ : ∀ x : α × β, swap (swap x) = x
   | ⟨a, b⟩ => rfl
 
 @[simp]
-theorem fst_swap {p : α × β} : (swap p).1 = p.2 :=
+theorem fst_swapₓ {p : α × β} : (swap p).1 = p.2 :=
   rfl
 
 @[simp]
-theorem snd_swap {p : α × β} : (swap p).2 = p.1 :=
+theorem snd_swapₓ {p : α × β} : (swap p).2 = p.1 :=
   rfl
 
 @[simp]
-theorem swap_prod_mk {a : α} {b : β} : swap (a, b) = (b, a) :=
+theorem swap_prod_mkₓ {a : α} {b : β} : swap (a, b) = (b, a) :=
   rfl
 
 @[simp]
-theorem swap_swap_eq : swap ∘ swap = @id (α × β) :=
-  funext swap_swap
+theorem swap_swap_eqₓ : swap ∘ swap = @id (α × β) :=
+  funext swap_swapₓ
 
 @[simp]
 theorem swap_left_inverse : Function.LeftInverse (@swap α β) swap :=
@@ -141,32 +141,32 @@ theorem swap_left_inverse : Function.LeftInverse (@swap α β) swap :=
 theorem swap_right_inverse : Function.RightInverse (@swap α β) swap :=
   swap_swap
 
-theorem swap_injective : Function.Injective (@swap α β) :=
+theorem swap_injectiveₓ : Function.Injective (@swap α β) :=
   swap_left_inverse.Injective
 
-theorem swap_surjective : Function.Surjective (@swap α β) :=
+theorem swap_surjectiveₓ : Function.Surjective (@swap α β) :=
   swap_left_inverse.Surjective
 
-theorem swap_bijective : Function.Bijective (@swap α β) :=
-  ⟨swap_injective, swap_surjective⟩
+theorem swap_bijectiveₓ : Function.Bijective (@swap α β) :=
+  ⟨swap_injectiveₓ, swap_surjectiveₓ⟩
 
 @[simp]
-theorem swap_inj {p q : α × β} : swap p = swap q ↔ p = q :=
-  swap_injective.eq_iff
+theorem swap_injₓ {p q : α × β} : swap p = swap q ↔ p = q :=
+  swap_injectiveₓ.eq_iff
 
-theorem eq_iff_fst_eq_snd_eq : ∀ {p q : α × β}, p = q ↔ p.1 = q.1 ∧ p.2 = q.2
+theorem eq_iff_fst_eq_snd_eqₓ : ∀ {p q : α × β}, p = q ↔ p.1 = q.1 ∧ p.2 = q.2
   | ⟨p₁, p₂⟩, ⟨q₁, q₂⟩ => by
     simp
 
-theorem fst_eq_iff : ∀ {p : α × β} {x : α}, p.1 = x ↔ p = (x, p.2)
+theorem fst_eq_iffₓ : ∀ {p : α × β} {x : α}, p.1 = x ↔ p = (x, p.2)
   | ⟨a, b⟩, x => by
     simp
 
-theorem snd_eq_iff : ∀ {p : α × β} {x : β}, p.2 = x ↔ p = (p.1, x)
+theorem snd_eq_iffₓ : ∀ {p : α × β} {x : β}, p.2 = x ↔ p = (p.1, x)
   | ⟨a, b⟩, x => by
     simp
 
-theorem lex_def (r : α → α → Prop) (s : β → β → Prop) {p q : α × β} :
+theorem lex_defₓ (r : α → α → Prop) (s : β → β → Prop) {p q : α × β} :
     Prod.Lex r s p q ↔ r p.1 q.1 ∨ p.1 = q.1 ∧ s p.2 q.2 :=
   ⟨fun h => by
     cases h <;> simp [*], fun h =>
@@ -180,7 +180,7 @@ instance Lex.decidable [DecidableEq α] (r : α → α → Prop) (s : β → β 
   decidableOfDecidableOfIff
     (by
       infer_instance)
-    (lex_def r s).symm
+    (lex_defₓ r s).symm
 
 @[refl]
 theorem Lex.refl_left (r : α → α → Prop) (s : β → β → Prop) [IsRefl α r] : ∀ x, Prod.Lex r s x x
@@ -238,7 +238,7 @@ namespace Function
 variable {f : α → γ} {g : β → δ} {f₁ : α → β} {g₁ : γ → δ} {f₂ : β → α} {g₂ : δ → γ}
 
 theorem Injective.prod_map (hf : Injective f) (hg : Injective g) : Injective (map f g) := fun x y h =>
-  extₓ (hf (ext_iff.1 h).1) (hg <| (ext_iff.1 h).2)
+  extₓ (hf (ext_iffₓ.1 h).1) (hg <| (ext_iffₓ.1 h).2)
 
 theorem Surjective.prod_map (hf : Surjective f) (hg : Surjective g) : Surjective (map f g) := fun p =>
   let ⟨x, hx⟩ := hf p.1

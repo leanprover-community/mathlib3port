@@ -103,10 +103,10 @@ theorem coe_mk (f : (ι → M) → N) (h₁ h₂ h₃) : ⇑(⟨f, h₁, h₂, h
   rfl
 
 theorem congr_fun {f g : AlternatingMap R M N ι} (h : f = g) (x : ι → M) : f x = g x :=
-  congr_arg (fun h : AlternatingMap R M N ι => h x) h
+  congr_argₓ (fun h : AlternatingMap R M N ι => h x) h
 
 theorem congr_arg (f : AlternatingMap R M N ι) {x y : ι → M} (h : x = y) : f x = f y :=
-  congr_arg (fun x : ι → M => f x) h
+  congr_argₓ (fun x : ι → M => f x) h
 
 theorem coe_injective : Injective (coeFn : AlternatingMap R M N ι → (ι → M) → N) := fun f g h => by
   cases f
@@ -526,8 +526,8 @@ theorem map_update_update {i j : ι} (hij : i ≠ j) (m : M) : f (Function.updat
 theorem map_swap_add {i j : ι} (hij : i ≠ j) : f (v ∘ Equivₓ.swap i j) + f v = 0 := by
   rw [Equivₓ.comp_swap_eq_update]
   convert f.map_update_update v hij (v i + v j)
-  simp [f.map_update_self _ hij, f.map_update_self _ hij.symm, Function.update_comm hij (v i + v j) (v _) v,
-    Function.update_comm hij.symm (v i) (v i) v]
+  simp [f.map_update_self _ hij, f.map_update_self _ hij.symm, Function.update_commₓ hij (v i + v j) (v _) v,
+    Function.update_commₓ hij.symm (v i) (v i) v]
 
 theorem map_add_swap {i j : ι} (hij : i ≠ j) : f v + f (v ∘ Equivₓ.swap i j) = 0 := by
   rw [add_commₓ]
@@ -961,7 +961,7 @@ section Basis
 
 open AlternatingMap
 
-variable {ι₁ : Type _} [Fintype ι]
+variable {ι₁ : Type _} [Finite ι]
 
 variable {R' : Type _} {N₁ N₂ : Type _} [CommSemiringₓ R'] [AddCommMonoidₓ N₁] [AddCommMonoidₓ N₂]
 

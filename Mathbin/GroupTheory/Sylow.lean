@@ -65,7 +65,7 @@ theorem ext {P Q : Sylow p G} (h : (P : Subgroup G) = Q) : P = Q := by
   cases P <;> cases Q <;> congr
 
 theorem ext_iff {P Q : Sylow p G} : P = Q ↔ (P : Subgroup G) = Q :=
-  ⟨congr_arg coe, ext⟩
+  ⟨congr_argₓ coe, ext⟩
 
 instance : SetLike (Sylow p G) G where
   coe := coe
@@ -187,7 +187,7 @@ instance Sylow.pointwiseMulAction {α : Type _} [Groupₓ α] [MulDistribMulActi
     ⟨g • P, P.2.map _, fun Q hQ hS =>
       inv_smul_eq_iff.mp
         (P.3 (hQ.map _) fun s hs =>
-          (congr_arg (· ∈ g⁻¹ • Q) (inv_smul_smul g s)).mp
+          (congr_argₓ (· ∈ g⁻¹ • Q) (inv_smul_smul g s)).mp
             (smul_mem_pointwise_smul (g • s) g⁻¹ Q (hS (smul_mem_pointwise_smul s g P hs))))⟩
   one_smul := fun P => Sylow.ext (one_smul α P)
   mul_smul := fun g h P => Sylow.ext (mul_smul g h P)
@@ -220,8 +220,9 @@ theorem Sylow.smul_eq_iff_mem_normalizer {g : G} {P : Sylow p G} : g • P = P �
   exact
     forall_congrₓ fun h =>
       iff_congr Iff.rfl
-        ⟨fun ⟨a, b, c⟩ => (congr_arg _ c).mp ((congr_arg (· ∈ P.1) (MulAut.inv_apply_self G (MulAut.conj g) a)).mpr b),
-          fun hh => ⟨(MulAut.conj g)⁻¹ h, hh, MulAut.apply_inv_self G (MulAut.conj g) h⟩⟩
+        ⟨fun ⟨a, b, c⟩ =>
+          (congr_argₓ _ c).mp ((congr_argₓ (· ∈ P.1) (MulAut.inv_apply_self G (MulAut.conj g) a)).mpr b), fun hh =>
+          ⟨(MulAut.conj g)⁻¹ h, hh, MulAut.apply_inv_self G (MulAut.conj g) h⟩⟩
 
 theorem Sylow.smul_eq_of_normal {g : G} {P : Sylow p G} [h : (P : Subgroup G).Normal] : g • P = P := by
   simp only [Sylow.smul_eq_iff_mem_normalizer, normalizer_eq_top.mpr h, mem_top]
@@ -253,7 +254,7 @@ instance [hp : Fact p.Prime] [Finite (Sylow p G)] : IsPretransitive G (Sylow p G
         _ ↔ S.1.1 = R := ⟨fun h => R.3 S.1.2 h, ge_of_eqₓ⟩
         
     suffices Set.Nonempty (fixed_points Q (orbit G P)) by
-      exact Exists.elim this fun R hR => (congr_arg _ (Sylow.ext (H.mp hR))).mp R.2
+      exact Exists.elim this fun R hR => (congr_argₓ _ (Sylow.ext (H.mp hR))).mp R.2
     apply Q.2.nonempty_fixed_point_of_prime_not_dvd_card
     refine' fun h => hp.out.not_dvd_one (nat.modeq_zero_iff_dvd.mp _)
     calc
@@ -262,7 +263,7 @@ instance [hp : Fact p.Prime] [Finite (Sylow p G)] : IsPretransitive G (Sylow p G
       _ ≡ 0 [MOD p] := nat.modeq_zero_iff_dvd.mpr h
       
     rw [← Set.card_singleton (⟨P, mem_orbit_self P⟩ : orbit G P)]
-    refine' card_congr' (congr_arg _ (Eq.symm _))
+    refine' card_congr' (congr_argₓ _ (Eq.symm _))
     rw [Set.eq_singleton_iff_unique_mem]
     exact ⟨H.mpr rfl, fun R h => Subtype.ext (Sylow.ext (H.mp h))⟩⟩
 
@@ -338,7 +339,7 @@ theorem card_sylow_eq_index_normalizer [Fact p.Prime] [Fintype (Sylow p G)] (P :
 
 theorem card_sylow_dvd_index [Fact p.Prime] [Fintype (Sylow p G)] (P : Sylow p G) :
     card (Sylow p G) ∣ (P : Subgroup G).index :=
-  ((congr_arg _ (card_sylow_eq_index_normalizer P)).mp dvd_rfl).trans (index_dvd_of_le le_normalizer)
+  ((congr_argₓ _ (card_sylow_eq_index_normalizer P)).mp dvd_rfl).trans (index_dvd_of_le le_normalizer)
 
 theorem not_dvd_index_sylow' [hp : Fact p.Prime] (P : Sylow p G) [(P : Subgroup G).Normal]
     (hP : (P : Subgroup G).index ≠ 0) : ¬p ∣ (P : Subgroup G).index := by
@@ -380,7 +381,7 @@ theorem Sylow.normalizer_sup_eq_top {p : ℕ} [Fact p.Prime] {N : Subgroup G} [N
             (show Function.Injective (MulAut.conj (↑n * g)).toMonoidHom from
               (MulAut.conj (↑n * g)).Injective)).symm.trans
       _
-  rw [map_map, ← congr_arg (map N.subtype) hn, map_map]
+  rw [map_map, ← congr_argₓ (map N.subtype) hn, map_map]
   rfl
 
 end InfiniteSylow

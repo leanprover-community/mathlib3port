@@ -162,7 +162,7 @@ variable [Infinite R]
 
 /-- In the following results, we need a large set of distinct elements of `R`. -/
 noncomputable def distinctElems : Finₓ (cardM bS adm).succ ↪ R :=
-  Function.Embedding.trans (Finₓ.coeEmbedding _).toEmbedding (Infinite.natEmbedding R)
+  Finₓ.coeEmbedding.trans (Infinite.natEmbedding R)
 
 variable [DecidableEq R]
 

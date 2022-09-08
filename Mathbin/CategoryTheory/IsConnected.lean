@@ -142,7 +142,7 @@ theorem induct_on_objects [IsPreconnected J] (p : Set J) {j₀ : J} (h0 : j₀ �
   injection constant_of_preserves_morphisms (fun k => ULift.up (k ∈ p)) (fun j₁ j₂ f => _) j j₀ with i
   rwa [i]
   dsimp'
-  exact congr_arg ULift.up (propext (h1 f))
+  exact congr_argₓ ULift.up (propext (h1 f))
 
 /-- If any maximal connected component containing some element j₀ of J is all of J, then J is connected.
 
@@ -208,7 +208,7 @@ theorem is_preconnected_of_equivalent {K : Type u₁} [Category.{v₂} K] [IsPre
 /-- If `J` and `K` are equivalent, then if `J` is connected then `K` is as well. -/
 theorem is_connected_of_equivalent {K : Type u₁} [Category.{v₂} K] (e : J ≌ K) [IsConnected J] : IsConnected K :=
   { is_nonempty :=
-      Nonempty.map e.Functor.obj
+      Nonempty.mapₓ e.Functor.obj
         (by
           infer_instance),
     to_is_preconnected := is_preconnected_of_equivalent e }
@@ -267,11 +267,11 @@ def Zigzag.setoid (J : Type u₂) [Category.{v₁} J] : Setoidₓ J where
 `F j₂` as long as `F` is a functor.
 -/
 theorem zigzag_obj_of_zigzag (F : J ⥤ K) {j₁ j₂ : J} (h : Zigzag j₁ j₂) : Zigzag (F.obj j₁) (F.obj j₂) :=
-  (h.lift _) fun j k => Or.imp (Nonempty.map fun f => F.map f) (Nonempty.map fun f => F.map f)
+  (h.lift _) fun j k => Or.impₓ (Nonempty.mapₓ fun f => F.map f) (Nonempty.mapₓ fun f => F.map f)
 
 -- TODO: figure out the right way to generalise this to `zigzag`.
 theorem zag_of_zag_obj (F : J ⥤ K) [Full F] {j₁ j₂ : J} (h : Zag (F.obj j₁) (F.obj j₂)) : Zag j₁ j₂ :=
-  Or.imp (Nonempty.map F.Preimage) (Nonempty.map F.Preimage) h
+  Or.impₓ (Nonempty.mapₓ F.Preimage) (Nonempty.mapₓ F.Preimage) h
 
 /-- Any equivalence relation containing (⟶) holds for all pairs of a connected category. -/
 theorem equiv_relation [IsConnected J] (r : J → J → Prop) (hr : Equivalenceₓ r)
@@ -346,7 +346,7 @@ instance [IsConnected J] : Full (Functor.const J : C ⥤ J ⥤ C) where
 
 instance nonempty_hom_of_connected_groupoid {G} [Groupoid G] [IsConnected G] : ∀ x y : G, Nonempty (x ⟶ y) := by
   refine' equiv_relation _ _ fun j₁ j₂ => Nonempty.intro
-  exact ⟨fun j => ⟨𝟙 _⟩, fun j₁ j₂ => Nonempty.map fun f => inv f, fun _ _ _ => Nonempty.map2 (· ≫ ·)⟩
+  exact ⟨fun j => ⟨𝟙 _⟩, fun j₁ j₂ => Nonempty.mapₓ fun f => inv f, fun _ _ _ => Nonempty.map2ₓ (· ≫ ·)⟩
 
 end CategoryTheory
 

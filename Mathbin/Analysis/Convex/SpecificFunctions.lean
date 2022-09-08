@@ -118,7 +118,7 @@ theorem int_prod_range_pos {m : ℤ} {n : ℕ} (hn : Even n) (hm : m ∉ Ico (0 
   rw [eq_comm, Finset.prod_eq_zero_iff] at h
   obtain ⟨a, ha, h⟩ := h
   rw [sub_eq_zero.1 h]
-  exact ⟨Int.coe_zero_le _, Int.coe_nat_lt.2 <| Finset.mem_range.1 ha⟩
+  exact ⟨Int.coe_zero_le _, Int.coe_nat_ltₓ.2 <| Finset.mem_range.1 ha⟩
 
 /-- `x^m`, `m : ℤ` is convex on `(0, +∞)` for all `m` -/
 theorem convex_on_zpow (m : ℤ) : ConvexOn ℝ (Ioi 0) fun x : ℝ => x ^ m := by

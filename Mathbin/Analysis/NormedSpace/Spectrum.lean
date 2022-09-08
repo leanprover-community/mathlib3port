@@ -280,7 +280,7 @@ theorem limsup_pow_nnnorm_pow_one_div_le_spectral_radius (a : A) :
   suffices h : (r : ℝ≥0∞) ≤ p.radius
   · convert h
     simp only [p.radius_eq_liminf, ← norm_to_nnreal, norm_mk_pi_field]
-    refine' congr_arg _ (funext fun n => congr_arg _ _)
+    refine' congr_argₓ _ (funext fun n => congr_argₓ _ _)
     rw [norm_to_nnreal, Ennreal.coe_rpow_def ∥a ^ n∥₊ (1 / n : ℝ), if_neg]
     exact fun ha => by
       linarith [ha.2, (one_div_nonneg.mpr n.cast_nonneg : 0 ≤ (1 / n : ℝ))]

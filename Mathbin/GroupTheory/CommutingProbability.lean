@@ -67,7 +67,7 @@ theorem card_comm_eq_card_conj_classes_mul_card [h : Fintype (ConjClasses G)] :
       _ = ∑ g, card { h // g * h = h * g } := card_sigma _
       _ = ∑ g, card (MulAction.FixedBy (ConjAct G) G g) :=
         sum_equiv conj_act.to_conj_act.to_equiv _ _ fun g =>
-          card_congr' <| congr_arg _ <| funext fun h => mul_inv_eq_iff_eq_mul.symm.to_eq
+          card_congr' <| congr_argₓ _ <| funext fun h => mul_inv_eq_iff_eq_mul.symm.to_eq
       _ = card (Quotientₓ (MulAction.orbitRel (ConjAct G) G)) * card G :=
         MulAction.sum_card_fixed_by_eq_card_orbits_mul_card_group (ConjAct G) G
       _ = card (Quotientₓ (IsConj.setoid G)) * card G := by
@@ -90,7 +90,7 @@ theorem Subgroup.comm_prob_subgroup_le : commProb H ≤ commProb G * H.index ^ 2
   · apply card_le_of_injective _ _
     exact fun p => ⟨⟨p.1.1, p.1.2⟩, subtype.ext_iff.mp p.2⟩
     exact fun p q h => by
-      simpa only [Subtype.ext_iff, Prod.ext_iff] using h
+      simpa only [Subtype.ext_iff, Prod.ext_iffₓ] using h
     
   · exact pow_ne_zero 2 (nat.cast_ne_zero.mpr card_ne_zero)
     

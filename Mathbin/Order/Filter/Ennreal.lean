@@ -102,6 +102,19 @@ theorem limsup_const_mul [CountableInterFilter f] {u : α → ℝ≥0∞} {a : �
     simp only [h_top_le, hfu, if_false]
     
 
+theorem limsup_mul_le [CountableInterFilter f] (u v : α → ℝ≥0∞) : f.limsup (u * v) ≤ f.limsup u * f.limsup v :=
+  calc
+    f.limsup (u * v) ≤ f.limsup fun x => f.limsup u * v x := by
+      refine' limsup_le_limsup _ _
+      · filter_upwards [@eventually_le_limsup _ f _ u] with x hx
+        exact Ennreal.mul_le_mul hx le_rflₓ
+        
+      · run_tac
+          is_bounded_default
+        
+    _ = f.limsup u * f.limsup v := limsup_const_mul
+    
+
 theorem limsup_add_le [CountableInterFilter f] (u v : α → ℝ≥0∞) : f.limsup (u + v) ≤ f.limsup u + f.limsup v :=
   Inf_le ((eventually_le_limsup u).mp ((eventually_le_limsup v).mono fun _ hxg hxf => add_le_add hxf hxg))
 

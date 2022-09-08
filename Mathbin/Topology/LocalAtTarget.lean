@@ -57,7 +57,7 @@ theorem open_iff_inter_of_supr_eq_top (s : Set β) : IsOpen s ↔ ∀ i, IsOpen 
     
   · intro H
     have : (⋃ i, (U i : Set β)) = Set.Univ := by
-      convert congr_arg coe hU
+      convert congr_argₓ coe hU
       simp
     rw [← s.inter_univ, ← this, Set.inter_Union]
     exact is_open_Union H
@@ -99,7 +99,7 @@ theorem embedding_iff_embedding_of_supr_eq_top (h : Continuous f) :
   · apply inducing_iff_inducing_of_supr_eq_top <;> assumption
     
   · apply Set.injective_iff_injective_of_Union_eq_univ
-    convert congr_arg coe hU
+    convert congr_argₓ coe hU
     simp
     
 

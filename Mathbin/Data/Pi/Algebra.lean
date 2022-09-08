@@ -204,7 +204,7 @@ theorem mul_single_one (i : I) : mulSingle i (1 : f i) = 1 :=
 /-- On non-dependent functions, `pi.mul_single` can be expressed as an `ite` -/
 @[to_additive "On non-dependent functions, `pi.single` can be expressed as an `ite`"]
 theorem mul_single_apply {β : Sort _} [One β] (i : I) (x : β) (i' : I) : mulSingle i x i' = if i' = i then x else 1 :=
-  Function.update_apply 1 i x i'
+  Function.update_applyₓ 1 i x i'
 
 /-- On non-dependent functions, `pi.mul_single` is symmetric in the two indices. -/
 @[to_additive "On non-dependent functions, `pi.single` is symmetric in the two\nindices."]
@@ -214,7 +214,7 @@ theorem mul_single_comm {β : Sort _} [One β] (i : I) (x : β) (i' : I) : mulSi
 @[to_additive]
 theorem apply_mul_single (f' : ∀ i, f i → g i) (hf' : ∀ i, f' i 1 = 1) (i : I) (x : f i) (j : I) :
     f' j (mulSingle i x j) = mulSingle i (f' i x) j := by
-  simpa only [Pi.one_apply, hf', mul_single] using Function.apply_update f' 1 i x j
+  simpa only [Pi.one_apply, hf', mul_single] using Function.apply_updateₓ f' 1 i x j
 
 @[to_additive apply_single₂]
 theorem apply_mul_single₂ (f' : ∀ i, f i → g i → h i) (hf' : ∀ i, f' i 1 1 = 1) (i : I) (x : f i) (y : g i) (j : I) :
@@ -256,7 +256,7 @@ protected def prod (f' : ∀ i, f i) (g' : ∀ i, g i) (i : I) : f i × g i :=
 
 @[simp]
 theorem prod_fst_snd : Pi.prod (Prod.fst : α × β → α) (Prod.snd : α × β → β) = id :=
-  funext fun _ => Prod.mk.eta
+  funext fun _ => Prod.mk.etaₓ
 
 @[simp]
 theorem prod_snd_fst : Pi.prod (Prod.snd : α × β → β) (Prod.fst : α × β → α) = Prod.swap :=
@@ -283,7 +283,7 @@ theorem extend_mul [Mul γ] (f : α → β) (g₁ g₂ : α → γ) (e₁ e₂ :
 theorem extend_inv [Inv γ] (f : α → β) (g : α → γ) (e : β → γ) :
     Function.extendₓ f g⁻¹ e⁻¹ = (Function.extendₓ f g e)⁻¹ :=
   funext fun _ => by
-    convert (apply_dite Inv.inv _ _ _).symm
+    convert (apply_diteₓ Inv.inv _ _ _).symm
 
 @[to_additive]
 theorem extend_div [Div γ] (f : α → β) (g₁ g₂ : α → γ) (e₁ e₂ : β → γ) :
@@ -298,7 +298,7 @@ theorem surjective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, Surjective (F i)
   ⟨fun i => (hF i (y i)).some, funext fun i => (hF i (y i)).some_spec⟩
 
 theorem injective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, Injective (F i)) :
-    Injective fun x : ∀ i, f i => fun i => F i (x i) := fun x y h => funext fun i => hF i <| (congr_fun h i : _)
+    Injective fun x : ∀ i, f i => fun i => F i (x i) := fun x y h => funext fun i => hF i <| (congr_funₓ h i : _)
 
 theorem bijective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, Bijective (F i)) :
     Bijective fun x : ∀ i, f i => fun i => F i (x i) :=

@@ -259,7 +259,7 @@ theorem eq_line_map_of_dist_eq_mul_of_dist_eq_mul {x y z : PE} (hxy : dist x y =
   · rw [← dist_ne_zero] at hne
     rcases this with ⟨a, b, ha, hb, hab, H⟩
     rw [smul_zero, zero_addₓ] at H
-    have H' := congr_arg norm H
+    have H' := congr_argₓ norm H
     rw [norm_smul, Real.norm_of_nonneg hb, ← dist_eq_norm_vsub', ← dist_eq_norm_vsub', hxy, mul_left_inj' hne] at H'
     rw [AffineMap.line_map_apply, ← H', H, vsub_vadd]
     

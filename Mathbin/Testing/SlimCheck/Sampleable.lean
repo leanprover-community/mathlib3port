@@ -308,10 +308,10 @@ def iterateShrink {α} [HasToString α] [Sampleable α] (p : α → Prop) [Decid
     f_rec y y <|> some y
 
 instance Fin.sampleable {n : ℕ} [NeZero n] : Sampleable (Finₓ n) :=
-  (Sampleable.lift ℕ Finₓ.ofNat' Subtype.val) fun i => (mod_leₓ _ _ : i % n ≤ i)
+  (Sampleable.lift ℕ Finₓ.ofNat' Finₓ.val) fun i => (mod_leₓ _ _ : i % n ≤ i)
 
 instance (priority := 100) Fin.sampleable' {n} : Sampleable (Finₓ (succ n)) :=
-  (Sampleable.lift ℕ Finₓ.ofNat Subtype.val) fun i => (mod_leₓ _ _ : i % succ n ≤ i)
+  (Sampleable.lift ℕ Finₓ.ofNat Finₓ.val) fun i => (mod_leₓ _ _ : i % succ n ≤ i)
 
 instance Pnat.sampleable : Sampleable ℕ+ :=
   (Sampleable.lift ℕ Nat.succPnat Pnat.natPred) fun a => by
@@ -417,7 +417,7 @@ instance Rat.sampleable : Sampleable ℚ :=
     intro i
     rcases i with ⟨x, ⟨y, hy⟩⟩ <;> unfold_wf <;> dsimp' [Rat.mkPnat]
     mono*
-    · rw [← Int.coe_nat_le, ← Int.abs_eq_nat_abs, ← Int.abs_eq_nat_abs]
+    · rw [← Int.coe_nat_leₓ, ← Int.abs_eq_nat_abs, ← Int.abs_eq_nat_abs]
       apply Int.abs_div_le_abs
       
     · change _ - 1 ≤ y - 1
@@ -534,9 +534,9 @@ def List.shrinkRemoves (k : ℕ) (hk : 0 < k) :
         match (motive := ∀ ys, ys = List.splitAtₓ k xs → _) List.splitAtₓ k xs, rfl with
         | ⟨xs₁, xs₂⟩, h =>
           have h₄ : xs₁ = xs.take k := by
-            simp only [List.split_at_eq_take_drop, Prod.mk.inj_iff] at h <;> tauto
+            simp only [List.split_at_eq_take_drop, Prod.mk.inj_iffₓ] at h <;> tauto
           have h₃ : xs₂ = xs.drop k := by
-            simp only [List.split_at_eq_take_drop, Prod.mk.inj_iff] at h <;> tauto
+            simp only [List.split_at_eq_take_drop, Prod.mk.inj_iffₓ] at h <;> tauto
           have : sizeof xs₂ < sizeof xs := by
             rw [h₃] <;> solve_by_elim [list.sizeof_drop_lt_sizeof_of_lt_length]
           have h₁ : n - k = xs₂.length := by

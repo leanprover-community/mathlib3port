@@ -381,7 +381,7 @@ theorem ContinuousMap.subalgebra_is_R_or_C_topological_closure_eq_top_of_separat
     -- we may apply the real Stone-Weierstrass result to it.
     have SW : A₀.topological_closure = ⊤ := by
       have := subalgebra_topological_closure_eq_top_of_separates_points _ (hA.is_R_or_C_to_real hA')
-      exact congr_arg Subalgebra.toSubmodule this
+      exact congr_argₓ Subalgebra.toSubmodule this
     rw [← Submodule.map_top, ← SW]
     -- So it suffices to prove that the image under `I` of the closure of `A₀` is contained in the
     -- closure of `A`, which follows by abstract nonsense

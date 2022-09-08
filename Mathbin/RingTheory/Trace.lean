@@ -133,10 +133,12 @@ theorem trace_algebra_map (x : K) : trace K L (algebraMap K L x) = finrank K L �
   · simp [trace_eq_zero_of_not_exists_basis K H, finrank_eq_zero_of_not_exists_basis_finset H]
     
 
-theorem trace_trace_of_basis [Algebra S T] [IsScalarTower R S T] {ι κ : Type _} [Fintype ι] [Fintype κ]
-    (b : Basis ι R S) (c : Basis κ S T) (x : T) : trace R S (trace S T x) = trace R T x := by
+theorem trace_trace_of_basis [Algebra S T] [IsScalarTower R S T] {ι κ : Type _} [Finite ι] [Finite κ] (b : Basis ι R S)
+    (c : Basis κ S T) (x : T) : trace R S (trace S T x) = trace R T x := by
   haveI := Classical.decEq ι
   haveI := Classical.decEq κ
+  cases nonempty_fintype ι
+  cases nonempty_fintype κ
   rw [trace_eq_matrix_trace (b.smul c), trace_eq_matrix_trace b, trace_eq_matrix_trace c, Matrix.trace, Matrix.trace,
     Matrix.trace, ← Finset.univ_product_univ, Finset.sum_product]
   refine' Finset.sum_congr rfl fun i _ => _
@@ -145,7 +147,7 @@ theorem trace_trace_of_basis [Algebra S T] [IsScalarTower R S T] {ι κ : Type _
       Finset.sum_apply
       i _ fun y => left_mul_matrix b (left_mul_matrix c x y y)]
 
-theorem trace_comp_trace_of_basis [Algebra S T] [IsScalarTower R S T] {ι κ : Type _} [Fintype ι] [Fintype κ]
+theorem trace_comp_trace_of_basis [Algebra S T] [IsScalarTower R S T] {ι κ : Type _} [Finite ι] [Fintype κ]
     (b : Basis ι R S) (c : Basis κ S T) : (trace R S).comp ((trace S T).restrictScalars R) = trace R T := by
   ext
   rw [LinearMap.comp_apply, LinearMap.restrict_scalars_apply, trace_trace_of_basis b c]
@@ -177,7 +179,7 @@ variable {S}
 theorem trace_form_apply (x y : S) : traceForm R S x y = trace R S (x * y) :=
   rfl
 
-theorem trace_form_is_symm : (traceForm R S).IsSymm := fun x y => congr_arg (trace R S) (mul_comm _ _)
+theorem trace_form_is_symm : (traceForm R S).IsSymm := fun x y => congr_argₓ (trace R S) (mul_comm _ _)
 
 theorem trace_form_to_matrix [DecidableEq ι] (i j) : BilinForm.toMatrix b (traceForm R S) i j = trace R S (b i * b j) :=
   by

@@ -49,7 +49,7 @@ theorem diff_mul_diff : diff ϕ R S * diff ϕ S T = diff ϕ R T :=
   prod_mul_distrib.symm.trans
     (prod_congr rfl fun q hq =>
       (ϕ.map_mul _ _).symm.trans
-        (congr_arg ϕ
+        (congr_argₓ ϕ
           (by
             simp_rw [Subtype.ext_iff, coe_mul, coe_mk, mul_assoc, mul_inv_cancel_left])))
 
@@ -65,7 +65,7 @@ theorem diff_inv : (diff ϕ S T)⁻¹ = diff ϕ T S :=
 theorem smul_diff_smul (g : G) : diff ϕ (g • S) (g • T) = diff ϕ S T :=
   prod_bij' (fun q _ => g⁻¹ • q) (fun _ _ => mem_univ _)
     (fun _ _ =>
-      congr_arg ϕ
+      congr_argₓ ϕ
         (by
           simp_rw [coe_mk, smul_apply_eq_smul_apply_inv_smul, smul_eq_mul, mul_inv_rev, mul_assoc,
             inv_mul_cancel_leftₓ]))
@@ -147,7 +147,7 @@ theorem transfer_eq_pow [Fintype (G ⧸ H)] (g : G)
   classical
   change ∀ (k g₀) (hk : g₀⁻¹ * g ^ k * g₀ ∈ H), ↑(⟨g₀⁻¹ * g ^ k * g₀, hk⟩ : H) = g ^ k at key
   rw [transfer_eq_prod_quotient_orbit_rel_zpowers_quot, ← Finset.prod_to_list, List.prod_map_hom]
-  refine' congr_arg ϕ (Subtype.coe_injective _)
+  refine' congr_argₓ ϕ (Subtype.coe_injective _)
   rw [H.coe_mk, ← (zpowers g).coe_mk g (mem_zpowers g), ← (zpowers g).coe_pow, (zpowers g).coe_mk, index_eq_card,
     Fintype.card_congr (self_equiv_sigma_orbits (zpowers g) (G ⧸ H)), Fintype.card_sigma, ← Finset.prod_pow_eq_pow_sum,
     ← Finset.prod_to_list]

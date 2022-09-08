@@ -318,7 +318,7 @@ theorem succ_pos' {n : ℕ} : 0 < succ n :=
   succ_posₓ n
 
 theorem succ_inj' {n m : ℕ} : succ n = succ m ↔ n = m :=
-  ⟨succ.injₓ, congr_arg _⟩
+  ⟨succ.injₓ, congr_argₓ _⟩
 
 theorem succ_injective : Function.Injective Nat.succ := fun x y => succ.injₓ
 
@@ -341,7 +341,7 @@ theorem two_le_iff : ∀ n, 2 ≤ n ↔ n ≠ 0 ∧ n ≠ 1
   | n + 2 => by
     simp
 
-theorem succ_le_succ_iff {m n : ℕ} : succ m ≤ succ n ↔ m ≤ n :=
+theorem succ_le_succ_iffₓ {m n : ℕ} : succ m ≤ succ n ↔ m ≤ n :=
   ⟨le_of_succ_le_succₓ, succ_le_succₓ⟩
 
 theorem max_succ_succ {m n : ℕ} : max (succ m) (succ n) = succ (max m n) := by
@@ -630,7 +630,7 @@ theorem le_mul_of_pos_right {m n : ℕ} (h : 0 < n) : m ≤ m * n := by
         decide)
 
 theorem two_mul_ne_two_mul_add_one {n m} : 2 * n ≠ 2 * m + 1 :=
-  mt (congr_arg (· % 2))
+  mt (congr_argₓ (· % 2))
     (by
       rw [add_commₓ, add_mul_mod_self_left, mul_mod_right, mod_eq_of_lt] <;> simp )
 
@@ -1119,7 +1119,7 @@ theorem mul_div_mul_comm_of_dvd_dvd {a b c d : ℕ} (hac : c ∣ a) (hbd : d ∣
 
 @[simp]
 protected theorem div_left_inj {a b d : ℕ} (hda : d ∣ a) (hdb : d ∣ b) : a / d = b / d ↔ a = b := by
-  refine' ⟨fun h => _, congr_arg _⟩
+  refine' ⟨fun h => _, congr_argₓ _⟩
   rw [← Nat.mul_div_cancel'ₓ hda, ← Nat.mul_div_cancel'ₓ hdb, h]
 
 /-! ### `mod`, `dvd` -/
@@ -1502,7 +1502,7 @@ theorem dvd_left_iff_eq {m n : ℕ} : (∀ a : ℕ, a ∣ m ↔ a ∣ n) ↔ m =
 
 /-- `dvd` is injective in the left argument -/
 theorem dvd_left_injective : Function.Injective ((· ∣ ·) : ℕ → ℕ → Prop) := fun m n h =>
-  dvd_right_iff_eq.mp fun a => iff_of_eq (congr_fun h a)
+  dvd_right_iff_eq.mp fun a => iff_of_eq (congr_funₓ h a)
 
 theorem div_lt_div_of_lt_of_dvd {a b d : ℕ} (hdb : d ∣ b) (h : a < b) : a / d < b / d := by
   rw [Nat.lt_div_iff_mul_lt hdb]
@@ -1828,12 +1828,10 @@ theorem bit_le_bit1_iff : ∀ {b : Bool}, bit b k ≤ bit1 n ↔ k ≤ n
   | ff => bit0_le_bit1_iff
   | tt => bit1_le_bit1
 
-@[simp]
 theorem bit0_mod_two : bit0 n % 2 = 0 := by
   rw [Nat.mod_two_of_bodd]
   simp
 
-@[simp]
 theorem bit1_mod_two : bit1 n % 2 = 1 := by
   rw [Nat.mod_two_of_bodd]
   simp
@@ -1847,7 +1845,7 @@ theorem pos_of_bit0_pos {n : ℕ} (h : 0 < bit0 n) : 0 < n := by
 theorem bit_cases_on_bit {C : ℕ → Sort u} (H : ∀ b n, C (bit b n)) (b : Bool) (n : ℕ) :
     bitCasesOn (bit b n) H = H b n :=
   eq_of_heq <|
-    (eq_rec_heq _ _).trans <| by
+    (eq_rec_heqₓ _ _).trans <| by
       rw [bodd_bit, div2_bit]
 
 @[simp]
@@ -1862,7 +1860,7 @@ theorem bit_cases_on_injective {C : ℕ → Sort u} :
     Function.Injective fun H : ∀ b n, C (bit b n) => fun n => bitCasesOn n H := by
   intro H₁ H₂ h
   ext b n
-  simpa only [bit_cases_on_bit] using congr_fun h (bit b n)
+  simpa only [bit_cases_on_bit] using congr_funₓ h (bit b n)
 
 @[simp]
 theorem bit_cases_on_inj {C : ℕ → Sort u} (H₁ H₂ : ∀ b n, C (bit b n)) :

@@ -664,13 +664,13 @@ faces are given by the same subset of points. -/
 theorem centroid_eq_iff [CharZero k] {n : ℕ} (s : Simplex k P n) {fs₁ fs₂ : Finset (Finₓ (n + 1))} {m₁ m₂ : ℕ}
     (h₁ : fs₁.card = m₁ + 1) (h₂ : fs₂.card = m₂ + 1) : fs₁.centroid k s.points = fs₂.centroid k s.points ↔ fs₁ = fs₂ :=
   by
-  refine' ⟨fun h => _, congr_arg _⟩
+  refine' ⟨fun h => _, congr_argₓ _⟩
   rw [Finset.centroid_eq_affine_combination_fintype, Finset.centroid_eq_affine_combination_fintype] at h
   have ha :=
     (affine_independent_iff_indicator_eq_of_affine_combination_eq k s.points).1 s.independent _ _ _ _
       (fs₁.sum_centroid_weights_indicator_eq_one_of_card_eq_add_one k h₁)
       (fs₂.sum_centroid_weights_indicator_eq_one_of_card_eq_add_one k h₂) h
-  simp_rw [Finset.coe_univ, Set.indicator_univ, Function.funext_iffₓ, Finset.centroid_weights_indicator_def,
+  simp_rw [Finset.coe_univ, Set.indicator_univ, Function.funext_iff, Finset.centroid_weights_indicator_def,
     Finset.centroidWeights, h₁, h₂] at ha
   ext i
   specialize ha i

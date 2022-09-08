@@ -97,7 +97,7 @@ noncomputable instance HallMatchingsOn.fintype {ι : Type u} {α : Type v} (t : 
     exact ⟨i, i.property, f.property.2 i⟩
   apply Fintype.ofInjective g
   intro f f' h
-  simp only [g, Function.funext_iffₓ, Subtype.val_eq_coe] at h
+  simp only [g, Function.funext_iff, Subtype.val_eq_coe] at h
   ext a
   exact h a
 
@@ -187,7 +187,7 @@ theorem Fintype.all_card_le_rel_image_card_iff_exists_injective {α : Type u} {�
   have h : ∀ A : Finset α, Fintype.card (Rel.Image r A) = (A.bUnion r').card := by
     intro A
     rw [← Set.to_finset_card]
-    apply congr_arg
+    apply congr_argₓ
     ext b
     simp [Rel.Image]
   have h' : ∀ (f : α → β) (x), r x (f x) ↔ f x ∈ r' x := by

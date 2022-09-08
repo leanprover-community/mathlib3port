@@ -275,7 +275,7 @@ theorem coe_filter_univ (p : α → Prop) [DecidablePred p] : (univ.filter p : S
 
 /-- A special case of `finset.sup_eq_supr` that omits the useless `x ∈ univ` binder. -/
 theorem sup_univ_eq_supr [CompleteLattice β] (f : α → β) : Finset.univ.sup f = supr f :=
-  (sup_eq_supr _ f).trans <| congr_arg _ <| funext fun a => supr_pos (mem_univ _)
+  (sup_eq_supr _ f).trans <| congr_argₓ _ <| funext fun a => supr_pos (mem_univ _)
 
 /-- A special case of `finset.inf_eq_infi` that omits the useless `x ∈ univ` binder. -/
 theorem inf_univ_eq_infi [CompleteLattice β] (f : α → β) : Finset.univ.inf f = infi f :=
@@ -299,7 +299,7 @@ instance decidablePiFintype {α} {β : α → Type _} [∀ a, DecidableEq (β a)
   fun f g =>
   decidableOfIff (∀ a ∈ Fintype.elems α, f a = g a)
     (by
-      simp [Function.funext_iffₓ, Fintype.complete])
+      simp [Function.funext_iff, Fintype.complete])
 
 instance decidableForallFintype {p : α → Prop} [DecidablePred p] [Fintype α] : Decidable (∀ a, p a) :=
   decidableOfIff (∀ a ∈ @univ α _, p a)
@@ -429,7 +429,7 @@ instance (α : Type _) : Subsingleton (Fintype α) :=
 /-- Given a predicate that can be represented by a finset, the subtype
 associated to the predicate is a fintype. -/
 protected def subtype {p : α → Prop} (s : Finset α) (H : ∀ x : α, x ∈ s ↔ p x) : Fintype { x // p x } :=
-  ⟨⟨s.1.pmap Subtype.mk fun x => (H x).1, s.Nodup.pmap fun a _ b _ => congr_arg Subtype.val⟩, fun ⟨x, px⟩ =>
+  ⟨⟨s.1.pmap Subtype.mk fun x => (H x).1, s.Nodup.pmap fun a _ b _ => congr_argₓ Subtype.val⟩, fun ⟨x, px⟩ =>
     Multiset.mem_pmap.2 ⟨x, (H x).2 px, rfl⟩⟩
 
 theorem subtype_card {p : α → Prop} (s : Finset α) (H : ∀ x : α, x ∈ s ↔ p x) :
@@ -1597,7 +1597,7 @@ there is an additional condition `i ∈ finset.univ` in the `finset.pi` definiti
 def piFinset (t : ∀ a, Finset (δ a)) : Finset (∀ a, δ a) :=
   (Finset.univ.pi t).map
     ⟨fun f a => f a (mem_univ a), fun _ _ => by
-      simp [Function.funext_iffₓ]⟩
+      simp [Function.funext_iff]⟩
 
 @[simp]
 theorem mem_pi_finset {t : ∀ a, Finset (δ a)} {f : ∀ a, δ a} : f ∈ piFinset t ↔ ∀ a, f a ∈ t a := by
@@ -1628,7 +1628,7 @@ theorem pi_finset_empty [Nonempty α] : piFinset (fun _ => ∅ : ∀ i, Finset (
 @[simp]
 theorem pi_finset_singleton (f : ∀ i, δ i) : piFinset (fun i => {f i} : ∀ i, Finset (δ i)) = {f} :=
   ext fun _ => by
-    simp only [Function.funext_iffₓ, Fintype.mem_pi_finset, mem_singleton]
+    simp only [Function.funext_iff, Fintype.mem_pi_finset, mem_singleton]
 
 theorem pi_finset_subsingleton {f : ∀ i, Finset (δ i)} (hf : ∀ i, (f i : Set (δ i)).Subsingleton) :
     (Fintype.piFinset f : Set (∀ i, δ i)).Subsingleton := fun a ha b hb =>
@@ -1637,7 +1637,7 @@ theorem pi_finset_subsingleton {f : ∀ i, Finset (δ i)} (hf : ∀ i, (f i : Se
 theorem pi_finset_disjoint_of_disjoint [∀ a, DecidableEq (δ a)] (t₁ t₂ : ∀ a, Finset (δ a)) {a : α}
     (h : Disjoint (t₁ a) (t₂ a)) : Disjoint (piFinset t₁) (piFinset t₂) :=
   disjoint_iff_ne.2 fun f₁ hf₁ f₂ hf₂ eq₁₂ =>
-    disjoint_iff_ne.1 h (f₁ a) (mem_pi_finset.1 hf₁ a) (f₂ a) (mem_pi_finset.1 hf₂ a) (congr_fun eq₁₂ a)
+    disjoint_iff_ne.1 h (f₁ a) (mem_pi_finset.1 hf₁ a) (f₂ a) (mem_pi_finset.1 hf₂ a) (congr_funₓ eq₁₂ a)
 
 end Fintype
 
@@ -1800,7 +1800,7 @@ instance pfunFintype (p : Prop) [Decidable p] (α : p → Type _) [∀ hp, Finty
   if hp : p then Fintype.ofEquiv (α hp) ⟨fun a _ => a, fun f => f hp, fun _ => rfl, fun _ => rfl⟩
   else
     ⟨singleton fun h => (hp h).elim, by
-      simp [hp, Function.funext_iffₓ]⟩
+      simp [hp, Function.funext_iff]⟩
 
 @[simp]
 theorem Finset.univ_pi_univ {α : Type _} {β : α → Type _} [DecidableEq α] [Fintype α] [∀ a, Fintype (β a)] :
@@ -1873,7 +1873,7 @@ def Quotientₓ.finChoice {ι : Type _} [DecidableEq ι] [Fintype ι] {α : ι �
       simp [Quotientₓ.out_eq] at this
       simp [this]
       let g := fun a : Multiset ι => ⟦fun (i : ι) (h : i ∈ a) => Quotientₓ.out (f i)⟧
-      refine' eq_of_heq ((eq_rec_heq _ _).trans (_ : HEq (g a) (g b)))
+      refine' eq_of_heq ((eq_rec_heqₓ _ _).trans (_ : HEq (g a) (g b)))
       congr 1
       exact Quotientₓ.sound h)
     (fun f => ⟦fun i => f i (Finset.mem_univ _)⟧) fun a b h => Quotientₓ.sound fun i => h _ _
@@ -2001,7 +2001,7 @@ theorem nodup_perms_of_list : ∀ {l : List α} (hl : l.Nodup), (permsOfList l).
 def permsOfFinset (s : Finset α) : Finset (Perm α) :=
   Quotientₓ.hrecOn s.1 (fun l hl => ⟨permsOfList l, nodup_perms_of_list hl⟩)
     (fun a b hab =>
-      hfunext (congr_arg _ (Quotientₓ.sound hab)) fun ha hb _ =>
+      hfunext (congr_argₓ _ (Quotientₓ.sound hab)) fun ha hb _ =>
         heq_of_eq <|
           Finset.ext <| by
             simp [mem_perms_of_list_iff, hab.mem_iff])
@@ -2254,10 +2254,10 @@ theorem infinite_sum : Infinite (Sum α β) ↔ Infinite α ∨ Infinite β := b
   exact Infinite.false
 
 instance Prod.infinite_of_right [Nonempty α] [Infinite β] : Infinite (α × β) :=
-  Infinite.of_surjective Prod.snd Prod.snd_surjective
+  Infinite.of_surjective Prod.snd Prod.snd_surjectiveₓ
 
 instance Prod.infinite_of_left [Infinite α] [Nonempty β] : Infinite (α × β) :=
-  Infinite.of_surjective Prod.fst Prod.fst_surjectiveₓ
+  Infinite.of_surjective Prod.fst Prod.fst_surjective
 
 @[simp]
 theorem infinite_prod : Infinite (α × β) ↔ Infinite α ∧ Nonempty β ∨ Nonempty α ∧ Infinite β := by

@@ -46,10 +46,6 @@ of `x` with `↑x`. This tactic also works for a function `f : α → ℝ` with 
 ## Notations
 
 This file defines `ℝ≥0` as a localized notation for `nnreal`.
-
-## TODO
-
-`semifield` instance
 -/
 
 
@@ -58,9 +54,10 @@ open Classical BigOperators
 -- to ensure these instance are computable
 /-- Nonnegative real numbers. -/
 def Nnreal :=
-  { r : ℝ // 0 ≤ r }deriving OrderedSemiring, CommMonoidWithZero, FloorSemiring, SemilatticeInf, DenselyOrdered,
-  OrderBot, CanonicallyLinearOrderedAddMonoid, LinearOrderedCommGroupWithZero, Archimedean, LinearOrderedSemiring,
-  OrderedCommSemiring, CanonicallyOrderedCommSemiring, Sub, HasOrderedSub, Div, Inhabited
+  { r : ℝ // 0 ≤ r }deriving OrderedSemiring, CommMonoidWithZero, FloorSemiring, CommSemiringₓ, Semiringₓ,
+  SemilatticeInf, DenselyOrdered, OrderBot, CanonicallyLinearOrderedSemifield, LinearOrderedCommGroupWithZero,
+  Archimedean, LinearOrderedSemiring, OrderedCommSemiring, CanonicallyOrderedCommSemiring, Sub, HasOrderedSub, Div,
+  Inhabited
 
 -- mathport name: nnreal
 localized [Nnreal] notation " ℝ≥0 " => Nnreal
@@ -82,7 +79,7 @@ protected theorem eq {n m : ℝ≥0 } : (n : ℝ) = (m : ℝ) → n = m :=
   Subtype.eq
 
 protected theorem eq_iff {n m : ℝ≥0 } : (n : ℝ) = (m : ℝ) ↔ n = m :=
-  Iff.intro Nnreal.eq (congr_arg coe)
+  Iff.intro Nnreal.eq (congr_argₓ coe)
 
 theorem ne_iff {x y : ℝ≥0 } : (x : ℝ) ≠ (y : ℝ) ↔ x ≠ y :=
   not_iff_not_of_iff <| Nnreal.eq_iff
@@ -185,7 +182,6 @@ protected theorem coe_sub {r₁ r₂ : ℝ≥0 } (h : r₂ ≤ r₁) : ((r₁ - 
     le_sub.2 <| by
       simp [show (r₂ : ℝ) ≤ r₁ from h]
 
--- TODO: setup semifield!
 @[simp, norm_cast]
 protected theorem coe_eq_zero (r : ℝ≥0 ) : ↑r = (0 : ℝ) ↔ r = 0 := by
   rw [← Nnreal.coe_zero, Nnreal.coe_eq]
@@ -467,10 +463,9 @@ instance contravariant_add : ContravariantClass ℝ≥0 ℝ≥0 (· + ·) (· < 
 instance covariant_mul : CovariantClass ℝ≥0 ℝ≥0 (· * ·) (· ≤ ·) :=
   OrderedCommMonoid.to_covariant_class_left ℝ≥0
 
+-- Why isn't `nnreal.contravariant_add` inferred?
 theorem le_of_forall_pos_le_add {a b : ℝ≥0 } (h : ∀ ε, 0 < ε → a ≤ b + ε) : a ≤ b :=
-  le_of_forall_le_of_denseₓ fun x hxb => by
-    rcases exists_add_of_le (le_of_ltₓ hxb) with ⟨ε, rfl⟩
-    exact h _ ((lt_add_iff_pos_right b).1 hxb)
+  @le_of_forall_pos_le_add _ _ _ _ _ _ Nnreal.contravariant_add _ _ h
 
 theorem lt_iff_exists_rat_btwn (a b : ℝ≥0 ) : a < b ↔ ∃ q : ℚ, 0 ≤ q ∧ a < Real.toNnreal q ∧ Real.toNnreal q < b :=
   Iff.intro
@@ -627,13 +622,7 @@ namespace Nnreal
 section Mul
 
 theorem mul_eq_mul_left {a b c : ℝ≥0 } (h : a ≠ 0) : a * b = a * c ↔ b = c := by
-  rw [← Nnreal.eq_iff, ← Nnreal.eq_iff, Nnreal.coe_mul, Nnreal.coe_mul]
-  constructor
-  · exact mul_left_cancel₀ (mt (@Nnreal.eq_iff a 0).1 h)
-    
-  · intro h
-    rw [h]
-    
+  rw [mul_eq_mul_left_iff, or_iff_left h]
 
 theorem _root_.real.to_nnreal_mul {p q : ℝ} (hp : 0 ≤ p) : Real.toNnreal (p * q) = Real.toNnreal p * Real.toNnreal q :=
   by
@@ -690,25 +679,25 @@ theorem coe_sub_def {r p : ℝ≥0 } : ↑(r - p) = max (r - p : ℝ) 0 :=
 noncomputable example : HasOrderedSub ℝ≥0 := by
   infer_instance
 
-theorem sub_div (a b c : ℝ≥0 ) : (a - b) / c = a / c - b / c := by
-  simp only [div_eq_mul_inv, tsub_mul]
+theorem sub_div (a b c : ℝ≥0 ) : (a - b) / c = a / c - b / c :=
+  tsub_div _ _ _
 
 end Sub
 
 section Inv
 
-theorem sum_div {ι} (s : Finset ι) (f : ι → ℝ≥0 ) (b : ℝ≥0 ) : (∑ i in s, f i) / b = ∑ i in s, f i / b := by
-  simp only [div_eq_mul_inv, Finset.sum_mul]
+theorem sum_div {ι} (s : Finset ι) (f : ι → ℝ≥0 ) (b : ℝ≥0 ) : (∑ i in s, f i) / b = ∑ i in s, f i / b :=
+  Finset.sum_div
 
 @[simp]
-theorem inv_pos {r : ℝ≥0 } : 0 < r⁻¹ ↔ 0 < r := by
-  simp [pos_iff_ne_zero]
+theorem inv_pos {r : ℝ≥0 } : 0 < r⁻¹ ↔ 0 < r :=
+  inv_pos
 
-theorem div_pos {r p : ℝ≥0 } (hr : 0 < r) (hp : 0 < p) : 0 < r / p := by
-  simpa only [div_eq_mul_inv] using mul_pos hr (inv_pos.2 hp)
+theorem div_pos {r p : ℝ≥0 } (hr : 0 < r) (hp : 0 < p) : 0 < r / p :=
+  div_pos hr hp
 
 theorem div_self_le (r : ℝ≥0 ) : r / r ≤ 1 :=
-  div_self_le_one (r : ℝ)
+  div_self_le_one r
 
 @[simp]
 theorem inv_le {r p : ℝ≥0 } (h : r ≠ 0) : r⁻¹ ≤ p ↔ 1 ≤ r * p := by
@@ -729,11 +718,11 @@ theorem mul_le_iff_le_inv {a b r : ℝ≥0 } (hr : r ≠ 0) : r * a ≤ b ↔ a 
   have : 0 < r := lt_of_le_of_neₓ (zero_le r) hr.symm
   rw [← mul_le_mul_left (inv_pos.mpr this), ← mul_assoc, inv_mul_cancel hr, one_mulₓ]
 
-theorem le_div_iff_mul_le {a b r : ℝ≥0 } (hr : r ≠ 0) : a ≤ b / r ↔ a * r ≤ b := by
-  rw [div_eq_inv_mul, ← mul_le_iff_le_inv hr, mul_comm]
+theorem le_div_iff_mul_le {a b r : ℝ≥0 } (hr : r ≠ 0) : a ≤ b / r ↔ a * r ≤ b :=
+  le_div_iff₀ hr
 
 theorem div_le_iff {a b r : ℝ≥0 } (hr : r ≠ 0) : a / r ≤ b ↔ a ≤ b * r :=
-  @div_le_iff ℝ _ a r b <| pos_iff_ne_zero.2 hr
+  div_le_iff₀ hr
 
 theorem div_le_iff' {a b r : ℝ≥0 } (hr : r ≠ 0) : a / r ≤ b ↔ a ≤ r * b :=
   @div_le_iff' ℝ _ a r b <| pos_iff_ne_zero.2 hr
@@ -778,8 +767,8 @@ theorem div_le_div_left_of_le {a b c : ℝ≥0 } (b0 : 0 < b) (c0 : 0 < c) (cb :
     exact (div_le_div_left a0 b0 c0).mpr cb
     
 
-theorem div_le_div_left {a b c : ℝ≥0 } (a0 : 0 < a) (b0 : 0 < b) (c0 : 0 < c) : a / b ≤ a / c ↔ c ≤ b := by
-  rw [Nnreal.div_le_iff b0.ne.symm, div_mul_eq_mul_div, Nnreal.le_div_iff_mul_le c0.ne.symm, mul_le_mul_left a0]
+theorem div_le_div_left {a b c : ℝ≥0 } (a0 : 0 < a) (b0 : 0 < b) (c0 : 0 < c) : a / b ≤ a / c ↔ c ≤ b :=
+  div_le_div_left a0 b0 c0
 
 theorem le_of_forall_lt_one_mul_le {x y : ℝ≥0 } (h : ∀ a < 1, a * x ≤ y) : x ≤ y :=
   le_of_forall_ge_of_denseₓ fun a ha => by
@@ -792,22 +781,22 @@ theorem le_of_forall_lt_one_mul_le {x y : ℝ≥0 } (h : ∀ a < 1, a * x ≤ y)
     rwa [mul_assoc, inv_mul_cancel hx, mul_oneₓ] at this
 
 theorem div_add_div_same (a b c : ℝ≥0 ) : a / c + b / c = (a + b) / c :=
-  Eq.symm <| right_distrib a b c⁻¹
+  div_add_div_same _ _ _
 
 theorem half_pos {a : ℝ≥0 } (h : 0 < a) : 0 < a / 2 :=
-  div_pos h zero_lt_two
+  half_pos h
 
 theorem add_halves (a : ℝ≥0 ) : a / 2 + a / 2 = a :=
-  Nnreal.eq (add_halves a)
+  add_halves _
 
 theorem half_le_self (a : ℝ≥0 ) : a / 2 ≤ a :=
-  Nnreal.coe_le_coe.mp <| half_le_self a.coe_nonneg
+  half_le_self bot_le
 
-theorem half_lt_self {a : ℝ≥0 } (h : a ≠ 0) : a / 2 < a := by
-  rw [← Nnreal.coe_lt_coe, Nnreal.coe_div] <;> exact half_lt_self (bot_lt_iff_ne_bot.2 h)
+theorem half_lt_self {a : ℝ≥0 } (h : a ≠ 0) : a / 2 < a :=
+  half_lt_self h.bot_lt
 
-theorem two_inv_lt_one : (2⁻¹ : ℝ≥0 ) < 1 := by
-  simpa using half_lt_self zero_ne_one.symm
+theorem two_inv_lt_one : (2⁻¹ : ℝ≥0 ) < 1 :=
+  two_inv_lt_one
 
 theorem div_lt_one_of_lt {a b : ℝ≥0 } (h : a < b) : a / b < 1 := by
   rwa [div_lt_iff, one_mulₓ]
@@ -815,18 +804,16 @@ theorem div_lt_one_of_lt {a b : ℝ≥0 } (h : a < b) : a / b < 1 := by
 
 @[field_simps]
 theorem div_add_div (a : ℝ≥0 ) {b : ℝ≥0 } (c : ℝ≥0 ) {d : ℝ≥0 } (hb : b ≠ 0) (hd : d ≠ 0) :
-    a / b + c / d = (a * d + b * c) / (b * d) := by
-  rw [← Nnreal.eq_iff]
-  simp only [Nnreal.coe_add, Nnreal.coe_div, Nnreal.coe_mul]
-  exact div_add_div _ _ (coe_ne_zero.2 hb) (coe_ne_zero.2 hd)
+    a / b + c / d = (a * d + b * c) / (b * d) :=
+  div_add_div _ _ hb hd
 
 @[field_simps]
-theorem add_div' (a b c : ℝ≥0 ) (hc : c ≠ 0) : b + a / c = (b * c + a) / c := by
-  simpa using div_add_div b a one_ne_zero hc
+theorem add_div' (a b c : ℝ≥0 ) (hc : c ≠ 0) : b + a / c = (b * c + a) / c :=
+  add_div' _ _ _ hc
 
 @[field_simps]
-theorem div_add' (a b c : ℝ≥0 ) (hc : c ≠ 0) : a / c + b = (a + b * c) / c := by
-  rwa [add_commₓ, add_div', add_commₓ]
+theorem div_add' (a b c : ℝ≥0 ) (hc : c ≠ 0) : a / c + b = (a + b * c) / c :=
+  div_add' _ _ _ hc
 
 theorem _root_.real.to_nnreal_inv {x : ℝ} : Real.toNnreal x⁻¹ = (Real.toNnreal x)⁻¹ := by
   by_cases' hx : 0 ≤ x
@@ -849,7 +836,7 @@ theorem inv_lt_one_iff {x : ℝ≥0 } (hx : x ≠ 0) : x⁻¹ < 1 ↔ 1 < x := b
   rwa [← one_div, div_lt_iff hx, one_mulₓ]
 
 theorem inv_lt_one {x : ℝ≥0 } (hx : 1 < x) : x⁻¹ < 1 :=
-  (inv_lt_one_iff (zero_lt_one.trans hx).ne').2 hx
+  inv_lt_one hx
 
 theorem zpow_pos {x : ℝ≥0 } (hx : x ≠ 0) (n : ℤ) : 0 < x ^ n := by
   cases n
@@ -858,8 +845,8 @@ theorem zpow_pos {x : ℝ≥0 } (hx : x ≠ 0) (n : ℤ) : 0 < x ^ n := by
   · simp [pow_pos hx.bot_lt _]
     
 
-theorem inv_lt_inv_iff {x y : ℝ≥0 } (hx : x ≠ 0) (hy : y ≠ 0) : y⁻¹ < x⁻¹ ↔ x < y := by
-  rw [← one_div, div_lt_iff hy, ← div_eq_inv_mul, lt_div_iff hx, one_mulₓ]
+theorem inv_lt_inv_iff {x y : ℝ≥0 } (hx : x ≠ 0) (hy : y ≠ 0) : y⁻¹ < x⁻¹ ↔ x < y :=
+  inv_lt_inv₀ hy hx
 
 theorem inv_lt_inv {x y : ℝ≥0 } (hx : x ≠ 0) (h : x < y) : y⁻¹ < x⁻¹ :=
   (inv_lt_inv_iff hx (bot_le.trans_lt h).ne').2 h

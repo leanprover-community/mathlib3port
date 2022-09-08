@@ -533,7 +533,7 @@ theorem mul_inv_rev (A B : Matrix n n α) : (A ⬝ B)⁻¹ = B⁻¹ ⬝ A⁻¹ :
 /-- A version of `list.prod_inv_reverse` for `matrix.has_inv`. -/
 theorem list_prod_inv_reverse : ∀ l : List (Matrix n n α), l.Prod⁻¹ = (l.reverse.map Inv.inv).Prod
   | [] => by
-    rw [List.reverse_nil, List.map_nil, List.prod_nil, inv_one]
+    rw [List.reverse_nil, List.map_nilₓ, List.prod_nil, inv_one]
   | A::Xs => by
     rw [List.reverse_cons', List.map_concat, List.prod_concat, List.prod_cons, Matrix.mul_eq_mul, Matrix.mul_eq_mul,
       mul_inv_rev, list_prod_inv_reverse]

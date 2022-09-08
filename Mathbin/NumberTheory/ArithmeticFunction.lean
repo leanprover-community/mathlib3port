@@ -269,7 +269,7 @@ theorem mul_smul' (f g : ArithmeticFunction R) (h : ArithmeticFunction M) : (f *
     simp only [mul_assoc]
     
   · rintro ⟨⟨a, b⟩, ⟨c, d⟩⟩ ⟨⟨i, j⟩, ⟨k, l⟩⟩ H₁ H₂
-    simp only [Finset.mem_sigma, mem_divisors_antidiagonal, and_imp, Prod.mk.inj_iff, add_commₓ, heq_iff_eq] at H₁ H₂⊢
+    simp only [Finset.mem_sigma, mem_divisors_antidiagonal, and_imp, Prod.mk.inj_iffₓ, add_commₓ, heq_iff_eq] at H₁ H₂⊢
     rintro rfl h2 rfl rfl
     exact ⟨⟨Eq.trans H₁.2.1.symm H₂.2.1, rfl⟩, rfl, rfl⟩
     
@@ -281,7 +281,7 @@ theorem mul_smul' (f g : ArithmeticFunction R) (h : ArithmeticFunction M) : (f *
       rw [mul_ne_zero_iff] at *
       exact ⟨n0.1, j0.1⟩
       
-    · simp only [true_andₓ, mem_divisors_antidiagonal, and_trueₓ, Prod.mk.inj_iff, eq_self_iff_true, Ne.def, mem_sigma,
+    · simp only [true_andₓ, mem_divisors_antidiagonal, and_trueₓ, Prod.mk.inj_iffₓ, eq_self_iff_true, Ne.def, mem_sigma,
         heq_iff_eq] at H⊢
       rw [H.2.1]
       
@@ -302,7 +302,7 @@ theorem one_smul' (b : ArithmeticFunction M) : (1 : ArithmeticFunction R) • b 
   have y1ne : y.fst ≠ 1 := by
     intro con
     simp only [Con, mem_divisors_antidiagonal, one_mulₓ, Ne.def] at ymem
-    simp only [mem_singleton, Prod.ext_iff] at ynmem
+    simp only [mem_singleton, Prod.ext_iffₓ] at ynmem
     tauto
   simp [y1ne]
 
@@ -329,7 +329,7 @@ instance : Monoidₓ (ArithmeticFunction R) :=
       have y2ne : y.snd ≠ 1 := by
         intro con
         simp only [Con, mem_divisors_antidiagonal, mul_oneₓ, Ne.def] at ymem
-        simp only [mem_singleton, Prod.ext_iff] at ynmem
+        simp only [mem_singleton, Prod.ext_iffₓ] at ynmem
         tauto
       simp [y2ne],
     mul_assoc := mul_smul' }
@@ -485,8 +485,8 @@ theorem coe_mul_zeta_apply [Semiringₓ R] {f : ArithmeticFunction R} {x : ℕ} 
   by_cases' h1 : y.fst = 0
   · simp [Function.comp_applyₓ, h1]
     
-  · simp only [h1, mul_oneₓ, one_mulₓ, Prod.fst_swap, Function.Embedding.coe_fn_mk, Prod.snd_swap, if_false, zeta_apply,
-      ZeroHom.coe_mk, nat_coe_apply, cast_one]
+  · simp only [h1, mul_oneₓ, one_mulₓ, Prod.fst_swapₓ, Function.Embedding.coe_fn_mk, Prod.snd_swapₓ, if_false,
+      zeta_apply, ZeroHom.coe_mk, nat_coe_apply, cast_one]
     
 
 theorem zeta_mul_apply {f : ArithmeticFunction ℕ} {x : ℕ} : (ζ * f) x = ∑ i in divisors x, f i := by
@@ -636,7 +636,7 @@ theorem mul [CommSemiringₓ R] {f g : ArithmeticFunction R} (hf : f.IsMultiplic
       simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at hab
       rcases hab with ⟨⟨rfl, ha⟩, ⟨rfl, hb⟩⟩
       simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at hcd
-      simp only [Prod.mk.inj_iff] at h
+      simp only [Prod.mk.inj_iffₓ] at h
       ext <;> dsimp' only
       · trans Nat.gcdₓ (a1 * a2) (a1 * b1)
         · rw [Nat.gcd_mul_leftₓ, cop.coprime_mul_left.coprime_mul_right_right.gcd_eq_one, mul_oneₓ]
@@ -673,7 +673,7 @@ theorem mul [CommSemiringₓ R] {f g : ArithmeticFunction R} (hf : f.IsMultiplic
     · rintro ⟨b1, b2⟩ h
       simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at h
       use ((b1.gcd m, b2.gcd m), (b1.gcd n, b2.gcd n))
-      simp only [exists_prop, Prod.mk.inj_iff, Ne.def, mem_product, mem_divisors_antidiagonal]
+      simp only [exists_prop, Prod.mk.inj_iffₓ, Ne.def, mem_product, mem_divisors_antidiagonal]
       rw [← cop.gcd_mul _, ← cop.gcd_mul _, ← h.1, Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mulₓ cop h.1,
         Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mulₓ cop.symm _]
       · rw [Nat.mul_eq_zero, Decidable.not_or_iff_and_not] at h

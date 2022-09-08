@@ -81,7 +81,7 @@ theorem has_faithful_smul_at {α : Type _} [∀ i, HasSmul α <| f i] [∀ i, No
   ⟨fun x y h =>
     eq_of_smul_eq_smul fun a : f i => by
       classical
-      have := congr_fun (h <| Function.update (fun j => Classical.choice (‹∀ i, Nonempty (f i)› j)) i a) i
+      have := congr_funₓ (h <| Function.update (fun j => Classical.choice (‹∀ i, Nonempty (f i)› j)) i a) i
       simpa using this⟩
 
 @[to_additive Pi.has_faithful_vadd]
@@ -174,7 +174,7 @@ instance smul_comm_class {ι α β M : Type _} [HasSmul α M] [HasSmul β M] [Sm
 @[to_additive]
 theorem update_smul {α : Type _} [∀ i, HasSmul α (f i)] [DecidableEq I] (c : α) (f₁ : ∀ i, f i) (i : I) (x₁ : f i) :
     update (c • f₁) i (c • x₁) = c • update f₁ i x₁ :=
-  funext fun j => (apply_update (fun i => (· • ·) c) f₁ i x₁ j).symm
+  funext fun j => (apply_updateₓ (fun i => (· • ·) c) f₁ i x₁ j).symm
 
 end Function
 
@@ -193,7 +193,7 @@ section Extend
 theorem Function.extend_smul {R α β γ : Type _} [HasSmul R γ] (r : R) (f : α → β) (g : α → γ) (e : β → γ) :
     Function.extendₓ f (r • g) (r • e) = r • Function.extendₓ f g e :=
   funext fun _ => by
-    convert (apply_dite ((· • ·) r) _ _ _).symm
+    convert (apply_diteₓ ((· • ·) r) _ _ _).symm
 
 end Extend
 

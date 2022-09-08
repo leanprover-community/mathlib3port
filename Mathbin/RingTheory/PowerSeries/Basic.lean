@@ -132,7 +132,7 @@ theorem ext {φ ψ} (h : ∀ n : σ →₀ ℕ, coeff R n φ = coeff R n ψ) : �
 /-- Two multivariate formal power series are equal
  if and only if all their coefficients are equal.-/
 theorem ext_iff {φ ψ : MvPowerSeries σ R} : φ = ψ ↔ ∀ n : σ →₀ ℕ, coeff R n φ = coeff R n ψ :=
-  Function.funext_iffₓ
+  Function.funext_iff
 
 theorem monomial_def [DecidableEq σ] (n : σ →₀ ℕ) : monomial R n = LinearMap.stdBasis R _ n := by
   convert rfl
@@ -140,7 +140,7 @@ theorem monomial_def [DecidableEq σ] (n : σ →₀ ℕ) : monomial R n = Linea
 -- unify the `decidable` arguments
 theorem coeff_monomial [DecidableEq σ] (m n : σ →₀ ℕ) (a : R) : coeff R m (monomial R n a) = if m = n then a else 0 :=
   by
-  rw [coeff, monomial_def, LinearMap.proj_apply, LinearMap.std_basis_apply, Function.update_apply, Pi.zero_apply]
+  rw [coeff, monomial_def, LinearMap.proj_apply, LinearMap.std_basis_apply, Function.update_applyₓ, Pi.zero_apply]
 
 @[simp]
 theorem coeff_monomial_same (n : σ →₀ ℕ) (a : R) : coeff R n (monomial R n a) = a :=
@@ -236,7 +236,7 @@ protected theorem mul_assoc (φ₁ φ₂ φ₃ : MvPowerSeries σ R) : φ₁ * �
   ext1 n
   simp only [coeff_mul, Finset.sum_mul, Finset.mul_sum, Finset.sum_sigma']
   refine' Finset.sum_bij (fun p _ => ⟨(p.2.1, p.2.2 + p.1.2), (p.2.2, p.1.2)⟩) _ _ _ _ <;>
-    simp only [mem_antidiagonal, Finset.mem_sigma, heq_iff_eq, Prod.mk.inj_iff, and_imp, exists_prop]
+    simp only [mem_antidiagonal, Finset.mem_sigma, heq_iff_eq, Prod.mk.inj_iffₓ, and_imp, exists_prop]
   · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩
     dsimp' only
     rintro rfl rfl
@@ -430,7 +430,7 @@ theorem smul_eq_C_mul (f : MvPowerSeries σ R) (a : R) : a • f = c σ R a * f 
 theorem X_inj [Nontrivial R] {s t : σ} : (x s : MvPowerSeries σ R) = x t ↔ s = t :=
   ⟨by
     intro h
-    replace h := congr_arg (coeff R (single s 1)) h
+    replace h := congr_argₓ (coeff R (single s 1)) h
     rw [coeff_X, if_pos rfl, coeff_X] at h
     split_ifs  at h with H
     · rw [Finsupp.single_eq_single_iff] at H
@@ -444,7 +444,7 @@ theorem X_inj [Nontrivial R] {s t : σ} : (x s : MvPowerSeries σ R) = x t ↔ s
     · exfalso
       exact one_ne_zero h
       ,
-    congr_arg x⟩
+    congr_argₓ x⟩
 
 end Semiringₓ
 
@@ -497,7 +497,7 @@ theorem constant_coeff_map (φ : MvPowerSeries σ R) : constantCoeff σ S (map �
 @[simp]
 theorem map_monomial (n : σ →₀ ℕ) (a : R) : map σ f (monomial R n a) = monomial S n (f a) := by
   ext m
-  simp [coeff_monomial, apply_ite f]
+  simp [coeff_monomial, apply_iteₓ f]
 
 @[simp]
 theorem map_C (a : R) : map σ f (c σ R a) = c σ S (f a) :=
@@ -634,7 +634,7 @@ theorem X_pow_dvd_iff {s : σ} {n : ℕ} {φ : MvPowerSeries σ R} :
     by_cases' H : m - single s n + single s n = m
     · rw [coeff_mul, Finset.sum_eq_single (single s n, m - single s n)]
       · rw [coeff_X_pow, if_pos rfl, one_mulₓ]
-        simpa using congr_arg (fun m : σ →₀ ℕ => coeff R m φ) H.symm
+        simpa using congr_argₓ (fun m : σ →₀ ℕ => coeff R m φ) H.symm
         
       · rintro ⟨i, j⟩ hij hne
         rw [Finsupp.mem_antidiagonal] at hij
@@ -642,7 +642,7 @@ theorem X_pow_dvd_iff {s : σ} {n : ℕ} {φ : MvPowerSeries σ R} :
         split_ifs with hi
         · exfalso
           apply hne
-          rw [← hij, ← hi, Prod.mk.inj_iff]
+          rw [← hij, ← hi, Prod.mk.inj_iffₓ]
           refine' ⟨rfl, _⟩
           ext t
           simp only [add_tsub_cancel_left, Finsupp.add_apply, Finsupp.tsub_apply]
@@ -792,7 +792,7 @@ variable {S : Type _} [CommRingₓ R] [CommRingₓ S] (f : R →+* S) [IsLocalRi
 instance map.is_local_ring_hom : IsLocalRingHom (map σ f) :=
   ⟨by
     rintro φ ⟨ψ, h⟩
-    replace h := congr_arg (constant_coeff σ S) h
+    replace h := congr_argₓ (constant_coeff σ S) h
     rw [constant_coeff_map] at h
     have : IsUnit (constant_coeff σ S ↑ψ) := @is_unit_constant_coeff σ S _ (↑ψ) ψ.is_unit
     rw [h] at this
@@ -824,7 +824,7 @@ theorem constant_coeff_inv (φ : MvPowerSeries σ k) : constantCoeff σ k φ⁻�
 
 theorem inv_eq_zero {φ : MvPowerSeries σ k} : φ⁻¹ = 0 ↔ constantCoeff σ k φ = 0 :=
   ⟨fun h => by
-    simpa using congr_arg (constant_coeff σ k) h, fun h =>
+    simpa using congr_argₓ (constant_coeff σ k) h, fun h =>
     ext fun n => by
       rw [coeff_inv]
       split_ifs <;> simp only [h, MvPowerSeries.coeff_zero, zero_mul, inv_zero, neg_zero]⟩
@@ -1134,14 +1134,14 @@ theorem ext {φ ψ : PowerSeries R} (h : ∀ n, coeff R n φ = coeff R n ψ) : �
 
 /-- Two formal power series are equal if all their coefficients are equal.-/
 theorem ext_iff {φ ψ : PowerSeries R} : φ = ψ ↔ ∀ n, coeff R n φ = coeff R n ψ :=
-  ⟨fun h n => congr_arg (coeff R n) h, ext⟩
+  ⟨fun h n => congr_argₓ (coeff R n) h, ext⟩
 
 /-- Constructor for formal power series.-/
 def mk {R} (f : ℕ → R) : PowerSeries R := fun s => f (s ())
 
 @[simp]
 theorem coeff_mk (n : ℕ) (f : ℕ → R) : coeff R n (mk f) = f n :=
-  congr_arg f Finsupp.single_eq_same
+  congr_argₓ f Finsupp.single_eq_same
 
 theorem coeff_monomial (m n : ℕ) (a : R) : coeff R m (monomial R n a) = if m = n then a else 0 :=
   calc
@@ -1216,7 +1216,7 @@ theorem coeff_one_X : coeff R 1 (x : PowerSeries R) = 1 := by
 
 @[simp]
 theorem X_ne_zero [Nontrivial R] : (x : PowerSeries R) ≠ 0 := fun H => by
-  simpa only [coeff_one_X, one_ne_zero, map_zero] using congr_arg (coeff R 1) H
+  simpa only [coeff_one_X, one_ne_zero, map_zero] using congr_argₓ (coeff R 1) H
 
 theorem X_pow_eq (n : ℕ) : (x : PowerSeries R) ^ n = monomial R n 1 :=
   MvPowerSeries.X_pow_eq _ n
@@ -1247,14 +1247,14 @@ theorem coeff_mul (n : ℕ) (φ ψ : PowerSeries R) :
     rfl
     
   · rintro ⟨i, j⟩ ⟨k, l⟩ hij hkl
-    simpa only [Prod.mk.inj_iff, Finsupp.unique_single_eq_iff] using id
+    simpa only [Prod.mk.inj_iffₓ, Finsupp.unique_single_eq_iff] using id
     
   · rintro ⟨f, g⟩ hfg
     refine' ⟨(f (), g ()), _, _⟩
     · rw [Finsupp.mem_antidiagonal] at hfg
       rw [Finset.Nat.mem_antidiagonal, ← Finsupp.add_apply, hfg, Finsupp.single_eq_same]
       
-    · rw [Prod.mk.inj_iff]
+    · rw [Prod.mk.inj_iffₓ]
       dsimp'
       exact ⟨Finsupp.unique_single f, Finsupp.unique_single g⟩
       
@@ -1420,12 +1420,12 @@ theorem coeff_map (n : ℕ) (φ : PowerSeries R) : coeff S n (map f φ) = f (coe
 @[simp]
 theorem map_C (r : R) : map f (c _ r) = c _ (f r) := by
   ext
-  simp [coeff_C, apply_ite f]
+  simp [coeff_C, apply_iteₓ f]
 
 @[simp]
 theorem map_X : map f x = X := by
   ext
-  simp [coeff_X, apply_ite f]
+  simp [coeff_X, apply_iteₓ f]
 
 end Map
 
@@ -1479,7 +1479,7 @@ noncomputable def rescale (a : R) : PowerSeries R →+* PowerSeries R where
     ext
     rw [PowerSeries.coeff_mul, PowerSeries.coeff_mk, PowerSeries.coeff_mul, Finset.mul_sum]
     apply sum_congr rfl
-    simp only [coeff_mk, Prod.forall, nat.mem_antidiagonal]
+    simp only [coeff_mk, Prod.forallₓ, nat.mem_antidiagonal]
     intro b c H
     rw [← H, pow_addₓ, mul_mul_mul_commₓ]
 
@@ -1624,14 +1624,14 @@ theorem coeff_inv_aux (n : ℕ) (a : R) (φ : PowerSeries R) :
       
     
   · rintro ⟨i, j⟩ ⟨k, l⟩ hij hkl
-    simpa only [Prod.mk.inj_iff, Finsupp.unique_single_eq_iff] using id
+    simpa only [Prod.mk.inj_iffₓ, Finsupp.unique_single_eq_iff] using id
     
   · rintro ⟨f, g⟩ hfg
     refine' ⟨(f (), g ()), _, _⟩
     · rw [Finsupp.mem_antidiagonal] at hfg
       rw [Finset.Nat.mem_antidiagonal, ← Finsupp.add_apply, hfg, Finsupp.single_eq_same]
       
-    · rw [Prod.mk.inj_iff]
+    · rw [Prod.mk.inj_iffₓ]
       dsimp'
       exact ⟨Finsupp.unique_single f, Finsupp.unique_single g⟩
       
@@ -1707,7 +1707,7 @@ theorem eq_zero_or_eq_zero_of_mul_eq_zero (φ ψ : PowerSeries R) (h : φ * ψ =
   apply Nat.strong_induction_onₓ n
   clear n
   intro n ih
-  replace h := congr_arg (coeff R (m + n)) h
+  replace h := congr_argₓ (coeff R (m + n)) h
   rw [LinearMap.map_zero, coeff_mul, Finset.sum_eq_single (m, n)] at h
   · replace h := eq_zero_or_eq_zero_of_mul_eq_zero h
     rw [or_iff_not_imp_left] at h
@@ -1730,7 +1730,7 @@ theorem eq_zero_or_eq_zero_of_mul_eq_zero (φ ψ : PowerSeries R) (h : φ * ψ =
       exact ne_of_ltₓ this hij.symm
     contrapose! hne
     obtain rfl := le_antisymmₓ hi hne
-    simpa [Ne.def, Prod.mk.inj_iff] using (add_right_injₓ m).mp hij
+    simpa [Ne.def, Prod.mk.inj_iffₓ] using (add_right_injₓ m).mp hij
     
   · contrapose!
     intro h
@@ -1762,7 +1762,7 @@ theorem X_prime : Prime (x : PowerSeries R) := by
   · exact span_X_is_prime
     
   · intro h
-    simpa using congr_arg (coeff R 1) h
+    simpa using congr_argₓ (coeff R 1) h
     
 
 theorem rescale_injective {a : R} (ha : a ≠ 0) : Function.Injective (rescale a) := by
@@ -2152,7 +2152,7 @@ theorem order_eq_multiplicity_X {R : Type _} [CommSemiringₓ R] (φ : PowerSeri
     le_antisymmₓ (le_multiplicity_of_pow_dvd <| X_pow_order_dvd (order_finite_iff_ne_zero.mpr hφ))
       (PartEnat.find_le _ _ _)
   rintro ⟨ψ, H⟩
-  have := congr_arg (coeff R n) H
+  have := congr_argₓ (coeff R n) H
   rw [mul_comm, coeff_mul_of_lt_order, ← hn] at this
   · exact coeff_order _ this
     
@@ -2219,7 +2219,7 @@ theorem coe_def : (φ : PowerSeries R) = PowerSeries.mk (coeff φ) :=
 
 @[simp, norm_cast]
 theorem coeff_coe (n) : PowerSeries.coeff R n φ = coeff φ n :=
-  congr_arg (coeff φ) Finsupp.single_eq_same
+  congr_argₓ (coeff φ) Finsupp.single_eq_same
 
 @[simp, norm_cast]
 theorem coe_monomial (n : ℕ) (a : R) : (monomial n a : PowerSeries R) = PowerSeries.monomial R n a := by

@@ -114,10 +114,10 @@ protected theorem induction_on₂ {f : Sym2 α → Sym2 β → Prop} (i : Sym2 �
     exact hf _ _ _ _
 
 protected theorem exists {α : Sort _} {f : Sym2 α → Prop} : (∃ x : Sym2 α, f x) ↔ ∃ x y, f ⟦(x, y)⟧ :=
-  (surjective_quotient_mk _).exists.trans Prod.exists
+  (surjective_quotient_mk _).exists.trans Prod.existsₓ
 
 protected theorem forall {α : Sort _} {f : Sym2 α → Prop} : (∀ x : Sym2 α, f x) ↔ ∀ x y, f ⟦(x, y)⟧ :=
-  (surjective_quotient_mk _).forall.trans Prod.forall
+  (surjective_quotient_mk _).forall.trans Prod.forallₓ
 
 theorem eq_swap {a b : α} : ⟦(a, b)⟧ = ⟦(b, a)⟧ := by
   rw [Quotientₓ.eq]
@@ -148,7 +148,7 @@ theorem eq_iff {x y z w : α} : ⟦(x, y)⟧ = ⟦(z, w)⟧ ↔ x = z ∧ y = w 
 theorem mk_eq_mk_iff {p q : α × α} : ⟦p⟧ = ⟦q⟧ ↔ p = q ∨ p = q.swap := by
   cases p
   cases q
-  simp only [eq_iff, Prod.mk.inj_iff, Prod.swap_prod_mk]
+  simp only [eq_iff, Prod.mk.inj_iffₓ, Prod.swap_prod_mkₓ]
 
 /-- The universal property of `sym2`; symmetric functions of two arguments are equivalent to
 functions from `sym2`. Note that when `β` is `Prop`, it can sometimes be more convenient to use
@@ -158,7 +158,7 @@ def lift : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ } 
     Quotientₓ.lift (uncurry ↑f) <| by
       rintro _ _ ⟨⟩
       exacts[rfl, f.prop _ _]
-  invFun := fun F => ⟨curry (F ∘ Quotientₓ.mk), fun a₁ a₂ => congr_arg F eq_swap⟩
+  invFun := fun F => ⟨curry (F ∘ Quotientₓ.mk), fun a₁ a₂ => congr_argₓ F eq_swap⟩
   left_inv := fun f => Subtype.ext rfl
   right_inv := fun F => funext <| Sym2.ind fun x y => rfl
 
@@ -269,11 +269,11 @@ theorem mem_iff {a b c : α} : a ∈ ⟦(b, c)⟧ ↔ a = b ∨ a = c :=
 
 theorem out_fst_mem (e : Sym2 α) : e.out.1 ∈ e :=
   ⟨e.out.2, by
-    rw [Prod.mk.eta, e.out_eq]⟩
+    rw [Prod.mk.etaₓ, e.out_eq]⟩
 
 theorem out_snd_mem (e : Sym2 α) : e.out.2 ∈ e :=
   ⟨e.out.1, by
-    rw [eq_swap, Prod.mk.eta, e.out_eq]⟩
+    rw [eq_swap, Prod.mk.etaₓ, e.out_eq]⟩
 
 theorem ball {p : α → Prop} {a b : α} : (∀ c ∈ ⟦(a, b)⟧, p c) ↔ p a ∧ p b := by
   refine' ⟨fun h => ⟨h _ <| mem_mk_left _ _, h _ <| mem_mk_right _ _⟩, fun h c hc => _⟩
@@ -688,7 +688,7 @@ theorem filter_image_quotient_mk_is_diag [DecidableEq α] (s : Finset α) :
   ext z
   induction z using Quotientₓ.induction_on
   rcases z with ⟨x, y⟩
-  simp only [mem_image, mem_diag, exists_prop, mem_filter, Prod.exists, mem_product]
+  simp only [mem_image, mem_diag, exists_prop, mem_filter, Prod.existsₓ, mem_product]
   constructor
   · rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
     rw [← h, Sym2.mk_is_diag_iff] at hab
@@ -705,7 +705,7 @@ theorem filter_image_quotient_mk_not_is_diag [DecidableEq α] (s : Finset α) :
   ext z
   induction z using Quotientₓ.induction_on
   rcases z with ⟨x, y⟩
-  simp only [mem_image, mem_off_diag, exists_prop, mem_filter, Prod.exists, mem_product]
+  simp only [mem_image, mem_off_diag, exists_prop, mem_filter, Prod.existsₓ, mem_product]
   constructor
   · rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
     rw [← h, Sym2.mk_is_diag_iff] at hab

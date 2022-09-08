@@ -3,8 +3,8 @@ Copyright (c) 2022 Eric Rodriguez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 -/
-import Mathbin.Order.Basic
-import Mathbin.Algebra.Algebra.Basic
+import Mathbin.Algebra.BigOperators.Basic
+import Mathbin.Data.Fintype.Card
 import Mathbin.Tactic.DeriveFintype
 
 /-!
@@ -258,6 +258,11 @@ def castHom {α} [MulZeroOneClassₓ α] [HasDistribNeg α] : SignType →*₀ �
   map_mul' := fun x y => by
     cases x <;> cases y <;> simp
 
+theorem range_eq {α} (f : SignType → α) : Set.Range f = {f zero, f neg, f pos} := by
+  classical
+  simpa only [← Finset.coe_singleton, ← Finset.image_singleton, ← Fintype.coe_image_univ, Finset.coe_image, ←
+    Set.image_insert_eq]
+
 end SignType
 
 variable {α : Type _}
@@ -421,4 +426,64 @@ theorem Right.sign_neg [CovariantClass α α (Function.swap (· + ·)) (· < ·)
     
 
 end AddGroupₓ
+
+namespace Int
+
+theorem sign_eq_sign (n : ℤ) : n.sign = sign n := by
+  obtain (_ | _) | _ := n
+  · exact congr_argₓ coe sign_zero.symm
+    
+  · exact congr_argₓ coe (sign_pos <| Int.succ_coe_nat_pos _).symm
+    
+  · exact congr_argₓ coe (_root_.sign_neg <| neg_succ_lt_zero _).symm
+    
+
+end Int
+
+open Finset Nat
+
+open BigOperators
+
+private theorem exists_signed_sum_aux [DecidableEq α] (s : Finset α) (f : α → ℤ) :
+    ∃ (β : Type u_1)(t : Finset β)(sgn : β → SignType)(g : β → α),
+      (∀ b, g b ∈ s) ∧
+        (t.card = ∑ a in s, (f a).natAbs) ∧ ∀ a ∈ s, (∑ b in t, if g b = a then (sgn b : ℤ) else 0) = f a :=
+  by
+  refine'
+    ⟨Σa : { x // x ∈ s }, ℕ, finset.univ.sigma fun a => range (f a).natAbs, fun a => sign (f a.1), fun a => a.1,
+      fun a => a.1.Prop, _, _⟩
+  · simp [@sum_attach _ _ _ _ fun a => (f a).natAbs]
+    
+  · intro x hx
+    simp [sum_sigma, hx, ← Int.sign_eq_sign, Int.sign_mul_nat_abs, mul_comm ((f _).natAbs : ℤ),
+      @sum_attach _ _ _ _ fun a => ∑ j in range (f a).natAbs, if a = x then (f a).sign else 0]
+    
+
+/-- We can decompose a sum of absolute value `n` into a sum of `n` signs. -/
+theorem exists_signed_sum [DecidableEq α] (s : Finset α) (f : α → ℤ) :
+    ∃ (β : Type u_1)(_ : Fintype β)(sgn : β → SignType)(g : β → α),
+      (∀ b, g b ∈ s) ∧
+        (Fintype.card β = ∑ a in s, (f a).natAbs) ∧ ∀ a ∈ s, (∑ b, if g b = a then (sgn b : ℤ) else 0) = f a :=
+  let ⟨β, t, sgn, g, hg, ht, hf⟩ := exists_signed_sum_aux s f
+  ⟨t, inferInstance, fun b => sgn b, fun b => g b, fun b => hg b, by
+    simp [ht], fun a ha => (@sum_attach _ _ t _ fun b => ite (g b = a) (sgn b : ℤ) 0).trans <| hf _ ha⟩
+
+/-- We can decompose a sum of absolute value less than `n` into a sum of at most `n` signs. -/
+theorem exists_signed_sum' [Nonempty α] [DecidableEq α] (s : Finset α) (f : α → ℤ) (n : ℕ)
+    (h : (∑ i in s, (f i).natAbs) ≤ n) :
+    ∃ (β : Type u_1)(_ : Fintype β)(sgn : β → SignType)(g : β → α),
+      (∀ b, g b ∉ s → sgn b = 0) ∧ Fintype.card β = n ∧ ∀ a ∈ s, (∑ i, if g i = a then (sgn i : ℤ) else 0) = f a :=
+  by
+  obtain ⟨β, _, sgn, g, hg, hβ, hf⟩ := exists_signed_sum s f
+  skip
+  refine'
+    ⟨Sum β (Finₓ (n - ∑ i in s, (f i).natAbs)), inferInstance, Sum.elim sgn 0, Sum.elim g <| Classical.arbitrary _, _,
+      by
+      simp [hβ, h], fun a ha => by
+      simp [hf _ ha]⟩
+  rintro (b | b) hb
+  · cases hb (hg _)
+    
+  · rfl
+    
 

@@ -468,7 +468,7 @@ theorem Set.Finite.convex_hull_eq_image {s : Set E} (hs : s.Finite) :
       ⇑(∑ x : s, (@LinearMap.proj R s _ (fun i => R) _ _ x).smul_right x.1) '' StdSimplex R s :=
   by
   rw [← convex_hull_basis_eq_std_simplex, ← LinearMap.convex_hull_image, ← Set.range_comp, (· ∘ ·)]
-  apply congr_arg
+  apply congr_argₓ
   convert subtype.range_coe.symm
   ext x
   simp [LinearMap.sum_apply, ite_smul, Finset.filter_eq]

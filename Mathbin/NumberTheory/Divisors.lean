@@ -187,7 +187,7 @@ theorem divisors_antidiagonal_zero : divisorsAntidiagonal 0 = ∅ := by
 @[simp]
 theorem divisors_antidiagonal_one : divisorsAntidiagonal 1 = {(1, 1)} := by
   ext
-  simp [Nat.mul_eq_one_iff, Prod.ext_iff]
+  simp [Nat.mul_eq_one_iff, Prod.ext_iffₓ]
 
 theorem swap_mem_divisors_antidiagonal {x : ℕ × ℕ} (h : x ∈ divisorsAntidiagonal n) : x.swap ∈ divisorsAntidiagonal n :=
   by
@@ -207,7 +207,7 @@ theorem map_swap_divisors_antidiagonal :
     (divisorsAntidiagonal n).map ⟨Prod.swap, Prod.swap_right_inverse.Injective⟩ = divisorsAntidiagonal n := by
   ext
   simp only [exists_prop, mem_divisors_antidiagonal, Finset.mem_map, Function.Embedding.coe_fn_mk, Ne.def,
-    Prod.swap_prod_mk, Prod.exists]
+    Prod.swap_prod_mkₓ, Prod.existsₓ]
   constructor
   · rintro ⟨x, y, ⟨⟨rfl, h⟩, rfl⟩⟩
     simp [mul_comm, h]
@@ -379,14 +379,14 @@ theorem prod_divisors_antidiagonal {M : Type _} [CommMonoidₓ M] (f : ℕ → �
     simp only [zero_mul] at hij
     apply hij.2 hij.1.symm
     
-  · simp only [and_imp, Prod.forall, mem_divisors_antidiagonal, Ne.def]
+  · simp only [and_imp, Prod.forallₓ, mem_divisors_antidiagonal, Ne.def]
     rintro i₁ j₁ ⟨i₂, j₂⟩ h - (rfl : i₂ * j₂ = _) h₁ (rfl : _ = i₂)
     simp only [Nat.mul_eq_zero, not_or_distrib, ← Ne.def] at h₁
     rw [mul_right_inj' h₁.1] at h
     simp [h]
     
   simp only [and_imp, exists_prop, mem_divisors_antidiagonal, exists_and_distrib_right, Ne.def, exists_eq_right',
-    mem_divisors, Prod.exists]
+    mem_divisors, Prod.existsₓ]
   rintro _ ⟨k, rfl⟩ hn
   exact ⟨⟨k, rfl⟩, hn⟩
 

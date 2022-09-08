@@ -311,7 +311,7 @@ theorem prod_rcons {i} (p : Pair M i) : prod (rcons p) = of p.head * prod p.tail
   if hm : p.head = 1 then by
     rw [rcons, dif_pos hm, hm, MonoidHom.map_one, one_mulₓ]
   else by
-    rw [rcons, dif_neg hm, Prod, List.map_cons, List.prod_cons, Prod]
+    rw [rcons, dif_neg hm, Prod, List.map_consₓ, List.prod_cons, Prod]
 
 theorem rcons_inj {i} : Function.Injective (rcons : Pair M i → Word M) := by
   rintro ⟨m, w, h⟩ ⟨m', w', h'⟩ he

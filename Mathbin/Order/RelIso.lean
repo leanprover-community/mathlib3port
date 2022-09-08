@@ -339,7 +339,7 @@ protected theorem is_strict_order : ∀ (f : r ↪r s) [IsStrictOrder β s], IsS
 protected theorem is_trichotomous : ∀ (f : r ↪r s) [IsTrichotomous β s], IsTrichotomous α r
   | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b => (or_congr o (or_congr f.inj'.eq_iff o)).1 (H _ _)⟩
 
-protected theorem is_strict_total_order' : ∀ (f : r ↪r s) [IsStrictTotalOrder' β s], IsStrictTotalOrder' α r
+protected theorem is_strict_total_order : ∀ (f : r ↪r s) [IsStrictTotalOrder β s], IsStrictTotalOrder α r
   | f, H => { f.is_trichotomous, f.is_strict_order with }
 
 protected theorem acc (f : r ↪r s) (a : α) : Acc s (f a) → Acc r a := by
@@ -353,7 +353,7 @@ protected theorem well_founded : ∀ (f : r ↪r s) (h : WellFounded s), WellFou
   | f, ⟨H⟩ => ⟨fun a => f.Acc _ (H _)⟩
 
 protected theorem is_well_order : ∀ (f : r ↪r s) [IsWellOrder β s], IsWellOrder α r
-  | f, H => { f.is_strict_total_order' with wf := f.well_founded H.wf }
+  | f, H => { f.is_strict_total_order with wf := f.well_founded H.wf }
 
 /-- `quotient.out` as a relation embedding between the lift of a relation and the relation. -/
 @[simps]
@@ -466,17 +466,17 @@ def sumLexMap (f : r ↪r s) (g : t ↪r u) : Sum.Lex r t ↪r Sum.Lex s u where
 @[simps]
 def prodLexMkLeft (s : β → β → Prop) {a : α} (h : ¬r a a) : s ↪r Prod.Lex r s where
   toFun := Prod.mk a
-  inj' := Prod.mk.inj_left a
+  inj' := Prod.mk.inj_leftₓ a
   map_rel_iff' := fun b₁ b₂ => by
-    simp [Prod.lex_def, h]
+    simp [Prod.lex_defₓ, h]
 
 /-- `λ a, prod.mk a b` as a relation embedding. -/
 @[simps]
 def prodLexMkRight (r : α → α → Prop) {b : β} (h : ¬s b b) : r ↪r Prod.Lex r s where
   toFun := fun a => (a, b)
-  inj' := Prod.mk.inj_right b
+  inj' := Prod.mk.inj_rightₓ b
   map_rel_iff' := fun a₁ a₂ => by
-    simp [Prod.lex_def, h]
+    simp [Prod.lex_defₓ, h]
 
 /-- `prod.map` as a relation embedding. -/
 @[simps]
@@ -484,7 +484,7 @@ def prodLexMap (f : r ↪r s) (g : t ↪r u) : Prod.Lex r t ↪r Prod.Lex s u wh
   toFun := Prod.map f g
   inj' := f.Injective.prod_map g.Injective
   map_rel_iff' := fun a b => by
-    simp [Prod.lex_def, f.map_rel_iff, g.map_rel_iff]
+    simp [Prod.lex_defₓ, f.map_rel_iff, g.map_rel_iff]
 
 end RelEmbedding
 
@@ -682,7 +682,7 @@ lexicographic orders on the product.
 def prodLexCongr {α₁ α₂ β₁ β₂ r₁ r₂ s₁ s₂} (e₁ : @RelIso α₁ β₁ r₁ s₁) (e₂ : @RelIso α₂ β₂ r₂ s₂) :
     Prod.Lex r₁ r₂ ≃r Prod.Lex s₁ s₂ :=
   ⟨Equivₓ.prodCongr e₁.toEquiv e₂.toEquiv, fun a b => by
-    simp [Prod.lex_def, e₁.map_rel_iff, e₂.map_rel_iff]⟩
+    simp [Prod.lex_defₓ, e₁.map_rel_iff, e₂.map_rel_iff]⟩
 
 instance : Groupₓ (r ≃r r) where
   one := RelIso.refl r

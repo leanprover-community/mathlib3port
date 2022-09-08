@@ -55,7 +55,15 @@ def n₁ : SimplicialObject C ⥤ Karoubi (ChainComplex C ℕ) where
   map := fun X Y f =>
     { f := P_infty ≫ AlternatingFaceMapComplex.map f,
       comm := by
-        tidy }
+        ext
+        simp }
+  map_id' := fun X => by
+    ext
+    dsimp'
+    simp
+  map_comp' := fun X Y Z f g => by
+    ext
+    simp
 
 /-- The extension of `N₁` to the Karoubi envelope of `simplicial_object C`. -/
 @[simps]

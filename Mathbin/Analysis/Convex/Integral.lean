@@ -275,7 +275,7 @@ theorem StrictConvexOn.ae_eq_const_or_map_average_lt [IsFiniteMeasure μ] (hg : 
   rcases average_mem_open_segment_compl_self hm.null_measurable_set h₀ h₀' (hfi.prod_mk hgi) with
     ⟨a, b, ha, hb, hab, h_avg⟩
   simp only [average_pair hfi hgi, average_pair hfi.integrable_on hgi.integrable_on, Prod.smul_mk, Prod.mk_add_mk,
-    Prod.mk.inj_iff, (· ∘ ·)] at h_avg
+    Prod.mk.inj_iffₓ, (· ∘ ·)] at h_avg
   rw [← h_avg.1, ← h_avg.2]
   calc
     g ((a • ⨍ x in t, f x ∂μ) + b • ⨍ x in tᶜ, f x ∂μ) < a * g (⨍ x in t, f x ∂μ) + b * g (⨍ x in tᶜ, f x ∂μ) :=

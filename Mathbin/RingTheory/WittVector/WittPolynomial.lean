@@ -242,7 +242,7 @@ theorem X_in_terms_of_W_vars_aux (n : ℕ) : n ∈ (xInTermsOfW p ℚ n).vars �
     simp only [true_andₓ, true_orₓ, eq_self_iff_true, mem_union, mem_singleton]
     intro i
     rw [mem_union, mem_union]
-    apply Or.imp id
+    apply Or.impₓ id
   on_goal 2 =>
     rw [vars_X, disjoint_singleton_left]
   all_goals

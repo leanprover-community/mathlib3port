@@ -321,7 +321,7 @@ unsafe def nat.mk_numeral (type has_zero has_one has_add : expr) : ℕ → expr 
  -/
 unsafe def int.mk_numeral (type has_zero has_one has_add has_neg : expr) : ℤ → expr
   | Int.ofNat n => n.mk_numeral type Zero One Add
-  | -[1+ n] =>
+  | -[1 + n] =>
     let ne := (n + 1).mk_numeral type Zero One Add
     quote.1 (@Neg.neg.{0} (%%ₓtype) (%%ₓNeg) (%%ₓNe))
 

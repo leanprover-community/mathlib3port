@@ -206,7 +206,7 @@ theorem exists_extension_forall_mem_Icc_of_closed_embedding (f : X →ᵇ ℝ) {
     simpa only [Real.Icc_eq_closed_ball] using hf x
     
   · ext x
-    have : g (e x) = f x - (a + b) / 2 := congr_fun hge x
+    have : g (e x) = f x - (a + b) / 2 := congr_funₓ hge x
     simp [this]
     
 
@@ -231,7 +231,7 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
   · have : ∀ x, f x = a := by
       simpa using hmem
     use const Y a
-    simp [this, Function.funext_iffₓ]
+    simp [this, Function.funext_iff]
     
   -- Put `c = (a + b) / 2`. Then `a < c < b` and `c - a = b - c`.
   set c := (a + b) / 2
@@ -257,7 +257,7 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
     have hd : Disjoint (range e ∪ g ⁻¹' Ici c) (g ⁻¹' {a}) := by
       refine' disjoint_union_left.2 ⟨_, Disjoint.preimage _ _⟩
       · rintro _ ⟨⟨x, rfl⟩, rfl : g (e x) = a⟩
-        exact ha' ⟨x, (congr_fun hgf x).symm⟩
+        exact ha' ⟨x, (congr_funₓ hgf x).symm⟩
         
       · exact Set.disjoint_singleton_right.2 hac.not_le
         
@@ -300,7 +300,7 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
   have hd : Disjoint (range e ∪ g ⁻¹' Iic c) (g ⁻¹' {b}) := by
     refine' disjoint_union_left.2 ⟨_, Disjoint.preimage _ _⟩
     · rintro _ ⟨⟨x, rfl⟩, rfl : g (e x) = b⟩
-      exact hb' ⟨x, (congr_fun hgf x).symm⟩
+      exact hb' ⟨x, (congr_funₓ hgf x).symm⟩
       
     · exact Set.disjoint_singleton_right.2 hcb.not_le
       
@@ -414,7 +414,7 @@ theorem exists_extension_forall_mem_of_closed_embedding (f : C(X, ℝ)) {t : Set
     exact hgG.2 hay.symm
     
   · ext x
-    exact hgG.2 (congr_fun hGF _)
+    exact hgG.2 (congr_funₓ hGF _)
     
 
 /-- **Tietze extension theorem** for real-valued continuous maps, a version for a closed

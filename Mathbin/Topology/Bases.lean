@@ -312,7 +312,7 @@ theorem _root_.set.pairwise_disjoint.countable_of_is_open [SeparableSpace α] {�
   lift f to a → u using hfu
   have f_inj : injective f := by
     refine' injective_iff_pairwise_ne.mpr ((h.subtype _ _).mono fun i j hij hfij => hij ⟨hfs i, _⟩)
-    simp only [congr_arg coe hfij, hfs j]
+    simp only [congr_argₓ coe hfij, hfs j]
   exact ⟨@Encodable.ofInj _ _ u_encodable f f_inj⟩
 
 /-- In a separable space, a family of disjoint sets with nonempty interiors is countable. -/

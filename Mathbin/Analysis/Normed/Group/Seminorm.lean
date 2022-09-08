@@ -194,7 +194,7 @@ def comp (p : GroupSeminorm E) (f : F →* E) : GroupSeminorm F where
   toFun := fun x => p (f x)
   map_one' := by
     rw [f.map_one, p.map_one]
-  mul_le' := fun _ _ => (congr_arg p <| f.map_mul _ _).trans_le <| p.mul_le _ _
+  mul_le' := fun _ _ => (congr_argₓ p <| f.map_mul _ _).trans_le <| p.mul_le _ _
   inv' := fun x => by
     rw [map_inv, p.inv]
 

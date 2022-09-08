@@ -283,7 +283,7 @@ theorem T0Space.of_cover (h : ∀ x y, Inseparable x y → ∃ s : Set α, x ∈
   lift x to s using hxs
   lift y to s using hys
   rw [← subtype_inseparable_iff] at hxy
-  exact congr_arg coe hxy.eq
+  exact congr_argₓ coe hxy.eq
 
 theorem T0Space.of_open_cover (h : ∀ x, ∃ s : Set α, x ∈ s ∧ IsOpen s ∧ T0Space s) : T0Space α :=
   T0Space.of_cover fun x y hxy =>
@@ -584,6 +584,14 @@ theorem eq_of_tendsto_nhds [TopologicalSpace β] [T1Space β] {f : α → β} {a
     have fact₂ : Tendsto f (pure a) (𝓝 b) := h.comp (tendsto_id'.2 <| pure_le_nhds a)
     fact₂ fact₁ (Eq.refl <| f a)
 
+theorem Filter.Tendsto.eventually_ne [TopologicalSpace β] [T1Space β] {α : Type _} {g : α → β} {l : Filter α}
+    {b₁ b₂ : β} (hg : Tendsto g l (𝓝 b₁)) (hb : b₁ ≠ b₂) : ∀ᶠ z in l, g z ≠ b₂ :=
+  hg.Eventually (is_open_compl_singleton.eventually_mem hb)
+
+theorem ContinuousAt.eventually_ne [TopologicalSpace β] [T1Space β] {g : α → β} {a : α} {b : β} (hg1 : ContinuousAt g a)
+    (hg2 : g a ≠ b) : ∀ᶠ z in 𝓝 a, g z ≠ b :=
+  hg1.Tendsto.eventually_ne hg2
+
 /-- To prove a function to a `t1_space` is continuous at some point `a`, it suffices to prove that
 `f` admits *some* limit at `a`. -/
 theorem continuous_at_of_tendsto_nhds [TopologicalSpace β] [T1Space β] {f : α → β} {a : α} {b : β}
@@ -687,9 +695,14 @@ theorem induced_bot {X Y : Type _} {f : X → Y} (hf : Function.Injective f) : T
 is the discrete topology on `X`. -/
 theorem discrete_topology_induced {X Y : Type _} [tY : TopologicalSpace Y] [DiscreteTopology Y] {f : X → Y}
     (hf : Function.Injective f) : @DiscreteTopology X (TopologicalSpace.induced f tY) := by
-  constructor
-  rw [DiscreteTopology.eq_bot Y]
-  exact induced_bot hf
+  apply DiscreteTopology.mk <;>
+    · rw [DiscreteTopology.eq_bot Y, induced_bot hf]
+      
+
+theorem Embedding.discrete_topology {X Y : Type _} [TopologicalSpace X] [tY : TopologicalSpace Y] [DiscreteTopology Y]
+    {f : X → Y} (hf : Embedding f) : DiscreteTopology X :=
+  ⟨by
+    rw [hf.induced, DiscreteTopology.eq_bot Y, induced_bot hf.inj]⟩
 
 /-- Let `s, t ⊆ X` be two subsets of a topological space `X`.  If `t ⊆ s` and the topology induced
 by `X`on `s` is discrete, then also the topology induces on `t` is discrete.  -/
@@ -790,7 +803,7 @@ theorem t2_iff_ultrafilter : T2Space α ↔ ∀ {x y : α} (f : Ultrafilter α),
     simp only [← exists_ultrafilter_iff, and_imp, le_inf_iff, exists_imp_distrib]
 
 theorem t2_iff_is_closed_diagonal : T2Space α ↔ IsClosed (Diagonal α) := by
-  simp only [t2_space_iff_disjoint_nhds, ← is_open_compl_iff, is_open_iff_mem_nhds, Prod.forall, nhds_prod_eq,
+  simp only [t2_space_iff_disjoint_nhds, ← is_open_compl_iff, is_open_iff_mem_nhds, Prod.forallₓ, nhds_prod_eq,
     compl_diagonal_mem_prod, mem_compl_iff, mem_diagonal_iff]
 
 theorem is_closed_diagonal [T2Space α] : IsClosed (Diagonal α) :=
@@ -946,8 +959,8 @@ instance {α : Type _} {p : α → Prop} [t : TopologicalSpace α] [T2Space α] 
 instance {α : Type _} {β : Type _} [t₁ : TopologicalSpace α] [T2Space α] [t₂ : TopologicalSpace β] [T2Space β] :
     T2Space (α × β) :=
   ⟨fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ h =>
-    Or.elim (not_and_distrib.mp (mt Prod.ext_iff.mpr h)) (fun h₁ => separated_by_continuous continuous_fst h₁) fun h₂ =>
-      separated_by_continuous continuous_snd h₂⟩
+    Or.elim (not_and_distrib.mp (mt Prod.ext_iffₓ.mpr h)) (fun h₁ => separated_by_continuous continuous_fst h₁)
+      fun h₂ => separated_by_continuous continuous_snd h₂⟩
 
 theorem Embedding.t2_space [TopologicalSpace β] [T2Space β] {f : α → β} (hf : Embedding f) : T2Space α :=
   ⟨fun x y h => separated_by_continuous hf.Continuous (hf.inj.Ne h)⟩

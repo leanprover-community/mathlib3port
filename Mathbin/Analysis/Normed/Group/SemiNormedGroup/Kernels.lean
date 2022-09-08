@@ -69,7 +69,7 @@ instance :
               rintro _ ⟨b, rfl⟩
               change (f ≫ s.π) b = 0
               simp )
-            fun s m w => Subtype.eq (NormedAddGroupHom.lift_unique f.1.range _ _ _ (congr_arg Subtype.val w : _)) }
+            fun s m w => Subtype.eq (NormedAddGroupHom.lift_unique f.1.range _ _ _ (congr_argₓ Subtype.val w : _)) }
 
 -- Sanity check
 example : HasCokernels SemiNormedGroup₁ := by

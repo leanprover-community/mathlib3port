@@ -374,7 +374,7 @@ protected def bitm1 : Znum → Znum
   -/
 def ofInt' : ℤ → Znum
   | (n : ℕ) => Num.toZnum (Num.ofNat' n)
-  | -[1+ n] => Num.toZnumNeg (Num.ofNat' (n + 1))
+  | -[1 + n] => Num.toZnumNeg (Num.ofNat' (n + 1))
 
 end Znum
 

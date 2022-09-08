@@ -42,7 +42,9 @@ This file expands on the development in the core library.
 
 ### Order embeddings and an order isomorphism
 
-* `fin.coe_embedding` : coercion to natural numbers as an `order_embedding`;
+* `fin.order_iso_subtype` : coercion to `{ i // i < n }` as an `order_iso`;
+* `fin.coe_embedding` : coercion to natural numbers as an `embedding`;
+* `fin.coe_order_embedding` : coercion to natural numbers as an `order_embedding`;
 * `fin.succ_embedding` : `fin.succ` as an `order_embedding`;
 * `fin.cast_le h` : embed `fin n` into `fin m`, `h : n ≤ m`;
 * `fin.cast eq` : order isomorphism between `fin n` and fin m` provided that `n = m`,
@@ -90,10 +92,28 @@ def elim0' {α : Sort _} (x : Finₓ 0) : α :=
 variable {n m : ℕ} {a b : Finₓ n}
 
 instance finToNat (n : ℕ) : Coe (Finₓ n) Nat :=
-  ⟨Subtype.val⟩
+  ⟨Finₓ.val⟩
+
+theorem val_injective : Function.Injective (@Finₓ.val n) :=
+  @Finₓ.eq_of_veq n
+
+protected theorem prop (a : Finₓ n) : a.val < n :=
+  a.2
+
+@[simp]
+theorem is_lt (a : Finₓ n) : (a : Nat) < n :=
+  a.2
 
 theorem pos_iff_nonempty {n : ℕ} : 0 < n ↔ Nonempty (Finₓ n) :=
   ⟨fun h => ⟨⟨0, h⟩⟩, fun ⟨i⟩ => lt_of_le_of_ltₓ (Nat.zero_leₓ _) i.2⟩
+
+/-- Equivalence between `fin n` and `{ i // i < n }`. -/
+@[simps apply symmApply]
+def equivSubtype : Finₓ n ≃ { i // i < n } where
+  toFun := fun a => ⟨a.1, a.2⟩
+  invFun := fun a => ⟨a.1, a.2⟩
+  left_inv := fun ⟨_, _⟩ => rfl
+  right_inv := fun ⟨_, _⟩ => rfl
 
 section coe
 
@@ -110,11 +130,14 @@ protected theorem eta (a : Finₓ n) (h : (a : ℕ) < n) : (⟨(a : ℕ), h⟩ :
 theorem ext {a b : Finₓ n} (h : (a : ℕ) = b) : a = b :=
   eq_of_veq h
 
-theorem ext_iff (a b : Finₓ n) : a = b ↔ (a : ℕ) = b :=
-  Iff.intro (congr_arg _) Finₓ.eq_of_veq
+theorem ext_iff {a b : Finₓ n} : a = b ↔ (a : ℕ) = b :=
+  Iff.intro (congr_argₓ _) Finₓ.eq_of_veq
 
 theorem coe_injective {n : ℕ} : Injective (coe : Finₓ n → ℕ) :=
-  Subtype.coe_injective
+  Finₓ.val_injective
+
+theorem coe_eq_coe (a b : Finₓ n) : (a : ℕ) = b ↔ a = b :=
+  ext_iff.symm
 
 theorem eq_iff_veq (a b : Finₓ n) : a = b ↔ a.1 = b.1 :=
   ⟨veq_of_eq, eq_of_veq⟩
@@ -122,12 +145,13 @@ theorem eq_iff_veq (a b : Finₓ n) : a = b ↔ a.1 = b.1 :=
 theorem ne_iff_vne (a b : Finₓ n) : a ≠ b ↔ a.1 ≠ b.1 :=
   ⟨vne_of_ne, ne_of_vne⟩
 
-@[simp]
-theorem mk_eq_subtype_mk (a : ℕ) (h : a < n) : mk a h = ⟨a, h⟩ :=
-  rfl
+-- built-in reduction doesn't always work
+@[simp, nolint simp_nf]
+theorem mk_eq_mk {a h a' h'} : @mk n a h = @mk n a' h' ↔ a = a' :=
+  ext_iff
 
 protected theorem mk.inj_iff {n a b : ℕ} {ha : a < n} {hb : b < n} : (⟨a, ha⟩ : Finₓ n) = ⟨b, hb⟩ ↔ a = b :=
-  Subtype.mk_eq_mk
+  eq_iff_veq _ _
 
 theorem mk_val {m n : ℕ} (h : m < n) : (⟨m, h⟩ : Finₓ n).val = m :=
   rfl
@@ -153,12 +177,12 @@ theorem val_eq_coe (a : Finₓ n) : a.val = a :=
 then they coincide (in the heq sense). -/
 protected theorem heq_fun_iff {α : Sort _} {k l : ℕ} (h : k = l) {f : Finₓ k → α} {g : Finₓ l → α} :
     HEq f g ↔ ∀ i : Finₓ k, f i = g ⟨(i : ℕ), h ▸ i.2⟩ := by
-  induction h
-  simp [heq_iff_eq, Function.funext_iffₓ]
+  subst h
+  simp [Function.funext_iff]
 
 protected theorem heq_ext_iff {k l : ℕ} (h : k = l) {i : Finₓ k} {j : Finₓ l} : HEq i j ↔ (i : ℕ) = (j : ℕ) := by
-  induction h
-  simp [ext_iff]
+  subst h
+  simp [coe_eq_coe]
 
 theorem exists_iff {p : Finₓ n → Prop} : (∃ i, p i) ↔ ∃ i h, p ⟨i, h⟩ :=
   ⟨fun h => Exists.elim h fun ⟨i, hi⟩ hpi => ⟨i, hi, hpi⟩, fun h => Exists.elim h fun i hi => ⟨⟨i, hi.fst⟩, hi.snd⟩⟩
@@ -175,11 +199,12 @@ section Order
 -/
 
 
-theorem is_lt (i : Finₓ n) : (i : ℕ) < n :=
-  i.2
-
 theorem is_le (i : Finₓ (n + 1)) : (i : ℕ) ≤ n :=
   le_of_lt_succₓ i.is_lt
+
+@[simp]
+theorem is_le' : (a : ℕ) ≤ n :=
+  le_of_ltₓ a.is_lt
 
 theorem lt_iff_coe_lt_coe : a < b ↔ (a : ℕ) < b :=
   Iff.rfl
@@ -204,20 +229,57 @@ theorem coe_fin_le {n : ℕ} {a b : Finₓ n} : (a : ℕ) ≤ (b : ℕ) ↔ a �
   Iff.rfl
 
 instance {n : ℕ} : LinearOrderₓ (Finₓ n) :=
-  Subtype.linearOrder _
+  @LinearOrderₓ.lift (Finₓ n) _ _ ⟨fun x y => ⟨max x y, max_rec' (· < n) x.2 y.2⟩⟩
+    ⟨fun x y => ⟨min x y, min_rec' (· < n) x.2 y.2⟩⟩ Finₓ.val Finₓ.val_injective (fun _ _ => rfl) fun _ _ => rfl
 
-instance {n : ℕ} : PartialOrderₓ (Finₓ n) :=
-  Subtype.partialOrder _
+@[simp]
+theorem mk_le_mk {x y : Nat} {hx} {hy} : (⟨x, hx⟩ : Finₓ n) ≤ ⟨y, hy⟩ ↔ x ≤ y :=
+  Iff.rfl
+
+@[simp]
+theorem mk_lt_mk {x y : Nat} {hx} {hy} : (⟨x, hx⟩ : Finₓ n) < ⟨y, hy⟩ ↔ x < y :=
+  Iff.rfl
+
+@[simp]
+theorem min_coe : min (a : ℕ) n = a := by
+  simp
+
+@[simp]
+theorem max_coe : max (a : ℕ) n = n := by
+  simp
+
+instance {n : ℕ} : PartialOrderₓ (Finₓ n) := by
+  infer_instance
 
 theorem coe_strict_mono : StrictMono (coe : Finₓ n → ℕ) := fun _ _ => id
 
-/-- The inclusion map `fin n → ℕ` is a relation embedding. -/
-def coeEmbedding (n) : Finₓ n ↪o ℕ :=
-  ⟨⟨coe, @Finₓ.eq_of_veq _⟩, fun a b => Iff.rfl⟩
+/-- The equivalence `fin n ≃ { i // i < n }` is an order isomorphism. -/
+@[simps apply symmApply]
+def orderIsoSubtype : Finₓ n ≃o { i // i < n } :=
+  equivSubtype.toOrderIso
+    (by
+      simp [Monotone])
+    (by
+      simp [Monotone])
+
+/-- The inclusion map `fin n → ℕ` is an embedding. -/
+@[simps apply]
+def coeEmbedding : Finₓ n ↪ ℕ :=
+  ⟨coe, coe_injective⟩
+
+@[simp]
+theorem equiv_subtype_symm_trans_val_embedding :
+    equivSubtype.symm.toEmbedding.trans coeEmbedding = Embedding.subtype (· < n) :=
+  rfl
+
+/-- The inclusion map `fin n → ℕ` is an order embedding. -/
+@[simps apply]
+def coeOrderEmbedding (n) : Finₓ n ↪o ℕ :=
+  ⟨coeEmbedding, fun a b => Iff.rfl⟩
 
 /-- The ordering on `fin n` is a well order. -/
 instance Fin.Lt.is_well_order (n) : IsWellOrder (Finₓ n) (· < ·) :=
-  (coeEmbedding n).IsWellOrder
+  (coeOrderEmbedding n).IsWellOrder
 
 /-- Use the ordering on `fin n` for checking recursive definitions.
 
@@ -269,6 +331,14 @@ theorem eq_zero_or_eq_succ {n : ℕ} (i : Finₓ (n + 1)) : i = 0 ∨ ∃ j : Fi
     exact ⟨⟨j, Nat.lt_of_succ_lt_succₓ h⟩, rfl⟩
     
 
+theorem eq_succ_of_ne_zero {n : ℕ} {i : Finₓ (n + 1)} (hi : i ≠ 0) : ∃ j : Finₓ n, i = j.succ := by
+  cases eq_zero_or_eq_succ i
+  · exfalso
+    exact hi h
+    
+  · exact h
+    
+
 /-- The greatest value of `fin (n+1)` -/
 def last (n : ℕ) : Finₓ (n + 1) :=
   ⟨_, n.lt_succ_self⟩
@@ -315,7 +385,7 @@ map. In this lemma we state that for each `i : fin n` we have `(e i : ℕ) = (i 
 @[simp]
 theorem coe_order_iso_apply (e : Finₓ n ≃o Finₓ m) (i : Finₓ n) : (e i : ℕ) = i := by
   rcases i with ⟨i, hi⟩
-  rw [Subtype.coe_mk]
+  rw [Finₓ.coe_mk]
   induction' i using Nat.strong_induction_onₓ with i h
   refine' le_antisymmₓ (forall_lt_iff_leₓ.1 fun j hj => _) (forall_lt_iff_leₓ.1 fun j hj => _)
   · have := e.symm.lt_iff_lt.2 (mk_lt_of_lt_coe hj)
@@ -341,11 +411,11 @@ instance orderIsoUnique : Unique (Finₓ n ≃o Finₓ n) :=
 are equal. -/
 theorem strict_mono_unique {f g : Finₓ n → α} (hf : StrictMono f) (hg : StrictMono g) (h : Range f = Range g) : f = g :=
   have : (hf.OrderIso f).trans (OrderIso.setCongr _ _ h) = hg.OrderIso g := Subsingleton.elim _ _
-  congr_arg (Function.comp (coe : Range g → α)) (funext <| RelIso.ext_iff.1 this)
+  congr_argₓ (Function.comp (coe : Range g → α)) (funext <| RelIso.ext_iff.1 this)
 
 /-- Two order embeddings of `fin n` are equal provided that their ranges are equal. -/
 theorem order_embedding_eq {f g : Finₓ n ↪o α} (h : Range f = Range g) : f = g :=
-  RelEmbedding.ext <| funext_iffₓ.1 <| strict_mono_unique f.StrictMono g.StrictMono h
+  RelEmbedding.ext <| funext_iff.1 <| strict_mono_unique f.StrictMono g.StrictMono h
 
 end
 
@@ -604,7 +674,7 @@ theorem succ_inj {a b : Finₓ n} : a.succ = b.succ ↔ a = b :=
   (succ_injective n).eq_iff
 
 theorem succ_ne_zero {n} : ∀ k : Finₓ n, Finₓ.succ k ≠ 0
-  | ⟨k, hk⟩, HEq => Nat.succ_ne_zero k <| (ext_iff _ _).1 HEq
+  | ⟨k, hk⟩, HEq => Nat.succ_ne_zero k <| ext_iff.1 HEq
 
 @[simp]
 theorem succ_zero_eq_one : Finₓ.succ (0 : Finₓ (n + 1)) = 1 :=
@@ -669,11 +739,11 @@ theorem range_cast_le {n k : ℕ} (h : n ≤ k) : Set.Range (castLe h) = { i | (
 theorem coe_of_injective_cast_le_symm {n k : ℕ} (h : n ≤ k) (i : Finₓ k) (hi) :
     ((Equivₓ.ofInjective _ (castLe h).Injective).symm ⟨i, hi⟩ : ℕ) = i := by
   rw [← coe_cast_le]
-  exact congr_arg coe (Equivₓ.apply_of_injective_symm _ _)
+  exact congr_argₓ coe (Equivₓ.apply_of_injective_symm _ _)
 
 @[simp]
 theorem cast_le_succ {m n : ℕ} (h : m + 1 ≤ n + 1) (i : Finₓ m) :
-    castLe h i.succ = (castLe (Nat.succ_le_succ_iff.mp h) i).succ := by
+    castLe h i.succ = (castLe (Nat.succ_le_succ_iffₓ.mp h) i).succ := by
   simp [Finₓ.eq_iff_veq]
 
 @[simp]
@@ -771,7 +841,7 @@ theorem cast_lt_cast_add (m : ℕ) (i : Finₓ n) : castLt (castAdd m i) (cast_a
 
 /-- For rewriting in the reverse direction, see `fin.cast_cast_add_left`. -/
 theorem cast_add_cast {n n' : ℕ} (m : ℕ) (i : Finₓ n') (h : n' = n) :
-    castAdd m (Finₓ.cast h i) = Finₓ.cast (congr_arg _ h) (castAdd m i) :=
+    castAdd m (Finₓ.cast h i) = Finₓ.cast (congr_argₓ _ h) (castAdd m i) :=
   ext rfl
 
 theorem cast_cast_add_left {n n' m : ℕ} (i : Finₓ n') (h : n' + m = n + m) :
@@ -870,7 +940,7 @@ theorem cast_succ_pos {i : Finₓ (n + 1)} (h : 0 < i) : 0 < castSucc i := by
 
 @[simp]
 theorem cast_succ_eq_zero_iff (a : Finₓ (n + 1)) : a.cast_succ = 0 ↔ a = 0 :=
-  Subtype.ext_iff.trans <| (Subtype.ext_iff.trans <| Iff.rfl).symm
+  Finₓ.ext_iff.trans <| (Finₓ.ext_iff.trans <| Iff.rfl).symm
 
 theorem cast_succ_ne_zero_iff (a : Finₓ (n + 1)) : a.cast_succ ≠ 0 ↔ a ≠ 0 :=
   not_iff_not.mpr <| cast_succ_eq_zero_iff a
@@ -903,7 +973,7 @@ theorem range_cast_succ {n : ℕ} : Set.Range (castSucc : Finₓ n → Finₓ n.
 theorem coe_of_injective_cast_succ_symm {n : ℕ} (i : Finₓ n.succ) (hi) :
     ((Equivₓ.ofInjective castSucc (cast_succ_injective _)).symm ⟨i, hi⟩ : ℕ) = i := by
   rw [← coe_cast_succ]
-  exact congr_arg coe (Equivₓ.apply_of_injective_symm _ _)
+  exact congr_argₓ coe (Equivₓ.apply_of_injective_symm _ _)
 
 theorem succ_cast_succ {n : ℕ} (i : Finₓ n) : i.cast_succ.succ = i.succ.cast_succ :=
   Finₓ.ext
@@ -938,7 +1008,7 @@ theorem cast_add_nat_zero {n n' : ℕ} (i : Finₓ n) (h : n + 0 = n') :
 
 /-- For rewriting in the reverse direction, see `fin.cast_add_nat_left`. -/
 theorem add_nat_cast {n n' m : ℕ} (i : Finₓ n') (h : n' = n) :
-    addNat m (cast h i) = cast (congr_arg _ h) (addNat m i) :=
+    addNat m (cast h i) = cast (congr_argₓ _ h) (addNat m i) :=
   ext rfl
 
 theorem cast_add_nat_left {n n' m : ℕ} (i : Finₓ n') (h : n' + m = n + m) :
@@ -947,7 +1017,7 @@ theorem cast_add_nat_left {n n' m : ℕ} (i : Finₓ n') (h : n' + m = n + m) :
 
 @[simp]
 theorem cast_add_nat_right {n m m' : ℕ} (i : Finₓ n) (h : n + m' = n + m) : cast h (addNat m' i) = addNat m i :=
-  ext <| (congr_arg ((· + ·) (i : ℕ)) (add_left_cancelₓ h) : _)
+  ext <| (congr_argₓ ((· + ·) (i : ℕ)) (add_left_cancelₓ h) : _)
 
 /-- `nat_add n i` adds `n` to `i` "on the left". -/
 def natAdd (n) {m} : Finₓ m ↪o Finₓ (n + m) :=
@@ -971,7 +1041,7 @@ theorem nat_add_zero {n : ℕ} : Finₓ.natAdd 0 = (Finₓ.cast (zero_addₓ n).
 
 /-- For rewriting in the reverse direction, see `fin.cast_nat_add_right`. -/
 theorem nat_add_cast {n n' : ℕ} (m : ℕ) (i : Finₓ n') (h : n' = n) :
-    natAdd m (cast h i) = cast (congr_arg _ h) (natAdd m i) :=
+    natAdd m (cast h i) = cast (congr_argₓ _ h) (natAdd m i) :=
   ext rfl
 
 theorem cast_nat_add_right {n n' m : ℕ} (i : Finₓ n') (h : m + n' = m + n) :
@@ -980,7 +1050,7 @@ theorem cast_nat_add_right {n n' m : ℕ} (i : Finₓ n') (h : m + n' = m + n) :
 
 @[simp]
 theorem cast_nat_add_left {n m m' : ℕ} (i : Finₓ n) (h : m' + n = m + n) : cast h (natAdd m' i) = natAdd m i :=
-  ext <| (congr_arg (· + (i : ℕ)) (add_right_cancelₓ h) : _)
+  ext <| (congr_argₓ (· + (i : ℕ)) (add_right_cancelₓ h) : _)
 
 @[simp]
 theorem cast_nat_add_zero {n n' : ℕ} (i : Finₓ n) (h : 0 + n = n') :
@@ -1309,7 +1379,7 @@ theorem add_cases_right {m n : ℕ} {C : Finₓ (m + n) → Sort _} (hleft : ∀
     (hright : ∀ i, C (natAdd m i)) (i : Finₓ n) : addCases hleft hright (natAdd m i) = hright i := by
   have : ¬(nat_add m i : ℕ) < m := (le_coe_nat_add _ _).not_lt
   rw [add_cases, dif_neg this]
-  refine' eq_of_heq ((eq_rec_heq _ _).trans _)
+  refine' eq_of_heq ((eq_rec_heqₓ _ _).trans _)
   congr 1
   simp
 
@@ -1402,13 +1472,13 @@ theorem coe_sub_one {n} (a : Finₓ (n + 1)) : ↑(a - 1) = if a = 0 then n else
     
   rw [sub_eq_add_neg, coe_add_eq_ite, coe_neg_one, if_pos, add_commₓ, add_tsub_add_eq_tsub_left]
   rw [add_commₓ ↑a, add_le_add_iff_left, Nat.one_le_iff_ne_zero]
-  rwa [Subtype.ext_iff] at h
+  rwa [Finₓ.ext_iff] at h
 
 theorem coe_sub_iff_le {n : ℕ} {a b : Finₓ n} : (↑(a - b) : ℕ) = a - b ↔ b ≤ a := by
   cases n
   · exact finZeroElim a
     
-  rw [le_iff_coe_le_coe, Finₓ.coe_sub, ← add_tsub_assoc_of_le b.is_lt.le]
+  rw [le_iff_coe_le_coe, Finₓ.coe_sub, ← add_tsub_assoc_of_le b.is_lt.le a]
   cases' le_or_ltₓ (b : ℕ) a with h h
   · simp [← tsub_add_eq_add_tsub h, h, Nat.mod_eq_of_ltₓ ((Nat.sub_leₓ _ _).trans_lt a.is_lt)]
     
@@ -1610,7 +1680,7 @@ theorem succ_above_right_inj {x : Finₓ (n + 1)} : x.succAbove a = x.succAbove 
 
 /-- `succ_above` is injective at the pivot -/
 theorem succ_above_left_injective : Injective (@succAbove n) := fun _ _ h => by
-  simpa [range_succ_above] using congr_arg (fun f : Finₓ n ↪o Finₓ (n + 1) => Set.Range fᶜ) h
+  simpa [range_succ_above] using congr_argₓ (fun f : Finₓ n ↪o Finₓ (n + 1) => Set.Range fᶜ) h
 
 /-- `succ_above` is injective at the pivot -/
 @[simp]
@@ -1717,14 +1787,21 @@ theorem pred_above_zero {i : Finₓ (n + 2)} (hi : i ≠ 0) : predAbove 0 i = i.
   exact (pos_iff_ne_zero _).mpr hi
 
 @[simp]
-theorem cast_pred_last : castPred (last (n + 1)) = last n := by
-  simp [eq_iff_veq, cast_pred, pred_above, cast_succ_lt_last]
+theorem cast_pred_last : castPred (last (n + 1)) = last n :=
+  eq_of_veq
+    (by
+      simp [cast_pred, pred_above, cast_succ_lt_last])
 
 @[simp]
 theorem cast_pred_mk (n i : ℕ) (h : i < n + 1) : castPred ⟨i, lt_succ_of_ltₓ h⟩ = ⟨i, h⟩ := by
   have : ¬cast_succ (last n) < ⟨i, lt_succ_of_lt h⟩ := by
     simpa [lt_iff_coe_lt_coe] using le_of_lt_succ h
   simp [cast_pred, pred_above, this]
+
+theorem coe_cast_pred {n : ℕ} (a : Finₓ (n + 2)) (hx : a < Finₓ.last _) : (a.cast_pred : ℕ) = a := by
+  rcases a with ⟨a, ha⟩
+  rw [cast_pred_mk]
+  exacts[rfl, hx]
 
 theorem pred_above_below (p : Finₓ (n + 1)) (i : Finₓ (n + 2)) (h : i ≤ p.cast_succ) : p.predAbove i = i.cast_pred := by
   have : i ≤ (last n).cast_succ := h.trans p.le_last
@@ -1768,8 +1845,8 @@ theorem succ_above_pred_above {p : Finₓ n} {i : Finₓ (n + 1)} (h : i ≠ p.c
       
     · simp
       
-    · simp only [Subtype.mk_eq_mk, Ne.def, Finₓ.cast_succ_mk] at h
-      simp only [pred, Subtype.mk_lt_mk, not_ltₓ]
+    · simp only [Finₓ.mk_eq_mk, Ne.def, Finₓ.cast_succ_mk] at h
+      simp only [pred, Finₓ.mk_lt_mk, not_ltₓ]
       exact Nat.le_pred_of_ltₓ (Nat.lt_of_le_and_ne H (Ne.symm h))
       
     
@@ -1820,6 +1897,32 @@ theorem pred_succ_above_pred {a : Finₓ (n + 2)} {b : Finₓ (n + 1)} (ha : a �
     · rwa [this, Finₓ.pred_inj, Finₓ.succ_above_above]
       
     · rwa [cast_succ_pred_eq_pred_cast_succ, Finₓ.pred_le_pred_iff]
+      
+    
+
+/-- `succ` commutes with `pred_above`. -/
+@[simp]
+theorem succ_pred_above_succ (a : Finₓ n) (b : Finₓ (n + 1)) : a.succ.predAbove b.succ = (a.predAbove b).succ := by
+  obtain h₁ | h₂ := lt_or_leₓ a.cast_succ b
+  · rw [Finₓ.pred_above_above _ _ h₁, Finₓ.succ_pred, Finₓ.pred_above_above, Finₓ.pred_succ]
+    simpa only [Finₓ.lt_iff_coe_lt_coe, Finₓ.coe_cast_succ, Finₓ.coe_succ, add_lt_add_iff_right] using h₁
+    
+  · cases n
+    · exfalso
+      exact not_lt_zero' a.is_lt
+      
+    · rw [Finₓ.pred_above_below a b h₂,
+        Finₓ.pred_above_below a.succ b.succ
+          (by
+            simpa only [le_iff_coe_le_coe, coe_succ, coe_cast_succ, add_le_add_iff_right] using h₂)]
+      ext
+      have h₀ : (b : ℕ) < n + 1 := by
+        simp only [le_iff_coe_le_coe, coe_cast_succ] at h₂
+        simpa only [lt_succ_iff] using h₂.trans a.is_le
+      have h₁ : (b.succ : ℕ) < n + 2 := by
+        rw [← Nat.succ_lt_succ_iff] at h₀
+        simpa only [coe_succ] using h₀
+      simp only [coe_cast_pred b h₀, coe_cast_pred b.succ h₁, coe_succ]
       
     
 
@@ -1936,7 +2039,7 @@ unsafe instance reflect : ∀ n, has_reflect (Finₓ n)
         (quote.1
           (by
             infer_instance : Add (Finₓ n.succ))) ∘
-      Subtype.val
+      Finₓ.val
 
 end
 

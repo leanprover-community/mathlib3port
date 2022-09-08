@@ -137,7 +137,7 @@ theorem zpow_mem {x : M} (hx : x ∈ K) : ∀ n : ℤ, x ^ n ∈ K
   | (n : ℕ) => by
     rw [zpow_coe_nat]
     exact pow_mem hx n
-  | -[1+ n] => by
+  | -[1 + n] => by
     rw [zpow_neg_succ_of_nat]
     exact inv_mem (pow_mem hx n.succ)
 
@@ -1132,14 +1132,14 @@ theorem closure_induction_left {p : G → Prop} {x : G} (h : x ∈ closure k) (H
     (Hmul : ∀ x ∈ k, ∀ (y), p y → p (x * y)) (Hinv : ∀ x ∈ k, ∀ (y), p y → p (x⁻¹ * y)) : p x :=
   let key := le_of_eqₓ (closure_to_submonoid k)
   Submonoid.closure_induction_left (key h) H1 fun x hx =>
-    hx.elim (Hmul x) fun hx y hy => (congr_arg _ (inv_invₓ x)).mp (Hinv x⁻¹ hx y hy)
+    hx.elim (Hmul x) fun hx y hy => (congr_argₓ _ (inv_invₓ x)).mp (Hinv x⁻¹ hx y hy)
 
 @[to_additive]
 theorem closure_induction_right {p : G → Prop} {x : G} (h : x ∈ closure k) (H1 : p 1)
     (Hmul : ∀ (x), ∀ y ∈ k, p x → p (x * y)) (Hinv : ∀ (x), ∀ y ∈ k, p x → p (x * y⁻¹)) : p x :=
   let key := le_of_eqₓ (closure_to_submonoid k)
   Submonoid.closure_induction_right (key h) H1 fun x y hy =>
-    hy.elim (Hmul x y) fun hy hx => (congr_arg _ (inv_invₓ y)).mp (Hinv x y⁻¹ hy hx)
+    hy.elim (Hmul x y) fun hy hx => (congr_argₓ _ (inv_invₓ y)).mp (Hinv x y⁻¹ hy hx)
 
 /-- An induction principle for closure membership. If `p` holds for `1` and all elements of
 `k` and their inverse, and is preserved under multiplication, then `p` holds for all elements of
@@ -1628,7 +1628,7 @@ theorem pi_eq_bot_iff (H : ∀ i, Subgroup (f i)) : pi Set.Univ H = ⊥ ↔ ∀ 
   constructor
   · intro h i x hx
     have : MonoidHom.single f i x = 1 := h (MonoidHom.single f i x) ((mul_single_mem_pi i x).mpr fun _ => hx)
-    simpa using congr_fun this i
+    simpa using congr_funₓ this i
     
   · exact fun h x hx => funext fun i => h _ _ (hx i trivialₓ)
     
@@ -1724,13 +1724,13 @@ theorem characteristic_iff_comap_eq : H.Characteristic ↔ ∀ ϕ : G ≃* G, H.
 theorem characteristic_iff_comap_le : H.Characteristic ↔ ∀ ϕ : G ≃* G, H.comap ϕ.toMonoidHom ≤ H :=
   characteristic_iff_comap_eq.trans
     ⟨fun h ϕ => le_of_eqₓ (h ϕ), fun h ϕ =>
-      le_antisymmₓ (h ϕ) fun g hg => h ϕ.symm ((congr_arg (· ∈ H) (ϕ.symm_apply_apply g)).mpr hg)⟩
+      le_antisymmₓ (h ϕ) fun g hg => h ϕ.symm ((congr_argₓ (· ∈ H) (ϕ.symm_apply_apply g)).mpr hg)⟩
 
 @[to_additive]
 theorem characteristic_iff_le_comap : H.Characteristic ↔ ∀ ϕ : G ≃* G, H ≤ H.comap ϕ.toMonoidHom :=
   characteristic_iff_comap_eq.trans
     ⟨fun h ϕ => ge_of_eqₓ (h ϕ), fun h ϕ =>
-      le_antisymmₓ (fun g hg => (congr_arg (· ∈ H) (ϕ.symm_apply_apply g)).mp (h ϕ.symm hg)) (h ϕ)⟩
+      le_antisymmₓ (fun g hg => (congr_argₓ (· ∈ H) (ϕ.symm_apply_apply g)).mp (h ϕ.symm hg)) (h ϕ)⟩
 
 @[to_additive]
 theorem characteristic_iff_map_eq : H.Characteristic ↔ ∀ ϕ : G ≃* G, H.map ϕ.toMonoidHom = H := by
@@ -1945,6 +1945,8 @@ section Centralizer
 def centralizer : Subgroup G :=
   { Submonoid.centralizer ↑H with Carrier := Set.Centralizer H, inv_mem' := fun g => Set.inv_mem_centralizer }
 
+variable {H}
+
 @[to_additive]
 theorem mem_centralizer_iff {g : G} : g ∈ H.Centralizer ↔ ∀ h ∈ H, h * g = g * h :=
   Iff.rfl
@@ -1956,6 +1958,14 @@ theorem mem_centralizer_iff_commutator_eq_one {g : G} : g ∈ H.Centralizer ↔ 
 @[to_additive]
 theorem centralizer_top : centralizer ⊤ = center G :=
   SetLike.ext' (Set.centralizer_univ G)
+
+@[to_additive]
+theorem le_centralizer_iff : H ≤ K.Centralizer ↔ K ≤ H.Centralizer :=
+  ⟨fun h x hx y hy => (h hy x hx).symm, fun h x hx y hy => (h hy x hx).symm⟩
+
+@[to_additive]
+theorem centralizer_le (h : H ≤ K) : centralizer K ≤ centralizer H :=
+  Submonoid.centralizer_le h
 
 @[to_additive]
 instance Subgroup.Centralizer.characteristic [hH : H.Characteristic] : H.Centralizer.Characteristic := by
@@ -1992,7 +2002,7 @@ instance map_is_commutative {G' : Type _} [Groupₓ G'] (f : G →* G') [H.IsCom
   ⟨⟨by
       rintro ⟨-, a, ha, rfl⟩ ⟨-, b, hb, rfl⟩
       rw [Subtype.ext_iff, coe_mul, coe_mul, Subtype.coe_mk, Subtype.coe_mk, ← map_mul, ← map_mul]
-      exact congr_arg f (subtype.ext_iff.mp (mul_comm ⟨a, ha⟩ ⟨b, hb⟩))⟩⟩
+      exact congr_argₓ f (subtype.ext_iff.mp (mul_comm ⟨a, ha⟩ ⟨b, hb⟩))⟩⟩
 
 @[to_additive]
 theorem comap_injective_is_commutative {G' : Type _} [Groupₓ G'] {f : G' →* G} (hf : Function.Injective f)
@@ -2124,8 +2134,8 @@ def normalCore (H : Subgroup G) : Subgroup G where
   Carrier := { a : G | ∀ b : G, b * a * b⁻¹ ∈ H }
   one_mem' := fun a => by
     rw [mul_oneₓ, mul_inv_selfₓ] <;> exact H.one_mem
-  inv_mem' := fun a h b => (congr_arg (· ∈ H) conj_inv).mp (H.inv_mem (h b))
-  mul_mem' := fun a b ha hb c => (congr_arg (· ∈ H) conj_mul).mp (H.mul_mem (ha c) (hb c))
+  inv_mem' := fun a h b => (congr_argₓ (· ∈ H) conj_inv).mp (H.inv_mem (h b))
+  mul_mem' := fun a b ha hb c => (congr_argₓ (· ∈ H) conj_mul).mp (H.mul_mem (ha c) (hb c))
 
 theorem normal_core_le (H : Subgroup G) : H.normalCore ≤ H := fun a h => by
   rw [← mul_oneₓ a, ← inv_one, ← one_mulₓ a]
@@ -2845,6 +2855,12 @@ theorem zpowers_eq_bot {g : G} : zpowers g = ⊥ ↔ g = 1 := by
 theorem zpowers_one_eq_bot : Subgroup.zpowers (1 : G) = ⊥ :=
   Subgroup.zpowers_eq_bot.mpr rfl
 
+@[to_additive]
+theorem centralizer_closure (S : Set G) : (closure S).Centralizer = ⨅ g ∈ S, (zpowers g).Centralizer :=
+  le_antisymmₓ (le_infi fun g => le_infi fun hg => centralizer_le <| zpowers_le.2 <| subset_closure hg) <|
+    le_centralizer_iff.1 <|
+      (closure_le _).2 fun g => SetLike.mem_coe.2 ∘ zpowers_le.1 ∘ le_centralizer_iff.1 ∘ infi_le_of_le g ∘ infi_le _
+
 end Subgroup
 
 namespace MonoidHom
@@ -2875,7 +2891,7 @@ variable {H K : Subgroup G}
     group are equal. -/
 @[to_additive "Makes the identity additive isomorphism from a proof\ntwo subgroups of an additive group are equal."]
 def subgroupCongr (h : H = K) : H ≃* K :=
-  { Equivₓ.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl }
+  { Equivₓ.setCongr <| congr_argₓ _ h with map_mul' := fun _ _ => rfl }
 
 /-- A `mul_equiv` `φ` between two groups `G` and `G'` induces a `mul_equiv` between
 a subgroup `H ≤ G` and the subgroup `φ(H) ≤ G'`. -/
@@ -3329,11 +3345,15 @@ namespace Subgroup
 /-- A subgroup `H` of `G` determines a subgroup `H.opposite` of the opposite group `Gᵐᵒᵖ`. -/
 @[to_additive
       "An additive subgroup `H` of `G` determines an additive subgroup `H.opposite` of the\n  opposite additive group `Gᵃᵒᵖ`."]
-def opposite (H : Subgroup G) : Subgroup Gᵐᵒᵖ where
-  Carrier := MulOpposite.unop ⁻¹' (H : Set G)
-  one_mem' := H.one_mem
-  mul_mem' := fun a b ha hb => H.mul_mem hb ha
-  inv_mem' := fun a => H.inv_mem
+def opposite : Subgroup G ≃ Subgroup Gᵐᵒᵖ where
+  toFun := fun H =>
+    { Carrier := MulOpposite.unop ⁻¹' (H : Set G), one_mem' := H.one_mem, mul_mem' := fun a b ha hb => H.mul_mem hb ha,
+      inv_mem' := fun a => H.inv_mem }
+  invFun := fun H =>
+    { Carrier := MulOpposite.op ⁻¹' (H : Set Gᵐᵒᵖ), one_mem' := H.one_mem, mul_mem' := fun a b ha hb => H.mul_mem hb ha,
+      inv_mem' := fun a => H.inv_mem }
+  left_inv := fun H => SetLike.coe_injective rfl
+  right_inv := fun H => SetLike.coe_injective rfl
 
 /-- Bijection between a subgroup `H` and its opposite. -/
 @[to_additive "Bijection between an additive subgroup `H` and its opposite.", simps]

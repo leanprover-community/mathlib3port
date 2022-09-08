@@ -308,7 +308,7 @@ theorem mk_neg {f : CauSeq ℚ abs} : mk (-f) = -mk f := by
 
 @[simp]
 theorem mk_pos {f : CauSeq ℚ abs} : 0 < mk f ↔ Pos f := by
-  rw [← mk_zero, mk_lt] <;> exact iff_of_eq (congr_arg Pos (sub_zero f))
+  rw [← mk_zero, mk_lt] <;> exact iff_of_eq (congr_argₓ Pos (sub_zero f))
 
 private irreducible_def le (x y : ℝ) : Prop :=
   x < y ∨ x = y

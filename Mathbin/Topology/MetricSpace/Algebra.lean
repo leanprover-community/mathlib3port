@@ -82,7 +82,7 @@ instance MulOpposite.has_lipschitz_mul :
       βᵐᵒᵖ where lipschitz_mul :=
     ⟨HasLipschitzMul.c β, fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ =>
       (lipschitz_with_lipschitz_const_mul_edist ⟨x₂.unop, x₁.unop⟩ ⟨y₂.unop, y₁.unop⟩).trans_eq
-        (congr_arg _ <| max_commₓ _ _)⟩
+        (congr_argₓ _ <| max_commₓ _ _)⟩
 
 -- this instance could be deduced from `normed_add_comm_group.has_lipschitz_add`, but we prove it
 -- separately here so that it is available earlier in the hierarchy

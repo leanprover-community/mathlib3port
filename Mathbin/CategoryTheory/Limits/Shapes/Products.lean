@@ -164,6 +164,13 @@ from a family of morphisms between the factors.
 abbrev Pi.map {f g : β → C} [HasProduct f] [HasProduct g] (p : ∀ b, f b ⟶ g b) : ∏ f ⟶ ∏ g :=
   limMap (Discrete.natTrans fun X => p X.as)
 
+instance Pi.map_mono {f g : β → C} [HasProduct f] [HasProduct g] (p : ∀ b, f b ⟶ g b) [∀ i, Mono (p i)] :
+    mono <| Pi.map p :=
+  @Limits.lim_map_mono _ _ _ _ _
+    (by
+      dsimp'
+      infer_instance)
+
 /-- Construct an isomorphism between categorical products (indexed by the same type)
 from a family of isomorphisms between the factors.
 -/
@@ -175,6 +182,13 @@ from a family of morphisms between the factors.
 -/
 abbrev Sigma.map {f g : β → C} [HasCoproduct f] [HasCoproduct g] (p : ∀ b, f b ⟶ g b) : ∐ f ⟶ ∐ g :=
   colimMap (Discrete.natTrans fun X => p X.as)
+
+instance Sigma.map_epi {f g : β → C} [HasCoproduct f] [HasCoproduct g] (p : ∀ b, f b ⟶ g b) [∀ i, Epi (p i)] :
+    epi <| Sigma.map p :=
+  @Limits.colim_map_epi _ _ _ _ _
+    (by
+      dsimp'
+      infer_instance)
 
 /-- Construct an isomorphism between categorical coproducts (indexed by the same type)
 from a family of isomorphisms between the factors.

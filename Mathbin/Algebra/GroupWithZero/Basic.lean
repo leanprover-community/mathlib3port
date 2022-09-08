@@ -268,7 +268,7 @@ theorem right_ne_zero_of_mul_eq_one (h : a * b = 1) : b ≠ 0 :=
 protected theorem pullback_nonzero [Zero M₀'] [One M₀'] (f : M₀' → M₀) (zero : f 0 = 0) (one : f 1 = 1) :
     Nontrivial M₀' :=
   ⟨⟨0, 1,
-      mt (congr_arg f) <| by
+      mt (congr_argₓ f) <| by
         rw [zero, one]
         exact zero_ne_one⟩⟩
 
@@ -463,7 +463,7 @@ theorem is_unit_ring_inverse {a : M₀} : IsUnit (Ring.inverse a) ↔ IsUnit a :
     IsUnit.ring_inverse⟩
 
 theorem Commute.ring_inverse_ring_inverse {a b : M₀} (h : Commute a b) : Commute (Ring.inverse a) (Ring.inverse b) :=
-  (Ring.mul_inverse_rev' h.symm).symm.trans <| (congr_arg _ h.symm.Eq).trans <| Ring.mul_inverse_rev' h
+  (Ring.mul_inverse_rev' h.symm).symm.trans <| (congr_argₓ _ h.symm.Eq).trans <| Ring.mul_inverse_rev' h
 
 variable (M₀)
 
@@ -585,7 +585,7 @@ protected def Function.Surjective.groupWithZero [Zero G₀'] [Mul G₀'] [One G�
       erw [← zero, ← inv, inv_zero],
     mul_inv_cancel :=
       hf.forall.2 fun x hx => by
-        erw [← inv, ← mul, mul_inv_cancel (mt (congr_arg f) <| trans_rel_left Ne hx zero.symm)] <;> exact one,
+        erw [← inv, ← mul, mul_inv_cancel (mt (congr_argₓ f) <| trans_rel_left Ne hx zero.symm)] <;> exact one,
     exists_pair_ne := ⟨0, 1, h01⟩ }
 
 @[simp]
@@ -619,10 +619,10 @@ theorem inv_mul_cancel (h : a ≠ 0) : a⁻¹ * a = 1 :=
     
 
 theorem GroupWithZeroₓ.mul_left_injective (h : x ≠ 0) : Function.Injective fun y => x * y := fun y y' w => by
-  simpa only [← mul_assoc, inv_mul_cancel h, one_mulₓ] using congr_arg (fun y => x⁻¹ * y) w
+  simpa only [← mul_assoc, inv_mul_cancel h, one_mulₓ] using congr_argₓ (fun y => x⁻¹ * y) w
 
 theorem GroupWithZeroₓ.mul_right_injective (h : x ≠ 0) : Function.Injective fun y => y * x := fun y y' w => by
-  simpa only [mul_assoc, mul_inv_cancel h, mul_oneₓ] using congr_arg (fun y => y * x⁻¹) w
+  simpa only [mul_assoc, mul_inv_cancel h, mul_oneₓ] using congr_argₓ (fun y => y * x⁻¹) w
 
 @[simp]
 theorem inv_mul_cancel_right₀ (h : b ≠ 0) (a : G₀) : a * b⁻¹ * b = a :=

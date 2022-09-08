@@ -299,7 +299,7 @@ theorem eq_of_lt_minimal_period_of_iterate_eq {m n : ℕ} (hm : m < minimalPerio
 
 theorem eq_iff_lt_minimal_period_of_iterate_eq {m n : ℕ} (hm : m < minimalPeriod f x) (hn : n < minimalPeriod f x) :
     (f^[m]) x = (f^[n]) x ↔ m = n :=
-  ⟨eq_of_lt_minimal_period_of_iterate_eq hm hn, congr_arg _⟩
+  ⟨eq_of_lt_minimal_period_of_iterate_eq hm hn, congr_argₓ _⟩
 
 theorem minimal_period_id : minimalPeriod id x = 1 :=
   ((is_periodic_id _ _).minimal_period_le Nat.one_posₓ).antisymm

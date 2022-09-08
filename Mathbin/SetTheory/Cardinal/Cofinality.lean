@@ -216,7 +216,7 @@ theorem cof_eq_Inf_lsub (o : Ordinal.{u}) :
         (@mk_le_of_injective _ _
           (fun s : typein ((· < ·) : o.out.α → o.out.α → Prop) ⁻¹' Set.Range f => Classical.choose s.Prop)
           fun s t hst => by
-          let H := congr_arg f hst
+          let H := congr_argₓ f hst
           rwa [Classical.choose_spec s.prop, Classical.choose_spec t.prop, typein_inj, Subtype.coe_inj] at H)
     have := typein_lt_self a
     simp_rw [← hf, lt_lsub_iff] at this
@@ -511,7 +511,7 @@ theorem cof_eq_one_iff_is_succ {o} : cof.{u} o = 1 ↔ ∃ a, o = succ a :=
           rw [(_ : ↑a = a')] at h
           · exact absurd h hn
             
-          refine' congr_arg Subtype.val (_ : a = ⟨a', aS⟩)
+          refine' congr_argₓ Subtype.val (_ : a = ⟨a', aS⟩)
           haveI := le_one_iff_subsingleton.1 (le_of_eqₓ e)
           apply Subsingleton.elim
           

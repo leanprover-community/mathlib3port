@@ -116,7 +116,7 @@ theorem inv_sup (S T : Submonoid G) : (S⊔T)⁻¹ = S⁻¹⊔T⁻¹ :=
 
 @[simp, to_additive]
 theorem inv_bot : (⊥ : Submonoid G)⁻¹ = ⊥ :=
-  SetLike.coe_injective <| (Set.inv_singleton 1).trans <| congr_arg _ inv_one
+  SetLike.coe_injective <| (Set.inv_singleton 1).trans <| congr_argₓ _ inv_one
 
 @[simp, to_additive]
 theorem inv_top : (⊤ : Submonoid G)⁻¹ = ⊤ :=
@@ -147,7 +147,7 @@ protected def pointwiseMulAction : MulAction α (Submonoid M) where
     ext
     simp
   mul_smul := fun a₁ a₂ S =>
-    (congr_arg (fun f : Monoidₓ.End M => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
+    (congr_argₓ (fun f : Monoidₓ.End M => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
 
 localized [Pointwise] attribute [instance] Submonoid.pointwiseMulAction
 
@@ -165,7 +165,7 @@ theorem mem_smul_pointwise_iff_exists (m : M) (a : α) (S : Submonoid M) : m ∈
 
 instance pointwise_central_scalar [MulDistribMulAction αᵐᵒᵖ M] [IsCentralScalar α M] :
     IsCentralScalar α (Submonoid M) :=
-  ⟨fun a S => (congr_arg fun f : Monoidₓ.End M => S.map f) <| MonoidHom.ext <| op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_argₓ fun f : Monoidₓ.End M => S.map f) <| MonoidHom.ext <| op_smul_eq_smul _⟩
 
 end Monoidₓ
 
@@ -245,9 +245,9 @@ variable [Monoidₓ α] [DistribMulAction α A]
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseMulAction : MulAction α (AddSubmonoid A) where
   smul := fun a S => S.map (DistribMulAction.toAddMonoidEnd _ A a)
-  one_smul := fun S => (congr_arg (fun f : AddMonoidₓ.End A => S.map f) (MonoidHom.map_one _)).trans S.map_id
+  one_smul := fun S => (congr_argₓ (fun f : AddMonoidₓ.End A => S.map f) (MonoidHom.map_one _)).trans S.map_id
   mul_smul := fun a₁ a₂ S =>
-    (congr_arg (fun f : AddMonoidₓ.End A => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
+    (congr_argₓ (fun f : AddMonoidₓ.End A => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
 
 localized [Pointwise] attribute [instance] AddSubmonoid.pointwiseMulAction
 
@@ -262,7 +262,7 @@ theorem smul_mem_pointwise_smul (m : A) (a : α) (S : AddSubmonoid A) : m ∈ S 
 
 instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ A] [IsCentralScalar α A] :
     IsCentralScalar α (AddSubmonoid A) :=
-  ⟨fun a S => (congr_arg fun f : AddMonoidₓ.End A => S.map f) <| AddMonoidHom.ext <| op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_argₓ fun f : AddMonoidₓ.End A => S.map f) <| AddMonoidHom.ext <| op_smul_eq_smul _⟩
 
 end Monoidₓ
 

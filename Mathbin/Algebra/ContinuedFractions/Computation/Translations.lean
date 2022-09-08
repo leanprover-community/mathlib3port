@@ -278,7 +278,7 @@ Now let's show how the values of the sequences correspond to one another.
                       ","
                       (Tactic.rwRule [] `Seqₓₓ.map_nth)
                       ","
-                      (Tactic.rwRule [] `Option.map_eq_some')]
+                      (Tactic.rwRule [] `Option.map_eq_some'ₓ)]
                      "]")
                     [(Tactic.location "at" (Tactic.locationHyp [`s_nth_eq] []))])
                    [])])))]])
@@ -322,7 +322,7 @@ theorem
           :=
             by
               unfold of int_fract_pair.seq1 at s_nth_eq
-                rwa [ Seqₓₓ.map_tail , Seqₓₓ.nth_tail , Seqₓₓ.map_nth , Option.map_eq_some' ] at s_nth_eq
+                rwa [ Seqₓₓ.map_tail , Seqₓₓ.nth_tail , Seqₓₓ.map_nth , Option.map_eq_some'ₓ ] at s_nth_eq
         cases gp_n_eq
         injection gp_n_eq with _ ifp_b_eq_gp_n_b
         exists ifp

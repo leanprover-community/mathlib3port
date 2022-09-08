@@ -875,7 +875,7 @@ def coconeEquivalenceOpConeOp : Cocone F ≌ (Cone F.op)ᵒᵖ where
             w' := fun j => by
               apply Quiver.Hom.unop_inj
               dsimp'
-              simp } }
+              apply cocone_morphism.w } }
   inverse :=
     { obj := fun c => Cone.unop (unop c),
       map := fun X Y f =>
@@ -883,15 +883,17 @@ def coconeEquivalenceOpConeOp : Cocone F ≌ (Cone F.op)ᵒᵖ where
           w' := fun j => by
             apply Quiver.Hom.op_inj
             dsimp'
-            simp } }
+            apply cone_morphism.w } }
   unitIso :=
     NatIso.ofComponents
       (fun c =>
         Cocones.ext (Iso.refl _)
           (by
-            tidy))
-      (by
-        tidy)
+            dsimp'
+            simp ))
+      fun X Y f => by
+      ext
+      simp
   counitIso :=
     NatIso.ofComponents
       (fun c => by
@@ -901,7 +903,8 @@ def coconeEquivalenceOpConeOp : Cocone F ≌ (Cone F.op)ᵒᵖ where
         exact
           cones.ext (iso.refl _)
             (by
-              tidy))
+              dsimp'
+              simp ))
       fun X Y f =>
       Quiver.Hom.unop_inj
         (ConeMorphism.ext _ _
@@ -912,7 +915,7 @@ def coconeEquivalenceOpConeOp : Cocone F ≌ (Cone F.op)ᵒᵖ where
     apply Quiver.Hom.unop_inj
     ext
     dsimp'
-    simp
+    apply comp_id
 
 attribute [simps] cocone_equivalence_op_cone_op
 

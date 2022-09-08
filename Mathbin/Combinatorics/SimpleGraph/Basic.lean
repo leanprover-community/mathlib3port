@@ -415,7 +415,7 @@ theorem Dart.edge_comp_symm : dart.edge ∘ dart.symm = (Dart.edge : G.Dart → 
 
 @[simp]
 theorem Dart.symm_symm (d : G.Dart) : d.symm.symm = d :=
-  Dart.ext _ _ <| Prod.swap_swap _
+  Dart.ext _ _ <| Prod.swap_swapₓ _
 
 @[simp]
 theorem Dart.symm_involutive : Function.Involutive (Dart.symm : G.Dart → G.Dart) :=
@@ -455,7 +455,7 @@ def dartOfNeighborSet (v : V) (w : G.NeighborSet v) : G.Dart :=
 theorem dart_of_neighbor_set_injective (v : V) : Function.Injective (G.dartOfNeighborSet v) := fun e₁ e₂ h =>
   Subtype.ext <| by
     injection h with h'
-    convert congr_arg Prod.snd h'
+    convert congr_argₓ Prod.snd h'
 
 instance nonempty_dart_top [Nontrivial V] : Nonempty (⊤ : SimpleGraph V).Dart := by
   obtain ⟨v, w, h⟩ := exists_pair_ne V
@@ -1271,14 +1271,14 @@ def mapEdgeSet : G.EdgeSet ≃ G'.EdgeSet where
     rintro ⟨e, h⟩
     simp only [hom.map_edge_set, Sym2.map_map, RelIso.coe_coe_fn, RelEmbedding.coe_coe_fn, Subtype.mk_eq_mk,
       Subtype.coe_mk, coe_coe]
-    apply congr_fun
+    apply congr_funₓ
     convert Sym2.map_id
     exact funext fun _ => RelIso.symm_apply_apply _ _
   right_inv := by
     rintro ⟨e, h⟩
     simp only [hom.map_edge_set, Sym2.map_map, RelIso.coe_coe_fn, RelEmbedding.coe_coe_fn, Subtype.mk_eq_mk,
       Subtype.coe_mk, coe_coe]
-    apply congr_fun
+    apply congr_funₓ
     convert Sym2.map_id
     exact funext fun _ => RelIso.apply_symm_apply _ _
 

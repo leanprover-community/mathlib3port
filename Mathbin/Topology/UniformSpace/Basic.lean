@@ -418,7 +418,7 @@ theorem uniformity_eq_symm : 𝓤 α = @Prod.swap α α <$> 𝓤 α :=
 
 @[simp]
 theorem comap_swap_uniformity : comap (@Prod.swap α α) (𝓤 α) = 𝓤 α :=
-  (congr_arg _ uniformity_eq_symm).trans <| comap_map Prod.swap_injective
+  (congr_argₓ _ uniformity_eq_symm).trans <| comap_map Prod.swap_injectiveₓ
 
 theorem symmetrize_mem_uniformity {V : Set (α × α)} (h : V ∈ 𝓤 α) : SymmetrizeRel V ∈ 𝓤 α := by
   apply (𝓤 α).inter_sets h
@@ -686,7 +686,7 @@ theorem lift_nhds_left {x : α} {g : Set α → Filter β} (hg : Monotone g) :
     (by
       rw [nhds_eq_uniformity]
       exact Filter.lift_assoc <| monotone_principal.comp <| monotone_preimage.comp monotone_preimage)
-    (congr_arg _ <| funext fun s => Filter.lift_principal hg)
+    (congr_argₓ _ <| funext fun s => Filter.lift_principal hg)
 
 theorem lift_nhds_right {x : α} {g : Set α → Filter β} (hg : Monotone g) :
     (𝓝 x).lift g = (𝓤 α).lift fun s : Set (α × α) => g { y | (y, x) ∈ s } :=
@@ -858,7 +858,7 @@ theorem uniformity_has_basis_open : HasBasis (𝓤 α) (fun V : Set (α × α) =
 theorem Filter.HasBasis.mem_uniformity_iff {p : β → Prop} {s : β → Set (α × α)} (h : (𝓤 α).HasBasis p s)
     {t : Set (α × α)} : t ∈ 𝓤 α ↔ ∃ (i : _)(hi : p i), ∀ a b, (a, b) ∈ s i → (a, b) ∈ t :=
   h.mem_iff.trans <| by
-    simp only [Prod.forall, subset_def]
+    simp only [Prod.forallₓ, subset_def]
 
 /-- Open elements `s : set (α × α)` of `𝓤 α` such that `(x, y) ∈ s ↔ (y, x) ∈ s` form a basis
 of `𝓤 α`. -/
@@ -941,7 +941,7 @@ theorem Filter.HasBasis.uniform_continuous_iff [UniformSpace β] {p : γ → Pro
     (ha : (𝓤 α).HasBasis p s) {q : δ → Prop} {t : δ → Set (β × β)} (hb : (𝓤 β).HasBasis q t) {f : α → β} :
     UniformContinuous f ↔ ∀ (i) (hi : q i), ∃ (j : _)(hj : p j), ∀ x y, (x, y) ∈ s j → (f x, f y) ∈ t i :=
   (ha.tendsto_iff hb).trans <| by
-    simp only [Prod.forall]
+    simp only [Prod.forallₓ]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x y «expr ∈ » S)
@@ -950,7 +950,7 @@ theorem Filter.HasBasis.uniform_continuous_on_iff [UniformSpace β] {p : γ → 
     UniformContinuousOn f S ↔
       ∀ (i) (hi : q i), ∃ (j : _)(hj : p j), ∀ (x y) (_ : x ∈ S) (_ : y ∈ S), (x, y) ∈ s j → (f x, f y) ∈ t i :=
   ((ha.inf_principal (S ×ˢ S)).tendsto_iff hb).trans <| by
-    simp [Prod.forall, Set.inter_comm (s _), ball_mem_comm]
+    simp [Prod.forallₓ, Set.inter_comm (s _), ball_mem_comm]
 
 end UniformSpace
 

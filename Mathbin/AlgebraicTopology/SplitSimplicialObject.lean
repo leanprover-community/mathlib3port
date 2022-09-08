@@ -102,7 +102,7 @@ instance : Fintype (IndexSet Δ) :=
       simp only at h₁
       have h₂ : Δ₁ = Δ₂ := by
         ext1
-        simpa only [Subtype.mk_eq_mk] using h₁.1
+        simpa only [Finₓ.mk_eq_mk] using h₁.1
       subst h₂
       refine' ext _ _ rfl _
       ext : 2

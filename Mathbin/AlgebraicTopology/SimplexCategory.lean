@@ -220,7 +220,7 @@ theorem δ_comp_σ_of_le {n} {i : Finₓ (n + 2)} {j : Finₓ (n + 1)} (H : i �
   rcases i with ⟨i, _⟩
   rcases j with ⟨j, _⟩
   rcases k with ⟨k, _⟩
-  simp only [Subtype.mk_le_mk, Finₓ.cast_succ_mk] at H
+  simp only [Finₓ.mk_le_mk, Finₓ.cast_succ_mk] at H
   dsimp'
   split_ifs
   -- Most of the goals can now be handled by `linarith`,
@@ -276,14 +276,14 @@ theorem δ_comp_σ_of_gt {n} {i : Finₓ (n + 2)} {j : Finₓ (n + 1)} (H : j.ca
   rcases i with ⟨i, _⟩
   rcases j with ⟨j, _⟩
   rcases k with ⟨k, _⟩
-  simp only [Subtype.mk_lt_mk, Finₓ.cast_succ_mk] at H
+  simp only [Finₓ.mk_lt_mk, Finₓ.cast_succ_mk] at H
   suffices ite (_ < ite (k < i + 1) _ _) _ _ = ite _ (ite (j < k) (k - 1) k) (ite (j < k) (k - 1) k + 1) by
-    simpa [apply_dite Finₓ.castSucc, Finₓ.predAbove] with push_cast
+    simpa [apply_diteₓ Finₓ.castSucc, Finₓ.predAbove] with push_cast
   split_ifs
   -- Most of the goals can now be handled by `linarith`,
   -- but we have to deal with three of them by hand.
   swap
-  · simp only [Subtype.mk_lt_mk] at h_1
+  · simp only [Finₓ.mk_lt_mk] at h_1
     simp only [not_ltₓ] at h_2
     simp only [self_eq_add_rightₓ, one_ne_zero]
     exact
@@ -292,14 +292,14 @@ theorem δ_comp_σ_of_gt {n} {i : Finₓ (n + 2)} {j : Finₓ (n + 1)} (H : j.ca
           (le_transₓ (Nat.le_of_lt_succₓ h) h_2))
     
   pick_goal 4
-  · simp only [Subtype.mk_lt_mk] at h_1
+  · simp only [Finₓ.mk_lt_mk] at h_1
     simp only [not_ltₓ] at h
     simp only [Nat.add_succ_sub_one, add_zeroₓ]
     exfalso
     exact lt_irreflₓ _ (lt_of_le_of_ltₓ (Nat.le_pred_of_ltₓ (Nat.lt_of_succ_leₓ h)) h_3)
     
   pick_goal 4
-  · simp only [Subtype.mk_lt_mk] at h_1
+  · simp only [Finₓ.mk_lt_mk] at h_1
     simp only [not_ltₓ] at h_3
     simp only [Nat.add_succ_sub_one, add_zeroₓ]
     exact (Nat.succ_pred_eq_of_posₓ (lt_of_le_of_ltₓ (zero_le _) h_2)).symm
@@ -317,7 +317,7 @@ theorem σ_comp_σ {n} {i j : Finₓ (n + 1)} (H : i ≤ j) : σ i.cast_succ ≫
   rcases i with ⟨i, _⟩
   rcases j with ⟨j, _⟩
   rcases k with ⟨k, _⟩
-  simp only [Subtype.mk_le_mk] at H
+  simp only [Finₓ.mk_le_mk] at H
   -- At this point `simp with push_cast` makes good progress, but neither `simp?` nor `squeeze_simp`
   -- return usable sets of lemmas.
   -- To avoid using a non-terminal simp, we make a `suffices` statement indicating the shape
@@ -616,9 +616,9 @@ def orderIsoOfIso {x y : SimplexCategory} (e : x ≅ y) : Finₓ (x.len + 1) ≃
   Equivₓ.toOrderIso
     { toFun := e.Hom.toOrderHom, invFun := e.inv.toOrderHom,
       left_inv := fun i => by
-        simpa only using congr_arg (fun φ => (hom.to_order_hom φ) i) e.hom_inv_id',
+        simpa only using congr_argₓ (fun φ => (hom.to_order_hom φ) i) e.hom_inv_id',
       right_inv := fun i => by
-        simpa only using congr_arg (fun φ => (hom.to_order_hom φ) i) e.inv_hom_id' }
+        simpa only using congr_argₓ (fun φ => (hom.to_order_hom φ) i) e.inv_hom_id' }
     e.Hom.toOrderHom.Monotone e.inv.toOrderHom.Monotone
 
 theorem iso_eq_iso_refl {x : SimplexCategory} (e : x ≅ x) : e = Iso.refl x := by
@@ -627,13 +627,13 @@ theorem iso_eq_iso_refl {x : SimplexCategory} (e : x ≅ x) : e = Iso.refl x := 
   have eq₂ := Finset.order_emb_of_fin_unique' h fun i => Finset.mem_univ ((order_iso_of_iso (iso.refl x)) i)
   ext1
   ext1
-  convert congr_arg (fun φ => OrderEmbedding.toOrderHom φ) (eq₁.trans eq₂.symm)
+  convert congr_argₓ (fun φ => OrderEmbedding.toOrderHom φ) (eq₁.trans eq₂.symm)
   ext1
   ext1 i
   rfl
 
 theorem eq_id_of_is_iso {x : SimplexCategory} {f : x ⟶ x} (hf : IsIso f) : f = 𝟙 _ :=
-  congr_arg (fun φ : _ ≅ _ => φ.Hom) (iso_eq_iso_refl (asIso f))
+  congr_argₓ (fun φ : _ ≅ _ => φ.Hom) (iso_eq_iso_refl (asIso f))
 
 theorem eq_σ_comp_of_not_injective' {n : ℕ} {Δ' : SimplexCategory} (θ : mk (n + 1) ⟶ Δ') (i : Finₓ (n + 1))
     (hi : θ.toOrderHom i.cast_succ = θ.toOrderHom i.succ) : ∃ θ' : mk n ⟶ Δ', θ = σ i ≫ θ' := by

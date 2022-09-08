@@ -393,10 +393,44 @@ theorem HasFpowerSeriesOnBall.mono (hf : HasFpowerSeriesOnBall f p x r) (r'_pos 
     HasFpowerSeriesOnBall f p x r' :=
   ⟨le_transₓ hr hf.1, r'_pos, fun y hy => hf.HasSum (Emetric.ball_subset_ball hr hy)⟩
 
+theorem HasFpowerSeriesAt.congr (hf : HasFpowerSeriesAt f p x) (hg : f =ᶠ[𝓝 x] g) : HasFpowerSeriesAt g p x := by
+  rcases hf with ⟨r₁, h₁⟩
+  rcases emetric.mem_nhds_iff.mp hg with ⟨r₂, h₂pos, h₂⟩
+  exact
+    ⟨min r₁ r₂,
+      (h₁.mono (lt_minₓ h₁.r_pos h₂pos) inf_le_left).congr fun y hy => h₂ (Emetric.ball_subset_ball inf_le_right hy)⟩
+
 protected theorem HasFpowerSeriesAt.eventually (hf : HasFpowerSeriesAt f p x) :
     ∀ᶠ r : ℝ≥0∞ in 𝓝[>] 0, HasFpowerSeriesOnBall f p x r :=
   let ⟨r, hr⟩ := hf
   (mem_of_superset (Ioo_mem_nhds_within_Ioi (left_mem_Ico.2 hr.r_pos))) fun r' hr' => hr.mono hr'.1 hr'.2.le
+
+theorem HasFpowerSeriesOnBall.eventually_has_sum (hf : HasFpowerSeriesOnBall f p x r) :
+    ∀ᶠ y in 𝓝 0, HasSum (fun n : ℕ => p n fun i : Finₓ n => y) (f (x + y)) := by
+  filter_upwards [Emetric.ball_mem_nhds (0 : E) hf.r_pos] using fun _ => hf.has_sum
+
+theorem HasFpowerSeriesAt.eventually_has_sum (hf : HasFpowerSeriesAt f p x) :
+    ∀ᶠ y in 𝓝 0, HasSum (fun n : ℕ => p n fun i : Finₓ n => y) (f (x + y)) :=
+  let ⟨r, hr⟩ := hf
+  hr.eventually_has_sum
+
+theorem HasFpowerSeriesOnBall.eventually_has_sum_sub (hf : HasFpowerSeriesOnBall f p x r) :
+    ∀ᶠ y in 𝓝 x, HasSum (fun n : ℕ => p n fun i : Finₓ n => y - x) (f y) := by
+  filter_upwards [Emetric.ball_mem_nhds x hf.r_pos] with y using hf.has_sum_sub
+
+theorem HasFpowerSeriesAt.eventually_has_sum_sub (hf : HasFpowerSeriesAt f p x) :
+    ∀ᶠ y in 𝓝 x, HasSum (fun n : ℕ => p n fun i : Finₓ n => y - x) (f y) :=
+  let ⟨r, hr⟩ := hf
+  hr.eventually_has_sum_sub
+
+theorem HasFpowerSeriesOnBall.eventually_eq_zero
+    (hf : HasFpowerSeriesOnBall f (0 : FormalMultilinearSeries 𝕜 E F) x r) : ∀ᶠ z in 𝓝 x, f z = 0 := by
+  filter_upwards [hf.eventually_has_sum_sub] with z hz using hz.unique has_sum_zero
+
+theorem HasFpowerSeriesAt.eventually_eq_zero (hf : HasFpowerSeriesAt f (0 : FormalMultilinearSeries 𝕜 E F) x) :
+    ∀ᶠ z in 𝓝 x, f z = 0 :=
+  let ⟨r, hr⟩ := hf
+  hr.eventually_eq_zero
 
 theorem HasFpowerSeriesOnBall.add (hf : HasFpowerSeriesOnBall f pf x r) (hg : HasFpowerSeriesOnBall g pg x r) :
     HasFpowerSeriesOnBall (f + g) (pf + pg) x r :=
@@ -613,7 +647,7 @@ theorem HasFpowerSeriesOnBall.image_sub_sub_deriv_le (hf : HasFpowerSeriesOnBall
       ∀ (y z) (_ : y ∈ Emetric.Ball x r') (_ : z ∈ Emetric.Ball x r'),
         ∥f y - f z - p 1 fun _ => y - z∥ ≤ C * max ∥y - x∥ ∥z - x∥ * ∥y - z∥ :=
   by
-  simpa only [is_O_principal, mul_assoc, norm_mul, norm_norm, Prod.forall, Emetric.mem_ball, Prod.edist_eq, max_lt_iff,
+  simpa only [is_O_principal, mul_assoc, norm_mul, norm_norm, Prod.forallₓ, Emetric.mem_ball, Prod.edist_eq, max_lt_iff,
     and_imp, @forall_swap (_ < _) E] using hf.is_O_image_sub_image_sub_deriv_principal hr
 
 /-- If `f` has formal power series `∑ n, pₙ` at `x`, then
@@ -779,7 +813,7 @@ theorem Asymptotics.IsO.continuous_multilinear_map_apply_eq_zero {n : ℕ} {p : 
     calc
       ∥p fun i => y∥ = ∥k⁻¹ ^ n.succ∥ * ∥p fun i => k • y∥ := by
         simpa only [inv_smul_smul₀ (norm_pos_iff.mp k_pos), norm_smul, Finset.prod_const, Finset.card_fin] using
-          congr_arg norm (p.map_smul_univ (fun i : Finₓ n.succ => k⁻¹) fun i : Finₓ n.succ => k • y)
+          congr_argₓ norm (p.map_smul_univ (fun i : Finₓ n.succ => k⁻¹) fun i : Finₓ n.succ => k • y)
       _ ≤ ∥k⁻¹ ^ n.succ∥ * (∥k∥ ^ n.succ * (∥k∥ * (c * ∥y∥ ^ (n.succ + 1)))) :=
         mul_le_mul_of_nonneg_left h₂ (norm_nonneg _)
       _ = ∥(k⁻¹ * k) ^ n.succ∥ * (∥k∥ * (c * ∥y∥ ^ (n.succ + 1))) := by
@@ -822,6 +856,15 @@ theorem HasFpowerSeriesAt.eq_formal_multilinear_series {p₁ p₂ : FormalMultil
     (HasFpowerSeriesAt.eq_zero
       (by
         simpa only [sub_self] using h₁.sub h₂))
+
+theorem HasFpowerSeriesAt.eq_formal_multilinear_series_of_eventually {p q : FormalMultilinearSeries 𝕜 𝕜 E} {f g : 𝕜 → E}
+    {x : 𝕜} (hp : HasFpowerSeriesAt f p x) (hq : HasFpowerSeriesAt g q x) (heq : ∀ᶠ z in 𝓝 x, f z = g z) : p = q :=
+  (hp.congr HEq).eq_formal_multilinear_series hq
+
+/-- A one-dimensional formal multilinear series representing a locally zero function is zero. -/
+theorem HasFpowerSeriesAt.eq_zero_of_eventually {p : FormalMultilinearSeries 𝕜 𝕜 E} {f : 𝕜 → E} {x : 𝕜}
+    (hp : HasFpowerSeriesAt f p x) (hf : f =ᶠ[𝓝 x] 0) : p = 0 :=
+  (hp.congr hf).eq_zero
 
 /-- If a function `f : 𝕜 → E` has two power series representations at `x`, then the given radii in
 which convergence is guaranteed may be interchanged. This can be useful when the formal multilinear
@@ -1149,6 +1192,53 @@ theorem is_open_analytic_at : IsOpen { x | AnalyticAt 𝕜 f x } := by
   rw [is_open_iff_mem_nhds]
   rintro x ⟨p, r, hr⟩
   exact mem_of_superset (Emetric.ball_mem_nhds _ hr.r_pos) fun y hy => hr.analytic_at_of_mem hy
+
+end
+
+section
+
+open FormalMultilinearSeries
+
+variable {p : FormalMultilinearSeries 𝕜 𝕜 E} {f : 𝕜 → E} {z₀ : 𝕜}
+
+/-- A function `f : 𝕜 → E` has `p` as power series expansion at a point `z₀` iff it is the sum of
+`p` in a neighborhood of `z₀`. This makes some proofs easier by hiding the fact that
+`has_fpower_series_at` depends on `p.radius`. -/
+theorem has_fpower_series_at_iff :
+    HasFpowerSeriesAt f p z₀ ↔ ∀ᶠ z in 𝓝 0, HasSum (fun n => z ^ n • p.coeff n) (f (z₀ + z)) := by
+  refine'
+    ⟨fun ⟨r, r_le, r_pos, h⟩ =>
+      eventually_of_mem (Emetric.ball_mem_nhds 0 r_pos) fun _ => by
+        simpa using h,
+      _⟩
+  simp only [Metric.eventually_nhds_iff]
+  rintro ⟨r, r_pos, h⟩
+  refine'
+    ⟨p.radius⊓r.to_nnreal, by
+      simp , _, _⟩
+  · simp only [r_pos.lt, lt_inf_iff, Ennreal.coe_pos, Real.to_nnreal_pos, and_trueₓ]
+    obtain ⟨z, z_pos, le_z⟩ := NormedField.exists_norm_lt 𝕜 r_pos.lt
+    have : (∥z∥₊ : Ennreal) ≤ p.radius := by
+      simp only [dist_zero_right] at h
+      apply FormalMultilinearSeries.le_radius_of_tendsto
+      convert tendsto_norm.comp (h le_z).Summable.tendsto_at_top_zero
+      funext <;> simp [norm_smul, mul_comm]
+    refine' lt_of_lt_of_leₓ _ this
+    simp only [Ennreal.coe_pos]
+    exact zero_lt_iff.mpr (nnnorm_ne_zero_iff.mpr (norm_pos_iff.mp z_pos))
+    
+  · simp only [Emetric.mem_ball, lt_inf_iff, edist_lt_coe, apply_eq_pow_smul_coeff, and_imp, dist_zero_right] at h⊢
+    refine' fun y hyp hyr => h _
+    simpa [nndist_eq_nnnorm, Real.lt_to_nnreal_iff_coe_lt] using hyr
+    
+
+-- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `congrm #[[expr «expr∀ᶠ in , »((z), (nhds() 0 : filter 𝕜), has_sum (λ n, _) (f «expr + »(z₀, z)))]]
+theorem has_fpower_series_at_iff' :
+    HasFpowerSeriesAt f p z₀ ↔ ∀ᶠ z in 𝓝 z₀, HasSum (fun n => (z - z₀) ^ n • p.coeff n) (f z) := by
+  rw [← map_add_left_nhds_zero, eventually_map, has_fpower_series_at_iff]
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `congrm #[[expr «expr∀ᶠ in , »((z), (nhds() 0 : filter 𝕜), has_sum (λ n, _) (f «expr + »(z₀, z)))]]"
+  rw [add_sub_cancel']
 
 end
 

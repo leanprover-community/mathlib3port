@@ -442,7 +442,7 @@ theorem continuous_pow (n : ℕ) : Continuous fun a : ℝ≥0∞ => a ^ n := by
 theorem continuous_on_sub : ContinuousOn (fun p : ℝ≥0∞ × ℝ≥0∞ => p.fst - p.snd) { p : ℝ≥0∞ × ℝ≥0∞ | p ≠ ⟨∞, ∞⟩ } := by
   rw [ContinuousOn]
   rintro ⟨x, y⟩ hp
-  simp only [Ne.def, Set.mem_set_of_eq, Prod.mk.inj_iff] at hp
+  simp only [Ne.def, Set.mem_set_of_eq, Prod.mk.inj_iffₓ] at hp
   refine' tendsto_nhds_within_of_tendsto_nhds (tendsto_sub (not_and_distrib.mp hp))
 
 theorem continuous_sub_left {a : ℝ≥0∞} (a_ne_top : a ≠ ⊤) : Continuous fun x => a - x := by
@@ -451,7 +451,7 @@ theorem continuous_sub_left {a : ℝ≥0∞} (a_ne_top : a ≠ ⊤) : Continuous
       rfl]
   apply ContinuousOn.comp_continuous continuous_on_sub (Continuous.Prod.mk a)
   intro x
-  simp only [a_ne_top, Ne.def, mem_set_of_eq, Prod.mk.inj_iff, false_andₓ, not_false_iff]
+  simp only [a_ne_top, Ne.def, mem_set_of_eq, Prod.mk.inj_iffₓ, false_andₓ, not_false_iff]
 
 theorem continuous_nnreal_sub {a : ℝ≥0 } : Continuous fun x : ℝ≥0∞ => (a : ℝ≥0∞) - x :=
   continuous_sub_left coe_ne_top
@@ -473,7 +473,7 @@ theorem continuous_sub_right (a : ℝ≥0∞) : Continuous fun x : ℝ≥0∞ =>
         rfl]
     apply ContinuousOn.comp_continuous continuous_on_sub (continuous_id'.prod_mk continuous_const)
     intro x
-    simp only [a_infty, Ne.def, mem_set_of_eq, Prod.mk.inj_iff, and_falseₓ, not_false_iff]
+    simp only [a_infty, Ne.def, mem_set_of_eq, Prod.mk.inj_iffₓ, and_falseₓ, not_false_iff]
     
 
 protected theorem Tendsto.pow {f : Filter α} {m : α → ℝ≥0∞} {a : ℝ≥0∞} {n : ℕ} (hm : Tendsto m f (𝓝 a)) :
@@ -1159,13 +1159,12 @@ end Nnreal
 
 namespace Ennreal
 
+theorem tsum_to_nnreal_eq {f : α → ℝ≥0∞} (hf : ∀ a, f a ≠ ∞) : (∑' a, f a).toNnreal = ∑' a, (f a).toNnreal :=
+  (congr_argₓ Ennreal.toNnreal (tsum_congr fun x => (coe_to_nnreal (hf x)).symm)).trans
+    Nnreal.tsum_eq_to_nnreal_tsum.symm
+
 theorem tsum_to_real_eq {f : α → ℝ≥0∞} (hf : ∀ a, f a ≠ ∞) : (∑' a, f a).toReal = ∑' a, (f a).toReal := by
-  lift f to α → ℝ≥0 using hf
-  have : (∑' a : α, (f a : ℝ≥0∞)).toReal = ((∑' a : α, (f a : ℝ≥0∞)).toNnreal : ℝ≥0∞).toReal := by
-    rw [Ennreal.coe_to_real]
-    rfl
-  rw [this, ← Nnreal.tsum_eq_to_nnreal_tsum, Ennreal.coe_to_real]
-  exact Nnreal.coe_tsum
+  simp only [Ennreal.toReal, tsum_to_nnreal_eq hf, Nnreal.coe_tsum]
 
 theorem tendsto_sum_nat_add (f : ℕ → ℝ≥0∞) (hf : (∑' i, f i) ≠ ∞) : Tendsto (fun i => ∑' k, f (k + i)) atTop (𝓝 0) := by
   lift f to ℕ → ℝ≥0 using Ennreal.ne_top_of_tsum_ne_top hf
@@ -1301,7 +1300,7 @@ theorem Emetric.cauchy_seq_iff_le_tendsto_0 [Nonempty β] [SemilatticeSup β] {s
       have : b n ≤ δ :=
         Sup_le
           (by
-            simp only [and_imp, Set.mem_image, Set.mem_set_of_eq, exists_imp_distrib, Prod.exists]
+            simp only [and_imp, Set.mem_image, Set.mem_set_of_eq, exists_imp_distrib, Prod.existsₓ]
             intro d p q hp hq hd
             rw [← hd]
             exact le_of_ltₓ (hN p (le_transₓ hn hp) q (le_transₓ hn hq)))

@@ -96,7 +96,7 @@ theorem smul_pow' [MulDistribMulAction M N] (x : M) (m : N) (n : ℕ) : x • m 
     exact smul_one x
     
   · rw [pow_succₓ, pow_succₓ]
-    exact (smul_mul' x m (m ^ n)).trans (congr_arg _ ih)
+    exact (smul_mul' x m (m ^ n)).trans (congr_argₓ _ ih)
     
 
 end Monoidₓ
@@ -115,14 +115,14 @@ theorem zpow_mul (a : α) : ∀ m n : ℤ, a ^ (m * n) = (a ^ m) ^ n
   | (m : ℕ), (n : ℕ) => by
     rw [zpow_coe_nat, zpow_coe_nat, ← pow_mulₓ, ← zpow_coe_nat]
     rfl
-  | (m : ℕ), -[1+ n] => by
+  | (m : ℕ), -[1 + n] => by
     rw [zpow_coe_nat, zpow_neg_succ_of_nat, ← pow_mulₓ, coe_nat_mul_neg_succ, zpow_neg, inv_inj, ← zpow_coe_nat]
     rfl
-  | -[1+ m], (n : ℕ) => by
+  | -[1 + m], (n : ℕ) => by
     rw [zpow_coe_nat, zpow_neg_succ_of_nat, ← inv_pow, ← pow_mulₓ, neg_succ_mul_coe_nat, zpow_neg, inv_pow, inv_inj, ←
       zpow_coe_nat]
     rfl
-  | -[1+ m], -[1+ n] => by
+  | -[1 + m], -[1 + n] => by
     rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat, neg_succ_mul_neg_succ, inv_pow, inv_invₓ, ← pow_mulₓ, ←
       zpow_coe_nat]
     rfl
@@ -135,7 +135,7 @@ theorem zpow_mul' (a : α) (m n : ℤ) : a ^ (m * n) = (a ^ n) ^ m := by
 theorem zpow_bit0 (a : α) : ∀ n : ℤ, a ^ bit0 n = a ^ n * a ^ n
   | (n : ℕ) => by
     simp only [zpow_coe_nat, ← Int.coe_nat_bit0, pow_bit0]
-  | -[1+ n] => by
+  | -[1 + n] => by
     simp [← mul_inv_rev, ← pow_bit0]
     rw [neg_succ_of_nat_eq, bit0_neg, zpow_neg]
     norm_cast
@@ -158,9 +158,9 @@ variable [Groupₓ G]
 theorem zpow_add_one (a : G) : ∀ n : ℤ, a ^ (n + 1) = a ^ n * a
   | (n : ℕ) => by
     simp only [← Int.coe_nat_succ, zpow_coe_nat, pow_succ'ₓ]
-  | -[1+ 0] => by
+  | -[1 + 0] => by
     erw [zpow_zero, zpow_neg_succ_of_nat, pow_oneₓ, mul_left_invₓ]
-  | -[1+ n + 1] => by
+  | -[1 + (n + 1)] => by
     rw [zpow_neg_succ_of_nat, pow_succₓ, mul_inv_rev, inv_mul_cancel_right]
     rw [Int.neg_succ_of_nat_eq, neg_add, add_assocₓ, neg_add_selfₓ, add_zeroₓ]
     exact zpow_neg_succ_of_nat _ _
@@ -449,7 +449,7 @@ theorem mul_bit1 [NonAssocRing R] {n r : R} : r * bit1 n = (2 : ℤ) • (r * n)
 theorem zsmul_eq_mul [Ringₓ R] (a : R) : ∀ n : ℤ, n • a = n * a
   | (n : ℕ) => by
     rw [coe_nat_zsmul, nsmul_eq_mul, Int.cast_coe_nat]
-  | -[1+ n] => by
+  | -[1 + n] => by
     simp [Nat.cast_succₓ, neg_add_rev, Int.cast_neg_succ_of_nat, add_mulₓ]
 
 theorem zsmul_eq_mul' [Ringₓ R] (a : R) (n : ℤ) : n • a = a * n := by
@@ -461,7 +461,7 @@ instance NonUnitalNonAssocRing.int_smul_comm_class [NonUnitalNonAssocRing R] : S
     match n with
     | (n : ℕ) => by
       simp_rw [coe_nat_zsmul, smul_comm]
-    | -[1+ n] => by
+    | -[1 + n] => by
       simp_rw [zsmul_neg_succ_of_nat, smul_eq_mul, mul_neg, mul_smul_comm]⟩
 
 /-- Note that `add_comm_group.int_is_scalar_tower` requires stronger assumptions on `R`. -/
@@ -470,7 +470,7 @@ instance NonUnitalNonAssocRing.int_is_scalar_tower [NonUnitalNonAssocRing R] : I
     match n with
     | (n : ℕ) => by
       simp_rw [coe_nat_zsmul, smul_assoc]
-    | -[1+ n] => by
+    | -[1 + n] => by
       simp_rw [zsmul_neg_succ_of_nat, smul_eq_mul, neg_mul, smul_mul_assoc]⟩
 
 theorem zsmul_int_int (a b : ℤ) : a • b = a * b := by
@@ -846,7 +846,7 @@ variable [Monoidₓ M] [Groupₓ G] [Ringₓ R]
 theorem units_zpow_right {a : M} {x y : Mˣ} (h : SemiconjBy a x y) : ∀ m : ℤ, SemiconjBy a ↑(x ^ m) ↑(y ^ m)
   | (n : ℕ) => by
     simp only [zpow_coe_nat, Units.coe_pow, h, pow_right]
-  | -[1+ n] => by
+  | -[1 + n] => by
     simp only [zpow_neg_succ_of_nat, Units.coe_pow, units_inv_right, h, pow_right]
 
 variable {a b x y x' y' : R}

@@ -111,12 +111,12 @@ theorem map_exp : map (f : A →+* A') (exp A) = exp A' := by
 @[simp]
 theorem map_sin : map f (sin A) = sin A' := by
   ext
-  simp [sin, apply_ite f]
+  simp [sin, apply_iteₓ f]
 
 @[simp]
 theorem map_cos : map f (cos A) = cos A' := by
   ext
-  simp [cos, apply_ite f]
+  simp [cos, apply_iteₓ f]
 
 end Field
 

@@ -160,7 +160,7 @@ theorem not_fuzzy {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : ¬Fuzzy x y 
   not_lf.2 ((lf_of_fuzzy h).le ox oy) h.2
 
 theorem lt_or_equiv_or_gt {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : x < y ∨ x ≈ y ∨ y < x :=
-  ((lf_or_equiv_or_gf x y).imp fun h => h.lt ox oy) <| Or.imp_rightₓ fun h => h.lt oy ox
+  ((lf_or_equiv_or_gf x y).imp fun h => h.lt ox oy) <| Or.imp_right fun h => h.lt oy ox
 
 theorem numeric_of_is_empty (x : Pgame) [IsEmpty x.LeftMoves] [IsEmpty x.RightMoves] : Numeric x :=
   Numeric.mk isEmptyElim isEmptyElim isEmptyElim

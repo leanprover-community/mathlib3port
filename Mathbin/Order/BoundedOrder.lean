@@ -36,11 +36,11 @@ instances for `Prop` and `fun`.
 -/
 
 
-open OrderDual
+open Function OrderDual
 
 universe u v
 
-variable {α : Type u} {β : Type v}
+variable {α : Type u} {β : Type v} {γ δ : Type _}
 
 /-! ### Top, bottom element -/
 
@@ -176,10 +176,10 @@ theorem ne_top_of_le_ne_top (hb : b ≠ ⊤) (hab : a ≤ b) : a ≠ ⊤ :=
   (hab.trans_lt hb.lt_top).Ne
 
 theorem StrictMono.apply_eq_top_iff (hf : StrictMono f) : f a = f ⊤ ↔ a = ⊤ :=
-  ⟨fun h => not_lt_top_iff.1 fun ha => (hf ha).Ne h, congr_arg _⟩
+  ⟨fun h => not_lt_top_iff.1 fun ha => (hf ha).Ne h, congr_argₓ _⟩
 
 theorem StrictAnti.apply_eq_top_iff (hf : StrictAnti f) : f a = f ⊤ ↔ a = ⊤ :=
-  ⟨fun h => not_lt_top_iff.1 fun ha => (hf ha).ne' h, congr_arg _⟩
+  ⟨fun h => not_lt_top_iff.1 fun ha => (hf ha).ne' h, congr_argₓ _⟩
 
 variable [Nontrivial α]
 
@@ -531,7 +531,7 @@ theorem monotone_and {p q : α → Prop} (m_p : Monotone p) (m_q : Monotone q) :
 
 -- Note: by finish [monotone] doesn't work
 theorem monotone_or {p q : α → Prop} (m_p : Monotone p) (m_q : Monotone q) : Monotone fun x => p x ∨ q x := fun a b h =>
-  Or.imp (m_p h) (m_q h)
+  Or.impₓ (m_p h) (m_q h)
 
 theorem monotone_le {x : α} : Monotone ((· ≤ ·) x) := fun y z h' h => h.trans h'
 
@@ -701,6 +701,13 @@ unsafe instance {α : Type} [reflected _ α] [has_reflect α] : has_reflect (Wit
 instance : Inhabited (WithBot α) :=
   ⟨⊥⟩
 
+theorem coe_injective : Injective (coe : α → WithBot α) :=
+  Option.some_injective _
+
+@[norm_cast]
+theorem coe_inj : (a : WithBot α) = b ↔ a = b :=
+  Option.some_inj
+
 theorem none_eq_bot : (none : WithBot α) = (⊥ : WithBot α) :=
   rfl
 
@@ -756,6 +763,10 @@ theorem map_bot (f : α → β) : map f ⊥ = ⊥ :=
 @[simp]
 theorem map_coe (f : α → β) (a : α) : map f a = f a :=
   rfl
+
+theorem map_comm {f₁ : α → β} {f₂ : α → γ} {g₁ : β → δ} {g₂ : γ → δ} (h : g₁ ∘ f₁ = g₂ ∘ f₂) (a : α) :
+    map g₁ (map f₁ a) = map g₂ (map f₂ a) :=
+  Option.map_comm h _
 
 theorem ne_bot_iff_exists {x : WithBot α} : x ≠ ⊥ ↔ ∃ a : α, ↑a = x :=
   Option.ne_none_iff_exists
@@ -1214,6 +1225,10 @@ theorem map_top (f : α → β) : map f ⊤ = ⊤ :=
 @[simp]
 theorem map_coe (f : α → β) (a : α) : map f a = f a :=
   rfl
+
+theorem map_comm {f₁ : α → β} {f₂ : α → γ} {g₁ : β → δ} {g₂ : γ → δ} (h : g₁ ∘ f₁ = g₂ ∘ f₂) (a : α) :
+    map g₁ (map f₁ a) = map g₂ (map f₂ a) :=
+  Option.map_comm h _
 
 theorem map_to_dual (f : αᵒᵈ → βᵒᵈ) (a : WithBot α) : map f (WithBot.toDual a) = a.map (to_dual ∘ f) :=
   rfl
@@ -1712,10 +1727,10 @@ theorem mk_top [OrderTop α] [OrderTop (Subtype p)] (htop : p ⊤) : mk ⊤ htop
   top_le_iff.1 <| coe_le_coe.1 le_top
 
 theorem coe_bot [OrderBot α] [OrderBot (Subtype p)] (hbot : p ⊥) : ((⊥ : Subtype p) : α) = ⊥ :=
-  congr_arg coe (mk_bot hbot).symm
+  congr_argₓ coe (mk_bot hbot).symm
 
 theorem coe_top [OrderTop α] [OrderTop (Subtype p)] (htop : p ⊤) : ((⊤ : Subtype p) : α) = ⊤ :=
-  congr_arg coe (mk_top htop).symm
+  congr_argₓ coe (mk_top htop).symm
 
 @[simp]
 theorem coe_eq_bot_iff [OrderBot α] [OrderBot (Subtype p)] (hbot : p ⊥) {x : { x // p x }} : (x : α) = ⊥ ↔ x = ⊥ := by

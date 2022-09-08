@@ -150,14 +150,14 @@ instance : IsFractionRing A K where
       simp
       
     · refine' ⟨⟨1, ⟨⟨_, hh⟩, _⟩⟩, mul_inv_cancel h⟩
-      exact mem_non_zero_divisors_iff_ne_zero.2 fun c => h (inv_eq_zero.mp (congr_arg coe c))
+      exact mem_non_zero_divisors_iff_ne_zero.2 fun c => h (inv_eq_zero.mp (congr_argₓ coe c))
       
   eq_iff_exists := fun a b =>
     ⟨fun h =>
       ⟨1, by
         ext
         simpa using h⟩,
-      fun ⟨c, h⟩ => congr_arg coe ((mul_eq_mul_right_iff.1 h).resolve_right (nonZeroDivisors.ne_zero c.2))⟩
+      fun ⟨c, h⟩ => congr_argₓ coe ((mul_eq_mul_right_iff.1 h).resolve_right (nonZeroDivisors.ne_zero c.2))⟩
 
 /-- The value group of the valuation associated to `A`. Note: it is actually a group with zero. -/
 def ValueGroup :=

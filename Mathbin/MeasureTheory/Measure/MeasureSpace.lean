@@ -201,7 +201,7 @@ theorem le_measure_diff : μ s₁ - μ s₂ ≤ μ (s₁ \ s₂) :=
   tsub_le_iff_left.2 <|
     calc
       μ s₁ ≤ μ (s₂ ∪ s₁) := measure_mono (subset_union_right _ _)
-      _ = μ (s₂ ∪ s₁ \ s₂) := congr_arg μ union_diff_self.symm
+      _ = μ (s₂ ∪ s₁ \ s₂) := congr_argₓ μ union_diff_self.symm
       _ ≤ μ s₂ + μ (s₁ \ s₂) := measure_union_le _ _
       
 
@@ -1576,7 +1576,7 @@ theorem sum_add_sum_compl (s : Set ι) (μ : ι → Measure α) : ((sum fun i : 
   exact @tsum_add_tsum_compl ℝ≥0∞ ι _ _ _ (fun i => μ i t) _ s Ennreal.summable Ennreal.summable
 
 theorem sum_congr {μ ν : ℕ → Measure α} (h : ∀ n, μ n = ν n) : sum μ = sum ν :=
-  congr_arg sum (funext h)
+  congr_argₓ sum (funext h)
 
 theorem sum_add_sum (μ ν : ℕ → Measure α) : sum μ + sum ν = sum fun n => μ n + ν n := by
   ext1 s hs
@@ -1941,6 +1941,27 @@ theorem ae_restrict_Union_eq [Countable ι] (s : ι → Set α) : (μ.restrict (
 @[simp]
 theorem ae_restrict_union_eq (s t : Set α) : (μ.restrict (s ∪ t)).ae = (μ.restrict s).ae⊔(μ.restrict t).ae := by
   simp [union_eq_Union, supr_bool_eq]
+
+theorem ae_restrict_bUnion_eq (s : ι → Set α) {t : Set ι} (ht : t.Countable) :
+    (μ.restrict (⋃ i ∈ t, s i)).ae = ⨆ i ∈ t, (μ.restrict (s i)).ae := by
+  haveI := ht.to_subtype
+  rw [bUnion_eq_Union, ae_restrict_Union_eq, ← supr_subtype'']
+
+theorem ae_restrict_bUnion_finset_eq (s : ι → Set α) (t : Finset ι) :
+    (μ.restrict (⋃ i ∈ t, s i)).ae = ⨆ i ∈ t, (μ.restrict (s i)).ae :=
+  ae_restrict_bUnion_eq s t.countable_to_set
+
+theorem ae_eq_restrict_Union_iff [Countable ι] (s : ι → Set α) (f g : α → δ) :
+    f =ᵐ[μ.restrict (⋃ i, s i)] g ↔ ∀ i, f =ᵐ[μ.restrict (s i)] g := by
+  simp_rw [eventually_eq, ae_restrict_Union_eq, eventually_supr]
+
+theorem ae_eq_restrict_bUnion_iff (s : ι → Set α) {t : Set ι} (ht : t.Countable) (f g : α → δ) :
+    f =ᵐ[μ.restrict (⋃ i ∈ t, s i)] g ↔ ∀ i ∈ t, f =ᵐ[μ.restrict (s i)] g := by
+  simp_rw [ae_restrict_bUnion_eq s ht, eventually_eq, eventually_supr]
+
+theorem ae_eq_restrict_bUnion_finset_iff (s : ι → Set α) (t : Finset ι) (f g : α → δ) :
+    f =ᵐ[μ.restrict (⋃ i ∈ t, s i)] g ↔ ∀ i ∈ t, f =ᵐ[μ.restrict (s i)] g :=
+  ae_eq_restrict_bUnion_iff s t.countable_to_set f g
 
 theorem ae_restrict_interval_oc_eq [LinearOrderₓ α] (a b : α) :
     (μ.restrict (Ι a b)).ae = (μ.restrict (Ioc a b)).ae⊔(μ.restrict (Ioc b a)).ae := by

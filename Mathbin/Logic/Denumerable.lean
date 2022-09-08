@@ -71,7 +71,7 @@ instance (priority := 100) : Infinite α :=
 def mk' {α} (e : α ≃ ℕ) : Denumerable α where
   encode := e
   decode := some ∘ e.symm
-  encodek := fun a => congr_arg some (e.symm_apply_apply _)
+  encodek := fun a => congr_argₓ some (e.symm_apply_apply _)
   decode_inv := fun n => ⟨_, rfl, e.apply_symm_apply _⟩
 
 /-- Denumerability is conserved by equivalences. This is transitivity of equivalence the denumerable
@@ -104,7 +104,7 @@ instance option : Denumerable (Option α) :=
       rw [decode_option_zero, Option.mem_def]
       
     refine' ⟨some (of_nat α n), _, _⟩
-    · rw [decode_option_succ, decode_eq_of_nat, Option.map_some'ₓ, Option.mem_def]
+    · rw [decode_option_succ, decode_eq_of_nat, Option.map_some', Option.mem_def]
       
     rw [encode_some, encode_of_nat]⟩
 

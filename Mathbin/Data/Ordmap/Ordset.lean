@@ -173,7 +173,7 @@ instance Balanced.dec : DecidablePred (@Balanced α)
     induction t <;> unfold balanced <;> skip <;> infer_instance
 
 theorem BalancedSz.symm {l r : ℕ} : BalancedSz l r → BalancedSz r l :=
-  Or.imp
+  Or.impₓ
     (by
       rw [add_commₓ] <;> exact id)
     And.symm
@@ -414,7 +414,7 @@ theorem All.imp {P Q : α → Prop} (H : ∀ a, P a → Q a) : ∀ {t}, All P t 
 
 theorem Any.imp {P Q : α → Prop} (H : ∀ a, P a → Q a) : ∀ {t}, Any P t → Any Q t
   | nil => id
-  | node _ l x r => Or.imp any.imp <| Or.imp (H _) any.imp
+  | node _ l x r => Or.impₓ any.imp <| Or.impₓ (H _) any.imp
 
 theorem all_singleton {P : α → Prop} {x : α} : All P (singleton x) ↔ P x :=
   ⟨fun h => h.2.1, fun h => ⟨⟨⟩, h, ⟨⟩⟩⟩
@@ -527,7 +527,7 @@ theorem find_max'_dual (t) (x : α) : findMax' x (dual t) = findMin' t x := by
 
 theorem find_min_dual : ∀ t : Ordnode α, findMin (dual t) = findMax t
   | nil => rfl
-  | node _ l x r => congr_arg some <| find_min'_dual _ _
+  | node _ l x r => congr_argₓ some <| find_min'_dual _ _
 
 theorem find_max_dual (t : Ordnode α) : findMax (dual t) = findMin t := by
   rw [← find_min_dual, dual_dual]
@@ -610,7 +610,7 @@ theorem balance_eq_balance' {l x r} (hl : Balanced l) (hr : Balanced r) (sl : Si
         
       · have : size rrl = 0 ∧ size rrr = 0 := by
           have := balanced_sz_zero.1 hr.1.symm
-          rwa [size, sr.2.2.1, Nat.succ_le_succ_iff, le_zero_iff, add_eq_zero_iff] at this
+          rwa [size, sr.2.2.1, Nat.succ_le_succ_iffₓ, le_zero_iff, add_eq_zero_iff] at this
         cases sr.2.2.2.1.size_eq_zero.1 this.1
         cases sr.2.2.2.2.size_eq_zero.1 this.2
         obtain rfl : rrs = 1 := sr.2.2.1
@@ -623,7 +623,7 @@ theorem balance_eq_balance' {l x r} (hl : Balanced l) (hr : Balanced r) (sl : Si
         
       · have : size rll = 0 ∧ size rlr = 0 := by
           have := balanced_sz_zero.1 hr.1
-          rwa [size, sr.2.1.1, Nat.succ_le_succ_iff, le_zero_iff, add_eq_zero_iff] at this
+          rwa [size, sr.2.1.1, Nat.succ_le_succ_iffₓ, le_zero_iff, add_eq_zero_iff] at this
         cases sr.2.1.2.1.size_eq_zero.1 this.1
         cases sr.2.1.2.2.size_eq_zero.1 this.2
         obtain rfl : rls = 1 := sr.2.1.1
@@ -657,7 +657,7 @@ theorem balance_eq_balance' {l x r} (hl : Balanced l) (hr : Balanced r) (sl : Si
         
       · have : size lrl = 0 ∧ size lrr = 0 := by
           have := balanced_sz_zero.1 hl.1.symm
-          rwa [size, sl.2.2.1, Nat.succ_le_succ_iff, le_zero_iff, add_eq_zero_iff] at this
+          rwa [size, sl.2.2.1, Nat.succ_le_succ_iffₓ, le_zero_iff, add_eq_zero_iff] at this
         cases sl.2.2.2.1.size_eq_zero.1 this.1
         cases sl.2.2.2.2.size_eq_zero.1 this.2
         obtain rfl : lrs = 1 := sl.2.2.1
@@ -670,7 +670,7 @@ theorem balance_eq_balance' {l x r} (hl : Balanced l) (hr : Balanced r) (sl : Si
         
       · have : size lll = 0 ∧ size llr = 0 := by
           have := balanced_sz_zero.1 hl.1
-          rwa [size, sl.2.1.1, Nat.succ_le_succ_iff, le_zero_iff, add_eq_zero_iff] at this
+          rwa [size, sl.2.1.1, Nat.succ_le_succ_iffₓ, le_zero_iff, add_eq_zero_iff] at this
         cases sl.2.1.2.1.size_eq_zero.1 this.1
         cases sl.2.1.2.2.size_eq_zero.1 this.2
         obtain rfl : lls = 1 := sl.2.1.1
@@ -765,7 +765,7 @@ theorem balance_l_eq_balance {l x r} (sl : Sized l) (sr : Sized r) (H1 : size l 
   · cases' l with ls ll lx lr
     · have : size rl = 0 ∧ size rr = 0 := by
         have := H1 rfl
-        rwa [size, sr.1, Nat.succ_le_succ_iff, le_zero_iff, add_eq_zero_iff] at this
+        rwa [size, sr.1, Nat.succ_le_succ_iffₓ, le_zero_iff, add_eq_zero_iff] at this
       cases sr.2.1.size_eq_zero.1 this.1
       cases sr.2.2.size_eq_zero.1 this.2
       rw [sr.eq_node']

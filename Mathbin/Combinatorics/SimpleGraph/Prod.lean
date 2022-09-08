@@ -68,21 +68,21 @@ def boxProdComm : G □ H ≃g H □ G :=
 @[simps]
 def boxProdAssoc : G □ H □ I ≃g G □ (H □ I) :=
   ⟨Equivₓ.prodAssoc _ _ _, fun x y => by
-    simp only [box_prod_adj, Equivₓ.prod_assoc_apply, or_and_distrib_right, or_assoc, Prod.ext_iff, and_assoc,
+    simp only [box_prod_adj, Equivₓ.prod_assoc_apply, or_and_distrib_right, or_assoc, Prod.ext_iffₓ, and_assoc,
       @And.comm (x.1.1 = _)]⟩
 
 /-- The embedding of `G` into `G □ H` given by `b`. -/
 @[simps]
 def boxProdLeft (b : β) : G ↪g G □ H where
   toFun := fun a => (a, b)
-  inj' := fun a₁ a₂ => congr_arg Prod.fst
+  inj' := fun a₁ a₂ => congr_argₓ Prod.fst
   map_rel_iff' := fun a₁ a₂ => box_prod_adj_left
 
 /-- The embedding of `H` into `G □ H` given by `a`. -/
 @[simps]
 def boxProdRight (a : α) : H ↪g G □ H where
   toFun := Prod.mk a
-  inj' := fun b₁ b₂ => congr_arg Prod.snd
+  inj' := fun b₁ b₂ => congr_argₓ Prod.snd
   map_rel_iff' := fun b₁ b₂ => box_prod_adj_right
 
 namespace Walk
@@ -143,7 +143,7 @@ protected theorem Preconnected.box_prod (hG : G.Preconnected) (hH : H.Preconnect
   rintro x y
   obtain ⟨w₁⟩ := hG x.1 y.1
   obtain ⟨w₂⟩ := hH x.2 y.2
-  rw [← @Prod.mk.eta _ _ x, ← @Prod.mk.eta _ _ y]
+  rw [← @Prod.mk.etaₓ _ _ x, ← @Prod.mk.etaₓ _ _ y]
   exact ⟨(w₁.box_prod_left _ _).append (w₂.box_prod_right _ _)⟩
 
 protected theorem Preconnected.of_box_prod_left [Nonempty β] (h : (G □ H).Preconnected) : G.Preconnected := by
@@ -164,13 +164,13 @@ protected theorem Connected.box_prod (hG : G.Connected) (hH : H.Connected) : (G 
   exact ⟨hG.preconnected.box_prod hH.preconnected⟩
 
 protected theorem Connected.of_box_prod_left (h : (G □ H).Connected) : G.Connected := by
-  haveI := (nonempty_prod.1 h.nonempty).1
-  haveI := (nonempty_prod.1 h.nonempty).2
+  haveI := (nonempty_prodₓ.1 h.nonempty).1
+  haveI := (nonempty_prodₓ.1 h.nonempty).2
   exact ⟨h.preconnected.of_box_prod_left⟩
 
 protected theorem Connected.of_box_prod_right (h : (G □ H).Connected) : H.Connected := by
-  haveI := (nonempty_prod.1 h.nonempty).1
-  haveI := (nonempty_prod.1 h.nonempty).2
+  haveI := (nonempty_prodₓ.1 h.nonempty).1
+  haveI := (nonempty_prodₓ.1 h.nonempty).2
   exact ⟨h.preconnected.of_box_prod_right⟩
 
 @[simp]

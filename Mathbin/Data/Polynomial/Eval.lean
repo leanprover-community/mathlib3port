@@ -209,9 +209,9 @@ section
 variable [Semiringₓ S] (f : R →+* S) (x : S)
 
 theorem eval₂_eq_sum_range : p.eval₂ f x = ∑ i in Finset.range (p.natDegree + 1), f (p.coeff i) * x ^ i :=
-  trans (congr_arg _ p.as_sum_range)
+  trans (congr_argₓ _ p.as_sum_range)
     (trans (eval₂_finset_sum f _ _ x)
-      (congr_arg _
+      (congr_argₓ _
         (by
           simp )))
 
@@ -709,7 +709,7 @@ theorem map_monic_eq_zero_iff (hp : p.Monic) : p.map f = 0 ↔ ∀ x, f x = 0 :=
     calc
       f x = f x * f p.leadingCoeff := by
         simp only [mul_oneₓ, hp.leading_coeff, f.map_one]
-      _ = f x * (p.map f).coeff p.natDegree := congr_arg _ (coeff_map _ _).symm
+      _ = f x * (p.map f).coeff p.natDegree := congr_argₓ _ (coeff_map _ _).symm
       _ = 0 := by
         simp only [hfp, mul_zero, coeff_zero]
       ,
@@ -723,7 +723,7 @@ theorem map_monic_ne_zero (hp : p.Monic) [Nontrivial S] : p.map f ≠ 0 := fun h
 theorem degree_map_eq_of_leading_coeff_ne_zero (f : R →+* S) (hf : f (leadingCoeff p) ≠ 0) :
     degree (p.map f) = degree p :=
   le_antisymmₓ (degree_map_le f _) <| by
-    have hp0 : p ≠ 0 := leading_coeff_ne_zero.mp fun hp0 => hf (trans (congr_arg _ hp0) f.map_zero)
+    have hp0 : p ≠ 0 := leading_coeff_ne_zero.mp fun hp0 => hf (trans (congr_argₓ _ hp0) f.map_zero)
     rw [degree_eq_nat_degree hp0]
     refine' le_degree_of_ne_zero _
     rw [coeff_map]

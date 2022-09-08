@@ -185,7 +185,7 @@ theorem mul_left_cancelₓ : a * b = a * c → b = c :=
 
 @[to_additive]
 theorem mul_left_cancel_iffₓ : a * b = a * c ↔ b = c :=
-  ⟨mul_left_cancelₓ, congr_arg _⟩
+  ⟨mul_left_cancelₓ, congr_argₓ _⟩
 
 @[to_additive]
 theorem mul_right_injective (a : G) : Function.Injective ((· * ·) a) := fun b c => mul_left_cancelₓ
@@ -223,7 +223,7 @@ theorem mul_right_cancelₓ : a * b = c * b → a = c :=
 
 @[to_additive]
 theorem mul_right_cancel_iffₓ : b * a = c * a ↔ b = c :=
-  ⟨mul_right_cancelₓ, congr_arg _⟩
+  ⟨mul_right_cancelₓ, congr_argₓ _⟩
 
 @[to_additive]
 theorem mul_left_injective (a : G) : Function.Injective fun x => x * a := fun b c => mul_right_cancelₓ
@@ -526,13 +526,13 @@ end CancelMonoid
 Use instead `a ^ n`,  which has better definitional behavior. -/
 def zpowRec {M : Type _} [One M] [Mul M] [Inv M] : ℤ → M → M
   | Int.ofNat n, a => npowRec n a
-  | -[1+ n], a => (npowRec n.succ a)⁻¹
+  | -[1 + n], a => (npowRec n.succ a)⁻¹
 
 /-- The fundamental scalar multiplication in an additive group. `zsmul_rec n a = a+a+...+a` n
 times, for integer `n`. Use instead `n • a`, which has better definitional behavior. -/
 def zsmulRec {M : Type _} [Zero M] [Add M] [Neg M] : ℤ → M → M
   | Int.ofNat n, a => nsmulRec n a
-  | -[1+ n], a => -nsmulRec n.succ a
+  | -[1 + n], a => -nsmulRec n.succ a
 
 attribute [to_additive] zpowRec
 
@@ -624,7 +624,7 @@ class DivInvMonoidₓ (G : Type u) extends Monoidₓ G, Inv G, Div G where
   zpow_succ' : ∀ (n : ℕ) (a : G), zpow (Int.ofNat n.succ) a = a * zpow (Int.ofNat n) a := by
     run_tac
       try_refl_tac
-  zpow_neg' : ∀ (n : ℕ) (a : G), zpow -[1+ n] a = (zpow n.succ a)⁻¹ := by
+  zpow_neg' : ∀ (n : ℕ) (a : G), zpow (-[1 + n]) a = (zpow n.succ a)⁻¹ := by
     run_tac
       try_refl_tac
 
@@ -658,7 +658,7 @@ class SubNegMonoidₓ (G : Type u) extends AddMonoidₓ G, Neg G, Sub G where
   zsmul_succ' : ∀ (n : ℕ) (a : G), zsmul (Int.ofNat n.succ) a = a + zsmul (Int.ofNat n) a := by
     run_tac
       try_refl_tac
-  zsmul_neg' : ∀ (n : ℕ) (a : G), zsmul -[1+ n] a = -zsmul n.succ a := by
+  zsmul_neg' : ∀ (n : ℕ) (a : G), zsmul (-[1 + n]) a = -zsmul n.succ a := by
     run_tac
       try_refl_tac
 
@@ -690,7 +690,7 @@ theorem zpow_coe_nat (a : G) : ∀ n : ℕ, a ^ (n : ℤ) = a ^ n
   | n + 1 =>
     calc
       a ^ (↑(n + 1) : ℤ) = a * a ^ (n : ℤ) := DivInvMonoidₓ.zpow_succ' _ _
-      _ = a * a ^ n := congr_arg ((· * ·) a) (zpow_coe_nat n)
+      _ = a * a ^ n := congr_argₓ ((· * ·) a) (zpow_coe_nat n)
       _ = a ^ (n + 1) := (pow_succₓ _ _).symm
       
 
@@ -699,7 +699,7 @@ theorem zpow_of_nat (a : G) (n : ℕ) : a ^ Int.ofNat n = a ^ n :=
   zpow_coe_nat a n
 
 @[simp, to_additive]
-theorem zpow_neg_succ_of_nat (a : G) (n : ℕ) : a ^ -[1+ n] = (a ^ (n + 1))⁻¹ := by
+theorem zpow_neg_succ_of_nat (a : G) (n : ℕ) : a ^ -[1 + n] = (a ^ (n + 1))⁻¹ := by
   rw [← zpow_coe_nat]
   exact DivInvMonoidₓ.zpow_neg' n a
 

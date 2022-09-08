@@ -242,7 +242,7 @@ theorem restrict_prod_injective : Function.Injective (restrictProd p q) := by
     
   intro f g hfg
   dsimp' only [restrict_prod, restrict_dvd]  at hfg
-  simp only [dif_neg hpq, MonoidHom.prod_apply, Prod.mk.inj_iff] at hfg
+  simp only [dif_neg hpq, MonoidHom.prod_apply, Prod.mk.inj_iffₓ] at hfg
   ext x hx
   rw [root_set, Polynomial.map_mul, Polynomial.roots_mul] at hx
   cases' multiset.mem_add.mp (multiset.mem_to_finset.mp hx) with h h
@@ -254,7 +254,7 @@ theorem restrict_prod_injective : Function.Injective (restrictProd p q) := by
           ((roots_equiv_roots p _).invFun ⟨x, multiset.mem_to_finset.mpr h⟩) :=
       subtype.ext_iff.mp (Equivₓ.apply_symm_apply (roots_equiv_roots p _) ⟨x, _⟩).symm
     rw [key, ← AlgEquiv.restrict_normal_commutes, ← AlgEquiv.restrict_normal_commutes]
-    exact congr_arg _ (alg_equiv.ext_iff.mp hfg.1 _)
+    exact congr_argₓ _ (alg_equiv.ext_iff.mp hfg.1 _)
     
   · haveI : Fact (q.splits (algebraMap F (p * q).SplittingField)) :=
       ⟨splits_of_splits_of_dvd _ hpq (splitting_field.splits (p * q)) (dvd_mul_left q p)⟩
@@ -264,7 +264,7 @@ theorem restrict_prod_injective : Function.Injective (restrictProd p q) := by
           ((roots_equiv_roots q _).invFun ⟨x, multiset.mem_to_finset.mpr h⟩) :=
       subtype.ext_iff.mp (Equivₓ.apply_symm_apply (roots_equiv_roots q _) ⟨x, _⟩).symm
     rw [key, ← AlgEquiv.restrict_normal_commutes, ← AlgEquiv.restrict_normal_commutes]
-    exact congr_arg _ (alg_equiv.ext_iff.mp hfg.2 _)
+    exact congr_argₓ _ (alg_equiv.ext_iff.mp hfg.2 _)
     
   · rwa [Ne.def, mul_eq_zero, map_eq_zero, map_eq_zero, ← mul_eq_zero]
     
@@ -437,7 +437,7 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
       exact ⟨⟨z, (mem_root_set hp).mpr hz1⟩, equiv.perm.mem_support.mpr (mt (hc0 _).mp hz2), rfl⟩
       
   rw [← Finset.card_disjoint_union]
-  · apply congr_arg Finset.card
+  · apply congr_argₓ Finset.card
     simp_rw [Finset.ext_iff, Finset.mem_union, ha, hb, hc]
     tauto
     
@@ -464,7 +464,7 @@ theorem gal_action_hom_bijective_of_prime_degree {p : ℚ[X]} (p_irr : Irreducib
   let conj := restrict p ℂ (complex.conj_ae.restrict_scalars ℚ)
   refine'
     ⟨gal_action_hom_injective p ℂ, fun x =>
-      (congr_arg (Membership.Mem x) (show (gal_action_hom p ℂ).range = ⊤ from _)).mpr (Subgroup.mem_top x)⟩
+      (congr_argₓ (Membership.Mem x) (show (gal_action_hom p ℂ).range = ⊤ from _)).mpr (Subgroup.mem_top x)⟩
   apply Equivₓ.Perm.subgroup_eq_top_of_swap_mem
   · rwa [h1]
     

@@ -104,13 +104,13 @@ theorem mk_sub (f g : CauSeq β abv) : mk f - mk g = mk (f - g) :=
   rfl
 
 theorem of_rat_add (x y : β) : of_rat (x + y) = of_rat x + of_rat y :=
-  congr_arg mk (const_add _ _)
+  congr_argₓ mk (const_add _ _)
 
 theorem of_rat_neg (x : β) : of_rat (-x) = -of_rat x :=
-  congr_arg mk (const_neg _)
+  congr_argₓ mk (const_neg _)
 
 theorem of_rat_mul (x y : β) : of_rat (x * y) = of_rat x * of_rat y :=
-  congr_arg mk (const_mul _ _)
+  congr_argₓ mk (const_mul _ _)
 
 private theorem zero_def : 0 = mk 0 :=
   rfl
@@ -130,10 +130,10 @@ instance : AddGroupₓ Cauchy := by
         
 
 instance : AddGroupWithOneₓ Cauchy :=
-  { Cauchy.add_group with natCast := fun n => mk n, nat_cast_zero := congr_arg mk Nat.cast_zeroₓ,
-    nat_cast_succ := fun n => congr_arg mk (Nat.cast_succₓ n), intCast := fun n => mk n,
-    int_cast_of_nat := fun n => congr_arg mk (Int.cast_of_nat n),
-    int_cast_neg_succ_of_nat := fun n => congr_arg mk (Int.cast_neg_succ_of_nat n), one := 1 }
+  { Cauchy.add_group with natCast := fun n => mk n, nat_cast_zero := congr_argₓ mk Nat.cast_zeroₓ,
+    nat_cast_succ := fun n => congr_argₓ mk (Nat.cast_succₓ n), intCast := fun n => mk n,
+    int_cast_of_nat := fun n => congr_argₓ mk (Int.cast_of_nat n),
+    int_cast_neg_succ_of_nat := fun n => congr_argₓ mk (Int.cast_neg_succ_of_nat n), one := 1 }
 
 @[simp]
 theorem of_rat_nat_cast (n : ℕ) : of_rat n = n :=
@@ -168,7 +168,7 @@ def ofRatRingHom : β →+* Cauchy where
   map_mul' := of_rat_mul
 
 theorem of_rat_sub (x y : β) : of_rat (x - y) = of_rat x - of_rat y :=
-  congr_arg mk (const_sub _ _)
+  congr_argₓ mk (const_sub _ _)
 
 end
 
@@ -208,12 +208,12 @@ noncomputable instance : Inv Cauchy :=
 
 @[simp]
 theorem inv_zero : (0 : Cauchy)⁻¹ = 0 :=
-  congr_arg mk <| by
+  congr_argₓ mk <| by
     rw [dif_pos] <;> [rfl, exact zero_lim_zero]
 
 @[simp]
 theorem inv_mk {f} (hf) : (@mk α _ β _ abv _ f)⁻¹ = mk (inv f hf) :=
-  congr_arg mk <| by
+  congr_argₓ mk <| by
     rw [dif_neg]
 
 theorem cau_seq_zero_ne_one : ¬(0 : CauSeq _ abv) ≈ 1 := fun h =>
@@ -231,7 +231,7 @@ protected theorem inv_mul_cancel {x : Cauchy} : x ≠ 0 → x⁻¹ * x = 1 :=
     exact Quotientₓ.sound (CauSeq.inv_mul_cancel hf)
 
 theorem of_rat_inv (x : β) : ofRat x⁻¹ = ((ofRat x)⁻¹ : Cauchy) :=
-  congr_arg mk <| by
+  congr_argₓ mk <| by
     split_ifs with h <;> [simp [const_lim_zero.1 h], rfl]
 
 /-- The Cauchy completion forms a field. -/

@@ -413,7 +413,7 @@ theorem Ideal.IsHomogeneous.mul {I J : Ideal A} (HI : I.IsHomogeneous 𝒜) (HJ 
   rw [Ideal.IsHomogeneous.iff_exists] at HI HJ⊢
   obtain ⟨⟨s₁, rfl⟩, ⟨s₂, rfl⟩⟩ := HI, HJ
   rw [Ideal.span_mul_span']
-  exact ⟨s₁ * s₂, congr_arg _ <| (Set.image_mul (homogeneous_submonoid 𝒜).Subtype).symm⟩
+  exact ⟨s₁ * s₂, congr_argₓ _ <| (Set.image_mul (homogeneous_submonoid 𝒜).Subtype).symm⟩
 
 variable {𝒜}
 
@@ -530,7 +530,7 @@ variable (I 𝒜)
 theorem Ideal.to_ideal_homogeneous_hull_eq_supr :
     (I.homogeneousHull 𝒜).toIdeal = ⨆ i, Ideal.span (GradedRing.proj 𝒜 i '' I) := by
   rw [← Ideal.span_Union]
-  apply congr_arg Ideal.span _
+  apply congr_argₓ Ideal.span _
   ext1
   simp only [Set.mem_Union, Set.mem_image, mem_set_of_eq, GradedRing.proj_apply, SetLike.exists, exists_prop,
     Subtype.coe_mk, SetLike.mem_coe]

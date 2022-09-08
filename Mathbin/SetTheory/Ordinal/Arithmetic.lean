@@ -687,20 +687,21 @@ instance : Monoidₓ Ordinal.{u} where
           ⟨⟨prodAssoc _ _ _, fun a b => by
               rcases a with ⟨⟨a₁, a₂⟩, a₃⟩
               rcases b with ⟨⟨b₁, b₂⟩, b₃⟩
-              simp [Prod.lex_def, and_or_distrib_left, or_assoc, and_assoc]⟩⟩
+              simp [Prod.lex_defₓ, and_or_distrib_left, or_assoc, and_assoc]⟩⟩
   mul_one := fun a =>
     (induction_on a) fun α r _ =>
       Quotientₓ.sound
         ⟨⟨punitProd _, fun a b => by
             rcases a with ⟨⟨⟨⟩⟩, a⟩ <;>
               rcases b with ⟨⟨⟨⟩⟩, b⟩ <;>
-                simp only [Prod.lex_def, EmptyRelation, false_orₓ] <;> simp only [eq_self_iff_true, true_andₓ] <;> rfl⟩⟩
+                simp only [Prod.lex_defₓ, EmptyRelation, false_orₓ] <;>
+                  simp only [eq_self_iff_true, true_andₓ] <;> rfl⟩⟩
   one_mul := fun a =>
     (induction_on a) fun α r _ =>
       Quotientₓ.sound
         ⟨⟨prodPunit _, fun a b => by
             rcases a with ⟨a, ⟨⟨⟩⟩⟩ <;>
-              rcases b with ⟨b, ⟨⟨⟩⟩⟩ <;> simp only [Prod.lex_def, EmptyRelation, and_falseₓ, or_falseₓ] <;> rfl⟩⟩
+              rcases b with ⟨b, ⟨⟨⟩⟩⟩ <;> simp only [Prod.lex_defₓ, EmptyRelation, and_falseₓ, or_falseₓ] <;> rfl⟩⟩
 
 @[simp]
 theorem type_prod_lex {α β : Type u} (r : α → α → Prop) (s : β → β → Prop) [IsWellOrder α r] [IsWellOrder β s] :
@@ -738,7 +739,7 @@ instance : LeftDistribClass Ordinal.{u} :=
       Quotientₓ.sound
         ⟨⟨sumProdDistrib _ _ _, by
             rintro ⟨a₁ | a₁, a₂⟩ ⟨b₁ | b₁, b₂⟩ <;>
-              simp only [Prod.lex_def, Sum.lex_inl_inl, Sum.Lex.sep, Sum.lex_inr_inl, Sum.lex_inr_inr,
+              simp only [Prod.lex_defₓ, Sum.lex_inl_inl, Sum.Lex.sep, Sum.lex_inr_inl, Sum.lex_inr_inr,
                   sum_prod_distrib_apply_left, sum_prod_distrib_apply_right] <;>
                 simp only [Sum.inl.inj_iff, true_orₓ, false_andₓ, false_orₓ]⟩⟩⟩
 
@@ -810,19 +811,19 @@ private theorem mul_le_of_limit_aux {α β r s} [IsWellOrder α r] [IsWellOrder 
     intro h
     by_cases' e₁ : b = b₁ <;> by_cases' e₂ : b = b₂
     · substs b₁ b₂
-      simpa only [subrel_val, Prod.lex_def, @irrefl _ s _ b, true_andₓ, false_orₓ, eq_self_iff_true, dif_pos,
+      simpa only [subrel_val, Prod.lex_defₓ, @irrefl _ s _ b, true_andₓ, false_orₓ, eq_self_iff_true, dif_pos,
         Sum.lex_inr_inr] using h
       
     · subst b₁
-      simp only [subrel_val, Prod.lex_def, e₂, Prod.lex_def, dif_pos, subrel_val, eq_self_iff_true, or_falseₓ, dif_neg,
-        not_false_iff, Sum.lex_inr_inl, false_andₓ] at h⊢
+      simp only [subrel_val, Prod.lex_defₓ, e₂, Prod.lex_defₓ, dif_pos, subrel_val, eq_self_iff_true, or_falseₓ,
+        dif_neg, not_false_iff, Sum.lex_inr_inl, false_andₓ] at h⊢
       cases h₂ <;> [exact asymm h h₂_h, exact e₂ rfl]
       
     · simp [e₂, dif_neg e₁,
         show b₂ ≠ b₁ by
           cc]
       
-    · simpa only [dif_neg e₁, dif_neg e₂, Prod.lex_def, subrel_val, Subtype.mk_eq_mk, Sum.lex_inl_inl] using h
+    · simpa only [dif_neg e₁, dif_neg e₂, Prod.lex_defₓ, subrel_val, Subtype.mk_eq_mk, Sum.lex_inl_inl] using h
       
     
 

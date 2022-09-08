@@ -176,7 +176,7 @@ theorem nodup_middle {a : α} {l₁ l₂ : List α} : Nodupₓ (l₁ ++ a :: l�
   simp only [nodup_append, not_or_distrib, And.left_comm, and_assoc, nodup_cons, mem_append, disjoint_cons_right]
 
 theorem Nodupₓ.of_map (f : α → β) {l : List α} : Nodupₓ (map f l) → Nodupₓ l :=
-  (Pairwiseₓ.of_map f) fun a b => mt <| congr_arg f
+  (Pairwiseₓ.of_map f) fun a b => mt <| congr_argₓ f
 
 theorem Nodupₓ.map_on {f : α → β} (H : ∀ x ∈ l, ∀ y ∈ l, f x = f y → x = y) (d : Nodupₓ l) : (map f l).Nodup :=
   Pairwiseₓ.map _ (fun a b ⟨ma, mb, n⟩ e => n (H a ma b mb e)) (Pairwiseₓ.and_mem.1 d)
@@ -843,7 +843,7 @@ theorem Nodupₓ.map_update [DecidableEq α] {l : List α} (hl : l.Nodup) (f : �
   · subst hd
     simp [update_nth, hl.1]
     
-  · simp [Ne.symm H, H, update_nth, ← apply_ite (cons (f hd))]
+  · simp [Ne.symm H, H, update_nth, ← apply_iteₓ (cons (f hd))]
     
 
 theorem Nodupₓ.pairwise_of_forall_ne {l : List α} {r : α → α → Prop} (hl : l.Nodup)

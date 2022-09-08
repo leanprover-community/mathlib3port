@@ -25,9 +25,6 @@ if it is the smallest field extension of `K` such that `f` splits.
 
 ## Main statements
 
-* `polynomial.C_leading_coeff_mul_prod_multiset_X_sub_C`: If a polynomial has as many roots as its
-  degree, it can be written as the product of its leading coefficient with `∏ (X - a)` where `a`
-  ranges through its roots.
 * `lift_of_splits`: If `K` and `L` are field extensions of a field `F` and for some finite subset
   `S` of `K`, the minimal polynomial of every `x ∈ K` splits as a polynomial with coefficients in
   `L`, then `algebra.adjoin F S` embeds into `L`.
@@ -74,13 +71,13 @@ theorem splits_C (a : K) : Splits i (c a) :=
       absurd hg.1
         (not_not.2
           (is_unit_iff_degree_eq_zero.2 <| by
-            have := congr_arg degree hp <;>
+            have := congr_argₓ degree hp <;>
               simp [degree_C hia, @eq_comm (WithBot ℕ) 0, Nat.WithBot.add_eq_zero_iff] at this <;>
                 clear _fun_match <;> tauto))
 
 theorem splits_of_degree_eq_one {f : K[X]} (hf : degree f = 1) : Splits i f :=
   Or.inr fun g hg ⟨p, hp⟩ => by
-    have := congr_arg degree hp <;>
+    have := congr_argₓ degree hp <;>
       simp [Nat.WithBot.add_eq_one_iff, hf, @eq_comm (WithBot ℕ) 1, mt is_unit_iff_degree_eq_zero.2 hg.1] at this <;>
         clear _fun_match <;> tauto
 
@@ -321,7 +318,7 @@ theorem splits_of_exists_multiset {f : K[X]} {s : Multiset L}
         exact is_unit_C.2 ((leading_coeff_ne_zero.2 hf0).IsUnit.map i)
         
       · obtain ⟨q, hq, hd⟩ := hp.dvd_prod_iff.1 hd
-        obtain ⟨a, ha, rfl⟩ := Multiset.mem_map.1 ((Multiset.mem_to_list _ _).1 hq)
+        obtain ⟨a, ha, rfl⟩ := Multiset.mem_map.1 (Multiset.mem_to_list.1 hq)
         rw [degree_eq_degree_of_associated ((hp.dvd_prime_iff_associated <| prime_X_sub_C a).1 hd)]
         exact degree_X_sub_C a
         

@@ -316,7 +316,7 @@ theorem _root_.polynomial.to_laurent_injective : Function.Injective (Polynomial.
 
 @[simp]
 theorem _root_.polynomial.to_laurent_inj (f g : R[X]) : f.toLaurent = g.toLaurent ↔ f = g :=
-  ⟨fun h => Polynomial.to_laurent_injective h, congr_arg _⟩
+  ⟨fun h => Polynomial.to_laurent_injective h, congr_argₓ _⟩
 
 theorem _root_.polynomial.to_laurent_ne_zero {f : R[X]} : f ≠ 0 ↔ f.toLaurent ≠ 0 :=
   (map_ne_zero_iff _ Polynomial.to_laurent_injective).symm

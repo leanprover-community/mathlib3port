@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
 import Mathbin.Data.Nat.Interval
+import Mathbin.Data.Finset.LocallyFinite
 
 /-!
 # Finite intervals in `fin n`
@@ -20,10 +21,10 @@ open BigOperators
 variable (n : ℕ)
 
 instance : LocallyFiniteOrder (Finₓ n) :=
-  Subtype.locallyFiniteOrder _
+  OrderIso.locallyFiniteOrder Finₓ.orderIsoSubtype
 
 instance : LocallyFiniteOrderBot (Finₓ n) :=
-  Subtype.locallyFiniteOrderBot _
+  OrderIso.locallyFiniteOrderBot Finₓ.orderIsoSubtype
 
 instance : ∀ n, LocallyFiniteOrderTop (Finₓ n)
   | 0 => IsEmpty.toLocallyFiniteOrderTop
@@ -33,33 +34,33 @@ namespace Finₓ
 
 variable {n} (a b : Finₓ n)
 
-theorem Icc_eq_finset_subtype : icc a b = (icc (a : ℕ) b).Subtype fun x => x < n :=
+theorem Icc_eq_finset_subtype : icc a b = (icc (a : ℕ) b).Fin n :=
   rfl
 
-theorem Ico_eq_finset_subtype : ico a b = (ico (a : ℕ) b).Subtype fun x => x < n :=
+theorem Ico_eq_finset_subtype : ico a b = (ico (a : ℕ) b).Fin n :=
   rfl
 
-theorem Ioc_eq_finset_subtype : ioc a b = (ioc (a : ℕ) b).Subtype fun x => x < n :=
+theorem Ioc_eq_finset_subtype : ioc a b = (ioc (a : ℕ) b).Fin n :=
   rfl
 
-theorem Ioo_eq_finset_subtype : ioo a b = (ioo (a : ℕ) b).Subtype fun x => x < n :=
+theorem Ioo_eq_finset_subtype : ioo a b = (ioo (a : ℕ) b).Fin n :=
   rfl
 
 @[simp]
-theorem map_subtype_embedding_Icc : (icc a b).map (Embedding.subtype _) = icc a b :=
-  map_subtype_embedding_Icc _ _ _ fun _ c x _ hx _ => hx.trans_lt
+theorem map_subtype_embedding_Icc : (icc a b).map Finₓ.coeEmbedding = icc a b := by
+  simp [Icc_eq_finset_subtype, Finset.fin, Finset.map_map, Icc_filter_lt_of_lt_right]
 
 @[simp]
-theorem map_subtype_embedding_Ico : (ico a b).map (Embedding.subtype _) = ico a b :=
-  map_subtype_embedding_Ico _ _ _ fun _ c x _ hx _ => hx.trans_lt
+theorem map_subtype_embedding_Ico : (ico a b).map Finₓ.coeEmbedding = ico a b := by
+  simp [Ico_eq_finset_subtype, Finset.fin, Finset.map_map]
 
 @[simp]
-theorem map_subtype_embedding_Ioc : (ioc a b).map (Embedding.subtype _) = ioc a b :=
-  map_subtype_embedding_Ioc _ _ _ fun _ c x _ hx _ => hx.trans_lt
+theorem map_subtype_embedding_Ioc : (ioc a b).map Finₓ.coeEmbedding = ioc a b := by
+  simp [Ioc_eq_finset_subtype, Finset.fin, Finset.map_map, Ioc_filter_lt_of_lt_right]
 
 @[simp]
-theorem map_subtype_embedding_Ioo : (ioo a b).map (Embedding.subtype _) = ioo a b :=
-  map_subtype_embedding_Ioo _ _ _ fun _ c x _ hx _ => hx.trans_lt
+theorem map_subtype_embedding_Ioo : (ioo a b).map Finₓ.coeEmbedding = ioo a b := by
+  simp [Ioo_eq_finset_subtype, Finset.fin, Finset.map_map]
 
 @[simp]
 theorem card_Icc : (icc a b).card = b + 1 - a := by
@@ -93,24 +94,22 @@ theorem card_fintype_Ioc : Fintype.card (Set.Ioc a b) = b - a := by
 theorem card_fintype_Ioo : Fintype.card (Set.Ioo a b) = b - a - 1 := by
   rw [← card_Ioo, Fintype.card_of_finset]
 
-theorem Ici_eq_finset_subtype : ici a = (icc (a : ℕ) n).Subtype fun x => x < n := by
-  ext x
-  simp only [mem_subtype, mem_Ici, mem_Icc, coe_fin_le, iff_self_and]
-  exact fun _ => x.2.le
+theorem Ici_eq_finset_subtype : ici a = (icc (a : ℕ) n).Fin n := by
+  ext
+  simp
 
-theorem Ioi_eq_finset_subtype : ioi a = (ioc (a : ℕ) n).Subtype fun x => x < n := by
-  ext x
-  simp only [mem_subtype, mem_Ioi, mem_Ioc, coe_fin_lt, iff_self_and]
-  exact fun _ => x.2.le
+theorem Ioi_eq_finset_subtype : ioi a = (ioc (a : ℕ) n).Fin n := by
+  ext
+  simp
 
-theorem Iic_eq_finset_subtype : iic b = (iic (b : ℕ)).Subtype fun x => x < n :=
+theorem Iic_eq_finset_subtype : iic b = (iic (b : ℕ)).Fin n :=
   rfl
 
-theorem Iio_eq_finset_subtype : iio b = (iio (b : ℕ)).Subtype fun x => x < n :=
+theorem Iio_eq_finset_subtype : iio b = (iio (b : ℕ)).Fin n :=
   rfl
 
 @[simp]
-theorem map_subtype_embedding_Ici : (ici a).map (Embedding.subtype _) = icc a (n - 1) := by
+theorem map_subtype_embedding_Ici : (ici a).map Finₓ.coeEmbedding = icc a (n - 1) := by
   ext x
   simp only [exists_prop, embedding.coe_subtype, mem_Ici, mem_map, mem_Icc]
   constructor
@@ -124,7 +123,7 @@ theorem map_subtype_embedding_Ici : (ici a).map (Embedding.subtype _) = icc a (n
     
 
 @[simp]
-theorem map_subtype_embedding_Ioi : (ioi a).map (Embedding.subtype _) = ioc a (n - 1) := by
+theorem map_subtype_embedding_Ioi : (ioi a).map Finₓ.coeEmbedding = ioc a (n - 1) := by
   ext x
   simp only [exists_prop, embedding.coe_subtype, mem_Ioi, mem_map, mem_Ioc]
   constructor
@@ -138,12 +137,12 @@ theorem map_subtype_embedding_Ioi : (ioi a).map (Embedding.subtype _) = ioc a (n
     
 
 @[simp]
-theorem map_subtype_embedding_Iic : (iic b).map (Embedding.subtype _) = iic b :=
-  (map_subtype_embedding_Iic _ _) fun _ _ => lt_of_le_of_ltₓ
+theorem map_subtype_embedding_Iic : (iic b).map Finₓ.coeEmbedding = iic b := by
+  simp [Iic_eq_finset_subtype, Finset.fin, Finset.map_map, Iic_filter_lt_of_lt_right]
 
 @[simp]
-theorem map_subtype_embedding_Iio : (iio b).map (Embedding.subtype _) = iio b :=
-  (map_subtype_embedding_Iio _ _) fun _ _ => lt_of_le_of_ltₓ
+theorem map_subtype_embedding_Iio : (iio b).map Finₓ.coeEmbedding = iio b := by
+  simp [Iio_eq_finset_subtype, Finset.fin, Finset.map_map]
 
 @[simp]
 theorem card_Ici : (ici a).card = n - a := by

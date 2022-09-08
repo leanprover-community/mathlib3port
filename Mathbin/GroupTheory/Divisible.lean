@@ -189,7 +189,7 @@ def rootableByIntOfRootableByNat [RootableBy A ℕ] : RootableBy A ℤ where
   root := fun a z =>
     match z with
     | (n : ℕ) => RootableBy.root a n
-    | -[1+ n] => (RootableBy.root a (n + 1))⁻¹
+    | -[1 + n] => (RootableBy.root a (n + 1))⁻¹
   root_zero := fun a => RootableBy.root_zero a
   root_cancel := fun n a hn => by
     induction n

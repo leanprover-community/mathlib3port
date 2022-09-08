@@ -89,14 +89,14 @@ unsafe def list.decide_mem (decide_eq : expr → expr → tactic (Bool × expr))
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem List.map_cons_congr {α β : Type _} (f : α → β) {x : α} {xs : List α} {fx : β} {fxs : List β} (h₁ : f x = fx)
     (h₂ : xs.map f = fxs) : (x::xs).map f = fx::fxs := by
-  rw [List.map_cons, h₁, h₂]
+  rw [List.map_consₓ, h₁, h₂]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Apply `ef : α → β` to all elements of the list, constructing an equality proof. -/
 unsafe def eval_list_map (ef : expr) : List expr → tactic (List expr × expr)
   | [] => do
-    let eq ← i_to_expr (pquote.1 (List.map_nil (%%ₓef)))
+    let eq ← i_to_expr (pquote.1 (List.map_nilₓ (%%ₓef)))
     pure ([], Eq)
   | x::xs => do
     let (fx, fx_eq) ← or_refl_conv norm_num.derive (expr.app ef x)
@@ -181,7 +181,7 @@ unsafe def eval_multiset : expr → tactic (List expr × expr)
     pure (eis, Eq)
   | quote.1 (@coe (@coeToLift (@coeBaseₓ Multiset.hasCoe)) (%%ₓexs)) => do
     let (xs, xs_eq) ← eval_list exs
-    let eq ← i_to_expr (pquote.1 (congr_arg coe (%%ₓxs_eq)))
+    let eq ← i_to_expr (pquote.1 (congr_argₓ coe (%%ₓxs_eq)))
     pure (xs, Eq)
   | quote.1 (@Multiset.map (%%ₓα) (%%ₓβ) (%%ₓef) (%%ₓexs)) => do
     let (xs, xs_eq) ← eval_multiset exs

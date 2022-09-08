@@ -521,7 +521,7 @@ def ofLeftInverse {α β : Sort _} (f : α → β) (f_inv : Nonempty α → β �
   toFun := fun a => ⟨f a, a, rfl⟩
   invFun := fun b => f_inv (nonempty_of_exists b.2) b
   left_inv := fun a => hf ⟨a⟩ a
-  right_inv := fun ⟨b, a, ha⟩ => Subtype.eq <| show f (f_inv ⟨a⟩ b) = b from Eq.trans (congr_arg f <| ha ▸ hf _ a) ha
+  right_inv := fun ⟨b, a, ha⟩ => Subtype.eq <| show f (f_inv ⟨a⟩ b) = b from Eq.trans (congr_argₓ f <| ha ▸ hf _ a) ha
 
 /-- If `f : α → β` has a left-inverse, then `α` is computably equivalent to the range of `f`.
 
@@ -620,8 +620,8 @@ theorem dite_comp_equiv_update {α : Type _} {β : Sort _} {γ : Sort _} {s : Se
   by
   ext i
   by_cases' h : i ∈ s
-  · rw [dif_pos h, Function.update_apply_equiv_apply, Equivₓ.symm_symm, Function.comp, Function.update_apply,
-      Function.update_apply, dif_pos h]
+  · rw [dif_pos h, Function.update_apply_equiv_apply, Equivₓ.symm_symm, Function.comp, Function.update_applyₓ,
+      Function.update_applyₓ, dif_pos h]
     have h_coe : (⟨i, h⟩ : s) = e j ↔ i = e j :=
       subtype.ext_iff.trans
         (by

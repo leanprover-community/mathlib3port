@@ -143,7 +143,7 @@ end MonoidHom
 
 namespace IsUnit
 
-variable {F α M N : Type _}
+variable {F G α M N : Type _}
 
 section Monoidₓ
 
@@ -152,6 +152,16 @@ variable [Monoidₓ M] [Monoidₓ N]
 @[to_additive]
 theorem map [MonoidHomClass F M N] (f : F) {x : M} (h : IsUnit x) : IsUnit (f x) := by
   rcases h with ⟨y, rfl⟩ <;> exact (Units.map (f : M →* N) y).IsUnit
+
+@[to_additive]
+theorem of_left_inverse [MonoidHomClass F M N] [MonoidHomClass G N M] {f : F} {x : M} (g : G)
+    (hfg : Function.LeftInverse g f) (h : IsUnit (f x)) : IsUnit x := by
+  simpa only [hfg x] using h.map g
+
+@[to_additive]
+theorem _root_.is_unit_map_of_left_inverse [MonoidHomClass F M N] [MonoidHomClass G N M] {f : F} {x : M} (g : G)
+    (hfg : Function.LeftInverse g f) : IsUnit (f x) ↔ IsUnit x :=
+  ⟨of_left_inverse g hfg, map _⟩
 
 /-- If a homomorphism `f : M →* N` sends each element to an `is_unit`, then it can be lifted
 to `f : M →* Nˣ`. See also `units.lift_right` for a computable version. -/

@@ -296,7 +296,7 @@ def Submonoid.commMonoidTopologicalClosure [T2Space M] (s : Submonoid M) (hs : �
     CommMonoidₓ s.topologicalClosure :=
   { s.topologicalClosure.toMonoid with
     mul_comm :=
-      have : ∀ x ∈ s, ∀ y ∈ s, x * y = y * x := fun x hx y hy => congr_arg Subtype.val (hs ⟨x, hx⟩ ⟨y, hy⟩)
+      have : ∀ x ∈ s, ∀ y ∈ s, x * y = y * x := fun x hx y hy => congr_argₓ Subtype.val (hs ⟨x, hx⟩ ⟨y, hy⟩)
       fun ⟨x, hx⟩ ⟨y, hy⟩ =>
       Subtype.ext <| eq_on_closure₂ this continuous_mul (continuous_snd.mul continuous_fst) x hx y hy }
 
@@ -346,7 +346,7 @@ theorem tendsto_list_prod {f : ι → α → M} {x : Filter α} {a : ι → M} :
   | [], _ => by
     simp [tendsto_const_nhds]
   | f::l, h => by
-    simp only [List.map_cons, List.prod_cons]
+    simp only [List.map_consₓ, List.prod_cons]
     exact (h f (List.mem_cons_selfₓ _ _)).mul (tendsto_list_prod l fun c hc => h c (List.mem_cons_of_memₓ _ hc))
 
 @[to_additive]

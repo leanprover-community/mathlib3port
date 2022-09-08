@@ -584,7 +584,7 @@ unsafe def h_generalize (rev : parse (parser.optional (tk "!"))) (h : parse (par
       try (rewrite_target h')
       tactic.clear h'
   when h do
-      ((to_expr (pquote.1 (heq_of_eq_rec_leftₓ (%%ₓeq_h) (%%ₓasm))) <|>
+      ((to_expr (pquote.1 (heq_of_eq_rec_left (%%ₓeq_h) (%%ₓasm))) <|>
               to_expr (pquote.1 (heq_of_cast_eq (%%ₓeq_h) (%%ₓasm)))) >>=
             note h' none) >>
           pure ()

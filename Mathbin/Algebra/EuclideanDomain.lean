@@ -375,10 +375,10 @@ theorem xgcd_aux_fst (x y : R) : ∀ s t s' t', (xgcdAux x s t y s' t').1 = gcd 
     rw [← gcd_val]
 
 theorem xgcd_aux_val (x y : R) : xgcdAux x 1 0 y 0 1 = (gcd x y, xgcd x y) := by
-  rw [xgcd, ← xgcd_aux_fst x y 1 0 0 1, Prod.mk.eta]
+  rw [xgcd, ← xgcd_aux_fst x y 1 0 0 1, Prod.mk.etaₓ]
 
 theorem xgcd_val (x y : R) : xgcd x y = (gcdA x y, gcdB x y) :=
-  Prod.mk.eta.symm
+  Prod.mk.etaₓ.symm
 
 private def P (a b : R) : R × R × R → Prop
   | (r, s, t) => (r : R) = a * s + b * t
@@ -558,7 +558,7 @@ instance Int.euclideanDomain : EuclideanDomain ℤ :=
     quotient_mul_add_remainder_eq := fun a b => Int.div_add_mod _ _, R := fun a b => a.natAbs < b.natAbs,
     r_well_founded := measure_wf fun a => Int.natAbs a,
     remainder_lt := fun a b b0 =>
-      Int.coe_nat_lt.1 <| by
+      Int.coe_nat_ltₓ.1 <| by
         rw [Int.nat_abs_of_nonneg (Int.mod_nonneg _ b0), ← Int.abs_eq_nat_abs]
         exact Int.mod_lt _ b0,
     mul_left_not_lt := fun a b b0 =>

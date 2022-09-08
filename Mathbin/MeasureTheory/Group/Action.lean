@@ -56,7 +56,7 @@ instance add [SmulInvariantMeasure M α μ] [SmulInvariantMeasure M α ν] : Smu
 
 @[to_additive]
 instance smul [SmulInvariantMeasure M α μ] (c : ℝ≥0∞) : SmulInvariantMeasure M α (c • μ) :=
-  ⟨fun a s hs => show c • _ = c • _ from congr_arg ((· • ·) c) (measure_preimage_smul μ a hs)⟩
+  ⟨fun a s hs => show c • _ = c • _ from congr_argₓ ((· • ·) c) (measure_preimage_smul μ a hs)⟩
 
 @[to_additive]
 instance smul_nnreal [SmulInvariantMeasure M α μ] (c : ℝ≥0 ) : SmulInvariantMeasure M α (c • μ) :=

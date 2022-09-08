@@ -151,10 +151,10 @@ protected theorem Function.Injective.exists_ne [Nontrivial α] {f : α → β} (
     
 
 instance nontrivial_prod_right [Nonempty α] [Nontrivial β] : Nontrivial (α × β) :=
-  Prod.snd_surjective.Nontrivial
+  Prod.snd_surjectiveₓ.Nontrivial
 
 instance nontrivial_prod_left [Nontrivial α] [Nonempty β] : Nontrivial (α × β) :=
-  Prod.fst_surjectiveₓ.Nontrivial
+  Prod.fst_surjective.Nontrivial
 
 namespace Pi
 

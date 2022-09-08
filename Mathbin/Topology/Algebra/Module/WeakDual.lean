@@ -127,14 +127,14 @@ theorem tendsto_iff_forall_eval_tendsto {l : Filter α} {f : α → WeakBilin B}
 instance [HasContinuousAdd 𝕜] : HasContinuousAdd (WeakBilin B) := by
   refine' ⟨continuous_induced_rng.2 _⟩
   refine'
-    cast (congr_arg _ _) (((coe_fn_continuous B).comp continuous_fst).add ((coe_fn_continuous B).comp continuous_snd))
+    cast (congr_argₓ _ _) (((coe_fn_continuous B).comp continuous_fst).add ((coe_fn_continuous B).comp continuous_snd))
   ext
   simp only [Function.comp_app, Pi.add_apply, map_add, LinearMap.add_apply]
 
 /-- Scalar multiplication by `𝕜` on `weak_bilin B` is continuous. -/
 instance [HasContinuousSmul 𝕜 𝕜] : HasContinuousSmul 𝕜 (WeakBilin B) := by
   refine' ⟨continuous_induced_rng.2 _⟩
-  refine' cast (congr_arg _ _) (continuous_fst.smul ((coe_fn_continuous B).comp continuous_snd))
+  refine' cast (congr_argₓ _ _) (continuous_fst.smul ((coe_fn_continuous B).comp continuous_snd))
   ext
   simp only [Function.comp_app, Pi.smul_apply, LinearMap.map_smulₛₗ, RingHom.id_apply, LinearMap.smul_apply]
 
@@ -157,7 +157,7 @@ instance [HasContinuousAdd 𝕜] : TopologicalAddGroup (WeakBilin B) where
     infer_instance
   continuous_neg := by
     refine' continuous_induced_rng.2 (continuous_pi_iff.mpr fun y => _)
-    refine' cast (congr_arg _ _) (eval_continuous B (-y))
+    refine' cast (congr_argₓ _ _) (eval_continuous B (-y))
     ext
     simp only [map_neg, Function.comp_app, LinearMap.neg_apply]
 

@@ -275,7 +275,7 @@ the product of the `v`s. -/
 theorem det_mul_row (v : n → R) (A : Matrix n n R) : det (of fun i j => v j * A i j) = (∏ i, v i) * det A :=
   calc
     det (of fun i j => v j * A i j) = det (A ⬝ diagonalₓ v) :=
-      congr_arg det <| by
+      congr_argₓ det <| by
         ext
         simp [mul_comm]
     _ = (∏ i, v i) * det A := by
@@ -313,7 +313,7 @@ end HomMap
 
 @[simp]
 theorem det_conj_transpose [StarRing R] (M : Matrix m m R) : det Mᴴ = star (det M) :=
-  ((starRingEnd R).map_det _).symm.trans <| congr_arg star M.det_transpose
+  ((starRingEnd R).map_det _).symm.trans <| congr_argₓ star M.det_transpose
 
 section DetZero
 
@@ -382,7 +382,7 @@ Lemmas showing the determinant is invariant under a variety of operations.
 theorem det_eq_of_eq_mul_det_one {A B : Matrix n n R} (C : Matrix n n R) (hC : det C = 1) (hA : A = B ⬝ C) :
     det A = det B :=
   calc
-    det A = det (B ⬝ C) := congr_arg _ hA
+    det A = det (B ⬝ C) := congr_argₓ _ hA
     _ = det B * det C := det_mul _ _
     _ = det B := by
       rw [hC, mul_oneₓ]
@@ -391,7 +391,7 @@ theorem det_eq_of_eq_mul_det_one {A B : Matrix n n R} (C : Matrix n n R) (hC : d
 theorem det_eq_of_eq_det_one_mul {A B : Matrix n n R} (C : Matrix n n R) (hC : det C = 1) (hA : A = C ⬝ B) :
     det A = det B :=
   calc
-    det A = det (C ⬝ B) := congr_arg _ hA
+    det A = det (C ⬝ B) := congr_argₓ _ hA
     _ = det C * det B := det_mul _ _
     _ = det B := by
       rw [hC, one_mulₓ]
@@ -438,7 +438,7 @@ theorem det_eq_of_forall_row_eq_smul_add_const_aux {A B : Matrix n n R} {s : Fin
     · exact mt (fun h => show k ∈ insert i s from h ▸ Finset.mem_insert_self _ _) hk
       
     · intro i' hi'
-      rw [Function.update_apply]
+      rw [Function.update_applyₓ]
       split_ifs with hi'i
       · rfl
         
@@ -448,7 +448,7 @@ theorem det_eq_of_forall_row_eq_smul_add_const_aux {A B : Matrix n n R} {s : Fin
     · exact fun h => hk (Finset.mem_insert_of_mem h)
       
     · intro i' j'
-      rw [update_row_apply, Function.update_apply]
+      rw [update_row_apply, Function.update_applyₓ]
       split_ifs with hi'i
       · simp [hi'i]
         
@@ -488,7 +488,7 @@ theorem det_eq_of_forall_row_eq_smul_add_pred_aux {n : ℕ} (k : Finₓ (n + 1))
   rw [hM, M_k, det_update_row_add_smul_self M' k_ne_succ.symm, ih (Function.update c k 0)]
   · intro i hi
     rw [Finₓ.lt_iff_coe_lt_coe, Finₓ.coe_cast_succ, Finₓ.coe_succ, Nat.lt_succ_iffₓ] at hi
-    rw [Function.update_apply]
+    rw [Function.update_applyₓ]
     split_ifs with hik
     · rfl
       
@@ -497,7 +497,7 @@ theorem det_eq_of_forall_row_eq_smul_add_pred_aux {n : ℕ} (k : Finₓ (n + 1))
   · rwa [hM', update_row_ne (Finₓ.succ_ne_zero _).symm]
     
   intro i j
-  rw [Function.update_apply]
+  rw [Function.update_applyₓ]
   split_ifs with hik
   · rw [zero_mul, add_zeroₓ, hM', hik, update_row_self]
     
@@ -562,7 +562,7 @@ theorem det_block_diagonal {o : Type _} [Fintype o] [DecidableEq o] (M : o → M
           prod_congr_left (fun k => σ' k (Finset.mem_univ _)) (k, x) :=
       fun k x => by
       rw [Eq]
-    simp only [prod_congr_left_apply, Prod.mk.inj_iff] at this
+    simp only [prod_congr_left_apply, Prod.mk.inj_iffₓ] at this
     exact (this k x).1
     
   · intro σ hσ
@@ -605,7 +605,7 @@ theorem det_block_diagonal {o : Type _} [Fintype o] [DecidableEq o] (M : o → M
     rw [mem_preserving_snd] at hσ
     obtain ⟨⟨k, x⟩, hkx⟩ := not_forall.mp hσ
     rw [Finset.prod_eq_zero (Finset.mem_univ (k, x)), mul_zero]
-    rw [← @Prod.mk.eta _ _ (σ (k, x)), block_diagonal_apply_ne]
+    rw [← @Prod.mk.etaₓ _ _ (σ (k, x)), block_diagonal_apply_ne]
     exact hkx
     
 
@@ -627,7 +627,7 @@ theorem det_from_blocks_zero₂₁ (A : Matrix m m R) (B : Matrix m n R) (D : Ma
     use σ₁₂
     simp only [sum_congr_hom_apply]
     
-  · simp only [forall_prop_of_true, Prod.forall, mem_univ]
+  · simp only [forall_prop_of_true, Prod.forallₓ, mem_univ]
     intro σ₁ σ₂
     rw [Fintype.prod_sum_type]
     simp_rw [Equivₓ.sum_congr_apply, Sum.map_inr, Sum.map_inl, from_blocks_apply₁₁, from_blocks_apply₂₂]
@@ -640,7 +640,7 @@ theorem det_from_blocks_zero₂₁ (A : Matrix m m R) (B : Matrix m n R) (D : Ma
     intro h
     have h2 : ∀ x, perm.sum_congr σ₁.fst σ₁.snd x = perm.sum_congr σ₂.fst σ₂.snd x := by
       intro x
-      exact congr_fun (congr_arg to_fun h) x
+      exact congr_funₓ (congr_argₓ to_fun h) x
     simp only [Sum.map_inr, Sum.map_inl, perm.sum_congr_apply, Sum.forall] at h2
     ext
     · exact h2.left x

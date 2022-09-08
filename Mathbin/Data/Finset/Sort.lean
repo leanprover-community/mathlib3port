@@ -176,7 +176,7 @@ theorem range_order_emb_of_fin (s : Finset α) {k : ℕ} (h : s.card = k) : Set.
 /-- The bijection `order_emb_of_fin s h` sends `0` to the minimum of `s`. -/
 theorem order_emb_of_fin_zero {s : Finset α} {k : ℕ} (h : s.card = k) (hz : 0 < k) :
     orderEmbOfFin s h ⟨0, hz⟩ = s.min' (card_pos.mp (h.symm ▸ hz)) := by
-  simp only [order_emb_of_fin_apply, Subtype.coe_mk, sorted_zero_eq_min']
+  simp only [order_emb_of_fin_apply, Finₓ.coe_mk, sorted_zero_eq_min']
 
 /-- The bijection `order_emb_of_fin s h` sends `k-1` to the maximum of `s`. -/
 theorem order_emb_of_fin_last {s : Finset α} {k : ℕ} (h : s.card = k) (hz : 0 < k) :
@@ -205,7 +205,7 @@ theorem order_emb_of_fin_unique {s : Finset α} {k : ℕ} (h : s.card = k) {f : 
 the increasing bijection `order_emb_of_fin s h`. -/
 theorem order_emb_of_fin_unique' {s : Finset α} {k : ℕ} (h : s.card = k) {f : Finₓ k ↪o α} (hfs : ∀ x, f x ∈ s) :
     f = s.orderEmbOfFin h :=
-  RelEmbedding.ext <| Function.funext_iffₓ.1 <| order_emb_of_fin_unique h hfs f.StrictMono
+  RelEmbedding.ext <| Function.funext_iff.1 <| order_emb_of_fin_unique h hfs f.StrictMono
 
 /-- Two parametrizations `order_emb_of_fin` of the same set take the same value on `i` and `j` if
 and only if `i = j`. Since they can be defined on a priori not defeq types `fin k` and `fin l`
@@ -214,7 +214,7 @@ and only if `i = j`. Since they can be defined on a priori not defeq types `fin 
 theorem order_emb_of_fin_eq_order_emb_of_fin_iff {k l : ℕ} {s : Finset α} {i : Finₓ k} {j : Finₓ l} {h : s.card = k}
     {h' : s.card = l} : s.orderEmbOfFin h i = s.orderEmbOfFin h' j ↔ (i : ℕ) = (j : ℕ) := by
   substs k l
-  exact (s.order_emb_of_fin rfl).eq_iff_eq.trans (Finₓ.ext_iff _ _)
+  exact (s.order_emb_of_fin rfl).eq_iff_eq.trans Finₓ.ext_iff
 
 /-- Given a finset `s` of size at least `k` in a linear order `α`, the map `order_emb_of_card_le`
 is an order embedding from `fin k` to `α` whose image is contained in `s`. Specifically, it maps

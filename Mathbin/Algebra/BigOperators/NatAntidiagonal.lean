@@ -23,7 +23,7 @@ namespace Nat
 
 theorem prod_antidiagonal_succ {n : ℕ} {f : ℕ × ℕ → M} :
     (∏ p in antidiagonal (n + 1), f p) = f (0, n + 1) * ∏ p in antidiagonal n, f (p.1 + 1, p.2) := by
-  rw [antidiagonal_succ, prod_cons, prod_map]
+  rw [antidiagonal_succ, prod_cons, prod_mapₓ]
   rfl
 
 theorem sum_antidiagonal_succ {n : ℕ} {f : ℕ × ℕ → N} :
@@ -34,7 +34,7 @@ theorem sum_antidiagonal_succ {n : ℕ} {f : ℕ × ℕ → N} :
 theorem prod_antidiagonal_swap {n : ℕ} {f : ℕ × ℕ → M} :
     (∏ p in antidiagonal n, f p.swap) = ∏ p in antidiagonal n, f p := by
   nth_rw 1[← map_swap_antidiagonal]
-  rw [prod_map]
+  rw [prod_mapₓ]
   rfl
 
 theorem prod_antidiagonal_succ' {n : ℕ} {f : ℕ × ℕ → M} :
@@ -55,7 +55,7 @@ theorem prod_antidiagonal_subst {n : ℕ} {f : ℕ × ℕ → ℕ → M} :
 @[to_additive]
 theorem prod_antidiagonal_eq_prod_range_succ_mk {M : Type _} [CommMonoidₓ M] (f : ℕ × ℕ → M) (n : ℕ) :
     (∏ ij in Finset.Nat.antidiagonal n, f ij) = ∏ k in range n.succ, f (k, n - k) := by
-  convert prod_map _ ⟨fun i => (i, n - i), fun x y h => (Prod.mk.inj h).1⟩ _
+  convert prod_mapₓ _ ⟨fun i => (i, n - i), fun x y h => (Prod.mk.inj h).1⟩ _
   rfl
 
 /-- This lemma matches more generally than `finset.nat.prod_antidiagonal_eq_prod_range_succ_mk` when

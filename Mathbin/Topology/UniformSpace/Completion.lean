@@ -128,7 +128,7 @@ theorem mem_uniformity {s : Set (Cauchyₓ α × Cauchyₓ α)} : s ∈ 𝓤 (Ca
 
 theorem mem_uniformity' {s : Set (Cauchyₓ α × Cauchyₓ α)} :
     s ∈ 𝓤 (Cauchyₓ α) ↔ ∃ t ∈ 𝓤 α, ∀ f g : Cauchyₓ α, t ∈ f.1 ×ᶠ g.1 → (f, g) ∈ s :=
-  mem_uniformity.trans <| bex_congr fun t h => Prod.forall
+  mem_uniformity.trans <| bex_congr fun t h => Prod.forallₓ
 
 /-- Embedding of `α` into its completion `Cauchy α` -/
 def pureCauchy (a : α) : Cauchyₓ α :=
@@ -450,7 +450,7 @@ theorem ext {Y : Type _} [TopologicalSpace Y] [T2Space Y] {f g : Completion α �
 
 theorem ext' {Y : Type _} [TopologicalSpace Y] [T2Space Y] {f g : Completion α → Y} (hf : Continuous f)
     (hg : Continuous g) (h : ∀ a : α, f a = g a) (a : Completion α) : f a = g a :=
-  congr_fun (ext hf hg h) a
+  congr_funₓ (ext hf hg h) a
 
 section Extension
 

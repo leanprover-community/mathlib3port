@@ -76,7 +76,7 @@ variable {R}
 theorem alg_hom_ext' [Algebra R A'] [Algebra R B'] {f g : A'[X] →ₐ[R] B'}
     (h₁ : f.comp (IsScalarTower.toAlgHom R A' (Polynomial A')) = g.comp (IsScalarTower.toAlgHom R A' (Polynomial A')))
     (h₂ : f x = g x) : f = g :=
-  AlgHom.coe_ring_hom_injective (Polynomial.ring_hom_ext' (congr_arg AlgHom.toRingHom h₁) h₂)
+  AlgHom.coe_ring_hom_injective (Polynomial.ring_hom_ext' (congr_argₓ AlgHom.toRingHom h₁) h₂)
 
 variable (R)
 
@@ -384,7 +384,7 @@ theorem eval_mul_X_sub_C {p : R[X]} (r : R) : (p * (X - c r)).eval r = 0 := by
   have bound :=
     calc
       (p * (X - C r)).natDegree ≤ p.nat_degree + (X - C r).natDegree := nat_degree_mul_le
-      _ ≤ p.nat_degree + 1 := add_le_add_left nat_degree_X_sub_C_le _
+      _ ≤ p.nat_degree + 1 := add_le_add_left (nat_degree_X_sub_C_le _) _
       _ < p.nat_degree + 2 := lt_add_one _
       
   rw [sum_over_range' _ _ (p.nat_degree + 2) bound]

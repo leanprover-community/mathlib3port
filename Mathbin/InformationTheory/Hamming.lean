@@ -112,7 +112,7 @@ theorem hamming_dist_le_card_fintype {x y : ∀ i, β i} : hammingDist x y ≤ F
 
 theorem hamming_dist_comp_le_hamming_dist (f : ∀ i, γ i → β i) {x y : ∀ i, γ i} :
     (hammingDist (fun i => f i (x i)) fun i => f i (y i)) ≤ hammingDist x y :=
-  card_mono ((monotone_filter_right _) fun i H1 H2 => H1 <| congr_arg (f i) H2)
+  card_mono ((monotone_filter_right _) fun i H1 H2 => H1 <| congr_argₓ (f i) H2)
 
 theorem hamming_dist_comp (f : ∀ i, γ i → β i) {x y : ∀ i, γ i} (hf : ∀ i, Injective (f i)) :
     (hammingDist (fun i => f i (x i)) fun i => f i (y i)) = hammingDist x y := by

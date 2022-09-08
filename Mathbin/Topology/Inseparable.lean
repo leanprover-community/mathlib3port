@@ -318,7 +318,7 @@ theorem range_mk : Range (mk : X → SeparationQuotient X) = univ :=
   surjective_mk.range_eq
 
 instance [Nonempty X] : Nonempty (SeparationQuotient X) :=
-  Nonempty.map mk ‹_›
+  Nonempty.mapₓ mk ‹_›
 
 instance [Inhabited X] : Inhabited (SeparationQuotient X) :=
   ⟨mk default⟩

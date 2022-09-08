@@ -118,8 +118,8 @@ open Opposite HasZeroMorphisms
 
 instance hasZeroMorphismsOpposite [HasZeroMorphisms C] : HasZeroMorphisms Cᵒᵖ where
   HasZero := fun X Y => ⟨(0 : unop Y ⟶ unop X).op⟩
-  comp_zero' := fun X Y f Z => congr_arg Quiver.Hom.op (HasZeroMorphisms.zero_comp (unop Z) f.unop)
-  zero_comp' := fun X Y Z f => congr_arg Quiver.Hom.op (HasZeroMorphisms.comp_zero f.unop (unop X))
+  comp_zero' := fun X Y f Z => congr_argₓ Quiver.Hom.op (HasZeroMorphisms.zero_comp (unop Z) f.unop)
+  zero_comp' := fun X Y Z f => congr_argₓ Quiver.Hom.op (HasZeroMorphisms.comp_zero f.unop (unop X))
 
 section
 

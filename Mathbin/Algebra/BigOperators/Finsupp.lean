@@ -52,7 +52,7 @@ variable [Zero M] [Zero M'] [CommMonoidₓ N]
 @[to_additive]
 theorem prod_of_support_subset (f : α →₀ M) {s : Finset α} (hs : f.Support ⊆ s) (g : α → M → N)
     (h : ∀ i ∈ s, g i 0 = 1) : f.Prod g = ∏ x in s, g x (f x) :=
-  (Finset.prod_subset hs) fun x hxs hx => h x hxs ▸ congr_arg (g x) <| not_mem_support_iff.1 hx
+  (Finset.prod_subset hs) fun x hxs hx => h x hxs ▸ congr_argₓ (g x) <| not_mem_support_iff.1 hx
 
 @[to_additive]
 theorem prod_fintype [Fintype α] (f : α →₀ M) (g : α → M → N) (h : ∀ i, g i 0 = 1) : f.Prod g = ∏ i, g i (f i) :=

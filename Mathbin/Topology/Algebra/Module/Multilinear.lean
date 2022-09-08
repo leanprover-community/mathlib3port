@@ -90,6 +90,9 @@ theorem to_multilinear_map_inj :
 theorem ext {f f' : ContinuousMultilinearMap R M₁ M₂} (H : ∀ x, f x = f' x) : f = f' :=
   to_multilinear_map_inj <| MultilinearMap.ext H
 
+theorem ext_iff {f f' : ContinuousMultilinearMap R M₁ M₂} : f = f' ↔ ∀ x, f x = f' x := by
+  rw [← to_multilinear_map_inj.eq_iff, MultilinearMap.ext_iff] <;> rfl
+
 @[simp]
 theorem map_add (m : ∀ i, M₁ i) (i : ι) (x y : M₁ i) : f (update m i (x + y)) = f (update m i x) + f (update m i y) :=
   f.map_add' m i x y

@@ -260,7 +260,7 @@ theorem FinrankQuotientMap.linear_independent_of_nontrivial [IsDomain R] [IsDede
   let g' := fun i => if h : i ∈ s then g'' i h else 0
   have hg' : ∀ i ∈ s, algebraMap _ _ (g' i) = a * g i := by
     intro i hi
-    exact (congr_arg _ (dif_pos hi)).trans (hg'' i hi)
+    exact (congr_argₓ _ (dif_pos hi)).trans (hg'' i hi)
   -- Because `R/I` is nontrivial, we can lift `g` to a nontrivial linear dependence in `S`.
   have hgI : algebraMap R S (g' j) ≠ 0 := by
     simp only [FractionalIdeal.mem_coe_ideal, not_exists, not_and'] at hgI
@@ -376,11 +376,11 @@ theorem FinrankQuotientMap.span_eq_top [IsDomain R] [IsDomain S] [Algebra K L] [
         rw [Matrix.det_neg, Fintype.card_fin, Matrix.det_one, mul_oneₓ]
       _ ≠ 0 := IsUnit.ne_zero (is_unit_one.neg.pow _)
       
-    · refine' congr_arg Matrix.det (Matrix.ext fun i j => _)
+    · refine' congr_argₓ Matrix.det (Matrix.ext fun i j => _)
       rw [map_sub, RingHom.map_matrix_apply, map_one]
       rfl
       
-    · refine' congr_arg Matrix.det (Matrix.ext fun i j => _)
+    · refine' congr_argₓ Matrix.det (Matrix.ext fun i j => _)
       rw [ideal.quotient.eq_zero_iff_mem.mpr (hA'p i j), zero_sub]
       rfl
       
@@ -537,7 +537,7 @@ noncomputable def quotientToQuotientRangePowQuotSucc {i : ℕ} {a : S} (a_mem : 
     refine' Quotientₓ.induction_on' x fun x => Quotientₓ.induction_on' y fun y => _
     simp only [Submodule.Quotient.mk'_eq_mk, ← Submodule.Quotient.mk_add,
       quotient_to_quotient_range_pow_quot_succ_aux_mk, add_mulₓ]
-    refine' congr_arg Submodule.Quotient.mk _
+    refine' congr_argₓ Submodule.Quotient.mk _
     ext
     rfl
   map_smul' := by
@@ -545,7 +545,7 @@ noncomputable def quotientToQuotientRangePowQuotSucc {i : ℕ} {a : S} (a_mem : 
     refine' Quotientₓ.induction_on' x fun x => Quotientₓ.induction_on' y fun y => _
     simp only [Submodule.Quotient.mk'_eq_mk, ← Submodule.Quotient.mk_add,
       quotient_to_quotient_range_pow_quot_succ_aux_mk, RingHom.id_apply]
-    refine' congr_arg Submodule.Quotient.mk _
+    refine' congr_argₓ Submodule.Quotient.mk _
     ext
     simp only [Subtype.coe_mk, _root_.map_mul, Algebra.smul_def, Submodule.coe_mk, mul_assoc, Ideal.Quotient.mk_eq_mk,
       Submodule.coe_smul_of_tower, Ideal.Quotient.algebra_map_quotient_pow_ramification_idx]

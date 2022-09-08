@@ -237,7 +237,7 @@ theorem symm_apply_apply {x : Z} (hx : x ∈ e.Source) : e.toLocalEquiv.symm (e 
 
 @[simp, mfld_simps]
 theorem symm_apply_mk_proj {x : Z} (ex : x ∈ e.Source) : e.toLocalEquiv.symm (proj x, (e x).2) = x := by
-  rw [← e.coe_fst ex, Prod.mk.eta, ← e.coe_coe, e.to_local_equiv.left_inv ex]
+  rw [← e.coe_fst ex, Prod.mk.etaₓ, ← e.coe_coe, e.to_local_equiv.left_inv ex]
 
 @[simp, mfld_simps]
 theorem preimage_symm_proj_base_set : e.toLocalEquiv.symm ⁻¹' (proj ⁻¹' e.BaseSet) ∩ e.Target = e.Target := by
@@ -393,6 +393,64 @@ theorem coe_fst_eventually_eq_proj' (ex : proj x ∈ e.BaseSet) : Prod.fst ∘ e
 theorem map_proj_nhds (ex : x ∈ e.Source) : map proj (𝓝 x) = 𝓝 (proj x) := by
   rw [← e.coe_fst ex, ← map_congr (e.coe_fst_eventually_eq_proj ex), ← map_map, ← e.coe_coe,
     e.to_local_homeomorph.map_nhds_eq ex, map_fst_nhds]
+
+theorem preimage_subset_source {s : Set B} (hb : s ⊆ e.BaseSet) : proj ⁻¹' s ⊆ e.Source := fun p hp =>
+  e.mem_source.mpr (hb hp)
+
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem image_preimage_eq_prod_univ {s : Set B} (hb : s ⊆ e.BaseSet) : e '' (proj ⁻¹' s) = s ×ˢ univ :=
+  Subset.antisymm
+    (image_subset_iff.mpr fun p hp => ⟨(e.proj_to_fun p (e.preimage_subset_source hb hp)).symm ▸ hp, trivialₓ⟩)
+    fun p hp =>
+    let hp' : p ∈ e.Target := e.mem_target.mpr (hb hp.1)
+    ⟨e.invFun p, mem_preimage.mpr ((e.proj_symm_apply hp').symm ▸ hp.1), e.apply_symm_apply hp'⟩
+
+/-- The preimage of a subset of the base set is homeomorphic to the product with the fiber. -/
+def preimageHomeomorph {s : Set B} (hb : s ⊆ e.BaseSet) : proj ⁻¹' s ≃ₜ s × F :=
+  (e.toLocalHomeomorph.homeomorphOfImageSubsetSource (e.preimage_subset_source hb)
+        (e.image_preimage_eq_prod_univ hb)).trans
+    ((Homeomorph.Set.prod s Univ).trans ((Homeomorph.refl s).prodCongr (Homeomorph.Set.univ F)))
+
+@[simp]
+theorem preimage_homeomorph_apply {s : Set B} (hb : s ⊆ e.BaseSet) (p : proj ⁻¹' s) :
+    e.preimageHomeomorph hb p = (⟨proj p, p.2⟩, (e p).2) :=
+  Prod.extₓ (Subtype.ext (e.proj_to_fun p (e.mem_source.mpr (hb p.2)))) rfl
+
+@[simp]
+theorem preimage_homeomorph_symm_apply {s : Set B} (hb : s ⊆ e.BaseSet) (p : s × F) :
+    (e.preimageHomeomorph hb).symm p = ⟨e.symm (p.1, p.2), ((e.preimageHomeomorph hb).symm p).2⟩ :=
+  rfl
+
+/-- The source is homeomorphic to the product of the base set with the fiber. -/
+def sourceHomeomorphBaseSetProd : e.Source ≃ₜ e.BaseSet × F :=
+  (Homeomorph.setCongr e.source_eq).trans (e.preimageHomeomorph subset_rfl)
+
+@[simp]
+theorem source_homeomorph_base_set_prod_apply (p : e.Source) :
+    e.sourceHomeomorphBaseSetProd p = (⟨proj p, e.mem_source.mp p.2⟩, (e p).2) :=
+  e.preimage_homeomorph_apply subset_rfl ⟨p, e.mem_source.mp p.2⟩
+
+@[simp]
+theorem source_homeomorph_base_set_prod_symm_apply (p : e.BaseSet × F) :
+    e.sourceHomeomorphBaseSetProd.symm p = ⟨e.symm (p.1, p.2), (e.sourceHomeomorphBaseSetProd.symm p).2⟩ :=
+  rfl
+
+/-- Each fiber of a trivialization is homeomorphic to the specified fiber. -/
+def preimageSingletonHomeomorph {b : B} (hb : b ∈ e.BaseSet) : proj ⁻¹' {b} ≃ₜ F :=
+  (e.preimageHomeomorph (Set.singleton_subset_iff.mpr hb)).trans
+    (((Homeomorph.homeomorphOfUnique ({b} : Set B) PUnit).prodCongr (Homeomorph.refl F)).trans (Homeomorph.punitProd F))
+
+@[simp]
+theorem preimage_singleton_homeomorph_apply {b : B} (hb : b ∈ e.BaseSet) (p : proj ⁻¹' {b}) :
+    e.preimageSingletonHomeomorph hb p = (e p).2 :=
+  rfl
+
+@[simp]
+theorem preimage_singleton_homeomorph_symm_apply {b : B} (hb : b ∈ e.BaseSet) (p : F) :
+    (e.preimageSingletonHomeomorph hb).symm p =
+      ⟨e.symm (b, p), by
+        rw [mem_preimage, e.proj_symm_apply' hb, mem_singleton_iff]⟩ :=
+  rfl
 
 /-- In the domain of a bundle trivialization, the projection is continuous-/
 theorem continuous_at_proj (ex : x ∈ e.Source) : ContinuousAt proj x :=
@@ -1039,7 +1097,7 @@ theorem local_triv_as_local_equiv_trans (i j : ι) :
     rfl
     
   · rintro ⟨x, v⟩ hx
-    simp only [triv_change, local_triv_as_local_equiv, LocalEquiv.symm, true_andₓ, Prod.mk.inj_iff,
+    simp only [triv_change, local_triv_as_local_equiv, LocalEquiv.symm, true_andₓ, Prod.mk.inj_iffₓ,
       prod_mk_mem_set_prod_eq, LocalEquiv.trans_source, mem_inter_eq, and_trueₓ, mem_preimage, proj, mem_univ,
       LocalEquiv.coe_mk, eq_self_iff_true, LocalEquiv.coe_trans, total_space.proj] at hx⊢
     simp only [Z.coord_change_comp, hx, mem_inter_eq, and_selfₓ, mem_base_set_at]
@@ -1301,7 +1359,7 @@ def trivializationOfMemPretrivializationAtlas (he : e ∈ a.PretrivializationAtl
       refine' is_open_supr_iff.mpr fun he' => _
       rw [is_open_coinduced, is_open_induced_iff]
       obtain ⟨u, hu1, hu2⟩ := continuous_on_iff'.mp (a.continuous_triv_change _ he _ he') s hs
-      have hu3 := congr_arg (fun s => (fun x : e'.target => (x : B × F)) ⁻¹' s) hu2
+      have hu3 := congr_argₓ (fun s => (fun x : e'.target => (x : B × F)) ⁻¹' s) hu2
       simp only [Subtype.coe_preimage_self, preimage_inter, univ_inter] at hu3
       refine'
         ⟨u ∩ e'.to_local_equiv.target ∩ e'.to_local_equiv.symm ⁻¹' e.source, _, by

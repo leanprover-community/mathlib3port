@@ -92,7 +92,7 @@ instance [Inhabited X] : Inhabited (ActionCategory M X) :=
   ⟨show X from default⟩
 
 instance [Nonempty X] : Nonempty (ActionCategory M X) :=
-  Nonempty.map (objEquiv M X) inferInstance
+  Nonempty.mapₓ (objEquiv M X) inferInstance
 
 variable {X} (x : X)
 

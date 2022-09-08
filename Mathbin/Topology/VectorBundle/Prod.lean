@@ -96,7 +96,7 @@ theorem Prod.continuous_to_fun :
     exact maps_to_preimage _ _
     
   rintro ⟨b, v₁, v₂⟩ ⟨hb₁, hb₂⟩
-  simp only [prod.to_fun', Prod.mk.inj_iff, eq_self_iff_true, and_trueₓ]
+  simp only [prod.to_fun', Prod.mk.inj_iffₓ, eq_self_iff_true, and_trueₓ]
   rw [e₁.coe_fst]
   rw [e₁.source_eq, mem_preimage]
   exact hb₁
@@ -233,7 +233,7 @@ theorem Trivialization.continuous_linear_equiv_at_prod {e₁ : Trivialization R 
   funext v
   obtain ⟨v₁, v₂⟩ := v
   rw [(e₁.prod e₂).continuous_linear_equiv_at_apply, trivialization.prod]
-  exact (congr_arg Prod.snd (prod_apply hx₁ hx₂ v₁ v₂) : _)
+  exact (congr_argₓ Prod.snd (prod_apply hx₁ hx₂ v₁ v₂) : _)
 
 end TopologicalVectorBundle
 

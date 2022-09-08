@@ -567,6 +567,11 @@ def presheafToSheaf : (Cᵒᵖ ⥤ D) ⥤ Sheaf J D where
   map_id' := fun P => Sheaf.Hom.ext _ _ <| J.sheafify_map_id _
   map_comp' := fun P Q R f g => Sheaf.Hom.ext _ _ <| J.sheafify_map_comp _ _
 
+instance presheaf_to_Sheaf_preserves_zero_morphisms [Preadditive D] :
+    (presheafToSheaf J D).PreservesZeroMorphisms where map_zero' := fun F G => by
+    ext
+    erw [colimit.ι_map, comp_zero, J.plus_map_zero, J.diagram_nat_trans_zero, zero_comp]
+
 /-- The sheafification functor is left adjoint to the forgetful functor. -/
 @[simps unit_app counit_app_val]
 def sheafificationAdjunction : presheafToSheaf J D ⊣ sheafToPresheaf J D :=

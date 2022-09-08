@@ -703,7 +703,7 @@ theorem Monic.ne_zero_of_ne (h : (0 : R) ≠ 1) {p : R[X]} (hp : p.Monic) : p �
 
 theorem monic_of_nat_degree_le_of_coeff_eq_one (n : ℕ) (pn : p.natDegree ≤ n) (p1 : p.coeff n = 1) : Monic p := by
   nontriviality
-  refine' (congr_arg _ <| nat_degree_eq_of_le_of_coeff_ne_zero pn _).trans p1
+  refine' (congr_argₓ _ <| nat_degree_eq_of_le_of_coeff_ne_zero pn _).trans p1
   exact ne_of_eq_of_ne p1 one_ne_zero
 
 theorem monic_of_degree_le_of_coeff_eq_one (n : ℕ) (pn : p.degree ≤ n) (p1 : p.coeff n = 1) : Monic p :=
@@ -1122,9 +1122,11 @@ theorem degree_sub_lt (hd : degree p = degree q) (hp0 : p ≠ 0) (hlc : leadingC
     _ < degree p := max_lt_iff.2 ⟨hd' ▸ degree_erase_lt hp0, hd.symm ▸ degree_erase_lt hq0⟩
     
 
-theorem nat_degree_X_sub_C_le {r : R} : (X - c r).natDegree ≤ 1 :=
-  nat_degree_le_iff_degree_le.2 <|
-    le_transₓ (degree_sub_le _ _) <| max_leₓ degree_X_le <| le_transₓ degree_C_le <| WithBot.coe_le_coe.2 zero_le_one
+theorem degree_X_sub_C_le (r : R) : (X - c r).degree ≤ 1 :=
+  (degree_sub_le _ _).trans (max_leₓ degree_X_le (degree_C_le.trans zero_le_one))
+
+theorem nat_degree_X_sub_C_le (r : R) : (X - c r).natDegree ≤ 1 :=
+  nat_degree_le_iff_degree_le.2 <| degree_X_sub_C_le r
 
 theorem degree_sub_eq_left_of_degree_lt (h : degree q < degree p) : degree (p - q) = degree p := by
   rw [← degree_neg q] at h

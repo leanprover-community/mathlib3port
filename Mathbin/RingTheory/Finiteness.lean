@@ -107,7 +107,7 @@ instance prod [hM : Finite R M] [hN : Finite R N] : Finite R (M × N) :=
     rw [← Submodule.prod_top]
     exact hM.1.Prod hN.1⟩
 
-instance pi {ι : Type _} {M : ι → Type _} [Fintype ι] [∀ i, AddCommMonoidₓ (M i)] [∀ i, Module R (M i)]
+instance pi {ι : Type _} {M : ι → Type _} [Finite ι] [∀ i, AddCommMonoidₓ (M i)] [∀ i, Module R (M i)]
     [h : ∀ i, Finite R (M i)] : Finite R (∀ i, M i) :=
   ⟨by
     rw [← Submodule.pi_top]
@@ -177,10 +177,12 @@ protected theorem polynomial : FiniteType R R[X] :=
       rw [Finset.coe_singleton]
       exact Polynomial.adjoin_X⟩⟩
 
-protected theorem mv_polynomial (ι : Type _) [Fintype ι] : FiniteType R (MvPolynomial ι R) :=
-  ⟨⟨Finset.univ.Image MvPolynomial.x, by
-      rw [Finset.coe_image, Finset.coe_univ, Set.image_univ]
-      exact MvPolynomial.adjoin_range_X⟩⟩
+protected theorem mv_polynomial (ι : Type _) [Finite ι] : FiniteType R (MvPolynomial ι R) := by
+  cases nonempty_fintype ι <;>
+    exact
+      ⟨⟨finset.univ.image MvPolynomial.x, by
+          rw [Finset.coe_image, Finset.coe_univ, Set.image_univ]
+          exact MvPolynomial.adjoin_range_X⟩⟩
 
 theorem of_restrict_scalars_finite_type [Algebra A B] [IsScalarTower R A B] [hB : FiniteType R B] : FiniteType A B := by
   obtain ⟨S, hS⟩ := hB.out
@@ -312,9 +314,12 @@ theorem equiv (hfp : FinitePresentation R A) (e : A ≃ₐ[R] B) : FinitePresent
 variable (R)
 
 /-- The ring of polynomials in finitely many variables is finitely presented. -/
-protected theorem mv_polynomial (ι : Type u_2) [Fintype ι] : FinitePresentation R (MvPolynomial ι R) :=
-  let eqv := (MvPolynomial.renameEquiv R <| Fintype.equivFin ι).symm
-  ⟨Fintype.card ι, eqv, eqv.Surjective, ((RingHom.injective_iff_ker_eq_bot _).1 eqv.Injective).symm ▸ Submodule.fg_bot⟩
+protected theorem mv_polynomial (ι : Type u_2) [Finite ι] : FinitePresentation R (MvPolynomial ι R) := by
+  cases nonempty_fintype ι <;>
+    exact
+      let eqv := (MvPolynomial.renameEquiv R <| Fintype.equivFin ι).symm
+      ⟨Fintype.card ι, eqv, eqv.Surjective,
+        ((RingHom.injective_iff_ker_eq_bot _).1 eqv.Injective).symm ▸ Submodule.fg_bot⟩
 
 /-- `R` is finitely presented as `R`-algebra. -/
 theorem self : FinitePresentation R R :=
@@ -379,13 +384,14 @@ theorem iff_quotient_mv_polynomial' :
 
 /-- If `A` is a finitely presented `R`-algebra, then `mv_polynomial (fin n) A` is finitely presented
 as `R`-algebra. -/
-theorem mv_polynomial_of_finite_presentation (hfp : FinitePresentation R A) (ι : Type _) [Fintype ι] :
+theorem mv_polynomial_of_finite_presentation (hfp : FinitePresentation R A) (ι : Type _) [Finite ι] :
     FinitePresentation R (MvPolynomial ι A) := by
   rw [iff_quotient_mv_polynomial'] at hfp⊢
   classical
   obtain ⟨ι', _, f, hf_surj, hf_ker⟩ := hfp
   skip
   let g := (MvPolynomial.mapAlgHom f).comp (MvPolynomial.sumAlgEquiv R ι ι').toAlgHom
+  cases nonempty_fintype (Sum ι ι')
   refine'
     ⟨Sum ι ι', by
       infer_instance, g, (MvPolynomial.map_surjective f.to_ring_hom hf_surj).comp (AlgEquiv.surjective _),

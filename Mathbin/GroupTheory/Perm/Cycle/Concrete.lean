@@ -115,7 +115,7 @@ theorem cycle_type_form_perm (hl : Nodupₓ l) (hn : 2 ≤ l.length) : cycleType
     · simp
       
     · intro x h
-      simpa [h, Nat.succ_le_succ_iff] using hn
+      simpa [h, Nat.succ_le_succ_iffₓ] using hn
       
     
   · simp
@@ -171,7 +171,7 @@ theorem support_form_perm [Fintype α] (s : Cycle α) (h : Nodup s) (hn : Nontri
   induction s using Quot.induction_on
   refine' support_form_perm_of_nodup s h _
   rintro _ rfl
-  simpa [Nat.succ_le_succ_iff] using length_nontrivial hn
+  simpa [Nat.succ_le_succ_iffₓ] using length_nontrivial hn
 
 theorem form_perm_eq_self_of_not_mem (s : Cycle α) (h : Nodup s) (x : α) (hx : x ∉ s) : formPerm s h x = x := by
   induction s using Quot.induction_on
@@ -224,7 +224,7 @@ theorem length_to_list : length (toList p x) = (cycleOf p x).support.card := by
 
 theorem to_list_ne_singleton (y : α) : toList p x ≠ [y] := by
   intro H
-  simpa [card_support_ne_one] using congr_arg length H
+  simpa [card_support_ne_one] using congr_argₓ length H
 
 theorem two_le_length_to_list_iff_mem_support {p : Perm α} {x : α} : 2 ≤ length (toList p x) ↔ x ∈ p.support := by
   simp
@@ -342,7 +342,7 @@ theorem to_list_form_perm_nontrivial (l : List α) (hl : 2 ≤ l.length) (hn : N
   have hs : l.form_perm.support = l.to_finset := by
     refine' support_form_perm_of_nodup _ hn _
     rintro _ rfl
-    simpa [Nat.succ_le_succ_iff] using hl
+    simpa [Nat.succ_le_succ_iffₓ] using hl
   rw [to_list, hc.cycle_of_eq (mem_support.mp _), hs, card_to_finset, dedup_eq_self.mpr hn]
   · refine'
       List.ext_le
@@ -440,7 +440,7 @@ def isoCycle : { f : Perm α // IsCycle f } ≃ { s : Cycle α // s.Nodup ∧ s.
       · simpa using hx
         
       · rintro _ rfl
-        simpa [Nat.succ_le_succ_iff] using hl
+        simpa [Nat.succ_le_succ_iffₓ] using hl
         
       
 

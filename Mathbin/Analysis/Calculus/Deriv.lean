@@ -1900,7 +1900,7 @@ theorem iter_deriv_zpow' (m : ℤ) (k : ℕ) :
 
 theorem iter_deriv_zpow (m : ℤ) (x : 𝕜) (k : ℕ) :
     (deriv^[k]) (fun y => y ^ m) x = (∏ i in Finset.range k, m - i) * x ^ (m - k) :=
-  congr_fun (iter_deriv_zpow' m k) x
+  congr_funₓ (iter_deriv_zpow' m k) x
 
 theorem iter_deriv_pow (n : ℕ) (x : 𝕜) (k : ℕ) :
     (deriv^[k]) (fun x : 𝕜 => x ^ n) x = (∏ i in Finset.range k, n - i) * x ^ (n - k) := by

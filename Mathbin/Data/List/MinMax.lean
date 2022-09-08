@@ -184,7 +184,7 @@ theorem argmax_cons (f : α → β) (a : α) (l : List α) :
     · simp [h]
       
     dsimp'
-    rw [← apply_ite, ← apply_ite]
+    rw [← apply_iteₓ, ← apply_iteₓ]
     dsimp'
     split_ifs <;>
       try

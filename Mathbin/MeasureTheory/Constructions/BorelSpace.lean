@@ -939,7 +939,7 @@ private theorem ae_measurable.is_lub_of_nonempty {ι} (hι : Nonempty ι) {μ : 
   let g_seq := fun x => ite (x ∈ AeSeqSet hf p) (g x) (⟨g x⟩ : Nonempty α).some
   have hg_seq : ∀ b, IsLub { a | ∃ i, aeSeq hf p i b = a } (g_seq b) := by
     intro b
-    haveI hα : Nonempty α := Nonempty.map g ⟨b⟩
+    haveI hα : Nonempty α := Nonempty.mapₓ g ⟨b⟩
     simp only [aeSeq, g_seq]
     split_ifs
     · have h_set_eq : { a : α | ∃ i : ι, (hf i).mk (f i) b = a } = { a : α | ∃ i : ι, f i b = a } := by
@@ -996,7 +996,7 @@ private theorem ae_measurable.is_glb_of_nonempty {ι} (hι : Nonempty ι) {μ : 
   let g_seq := fun x => ite (x ∈ AeSeqSet hf p) (g x) (⟨g x⟩ : Nonempty α).some
   have hg_seq : ∀ b, IsGlb { a | ∃ i, aeSeq hf p i b = a } (g_seq b) := by
     intro b
-    haveI hα : Nonempty α := Nonempty.map g ⟨b⟩
+    haveI hα : Nonempty α := Nonempty.mapₓ g ⟨b⟩
     simp only [aeSeq, g_seq]
     split_ifs
     · have h_set_eq : { a : α | ∃ i : ι, (hf i).mk (f i) b = a } = { a : α | ∃ i : ι, f i b = a } := by

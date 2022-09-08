@@ -102,7 +102,7 @@ theorem coe_ideal_le_self_mul_inv (I : Ideal R₁) : (I : FractionalIdeal R₁�
 theorem right_inverse_eq (I J : FractionalIdeal R₁⁰ K) (h : I * J = 1) : J = I⁻¹ := by
   have hI : I ≠ 0 := FractionalIdeal.ne_zero_of_mul_eq_one I J h
   suffices h' : I * (1 / I) = 1
-  · exact congr_arg Units.inv <| @Units.ext _ _ (Units.mkOfMulEqOne _ _ h) (Units.mkOfMulEqOne _ _ h') rfl
+  · exact congr_argₓ Units.inv <| @Units.ext _ _ (Units.mkOfMulEqOne _ _ h) (Units.mkOfMulEqOne _ _ h') rfl
     
   apply le_antisymmₓ
   · apply fractional_ideal.mul_le.mpr _
@@ -210,7 +210,7 @@ theorem FractionalIdeal.adjoin_integral_eq_one_of_is_unit [Algebra A K] [IsFract
   have mul_self : I * I = I := by
     apply FractionalIdeal.coe_to_submodule_injective
     simp
-  convert congr_arg (· * I⁻¹) mul_self <;> simp only [(mul_inv_cancel_iff_is_unit K).mpr hI, mul_assoc, mul_oneₓ]
+  convert congr_argₓ (· * I⁻¹) mul_self <;> simp only [(mul_inv_cancel_iff_is_unit K).mpr hI, mul_assoc, mul_oneₓ]
 
 namespace IsDedekindDomainInv
 

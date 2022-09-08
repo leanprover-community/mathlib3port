@@ -813,7 +813,7 @@ variable {F E K}
 
 instance : PartialOrderₓ (Lifts F E K) where
   le := fun x y => x.1 ≤ y.1 ∧ ∀ (s : x.1) (t : y.1), (s : E) = t → x.2 s = y.2 t
-  le_refl := fun x => ⟨le_reflₓ x.1, fun s t hst => congr_arg x.2 (Subtype.ext hst)⟩
+  le_refl := fun x => ⟨le_reflₓ x.1, fun s t hst => congr_argₓ x.2 (Subtype.ext hst)⟩
   le_trans := fun x y z hxy hyz =>
     ⟨le_transₓ hxy.1 hyz.1, fun s u hsu => Eq.trans (hxy.2 s ⟨s, hxy.1 s.Mem⟩ rfl) (hyz.2 ⟨s, hxy.1 s.Mem⟩ u hsu)⟩
   le_antisymm := by
@@ -907,7 +907,7 @@ theorem Lifts.exists_upper_bound (c : Set (Lifts F E K)) (hc : IsChain (· ≤ �
       change x.2 s = (Classical.choose t.mem).2 ⟨t, (Classical.choose_spec t.mem).2⟩
       obtain ⟨z, hz, hxz, hyz⟩ := lifts.exists_max_two hc (Set.mem_insert_of_mem ⊥ hx) (Classical.choose_spec t.mem).1
       rw [lifts.eq_of_le hxz, lifts.eq_of_le hyz]
-      exact congr_arg z.2 (Subtype.ext hst)
+      exact congr_argₓ z.2 (Subtype.ext hst)
       ⟩
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible)
@@ -992,7 +992,7 @@ theorem sup_to_subalgebra [h1 : FiniteDimensional K E1] [h2 : FiniteDimensional 
       exact (S1⊔S2).zero_mem
       
     · obtain ⟨y, h⟩ := this.mul_inv_cancel hx'
-      exact (congr_arg (· ∈ S1⊔S2) <| eq_inv_of_mul_eq_one_right <| subtype.ext_iff.mp h).mp y.2
+      exact (congr_argₓ (· ∈ S1⊔S2) <| eq_inv_of_mul_eq_one_right <| subtype.ext_iff.mp h).mp y.2
       
   exact
     is_field_of_is_integral_of_is_field'

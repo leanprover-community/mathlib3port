@@ -93,7 +93,7 @@ theorem index (H : Subgroup G) [Finite (G ⧸ H)] : ∃ n : ℕ, H.index = p ^ n
   obtain ⟨n, hn⟩ := iff_card.mp (hG.to_quotient H.normal_core)
   obtain ⟨k, hk1, hk2⟩ :=
     (Nat.dvd_prime_pow hp.out).mp
-      ((congr_arg _ (H.normal_core.index_eq_card.trans hn)).mp (Subgroup.index_dvd_of_le H.normal_core_le))
+      ((congr_argₓ _ (H.normal_core.index_eq_card.trans hn)).mp (Subgroup.index_dvd_of_le H.normal_core_le))
   exact ⟨k, hk2⟩
 
 theorem nontrivial_iff_card [Fintype G] : Nontrivial G ↔ ∃ n > 0, card G = p ^ n :=
@@ -225,7 +225,7 @@ theorem comap_of_ker_is_p_group {H : Subgroup G} (hH : IsPGroup p H) {K : Type _
 
 theorem ker_is_p_group_of_injective {K : Type _} [Groupₓ K] {ϕ : K →* G} (hϕ : Function.Injective ϕ) :
     IsPGroup p ϕ.ker :=
-  (congr_arg (fun Q : Subgroup K => IsPGroup p Q) (ϕ.ker_eq_bot_iff.mpr hϕ)).mpr IsPGroup.of_bot
+  (congr_argₓ (fun Q : Subgroup K => IsPGroup p Q) (ϕ.ker_eq_bot_iff.mpr hϕ)).mpr IsPGroup.of_bot
 
 theorem comap_of_injective {H : Subgroup G} (hH : IsPGroup p H) {K : Type _} [Groupₓ K] (ϕ : K →* G)
     (hϕ : Function.Injective ϕ) : IsPGroup p (H.comap ϕ) :=
@@ -242,21 +242,21 @@ theorem to_sup_of_normal_right {H K : Subgroup G} (hH : IsPGroup p H) (hK : IsPG
 
 theorem to_sup_of_normal_left {H K : Subgroup G} (hH : IsPGroup p H) (hK : IsPGroup p K) [H.Normal] :
     IsPGroup p (H⊔K : Subgroup G) :=
-  (congr_arg (fun H : Subgroup G => IsPGroup p H) sup_comm).mp (to_sup_of_normal_right hK hH)
+  (congr_argₓ (fun H : Subgroup G => IsPGroup p H) sup_comm).mp (to_sup_of_normal_right hK hH)
 
 theorem to_sup_of_normal_right' {H K : Subgroup G} (hH : IsPGroup p H) (hK : IsPGroup p K) (hHK : H ≤ K.normalizer) :
     IsPGroup p (H⊔K : Subgroup G) :=
   let hHK' :=
     to_sup_of_normal_right (hH.of_equiv (Subgroup.comapSubtypeEquivOfLe hHK).symm)
       (hK.of_equiv (Subgroup.comapSubtypeEquivOfLe Subgroup.le_normalizer).symm)
-  ((congr_arg (fun H : Subgroup K.normalizer => IsPGroup p H)
+  ((congr_argₓ (fun H : Subgroup K.normalizer => IsPGroup p H)
             (Subgroup.sup_subgroup_of_eq hHK Subgroup.le_normalizer)).mp
         hHK').of_equiv
     (Subgroup.comapSubtypeEquivOfLe (sup_le hHK Subgroup.le_normalizer))
 
 theorem to_sup_of_normal_left' {H K : Subgroup G} (hH : IsPGroup p H) (hK : IsPGroup p K) (hHK : K ≤ H.normalizer) :
     IsPGroup p (H⊔K : Subgroup G) :=
-  (congr_arg (fun H : Subgroup G => IsPGroup p H) sup_comm).mp (to_sup_of_normal_right' hK hH hHK)
+  (congr_argₓ (fun H : Subgroup G => IsPGroup p H) sup_comm).mp (to_sup_of_normal_right' hK hH hHK)
 
 /-- finite p-groups with different p have coprime orders -/
 theorem coprime_card_of_ne {G₂ : Type _} [Groupₓ G₂] (p₁ p₂ : ℕ) [hp₁ : Fact p₁.Prime] [hp₂ : Fact p₂.Prime]

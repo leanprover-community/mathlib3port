@@ -253,7 +253,8 @@ theorem is_coseparating_iff_mono (𝒢 : Set C) [∀ A : C, HasProduct fun f : �
 /-- An ingredient of the proof of the Special Adjoint Functor Theorem: a complete well-powered
     category with a small coseparating set has an initial object.
 
-    In fact, it follows from the Special Adjoint Functor Theorem that `C` is already cocomplete. -/
+    In fact, it follows from the Special Adjoint Functor Theorem that `C` is already cocomplete,
+    see `has_colimits_of_has_limits_of_is_coseparating`. -/
 theorem has_initial_of_is_coseparating [WellPowered C] [HasLimits C] {𝒢 : Set C} [Small.{v₁} 𝒢]
     (h𝒢 : IsCoseparating 𝒢) : HasInitial C := by
   haveI := has_products_of_shape_of_small C 𝒢
@@ -280,7 +281,8 @@ theorem has_initial_of_is_coseparating [WellPowered C] [HasLimits C] {𝒢 : Set
 /-- An ingredient of the proof of the Special Adjoint Functor Theorem: a cocomplete well-copowered
     category with a small separating set has a terminal object.
 
-    In fact, it follows from the Special Adjoint Functor Theorem that `C` is already complete. -/
+    In fact, it follows from the Special Adjoint Functor Theorem that `C` is already complete, see
+    `has_limits_of_has_colimits_of_is_separating`. -/
 theorem has_terminal_of_is_separating [WellPowered Cᵒᵖ] [HasColimits C] {𝒢 : Set C} [Small.{v₁} 𝒢]
     (h𝒢 : IsSeparating 𝒢) : HasTerminal C := by
   haveI : has_limits Cᵒᵖ := has_limits_op_of_has_colimits
@@ -339,7 +341,7 @@ variable (S : D) (T : C ⥤ D)
 
 theorem is_coseparating_proj_preimage {𝒢 : Set C} (h𝒢 : IsCoseparating 𝒢) : IsCoseparating ((proj S T).obj ⁻¹' 𝒢) := by
   refine' fun X Y f g hfg => ext _ _ (h𝒢 _ _ fun G hG h => _)
-  exact congr_arg comma_morphism.right (hfg (mk (Y.hom ≫ T.map h)) hG (hom_mk h rfl))
+  exact congr_argₓ comma_morphism.right (hfg (mk (Y.hom ≫ T.map h)) hG (hom_mk h rfl))
 
 end StructuredArrow
 
@@ -349,7 +351,7 @@ variable (S : C ⥤ D) (T : D)
 
 theorem is_separating_proj_preimage {𝒢 : Set C} (h𝒢 : IsSeparating 𝒢) : IsSeparating ((proj S T).obj ⁻¹' 𝒢) := by
   refine' fun X Y f g hfg => ext _ _ (h𝒢 _ _ fun G hG h => _)
-  convert congr_arg comma_morphism.left (hfg (mk (S.map h ≫ X.hom)) hG (hom_mk h rfl))
+  convert congr_argₓ comma_morphism.left (hfg (mk (S.map h ≫ X.hom)) hG (hom_mk h rfl))
 
 end CostructuredArrow
 
@@ -453,11 +455,11 @@ theorem IsCodetector.def {G : C} :
   (is_codetector_def _).1
 
 theorem is_separator_iff_faithful_coyoneda_obj (G : C) : IsSeparator G ↔ Faithful (coyoneda.obj (op G)) :=
-  ⟨fun hG => ⟨fun X Y f g hfg => hG.def _ _ (congr_fun hfg)⟩, fun h =>
+  ⟨fun hG => ⟨fun X Y f g hfg => hG.def _ _ (congr_funₓ hfg)⟩, fun h =>
     (is_separator_def _).2 fun X Y f g hfg => (coyoneda.obj (op G)).map_injective (funext hfg)⟩
 
 theorem is_coseparator_iff_faithful_yoneda_obj (G : C) : IsCoseparator G ↔ Faithful (yoneda.obj G) :=
-  ⟨fun hG => ⟨fun X Y f g hfg => Quiver.Hom.unop_inj (hG.def _ _ (congr_fun hfg))⟩, fun h =>
+  ⟨fun hG => ⟨fun X Y f g hfg => Quiver.Hom.unop_inj (hG.def _ _ (congr_funₓ hfg))⟩, fun h =>
     (is_coseparator_def _).2 fun X Y f g hfg => Quiver.Hom.op_inj <| (yoneda.obj G).map_injective (funext hfg)⟩
 
 theorem is_separator_iff_epi (G : C) [∀ A : C, HasCoproduct fun f : G ⟶ A => G] :
@@ -607,24 +609,24 @@ end ZeroMorphisms
 theorem is_detector_iff_reflects_isomorphisms_coyoneda_obj (G : C) :
     IsDetector G ↔ ReflectsIsomorphisms (coyoneda.obj (op G)) := by
   refine' ⟨fun hG => ⟨fun X Y f hf => hG.def _ fun h => _⟩, fun h => (is_detector_def _).2 fun X Y f hf => _⟩
-  · rw [is_iso_iff_bijective, Function.bijective_iff_exists_unique] at hf
+  · rw [is_iso_iff_bijective, Function.bijective_iff_exists_uniqueₓ] at hf
     exact hf h
     
   · suffices is_iso ((coyoneda.obj (op G)).map f) by
       exact @is_iso_of_reflects_iso _ _ _ _ _ _ _ (coyoneda.obj (op G)) _ h
-    rwa [is_iso_iff_bijective, Function.bijective_iff_exists_unique]
+    rwa [is_iso_iff_bijective, Function.bijective_iff_exists_uniqueₓ]
     
 
 theorem is_codetector_iff_reflects_isomorphisms_yoneda_obj (G : C) :
     IsCodetector G ↔ ReflectsIsomorphisms (yoneda.obj G) := by
   refine' ⟨fun hG => ⟨fun X Y f hf => _⟩, fun h => (is_codetector_def _).2 fun X Y f hf => _⟩
   · refine' (is_iso_unop_iff _).1 (hG.def _ _)
-    rwa [is_iso_iff_bijective, Function.bijective_iff_exists_unique] at hf
+    rwa [is_iso_iff_bijective, Function.bijective_iff_exists_uniqueₓ] at hf
     
   · rw [← is_iso_op_iff]
     suffices is_iso ((yoneda.obj G).map f.op) by
       exact @is_iso_of_reflects_iso _ _ _ _ _ _ _ (yoneda.obj G) _ h
-    rwa [is_iso_iff_bijective, Function.bijective_iff_exists_unique]
+    rwa [is_iso_iff_bijective, Function.bijective_iff_exists_uniqueₓ]
     
 
 theorem well_powered_of_is_detector [HasPullbacks C] (G : C) (hG : IsDetector G) : WellPowered C :=

@@ -45,7 +45,7 @@ theorem cast_mul [NonAssocRing α] : ∀ m n, ((m * n : ℤ) : α) = m * n := fu
 
 @[simp, norm_cast]
 theorem cast_ite [AddGroupWithOneₓ α] (P : Prop) [Decidable P] (m n : ℤ) : ((ite P m n : ℤ) : α) = ite P m n :=
-  apply_ite _ _ _ _
+  apply_iteₓ _ _ _ _
 
 /-- `coe : ℤ → α` as an `add_monoid_hom`. -/
 def castAddHom (α : Type _) [AddGroupWithOneₓ α] : ℤ →+ α :=
@@ -66,7 +66,7 @@ theorem coe_cast_ring_hom [NonAssocRing α] : ⇑(castRingHom α) = coe :=
 theorem cast_commute [NonAssocRing α] : ∀ (m : ℤ) (x : α), Commute (↑m) x
   | (n : ℕ), x => by
     simpa using n.cast_commute x
-  | -[1+ n], x => by
+  | -[1 + n], x => by
     simpa only [cast_neg_succ_of_nat, Commute.neg_left_iff, Commute.neg_right_iff] using (n + 1).cast_commute (-x)
 
 theorem cast_comm [NonAssocRing α] (m : ℤ) (x : α) : (m : α) * x = x * m :=
@@ -86,7 +86,7 @@ theorem cast_mono [OrderedRing α] : Monotone (coe : ℤ → α) := by
 theorem cast_nonneg [OrderedRing α] [Nontrivial α] : ∀ {n : ℤ}, (0 : α) ≤ n ↔ 0 ≤ n
   | (n : ℕ) => by
     simp
-  | -[1+ n] => by
+  | -[1 + n] => by
     have : -(n : α) < 1 :=
       lt_of_le_of_ltₓ
         (by

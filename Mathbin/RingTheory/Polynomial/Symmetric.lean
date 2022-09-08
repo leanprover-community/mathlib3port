@@ -193,7 +193,7 @@ theorem support_esymm'' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
   intro s t hst d
   simp only [Finsupp.support_single_ne_zero _ one_ne_zero, and_imp, inf_eq_inter, mem_inter, mem_singleton]
   rintro h rfl
-  have := congr_arg Finsupp.support h
+  have := congr_argₓ Finsupp.support h
   rw [Finsupp.support_sum_eq_bUnion, Finsupp.support_sum_eq_bUnion] at this
   · simp only [Finsupp.support_single_ne_zero _ one_ne_zero, bUnion_singleton_eq_self] at this
     exact absurd this hst.symm

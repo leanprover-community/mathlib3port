@@ -209,7 +209,7 @@ theorem mass_nonzero_iff (μ : FiniteMeasure α) : μ.mass ≠ 0 ↔ μ ≠ 0 :=
 theorem extensionality (μ ν : FiniteMeasure α) (h : ∀ s : Set α, MeasurableSet s → μ s = ν s) : μ = ν := by
   ext1
   ext1 s s_mble
-  simpa [ennreal_coe_fn_eq_coe_fn_to_measure] using congr_arg (coe : ℝ≥0 → ℝ≥0∞) (h s s_mble)
+  simpa [ennreal_coe_fn_eq_coe_fn_to_measure] using congr_argₓ (coe : ℝ≥0 → ℝ≥0∞) (h s s_mble)
 
 instance : Inhabited (FiniteMeasure α) :=
   ⟨0⟩
@@ -729,7 +729,7 @@ theorem coe_injective : Function.Injective (coe : ProbabilityMeasure α → Meas
 
 @[simp]
 theorem coe_fn_univ (ν : ProbabilityMeasure α) : ν Univ = 1 :=
-  congr_arg Ennreal.toNnreal ν.Prop.measure_univ
+  congr_argₓ Ennreal.toNnreal ν.Prop.measure_univ
 
 /-- A probability measure can be interpreted as a finite measure. -/
 def toFiniteMeasure (μ : ProbabilityMeasure α) : FiniteMeasure α :=
@@ -755,7 +755,7 @@ theorem ennreal_coe_fn_eq_coe_fn_to_measure (ν : ProbabilityMeasure α) (s : Se
 theorem extensionality (μ ν : ProbabilityMeasure α) (h : ∀ s : Set α, MeasurableSet s → μ s = ν s) : μ = ν := by
   ext1
   ext1 s s_mble
-  simpa [ennreal_coe_fn_eq_coe_fn_to_measure] using congr_arg (coe : ℝ≥0 → ℝ≥0∞) (h s s_mble)
+  simpa [ennreal_coe_fn_eq_coe_fn_to_measure] using congr_argₓ (coe : ℝ≥0 → ℝ≥0∞) (h s s_mble)
 
 @[simp]
 theorem mass_to_finite_measure (μ : ProbabilityMeasure α) : μ.toFiniteMeasure.mass = 1 :=
@@ -812,7 +812,7 @@ theorem to_finite_measure_embedding (α : Type _) [MeasurableSpace α] [Topologi
     inj := fun μ ν h =>
       Subtype.eq
         (by
-          convert congr_arg coe h) }
+          convert congr_argₓ coe h) }
 
 theorem tendsto_nhds_iff_to_finite_measures_tendsto_nhds {δ : Type _} (F : Filter δ) {μs : δ → ProbabilityMeasure α}
     {μ₀ : ProbabilityMeasure α} : Tendsto μs F (𝓝 μ₀) ↔ Tendsto (to_finite_measure ∘ μs) F (𝓝 μ₀.toFiniteMeasure) :=

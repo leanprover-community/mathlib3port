@@ -81,7 +81,7 @@ theorem aeval : aeval x (minpoly A x) = 0 := by
 theorem ne_one [Nontrivial B] : minpoly A x ≠ 1 := by
   intro h
   refine' (one_ne_zero : (1 : B) ≠ 0) _
-  simpa using congr_arg (Polynomial.aeval x) h
+  simpa using congr_argₓ (Polynomial.aeval x) h
 
 theorem map_ne_one [Nontrivial B] {R : Type _} [Semiringₓ R] [Nontrivial R] (f : A →+* R) : (minpoly A x).map f ≠ 1 :=
   by
@@ -565,7 +565,7 @@ theorem prime (hx : IsIntegral A x) : Prime (minpoly A x) := by
     simp [h, aeval A x]
   replace : Polynomial.aeval x p = 0 ∨ Polynomial.aeval x q = 0 := by
     simpa
-  exact Or.imp (dvd A x) (dvd A x) this
+  exact Or.impₓ (dvd A x) (dvd A x) this
 
 /-- If `L/K` is a field extension and an element `y` of `K` is a root of the minimal polynomial
 of an element `x ∈ L`, then `y` maps to `x` under the field embedding. -/

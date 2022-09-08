@@ -61,7 +61,7 @@ theorem sigma_mk_eq_total_space_mk {x : B} {y : E x} : Sigma.mk x y = totalSpace
   rfl
 
 theorem TotalSpace.mk_cast {x x' : B} (h : x = x') (b : E x) :
-    totalSpaceMk x' (cast (congr_arg E h) b) = totalSpaceMk x b := by
+    totalSpaceMk x' (cast (congr_argₓ E h) b) = totalSpaceMk x b := by
   subst h
   rfl
 

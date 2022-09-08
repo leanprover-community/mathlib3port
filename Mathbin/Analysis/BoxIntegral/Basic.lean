@@ -216,7 +216,7 @@ theorem integrable_iff_cauchy_basis [CompleteSpace F] :
   rw [integrable_iff_cauchy, cauchy_map_iff',
     (l.has_basis_to_filter_Union_top _).prod_self.tendsto_iff uniformity_basis_dist_le]
   refine' forall₂_congrₓ fun ε ε0 => exists_congr fun r => _
-  simp only [exists_prop, Prod.forall, Set.mem_Union, exists_imp_distrib, prod_mk_mem_set_prod_eq, and_imp,
+  simp only [exists_prop, Prod.forallₓ, Set.mem_Union, exists_imp_distrib, prod_mk_mem_set_prod_eq, and_imp,
     mem_inter_eq, mem_set_of_eq]
   exact
     and_congr Iff.rfl

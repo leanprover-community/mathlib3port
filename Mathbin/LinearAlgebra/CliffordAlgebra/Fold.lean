@@ -71,9 +71,9 @@ theorem foldr_mul (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) (a b : CliffordAl
 theorem foldr_prod_map_ι (l : List M) (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) :
     foldr Q f hf n (l.map <| ι Q).Prod = List.foldr (fun m n => f m n) n l := by
   induction' l with hd tl ih
-  · rw [List.map_nil, List.prod_nil, List.foldr_nil, foldr_one]
+  · rw [List.map_nilₓ, List.prod_nil, List.foldr_nil, foldr_one]
     
-  · rw [List.map_cons, List.prod_cons, List.foldr_cons, foldr_mul, foldr_ι, ih]
+  · rw [List.map_consₓ, List.prod_cons, List.foldr_cons, foldr_mul, foldr_ι, ih]
     
 
 end Foldr

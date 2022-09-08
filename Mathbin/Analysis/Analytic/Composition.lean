@@ -111,7 +111,7 @@ theorem apply_composition_ones (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) 
   intro j hjn hj1
   obtain rfl : j = 0 := by
     linarith
-  refine' congr_arg v _
+  refine' congr_argₓ v _
   rw [Finₓ.ext_iff, Finₓ.coe_cast_le, Composition.ones_embedding, Finₓ.coe_mk]
 
 theorem apply_composition_single (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ} (hn : 0 < n) (v : Finₓ n → E) :
@@ -163,7 +163,7 @@ theorem apply_composition_update (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ
     · convert C
       exact (c.embedding_comp_inv j).symm
       
-    exact Function.update_comp_eq_of_injective _ (c.embedding _).Injective _ _
+    exact Function.update_comp_eq_of_injectiveₓ _ (c.embedding _).Injective _ _
     
   · simp only [h, Function.update_eq_self, Function.update_noteq, Ne.def, not_false_iff]
     let r : Finₓ (c.blocks_fun k) → Finₓ n := c.embedding k
@@ -399,7 +399,7 @@ theorem comp_id (p : FormalMultilinearSeries 𝕜 E F) : p.comp (id 𝕜 E) = p 
     apply p.congr (Composition.ones_length n)
     intros
     rw [apply_composition_ones]
-    refine' congr_arg v _
+    refine' congr_argₓ v _
     rw [Finₓ.ext_iff, Finₓ.coe_cast_le, Finₓ.coe_mk, Finₓ.coe_mk]
     
   show ∀ b : Composition n, b ∈ Finset.univ → b ≠ Composition.ones n → comp_along_composition p (id 𝕜 E) b = 0
@@ -435,7 +435,7 @@ theorem id_comp (p : FormalMultilinearSeries 𝕜 E F) (h : p 0 = 0) : (id 𝕜 
     · ext v
       rw [comp_along_composition_apply, id_apply_one' _ _ (Composition.single_length n_pos)]
       dsimp' [apply_composition]
-      refine' p.congr rfl fun i him hin => congr_arg v <| _
+      refine' p.congr rfl fun i him hin => congr_argₓ v <| _
       ext
       simp
       
@@ -587,7 +587,7 @@ theorem comp_change_of_variables_blocks_fun (m M N : ℕ) {i : Σn, Finₓ n →
   rcases i with ⟨n, f⟩
   dsimp' [Composition.blocksFun, Composition.blocks, comp_change_of_variables]
   simp only [map_of_fn, nth_le_of_fn', Function.comp_app]
-  apply congr_arg
+  apply congr_argₓ
   exact Finₓ.eta _ _
 
 /-- Target set in the change of variables to compute the composition of partial sums of formal
@@ -1185,7 +1185,7 @@ theorem comp_assoc (r : FormalMultilinearSeries 𝕜 G H) (q : FormalMultilinear
   intro k hk1 hk2
   -- finally, check that the coordinates of `v` one is using are the same. Based on
   -- `size_up_to_size_up_to_add`.
-  refine' congr_arg v (Finₓ.eq_of_veq _)
+  refine' congr_argₓ v (Finₓ.eq_of_veq _)
   dsimp' [Composition.embedding]
   rw [size_up_to_size_up_to_add _ _ hi1 hj1, add_assocₓ]
 

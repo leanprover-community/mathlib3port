@@ -321,8 +321,7 @@ section CommMonoidₓ
 variable [CommMonoidₓ α]
 
 theorem is_unit_iff_dvd_one {x : α} : IsUnit x ↔ x ∣ 1 :=
-  ⟨by
-    rintro ⟨u, rfl⟩ <;> exact ⟨_, u.mul_inv.symm⟩, fun ⟨y, h⟩ =>
+  ⟨IsUnit.dvd, fun ⟨y, h⟩ =>
     ⟨⟨x, y, h.symm, by
         rw [h, mul_comm]⟩,
       rfl⟩⟩

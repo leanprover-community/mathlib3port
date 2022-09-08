@@ -449,6 +449,10 @@ theorem integrable_of_interval_integral_norm_bounded (I : ℝ) (hfi : ∀ i, Int
   filter_upwards [ha.eventually (eventually_le_at_bot 0), hb.eventually (eventually_ge_at_top 0)] with i hai hbi ht
   rwa [← intervalIntegral.integral_of_le (hai.trans hbi)]
 
+/-- If `f` is integrable on intervals `Ioc (a i) (b i)`,
+where `a i` tends to -∞ and `b i` tends to ∞, and
+`∫ x in a i .. b i, ∥f x∥ ∂μ` converges to `I : ℝ` along a filter `l`,
+then `f` is integrable on the interval (-∞, ∞) -/
 theorem integrable_of_interval_integral_norm_tendsto (I : ℝ) (hfi : ∀ i, IntegrableOn f (Ioc (a i) (b i)) μ)
     (ha : Tendsto a l atBot) (hb : Tendsto b l atTop) (h : Tendsto (fun i => ∫ x in a i..b i, ∥f x∥ ∂μ) l (𝓝 I)) :
     Integrable f μ :=
@@ -467,6 +471,10 @@ theorem integrable_on_Iic_of_interval_integral_norm_bounded (I b : ℝ) (hfi : �
   rw [intervalIntegral.integral_of_le hai, measure.restrict_restrict (hφ.measurable i)]
   exact id
 
+/-- If `f` is integrable on intervals `Ioc (a i) b`,
+where `a i` tends to -∞, and
+`∫ x in a i .. b, ∥f x∥ ∂μ` converges to `I : ℝ` along a filter `l`,
+then `f` is integrable on the interval (-∞, b) -/
 theorem integrable_on_Iic_of_interval_integral_norm_tendsto (I b : ℝ) (hfi : ∀ i, IntegrableOn f (Ioc (a i) b) μ)
     (ha : Tendsto a l atBot) (h : Tendsto (fun i => ∫ x in a i..b, ∥f x∥ ∂μ) l (𝓝 I)) : IntegrableOn f (Iic b) μ :=
   let ⟨I', hI'⟩ := h.is_bounded_under_le
@@ -484,6 +492,10 @@ theorem integrable_on_Ioi_of_interval_integral_norm_bounded (I a : ℝ) (hfi : �
   rw [intervalIntegral.integral_of_le hbi, measure.restrict_restrict (hφ.measurable i), inter_comm]
   exact id
 
+/-- If `f` is integrable on intervals `Ioc a (b i)`,
+where `b i` tends to ∞, and
+`∫ x in a .. b i, ∥f x∥ ∂μ` converges to `I : ℝ` along a filter `l`,
+then `f` is integrable on the interval (a, ∞) -/
 theorem integrable_on_Ioi_of_interval_integral_norm_tendsto (I a : ℝ) (hfi : ∀ i, IntegrableOn f (Ioc a (b i)) μ)
     (hb : Tendsto b l atTop) (h : Tendsto (fun i => ∫ x in a..b i, ∥f x∥ ∂μ) l (𝓝 <| I)) : IntegrableOn f (Ioi a) μ :=
   let ⟨I', hI'⟩ := h.is_bounded_under_le

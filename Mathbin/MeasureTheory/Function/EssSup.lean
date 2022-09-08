@@ -294,6 +294,9 @@ theorem ess_sup_eq_zero_iff : essSup f μ = 0 ↔ f =ᵐ[μ] 0 :=
 theorem ess_sup_const_mul {a : ℝ≥0∞} : essSup (fun x : α => a * f x) μ = a * essSup f μ :=
   limsup_const_mul
 
+theorem ess_sup_mul_le (f g : α → ℝ≥0∞) : essSup (f * g) μ ≤ essSup f μ * essSup g μ :=
+  limsup_mul_le f g
+
 theorem ess_sup_add_le (f g : α → ℝ≥0∞) : essSup (f + g) μ ≤ essSup f μ + essSup g μ :=
   limsup_add_le f g
 

@@ -78,7 +78,7 @@ theorem hom_eq ⦃f g : FreeMonoid α →* M⦄ (h : ∀ x, f (of x) = g (of x))
 def lift : (α → M) ≃ (FreeMonoid α →* M) where
   toFun := fun f =>
     ⟨fun l => (l.map f).Prod, rfl, fun l₁ l₂ => by
-      simp only [mul_def, List.map_append, List.prod_append]⟩
+      simp only [mul_def, List.map_appendₓ, List.prod_append]⟩
   invFun := fun f x => f (of x)
   left_inv := fun f => funext fun x => one_mulₓ (f x)
   right_inv := fun f => hom_eq fun x => one_mulₓ (f (of x))
@@ -97,7 +97,7 @@ theorem lift_comp_of (f : α → M) : lift f ∘ of = f :=
 
 @[simp, to_additive]
 theorem lift_eval_of (f : α → M) (x : α) : lift f (of x) = f x :=
-  congr_fun (lift_comp_of f) x
+  congr_funₓ (lift_comp_of f) x
 
 @[simp, to_additive]
 theorem lift_restrict (f : FreeMonoid α →* M) : lift (f ∘ of) = f :=
@@ -119,7 +119,7 @@ each `of x` to `of (f x)`. -/
 def map (f : α → β) : FreeMonoid α →* FreeMonoid β where
   toFun := List.map f
   map_one' := rfl
-  map_mul' := fun l₁ l₂ => List.map_append _ _ _
+  map_mul' := fun l₁ l₂ => List.map_appendₓ _ _ _
 
 @[simp, to_additive]
 theorem map_of (f : α → β) (x : α) : map f (of x) = of (f x) :=

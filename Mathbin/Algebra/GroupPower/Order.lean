@@ -296,8 +296,8 @@ theorem pow_mono (h : 1 ≤ a) : Monotone fun n : ℕ => a ^ n :=
 theorem pow_le_pow (ha : 1 ≤ a) (h : n ≤ m) : a ^ n ≤ a ^ m :=
   pow_mono ha h
 
-theorem le_self_pow (ha : 1 ≤ a) (h : 1 ≤ m) : a ≤ a ^ m :=
-  Eq.trans_leₓ (pow_oneₓ a).symm (pow_le_pow ha h)
+theorem le_self_pow (ha : 1 ≤ a) (h : m ≠ 0) : a ≤ a ^ m :=
+  (pow_oneₓ a).symm.trans_le (pow_le_pow ha <| pos_iff_ne_zero.mpr h)
 
 theorem strict_mono_pow (h : 1 < a) : StrictMono fun n : ℕ => a ^ n :=
   have : 0 < a := zero_le_one.trans_lt h
