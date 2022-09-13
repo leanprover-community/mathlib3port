@@ -17,6 +17,7 @@ sed -i '
   /^def tag / s/"\(.*\)"$/"'$tag'"/;
   /^require lean3port / s/@"\([^"]*\)"$/@"'$lean3port_rev'"/
 ' lakefile.lean
+rm lean_packages/manifest.json
 lake update
 
 rm -rf Mathbin
