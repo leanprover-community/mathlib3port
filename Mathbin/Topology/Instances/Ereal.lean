@@ -59,11 +59,11 @@ instance : SecondCountableTopology Ereal :=
         [rw
           [show s = ⋃ q ∈ { q : ℚ | a < (q : ℝ) }, { b | ((q : ℝ) : Ereal) < b } by
             ext x
-            simpa only [hs, exists_prop, mem_Union] using lt_iff_exists_rat_btwn],
+            simpa only [hs, exists_propₓ, mem_Union] using lt_iff_exists_rat_btwn],
         rw
           [show s = ⋃ q ∈ { q : ℚ | ((q : ℝ) : Ereal) < a }, { b | b < ((q : ℝ) : Ereal) } by
             ext x
-            simpa only [hs, and_comm, exists_prop, mem_Union] using lt_iff_exists_rat_btwn]] <;>
+            simpa only [hs, and_comm, exists_propₓ, mem_Union] using lt_iff_exists_rat_btwn]] <;>
       · apply is_open_Union
         intro q
         apply is_open_Union
@@ -181,7 +181,7 @@ theorem embedding_coe_ennreal : Embedding (coe : ℝ≥0∞ → Ereal) :=
           · simp only [is_open_univ, bot_lt_coe_ennreal, set_of_true]
             
           · rcases le_or_ltₓ 0 x with (h | h)
-            · have : (x : Ereal) = ((id ⟨x, h⟩ : ℝ≥0 ) : ℝ≥0∞) := rfl
+            · have : (x : Ereal) = ((id ⟨x, h⟩ : ℝ≥0) : ℝ≥0∞) := rfl
               rw [this]
               simp only [id.def, coe_ennreal_lt_coe_ennreal_iff]
               exact is_open_Ioi
@@ -198,7 +198,7 @@ theorem embedding_coe_ennreal : Embedding (coe : ℝ≥0∞ → Ereal) :=
           · simp only [not_lt_bot, set_of_false, is_open_empty]
             
           · rcases le_or_ltₓ 0 x with (h | h)
-            · have : (x : Ereal) = ((id ⟨x, h⟩ : ℝ≥0 ) : ℝ≥0∞) := rfl
+            · have : (x : Ereal) = ((id ⟨x, h⟩ : ℝ≥0) : ℝ≥0∞) := rfl
               rw [this]
               simp only [id.def, coe_ennreal_lt_coe_ennreal_iff]
               exact is_open_Iio

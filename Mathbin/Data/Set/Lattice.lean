@@ -158,7 +158,7 @@ instance : CompleteBooleanAlgebra (Set α) :=
         simp [forall_or_distrib_left],
     inf_Sup_le_supr_inf := fun s S x =>
       Iff.mp <| by
-        simp [exists_and_distrib_left] }
+        simp [exists_and_distrib_leftₓ] }
 
 /-- `set.image` is monotone. See `set.image_image` for the statement in terms of `⊆`. -/
 theorem monotone_image {f : α → β} : Monotone (Image f) := fun s t => image_subset _
@@ -483,7 +483,7 @@ theorem diff_Inter (s : Set β) (t : ι → Set β) : (s \ ⋂ i, t i) = ⋃ i, 
 
 theorem directed_on_Union {r} {f : ι → Set α} (hd : Directed (· ⊆ ·) f) (h : ∀ x, DirectedOn r (f x)) :
     DirectedOn r (⋃ x, f x) := by
-  simp only [DirectedOn, exists_prop, mem_Union, exists_imp_distrib] <;>
+  simp only [DirectedOn, exists_propₓ, mem_Union, exists_imp_distrib] <;>
     exact fun a₁ b₁ fb₁ a₂ b₂ fb₂ =>
       let ⟨z, zb₁, zb₂⟩ := hd b₁ b₂
       let ⟨x, xf, xa₁, xa₂⟩ := h z a₁ (zb₁ fb₁) a₂ (zb₂ fb₂)
@@ -1121,7 +1121,7 @@ theorem Union_range_eq_sUnion {α β : Type _} (C : Set (Set α)) {f : ∀ s : C
   · rintro ⟨s, hs, hx⟩
     cases' hf ⟨s, hs⟩ ⟨x, hx⟩ with y hy
     refine' ⟨_, ⟨y, rfl⟩, ⟨s, hs⟩, _⟩
-    exact congr_argₓ Subtype.val hy
+    exact congr_arg Subtype.val hy
     
 
 theorem Union_range_eq_Union (C : ι → Set α) {f : ∀ x : ι, β → C x} (hf : ∀ x : ι, Surjective (f x)) :
@@ -1134,7 +1134,7 @@ theorem Union_range_eq_Union (C : ι → Set α) {f : ∀ x : ι, β → C x} (h
     
   · rintro ⟨i, hx⟩
     cases' hf i ⟨x, hx⟩ with y hy
-    exact ⟨y, i, congr_argₓ Subtype.val hy⟩
+    exact ⟨y, i, congr_arg Subtype.val hy⟩
     
 
 theorem union_distrib_Inter_left (s : ι → Set α) (t : Set α) : (t ∪ ⋂ i, s i) = ⋂ i, t ∪ s i :=
@@ -1256,7 +1256,7 @@ theorem surjective_iff_surjective_of_Union_eq_univ : Surjective f ↔ ∀ i, Sur
       (show x ∈ Set.Union U by
         rw [hU]
         triv)
-  exact ⟨_, congr_argₓ Subtype.val (H i ⟨x, hi⟩).some_spec⟩
+  exact ⟨_, congr_arg Subtype.val (H i ⟨x, hi⟩).some_spec⟩
 
 theorem bijective_iff_bijective_of_Union_eq_univ : Bijective f ↔ ∀ i, Bijective ((U i).restrictPreimage f) := by
   simp_rw [bijective, forall_and_distrib, injective_iff_injective_of_Union_eq_univ hU,
@@ -1372,7 +1372,7 @@ section Image
 
 theorem image_Union {f : α → β} {s : ι → Set α} : (f '' ⋃ i, s i) = ⋃ i, f '' s i := by
   ext1 x
-  simp [image, ← exists_and_distrib_right, @exists_swap α]
+  simp [image, ← exists_and_distrib_rightₓ, @exists_swap α]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j)
@@ -1512,7 +1512,7 @@ theorem Union_prod_of_monotone [SemilatticeSup α] {s : α → Set β} {t : α �
     exact ⟨⟨x, hz⟩, x, hw⟩
     
   · intro x hz x' hw
-    exact ⟨x⊔x', hs le_sup_left hz, ht le_sup_right hw⟩
+    exact ⟨x ⊔ x', hs le_sup_left hz, ht le_sup_right hw⟩
     
 
 end Prod
@@ -1930,7 +1930,7 @@ theorem sigma_to_Union_surjective : Surjective (sigmaToUnion t)
 
 theorem sigma_to_Union_injective (h : ∀ i j, i ≠ j → Disjoint (t i) (t j)) : Injective (sigmaToUnion t)
   | ⟨a₁, b₁, h₁⟩, ⟨a₂, b₂, h₂⟩, Eq =>
-    have b_eq : b₁ = b₂ := congr_argₓ Subtype.val Eq
+    have b_eq : b₁ = b₂ := congr_arg Subtype.val Eq
     have a_eq : a₁ = a₂ :=
       Classical.by_contradiction fun ne =>
         have : b₁ ∈ t a₁ ∩ t a₂ := ⟨h₁, b_eq.symm ▸ h₂⟩
@@ -1975,7 +1975,7 @@ section SupClosed
 
 /-- A set `s` is sup-closed if for all `x₁, x₂ ∈ s`, `x₁ ⊔ x₂ ∈ s`. -/
 def SupClosed [HasSup α] (s : Set α) : Prop :=
-  ∀ x1 x2, x1 ∈ s → x2 ∈ s → x1⊔x2 ∈ s
+  ∀ x1 x2, x1 ∈ s → x2 ∈ s → x1 ⊔ x2 ∈ s
 
 theorem sup_closed_singleton [SemilatticeSup α] (x : α) : SupClosed ({x} : Set α) := fun _ _ y1_mem y2_mem => by
   rw [Set.mem_singleton_iff] at *

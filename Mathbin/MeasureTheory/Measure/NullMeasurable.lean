@@ -267,7 +267,7 @@ theorem measure_inter_add_diff₀ (s : Set α) (ht : NullMeasurableSet t μ) : �
         add_le_add (measure_mono <| inter_subset_inter_left _ hsub) (measure_mono <| diff_subset_diff_left hsub)
       _ = μ (s' ∩ t ∪ s' \ t) :=
         (measure_union₀_aux (hs'm.inter ht) (hs'm.diff ht) <| (@disjoint_inf_sdiff _ s' t _).AeDisjoint).symm
-      _ = μ s' := congr_argₓ μ (inter_union_diff _ _)
+      _ = μ s' := congr_arg μ (inter_union_diff _ _)
       _ = μ s := hs'
       
     

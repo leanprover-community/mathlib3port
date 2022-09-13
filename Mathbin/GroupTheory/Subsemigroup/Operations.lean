@@ -251,7 +251,7 @@ theorem comap_map_comap {S : Subsemigroup N} {f : M →ₙ* N} : ((S.comap f).ma
   (gc_map_comap f).u_l_u_eq_u _
 
 @[to_additive]
-theorem map_sup (S T : Subsemigroup M) (f : M →ₙ* N) : (S⊔T).map f = S.map f⊔T.map f :=
+theorem map_sup (S T : Subsemigroup M) (f : M →ₙ* N) : (S ⊔ T).map f = S.map f ⊔ T.map f :=
   (gc_map_comap f).l_sup
 
 @[to_additive]
@@ -259,7 +259,7 @@ theorem map_supr {ι : Sort _} (f : M →ₙ* N) (s : ι → Subsemigroup M) : (
   (gc_map_comap f).l_supr
 
 @[to_additive]
-theorem comap_inf (S T : Subsemigroup N) (f : M →ₙ* N) : (S⊓T).comap f = S.comap f⊓T.comap f :=
+theorem comap_inf (S T : Subsemigroup N) (f : M →ₙ* N) : (S ⊓ T).comap f = S.comap f ⊓ T.comap f :=
   (gc_map_comap f).u_inf
 
 @[to_additive]
@@ -303,7 +303,7 @@ theorem map_injective_of_injective : Function.Injective (map f) :=
   (gciMapComap hf).l_injective
 
 @[to_additive]
-theorem comap_inf_map_of_injective (S T : Subsemigroup M) : (S.map f⊓T.map f).comap f = S⊓T :=
+theorem comap_inf_map_of_injective (S T : Subsemigroup M) : (S.map f ⊓ T.map f).comap f = S ⊓ T :=
   (gciMapComap hf).u_inf_l _ _
 
 @[to_additive]
@@ -311,7 +311,7 @@ theorem comap_infi_map_of_injective (S : ι → Subsemigroup M) : (⨅ i, (S i).
   (gciMapComap hf).u_infi_l _
 
 @[to_additive]
-theorem comap_sup_map_of_injective (S T : Subsemigroup M) : (S.map f⊔T.map f).comap f = S⊔T :=
+theorem comap_sup_map_of_injective (S T : Subsemigroup M) : (S.map f ⊔ T.map f).comap f = S ⊔ T :=
   (gciMapComap hf).u_sup_l _ _
 
 @[to_additive]
@@ -356,7 +356,7 @@ theorem comap_injective_of_surjective : Function.Injective (comap f) :=
   (giMapComap hf).u_injective
 
 @[to_additive]
-theorem map_inf_comap_of_surjective (S T : Subsemigroup N) : (S.comap f⊓T.comap f).map f = S⊓T :=
+theorem map_inf_comap_of_surjective (S T : Subsemigroup N) : (S.comap f ⊓ T.comap f).map f = S ⊓ T :=
   (giMapComap hf).l_inf_u _ _
 
 @[to_additive]
@@ -364,7 +364,7 @@ theorem map_infi_comap_of_surjective (S : ι → Subsemigroup N) : (⨅ i, (S i)
   (giMapComap hf).l_infi_u _
 
 @[to_additive]
-theorem map_sup_comap_of_surjective (S T : Subsemigroup N) : (S.comap f⊔T.comap f).map f = S⊔T :=
+theorem map_sup_comap_of_surjective (S T : Subsemigroup N) : (S.comap f ⊔ T.comap f).map f = S ⊔ T :=
   (giMapComap hf).l_sup_u _ _
 
 @[to_additive]
@@ -709,7 +709,7 @@ variable [Mul M] [Mul N] {S T : Subsemigroup M}
 @[to_additive
       "Makes the identity additive isomorphism from a proof two\nsubsemigroups of an additive semigroup are equal."]
 def subsemigroupCongr (h : S = T) : S ≃* T :=
-  { Equivₓ.setCongr <| congr_argₓ _ h with map_mul' := fun _ _ => rfl }
+  { Equivₓ.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl }
 
 -- this name is primed so that the version to `f.range` instead of `f.srange` can be unprimed.
 /-- A semigroup homomorphism `f : M →ₙ* N` with a left-inverse `g : N → M` defines a multiplicative

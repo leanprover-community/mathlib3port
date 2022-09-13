@@ -227,16 +227,22 @@ Now let's show how the values of the sequences correspond to one another.
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
          [(group
-           (Mathlib.Tactic.obtain
+           (Std.Tactic.obtain
             "obtain"
-            [(Tactic.rcasesPatMed
-              [(Tactic.rcasesPat.tuple
+            [(Std.Tactic.RCases.rcasesPatMed
+              [(Std.Tactic.RCases.rcasesPat.tuple
                 "⟨"
-                [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `ifp)]) [])
+                [(Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ifp)])
+                  [])
                  ","
-                 (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `stream_succ_nth_eq)]) [])
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `stream_succ_nth_eq)])
+                  [])
                  ","
-                 (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `gp_n_eq)]) [])]
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `gp_n_eq)])
+                  [])]
                 "⟩")])]
             [":"
              («term∃_,_»

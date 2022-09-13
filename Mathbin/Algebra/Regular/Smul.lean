@@ -213,7 +213,7 @@ variable {G : Type _} [Groupₓ G]
 of the inverse given by groups, since there is no `left_cancel_smul` typeclass. -/
 theorem is_smul_regular_of_group [MulAction G R] (g : G) : IsSmulRegular R g := by
   intro x y h
-  convert congr_argₓ ((· • ·) g⁻¹) h using 1 <;> simp [← smul_assoc]
+  convert congr_arg ((· • ·) g⁻¹) h using 1 <;> simp [← smul_assoc]
 
 end Groupₓ
 

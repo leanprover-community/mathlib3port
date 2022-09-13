@@ -332,7 +332,7 @@ instance is_relational_constants_on [ie : IsEmpty α] : IsRelational (constantsO
 instance is_empty_functions_constants_on_succ {n : ℕ} : IsEmpty ((constantsOn α).Functions (n + 1)) :=
   Nat.casesOn n Pempty.is_empty fun n => Nat.casesOn n Pempty.is_empty fun _ => Pempty.is_empty
 
-theorem card_constants_on : (constantsOn α).card = # α := by
+theorem card_constants_on : (constantsOn α).card = (#α) := by
   simp
 
 /-- Gives a `constants_on α` structure to a type by assigning each constant a value. -/
@@ -349,7 +349,7 @@ theorem constants_on_map_is_expansion_on {f : α → β} {fα : α → M} {fβ :
     @Lhom.IsExpansionOn _ _ (Lhom.constantsOnMap f) M (constantsOn.structure fα) (constantsOn.structure fβ) := by
   letI := constants_on.Structure fα
   letI := constants_on.Structure fβ
-  exact ⟨fun n => Nat.casesOn n (fun F x => (congr_funₓ h F : _)) fun n F => isEmptyElim F, fun _ R => isEmptyElim R⟩
+  exact ⟨fun n => Nat.casesOn n (fun F x => (congr_fun h F : _)) fun n F => isEmptyElim F, fun _ R => isEmptyElim R⟩
 
 end ConstantsOn
 
@@ -369,7 +369,7 @@ def withConstants : Language.{max u w', v} :=
 localized [FirstOrder] notation:95 L "[[" α "]]" => L.withConstants α
 
 @[simp]
-theorem card_with_constants : L[[α]].card = Cardinal.lift.{w'} L.card + Cardinal.lift.{max u v} (# α) := by
+theorem card_with_constants : L[[α]].card = Cardinal.lift.{w'} L.card + Cardinal.lift.{max u v} (#α) := by
   rw [with_constants, card_sum, card_constants_on]
 
 /-- The language map adding constants.  -/

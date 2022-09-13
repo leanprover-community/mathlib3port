@@ -119,7 +119,7 @@ instance (priority := 100) preservesFiniteBiproductsOfAdditive [Additive F] :
                 simp_rw [F.map_bicone_π, F.map_bicone_ι, ← F.map_comp, ← F.map_sum]
                 dsimp' only [map_bicone_X]
                 simp_rw [← F.map_id]
-                refine' congr_argₓ _ (hb.is_limit.hom_ext fun j => hb.is_colimit.hom_ext fun j' => _)
+                refine' congr_arg _ (hb.is_limit.hom_ext fun j => hb.is_colimit.hom_ext fun j' => _)
                 cases j
                 cases j'
                 dsimp' only [limits.bicone.to_cone_π_app]

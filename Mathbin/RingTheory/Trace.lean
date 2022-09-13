@@ -179,7 +179,7 @@ variable {S}
 theorem trace_form_apply (x y : S) : traceForm R S x y = trace R S (x * y) :=
   rfl
 
-theorem trace_form_is_symm : (traceForm R S).IsSymm := fun x y => congr_argₓ (trace R S) (mul_comm _ _)
+theorem trace_form_is_symm : (traceForm R S).IsSymm := fun x y => congr_arg (trace R S) (mul_comm _ _)
 
 theorem trace_form_to_matrix [DecidableEq ι] (i j) : BilinForm.toMatrix b (traceForm R S) i j = trace R S (b i * b j) :=
   by

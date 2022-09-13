@@ -616,9 +616,9 @@ def orderIsoOfIso {x y : SimplexCategory} (e : x ≅ y) : Finₓ (x.len + 1) ≃
   Equivₓ.toOrderIso
     { toFun := e.Hom.toOrderHom, invFun := e.inv.toOrderHom,
       left_inv := fun i => by
-        simpa only using congr_argₓ (fun φ => (hom.to_order_hom φ) i) e.hom_inv_id',
+        simpa only using congr_arg (fun φ => (hom.to_order_hom φ) i) e.hom_inv_id',
       right_inv := fun i => by
-        simpa only using congr_argₓ (fun φ => (hom.to_order_hom φ) i) e.inv_hom_id' }
+        simpa only using congr_arg (fun φ => (hom.to_order_hom φ) i) e.inv_hom_id' }
     e.Hom.toOrderHom.Monotone e.inv.toOrderHom.Monotone
 
 theorem iso_eq_iso_refl {x : SimplexCategory} (e : x ≅ x) : e = Iso.refl x := by
@@ -627,13 +627,13 @@ theorem iso_eq_iso_refl {x : SimplexCategory} (e : x ≅ x) : e = Iso.refl x := 
   have eq₂ := Finset.order_emb_of_fin_unique' h fun i => Finset.mem_univ ((order_iso_of_iso (iso.refl x)) i)
   ext1
   ext1
-  convert congr_argₓ (fun φ => OrderEmbedding.toOrderHom φ) (eq₁.trans eq₂.symm)
+  convert congr_arg (fun φ => OrderEmbedding.toOrderHom φ) (eq₁.trans eq₂.symm)
   ext1
   ext1 i
   rfl
 
 theorem eq_id_of_is_iso {x : SimplexCategory} {f : x ⟶ x} (hf : IsIso f) : f = 𝟙 _ :=
-  congr_argₓ (fun φ : _ ≅ _ => φ.Hom) (iso_eq_iso_refl (asIso f))
+  congr_arg (fun φ : _ ≅ _ => φ.Hom) (iso_eq_iso_refl (asIso f))
 
 theorem eq_σ_comp_of_not_injective' {n : ℕ} {Δ' : SimplexCategory} (θ : mk (n + 1) ⟶ Δ') (i : Finₓ (n + 1))
     (hi : θ.toOrderHom i.cast_succ = θ.toOrderHom i.succ) : ∃ θ' : mk n ⟶ Δ', θ = σ i ≫ θ' := by
@@ -688,7 +688,7 @@ theorem eq_σ_comp_of_not_injective' {n : ℕ} {Δ' : SimplexCategory} (θ : mk 
 
 theorem eq_σ_comp_of_not_injective {n : ℕ} {Δ' : SimplexCategory} (θ : mk (n + 1) ⟶ Δ')
     (hθ : ¬Function.Injective θ.toOrderHom) : ∃ (i : Finₓ (n + 1))(θ' : mk n ⟶ Δ'), θ = σ i ≫ θ' := by
-  simp only [Function.Injective, exists_prop, not_forall] at hθ
+  simp only [Function.Injective, exists_propₓ, not_forall] at hθ
   -- as θ is not injective, there exists `x<y` such that `θ x = θ y`
   -- and then, `θ x = θ (x+1)`
   have hθ₂ : ∃ x y : Finₓ (n + 2), (hom.to_order_hom θ) x = (hom.to_order_hom θ) y ∧ x < y := by

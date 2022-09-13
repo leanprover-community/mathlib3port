@@ -29,9 +29,9 @@ open BigOperators
 
 variable {F ι α β : Type _}
 
-namespace Rat
+namespace Ratₓ
 
-open Rat
+open Ratₓ
 
 section WithDivRing
 
@@ -86,7 +86,7 @@ theorem cast_mk_of_ne_zero (a b : ℤ) (b0 : (b : α) ≠ 0) : (a /. b : α) = a
     rw [d0, zero_mul] at this
     contradiction
   rw [num_denom'] at e
-  have := congr_argₓ (coe : ℤ → α) ((mk_eq b0' <| ne_of_gtₓ <| Int.coe_nat_pos.2 h).1 e)
+  have := congr_arg (coe : ℤ → α) ((mk_eq b0' <| ne_of_gtₓ <| Int.coe_nat_pos.2 h).1 e)
   rw [Int.cast_mul, Int.cast_mul, Int.cast_coe_nat] at this
   symm
   rw [cast_def, div_eq_mul_inv, eq_div_iff_mul_eq d0, mul_assoc, (d.commute_cast _).Eq, ← mul_assoc, this, mul_assoc,
@@ -177,13 +177,13 @@ theorem cast_div_of_ne_zero {m n : ℚ} (md : (m.denom : α) ≠ 0) (nn : (n.num
     conv in n⁻¹.denom => rw [← @num_denom n, inv_def] <;> apply denom_dvd
   have : (n⁻¹.denom : α) = 0 → (n.num : α) = 0 := fun h => by
     let ⟨k, e⟩ := this
-    have := congr_argₓ (coe : ℤ → α) e <;> rwa [Int.cast_mul, Int.cast_coe_nat, h, zero_mul] at this
+    have := congr_arg (coe : ℤ → α) e <;> rwa [Int.cast_mul, Int.cast_coe_nat, h, zero_mul] at this
   rw [division_def, cast_mul_of_ne_zero md (mt this nn), cast_inv_of_ne_zero nn nd, division_def]
 
 @[simp, norm_cast]
 theorem cast_inj [CharZero α] : ∀ {m n : ℚ}, (m : α) = n ↔ m = n
   | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => by
-    refine' ⟨fun h => _, congr_argₓ _⟩
+    refine' ⟨fun h => _, congr_arg _⟩
     have d₁0 : d₁ ≠ 0 := ne_of_gtₓ h₁
     have d₂0 : d₂ ≠ 0 := ne_of_gtₓ h₂
     have d₁a : (d₁ : α) ≠ 0 := Nat.cast_ne_zero.2 d₁0
@@ -255,19 +255,19 @@ theorem cast_pow (q) (k : ℕ) : ((q ^ k : ℚ) : α) = q ^ k :=
 
 @[simp, norm_cast]
 theorem cast_list_sum (s : List ℚ) : (↑s.Sum : α) = (s.map coe).Sum :=
-  map_list_sum (Rat.castHom α) _
+  map_list_sum (Ratₓ.castHom α) _
 
 @[simp, norm_cast]
 theorem cast_multiset_sum (s : Multiset ℚ) : (↑s.Sum : α) = (s.map coe).Sum :=
-  map_multiset_sum (Rat.castHom α) _
+  map_multiset_sum (Ratₓ.castHom α) _
 
 @[simp, norm_cast]
 theorem cast_sum (s : Finset ι) (f : ι → ℚ) : (↑(∑ i in s, f i) : α) = ∑ i in s, f i :=
-  map_sum (Rat.castHom α) _ _
+  map_sum (Ratₓ.castHom α) _ _
 
 @[simp, norm_cast]
 theorem cast_list_prod (s : List ℚ) : (↑s.Prod : α) = (s.map coe).Prod :=
-  map_list_prod (Rat.castHom α) _
+  map_list_prod (Ratₓ.castHom α) _
 
 end WithDivRing
 
@@ -277,11 +277,11 @@ variable [Field α] [CharZero α]
 
 @[simp, norm_cast]
 theorem cast_multiset_prod (s : Multiset ℚ) : (↑s.Prod : α) = (s.map coe).Prod :=
-  map_multiset_prod (Rat.castHom α) _
+  map_multiset_prod (Ratₓ.castHom α) _
 
 @[simp, norm_cast]
 theorem cast_prod (s : Finset ι) (f : ι → ℚ) : (↑(∏ i in s, f i) : α) = ∏ i in s, f i :=
-  map_prod (Rat.castHom α) _ _
+  map_prod (Ratₓ.castHom α) _ _
 
 end Field
 
@@ -290,7 +290,7 @@ section LinearOrderedField
 variable {K : Type _} [LinearOrderedField K]
 
 theorem cast_pos_of_pos {r : ℚ} (hr : 0 < r) : (0 : K) < r := by
-  rw [Rat.cast_def]
+  rw [Ratₓ.cast_def]
   exact div_pos (Int.cast_pos.2 <| num_pos_iff_pos.2 hr) (Nat.cast_pos.2 r.pos)
 
 @[mono]
@@ -398,9 +398,9 @@ theorem cast_eq_id : (coe : ℚ → ℚ) = id :=
 theorem cast_hom_rat : castHom ℚ = RingHom.id ℚ :=
   RingHom.ext cast_id
 
-end Rat
+end Ratₓ
 
-open Rat
+open Ratₓ
 
 @[simp]
 theorem map_rat_cast [DivisionRing α] [DivisionRing β] [RingHomClass F α β] (f : F) (q : ℚ) : f q = q := by
@@ -408,7 +408,7 @@ theorem map_rat_cast [DivisionRing α] [DivisionRing β] [RingHomClass F α β] 
 
 @[simp]
 theorem eq_rat_cast {k} [DivisionRing k] [RingHomClass F ℚ k] (f : F) (r : ℚ) : f r = r := by
-  rw [← map_rat_cast f, Rat.cast_id]
+  rw [← map_rat_cast f, Ratₓ.cast_id]
 
 namespace MonoidWithZeroHom
 
@@ -447,7 +447,7 @@ theorem RingHom.ext_rat {R : Type _} [Semiringₓ R] [RingHomClass F ℚ R] (f g
   MonoidWithZeroHom.ext_rat' <|
     RingHom.congr_fun <| ((f : ℚ →+* R).comp (Int.castRingHom ℚ)).ext_int ((g : ℚ →+* R).comp (Int.castRingHom ℚ))
 
-instance Rat.subsingleton_ring_hom {R : Type _} [Semiringₓ R] : Subsingleton (ℚ →+* R) :=
+instance Ratₓ.subsingleton_ring_hom {R : Type _} [Semiringₓ R] : Subsingleton (ℚ →+* R) :=
   ⟨RingHom.ext_rat⟩
 
 namespace MulOpposite

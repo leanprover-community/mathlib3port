@@ -79,7 +79,7 @@ section SemilatticeSup
 
 variable [SemilatticeSup α] [SemilatticeSup β] {f : α → β}
 
-theorem map_sup (hf : LeftOrdContinuous f) (x y : α) : f (x⊔y) = f x⊔f y :=
+theorem map_sup (hf : LeftOrdContinuous f) (x y : α) : f (x ⊔ y) = f x ⊔ f y :=
   (hf is_lub_pair).unique <| by
     simp only [image_pair, is_lub_pair]
 
@@ -165,7 +165,7 @@ section SemilatticeInf
 
 variable [SemilatticeInf α] [SemilatticeInf β] {f : α → β}
 
-theorem map_inf (hf : RightOrdContinuous f) (x y : α) : f (x⊓y) = f x⊓f y :=
+theorem map_inf (hf : RightOrdContinuous f) (x y : α) : f (x ⊓ y) = f x ⊓ f y :=
   hf.OrderDual.map_sup x y
 
 theorem le_iff (hf : RightOrdContinuous f) (h : Injective f) {x y} : f x ≤ f y ↔ x ≤ y :=

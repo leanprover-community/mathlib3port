@@ -174,7 +174,7 @@ theorem cycle_range_of_le {n : ℕ} {i j : Finₓ n.succ} (h : j ≤ i) : cycleR
   · rfl
     
   · rw [Finₓ.coe_add_one_of_lt]
-    exact lt_of_lt_of_leₓ (lt_of_le_of_neₓ h (mt (congr_argₓ coe) HEq)) (le_last i)
+    exact lt_of_lt_of_leₓ (lt_of_le_of_neₓ h (mt (congr_arg coe) HEq)) (le_last i)
     
 
 theorem coe_cycle_range_of_le {n : ℕ} {i j : Finₓ n.succ} (h : j ≤ i) :

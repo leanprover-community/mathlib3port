@@ -75,7 +75,7 @@ variable (F : C ⥤ D) {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {
 
 theorem map_comm_sq (s : CommSq f g h i) : CommSq (F.map f) (F.map g) (F.map h) (F.map i) :=
   ⟨by
-    simpa using congr_argₓ (fun k : W ⟶ Z => F.map k) s.w⟩
+    simpa using congr_arg (fun k : W ⟶ Z => F.map k) s.w⟩
 
 end Functor
 

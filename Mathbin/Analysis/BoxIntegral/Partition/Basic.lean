@@ -267,7 +267,7 @@ function. -/
 def bUnion (πi : ∀ J : Box ι, Prepartition J) : Prepartition I where
   boxes := π.boxes.bUnion fun J => (πi J).boxes
   le_of_mem' := fun J hJ => by
-    simp only [Finset.mem_bUnion, exists_prop, mem_boxes] at hJ
+    simp only [Finset.mem_bUnion, exists_propₓ, mem_boxes] at hJ
     rcases hJ with ⟨J', hJ', hJ⟩
     exact ((πi J').le_of_mem hJ).trans (π.le_of_mem hJ')
   PairwiseDisjoint := by
@@ -344,7 +344,7 @@ theorem bUnion_index_of_mem (hJ : J ∈ π) {J'} (hJ' : J' ∈ πi J) : π.bUnio
 theorem bUnion_assoc (πi : ∀ J, Prepartition J) (πi' : Box ι → ∀ J : Box ι, Prepartition J) :
     (π.bUnion fun J => (πi J).bUnion (πi' J)) = (π.bUnion πi).bUnion fun J => πi' (π.bUnionIndex πi J) J := by
   ext J
-  simp only [mem_bUnion, exists_prop]
+  simp only [mem_bUnion, exists_propₓ]
   fconstructor
   · rintro ⟨J₁, hJ₁, J₂, hJ₂, hJ⟩
     refine' ⟨J₂, ⟨J₁, hJ₁, hJ₂⟩, _⟩
@@ -411,7 +411,7 @@ theorem sum_of_with_bot {M : Type _} [AddCommMonoidₓ M] (boxes : Finset (WithB
 
 /-- Restrict a prepartition to a box. -/
 def restrict (π : Prepartition I) (J : Box ι) : Prepartition J :=
-  ofWithBot (π.boxes.Image fun J' => J⊓J')
+  ofWithBot (π.boxes.Image fun J' => J ⊓ J')
     (fun J' hJ' => by
       rcases Finset.mem_image.1 hJ' with ⟨J', -, rfl⟩
       exact inf_le_left)
@@ -424,7 +424,7 @@ def restrict (π : Prepartition I) (J : Box ι) : Prepartition J :=
       exact ((box.disjoint_coe.2 <| π.disjoint_coe_of_mem h₁ h₂ this).inf_left' _).inf_right' _)
 
 @[simp]
-theorem mem_restrict : J₁ ∈ π.restrict J ↔ ∃ J' ∈ π, (J₁ : WithBot (Box ι)) = J⊓J' := by
+theorem mem_restrict : J₁ ∈ π.restrict J ↔ ∃ J' ∈ π, (J₁ : WithBot (Box ι)) = J ⊓ J' := by
   simp [restrict, eq_comm]
 
 theorem mem_restrict' : J₁ ∈ π.restrict J ↔ ∃ J' ∈ π, (J₁ : Set (ι → ℝ)) = J ∩ J' := by
@@ -500,15 +500,15 @@ theorem le_bUnion_iff {πi : ∀ J, Prepartition J} {π' : Prepartition I} :
 instance : HasInf (Prepartition I) :=
   ⟨fun π₁ π₂ => π₁.bUnion fun J => π₂.restrict J⟩
 
-theorem inf_def (π₁ π₂ : Prepartition I) : π₁⊓π₂ = π₁.bUnion fun J => π₂.restrict J :=
+theorem inf_def (π₁ π₂ : Prepartition I) : π₁ ⊓ π₂ = π₁.bUnion fun J => π₂.restrict J :=
   rfl
 
 @[simp]
-theorem mem_inf {π₁ π₂ : Prepartition I} : J ∈ π₁⊓π₂ ↔ ∃ J₁ ∈ π₁, ∃ J₂ ∈ π₂, (J : WithBot (Box ι)) = J₁⊓J₂ := by
+theorem mem_inf {π₁ π₂ : Prepartition I} : J ∈ π₁ ⊓ π₂ ↔ ∃ J₁ ∈ π₁, ∃ J₂ ∈ π₂, (J : WithBot (Box ι)) = J₁ ⊓ J₂ := by
   simp only [inf_def, mem_bUnion, mem_restrict]
 
 @[simp]
-theorem Union_inf (π₁ π₂ : Prepartition I) : (π₁⊓π₂).Union = π₁.Union ∩ π₂.Union := by
+theorem Union_inf (π₁ π₂ : Prepartition I) : (π₁ ⊓ π₂).Union = π₁.Union ∩ π₂.Union := by
   simp only [inf_def, Union_bUnion, Union_restrict, ← Union_inter, ← Union_def]
 
 instance : SemilatticeInf (Prepartition I) :=
@@ -590,7 +590,7 @@ def distortion : ℝ≥0 :=
 theorem distortion_le_of_mem (h : J ∈ π) : J.distortion ≤ π.distortion :=
   le_sup h
 
-theorem distortion_le_iff {c : ℝ≥0 } : π.distortion ≤ c ↔ ∀ J ∈ π, Box.distortion J ≤ c :=
+theorem distortion_le_iff {c : ℝ≥0} : π.distortion ≤ c ↔ ∀ J ∈ π, Box.distortion J ≤ c :=
   Finset.sup_le_iff
 
 theorem distortion_bUnion (π : Prepartition I) (πi : ∀ J, Prepartition J) :
@@ -651,7 +651,7 @@ theorem eq_of_boxes_subset (h₁ : π₁.IsPartition) (h₂ : π₁.boxes ⊆ π
   eq_of_boxes_subset_Union_superset h₂ <| h₁.Union_subset _
 
 theorem le_iff (h : π₂.IsPartition) : π₁ ≤ π₂ ↔ ∀ J ∈ π₁, ∀ J' ∈ π₂, (J ∩ J' : Set (ι → ℝ)).Nonempty → J ≤ J' :=
-  le_iff_nonempty_imp_le_and_Union_subset.trans <| and_iff_left <| h.Union_subset _
+  le_iff_nonempty_imp_le_and_Union_subset.trans <| and_iff_leftₓ <| h.Union_subset _
 
 protected theorem bUnion (h : IsPartition π) (hi : ∀ J ∈ π, IsPartition (πi J)) : IsPartition (π.bUnion πi) :=
   fun x hx =>
@@ -663,7 +663,7 @@ protected theorem restrict (h : IsPartition π) (hJ : J ≤ I) : IsPartition (π
   is_partition_iff_Union_eq.2 <| by
     simp [h.Union_eq, hJ]
 
-protected theorem inf (h₁ : IsPartition π₁) (h₂ : IsPartition π₂) : IsPartition (π₁⊓π₂) :=
+protected theorem inf (h₁ : IsPartition π₁) (h₂ : IsPartition π₂) : IsPartition (π₁ ⊓ π₂) :=
   is_partition_iff_Union_eq.2 <| by
     simp [h₁.Union_eq, h₂.Union_eq]
 

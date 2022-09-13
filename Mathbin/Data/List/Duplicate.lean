@@ -139,7 +139,7 @@ theorem exists_duplicate_iff_not_nodup : (∃ x : α, x ∈+ l) ↔ ¬Nodupₓ l
 
 theorem Duplicate.not_nodup (h : x ∈+ l) : ¬Nodupₓ l := fun H => nodup_iff_forall_not_duplicate.mp H _ h
 
-theorem duplicate_iff_two_le_count [DecidableEq α] : x ∈+ l ↔ 2 ≤ count x l := by
+theorem duplicate_iff_two_le_count [DecidableEq α] : x ∈+ l ↔ 2 ≤ countₓ x l := by
   simp [duplicate_iff_sublist, le_count_iff_repeat_sublist]
 
 instance decidableDuplicate [DecidableEq α] (x : α) : ∀ l : List α, Decidable (x ∈+ l)

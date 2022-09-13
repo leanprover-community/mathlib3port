@@ -171,7 +171,7 @@ synthesizes `foo1 <$> traverse f x <*> pure y.` -/
 unsafe def traverse_constructor (c n : Name) (appl_inst f α β : expr) (args₀ : List expr) (args₁ : List (Bool × expr))
     (rec_call : List expr) : tactic expr := do
   let g ← target
-  let args' ← mmapₓ (traverse_field n appl_inst g.app_fn f α) args₀
+  let args' ← mmap (traverse_field n appl_inst g.app_fn f α) args₀
   let (_, args') ←
     mmapAccuml
         (fun (x : List expr) (y : Bool × _) =>

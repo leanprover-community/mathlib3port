@@ -90,7 +90,7 @@ theorem comp_f {X Y Z : DifferentialObject C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f �
   rfl
 
 @[simp]
-theorem eq_to_hom_f {X Y : DifferentialObject C} (h : X = Y) : Hom.f (eqToHom h) = eqToHom (congr_argₓ _ h) := by
+theorem eq_to_hom_f {X Y : DifferentialObject C} (h : X = Y) : Hom.f (eqToHom h) = eqToHom (congr_arg _ h) := by
   subst h
   rw [eq_to_hom_refl, eq_to_hom_refl]
   rfl

@@ -182,28 +182,28 @@ BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.hasSup
 
 localized [BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.hasInf
 
-theorem sup_comm (a b : α) : a⊔b = b⊔a := by
-  dsimp' only [(·⊔·)]
+theorem sup_comm (a b : α) : a ⊔ b = b ⊔ a := by
+  dsimp' only [(· ⊔ ·)]
   ring
 
-theorem inf_comm (a b : α) : a⊓b = b⊓a := by
-  dsimp' only [(·⊓·)]
+theorem inf_comm (a b : α) : a ⊓ b = b ⊓ a := by
+  dsimp' only [(· ⊓ ·)]
   ring
 
-theorem sup_assoc (a b c : α) : a⊔b⊔c = a⊔(b⊔c) := by
-  dsimp' only [(·⊔·)]
+theorem sup_assoc (a b c : α) : a ⊔ b ⊔ c = a ⊔ (b ⊔ c) := by
+  dsimp' only [(· ⊔ ·)]
   ring
 
-theorem inf_assoc (a b c : α) : a⊓b⊓c = a⊓(b⊓c) := by
-  dsimp' only [(·⊓·)]
+theorem inf_assoc (a b c : α) : a ⊓ b ⊓ c = a ⊓ (b ⊓ c) := by
+  dsimp' only [(· ⊓ ·)]
   ring
 
-theorem sup_inf_self (a b : α) : a⊔a⊓b = a := by
-  dsimp' only [(·⊔·), (·⊓·)]
+theorem sup_inf_self (a b : α) : a ⊔ a ⊓ b = a := by
+  dsimp' only [(· ⊔ ·), (· ⊓ ·)]
   assoc_rw [mul_self, add_self, add_zeroₓ]
 
-theorem inf_sup_self (a b : α) : a⊓(a⊔b) = a := by
-  dsimp' only [(·⊔·), (·⊓·)]
+theorem inf_sup_self (a b : α) : a ⊓ (a ⊔ b) = a := by
+  dsimp' only [(· ⊔ ·), (· ⊓ ·)]
   rw [mul_addₓ, mul_addₓ, mul_self, ← mul_assoc, mul_self, add_assocₓ, add_self, add_zeroₓ]
 
 theorem le_sup_inf_aux (a b c : α) : (a + b + a * b) * (a + c + a * c) = a + b * c + a * (b * c) :=
@@ -216,8 +216,8 @@ theorem le_sup_inf_aux (a b c : α) : (a + b + a * b) * (a + c + a * c) = a + b 
       simp only [mul_self, add_self, add_zeroₓ]
     
 
-theorem le_sup_inf (a b c : α) : (a⊔b)⊓(a⊔c)⊔(a⊔b⊓c) = a⊔b⊓c := by
-  dsimp' only [(·⊔·), (·⊓·)]
+theorem le_sup_inf (a b c : α) : (a ⊔ b) ⊓ (a ⊔ c) ⊔ (a ⊔ b ⊓ c) = a ⊔ b ⊓ c := by
+  dsimp' only [(· ⊔ ·), (· ⊓ ·)]
   rw [le_sup_inf_aux, add_self, mul_self, zero_addₓ]
 
 /-- The Boolean algebra structure on a Boolean ring.
@@ -265,11 +265,12 @@ theorem of_boolalg_bot : ofBoolalg (⊥ : AsBoolalg α) = 0 :=
   rfl
 
 @[simp]
-theorem of_boolalg_sup (a b : AsBoolalg α) : ofBoolalg (a⊔b) = ofBoolalg a + ofBoolalg b + ofBoolalg a * ofBoolalg b :=
+theorem of_boolalg_sup (a b : AsBoolalg α) :
+    ofBoolalg (a ⊔ b) = ofBoolalg a + ofBoolalg b + ofBoolalg a * ofBoolalg b :=
   rfl
 
 @[simp]
-theorem of_boolalg_inf (a b : AsBoolalg α) : ofBoolalg (a⊓b) = ofBoolalg a * ofBoolalg b :=
+theorem of_boolalg_inf (a b : AsBoolalg α) : ofBoolalg (a ⊓ b) = ofBoolalg a * ofBoolalg b :=
   rfl
 
 @[simp]
@@ -306,12 +307,12 @@ theorem to_boolalg_one : toBoolalg (1 : α) = ⊤ :=
   rfl
 
 @[simp]
-theorem to_boolalg_mul (a b : α) : toBoolalg (a * b) = toBoolalg a⊓toBoolalg b :=
+theorem to_boolalg_mul (a b : α) : toBoolalg (a * b) = toBoolalg a ⊓ toBoolalg b :=
   rfl
 
 -- `to_boolalg_add` simplifies the LHS but this lemma is eligible to `dsimp`
 @[simp, nolint simp_nf]
-theorem to_boolalg_add_add_mul (a b : α) : toBoolalg (a + b + a * b) = toBoolalg a⊔toBoolalg b :=
+theorem to_boolalg_add_add_mul (a b : α) : toBoolalg (a + b + a * b) = toBoolalg a ⊔ toBoolalg b :=
   rfl
 
 @[simp]
@@ -406,7 +407,7 @@ def GeneralizedBooleanAlgebra.toNonUnitalCommRing [GeneralizedBooleanAlgebra α]
   neg := id
   add_left_neg := symm_diff_self
   add_comm := symm_diff_comm
-  mul := (·⊓·)
+  mul := (· ⊓ ·)
   mul_assoc := fun _ _ _ => inf_assoc
   mul_comm := fun _ _ => inf_comm
   left_distrib := inf_symm_diff_distrib_left
@@ -460,7 +461,7 @@ theorem of_boolring_sub (a b : AsBoolring α) : ofBoolring (a - b) = ofBoolring 
   rfl
 
 @[simp]
-theorem of_boolring_mul (a b : AsBoolring α) : ofBoolring (a * b) = ofBoolring a⊓ofBoolring b :=
+theorem of_boolring_mul (a b : AsBoolring α) : ofBoolring (a * b) = ofBoolring a ⊓ ofBoolring b :=
   rfl
 
 @[simp]
@@ -476,7 +477,7 @@ theorem to_boolring_top : toBoolring (⊤ : α) = 1 :=
   rfl
 
 @[simp]
-theorem to_boolring_inf (a b : α) : toBoolring (a⊓b) = toBoolring a * toBoolring b :=
+theorem to_boolring_inf (a b : α) : toBoolring (a ⊓ b) = toBoolring a * toBoolring b :=
   rfl
 
 @[simp]

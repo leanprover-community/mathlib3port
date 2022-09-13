@@ -45,7 +45,7 @@ theorem Intersecting.mono (h : t ⊆ s) (hs : s.Intersecting) : t.Intersecting :
 theorem Intersecting.not_bot_mem (hs : s.Intersecting) : ⊥ ∉ s := fun h => hs h h disjoint_bot_left
 
 theorem Intersecting.ne_bot (hs : s.Intersecting) (ha : a ∈ s) : a ≠ ⊥ :=
-  ne_of_mem_of_not_mem ha hs.not_bot_mem
+  ne_of_mem_of_not_memₓ ha hs.not_bot_mem
 
 theorem intersecting_empty : (∅ : Set α).Intersecting := fun _ => False.elim
 

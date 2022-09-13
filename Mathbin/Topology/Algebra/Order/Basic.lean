@@ -718,7 +718,7 @@ theorem gt_mem_nhds {a b : α} (h : a < b) : ∀ᶠ x in 𝓝 a, x < b :=
 theorem ge_mem_nhds {a b : α} (h : a < b) : ∀ᶠ x in 𝓝 a, x ≤ b :=
   ((𝓝 a).sets_of_superset (gt_mem_nhds h)) fun b hb => le_of_ltₓ hb
 
-theorem nhds_eq_order (a : α) : 𝓝 a = (⨅ b ∈ Iio a, 𝓟 (Ioi b))⊓⨅ b ∈ Ioi a, 𝓟 (Iio b) := by
+theorem nhds_eq_order (a : α) : 𝓝 a = (⨅ b ∈ Iio a, 𝓟 (Ioi b)) ⊓ ⨅ b ∈ Ioi a, 𝓟 (Iio b) := by
   rw [t.topology_eq_generate_intervals, nhds_generate_from] <;>
     exact
       le_antisymmₓ
@@ -903,7 +903,7 @@ theorem nhds_top_basis [TopologicalSpace α] [LinearOrderₓ α] [OrderTop α] [
     simp only [nhds_top_order]
     refine' @Filter.mem_binfi_of_directed α α (fun a => 𝓟 (Ioi a)) (fun a => a < ⊤) _ _
     · rintro a (ha : a < ⊤) b (hb : b < ⊤)
-      use a⊔b
+      use a ⊔ b
       simp only [Filter.le_principal_iff, ge_iff_leₓ, Order.Preimage]
       exact ⟨sup_lt_iff.mpr ⟨ha, hb⟩, Ioi_subset_Ioi le_sup_left, Ioi_subset_Ioi le_sup_right⟩
       
@@ -996,7 +996,7 @@ theorem exists_Ioc_subset_of_mem_nhds' {a : α} {s : Set α} (hs : s ∈ 𝓝 a)
 
 theorem exists_Ico_subset_of_mem_nhds' {a : α} {s : Set α} (hs : s ∈ 𝓝 a) {u : α} (hu : a < u) :
     ∃ u' ∈ Ioc a u, Ico a u' ⊆ s := by
-  simpa only [OrderDual.exists, exists_prop, dual_Ico, dual_Ioc] using
+  simpa only [OrderDual.exists, exists_propₓ, dual_Ico, dual_Ioc] using
     exists_Ioc_subset_of_mem_nhds' (show of_dual ⁻¹' s ∈ 𝓝 (to_dual a) from hs) hu.dual
 
 theorem exists_Ioc_subset_of_mem_nhds {a : α} {s : Set α} (hs : s ∈ 𝓝 a) (h : ∃ l, l < a) : ∃ l < a, Ioc l a ⊆ s :=
@@ -1315,14 +1315,14 @@ theorem disjoint_nhds_at_top [NoMaxOrder α] (x : α) : Disjoint (𝓝 x) atTop 
   exact disjoint_left.mpr fun z => not_leₓ.2
 
 @[simp]
-theorem inf_nhds_at_top [NoMaxOrder α] (x : α) : 𝓝 x⊓at_top = ⊥ :=
+theorem inf_nhds_at_top [NoMaxOrder α] (x : α) : 𝓝 x ⊓ at_top = ⊥ :=
   disjoint_iff.1 (disjoint_nhds_at_top x)
 
 theorem disjoint_nhds_at_bot [NoMinOrder α] (x : α) : Disjoint (𝓝 x) atBot :=
   @disjoint_nhds_at_top αᵒᵈ _ _ _ _ x
 
 @[simp]
-theorem inf_nhds_at_bot [NoMinOrder α] (x : α) : 𝓝 x⊓at_bot = ⊥ :=
+theorem inf_nhds_at_bot [NoMinOrder α] (x : α) : 𝓝 x ⊓ at_bot = ⊥ :=
   @inf_nhds_at_top αᵒᵈ _ _ _ _ x
 
 theorem not_tendsto_nhds_of_tendsto_at_top [NoMaxOrder α] {F : Filter β} [NeBot F] {f : β → α} (hf : Tendsto f F atTop)
@@ -1439,7 +1439,7 @@ theorem tfae_mem_nhds_within_Iio {a b : α} (h : a < b) (s : Set α) :
         ∃ l ∈ Iio b, Ioo l b ⊆ s] :=
   by
   -- 4 : `s` includes `(l, b)` for some `l < b`
-  simpa only [exists_prop, OrderDual.exists, dual_Ioi, dual_Ioc, dual_Ioo] using
+  simpa only [exists_propₓ, OrderDual.exists, dual_Ioi, dual_Ioc, dual_Ioo] using
     tfae_mem_nhds_within_Ioi h.dual (of_dual ⁻¹' s)
 
 theorem mem_nhds_within_Iio_iff_exists_mem_Ico_Ioo_subset {a l' : α} {s : Set α} (hl' : l' < a) :
@@ -1464,7 +1464,7 @@ with `l < a`. -/
 theorem mem_nhds_within_Iio_iff_exists_Ico_subset [NoMinOrder α] [DenselyOrdered α] {a : α} {s : Set α} :
     s ∈ 𝓝[<] a ↔ ∃ l ∈ Iio a, Ico l a ⊆ s := by
   have : of_dual ⁻¹' s ∈ 𝓝[>] to_dual a ↔ _ := mem_nhds_within_Ioi_iff_exists_Ioc_subset
-  simpa only [OrderDual.exists, exists_prop, dual_Ioc] using this
+  simpa only [OrderDual.exists, exists_propₓ, dual_Ioc] using this
 
 /-- The following statements are equivalent:
 
@@ -1531,6 +1531,9 @@ theorem mem_nhds_within_Ici_iff_exists_Ico_subset [NoMaxOrder α] {a : α} {s : 
   let ⟨u', hu'⟩ := exists_gt a
   mem_nhds_within_Ici_iff_exists_Ico_subset' hu'
 
+theorem nhds_within_Ici_basis_Ico [NoMaxOrder α] (a : α) : (𝓝[≥] a).HasBasis (fun u => a < u) (Ico a) :=
+  ⟨fun s => mem_nhds_within_Ici_iff_exists_Ico_subset⟩
+
 /-- A set is a neighborhood of `a` within `[a, +∞)` if and only if it contains an interval `[a, u]`
 with `a < u`. -/
 theorem mem_nhds_within_Ici_iff_exists_Icc_subset [NoMaxOrder α] [DenselyOrdered α] {a : α} {s : Set α} :
@@ -1563,7 +1566,7 @@ theorem tfae_mem_nhds_within_Iic {a b : α} (h : a < b) (s : Set α) :
         ∃ l ∈ Iio b, Ioc l b ⊆ s] :=
   by
   -- 4 : `s` includes `(l, b]` for some `l < b`
-  simpa only [exists_prop, OrderDual.exists, dual_Ici, dual_Ioc, dual_Icc, dual_Ico] using
+  simpa only [exists_propₓ, OrderDual.exists, dual_Ici, dual_Ioc, dual_Icc, dual_Ico] using
     tfae_mem_nhds_within_Ici h.dual (of_dual ⁻¹' s)
 
 theorem mem_nhds_within_Iic_iff_exists_mem_Ico_Ioc_subset {a l' : α} {s : Set α} (hl' : l' < a) :
@@ -1838,14 +1841,14 @@ theorem mul_tendsto_nhds_zero_left (x : α) : Tendsto (uncurry ((· * ·) : α �
 theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) : 𝓝 x₀ = map (fun x => x₀ * x) (𝓝 1) := by
   have hx₀' : 0 < abs x₀ := abs_pos.2 hx₀
   refine' Filter.ext fun t => _
-  simp only [exists_prop, set_of_subset_set_of, (nhds_basis_abs_sub_lt x₀).mem_iff,
+  simp only [exists_propₓ, set_of_subset_set_of, (nhds_basis_abs_sub_lt x₀).mem_iff,
     (nhds_basis_abs_sub_lt (1 : α)).mem_iff, Filter.mem_map']
   refine' ⟨fun h => _, fun h => _⟩
   · obtain ⟨i, hi, hit⟩ := h
     refine' ⟨i / abs x₀, div_pos hi (abs_pos.2 hx₀), fun x hx => hit _⟩
     calc
       abs (x₀ * x - x₀) = abs (x₀ * (x - 1)) :=
-        congr_argₓ abs
+        congr_arg abs
           (by
             ring_nf)
       _ = abs x₀ * abs (x - 1) := abs_mul x₀ (x - 1)
@@ -1865,7 +1868,7 @@ theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) : 𝓝 x�
     calc
       abs (x / x₀ - 1) = abs (x / x₀ - x₀ / x₀) := by
         rw [div_self hx₀]
-      _ = abs ((x - x₀) / x₀) := congr_argₓ abs (sub_div x x₀ x₀).symm
+      _ = abs ((x - x₀) / x₀) := congr_arg abs (sub_div x x₀ x₀).symm
       _ = abs (x - x₀) / abs x₀ := abs_div (x - x₀) x₀
       _ < i * abs x₀ / abs x₀ := div_lt_div_of_lt (abs_pos.2 hx₀) hx
       _ = i := by
@@ -2194,22 +2197,22 @@ theorem IsLub.nhds_within_ne_bot {a : α} {s : Set α} (ha : IsLub s a) (hs : s.
 theorem IsGlb.nhds_within_ne_bot : ∀ {a : α} {s : Set α}, IsGlb s a → s.Nonempty → NeBot (𝓝[s] a) :=
   @IsLub.nhds_within_ne_bot αᵒᵈ _ _ _
 
-theorem is_lub_of_mem_nhds {s : Set α} {a : α} {f : Filter α} (hsa : a ∈ UpperBounds s) (hsf : s ∈ f) [NeBot (f⊓𝓝 a)] :
-    IsLub s a :=
+theorem is_lub_of_mem_nhds {s : Set α} {a : α} {f : Filter α} (hsa : a ∈ UpperBounds s) (hsf : s ∈ f)
+    [NeBot (f ⊓ 𝓝 a)] : IsLub s a :=
   ⟨hsa, fun b hb =>
     not_ltₓ.1 fun hba =>
-      have : s ∩ { a | b < a } ∈ f⊓𝓝 a := inter_mem_inf hsf (IsOpen.mem_nhds (is_open_lt' _) hba)
+      have : s ∩ { a | b < a } ∈ f ⊓ 𝓝 a := inter_mem_inf hsf (IsOpen.mem_nhds (is_open_lt' _) hba)
       let ⟨x, ⟨hxs, hxb⟩⟩ := Filter.nonempty_of_mem this
       have : b < b := lt_of_lt_of_leₓ hxb <| hb hxs
       lt_irreflₓ b this⟩
 
 theorem is_lub_of_mem_closure {s : Set α} {a : α} (hsa : a ∈ UpperBounds s) (hsf : a ∈ Closure s) : IsLub s a := by
   rw [mem_closure_iff_cluster_pt, ClusterPt, inf_comm] at hsf
-  haveI : (𝓟 s⊓𝓝 a).ne_bot := hsf
+  haveI : (𝓟 s ⊓ 𝓝 a).ne_bot := hsf
   exact is_lub_of_mem_nhds hsa (mem_principal_self s)
 
 theorem is_glb_of_mem_nhds :
-    ∀ {s : Set α} {a : α} {f : Filter α}, a ∈ LowerBounds s → s ∈ f → NeBot (f⊓𝓝 a) → IsGlb s a :=
+    ∀ {s : Set α} {a : α} {f : Filter α}, a ∈ LowerBounds s → s ∈ f → NeBot (f ⊓ 𝓝 a) → IsGlb s a :=
   @is_lub_of_mem_nhds αᵒᵈ _ _ _
 
 theorem is_glb_of_mem_closure {s : Set α} {a : α} (hsa : a ∈ LowerBounds s) (hsf : a ∈ Closure s) : IsGlb s a :=
@@ -2564,7 +2567,7 @@ theorem nhds_within_Ioi_self_ne_bot [NoMaxOrder α] (a : α) : NeBot (𝓝[>] a)
   nhds_within_Ioi_ne_bot (le_reflₓ a)
 
 theorem Filter.Eventually.exists_gt [NoMaxOrder α] {a : α} {p : α → Prop} (h : ∀ᶠ x in 𝓝 a, p x) : ∃ b > a, p b := by
-  simpa only [exists_prop, gt_iff_ltₓ, and_comm] using
+  simpa only [exists_propₓ, gt_iff_ltₓ, and_comm] using
     ((h.filter_mono (@nhds_within_le_nhds _ _ a (Ioi a))).And self_mem_nhds_within).exists
 
 theorem nhds_within_Iio_ne_bot' {b c : α} (H₁ : (Iio c).Nonempty) (H₂ : b ≤ c) : NeBot (𝓝[Iio c] b) :=
@@ -2951,7 +2954,7 @@ theorem Monotone.tendsto_nhds_within_Iio {α β : Type _} [LinearOrderₓ α] [T
     
   refine' tendsto_order.2 ⟨fun l hl => _, fun m hm => _⟩
   · obtain ⟨z, zx, lz⟩ : ∃ a : α, a < x ∧ l < f a := by
-      simpa only [mem_image, exists_prop, exists_exists_and_eq_and] using
+      simpa only [mem_image, exists_propₓ, exists_exists_and_eq_and] using
         exists_lt_of_lt_cSup (nonempty_image_iff.2 h) hl
     exact (mem_nhds_within_Iio_iff_exists_Ioo_subset' zx).2 ⟨z, zx, fun y hy => lz.trans_le (Mf hy.1.le)⟩
     

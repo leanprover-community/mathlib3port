@@ -207,7 +207,7 @@ theorem mod_coprime {a b : ℕ} (hab : Nat.Coprime a b) : ∃ y : ℤ, a * y ≡
       ⟩
 
 theorem exists_unique_equiv (a : ℤ) {b : ℤ} (hb : 0 < b) : ∃ z : ℤ, 0 ≤ z ∧ z < b ∧ z ≡ a [ZMOD b] :=
-  ⟨a % b, mod_nonneg _ (ne_of_gtₓ hb), by
+  ⟨a % b, mod_nonnegₓ _ (ne_of_gtₓ hb), by
     have : a % b < abs b := mod_lt _ (ne_of_gtₓ hb)
     rwa [abs_of_pos hb] at this, by
     simp [modeq]⟩

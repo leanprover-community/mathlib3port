@@ -142,7 +142,7 @@ theorem has_sum_of_disjoint_Union [Countable β] {f : β → Set α} (hf₁ : �
     simp only
     congr
     ext y
-    simp only [exists_prop, mem_Union, Option.mem_def]
+    simp only [exists_propₓ, mem_Union, Option.mem_def]
     constructor
     · intro hy
       refine' ⟨x, (Encodable.decode₂_is_partial_inv _ _).2 rfl, hy⟩
@@ -474,7 +474,7 @@ theorem to_signed_measure_add (μ ν : Measure α) [IsFiniteMeasure μ] [IsFinit
     infer_instance
 
 @[simp]
-theorem to_signed_measure_smul (μ : Measure α) [IsFiniteMeasure μ] (r : ℝ≥0 ) :
+theorem to_signed_measure_smul (μ : Measure α) [IsFiniteMeasure μ] (r : ℝ≥0) :
     (r • μ).toSignedMeasure = r • μ.toSignedMeasure := by
   ext i hi
   rw [to_signed_measure_apply_measurable hi, vector_measure.smul_apply, to_signed_measure_apply_measurable hi, coe_smul,

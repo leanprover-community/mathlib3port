@@ -134,7 +134,7 @@ theorem Monad.left_comparison (h : L ⊣ R) : L ⋙ Monad.comparison h = h.toMon
 instance [Faithful R] (h : L ⊣ R) :
     Faithful
       (Monad.comparison
-        h) where map_injective' := fun X Y f g w => R.map_injective (congr_argₓ Monad.Algebra.Hom.f w : _)
+        h) where map_injective' := fun X Y f g w => R.map_injective (congr_arg Monad.Algebra.Hom.f w : _)
 
 instance (T : Monad C) :
     Full (Monad.comparison T.adj) where preimage := fun X Y f =>
@@ -184,7 +184,7 @@ theorem Comonad.left_comparison (h : L ⊣ R) : R ⋙ Comonad.comparison h = h.t
 instance Comonad.comparison_faithful_of_faithful [Faithful L] (h : L ⊣ R) :
     Faithful
       (Comonad.comparison
-        h) where map_injective' := fun X Y f g w => L.map_injective (congr_argₓ Comonad.Coalgebra.Hom.f w : _)
+        h) where map_injective' := fun X Y f g w => L.map_injective (congr_arg Comonad.Coalgebra.Hom.f w : _)
 
 instance (G : Comonad C) :
     Full (Comonad.comparison G.adj) where preimage := fun X Y f =>

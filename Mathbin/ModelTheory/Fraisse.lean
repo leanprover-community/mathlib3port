@@ -110,7 +110,7 @@ class IsFraisse : Prop where
 variable {K} (L) (M : Type w) [L.Structure M]
 
 theorem Age.is_equiv_invariant (N P : Bundled.{w} L.Structure) (h : Nonempty (N ≃[L] P)) : N ∈ L.Age M ↔ P ∈ L.Age M :=
-  and_congr h.some.fg_iff
+  and_congrₓ h.some.fg_iff
     ⟨Nonempty.mapₓ fun x => Embedding.comp x h.some.symm.toEmbedding,
       Nonempty.mapₓ fun x => Embedding.comp x h.some.toEmbedding⟩
 
@@ -139,7 +139,7 @@ theorem Age.nonempty : (L.Age M).Nonempty :=
 theorem Age.hereditary : Hereditary (L.Age M) := fun N hN P hP => hN.2.some.age_subset_age hP
 
 theorem Age.joint_embedding : JointEmbedding (L.Age M) := fun N hN P hP =>
-  ⟨Bundled.of ↥(hN.2.some.toHom.range⊔hP.2.some.toHom.range),
+  ⟨Bundled.of ↥(hN.2.some.toHom.range ⊔ hP.2.some.toHom.range),
     ⟨(fg_iff_Structure_fg _).1 ((hN.1.range hN.2.some.toHom).sup (hP.1.range hP.2.some.toHom)), ⟨Subtype _⟩⟩,
     ⟨Embedding.comp (inclusion le_sup_left) hN.2.some.equivRange.toEmbedding⟩,
     ⟨Embedding.comp (inclusion le_sup_right) hP.2.some.equivRange.toEmbedding⟩⟩
@@ -231,8 +231,8 @@ theorem exists_countable_is_age_of_iff [L.CountableFunctions] :
     
   · rintro ⟨Kn, eqinv, cq, hfg, hp, jep⟩
     obtain ⟨M, hM, rfl⟩ := exists_cg_is_age_of Kn eqinv cq hfg hp jep
-    haveI := (Structure.cg_iff_countable.1 hM).some
-    refine' ⟨M, to_countable _, rfl⟩
+    haveI : Countable M := Structure.cg_iff_countable.1 hM
+    exact ⟨M, to_countable _, rfl⟩
     
 
 variable {K} (L) (M)
@@ -257,7 +257,7 @@ theorem IsUltrahomogeneous.amalgamation_age (h : L.IsUltrahomogeneous M) : Amalg
   rintro N P Q NP NQ ⟨Nfg, ⟨NM⟩⟩ ⟨Pfg, ⟨PM⟩⟩ ⟨Qfg, ⟨QM⟩⟩
   obtain ⟨g, hg⟩ :=
     h (PM.comp NP).toHom.range (Nfg.range _) ((QM.comp NQ).comp (PM.comp NP).equivRange.symm.toEmbedding)
-  let s := (g.to_hom.comp PM.to_hom).range⊔QM.to_hom.range
+  let s := (g.to_hom.comp PM.to_hom).range ⊔ QM.to_hom.range
   refine'
     ⟨bundled.of s, embedding.comp (substructure.inclusion le_sup_left) (g.to_embedding.comp PM).equivRange.toEmbedding,
       embedding.comp (substructure.inclusion le_sup_right) QM.equiv_range.to_embedding,

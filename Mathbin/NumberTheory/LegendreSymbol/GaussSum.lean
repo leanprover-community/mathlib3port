@@ -284,7 +284,7 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
   -- we now show that the Gauss sum of `χ` and `ψ₈` has the relevant property
   have hg : gaussSum χ ψ₈.char ^ 2 = χ (-1) * Fintype.card (Zmod 8) := by
     rw [hχ, one_mulₓ, card, gaussSum]
-    convert ← congr_argₓ (· ^ 2) (Finₓ.sum_univ_eight fun x => (χ₈ x : FF) * τ ^ x.val)
+    convert ← congr_arg (· ^ 2) (Finₓ.sum_univ_eight fun x => (χ₈ x : FF) * τ ^ x.val)
     · ext
       congr
       apply pow_oneₓ

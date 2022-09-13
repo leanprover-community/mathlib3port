@@ -451,10 +451,10 @@ theorem le_mul_of_le_mul_right [MulPosMono α] (h : a ≤ b * c) (hle : b ≤ d)
   h.trans (mul_le_mul_of_nonneg_right hle c0)
 
 theorem mul_left_cancel_iff_of_pos [PosMulMonoRev α] (a0 : 0 < a) : a * b = a * c ↔ b = c :=
-  ⟨fun h => (le_of_mul_le_mul_left' h.le a0).antisymm (le_of_mul_le_mul_left' h.Ge a0), congr_argₓ _⟩
+  ⟨fun h => (le_of_mul_le_mul_left' h.le a0).antisymm (le_of_mul_le_mul_left' h.Ge a0), congr_arg _⟩
 
 theorem mul_right_cancel_iff_of_pos [MulPosMonoRev α] (b0 : 0 < b) : a * b = c * b ↔ a = c :=
-  ⟨fun h => (le_of_mul_le_mul_right' h.le b0).antisymm (le_of_mul_le_mul_right' h.Ge b0), congr_argₓ _⟩
+  ⟨fun h => (le_of_mul_le_mul_right' h.le b0).antisymm (le_of_mul_le_mul_right' h.Ge b0), congr_arg _⟩
 
 theorem mul_eq_mul_iff_eq_and_eq [PosMulStrictMono α] [MulPosStrictMono α] [PosMulMonoRev α] [MulPosMonoRev α]
     (hac : a ≤ b) (hbd : c ≤ d) (a0 : 0 < a) (d0 : 0 < d) : a * c = b * d ↔ a = b ∧ c = d := by
@@ -1246,21 +1246,21 @@ variable [CommSemigroupₓ α] [Zero α]
 
 variable [LT α]
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 theorem pos_mul_strict_mono_iff_mul_pos_strict_mono : PosMulStrictMono α ↔ MulPosStrictMono α := by
   simp only [mul_comm]
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 theorem pos_mul_reflect_lt_iff_mul_pos_reflect_lt : PosMulReflectLt α ↔ MulPosReflectLt α := by
   simp only [mul_comm]
 
 variable [LE α]
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 theorem pos_mul_mono_iff_mul_pos_mono : PosMulMono α ↔ MulPosMono α := by
   simp only [mul_comm]
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 theorem pos_mul_mono_rev_iff_mul_pos_mono_rev : PosMulMonoRev α ↔ MulPosMonoRev α := by
   simp only [mul_comm]
 

@@ -69,7 +69,7 @@ export HasFaithfulVadd (eq_of_vadd_eq_vadd)
 
 @[to_additive]
 theorem smul_left_injective' [HasSmul M α] [HasFaithfulSmul M α] : Function.Injective ((· • ·) : M → α → α) :=
-  fun m₁ m₂ h => HasFaithfulSmul.eq_of_smul_eq_smul (congr_funₓ h)
+  fun m₁ m₂ h => HasFaithfulSmul.eq_of_smul_eq_smul (congr_fun h)
 
 -- see Note [lower instance priority]
 /-- See also `monoid.to_mul_action` and `mul_zero_class.to_smul_with_zero`. -/
@@ -322,7 +322,7 @@ variable [HasSmul M α]
 @[to_additive]
 theorem Commute.smul_right [Mul α] [SmulCommClass M α α] [IsScalarTower M α α] {a b : α} (h : Commute a b) (r : M) :
     Commute a (r • b) :=
-  (mul_smul_comm _ _ _).trans ((congr_argₓ _ h).trans <| (smul_mul_assoc _ _ _).symm)
+  (mul_smul_comm _ _ _).trans ((congr_arg _ h).trans <| (smul_mul_assoc _ _ _).symm)
 
 @[to_additive]
 theorem Commute.smul_left [Mul α] [SmulCommClass M α α] [IsScalarTower M α α] {a b : α} (h : Commute a b) (r : M) :
@@ -450,7 +450,7 @@ def toFun : α ↪ M → α :=
   ⟨fun y x => x • y, fun y₁ y₂ H =>
     one_smul M y₁ ▸
       one_smul M y₂ ▸ by
-        convert congr_funₓ H 1⟩
+        convert congr_fun H 1⟩
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 -- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident add_action.to_fun]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg

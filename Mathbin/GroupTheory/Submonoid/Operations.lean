@@ -259,7 +259,7 @@ theorem comap_map_comap {S : Submonoid N} {f : F} : ((S.comap f).map f).comap f 
   (gc_map_comap f).u_l_u_eq_u _
 
 @[to_additive]
-theorem map_sup (S T : Submonoid M) (f : F) : (S⊔T).map f = S.map f⊔T.map f :=
+theorem map_sup (S T : Submonoid M) (f : F) : (S ⊔ T).map f = S.map f ⊔ T.map f :=
   (gc_map_comap f : GaloisConnection (map f) (comap f)).l_sup
 
 @[to_additive]
@@ -267,7 +267,7 @@ theorem map_supr {ι : Sort _} (f : F) (s : ι → Submonoid M) : (supr s).map f
   (gc_map_comap f : GaloisConnection (map f) (comap f)).l_supr
 
 @[to_additive]
-theorem comap_inf (S T : Submonoid N) (f : F) : (S⊓T).comap f = S.comap f⊓T.comap f :=
+theorem comap_inf (S T : Submonoid N) (f : F) : (S ⊓ T).comap f = S.comap f ⊓ T.comap f :=
   (gc_map_comap f : GaloisConnection (map f) (comap f)).u_inf
 
 @[to_additive]
@@ -313,7 +313,7 @@ theorem map_injective_of_injective : Function.Injective (map f) :=
   (gciMapComap hf).l_injective
 
 @[to_additive]
-theorem comap_inf_map_of_injective (S T : Submonoid M) : (S.map f⊓T.map f).comap f = S⊓T :=
+theorem comap_inf_map_of_injective (S T : Submonoid M) : (S.map f ⊓ T.map f).comap f = S ⊓ T :=
   (gciMapComap hf).u_inf_l _ _
 
 @[to_additive]
@@ -321,7 +321,7 @@ theorem comap_infi_map_of_injective (S : ι → Submonoid M) : (⨅ i, (S i).map
   (gciMapComap hf).u_infi_l _
 
 @[to_additive]
-theorem comap_sup_map_of_injective (S T : Submonoid M) : (S.map f⊔T.map f).comap f = S⊔T :=
+theorem comap_sup_map_of_injective (S T : Submonoid M) : (S.map f ⊔ T.map f).comap f = S ⊔ T :=
   (gciMapComap hf).u_sup_l _ _
 
 @[to_additive]
@@ -366,7 +366,7 @@ theorem comap_injective_of_surjective : Function.Injective (comap f) :=
   (giMapComap hf).u_injective
 
 @[to_additive]
-theorem map_inf_comap_of_surjective (S T : Submonoid N) : (S.comap f⊓T.comap f).map f = S⊓T :=
+theorem map_inf_comap_of_surjective (S T : Submonoid N) : (S.comap f ⊓ T.comap f).map f = S ⊓ T :=
   (giMapComap hf).l_inf_u _ _
 
 @[to_additive]
@@ -374,7 +374,7 @@ theorem map_infi_comap_of_surjective (S : ι → Submonoid N) : (⨅ i, (S i).co
   (giMapComap hf).l_infi_u _
 
 @[to_additive]
-theorem map_sup_comap_of_surjective (S T : Submonoid N) : (S.comap f⊔T.comap f).map f = S⊔T :=
+theorem map_sup_comap_of_surjective (S T : Submonoid N) : (S.comap f ⊔ T.comap f).map f = S ⊔ T :=
   (giMapComap hf).l_sup_u _ _
 
 @[to_additive]
@@ -699,11 +699,11 @@ theorem map_inr (s : Submonoid N) : s.map (inr M N) = prod ⊥ s :=
       ⟨p.2, hps, Prod.extₓ (Set.eq_of_mem_singleton hp1).symm rfl⟩⟩
 
 @[simp, to_additive prod_bot_sup_bot_prod]
-theorem prod_bot_sup_bot_prod (s : Submonoid M) (t : Submonoid N) : s.Prod ⊥⊔prod ⊥ t = s.Prod t :=
+theorem prod_bot_sup_bot_prod (s : Submonoid M) (t : Submonoid N) : s.Prod ⊥ ⊔ prod ⊥ t = s.Prod t :=
   (le_antisymmₓ (sup_le (prod_mono (le_reflₓ s) bot_le) (prod_mono bot_le (le_reflₓ t)))) fun p hp =>
     Prod.fst_mul_snd p ▸
-      mul_mem ((le_sup_left : s.Prod ⊥ ≤ s.Prod ⊥⊔prod ⊥ t) ⟨hp.1, Set.mem_singleton 1⟩)
-        ((le_sup_right : prod ⊥ t ≤ s.Prod ⊥⊔prod ⊥ t) ⟨Set.mem_singleton 1, hp.2⟩)
+      mul_mem ((le_sup_left : s.Prod ⊥ ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨hp.1, Set.mem_singleton 1⟩)
+        ((le_sup_right : prod ⊥ t ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨Set.mem_singleton 1, hp.2⟩)
 
 @[to_additive]
 theorem mem_map_equiv {f : M ≃* N} {K : Submonoid M} {x : N} : x ∈ K.map f.toMonoidHom ↔ f.symm x ∈ K :=
@@ -1014,7 +1014,7 @@ theorem prod_eq_top_iff {s : Submonoid M} {t : Submonoid N} : s.Prod t = ⊤ ↔
   simp only [eq_top_iff, le_prod_iff, ← (gc_map_comap _).le_iff_le, ← mrange_eq_map, mrange_fst, mrange_snd]
 
 @[simp, to_additive]
-theorem mrange_inl_sup_mrange_inr : (inl M N).mrange⊔(inr M N).mrange = ⊤ := by
+theorem mrange_inl_sup_mrange_inr : (inl M N).mrange ⊔ (inr M N).mrange = ⊤ := by
   simp only [mrange_inl, mrange_inr, prod_bot_sup_bot_prod, top_prod_top]
 
 /-- The monoid hom associated to an inclusion of submonoids. -/
@@ -1064,7 +1064,7 @@ variable {S} {T : Submonoid M}
     monoid are equal. -/
 @[to_additive "Makes the identity additive isomorphism from a proof two\nsubmonoids of an additive monoid are equal."]
 def submonoidCongr (h : S = T) : S ≃* T :=
-  { Equivₓ.setCongr <| congr_argₓ _ h with map_mul' := fun _ _ => rfl }
+  { Equivₓ.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl }
 
 -- this name is primed so that the version to `f.range` instead of `f.mrange` can be unprimed.
 /-- A monoid homomorphism `f : M →* N` with a left-inverse `g : N → M` defines a multiplicative

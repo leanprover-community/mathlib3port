@@ -56,11 +56,11 @@ localized [Convex] notation "[" x " -[" 𝕜 "] " y "]" => Segment 𝕜 x y
 
 theorem segment_eq_image₂ (x y : E) :
     [x -[𝕜] y] = (fun p : 𝕜 × 𝕜 => p.1 • x + p.2 • y) '' { p | 0 ≤ p.1 ∧ 0 ≤ p.2 ∧ p.1 + p.2 = 1 } := by
-  simp only [Segment, image, Prod.existsₓ, mem_set_of_eq, exists_prop, and_assoc]
+  simp only [Segment, image, Prod.existsₓ, mem_set_of_eq, exists_propₓ, and_assocₓ]
 
 theorem open_segment_eq_image₂ (x y : E) :
     OpenSegment 𝕜 x y = (fun p : 𝕜 × 𝕜 => p.1 • x + p.2 • y) '' { p | 0 < p.1 ∧ 0 < p.2 ∧ p.1 + p.2 = 1 } := by
-  simp only [OpenSegment, image, Prod.existsₓ, mem_set_of_eq, exists_prop, and_assoc]
+  simp only [OpenSegment, image, Prod.existsₓ, mem_set_of_eq, exists_propₓ, and_assocₓ]
 
 theorem segment_symm (x y : E) : [x -[𝕜] y] = [y -[𝕜] x] :=
   Set.ext fun z =>
@@ -210,14 +210,14 @@ theorem open_segment_image (f : E →ₗ[𝕜] F) (a b : E) : f '' OpenSegment �
 
 theorem mem_segment_translate (a : E) {x b c} : a + x ∈ [a + b -[𝕜] a + c] ↔ x ∈ [b -[𝕜] c] := by
   rw [segment_eq_image', segment_eq_image']
-  refine' exists_congr fun θ => and_congr Iff.rfl _
+  refine' exists_congr fun θ => and_congrₓ Iff.rfl _
   simp only [add_sub_add_left_eq_sub, add_assocₓ, add_right_injₓ]
 
 @[simp]
 theorem mem_open_segment_translate (a : E) {x b c : E} :
     a + x ∈ OpenSegment 𝕜 (a + b) (a + c) ↔ x ∈ OpenSegment 𝕜 b c := by
   rw [open_segment_eq_image', open_segment_eq_image']
-  refine' exists_congr fun θ => and_congr Iff.rfl _
+  refine' exists_congr fun θ => and_congrₓ Iff.rfl _
   simp only [add_sub_add_left_eq_sub, add_assocₓ, add_right_injₓ]
 
 theorem segment_translate_preimage (a b c : E) : (fun x => a + x) ⁻¹' [a + b -[𝕜] a + c] = [b -[𝕜] c] :=
@@ -449,14 +449,14 @@ theorem segment_eq_interval (x y : 𝕜) : [x -[𝕜] y] = Interval x y :=
 /-- A point is in an `Icc` iff it can be expressed as a convex combination of the endpoints. -/
 theorem Convex.mem_Icc (h : x ≤ y) : z ∈ Icc x y ↔ ∃ a b, 0 ≤ a ∧ 0 ≤ b ∧ a + b = 1 ∧ a * x + b * y = z := by
   rw [← segment_eq_Icc h]
-  simp_rw [← exists_prop]
+  simp_rw [← exists_propₓ]
   rfl
 
 /-- A point is in an `Ioo` iff it can be expressed as a strict convex combination of the endpoints.
 -/
 theorem Convex.mem_Ioo (h : x < y) : z ∈ Ioo x y ↔ ∃ a b, 0 < a ∧ 0 < b ∧ a + b = 1 ∧ a * x + b * y = z := by
   rw [← open_segment_eq_Ioo h]
-  simp_rw [← exists_prop]
+  simp_rw [← exists_propₓ]
   rfl
 
 /-- A point is in an `Ioc` iff it can be expressed as a semistrict convex combination of the

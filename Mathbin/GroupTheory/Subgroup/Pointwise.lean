@@ -5,6 +5,7 @@ Authors: Eric Wieser
 -/
 import Mathbin.GroupTheory.Subgroup.Basic
 import Mathbin.GroupTheory.Submonoid.Pointwise
+import Mathbin.GroupTheory.GroupAction.ConjAct
 
 /-! # Pointwise instances on `subgroup` and `add_subgroup`s
 
@@ -39,8 +40,8 @@ variable [Monoidₓ α] [MulDistribMulAction α G]
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseMulAction : MulAction α (Subgroup G) where
   smul := fun a S => S.map (MulDistribMulAction.toMonoidEnd _ _ a)
-  one_smul := fun S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
-  mul_smul := fun a₁ a₂ S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
+  one_smul := fun S => (congr_arg (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
+  mul_smul := fun a₁ a₂ S => (congr_arg (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
 
 localized [Pointwise] attribute [instance] Subgroup.pointwiseMulAction
 
@@ -64,7 +65,7 @@ theorem mem_smul_pointwise_iff_exists (m : G) (a : α) (S : Subgroup G) : m ∈ 
   (Set.mem_smul_set : m ∈ a • (S : Set G) ↔ _)
 
 instance pointwise_central_scalar [MulDistribMulAction αᵐᵒᵖ G] [IsCentralScalar α G] : IsCentralScalar α (Subgroup G) :=
-  ⟨fun a S => (congr_argₓ fun f => S.map f) <| MonoidHom.ext <| op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_arg fun f => S.map f) <| MonoidHom.ext <| op_smul_eq_smul _⟩
 
 theorem conj_smul_le_of_le {P H : Subgroup G} (hP : P ≤ H) (h : H) : MulAut.conj (h : G) • P ≤ H := by
   rintro - ⟨g, hg, rfl⟩
@@ -123,6 +124,26 @@ theorem singleton_mul_subgroup {H : Subgroup G} {h : G} (hh : h ∈ H) : {h} * (
   rintro _ ⟨h, h', rfl : _ = _, hh', rfl⟩
   exact H.mul_mem hh hh'
 
+theorem Normal.conj_act {G : Type _} [Groupₓ G] {H : Subgroup G} (hH : H.Normal) (g : ConjAct G) : g • H = H := by
+  ext
+  constructor
+  · intro h
+    have := hH.conj_mem (g⁻¹ • x) _ (ConjAct.ofConjAct g)
+    rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem] at h
+    dsimp'  at *
+    rw [ConjAct.smul_def] at *
+    simp only [ConjAct.of_conj_act_inv, ConjAct.of_conj_act_to_conj_act, inv_invₓ] at *
+    convert this
+    simp only [← mul_assoc, mul_right_invₓ, one_mulₓ, mul_inv_cancel_rightₓ]
+    rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem] at h
+    exact h
+    
+  · intro h
+    rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem, ConjAct.smul_def]
+    apply hH.conj_mem
+    exact h
+    
+
 end Groupₓ
 
 section GroupWithZeroₓ
@@ -166,8 +187,8 @@ variable [Monoidₓ α] [DistribMulAction α A]
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseMulAction : MulAction α (AddSubgroup A) where
   smul := fun a S => S.map (DistribMulAction.toAddMonoidEnd _ _ a)
-  one_smul := fun S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
-  mul_smul := fun a₁ a₂ S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
+  one_smul := fun S => (congr_arg (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
+  mul_smul := fun a₁ a₂ S => (congr_arg (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
 
 localized [Pointwise] attribute [instance] AddSubgroup.pointwiseMulAction
 
@@ -188,7 +209,7 @@ theorem mem_smul_pointwise_iff_exists (m : A) (a : α) (S : AddSubgroup A) : m �
   (Set.mem_smul_set : m ∈ a • (S : Set A) ↔ _)
 
 instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ A] [IsCentralScalar α A] : IsCentralScalar α (AddSubgroup A) :=
-  ⟨fun a S => (congr_argₓ fun f => S.map f) <| AddMonoidHom.ext <| op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_arg fun f => S.map f) <| AddMonoidHom.ext <| op_smul_eq_smul _⟩
 
 end Monoidₓ
 

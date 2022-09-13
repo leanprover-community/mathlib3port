@@ -114,13 +114,13 @@ protected def addGroupFilterBasis [Nonempty ι] : AddGroupFilterBasis E :=
 theorem basis_sets_smul_right (v : E) (U : Set E) (hU : U ∈ p.basis_sets) : ∀ᶠ x : 𝕜 in 𝓝 0, x • v ∈ U := by
   rcases p.basis_sets_iff.mp hU with ⟨s, r, hr, hU⟩
   rw [hU, Filter.eventually_iff]
-  simp_rw [(s.sup p).mem_ball_zero, (s.sup p).smul]
+  simp_rw [(s.sup p).mem_ball_zero, map_smul_eq_mul]
   by_cases' h : 0 < (s.sup p) v
   · simp_rw [(lt_div_iff h).symm]
     rw [← _root_.ball_zero_eq]
     exact Metric.ball_mem_nhds 0 (div_pos hr h)
     
-  simp_rw [le_antisymmₓ (not_lt.mp h) ((s.sup p).Nonneg v), mul_zero, hr]
+  simp_rw [le_antisymmₓ (not_lt.mp h) (map_nonneg _ v), mul_zero, hr]
   exact IsOpen.mem_nhds is_open_univ (mem_univ 0)
 
 variable [Nonempty ι]
@@ -187,14 +187,14 @@ variable [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [AddCommGroupₓ
 -- Todo: This should be phrased entirely in terms of the von Neumann bornology.
 /-- The proposition that a linear map is bounded between spaces with families of seminorms. -/
 def IsBounded (p : ι → Seminorm 𝕜 E) (q : ι' → Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) : Prop :=
-  ∀ i, ∃ s : Finset ι, ∃ C : ℝ≥0 , C ≠ 0 ∧ (q i).comp f ≤ C • s.sup p
+  ∀ i, ∃ s : Finset ι, ∃ C : ℝ≥0, C ≠ 0 ∧ (q i).comp f ≤ C • s.sup p
 
 theorem is_bounded_const (ι' : Type _) [Nonempty ι'] {p : ι → Seminorm 𝕜 E} {q : Seminorm 𝕜 F} (f : E →ₗ[𝕜] F) :
-    IsBounded p (fun _ : ι' => q) f ↔ ∃ (s : Finset ι)(C : ℝ≥0 ), C ≠ 0 ∧ q.comp f ≤ C • s.sup p := by
+    IsBounded p (fun _ : ι' => q) f ↔ ∃ (s : Finset ι)(C : ℝ≥0), C ≠ 0 ∧ q.comp f ≤ C • s.sup p := by
   simp only [is_bounded, forall_const]
 
 theorem const_is_bounded (ι : Type _) [Nonempty ι] {p : Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜 F} (f : E →ₗ[𝕜] F) :
-    IsBounded (fun _ : ι => p) q f ↔ ∀ i, ∃ C : ℝ≥0 , C ≠ 0 ∧ (q i).comp f ≤ C • p := by
+    IsBounded (fun _ : ι => p) q f ↔ ∀ i, ∃ C : ℝ≥0, C ≠ 0 ∧ (q i).comp f ≤ C • p := by
   constructor <;> intro h i
   · rcases h i with ⟨s, C, hC, h⟩
     exact ⟨C, hC, le_transₓ h (smul_le_smul (Finset.sup_le fun _ _ => le_rflₓ) le_rflₓ)⟩
@@ -203,14 +203,13 @@ theorem const_is_bounded (ι : Type _) [Nonempty ι] {p : Seminorm 𝕜 E} {q : 
   simp only [h, Finset.sup_singleton]
 
 theorem is_bounded_sup {p : ι → Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜 F} {f : E →ₗ[𝕜] F} (hf : IsBounded p q f)
-    (s' : Finset ι') : ∃ (C : ℝ≥0 )(s : Finset ι), 0 < C ∧ (s'.sup q).comp f ≤ C • s.sup p := by
+    (s' : Finset ι') : ∃ (C : ℝ≥0)(s : Finset ι), 0 < C ∧ (s'.sup q).comp f ≤ C • s.sup p := by
   classical
-  by_cases' hs' : ¬s'.nonempty
-  · refine' ⟨1, ∅, zero_lt_one, _⟩
-    rw [finset.not_nonempty_iff_eq_empty.mp hs', Finset.sup_empty, Seminorm.bot_eq_zero, zero_comp]
-    exact Seminorm.nonneg _
+  obtain rfl | hs' := s'.eq_empty_or_nonempty
+  · exact
+      ⟨1, ∅, zero_lt_one, by
+        simp [Seminorm.bot_eq_zero]⟩
     
-  rw [not_not] at hs'
   choose fₛ fC hf using hf
   use s'.card • s'.sup fC, Finset.bUnion s' fₛ
   constructor
@@ -250,7 +249,7 @@ variable {p : SeminormFamily 𝕜 E ι}
 
 theorem WithSeminorms.has_basis (hp : WithSeminorms p) : (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ p.basis_sets) id :=
   by
-  rw [congr_funₓ (congr_argₓ (@nhds E) hp.1) 0]
+  rw [congr_fun (congr_arg (@nhds E) hp.1) 0]
   exact AddGroupFilterBasis.nhds_zero_has_basis _
 
 end Topology
@@ -358,10 +357,10 @@ theorem Bornology.is_vonN_bounded_iff_seminorm_bounded {s : Set E} (hp : WithSem
       exact lt_of_lt_of_leₓ (hr i) (Finset.le_sup' r hi)
     refine' ⟨I.sup' hI r, h', fun x hx => finset_sup_apply_lt h' fun i hi => _⟩
     refine' lt_of_lt_of_leₓ (h i x hx) _
-    simp only [Finset.le_sup'_iff, exists_prop]
+    simp only [Finset.le_sup'_iff, exists_propₓ]
     exact ⟨i, hi, (Eq.refl _).le⟩
     
-  simp only [finset.not_nonempty_iff_eq_empty.mp hI, Finset.sup_empty, coe_bot, Pi.zero_apply, exists_prop]
+  simp only [finset.not_nonempty_iff_eq_empty.mp hI, Finset.sup_empty, coe_bot, Pi.zero_apply, exists_propₓ]
   exact ⟨1, zero_lt_one, fun _ _ => zero_lt_one⟩
 
 end NontriviallyNormedField
@@ -394,13 +393,13 @@ theorem continuous_from_bounded {p : SeminormFamily 𝕜 E ι} {q : SeminormFami
 
 theorem cont_with_seminorms_normed_space (F) [SeminormedAddCommGroup F] [NormedSpace 𝕜 F] [UniformSpace E]
     [UniformAddGroup E] {p : ι → Seminorm 𝕜 E} (hp : WithSeminorms p) (f : E →ₗ[𝕜] F)
-    (hf : ∃ (s : Finset ι)(C : ℝ≥0 ), C ≠ 0 ∧ (normSeminorm 𝕜 F).comp f ≤ C • s.sup p) : Continuous f := by
+    (hf : ∃ (s : Finset ι)(C : ℝ≥0), C ≠ 0 ∧ (normSeminorm 𝕜 F).comp f ≤ C • s.sup p) : Continuous f := by
   rw [← Seminorm.is_bounded_const (Finₓ 1)] at hf
   exact continuous_from_bounded hp (norm_with_seminorms 𝕜 F) f hf
 
 theorem cont_normed_space_to_with_seminorms (E) [SeminormedAddCommGroup E] [NormedSpace 𝕜 E] [UniformSpace F]
     [UniformAddGroup F] {q : ι → Seminorm 𝕜 F} (hq : WithSeminorms q) (f : E →ₗ[𝕜] F)
-    (hf : ∀ i : ι, ∃ C : ℝ≥0 , C ≠ 0 ∧ (q i).comp f ≤ C • normSeminorm 𝕜 E) : Continuous f := by
+    (hf : ∀ i : ι, ∃ C : ℝ≥0, C ≠ 0 ∧ (q i).comp f ≤ C • normSeminorm 𝕜 E) : Continuous f := by
   rw [← Seminorm.const_is_bounded (Finₓ 1)] at hf
   exact continuous_from_bounded (norm_with_seminorms 𝕜 E) hq f hf
 

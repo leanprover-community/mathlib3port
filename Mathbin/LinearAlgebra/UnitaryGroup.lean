@@ -62,7 +62,18 @@ variable {α : Type v} [CommRingₓ α] [StarRing α]
 
 theorem mem_unitary_group_iff {A : Matrix n n α} : A ∈ Matrix.unitaryGroup n α ↔ A * star A = 1 := by
   refine' ⟨And.right, fun hA => ⟨_, hA⟩⟩
-  simpa only [Matrix.mul_eq_mul, Matrix.mul_eq_one_comm] using hA
+  simpa only [mul_eq_mul, mul_eq_one_comm] using hA
+
+theorem mem_unitary_group_iff' {A : Matrix n n α} : A ∈ Matrix.unitaryGroup n α ↔ star A * A = 1 := by
+  refine' ⟨And.left, fun hA => ⟨hA, _⟩⟩
+  rwa [mul_eq_mul, mul_eq_one_comm] at hA
+
+theorem det_of_mem_unitary {A : Matrix n n α} (hA : A ∈ Matrix.unitaryGroup n α) : A.det ∈ unitary α := by
+  constructor
+  · simpa [star, det_transpose] using congr_arg det hA.1
+    
+  · simpa [star, det_transpose] using congr_arg det hA.2
+    
 
 namespace UnitaryGroup
 
@@ -80,7 +91,7 @@ def toLin' (A : unitaryGroup n α) :=
   Matrix.toLin' A
 
 theorem ext_iff (A B : unitaryGroup n α) : A = B ↔ ∀ i j, A i j = B i j :=
-  Subtype.ext_iff_val.trans ⟨fun h i j => congr_funₓ (congr_funₓ h i) j, Matrix.ext⟩
+  Subtype.ext_iff_val.trans ⟨fun h i j => congr_fun (congr_fun h i) j, Matrix.ext⟩
 
 @[ext]
 theorem ext (A B : unitaryGroup n α) : (∀ i j, A i j = B i j) → A = B :=
@@ -187,7 +198,11 @@ abbrev orthogonalGroup :=
 
 theorem mem_orthogonal_group_iff {A : Matrix n n β} : A ∈ Matrix.orthogonalGroup n β ↔ A * star A = 1 := by
   refine' ⟨And.right, fun hA => ⟨_, hA⟩⟩
-  simpa only [Matrix.mul_eq_mul, Matrix.mul_eq_one_comm] using hA
+  simpa only [mul_eq_mul, mul_eq_one_comm] using hA
+
+theorem mem_orthogonal_group_iff' {A : Matrix n n β} : A ∈ Matrix.orthogonalGroup n β ↔ star A * A = 1 := by
+  refine' ⟨And.left, fun hA => ⟨hA, _⟩⟩
+  rwa [mul_eq_mul, mul_eq_one_comm] at hA
 
 end OrthogonalGroup
 

@@ -172,7 +172,7 @@ theorem perm_ordered_insert (a) : ∀ l : List α, orderedInsert r a l ~ a :: l
       simpa [ordered_insert, h] using ((perm_ordered_insert l).cons _).trans (perm.swap _ _ _)]
 
 theorem ordered_insert_count [DecidableEq α] (L : List α) (a b : α) :
-    count a (L.orderedInsert r b) = count a L + if a = b then 1 else 0 := by
+    countₓ a (L.orderedInsert r b) = countₓ a L + if a = b then 1 else 0 := by
   rw [(L.perm_ordered_insert r b).count_eq, count_cons]
   split_ifs <;> simp only [Nat.succ_eq_add_one, add_zeroₓ]
 

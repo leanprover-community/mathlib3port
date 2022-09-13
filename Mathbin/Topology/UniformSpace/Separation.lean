@@ -206,7 +206,8 @@ instance (priority := 100) separated_t3 [SeparatedSpace α] : T3Space α :=
         have : (a, a') ∈ CompRel d d := ⟨y, hx₂, hy⟩
         h this rfl
       have : Closure e ∈ 𝓝 a := (𝓝 a).sets_of_superset (mem_nhds_left a hd) subset_closure
-      have : 𝓝 a⊓𝓟 (Closure eᶜ) = ⊥ := (is_compl_principal (Closure e)).inf_right_eq_bot_iff.2 (le_principal_iff.2 this)
+      have : 𝓝 a ⊓ 𝓟 (Closure eᶜ) = ⊥ :=
+        (is_compl_principal (Closure e)).inf_right_eq_bot_iff.2 (le_principal_iff.2 this)
       ⟨Closure eᶜ, is_closed_closure.is_open_compl, fun x h₁ h₂ => @e_subset x h₂ h₁, this⟩ }
 
 theorem is_closed_of_spaced_out [SeparatedSpace α] {V₀ : Set (α × α)} (V₀_in : V₀ ∈ 𝓤 α) {s : Set α}
@@ -401,7 +402,7 @@ theorem comap_quotient_le_uniformity :
   ⟨(fun p : α × α => (⟦p.1⟧, ⟦p.2⟧)) '' s, ((𝓤 α).sets_of_superset hs) fun x hx => ⟨x, hx, rfl⟩,
     fun ⟨a₁, a₂⟩ ⟨⟨b₁, b₂⟩, hb, ab_eq⟩ =>
     have : ⟦b₁⟧ = ⟦a₁⟧ ∧ ⟦b₂⟧ = ⟦a₂⟧ := Prod.mk.inj ab_eq
-    have : b₁ ≈ a₁ ∧ b₂ ≈ a₂ := And.imp Quotientₓ.exact Quotientₓ.exact this
+    have : b₁ ≈ a₁ ∧ b₂ ≈ a₂ := And.impₓ Quotientₓ.exact Quotientₓ.exact this
     have ab₁ : (a₁, b₁) ∈ t := (Setoidₓ.symm this.left) t ht
     have ba₂ : (b₂, a₂) ∈ s := this.right s hs
     tt_t' ⟨b₁, show ((a₁, a₂).1, b₁) ∈ t from ab₁, ss_t ⟨b₂, show ((b₁, a₂).1, b₂) ∈ s from hb, ba₂⟩⟩⟩
@@ -487,7 +488,7 @@ theorem map_unique {f : α → β} (hf : UniformContinuous f) {g : SeparationQuo
   ext ⟨a⟩ <;>
     calc
       map f ⟦a⟧ = ⟦f a⟧ := map_mk hf a
-      _ = g ⟦a⟧ := congr_funₓ comm a
+      _ = g ⟦a⟧ := congr_fun comm a
       
 
 theorem map_id : map (@id α) = id :=

@@ -75,7 +75,7 @@ theorem SupIndep.pairwise_disjoint (hs : s.SupIndep f) : (s : Set ι).PairwiseDi
 /-- The RHS looks like the definition of `complete_lattice.independent`. -/
 theorem sup_indep_iff_disjoint_erase [DecidableEq ι] : s.SupIndep f ↔ ∀ i ∈ s, Disjoint (f i) ((s.erase i).sup f) :=
   ⟨fun hs i hi => hs (erase_subset _ _) hi (not_mem_erase _ _), fun hs t ht i hi hit =>
-    (hs i hi).mono_right (sup_mono fun j hj => mem_erase.2 ⟨ne_of_mem_of_not_mem hj hit, ht hj⟩)⟩
+    (hs i hi).mono_right (sup_mono fun j hj => mem_erase.2 ⟨ne_of_mem_of_not_memₓ hj hit, ht hj⟩)⟩
 
 @[simp]
 theorem sup_indep_pair [DecidableEq ι] {i j : ι} (hij : i ≠ j) :
@@ -100,7 +100,7 @@ theorem sup_indep_pair [DecidableEq ι] {i j : ι} (hij : i ≠ j) :
       have : ({i, k} : Finset ι).erase k = {i} := by
         ext
         rw [mem_erase, mem_insert, mem_singleton, mem_singleton, and_or_distrib_left, Ne.def, not_and_selfₓ, or_falseₓ,
-          and_iff_right_of_imp]
+          and_iff_right_of_impₓ]
         rintro rfl
         exact hij
       rw [this, Finset.sup_singleton]
@@ -135,7 +135,7 @@ variable [DistribLattice α] [OrderBot α] {s : Finset ι} {f : ι → α}
 
 theorem sup_indep_iff_pairwise_disjoint : s.SupIndep f ↔ (s : Set ι).PairwiseDisjoint f :=
   ⟨SupIndep.pairwise_disjoint, fun hs t ht i hi hit =>
-    disjoint_sup_right.2 fun j hj => hs hi (ht hj) (ne_of_mem_of_not_mem hj hit).symm⟩
+    disjoint_sup_right.2 fun j hj => hs hi (ht hj) (ne_of_mem_of_not_memₓ hj hit).symm⟩
 
 alias sup_indep_iff_pairwise_disjoint ↔ sup_indep.pairwise_disjoint _root_.set.pairwise_disjoint.sup_indep
 
@@ -272,7 +272,7 @@ theorem Independent.comp' {ι ι' : Sort _} {t : ι → α} {f : ι' → ι} (ht
   intro i
   obtain ⟨i', rfl⟩ := hf i
   rw [← hf.supr_comp]
-  exact (ht i').mono_right (bsupr_mono fun j' hij => mt (congr_argₓ f) hij)
+  exact (ht i').mono_right (bsupr_mono fun j' hij => mt (congr_arg f) hij)
 
 theorem Independent.set_independent_range (ht : Independent t) : set_independent <| Range t := by
   rw [set_independent_iff]
@@ -317,7 +317,7 @@ theorem Independent.map_order_iso {ι : Sort _} {α β : Type _} [CompleteLattic
 theorem independent_map_order_iso_iff {ι : Sort _} {α β : Type _} [CompleteLattice α] [CompleteLattice β] (f : α ≃o β)
     {a : ι → α} : Independent (f ∘ a) ↔ Independent a :=
   ⟨fun h =>
-    have hf : f.symm ∘ f ∘ a = a := congr_argₓ (· ∘ a) f.left_inv.comp_eq_id
+    have hf : f.symm ∘ f ∘ a = a := congr_arg (· ∘ a) f.left_inv.comp_eq_id
     hf ▸ h.map_order_iso f.symm,
     fun h => h.map_order_iso f⟩
 
@@ -325,7 +325,7 @@ theorem independent_map_order_iso_iff {ι : Sort _} {α β : Type _} [CompleteLa
 subset of the rest. -/
 theorem Independent.disjoint_bsupr {ι : Type _} {α : Type _} [CompleteLattice α] {t : ι → α} (ht : Independent t)
     {x : ι} {y : Set ι} (hx : x ∉ y) : Disjoint (t x) (⨆ i ∈ y, t i) :=
-  Disjoint.mono_right (bsupr_mono fun i hi => (ne_of_mem_of_not_mem hi hx : _)) (ht x)
+  Disjoint.mono_right (bsupr_mono fun i hi => (ne_of_mem_of_not_memₓ hi hx : _)) (ht x)
 
 end CompleteLattice
 

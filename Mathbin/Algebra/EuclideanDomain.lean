@@ -554,12 +554,12 @@ end EuclideanDomain
 
 instance Int.euclideanDomain : EuclideanDomain ℤ :=
   { Int.commRing, Int.nontrivial with add := (· + ·), mul := (· * ·), one := 1, zero := 0, neg := Neg.neg,
-    Quotient := (· / ·), quotient_zero := Int.div_zero, remainder := (· % ·),
-    quotient_mul_add_remainder_eq := fun a b => Int.div_add_mod _ _, R := fun a b => a.natAbs < b.natAbs,
+    Quotient := (· / ·), quotient_zero := Int.div_zeroₓ, remainder := (· % ·),
+    quotient_mul_add_remainder_eq := fun a b => Int.div_add_modₓ _ _, R := fun a b => a.natAbs < b.natAbs,
     r_well_founded := measure_wf fun a => Int.natAbs a,
     remainder_lt := fun a b b0 =>
       Int.coe_nat_ltₓ.1 <| by
-        rw [Int.nat_abs_of_nonneg (Int.mod_nonneg _ b0), ← Int.abs_eq_nat_abs]
+        rw [Int.nat_abs_of_nonneg (Int.mod_nonnegₓ _ b0), ← Int.abs_eq_nat_abs]
         exact Int.mod_lt _ b0,
     mul_left_not_lt := fun a b b0 =>
       not_lt_of_geₓ <| by

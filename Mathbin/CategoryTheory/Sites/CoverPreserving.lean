@@ -510,10 +510,10 @@ def Sites.pushforward (G : C ⥤ D) : Sheaf J A ⥤ Sheaf K A :=
   sheafToPresheaf J A ⋙ lan G.op ⋙ presheafToSheaf K A
 
 instance (G : C ⥤ D) [RepresentablyFlat G] : PreservesFiniteLimits (Sites.pushforward A J K G) := by
-  apply comp_preserves_finite_limits with { instances := false }
+  apply (config := { instances := false }) comp_preserves_finite_limits
   · infer_instance
     
-  apply comp_preserves_finite_limits with { instances := false }
+  apply (config := { instances := false }) comp_preserves_finite_limits
   · apply CategoryTheory.lanPreservesFiniteLimitsOfFlat
     
   · apply CategoryTheory.presheafToSheaf.Limits.preservesFiniteLimits.{u₂, v₁, v₁}

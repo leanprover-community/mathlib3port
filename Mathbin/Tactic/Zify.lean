@@ -47,7 +47,7 @@ unsafe def zify_attr : user_attribute simp_lemmas Unit where
   descr := "Used to tag lemmas for use in the `zify` tactic"
   cache_cfg :=
     { mk_cache := fun ns =>
-        mmapₓ
+        mmap
             (fun n => do
               let c ← mk_const n
               return (c, tt))

@@ -97,7 +97,7 @@ theorem integral_finset_bUnion {ι : Type _} (t : Finset ι) {s : ι → Set α}
     · rw [Finset.sum_insert hat, IH hs.2 h's.1 hf.2]
       
     · simp only [disjoint_Union_right]
-      exact fun i hi => (h's.2 i hi (ne_of_mem_of_not_mem hi hat).symm).1
+      exact fun i hi => (h's.2 i hi (ne_of_mem_of_not_memₓ hi hat).symm).1
       
     · exact Finset.measurable_set_bUnion _ hs.2
       
@@ -594,7 +594,7 @@ Often there is a good formula for `(μ (s i)).to_real`, so the formalization can
 argument `m` with this formula and a proof `of `(λ i, (μ (s i)).to_real) =ᶠ[li] m`. Without these
 arguments, `m i = (μ (s i)).to_real` is used in the output. -/
 theorem Filter.Tendsto.integral_sub_linear_is_o_ae [NormedSpace ℝ E] [CompleteSpace E] {μ : Measureₓ α} {l : Filter α}
-    [l.IsMeasurablyGenerated] {f : α → E} {b : E} (h : Tendsto f (l⊓μ.ae) (𝓝 b))
+    [l.IsMeasurablyGenerated] {f : α → E} {b : E} (h : Tendsto f (l ⊓ μ.ae) (𝓝 b))
     (hfm : StronglyMeasurableAtFilter f l μ) (hμ : μ.FiniteAtFilter l) {s : ι → Set α} {li : Filter ι}
     (hs : Tendsto s li l.smallSets) (m : ι → ℝ := fun i => (μ (s i)).toReal)
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by
@@ -831,7 +831,7 @@ theorem integral_eq_zero_of_forall_integral_inner_eq_zero (f : α → E') (hf : 
 
 end Inner
 
-theorem integral_with_density_eq_integral_smul {f : α → ℝ≥0 } (f_meas : Measurable f) (g : α → E) :
+theorem integral_with_density_eq_integral_smul {f : α → ℝ≥0} (f_meas : Measurable f) (g : α → E) :
     (∫ a, g a ∂μ.withDensity fun x => f x) = ∫ a, f a • g a ∂μ := by
   by_cases' hg : integrable g (μ.with_density fun x => f x)
   swap
@@ -888,7 +888,7 @@ theorem integral_with_density_eq_integral_smul {f : α → ℝ≥0 } (f_meas : M
       
     
 
-theorem integral_with_density_eq_integral_smul₀ {f : α → ℝ≥0 } (hf : AeMeasurable f μ) (g : α → E) :
+theorem integral_with_density_eq_integral_smul₀ {f : α → ℝ≥0} (hf : AeMeasurable f μ) (g : α → E) :
     (∫ a, g a ∂μ.withDensity fun x => f x) = ∫ a, f a • g a ∂μ := by
   let f' := hf.mk _
   calc
@@ -904,11 +904,11 @@ theorem integral_with_density_eq_integral_smul₀ {f : α → ℝ≥0 } (hf : Ae
       rw [hx]
     
 
-theorem set_integral_with_density_eq_set_integral_smul {f : α → ℝ≥0 } (f_meas : Measurable f) (g : α → E) {s : Set α}
+theorem set_integral_with_density_eq_set_integral_smul {f : α → ℝ≥0} (f_meas : Measurable f) (g : α → E) {s : Set α}
     (hs : MeasurableSet s) : (∫ a in s, g a ∂μ.withDensity fun x => f x) = ∫ a in s, f a • g a ∂μ := by
   rw [restrict_with_density hs, integral_with_density_eq_integral_smul f_meas]
 
-theorem set_integral_with_density_eq_set_integral_smul₀ {f : α → ℝ≥0 } {s : Set α} (hf : AeMeasurable f (μ.restrict s))
+theorem set_integral_with_density_eq_set_integral_smul₀ {f : α → ℝ≥0} {s : Set α} (hf : AeMeasurable f (μ.restrict s))
     (g : α → E) (hs : MeasurableSet s) : (∫ a in s, g a ∂μ.withDensity fun x => f x) = ∫ a in s, f a • g a ∂μ := by
   rw [restrict_with_density hs, integral_with_density_eq_integral_smul₀ hf]
 

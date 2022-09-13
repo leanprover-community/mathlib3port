@@ -107,7 +107,7 @@ theorem at_top_basis [Nonempty α] [SemilatticeSup α] : (@atTop α _).HasBasis 
 theorem at_top_basis' [SemilatticeSup α] (a : α) : (@atTop α _).HasBasis (fun x => a ≤ x) Ici :=
   ⟨fun t =>
     (@at_top_basis α ⟨a⟩ _).mem_iff.trans
-      ⟨fun ⟨x, _, hx⟩ => ⟨x⊔a, le_sup_right, fun y hy => hx (le_transₓ le_sup_left hy)⟩, fun ⟨x, _, hx⟩ =>
+      ⟨fun ⟨x, _, hx⟩ => ⟨x ⊔ a, le_sup_right, fun y hy => hx (le_transₓ le_sup_left hy)⟩, fun ⟨x, _, hx⟩ =>
         ⟨x, trivialₓ, hx⟩⟩⟩
 
 theorem at_bot_basis [Nonempty α] [SemilatticeInf α] : (@atBot α _).HasBasis (fun _ => True) Iic :=
@@ -337,11 +337,11 @@ namespace Filter
 
 
 theorem inf_map_at_top_ne_bot_iff [SemilatticeSup α] [Nonempty α] {F : Filter β} {u : α → β} :
-    NeBot (F⊓map u atTop) ↔ ∀ U ∈ F, ∀ N, ∃ n ≥ N, u n ∈ U := by
+    NeBot (F ⊓ map u atTop) ↔ ∀ U ∈ F, ∀ N, ∃ n ≥ N, u n ∈ U := by
   simp_rw [inf_ne_bot_iff_frequently_left, frequently_map, frequently_at_top] <;> rfl
 
 theorem inf_map_at_bot_ne_bot_iff [SemilatticeInf α] [Nonempty α] {F : Filter β} {u : α → β} :
-    NeBot (F⊓map u atBot) ↔ ∀ U ∈ F, ∀ N, ∃ n ≤ N, u n ∈ U :=
+    NeBot (F ⊓ map u atBot) ↔ ∀ U ∈ F, ∀ N, ∃ n ≤ N, u n ∈ U :=
   @inf_map_at_top_ne_bot_iff αᵒᵈ _ _ _ _ _
 
 theorem extraction_of_frequently_at_top' {P : ℕ → Prop} (h : ∀ N, ∃ n > N, P n) :
@@ -731,7 +731,7 @@ theorem tendsto_abs_at_bot_at_top : Tendsto (abs : α → α) atBot atTop :=
   tendsto_at_top_mono neg_le_abs_self tendsto_neg_at_bot_at_top
 
 @[simp]
-theorem comap_abs_at_top : comap (abs : α → α) atTop = at_bot⊔at_top := by
+theorem comap_abs_at_top : comap (abs : α → α) atTop = at_bot ⊔ at_top := by
   refine'
     le_antisymmₓ (((at_top_basis.comap _).le_basis_iff (at_bot_basis.sup at_top_basis)).2 _)
       (sup_le tendsto_abs_at_bot_at_top.le_comap tendsto_abs_at_top_at_top.le_comap)
@@ -1189,9 +1189,9 @@ Galois insertion. The Galois "insertion" and "connection" is weakened to only re
 insertion and a connetion above `b'`. -/
 theorem map_at_top_eq_of_gc [SemilatticeSup α] [SemilatticeSup β] {f : α → β} (g : β → α) (b' : β) (hf : Monotone f)
     (gc : ∀ a, ∀ b ≥ b', f a ≤ b ↔ a ≤ g b) (hgi : ∀ b ≥ b', b ≤ f (g b)) : map f atTop = at_top := by
-  refine' le_antisymmₓ (hf.tendsto_at_top_at_top fun b => ⟨g (b⊔b'), le_sup_left.trans <| hgi _ le_sup_right⟩) _
+  refine' le_antisymmₓ (hf.tendsto_at_top_at_top fun b => ⟨g (b ⊔ b'), le_sup_left.trans <| hgi _ le_sup_right⟩) _
   rw [@map_at_top_eq _ _ ⟨g b'⟩]
-  refine' le_infi fun a => infi_le_of_le (f a⊔b') <| principal_mono.2 fun b hb => _
+  refine' le_infi fun a => infi_le_of_le (f a ⊔ b') <| principal_mono.2 fun b hb => _
   rw [mem_Ici, sup_le_iff] at hb
   exact ⟨g b, (gc _ _ hb.2).1 hb.1, le_antisymmₓ ((gc _ _ hb.2).2 le_rflₓ) (hgi _ hb.2)⟩
 
@@ -1203,7 +1203,7 @@ theorem map_coe_at_top_of_Ici_subset [SemilatticeSup α] {a : α} {s : Set α} (
     map (coe : s → α) atTop = at_top := by
   have : Directed (· ≥ ·) fun x : s => 𝓟 (Ici x) := by
     intro x y
-    use ⟨x⊔y⊔a, h le_sup_right⟩
+    use ⟨x ⊔ y ⊔ a, h le_sup_right⟩
     simp only [ge_iff_leₓ, principal_mono, Ici_subset_Ici, ← Subtype.coe_le_coe, Subtype.coe_mk]
     exact ⟨le_sup_left.trans le_sup_left, le_sup_right.trans le_sup_left⟩
   haveI : Nonempty s := ⟨⟨a, h le_rflₓ⟩⟩
@@ -1211,12 +1211,12 @@ theorem map_coe_at_top_of_Ici_subset [SemilatticeSup α] {a : α} {s : Set α} (
     map_principal]
   constructor
   · intro x
-    refine' mem_of_superset (mem_infi_of_mem ⟨x⊔a, h le_sup_right⟩ (mem_principal_self _)) _
+    refine' mem_of_superset (mem_infi_of_mem ⟨x ⊔ a, h le_sup_right⟩ (mem_principal_self _)) _
     rintro _ ⟨y, hy, rfl⟩
     exact le_transₓ le_sup_left (Subtype.coe_le_coe.2 hy)
     
   · intro x
-    filter_upwards [mem_at_top (↑x⊔a)] with b hb
+    filter_upwards [mem_at_top (↑x ⊔ a)] with b hb
     exact ⟨⟨b, h <| le_sup_right.trans hb⟩, Subtype.coe_le_coe.1 (le_sup_left.trans hb), rfl⟩
     
 
@@ -1467,9 +1467,9 @@ theorem tendsto_iff_seq_tendsto {f : α → β} {k : Filter α} {l : Filter β} 
     Tendsto f k l ↔ ∀ x : ℕ → α, Tendsto x atTop k → Tendsto (f ∘ x) atTop l := by
   refine' ⟨fun h x hx => h.comp hx, fun H s hs => _⟩
   contrapose! H
-  have : ne_bot (k⊓𝓟 (f ⁻¹' sᶜ)) := by
+  have : ne_bot (k ⊓ 𝓟 (f ⁻¹' sᶜ)) := by
     simpa [ne_bot_iff, inf_principal_eq_bot]
-  rcases(k⊓𝓟 (f ⁻¹' sᶜ)).exists_seq_tendsto with ⟨x, hx⟩
+  rcases(k ⊓ 𝓟 (f ⁻¹' sᶜ)).exists_seq_tendsto with ⟨x, hx⟩
   rw [tendsto_inf, tendsto_principal] at hx
   refine' ⟨x, hx.1, fun h => _⟩
   rcases(hx.2.And (h hs)).exists with ⟨N, hnmem, hmem⟩
@@ -1482,7 +1482,7 @@ theorem tendsto_of_seq_tendsto {f : α → β} {k : Filter α} {l : Filter β} [
 theorem tendsto_iff_forall_eventually_mem {α ι : Type _} {x : ι → α} {f : Filter α} {l : Filter ι} :
     Tendsto x l f ↔ ∀ s ∈ f, ∀ᶠ n in l, x n ∈ s := by
   rw [tendsto_def]
-  refine' forall_congrₓ fun s => imp_congr_right fun hsf => _
+  refine' forall_congrₓ fun s => imp_congr_rightₓ fun hsf => _
   rfl
 
 theorem not_tendsto_iff_exists_frequently_nmem {α ι : Type _} {x : ι → α} {f : Filter α} {l : Filter ι} :
@@ -1490,14 +1490,14 @@ theorem not_tendsto_iff_exists_frequently_nmem {α ι : Type _} {x : ι → α} 
   rw [tendsto_iff_forall_eventually_mem]
   push_neg
   refine' exists_congr fun s => _
-  rw [not_eventually, exists_prop]
+  rw [not_eventually, exists_propₓ]
 
 theorem frequently_iff_seq_frequently {ι : Type _} {l : Filter ι} {p : ι → Prop} [hl : l.IsCountablyGenerated] :
     (∃ᶠ n in l, p n) ↔ ∃ x : ℕ → ι, Tendsto x atTop l ∧ ∃ᶠ n : ℕ in at_top, p (x n) := by
   refine' ⟨fun h_freq => _, fun h_exists_freq => _⟩
-  · have : ne_bot (l⊓𝓟 { x : ι | p x }) := by
+  · have : ne_bot (l ⊓ 𝓟 { x : ι | p x }) := by
       simpa [ne_bot_iff, inf_principal_eq_bot]
-    obtain ⟨x, hx⟩ := exists_seq_tendsto (l⊓𝓟 { x : ι | p x })
+    obtain ⟨x, hx⟩ := exists_seq_tendsto (l ⊓ 𝓟 { x : ι | p x })
     rw [tendsto_inf] at hx
     cases' hx with hx_l hx_p
     refine' ⟨x, hx_l, _⟩
@@ -1555,7 +1555,7 @@ theorem tendsto_of_subseq_tendsto {α ι : Type _} {x : ι → α} {f : Filter �
   rw [h_empty] at hms_tendsto
   exact empty_not_mem at_top hms_tendsto
 
-theorem subseq_tendsto_of_ne_bot {f : Filter α} [IsCountablyGenerated f] {u : ℕ → α} (hx : NeBot (f⊓map u atTop)) :
+theorem subseq_tendsto_of_ne_bot {f : Filter α} [IsCountablyGenerated f] {u : ℕ → α} (hx : NeBot (f ⊓ map u atTop)) :
     ∃ θ : ℕ → ℕ, StrictMono θ ∧ Tendsto (u ∘ θ) atTop f := by
   obtain ⟨B, h⟩ := f.exists_antitone_basis
   have : ∀ N, ∃ n ≥ N, u n ∈ B N := fun N =>

@@ -67,7 +67,7 @@ def UnifIntegrable {m : MeasurableSpace α} (f : ι → α → β) (p : ℝ≥0�
 /-- In probability theory, a family of measurable functions is uniformly integrable if it is
 uniformly integrable in the measure theory sense and is uniformly bounded. -/
 def UniformIntegrable {m : MeasurableSpace α} (f : ι → α → β) (p : ℝ≥0∞) (μ : Measure α) : Prop :=
-  (∀ i, AeStronglyMeasurable (f i) μ) ∧ UnifIntegrable f p μ ∧ ∃ C : ℝ≥0 , ∀ i, snorm (f i) p μ ≤ C
+  (∀ i, AeStronglyMeasurable (f i) μ) ∧ UnifIntegrable f p μ ∧ ∃ C : ℝ≥0, ∀ i, snorm (f i) p μ ≤ C
 
 namespace UniformIntegrable
 
@@ -668,8 +668,7 @@ theorem tendsto_in_measure_iff_tendsto_Lp [IsFiniteMeasure μ] (hp : 1 ≤ p) (h
 
 /-- This lemma is superceded by `unif_integrable_of` which do not require `C` to be positive. -/
 theorem unif_integrable_of' (hp : 1 ≤ p) (hp' : p ≠ ∞) {f : ι → α → β} (hf : ∀ i, StronglyMeasurable (f i))
-    (h :
-      ∀ ε : ℝ, 0 < ε → ∃ C : ℝ≥0 , 0 < C ∧ ∀ i, snorm ({ x | C ≤ ∥f i x∥₊ }.indicator (f i)) p μ ≤ Ennreal.ofReal ε) :
+    (h : ∀ ε : ℝ, 0 < ε → ∃ C : ℝ≥0, 0 < C ∧ ∀ i, snorm ({ x | C ≤ ∥f i x∥₊ }.indicator (f i)) p μ ≤ Ennreal.ofReal ε) :
     UnifIntegrable f p μ := by
   have hpzero := (lt_of_lt_of_leₓ Ennreal.zero_lt_one hp).Ne.symm
   by_cases' hμ : μ Set.Univ = 0
@@ -739,7 +738,7 @@ theorem unif_integrable_of' (hp : 1 ≤ p) (hp' : p ≠ ∞) {f : ι → α → 
     
 
 theorem unif_integrable_of (hp : 1 ≤ p) (hp' : p ≠ ∞) {f : ι → α → β} (hf : ∀ i, AeStronglyMeasurable (f i) μ)
-    (h : ∀ ε : ℝ, 0 < ε → ∃ C : ℝ≥0 , ∀ i, snorm ({ x | C ≤ ∥f i x∥₊ }.indicator (f i)) p μ ≤ Ennreal.ofReal ε) :
+    (h : ∀ ε : ℝ, 0 < ε → ∃ C : ℝ≥0, ∀ i, snorm ({ x | C ≤ ∥f i x∥₊ }.indicator (f i)) p μ ≤ Ennreal.ofReal ε) :
     UnifIntegrable f p μ := by
   set g : ι → α → β := fun i => (hf i).some
   refine'
@@ -829,7 +828,7 @@ theorem uniform_integrable_const {g : α → β} (hp : 1 ≤ p) (hp_ne_top : p �
 /-- This lemma is superceded by `uniform_integrable_of` which only requires
 `ae_strongly_measurable`. -/
 theorem uniform_integrable_of' [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp' : p ≠ ∞) (hf : ∀ i, StronglyMeasurable (f i))
-    (h : ∀ ε : ℝ, 0 < ε → ∃ C : ℝ≥0 , ∀ i, snorm ({ x | C ≤ ∥f i x∥₊ }.indicator (f i)) p μ ≤ Ennreal.ofReal ε) :
+    (h : ∀ ε : ℝ, 0 < ε → ∃ C : ℝ≥0, ∀ i, snorm ({ x | C ≤ ∥f i x∥₊ }.indicator (f i)) p μ ≤ Ennreal.ofReal ε) :
     UniformIntegrable f p μ := by
   refine'
     ⟨fun i => (hf i).AeStronglyMeasurable, unif_integrable_of μ hp hp' (fun i => (hf i).AeStronglyMeasurable) h, _⟩
@@ -876,7 +875,7 @@ theorem uniform_integrable_of' [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp' : p ≠ 
 /-- A sequene of functions `(fₙ)` is uniformly integrable in the probability sense if for all
 `ε > 0`, there exists some `C` such that `∫ x in {|fₙ| ≥ C}, fₙ x ∂μ ≤ ε` for all `n`. -/
 theorem uniform_integrable_of [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp' : p ≠ ∞) (hf : ∀ i, AeStronglyMeasurable (f i) μ)
-    (h : ∀ ε : ℝ, 0 < ε → ∃ C : ℝ≥0 , ∀ i, snorm ({ x | C ≤ ∥f i x∥₊ }.indicator (f i)) p μ ≤ Ennreal.ofReal ε) :
+    (h : ∀ ε : ℝ, 0 < ε → ∃ C : ℝ≥0, ∀ i, snorm ({ x | C ≤ ∥f i x∥₊ }.indicator (f i)) p μ ≤ Ennreal.ofReal ε) :
     UniformIntegrable f p μ := by
   set g : ι → α → β := fun i => (hf i).some
   have hgmeas : ∀ i, strongly_measurable (g i) := fun i => (Exists.some_spec <| hf i).1
@@ -896,15 +895,15 @@ theorem uniform_integrable_of [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp' : p ≠ �
 /-- This lemma is superceded by `uniform_integrable.spec` which does not require measurability. -/
 theorem UniformIntegrable.spec' (hp : p ≠ 0) (hp' : p ≠ ∞) (hf : ∀ i, StronglyMeasurable (f i))
     (hfu : UniformIntegrable f p μ) {ε : ℝ} (hε : 0 < ε) :
-    ∃ C : ℝ≥0 , ∀ i, snorm ({ x | C ≤ ∥f i x∥₊ }.indicator (f i)) p μ ≤ Ennreal.ofReal ε := by
+    ∃ C : ℝ≥0, ∀ i, snorm ({ x | C ≤ ∥f i x∥₊ }.indicator (f i)) p μ ≤ Ennreal.ofReal ε := by
   obtain ⟨-, hfu, M, hM⟩ := hfu
   obtain ⟨δ, hδpos, hδ⟩ := hfu hε
-  obtain ⟨C, hC⟩ : ∃ C : ℝ≥0 , ∀ i, μ { x | C ≤ ∥f i x∥₊ } ≤ Ennreal.ofReal δ := by
+  obtain ⟨C, hC⟩ : ∃ C : ℝ≥0, ∀ i, μ { x | C ≤ ∥f i x∥₊ } ≤ Ennreal.ofReal δ := by
     by_contra hcon
     push_neg  at hcon
     choose ℐ hℐ using hcon
     lift δ to ℝ≥0 using hδpos.le
-    have : ∀ C : ℝ≥0 , C • (δ : ℝ≥0∞) ^ (1 / p.to_real) ≤ snorm (f (ℐ C)) p μ := by
+    have : ∀ C : ℝ≥0, C • (δ : ℝ≥0∞) ^ (1 / p.to_real) ≤ snorm (f (ℐ C)) p μ := by
       intro C
       calc
         C • (δ : ℝ≥0∞) ^ (1 / p.to_real) ≤ C • μ { x | C ≤ ∥f (ℐ C) x∥₊ } ^ (1 / p.to_real) := by
@@ -931,7 +930,7 @@ theorem UniformIntegrable.spec' (hp : p ≠ 0) (hp' : p ≠ ∞) (hf : ∀ i, St
   exact ⟨C, fun i => hδ i _ (measurable_set_le measurable_const (hf i).nnnorm.Measurable) (hC i)⟩
 
 theorem UniformIntegrable.spec (hp : p ≠ 0) (hp' : p ≠ ∞) (hfu : UniformIntegrable f p μ) {ε : ℝ} (hε : 0 < ε) :
-    ∃ C : ℝ≥0 , ∀ i, snorm ({ x | C ≤ ∥f i x∥₊ }.indicator (f i)) p μ ≤ Ennreal.ofReal ε := by
+    ∃ C : ℝ≥0, ∀ i, snorm ({ x | C ≤ ∥f i x∥₊ }.indicator (f i)) p μ ≤ Ennreal.ofReal ε := by
   set g : ι → α → β := fun i => (hfu.1 i).some
   have hgmeas : ∀ i, strongly_measurable (g i) := fun i => (Exists.some_spec <| hfu.1 i).1
   have hgunif : uniform_integrable g p μ := hfu.ae_eq fun i => (Exists.some_spec <| hfu.1 i).2
@@ -951,7 +950,7 @@ found in literature. -/
 theorem uniform_integrable_iff [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp' : p ≠ ∞) :
     UniformIntegrable f p μ ↔
       (∀ i, AeStronglyMeasurable (f i) μ) ∧
-        ∀ ε : ℝ, 0 < ε → ∃ C : ℝ≥0 , ∀ i, snorm ({ x | C ≤ ∥f i x∥₊ }.indicator (f i)) p μ ≤ Ennreal.ofReal ε :=
+        ∀ ε : ℝ, 0 < ε → ∃ C : ℝ≥0, ∀ i, snorm ({ x | C ≤ ∥f i x∥₊ }.indicator (f i)) p μ ≤ Ennreal.ofReal ε :=
   ⟨fun h => ⟨h.1, fun ε => h.spec (lt_of_lt_of_leₓ Ennreal.zero_lt_one hp).Ne.symm hp'⟩, fun h =>
     uniform_integrable_of hp hp' h.1 h.2⟩
 
@@ -978,10 +977,10 @@ theorem uniform_integrable_average (hp : 1 ≤ p) {f : ℕ → α → ℝ} (hf :
       · rfl
         
     simp_rw [this, snorm_const_smul, ← Finset.mul_sum, nnnorm_inv, Real.nnnorm_coe_nat]
-    by_cases' hn : (↑(↑n : ℝ≥0 )⁻¹ : ℝ≥0∞) = 0
+    by_cases' hn : (↑(↑n : ℝ≥0)⁻¹ : ℝ≥0∞) = 0
     · simp only [hn, zero_mul, zero_le]
       
-    refine' le_transₓ _ (_ : ↑(↑n : ℝ≥0 )⁻¹ * n • Ennreal.ofReal ε ≤ Ennreal.ofReal ε)
+    refine' le_transₓ _ (_ : ↑(↑n : ℝ≥0)⁻¹ * n • Ennreal.ofReal ε ≤ Ennreal.ofReal ε)
     · refine' (Ennreal.mul_le_mul_left hn Ennreal.coe_ne_top).2 _
       conv_rhs => rw [← Finset.card_range n]
       exact Finset.sum_le_card_nsmul _ _ _ fun i hi => hδ₂ _ _ hs hle
@@ -1003,10 +1002,10 @@ theorem uniform_integrable_average (hp : 1 ≤ p) {f : ℕ → α → ℝ} (hf :
       ext ω
       simp only [mul_comm, Pi.smul_apply, Algebra.id.smul_eq_mul]
     simp_rw [this, snorm_const_smul, ← Finset.mul_sum, nnnorm_inv, Real.nnnorm_coe_nat]
-    by_cases' hn : (↑(↑n : ℝ≥0 )⁻¹ : ℝ≥0∞) = 0
+    by_cases' hn : (↑(↑n : ℝ≥0)⁻¹ : ℝ≥0∞) = 0
     · simp only [hn, zero_mul, zero_le]
       
-    refine' le_transₓ _ (_ : ↑(↑n : ℝ≥0 )⁻¹ * (n • C : ℝ≥0∞) ≤ C)
+    refine' le_transₓ _ (_ : ↑(↑n : ℝ≥0)⁻¹ * (n • C : ℝ≥0∞) ≤ C)
     · refine' (Ennreal.mul_le_mul_left hn Ennreal.coe_ne_top).2 _
       conv_rhs => rw [← Finset.card_range n]
       exact Finset.sum_le_card_nsmul _ _ _ fun i hi => hC i

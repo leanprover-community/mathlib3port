@@ -150,14 +150,14 @@ instance : IsFractionRing A K where
       simp
       
     · refine' ⟨⟨1, ⟨⟨_, hh⟩, _⟩⟩, mul_inv_cancel h⟩
-      exact mem_non_zero_divisors_iff_ne_zero.2 fun c => h (inv_eq_zero.mp (congr_argₓ coe c))
+      exact mem_non_zero_divisors_iff_ne_zero.2 fun c => h (inv_eq_zero.mp (congr_arg coe c))
       
   eq_iff_exists := fun a b =>
     ⟨fun h =>
       ⟨1, by
         ext
         simpa using h⟩,
-      fun ⟨c, h⟩ => congr_argₓ coe ((mul_eq_mul_right_iff.1 h).resolve_right (nonZeroDivisors.ne_zero c.2))⟩
+      fun ⟨c, h⟩ => congr_arg coe ((mul_eq_mul_right_iff.1 h).resolve_right (nonZeroDivisors.ne_zero c.2))⟩
 
 /-- The value group of the valuation associated to `A`. Note: it is actually a group with zero. -/
 def ValueGroup :=
@@ -232,10 +232,10 @@ section Order
 
 instance : SemilatticeSup (ValuationSubring K) :=
   { (inferInstance : PartialOrderₓ (ValuationSubring K)) with
-    sup := fun R S => ofLe R (R.toSubring⊔S.toSubring) <| le_sup_left,
-    le_sup_left := fun R S x hx => (le_sup_left : R.toSubring ≤ R.toSubring⊔S.toSubring) hx,
-    le_sup_right := fun R S x hx => (le_sup_right : S.toSubring ≤ R.toSubring⊔S.toSubring) hx,
-    sup_le := fun R S T hR hT x hx => (sup_le hR hT : R.toSubring⊔S.toSubring ≤ T.toSubring) hx }
+    sup := fun R S => ofLe R (R.toSubring ⊔ S.toSubring) <| le_sup_left,
+    le_sup_left := fun R S x hx => (le_sup_left : R.toSubring ≤ R.toSubring ⊔ S.toSubring) hx,
+    le_sup_right := fun R S x hx => (le_sup_right : S.toSubring ≤ R.toSubring ⊔ S.toSubring) hx,
+    sup_le := fun R S T hR hT x hx => (sup_le hR hT : R.toSubring ⊔ S.toSubring ≤ T.toSubring) hx }
 
 /-- The ring homomorphism induced by the partial order. -/
 def inclusion (R S : ValuationSubring K) (h : R ≤ S) : R →+* S :=
@@ -470,6 +470,7 @@ section UnitGroup
 def unitGroup : Subgroup Kˣ :=
   (A.Valuation.toMonoidWithZeroHom.toMonoidHom.comp (Units.coeHom K)).ker
 
+@[simp]
 theorem mem_unit_group_iff (x : Kˣ) : x ∈ A.unitGroup ↔ A.Valuation x = 1 :=
   Iff.rfl
 
@@ -606,7 +607,7 @@ theorem image_maximal_ideal : (coe : A → K) '' LocalRing.maximalIdeal A = A.No
   ext a
   simp only [Set.mem_image, SetLike.mem_coe, mem_nonunits_iff_exists_mem_maximal_ideal]
   erw [Subtype.exists]
-  simp_rw [Subtype.coe_mk, exists_and_distrib_right, exists_eq_right]
+  simp_rw [Subtype.coe_mk, exists_and_distrib_rightₓ, exists_eq_right]
 
 end Nonunits
 
@@ -832,4 +833,14 @@ theorem subset_pointwise_smul_iff {g : G} {S T : ValuationSubring K} : S ≤ g �
 end PointwiseActions
 
 end ValuationSubring
+
+namespace Valuation
+
+variable {Γ : Type _} [LinearOrderedCommGroupWithZero Γ] (v : Valuation K Γ) (x : Kˣ)
+
+@[simp]
+theorem mem_unit_group_iff : x ∈ v.ValuationSubring.unitGroup ↔ v x = 1 :=
+  (Valuation.is_equiv_iff_val_eq_one _ _).mp (Valuation.is_equiv_valuation_valuation_subring _).symm
+
+end Valuation
 

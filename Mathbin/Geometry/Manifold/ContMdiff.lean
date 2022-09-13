@@ -310,7 +310,7 @@ theorem cont_mdiff_within_at_iff_target :
     ContMdiffWithinAt I I' n f s x ↔
       ContinuousWithinAt f s x ∧ ContMdiffWithinAt I 𝓘(𝕜, E') n (extChartAt I' (f x) ∘ f) s x :=
   by
-  simp_rw [ContMdiffWithinAt, lift_prop_within_at, ← and_assoc]
+  simp_rw [ContMdiffWithinAt, lift_prop_within_at, ← and_assocₓ]
   have cont : ContinuousWithinAt f s x ∧ ContinuousWithinAt (extChartAt I' (f x) ∘ f) s x ↔ ContinuousWithinAt f s x :=
     by
     refine' ⟨fun h => h.1, fun h => ⟨h, _⟩⟩
@@ -1209,8 +1209,8 @@ theorem ContMdiffOn.continuous_on_tangent_map_within_aux {f : H → H'} {s : Set
     · rfl
       
     simp' only with mfld_simps
-    apply congr_funₓ
-    apply congr_argₓ
+    apply congr_fun
+    apply congr_arg
     rw [MdifferentiableWithinAt.mfderiv_within (hf.mdifferentiable_on hn x hx)]
     rfl
     
@@ -1563,7 +1563,7 @@ theorem cont_mdiff_at_iff_target {f : N → Z.toTopologicalVectorBundleCore.Tota
         ContMdiffAt J 𝓘(𝕜, E × E') n (extChartAt (I.Prod 𝓘(𝕜, E')) (f x) ∘ f) x :=
   by
   let Z' := Z.to_topological_vector_bundle_core
-  rw [cont_mdiff_at_iff_target, And.congr_left_iff]
+  rw [cont_mdiff_at_iff_target, And.congr_left_iffₓ]
   refine' fun hf => ⟨fun h => Z'.continuous_proj.continuous_at.comp h, fun h => _⟩
   exact
     (Z'.local_triv ⟨chart_at _ (f x).1, chart_mem_atlas _ _⟩).toFiberBundleTrivialization.continuous_at_of_comp_left h

@@ -123,10 +123,10 @@ theorem conformal_at_iff_differentiable_at_or_differentiable_at_comp_conj {f : �
     ConformalAt f z ↔ (DifferentiableAt ℂ f z ∨ DifferentiableAt ℂ (f ∘ conj) (conj z)) ∧ fderiv ℝ f z ≠ 0 := by
   rw [conformal_at_iff_is_conformal_map_fderiv]
   rw [is_conformal_map_iff_is_complex_or_conj_linear]
-  apply and_congr_left
+  apply and_congr_leftₓ
   intro h
   have h_diff := h.imp_symm fderiv_zero_of_not_differentiable_at
-  apply or_congr
+  apply or_congrₓ
   · rw [differentiable_at_iff_restrict_scalars ℝ h_diff]
     
   rw [← conj_conj z] at h_diff

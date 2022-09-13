@@ -90,7 +90,7 @@ section Degrees
 theorem degrees_neg (p : MvPolynomial σ R) : (-p).degrees = p.degrees := by
   rw [degrees, support_neg] <;> rfl
 
-theorem degrees_sub (p q : MvPolynomial σ R) : (p - q).degrees ≤ p.degrees⊔q.degrees := by
+theorem degrees_sub (p q : MvPolynomial σ R) : (p - q).degrees ≤ p.degrees ⊔ q.degrees := by
   simpa only [sub_eq_add_neg] using
     le_transₓ (degrees_add p (-q))
       (by

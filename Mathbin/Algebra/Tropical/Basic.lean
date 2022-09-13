@@ -228,7 +228,7 @@ theorem trop_min (x y : R) : trop (min x y) = trop x + trop y :=
   rfl
 
 @[simp]
-theorem trop_inf (x y : R) : trop (x⊓y) = trop x + trop y :=
+theorem trop_inf (x y : R) : trop (x ⊓ y) = trop x + trop y :=
   rfl
 
 theorem trop_add_def (x y : Tropical R) : x + y = trop (min (untrop x) (untrop y)) :=
@@ -248,7 +248,7 @@ instance : LinearOrderₓ (Tropical R) :=
         if_congr untrop_le_iff rfl rfl] }
 
 @[simp]
-theorem untrop_sup (x y : Tropical R) : untrop (x⊔y) = untrop x⊔untrop y :=
+theorem untrop_sup (x y : Tropical R) : untrop (x ⊔ y) = untrop x ⊔ untrop y :=
   rfl
 
 @[simp]
@@ -260,13 +260,13 @@ theorem min_eq_add : (min : Tropical R → Tropical R → Tropical R) = (· + ·
   rfl
 
 @[simp]
-theorem inf_eq_add : ((·⊓·) : Tropical R → Tropical R → Tropical R) = (· + ·) :=
+theorem inf_eq_add : ((· ⊓ ·) : Tropical R → Tropical R → Tropical R) = (· + ·) :=
   rfl
 
 theorem trop_max_def (x y : Tropical R) : max x y = trop (max (untrop x) (untrop y)) :=
   rfl
 
-theorem trop_sup_def (x y : Tropical R) : x⊔y = trop (untrop x⊔untrop y) :=
+theorem trop_sup_def (x y : Tropical R) : x ⊔ y = trop (untrop x ⊔ untrop y) :=
   rfl
 
 @[simp]

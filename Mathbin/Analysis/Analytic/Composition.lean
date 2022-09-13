@@ -111,7 +111,7 @@ theorem apply_composition_ones (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) 
   intro j hjn hj1
   obtain rfl : j = 0 := by
     linarith
-  refine' congr_argₓ v _
+  refine' congr_arg v _
   rw [Finₓ.ext_iff, Finₓ.coe_cast_le, Composition.ones_embedding, Finₓ.coe_mk]
 
 theorem apply_composition_single (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ} (hn : 0 < n) (v : Finₓ n → E) :
@@ -399,7 +399,7 @@ theorem comp_id (p : FormalMultilinearSeries 𝕜 E F) : p.comp (id 𝕜 E) = p 
     apply p.congr (Composition.ones_length n)
     intros
     rw [apply_composition_ones]
-    refine' congr_argₓ v _
+    refine' congr_arg v _
     rw [Finₓ.ext_iff, Finₓ.coe_cast_le, Finₓ.coe_mk, Finₓ.coe_mk]
     
   show ∀ b : Composition n, b ∈ Finset.univ → b ≠ Composition.ones n → comp_along_composition p (id 𝕜 E) b = 0
@@ -435,7 +435,7 @@ theorem id_comp (p : FormalMultilinearSeries 𝕜 E F) (h : p 0 = 0) : (id 𝕜 
     · ext v
       rw [comp_along_composition_apply, id_apply_one' _ _ (Composition.single_length n_pos)]
       dsimp' [apply_composition]
-      refine' p.congr rfl fun i him hin => congr_argₓ v <| _
+      refine' p.congr rfl fun i him hin => congr_arg v <| _
       ext
       simp
       
@@ -461,7 +461,7 @@ in the definition of their composition are also summable (when multiplied by a s
 geometric term). -/
 theorem comp_summable_nnreal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultilinearSeries 𝕜 E F) (hq : 0 < q.radius)
     (hp : 0 < p.radius) :
-    ∃ r > (0 : ℝ≥0 ), Summable fun i : Σn, Composition n => ∥q.compAlongComposition p i.2∥₊ * r ^ i.1 := by
+    ∃ r > (0 : ℝ≥0), Summable fun i : Σn, Composition n => ∥q.compAlongComposition p i.2∥₊ * r ^ i.1 := by
   /- This follows from the fact that the growth rate of `∥qₙ∥` and `∥pₙ∥` is at most geometric,
     giving a geometric bound on each `∥q.comp_along_composition p op∥`, together with the
     fact that there are `2^(n-1)` compositions of `n`, giving at most a geometric loss. -/
@@ -508,21 +508,21 @@ theorem comp_summable_nnreal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
   refine' ⟨r, r_pos, Nnreal.summable_of_le I _⟩
   simp_rw [div_eq_mul_inv]
   refine' Summable.mul_left _ _
-  have : ∀ n : ℕ, HasSum (fun c : Composition n => (4 ^ n : ℝ≥0 )⁻¹) (2 ^ (n - 1) / 4 ^ n) := by
+  have : ∀ n : ℕ, HasSum (fun c : Composition n => (4 ^ n : ℝ≥0)⁻¹) (2 ^ (n - 1) / 4 ^ n) := by
     intro n
-    convert has_sum_fintype fun c : Composition n => (4 ^ n : ℝ≥0 )⁻¹
+    convert has_sum_fintype fun c : Composition n => (4 ^ n : ℝ≥0)⁻¹
     simp [Finset.card_univ, composition_card, div_eq_mul_inv]
   refine' Nnreal.summable_sigma.2 ⟨fun n => (this n).Summable, (Nnreal.summable_nat_add_iff 1).1 _⟩
   convert (Nnreal.summable_geometric (Nnreal.div_lt_one_of_lt one_lt_two)).mul_left (1 / 4)
   ext1 n
   rw [(this _).tsum_eq, add_tsub_cancel_right]
-  field_simp [← mul_assoc, pow_succ'ₓ, mul_powₓ, show (4 : ℝ≥0 ) = 2 * 2 from (two_mul 2).symm, mul_right_commₓ]
+  field_simp [← mul_assoc, pow_succ'ₓ, mul_powₓ, show (4 : ℝ≥0) = 2 * 2 from (two_mul 2).symm, mul_right_commₓ]
 
 end
 
 /-- Bounding below the radius of the composition of two formal multilinear series assuming
 summability over all compositions. -/
-theorem le_comp_radius_of_summable (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultilinearSeries 𝕜 E F) (r : ℝ≥0 )
+theorem le_comp_radius_of_summable (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultilinearSeries 𝕜 E F) (r : ℝ≥0)
     (hr : Summable fun i : Σn, Composition n => ∥q.compAlongComposition p i.2∥₊ * r ^ i.1) :
     (r : ℝ≥0∞) ≤ (q.comp p).radius := by
   refine'
@@ -587,7 +587,7 @@ theorem comp_change_of_variables_blocks_fun (m M N : ℕ) {i : Σn, Finₓ n →
   rcases i with ⟨n, f⟩
   dsimp' [Composition.blocksFun, Composition.blocks, comp_change_of_variables]
   simp only [map_of_fn, nth_le_of_fn', Function.comp_app]
-  apply congr_argₓ
+  apply congr_arg
   exact Finₓ.eta _ _
 
 /-- Target set in the change of variables to compute the composition of partial sums of formal
@@ -1185,7 +1185,7 @@ theorem comp_assoc (r : FormalMultilinearSeries 𝕜 G H) (q : FormalMultilinear
   intro k hk1 hk2
   -- finally, check that the coordinates of `v` one is using are the same. Based on
   -- `size_up_to_size_up_to_add`.
-  refine' congr_argₓ v (Finₓ.eq_of_veq _)
+  refine' congr_arg v (Finₓ.eq_of_veq _)
   dsimp' [Composition.embedding]
   rw [size_up_to_size_up_to_add _ _ hi1 hj1, add_assocₓ]
 

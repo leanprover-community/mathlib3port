@@ -271,6 +271,9 @@ theorem ne_zero_of_norm_ne_zero {g : E} : ∥g∥ ≠ 0 → g ≠ 0 :=
 theorem norm_of_subsingleton [Subsingleton E] (x : E) : ∥x∥ = 0 := by
   rw [Subsingleton.elim x 0, norm_zero]
 
+theorem norm_multiset_sum_le (m : Multiset E) : ∥m.Sum∥ ≤ (m.map fun x => ∥x∥).Sum :=
+  m.le_sum_of_subadditive norm norm_zero norm_add_le
+
 theorem norm_sum_le (s : Finset ι) (f : ι → E) : ∥∑ i in s, f i∥ ≤ ∑ i in s, ∥f i∥ :=
   s.le_sum_of_subadditive norm norm_zero norm_add_le f
 
@@ -529,6 +532,44 @@ theorem NormedAddCommGroup.uniformity_basis_dist :
   convert Metric.uniformity_basis_dist
   simp [dist_eq_norm]
 
+section TendstoUniformly
+
+variable {E' : Type _} {f : ι → E' → G} {s : Set E'} {l : Filter ι}
+
+theorem NormedAddCommGroup.tendsto_uniformly_on_zero :
+    TendstoUniformlyOn f 0 l s ↔ ∀ ε > 0, ∀ᶠ N : ι in l, ∀ x : E', x ∈ s → ∥f N x∥ < ε := by
+  simp_rw [tendsto_uniformly_on_iff, Pi.zero_apply, dist_zero_left]
+
+theorem NormedAddCommGroup.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_filter_zero {l' : Filter E'} :
+    UniformCauchySeqOnFilter f l l' ↔
+      TendstoUniformlyOnFilter (fun n : ι × ι => fun z : E' => f n.fst z - f n.snd z) 0 (l.Prod l) l' :=
+  by
+  constructor
+  · intro hf u hu
+    obtain ⟨ε, hε, H⟩ := uniformity_basis_dist.mem_uniformity_iff.mp hu
+    refine'
+      (hf { p : G × G | dist p.fst p.snd < ε } <| dist_mem_uniformity hε).mono fun x hx =>
+        H 0 (f x.fst.fst x.snd - f x.fst.snd x.snd) _
+    simpa [dist_eq_norm, norm_sub_rev] using hx
+    
+  · intro hf u hu
+    obtain ⟨ε, hε, H⟩ := uniformity_basis_dist.mem_uniformity_iff.mp hu
+    refine'
+      (hf { p : G × G | dist p.fst p.snd < ε } <| dist_mem_uniformity hε).mono fun x hx =>
+        H (f x.fst.fst x.snd) (f x.fst.snd x.snd) _
+    simpa [dist_eq_norm, norm_sub_rev] using hx
+    
+
+theorem NormedAddCommGroup.uniform_cauchy_seq_on_iff_tendsto_uniformly_on_zero :
+    UniformCauchySeqOn f l s ↔
+      TendstoUniformlyOn (fun n : ι × ι => fun z : E' => f n.fst z - f n.snd z) 0 (l.Prod l) s :=
+  by
+  rw [tendsto_uniformly_on_iff_tendsto_uniformly_on_filter]
+  rw [uniform_cauchy_seq_on_iff_uniform_cauchy_seq_on_filter]
+  exact NormedAddCommGroup.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_filter_zero
+
+end TendstoUniformly
+
 open Finset
 
 /-- A homomorphism `f` of seminormed groups is Lipschitz, if there exists a constant `C` such that
@@ -539,25 +580,25 @@ theorem AddMonoidHomClass.lipschitz_of_bound {𝓕 : Type _} [AddMonoidHomClass 
   LipschitzWith.of_dist_le' fun x y => by
     simpa only [dist_eq_norm, map_sub] using h (x - y)
 
-theorem lipschitz_on_with_iff_norm_sub_le {f : E → F} {C : ℝ≥0 } {s : Set E} :
+theorem lipschitz_on_with_iff_norm_sub_le {f : E → F} {C : ℝ≥0} {s : Set E} :
     LipschitzOnWith C f s ↔ ∀ x ∈ s, ∀ y ∈ s, ∥f x - f y∥ ≤ C * ∥x - y∥ := by
   simp only [lipschitz_on_with_iff_dist_le_mul, dist_eq_norm]
 
-theorem LipschitzOnWith.norm_sub_le {f : E → F} {C : ℝ≥0 } {s : Set E} (h : LipschitzOnWith C f s) {x y : E}
+theorem LipschitzOnWith.norm_sub_le {f : E → F} {C : ℝ≥0} {s : Set E} (h : LipschitzOnWith C f s) {x y : E}
     (x_in : x ∈ s) (y_in : y ∈ s) : ∥f x - f y∥ ≤ C * ∥x - y∥ :=
   lipschitz_on_with_iff_norm_sub_le.mp h x x_in y y_in
 
-theorem LipschitzOnWith.norm_sub_le_of_le {f : E → F} {C : ℝ≥0 } {s : Set E} (h : LipschitzOnWith C f s) {x y : E}
+theorem LipschitzOnWith.norm_sub_le_of_le {f : E → F} {C : ℝ≥0} {s : Set E} (h : LipschitzOnWith C f s) {x y : E}
     (x_in : x ∈ s) (y_in : y ∈ s) {d : ℝ} (hd : ∥x - y∥ ≤ d) : ∥f x - f y∥ ≤ C * d :=
   (h.norm_sub_le x_in y_in).trans <| mul_le_mul_of_nonneg_left hd C.2
 
-theorem lipschitz_with_iff_norm_sub_le {f : E → F} {C : ℝ≥0 } : LipschitzWith C f ↔ ∀ x y, ∥f x - f y∥ ≤ C * ∥x - y∥ :=
+theorem lipschitz_with_iff_norm_sub_le {f : E → F} {C : ℝ≥0} : LipschitzWith C f ↔ ∀ x y, ∥f x - f y∥ ≤ C * ∥x - y∥ :=
   by
   simp only [lipschitz_with_iff_dist_le_mul, dist_eq_norm]
 
 alias lipschitz_with_iff_norm_sub_le ↔ LipschitzWith.norm_sub_le _
 
-theorem LipschitzWith.norm_sub_le_of_le {f : E → F} {C : ℝ≥0 } (h : LipschitzWith C f) {x y : E} {d : ℝ}
+theorem LipschitzWith.norm_sub_le_of_le {f : E → F} {C : ℝ≥0} (h : LipschitzWith C f) {x y : E} {d : ℝ}
     (hd : ∥x - y∥ ≤ d) : ∥f x - f y∥ ≤ C * d :=
   (h.norm_sub_le x y).trans <| mul_le_mul_of_nonneg_left hd C.2
 
@@ -656,7 +697,7 @@ theorem coe_nnnorm (a : E) : (∥a∥₊ : ℝ) = norm a :=
   rfl
 
 @[simp]
-theorem coe_comp_nnnorm : (coe : ℝ≥0 → ℝ) ∘ (nnnorm : E → ℝ≥0 ) = norm :=
+theorem coe_comp_nnnorm : (coe : ℝ≥0 → ℝ) ∘ (nnnorm : E → ℝ≥0) = norm :=
   rfl
 
 theorem norm_to_nnreal {a : E} : ∥a∥.toNnreal = ∥a∥₊ :=
@@ -737,23 +778,26 @@ theorem edist_sub_left (g h₁ h₂ : E) : edist (g - h₁) (g - h₂) = edist h
 theorem edist_sub_right (g₁ g₂ h : E) : edist (g₁ - h) (g₂ - h) = edist g₁ g₂ := by
   simpa only [sub_eq_add_neg] using edist_add_right _ _ _
 
+theorem nnnorm_multiset_sum_le (m : Multiset E) : ∥m.Sum∥₊ ≤ (m.map fun x => ∥x∥₊).Sum :=
+  m.le_sum_of_subadditive nnnorm nnnorm_zero nnnorm_add_le
+
 theorem nnnorm_sum_le (s : Finset ι) (f : ι → E) : ∥∑ a in s, f a∥₊ ≤ ∑ a in s, ∥f a∥₊ :=
   s.le_sum_of_subadditive nnnorm nnnorm_zero nnnorm_add_le f
 
-theorem nnnorm_sum_le_of_le (s : Finset ι) {f : ι → E} {n : ι → ℝ≥0 } (h : ∀ b ∈ s, ∥f b∥₊ ≤ n b) :
+theorem nnnorm_sum_le_of_le (s : Finset ι) {f : ι → E} {n : ι → ℝ≥0} (h : ∀ b ∈ s, ∥f b∥₊ ≤ n b) :
     ∥∑ b in s, f b∥₊ ≤ ∑ b in s, n b :=
   (norm_sum_le_of_le s h).trans_eq Nnreal.coe_sum.symm
 
-theorem AddMonoidHomClass.lipschitz_of_bound_nnnorm {𝓕 : Type _} [AddMonoidHomClass 𝓕 E F] (f : 𝓕) (C : ℝ≥0 )
+theorem AddMonoidHomClass.lipschitz_of_bound_nnnorm {𝓕 : Type _} [AddMonoidHomClass 𝓕 E F] (f : 𝓕) (C : ℝ≥0)
     (h : ∀ x, ∥f x∥₊ ≤ C * ∥x∥₊) : LipschitzWith C f :=
   @Real.to_nnreal_coe C ▸ AddMonoidHomClass.lipschitz_of_bound f C h
 
-theorem AddMonoidHomClass.antilipschitz_of_bound {𝓕 : Type _} [AddMonoidHomClass 𝓕 E F] (f : 𝓕) {K : ℝ≥0 }
+theorem AddMonoidHomClass.antilipschitz_of_bound {𝓕 : Type _} [AddMonoidHomClass 𝓕 E F] (f : 𝓕) {K : ℝ≥0}
     (h : ∀ x, ∥x∥ ≤ K * ∥f x∥) : AntilipschitzWith K f :=
   AntilipschitzWith.of_le_mul_dist fun x y => by
     simpa only [dist_eq_norm, map_sub] using h (x - y)
 
-theorem AddMonoidHomClass.bound_of_antilipschitz {𝓕 : Type _} [AddMonoidHomClass 𝓕 E F] (f : 𝓕) {K : ℝ≥0 }
+theorem AddMonoidHomClass.bound_of_antilipschitz {𝓕 : Type _} [AddMonoidHomClass 𝓕 E F] (f : 𝓕) {K : ℝ≥0}
     (h : AntilipschitzWith K f) (x) : ∥x∥ ≤ K * ∥f x∥ := by
   simpa only [dist_zero_right, map_zero] using h.le_mul_dist x 0
 
@@ -761,7 +805,7 @@ end Nnnorm
 
 namespace LipschitzWith
 
-variable [PseudoEmetricSpace α] {K Kf Kg : ℝ≥0 } {f g : α → E}
+variable [PseudoEmetricSpace α] {K Kf Kg : ℝ≥0} {f g : α → E}
 
 theorem neg (hf : LipschitzWith K f) : LipschitzWith K fun x => -f x := fun x y =>
   (edist_neg_neg _ _).trans_le <| hf x y
@@ -781,7 +825,7 @@ end LipschitzWith
 
 namespace AntilipschitzWith
 
-variable [PseudoEmetricSpace α] {K Kf Kg : ℝ≥0 } {f g : α → E}
+variable [PseudoEmetricSpace α] {K Kf Kg : ℝ≥0} {f g : α → E}
 
 theorem add_lipschitz_with (hf : AntilipschitzWith Kf f) (hg : LipschitzWith Kg g) (hK : Kg < Kf⁻¹) :
     AntilipschitzWith (Kf⁻¹ - Kg)⁻¹ fun x => f x + g x := by
@@ -915,8 +959,8 @@ using the sup norm. -/
 noncomputable instance Pi.seminormedAddCommGroup : SeminormedAddCommGroup (∀ i, π i) where
   norm := fun f => ↑(Finset.univ.sup fun b => ∥f b∥₊)
   dist_eq := fun x y =>
-    congr_argₓ (coe : ℝ≥0 → ℝ) <|
-      congr_argₓ (Finset.sup Finset.univ) <|
+    congr_arg (coe : ℝ≥0 → ℝ) <|
+      congr_arg (Finset.sup Finset.univ) <|
         funext fun a => show nndist (x a) (y a) = ∥x a - y a∥₊ from nndist_eq_nnnorm _ _
 
 theorem Pi.norm_def : ∥f∥ = ↑(Finset.univ.sup fun b => ∥f b∥₊) :=
@@ -930,7 +974,7 @@ component is. -/
 theorem pi_norm_le_iff {r : ℝ} (hr : 0 ≤ r) {x : ∀ i, π i} : ∥x∥ ≤ r ↔ ∀ i, ∥x i∥ ≤ r := by
   simp only [← dist_zero_right, dist_pi_le_iff hr, Pi.zero_apply]
 
-theorem pi_nnnorm_le_iff {r : ℝ≥0 } {x : ∀ i, π i} : ∥x∥₊ ≤ r ↔ ∀ i, ∥x i∥₊ ≤ r :=
+theorem pi_nnnorm_le_iff {r : ℝ≥0} {x : ∀ i, π i} : ∥x∥₊ ≤ r ↔ ∀ i, ∥x i∥₊ ≤ r :=
   pi_norm_le_iff r.coe_nonneg
 
 /-- The seminorm of an element in a product space is `< r` if and only if the norm of each
@@ -938,7 +982,7 @@ component is. -/
 theorem pi_norm_lt_iff {r : ℝ} (hr : 0 < r) {x : ∀ i, π i} : ∥x∥ < r ↔ ∀ i, ∥x i∥ < r := by
   simp only [← dist_zero_right, dist_pi_lt_iff hr, Pi.zero_apply]
 
-theorem pi_nnnorm_lt_iff {r : ℝ≥0 } (hr : 0 < r) {x : ∀ i, π i} : ∥x∥₊ < r ↔ ∀ i, ∥x i∥₊ < r :=
+theorem pi_nnnorm_lt_iff {r : ℝ≥0} (hr : 0 < r) {x : ∀ i, π i} : ∥x∥₊ < r ↔ ∀ i, ∥x i∥₊ < r :=
   pi_norm_lt_iff hr
 
 theorem norm_le_pi_norm (i : ι) : ∥f i∥ ≤ ∥f∥ :=
@@ -999,7 +1043,7 @@ theorem tendsto_norm_sub_self (x : E) : Tendsto (fun g : E => ∥g - x∥) (𝓝
 theorem lipschitz_with_one_norm : LipschitzWith 1 (norm : E → ℝ) := by
   simpa only [dist_zero_left] using LipschitzWith.dist_right (0 : E)
 
-theorem lipschitz_with_one_nnnorm : LipschitzWith 1 (HasNnnorm.nnnorm : E → ℝ≥0 ) :=
+theorem lipschitz_with_one_nnnorm : LipschitzWith 1 (HasNnnorm.nnnorm : E → ℝ≥0) :=
   lipschitz_with_one_norm
 
 theorem uniform_continuous_norm : UniformContinuous (norm : E → ℝ) :=

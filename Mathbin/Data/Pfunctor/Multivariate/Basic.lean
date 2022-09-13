@@ -117,7 +117,7 @@ theorem comp.get_map (f : α ⟹ β) (x : (comp P Q).Obj α) :
   cases x
   rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem comp.get_mk (x : P.Obj fun i => (Q i).Obj α) : comp.get (comp.mk x) = x := by
   cases x

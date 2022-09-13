@@ -204,7 +204,7 @@ theorem coeff_coe (i : ℤ) :
   cases i
   · rw [Int.nat_abs_of_nat_core, Int.of_nat_eq_coe, coeff_coe_power_series, if_neg (Int.coe_nat_nonneg _).not_lt]
     
-  · rw [coe_power_series, of_power_series_apply, emb_domain_notin_image_support, if_pos (Int.neg_succ_lt_zeroₓ _)]
+  · rw [coe_power_series, of_power_series_apply, emb_domain_notin_image_support, if_pos (Int.neg_succ_lt_zero _)]
     simp only [not_exists, RelEmbedding.coe_fn_mk, Set.mem_image, not_and, Function.Embedding.coe_fn_mk, Ne.def,
       to_power_series_symm_apply_coeff, mem_support, Int.coe_nat_eq, implies_true_iff, not_false_iff]
     

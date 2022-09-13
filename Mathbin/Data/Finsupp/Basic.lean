@@ -451,7 +451,7 @@ theorem cast_finsupp_sum [CommRingₓ R] (g : α → M → ℤ) : (↑(f.Sum g) 
 
 end Int
 
-namespace Rat
+namespace Ratₓ
 
 @[simp, norm_cast]
 theorem cast_finsupp_sum [DivisionRing R] [CharZero R] (g : α → M → ℚ) : (↑(f.Sum g) : R) = f.Sum fun a b => g a b :=
@@ -461,7 +461,7 @@ theorem cast_finsupp_sum [DivisionRing R] [CharZero R] (g : α → M → ℚ) : 
 theorem cast_finsupp_prod [Field R] [CharZero R] (g : α → M → ℚ) : (↑(f.Prod g) : R) = f.Prod fun a b => g a b :=
   cast_prod _ _
 
-end Rat
+end Ratₓ
 
 end CastFinsupp
 
@@ -584,7 +584,7 @@ theorem map_domain_support_of_inj_on [DecidableEq β] {f : α → β} (s : α �
     (mapDomain f s).Support = Finset.image f s.Support :=
   Finset.Subset.antisymm map_domain_support <| by
     intro x hx
-    simp only [mem_image, exists_prop, mem_support_iff, Ne.def] at hx
+    simp only [mem_image, exists_propₓ, mem_support_iff, Ne.def] at hx
     rcases hx with ⟨hx_w, hx_h_left, rfl⟩
     simp only [mem_support_iff, Ne.def]
     rw [map_domain_apply' (↑s.support : Set _) _ _ hf]
@@ -1359,7 +1359,7 @@ instance [Monoidₓ R] [Nonempty α] [AddMonoidₓ M] [DistribMulAction R M] [Ha
     HasFaithfulSmul R (α →₀ M) where eq_of_smul_eq_smul := fun r₁ r₂ h =>
     let ⟨a⟩ := ‹Nonempty α›
     eq_of_smul_eq_smul fun m : M => by
-      simpa using congr_funₓ (h (single a m)) a
+      simpa using congr_fun (h (single a m)) a
 
 variable (α M)
 
@@ -1599,8 +1599,8 @@ def splitSupport : Finset ι :=
 theorem mem_split_support_iff_nonzero (i : ι) : i ∈ splitSupport l ↔ split l i ≠ 0 := by
   rw [split_support, mem_image, Ne.def, ← support_eq_empty, ← Ne.def, ← Finset.nonempty_iff_ne_empty, split,
     comap_domain, Finset.Nonempty]
-  simp only [exists_prop, Finset.mem_preimage, exists_and_distrib_right, exists_eq_right, mem_support_iff, Sigma.exists,
-    Ne.def]
+  simp only [exists_propₓ, Finset.mem_preimage, exists_and_distrib_rightₓ, exists_eq_right, mem_support_iff,
+    Sigma.exists, Ne.def]
 
 /-- Given `l`, a finitely supported function from the sigma type `Σ i, αs i` to `β` and
 an `ι`-indexed family `g` of functions from `(αs i →₀ β)` to `γ`, `split_comp` defines a

@@ -37,5 +37,5 @@ class HasBracket (L M : Type _) where
   bracket : L → M → M
 
 -- mathport name: «expr⁅ , ⁆»
-notation "⁅" x "," y "⁆" => HasBracket.bracket x y
+notation "⁅" x ", " y "⁆" => HasBracket.bracket x y
 

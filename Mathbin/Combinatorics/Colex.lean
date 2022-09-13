@@ -102,7 +102,7 @@ namespace Colex
 /-- Strictly monotone functions preserve the colex ordering. -/
 theorem hom_lt_iff {β : Type _} [LinearOrderₓ α] [DecidableEq β] [Preorderₓ β] {f : α → β} (h₁ : StrictMono f)
     (A B : Finset α) : (A.Image f).toColex < (B.Image f).toColex ↔ A.toColex < B.toColex := by
-  simp only [Colex.lt_def, not_exists, mem_image, exists_prop, not_and]
+  simp only [Colex.lt_def, not_exists, mem_image, exists_propₓ, not_and]
   constructor
   · rintro ⟨k, z, q, k', _, rfl⟩
     exact
@@ -116,7 +116,7 @@ theorem hom_lt_iff {β : Type _} [LinearOrderₓ α] [DecidableEq β] [Preorder�
     }
     
   · simp only [h₁.injective, Function.Injective.eq_iff]
-    exact fun x hx => ne_of_mem_of_not_mem hx ka
+    exact fun x hx => ne_of_mem_of_not_memₓ hx ka
     
 
 /-- A special case of `colex.hom_lt_iff` which is sometimes useful. -/
@@ -131,7 +131,7 @@ instance [LT α] : IsIrrefl (Finset.Colex α) (· < ·) :=
 @[trans]
 theorem lt_trans [LinearOrderₓ α] {a b c : Finset.Colex α} : a < b → b < c → a < c := by
   rintro ⟨k₁, k₁z, notinA, inB⟩ ⟨k₂, k₂z, notinB, inC⟩
-  cases lt_or_gt_of_neₓ (ne_of_mem_of_not_mem inB notinB)
+  cases lt_or_gt_of_neₓ (ne_of_mem_of_not_memₓ inB notinB)
   · refine'
       ⟨k₂, fun x hx => _, by
         rwa [k₁z h], inC⟩
@@ -191,7 +191,7 @@ instance decidableLt [LinearOrderₓ α] : ∀ {A B : Finset.Colex α}, Decidabl
       (by
         rw [Colex.lt_def]
         apply exists_congr
-        simp only [mem_union, exists_prop, or_imp_distrib, and_comm (_ ∈ B), and_assoc]
+        simp only [mem_union, exists_propₓ, or_imp_distrib, and_comm (_ ∈ B), and_assocₓ]
         intro k
         refine' and_congr_left' (forall_congrₓ _)
         tauto)
@@ -252,7 +252,7 @@ theorem forall_lt_of_colex_lt_of_forall_lt [LinearOrderₓ α] {A B : Finset α}
 /-- `s.to_colex < {r}.to_colex` iff all elements of `s` are less than `r`. -/
 theorem lt_singleton_iff_mem_lt [LinearOrderₓ α] {r : α} {s : Finset α} :
     s.toColex < ({r} : Finset α).toColex ↔ ∀ x ∈ s, x < r := by
-  simp only [lt_def, mem_singleton, ← and_assoc, exists_eq_right]
+  simp only [lt_def, mem_singleton, ← and_assocₓ, exists_eq_right]
   constructor
   · intro t x hx
     rw [← not_leₓ]
@@ -386,7 +386,7 @@ theorem sum_two_pow_lt_iff_lt (A B : Finset ℕ) : ((∑ i in A, 2 ^ i) < ∑ i 
       
     intro x hx
     apply lt_of_le_of_neₓ (le_of_not_ltₓ fun kx => _)
-    · apply ne_of_mem_of_not_mem hx kA
+    · apply ne_of_mem_of_not_memₓ hx kA
       
     have := (z kx).1 hx
     rw [mem_sdiff] at this hx

@@ -82,8 +82,7 @@ instance : CanonicallyOrderedAddMonoid PUnit := by
     intros <;> trivial
 
 instance : LinearOrderedCancelAddCommMonoid PUnit :=
-  { PUnit.canonicallyOrderedAddMonoid, PUnit.linearOrder with add_left_cancel := fun _ _ _ _ => Subsingleton.elim _ _,
-    le_of_add_le_add_left := fun _ _ _ _ => trivialₓ }
+  { PUnit.canonicallyOrderedAddMonoid, PUnit.linearOrder with le_of_add_le_add_left := fun _ _ _ _ => trivialₓ }
 
 instance : HasSmul R PUnit where smul := fun _ _ => unit
 

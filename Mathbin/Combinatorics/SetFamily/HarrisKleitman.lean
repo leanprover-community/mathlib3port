@@ -34,13 +34,13 @@ variable {α : Type _} [DecidableEq α] {𝒜 ℬ : Finset (Finset α)} {s : Fin
 theorem IsLowerSet.non_member_subfamily (h : IsLowerSet (𝒜 : Set (Finset α))) :
     IsLowerSet (𝒜.nonMemberSubfamily a : Set (Finset α)) := fun s t hts => by
   simp_rw [mem_coe, mem_non_member_subfamily]
-  exact And.imp (h hts) (mt <| @hts _)
+  exact And.impₓ (h hts) (mt <| @hts _)
 
 theorem IsLowerSet.member_subfamily (h : IsLowerSet (𝒜 : Set (Finset α))) :
     IsLowerSet (𝒜.memberSubfamily a : Set (Finset α)) := by
   rintro s t hts
   simp_rw [mem_coe, mem_member_subfamily]
-  exact And.imp (h <| insert_subset_insert _ hts) (mt <| @hts _)
+  exact And.impₓ (h <| insert_subset_insert _ hts) (mt <| @hts _)
 
 theorem IsLowerSet.member_subfamily_subset_non_member_subfamily (h : IsLowerSet (𝒜 : Set (Finset α))) :
     𝒜.memberSubfamily a ⊆ 𝒜.nonMemberSubfamily a := fun s => by

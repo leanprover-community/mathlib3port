@@ -157,7 +157,7 @@ theorem has_continuous_smul_infi {ts' : ι → TopologicalSpace X} (h : ∀ i, @
 
 @[to_additive]
 theorem has_continuous_smul_inf {t₁ t₂ : TopologicalSpace X} [@HasContinuousSmul M X _ _ t₁]
-    [@HasContinuousSmul M X _ _ t₂] : @HasContinuousSmul M X _ _ (t₁⊓t₂) := by
+    [@HasContinuousSmul M X _ _ t₂] : @HasContinuousSmul M X _ _ (t₁ ⊓ t₂) := by
   rw [inf_eq_infi]
   refine' has_continuous_smul_infi fun b => _
   cases b <;> assumption

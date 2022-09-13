@@ -612,7 +612,7 @@ theorem IndepFun.indep_fun_finset [IsProbabilityMeasure μ] {ι : Type _} {β : 
   have hπS_gen : (measurable_space.pi.comap fun a (i : S) => f i a) = generate_from πS := by
     rw [generate_from_pi.symm, comap_generate_from]
     · congr with s
-      simp only [Set.mem_image, Set.mem_set_of_eq, exists_prop]
+      simp only [Set.mem_image, Set.mem_set_of_eq, exists_propₓ]
       
     · infer_instance
       
@@ -622,7 +622,7 @@ theorem IndepFun.indep_fun_finset [IsProbabilityMeasure μ] {ι : Type _} {β : 
   have hπT_gen : (measurable_space.pi.comap fun a (i : T) => f i a) = generate_from πT := by
     rw [generate_from_pi.symm, comap_generate_from]
     · congr with s
-      simp only [Set.mem_image, Set.mem_set_of_eq, exists_prop]
+      simp only [Set.mem_image, Set.mem_set_of_eq, exists_propₓ]
       
     · infer_instance
       

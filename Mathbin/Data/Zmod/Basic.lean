@@ -214,7 +214,7 @@ theorem nat_cast_comp_val [NeZero n] : (coe : ℕ → R) ∘ (val : Zmod n → �
 @[simp]
 theorem int_cast_comp_cast : (coe : ℤ → R) ∘ (coe : Zmod n → ℤ) = coe := by
   cases n
-  · exact congr_argₓ ((· ∘ ·) Int.castₓ) Zmod.cast_id'
+  · exact congr_arg ((· ∘ ·) Int.castₓ) Zmod.cast_id'
     
   · ext
     simp
@@ -224,11 +224,11 @@ variable {R}
 
 @[simp]
 theorem nat_cast_val [NeZero n] (i : Zmod n) : (i.val : R) = i :=
-  congr_funₓ (nat_cast_comp_val R) i
+  congr_fun (nat_cast_comp_val R) i
 
 @[simp]
 theorem int_cast_cast (i : Zmod n) : ((i : ℤ) : R) = i :=
-  congr_funₓ (int_cast_comp_cast R) i
+  congr_fun (int_cast_comp_cast R) i
 
 theorem coe_add_eq_ite {n : ℕ} (a b : Zmod n) : (↑(a + b) : ℤ) = if (n : ℤ) ≤ a + b then a + b - n else a + b := by
   cases n
@@ -428,12 +428,12 @@ theorem nat_coe_zmod_eq_zero_iff_dvd (a b : ℕ) : (a : Zmod b) = 0 ↔ b ∣ a 
 theorem val_int_cast {n : ℕ} (a : ℤ) [NeZero n] : ↑(a : Zmod n).val = a % n := by
   have hle : (0 : ℤ) ≤ ↑(a : Zmod n).val := Int.coe_nat_nonneg _
   have hlt : ↑(a : Zmod n).val < (n : ℤ) := int.coe_nat_lt.mpr (Zmod.val_lt a)
-  refine' (Int.mod_eq_of_lt hle hlt).symm.trans _
+  refine' (Int.mod_eq_of_ltₓ hle hlt).symm.trans _
   rw [← Zmod.int_coe_eq_int_coe_iff', Int.cast_coe_nat, Zmod.nat_cast_val, Zmod.cast_id]
 
 theorem coe_int_cast {n : ℕ} (a : ℤ) : ↑(a : Zmod n) = a % n := by
   cases n
-  · rw [Int.coe_nat_zero, Int.mod_zero, Int.cast_id, Int.cast_id]
+  · rw [Int.coe_nat_zero, Int.mod_zeroₓ, Int.cast_id, Int.cast_id]
     
   · rw [← val_int_cast, val, coe_coe]
     
@@ -486,7 +486,7 @@ theorem int_coe_zmod_eq_iff (p : ℕ) (n : ℤ) (z : Zmod p) [NeZero p] : ↑n =
   constructor
   · rintro rfl
     refine' ⟨n / p, _⟩
-    rw [val_int_cast, Int.mod_add_div]
+    rw [val_int_cast, Int.mod_add_divₓ]
     
   · rintro ⟨k, rfl⟩
     rw [Int.cast_add, Int.cast_mul, Int.cast_coe_nat, Int.cast_coe_nat, nat_cast_val, Zmod.nat_cast_self, zero_mul,
@@ -550,7 +550,7 @@ instance nontrivial (n : ℕ) [Fact (1 < n)] : Nontrivial (Zmod n) :=
         calc
           0 = (0 : Zmod n).val := by
             rw [val_zero]
-          _ = (1 : Zmod n).val := congr_argₓ Zmod.val h
+          _ = (1 : Zmod n).val := congr_arg Zmod.val h
           _ = 1 := val_one n
           ⟩⟩
 
@@ -593,7 +593,7 @@ theorem mul_inv_eq_gcd {n : ℕ} (a : Zmod n) : a * a⁻¹ = Nat.gcdₓ a.val n 
         push_cast
         rw [nat_cast_zmod_val]
         rfl
-      _ = Nat.gcdₓ a.val k := (congr_argₓ coe (Nat.gcd_eq_gcd_ab a.val k)).symm
+      _ = Nat.gcdₓ a.val k := (congr_arg coe (Nat.gcd_eq_gcd_ab a.val k)).symm
       
     
 
@@ -637,7 +637,7 @@ theorem val_coe_unit_coprime {n : ℕ} (u : (Zmod n)ˣ) : Nat.Coprime (u : Zmod 
 
 @[simp]
 theorem inv_coe_unit {n : ℕ} (u : (Zmod n)ˣ) : (u : Zmod n)⁻¹ = (u⁻¹ : (Zmod n)ˣ) := by
-  have := congr_argₓ (coe : ℕ → Zmod n) (val_coe_unit_coprime u)
+  have := congr_arg (coe : ℕ → Zmod n) (val_coe_unit_coprime u)
   rw [← mul_inv_eq_gcd, Nat.cast_oneₓ] at this
   let u' : (Zmod n)ˣ :=
     ⟨u, (u : Zmod n)⁻¹, this, by

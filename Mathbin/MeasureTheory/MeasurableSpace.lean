@@ -134,7 +134,7 @@ theorem comap_bot : (⊥ : MeasurableSpace α).comap g = ⊥ :=
   (gc_comap_map g).l_bot
 
 @[simp]
-theorem comap_sup : (m₁⊔m₂).comap g = m₁.comap g⊔m₂.comap g :=
+theorem comap_sup : (m₁ ⊔ m₂).comap g = m₁.comap g ⊔ m₂.comap g :=
   (gc_comap_map g).l_sup
 
 @[simp]
@@ -146,7 +146,7 @@ theorem map_top : (⊤ : MeasurableSpace α).map f = ⊤ :=
   (gc_comap_map f).u_top
 
 @[simp]
-theorem map_inf : (m₁⊓m₂).map f = m₁.map f⊓m₂.map f :=
+theorem map_inf : (m₁ ⊓ m₂).map f = m₁.map f ⊓ m₂.map f :=
   (gc_comap_map f).u_inf
 
 @[simp]
@@ -506,7 +506,7 @@ section Prod
 
 /-- A `measurable_space` structure on the product of two measurable spaces. -/
 def MeasurableSpace.prod {α β} (m₁ : MeasurableSpace α) (m₂ : MeasurableSpace β) : MeasurableSpace (α × β) :=
-  m₁.comap Prod.fst⊔m₂.comap Prod.snd
+  m₁.comap Prod.fst ⊔ m₂.comap Prod.snd
 
 instance {α β} [m₁ : MeasurableSpace α] [m₂ : MeasurableSpace β] : MeasurableSpace (α × β) :=
   m₁.Prod m₂
@@ -620,7 +620,7 @@ theorem measurable_from_prod_countable [Countable β] [MeasurableSingletonClass 
   intro s hs
   have : f ⁻¹' s = ⋃ y, ((fun x => f (x, y)) ⁻¹' s) ×ˢ ({y} : Set β) := by
     ext1 ⟨x, y⟩
-    simp [and_assoc, And.left_comm]
+    simp [and_assocₓ, And.left_comm]
   rw [this]
   exact MeasurableSet.Union fun y => (hf y hs).Prod (measurable_set_singleton y)
 
@@ -809,7 +809,7 @@ theorem MeasurableSet.tprod (l : List δ) {s : ∀ i, Set (π i)} (hs : ∀ i, M
 end Tprod
 
 instance {α β} [m₁ : MeasurableSpace α] [m₂ : MeasurableSpace β] : MeasurableSpace (Sum α β) :=
-  m₁.map Sum.inl⊓m₂.map Sum.inr
+  m₁.map Sum.inl ⊓ m₂.map Sum.inr
 
 section Sum
 
@@ -952,7 +952,7 @@ theorem MeasurableSet.exists_measurable_proj {m : MeasurableSpace α} {s : Set �
     (hne : s.Nonempty) : ∃ f : α → s, Measurable f ∧ ∀ x : s, f x = x :=
   let ⟨f, hfm, hf⟩ :=
     (MeasurableEmbedding.subtype_coe hs).exists_measurable_extend measurable_id fun _ => hne.to_subtype
-  ⟨f, hfm, congr_funₓ hf⟩
+  ⟨f, hfm, congr_fun hf⟩
 
 /-- Equivalences between measurable spaces. Main application is the simplification of measurability
 statements along measurable equivalences. -/
@@ -1387,7 +1387,7 @@ theorem Eventually.exists_measurable_mem_of_small_sets {f : Filter α} [IsMeasur
   ⟨t, htf, htm, hs t hts⟩
 
 instance inf_is_measurably_generated (f g : Filter α) [IsMeasurablyGenerated f] [IsMeasurablyGenerated g] :
-    IsMeasurablyGenerated (f⊓g) := by
+    IsMeasurablyGenerated (f ⊓ g) := by
   refine' ⟨_⟩
   rintro t ⟨sf, hsf, sg, hsg, rfl⟩
   rcases is_measurably_generated.exists_measurable_subset hsf with ⟨s'f, hs'f, hmf, hs'sf⟩
@@ -1511,13 +1511,13 @@ instance : PartialOrderₓ (Subtype (MeasurableSet : Set α → Prop)) :=
 
 instance : DistribLattice (Subtype (MeasurableSet : Set α → Prop)) :=
   { MeasurableSet.Subtype.partialOrder with sup := (· ∪ ·),
-    le_sup_left := fun a b => show (a : Set α) ≤ a⊔b from le_sup_left,
-    le_sup_right := fun a b => show (b : Set α) ≤ a⊔b from le_sup_right,
-    sup_le := fun a b c ha hb => show (a⊔b : Set α) ≤ c from sup_le ha hb, inf := (· ∩ ·),
-    inf_le_left := fun a b => show (a⊓b : Set α) ≤ a from inf_le_left,
-    inf_le_right := fun a b => show (a⊓b : Set α) ≤ b from inf_le_right,
-    le_inf := fun a b c ha hb => show (a : Set α) ≤ b⊓c from le_inf ha hb,
-    le_sup_inf := fun x y z => show ((x⊔y)⊓(x⊔z) : Set α) ≤ x⊔y⊓z from le_sup_inf }
+    le_sup_left := fun a b => show (a : Set α) ≤ a ⊔ b from le_sup_left,
+    le_sup_right := fun a b => show (b : Set α) ≤ a ⊔ b from le_sup_right,
+    sup_le := fun a b c ha hb => show (a ⊔ b : Set α) ≤ c from sup_le ha hb, inf := (· ∩ ·),
+    inf_le_left := fun a b => show (a ⊓ b : Set α) ≤ a from inf_le_left,
+    inf_le_right := fun a b => show (a ⊓ b : Set α) ≤ b from inf_le_right,
+    le_inf := fun a b c ha hb => show (a : Set α) ≤ b ⊓ c from le_inf ha hb,
+    le_sup_inf := fun x y z => show ((x ⊔ y) ⊓ (x ⊔ z) : Set α) ≤ x ⊔ y ⊓ z from le_sup_inf }
 
 instance : BoundedOrder (Subtype (MeasurableSet : Set α → Prop)) where
   top := ⊤

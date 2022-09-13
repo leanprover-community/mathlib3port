@@ -994,7 +994,7 @@ theorem integral_eq_integral_pos_part_sub_integral_neg_part {f : α → ℝ} (hf
 theorem integral_nonneg_of_ae {f : α → ℝ} (hf : 0 ≤ᵐ[μ] f) : 0 ≤ ∫ a, f a ∂μ :=
   set_to_fun_nonneg (dominated_fin_meas_additive_weighted_smul μ) (fun s _ _ => weighted_smul_nonneg s) hf
 
-theorem lintegral_coe_eq_integral (f : α → ℝ≥0 ) (hfi : Integrable (fun x => (f x : ℝ)) μ) :
+theorem lintegral_coe_eq_integral (f : α → ℝ≥0) (hfi : Integrable (fun x => (f x : ℝ)) μ) :
     (∫⁻ a, f a ∂μ) = Ennreal.ofReal (∫ a, f a ∂μ) := by
   simp_rw
     [integral_eq_lintegral_of_nonneg_ae (eventually_of_forall fun x => (f x).coe_nonneg) hfi.ae_strongly_measurable, ←
@@ -1016,7 +1016,7 @@ theorem of_real_integral_eq_lintegral_of_real {f : α → ℝ} (hfi : Integrable
   apply lintegral_congr_ae
   filter_upwards [f_nn] with x hx
   exact
-    congr_argₓ Ennreal.ofReal
+    congr_arg Ennreal.ofReal
       (by
         rw [Real.norm_eq_abs, abs_eq_self.mpr hx])
 
@@ -1032,11 +1032,11 @@ theorem integral_to_real {f : α → ℝ≥0∞} (hfm : AeMeasurable f μ) (hf :
   · exact eventually_of_forall fun x => Ennreal.to_real_nonneg
     
 
-theorem lintegral_coe_le_coe_iff_integral_le {f : α → ℝ≥0 } (hfi : Integrable (fun x => (f x : ℝ)) μ) {b : ℝ≥0 } :
+theorem lintegral_coe_le_coe_iff_integral_le {f : α → ℝ≥0} (hfi : Integrable (fun x => (f x : ℝ)) μ) {b : ℝ≥0} :
     (∫⁻ a, f a ∂μ) ≤ b ↔ (∫ a, (f a : ℝ) ∂μ) ≤ b := by
   rw [lintegral_coe_eq_integral f hfi, Ennreal.ofReal, Ennreal.coe_le_coe, Real.to_nnreal_le_iff_le_coe]
 
-theorem integral_coe_le_of_lintegral_coe_le {f : α → ℝ≥0 } {b : ℝ≥0 } (h : (∫⁻ a, f a ∂μ) ≤ b) :
+theorem integral_coe_le_of_lintegral_coe_le {f : α → ℝ≥0} {b : ℝ≥0} (h : (∫⁻ a, f a ∂μ) ≤ b) :
     (∫ a, (f a : ℝ) ∂μ) ≤ b := by
   by_cases' hf : integrable (fun a => (f a : ℝ)) μ
   · exact (lintegral_coe_le_coe_iff_integral_le hf).1 h

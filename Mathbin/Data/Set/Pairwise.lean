@@ -289,7 +289,7 @@ theorem InjOn.pairwise_disjoint_image {g : ι' → ι} {s : Set ι'} (h : s.InjO
 theorem PairwiseDisjoint.range (g : s → ι) (hg : ∀ i : s, f (g i) ≤ f i) (ht : s.PairwiseDisjoint f) :
     (Range g).PairwiseDisjoint f := by
   rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ hxy
-  exact ((ht x.2 y.2) fun h => hxy <| congr_argₓ g <| Subtype.ext h).mono (hg x) (hg y)
+  exact ((ht x.2 y.2) fun h => hxy <| congr_arg g <| Subtype.ext h).mono (hg x) (hg y)
 
 theorem pairwise_disjoint_union :
     (s ∪ t).PairwiseDisjoint f ↔
@@ -314,7 +314,7 @@ theorem PairwiseDisjoint.elim (hs : s.PairwiseDisjoint f) {i j : ι} (hi : i ∈
   hs.Eq hi hj h
 
 -- classical
-theorem PairwiseDisjoint.elim' (hs : s.PairwiseDisjoint f) {i j : ι} (hi : i ∈ s) (hj : j ∈ s) (h : f i⊓f j ≠ ⊥) :
+theorem PairwiseDisjoint.elim' (hs : s.PairwiseDisjoint f) {i j : ι} (hi : i ∈ s) (hj : j ∈ s) (h : f i ⊓ f j ≠ ⊥) :
     i = j :=
   (hs.elim hi hj) fun hij => h hij.eq_bot
 
@@ -366,7 +366,7 @@ theorem bUnion_diff_bUnion_eq {s t : Set ι} {f : ι → Set α} (h : (s ∪ t).
     (bUnion_diff_bUnion_subset f s t).antisymm (Union₂_subset fun i hi a ha => (mem_diff _).2 ⟨mem_bUnion hi.1 ha, _⟩)
   rw [mem_Union₂]
   rintro ⟨j, hj, haj⟩
-  exact h (Or.inl hi.1) (Or.inr hj) (ne_of_mem_of_not_mem hj hi.2).symm ⟨ha, haj⟩
+  exact h (Or.inl hi.1) (Or.inr hj) (ne_of_mem_of_not_memₓ hj hi.2).symm ⟨ha, haj⟩
 
 /-- Equivalence between a disjoint bounded union and a dependent sum. -/
 noncomputable def bUnionEqSigmaOfDisjoint {s : Set ι} {f : ι → Set α} (h : s.PairwiseDisjoint f) :
@@ -391,7 +391,7 @@ theorem pairwise_disjoint_image_right_iff {f : α → β → γ} {s : Set α} {t
     exact mem_image_of_mem _ hy.2
     
   · rintro _ ⟨⟨a, ha, hab⟩, b, hb, rfl⟩
-    exact h (congr_argₓ Prod.fst <| hs (mk_mem_prod hx ha) (mk_mem_prod hy hb) hab)
+    exact h (congr_arg Prod.fst <| hs (mk_mem_prod hx ha) (mk_mem_prod hy hb) hab)
     
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -413,7 +413,7 @@ theorem pairwise_disjoint_image_left_iff {f : α → β → γ} {s : Set α} {t 
     exact mem_image_of_mem _ hy.1
     
   · rintro _ ⟨⟨a, ha, hab⟩, b, hb, rfl⟩
-    exact h (congr_argₓ Prod.snd <| ht (mk_mem_prod ha hx) (mk_mem_prod hb hy) hab)
+    exact h (congr_arg Prod.snd <| ht (mk_mem_prod ha hx) (mk_mem_prod hb hy) hab)
     
 
 end Set

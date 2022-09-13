@@ -180,14 +180,14 @@ instance [HasFaithfulSmul M X] : HasInf { P : M // IsLprojection X P } :=
   ⟨fun P Q => ⟨P * Q, P.Prop.mul Q.Prop⟩⟩
 
 @[simp]
-theorem coe_inf [HasFaithfulSmul M X] (P Q : { P : M // IsLprojection X P }) : ↑(P⊓Q) = (↑P : M) * ↑Q :=
+theorem coe_inf [HasFaithfulSmul M X] (P Q : { P : M // IsLprojection X P }) : ↑(P ⊓ Q) = (↑P : M) * ↑Q :=
   rfl
 
 instance [HasFaithfulSmul M X] : HasSup { P : M // IsLprojection X P } :=
   ⟨fun P Q => ⟨P + Q - P * Q, P.Prop.join Q.Prop⟩⟩
 
 @[simp]
-theorem coe_sup [HasFaithfulSmul M X] (P Q : { P : M // IsLprojection X P }) : ↑(P⊔Q) = (↑P : M) + ↑Q - ↑P * ↑Q :=
+theorem coe_sup [HasFaithfulSmul M X] (P Q : { P : M // IsLprojection X P }) : ↑(P ⊔ Q) = (↑P : M) + ↑Q - ↑P * ↑Q :=
   rfl
 
 instance [HasFaithfulSmul M X] : Sdiff { P : M // IsLprojection X P } :=
@@ -198,7 +198,7 @@ theorem coe_sdiff [HasFaithfulSmul M X] (P Q : { P : M // IsLprojection X P }) :
   rfl
 
 instance [HasFaithfulSmul M X] : PartialOrderₓ { P : M // IsLprojection X P } where
-  le := fun P Q => (↑P : M) = ↑(P⊓Q)
+  le := fun P Q => (↑P : M) = ↑(P ⊓ Q)
   le_refl := fun P => by
     simpa only [coe_inf, ← sq] using P.prop.proj.eq.symm
   le_trans := fun P Q R h₁ h₂ => by
@@ -209,7 +209,7 @@ instance [HasFaithfulSmul M X] : PartialOrderₓ { P : M // IsLprojection X P } 
       (by
         convert (P.prop.commute Q.prop).Eq)
 
-theorem le_def [HasFaithfulSmul M X] (P Q : { P : M // IsLprojection X P }) : P ≤ Q ↔ (P : M) = ↑(P⊓Q) :=
+theorem le_def [HasFaithfulSmul M X] (P Q : { P : M // IsLprojection X P }) : P ≤ Q ↔ (P : M) = ↑(P ⊓ Q) :=
   Iff.rfl
 
 instance : Zero { P : M // IsLprojection X P } :=
@@ -252,10 +252,10 @@ theorem mul_compl_self {P : { P : M // IsLprojection X P }} : (↑P : M) * ↑(P
 theorem distrib_lattice_lemma [HasFaithfulSmul M X] {P Q R : { P : M // IsLprojection X P }} :
     ((↑P : M) + ↑(Pᶜ) * R) * (↑P + ↑Q * ↑R * ↑(Pᶜ)) = ↑P + ↑Q * ↑R * ↑(Pᶜ) := by
   rw [add_mulₓ, mul_addₓ, mul_addₓ, mul_assoc (↑(Pᶜ)) (↑R) (↑Q * ↑R * ↑(Pᶜ)), ← mul_assoc (↑R) (↑Q * ↑R) ↑(Pᶜ), ←
-    coe_inf Q, (Pᶜ.Prop.Commute R.prop).Eq, ((Q⊓R).Prop.Commute Pᶜ.Prop).Eq, (R.prop.commute (Q⊓R).Prop).Eq, coe_inf Q,
-    mul_assoc ↑Q, ← mul_assoc, mul_assoc ↑R, (Pᶜ.Prop.Commute P.prop).Eq, mul_compl_self, zero_mul, mul_zero, zero_addₓ,
-    add_zeroₓ, ← mul_assoc, P.prop.proj.eq, R.prop.proj.eq, ← coe_inf Q, mul_assoc, ((Q⊓R).Prop.Commute Pᶜ.Prop).Eq, ←
-    mul_assoc, Pᶜ.Prop.proj.Eq]
+    coe_inf Q, (Pᶜ.Prop.Commute R.prop).Eq, ((Q ⊓ R).Prop.Commute Pᶜ.Prop).Eq, (R.prop.commute (Q ⊓ R).Prop).Eq,
+    coe_inf Q, mul_assoc ↑Q, ← mul_assoc, mul_assoc ↑R, (Pᶜ.Prop.Commute P.prop).Eq, mul_compl_self, zero_mul, mul_zero,
+    zero_addₓ, add_zeroₓ, ← mul_assoc, P.prop.proj.eq, R.prop.proj.eq, ← coe_inf Q, mul_assoc,
+    ((Q ⊓ R).Prop.Commute Pᶜ.Prop).Eq, ← mul_assoc, Pᶜ.Prop.proj.Eq]
 
 instance [HasFaithfulSmul M X] : DistribLattice { P : M // IsLprojection X P } :=
   { IsLprojection.Subtype.hasInf, IsLprojection.Subtype.hasSup, IsLprojection.Subtype.partialOrder with
@@ -277,14 +277,14 @@ instance [HasFaithfulSmul M X] : DistribLattice { P : M // IsLprojection X P } :
       intro h₁ h₂
       rw [← h₁, ← h₂],
     le_sup_inf := fun P Q R => by
-      have e₁ : ↑((P⊔Q)⊓(P⊔R)) = ↑P + ↑Q * ↑R * ↑(Pᶜ) := by
+      have e₁ : ↑((P ⊔ Q) ⊓ (P ⊔ R)) = ↑P + ↑Q * ↑R * ↑(Pᶜ) := by
         rw [coe_inf, coe_sup, coe_sup, ← add_sub, ← add_sub, ← compl_mul, ← compl_mul, add_mulₓ, mul_addₓ,
           (Pᶜ.Prop.Commute Q.prop).Eq, mul_addₓ, ← mul_assoc, mul_assoc ↑Q, (Pᶜ.Prop.Commute P.prop).Eq, mul_compl_self,
           zero_mul, mul_zero, zero_addₓ, add_zeroₓ, ← mul_assoc, mul_assoc ↑Q, P.prop.proj.eq, Pᶜ.Prop.proj.Eq,
           mul_assoc, (Pᶜ.Prop.Commute R.prop).Eq, ← mul_assoc]
-      have e₂ : ↑((P⊔Q)⊓(P⊔R)) * ↑(P⊔Q⊓R) = ↑P + ↑Q * ↑R * ↑(Pᶜ) := by
+      have e₂ : ↑((P ⊔ Q) ⊓ (P ⊔ R)) * ↑(P ⊔ Q ⊓ R) = ↑P + ↑Q * ↑R * ↑(Pᶜ) := by
         rw [coe_inf, coe_sup, coe_sup, coe_sup, ← add_sub, ← add_sub, ← add_sub, ← compl_mul, ← compl_mul, ← compl_mul,
-          (Pᶜ.Prop.Commute (Q⊓R).Prop).Eq, coe_inf, mul_assoc, distrib_lattice_lemma, (Q.prop.commute R.prop).Eq,
+          (Pᶜ.Prop.Commute (Q ⊓ R).Prop).Eq, coe_inf, mul_assoc, distrib_lattice_lemma, (Q.prop.commute R.prop).Eq,
           distrib_lattice_lemma]
       rw [le_def, e₁, coe_inf, e₂] }
 

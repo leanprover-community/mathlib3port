@@ -96,7 +96,7 @@ theorem smul_pow' [MulDistribMulAction M N] (x : M) (m : N) (n : ℕ) : x • m 
     exact smul_one x
     
   · rw [pow_succₓ, pow_succₓ]
-    exact (smul_mul' x m (m ^ n)).trans (congr_argₓ _ ih)
+    exact (smul_mul' x m (m ^ n)).trans (congr_arg _ ih)
     
 
 end Monoidₓ

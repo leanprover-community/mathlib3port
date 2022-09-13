@@ -42,17 +42,17 @@ variable (M S)
 
 /-- The submonoid of `S = M⁻¹R` consisting of `{ 1 / x | x ∈ M }`. -/
 def invSubmonoid : Submonoid S :=
-  (M.map (algebraMap R S : R →* S)).left_inv
+  (M.map (algebraMap R S)).left_inv
 
 variable [IsLocalization M S]
 
-theorem submonoid_map_le_is_unit : M.map (algebraMap R S : R →* S) ≤ IsUnit.submonoid S := by
+theorem submonoid_map_le_is_unit : M.map (algebraMap R S) ≤ IsUnit.submonoid S := by
   rintro _ ⟨a, ha, rfl⟩
   exact IsLocalization.map_units S ⟨_, ha⟩
 
 /-- There is an equivalence of monoids between the image of `M` and `inv_submonoid`. -/
-noncomputable abbrev equivInvSubmonoid : M.map (algebraMap R S : R →* S) ≃* invSubmonoid M S :=
-  ((M.map (algebraMap R S : R →* S)).leftInvEquiv (submonoid_map_le_is_unit M S)).symm
+noncomputable abbrev equivInvSubmonoid : M.map (algebraMap R S) ≃* invSubmonoid M S :=
+  ((M.map (algebraMap R S)).leftInvEquiv (submonoid_map_le_is_unit M S)).symm
 
 /-- There is a canonical map from `M` to `inv_submonoid` sending `x` to `1 / x`. -/
 noncomputable def toInvSubmonoid : M →* invSubmonoid M S :=
@@ -90,7 +90,7 @@ theorem to_inv_submonoid_eq_mk' (x : M) : (toInvSubmonoid M S x : S) = mk' S 1 x
 theorem mem_inv_submonoid_iff_exists_mk' (x : S) : x ∈ invSubmonoid M S ↔ ∃ m : M, mk' S 1 m = x := by
   simp_rw [← to_inv_submonoid_eq_mk']
   exact
-    ⟨fun h => ⟨_, congr_argₓ Subtype.val (to_inv_submonoid_surjective M S ⟨x, h⟩).some_spec⟩, fun h =>
+    ⟨fun h => ⟨_, congr_arg Subtype.val (to_inv_submonoid_surjective M S ⟨x, h⟩).some_spec⟩, fun h =>
       h.some_spec ▸ (to_inv_submonoid M S h.some).Prop⟩
 
 variable (S)

@@ -433,7 +433,7 @@ theorem closed_complemented_range_of_is_compl_of_ker_eq_bot (f : E →L[𝕜] F)
     (hG : IsClosed (G : Set F)) (hker : f.ker = ⊥) : IsClosed (f.range : Set F) := by
   haveI : CompleteSpace G := hG.complete_space_coe
   let g := coprod_subtypeL_equiv_of_is_compl f h hker
-  rw [congr_argₓ coe (range_eq_map_coprod_subtypeL_equiv_of_is_compl f h hker)]
+  rw [congr_arg coe (range_eq_map_coprod_subtypeL_equiv_of_is_compl f h hker)]
   apply g.to_homeomorph.is_closed_image.2
   exact is_closed_univ.prod is_closed_singleton
 

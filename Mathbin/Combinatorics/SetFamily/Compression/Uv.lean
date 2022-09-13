@@ -56,9 +56,9 @@ variable {α : Type _}
 
 /-- UV-compression is injective on the elements it moves. See `uv.compress`. -/
 theorem sup_sdiff_inj_on [GeneralizedBooleanAlgebra α] (u v : α) :
-    { x | Disjoint u x ∧ v ≤ x }.InjOn fun x => (x⊔u) \ v := by
+    { x | Disjoint u x ∧ v ≤ x }.InjOn fun x => (x ⊔ u) \ v := by
   rintro a ha b hb hab
-  have h : ((a⊔u) \ v) \ u⊔v = ((b⊔u) \ v) \ u⊔v := by
+  have h : ((a ⊔ u) \ v) \ u ⊔ v = ((b ⊔ u) \ v) \ u ⊔ v := by
     dsimp'  at hab
     rw [hab]
   rwa [sdiff_sdiff_comm, ha.1.symm.sup_sdiff_cancel_right, sdiff_sdiff_comm, hb.1.symm.sup_sdiff_cancel_right,
@@ -80,7 +80,7 @@ attribute [local instance] decidableEqOfDecidableLe
 /-- To UV-compress `a`, if it doesn't touch `U` and does contain `V`, we remove `V` and
 put `U` in. We'll only really use this when `|U| = |V|` and `U ∩ V = ∅`. -/
 def compress (u v a : α) : α :=
-  if Disjoint u a ∧ v ≤ a then (a⊔u) \ v else a
+  if Disjoint u a ∧ v ≤ a then (a ⊔ u) \ v else a
 
 /-- To UV-compress a set family, we compress each of its elements, except that we don't want to
 reduce the cardinality, so we keep all elements whose compression is already present. -/
@@ -94,7 +94,7 @@ localized [FinsetFamily] notation "𝓒 " => Uv.compression
 def IsCompressed (u v : α) (s : Finset α) :=
   𝓒 u v s = s
 
-theorem compress_of_disjoint_of_le (hua : Disjoint u a) (hva : v ≤ a) : compress u v a = (a⊔u) \ v :=
+theorem compress_of_disjoint_of_le (hua : Disjoint u a) (hva : v ≤ a) : compress u v a = (a ⊔ u) \ v :=
   if_pos ⟨hua, hva⟩
 
 /-- `a` is in the UV-compressed family iff it's in the original and its compression is in the
@@ -156,7 +156,7 @@ theorem compress_mem_compression (ha : a ∈ s) : compress u v a ∈ 𝓒 u v s 
 -- This is a special case of `compress_mem_compression` once we have `compression_idem`.
 theorem compress_mem_compression_of_mem_compression (ha : a ∈ 𝓒 u v s) : compress u v a ∈ 𝓒 u v s := by
   rw [mem_compression] at ha⊢
-  simp only [compress_idem, exists_prop]
+  simp only [compress_idem, exists_propₓ]
   obtain ⟨_, ha⟩ | ⟨_, b, hb, rfl⟩ := ha
   · exact Or.inl ⟨ha, ha⟩
     
@@ -198,7 +198,7 @@ theorem card_compression (u v : α) (s : Finset α) : (𝓒 u v s).card = s.card
 
 /-- If `a` is in the family compression and can be compressed, then its compression is in the
 original family. -/
-theorem sup_sdiff_mem_of_mem_compression (ha : a ∈ 𝓒 u v s) (hva : v ≤ a) (hua : Disjoint u a) : (a⊔u) \ v ∈ s := by
+theorem sup_sdiff_mem_of_mem_compression (ha : a ∈ 𝓒 u v s) (hva : v ≤ a) (hua : Disjoint u a) : (a ⊔ u) \ v ∈ s := by
   rw [mem_compression, compress_of_disjoint_of_le hua hva] at ha
   obtain ⟨_, ha⟩ | ⟨_, b, hb, rfl⟩ := ha
   · exact ha

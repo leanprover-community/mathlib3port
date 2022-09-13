@@ -61,7 +61,7 @@ theorem sigma_mk_eq_total_space_mk {x : B} {y : E x} : Sigma.mk x y = totalSpace
   rfl
 
 theorem TotalSpace.mk_cast {x x' : B} (h : x = x') (b : E x) :
-    totalSpaceMk x' (cast (congr_argₓ E h) b) = totalSpaceMk x b := by
+    totalSpaceMk x' (cast (congr_arg E h) b) = totalSpaceMk x b := by
   subst h
   rfl
 
@@ -84,7 +84,7 @@ theorem to_total_space_coe {x : B} (v : E x) : (v : TotalSpace E) = totalSpaceMk
 
 -- mathport name: «expr ×ᵇ »
 notation:100 -- notation for the direct sum of two bundles over the same base
-E₁ "×ᵇ" E₂ => fun x => E₁ x × E₂ x
+E₁ " ×ᵇ " E₂ => fun x => E₁ x × E₂ x
 
 /-- `bundle.trivial B F` is the trivial bundle over `B` of fiber `F`. -/
 def Trivial (B : Type _) (F : Type _) : B → Type _ :=

@@ -42,7 +42,7 @@ a continuous linear functional `f` separating `x₀` and `s`, in the sense that 
 all of `s` to values strictly below `1`. -/
 theorem separate_convex_open_set [SeminormedAddCommGroup E] [NormedSpace ℝ E] {s : Set E} (hs₀ : (0 : E) ∈ s)
     (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) {x₀ : E} (hx₀ : x₀ ∉ s) : ∃ f : E →L[ℝ] ℝ, f x₀ = 1 ∧ ∀ x ∈ s, f x < 1 := by
-  let f : E →ₗ.[ℝ] ℝ := LinearPmap.mkSpanSingleton x₀ 1 (ne_of_mem_of_not_mem hs₀ hx₀).symm
+  let f : E →ₗ.[ℝ] ℝ := LinearPmap.mkSpanSingleton x₀ 1 (ne_of_mem_of_not_memₓ hs₀ hx₀).symm
   obtain ⟨r, hr, hrs⟩ :=
     Metric.mem_nhds_iff.1
       (Filter.inter_mem (hs₂.mem_nhds hs₀) <|

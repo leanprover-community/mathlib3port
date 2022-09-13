@@ -299,7 +299,7 @@ theorem eq_of_lt_minimal_period_of_iterate_eq {m n : ℕ} (hm : m < minimalPerio
 
 theorem eq_iff_lt_minimal_period_of_iterate_eq {m n : ℕ} (hm : m < minimalPeriod f x) (hn : n < minimalPeriod f x) :
     (f^[m]) x = (f^[n]) x ↔ m = n :=
-  ⟨eq_of_lt_minimal_period_of_iterate_eq hm hn, congr_argₓ _⟩
+  ⟨eq_of_lt_minimal_period_of_iterate_eq hm hn, congr_arg _⟩
 
 theorem minimal_period_id : minimalPeriod id x = 1 :=
   ((is_periodic_id _ _).minimal_period_le Nat.one_posₓ).antisymm
@@ -531,7 +531,7 @@ theorem pow_smul_mod_minimal_period (n : ℕ) : a ^ (n % Function.minimalPeriod 
 theorem zpow_smul_mod_minimal_period (n : ℤ) : a ^ (n % (Function.minimalPeriod ((· • ·) a) b : ℤ)) • b = a ^ n • b :=
   by
   conv_rhs =>
-    rw [← Int.mod_add_div n (minimal_period ((· • ·) a) b), zpow_add, mul_smul,
+    rw [← Int.mod_add_divₓ n (minimal_period ((· • ·) a) b), zpow_add, mul_smul,
       zpow_smul_eq_iff_minimal_period_dvd.mpr (dvd_mul_right _ _)]
 
 end MulAction

@@ -57,7 +57,7 @@ instance : ContinuousLinearMapClass (CharacterSpace 𝕜 A) 𝕜 A 𝕜 where
   coe := fun φ => (φ : A → 𝕜)
   coe_injective' := fun φ ψ h => by
     ext
-    exact congr_funₓ h x
+    exact congr_fun h x
   map_smulₛₗ := fun φ => (φ : WeakDual 𝕜 A).map_smul
   map_add := fun φ => (φ : WeakDual 𝕜 A).map_add
   map_continuous := fun φ => (φ : WeakDual 𝕜 A).cont

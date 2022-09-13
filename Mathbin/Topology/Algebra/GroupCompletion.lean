@@ -128,7 +128,7 @@ instance : SubNegMonoidₓ (Completion α) :=
         (is_closed_eq (continuous_map₂ continuous_fst continuous_snd)
           (continuous_map₂ continuous_fst (Completion.continuous_map.comp continuous_snd)))
         fun a b => by
-        exact_mod_cast congr_argₓ coe (sub_eq_add_neg a b),
+        exact_mod_cast congr_arg coe (sub_eq_add_neg a b),
     zsmul := (· • ·),
     zsmul_zero' := fun a =>
       Completion.induction_on a (is_closed_eq continuous_map continuous_const) fun a => by
@@ -177,6 +177,13 @@ def toCompl : α →+ Completion α where
 
 theorem continuous_to_compl : Continuous (toCompl : α → Completion α) :=
   continuous_coe α
+
+variable (α)
+
+theorem dense_inducing_to_compl : DenseInducing (toCompl : α → Completion α) :=
+  dense_inducing_coe
+
+variable {α}
 
 end UniformAddGroup
 

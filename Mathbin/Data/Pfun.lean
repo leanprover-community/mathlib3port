@@ -135,7 +135,7 @@ theorem dom_coe (f : α → β) : (f : α →. β).Dom = Set.Univ :=
   rfl
 
 theorem coe_injective : Injective (coe : (α → β) → α →. β) := fun f g h =>
-  funext fun a => Part.some_injective <| congr_funₓ h a
+  funext fun a => Part.some_injective <| congr_fun h a
 
 /-- Graph of a partial function `f` as the set of pairs `(x, f x)` where `x` is in the domain of
 `f`. -/
@@ -473,25 +473,25 @@ theorem comp_id (f : α →. β) : f.comp (Pfun.id α) = f :=
 @[simp]
 theorem dom_comp (f : β →. γ) (g : α →. β) : (f.comp g).Dom = g.Preimage f.Dom := by
   ext
-  simp_rw [mem_preimage, mem_dom, comp_apply, Part.mem_bind_iff, exists_prop, ← exists_and_distrib_right]
+  simp_rw [mem_preimage, mem_dom, comp_apply, Part.mem_bind_iff, exists_propₓ, ← exists_and_distrib_rightₓ]
   rw [exists_comm]
   simp_rw [And.comm]
 
 @[simp]
 theorem preimage_comp (f : β →. γ) (g : α →. β) (s : Set γ) : (f.comp g).Preimage s = g.Preimage (f.Preimage s) := by
   ext
-  simp_rw [mem_preimage, comp_apply, Part.mem_bind_iff, exists_prop, ← exists_and_distrib_right, ←
-    exists_and_distrib_left]
+  simp_rw [mem_preimage, comp_apply, Part.mem_bind_iff, exists_propₓ, ← exists_and_distrib_rightₓ, ←
+    exists_and_distrib_leftₓ]
   rw [exists_comm]
-  simp_rw [and_assoc, And.comm]
+  simp_rw [and_assocₓ, And.comm]
 
 @[simp]
 theorem _root_.part.bind_comp (f : β →. γ) (g : α →. β) (a : Part α) : a.bind (f.comp g) = (a.bind g).bind f := by
   ext c
-  simp_rw [Part.mem_bind_iff, comp_apply, Part.mem_bind_iff, exists_prop, ← exists_and_distrib_right, ←
-    exists_and_distrib_left]
+  simp_rw [Part.mem_bind_iff, comp_apply, Part.mem_bind_iff, exists_propₓ, ← exists_and_distrib_rightₓ, ←
+    exists_and_distrib_leftₓ]
   rw [exists_comm]
-  simp_rw [and_assoc]
+  simp_rw [and_assocₓ]
 
 @[simp]
 theorem comp_assoc (f : γ →. δ) (g : β →. γ) (h : α →. β) : (f.comp g).comp h = f.comp (g.comp h) :=

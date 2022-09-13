@@ -84,7 +84,7 @@ def ofLeftInjection [Encodable α] (f : β → α) (finv : α → Option β) (li
 
 /-- If `α` is encodable and `f : β → α` is invertible, then `β` is encodable as well. -/
 def ofLeftInverse [Encodable α] (f : β → α) (finv : α → β) (linv : ∀ b, finv (f b) = b) : Encodable β :=
-  ofLeftInjection f (some ∘ finv) fun b => congr_argₓ some (linv b)
+  ofLeftInjection f (some ∘ finv) fun b => congr_arg some (linv b)
 
 /-- Encodability is preserved by equivalence. -/
 def ofEquiv (α) [Encodable α] (e : β ≃ α) : Encodable β :=
@@ -160,7 +160,7 @@ theorem mem_decode₂' [Encodable α] {n : ℕ} {a : α} : a ∈ decode₂ α n 
   simp [decode₂] <;> exact ⟨fun ⟨_, h₁, rfl, h₂⟩ => ⟨h₁, h₂⟩, fun ⟨h₁, h₂⟩ => ⟨_, h₁, rfl, h₂⟩⟩
 
 theorem mem_decode₂ [Encodable α] {n : ℕ} {a : α} : a ∈ decode₂ α n ↔ encode a = n :=
-  mem_decode₂'.trans (and_iff_right_of_imp fun e => e ▸ encodek _)
+  mem_decode₂'.trans (and_iff_right_of_impₓ fun e => e ▸ encodek _)
 
 theorem decode₂_eq_some [Encodable α] {n : ℕ} {a : α} : decode₂ α n = some a ↔ encode a = n :=
   mem_decode₂
@@ -581,7 +581,7 @@ theorem Quotientₓ.rep_spec (q : Quotientₓ s) : ⟦q.rep⟧ = q :=
 /-- The quotient of an encodable space by a decidable equivalence relation is encodable. -/
 def encodableQuotient : Encodable (Quotientₓ s) :=
   ⟨fun q => encode q.rep, fun n => Quotientₓ.mk <$> decode α n, by
-    rintro ⟨l⟩ <;> rw [encodek] <;> exact congr_argₓ some ⟦l⟧.rep_spec⟩
+    rintro ⟨l⟩ <;> rw [encodek] <;> exact congr_arg some ⟦l⟧.rep_spec⟩
 
 end Quotientₓ
 

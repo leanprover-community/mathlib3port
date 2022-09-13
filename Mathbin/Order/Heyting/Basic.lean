@@ -164,7 +164,7 @@ Heyting implication such that `a ⇨` is right adjoint to `a ⊓`.
  This generalizes `heyting_algebra` by not requiring a bottom element. -/
 class GeneralizedHeytingAlgebra (α : Type _) extends Lattice α, HasTop α, HasHimp α where
   le_top : ∀ a : α, a ≤ ⊤
-  le_himp_iff (a b c : α) : a ≤ b ⇨ c ↔ a⊓b ≤ c
+  le_himp_iff (a b c : α) : a ≤ b ⇨ c ↔ a ⊓ b ≤ c
 
 /-- A generalized co-Heyting algebra is a lattice with an additional binary difference operation `\`
 such that `\ a` is right adjoint to `⊔ a`.
@@ -172,7 +172,7 @@ such that `\ a` is right adjoint to `⊔ a`.
 This generalizes `coheyting_algebra` by not requiring a top element. -/
 class GeneralizedCoheytingAlgebra (α : Type _) extends Lattice α, HasBot α, Sdiff α where
   bot_le : ∀ a : α, ⊥ ≤ a
-  sdiff_le_iff (a b c : α) : a \ b ≤ c ↔ a ≤ b⊔c
+  sdiff_le_iff (a b c : α) : a \ b ≤ c ↔ a ≤ b ⊔ c
 
 /-- A Heyting algebra is a bounded lattice with an additional binary operation `⇨` called Heyting
 implication such that `a ⇨` is right adjoint to `a ⊓`. -/
@@ -188,7 +188,7 @@ class CoheytingAlgebra (α : Type _) extends GeneralizedCoheytingAlgebra α, Has
 
 /-- A bi-Heyting algebra is a Heyting algebra that is also a co-Heyting algebra. -/
 class BiheytingAlgebra (α : Type _) extends HeytingAlgebra α, Sdiff α, HasHnot α where
-  sdiff_le_iff (a b c : α) : a \ b ≤ c ↔ a ≤ b⊔c
+  sdiff_le_iff (a b c : α) : a \ b ≤ c ↔ a ≤ b ⊔ c
   top_sdiff (a : α) : ⊤ \ a = ￢a
 
 -- See note [lower instance priority]
@@ -215,22 +215,22 @@ instance (priority := 100) BiheytingAlgebra.toCoheytingAlgebra [BiheytingAlgebra
 /-- Construct a Heyting algebra from the lattice structure and Heyting implication alone. -/
 @[reducible]
 def HeytingAlgebra.ofHimp [DistribLattice α] [BoundedOrder α] (himp : α → α → α)
-    (le_himp_iff : ∀ a b c, a ≤ himp b c ↔ a⊓b ≤ c) : HeytingAlgebra α :=
+    (le_himp_iff : ∀ a b c, a ≤ himp b c ↔ a ⊓ b ≤ c) : HeytingAlgebra α :=
   { ‹DistribLattice α›, ‹BoundedOrder α› with himp, compl := fun a => himp a ⊥, le_himp_iff, himp_bot := fun a => rfl }
 
 -- See note [reducible non-instances]
 /-- Construct a Heyting algebra from the lattice structure and complement operator alone. -/
 @[reducible]
 def HeytingAlgebra.ofCompl [DistribLattice α] [BoundedOrder α] (compl : α → α)
-    (le_himp_iff : ∀ a b c, a ≤ compl b⊔c ↔ a⊓b ≤ c) : HeytingAlgebra α :=
-  { ‹DistribLattice α›, ‹BoundedOrder α› with himp := fun a => (·⊔·) (compl a), compl, le_himp_iff,
+    (le_himp_iff : ∀ a b c, a ≤ compl b ⊔ c ↔ a ⊓ b ≤ c) : HeytingAlgebra α :=
+  { ‹DistribLattice α›, ‹BoundedOrder α› with himp := fun a => (· ⊔ ·) (compl a), compl, le_himp_iff,
     himp_bot := fun a => sup_bot_eq }
 
 -- See note [reducible non-instances]
 /-- Construct a co-Heyting algebra from the lattice structure and the difference alone. -/
 @[reducible]
 def CoheytingAlgebra.ofSdiff [DistribLattice α] [BoundedOrder α] (sdiff : α → α → α)
-    (sdiff_le_iff : ∀ a b c, sdiff a b ≤ c ↔ a ≤ b⊔c) : CoheytingAlgebra α :=
+    (sdiff_le_iff : ∀ a b c, sdiff a b ≤ c ↔ a ≤ b ⊔ c) : CoheytingAlgebra α :=
   { ‹DistribLattice α›, ‹BoundedOrder α› with sdiff, hnot := fun a => sdiff ⊤ a, sdiff_le_iff,
     top_sdiff := fun a => rfl }
 
@@ -238,8 +238,8 @@ def CoheytingAlgebra.ofSdiff [DistribLattice α] [BoundedOrder α] (sdiff : α �
 /-- Construct a co-Heyting algebra from the difference and Heyting negation alone. -/
 @[reducible]
 def CoheytingAlgebra.ofHnot [DistribLattice α] [BoundedOrder α] (hnot : α → α)
-    (sdiff_le_iff : ∀ a b c, a⊓hnot b ≤ c ↔ a ≤ b⊔c) : CoheytingAlgebra α :=
-  { ‹DistribLattice α›, ‹BoundedOrder α› with sdiff := fun a b => a⊓hnot b, hnot, sdiff_le_iff,
+    (sdiff_le_iff : ∀ a b c, a ⊓ hnot b ≤ c ↔ a ≤ b ⊔ c) : CoheytingAlgebra α :=
+  { ‹DistribLattice α›, ‹BoundedOrder α› with sdiff := fun a b => a ⊓ hnot b, hnot, sdiff_le_iff,
     top_sdiff := fun a => top_inf_eq }
 
 section GeneralizedHeytingAlgebra
@@ -254,11 +254,11 @@ the same in this logic.
 See also `Prop.heyting_algebra`. -/
 -- `p → q → r ↔ p ∧ q → r`
 @[simp]
-theorem le_himp_iff : a ≤ b ⇨ c ↔ a⊓b ≤ c :=
+theorem le_himp_iff : a ≤ b ⇨ c ↔ a ⊓ b ≤ c :=
   GeneralizedHeytingAlgebra.le_himp_iff _ _ _
 
 -- `p → q → r ↔ q ∧ p → r`
-theorem le_himp_iff' : a ≤ b ⇨ c ↔ b⊓a ≤ c := by
+theorem le_himp_iff' : a ≤ b ⇨ c ↔ b ⊓ a ≤ c := by
   rw [le_himp_iff, inf_comm]
 
 -- `p → q → r ↔ q → p → r`
@@ -280,16 +280,16 @@ theorem himp_self : a ⇨ a = ⊤ :=
   top_le_iff.1 <| le_himp_iff.2 inf_le_right
 
 -- `(p → q) ∧ p → q`
-theorem himp_inf_le : (a ⇨ b)⊓a ≤ b :=
+theorem himp_inf_le : (a ⇨ b) ⊓ a ≤ b :=
   le_himp_iff.1 le_rflₓ
 
 -- `p ∧ (p → q) → q`
-theorem inf_himp_le : a⊓(a ⇨ b) ≤ b := by
+theorem inf_himp_le : a ⊓ (a ⇨ b) ≤ b := by
   rw [inf_comm, ← le_himp_iff]
 
 -- `p ∧ (p → q) ↔ p ∧ q`
 @[simp]
-theorem inf_himp (a b : α) : a⊓(a ⇨ b) = a⊓b :=
+theorem inf_himp (a b : α) : a ⊓ (a ⇨ b) = a ⊓ b :=
   le_antisymmₓ
       (le_inf inf_le_left <| by
         rw [inf_comm, ← le_himp_iff]) <|
@@ -297,7 +297,7 @@ theorem inf_himp (a b : α) : a⊓(a ⇨ b) = a⊓b :=
 
 -- `(p → q) ∧ p ↔ q ∧ p`
 @[simp]
-theorem himp_inf_self (a b : α) : (a ⇨ b)⊓a = b⊓a := by
+theorem himp_inf_self (a b : α) : (a ⇨ b) ⊓ a = b ⊓ a := by
   rw [inf_comm, inf_himp, inf_comm]
 
 /-- The **deduction theorem** in the Heyting algebra model of intuitionistic logic:
@@ -317,7 +317,7 @@ theorem top_himp : ⊤ ⇨ a = a :=
     rw [le_himp_iff, inf_top_eq]
 
 -- `p → q → r ↔ p ∧ q → r`
-theorem himp_himp (a b c : α) : a ⇨ b ⇨ c = a⊓b ⇨ c :=
+theorem himp_himp (a b c : α) : a ⇨ b ⇨ c = a ⊓ b ⇨ c :=
   eq_of_forall_le_iffₓ fun d => by
     simp_rw [le_himp_iff, inf_assoc]
 
@@ -331,11 +331,11 @@ theorem himp_le_himp_himp_himp : b ⇨ c ≤ (a ⇨ b) ⇨ a ⇨ c := by
 theorem himp_left_comm (a b c : α) : a ⇨ b ⇨ c = b ⇨ a ⇨ c := by
   simp_rw [himp_himp, inf_comm]
 
-theorem himp_inf_distrib (a b c : α) : a ⇨ b⊓c = (a ⇨ b)⊓(a ⇨ c) :=
+theorem himp_inf_distrib (a b c : α) : a ⇨ b ⊓ c = (a ⇨ b) ⊓ (a ⇨ c) :=
   eq_of_forall_le_iffₓ fun d => by
     simp_rw [le_himp_iff, le_inf_iff, le_himp_iff]
 
-theorem sup_himp_distrib (a b c : α) : a⊔b ⇨ c = (a ⇨ c)⊓(b ⇨ c) :=
+theorem sup_himp_distrib (a b c : α) : a ⊔ b ⇨ c = (a ⇨ c) ⊓ (b ⇨ c) :=
   eq_of_forall_le_iffₓ fun d => by
     rw [le_inf_iff, le_himp_comm, sup_le_iff]
     simp_rw [le_himp_comm]
@@ -350,11 +350,11 @@ theorem himp_le_himp (hab : a ≤ b) (hcd : c ≤ d) : b ⇨ c ≤ a ⇨ d :=
   (himp_le_himp_right hab).trans <| himp_le_himp_left hcd
 
 @[simp]
-theorem sup_himp_self_left (a b : α) : a⊔b ⇨ a = b ⇨ a := by
+theorem sup_himp_self_left (a b : α) : a ⊔ b ⇨ a = b ⇨ a := by
   rw [sup_himp_distrib, himp_self, top_inf_eq]
 
 @[simp]
-theorem sup_himp_self_right (a b : α) : a⊔b ⇨ b = a ⇨ b := by
+theorem sup_himp_self_right (a b : α) : a ⊔ b ⇨ b = a ⇨ b := by
   rw [sup_himp_distrib, himp_self, inf_top_eq]
 
 theorem Codisjoint.himp_eq_right (h : Codisjoint a b) : b ⇨ a = a := by
@@ -364,20 +364,20 @@ theorem Codisjoint.himp_eq_right (h : Codisjoint a b) : b ⇨ a = a := by
 theorem Codisjoint.himp_eq_left (h : Codisjoint a b) : a ⇨ b = b :=
   h.symm.himp_eq_right
 
-theorem Codisjoint.himp_inf_cancel_right (h : Codisjoint a b) : a ⇨ a⊓b = b := by
+theorem Codisjoint.himp_inf_cancel_right (h : Codisjoint a b) : a ⇨ a ⊓ b = b := by
   rw [himp_inf_distrib, himp_self, top_inf_eq, h.himp_eq_left]
 
-theorem Codisjoint.himp_inf_cancel_left (h : Codisjoint a b) : b ⇨ a⊓b = a := by
+theorem Codisjoint.himp_inf_cancel_left (h : Codisjoint a b) : b ⇨ a ⊓ b = a := by
   rw [himp_inf_distrib, himp_self, inf_top_eq, h.himp_eq_right]
 
 theorem le_himp_himp : a ≤ (a ⇨ b) ⇨ b :=
   le_himp_iff.2 inf_himp_le
 
-theorem himp_triangle (a b c : α) : (a ⇨ b)⊓(b ⇨ c) ≤ a ⇨ c := by
+theorem himp_triangle (a b c : α) : (a ⇨ b) ⊓ (b ⇨ c) ≤ a ⇨ c := by
   rw [le_himp_iff, inf_right_comm, ← le_himp_iff]
   exact himp_inf_le.trans le_himp_himp
 
-theorem himp_inf_himp_cancel (hba : b ≤ a) (hcb : c ≤ b) : (a ⇨ b)⊓(b ⇨ c) = a ⇨ c :=
+theorem himp_inf_himp_cancel (hba : b ≤ a) (hcb : c ≤ b) : (a ⇨ b) ⊓ (b ⇨ c) = a ⇨ c :=
   (himp_triangle _ _ _).antisymm <| le_inf (himp_le_himp_left hcb) (himp_le_himp_right hba)
 
 -- See note [lower instance priority]
@@ -393,7 +393,7 @@ instance : GeneralizedCoheytingAlgebra αᵒᵈ :=
 
 instance Prod.generalizedHeytingAlgebra [GeneralizedHeytingAlgebra β] : GeneralizedHeytingAlgebra (α × β) :=
   { Prod.lattice α β, Prod.orderTop α β, Prod.hasHimp, Prod.hasCompl with
-    le_himp_iff := fun a b c => and_congr le_himp_iff le_himp_iff }
+    le_himp_iff := fun a b c => and_congrₓ le_himp_iff le_himp_iff }
 
 instance Pi.generalizedHeytingAlgebra {α : ι → Type _} [∀ i, GeneralizedHeytingAlgebra (α i)] :
     GeneralizedHeytingAlgebra (∀ i, α i) := by
@@ -407,10 +407,10 @@ section GeneralizedCoheytingAlgebra
 variable [GeneralizedCoheytingAlgebra α] {a b c d : α}
 
 @[simp]
-theorem sdiff_le_iff : a \ b ≤ c ↔ a ≤ b⊔c :=
+theorem sdiff_le_iff : a \ b ≤ c ↔ a ≤ b ⊔ c :=
   GeneralizedCoheytingAlgebra.sdiff_le_iff _ _ _
 
-theorem sdiff_le_iff' : a \ b ≤ c ↔ a ≤ c⊔b := by
+theorem sdiff_le_iff' : a \ b ≤ c ↔ a ≤ c ⊔ b := by
   rw [sdiff_le_iff, sup_comm]
 
 theorem sdiff_le_comm : a \ b ≤ c ↔ a \ c ≤ b := by
@@ -433,57 +433,57 @@ theorem sdiff_le_iff_left : a \ b ≤ b ↔ a ≤ b := by
 theorem sdiff_self : a \ a = ⊥ :=
   le_bot_iff.1 <| sdiff_le_iff.2 le_sup_left
 
-theorem le_sup_sdiff : a ≤ b⊔a \ b :=
+theorem le_sup_sdiff : a ≤ b ⊔ a \ b :=
   sdiff_le_iff.1 le_rflₓ
 
-theorem le_sdiff_sup : a ≤ a \ b⊔b := by
+theorem le_sdiff_sup : a ≤ a \ b ⊔ b := by
   rw [sup_comm, ← sdiff_le_iff]
 
 @[simp]
-theorem sup_sdiff_left : a⊔a \ b = a :=
+theorem sup_sdiff_left : a ⊔ a \ b = a :=
   sup_of_le_left sdiff_le
 
 @[simp]
-theorem sup_sdiff_right : a \ b⊔a = a :=
+theorem sup_sdiff_right : a \ b ⊔ a = a :=
   sup_of_le_right sdiff_le
 
 @[simp]
-theorem inf_sdiff_left : a \ b⊓a = a \ b :=
+theorem inf_sdiff_left : a \ b ⊓ a = a \ b :=
   inf_of_le_left sdiff_le
 
 @[simp]
-theorem inf_sdiff_right : a⊓a \ b = a \ b :=
+theorem inf_sdiff_right : a ⊓ a \ b = a \ b :=
   inf_of_le_right sdiff_le
 
 @[simp]
-theorem sup_sdiff_self (a b : α) : a⊔b \ a = a⊔b :=
+theorem sup_sdiff_self (a b : α) : a ⊔ b \ a = a ⊔ b :=
   le_antisymmₓ (sup_le_sup_left sdiff_le _) (sup_le le_sup_left le_sup_sdiff)
 
 @[simp]
-theorem sdiff_sup_self (a b : α) : b \ a⊔a = b⊔a := by
+theorem sdiff_sup_self (a b : α) : b \ a ⊔ a = b ⊔ a := by
   rw [sup_comm, sup_sdiff_self, sup_comm]
 
 alias sdiff_sup_self ← sup_sdiff_self_left
 
 alias sup_sdiff_self ← sup_sdiff_self_right
 
-theorem sup_sdiff_eq_sup (h : c ≤ a) : a⊔b \ c = a⊔b :=
+theorem sup_sdiff_eq_sup (h : c ≤ a) : a ⊔ b \ c = a ⊔ b :=
   sup_congr_left (sdiff_le.trans le_sup_right) <| le_sup_sdiff.trans <| sup_le_sup_right h _
 
 -- cf. `set.union_diff_cancel'`
-theorem sup_sdiff_cancel' (hab : a ≤ b) (hbc : b ≤ c) : b⊔c \ a = c := by
+theorem sup_sdiff_cancel' (hab : a ≤ b) (hbc : b ≤ c) : b ⊔ c \ a = c := by
   rw [sup_sdiff_eq_sup hab, sup_of_le_right hbc]
 
-theorem sup_sdiff_cancel_right (h : a ≤ b) : a⊔b \ a = b :=
+theorem sup_sdiff_cancel_right (h : a ≤ b) : a ⊔ b \ a = b :=
   sup_sdiff_cancel' le_rflₓ h
 
-theorem sdiff_sup_cancel (h : b ≤ a) : a \ b⊔b = a := by
+theorem sdiff_sup_cancel (h : b ≤ a) : a \ b ⊔ b = a := by
   rw [sup_comm, sup_sdiff_cancel_right h]
 
-theorem sup_le_of_le_sdiff_left (h : b ≤ c \ a) (hac : a ≤ c) : a⊔b ≤ c :=
+theorem sup_le_of_le_sdiff_left (h : b ≤ c \ a) (hac : a ≤ c) : a ⊔ b ≤ c :=
   sup_le hac <| h.trans sdiff_le
 
-theorem sup_le_of_le_sdiff_right (h : a ≤ c \ b) (hbc : b ≤ c) : a⊔b ≤ c :=
+theorem sup_le_of_le_sdiff_right (h : a ≤ c \ b) (hbc : b ≤ c) : a ⊔ b ≤ c :=
   sup_le (h.trans sdiff_le) hbc
 
 @[simp]
@@ -504,11 +504,11 @@ theorem sdiff_sdiff_sdiff_le_sdiff : (a \ b) \ (a \ c) ≤ c \ b := by
   rw [sdiff_le_iff, sdiff_le_iff, sup_left_comm, sup_sdiff_self, sup_left_comm, sdiff_sup_self, sup_left_comm]
   exact le_sup_left
 
-theorem sdiff_sdiff (a b c : α) : (a \ b) \ c = a \ (b⊔c) :=
+theorem sdiff_sdiff (a b c : α) : (a \ b) \ c = a \ (b ⊔ c) :=
   eq_of_forall_ge_iffₓ fun d => by
     simp_rw [sdiff_le_iff, sup_assoc]
 
-theorem sdiff_sdiff_left : (a \ b) \ c = a \ (b⊔c) :=
+theorem sdiff_sdiff_left : (a \ b) \ c = a \ (b ⊔ c) :=
   sdiff_sdiff _ _ _
 
 theorem sdiff_right_comm (a b c : α) : (a \ b) \ c = (a \ c) \ b := by
@@ -525,24 +525,24 @@ theorem sdiff_idem : (a \ b) \ b = a \ b := by
 theorem sdiff_sdiff_self : (a \ b) \ a = ⊥ := by
   rw [sdiff_sdiff_comm, sdiff_self, bot_sdiff]
 
-theorem sup_sdiff_distrib (a b c : α) : (a⊔b) \ c = a \ c⊔b \ c :=
+theorem sup_sdiff_distrib (a b c : α) : (a ⊔ b) \ c = a \ c ⊔ b \ c :=
   eq_of_forall_ge_iffₓ fun d => by
     simp_rw [sdiff_le_iff, sup_le_iff, sdiff_le_iff]
 
-theorem sdiff_inf_distrib (a b c : α) : a \ (b⊓c) = a \ b⊔a \ c :=
+theorem sdiff_inf_distrib (a b c : α) : a \ (b ⊓ c) = a \ b ⊔ a \ c :=
   eq_of_forall_ge_iffₓ fun d => by
     rw [sup_le_iff, sdiff_le_comm, le_inf_iff]
     simp_rw [sdiff_le_comm]
 
-theorem sup_sdiff : (a⊔b) \ c = a \ c⊔b \ c :=
+theorem sup_sdiff : (a ⊔ b) \ c = a \ c ⊔ b \ c :=
   sup_sdiff_distrib _ _ _
 
 @[simp]
-theorem sup_sdiff_right_self : (a⊔b) \ b = a \ b := by
+theorem sup_sdiff_right_self : (a ⊔ b) \ b = a \ b := by
   rw [sup_sdiff, sdiff_self, sup_bot_eq]
 
 @[simp]
-theorem sup_sdiff_left_self : (a⊔b) \ a = b \ a := by
+theorem sup_sdiff_left_self : (a ⊔ b) \ a = b \ a := by
   rw [sup_comm, sup_sdiff_right_self]
 
 theorem sdiff_le_sdiff_right (h : a ≤ b) : a \ c ≤ b \ c :=
@@ -555,15 +555,15 @@ theorem sdiff_le_sdiff (hab : a ≤ b) (hcd : c ≤ d) : a \ d ≤ b \ c :=
   (sdiff_le_sdiff_right hab).trans <| sdiff_le_sdiff_left hcd
 
 -- cf. `is_compl.inf_sup`
-theorem sdiff_inf : a \ (b⊓c) = a \ b⊔a \ c :=
+theorem sdiff_inf : a \ (b ⊓ c) = a \ b ⊔ a \ c :=
   sdiff_inf_distrib _ _ _
 
 @[simp]
-theorem sdiff_inf_self_left (a b : α) : a \ (a⊓b) = a \ b := by
+theorem sdiff_inf_self_left (a b : α) : a \ (a ⊓ b) = a \ b := by
   rw [sdiff_inf, sdiff_self, bot_sup_eq]
 
 @[simp]
-theorem sdiff_inf_self_right (a b : α) : b \ (a⊓b) = b \ a := by
+theorem sdiff_inf_self_right (a b : α) : b \ (a ⊓ b) = b \ a := by
   rw [sdiff_inf, sdiff_self, sup_bot_eq]
 
 theorem Disjoint.sdiff_eq_left (h : Disjoint a b) : a \ b = a := by
@@ -573,36 +573,36 @@ theorem Disjoint.sdiff_eq_left (h : Disjoint a b) : a \ b = a := by
 theorem Disjoint.sdiff_eq_right (h : Disjoint a b) : b \ a = b :=
   h.symm.sdiff_eq_left
 
-theorem Disjoint.sup_sdiff_cancel_left (h : Disjoint a b) : (a⊔b) \ a = b := by
+theorem Disjoint.sup_sdiff_cancel_left (h : Disjoint a b) : (a ⊔ b) \ a = b := by
   rw [sup_sdiff, sdiff_self, bot_sup_eq, h.sdiff_eq_right]
 
-theorem Disjoint.sup_sdiff_cancel_right (h : Disjoint a b) : (a⊔b) \ b = a := by
+theorem Disjoint.sup_sdiff_cancel_right (h : Disjoint a b) : (a ⊔ b) \ b = a := by
   rw [sup_sdiff, sdiff_self, sup_bot_eq, h.sdiff_eq_left]
 
 theorem sdiff_sdiff_le : a \ (a \ b) ≤ b :=
   sdiff_le_iff.2 le_sdiff_sup
 
-theorem sdiff_triangle (a b c : α) : a \ c ≤ a \ b⊔b \ c := by
+theorem sdiff_triangle (a b c : α) : a \ c ≤ a \ b ⊔ b \ c := by
   rw [sdiff_le_iff, sup_left_comm, ← sdiff_le_iff]
   exact sdiff_sdiff_le.trans le_sup_sdiff
 
-theorem sdiff_sup_sdiff_cancel (hba : b ≤ a) (hcb : c ≤ b) : a \ b⊔b \ c = a \ c :=
+theorem sdiff_sup_sdiff_cancel (hba : b ≤ a) (hcb : c ≤ b) : a \ b ⊔ b \ c = a \ c :=
   (sdiff_triangle _ _ _).antisymm' <| sup_le (sdiff_le_sdiff_left hcb) (sdiff_le_sdiff_right hba)
 
-theorem sdiff_le_sdiff_of_sup_le_sup_left (h : c⊔a ≤ c⊔b) : a \ c ≤ b \ c := by
+theorem sdiff_le_sdiff_of_sup_le_sup_left (h : c ⊔ a ≤ c ⊔ b) : a \ c ≤ b \ c := by
   rw [← sup_sdiff_left_self, ← @sup_sdiff_left_self _ _ _ b]
   exact sdiff_le_sdiff_right h
 
-theorem sdiff_le_sdiff_of_sup_le_sup_right (h : a⊔c ≤ b⊔c) : a \ c ≤ b \ c := by
+theorem sdiff_le_sdiff_of_sup_le_sup_right (h : a ⊔ c ≤ b ⊔ c) : a \ c ≤ b \ c := by
   rw [← sup_sdiff_right_self, ← @sup_sdiff_right_self _ _ b]
   exact sdiff_le_sdiff_right h
 
 @[simp]
-theorem inf_sdiff_sup_left : a \ c⊓(a⊔b) = a \ c :=
+theorem inf_sdiff_sup_left : a \ c ⊓ (a ⊔ b) = a \ c :=
   inf_of_le_left <| sdiff_le.trans le_sup_left
 
 @[simp]
-theorem inf_sdiff_sup_right : a \ c⊓(b⊔a) = a \ c :=
+theorem inf_sdiff_sup_right : a \ c ⊓ (b ⊔ a) = a \ c :=
   inf_of_le_left <| sdiff_le.trans le_sup_right
 
 -- See note [lower instance priority]
@@ -619,7 +619,7 @@ instance : GeneralizedHeytingAlgebra αᵒᵈ :=
 
 instance Prod.generalizedCoheytingAlgebra [GeneralizedCoheytingAlgebra β] : GeneralizedCoheytingAlgebra (α × β) :=
   { Prod.lattice α β, Prod.orderBot α β, Prod.hasSdiff, Prod.hasHnot with
-    sdiff_le_iff := fun a b c => and_congr sdiff_le_iff sdiff_le_iff }
+    sdiff_le_iff := fun a b c => and_congrₓ sdiff_le_iff sdiff_le_iff }
 
 instance Pi.generalizedCoheytingAlgebra {α : ι → Type _} [∀ i, GeneralizedCoheytingAlgebra (α i)] :
     GeneralizedCoheytingAlgebra (∀ i, α i) := by
@@ -640,20 +640,20 @@ theorem himp_bot (a : α) : a ⇨ ⊥ = aᶜ :=
 theorem bot_himp (a : α) : ⊥ ⇨ a = ⊤ :=
   himp_eq_top_iff.2 bot_le
 
-theorem compl_sup_distrib (a b : α) : (a⊔b)ᶜ = aᶜ⊓bᶜ := by
+theorem compl_sup_distrib (a b : α) : (a ⊔ b)ᶜ = aᶜ ⊓ bᶜ := by
   simp_rw [← himp_bot, sup_himp_distrib]
 
 @[simp]
-theorem compl_sup : (a⊔b)ᶜ = aᶜ⊓bᶜ :=
+theorem compl_sup : (a ⊔ b)ᶜ = aᶜ ⊓ bᶜ :=
   compl_sup_distrib _ _
 
 theorem compl_le_himp : aᶜ ≤ a ⇨ b :=
   (himp_bot _).Ge.trans <| himp_le_himp_left bot_le
 
-theorem compl_sup_le_himp : aᶜ⊔b ≤ a ⇨ b :=
+theorem compl_sup_le_himp : aᶜ ⊔ b ≤ a ⇨ b :=
   sup_le compl_le_himp le_himp
 
-theorem sup_compl_le_himp : b⊔aᶜ ≤ a ⇨ b :=
+theorem sup_compl_le_himp : b ⊔ aᶜ ≤ a ⇨ b :=
   sup_le le_himp compl_le_himp
 
 -- `p → ¬ p ↔ ¬ p`
@@ -700,21 +700,21 @@ theorem IsCompl.compl_eq (h : IsCompl a b) : aᶜ = b :=
 theorem IsCompl.eq_compl (h : IsCompl a b) : a = bᶜ :=
   h.1.le_compl_right.antisymm <| Disjoint.le_of_codisjoint disjoint_compl_left h.2.symm
 
-theorem compl_unique (h₀ : a⊓b = ⊥) (h₁ : a⊔b = ⊤) : aᶜ = b :=
+theorem compl_unique (h₀ : a ⊓ b = ⊥) (h₁ : a ⊔ b = ⊤) : aᶜ = b :=
   (IsCompl.of_eq h₀ h₁).compl_eq
 
 @[simp]
-theorem inf_compl_self (a : α) : a⊓aᶜ = ⊥ :=
+theorem inf_compl_self (a : α) : a ⊓ aᶜ = ⊥ :=
   disjoint_compl_right.eq_bot
 
 @[simp]
-theorem compl_inf_self (a : α) : aᶜ⊓a = ⊥ :=
+theorem compl_inf_self (a : α) : aᶜ ⊓ a = ⊥ :=
   disjoint_compl_left.eq_bot
 
-theorem inf_compl_eq_bot : a⊓aᶜ = ⊥ :=
+theorem inf_compl_eq_bot : a ⊓ aᶜ = ⊥ :=
   inf_compl_self _
 
-theorem compl_inf_eq_bot : aᶜ⊓a = ⊥ :=
+theorem compl_inf_eq_bot : aᶜ ⊓ a = ⊥ :=
   compl_inf_self _
 
 @[simp]
@@ -746,10 +746,10 @@ theorem disjoint_compl_compl_left_iff : Disjoint (aᶜᶜ) b ↔ Disjoint a b :=
 theorem disjoint_compl_compl_right_iff : Disjoint a (bᶜᶜ) ↔ Disjoint a b := by
   simp_rw [← le_compl_iff_disjoint_right, compl_compl_compl]
 
-theorem compl_sup_compl_le : aᶜ⊔bᶜ ≤ (a⊓b)ᶜ :=
+theorem compl_sup_compl_le : aᶜ ⊔ bᶜ ≤ (a ⊓ b)ᶜ :=
   sup_le (compl_anti inf_le_left) <| compl_anti inf_le_right
 
-theorem compl_compl_inf_distrib (a b : α) : (a⊓b)ᶜᶜ = aᶜᶜ⊓bᶜᶜ := by
+theorem compl_compl_inf_distrib (a b : α) : (a ⊓ b)ᶜᶜ = aᶜᶜ ⊓ bᶜᶜ := by
   refine' ((compl_anti compl_sup_compl_le).trans (compl_sup_distrib _ _).le).antisymm _
   rw [le_compl_iff_disjoint_right, disjoint_assoc, disjoint_compl_compl_left_iff, disjoint_left_comm,
     disjoint_compl_compl_left_iff, ← disjoint_assoc, inf_comm]
@@ -803,13 +803,13 @@ theorem top_sdiff' (a : α) : ⊤ \ a = ￢a :=
 theorem sdiff_top (a : α) : a \ ⊤ = ⊥ :=
   sdiff_eq_bot_iff.2 le_top
 
-theorem hnot_inf_distrib (a b : α) : ￢(a⊓b) = ￢a⊔￢b := by
+theorem hnot_inf_distrib (a b : α) : ￢(a ⊓ b) = ￢a ⊔ ￢b := by
   simp_rw [← top_sdiff', sdiff_inf_distrib]
 
 theorem sdiff_le_hnot : a \ b ≤ ￢b :=
   (sdiff_le_sdiff_right le_top).trans_eq <| top_sdiff' _
 
-theorem sdiff_le_inf_hnot : a \ b ≤ a⊓￢b :=
+theorem sdiff_le_inf_hnot : a \ b ≤ a ⊓ ￢b :=
   le_inf sdiff_le sdiff_le_hnot
 
 -- See note [lower instance priority]
@@ -857,11 +857,11 @@ theorem IsCompl.eq_hnot (h : IsCompl a b) : a = ￢b :=
   h.2.hnot_le_left.antisymm' <| Disjoint.le_of_codisjoint h.1 codisjoint_hnot_right
 
 @[simp]
-theorem sup_hnot_self (a : α) : a⊔￢a = ⊤ :=
+theorem sup_hnot_self (a : α) : a ⊔ ￢a = ⊤ :=
   codisjoint_hnot_right.eq_top
 
 @[simp]
-theorem hnot_sup_self (a : α) : ￢a⊔a = ⊤ :=
+theorem hnot_sup_self (a : α) : ￢a ⊔ a = ⊤ :=
   codisjoint_hnot_left.eq_top
 
 @[simp]
@@ -893,10 +893,10 @@ theorem codisjoint_hnot_hnot_left_iff : Codisjoint (￢￢a) b ↔ Codisjoint a 
 theorem codisjoint_hnot_hnot_right_iff : Codisjoint a (￢￢b) ↔ Codisjoint a b := by
   simp_rw [← hnot_le_iff_codisjoint_left, hnot_hnot_hnot]
 
-theorem le_hnot_inf_hnot : ￢(a⊔b) ≤ ￢a⊓￢b :=
+theorem le_hnot_inf_hnot : ￢(a ⊔ b) ≤ ￢a ⊓ ￢b :=
   le_inf (hnot_anti le_sup_left) <| hnot_anti le_sup_right
 
-theorem hnot_hnot_sup_distrib (a b : α) : ￢￢(a⊔b) = ￢￢a⊔￢￢b := by
+theorem hnot_hnot_sup_distrib (a b : α) : ￢￢(a ⊔ b) = ￢￢a ⊔ ￢￢b := by
   refine' ((hnot_inf_distrib _ _).Ge.trans <| hnot_anti le_hnot_inf_hnot).antisymm' _
   rw [hnot_le_iff_codisjoint_left, codisjoint_assoc, codisjoint_hnot_hnot_left_iff, codisjoint_left_comm,
     codisjoint_hnot_hnot_left_iff, ← codisjoint_assoc, sup_comm]
@@ -938,7 +938,7 @@ theorem to_dual_sdiff (a b : α) : toDual (a \ b) = toDual b ⇨ toDual a :=
 
 instance Prod.coheytingAlgebra [CoheytingAlgebra β] : CoheytingAlgebra (α × β) :=
   { Prod.lattice α β, Prod.boundedOrder α β, Prod.hasSdiff, Prod.hasHnot with
-    sdiff_le_iff := fun a b c => and_congr sdiff_le_iff sdiff_le_iff,
+    sdiff_le_iff := fun a b c => and_congrₓ sdiff_le_iff sdiff_le_iff,
     top_sdiff := fun a => Prod.extₓ (top_sdiff' a.1) (top_sdiff' a.2) }
 
 instance Pi.coheytingAlgebra {α : ι → Type _} [∀ i, CoheytingAlgebra (α i)] : CoheytingAlgebra (∀ i, α i) := by
@@ -984,7 +984,7 @@ def LinearOrderₓ.toBiheytingAlgebra [LinearOrderₓ α] [BoundedOrder α] : Bi
       split_ifs
       · exact iff_of_true le_top (inf_le_of_right_le h)
         
-      · rw [inf_le_iff, or_iff_left h]
+      · rw [inf_le_iff, or_iff_leftₓ h]
         ,
     himp_bot := fun a => if_congr le_bot_iff rfl rfl, sdiff := fun a b => if a ≤ b then ⊥ else a,
     hnot := fun a => if a = ⊤ then ⊥ else ⊤,
@@ -1003,8 +1003,8 @@ section lift
 /-- Pullback a `generalized_heyting_algebra` along an injection. -/
 @[reducible]
 protected def Function.Injective.generalizedHeytingAlgebra [HasSup α] [HasInf α] [HasTop α] [HasHimp α]
-    [GeneralizedHeytingAlgebra β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b)
-    (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) (map_top : f ⊤ = ⊤) (map_himp : ∀ a b, f (a ⇨ b) = f a ⇨ f b) :
+    [GeneralizedHeytingAlgebra β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b)
+    (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b) (map_top : f ⊤ = ⊤) (map_himp : ∀ a b, f (a ⇨ b) = f a ⇨ f b) :
     GeneralizedHeytingAlgebra α :=
   { hf.Lattice f map_sup map_inf, ‹HasTop α›, ‹HasHimp α› with
     le_top := fun a => by
@@ -1019,8 +1019,8 @@ protected def Function.Injective.generalizedHeytingAlgebra [HasSup α] [HasInf �
 /-- Pullback a `generalized_coheyting_algebra` along an injection. -/
 @[reducible]
 protected def Function.Injective.generalizedCoheytingAlgebra [HasSup α] [HasInf α] [HasBot α] [Sdiff α]
-    [GeneralizedCoheytingAlgebra β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b)
-    (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) (map_bot : f ⊥ = ⊥) (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) :
+    [GeneralizedCoheytingAlgebra β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b)
+    (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b) (map_bot : f ⊥ = ⊥) (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) :
     GeneralizedCoheytingAlgebra α :=
   { hf.Lattice f map_sup map_inf, ‹HasBot α›, ‹Sdiff α› with
     bot_le := fun a => by
@@ -1035,8 +1035,8 @@ protected def Function.Injective.generalizedCoheytingAlgebra [HasSup α] [HasInf
 /-- Pullback a `heyting_algebra` along an injection. -/
 @[reducible]
 protected def Function.Injective.heytingAlgebra [HasSup α] [HasInf α] [HasTop α] [HasBot α] [HasCompl α] [HasHimp α]
-    [HeytingAlgebra β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b)
-    (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) (map_compl : ∀ a, f (aᶜ) = f aᶜ)
+    [HeytingAlgebra β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b)
+    (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) (map_compl : ∀ a, f (aᶜ) = f aᶜ)
     (map_himp : ∀ a b, f (a ⇨ b) = f a ⇨ f b) : HeytingAlgebra α :=
   { hf.GeneralizedHeytingAlgebra f map_sup map_inf map_top map_himp, ‹HasBot α›, ‹HasCompl α› with
     bot_le := fun a => by
@@ -1051,8 +1051,8 @@ protected def Function.Injective.heytingAlgebra [HasSup α] [HasInf α] [HasTop 
 /-- Pullback a `coheyting_algebra` along an injection. -/
 @[reducible]
 protected def Function.Injective.coheytingAlgebra [HasSup α] [HasInf α] [HasTop α] [HasBot α] [HasHnot α] [Sdiff α]
-    [CoheytingAlgebra β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b)
-    (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) (map_hnot : ∀ a, f (￢a) = ￢f a)
+    [CoheytingAlgebra β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b)
+    (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) (map_hnot : ∀ a, f (￢a) = ￢f a)
     (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) : CoheytingAlgebra α :=
   { hf.GeneralizedCoheytingAlgebra f map_sup map_inf map_bot map_sdiff, ‹HasTop α›, ‹HasHnot α› with
     le_top := fun a => by
@@ -1067,8 +1067,8 @@ protected def Function.Injective.coheytingAlgebra [HasSup α] [HasInf α] [HasTo
 /-- Pullback a `biheyting_algebra` along an injection. -/
 @[reducible]
 protected def Function.Injective.biheytingAlgebra [HasSup α] [HasInf α] [HasTop α] [HasBot α] [HasCompl α] [HasHnot α]
-    [HasHimp α] [Sdiff α] [BiheytingAlgebra β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b)
-    (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) (map_compl : ∀ a, f (aᶜ) = f aᶜ)
+    [HasHimp α] [Sdiff α] [BiheytingAlgebra β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b)
+    (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) (map_compl : ∀ a, f (aᶜ) = f aᶜ)
     (map_hnot : ∀ a, f (￢a) = ￢f a) (map_himp : ∀ a b, f (a ⇨ b) = f a ⇨ f b)
     (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) : BiheytingAlgebra α :=
   { hf.HeytingAlgebra f map_sup map_inf map_top map_bot map_compl map_himp,
@@ -1098,11 +1098,11 @@ theorem bot_eq : (⊥ : PUnit) = star :=
   rfl
 
 @[simp]
-theorem sup_eq : a⊔b = star :=
+theorem sup_eq : a ⊔ b = star :=
   rfl
 
 @[simp]
-theorem inf_eq : a⊓b = star :=
+theorem inf_eq : a ⊓ b = star :=
   rfl
 
 @[simp]

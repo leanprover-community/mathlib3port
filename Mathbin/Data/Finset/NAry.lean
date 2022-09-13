@@ -37,7 +37,7 @@ def image₂ (f : α → β → γ) (s : Finset α) (t : Finset β) : Finset γ 
 
 @[simp]
 theorem mem_image₂ : c ∈ image₂ f s t ↔ ∃ a b, a ∈ s ∧ b ∈ t ∧ f a b = c := by
-  simp [image₂, and_assoc]
+  simp [image₂, and_assocₓ]
 
 @[simp, norm_cast]
 theorem coe_image₂ (f : α → β → γ) (s : Finset α) (t : Finset β) : (image₂ f s t : Set γ) = Set.Image2 f s t :=

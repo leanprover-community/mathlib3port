@@ -102,11 +102,11 @@ theorem neg_neg_part : (-j).negPart = j.posPart :=
   rfl
 
 @[simp]
-theorem smul_pos_part (r : ℝ≥0 ) : (r • j).posPart = r • j.posPart :=
+theorem smul_pos_part (r : ℝ≥0) : (r • j).posPart = r • j.posPart :=
   rfl
 
 @[simp]
-theorem smul_neg_part (r : ℝ≥0 ) : (r • j).negPart = r • j.negPart :=
+theorem smul_neg_part (r : ℝ≥0) : (r • j).negPart = r • j.negPart :=
   rfl
 
 theorem real_smul_def (r : ℝ) (j : JordanDecomposition α) :
@@ -114,7 +114,7 @@ theorem real_smul_def (r : ℝ) (j : JordanDecomposition α) :
   rfl
 
 @[simp]
-theorem coe_smul (r : ℝ≥0 ) : (r : ℝ) • j = r • j :=
+theorem coe_smul (r : ℝ≥0) : (r : ℝ) • j = r • j :=
   show dite _ _ _ = _ by
     rw [dif_pos (Nnreal.coe_nonneg r), Real.to_nnreal_coe]
 
@@ -150,7 +150,7 @@ theorem to_signed_measure_neg : (-j).toSignedMeasure = -j.toSignedMeasure := by
     neg_sub]
   rfl
 
-theorem to_signed_measure_smul (r : ℝ≥0 ) : (r • j).toSignedMeasure = r • j.toSignedMeasure := by
+theorem to_signed_measure_smul (r : ℝ≥0) : (r • j).toSignedMeasure = r • j.toSignedMeasure := by
   ext1 i hi
   rw [vector_measure.smul_apply, to_signed_measure, to_signed_measure, to_signed_measure_sub_apply hi,
     to_signed_measure_sub_apply hi, smul_sub, smul_pos_part, smul_neg_part, ← Ennreal.to_real_smul, ←
@@ -419,7 +419,7 @@ theorem to_jordan_decomposition_neg (s : SignedMeasure α) : (-s).toJordanDecomp
   apply to_signed_measure_injective
   simp [to_signed_measure_neg]
 
-theorem to_jordan_decomposition_smul (s : SignedMeasure α) (r : ℝ≥0 ) :
+theorem to_jordan_decomposition_smul (s : SignedMeasure α) (r : ℝ≥0) :
     (r • s).toJordanDecomposition = r • s.toJordanDecomposition := by
   apply to_signed_measure_injective
   simp [to_signed_measure_smul]

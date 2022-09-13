@@ -301,7 +301,7 @@ theorem logb_ne_zero_of_pos_of_ne_one_of_base_lt_one (hx_pos : 0 < x) (hx : x �
 theorem tendsto_logb_at_top_of_base_lt_one : Tendsto (logb b) atTop atBot := by
   rw [tendsto_at_top_at_bot]
   intro e
-  use 1⊔b ^ e
+  use 1 ⊔ b ^ e
   intro a
   simp only [and_imp, sup_le_iff]
   intro ha

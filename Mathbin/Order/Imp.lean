@@ -22,14 +22,14 @@ namespace Lattice
 
 /-- Implication as a binary operation on a boolean algebra. -/
 def imp [HasCompl α] [HasSup α] (a b : α) : α :=
-  aᶜ⊔b
+  aᶜ ⊔ b
 
 -- mathport name: «expr ⇒ₒ »
 infixl:65 " ⇒ₒ " => Lattice.imp
 
 /-- Equivalence as a binary operation on a boolean algebra. -/
 def biimp [HasCompl α] [HasSup α] [HasInf α] (a b : α) : α :=
-  (a ⇒ₒ b)⊓(b ⇒ₒ a)
+  (a ⇒ₒ b) ⊓ (b ⇒ₒ a)
 
 -- mathport name: «expr ⇔ₒ »
 infixl:60 " ⇔ₒ " => Lattice.biimp
@@ -55,7 +55,7 @@ theorem compl_sdiff (a b : α) : (a \ b)ᶜ = a ⇒ₒ b := by
 theorem imp_mono (h₁ : a ≤ b) (h₂ : c ≤ d) : b ⇒ₒ c ≤ a ⇒ₒ d :=
   sup_le_sup (compl_le_compl h₁) h₂
 
-theorem inf_imp_eq (a b c : α) : a⊓(b ⇒ₒ c) = a ⇒ₒ b ⇒ₒ a⊓c := by
+theorem inf_imp_eq (a b c : α) : a ⊓ (b ⇒ₒ c) = a ⇒ₒ b ⇒ₒ a ⊓ c := by
   unfold imp <;> simp [inf_sup_left]
 
 @[simp]
@@ -90,15 +90,15 @@ theorem imp_self (a : α) : a ⇒ₒ a = ⊤ :=
 theorem compl_imp_compl (a b : α) : aᶜ ⇒ₒ bᶜ = b ⇒ₒ a := by
   simp [imp, sup_comm]
 
-theorem imp_inf_le {α : Type _} [BooleanAlgebra α] (a b : α) : (a ⇒ₒ b)⊓a ≤ b := by
+theorem imp_inf_le {α : Type _} [BooleanAlgebra α] (a b : α) : (a ⇒ₒ b) ⊓ a ≤ b := by
   unfold imp
   rw [inf_sup_right]
   simp
 
-theorem inf_imp_eq_imp_imp (a b c : α) : a⊓b ⇒ₒ c = a ⇒ₒ (b ⇒ₒ c) := by
+theorem inf_imp_eq_imp_imp (a b c : α) : a ⊓ b ⇒ₒ c = a ⇒ₒ (b ⇒ₒ c) := by
   simp [imp, sup_assoc]
 
-theorem le_imp_iff : a ≤ b ⇒ₒ c ↔ a⊓b ≤ c := by
+theorem le_imp_iff : a ≤ b ⇒ₒ c ↔ a ⊓ b ≤ c := by
   rw [imp, sup_comm, is_compl_compl.le_sup_right_iff_inf_left_le]
 
 theorem biimp_mp (a b : α) : a ⇔ₒ b ≤ a ⇒ₒ b :=

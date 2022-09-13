@@ -71,7 +71,7 @@ theorem fg_closure {s : Set M} (hs : s.Finite) : Fg (closure L s) :=
 theorem fg_closure_singleton (x : M) : Fg (closure L ({x} : Set M)) :=
   fg_closure (finite_singleton x)
 
-theorem Fg.sup {N₁ N₂ : L.Substructure M} (hN₁ : N₁.Fg) (hN₂ : N₂.Fg) : (N₁⊔N₂).Fg :=
+theorem Fg.sup {N₁ N₂ : L.Substructure M} (hN₁ : N₁.Fg) (hN₂ : N₂.Fg) : (N₁ ⊔ N₂).Fg :=
   let ⟨t₁, ht₁⟩ := fg_def.1 hN₁
   let ⟨t₂, ht₂⟩ := fg_def.1 hN₂
   fg_def.2
@@ -142,7 +142,7 @@ theorem cg_closure {s : Set M} (hs : s.Countable) : Cg (closure L s) :=
 theorem cg_closure_singleton (x : M) : Cg (closure L ({x} : Set M)) :=
   (fg_closure_singleton x).Cg
 
-theorem Cg.sup {N₁ N₂ : L.Substructure M} (hN₁ : N₁.Cg) (hN₂ : N₂.Cg) : (N₁⊔N₂).Cg :=
+theorem Cg.sup {N₁ N₂ : L.Substructure M} (hN₁ : N₁.Cg) (hN₂ : N₂.Cg) : (N₁ ⊔ N₂).Cg :=
   let ⟨t₁, ht₁⟩ := cg_def.1 hN₁
   let ⟨t₂, ht₂⟩ := cg_def.1 hN₂
   cg_def.2
@@ -168,8 +168,8 @@ theorem Cg.of_map_embedding {N : Type _} [L.Structure N] (f : M ↪[L] N) {s : L
   rw [h2] at h'
   exact hom.map_le_range h'
 
-theorem cg_iff_countable [L.CountableFunctions] {s : L.Substructure M} : s.Cg ↔ Nonempty (Encodable s) := by
-  refine' ⟨_, fun h => ⟨s, h, s.closure_eq⟩⟩
+theorem cg_iff_countable [L.CountableFunctions] {s : L.Substructure M} : s.Cg ↔ Countable s := by
+  refine' ⟨_, fun h => ⟨s, h.to_set, s.closure_eq⟩⟩
   rintro ⟨s, h, rfl⟩
   exact h.substructure_closure L
 
@@ -225,8 +225,8 @@ theorem Cg.map_of_surjective {N : Type _} [L.Structure N] (h : Cg L M) (f : M �
   rw [cg_def, ← hs]
   exact h.range f
 
-theorem cg_iff_countable [L.CountableFunctions] : Cg L M ↔ Nonempty (Encodable M) := by
-  rw [cg_def, cg_iff_countable, Cardinal.encodable_iff, Cardinal.encodable_iff, top_equiv.to_equiv.cardinal_eq]
+theorem cg_iff_countable [L.CountableFunctions] : Cg L M ↔ Countable M := by
+  rw [cg_def, cg_iff_countable, top_equiv.to_equiv.countable_iff]
 
 theorem Fg.cg (h : Fg L M) : Cg L M :=
   cg_def.2 (fg_def.1 h).Cg

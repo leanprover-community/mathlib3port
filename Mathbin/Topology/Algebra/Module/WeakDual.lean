@@ -127,14 +127,14 @@ theorem tendsto_iff_forall_eval_tendsto {l : Filter α} {f : α → WeakBilin B}
 instance [HasContinuousAdd 𝕜] : HasContinuousAdd (WeakBilin B) := by
   refine' ⟨continuous_induced_rng.2 _⟩
   refine'
-    cast (congr_argₓ _ _) (((coe_fn_continuous B).comp continuous_fst).add ((coe_fn_continuous B).comp continuous_snd))
+    cast (congr_arg _ _) (((coe_fn_continuous B).comp continuous_fst).add ((coe_fn_continuous B).comp continuous_snd))
   ext
   simp only [Function.comp_app, Pi.add_apply, map_add, LinearMap.add_apply]
 
 /-- Scalar multiplication by `𝕜` on `weak_bilin B` is continuous. -/
 instance [HasContinuousSmul 𝕜 𝕜] : HasContinuousSmul 𝕜 (WeakBilin B) := by
   refine' ⟨continuous_induced_rng.2 _⟩
-  refine' cast (congr_argₓ _ _) (continuous_fst.smul ((coe_fn_continuous B).comp continuous_snd))
+  refine' cast (congr_arg _ _) (continuous_fst.smul ((coe_fn_continuous B).comp continuous_snd))
   ext
   simp only [Function.comp_app, Pi.smul_apply, LinearMap.map_smulₛₗ, RingHom.id_apply, LinearMap.smul_apply]
 
@@ -157,7 +157,7 @@ instance [HasContinuousAdd 𝕜] : TopologicalAddGroup (WeakBilin B) where
     infer_instance
   continuous_neg := by
     refine' continuous_induced_rng.2 (continuous_pi_iff.mpr fun y => _)
-    refine' cast (congr_argₓ _ _) (eval_continuous B (-y))
+    refine' cast (congr_arg _ _) (eval_continuous B (-y))
     ext
     simp only [map_neg, Function.comp_app, LinearMap.neg_apply]
 
@@ -255,6 +255,24 @@ def WeakSpace (𝕜 E) [CommSemiringₓ 𝕜] [TopologicalSpace 𝕜] [HasContin
   WeakBilin (topDualPairing 𝕜 E).flip deriving AddCommMonoidₓ,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] 𝕜», TopologicalSpace,
   HasContinuousAdd
+
+namespace WeakSpace
+
+variable {𝕜 E F} [AddCommMonoidₓ F] [Module 𝕜 F] [TopologicalSpace F]
+
+/-- A continuous linear map from `E` to `F` is still continuous when `E` and `F` are equipped with
+their weak topologies. -/
+def map (f : E →L[𝕜] F) : WeakSpace 𝕜 E →L[𝕜] WeakSpace 𝕜 F :=
+  { f with cont := WeakBilin.continuous_of_continuous_eval _ fun l => WeakBilin.eval_continuous _ (l ∘L f) }
+
+theorem map_apply (f : E →L[𝕜] F) (x : E) : WeakSpace.map f x = f x :=
+  rfl
+
+@[simp]
+theorem coe_map (f : E →L[𝕜] F) : (WeakSpace.map f : E → F) = f :=
+  rfl
+
+end WeakSpace
 
 theorem tendsto_iff_forall_eval_tendsto_top_dual_pairing {l : Filter α} {f : α → WeakDual 𝕜 E} {x : WeakDual 𝕜 E} :
     Tendsto f l (𝓝 x) ↔ ∀ y, Tendsto (fun i => topDualPairing 𝕜 E (f i) y) l (𝓝 (topDualPairing 𝕜 E x y)) :=

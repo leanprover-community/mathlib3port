@@ -29,7 +29,7 @@ namespace EckmannHilton
 variable {X : Type u}
 
 -- mathport name: «expr < > »
-local notation a "<" m ">" b => m a b
+local notation a " <" m "> " b => m a b
 
 /-- `is_unital m e` expresses that `e : X` is a left and right unit
 for the binary operation `m : X → X → X`. -/
@@ -47,7 +47,7 @@ variable {m₁ m₂ : X → X → X} {e₁ e₂ : X}
 
 variable (h₁ : IsUnital m₁ e₁) (h₂ : IsUnital m₂ e₂)
 
-variable (distrib : ∀ a b c d, ((a<m₂>b)<m₁>c<m₂>d) = (a<m₁>c)<m₂>b<m₁>d)
+variable (distrib : ∀ a b c d, ((a <m₂> b) <m₁> c <m₂> d) = (a <m₁> c) <m₂> b <m₁> d)
 
 include h₁ h₂ distrib
 
@@ -94,7 +94,8 @@ omit h₁ h₂ distrib
 operations, then the magma structure is a commutative monoid. -/
 @[to_additive
       "If a type carries a unital additive magma structure that distributes over a\nunital binary operations, then the additive magma structure is a commutative additive monoid."]
-def commMonoid [h : MulOneClassₓ X] (distrib : ∀ a b c d, ((a * b)<m₁>c * d) = (a<m₁>c) * b<m₁>d) : CommMonoidₓ X :=
+def commMonoid [h : MulOneClassₓ X] (distrib : ∀ a b c d, ((a * b) <m₁> c * d) = (a <m₁> c) * b <m₁> d) :
+    CommMonoidₓ X :=
   { h with mul := (· * ·), one := 1, mul_comm := (mul_comm h₁ MulOneClass.is_unital distrib).comm,
     mul_assoc := (mul_assoc h₁ MulOneClass.is_unital distrib).assoc }
 
@@ -102,7 +103,7 @@ def commMonoid [h : MulOneClassₓ X] (distrib : ∀ a b c d, ((a * b)<m₁>c * 
 then the group is commutative. -/
 @[to_additive
       "If a type carries an additive group structure that distributes\nover a unital binary operation, then the additive group is commutative."]
-def commGroup [G : Groupₓ X] (distrib : ∀ a b c d, ((a * b)<m₁>c * d) = (a<m₁>c) * b<m₁>d) : CommGroupₓ X :=
+def commGroup [G : Groupₓ X] (distrib : ∀ a b c d, ((a * b) <m₁> c * d) = (a <m₁> c) * b <m₁> d) : CommGroupₓ X :=
   { EckmannHilton.commMonoid h₁ distrib, G with }
 
 end EckmannHilton

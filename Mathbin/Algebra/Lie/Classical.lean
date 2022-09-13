@@ -79,10 +79,10 @@ variable [DecidableEq n] [DecidableEq p] [DecidableEq q] [DecidableEq l]
 variable [CommRingₓ R]
 
 @[simp]
-theorem matrix_trace_commutator_zero [Fintype n] (X Y : Matrix n n R) : Matrix.trace ⁅X,Y⁆ = 0 :=
+theorem matrix_trace_commutator_zero [Fintype n] (X Y : Matrix n n R) : Matrix.trace ⁅X, Y⁆ = 0 :=
   calc
     _ = Matrix.trace (X ⬝ Y) - Matrix.trace (Y ⬝ X) := trace_sub _ _
-    _ = Matrix.trace (X ⬝ Y) - Matrix.trace (X ⬝ Y) := congr_argₓ (fun x => _ - x) (Matrix.trace_mul_comm Y X)
+    _ = Matrix.trace (X ⬝ Y) - Matrix.trace (X ⬝ Y) := congr_arg (fun x => _ - x) (Matrix.trace_mul_comm Y X)
     _ = 0 := sub_self _
     
 
@@ -93,7 +93,7 @@ def sl [Fintype n] : LieSubalgebra R (Matrix n n R) :=
   { LinearMap.ker (Matrix.traceLinearMap n R R) with
     lie_mem' := fun X Y _ _ => LinearMap.mem_ker.2 <| matrix_trace_commutator_zero _ _ _ _ }
 
-theorem sl_bracket [Fintype n] (A B : sl n R) : ⁅A,B⁆.val = A.val ⬝ B.val - B.val ⬝ A.val :=
+theorem sl_bracket [Fintype n] (A B : sl n R) : ⁅A, B⁆.val = A.val ⬝ B.val - B.val ⬝ A.val :=
   rfl
 
 section ElementaryBasis
@@ -121,7 +121,7 @@ theorem sl_non_abelian [Fintype n] [Nontrivial R] (h : 1 < Fintype.card n) : ¬I
   have c' : A.val ⬝ B.val = B.val ⬝ A.val := by
     rw [← sub_eq_zero, ← sl_bracket, c.trivial]
     rfl
-  simpa [std_basis_matrix, Matrix.mul_apply, hij] using congr_funₓ (congr_funₓ c' i) i
+  simpa [std_basis_matrix, Matrix.mul_apply, hij] using congr_fun (congr_fun c' i) i
 
 end SpecialLinear
 

@@ -136,10 +136,10 @@ theorem even_odd_of_coprime (hc : Int.gcdₓ x y = 1) : x % 2 = 0 ∧ y % 2 = 1 
           decide : 1 < 2)
         _ _ hc
     · apply Int.dvd_nat_abs_of_of_nat_dvd
-      apply Int.dvd_of_mod_eq_zero hx
+      apply Int.dvd_of_mod_eq_zeroₓ hx
       
     · apply Int.dvd_nat_abs_of_of_nat_dvd
-      apply Int.dvd_of_mod_eq_zero hy
+      apply Int.dvd_of_mod_eq_zeroₓ hy
       
     
   · left
@@ -196,7 +196,7 @@ theorem normalize : PythagoreanTriple (x / Int.gcdₓ x y) (y / Int.gcdₓ x y) 
       apply Nat.eq_zero_of_gcd_eq_zero_rightₓ h0
     have hz : z = 0 := by
       simpa only [PythagoreanTriple, hx, hy, add_zeroₓ, zero_eq_mul, mul_zero, or_selfₓ] using h
-    simp only [hx, hy, hz, Int.zero_div]
+    simp only [hx, hy, hz, Int.zero_divₓ]
     exact zero
     
   rcases h.gcd_dvd with ⟨z0, rfl⟩
@@ -207,7 +207,7 @@ theorem normalize : PythagoreanTriple (x / Int.gcdₓ x y) (y / Int.gcdₓ x y) 
     rwa [pos_iff_ne_zero] at k0
   rw [Int.gcd_mul_right, h2, Int.nat_abs_of_nat, one_mulₓ] at h⊢
   rw [mul_comm x0, mul_comm y0, mul_iff k hk] at h
-  rwa [Int.mul_div_cancel _ hk, Int.mul_div_cancel _ hk, Int.mul_div_cancel_left _ hk]
+  rwa [Int.mul_div_cancelₓ _ hk, Int.mul_div_cancelₓ _ hk, Int.mul_div_cancel_leftₓ _ hk]
 
 theorem is_classified_of_is_primitive_classified (hp : h.IsPrimitiveClassified) : h.IsClassified := by
   obtain ⟨m, n, H⟩ := hp
@@ -219,7 +219,7 @@ theorem is_classified_of_is_primitive_classified (hp : h.IsPrimitiveClassified) 
 theorem is_classified_of_normalize_is_primitive_classified (hc : h.normalize.IsPrimitiveClassified) : h.IsClassified :=
   by
   convert h.normalize.mul_is_classified (Int.gcdₓ x y) (is_classified_of_is_primitive_classified h.normalize hc) <;>
-    rw [Int.mul_div_cancel']
+    rw [Int.mul_div_cancel'ₓ]
   · exact Int.gcd_dvd_left x y
     
   · exact Int.gcd_dvd_right x y
@@ -344,7 +344,7 @@ private theorem coprime_sq_sub_sq_add_of_even_odd {m n : ℤ} (h : Int.gcdₓ m 
   · have h3 : (m ^ 2 + n ^ 2) % 2 = 1 := by
       norm_num[sq, Int.add_mod, Int.mul_mod, hm, hn]
     have h4 : (m ^ 2 + n ^ 2) % 2 = 0 := by
-      apply Int.mod_eq_zero_of_dvd
+      apply Int.mod_eq_zero_of_dvdₓ
       rwa [h2] at hp2
     rw [h4] at h3
     exact zero_ne_one h3
@@ -379,7 +379,7 @@ private theorem coprime_sq_sub_mul_of_even_odd {m n : ℤ} (h : Int.gcdₓ m n =
     · have hp2' : p = 2 := (Nat.le_of_dvdₓ zero_lt_two hp2).antisymm hp.two_le
       revert hp1
       rw [hp2']
-      apply mt Int.mod_eq_zero_of_dvd
+      apply mt Int.mod_eq_zero_of_dvdₓ
       norm_num[sq, Int.sub_mod, Int.mul_mod, hm, hn]
       
     apply mt (Int.dvd_gcd (int.coe_nat_dvd_left.mpr hpm)) hnp
@@ -434,13 +434,13 @@ private theorem coprime_sq_sub_sq_sum_of_odd_odd {m n : ℤ} (h : Int.gcdₓ m n
   have h2 : (m0 * 2 + 1) ^ 2 - (n0 * 2 + 1) ^ 2 = 2 * (2 * (m0 ^ 2 - n0 ^ 2 + m0 - n0)) := by
     ring_exp
   have h3 : ((m0 * 2 + 1) ^ 2 - (n0 * 2 + 1) ^ 2) / 2 % 2 = 0 := by
-    rw [h2, Int.mul_div_cancel_left, Int.mul_mod_right]
+    rw [h2, Int.mul_div_cancel_leftₓ, Int.mul_mod_rightₓ]
     exact by
       decide
   refine' ⟨⟨_, h1⟩, ⟨_, h2⟩, h3, _⟩
   have h20 : (2 : ℤ) ≠ 0 := by
     decide
-  rw [h1, h2, Int.mul_div_cancel_left _ h20, Int.mul_div_cancel_left _ h20]
+  rw [h1, h2, Int.mul_div_cancel_leftₓ _ h20, Int.mul_div_cancel_leftₓ _ h20]
   by_contra h4
   obtain ⟨p, hp, hp1, hp2⟩ := nat.prime.not_coprime_iff_dvd.mp h4
   apply hp.not_dvd_one
@@ -469,17 +469,17 @@ theorem is_primitive_classified_aux (hc : x.gcd y = 1) (hzpos : 0 < z) {m n : �
   have hz : z ≠ 0
   apply ne_of_gtₓ hzpos
   have h2 : y = m ^ 2 - n ^ 2 ∧ z = m ^ 2 + n ^ 2 := by
-    apply Rat.div_int_inj hzpos hm2n2 (h.coprime_of_coprime hc) H
+    apply Ratₓ.div_int_inj hzpos hm2n2 (h.coprime_of_coprime hc) H
     rw [hw2]
     norm_cast
   use m, n
   apply And.intro _ (And.intro co pp)
   right
   refine' ⟨_, h2.left⟩
-  rw [← Rat.coe_int_inj _ _, ← div_left_inj' ((mt (Rat.coe_int_inj z 0).mp) hz), hv2, h2.right]
+  rw [← Ratₓ.coe_int_inj _ _, ← div_left_inj' ((mt (Ratₓ.coe_int_inj z 0).mp) hz), hv2, h2.right]
   norm_cast
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2, 3]) }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2, 3]) }
 theorem is_primitive_classified_of_coprime_of_odd_of_pos (hc : Int.gcdₓ x y = 1) (hyo : y % 2 = 1) (hzpos : 0 < z) :
     h.IsPrimitiveClassified := by
   by_cases' h0 : x = 0
@@ -509,19 +509,19 @@ theorem is_primitive_classified_of_coprime_of_odd_of_pos (hc : Int.gcdₓ x y = 
   have ht4 : v = 2 * q / (1 + q ^ 2) ∧ w = (1 - q ^ 2) / (1 + q ^ 2) := by
     apply Prod.mk.inj
     have := ((circleEquivGen hQ).apply_symm_apply ⟨⟨v, w⟩, hp⟩).symm
-    exact congr_argₓ Subtype.val this
+    exact congr_arg Subtype.val this
   let m := (q.denom : ℤ)
   let n := q.num
   have hm0 : m ≠ 0 := by
     norm_cast
-    apply Rat.denom_ne_zero q
-  have hq2 : q = n / m := (Rat.num_div_denom q).symm
+    apply Ratₓ.denom_ne_zero q
+  have hq2 : q = n / m := (Ratₓ.num_div_denom q).symm
   have hm2n2 : 0 < m ^ 2 + n ^ 2 := by
     apply lt_add_of_pos_of_le _ (sq_nonneg n)
     exact lt_of_le_of_neₓ (sq_nonneg m) (Ne.symm (pow_ne_zero 2 hm0))
   have hw2 : w = (m ^ 2 - n ^ 2) / (m ^ 2 + n ^ 2) := by
     rw [ht4.2, hq2]
-    field_simp [hm2n2, Rat.denom_ne_zero q, -Rat.num_div_denom]
+    field_simp [hm2n2, Ratₓ.denom_ne_zero q, -Ratₓ.num_div_denom]
   have hm2n20 : (m : ℚ) ^ 2 + (n : ℚ) ^ 2 ≠ 0 := by
     norm_cast
     simpa only [Int.coe_nat_pow] using ne_of_gtₓ hm2n2
@@ -531,7 +531,7 @@ theorem is_primitive_classified_of_coprime_of_odd_of_pos (hc : Int.gcdₓ x y = 
     rw [ht4.1]
     field_simp [hQ q]
     rw [hq2]
-    field_simp [Rat.denom_ne_zero q, -Rat.num_div_denom]
+    field_simp [Ratₓ.denom_ne_zero q, -Ratₓ.num_div_denom]
     ring
   have hnmcp : Int.gcdₓ n m = 1 := q.cop
   have hmncp : Int.gcdₓ m n = 1 := by
@@ -540,7 +540,7 @@ theorem is_primitive_classified_of_coprime_of_odd_of_pos (hc : Int.gcdₓ x y = 
   cases' Int.mod_two_eq_zero_or_one m with hm2 hm2 <;> cases' Int.mod_two_eq_zero_or_one n with hn2 hn2
   · -- m even, n even
     exfalso
-    have h1 : 2 ∣ (Int.gcdₓ n m : ℤ) := Int.dvd_gcd (Int.dvd_of_mod_eq_zero hn2) (Int.dvd_of_mod_eq_zero hm2)
+    have h1 : 2 ∣ (Int.gcdₓ n m : ℤ) := Int.dvd_gcd (Int.dvd_of_mod_eq_zeroₓ hn2) (Int.dvd_of_mod_eq_zeroₓ hm2)
     rw [hnmcp] at h1
     revert h1
     norm_num
@@ -567,20 +567,20 @@ theorem is_primitive_classified_of_coprime_of_odd_of_pos (hc : Int.gcdₓ x y = 
         2 ∣ m ^ 2 - n ^ 2 ∧ (m ^ 2 - n ^ 2) / 2 % 2 = 0 ∧ Int.gcdₓ ((m ^ 2 - n ^ 2) / 2) ((m ^ 2 + n ^ 2) / 2) = 1 :=
       coprime_sq_sub_sq_sum_of_odd_odd hmncp hm2 hn2
     have h2 : y = (m ^ 2 - n ^ 2) / 2 ∧ z = (m ^ 2 + n ^ 2) / 2 := by
-      apply Rat.div_int_inj hzpos _ (h.coprime_of_coprime hc) h1.2.2.2
+      apply Ratₓ.div_int_inj hzpos _ (h.coprime_of_coprime hc) h1.2.2.2
       · show w = _
-        rw [← Rat.mk_eq_div, ←
-          Rat.div_mk_div_cancel_left
+        rw [← Ratₓ.mk_eq_div, ←
+          Ratₓ.div_mk_div_cancel_left
             (by
               norm_num : (2 : ℤ) ≠ 0)]
-        rw [Int.div_mul_cancel h1.1, Int.div_mul_cancel h1.2.1, hw2]
+        rw [Int.div_mul_cancelₓ h1.1, Int.div_mul_cancelₓ h1.2.1, hw2]
         norm_cast
         
       · apply
           (mul_lt_mul_right
               (by
                 norm_num : 0 < (2 : ℤ))).mp
-        rw [Int.div_mul_cancel h1.1, zero_mul]
+        rw [Int.div_mul_cancelₓ h1.1, zero_mul]
         exact hm2n2
         
     rw [h2.1, h1.2.2.1] at hyo
@@ -692,7 +692,7 @@ theorem coprime_classification' {x y z : ℤ} (h : PythagoreanTriple x y z) (h_c
       
     exfalso
     rcases h_even with ⟨rfl, -⟩
-    rw [mul_assoc, Int.mul_mod_right] at h_parity
+    rw [mul_assoc, Int.mul_mod_rightₓ] at h_parity
     exact zero_ne_one h_parity
     
   · use -m, -n
@@ -724,7 +724,7 @@ theorem coprime_classification' {x y z : ℤ} (h : PythagoreanTriple x y z) (h_c
       
     exfalso
     rcases h_even with ⟨rfl, -⟩
-    rw [mul_assoc, Int.mul_mod_right] at h_parity
+    rw [mul_assoc, Int.mul_mod_rightₓ] at h_parity
     exact zero_ne_one h_parity
     
 

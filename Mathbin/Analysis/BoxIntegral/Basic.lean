@@ -107,7 +107,7 @@ theorem integral_sum_fiberwise {α} (g : Box ι → α) (f : ℝⁿ → E) (vol 
 theorem integral_sum_sub_partitions (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) {π₁ π₂ : TaggedPrepartition I}
     (h₁ : π₁.IsPartition) (h₂ : π₂.IsPartition) :
     integralSum f vol π₁ - integralSum f vol π₂ =
-      ∑ J in (π₁.toPrepartition⊓π₂.toPrepartition).boxes,
+      ∑ J in (π₁.toPrepartition ⊓ π₂.toPrepartition).boxes,
         vol J (f <| (π₁.infPrepartition π₂.toPrepartition).Tag J) -
           vol J (f <| (π₂.infPrepartition π₁.toPrepartition).Tag J) :=
   by
@@ -216,10 +216,10 @@ theorem integrable_iff_cauchy_basis [CompleteSpace F] :
   rw [integrable_iff_cauchy, cauchy_map_iff',
     (l.has_basis_to_filter_Union_top _).prod_self.tendsto_iff uniformity_basis_dist_le]
   refine' forall₂_congrₓ fun ε ε0 => exists_congr fun r => _
-  simp only [exists_prop, Prod.forallₓ, Set.mem_Union, exists_imp_distrib, prod_mk_mem_set_prod_eq, and_imp,
+  simp only [exists_propₓ, Prod.forallₓ, Set.mem_Union, exists_imp_distrib, prod_mk_mem_set_prod_eq, and_imp,
     mem_inter_eq, mem_set_of_eq]
   exact
-    and_congr Iff.rfl
+    and_congrₓ Iff.rfl
       ⟨fun H c₁ c₂ π₁ π₂ h₁ hU₁ h₂ hU₂ => H π₁ π₂ c₁ h₁ hU₁ c₂ h₂ hU₂, fun H π₁ π₂ c₁ h₁ hU₁ c₂ h₂ hU₂ =>
         H c₁ c₂ π₁ π₂ h₁ hU₁ h₂ hU₂⟩
 
@@ -412,9 +412,9 @@ then we use `r c x = 1`.  -/
 def convergenceR (h : Integrable I l f vol) (ε : ℝ) : ℝ≥0 → ℝⁿ → ioi (0 : ℝ) :=
   if hε : 0 < ε then (has_integral_iff.1 h.HasIntegral ε hε).some else fun _ _ => ⟨1, Set.mem_Ioi.2 zero_lt_one⟩
 
-variable {c c₁ c₂ : ℝ≥0 } {ε ε₁ ε₂ : ℝ} {π₁ π₂ : TaggedPrepartition I}
+variable {c c₁ c₂ : ℝ≥0} {ε ε₁ ε₂ : ℝ} {π₁ π₂ : TaggedPrepartition I}
 
-theorem convergence_r_cond (h : Integrable I l f vol) (ε : ℝ) (c : ℝ≥0 ) : l.RCond (h.convergenceR ε c) := by
+theorem convergence_r_cond (h : Integrable I l f vol) (ε : ℝ) (c : ℝ≥0) : l.RCond (h.convergenceR ε c) := by
   rw [convergence_r]
   split_ifs with h₀
   exacts[(has_integral_iff.1 h.has_integral ε h₀).some_spec.1 _, fun _ x => rfl]
@@ -464,7 +464,7 @@ theorem dist_integral_sum_le_of_mem_base_set (h : Integrable I l f vol) (hpos₁
 the same part of `I`, the integral sums of `f` over `π₁` and `π₂` are very close to each other.  -/
 theorem tendsto_integral_sum_to_filter_prod_self_inf_Union_eq_uniformity (h : Integrable I l f vol) :
     Tendsto (fun π : TaggedPrepartition I × TaggedPrepartition I => (integralSum f vol π.1, integralSum f vol π.2))
-      ((l.toFilter I ×ᶠ l.toFilter I)⊓𝓟 { π | π.1.Union = π.2.Union }) (𝓤 F) :=
+      ((l.toFilter I ×ᶠ l.toFilter I) ⊓ 𝓟 { π | π.1.Union = π.2.Union }) (𝓤 F) :=
   by
   refine' (((l.has_basis_to_filter I).prod_self.inf_principal _).tendsto_iff uniformity_basis_dist_le).2 fun ε ε0 => _
   replace ε0 := half_pos ε0
@@ -650,7 +650,7 @@ theorem integrable_of_continuous_on [CompleteSpace E] {I : Box ι} {f : ℝⁿ �
   refine' ⟨fun _ _ => ⟨δ / 2, half_pos δ0⟩, fun _ _ _ => rfl, fun c₁ c₂ π₁ π₂ h₁ h₁p h₂ h₂p => _⟩
   simp only [dist_eq_norm, integral_sum_sub_partitions _ _ h₁p h₂p, box_additive_map.to_smul_apply, ← smul_sub]
   have :
-    ∀ J ∈ π₁.to_prepartition⊓π₂.to_prepartition,
+    ∀ J ∈ π₁.to_prepartition ⊓ π₂.to_prepartition,
       ∥μ.to_box_additive J •
             (f ((π₁.inf_prepartition π₂.to_prepartition).Tag J) - f ((π₂.inf_prepartition π₁.to_prepartition).Tag J))∥ ≤
         μ.to_box_additive J * ε' :=
@@ -683,7 +683,7 @@ lemmas instead. -/
 theorem has_integral_of_bRiemann_eq_ff_of_forall_is_o (hl : l.bRiemann = ff) (B : ι →ᵇᵃ[I] ℝ) (hB0 : ∀ J, 0 ≤ B J)
     (g : ι →ᵇᵃ[I] F) (s : Set ℝⁿ) (hs : s.Countable) (hlH : s.Nonempty → l.bHenstock = tt)
     (H₁ :
-      ∀ (c : ℝ≥0 ),
+      ∀ (c : ℝ≥0),
         ∀ x ∈ I.Icc ∩ s,
           ∀ ε > (0 : ℝ),
             ∃ δ > 0,
@@ -691,7 +691,7 @@ theorem has_integral_of_bRiemann_eq_ff_of_forall_is_o (hl : l.bRiemann = ff) (B 
                 J.Icc ⊆ Metric.ClosedBall x δ →
                   x ∈ J.Icc → (l.bDistortion → J.distortion ≤ c) → dist (vol J (f x)) (g J) ≤ ε)
     (H₂ :
-      ∀ (c : ℝ≥0 ),
+      ∀ (c : ℝ≥0),
         ∀ x ∈ I.Icc \ s,
           ∀ ε > (0 : ℝ),
             ∃ δ > 0,
@@ -795,7 +795,7 @@ Then `f` is integrable on `I along `l` with integral `g I`. -/
 theorem has_integral_of_le_Henstock_of_forall_is_o (hl : l ≤ Henstock) (B : ι →ᵇᵃ[I] ℝ) (hB0 : ∀ J, 0 ≤ B J)
     (g : ι →ᵇᵃ[I] F) (s : Set ℝⁿ) (hs : s.Countable)
     (H₁ :
-      ∀ (c : ℝ≥0 ),
+      ∀ (c : ℝ≥0),
         ∀ x ∈ I.Icc ∩ s,
           ∀ ε > (0 : ℝ),
             ∃ δ > 0,
@@ -803,7 +803,7 @@ theorem has_integral_of_le_Henstock_of_forall_is_o (hl : l ≤ Henstock) (B : ι
                 J.Icc ⊆ Metric.ClosedBall x δ →
                   x ∈ J.Icc → (l.bDistortion → J.distortion ≤ c) → dist (vol J (f x)) (g J) ≤ ε)
     (H₂ :
-      ∀ (c : ℝ≥0 ),
+      ∀ (c : ℝ≥0),
         ∀ x ∈ I.Icc \ s,
           ∀ ε > (0 : ℝ),
             ∃ δ > 0,
@@ -837,7 +837,7 @@ less than or equal to `ε * B J`.
 Then `f` is McShane integrable on `I` with integral `g I`. -/
 theorem has_integral_McShane_of_forall_is_o (B : ι →ᵇᵃ[I] ℝ) (hB0 : ∀ J, 0 ≤ B J) (g : ι →ᵇᵃ[I] F)
     (H :
-      ∀ (c : ℝ≥0 ),
+      ∀ (c : ℝ≥0),
         ∀ x ∈ I.Icc,
           ∀ ε > (0 : ℝ), ∃ δ > 0, ∀ J ≤ I, J.Icc ⊆ Metric.ClosedBall x δ → dist (vol J (f x)) (g J) ≤ ε * B J) :
     HasIntegral I mcShane f vol (g I) :=

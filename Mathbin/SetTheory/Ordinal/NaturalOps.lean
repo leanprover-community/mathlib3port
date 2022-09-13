@@ -307,8 +307,7 @@ instance add_contravariant_class_le : ContravariantClass NatOrdinal.{u} NatOrdin
     exact h.not_lt (add_lt_add_left h' a)⟩
 
 instance : OrderedCancelAddCommMonoid NatOrdinal :=
-  { NatOrdinal.linearOrder with add := (· + ·), add_assoc := nadd_assoc,
-    add_left_cancel := fun a b c => add_left_cancel'', add_le_add_left := fun a b => add_le_add_left,
+  { NatOrdinal.linearOrder with add := (· + ·), add_assoc := nadd_assoc, add_le_add_left := fun a b => add_le_add_left,
     le_of_add_le_add_left := fun a b c => le_of_add_le_add_left, zero := 0, zero_add := zero_nadd,
     add_zero := nadd_zero, add_comm := nadd_comm }
 

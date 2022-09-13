@@ -245,10 +245,10 @@ variable [DecidableEq α] {a b c : α}
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 instance : HasInf (Finpartition a) :=
   ⟨fun P Q =>
-    ofErase ((P.parts ×ˢ Q.parts).Image fun bc => bc.1⊓bc.2)
+    ofErase ((P.parts ×ˢ Q.parts).Image fun bc => bc.1 ⊓ bc.2)
       (by
         rw [sup_indep_iff_disjoint_erase]
-        simp only [mem_image, and_imp, exists_prop, forall_exists_index, id.def, Prod.existsₓ, mem_product,
+        simp only [mem_image, and_imp, exists_propₓ, forall_exists_index, id.def, Prod.existsₓ, mem_product,
           Finset.disjoint_sup_right, mem_erase, Ne.def]
         rintro _ x₁ y₁ hx₁ hy₁ rfl _ h x₂ y₂ hx₂ hy₂ rfl
         rcases eq_or_ne x₁ x₂ with (rfl | xdiff)
@@ -259,7 +259,7 @@ instance : HasInf (Finpartition a) :=
         exact Disjoint.mono inf_le_left inf_le_left (P.disjoint hx₁ hx₂ xdiff))
       (by
         rw [sup_image, comp.left_id, sup_product_left]
-        trans P.parts.sup id⊓Q.parts.sup id
+        trans P.parts.sup id ⊓ Q.parts.sup id
         · simp_rw [Finset.sup_inf_distrib_right, Finset.sup_inf_distrib_left]
           rfl
           
@@ -269,7 +269,7 @@ instance : HasInf (Finpartition a) :=
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem parts_inf (P Q : Finpartition a) :
-    (P⊓Q).parts = ((P.parts ×ˢ Q.parts).Image fun bc : α × α => bc.1⊓bc.2).erase ⊥ :=
+    (P ⊓ Q).parts = ((P.parts ×ˢ Q.parts).Image fun bc : α × α => bc.1 ⊓ bc.2).erase ⊥ :=
   rfl
 
 instance : SemilatticeInf (Finpartition a) :=
@@ -287,7 +287,7 @@ instance : SemilatticeInf (Finpartition a) :=
       obtain ⟨d, hd, hbd⟩ := hPR hb
       have h := _root_.le_inf hbc hbd
       refine'
-        ⟨c⊓d,
+        ⟨c ⊓ d,
           mem_erase_of_ne_of_mem (ne_bot_of_le_ne_bot (P.ne_bot hb) h)
             (mem_image.2 ⟨(c, d), mem_product.2 ⟨hc, hd⟩, rfl⟩),
           h⟩ }
@@ -370,7 +370,7 @@ end Bind
 
 /-- Adds `b` to a finpartition of `a` to make a finpartition of `a ⊔ b`. -/
 @[simps]
-def extend (P : Finpartition a) (hb : b ≠ ⊥) (hab : Disjoint a b) (hc : a⊔b = c) : Finpartition c where
+def extend (P : Finpartition a) (hb : b ≠ ⊥) (hab : Disjoint a b) (hc : a ⊔ b = c) : Finpartition c where
   parts := insert b P.parts
   SupIndep := by
     rw [sup_indep_iff_pairwise_disjoint, coe_insert]
@@ -379,7 +379,7 @@ def extend (P : Finpartition a) (hb : b ≠ ⊥) (hab : Disjoint a b) (hc : a⊔
     rwa [sup_insert, P.sup_parts, id, _root_.sup_comm]
   not_bot_mem := fun h => (mem_insert.1 h).elim hb.symm P.not_bot_mem
 
-theorem card_extend (P : Finpartition a) (b c : α) {hb : b ≠ ⊥} {hab : Disjoint a b} {hc : a⊔b = c} :
+theorem card_extend (P : Finpartition a) (b c : α) {hb : b ≠ ⊥} {hab : Disjoint a b} {hc : a ⊔ b = c} :
     (P.extend hb hab hc).parts.card = P.parts.card + 1 :=
   card_insert_of_not_mem fun h => hb <| hab.symm.eq_bot_of_le <| P.le h
 
@@ -398,9 +398,9 @@ def avoid (b : α) : Finpartition (a \ b) :=
 
 @[simp]
 theorem mem_avoid : c ∈ (P.avoid b).parts ↔ ∃ d ∈ P.parts, ¬d ≤ b ∧ d \ b = c := by
-  simp only [avoid, of_erase_parts, mem_erase, Ne.def, mem_image, exists_prop, ← exists_and_distrib_left,
+  simp only [avoid, of_erase_parts, mem_erase, Ne.def, mem_image, exists_propₓ, ← exists_and_distrib_leftₓ,
     @And.left_comm (c ≠ ⊥)]
-  refine' exists_congr fun d => and_congr_right' <| and_congr_left _
+  refine' exists_congr fun d => and_congr_right'ₓ <| and_congr_leftₓ _
   rintro rfl
   rw [sdiff_eq_bot_iff]
 
@@ -426,7 +426,7 @@ theorem bUnion_parts : P.parts.bUnion id = s :=
   (sup_eq_bUnion _ _).symm.trans P.sup_parts
 
 theorem sum_card_parts : (∑ i in P.parts, i.card) = s.card := by
-  convert congr_argₓ Finset.card P.bUnion_parts
+  convert congr_arg Finset.card P.bUnion_parts
   rw [card_bUnion P.sup_indep.pairwise_disjoint]
   rfl
 
@@ -508,7 +508,7 @@ variable {F : Finset (Finset α)}
 theorem mem_atomise :
     t ∈ (atomise s F).parts ↔ t.Nonempty ∧ ∃ (Q : _)(_ : Q ⊆ F), (s.filter fun i => ∀ u ∈ F, u ∈ Q ↔ i ∈ u) = t := by
   simp only [atomise, of_erase, bot_eq_empty, mem_erase, mem_image, nonempty_iff_ne_empty, mem_singleton, and_comm,
-    mem_powerset, exists_prop]
+    mem_powerset, exists_propₓ]
 
 theorem atomise_empty (hs : s.Nonempty) : (atomise s ∅).parts = {s} := by
   simp only [atomise, powerset_empty, image_singleton, not_mem_empty, IsEmpty.forall_iff, implies_true_iff, filter_true]
@@ -536,7 +536,7 @@ theorem card_filter_atomise_le_two_pow (ht : t ∈ F) :
     rw [card_powerset, card_erase_of_mem ht]
     
   rw [subset_iff]
-  simp only [mem_erase, mem_sdiff, mem_powerset, mem_image, exists_prop, mem_filter, and_assoc, Finset.Nonempty,
+  simp only [mem_erase, mem_sdiff, mem_powerset, mem_image, exists_propₓ, mem_filter, and_assocₓ, Finset.Nonempty,
     exists_imp_distrib, and_imp, mem_atomise, forall_apply_eq_imp_iff₂]
   rintro P' i hi P PQ rfl hy₂ j hj
   refine' ⟨P.erase t, erase_subset_erase _ PQ, _⟩

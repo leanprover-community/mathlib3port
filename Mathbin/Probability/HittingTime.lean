@@ -91,7 +91,7 @@ theorem hitting_eq_end_iff {m : ι} :
 
 theorem hitting_of_le {m : ι} (hmn : m ≤ n) : hitting u s n m ω = m := by
   obtain rfl | h := le_iff_eq_or_ltₓ.1 hmn
-  · simp only [hitting, Set.Icc_self, ite_eq_right_iff, Set.mem_Icc, exists_prop, forall_exists_index, and_imp]
+  · simp only [hitting, Set.Icc_self, ite_eq_right_iff, Set.mem_Icc, exists_propₓ, forall_exists_index, and_imp]
     intro i hi₁ hi₂ hi
     rw [Set.inter_eq_left_iff_subset.2, cInf_singleton]
     exact Set.singleton_subset_iff.2 (le_antisymmₓ hi₂ hi₁ ▸ hi)
@@ -237,7 +237,7 @@ theorem hitting_is_stopping_time [ConditionallyCompleteLinearOrder ι] [IsWellOr
   · have h_set_eq_Union : { ω | hitting u s n n' ω ≤ i } = ⋃ j ∈ Set.Icc n i, u j ⁻¹' s := by
       ext x
       rw [Set.mem_set_of_eq, hitting_le_iff_of_lt _ hi]
-      simp only [Set.mem_Icc, exists_prop, Set.mem_Union, Set.mem_preimage]
+      simp only [Set.mem_Icc, exists_propₓ, Set.mem_Union, Set.mem_preimage]
     rw [h_set_eq_Union]
     exact MeasurableSet.Union fun j => MeasurableSet.Union fun hj => f.mono hj.2 _ ((hu j).Measurable hs)
     
@@ -267,7 +267,7 @@ theorem is_stopping_time_hitting_is_stopping_time [ConditionallyCompleteLinearOr
     simp [← exists_or_distrib, ← or_and_distrib_right, le_or_ltₓ]
   have h₂ : (⋃ i > n, { x | τ x = i } ∩ { x | hitting u s i N x ≤ n }) = ∅ := by
     ext x
-    simp only [gt_iff_ltₓ, Set.mem_Union, Set.mem_inter_eq, Set.mem_set_of_eq, exists_prop, Set.mem_empty_eq,
+    simp only [gt_iff_ltₓ, Set.mem_Union, Set.mem_inter_eq, Set.mem_set_of_eq, exists_propₓ, Set.mem_empty_eq,
       iff_falseₓ, not_exists, not_and, not_leₓ]
     rintro m hm rfl
     exact lt_of_lt_of_leₓ hm (le_hitting (hτbdd _) _)

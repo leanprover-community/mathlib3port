@@ -999,18 +999,20 @@ theorem OrderIso.map_top' [LE α] [PartialOrderₓ β] (f : α ≃o β) {x : α}
 theorem OrderIso.map_top [LE α] [PartialOrderₓ β] [OrderTop α] [OrderTop β] (f : α ≃o β) : f ⊤ = ⊤ :=
   f.dual.map_bot
 
-theorem OrderEmbedding.map_inf_le [SemilatticeInf α] [SemilatticeInf β] (f : α ↪o β) (x y : α) : f (x⊓y) ≤ f x⊓f y :=
+theorem OrderEmbedding.map_inf_le [SemilatticeInf α] [SemilatticeInf β] (f : α ↪o β) (x y : α) :
+    f (x ⊓ y) ≤ f x ⊓ f y :=
   f.Monotone.map_inf_le x y
 
-theorem OrderEmbedding.le_map_sup [SemilatticeSup α] [SemilatticeSup β] (f : α ↪o β) (x y : α) : f x⊔f y ≤ f (x⊔y) :=
+theorem OrderEmbedding.le_map_sup [SemilatticeSup α] [SemilatticeSup β] (f : α ↪o β) (x y : α) :
+    f x ⊔ f y ≤ f (x ⊔ y) :=
   f.Monotone.le_map_sup x y
 
-theorem OrderIso.map_inf [SemilatticeInf α] [SemilatticeInf β] (f : α ≃o β) (x y : α) : f (x⊓y) = f x⊓f y := by
+theorem OrderIso.map_inf [SemilatticeInf α] [SemilatticeInf β] (f : α ≃o β) (x y : α) : f (x ⊓ y) = f x ⊓ f y := by
   refine' (f.to_order_embedding.map_inf_le x y).antisymm _
   apply f.symm.le_iff_le.1
   simpa using f.symm.to_order_embedding.map_inf_le (f x) (f y)
 
-theorem OrderIso.map_sup [SemilatticeSup α] [SemilatticeSup β] (f : α ≃o β) (x y : α) : f (x⊔y) = f x⊔f y :=
+theorem OrderIso.map_sup [SemilatticeSup α] [SemilatticeSup β] (f : α ≃o β) (x y : α) : f (x ⊔ y) = f x ⊔ f y :=
   f.dual.map_inf x y
 
 /-- Note that this goal could also be stated `(disjoint on f) a b` -/

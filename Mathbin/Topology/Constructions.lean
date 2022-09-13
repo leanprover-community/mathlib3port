@@ -55,10 +55,10 @@ instance {s : Setoidₓ α} [t : TopologicalSpace α] : TopologicalSpace (Quotie
   coinduced Quotientₓ.mk t
 
 instance [t₁ : TopologicalSpace α] [t₂ : TopologicalSpace β] : TopologicalSpace (α × β) :=
-  induced Prod.fst t₁⊓induced Prod.snd t₂
+  induced Prod.fst t₁ ⊓ induced Prod.snd t₂
 
 instance [t₁ : TopologicalSpace α] [t₂ : TopologicalSpace β] : TopologicalSpace (Sum α β) :=
-  coinduced Sum.inl t₁⊔coinduced Sum.inr t₂
+  coinduced Sum.inl t₁ ⊔ coinduced Sum.inr t₂
 
 instance {β : α → Type v} [t₂ : ∀ a, TopologicalSpace (β a)] : TopologicalSpace (Sigma β) :=
   ⨆ a, coinduced (Sigma.mk a) (t₂ a)
@@ -271,7 +271,7 @@ theorem is_open_iff' {s : Set (CofiniteTopology α)} : IsOpen s ↔ s = ∅ ∨ 
 theorem is_closed_iff {s : Set (CofiniteTopology α)} : IsClosed s ↔ s = univ ∨ s.Finite := by
   simp [← is_open_compl_iff, is_open_iff']
 
-theorem nhds_eq (a : CofiniteTopology α) : 𝓝 a = pure a⊔cofinite := by
+theorem nhds_eq (a : CofiniteTopology α) : 𝓝 a = pure a ⊔ cofinite := by
   ext U
   rw [mem_nhds_iff]
   constructor
@@ -392,10 +392,10 @@ theorem continuous_inf_dom_left₂ {α β γ} {f : α → β → γ} {ta1 ta2 : 
     (h : by
       haveI := ta1 <;> haveI := tb1 <;> exact Continuous fun p : α × β => f p.1 p.2) :
     by
-    haveI := ta1⊓ta2 <;> haveI := tb1⊓tb2 <;> exact Continuous fun p : α × β => f p.1 p.2 := by
+    haveI := ta1 ⊓ ta2 <;> haveI := tb1 ⊓ tb2 <;> exact Continuous fun p : α × β => f p.1 p.2 := by
   have ha := @continuous_inf_dom_left _ _ id ta1 ta2 ta1 (@continuous_id _ (id _))
   have hb := @continuous_inf_dom_left _ _ id tb1 tb2 tb1 (@continuous_id _ (id _))
-  have h_continuous_id := @Continuous.prod_map _ _ _ _ ta1 tb1 (ta1⊓ta2) (tb1⊓tb2) _ _ ha hb
+  have h_continuous_id := @Continuous.prod_map _ _ _ _ ta1 tb1 (ta1 ⊓ ta2) (tb1 ⊓ tb2) _ _ ha hb
   exact @Continuous.comp _ _ _ (id _) (id _) _ _ _ h h_continuous_id
 
 /-- A version of `continuous_inf_dom_right` for binary functions -/
@@ -404,10 +404,10 @@ theorem continuous_inf_dom_right₂ {α β γ} {f : α → β → γ} {ta1 ta2 :
     (h : by
       haveI := ta2 <;> haveI := tb2 <;> exact Continuous fun p : α × β => f p.1 p.2) :
     by
-    haveI := ta1⊓ta2 <;> haveI := tb1⊓tb2 <;> exact Continuous fun p : α × β => f p.1 p.2 := by
+    haveI := ta1 ⊓ ta2 <;> haveI := tb1 ⊓ tb2 <;> exact Continuous fun p : α × β => f p.1 p.2 := by
   have ha := @continuous_inf_dom_right _ _ id ta1 ta2 ta2 (@continuous_id _ (id _))
   have hb := @continuous_inf_dom_right _ _ id tb1 tb2 tb2 (@continuous_id _ (id _))
-  have h_continuous_id := @Continuous.prod_map _ _ _ _ ta2 tb2 (ta1⊓ta2) (tb1⊓tb2) _ _ ha hb
+  have h_continuous_id := @Continuous.prod_map _ _ _ _ ta2 tb2 (ta1 ⊓ ta2) (tb1 ⊓ tb2) _ _ ha hb
   exact @Continuous.comp _ _ _ (id _) (id _) _ _ _ h h_continuous_id
 
 /-- A version of `continuous_Inf_dom` for binary functions -/
@@ -596,8 +596,8 @@ theorem is_open_prod_iff {s : Set (α × β)} :
     IsOpen s ↔ ∀ a b, (a, b) ∈ s → ∃ (u : Set α)(v : Set β), IsOpen u ∧ IsOpen v ∧ a ∈ u ∧ b ∈ v ∧ u ×ˢ v ⊆ s := by
   rw [is_open_iff_nhds]
   simp_rw [le_principal_iff, Prod.forallₓ, ((nhds_basis_opens _).prod_nhds (nhds_basis_opens _)).mem_iff, Prod.existsₓ,
-    exists_prop]
-  simp only [and_assoc, And.left_comm]
+    exists_propₓ]
+  simp only [and_assocₓ, And.left_comm]
 
 /-- A product of induced topologies is induced by the product map -/
 theorem prod_induced_induced {α γ : Type _} (f : α → β) (g : γ → δ) :
@@ -688,7 +688,7 @@ theorem is_open_prod_iff' {s : Set α} {t : Set β} : IsOpen (s ×ˢ t) ↔ IsOp
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem closure_prod_eq {s : Set α} {t : Set β} : Closure (s ×ˢ t) = Closure s ×ˢ Closure t :=
   Set.ext fun ⟨a, b⟩ => by
-    have : (𝓝 a ×ᶠ 𝓝 b)⊓𝓟 (s ×ˢ t) = 𝓝 a⊓𝓟 s ×ᶠ 𝓝 b⊓𝓟 t := by
+    have : (𝓝 a ×ᶠ 𝓝 b) ⊓ 𝓟 (s ×ˢ t) = 𝓝 a ⊓ 𝓟 s ×ᶠ 𝓝 b ⊓ 𝓟 t := by
       rw [← prod_inf_prod, prod_principal_principal]
     simp [closure_eq_cluster_pts, ClusterPt, nhds_prod_eq, this] <;> exact prod_ne_bot
 
@@ -946,7 +946,7 @@ theorem continuous_subtype_nhds_cover {ι : Sort _} {f : α → β} {c : ι → 
     let ⟨i, (c_sets : { x | c i x } ∈ 𝓝 x)⟩ := c_cover x
     let x' : Subtype (c i) := ⟨x, mem_of_mem_nhds c_sets⟩
     calc
-      map f (𝓝 x) = map f (map coe (𝓝 x')) := congr_argₓ (map f) (map_nhds_subtype_coe_eq _ <| c_sets).symm
+      map f (𝓝 x) = map f (map coe (𝓝 x')) := congr_arg (map f) (map_nhds_subtype_coe_eq _ <| c_sets).symm
       _ = map (fun x : Subtype (c i) => f x) (𝓝 x') := rfl
       _ ≤ 𝓝 (f x) := continuous_iff_continuous_at.mp (f_cont i) x'
       
@@ -966,7 +966,7 @@ theorem continuous_subtype_is_closed_cover {ι : Sort _} {f : α → β} (c : ι
           let ⟨i, hi⟩ := h_cover x
           ⟨i, hi, hx⟩,
           fun ⟨i, hi, hx⟩ => hx⟩
-      simpa [And.comm, @And.left_comm (c _ _), ← exists_and_distrib_right]
+      simpa [And.comm, @And.left_comm (c _ _), ← exists_and_distrib_rightₓ]
     rwa [this]
 
 theorem closure_subtype {x : { a // p a }} {s : Set { a // p a }} :
@@ -1034,7 +1034,7 @@ theorem Continuous.quotient_lift_on' {f : α → β} (h : Continuous f) (hs : �
     Continuous (fun x => Quotientₓ.liftOn' x f hs : Quotientₓ s → β) :=
   h.quotient_lift hs
 
-theorem Continuous.quotient_map' {t : Setoidₓ β} {f : α → β} (hf : Continuous f) (H : (s.R⇒t.R) f f) :
+theorem Continuous.quotient_map' {t : Setoidₓ β} {f : α → β} (hf : Continuous f) (H : (s.R ⇒ t.R) f f) :
     Continuous (Quotientₓ.map' f H) :=
   (continuous_quotient_mk.comp hf).quotient_lift _
 

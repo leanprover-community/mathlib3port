@@ -135,7 +135,7 @@ theorem null_of_locally_null [TopologicalSpace α] [SecondCountableTopology α] 
 theorem exists_mem_forall_mem_nhds_within_pos [TopologicalSpace α] [SecondCountableTopology α] (m : OuterMeasure α)
     {s : Set α} (hs : m s ≠ 0) : ∃ x ∈ s, ∀ t ∈ 𝓝[s] x, 0 < m t := by
   contrapose! hs
-  simp only [nonpos_iff_eq_zero, ← exists_prop] at hs
+  simp only [nonpos_iff_eq_zero, ← exists_propₓ] at hs
   exact m.null_of_locally_null s hs
 
 /-- If `s : ι → set α` is a sequence of sets, `S = ⋃ n, s n`, and `m (S \ s n)` tends to zero along
@@ -355,7 +355,7 @@ theorem coe_supr {ι} (f : ι → OuterMeasure α) : ⇑(⨆ i, f i) = ⨆ i, f 
     rw [supr_apply, _root_.supr_apply]
 
 @[simp]
-theorem sup_apply (m₁ m₂ : OuterMeasure α) (s : Set α) : (m₁⊔m₂) s = m₁ s⊔m₂ s := by
+theorem sup_apply (m₁ m₂ : OuterMeasure α) (s : Set α) : (m₁ ⊔ m₂) s = m₁ s ⊔ m₂ s := by
   have := supr_apply (fun b => cond b m₁ m₂) s <;> rwa [supr_bool_eq, supr_bool_eq] at this
 
 theorem smul_supr [HasSmul R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] {ι} (f : ι → OuterMeasure α) (c : R) :
@@ -394,7 +394,7 @@ theorem map_map {β γ} (f : α → β) (g : β → γ) (m : OuterMeasure α) : 
 theorem map_mono {β} (f : α → β) : Monotone (map f) := fun m m' h s => h _
 
 @[simp]
-theorem map_sup {β} (f : α → β) (m m' : OuterMeasure α) : map f (m⊔m') = map f m⊔map f m' :=
+theorem map_sup {β} (f : α → β) (m m' : OuterMeasure α) : map f (m ⊔ m') = map f m ⊔ map f m' :=
   ext fun s => by
     simp only [map_apply, sup_apply]
 
@@ -501,7 +501,7 @@ theorem restrict_supr {ι} (s : Set α) (m : ι → OuterMeasure α) : restrict 
 
 theorem map_comap {β} (f : α → β) (m : OuterMeasure β) : map f (comap f m) = restrict (range f) m :=
   ext fun s =>
-    congr_argₓ m <| by
+    congr_arg m <| by
       simp only [image_preimage_eq_inter_range, Subtype.range_coe]
 
 theorem map_comap_le {β} (f : α → β) (m : OuterMeasure β) : map f (comap f m) ≤ m := fun s =>
@@ -695,7 +695,7 @@ theorem comap_of_function {β} (f : β → α) (h : Monotone m ∨ Surjective f)
     rw [Set.image_subset_iff, preimage_Union] at ht
     refine' ⟨ht, Ennreal.tsum_le_tsum fun n => _⟩
     cases h
-    exacts[h (image_preimage_subset _ _), (congr_argₓ m (h.image_preimage (t n))).le]
+    exacts[h (image_preimage_subset _ _), (congr_arg m (h.image_preimage (t n))).le]
     
 
 theorem map_of_function_le {β} (f : α → β) :
@@ -976,7 +976,7 @@ theorem top_caratheodory : (⊤ : OuterMeasure α).caratheodory = ⊤ :=
         simp only [ht, top_apply, le_top]
 
 theorem le_add_caratheodory (m₁ m₂ : OuterMeasure α) :
-    m₁.caratheodory⊓m₂.caratheodory ≤ (m₁ + m₂ : OuterMeasure α).caratheodory := fun s ⟨hs₁, hs₂⟩ t => by
+    m₁.caratheodory ⊓ m₂.caratheodory ≤ (m₁ + m₂ : OuterMeasure α).caratheodory := fun s ⟨hs₁, hs₂⟩ t => by
   simp [hs₁ t, hs₂ t, add_left_commₓ, add_assocₓ]
 
 theorem le_sum_caratheodory {ι} (m : ι → OuterMeasure α) : (⨅ i, (m i).caratheodory) ≤ (sum m).caratheodory :=
@@ -1117,12 +1117,12 @@ theorem restrict_infi_restrict {ι} (s : Set α) (m : ι → OuterMeasure α) :
     restrict s (⨅ i, restrict s (m i)) = restrict (range (coe : s → α)) (⨅ i, restrict s (m i)) := by
       rw [Subtype.range_coe]
     _ = map (coe : s → α) (⨅ i, comap coe (m i)) := (map_infi Subtype.coe_injective _).symm
-    _ = restrict s (⨅ i, m i) := congr_argₓ (map coe) (comap_infi _ _).symm
+    _ = restrict s (⨅ i, m i) := congr_arg (map coe) (comap_infi _ _).symm
     
 
 theorem restrict_infi {ι} [Nonempty ι] (s : Set α) (m : ι → OuterMeasure α) :
     restrict s (⨅ i, m i) = ⨅ i, restrict s (m i) :=
-  (congr_argₓ (map coe) (comap_infi _ _)).trans (map_infi_comap _)
+  (congr_arg (map coe) (comap_infi _ _)).trans (map_infi_comap _)
 
 theorem restrict_binfi {ι} {I : Set ι} (hI : I.Nonempty) (s : Set α) (m : ι → OuterMeasure α) :
     restrict s (⨅ i ∈ I, m i) = ⨅ i ∈ I, restrict s (m i) := by
@@ -1216,7 +1216,7 @@ include PU msU
 
 theorem extend_Union_le_tsum_nat' (s : ℕ → Set α) : extend m (⋃ i, s i) ≤ ∑' i, extend m (s i) := by
   by_cases' h : ∀ i, P (s i)
-  · rw [extend_eq _ (PU h), congr_argₓ tsum _]
+  · rw [extend_eq _ (PU h), congr_arg tsum _]
     · apply msU h
       
     funext i
@@ -1529,7 +1529,7 @@ theorem trim_smul {R : Type _} [HasSmul R ℝ≥0∞] [IsScalarTower R ℝ≥0�
   ext <| trim_op (smul_apply c m)
 
 /-- `trim` sends the supremum of two outer measures to the supremum of the trimmed measures. -/
-theorem trim_sup (m₁ m₂ : OuterMeasure α) : (m₁⊔m₂).trim = m₁.trim⊔m₂.trim :=
+theorem trim_sup (m₁ m₂ : OuterMeasure α) : (m₁ ⊔ m₂).trim = m₁.trim ⊔ m₂.trim :=
   ext fun s => (trim_binop (sup_apply m₁ m₂) s).trans (sup_apply _ _ _).symm
 
 /-- `trim` sends the supremum of a countable family of outer measures to the supremum

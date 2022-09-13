@@ -101,10 +101,10 @@ and similarly if `pf` proves a negated weak inequality.
 unsafe def mk_non_strict_int_pf_of_strict_int_pf (pf : expr) : tactic expr := do
   let tp ← infer_type pf
   match tp with
-    | quote.1 ((%%ₓa) < %%ₓb) => to_expr (pquote.1 (Int.add_one_le_iff.mpr (%%ₓpf)))
-    | quote.1 ((%%ₓa) > %%ₓb) => to_expr (pquote.1 (Int.add_one_le_iff.mpr (%%ₓpf)))
-    | quote.1 ¬(%%ₓa) ≤ %%ₓb => to_expr (pquote.1 (Int.add_one_le_iff.mpr (le_of_not_gtₓ (%%ₓpf))))
-    | quote.1 ¬(%%ₓa) ≥ %%ₓb => to_expr (pquote.1 (Int.add_one_le_iff.mpr (le_of_not_gtₓ (%%ₓpf))))
+    | quote.1 ((%%ₓa) < %%ₓb) => to_expr (pquote.1 (Int.add_one_le_iffₓ.mpr (%%ₓpf)))
+    | quote.1 ((%%ₓa) > %%ₓb) => to_expr (pquote.1 (Int.add_one_le_iffₓ.mpr (%%ₓpf)))
+    | quote.1 ¬(%%ₓa) ≤ %%ₓb => to_expr (pquote.1 (Int.add_one_le_iffₓ.mpr (le_of_not_gtₓ (%%ₓpf))))
+    | quote.1 ¬(%%ₓa) ≥ %%ₓb => to_expr (pquote.1 (Int.add_one_le_iffₓ.mpr (le_of_not_gtₓ (%%ₓpf))))
     | _ => fail "mk_non_strict_int_pf_of_strict_int_pf failed: proof is not an inequality"
 
 /-- `is_nat_prop tp` is true iff `tp` is an inequality or equality between natural numbers

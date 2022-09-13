@@ -119,7 +119,7 @@ theorem circle_map_not_mem_ball (c : ℂ) (R : ℝ) (θ : ℝ) : circleMap c R �
   simp [dist_eq, le_abs_self]
 
 theorem circle_map_ne_mem_ball {c : ℂ} {R : ℝ} {w : ℂ} (hw : w ∈ Ball c R) (θ : ℝ) : circleMap c R θ ≠ w :=
-  (ne_of_mem_of_not_mem hw (circle_map_not_mem_ball _ _ _)).symm
+  (ne_of_mem_of_not_memₓ hw (circle_map_not_mem_ball _ _ _)).symm
 
 /-- The range of `circle_map c R` is the circle with center `c` and radius `|R|`. -/
 @[simp]
@@ -292,13 +292,13 @@ theorem circle_integrable_sub_zpow_iff {c w : ℂ} {R : ℝ} {n : ℤ} :
     have : x ∈ Ioo (0 : ℝ) 1 := by
       simpa [And.comm, x] using hθ'
     rw [← zpow_neg_one]
-    refine' (zpow_strict_anti this.1 this.2).le_iff_le.2 (Int.lt_add_one_iff.1 _)
+    refine' (zpow_strict_anti this.1 this.2).le_iff_le.2 (Int.lt_add_one_iffₓ.1 _)
     exact hn
     
   · rintro (rfl | H)
     exacts[circle_integrable_zero_radius,
       (((continuous_on_id.sub continuous_on_const).zpow₀ _) fun z hz =>
-          H.symm.imp_left fun hw => sub_ne_zero.2 <| ne_of_mem_of_not_mem hz hw).circle_integrable']
+          H.symm.imp_left fun hw => sub_ne_zero.2 <| ne_of_mem_of_not_memₓ hz hw).circle_integrable']
     
 
 @[simp]
@@ -522,7 +522,7 @@ theorem norm_cauchy_power_series_le (f : ℂ → E) (c : ℂ) (R : ℝ) (n : ℕ
         
     
 
-theorem le_radius_cauchy_power_series (f : ℂ → E) (c : ℂ) (R : ℝ≥0 ) : ↑R ≤ (cauchyPowerSeries f c R).radius := by
+theorem le_radius_cauchy_power_series (f : ℂ → E) (c : ℂ) (R : ℝ≥0) : ↑R ≤ (cauchyPowerSeries f c R).radius := by
   refine'
     (cauchyPowerSeries f c R).le_radius_of_bound ((2 * π)⁻¹ * ∫ θ : ℝ in 0 ..2 * π, ∥f (circleMap c R θ)∥) fun n => _
   refine' (mul_le_mul_of_nonneg_right (norm_cauchy_power_series_le _ _ _ _) (pow_nonneg R.coe_nonneg _)).trans _
@@ -591,7 +591,7 @@ theorem sum_cauchy_power_series_eq_integral {f : ℂ → E} {c : ℂ} {R : ℝ} 
 /-- For any circle integrable function `f`, the power series `cauchy_power_series f c R`, `R > 0`,
 converges to the Cauchy integral `(2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - w)⁻¹ • f z` on the open
 disc `metric.ball c R`. -/
-theorem has_fpower_series_on_cauchy_integral {f : ℂ → E} {c : ℂ} {R : ℝ≥0 } (hf : CircleIntegrable f c R) (hR : 0 < R) :
+theorem has_fpower_series_on_cauchy_integral {f : ℂ → E} {c : ℂ} {R : ℝ≥0} (hf : CircleIntegrable f c R) (hR : 0 < R) :
     HasFpowerSeriesOnBall (fun w => (2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - w)⁻¹ • f z) (cauchyPowerSeries f c R) c
       R :=
   { r_le := le_radius_cauchy_power_series _ _ _, r_pos := Ennreal.coe_pos.2 hR,

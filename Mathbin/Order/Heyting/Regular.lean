@@ -57,7 +57,7 @@ theorem is_regular_bot : IsRegular (⊥ : α) := by
 theorem is_regular_top : IsRegular (⊤ : α) := by
   rw [IsRegular, compl_top, compl_bot]
 
-theorem IsRegular.inf (ha : IsRegular a) (hb : IsRegular b) : IsRegular (a⊓b) := by
+theorem IsRegular.inf (ha : IsRegular a) (hb : IsRegular b) : IsRegular (a ⊓ b) := by
   rw [IsRegular, compl_compl_inf_distrib, ha.eq, hb.eq]
 
 theorem IsRegular.himp (ha : IsRegular a) (hb : IsRegular b) : IsRegular (a ⇨ b) := by
@@ -75,7 +75,7 @@ protected theorem IsRegular.disjoint_compl_right_iff (hb : IsRegular b) : Disjoi
 -- See note [reducible non-instances]
 /-- A Heyting algebra with regular excluded middle is a boolean algebra. -/
 @[reducible]
-def _root_.boolean_algebra.of_regular (h : ∀ a : α, IsRegular (a⊔aᶜ)) : BooleanAlgebra α :=
+def _root_.boolean_algebra.of_regular (h : ∀ a : α, IsRegular (a ⊔ aᶜ)) : BooleanAlgebra α :=
   have : ∀ a : α, IsCompl a (aᶜ) := fun a =>
     ⟨disjoint_compl_right,
       codisjoint_iff.2 <| by
@@ -111,7 +111,7 @@ instance : HasBot (Regular α) :=
   ⟨⟨⊥, is_regular_bot⟩⟩
 
 instance : HasInf (Regular α) :=
-  ⟨fun a b => ⟨a⊓b, a.2.inf b.2⟩⟩
+  ⟨fun a b => ⟨a ⊓ b, a.2.inf b.2⟩⟩
 
 instance : HasHimp (Regular α) :=
   ⟨fun a b => ⟨a ⇨ b, a.2.himp b.2⟩⟩
@@ -128,7 +128,7 @@ theorem coe_bot : ((⊥ : Regular α) : α) = ⊥ :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_inf (a b : Regular α) : (↑(a⊓b) : α) = a⊓b :=
+theorem coe_inf (a b : Regular α) : (↑(a ⊓ b) : α) = a ⊓ b :=
   rfl
 
 @[simp, norm_cast]
@@ -179,7 +179,7 @@ instance : Lattice (Regular α) :=
   gi.liftLattice
 
 @[simp, norm_cast]
-theorem coe_sup (a b : Regular α) : (↑(a⊔b) : α) = (a⊔b)ᶜᶜ :=
+theorem coe_sup (a b : Regular α) : (↑(a ⊔ b) : α) = (a ⊔ b)ᶜᶜ :=
   rfl
 
 instance : BooleanAlgebra (Regular α) :=
@@ -203,7 +203,7 @@ instance : BooleanAlgebra (Regular α) :=
           rw [le_compl_iff_disjoint_right, disjoint_left_comm, b.prop.disjoint_compl_left_iff]) }
 
 @[simp, norm_cast]
-theorem coe_sdiff (a b : Regular α) : (↑(a \ b) : α) = a⊓bᶜ :=
+theorem coe_sdiff (a b : Regular α) : (↑(a \ b) : α) = a ⊓ bᶜ :=
   rfl
 
 end Regular

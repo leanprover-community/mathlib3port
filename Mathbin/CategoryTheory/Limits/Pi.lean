@@ -35,13 +35,13 @@ variable {F : J ⥤ ∀ i, C i}
 -/
 def coneCompEval (c : Cone F) (i : I) : Cone (F ⋙ pi.eval C i) where
   x := c.x i
-  π := { app := fun j => c.π.app j i, naturality' := fun j j' f => congr_funₓ (c.π.naturality f) i }
+  π := { app := fun j => c.π.app j i, naturality' := fun j j' f => congr_fun (c.π.naturality f) i }
 
 /-- A cocone over `F : J ⥤ Π i, C i` has as its components cocones over each of the `F ⋙ pi.eval C i`.
 -/
 def coconeCompEval (c : Cocone F) (i : I) : Cocone (F ⋙ pi.eval C i) where
   x := c.x i
-  ι := { app := fun j => c.ι.app j i, naturality' := fun j j' f => congr_funₓ (c.ι.naturality f) i }
+  ι := { app := fun j => c.ι.app j i, naturality' := fun j j' f => congr_fun (c.ι.naturality f) i }
 
 /-- Given a family of cones over the `F ⋙ pi.eval C i`, we can assemble these together as a `cone F`.
 -/
@@ -75,7 +75,7 @@ def coneOfConeEvalIsLimit {c : ∀ i, Cone (F ⋙ pi.eval C i)} (P : ∀ i, IsLi
     exact (P i).fac (cone_comp_eval s i) j
   uniq' := fun s m w => by
     ext i
-    exact (P i).uniq (cone_comp_eval s i) (m i) fun j => congr_funₓ (w j) i
+    exact (P i).uniq (cone_comp_eval s i) (m i) fun j => congr_fun (w j) i
 
 /-- Given a family of colimit cocones over the `F ⋙ pi.eval C i`,
 assembling them together as a `cocone F` produces a colimit cocone.
@@ -88,7 +88,7 @@ def coconeOfCoconeEvalIsColimit {c : ∀ i, Cocone (F ⋙ pi.eval C i)} (P : ∀
     exact (P i).fac (cocone_comp_eval s i) j
   uniq' := fun s m w => by
     ext i
-    exact (P i).uniq (cocone_comp_eval s i) (m i) fun j => congr_funₓ (w j) i
+    exact (P i).uniq (cocone_comp_eval s i) (m i) fun j => congr_fun (w j) i
 
 section
 

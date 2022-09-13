@@ -62,8 +62,7 @@ theorem det_pos [DecidableEq n] : 0 < det M := by
   intro i _
   rw [hM.is_hermitian.eigenvalues_eq]
   apply hM.2 _ fun h => _
-  have h_det : hM.is_hermitian.eigenvector_matrixᵀ.det = 0 :=
-    Matrix.det_eq_zero_of_row_eq_zero i fun j => congr_funₓ h j
+  have h_det : hM.is_hermitian.eigenvector_matrixᵀ.det = 0 := Matrix.det_eq_zero_of_row_eq_zero i fun j => congr_fun h j
   simpa only [h_det, not_is_unit_zero] using is_unit_det_of_invertible hM.is_hermitian.eigenvector_matrixᵀ
 
 end PosDef

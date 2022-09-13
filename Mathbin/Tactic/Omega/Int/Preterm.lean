@@ -38,7 +38,7 @@ localized [Omega.Int] notation "&" k => Omega.Int.Preterm.cst k
 localized [Omega.Int] infixl:300 " ** " => Omega.Int.Preterm.var
 
 -- mathport name: preterm.add
-localized [Omega.Int] notation t "+*" s => Omega.Int.Preterm.add t s
+localized [Omega.Int] notation t " +* " s => Omega.Int.Preterm.add t s
 
 namespace Preterm
 
@@ -47,22 +47,22 @@ namespace Preterm
 def val (v : Nat → Int) : Preterm → Int
   | &i => i
   | i ** n => if i = 1 then v n else if i = -1 then -v n else v n * i
-  | t1+*t2 => t1.val + t2.val
+  | t1 +* t2 => t1.val + t2.val
 
 /-- Fresh de Brujin index not used by any variable in argument -/
 def freshIndex : Preterm → Nat
   | &_ => 0
   | i ** n => n + 1
-  | t1+*t2 => max t1.freshIndex t2.freshIndex
+  | t1 +* t2 => max t1.freshIndex t2.freshIndex
 
 @[simp]
 def addOne (t : Preterm) : Preterm :=
-  t+*&1
+  t +* &1
 
 def repr : Preterm → Stringₓ
   | &i => i.repr
   | i ** n => i.repr ++ "*x" ++ n.repr
-  | t1+*t2 => "(" ++ t1.repr ++ " + " ++ t2.repr ++ ")"
+  | t1 +* t2 => "(" ++ t1.repr ++ " + " ++ t2.repr ++ ")"
 
 end Preterm
 
@@ -75,7 +75,7 @@ open List.Func
 def canonize : Preterm → Term
   | &i => ⟨i, []⟩
   | i ** n => ⟨0, [] {n ↦ i}⟩
-  | t1+*t2 => Term.add (canonize t1) (canonize t2)
+  | t1 +* t2 => Term.add (canonize t1) (canonize t2)
 
 @[simp]
 theorem val_canonize {v : Nat → Int} : ∀ {t : Preterm}, (canonize t).val v = t.val v
@@ -90,7 +90,7 @@ theorem val_canonize {v : Nat → Int} : ∀ {t : Preterm}, (canonize t).val v =
       
     · rw [mul_comm]
       
-  | t+*s => by
+  | t +* s => by
     simp only [canonize, val_canonize, term.val_add, preterm.val]
 
 end Int

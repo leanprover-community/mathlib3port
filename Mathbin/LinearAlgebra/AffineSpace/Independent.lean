@@ -432,7 +432,7 @@ theorem exists_nontrivial_relation_sum_zero_of_not_affine_ind {t : Finset V} (h 
     ∃ f : V → k, (∑ e in t, f e • e) = 0 ∧ (∑ e in t, f e) = 0 ∧ ∃ x ∈ t, f x ≠ 0 := by
   classical
   rw [affine_independent_iff_of_fintype] at h
-  simp only [exists_prop, not_forall] at h
+  simp only [exists_propₓ, not_forall] at h
   obtain ⟨w, hw, hwt, i, hi⟩ := h
   simp only [Finset.weighted_vsub_eq_weighted_vsub_of_point_of_sum_eq_zero _ w (coe : t → V) hw 0, vsub_eq_sub,
     Finset.weighted_vsub_of_point_apply, sub_zero] at hwt
@@ -664,7 +664,7 @@ faces are given by the same subset of points. -/
 theorem centroid_eq_iff [CharZero k] {n : ℕ} (s : Simplex k P n) {fs₁ fs₂ : Finset (Finₓ (n + 1))} {m₁ m₂ : ℕ}
     (h₁ : fs₁.card = m₁ + 1) (h₂ : fs₂.card = m₂ + 1) : fs₁.centroid k s.points = fs₂.centroid k s.points ↔ fs₁ = fs₂ :=
   by
-  refine' ⟨fun h => _, congr_argₓ _⟩
+  refine' ⟨fun h => _, congr_arg _⟩
   rw [Finset.centroid_eq_affine_combination_fintype, Finset.centroid_eq_affine_combination_fintype] at h
   have ha :=
     (affine_independent_iff_indicator_eq_of_affine_combination_eq k s.points).1 s.independent _ _ _ _

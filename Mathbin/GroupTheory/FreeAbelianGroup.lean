@@ -496,7 +496,7 @@ def liftMonoid : (α →* R) ≃ (FreeAbelianGroup α →+* R) where
             exact f.map_mul _ _
             
           · simp_rw [neg_mul, map_neg, neg_mul]
-            exact congr_argₓ Neg.neg ih
+            exact congr_arg Neg.neg ih
             
           · intro x1 x2 ih1 ih2
             simp only [add_mulₓ, map_add, ih1, ih2]

@@ -65,7 +65,7 @@ theorem ext {P Q : Sylow p G} (h : (P : Subgroup G) = Q) : P = Q := by
   cases P <;> cases Q <;> congr
 
 theorem ext_iff {P Q : Sylow p G} : P = Q ↔ (P : Subgroup G) = Q :=
-  ⟨congr_argₓ coe, ext⟩
+  ⟨congr_arg coe, ext⟩
 
 instance : SetLike (Sylow p G) G where
   coe := coe
@@ -187,7 +187,7 @@ instance Sylow.pointwiseMulAction {α : Type _} [Groupₓ α] [MulDistribMulActi
     ⟨g • P, P.2.map _, fun Q hQ hS =>
       inv_smul_eq_iff.mp
         (P.3 (hQ.map _) fun s hs =>
-          (congr_argₓ (· ∈ g⁻¹ • Q) (inv_smul_smul g s)).mp
+          (congr_arg (· ∈ g⁻¹ • Q) (inv_smul_smul g s)).mp
             (smul_mem_pointwise_smul (g • s) g⁻¹ Q (hS (smul_mem_pointwise_smul s g P hs))))⟩
   one_smul := fun P => Sylow.ext (one_smul α P)
   mul_smul := fun g h P => Sylow.ext (mul_smul g h P)
@@ -219,10 +219,9 @@ theorem Sylow.smul_eq_iff_mem_normalizer {g : G} {P : Sylow p G} : g • P = P �
   rw [eq_comm, SetLike.ext_iff, ← inv_mem_iff, mem_normalizer_iff, inv_invₓ]
   exact
     forall_congrₓ fun h =>
-      iff_congr Iff.rfl
-        ⟨fun ⟨a, b, c⟩ =>
-          (congr_argₓ _ c).mp ((congr_argₓ (· ∈ P.1) (MulAut.inv_apply_self G (MulAut.conj g) a)).mpr b), fun hh =>
-          ⟨(MulAut.conj g)⁻¹ h, hh, MulAut.apply_inv_self G (MulAut.conj g) h⟩⟩
+      iff_congrₓ Iff.rfl
+        ⟨fun ⟨a, b, c⟩ => (congr_arg _ c).mp ((congr_arg (· ∈ P.1) (MulAut.inv_apply_self G (MulAut.conj g) a)).mpr b),
+          fun hh => ⟨(MulAut.conj g)⁻¹ h, hh, MulAut.apply_inv_self G (MulAut.conj g) h⟩⟩
 
 theorem Sylow.smul_eq_of_normal {g : G} {P : Sylow p G} [h : (P : Subgroup G).Normal] : g • P = P := by
   simp only [Sylow.smul_eq_iff_mem_normalizer, normalizer_eq_top.mpr h, mem_top]
@@ -232,7 +231,7 @@ theorem Subgroup.sylow_mem_fixed_points_iff (H : Subgroup G) {P : Sylow p G} :
   simp_rw [SetLike.le_def, ← Sylow.smul_eq_iff_mem_normalizer] <;> exact Subtype.forall
 
 theorem IsPGroup.inf_normalizer_sylow {P : Subgroup G} (hP : IsPGroup p P) (Q : Sylow p G) :
-    P⊓(Q : Subgroup G).normalizer = P⊓Q :=
+    P ⊓ (Q : Subgroup G).normalizer = P ⊓ Q :=
   le_antisymmₓ
     (le_inf inf_le_left (sup_eq_right.mp (Q.3 (hP.to_inf_left.to_sup_of_normal_right' Q.2 inf_le_right) le_sup_right)))
     (inf_le_inf_left P le_normalizer)
@@ -254,7 +253,7 @@ instance [hp : Fact p.Prime] [Finite (Sylow p G)] : IsPretransitive G (Sylow p G
         _ ↔ S.1.1 = R := ⟨fun h => R.3 S.1.2 h, ge_of_eqₓ⟩
         
     suffices Set.Nonempty (fixed_points Q (orbit G P)) by
-      exact Exists.elim this fun R hR => (congr_argₓ _ (Sylow.ext (H.mp hR))).mp R.2
+      exact Exists.elim this fun R hR => (congr_arg _ (Sylow.ext (H.mp hR))).mp R.2
     apply Q.2.nonempty_fixed_point_of_prime_not_dvd_card
     refine' fun h => hp.out.not_dvd_one (nat.modeq_zero_iff_dvd.mp _)
     calc
@@ -263,7 +262,7 @@ instance [hp : Fact p.Prime] [Finite (Sylow p G)] : IsPretransitive G (Sylow p G
       _ ≡ 0 [MOD p] := nat.modeq_zero_iff_dvd.mpr h
       
     rw [← Set.card_singleton (⟨P, mem_orbit_self P⟩ : orbit G P)]
-    refine' card_congr' (congr_argₓ _ (Eq.symm _))
+    refine' card_congr' (congr_arg _ (Eq.symm _))
     rw [Set.eq_singleton_iff_unique_mem]
     exact ⟨H.mpr rfl, fun R h => Subtype.ext (Sylow.ext (H.mp h))⟩⟩
 
@@ -339,7 +338,7 @@ theorem card_sylow_eq_index_normalizer [Fact p.Prime] [Fintype (Sylow p G)] (P :
 
 theorem card_sylow_dvd_index [Fact p.Prime] [Fintype (Sylow p G)] (P : Sylow p G) :
     card (Sylow p G) ∣ (P : Subgroup G).index :=
-  ((congr_argₓ _ (card_sylow_eq_index_normalizer P)).mp dvd_rfl).trans (index_dvd_of_le le_normalizer)
+  ((congr_arg _ (card_sylow_eq_index_normalizer P)).mp dvd_rfl).trans (index_dvd_of_le le_normalizer)
 
 theorem not_dvd_index_sylow' [hp : Fact p.Prime] (P : Sylow p G) [(P : Subgroup G).Normal]
     (hP : (P : Subgroup G).index ≠ 0) : ¬p ∣ (P : Subgroup G).index := by
@@ -369,7 +368,7 @@ theorem not_dvd_index_sylow [hp : Fact p.Prime] [Finite (Sylow p G)] (P : Sylow 
 /-- Frattini's Argument: If `N` is a normal subgroup of `G`, and if `P` is a Sylow `p`-subgroup
   of `N`, then `N_G(P) ⊔ N = G`. -/
 theorem Sylow.normalizer_sup_eq_top {p : ℕ} [Fact p.Prime] {N : Subgroup G} [N.Normal] [Finite (Sylow p N)]
-    (P : Sylow p N) : ((↑P : Subgroup N).map N.Subtype).normalizer⊔N = ⊤ := by
+    (P : Sylow p N) : ((↑P : Subgroup N).map N.Subtype).normalizer ⊔ N = ⊤ := by
   refine' top_le_iff.mp fun g hg => _
   obtain ⟨n, hn⟩ := exists_smul_eq N ((MulAut.conjNormal g : MulAut N) • P) P
   rw [← inv_mul_cancel_leftₓ (↑n) g, sup_comm]
@@ -381,7 +380,7 @@ theorem Sylow.normalizer_sup_eq_top {p : ℕ} [Fact p.Prime] {N : Subgroup G} [N
             (show Function.Injective (MulAut.conj (↑n * g)).toMonoidHom from
               (MulAut.conj (↑n * g)).Injective)).symm.trans
       _
-  rw [map_map, ← congr_argₓ (map N.subtype) hn, map_map]
+  rw [map_map, ← congr_arg (map N.subtype) hn, map_map]
   rfl
 
 end InfiniteSylow
@@ -513,7 +512,7 @@ theorem exists_subgroup_card_pow_succ [Fintype G] {p : ℕ} {n : ℕ} [hp : Fact
       pow_succ'ₓ, ← hH, Fintype.card_congr hequiv, ← hx, order_eq_card_zpowers, ← Fintype.card_prod]
     exact @Fintype.card_congr _ _ (id _) (id _) (preimage_mk_equiv_subgroup_times_set _ _), by
     intro y hy
-    simp only [exists_prop, Subgroup.coe_subtype, mk'_apply, Subgroup.mem_map, Subgroup.mem_comap]
+    simp only [exists_propₓ, Subgroup.coe_subtype, mk'_apply, Subgroup.mem_map, Subgroup.mem_comap]
     refine' ⟨⟨y, le_normalizer hy⟩, ⟨0, _⟩, rfl⟩
     rw [zpow_zero, eq_comm, QuotientGroup.eq_one_iff]
     simpa using hy⟩
@@ -633,10 +632,10 @@ theorem normal_of_all_max_subgroups_normal [Finite G] (hnc : ∀ H : Subgroup G,
         exfalso
         apply hK.1
         calc
-          K = (↑P : Subgroup G).normalizer⊔K := by
+          K = (↑P : Subgroup G).normalizer ⊔ K := by
             rw [sup_eq_right.mpr]
             exact hNK
-          _ = (map K.subtype (↑P' : Subgroup K)).normalizer⊔K := by
+          _ = (map K.subtype (↑P' : Subgroup K)).normalizer ⊔ K := by
             simp [map_comap_eq_self, hPK]
           _ = ⊤ := normalizer_sup_eq_top P'
           

@@ -167,7 +167,7 @@ theorem finprod_eq_if {p : Prop} [Decidable p] {x : M} : (∏ᶠ i : p, x) = if 
 
 @[to_additive]
 theorem finprod_congr {f g : α → M} (h : ∀ x, f x = g x) : finprod f = finprod g :=
-  congr_argₓ _ <| funext h
+  congr_arg _ <| funext h
 
 @[congr, to_additive]
 theorem finprod_congr_Prop {p q : Prop} {f : p → M} {g : q → M} (hpq : p = q) (hfg : ∀ h : q, f (hpq.mpr h) = g h) :
@@ -400,7 +400,7 @@ theorem finprod_mem_inter_mul_support_eq' (f : α → M) (s t : Set α) (h : ∀
     (∏ᶠ i ∈ s, f i) = ∏ᶠ i ∈ t, f i := by
   apply finprod_mem_inter_mul_support_eq
   ext x
-  exact and_congr_left (h x)
+  exact and_congr_leftₓ (h x)
 
 @[to_additive]
 theorem finprod_mem_univ (f : α → M) : (∏ᶠ i ∈ @Set.Univ α, f i) = ∏ᶠ i : α, f i :=
@@ -845,7 +845,7 @@ theorem finprod_prod_comm (s : Finset β) (f : α → β → M) (h : ∀ b ∈ s
     by
     rw [finite.coe_to_finset]
     intro x hx
-    simp only [exists_prop, mem_Union, Ne.def, mem_mul_support, Finset.mem_coe]
+    simp only [exists_propₓ, mem_Union, Ne.def, mem_mul_support, Finset.mem_coe]
     contrapose! hx
     rw [mem_mul_support, not_not, Finset.prod_congr rfl hx, Finset.prod_const_one]
   rw [finprod_eq_prod_of_mul_support_subset _ hU, Finset.prod_comm]
@@ -873,7 +873,7 @@ theorem Finset.mul_support_of_fiberwise_prod_subset_image [DecidableEq β] (s : 
   simp only [Finset.coe_image, Set.mem_image, Finset.mem_coe, Function.support_subset_iff]
   intro b h
   suffices (s.filter fun a : α => g a = b).Nonempty by
-    simpa only [s.fiber_nonempty_iff_mem_image g b, Finset.mem_image, exists_prop]
+    simpa only [s.fiber_nonempty_iff_mem_image g b, Finset.mem_image, exists_propₓ]
   exact Finset.nonempty_of_prod_ne_one h
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b)

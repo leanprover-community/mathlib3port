@@ -721,7 +721,7 @@ def compositionAsSetEquiv (n : ℕ) : CompositionAsSet n ≃ Finset (Finₓ (n -
   left_inv := by
     intro c
     ext i
-    simp only [exists_prop, add_commₓ, Set.mem_to_finset, true_orₓ, or_trueₓ, Set.mem_set_of_eq]
+    simp only [exists_propₓ, add_commₓ, Set.mem_to_finset, true_orₓ, or_trueₓ, Set.mem_set_of_eq]
     constructor
     · rintro (rfl | rfl | ⟨j, hj1, hj2⟩)
       · exact c.zero_mem
@@ -759,7 +759,8 @@ def compositionAsSetEquiv (n : ℕ) : CompositionAsSet n ≃ Finset (Finₓ (n -
       rw [add_commₓ]
       apply (Nat.succ_pred_eq_of_posₓ _).symm
       exact (zero_le i.val).trans_lt (i.2.trans_le (Nat.sub_leₓ n 1))
-    simp only [Finₓ.ext_iff, exists_prop, Finₓ.coe_zero, add_commₓ, Set.mem_to_finset, Set.mem_set_of_eq, Finₓ.coe_last]
+    simp only [Finₓ.ext_iff, exists_propₓ, Finₓ.coe_zero, add_commₓ, Set.mem_to_finset, Set.mem_set_of_eq,
+      Finₓ.coe_last]
     erw [Set.mem_set_of_eq]
     simp only [this, false_orₓ, add_right_injₓ, add_eq_zero_iff, one_ne_zero, false_andₓ, Finₓ.coe_mk]
     constructor

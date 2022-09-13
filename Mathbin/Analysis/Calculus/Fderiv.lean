@@ -308,7 +308,7 @@ theorem HasFderivAt.le_of_lip' {f : E → F} {f' : E →L[𝕜] F} {x₀ : E} (h
 /-- Converse to the mean value inequality: if `f` is differentiable at `x₀` and `C`-lipschitz
 on a neighborhood of `x₀` then it its derivative at `x₀` has norm bounded by `C`. -/
 theorem HasFderivAt.le_of_lip {f : E → F} {f' : E →L[𝕜] F} {x₀ : E} (hf : HasFderivAt f f' x₀) {s : Set E}
-    (hs : s ∈ 𝓝 x₀) {C : ℝ≥0 } (hlip : LipschitzOnWith C f s) : ∥f'∥ ≤ C := by
+    (hs : s ∈ 𝓝 x₀) {C : ℝ≥0} (hlip : LipschitzOnWith C f s) : ∥f'∥ ≤ C := by
   refine' hf.le_of_lip' C.coe_nonneg _
   filter_upwards [hs] with x hx using hlip.norm_sub_le hx (mem_of_mem_nhds hs)
 
@@ -355,7 +355,7 @@ protected theorem HasStrictFderivAt.differentiable_at (hf : HasStrictFderivAt f 
 
 /-- If `f` is strictly differentiable at `x` with derivative `f'` and `K > ∥f'∥₊`, then `f` is
 `K`-Lipschitz in a neighborhood of `x`. -/
-theorem HasStrictFderivAt.exists_lipschitz_on_with_of_nnnorm_lt (hf : HasStrictFderivAt f f' x) (K : ℝ≥0 )
+theorem HasStrictFderivAt.exists_lipschitz_on_with_of_nnnorm_lt (hf : HasStrictFderivAt f f' x) (K : ℝ≥0)
     (hK : ∥f'∥₊ < K) : ∃ s ∈ 𝓝 x, LipschitzOnWith K f s := by
   have := hf.add_is_O_with (f'.is_O_with_comp _ _) hK
   simp only [sub_add_cancel, is_O_with] at this
@@ -438,7 +438,7 @@ theorem fderiv_eq {f' : E → E →L[𝕜] F} (h : ∀ x, HasFderivAt f (f' x) x
 /-- Converse to the mean value inequality: if `f` is differentiable at `x₀` and `C`-lipschitz
 on a neighborhood of `x₀` then it its derivative at `x₀` has norm bounded by `C`.
 Version using `fderiv`. -/
-theorem FderivAt.le_of_lip {f : E → F} {x₀ : E} (hf : DifferentiableAt 𝕜 f x₀) {s : Set E} (hs : s ∈ 𝓝 x₀) {C : ℝ≥0 }
+theorem FderivAt.le_of_lip {f : E → F} {x₀ : E} (hf : DifferentiableAt 𝕜 f x₀) {s : Set E} (hs : s ∈ 𝓝 x₀) {C : ℝ≥0}
     (hlip : LipschitzOnWith C f s) : ∥fderiv 𝕜 f x₀∥ ≤ C :=
   hf.HasFderivAt.le_of_lip hs hlip
 

@@ -70,11 +70,11 @@ namespace RelHomClass
 variable {F : Type _}
 
 theorem map_inf [SemilatticeInf α] [LinearOrderₓ β] [RelHomClass F ((· < ·) : β → β → Prop) ((· < ·) : α → α → Prop)]
-    (a : F) (m n : β) : a (m⊓n) = a m⊓a n :=
+    (a : F) (m n : β) : a (m ⊓ n) = a m ⊓ a n :=
   (StrictMono.monotone fun x y => map_rel a).map_inf m n
 
 theorem map_sup [SemilatticeSup α] [LinearOrderₓ β] [RelHomClass F ((· > ·) : β → β → Prop) ((· > ·) : α → α → Prop)]
-    (a : F) (m n : β) : a (m⊔n) = a m⊔a n :=
+    (a : F) (m n : β) : a (m ⊔ n) = a m ⊔ a n :=
   @map_inf αᵒᵈ βᵒᵈ _ _ _ _ _ _ _
 
 protected theorem is_irrefl [RelHomClass F r s] (f : F) : ∀ [IsIrrefl β s], IsIrrefl α r
@@ -322,7 +322,7 @@ protected theorem is_trans : ∀ (f : r ↪r s) [IsTrans β s], IsTrans α r
   | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b c h₁ h₂ => o.1 (H _ _ _ (o.2 h₁) (o.2 h₂))⟩
 
 protected theorem is_total : ∀ (f : r ↪r s) [IsTotal β s], IsTotal α r
-  | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b => (or_congr o o).1 (H _ _)⟩
+  | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b => (or_congrₓ o o).1 (H _ _)⟩
 
 protected theorem is_preorder : ∀ (f : r ↪r s) [IsPreorder β s], IsPreorder α r
   | f, H => { f.is_refl, f.is_trans with }
@@ -337,7 +337,7 @@ protected theorem is_strict_order : ∀ (f : r ↪r s) [IsStrictOrder β s], IsS
   | f, H => { f.is_irrefl, f.is_trans with }
 
 protected theorem is_trichotomous : ∀ (f : r ↪r s) [IsTrichotomous β s], IsTrichotomous α r
-  | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b => (or_congr o (or_congr f.inj'.eq_iff o)).1 (H _ _)⟩
+  | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b => (or_congrₓ o (or_congrₓ f.inj'.eq_iff o)).1 (H _ _)⟩
 
 protected theorem is_strict_total_order : ∀ (f : r ↪r s) [IsStrictTotalOrder β s], IsStrictTotalOrder α r
   | f, H => { f.is_trichotomous, f.is_strict_order with }

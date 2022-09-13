@@ -96,7 +96,7 @@ theorem is_integral_of_submodule_noetherian (S : Subalgebra R A) (H : IsNoetheri
     (hx : x ∈ S) : IsIntegral R x := by
   suffices IsIntegral R (show S from ⟨x, hx⟩) by
     rcases this with ⟨p, hpm, hpx⟩
-    replace hpx := congr_argₓ S.val hpx
+    replace hpx := congr_arg S.val hpx
     refine' ⟨p, hpm, Eq.trans _ hpx⟩
     simp only [aeval_def, eval₂, sum_def]
     rw [S.val.map_sum]
@@ -448,7 +448,7 @@ theorem le_integral_closure_iff_is_integral {S : Subalgebra R A} : S ≤ integra
       show IsIntegral R (algebraMap S A x) ↔ IsIntegral R x from is_integral_algebra_map_iff Subtype.coe_injective)
 
 theorem is_integral_sup {S T : Subalgebra R A} :
-    Algebra.IsIntegral R ↥(S⊔T) ↔ Algebra.IsIntegral R S ∧ Algebra.IsIntegral R T := by
+    Algebra.IsIntegral R ↥(S ⊔ T) ↔ Algebra.IsIntegral R S ∧ Algebra.IsIntegral R T := by
   simp only [← le_integral_closure_iff_is_integral, sup_le_iff]
 
 /-- Mapping an integral closure along an `alg_equiv` gives the integral closure. -/
@@ -815,7 +815,7 @@ theorem is_integral_trans_aux (x : B) {p : A[X]} (pmonic : Monic p) (hp : aeval 
       
     
   · convert hp using 1
-    replace hq := congr_argₓ (eval x) hq
+    replace hq := congr_arg (eval x) hq
     convert hq using 1 <;> symm <;> apply eval_map
     
 
@@ -897,7 +897,7 @@ theorem RingHom.is_integral_quotient_of_is_integral {I : Ideal S} (hf : f.IsInte
   rintro ⟨x⟩
   obtain ⟨p, ⟨p_monic, hpx⟩⟩ := hf x
   refine' ⟨p.map (Ideal.Quotient.mk _), ⟨p_monic.map _, _⟩⟩
-  simpa only [hom_eval₂, eval₂_map] using congr_argₓ (Ideal.Quotient.mk I) hpx
+  simpa only [hom_eval₂, eval₂_map] using congr_arg (Ideal.Quotient.mk I) hpx
 
 theorem is_integral_quotient_of_is_integral {I : Ideal A} (hRA : IsIntegral R A) :
     IsIntegral (R ⧸ I.comap (algebraMap R A)) (A ⧸ I) :=

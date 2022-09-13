@@ -26,7 +26,7 @@ section Zero
 
 variable [Zero M] {s t : Set α} {f g : α → M} {a : α} {l : Filter α}
 
-theorem indicator_eventually_eq (hf : f =ᶠ[l⊓𝓟 s] g) (hs : s =ᶠ[l] t) : indicatorₓ s f =ᶠ[l] indicatorₓ t g :=
+theorem indicator_eventually_eq (hf : f =ᶠ[l ⊓ 𝓟 s] g) (hs : s =ᶠ[l] t) : indicatorₓ s f =ᶠ[l] indicatorₓ t g :=
   (eventually_inf_principal.1 hf).mp <|
     hs.mem_iff.mono fun x hst hfg =>
       by_cases
@@ -51,7 +51,7 @@ section Order
 
 variable [Zero β] [Preorderₓ β] {s t : Set α} {f g : α → β} {a : α} {l : Filter α}
 
-theorem indicator_eventually_le_indicator (h : f ≤ᶠ[l⊓𝓟 s] g) : indicatorₓ s f ≤ᶠ[l] indicatorₓ s g :=
+theorem indicator_eventually_le_indicator (h : f ≤ᶠ[l ⊓ 𝓟 s] g) : indicatorₓ s f ≤ᶠ[l] indicatorₓ s g :=
   (eventually_inf_principal.1 h).mono fun a h => indicator_rel_indicator le_rflₓ h
 
 end Order

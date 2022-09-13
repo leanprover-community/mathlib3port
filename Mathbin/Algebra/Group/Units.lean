@@ -216,12 +216,12 @@ theorem inv_mul_cancel_right (a : α) (b : αˣ) : a * ↑b⁻¹ * b = a := by
 @[simp, to_additive]
 theorem mul_right_inj (a : αˣ) {b c : α} : (a : α) * b = a * c ↔ b = c :=
   ⟨fun h => by
-    simpa only [inv_mul_cancel_leftₓ] using congr_argₓ ((· * ·) ↑(a⁻¹ : αˣ)) h, congr_argₓ _⟩
+    simpa only [inv_mul_cancel_leftₓ] using congr_arg ((· * ·) ↑(a⁻¹ : αˣ)) h, congr_arg _⟩
 
 @[simp, to_additive]
 theorem mul_left_inj (a : αˣ) {b c : α} : b * a = c * a ↔ b = c :=
   ⟨fun h => by
-    simpa only [mul_inv_cancel_rightₓ] using congr_argₓ (· * ↑(a⁻¹ : αˣ)) h, congr_argₓ _⟩
+    simpa only [mul_inv_cancel_rightₓ] using congr_arg (· * ↑(a⁻¹ : αˣ)) h, congr_arg _⟩
 
 @[to_additive]
 theorem eq_mul_inv_iff_mul_eq {a b : α} : a = b * ↑c⁻¹ ↔ a * c = b :=

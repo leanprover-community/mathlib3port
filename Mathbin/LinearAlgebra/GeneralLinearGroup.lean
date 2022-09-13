@@ -124,7 +124,7 @@ namespace SpecialLinearGroup
 variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRingₓ R]
 
 instance hasCoeToGeneralLinearGroup : Coe (SpecialLinearGroup n R) (GL n R) :=
-  ⟨fun A => ⟨↑A, ↑A⁻¹, congr_argₓ coe (mul_right_invₓ A), congr_argₓ coe (mul_left_invₓ A)⟩⟩
+  ⟨fun A => ⟨↑A, ↑A⁻¹, congr_arg coe (mul_right_invₓ A), congr_arg coe (mul_left_invₓ A)⟩⟩
 
 @[simp]
 theorem coe_to_GL_det (g : SpecialLinearGroup n R) : (g : GL n R).det = 1 :=

@@ -74,7 +74,7 @@ theorem eq_bot_of_generator_maximal_submodule_image_eq_zero {N O : Submodule R M
     [(ϕ.submoduleImage N).IsPrincipal] (hgen : generator (ϕ.submoduleImage N) = 0) : N = ⊥ := by
   rw [Submodule.eq_bot_iff]
   intro x hx
-  refine' congr_argₓ coe (show (⟨x, hNO hx⟩ : O) = 0 from b.ext_elem fun i => _)
+  refine' congr_arg coe (show (⟨x, hNO hx⟩ : O) = 0 from b.ext_elem fun i => _)
   rw [(eq_bot_iff_generator_eq_zero _).mpr hgen] at hϕ
   rw [LinearEquiv.map_zero, Finsupp.zero_apply]
   refine' (Submodule.eq_bot_iff _).mp (hϕ (Finsupp.lapply i ∘ₗ ↑b.repr) bot_le) _ _
@@ -201,7 +201,7 @@ theorem Submodule.basis_of_pid_aux [Fintype ι] {O : Type _} [AddCommGroupₓ O]
         simp only [LinearMap.map_sum, LinearMap.map_smul]
         rfl)
   have a_smul_y' : a • y' = y := by
-    refine' congr_argₓ coe (show (a • ⟨y', y'M⟩ : M) = ⟨y, N_le_M yN⟩ from _)
+    refine' congr_arg coe (show (a • ⟨y', y'M⟩ : M) = ⟨y, N_le_M yN⟩ from _)
     rw [← b'M.sum_repr ⟨y, N_le_M yN⟩, mk_y', Finset.smul_sum]
     refine' Finset.sum_congr rfl fun i _ => _
     rw [← mul_smul, ← hc]
@@ -238,7 +238,7 @@ theorem Submodule.basis_of_pid_aux [Fintype ι] {O : Type _} [AddCommGroupₓ O]
     rw [LinearMap.mem_ker] at hx'
     have hc' : (c • ⟨y', y'M⟩ + ⟨x, xM⟩ : M) = 0 := Subtype.coe_injective hc
     simpa only [LinearMap.map_add, LinearMap.map_zero, LinearMap.map_smul, smul_eq_mul, add_zeroₓ, mul_eq_zero,
-      ϕy'_ne_zero, hx', or_falseₓ] using congr_argₓ ϕ hc'
+      ϕy'_ne_zero, hx', or_falseₓ] using congr_arg ϕ hc'
   -- And `a • y'` is orthogonal to `N'`.
   have ay'_ortho_N' : ∀ (c : R), ∀ z ∈ N', c • a • y' + z = 0 → c = 0 := by
     intro c z zN' hc

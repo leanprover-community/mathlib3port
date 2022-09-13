@@ -55,7 +55,7 @@ theorem inverses_right (h : Semiconj f ga gb) (ha : RightInverse ga' ga) (hb : L
 theorem option_map {f : α → β} {ga : α → α} {gb : β → β} (h : Semiconj f ga gb) :
     Semiconj (Option.map f) (Option.map ga) (Option.map gb)
   | none => rfl
-  | some a => congr_argₓ some <| h _
+  | some a => congr_arg some <| h _
 
 end Semiconj
 

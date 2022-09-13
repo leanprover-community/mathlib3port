@@ -307,7 +307,7 @@ theorem span_restrict_scalars_eq_span_of_surjective (h : Function.Surjective (al
 
 theorem coe_span_eq_span_of_surjective (h : Function.Surjective (algebraMap R A)) (s : Set M) :
     (Submodule.span A s : Set M) = Submodule.span R s :=
-  congr_argₓ coe (Algebra.span_restrict_scalars_eq_span_of_surjective h s)
+  congr_arg coe (Algebra.span_restrict_scalars_eq_span_of_surjective h s)
 
 end Algebra
 

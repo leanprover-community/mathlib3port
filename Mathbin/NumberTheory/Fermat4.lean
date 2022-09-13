@@ -129,7 +129,7 @@ theorem exists_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, Mi
   cases' Int.mod_two_eq_zero_or_one a0 with hap hap
   · cases' Int.mod_two_eq_zero_or_one b0 with hbp hbp
     · exfalso
-      have h1 : 2 ∣ (Int.gcdₓ a0 b0 : ℤ) := Int.dvd_gcd (Int.dvd_of_mod_eq_zero hap) (Int.dvd_of_mod_eq_zero hbp)
+      have h1 : 2 ∣ (Int.gcdₓ a0 b0 : ℤ) := Int.dvd_gcd (Int.dvd_of_mod_eq_zeroₓ hap) (Int.dvd_of_mod_eq_zeroₓ hbp)
       rw [int.gcd_eq_one_iff_coprime.mpr (coprime_of_minimal hf)] at h1
       revert h1
       norm_num

@@ -59,7 +59,7 @@ variable (α)
 /-- A compactness property for a complete lattice is that any `sup`-closed non-empty subset
 contains its `Sup`. -/
 def IsSupClosedCompact : Prop :=
-  ∀ (s : Set α) (h : s.Nonempty), (∀ (a b) (_ : a ∈ s) (_ : b ∈ s), a⊔b ∈ s) → sup s ∈ s
+  ∀ (s : Set α) (h : s.Nonempty), (∀ (a b) (_ : a ∈ s) (_ : b ∈ s), a ⊔ b ∈ s) → sup s ∈ s
 
 /-- A compactness property for a complete lattice is that any subset has a finite subset with the
 same `Sup`. -/
@@ -119,7 +119,7 @@ theorem is_compact_element_iff_le_of_directed_Sup_le (k : α) :
     -- S is directed, nonempty, and still has sup above k.
     have dir_US : DirectedOn (· ≤ ·) S := by
       rintro x ⟨c, hc⟩ y ⟨d, hd⟩
-      use x⊔y
+      use x ⊔ y
       constructor
       · use c ∪ d
         constructor
@@ -190,7 +190,7 @@ theorem finset_sup_compact_of_compact {α β : Type _} [CompleteLattice α] {f :
   specialize h p hps
   rw [is_compact_element_iff_le_of_directed_Sup_le] at h
   specialize h d hemp hdir (le_transₓ (Finset.le_sup hps) hsup)
-  simpa only [exists_prop]
+  simpa only [exists_propₓ]
 
 theorem WellFounded.is_Sup_finite_compact (h : WellFounded ((· > ·) : α → α → Prop)) : IsSupFiniteCompact α := by
   intro s
@@ -250,7 +250,7 @@ theorem IsSupClosedCompact.well_founded (h : IsSupClosedCompact α) : WellFounde
     apply Set.mem_range_self
     
   · rintro x ⟨m, hm⟩ y ⟨n, hn⟩
-    use m⊔n
+    use m ⊔ n
     rw [← hm, ← hn]
     apply RelHomClass.map_sup a
     
@@ -322,7 +322,7 @@ theorem WellFounded.finite_of_set_independent (h : WellFounded ((· > ·) : α �
         simpa [not_or_distrib] using hx₂⟩
     
   obtain ⟨x, hx₀, hx₁, hx₂⟩ := contra
-  replace hs : x⊓Sup s = ⊥
+  replace hs : x ⊓ Sup s = ⊥
   · have :=
       hs.mono
         (by
@@ -359,7 +359,7 @@ theorem Sup_compact_le_eq (b) : sup { c : α | CompleteLattice.IsCompactElement 
 @[simp]
 theorem Sup_compact_eq_top : sup { a : α | CompleteLattice.IsCompactElement a } = ⊤ := by
   refine' Eq.trans (congr rfl (Set.ext fun x => _)) (Sup_compact_le_eq ⊤)
-  exact (and_iff_left le_top).symm
+  exact (and_iff_leftₓ le_top).symm
 
 theorem le_iff_compact_le_imp {a b : α} : a ≤ b ↔ ∀ c : α, CompleteLattice.IsCompactElement c → c ≤ a → c ≤ b :=
   ⟨fun ab c hc ca => le_transₓ ca ab, fun h => by
@@ -367,7 +367,7 @@ theorem le_iff_compact_le_imp {a b : α} : a ≤ b ↔ ∀ c : α, CompleteLatti
     exact Sup_le_Sup fun c hc => ⟨hc.1, h c hc.1 hc.2⟩⟩
 
 /-- This property is sometimes referred to as `α` being upper continuous. -/
-theorem inf_Sup_eq_of_directed_on (h : DirectedOn (· ≤ ·) s) : a⊓sup s = ⨆ b ∈ s, a⊓b :=
+theorem inf_Sup_eq_of_directed_on (h : DirectedOn (· ≤ ·) s) : a ⊓ sup s = ⨆ b ∈ s, a ⊓ b :=
   le_antisymmₓ
     (by
       rw [le_iff_compact_le_imp]
@@ -384,7 +384,7 @@ theorem inf_Sup_eq_of_directed_on (h : DirectedOn (· ≤ ·) s) : a⊓sup s = �
     supr_inf_le_inf_Sup
 
 /-- This property is equivalent to `α` being upper continuous. -/
-theorem inf_Sup_eq_supr_inf_sup_finset : a⊓sup s = ⨆ (t : Finset α) (H : ↑t ⊆ s), a⊓t.sup id :=
+theorem inf_Sup_eq_supr_inf_sup_finset : a ⊓ sup s = ⨆ (t : Finset α) (H : ↑t ⊆ s), a ⊓ t.sup id :=
   le_antisymmₓ
     (by
       rw [le_iff_compact_le_imp]
@@ -521,7 +521,7 @@ instance (priority := 100) is_atomistic_of_complemented_lattice [ComplementedLat
 theorem complemented_lattice_of_Sup_atoms_eq_top (h : sup { a : α | IsAtom a } = ⊤) : ComplementedLattice α :=
   ⟨fun b => by
     obtain ⟨s, ⟨s_ind, b_inf_Sup_s, s_atoms⟩, s_max⟩ :=
-      zorn_subset { s : Set α | CompleteLattice.SetIndependent s ∧ b⊓Sup s = ⊥ ∧ ∀ a ∈ s, IsAtom a } _
+      zorn_subset { s : Set α | CompleteLattice.SetIndependent s ∧ b ⊓ Sup s = ⊥ ∧ ∀ a ∈ s, IsAtom a } _
     · refine' ⟨Sup s, le_of_eqₓ b_inf_Sup_s, h.symm.trans_le <| Sup_le_iff.2 fun a ha => _⟩
       rw [← inf_eq_left]
       refine' (ha.le_iff.mp inf_le_left).resolve_left fun con => ha.1 _

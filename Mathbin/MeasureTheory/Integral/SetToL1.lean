@@ -1145,7 +1145,7 @@ end Order
 theorem norm_set_to_L1_le_norm_set_to_L1s_clm (hT : DominatedFinMeasAdditive μ T C) :
     ∥setToL1 hT∥ ≤ ∥setToL1sClm α E μ hT∥ :=
   calc
-    ∥setToL1 hT∥ ≤ (1 : ℝ≥0 ) * ∥setToL1sClm α E μ hT∥ := by
+    ∥setToL1 hT∥ ≤ (1 : ℝ≥0) * ∥setToL1sClm α E μ hT∥ := by
       refine'
         ContinuousLinearMap.op_norm_extend_le (set_to_L1s_clm α E μ hT) (coe_to_Lp α E ℝ)
           (simple_func.dense_range one_ne_top) fun x => le_of_eqₓ _

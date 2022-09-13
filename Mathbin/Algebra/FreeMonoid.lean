@@ -60,7 +60,7 @@ theorem of_def (x : α) : of x = [x] :=
   rfl
 
 @[to_additive]
-theorem of_injective : Function.Injective (@of α) := fun a b => List.head_eq_of_cons_eq
+theorem of_injective : Function.Injective (@of α) := fun a b => List.head_eq_of_cons_eqₓ
 
 /-- Recursor for `free_monoid` using `1` and `of x * xs` instead of `[]` and `x :: xs`. -/
 @[elabAsElim, to_additive "Recursor for `free_add_monoid` using `0` and `of x + xs` instead of `[]` and `x :: xs`."]
@@ -97,7 +97,7 @@ theorem lift_comp_of (f : α → M) : lift f ∘ of = f :=
 
 @[simp, to_additive]
 theorem lift_eval_of (f : α → M) (x : α) : lift f (of x) = f x :=
-  congr_funₓ (lift_comp_of f) x
+  congr_fun (lift_comp_of f) x
 
 @[simp, to_additive]
 theorem lift_restrict (f : FreeMonoid α →* M) : lift (f ∘ of) = f :=

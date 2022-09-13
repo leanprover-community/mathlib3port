@@ -296,7 +296,7 @@ def Submonoid.commMonoidTopologicalClosure [T2Space M] (s : Submonoid M) (hs : �
     CommMonoidₓ s.topologicalClosure :=
   { s.topologicalClosure.toMonoid with
     mul_comm :=
-      have : ∀ x ∈ s, ∀ y ∈ s, x * y = y * x := fun x hx y hy => congr_argₓ Subtype.val (hs ⟨x, hx⟩ ⟨y, hy⟩)
+      have : ∀ x ∈ s, ∀ y ∈ s, x * y = y * x := fun x hx y hy => congr_arg Subtype.val (hs ⟨x, hx⟩ ⟨y, hy⟩)
       fun ⟨x, hx⟩ ⟨y, hy⟩ =>
       Subtype.ext <| eq_on_closure₂ this continuous_mul (continuous_snd.mul continuous_fst) x hx y hy }
 
@@ -553,7 +553,7 @@ theorem has_continuous_mul_infi {ts : ι' → TopologicalSpace M} (h' : ∀ i, @
 
 @[to_additive]
 theorem has_continuous_mul_inf {t₁ t₂ : TopologicalSpace M} (h₁ : @HasContinuousMul M t₁ _)
-    (h₂ : @HasContinuousMul M t₂ _) : @HasContinuousMul M (t₁⊓t₂) _ := by
+    (h₂ : @HasContinuousMul M t₂ _) : @HasContinuousMul M (t₁ ⊓ t₂) _ := by
   rw [inf_eq_infi]
   refine' has_continuous_mul_infi fun b => _
   cases b <;> assumption

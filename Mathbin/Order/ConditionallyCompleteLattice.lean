@@ -397,11 +397,11 @@ theorem cInf_singleton (a : α) : inf {a} = a :=
   is_least_singleton.cInf_eq
 
 @[simp]
-theorem cSup_pair (a b : α) : sup {a, b} = a⊔b :=
+theorem cSup_pair (a b : α) : sup {a, b} = a ⊔ b :=
   (@is_lub_pair _ _ a b).cSup_eq (insert_nonempty _ _)
 
 @[simp]
-theorem cInf_pair (a b : α) : inf {a, b} = a⊓b :=
+theorem cInf_pair (a b : α) : inf {a, b} = a ⊓ b :=
   (@is_glb_pair _ _ a b).cInf_eq (insert_nonempty _ _)
 
 /-- If a set is bounded below and above, and nonempty, its infimum is less than or equal to
@@ -412,33 +412,33 @@ theorem cInf_le_cSup (hb : BddBelow s) (ha : BddAbove s) (ne : s.Nonempty) : inf
 /-- The sup of a union of two sets is the max of the suprema of each subset, under the assumptions
 that all sets are bounded above and nonempty.-/
 theorem cSup_union (hs : BddAbove s) (sne : s.Nonempty) (ht : BddAbove t) (tne : t.Nonempty) :
-    sup (s ∪ t) = sup s⊔sup t :=
+    sup (s ∪ t) = sup s ⊔ sup t :=
   ((is_lub_cSup sne hs).union (is_lub_cSup tne ht)).cSup_eq sne.inl
 
 /-- The inf of a union of two sets is the min of the infima of each subset, under the assumptions
 that all sets are bounded below and nonempty.-/
 theorem cInf_union (hs : BddBelow s) (sne : s.Nonempty) (ht : BddBelow t) (tne : t.Nonempty) :
-    inf (s ∪ t) = inf s⊓inf t :=
+    inf (s ∪ t) = inf s ⊓ inf t :=
   @cSup_union αᵒᵈ _ _ _ hs sne ht tne
 
 /-- The supremum of an intersection of two sets is bounded by the minimum of the suprema of each
 set, if all sets are bounded above and nonempty.-/
-theorem cSup_inter_le (hs : BddAbove s) (ht : BddAbove t) (hst : (s ∩ t).Nonempty) : sup (s ∩ t) ≤ sup s⊓sup t :=
+theorem cSup_inter_le (hs : BddAbove s) (ht : BddAbove t) (hst : (s ∩ t).Nonempty) : sup (s ∩ t) ≤ sup s ⊓ sup t :=
   (cSup_le hst) fun x hx => le_inf (le_cSup hs hx.1) (le_cSup ht hx.2)
 
 /-- The infimum of an intersection of two sets is bounded below by the maximum of the
 infima of each set, if all sets are bounded below and nonempty.-/
-theorem le_cInf_inter : BddBelow s → BddBelow t → (s ∩ t).Nonempty → inf s⊔inf t ≤ inf (s ∩ t) :=
+theorem le_cInf_inter : BddBelow s → BddBelow t → (s ∩ t).Nonempty → inf s ⊔ inf t ≤ inf (s ∩ t) :=
   @cSup_inter_le αᵒᵈ _ _ _
 
 /-- The supremum of insert a s is the maximum of a and the supremum of s, if s is
 nonempty and bounded above.-/
-theorem cSup_insert (hs : BddAbove s) (sne : s.Nonempty) : sup (insert a s) = a⊔sup s :=
+theorem cSup_insert (hs : BddAbove s) (sne : s.Nonempty) : sup (insert a s) = a ⊔ sup s :=
   ((is_lub_cSup sne hs).insert a).cSup_eq (insert_nonempty a s)
 
 /-- The infimum of insert a s is the minimum of a and the infimum of s, if s is
 nonempty and bounded below.-/
-theorem cInf_insert (hs : BddBelow s) (sne : s.Nonempty) : inf (insert a s) = a⊓inf s :=
+theorem cInf_insert (hs : BddBelow s) (sne : s.Nonempty) : inf (insert a s) = a ⊓ inf s :=
   @cSup_insert αᵒᵈ _ _ _ hs sne
 
 @[simp]
@@ -543,7 +543,7 @@ theorem cinfi_const [hι : Nonempty ι] {a : α} : (⨅ b : ι, a) = a :=
 
 @[simp]
 theorem supr_unique [Unique ι] {s : ι → α} : (⨆ i, s i) = s default := by
-  have : ∀ i, s i = s default := fun i => congr_argₓ s (Unique.eq_default i)
+  have : ∀ i, s i = s default := fun i => congr_arg s (Unique.eq_default i)
   simp only [this, csupr_const]
 
 @[simp]

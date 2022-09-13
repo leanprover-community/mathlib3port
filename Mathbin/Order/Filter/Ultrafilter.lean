@@ -77,10 +77,10 @@ theorem coe_inj : (f : Filter α) = g ↔ f = g :=
 theorem ext ⦃f g : Ultrafilter α⦄ (h : ∀ s, s ∈ f ↔ s ∈ g) : f = g :=
   coe_injective <| Filter.ext h
 
-theorem le_of_inf_ne_bot (f : Ultrafilter α) {g : Filter α} (hg : NeBot (↑f⊓g)) : ↑f ≤ g :=
+theorem le_of_inf_ne_bot (f : Ultrafilter α) {g : Filter α} (hg : NeBot (↑f ⊓ g)) : ↑f ≤ g :=
   le_of_inf_eq (f.unique inf_le_left hg)
 
-theorem le_of_inf_ne_bot' (f : Ultrafilter α) {g : Filter α} (hg : NeBot (g⊓f)) : ↑f ≤ g :=
+theorem le_of_inf_ne_bot' (f : Ultrafilter α) {g : Filter α} (hg : NeBot (g ⊓ f)) : ↑f ≤ g :=
   f.le_of_inf_ne_bot <| by
     rwa [inf_comm]
 
@@ -105,7 +105,7 @@ theorem compl_mem_iff_not_mem : sᶜ ∈ f ↔ s ∉ f := by
   rw [← compl_not_mem_iff, compl_compl]
 
 theorem diff_mem_iff (f : Ultrafilter α) : s \ t ∈ f ↔ s ∈ f ∧ t ∉ f :=
-  inter_mem_iff.trans <| and_congr Iff.rfl compl_mem_iff_not_mem
+  inter_mem_iff.trans <| and_congrₓ Iff.rfl compl_mem_iff_not_mem
 
 /-- If `sᶜ ∉ f ↔ s ∈ f`, then `f` is an ultrafilter. The other implication is given by
 `ultrafilter.compl_not_mem_iff`.  -/
@@ -241,7 +241,7 @@ theorem comap_pure {m : α → β} (a : α) (inj : Injective m) (large) : comap 
       rw [coe_pure, ← principal_singleton, ← image_singleton, preimage_image_eq _ inj]
 
 theorem pure_injective : Injective (pure : α → Ultrafilter α) := fun a b h =>
-  Filter.pure_injective (congr_argₓ Ultrafilter.toFilter h : _)
+  Filter.pure_injective (congr_arg Ultrafilter.toFilter h : _)
 
 instance [Inhabited α] : Inhabited (Ultrafilter α) :=
   ⟨pure default⟩
@@ -424,29 +424,29 @@ open Filter
 
 variable {m : α → β} {s : Set α} {g : Ultrafilter β}
 
-theorem comap_inf_principal_ne_bot_of_image_mem (h : m '' s ∈ g) : (Filter.comap m g⊓𝓟 s).ne_bot :=
+theorem comap_inf_principal_ne_bot_of_image_mem (h : m '' s ∈ g) : (Filter.comap m g ⊓ 𝓟 s).ne_bot :=
   Filter.comap_inf_principal_ne_bot_of_image_mem g.ne_bot h
 
 /-- Ultrafilter extending the inf of a comapped ultrafilter and a principal ultrafilter. -/
 noncomputable def ofComapInfPrincipal (h : m '' s ∈ g) : Ultrafilter α :=
-  @of _ (Filter.comap m g⊓𝓟 s) (comap_inf_principal_ne_bot_of_image_mem h)
+  @of _ (Filter.comap m g ⊓ 𝓟 s) (comap_inf_principal_ne_bot_of_image_mem h)
 
 theorem of_comap_inf_principal_mem (h : m '' s ∈ g) : s ∈ ofComapInfPrincipal h := by
-  let f := Filter.comap m g⊓𝓟 s
+  let f := Filter.comap m g ⊓ 𝓟 s
   haveI : f.ne_bot := comap_inf_principal_ne_bot_of_image_mem h
   have : s ∈ f := mem_inf_of_right (mem_principal_self s)
   exact le_def.mp (of_le _) s this
 
 theorem of_comap_inf_principal_eq_of_map (h : m '' s ∈ g) : (ofComapInfPrincipal h).map m = g := by
-  let f := Filter.comap m g⊓𝓟 s
+  let f := Filter.comap m g ⊓ 𝓟 s
   haveI : f.ne_bot := comap_inf_principal_ne_bot_of_image_mem h
   apply eq_of_le
   calc
     Filter.map m (of f) ≤ Filter.map m f := map_mono (of_le _)
-    _ ≤ (Filter.map m <| Filter.comap m g)⊓Filter.map m (𝓟 s) := map_inf_le
-    _ = (Filter.map m <| Filter.comap m g)⊓(𝓟 <| m '' s) := by
+    _ ≤ (Filter.map m <| Filter.comap m g) ⊓ Filter.map m (𝓟 s) := map_inf_le
+    _ = (Filter.map m <| Filter.comap m g) ⊓ (𝓟 <| m '' s) := by
       rw [map_principal]
-    _ ≤ g⊓(𝓟 <| m '' s) := inf_le_inf_right _ map_comap_le
+    _ ≤ g ⊓ (𝓟 <| m '' s) := inf_le_inf_right _ map_comap_le
     _ = g := inf_of_le_left (le_principal_iff.mpr h)
     
 

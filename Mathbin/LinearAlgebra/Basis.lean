@@ -416,7 +416,7 @@ theorem reindex_range_self (i : ι) (h := Set.mem_range_self i) : b.reindexRange
 theorem reindex_range_repr_self (i : ι) : b.reindexRange.repr (b i) = Finsupp.single ⟨b i, mem_range_self i⟩ 1 :=
   calc
     b.reindexRange.repr (b i) = b.reindexRange.repr (b.reindexRange ⟨b i, mem_range_self i⟩) :=
-      congr_argₓ _ (b.reindex_range_self _ _).symm
+      congr_arg _ (b.reindex_range_self _ _).symm
     _ = Finsupp.single ⟨b i, mem_range_self i⟩ 1 := b.reindexRange.repr_self _
     
 
@@ -766,7 +766,7 @@ protected def empty [Subsingleton M] [IsEmpty ι] : Basis ι R M :=
 
 instance emptyUnique [Subsingleton M] [IsEmpty ι] : Unique (Basis ι R M) where
   default := Basis.empty M
-  uniq := fun ⟨x⟩ => congr_argₓ of_repr <| Subsingleton.elim _ _
+  uniq := fun ⟨x⟩ => congr_arg of_repr <| Subsingleton.elim _ _
 
 end Empty
 
@@ -881,14 +881,14 @@ def equiv' (f : M → M') (g : M' → M) (hf : ∀ i, f (b i) ∈ Range b') (hg 
           Exists.elim (hf i) fun i' hi' => by
             rw [LinearMap.comp_apply, b.constr_basis, Function.comp_applyₓ, ← hi', b'.constr_basis,
               Function.comp_applyₓ, hi', hgf, LinearMap.id_apply]
-      fun x => congr_argₓ (fun h : M →ₗ[R] M => h x) this,
+      fun x => congr_arg (fun h : M →ₗ[R] M => h x) this,
     right_inv :=
       have : (b.constr R (f ∘ b)).comp (b'.constr R (g ∘ b')) = LinearMap.id :=
         b'.ext fun i =>
           Exists.elim (hg i) fun i' hi' => by
             rw [LinearMap.comp_apply, b'.constr_basis, Function.comp_applyₓ, ← hi', b.constr_basis,
               Function.comp_applyₓ, hi', hfg, LinearMap.id_apply]
-      fun x => congr_argₓ (fun h : M' →ₗ[R] M' => h x) this }
+      fun x => congr_arg (fun h : M' →ₗ[R] M' => h x) this }
 
 @[simp]
 theorem equiv'_apply (f : M → M') (g : M' → M) (hf hg hgf hfg) (i : ι) :
@@ -1028,7 +1028,7 @@ protected noncomputable def span : Basis ι R (span R (range v)) :=
     rwa [h_x_eq_y]
 
 protected theorem span_apply (i : ι) : (Basis.span hli i : M) = v i :=
-  congr_argₓ (coe : span R (range v) → M) <| Basis.mk_apply (linear_independent_span hli) _ i
+  congr_arg (coe : span R (range v) → M) <| Basis.mk_apply (linear_independent_span hli) _ i
 
 end Span
 
@@ -1106,7 +1106,7 @@ noncomputable def mkFinConsOfLe {n : ℕ} {N O : Submodule R M} (y : M) (yO : y 
     (hNO : N ≤ O) (hli : ∀ (c : R), ∀ x ∈ N, c • y + x = 0 → c = 0) (hsp : ∀ z ∈ O, ∃ c : R, z + c • y ∈ N) :
     Basis (Finₓ (n + 1)) R O :=
   mkFinCons ⟨y, yO⟩ (b.map (Submodule.comapSubtypeEquivOfLe hNO).symm)
-    (fun c x hc hx => hli c x (Submodule.mem_comap.mp hc) (congr_argₓ coe hx)) fun z => hsp z z.2
+    (fun c x hc hx => hli c x (Submodule.mem_comap.mp hc) (congr_arg coe hx)) fun z => hsp z z.2
 
 @[simp]
 theorem coe_mk_fin_cons_of_le {n : ℕ} {N O : Submodule R M} (y : M) (yO : y ∈ O) (b : Basis (Finₓ n) R N) (hNO : N ≤ O)

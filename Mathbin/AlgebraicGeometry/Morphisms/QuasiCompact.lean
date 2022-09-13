@@ -214,7 +214,7 @@ theorem quasi_compact_stable_under_composition : MorphismProperty.StableUnderCom
 
 @[elabAsElim]
 theorem compact_open_induction_on {P : Opens X.Carrier → Prop} (S : Opens X.Carrier) (hS : IsCompact S.1) (h₁ : P ⊥)
-    (h₂ : ∀ (S : Opens X.Carrier) (hS : IsCompact S.1) (U : X.AffineOpens), P S → P (S⊔U)) : P S := by
+    (h₂ : ∀ (S : Opens X.Carrier) (hS : IsCompact S.1) (U : X.AffineOpens), P S → P (S ⊔ U)) : P S := by
   classical
   obtain ⟨s, hs, hs'⟩ := (is_compact_open_iff_eq_finset_affine_union S.1).mp ⟨hS, S.2⟩
   replace hs' : S = supr fun i : s => (i : opens X.carrier) := by

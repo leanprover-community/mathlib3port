@@ -322,7 +322,7 @@ theorem collinear_iff_of_mem {s : Set P} {p₀ : P} (h : p₀ ∈ s) :
   · rintro ⟨v, hp₀v⟩
     use v
     intro w hw
-    have hs : vectorSpan k s ≤ k∙v := by
+    have hs : vectorSpan k s ≤ k ∙ v := by
       rw [vector_span_eq_span_vsub_set_right k h, Submodule.span_le, Set.subset_def]
       intro x hx
       rw [SetLike.mem_coe, Submodule.mem_span_singleton]

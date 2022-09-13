@@ -96,19 +96,19 @@ local notation "Proj.T| " U =>
 
 -- mathport name: «exprpbo »
 -- the underlying topological space of `Proj` restricted to some open set
-local notation "pbo" x => ProjectiveSpectrum.basicOpen 𝒜 x
+local notation "pbo " x => ProjectiveSpectrum.basicOpen 𝒜 x
 
 -- mathport name: «exprsbo »
 -- basic open sets in `Proj`
-local notation "sbo" f => PrimeSpectrum.basicOpen f
+local notation "sbo " f => PrimeSpectrum.basicOpen f
 
 -- mathport name: «exprSpec »
 -- basic open sets in `Spec`
-local notation "Spec" ring => Spec.locallyRingedSpaceObj (CommRingₓₓ.of Ringₓ)
+local notation "Spec " ring => Spec.locallyRingedSpaceObj (CommRingₓₓ.of Ringₓ)
 
 -- mathport name: «exprSpec.T »
 -- `Spec` as a locally ringed space
-local notation "Spec.T" ring => (Spec.locallyRingedSpaceObj (CommRingₓₓ.of Ringₓ)).toSheafedSpace.toPresheafedSpace.1
+local notation "Spec.T " ring => (Spec.locallyRingedSpaceObj (CommRingₓₓ.of Ringₓ)).toSheafedSpace.toPresheafedSpace.1
 
 -- the underlying topological space of `Spec`
 section
@@ -164,36 +164,36 @@ def degreeZeroPart {f : A} {m : ℕ} (f_deg : f ∈ 𝒜 m) : Subring (Away f) w
 end
 
 -- mathport name: «exprA⁰_ »
-local notation "A⁰_" f_deg => degreeZeroPart f_deg
+local notation "A⁰_ " f_deg => degreeZeroPart f_deg
 
 section
 
 variable {𝒜}
 
-instance (f : A) {m : ℕ} (f_deg : f ∈ 𝒜 m) : CommRingₓ (A⁰_f_deg) :=
+instance (f : A) {m : ℕ} (f_deg : f ∈ 𝒜 m) : CommRingₓ (A⁰_ f_deg) :=
   (degreeZeroPart f_deg).toCommRing
 
 /-- Every element in the degree zero part of `Aₓ` can be written as `a/x^n` for some `a` and `n : ℕ`,
 `degree_zero_part.deg` picks this natural number `n`
 -/
-def degreeZeroPart.deg {f : A} {m : ℕ} {f_deg : f ∈ 𝒜 m} (x : A⁰_f_deg) : ℕ :=
+def degreeZeroPart.deg {f : A} {m : ℕ} {f_deg : f ∈ 𝒜 m} (x : A⁰_ f_deg) : ℕ :=
   x.2.some
 
 /-- Every element in the degree zero part of `Aₓ` can be written as `a/x^n` for some `a` and `n : ℕ`,
 `degree_zero_part.deg` picks the numerator `a`
 -/
-def degreeZeroPart.num {f : A} {m : ℕ} {f_deg : f ∈ 𝒜 m} (x : A⁰_f_deg) : A :=
+def degreeZeroPart.num {f : A} {m : ℕ} {f_deg : f ∈ 𝒜 m} (x : A⁰_ f_deg) : A :=
   x.2.some_spec.some.1
 
-theorem degreeZeroPart.num_mem {f : A} {m : ℕ} {f_deg : f ∈ 𝒜 m} (x : A⁰_f_deg) :
+theorem degreeZeroPart.num_mem {f : A} {m : ℕ} {f_deg : f ∈ 𝒜 m} (x : A⁰_ f_deg) :
     degreeZeroPart.num x ∈ 𝒜 (m * degreeZeroPart.deg x) :=
   x.2.some_spec.some.2
 
-theorem degreeZeroPart.eq {f : A} {m : ℕ} {f_deg : f ∈ 𝒜 m} (x : A⁰_f_deg) :
+theorem degreeZeroPart.eq {f : A} {m : ℕ} {f_deg : f ∈ 𝒜 m} (x : A⁰_ f_deg) :
     (x : Away f) = mk (degreeZeroPart.num x) ⟨f ^ degreeZeroPart.deg x, ⟨_, rfl⟩⟩ :=
   x.2.some_spec.some_spec
 
-theorem degreeZeroPart.coe_mul {f : A} {m : ℕ} (f_deg : f ∈ 𝒜 m) (x y : A⁰_f_deg) : (↑(x * y) : Away f) = x * y :=
+theorem degreeZeroPart.coe_mul {f : A} {m : ℕ} (f_deg : f ∈ 𝒜 m) (x y : A⁰_ f_deg) : (↑(x * y) : Away f) = x * y :=
   rfl
 
 end
@@ -216,14 +216,14 @@ variable {𝒜} {f : A} {m : ℕ} (f_deg : f ∈ 𝒜 m) (x : Proj| pbo f)
 
 /-- For any `x` in `Proj| (pbo f)`, the corresponding ideal in `Spec A⁰_f`. This fact that this ideal
 is prime is proven in `Top_component.forward.to_fun`-/
-def carrier : Ideal (A⁰_f_deg) :=
-  Ideal.comap (algebraMap (A⁰_f_deg) (Away f)) (Ideal.span <| algebraMap A (Away f) '' x.1.asHomogeneousIdeal)
+def carrier : Ideal (A⁰_ f_deg) :=
+  Ideal.comap (algebraMap (A⁰_ f_deg) (Away f)) (Ideal.span <| algebraMap A (Away f) '' x.1.asHomogeneousIdeal)
 
-theorem mem_carrier_iff (z : A⁰_f_deg) :
+theorem mem_carrier_iff (z : A⁰_ f_deg) :
     z ∈ carrier f_deg x ↔ ↑z ∈ Ideal.span (algebraMap A (Away f) '' x.1.asHomogeneousIdeal) :=
   Iff.rfl
 
-theorem MemCarrier.clear_denominator [DecidableEq (Away f)] {z : A⁰_f_deg} (hz : z ∈ carrier f_deg x) :
+theorem MemCarrier.clear_denominator [DecidableEq (Away f)] {z : A⁰_ f_deg} (hz : z ∈ carrier f_deg x) :
     ∃ (c : algebraMap A (Away f) '' x.1.asHomogeneousIdeal →₀ Away f)(N : ℕ)(acd : ∀ y ∈ c.Support.Image c, A),
       f ^ N • ↑z =
         algebraMap A (Away f)
@@ -284,7 +284,7 @@ theorem carrier_ne_top : carrier f_deg x ≠ ⊤ := by
 /-- The function between the basic open set `D(f)` in `Proj` to the corresponding basic open set in
 `Spec A⁰_f`. This is bundled into a continuous map in `Top_component.forward`.
 -/
-def toFun (x : Proj.T| pbo f) : Spec.T A⁰_f_deg :=
+def toFun (x : Proj.T| pbo f) : Spec.T A⁰_ f_deg :=
   ⟨carrier f_deg x, carrier_ne_top f_deg x, fun x1 x2 hx12 => by
     classical
     rcases x1, x2 with ⟨⟨x1, hx1⟩, ⟨x2, hx2⟩⟩
@@ -331,10 +331,10 @@ The preimage of basic open set `D(a/f^n)` in `Spec A⁰_f` under the forward map
 `Spec A⁰_f` is the basic open set `D(a) ∩ D(f)` in  `Proj A`. This lemma is used to prove that the
 forward map is continuous.
 -/
-theorem preimage_eq (a : A) (n : ℕ) (a_mem_degree_zero : (mk a ⟨f ^ n, ⟨n, rfl⟩⟩ : Away f) ∈ A⁰_f_deg) :
+theorem preimage_eq (a : A) (n : ℕ) (a_mem_degree_zero : (mk a ⟨f ^ n, ⟨n, rfl⟩⟩ : Away f) ∈ A⁰_ f_deg) :
     toFun 𝒜 f_deg ⁻¹'
-        (sbo(⟨mk a ⟨f ^ n, ⟨_, rfl⟩⟩, a_mem_degree_zero⟩ : A⁰_f_deg) : Set (PrimeSpectrum { x // x ∈ A⁰_f_deg })) =
-      { x | x.1 ∈ (pbo f)⊓pbo a } :=
+        (sbo (⟨mk a ⟨f ^ n, ⟨_, rfl⟩⟩, a_mem_degree_zero⟩ : A⁰_ f_deg) : Set (PrimeSpectrum { x // x ∈ A⁰_ f_deg })) =
+      { x | x.1 ∈ (pbo f) ⊓ pbo a } :=
   by
   classical
   ext1 y
@@ -386,7 +386,7 @@ variable {𝒜}
 /-- The continuous function between the basic open set `D(f)` in `Proj` to the corresponding basic
 open set in `Spec A⁰_f`.
 -/
-def toSpec {f : A} (m : ℕ) (f_deg : f ∈ 𝒜 m) : (Proj.T| pbo f) ⟶ Spec.T A⁰_f_deg where
+def toSpec {f : A} (m : ℕ) (f_deg : f ∈ 𝒜 m) : (Proj.T| pbo f) ⟶ Spec.T A⁰_ f_deg where
   toFun := ToSpec.toFun 𝒜 f_deg
   continuous_to_fun := by
     apply is_topological_basis.continuous PrimeSpectrum.is_topological_basis_basic_opens
@@ -394,7 +394,7 @@ def toSpec {f : A} (m : ℕ) (f_deg : f ∈ 𝒜 m) : (Proj.T| pbo f) ⟶ Spec.T
     induction' g using Localization.induction_on with data
     obtain ⟨a, ⟨_, ⟨n, rfl⟩⟩⟩ := data
     erw [to_Spec.preimage_eq]
-    refine' is_open_induced_iff.mpr ⟨(pbo f).1⊓(pbo a).1, IsOpen.inter (pbo f).2 (pbo a).2, _⟩
+    refine' is_open_induced_iff.mpr ⟨(pbo f).1 ⊓ (pbo a).1, IsOpen.inter (pbo f).2 (pbo a).2, _⟩
     ext z
     constructor <;> intro hz <;> simpa [Set.mem_preimage]
 

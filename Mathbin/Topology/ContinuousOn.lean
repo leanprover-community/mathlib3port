@@ -69,7 +69,7 @@ theorem nhds_within_basis_open (a : α) (t : Set α) : (𝓝[t] a).HasBasis (fun
   nhds_within_has_basis (nhds_basis_opens a) t
 
 theorem mem_nhds_within {t : Set α} {a : α} {s : Set α} : t ∈ 𝓝[s] a ↔ ∃ u, IsOpen u ∧ a ∈ u ∧ u ∩ s ⊆ t := by
-  simpa only [exists_prop, and_assoc, and_comm] using (nhds_within_basis_open a s).mem_iff
+  simpa only [exists_propₓ, and_assocₓ, and_comm] using (nhds_within_basis_open a s).mem_iff
 
 theorem mem_nhds_within_iff_exists_mem_nhds_inter {t : Set α} {a : α} {s : Set α} : t ∈ 𝓝[s] a ↔ ∃ u ∈ 𝓝 a, u ∩ s ⊆ t :=
   (nhds_within_has_basis (𝓝 a).basis_sets s).mem_iff
@@ -197,15 +197,15 @@ theorem preimage_nhds_within_coinduced {π : α → β} {s : Set β} {t : Set α
 theorem nhds_within_empty (a : α) : 𝓝[∅] a = ⊥ := by
   rw [nhdsWithin, principal_empty, inf_bot_eq]
 
-theorem nhds_within_union (a : α) (s t : Set α) : 𝓝[s ∪ t] a = 𝓝[s] a⊔𝓝[t] a := by
+theorem nhds_within_union (a : α) (s t : Set α) : 𝓝[s ∪ t] a = 𝓝[s] a ⊔ 𝓝[t] a := by
   delta' nhdsWithin
   rw [← inf_sup_left, sup_principal]
 
-theorem nhds_within_inter (a : α) (s t : Set α) : 𝓝[s ∩ t] a = 𝓝[s] a⊓𝓝[t] a := by
+theorem nhds_within_inter (a : α) (s t : Set α) : 𝓝[s ∩ t] a = 𝓝[s] a ⊓ 𝓝[t] a := by
   delta' nhdsWithin
   rw [inf_left_comm, inf_assoc, inf_principal, ← inf_assoc, inf_idem]
 
-theorem nhds_within_inter' (a : α) (s t : Set α) : 𝓝[s ∩ t] a = 𝓝[s] a⊓𝓟 t := by
+theorem nhds_within_inter' (a : α) (s t : Set α) : 𝓝[s ∩ t] a = 𝓝[s] a ⊓ 𝓟 t := by
   delta' nhdsWithin
   rw [← inf_principal, inf_assoc]
 
@@ -218,7 +218,7 @@ theorem nhds_within_singleton (a : α) : 𝓝[{a}] a = pure a := by
   rw [nhdsWithin, principal_singleton, inf_eq_right.2 (pure_le_nhds a)]
 
 @[simp]
-theorem nhds_within_insert (a : α) (s : Set α) : 𝓝[insert a s] a = pure a⊔𝓝[s] a := by
+theorem nhds_within_insert (a : α) (s : Set α) : 𝓝[insert a s] a = pure a ⊔ 𝓝[s] a := by
   rw [← singleton_union, nhds_within_union, nhds_within_singleton]
 
 theorem mem_nhds_within_insert {a : α} {s t : Set α} : t ∈ 𝓝[insert a s] a ↔ a ∈ t ∧ t ∈ 𝓝[s] a := by
@@ -231,7 +231,7 @@ theorem insert_mem_nhds_iff {a : α} {s : Set α} : insert a s ∈ 𝓝 a ↔ s 
   simp only [nhdsWithin, mem_inf_principal, mem_compl_iff, mem_singleton_iff, or_iff_not_imp_left, insert_def]
 
 @[simp]
-theorem nhds_within_compl_singleton_sup_pure (a : α) : 𝓝[≠] a⊔pure a = 𝓝 a := by
+theorem nhds_within_compl_singleton_sup_pure (a : α) : 𝓝[≠] a ⊔ pure a = 𝓝 a := by
   rw [← nhds_within_singleton, ← nhds_within_union, compl_union_self, nhds_within_univ]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -248,14 +248,15 @@ theorem nhds_within_prod {α : Type _} [TopologicalSpace α] {β : Type _} [Topo
   exact prod_mem_prod hu hv
 
 theorem nhds_within_pi_eq' {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι} (hI : I.Finite)
-    (s : ∀ i, Set (α i)) (x : ∀ i, α i) : 𝓝[pi I s] x = ⨅ i, comap (fun x => x i) (𝓝 (x i)⊓⨅ hi : i ∈ I, 𝓟 (s i)) := by
+    (s : ∀ i, Set (α i)) (x : ∀ i, α i) : 𝓝[pi I s] x = ⨅ i, comap (fun x => x i) (𝓝 (x i) ⊓ ⨅ hi : i ∈ I, 𝓟 (s i)) :=
+  by
   simp only [nhdsWithin, nhds_pi, Filter.pi, comap_inf, comap_infi, pi_def, comap_principal, ← infi_principal_finite hI,
     ← infi_inf_eq]
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (i «expr ∉ » I)
 theorem nhds_within_pi_eq {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι} (hI : I.Finite)
     (s : ∀ i, Set (α i)) (x : ∀ i, α i) :
-    𝓝[pi I s] x = (⨅ i ∈ I, comap (fun x => x i) (𝓝[s i] x i))⊓⨅ (i) (_ : i ∉ I), comap (fun x => x i) (𝓝 (x i)) := by
+    𝓝[pi I s] x = (⨅ i ∈ I, comap (fun x => x i) (𝓝[s i] x i)) ⊓ ⨅ (i) (_ : i ∉ I), comap (fun x => x i) (𝓝 (x i)) := by
   simp only [nhdsWithin, nhds_pi, Filter.pi, pi_def, ← infi_principal_finite hI, comap_inf, comap_principal, eval]
   rw [infi_split _ fun i => i ∈ I, inf_right_comm]
   simp only [infi_inf_eq]

@@ -18,7 +18,6 @@ defined.
   former lemma takes `fintype α` as an explicit argument while the latter takes it as an instance
   argument.
 * `fintype.of_finite` noncomputably creates a `fintype` instance from a `finite` instance.
-* `finite_or_infinite` is that every type is either `finite` or `infinite`.
 
 ## Implementation notes
 
@@ -43,10 +42,6 @@ noncomputable section
 open Classical
 
 variable {α β γ : Type _}
-
-theorem finite_or_infinite (α : Type _) : Finite α ∨ Infinite α := by
-  rw [← not_finite_iff_infinite]
-  apply em
 
 namespace Finite
 

@@ -118,7 +118,7 @@ variable {α : Type _} {ι ι' : Sort _} [LinearOrderₓ α]
 
 theorem is_pi_system_image_Iio (s : Set α) : IsPiSystem (Iio '' s) := by
   rintro _ ⟨a, ha, rfl⟩ _ ⟨b, hb, rfl⟩ -
-  exact ⟨a⊓b, inf_ind a b ha hb, Iio_inter_Iio.symm⟩
+  exact ⟨a ⊓ b, inf_ind a b ha hb, Iio_inter_Iio.symm⟩
 
 theorem is_pi_system_Iio : IsPiSystem (Range Iio : Set (Set α)) :=
   @image_univ α _ Iio ▸ is_pi_system_image_Iio Univ
@@ -134,7 +134,7 @@ theorem is_pi_system_Ixx_mem {Ixx : α → α → Set α} {p : α → α → Pro
     IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ hlu : p l u, Ixx l u = S } := by
   rintro _ ⟨l₁, hls₁, u₁, hut₁, hlu₁, rfl⟩ _ ⟨l₂, hls₂, u₂, hut₂, hlu₂, rfl⟩
   simp only [Hi, ← sup_eq_max, ← inf_eq_min]
-  exact fun H => ⟨l₁⊔l₂, sup_ind l₁ l₂ hls₁ hls₂, u₁⊓u₂, inf_ind u₁ u₂ hut₁ hut₂, Hne H, rfl⟩
+  exact fun H => ⟨l₁ ⊔ l₂, sup_ind l₁ l₂ hls₁ hls₂, u₁ ⊓ u₂, inf_ind u₁ u₂ hut₁ hut₂, Hne H, rfl⟩
 
 theorem is_pi_system_Ixx {Ixx : α → α → Set α} {p : α → α → Prop} (Hne : ∀ {a b}, (Ixx a b).Nonempty → p a b)
     (Hi : ∀ {a₁ b₁ a₂ b₂}, Ixx a₁ b₁ ∩ Ixx a₂ b₂ = Ixx (max a₁ a₂) (min b₁ b₂)) (f : ι → α) (g : ι' → α) :
@@ -276,7 +276,7 @@ theorem mem_generate_pi_system_Union_elim' {α β} {g : β → Set (Set α)} {s 
     · rwa [h1]
       
     ext x
-    simp only [exists_prop, Set.mem_Union, Function.comp_app, Subtype.exists, Subtype.coe_mk]
+    simp only [exists_propₓ, Set.mem_Union, Function.comp_app, Subtype.exists, Subtype.coe_mk]
     rfl
   rcases@mem_generate_pi_system_Union_elim α (Subtype s) (g ∘ Subtype.val) (fun b => h_pi b.val b.property) t this with
     ⟨T, ⟨f, ⟨rfl, h_t'⟩⟩⟩
@@ -294,7 +294,7 @@ theorem mem_generate_pi_system_Union_elim' {α β} {g : β → Set (Set α)} {s 
         
     
   · intro b h_b
-    simp_rw [Finset.mem_image, exists_prop, Subtype.exists, exists_and_distrib_right, exists_eq_right] at h_b
+    simp_rw [Finset.mem_image, exists_propₓ, Subtype.exists, exists_and_distrib_rightₓ, exists_eq_right] at h_b
     cases h_b
     have h_b_alt : b = (Subtype.mk b h_b_w).val := rfl
     rw [h_b_alt, Function.extend_applyₓ Subtype.val_injective]

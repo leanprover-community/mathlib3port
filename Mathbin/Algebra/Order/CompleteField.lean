@@ -47,7 +47,7 @@ variable {F α β γ : Type _}
 
 noncomputable section
 
-open Function Rat Real Set
+open Function Ratₓ Real Set
 
 open Classical Pointwise
 
@@ -112,7 +112,7 @@ theorem mem_cut_map_iff : b ∈ CutMap β a ↔ ∃ q : ℚ, (q : α) < a ∧ (q
 
 @[simp]
 theorem coe_mem_cut_map_iff [CharZero β] : (q : β) ∈ CutMap β a ↔ (q : α) < a :=
-  Rat.cast_injective.mem_set_image
+  Ratₓ.cast_injective.mem_set_image
 
 theorem cut_map_self (a : α) : CutMap α a = Iio a ∩ Range (coe : ℚ → α) := by
   ext
@@ -129,7 +129,7 @@ end DivisionRing
 variable (β) [LinearOrderedField β] {a a₁ a₂ : α} {b : β} {q : ℚ}
 
 theorem cut_map_coe (q : ℚ) : CutMap β (q : α) = coe '' { r : ℚ | (r : β) < q } := by
-  simp_rw [cut_map, Rat.cast_lt]
+  simp_rw [cut_map, Ratₓ.cast_lt]
 
 variable [Archimedean α]
 
@@ -265,7 +265,7 @@ theorem exists_mem_cut_map_mul_self_of_lt_induced_map_mul_self (ha : 0 < a) (b :
     (hba : b < inducedMap α β a * inducedMap α β a) : ∃ c ∈ CutMap β (a * a), b < c := by
   obtain hb | hb := lt_or_leₓ b 0
   · refine' ⟨0, _, hb⟩
-    rw [← Rat.cast_zero, coe_mem_cut_map_iff, Rat.cast_zero]
+    rw [← Ratₓ.cast_zero, coe_mem_cut_map_iff, Ratₓ.cast_zero]
     exact mul_self_pos.2 ha.ne'
     
   obtain ⟨q, hq, hbq, hqa⟩ := exists_rat_pow_btwn two_ne_zero hba (hb.trans_lt hba)
@@ -373,7 +373,7 @@ theorem ring_hom_monotone (hR : ∀ r : R, 0 ≤ r → ∃ s : R, s ^ 2 = r) (f 
 instance Real.RingHom.unique : Unique (ℝ →+* ℝ) where
   default := RingHom.id ℝ
   uniq := fun f =>
-    congr_argₓ OrderRingHom.toRingHom
+    congr_arg OrderRingHom.toRingHom
       (Subsingleton.elim ⟨f, ring_hom_monotone (fun r hr => ⟨Real.sqrt r, sq_sqrt hr⟩) f⟩ default)
 
 end Real

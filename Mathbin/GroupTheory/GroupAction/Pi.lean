@@ -81,7 +81,7 @@ theorem has_faithful_smul_at {α : Type _} [∀ i, HasSmul α <| f i] [∀ i, No
   ⟨fun x y h =>
     eq_of_smul_eq_smul fun a : f i => by
       classical
-      have := congr_funₓ (h <| Function.update (fun j => Classical.choice (‹∀ i, Nonempty (f i)› j)) i a) i
+      have := congr_fun (h <| Function.update (fun j => Classical.choice (‹∀ i, Nonempty (f i)› j)) i a) i
       simpa using this⟩
 
 @[to_additive Pi.has_faithful_vadd]

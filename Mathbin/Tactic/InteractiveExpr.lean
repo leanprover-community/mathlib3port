@@ -250,7 +250,7 @@ unsafe def mk {γ} (tooltip : tc subexpr γ) : tc expr γ :=
 /-- Render the implicit arguments for an expression in fancy, little pills. -/
 unsafe def implicit_arg_list (tooltip : tc subexpr Empty) (e : expr) : tactic <| html Empty := do
   let fn ← mk tooltip <| expr.get_app_fn e
-  let args ← List.mmapₓ (mk tooltip) <| expr.get_app_args e
+  let args ← List.mmap (mk tooltip) <| expr.get_app_args e
   pure <|
       h "div" [style [("display", "flex"), ("flexWrap", "wrap"), ("alignItems", "baseline")]]
         (h "span" [className "bg-blue br3 ma1 ph2 white"] [fn] ::

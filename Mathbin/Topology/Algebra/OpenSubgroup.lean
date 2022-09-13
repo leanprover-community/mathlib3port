@@ -164,7 +164,7 @@ instance : PartialOrderₓ (OpenSubgroup G) :=
 @[to_additive]
 instance : SemilatticeInf (OpenSubgroup G) :=
   { OpenSubgroup.partialOrder with
-    inf := fun U V => { (U : Subgroup G)⊓V with is_open' := IsOpen.inter U.IsOpen V.IsOpen },
+    inf := fun U V => { (U : Subgroup G) ⊓ V with is_open' := IsOpen.inter U.IsOpen V.IsOpen },
     inf_le_left := fun U V => Set.inter_subset_left _ _, inf_le_right := fun U V => Set.inter_subset_right _ _,
     le_inf := fun U V W hV hW => Set.subset_inter hV hW }
 
@@ -174,7 +174,7 @@ instance : OrderTop (OpenSubgroup G) where
   le_top := fun U => Set.subset_univ _
 
 @[simp, norm_cast, to_additive]
-theorem coe_inf : (↑(U⊓V) : Set G) = (U : Set G) ∩ V :=
+theorem coe_inf : (↑(U ⊓ V) : Set G) = (U : Set G) ∩ V :=
   rfl
 
 @[simp, norm_cast, to_additive]
@@ -260,9 +260,9 @@ variable {G : Type _} [Groupₓ G] [TopologicalSpace G] [HasContinuousMul G]
 instance : SemilatticeSup (OpenSubgroup G) :=
   { OpenSubgroup.semilatticeInf with
     sup := fun U V =>
-      { (U : Subgroup G)⊔V with
+      { (U : Subgroup G) ⊔ V with
         is_open' :=
-          show IsOpen (((U : Subgroup G)⊔V : Subgroup G) : Set G) from Subgroup.is_open_mono le_sup_left U.IsOpen },
+          show IsOpen (((U : Subgroup G) ⊔ V : Subgroup G) : Set G) from Subgroup.is_open_mono le_sup_left U.IsOpen },
     le_sup_left := fun U V => coe_subgroup_le.1 le_sup_left, le_sup_right := fun U V => coe_subgroup_le.1 le_sup_right,
     sup_le := fun U V W hU hV => coe_subgroup_le.1 (sup_le hU hV) }
 

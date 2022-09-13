@@ -155,7 +155,7 @@ theorem even_pow : Even (m ^ n) ↔ Even m ∧ n ≠ 0 := by
   tauto
 
 theorem even_pow' (h : n ≠ 0) : Even (m ^ n) ↔ Even m :=
-  even_pow.trans <| and_iff_left h
+  even_pow.trans <| and_iff_leftₓ h
 
 theorem even_div : Even (m / n) ↔ m % (2 * n) / n = 0 := by
   rw [even_iff_two_dvd, dvd_iff_mod_eq_zero, Nat.div_mod_eq_mod_mul_div, mul_comm]
@@ -241,7 +241,7 @@ theorem bit0_mod_bit0 : bit0 n % bit0 m = bit0 (n % m) := by
 
 @[simp]
 theorem bit1_mod_bit0 : bit1 n % bit0 m = bit1 (n % m) := by
-  have h₁ := congr_argₓ bit1 (Nat.div_add_modₓ n m)
+  have h₁ := congr_arg bit1 (Nat.div_add_modₓ n m)
   -- `∀ m n : ℕ, bit0 m * n = bit0 (m * n)` seems to be missing...
   rw [bit1_add, bit0_eq_two_mul, ← mul_assoc, ← bit0_eq_two_mul] at h₁
   have h₂ := Nat.div_add_modₓ (bit1 n) (bit0 m)

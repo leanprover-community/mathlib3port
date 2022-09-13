@@ -417,15 +417,15 @@ variable (D : Derivation R A A) {D1 D2 : Derivation R A A} (r : R) (a b : A)
 /-- The commutator of derivations is again a derivation. -/
 instance : HasBracket (Derivation R A A) (Derivation R A A) :=
   ⟨fun D1 D2 =>
-    (mk' ⁅(D1 : Module.End R A),(D2 : Module.End R A)⁆) fun a b => by
+    (mk' ⁅(D1 : Module.End R A), (D2 : Module.End R A)⁆) fun a b => by
       simp only [Ringₓ.lie_def, map_add, id.smul_eq_mul, LinearMap.mul_apply, leibniz, coe_fn_coe, LinearMap.sub_apply]
       ring⟩
 
 @[simp]
-theorem commutator_coe_linear_map : ↑⁅D1,D2⁆ = ⁅(D1 : Module.End R A),(D2 : Module.End R A)⁆ :=
+theorem commutator_coe_linear_map : ↑⁅D1, D2⁆ = ⁅(D1 : Module.End R A), (D2 : Module.End R A)⁆ :=
   rfl
 
-theorem commutator_apply : ⁅D1,D2⁆ a = D1 (D2 a) - D2 (D1 a) :=
+theorem commutator_apply : ⁅D1, D2⁆ a = D1 (D2 a) - D2 (D1 a) :=
   rfl
 
 instance : LieRing (Derivation R A A) where
@@ -700,15 +700,15 @@ def KaehlerDifferential : Type _ :=
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] tensor_product(S, R, S)»
 
 -- mathport name: «exprΩ[ ⁄ ]»
-notation:100 "Ω[ " S " ⁄ " R " ]" => KaehlerDifferential R S
+notation:100 "Ω[" S "⁄" R "]" => KaehlerDifferential R S
 
-instance : Nonempty (Ω[ S ⁄ R ]) :=
+instance : Nonempty (Ω[S⁄R]) :=
   ⟨0⟩
 
-instance : IsScalarTower S (S ⊗[R] S) (Ω[ S ⁄ R ]) :=
+instance : IsScalarTower S (S ⊗[R] S) (Ω[S⁄R]) :=
   Ideal.Cotangent.is_scalar_tower _
 
-instance KaehlerDifferential.is_scalar_tower' : IsScalarTower R S (Ω[ S ⁄ R ]) := by
+instance KaehlerDifferential.is_scalar_tower' : IsScalarTower R S (Ω[S⁄R]) := by
   have : IsScalarTower R S (KaehlerDifferential.ideal R S) := by
     constructor
     intro x y z
@@ -717,7 +717,7 @@ instance KaehlerDifferential.is_scalar_tower' : IsScalarTower R S (Ω[ S ⁄ R ]
   exact Submodule.Quotient.is_scalar_tower _ _
 
 /-- (Implementation) The underlying linear map of the derivation into `Ω[S⁄R]`. -/
-def KaehlerDifferential.dLinearMap : S →ₗ[R] Ω[ S ⁄ R ] :=
+def KaehlerDifferential.dLinearMap : S →ₗ[R] Ω[S⁄R] :=
   ((KaehlerDifferential.ideal R S).toCotangent.restrictScalars R).comp
     ((TensorProduct.includeRight.toLinearMap - TensorProduct.includeLeft.toLinearMap : S →ₗ[R] S ⊗[R] S).codRestrict
       ((KaehlerDifferential.ideal R S).restrictScalars R) (KaehlerDifferential.one_smul_sub_smul_one_mem_ideal R) :
@@ -730,7 +730,7 @@ theorem KaehlerDifferential.D_linear_map_apply (s : S) :
   rfl
 
 /-- The universal derivation into `Ω[S⁄R]`. -/
-def KaehlerDifferential.d : Derivation R S (Ω[ S ⁄ R ]) :=
+def KaehlerDifferential.d : Derivation R S (Ω[S⁄R]) :=
   { KaehlerDifferential.dLinearMap R S with
     map_one_eq_zero' := by
       dsimp' [KaehlerDifferential.D_linear_map_apply]
@@ -782,7 +782,7 @@ theorem KaehlerDifferential.span_range_derivation : Submodule.span S (Set.Range 
 variable {R S}
 
 /-- The linear map from `Ω[S⁄R]`, associated with a derivation. -/
-def Derivation.liftKaehlerDifferential (D : Derivation R S M) : Ω[ S ⁄ R ] →ₗ[S] M := by
+def Derivation.liftKaehlerDifferential (D : Derivation R S M) : Ω[S⁄R] →ₗ[S] M := by
   refine'
     ((KaehlerDifferential.ideal R S • ⊤ : Submodule (S ⊗[R] S) (KaehlerDifferential.ideal R S)).restrictScalars S).liftq
       _ _
@@ -813,7 +813,7 @@ theorem Derivation.lift_kaehler_differential_comp (D : Derivation R S M) :
     D.map_one_eq_zero, smul_zero, sub_zero]
 
 @[ext]
-theorem Derivation.lift_kaehler_differential_unique (f f' : Ω[ S ⁄ R ] →ₗ[S] M)
+theorem Derivation.lift_kaehler_differential_unique (f f' : Ω[S⁄R] →ₗ[S] M)
     (hf : f.compDer (KaehlerDifferential.d R S) = f'.compDer (KaehlerDifferential.d R S)) : f = f' := by
   apply LinearMap.ext
   intro x
@@ -822,7 +822,7 @@ theorem Derivation.lift_kaehler_differential_unique (f f' : Ω[ S ⁄ R ] →ₗ
     trivial
   apply Submodule.span_induction this
   · rintro _ ⟨x, rfl⟩
-    exact congr_argₓ (fun D : Derivation R S M => D x) hf
+    exact congr_arg (fun D : Derivation R S M => D x) hf
     
   · rw [map_zero, map_zero]
     
@@ -855,7 +855,7 @@ theorem KaehlerDifferential.tensor_product_to_surjective :
 
 /-- The `S`-linear maps from `Ω[S⁄R]` to `M` are (`S`-linearly) equivalent to `R`-derivations
 from `S` to `M`.  -/
-def KaehlerDifferential.linearMapEquivDerivation : (Ω[ S ⁄ R ] →ₗ[S] M) ≃ₗ[S] Derivation R S M :=
+def KaehlerDifferential.linearMapEquivDerivation : (Ω[S⁄R] →ₗ[S] M) ≃ₗ[S] Derivation R S M :=
   { Derivation.llcomp.flip <| KaehlerDifferential.d R S with invFun := Derivation.liftKaehlerDifferential,
     left_inv := fun f => Derivation.lift_kaehler_differential_unique _ _ (Derivation.lift_kaehler_differential_comp _),
     right_inv := Derivation.lift_kaehler_differential_comp }

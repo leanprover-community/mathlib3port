@@ -304,7 +304,7 @@ use outside this file. -/
 theorem supr_edist_ne_top_aux {ι : Type _} [Finite ι] {α : ι → Type _} [∀ i, PseudoMetricSpace (α i)] (f g : PiLp ∞ α) :
     (⨆ i, edist (f i) (g i)) ≠ ⊤ := by
   cases nonempty_fintype ι
-  obtain ⟨M, hM⟩ := Fintype.exists_le fun i => (⟨dist (f i) (g i), dist_nonneg⟩ : ℝ≥0 )
+  obtain ⟨M, hM⟩ := Fintype.exists_le fun i => (⟨dist (f i) (g i), dist_nonneg⟩ : ℝ≥0)
   refine' ne_of_ltₓ ((supr_le fun i => _).trans_lt (@Ennreal.coe_lt_top M))
   simp only [edist, PseudoMetricSpace.edist_dist, Ennreal.of_real_eq_coe_nnreal dist_nonneg]
   exact_mod_cast hM i
@@ -380,7 +380,7 @@ theorem lipschitz_with_equiv_aux : LipschitzWith 1 (PiLp.equiv p β) := by
       
     
 
-theorem antilipschitz_with_equiv_aux : AntilipschitzWith ((Fintype.card ι : ℝ≥0 ) ^ (1 / p).toReal) (PiLp.equiv p β) :=
+theorem antilipschitz_with_equiv_aux : AntilipschitzWith ((Fintype.card ι : ℝ≥0) ^ (1 / p).toReal) (PiLp.equiv p β) :=
   by
   intro x y
   rcases p.dichotomy with (rfl | h)
@@ -401,10 +401,10 @@ theorem antilipschitz_with_equiv_aux : AntilipschitzWith ((Fintype.card ι : ℝ
         apply Finset.sum_le_sum fun i hi => _
         apply Ennreal.rpow_le_rpow _ (le_of_ltₓ Pos)
         exact Finset.le_sup (Finset.mem_univ i)
-      _ = ((Fintype.card ι : ℝ≥0 ) ^ (1 / p.to_real) : ℝ≥0 ) * edist (PiLp.equiv p β x) (PiLp.equiv p β y) := by
+      _ = ((Fintype.card ι : ℝ≥0) ^ (1 / p.to_real) : ℝ≥0) * edist (PiLp.equiv p β x) (PiLp.equiv p β y) := by
         simp only [nsmul_eq_mul, Finset.card_univ, Ennreal.rpow_one, Finset.sum_const,
           Ennreal.mul_rpow_of_nonneg _ _ nonneg, ← Ennreal.rpow_mul, cancel]
-        have : (Fintype.card ι : ℝ≥0∞) = (Fintype.card ι : ℝ≥0 ) := (Ennreal.coe_nat (Fintype.card ι)).symm
+        have : (Fintype.card ι : ℝ≥0∞) = (Fintype.card ι : ℝ≥0) := (Ennreal.coe_nat (Fintype.card ι)).symm
         rw [this, Ennreal.coe_rpow_of_nonneg _ nonneg]
       
     
@@ -477,7 +477,7 @@ theorem lipschitz_with_equiv [∀ i, PseudoEmetricSpace (β i)] : LipschitzWith 
   lipschitz_with_equiv_aux p β
 
 theorem antilipschitz_with_equiv [∀ i, PseudoEmetricSpace (β i)] :
-    AntilipschitzWith ((Fintype.card ι : ℝ≥0 ) ^ (1 / p).toReal) (PiLp.equiv p β) :=
+    AntilipschitzWith ((Fintype.card ι : ℝ≥0) ^ (1 / p).toReal) (PiLp.equiv p β) :=
   antilipschitz_with_equiv_aux p β
 
 theorem infty_equiv_isometry [∀ i, PseudoEmetricSpace (β i)] : Isometry (PiLp.equiv ∞ β) := fun x y =>
@@ -542,7 +542,7 @@ theorem nnnorm_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β 
 theorem norm_sq_eq_of_L2 (β : ι → Type _) [∀ i, SeminormedAddCommGroup (β i)] (x : PiLp 2 β) :
     ∥x∥ ^ 2 = ∑ i : ι, ∥x i∥ ^ 2 := by
   suffices ∥x∥₊ ^ 2 = ∑ i : ι, ∥x i∥₊ ^ 2 by
-    simpa only [Nnreal.coe_sum] using congr_argₓ (coe : ℝ≥0 → ℝ) this
+    simpa only [Nnreal.coe_sum] using congr_arg (coe : ℝ≥0 → ℝ) this
   rw [nnnorm_eq_of_L2, Nnreal.sq_sqrt]
 
 theorem dist_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (x y : PiLp 2 β) :
@@ -614,7 +614,7 @@ def equivₗᵢ : PiLp ∞ β ≃ₗᵢ[𝕜] ∀ i, β i :=
   { PiLp.equiv ∞ β with map_add' := fun f g => rfl, map_smul' := fun c f => rfl,
     norm_map' := fun f => by
       suffices (finset.univ.sup fun i => ∥f i∥₊) = ⨆ i, ∥f i∥₊ by
-        simpa only [Nnreal.coe_supr] using congr_argₓ (coe : ℝ≥0 → ℝ) this
+        simpa only [Nnreal.coe_supr] using congr_arg (coe : ℝ≥0 → ℝ) this
       refine' antisymm (Finset.sup_le fun i _ => le_csupr (Fintype.bdd_above_range fun i => ∥f i∥₊) _) _
       cases is_empty_or_nonempty ι
       · simp only [csupr_of_empty, Finset.univ_eq_empty, Finset.sup_empty]
@@ -737,7 +737,7 @@ the left-hand side simplifies to `0`, while the right-hand side simplifies to `�
 `nonempty ι`. -/
 theorem norm_equiv_symm_const {β} [SeminormedAddCommGroup β] (hp : p ≠ ∞) (b : β) :
     ∥(PiLp.equiv p fun _ : ι => β).symm (Function.const _ b)∥ = Fintype.card ι ^ (1 / p).toReal * ∥b∥ :=
-  (congr_argₓ coe <| nnnorm_equiv_symm_const hp b).trans <| by
+  (congr_arg coe <| nnnorm_equiv_symm_const hp b).trans <| by
     simp
 
 /-- When `is_empty ι`, this lemma does not hold without the additional assumption `p ≠ ∞` because
@@ -746,7 +746,7 @@ the left-hand side simplifies to `0`, while the right-hand side simplifies to `�
 for `p ≠ ∞`. -/
 theorem norm_equiv_symm_const' {β} [SeminormedAddCommGroup β] [Nonempty ι] (b : β) :
     ∥(PiLp.equiv p fun _ : ι => β).symm (Function.const _ b)∥ = Fintype.card ι ^ (1 / p).toReal * ∥b∥ :=
-  (congr_argₓ coe <| nnnorm_equiv_symm_const' b).trans <| by
+  (congr_arg coe <| nnnorm_equiv_symm_const' b).trans <| by
     simp
 
 theorem nnnorm_equiv_symm_one {β} [SeminormedAddCommGroup β] (hp : p ≠ ∞) [One β] :

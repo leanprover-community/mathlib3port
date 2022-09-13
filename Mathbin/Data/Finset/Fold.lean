@@ -25,7 +25,7 @@ section Fold
 variable (op : β → β → β) [hc : IsCommutative β op] [ha : IsAssociative β op]
 
 -- mathport name: op
-local notation a "*" b => op a b
+local notation a " * " b => op a b
 
 include hc ha
 
@@ -41,16 +41,16 @@ theorem fold_empty : (∅ : Finset α).fold op b f = b :=
   rfl
 
 @[simp]
-theorem fold_cons (h : a ∉ s) : (cons a s h).fold op b f = f a*s.fold op b f := by
+theorem fold_cons (h : a ∉ s) : (cons a s h).fold op b f = f a * s.fold op b f := by
   dunfold fold
   rw [cons_val, Multiset.map_cons, fold_cons_left]
 
 @[simp]
-theorem fold_insert [DecidableEq α] (h : a ∉ s) : (insert a s).fold op b f = f a*s.fold op b f := by
+theorem fold_insert [DecidableEq α] (h : a ∉ s) : (insert a s).fold op b f = f a * s.fold op b f := by
   unfold fold <;> rw [insert_val, ndinsert_of_not_mem h, Multiset.map_cons, fold_cons_left]
 
 @[simp]
-theorem fold_singleton : ({a} : Finset α).fold op b f = f a*b :=
+theorem fold_singleton : ({a} : Finset α).fold op b f = f a * b :=
   rfl
 
 @[simp]
@@ -67,7 +67,7 @@ theorem fold_congr {g : α → β} (H : ∀ x ∈ s, f x = g x) : s.fold op b f 
   rw [fold, fold, map_congr rfl H]
 
 theorem fold_op_distrib {f g : α → β} {b₁ b₂ : β} :
-    (s.fold op (b₁*b₂) fun x => f x*g x) = s.fold op b₁ f*s.fold op b₂ g := by
+    (s.fold op (b₁ * b₂) fun x => f x * g x) = s.fold op b₁ f * s.fold op b₂ g := by
   simp only [fold, fold_distrib]
 
 theorem fold_const [Decidable (s = ∅)] (c : β) (h : op c (op b c) = op b c) :
@@ -89,16 +89,16 @@ theorem fold_hom {op' : γ → γ → γ} [IsCommutative γ op'] [IsAssociative 
   rw [fold, fold, ← fold_hom op hm, Multiset.map_map]
 
 theorem fold_disj_union {s₁ s₂ : Finset α} {b₁ b₂ : β} (h) :
-    (s₁.disjUnion s₂ h).fold op (b₁*b₂) f = s₁.fold op b₁ f*s₂.fold op b₂ f :=
-  (congr_argₓ _ <| Multiset.map_add _ _ _).trans (Multiset.fold_add _ _ _ _ _)
+    (s₁.disjUnion s₂ h).fold op (b₁ * b₂) f = s₁.fold op b₁ f * s₂.fold op b₂ f :=
+  (congr_arg _ <| Multiset.map_add _ _ _).trans (Multiset.fold_add _ _ _ _ _)
 
 theorem fold_union_inter [DecidableEq α] {s₁ s₂ : Finset α} {b₁ b₂ : β} :
-    ((s₁ ∪ s₂).fold op b₁ f*(s₁ ∩ s₂).fold op b₂ f) = s₁.fold op b₂ f*s₂.fold op b₁ f := by
+    ((s₁ ∪ s₂).fold op b₁ f * (s₁ ∩ s₂).fold op b₂ f) = s₁.fold op b₂ f * s₂.fold op b₁ f := by
   unfold fold <;>
     rw [← fold_add op, ← Multiset.map_add, union_val, inter_val, union_add_inter, Multiset.map_add, hc.comm, fold_add]
 
 @[simp]
-theorem fold_insert_idem [DecidableEq α] [hi : IsIdempotent β op] : (insert a s).fold op b f = f a*s.fold op b f := by
+theorem fold_insert_idem [DecidableEq α] [hi : IsIdempotent β op] : (insert a s).fold op b f = f a * s.fold op b f := by
   by_cases' a ∈ s
   · rw [← insert_erase h]
     simp [← ha.assoc, hi.idempotent]
@@ -155,8 +155,8 @@ theorem fold_op_rel_iff_and {r : β → β → Prop} (hr : ∀ {x y z}, r x (op 
     
   clear s
   intro a s ha IH
-  rw [Finset.fold_insert ha, hr, IH, ← and_assoc, and_comm (r c (f a)), and_assoc]
-  apply and_congr Iff.rfl
+  rw [Finset.fold_insert ha, hr, IH, ← and_assocₓ, and_comm (r c (f a)), and_assocₓ]
+  apply and_congrₓ Iff.rfl
   constructor
   · rintro ⟨h₁, h₂⟩
     intro b hb
@@ -183,8 +183,8 @@ theorem fold_op_rel_iff_or {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y
     
   clear s
   intro a s ha IH
-  rw [Finset.fold_insert ha, hr, IH, ← or_assoc, or_comm (r c (f a)), or_assoc]
-  apply or_congr Iff.rfl
+  rw [Finset.fold_insert ha, hr, IH, ← or_assocₓ, or_comm (r c (f a)), or_assocₓ]
+  apply or_congrₓ Iff.rfl
   constructor
   · rintro (h₁ | ⟨x, hx, h₂⟩)
     · use a
@@ -217,7 +217,7 @@ theorem fold_union_empty_singleton [DecidableEq α] (s : Finset α) : Finset.fol
     rw [fold_insert has, ih, insert_eq]
     
 
-theorem fold_sup_bot_singleton [DecidableEq α] (s : Finset α) : Finset.fold (·⊔·) ⊥ singleton s = s :=
+theorem fold_sup_bot_singleton [DecidableEq α] (s : Finset α) : Finset.fold (· ⊔ ·) ⊥ singleton s = s :=
   fold_union_empty_singleton s
 
 section Order

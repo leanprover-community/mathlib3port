@@ -193,7 +193,7 @@ theorem coe_stream_nth_rat_eq :
           norm_cast
         have coe_of_fr := coe_of_rat_eq this
         simp [int_fract_pair.stream, IH.symm, v_eq_q, stream_q_nth_eq, fr_ne_zero]
-        exact congr_argₓ some coe_of_fr
+        exact congr_arg some coe_of_fr
         
 
 theorem coe_stream_rat_eq :
@@ -266,7 +266,7 @@ variable {q : ℚ} {n : ℕ}
 `int_fract_pair.of q⁻¹` is smaller than the numerator of `q`.
 -/
 theorem of_inv_fr_num_lt_num_of_pos (q_pos : 0 < q) : (IntFractPair.of q⁻¹).fr.num < q.num :=
-  Rat.fract_inv_num_lt_num_of_pos q_pos
+  Ratₓ.fract_inv_num_lt_num_of_pos q_pos
 
 /-- Shows that the sequence of numerators of the fractional parts of the stream is strictly
 antitone. -/

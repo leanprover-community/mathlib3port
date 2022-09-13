@@ -48,7 +48,7 @@ theorem antidiagonal_filter_fst_eq (f g : α →₀ ℕ) [D : ∀ p : (α →₀
     ((antidiagonal f).filter fun p => p.1 = g) = if g ≤ f then {(g, f - g)} else ∅ := by
   ext ⟨a, b⟩
   suffices a = g → (a + b = f ↔ g ≤ f ∧ b = f - g) by
-    simpa [apply_iteₓ ((· ∈ ·) (a, b)), ← And.assoc, @And.right_comm _ (a = _), And.congr_left_iff]
+    simpa [apply_iteₓ ((· ∈ ·) (a, b)), ← And.assoc, @And.right_comm _ (a = _), And.congr_left_iffₓ]
   rintro rfl
   constructor
   · rintro rfl
@@ -62,7 +62,7 @@ theorem antidiagonal_filter_snd_eq (f g : α →₀ ℕ) [D : ∀ p : (α →₀
     ((antidiagonal f).filter fun p => p.2 = g) = if g ≤ f then {(f - g, g)} else ∅ := by
   ext ⟨a, b⟩
   suffices b = g → (a + b = f ↔ g ≤ f ∧ a = f - g) by
-    simpa [apply_iteₓ ((· ∈ ·) (a, b)), ← And.assoc, And.congr_left_iff]
+    simpa [apply_iteₓ ((· ∈ ·) (a, b)), ← And.assoc, And.congr_left_iffₓ]
   rintro rfl
   constructor
   · rintro rfl

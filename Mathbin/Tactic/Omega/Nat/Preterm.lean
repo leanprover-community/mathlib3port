@@ -93,7 +93,7 @@ theorem val_constant (v w : Nat → Nat) : ∀ t : Preterm, (∀ x < t.freshInde
   | &n, h1 => rfl
   | m ** n, h1 => by
     simp only [val_var]
-    apply congr_argₓ fun y => m * y
+    apply congr_arg fun y => m * y
     apply h1 _ (lt_add_one _)
   | t +* s, h1 => by
     simp only [val_add]

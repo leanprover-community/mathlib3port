@@ -241,7 +241,7 @@ theorem degree_eq_zero_of_is_unit (h : IsUnit p) : degree p = 0 := by
     simpa [hp0] using hq
   have hq0 : q ≠ 0 := fun hp0 => by
     simpa [hp0] using hq
-  have : natDegree (1 : R[X]) = natDegree (p * q) := congr_argₓ _ hq
+  have : natDegree (1 : R[X]) = natDegree (p * q) := congr_arg _ hq
   rw [nat_degree_one, nat_degree_mul hp0 hq0, eq_comm, _root_.add_eq_zero_iff, ← WithBot.coe_eq_coe, ←
       degree_eq_nat_degree hp0] at this <;>
     exact this.1
@@ -480,7 +480,7 @@ theorem roots_smul_nonzero (p : R[X]) {r : R} (hr : r ≠ 0) : (r • p).roots =
 
 theorem roots_list_prod (L : List R[X]) : (0 : R[X]) ∉ L → L.Prod.roots = (L : Multiset R[X]).bind roots :=
   (List.recOn L fun _ => roots_one) fun hd tl ih H => by
-    rw [List.mem_cons_iffₓ, not_or_distrib] at H
+    rw [List.mem_cons_iff, not_or_distrib] at H
     rw [List.prod_cons, roots_mul (mul_ne_zero (Ne.symm H.1) <| List.prod_ne_zero H.2), ← Multiset.cons_coe,
       Multiset.cons_bind, ih H.2]
 
@@ -862,7 +862,7 @@ theorem exists_prod_multiset_X_sub_C_mul (p : R[X]) :
   · conv_rhs => rw [he]
     rw [monic_prod_multiset_X_sub_C.nat_degree_mul' hq, nat_degree_multiset_prod_X_sub_C_eq_card]
     
-  · replace he := congr_argₓ roots he.symm
+  · replace he := congr_arg roots he.symm
     rw [roots_mul, roots_multiset_prod_X_sub_C] at he
     exacts[add_right_eq_selfₓ.1 he, mul_ne_zero monic_prod_multiset_X_sub_C.ne_zero hq]
     
@@ -922,7 +922,7 @@ theorem Monic.irreducible_of_irreducible_map (f : R[X]) (h_mon : Monic f) (h_irr
   dsimp' [monic]  at h_mon
   have q := (leading_coeff_mul a b).symm
   rw [← h, h_mon] at q
-  refine' (h_irr.is_unit_or_is_unit <| (congr_argₓ (map φ) h).trans (Polynomial.map_mul φ)).imp _ _ <;>
+  refine' (h_irr.is_unit_or_is_unit <| (congr_arg (map φ) h).trans (Polynomial.map_mul φ)).imp _ _ <;>
     apply is_unit_of_is_unit_leading_coeff_of_is_unit_map <;> apply is_unit_of_mul_eq_one
   · exact q
     

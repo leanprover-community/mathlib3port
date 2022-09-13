@@ -129,11 +129,11 @@ theorem IsTheta.is_O_congr_right (h : g' =Θ[l] k') : f =O[l] g' ↔ f =O[l] k' 
 theorem IsTheta.mono (h : f =Θ[l] g) (hl : l' ≤ l) : f =Θ[l'] g :=
   ⟨h.1.mono hl, h.2.mono hl⟩
 
-theorem IsTheta.sup (h : f' =Θ[l] g') (h' : f' =Θ[l'] g') : f' =Θ[l⊔l'] g' :=
+theorem IsTheta.sup (h : f' =Θ[l] g') (h' : f' =Θ[l'] g') : f' =Θ[l ⊔ l'] g' :=
   ⟨h.1.sup h'.1, h.2.sup h'.2⟩
 
 @[simp]
-theorem is_Theta_sup : f' =Θ[l⊔l'] g' ↔ f' =Θ[l] g' ∧ f' =Θ[l'] g' :=
+theorem is_Theta_sup : f' =Θ[l ⊔ l'] g' ↔ f' =Θ[l] g' ∧ f' =Θ[l'] g' :=
   ⟨fun h => ⟨h.mono le_sup_left, h.mono le_sup_right⟩, fun h => h.1.sup h.2⟩
 
 theorem IsTheta.eq_zero_iff (h : f'' =Θ[l] g'') : ∀ᶠ x in l, f'' x = 0 ↔ g'' x = 0 :=
@@ -197,12 +197,12 @@ theorem is_Theta_zero_right : (f'' =Θ[l] fun x => (0 : F')) ↔ f'' =ᶠ[l] 0 :
   is_Theta_comm.trans is_Theta_zero_left
 
 theorem is_Theta_const_smul_left [NormedSpace 𝕜 E'] {c : 𝕜} (hc : c ≠ 0) : (fun x => c • f' x) =Θ[l] g ↔ f' =Θ[l] g :=
-  and_congr (is_O_const_smul_left hc) (is_O_const_smul_right hc)
+  and_congrₓ (is_O_const_smul_left hc) (is_O_const_smul_right hc)
 
 alias is_Theta_const_smul_left ↔ is_Theta.of_const_smul_left is_Theta.const_smul_left
 
 theorem is_Theta_const_smul_right [NormedSpace 𝕜 F'] {c : 𝕜} (hc : c ≠ 0) : (f =Θ[l] fun x => c • g' x) ↔ f =Θ[l] g' :=
-  and_congr (is_O_const_smul_right hc) (is_O_const_smul_left hc)
+  and_congrₓ (is_O_const_smul_right hc) (is_O_const_smul_left hc)
 
 alias is_Theta_const_smul_right ↔ is_Theta.of_const_smul_right is_Theta.const_smul_right
 

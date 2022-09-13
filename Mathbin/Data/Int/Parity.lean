@@ -33,7 +33,7 @@ theorem even_iff : Even n ↔ n % 2 = 0 :=
   ⟨fun ⟨m, hm⟩ => by
     simp [← two_mul, hm], fun h =>
     ⟨n / 2,
-      (mod_add_div n 2).symm.trans
+      (mod_add_divₓ n 2).symm.trans
         (by
           simp [← two_mul, h])⟩⟩
 
@@ -42,7 +42,7 @@ theorem odd_iff : Odd n ↔ n % 2 = 1 :=
     rw [hm, add_mod]
     norm_num, fun h =>
     ⟨n / 2,
-      (mod_add_div n 2).symm.trans
+      (mod_add_divₓ n 2).symm.trans
         (by
           rw [h]
           abel)⟩⟩
@@ -143,7 +143,7 @@ theorem even_pow {n : ℕ} : Even (m ^ n) ↔ Even m ∧ n ≠ 0 := by
   tauto
 
 theorem even_pow' {n : ℕ} (h : n ≠ 0) : Even (m ^ n) ↔ Even m :=
-  even_pow.trans <| and_iff_left h
+  even_pow.trans <| and_iff_leftₓ h
 
 @[parity_simps]
 theorem odd_add : Odd (m + n) ↔ (Odd m ↔ Even n) := by
@@ -208,29 +208,29 @@ theorem four_dvd_add_or_sub_of_odd {a b : ℤ} (ha : Odd a) (hb : Odd b) : 4 ∣
     rfl
     
 
-theorem two_mul_div_two_of_even : Even n → 2 * (n / 2) = n := fun h => Int.mul_div_cancel' (even_iff_two_dvd.mp h)
+theorem two_mul_div_two_of_even : Even n → 2 * (n / 2) = n := fun h => Int.mul_div_cancel'ₓ (even_iff_two_dvd.mp h)
 
 theorem div_two_mul_two_of_even : Even n → n / 2 * 2 = n :=
   fun
     --int.div_mul_cancel
     h =>
-  Int.div_mul_cancel (even_iff_two_dvd.mp h)
+  Int.div_mul_cancelₓ (even_iff_two_dvd.mp h)
 
 theorem two_mul_div_two_add_one_of_odd : Odd n → 2 * (n / 2) + 1 = n := by
   rintro ⟨c, rfl⟩
   rw [mul_comm]
-  convert Int.div_add_mod' _ _
+  convert Int.div_add_mod'ₓ _ _
   simpa [Int.add_mod]
 
 theorem div_two_mul_two_add_one_of_odd : Odd n → n / 2 * 2 + 1 = n := by
   rintro ⟨c, rfl⟩
-  convert Int.div_add_mod' _ _
+  convert Int.div_add_mod'ₓ _ _
   simpa [Int.add_mod]
 
 theorem add_one_div_two_mul_two_of_odd : Odd n → 1 + n / 2 * 2 = n := by
   rintro ⟨c, rfl⟩
   rw [add_commₓ]
-  convert Int.div_add_mod' _ _
+  convert Int.div_add_mod'ₓ _ _
   simpa [Int.add_mod]
 
 theorem two_mul_div_two_of_odd (h : Odd n) : 2 * (n / 2) = n - 1 :=

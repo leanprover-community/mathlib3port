@@ -58,11 +58,12 @@ instance hasSup [LinearOrderₓ β] [OrderClosedTopology β] :
     HasSup C(α, β) where sup := fun f g => { toFun := fun a => max (f a) (g a) }
 
 @[simp, norm_cast]
-theorem sup_coe [LinearOrderₓ β] [OrderClosedTopology β] (f g : C(α, β)) : ((f⊔g : C(α, β)) : α → β) = (f⊔g : α → β) :=
+theorem sup_coe [LinearOrderₓ β] [OrderClosedTopology β] (f g : C(α, β)) :
+    ((f ⊔ g : C(α, β)) : α → β) = (f ⊔ g : α → β) :=
   rfl
 
 @[simp]
-theorem sup_apply [LinearOrderₓ β] [OrderClosedTopology β] (f g : C(α, β)) (a : α) : (f⊔g) a = max (f a) (g a) :=
+theorem sup_apply [LinearOrderₓ β] [OrderClosedTopology β] (f g : C(α, β)) (a : α) : (f ⊔ g) a = max (f a) (g a) :=
   rfl
 
 instance [LinearOrderₓ β] [OrderClosedTopology β] : SemilatticeSup C(α, β) :=
@@ -83,11 +84,12 @@ instance hasInf [LinearOrderₓ β] [OrderClosedTopology β] :
     HasInf C(α, β) where inf := fun f g => { toFun := fun a => min (f a) (g a) }
 
 @[simp, norm_cast]
-theorem inf_coe [LinearOrderₓ β] [OrderClosedTopology β] (f g : C(α, β)) : ((f⊓g : C(α, β)) : α → β) = (f⊓g : α → β) :=
+theorem inf_coe [LinearOrderₓ β] [OrderClosedTopology β] (f g : C(α, β)) :
+    ((f ⊓ g : C(α, β)) : α → β) = (f ⊓ g : α → β) :=
   rfl
 
 @[simp]
-theorem inf_apply [LinearOrderₓ β] [OrderClosedTopology β] (f g : C(α, β)) (a : α) : (f⊓g) a = min (f a) (g a) :=
+theorem inf_apply [LinearOrderₓ β] [OrderClosedTopology β] (f g : C(α, β)) (a : α) : (f ⊓ g) a = min (f a) (g a) :=
   rfl
 
 instance [LinearOrderₓ β] [OrderClosedTopology β] : SemilatticeInf C(α, β) :=

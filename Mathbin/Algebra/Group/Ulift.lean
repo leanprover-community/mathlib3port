@@ -100,8 +100,8 @@ instance monoid [Monoidₓ α] : Monoidₓ (ULift α) :=
   Equivₓ.ulift.Injective.Monoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 instance addMonoidWithOne [AddMonoidWithOneₓ α] : AddMonoidWithOneₓ (ULift α) :=
-  { ULift.hasOne, ULift.addMonoid with natCast := fun n => ⟨n⟩, nat_cast_zero := congr_argₓ ULift.up Nat.cast_zeroₓ,
-    nat_cast_succ := fun n => congr_argₓ ULift.up (Nat.cast_succₓ _) }
+  { ULift.hasOne, ULift.addMonoid with natCast := fun n => ⟨n⟩, nat_cast_zero := congr_arg ULift.up Nat.cast_zeroₓ,
+    nat_cast_succ := fun n => congr_arg ULift.up (Nat.cast_succₓ _) }
 
 @[simp]
 theorem nat_cast_down [AddMonoidWithOneₓ α] (n : ℕ) : (n : ULift α).down = n :=
@@ -128,8 +128,8 @@ instance group [Groupₓ α] : Groupₓ (ULift α) :=
 
 instance addGroupWithOne [AddGroupWithOneₓ α] : AddGroupWithOneₓ (ULift α) :=
   { ULift.addMonoidWithOne, ULift.addGroup with intCast := fun n => ⟨n⟩,
-    int_cast_of_nat := fun n => congr_argₓ ULift.up (Int.cast_of_nat _),
-    int_cast_neg_succ_of_nat := fun n => congr_argₓ ULift.up (Int.cast_neg_succ_of_nat _) }
+    int_cast_of_nat := fun n => congr_arg ULift.up (Int.cast_of_nat _),
+    int_cast_neg_succ_of_nat := fun n => congr_arg ULift.up (Int.cast_neg_succ_of_nat _) }
 
 @[simp]
 theorem int_cast_down [AddGroupWithOneₓ α] (n : ℤ) : (n : ULift α).down = n :=

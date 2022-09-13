@@ -259,6 +259,7 @@ import Mathbin.Algebra.Order.Field
 import Mathbin.Algebra.Order.FieldDefs
 import Mathbin.Algebra.Order.Floor
 import Mathbin.Algebra.Order.Group
+import Mathbin.Algebra.Order.Hom.Basic
 import Mathbin.Algebra.Order.Hom.Monoid
 import Mathbin.Algebra.Order.Hom.Ring
 import Mathbin.Algebra.Order.Invertible
@@ -425,6 +426,7 @@ import Mathbin.Analysis.Calculus.ParametricIntegral
 import Mathbin.Analysis.Calculus.ParametricIntervalIntegral
 import Mathbin.Analysis.Calculus.SpecificFunctions
 import Mathbin.Analysis.Calculus.TangentCone
+import Mathbin.Analysis.Calculus.UniformLimitsDeriv
 import Mathbin.Analysis.Complex.AbsMax
 import Mathbin.Analysis.Complex.Arg
 import Mathbin.Analysis.Complex.Basic
@@ -564,6 +566,7 @@ import Mathbin.Analysis.NormedSpace.Units
 import Mathbin.Analysis.NormedSpace.WeakDual
 import Mathbin.Analysis.PSeries
 import Mathbin.Analysis.Quaternion
+import Mathbin.Analysis.SchwartzSpace
 import Mathbin.Analysis.Seminorm
 import Mathbin.Analysis.SpecialFunctions.Arsinh
 import Mathbin.Analysis.SpecialFunctions.Bernstein
@@ -993,6 +996,7 @@ import Mathbin.Combinatorics.SimpleGraph.Regularity.Uniform
 import Mathbin.Combinatorics.SimpleGraph.StronglyRegular
 import Mathbin.Combinatorics.SimpleGraph.Subgraph
 import Mathbin.Combinatorics.SimpleGraph.Trails
+import Mathbin.Combinatorics.SimpleGraph.Triangle.Basic
 import Mathbin.Combinatorics.YoungDiagram
 import Mathbin.Computability.DFA
 import Mathbin.Computability.NFA
@@ -1259,6 +1263,7 @@ import Mathbin.Data.Nat.Choose.Central
 import Mathbin.Data.Nat.Choose.Default
 import Mathbin.Data.Nat.Choose.Dvd
 import Mathbin.Data.Nat.Choose.Factorization
+import Mathbin.Data.Nat.Choose.Multinomial
 import Mathbin.Data.Nat.Choose.Sum
 import Mathbin.Data.Nat.Choose.Vandermonde
 import Mathbin.Data.Nat.Count
@@ -1266,6 +1271,7 @@ import Mathbin.Data.Nat.Digits
 import Mathbin.Data.Nat.Dist
 import Mathbin.Data.Nat.Enat
 import Mathbin.Data.Nat.Factorial.Basic
+import Mathbin.Data.Nat.Factorial.BigOperators
 import Mathbin.Data.Nat.Factorial.Cast
 import Mathbin.Data.Nat.Factorization.Basic
 import Mathbin.Data.Nat.Factorization.PrimePow
@@ -1932,6 +1938,7 @@ import Mathbin.NumberTheory.LSeries
 import Mathbin.NumberTheory.LegendreSymbol.AddCharacter
 import Mathbin.NumberTheory.LegendreSymbol.GaussEisensteinLemmas
 import Mathbin.NumberTheory.LegendreSymbol.GaussSum
+import Mathbin.NumberTheory.LegendreSymbol.JacobiSymbol
 import Mathbin.NumberTheory.LegendreSymbol.MulCharacter
 import Mathbin.NumberTheory.LegendreSymbol.QuadraticChar
 import Mathbin.NumberTheory.LegendreSymbol.QuadraticReciprocity
@@ -1944,6 +1951,7 @@ import Mathbin.NumberTheory.Liouville.Residual
 import Mathbin.NumberTheory.LucasLehmer
 import Mathbin.NumberTheory.LucasPrimality
 import Mathbin.NumberTheory.Modular
+import Mathbin.NumberTheory.ModularForms.CongruenceSubgroups
 import Mathbin.NumberTheory.ModularForms.SlashActions
 import Mathbin.NumberTheory.NumberField
 import Mathbin.NumberTheory.Padics.Default
@@ -2013,6 +2021,7 @@ import Mathbin.Order.Filter.Bases
 import Mathbin.Order.Filter.Basic
 import Mathbin.Order.Filter.Cofinite
 import Mathbin.Order.Filter.CountableInter
+import Mathbin.Order.Filter.Curry
 import Mathbin.Order.Filter.Default
 import Mathbin.Order.Filter.Ennreal
 import Mathbin.Order.Filter.Extr
@@ -2090,6 +2099,7 @@ import Mathbin.Probability.Independence
 import Mathbin.Probability.Integration
 import Mathbin.Probability.Martingale.Basic
 import Mathbin.Probability.Martingale.Convergence
+import Mathbin.Probability.Martingale.OptionalStopping
 import Mathbin.Probability.Martingale.Upcrossing
 import Mathbin.Probability.Moments
 import Mathbin.Probability.Notation
@@ -2123,6 +2133,7 @@ import Mathbin.RingTheory.ClassGroup
 import Mathbin.RingTheory.Coprime.Basic
 import Mathbin.RingTheory.Coprime.Ideal
 import Mathbin.RingTheory.Coprime.Lemmas
+import Mathbin.RingTheory.DedekindDomain.SInteger
 import Mathbin.RingTheory.DedekindDomain.AdicValuation
 import Mathbin.RingTheory.DedekindDomain.Basic
 import Mathbin.RingTheory.DedekindDomain.Dvr

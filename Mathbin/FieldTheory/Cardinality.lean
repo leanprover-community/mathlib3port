@@ -59,7 +59,7 @@ theorem Fintype.not_is_field_of_card_not_prime_pow {α} [Fintype α] [Ringₓ α
 /-- Any infinite type can be endowed a field structure. -/
 theorem Infinite.nonempty_field {α : Type u} [Infinite α] : Nonempty (Field α) := by
   letI K := FractionRing (MvPolynomial α <| ULift.{u} ℚ)
-  suffices # α = # K by
+  suffices (#α) = (#K) by
     obtain ⟨e⟩ := Cardinal.eq.1 this
     exact ⟨e.field⟩
   rw [← IsLocalization.card (MvPolynomial α <| ULift.{u} ℚ)⁰ K le_rflₓ]
@@ -71,7 +71,7 @@ theorem Infinite.nonempty_field {α : Type u} [Infinite α] : Nonempty (Field α
     
 
 /-- There is a field structure on type if and only if its cardinality is a prime power. -/
-theorem Field.nonempty_iff {α : Type u} : Nonempty (Field α) ↔ IsPrimePow (# α) := by
+theorem Field.nonempty_iff {α : Type u} : Nonempty (Field α) ↔ IsPrimePow (#α) := by
   rw [Cardinal.is_prime_pow_iff]
   cases' fintypeOrInfinite α with h h
   · simpa only [Cardinal.mk_fintype, Nat.cast_inj, exists_eq_left', (Cardinal.nat_lt_aleph_0 _).not_le, false_orₓ] using

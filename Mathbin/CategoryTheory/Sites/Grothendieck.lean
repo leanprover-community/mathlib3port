@@ -131,13 +131,13 @@ theorem superset_covering (Hss : S ≤ R) (sjx : S ∈ J X) : R ∈ J X := by
 See <https://stacks.math.columbia.edu/tag/00Z5> (1), or [MM92] Chapter III,
 Section 2, Definition 1 (iv).
 -/
-theorem intersection_covering (rj : R ∈ J X) (sj : S ∈ J X) : R⊓S ∈ J X := by
+theorem intersection_covering (rj : R ∈ J X) (sj : S ∈ J X) : R ⊓ S ∈ J X := by
   apply J.transitive rj _ fun Y f Hf => _
   rw [sieve.pullback_inter, R.pullback_eq_top_of_mem Hf]
   simp [sj]
 
 @[simp]
-theorem intersection_covering_iff : R⊓S ∈ J X ↔ R ∈ J X ∧ S ∈ J X :=
+theorem intersection_covering_iff : R ⊓ S ∈ J X ↔ R ∈ J X ∧ S ∈ J X :=
   ⟨fun h => ⟨J.superset_covering inf_le_left h, J.superset_covering inf_le_right h⟩, fun t =>
     intersection_covering _ t.1 t.2⟩
 
@@ -178,7 +178,7 @@ theorem arrow_trans (f : Y ⟶ X) (S R : Sieve X) (h : J.Covers S f) :
   rw [← sieve.pullback_comp]
   apply k (g ≫ f) hg
 
-theorem arrow_intersect (f : Y ⟶ X) (S R : Sieve X) (hS : J.Covers S f) (hR : J.Covers R f) : J.Covers (S⊓R) f := by
+theorem arrow_intersect (f : Y ⟶ X) (S R : Sieve X) (hS : J.Covers S f) (hR : J.Covers R f) : J.Covers (S ⊓ R) f := by
   simpa [covers_iff] using And.intro hS hR
 
 variable (C)
@@ -386,7 +386,7 @@ instance : OrderTop (J.cover X) :=
       tauto }
 
 instance : SemilatticeInf (J.cover X) :=
-  { (inferInstance : Preorderₓ _) with inf := fun S T => ⟨S⊓T, J.intersection_covering S.condition T.condition⟩,
+  { (inferInstance : Preorderₓ _) with inf := fun S T => ⟨S ⊓ T, J.intersection_covering S.condition T.condition⟩,
     le_antisymm := fun S T h1 h2 => (ext _ _) fun Y f => ⟨h1 _, h2 _⟩, inf_le_left := fun S T Y f hf => hf.1,
     inf_le_right := fun S T Y f hf => hf.2, le_inf := fun S T W h1 h2 Y f h => ⟨h1 _ h, h2 _ h⟩ }
 

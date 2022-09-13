@@ -71,7 +71,7 @@ local notation "ℝⁿ⁺¹" => Finₓ (n + 1) → ℝ
 local notation "Eⁿ⁺¹" => Finₓ (n + 1) → E
 
 -- mathport name: «expre »
-local notation "e" i => Pi.single i 1
+local notation "e " i => Pi.single i 1
 
 section
 
@@ -240,13 +240,13 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : Bo
 variable (a b : ℝⁿ⁺¹)
 
 -- mathport name: «exprface »
-local notation "face" i => Set.Icc (a ∘ Finₓ.succAbove i) (b ∘ Finₓ.succAbove i)
+local notation "face " i => Set.Icc (a ∘ Finₓ.succAbove i) (b ∘ Finₓ.succAbove i)
 
 -- mathport name: «exprfront_face »
-local notation "front_face" i:2000 => Finₓ.insertNth i (b i)
+local notation "front_face " i:2000 => Finₓ.insertNth i (b i)
 
 -- mathport name: «exprback_face »
-local notation "back_face" i:2000 => Finₓ.insertNth i (a i)
+local notation "back_face " i:2000 => Finₓ.insertNth i (a i)
 
 /-- **Divergence theorem** for Bochner integral. If `f : ℝⁿ⁺¹ → Eⁿ⁺¹` is continuous on a rectangular
 box `[a, b] : set ℝⁿ⁺¹`, `a ≤ b`, is differentiable on its interior with derivative
@@ -268,7 +268,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable (hle : a ≤ b
     (Hd : ∀ x ∈ (Set.Pi univ fun i => ioo (a i) (b i)) \ s, HasFderivAt f (f' x) x)
     (Hi : IntegrableOn (fun x => ∑ i, f' x (e i) i) (icc a b)) :
     (∫ x in icc a b, ∑ i, f' x (e i) i) =
-      ∑ i : Finₓ (n + 1), (∫ x in face i, f ((front_face(i)) x) i) - ∫ x in face i, f ((back_face(i)) x) i :=
+      ∑ i : Finₓ (n + 1), (∫ x in face i, f ((front_face (i)) x) i) - ∫ x in face i, f ((back_face (i)) x) i :=
   by
   rcases em (∃ i, a i = b i) with (⟨i, hi⟩ | hne)
   · -- First we sort out the trivial case `∃ i, a i = b i`.
@@ -298,7 +298,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable' (hle : a ≤ 
     (Hd : ∀ x ∈ (pi Set.Univ fun i => ioo (a i) (b i)) \ s, ∀ (i), HasFderivAt (f i) (f' i x) x)
     (Hi : IntegrableOn (fun x => ∑ i, f' i x (e i)) (icc a b)) :
     (∫ x in icc a b, ∑ i, f' i x (e i)) =
-      ∑ i : Finₓ (n + 1), (∫ x in face i, f i ((front_face(i)) x)) - ∫ x in face i, f i ((back_face(i)) x) :=
+      ∑ i : Finₓ (n + 1), (∫ x in face i, f i ((front_face (i)) x)) - ∫ x in face i, f i ((back_face (i)) x) :=
   integral_divergence_of_has_fderiv_within_at_off_countable a b hle (fun x i => f i x)
     (fun x => ContinuousLinearMap.pi fun i => f' i x) s hs (continuous_on_pi.2 Hc)
     (fun x hx => has_fderiv_at_pi.2 (Hd x hx)) Hi
@@ -544,13 +544,13 @@ theorem integral2_divergence_prod_of_has_fderiv_within_at_off_countable (f g : �
   · rw [interval_swap b₂ a₂, min_commₓ b₂ a₂, max_commₓ b₂ a₂] at this
     intro Hcf Hcg Hdf Hdg Hi
     simp only [intervalIntegral.integral_symm b₂ a₂, intervalIntegral.integral_neg]
-    refine' (congr_argₓ Neg.neg (this Hcf Hcg Hdf Hdg Hi)).trans _
+    refine' (congr_arg Neg.neg (this Hcf Hcg Hdf Hdg Hi)).trans _
     abel
     
   · rw [interval_swap b₁ a₁, min_commₓ b₁ a₁, max_commₓ b₁ a₁] at this
     intro Hcf Hcg Hdf Hdg Hi
     simp only [intervalIntegral.integral_symm b₁ a₁]
-    refine' (congr_argₓ Neg.neg (this Hcf Hcg Hdf Hdg Hi)).trans _
+    refine' (congr_arg Neg.neg (this Hcf Hcg Hdf Hdg Hi)).trans _
     abel
     
 

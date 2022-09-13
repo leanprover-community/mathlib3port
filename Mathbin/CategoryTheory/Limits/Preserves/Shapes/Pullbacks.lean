@@ -81,7 +81,7 @@ def preservesPullbackSymmetry :
     apply is_limit.of_iso_limit _ (pullback_cone.iso_mk _).symm
     apply pullback_cone.flip_is_limit
     apply (is_limit_map_cone_pullback_cone_equiv _ _).toFun
-    · apply preserves_limit.preserves with { instances := false }
+    · apply (config := { instances := false }) preserves_limit.preserves
       · dsimp'
         infer_instance
         
@@ -169,7 +169,7 @@ def preservesPushoutSymmetry :
     apply is_colimit.of_iso_colimit _ (pushout_cocone.iso_mk _).symm
     apply pushout_cocone.flip_is_colimit
     apply (is_colimit_map_cocone_pushout_cocone_equiv _ _).toFun
-    · apply preserves_colimit.preserves with { instances := false }
+    · apply (config := { instances := false }) preserves_colimit.preserves
       · dsimp'
         infer_instance
         

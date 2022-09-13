@@ -59,12 +59,12 @@ We now construct as morphisms various inclusions of open sets.
 -- This is tedious, but necessary because we decided not to allow Prop as morphisms in a category...
 /-- The inclusion `U ⊓ V ⟶ U` as a morphism in the category of open sets.
 -/
-def infLeLeft (U V : Opens X) : U⊓V ⟶ U :=
+def infLeLeft (U V : Opens X) : U ⊓ V ⟶ U :=
   inf_le_left.Hom
 
 /-- The inclusion `U ⊓ V ⟶ V` as a morphism in the category of open sets.
 -/
-def infLeRight (U V : Opens X) : U⊓V ⟶ V :=
+def infLeRight (U V : Opens X) : U ⊓ V ⟶ V :=
   inf_le_right.Hom
 
 /-- The inclusion `U i ⟶ supr U` as a morphism in the category of open sets.
@@ -223,7 +223,7 @@ theorem map_comp_eq (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) = map g ⋙ map 
 then the functors `opens Y ⥤ opens X` they induce are isomorphic.
 -/
 def mapIso (f g : X ⟶ Y) (h : f = g) : map f ≅ map g :=
-  NatIso.ofComponents (fun U => eqToIso (congr_funₓ (congr_argₓ Functor.obj (congr_argₓ map h)) U))
+  NatIso.ofComponents (fun U => eqToIso (congr_fun (congr_arg Functor.obj (congr_arg map h)) U))
     (by
       run_tac
         obviously)
@@ -242,12 +242,12 @@ theorem map_iso_refl (f : X ⟶ Y) (h) : mapIso f f h = Iso.refl (map _) :=
 
 @[simp]
 theorem map_iso_hom_app (f g : X ⟶ Y) (h : f = g) (U : Opens Y) :
-    (mapIso f g h).Hom.app U = eqToHom (congr_funₓ (congr_argₓ Functor.obj (congr_argₓ map h)) U) :=
+    (mapIso f g h).Hom.app U = eqToHom (congr_fun (congr_arg Functor.obj (congr_arg map h)) U) :=
   rfl
 
 @[simp]
 theorem map_iso_inv_app (f g : X ⟶ Y) (h : f = g) (U : Opens Y) :
-    (mapIso f g h).inv.app U = eqToHom (congr_funₓ (congr_argₓ Functor.obj (congr_argₓ map h.symm)) U) :=
+    (mapIso f g h).inv.app U = eqToHom (congr_fun (congr_arg Functor.obj (congr_arg map h.symm)) U) :=
   rfl
 
 /-- A homeomorphism of spaces gives an equivalence of categories of open sets. -/
@@ -336,7 +336,7 @@ theorem inclusion_top_functor (X : Top) : (@Opens.open_embedding X ⊤).IsOpenMa
     apply inclusion_top_functor.obj_eq
 
 theorem functor_obj_map_obj {X Y : Top} {f : X ⟶ Y} (hf : IsOpenMap f) (U : Opens Y) :
-    hf.Functor.obj ((Opens.map f).obj U) = hf.Functor.obj ⊤⊓U := by
+    hf.Functor.obj ((Opens.map f).obj U) = hf.Functor.obj ⊤ ⊓ U := by
   ext
   constructor
   · rintro ⟨x, hx, rfl⟩

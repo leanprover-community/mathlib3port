@@ -128,7 +128,7 @@ section Terminal
 
 /-- The trivial ring is the (strict) terminal object of `CommRing`. -/
 def punitIsTerminal : IsTerminal (CommRingₓₓ.of.{u} PUnit) := by
-  apply is_terminal.of_unique with { instances := false }
+  apply (config := { instances := false }) is_terminal.of_unique
   tidy
 
 instance CommRing_has_strict_terminal_objects : HasStrictTerminalObjects CommRingₓₓ.{u} := by
@@ -142,7 +142,7 @@ instance CommRing_has_strict_terminal_objects : HasStrictTerminalObjects CommRin
   have e : (0 : X) = 1 := by
     rw [← f.map_one, ← f.map_zero]
     congr
-  replace e : 0 * x = 1 * x := congr_argₓ (fun a => a * x) e
+  replace e : 0 * x = 1 * x := congr_arg (fun a => a * x) e
   rw [one_mulₓ, zero_mul, ← f.map_zero] at e
   exact e
 
@@ -153,7 +153,7 @@ theorem subsingleton_of_is_terminal {X : CommRingₓₓ} (hX : IsTerminal X) : S
 
 /-- `ℤ` is the initial object of `CommRing`. -/
 def zIsInitial : IsInitial (CommRingₓₓ.of ℤ) := by
-  apply is_initial.of_unique with { instances := false }
+  apply (config := { instances := false }) is_initial.of_unique
   exact fun R => ⟨⟨Int.castRingHom R⟩, fun a => a.ext_int _⟩
 
 end Terminal
@@ -265,7 +265,7 @@ def pullbackConeIsLimit {A B C : CommRingₓₓ.{u}} (f : A ⟶ C) (g : B ⟶ C)
   · intro s
     apply (s.fst.prod s.snd).codRestrict
     intro x
-    exact congr_argₓ (fun f : s.X →+* C => f x) s.condition
+    exact congr_arg (fun f : s.X →+* C => f x) s.condition
     
   · intro s
     ext x
@@ -277,9 +277,9 @@ def pullbackConeIsLimit {A B C : CommRingₓₓ.{u}} (f : A ⟶ C) (g : B ⟶ C)
     
   · intro s m e₁ e₂
     ext
-    · exact (congr_argₓ (fun f : s.X →+* A => f x) e₁ : _)
+    · exact (congr_arg (fun f : s.X →+* A => f x) e₁ : _)
       
-    · exact (congr_argₓ (fun f : s.X →+* B => f x) e₂ : _)
+    · exact (congr_arg (fun f : s.X →+* B => f x) e₂ : _)
       
     
 

@@ -739,7 +739,7 @@ theorem nat_div_mod : Primrec₂ fun n k : ℕ => (n / k, n % k) :=
         f (n.succ, k) = _root_.ite ((f (n, k)).2.succ = k) (Nat.succ (f (n, k)).1, 0) ((f (n, k)).1, (f (n, k)).2.succ)
         from rfl]
     by_cases' h : (f (n, k)).2.succ = k <;> simp [h]
-    · have := congr_argₓ Nat.succ IH.1
+    · have := congr_arg Nat.succ IH.1
       refine' ⟨_, fun k0 => Nat.noConfusion (h.trans k0)⟩
       rwa [← Nat.succ_add, h, add_commₓ, ← Nat.mul_succ] at this
       
@@ -886,7 +886,7 @@ instance list : Primcodable (List α) :=
         (Primrec.comp₂ (bind_decode_iff.2 <| Primrec₂.swap this) Primrec₂.right)
     nat_iff.1 <|
       (encode_iff.2 this).of_eq fun n => by
-        rw [List.foldl_reverse]
+        rw [List.foldl_reverseₓ]
         apply Nat.case_strong_induction_onₓ n
         · simp
           
@@ -902,7 +902,7 @@ instance list : Primcodable (List α) :=
         exact this _ _ (IH _ (Nat.unpair_right_le n))
         intro o p IH
         cases o <;> cases p <;> injection IH with h
-        exact congr_argₓ (fun k => (Nat.mkpair (encode a) k).succ.succ) h⟩
+        exact congr_arg (fun k => (Nat.mkpair (encode a) k).succ.succ) h⟩
 
 end Primcodable
 
@@ -943,7 +943,7 @@ theorem list_reverse : Primrec (@List.reverse α) :=
 theorem list_foldr {f : α → List β} {g : α → σ} {h : α → β × σ → σ} (hf : Primrec f) (hg : Primrec g)
     (hh : Primrec₂ h) : Primrec fun a => (f a).foldr (fun b s => h a (b, s)) (g a) :=
   (list_foldl (list_reverse.comp hf) hg <| to₂ <| hh.comp fst <| (pair snd fst).comp snd).of_eq fun a => by
-    simp [List.foldl_reverse]
+    simp [List.foldl_reverseₓ]
 
 theorem list_head' : Primrec (@List.head' α) :=
   (list_cases Primrec.id (const none) (option_some_iff.2 <| fst.comp snd).to₂).of_eq fun l => by

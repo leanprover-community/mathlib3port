@@ -74,7 +74,7 @@ instance (priority := 75) toNonAssocSemiring : NonAssocSemiringₓ s :=
   Subtype.coe_injective.NonAssocSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ => rfl
 
 instance nontrivial [Nontrivial R] : Nontrivial s :=
-  (nontrivial_of_ne 0 1) fun H => zero_ne_one (congr_argₓ Subtype.val H)
+  (nontrivial_of_ne 0 1) fun H => zero_ne_one (congr_arg Subtype.val H)
 
 instance no_zero_divisors [NoZeroDivisors R] :
     NoZeroDivisors
@@ -312,7 +312,7 @@ theorem coe_mul (x y : s) : ((x * y : s) : R) = (x * y : R) :=
   rfl
 
 instance nontrivial [Nontrivial R] : Nontrivial s :=
-  (nontrivial_of_ne 0 1) fun H => zero_ne_one (congr_argₓ Subtype.val H)
+  (nontrivial_of_ne 0 1) fun H => zero_ne_one (congr_arg Subtype.val H)
 
 protected theorem pow_mem {R : Type _} [Semiringₓ R] (s : Subsemiring R) {x : R} (hx : x ∈ s) (n : ℕ) : x ^ n ∈ s :=
   pow_mem hx n
@@ -497,14 +497,14 @@ theorem mem_bot {x : R} : x ∈ (⊥ : Subsemiring R) ↔ ∃ n : ℕ, ↑n = x 
 
 /-- The inf of two subsemirings is their intersection. -/
 instance : HasInf (Subsemiring R) :=
-  ⟨fun s t => { s.toSubmonoid⊓t.toSubmonoid, s.toAddSubmonoid⊓t.toAddSubmonoid with Carrier := s ∩ t }⟩
+  ⟨fun s t => { s.toSubmonoid ⊓ t.toSubmonoid, s.toAddSubmonoid ⊓ t.toAddSubmonoid with Carrier := s ∩ t }⟩
 
 @[simp]
-theorem coe_inf (p p' : Subsemiring R) : ((p⊓p' : Subsemiring R) : Set R) = p ∩ p' :=
+theorem coe_inf (p p' : Subsemiring R) : ((p ⊓ p' : Subsemiring R) : Set R) = p ∩ p' :=
   rfl
 
 @[simp]
-theorem mem_inf {p p' : Subsemiring R} {x : R} : x ∈ p⊓p' ↔ x ∈ p ∧ x ∈ p' :=
+theorem mem_inf {p p' : Subsemiring R} {x : R} : x ∈ p ⊓ p' ↔ x ∈ p ∧ x ∈ p' :=
   Iff.rfl
 
 instance : HasInfₓ (Subsemiring R) :=
@@ -540,7 +540,7 @@ instance : CompleteLattice (Subsemiring R) :=
     bot_le := fun s x hx =>
       let ⟨n, hn⟩ := mem_bot.1 hx
       hn ▸ coe_nat_mem s n,
-    top := ⊤, le_top := fun s x hx => trivialₓ, inf := (·⊓·), inf_le_left := fun s t x => And.left,
+    top := ⊤, le_top := fun s x hx => trivialₓ, inf := (· ⊓ ·), inf_le_left := fun s t x => And.left,
     inf_le_right := fun s t x => And.right, le_inf := fun s t₁ t₂ h₁ h₂ x hx => ⟨h₁ hx, h₂ hx⟩ }
 
 theorem eq_top_iff' (A : Subsemiring R) : A = ⊤ ↔ ∀ x : R, x ∈ A :=
@@ -755,7 +755,7 @@ theorem closure_empty : closure (∅ : Set R) = ⊥ :=
 theorem closure_univ : closure (Set.Univ : Set R) = ⊤ :=
   @coe_top R _ ▸ closure_eq ⊤
 
-theorem closure_union (s t : Set R) : closure (s ∪ t) = closure s⊔closure t :=
+theorem closure_union (s t : Set R) : closure (s ∪ t) = closure s ⊔ closure t :=
   (Subsemiring.gi R).gc.l_sup
 
 theorem closure_Union {ι} (s : ι → Set R) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
@@ -764,13 +764,13 @@ theorem closure_Union {ι} (s : ι → Set R) : closure (⋃ i, s i) = ⨆ i, cl
 theorem closure_sUnion (s : Set (Set R)) : closure (⋃₀s) = ⨆ t ∈ s, closure t :=
   (Subsemiring.gi R).gc.l_Sup
 
-theorem map_sup (s t : Subsemiring R) (f : R →+* S) : (s⊔t).map f = s.map f⊔t.map f :=
+theorem map_sup (s t : Subsemiring R) (f : R →+* S) : (s ⊔ t).map f = s.map f ⊔ t.map f :=
   (gc_map_comap f).l_sup
 
 theorem map_supr {ι : Sort _} (f : R →+* S) (s : ι → Subsemiring R) : (supr s).map f = ⨆ i, (s i).map f :=
   (gc_map_comap f).l_supr
 
-theorem comap_inf (s t : Subsemiring S) (f : R →+* S) : (s⊓t).comap f = s.comap f⊓t.comap f :=
+theorem comap_inf (s t : Subsemiring S) (f : R →+* S) : (s ⊓ t).comap f = s.comap f ⊓ t.comap f :=
   (gc_map_comap f).u_inf
 
 theorem comap_infi {ι : Sort _} (f : R →+* S) (s : ι → Subsemiring S) : (infi s).comap f = ⨅ i, (s i).comap f :=
@@ -947,11 +947,11 @@ theorem range_snd : (snd R S).srange = ⊤ :=
   (snd R S).srange_top_of_surjective <| Prod.snd_surjectiveₓ
 
 @[simp]
-theorem prod_bot_sup_bot_prod (s : Subsemiring R) (t : Subsemiring S) : s.Prod ⊥⊔prod ⊥ t = s.Prod t :=
+theorem prod_bot_sup_bot_prod (s : Subsemiring R) (t : Subsemiring S) : s.Prod ⊥ ⊔ prod ⊥ t = s.Prod t :=
   (le_antisymmₓ (sup_le (prod_mono_right s bot_le) (prod_mono_left t bot_le))) fun p hp =>
     Prod.fst_mul_snd p ▸
-      mul_mem ((le_sup_left : s.Prod ⊥ ≤ s.Prod ⊥⊔prod ⊥ t) ⟨hp.1, SetLike.mem_coe.2 <| one_mem ⊥⟩)
-        ((le_sup_right : prod ⊥ t ≤ s.Prod ⊥⊔prod ⊥ t) ⟨SetLike.mem_coe.2 <| one_mem ⊥, hp.2⟩)
+      mul_mem ((le_sup_left : s.Prod ⊥ ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨hp.1, SetLike.mem_coe.2 <| one_mem ⊥⟩)
+        ((le_sup_right : prod ⊥ t ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨SetLike.mem_coe.2 <| one_mem ⊥, hp.2⟩)
 
 end Subsemiring
 
@@ -962,7 +962,7 @@ variable {s t : Subsemiring R}
 /-- Makes the identity isomorphism from a proof two subsemirings of a multiplicative
     monoid are equal. -/
 def subsemiringCongr (h : s = t) : s ≃+* t :=
-  { Equivₓ.setCongr <| congr_argₓ _ h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
+  { Equivₓ.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
 
 /-- Restrict a ring homomorphism with a left inverse to a ring isomorphism to its
 `ring_hom.srange`. -/

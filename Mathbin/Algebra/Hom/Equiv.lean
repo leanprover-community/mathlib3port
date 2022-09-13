@@ -105,7 +105,7 @@ instance (priority := 100) [MulOneClassₓ M] [MulOneClassₓ N] [MulEquivClass 
     map_one := fun e =>
       calc
         e 1 = e 1 * 1 := (mul_oneₓ _).symm
-        _ = e 1 * e (inv e (1 : N) : M) := congr_argₓ _ (right_inv e 1).symm
+        _ = e 1 * e (inv e (1 : N) : M) := congr_arg _ (right_inv e 1).symm
         _ = e (inv e (1 : N)) := by
           rw [← map_mul, one_mulₓ]
         _ = 1 := right_inv e 1

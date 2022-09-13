@@ -259,14 +259,15 @@ theorem IntegrableAtFilter.filter_mono (hl : l ≤ l') (hl' : IntegrableAtFilter
   let ⟨s, hs, hsf⟩ := hl'
   ⟨s, hl hs, hsf⟩
 
-theorem IntegrableAtFilter.inf_of_left (hl : IntegrableAtFilter f l μ) : IntegrableAtFilter f (l⊓l') μ :=
+theorem IntegrableAtFilter.inf_of_left (hl : IntegrableAtFilter f l μ) : IntegrableAtFilter f (l ⊓ l') μ :=
   hl.filter_mono inf_le_left
 
-theorem IntegrableAtFilter.inf_of_right (hl : IntegrableAtFilter f l μ) : IntegrableAtFilter f (l'⊓l) μ :=
+theorem IntegrableAtFilter.inf_of_right (hl : IntegrableAtFilter f l μ) : IntegrableAtFilter f (l' ⊓ l) μ :=
   hl.filter_mono inf_le_right
 
 @[simp]
-theorem IntegrableAtFilter.inf_ae_iff {l : Filter α} : IntegrableAtFilter f (l⊓μ.ae) μ ↔ IntegrableAtFilter f l μ := by
+theorem IntegrableAtFilter.inf_ae_iff {l : Filter α} : IntegrableAtFilter f (l ⊓ μ.ae) μ ↔ IntegrableAtFilter f l μ :=
+  by
   refine' ⟨_, fun h => h.filter_mono inf_le_left⟩
   rintro ⟨s, ⟨t, ht, u, hu, rfl⟩, hf⟩
   refine' ⟨t, ht, _⟩
@@ -291,7 +292,7 @@ theorem Measure.FiniteAtFilter.integrable_at_filter {l : Filter α} [IsMeasurabl
   exact eventually_of_forall hC
 
 theorem Measure.FiniteAtFilter.integrable_at_filter_of_tendsto_ae {l : Filter α} [IsMeasurablyGenerated l]
-    (hfm : StronglyMeasurableAtFilter f l μ) (hμ : μ.FiniteAtFilter l) {b} (hf : Tendsto f (l⊓μ.ae) (𝓝 b)) :
+    (hfm : StronglyMeasurableAtFilter f l μ) (hμ : μ.FiniteAtFilter l) {b} (hf : Tendsto f (l ⊓ μ.ae) (𝓝 b)) :
     IntegrableAtFilter f l μ :=
   (hμ.inf_of_left.IntegrableAtFilter (hfm.filter_mono inf_le_left) hf.norm.is_bounded_under_le).of_inf_ae
 

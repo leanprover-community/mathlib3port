@@ -1,0 +1,63 @@
+/-
+Copyright (c) 2022 Yaël Dillies. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies
+-/
+import Mathbin.Algebra.Hom.Group
+import Mathbin.Algebra.Order.WithZero
+import Mathbin.Order.Hom.Basic
+
+/-!
+# Algebraic order homomorphism classes
+
+This file defines hom classes for common properties at the intersection of order theory and algebra.
+
+## Typeclasses
+
+* `nonneg_hom_class`: Homs are nonnegative: `∀ f a, 0 ≤ f a`
+* `subadditive_hom_class`: Homs are subadditive: `∀ f a b, f (a + b) ≤ f a + f b`
+* `submultiplicative_hom_class`: Homs are submultiplicative: `∀ f a b, f (a * b) ≤ f a * f b`
+* `mul_le_add_hom_class`: `∀ f a b, f (a * b) ≤ f a + f b`
+-/
+
+
+open Function
+
+variable {F α β γ δ : Type _}
+
+/-- `nonneg_hom_class F α β` states that `F` is a type of nonnegative morphisms. -/
+class NonnegHomClass (F : Type _) (α β : outParam <| Type _) [Zero β] [LE β] extends FunLike F α fun _ => β where
+  map_nonneg (f : F) : ∀ a, 0 ≤ f a
+
+/-- `subadditive_hom_class F α β` states that `F` is a type of subadditive morphisms. -/
+class SubadditiveHomClass (F : Type _) (α β : outParam <| Type _) [Add α] [Add β] [LE β] extends
+  FunLike F α fun _ => β where
+  map_add_le_add (f : F) : ∀ a b, f (a + b) ≤ f a + f b
+
+/-- `submultiplicative_hom_class F α β` states that `F` is a type of submultiplicative morphisms. -/
+@[to_additive SubadditiveHomClass]
+class SubmultiplicativeHomClass (F : Type _) (α β : outParam <| Type _) [Mul α] [Mul β] [LE β] extends
+  FunLike F α fun _ => β where
+  map_mul_le_mul (f : F) : ∀ a b, f (a * b) ≤ f a * f b
+
+/-- `map_add_le_class F α β` states that `F` is a type of subadditive morphisms. -/
+@[to_additive SubadditiveHomClass]
+class MulLeAddHomClass (F : Type _) (α β : outParam <| Type _) [Mul α] [Add β] [LE β] extends
+  FunLike F α fun _ => β where
+  map_mul_le_add (f : F) : ∀ a b, f (a * b) ≤ f a + f b
+
+export NonnegHomClass (map_nonneg)
+
+export SubadditiveHomClass (map_add_le_add)
+
+export SubmultiplicativeHomClass (map_mul_le_mul)
+
+export MulLeAddHomClass (map_mul_le_add)
+
+attribute [simp] map_nonneg
+
+@[to_additive]
+theorem le_map_add_map_div [Groupₓ α] [AddCommSemigroupₓ β] [LE β] [MulLeAddHomClass F α β] (f : F) (a b : α) :
+    f a ≤ f b + f (a / b) := by
+  simpa only [add_commₓ, div_mul_cancel'] using map_mul_le_add f (a / b) b
+

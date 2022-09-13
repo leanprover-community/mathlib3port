@@ -70,15 +70,15 @@ theorem coe_Sup_of_directed_on {S : Set (Subsemigroup M)} (hS : DirectedOn (· �
     simp [mem_Sup_of_directed_on hS]
 
 @[to_additive]
-theorem mem_sup_left {S T : Subsemigroup M} : ∀ {x : M}, x ∈ S → x ∈ S⊔T :=
-  show S ≤ S⊔T from le_sup_left
+theorem mem_sup_left {S T : Subsemigroup M} : ∀ {x : M}, x ∈ S → x ∈ S ⊔ T :=
+  show S ≤ S ⊔ T from le_sup_left
 
 @[to_additive]
-theorem mem_sup_right {S T : Subsemigroup M} : ∀ {x : M}, x ∈ T → x ∈ S⊔T :=
-  show T ≤ S⊔T from le_sup_right
+theorem mem_sup_right {S T : Subsemigroup M} : ∀ {x : M}, x ∈ T → x ∈ S ⊔ T :=
+  show T ≤ S ⊔ T from le_sup_right
 
 @[to_additive]
-theorem mul_mem_sup {S T : Subsemigroup M} {x y : M} (hx : x ∈ S) (hy : y ∈ T) : x * y ∈ S⊔T :=
+theorem mul_mem_sup {S T : Subsemigroup M} {x y : M} (hx : x ∈ S) (hy : y ∈ T) : x * y ∈ S ⊔ T :=
   mul_mem (mem_sup_left hx) (mem_sup_right hy)
 
 @[to_additive]

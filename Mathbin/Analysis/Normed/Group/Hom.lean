@@ -47,7 +47,7 @@ def mkNormedAddGroupHom (f : V →+ W) (C : ℝ) (h : ∀ v, ∥f v∥ ≤ C * �
 /-- Associate to a group homomorphism a bounded group homomorphism under a norm control condition.
 
 See `add_monoid_hom.mk_normed_add_group_hom` for a version that uses `ℝ` for the bound. -/
-def mkNormedAddGroupHom' (f : V →+ W) (C : ℝ≥0 ) (hC : ∀ x, ∥f x∥₊ ≤ C * ∥x∥₊) : NormedAddGroupHom V W :=
+def mkNormedAddGroupHom' (f : V →+ W) (C : ℝ≥0) (hC : ∀ x, ∥f x∥₊ ≤ C * ∥x∥₊) : NormedAddGroupHom V W :=
   { f with bound' := ⟨C, hC⟩ }
 
 end AddMonoidHom
@@ -79,7 +79,7 @@ theorem coe_injective : @Function.Injective (NormedAddGroupHom V₁ V₂) (V₁ 
   apply coe_inj
 
 theorem coe_inj_iff : f = g ↔ (f : V₁ → V₂) = g :=
-  ⟨congr_argₓ _, coe_inj⟩
+  ⟨congr_arg _, coe_inj⟩
 
 @[ext]
 theorem ext (H : ∀ x, f x = g x) : f = g :=
@@ -136,7 +136,7 @@ theorem bound : ∃ C, 0 < C ∧ ∀ x, ∥f x∥ ≤ C * ∥x∥ :=
   let ⟨C, hC⟩ := f.bound'
   exists_pos_bound_of_bound _ hC
 
-theorem antilipschitz_of_norm_ge {K : ℝ≥0 } (h : ∀ x, ∥x∥ ≤ K * ∥f x∥) : AntilipschitzWith K f :=
+theorem antilipschitz_of_norm_ge {K : ℝ≥0} (h : ∀ x, ∥x∥ ≤ K * ∥f x∥) : AntilipschitzWith K f :=
   AntilipschitzWith.of_le_mul_dist fun x y => by
     simpa only [dist_eq_norm, map_sub] using h (x - y)
 
@@ -242,7 +242,7 @@ theorem op_norm_eq_of_bounds {M : ℝ} (M_nonneg : 0 ≤ M) (h_above : ∀ x, �
     ((le_cInf_iff NormedAddGroupHom.bounds_bdd_below ⟨M, M_nonneg, h_above⟩).mpr fun N ⟨N_nonneg, hN⟩ =>
       h_below N N_nonneg hN)
 
-theorem op_norm_le_of_lipschitz {f : NormedAddGroupHom V₁ V₂} {K : ℝ≥0 } (hf : LipschitzWith K f) : ∥f∥ ≤ K :=
+theorem op_norm_le_of_lipschitz {f : NormedAddGroupHom V₁ V₂} {K : ℝ≥0} (hf : LipschitzWith K f) : ∥f∥ ≤ K :=
   (f.op_norm_le_bound K.2) fun x => by
     simpa only [dist_zero_right, map_zero] using hf.dist_le_mul x 0
 

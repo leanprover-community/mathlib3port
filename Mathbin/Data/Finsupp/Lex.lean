@@ -78,7 +78,7 @@ private def lt_trichotomy_rec {P : Lex (α →₀ N) → Lex (α →₀ N) → S
 
 -- ./././Mathport/Syntax/Translate/Command.lean:271:38: unsupported irreducible non-definition
 irreducible_def Lex.decidableLe : @DecidableRel (Lex (α →₀ N)) (· ≤ ·) :=
-  ltTrichotomyRec (fun f g h => is_true <| Or.inr h) (fun f g h => is_true <| Or.inl <| congr_argₓ _ h) fun f g h =>
+  ltTrichotomyRec (fun f g h => is_true <| Or.inr h) (fun f g h => is_true <| Or.inl <| congr_arg _ h) fun f g h =>
     is_false fun h' => (lt_irreflₓ _ (h.trans_le h')).elim
 
 -- ./././Mathport/Syntax/Translate/Command.lean:271:38: unsupported irreducible non-definition
@@ -124,7 +124,7 @@ section Left
 variable [CovariantClass N N (· + ·) (· < ·)]
 
 instance Lex.covariant_class_lt_left : CovariantClass (Lex (α →₀ N)) (Lex (α →₀ N)) (· + ·) (· < ·) :=
-  ⟨fun f g h ⟨a, lta, ha⟩ => ⟨a, fun j ja => congr_argₓ ((· + ·) _) (lta j ja), add_lt_add_left ha _⟩⟩
+  ⟨fun f g h ⟨a, lta, ha⟩ => ⟨a, fun j ja => congr_arg ((· + ·) _) (lta j ja), add_lt_add_left ha _⟩⟩
 
 instance Lex.covariant_class_le_left : CovariantClass (Lex (α →₀ N)) (Lex (α →₀ N)) (· + ·) (· ≤ ·) :=
   Add.to_covariant_class_left _
@@ -136,7 +136,7 @@ section Right
 variable [CovariantClass N N (Function.swap (· + ·)) (· < ·)]
 
 instance Lex.covariant_class_lt_right : CovariantClass (Lex (α →₀ N)) (Lex (α →₀ N)) (Function.swap (· + ·)) (· < ·) :=
-  ⟨fun f g h ⟨a, lta, ha⟩ => ⟨a, fun j ja => congr_argₓ (· + ofLex f j) (lta j ja), add_lt_add_right ha _⟩⟩
+  ⟨fun f g h ⟨a, lta, ha⟩ => ⟨a, fun j ja => congr_arg (· + ofLex f j) (lta j ja), add_lt_add_right ha _⟩⟩
 
 instance Lex.covariant_class_le_right : CovariantClass (Lex (α →₀ N)) (Lex (α →₀ N)) (Function.swap (· + ·)) (· ≤ ·) :=
   Add.to_covariant_class_right _

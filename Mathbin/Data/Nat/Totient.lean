@@ -149,7 +149,7 @@ theorem totient_div_of_dvd {n d : ℕ} (hnd : d ∣ n) : φ (n / d) = (filter (f
     
   · simp [hd0.ne']
     
-  · simp only [mem_filter, mem_range, exists_prop, and_imp]
+  · simp only [mem_filter, mem_range, exists_propₓ, and_imp]
     refine' fun b hb1 hb2 => _
     have : d ∣ b := by
       rw [← hb2]
@@ -181,7 +181,7 @@ theorem totient_prime_pow_succ {p : ℕ} (hp : p.Prime) (n : ℕ) : φ (p ^ (n +
   calc
     φ (p ^ (n + 1)) = ((range (p ^ (n + 1))).filter (Coprime (p ^ (n + 1)))).card := totient_eq_card_coprime _
     _ = (range (p ^ (n + 1)) \ (range (p ^ n)).Image (· * p)).card :=
-      congr_argₓ card
+      congr_arg card
         (by
           rw [sdiff_eq_filter]
           apply filter_congr

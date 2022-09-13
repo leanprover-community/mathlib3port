@@ -217,7 +217,7 @@ theorem bounded_ge_Icc [Preorderₓ α] (a b : α) : Bounded (· ≥ ·) (Set.Ic
 
 
 theorem unbounded_le_Ioi [SemilatticeSup α] [NoMaxOrder α] (a : α) : Unbounded (· ≤ ·) (Set.Ioi a) := fun b =>
-  let ⟨c, hc⟩ := exists_gt (a⊔b)
+  let ⟨c, hc⟩ := exists_gt (a ⊔ b)
   ⟨c, le_sup_left.trans_lt hc, (le_sup_right.trans_lt hc).not_le⟩
 
 theorem unbounded_le_Ici [SemilatticeSup α] [NoMaxOrder α] (a : α) : Unbounded (· ≤ ·) (Set.Ici a) :=
@@ -227,7 +227,7 @@ theorem unbounded_lt_Ioi [SemilatticeSup α] [NoMaxOrder α] (a : α) : Unbounde
   unbounded_lt_of_unbounded_le (unbounded_le_Ioi a)
 
 theorem unbounded_lt_Ici [SemilatticeSup α] (a : α) : Unbounded (· < ·) (Set.Ici a) := fun b =>
-  ⟨a⊔b, le_sup_left, le_sup_right.not_lt⟩
+  ⟨a ⊔ b, le_sup_left, le_sup_right.not_lt⟩
 
 /-! ### Bounded initial segments -/
 
@@ -247,7 +247,7 @@ theorem unbounded_inter_not (H : ∀ a b, ∃ m, ∀ c, r c a ∨ r c b → r c 
 
 
 theorem bounded_le_inter_not_le [SemilatticeSup α] (a : α) : Bounded (· ≤ ·) (s ∩ { b | ¬b ≤ a }) ↔ Bounded (· ≤ ·) s :=
-  bounded_inter_not (fun x y => ⟨x⊔y, fun z h => h.elim le_sup_of_le_left le_sup_of_le_right⟩) a
+  bounded_inter_not (fun x y => ⟨x ⊔ y, fun z h => h.elim le_sup_of_le_left le_sup_of_le_right⟩) a
 
 theorem unbounded_le_inter_not_le [SemilatticeSup α] (a : α) :
     Unbounded (· ≤ ·) (s ∩ { b | ¬b ≤ a }) ↔ Unbounded (· ≤ ·) s := by
@@ -277,7 +277,7 @@ theorem unbounded_le_inter_le [LinearOrderₓ α] (a : α) : Unbounded (· ≤ �
 
 
 theorem bounded_lt_inter_not_lt [SemilatticeSup α] (a : α) : Bounded (· < ·) (s ∩ { b | ¬b < a }) ↔ Bounded (· < ·) s :=
-  bounded_inter_not (fun x y => ⟨x⊔y, fun z h => h.elim lt_sup_of_lt_left lt_sup_of_lt_right⟩) a
+  bounded_inter_not (fun x y => ⟨x ⊔ y, fun z h => h.elim lt_sup_of_lt_left lt_sup_of_lt_right⟩) a
 
 theorem unbounded_lt_inter_not_lt [SemilatticeSup α] (a : α) :
     Unbounded (· < ·) (s ∩ { b | ¬b < a }) ↔ Unbounded (· < ·) s := by

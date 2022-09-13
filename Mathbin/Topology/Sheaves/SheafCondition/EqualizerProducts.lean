@@ -51,7 +51,7 @@ def piOpens : C :=
 a family of open sets.
 -/
 def piInters : C :=
-  ∏ fun p : ι × ι => F.obj (op (U p.1⊓U p.2))
+  ∏ fun p : ι × ι => F.obj (op (U p.1 ⊓ U p.2))
 
 /-- The morphism `Π F.obj (U i) ⟶ Π F.obj (U i) ⊓ (U j)` whose components
 are given by the restriction maps from `U i` to `U i ⊓ U j`.

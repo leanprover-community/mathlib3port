@@ -117,7 +117,7 @@ theorem applicative_comp_id {F} [AF : Applicativeₓ F] [LF : IsLawfulApplicativ
 
 open IsCommApplicative
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 instance {f : Type u → Type w} {g : Type v → Type u} [Applicativeₓ f] [Applicativeₓ g] [IsCommApplicative f]
     [IsCommApplicative g] : IsCommApplicative (Comp f g) := by
   refine' { @comp.is_lawful_applicative f g _ _ _ _ with .. }

@@ -28,10 +28,10 @@ theorem zsmul_mem_zmultiples_iff_exists_sub_div {r : R} {z : ℤ} (hz : z ≠ 0)
   · rintro ⟨k, h⟩
     simp_rw [← h]
     refine' ⟨⟨(k % z).toNat, _⟩, k / z, _⟩
-    · rw [← Int.coe_nat_ltₓ, Int.to_nat_of_nonneg (Int.mod_nonneg _ hz)]
+    · rw [← Int.coe_nat_ltₓ, Int.to_nat_of_nonneg (Int.mod_nonnegₓ _ hz)]
       exact (Int.mod_lt _ hz).trans_eq (Int.abs_eq_nat_abs _)
       
-    rw [Finₓ.coe_mk, Int.to_nat_of_nonneg (Int.mod_nonneg _ hz), Int.div_add_mod]
+    rw [Finₓ.coe_mk, Int.to_nat_of_nonneg (Int.mod_nonnegₓ _ hz), Int.div_add_modₓ]
     
   · rintro ⟨k, n, h⟩
     exact ⟨_, h⟩

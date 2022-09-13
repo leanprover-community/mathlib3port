@@ -78,7 +78,7 @@ theorem preinclusion_obj (a : B) : (preinclusion B).obj a = a :=
 
 @[simp]
 theorem preinclusion_map₂ {a b : B} (f g : Discrete (Path.{v + 1} a b)) (η : f ⟶ g) :
-    (preinclusion B).map₂ η = eqToHom (congr_argₓ _ (Discrete.ext _ _ (Discrete.eq_of_hom η))) := by
+    (preinclusion B).map₂ η = eqToHom (congr_arg _ (Discrete.ext _ _ (Discrete.eq_of_hom η))) := by
   rcases η with ⟨⟨⟩⟩
   cases discrete.ext _ _ η
   exact (inclusion_path a b).map_id _
@@ -130,7 +130,7 @@ def normalizeIsoₓ {a : B} :
 theorem normalize_aux_congr {a b c : B} (p : Path a b) {f g : Hom b c} (η : f ⟶ g) :
     normalizeAuxₓ p f = normalizeAuxₓ p g := by
   rcases η with ⟨⟩
-  apply @congr_funₓ _ _ fun p => normalize_aux p f
+  apply @congr_fun _ _ fun p => normalize_aux p f
   clear p
   induction η
   case vcomp =>
@@ -138,10 +138,10 @@ theorem normalize_aux_congr {a b c : B} (p : Path a b) {f g : Hom b c} (η : f �
   -- p ≠ nil required! See the docstring of `normalize_aux`.
   case whisker_left _ _ _ _ _ _ _ ih =>
     funext
-    apply congr_funₓ ih
+    apply congr_fun ih
   case whisker_right _ _ _ _ _ _ _ ih =>
     funext
-    apply congr_arg2ₓ _ (congr_funₓ ih p) rfl
+    apply congr_arg2ₓ _ (congr_fun ih p) rfl
   all_goals
     funext
     rfl

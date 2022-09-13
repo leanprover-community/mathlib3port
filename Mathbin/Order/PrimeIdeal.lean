@@ -100,27 +100,27 @@ section SemilatticeInf
 
 variable [SemilatticeInf P] {x y : P} {I : Ideal P}
 
-theorem IsPrime.mem_or_mem (hI : IsPrime I) {x y : P} : x⊓y ∈ I → x ∈ I ∨ y ∈ I := by
+theorem IsPrime.mem_or_mem (hI : IsPrime I) {x y : P} : x ⊓ y ∈ I → x ∈ I ∨ y ∈ I := by
   contrapose!
   let F := hI.compl_filter.to_pfilter
-  show x ∈ F ∧ y ∈ F → x⊓y ∈ F
+  show x ∈ F ∧ y ∈ F → x ⊓ y ∈ F
   exact fun h => inf_mem h.1 h.2
 
-theorem IsPrime.of_mem_or_mem [IsProper I] (hI : ∀ {x y : P}, x⊓y ∈ I → x ∈ I ∨ y ∈ I) : IsPrime I := by
+theorem IsPrime.of_mem_or_mem [IsProper I] (hI : ∀ {x y : P}, x ⊓ y ∈ I → x ∈ I ∨ y ∈ I) : IsPrime I := by
   rw [is_prime_iff]
   use ‹_›
   apply is_pfilter.of_def
   · exact Set.nonempty_compl.2 (I.is_proper_iff.1 ‹_›)
     
   · intro x _ y _
-    refine' ⟨x⊓y, _, inf_le_left, inf_le_right⟩
+    refine' ⟨x ⊓ y, _, inf_le_left, inf_le_right⟩
     have := mt hI
     tauto!
     
   · exact @mem_compl_of_ge _ _ _
     
 
-theorem is_prime_iff_mem_or_mem [IsProper I] : IsPrime I ↔ ∀ {x y : P}, x⊓y ∈ I → x ∈ I ∨ y ∈ I :=
+theorem is_prime_iff_mem_or_mem [IsProper I] : IsPrime I ↔ ∀ {x y : P}, x ⊓ y ∈ I → x ∈ I ∨ y ∈ I :=
   ⟨IsPrime.mem_or_mem, IsPrime.of_mem_or_mem⟩
 
 end SemilatticeInf
@@ -135,7 +135,7 @@ instance (priority := 100) IsMaximal.is_prime [IsMaximal I] : IsPrime I := by
   contrapose!
   rintro ⟨hx, hynI⟩ hxy
   apply hynI
-  let J := I⊔principal x
+  let J := I ⊔ principal x
   have hJuniv : (J : Set P) = Set.Univ := is_maximal.maximal_proper (lt_sup_principal_of_not_mem ‹_›)
   have hyJ : y ∈ ↑J := set.eq_univ_iff_forall.mp hJuniv y
   rw [coe_sup_eq] at hyJ
@@ -163,7 +163,7 @@ theorem is_prime_of_mem_or_compl_mem [IsProper I] (h : ∀ {x : P}, x ∈ I ∨ 
   simp only [is_prime_iff_mem_or_mem, or_iff_not_imp_left]
   intro x y hxy hxI
   have hxcI : xᶜ ∈ I := h.resolve_left hxI
-  have ass : x⊓y⊔y⊓xᶜ ∈ I := sup_mem hxy (I.lower inf_le_right hxcI)
+  have ass : x ⊓ y ⊔ y ⊓ xᶜ ∈ I := sup_mem hxy (I.lower inf_le_right hxcI)
   rwa [inf_comm, sup_inf_inf_compl] at ass
 
 theorem is_prime_iff_mem_or_compl_mem [IsProper I] : IsPrime I ↔ ∀ {x : P}, x ∈ I ∨ xᶜ ∈ I :=
@@ -173,7 +173,7 @@ instance (priority := 100) IsPrime.is_maximal [IsPrime I] : IsMaximal I := by
   simp only [is_maximal_iff, Set.eq_univ_iff_forall, is_prime.to_is_proper, true_andₓ]
   intro J hIJ x
   rcases Set.exists_of_ssubset hIJ with ⟨y, hyJ, hyI⟩
-  suffices ass : x⊓y⊔x⊓yᶜ ∈ J
+  suffices ass : x ⊓ y ⊔ x ⊓ yᶜ ∈ J
   · rwa [sup_inf_inf_compl] at ass
     
   exact sup_mem (J.lower inf_le_right hyJ) (hIJ.le <| I.lower inf_le_right <| is_prime.mem_compl_of_not_mem ‹_› hyI)

@@ -173,11 +173,11 @@ def filterAt (x : α) : Filter (Set α) :=
 
 theorem mem_filter_at_iff {x : α} {s : Set (Set α)} :
     s ∈ v.filterAt x ↔ ∃ ε > (0 : ℝ), ∀ a ∈ v.SetsAt x, a ⊆ ClosedBall x ε → a ∈ s := by
-  simp only [filter_at, exists_prop, gt_iff_ltₓ]
+  simp only [filter_at, exists_propₓ, gt_iff_ltₓ]
   rw [mem_binfi_of_directed]
-  · simp only [subset_def, and_imp, exists_prop, mem_sep_eq, mem_Ioi, mem_principal]
+  · simp only [subset_def, and_imp, exists_propₓ, mem_sep_eq, mem_Ioi, mem_principal]
     
-  · simp only [DirectedOn, exists_prop, ge_iff_leₓ, le_principal_iff, mem_Ioi, Order.Preimage, mem_principal]
+  · simp only [DirectedOn, exists_propₓ, ge_iff_leₓ, le_principal_iff, mem_Ioi, Order.Preimage, mem_principal]
     intro x hx y hy
     refine'
       ⟨min x y, lt_minₓ hx hy, fun a ha => ⟨ha.1, ha.2.trans (closed_ball_subset_closed_ball (min_le_leftₓ _ _))⟩,
@@ -187,7 +187,7 @@ theorem mem_filter_at_iff {x : α} {s : Set (Set α)} :
     
 
 instance filter_at_ne_bot (x : α) : (v.filterAt x).ne_bot := by
-  simp only [ne_bot_iff, ← empty_mem_iff_bot, mem_filter_at_iff, not_exists, exists_prop, mem_empty_eq, and_trueₓ,
+  simp only [ne_bot_iff, ← empty_mem_iff_bot, mem_filter_at_iff, not_exists, exists_propₓ, mem_empty_eq, and_trueₓ,
     gt_iff_ltₓ, not_and, Ne.def, not_false_iff, not_forall]
   intro ε εpos
   obtain ⟨w, w_sets, hw⟩ : ∃ w ∈ v.sets_at x, w ⊆ closed_ball x ε := v.nontrivial x ε εpos
@@ -198,7 +198,7 @@ theorem eventually_filter_at_iff {x : α} {P : Set α → Prop} :
   v.mem_filter_at_iff
 
 theorem eventually_filter_at_mem_sets (x : α) : ∀ᶠ a in v.filterAt x, a ∈ v.SetsAt x := by
-  simp (config := { contextual := true })only [eventually_filter_at_iff, exists_prop, and_trueₓ, gt_iff_ltₓ,
+  simp (config := { contextual := true })only [eventually_filter_at_iff, exists_propₓ, and_trueₓ, gt_iff_ltₓ,
     implies_true_iff]
   exact ⟨1, zero_lt_one⟩
 
@@ -207,7 +207,7 @@ theorem eventually_filter_at_measurable_set (x : α) : ∀ᶠ a in v.filterAt x,
 
 theorem frequently_filter_at_iff {x : α} {P : Set α → Prop} :
     (∃ᶠ a in v.filterAt x, P a) ↔ ∀ ε > (0 : ℝ), ∃ a ∈ v.SetsAt x, a ⊆ ClosedBall x ε ∧ P a := by
-  simp only [Filter.Frequently, eventually_filter_at_iff, not_exists, exists_prop, not_and, not_not, not_forall]
+  simp only [Filter.Frequently, eventually_filter_at_iff, not_exists, exists_propₓ, not_and, not_not, not_forall]
 
 theorem eventually_filter_at_subset_of_nhds {x : α} {o : Set α} (hx : o ∈ 𝓝 x) : ∀ᶠ a in v.filterAt x, a ⊆ o := by
   rw [eventually_filter_at_iff]

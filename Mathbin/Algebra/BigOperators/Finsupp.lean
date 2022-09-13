@@ -52,7 +52,7 @@ variable [Zero M] [Zero M'] [CommMonoidₓ N]
 @[to_additive]
 theorem prod_of_support_subset (f : α →₀ M) {s : Finset α} (hs : f.Support ⊆ s) (g : α → M → N)
     (h : ∀ i ∈ s, g i 0 = 1) : f.Prod g = ∏ x in s, g x (f x) :=
-  (Finset.prod_subset hs) fun x hxs hx => h x hxs ▸ congr_argₓ (g x) <| not_mem_support_iff.1 hx
+  (Finset.prod_subset hs) fun x hxs hx => h x hxs ▸ congr_arg (g x) <| not_mem_support_iff.1 hx
 
 @[to_additive]
 theorem prod_fintype [Fintype α] (f : α →₀ M) (g : α → M → N) (h : ∀ i, g i 0 = 1) : f.Prod g = ∏ i, g i (f i) :=
@@ -242,7 +242,7 @@ theorem support_sum [DecidableEq β] [Zero M] [AddCommMonoidₓ N] {f : α →�
   have : ∀ c, (f.Sum fun a b => g a b c) ≠ 0 → ∃ a, f a ≠ 0 ∧ ¬(g a (f a)) c = 0 := fun a₁ h =>
     let ⟨a, ha, Ne⟩ := Finset.exists_ne_zero_of_sum_ne_zero h
     ⟨a, mem_support_iff.mp ha, Ne⟩
-  simpa only [Finset.subset_iff, mem_support_iff, Finset.mem_bUnion, sum_apply, exists_prop]
+  simpa only [Finset.subset_iff, mem_support_iff, Finset.mem_bUnion, sum_apply, exists_propₓ]
 
 theorem support_finset_sum [DecidableEq β] [AddCommMonoidₓ M] {s : Finset α} {f : α → β →₀ M} :
     (Finset.sum s f).Support ⊆ s.bUnion fun x => (f x).Support := by
@@ -413,7 +413,7 @@ theorem support_sum_eq_bUnion {α : Type _} {ι : Type _} {M : Type _} [AddCommM
     rw [Finsupp.support_add_eq, hs]
     rw [hs]
     intro x hx
-    simp only [mem_bUnion, exists_prop, inf_eq_inter, Ne.def, mem_inter] at hx
+    simp only [mem_bUnion, exists_propₓ, inf_eq_inter, Ne.def, mem_inter] at hx
     obtain ⟨hxi, j, hj, hxj⟩ := hx
     have hn : i ≠ j := fun H => hi (H.symm ▸ hj)
     apply h _ _ hn

@@ -117,7 +117,7 @@ instance : HasBot PartEnat :=
   ⟨0⟩
 
 instance : HasSup PartEnat :=
-  ⟨fun x y => ⟨x.Dom ∧ y.Dom, fun h => x.get h.1⊔y.get h.2⟩⟩
+  ⟨fun x y => ⟨x.Dom ∧ y.Dom, fun h => x.get h.1 ⊔ y.get h.2⟩⟩
 
 theorem le_def (x y : PartEnat) : x ≤ y ↔ ∃ h : y.Dom → x.Dom, ∀ hy : y.Dom, x.get (h hy) ≤ y.get hy :=
   Iff.rfl
@@ -268,7 +268,7 @@ protected theorem zero_lt_one : (0 : PartEnat) < 1 := by
   norm_num
 
 instance semilatticeSup : SemilatticeSup PartEnat :=
-  { PartEnat.partialOrder with sup := (·⊔·), le_sup_left := fun _ _ => ⟨And.left, fun _ => le_sup_left⟩,
+  { PartEnat.partialOrder with sup := (· ⊔ ·), le_sup_left := fun _ _ => ⟨And.left, fun _ => le_sup_left⟩,
     le_sup_right := fun _ _ => ⟨And.right, fun _ => le_sup_right⟩,
     sup_le := fun x y z ⟨hx₁, hx₂⟩ ⟨hy₁, hy₂⟩ => ⟨fun hz => ⟨hx₁ hz, hy₁ hz⟩, fun _ => sup_le (hx₂ _) (hy₂ _)⟩ }
 
@@ -295,7 +295,7 @@ theorem top_eq_none : (⊤ : PartEnat) = none :=
 @[simp]
 theorem coe_lt_top (x : ℕ) : (x : PartEnat) < ⊤ :=
   Ne.lt_top fun h =>
-    absurd (congr_argₓ Dom h) <| by
+    absurd (congr_arg Dom h) <| by
       simpa only [dom_coe] using true_ne_false
 
 @[simp]
@@ -349,7 +349,7 @@ instance :
         (le_totalₓ x y).elim (Or.inr ∘ coe_le_coe.2) (Or.inl ∘ coe_le_coe.2))
 
 noncomputable instance : LinearOrderₓ PartEnat :=
-  { PartEnat.partialOrder with le_total := IsTotal.total, decidableLe := Classical.decRel _, max := (·⊔·),
+  { PartEnat.partialOrder with le_total := IsTotal.total, decidableLe := Classical.decRel _, max := (· ⊔ ·),
     max_def := @sup_eq_max_default _ _ (id _) _ }
 
 instance : BoundedOrder PartEnat :=
@@ -641,7 +641,7 @@ noncomputable instance : LinearOrderedAddCommMonoidWithTop PartEnat :=
 
 noncomputable instance : CompleteLinearOrder PartEnat :=
   { PartEnat.lattice, withTopOrderIso.symm.toGaloisInsertion.liftCompleteLattice, PartEnat.linearOrder with
-    inf := (·⊓·), sup := (·⊔·), top := ⊤, bot := ⊥, le := (· ≤ ·), lt := (· < ·) }
+    inf := (· ⊓ ·), sup := (· ⊔ ·), top := ⊤, bot := ⊥, le := (· ≤ ·), lt := (· < ·) }
 
 end PartEnat
 

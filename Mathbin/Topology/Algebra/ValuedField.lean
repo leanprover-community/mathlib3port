@@ -275,7 +275,7 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
       rcases completion.dense_range_coe.mem_nhds nhds_right with ⟨z₀, y₀, y₀_in, H : y₀ * x₀ = z₀⟩
       refine' ⟨z₀, y₀, y₀_in, ⟨H.symm, _⟩⟩
       rintro rfl
-      exact mul_ne_zero (ne_of_mem_of_not_mem y₀_in zeroV') h H
+      exact mul_ne_zero (ne_of_mem_of_not_memₓ y₀_in zeroV') h H
     rcases this with ⟨z₀, y₀, y₀_in, hz₀, z₀_ne⟩
     have vz₀_ne : (v z₀ : Γ₀) ≠ 0 := by
       rwa [Valuation.ne_zero_iff]

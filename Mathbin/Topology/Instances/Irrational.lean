@@ -40,7 +40,7 @@ theorem dense_irrational : Dense { x : ℝ | Irrational x } := by
   simp only [mem_Union, mem_singleton_iff]
   rintro _ ⟨a, b, hlt, rfl⟩ hne
   rw [inter_comm]
-  exact exists_irrational_btwn (Rat.cast_lt.2 hlt)
+  exact exists_irrational_btwn (Ratₓ.cast_lt.2 hlt)
 
 theorem eventually_residual_irrational : ∀ᶠ x in residual ℝ, Irrational x :=
   eventually_residual.2 ⟨_, is_Gδ_irrational, dense_irrational, fun _ => id⟩
@@ -89,7 +89,7 @@ theorem eventually_forall_le_dist_cast_div_of_denom_le (hx : Irrational x) (n : 
 theorem eventually_forall_le_dist_cast_rat_of_denom_le (hx : Irrational x) (n : ℕ) :
     ∀ᶠ ε : ℝ in 𝓝 0, ∀ r : ℚ, r.denom ≤ n → ε ≤ dist x r :=
   (hx.eventually_forall_le_dist_cast_div_of_denom_le n).mono fun ε H r hr => by
-    simpa only [Rat.cast_def] using H r.denom hr r.num
+    simpa only [Ratₓ.cast_def] using H r.denom hr r.num
 
 end Irrational
 

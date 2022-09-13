@@ -38,7 +38,7 @@ variable (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L] [LieAlgebra R L]
 /-- A Lie subalgebra of a Lie algebra is submodule that is closed under the Lie bracket.
 This is a sufficient condition for the subset itself to form a Lie algebra. -/
 structure LieSubalgebra extends Submodule R L where
-  lie_mem' : ∀ {x y}, x ∈ carrier → y ∈ carrier → ⁅x,y⁆ ∈ carrier
+  lie_mem' : ∀ {x y}, x ∈ carrier → y ∈ carrier → ⁅x, y⁆ ∈ carrier
 
 attribute [nolint doc_blame] LieSubalgebra.toSubmodule
 
@@ -71,7 +71,7 @@ instance : AddSubgroupClass (LieSubalgebra R L) L where
 
 /-- A Lie subalgebra forms a new Lie ring. -/
 instance (L' : LieSubalgebra R L) : LieRing L' where
-  bracket := fun x y => ⟨⁅x.val,y.val⁆, L'.lie_mem' x.property y.property⟩
+  bracket := fun x y => ⟨⁅x.val, y.val⁆, L'.lie_mem' x.property y.property⟩
   lie_add := by
     intros
     apply SetCoe.ext
@@ -131,7 +131,7 @@ protected theorem sub_mem {x y : L} : x ∈ L' → y ∈ L' → (x - y : L) ∈ 
 theorem smul_mem (t : R) {x : L} (h : x ∈ L') : t • x ∈ L' :=
   (L' : Submodule R L).smul_mem t h
 
-theorem lie_mem {x y : L} (hx : x ∈ L') (hy : y ∈ L') : (⁅x,y⁆ : L) ∈ L' :=
+theorem lie_mem {x y : L} (hx : x ∈ L') (hy : y ∈ L') : (⁅x, y⁆ : L) ∈ L' :=
   L'.lie_mem' hx hy
 
 @[simp]
@@ -150,7 +150,7 @@ theorem mem_coe {x : L} : x ∈ (L' : Set L) ↔ x ∈ L' :=
   Iff.rfl
 
 @[simp, norm_cast]
-theorem coe_bracket (x y : L') : (↑⁅x,y⁆ : L) = ⁅(↑x : L),↑y⁆ :=
+theorem coe_bracket (x y : L') : (↑⁅x, y⁆ : L) = ⁅(↑x : L), ↑y⁆ :=
   rfl
 
 theorem ext_iff (x y : L') : x = y ↔ (x : L) = y :=
@@ -206,13 +206,13 @@ variable {N : Type w₁} [AddCommGroupₓ N] [LieRingModule L N] [Module R N] [L
 /-- Given a Lie algebra `L` containing a Lie subalgebra `L' ⊆ L`, together with a Lie ring module
 `M` of `L`, we may regard `M` as a Lie ring module of `L'` by restriction. -/
 instance : LieRingModule L' M where
-  bracket := fun x m => ⁅(x : L),m⁆
+  bracket := fun x m => ⁅(x : L), m⁆
   add_lie := fun x y m => add_lie x y m
   lie_add := fun x y m => lie_add x y m
   leibniz_lie := fun x y m => leibniz_lie x y m
 
 @[simp]
-theorem coe_bracket_of_module (x : L') (m : M) : ⁅x,m⁆ = ⁅(x : L),m⁆ :=
+theorem coe_bracket_of_module (x : L') (m : M) : ⁅x, m⁆ = ⁅(x : L), m⁆ :=
   rfl
 
 variable [Module R M] [LieModule R L M]
@@ -269,13 +269,13 @@ namespace LieHom
 def range : LieSubalgebra R L₂ :=
   { (f : L →ₗ[R] L₂).range with
     lie_mem' := fun x y =>
-      show x ∈ f.toLinearMap.range → y ∈ f.toLinearMap.range → ⁅x,y⁆ ∈ f.toLinearMap.range by
+      show x ∈ f.toLinearMap.range → y ∈ f.toLinearMap.range → ⁅x, y⁆ ∈ f.toLinearMap.range by
         repeat'
           rw [LinearMap.mem_range]
         rintro ⟨x', hx⟩ ⟨y', hy⟩
-        refine' ⟨⁅x',y'⁆, _⟩
+        refine' ⟨⁅x', y'⁆, _⟩
         rw [← hx, ← hy]
-        change f ⁅x',y'⁆ = ⁅f x',f y'⁆
+        change f ⁅x', y'⁆ = ⁅f x', f y'⁆
         rw [map_lie] }
 
 @[simp]
@@ -323,7 +323,7 @@ theorem equiv_range_of_injective_apply (h : Function.Injective f) (x : L) :
 end LieHom
 
 theorem Submodule.exists_lie_subalgebra_coe_eq_iff (p : Submodule R L) :
-    (∃ K : LieSubalgebra R L, ↑K = p) ↔ ∀ x y : L, x ∈ p → y ∈ p → ⁅x,y⁆ ∈ p := by
+    (∃ K : LieSubalgebra R L, ↑K = p) ↔ ∀ x y : L, x ∈ p → y ∈ p → ⁅x, y⁆ ∈ p := by
   constructor
   · rintro ⟨K, rfl⟩ _ _
     exact K.lie_mem'
@@ -354,7 +354,7 @@ def map : LieSubalgebra R L₂ :=
       rcases hy with ⟨y', hy', hy⟩
       rw [← hy]
       erw [Submodule.mem_map]
-      exact ⟨⁅x',y'⁆, K.lie_mem hx' hy', f.map_lie x' y'⟩ }
+      exact ⟨⁅x', y'⁆, K.lie_mem hx' hy', f.map_lie x' y'⟩ }
 
 @[simp]
 theorem mem_map (x : L₂) : x ∈ K.map f ↔ ∃ y : L, y ∈ K ∧ f y = x :=
@@ -371,7 +371,7 @@ domain. -/
 def comap : LieSubalgebra R L :=
   { (K₂ : Submodule R L₂).comap (f : L →ₗ[R] L₂) with
     lie_mem' := fun x y hx hy => by
-      suffices ⁅f x,f y⁆ ∈ K₂ by
+      suffices ⁅f x, f y⁆ ∈ K₂ by
         simp [this]
       exact K₂.lie_mem hx hy }
 
@@ -408,7 +408,7 @@ theorem mem_bot (x : L) : x ∈ (⊥ : LieSubalgebra R L) ↔ x = 0 :=
   mem_singleton_iff
 
 instance : HasTop (LieSubalgebra R L) :=
-  ⟨{ (⊤ : Submodule R L) with lie_mem' := fun x y hx hy => mem_univ ⁅x,y⁆ }⟩
+  ⟨{ (⊤ : Submodule R L) with lie_mem' := fun x y hx hy => mem_univ ⁅x, y⁆ }⟩
 
 @[simp]
 theorem top_coe : ((⊤ : LieSubalgebra R L) : Set L) = univ :=
@@ -428,7 +428,8 @@ theorem _root_.lie_hom.range_eq_map : f.range = map f ⊤ := by
 
 instance : HasInf (LieSubalgebra R L) :=
   ⟨fun K K' =>
-    { (K⊓K' : Submodule R L) with lie_mem' := fun x y hx hy => mem_inter (K.lie_mem hx.1 hy.1) (K'.lie_mem hx.2 hy.2) }⟩
+    { (K ⊓ K' : Submodule R L) with
+      lie_mem' := fun x y hx hy => mem_inter (K.lie_mem hx.1 hy.1) (K'.lie_mem hx.2 hy.2) }⟩
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:368:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
 instance : HasInfₓ (LieSubalgebra R L) :=
@@ -442,7 +443,7 @@ instance : HasInfₓ (LieSubalgebra R L) :=
         exact K.lie_mem (hx K hK) (hy K hK) }⟩
 
 @[simp]
-theorem inf_coe : (↑(K⊓K') : Set L) = K ∩ K' :=
+theorem inf_coe : (↑(K ⊓ K') : Set L) = K ∩ K' :=
   rfl
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:368:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
@@ -477,11 +478,11 @@ instance : CompleteLattice (LieSubalgebra R L) :=
       rw [mem_bot] at h
       rw [h]
       exact N.zero_mem',
-    top := ⊤, le_top := fun _ _ _ => trivialₓ, inf := (·⊓·), le_inf := fun N₁ N₂ N₃ h₁₂ h₁₃ m hm => ⟨h₁₂ hm, h₁₃ hm⟩,
+    top := ⊤, le_top := fun _ _ _ => trivialₓ, inf := (· ⊓ ·), le_inf := fun N₁ N₂ N₃ h₁₂ h₁₃ m hm => ⟨h₁₂ hm, h₁₃ hm⟩,
     inf_le_left := fun _ _ _ => And.left, inf_le_right := fun _ _ _ => And.right }
 
 instance : AddCommMonoidₓ (LieSubalgebra R L) where
-  add := (·⊔·)
+  add := (· ⊔ ·)
   add_assoc := fun _ _ _ => sup_assoc
   zero := ⊥
   zero_add := fun _ => bot_sup_eq
@@ -493,15 +494,15 @@ instance : CanonicallyOrderedAddMonoid (LieSubalgebra R L) :=
     exists_add_of_le := fun a b h => ⟨b, (sup_eq_right.2 h).symm⟩, le_self_add := fun a b => le_sup_left }
 
 @[simp]
-theorem add_eq_sup : K + K' = K⊔K' :=
+theorem add_eq_sup : K + K' = K ⊔ K' :=
   rfl
 
 @[norm_cast, simp]
-theorem inf_coe_to_submodule : (↑(K⊓K') : Submodule R L) = (K : Submodule R L)⊓(K' : Submodule R L) :=
+theorem inf_coe_to_submodule : (↑(K ⊓ K') : Submodule R L) = (K : Submodule R L) ⊓ (K' : Submodule R L) :=
   rfl
 
 @[simp]
-theorem mem_inf (x : L) : x ∈ K⊓K' ↔ x ∈ K ∧ x ∈ K' := by
+theorem mem_inf (x : L) : x ∈ K ⊓ K' ↔ x ∈ K ∧ x ∈ K' := by
   rw [← mem_coe_submodule, ← mem_coe_submodule, ← mem_coe_submodule, inf_coe_to_submodule, Submodule.mem_inf]
 
 theorem eq_bot_iff : K = ⊥ ↔ ∀ x : L, x ∈ K → x = 0 := by
@@ -665,7 +666,7 @@ theorem span_univ : lieSpan R L (Set.Univ : Set L) = ⊤ :=
 
 variable {L}
 
-theorem span_union (s t : Set L) : lieSpan R L (s ∪ t) = lieSpan R L s⊔lieSpan R L t :=
+theorem span_union (s t : Set L) : lieSpan R L (s ∪ t) = lieSpan R L s ⊔ lieSpan R L t :=
   (LieSubalgebra.gi R L).gc.l_sup
 
 theorem span_Union {ι} (s : ι → Set L) : lieSpan R L (⋃ i, s i) = ⨆ i, lieSpan R L (s i) :=

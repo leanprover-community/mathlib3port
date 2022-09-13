@@ -38,8 +38,8 @@ instance : T0Space X.Carrier := by
   exact ⟨U.1.1, U.2, U.1.2, e'.embedding.t0_space⟩
 
 instance : QuasiSober X.Carrier := by
-  apply quasi_sober_of_open_cover (Set.Range fun x => Set.Range <| (X.affine_cover.map x).1.base) with
-    { instances := false }
+  apply (config := { instances := false })
+    quasi_sober_of_open_cover (Set.Range fun x => Set.Range <| (X.affine_cover.map x).1.base)
   · rintro ⟨_, i, rfl⟩
     exact (X.affine_cover.is_open i).base_open.open_range
     
@@ -95,7 +95,7 @@ theorem is_reduced_of_open_immersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImm
               Y.presheaf.obj _ ≅ _).symm.commRingIsoToRingEquiv.Injective
 
 instance {R : CommRingₓₓ} [H : IsReduced R] : IsReduced (Scheme.spec.obj <| op R) := by
-  apply is_reduced_of_stalk_is_reduced with { instances := false }
+  apply (config := { instances := false }) is_reduced_of_stalk_is_reduced
   intro x
   dsimp'
   have : _root_.is_reduced (CommRingₓₓ.of <| Localization.AtPrime (PrimeSpectrum.asIdeal x)) := by
@@ -250,10 +250,10 @@ instance is_irreducible_of_is_integral [IsIntegral X] : IrreducibleSpace X.Carri
   simp_rw [not_forall] at h₂ h₃
   haveI : Nonempty (⟨Sᶜ, hS.1⟩ : opens X.carrier) := ⟨⟨_, h₂.some_spec.some_spec⟩⟩
   haveI : Nonempty (⟨Tᶜ, hT.1⟩ : opens X.carrier) := ⟨⟨_, h₃.some_spec.some_spec⟩⟩
-  haveI : Nonempty (⟨Sᶜ, hS.1⟩⊔⟨Tᶜ, hT.1⟩ : opens X.carrier) := ⟨⟨_, Or.inl h₂.some_spec.some_spec⟩⟩
+  haveI : Nonempty (⟨Sᶜ, hS.1⟩ ⊔ ⟨Tᶜ, hT.1⟩ : opens X.carrier) := ⟨⟨_, Or.inl h₂.some_spec.some_spec⟩⟩
   let e : X.presheaf.obj _ ≅ CommRingₓₓ.of _ :=
     (X.sheaf.is_product_of_disjoint ⟨_, hS.1⟩ ⟨_, hT.1⟩ _).conePointUniqueUpToIso (CommRingₓₓ.prodFanIsLimit _ _)
-  apply false_of_nontrivial_of_product_domain with { instances := false }
+  apply (config := { instances := false }) false_of_nontrivial_of_product_domain
   · exact e.symm.CommRing_iso_to_ring_equiv.is_domain _
     
   · apply X.to_LocallyRingedSpace.component_nontrivial
@@ -283,7 +283,7 @@ theorem is_integral_of_is_irreducible_is_reduced [IsReduced X] [H : IrreducibleS
     @nonempty_preirreducible_inter _ H.1 (X.basic_open a).2 (X.basic_open b).2 h.1 h.2
   replace e' := Subtype.eq e'
   subst e'
-  replace e := congr_argₓ (X.presheaf.germ x) e
+  replace e := congr_arg (X.presheaf.germ x) e
   rw [RingHom.map_mul, RingHom.map_zero] at e
   refine' @zero_ne_one (X.presheaf.stalk x.1) _ _ (is_unit_zero_iff.1 _)
   convert hx₁.mul hx₂
@@ -301,7 +301,7 @@ theorem is_integral_of_open_immersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenIm
     exact (Set.preimage_image_eq _ H.base_open.inj).symm
   rw [this]
   have : IsDomain (Y.presheaf.obj (op (H.base_open.is_open_map.functor.obj U))) := by
-    apply is_integral.component_integral with { instances := false }
+    apply (config := { instances := false }) is_integral.component_integral
     infer_instance
     refine' ⟨⟨_, _, hU.some.prop, rfl⟩⟩
   exact
@@ -310,7 +310,7 @@ theorem is_integral_of_open_immersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenIm
       _
 
 instance {R : CommRingₓₓ} [H : IsDomain R] : IsIntegral (Scheme.spec.obj <| op R) := by
-  apply is_integral_of_is_irreducible_is_reduced with { instances := false }
+  apply (config := { instances := false }) is_integral_of_is_irreducible_is_reduced
   · infer_instance
     
   · dsimp' [Spec.Top_obj]

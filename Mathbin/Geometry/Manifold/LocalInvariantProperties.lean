@@ -83,7 +83,7 @@ namespace LocalInvariantProp
 
 theorem congr_set {s t : Set H} {x : H} {f : H → H'} (hu : s =ᶠ[𝓝 x] t) : P f s x ↔ P f t x := by
   obtain ⟨o, host, ho, hxo⟩ := mem_nhds_iff.mp hu.mem_iff
-  simp_rw [subset_def, mem_set_of, ← And.congr_left_iff, ← mem_inter_iff, ← Set.ext_iff] at host
+  simp_rw [subset_def, mem_set_of, ← And.congr_left_iffₓ, ← mem_inter_iff, ← Set.ext_iff] at host
   rw [hG.is_local ho hxo, host, ← hG.is_local ho hxo]
 
 theorem is_local_nhds {s u : Set H} {x : H} {f : H → H'} (hu : u ∈ 𝓝[s] x) : P f s x ↔ P f (s ∩ u) x :=
@@ -265,7 +265,7 @@ theorem lift_prop_within_at_indep_chart_target_aux2 (g : H → M') {x : H} {s : 
     hG.congr_iff_nhds_within _
       (by
         simp' only [xf] with mfld_simps)
-  exact (hgs.eventually <| f.eventually_left_inverse xf).mono fun y => congr_argₓ f'
+  exact (hgs.eventually <| f.eventually_left_inverse xf).mono fun y => congr_arg f'
 
 theorem lift_prop_within_at_indep_chart_target_aux {g : X → M'} {e : LocalHomeomorph X H} {x : X} {s : Set X}
     (xe : x ∈ e.Source) (hf : f ∈ G'.MaximalAtlas M') (xf : g x ∈ f.Source) (hf' : f' ∈ G'.MaximalAtlas M')
@@ -302,7 +302,7 @@ theorem lift_prop_within_at_indep_chart_source [HasGroupoid M G] (he : e ∈ G.M
   rw [e.symm_symm] at this
   rw [lift_prop_within_at_self_source, lift_prop_within_at, ← this]
   simp_rw [Function.comp_app, e.left_inv xe]
-  refine' and_congr Iff.rfl _
+  refine' and_congrₓ Iff.rfl _
   rw
     [hG.lift_prop_within_at_indep_chart_source_aux (chart_at H' (g x) ∘ g) (chart_mem_maximal_atlas G x)
       (mem_chart_source H x) he xe]

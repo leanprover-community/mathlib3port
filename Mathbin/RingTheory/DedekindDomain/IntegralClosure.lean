@@ -155,7 +155,7 @@ theorem FiniteDimensional.exists_is_basis_integral : ∃ (s : Finset L)(b : Basi
     simp only [mul_inv_cancel_left₀ hy']
     
   · rintro ⟨x', hx'⟩
-    simp only [Algebra.smul_def, Finset.mem_image, exists_prop, Finset.mem_univ, true_andₓ] at his'
+    simp only [Algebra.smul_def, Finset.mem_image, exists_propₓ, Finset.mem_univ, true_andₓ] at his'
     simp only [Basis.map_apply, LinearEquiv.coe_mk]
     exact his' _ ⟨_, rfl⟩
     

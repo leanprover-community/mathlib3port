@@ -147,7 +147,7 @@ end IsCoatom
 section Pairwise
 
 theorem IsAtom.inf_eq_bot_of_ne [SemilatticeInf α] [OrderBot α] {a b : α} (ha : IsAtom a) (hb : IsAtom b)
-    (hab : a ≠ b) : a⊓b = ⊥ :=
+    (hab : a ≠ b) : a ⊓ b = ⊥ :=
   hab.not_le_or_not_le.elim (ha.lt_iff.1 ∘ inf_lt_left.2) (hb.lt_iff.1 ∘ inf_lt_right.2)
 
 theorem IsAtom.disjoint_of_ne [SemilatticeInf α] [OrderBot α] {a b : α} (ha : IsAtom a) (hb : IsAtom b) (hab : a ≠ b) :
@@ -155,7 +155,7 @@ theorem IsAtom.disjoint_of_ne [SemilatticeInf α] [OrderBot α] {a b : α} (ha :
   disjoint_iff.mpr (IsAtom.inf_eq_bot_of_ne ha hb hab)
 
 theorem IsCoatom.sup_eq_top_of_ne [SemilatticeSup α] [OrderTop α] {a b : α} (ha : IsCoatom a) (hb : IsCoatom b)
-    (hab : a ≠ b) : a⊔b = ⊤ :=
+    (hab : a ≠ b) : a ⊔ b = ⊤ :=
   ha.dual.inf_eq_bot_of_ne hb.dual hab
 
 end Pairwise
@@ -318,7 +318,7 @@ theorem Sup_atoms_le_eq (b : α) : sup { a : α | IsAtom a ∧ a ≤ b } = b := 
 @[simp]
 theorem Sup_atoms_eq_top : sup { a : α | IsAtom a } = ⊤ := by
   refine' Eq.trans (congr rfl (Set.ext fun x => _)) (Sup_atoms_le_eq ⊤)
-  exact (and_iff_left le_top).symm
+  exact (and_iff_leftₓ le_top).symm
 
 theorem le_iff_atom_le_imp {a b : α} : a ≤ b ↔ ∀ c : α, IsAtom c → c ≤ a → c ≤ b :=
   ⟨fun ab c hc ca => le_transₓ ca ab, fun h => by
@@ -636,13 +636,13 @@ namespace Set
 
 theorem is_simple_order_Iic_iff_is_atom [PartialOrderₓ α] [OrderBot α] {a : α} : IsSimpleOrder (Iic a) ↔ IsAtom a :=
   is_simple_order_iff_is_atom_top.trans <|
-    and_congr (not_congr Subtype.mk_eq_mk)
+    and_congrₓ (not_congr Subtype.mk_eq_mk)
       ⟨fun h b ab => Subtype.mk_eq_mk.1 (h ⟨b, le_of_ltₓ ab⟩ ab), fun h ⟨b, hab⟩ hbotb =>
         Subtype.mk_eq_mk.2 (h b (Subtype.mk_lt_mk.1 hbotb))⟩
 
 theorem is_simple_order_Ici_iff_is_coatom [PartialOrderₓ α] [OrderTop α] {a : α} : IsSimpleOrder (Ici a) ↔ IsCoatom a :=
   is_simple_order_iff_is_coatom_bot.trans <|
-    and_congr (not_congr Subtype.mk_eq_mk)
+    and_congrₓ (not_congr Subtype.mk_eq_mk)
       ⟨fun h b ab => Subtype.mk_eq_mk.1 (h ⟨b, le_of_ltₓ ab⟩ ab), fun h ⟨b, hab⟩ hbotb =>
         Subtype.mk_eq_mk.2 (h b (Subtype.mk_lt_mk.1 hbotb))⟩
 
@@ -655,7 +655,7 @@ variable {β : Type _}
 @[simp]
 theorem is_atom_iff [PartialOrderₓ α] [OrderBot α] [PartialOrderₓ β] [OrderBot β] (f : α ≃o β) (a : α) :
     IsAtom (f a) ↔ IsAtom a :=
-  and_congr (not_congr ⟨fun h => f.Injective (f.map_bot.symm ▸ h), fun h => f.map_bot ▸ congr rfl h⟩)
+  and_congrₓ (not_congr ⟨fun h => f.Injective (f.map_bot.symm ▸ h), fun h => f.map_bot ▸ congr rfl h⟩)
     ⟨fun h b hb => f.Injective ((h (f b) ((f : α ↪o β).lt_iff_lt.2 hb)).trans f.map_bot.symm), fun h b hb =>
       f.symm.Injective
         (by
@@ -684,7 +684,7 @@ theorem is_atomic_iff [PartialOrderₓ α] [OrderBot α] [PartialOrderₓ β] [O
   apply f.to_equiv.forall_congr
   simp_rw [RelIso.coe_fn_to_equiv]
   intro b
-  apply or_congr
+  apply or_congrₓ
   · rw [f.apply_eq_iff_eq_symm_apply, map_bot]
     
   · constructor

@@ -1358,7 +1358,7 @@ variable [Mul M] [Mul N] {a x y : M}
 
 @[simp, to_additive]
 protected theorem SemiconjBy.map [MulHomClass F M N] (h : SemiconjBy a x y) (f : F) : SemiconjBy (f a) (f x) (f y) := by
-  simpa only [SemiconjBy, map_mul] using congr_argₓ f h
+  simpa only [SemiconjBy, map_mul] using congr_arg f h
 
 @[simp, to_additive]
 protected theorem Commute.map [MulHomClass F M N] (h : Commute x y) (f : F) : Commute (f x) (f y) :=

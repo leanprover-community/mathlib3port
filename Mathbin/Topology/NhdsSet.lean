@@ -38,6 +38,10 @@ def nhdsSet (s : Set α) : Filter α :=
 -- mathport name: nhds_set
 localized [TopologicalSpace] notation "𝓝ˢ" => nhdsSet
 
+theorem nhds_set_diagonal (α) [TopologicalSpace (α × α)] : 𝓝ˢ (Diagonal α) = ⨆ x, 𝓝 (x, x) := by
+  rw [nhdsSet, ← range_diag, ← range_comp]
+  rfl
+
 theorem mem_nhds_set_iff_forall : s ∈ 𝓝ˢ t ↔ ∀ x : α, x ∈ t → s ∈ 𝓝 x := by
   simp_rw [nhdsSet, Filter.mem_Sup, ball_image_iff]
 
@@ -49,7 +53,7 @@ theorem mem_nhds_set_iff_exists : s ∈ 𝓝ˢ t ↔ ∃ U : Set α, IsOpen U �
 
 theorem has_basis_nhds_set (s : Set α) : (𝓝ˢ s).HasBasis (fun U => IsOpen U ∧ s ⊆ U) fun U => U :=
   ⟨fun t => by
-    simp [mem_nhds_set_iff_exists, and_assoc]⟩
+    simp [mem_nhds_set_iff_exists, and_assocₓ]⟩
 
 theorem IsOpen.mem_nhds_set (hU : IsOpen s) : s ∈ 𝓝ˢ t ↔ t ⊆ s := by
   rw [← subset_interior_iff_mem_nhds_set, interior_eq_iff_open.mpr hU]
@@ -89,7 +93,7 @@ theorem nhds_set_univ : 𝓝ˢ (Univ : Set α) = ⊤ := by
 theorem monotone_nhds_set : Monotone (𝓝ˢ : Set α → Filter α) := fun s t hst => Sup_le_Sup <| image_subset _ hst
 
 @[simp]
-theorem nhds_set_union (s t : Set α) : 𝓝ˢ (s ∪ t) = 𝓝ˢ s⊔𝓝ˢ t := by
+theorem nhds_set_union (s t : Set α) : 𝓝ˢ (s ∪ t) = 𝓝ˢ s ⊔ 𝓝ˢ t := by
   simp only [nhdsSet, image_union, Sup_union]
 
 theorem union_mem_nhds_set (h₁ : s₁ ∈ 𝓝ˢ t₁) (h₂ : s₂ ∈ 𝓝ˢ t₂) : s₁ ∪ s₂ ∈ 𝓝ˢ (t₁ ∪ t₂) := by

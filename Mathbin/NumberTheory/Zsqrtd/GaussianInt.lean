@@ -163,20 +163,20 @@ theorem nat_abs_norm_eq (x : ℤ[i]) : x.norm.natAbs = x.re.natAbs * x.re.natAbs
 
 instance : Div ℤ[i] :=
   ⟨fun x y =>
-    let n := (Rat.ofInt (norm y))⁻¹
+    let n := (Ratₓ.ofInt (norm y))⁻¹
     let c := y.conj
-    ⟨round (Rat.ofInt (x * c).re * n : ℚ), round (Rat.ofInt (x * c).im * n : ℚ)⟩⟩
+    ⟨round (Ratₓ.ofInt (x * c).re * n : ℚ), round (Ratₓ.ofInt (x * c).im * n : ℚ)⟩⟩
 
 theorem div_def (x y : ℤ[i]) : x / y = ⟨round ((x * conj y).re / norm y : ℚ), round ((x * conj y).im / norm y : ℚ)⟩ :=
   show Zsqrtd.mk _ _ = _ by
-    simp [Rat.of_int_eq_mk, Rat.mk_eq_div, div_eq_mul_inv]
+    simp [Ratₓ.of_int_eq_mk, Ratₓ.mk_eq_div, div_eq_mul_inv]
 
 theorem to_complex_div_re (x y : ℤ[i]) : ((x / y : ℤ[i]) : ℂ).re = round (x / y : ℂ).re := by
-  rw [div_def, ← @Rat.round_cast ℝ _ _] <;> simp [-Rat.round_cast, mul_assoc, div_eq_mul_inv, mul_addₓ, add_mulₓ]
+  rw [div_def, ← @Ratₓ.round_cast ℝ _ _] <;> simp [-Ratₓ.round_cast, mul_assoc, div_eq_mul_inv, mul_addₓ, add_mulₓ]
 
 theorem to_complex_div_im (x y : ℤ[i]) : ((x / y : ℤ[i]) : ℂ).im = round (x / y : ℂ).im := by
-  rw [div_def, ← @Rat.round_cast ℝ _ _, ← @Rat.round_cast ℝ _ _] <;>
-    simp [-Rat.round_cast, mul_assoc, div_eq_mul_inv, mul_addₓ, add_mulₓ]
+  rw [div_def, ← @Ratₓ.round_cast ℝ _ _, ← @Ratₓ.round_cast ℝ _ _] <;>
+    simp [-Ratₓ.round_cast, mul_assoc, div_eq_mul_inv, mul_addₓ, add_mulₓ]
 
 theorem norm_sq_le_norm_sq_of_re_le_of_im_le {x y : ℂ} (hre : abs x.re ≤ abs y.re) (him : abs x.im ≤ abs y.im) :
     x.normSq ≤ y.normSq := by
@@ -189,7 +189,7 @@ theorem norm_sq_div_sub_div_lt_one (x y : ℤ[i]) : ((x / y : ℂ) - ((x / y : �
   calc
     ((x / y : ℂ) - ((x / y : ℤ[i]) : ℂ)).normSq =
         ((x / y : ℂ).re - ((x / y : ℤ[i]) : ℂ).re + ((x / y : ℂ).im - ((x / y : ℤ[i]) : ℂ).im) * I : ℂ).normSq :=
-      congr_argₓ _ <| by
+      congr_arg _ <| by
         apply Complex.ext <;> simp
     _ ≤ (1 / 2 + 1 / 2 * I).normSq :=
       have : abs (2⁻¹ : ℝ) = 2⁻¹ :=
@@ -312,7 +312,7 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime] (h
                 show (-1 : ℤ) ≠ 0 by
                     decide <|
                   by
-                  simpa [hx0] using congr_argₓ Zsqrtd.im hx
+                  simpa [hx0] using congr_arg Zsqrtd.im hx
             
       have hpk₂ : ¬(p : ℤ[i]) ∣ ⟨k, 1⟩ := fun ⟨x, hx⟩ =>
         lt_irreflₓ (p * x : ℤ[i]).norm.natAbs <|
@@ -326,7 +326,7 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime] (h
                 show (1 : ℤ) ≠ 0 by
                     decide <|
                   by
-                  simpa [hx0] using congr_argₓ Zsqrtd.im hx
+                  simpa [hx0] using congr_arg Zsqrtd.im hx
             
       have hpu : ¬IsUnit (p : ℤ[i]) :=
         mt norm_eq_one_iff.2

@@ -163,7 +163,7 @@ theorem trace_fin_one (A : Matrix (Finₓ 1) (Finₓ 1) R) : trace A = A 0 0 :=
   add_zeroₓ _
 
 theorem trace_fin_two (A : Matrix (Finₓ 2) (Finₓ 2) R) : trace A = A 0 0 + A 1 1 :=
-  congr_argₓ ((· + ·) _) (add_zeroₓ (A 1 1))
+  congr_arg ((· + ·) _) (add_zeroₓ (A 1 1))
 
 theorem trace_fin_three (A : Matrix (Finₓ 3) (Finₓ 3) R) : trace A = A 0 0 + A 1 1 + A 2 2 := by
   rw [← add_zeroₓ (A 2 2), add_assocₓ]

@@ -30,7 +30,7 @@ unsafe def pi_instance_derive_field : tactic Unit := do
       applyc field
       hs fun h =>
           try <|
-            () <$ (to_expr (pquote.1 (congr_funₓ (%%ₓh) (%%ₓxv))) >>= apply) <|>
+            () <$ (to_expr (pquote.1 (congr_fun (%%ₓh) (%%ₓxv))) >>= apply) <|>
               () <$ apply (h xv) <|>
                 () <$ (to_expr (pquote.1 (Set.mem_image_of_mem _ (%%ₓh))) >>= apply) <|> () <$ solve_by_elim
       return ()

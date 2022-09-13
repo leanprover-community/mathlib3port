@@ -23,7 +23,7 @@ theorem cast_eq_zero [AddGroupWithOneₓ α] [CharZero α] {n : ℤ} : (n : α) 
   ⟨fun h => by
     cases n
     · rw [Int.cast_of_nat] at h
-      exact congr_argₓ coe (Nat.cast_eq_zero.1 h)
+      exact congr_arg coe (Nat.cast_eq_zero.1 h)
       
     · rw [cast_neg_succ_of_nat, neg_eq_zero, Nat.cast_eq_zero] at h
       contradiction
@@ -45,7 +45,7 @@ theorem cast_ne_zero [AddGroupWithOneₓ α] [CharZero α] {n : ℤ} : (n : α) 
 theorem cast_div_char_zero {k : Type _} [Field k] [CharZero k] {m n : ℤ} (n_dvd : n ∣ m) : ((m / n : ℤ) : k) = m / n :=
   by
   rcases eq_or_ne n 0 with (rfl | hn)
-  · simp [Int.div_zero]
+  · simp [Int.div_zeroₓ]
     
   · exact cast_div n_dvd (cast_ne_zero.mpr hn)
     

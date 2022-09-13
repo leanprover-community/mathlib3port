@@ -206,5 +206,5 @@ theorem locally_finite_iff_exists_realizer [TopologicalSpace α] (F : Realizer �
     fun ⟨R⟩ => R.to_locally_finite⟩
 
 def Compact.Realizer [TopologicalSpace α] (R : Realizer α) (s : Set α) :=
-  ∀ {f : Filter α} (F : f.Realizer) (x : F.σ), f ≠ ⊥ → F.f x ⊆ s → { a // a ∈ s ∧ 𝓝 a⊓f ≠ ⊥ }
+  ∀ {f : Filter α} (F : f.Realizer) (x : F.σ), f ≠ ⊥ → F.f x ⊆ s → { a // a ∈ s ∧ 𝓝 a ⊓ f ≠ ⊥ }
 

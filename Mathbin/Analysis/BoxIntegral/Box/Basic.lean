@@ -216,7 +216,7 @@ theorem coe_subset_Icc : ↑I ⊆ I.Icc := fun x hx => ⟨fun i => (hx i).1.le, 
 `↑(I ⊔ J)` is larger than `↑I ∪ ↑J`. -/
 instance : HasSup (Box ι) :=
   ⟨fun I J =>
-    ⟨I.lower⊓J.lower, I.upper⊔J.upper, fun i =>
+    ⟨I.lower ⊓ J.lower, I.upper ⊔ J.upper, fun i =>
       (min_le_leftₓ _ _).trans_lt <| (I.lower_lt_upper i).trans_le (le_max_leftₓ _ _)⟩⟩
 
 instance : SemilatticeSup (Box ι) :=
@@ -305,11 +305,11 @@ theorem coe_mk' (l u : ι → ℝ) : (mk' l u : Set (ι → ℝ)) = pi Univ fun 
 
 instance : HasInf (WithBot (Box ι)) :=
   ⟨fun I =>
-    WithBot.recBotCoe (fun J => ⊥) (fun I J => WithBot.recBotCoe ⊥ (fun J => mk' (I.lower⊔J.lower) (I.upper⊓J.upper)) J)
-      I⟩
+    WithBot.recBotCoe (fun J => ⊥)
+      (fun I J => WithBot.recBotCoe ⊥ (fun J => mk' (I.lower ⊔ J.lower) (I.upper ⊓ J.upper)) J) I⟩
 
 @[simp]
-theorem coe_inf (I J : WithBot (Box ι)) : (↑(I⊓J) : Set (ι → ℝ)) = I ∩ J := by
+theorem coe_inf (I J : WithBot (Box ι)) : (↑(I ⊓ J) : Set (ι → ℝ)) = I ∩ J := by
   induction I using WithBot.recBotCoe
   · change ∅ = _
     simp
@@ -457,7 +457,7 @@ theorem dist_le_distortion_mul (I : Box ι) (i : ι) : dist I.lower I.upper ≤ 
   simpa only [← Nnreal.coe_le_coe, ← dist_nndist, Nnreal.coe_mul, Real.dist_eq, abs_of_neg A, neg_sub] using
     I.nndist_le_distortion_mul i
 
-theorem diam_Icc_le_of_distortion_le (I : Box ι) (i : ι) {c : ℝ≥0 } (h : I.distortion ≤ c) :
+theorem diam_Icc_le_of_distortion_le (I : Box ι) (i : ι) {c : ℝ≥0} (h : I.distortion ≤ c) :
     diam I.Icc ≤ c * (I.upper i - I.lower i) :=
   have : (0 : ℝ) ≤ c * (I.upper i - I.lower i) := mul_nonneg c.coe_nonneg (sub_nonneg.2 <| I.lower_le_upper _)
   (diam_le_of_forall_dist_le this) fun x hx y hy =>

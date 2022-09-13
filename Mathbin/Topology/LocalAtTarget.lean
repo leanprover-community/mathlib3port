@@ -57,7 +57,7 @@ theorem open_iff_inter_of_supr_eq_top (s : Set β) : IsOpen s ↔ ∀ i, IsOpen 
     
   · intro H
     have : (⋃ i, (U i : Set β)) = Set.Univ := by
-      convert congr_argₓ coe hU
+      convert congr_arg coe hU
       simp
     rw [← s.inter_univ, ← this, Set.inter_Union]
     exact is_open_Union H
@@ -95,11 +95,11 @@ theorem embedding_iff_embedding_of_supr_eq_top (h : Continuous f) :
     Embedding f ↔ ∀ i, Embedding ((U i).1.restrictPreimage f) := by
   simp_rw [embedding_iff]
   rw [forall_and_distrib]
-  apply and_congr
+  apply and_congrₓ
   · apply inducing_iff_inducing_of_supr_eq_top <;> assumption
     
   · apply Set.injective_iff_injective_of_Union_eq_univ
-    convert congr_argₓ coe hU
+    convert congr_arg coe hU
     simp
     
 
@@ -107,7 +107,7 @@ theorem open_embedding_iff_open_embedding_of_supr_eq_top (h : Continuous f) :
     OpenEmbedding f ↔ ∀ i, OpenEmbedding ((U i).1.restrictPreimage f) := by
   simp_rw [open_embedding_iff]
   rw [forall_and_distrib]
-  apply and_congr
+  apply and_congrₓ
   · apply embedding_iff_embedding_of_supr_eq_top <;> assumption
     
   · simp_rw [Set.range_restrict_preimage]
@@ -118,7 +118,7 @@ theorem closed_embedding_iff_closed_embedding_of_supr_eq_top (h : Continuous f) 
     ClosedEmbedding f ↔ ∀ i, ClosedEmbedding ((U i).1.restrictPreimage f) := by
   simp_rw [closed_embedding_iff]
   rw [forall_and_distrib]
-  apply and_congr
+  apply and_congrₓ
   · apply embedding_iff_embedding_of_supr_eq_top <;> assumption
     
   · simp_rw [Set.range_restrict_preimage]

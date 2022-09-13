@@ -120,7 +120,7 @@ theorem IsTopologicalBasis.mem_nhds_iff {a : α} {s : Set α} {b : Set (Set α)}
     s ∈ 𝓝 a ↔ ∃ t ∈ b, a ∈ t ∧ t ⊆ s := by
   change s ∈ (𝓝 a).Sets ↔ ∃ t ∈ b, a ∈ t ∧ t ⊆ s
   rw [hb.eq_generate_from, nhds_generate_from, binfi_sets_eq]
-  · simp [and_assoc, And.left_comm]
+  · simp [and_assocₓ, And.left_comm]
     
   · exact fun s ⟨hs₁, hs₂⟩ t ⟨ht₁, ht₂⟩ =>
       have : a ∈ s ∩ t := ⟨hs₁, ht₁⟩
@@ -140,7 +140,7 @@ theorem IsTopologicalBasis.nhds_has_basis {b : Set (Set α)} (hb : IsTopological
     (𝓝 a).HasBasis (fun t : Set α => t ∈ b ∧ a ∈ t) fun t => t :=
   ⟨fun s =>
     hb.mem_nhds_iff.trans <| by
-      simp only [exists_prop, and_assoc]⟩
+      simp only [exists_propₓ, and_assocₓ]⟩
 
 protected theorem IsTopologicalBasis.is_open {s : Set α} {b : Set (Set α)} (hb : IsTopologicalBasis b) (hs : s ∈ b) :
     IsOpen s := by
@@ -312,7 +312,7 @@ theorem _root_.set.pairwise_disjoint.countable_of_is_open [SeparableSpace α] {�
   lift f to a → u using hfu
   have f_inj : injective f := by
     refine' injective_iff_pairwise_ne.mpr ((h.subtype _ _).mono fun i j hij hfij => hij ⟨hfs i, _⟩)
-    simp only [congr_argₓ coe hfij, hfs j]
+    simp only [congr_arg coe hfij, hfs j]
   exact ⟨@Encodable.ofInj _ _ u_encodable f f_inj⟩
 
 /-- In a separable space, a family of disjoint sets with nonempty interiors is countable. -/
@@ -559,7 +559,7 @@ theorem exists_countable_basis [SecondCountableTopology α] :
   ⟨b',
     ((countable_set_of_finite_subset hb₁).mono
           (by
-            simp only [← and_assoc]
+            simp only [← and_assocₓ]
             apply inter_subset_left)).Image
       _,
     fun ⟨s, ⟨_, _, hn⟩, hp⟩ => absurd hn (not_nonempty_iff_eq_empty.2 hp), is_topological_basis_of_subbasis hb₂⟩
@@ -591,7 +591,7 @@ theorem is_open_of_mem_countable_basis [SecondCountableTopology α] {s : Set α}
 
 theorem nonempty_of_mem_countable_basis [SecondCountableTopology α] {s : Set α} (hs : s ∈ CountableBasis α) :
     s.Nonempty :=
-  ne_empty_iff_nonempty.1 <| ne_of_mem_of_not_mem hs <| empty_nmem_countable_basis α
+  ne_empty_iff_nonempty.1 <| ne_of_mem_of_not_memₓ hs <| empty_nmem_countable_basis α
 
 variable (α)
 
@@ -632,7 +632,7 @@ instance {ι : Type _} {π : ι → Type _} [Countable ι] [t : ∀ a, Topologic
         ∃ (I : Finset ι)(s : ∀ i : I, Set (π i)),
           (∀ i, s i ∈ countable_basis (π i)) ∧ T = { f | ∀ i : I, f i ∈ s i } } :=
     by
-    simp only [set_of_exists, ← exists_prop]
+    simp only [set_of_exists, ← exists_propₓ]
     refine' countable_Union fun I => countable.bUnion _ fun _ _ => countable_singleton _
     change Set.Countable { s : ∀ i : I, Set (π i) | ∀ i, s i ∈ countable_basis (π i) }
     exact countable_pi fun i => countable_countable_basis _

@@ -274,14 +274,14 @@ theorem zero_locus_empty_iff_eq_top {I : Ideal R} : ZeroLocus (I : Set R) = ∅ 
 theorem zero_locus_univ : ZeroLocus (Set.Univ : Set R) = ∅ :=
   zero_locus_empty_of_one_mem (Set.mem_univ 1)
 
-theorem zero_locus_sup (I J : Ideal R) : ZeroLocus ((I⊔J : Ideal R) : Set R) = ZeroLocus I ∩ ZeroLocus J :=
+theorem zero_locus_sup (I J : Ideal R) : ZeroLocus ((I ⊔ J : Ideal R) : Set R) = ZeroLocus I ∩ ZeroLocus J :=
   (gc R).l_sup
 
 theorem zero_locus_union (s s' : Set R) : ZeroLocus (s ∪ s') = ZeroLocus s ∩ ZeroLocus s' :=
   (gc_set R).l_sup
 
 theorem vanishing_ideal_union (t t' : Set (PrimeSpectrum R)) :
-    vanishingIdeal (t ∪ t') = vanishingIdeal t⊓vanishingIdeal t' :=
+    vanishingIdeal (t ∪ t') = vanishingIdeal t ⊓ vanishingIdeal t' :=
   (gc R).u_inf
 
 theorem zero_locus_supr {ι : Sort _} (I : ι → Ideal R) :
@@ -298,11 +298,11 @@ theorem vanishing_ideal_Union {ι : Sort _} (t : ι → Set (PrimeSpectrum R)) :
     vanishingIdeal (⋃ i, t i) = ⨅ i, vanishingIdeal (t i) :=
   (gc R).u_infi
 
-theorem zero_locus_inf (I J : Ideal R) : ZeroLocus ((I⊓J : Ideal R) : Set R) = ZeroLocus I ∪ ZeroLocus J :=
+theorem zero_locus_inf (I J : Ideal R) : ZeroLocus ((I ⊓ J : Ideal R) : Set R) = ZeroLocus I ∪ ZeroLocus J :=
   Set.ext fun x => x.2.inf_le
 
 theorem union_zero_locus (s s' : Set R) :
-    ZeroLocus s ∪ ZeroLocus s' = ZeroLocus (Ideal.span s⊓Ideal.span s' : Ideal R) := by
+    ZeroLocus s ∪ ZeroLocus s' = ZeroLocus (Ideal.span s ⊓ Ideal.span s' : Ideal R) := by
   rw [zero_locus_inf]
   simp
 
@@ -323,7 +323,7 @@ theorem zero_locus_singleton_pow (f : R) (n : ℕ) (hn : 0 < n) : ZeroLocus ({f 
     simpa using x.2.pow_mem_iff_mem n hn
 
 theorem sup_vanishing_ideal_le (t t' : Set (PrimeSpectrum R)) :
-    vanishingIdeal t⊔vanishingIdeal t' ≤ vanishingIdeal (t ∩ t') := by
+    vanishingIdeal t ⊔ vanishingIdeal t' ≤ vanishingIdeal (t ∩ t') := by
   intro r
   rw [Submodule.mem_sup, mem_vanishing_ideal]
   rintro ⟨f, hf, g, hg, rfl⟩ x ⟨hxt, hxt'⟩
@@ -381,7 +381,7 @@ theorem is_closed_singleton_iff_is_maximal (x : PrimeSpectrum R) :
           not_not.1 (mt (Ideal.exists_le_maximal I) <| not_exists.2 fun J => not_and.2 fun hJ hIJ => _)⟩⟩
     exact
       ne_of_ltₓ (lt_of_lt_of_leₓ hI hIJ)
-        (symm <| congr_argₓ PrimeSpectrum.asIdeal (hs.2 ⟨J, hJ.is_prime⟩ fun r hr => hIJ (le_of_ltₓ hI <| hs.1 hr)))
+        (symm <| congr_arg PrimeSpectrum.asIdeal (hs.2 ⟨J, hJ.is_prime⟩ fun r hr => hIJ (le_of_ltₓ hI <| hs.1 hr)))
     
   · refine' ⟨x.as_ideal.1, _⟩
     rw [eq_comm, Set.eq_singleton_iff_unique_mem]
@@ -429,7 +429,7 @@ local notation "Z(" a ")" => ZeroLocus (a : Set R)
 theorem is_irreducible_zero_locus_iff_of_radical (I : Ideal R) (hI : I.radical = I) :
     IsIrreducible (ZeroLocus (I : Set R)) ↔ I.IsPrime := by
   rw [Ideal.is_prime_iff, IsIrreducible]
-  apply and_congr
+  apply and_congrₓ
   · rw [← Set.ne_empty_iff_nonempty, Ne.def, zero_locus_empty_iff_eq_top]
     
   · trans ∀ x y : Ideal R, Z(I) ⊆ Z(x) ∪ Z(y) → Z(I) ⊆ Z(x) ∨ Z(I) ⊆ Z(y)
@@ -528,7 +528,7 @@ theorem comap_injective_of_surjective (f : R →+* S) (hf : Function.Surjective 
   fun x y h =>
   PrimeSpectrum.ext.2
     (Ideal.comap_injective_of_surjective f hf
-      (congr_argₓ PrimeSpectrum.asIdeal h : (comap f x).asIdeal = (comap f y).asIdeal))
+      (congr_arg PrimeSpectrum.asIdeal h : (comap f x).asIdeal = (comap f y).asIdeal))
 
 theorem comap_singleton_is_closed_of_surjective (f : R →+* S) (hf : Function.Surjective f) (x : PrimeSpectrum S)
     (hx : IsClosed ({x} : Set (PrimeSpectrum S))) : IsClosed ({comap f x} : Set (PrimeSpectrum R)) := by
@@ -555,7 +555,7 @@ theorem localization_comap_inducing [Algebra R S] (M : Submonoid R) [IsLocalizat
     refine' ⟨_, ⟨algebraMap R S ⁻¹' Ideal.span s, rfl⟩, _⟩
     rw [preimage_comap_zero_locus, ← zero_locus_span, ← zero_locus_span s]
     congr 1
-    exact congr_argₓ Submodule.Carrier (IsLocalization.map_comap M S (Ideal.span s))
+    exact congr_arg Submodule.Carrier (IsLocalization.map_comap M S (Ideal.span s))
     
   · rintro ⟨_, ⟨t, rfl⟩, rfl⟩
     simp
@@ -564,7 +564,7 @@ theorem localization_comap_inducing [Algebra R S] (M : Submonoid R) [IsLocalizat
 theorem localization_comap_injective [Algebra R S] (M : Submonoid R) [IsLocalization M S] :
     Function.Injective (comap (algebraMap R S)) := by
   intro p q h
-  replace h := congr_argₓ (fun x : PrimeSpectrum R => Ideal.map (algebraMap R S) x.asIdeal) h
+  replace h := congr_arg (fun x : PrimeSpectrum R => Ideal.map (algebraMap R S) x.asIdeal) h
   dsimp' only  at h
   erw [IsLocalization.map_comap M S, IsLocalization.map_comap M S] at h
   ext1
@@ -679,7 +679,7 @@ theorem basic_open_le_basic_open_iff (f g : R) : basicOpen f ≤ basicOpen g ↔
   rw [TopologicalSpace.Opens.le_def, basic_open_eq_zero_locus_compl, basic_open_eq_zero_locus_compl, Set.le_eq_subset,
     Set.compl_subset_compl, zero_locus_subset_zero_locus_singleton_iff]
 
-theorem basic_open_mul (f g : R) : basicOpen (f * g) = basicOpen f⊓basicOpen g :=
+theorem basic_open_mul (f g : R) : basicOpen (f * g) = basicOpen f ⊓ basicOpen g :=
   TopologicalSpace.Opens.ext <| by
     simp [zero_locus_singleton_mul]
 

@@ -42,7 +42,7 @@ namespace SimplicialObject
 
 -- mathport name: simplicial_object.at
 localized [Simplicial]
-  notation:1000 X "_[" n "]" => (X : CategoryTheory.SimplicialObject hole!).obj (Opposite.op (SimplexCategory.mk n))
+  notation:1000 X " _[" n "]" => (X : CategoryTheory.SimplicialObject hole!).obj (Opposite.op (SimplexCategory.mk n))
 
 instance {J : Type v} [SmallCategory J] [HasLimitsOfShape J C] : HasLimitsOfShape J (SimplicialObject C) := by
   dsimp' [simplicial_object]
@@ -272,7 +272,7 @@ namespace CosimplicialObject
 
 -- mathport name: cosimplicial_object.at
 localized [Simplicial]
-  notation:1000 X "_[" n "]" => (X : CategoryTheory.CosimplicialObject hole!).obj (SimplexCategory.mk n)
+  notation:1000 X " _[" n "]" => (X : CategoryTheory.CosimplicialObject hole!).obj (SimplexCategory.mk n)
 
 instance {J : Type v} [SmallCategory J] [HasLimitsOfShape J C] : HasLimitsOfShape J (CosimplicialObject C) := by
   dsimp' [cosimplicial_object]

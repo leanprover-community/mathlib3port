@@ -146,7 +146,7 @@ end RingOfIntegers
 
 end NumberField
 
-namespace Rat
+namespace Ratₓ
 
 open NumberField
 
@@ -163,7 +163,7 @@ instance number_field : NumberField ℚ where
 noncomputable def ringOfIntegersEquiv : ringOfIntegers ℚ ≃+* ℤ :=
   ringOfIntegers.equiv ℤ
 
-end Rat
+end Ratₓ
 
 namespace AdjoinRoot
 

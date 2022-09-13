@@ -173,11 +173,11 @@ noncomputable instance : SemilatticeSup (Enorm 𝕜 V) :=
     sup_le := fun e₁ e₂ e₃ h₁ h₂ x => max_leₓ (h₁ x) (h₂ x) }
 
 @[simp, norm_cast]
-theorem coe_max (e₁ e₂ : Enorm 𝕜 V) : ⇑(e₁⊔e₂) = fun x => max (e₁ x) (e₂ x) :=
+theorem coe_max (e₁ e₂ : Enorm 𝕜 V) : ⇑(e₁ ⊔ e₂) = fun x => max (e₁ x) (e₂ x) :=
   rfl
 
 @[norm_cast]
-theorem max_map (e₁ e₂ : Enorm 𝕜 V) (x : V) : (e₁⊔e₂) x = max (e₁ x) (e₂ x) :=
+theorem max_map (e₁ e₂ : Enorm 𝕜 V) (x : V) : (e₁ ⊔ e₂) x = max (e₁ x) (e₂ x) :=
   rfl
 
 /-- Structure of an `emetric_space` defined by an extended norm. -/

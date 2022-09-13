@@ -38,7 +38,7 @@ instance (r : α → α → Prop) [Inhabited α] : Inhabited (Quot r) :=
   ⟨⟦default⟧⟩
 
 instance [Subsingleton α] : Subsingleton (Quot ra) :=
-  ⟨fun x => Quot.induction_on x fun y => Quot.ind fun b => congr_argₓ _ (Subsingleton.elim _ _)⟩
+  ⟨fun x => Quot.induction_on x fun y => Quot.ind fun b => congr_arg _ (Subsingleton.elim _ _)⟩
 
 /-- Recursion on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
 protected def hrecOn₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ ⟦a⟧ ⟦b⟧)
@@ -56,7 +56,7 @@ protected def hrecOn₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ ⟦a⟧ �
 
 /-- Map a function `f : α → β` such that `ra x y` implies `rb (f x) (f y)`
 to a map `quot ra → quot rb`. -/
-protected def map (f : α → β) (h : (ra⇒rb) f f) : Quot ra → Quot rb :=
+protected def map (f : α → β) (h : (ra ⇒ rb) f f) : Quot ra → Quot rb :=
   (Quot.lift fun x => ⟦f x⟧) fun x y (h₁ : ra x y) => Quot.sound <| h h₁
 
 /-- If `ra` is a subrelation of `ra'`, then we have a natural map `quot ra → quot ra'`. -/
@@ -179,11 +179,11 @@ protected def hrecOn₂ (qa : Quotientₓ sa) (qb : Quotientₓ sb) (f : ∀ a b
 
 /-- Map a function `f : α → β` that sends equivalent elements to equivalent elements
 to a function `quotient sa → quotient sb`. Useful to define unary operations on quotients. -/
-protected def map (f : α → β) (h : ((· ≈ ·)⇒(· ≈ ·)) f f) : Quotientₓ sa → Quotientₓ sb :=
+protected def map (f : α → β) (h : ((· ≈ ·) ⇒ (· ≈ ·)) f f) : Quotientₓ sa → Quotientₓ sb :=
   Quot.map f h
 
 @[simp]
-theorem map_mk (f : α → β) (h : ((· ≈ ·)⇒(· ≈ ·)) f f) (x : α) :
+theorem map_mk (f : α → β) (h : ((· ≈ ·) ⇒ (· ≈ ·)) f f) (x : α) :
     Quotientₓ.map f h (⟦x⟧ : Quotientₓ sa) = (⟦f x⟧ : Quotientₓ sb) :=
   rfl
 
@@ -192,11 +192,12 @@ variable {γ : Sort _} [sc : Setoidₓ γ]
 /-- Map a function `f : α → β → γ` that sends equivalent elements to equivalent elements
 to a function `f : quotient sa → quotient sb → quotient sc`.
 Useful to define binary operations on quotients. -/
-protected def map₂ (f : α → β → γ) (h : ((· ≈ ·)⇒(· ≈ ·)⇒(· ≈ ·)) f f) : Quotientₓ sa → Quotientₓ sb → Quotientₓ sc :=
+protected def map₂ (f : α → β → γ) (h : ((· ≈ ·) ⇒ (· ≈ ·) ⇒ (· ≈ ·)) f f) :
+    Quotientₓ sa → Quotientₓ sb → Quotientₓ sc :=
   Quotientₓ.lift₂ (fun x y => ⟦f x y⟧) fun x₁ y₁ x₂ y₂ h₁ h₂ => Quot.sound <| h h₁ h₂
 
 @[simp]
-theorem map₂_mk (f : α → β → γ) (h : ((· ≈ ·)⇒(· ≈ ·)⇒(· ≈ ·)) f f) (x : α) (y : β) :
+theorem map₂_mk (f : α → β → γ) (h : ((· ≈ ·) ⇒ (· ≈ ·) ⇒ (· ≈ ·)) f f) (x : α) (y : β) :
     Quotientₓ.map₂ f h (⟦x⟧ : Quotientₓ sa) (⟦y⟧ : Quotientₓ sb) = (⟦f x y⟧ : Quotientₓ sc) :=
   rfl
 
@@ -566,7 +567,7 @@ theorem hrec_on₂'_mk' {φ : Quotientₓ s₁ → Quotientₓ s₂ → Sort _} 
 
 /-- Map a function `f : α → β` that sends equivalent elements to equivalent elements
 to a function `quotient sa → quotient sb`. Useful to define unary operations on quotients. -/
-protected def map' (f : α → β) (h : (s₁.R⇒s₂.R) f f) : Quotientₓ s₁ → Quotientₓ s₂ :=
+protected def map' (f : α → β) (h : (s₁.R ⇒ s₂.R) f f) : Quotientₓ s₁ → Quotientₓ s₂ :=
   Quot.map f h
 
 @[simp]
@@ -575,7 +576,7 @@ theorem map'_mk' (f : α → β) (h) (x : α) :
   rfl
 
 /-- A version of `quotient.map₂` using curly braces and unification. -/
-protected def map₂' (f : α → β → γ) (h : (s₁.R⇒s₂.R⇒s₃.R) f f) : Quotientₓ s₁ → Quotientₓ s₂ → Quotientₓ s₃ :=
+protected def map₂' (f : α → β → γ) (h : (s₁.R ⇒ s₂.R ⇒ s₃.R) f f) : Quotientₓ s₁ → Quotientₓ s₂ → Quotientₓ s₃ :=
   Quotientₓ.map₂ f h
 
 @[simp]

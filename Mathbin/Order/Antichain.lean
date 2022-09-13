@@ -182,10 +182,10 @@ theorem IsAntichain.greatest_iff (hs : IsAntichain (· ≤ ·) s) : IsGreatest s
   (and_iff_right hs).symm.trans is_antichain_and_greatest_iff
 
 theorem IsLeast.antichain_iff (hs : IsLeast s a) : IsAntichain (· ≤ ·) s ↔ s = {a} :=
-  (and_iff_left hs).symm.trans is_antichain_and_least_iff
+  (and_iff_leftₓ hs).symm.trans is_antichain_and_least_iff
 
 theorem IsGreatest.antichain_iff (hs : IsGreatest s a) : IsAntichain (· ≤ ·) s ↔ s = {a} :=
-  (and_iff_left hs).symm.trans is_antichain_and_greatest_iff
+  (and_iff_leftₓ hs).symm.trans is_antichain_and_greatest_iff
 
 theorem IsAntichain.bot_mem_iff [OrderBot α] (hs : IsAntichain (· ≤ ·) s) : ⊥ ∈ s ↔ s = {⊥} :=
   is_least_bot_iff.symm.trans hs.least_iff

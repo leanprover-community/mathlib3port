@@ -392,7 +392,7 @@ theorem nth_eq_order_iso_of_nat (i : Infinite (SetOf p)) (n : ℕ) : nth p n = N
           (by
             simp )
       
-    simp only [exists_prop, not_and, not_ltₓ, Set.mem_set_of_eq, not_forall]
+    simp only [exists_propₓ, not_and, not_ltₓ, Set.mem_set_of_eq, not_forall]
     refine' fun hpn => ⟨k, lt_add_one k, _⟩
     by_contra' hlt
     replace hn : n - nth p k - 1 < t

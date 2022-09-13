@@ -114,7 +114,7 @@ theorem symm_symm_eq {X Y : C} (α : X ≅ Y) : α.symm.symm = α := by
 
 @[simp]
 theorem symm_eq_iff {X Y : C} {α β : X ≅ Y} : α.symm = β.symm ↔ α = β :=
-  ⟨fun h => symm_symm_eq α ▸ symm_symm_eq β ▸ congr_argₓ symm h, congr_argₓ symm⟩
+  ⟨fun h => symm_symm_eq α ▸ symm_symm_eq β ▸ congr_arg symm h, congr_arg symm⟩
 
 /-- Identity isomorphism. -/
 @[refl, simps]

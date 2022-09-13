@@ -34,14 +34,14 @@ variable (G)
   taking the commutator of the previous subgroup with itself for `n` times. -/
 def derivedSeries : ℕ → Subgroup G
   | 0 => ⊤
-  | n + 1 => ⁅derivedSeries n,derivedSeries n⁆
+  | n + 1 => ⁅derivedSeries n, derivedSeries n⁆
 
 @[simp]
 theorem derived_series_zero : derivedSeries G 0 = ⊤ :=
   rfl
 
 @[simp]
-theorem derived_series_succ (n : ℕ) : derivedSeries G (n + 1) = ⁅derivedSeries G n,derivedSeries G n⁆ :=
+theorem derived_series_succ (n : ℕ) : derivedSeries G (n + 1) = ⁅derivedSeries G n, derivedSeries G n⁆ :=
   rfl
 
 theorem derived_series_normal (n : ℕ) : (derivedSeries G n).Normal := by
@@ -186,7 +186,7 @@ section PermNotSolvable
 
 theorem not_solvable_of_mem_derived_series {g : G} (h1 : g ≠ 1) (h2 : ∀ n : ℕ, g ∈ derivedSeries G n) : ¬IsSolvable G :=
   mt (is_solvable_def _).mp
-    (not_exists_of_forall_not fun n h => h1 (Subgroup.mem_bot.mp ((congr_argₓ (Membership.Mem g) h).mp (h2 n))))
+    (not_exists_of_forall_notₓ fun n h => h1 (Subgroup.mem_bot.mp ((congr_arg (Membership.Mem g) h).mp (h2 n))))
 
 theorem Equivₓ.Perm.fin_5_not_solvable : ¬IsSolvable (Equivₓ.Perm (Finₓ 5)) := by
   let x : Equivₓ.Perm (Finₓ 5) :=
@@ -201,7 +201,7 @@ theorem Equivₓ.Perm.fin_5_not_solvable : ¬IsSolvable (Equivₓ.Perm (Finₓ 5
     ⟨![0, 3, 2, 1, 4], ![0, 3, 2, 1, 4], by
       decide, by
       decide⟩
-  have key : x = z * ⁅x,y * x * y⁻¹⁆ * z⁻¹ := by
+  have key : x = z * ⁅x, y * x * y⁻¹⁆ * z⁻¹ := by
     decide
   refine'
     not_solvable_of_mem_derived_series

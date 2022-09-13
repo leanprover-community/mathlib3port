@@ -529,29 +529,29 @@ theorem coe_inj {q r : ℚ} : (↑q : ℚ_[p]) = ↑r ↔ q = r :=
 
 instance : CharZero ℚ_[p] :=
   ⟨fun m n => by
-    rw [← Rat.cast_coe_nat]
+    rw [← Ratₓ.cast_coe_nat]
     norm_cast
     exact id⟩
 
 @[norm_cast]
 theorem coe_add : ∀ {x y : ℚ}, (↑(x + y) : ℚ_[p]) = ↑x + ↑y :=
-  Rat.cast_add
+  Ratₓ.cast_add
 
 @[norm_cast]
 theorem coe_neg : ∀ {x : ℚ}, (↑(-x) : ℚ_[p]) = -↑x :=
-  Rat.cast_neg
+  Ratₓ.cast_neg
 
 @[norm_cast]
 theorem coe_mul : ∀ {x y : ℚ}, (↑(x * y) : ℚ_[p]) = ↑x * ↑y :=
-  Rat.cast_mul
+  Ratₓ.cast_mul
 
 @[norm_cast]
 theorem coe_sub : ∀ {x y : ℚ}, (↑(x - y) : ℚ_[p]) = ↑x - ↑y :=
-  Rat.cast_sub
+  Ratₓ.cast_sub
 
 @[norm_cast]
 theorem coe_div : ∀ {x y : ℚ}, (↑(x / y) : ℚ_[p]) = ↑x / ↑y :=
-  Rat.cast_div
+  Ratₓ.cast_div
 
 @[norm_cast]
 theorem coe_one : (↑1 : ℚ_[p]) = 1 :=
@@ -910,9 +910,9 @@ theorem eq_padic_norm (q : ℚ) : ∥(↑q : ℚ_[p])∥ = padicNorm p q := by
 theorem norm_p : ∥(p : ℚ_[p])∥ = p⁻¹ := by
   have p₀ : p ≠ 0 := hp.1.ne_zero
   have p₁ : p ≠ 1 := hp.1.ne_one
-  rw [← @Rat.cast_coe_nat ℝ _ p]
-  rw [← @Rat.cast_coe_nat ℚ_[p] _ p]
-  simp [p₀, p₁, norm, padicNorm, padicValRat, padicValInt, zpow_neg, -Rat.cast_coe_nat]
+  rw [← @Ratₓ.cast_coe_nat ℝ _ p]
+  rw [← @Ratₓ.cast_coe_nat ℚ_[p] _ p]
+  simp [p₀, p₁, norm, padicNorm, padicValRat, padicValInt, zpow_neg, -Ratₓ.cast_coe_nat]
 
 theorem norm_p_lt_one : ∥(p : ℚ_[p])∥ < 1 := by
   rw [norm_p]
@@ -934,7 +934,7 @@ protected theorem image {q : ℚ_[p]} : q ≠ 0 → ∃ n : ℤ, ∥q∥ = ↑((
   (Quotientₓ.induction_on q) fun f hf =>
     have : ¬f ≈ 0 := (PadicSeq.ne_zero_iff_nequiv_zero f).1 hf
     let ⟨n, hn⟩ := PadicSeq.norm_values_discrete f this
-    ⟨n, congr_argₓ coe hn⟩
+    ⟨n, congr_arg coe hn⟩
 
 protected theorem is_rat (q : ℚ_[p]) : ∃ q' : ℚ, ∥q∥ = ↑q' :=
   if h : q = 0 then
@@ -956,10 +956,10 @@ theorem eq_rat_norm (q : ℚ_[p]) : ∥q∥ = ratNorm q :=
 theorem norm_rat_le_one : ∀ {q : ℚ} (hq : ¬p ∣ q.denom), ∥(q : ℚ_[p])∥ ≤ 1
   | ⟨n, d, hn, hd⟩ => fun hq : ¬p ∣ d =>
     if hnz : n = 0 then by
-      have : (⟨n, d, hn, hd⟩ : ℚ) = 0 := Rat.zero_iff_num_zero.mpr hnz
+      have : (⟨n, d, hn, hd⟩ : ℚ) = 0 := Ratₓ.zero_iff_num_zero.mpr hnz
       norm_num[this]
     else by
-      have hnz' : { num := n, denom := d, Pos := hn, cop := hd } ≠ 0 := mt Rat.zero_iff_num_zero.1 hnz
+      have hnz' : { num := n, denom := d, Pos := hn, cop := hd } ≠ 0 := mt Ratₓ.zero_iff_num_zero.1 hnz
       rw [padicNormE.eq_padic_norm]
       norm_cast
       rw [padicNorm.eq_zpow_of_nonzero p hnz', padicValRat, neg_sub, padicValNat.eq_zero_of_not_dvd hq]
@@ -1143,7 +1143,7 @@ theorem norm_eq_pow_val {x : ℚ_[p]} : x ≠ 0 → ∥x∥ = p ^ -x.Valuation :
   change (PadicSeq.norm _ : ℝ) = (p : ℝ) ^ -PadicSeq.valuation _
   rw [PadicSeq.norm_eq_pow_val]
   change ↑((p : ℚ) ^ -PadicSeq.valuation f) = (p : ℝ) ^ -PadicSeq.valuation f
-  · rw [Rat.cast_zpow, Rat.cast_coe_nat]
+  · rw [Ratₓ.cast_zpow, Ratₓ.cast_coe_nat]
     
   · apply CauSeq.not_lim_zero_of_not_congr_zero
     contrapose! hf
@@ -1258,7 +1258,7 @@ theorem norm_le_pow_iff_norm_lt_pow_add_one (x : ℚ_[p]) (n : ℤ) : ∥x∥ �
   have h1p : 1 < (p : ℝ) := by
     exact_mod_cast hp_prime.1.one_lt
   have H := zpow_strict_mono h1p
-  rw [H.le_iff_le, H.lt_iff_lt, Int.lt_add_one_iff]
+  rw [H.le_iff_le, H.lt_iff_lt, Int.lt_add_one_iffₓ]
 
 theorem norm_lt_pow_iff_norm_le_pow_sub_one (x : ℚ_[p]) (n : ℤ) : ∥x∥ < p ^ n ↔ ∥x∥ ≤ p ^ (n - 1) := by
   rw [norm_le_pow_iff_norm_lt_pow_add_one, sub_add_cancel]

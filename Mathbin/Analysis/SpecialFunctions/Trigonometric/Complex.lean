@@ -38,7 +38,7 @@ theorem cos_eq_zero_iff {θ : ℂ} : cos θ = 0 ↔ ∃ k : ℤ, θ = (2 * k + 1
     ring
   rw [cos, h, ← exp_pi_mul_I, exp_eq_exp_iff_exists_int, mul_right_commₓ]
   refine' exists_congr fun x => _
-  refine' (iff_of_eq <| congr_argₓ _ _).trans (mul_right_inj' <| mul_ne_zero two_ne_zero' I_ne_zero)
+  refine' (iff_of_eq <| congr_arg _ _).trans (mul_right_inj' <| mul_ne_zero two_ne_zero' I_ne_zero)
   field_simp
   ring
 
@@ -88,7 +88,7 @@ theorem cos_eq_cos_iff {x y : ℂ} : cos x = cos y ↔ ∃ k : ℤ, y = 2 * k * 
           norm_num : (2 : ℂ) ≠ 0)]
     _ ↔ sin ((x - y) / 2) = 0 ∨ sin ((x + y) / 2) = 0 := Or.comm
     _ ↔ (∃ k : ℤ, y = 2 * k * π + x) ∨ ∃ k : ℤ, y = 2 * k * π - x := by
-      apply or_congr <;>
+      apply or_congrₓ <;>
         field_simp [sin_eq_zero_iff,
           (by
             norm_num : -(2 : ℂ) ≠ 0),
@@ -103,7 +103,7 @@ theorem cos_eq_cos_iff {x y : ℂ} : cos x = cos y ↔ ∃ k : ℤ, y = 2 * k * 
 
 theorem sin_eq_sin_iff {x y : ℂ} : sin x = sin y ↔ ∃ k : ℤ, y = 2 * k * π + x ∨ y = (2 * k + 1) * π - x := by
   simp only [← Complex.cos_sub_pi_div_two, cos_eq_cos_iff, sub_eq_iff_eq_add]
-  refine' exists_congr fun k => or_congr _ _ <;> refine' Eq.congr rfl _ <;> field_simp <;> ring
+  refine' exists_congr fun k => or_congrₓ _ _ <;> refine' Eq.congr rfl _ <;> field_simp <;> ring
 
 theorem tan_add {x y : ℂ}
     (h :

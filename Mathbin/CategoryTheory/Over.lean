@@ -215,7 +215,7 @@ instance mono_left_of_mono {f g : Over X} (k : f ⟶ g) [Mono k] : Mono k.left :
         dsimp'
         rw [← over.w k, reassoc_of a])
   suffices l' = hom_mk m by
-    apply congr_argₓ comma_morphism.left this
+    apply congr_arg comma_morphism.left this
   rw [← cancel_mono k]
   ext
   apply a
@@ -463,7 +463,7 @@ instance epi_right_of_epi {f g : Under X} (k : f ⟶ g) [Epi k] : Epi k.right :=
         dsimp'
         rw [← under.w k, category.assoc, a, category.assoc])
   suffices l' = hom_mk m by
-    apply congr_argₓ comma_morphism.right this
+    apply congr_arg comma_morphism.right this
   rw [← cancel_epi k]
   ext
   apply a

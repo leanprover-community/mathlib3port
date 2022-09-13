@@ -85,7 +85,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
   simp_rw [integrand_eq, ← lintegral_indicator (fun t => Ennreal.ofReal (g t)) measurable_set_Ioc, ←
     lintegral_indicator _ measurable_set_Ioi]
   rw [lintegral_lintegral_swap]
-  · apply congr_argₓ
+  · apply congr_arg
     funext s
     have aux₁ :
       (fun x => (Ioc 0 (f x)).indicator (fun t : ℝ => Ennreal.ofReal (g t)) s) = fun x =>

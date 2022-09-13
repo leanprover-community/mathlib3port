@@ -455,7 +455,7 @@ def Bounded (r : α → α → Prop) (s : Set α) : Prop :=
 
 @[simp]
 theorem not_bounded_iff {r : α → α → Prop} (s : Set α) : ¬Bounded r s ↔ Unbounded r s := by
-  simp only [bounded, unbounded, not_forall, not_exists, exists_prop, not_and, not_not]
+  simp only [bounded, unbounded, not_forall, not_exists, exists_propₓ, not_and, not_not]
 
 @[simp]
 theorem not_unbounded_iff {r : α → α → Prop} (s : Set α) : ¬Unbounded r s ↔ Bounded r s := by

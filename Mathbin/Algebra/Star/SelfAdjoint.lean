@@ -71,7 +71,7 @@ theorem mul_star_self [Semigroupₓ R] [StarSemigroup R] (x : R) : IsSelfAdjoint
 /-- Functions in a `star_hom_class` preserve self-adjoint elements. -/
 theorem star_hom_apply {F R S : Type _} [HasStar R] [HasStar S] [StarHomClass F R S] {x : R} (hx : IsSelfAdjoint x)
     (f : F) : IsSelfAdjoint (f x) :=
-  show star (f x) = f x from map_star f x ▸ congr_argₓ f hx
+  show star (f x) = f x from map_star f x ▸ congr_arg f hx
 
 section AddGroupₓ
 
@@ -296,7 +296,7 @@ theorem coe_zpow (x : selfAdjoint R) (z : ℤ) : ↑(x ^ z) = (x : R) ^ z :=
 
 theorem rat_cast_mem : ∀ x : ℚ, IsSelfAdjoint (x : R)
   | ⟨a, b, h1, h2⟩ => by
-    rw [IsSelfAdjoint, Rat.cast_mk', star_mul', star_inv', star_nat_cast, star_int_cast]
+    rw [IsSelfAdjoint, Ratₓ.cast_mk', star_mul', star_inv', star_nat_cast, star_int_cast]
 
 instance : HasRatCast (selfAdjoint R) :=
   ⟨fun n => ⟨n, rat_cast_mem n⟩⟩
@@ -308,7 +308,7 @@ theorem coe_rat_cast (x : ℚ) : ↑(x : selfAdjoint R) = (x : R) :=
 instance hasQsmul : HasSmul ℚ (selfAdjoint R) :=
   ⟨fun a x =>
     ⟨a • x, by
-      rw [Rat.smul_def] <;> exact (rat_cast_mem a).mul x.prop⟩⟩
+      rw [Ratₓ.smul_def] <;> exact (rat_cast_mem a).mul x.prop⟩⟩
 
 @[simp, norm_cast]
 theorem coe_rat_smul (x : selfAdjoint R) (a : ℚ) : ↑(a • x) = a • (x : R) :=

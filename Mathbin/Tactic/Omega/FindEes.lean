@@ -89,7 +89,7 @@ unsafe def ee_commit (t1 : eqelim α) (t2 : eqelim β) (t3 : α → eqelim β) :
     | some a => t3 a
 
 -- mathport name: «expr !>>= ; »
-local notation t1 "!>>=" t2 ";" t3 => ee_commit t1 t2 t3
+local notation t1 " !>>= " t2 "; " t3 => ee_commit t1 t2 t3
 
 private unsafe def of_tactic {α : Type} : tactic α → eqelim α :=
   StateTₓ.lift
@@ -135,8 +135,8 @@ unsafe def find_min_coeff (t : Term) : eqelim (Int × Nat × term) := do
 unsafe def elim_eq : eqelim Unit := do
   let t ← head_eq
   let i ← get_gcd t
-  factor i t !>>=set_eqs [] >> add_ee (ee.nondiv i);fun s =>
-      find_min_coeff s !>>=add_ee ee.drop;fun ⟨i, n, u⟩ =>
+  factor i t !>>= set_eqs [] >> add_ee (ee.nondiv i); fun s =>
+      find_min_coeff s !>>= add_ee ee.drop; fun ⟨i, n, u⟩ =>
         if i = 1 then do
           let eqs ← get_eqs
           let les ← get_les
@@ -157,7 +157,7 @@ unsafe def elim_eq : eqelim Unit := do
 /-- Find and return the sequence of steps for eliminating
     all equality constraints in the current state. -/
 unsafe def elim_eqs : eqelim (List Ee) :=
-  elim_eq !>>=get_ees;fun _ => elim_eqs
+  elim_eq !>>= get_ees; fun _ => elim_eqs
 
 /-- Given a linear constrain clause, return a list of steps for eliminating its equality
 constraints. -/

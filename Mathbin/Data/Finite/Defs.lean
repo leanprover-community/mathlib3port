@@ -9,7 +9,8 @@ import Mathbin.Logic.Equiv.Basic
 # Definition of the `finite` typeclass
 
 This file defines a typeclass `finite` saying that `α : Sort*` is finite. A type is `finite` if it
-is equivalent to `fin n` for some `n`.
+is equivalent to `fin n` for some `n`. We also define `infinite α` as a typeclass equivalent to
+`¬finite α`.
 
 The `finite` predicate has no computational relevance and, being `Prop`-valued, gets to enjoy proof
 irrelevance -- it represents the mere fact that the type is finite.  While the `fintype` class also
@@ -26,6 +27,7 @@ instead.
 ## Main definitions
 
 * `finite α` denotes that `α` is a finite type.
+* `infinite α` denotes that `α` is an infinite type.
 
 ## Implementation notes
 
@@ -70,16 +72,39 @@ theorem Equivₓ.finite_iff (f : α ≃ β) : Finite α ↔ Finite β :=
 theorem Function.Bijective.finite_iff {f : α → β} (h : Bijective f) : Finite α ↔ Finite β :=
   (Equivₓ.ofBijective f h).finite_iff
 
-namespace Finite
-
-theorem of_bijective [Finite α] {f : α → β} (h : Bijective f) : Finite β :=
+theorem Finite.of_bijective [Finite α] {f : α → β} (h : Bijective f) : Finite β :=
   h.finite_iff.mp ‹_›
 
 instance [Finite α] : Finite (Plift α) :=
-  of_equiv α Equivₓ.plift.symm
+  Finite.of_equiv α Equivₓ.plift.symm
 
 instance {α : Type v} [Finite α] : Finite (ULift.{u} α) :=
-  of_equiv α Equivₓ.ulift.symm
+  Finite.of_equiv α Equivₓ.ulift.symm
 
-end Finite
+/-- A type is said to be infinite if it is not finite. Note that `infinite α` is equivalent to
+`is_empty (fintype α)` or `is_empty (finite α)`. -/
+class Infinite (α : Sort _) : Prop where
+  not_finite : ¬Finite α
+
+@[simp]
+theorem not_finite_iff_infinite : ¬Finite α ↔ Infinite α :=
+  ⟨Infinite.mk, fun h => h.1⟩
+
+@[simp]
+theorem not_infinite_iff_finite : ¬Infinite α ↔ Finite α :=
+  not_finite_iff_infinite.not_right.symm
+
+theorem finite_or_infinite (α : Sort _) : Finite α ∨ Infinite α :=
+  or_iff_not_imp_left.2 <| not_finite_iff_infinite.1
+
+theorem not_finite (α : Sort _) [Infinite α] [Finite α] : False :=
+  @Infinite.not_finite α ‹_› ‹_›
+
+protected theorem Finite.false [Infinite α] (h : Finite α) : False :=
+  not_finite α
+
+protected theorem Infinite.false [Finite α] (h : Infinite α) : False :=
+  not_finite α
+
+alias not_infinite_iff_finite ↔ Finite.of_not_infinite Finite.not_infinite
 

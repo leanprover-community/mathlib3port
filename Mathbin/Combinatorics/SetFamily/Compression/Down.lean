@@ -88,7 +88,7 @@ theorem card_member_subfamily_add_card_non_member_subfamily (a : α) (𝒜 : Fin
 theorem member_subfamily_union_non_member_subfamily (a : α) (𝒜 : Finset (Finset α)) :
     𝒜.memberSubfamily a ∪ 𝒜.nonMemberSubfamily a = 𝒜.Image fun s => s.erase a := by
   ext s
-  simp only [mem_union, mem_member_subfamily, mem_non_member_subfamily, mem_image, exists_prop]
+  simp only [mem_union, mem_member_subfamily, mem_non_member_subfamily, mem_image, exists_propₓ]
   constructor
   · rintro (h | h)
     · exact ⟨_, h.1, erase_insert h.2⟩
@@ -152,21 +152,21 @@ original, or it's not in the original but it's the compression of something in t
 theorem mem_compression : s ∈ 𝓓 a 𝒜 ↔ s ∈ 𝒜 ∧ s.erase a ∈ 𝒜 ∨ s ∉ 𝒜 ∧ insert a s ∈ 𝒜 := by
   simp_rw [compression, mem_disj_union, mem_filter, mem_image, and_comm (s ∉ 𝒜)]
   refine'
-    or_congr_right'
-      (and_congr_left fun hs => ⟨_, fun h => ⟨_, h, erase_insert <| insert_ne_self.1 <| ne_of_mem_of_not_mem h hs⟩⟩)
+    or_congr_right'ₓ
+      (and_congr_leftₓ fun hs => ⟨_, fun h => ⟨_, h, erase_insert <| insert_ne_self.1 <| ne_of_mem_of_not_memₓ h hs⟩⟩)
   rintro ⟨t, ht, rfl⟩
-  rwa [insert_erase (erase_ne_self.1 (ne_of_mem_of_not_mem ht hs).symm)]
+  rwa [insert_erase (erase_ne_self.1 (ne_of_mem_of_not_memₓ ht hs).symm)]
 
 theorem erase_mem_compression (hs : s ∈ 𝒜) : s.erase a ∈ 𝓓 a 𝒜 := by
   simp_rw [mem_compression, erase_idem, and_selfₓ]
   refine' (em _).imp_right fun h => ⟨h, _⟩
-  rwa [insert_erase (erase_ne_self.1 (ne_of_mem_of_not_mem hs h).symm)]
+  rwa [insert_erase (erase_ne_self.1 (ne_of_mem_of_not_memₓ hs h).symm)]
 
 -- This is a special case of `erase_mem_compression` once we have `compression_idem`.
 theorem erase_mem_compression_of_mem_compression : s ∈ 𝓓 a 𝒜 → s.erase a ∈ 𝓓 a 𝒜 := by
   simp_rw [mem_compression, erase_idem]
   refine' Or.impₓ (fun h => ⟨h.2, h.2⟩) fun h => _
-  rwa [erase_eq_of_not_mem (insert_ne_self.1 <| ne_of_mem_of_not_mem h.2 h.1)]
+  rwa [erase_eq_of_not_mem (insert_ne_self.1 <| ne_of_mem_of_not_memₓ h.2 h.1)]
 
 theorem mem_compression_of_insert_mem_compression (h : insert a s ∈ 𝓓 a 𝒜) : s ∈ 𝓓 a 𝒜 := by
   by_cases' ha : a ∈ s
@@ -195,7 +195,7 @@ theorem card_compression (a : α) (𝒜 : Finset (Finset α)) : (𝓓 a 𝒜).ca
   · exact disjoint_filter_filter_neg _ _
     
   rw [mem_coe, mem_filter] at hs
-  exact not_imp_comm.1 erase_eq_of_not_mem (ne_of_mem_of_not_mem hs.1 hs.2).symm
+  exact not_imp_comm.1 erase_eq_of_not_mem (ne_of_mem_of_not_memₓ hs.1 hs.2).symm
 
 end Down
 

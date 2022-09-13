@@ -139,7 +139,7 @@ variable [CompleteBooleanAlgebra α]
 theorem supr_disjointed (f : ℕ → α) : (⨆ n, disjointed f n) = ⨆ n, f n :=
   supr_eq_supr_of_partial_sups_eq_partial_sups (partial_sups_disjointed f)
 
-theorem disjointed_eq_inf_compl (f : ℕ → α) (n : ℕ) : disjointed f n = f n⊓⨅ i < n, f iᶜ := by
+theorem disjointed_eq_inf_compl (f : ℕ → α) (n : ℕ) : disjointed f n = f n ⊓ ⨅ i < n, f iᶜ := by
   cases n
   · rw [disjointed_zero, eq_comm, inf_eq_left]
     simp_rw [le_infi_iff]

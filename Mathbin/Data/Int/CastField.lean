@@ -38,7 +38,7 @@ theorem cast_div [Field α] {m n : ℤ} (n_dvd : n ∣ m) (n_nonzero : (n : α) 
   have : n ≠ 0 := by
     rintro rfl
     simpa using n_nonzero
-  rw [Int.mul_div_cancel_left _ this, Int.cast_mul, mul_div_cancel_left _ n_nonzero]
+  rw [Int.mul_div_cancel_leftₓ _ this, Int.cast_mul, mul_div_cancel_left _ n_nonzero]
 
 end Int
 

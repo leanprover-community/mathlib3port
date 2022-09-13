@@ -18,6 +18,6 @@ This lemma is in a separate file because `topology.algebra.order.basic` does not
 variable {𝕜 : Type _} [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [OrderTopology 𝕜] [Archimedean 𝕜]
 
 /-- Rational numbers are dense in a linear ordered archimedean field. -/
-theorem Rat.dense_range_cast : DenseRange (coe : ℚ → 𝕜) :=
+theorem Ratₓ.dense_range_cast : DenseRange (coe : ℚ → 𝕜) :=
   dense_of_exists_between fun a b h => Set.exists_range_iff.2 <| exists_rat_btwn h
 

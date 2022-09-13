@@ -75,7 +75,7 @@ def bind {β γ} (f : α →o Part β) (g : α →o β → Part γ) : α →o Pa
   toFun := fun x => f x >>= g x
   monotone' := by
     intro x y h a
-    simp only [and_imp, exists_prop, Part.bind_eq_bind, Part.mem_bind_iff, exists_imp_distrib]
+    simp only [and_imp, exists_propₓ, Part.bind_eq_bind, Part.mem_bind_iff, exists_imp_distrib]
     intro b hb ha
     refine' ⟨b, f.monotone h _ hb, g.monotone h _ _ ha⟩
 
@@ -308,7 +308,7 @@ theorem ωSup_eq_some {c : Chain (Part α)} {a : α} (h : some a ∈ c) : Part.�
   have a' : some (Classical.choose this) ∈ c := Classical.choose_spec this
   calc
     Part.ωSup c = some (Classical.choose this) := dif_pos this
-    _ = some a := congr_argₓ _ (eq_of_chain a' h)
+    _ = some a := congr_arg _ (eq_of_chain a' h)
     
 
 theorem ωSup_eq_none {c : Chain (Part α)} (h : ¬∃ a, some a ∈ c) : Part.ωSup c = none :=
@@ -388,7 +388,7 @@ variable [∀ x, OmegaCompletePartialOrder <| β x]
 variable [OmegaCompletePartialOrder γ]
 
 theorem flip₁_continuous' (f : ∀ x : α, γ → β x) (a : α) (hf : Continuous' fun x y => f y x) : Continuous' (f a) :=
-  Continuous.of_bundled _ (fun x y h => hf.to_monotone h a) fun c => congr_funₓ (hf.to_bundled _ c) a
+  Continuous.of_bundled _ (fun x y h => hf.to_monotone h a) fun c => congr_fun (hf.to_bundled _ c) a
 
 theorem flip₂_continuous' (f : γ → ∀ x, β x) (hf : ∀ x, Continuous' fun g => f g x) : Continuous' f :=
   Continuous.of_bundled _ (fun x y h a => (hf a).to_monotone h)
@@ -465,7 +465,7 @@ theorem Sup_continuous' (s : Set (α → β)) (hc : ∀ f ∈ s, Continuous' f) 
   norm_cast
   exact supr_continuous fun f => supr_continuous fun hf => hc f hf
 
-theorem sup_continuous {f g : α →o β} (hf : Continuous f) (hg : Continuous g) : Continuous (f⊔g) := by
+theorem sup_continuous {f g : α →o β} (hf : Continuous f) (hg : Continuous g) : Continuous (f ⊔ g) := by
   rw [← Sup_pair]
   apply Sup_continuous
   rintro f (rfl | rfl | _) <;> assumption
@@ -487,7 +487,7 @@ namespace CompleteLattice
 
 variable {α β : Type _} [OmegaCompletePartialOrder α] [CompleteLinearOrder β]
 
-theorem inf_continuous (f g : α →o β) (hf : Continuous f) (hg : Continuous g) : Continuous (f⊓g) := by
+theorem inf_continuous (f g : α →o β) (hf : Continuous f) (hg : Continuous g) : Continuous (f ⊓ g) := by
   refine' fun c => eq_of_forall_ge_iffₓ fun z => _
   simp only [inf_le_iff, hf c, hg c, ωSup_le_iff, ← forall_or_distrib_left, ← forall_or_distrib_right,
     Function.comp_app, chain.map_coe, OrderHom.has_inf_inf_coe]
@@ -496,7 +496,7 @@ theorem inf_continuous (f g : α →o β) (hf : Continuous f) (hg : Continuous g
       (h (max i j)).imp (le_transₓ <| f.mono <| c.mono <| le_max_leftₓ _ _)
         (le_transₓ <| g.mono <| c.mono <| le_max_rightₓ _ _)⟩
 
-theorem inf_continuous' {f g : α → β} (hf : Continuous' f) (hg : Continuous' g) : Continuous' (f⊓g) :=
+theorem inf_continuous' {f g : α → β} (hf : Continuous' f) (hg : Continuous' g) : Continuous' (f ⊓ g) :=
   ⟨_, inf_continuous _ _ hf.snd hg.snd⟩
 
 end CompleteLattice
@@ -562,10 +562,10 @@ end
 namespace ContinuousHom
 
 theorem congr_fun {f g : α →𝒄 β} (h : f = g) (x : α) : f x = g x :=
-  congr_argₓ (fun h : α →𝒄 β => h x) h
+  congr_arg (fun h : α →𝒄 β => h x) h
 
 theorem congr_arg (f : α →𝒄 β) {x y : α} (h : x = y) : f x = f y :=
-  congr_argₓ (fun x : α => f x) h
+  congr_arg (fun x : α => f x) h
 
 protected theorem monotone (f : α →𝒄 β) : Monotone f :=
   f.monotone'
@@ -594,12 +594,12 @@ theorem ωSup_bind {β γ : Type v} (c : Chain α) (f : α →o Part β) (g : α
     replace hb : b ∈ f (c (max i j)) := f.mono (c.mono (le_max_rightₓ i j)) _ hb
     replace hy : y ∈ g (c (max i j)) b := g.mono (c.mono (le_max_leftₓ i j)) _ _ hy
     apply h''' (max i j)
-    simp only [exists_prop, Part.bind_eq_bind, Part.mem_bind_iff, chain.map_coe, Function.comp_app, OrderHom.bind_coe]
+    simp only [exists_propₓ, Part.bind_eq_bind, Part.mem_bind_iff, chain.map_coe, Function.comp_app, OrderHom.bind_coe]
     exact ⟨_, hb, hy⟩
     
   · intro i
     intro y hy
-    simp only [exists_prop, Part.bind_eq_bind, Part.mem_bind_iff, chain.map_coe, Function.comp_app,
+    simp only [exists_propₓ, Part.bind_eq_bind, Part.mem_bind_iff, chain.map_coe, Function.comp_app,
       OrderHom.bind_coe] at hy
     rcases hy with ⟨b, hb₀, hb₁⟩
     apply h''' b _
@@ -657,7 +657,7 @@ protected theorem ext (f g : α →𝒄 β) (h : ∀ x, f x = g x) : f = g := by
   cases f <;> cases g <;> congr <;> ext <;> apply h
 
 protected theorem coe_inj (f g : α →𝒄 β) (h : (f : α → β) = g) : f = g :=
-  ContinuousHom.ext _ _ <| congr_funₓ h
+  ContinuousHom.ext _ _ <| congr_fun h
 
 @[simp]
 theorem comp_id (f : β →𝒄 γ) : f.comp id = f := by

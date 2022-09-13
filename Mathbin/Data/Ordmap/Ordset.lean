@@ -450,16 +450,16 @@ theorem all_node' {P l x r} : @All α P (node' l x r) ↔ All P l ∧ P x ∧ Al
   Iff.rfl
 
 theorem all_node3_l {P l x m y r} : @All α P (node3L l x m y r) ↔ All P l ∧ P x ∧ All P m ∧ P y ∧ All P r := by
-  simp [node3_l, all_node', and_assoc]
+  simp [node3_l, all_node', and_assocₓ]
 
 theorem all_node3_r {P l x m y r} : @All α P (node3R l x m y r) ↔ All P l ∧ P x ∧ All P m ∧ P y ∧ All P r :=
   Iff.rfl
 
 theorem all_node4_l {P l x m y r} : @All α P (node4L l x m y r) ↔ All P l ∧ P x ∧ All P m ∧ P y ∧ All P r := by
-  cases m <;> simp [node4_l, all_node', all, all_node3_l, and_assoc]
+  cases m <;> simp [node4_l, all_node', all, all_node3_l, and_assocₓ]
 
 theorem all_node4_r {P l x m y r} : @All α P (node4R l x m y r) ↔ All P l ∧ P x ∧ All P m ∧ P y ∧ All P r := by
-  cases m <;> simp [node4_r, all_node', all, all_node3_r, and_assoc]
+  cases m <;> simp [node4_r, all_node', all, all_node3_r, and_assocₓ]
 
 theorem all_rotate_l {P l x r} : @All α P (rotateL l x r) ↔ All P l ∧ P x ∧ All P r := by
   cases r <;> simp [rotate_l, all_node'] <;> split_ifs <;> simp [all_node3_l, all_node4_l, all]
@@ -490,7 +490,7 @@ theorem to_list_node (s l x r) : toList (@node α s l x r) = toList l ++ x::toLi
   rw [to_list, foldr, foldr_cons_eq_to_list] <;> rfl
 
 theorem emem_iff_mem_to_list {x : α} {t} : Emem x t ↔ x ∈ toList t := by
-  unfold emem <;> induction t <;> simp [any, *, or_assoc]
+  unfold emem <;> induction t <;> simp [any, *, or_assocₓ]
 
 theorem length_to_list' : ∀ t : Ordnode α, (toList t).length = t.realSize
   | nil => rfl
@@ -501,7 +501,7 @@ theorem length_to_list {t : Ordnode α} (h : Sized t) : (toList t).length = t.si
   rw [length_to_list', size_eq_real_size h]
 
 theorem equiv_iff {t₁ t₂ : Ordnode α} (h₁ : Sized t₁) (h₂ : Sized t₂) : Equiv t₁ t₂ ↔ toList t₁ = toList t₂ :=
-  and_iff_right_of_imp fun h => by
+  and_iff_right_of_impₓ fun h => by
     rw [← length_to_list h₁, h, length_to_list h₂]
 
 /-! ### `mem` -/
@@ -527,7 +527,7 @@ theorem find_max'_dual (t) (x : α) : findMax' x (dual t) = findMin' t x := by
 
 theorem find_min_dual : ∀ t : Ordnode α, findMin (dual t) = findMax t
   | nil => rfl
-  | node _ l x r => congr_argₓ some <| find_min'_dual _ _
+  | node _ l x r => congr_arg some <| find_min'_dual _ _
 
 theorem find_max_dual (t : Ordnode α) : findMax (dual t) = findMin t := by
   rw [← find_min_dual, dual_dual]
@@ -1257,7 +1257,7 @@ theorem Valid'.rotate_l {l x r o₁ o₂} (hl : Valid' o₁ l ↑x) (hr : Valid'
                   decide))).1
         H3
   have H3p : size l > 0 → 2 * (size rl + size rr) ≤ 9 * size l + 3 := fun l0 : 1 ≤ size l =>
-    (or_iff_left_of_imp <| by
+    (or_iff_left_of_impₓ <| by
           intro <;> linarith).1
       H3
   have ablem : ∀ {a b : ℕ}, 1 ≤ a → a + b ≤ 2 → b ≤ 1 := by

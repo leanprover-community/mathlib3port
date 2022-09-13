@@ -65,7 +65,7 @@ variable {s t}
 
 theorem Icc_eq_image_powerset (h : s ⊆ t) : icc s t = (t \ s).Powerset.Image ((· ∪ ·) s) := by
   ext u
-  simp_rw [mem_Icc, mem_image, exists_prop, mem_powerset]
+  simp_rw [mem_Icc, mem_image, exists_propₓ, mem_powerset]
   constructor
   · rintro ⟨hs, ht⟩
     exact ⟨u \ s, sdiff_le_sdiff_right ht, sup_sdiff_cancel_right hs⟩
@@ -76,7 +76,7 @@ theorem Icc_eq_image_powerset (h : s ⊆ t) : icc s t = (t \ s).Powerset.Image (
 
 theorem Ico_eq_image_ssubsets (h : s ⊆ t) : ico s t = (t \ s).ssubsets.Image ((· ∪ ·) s) := by
   ext u
-  simp_rw [mem_Ico, mem_image, exists_prop, mem_ssubsets]
+  simp_rw [mem_Ico, mem_image, exists_propₓ, mem_ssubsets]
   constructor
   · rintro ⟨hs, ht⟩
     exact ⟨u \ s, sdiff_lt_sdiff_right ht hs, sup_sdiff_cancel_right hs⟩
@@ -88,7 +88,7 @@ theorem Ico_eq_image_ssubsets (h : s ⊆ t) : ico s t = (t \ s).ssubsets.Image (
 /-- Cardinality of a non-empty `Icc` of finsets. -/
 theorem card_Icc_finset (h : s ⊆ t) : (icc s t).card = 2 ^ (t.card - s.card) := by
   rw [← card_sdiff h, ← card_powerset, Icc_eq_image_powerset h, Finset.card_image_iff]
-  rintro u hu v hv (huv : s⊔u = s⊔v)
+  rintro u hu v hv (huv : s ⊔ u = s ⊔ v)
   rw [mem_coe, mem_powerset] at hu hv
   rw [← (disjoint_sdiff.mono_right hu : Disjoint s u).sup_sdiff_cancel_left, ←
     (disjoint_sdiff.mono_right hv : Disjoint s v).sup_sdiff_cancel_left, huv]

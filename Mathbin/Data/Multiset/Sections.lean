@@ -56,7 +56,7 @@ theorem mem_sections {s : Multiset (Multiset α)} : ∀ {a}, a ∈ sections s �
     (by
       simp )
     fun a s ih a' => by
-    simp [ih, rel_cons_left, -exists_and_distrib_left, exists_and_distrib_left.symm, eq_comm]
+    simp [ih, rel_cons_left, -exists_and_distrib_leftₓ, exists_and_distrib_left.symm, eq_comm]
 
 theorem card_sections {s : Multiset (Multiset α)} : card (sections s) = prod (s.map card) :=
   Multiset.induction_on s

@@ -538,7 +538,7 @@ theorem Finite.union {s t : Set α} (hs : s.Finite) (ht : t.Finite) : (s ∪ t).
   cases ht
   apply to_finite
 
-theorem Finite.sup {s t : Set α} : s.Finite → t.Finite → (s⊔t).Finite :=
+theorem Finite.sup {s t : Set α} : s.Finite → t.Finite → (s ⊔ t).Finite :=
   finite.union
 
 theorem Finite.sep {s : Set α} (hs : s.Finite) (p : α → Prop) : { a ∈ s | p a }.Finite := by
@@ -553,10 +553,10 @@ theorem Finite.inter_of_right {s : Set α} (hs : s.Finite) (t : Set α) : (t ∩
   cases hs
   apply to_finite
 
-theorem Finite.inf_of_left {s : Set α} (h : s.Finite) (t : Set α) : (s⊓t).Finite :=
+theorem Finite.inf_of_left {s : Set α} (h : s.Finite) (t : Set α) : (s ⊓ t).Finite :=
   h.inter_of_left t
 
-theorem Finite.inf_of_right {s : Set α} (h : s.Finite) (t : Set α) : (t⊓s).Finite :=
+theorem Finite.inf_of_right {s : Set α} (h : s.Finite) (t : Set α) : (t ⊓ s).Finite :=
   h.inter_of_right t
 
 theorem Finite.subset {s : Set α} (hs : s.Finite) {t : Set α} (ht : t ⊆ s) : t.Finite := by
@@ -927,10 +927,9 @@ theorem infinite_univ [h : Infinite α] : (@Univ α).Infinite :=
   infinite_univ_iff.2 h
 
 theorem infinite_coe_iff {s : Set α} : Infinite s ↔ s.Infinite :=
-  ⟨fun ⟨h₁⟩ h₂ => h₁ h₂.Fintype, fun h₁ => ⟨fun h₂ => h₁ ⟨h₂⟩⟩⟩
+  not_finite_iff_infinite.symm.trans finite_coe_iff.Not
 
-theorem Infinite.to_subtype {s : Set α} (h : s.Infinite) : Infinite s :=
-  infinite_coe_iff.2 h
+alias infinite_coe_iff ↔ _ infinite.to_subtype
 
 /-- Embedding of `ℕ` into an infinite set. -/
 noncomputable def Infinite.natEmbedding (s : Set α) (h : s.Infinite) : ℕ ↪ s := by
@@ -1020,12 +1019,12 @@ theorem Finite.exists_lt_map_eq_of_forall_mem [LinearOrderₓ α] [Infinite α] 
 theorem exists_min_image [LinearOrderₓ β] (s : Set α) (f : α → β) (h1 : s.Finite) :
     s.Nonempty → ∃ a ∈ s, ∀ b ∈ s, f a ≤ f b
   | ⟨x, hx⟩ => by
-    simpa only [exists_prop, finite.mem_to_finset] using h1.to_finset.exists_min_image f ⟨x, h1.mem_to_finset.2 hx⟩
+    simpa only [exists_propₓ, finite.mem_to_finset] using h1.to_finset.exists_min_image f ⟨x, h1.mem_to_finset.2 hx⟩
 
 theorem exists_max_image [LinearOrderₓ β] (s : Set α) (f : α → β) (h1 : s.Finite) :
     s.Nonempty → ∃ a ∈ s, ∀ b ∈ s, f b ≤ f a
   | ⟨x, hx⟩ => by
-    simpa only [exists_prop, finite.mem_to_finset] using h1.to_finset.exists_max_image f ⟨x, h1.mem_to_finset.2 hx⟩
+    simpa only [exists_propₓ, finite.mem_to_finset] using h1.to_finset.exists_max_image f ⟨x, h1.mem_to_finset.2 hx⟩
 
 theorem exists_lower_bound_image [hα : Nonempty α] [LinearOrderₓ β] (s : Set α) (f : α → β) (h : s.Finite) :
     ∃ a : α, ∀ b ∈ s, f a ≤ f b := by

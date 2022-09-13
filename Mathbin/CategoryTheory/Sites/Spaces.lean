@@ -46,7 +46,7 @@ def grothendieckTopology : GrothendieckTopology (Opens T) where
   top_mem' := fun X x hx => ⟨_, 𝟙 _, trivialₓ, hx⟩
   pullback_stable' := fun X Y S f hf y hy => by
     rcases hf y (f.le hy) with ⟨U, g, hg, hU⟩
-    refine' ⟨U⊓Y, hom_of_le inf_le_right, _, hU, hy⟩
+    refine' ⟨U ⊓ Y, hom_of_le inf_le_right, _, hU, hy⟩
     apply S.downward_closed hg (hom_of_le inf_le_left)
   transitive' := fun X S hS R hR x hx => by
     rcases hS x hx with ⟨U, f, hf, hU⟩
@@ -60,7 +60,7 @@ def pretopology : Pretopology (Opens T) where
   pullbacks := fun X Y f S hS x hx => by
     rcases hS _ (f.le hx) with ⟨U, g, hg, hU⟩
     refine' ⟨_, _, presieve.pullback_arrows.mk _ _ hg, _⟩
-    have : U⊓Y ≤ pullback g f
+    have : U ⊓ Y ≤ pullback g f
     refine' le_of_hom (pullback.lift (hom_of_le inf_le_left) (hom_of_le inf_le_right) rfl)
     apply this ⟨hU, hx⟩
   Transitive := fun X S Ti hS hTi x hx => by

@@ -321,7 +321,7 @@ theorem diagonal_apply_ne' [Zero α] (d : n → α) {i j : n} (h : j ≠ i) : (d
 @[simp]
 theorem diagonal_eq_diagonal_iff [Zero α] {d₁ d₂ : n → α} : diagonalₓ d₁ = diagonalₓ d₂ ↔ ∀ i, d₁ i = d₂ i :=
   ⟨fun h i => by
-    simpa using congr_argₓ (fun m : Matrix n n α => m i i) h, fun h => by
+    simpa using congr_arg (fun m : Matrix n n α => m i i) h, fun h => by
     rw [show d₁ = d₂ from funext h]⟩
 
 theorem diagonal_injective [Zero α] : Function.Injective (diagonalₓ : (n → α) → Matrix n n α) := fun d₁ d₂ h =>
@@ -707,7 +707,22 @@ theorem diagonal_neg [DecidableEq n] [AddGroupₓ α] (d : n → α) : -diagonal
 
 theorem sum_apply [AddCommMonoidₓ α] (i : m) (j : n) (s : Finset β) (g : β → Matrix m n α) :
     (∑ c in s, g c) i j = ∑ c in s, g c i j :=
-  (congr_funₓ (s.sum_apply i g) j).trans (s.sum_apply j _)
+  (congr_fun (s.sum_apply i g) j).trans (s.sum_apply j _)
+
+theorem two_mul_expl {R : Type _} [CommRingₓ R] (A B : Matrix (Finₓ 2) (Finₓ 2) R) :
+    (A * B) 0 0 = A 0 0 * B 0 0 + A 0 1 * B 1 0 ∧
+      (A * B) 0 1 = A 0 0 * B 0 1 + A 0 1 * B 1 1 ∧
+        (A * B) 1 0 = A 1 0 * B 0 0 + A 1 1 * B 1 0 ∧ (A * B) 1 1 = A 1 0 * B 0 1 + A 1 1 * B 1 1 :=
+  by
+  constructor
+  on_goal 2 =>
+    constructor
+  on_goal 3 =>
+    constructor
+  all_goals
+    simp only [Matrix.mul_eq_mul]
+    rw [Matrix.mul_apply, Finset.sum_fin_eq_sum_range, Finset.sum_range_succ, Finset.sum_range_succ]
+    simp
 
 section AddCommMonoidₓ
 
@@ -1615,7 +1630,7 @@ variable (m α)
 def transposeRingEquiv [AddCommMonoidₓ α] [CommSemigroupₓ α] [Fintype m] : Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ :=
   { (transposeAddEquiv m m α).trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op Mᵀ,
     invFun := fun M => M.unopᵀ,
-    map_mul' := fun M N => (congr_argₓ MulOpposite.op (transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
+    map_mul' := fun M N => (congr_arg MulOpposite.op (transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
 
 variable {m α}
 
@@ -1820,7 +1835,7 @@ variable (m α)
 def conjTransposeRingEquiv [Semiringₓ α] [StarRing α] [Fintype m] : Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ :=
   { (conjTransposeAddEquiv m m α).trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op Mᴴ,
     invFun := fun M => M.unopᴴ,
-    map_mul' := fun M N => (congr_argₓ MulOpposite.op (conj_transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
+    map_mul' := fun M N => (congr_arg MulOpposite.op (conj_transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
 
 variable {m α}
 

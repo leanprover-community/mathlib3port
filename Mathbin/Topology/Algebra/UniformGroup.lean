@@ -137,7 +137,7 @@ theorem uniformity_translate_mul (a : α) : ((𝓤 α).map fun x : α × α => (
         Filter.map_mono (uniform_continuous_id.mul uniform_continuous_const)
       )
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) }
 @[to_additive]
 theorem uniform_embedding_translate_mul (a : α) : UniformEmbedding fun x : α => x * a :=
   { comap_uniformity := by
@@ -184,7 +184,7 @@ theorem uniform_group_infi {ι : Sort _} {us' : ι → UniformSpace β} (h' : �
 
 @[to_additive]
 theorem uniform_group_inf {u₁ u₂ : UniformSpace β} (h₁ : @UniformGroup β u₁ _) (h₂ : @UniformGroup β u₂ _) :
-    @UniformGroup β (u₁⊓u₂) _ := by
+    @UniformGroup β (u₁ ⊓ u₂) _ := by
   rw [inf_eq_infi]
   refine' uniform_group_infi fun b => _
   cases b <;> assumption
@@ -410,10 +410,10 @@ variable (G : Type _) [Groupₓ G] [TopologicalSpace G] [TopologicalGroup G]
 
 Warning: in general the right and left uniformities do not coincide and so one does not obtain a
 `uniform_group` structure. Two important special cases where they _do_ coincide are for
-commutative groups (see `topological_comm_group_is_uniform`) and for compact Hausdorff groups (see
+commutative groups (see `topological_comm_group_is_uniform`) and for compact groups (see
 `topological_group_is_uniform_of_compact_space`). -/
 @[to_additive
-      "The right uniformity on a topological additive group (as opposed to the left\nuniformity).\n\nWarning: in general the right and left uniformities do not coincide and so one does not obtain a\n`uniform_add_group` structure. Two important special cases where they _do_ coincide are for\ncommutative additive groups (see `topological_add_comm_group_is_uniform`) and for compact Hausdorff\nadditive groups (see `topological_add_comm_group_is_uniform_of_compact_space`)."]
+      "The right uniformity on a topological additive group (as opposed to the left\nuniformity).\n\nWarning: in general the right and left uniformities do not coincide and so one does not obtain a\n`uniform_add_group` structure. Two important special cases where they _do_ coincide are for\ncommutative additive groups (see `topological_add_comm_group_is_uniform`) and for compact\nadditive groups (see `topological_add_comm_group_is_uniform_of_compact_space`)."]
 def TopologicalGroup.toUniformSpace : UniformSpace G where
   uniformity := comap (fun p : G × G => p.2 / p.1) (𝓝 1)
   refl := by
@@ -467,12 +467,8 @@ theorem uniformity_eq_comap_nhds_one' : 𝓤 G = comap (fun p : G × G => p.2 / 
   rfl
 
 @[to_additive]
-theorem topological_group_is_uniform_of_compact_space [CompactSpace G] [T2Space G] : UniformGroup G :=
+theorem topological_group_is_uniform_of_compact_space [CompactSpace G] : UniformGroup G :=
   ⟨by
-    haveI : SeparatedSpace G :=
-      separated_iff_t2.mpr
-        (by
-          infer_instance)
     apply CompactSpace.uniform_continuous_of_continuous
     exact continuous_div'⟩
 
@@ -782,7 +778,7 @@ theorem extend_Z_bilin : Continuous (extend (de.Prod df) Φ) := by
     rw [mem_map, mem_comap, nhds_prod_eq]
     exists (U' ×ˢ V') ×ˢ U' ×ˢ V'
     rw [mem_prod_same_iff]
-    simp only [exists_prop]
+    simp only [exists_propₓ]
     constructor
     · change U' ∈ 𝓝 x₀ at U'_nhd
       change V' ∈ 𝓝 y₀ at V'_nhd

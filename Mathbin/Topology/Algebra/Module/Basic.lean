@@ -901,7 +901,7 @@ instance complete_space_ker {M' : Type _} [UniformSpace M'] [CompleteSpace M'] [
   f.is_closed_ker.complete_space_coe
 
 @[simp]
-theorem ker_prod [Module R₁ M₂] [Module R₁ M₃] (f : M₁ →L[R₁] M₂) (g : M₁ →L[R₁] M₃) : ker (f.Prod g) = ker f⊓ker g :=
+theorem ker_prod [Module R₁ M₂] [Module R₁ M₃] (f : M₁ →L[R₁] M₂) (g : M₁ →L[R₁] M₃) : ker (f.Prod g) = ker f ⊓ ker g :=
   LinearMap.ker_prod f g
 
 /-- Range of a continuous linear map. -/
@@ -1041,7 +1041,7 @@ theorem coprod_apply [Module R₁ M₂] [Module R₁ M₃] [HasContinuousAdd M�
   rfl
 
 theorem range_coprod [Module R₁ M₂] [Module R₁ M₃] [HasContinuousAdd M₃] (f₁ : M₁ →L[R₁] M₃) (f₂ : M₂ →L[R₁] M₃) :
-    (f₁.coprod f₂).range = f₁.range⊔f₂.range :=
+    (f₁.coprod f₂).range = f₁.range ⊔ f₂.range :=
   LinearMap.range_coprod _ _
 
 section
@@ -1171,7 +1171,7 @@ section
 
 variable [Module R M₂] [Module R M₃] [Module R M₄]
 
-theorem range_prod_eq {f : M →L[R] M₂} {g : M →L[R] M₃} (h : ker f⊔ker g = ⊤) :
+theorem range_prod_eq {f : M →L[R] M₂} {g : M →L[R] M₃} (h : ker f ⊔ ker g = ⊤) :
     range (f.Prod g) = (range f).Prod (range g) :=
   LinearMap.range_prod_eq h
 
@@ -1613,7 +1613,7 @@ theorem to_linear_equiv_injective : Function.Injective (toLinearEquiv : (M₁ �
 
 @[ext]
 theorem ext {f g : M₁ ≃SL[σ₁₂] M₂} (h : (f : M₁ → M₂) = g) : f = g :=
-  to_linear_equiv_injective <| LinearEquiv.ext <| congr_funₓ h
+  to_linear_equiv_injective <| LinearEquiv.ext <| congr_fun h
 
 theorem coe_injective : Function.Injective (coe : (M₁ ≃SL[σ₁₂] M₂) → M₁ →SL[σ₁₂] M₂) := fun e e' h =>
   ext <| funext <| ContinuousLinearMap.ext_iff.1 h

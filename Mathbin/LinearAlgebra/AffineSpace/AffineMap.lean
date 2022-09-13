@@ -132,10 +132,10 @@ theorem ext {f g : P1 →ᵃ[k] P2} (h : ∀ p, f p = g p) : f = g := by
 theorem ext_iff {f g : P1 →ᵃ[k] P2} : f = g ↔ ∀ p, f p = g p :=
   ⟨fun h p => h ▸ rfl, ext⟩
 
-theorem coe_fn_injective : @Function.Injective (P1 →ᵃ[k] P2) (P1 → P2) coeFn := fun f g H => ext <| congr_funₓ H
+theorem coe_fn_injective : @Function.Injective (P1 →ᵃ[k] P2) (P1 → P2) coeFn := fun f g H => ext <| congr_fun H
 
 protected theorem congr_arg (f : P1 →ᵃ[k] P2) {x y : P1} (h : x = y) : f x = f y :=
-  congr_argₓ _ h
+  congr_arg _ h
 
 protected theorem congr_fun {f g : P1 →ᵃ[k] P2} (h : f = g) (x : P1) : f x = g x :=
   h ▸ rfl
@@ -427,7 +427,7 @@ theorem surjective_iff_linear_surjective (f : P1 →ᵃ[k] P2) : Function.Surjec
 
 theorem image_vsub_image {s t : Set P1} (f : P1 →ᵃ[k] P2) : f '' s -ᵥ f '' t = f.linear '' (s -ᵥ t) := by
   ext v
-  simp only [Set.mem_vsub, Set.mem_image, exists_exists_and_eq_and, exists_and_distrib_left, ← f.linear_map_vsub]
+  simp only [Set.mem_vsub, Set.mem_image, exists_exists_and_eq_and, exists_and_distrib_leftₓ, ← f.linear_map_vsub]
   constructor
   · rintro ⟨x, hx, y, hy, hv⟩
     exact ⟨x -ᵥ y, ⟨x, hx, y, hy, rfl⟩, hv⟩

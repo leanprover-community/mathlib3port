@@ -673,7 +673,7 @@ theorem mul [CommSemiringₓ R] {f g : ArithmeticFunction R} (hf : f.IsMultiplic
     · rintro ⟨b1, b2⟩ h
       simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at h
       use ((b1.gcd m, b2.gcd m), (b1.gcd n, b2.gcd n))
-      simp only [exists_prop, Prod.mk.inj_iffₓ, Ne.def, mem_product, mem_divisors_antidiagonal]
+      simp only [exists_propₓ, Prod.mk.inj_iffₓ, Ne.def, mem_product, mem_divisors_antidiagonal]
       rw [← cop.gcd_mul _, ← cop.gcd_mul _, ← h.1, Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mulₓ cop h.1,
         Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mulₓ cop.symm _]
       · rw [Nat.mul_eq_zero, Decidable.not_or_iff_and_not] at h
@@ -698,7 +698,7 @@ theorem multiplicative_factorization [CommMonoidWithZero R] (f : ArithmeticFunct
 /-- A recapitulation of the definition of multiplicative that is simpler for proofs -/
 theorem iff_ne_zero [MonoidWithZeroₓ R] {f : ArithmeticFunction R} :
     IsMultiplicative f ↔ f 1 = 1 ∧ ∀ {m n : ℕ}, m ≠ 0 → n ≠ 0 → m.Coprime n → f (m * n) = f m * f n := by
-  refine' and_congr_right' (forall₂_congrₓ fun m n => ⟨fun h _ _ => h, fun h hmn => _⟩)
+  refine' and_congr_right'ₓ (forall₂_congrₓ fun m n => ⟨fun h _ _ => h, fun h hmn => _⟩)
   rcases eq_or_ne m 0 with (rfl | hm)
   · simp
     
@@ -1075,7 +1075,7 @@ theorem sum_eq_iff_sum_mul_moebius_eq [Ringₓ R] {f g : ℕ → R} :
   by
   rw [sum_eq_iff_sum_smul_moebius_eq]
   apply forall_congrₓ
-  refine' fun a => imp_congr_right fun _ => ((sum_congr rfl) fun x hx => _).congr_left
+  refine' fun a => imp_congr_rightₓ fun _ => ((sum_congr rfl) fun x hx => _).congr_left
   rw [zsmul_eq_mul]
 
 /-- Möbius inversion for functions to a `comm_group`. -/
@@ -1096,7 +1096,7 @@ theorem prod_eq_iff_prod_pow_moebius_eq_of_nonzero [CommGroupWithZero R] {f g : 
           (@prod_eq_iff_prod_pow_moebius_eq Rˣ _ (fun n => if h : 0 < n then Units.mk0 (f n) (hf n h) else 1) fun n =>
             if h : 0 < n then Units.mk0 (g n) (hg n h) else 1))
         (forall_congrₓ fun n => _) <;>
-    refine' imp_congr_right fun hn => _
+    refine' imp_congr_rightₓ fun hn => _
   · dsimp'
     rw [dif_pos hn, ← Units.eq_iff, ← Units.coe_hom_apply, MonoidHom.map_prod, Units.coe_mk0, prod_congr rfl _]
     intro x hx

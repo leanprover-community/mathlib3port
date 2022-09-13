@@ -93,7 +93,7 @@ theorem comap_small_sets (l : Filter β) (f : α → Set β) : comap f l.smallSe
 theorem small_sets_infi {f : ι → Filter α} : (infi f).smallSets = ⨅ i, (f i).smallSets :=
   lift'_infi_of_map_univ powerset_inter powerset_univ
 
-theorem small_sets_inf (l₁ l₂ : Filter α) : (l₁⊓l₂).smallSets = l₁.smallSets⊓l₂.smallSets :=
+theorem small_sets_inf (l₁ l₂ : Filter α) : (l₁ ⊓ l₂).smallSets = l₁.smallSets ⊓ l₂.smallSets :=
   lift'_inf _ _ powerset_inter
 
 instance small_sets_ne_bot (l : Filter α) : NeBot l.smallSets :=
@@ -117,12 +117,12 @@ theorem Tendsto.of_small_sets {s : α → Set β} {f : α → β} (hs : Tendsto 
 
 @[simp]
 theorem eventually_small_sets_eventually {p : α → Prop} :
-    (∀ᶠ s in l.smallSets, ∀ᶠ x in l', x ∈ s → p x) ↔ ∀ᶠ x in l⊓l', p x :=
+    (∀ᶠ s in l.smallSets, ∀ᶠ x in l', x ∈ s → p x) ↔ ∀ᶠ x in l ⊓ l', p x :=
   calc
     _ ↔ ∃ s ∈ l, ∀ᶠ x in l', x ∈ s → p x := eventually_small_sets' fun s t hst ht => ht.mono fun x hx hs => hx (hst hs)
     _ ↔ ∃ s ∈ l, ∃ t ∈ l', ∀ x, x ∈ t → x ∈ s → p x := by
       simp only [eventually_iff_exists_mem]
-    _ ↔ ∀ᶠ x in l⊓l', p x := by
+    _ ↔ ∀ᶠ x in l ⊓ l', p x := by
       simp only [eventually_inf, and_comm, mem_inter_iff, ← and_imp]
     
 

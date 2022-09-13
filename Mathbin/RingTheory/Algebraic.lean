@@ -57,7 +57,7 @@ variable {R A}
 theorem Subalgebra.is_algebraic_iff (S : Subalgebra R A) : S.IsAlgebraic ↔ @Algebra.IsAlgebraic R S _ _ S.Algebra := by
   delta' Algebra.IsAlgebraic Subalgebra.IsAlgebraic
   rw [Subtype.forall']
-  refine' forall_congrₓ fun x => exists_congr fun p => and_congr Iff.rfl _
+  refine' forall_congrₓ fun x => exists_congr fun p => and_congrₓ Iff.rfl _
   have h : Function.Injective S.val := Subtype.val_injective
   conv_rhs => rw [← h.eq_iff, AlgHom.map_zero]
   rw [← aeval_alg_hom_apply, S.val_apply]
@@ -69,7 +69,7 @@ theorem Algebra.is_algebraic_iff : Algebra.IsAlgebraic R A ↔ (⊤ : Subalgebra
 
 theorem is_algebraic_iff_not_injective {x : A} :
     IsAlgebraic R x ↔ ¬Function.Injective (Polynomial.aeval x : R[X] →ₐ[R] A) := by
-  simp only [IsAlgebraic, injective_iff_map_eq_zero, not_forall, And.comm, exists_prop]
+  simp only [IsAlgebraic, injective_iff_map_eq_zero, not_forall, And.comm, exists_propₓ]
 
 end
 

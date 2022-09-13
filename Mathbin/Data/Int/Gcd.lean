@@ -119,7 +119,7 @@ theorem xgcd_aux_P {r r'} : ∀ {s t s' t'}, P (r, s, t) → P (r', s', t') → 
     rw [xgcd_aux_rec h]
     refine' IH _ p
     dsimp' [P]  at *
-    rw [Int.mod_def]
+    rw [Int.mod_defₓ]
     generalize (b / a : ℤ) = k
     rw [p, p']
     simp [mul_addₓ, mul_comm, mul_left_commₓ, add_commₓ, add_left_commₓ, sub_eq_neg_add, mul_assoc]
@@ -140,12 +140,12 @@ end
 
 theorem exists_mul_mod_eq_gcd {k n : ℕ} (hk : gcdₓ n k < k) : ∃ m, n * m % k = gcdₓ n k := by
   have hk' := int.coe_nat_ne_zero.mpr (ne_of_gtₓ (lt_of_le_of_ltₓ (zero_le (gcd n k)) hk))
-  have key := congr_argₓ (fun m => Int.natModₓ m k) (gcd_eq_gcd_ab n k)
+  have key := congr_arg (fun m => Int.natModₓ m k) (gcd_eq_gcd_ab n k)
   simp_rw [Int.natModₓ] at key
   rw [Int.add_mul_mod_self_left, ← Int.coe_nat_mod, Int.to_nat_coe_nat, mod_eq_of_lt hk] at key
   refine' ⟨(n.gcd_a k % k).toNat, Eq.trans (Int.coe_nat_inj _) key.symm⟩
-  rw [Int.coe_nat_mod, Int.coe_nat_mul, Int.to_nat_of_nonneg (Int.mod_nonneg _ hk'),
-    Int.to_nat_of_nonneg (Int.mod_nonneg _ hk'), Int.mul_mod, Int.mod_mod, ← Int.mul_mod]
+  rw [Int.coe_nat_mod, Int.coe_nat_mul, Int.to_nat_of_nonneg (Int.mod_nonnegₓ _ hk'),
+    Int.to_nat_of_nonneg (Int.mod_nonnegₓ _ hk'), Int.mul_mod, Int.mod_mod, ← Int.mul_mod]
 
 theorem exists_mul_mod_eq_one_of_coprime {k n : ℕ} (hkn : Coprime n k) (hk : 1 < k) : ∃ m, n * m % k = 1 :=
   Exists.cases_on (exists_mul_mod_eq_gcd (lt_of_le_of_ltₓ (le_of_eqₓ hkn) hk)) fun m hm => ⟨m, hm.trans hkn⟩
@@ -187,7 +187,7 @@ theorem gcd_eq_gcd_ab : ∀ x y : ℤ, (gcdₓ x y : ℤ) = x * gcdA x y + y * g
 theorem nat_abs_div (a b : ℤ) (H : b ∣ a) : natAbs (a / b) = natAbs a / natAbs b := by
   cases Nat.eq_zero_or_posₓ (nat_abs b)
   · rw [eq_zero_of_nat_abs_eq_zero h]
-    simp [Int.div_zero]
+    simp [Int.div_zeroₓ]
     
   calc
     nat_abs (a / b) = nat_abs (a / b) * 1 := by
@@ -199,7 +199,7 @@ theorem nat_abs_div (a b : ℤ) (H : b ∣ a) : natAbs (a / b) = natAbs a / natA
     _ = nat_abs (a / b * b) / nat_abs b := by
       rw [nat_abs_mul (a / b) b]
     _ = nat_abs a / nat_abs b := by
-      rw [Int.div_mul_cancel H]
+      rw [Int.div_mul_cancelₓ H]
     
 
 theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : Nat.Prime p) {m n : ℤ} {k l : ℕ}
@@ -353,8 +353,8 @@ theorem ne_zero_of_gcd {x y : ℤ} (hc : gcdₓ x y ≠ 0) : x ≠ 0 ∨ y ≠ 0
 
 theorem exists_gcd_one {m n : ℤ} (H : 0 < gcdₓ m n) :
     ∃ m' n' : ℤ, gcdₓ m' n' = 1 ∧ m = m' * gcdₓ m n ∧ n = n' * gcdₓ m n :=
-  ⟨_, _, gcd_div_gcd_div_gcd H, (Int.div_mul_cancel (gcd_dvd_left m n)).symm,
-    (Int.div_mul_cancel (gcd_dvd_right m n)).symm⟩
+  ⟨_, _, gcd_div_gcd_div_gcd H, (Int.div_mul_cancelₓ (gcd_dvd_left m n)).symm,
+    (Int.div_mul_cancelₓ (gcd_dvd_right m n)).symm⟩
 
 theorem exists_gcd_one' {m n : ℤ} (H : 0 < gcdₓ m n) :
     ∃ (g : ℕ)(m' n' : ℤ), 0 < g ∧ gcdₓ m' n' = 1 ∧ m = m' * g ∧ n = n' * g :=
@@ -381,7 +381,7 @@ theorem gcd_dvd_iff {a b : ℤ} {n : ℕ} : gcdₓ a b ∣ n ↔ ∃ x y : ℤ, 
 
 theorem gcd_greatest {a b d : ℤ} (hd_pos : 0 ≤ d) (hda : d ∣ a) (hdb : d ∣ b) (hd : ∀ e : ℤ, e ∣ a → e ∣ b → e ∣ d) :
     d = gcdₓ a b :=
-  dvd_antisymm hd_pos (coe_zero_le (gcdₓ a b)) (dvd_gcd hda hdb) (hd _ (gcd_dvd_left a b) (gcd_dvd_right a b))
+  dvd_antisymmₓ hd_pos (coe_zero_le (gcdₓ a b)) (dvd_gcd hda hdb) (hd _ (gcd_dvd_left a b) (gcd_dvd_right a b))
 
 /-- Euclid's lemma: if `a ∣ b * c` and `gcd a c = 1` then `a ∣ b`.
 Compare with `is_coprime.dvd_of_dvd_mul_left` and

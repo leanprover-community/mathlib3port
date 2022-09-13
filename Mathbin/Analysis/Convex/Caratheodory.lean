@@ -123,7 +123,7 @@ cardinality, whose convex hull contains `x`. -/
 noncomputable def minCardFinsetOfMemConvexHull : Finset E :=
   Function.argminOn Finset.card Nat.lt_wf { t | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) }
     (by
-      simpa only [convex_hull_eq_union_convex_hull_finite_subsets s, exists_prop, mem_Union] using hx)
+      simpa only [convex_hull_eq_union_convex_hull_finite_subsets s, exists_propₓ, mem_Union] using hx)
 
 theorem min_card_finset_of_mem_convex_hull_subseteq : ↑(minCardFinsetOfMemConvexHull hx) ⊆ s :=
   (Function.argmin_on_mem _ _ { t : Finset E | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) } _).1
@@ -166,7 +166,7 @@ theorem convex_hull_eq_union :
     convexHull 𝕜 s = ⋃ (t : Finset E) (hss : ↑t ⊆ s) (hai : AffineIndependent 𝕜 (coe : t → E)), convexHull 𝕜 ↑t := by
   apply Set.Subset.antisymm
   · intro x hx
-    simp only [exists_prop, Set.mem_Union]
+    simp only [exists_propₓ, Set.mem_Union]
     exact
       ⟨Caratheodory.minCardFinsetOfMemConvexHull hx, Caratheodory.min_card_finset_of_mem_convex_hull_subseteq hx,
         Caratheodory.affine_independent_min_card_finset_of_mem_convex_hull hx,
@@ -185,9 +185,9 @@ theorem eq_pos_convex_span_of_mem_convex_hull {x : E} (hx : x ∈ convexHull �
         (∑ i, w i) = 1 ∧ (∑ i, w i • z i) = x :=
   by
   rw [convex_hull_eq_union] at hx
-  simp only [exists_prop, Set.mem_Union] at hx
+  simp only [exists_propₓ, Set.mem_Union] at hx
   obtain ⟨t, ht₁, ht₂, ht₃⟩ := hx
-  simp only [t.convex_hull_eq, exists_prop, Set.mem_set_of_eq] at ht₃
+  simp only [t.convex_hull_eq, exists_propₓ, Set.mem_set_of_eq] at ht₃
   obtain ⟨w, hw₁, hw₂, hw₃⟩ := ht₃
   let t' := t.filter fun i => w i ≠ 0
   refine' ⟨t', t'.fintype_coe_sort, (coe : t' → E), w ∘ (coe : t' → E), _, _, _, _, _⟩

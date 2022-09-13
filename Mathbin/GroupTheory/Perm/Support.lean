@@ -160,7 +160,7 @@ theorem Disjoint.mul_apply_eq_iff {σ τ : Perm α} (hστ : Disjoint σ τ) {a 
   cases' hστ a with hσ hτ
   · exact ⟨hσ, σ.injective (h.trans hσ.symm)⟩
     
-  · exact ⟨(congr_argₓ σ hτ).symm.trans h, hτ⟩
+  · exact ⟨(congr_arg σ hτ).symm.trans h, hτ⟩
     
 
 theorem Disjoint.mul_eq_one_iff {σ τ : Perm α} (hστ : Disjoint σ τ) : σ * τ = 1 ↔ σ = 1 ∧ τ = 1 := by
@@ -272,7 +272,7 @@ theorem support_congr (h : f.support ⊆ g.support) (h' : ∀ x ∈ g.support, f
     exact fun H => hx (h H)
     
 
-theorem support_mul_le (f g : Perm α) : (f * g).support ≤ f.support⊔g.support := fun x => by
+theorem support_mul_le (f g : Perm α) : (f * g).support ≤ f.support ⊔ g.support := fun x => by
   rw [sup_eq_union, mem_union, mem_support, mem_support, mem_support, mul_apply, ← not_and_distrib, not_imp_not]
   rintro ⟨hf, hg⟩
   rw [hg, hf]
@@ -334,10 +334,10 @@ theorem Disjoint.support_mul (h : Disjoint f g) : (f * g).support = f.support �
   rw [mem_union, mem_support, mem_support, mem_support, mul_apply, ← not_and_distrib, not_imp_not]
   exact
     (h a).elim (fun hf h => ⟨hf, f.apply_eq_iff_eq.mp (h.trans hf.symm)⟩) fun hg h =>
-      ⟨(congr_argₓ f hg).symm.trans h, hg⟩
+      ⟨(congr_arg f hg).symm.trans h, hg⟩
 
 theorem support_prod_of_pairwise_disjoint (l : List (Perm α)) (h : l.Pairwise Disjoint) :
-    l.Prod.support = (l.map support).foldr (·⊔·) ⊥ := by
+    l.Prod.support = (l.map support).foldr (· ⊔ ·) ⊥ := by
   induction' l with hd tl hl
   · simp
     
@@ -346,7 +346,7 @@ theorem support_prod_of_pairwise_disjoint (l : List (Perm α)) (h : l.Pairwise D
     simp [this.support_mul, hl h.right]
     
 
-theorem support_prod_le (l : List (Perm α)) : l.Prod.support ≤ (l.map support).foldr (·⊔·) ⊥ := by
+theorem support_prod_le (l : List (Perm α)) : l.Prod.support ≤ (l.map support).foldr (· ⊔ ·) ⊥ := by
   induction' l with hd tl hl
   · simp
     
@@ -379,7 +379,7 @@ theorem support_swap_iff (x y : α) : support (swap x y) = {x, y} ↔ x ≠ y :=
   simpa
 
 theorem support_swap_mul_swap {x y z : α} (h : List.Nodupₓ [x, y, z]) : support (swap x y * swap y z) = {x, y, z} := by
-  simp only [List.not_mem_nilₓ, and_trueₓ, List.mem_cons_iffₓ, not_false_iff, List.nodup_cons, List.mem_singletonₓ,
+  simp only [List.not_mem_nilₓ, and_trueₓ, List.mem_cons_iff, not_false_iff, List.nodup_cons, List.mem_singletonₓ,
     and_selfₓ, List.nodup_nil] at h
   push_neg  at h
   apply le_antisymmₓ
@@ -438,7 +438,7 @@ theorem eq_on_support_mem_disjoint {l : List (Perm α)} (h : f ∈ l) (hl : l.Pa
     
   · intro x hx
     rw [List.pairwise_cons] at hl
-    rw [List.mem_cons_iffₓ] at h
+    rw [List.mem_cons_iff] at h
     rcases h with (rfl | h)
     · rw [List.prod_cons, mul_apply, not_mem_support.mp ((disjoint_prod_right tl hl.left).mem_imp hx)]
       
@@ -467,7 +467,7 @@ variable {β : Type _} [DecidableEq β] [Fintype β] {p : β → Prop} [Decidabl
 theorem support_extend_domain (f : α ≃ Subtype p) {g : Perm α} :
     support (g.extendDomain f) = g.support.map f.asEmbedding := by
   ext b
-  simp only [exists_prop, Function.Embedding.coe_fn_mk, to_embedding_apply, mem_map, Ne.def,
+  simp only [exists_propₓ, Function.Embedding.coe_fn_mk, to_embedding_apply, mem_map, Ne.def,
     Function.Embedding.trans_apply, mem_support]
   by_cases' pb : p b
   · rw [extend_domain_apply_subtype _ _ pb]
@@ -523,7 +523,7 @@ theorem card_support_ne_one (f : Perm α) : f.support.card ≠ 1 := by
 @[simp]
 theorem card_support_le_one {f : Perm α} : f.support.card ≤ 1 ↔ f = 1 := by
   rw [le_iff_lt_or_eqₓ, Nat.lt_succ_iffₓ, le_zero_iff, card_support_eq_zero, or_iff_not_imp_right,
-    imp_iff_right f.card_support_ne_one]
+    imp_iff_rightₓ f.card_support_ne_one]
 
 theorem two_le_card_support_of_ne_one {f : Perm α} (h : f ≠ 1) : 2 ≤ f.support.card :=
   one_lt_card_support_of_ne_one h
@@ -543,7 +543,7 @@ theorem card_support_swap {x y : α} (hxy : x ≠ y) : (swap x y).support.card =
         ⟨x ::ₘ y ::ₘ 0, by
           simp [hxy]⟩
     from
-    congr_argₓ card <| by
+    congr_arg card <| by
       simp [support_swap hxy, *, Finset.ext_iff]
 
 @[simp]

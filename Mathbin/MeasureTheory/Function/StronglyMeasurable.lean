@@ -258,6 +258,27 @@ theorem norm_approx_bounded_le {β} {f : α → β} [SeminormedAddCommGroup β] 
       
     
 
+theorem _root_.strongly_measurable_bot_iff [Nonempty β] [T2Space β] : strongly_measurable[⊥] f ↔ ∃ c, f = fun _ => c :=
+  by
+  cases' is_empty_or_nonempty α with hα hα
+  · simp only [subsingleton.strongly_measurable', eq_iff_true_of_subsingleton, exists_const]
+    
+  refine' ⟨fun hf => _, fun hf_eq => _⟩
+  · refine' ⟨f hα.some, _⟩
+    let fs := hf.approx
+    have h_fs_tendsto : ∀ x, tendsto (fun n => fs n x) at_top (𝓝 (f x)) := hf.tendsto_approx
+    have : ∀ n, ∃ c, ∀ x, fs n x = c := fun n => simple_func.simple_func_bot (fs n)
+    let cs := fun n => (this n).some
+    have h_cs_eq : ∀ n, ⇑(fs n) = fun x => cs n := fun n => funext (this n).some_spec
+    simp_rw [h_cs_eq] at h_fs_tendsto
+    have h_tendsto : tendsto cs at_top (𝓝 (f hα.some)) := h_fs_tendsto hα.some
+    ext1 x
+    exact tendsto_nhds_unique (h_fs_tendsto x) h_tendsto
+    
+  · obtain ⟨c, rfl⟩ := hf_eq
+    exact strongly_measurable_const
+    
+
 end BasicPropertiesInAnyTopologicalSpace
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ∉ » t)
@@ -451,12 +472,12 @@ open Filter
 open Filter
 
 protected theorem sup [HasSup β] [HasContinuousSup β] (hf : StronglyMeasurable f) (hg : StronglyMeasurable g) :
-    StronglyMeasurable (f⊔g) :=
-  ⟨fun n => hf.approx n⊔hg.approx n, fun x => (hf.tendsto_approx x).sup_right_nhds (hg.tendsto_approx x)⟩
+    StronglyMeasurable (f ⊔ g) :=
+  ⟨fun n => hf.approx n ⊔ hg.approx n, fun x => (hf.tendsto_approx x).sup_right_nhds (hg.tendsto_approx x)⟩
 
 protected theorem inf [HasInf β] [HasContinuousInf β] (hf : StronglyMeasurable f) (hg : StronglyMeasurable g) :
-    StronglyMeasurable (f⊓g) :=
-  ⟨fun n => hf.approx n⊓hg.approx n, fun x => (hf.tendsto_approx x).inf_right_nhds (hg.tendsto_approx x)⟩
+    StronglyMeasurable (f ⊓ g) :=
+  ⟨fun n => hf.approx n ⊓ hg.approx n, fun x => (hf.tendsto_approx x).inf_right_nhds (hg.tendsto_approx x)⟩
 
 end Order
 
@@ -697,7 +718,7 @@ theorem _root_.strongly_measurable_of_strongly_measurable_union_cover {m : Measu
             ((ht.subtype_image ((hd.approx n).measurable_set_fiber x)).diff hs)
         ext1 y
         simp only [mem_union_eq, mem_preimage, mem_singleton_iff, mem_image, SetCoe.exists, Subtype.coe_mk,
-          exists_and_distrib_right, exists_eq_right, mem_diff]
+          exists_and_distrib_rightₓ, exists_eq_right, mem_diff]
         by_cases' hy : y ∈ s
         · rw [dif_pos hy]
           simp only [hy, exists_true_left, not_true, and_falseₓ, or_falseₓ]
@@ -1025,16 +1046,18 @@ section Order
 variable [TopologicalSpace β] [Zero β]
 
 protected theorem sup [SemilatticeSup β] [HasContinuousSup β] (hf : FinStronglyMeasurable f μ)
-    (hg : FinStronglyMeasurable g μ) : FinStronglyMeasurable (f⊔g) μ := by
+    (hg : FinStronglyMeasurable g μ) : FinStronglyMeasurable (f ⊔ g) μ := by
   refine'
-    ⟨fun n => hf.approx n⊔hg.approx n, fun n => _, fun x => (hf.tendsto_approx x).sup_right_nhds (hg.tendsto_approx x)⟩
+    ⟨fun n => hf.approx n ⊔ hg.approx n, fun n => _, fun x =>
+      (hf.tendsto_approx x).sup_right_nhds (hg.tendsto_approx x)⟩
   refine' (measure_mono (support_sup _ _)).trans_lt _
   exact measure_union_lt_top_iff.mpr ⟨hf.fin_support_approx n, hg.fin_support_approx n⟩
 
 protected theorem inf [SemilatticeInf β] [HasContinuousInf β] (hf : FinStronglyMeasurable f μ)
-    (hg : FinStronglyMeasurable g μ) : FinStronglyMeasurable (f⊓g) μ := by
+    (hg : FinStronglyMeasurable g μ) : FinStronglyMeasurable (f ⊓ g) μ := by
   refine'
-    ⟨fun n => hf.approx n⊓hg.approx n, fun n => _, fun x => (hf.tendsto_approx x).inf_right_nhds (hg.tendsto_approx x)⟩
+    ⟨fun n => hf.approx n ⊓ hg.approx n, fun n => _, fun x =>
+      (hf.tendsto_approx x).inf_right_nhds (hg.tendsto_approx x)⟩
   refine' (measure_mono (support_inf _ _)).trans_lt _
   exact measure_union_lt_top_iff.mpr ⟨hf.fin_support_approx n, hg.fin_support_approx n⟩
 
@@ -1207,12 +1230,12 @@ end Arithmetic
 section Order
 
 protected theorem sup [SemilatticeSup β] [HasContinuousSup β] (hf : AeStronglyMeasurable f μ)
-    (hg : AeStronglyMeasurable g μ) : AeStronglyMeasurable (f⊔g) μ :=
-  ⟨hf.mk f⊔hg.mk g, hf.strongly_measurable_mk.sup hg.strongly_measurable_mk, hf.ae_eq_mk.sup hg.ae_eq_mk⟩
+    (hg : AeStronglyMeasurable g μ) : AeStronglyMeasurable (f ⊔ g) μ :=
+  ⟨hf.mk f ⊔ hg.mk g, hf.strongly_measurable_mk.sup hg.strongly_measurable_mk, hf.ae_eq_mk.sup hg.ae_eq_mk⟩
 
 protected theorem inf [SemilatticeInf β] [HasContinuousInf β] (hf : AeStronglyMeasurable f μ)
-    (hg : AeStronglyMeasurable g μ) : AeStronglyMeasurable (f⊓g) μ :=
-  ⟨hf.mk f⊓hg.mk g, hf.strongly_measurable_mk.inf hg.strongly_measurable_mk, hf.ae_eq_mk.inf hg.ae_eq_mk⟩
+    (hg : AeStronglyMeasurable g μ) : AeStronglyMeasurable (f ⊓ g) μ :=
+  ⟨hf.mk f ⊓ hg.mk g, hf.strongly_measurable_mk.inf hg.strongly_measurable_mk, hf.ae_eq_mk.inf hg.ae_eq_mk⟩
 
 end Order
 
@@ -1576,7 +1599,7 @@ theorem _root_.continuous_linear_map.ae_strongly_measurable_comp₂ (L : E →L[
 end ContinuousLinearMapNontriviallyNormedField
 
 theorem _root_.ae_strongly_measurable_with_density_iff {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    {f : α → ℝ≥0 } (hf : Measurable f) {g : α → E} :
+    {f : α → ℝ≥0} (hf : Measurable f) {g : α → E} :
     AeStronglyMeasurable g (μ.withDensity fun x => (f x : ℝ≥0∞)) ↔ AeStronglyMeasurable (fun x => (f x : ℝ) • g x) μ :=
   by
   constructor
@@ -1664,12 +1687,12 @@ section Order
 variable [Zero β]
 
 protected theorem sup [SemilatticeSup β] [HasContinuousSup β] (hf : AeFinStronglyMeasurable f μ)
-    (hg : AeFinStronglyMeasurable g μ) : AeFinStronglyMeasurable (f⊔g) μ :=
-  ⟨hf.mk f⊔hg.mk g, hf.fin_strongly_measurable_mk.sup hg.fin_strongly_measurable_mk, hf.ae_eq_mk.sup hg.ae_eq_mk⟩
+    (hg : AeFinStronglyMeasurable g μ) : AeFinStronglyMeasurable (f ⊔ g) μ :=
+  ⟨hf.mk f ⊔ hg.mk g, hf.fin_strongly_measurable_mk.sup hg.fin_strongly_measurable_mk, hf.ae_eq_mk.sup hg.ae_eq_mk⟩
 
 protected theorem inf [SemilatticeInf β] [HasContinuousInf β] (hf : AeFinStronglyMeasurable f μ)
-    (hg : AeFinStronglyMeasurable g μ) : AeFinStronglyMeasurable (f⊓g) μ :=
-  ⟨hf.mk f⊓hg.mk g, hf.fin_strongly_measurable_mk.inf hg.fin_strongly_measurable_mk, hf.ae_eq_mk.inf hg.ae_eq_mk⟩
+    (hg : AeFinStronglyMeasurable g μ) : AeFinStronglyMeasurable (f ⊓ g) μ :=
+  ⟨hf.mk f ⊓ hg.mk g, hf.fin_strongly_measurable_mk.inf hg.fin_strongly_measurable_mk, hf.ae_eq_mk.inf hg.ae_eq_mk⟩
 
 end Order
 

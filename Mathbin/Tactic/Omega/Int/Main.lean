@@ -108,7 +108,7 @@ unsafe def exprterm.to_preterm (xs : List expr) : exprterm → tactic Preterm
   | exprterm.add xa xb => do
     let a ← xa.to_preterm
     let b ← xb.to_preterm
-    return (a+*b)
+    return (a +* b)
 
 /-- Reification to an intermediate shadow syntax which eliminates exprs,
     but still includes non-canonical terms -/

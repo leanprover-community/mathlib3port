@@ -79,7 +79,7 @@ private unsafe def rewrites_for_rule (exp : expr) (cfg : config) (numbered_rule 
 /-- Get all rewrites that start at the given expression and use one of the given rewrite rules.
 -/
 unsafe def get_rewrites (rules : List (expr × Bool)) (exp : expr) (cfg : config) : tactic (Buffer rewrite) := do
-  let lists ← List.mmapₓ (rewrites_for_rule exp cfg) rules.enum
+  let lists ← List.mmap (rewrites_for_rule exp cfg) rules.enum
   return (List.foldlₓ Buffer.appendList Buffer.nil lists)
 
 end Tactic.RewriteSearch

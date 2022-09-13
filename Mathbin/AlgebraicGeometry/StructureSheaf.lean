@@ -164,7 +164,7 @@ def sectionsSubring (U : (Opens (PrimeSpectrum.top R))ᵒᵖ) : Subring (∀ x :
     intro a b ha hb x
     rcases ha x with ⟨Va, ma, ia, ra, sa, wa⟩
     rcases hb x with ⟨Vb, mb, ib, rb, sb, wb⟩
-    refine' ⟨Va⊓Vb, ⟨ma, mb⟩, opens.inf_le_left _ _ ≫ ia, ra * sb + rb * sa, sa * sb, _⟩
+    refine' ⟨Va ⊓ Vb, ⟨ma, mb⟩, opens.inf_le_left _ _ ≫ ia, ra * sb + rb * sa, sa * sb, _⟩
     intro y
     rcases wa (opens.inf_le_left _ _ y) with ⟨nma, wa⟩
     rcases wb (opens.inf_le_right _ _ y) with ⟨nmb, wb⟩
@@ -196,7 +196,7 @@ def sectionsSubring (U : (Opens (PrimeSpectrum.top R))ᵒᵖ) : Subring (∀ x :
     intro a b ha hb x
     rcases ha x with ⟨Va, ma, ia, ra, sa, wa⟩
     rcases hb x with ⟨Vb, mb, ib, rb, sb, wb⟩
-    refine' ⟨Va⊓Vb, ⟨ma, mb⟩, opens.inf_le_left _ _ ≫ ia, ra * rb, sa * sb, _⟩
+    refine' ⟨Va ⊓ Vb, ⟨ma, mb⟩, opens.inf_le_left _ _ ≫ ia, ra * rb, sa * sb, _⟩
     intro y
     rcases wa (opens.inf_le_left _ _ y) with ⟨nma, wa⟩
     rcases wb (opens.inf_le_right _ _ y) with ⟨nmb, wb⟩
@@ -595,7 +595,7 @@ theorem to_basic_open_injective (f : R) : Function.Injective (toBasicOpen R f) :
   intro p hfp
   contrapose hfp
   rw [mem_zero_locus, Set.not_subset]
-  have := congr_funₓ (congr_argₓ Subtype.val h_eq) ⟨p, hfp⟩
+  have := congr_fun (congr_arg Subtype.val h_eq) ⟨p, hfp⟩
   rw [const_apply, const_apply, IsLocalization.eq] at this
   cases' this with r hr
   exact ⟨r.1, hr, r.2⟩
@@ -674,8 +674,8 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.top R
     simp only [SetLike.coe_mk]
     -- Here, both sides of the equation are equal to a restriction of `s`
     trans
-    convert congr_argₓ ((structure_sheaf R).1.map iDj.op) (hs j).symm using 1
-    convert congr_argₓ ((structure_sheaf R).1.map iDi.op) (hs i) using 1
+    convert congr_arg ((structure_sheaf R).1.map iDj.op) (hs j).symm using 1
+    convert congr_arg ((structure_sheaf R).1.map iDi.op) (hs i) using 1
     swap
     all_goals
       rw [res_const]
@@ -715,7 +715,7 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.top R
     simp only [← hk, pow_addₓ, pow_oneₓ]
     -- To accommodate for the difference `k`, we multiply both sides of the equation `n_spec (i, j)`
       -- by `(h i * h j) ^ k`
-      convert congr_argₓ (fun z => z * (h i * h j) ^ k) (n_spec (i, j)) using 1 <;>
+      convert congr_arg (fun z => z * (h i * h j) ^ k) (n_spec (i, j)) using 1 <;>
       · simp only [n, mul_powₓ]
         ring
         
@@ -955,7 +955,7 @@ theorem comap_fun_is_locally_fraction (f : R →+* S) (U : Opens (PrimeSpectrum.
   rcases hs ⟨PrimeSpectrum.comap f p, hUV hpV⟩ with ⟨W, m, iWU, a, b, h_frac⟩
   -- We claim that we can write our new section as the fraction `f a / f b` on the neighborhood
   -- `(comap f) ⁻¹ W ⊓ V` of `p`.
-  refine' ⟨opens.comap (comap f) W⊓V, ⟨m, hpV⟩, opens.inf_le_right _ _, f a, f b, _⟩
+  refine' ⟨opens.comap (comap f) W ⊓ V, ⟨m, hpV⟩, opens.inf_le_right _ _, f a, f b, _⟩
   rintro ⟨q, ⟨hqW, hqV⟩⟩
   specialize h_frac ⟨PrimeSpectrum.comap f q, hqW⟩
   refine' ⟨h_frac.1, _⟩

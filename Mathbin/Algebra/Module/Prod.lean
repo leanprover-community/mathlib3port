@@ -35,7 +35,7 @@ instance {r : Semiringₓ R} [AddCommMonoidₓ M] [AddCommMonoidₓ N] [Module R
   ⟨fun c ⟨x, y⟩ h =>
     or_iff_not_imp_left.mpr fun hc =>
       mk.inj_iffₓ.mpr
-        ⟨(smul_eq_zero.mp (congr_argₓ fst h)).resolve_left hc, (smul_eq_zero.mp (congr_argₓ snd h)).resolve_left hc⟩⟩
+        ⟨(smul_eq_zero.mp (congr_arg fst h)).resolve_left hc, (smul_eq_zero.mp (congr_arg snd h)).resolve_left hc⟩⟩
 
 end Prod
 

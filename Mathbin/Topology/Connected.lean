@@ -660,10 +660,8 @@ theorem connected_component_disjoint {x y : α} (h : ConnectedComponent x ≠ Co
   Set.disjoint_left.2 fun a h1 h2 => h ((connected_component_eq h1).trans (connected_component_eq h2).symm)
 
 theorem is_closed_connected_component {x : α} : IsClosed (ConnectedComponent x) :=
-  closure_eq_iff_is_closed.1 <|
-    Subset.antisymm
-      (is_connected_connected_component.closure.subset_connected_component (subset_closure mem_connected_component))
-      subset_closure
+  closure_subset_iff_is_closed.1 <|
+    is_connected_connected_component.closure.subset_connected_component <| subset_closure mem_connected_component
 
 theorem Continuous.image_connected_component_subset [TopologicalSpace β] {f : α → β} (h : Continuous f) (a : α) :
     f '' ConnectedComponent a ⊆ ConnectedComponent (f a) :=

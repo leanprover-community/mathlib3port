@@ -45,39 +45,39 @@ variable [PseudoEmetricSpace X] [PseudoEmetricSpace Y] [PseudoEmetricSpace Z]
 
 /-- A function `f : X → Y` between two `pseudo_emetric_space`s is Hölder continuous with constant
 `C : ℝ≥0` and exponent `r : ℝ≥0`, if `edist (f x) (f y) ≤ C * edist x y ^ r` for all `x y : X`. -/
-def HolderWith (C r : ℝ≥0 ) (f : X → Y) : Prop :=
+def HolderWith (C r : ℝ≥0) (f : X → Y) : Prop :=
   ∀ x y, edist (f x) (f y) ≤ C * edist x y ^ (r : ℝ)
 
 /-- A function `f : X → Y` between two `pseudo_emeteric_space`s is Hölder continuous with constant
 `C : ℝ≥0` and exponent `r : ℝ≥0` on a set `s : set X`, if `edist (f x) (f y) ≤ C * edist x y ^ r`
 for all `x y ∈ s`. -/
-def HolderOnWith (C r : ℝ≥0 ) (f : X → Y) (s : Set X) : Prop :=
+def HolderOnWith (C r : ℝ≥0) (f : X → Y) (s : Set X) : Prop :=
   ∀ x ∈ s, ∀ y ∈ s, edist (f x) (f y) ≤ C * edist x y ^ (r : ℝ)
 
 @[simp]
-theorem holder_on_with_empty (C r : ℝ≥0 ) (f : X → Y) : HolderOnWith C r f ∅ := fun x hx => hx.elim
+theorem holder_on_with_empty (C r : ℝ≥0) (f : X → Y) : HolderOnWith C r f ∅ := fun x hx => hx.elim
 
 @[simp]
-theorem holder_on_with_singleton (C r : ℝ≥0 ) (f : X → Y) (x : X) : HolderOnWith C r f {x} := by
+theorem holder_on_with_singleton (C r : ℝ≥0) (f : X → Y) (x : X) : HolderOnWith C r f {x} := by
   rintro a (rfl : a = x) b (rfl : b = a)
   rw [edist_self]
   exact zero_le _
 
-theorem Set.Subsingleton.holder_on_with {s : Set X} (hs : s.Subsingleton) (C r : ℝ≥0 ) (f : X → Y) :
+theorem Set.Subsingleton.holder_on_with {s : Set X} (hs : s.Subsingleton) (C r : ℝ≥0) (f : X → Y) :
     HolderOnWith C r f s :=
   hs.induction_on (holder_on_with_empty C r f) (holder_on_with_singleton C r f)
 
-theorem holder_on_with_univ {C r : ℝ≥0 } {f : X → Y} : HolderOnWith C r f Univ ↔ HolderWith C r f := by
+theorem holder_on_with_univ {C r : ℝ≥0} {f : X → Y} : HolderOnWith C r f Univ ↔ HolderWith C r f := by
   simp only [HolderOnWith, HolderWith, mem_univ, true_implies_iff]
 
 @[simp]
-theorem holder_on_with_one {C : ℝ≥0 } {f : X → Y} {s : Set X} : HolderOnWith C 1 f s ↔ LipschitzOnWith C f s := by
+theorem holder_on_with_one {C : ℝ≥0} {f : X → Y} {s : Set X} : HolderOnWith C 1 f s ↔ LipschitzOnWith C f s := by
   simp only [HolderOnWith, LipschitzOnWith, Nnreal.coe_one, Ennreal.rpow_one]
 
 alias holder_on_with_one ↔ _ LipschitzOnWith.holder_on_with
 
 @[simp]
-theorem holder_with_one {C : ℝ≥0 } {f : X → Y} : HolderWith C 1 f ↔ LipschitzWith C f :=
+theorem holder_with_one {C : ℝ≥0} {f : X → Y} : HolderWith C 1 f ↔ LipschitzWith C f :=
   holder_on_with_univ.symm.trans <| holder_on_with_one.trans lipschitz_on_univ
 
 alias holder_with_one ↔ _ LipschitzWith.holder_with
@@ -85,12 +85,12 @@ alias holder_with_one ↔ _ LipschitzWith.holder_with
 theorem holder_with_id : HolderWith 1 1 (id : X → X) :=
   LipschitzWith.id.HolderWith
 
-protected theorem HolderWith.holder_on_with {C r : ℝ≥0 } {f : X → Y} (h : HolderWith C r f) (s : Set X) :
+protected theorem HolderWith.holder_on_with {C r : ℝ≥0} {f : X → Y} (h : HolderWith C r f) (s : Set X) :
     HolderOnWith C r f s := fun x _ y _ => h x y
 
 namespace HolderOnWith
 
-variable {C r : ℝ≥0 } {f : X → Y} {s t : Set X}
+variable {C r : ℝ≥0} {f : X → Y} {s t : Set X}
 
 theorem edist_le (h : HolderOnWith C r f s) {x y : X} (hx : x ∈ s) (hy : y ∈ s) :
     edist (f x) (f y) ≤ C * edist x y ^ (r : ℝ) :=
@@ -100,14 +100,14 @@ theorem edist_le_of_le (h : HolderOnWith C r f s) {x y : X} (hx : x ∈ s) (hy :
     edist (f x) (f y) ≤ C * d ^ (r : ℝ) :=
   (h.edist_le hx hy).trans (mul_le_mul_left' (Ennreal.rpow_le_rpow hd r.coe_nonneg) _)
 
-theorem comp {Cg rg : ℝ≥0 } {g : Y → Z} {t : Set Y} (hg : HolderOnWith Cg rg g t) {Cf rf : ℝ≥0 } {f : X → Y}
+theorem comp {Cg rg : ℝ≥0} {g : Y → Z} {t : Set Y} (hg : HolderOnWith Cg rg g t) {Cf rf : ℝ≥0} {f : X → Y}
     (hf : HolderOnWith Cf rf f s) (hst : MapsTo f s t) : HolderOnWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) s := by
   intro x hx y hy
   rw [Ennreal.coe_mul, mul_comm rg, Nnreal.coe_mul, Ennreal.rpow_mul, mul_assoc, ←
     Ennreal.coe_rpow_of_nonneg _ rg.coe_nonneg, ← Ennreal.mul_rpow_of_nonneg _ _ rg.coe_nonneg]
   exact hg.edist_le_of_le (hst hx) (hst hy) (hf.edist_le hx hy)
 
-theorem comp_holder_with {Cg rg : ℝ≥0 } {g : Y → Z} {t : Set Y} (hg : HolderOnWith Cg rg g t) {Cf rf : ℝ≥0 } {f : X → Y}
+theorem comp_holder_with {Cg rg : ℝ≥0} {g : Y → Z} {t : Set Y} (hg : HolderOnWith Cg rg g t) {Cf rf : ℝ≥0} {f : X → Y}
     (hf : HolderWith Cf rf f) (ht : ∀ x, f x ∈ t) : HolderWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) :=
   holder_on_with_univ.mp <| hg.comp (hf.HolderOnWith Univ) fun x _ => ht x
 
@@ -152,7 +152,7 @@ end HolderOnWith
 
 namespace HolderWith
 
-variable {C r : ℝ≥0 } {f : X → Y}
+variable {C r : ℝ≥0} {f : X → Y}
 
 theorem edist_le (h : HolderWith C r f) (x y : X) : edist (f x) (f y) ≤ C * edist x y ^ (r : ℝ) :=
   h x y
@@ -161,11 +161,11 @@ theorem edist_le_of_le (h : HolderWith C r f) {x y : X} {d : ℝ≥0∞} (hd : e
     edist (f x) (f y) ≤ C * d ^ (r : ℝ) :=
   (h.HolderOnWith Univ).edist_le_of_le trivialₓ trivialₓ hd
 
-theorem comp {Cg rg : ℝ≥0 } {g : Y → Z} (hg : HolderWith Cg rg g) {Cf rf : ℝ≥0 } {f : X → Y} (hf : HolderWith Cf rf f) :
+theorem comp {Cg rg : ℝ≥0} {g : Y → Z} (hg : HolderWith Cg rg g) {Cf rf : ℝ≥0} {f : X → Y} (hf : HolderWith Cf rf f) :
     HolderWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) :=
   (hg.HolderOnWith Univ).comp_holder_with hf fun _ => trivialₓ
 
-theorem comp_holder_on_with {Cg rg : ℝ≥0 } {g : Y → Z} (hg : HolderWith Cg rg g) {Cf rf : ℝ≥0 } {f : X → Y} {s : Set X}
+theorem comp_holder_on_with {Cg rg : ℝ≥0} {g : Y → Z} (hg : HolderWith Cg rg g) {Cf rf : ℝ≥0} {f : X → Y} {s : Set X}
     (hf : HolderOnWith Cf rf f s) : HolderOnWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) s :=
   (hg.HolderOnWith Univ).comp hf fun _ _ => trivialₓ
 
@@ -185,11 +185,11 @@ end Emetric
 
 section Metric
 
-variable [PseudoMetricSpace X] [PseudoMetricSpace Y] {C r : ℝ≥0 } {f : X → Y}
+variable [PseudoMetricSpace X] [PseudoMetricSpace Y] {C r : ℝ≥0} {f : X → Y}
 
 namespace HolderWith
 
-theorem nndist_le_of_le (hf : HolderWith C r f) {x y : X} {d : ℝ≥0 } (hd : nndist x y ≤ d) :
+theorem nndist_le_of_le (hf : HolderWith C r f) {x y : X} {d : ℝ≥0} (hd : nndist x y ≤ d) :
     nndist (f x) (f y) ≤ C * d ^ (r : ℝ) := by
   rw [← Ennreal.coe_le_coe, ← edist_nndist, Ennreal.coe_mul, ← Ennreal.coe_rpow_of_nonneg _ r.coe_nonneg]
   apply hf.edist_le_of_le

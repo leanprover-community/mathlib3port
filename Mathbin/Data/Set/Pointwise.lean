@@ -214,7 +214,7 @@ theorem Finite.inv (hs : s.Finite) : s⁻¹.Finite :=
 
 @[simp, to_additive]
 theorem image_inv : Inv.inv '' s = s⁻¹ :=
-  congr_funₓ (image_eq_preimage_of_inverse inv_involutive.LeftInverse inv_involutive.RightInverse) _
+  congr_fun (image_eq_preimage_of_inverse inv_involutive.LeftInverse inv_involutive.RightInverse) _
 
 @[simp, to_additive]
 instance : HasInvolutiveInv (Set α) where
@@ -727,7 +727,7 @@ theorem mem_prod_list_of_fn {a : α} {s : Finₓ n → Set α} :
   · simp_rw [List.of_fn_zero, List.prod_nil, Finₓ.exists_fin_zero_pi, eq_comm, Set.mem_one]
     
   · simp_rw [List.of_fn_succ, List.prod_cons, Finₓ.exists_fin_succ_pi, Finₓ.cons_zero, Finₓ.cons_succ, mem_mul, @ih,
-      exists_and_distrib_left, exists_exists_eq_and, SetCoe.exists, Subtype.coe_mk, exists_prop]
+      exists_and_distrib_leftₓ, exists_exists_eq_and, SetCoe.exists, Subtype.coe_mk, exists_propₓ]
     
 
 @[to_additive]
@@ -736,7 +736,7 @@ theorem mem_list_prod {l : List (Set α)} {a : α} :
       ∃ l' : List (Σs : Set α, ↥s), List.prod (l'.map fun x => (Sigma.snd x : α)) = a ∧ l'.map Sigma.fst = l :=
   by
   induction' l using List.ofFnRec with n f
-  simp_rw [List.exists_iff_exists_tuple, List.map_of_fn, List.of_fn_inj', And.left_comm, exists_and_distrib_left,
+  simp_rw [List.exists_iff_exists_tuple, List.map_of_fn, List.of_fn_inj', And.left_comm, exists_and_distrib_leftₓ,
     exists_eq_left, heq_iff_eq, Function.comp, mem_prod_list_of_fn]
   constructor
   · rintro ⟨fi, rfl⟩
@@ -1079,7 +1079,7 @@ theorem mem_finset_prod (t : Finset ι) (f : ι → Set α) (a : α) :
     · rw [Function.update_same]
       exact hx
       
-    · rw [update_noteq (ne_of_mem_of_not_mem hj hi)]
+    · rw [update_noteq (ne_of_mem_of_not_memₓ hj hi)]
       exact hg hj
       
     rw [Finset.prod_update_of_not_mem hi, Function.update_same]
@@ -1480,7 +1480,7 @@ instance is_scalar_tower'' [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsSc
     IsScalarTower (Set α) (Set β) (Set γ) where smul_assoc := fun T T' T'' => image2_assoc smul_assoc
 
 instance is_central_scalar [HasSmul α β] [HasSmul αᵐᵒᵖ β] [IsCentralScalar α β] : IsCentralScalar α (Set β) :=
-  ⟨fun a S => (congr_argₓ fun f => f '' S) <| funext fun _ => op_smul_eq_smul _ _⟩
+  ⟨fun a S => (congr_arg fun f => f '' S) <| funext fun _ => op_smul_eq_smul _ _⟩
 
 /-- A multiplicative action of a monoid `α` on a type `β` gives a multiplicative action of `set α`
 on `set β`. -/
@@ -1780,13 +1780,13 @@ theorem set_smul_subset_set_smul_iff : a • A ⊆ a • B ↔ A ⊆ B :=
 
 @[to_additive]
 theorem set_smul_subset_iff : a • A ⊆ B ↔ A ⊆ a⁻¹ • B :=
-  image_subset_iff.trans <| iff_of_eq <| congr_argₓ _ <| preimage_equiv_eq_image_symm _ <| MulAction.toPerm _
+  image_subset_iff.trans <| iff_of_eq <| congr_arg _ <| preimage_equiv_eq_image_symm _ <| MulAction.toPerm _
 
 @[to_additive]
 theorem subset_set_smul_iff : A ⊆ a • B ↔ a⁻¹ • A ⊆ B :=
   Iff.symm <|
     image_subset_iff.trans <|
-      Iff.symm <| iff_of_eq <| congr_argₓ _ <| image_equiv_eq_preimage_symm _ <| MulAction.toPerm _
+      Iff.symm <| iff_of_eq <| congr_arg _ <| image_equiv_eq_preimage_symm _ <| MulAction.toPerm _
 
 end Groupₓ
 
@@ -1893,14 +1893,14 @@ theorem coe_mul_self_eq (s : Submonoid M) : (s : Set M) * s = s := by
   exact s.mul_mem ha hb
 
 @[to_additive]
-theorem closure_mul_le (S T : Set M) : closure (S * T) ≤ closure S⊔closure T :=
+theorem closure_mul_le (S T : Set M) : closure (S * T) ≤ closure S ⊔ closure T :=
   Inf_le fun x ⟨s, t, hs, ht, hx⟩ =>
     hx ▸
-      (closure S⊔closure T).mul_mem (SetLike.le_def.mp le_sup_left <| subset_closure hs)
+      (closure S ⊔ closure T).mul_mem (SetLike.le_def.mp le_sup_left <| subset_closure hs)
         (SetLike.le_def.mp le_sup_right <| subset_closure ht)
 
 @[to_additive]
-theorem sup_eq_closure (H K : Submonoid M) : H⊔K = closure (H * K) :=
+theorem sup_eq_closure (H K : Submonoid M) : H ⊔ K = closure (H * K) :=
   le_antisymmₓ
     (sup_le (fun h hh => subset_closure ⟨h, 1, hh, K.one_mem, mul_oneₓ h⟩) fun k hk =>
       subset_closure ⟨1, k, H.one_mem, hk, one_mulₓ k⟩)
@@ -1947,7 +1947,7 @@ theorem card_pow_eq_card_pow_card_univ_aux {f : ℕ → ℕ} (h1 : Monotone f) {
     replace key : ∀ k : ℕ, f (n + k) = f (n + k + 1) ∧ f (n + k) = f n := fun k =>
       Nat.rec ⟨hn2, rfl⟩ (fun k ih => ⟨h3 _ ih.1, ih.1.symm.trans ih.2⟩) k
     replace key : ∀ k : ℕ, n ≤ k → f k = f n := fun k hk =>
-      (congr_argₓ f (add_tsub_cancel_of_le hk)).symm.trans (key (k - n)).2
+      (congr_arg f (add_tsub_cancel_of_le hk)).symm.trans (key (k - n)).2
     exact fun k hk => (key k (hn1.trans hk)).trans (key B hn1).symm
     
 

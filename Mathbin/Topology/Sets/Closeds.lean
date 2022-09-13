@@ -94,11 +94,11 @@ instance : Inhabited (Closeds α) :=
   ⟨⊥⟩
 
 @[simp, norm_cast]
-theorem coe_sup (s t : Closeds α) : (↑(s⊔t) : Set α) = s ∪ t :=
+theorem coe_sup (s t : Closeds α) : (↑(s ⊔ t) : Set α) = s ∪ t :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_inf (s t : Closeds α) : (↑(s⊓t) : Set α) = s ∩ t :=
+theorem coe_inf (s t : Closeds α) : (↑(s ⊓ t) : Set α) = s ∩ t :=
   rfl
 
 @[simp, norm_cast]
@@ -228,11 +228,11 @@ instance : BooleanAlgebra (Clopens α) :=
   SetLike.coe_injective.BooleanAlgebra _ (fun _ _ => rfl) (fun _ _ => rfl) rfl rfl (fun _ => rfl) fun _ _ => rfl
 
 @[simp]
-theorem coe_sup (s t : Clopens α) : (↑(s⊔t) : Set α) = s ∪ t :=
+theorem coe_sup (s t : Clopens α) : (↑(s ⊔ t) : Set α) = s ∪ t :=
   rfl
 
 @[simp]
-theorem coe_inf (s t : Clopens α) : (↑(s⊓t) : Set α) = s ∩ t :=
+theorem coe_inf (s t : Clopens α) : (↑(s ⊓ t) : Set α) = s ∩ t :=
   rfl
 
 @[simp]

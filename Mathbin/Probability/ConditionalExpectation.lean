@@ -38,7 +38,8 @@ theorem condexp_indep_eq (hle₁ : m₁ ≤ m) (hle₂ : m₂ ≤ m) [SigmaFinit
     (hindp : Indepₓ m₁ m₂ μ) : μ[f|m₂] =ᵐ[μ] fun x => μ[f] := by
   by_cases' hfint : integrable f μ
   swap
-  · exact (integral_undef hfint).symm ▸ condexp_undef hfint
+  · rw [condexp_undef hfint, integral_undef hfint]
+    rfl
     
   have hfint₁ := hfint.trim hle₁ hf
   refine'

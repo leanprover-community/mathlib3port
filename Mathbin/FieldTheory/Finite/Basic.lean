@@ -68,7 +68,7 @@ theorem card_image_polynomial_eval [DecidableEq R] [Fintype R] {p : R[X]} (hp : 
   Finset.card_le_mul_card_image _ _ fun a _ =>
     calc
       _ = (p - c a).roots.toFinset.card :=
-        congr_argₓ card
+        congr_arg card
           (by
             simp [Finset.ext_iff, mem_roots_sub_C hp])
       _ ≤ (p - c a).roots.card := Multiset.to_finset_card_le _
@@ -102,7 +102,7 @@ theorem exists_root_sum_quadratic [Fintype R] {f g : R[X]} (hf2 : degree f = 2) 
                 rw [hf2] <;>
                   exact by
                     decide))
-            (mt (congr_argₓ (· % 2))
+            (mt (congr_arg (· % 2))
               (by
                 simp [nat_degree_eq_of_degree_eq_some hf2, hR])))
           (card_image_polynomial_eval
@@ -386,7 +386,7 @@ theorem sq_add_sq (R : Type _) [CommRingₓ R] [IsDomain R] (p : ℕ) [NeZero p]
   haveI := char_is_prime_of_pos R p
   obtain ⟨a, b, hab⟩ := Zmod.sq_add_sq p x
   refine' ⟨a.val, b.val, _⟩
-  simpa using congr_argₓ (Zmod.castHom dvd_rfl R) hab
+  simpa using congr_arg (Zmod.castHom dvd_rfl R) hab
 
 end CharP
 
@@ -503,7 +503,7 @@ theorem exists_nonsquare (hF : ringChar F ≠ 2) : ∃ a : F, ¬IsSquare a := by
   -- Idea: the squaring map on `F` is not injective, hence not surjective
   let sq : F → F := fun x => x ^ 2
   have h : ¬injective sq := by
-    simp only [injective, not_forall, exists_prop]
+    simp only [injective, not_forall, exists_propₓ]
     refine' ⟨-1, 1, _, Ringₓ.neg_one_ne_one_of_char_ne_two hF⟩
     simp only [sq, one_pow, neg_one_sq]
   rw [Finite.injective_iff_surjective] at h
@@ -579,7 +579,7 @@ theorem unit_is_square_iff (hF : ringChar F ≠ 2) (a : Fˣ) : IsSquare a ↔ a 
 /-- A non-zero `a : F` is a square if and only if `a ^ (#F / 2) = 1`. -/
 theorem is_square_iff (hF : ringChar F ≠ 2) {a : F} (ha : a ≠ 0) : IsSquare a ↔ a ^ (Fintype.card F / 2) = 1 := by
   apply
-    (iff_congr _
+    (iff_congrₓ _
           (by
             simp [Units.ext_iff])).mp
       (FiniteField.unit_is_square_iff hF (Units.mk0 a ha))

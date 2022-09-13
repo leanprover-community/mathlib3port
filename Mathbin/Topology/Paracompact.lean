@@ -34,7 +34,7 @@ We also prove the following facts.
   the instance graph.
 
 * Every `emetric_space` is a paracompact space, see instance `emetric_space.paracompact_space` in
-  `topology/metric_space/emetric_space`.
+  `topology/metric_space/emetric_paracompact`.
 
 ## TODO
 
@@ -74,7 +74,7 @@ theorem precise_refinement [ParacompactSpace X] (u : ι → Set X) (uo : ∀ a, 
     ParacompactSpace.locally_finite_refinement (range u) coe (SetCoe.forall.2 <| forall_range_iff.2 uo)
       (by
         rwa [← sUnion_range, Subtype.range_coe])
-  simp only [SetCoe.exists, Subtype.coe_mk, exists_range_iff', Union_eq_univ_iff, exists_prop] at this
+  simp only [SetCoe.exists, Subtype.coe_mk, exists_range_iff', Union_eq_univ_iff, exists_propₓ] at this
   choose α t hto hXt htf ind hind
   choose t_inv ht_inv using hXt
   choose U hxU hU using htf

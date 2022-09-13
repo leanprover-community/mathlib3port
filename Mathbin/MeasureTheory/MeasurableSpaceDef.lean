@@ -349,7 +349,7 @@ instance : Inhabited (MeasurableSpace α) :=
 theorem generate_from_mono {s t : Set (Set α)} (h : s ⊆ t) : generateFrom s ≤ generateFrom t :=
   giGenerateFrom.gc.monotone_l h
 
-theorem generate_from_sup_generate_from {s t : Set (Set α)} : generateFrom s⊔generateFrom t = generateFrom (s ∪ t) :=
+theorem generate_from_sup_generate_from {s t : Set (Set α)} : generateFrom s ⊔ generateFrom t = generateFrom (s ∪ t) :=
   (@giGenerateFrom α).gc.l_sup.symm
 
 @[simp]
@@ -405,7 +405,7 @@ theorem measurable_set_top {s : Set α} : @MeasurableSet _ ⊤ s :=
 
 @[simp]
 theorem measurable_set_inf {m₁ m₂ : MeasurableSpace α} {s : Set α} :
-    @MeasurableSet _ (m₁⊓m₂) s ↔ @MeasurableSet _ m₁ s ∧ @MeasurableSet _ m₂ s :=
+    @MeasurableSet _ (m₁ ⊓ m₂) s ↔ @MeasurableSet _ m₁ s ∧ @MeasurableSet _ m₂ s :=
   Iff.rfl
 
 @[simp]
@@ -420,7 +420,7 @@ theorem measurable_set_infi {ι} {m : ι → MeasurableSpace α} {s : Set α} :
   rw [infi, measurable_set_Inf, forall_range_iff]
 
 theorem measurable_set_sup {m₁ m₂ : MeasurableSpace α} {s : Set α} :
-    measurable_set[m₁⊔m₂] s ↔ GenerateMeasurable (measurable_set[m₁] ∪ measurable_set[m₂]) s :=
+    measurable_set[m₁ ⊔ m₂] s ↔ GenerateMeasurable (measurable_set[m₁] ∪ measurable_set[m₂]) s :=
   Iff.refl _
 
 theorem measurable_set_Sup {ms : Set (MeasurableSpace α)} {s : Set α} :

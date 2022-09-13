@@ -112,7 +112,7 @@ theorem mul_rat (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (x * r)
     
   · rw [A, ← sub_mul, abs_mul]
     simp only [smul_eq_mul, id.def, Nat.cast_mulₓ]
-    refine' (mul_lt_mul_of_pos_right hlt <| abs_pos.2 <| Rat.cast_ne_zero.2 hr).trans_le _
+    refine' (mul_lt_mul_of_pos_right hlt <| abs_pos.2 <| Ratₓ.cast_ne_zero.2 hr).trans_le _
     rw [mul_rpow, mul_div_mul_left, mul_comm, mul_div_assoc]
     exacts[(rpow_pos_of_pos (Nat.cast_pos.2 r.pos) _).ne', Nat.cast_nonneg _, Nat.cast_nonneg _]
     
@@ -121,7 +121,8 @@ theorem mul_rat (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (x * r)
 `x` satisfies the same condition. -/
 theorem mul_rat_iff (hr : r ≠ 0) : LiouvilleWith p (x * r) ↔ LiouvilleWith p x :=
   ⟨fun h => by
-    simpa only [mul_assoc, ← Rat.cast_mul, mul_inv_cancel hr, Rat.cast_one, mul_oneₓ] using h.mul_rat (inv_ne_zero hr),
+    simpa only [mul_assoc, ← Ratₓ.cast_mul, mul_inv_cancel hr, Ratₓ.cast_one, mul_oneₓ] using
+      h.mul_rat (inv_ne_zero hr),
     fun h => h.mul_rat hr⟩
 
 /-- The product `r * x`, `r : ℚ`, `r ≠ 0`, is a Liouville number with exponent `p` if and only if
@@ -133,7 +134,7 @@ theorem rat_mul (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (r * x)
   (rat_mul_iff hr).2 h
 
 theorem mul_int_iff (hm : m ≠ 0) : LiouvilleWith p (x * m) ↔ LiouvilleWith p x := by
-  rw [← Rat.cast_coe_int, mul_rat_iff (Int.cast_ne_zero.2 hm)]
+  rw [← Ratₓ.cast_coe_int, mul_rat_iff (Int.cast_ne_zero.2 hm)]
 
 theorem mul_int (h : LiouvilleWith p x) (hm : m ≠ 0) : LiouvilleWith p (x * m) :=
   (mul_int_iff hm).2 h
@@ -145,7 +146,7 @@ theorem int_mul (h : LiouvilleWith p x) (hm : m ≠ 0) : LiouvilleWith p (m * x)
   (int_mul_iff hm).2 h
 
 theorem mul_nat_iff (hn : n ≠ 0) : LiouvilleWith p (x * n) ↔ LiouvilleWith p x := by
-  rw [← Rat.cast_coe_nat, mul_rat_iff (Nat.cast_ne_zero.2 hn)]
+  rw [← Ratₓ.cast_coe_nat, mul_rat_iff (Nat.cast_ne_zero.2 hn)]
 
 theorem mul_nat (h : LiouvilleWith p x) (hn : n ≠ 0) : LiouvilleWith p (x * n) :=
   (mul_nat_iff hn).2 h
@@ -164,7 +165,7 @@ theorem add_rat (h : LiouvilleWith p x) (r : ℚ) : LiouvilleWith p (x + r) := b
   have hr : (0 : ℝ) < r.denom := Nat.cast_pos.2 r.pos
   have hn' : (n : ℝ) ≠ 0 := Nat.cast_ne_zero.2 (zero_lt_one.trans_le hn).ne'
   have : (↑(r.denom * m + r.num * n : ℤ) / ↑(r.denom • id n) : ℝ) = m / n + r := by
-    simp [add_div, hr.ne', mul_div_mul_left, mul_div_mul_right, hn', ← Rat.cast_def]
+    simp [add_div, hr.ne', mul_div_mul_left, mul_div_mul_right, hn', ← Ratₓ.cast_def]
   refine' ⟨r.denom * m + r.num * n, _⟩
   rw [this, add_sub_add_right_eq_sub]
   refine'
@@ -187,7 +188,7 @@ theorem rat_add (h : LiouvilleWith p x) (r : ℚ) : LiouvilleWith p (r + x) :=
 
 @[simp]
 theorem add_int_iff : LiouvilleWith p (x + m) ↔ LiouvilleWith p x := by
-  rw [← Rat.cast_coe_int m, add_rat_iff]
+  rw [← Ratₓ.cast_coe_int m, add_rat_iff]
 
 @[simp]
 theorem int_add_iff : LiouvilleWith p (m + x) ↔ LiouvilleWith p x := by
@@ -195,7 +196,7 @@ theorem int_add_iff : LiouvilleWith p (m + x) ↔ LiouvilleWith p x := by
 
 @[simp]
 theorem add_nat_iff : LiouvilleWith p (x + n) ↔ LiouvilleWith p x := by
-  rw [← Rat.cast_coe_nat n, add_rat_iff]
+  rw [← Ratₓ.cast_coe_nat n, add_rat_iff]
 
 @[simp]
 theorem nat_add_iff : LiouvilleWith p (n + x) ↔ LiouvilleWith p x := by
@@ -226,21 +227,21 @@ theorem neg_iff : LiouvilleWith p (-x) ↔ LiouvilleWith p x :=
 
 @[simp]
 theorem sub_rat_iff : LiouvilleWith p (x - r) ↔ LiouvilleWith p x := by
-  rw [sub_eq_add_neg, ← Rat.cast_neg, add_rat_iff]
+  rw [sub_eq_add_neg, ← Ratₓ.cast_neg, add_rat_iff]
 
 theorem sub_rat (h : LiouvilleWith p x) (r : ℚ) : LiouvilleWith p (x - r) :=
   sub_rat_iff.2 h
 
 @[simp]
 theorem sub_int_iff : LiouvilleWith p (x - m) ↔ LiouvilleWith p x := by
-  rw [← Rat.cast_coe_int, sub_rat_iff]
+  rw [← Ratₓ.cast_coe_int, sub_rat_iff]
 
 theorem sub_int (h : LiouvilleWith p x) (m : ℤ) : LiouvilleWith p (x - m) :=
   sub_int_iff.2 h
 
 @[simp]
 theorem sub_nat_iff : LiouvilleWith p (x - n) ↔ LiouvilleWith p x := by
-  rw [← Rat.cast_coe_nat, sub_rat_iff]
+  rw [← Ratₓ.cast_coe_nat, sub_rat_iff]
 
 theorem sub_nat (h : LiouvilleWith p x) (n : ℕ) : LiouvilleWith p (x - n) :=
   sub_nat_iff.2 h
@@ -276,7 +277,7 @@ theorem ne_cast_int (h : LiouvilleWith p x) (hp : 1 < p) (m : ℤ) : x ≠ m := 
     simpa
   rw [rpow_neg_one, ← one_div, sub_div' _ _ _ hn'.ne', abs_div, Nat.abs_cast, div_le_div_right hn']
   norm_cast
-  rw [← zero_addₓ (1 : ℤ), Int.add_one_le_iff, abs_pos, sub_ne_zero]
+  rw [← zero_addₓ (1 : ℤ), Int.add_one_le_iffₓ, abs_pos, sub_ne_zero]
   rw [Ne.def, eq_div_iff hn'.ne'] at hne
   exact_mod_cast hne
 
@@ -285,10 +286,10 @@ protected theorem irrational (h : LiouvilleWith p x) (hp : 1 < p) : Irrational x
   rintro ⟨r, rfl⟩
   rcases eq_or_ne r 0 with (rfl | h0)
   · refine' h.ne_cast_int hp 0 _
-    rw [Rat.cast_zero, Int.cast_zeroₓ]
+    rw [Ratₓ.cast_zero, Int.cast_zeroₓ]
     
   · refine' (h.mul_rat (inv_ne_zero h0)).ne_cast_int hp 1 _
-    simp [Rat.cast_ne_zero.2 h0]
+    simp [Ratₓ.cast_ne_zero.2 h0]
     
 
 end LiouvilleWith

@@ -98,7 +98,7 @@ unsafe def traverse {m : Type → Type u} [Applicativeₓ m] {elab elab' : Bool}
   | lam n bi e₀ e₁ => lam n bi <$> f e₀ <*> f e₁
   | pi n bi e₀ e₁ => pi n bi <$> f e₀ <*> f e₁
   | elet n e₀ e₁ e₂ => elet n <$> f e₀ <*> f e₁ <*> f e₂
-  | macro mac es => macro mac <$> List.traverseₓₓ f es
+  | macro mac es => macro mac <$> List.traverseₓ f es
 
 /-- `mfoldl f a e` folds the monadic function `f` over the subterms of the expression `e`,
 with initial value `a`. -/

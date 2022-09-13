@@ -133,7 +133,7 @@ theorem ext : ∀ {s t : Finmap β}, s.entries = t.entries → s = t
 
 @[simp]
 theorem ext_iff {s t : Finmap β} : s.entries = t.entries ↔ s = t :=
-  ⟨ext, congr_argₓ _⟩
+  ⟨ext, congr_arg _⟩
 
 /-! ### mem -/
 
@@ -413,8 +413,8 @@ theorem to_finmap_cons (a : α) (b : β a) (xs : List (Sigma β)) :
 theorem mem_list_to_finmap (a : α) (xs : List (Sigma β)) : a ∈ xs.toFinmap ↔ ∃ b : β a, Sigma.mk a b ∈ xs := by
   induction' xs with x xs <;> [skip, cases x] <;>
     simp only [to_finmap_cons, *, not_mem_empty, exists_or_distrib, not_mem_nil, to_finmap_nil, exists_false,
-        mem_cons_iff, mem_insert, exists_and_distrib_left] <;>
-      apply or_congr _ Iff.rfl
+        mem_cons_iff, mem_insert, exists_and_distrib_leftₓ] <;>
+      apply or_congrₓ _ Iff.rfl
   conv => lhs rw [← and_trueₓ (a = x_fst)]
   apply and_congr_right
   rintro ⟨⟩

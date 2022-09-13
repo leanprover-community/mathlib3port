@@ -114,7 +114,7 @@ theorem d_of_eq {Q : Cubic R} (h : P.toPoly = Q.toPoly) : P.d = Q.d := by
 
 @[simp]
 theorem to_poly_injective (P Q : Cubic R) : P.toPoly = Q.toPoly ↔ P = Q :=
-  ⟨fun h => Cubic.ext _ _ (a_of_eq h) (b_of_eq h) (c_of_eq h) (d_of_eq h), congr_argₓ _⟩
+  ⟨fun h => Cubic.ext _ _ (a_of_eq h) (b_of_eq h) (c_of_eq h) (d_of_eq h), congr_arg _⟩
 
 @[simp]
 theorem of_a_eq_zero (ha : P.a = 0) : P.toPoly = c P.b * X ^ 2 + c P.c * X + c P.d := by
@@ -327,7 +327,7 @@ theorem disc_eq_prod_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y
 theorem disc_ne_zero_iff_roots_ne (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) :
     P.disc ≠ 0 ↔ x ≠ y ∧ x ≠ z ∧ y ≠ z := by
   rw [← _root_.map_ne_zero φ, disc_eq_prod_three_roots ha h3, pow_two]
-  simp_rw [mul_ne_zero_iff, sub_ne_zero, _root_.map_ne_zero, and_selfₓ, and_iff_right ha, and_assoc]
+  simp_rw [mul_ne_zero_iff, sub_ne_zero, _root_.map_ne_zero, and_selfₓ, and_iff_right ha, and_assocₓ]
 
 theorem disc_ne_zero_iff_roots_nodup (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) :
     P.disc ≠ 0 ↔ (map φ P).roots.Nodup := by

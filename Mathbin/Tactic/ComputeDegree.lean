@@ -198,7 +198,7 @@ unsafe def compute_degree_le : tactic Unit := do
           at least '{expected_deg}'"
     else repeat <| target >>= resolve_sum_step
   (do
-        let gs ← get_goals >>= List.mmapₓ infer_type
+        let gs ← get_goals >>= List.mmap infer_type
         success_if_fail <| gs <| unify t) <|>
       fail "Goal did not change"
   try <| any_goals' norm_assum

@@ -53,7 +53,7 @@ protected theorem mono' (h : AeMeasurable f μ) (h' : ν ≪ μ) : AeMeasurable 
 theorem ae_mem_imp_eq_mk {s} (h : AeMeasurable f (μ.restrict s)) : ∀ᵐ x ∂μ, x ∈ s → f x = h.mk f x :=
   ae_imp_of_ae_restrict h.ae_eq_mk
 
-theorem ae_inf_principal_eq_mk {s} (h : AeMeasurable f (μ.restrict s)) : f =ᶠ[μ.ae⊓𝓟 s] h.mk f :=
+theorem ae_inf_principal_eq_mk {s} (h : AeMeasurable f (μ.restrict s)) : f =ᶠ[μ.ae ⊓ 𝓟 s] h.mk f :=
   le_ae_restrict h.ae_eq_mk
 
 @[measurability]
@@ -316,7 +316,7 @@ theorem MeasureTheory.Measure.restrict_map_of_ae_measurable {f : α → δ} (hf 
     _ = (μ.restrict <| hf.mk f ⁻¹' s).map (hf.mk f) := Measure.restrict_map hf.measurable_mk hs
     _ = (μ.restrict <| hf.mk f ⁻¹' s).map f := Measure.map_congr (ae_restrict_of_ae hf.ae_eq_mk.symm)
     _ = (μ.restrict <| f ⁻¹' s).map f := by
-      apply congr_argₓ
+      apply congr_arg
       ext1 t ht
       simp only [ht, measure.restrict_apply]
       apply measure_congr

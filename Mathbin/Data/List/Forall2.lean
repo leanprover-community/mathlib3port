@@ -100,7 +100,7 @@ theorem forall₂_and_left {p : α → Prop} : ∀ l u, Forall₂ (fun a b => p 
   | [], u => by
     simp only [forall₂_nil_left_iff, forall_prop_of_false (not_mem_nil _), imp_true_iff, true_andₓ]
   | a :: l, u => by
-    simp only [forall₂_and_left l, forall₂_cons_left_iff, forall_mem_cons, and_assoc, and_comm, And.left_comm,
+    simp only [forall₂_and_left l, forall₂_cons_left_iff, forall_mem_cons, and_assocₓ, and_comm, And.left_comm,
       exists_and_distrib_left.symm]
 
 @[simp]
@@ -138,7 +138,7 @@ theorem _root_.relator.bi_unique.forall₂ (hr : BiUnique R) : BiUnique (Forall�
 
 theorem Forall₂.length_eq : ∀ {l₁ l₂}, Forall₂ R l₁ l₂ → length l₁ = length l₂
   | _, _, forall₂.nil => rfl
-  | _, _, forall₂.cons h₁ h₂ => congr_argₓ succ (forall₂.length_eq h₂)
+  | _, _, forall₂.cons h₁ h₂ => congr_arg succ (forall₂.length_eq h₂)
 
 theorem Forall₂.nth_le :
     ∀ {x : List α} {y : List β} (h : Forall₂ R x y) ⦃i : ℕ⦄ (hx : i < x.length) (hy : i < y.length),
@@ -198,20 +198,20 @@ theorem forall₂_drop_append (l : List α) (l₁ : List β) (l₂ : List β) (h
   have h' : Forall₂ R (dropₓ (length l₁) l) (dropₓ (length l₁) (l₁ ++ l₂)) := forall₂_drop (length l₁) h
   rwa [drop_left] at h'
 
-theorem rel_mem (hr : BiUnique R) : (R⇒Forall₂ R⇒Iff) (· ∈ ·) (· ∈ ·)
+theorem rel_mem (hr : BiUnique R) : (R ⇒ Forall₂ R ⇒ Iff) (· ∈ ·) (· ∈ ·)
   | a, b, h, [], [], forall₂.nil => by
     simp only [not_mem_nil]
   | a, b, h, a' :: as, b' :: bs, forall₂.cons h₁ h₂ => rel_or (rel_eq hr h h₁) (rel_mem h h₂)
 
-theorem rel_map : ((R⇒P)⇒Forall₂ R⇒Forall₂ P) map map
+theorem rel_map : ((R ⇒ P) ⇒ Forall₂ R ⇒ Forall₂ P) map map
   | f, g, h, [], [], forall₂.nil => Forall₂.nil
   | f, g, h, a :: as, b :: bs, forall₂.cons h₁ h₂ => Forall₂.cons (h h₁) (rel_map (@h) h₂)
 
-theorem rel_append : (Forall₂ R⇒Forall₂ R⇒Forall₂ R) append append
+theorem rel_append : (Forall₂ R ⇒ Forall₂ R ⇒ Forall₂ R) append append
   | [], [], h, l₁, l₂, hl => hl
   | a :: as, b :: bs, forall₂.cons h₁ h₂, l₁, l₂, hl => Forall₂.cons h₁ (rel_append h₂ hl)
 
-theorem rel_reverse : (Forall₂ R⇒Forall₂ R) reverse reverse
+theorem rel_reverse : (Forall₂ R ⇒ Forall₂ R) reverse reverse
   | [], [], forall₂.nil => Forall₂.nil
   | a :: as, b :: bs, forall₂.cons h₁ h₂ => by
     simp only [reverse_cons]
@@ -225,23 +225,23 @@ theorem forall₂_reverse_iff {l₁ l₂} : Forall₂ R (reverse l₁) (reverse 
       exact rel_reverse h)
     fun h => rel_reverse h
 
-theorem rel_join : (Forall₂ (Forall₂ R)⇒Forall₂ R) join join
+theorem rel_join : (Forall₂ (Forall₂ R) ⇒ Forall₂ R) join join
   | [], [], forall₂.nil => Forall₂.nil
   | a :: as, b :: bs, forall₂.cons h₁ h₂ => rel_append h₁ (rel_join h₂)
 
-theorem rel_bind : (Forall₂ R⇒(R⇒Forall₂ P)⇒Forall₂ P) List.bind List.bind := fun a b h₁ f g h₂ =>
+theorem rel_bind : (Forall₂ R ⇒ (R ⇒ Forall₂ P) ⇒ Forall₂ P) List.bind List.bind := fun a b h₁ f g h₂ =>
   rel_join (rel_map (@h₂) h₁)
 
-theorem rel_foldl : ((P⇒R⇒P)⇒P⇒Forall₂ R⇒P) foldlₓ foldlₓ
+theorem rel_foldl : ((P ⇒ R ⇒ P) ⇒ P ⇒ Forall₂ R ⇒ P) foldlₓ foldlₓ
   | f, g, hfg, _, _, h, _, _, forall₂.nil => h
   | f, g, hfg, x, y, hxy, _, _, forall₂.cons hab hs => rel_foldl (@hfg) (hfg hxy hab) hs
 
-theorem rel_foldr : ((R⇒P⇒P)⇒P⇒Forall₂ R⇒P) foldr foldr
+theorem rel_foldr : ((R ⇒ P ⇒ P) ⇒ P ⇒ Forall₂ R ⇒ P) foldr foldr
   | f, g, hfg, _, _, h, _, _, forall₂.nil => h
   | f, g, hfg, x, y, hxy, _, _, forall₂.cons hab hs => hfg hab (rel_foldr (@hfg) hxy hs)
 
-theorem rel_filter {p : α → Prop} {q : β → Prop} [DecidablePred p] [DecidablePred q] (hpq : (R⇒(· ↔ ·)) p q) :
-    (Forall₂ R⇒Forall₂ R) (filterₓ p) (filterₓ q)
+theorem rel_filter {p : α → Prop} {q : β → Prop} [DecidablePred p] [DecidablePred q] (hpq : (R ⇒ (· ↔ ·)) p q) :
+    (Forall₂ R ⇒ Forall₂ R) (filterₓ p) (filterₓ q)
   | _, _, forall₂.nil => Forall₂.nil
   | a :: as, b :: bs, forall₂.cons h₁ h₂ => by
     by_cases' p a
@@ -254,7 +254,7 @@ theorem rel_filter {p : α → Prop} {q : β → Prop} [DecidablePred p] [Decida
       simp only [filter_cons_of_neg _ h, filter_cons_of_neg _ this, rel_filter h₂]
       
 
-theorem rel_filter_map : ((R⇒Option.Rel P)⇒Forall₂ R⇒Forall₂ P) filterMap filterMap
+theorem rel_filter_map : ((R ⇒ Option.Rel P) ⇒ Forall₂ R ⇒ Forall₂ P) filterMap filterMap
   | f, g, hfg, _, _, forall₂.nil => Forall₂.nil
   | f, g, hfg, a :: as, b :: bs, forall₂.cons h₁ h₂ => by
     rw [filter_map_cons, filter_map_cons] <;>
@@ -264,7 +264,7 @@ theorem rel_filter_map : ((R⇒Option.Rel P)⇒Forall₂ R⇒Forall₂ P) filter
         | _, _, Option.Rel.some h => forall₂.cons h (rel_filter_map (@hfg) h₂)
 
 @[to_additive]
-theorem rel_prod [Monoidₓ α] [Monoidₓ β] (h : R 1 1) (hf : (R⇒R⇒R) (· * ·) (· * ·)) : (Forall₂ R⇒R) prod prod :=
+theorem rel_prod [Monoidₓ α] [Monoidₓ β] (h : R 1 1) (hf : (R ⇒ R ⇒ R) (· * ·) (· * ·)) : (Forall₂ R ⇒ R) prod prod :=
   rel_foldl hf h
 
 /-- Given a relation `R`, `sublist_forall₂ r l₁ l₂` indicates that there is a sublist of `l₂` such

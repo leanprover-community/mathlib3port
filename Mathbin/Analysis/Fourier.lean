@@ -170,7 +170,7 @@ theorem fourier_subalgebra_closure_eq_top : fourierSubalgebra.topologicalClosure
 /-- The linear span of the monomials `z ^ n` is dense in `C(circle, ℂ)`. -/
 theorem span_fourier_closure_eq_top : (span ℂ (Range fourier)).topologicalClosure = ⊤ := by
   rw [← fourier_subalgebra_coe]
-  exact congr_argₓ Subalgebra.toSubmodule fourier_subalgebra_closure_eq_top
+  exact congr_arg Subalgebra.toSubmodule fourier_subalgebra_closure_eq_top
 
 /-- The family of monomials `λ z, z ^ n`, parametrized by `n : ℤ` and considered as elements of
 the `Lp` space of functions on `circle` taking values in `ℂ`. -/
@@ -257,7 +257,7 @@ theorem tsum_sq_fourier_series_repr (f : lp ℂ 2 haarCircle) :
     norm_num
   have H₂ : ∥fourier_series.repr f∥ ^ 2 = ∥f∥ ^ 2 := by
     simp
-  have H₃ := congr_argₓ IsROrC.re (@L2.inner_def circle ℂ ℂ _ _ _ _ f f)
+  have H₃ := congr_arg IsROrC.re (@L2.inner_def circle ℂ ℂ _ _ _ _ f f)
   rw [← integral_re] at H₃
   · simp only [← norm_sq_eq_inner] at H₃
     rw [← H₁, H₂]

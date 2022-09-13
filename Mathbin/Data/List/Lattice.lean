@@ -146,7 +146,7 @@ theorem cons_unionₓ (l₁ l₂ : List α) (a : α) : a :: l₁ ∪ l₂ = inse
 
 @[simp]
 theorem mem_union : a ∈ l₁ ∪ l₂ ↔ a ∈ l₁ ∨ a ∈ l₂ := by
-  induction l₁ <;> simp only [nil_union, not_mem_nil, false_orₓ, cons_union, mem_insert_iff, mem_cons_iff, or_assoc, *]
+  induction l₁ <;> simp only [nil_union, not_mem_nil, false_orₓ, cons_union, mem_insert_iff, mem_cons_iff, or_assocₓ, *]
 
 theorem mem_union_left (h : a ∈ l₁) (l₂ : List α) : a ∈ l₁ ∪ l₂ :=
   mem_union.2 (Or.inl h)
@@ -283,13 +283,13 @@ theorem mem_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, a ∈ l₁.bagInter 
       
 
 @[simp]
-theorem count_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, count a (l₁.bagInter l₂) = min (count a l₁) (count a l₂)
+theorem count_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, countₓ a (l₁.bagInter l₂) = min (countₓ a l₁) (countₓ a l₂)
   | [], l₂ => by
     simp
   | l₁, [] => by
     simp
   | h₁ :: l₁, h₂ :: l₂ => by
-    simp only [List.bagInterₓ, List.mem_cons_iffₓ]
+    simp only [List.bagInterₓ, List.mem_cons_iff]
     by_cases' p₁ : h₂ = h₁ <;> by_cases' p₂ : h₁ = a
     · simp only [p₁, p₂, count_bag_inter, min_succ_succ, erase_cons_head, if_true, mem_cons_iff, count_cons_self,
         true_orₓ, eq_self_iff_true]

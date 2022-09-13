@@ -264,7 +264,7 @@ theorem nilpotent_iff_finite_descending_central_series :
   by `H 0` is all of `G` and for `n≥1`, `H (n + 1) = ⁅H n, G⁆` -/
 def lowerCentralSeries (G : Type _) [Groupₓ G] : ℕ → Subgroup G
   | 0 => ⊤
-  | n + 1 => ⁅lowerCentralSeries n,⊤⁆
+  | n + 1 => ⁅lowerCentralSeries n, ⊤⁆
 
 variable {G}
 
@@ -295,7 +295,7 @@ instance (n : ℕ) : Normal (lowerCentralSeries G n) := by
 
 theorem lower_central_series_antitone : Antitone (lowerCentralSeries G) := by
   refine' antitone_nat_of_succ_le fun n x hx => _
-  simp only [mem_lower_central_series_succ_iff, exists_prop, mem_top, exists_true_left, true_andₓ] at hx
+  simp only [mem_lower_central_series_succ_iff, exists_propₓ, mem_top, exists_true_left, true_andₓ] at hx
   refine' closure_induction hx _ (Subgroup.one_mem _) (@Subgroup.mul_mem _ _ _) (@Subgroup.inv_mem _ _ _)
   rintro y ⟨z, hz, a, ha⟩
   rw [← ha, mul_assoc, mul_assoc, ← mul_assoc a z⁻¹ a⁻¹]
@@ -687,12 +687,12 @@ theorem lower_central_series_prod (n : ℕ) :
   · simp
     
   · calc
-      lowerCentralSeries (G₁ × G₂) n.succ = ⁅lowerCentralSeries (G₁ × G₂) n,⊤⁆ := rfl
-      _ = ⁅(lowerCentralSeries G₁ n).Prod (lowerCentralSeries G₂ n),⊤⁆ := by
+      lowerCentralSeries (G₁ × G₂) n.succ = ⁅lowerCentralSeries (G₁ × G₂) n, ⊤⁆ := rfl
+      _ = ⁅(lowerCentralSeries G₁ n).Prod (lowerCentralSeries G₂ n), ⊤⁆ := by
         rw [ih]
-      _ = ⁅(lowerCentralSeries G₁ n).Prod (lowerCentralSeries G₂ n),(⊤ : Subgroup G₁).Prod ⊤⁆ := by
+      _ = ⁅(lowerCentralSeries G₁ n).Prod (lowerCentralSeries G₂ n), (⊤ : Subgroup G₁).Prod ⊤⁆ := by
         simp
-      _ = ⁅lowerCentralSeries G₁ n,(⊤ : Subgroup G₁)⁆.Prod ⁅lowerCentralSeries G₂ n,⊤⁆ := commutator_prod_prod _ _ _ _
+      _ = ⁅lowerCentralSeries G₁ n, (⊤ : Subgroup G₁)⁆.Prod ⁅lowerCentralSeries G₂ n, ⊤⁆ := commutator_prod_prod _ _ _ _
       _ = (lowerCentralSeries G₁ n.succ).Prod (lowerCentralSeries G₂ n.succ) := rfl
       
     
@@ -725,11 +725,11 @@ theorem lower_central_series_pi_le (n : ℕ) :
   · simp [pi_top]
     
   · calc
-      lowerCentralSeries (∀ i, Gs i) n.succ = ⁅lowerCentralSeries (∀ i, Gs i) n,⊤⁆ := rfl
-      _ ≤ ⁅pi fun i => lowerCentralSeries (Gs i) n,⊤⁆ := commutator_mono ih (le_reflₓ _)
-      _ = ⁅pi fun i => lowerCentralSeries (Gs i) n,pi fun i => ⊤⁆ := by
+      lowerCentralSeries (∀ i, Gs i) n.succ = ⁅lowerCentralSeries (∀ i, Gs i) n, ⊤⁆ := rfl
+      _ ≤ ⁅pi fun i => lowerCentralSeries (Gs i) n, ⊤⁆ := commutator_mono ih (le_reflₓ _)
+      _ = ⁅pi fun i => lowerCentralSeries (Gs i) n, pi fun i => ⊤⁆ := by
         simp [pi, pi_top]
-      _ ≤ pi fun i => ⁅lowerCentralSeries (Gs i) n,⊤⁆ := commutator_pi_pi_le _ _
+      _ ≤ pi fun i => ⁅lowerCentralSeries (Gs i) n, ⊤⁆ := commutator_pi_pi_le _ _
       _ = pi fun i => lowerCentralSeries (Gs i) n.succ := rfl
       
     
@@ -759,12 +759,12 @@ theorem lower_central_series_pi_of_finite [Finite η] (n : ℕ) :
   · simp [pi_top]
     
   · calc
-      lowerCentralSeries (∀ i, Gs i) n.succ = ⁅lowerCentralSeries (∀ i, Gs i) n,⊤⁆ := rfl
-      _ = ⁅pi fun i => lowerCentralSeries (Gs i) n,⊤⁆ := by
+      lowerCentralSeries (∀ i, Gs i) n.succ = ⁅lowerCentralSeries (∀ i, Gs i) n, ⊤⁆ := rfl
+      _ = ⁅pi fun i => lowerCentralSeries (Gs i) n, ⊤⁆ := by
         rw [ih]
-      _ = ⁅pi fun i => lowerCentralSeries (Gs i) n,pi fun i => ⊤⁆ := by
+      _ = ⁅pi fun i => lowerCentralSeries (Gs i) n, pi fun i => ⊤⁆ := by
         simp [pi, pi_top]
-      _ = pi fun i => ⁅lowerCentralSeries (Gs i) n,⊤⁆ := commutator_pi_pi_of_finite _ _
+      _ = pi fun i => ⁅lowerCentralSeries (Gs i) n, ⊤⁆ := commutator_pi_pi_of_finite _ _
       _ = pi fun i => lowerCentralSeries (Gs i) n.succ := rfl
       
     

@@ -263,7 +263,7 @@ theorem IsBaseChange.of_lift_unique
     · simp only [map_zero]
       
     · intro x y
-      have := (congr_argₓ (fun a => x • a) (LinearMap.congr_fun hg y)).trans (ulift.module_equiv.symm.map_smul x _).symm
+      have := (congr_arg (fun a => x • a) (LinearMap.congr_fun hg y)).trans (ulift.module_equiv.symm.map_smul x _).symm
       apply (ULift.moduleEquiv : ULift.{v₂} (S ⊗ M) ≃ₗ[S] S ⊗ M).toEquiv.apply_eq_iff_eq_symm_apply.mpr
       any_goals {
       }

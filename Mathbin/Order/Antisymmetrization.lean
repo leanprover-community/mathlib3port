@@ -164,7 +164,7 @@ def OrderHom.toAntisymmetrization : α →o Antisymmetrization α (· ≤ ·) :=
   ⟨toAntisymmetrization (· ≤ ·), fun a b => id⟩
 
 private theorem lift_fun_antisymm_rel (f : α →o β) :
-    ((AntisymmRel.setoid α (· ≤ ·)).R⇒(AntisymmRel.setoid β (· ≤ ·)).R) f f := fun a b h => ⟨f.mono h.1, f.mono h.2⟩
+    ((AntisymmRel.setoid α (· ≤ ·)).R ⇒ (AntisymmRel.setoid β (· ≤ ·)).R) f f := fun a b h => ⟨f.mono h.1, f.mono h.2⟩
 
 /-- Turns an order homomorphism from `α` to `β` into one from `antisymmetrization α` to
 `antisymmetrization β`. `antisymmetrization` is actually a functor. See `Preorder_to_PartialOrder`.

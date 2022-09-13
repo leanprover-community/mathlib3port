@@ -58,7 +58,7 @@ theorem unique_iff_exists_unique (α : Sort u) : Nonempty (Unique α) ↔ ∃! a
   ⟨fun ⟨u⟩ => ⟨u.default, trivialₓ, fun a _ => u.uniq a⟩, fun ⟨a, _, h⟩ => ⟨⟨⟨a⟩, fun _ => h _ trivialₓ⟩⟩⟩
 
 theorem unique_subtype_iff_exists_unique {α} (p : α → Prop) : Nonempty (Unique (Subtype p)) ↔ ∃! a, p a :=
-  ⟨fun ⟨u⟩ => ⟨u.default.1, u.default.2, fun a h => congr_argₓ Subtype.val (u.uniq ⟨a, h⟩)⟩, fun ⟨a, ha, he⟩ =>
+  ⟨fun ⟨u⟩ => ⟨u.default.1, u.default.2, fun a h => congr_arg Subtype.val (u.uniq ⟨a, h⟩)⟩, fun ⟨a, ha, he⟩ =>
     ⟨⟨⟨⟨a, ha⟩⟩, fun ⟨b, hb⟩ => by
         congr
         exact he b hb⟩⟩⟩
@@ -197,7 +197,7 @@ protected theorem Injective.subsingleton (hf : Injective f) [Subsingleton β] : 
 /-- If the domain of a surjective function is a subsingleton, then the codomain is a subsingleton as
 well. -/
 protected theorem Surjective.subsingleton [Subsingleton α] (hf : Surjective f) : Subsingleton β :=
-  ⟨hf.Forall₂.2 fun x y => congr_argₓ f <| Subsingleton.elim x y⟩
+  ⟨hf.Forall₂.2 fun x y => congr_arg f <| Subsingleton.elim x y⟩
 
 /-- If the domain of a surjective function is a singleton,
 then the codomain is a singleton as well. -/

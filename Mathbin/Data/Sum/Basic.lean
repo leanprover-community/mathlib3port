@@ -97,10 +97,10 @@ theorem get_right_eq_none_iff : x.getRight = none ↔ x.isLeft := by
 end get
 
 theorem inl.inj_iff {a b} : (inl a : Sum α β) = inl b ↔ a = b :=
-  ⟨inl.injₓ, congr_argₓ _⟩
+  ⟨inl.injₓ, congr_arg _⟩
 
 theorem inr.inj_iff {a b} : (inr a : Sum α β) = inr b ↔ a = b :=
-  ⟨inr.injₓ, congr_argₓ _⟩
+  ⟨inr.injₓ, congr_arg _⟩
 
 theorem inl_ne_inr {a : α} {b : β} : inl a ≠ inr b :=
   fun.
@@ -402,22 +402,22 @@ namespace Function
 
 theorem Injective.sum_elim {f : α → γ} {g : β → γ} (hf : Injective f) (hg : Injective g) (hfg : ∀ a b, f a ≠ g b) :
     Injective (Sum.elim f g)
-  | inl x, inl y, h => congr_argₓ inl <| hf h
+  | inl x, inl y, h => congr_arg inl <| hf h
   | inl x, inr y, h => (hfg x y h).elim
   | inr x, inl y, h => (hfg y x h.symm).elim
-  | inr x, inr y, h => congr_argₓ inr <| hg h
+  | inr x, inr y, h => congr_arg inr <| hg h
 
 theorem Injective.sum_map {f : α → β} {g : α' → β'} (hf : Injective f) (hg : Injective g) : Injective (Sum.map f g)
-  | inl x, inl y, h => congr_argₓ inl <| hf <| inl.injₓ h
-  | inr x, inr y, h => congr_argₓ inr <| hg <| inr.injₓ h
+  | inl x, inl y, h => congr_arg inl <| hf <| inl.injₓ h
+  | inr x, inr y, h => congr_arg inr <| hg <| inr.injₓ h
 
 theorem Surjective.sum_map {f : α → β} {g : α' → β'} (hf : Surjective f) (hg : Surjective g) : Surjective (Sum.map f g)
   | inl y =>
     let ⟨x, hx⟩ := hf y
-    ⟨inl x, congr_argₓ inl hx⟩
+    ⟨inl x, congr_arg inl hx⟩
   | inr y =>
     let ⟨x, hx⟩ := hg y
-    ⟨inr x, congr_argₓ inr hx⟩
+    ⟨inr x, congr_arg inr hx⟩
 
 end Function
 

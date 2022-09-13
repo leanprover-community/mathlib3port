@@ -33,7 +33,7 @@ it is a member of the support of a member of the collection:
 variable {ι M : Type _} [DecidableEq ι]
 
 theorem List.support_sum_subset [AddMonoidₓ M] (l : List (ι →₀ M)) :
-    l.Sum.Support ⊆ l.foldr ((·⊔·) ∘ Finsupp.support) ∅ := by
+    l.Sum.Support ⊆ l.foldr ((· ⊔ ·) ∘ Finsupp.support) ∅ := by
   induction' l with hd tl IH
   · simp
     
@@ -53,12 +53,12 @@ theorem Finset.support_sum_subset [AddCommMonoidₓ M] (s : Finset (ι →₀ M)
   convert Multiset.support_sum_subset s.1 <;> simp
 
 theorem List.mem_foldr_sup_support_iff [Zero M] {l : List (ι →₀ M)} {x : ι} :
-    x ∈ l.foldr ((·⊔·) ∘ Finsupp.support) ∅ ↔ ∃ (f : ι →₀ M)(hf : f ∈ l), x ∈ f.Support := by
-  simp only [Finset.sup_eq_union, List.foldr_map, Finsupp.mem_support_iff, exists_prop]
+    x ∈ l.foldr ((· ⊔ ·) ∘ Finsupp.support) ∅ ↔ ∃ (f : ι →₀ M)(hf : f ∈ l), x ∈ f.Support := by
+  simp only [Finset.sup_eq_union, List.foldr_map, Finsupp.mem_support_iff, exists_propₓ]
   induction' l with hd tl IH
   · simp
     
-  · simp only [IH, List.foldr_cons, Finset.mem_union, Finsupp.mem_support_iff, List.mem_cons_iffₓ]
+  · simp only [IH, List.foldr_cons, Finset.mem_union, Finsupp.mem_support_iff, List.mem_cons_iff]
     constructor
     · rintro (h | h)
       · exact ⟨hd, Or.inl rfl, h⟩
@@ -84,14 +84,14 @@ theorem Finset.mem_sup_support_iff [Zero M] {s : Finset (ι →₀ M)} {x : ι} 
   Multiset.mem_sup_map_support_iff
 
 theorem List.support_sum_eq [AddMonoidₓ M] (l : List (ι →₀ M)) (hl : l.Pairwise (Disjoint on Finsupp.support)) :
-    l.Sum.Support = l.foldr ((·⊔·) ∘ Finsupp.support) ∅ := by
+    l.Sum.Support = l.foldr ((· ⊔ ·) ∘ Finsupp.support) ∅ := by
   induction' l with hd tl IH
   · simp
     
   · simp only [List.pairwise_cons] at hl
     simp only [List.sum_cons, List.foldr_cons, Function.comp_app]
     rw [Finsupp.support_add_eq, IH hl.right, Finset.sup_eq_union]
-    suffices Disjoint hd.support (tl.foldr ((·⊔·) ∘ Finsupp.support) ∅) by
+    suffices Disjoint hd.support (tl.foldr ((· ⊔ ·) ∘ Finsupp.support) ∅) by
       exact Finset.disjoint_of_subset_right (List.support_sum_subset _) this
     · rw [← List.foldr_map, ← Finset.bot_eq_empty, List.foldr_sup_eq_sup_to_finset]
       rw [Finset.disjoint_sup_right]

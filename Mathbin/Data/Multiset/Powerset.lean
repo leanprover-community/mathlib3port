@@ -26,7 +26,7 @@ of sublists of `l` (using `sublists_aux`), as multisets. -/
 def powersetAux (l : List α) : List (Multiset α) :=
   0 :: sublistsAux l fun x y => x :: y
 
-theorem powerset_aux_eq_map_coe {l : List α} : powersetAux l = (sublists l).map coe := by
+theorem powerset_aux_eq_map_coe {l : List α} : powersetAux l = (sublistsₓ l).map coe := by
   simp [powerset_aux, sublists] <;>
     rw [←
         show (@sublists_aux₁ α (Multiset α) l fun x => [↑x]) = sublists_aux l fun x => List.cons ↑x from
@@ -42,7 +42,7 @@ theorem mem_powerset_aux {l : List α} {s} : s ∈ powersetAux l ↔ s ≤ ↑l 
 /-- Helper function for the powerset of a multiset. Given a list `l`, returns a list
 of sublists of `l` (using `sublists'`), as multisets. -/
 def powersetAux' (l : List α) : List (Multiset α) :=
-  (sublists' l).map coe
+  (sublists'ₓ l).map coe
 
 theorem powerset_aux_perm_powerset_aux' {l : List α} : powersetAux l ~ powersetAux' l := by
   rw [powerset_aux_eq_map_coe] <;> exact (sublists_perm_sublists' _).map _
@@ -80,11 +80,11 @@ theorem powerset_aux_perm {l₁ l₂ : List α} (p : l₁ ~ l₂) : powersetAux 
 def powerset (s : Multiset α) : Multiset (Multiset α) :=
   Quot.liftOn s (fun l => (powersetAux l : Multiset (Multiset α))) fun l₁ l₂ h => Quot.sound (powerset_aux_perm h)
 
-theorem powerset_coe (l : List α) : @powerset α l = ((sublists l).map coe : List (Multiset α)) :=
-  congr_argₓ coe powerset_aux_eq_map_coe
+theorem powerset_coe (l : List α) : @powerset α l = ((sublistsₓ l).map coe : List (Multiset α)) :=
+  congr_arg coe powerset_aux_eq_map_coe
 
 @[simp]
-theorem powerset_coe' (l : List α) : @powerset α l = ((sublists' l).map coe : List (Multiset α)) :=
+theorem powerset_coe' (l : List α) : @powerset α l = ((sublists'ₓ l).map coe : List (Multiset α)) :=
   Quot.sound powerset_aux_perm_powerset_aux'
 
 @[simp]
@@ -215,7 +215,7 @@ theorem powerset_len_coe' (n) (l : List α) : @powersetLen α n l = powersetLenA
   rfl
 
 theorem powerset_len_coe (n) (l : List α) : @powersetLen α n l = ((sublistsLen n l).map coe : List (Multiset α)) :=
-  congr_argₓ coe powerset_len_aux_eq_map_coe
+  congr_arg coe powerset_len_aux_eq_map_coe
 
 @[simp]
 theorem powerset_len_zero_left (s : Multiset α) : powersetLen 0 s = {0} :=

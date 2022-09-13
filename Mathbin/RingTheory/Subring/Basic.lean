@@ -600,14 +600,14 @@ theorem mem_bot {x : R} : x ∈ (⊥ : Subring R) ↔ ∃ n : ℤ, ↑n = x :=
 
 /-- The inf of two subrings is their intersection. -/
 instance : HasInf (Subring R) :=
-  ⟨fun s t => { s.toSubmonoid⊓t.toSubmonoid, s.toAddSubgroup⊓t.toAddSubgroup with Carrier := s ∩ t }⟩
+  ⟨fun s t => { s.toSubmonoid ⊓ t.toSubmonoid, s.toAddSubgroup ⊓ t.toAddSubgroup with Carrier := s ∩ t }⟩
 
 @[simp]
-theorem coe_inf (p p' : Subring R) : ((p⊓p' : Subring R) : Set R) = p ∩ p' :=
+theorem coe_inf (p p' : Subring R) : ((p ⊓ p' : Subring R) : Set R) = p ∩ p' :=
   rfl
 
 @[simp]
-theorem mem_inf {p p' : Subring R} {x : R} : x ∈ p⊓p' ↔ x ∈ p ∧ x ∈ p' :=
+theorem mem_inf {p p' : Subring R} {x : R} : x ∈ p ⊓ p' ↔ x ∈ p ∧ x ∈ p' :=
   Iff.rfl
 
 instance : HasInfₓ (Subring R) :=
@@ -625,6 +625,13 @@ theorem coe_Inf (S : Set (Subring R)) : ((inf S : Subring R) : Set R) = ⋂ s �
 theorem mem_Inf {S : Set (Subring R)} {x : R} : x ∈ inf S ↔ ∀ p ∈ S, x ∈ p :=
   Set.mem_Inter₂
 
+@[simp, norm_cast]
+theorem coe_infi {ι : Sort _} {S : ι → Subring R} : (↑(⨅ i, S i) : Set R) = ⋂ i, S i := by
+  simp only [infi, coe_Inf, Set.bInter_range]
+
+theorem mem_infi {ι : Sort _} {S : ι → Subring R} {x : R} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
+  simp only [infi, mem_Inf, Set.forall_range_iff]
+
 @[simp]
 theorem Inf_to_submonoid (s : Set (Subring R)) : (inf s).toSubmonoid = ⨅ t ∈ s, Subring.toSubmonoid t :=
   mk'_to_submonoid _ _
@@ -641,7 +648,7 @@ instance : CompleteLattice (Subring R) :=
     bot_le := fun s x hx =>
       let ⟨n, hn⟩ := mem_bot.1 hx
       hn ▸ coe_int_mem s n,
-    top := ⊤, le_top := fun s x hx => trivialₓ, inf := (·⊓·), inf_le_left := fun s t x => And.left,
+    top := ⊤, le_top := fun s x hx => trivialₓ, inf := (· ⊓ ·), inf_le_left := fun s t x => And.left,
     inf_le_right := fun s t x => And.right, le_inf := fun s t₁ t₂ h₁ h₂ x hx => ⟨h₁ hx, h₂ hx⟩ }
 
 theorem eq_top_iff' (A : Subring R) : A = ⊤ ↔ ∀ x : R, x ∈ A :=
@@ -867,7 +874,7 @@ theorem closure_empty : closure (∅ : Set R) = ⊥ :=
 theorem closure_univ : closure (Set.Univ : Set R) = ⊤ :=
   @coe_top R _ ▸ closure_eq ⊤
 
-theorem closure_union (s t : Set R) : closure (s ∪ t) = closure s⊔closure t :=
+theorem closure_union (s t : Set R) : closure (s ∪ t) = closure s ⊔ closure t :=
   (Subring.gi R).gc.l_sup
 
 theorem closure_Union {ι} (s : ι → Set R) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
@@ -876,13 +883,13 @@ theorem closure_Union {ι} (s : ι → Set R) : closure (⋃ i, s i) = ⨆ i, cl
 theorem closure_sUnion (s : Set (Set R)) : closure (⋃₀s) = ⨆ t ∈ s, closure t :=
   (Subring.gi R).gc.l_Sup
 
-theorem map_sup (s t : Subring R) (f : R →+* S) : (s⊔t).map f = s.map f⊔t.map f :=
+theorem map_sup (s t : Subring R) (f : R →+* S) : (s ⊔ t).map f = s.map f ⊔ t.map f :=
   (gc_map_comap f).l_sup
 
 theorem map_supr {ι : Sort _} (f : R →+* S) (s : ι → Subring R) : (supr s).map f = ⨆ i, (s i).map f :=
   (gc_map_comap f).l_supr
 
-theorem comap_inf (s t : Subring S) (f : R →+* S) : (s⊓t).comap f = s.comap f⊓t.comap f :=
+theorem comap_inf (s t : Subring S) (f : R →+* S) : (s ⊓ t).comap f = s.comap f ⊓ t.comap f :=
   (gc_map_comap f).u_inf
 
 theorem comap_infi {ι : Sort _} (f : R →+* S) (s : ι → Subring S) : (infi s).comap f = ⨅ i, (s i).comap f :=
@@ -1055,11 +1062,11 @@ theorem range_snd : (snd R S).srange = ⊤ :=
   (snd R S).srange_top_of_surjective <| Prod.snd_surjectiveₓ
 
 @[simp]
-theorem prod_bot_sup_bot_prod (s : Subring R) (t : Subring S) : s.Prod ⊥⊔prod ⊥ t = s.Prod t :=
+theorem prod_bot_sup_bot_prod (s : Subring R) (t : Subring S) : s.Prod ⊥ ⊔ prod ⊥ t = s.Prod t :=
   (le_antisymmₓ (sup_le (prod_mono_right s bot_le) (prod_mono_left t bot_le))) fun p hp =>
     Prod.fst_mul_snd p ▸
-      mul_mem ((le_sup_left : s.Prod ⊥ ≤ s.Prod ⊥⊔prod ⊥ t) ⟨hp.1, SetLike.mem_coe.2 <| one_mem ⊥⟩)
-        ((le_sup_right : prod ⊥ t ≤ s.Prod ⊥⊔prod ⊥ t) ⟨SetLike.mem_coe.2 <| one_mem ⊥, hp.2⟩)
+      mul_mem ((le_sup_left : s.Prod ⊥ ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨hp.1, SetLike.mem_coe.2 <| one_mem ⊥⟩)
+        ((le_sup_right : prod ⊥ t ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨SetLike.mem_coe.2 <| one_mem ⊥, hp.2⟩)
 
 end Subring
 
@@ -1070,7 +1077,7 @@ variable {s t : Subring R}
 /-- Makes the identity isomorphism from a proof two subrings of a multiplicative
     monoid are equal. -/
 def subringCongr (h : s = t) : s ≃+* t :=
-  { Equivₓ.setCongr <| congr_argₓ _ h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
+  { Equivₓ.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
 
 /-- Restrict a ring homomorphism with a left inverse to a ring isomorphism to its
 `ring_hom.range`. -/

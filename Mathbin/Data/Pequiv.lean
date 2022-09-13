@@ -84,7 +84,7 @@ theorem ext : ∀ {f g : α ≃. β} (h : ∀ x, f x = g x), f = g
     simp [*, funext_iff]
 
 theorem ext_iff {f g : α ≃. β} : f = g ↔ ∀ x, f x = g x :=
-  ⟨congr_funₓ ∘ congr_argₓ _, ext⟩
+  ⟨congr_fun ∘ congr_arg _, ext⟩
 
 /-- The identity map as a partial equivalence. -/
 @[refl]
@@ -189,9 +189,9 @@ def ofSet (s : Set α) [DecidablePred (· ∈ s)] : α ≃. α where
     split_ifs with hb ha ha
     · simp [eq_comm]
       
-    · simp [ne_of_mem_of_not_mem hb ha]
+    · simp [ne_of_mem_of_not_memₓ hb ha]
       
-    · simp [ne_of_mem_of_not_mem ha hb]
+    · simp [ne_of_mem_of_not_memₓ ha hb]
       
     · simp
       

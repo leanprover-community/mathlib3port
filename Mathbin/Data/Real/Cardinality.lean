@@ -187,7 +187,7 @@ theorem cantor_function_injective (h1 : 0 < c) (h2 : c < 1 / 2) : Function.Injec
     
 
 /-- The cardinality of the reals, as a type. -/
-theorem mk_real : # ℝ = 𝔠 := by
+theorem mk_real : (#ℝ) = 𝔠 := by
   apply le_antisymmₓ
   · rw [real.equiv_Cauchy.cardinal_eq]
     apply mk_quotient_le.trans
@@ -202,16 +202,16 @@ theorem mk_real : # ℝ = 𝔠 := by
     
 
 /-- The cardinality of the reals, as a set. -/
-theorem mk_univ_real : # (Set.Univ : Set ℝ) = 𝔠 := by
+theorem mk_univ_real : (#(Set.Univ : Set ℝ)) = 𝔠 := by
   rw [mk_univ, mk_real]
 
 /-- **Non-Denumerability of the Continuum**: The reals are not countable. -/
 theorem not_countable_real : ¬(Set.Univ : Set ℝ).Countable := by
-  rw [← mk_set_le_aleph_0, not_leₓ, mk_univ_real]
+  rw [← le_aleph_0_iff_set_countable, not_leₓ, mk_univ_real]
   apply cantor
 
 /-- The cardinality of the interval (a, ∞). -/
-theorem mk_Ioi_real (a : ℝ) : # (Ioi a) = 𝔠 := by
+theorem mk_Ioi_real (a : ℝ) : (#Ioi a) = 𝔠 := by
   refine' le_antisymmₓ (mk_real ▸ mk_set_le _) _
   rw [← not_ltₓ]
   intro h
@@ -232,11 +232,11 @@ theorem mk_Ioi_real (a : ℝ) : # (Ioi a) = 𝔠 := by
   exact one_lt_aleph_0.trans (cantor _)
 
 /-- The cardinality of the interval [a, ∞). -/
-theorem mk_Ici_real (a : ℝ) : # (Ici a) = 𝔠 :=
+theorem mk_Ici_real (a : ℝ) : (#Ici a) = 𝔠 :=
   le_antisymmₓ (mk_real ▸ mk_set_le _) (mk_Ioi_real a ▸ mk_le_mk_of_subset Ioi_subset_Ici_self)
 
 /-- The cardinality of the interval (-∞, a). -/
-theorem mk_Iio_real (a : ℝ) : # (Iio a) = 𝔠 := by
+theorem mk_Iio_real (a : ℝ) : (#Iio a) = 𝔠 := by
   refine' le_antisymmₓ (mk_real ▸ mk_set_le _) _
   have h2 : (fun x => a + a - x) '' Iio a = Ioi a := by
     convert image_const_sub_Iio _ _
@@ -244,30 +244,30 @@ theorem mk_Iio_real (a : ℝ) : # (Iio a) = 𝔠 := by
   exact mk_Ioi_real a ▸ h2 ▸ mk_image_le
 
 /-- The cardinality of the interval (-∞, a]. -/
-theorem mk_Iic_real (a : ℝ) : # (Iic a) = 𝔠 :=
+theorem mk_Iic_real (a : ℝ) : (#Iic a) = 𝔠 :=
   le_antisymmₓ (mk_real ▸ mk_set_le _) (mk_Iio_real a ▸ mk_le_mk_of_subset Iio_subset_Iic_self)
 
 /-- The cardinality of the interval (a, b). -/
-theorem mk_Ioo_real {a b : ℝ} (h : a < b) : # (Ioo a b) = 𝔠 := by
+theorem mk_Ioo_real {a b : ℝ} (h : a < b) : (#Ioo a b) = 𝔠 := by
   refine' le_antisymmₓ (mk_real ▸ mk_set_le _) _
-  have h1 : # ((fun x => x - a) '' Ioo a b) ≤ # (Ioo a b) := mk_image_le
+  have h1 : (#(fun x => x - a) '' Ioo a b) ≤ (#Ioo a b) := mk_image_le
   refine' le_transₓ _ h1
   rw [image_sub_const_Ioo, sub_self]
   replace h := sub_pos_of_lt h
-  have h2 : # (Inv.inv '' Ioo 0 (b - a)) ≤ # (Ioo 0 (b - a)) := mk_image_le
+  have h2 : (#Inv.inv '' Ioo 0 (b - a)) ≤ (#Ioo 0 (b - a)) := mk_image_le
   refine' le_transₓ _ h2
   rw [image_inv, inv_Ioo_0_left h, mk_Ioi_real]
 
 /-- The cardinality of the interval [a, b). -/
-theorem mk_Ico_real {a b : ℝ} (h : a < b) : # (Ico a b) = 𝔠 :=
+theorem mk_Ico_real {a b : ℝ} (h : a < b) : (#Ico a b) = 𝔠 :=
   le_antisymmₓ (mk_real ▸ mk_set_le _) (mk_Ioo_real h ▸ mk_le_mk_of_subset Ioo_subset_Ico_self)
 
 /-- The cardinality of the interval [a, b]. -/
-theorem mk_Icc_real {a b : ℝ} (h : a < b) : # (Icc a b) = 𝔠 :=
+theorem mk_Icc_real {a b : ℝ} (h : a < b) : (#Icc a b) = 𝔠 :=
   le_antisymmₓ (mk_real ▸ mk_set_le _) (mk_Ioo_real h ▸ mk_le_mk_of_subset Ioo_subset_Icc_self)
 
 /-- The cardinality of the interval (a, b]. -/
-theorem mk_Ioc_real {a b : ℝ} (h : a < b) : # (Ioc a b) = 𝔠 :=
+theorem mk_Ioc_real {a b : ℝ} (h : a < b) : (#Ioc a b) = 𝔠 :=
   le_antisymmₓ (mk_real ▸ mk_set_le _) (mk_Ioo_real h ▸ mk_le_mk_of_subset Ioo_subset_Ioc_self)
 
 end Cardinal

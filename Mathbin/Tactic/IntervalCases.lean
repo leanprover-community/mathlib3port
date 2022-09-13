@@ -69,7 +69,7 @@ unsafe def gives_upper_bound (n e : expr) : tactic expr := do
       match tn with
         | quote.1 ℕ => to_expr (pquote.1 (Nat.lt_add_one_iff.mpr (%%ₓe)))
         | quote.1 ℕ+ => to_expr (pquote.1 (Pnat.lt_add_one_iff.mpr (%%ₓe)))
-        | quote.1 ℤ => to_expr (pquote.1 (Int.lt_add_one_iff.mpr (%%ₓe)))
+        | quote.1 ℤ => to_expr (pquote.1 (Int.lt_add_one_iffₓ.mpr (%%ₓe)))
         | _ => failed
     | quote.1 ((%%ₓb) ≥ %%ₓn') => do
       guardₓ (n = n')
@@ -78,7 +78,7 @@ unsafe def gives_upper_bound (n e : expr) : tactic expr := do
       match tn with
         | quote.1 ℕ => to_expr (pquote.1 (Nat.lt_add_one_iff.mpr (%%ₓe)))
         | quote.1 ℕ+ => to_expr (pquote.1 (Pnat.lt_add_one_iff.mpr (%%ₓe)))
-        | quote.1 ℤ => to_expr (pquote.1 (Int.lt_add_one_iff.mpr (%%ₓe)))
+        | quote.1 ℤ => to_expr (pquote.1 (Int.lt_add_one_iffₓ.mpr (%%ₓe)))
         | _ => failed
     | _ => failed
 
@@ -104,7 +104,7 @@ unsafe def gives_lower_bound (n e : expr) : tactic expr := do
       match tn with
         | quote.1 ℕ => to_expr (pquote.1 (Nat.add_one_le_iff.mpr (%%ₓe)))
         | quote.1 ℕ+ => to_expr (pquote.1 (Pnat.add_one_le_iff.mpr (%%ₓe)))
-        | quote.1 ℤ => to_expr (pquote.1 (Int.add_one_le_iff.mpr (%%ₓe)))
+        | quote.1 ℤ => to_expr (pquote.1 (Int.add_one_le_iffₓ.mpr (%%ₓe)))
         | _ => failed
     | quote.1 ((%%ₓb) < %%ₓn') => do
       guardₓ (n = n')
@@ -113,7 +113,7 @@ unsafe def gives_lower_bound (n e : expr) : tactic expr := do
       match tn with
         | quote.1 ℕ => to_expr (pquote.1 (Nat.add_one_le_iff.mpr (%%ₓe)))
         | quote.1 ℕ+ => to_expr (pquote.1 (Pnat.add_one_le_iff.mpr (%%ₓe)))
-        | quote.1 ℤ => to_expr (pquote.1 (Int.add_one_le_iff.mpr (%%ₓe)))
+        | quote.1 ℤ => to_expr (pquote.1 (Int.add_one_le_iffₓ.mpr (%%ₓe)))
         | _ => failed
     | _ => failed
 
@@ -163,7 +163,7 @@ unsafe def initial_upper_bound (n : expr) : tactic expr := do
         match tn with
           | quote.1 ℕ => to_expr (pquote.1 (Nat.add_one_le_iff.mpr (%%ₓe)))
           | quote.1 ℕ+ => to_expr (pquote.1 (Pnat.add_one_le_iff.mpr (%%ₓe)))
-          | quote.1 ℤ => to_expr (pquote.1 (Int.add_one_le_iff.mpr (%%ₓe)))
+          | quote.1 ℤ => to_expr (pquote.1 (Int.add_one_le_iffₓ.mpr (%%ₓe)))
           | _ => failed
       return e
     | _ => failed

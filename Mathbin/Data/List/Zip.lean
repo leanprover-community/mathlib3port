@@ -169,7 +169,7 @@ theorem mem_zip {a b} : ∀ {l₁ : List α} {l₂ : List β}, (a, b) ∈ zipₓ
   | a' :: l₁, b' :: l₂, Or.inr h => by
     constructor <;> simp only [mem_cons_iff, or_trueₓ, mem_zip h]
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 theorem map_fst_zip : ∀ (l₁ : List α) (l₂ : List β), l₁.length ≤ l₂.length → map Prod.fst (zipₓ l₁ l₂) = l₁
   | [], bs, _ => rfl
   | a :: as, b :: bs, h => by
@@ -179,7 +179,7 @@ theorem map_fst_zip : ∀ (l₁ : List α) (l₂ : List β), l₁.length ≤ l�
     simp at h
     contradiction
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 theorem map_snd_zip : ∀ (l₁ : List α) (l₂ : List β), l₂.length ≤ l₁.length → map Prod.snd (zipₓ l₁ l₂) = l₂
   | _, [], _ => by
     rw [zip_nil_right]

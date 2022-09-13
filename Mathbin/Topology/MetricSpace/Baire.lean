@@ -124,7 +124,7 @@ instance (priority := 100) baire_category_theorem_emetric_complete [PseudoEmetri
   -- this point `y` will be the desired point. We will check that it belongs to all
   -- `f n` and to `ball x ε`.
   use y
-  simp only [exists_prop, Set.mem_Inter]
+  simp only [exists_propₓ, Set.mem_Inter]
   have I : ∀ n, ∀ m ≥ n, closed_ball (c m) (r m) ⊆ closed_ball (c n) (r n) := by
     intro n
     refine' Nat.le_induction _ fun m hnm h => _
@@ -279,7 +279,7 @@ theorem eventually_residual {p : α → Prop} : (∀ᶠ x in residual α, p x) �
             simp ⟩)
         ⟨Univ, is_Gδ_univ, dense_univ⟩
     _ ↔ _ := by
-      simp [and_assoc]
+      simp [and_assocₓ]
     
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
@@ -287,7 +287,7 @@ theorem eventually_residual {p : α → Prop} : (∀ᶠ x in residual α, p x) �
 theorem mem_residual {s : Set α} : s ∈ residual α ↔ ∃ (t : _)(_ : t ⊆ s), IsGδ t ∧ Dense t :=
   (@eventually_residual α _ _ fun x => x ∈ s).trans <|
     exists_congr fun t => by
-      rw [exists_prop, and_comm (t ⊆ s), subset_def, and_assoc]
+      rw [exists_propₓ, and_comm (t ⊆ s), subset_def, and_assocₓ]
 
 theorem dense_of_mem_residual {s : Set α} (hs : s ∈ residual α) : Dense s :=
   let ⟨t, hts, _, hd⟩ := mem_residual.1 hs

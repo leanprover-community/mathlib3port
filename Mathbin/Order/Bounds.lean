@@ -91,11 +91,11 @@ theorem top_mem_upper_bounds [OrderTop α] (s : Set α) : ⊤ ∈ UpperBounds s 
 
 @[simp]
 theorem is_least_bot_iff [OrderBot α] : IsLeast s ⊥ ↔ ⊥ ∈ s :=
-  and_iff_left <| bot_mem_lower_bounds _
+  and_iff_leftₓ <| bot_mem_lower_bounds _
 
 @[simp]
 theorem is_greatest_top_iff [OrderTop α] : IsGreatest s ⊤ ↔ ⊤ ∈ s :=
-  and_iff_left <| top_mem_upper_bounds _
+  and_iff_leftₓ <| top_mem_upper_bounds _
 
 /-- A set `s` is not bounded above if and only if for each `x` there exists `y ∈ s` such that `x`
 is not greater than or equal to `y`. This version only assumes `preorder` structure and uses
@@ -293,7 +293,7 @@ theorem union_lower_bounds_subset_lower_bounds_inter : LowerBounds s ∪ LowerBo
 
 theorem is_least_union_iff {a : α} {s t : Set α} :
     IsLeast (s ∪ t) a ↔ IsLeast s a ∧ a ∈ LowerBounds t ∨ a ∈ LowerBounds s ∧ IsLeast t a := by
-  simp [IsLeast, lower_bounds_union, or_and_distrib_right, and_comm (a ∈ t), and_assoc]
+  simp [IsLeast, lower_bounds_union, or_and_distrib_right, and_comm (a ∈ t), and_assocₓ]
 
 theorem is_greatest_union_iff :
     IsGreatest (s ∪ t) a ↔ IsGreatest s a ∧ a ∈ UpperBounds t ∨ a ∈ UpperBounds s ∧ IsGreatest t a :=
@@ -318,7 +318,7 @@ theorem BddBelow.inter_of_right (h : BddBelow t) : BddBelow (s ∩ t) :=
 /-- If `s` and `t` are bounded above sets in a `semilattice_sup`, then so is `s ∪ t`. -/
 theorem BddAbove.union [SemilatticeSup γ] {s t : Set γ} : BddAbove s → BddAbove t → BddAbove (s ∪ t) := by
   rintro ⟨bs, hs⟩ ⟨bt, ht⟩
-  use bs⊔bt
+  use bs ⊔ bt
   rw [upper_bounds_union]
   exact ⟨upper_bounds_mono_mem le_sup_left hs, upper_bounds_mono_mem le_sup_right ht⟩
 
@@ -336,14 +336,14 @@ theorem bdd_below_union [SemilatticeInf γ] {s t : Set γ} : BddBelow (s ∪ t) 
 /-- If `a` is the least upper bound of `s` and `b` is the least upper bound of `t`,
 then `a ⊔ b` is the least upper bound of `s ∪ t`. -/
 theorem IsLub.union [SemilatticeSup γ] {a b : γ} {s t : Set γ} (hs : IsLub s a) (ht : IsLub t b) :
-    IsLub (s ∪ t) (a⊔b) :=
+    IsLub (s ∪ t) (a ⊔ b) :=
   ⟨fun c h => h.casesOn (fun h => le_sup_of_le_left <| hs.left h) fun h => le_sup_of_le_right <| ht.left h, fun c hc =>
     sup_le (hs.right fun d hd => hc <| Or.inl hd) (ht.right fun d hd => hc <| Or.inr hd)⟩
 
 /-- If `a` is the greatest lower bound of `s` and `b` is the greatest lower bound of `t`,
 then `a ⊓ b` is the greatest lower bound of `s ∪ t`. -/
 theorem IsGlb.union [SemilatticeInf γ] {a₁ a₂ : γ} {s t : Set γ} (hs : IsGlb s a₁) (ht : IsGlb t a₂) :
-    IsGlb (s ∪ t) (a₁⊓a₂) :=
+    IsGlb (s ∪ t) (a₁ ⊓ a₂) :=
   hs.dual.union ht
 
 /-- If `a` is the least element of `s` and `b` is the least element of `t`,
@@ -578,7 +578,7 @@ variable [SemilatticeSup γ] [DenselyOrdered γ]
 
 theorem is_glb_Ioo {a b : γ} (h : a < b) : IsGlb (Ioo a b) a :=
   ⟨fun x hx => hx.1.le, fun x hx => by
-    cases' eq_or_lt_of_leₓ (le_sup_right : a ≤ x⊔a) with h₁ h₂
+    cases' eq_or_lt_of_leₓ (le_sup_right : a ≤ x ⊔ a) with h₁ h₂
     · exact h₁.symm ▸ le_sup_left
       
     obtain ⟨y, lty, ylt⟩ := exists_between h₂
@@ -623,7 +623,7 @@ theorem bdd_above_iff_subset_Iic : BddAbove s ↔ ∃ a, s ⊆ Iic a :=
 
 theorem bdd_below_bdd_above_iff_subset_Icc : BddBelow s ∧ BddAbove s ↔ ∃ a b, s ⊆ Icc a b := by
   simp only [Ici_inter_Iic.symm, subset_inter_iff, bdd_below_iff_subset_Ici, bdd_above_iff_subset_Iic,
-    exists_and_distrib_left, exists_and_distrib_right]
+    exists_and_distrib_leftₓ, exists_and_distrib_rightₓ]
 
 /-!
 #### Univ
@@ -732,11 +732,11 @@ theorem bdd_below_insert [SemilatticeInf γ] (a : γ) {s : Set γ} : BddBelow (i
 theorem BddBelow.insert [SemilatticeInf γ] (a : γ) {s : Set γ} (hs : BddBelow s) : BddBelow (insert a s) :=
   (bdd_below_insert a).2 hs
 
-theorem IsLub.insert [SemilatticeSup γ] (a) {b} {s : Set γ} (hs : IsLub s b) : IsLub (insert a s) (a⊔b) := by
+theorem IsLub.insert [SemilatticeSup γ] (a) {b} {s : Set γ} (hs : IsLub s b) : IsLub (insert a s) (a ⊔ b) := by
   rw [insert_eq]
   exact is_lub_singleton.union hs
 
-theorem IsGlb.insert [SemilatticeInf γ] (a) {b} {s : Set γ} (hs : IsGlb s b) : IsGlb (insert a s) (a⊓b) := by
+theorem IsGlb.insert [SemilatticeInf γ] (a) {b} {s : Set γ} (hs : IsGlb s b) : IsGlb (insert a s) (a ⊓ b) := by
   rw [insert_eq]
   exact is_glb_singleton.union hs
 
@@ -772,10 +772,10 @@ protected theorem OrderBot.bdd_below [Preorderₓ γ] [OrderBot γ] (s : Set γ)
 -/
 
 
-theorem is_lub_pair [SemilatticeSup γ] {a b : γ} : IsLub {a, b} (a⊔b) :=
+theorem is_lub_pair [SemilatticeSup γ] {a b : γ} : IsLub {a, b} (a ⊔ b) :=
   is_lub_singleton.insert _
 
-theorem is_glb_pair [SemilatticeInf γ] {a b : γ} : IsGlb {a, b} (a⊓b) :=
+theorem is_glb_pair [SemilatticeInf γ] {a b : γ} : IsGlb {a, b} (a ⊓ b) :=
   is_glb_singleton.insert _
 
 theorem is_least_pair [LinearOrderₓ γ] {a b : γ} : IsLeast {a, b} (min a b) :=

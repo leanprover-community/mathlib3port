@@ -214,7 +214,7 @@ theorem copy_eq (G' : Subgraph G) (V'' : Set V) (hV : V'' = G'.Verts) (adj' : V 
 /-- The union of two subgraphs. -/
 def union (x y : Subgraph G) : Subgraph G where
   Verts := x.Verts ∪ y.Verts
-  Adj := x.Adj⊔y.Adj
+  Adj := x.Adj ⊔ y.Adj
   adj_sub := fun v w h => Or.cases_on h (fun h => x.adj_sub h) fun h => y.adj_sub h
   edge_vert := fun v w h => Or.cases_on h (fun h => Or.inl (x.edge_vert h)) fun h => Or.inr (y.edge_vert h)
   symm := fun v w h => by
@@ -223,7 +223,7 @@ def union (x y : Subgraph G) : Subgraph G where
 /-- The intersection of two subgraphs. -/
 def inter (x y : Subgraph G) : Subgraph G where
   Verts := x.Verts ∩ y.Verts
-  Adj := x.Adj⊓y.Adj
+  Adj := x.Adj ⊓ y.Adj
   adj_sub := fun v w h => x.adj_sub h.1
   edge_vert := fun v w h => ⟨x.edge_vert h.1, y.edge_vert h.2⟩
   symm := fun v w h => by
@@ -297,11 +297,11 @@ theorem not_bot_adj {v w : V} : ¬(⊥ : Subgraph G).Adj v w :=
   not_false
 
 @[simp]
-theorem inf_adj {H₁ H₂ : Subgraph G} {v w : V} : (H₁⊓H₂).Adj v w ↔ H₁.Adj v w ∧ H₂.Adj v w :=
+theorem inf_adj {H₁ H₂ : Subgraph G} {v w : V} : (H₁ ⊓ H₂).Adj v w ↔ H₁.Adj v w ∧ H₂.Adj v w :=
   Iff.rfl
 
 @[simp]
-theorem sup_adj {H₁ H₂ : Subgraph G} {v w : V} : (H₁⊔H₂).Adj v w ↔ H₁.Adj v w ∨ H₂.Adj v w :=
+theorem sup_adj {H₁ H₂ : Subgraph G} {v w : V} : (H₁ ⊔ H₂).Adj v w ↔ H₁.Adj v w ∨ H₂.Adj v w :=
   Iff.rfl
 
 @[simp]
@@ -316,14 +316,14 @@ theorem edge_set_bot : (⊥ : Subgraph G).EdgeSet = ∅ :=
         simp )
 
 @[simp]
-theorem edge_set_inf {H₁ H₂ : Subgraph G} : (H₁⊓H₂).EdgeSet = H₁.EdgeSet ∩ H₂.EdgeSet :=
+theorem edge_set_inf {H₁ H₂ : Subgraph G} : (H₁ ⊓ H₂).EdgeSet = H₁.EdgeSet ∩ H₂.EdgeSet :=
   Set.ext <|
     Sym2.ind
       (by
         simp )
 
 @[simp]
-theorem edge_set_sup {H₁ H₂ : Subgraph G} : (H₁⊔H₂).EdgeSet = H₁.EdgeSet ∪ H₂.EdgeSet :=
+theorem edge_set_sup {H₁ H₂ : Subgraph G} : (H₁ ⊔ H₂).EdgeSet = H₁.EdgeSet ∪ H₂.EdgeSet :=
   Set.ext <|
     Sym2.ind
       (by
@@ -562,7 +562,7 @@ theorem restrict_coe_subgraph {G' : G.Subgraph} (G'' : G'.coe.Subgraph) : G''.co
   · simp
     
   · simp only [Relation.Map, comap_adj, coe_adj, Subtype.coe_prop, hom_apply, map_adj, SetCoe.exists, Subtype.coe_mk,
-      exists_and_distrib_right, exists_eq_right_rightₓ, Subtype.coe_eta, exists_true_left, exists_eq_right,
+      exists_and_distrib_rightₓ, exists_eq_right_rightₓ, Subtype.coe_eta, exists_true_left, exists_eq_right,
       and_iff_right_iff_imp]
     apply G''.adj_sub
     
@@ -601,7 +601,7 @@ theorem delete_edges_adj (v w : V) : (G'.deleteEdges s).Adj v w ↔ G'.Adj v w �
 @[simp]
 theorem delete_edges_delete_edges (s s' : Set (Sym2 V)) : (G'.deleteEdges s).deleteEdges s' = G'.deleteEdges (s ∪ s') :=
   by
-  ext <;> simp [and_assoc, not_or_distrib]
+  ext <;> simp [and_assocₓ, not_or_distrib]
 
 @[simp]
 theorem delete_edges_empty_eq : G'.deleteEdges ∅ = G' := by
@@ -738,11 +738,11 @@ theorem delete_verts_verts : (G'.deleteVerts s).Verts = G'.Verts \ s :=
 
 theorem delete_verts_adj {u v : V} :
     (G'.deleteVerts s).Adj u v ↔ u ∈ G'.Verts ∧ ¬u ∈ s ∧ v ∈ G'.Verts ∧ ¬v ∈ s ∧ G'.Adj u v := by
-  simp [and_assoc]
+  simp [and_assocₓ]
 
 @[simp]
 theorem delete_verts_delete_verts (s s' : Set V) : (G'.deleteVerts s).deleteVerts s' = G'.deleteVerts (s ∪ s') := by
-  ext <;> simp (config := { contextual := true })[not_or_distrib, and_assoc]
+  ext <;> simp (config := { contextual := true })[not_or_distrib, and_assocₓ]
 
 @[simp]
 theorem delete_verts_empty : G'.deleteVerts ∅ = G' := by

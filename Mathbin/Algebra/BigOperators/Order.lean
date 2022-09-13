@@ -87,14 +87,8 @@ variable {f g : ι → N} {s t : Finset ι}
 equal to the corresponding factor `g i` of another finite product, then
 `∏ i in s, f i ≤ ∏ i in s, g i`. -/
 @[to_additive sum_le_sum]
-theorem prod_le_prod'' (h : ∀ i ∈ s, f i ≤ g i) : (∏ i in s, f i) ≤ ∏ i in s, g i := by
-  classical
-  induction' s using Finset.induction_on with i s hi ihs h
-  · rfl
-    
-  · simp only [prod_insert hi]
-    exact mul_le_mul' (h _ (mem_insert_self _ _)) (ihs fun j hj => h j (mem_insert_of_mem hj))
-    
+theorem prod_le_prod'' (h : ∀ i ∈ s, f i ≤ g i) : (∏ i in s, f i) ≤ ∏ i in s, g i :=
+  Multiset.prod_map_le_prod_map f g h
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 -- ./././Mathport/Syntax/Translate/Command.lean:665:43: in add_decl_doc #[[ident sum_le_sum]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg

@@ -24,11 +24,11 @@ section Powerset
 /-- When `s` is a finset, `s.powerset` is the finset of all subsets of `s` (seen as finsets). -/
 def powerset (s : Finset α) : Finset (Finset α) :=
   ⟨(s.1.Powerset.pmap Finset.mk) fun t h => nodup_of_le (mem_powerset.1 h) s.Nodup,
-    s.Nodup.Powerset.pmap fun a ha b hb => congr_argₓ Finset.val⟩
+    s.Nodup.Powerset.pmap fun a ha b hb => congr_arg Finset.val⟩
 
 @[simp]
 theorem mem_powerset {s t : Finset α} : s ∈ powerset t ↔ s ⊆ t := by
-  cases s <;> simp only [powerset, mem_mk, mem_pmap, mem_powerset, exists_prop, exists_eq_right] <;> rw [← val_le_iff]
+  cases s <;> simp only [powerset, mem_mk, mem_pmap, mem_powerset, exists_propₓ, exists_eq_right] <;> rw [← val_le_iff]
 
 @[simp, norm_cast]
 theorem coe_powerset (s : Finset α) : (s.Powerset : Set (Finset α)) = coe ⁻¹' (s : Set α).Powerset := by
@@ -78,7 +78,7 @@ theorem not_mem_of_mem_powerset_of_not_mem {s t : Finset α} {a : α} (ht : t �
 theorem powerset_insert [DecidableEq α] (s : Finset α) (a : α) :
     powerset (insert a s) = s.Powerset ∪ s.Powerset.Image (insert a) := by
   ext t
-  simp only [exists_prop, mem_powerset, mem_image, mem_union, subset_insert_iff]
+  simp only [exists_propₓ, mem_powerset, mem_image, mem_union, subset_insert_iff]
   by_cases' h : a ∈ t
   · constructor
     · exact fun H => Or.inr ⟨_, H, insert_erase h⟩
@@ -176,7 +176,7 @@ section PowersetLen
 of cardinality `n`. -/
 def powersetLen (n : ℕ) (s : Finset α) : Finset (Finset α) :=
   ⟨((s.1.powersetLen n).pmap Finset.mk) fun t h => nodup_of_le (mem_powerset_len.1 h).1 s.2,
-    s.2.powersetLen.pmap fun a ha b hb => congr_argₓ Finset.val⟩
+    s.2.powersetLen.pmap fun a ha b hb => congr_arg Finset.val⟩
 
 /-- **Formula for the Number of Combinations** -/
 theorem mem_powerset_len {n} {s t : Finset α} : s ∈ powersetLen n t ↔ s ⊆ t ∧ card s = n := by
@@ -184,7 +184,7 @@ theorem mem_powerset_len {n} {s t : Finset α} : s ∈ powersetLen n t ↔ s ⊆
 
 @[simp]
 theorem powerset_len_mono {n} {s t : Finset α} (h : s ⊆ t) : powersetLen n s ⊆ powersetLen n t := fun u h' =>
-  mem_powerset_len.2 <| And.imp (fun h₂ => Subset.trans h₂ h) id (mem_powerset_len.1 h')
+  mem_powerset_len.2 <| And.impₓ (fun h₂ => Subset.trans h₂ h) id (mem_powerset_len.1 h')
 
 /-- **Formula for the Number of Combinations** -/
 @[simp]
@@ -272,7 +272,7 @@ theorem powerset_len_sup [DecidableEq α] (u : Finset α) (n : ℕ) (hn : n < u.
     · simp [h']
       
     · intro x hx
-      simp only [mem_bUnion, exists_prop, id.def]
+      simp only [mem_bUnion, exists_propₓ, id.def]
       obtain ⟨t, ht⟩ : ∃ t, t ∈ powerset_len n (u.erase x) := powerset_len_nonempty _
       · refine' ⟨insert x t, _, mem_insert_self _ _⟩
         rw [← insert_erase hx, powerset_len_succ_insert (not_mem_erase _ _)]

@@ -757,12 +757,12 @@ variable {α : Type _} [TopologicalSpace α]
 
 variable {β : Type _} [LinearOrderedField β] [TopologicalSpace β] [OrderTopology β] [TopologicalRing β]
 
-theorem inf_eq (f g : C(α, β)) : f⊓g = (2⁻¹ : β) • (f + g - abs (f - g)) :=
+theorem inf_eq (f g : C(α, β)) : f ⊓ g = (2⁻¹ : β) • (f + g - abs (f - g)) :=
   ext fun x => by
     simpa using min_eq_half_add_sub_abs_sub
 
 -- Not sure why this is grosser than `inf_eq`:
-theorem sup_eq (f g : C(α, β)) : f⊔g = (2⁻¹ : β) • (f + g + abs (f - g)) :=
+theorem sup_eq (f g : C(α, β)) : f ⊔ g = (2⁻¹ : β) • (f + g + abs (f - g)) :=
   ext fun x => by
     simpa [mul_addₓ] using @max_eq_half_add_add_abs_sub _ _ (f x) (g x)
 

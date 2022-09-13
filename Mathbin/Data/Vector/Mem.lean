@@ -42,7 +42,7 @@ theorem not_mem_zero (v : Vector α 0) : a ∉ v.toList :=
   (Vector.eq_nil v).symm ▸ not_mem_nil a
 
 theorem mem_cons_iff (v : Vector α n) : a' ∈ (a ::ᵥ v).toList ↔ a' = a ∨ a' ∈ v.toList := by
-  rw [Vector.to_list_cons, List.mem_cons_iffₓ]
+  rw [Vector.to_list_cons, List.mem_cons_iff]
 
 theorem mem_succ_iff (v : Vector α (n + 1)) : a ∈ v.toList ↔ a = v.head ∨ a ∈ v.tail.toList := by
   obtain ⟨a', v', h⟩ := exists_eq_cons v

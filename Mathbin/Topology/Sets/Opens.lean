@@ -117,15 +117,15 @@ theorem le_def {U V : Opens α} : U ≤ V ↔ (U : Set α) ≤ (V : Set α) :=
 
 @[simp]
 theorem mk_inf_mk {U V : Set α} {hU : IsOpen U} {hV : IsOpen V} :
-    (⟨U, hU⟩⊓⟨V, hV⟩ : Opens α) = ⟨U⊓V, IsOpen.inter hU hV⟩ :=
+    (⟨U, hU⟩ ⊓ ⟨V, hV⟩ : Opens α) = ⟨U ⊓ V, IsOpen.inter hU hV⟩ :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_inf (s t : Opens α) : (↑(s⊓t) : Set α) = s ∩ t :=
+theorem coe_inf (s t : Opens α) : (↑(s ⊓ t) : Set α) = s ∩ t :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_sup (s t : Opens α) : (↑(s⊔t) : Set α) = s ∪ t :=
+theorem coe_sup (s t : Opens α) : (↑(s ⊔ t) : Set α) = s ∪ t :=
   rfl
 
 @[simp, norm_cast]
@@ -149,10 +149,10 @@ theorem coe_finset_inf (f : ι → Opens α) (s : Finset ι) : (↑(s.inf f) : S
   map_finset_inf (⟨⟨coe, coe_inf⟩, coe_top⟩ : InfTopHom (Opens α) (Set α)) _ _
 
 instance : Inter (Opens α) :=
-  ⟨fun U V => U⊓V⟩
+  ⟨fun U V => U ⊓ V⟩
 
 instance : Union (Opens α) :=
-  ⟨fun U V => U⊔V⟩
+  ⟨fun U V => U ⊔ V⟩
 
 instance : EmptyCollection (Opens α) :=
   ⟨⊥⟩
@@ -161,11 +161,11 @@ instance : Inhabited (Opens α) :=
   ⟨∅⟩
 
 @[simp]
-theorem inter_eq (U V : Opens α) : U ∩ V = U⊓V :=
+theorem inter_eq (U V : Opens α) : U ∩ V = U ⊓ V :=
   rfl
 
 @[simp]
-theorem union_eq (U V : Opens α) : U ∪ V = U⊔V :=
+theorem union_eq (U V : Opens α) : U ∪ V = U ⊔ V :=
   rfl
 
 @[simp]

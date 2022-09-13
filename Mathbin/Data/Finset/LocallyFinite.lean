@@ -262,7 +262,7 @@ theorem Ico_filter_le_of_left_le {a b c : α} [DecidablePred ((· ≤ ·) c)] (h
     (ico a b).filter ((· ≤ ·) c) = ico c b := by
   ext x
   rw [mem_filter, mem_Ico, mem_Ico, and_comm, And.left_comm]
-  exact and_iff_right_of_imp fun h => hac.trans h.1
+  exact and_iff_right_of_impₓ fun h => hac.trans h.1
 
 theorem Icc_filter_lt_of_lt_right {a b c : α} [DecidablePred (· < c)] (h : b < c) :
     (icc a b).filter (· < c) = icc a b :=
@@ -622,13 +622,13 @@ theorem Ico_filter_le (a b c : α) : ((ico a b).filter fun x => c ≤ x) = ico (
 @[simp]
 theorem Ioo_filter_lt (a b c : α) : (ioo a b).filter (· < c) = ioo a (min b c) := by
   ext
-  simp [and_assoc]
+  simp [and_assocₓ]
 
 @[simp]
 theorem Iio_filter_lt {α} [LinearOrderₓ α] [LocallyFiniteOrderBot α] (a b : α) :
     (iio a).filter (· < b) = iio (min a b) := by
   ext
-  simp [and_assoc]
+  simp [and_assocₓ]
 
 @[simp]
 theorem Ico_diff_Ico_left (a b c : α) : ico a b \ ico a c = ico (max a c) b := by
@@ -646,8 +646,8 @@ theorem Ico_diff_Ico_right (a b c : α) : ico a b \ ico c b = ico a (min b c) :=
   · rw [Ico_eq_empty_of_le h, sdiff_empty, min_eq_leftₓ h]
     
   · ext x
-    rw [mem_sdiff, mem_Ico, mem_Ico, mem_Ico, min_eq_rightₓ h, and_assoc, not_and', not_leₓ]
-    exact and_congr_right' ⟨fun hx => hx.2 hx.1, fun hx => ⟨hx.trans_le h, fun _ => hx⟩⟩
+    rw [mem_sdiff, mem_Ico, mem_Ico, mem_Ico, min_eq_rightₓ h, and_assocₓ, not_and', not_leₓ]
+    exact and_congr_right'ₓ ⟨fun hx => hx.2 hx.1, fun hx => ⟨hx.trans_le h, fun _ => hx⟩⟩
     
 
 end LocallyFiniteOrder

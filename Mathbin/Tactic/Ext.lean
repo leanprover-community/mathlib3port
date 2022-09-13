@@ -376,7 +376,7 @@ theorem Unit.ext {x y : Unit} : x = y := by
   rfl
 
 @[ext]
-theorem PUnit.extₓ {x y : PUnit} : x = y := by
+theorem PUnit.ext {x y : PUnit} : x = y := by
   cases x
   cases y
   rfl

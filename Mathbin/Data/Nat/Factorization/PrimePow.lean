@@ -59,9 +59,9 @@ theorem is_prime_pow_iff_factorization_eq_single {n : ℕ} :
 
 theorem is_prime_pow_iff_card_support_factorization_eq_one {n : ℕ} : IsPrimePow n ↔ n.factorization.support.card = 1 :=
   by
-  simp_rw [is_prime_pow_iff_factorization_eq_single, Finsupp.card_support_eq_one', exists_prop, pos_iff_ne_zero]
+  simp_rw [is_prime_pow_iff_factorization_eq_single, Finsupp.card_support_eq_one', exists_propₓ, pos_iff_ne_zero]
 
-theorem IsPrimePow.exists_ord_compl_eq_one {n : ℕ} (h : IsPrimePow n) : ∃ p : ℕ, p.Prime ∧ ord_compl[p]n = 1 := by
+theorem IsPrimePow.exists_ord_compl_eq_one {n : ℕ} (h : IsPrimePow n) : ∃ p : ℕ, p.Prime ∧ ord_compl[p] n = 1 := by
   rcases eq_or_ne n 0 with (rfl | hn0)
   · cases not_is_prime_pow_zero h
     
@@ -80,7 +80,7 @@ theorem IsPrimePow.exists_ord_compl_eq_one {n : ℕ} (h : IsPrimePow n) : ∃ p 
   simp
 
 theorem exists_ord_compl_eq_one_iff_is_prime_pow {n : ℕ} (hn : n ≠ 1) :
-    IsPrimePow n ↔ ∃ p : ℕ, p.Prime ∧ ord_compl[p]n = 1 := by
+    IsPrimePow n ↔ ∃ p : ℕ, p.Prime ∧ ord_compl[p] n = 1 := by
   refine' ⟨fun h => IsPrimePow.exists_ord_compl_eq_one h, fun h => _⟩
   rcases h with ⟨p, pp, h⟩
   rw [is_prime_pow_nat_iff]
@@ -153,7 +153,7 @@ theorem Nat.mul_divisors_filter_prime_pow {a b : ℕ} (hab : a.Coprime b) :
     simp [hab, Finset.filter_singleton, not_is_prime_pow_one]
     
   ext n
-  simp only [ha, hb, Finset.mem_union, Finset.mem_filter, Nat.mul_eq_zero, and_trueₓ, Ne.def, And.congr_left_iff,
+  simp only [ha, hb, Finset.mem_union, Finset.mem_filter, Nat.mul_eq_zero, and_trueₓ, Ne.def, And.congr_left_iffₓ,
     not_false_iff, Nat.mem_divisors, or_selfₓ]
   apply hab.is_prime_pow_dvd_mul
 

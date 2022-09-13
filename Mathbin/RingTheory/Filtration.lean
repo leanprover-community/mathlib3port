@@ -61,7 +61,7 @@ def _root_.ideal.trivial_filtration (I : Ideal R) (N : Submodule R M) : I.Filtra
 /-- The `sup` of two `I.filtration`s is an `I.filtration`. -/
 instance : HasSup (I.Filtration M) :=
   ⟨fun F F' =>
-    ⟨F.n⊔F'.n, fun i => sup_le_sup (F.mono i) (F'.mono i), fun i =>
+    ⟨F.n ⊔ F'.n, fun i => sup_le_sup (F.mono i) (F'.mono i), fun i =>
       (le_of_eqₓ (Submodule.smul_sup _ _ _)).trans <| sup_le_sup (F.smul_le i) (F'.smul_le i)⟩⟩
 
 /-- The `Sup` of a family of `I.filtration`s is an `I.filtration`. -/
@@ -81,7 +81,7 @@ instance : HasSupₓ (I.Filtration M) :=
 /-- The `inf` of two `I.filtration`s is an `I.filtration`. -/
 instance : HasInf (I.Filtration M) :=
   ⟨fun F F' =>
-    ⟨F.n⊓F'.n, fun i => inf_le_inf (F.mono i) (F'.mono i), fun i =>
+    ⟨F.n ⊓ F'.n, fun i => inf_le_inf (F.mono i) (F'.mono i), fun i =>
       (Submodule.smul_inf_le _ _ _).trans <| inf_le_inf (F.smul_le i) (F'.smul_le i)⟩⟩
 
 /-- The `Inf` of a family of `I.filtration`s is an `I.filtration`. -/
@@ -106,7 +106,7 @@ instance : HasBot (I.Filtration M) :=
   ⟨I.trivialFiltration ⊥⟩
 
 @[simp]
-theorem sup_N : (F⊔F').n = F.n⊔F'.n :=
+theorem sup_N : (F ⊔ F').n = F.n ⊔ F'.n :=
   rfl
 
 @[simp]
@@ -114,7 +114,7 @@ theorem Sup_N (S : Set (I.Filtration M)) : (sup S).n = sup (Ideal.Filtration.n '
   rfl
 
 @[simp]
-theorem inf_N : (F⊓F').n = F.n⊓F'.n :=
+theorem inf_N : (F ⊓ F').n = F.n ⊓ F'.n :=
   rfl
 
 @[simp]
@@ -131,11 +131,11 @@ theorem bot_N : (⊥ : I.Filtration M).n = ⊥ :=
 
 @[simp]
 theorem supr_N {ι : Sort _} (f : ι → I.Filtration M) : (supr f).n = ⨆ i, (f i).n :=
-  congr_argₓ sup (Set.range_comp _ _).symm
+  congr_arg sup (Set.range_comp _ _).symm
 
 @[simp]
 theorem infi_N {ι : Sort _} (f : ι → I.Filtration M) : (infi f).n = ⨅ i, (f i).n :=
-  congr_argₓ inf (Set.range_comp _ _).symm
+  congr_arg inf (Set.range_comp _ _).symm
 
 instance : CompleteLattice (I.Filtration M) :=
   Function.Injective.completeLattice Ideal.Filtration.n Ideal.Filtration.ext sup_N inf_N (fun _ => Sup_image)

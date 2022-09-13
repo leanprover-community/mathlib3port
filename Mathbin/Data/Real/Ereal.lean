@@ -275,7 +275,7 @@ theorem to_real_coe_ennreal : ∀ {x : ℝ≥0∞}, toReal (x : Ereal) = Ennreal
   | ⊤ => rfl
   | some x => rfl
 
-theorem coe_nnreal_eq_coe_real (x : ℝ≥0 ) : ((x : ℝ≥0∞) : Ereal) = (x : ℝ) :=
+theorem coe_nnreal_eq_coe_real (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) = (x : ℝ) :=
   rfl
 
 @[simp]
@@ -290,11 +290,11 @@ theorem coe_ennreal_eq_top_iff : ∀ {x : ℝ≥0∞}, (x : Ereal) = ⊤ ↔ x =
     simp only [Ennreal.coe_ne_top, iff_falseₓ, Ennreal.some_eq_coe]
     decide
 
-theorem coe_nnreal_ne_top (x : ℝ≥0 ) : ((x : ℝ≥0∞) : Ereal) ≠ ⊤ := by
+theorem coe_nnreal_ne_top (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) ≠ ⊤ := by
   decide
 
 @[simp]
-theorem coe_nnreal_lt_top (x : ℝ≥0 ) : ((x : ℝ≥0∞) : Ereal) < ⊤ := by
+theorem coe_nnreal_lt_top (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) < ⊤ := by
   decide
 
 @[simp, norm_cast]

@@ -76,7 +76,7 @@ variable {R}
 theorem alg_hom_ext' [Algebra R A'] [Algebra R B'] {f g : A'[X] →ₐ[R] B'}
     (h₁ : f.comp (IsScalarTower.toAlgHom R A' (Polynomial A')) = g.comp (IsScalarTower.toAlgHom R A' (Polynomial A')))
     (h₂ : f x = g x) : f = g :=
-  AlgHom.coe_ring_hom_injective (Polynomial.ring_hom_ext' (congr_argₓ AlgHom.toRingHom h₁) h₂)
+  AlgHom.coe_ring_hom_injective (Polynomial.ring_hom_ext' (congr_arg AlgHom.toRingHom h₁) h₂)
 
 variable (R)
 
@@ -221,6 +221,9 @@ theorem aeval_alg_hom (f : A →ₐ[R] B) (x : A) : aeval (f x) = f.comp (aeval 
 @[simp]
 theorem aeval_X_left : aeval (x : R[X]) = AlgHom.id R R[X] :=
   alg_hom_ext <| aeval_X x
+
+theorem aeval_X_left_apply (p : R[X]) : aeval x p = p :=
+  AlgHom.congr_fun (@aeval_X_left R _) p
 
 theorem eval_unique (φ : R[X] →ₐ[R] A) (p) : φ p = eval₂ (algebraMap R A) (φ x) p := by
   rw [← aeval_def, aeval_alg_hom, aeval_X_left, AlgHom.comp_id]

@@ -447,12 +447,12 @@ theorem map_inv_nat_cast_smul [AddCommGroupₓ M] [AddCommGroupₓ M₂] {F : Ty
 theorem map_rat_cast_smul [AddCommGroupₓ M] [AddCommGroupₓ M₂] {F : Type _} [AddMonoidHomClass F M M₂] (f : F)
     (R S : Type _) [DivisionRing R] [DivisionRing S] [Module R M] [Module S M₂] (c : ℚ) (x : M) :
     f ((c : R) • x) = (c : S) • f x := by
-  rw [Rat.cast_def, Rat.cast_def, div_eq_mul_inv, div_eq_mul_inv, mul_smul, mul_smul, map_int_cast_smul f R S,
+  rw [Ratₓ.cast_def, Ratₓ.cast_def, div_eq_mul_inv, div_eq_mul_inv, mul_smul, mul_smul, map_int_cast_smul f R S,
     map_inv_nat_cast_smul f R S]
 
 theorem map_rat_smul [AddCommGroupₓ M] [AddCommGroupₓ M₂] [Module ℚ M] [Module ℚ M₂] {F : Type _}
     [AddMonoidHomClass F M M₂] (f : F) (c : ℚ) (x : M) : f (c • x) = c • f x :=
-  Rat.cast_id c ▸ map_rat_cast_smul f ℚ ℚ c x
+  Ratₓ.cast_id c ▸ map_rat_cast_smul f ℚ ℚ c x
 
 /-- There can be at most one `module ℚ E` structure on an additive commutative group. -/
 instance subsingleton_rat_module (E : Type _) [AddCommGroupₓ E] : Subsingleton (Module ℚ E) :=

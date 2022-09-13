@@ -205,7 +205,7 @@ theorem _root_.commute.list_prod_right (l : List M) (y : M) (h : ∀ x ∈ l, Co
   induction' l with z l IH
   · simp
     
-  · rw [List.ball_consₓ] at h
+  · rw [List.ball_cons] at h
     rw [List.prod_cons]
     exact Commute.mul_right h.1 (IH h.2)
     
@@ -433,7 +433,7 @@ theorem one_lt_prod_of_one_lt [OrderedCommMonoid M] :
   | [b], h, _ => by
     simpa using h
   | a :: b :: l, hl₁, hl₂ => by
-    simp only [forall_eq_or_imp, List.mem_cons_iffₓ _ a] at hl₁
+    simp only [forall_eq_or_imp, List.mem_cons_iff _ a] at hl₁
     rw [List.prod_cons]
     apply one_lt_mul_of_lt_of_le' hl₁.1
     apply le_of_ltₓ ((b :: l).one_lt_prod_of_one_lt hl₁.2 (l.cons_ne_nil b))

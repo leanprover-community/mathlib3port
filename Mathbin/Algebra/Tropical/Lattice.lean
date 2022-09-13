@@ -29,9 +29,9 @@ variable {R S : Type _}
 
 open Tropical
 
-instance [HasSup R] : HasSup (Tropical R) where sup := fun x y => trop (untrop x⊔untrop y)
+instance [HasSup R] : HasSup (Tropical R) where sup := fun x y => trop (untrop x ⊔ untrop y)
 
-instance [HasInf R] : HasInf (Tropical R) where inf := fun x y => trop (untrop x⊓untrop y)
+instance [HasInf R] : HasInf (Tropical R) where inf := fun x y => trop (untrop x ⊓ untrop y)
 
 instance [SemilatticeInf R] : SemilatticeInf (Tropical R) :=
   { Tropical.hasInf, Tropical.partialOrder with le_inf := fun _ _ _ => le_inf, inf_le_left := fun _ _ => inf_le_left,

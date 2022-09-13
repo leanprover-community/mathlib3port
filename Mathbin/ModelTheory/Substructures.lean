@@ -71,7 +71,7 @@ namespace ClosedUnder
 theorem inter (hs : ClosedUnder f s) (ht : ClosedUnder f t) : ClosedUnder f (s ∩ t) := fun x h =>
   mem_inter (hs x fun i => mem_of_mem_inter_left (h i)) (ht x fun i => mem_of_mem_inter_right (h i))
 
-theorem inf (hs : ClosedUnder f s) (ht : ClosedUnder f t) : ClosedUnder f (s⊓t) :=
+theorem inf (hs : ClosedUnder f s) (ht : ClosedUnder f t) : ClosedUnder f (s ⊓ t) :=
   hs.inter ht
 
 variable {S : Set (Set M)}
@@ -160,11 +160,11 @@ instance : HasInf (L.Substructure M) :=
   ⟨fun S₁ S₂ => { Carrier := S₁ ∩ S₂, fun_mem := fun n f => (S₁.fun_mem f).inf (S₂.fun_mem f) }⟩
 
 @[simp]
-theorem coe_inf (p p' : L.Substructure M) : ((p⊓p' : L.Substructure M) : Set M) = p ∩ p' :=
+theorem coe_inf (p p' : L.Substructure M) : ((p ⊓ p' : L.Substructure M) : Set M) = p ∩ p' :=
   rfl
 
 @[simp]
-theorem mem_inf {p p' : L.Substructure M} {x : M} : x ∈ p⊓p' ↔ x ∈ p ∧ x ∈ p' :=
+theorem mem_inf {p p' : L.Substructure M} {x : M} : x ∈ p ⊓ p' ↔ x ∈ p ∧ x ∈ p' :=
   Iff.rfl
 
 instance : HasInfₓ (L.Substructure M) :=
@@ -198,7 +198,7 @@ theorem coe_infi {ι : Sort _} {S : ι → L.Substructure M} : (↑(⨅ i, S i) 
 instance : CompleteLattice (L.Substructure M) :=
   { (completeLatticeOfInf (L.Substructure M)) fun s =>
       IsGlb.of_image (fun S T => show (S : Set M) ≤ T ↔ S ≤ T from SetLike.coe_subset_coe) is_glb_binfi with
-    le := (· ≤ ·), lt := (· < ·), top := ⊤, le_top := fun S x hx => mem_top x, inf := (·⊓·), inf := HasInfₓ.inf,
+    le := (· ≤ ·), lt := (· < ·), top := ⊤, le_top := fun S x hx => mem_top x, inf := (· ⊓ ·), inf := HasInfₓ.inf,
     le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩, inf_le_left := fun a b x => And.left,
     inf_le_right := fun a b x => And.right }
 
@@ -260,14 +260,14 @@ instance small_closure [Small.{u} s] : Small.{u} (closure L s) := by
 theorem mem_closure_iff_exists_term {x : M} : x ∈ closure L s ↔ ∃ t : L.term s, t.realize (coe : s → M) = x := by
   rw [← SetLike.mem_coe, coe_closure_eq_range_term_realize, mem_range]
 
-theorem lift_card_closure_le_card_term : Cardinal.lift.{max u w} (# (closure L s)) ≤ # (L.term s) := by
+theorem lift_card_closure_le_card_term : Cardinal.lift.{max u w} (#closure L s) ≤ (#L.term s) := by
   rw [← SetLike.coe_sort_coe, coe_closure_eq_range_term_realize]
-  rw [← Cardinal.lift_id'.{w, max u w} (# (L.term s))]
+  rw [← Cardinal.lift_id'.{w, max u w} (#L.term s)]
   exact Cardinal.mk_range_le_lift
 
 theorem lift_card_closure_le :
-    Cardinal.lift.{u, w} (# (closure L s)) ≤
-      max ℵ₀ (Cardinal.lift.{u, w} (# s) + Cardinal.lift.{w, u} (# (Σi, L.Functions i))) :=
+    Cardinal.lift.{u, w} (#closure L s) ≤
+      max ℵ₀ (Cardinal.lift.{u, w} (#s) + Cardinal.lift.{w, u} (#Σi, L.Functions i)) :=
   by
   rw [← lift_umax]
   refine' lift_card_closure_le_card_term.trans (term.card_le.trans _)
@@ -275,10 +275,10 @@ theorem lift_card_closure_le :
 
 variable (L)
 
-theorem _root_.set.countable.substructure_closure [L.CountableFunctions] (h : s.Countable) :
-    Nonempty (Encodable (closure L s)) := by
-  haveI : Nonempty (Encodable s) := h
-  rw [encodable_iff, ← lift_le_aleph_0]
+theorem _root_.set.countable.substructure_closure [L.CountableFunctions] (h : s.Countable) : Countable (closure L s) :=
+  by
+  haveI : Countable s := h.to_subtype
+  rw [← mk_le_aleph_0_iff, ← lift_le_aleph_0]
   exact lift_card_closure_le_card_term.trans term.card_le_aleph_0
 
 variable {L} (S)
@@ -323,7 +323,7 @@ theorem closure_empty : closure L (∅ : Set M) = ⊥ :=
 theorem closure_univ : closure L (Univ : Set M) = ⊤ :=
   @coe_top L M _ ▸ closure_eq ⊤
 
-theorem closure_union (s t : Set M) : closure L (s ∪ t) = closure L s⊔closure L t :=
+theorem closure_union (s t : Set M) : closure L (s ∪ t) = closure L s ⊔ closure L t :=
   (Substructure.gi L M).gc.l_sup
 
 theorem closure_Union {ι} (s : ι → Set M) : closure L (⋃ i, s i) = ⨆ i, closure L (s i) :=
@@ -414,13 +414,13 @@ theorem map_comap_map {f : M →[L] N} : ((S.map f).comap f).map f = S.map f :=
 theorem comap_map_comap {S : L.Substructure N} {f : M →[L] N} : ((S.comap f).map f).comap f = S.comap f :=
   (gc_map_comap f).u_l_u_eq_u _
 
-theorem map_sup (S T : L.Substructure M) (f : M →[L] N) : (S⊔T).map f = S.map f⊔T.map f :=
+theorem map_sup (S T : L.Substructure M) (f : M →[L] N) : (S ⊔ T).map f = S.map f ⊔ T.map f :=
   (gc_map_comap f).l_sup
 
 theorem map_supr {ι : Sort _} (f : M →[L] N) (s : ι → L.Substructure M) : (supr s).map f = ⨆ i, (s i).map f :=
   (gc_map_comap f).l_supr
 
-theorem comap_inf (S T : L.Substructure N) (f : M →[L] N) : (S⊓T).comap f = S.comap f⊓T.comap f :=
+theorem comap_inf (S T : L.Substructure N) (f : M →[L] N) : (S ⊓ T).comap f = S.comap f ⊓ T.comap f :=
   (gc_map_comap f).u_inf
 
 theorem comap_infi {ι : Sort _} (f : M →[L] N) (s : ι → L.Substructure N) : (infi s).comap f = ⨅ i, (s i).comap f :=
@@ -467,13 +467,13 @@ theorem comap_surjective_of_injective : Function.Surjective (comap f) :=
 theorem map_injective_of_injective : Function.Injective (map f) :=
   (gciMapComap hf).l_injective
 
-theorem comap_inf_map_of_injective (S T : L.Substructure M) : (S.map f⊓T.map f).comap f = S⊓T :=
+theorem comap_inf_map_of_injective (S T : L.Substructure M) : (S.map f ⊓ T.map f).comap f = S ⊓ T :=
   (gciMapComap hf).u_inf_l _ _
 
 theorem comap_infi_map_of_injective (S : ι → L.Substructure M) : (⨅ i, (S i).map f).comap f = infi S :=
   (gciMapComap hf).u_infi_l _
 
-theorem comap_sup_map_of_injective (S T : L.Substructure M) : (S.map f⊔T.map f).comap f = S⊔T :=
+theorem comap_sup_map_of_injective (S T : L.Substructure M) : (S.map f ⊔ T.map f).comap f = S ⊔ T :=
   (gciMapComap hf).u_sup_l _ _
 
 theorem comap_supr_map_of_injective (S : ι → L.Substructure M) : (⨆ i, (S i).map f).comap f = supr S :=
@@ -510,13 +510,13 @@ theorem map_surjective_of_surjective : Function.Surjective (map f) :=
 theorem comap_injective_of_surjective : Function.Injective (comap f) :=
   (giMapComap hf).u_injective
 
-theorem map_inf_comap_of_surjective (S T : L.Substructure N) : (S.comap f⊓T.comap f).map f = S⊓T :=
+theorem map_inf_comap_of_surjective (S T : L.Substructure N) : (S.comap f ⊓ T.comap f).map f = S ⊓ T :=
   (giMapComap hf).l_inf_u _ _
 
 theorem map_infi_comap_of_surjective (S : ι → L.Substructure N) : (⨅ i, (S i).comap f).map f = infi S :=
   (giMapComap hf).l_infi_u _
 
-theorem map_sup_comap_of_surjective (S T : L.Substructure N) : (S.comap f⊔T.comap f).map f = S⊔T :=
+theorem map_sup_comap_of_surjective (S T : L.Substructure N) : (S.comap f ⊔ T.comap f).map f = S ⊔ T :=
   (giMapComap hf).l_sup_u _ _
 
 theorem map_supr_comap_of_surjective (S : ι → L.Substructure N) : (⨆ i, (S i).comap f).map f = supr S :=

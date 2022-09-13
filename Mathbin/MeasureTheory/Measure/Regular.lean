@@ -154,7 +154,7 @@ variable {α : Type _} {m : MeasurableSpace α} {μ : Measure α} {p q : Set α 
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (K «expr ⊆ » U)
 theorem measure_eq_supr (H : InnerRegular μ p q) (hU : q U) : μ U = ⨆ (K) (_ : K ⊆ U) (hK : p K), μ K := by
   refine' le_antisymmₓ (le_of_forall_ltₓ fun r hr => _) (supr₂_le fun K hK => supr_le fun _ => μ.mono hK)
-  simpa only [lt_supr_iff, exists_prop] using H hU r hr
+  simpa only [lt_supr_iff, exists_propₓ] using H hU r hr
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (K «expr ⊆ » U)
 theorem exists_subset_lt_add (H : InnerRegular μ p q) (h0 : p ∅) (hU : q U) (hμU : μ U ≠ ∞) (hε : ε ≠ 0) :
@@ -180,7 +180,7 @@ theorem map {α β} [MeasurableSpace α] [MeasurableSpace β] {μ : Measure α} 
 theorem smul (H : InnerRegular μ p q) (c : ℝ≥0∞) : InnerRegular (c • μ) p q := by
   intro U hU r hr
   rw [smul_apply, H.measure_eq_supr hU, smul_eq_mul] at hr
-  simpa only [Ennreal.mul_supr, lt_supr_iff, exists_prop] using hr
+  simpa only [Ennreal.mul_supr, lt_supr_iff, exists_propₓ] using hr
 
 theorem trans {q' : Set α → Prop} (H : InnerRegular μ p q) (H' : InnerRegular μ q q') : InnerRegular μ p q' := by
   intro U hU r hr
@@ -247,7 +247,7 @@ theorem _root_.set.measure_eq_infi_is_open (A : Set α) (μ : Measure α) [Outer
     μ A = ⨅ (U : Set α) (h : A ⊆ U) (h2 : IsOpen U), μ U := by
   refine' le_antisymmₓ (le_infi₂ fun s hs => le_infi fun h2s => μ.mono hs) _
   refine' le_of_forall_lt'ₓ fun r hr => _
-  simpa only [infi_lt_iff, exists_prop] using A.exists_is_open_lt_of_lt r hr
+  simpa only [infi_lt_iff, exists_propₓ] using A.exists_is_open_lt_of_lt r hr
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (U «expr ⊇ » A)
 theorem _root_.set.exists_is_open_lt_add [OuterRegular μ] (A : Set α) (hA : μ A ≠ ∞) {ε : ℝ≥0∞} (hε : ε ≠ 0) :
@@ -289,7 +289,7 @@ protected theorem smul (μ : Measure α) [OuterRegular μ] {x : ℝ≥0∞} (hx 
     
   · refine' ⟨fun A hA r hr => _⟩
     rw [smul_apply, A.measure_eq_infi_is_open, smul_eq_mul] at hr
-    simpa only [Ennreal.mul_infi_of_ne h0 hx, gt_iff_ltₓ, infi_lt_iff, exists_prop] using hr
+    simpa only [Ennreal.mul_infi_of_ne h0 hx, gt_iff_ltₓ, infi_lt_iff, exists_propₓ] using hr
     
 
 end OuterRegular
@@ -480,7 +480,7 @@ theorem _root_.is_open.measure_eq_supr_is_compact ⦃U : Set α⦄ (hU : IsOpen 
 
 theorem exists_compact_not_null [Regular μ] : (∃ K, IsCompact K ∧ μ K ≠ 0) ↔ μ ≠ 0 := by
   simp_rw [Ne.def, ← measure_univ_eq_zero, is_open_univ.measure_eq_supr_is_compact, Ennreal.supr_eq_zero, not_forall,
-    exists_prop, subset_univ, true_andₓ]
+    exists_propₓ, subset_univ, true_andₓ]
 
 /-- If `μ` is a regular measure, then any measurable set of finite measure can be approximated by a
 compact subset. See also `measurable_set.exists_is_compact_lt_add` and

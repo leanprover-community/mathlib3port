@@ -116,7 +116,7 @@ theorem degrees_zero : degrees (0 : MvPolynomial σ R) = 0 := by
 theorem degrees_one : degrees (1 : MvPolynomial σ R) = 0 :=
   degrees_C 1
 
-theorem degrees_add (p q : MvPolynomial σ R) : (p + q).degrees ≤ p.degrees⊔q.degrees := by
+theorem degrees_add (p q : MvPolynomial σ R) : (p + q).degrees ≤ p.degrees ⊔ q.degrees := by
   refine' Finset.sup_le fun b hb => _
   have := Finsupp.support_add hb
   rw [Finset.mem_union] at this
@@ -164,7 +164,7 @@ theorem degrees_pow (p : MvPolynomial σ R) : ∀ n : ℕ, (p ^ n).degrees ≤ n
     exact le_transₓ (degrees_mul _ _) (add_le_add_left (degrees_pow n) _)
 
 theorem mem_degrees {p : MvPolynomial σ R} {i : σ} : i ∈ p.degrees ↔ ∃ d, p.coeff d ≠ 0 ∧ i ∈ d.support := by
-  simp only [degrees, Multiset.mem_sup, ← mem_support_iff, Finsupp.mem_to_multiset, exists_prop]
+  simp only [degrees, Multiset.mem_sup, ← mem_support_iff, Finsupp.mem_to_multiset, exists_propₓ]
 
 theorem le_degrees_add {p q : MvPolynomial σ R} (h : p.degrees.Disjoint q.degrees) : p.degrees ≤ (p + q).degrees := by
   apply Finset.sup_le
@@ -221,7 +221,7 @@ theorem degrees_rename (f : σ → τ) (φ : MvPolynomial σ R) : (rename f φ).
   contrapose! hi
   rw [Finset.sum_eq_zero]
   intro j hj
-  simp only [exists_prop, mem_degrees] at hi
+  simp only [exists_propₓ, mem_degrees] at hi
   specialize hi j ⟨x, hx, hj⟩
   rw [single_apply, if_neg hi]
 
@@ -264,7 +264,7 @@ theorem vars_X [Nontrivial R] : (x n : MvPolynomial σ R).vars = {n} := by
   rw [X, vars_monomial (@one_ne_zero R _ _), Finsupp.support_single_ne_zero _ (one_ne_zero : 1 ≠ 0)]
 
 theorem mem_vars (i : σ) : i ∈ p.vars ↔ ∃ (d : σ →₀ ℕ)(H : d ∈ p.support), i ∈ d.support := by
-  simp only [vars, Multiset.mem_to_finset, mem_degrees, mem_support_iff, exists_prop]
+  simp only [vars, Multiset.mem_to_finset, mem_degrees, mem_support_iff, exists_propₓ]
 
 theorem mem_support_not_mem_vars_zero {f : MvPolynomial σ R} {x : σ →₀ ℕ} (H : x ∈ f.support) {v : σ} (h : v ∉ vars f) :
     x v = 0 := by
@@ -351,10 +351,10 @@ variable {A : Type _} [CommRingₓ A] [IsDomain A]
 
 theorem vars_C_mul (a : A) (ha : a ≠ 0) (φ : MvPolynomial σ A) : (c a * φ).vars = φ.vars := by
   ext1 i
-  simp only [mem_vars, exists_prop, mem_support_iff]
+  simp only [mem_vars, exists_propₓ, mem_support_iff]
   apply exists_congr
   intro d
-  apply and_congr _ Iff.rfl
+  apply and_congrₓ _ Iff.rfl
   rw [coeff_C_mul, mul_ne_zero_iff, eq_true_intro ha, true_andₓ]
 
 end IsDomain
@@ -812,16 +812,16 @@ theorem vars_bind₁ (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
 
 theorem mem_vars_bind₁ (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) {j : τ} (h : j ∈ (bind₁ f φ).vars) :
     ∃ i : σ, i ∈ φ.vars ∧ j ∈ (f i).vars := by
-  simpa only [exists_prop, Finset.mem_bUnion, mem_support_iff, Ne.def] using vars_bind₁ f φ h
+  simpa only [exists_propₓ, Finset.mem_bUnion, mem_support_iff, Ne.def] using vars_bind₁ f φ h
 
 theorem vars_rename (f : σ → τ) (φ : MvPolynomial σ R) : (rename f φ).vars ⊆ φ.vars.Image f := by
   intro i hi
-  simp only [vars, exists_prop, Multiset.mem_to_finset, Finset.mem_image] at hi⊢
+  simp only [vars, exists_propₓ, Multiset.mem_to_finset, Finset.mem_image] at hi⊢
   simpa only [Multiset.mem_map] using degrees_rename _ _ hi
 
 theorem mem_vars_rename (f : σ → τ) (φ : MvPolynomial σ R) {j : τ} (h : j ∈ (rename f φ).vars) :
     ∃ i : σ, i ∈ φ.vars ∧ f i = j := by
-  simpa only [exists_prop, Finset.mem_image] using vars_rename f φ h
+  simpa only [exists_propₓ, Finset.mem_image] using vars_rename f φ h
 
 end EvalVars
 

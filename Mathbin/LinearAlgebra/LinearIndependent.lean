@@ -142,7 +142,7 @@ theorem linear_independent_iff'' :
 theorem not_linear_independent_iff :
     ¬LinearIndependent R v ↔ ∃ s : Finset ι, ∃ g : ι → R, (∑ i in s, g i • v i) = 0 ∧ ∃ i ∈ s, g i ≠ 0 := by
   rw [linear_independent_iff']
-  simp only [exists_prop, not_forall]
+  simp only [exists_propₓ, not_forall]
 
 theorem Fintype.linear_independent_iff [Fintype ι] :
     LinearIndependent R v ↔ ∀ g : ι → R, (∑ i, g i • v i) = 0 → ∀ i, g i = 0 := by
@@ -301,7 +301,7 @@ then the same is true for arbitrary sets of linearly independent vectors.
 -/
 theorem linear_independent_bounded_of_finset_linear_independent_bounded {n : ℕ}
     (H : ∀ s : Finset M, (LinearIndependent R fun i : s => (i : M)) → s.card ≤ n) :
-    ∀ s : Set M, LinearIndependent R (coe : s → M) → # s ≤ n := by
+    ∀ s : Set M, LinearIndependent R (coe : s → M) → (#s) ≤ n := by
   intro s li
   apply Cardinal.card_le_of
   intro t
@@ -533,7 +533,7 @@ theorem LinearIndependent.maximal_iff {ι : Type w} {R : Type u} [Ringₓ R] [No
         (by
           ext
           simp )
-    have q := congr_argₓ (fun s => (coe : w → M) '' s) p.range_eq
+    have q := congr_arg (fun s => (coe : w → M) '' s) p.range_eq
     dsimp'  at q
     rw [← image_univ, image_image] at q
     simpa using q
@@ -794,7 +794,7 @@ theorem linear_independent_iff_not_smul_mem_span :
 
 /-- See also `complete_lattice.independent_iff_linear_independent_of_ne_zero`. -/
 theorem LinearIndependent.independent_span_singleton (hv : LinearIndependent R v) :
-    CompleteLattice.Independent fun i => R∙v i := by
+    CompleteLattice.Independent fun i => R ∙ v i := by
   refine' complete_lattice.independent_def.mp fun i m hm => (mem_bot R).mpr _
   simp only [mem_inf, mem_span_singleton, supr_subtype', ← span_range_eq_supr] at hm
   obtain ⟨⟨r, rfl⟩, hm⟩ := hm
@@ -975,7 +975,7 @@ theorem linear_independent_monoid_hom (G : Type _) [Monoidₓ G] (L : Type _) [C
                           rw [Finset.sum_insert has, Finset.sum_insert has]
                         _ = (∑ i in insert a s, g i * i (x * y)) - ∑ i in insert a s, a x * (g i * i y) :=
                           congr
-                            (congr_argₓ Sub.sub
+                            (congr_arg Sub.sub
                               ((Finset.sum_congr rfl) fun i _ => by
                                 rw [i.map_mul, mul_assoc]))
                             ((Finset.sum_congr rfl) fun _ _ => by
@@ -1000,7 +1000,7 @@ theorem linear_independent_monoid_hom (G : Type _) [Monoidₓ G] (L : Type _) [C
             -- From these two facts we deduce that `g` actually vanishes on `s`,
             have h3 : ∀ i ∈ s, g i = 0 := fun i his =>
               let ⟨y, hy⟩ := h2 i his
-              have h : g i • i y = g i • a y := congr_funₓ (h1 i his) y
+              have h : g i • i y = g i • a y := congr_fun (h1 i his) y
               Or.resolve_right
                 (mul_eq_zero.1 <| by
                   rw [mul_sub, sub_eq_zero] <;> exact h)

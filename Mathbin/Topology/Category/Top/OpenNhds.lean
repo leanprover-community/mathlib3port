@@ -50,9 +50,9 @@ instance (x : X) : PartialOrderₓ (OpenNhds x) where
   le_antisymm := fun _ _ i j => FullSubcategory.ext _ _ <| le_antisymmₓ i j
 
 instance (x : X) : Lattice (OpenNhds x) :=
-  { OpenNhds.partialOrder x with inf := fun U V => ⟨U.1⊓V.1, ⟨U.2, V.2⟩⟩,
+  { OpenNhds.partialOrder x with inf := fun U V => ⟨U.1 ⊓ V.1, ⟨U.2, V.2⟩⟩,
     le_inf := fun U V W => @le_inf _ _ U.1.1 V.1.1 W.1.1, inf_le_left := fun U V => @inf_le_left _ _ U.1.1 V.1.1,
-    inf_le_right := fun U V => @inf_le_right _ _ U.1.1 V.1.1, sup := fun U V => ⟨U.1⊔V.1, V.1.1.mem_union_left U.2⟩,
+    inf_le_right := fun U V => @inf_le_right _ _ U.1.1 V.1.1, sup := fun U V => ⟨U.1 ⊔ V.1, V.1.1.mem_union_left U.2⟩,
     sup_le := fun U V W => @sup_le _ _ U.1.1 V.1.1 W.1.1, le_sup_left := fun U V => @le_sup_left _ _ U.1.1 V.1.1,
     le_sup_right := fun U V => @le_sup_right _ _ U.1.1 V.1.1 }
 
@@ -72,12 +72,12 @@ instance opensNhdsHomHasCoeToFun {x : X} {U V : OpenNhds x} : CoeFun (U ⟶ V) f
 
 /-- The inclusion `U ⊓ V ⟶ U` as a morphism in the category of open sets.
 -/
-def infLeLeft {x : X} (U V : OpenNhds x) : U⊓V ⟶ U :=
+def infLeLeft {x : X} (U V : OpenNhds x) : U ⊓ V ⟶ U :=
   homOfLe inf_le_left
 
 /-- The inclusion `U ⊓ V ⟶ V` as a morphism in the category of open sets.
 -/
-def infLeRight {x : X} (U V : OpenNhds x) : U⊓V ⟶ V :=
+def infLeRight {x : X} (U V : OpenNhds x) : U ⊓ V ⟶ V :=
   homOfLe inf_le_right
 
 /-- The inclusion functor from open neighbourhoods of `x`

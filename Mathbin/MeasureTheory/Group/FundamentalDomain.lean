@@ -285,7 +285,7 @@ protected theorem has_finite_integral_on_iff (hs : IsFundamentalDomain G s μ) (
 @[to_additive]
 protected theorem integrable_on_iff (hs : IsFundamentalDomain G s μ) (ht : IsFundamentalDomain G t μ) {f : α → E}
     (hf : ∀ (g : G) (x), f (g • x) = f x) : IntegrableOn f s μ ↔ IntegrableOn f t μ :=
-  and_congr (hs.ae_strongly_measurable_on_iff ht hf) (hs.has_finite_integral_on_iff ht hf)
+  and_congrₓ (hs.ae_strongly_measurable_on_iff ht hf) (hs.has_finite_integral_on_iff ht hf)
 
 variable [NormedSpace ℝ E] [CompleteSpace E]
 

@@ -542,7 +542,7 @@ def map [MonoidHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S[X]⁰.comap �
       · exact hφ hq
         
       refine' Localization.r_of_eq _
-      simpa only [map_mul] using (congr_argₓ φ h).symm
+      simpa only [map_mul] using (congr_arg φ h).symm
   map_one' := by
     rw [← of_fraction_ring_one, ← Localization.mk_one, lift_on_of_fraction_ring_mk, dif_pos]
     · simpa using of_fraction_ring_one

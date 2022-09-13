@@ -113,7 +113,7 @@ theorem has_finite_integral_iff_of_real {f : α → ℝ} (h : 0 ≤ᵐ[μ] f) :
     rwa [Real.norm_eq_abs, abs_of_nonneg]
   rw [has_finite_integral_iff_norm, lintegral_eq]
 
-theorem has_finite_integral_iff_of_nnreal {f : α → ℝ≥0 } :
+theorem has_finite_integral_iff_of_nnreal {f : α → ℝ≥0} :
     HasFiniteIntegral (fun x => (f x : ℝ)) μ ↔ (∫⁻ a, f a ∂μ) < ∞ := by
   simp [has_finite_integral_iff_norm]
 
@@ -208,7 +208,7 @@ theorem has_finite_integral_norm_iff (f : α → β) : HasFiniteIntegral (fun a 
 
 theorem has_finite_integral_to_real_of_lintegral_ne_top {f : α → ℝ≥0∞} (hf : (∫⁻ x, f x ∂μ) ≠ ∞) :
     HasFiniteIntegral (fun x => (f x).toReal) μ := by
-  have : ∀ x, (∥(f x).toReal∥₊ : ℝ≥0∞) = @coe ℝ≥0 ℝ≥0∞ _ (⟨(f x).toReal, Ennreal.to_real_nonneg⟩ : ℝ≥0 ) := by
+  have : ∀ x, (∥(f x).toReal∥₊ : ℝ≥0∞) = @coe ℝ≥0 ℝ≥0∞ _ (⟨(f x).toReal, Ennreal.to_real_nonneg⟩ : ℝ≥0) := by
     intro x
     rw [Real.nnnorm_of_nonneg]
   simp_rw [has_finite_integral, this]
@@ -580,12 +580,12 @@ theorem Integrable.norm {f : α → β} (hf : Integrable f μ) : Integrable (fun
   ⟨hf.AeStronglyMeasurable.norm, hf.HasFiniteIntegral.norm⟩
 
 theorem Integrable.inf {β} [NormedLatticeAddCommGroup β] {f g : α → β} (hf : Integrable f μ) (hg : Integrable g μ) :
-    Integrable (f⊓g) μ := by
+    Integrable (f ⊓ g) μ := by
   rw [← mem_ℒp_one_iff_integrable] at hf hg⊢
   exact hf.inf hg
 
 theorem Integrable.sup {β} [NormedLatticeAddCommGroup β] {f g : α → β} (hf : Integrable f μ) (hg : Integrable g μ) :
-    Integrable (f⊔g) μ := by
+    Integrable (f ⊔ g) μ := by
   rw [← mem_ℒp_one_iff_integrable] at hf hg⊢
   exact hf.sup hg
 
@@ -669,7 +669,7 @@ section
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
-theorem integrable_with_density_iff_integrable_coe_smul {f : α → ℝ≥0 } (hf : Measurable f) {g : α → E} :
+theorem integrable_with_density_iff_integrable_coe_smul {f : α → ℝ≥0} (hf : Measurable f) {g : α → E} :
     Integrable g (μ.withDensity fun x => f x) ↔ Integrable (fun x => (f x : ℝ) • g x) μ := by
   by_cases' H : ae_strongly_measurable (fun x : α => (f x : ℝ) • g x) μ
   · simp only [integrable, ae_strongly_measurable_with_density_iff hf, has_finite_integral, H, true_andₓ]
@@ -687,7 +687,7 @@ theorem integrable_with_density_iff_integrable_coe_smul {f : α → ℝ≥0 } (h
   · simp only [integrable, ae_strongly_measurable_with_density_iff hf, H, false_andₓ]
     
 
-theorem integrable_with_density_iff_integrable_smul {f : α → ℝ≥0 } (hf : Measurable f) {g : α → E} :
+theorem integrable_with_density_iff_integrable_smul {f : α → ℝ≥0} (hf : Measurable f) {g : α → E} :
     Integrable g (μ.withDensity fun x => f x) ↔ Integrable (fun x => f x • g x) μ :=
   integrable_with_density_iff_integrable_coe_smul hf
 
@@ -699,7 +699,7 @@ theorem integrable_with_density_iff_integrable_smul' {f : α → ℝ≥0∞} (hf
   · exact hf.ennreal_to_nnreal
     
 
-theorem integrable_with_density_iff_integrable_coe_smul₀ {f : α → ℝ≥0 } (hf : AeMeasurable f μ) {g : α → E} :
+theorem integrable_with_density_iff_integrable_coe_smul₀ {f : α → ℝ≥0} (hf : AeMeasurable f μ) {g : α → E} :
     Integrable g (μ.withDensity fun x => f x) ↔ Integrable (fun x => (f x : ℝ) • g x) μ :=
   calc
     Integrable g (μ.withDensity fun x => f x) ↔ Integrable g (μ.withDensity fun x => hf.mk f x) := by
@@ -715,7 +715,7 @@ theorem integrable_with_density_iff_integrable_coe_smul₀ {f : α → ℝ≥0 }
       simp [hx]
     
 
-theorem integrable_with_density_iff_integrable_smul₀ {f : α → ℝ≥0 } (hf : AeMeasurable f μ) {g : α → E} :
+theorem integrable_with_density_iff_integrable_smul₀ {f : α → ℝ≥0} (hf : AeMeasurable f μ) {g : α → E} :
     Integrable g (μ.withDensity fun x => f x) ↔ Integrable (fun x => f x • g x) μ :=
   integrable_with_density_iff_integrable_coe_smul₀ hf
 
@@ -732,15 +732,15 @@ section
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
-theorem mem_ℒ1_smul_of_L1_with_density {f : α → ℝ≥0 } (f_meas : Measurable f)
-    (u : lp E 1 (μ.withDensity fun x => f x)) : Memℒp (fun x => f x • u x) 1 μ :=
+theorem mem_ℒ1_smul_of_L1_with_density {f : α → ℝ≥0} (f_meas : Measurable f) (u : lp E 1 (μ.withDensity fun x => f x)) :
+    Memℒp (fun x => f x • u x) 1 μ :=
   mem_ℒp_one_iff_integrable.2 <|
     (integrable_with_density_iff_integrable_smul f_meas).1 <| mem_ℒp_one_iff_integrable.1 (lp.mem_ℒp u)
 
 variable (μ)
 
 /-- The map `u ↦ f • u` is an isometry between the `L^1` spaces for `μ.with_density f` and `μ`. -/
-noncomputable def withDensitySmulLi {f : α → ℝ≥0 } (f_meas : Measurable f) :
+noncomputable def withDensitySmulLi {f : α → ℝ≥0} (f_meas : Measurable f) :
     lp E 1 (μ.withDensity fun x => f x) →ₗᵢ[ℝ] lp E 1 μ where
   toFun := fun u => (mem_ℒ1_smul_of_L1_with_density f_meas u).toLp _
   map_add' := by
@@ -790,7 +790,7 @@ noncomputable def withDensitySmulLi {f : α → ℝ≥0 } (f_meas : Measurable f
     simp only [nnnorm_smul, Nnreal.nnnorm_eq, Ennreal.coe_mul]
 
 @[simp]
-theorem with_density_smul_li_apply {f : α → ℝ≥0 } (f_meas : Measurable f) (u : lp E 1 (μ.withDensity fun x => f x)) :
+theorem with_density_smul_li_apply {f : α → ℝ≥0} (f_meas : Measurable f) (u : lp E 1 (μ.withDensity fun x => f x)) :
     withDensitySmulLi μ f_meas u = (mem_ℒ1_smul_of_L1_with_density f_meas u).toLp fun x => f x • u x :=
   rfl
 
@@ -826,7 +826,7 @@ theorem Integrable.smul (c : 𝕜) {f : α → β} (hf : Integrable f μ) : Inte
   ⟨hf.AeStronglyMeasurable.const_smul c, hf.HasFiniteIntegral.smul c⟩
 
 theorem integrable_smul_iff {c : 𝕜} (hc : c ≠ 0) (f : α → β) : Integrable (c • f) μ ↔ Integrable f μ :=
-  and_congr (ae_strongly_measurable_const_smul_iff₀ hc) (has_finite_integral_smul_iff hc f)
+  and_congrₓ (ae_strongly_measurable_const_smul_iff₀ hc) (has_finite_integral_smul_iff hc f)
 
 theorem Integrable.const_mul {f : α → ℝ} (h : Integrable f μ) (c : ℝ) : Integrable (fun x => c * f x) μ :=
   Integrable.smul c h
@@ -865,7 +865,7 @@ theorem integrable_smul_const {f : α → 𝕜} {c : E} (hc : c ≠ 0) : Integra
   rw [lintegral_mul_const' _ _ Ennreal.coe_ne_top, Ennreal.mul_lt_top_iff]
   have : ∀ x : ℝ≥0∞, x = 0 → x < ∞ := by
     simp
-  simp [hc, or_iff_left_of_imp (this _)]
+  simp [hc, or_iff_left_of_impₓ (this _)]
 
 end NormedSpaceOverCompleteField
 

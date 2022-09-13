@@ -146,10 +146,10 @@ theorem symm_coe_proj {x : B} {y : F} (e : Pretrivialization R F E) (h : x ∈ e
 /-- A fiberwise inverse to `e`. This is the function `F → E b` that induces a local inverse
 `B × F → total_space E` of `e` on `e.base_set`. It is defined to be `0` outside `e.base_set`. -/
 protected def symm (e : Pretrivialization R F E) (b : B) (y : F) : E b :=
-  if hb : b ∈ e.BaseSet then cast (congr_argₓ E (e.proj_symm_apply' hb)) (e.toLocalEquiv.symm (b, y)).2 else 0
+  if hb : b ∈ e.BaseSet then cast (congr_arg E (e.proj_symm_apply' hb)) (e.toLocalEquiv.symm (b, y)).2 else 0
 
 theorem symm_apply (e : Pretrivialization R F E) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
-    e.symm b y = cast (congr_argₓ E (e.symm_coe_proj hb)) (e.toLocalEquiv.symm (b, y)).2 :=
+    e.symm b y = cast (congr_arg E (e.symm_coe_proj hb)) (e.toLocalEquiv.symm (b, y)).2 :=
   dif_pos hb
 
 theorem symm_apply_of_not_mem (e : Pretrivialization R F E) {b : B} (hb : b ∉ e.BaseSet) (y : F) : e.symm b y = 0 :=
@@ -181,7 +181,7 @@ protected def symmₗ (e : Pretrivialization R F E) (b : B) : F →ₗ[R] E b :=
   by_cases' hb : b ∈ e.base_set
   · exact
       (((e.linear hb).mk' _).inverse (e.symm b) (e.symm_apply_apply_mk hb) fun v =>
-          congr_argₓ Prod.snd <| e.apply_mk_symm hb v).is_linear
+          congr_arg Prod.snd <| e.apply_mk_symm hb v).is_linear
     
   · rw [e.coe_symm_of_not_mem hb]
     exact (0 : F →ₗ[R] E b).is_linear
@@ -350,7 +350,7 @@ protected def symm (e : Trivialization R F E) (b : B) (y : F) : E b :=
   e.toPretrivialization.symm b y
 
 theorem symm_apply (e : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet) (y : F) :
-    e.symm b y = cast (congr_argₓ E (e.symm_coe_proj hb)) (e.toLocalHomeomorph.symm (b, y)).2 :=
+    e.symm b y = cast (congr_arg E (e.symm_coe_proj hb)) (e.toLocalHomeomorph.symm (b, y)).2 :=
   dif_pos hb
 
 theorem symm_apply_of_not_mem (e : Trivialization R F E) {b : B} (hb : b ∉ e.BaseSet) (y : F) : e.symm b y = 0 :=
@@ -467,11 +467,11 @@ def coordChange (e e' : Trivialization R F E) (b : B) : F ≃L[R] F :=
 
 theorem coe_coord_change (e e' : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet ∩ e'.BaseSet) :
     ⇑(coordChange e e' b) = (e.linearEquivAt b hb.1).symm.trans (e'.linearEquivAt b hb.2) :=
-  congr_argₓ LinearEquiv.toFun (dif_pos hb)
+  congr_arg LinearEquiv.toFun (dif_pos hb)
 
 theorem coord_change_apply (e e' : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet ∩ e'.BaseSet) (y : F) :
     coordChange e e' b y = (e' (totalSpaceMk b (e.symm b y))).2 :=
-  congr_argₓ (fun f => LinearEquiv.toFun f y) (dif_pos hb)
+  congr_arg (fun f => LinearEquiv.toFun f y) (dif_pos hb)
 
 theorem mk_coord_change (e e' : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet ∩ e'.BaseSet) (y : F) :
     (b, coordChange e e' b y) = e' (totalSpaceMk b (e.symm b y)) := by
@@ -491,7 +491,7 @@ theorem coord_change_apply' (e e' : Trivialization R F E) {b : B} (hb : b ∈ e.
 
 theorem coord_change_symm_apply (e e' : Trivialization R F E) {b : B} (hb : b ∈ e.BaseSet ∩ e'.BaseSet) :
     ⇑(coordChange e e' b).symm = (e'.linearEquivAt b hb.2).symm.trans (e.linearEquivAt b hb.1) :=
-  congr_argₓ LinearEquiv.invFun (dif_pos hb)
+  congr_arg LinearEquiv.invFun (dif_pos hb)
 
 end TopologicalVectorBundle.Trivialization
 

@@ -727,7 +727,7 @@ protected def toTopologicalSpace : TopologicalSpace M :=
 
 theorem open_source' (he : e ∈ c.Atlas) : @IsOpen M c.toTopologicalSpace e.Source := by
   apply TopologicalSpace.GenerateOpen.basic
-  simp only [exists_prop, mem_Union, mem_singleton_iff]
+  simp only [exists_propₓ, mem_Union, mem_singleton_iff]
   refine' ⟨e, he, univ, is_open_univ, _⟩
   simp only [Set.univ_inter, Set.preimage_univ]
 
@@ -751,13 +751,13 @@ protected def localHomeomorph (e : LocalEquiv M H) (he : e ∈ c.Atlas) : @Local
       intro s s_open
       rw [inter_comm]
       apply TopologicalSpace.GenerateOpen.basic
-      simp only [exists_prop, mem_Union, mem_singleton_iff]
+      simp only [exists_propₓ, mem_Union, mem_singleton_iff]
       exact ⟨e, he, ⟨s, s_open, rfl⟩⟩,
     continuous_inv_fun := by
       letI : TopologicalSpace M := c.to_topological_space
       apply continuous_on_open_of_generate_from (c.open_target he)
       intro t ht
-      simp only [exists_prop, mem_Union, mem_singleton_iff] at ht
+      simp only [exists_propₓ, mem_Union, mem_singleton_iff] at ht
       rcases ht with ⟨e', e'_atlas, s, s_open, ts⟩
       rw [ts]
       let f := e.symm.trans e'

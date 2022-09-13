@@ -94,7 +94,7 @@ instance : Fintype { p : α × ℕ | p.2 < m.count p.1 } :=
     (by
       rintro ⟨x, i⟩
       simp only [Finset.mem_bUnion, Multiset.mem_to_finset, Finset.mem_map, Finset.mem_range,
-        Function.Embedding.coe_fn_mk, Prod.mk.inj_iffₓ, exists_prop, exists_eq_right_rightₓ, Set.mem_set_of_eq,
+        Function.Embedding.coe_fn_mk, Prod.mk.inj_iffₓ, exists_propₓ, exists_eq_right_rightₓ, Set.mem_set_of_eq,
         and_iff_right_iff_imp]
       exact fun h => multiset.count_pos.mp (pos_of_gt h))
 
@@ -175,14 +175,14 @@ theorem Multiset.map_univ_coe_embedding (m : Multiset α) :
     (Finset.univ : Finset m).map m.coeEmbedding = m.toEnumFinset := by
   ext ⟨x, i⟩
   simp only [Finₓ.exists_iff, Finset.mem_map, Finset.mem_univ, Multiset.coe_embedding_apply, Prod.mk.inj_iffₓ,
-    exists_true_left, Multiset.exists_coe, Multiset.coe_mk, Finₓ.coe_mk, exists_prop, exists_eq_right_rightₓ,
+    exists_true_left, Multiset.exists_coe, Multiset.coe_mk, Finₓ.coe_mk, exists_propₓ, exists_eq_right_rightₓ,
     exists_eq_right, Multiset.mem_to_enum_finset, iff_selfₓ, true_andₓ]
 
 theorem Multiset.to_enum_finset_filter_eq (m : Multiset α) (x : α) :
     (m.toEnumFinset.filter fun p => x = p.1) = (Finset.range (m.count x)).map ⟨Prod.mk x, Prod.mk.inj_leftₓ x⟩ := by
   ext ⟨y, i⟩
   simp only [eq_comm, Finset.mem_filter, Multiset.mem_to_enum_finset, Finset.mem_map, Finset.mem_range,
-    Function.Embedding.coe_fn_mk, Prod.mk.inj_iffₓ, exists_prop, exists_eq_right_right'ₓ, And.congr_left_iff]
+    Function.Embedding.coe_fn_mk, Prod.mk.inj_iffₓ, exists_propₓ, exists_eq_right_right'ₓ, And.congr_left_iffₓ]
   rintro rfl
   rfl
 

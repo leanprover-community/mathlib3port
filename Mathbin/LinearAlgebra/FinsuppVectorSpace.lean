@@ -87,7 +87,7 @@ protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
           support := g.support.Image Sigma.fst,
           mem_support_to_fun := fun i => by
             rw [Ne.def, ← (b i).repr.Injective.eq_iff, (b i).repr.apply_symm_apply, ext_iff]
-            simp only [exists_prop, LinearEquiv.map_zero, comap_domain_apply, zero_apply, exists_and_distrib_right,
+            simp only [exists_propₓ, LinearEquiv.map_zero, comap_domain_apply, zero_apply, exists_and_distrib_rightₓ,
               mem_support_iff, exists_eq_right, Sigma.exists, Finset.mem_image, not_forall] },
       left_inv := fun g => by
         ext i
@@ -138,7 +138,7 @@ variable {K : Type u} {V : Type v} {ι : Type v}
 
 variable [Field K] [AddCommGroupₓ V] [Module K V]
 
-theorem dim_eq : Module.rank K (ι →₀ V) = # ι * Module.rank K V := by
+theorem dim_eq : Module.rank K (ι →₀ V) = (#ι) * Module.rank K V := by
   let bs := Basis.ofVectorSpace K V
   rw [← bs.mk_eq_dim'', ← (Finsupp.basis fun a : ι => bs).mk_eq_dim'', Cardinal.mk_sigma, Cardinal.sum_const']
 
@@ -195,17 +195,17 @@ open Module
 
 variable (K V : Type u) [Field K] [AddCommGroupₓ V] [Module K V]
 
-theorem cardinal_mk_eq_cardinal_mk_field_pow_dim [FiniteDimensional K V] : # V = # K ^ Module.rank K V := by
+theorem cardinal_mk_eq_cardinal_mk_field_pow_dim [FiniteDimensional K V] : (#V) = (#K) ^ Module.rank K V := by
   let s := Basis.OfVectorSpaceIndex K V
   let hs := Basis.ofVectorSpace K V
   calc
-    # V = # (s →₀ K) := Quotientₓ.sound ⟨hs.repr.to_equiv⟩
-    _ = # (s → K) := Quotientₓ.sound ⟨Finsupp.equivFunOnFintype⟩
+    (#V) = (#s →₀ K) := Quotientₓ.sound ⟨hs.repr.to_equiv⟩
+    _ = (#s → K) := Quotientₓ.sound ⟨Finsupp.equivFunOnFintype⟩
     _ = _ := by
       rw [← Cardinal.lift_inj.1 hs.mk_eq_dim, Cardinal.power_def]
     
 
-theorem cardinal_lt_aleph_0_of_finite_dimensional [Finite K] [FiniteDimensional K V] : # V < ℵ₀ := by
+theorem cardinal_lt_aleph_0_of_finite_dimensional [Finite K] [FiniteDimensional K V] : (#V) < ℵ₀ := by
   letI : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance
   rw [cardinal_mk_eq_cardinal_mk_field_pow_dim K V]
   exact Cardinal.power_lt_aleph_0 (Cardinal.lt_aleph_0_of_finite K) (IsNoetherian.dim_lt_aleph_0 K V)

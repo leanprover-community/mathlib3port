@@ -98,7 +98,7 @@ theorem IsChain.directed_on (H : IsChain r s) : DirectedOn r s := fun x hx y hy 
 protected theorem IsChain.directed {f : β → α} {c : Set β} (h : IsChain (f ⁻¹'o r) c) :
     Directed r fun x : { a : β // a ∈ c } => f x := fun ⟨a, ha⟩ ⟨b, hb⟩ =>
   (by_cases fun hab : a = b => by
-      simp only [hab, exists_prop, and_selfₓ, Subtype.exists] <;> exact ⟨b, hb, refl _⟩)
+      simp only [hab, exists_propₓ, and_selfₓ, Subtype.exists] <;> exact ⟨b, hb, refl _⟩)
     fun hab => ((h ha hb hab).elim fun h => ⟨⟨b, hb⟩, h, refl _⟩) fun h => ⟨⟨a, ha⟩, refl _, h⟩
 
 theorem IsChain.exists3 (hchain : IsChain r s) [IsTrans α r] {a b c} (mem1 : a ∈ s) (mem2 : b ∈ s) (mem3 : c ∈ s) :

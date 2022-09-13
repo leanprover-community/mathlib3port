@@ -20,7 +20,7 @@ variable {p q : ℕ+ → Prop} [DecidablePred p] [DecidablePred q] (h : ∃ n, p
 instance decidablePredExistsNat : DecidablePred fun n' : ℕ => ∃ (n : ℕ+)(hn : n' = n), p n := fun n' =>
   decidableOfIff' (∃ h : 0 < n', p ⟨n', h⟩) <|
     Subtype.exists.trans <| by
-      simp_rw [Subtype.coe_mk, @exists_comm (_ < _) (_ = _), exists_prop, exists_eq_left']
+      simp_rw [Subtype.coe_mk, @exists_comm (_ < _) (_ = _), exists_propₓ, exists_eq_left']
 
 include h
 
@@ -79,7 +79,7 @@ theorem find_lt_iff (n : ℕ+) : Pnat.find h < n ↔ ∃ m < n, p m :=
 
 @[simp]
 theorem find_le_iff (n : ℕ+) : Pnat.find h ≤ n ↔ ∃ m ≤ n, p m := by
-  simp only [exists_prop, ← lt_add_one_iff, find_lt_iff]
+  simp only [exists_propₓ, ← lt_add_one_iff, find_lt_iff]
 
 @[simp]
 theorem le_find_iff (n : ℕ+) : n ≤ Pnat.find h ↔ ∀ m < n, ¬p m := by

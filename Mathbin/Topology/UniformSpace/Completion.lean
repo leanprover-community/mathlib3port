@@ -450,7 +450,7 @@ theorem ext {Y : Type _} [TopologicalSpace Y] [T2Space Y] {f g : Completion α �
 
 theorem ext' {Y : Type _} [TopologicalSpace Y] [T2Space Y] {f g : Completion α → Y} (hf : Continuous f)
     (hg : Continuous g) (h : ∀ a : α, f a = g a) (a : Completion α) : f a = g a :=
-  congr_funₓ (ext hf hg h) a
+  congr_fun (ext hf hg h) a
 
 section Extension
 

@@ -81,7 +81,7 @@ theorem aeval : aeval x (minpoly A x) = 0 := by
 theorem ne_one [Nontrivial B] : minpoly A x ≠ 1 := by
   intro h
   refine' (one_ne_zero : (1 : B) ≠ 0) _
-  simpa using congr_argₓ (Polynomial.aeval x) h
+  simpa using congr_arg (Polynomial.aeval x) h
 
 theorem map_ne_one [Nontrivial B] {R : Type _} [Semiringₓ R] [Nontrivial R] (f : A →+* R) : (minpoly A x).map f ≠ 1 :=
   by

@@ -258,7 +258,7 @@ theorem op_norm_le_bound' (f : E →SL[σ₁₂] F) {M : ℝ} (hMp : 0 ≤ M) (h
     ((ne_or_eq ∥x∥ 0).elim (hM x)) fun h => by
       simp only [h, mul_zero, norm_image_of_norm_zero f f.2 h]
 
-theorem op_norm_le_of_lipschitz {f : E →SL[σ₁₂] F} {K : ℝ≥0 } (hf : LipschitzWith K f) : ∥f∥ ≤ K :=
+theorem op_norm_le_of_lipschitz {f : E →SL[σ₁₂] F} {K : ℝ≥0} (hf : LipschitzWith K f) : ∥f∥ ≤ K :=
   (f.op_norm_le_bound K.2) fun x => by
     simpa only [dist_zero_right, f.map_zero] using hf.dist_le_mul x 0
 
@@ -271,10 +271,10 @@ theorem op_norm_eq_of_bounds {φ : E →SL[σ₁₂] F} {M : ℝ} (M_nonneg : 0 
 theorem op_norm_neg (f : E →SL[σ₁₂] F) : ∥-f∥ = ∥f∥ := by
   simp only [norm_def, neg_apply, norm_neg]
 
-theorem antilipschitz_of_bound (f : E →SL[σ₁₂] F) {K : ℝ≥0 } (h : ∀ x, ∥x∥ ≤ K * ∥f x∥) : AntilipschitzWith K f :=
+theorem antilipschitz_of_bound (f : E →SL[σ₁₂] F) {K : ℝ≥0} (h : ∀ x, ∥x∥ ≤ K * ∥f x∥) : AntilipschitzWith K f :=
   AddMonoidHomClass.antilipschitz_of_bound _ h
 
-theorem bound_of_antilipschitz (f : E →SL[σ₁₂] F) {K : ℝ≥0 } (h : AntilipschitzWith K f) (x) : ∥x∥ ≤ K * ∥f x∥ :=
+theorem bound_of_antilipschitz (f : E →SL[σ₁₂] F) {K : ℝ≥0} (h : AntilipschitzWith K f) (x) : ∥x∥ ≤ K * ∥f x∥ :=
   AddMonoidHomClass.bound_of_antilipschitz _ h x
 
 section
@@ -398,30 +398,30 @@ instance toSeminormedAddCommGroup : SeminormedAddCommGroup (E →SL[σ₁₂] F)
 theorem nnnorm_def (f : E →SL[σ₁₂] F) : ∥f∥₊ = inf { c | ∀ x, ∥f x∥₊ ≤ c * ∥x∥₊ } := by
   ext
   rw [Nnreal.coe_Inf, coe_nnnorm, norm_def, Nnreal.coe_image]
-  simp_rw [← Nnreal.coe_le_coe, Nnreal.coe_mul, coe_nnnorm, mem_set_of_eq, Subtype.coe_mk, exists_prop]
+  simp_rw [← Nnreal.coe_le_coe, Nnreal.coe_mul, coe_nnnorm, mem_set_of_eq, Subtype.coe_mk, exists_propₓ]
 
 /-- If one controls the norm of every `A x`, then one controls the norm of `A`. -/
-theorem op_nnnorm_le_bound (f : E →SL[σ₁₂] F) (M : ℝ≥0 ) (hM : ∀ x, ∥f x∥₊ ≤ M * ∥x∥₊) : ∥f∥₊ ≤ M :=
+theorem op_nnnorm_le_bound (f : E →SL[σ₁₂] F) (M : ℝ≥0) (hM : ∀ x, ∥f x∥₊ ≤ M * ∥x∥₊) : ∥f∥₊ ≤ M :=
   op_norm_le_bound f (zero_le M) hM
 
 /-- If one controls the norm of every `A x`, `∥x∥₊ ≠ 0`, then one controls the norm of `A`. -/
-theorem op_nnnorm_le_bound' (f : E →SL[σ₁₂] F) (M : ℝ≥0 ) (hM : ∀ x, ∥x∥₊ ≠ 0 → ∥f x∥₊ ≤ M * ∥x∥₊) : ∥f∥₊ ≤ M :=
+theorem op_nnnorm_le_bound' (f : E →SL[σ₁₂] F) (M : ℝ≥0) (hM : ∀ x, ∥x∥₊ ≠ 0 → ∥f x∥₊ ≤ M * ∥x∥₊) : ∥f∥₊ ≤ M :=
   (op_norm_le_bound' f (zero_le M)) fun x hx =>
     hM x <| by
       rwa [← Nnreal.coe_ne_zero]
 
 /-- For a continuous real linear map `f`, if one controls the norm of every `f x`, `∥x∥₊ = 1`, then
 one controls the norm of `f`. -/
-theorem op_nnnorm_le_of_unit_nnnorm [NormedSpace ℝ E] [NormedSpace ℝ F] {f : E →L[ℝ] F} {C : ℝ≥0 }
+theorem op_nnnorm_le_of_unit_nnnorm [NormedSpace ℝ E] [NormedSpace ℝ F] {f : E →L[ℝ] F} {C : ℝ≥0}
     (hf : ∀ x, ∥x∥₊ = 1 → ∥f x∥₊ ≤ C) : ∥f∥₊ ≤ C :=
   (op_norm_le_of_unit_norm C.coe_nonneg) fun x hx =>
     hf x <| by
       rwa [← Nnreal.coe_eq_one]
 
-theorem op_nnnorm_le_of_lipschitz {f : E →SL[σ₁₂] F} {K : ℝ≥0 } (hf : LipschitzWith K f) : ∥f∥₊ ≤ K :=
+theorem op_nnnorm_le_of_lipschitz {f : E →SL[σ₁₂] F} {K : ℝ≥0} (hf : LipschitzWith K f) : ∥f∥₊ ≤ K :=
   op_norm_le_of_lipschitz hf
 
-theorem op_nnnorm_eq_of_bounds {φ : E →SL[σ₁₂] F} (M : ℝ≥0 ) (h_above : ∀ x, ∥φ x∥ ≤ M * ∥x∥)
+theorem op_nnnorm_eq_of_bounds {φ : E →SL[σ₁₂] F} (M : ℝ≥0) (h_above : ∀ x, ∥φ x∥ ≤ M * ∥x∥)
     (h_below : ∀ N, (∀ x, ∥φ x∥₊ ≤ N * ∥x∥₊) → M ≤ N) : ∥φ∥₊ = M :=
   Subtype.ext <| op_norm_eq_of_bounds (zero_le M) h_above <| Subtype.forall'.mpr h_below
 
@@ -1107,7 +1107,7 @@ theorem ContinuousLinearEquiv.tsum_eq_iff [T2Space M] [T2Space M₂] {f : ι →
       ⟨by
         rintro rfl
         simp , fun H => by
-        simpa using congr_argₓ (fun z => e z) H⟩
+        simpa using congr_arg (fun z => e z) H⟩
     
 
 protected theorem ContinuousLinearEquiv.map_tsum [T2Space M] [T2Space M₂] {f : ι → M} (e : M ≃SL[σ] M₂) :
@@ -1342,7 +1342,7 @@ theorem to_span_singleton_norm (x : E) : ∥toSpanSingleton 𝕜 x∥ = ∥x∥ 
 
 variable (f)
 
-theorem uniform_embedding_of_bound {K : ℝ≥0 } (hf : ∀ x, ∥x∥ ≤ K * ∥f x∥) : UniformEmbedding f :=
+theorem uniform_embedding_of_bound {K : ℝ≥0} (hf : ∀ x, ∥x∥ ≤ K * ∥f x∥) : UniformEmbedding f :=
   (AddMonoidHomClass.antilipschitz_of_bound f hf).UniformEmbedding f.UniformContinuous
 
 /-- If a continuous linear map is a uniform embedding, then it is expands the distances
@@ -1573,7 +1573,7 @@ end
 
 section
 
-variable {N : ℝ≥0 } (h_e : ∀ x, ∥x∥ ≤ N * ∥e x∥) [RingHomIsometric σ₁₂]
+variable {N : ℝ≥0} (h_e : ∀ x, ∥x∥ ≤ N * ∥e x∥) [RingHomIsometric σ₁₂]
 
 -- mathport name: exprψ
 local notation "ψ" => f.extend e h_dense (uniform_embedding_of_bound _ h_e).to_uniform_inducing
@@ -1839,13 +1839,13 @@ variable (𝕜)
 
 /-- Given a nonzero element `x` of a normed space `E₁` over a field `𝕜`, the natural
     continuous linear equivalence from `E₁` to the span of `x`.-/
-def toSpanNonzeroSingleton (x : E) (h : x ≠ 0) : 𝕜 ≃L[𝕜] 𝕜∙x :=
+def toSpanNonzeroSingleton (x : E) (h : x ≠ 0) : 𝕜 ≃L[𝕜] 𝕜 ∙ x :=
   ofHomothety (LinearEquiv.toSpanNonzeroSingleton 𝕜 E x h) ∥x∥ (norm_pos_iff.mpr h)
     (to_span_nonzero_singleton_homothety 𝕜 x h)
 
 /-- Given a nonzero element `x` of a normed space `E₁` over a field `𝕜`, the natural continuous
     linear map from the span of `x` to `𝕜`.-/
-def coord (x : E) (h : x ≠ 0) : (𝕜∙x) →L[𝕜] 𝕜 :=
+def coord (x : E) (h : x ≠ 0) : (𝕜 ∙ x) →L[𝕜] 𝕜 :=
   (toSpanNonzeroSingleton 𝕜 x h).symm
 
 @[simp]
@@ -1858,19 +1858,19 @@ theorem coord_to_span_nonzero_singleton {x : E} (h : x ≠ 0) (c : 𝕜) :
   (toSpanNonzeroSingleton 𝕜 x h).symm_apply_apply c
 
 @[simp]
-theorem to_span_nonzero_singleton_coord {x : E} (h : x ≠ 0) (y : 𝕜∙x) :
+theorem to_span_nonzero_singleton_coord {x : E} (h : x ≠ 0) (y : 𝕜 ∙ x) :
     toSpanNonzeroSingleton 𝕜 x h (coord 𝕜 x h y) = y :=
   (toSpanNonzeroSingleton 𝕜 x h).apply_symm_apply y
 
 @[simp]
 theorem coord_norm (x : E) (h : x ≠ 0) : ∥coord 𝕜 x h∥ = ∥x∥⁻¹ := by
   have hx : 0 < ∥x∥ := norm_pos_iff.mpr h
-  haveI : Nontrivial (𝕜∙x) := Submodule.nontrivial_span_singleton h
+  haveI : Nontrivial (𝕜 ∙ x) := Submodule.nontrivial_span_singleton h
   exact
     ContinuousLinearMap.homothety_norm _ fun y => homothety_inverse _ hx _ (to_span_nonzero_singleton_homothety 𝕜 x h) _
 
 @[simp]
-theorem coord_self (x : E) (h : x ≠ 0) : (coord 𝕜 x h) (⟨x, Submodule.mem_span_singleton_self x⟩ : 𝕜∙x) = 1 :=
+theorem coord_self (x : E) (h : x ≠ 0) : (coord 𝕜 x h) (⟨x, Submodule.mem_span_singleton_self x⟩ : 𝕜 ∙ x) = 1 :=
   LinearEquiv.coord_self 𝕜 E x h
 
 variable {𝕜} {𝕜₄ : Type _} [NontriviallyNormedField 𝕜₄]

@@ -114,7 +114,7 @@ theorem ClassGroup.mk0_eq_mk0_iff_exists_fraction_ring [IsDedekindDomain R] {I J
   · rintro ⟨_, ⟨x, rfl⟩, hx⟩
     refine' ⟨x, x.ne_zero, _⟩
     simpa only [mul_comm, coe_mk0, MonoidHom.to_fun_eq_coe, coe_to_principal_ideal, Units.coe_mul] using
-      congr_argₓ (coe : _ → FractionalIdeal R⁰ K) hx
+      congr_arg (coe : _ → FractionalIdeal R⁰ K) hx
     
   · rintro ⟨x, hx, eq_J⟩
     refine' ⟨_, ⟨Units.mk0 x hx, rfl⟩, Units.ext _⟩
@@ -203,7 +203,7 @@ end
 theorem ClassGroup.mk_eq_one_iff {I : (FractionalIdeal R⁰ K)ˣ} :
     QuotientGroup.mk' (toPrincipalIdeal R K).range I = 1 ↔ (I : Submodule R K).IsPrincipal := by
   rw [← (QuotientGroup.mk' _).map_one, eq_comm, QuotientGroup.mk'_eq_mk']
-  simp only [exists_prop, one_mulₓ, exists_eq_right, to_principal_ideal_eq_iff, MonoidHom.mem_range, coe_coe]
+  simp only [exists_propₓ, one_mulₓ, exists_eq_right, to_principal_ideal_eq_iff, MonoidHom.mem_range, coe_coe]
   refine'
     ⟨fun ⟨x, hx⟩ =>
       ⟨⟨x, by

@@ -52,7 +52,7 @@ theorem exists_eq_polynomial [Semiringₓ Fq] {d : ℕ} {m : ℕ} (hm : Fintype.
     
   -- So we only need to look for the coefficients between `0` and `deg b`.
   rw [not_leₓ] at hbj
-  apply congr_funₓ i_eq.symm ⟨j, _⟩
+  apply congr_fun i_eq.symm ⟨j, _⟩
   exact lt_of_lt_of_leₓ (coe_lt_degree.mp hbj) hb
 
 /-- If `A` is a family of enough low-degree polynomials over a finite ring,
@@ -95,7 +95,7 @@ theorem exists_approx_polynomial_aux [Ringₓ Fq] {d : ℕ} {m : ℕ} (hm : Fint
       
   have : j = b.nat_degree - (nat_degree b - j.succ).succ := by
     rw [← Nat.succ_subₓ hbj, Nat.succ_sub_succ, tsub_tsub_cancel_of_le hbj.le]
-  convert congr_funₓ i_eq.symm ⟨nat_degree b - j.succ, hj⟩
+  convert congr_fun i_eq.symm ⟨nat_degree b - j.succ, hj⟩
 
 variable [Field Fq]
 

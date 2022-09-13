@@ -115,7 +115,7 @@ instance : Inhabited (GroupFilterBasis G) :=
   ⟨by
     refine' { Sets := {{1}}, Nonempty := singleton_nonempty _.. }
     all_goals
-      simp only [exists_prop, mem_singleton_iff]
+      simp only [exists_propₓ, mem_singleton_iff]
     · rintro - - rfl rfl
       use {1}
       simp

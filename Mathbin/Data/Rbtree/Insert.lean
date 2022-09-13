@@ -141,7 +141,7 @@ theorem is_searchable_balance1 {l y r v t lo hi} :
         run_tac
           is_searchable_tactic
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 theorem is_searchable_balance1_node {t} [IsTrans α lt] :
     ∀ {y s lo hi},
       IsSearchable lt t lo (some y) → IsSearchable lt s (some y) hi → IsSearchable lt (balance1Node t y s) lo hi :=
@@ -173,7 +173,7 @@ theorem is_searchable_balance2 {l y r v t lo hi} :
         run_tac
           is_searchable_tactic
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 theorem is_searchable_balance2_node {t} [IsTrans α lt] :
     ∀ {y s lo hi},
       IsSearchable lt s lo (some y) → IsSearchable lt t (some y) hi → IsSearchable lt (balance2Node t y s) lo hi :=
@@ -196,7 +196,7 @@ theorem is_searchable_balance2_node {t} [IsTrans α lt] :
     apply is_searchable_balance2
     assumption'
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 theorem is_searchable_ins [DecidableRel lt] {t x} [IsStrictWeakOrder α lt] :
     ∀ {lo hi} (h : IsSearchable lt t lo hi),
       Lift lt lo (some x) → Lift lt (some x) hi → IsSearchable lt (ins lt t x) lo hi :=
@@ -279,31 +279,31 @@ parameter {α : Type u}(lt : α → α → Prop)
 attribute [local simp] mem balance1_node balance2_node
 
 -- mathport name: mem
-local infixl:0 "∈" => Mem lt
+local infixl:0 " ∈ " => Mem lt
 
-theorem mem_balance1_node_of_mem_left {x s} (v) (t : Rbnode α) : (x∈s) → (x∈balance1Node s v t) := by
+theorem mem_balance1_node_of_mem_left {x s} (v) (t : Rbnode α) : (x ∈ s) → (x ∈ balance1Node s v t) := by
   cases s <;> simp [false_implies_iff]
   all_goals
     apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp at * <;> cases_type* or.1 <;> simp [*]
 
-theorem mem_balance2_node_of_mem_left {x s} (v) (t : Rbnode α) : (x∈s) → (x∈balance2Node s v t) := by
+theorem mem_balance2_node_of_mem_left {x s} (v) (t : Rbnode α) : (x ∈ s) → (x ∈ balance2Node s v t) := by
   cases s <;> simp [false_implies_iff]
   all_goals
     apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp at * <;> cases_type* or.1 <;> simp [*]
 
-theorem mem_balance1_node_of_mem_right {x t} (v) (s : Rbnode α) : (x∈t) → (x∈balance1Node s v t) := by
+theorem mem_balance1_node_of_mem_right {x t} (v) (s : Rbnode α) : (x ∈ t) → (x ∈ balance1Node s v t) := by
   intros
   cases s <;> simp [*]
   all_goals
     apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp [*]
 
-theorem mem_balance2_node_of_mem_right {x t} (v) (s : Rbnode α) : (x∈t) → (x∈balance2Node s v t) := by
+theorem mem_balance2_node_of_mem_right {x t} (v) (s : Rbnode α) : (x ∈ t) → (x ∈ balance2Node s v t) := by
   intros
   cases s <;> simp [*]
   all_goals
     apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp [*]
 
-theorem mem_balance1_node_of_incomp {x v} (s t) : ¬lt x v ∧ ¬lt v x → s ≠ leaf → (x∈balance1Node s v t) := by
+theorem mem_balance1_node_of_incomp {x v} (s t) : ¬lt x v ∧ ¬lt v x → s ≠ leaf → (x ∈ balance1Node s v t) := by
   intros
   cases s <;> simp
   · contradiction
@@ -311,7 +311,7 @@ theorem mem_balance1_node_of_incomp {x v} (s t) : ¬lt x v ∧ ¬lt v x → s �
   all_goals
     apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp [*]
 
-theorem mem_balance2_node_of_incomp {x v} (s t) : ¬lt v x ∧ ¬lt x v → s ≠ leaf → (x∈balance2Node s v t) := by
+theorem mem_balance2_node_of_incomp {x v} (s t) : ¬lt v x ∧ ¬lt x v → s ≠ leaf → (x ∈ balance2Node s v t) := by
   intros
   cases s <;> simp
   · contradiction
@@ -342,7 +342,7 @@ theorem insert_ne_leaf [DecidableRel lt] (t : Rbnode α) (x : α) : insert lt t 
   · exact absurd he (ins_ne_leaf _ _ _)
     
 
-theorem mem_ins_of_incomp [DecidableRel lt] (t : Rbnode α) {x y : α} : ∀ h : ¬lt x y ∧ ¬lt y x, x∈t.ins lt y := by
+theorem mem_ins_of_incomp [DecidableRel lt] (t : Rbnode α) {x y : α} : ∀ h : ¬lt x y ∧ ¬lt y x, x ∈ t.ins lt y := by
   with_cases
     apply ins.induction lt t y <;> intros <;> simp [ins, *]
   case is_black_lt_red =>
@@ -356,7 +356,7 @@ theorem mem_ins_of_incomp [DecidableRel lt] (t : Rbnode α) {x y : α} : ∀ h :
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 theorem mem_ins_of_mem [DecidableRel lt] [IsStrictWeakOrder α lt] {t : Rbnode α} (z : α) :
-    ∀ {x} (h : x∈t), x∈t.ins lt z := by
+    ∀ {x} (h : x ∈ t), x ∈ t.ins lt z := by
   with_cases
     apply ins.induction lt t z <;>
       intros <;>
@@ -406,13 +406,14 @@ theorem mem_mk_insert_result {a t} (c) : Mem lt a t → Mem lt a (mkInsertResult
 theorem mem_of_mem_mk_insert_result {a t c} : Mem lt a (mkInsertResult c t) → Mem lt a t := by
   cases t <;> cases c <;> simp [mk_insert_result, mem] <;> intros <;> assumption
 
-theorem mem_insert_of_incomp [DecidableRel lt] (t : Rbnode α) {x y : α} : ∀ h : ¬lt x y ∧ ¬lt y x, x∈t.insert lt y := by
+theorem mem_insert_of_incomp [DecidableRel lt] (t : Rbnode α) {x y : α} : ∀ h : ¬lt x y ∧ ¬lt y x, x ∈ t.insert lt y :=
+  by
   intros <;> unfold insert <;> apply mem_mk_insert_result <;> apply mem_ins_of_incomp <;> assumption
 
-theorem mem_insert_of_mem [DecidableRel lt] [IsStrictWeakOrder α lt] {t x} (z) : (x∈t) → (x∈t.insert lt z) := by
+theorem mem_insert_of_mem [DecidableRel lt] [IsStrictWeakOrder α lt] {t x} (z) : (x ∈ t) → (x ∈ t.insert lt z) := by
   intros <;> apply mem_mk_insert_result <;> apply mem_ins_of_mem <;> assumption
 
-theorem of_mem_balance1_node {x s v t} : (x∈balance1Node s v t) → (x∈s) ∨ ¬lt x v ∧ ¬lt v x ∨ (x∈t) := by
+theorem of_mem_balance1_node {x s v t} : (x ∈ balance1Node s v t) → (x ∈ s) ∨ ¬lt x v ∧ ¬lt v x ∨ (x ∈ t) := by
   cases s <;> simp
   · intros
     simp [*]
@@ -420,7 +421,7 @@ theorem of_mem_balance1_node {x s v t} : (x∈balance1Node s v t) → (x∈s) �
   all_goals
     apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp_all <;> cases_type* or.1 <;> simp [*]
 
-theorem of_mem_balance2_node {x s v t} : (x∈balance2Node s v t) → (x∈s) ∨ ¬lt x v ∧ ¬lt v x ∨ (x∈t) := by
+theorem of_mem_balance2_node {x s v t} : (x ∈ balance2Node s v t) → (x ∈ s) ∨ ¬lt x v ∧ ¬lt v x ∨ (x ∈ t) := by
   cases s <;> simp
   · intros
     simp [*]
@@ -430,7 +431,7 @@ theorem of_mem_balance2_node {x s v t} : (x∈balance2Node s v t) → (x∈s) �
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 theorem equiv_or_mem_of_mem_ins [DecidableRel lt] [IsStrictWeakOrder α lt] {t : Rbnode α} {x z} :
-    ∀ h : x∈t.ins lt z, x ≈[lt]z ∨ (x∈t) := by
+    ∀ h : x ∈ t.ins lt z, x ≈[lt]z ∨ (x ∈ t) := by
   with_cases
     apply ins.induction lt t z <;> intros <;> simp_all [ins, StrictWeakOrder.Equiv] <;> cases_type* or.1
   case is_black_lt_red =>
@@ -456,7 +457,7 @@ theorem equiv_or_mem_of_mem_ins [DecidableRel lt] [IsStrictWeakOrder α lt] {t :
     done
 
 theorem equiv_or_mem_of_mem_insert [DecidableRel lt] [IsStrictWeakOrder α lt] {t : Rbnode α} {x z} :
-    ∀ h : x∈t.insert lt z, x ≈[lt]z ∨ (x∈t) := by
+    ∀ h : x ∈ t.insert lt z, x ≈[lt]z ∨ (x ∈ t) := by
   simp [insert]
   intros
   apply equiv_or_mem_of_mem_ins

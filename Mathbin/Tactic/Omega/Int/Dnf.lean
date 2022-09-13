@@ -166,11 +166,11 @@ theorem implies_neg_elim : ∀ {p : Preform}, Preform.Implies p (negElim p) := b
       try
         apply h
     · simp only [le_and_le_iff_eq.symm, not_and_distrib, not_leₓ, preterm.val, preform.holds] at h
-      simp only [Int.add_one_le_iff, preterm.add_one, preterm.val, preform.holds, neg_elim]
+      simp only [Int.add_one_le_iffₓ, preterm.add_one, preterm.val, preform.holds, neg_elim]
       rw [or_comm]
       assumption
       
-    · simp only [not_leₓ, Int.add_one_le_iff, preterm.add_one, not_leₓ, preterm.val, preform.holds, neg_elim] at *
+    · simp only [not_leₓ, Int.add_one_le_iffₓ, preterm.add_one, not_leₓ, preterm.val, preform.holds, neg_elim] at *
       assumption
       
     
@@ -184,7 +184,7 @@ theorem implies_neg_elim : ∀ {p : Preform}, Preform.Implies p (negElim p) := b
           ] <;>
       assumption
     
-  · apply And.imp (ihp _) (ihq _) h
+  · apply And.impₓ (ihp _) (ihq _) h
     
 
 @[simp]

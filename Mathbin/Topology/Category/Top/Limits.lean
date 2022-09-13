@@ -314,12 +314,12 @@ theorem prod_iso_prod_inv_snd (X Y : Top.{u}) : (prodIsoProd X Y).inv ≫ limits
 
 theorem prod_topology {X Y : Top} :
     (X ⨯ Y).TopologicalSpace =
-      induced (Limits.prod.fst : X ⨯ Y ⟶ _)
-          X.TopologicalSpace⊓induced (Limits.prod.snd : X ⨯ Y ⟶ _) Y.TopologicalSpace :=
+      induced (Limits.prod.fst : X ⨯ Y ⟶ _) X.TopologicalSpace ⊓
+        induced (Limits.prod.snd : X ⨯ Y ⟶ _) Y.TopologicalSpace :=
   by
   let homeo := homeo_of_iso (prod_iso_prod X Y)
   refine' homeo.inducing.induced.trans _
-  change induced homeo (_⊓_) = _
+  change induced homeo (_ ⊓ _) = _
   simpa [induced_compose]
 
 theorem range_prod_map {W X Y Z : Top.{u}} (f : W ⟶ Y) (g : X ⟶ Z) :
@@ -330,7 +330,7 @@ theorem range_prod_map {W X Y Z : Top.{u}} (f : W ⟶ Y) (g : X ⟶ Z) :
   constructor
   · rintro ⟨y, rfl⟩
     simp only [Set.mem_preimage, Set.mem_range, Set.mem_inter_eq, ← comp_apply]
-    simp only [limits.prod.map_fst, limits.prod.map_snd, exists_apply_eq_applyₓ, comp_apply, and_selfₓ]
+    simp only [limits.prod.map_fst, limits.prod.map_snd, exists_apply_eq_apply, comp_apply, and_selfₓ]
     
   · rintro ⟨⟨x₁, hx₁⟩, ⟨x₂, hx₂⟩⟩
     use (prod_iso_prod W X).inv (x₁, x₂)
@@ -453,12 +453,12 @@ theorem pullback_iso_prod_subtype_hom_apply {f : X ⟶ Z} {g : Y ⟶ Z} (x : pul
 
 theorem pullback_topology {X Y Z : Top.{u}} (f : X ⟶ Z) (g : Y ⟶ Z) :
     (pullback f g).TopologicalSpace =
-      induced (pullback.fst : pullback f g ⟶ _)
-          X.TopologicalSpace⊓induced (pullback.snd : pullback f g ⟶ _) Y.TopologicalSpace :=
+      induced (pullback.fst : pullback f g ⟶ _) X.TopologicalSpace ⊓
+        induced (pullback.snd : pullback f g ⟶ _) Y.TopologicalSpace :=
   by
   let homeo := homeo_of_iso (pullback_iso_prod_subtype f g)
   refine' homeo.inducing.induced.trans _
-  change induced homeo (induced _ (_⊓_)) = _
+  change induced homeo (induced _ (_ ⊓ _)) = _
   simpa [induced_compose]
 
 theorem range_pullback_to_prod {X Y Z : Top} (f : X ⟶ Z) (g : Y ⟶ Z) :
@@ -895,20 +895,20 @@ theorem PartialSections.nonempty [IsCofiltered J] [h : ∀ j : J, Nonempty (F.ob
 theorem PartialSections.directed : Directed Superset fun G : FiniteDiagram J => PartialSections F G.2 := by
   classical
   intro A B
-  let ιA : finite_diagram_arrow A.1 → finite_diagram_arrow (A.1⊔B.1) := fun f =>
+  let ιA : finite_diagram_arrow A.1 → finite_diagram_arrow (A.1 ⊔ B.1) := fun f =>
     ⟨f.1, f.2.1, Finset.mem_union_left _ f.2.2.1, Finset.mem_union_left _ f.2.2.2.1, f.2.2.2.2⟩
-  let ιB : finite_diagram_arrow B.1 → finite_diagram_arrow (A.1⊔B.1) := fun f =>
+  let ιB : finite_diagram_arrow B.1 → finite_diagram_arrow (A.1 ⊔ B.1) := fun f =>
     ⟨f.1, f.2.1, Finset.mem_union_right _ f.2.2.1, Finset.mem_union_right _ f.2.2.2.1, f.2.2.2.2⟩
-  refine' ⟨⟨A.1⊔B.1, A.2.Image ιA⊔B.2.Image ιB⟩, _, _⟩
+  refine' ⟨⟨A.1 ⊔ B.1, A.2.Image ιA ⊔ B.2.Image ιB⟩, _, _⟩
   · rintro u hu f hf
-    have : ιA f ∈ A.2.Image ιA⊔B.2.Image ιB := by
+    have : ιA f ∈ A.2.Image ιA ⊔ B.2.Image ιB := by
       apply Finset.mem_union_left
       rw [Finset.mem_image]
       refine' ⟨f, hf, rfl⟩
     exact hu this
     
   · rintro u hu f hf
-    have : ιB f ∈ A.2.Image ιA⊔B.2.Image ιB := by
+    have : ιB f ∈ A.2.Image ιA ⊔ B.2.Image ιB := by
       apply Finset.mem_union_right
       rw [Finset.mem_image]
       refine' ⟨f, hf, rfl⟩

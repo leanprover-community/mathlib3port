@@ -49,7 +49,7 @@ theorem condexp_ae_eq_restrict_zero (hs : measurable_set[m] s) (hf : f =ᵐ[μ.r
     exact restrict.sigma_finite _ s
   by_cases' hf_int : integrable f μ
   swap
-  · exact ae_restrict_of_ae (condexp_undef hf_int)
+  · rw [condexp_undef hf_int]
     
   refine' ae_eq_of_forall_set_integral_eq_of_sigma_finite' hm _ _ _ _ _
   · exact fun t ht hμt => integrable_condexp.integrable_on.integrable_on
@@ -173,9 +173,7 @@ theorem condexp_ae_eq_restrict_of_measurable_space_eq_on {m m₂ m0 : Measurable
     rwa [← Set.inter_univ s, ← hs Set.Univ, Set.inter_univ]
   by_cases' hf_int : integrable f μ
   swap
-  · filter_upwards [@condexp_undef _ _ _ _ _ m _ μ _ hf_int, @condexp_undef _ _ _ _ _ m₂ _ μ _ hf_int] with x hxm hxm₂
-    rw [Pi.zero_apply] at hxm hxm₂
-    rw [Set.indicator_apply_eq_zero.2 fun _ => hxm, Set.indicator_apply_eq_zero.2 fun _ => hxm₂]
+  · simp_rw [condexp_undef hf_int]
     
   refine' ((condexp_indicator hf_int hs_m).symm.trans _).trans (condexp_indicator hf_int hs_m₂)
   refine'

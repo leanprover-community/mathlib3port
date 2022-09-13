@@ -18,7 +18,7 @@ The dual space of an R-module M is the R-module of linear maps `M → R`.
 
 * `dual R M` defines the dual space of M over R.
 * Given a basis for an `R`-module `M`, `basis.to_dual` produces a map from `M` to `dual R M`.
-* Given families of vectors `e` and `ε`, `dual_pair e ε` states that these families have the
+* Given families of vectors `e` and `ε`, `module.dual_bases e ε` states that these families have the
   characteristic properties of a basis and a dual.
 * `dual_annihilator W` is the submodule of `dual R M` where every element annihilates `W`.
 
@@ -26,8 +26,8 @@ The dual space of an R-module M is the R-module of linear maps `M → R`.
 
 * `to_dual_equiv` : the linear equivalence between the dual module and primal module,
   given a finite basis.
-* `dual_pair.basis` and `dual_pair.eq_dual`: if `e` and `ε` form a dual pair, `e` is a basis and
-  `ε` is its dual basis.
+* `module.dual_bases.basis` and `module.dual_bases.eq_dual`: if `e` and `ε` form a dual pair, `e`
+  is a basis and `ε` is its dual basis.
 * `quot_equiv_annihilator`: the quotient by a subspace is isomorphic to its dual annihilator.
 
 ## Notation
@@ -352,7 +352,7 @@ theorem eval_equiv_to_linear_map [FiniteDimensional K V] : (evalEquiv K V).toLin
 
 end Module
 
-section DualPair
+section DualBases
 
 open Module
 
@@ -362,14 +362,14 @@ variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] [DecidableEq ι]
 
 /-- `e` and `ε` have characteristic properties of a basis and its dual -/
 @[nolint has_nonempty_instance]
-structure DualPair (e : ι → M) (ε : ι → Dual R M) where
+structure Module.DualBases (e : ι → M) (ε : ι → Dual R M) where
   eval : ∀ i j : ι, ε i (e j) = if i = j then 1 else 0
   Total : ∀ {m : M}, (∀ i, ε i m = 0) → m = 0
   [Finite : ∀ m : M, Fintype { i | ε i m ≠ 0 }]
 
-end DualPair
+end DualBases
 
-namespace DualPair
+namespace Module.DualBases
 
 open Module Module.Dual LinearMap Function
 
@@ -380,7 +380,7 @@ variable [CommRingₓ R] [AddCommGroupₓ M] [Module R M]
 variable {e : ι → M} {ε : ι → Dual R M}
 
 /-- The coefficients of `v` on the basis `e` -/
-def coeffs [DecidableEq ι] (h : DualPair e ε) (m : M) : ι →₀ R where
+def coeffs [DecidableEq ι] (h : DualBases e ε) (m : M) : ι →₀ R where
   toFun := fun i => ε i m
   support := by
     haveI := h.finite m
@@ -391,7 +391,7 @@ def coeffs [DecidableEq ι] (h : DualPair e ε) (m : M) : ι →₀ R where
     exact Iff.rfl
 
 @[simp]
-theorem coeffs_apply [DecidableEq ι] (h : DualPair e ε) (m : M) (i : ι) : h.coeffs m i = ε i m :=
+theorem coeffs_apply [DecidableEq ι] (h : DualBases e ε) (m : M) (i : ι) : h.coeffs m i = ε i m :=
   rfl
 
 /-- linear combinations of elements of `e`.
@@ -402,11 +402,13 @@ def lc {ι} (e : ι → M) (l : ι →₀ R) : M :=
 theorem lc_def (e : ι → M) (l : ι →₀ R) : lc e l = Finsupp.total _ _ _ e l :=
   rfl
 
-variable [DecidableEq ι] (h : DualPair e ε)
+open Module
+
+variable [DecidableEq ι] (h : DualBases e ε)
 
 include h
 
-theorem dual_lc (l : ι →₀ R) (i : ι) : ε i (DualPair.lc e l) = l i := by
+theorem dual_lc (l : ι →₀ R) (i : ι) : ε i (DualBases.lc e l) = l i := by
   erw [LinearMap.map_sum]
   simp only [h.eval, map_smul, smul_eq_mul]
   rw [Finset.sum_eq_single i]
@@ -420,18 +422,18 @@ theorem dual_lc (l : ι →₀ R) (i : ι) : ε i (DualPair.lc e l) = l i := by
     
 
 @[simp]
-theorem coeffs_lc (l : ι →₀ R) : h.coeffs (DualPair.lc e l) = l := by
+theorem coeffs_lc (l : ι →₀ R) : h.coeffs (DualBases.lc e l) = l := by
   ext i
   rw [h.coeffs_apply, h.dual_lc]
 
 /-- For any m : M n, \sum_{p ∈ Q n} (ε p m) • e p = m -/
 @[simp]
-theorem lc_coeffs (m : M) : DualPair.lc e (h.coeffs m) = m := by
+theorem lc_coeffs (m : M) : DualBases.lc e (h.coeffs m) = m := by
   refine' eq_of_sub_eq_zero (h.total _)
   intro i
   simp [-sub_eq_add_neg, LinearMap.map_sub, h.dual_lc, sub_eq_zero]
 
-/-- `(h : dual_pair e ε).basis` shows the family of vectors `e` forms a basis. -/
+/-- `(h : dual_bases e ε).basis` shows the family of vectors `e` forms a basis. -/
 @[simps]
 def basis : Basis ι R M :=
   Basis.of_repr
@@ -463,7 +465,7 @@ theorem coe_dual_basis [Fintype ι] : ⇑h.Basis.dualBasis = ε :=
     h.Basis.ext fun j => by
       rw [h.basis.dual_basis_apply_self, h.coe_basis, h.eval, if_congr eq_comm rfl rfl]
 
-end DualPair
+end Module.DualBases
 
 namespace Submodule
 
@@ -499,7 +501,7 @@ theorem dual_restrict_ker_eq_dual_annihilator (W : Submodule R M) : W.dualRestri
   rfl
 
 theorem dual_annihilator_sup_eq_inf_dual_annihilator (U V : Submodule R M) :
-    (U⊔V).dualAnnihilator = U.dualAnnihilator⊓V.dualAnnihilator := by
+    (U ⊔ V).dualAnnihilator = U.dualAnnihilator ⊓ V.dualAnnihilator := by
   ext φ
   rw [mem_inf, mem_dual_annihilator, mem_dual_annihilator, mem_dual_annihilator]
   constructor <;> intro h
@@ -762,7 +764,7 @@ theorem dual_pairing_nondegenerate : (dualPairing K V).Nondegenerate := by
   let f : V →ₗ[K] K := Classical.choose (LinearPmap.mkSpanSingleton x 1 hx).toFun.exists_extend
   use f
   refine' ne_zero_of_eq_one _
-  have h : f.comp (K∙x).Subtype = (LinearPmap.mkSpanSingleton x 1 hx).toFun :=
+  have h : f.comp (K ∙ x).Subtype = (LinearPmap.mkSpanSingleton x 1 hx).toFun :=
     Classical.choose_spec (LinearPmap.mkSpanSingleton x (1 : K) hx).toFun.exists_extend
   exact (FunLike.congr_fun h _).trans (LinearPmap.mk_span_singleton_apply _ hx _)
 

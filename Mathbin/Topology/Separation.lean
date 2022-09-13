@@ -182,7 +182,7 @@ theorem nhds_eq_nhds_iff [T0Space α] {a b : α} : 𝓝 a = 𝓝 b ↔ a = b :=
 
 theorem t0_space_iff_exists_is_open_xor_mem (α : Type u) [TopologicalSpace α] :
     T0Space α ↔ ∀ x y, x ≠ y → ∃ U : Set α, IsOpen U ∧ Xorₓ (x ∈ U) (y ∈ U) := by
-  simp only [t0_space_iff_not_inseparable, xor_iff_not_iff, not_forall, exists_prop, inseparable_iff_forall_open]
+  simp only [t0_space_iff_not_inseparable, xor_iff_not_iff, not_forall, exists_propₓ, inseparable_iff_forall_open]
 
 theorem exists_is_open_xor_mem [T0Space α] {x y : α} (h : x ≠ y) : ∃ U : Set α, IsOpen U ∧ Xorₓ (x ∈ U) (y ∈ U) :=
   (t0_space_iff_exists_is_open_xor_mem α).1 ‹_› x y h
@@ -283,7 +283,7 @@ theorem T0Space.of_cover (h : ∀ x y, Inseparable x y → ∃ s : Set α, x ∈
   lift x to s using hxs
   lift y to s using hys
   rw [← subtype_inseparable_iff] at hxy
-  exact congr_argₓ coe hxy.eq
+  exact congr_arg coe hxy.eq
 
 theorem T0Space.of_open_cover (h : ∀ x, ∃ s : Set α, x ∈ s ∧ IsOpen s ∧ T0Space s) : T0Space α :=
   T0Space.of_cover fun x y hxy =>
@@ -371,7 +371,7 @@ theorem t1_space_tfae (α : Type u) [TopologicalSpace α] :
   · simp only [← subset_compl_singleton_iff, exists_mem_subset_iff]
     
   tfae_have 5 ↔ 7
-  · simp only [(nhds_basis_opens _).mem_iff, subset_compl_singleton_iff, exists_prop, And.assoc, And.left_comm]
+  · simp only [(nhds_basis_opens _).mem_iff, subset_compl_singleton_iff, exists_propₓ, And.assoc, And.left_comm]
     
   tfae_have 5 ↔ 8
   · simp only [← principal_singleton, disjoint_principal_right]
@@ -447,7 +447,7 @@ theorem continuous_on_update_iff [T1Space α] [DecidableEq α] [TopologicalSpace
     {y : β} :
     ContinuousOn (Function.update f x y) s ↔ ContinuousOn f (s \ {x}) ∧ (x ∈ s → Tendsto f (𝓝[s \ {x}] x) (𝓝 y)) := by
   rw [ContinuousOn, ← and_forall_ne x, and_comm]
-  refine' and_congr ⟨fun H z hz => _, fun H z hzx hzs => _⟩ (forall_congrₓ fun hxs => _)
+  refine' and_congrₓ ⟨fun H z hz => _, fun H z hzx hzs => _⟩ (forall_congrₓ fun hxs => _)
   · specialize H z hz.2 hz.1
     rw [continuous_within_at_update_of_ne hz.2] at H
     exact H.mono (diff_subset _ _)
@@ -541,7 +541,7 @@ theorem nhds_set_le_iff [T1Space α] {s t : Set α} : 𝓝ˢ s ≤ 𝓝ˢ t ↔ 
 @[simp]
 theorem nhds_set_inj_iff [T1Space α] {s t : Set α} : 𝓝ˢ s = 𝓝ˢ t ↔ s = t := by
   simp_rw [le_antisymm_iffₓ]
-  exact and_congr nhds_set_le_iff nhds_set_le_iff
+  exact and_congrₓ nhds_set_le_iff nhds_set_le_iff
 
 theorem injective_nhds_set [T1Space α] : Function.Injective (𝓝ˢ : Set α → Filter α) := fun s t hst =>
   nhds_set_inj_iff.mp hst
@@ -725,8 +725,8 @@ theorem t2_separation [T2Space α] {x y : α} (h : x ≠ y) :
 
 theorem t2_space_iff_disjoint_nhds : T2Space α ↔ ∀ x y : α, x ≠ y → Disjoint (𝓝 x) (𝓝 y) := by
   refine' (t2_space_iff α).trans (forall₃_congrₓ fun x y hne => _)
-  simp only [(nhds_basis_opens x).disjoint_iff (nhds_basis_opens y), exists_prop, ← exists_and_distrib_left, And.assoc,
-    and_comm, And.left_comm]
+  simp only [(nhds_basis_opens x).disjoint_iff (nhds_basis_opens y), exists_propₓ, ← exists_and_distrib_leftₓ,
+    And.assoc, and_comm, And.left_comm]
 
 @[simp]
 theorem disjoint_nhds_nhds [T2Space α] {x y : α} : Disjoint (𝓝 x) (𝓝 y) ↔ x ≠ y :=
@@ -780,10 +780,10 @@ instance (priority := 100) T2Space.t1_space [T2Space α] : T1Space α :=
   t1_space_iff_disjoint_pure_nhds.mpr fun x y hne => (disjoint_nhds_nhds.2 hne).mono_left <| pure_le_nhds _
 
 /-- A space is T₂ iff the neighbourhoods of distinct points generate the bottom filter. -/
-theorem t2_iff_nhds : T2Space α ↔ ∀ {x y : α}, NeBot (𝓝 x⊓𝓝 y) → x = y := by
+theorem t2_iff_nhds : T2Space α ↔ ∀ {x y : α}, NeBot (𝓝 x ⊓ 𝓝 y) → x = y := by
   simp only [t2_space_iff_disjoint_nhds, disjoint_iff, ne_bot_iff, Ne.def, not_imp_comm]
 
-theorem eq_of_nhds_ne_bot [T2Space α] {x y : α} (h : NeBot (𝓝 x⊓𝓝 y)) : x = y :=
+theorem eq_of_nhds_ne_bot [T2Space α] {x y : α} (h : NeBot (𝓝 x ⊓ 𝓝 y)) : x = y :=
   t2_iff_nhds.mp ‹_› h
 
 theorem t2_space_iff_nhds : T2Space α ↔ ∀ {x y : α}, x ≠ y → ∃ U ∈ 𝓝 x, ∃ V ∈ 𝓝 y, Disjoint U V := by
@@ -795,7 +795,7 @@ theorem t2_separation_nhds [T2Space α] {x y : α} (h : x ≠ y) : ∃ u v, u �
 
 theorem t2_separation_compact_nhds [LocallyCompactSpace α] [T2Space α] {x y : α} (h : x ≠ y) :
     ∃ u v, u ∈ 𝓝 x ∧ v ∈ 𝓝 y ∧ IsCompact u ∧ IsCompact v ∧ Disjoint u v := by
-  simpa only [exists_prop, ← exists_and_distrib_left, and_comm, And.assoc, And.left_comm] using
+  simpa only [exists_propₓ, ← exists_and_distrib_leftₓ, and_comm, And.assoc, And.left_comm] using
     ((compact_basis_nhds x).disjoint_iff (compact_basis_nhds y)).1 (disjoint_nhds_nhds.2 h)
 
 theorem t2_iff_ultrafilter : T2Space α ↔ ∀ {x y : α} (f : Ultrafilter α), ↑f ≤ 𝓝 x → ↑f ≤ 𝓝 y → x = y :=
@@ -1072,7 +1072,7 @@ theorem IsCompact.is_closed [T2Space α] {s : Set α} (hs : IsCompact s) : IsClo
 
 @[simp]
 theorem Filter.coclosed_compact_eq_cocompact [T2Space α] : coclosedCompact α = cocompact α := by
-  simp [coclosed_compact, cocompact, infi_and', and_iff_right_of_imp IsCompact.is_closed]
+  simp [coclosed_compact, cocompact, infi_and', and_iff_right_of_impₓ IsCompact.is_closed]
 
 @[simp]
 theorem Bornology.relatively_compact_eq_in_compact [T2Space α] :

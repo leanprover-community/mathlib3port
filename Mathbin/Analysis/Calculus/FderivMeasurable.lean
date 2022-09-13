@@ -450,7 +450,7 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
     -- use the previous estimates to see that `f (x + y) - f x - f' y` is small.
     calc
       ∥f (x + y) - f x - f' y∥ = ∥f (x + y) - f x - L e (n e) m y + (L e (n e) m - f') y∥ :=
-        congr_argₓ _
+        congr_arg _
           (by
             simp )
       _ ≤ 4 * (1 / 2) ^ e * ∥y∥ + 12 * ∥c∥ * (1 / 2) ^ e * ∥y∥ :=
@@ -586,9 +586,9 @@ theorem A_mem_nhds_within_Ioi {L : F} {r ε x : ℝ} (hx : x ∈ A f L r ε) : A
 
 theorem B_mem_nhds_within_Ioi {K : Set F} {r s ε x : ℝ} (hx : x ∈ B f K r s ε) : B f K r s ε ∈ 𝓝[>] x := by
   obtain ⟨L, LK, hL₁, hL₂⟩ : ∃ L : F, L ∈ K ∧ x ∈ A f L r ε ∧ x ∈ A f L s ε := by
-    simpa only [B, mem_Union, mem_inter_eq, exists_prop] using hx
+    simpa only [B, mem_Union, mem_inter_eq, exists_propₓ] using hx
   filter_upwards [A_mem_nhds_within_Ioi hL₁, A_mem_nhds_within_Ioi hL₂] with y hy₁ hy₂
-  simp only [B, mem_Union, mem_inter_eq, exists_prop]
+  simp only [B, mem_Union, mem_inter_eq, exists_propₓ]
   exact ⟨L, LK, hy₁, hy₂⟩
 
 theorem measurable_set_B {K : Set F} {r s ε : ℝ} : MeasurableSet (B f K r s ε) :=

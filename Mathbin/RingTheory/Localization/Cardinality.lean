@@ -34,7 +34,7 @@ variable {R : Type u} [CommRingₓ R] (S : Submonoid R) {L : Type u} [CommRing�
 include S
 
 /-- A localization always has cardinality less than or equal to the base ring. -/
-theorem card_le : # L ≤ # R := by
+theorem card_le : (#L) ≤ (#R) := by
   classical
   cases fintypeOrInfinite R
   · exact Cardinal.mk_le_of_surjective (IsArtinianRing.localization_surjective S _)
@@ -50,7 +50,7 @@ theorem card_le : # L ≤ # R := by
 variable (L)
 
 /-- If you do not localize at any zero-divisors, localization preserves cardinality. -/
-theorem card (hS : S ≤ R⁰) : # R = # L :=
+theorem card (hS : S ≤ R⁰) : (#R) = (#L) :=
   (Cardinal.mk_le_of_injective (IsLocalization.injective L hS)).antisymm (card_le S)
 
 end IsLocalization

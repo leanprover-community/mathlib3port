@@ -88,7 +88,7 @@ theorem map_swap_antidiagonal {n : ℕ} :
 /-- A point in the antidiagonal is determined by its first co-ordinate. -/
 theorem antidiagonal_congr {n : ℕ} {p q : ℕ × ℕ} (hp : p ∈ antidiagonal n) (hq : q ∈ antidiagonal n) :
     p = q ↔ p.fst = q.fst := by
-  refine' ⟨congr_argₓ Prod.fst, fun h => Prod.extₓ h ((add_right_injₓ q.fst).mp _)⟩
+  refine' ⟨congr_arg Prod.fst, fun h => Prod.extₓ h ((add_right_injₓ q.fst).mp _)⟩
   rw [mem_antidiagonal] at hp hq
   rw [hq, ← h, hp]
 

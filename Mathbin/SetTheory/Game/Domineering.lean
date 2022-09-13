@@ -51,10 +51,10 @@ def right (b : Board) : Finset (ℤ × ℤ) :=
   b ∩ b.map shiftRight
 
 theorem mem_left {b : Board} (x : ℤ × ℤ) : x ∈ left b ↔ x ∈ b ∧ (x.1, x.2 - 1) ∈ b :=
-  Finset.mem_inter.trans (and_congr Iff.rfl Finset.mem_map_equiv)
+  Finset.mem_inter.trans (and_congrₓ Iff.rfl Finset.mem_map_equiv)
 
 theorem mem_right {b : Board} (x : ℤ × ℤ) : x ∈ right b ↔ x ∈ b ∧ (x.1 - 1, x.2) ∈ b :=
-  Finset.mem_inter.trans (and_congr Iff.rfl Finset.mem_map_equiv)
+  Finset.mem_inter.trans (and_congrₓ Iff.rfl Finset.mem_map_equiv)
 
 /-- After Left moves, two vertically adjacent squares are removed from the board. -/
 def moveLeft (b : Board) (m : ℤ × ℤ) : Board :=

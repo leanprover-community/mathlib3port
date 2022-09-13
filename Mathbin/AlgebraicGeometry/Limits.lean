@@ -83,7 +83,7 @@ instance Spec_punit_is_empty : IsEmpty (Scheme.spec.obj (op <| CommRingₓₓ.of
 
 instance (priority := 100) is_open_immersion_of_is_empty {X Y : Scheme} (f : X ⟶ Y) [IsEmpty X.Carrier] :
     IsOpenImmersion f := by
-  apply is_open_immersion.of_stalk_iso with { instances := false }
+  apply (config := { instances := false }) is_open_immersion.of_stalk_iso
   · apply open_embedding_of_continuous_injective_open
     · continuity
       

@@ -348,7 +348,7 @@ theorem lt_limit {o} (h : IsLimit o) {a} : a < o ↔ ∃ x < o, a < x := by
 
 @[simp]
 theorem lift_is_limit (o) : IsLimit (lift o) ↔ IsLimit o :=
-  and_congr
+  and_congrₓ
     (not_congr <| by
       simpa only [lift_zero] using @lift_inj o 0)
     ⟨fun H a h =>
@@ -450,7 +450,7 @@ theorem type_subrel_lt (o : Ordinal.{u}) : type (Subrel (· < ·) { o' : Ordinal
   symm
   refine' (RelIso.preimage Equivₓ.ulift r).trans (enum_iso r).symm
 
-theorem mk_initial_seg (o : Ordinal.{u}) : # { o' : Ordinal | o' < o } = Cardinal.lift.{u + 1} o.card := by
+theorem mk_initial_seg (o : Ordinal.{u}) : (#{ o' : Ordinal | o' < o }) = Cardinal.lift.{u + 1} o.card := by
   rw [lift_card, ← type_subrel_lt, card_type]
 
 /-! ### Normal ordinal functions -/
@@ -467,7 +467,7 @@ theorem IsNormal.limit_le {f} (H : IsNormal f) : ∀ {o}, IsLimit o → ∀ {a},
 
 theorem IsNormal.limit_lt {f} (H : IsNormal f) {o} (h : IsLimit o) {a} : a < f o ↔ ∃ b < o, a < f b :=
   not_iff_not.1 <| by
-    simpa only [exists_prop, not_exists, not_and, not_ltₓ] using H.2 _ h a
+    simpa only [exists_propₓ, not_exists, not_and, not_ltₓ] using H.2 _ h a
 
 theorem IsNormal.strict_mono {f} (H : IsNormal f) : StrictMono f := fun a b =>
   limitRecOn b (Not.elim (not_lt_of_leₓ <| Ordinal.zero_le _))
@@ -687,7 +687,7 @@ instance : Monoidₓ Ordinal.{u} where
           ⟨⟨prodAssoc _ _ _, fun a b => by
               rcases a with ⟨⟨a₁, a₂⟩, a₃⟩
               rcases b with ⟨⟨b₁, b₂⟩, b₃⟩
-              simp [Prod.lex_defₓ, and_or_distrib_left, or_assoc, and_assoc]⟩⟩
+              simp [Prod.lex_defₓ, and_or_distrib_left, or_assocₓ, and_assocₓ]⟩⟩
   mul_one := fun a =>
     (induction_on a) fun α r _ =>
       Quotientₓ.sound
@@ -1812,11 +1812,11 @@ theorem mex_monotone {α β} {f : α → Ordinal} {g : β → Ordinal} (h : Set.
   rw [← hj] at hi
   exact ne_mex g j hi
 
-theorem mex_lt_ord_succ_mk {ι} (f : ι → Ordinal) : mex f < (succ (# ι)).ord := by
+theorem mex_lt_ord_succ_mk {ι} (f : ι → Ordinal) : mex f < (succ (#ι)).ord := by
   by_contra' h
-  apply (lt_succ (# ι)).not_le
+  apply (lt_succ (#ι)).not_le
   have H := fun a => exists_of_lt_mex ((typein_lt_self a).trans_le h)
-  let g : (succ (# ι)).ord.out.α → ι := fun a => Classical.choose (H a)
+  let g : (succ (#ι)).ord.out.α → ι := fun a => Classical.choose (H a)
   have hg : injective g := fun a b h' => by
     have Hf : ∀ x, f (g x) = typein (· < ·) x := fun a => Classical.choose_spec (H a)
     apply_fun f  at h'
@@ -2052,7 +2052,7 @@ theorem opow_le_of_limit {a b c : Ordinal} (a0 : a ≠ 0) (h : IsLimit b) : (a^b
   rw [opow_limit a0 h, bsup_le_iff]
 
 theorem lt_opow_of_limit {a b c : Ordinal} (b0 : b ≠ 0) (h : IsLimit c) : a < (b^c) ↔ ∃ c' < c, a < (b^c') := by
-  rw [← not_iff_not, not_exists] <;> simp only [not_ltₓ, opow_le_of_limit b0 h, exists_prop, not_and]
+  rw [← not_iff_not, not_exists] <;> simp only [not_ltₓ, opow_le_of_limit b0 h, exists_propₓ, not_and]
 
 @[simp]
 theorem opow_one (a : Ordinal) : (a^1) = a := by

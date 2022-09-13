@@ -92,7 +92,7 @@ theorem tsum_eq_zero_of_not_summable (h : ¬Summable f) : (∑' b, f b) = 0 := b
   simp [tsum, h]
 
 theorem summable_congr (hfg : ∀ b, f b = g b) : Summable f ↔ Summable g :=
-  iff_of_eq (congr_argₓ Summable <| funext hfg)
+  iff_of_eq (congr_arg Summable <| funext hfg)
 
 theorem Summable.congr (hf : Summable f) (hfg : ∀ b, f b = g b) : Summable g :=
   (summable_congr hfg).mp hf
@@ -403,7 +403,7 @@ theorem tsum_zero' (hz : IsClosed ({0} : Set α)) : (∑' b : β, (0 : α)) = 0 
   intro x hx
   contrapose! hx
   simp only [HasSum, tendsto_nhds, Finset.sum_const_zero, Filter.mem_at_top_sets, ge_iff_leₓ, Finset.le_eq_subset,
-    Set.mem_preimage, not_forall, not_exists, exists_prop, exists_and_distrib_right]
+    Set.mem_preimage, not_forall, not_exists, exists_propₓ, exists_and_distrib_rightₓ]
   refine' ⟨{0}ᶜ, ⟨is_open_compl_iff.mpr hz, _⟩, fun y => ⟨⟨y, subset_refl _⟩, _⟩⟩
   · simpa using hx
     
@@ -432,7 +432,7 @@ theorem tsum_eq_sum {f : β → α} {s : Finset β} (hf : ∀ (b) (_ : b ∉ s),
 
 theorem tsum_congr {α β : Type _} [AddCommMonoidₓ α] [TopologicalSpace α] {f g : β → α} (hfg : ∀ b, f b = g b) :
     (∑' b, f b) = ∑' b, g b :=
-  congr_argₓ tsum (funext hfg)
+  congr_arg tsum (funext hfg)
 
 theorem tsum_fintype [Fintype β] (f : β → α) : (∑' b, f b) = ∑ b, f b :=
   (has_sum_fintype f).tsum_eq
@@ -632,7 +632,7 @@ theorem rel_supr_sum [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : 
 
 /-- If a function is countably sub-additive then it is binary sub-additive -/
 theorem rel_sup_add [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : α → α → Prop)
-    (m_supr : ∀ s : ℕ → β, R (m (⨆ i, s i)) (∑' i, m (s i))) (s₁ s₂ : β) : R (m (s₁⊔s₂)) (m s₁ + m s₂) := by
+    (m_supr : ∀ s : ℕ → β, R (m (⨆ i, s i)) (∑' i, m (s i))) (s₁ s₂ : β) : R (m (s₁ ⊔ s₂)) (m s₁ + m s₂) := by
   convert rel_supr_tsum m m0 R m_supr fun b => cond b s₁ s₂
   · simp only [supr_bool_eq, cond]
     
@@ -912,7 +912,7 @@ theorem Summable.tsum_mul_right (a) (hf : Summable f) : (∑' b, f b * a) = (∑
   (hf.HasSum.mul_right _).tsum_eq
 
 theorem Commute.tsum_right (a) (h : ∀ b, Commute a (f b)) : Commute a (∑' b, f b) :=
-  if hf : Summable f then (hf.tsum_mul_left a).symm.trans ((congr_argₓ _ <| funext h).trans (hf.tsum_mul_right a))
+  if hf : Summable f then (hf.tsum_mul_left a).symm.trans ((congr_arg _ <| funext h).trans (hf.tsum_mul_right a))
   else (tsum_eq_zero_of_not_summable hf).symm ▸ Commute.zero_right _
 
 theorem Commute.tsum_left (a) (h : ∀ b, Commute (f b) a) : Commute (∑' b, f b) a :=
@@ -1435,7 +1435,7 @@ open Filter
 
 /-- If the extended distance between consecutive points of a sequence is estimated
 by a summable series of `nnreal`s, then the original sequence is a Cauchy sequence. -/
-theorem cauchy_seq_of_edist_le_of_summable [PseudoEmetricSpace α] {f : ℕ → α} (d : ℕ → ℝ≥0 )
+theorem cauchy_seq_of_edist_le_of_summable [PseudoEmetricSpace α] {f : ℕ → α} (d : ℕ → ℝ≥0)
     (hf : ∀ n, edist (f n) (f n.succ) ≤ d n) (hd : Summable d) : CauchySeq f := by
   refine' Emetric.cauchy_seq_iff_nnreal.2 fun ε εpos => _
   -- Actually we need partial sums of `d` to be a Cauchy sequence

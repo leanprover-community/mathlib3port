@@ -231,14 +231,14 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
       by_cases' hy : y = 0
       · simp only [hy, eq_self_iff_true, or_trueₓ]
         
-      apply or_congr _ Iff.rfl
+      apply or_congrₓ _ Iff.rfl
       rw [← mul_left_inj' hy, eq_comm, ← sub_eq_zero, add_mulₓ, inv_mul_cancel hy]
       apply eq_iff_eq_cancel_right.mpr
       ring
     -- Finally, we prove the claim that our finite union of finite sets covers all of `K`.
     · apply (Set.eq_univ_of_forall _).symm
       intro x
-      simp only [exists_prop, Set.mem_Union, Set.bind_def, Ne.def, Set.mem_set_of_eq]
+      simp only [exists_propₓ, Set.mem_Union, Set.bind_def, Ne.def, Set.mem_set_of_eq]
       by_cases' hx : x = 0
       · simp only [hx, and_trueₓ, eq_self_iff_true, inv_zero, or_trueₓ]
         exact ⟨_, 1, rfl, one_ne_zero⟩

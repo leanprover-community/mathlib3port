@@ -96,7 +96,7 @@ instance : Preorderₓ (NonemptyInterval α) :=
 def pure (a : α) : NonemptyInterval α :=
   ⟨⟨a, a⟩, le_rflₓ⟩
 
-theorem pure_injective : Injective (pure : α → NonemptyInterval α) := fun s t => congr_argₓ <| Prod.fst ∘ to_prod
+theorem pure_injective : Injective (pure : α → NonemptyInterval α) := fun s t => congr_arg <| Prod.fst ∘ to_prod
 
 @[simp]
 theorem dual_pure (a : α) : (pure a).dual = pure (toDual a) :=
@@ -197,17 +197,17 @@ section Lattice
 variable [Lattice α]
 
 instance : HasSup (NonemptyInterval α) :=
-  ⟨fun s t => ⟨⟨s.fst⊓t.fst, s.snd⊔t.snd⟩, inf_le_left.trans <| s.fst_le_snd.trans le_sup_left⟩⟩
+  ⟨fun s t => ⟨⟨s.fst ⊓ t.fst, s.snd ⊔ t.snd⟩, inf_le_left.trans <| s.fst_le_snd.trans le_sup_left⟩⟩
 
 instance : SemilatticeSup (NonemptyInterval α) :=
   (to_dual_prod_injective.SemilatticeSup _) fun _ _ => rfl
 
 @[simp]
-theorem fst_sup (s t : NonemptyInterval α) : (s⊔t).fst = s.fst⊓t.fst :=
+theorem fst_sup (s t : NonemptyInterval α) : (s ⊔ t).fst = s.fst ⊓ t.fst :=
   rfl
 
 @[simp]
-theorem snd_sup (s t : NonemptyInterval α) : (s⊔t).snd = s.snd⊔t.snd :=
+theorem snd_sup (s t : NonemptyInterval α) : (s ⊔ t).snd = s.snd ⊔ t.snd :=
   rfl
 
 end Lattice
@@ -388,7 +388,7 @@ instance : Lattice (Interval α) :=
       | s, ⊥ => ⊥
       | some s, some t =>
         if h : s.fst ≤ t.snd ∧ t.fst ≤ s.snd then
-          some ⟨⟨s.fst⊔t.fst, s.snd⊓t.snd⟩, sup_le (le_inf s.fst_le_snd h.1) <| le_inf h.2 t.fst_le_snd⟩
+          some ⟨⟨s.fst ⊔ t.fst, s.snd ⊓ t.snd⟩, sup_le (le_inf s.fst_le_snd h.1) <| le_inf h.2 t.fst_le_snd⟩
         else ⊥,
     inf_le_left := fun s t =>
       match s, t with
@@ -427,7 +427,7 @@ instance : Lattice (Interval α) :=
         exact ⟨hb.1.trans <| s.fst_le_snd.trans hc.2, hc.1.trans <| s.fst_le_snd.trans hb.2⟩ }
 
 @[simp, norm_cast]
-theorem coe_inf (s t : Interval α) : (↑(s⊓t) : Set α) = s ∩ t := by
+theorem coe_inf (s t : Interval α) : (↑(s ⊓ t) : Set α) = s ∩ t := by
   cases s
   · rw [WithBot.none_eq_bot, bot_inf_eq]
     exact (empty_inter _).symm
@@ -475,7 +475,7 @@ theorem mem_coe_interval [PartialOrderₓ α] {s : NonemptyInterval α} {x : α}
   Iff.rfl
 
 @[simp, norm_cast]
-theorem coe_sup_interval [Lattice α] (s t : NonemptyInterval α) : (↑(s⊔t) : Interval α) = s⊔t :=
+theorem coe_sup_interval [Lattice α] (s t : NonemptyInterval α) : (↑(s ⊔ t) : Interval α) = s ⊔ t :=
   rfl
 
 end NonemptyInterval
@@ -525,7 +525,7 @@ noncomputable instance [@DecidableRel α (· ≤ ·)] : CompleteLattice (Interva
           else ⊥,
         Inf_le := fun s s ha => by
           split_ifs
-          · lift s to NonemptyInterval α using ne_of_mem_of_not_mem ha h.1
+          · lift s to NonemptyInterval α using ne_of_mem_of_not_memₓ ha h.1
             exact WithBot.coe_le_coe.2 ⟨le_supr₂ s ha, infi₂_le s ha⟩
             
           · exact bot_le

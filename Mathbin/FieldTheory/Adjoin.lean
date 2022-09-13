@@ -97,19 +97,19 @@ theorem top_to_subfield : (⊤ : IntermediateField F E).toSubfield = ⊤ :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_inf (S T : IntermediateField F E) : (↑(S⊓T) : Set E) = S ∩ T :=
+theorem coe_inf (S T : IntermediateField F E) : (↑(S ⊓ T) : Set E) = S ∩ T :=
   rfl
 
 @[simp]
-theorem mem_inf {S T : IntermediateField F E} {x : E} : x ∈ S⊓T ↔ x ∈ S ∧ x ∈ T :=
+theorem mem_inf {S T : IntermediateField F E} {x : E} : x ∈ S ⊓ T ↔ x ∈ S ∧ x ∈ T :=
   Iff.rfl
 
 @[simp]
-theorem inf_to_subalgebra (S T : IntermediateField F E) : (S⊓T).toSubalgebra = S.toSubalgebra⊓T.toSubalgebra :=
+theorem inf_to_subalgebra (S T : IntermediateField F E) : (S ⊓ T).toSubalgebra = S.toSubalgebra ⊓ T.toSubalgebra :=
   rfl
 
 @[simp]
-theorem inf_to_subfield (S T : IntermediateField F E) : (S⊓T).toSubfield = S.toSubfield⊓T.toSubfield :=
+theorem inf_to_subfield (S T : IntermediateField F E) : (S ⊓ T).toSubfield = S.toSubfield ⊓ T.toSubfield :=
   rfl
 
 @[simp, norm_cast]
@@ -813,7 +813,7 @@ variable {F E K}
 
 instance : PartialOrderₓ (Lifts F E K) where
   le := fun x y => x.1 ≤ y.1 ∧ ∀ (s : x.1) (t : y.1), (s : E) = t → x.2 s = y.2 t
-  le_refl := fun x => ⟨le_reflₓ x.1, fun s t hst => congr_argₓ x.2 (Subtype.ext hst)⟩
+  le_refl := fun x => ⟨le_reflₓ x.1, fun s t hst => congr_arg x.2 (Subtype.ext hst)⟩
   le_trans := fun x y z hxy hyz =>
     ⟨le_transₓ hxy.1 hyz.1, fun s u hsu => Eq.trans (hxy.2 s ⟨s, hxy.1 s.Mem⟩ rfl) (hyz.2 ⟨s, hxy.1 s.Mem⟩ u hsu)⟩
   le_antisymm := by
@@ -907,7 +907,7 @@ theorem Lifts.exists_upper_bound (c : Set (Lifts F E K)) (hc : IsChain (· ≤ �
       change x.2 s = (Classical.choose t.mem).2 ⟨t, (Classical.choose_spec t.mem).2⟩
       obtain ⟨z, hz, hxz, hyz⟩ := lifts.exists_max_two hc (Set.mem_insert_of_mem ⊥ hx) (Classical.choose_spec t.mem).1
       rw [lifts.eq_of_le hxz, lifts.eq_of_le hyz]
-      exact congr_argₓ z.2 (Subtype.ext hst)
+      exact congr_arg z.2 (Subtype.ext hst)
       ⟩
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible)
@@ -973,26 +973,26 @@ section Supremum
 
 variable {K L : Type _} [Field K] [Field L] [Algebra K L] (E1 E2 : IntermediateField K L)
 
-theorem le_sup_to_subalgebra : E1.toSubalgebra⊔E2.toSubalgebra ≤ (E1⊔E2).toSubalgebra :=
-  sup_le (show E1 ≤ E1⊔E2 from le_sup_left) (show E2 ≤ E1⊔E2 from le_sup_right)
+theorem le_sup_to_subalgebra : E1.toSubalgebra ⊔ E2.toSubalgebra ≤ (E1 ⊔ E2).toSubalgebra :=
+  sup_le (show E1 ≤ E1 ⊔ E2 from le_sup_left) (show E2 ≤ E1 ⊔ E2 from le_sup_right)
 
 theorem sup_to_subalgebra [h1 : FiniteDimensional K E1] [h2 : FiniteDimensional K E2] :
-    (E1⊔E2).toSubalgebra = E1.toSubalgebra⊔E2.toSubalgebra := by
+    (E1 ⊔ E2).toSubalgebra = E1.toSubalgebra ⊔ E2.toSubalgebra := by
   let S1 := E1.to_subalgebra
   let S2 := E2.to_subalgebra
   refine'
     le_antisymmₓ
-      (show _ ≤ (S1⊔S2).toIntermediateField _ from
+      (show _ ≤ (S1 ⊔ S2).toIntermediateField _ from
         sup_le (show S1 ≤ _ from le_sup_left) (show S2 ≤ _ from le_sup_right))
       (le_sup_to_subalgebra E1 E2)
-  suffices IsField ↥(S1⊔S2) by
+  suffices IsField ↥(S1 ⊔ S2) by
     intro x hx
-    by_cases' hx' : (⟨x, hx⟩ : S1⊔S2) = 0
+    by_cases' hx' : (⟨x, hx⟩ : S1 ⊔ S2) = 0
     · rw [← Subtype.coe_mk x hx, hx', Subalgebra.coe_zero, inv_zero]
-      exact (S1⊔S2).zero_mem
+      exact (S1 ⊔ S2).zero_mem
       
     · obtain ⟨y, h⟩ := this.mul_inv_cancel hx'
-      exact (congr_argₓ (· ∈ S1⊔S2) <| eq_inv_of_mul_eq_one_right <| subtype.ext_iff.mp h).mp y.2
+      exact (congr_arg (· ∈ S1 ⊔ S2) <| eq_inv_of_mul_eq_one_right <| subtype.ext_iff.mp h).mp y.2
       
   exact
     is_field_of_is_integral_of_is_field'
@@ -1000,9 +1000,9 @@ theorem sup_to_subalgebra [h1 : FiniteDimensional K E1] [h2 : FiniteDimensional 
       (Field.to_is_field K)
 
 instance finite_dimensional_sup [h1 : FiniteDimensional K E1] [h2 : FiniteDimensional K E2] :
-    FiniteDimensional K ↥(E1⊔E2) := by
+    FiniteDimensional K ↥(E1 ⊔ E2) := by
   let g := Algebra.TensorProduct.productMap E1.val E2.val
-  suffices g.range = (E1⊔E2).toSubalgebra by
+  suffices g.range = (E1 ⊔ E2).toSubalgebra by
     have h : FiniteDimensional K g.range.to_submodule := g.to_linear_map.finite_dimensional_range
     rwa [this] at h
   rw [Algebra.TensorProduct.product_map_range, E1.range_val, E2.range_val, sup_to_subalgebra]

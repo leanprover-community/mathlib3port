@@ -472,10 +472,10 @@ theorem mul_indicator_finset_bUnion {ι} (I : Finset ι) (s : ι → Set α) {f 
   · intro i hi j hj hij
     exact hI i (Finset.mem_insert_of_mem hi) j (Finset.mem_insert_of_mem hj) hij
     
-  simp only [not_exists, exists_prop, mem_Union, mem_inter_eq, not_and]
+  simp only [not_exists, exists_propₓ, mem_Union, mem_inter_eq, not_and]
   intro hx a' ha'
   refine' disjoint_left.1 (hI a (Finset.mem_insert_self _ _) a' (Finset.mem_insert_of_mem ha') _) hx
-  exact (ne_of_mem_of_not_mem ha' haI).symm
+  exact (ne_of_mem_of_not_memₓ ha' haI).symm
 
 @[to_additive]
 theorem mul_indicator_finset_bUnion_apply {ι} (I : Finset ι) (s : ι → Set α) {f : α → M}
@@ -677,5 +677,5 @@ end Set
 @[to_additive]
 theorem MonoidHom.map_mul_indicator {M N : Type _} [MulOneClassₓ M] [MulOneClassₓ N] (f : M →* N) (s : Set α)
     (g : α → M) (x : α) : f (s.mulIndicator g x) = s.mulIndicator (f ∘ g) x :=
-  congr_funₓ (Set.mul_indicator_comp_of_one f.map_one).symm x
+  congr_fun (Set.mul_indicator_comp_of_one f.map_one).symm x
 

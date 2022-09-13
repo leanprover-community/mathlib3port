@@ -70,9 +70,9 @@ def mulEquiv {n m : ℕ} : (⨂[R]^n) M ⊗[R] (⨂[R]^m) M ≃ₗ[R] (⨂[R]^(n
 instance ghasMul : GradedMonoid.GhasMul fun i => (⨂[R]^i) M where mul := fun i j a b => mulEquiv (a ⊗ₜ b)
 
 -- mathport name: «expr ₜ* »
-local infixl:70 "ₜ*" => @GradedMonoid.GhasMul.mul ℕ (fun i => (⨂[R]^i) M) _ _ _ _
+local infixl:70 " ₜ* " => @GradedMonoid.GhasMul.mul ℕ (fun i => (⨂[R]^i) M) _ _ _ _
 
-theorem ghas_mul_def {i j} (a : (⨂[R]^i) M) (b : (⨂[R]^j) M) : a ₜ*b = mulEquiv (a ⊗ₜ b) :=
+theorem ghas_mul_def {i j} (a : (⨂[R]^i) M) (b : (⨂[R]^j) M) : a ₜ* b = mulEquiv (a ⊗ₜ b) :=
   rfl
 
 end TensorPower

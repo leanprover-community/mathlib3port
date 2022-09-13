@@ -41,7 +41,7 @@ variable {R : Type u} {M : Type v} [CommRingₓ R] [AddCommGroupₓ M] [Module R
 variable (B : BilinForm R M)
 
 theorem BilinForm.is_skew_adjoint_bracket (f g : Module.End R M) (hf : f ∈ B.skewAdjointSubmodule)
-    (hg : g ∈ B.skewAdjointSubmodule) : ⁅f,g⁆ ∈ B.skewAdjointSubmodule := by
+    (hg : g ∈ B.skewAdjointSubmodule) : ⁅f, g⁆ ∈ B.skewAdjointSubmodule := by
   rw [mem_skew_adjoint_submodule] at *
   have hfg : is_adjoint_pair B B (f * g) (g * f) := by
     rw [← neg_mul_neg g f]
@@ -89,14 +89,14 @@ variable {R : Type u} {n : Type w} [CommRingₓ R] [DecidableEq n] [Fintype n]
 
 variable (J : Matrix n n R)
 
-theorem Matrix.lie_transpose (A B : Matrix n n R) : ⁅A,B⁆ᵀ = ⁅Bᵀ,Aᵀ⁆ :=
+theorem Matrix.lie_transpose (A B : Matrix n n R) : ⁅A, B⁆ᵀ = ⁅Bᵀ, Aᵀ⁆ :=
   show (A * B - B * A)ᵀ = Bᵀ * Aᵀ - Aᵀ * Bᵀ by
     simp
 
 theorem Matrix.is_skew_adjoint_bracket (A B : Matrix n n R) (hA : A ∈ skewAdjointMatricesSubmodule J)
-    (hB : B ∈ skewAdjointMatricesSubmodule J) : ⁅A,B⁆ ∈ skewAdjointMatricesSubmodule J := by
+    (hB : B ∈ skewAdjointMatricesSubmodule J) : ⁅A, B⁆ ∈ skewAdjointMatricesSubmodule J := by
   simp only [mem_skew_adjoint_matrices_submodule] at *
-  change ⁅A,B⁆ᵀ ⬝ J = J ⬝ -⁅A,B⁆
+  change ⁅A, B⁆ᵀ ⬝ J = J ⬝ -⁅A, B⁆
   change Aᵀ ⬝ J = J ⬝ -A at hA
   change Bᵀ ⬝ J = J ⬝ -B at hB
   simp only [← Matrix.mul_eq_mul] at *
@@ -153,7 +153,7 @@ theorem mem_skew_adjoint_matrices_lie_subalgebra_unit_smul (u : Rˣ) (J A : Matr
   change A ∈ skewAdjointMatricesSubmodule (u • J) ↔ A ∈ skewAdjointMatricesSubmodule J
   simp only [mem_skew_adjoint_matrices_submodule, Matrix.IsSkewAdjoint, Matrix.IsAdjointPair]
   constructor <;> intro h
-  · simpa using congr_argₓ (fun B => u⁻¹ • B) h
+  · simpa using congr_arg (fun B => u⁻¹ • B) h
     
   · simp [h]
     

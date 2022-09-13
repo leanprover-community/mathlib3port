@@ -60,26 +60,26 @@ theorem tendsto_coe_int_at_top_at_top [OrderedRing R] [Archimedean R] : Tendsto 
       exact_mod_cast hn⟩
 
 @[simp]
-theorem Rat.comap_coe_at_top [LinearOrderedField R] [Archimedean R] : comap (coe : ℚ → R) atTop = at_top :=
-  (comap_embedding_at_top fun _ _ => Rat.cast_le) fun r =>
+theorem Ratₓ.comap_coe_at_top [LinearOrderedField R] [Archimedean R] : comap (coe : ℚ → R) atTop = at_top :=
+  (comap_embedding_at_top fun _ _ => Ratₓ.cast_le) fun r =>
     let ⟨n, hn⟩ := exists_nat_ge r
     ⟨n, by
       simpa⟩
 
 @[simp]
-theorem Rat.comap_coe_at_bot [LinearOrderedField R] [Archimedean R] : comap (coe : ℚ → R) atBot = at_bot :=
-  (comap_embedding_at_bot fun _ _ => Rat.cast_le) fun r =>
+theorem Ratₓ.comap_coe_at_bot [LinearOrderedField R] [Archimedean R] : comap (coe : ℚ → R) atBot = at_bot :=
+  (comap_embedding_at_bot fun _ _ => Ratₓ.cast_le) fun r =>
     let ⟨n, hn⟩ := exists_nat_ge (-r)
     ⟨-n, by
       simpa [neg_le] ⟩
 
 theorem tendsto_coe_rat_at_top_iff [LinearOrderedField R] [Archimedean R] {f : α → ℚ} {l : Filter α} :
     Tendsto (fun n => (f n : R)) l atTop ↔ Tendsto f l atTop := by
-  rw [← tendsto_comap_iff, Rat.comap_coe_at_top]
+  rw [← tendsto_comap_iff, Ratₓ.comap_coe_at_top]
 
 theorem tendsto_coe_rat_at_bot_iff [LinearOrderedField R] [Archimedean R] {f : α → ℚ} {l : Filter α} :
     Tendsto (fun n => (f n : R)) l atBot ↔ Tendsto f l atBot := by
-  rw [← tendsto_comap_iff, Rat.comap_coe_at_bot]
+  rw [← tendsto_comap_iff, Ratₓ.comap_coe_at_bot]
 
 theorem at_top_countable_basis_of_archimedean [LinearOrderedSemiring R] [Archimedean R] :
     (atTop : Filter R).HasCountableBasis (fun n : ℕ => True) fun n => Ici n :=

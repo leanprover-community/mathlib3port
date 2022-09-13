@@ -108,7 +108,7 @@ private unsafe def analyse_rule (u' : List Name) (pr : expr) : tactic rule_data 
   return <| rule_data.mk pr (u' u) p_data u args pat g
 
 unsafe def analyse_decls : List Name → tactic (List rule_data) :=
-  mmapₓ fun n => do
+  mmap fun n => do
     let d ← get_decl n
     let c ← return d.univ_params.length
     let ls ← (repeat () c).mmap fun _ => mk_fresh_name

@@ -210,7 +210,7 @@ theorem strict_mono_fst : StrictMono (Prod.fst ∘ to_prod : Concept α β r →
 theorem strict_anti_snd : StrictAnti (Prod.snd ∘ to_prod : Concept α β r → Set β) := fun c d => snd_ssubset_snd_iff.2
 
 instance : Lattice (Concept α β r) :=
-  { Concept.semilatticeInf with sup := (·⊔·), le_sup_left := fun c d => snd_subset_snd_iff.1 <| inter_subset_left _ _,
+  { Concept.semilatticeInf with sup := (· ⊔ ·), le_sup_left := fun c d => snd_subset_snd_iff.1 <| inter_subset_left _ _,
     le_sup_right := fun c d => snd_subset_snd_iff.1 <| inter_subset_right _ _,
     sup_le := fun c d e => by
       simp_rw [← snd_subset_snd_iff]
@@ -259,19 +259,19 @@ theorem bot_snd : (⊥ : Concept α β r).snd = univ :=
   rfl
 
 @[simp]
-theorem sup_fst (c d : Concept α β r) : (c⊔d).fst = ExtentClosure r (c.snd ∩ d.snd) :=
+theorem sup_fst (c d : Concept α β r) : (c ⊔ d).fst = ExtentClosure r (c.snd ∩ d.snd) :=
   rfl
 
 @[simp]
-theorem sup_snd (c d : Concept α β r) : (c⊔d).snd = c.snd ∩ d.snd :=
+theorem sup_snd (c d : Concept α β r) : (c ⊔ d).snd = c.snd ∩ d.snd :=
   rfl
 
 @[simp]
-theorem inf_fst (c d : Concept α β r) : (c⊓d).fst = c.fst ∩ d.fst :=
+theorem inf_fst (c d : Concept α β r) : (c ⊓ d).fst = c.fst ∩ d.fst :=
   rfl
 
 @[simp]
-theorem inf_snd (c d : Concept α β r) : (c⊓d).snd = IntentClosure r (c.fst ∩ d.fst) :=
+theorem inf_snd (c d : Concept α β r) : (c ⊓ d).snd = IntentClosure r (c.fst ∩ d.fst) :=
   rfl
 
 @[simp]

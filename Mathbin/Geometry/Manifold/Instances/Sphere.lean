@@ -77,19 +77,19 @@ variable (v : E)
 the orthogonal complement of an element `v` of `E`. It is smooth away from the affine hyperplane
 through `v` parallel to the orthogonal complement.  It restricts on the sphere to the stereographic
 projection. -/
-def stereoToFun [CompleteSpace E] (x : E) : (ℝ∙v)ᗮ :=
-  (2 / ((1 : ℝ) - innerSL v x)) • orthogonalProjection (ℝ∙v)ᗮ x
+def stereoToFun [CompleteSpace E] (x : E) : (ℝ ∙ v)ᗮ :=
+  (2 / ((1 : ℝ) - innerSL v x)) • orthogonalProjection (ℝ ∙ v)ᗮ x
 
 variable {v}
 
 @[simp]
 theorem stereo_to_fun_apply [CompleteSpace E] (x : E) :
-    stereoToFun v x = (2 / ((1 : ℝ) - innerSL v x)) • orthogonalProjection (ℝ∙v)ᗮ x :=
+    stereoToFun v x = (2 / ((1 : ℝ) - innerSL v x)) • orthogonalProjection (ℝ ∙ v)ᗮ x :=
   rfl
 
 theorem cont_diff_on_stereo_to_fun [CompleteSpace E] :
     ContDiffOn ℝ ⊤ (stereoToFun v) { x : E | innerSL v x ≠ (1 : ℝ) } := by
-  refine' ContDiffOn.smul _ (orthogonalProjection (ℝ∙v)ᗮ).ContDiff.ContDiffOn
+  refine' ContDiffOn.smul _ (orthogonalProjection (ℝ ∙ v)ᗮ).ContDiff.ContDiffOn
   refine' cont_diff_const.cont_diff_on.div _ _
   · exact (cont_diff_const.sub (innerSL v : E →L[ℝ] ℝ).ContDiff).ContDiffOn
     
@@ -117,7 +117,7 @@ variable {v}
 theorem stereo_inv_fun_aux_apply (w : E) : stereoInvFunAux v w = (∥w∥ ^ 2 + 4)⁻¹ • ((4 : ℝ) • w + (∥w∥ ^ 2 - 4) • v) :=
   rfl
 
-theorem stereo_inv_fun_aux_mem (hv : ∥v∥ = 1) {w : E} (hw : w ∈ (ℝ∙v)ᗮ) : stereoInvFunAux v w ∈ Sphere (0 : E) 1 := by
+theorem stereo_inv_fun_aux_mem (hv : ∥v∥ = 1) {w : E} (hw : w ∈ (ℝ ∙ v)ᗮ) : stereoInvFunAux v w ∈ Sphere (0 : E) 1 := by
   have h₁ : 0 ≤ ∥w∥ ^ 2 + 4 := by
     nlinarith
   suffices ∥(4 : ℝ) • w + (∥w∥ ^ 2 - 4) • v∥ = ∥w∥ ^ 2 + 4 by
@@ -146,15 +146,15 @@ theorem cont_diff_stereo_inv_fun_aux : ContDiff ℝ ⊤ (stereoInvFunAux v) := b
 
 /-- Stereographic projection, reverse direction.  This is a map from the orthogonal complement of a
 unit vector `v` in an inner product space `E` to the unit sphere in `E`. -/
-def stereoInvFun (hv : ∥v∥ = 1) (w : (ℝ∙v)ᗮ) : Sphere (0 : E) 1 :=
+def stereoInvFun (hv : ∥v∥ = 1) (w : (ℝ ∙ v)ᗮ) : Sphere (0 : E) 1 :=
   ⟨stereoInvFunAux v (w : E), stereo_inv_fun_aux_mem hv w.2⟩
 
 @[simp]
-theorem stereo_inv_fun_apply (hv : ∥v∥ = 1) (w : (ℝ∙v)ᗮ) :
+theorem stereo_inv_fun_apply (hv : ∥v∥ = 1) (w : (ℝ ∙ v)ᗮ) :
     (stereoInvFun hv w : E) = (∥w∥ ^ 2 + 4)⁻¹ • ((4 : ℝ) • w + (∥w∥ ^ 2 - 4) • v) :=
   rfl
 
-theorem stereo_inv_fun_ne_north_pole (hv : ∥v∥ = 1) (w : (ℝ∙v)ᗮ) :
+theorem stereo_inv_fun_ne_north_pole (hv : ∥v∥ = 1) (w : (ℝ ∙ v)ᗮ) :
     stereoInvFun hv w ≠
       (⟨v, by
         simp [hv]⟩ :
@@ -184,9 +184,9 @@ theorem stereo_left_inv (hv : ∥v∥ = 1) {x : Sphere (0 : E) 1} (hx : (x : E) 
   simp only [stereo_to_fun_apply, stereo_inv_fun_apply, smul_add]
   -- name two frequently-occuring quantities and write down their basic properties
   set a : ℝ := innerSL v x
-  set y := orthogonalProjection (ℝ∙v)ᗮ x
+  set y := orthogonalProjection (ℝ ∙ v)ᗮ x
   have split : ↑x = a • v + ↑y := by
-    convert eq_sum_orthogonal_projection_self_orthogonal_complement (ℝ∙v) x
+    convert eq_sum_orthogonal_projection_self_orthogonal_complement (ℝ ∙ v) x
     exact (orthogonal_projection_unit_singleton ℝ hv x).symm
   have hvy : ⟪v, y⟫_ℝ = 0 := inner_right_of_mem_orthogonal_singleton v y.2
   have pythag : 1 = a ^ 2 + ∥y∥ ^ 2 := by
@@ -226,14 +226,14 @@ theorem stereo_left_inv (hv : ∥v∥ = 1) {x : Sphere (0 : E) 1} (hx : (x : E) 
       
     ring
   -- deduce the result
-  convert congr_arg2ₓ Add.add (congr_argₓ (fun t => t • (y : E)) h₁) (congr_argₓ (fun t => t • v) h₂) using 1
+  convert congr_arg2ₓ Add.add (congr_arg (fun t => t • (y : E)) h₁) (congr_arg (fun t => t • v) h₂) using 1
   · simp [inner_add_right, inner_smul_right, hvy, real_inner_self_eq_norm_mul_norm, hv, mul_smul, mul_powₓ,
       Real.norm_eq_abs, sq_abs, norm_smul]
     
   · simp [split, add_commₓ]
     
 
-theorem stereo_right_inv (hv : ∥v∥ = 1) (w : (ℝ∙v)ᗮ) : stereoToFun v (stereoInvFun hv w) = w := by
+theorem stereo_right_inv (hv : ∥v∥ = 1) (w : (ℝ ∙ v)ᗮ) : stereoToFun v (stereoInvFun hv w) = w := by
   have : 2 / (1 - (∥(w : E)∥ ^ 2 + 4)⁻¹ * (∥(w : E)∥ ^ 2 - 4)) * (∥(w : E)∥ ^ 2 + 4)⁻¹ * 4 = 1 := by
     have : ∥(w : E)∥ ^ 2 + 4 ≠ 0 := by
       nlinarith
@@ -241,9 +241,9 @@ theorem stereo_right_inv (hv : ∥v∥ = 1) (w : (ℝ∙v)ᗮ) : stereoToFun v (
       nlinarith
     field_simp
     ring
-  convert congr_argₓ (fun c => c • w) this
-  · have h₁ : orthogonalProjection (ℝ∙v)ᗮ v = 0 := orthogonal_projection_orthogonal_complement_singleton_eq_zero v
-    have h₂ : orthogonalProjection (ℝ∙v)ᗮ w = w := orthogonal_projection_mem_subspace_eq_self w
+  convert congr_arg (fun c => c • w) this
+  · have h₁ : orthogonalProjection (ℝ ∙ v)ᗮ v = 0 := orthogonal_projection_orthogonal_complement_singleton_eq_zero v
+    have h₂ : orthogonalProjection (ℝ ∙ v)ᗮ w = w := orthogonal_projection_mem_subspace_eq_self w
     have h₃ : innerSL v w = (0 : ℝ) := inner_right_of_mem_orthogonal_singleton v w.2
     have h₄ : innerSL v v = (1 : ℝ) := by
       simp [real_inner_self_eq_norm_mul_norm, hv]
@@ -254,7 +254,7 @@ theorem stereo_right_inv (hv : ∥v∥ = 1) (w : (ℝ∙v)ᗮ) : stereoToFun v (
 
 /-- Stereographic projection from the unit sphere in `E`, centred at a unit vector `v` in `E`; this
 is the version as a local homeomorphism. -/
-def stereographic (hv : ∥v∥ = 1) : LocalHomeomorph (Sphere (0 : E) 1) (ℝ∙v)ᗮ where
+def stereographic (hv : ∥v∥ = 1) : LocalHomeomorph (Sphere (0 : E) 1) (ℝ ∙ v)ᗮ where
   toFun := stereoToFun v ∘ coe
   invFun := stereoInvFun hv
   Source :=
@@ -279,7 +279,7 @@ def stereographic (hv : ∥v∥ = 1) : LocalHomeomorph (Sphere (0 : E) 1) (ℝ�
   continuous_inv_fun := (continuous_stereo_inv_fun hv).ContinuousOn
 
 theorem stereographic_apply (hv : ∥v∥ = 1) (x : Sphere (0 : E) 1) :
-    stereographic hv x = (2 / ((1 : ℝ) - inner v x)) • orthogonalProjection (ℝ∙v)ᗮ x :=
+    stereographic hv x = (2 / ((1 : ℝ) - inner v x)) • orthogonalProjection (ℝ ∙ v)ᗮ x :=
   rfl
 
 @[simp]
@@ -354,7 +354,7 @@ theorem sphere_ext_iff (u v : Sphere (0 : E) 1) : u = v ↔ ⟪(u : E), v⟫_ℝ
 theorem stereographic'_symm_apply {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : Sphere (0 : E) 1)
     (x : EuclideanSpace ℝ (Finₓ n)) :
     ((stereographic' n v).symm x : E) =
-      let U : (ℝ∙(v : E))ᗮ ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Finₓ n) :=
+      let U : (ℝ ∙ (v : E))ᗮ ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Finₓ n) :=
         (OrthonormalBasis.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere v)).repr
       (∥(U.symm x : E)∥ ^ 2 + 4)⁻¹ • (4 : ℝ) • (U.symm x : E) +
         (∥(U.symm x : E)∥ ^ 2 + 4)⁻¹ • (∥(U.symm x : E)∥ ^ 2 - 4) • v :=
@@ -384,7 +384,7 @@ instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] : SmoothManifoldWithCorners (�
         stereographic' n v' = (stereographic (norm_eq_of_mem_sphere v')).trans U'.to_homeomorph.to_local_homeomorph :=
         rfl
       have H₁ := U'.cont_diff.comp_cont_diff_on cont_diff_on_stereo_to_fun
-      have H₂ := (cont_diff_stereo_inv_fun_aux.comp (ℝ∙(v : E))ᗮ.subtypeL.ContDiff).comp U.symm.cont_diff
+      have H₂ := (cont_diff_stereo_inv_fun_aux.comp (ℝ ∙ (v : E))ᗮ.subtypeL.ContDiff).comp U.symm.cont_diff
       convert H₁.comp' (H₂.cont_diff_on : ContDiffOn ℝ ⊤ _ Set.Univ) using 1
       ext
       simp [sphere_ext_iff, stereographic'_symm_apply, real_inner_comm])
@@ -401,7 +401,7 @@ theorem cont_mdiff_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
       (-- Again, removing type ascription...
           OrthonormalBasis.fromOrthogonalSpanSingleton
           n (ne_zero_of_mem_unit_sphere (-v))).repr
-    exact ((cont_diff_stereo_inv_fun_aux.comp (ℝ∙(-v : E))ᗮ.subtypeL.ContDiff).comp U.symm.cont_diff).ContDiffOn
+    exact ((cont_diff_stereo_inv_fun_aux.comp (ℝ ∙ (-v : E))ᗮ.subtypeL.ContDiff).comp U.symm.cont_diff).ContDiffOn
     
 
 variable {F : Type _} [NormedAddCommGroup F] [NormedSpace ℝ F]

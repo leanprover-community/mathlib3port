@@ -537,7 +537,7 @@ theorem dvd_iff' {k m : ℕ+} : k ∣ m ↔ mod m k = k := by
     by_cases' h' : (m : ℕ) % (k : ℕ) = 0
     · exact h'
       
-    · replace h : (mod m k : ℕ) = (k : ℕ) := congr_argₓ _ h
+    · replace h : (mod m k : ℕ) = (k : ℕ) := congr_arg _ h
       rw [mod_coe, if_neg h'] at h
       exact ((Nat.mod_ltₓ (m : ℕ) k.pos).Ne h).elim
       

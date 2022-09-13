@@ -231,7 +231,7 @@ theorem ι_mul_prod_list {n : ℕ} (f : Finₓ n → M) (i : Finₓ n) :
     by_cases' h : i = 0
     · rw [h, ι_sq_zero, zero_mul]
       
-    · replace hn := congr_argₓ ((· * ·) <| ι R <| f 0) (hn (fun i => f <| Finₓ.succ i) (i.pred h))
+    · replace hn := congr_arg ((· * ·) <| ι R <| f 0) (hn (fun i => f <| Finₓ.succ i) (i.pred h))
       simp only at hn
       rw [Finₓ.succ_pred, ← mul_assoc, mul_zero] at hn
       refine' (eq_zero_iff_eq_zero_of_add_eq_zero _).mp hn
@@ -284,7 +284,7 @@ theorem ι_multi_zero_apply (v : Finₓ 0 → M) : ιMulti R 0 v = 1 :=
 
 @[simp]
 theorem ι_multi_succ_apply {n : ℕ} (v : Finₓ n.succ → M) : ιMulti R _ v = ι R (v 0) * ιMulti R _ (Matrix.vecTail v) :=
-  (congr_argₓ List.prod (List.of_fn_succ _)).trans List.prod_cons
+  (congr_arg List.prod (List.of_fn_succ _)).trans List.prod_cons
 
 theorem ι_multi_succ_curry_left {n : ℕ} (m : M) :
     (ιMulti R n.succ).curryLeft m = (LinearMap.mulLeft R (ι R m)).compAlternatingMap (ιMulti R n) :=

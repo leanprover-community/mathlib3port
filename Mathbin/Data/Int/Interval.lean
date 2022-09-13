@@ -24,11 +24,11 @@ instance : LocallyFiniteOrder ℤ where
   finsetIoc := fun a b => (Finset.range (b - a).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)
   finsetIoo := fun a b => (Finset.range (b - a - 1).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)
   finset_mem_Icc := fun a b x => by
-    simp_rw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply, Nat.cast_embedding_apply,
+    simp_rw [mem_map, exists_propₓ, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply, Nat.cast_embedding_apply,
       add_left_embedding_apply]
     constructor
     · rintro ⟨a, h, rfl⟩
-      rw [lt_sub_iff_add_lt, Int.lt_add_one_iff, add_commₓ] at h
+      rw [lt_sub_iff_add_lt, Int.lt_add_one_iffₓ, add_commₓ] at h
       exact ⟨Int.Le.intro rfl, h⟩
       
     · rintro ⟨ha, hb⟩
@@ -38,7 +38,7 @@ instance : LocallyFiniteOrder ℤ where
       exact ⟨sub_lt_sub_right hb _, add_sub_cancel'_right _ _⟩
       
   finset_mem_Ico := fun a b x => by
-    simp_rw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply, Nat.cast_embedding_apply,
+    simp_rw [mem_map, exists_propₓ, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply, Nat.cast_embedding_apply,
       add_left_embedding_apply]
     constructor
     · rintro ⟨a, h, rfl⟩
@@ -50,7 +50,7 @@ instance : LocallyFiniteOrder ℤ where
       exact ⟨sub_lt_sub_right hb _, add_sub_cancel'_right _ _⟩
       
   finset_mem_Ioc := fun a b x => by
-    simp_rw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply, Nat.cast_embedding_apply,
+    simp_rw [mem_map, exists_propₓ, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply, Nat.cast_embedding_apply,
       add_left_embedding_apply]
     constructor
     · rintro ⟨a, h, rfl⟩
@@ -63,7 +63,7 @@ instance : LocallyFiniteOrder ℤ where
       exact ⟨sub_le_sub_right hb _, add_sub_cancel'_right _ _⟩
       
   finset_mem_Ioo := fun a b x => by
-    simp_rw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply, Nat.cast_embedding_apply,
+    simp_rw [mem_map, exists_propₓ, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply, Nat.cast_embedding_apply,
       add_left_embedding_apply]
     constructor
     · rintro ⟨a, h, rfl⟩
@@ -161,23 +161,23 @@ theorem image_Ico_mod (n a : ℤ) (h : 0 ≤ a) : (ico n (n + a)).Image (· % a)
   · simp
     
   ext i
-  simp only [mem_image, exists_prop, mem_range, mem_Ico]
+  simp only [mem_image, exists_propₓ, mem_range, mem_Ico]
   constructor
   · rintro ⟨i, h, rfl⟩
     exact ⟨mod_nonneg i (ne_of_gtₓ ha), mod_lt_of_pos i ha⟩
     
   intro hia
-  have hn := Int.mod_add_div n a
+  have hn := Int.mod_add_divₓ n a
   obtain hi | hi := lt_or_leₓ i (n % a)
   · refine' ⟨i + a * (n / a + 1), ⟨_, _⟩, _⟩
     · rw [add_commₓ (n / a), mul_addₓ, mul_oneₓ, ← add_assocₓ]
       refine' hn.symm.le.trans (add_le_add_right _ _)
-      simpa only [zero_addₓ] using add_le_add hia.left (Int.mod_lt_of_pos n ha).le
+      simpa only [zero_addₓ] using add_le_add hia.left (Int.mod_lt_of_posₓ n ha).le
       
     · refine' lt_of_lt_of_leₓ (add_lt_add_right hi (a * (n / a + 1))) _
       rw [mul_addₓ, mul_oneₓ, ← add_assocₓ, hn]
       
-    · rw [Int.add_mul_mod_self_left, Int.mod_eq_of_lt hia.left hia.right]
+    · rw [Int.add_mul_mod_self_left, Int.mod_eq_of_ltₓ hia.left hia.right]
       
     
   · refine' ⟨i + a * (n / a), ⟨_, _⟩, _⟩
@@ -186,9 +186,9 @@ theorem image_Ico_mod (n a : ℤ) (h : 0 ≤ a) : (ico n (n + a)).Image (· % a)
     · rw [add_commₓ n a]
       refine' add_lt_add_of_lt_of_le hia.right (le_transₓ _ hn.le)
       simp only [zero_le, le_add_iff_nonneg_left]
-      exact Int.mod_nonneg n (ne_of_gtₓ ha)
+      exact Int.mod_nonnegₓ n (ne_of_gtₓ ha)
       
-    · rw [Int.add_mul_mod_self_left, Int.mod_eq_of_lt hia.left hia.right]
+    · rw [Int.add_mul_mod_self_left, Int.mod_eq_of_ltₓ hia.left hia.right]
       
     
 

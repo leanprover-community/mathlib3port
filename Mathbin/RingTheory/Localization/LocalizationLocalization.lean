@@ -46,7 +46,7 @@ module. See `localization_localization_is_localization`.
 -/
 @[nolint unused_arguments]
 def localizationLocalizationSubmodule : Submonoid R :=
-  (N⊔M.map (algebraMap R S)).comap (algebraMap R S)
+  (N ⊔ M.map (algebraMap R S)).comap (algebraMap R S)
 
 variable {M N}
 
@@ -192,7 +192,7 @@ noncomputable instance (x : Ideal R) [H : x.IsPrime] [IsDomain R] :
 
 /-- If `M ≤ N` are submonoids of `R`, then `N⁻¹S` is also the localization of `M⁻¹S` at `N`. -/
 theorem is_localization_of_submonoid_le (M N : Submonoid R) (h : M ≤ N) [IsLocalization M S] [IsLocalization N T]
-    [Algebra S T] [IsScalarTower R S T] : IsLocalization (N.map (algebraMap R S).toMonoidHom) T :=
+    [Algebra S T] [IsScalarTower R S T] : IsLocalization (N.map (algebraMap R S)) T :=
   { map_units := by
       rintro ⟨_, ⟨y, hy, rfl⟩⟩
       convert IsLocalization.map_units T ⟨y, hy⟩

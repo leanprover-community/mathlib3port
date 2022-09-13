@@ -115,13 +115,13 @@ theorem mul_support_binop_subset (op : M → N → P) (op1 : op 1 1 = 1) (f : α
 
 @[to_additive]
 theorem mul_support_sup [SemilatticeSup M] (f g : α → M) :
-    (MulSupport fun x => f x⊔g x) ⊆ MulSupport f ∪ MulSupport g :=
-  mul_support_binop_subset (·⊔·) sup_idem f g
+    (MulSupport fun x => f x ⊔ g x) ⊆ MulSupport f ∪ MulSupport g :=
+  mul_support_binop_subset (· ⊔ ·) sup_idem f g
 
 @[to_additive]
 theorem mul_support_inf [SemilatticeInf M] (f g : α → M) :
-    (MulSupport fun x => f x⊓g x) ⊆ MulSupport f ∪ MulSupport g :=
-  mul_support_binop_subset (·⊓·) inf_idem f g
+    (MulSupport fun x => f x ⊓ g x) ⊆ MulSupport f ∪ MulSupport g :=
+  mul_support_binop_subset (· ⊓ ·) inf_idem f g
 
 @[to_additive]
 theorem mul_support_max [LinearOrderₓ M] (f g : α → M) :

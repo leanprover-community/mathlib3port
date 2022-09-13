@@ -121,8 +121,8 @@ noncomputable instance : PreservesLimits Γ.{u}.rightOp :=
   @Adjunction.isEquivalencePreservesLimits _ _ Γ.rightOp (IsEquivalence.ofEquivalence equivCommRing)
 
 noncomputable instance : PreservesLimits forgetToScheme := by
-  apply @preserves_limits_of_nat_iso _ _ (iso_whisker_right equiv_CommRing.unit_iso forget_to_Scheme).symm with
-    { instances := false }
+  apply (config := { instances := false })
+    @preserves_limits_of_nat_iso _ _ (iso_whisker_right equiv_CommRing.unit_iso forget_to_Scheme).symm
   change preserves_limits (equiv_CommRing.functor ⋙ Scheme.Spec)
   infer_instance
 
@@ -299,7 +299,7 @@ theorem IsAffineOpen.basic_open_is_affine {X : Scheme} {U : Opens X.Carrier} (hU
     exact Scheme.basic_open_subset _ _
   rw [Scheme.hom.opens_range_coe, Scheme.comp_val_base, ← this, coe_comp, Set.range_comp]
   congr 1
-  refine' (congr_argₓ coe <| Scheme.preimage_basic_open hU.from_Spec f).trans _
+  refine' (congr_arg coe <| Scheme.preimage_basic_open hU.from_Spec f).trans _
   refine' Eq.trans _ (PrimeSpectrum.localization_away_comap_range (Localization.Away f) f).symm
   congr 1
   have : (opens.map hU.from_Spec.val.base).obj U = ⊤ := by
@@ -308,7 +308,7 @@ theorem IsAffineOpen.basic_open_is_affine {X : Scheme} {U : Opens X.Carrier} (hU
     rw [← hU.from_Spec_range, ← Set.image_univ]
     exact Set.preimage_image_eq _ PresheafedSpace.is_open_immersion.base_open.inj
   refine' Eq.trans _ (basic_open_eq_of_affine f)
-  have lm : ∀ s, (opens.map hU.from_Spec.val.base).obj U⊓s = s := fun s => this.symm ▸ top_inf_eq
+  have lm : ∀ s, (opens.map hU.from_Spec.val.base).obj U ⊓ s = s := fun s => this.symm ▸ top_inf_eq
   refine' Eq.trans _ (lm _)
   refine' Eq.trans _ ((Scheme.Spec.obj <| op <| X.presheaf.obj <| op U).basic_open_res _ (eq_to_hom this).op)
   rw [← comp_apply]
@@ -360,11 +360,11 @@ theorem is_basis_basic_open (X : Scheme) [IsAffine X] :
   constructor
   · rintro ⟨_, ⟨x, rfl⟩, rfl⟩
     refine' ⟨_, ⟨_, ⟨x, rfl⟩, rfl⟩, _⟩
-    exact congr_argₓ Subtype.val (X.map_prime_spectrum_basic_open_of_affine x)
+    exact congr_arg Subtype.val (X.map_prime_spectrum_basic_open_of_affine x)
     
   · rintro ⟨_, ⟨_, ⟨x, rfl⟩, rfl⟩, rfl⟩
     refine' ⟨_, ⟨x, rfl⟩, _⟩
-    exact congr_argₓ Subtype.val (X.map_prime_spectrum_basic_open_of_affine x).symm
+    exact congr_arg Subtype.val (X.map_prime_spectrum_basic_open_of_affine x).symm
     
 
 theorem IsAffineOpen.exists_basic_open_subset {X : Scheme} {U : Opens X.Carrier} (hU : IsAffineOpen U)
@@ -423,7 +423,7 @@ def basicOpenSectionsToAffine {X : Scheme} {U : Opens X.Carrier} (hU : IsAffineO
 instance {X : Scheme} {U : Opens X.Carrier} (hU : IsAffineOpen U) (f : X.Presheaf.obj (op U)) :
     IsIso (basicOpenSectionsToAffine hU f) := by
   delta' basic_open_sections_to_affine
-  apply is_iso.comp_is_iso with { instances := false }
+  apply (config := { instances := false }) is_iso.comp_is_iso
   · apply PresheafedSpace.is_open_immersion.is_iso_of_subset
     rw [hU.from_Spec_range]
     exact RingedSpace.basic_open_subset _ _
@@ -626,9 +626,9 @@ theorem IsAffineOpen.basic_open_union_eq_self_iff {X : Scheme} {U : Opens X.Carr
   · simp only [opens.supr_def, Subtype.coe_mk, Set.preimage_Union, Subtype.val_eq_coe]
     congr 3
     · ext1 x
-      exact congr_argₓ Subtype.val (hU.from_Spec_map_basic_open _)
+      exact congr_arg Subtype.val (hU.from_Spec_map_basic_open _)
       
-    · exact congr_argₓ Subtype.val hU.from_Spec_base_preimage
+    · exact congr_arg Subtype.val hU.from_Spec_base_preimage
       
     
   · simp only [Subtype.val_eq_coe, PrimeSpectrum.basic_open_eq_zero_locus_compl]
@@ -681,7 +681,7 @@ theorem of_affine_open_cover {X : Scheme} (V : X.AffineOpens) (S : Set X.AffineO
     exact hf₂ x
   rw [← V.prop.self_le_basic_open_union_iff]
   intro x hx
-  simp only [exists_prop, Set.mem_Union, Set.mem_range, SetCoe.exists, opens.supr_def, exists_exists_eq_and,
+  simp only [exists_propₓ, Set.mem_Union, Set.mem_range, SetCoe.exists, opens.supr_def, exists_exists_eq_and,
     opens.mem_coe, Subtype.coe_mk]
   refine' ⟨_, hf₁ ⟨x, hx⟩⟩
 

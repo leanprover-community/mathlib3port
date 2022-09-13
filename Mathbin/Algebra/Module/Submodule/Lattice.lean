@@ -96,7 +96,7 @@ protected theorem ne_bot_iff (p : Submodule R M) : p ≠ ⊥ ↔ ∃ x ∈ p, x 
 
 theorem nonzero_mem_of_bot_lt {p : Submodule R M} (bot_lt : ⊥ < p) : ∃ a : p, a ≠ 0 :=
   let ⟨b, hb₁, hb₂⟩ := p.ne_bot_iff.mp bot_lt.ne'
-  ⟨⟨b, hb₁⟩, hb₂ ∘ congr_argₓ coe⟩
+  ⟨⟨b, hb₁⟩, hb₂ ∘ congr_arg coe⟩
 
 theorem exists_mem_ne_zero_of_ne_bot {p : Submodule R M} (h : p ≠ ⊥) : ∃ b : M, b ∈ p ∧ b ≠ 0 :=
   let ⟨b, hb₁, hb₂⟩ := p.ne_bot_iff.mp h
@@ -123,7 +123,7 @@ def botEquivPunit : (⊥ : Submodule R M) ≃ₗ[R] PUnit where
 theorem eq_bot_of_subsingleton (p : Submodule R M) [Subsingleton p] : p = ⊥ := by
   rw [eq_bot_iff]
   intro v hv
-  exact congr_argₓ coe (Subsingleton.elim (⟨v, hv⟩ : p) 0)
+  exact congr_arg coe (Subsingleton.elim (⟨v, hv⟩ : p) 0)
 
 /-- The universal set is the top element of the lattice of submodules. -/
 instance : HasTop (Submodule R M) :=
@@ -214,17 +214,17 @@ instance : HasInf (Submodule R M) :=
 instance : CompleteLattice (Submodule R M) :=
   { Submodule.orderTop, Submodule.orderBot, SetLike.partialOrder with sup := fun a b => inf { x | a ≤ x ∧ b ≤ x },
     le_sup_left := fun a b => le_Inf' fun x ⟨ha, hb⟩ => ha, le_sup_right := fun a b => le_Inf' fun x ⟨ha, hb⟩ => hb,
-    sup_le := fun a b c h₁ h₂ => Inf_le' ⟨h₁, h₂⟩, inf := (·⊓·), le_inf := fun a b c => Set.subset_inter,
+    sup_le := fun a b c h₁ h₂ => Inf_le' ⟨h₁, h₂⟩, inf := (· ⊓ ·), le_inf := fun a b c => Set.subset_inter,
     inf_le_left := fun a b => Set.inter_subset_left _ _, inf_le_right := fun a b => Set.inter_subset_right _ _,
     sup := fun tt => inf { t | ∀ t' ∈ tt, t' ≤ t }, le_Sup := fun s p hs => le_Inf' fun q hq => hq _ hs,
     Sup_le := fun s p hs => Inf_le' hs, inf := inf, le_Inf := fun s a => le_Inf', Inf_le := fun s a => Inf_le' }
 
 @[simp]
-theorem inf_coe : ↑(p⊓q) = (p ∩ q : Set M) :=
+theorem inf_coe : ↑(p ⊓ q) = (p ∩ q : Set M) :=
   rfl
 
 @[simp]
-theorem mem_inf {p q : Submodule R M} {x : M} : x ∈ p⊓q ↔ x ∈ p ∧ x ∈ q :=
+theorem mem_inf {p q : Submodule R M} {x : M} : x ∈ p ⊓ q ↔ x ∈ p ∧ x ∈ q :=
   Iff.rfl
 
 @[simp]
@@ -257,17 +257,17 @@ theorem mem_infi {ι} (p : ι → Submodule R M) {x} : (x ∈ ⨅ i, p i) ↔ �
 theorem mem_finset_inf {ι} {s : Finset ι} {p : ι → Submodule R M} {x : M} : x ∈ s.inf p ↔ ∀ i ∈ s, x ∈ p i := by
   simp only [← SetLike.mem_coe, finset_inf_coe, Set.mem_Inter]
 
-theorem mem_sup_left {S T : Submodule R M} : ∀ {x : M}, x ∈ S → x ∈ S⊔T :=
-  show S ≤ S⊔T from le_sup_left
+theorem mem_sup_left {S T : Submodule R M} : ∀ {x : M}, x ∈ S → x ∈ S ⊔ T :=
+  show S ≤ S ⊔ T from le_sup_left
 
-theorem mem_sup_right {S T : Submodule R M} : ∀ {x : M}, x ∈ T → x ∈ S⊔T :=
-  show T ≤ S⊔T from le_sup_right
+theorem mem_sup_right {S T : Submodule R M} : ∀ {x : M}, x ∈ T → x ∈ S ⊔ T :=
+  show T ≤ S ⊔ T from le_sup_right
 
-theorem add_mem_sup {S T : Submodule R M} {s t : M} (hs : s ∈ S) (ht : t ∈ T) : s + t ∈ S⊔T :=
+theorem add_mem_sup {S T : Submodule R M} {s t : M} (hs : s ∈ S) (ht : t ∈ T) : s + t ∈ S ⊔ T :=
   add_mem (mem_sup_left hs) (mem_sup_right ht)
 
 theorem sub_mem_sup {R' M' : Type _} [Ringₓ R'] [AddCommGroupₓ M'] [Module R' M'] {S T : Submodule R' M'} {s t : M'}
-    (hs : s ∈ S) (ht : t ∈ T) : s - t ∈ S⊔T := by
+    (hs : s ∈ S) (ht : t ∈ T) : s - t ∈ S ⊔ T := by
   rw [sub_eq_add_neg]
   exact add_mem_sup hs (neg_mem ht)
 

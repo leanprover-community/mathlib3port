@@ -833,7 +833,7 @@ theorem Adapted.measurable_upcrossings (hf : Adapted ℱ f) (hab : a < b) : Meas
   measurable_supr fun N => measurable_from_top.comp (hf.measurable_upcrossings_before hab)
 
 theorem upcrossings_lt_top_iff : upcrossings a b f ω < ∞ ↔ ∃ k, ∀ N, upcrossingsBefore a b f N ω ≤ k := by
-  have : upcrossings a b f ω < ∞ ↔ ∃ k : ℝ≥0 , upcrossings a b f ω ≤ k := by
+  have : upcrossings a b f ω < ∞ ↔ ∃ k : ℝ≥0, upcrossings a b f ω ≤ k := by
     constructor
     · intro h
       lift upcrossings a b f ω to ℝ≥0 using h.ne with r hr
@@ -870,7 +870,7 @@ theorem Submartingale.mul_lintegral_upcrossings_le_lintegral_pos_part [IsFiniteM
       intro N
       rw
         [(by
-          simp : (∫⁻ ω, upcrossings_before a b f N ω ∂μ) = ∫⁻ ω, ↑(upcrossings_before a b f N ω : ℝ≥0 ) ∂μ),
+          simp : (∫⁻ ω, upcrossings_before a b f N ω ∂μ) = ∫⁻ ω, ↑(upcrossings_before a b f N ω : ℝ≥0) ∂μ),
         lintegral_coe_eq_integral, ← Ennreal.of_real_mul (sub_pos.2 hab).le]
       · simp_rw [Nnreal.coe_nat_cast]
         exact

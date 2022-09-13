@@ -7,6 +7,7 @@ import Mathbin.Algebra.Order.Smul
 import Mathbin.Data.Complex.Basic
 import Mathbin.Data.Fin.VecNotation
 import Mathbin.FieldTheory.Tower
+import Mathbin.Algebra.CharP.Invertible
 
 /-!
 # Complex number as a vector space over `ℝ`
@@ -31,6 +32,13 @@ part, the embedding of `ℝ` in `ℂ`, and the complex conjugate):
 It also provides a universal property of the complex numbers `complex.lift`, which constructs a
 `ℂ →ₐ[ℝ] A` into any `ℝ`-algebra `A` given a square root of `-1`.
 
+In addition, this file provides a decomposition into `real_part` and `imaginary_part` for any
+element of a `star_module` over `ℂ`.
+
+## Notation
+
+* `ℜ` and `ℑ` for the `real_part` and `imaginary_part`, respectively, in the locale
+  `complex_star_module`.
 -/
 
 
@@ -349,4 +357,86 @@ theorem lift_aux_neg_I : liftAux (-I) ((neg_mul_neg _ _).trans I_mul_I) = conj_a
 end lift
 
 end Complex
+
+section RealImaginaryPart
+
+open Complex
+
+variable {A : Type _} [AddCommGroupₓ A] [Module ℂ A] [StarAddMonoid A] [StarModule ℂ A]
+
+/-- Create a `self_adjoint` element from a `skew_adjoint` element by multiplying by the scalar
+`-complex.I`. -/
+@[simps]
+def skewAdjoint.negISmul : skewAdjoint A →ₗ[ℝ] selfAdjoint A where
+  toFun := fun a =>
+    ⟨-I • a, by
+      simp only [selfAdjoint.mem_iff, neg_smul, star_neg, star_smul, star_def, conj_I, skewAdjoint.star_coe_eq,
+        neg_smul_neg]⟩
+  map_add' := fun a b => by
+    ext
+    simp only [AddSubgroup.coe_add, smul_add, AddMemClass.mk_add_mk]
+  map_smul' := fun a b => by
+    ext
+    simp only [neg_smul, skewAdjoint.coe_smul, AddSubgroup.coe_mk, RingHom.id_apply, selfAdjoint.coe_smul, smul_neg,
+      neg_inj]
+    rw [smul_comm]
+
+theorem skewAdjoint.I_smul_neg_I (a : skewAdjoint A) : I • (skewAdjoint.negISmul a : A) = a := by
+  simp only [smul_smul, skewAdjoint.neg_I_smul_apply_coe, neg_smul, smul_neg, I_mul_I, one_smul, neg_negₓ]
+
+/-- The real part `ℜ a` of an element `a` of a star module over `ℂ`, as a linear map. This is just
+`self_adjoint_part ℝ`, but we provide it as a separate definition in order to link it with lemmas
+concerning the `imaginary_part`, which doesn't exist in star modules over other rings. -/
+noncomputable def realPart : A →ₗ[ℝ] selfAdjoint A :=
+  selfAdjointPart ℝ
+
+/-- The imaginary part `ℑ a` of an element `a` of a star module over `ℂ`, as a linear map into the
+self adjoint elements. In a general star module, we have a decomposition into the `self_adjoint`
+and `skew_adjoint` parts, but in a star module over `ℂ` we have
+`real_part_add_I_smul_imaginary_part`, which allows us to decompose into a linear combination of
+`self_adjoint`s. -/
+noncomputable def imaginaryPart : A →ₗ[ℝ] selfAdjoint A :=
+  skewAdjoint.negISmul.comp (skewAdjointPart ℝ)
+
+-- mathport name: exprℜ
+localized [ComplexStarModule] notation "ℜ" => realPart
+
+-- mathport name: exprℑ
+localized [ComplexStarModule] notation "ℑ" => imaginaryPart
+
+@[simp]
+theorem real_part_apply_coe (a : A) : (ℜ a : A) = (2 : ℝ)⁻¹ • (a + star a) := by
+  unfold realPart
+  simp only [self_adjoint_part_apply_coe, inv_of_eq_inv]
+
+@[simp]
+theorem imaginary_part_apply_coe (a : A) : (ℑ a : A) = -I • (2 : ℝ)⁻¹ • (a - star a) := by
+  unfold imaginaryPart
+  simp only [LinearMap.coe_comp, skewAdjoint.neg_I_smul_apply_coe, skew_adjoint_part_apply_coe, inv_of_eq_inv]
+
+/-- The standard decomposition of `ℜ a + complex.I • ℑ a = a` of an element of a star module over
+`ℂ` into a linear combination of self adjoint elements. -/
+theorem real_part_add_I_smul_imaginary_part (a : A) : (ℜ a + I • ℑ a : A) = a := by
+  simpa only [smul_smul, real_part_apply_coe, imaginary_part_apply_coe, neg_smul, I_mul_I, one_smul, neg_sub,
+    add_add_sub_cancel, smul_sub, smul_add, neg_sub_neg, inv_of_eq_inv] using inv_of_two_smul_add_inv_of_two_smul ℝ a
+
+@[simp]
+theorem real_part_I_smul (a : A) : ℜ (I • a) = -ℑ a := by
+  ext
+  simp [smul_comm I, smul_sub, sub_eq_add_neg, add_commₓ]
+
+@[simp]
+theorem imaginary_part_I_smul (a : A) : ℑ (I • a) = ℜ a := by
+  ext
+  simp [smul_comm I, smul_smul I]
+
+theorem real_part_smul (z : ℂ) (a : A) : ℜ (z • a) = z.re • ℜ a - z.im • ℑ a := by
+  nth_rw 0[← re_add_im z]
+  simp [-re_add_im, add_smul, ← smul_smul, sub_eq_add_neg]
+
+theorem imaginary_part_smul (z : ℂ) (a : A) : ℑ (z • a) = z.re • ℑ a + z.im • ℜ a := by
+  nth_rw 0[← re_add_im z]
+  simp [-re_add_im, add_smul, ← smul_smul]
+
+end RealImaginaryPart
 

@@ -47,7 +47,7 @@ def splitCenter (I : Box ι) : Prepartition I where
   PairwiseDisjoint := by
     rw [Finset.coe_map, Finset.coe_univ, image_univ]
     rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩ Hne
-    exact I.disjoint_split_center_box (mt (congr_argₓ _) Hne)
+    exact I.disjoint_split_center_box (mt (congr_arg _) Hne)
 
 @[simp]
 theorem mem_split_center : J ∈ splitCenter I ↔ ∃ s, I.splitCenterBox s = J := by

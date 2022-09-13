@@ -137,7 +137,8 @@ def completeBipartiteGraph (V W : Type _) : SimpleGraph (Sum V W) where
 
 namespace SimpleGraph
 
-variable {V : Type u} {W : Type v} {X : Type w} (G : SimpleGraph V) (G' : SimpleGraph W) {a b c u v w : V} {e : Sym2 V}
+variable {𝕜 : Type _} {V : Type u} {W : Type v} {X : Type w} (G : SimpleGraph V) (G' : SimpleGraph W) {a b c u v w : V}
+  {e : Sym2 V}
 
 @[simp]
 protected theorem irrefl {v : V} : ¬G.Adj v v :=
@@ -182,23 +183,23 @@ theorem is_subgraph_eq_le : (IsSubgraph : SimpleGraph V → SimpleGraph V → Pr
 /-- The supremum of two graphs `x ⊔ y` has edges where either `x` or `y` have edges. -/
 instance : HasSup (SimpleGraph V) :=
   ⟨fun x y =>
-    { Adj := x.Adj⊔y.Adj,
+    { Adj := x.Adj ⊔ y.Adj,
       symm := fun v w h => by
         rwa [Pi.sup_apply, Pi.sup_apply, x.adj_comm, y.adj_comm] }⟩
 
 @[simp]
-theorem sup_adj (x y : SimpleGraph V) (v w : V) : (x⊔y).Adj v w ↔ x.Adj v w ∨ y.Adj v w :=
+theorem sup_adj (x y : SimpleGraph V) (v w : V) : (x ⊔ y).Adj v w ↔ x.Adj v w ∨ y.Adj v w :=
   Iff.rfl
 
 /-- The infimum of two graphs `x ⊓ y` has edges where both `x` and `y` have edges. -/
 instance : HasInf (SimpleGraph V) :=
   ⟨fun x y =>
-    { Adj := x.Adj⊓y.Adj,
+    { Adj := x.Adj ⊓ y.Adj,
       symm := fun v w h => by
         rwa [Pi.inf_apply, Pi.inf_apply, x.adj_comm, y.adj_comm] }⟩
 
 @[simp]
-theorem inf_adj (x y : SimpleGraph V) (v w : V) : (x⊓y).Adj v w ↔ x.Adj v w ∧ y.Adj v w :=
+theorem inf_adj (x y : SimpleGraph V) (v w : V) : (x ⊓ y).Adj v w ↔ x.Adj v w ∧ y.Adj v w :=
   Iff.rfl
 
 /-- We define `Gᶜ` to be the `simple_graph V` such that no two adjacent vertices in `G`
@@ -229,7 +230,7 @@ theorem sdiff_adj (x y : SimpleGraph V) (v w : V) : (x \ y).Adj v w ↔ x.Adj v 
   Iff.rfl
 
 instance : BooleanAlgebra (SimpleGraph V) :=
-  { PartialOrderₓ.lift Adj ext with le := (· ≤ ·), sup := (·⊔·), inf := (·⊓·), compl := HasCompl.compl,
+  { PartialOrderₓ.lift Adj ext with le := (· ≤ ·), sup := (· ⊔ ·), inf := (· ⊓ ·), compl := HasCompl.compl,
     sdiff := (· \ ·), top := completeGraph V, bot := emptyGraph V, le_top := fun x v w h => x.ne_of_adj h,
     bot_le := fun x v w h => h.elim, sup_le := fun x y z hxy hyz v w h => h.casesOn (fun h => hxy h) fun h => hyz h,
     sdiff_eq := fun x y => by
@@ -274,9 +275,9 @@ variable (V) (H : SimpleGraph V) [DecidableRel G.Adj] [DecidableRel H.Adj]
 
 instance Bot.adjDecidable : DecidableRel (⊥ : SimpleGraph V).Adj := fun v w => Decidable.false
 
-instance Sup.adjDecidable : DecidableRel (G⊔H).Adj := fun v w => Or.decidable
+instance Sup.adjDecidable : DecidableRel (G ⊔ H).Adj := fun v w => Or.decidable
 
-instance Inf.adjDecidable : DecidableRel (G⊓H).Adj := fun v w => And.decidable
+instance Inf.adjDecidable : DecidableRel (G ⊓ H).Adj := fun v w => And.decidable
 
 instance Sdiff.adjDecidable : DecidableRel (G \ H).Adj := fun v w => And.decidable
 
@@ -321,6 +322,9 @@ def EdgeSet : Set (Sym2 V) :=
 theorem mem_edge_set : ⟦(v, w)⟧ ∈ G.EdgeSet ↔ G.Adj v w :=
   Iff.rfl
 
+theorem edge_set_mono {G G' : SimpleGraph V} (h : G ≤ G') : G.EdgeSet ⊆ G'.EdgeSet := fun e =>
+  Sym2.ind (fun v w => @h v w) e
+
 /-- Two vertices are adjacent iff there is an edge between them. The
 condition `v ≠ w` ensures they are different endpoints of the edge,
 which is necessary since when `v = w` the existential
@@ -338,7 +342,7 @@ theorem adj_iff_exists_edge {v w : V} : G.Adj v w ↔ v ≠ w ∧ ∃ e ∈ G.Ed
     
 
 theorem adj_iff_exists_edge_coe : G.Adj a b ↔ ∃ e : G.EdgeSet, ↑e = ⟦(a, b)⟧ := by
-  simp only [mem_edge_set, exists_prop, SetCoe.exists, exists_eq_right, Subtype.coe_mk]
+  simp only [mem_edge_set, exists_propₓ, SetCoe.exists, exists_eq_right, Subtype.coe_mk]
 
 theorem edge_other_ne {e : Sym2 V} (he : e ∈ G.EdgeSet) {v : V} (h : v ∈ e) : h.other ≠ v := by
   erw [← Sym2.other_spec h, Sym2.eq_swap] at he
@@ -455,7 +459,7 @@ def dartOfNeighborSet (v : V) (w : G.NeighborSet v) : G.Dart :=
 theorem dart_of_neighbor_set_injective (v : V) : Function.Injective (G.dartOfNeighborSet v) := fun e₁ e₂ h =>
   Subtype.ext <| by
     injection h with h'
-    convert congr_argₓ Prod.snd h'
+    convert congr_arg Prod.snd h'
 
 instance nonempty_dart_top [Nontrivial V] : Nonempty (⊤ : SimpleGraph V).Dart := by
   obtain ⟨v, w, h⟩ := exists_pair_ne V
@@ -473,13 +477,13 @@ def IncidenceSet (v : V) : Set (Sym2 V) :=
 theorem incidence_set_subset (v : V) : G.IncidenceSet v ⊆ G.EdgeSet := fun _ h => h.1
 
 theorem mk_mem_incidence_set_iff : ⟦(b, c)⟧ ∈ G.IncidenceSet a ↔ G.Adj b c ∧ (a = b ∨ a = c) :=
-  and_congr_right' Sym2.mem_iff
+  and_congr_right'ₓ Sym2.mem_iff
 
 theorem mk_mem_incidence_set_left_iff : ⟦(a, b)⟧ ∈ G.IncidenceSet a ↔ G.Adj a b :=
-  and_iff_left <| Sym2.mem_mk_left _ _
+  and_iff_leftₓ <| Sym2.mem_mk_left _ _
 
 theorem mk_mem_incidence_set_right_iff : ⟦(a, b)⟧ ∈ G.IncidenceSet b ↔ G.Adj a b :=
-  and_iff_left <| Sym2.mem_mk_right _ _
+  and_iff_leftₓ <| Sym2.mem_mk_right _ _
 
 theorem edge_mem_incidence_set_iff {e : G.EdgeSet} : ↑e ∈ G.IncidenceSet a ↔ a ∈ (e : Sym2 V) :=
   and_iff_right e.2
@@ -515,6 +519,15 @@ def edgeFinset [Fintype G.EdgeSet] : Finset (Sym2 V) :=
 @[simp]
 theorem mem_edge_finset [Fintype G.EdgeSet] (e : Sym2 V) : e ∈ G.edgeFinset ↔ e ∈ G.EdgeSet :=
   Set.mem_to_finset
+
+@[simp, norm_cast]
+theorem coe_edge_finset [Fintype G.EdgeSet] : (G.edgeFinset : Set (Sym2 V)) = G.EdgeSet :=
+  Set.coe_to_finset _
+
+theorem edge_finset_mono {G G' : SimpleGraph V} [Fintype G.EdgeSet] [Fintype G'.EdgeSet] :
+    G ≤ G' → G.edgeFinset ⊆ G'.edgeFinset := by
+  simp_rw [← coe_subset, coe_edge_finset]
+  exact edge_set_mono
 
 theorem edge_finset_card [Fintype G.EdgeSet] : G.edgeFinset.card = Fintype.card G.EdgeSet :=
   Set.to_finset_card _
@@ -669,7 +682,7 @@ theorem compl_eq_delete_edges : Gᶜ = (⊤ : SimpleGraph V).deleteEdges G.EdgeS
 theorem delete_edges_delete_edges (s s' : Set (Sym2 V)) : (G.deleteEdges s).deleteEdges s' = G.deleteEdges (s ∪ s') :=
   by
   ext
-  simp [and_assoc, not_or_distrib]
+  simp [and_assocₓ, not_or_distrib]
 
 @[simp]
 theorem delete_edges_empty_eq : G.deleteEdges ∅ = G := by
@@ -692,6 +705,50 @@ theorem delete_edges_le_of_le {s s' : Set (Sym2 V)} (h : s ⊆ s') : G.deleteEdg
 theorem delete_edges_eq_inter_edge_set (s : Set (Sym2 V)) : G.deleteEdges s = G.deleteEdges (s ∩ G.EdgeSet) := by
   ext
   simp (config := { contextual := true })[imp_false]
+
+theorem delete_edges_sdiff_eq_of_le {H : SimpleGraph V} (h : H ≤ G) : G.deleteEdges (G.EdgeSet \ H.EdgeSet) = H := by
+  ext v w
+  constructor <;> simp (config := { contextual := true })[@h v w]
+
+theorem edge_set_delete_edges (s : Set (Sym2 V)) : (G.deleteEdges s).EdgeSet = G.EdgeSet \ s := by
+  ext e
+  refine' Sym2.ind _ e
+  simp
+
+theorem edge_finset_delete_edges [Fintype V] [DecidableEq V] [DecidableRel G.Adj] (s : Finset (Sym2 V))
+    [DecidableRel (G.deleteEdges s).Adj] : (G.deleteEdges s).edgeFinset = G.edgeFinset \ s := by
+  ext e
+  simp [edge_set_delete_edges]
+
+section DeleteFar
+
+variable (G) [OrderedRing 𝕜] [Fintype V] [DecidableEq V] [DecidableRel G.Adj] {p : SimpleGraph V → Prop} {r r₁ r₂ : 𝕜}
+
+/-- A graph is `r`-*delete-far* from a property `p` if we must delete at least `r` edges from it to
+get a graph with the property `p`. -/
+def DeleteFar (p : SimpleGraph V → Prop) (r : 𝕜) : Prop :=
+  ∀ ⦃s⦄, s ⊆ G.edgeFinset → p (G.deleteEdges s) → r ≤ s.card
+
+open Classical
+
+variable {G}
+
+theorem delete_far_iff : G.DeleteFar p r ↔ ∀ ⦃H⦄, H ≤ G → p H → r ≤ G.edgeFinset.card - H.edgeFinset.card := by
+  refine' ⟨fun h H hHG hH => _, fun h s hs hG => _⟩
+  · have := h (sdiff_subset G.edge_finset H.edge_finset)
+    simp only [delete_edges_sdiff_eq_of_le _ hHG, edge_finset_mono hHG, card_sdiff, card_le_of_subset, coe_sdiff,
+      coe_edge_finset, Nat.cast_sub] at this
+    exact this hH
+    
+  · simpa [card_sdiff hs, edge_finset_delete_edges, -Set.to_finset_card, Nat.cast_sub, card_le_of_subset hs] using
+      h (G.delete_edges_le s) hG
+    
+
+alias delete_far_iff ↔ delete_far.le_card_sub_card _
+
+theorem DeleteFar.mono (h : G.DeleteFar p r₂) (hr : r₁ ≤ r₂) : G.DeleteFar p r₁ := fun s hs hG => hr.trans <| h hs hG
+
+end DeleteFar
 
 /-! ## Map and comap -/
 
@@ -1271,14 +1328,14 @@ def mapEdgeSet : G.EdgeSet ≃ G'.EdgeSet where
     rintro ⟨e, h⟩
     simp only [hom.map_edge_set, Sym2.map_map, RelIso.coe_coe_fn, RelEmbedding.coe_coe_fn, Subtype.mk_eq_mk,
       Subtype.coe_mk, coe_coe]
-    apply congr_funₓ
+    apply congr_fun
     convert Sym2.map_id
     exact funext fun _ => RelIso.symm_apply_apply _ _
   right_inv := by
     rintro ⟨e, h⟩
     simp only [hom.map_edge_set, Sym2.map_map, RelIso.coe_coe_fn, RelEmbedding.coe_coe_fn, Subtype.mk_eq_mk,
       Subtype.coe_mk, coe_coe]
-    apply congr_funₓ
+    apply congr_fun
     convert Sym2.map_id
     exact funext fun _ => RelIso.apply_symm_apply _ _
 

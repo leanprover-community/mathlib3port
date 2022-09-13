@@ -65,7 +65,7 @@ theorem eval_from_singleton (S : Set σ) (a : α) : M.evalFrom S [a] = M.StepSet
 @[simp]
 theorem eval_from_append_singleton (S : Set σ) (x : List α) (a : α) :
     M.evalFrom S (x ++ [a]) = M.StepSet (M.evalFrom S x) a := by
-  simp only [eval_from, List.foldl_append, List.foldl_cons, List.foldl_nil]
+  simp only [eval_from, List.foldl_appendₓ, List.foldl_cons, List.foldl_nil]
 
 /-- `M.eval x` computes all possible paths though `M` with input `x` starting at an element of
   `M.start`. -/

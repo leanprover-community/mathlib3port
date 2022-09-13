@@ -100,12 +100,12 @@ section HasSmul
 
 variable [HasSmul 𝕜 E] {s : Set E} {f g : E → β}
 
-theorem QuasiconvexOn.sup (hf : QuasiconvexOn 𝕜 s f) (hg : QuasiconvexOn 𝕜 s g) : QuasiconvexOn 𝕜 s (f⊔g) := by
+theorem QuasiconvexOn.sup (hf : QuasiconvexOn 𝕜 s f) (hg : QuasiconvexOn 𝕜 s g) : QuasiconvexOn 𝕜 s (f ⊔ g) := by
   intro r
   simp_rw [Pi.sup_def, sup_le_iff, ← Set.sep_inter_sep]
   exact (hf r).inter (hg r)
 
-theorem QuasiconcaveOn.inf (hf : QuasiconcaveOn 𝕜 s f) (hg : QuasiconcaveOn 𝕜 s g) : QuasiconcaveOn 𝕜 s (f⊓g) :=
+theorem QuasiconcaveOn.inf (hf : QuasiconcaveOn 𝕜 s f) (hg : QuasiconcaveOn 𝕜 s g) : QuasiconcaveOn 𝕜 s (f ⊓ g) :=
   hf.dual.sup hg
 
 theorem quasiconvex_on_iff_le_max :
@@ -130,7 +130,7 @@ theorem quasilinear_on_iff_mem_interval :
           x ∈ s → ∀ ⦃y⦄, y ∈ s → ∀ ⦃a b : 𝕜⦄, 0 ≤ a → 0 ≤ b → a + b = 1 → f (a • x + b • y) ∈ Interval (f x) (f y) :=
   by
   rw [QuasilinearOn, quasiconvex_on_iff_le_max, quasiconcave_on_iff_min_le, and_and_and_comm, and_selfₓ]
-  apply and_congr_right'
+  apply and_congr_right'ₓ
   simp_rw [← forall_and_distrib, interval, mem_Icc, and_comm]
 
 theorem QuasiconvexOn.convex_lt (hf : QuasiconvexOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x ∈ s | f x < r }) := by

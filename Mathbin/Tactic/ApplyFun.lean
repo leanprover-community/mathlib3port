@@ -23,7 +23,7 @@ unsafe def apply_fun_to_hyp (e : pexpr) (mono_lem : Option pexpr) (hyp : expr) :
       | quote.1 ((%%ₓl) = %%ₓr) => do
         let ltp ← infer_type l
         let mv ← mk_mvar
-        to_expr (pquote.1 (congr_argₓ (%%ₓe : (%%ₓltp) → %%ₓmv) (%%ₓhyp)))
+        to_expr (pquote.1 (congr_arg (%%ₓe : (%%ₓltp) → %%ₓmv) (%%ₓhyp)))
       | quote.1 ((%%ₓl) ≤ %%ₓr) => do
         let Hmono ←
           match mono_lem with

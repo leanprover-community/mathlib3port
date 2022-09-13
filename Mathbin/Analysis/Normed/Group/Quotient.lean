@@ -484,7 +484,7 @@ theorem IsQuotient.norm_le {f : NormedAddGroupHom M N} (hquot : IsQuotient f) (m
     
 
 theorem lift_norm_le {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M) (f : NormedAddGroupHom M N)
-    (hf : ∀ s ∈ S, f s = 0) {c : ℝ≥0 } (fb : ∥f∥ ≤ c) : ∥lift S f hf∥ ≤ c := by
+    (hf : ∀ s ∈ S, f s = 0) {c : ℝ≥0} (fb : ∥f∥ ≤ c) : ∥lift S f hf∥ ≤ c := by
   apply op_norm_le_bound _ c.coe_nonneg
   intro x
   by_cases' hc : c = 0
@@ -516,7 +516,7 @@ theorem lift_norm_le {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M)
 
 theorem lift_norm_noninc {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M) (f : NormedAddGroupHom M N)
     (hf : ∀ s ∈ S, f s = 0) (fb : f.NormNoninc) : (lift S f hf).NormNoninc := fun x => by
-  have fb' : ∥f∥ ≤ (1 : ℝ≥0 ) := norm_noninc.norm_noninc_iff_norm_le_one.mp fb
+  have fb' : ∥f∥ ≤ (1 : ℝ≥0) := norm_noninc.norm_noninc_iff_norm_le_one.mp fb
   simpa using le_of_op_norm_le _ (f.lift_norm_le _ _ fb') _
 
 end NormedAddGroupHom

@@ -43,7 +43,7 @@ theorem sq_add_sq_of_two_mul_sq_add_sq {m x y : ℤ} (h : 2 * m = x ^ 2 + y ^ 2)
         rw [mul_assoc, h] <;> ring
       _ = (2 * ((x - y) / 2)) ^ 2 + (2 * ((x + y) / 2)) ^ 2 := by
         rw [even_iff_two_dvd] at hxsuby hxaddy
-        rw [Int.mul_div_cancel' hxsuby, Int.mul_div_cancel' hxaddy]
+        rw [Int.mul_div_cancel'ₓ hxsuby, Int.mul_div_cancel'ₓ hxaddy]
       _ = 2 * 2 * (((x - y) / 2) ^ 2 + ((x + y) / 2) ^ 2) := by
         simp [mul_addₓ, pow_succₓ, mul_comm, mul_assoc, mul_left_commₓ]
       

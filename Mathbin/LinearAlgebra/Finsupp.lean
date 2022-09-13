@@ -254,14 +254,14 @@ theorem supported_Union {δ : Type _} (s : δ → Set α) : supported M R (⋃ i
     exact le_supr (fun i => supported M R (s i)) i (single_mem_supported R _ hi)
     
 
-theorem supported_union (s t : Set α) : supported M R (s ∪ t) = supported M R s⊔supported M R t := by
+theorem supported_union (s t : Set α) : supported M R (s ∪ t) = supported M R s ⊔ supported M R t := by
   erw [Set.union_eq_Union, supported_Union, supr_bool_eq] <;> rfl
 
 theorem supported_Inter {ι : Type _} (s : ι → Set α) : supported M R (⋂ i, s i) = ⨅ i, supported M R (s i) :=
   Submodule.ext fun x => by
     simp [mem_supported, subset_Inter_iff]
 
-theorem supported_inter (s t : Set α) : supported M R (s ∩ t) = supported M R s⊓supported M R t := by
+theorem supported_inter (s t : Set α) : supported M R (s ∩ t) = supported M R s ⊓ supported M R t := by
   rw [Set.inter_eq_Inter, supported_Inter, infi_bool_eq] <;> rfl
 
 theorem disjoint_supported_supported {s t : Set α} (h : Disjoint s t) : Disjoint (supported M R s) (supported M R t) :=
@@ -825,6 +825,71 @@ end Prod
 
 end Finsupp
 
+section Fintype
+
+variable {α M : Type _} (R : Type _) [Fintype α] [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
+
+variable (S : Type _) [Semiringₓ S] [Module S M] [SmulCommClass R S M]
+
+variable (v : α → M)
+
+/-- `fintype.total R S v f` is the linear combination of vectors in `v` with weights in `f`.
+This variant of `finsupp.total` is defined on fintype indexed vectors.
+
+This map is linear in `v` if `R` is commutative, and always linear in `f`.
+See note [bundled maps over different rings] for why separate `R` and `S` semirings are used.
+-/
+protected def Fintype.total : (α → M) →ₗ[S] (α → R) →ₗ[R] M where
+  toFun := fun v =>
+    { toFun := fun f => ∑ i, f i • v i,
+      map_add' := fun f g => by
+        simp_rw [← Finset.sum_add_distrib, ← add_smul]
+        rfl,
+      map_smul' := fun r f => by
+        simp_rw [Finset.smul_sum, smul_smul]
+        rfl }
+  map_add' := fun u v => by
+    ext
+    simp [Finset.sum_add_distrib, Pi.add_apply, smul_add]
+  map_smul' := fun r v => by
+    ext
+    simp [Finset.smul_sum, smul_comm _ r]
+
+variable {S}
+
+theorem Fintype.total_apply (f) : Fintype.total R S v f = ∑ i, f i • v i :=
+  rfl
+
+@[simp]
+theorem Fintype.total_apply_single (i : α) (r : R) : Fintype.total R S v (Pi.single i r) = r • v i := by
+  simp_rw [Fintype.total_apply, Pi.single_apply, ite_smul, zero_smul]
+  rw [Finset.sum_ite_eq', if_pos (Finset.mem_univ _)]
+
+variable (S)
+
+theorem Finsupp.total_eq_fintype_total_apply (x : α → R) :
+    Finsupp.total α M R v ((Finsupp.linearEquivFunOnFintype R R α).symm x) = Fintype.total R S v x := by
+  apply Finset.sum_subset
+  · exact Finset.subset_univ _
+    
+  · intro x _ hx
+    rw [finsupp.not_mem_support_iff.mp hx]
+    exact zero_smul _ _
+    
+
+theorem Finsupp.total_eq_fintype_total :
+    (Finsupp.total α M R v).comp (Finsupp.linearEquivFunOnFintype R R α).symm.toLinearMap = Fintype.total R S v :=
+  LinearMap.ext <| Finsupp.total_eq_fintype_total_apply R S v
+
+variable {S}
+
+@[simp]
+theorem Fintype.range_total : (Fintype.total R S v).range = Submodule.span R (Set.Range v) := by
+  rw [← Finsupp.total_eq_fintype_total, LinearMap.range_comp, LinearEquiv.to_linear_map_eq_coe, LinearEquiv.range,
+    Submodule.map_top, Finsupp.range_total]
+
+end Fintype
+
 variable {R : Type _} {M : Type _} {N : Type _}
 
 variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] [AddCommMonoidₓ N] [Module R N]
@@ -881,7 +946,7 @@ The implementation uses `finsupp.sum`. -/
 theorem mem_span_set {m : M} {s : Set M} :
     m ∈ Submodule.span R s ↔ ∃ c : M →₀ R, (c.Support : Set M) ⊆ s ∧ (c.Sum fun mi r => r • mi) = m := by
   conv_lhs => rw [← Set.image_id s]
-  simp_rw [← exists_prop]
+  simp_rw [← exists_propₓ]
   exact Finsupp.mem_span_image_iff_total R
 
 /-- If `subsingleton R`, then `M ≃ₗ[R] ι →₀ R` for any type `ι`. -/

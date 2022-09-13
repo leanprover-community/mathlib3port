@@ -187,7 +187,7 @@ variable [Fintype α]
 
 theorem support_pow_coprime {σ : Perm α} {n : ℕ} (h : Nat.Coprime n (orderOf σ)) : (σ ^ n).support = σ.support := by
   obtain ⟨m, hm⟩ := exists_pow_eq_self_of_coprime h
-  exact le_antisymmₓ (support_pow_le σ n) (le_transₓ (ge_of_eqₓ (congr_argₓ support hm)) (support_pow_le (σ ^ n) m))
+  exact le_antisymmₓ (support_pow_le σ n) (le_transₓ (ge_of_eqₓ (congr_arg support hm)) (support_pow_le (σ ^ n) m))
 
 end Fintype
 
@@ -218,7 +218,7 @@ def swapFactorsAux :
           List.mem_of_ne_of_memₓ this.2 (h this.1)
       ⟨swap x (f x)::m.1, by
         rw [List.prod_cons, m.2.1, ← mul_assoc, mul_def (swap x (f x)), swap_swap, ← one_def, one_mulₓ], fun g hg =>
-        ((List.mem_cons_iffₓ _ _ _).1 hg).elim (fun h => ⟨x, f x, hfx, h⟩) (m.2.2 _)⟩
+        ((List.mem_cons_iff _ _ _).1 hg).elim (fun h => ⟨x, f x, hfx, h⟩) (m.2.2 _)⟩
 
 /-- `swap_factors` represents a permutation as a product of a list of transpositions.
 The representation is non unique and depends on the linear order structure.
@@ -570,7 +570,7 @@ theorem sign_aux3_symm_trans_trans [DecidableEq β] [Fintype β] (f : Perm α) (
         let n := equivFin β
         rw [← sign_aux_eq_sign_aux2 _ _ n fun _ _ => h₁ _, ← sign_aux_eq_sign_aux2 _ _ (e.trans n) fun _ _ => h₂ _]
         exact
-          congr_argₓ sign_aux
+          congr_arg sign_aux
             (Equivₓ.ext fun x => by
               simp only [Equivₓ.coe_trans, apply_eq_iff_eq, symm_trans_apply]))
     ht hs
@@ -715,7 +715,7 @@ theorem prod_prod_extend_right {α : Type _} [DecidableEq α] (σ : α → Perm 
     refine' Or.inl ⟨l.mem_cons_self a, _⟩
     rw [prod_extend_right_apply_eq]
     
-  · refine' Or.inr ⟨fun h => not_orₓ ha' not_mem_l ((List.mem_cons_iffₓ _ _ _).mp h), _⟩
+  · refine' Or.inr ⟨fun h => not_orₓ ha' not_mem_l ((List.mem_cons_iff _ _ _).mp h), _⟩
     rw [prod_extend_right_apply_ne _ ha']
     
 

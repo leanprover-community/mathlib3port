@@ -156,7 +156,7 @@ theorem Infinite.order_of_eq_zero_of_forall_mem_zpowers [Infinite α] {g : α} (
   let t : ℤ := -k % orderOf g
   rw [zpow_eq_mod_order_of] at hk
   have : 0 ≤ t :=
-    Int.mod_nonneg (-k)
+    Int.mod_nonnegₓ (-k)
       (by
         exact_mod_cast ho.ne')
   refine' ⟨t.to_nat, _⟩
@@ -194,23 +194,23 @@ instance Subgroup.is_cyclic {α : Type u} [Groupₓ α] [IsCyclic α] (H : Subgr
           exact_mod_cast (Nat.find_specₓ hex).2
         have hk₃ : g ^ (k % Nat.findₓ hex) ∈ H :=
           (Subgroup.mul_mem_cancel_right H hk₂).1 <| by
-            rw [← zpow_add, Int.mod_add_div, hk] <;> exact hx
+            rw [← zpow_add, Int.mod_add_divₓ, hk] <;> exact hx
         have hk₄ : k % Nat.findₓ hex = (k % Nat.findₓ hex).natAbs := by
-          rw [Int.nat_abs_of_nonneg (Int.mod_nonneg _ (Int.coe_nat_ne_zero_iff_pos.2 (Nat.find_specₓ hex).1))]
+          rw [Int.nat_abs_of_nonneg (Int.mod_nonnegₓ _ (Int.coe_nat_ne_zero_iff_pos.2 (Nat.find_specₓ hex).1))]
         have hk₅ : g ^ (k % Nat.findₓ hex).natAbs ∈ H := by
           rwa [← zpow_coe_nat, ← hk₄]
         have hk₆ : (k % (Nat.findₓ hex : ℤ)).natAbs = 0 :=
           by_contradiction fun h =>
             Nat.find_minₓ hex
               (Int.coe_nat_ltₓ.1 <| by
-                rw [← hk₄] <;> exact Int.mod_lt_of_pos _ (Int.coe_nat_pos.2 (Nat.find_specₓ hex).1))
+                rw [← hk₄] <;> exact Int.mod_lt_of_posₓ _ (Int.coe_nat_pos.2 (Nat.find_specₓ hex).1))
               ⟨Nat.pos_of_ne_zeroₓ h, hk₅⟩
         ⟨k / (Nat.findₓ hex : ℤ),
           Subtype.ext_iff_val.2
             (by
               suffices g ^ ((Nat.findₓ hex : ℤ) * (k / Nat.findₓ hex)) = x by
                 simpa [zpow_mul]
-              rw [Int.mul_div_cancel' (Int.dvd_of_mod_eq_zero (Int.eq_zero_of_nat_abs_eq_zero hk₆)), hk])⟩⟩⟩
+              rw [Int.mul_div_cancel'ₓ (Int.dvd_of_mod_eq_zeroₓ (Int.eq_zero_of_nat_abs_eq_zero hk₆)), hk])⟩⟩⟩
   else by
     have : H = (⊥ : Subgroup α) :=
       Subgroup.ext fun x =>
@@ -225,7 +225,7 @@ section Classical
 
 open Classical
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2, 3]) }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2, 3]) }
 @[to_additive IsAddCyclic.card_pow_eq_one_le]
 theorem IsCyclic.card_pow_eq_one_le [DecidableEq α] [Fintype α] [IsCyclic α] {n : ℕ} (hn0 : 0 < n) :
     (univ.filter fun a : α => a ^ n = 1).card ≤ n :=
@@ -342,7 +342,7 @@ theorem card_order_of_eq_totient_aux₂ {d : ℕ} (hd : d ∣ Fintype.card α) :
   calc
     c = ∑ m in c.divisors, (univ.filter fun a : α => orderOf a = m).card := by
       simp only [← filter_dvd_eq_divisors hc0.ne', sum_card_order_of_eq_card_pow_eq_one hc0]
-      apply congr_argₓ card
+      apply congr_arg card
       simp
     _ = ∑ m in c.divisors.erase d, (univ.filter fun a : α => orderOf a = m).card := by
       rw [eq_comm]

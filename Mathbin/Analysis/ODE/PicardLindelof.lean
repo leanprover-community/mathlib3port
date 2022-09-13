@@ -46,7 +46,7 @@ structure PicardLindelof (E : Type _) [NormedAddCommGroup E] [NormedSpace ℝ E]
   (tMin tMax : ℝ)
   t₀ : Icc t_min t_max
   x₀ : E
-  (c r l : ℝ≥0 )
+  (c r l : ℝ≥0)
   lipschitz' : ∀ t ∈ Icc t_min t_max, LipschitzOnWith L (to_fun t) (ClosedBall x₀ R)
   cont : ∀ x ∈ ClosedBall x₀ R, ContinuousOn (fun t => to_fun t x) (Icc t_min t_max)
   norm_le' : ∀ t ∈ Icc t_min t_max, ∀ x ∈ ClosedBall x₀ R, ∥to_fun t x∥ ≤ C
@@ -322,7 +322,7 @@ end PicardLindelof
 
 /-- Picard-Lindelöf (Cauchy-Lipschitz) theorem. -/
 theorem exists_forall_deriv_within_Icc_eq_of_lipschitz_of_continuous [CompleteSpace E] {v : ℝ → E → E}
-    {t_min t₀ t_max : ℝ} (ht₀ : t₀ ∈ Icc t_min t_max) (x₀ : E) {C R : ℝ} (hR : 0 ≤ R) {L : ℝ≥0 }
+    {t_min t₀ t_max : ℝ} (ht₀ : t₀ ∈ Icc t_min t_max) (x₀ : E) {C R : ℝ} (hR : 0 ≤ R) {L : ℝ≥0}
     (Hlip : ∀ t ∈ Icc t_min t_max, LipschitzOnWith L (v t) (ClosedBall x₀ R))
     (Hcont : ∀ x ∈ ClosedBall x₀ R, ContinuousOn (fun t => v t x) (Icc t_min t_max))
     (Hnorm : ∀ t ∈ Icc t_min t_max, ∀ x ∈ ClosedBall x₀ R, ∥v t x∥ ≤ C)

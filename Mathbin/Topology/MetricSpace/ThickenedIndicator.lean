@@ -197,7 +197,7 @@ theorem thickened_indicator_zero {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) {x : 
   rw [thickened_indicator_apply, thickened_indicator_aux_zero δ_pos E x_out, zero_to_nnreal]
 
 theorem indicator_le_thickened_indicator {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) :
-    (E.indicator fun _ => (1 : ℝ≥0 )) ≤ thickenedIndicator δ_pos E := by
+    (E.indicator fun _ => (1 : ℝ≥0)) ≤ thickenedIndicator δ_pos E := by
   intro a
   by_cases' a ∈ E
   · simp only [h, indicator_of_mem, thickened_indicator_one δ_pos E h, le_reflₓ]
@@ -224,15 +224,15 @@ the topology on `α →ᵇ ℝ≥0`. Coercions to functions `α → ℝ≥0` are
 instance is the product topology (the topology of pointwise convergence). -/
 theorem thickened_indicator_tendsto_indicator_closure {δseq : ℕ → ℝ} (δseq_pos : ∀ n, 0 < δseq n)
     (δseq_lim : Tendsto δseq atTop (𝓝 0)) (E : Set α) :
-    Tendsto (fun n : ℕ => (coeFn : (α →ᵇ ℝ≥0 ) → α → ℝ≥0 ) (thickenedIndicator (δseq_pos n) E)) atTop
-      (𝓝 (indicatorₓ (Closure E) fun x => (1 : ℝ≥0 ))) :=
+    Tendsto (fun n : ℕ => (coeFn : (α →ᵇ ℝ≥0) → α → ℝ≥0) (thickenedIndicator (δseq_pos n) E)) atTop
+      (𝓝 (indicatorₓ (Closure E) fun x => (1 : ℝ≥0))) :=
   by
   have key := thickened_indicator_aux_tendsto_indicator_closure δseq_lim E
   rw [tendsto_pi_nhds] at *
   intro x
   rw
-    [show indicator (Closure E) (fun x => (1 : ℝ≥0 )) x = (indicator (Closure E) (fun x => (1 : ℝ≥0∞)) x).toNnreal by
-      refine' (congr_funₓ (comp_indicator_const 1 Ennreal.toNnreal zero_to_nnreal) x).symm]
+    [show indicator (Closure E) (fun x => (1 : ℝ≥0)) x = (indicator (Closure E) (fun x => (1 : ℝ≥0∞)) x).toNnreal by
+      refine' (congr_fun (comp_indicator_const 1 Ennreal.toNnreal zero_to_nnreal) x).symm]
   refine' tendsto.comp (tendsto_to_nnreal _) (key x)
   by_cases' x_mem : x ∈ Closure E <;> simp [x_mem]
 

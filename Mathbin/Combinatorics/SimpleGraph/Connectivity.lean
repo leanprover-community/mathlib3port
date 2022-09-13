@@ -321,7 +321,7 @@ theorem length_append : ∀ {u v w : V} (p : G.Walk u v) (q : G.Walk v w), (p.ap
   | _, _, _, cons _ _, _ => by
     simp [length_append, add_left_commₓ, add_commₓ]
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 protected theorem length_reverse_aux :
     ∀ {u v w : V} (p : G.Walk u v) (q : G.Walk u w), (p.reverseAux q).length = p.length + q.length
@@ -508,20 +508,20 @@ theorem darts_reverse {u v : V} (p : G.Walk u v) : p.reverse.darts = (p.darts.ma
 theorem mem_darts_reverse {u v : V} {d : G.Dart} {p : G.Walk u v} : d ∈ p.reverse.darts ↔ d.symm ∈ p.darts := by
   simp
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem cons_map_snd_darts {u v : V} (p : G.Walk u v) : (u::p.darts.map Dart.snd) = p.Support := by
   induction p <;> simp [*]
 
 theorem map_snd_darts {u v : V} (p : G.Walk u v) : p.darts.map Dart.snd = p.Support.tail := by
-  simpa using congr_argₓ List.tail (cons_map_snd_darts p)
+  simpa using congr_arg List.tail (cons_map_snd_darts p)
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 theorem map_fst_darts_append {u v : V} (p : G.Walk u v) : p.darts.map Dart.fst ++ [v] = p.Support := by
   induction p <;> simp [*]
 
 theorem map_fst_darts {u v : V} (p : G.Walk u v) : p.darts.map Dart.fst = p.Support.init := by
-  simpa! using congr_argₓ List.init (map_fst_darts_append p)
+  simpa! using congr_arg List.init (map_fst_darts_append p)
 
 @[simp]
 theorem edges_nil {u : V} : (nil : G.Walk u u).edges = [] :=
@@ -559,7 +559,7 @@ theorem length_edges {u v : V} (p : G.Walk u v) : p.edges.length = p.length := b
 
 theorem dart_fst_mem_support_of_mem_darts : ∀ {u v : V} (p : G.Walk u v) {d : G.Dart}, d ∈ p.darts → d.fst ∈ p.Support
   | u, v, cons h p', d, hd => by
-    simp only [support_cons, darts_cons, List.mem_cons_iffₓ] at hd⊢
+    simp only [support_cons, darts_cons, List.mem_cons_iff] at hd⊢
     rcases hd with (rfl | hd)
     · exact Or.inl rfl
       
@@ -767,8 +767,8 @@ def dropUntil : ∀ {v w : V} (p : G.Walk v w) (u : V) (h : u ∈ p.Support), G.
       exact cons r p
     else drop_until p _ <| h.casesOn (fun h' => (hx h'.symm).elim) id
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 /-- The `take_until` and `drop_until` functions split a walk into two pieces.
 The lemma `count_support_take_until_eq_one` specifies where this split occurs. -/
 @[simp]
@@ -797,10 +797,10 @@ theorem mem_support_iff_exists_append {V : Type u} {G : SimpleGraph V} {u v w : 
     simp only [mem_support_append_iff, end_mem_support, start_mem_support, or_selfₓ]
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem count_support_take_until_eq_one {u v w : V} (p : G.Walk v w) (h : u ∈ p.Support) :
     (p.takeUntil u h).Support.count u = 1 := by
@@ -817,10 +817,10 @@ theorem count_support_take_until_eq_one {u v w : V} (p : G.Walk v w) (h : u ∈ 
       
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 theorem count_edges_take_until_le_one {u v w : V} (p : G.Walk v w) (h : u ∈ p.Support) (x : V) :
     (p.takeUntil u h).edges.count ⟦(u, x)⟧ ≤ 1 := by
   induction' p with u' u' v' w' ha p' ih
@@ -903,13 +903,13 @@ theorem edges_drop_until_subset {u v w : V} (p : G.Walk v w) (h : u ∈ p.Suppor
 
 theorem length_take_until_le {u v w : V} (p : G.Walk v w) (h : u ∈ p.Support) : (p.takeUntil u h).length ≤ p.length :=
   by
-  have := congr_argₓ walk.length (p.take_spec h)
+  have := congr_arg walk.length (p.take_spec h)
   rw [length_append] at this
   exact Nat.Le.intro this
 
 theorem length_drop_until_le {u v w : V} (p : G.Walk v w) (h : u ∈ p.Support) : (p.dropUntil u h).length ≤ p.length :=
   by
-  have := congr_argₓ walk.length (p.take_spec h)
+  have := congr_arg walk.length (p.take_spec h)
   rw [length_append, add_commₓ] at this
   exact Nat.Le.intro this
 
@@ -968,7 +968,7 @@ protected theorem IsCircuit.rotate {u v : V} {c : G.Walk v v} (hc : c.IsCircuit)
   · exact (hc.ne_nil rfl).elim
     
   · intro hn
-    have hn' := congr_argₓ length hn
+    have hn' := congr_arg length hn
     rw [rotate, length_append, add_commₓ, ← length_append, take_spec] at hn'
     simpa using hn'
     
@@ -1071,7 +1071,7 @@ theorem bypass_copy {u v u' v'} (p : G.Walk u v) (hu : u = u') (hv : v = v') :
   subst_vars
   rfl
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 theorem bypass_is_path {u v : V} (p : G.Walk u v) : p.bypass.IsPath := by
   induction p
   · simp
@@ -1105,15 +1105,15 @@ theorem length_bypass_le {u v : V} (p : G.Walk u v) : p.bypass.length ≤ p.leng
 def toPath {u v : V} (p : G.Walk u v) : G.Path u v :=
   ⟨p.bypass, p.bypass_is_path⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 theorem support_bypass_subset {u v : V} (p : G.Walk u v) : p.bypass.Support ⊆ p.Support := by
   induction p
   · simp
     
   · simp only
     split_ifs
-    · apply List.Subset.trans (support_drop_until_subset _ _)
+    · apply List.Subsetₓ.trans (support_drop_until_subset _ _)
       apply List.subset_cons_of_subsetₓ
       assumption
       
@@ -1126,15 +1126,15 @@ theorem support_bypass_subset {u v : V} (p : G.Walk u v) : p.bypass.Support ⊆ 
 theorem support_to_path_subset {u v : V} (p : G.Walk u v) : (p.toPath : G.Walk u v).Support ⊆ p.Support :=
   support_bypass_subset _
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 theorem darts_bypass_subset {u v : V} (p : G.Walk u v) : p.bypass.darts ⊆ p.darts := by
   induction p
   · simp
     
   · simp only
     split_ifs
-    · apply List.Subset.trans (darts_drop_until_subset _ _)
+    · apply List.Subsetₓ.trans (darts_drop_until_subset _ _)
       apply List.subset_cons_of_subsetₓ _ p_ih
       
     · rw [darts_cons]
@@ -1563,7 +1563,7 @@ theorem set_walk_length_succ_eq (u v : V) (n : ℕ) :
   · simp [eq_comm]
     
   · simp only [Nat.succ_eq_add_one, Set.mem_set_of_eq, walk.length_cons, add_left_injₓ, Set.mem_Union, Set.mem_image,
-      exists_prop]
+      exists_propₓ]
     constructor
     · rintro rfl
       exact ⟨w, huw, pwv, rfl, rfl, HEq.rfl⟩

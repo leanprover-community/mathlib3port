@@ -71,7 +71,7 @@ theorem set_of_liouville_with_subset_aux :
     
   rw [sub_div' _ _ _ hb0.ne', abs_div, abs_of_pos hb0, div_lt_div_right hb0, abs_sub_lt_iff, sub_lt_iff_lt_add,
     sub_lt_iff_lt_add, ← sub_lt_iff_lt_add'] at hlt
-  rw [Finset.mem_Icc, ← Int.lt_add_one_iff, ← Int.lt_add_one_iff, ← neg_lt_iff_pos_add, add_commₓ, ← @Int.cast_lt ℝ, ←
+  rw [Finset.mem_Icc, ← Int.lt_add_one_iffₓ, ← Int.lt_add_one_iffₓ, ← neg_lt_iff_pos_add, add_commₓ, ← @Int.cast_lt ℝ, ←
     @Int.cast_lt ℝ]
   push_cast
   refine' ⟨lt_of_le_of_ltₓ _ hlt.1, hlt.2.trans_le _⟩
@@ -103,16 +103,16 @@ theorem volume_Union_set_of_liouville_with : volume (⋃ (p : ℝ) (hp : 2 < p),
   refine' measure_set_of_frequently_eq_zero _
   simp only [set_of_exists, ← Real.dist_eq, ← mem_ball, set_of_mem_eq]
   set B : ℤ → ℕ → Set ℝ := fun a b => ball (a / b) (1 / b ^ r)
-  have hB : ∀ a b, volume (B a b) = ↑(2 / b ^ r : ℝ≥0 ) := by
+  have hB : ∀ a b, volume (B a b) = ↑(2 / b ^ r : ℝ≥0) := by
     intro a b
     rw [Real.volume_ball, mul_one_div, ← Nnreal.coe_two, ← Nnreal.coe_nat_cast, ← Nnreal.coe_rpow, ← Nnreal.coe_div,
       Ennreal.of_real_coe_nnreal]
-  have : ∀ b : ℕ, volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ (2 * (b ^ (1 - r) + b ^ -r) : ℝ≥0 ) := by
+  have : ∀ b : ℕ, volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ (2 * (b ^ (1 - r) + b ^ -r) : ℝ≥0) := by
     intro b
     calc
       volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ ∑ a in Finset.icc (0 : ℤ) b, volume (B a b) :=
         measure_bUnion_finset_le _ _
-      _ = ((b + 1) * (2 / b ^ r) : ℝ≥0 ) := by
+      _ = ((b + 1) * (2 / b ^ r) : ℝ≥0) := by
         simp only [hB, Int.card_Icc, Finset.sum_const, nsmul_eq_mul, sub_zero, ← Int.coe_nat_succ, Int.to_nat_coe_nat, ←
           Nat.cast_succₓ, Ennreal.coe_mul, Ennreal.coe_nat]
       _ = _ := _

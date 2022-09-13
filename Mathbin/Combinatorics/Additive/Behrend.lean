@@ -148,7 +148,7 @@ theorem map_inj_on : { x : Finₓ n → ℕ | ∀ i, x i < d }.InjOn (map d) := 
     
   ext i
   have x := (map_eq_iff hx₁ hx₂).1 h
-  refine' Finₓ.cases x.1 (congr_funₓ <| ih (fun _ => _) (fun _ => _) x.2) i
+  refine' Finₓ.cases x.1 (congr_fun <| ih (fun _ => _) (fun _ => _) x.2) i
   · exact hx₁ _
     
   · exact hx₂ _

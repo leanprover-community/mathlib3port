@@ -34,16 +34,16 @@ variable [AddCommGroupₓ M] [Module R M] [Module.Free R M]
 variable [AddCommGroupₓ N] [Module R N] [Module.Free R N]
 
 /-- The rank of a free module `M` over `R` is the cardinality of `choose_basis_index R M`. -/
-theorem rank_eq_card_choose_basis_index : Module.rank R M = # (ChooseBasisIndex R M) :=
+theorem rank_eq_card_choose_basis_index : Module.rank R M = (#ChooseBasisIndex R M) :=
   (chooseBasis R M).mk_eq_dim''.symm
 
 /-- The rank of `(ι →₀ R)` is `(# ι).lift`. -/
 @[simp]
-theorem rank_finsupp {ι : Type v} : Module.rank R (ι →₀ R) = (# ι).lift := by
+theorem rank_finsupp {ι : Type v} : Module.rank R (ι →₀ R) = (#ι).lift := by
   simpa [lift_id', lift_umax] using (Basis.of_repr (LinearEquiv.refl _ (ι →₀ R))).mk_eq_dim.symm
 
 /-- If `R` and `ι` lie in the same universe, the rank of `(ι →₀ R)` is `# ι`. -/
-theorem rank_finsupp' {ι : Type u} : Module.rank R (ι →₀ R) = # ι := by
+theorem rank_finsupp' {ι : Type u} : Module.rank R (ι →₀ R) = (#ι) := by
   simp
 
 /-- The rank of `M × N` is `(module.rank R M).lift + (module.rank R N).lift`. -/
@@ -76,7 +76,7 @@ theorem rank_pi_finite {ι : Type v} [Finite ι] {M : ι → Type w} [∀ i : ι
 /-- If `m` and `n` are `fintype`, the rank of `m × n` matrices is `(# m).lift * (# n).lift`. -/
 @[simp]
 theorem rank_matrix (m : Type v) (n : Type w) [Finite m] [Finite n] :
-    Module.rank R (Matrix m n R) = lift.{max v w u, v} (# m) * lift.{max v w u, w} (# n) := by
+    Module.rank R (Matrix m n R) = lift.{max v w u, v} (#m) * lift.{max v w u, w} (#n) := by
   cases nonempty_fintype m
   cases nonempty_fintype n
   have h := (Matrix.stdBasis R m n).mk_eq_dim
@@ -86,13 +86,13 @@ theorem rank_matrix (m : Type v) (n : Type w) [Finite m] [Finite n] :
 /-- If `m` and `n` are `fintype` that lie in the same universe, the rank of `m × n` matrices is
   `(# n * # m).lift`. -/
 @[simp]
-theorem rank_matrix' (m n : Type v) [Finite m] [Finite n] : Module.rank R (Matrix m n R) = (# m * # n).lift := by
+theorem rank_matrix' (m n : Type v) [Finite m] [Finite n] : Module.rank R (Matrix m n R) = ((#m) * (#n)).lift := by
   rw [rank_matrix, lift_mul, lift_umax]
 
 /-- If `m` and `n` are `fintype` that lie in the same universe as `R`, the rank of `m × n` matrices
   is `# m * # n`. -/
 @[simp]
-theorem rank_matrix'' (m n : Type u) [Finite m] [Finite n] : Module.rank R (Matrix m n R) = # m * # n := by
+theorem rank_matrix'' (m n : Type u) [Finite m] [Finite n] : Module.rank R (Matrix m n R) = (#m) * (#n) := by
   simp
 
 end Ringₓ

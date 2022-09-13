@@ -371,7 +371,7 @@ theorem comap {S : Type _} [Ringₓ S] (f : S →+* R) (h : v₁.IsEquiv v₂) :
   h (f r) (f s)
 
 theorem val_eq (h : v₁.IsEquiv v₂) {r s : R} : v₁ r = v₁ s ↔ v₂ r = v₂ s := by
-  simpa only [le_antisymm_iffₓ] using and_congr (h r s) (h s r)
+  simpa only [le_antisymm_iffₓ] using and_congrₓ (h r s) (h s r)
 
 theorem ne_zero (h : v₁.IsEquiv v₂) {r : R} : v₁ r ≠ 0 ↔ v₂ r ≠ 0 := by
   have : v₁ r ≠ v₁ 0 ↔ v₂ r ≠ v₂ 0 := not_iff_not_of_iff h.val_eq
@@ -466,7 +466,8 @@ theorem is_equiv_iff_val_lt_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOr
     (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) : v.IsEquiv v' ↔ ∀ {x : K}, v x < 1 ↔ v' x < 1 := by
   constructor
   · intro h x
-    simp only [lt_iff_le_and_neₓ, and_congr ((is_equiv_iff_val_le_one _ _).1 h) ((is_equiv_iff_val_eq_one _ _).1 h).Not]
+    simp only [lt_iff_le_and_neₓ,
+      and_congrₓ ((is_equiv_iff_val_le_one _ _).1 h) ((is_equiv_iff_val_eq_one _ _).1 h).Not]
     
   · rw [is_equiv_iff_val_eq_one]
     intro h x
@@ -541,7 +542,7 @@ def supp : Ideal R where
   smul_mem' := fun c x hx =>
     calc
       v (c * x) = v c * v x := map_mul v c x
-      _ = v c * 0 := congr_argₓ _ hx
+      _ = v c * 0 := congr_arg _ hx
       _ = 0 := mul_zero _
       
 

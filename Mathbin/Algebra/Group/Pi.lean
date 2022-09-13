@@ -366,10 +366,10 @@ theorem Pi.mul_single_mul_mul_single_eq_mul_single_mul_mul_single {M : Type _} [
       k = m ∧ l = n ∨ u = v ∧ k = n ∧ l = m ∨ u * v = 1 ∧ k = l ∧ m = n :=
   by
   refine' ⟨fun h => _, _⟩
-  · have hk := congr_funₓ h k
-    have hl := congr_funₓ h l
-    have hm := (congr_funₓ h m).symm
-    have hn := (congr_funₓ h n).symm
+  · have hk := congr_fun h k
+    have hl := congr_fun h l
+    have hm := (congr_fun h m).symm
+    have hn := (congr_fun h n).symm
     simp only [mul_apply, mul_single_apply, if_pos rfl] at hk hl hm hn
     rcases eq_or_ne k m with (rfl | hkm)
     · refine' Or.inl ⟨rfl, not_ne_iff.mp fun hln => (hv _).elim⟩

@@ -119,10 +119,10 @@ instance : HasInf (Setoidₓ α) :=
 
 /-- The infimum of 2 equivalence relations r and s is the same relation as the infimum
     of the underlying binary operations. -/
-theorem inf_def {r s : Setoidₓ α} : (r⊓s).Rel = r.Rel⊓s.Rel :=
+theorem inf_def {r s : Setoidₓ α} : (r ⊓ s).Rel = r.Rel ⊓ s.Rel :=
   rfl
 
-theorem inf_iff_and {r s : Setoidₓ α} {x y} : (r⊓s).Rel x y ↔ r.Rel x y ∧ s.Rel x y :=
+theorem inf_iff_and {r s : Setoidₓ α} {x y} : (r ⊓ s).Rel x y ↔ r.Rel x y ∧ s.Rel x y :=
   Iff.rfl
 
 /-- The infimum of a set of equivalence relations. -/
@@ -178,21 +178,21 @@ theorem eqv_gen_eq (r : α → α → Prop) : EqvGen.setoid r = inf { s : Setoid
 
 /-- The supremum of two equivalence relations r and s is the equivalence closure of the binary
     relation `x is related to y by r or s`. -/
-theorem sup_eq_eqv_gen (r s : Setoidₓ α) : r⊔s = EqvGen.setoid fun x y => r.Rel x y ∨ s.Rel x y := by
+theorem sup_eq_eqv_gen (r s : Setoidₓ α) : r ⊔ s = EqvGen.setoid fun x y => r.Rel x y ∨ s.Rel x y := by
   rw [eqv_gen_eq]
-  apply congr_argₓ Inf
+  apply congr_arg Inf
   simp only [le_def, or_imp_distrib, ← forall_and_distrib]
 
 /-- The supremum of 2 equivalence relations r and s is the equivalence closure of the
     supremum of the underlying binary operations. -/
-theorem sup_def {r s : Setoidₓ α} : r⊔s = EqvGen.setoid (r.Rel⊔s.Rel) := by
+theorem sup_def {r s : Setoidₓ α} : r ⊔ s = EqvGen.setoid (r.Rel ⊔ s.Rel) := by
   rw [sup_eq_eqv_gen] <;> rfl
 
 /-- The supremum of a set S of equivalence relations is the equivalence closure of the binary
     relation `there exists r ∈ S relating x and y`. -/
 theorem Sup_eq_eqv_gen (S : Set (Setoidₓ α)) : sup S = EqvGen.setoid fun x y => ∃ r : Setoidₓ α, r ∈ S ∧ r.Rel x y := by
   rw [eqv_gen_eq]
-  apply congr_argₓ Inf
+  apply congr_arg Inf
   simp only [UpperBounds, le_def, and_imp, exists_imp_distrib]
   ext
   exact ⟨fun H x y r hr => H hr, fun H r hr x y => H r hr⟩
@@ -202,7 +202,7 @@ theorem Sup_eq_eqv_gen (S : Set (Setoidₓ α)) : sup S = EqvGen.setoid fun x y 
 theorem Sup_def {s : Set (Setoidₓ α)} : sup s = EqvGen.setoid (sup (rel '' s)) := by
   rw [Sup_eq_eqv_gen, Sup_image]
   congr with x y
-  simp only [supr_apply, supr_Prop_eq, exists_prop]
+  simp only [supr_apply, supr_Prop_eq, exists_propₓ]
 
 /-- The equivalence closure of an equivalence relation r is r. -/
 @[simp]

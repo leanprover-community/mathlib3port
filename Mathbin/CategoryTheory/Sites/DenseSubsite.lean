@@ -165,7 +165,7 @@ theorem pushforward_family_compatible {X} (x : ℱ.obj (op X)) : (pushforwardFam
   rw [← G.image_preimage (f ≫ g₂ ≫ _)]
   erw [← α.naturality (G.preimage _).op]
   erw [← α.naturality (G.preimage _).op]
-  refine' congr_funₓ _ x
+  refine' congr_fun _ x
   simp only [Quiver.Hom.unop_op, functor.comp_map, ← op_comp, ← category.assoc, functor.op_map, ← ℱ.map_comp,
     G.image_preimage]
   congr 3
@@ -179,7 +179,7 @@ noncomputable def appHom (X : D) : ℱ.obj (op X) ⟶ ℱ'.val.obj (op X) := fun
 theorem pushforward_family_apply {X} (x : ℱ.obj (op X)) {Y : C} (f : G.obj Y ⟶ X) :
     pushforwardFamily H α x f (Presieve.in_cover_by_image G f) = α.app (op Y) (ℱ.map f.op x) := by
   unfold pushforward_family
-  refine' congr_funₓ _ x
+  refine' congr_fun _ x
   rw [← G.image_preimage (Nonempty.some _ : presieve.cover_by_image_structure _ _).lift]
   change ℱ.map _ ≫ α.app (op _) ≫ ℱ'.val.map _ = ℱ.map f.op ≫ α.app (op Y)
   erw [← α.naturality (G.preimage _).op]
@@ -294,7 +294,7 @@ noncomputable def sheafYonedaHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : ℱ
     
   · intro U V i
     ext X x
-    exact congr_funₓ ((α.app X).naturality i) x
+    exact congr_fun ((α.app X).naturality i) x
     
 
 /-- Given an natural transformation `G ⋙ ℱ ⟶ G ⋙ ℱ'` between presheaves of arbitrary category,
@@ -455,7 +455,7 @@ noncomputable def sheafEquivOfCoverPreservingCoverLifting : Sheaf J A ≌ Sheaf 
   let α := Sites.pullbackCopullbackAdjunction.{w, v, u} A Hp Hl Hd.compatible_preserving
   have : ∀ X : Sheaf J A, is_iso (α.counit.app X) := by
     intro ℱ
-    apply reflects_isomorphisms.reflects (Sheaf_to_presheaf J A) with { instances := false }
+    apply (config := { instances := false }) reflects_isomorphisms.reflects (Sheaf_to_presheaf J A)
     exact is_iso.of_iso ((@as_iso _ _ _ _ _ (Ran.reflective A G.op)).app ℱ.val)
   haveI : is_iso α.counit := nat_iso.is_iso_of_is_iso_app _
   exact

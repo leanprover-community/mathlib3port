@@ -275,18 +275,18 @@ theorem coe_filter_univ (p : α → Prop) [DecidablePred p] : (univ.filter p : S
 
 /-- A special case of `finset.sup_eq_supr` that omits the useless `x ∈ univ` binder. -/
 theorem sup_univ_eq_supr [CompleteLattice β] (f : α → β) : Finset.univ.sup f = supr f :=
-  (sup_eq_supr _ f).trans <| congr_argₓ _ <| funext fun a => supr_pos (mem_univ _)
+  (sup_eq_supr _ f).trans <| congr_arg _ <| funext fun a => supr_pos (mem_univ _)
 
 /-- A special case of `finset.inf_eq_infi` that omits the useless `x ∈ univ` binder. -/
 theorem inf_univ_eq_infi [CompleteLattice β] (f : α → β) : Finset.univ.inf f = infi f :=
   sup_univ_eq_supr (f : α → βᵒᵈ)
 
 @[simp]
-theorem fold_inf_univ [SemilatticeInf α] [OrderBot α] (a : α) : (Finset.univ.fold (·⊓·) a fun x => x) = ⊥ :=
+theorem fold_inf_univ [SemilatticeInf α] [OrderBot α] (a : α) : (Finset.univ.fold (· ⊓ ·) a fun x => x) = ⊥ :=
   eq_bot_iff.2 <| ((Finset.fold_op_rel_iff_and <| @le_inf_iff α _).1 le_rflₓ).2 ⊥ <| Finset.mem_univ _
 
 @[simp]
-theorem fold_sup_univ [SemilatticeSup α] [OrderTop α] (a : α) : (Finset.univ.fold (·⊔·) a fun x => x) = ⊤ :=
+theorem fold_sup_univ [SemilatticeSup α] [OrderTop α] (a : α) : (Finset.univ.fold (· ⊔ ·) a fun x => x) = ⊤ :=
   @fold_inf_univ αᵒᵈ ‹Fintype α› _ _ _
 
 end Finset
@@ -429,7 +429,7 @@ instance (α : Type _) : Subsingleton (Fintype α) :=
 /-- Given a predicate that can be represented by a finset, the subtype
 associated to the predicate is a fintype. -/
 protected def subtype {p : α → Prop} (s : Finset α) (H : ∀ x : α, x ∈ s ↔ p x) : Fintype { x // p x } :=
-  ⟨⟨s.1.pmap Subtype.mk fun x => (H x).1, s.Nodup.pmap fun a _ b _ => congr_argₓ Subtype.val⟩, fun ⟨x, px⟩ =>
+  ⟨⟨s.1.pmap Subtype.mk fun x => (H x).1, s.Nodup.pmap fun a _ b _ => congr_arg Subtype.val⟩, fun ⟨x, px⟩ =>
     Multiset.mem_pmap.2 ⟨x, (H x).2 px, rfl⟩⟩
 
 theorem subtype_card {p : α → Prop} (s : Finset α) (H : ∀ x : α, x ∈ s ↔ p x) :
@@ -739,6 +739,14 @@ theorem to_finset_ne_eq_erase {α : Type _} [DecidableEq α] [Fintype α] (a : �
 
 theorem to_finset_compl [DecidableEq α] [Fintype α] (s : Set α) [Fintype s] [Fintype ↥(sᶜ)] :
     sᶜ.toFinset = s.toFinsetᶜ := by
+  ext
+  simp
+
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+theorem to_finset_prod (s : Set α) (t : Set β) [Fintype s] [Fintype t] [Fintype (s ×ˢ t)] :
+    (s ×ˢ t).toFinset = s.toFinset ×ˢ t.toFinset := by
   ext
   simp
 
@@ -1074,7 +1082,7 @@ theorem Fintype.card_lex (α : Type _) [Fintype α] : Fintype.card (Lex α) = Fi
 theorem univ_sum_type {α β : Type _} [Fintype α] [Fintype β] [Fintype (Sum α β)] [DecidableEq (Sum α β)] :
     (univ : Finset (Sum α β)) = map Function.Embedding.inl univ ∪ map Function.Embedding.inr univ := by
   rw [eq_comm, eq_univ_iff_forall]
-  simp only [mem_union, mem_map, exists_prop, mem_univ, true_andₓ]
+  simp only [mem_union, mem_map, exists_propₓ, mem_univ, true_andₓ]
   rintro (x | y)
   exacts[Or.inl ⟨x, rfl⟩, Or.inr ⟨y, rfl⟩]
 
@@ -1602,12 +1610,12 @@ def piFinset (t : ∀ a, Finset (δ a)) : Finset (∀ a, δ a) :=
 @[simp]
 theorem mem_pi_finset {t : ∀ a, Finset (δ a)} {f : ∀ a, δ a} : f ∈ piFinset t ↔ ∀ a, f a ∈ t a := by
   constructor
-  · simp only [pi_finset, mem_map, and_imp, forall_prop_of_true, exists_prop, mem_univ, exists_imp_distrib, mem_pi]
+  · simp only [pi_finset, mem_map, and_imp, forall_prop_of_true, exists_propₓ, mem_univ, exists_imp_distrib, mem_pi]
     rintro g hg hgf a
     rw [← hgf]
     exact hg a
     
-  · simp only [pi_finset, mem_map, forall_prop_of_true, exists_prop, mem_univ, mem_pi]
+  · simp only [pi_finset, mem_map, forall_prop_of_true, exists_propₓ, mem_univ, mem_pi]
     exact fun hf => ⟨fun a ha => f a, hf, rfl⟩
     
 
@@ -1637,7 +1645,7 @@ theorem pi_finset_subsingleton {f : ∀ i, Finset (δ i)} (hf : ∀ i, (f i : Se
 theorem pi_finset_disjoint_of_disjoint [∀ a, DecidableEq (δ a)] (t₁ t₂ : ∀ a, Finset (δ a)) {a : α}
     (h : Disjoint (t₁ a) (t₂ a)) : Disjoint (piFinset t₁) (piFinset t₂) :=
   disjoint_iff_ne.2 fun f₁ hf₁ f₂ hf₂ eq₁₂ =>
-    disjoint_iff_ne.1 h (f₁ a) (mem_pi_finset.1 hf₁ a) (f₂ a) (mem_pi_finset.1 hf₂ a) (congr_funₓ eq₁₂ a)
+    disjoint_iff_ne.1 h (f₁ a) (mem_pi_finset.1 hf₁ a) (f₂ a) (mem_pi_finset.1 hf₂ a) (congr_fun eq₁₂ a)
 
 end Fintype
 
@@ -1873,7 +1881,7 @@ def Quotientₓ.finChoice {ι : Type _} [DecidableEq ι] [Fintype ι] {α : ι �
       simp [Quotientₓ.out_eq] at this
       simp [this]
       let g := fun a : Multiset ι => ⟦fun (i : ι) (h : i ∈ a) => Quotientₓ.out (f i)⟧
-      refine' eq_of_heq ((eq_rec_heqₓ _ _).trans (_ : HEq (g a) (g b)))
+      refine' eq_of_heq ((eq_rec_heq _ _).trans (_ : HEq (g a) (g b)))
       congr 1
       exact Quotientₓ.sound h)
     (fun f => ⟦fun i => f i (Finset.mem_univ _)⟧) fun a b h => Quotientₓ.sound fun i => h _ _
@@ -1929,7 +1937,7 @@ theorem mem_perms_of_list_of_mem {l : List α} {f : Perm α} (h : ∀ x, f x ≠
     simp only [h, mul_apply, swap_apply_def, mul_apply, Ne.def, apply_eq_iff_eq] at hx <;> split_ifs  at hx
     exacts[hxa (h.symm.trans h_1), hx h]
   suffices f ∈ permsOfList l ∨ ∃ b ∈ l, ∃ g ∈ permsOfList l, swap a b * g = f by
-    simpa only [permsOfList, exists_prop, List.mem_mapₓ, mem_append, List.mem_bindₓ]
+    simpa only [permsOfList, exists_propₓ, List.mem_mapₓ, mem_append, List.mem_bindₓ]
   refine' or_iff_not_imp_left.2 fun hfl => ⟨f a, _, swap a (f a) * f, IH this, _⟩
   · exact mem_of_ne_of_mem hfa (h _ hfa')
     
@@ -2001,7 +2009,7 @@ theorem nodup_perms_of_list : ∀ {l : List α} (hl : l.Nodup), (permsOfList l).
 def permsOfFinset (s : Finset α) : Finset (Perm α) :=
   Quotientₓ.hrecOn s.1 (fun l hl => ⟨permsOfList l, nodup_perms_of_list hl⟩)
     (fun a b hab =>
-      hfunext (congr_argₓ _ (Quotientₓ.sound hab)) fun ha hb _ =>
+      hfunext (congr_arg _ (Quotientₓ.sound hab)) fun ha hb _ =>
         heq_of_eq <|
           Finset.ext <| by
             simp [mem_perms_of_list_iff, hab.mem_iff])
@@ -2131,43 +2139,17 @@ instance (priority := 10) LinearOrder.is_well_order_gt [LinearOrderₓ α] :
 
 end Finite
 
-/-- A type is said to be infinite if it has no fintype instance.
-  Note that `infinite α` is equivalent to `is_empty (fintype α)`. -/
-class Infinite (α : Type _) : Prop where
-  not_fintype : Fintype α → False
-
-theorem not_finite (α : Type _) [Infinite α] [Finite α] : False := by
-  cases nonempty_fintype α
-  exact Infinite.not_fintype ‹_›
-
-protected theorem Finite.false [Infinite α] (h : Finite α) : False :=
-  not_finite α
-
 @[nolint fintype_finite]
 protected theorem Fintype.false [Infinite α] (h : Fintype α) : False :=
   not_finite α
 
-protected theorem Infinite.false [Finite α] (h : Infinite α) : False :=
-  not_finite α
-
 @[simp]
 theorem is_empty_fintype {α : Type _} : IsEmpty (Fintype α) ↔ Infinite α :=
-  ⟨fun ⟨x⟩ => ⟨x⟩, fun ⟨x⟩ => ⟨x⟩⟩
-
-theorem not_finite_iff_infinite : ¬Finite α ↔ Infinite α := by
-  rw [← is_empty_fintype, finite_iff_nonempty_fintype, not_nonempty_iff]
-
-theorem not_infinite_iff_finite : ¬Infinite α ↔ Finite α :=
-  not_finite_iff_infinite.not_right.symm
-
-alias not_finite_iff_infinite ↔ Infinite.of_not_finite Infinite.not_finite
-
-alias not_infinite_iff_finite ↔ Finite.of_not_infinite Finite.not_infinite
+  ⟨fun ⟨h⟩ => ⟨fun h' => (@nonempty_fintype α h').elim h⟩, fun ⟨h⟩ => ⟨fun h' => h h'.Finite⟩⟩
 
 /-- A non-infinite type is a fintype. -/
 noncomputable def fintypeOfNotInfinite {α : Type _} (h : ¬Infinite α) : Fintype α :=
-  Nonempty.some <| by
-    rwa [← not_is_empty_iff, is_empty_fintype]
+  @Fintype.ofFinite _ (not_infinite_iff_finite.mp h)
 
 section
 
@@ -2194,6 +2176,9 @@ theorem Finset.exists_maximal {α : Type _} [Preorderₓ α] (s : Finset α) (h 
 
 namespace Infinite
 
+theorem of_not_fintype (h : Fintype α → False) : Infinite α :=
+  is_empty_fintype.mp ⟨h⟩
+
 theorem exists_not_mem_finset [Infinite α] (s : Finset α) : ∃ x, x ∉ s :=
   not_forall.1 fun h => Fintype.false ⟨s, h⟩
 
@@ -2208,17 +2193,15 @@ protected theorem nonempty (α : Type _) [Infinite α] : Nonempty α := by
   infer_instance
 
 theorem of_injective [Infinite β] (f : β → α) (hf : Injective f) : Infinite α :=
-  ⟨fun I => (Fintype.ofInjective f hf).False⟩
+  ⟨fun I => (Finite.of_injective f hf).False⟩
 
 theorem of_surjective [Infinite β] (f : α → β) (hf : Surjective f) : Infinite α :=
-  ⟨fun I => by
-    classical
-    exact (Fintype.ofSurjective f hf).False⟩
+  ⟨fun I => (Finite.of_surjective f hf).False⟩
 
 end Infinite
 
 instance : Infinite ℕ :=
-  ⟨fun ⟨s, hs⟩ => Finset.not_mem_range_self <| s.subset_range_sup_succ (hs _)⟩
+  Infinite.of_not_fintype fun ⟨s, hs⟩ => Finset.not_mem_range_self <| s.subset_range_sup_succ (hs _)
 
 instance : Infinite ℤ :=
   Infinite.of_injective Int.ofNat fun _ _ => Int.ofNat.injₓ

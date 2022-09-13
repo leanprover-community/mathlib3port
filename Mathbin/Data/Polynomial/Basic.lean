@@ -207,10 +207,10 @@ theorem to_finsupp_pow (a : R[X]) (n : ℕ) : (a ^ n).toFinsupp = a.toFinsupp ^ 
 
 theorem _root_.is_smul_regular.polynomial {S : Type _} [Monoidₓ S] [DistribMulAction S R] {a : S}
     (ha : IsSmulRegular R a) : IsSmulRegular R[X] a
-  | ⟨x⟩, ⟨y⟩, h => congr_argₓ _ <| ha.Finsupp (Polynomial.of_finsupp.inj h)
+  | ⟨x⟩, ⟨y⟩, h => congr_arg _ <| ha.Finsupp (Polynomial.of_finsupp.inj h)
 
 theorem to_finsupp_injective : Function.Injective (toFinsupp : R[X] → AddMonoidAlgebra _ _) := fun ⟨x⟩ ⟨y⟩ =>
-  congr_argₓ _
+  congr_arg _
 
 @[simp]
 theorem to_finsupp_inj {a b : R[X]} : a.toFinsupp = b.toFinsupp ↔ a = b :=
@@ -251,7 +251,7 @@ instance {S} [Monoidₓ S] [DistribMulAction S R] : DistribMulAction S R[X] :=
 
 instance {S} [Monoidₓ S] [DistribMulAction S R] [HasFaithfulSmul S R] :
     HasFaithfulSmul S
-      R[X] where eq_of_smul_eq_smul := fun s₁ s₂ h => eq_of_smul_eq_smul fun a : ℕ →₀ R => congr_argₓ toFinsupp (h ⟨a⟩)
+      R[X] where eq_of_smul_eq_smul := fun s₁ s₂ h => eq_of_smul_eq_smul fun a : ℕ →₀ R => congr_arg toFinsupp (h ⟨a⟩)
 
 instance {S} [Semiringₓ S] [Module S R] : Module S R[X] :=
   Function.Injective.module _ ⟨toFinsupp, to_finsupp_zero, to_finsupp_add⟩ to_finsupp_injective to_finsupp_smul
@@ -278,7 +278,7 @@ instance [Subsingleton R] : Unique R[X] :=
   { Polynomial.inhabited with
     uniq := by
       rintro ⟨x⟩
-      refine' congr_argₓ of_finsupp _
+      refine' congr_arg of_finsupp _
       simp }
 
 variable (R)
@@ -606,7 +606,7 @@ theorem monomial_eq_C_mul_X : ∀ {n}, monomial n a = c a * X ^ n
 
 @[simp]
 theorem C_inj : c a = c b ↔ a = b :=
-  ⟨fun h => coeff_C_zero.symm.trans (h.symm ▸ coeff_C_zero), congr_argₓ c⟩
+  ⟨fun h => coeff_C_zero.symm.trans (h.symm ▸ coeff_C_zero), congr_arg c⟩
 
 @[simp]
 theorem C_eq_zero : c a = 0 ↔ a = 0 :=
@@ -800,7 +800,7 @@ theorem sum_smul_index {S : Type _} [AddCommMonoidₓ S] (p : R[X]) (b : R) (f :
   simpa [Sum, support, coeff] using Finsupp.sum_smul_index hf
 
 theorem sum_monomial_eq : ∀ p : R[X], (p.Sum fun n a => monomial n a) = p
-  | ⟨p⟩ => (of_finsupp_sum _ _).symm.trans (congr_argₓ _ <| Finsupp.sum_single _)
+  | ⟨p⟩ => (of_finsupp_sum _ _).symm.trans (congr_arg _ <| Finsupp.sum_single _)
 
 theorem sum_C_mul_X_eq (p : R[X]) : (p.Sum fun n a => c a * X ^ n) = p := by
   simp_rw [← monomial_eq_C_mul_X, sum_monomial_eq]
@@ -964,7 +964,7 @@ instance : Nontrivial R[X] := by
   simp [hxy]
 
 theorem X_ne_zero : (x : R[X]) ≠ 0 :=
-  mt (congr_argₓ fun p => coeff p 1)
+  mt (congr_arg fun p => coeff p 1)
     (by
       simp )
 

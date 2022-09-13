@@ -65,8 +65,8 @@ from which one can define a measure. -/
 structure Content (G : Type w) [TopologicalSpace G] where
   toFun : Compacts G → ℝ≥0
   mono' : ∀ K₁ K₂ : Compacts G, (K₁ : Set G) ⊆ K₂ → to_fun K₁ ≤ to_fun K₂
-  sup_disjoint' : ∀ K₁ K₂ : Compacts G, Disjoint (K₁ : Set G) K₂ → to_fun (K₁⊔K₂) = to_fun K₁ + to_fun K₂
-  sup_le' : ∀ K₁ K₂ : Compacts G, to_fun (K₁⊔K₂) ≤ to_fun K₁ + to_fun K₂
+  sup_disjoint' : ∀ K₁ K₂ : Compacts G, Disjoint (K₁ : Set G) K₂ → to_fun (K₁ ⊔ K₂) = to_fun K₁ + to_fun K₂
+  sup_le' : ∀ K₁ K₂ : Compacts G, to_fun (K₁ ⊔ K₂) ≤ to_fun K₁ + to_fun K₂
 
 instance : Inhabited (Content G) :=
   ⟨{ toFun := fun K => 0,
@@ -93,10 +93,10 @@ theorem apply_eq_coe_to_fun (K : Compacts G) : μ K = μ.toFun K :=
 theorem mono (K₁ K₂ : Compacts G) (h : (K₁ : Set G) ⊆ K₂) : μ K₁ ≤ μ K₂ := by
   simp [apply_eq_coe_to_fun, μ.mono' _ _ h]
 
-theorem sup_disjoint (K₁ K₂ : Compacts G) (h : Disjoint (K₁ : Set G) K₂) : μ (K₁⊔K₂) = μ K₁ + μ K₂ := by
+theorem sup_disjoint (K₁ K₂ : Compacts G) (h : Disjoint (K₁ : Set G) K₂) : μ (K₁ ⊔ K₂) = μ K₁ + μ K₂ := by
   simp [apply_eq_coe_to_fun, μ.sup_disjoint' _ _ h]
 
-theorem sup_le (K₁ K₂ : Compacts G) : μ (K₁⊔K₂) ≤ μ K₁ + μ K₂ := by
+theorem sup_le (K₁ K₂ : Compacts G) : μ (K₁ ⊔ K₂) ≤ μ K₁ + μ K₂ := by
   simp only [apply_eq_coe_to_fun]
   norm_cast
   exact μ.sup_le' _ _
@@ -139,7 +139,7 @@ theorem inner_content_mono ⦃U V : Set G⦄ (hU : IsOpen U) (hV : IsOpen V) (h2
     μ.innerContent ⟨U, hU⟩ ≤ μ.innerContent ⟨V, hV⟩ :=
   bsupr_mono fun K hK => hK.trans h2
 
-theorem inner_content_exists_compact {U : Opens G} (hU : μ.innerContent U ≠ ∞) {ε : ℝ≥0 } (hε : ε ≠ 0) :
+theorem inner_content_exists_compact {U : Opens G} (hU : μ.innerContent U ≠ ∞) {ε : ℝ≥0} (hε : ε ≠ 0) :
     ∃ K : Compacts G, (K : Set G) ⊆ U ∧ μ.innerContent U ≤ μ K + ε := by
   have h'ε := Ennreal.coe_ne_zero.2 hε
   cases le_or_ltₓ (μ.inner_content U) ε
@@ -259,13 +259,13 @@ theorem outer_measure_eq_infi (A : Set G) :
 theorem outer_measure_interior_compacts (K : Compacts G) : μ.OuterMeasure (Interior K) ≤ μ K :=
   (μ.outer_measure_opens <| Opens.interior K).le.trans <| μ.inner_content_le _ _ interior_subset
 
-theorem outer_measure_exists_compact {U : Opens G} (hU : μ.OuterMeasure U ≠ ∞) {ε : ℝ≥0 } (hε : ε ≠ 0) :
+theorem outer_measure_exists_compact {U : Opens G} (hU : μ.OuterMeasure U ≠ ∞) {ε : ℝ≥0} (hε : ε ≠ 0) :
     ∃ K : Compacts G, (K : Set G) ⊆ U ∧ μ.OuterMeasure U ≤ μ.OuterMeasure K + ε := by
   rw [μ.outer_measure_opens] at hU⊢
   rcases μ.inner_content_exists_compact hU hε with ⟨K, h1K, h2K⟩
   exact ⟨K, h1K, le_transₓ h2K <| add_le_add_right (μ.le_outer_measure_compacts K) _⟩
 
-theorem outer_measure_exists_open {A : Set G} (hA : μ.OuterMeasure A ≠ ∞) {ε : ℝ≥0 } (hε : ε ≠ 0) :
+theorem outer_measure_exists_open {A : Set G} (hA : μ.OuterMeasure A ≠ ∞) {ε : ℝ≥0} (hε : ε ≠ 0) :
     ∃ U : Opens G, A ⊆ U ∧ μ.OuterMeasure U ≤ μ.OuterMeasure A + ε := by
   rcases induced_outer_measure_exists_set _ _ μ.inner_content_mono hA (Ennreal.coe_ne_zero.2 hε) with ⟨U, hU, h2U, h3U⟩
   exact ⟨⟨U, hU⟩, h2U, h3U⟩
@@ -341,7 +341,7 @@ theorem borel_le_caratheodory : S ≤ μ.OuterMeasure.caratheodory := by
   refine' supr_le _
   rintro ⟨M, hM⟩
   simp only [subset_diff] at hM
-  have : (↑(L⊔M) : Set G) ⊆ U' := by
+  have : (↑(L ⊔ M) : Set G) ⊆ U' := by
     simp only [union_subset_iff, compacts.coe_sup, hM, hL, and_selfₓ]
   rw [μ.outer_measure_of_is_open (↑U') U'.2]
   refine' le_transₓ (ge_of_eqₓ _) (μ.le_inner_content _ _ this)

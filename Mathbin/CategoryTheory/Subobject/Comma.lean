@@ -47,7 +47,7 @@ def projectSubobject [HasLimits C] [PreservesLimits T] {A : StructuredArrow S T}
   refine' subobject.lift (fun P f hf => subobject.mk f.right) _
   intro P Q f g hf hg i hi
   refine' subobject.mk_eq_mk_of_comm _ _ ((proj S T).mapIso i) _
-  exact congr_argₓ comma_morphism.right hi
+  exact congr_arg comma_morphism.right hi
 
 @[simp]
 theorem project_subobject_mk [HasLimits C] [PreservesLimits T] {A P : StructuredArrow S T} (f : P ⟶ A) [Mono f] :
@@ -119,7 +119,7 @@ def subobjectEquiv [HasLimits C] [PreservesLimits T] (A : StructuredArrow S T) :
         · simp only [mono_over.mk'_arrow, subobject.of_mk_le_mk_comp, comma.comp_right, hom_mk_right]
           
         · refine' subobject.mk_le_mk_of_comm (subobject.of_mk_le_mk _ _ h).right _
-          exact congr_argₓ comma_morphism.right (subobject.of_mk_le_mk_comp h)
+          exact congr_arg comma_morphism.right (subobject.of_mk_le_mk_comp h)
           )
 
 /-- If `C` is well-powered and complete and `T` preserves limits, then `structured_arrow S T` is
@@ -140,8 +140,8 @@ def projectQuotient [HasColimits C] [PreservesColimits S] {A : CostructuredArrow
   refine' subobject.lift (fun P f hf => subobject.mk f.unop.left.op) _
   intro P Q f g hf hg i hi
   refine' subobject.mk_eq_mk_of_comm _ _ ((proj S T).mapIso i.unop).op (Quiver.Hom.unop_inj _)
-  have := congr_argₓ Quiver.Hom.unop hi
-  simpa using congr_argₓ comma_morphism.left this
+  have := congr_arg Quiver.Hom.unop hi
+  simpa using congr_arg comma_morphism.left this
 
 @[simp]
 theorem project_quotient_mk [HasColimits C] [PreservesColimits S] {A : CostructuredArrow S T}
@@ -233,8 +233,8 @@ def quotientEquiv [HasColimits C] [PreservesColimits S] (A : CostructuredArrow S
           
         · refine' subobject.mk_le_mk_of_comm (subobject.of_mk_le_mk _ _ h).unop.left.op _
           refine' Quiver.Hom.unop_inj _
-          have := congr_argₓ Quiver.Hom.unop (subobject.of_mk_le_mk_comp h)
-          simpa [-subobject.of_mk_le_mk_comp] using congr_argₓ comma_morphism.left this
+          have := congr_arg Quiver.Hom.unop (subobject.of_mk_le_mk_comp h)
+          simpa [-subobject.of_mk_le_mk_comp] using congr_arg comma_morphism.left this
           )
 
 /-- If `C` is well-copowered and cocomplete and `S` preserves colimits, then

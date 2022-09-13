@@ -30,10 +30,10 @@ def ToTopObj (x : SimplexCategory) :=
   { f : x → ℝ≥0 | (∑ i, f i) = 1 }
 
 instance (x : SimplexCategory) : CoeFun x.ToTopObj fun _ => x → ℝ≥0 :=
-  ⟨fun f => (f : x → ℝ≥0 )⟩
+  ⟨fun f => (f : x → ℝ≥0)⟩
 
 @[ext]
-theorem ToTopObj.ext {x : SimplexCategory} (f g : x.ToTopObj) : (f : x → ℝ≥0 ) = g → f = g :=
+theorem ToTopObj.ext {x : SimplexCategory} (f g : x.ToTopObj) : (f : x → ℝ≥0) = g → f = g :=
   Subtype.ext
 
 /-- A morphism in `simplex_category` induces a map on the associated topological spaces. -/

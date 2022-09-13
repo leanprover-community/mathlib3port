@@ -76,7 +76,7 @@ theorem is_bounded_principal (s : Set α) : IsBounded r (𝓟 s) ↔ ∃ t, ∀ 
   simp [is_bounded, subset_def]
 
 theorem is_bounded_sup [IsTrans α r] (hr : ∀ b₁ b₂, ∃ b, r b₁ b ∧ r b₂ b) :
-    IsBounded r f → IsBounded r g → IsBounded r (f⊔g)
+    IsBounded r f → IsBounded r g → IsBounded r (f ⊔ g)
   | ⟨b₁, h₁⟩, ⟨b₂, h₂⟩ =>
     let ⟨b, rb₁b, rb₂b⟩ := hr b₁ b₂
     ⟨b, eventually_sup.mpr ⟨h₁.mono fun x h => trans h rb₁b, h₂.mono fun x h => trans h rb₂b⟩⟩
@@ -224,31 +224,31 @@ theorem is_bounded_under_ge_inv [OrderedCommGroup α] {l : Filter β} {u : β �
   (OrderIso.inv α).is_bounded_under_le_comp
 
 theorem IsBoundedUnder.sup [SemilatticeSup α] {f : Filter β} {u v : β → α} :
-    f.IsBoundedUnder (· ≤ ·) u → f.IsBoundedUnder (· ≤ ·) v → f.IsBoundedUnder (· ≤ ·) fun a => u a⊔v a
+    f.IsBoundedUnder (· ≤ ·) u → f.IsBoundedUnder (· ≤ ·) v → f.IsBoundedUnder (· ≤ ·) fun a => u a ⊔ v a
   | ⟨bu, (hu : ∀ᶠ x in f, u x ≤ bu)⟩, ⟨bv, (hv : ∀ᶠ x in f, v x ≤ bv)⟩ =>
-    ⟨bu⊔bv,
-      show ∀ᶠ x in f, u x⊔v x ≤ bu⊔bv by
+    ⟨bu ⊔ bv,
+      show ∀ᶠ x in f, u x ⊔ v x ≤ bu ⊔ bv by
         filter_upwards [hu, hv] with _ using sup_le_sup⟩
 
 @[simp]
 theorem is_bounded_under_le_sup [SemilatticeSup α] {f : Filter β} {u v : β → α} :
-    (f.IsBoundedUnder (· ≤ ·) fun a => u a⊔v a) ↔ f.IsBoundedUnder (· ≤ ·) u ∧ f.IsBoundedUnder (· ≤ ·) v :=
+    (f.IsBoundedUnder (· ≤ ·) fun a => u a ⊔ v a) ↔ f.IsBoundedUnder (· ≤ ·) u ∧ f.IsBoundedUnder (· ≤ ·) v :=
   ⟨fun h =>
     ⟨h.mono_le <| eventually_of_forall fun _ => le_sup_left, h.mono_le <| eventually_of_forall fun _ => le_sup_right⟩,
     fun h => h.1.sup h.2⟩
 
 theorem IsBoundedUnder.inf [SemilatticeInf α] {f : Filter β} {u v : β → α} :
-    f.IsBoundedUnder (· ≥ ·) u → f.IsBoundedUnder (· ≥ ·) v → f.IsBoundedUnder (· ≥ ·) fun a => u a⊓v a :=
+    f.IsBoundedUnder (· ≥ ·) u → f.IsBoundedUnder (· ≥ ·) v → f.IsBoundedUnder (· ≥ ·) fun a => u a ⊓ v a :=
   @IsBoundedUnder.sup αᵒᵈ β _ _ _ _
 
 @[simp]
 theorem is_bounded_under_ge_inf [SemilatticeInf α] {f : Filter β} {u v : β → α} :
-    (f.IsBoundedUnder (· ≥ ·) fun a => u a⊓v a) ↔ f.IsBoundedUnder (· ≥ ·) u ∧ f.IsBoundedUnder (· ≥ ·) v :=
+    (f.IsBoundedUnder (· ≥ ·) fun a => u a ⊓ v a) ↔ f.IsBoundedUnder (· ≥ ·) u ∧ f.IsBoundedUnder (· ≥ ·) v :=
   @is_bounded_under_le_sup αᵒᵈ _ _ _ _ _
 
 theorem is_bounded_under_le_abs [LinearOrderedAddCommGroup α] {f : Filter β} {u : β → α} :
     (f.IsBoundedUnder (· ≤ ·) fun a => abs (u a)) ↔ f.IsBoundedUnder (· ≤ ·) u ∧ f.IsBoundedUnder (· ≥ ·) u :=
-  is_bounded_under_le_sup.trans <| and_congr Iff.rfl is_bounded_under_le_neg
+  is_bounded_under_le_sup.trans <| and_congrₓ Iff.rfl is_bounded_under_le_neg
 
 /-- Filters are automatically bounded or cobounded in complete lattices. To use the same statements
 in complete and conditionally complete lattices but let automation fill automatically the

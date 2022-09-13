@@ -136,7 +136,7 @@ theorem geom_sum₂_self {α : Type _} [CommRingₓ α] (x : α) (n : ℕ) :
       simp_rw [← pow_addₓ]
     _ = ∑ i in Finset.range n, x ^ (n - 1) :=
       Finset.sum_congr rfl fun i hi =>
-        congr_argₓ _ <| add_tsub_cancel_of_le <| Nat.le_pred_of_ltₓ <| Finset.mem_range.1 hi
+        congr_arg _ <| add_tsub_cancel_of_le <| Nat.le_pred_of_ltₓ <| Finset.mem_range.1 hi
     _ = (Finset.range n).card • x ^ (n - 1) := Finset.sum_const _
     _ = n * x ^ (n - 1) := by
       rw [Finset.card_range, nsmul_eq_mul]
@@ -182,7 +182,7 @@ theorem mul_geom_sum [Ringₓ α] (x : α) (n : ℕ) : ((x - 1) * ∑ i in range
     simpa using geom_sum_mul (op x) n
 
 theorem geom_sum_mul_neg [Ringₓ α] (x : α) (n : ℕ) : (∑ i in range n, x ^ i) * (1 - x) = 1 - x ^ n := by
-  have := congr_argₓ Neg.neg (geom_sum_mul x n)
+  have := congr_arg Neg.neg (geom_sum_mul x n)
   rw [neg_sub, ← mul_neg, neg_sub] at this
   exact this
 
@@ -493,7 +493,7 @@ theorem geom_sum_eq_zero_iff_neg_one [LinearOrderedRing α] (hn : 1 < n) :
 
 theorem geom_sum_neg_iff [LinearOrderedRing α] (hn : 1 < n) : (∑ i in range n, x ^ i) < 0 ↔ Even n ∧ x + 1 < 0 := by
   rw [← not_iff_not, not_ltₓ, le_iff_lt_or_eqₓ, eq_comm,
-    or_congr (geom_sum_pos_iff hn) (geom_sum_eq_zero_iff_neg_one hn), Nat.odd_iff_not_even, ← add_eq_zero_iff_eq_neg,
+    or_congrₓ (geom_sum_pos_iff hn) (geom_sum_eq_zero_iff_neg_one hn), Nat.odd_iff_not_even, ← add_eq_zero_iff_eq_neg,
     not_and, not_ltₓ, le_iff_lt_or_eqₓ, eq_comm, ← imp_iff_not_or, or_comm, and_comm, Decidable.and_or_imp, or_comm]
 
 end Order

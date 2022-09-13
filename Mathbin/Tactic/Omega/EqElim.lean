@@ -24,7 +24,7 @@ attribute [local semireducible] Int.Nonneg
 theorem symmod_add_one_self {i : Int} : 0 < i → symmod i (i + 1) = -1 := by
   intro h1
   unfold symmod
-  rw [Int.mod_eq_of_lt (le_of_ltₓ h1) (lt_add_one _), if_neg]
+  rw [Int.mod_eq_of_ltₓ (le_of_ltₓ h1) (lt_add_one _), if_neg]
   simp only [add_commₓ, add_neg_cancel_left, neg_add_rev, sub_eq_add_neg]
   have h2 : 2 * i = (1 + 1) * i := rfl
   simpa only [h2, add_mulₓ, one_mulₓ, add_lt_add_iff_left, not_ltₓ] using h1
@@ -35,11 +35,11 @@ theorem mul_symdiv_eq {i j : Int} : j * symdiv i j = i - symmod i j := by
   by_cases' h1 : 2 * (i % j) < j
   · repeat'
       rw [if_pos h1]
-    rw [Int.mod_def, sub_sub_cancel]
+    rw [Int.mod_defₓ, sub_sub_cancel]
     
   · repeat'
       rw [if_neg h1]
-    rw [Int.mod_def, sub_sub, sub_sub_cancel, mul_addₓ, mul_oneₓ]
+    rw [Int.mod_defₓ, sub_sub, sub_sub_cancel, mul_addₓ, mul_oneₓ]
     
 
 theorem symmod_eq {i j : Int} : symmod i j = i - j * symdiv i j := by
@@ -98,7 +98,7 @@ theorem rhs_correct {v : Nat → Int} {b : Int} {as : List Int} (n : Nat) :
     simp [a_n, m]
   have h2 : m * sgm v b as n = symmod b m + coeffs.val v (as.map fun x => symmod x m) := by
     simp only [sgm, mul_comm m]
-    rw [Int.div_mul_cancel]
+    rw [Int.div_mul_cancelₓ]
     have h4 :
       ∃ c, m * c + (symmod b (get n as + 1) + coeffs.val v (as.map fun x : ℤ => symmod x m)) = term.val v (b, as) := by
       have h5 : ∃ d, m * d + coeffs.val v (as.map fun x => symmod x m) = coeffs.val v as := by
@@ -225,7 +225,7 @@ theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : N
         apply fun_mono_2 (h4 _)
         apply coeffs.val_except_eq_val_except <;> intro x h5
         rfl
-        apply congr_argₓ
+        apply congr_arg
         apply fun_mono_2 _ rfl
         rw [Function.funext_iff]
         apply h4
@@ -245,7 +245,7 @@ theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : N
         simp only [coeffs_reduce, term.val, m, a_n]
         rw [← coeffs.val_except_add_eq n, coeffs.val_except_update_set, get_set, update_eq]
       
-  rw [← Int.mul_div_cancel (term.val _ _) h3, ← h4, Int.zero_div]
+  rw [← Int.mul_div_cancelₓ (term.val _ _) h3, ← h4, Int.zero_divₓ]
 
 -- Requires : t1.coeffs[m] = 1
 def cancel (m : Nat) (t1 t2 : Term) : Term :=
@@ -402,7 +402,7 @@ theorem sat_eq_elim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).S
       rw [List.forall_mem_consₓ] at *
       cases' h3 with h5 h6
       apply And.intro _ h6
-      rw [term.val_div h2.left h2.right, ← h5, Int.zero_div]
+      rw [term.val_div h2.left h2.right, ← h5, Int.zero_divₓ]
       
     · rw [if_neg h2]
       apply sat_empty

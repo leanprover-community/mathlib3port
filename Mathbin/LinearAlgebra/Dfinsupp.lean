@@ -340,7 +340,7 @@ theorem mem_supr_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N
       
     simp only [Dfinsupp.sum]
     rw [Finset.sum_subset support_mk_subset, ← hμ]
-    exact Finset.sum_congr rfl fun x hx => congr_argₓ coe <| mk_of_mem hx
+    exact Finset.sum_congr rfl fun x hx => congr_arg coe <| mk_of_mem hx
     · intro x _ hx
       rw [mem_support_iff, not_ne_iff] at hx
       rw [hx]
@@ -484,7 +484,7 @@ theorem Independent.linear_independent [NoZeroSmulDivisors R N] (p : ι → Subm
   simp [this, ha]
 
 theorem independent_iff_linear_independent_of_ne_zero [NoZeroSmulDivisors R N] {v : ι → N} (h_ne_zero : ∀ i, v i ≠ 0) :
-    (Independent fun i => R∙v i) ↔ LinearIndependent R v :=
+    (Independent fun i => R ∙ v i) ↔ LinearIndependent R v :=
   ⟨fun hv => hv.LinearIndependent _ (fun i => Submodule.mem_span_singleton_self <| v i) h_ne_zero, fun hv =>
     hv.independent_span_singleton⟩
 

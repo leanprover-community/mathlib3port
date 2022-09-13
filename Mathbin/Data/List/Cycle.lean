@@ -672,7 +672,7 @@ theorem nontrivial_coe_nodup_iff {l : List α} (hl : l.Nodup) : Nontrivial (l : 
     
   · simp
     
-  · simp only [mem_cons_iff, exists_prop, mem_coe_iff, List.length, Ne.def, Nat.succ_le_succ_iffₓ, zero_le, iff_trueₓ]
+  · simp only [mem_cons_iff, exists_propₓ, mem_coe_iff, List.length, Ne.def, Nat.succ_le_succ_iffₓ, zero_le, iff_trueₓ]
     refine'
       ⟨hd, hd', _, by
         simp ⟩

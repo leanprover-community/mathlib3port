@@ -143,7 +143,7 @@ theorem mem_iff_star_mul_self {U : R} : U ∈ unitary R ↔ star U * U = 1 :=
   mem_iff.trans <| and_iff_left_of_imp fun h => mul_comm (star U) U ▸ h
 
 theorem mem_iff_self_mul_star {U : R} : U ∈ unitary R ↔ U * star U = 1 :=
-  mem_iff.trans <| and_iff_right_of_imp fun h => mul_comm U (star U) ▸ h
+  mem_iff.trans <| and_iff_right_of_impₓ fun h => mul_comm U (star U) ▸ h
 
 end CommMonoidₓ
 

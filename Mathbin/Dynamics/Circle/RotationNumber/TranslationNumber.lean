@@ -391,11 +391,11 @@ noncomputable instance : Lattice CircleDeg1Lift where
   le_inf := fun f₁ f₂ f₃ h₂ h₃ x => le_minₓ (h₂ x) (h₃ x)
 
 @[simp]
-theorem sup_apply (x : ℝ) : (f⊔g) x = max (f x) (g x) :=
+theorem sup_apply (x : ℝ) : (f ⊔ g) x = max (f x) (g x) :=
   rfl
 
 @[simp]
-theorem inf_apply (x : ℝ) : (f⊓g) x = min (f x) (g x) :=
+theorem inf_apply (x : ℝ) : (f ⊓ g) x = min (f x) (g x) :=
   rfl
 
 theorem iterate_monotone (n : ℕ) : Monotone fun f : CircleDeg1Lift => f^[n] := fun f g h =>

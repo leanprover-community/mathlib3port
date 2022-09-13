@@ -111,7 +111,7 @@ instance : LargeCategory.{u} SemiNormedGroup₁ where
 
 @[ext]
 theorem hom_ext {M N : SemiNormedGroup₁} (f g : M ⟶ N) (w : (f : M → N) = (g : M → N)) : f = g :=
-  Subtype.eq (NormedAddGroupHom.ext (congr_funₓ w))
+  Subtype.eq (NormedAddGroupHom.ext (congr_fun w))
 
 instance : ConcreteCategory.{u} SemiNormedGroup₁ where
   forget := { obj := fun X => X, map := fun X Y f => f }

@@ -106,7 +106,7 @@ theorem elim_mk : ∀ (l : List ι) (f : ∀ i, α i) {i : ι} (hi : i ∈ l), (
 
 @[ext]
 theorem ext : ∀ {l : List ι} (hl : l.Nodup) {v w : Tprod α l} (hvw : ∀ (i) (hi : i ∈ l), v.elim hi = w.elim hi), v = w
-  | [], hl, v, w, hvw => PUnit.extₓ
+  | [], hl, v, w, hvw => PUnit.ext
   | i :: is, hl, v, w, hvw => by
     ext
     rw [← elim_self v, hvw, elim_self]

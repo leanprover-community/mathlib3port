@@ -262,7 +262,7 @@ def Interior (s : Set α) : Set α :=
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem mem_interior {s : Set α} {x : α} : x ∈ Interior s ↔ ∃ (t : _)(_ : t ⊆ s), IsOpen t ∧ x ∈ t := by
-  simp only [Interior, mem_sUnion, mem_set_of_eq, exists_prop, and_assoc, And.left_comm]
+  simp only [Interior, mem_sUnion, mem_set_of_eq, exists_propₓ, and_assocₓ, And.left_comm]
 
 @[simp]
 theorem is_open_interior {s : Set α} : IsOpen (Interior s) :=
@@ -705,7 +705,7 @@ localized [TopologicalSpace] notation "𝓝" => nhds
 /-- The "neighborhood within" filter. Elements of `𝓝[s] a` are sets containing the
 intersection of `s` and a neighborhood of `a`. -/
 def nhdsWithin (a : α) (s : Set α) : Filter α :=
-  𝓝 a⊓𝓟 s
+  𝓝 a ⊓ 𝓟 s
 
 -- mathport name: nhds_within
 localized [TopologicalSpace] notation "𝓝[" s "] " x:100 => nhdsWithin x s
@@ -766,7 +766,7 @@ containing `a`. -/
 theorem eventually_nhds_iff {a : α} {p : α → Prop} :
     (∀ᶠ x in 𝓝 a, p x) ↔ ∃ t : Set α, (∀ x ∈ t, p x) ∧ IsOpen t ∧ a ∈ t :=
   mem_nhds_iff.trans <| by
-    simp only [subset_def, exists_prop, mem_set_of_eq]
+    simp only [subset_def, exists_propₓ, mem_set_of_eq]
 
 theorem map_nhds {a : α} {f : α → β} : map f (𝓝 a) = ⨅ s ∈ { s : Set α | a ∈ s ∧ IsOpen s }, 𝓟 (Image f s) :=
   ((nhds_basis_opens a).map f).eq_binfi
@@ -796,7 +796,7 @@ for a variant using open sets around `a` instead. -/
 theorem nhds_basis_opens' (a : α) : (𝓝 a).HasBasis (fun s : Set α => s ∈ 𝓝 a ∧ IsOpen s) fun x => x := by
   convert nhds_basis_opens a
   ext s
-  exact And.congr_left_iff.2 IsOpen.mem_nhds_iff
+  exact And.congr_left_iffₓ.2 IsOpen.mem_nhds_iff
 
 /-- If `U` is a neighborhood of each point of a set `s` then it is a neighborhood of `s`:
 it contains an open set containing `s`. -/
@@ -886,7 +886,7 @@ theorem tendsto_nhds {f : β → α} {l : Filter β} {a : α} : Tendsto f l (�
 theorem tendsto_at_top_nhds [Nonempty β] [SemilatticeSup β] {f : β → α} {a : α} :
     Tendsto f atTop (𝓝 a) ↔ ∀ U : Set α, a ∈ U → IsOpen U → ∃ N, ∀ n, N ≤ n → f n ∈ U :=
   (at_top_basis.tendsto_iff (nhds_basis_opens a)).trans <| by
-    simp only [and_imp, exists_prop, true_andₓ, mem_Ici, ge_iff_leₓ]
+    simp only [and_imp, exists_propₓ, true_andₓ, mem_Ici, ge_iff_leₓ]
 
 theorem tendsto_const_nhds {a : α} {f : Filter β} : Tendsto (fun b : β => a) f (𝓝 a) :=
   tendsto_nhds.mpr fun s hs ha => univ_mem' fun _ => ha
@@ -923,9 +923,9 @@ In this section we define [cluster points](https://en.wikipedia.org/wiki/Limit_p
 /-- A point `x` is a cluster point of a filter `F` if 𝓝 x ⊓ F ≠ ⊥. Also known as
 an accumulation point or a limit point. -/
 def ClusterPt (x : α) (F : Filter α) : Prop :=
-  NeBot (𝓝 x⊓F)
+  NeBot (𝓝 x ⊓ F)
 
-theorem ClusterPt.ne_bot {x : α} {F : Filter α} (h : ClusterPt x F) : NeBot (𝓝 x⊓F) :=
+theorem ClusterPt.ne_bot {x : α} {F : Filter α} (h : ClusterPt x F) : NeBot (𝓝 x ⊓ F) :=
   h
 
 theorem Filter.HasBasis.cluster_pt_iff {ιa ιF} {pa : ιa → Prop} {sa : ιa → Set α} {pF : ιF → Prop} {sF : ιF → Set α}
@@ -943,7 +943,7 @@ theorem cluster_pt_principal_iff {x : α} {s : Set α} : ClusterPt x (𝓟 s) �
   inf_principal_ne_bot_iff
 
 theorem cluster_pt_principal_iff_frequently {x : α} {s : Set α} : ClusterPt x (𝓟 s) ↔ ∃ᶠ y in 𝓝 x, y ∈ s := by
-  simp only [cluster_pt_principal_iff, frequently_iff, Set.Nonempty, exists_prop, mem_inter_iff]
+  simp only [cluster_pt_principal_iff, frequently_iff, Set.Nonempty, exists_propₓ, mem_inter_iff]
 
 theorem ClusterPt.of_le_nhds {x : α} {f : Filter α} (H : f ≤ 𝓝 x) [NeBot f] : ClusterPt x f := by
   rwa [ClusterPt, inf_eq_right.mpr H]
@@ -957,10 +957,10 @@ theorem ClusterPt.of_nhds_le {x : α} {f : Filter α} (H : 𝓝 x ≤ f) : Clust
 theorem ClusterPt.mono {x : α} {f g : Filter α} (H : ClusterPt x f) (h : f ≤ g) : ClusterPt x g :=
   ⟨ne_bot_of_le_ne_bot H.Ne <| inf_le_inf_left _ h⟩
 
-theorem ClusterPt.of_inf_left {x : α} {f g : Filter α} (H : ClusterPt x <| f⊓g) : ClusterPt x f :=
+theorem ClusterPt.of_inf_left {x : α} {f g : Filter α} (H : ClusterPt x <| f ⊓ g) : ClusterPt x f :=
   H.mono inf_le_left
 
-theorem ClusterPt.of_inf_right {x : α} {f g : Filter α} (H : ClusterPt x <| f⊓g) : ClusterPt x g :=
+theorem ClusterPt.of_inf_right {x : α} {f g : Filter α} (H : ClusterPt x <| f ⊓ g) : ClusterPt x g :=
   H.mono inf_le_right
 
 theorem Ultrafilter.cluster_pt_iff {x : α} {f : Ultrafilter α} : ClusterPt x f ↔ ↑f ≤ 𝓝 x :=
@@ -983,7 +983,7 @@ theorem map_cluster_pt_of_comp {ι δ : Type _} {F : Filter ι} {φ : δ → ι}
       map (u ∘ φ) p = map u (map φ p) := map_map
       _ ≤ map u F := map_mono h
       
-  have : map (u ∘ φ) p ≤ 𝓝 x⊓map u F := le_inf H this
+  have : map (u ∘ φ) p ≤ 𝓝 x ⊓ map u F := le_inf H this
   exact ne_bot_of_le this
 
 /-!
@@ -1025,7 +1025,7 @@ theorem is_open_iff_nhds {s : Set α} : IsOpen s ↔ ∀ a ∈ s, 𝓝 a ≤ �
     
 
 theorem is_open_iff_mem_nhds {s : Set α} : IsOpen s ↔ ∀ a ∈ s, s ∈ 𝓝 a :=
-  is_open_iff_nhds.trans <| forall_congrₓ fun _ => imp_congr_right fun _ => le_principal_iff
+  is_open_iff_nhds.trans <| forall_congrₓ fun _ => imp_congr_rightₓ fun _ => le_principal_iff
 
 theorem is_open_iff_ultrafilter {s : Set α} : IsOpen s ↔ ∀ x ∈ s, ∀ (l : Ultrafilter α), ↑l ≤ 𝓝 x → s ∈ l := by
   simp_rw [is_open_iff_mem_nhds, ← mem_iff_ultrafilter]
@@ -1057,7 +1057,7 @@ theorem is_closed_set_of_cluster_pt {f : Filter α} : IsClosed { x | ClusterPt x
 theorem mem_closure_iff_cluster_pt {s : Set α} {a : α} : a ∈ Closure s ↔ ClusterPt a (𝓟 s) :=
   mem_closure_iff_frequently.trans cluster_pt_principal_iff_frequently.symm
 
-theorem mem_closure_iff_nhds_ne_bot {s : Set α} : a ∈ Closure s ↔ 𝓝 a⊓𝓟 s ≠ ⊥ :=
+theorem mem_closure_iff_nhds_ne_bot {s : Set α} : a ∈ Closure s ↔ 𝓝 a ⊓ 𝓟 s ≠ ⊥ :=
   mem_closure_iff_cluster_pt.trans ne_bot_iff
 
 theorem mem_closure_iff_nhds_within_ne_bot {s : Set α} {x : α} : x ∈ Closure s ↔ NeBot (𝓝[s] x) :=
@@ -1100,12 +1100,12 @@ theorem mem_closure_iff_nhds_basis' {a : α} {p : ι → Prop} {s : ι → Set �
     a ∈ Closure t ↔ ∀ i, p i → (s i ∩ t).Nonempty :=
   mem_closure_iff_cluster_pt.trans <|
     (h.cluster_pt_iff (has_basis_principal _)).trans <| by
-      simp only [exists_prop, forall_const]
+      simp only [exists_propₓ, forall_const]
 
 theorem mem_closure_iff_nhds_basis {a : α} {p : ι → Prop} {s : ι → Set α} (h : (𝓝 a).HasBasis p s) {t : Set α} :
     a ∈ Closure t ↔ ∀ i, p i → ∃ y ∈ t, y ∈ s i :=
   (mem_closure_iff_nhds_basis' h).trans <| by
-    simp only [Set.Nonempty, mem_inter_eq, exists_prop, and_comm]
+    simp only [Set.Nonempty, mem_inter_eq, exists_propₓ, and_comm]
 
 /-- `x` belongs to the closure of `s` if and only if some ultrafilter
   supported on `s` converges to `x`. -/
@@ -1143,12 +1143,12 @@ theorem mem_closure_of_mem_closure_union {s₁ s₂ : Set α} {x : α} (h : x �
   rw [mem_closure_iff_nhds_ne_bot] at *
   rwa [←
     calc
-      𝓝 x⊓principal (s₁ ∪ s₂) = 𝓝 x⊓(principal s₁⊔principal s₂) := by
+      𝓝 x ⊓ principal (s₁ ∪ s₂) = 𝓝 x ⊓ (principal s₁ ⊔ principal s₂) := by
         rw [sup_principal]
-      _ = 𝓝 x⊓principal s₁⊔𝓝 x⊓principal s₂ := inf_sup_left
-      _ = ⊥⊔𝓝 x⊓principal s₂ := by
+      _ = 𝓝 x ⊓ principal s₁ ⊔ 𝓝 x ⊓ principal s₂ := inf_sup_left
+      _ = ⊥ ⊔ 𝓝 x ⊓ principal s₂ := by
         rw [inf_principal_eq_bot.mpr h₁]
-      _ = 𝓝 x⊓principal s₂ := bot_sup_eq
+      _ = 𝓝 x ⊓ principal s₂ := bot_sup_eq
       ]
 
 /-- The intersection of an open dense set with a dense set is a dense set. -/
@@ -1198,7 +1198,7 @@ theorem mem_closure_of_tendsto {f : β → α} {b : Filter β} {a : α} {s : Set
 /-- Suppose that `f` sends the complement to `s` to a single point `a`, and `l` is some filter.
 Then `f` tends to `a` along `l` restricted to `s` if and only if it tends to `a` along `l`. -/
 theorem tendsto_inf_principal_nhds_iff_of_forall_eq {f : β → α} {l : Filter β} {s : Set β} {a : α}
-    (h : ∀ (x) (_ : x ∉ s), f x = a) : Tendsto f (l⊓𝓟 s) (𝓝 a) ↔ Tendsto f l (𝓝 a) := by
+    (h : ∀ (x) (_ : x ∉ s), f x = a) : Tendsto f (l ⊓ 𝓟 s) (𝓝 a) ↔ Tendsto f l (𝓝 a) := by
   rw [tendsto_iff_comap, tendsto_iff_comap]
   replace h : 𝓟 (sᶜ) ≤ comap f (𝓝 a)
   · rintro U ⟨t, ht, htU⟩ x hx

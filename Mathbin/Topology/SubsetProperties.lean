@@ -68,9 +68,9 @@ def IsCompact (s : Set α) :=
 
 /-- The complement to a compact set belongs to a filter `f` if it belongs to each filter
 `𝓝 a ⊓ f`, `a ∈ s`. -/
-theorem IsCompact.compl_mem_sets (hs : IsCompact s) {f : Filter α} (hf : ∀ a ∈ s, sᶜ ∈ 𝓝 a⊓f) : sᶜ ∈ f := by
+theorem IsCompact.compl_mem_sets (hs : IsCompact s) {f : Filter α} (hf : ∀ a ∈ s, sᶜ ∈ 𝓝 a ⊓ f) : sᶜ ∈ f := by
   contrapose! hf
-  simp only [not_mem_iff_inf_principal_compl, compl_compl, inf_assoc, ← exists_prop] at hf⊢
+  simp only [not_mem_iff_inf_principal_compl, compl_compl, inf_assoc, ← exists_propₓ] at hf⊢
   exact @hs _ hf inf_le_right
 
 /-- The complement to a compact set belongs to a filter `f` if each `a ∈ s` has a neighborhood `t`
@@ -126,10 +126,10 @@ theorem compact_of_is_closed_subset (hs : IsCompact s) (ht : IsClosed t) (h : t 
 theorem IsCompact.image_of_continuous_on {f : α → β} (hs : IsCompact s) (hf : ContinuousOn f s) : IsCompact (f '' s) :=
   by
   intro l lne ls
-  have : ne_bot (l.comap f⊓𝓟 s) := comap_inf_principal_ne_bot_of_image_mem lne (le_principal_iff.1 ls)
-  obtain ⟨a, has, ha⟩ : ∃ a ∈ s, ClusterPt a (l.comap f⊓𝓟 s) := @hs this inf_le_right
+  have : ne_bot (l.comap f ⊓ 𝓟 s) := comap_inf_principal_ne_bot_of_image_mem lne (le_principal_iff.1 ls)
+  obtain ⟨a, has, ha⟩ : ∃ a ∈ s, ClusterPt a (l.comap f ⊓ 𝓟 s) := @hs this inf_le_right
   use f a, mem_image_of_mem f has
-  have : tendsto f (𝓝 a⊓(comap f l⊓𝓟 s)) (𝓝 (f a)⊓l) := by
+  have : tendsto f (𝓝 a ⊓ (comap f l ⊓ 𝓟 s)) (𝓝 (f a) ⊓ l) := by
     convert (hf a has).inf (@tendsto_comap _ _ f l) using 1
     rw [nhdsWithin]
     ac_rfl
@@ -140,8 +140,8 @@ theorem IsCompact.image {f : α → β} (hs : IsCompact s) (hf : Continuous f) :
 
 theorem IsCompact.adherence_nhdset {f : Filter α} (hs : IsCompact s) (hf₂ : f ≤ 𝓟 s) (ht₁ : IsOpen t)
     (ht₂ : ∀ a ∈ s, ClusterPt a f → a ∈ t) : t ∈ f :=
-  (Classical.by_cases mem_of_eq_bot) fun this : f⊓𝓟 (tᶜ) ≠ ⊥ =>
-    let ⟨a, ha, (hfa : ClusterPt a <| f⊓𝓟 (tᶜ))⟩ := @hs ⟨this⟩ <| inf_le_of_left_le hf₂
+  (Classical.by_cases mem_of_eq_bot) fun this : f ⊓ 𝓟 (tᶜ) ≠ ⊥ =>
+    let ⟨a, ha, (hfa : ClusterPt a <| f ⊓ 𝓟 (tᶜ))⟩ := @hs ⟨this⟩ <| inf_le_of_left_le hf₂
     have : a ∈ t := ht₂ a ha hfa.of_inf_left
     have : tᶜ ∩ t ∈ 𝓝[tᶜ] a := inter_mem_nhds_within _ (IsOpen.mem_nhds ht₁ this)
     have A : 𝓝[tᶜ] a = ⊥ := empty_mem_iff_bot.1 <| compl_inter_self t ▸ this
@@ -199,10 +199,10 @@ theorem IsCompact.elim_finite_subfamily_closed {s : Set α} {ι : Type v} (hs : 
   let ⟨t, ht⟩ :=
     hs.elim_finite_subcover (fun i => Z iᶜ) (fun i => (hZc i).is_open_compl)
       (by
-        simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_prop, mem_inter_eq, not_and,
+        simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_propₓ, mem_inter_eq, not_and,
           iff_selfₓ, mem_Inter, mem_compl_eq] using hsZ)
   ⟨t, by
-    simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_prop, mem_inter_eq, not_and,
+    simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_propₓ, mem_inter_eq, not_and,
       iff_selfₓ, mem_Inter, mem_compl_eq] using ht⟩
 
 /-- If `s` is a compact set in a topological space `α` and `f : ι → set α` is a locally finite
@@ -284,10 +284,10 @@ theorem is_compact_of_finite_subfamily_closed
         (∀ i, IsClosed (Z i)) → (s ∩ ⋂ i, Z i) = ∅ → ∃ t : Finset ι, (s ∩ ⋂ i ∈ t, Z i) = ∅) :
     IsCompact s := fun f hfn hfs =>
   Classical.by_contradiction fun this : ¬∃ x ∈ s, ClusterPt x f =>
-    have hf : ∀ x ∈ s, 𝓝 x⊓f = ⊥ := by
+    have hf : ∀ x ∈ s, 𝓝 x ⊓ f = ⊥ := by
       simpa only [ClusterPt, not_exists, not_not, ne_bot_iff]
     have : ¬∃ x ∈ s, ∀ t ∈ f.Sets, x ∈ Closure t := fun ⟨x, hxs, hx⟩ => by
-      have : ∅ ∈ 𝓝 x⊓f := by
+      have : ∅ ∈ 𝓝 x ⊓ f := by
         rw [empty_mem_iff_bot, hf x hxs]
       let ⟨t₁, ht₁, t₂, ht₂, ht⟩ := by
         rw [mem_inf_iff] at this <;> exact this
@@ -326,10 +326,10 @@ theorem is_compact_of_finite_subcover
     let ⟨t, ht⟩ :=
       h (fun i => Z iᶜ) (fun i => is_open_compl_iff.mpr <| hZc i)
         (by
-          simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_prop, mem_inter_eq,
+          simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_propₓ, mem_inter_eq,
             not_and, iff_selfₓ, mem_Inter, mem_compl_eq] using hsZ)
     ⟨t, by
-      simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_prop, mem_inter_eq, not_and,
+      simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_propₓ, mem_inter_eq, not_and,
         iff_selfₓ, mem_Inter, mem_compl_eq] using ht⟩
 
 /-- A set `s` is compact if and only if
@@ -516,7 +516,7 @@ theorem has_basis_cocompact : (cocompact α).HasBasis IsCompact compl :=
     ⟨∅, is_compact_empty⟩
 
 theorem mem_cocompact : s ∈ cocompact α ↔ ∃ t, IsCompact t ∧ tᶜ ⊆ s :=
-  has_basis_cocompact.mem_iff.trans <| exists_congr fun t => exists_prop
+  has_basis_cocompact.mem_iff.trans <| exists_congr fun t => exists_propₓ
 
 theorem mem_cocompact' : s ∈ cocompact α ↔ ∃ t, IsCompact t ∧ sᶜ ⊆ t :=
   mem_cocompact.trans <| exists_congr fun t => and_congr_right fun ht => compl_subset_comm
@@ -577,7 +577,7 @@ theorem has_basis_coclosed_compact : (Filter.coclosedCompact α).HasBasis (fun s
         compl_subset_compl.2 (subset_union_right _ _)⟩⟩
 
 theorem mem_coclosed_compact : s ∈ coclosedCompact α ↔ ∃ t, IsClosed t ∧ IsCompact t ∧ tᶜ ⊆ s := by
-  simp [has_basis_coclosed_compact.mem_iff, and_assoc]
+  simp [has_basis_coclosed_compact.mem_iff, and_assocₓ]
 
 theorem mem_coclosed_compact' : s ∈ coclosedCompact α ↔ ∃ t, IsClosed t ∧ IsCompact t ∧ sᶜ ⊆ t := by
   simp only [mem_coclosed_compact, compl_subset_comm]
@@ -815,6 +815,9 @@ theorem Filter.comap_cocompact_le {f : α → β} (hf : Continuous f) : (Filter.
 theorem is_compact_range [CompactSpace α] {f : α → β} (hf : Continuous f) : IsCompact (Range f) := by
   rw [← image_univ] <;> exact compact_univ.image hf
 
+theorem is_compact_diagonal [CompactSpace α] : IsCompact (Diagonal α) :=
+  @range_diag α ▸ is_compact_range (continuous_id.prod_mk continuous_id)
+
 /-- If X is is_compact then pr₂ : X × Y → Y is a closed map -/
 theorem is_closed_proj_of_is_compact {X : Type _} [TopologicalSpace X] [CompactSpace X] {Y : Type _}
     [TopologicalSpace Y] : IsClosedMap (Prod.snd : X × Y → Y) := by
@@ -823,16 +826,16 @@ theorem is_closed_proj_of_is_compact {X : Type _} [TopologicalSpace X] [CompactS
   intro C(hC : IsClosed C)
   rw [is_closed_iff_cluster_pt] at hC⊢
   intro y(y_closure : ClusterPt y <| 𝓟 (πY '' C))
-  have : ne_bot (map πX (comap πY (𝓝 y)⊓𝓟 C)) := by
-    suffices ne_bot (map πY (comap πY (𝓝 y)⊓𝓟 C)) by
+  have : ne_bot (map πX (comap πY (𝓝 y) ⊓ 𝓟 C)) := by
+    suffices ne_bot (map πY (comap πY (𝓝 y) ⊓ 𝓟 C)) by
       simpa only [map_ne_bot_iff]
     convert y_closure
     calc
-      map πY (comap πY (𝓝 y)⊓𝓟 C) = 𝓝 y⊓map πY (𝓟 C) := Filter.push_pull' _ _ _
-      _ = 𝓝 y⊓𝓟 (πY '' C) := by
+      map πY (comap πY (𝓝 y) ⊓ 𝓟 C) = 𝓝 y ⊓ map πY (𝓟 C) := Filter.push_pull' _ _ _
+      _ = 𝓝 y ⊓ 𝓟 (πY '' C) := by
         rw [map_principal]
       
-  obtain ⟨x, hx⟩ : ∃ x, ClusterPt x (map πX (comap πY (𝓝 y)⊓𝓟 C))
+  obtain ⟨x, hx⟩ : ∃ x, ClusterPt x (map πX (comap πY (𝓝 y) ⊓ 𝓟 C))
   exact cluster_point_of_compact _
   refine'
     ⟨⟨x, y⟩, _, by
@@ -841,13 +844,13 @@ theorem is_closed_proj_of_is_compact {X : Type _} [TopologicalSpace X] [CompactS
   rw [ClusterPt, ← Filter.map_ne_bot_iff πX]
   convert hx
   calc
-    map πX (𝓝 (x, y)⊓𝓟 C) = map πX (comap πX (𝓝 x)⊓comap πY (𝓝 y)⊓𝓟 C) := by
+    map πX (𝓝 (x, y) ⊓ 𝓟 C) = map πX (comap πX (𝓝 x) ⊓ comap πY (𝓝 y) ⊓ 𝓟 C) := by
       rw [nhds_prod_eq, Filter.prod]
-    _ = map πX (comap πY (𝓝 y)⊓𝓟 C⊓comap πX (𝓝 x)) := by
+    _ = map πX (comap πY (𝓝 y) ⊓ 𝓟 C ⊓ comap πX (𝓝 x)) := by
       ac_rfl
-    _ = map πX (comap πY (𝓝 y)⊓𝓟 C)⊓𝓝 x := by
+    _ = map πX (comap πY (𝓝 y) ⊓ 𝓟 C) ⊓ 𝓝 x := by
       rw [Filter.push_pull]
-    _ = 𝓝 x⊓map πX (comap πY (𝓝 y)⊓𝓟 C) := by
+    _ = 𝓝 x ⊓ map πX (comap πY (𝓝 y) ⊓ 𝓟 C) := by
       rw [inf_comm]
     
 
@@ -868,13 +871,13 @@ theorem Inducing.is_compact_iff {f : α → β} (hf : Inducing f) {s : Set α} :
         _ = 𝓟 (f '' s) := map_principal
         )
   use x, x_in
-  suffices (map f (𝓝 x⊓F)).ne_bot by
+  suffices (map f (𝓝 x ⊓ F)).ne_bot by
     simpa [Filter.map_ne_bot_iff]
   rwa
     [calc
-      map f (𝓝 x⊓F) = map f ((comap f <| 𝓝 <| f x)⊓F) := by
+      map f (𝓝 x ⊓ F) = map f ((comap f <| 𝓝 <| f x) ⊓ F) := by
         rw [hf.nhds_eq_comap]
-      _ = 𝓝 (f x)⊓map f F := Filter.push_pull' _ _ _
+      _ = 𝓝 (f x) ⊓ map f F := Filter.push_pull' _ _ _
       ]
 
 /-- If `f : α → β` is an `embedding` (or more generally, an `inducing` map, see
@@ -954,7 +957,7 @@ instance [Finite ι] [∀ i, TopologicalSpace (π i)] [∀ i, CompactSpace (π i
 their product. -/
 theorem Filter.coprod_cocompact : (Filter.cocompact α).coprod (Filter.cocompact β) = Filter.cocompact (α × β) := by
   ext S
-  simp only [mem_coprod_iff, exists_prop, mem_comap, Filter.mem_cocompact]
+  simp only [mem_coprod_iff, exists_propₓ, mem_comap, Filter.mem_cocompact]
   constructor
   · rintro ⟨⟨A, ⟨t, ht, hAt⟩, hAS⟩, B, ⟨t', ht', hBt'⟩, hBS⟩
     refine' ⟨t ×ˢ t', ht.prod ht', _⟩
@@ -1000,7 +1003,7 @@ variable [∀ i, TopologicalSpace (π i)]
 /-- **Tychonoff's theorem**: product of compact sets is compact. -/
 theorem is_compact_pi_infinite {s : ∀ i, Set (π i)} :
     (∀ i, IsCompact (s i)) → IsCompact { x : ∀ i, π i | ∀ i, x i ∈ s i } := by
-  simp only [is_compact_iff_ultrafilter_le_nhds, nhds_pi, Filter.pi, exists_prop, mem_set_of_eq, le_infi_iff,
+  simp only [is_compact_iff_ultrafilter_le_nhds, nhds_pi, Filter.pi, exists_propₓ, mem_set_of_eq, le_infi_iff,
     le_principal_iff]
   intro h f hfs
   have : ∀ i : ι, ∃ a, a ∈ s i ∧ tendsto (fun x : ∀ i : ι, π i => x i) f (𝓝 a) := by
@@ -1188,7 +1191,7 @@ theorem IsClosed.exists_minimal_nonempty_closed_subset [CompactSpace α] {S : Se
           
         · convert_to (⋂ U : { U // U ∈ c }, U.1ᶜ).Nonempty
           · ext
-            simp only [not_exists, exists_prop, not_and, Set.mem_Inter, Subtype.forall, mem_set_of_eq, mem_compl_eq,
+            simp only [not_exists, exists_propₓ, not_and, Set.mem_Inter, Subtype.forall, mem_set_of_eq, mem_compl_eq,
               mem_sUnion]
             
           apply IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed
@@ -1491,7 +1494,7 @@ theorem clopen_range_sigma_mk {ι : Type _} {σ : ι → Type _} [∀ i, Topolog
 
 protected theorem QuotientMap.is_clopen_preimage {f : α → β} (hf : QuotientMap f) {s : Set β} :
     IsClopen (f ⁻¹' s) ↔ IsClopen s :=
-  and_congr hf.is_open_preimage hf.is_closed_preimage
+  and_congrₓ hf.is_open_preimage hf.is_closed_preimage
 
 end Clopen
 
@@ -1760,7 +1763,7 @@ theorem is_irreducible_iff_sUnion_closed {s : Set α} :
       
     intro z₁ z₂ hz₁ hz₂ H
     have := h {z₁, z₂} _ _
-    simp only [exists_prop, Finset.mem_insert, Finset.mem_singleton] at this
+    simp only [exists_propₓ, Finset.mem_insert, Finset.mem_singleton] at this
     · rcases this with ⟨z, rfl | rfl, hz⟩ <;> tauto
       
     · intro t

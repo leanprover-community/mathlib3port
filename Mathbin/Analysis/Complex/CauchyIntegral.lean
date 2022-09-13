@@ -356,7 +356,8 @@ theorem circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable_o
     diff_subset_diff_right (singleton_subset_iff.2 <| mem_ball_self hr0)
   have hsub' : ball c R \ closed_ball c r ⊆ ball c R \ {c} :=
     diff_subset_diff_right (singleton_subset_iff.2 <| mem_closed_ball_self hr0.le)
-  have hzne : ∀ z ∈ sphere c r, z ≠ c := fun z hz => ne_of_mem_of_not_mem hz fun h => hr0.ne' <| dist_self c ▸ Eq.symm h
+  have hzne : ∀ z ∈ sphere c r, z ≠ c := fun z hz =>
+    ne_of_mem_of_not_memₓ hz fun h => hr0.ne' <| dist_self c ▸ Eq.symm h
   /- The integral `∮ z in C(c, r), f z / (z - c)` does not depend on `0 < r ≤ R` and tends to
     `2πIy` as `r → 0`. -/
   calc
@@ -433,10 +434,10 @@ theorem circle_integral_sub_inv_smul_of_differentiable_on_off_countable_aux {R :
   have hcF : ContinuousOn F (closed_ball c R) :=
     (continuous_on_dslope <| closed_ball_mem_nhds_of_mem hw.1).2 ⟨hc, hd _ hw⟩
   have hdF : ∀ z ∈ ball (c : ℂ) R \ insert w s, DifferentiableAt ℂ F z := fun z hz =>
-    (differentiable_at_dslope_of_ne (ne_of_mem_of_not_mem (mem_insert _ _) hz.2).symm).2
+    (differentiable_at_dslope_of_ne (ne_of_mem_of_not_memₓ (mem_insert _ _) hz.2).symm).2
       (hd _ (diff_subset_diff_right (subset_insert _ _) hz))
   have HI := circle_integral_eq_zero_of_differentiable_on_off_countable hR.le hws hcF hdF
-  have hne : ∀ z ∈ sphere c R, z ≠ w := fun z hz => ne_of_mem_of_not_mem hz (ne_of_ltₓ hw.1)
+  have hne : ∀ z ∈ sphere c R, z ≠ w := fun z hz => ne_of_mem_of_not_memₓ hz (ne_of_ltₓ hw.1)
   have hFeq : eq_on F (fun z => (z - w)⁻¹ • f z - (z - w)⁻¹ • f w) (sphere c R) := by
     intro z hz
     calc
@@ -479,7 +480,7 @@ theorem two_pi_I_inv_smul_circle_integral_sub_inv_smul_of_differentiable_on_off_
   obtain ⟨x, hx⟩ : (Ioo l u \ g ⁻¹' s).Nonempty := by
     refine' nonempty_diff.2 fun hsub => _
     have : (Ioo l u).Countable := (hs.preimage ((add_right_injective w).comp of_real_injective)).mono hsub
-    rw [← Cardinal.mk_set_le_aleph_0, Cardinal.mk_Ioo_real (hlu₀.1.trans hlu₀.2)] at this
+    rw [← Cardinal.le_aleph_0_iff_set_countable, Cardinal.mk_Ioo_real (hlu₀.1.trans hlu₀.2)] at this
     exact this.not_lt Cardinal.aleph_0_lt_continuum
   exact ⟨g x, (hlu_sub hx.1).1, (hlu_sub hx.1).2, hx.2⟩
 
@@ -521,7 +522,7 @@ theorem circle_integral_div_sub_of_differentiable_on_off_countable {R : ℝ} {c 
 /-- If `f : ℂ → E` is continuous on a closed ball of positive radius and is differentiable at all
 but countably many points of the corresponding open ball, then it is analytic on the open ball with
 coefficients of the power series given by Cauchy integral formulas. -/
-theorem has_fpower_series_on_ball_of_differentiable_off_countable {R : ℝ≥0 } {c : ℂ} {f : ℂ → E} {s : Set ℂ}
+theorem has_fpower_series_on_ball_of_differentiable_off_countable {R : ℝ≥0} {c : ℂ} {f : ℂ → E} {s : Set ℂ}
     (hs : s.Countable) (hc : ContinuousOn f (ClosedBall c R)) (hd : ∀ z ∈ Ball c R \ s, DifferentiableAt ℂ f z)
     (hR : 0 < R) : HasFpowerSeriesOnBall f (cauchyPowerSeries f c R) c R :=
   { r_le := le_radius_cauchy_power_series _ _ _, r_pos := Ennreal.coe_pos.2 hR,
@@ -536,7 +537,7 @@ theorem has_fpower_series_on_ball_of_differentiable_off_countable {R : ℝ≥0 }
 /-- If `f : ℂ → E` is complex differentiable on an open disc of positive radius and is continuous
 on its closure, then it is analytic on the open disc with coefficients of the power series given by
 Cauchy integral formulas. -/
-theorem _root_.diff_cont_on_cl.has_fpower_series_on_ball {R : ℝ≥0 } {c : ℂ} {f : ℂ → E}
+theorem _root_.diff_cont_on_cl.has_fpower_series_on_ball {R : ℝ≥0} {c : ℂ} {f : ℂ → E}
     (hf : DiffContOnCl ℂ f (Ball c R)) (hR : 0 < R) : HasFpowerSeriesOnBall f (cauchyPowerSeries f c R) c R :=
   has_fpower_series_on_ball_of_differentiable_off_countable countable_empty hf.continuous_on_ball
     (fun z hz => hf.DifferentiableAt is_open_ball hz.1) hR
@@ -546,7 +547,7 @@ analytic on the corresponding open disc, and the coefficients of the power serie
 Cauchy integral formulas. See also
 `complex.has_fpower_series_on_ball_of_differentiable_off_countable` for a version of this lemma with
 weaker assumptions. -/
-protected theorem _root_.differentiable_on.has_fpower_series_on_ball {R : ℝ≥0 } {c : ℂ} {f : ℂ → E}
+protected theorem _root_.differentiable_on.has_fpower_series_on_ball {R : ℝ≥0} {c : ℂ} {f : ℂ → E}
     (hd : DifferentiableOn ℂ f (ClosedBall c R)) (hR : 0 < R) : HasFpowerSeriesOnBall f (cauchyPowerSeries f c R) c R :=
   (hd.mono closure_ball_subset_closed_ball).DiffContOnCl.HasFpowerSeriesOnBall hR
 
@@ -564,8 +565,8 @@ protected theorem _root_.differentiable.analytic_at {f : ℂ → E} (hf : Differ
 
 /-- When `f : ℂ → E` is differentiable, the `cauchy_power_series f z R` represents `f` as a power
 series centered at `z` in the entirety of `ℂ`, regardless of `R : ℝ≥0`, with  `0 < R`. -/
-protected theorem _root_.differentiable.has_fpower_series_on_ball {f : ℂ → E} (h : Differentiable ℂ f) (z : ℂ)
-    {R : ℝ≥0 } (hR : 0 < R) : HasFpowerSeriesOnBall f (cauchyPowerSeries f z R) z ∞ :=
+protected theorem _root_.differentiable.has_fpower_series_on_ball {f : ℂ → E} (h : Differentiable ℂ f) (z : ℂ) {R : ℝ≥0}
+    (hR : 0 < R) : HasFpowerSeriesOnBall f (cauchyPowerSeries f z R) z ∞ :=
   (h.DifferentiableOn.HasFpowerSeriesOnBall hR).r_eq_top_of_exists fun r hr =>
     ⟨_, h.DifferentiableOn.HasFpowerSeriesOnBall hr⟩
 

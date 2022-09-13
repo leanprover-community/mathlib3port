@@ -119,7 +119,7 @@ instance : IsLawfulApplicative Finset :=
     seq_assoc := fun α β γ s t u => by
       ext a
       simp_rw [seq_def, fmap_def]
-      simp only [exists_prop, mem_sup, mem_image]
+      simp only [exists_propₓ, mem_sup, mem_image]
       constructor
       · rintro ⟨g, hg, b, ⟨f, hf, a, ha, rfl⟩, rfl⟩
         exact ⟨g ∘ f, ⟨comp g, ⟨g, hg, rfl⟩, f, hf, rfl⟩, a, ha, rfl⟩

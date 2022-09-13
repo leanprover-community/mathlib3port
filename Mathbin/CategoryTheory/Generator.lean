@@ -312,14 +312,14 @@ theorem eq_of_le_of_is_detecting {𝒢 : Set C} (h𝒢 : IsDetecting 𝒢) {X : 
     
 
 theorem inf_eq_of_is_detecting [HasPullbacks C] {𝒢 : Set C} (h𝒢 : IsDetecting 𝒢) {X : C} (P Q : Subobject X)
-    (h : ∀ G ∈ 𝒢, ∀ {f : G ⟶ X}, P.Factors f → Q.Factors f) : P⊓Q = P :=
+    (h : ∀ G ∈ 𝒢, ∀ {f : G ⟶ X}, P.Factors f → Q.Factors f) : P ⊓ Q = P :=
   eq_of_le_of_is_detecting h𝒢 _ _ inf_le_left fun G hG f hf => (inf_factors _).2 ⟨hf, h _ hG hf⟩
 
 theorem eq_of_is_detecting [HasPullbacks C] {𝒢 : Set C} (h𝒢 : IsDetecting 𝒢) {X : C} (P Q : Subobject X)
     (h : ∀ G ∈ 𝒢, ∀ {f : G ⟶ X}, P.Factors f ↔ Q.Factors f) : P = Q :=
   calc
-    P = P⊓Q := Eq.symm <| (inf_eq_of_is_detecting h𝒢 _ _) fun G hG f hf => (h G hG).1 hf
-    _ = Q⊓P := inf_comm
+    P = P ⊓ Q := Eq.symm <| (inf_eq_of_is_detecting h𝒢 _ _) fun G hG f hf => (h G hG).1 hf
+    _ = Q ⊓ P := inf_comm
     _ = Q := (inf_eq_of_is_detecting h𝒢 _ _) fun G hG f hf => (h G hG).2 hf
     
 
@@ -341,7 +341,7 @@ variable (S : D) (T : C ⥤ D)
 
 theorem is_coseparating_proj_preimage {𝒢 : Set C} (h𝒢 : IsCoseparating 𝒢) : IsCoseparating ((proj S T).obj ⁻¹' 𝒢) := by
   refine' fun X Y f g hfg => ext _ _ (h𝒢 _ _ fun G hG h => _)
-  exact congr_argₓ comma_morphism.right (hfg (mk (Y.hom ≫ T.map h)) hG (hom_mk h rfl))
+  exact congr_arg comma_morphism.right (hfg (mk (Y.hom ≫ T.map h)) hG (hom_mk h rfl))
 
 end StructuredArrow
 
@@ -351,7 +351,7 @@ variable (S : C ⥤ D) (T : D)
 
 theorem is_separating_proj_preimage {𝒢 : Set C} (h𝒢 : IsSeparating 𝒢) : IsSeparating ((proj S T).obj ⁻¹' 𝒢) := by
   refine' fun X Y f g hfg => ext _ _ (h𝒢 _ _ fun G hG h => _)
-  convert congr_argₓ comma_morphism.left (hfg (mk (S.map h ≫ X.hom)) hG (hom_mk h rfl))
+  convert congr_arg comma_morphism.left (hfg (mk (S.map h ≫ X.hom)) hG (hom_mk h rfl))
 
 end CostructuredArrow
 
@@ -455,11 +455,11 @@ theorem IsCodetector.def {G : C} :
   (is_codetector_def _).1
 
 theorem is_separator_iff_faithful_coyoneda_obj (G : C) : IsSeparator G ↔ Faithful (coyoneda.obj (op G)) :=
-  ⟨fun hG => ⟨fun X Y f g hfg => hG.def _ _ (congr_funₓ hfg)⟩, fun h =>
+  ⟨fun hG => ⟨fun X Y f g hfg => hG.def _ _ (congr_fun hfg)⟩, fun h =>
     (is_separator_def _).2 fun X Y f g hfg => (coyoneda.obj (op G)).map_injective (funext hfg)⟩
 
 theorem is_coseparator_iff_faithful_yoneda_obj (G : C) : IsCoseparator G ↔ Faithful (yoneda.obj G) :=
-  ⟨fun hG => ⟨fun X Y f g hfg => Quiver.Hom.unop_inj (hG.def _ _ (congr_funₓ hfg))⟩, fun h =>
+  ⟨fun hG => ⟨fun X Y f g hfg => Quiver.Hom.unop_inj (hG.def _ _ (congr_fun hfg))⟩, fun h =>
     (is_coseparator_def _).2 fun X Y f g hfg => Quiver.Hom.op_inj <| (yoneda.obj G).map_injective (funext hfg)⟩
 
 theorem is_separator_iff_epi (G : C) [∀ A : C, HasCoproduct fun f : G ⟶ A => G] :

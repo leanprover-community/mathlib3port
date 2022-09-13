@@ -64,8 +64,8 @@ def StateTₓ.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type 
     (F : (σ₁ → m₁ (α₁ × σ₁)) ≃ (σ₂ → m₂ (α₂ × σ₂))) : StateTₓ σ₁ m₁ α₁ ≃ StateTₓ σ₂ m₂ α₂ where
   toFun := fun ⟨f⟩ => ⟨F f⟩
   invFun := fun ⟨f⟩ => ⟨F.symm f⟩
-  left_inv := fun ⟨f⟩ => congr_argₓ StateTₓ.mk <| F.left_inv _
-  right_inv := fun ⟨f⟩ => congr_argₓ StateTₓ.mk <| F.right_inv _
+  left_inv := fun ⟨f⟩ => congr_arg StateTₓ.mk <| F.left_inv _
+  right_inv := fun ⟨f⟩ => congr_arg StateTₓ.mk <| F.right_inv _
 
 /-- reduce the equivalence between two reader monads to the equivalence between
 their respective function spaces -/
@@ -73,6 +73,6 @@ def ReaderTₓ.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type
     (F : (ρ₁ → m₁ α₁) ≃ (ρ₂ → m₂ α₂)) : ReaderTₓ ρ₁ m₁ α₁ ≃ ReaderTₓ ρ₂ m₂ α₂ where
   toFun := fun ⟨f⟩ => ⟨F f⟩
   invFun := fun ⟨f⟩ => ⟨F.symm f⟩
-  left_inv := fun ⟨f⟩ => congr_argₓ ReaderTₓ.mk <| F.left_inv _
-  right_inv := fun ⟨f⟩ => congr_argₓ ReaderTₓ.mk <| F.right_inv _
+  left_inv := fun ⟨f⟩ => congr_arg ReaderTₓ.mk <| F.left_inv _
+  right_inv := fun ⟨f⟩ => congr_arg ReaderTₓ.mk <| F.right_inv _
 

@@ -166,7 +166,7 @@ theorem Multiset.to_finset_card_le : m.toFinset.card ≤ m.card :=
   card_le_of_le <| dedup_le _
 
 theorem Multiset.to_finset_card_of_nodup {m : Multiset α} (h : m.Nodup) : m.toFinset.card = m.card :=
-  congr_argₓ card <| Multiset.dedup_eq_self.mpr h
+  congr_arg card <| Multiset.dedup_eq_self.mpr h
 
 theorem List.card_to_finset : l.toFinset.card = l.dedup.length :=
   rfl
@@ -248,7 +248,7 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
       ⟨i, mem_range.2 hi, Eq⟩,
       fun ⟨i, hi, Eq⟩ => Eq ▸ hf' i (mem_range.1 hi)⟩
   have : s = (range n).attach.Image fun i => f i.1 (mem_range.1 i.2) := by
-    simpa only [ext_iff, mem_image, exists_prop, Subtype.exists, mem_attach, true_andₓ]
+    simpa only [ext_iff, mem_image, exists_propₓ, Subtype.exists, mem_attach, true_andₓ]
   calc
     s.card = card ((range n).attach.Image fun i => f i.1 (mem_range.1 i.2)) := by
       rw [this]
@@ -266,7 +266,7 @@ theorem card_congr {t : Finset β} (f : ∀ a ∈ s, β) (h₁ : ∀ a ha, f a h
       _ = (s.attach.image fun a : { a // a ∈ s } => f a.1 a.2).card :=
         Eq.symm ((card_image_of_injective _) fun a b h => Subtype.eq <| h₂ _ _ _ _ h)
       _ = t.card :=
-        congr_argₓ card
+        congr_arg card
           (Finset.ext fun b =>
             ⟨fun h =>
               let ⟨a, ha₁, ha₂⟩ := mem_image.1 h
@@ -514,7 +514,7 @@ theorem one_lt_card : 1 < s.card ↔ ∃ a ∈ s, ∃ b ∈ s, a ≠ b := by
 
 theorem one_lt_card_iff : 1 < s.card ↔ ∃ a b, a ∈ s ∧ b ∈ s ∧ a ≠ b := by
   rw [one_lt_card]
-  simp only [exists_prop, exists_and_distrib_left]
+  simp only [exists_propₓ, exists_and_distrib_leftₓ]
 
 theorem two_lt_card_iff : 2 < s.card ↔ ∃ a b c, a ∈ s ∧ b ∈ s ∧ c ∈ s ∧ a ≠ b ∧ a ≠ c ∧ b ≠ c := by
   classical
@@ -532,7 +532,7 @@ theorem two_lt_card_iff : 2 < s.card ↔ ∃ a b c, a ∈ s ∧ b ∈ s ∧ c �
     
 
 theorem two_lt_card : 2 < s.card ↔ ∃ a ∈ s, ∃ b ∈ s, ∃ c ∈ s, a ≠ b ∧ a ≠ c ∧ b ≠ c := by
-  simp_rw [two_lt_card_iff, exists_prop, exists_and_distrib_left]
+  simp_rw [two_lt_card_iff, exists_propₓ, exists_and_distrib_leftₓ]
 
 theorem exists_ne_of_one_lt_card (hs : 1 < s.card) (a : α) : ∃ b, b ∈ s ∧ b ≠ a := by
   obtain ⟨x, hx, y, hy, hxy⟩ := finset.one_lt_card.mp hs

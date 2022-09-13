@@ -60,7 +60,7 @@ theorem coeff_derivative (p : R[X]) (n : ℕ) : coeff (derivative p) n = coeff p
       rw [Nat.cast_zeroₓ, mul_zero, zero_mul]
       
     · intro _ H
-      rw [Nat.succ_sub_one b, if_neg (mt (congr_argₓ Nat.succ) H.symm), mul_zero]
+      rw [Nat.succ_sub_one b, if_neg (mt (congr_arg Nat.succ) H.symm), mul_zero]
       
     
   · rw [if_pos (add_tsub_cancel_right n 1).symm, mul_oneₓ, Nat.cast_addₓ, Nat.cast_oneₓ, mem_support_iff]
@@ -245,7 +245,7 @@ theorem derivative_mul {f g : R[X]} : derivative (f * g) = derivative f * g + f 
       apply Finset.sum_congr rfl
       intro m hm
       trans
-      · apply congr_argₓ
+      · apply congr_arg
         exact monomial_eq_C_mul_X
         
       dsimp'
@@ -345,7 +345,7 @@ theorem coeff_iterate_derivative_as_prod_Ico {k} (p : R[X]) :
         exact fun h => (Nat.lt_succ_selfₓ _).not_le h.1
         
       
-    · exact congr_argₓ _ (Nat.succ_add m k)
+    · exact congr_arg _ (Nat.succ_add m k)
       
     
 
@@ -505,7 +505,7 @@ theorem derivative_prod {s : Multiset ι} {f : ι → R[X]} :
   congr
   rw [h, ← AddMonoidHom.coe_mul_left, (AddMonoidHom.mulLeft (f i)).map_multiset_sum _, AddMonoidHom.coe_mul_left]
   simp only [Function.comp_app, Multiset.map_map]
-  refine' congr_argₓ _ (Multiset.map_congr rfl fun j hj => _)
+  refine' congr_arg _ (Multiset.map_congr rfl fun j hj => _)
   rw [← mul_assoc, ← Multiset.prod_cons, ← Multiset.map_cons]
   by_cases' hij : i = j
   · simp [hij, ← Multiset.prod_cons, ← Multiset.map_cons, Multiset.cons_erase hj]

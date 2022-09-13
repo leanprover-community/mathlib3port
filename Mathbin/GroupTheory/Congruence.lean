@@ -370,7 +370,7 @@ instance : PartialOrderₓ (Con M) where
 instance : CompleteLattice (Con M) :=
   { (completeLatticeOfInf (Con M)) fun s =>
       ⟨fun r hr x y h => (h : ∀ r ∈ s, (r : Con M) x y) r hr, fun r hr x y h r' hr' => hr hr' h⟩ with
-    inf := fun c d => ⟨c.toSetoid⊓d.toSetoid, fun _ _ _ _ h1 h2 => ⟨c.mul h1.1 h2.1, d.mul h1.2 h2.2⟩⟩,
+    inf := fun c d => ⟨c.toSetoid ⊓ d.toSetoid, fun _ _ _ _ h1 h2 => ⟨c.mul h1.1 h2.1, d.mul h1.2 h2.2⟩⟩,
     inf_le_left := fun _ _ _ _ h => h.1, inf_le_right := fun _ _ _ _ h => h.2,
     le_inf := fun _ _ _ hb hc _ _ h => ⟨hb h, hc h⟩,
     top :=
@@ -385,12 +385,12 @@ instance : CompleteLattice (Con M) :=
     operations. -/
 @[to_additive
       "The infimum of two additive congruence relations equals the infimum of the\nunderlying binary operations."]
-theorem inf_def {c d : Con M} : (c⊓d).R = c.R⊓d.R :=
+theorem inf_def {c d : Con M} : (c ⊓ d).R = c.R ⊓ d.R :=
   rfl
 
 /-- Definition of the infimum of two congruence relations. -/
 @[to_additive "Definition of the infimum of two additive congruence relations."]
-theorem inf_iff_and {c d : Con M} {x y} : (c⊓d) x y ↔ c x y ∧ d x y :=
+theorem inf_iff_and {c d : Con M} {x y} : (c ⊓ d) x y ↔ c x y ∧ d x y :=
   Iff.rfl
 
 /-- The inductively defined smallest congruence relation containing a binary relation `r` equals
@@ -441,16 +441,16 @@ theorem con_gen_idem (r : M → M → Prop) : conGen (conGen r) = conGen r :=
     the binary relation '`x` is related to `y` by `c` or `d`'. -/
 @[to_additive sup_eq_add_con_gen
       "The supremum of additive congruence relations `c, d` equals the\nsmallest additive congruence relation containing the binary relation '`x` is related to `y`\nby `c` or `d`'."]
-theorem sup_eq_con_gen (c d : Con M) : c⊔d = conGen fun x y => c x y ∨ d x y := by
+theorem sup_eq_con_gen (c d : Con M) : c ⊔ d = conGen fun x y => c x y ∨ d x y := by
   rw [con_gen_eq]
-  apply congr_argₓ Inf
+  apply congr_arg Inf
   simp only [le_def, or_imp_distrib, ← forall_and_distrib]
 
 /-- The supremum of two congruence relations equals the smallest congruence relation containing
     the supremum of the underlying binary operations. -/
 @[to_additive
       "The supremum of two additive congruence relations equals the smallest additive\ncongruence relation containing the supremum of the underlying binary operations."]
-theorem sup_def {c d : Con M} : c⊔d = conGen (c.R⊔d.R) := by
+theorem sup_def {c d : Con M} : c ⊔ d = conGen (c.R ⊔ d.R) := by
   rw [sup_eq_con_gen] <;> rfl
 
 /-- The supremum of a set of congruence relations `S` equals the smallest congruence relation
@@ -460,7 +460,7 @@ theorem sup_def {c d : Con M} : c⊔d = conGen (c.R⊔d.R) := by
       "The supremum of a set of additive congruence relations `S` equals\nthe smallest additive congruence relation containing the binary relation 'there exists `c ∈ S`\nsuch that `x` is related to `y` by `c`'."]
 theorem Sup_eq_con_gen (S : Set (Con M)) : sup S = conGen fun x y => ∃ c : Con M, c ∈ S ∧ c x y := by
   rw [con_gen_eq]
-  apply congr_argₓ Inf
+  apply congr_arg Inf
   ext
   exact ⟨fun h _ _ ⟨r, hr⟩ => h hr.1 hr.2, fun h r hS _ _ hr => h _ _ ⟨r, hS, hr⟩⟩
 
@@ -471,7 +471,7 @@ theorem Sup_eq_con_gen (S : Set (Con M)) : sup S = conGen fun x y => ∃ c : Con
 theorem Sup_def {S : Set (Con M)} : sup S = conGen (sup (@Set.Image (Con M) (M → M → Prop) coeFn S)) := by
   rw [Sup_eq_con_gen, Sup_image]
   congr with x y
-  simp only [Sup_image, supr_apply, supr_Prop_eq, exists_prop, rel_eq_coe]
+  simp only [Sup_image, supr_apply, supr_Prop_eq, exists_propₓ, rel_eq_coe]
 
 variable (M)
 
@@ -588,8 +588,8 @@ variable {M} [MulOneClassₓ M] [MulOneClassₓ N] [MulOneClassₓ P] (c : Con M
 instance mulOneClass : MulOneClassₓ c.Quotient where
   one := ((1 : M) : c.Quotient)
   mul := (· * ·)
-  mul_one := fun x => (Quotientₓ.induction_on' x) fun _ => congr_argₓ (coe : M → c.Quotient) <| mul_oneₓ _
-  one_mul := fun x => (Quotientₓ.induction_on' x) fun _ => congr_argₓ (coe : M → c.Quotient) <| one_mulₓ _
+  mul_one := fun x => (Quotientₓ.induction_on' x) fun _ => congr_arg (coe : M → c.Quotient) <| mul_oneₓ _
+  one_mul := fun x => (Quotientₓ.induction_on' x) fun _ => congr_arg (coe : M → c.Quotient) <| one_mulₓ _
 
 variable {c}
 

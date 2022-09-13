@@ -113,8 +113,8 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
     rw [Prod.mk.inj_iffₓ]
     refine'
       ⟨by
-        simpa using congr_argₓ Prod.snd h, _⟩
-    have h1 := congr_argₓ Finₓ.castSucc (congr_argₓ Prod.fst h)
+        simpa using congr_arg Prod.snd h, _⟩
+    have h1 := congr_arg Finₓ.castSucc (congr_arg Prod.fst h)
     simpa [Finₓ.cast_succ_cast_lt] using h1
     
   · -- φ : S → Sᶜ is surjective
@@ -242,7 +242,7 @@ def inclusionOfMooreComplexMap (X : SimplicialObject A) :
     have null : ∀ j : Finₓ (n + 1), t j.succ = 0 := by
       intro j
       rw [def_t, comp_zsmul, ← zsmul_zero ((-1 : ℤ) ^ (j.succ : ℕ))]
-      apply congr_argₓ
+      apply congr_arg
       rw [normalized_Moore_complex.obj_X]
       rw [←
         factor_thru_arrow _ _

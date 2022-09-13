@@ -316,7 +316,7 @@ theorem is_sheaf_iff_is_sheaf_of_type (P : Cᵒᵖ ⥤ Type w) : Presheaf.IsShea
   · intro hP X Y S hS z hz
     refine' ⟨fun x => (hP S hS).amalgamate (fun Z f hf => z f hf x) _, _, _⟩
     · intro Y₁ Y₂ Z g₁ g₂ f₁ f₂ hf₁ hf₂ h
-      exact congr_funₓ (hz g₁ g₂ hf₁ hf₂ h) x
+      exact congr_fun (hz g₁ g₂ hf₁ hf₂ h) x
       
     · intro Z f hf
       ext x
@@ -361,7 +361,7 @@ variable {J} {A}
 
 /-- If the empty sieve is a cover of `X`, then `F(X)` is terminal. -/
 def Sheaf.isTerminalOfBotCover (F : Sheaf J A) (X : C) (H : ⊥ ∈ J X) : IsTerminal (F.1.obj (op X)) := by
-  apply is_terminal.of_unique with { instances := false }
+  apply (config := { instances := false }) is_terminal.of_unique
   intro Y
   choose t h using
     F.2 Y _ H

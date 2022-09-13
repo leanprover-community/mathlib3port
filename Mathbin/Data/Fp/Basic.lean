@@ -58,7 +58,7 @@ def Float.isFinite : Float → Bool
 def toRat : ∀ f : Float, f.isFinite → ℚ
   | float.finite s e m f, _ =>
     let (n, d) := Int.shift2 m 1 e
-    let r := Rat.mkNat n d
+    let r := Ratₓ.mkNat n d
     if s then -r else r
 
 theorem Float.Zero.valid : ValidFinite emin 0 :=
@@ -117,7 +117,7 @@ unsafe def of_pos_rat_dn (n : ℕ+) (d : ℕ+) : float × Bool := by
   let e₂ := if n₁ < d₁ then e₁ - 1 else e₁
   let e₃ := max e₂ emin
   cases' h₂ : Int.shift2 d.1 n.1 (e₃ + prec) with d₂ n₂
-  let r := Rat.mkNat n₂ d₂
+  let r := Ratₓ.mkNat n₂ d₂
   let m := r.floor
   refine' (float.finite ff e₃ (Int.toNat m) _, r.denom = 1)
   · exact undefined

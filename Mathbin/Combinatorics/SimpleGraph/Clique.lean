@@ -109,7 +109,7 @@ theorem IsNClique.mono (h : G ≤ H) : G.IsNClique n s → H.IsNClique n s := by
 @[simp]
 theorem is_n_clique_bot_iff : (⊥ : SimpleGraph α).IsNClique n s ↔ n ≤ 1 ∧ s.card = n := by
   rw [is_n_clique_iff, is_clique_bot_iff]
-  refine' and_congr_left _
+  refine' and_congr_leftₓ _
   rintro rfl
   exact card_le_one.symm
 
@@ -146,7 +146,9 @@ variable {m n : ℕ}
 def CliqueFree (n : ℕ) : Prop :=
   ∀ t, ¬G.IsNClique n t
 
-variable {G H}
+variable {G H} {s : Finset α}
+
+theorem IsNClique.not_clique_free (hG : G.IsNClique n s) : ¬G.CliqueFree n := fun h => h _ hG
 
 theorem not_clique_free_of_top_embedding {n : ℕ} (f : (⊤ : SimpleGraph (Finₓ n)) ↪g G) : ¬G.CliqueFree n := by
   simp only [clique_free, is_n_clique_iff, is_clique_iff_induce_eq, not_forall, not_not]

@@ -44,7 +44,7 @@ variable [∀ i, AddCommGroupₓ (M i)] [∀ i, Module R (M i)]
 variable [∀ i, LieRingModule L (M i)] [∀ i, LieModule R L (M i)]
 
 instance : LieRingModule L (⨁ i, M i) where
-  bracket := fun x m => m.map_range (fun i m' => ⁅x,m'⁆) fun i => lie_zero x
+  bracket := fun x m => m.map_range (fun i m' => ⁅x, m'⁆) fun i => lie_zero x
   add_lie := fun x y m => by
     ext
     simp only [map_range_apply, add_apply, add_lie]
@@ -56,7 +56,7 @@ instance : LieRingModule L (⨁ i, M i) where
     simp only [map_range_apply, lie_lie, add_apply, sub_add_cancel]
 
 @[simp]
-theorem lie_module_bracket_apply (x : L) (m : ⨁ i, M i) (i : ι) : ⁅x,m⁆ i = ⁅x,m i⁆ :=
+theorem lie_module_bracket_apply (x : L) (m : ⨁ i, M i) (i : ι) : ⁅x, m⁆ i = ⁅x, m i⁆ :=
   map_range_apply _ _ m i
 
 instance : LieModule R L (⨁ i, M i) where
@@ -99,7 +99,7 @@ variable (L : ι → Type w)
 variable [∀ i, LieRing (L i)] [∀ i, LieAlgebra R (L i)]
 
 instance lieRing : LieRing (⨁ i, L i) :=
-  { (inferInstance : AddCommGroupₓ _) with bracket := zipWith (fun i => fun x y => ⁅x,y⁆) fun i => lie_zero 0,
+  { (inferInstance : AddCommGroupₓ _) with bracket := zipWith (fun i => fun x y => ⁅x, y⁆) fun i => lie_zero 0,
     add_lie := fun x y z => by
       ext
       simp only [zip_with_apply, add_apply, add_lie],
@@ -115,7 +115,7 @@ instance lieRing : LieRing (⨁ i, L i) :=
       apply leibniz_lie }
 
 @[simp]
-theorem bracket_apply (x y : ⨁ i, L i) (i : ι) : ⁅x,y⁆ i = ⁅x i,y i⁆ :=
+theorem bracket_apply (x y : ⨁ i, L i) (i : ι) : ⁅x, y⁆ i = ⁅x i, y i⁆ :=
   zip_with_apply _ _ x y i
 
 instance lieAlgebra : LieAlgebra R (⨁ i, L i) :=
@@ -153,7 +153,7 @@ theorem lie_algebra_ext {x y : ⨁ i, L i} (h : ∀ i, lieAlgebraComponent R ι 
 
 include R
 
-theorem lie_of_of_ne [DecidableEq ι] {i j : ι} (hij : j ≠ i) (x : L i) (y : L j) : ⁅of L i x,of L j y⁆ = 0 := by
+theorem lie_of_of_ne [DecidableEq ι] {i j : ι} (hij : j ≠ i) (x : L i) (y : L j) : ⁅of L i x, of L j y⁆ = 0 := by
   apply lie_algebra_ext R ι L
   intro k
   rw [LieHom.map_lie]
@@ -165,13 +165,14 @@ theorem lie_of_of_ne [DecidableEq ι] {i j : ι} (hij : j ≠ i) (x : L i) (y : 
     
 
 theorem lie_of_of_eq [DecidableEq ι] {i j : ι} (hij : j = i) (x : L i) (y : L j) :
-    ⁅of L i x,of L j y⁆ = of L i ⁅x,hij.recOn y⁆ := by
+    ⁅of L i x, of L j y⁆ = of L i ⁅x, hij.recOn y⁆ := by
   have : of L j y = of L i (hij.rec_on y) := Eq.drec (Eq.refl _) hij
-  rw [this, ← lie_algebra_of_apply R ι L i ⁅x,hij.rec_on y⁆, LieHom.map_lie, lie_algebra_of_apply, lie_algebra_of_apply]
+  rw [this, ← lie_algebra_of_apply R ι L i ⁅x, hij.rec_on y⁆, LieHom.map_lie, lie_algebra_of_apply,
+    lie_algebra_of_apply]
 
 @[simp]
 theorem lie_of [DecidableEq ι] {i j : ι} (x : L i) (y : L j) :
-    ⁅of L i x,of L j y⁆ = if hij : j = i then lieAlgebraOf R ι L i ⁅x,hij.recOn y⁆ else 0 := by
+    ⁅of L i x, of L j y⁆ = if hij : j = i then lieAlgebraOf R ι L i ⁅x, hij.recOn y⁆ else 0 := by
   by_cases' hij : j = i
   · simp only [lie_of_of_eq R ι L hij x y, hij, dif_pos, not_false_iff, lie_algebra_of_apply]
     
@@ -186,7 +187,7 @@ variable {R L ι}
 then this map is a morphism of Lie algebras. -/
 @[simps]
 def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'] (f : ∀ i, L i →ₗ⁅R⁆ L')
-    (hf : ∀ i j : ι, i ≠ j → ∀ (x : L i) (y : L j), ⁅f i x,f j y⁆ = 0) : (⨁ i, L i) →ₗ⁅R⁆ L' :=
+    (hf : ∀ i j : ι, i ≠ j → ∀ (x : L i) (y : L j), ⁅f i x, f j y⁆ = 0) : (⨁ i, L i) →ₗ⁅R⁆ L' :=
   { /- The goal is linear in `y`. We can use this to reduce to the case that `y` has only one
               non-zero component. -/
       -- Similarly, we can reduce to the case that `x` has only one non-zero component. 
@@ -198,7 +199,7 @@ def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'
     map_lie' := fun x y => by
       let f' := fun i => (f i : L i →ₗ[R] L')
       suffices
-        ∀ (i : ι) (y : L i), to_module R ι L' f' ⁅x,of L i y⁆ = ⁅to_module R ι L' f' x,to_module R ι L' f' (of L i y)⁆
+        ∀ (i : ι) (y : L i), to_module R ι L' f' ⁅x, of L i y⁆ = ⁅to_module R ι L' f' x, to_module R ι L' f' (of L i y)⁆
         by
         simp only [← LieAlgebra.ad_apply R]
         rw [← LinearMap.comp_apply, ← LinearMap.comp_apply]
@@ -208,7 +209,7 @@ def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'
         exact this i y
       suffices
         ∀ (i j) (y : L i) (x : L j),
-          to_module R ι L' f' ⁅of L j x,of L i y⁆ = ⁅to_module R ι L' f' (of L j x),to_module R ι L' f' (of L i y)⁆
+          to_module R ι L' f' ⁅of L j x, of L i y⁆ = ⁅to_module R ι L' f' (of L j x), to_module R ι L' f' (of L i y)⁆
         by
         intro i y
         rw [← lie_skew x, ← lie_skew (to_module R ι L' f' x)]

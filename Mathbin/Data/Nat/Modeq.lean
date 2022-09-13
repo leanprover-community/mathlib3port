@@ -71,7 +71,7 @@ theorem _root_.has_dvd.dvd.zero_modeq_nat (h : n ∣ a) : 0 ≡ a [MOD n] :=
 
 theorem modeq_iff_dvd : a ≡ b [MOD n] ↔ (n : ℤ) ∣ b - a := by
   rw [modeq, eq_comm, ← Int.coe_nat_inj', Int.coe_nat_mod, Int.coe_nat_mod, Int.mod_eq_mod_iff_mod_sub_eq_zero,
-    Int.dvd_iff_mod_eq_zero]
+    Int.dvd_iff_mod_eq_zeroₓ]
 
 protected theorem Modeq.dvd : a ≡ b [MOD n] → (n : ℤ) ∣ b - a :=
   modeq_iff_dvd.1
@@ -220,8 +220,8 @@ theorem modeq_cancel_left_div_gcd {a b c m : ℕ} (hm : 0 < m) (h : c * a ≡ c 
   rw [modeq_iff_dvd]
   refine' Int.dvd_of_dvd_mul_right_of_gcd_one _ _
   show (m / d : ℤ) ∣ c / d * (b - a)
-  · rw [mul_comm, ← Int.mul_div_assoc (b - a) (int.coe_nat_dvd.mpr hcd), mul_comm]
-    apply Int.div_dvd_div (int.coe_nat_dvd.mpr hmd)
+  · rw [mul_comm, ← Int.mul_div_assocₓ (b - a) (int.coe_nat_dvd.mpr hcd), mul_comm]
+    apply Int.div_dvd_divₓ (int.coe_nat_dvd.mpr hmd)
     rw [mul_sub]
     exact modeq_iff_dvd.mp h
     
@@ -286,7 +286,7 @@ def chineseRemainder' (h : a ≡ b [MOD gcdₓ n m]) : { k // k ≡ a [MOD n] �
         rw [xgcd_val]
         dsimp' [chinese_remainder'._match_1]
         rw [modeq_iff_dvd, modeq_iff_dvd,
-          Int.to_nat_of_nonneg (Int.mod_nonneg _ (Int.coe_nat_ne_zero.2 (lcm_ne_zero hn hm)))]
+          Int.to_nat_of_nonneg (Int.mod_nonnegₓ _ (Int.coe_nat_ne_zero.2 (lcm_ne_zero hn hm)))]
         have hnonzero : (gcd n m : ℤ) ≠ 0 := by
           norm_cast
           rw [Nat.gcd_eq_zero_iffₓ, not_and]
@@ -294,13 +294,13 @@ def chineseRemainder' (h : a ≡ b [MOD gcdₓ n m]) : { k // k ≡ a [MOD n] �
         have hcoedvd : ∀ t, (gcd n m : ℤ) ∣ t * (b - a) := fun t => h.dvd.mul_left _
         have := gcd_eq_gcd_ab n m
         constructor <;>
-          rw [Int.mod_def, ← sub_add] <;>
+          rw [Int.mod_defₓ, ← sub_add] <;>
             refine' dvd_add _ (dvd_mul_of_dvd_left _ _) <;>
               try
                 norm_cast
         · rw [← sub_eq_iff_eq_add'] at this
           rw [← this, sub_mul, ← add_sub_assoc, add_commₓ, add_sub_assoc, ← mul_sub, Int.add_div_of_dvd_left,
-            Int.mul_div_cancel_left _ hnonzero, Int.mul_div_assoc _ h.dvd, ← sub_sub, sub_self, zero_sub, dvd_neg,
+            Int.mul_div_cancel_leftₓ _ hnonzero, Int.mul_div_assocₓ _ h.dvd, ← sub_sub, sub_self, zero_sub, dvd_neg,
             mul_assoc]
           exact dvd_mul_right _ _
           norm_cast
@@ -309,8 +309,8 @@ def chineseRemainder' (h : a ≡ b [MOD gcdₓ n m]) : { k // k ≡ a [MOD n] �
         · exact dvd_lcm_left n m
           
         · rw [← sub_eq_iff_eq_add] at this
-          rw [← this, sub_mul, sub_add, ← mul_sub, Int.sub_div_of_dvd, Int.mul_div_cancel_left _ hnonzero,
-            Int.mul_div_assoc _ h.dvd, ← sub_add, sub_self, zero_addₓ, mul_assoc]
+          rw [← this, sub_mul, sub_add, ← mul_sub, Int.sub_div_of_dvd, Int.mul_div_cancel_leftₓ _ hnonzero,
+            Int.mul_div_assocₓ _ h.dvd, ← sub_add, sub_self, zero_addₓ, mul_assoc]
           exact dvd_mul_right _ _
           exact hcoedvd _
           
@@ -328,7 +328,7 @@ theorem chinese_remainder'_lt_lcm (h : a ≡ b [MOD gcdₓ n m]) (hn : n ≠ 0) 
   dsimp' only [chinese_remainder']
   rw [dif_neg hn, dif_neg hm, Subtype.coe_mk, xgcd_val, ← Int.to_nat_coe_nat (lcm n m)]
   have lcm_pos := int.coe_nat_pos.mpr (Nat.pos_of_ne_zeroₓ (lcm_ne_zero hn hm))
-  exact (Int.to_nat_lt_to_nat lcm_pos).mpr (Int.mod_lt_of_pos _ lcm_pos)
+  exact (Int.to_nat_lt_to_nat lcm_pos).mpr (Int.mod_lt_of_posₓ _ lcm_pos)
 
 theorem chinese_remainder_lt_mul (co : Coprime n m) (a b : ℕ) (hn : n ≠ 0) (hm : m ≠ 0) :
     ↑(chineseRemainder co a b) < n * m :=

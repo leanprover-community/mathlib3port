@@ -665,7 +665,7 @@ def tensoringLeft : C ⥤ C ⥤ C where
 instance :
     Faithful (tensoringLeft C) where map_injective' := fun X Y f g h => by
     injections with h
-    replace h := congr_funₓ h (𝟙_ C)
+    replace h := congr_fun h (𝟙_ C)
     simpa using h
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -681,7 +681,7 @@ def tensoringRight : C ⥤ C ⥤ C where
 instance :
     Faithful (tensoringRight C) where map_injective' := fun X Y f g h => by
     injections with h
-    replace h := congr_funₓ h (𝟙_ C)
+    replace h := congr_fun h (𝟙_ C)
     simpa using h
 
 variable {C}

@@ -58,7 +58,7 @@ instance lieRingModule : LieRingModule L (M ⊗[R] N) where
   leibniz_lie := fun x y t => by
     suffices
       (has_bracket_aux x).comp (has_bracket_aux y) =
-        has_bracket_aux ⁅x,y⁆ + (has_bracket_aux y).comp (has_bracket_aux x)
+        has_bracket_aux ⁅x, y⁆ + (has_bracket_aux y).comp (has_bracket_aux x)
       by
       simp only [← LinearMap.add_apply]
       rw [← LinearMap.comp_apply, this]
@@ -79,7 +79,7 @@ instance lieModule : LieModule R L (M ⊗[R] N) where
   lie_smul := fun c x => LinearMap.map_smul _ c
 
 @[simp]
-theorem lie_tmul_right (x : L) (m : M) (n : N) : ⁅x,m ⊗ₜ[R] n⁆ = ⁅x,m⁆ ⊗ₜ n + m ⊗ₜ ⁅x,n⁆ :=
+theorem lie_tmul_right (x : L) (m : M) (n : N) : ⁅x, m ⊗ₜ[R] n⁆ = ⁅x, m⁆ ⊗ₜ n + m ⊗ₜ ⁅x, n⁆ :=
   show hasBracketAux x (m ⊗ₜ[R] n) = _ by
     simp only [has_bracket_aux, LinearMap.rtensor_tmul, to_endomorphism_apply_apply, LinearMap.add_apply,
       LinearMap.ltensor_tmul]
@@ -178,7 +178,7 @@ def toModuleHom : L ⊗[R] M →ₗ⁅R,L⁆ M :=
         simp [LieRing.of_associative_ring_bracket] }
 
 @[simp]
-theorem to_module_hom_apply (x : L) (m : M) : toModuleHom R L M (x ⊗ₜ m) = ⁅x,m⁆ := by
+theorem to_module_hom_apply (x : L) (m : M) : toModuleHom R L M (x ⊗ₜ m) = ⁅x, m⁆ := by
   simp only [to_module_hom, TensorProduct.LieModule.lift_lie_apply, to_endomorphism_apply_apply,
     LieHom.coe_to_linear_map, LieModuleHom.coe_mk, LinearMap.coe_mk, LinearMap.to_fun_eq_coe]
 
@@ -207,7 +207,7 @@ applying the action of `L` on `M`, we obtain morphism of Lie modules `f : I ⊗ 
 
 This lemma states that `⁅I, N⁆ = range f`. -/
 theorem lie_ideal_oper_eq_tensor_map_range :
-    ⁅I,N⁆ = ((toModuleHom R L M).comp (mapIncl I N : ↥I ⊗ ↥N →ₗ⁅R,L⁆ L ⊗ M)).range := by
+    ⁅I, N⁆ = ((toModuleHom R L M).comp (mapIncl I N : ↥I ⊗ ↥N →ₗ⁅R,L⁆ L ⊗ M)).range := by
   rw [← coe_to_submodule_eq_iff, lie_ideal_oper_eq_linear_span, LieModuleHom.coe_submodule_range,
     LieModuleHom.coe_linear_map_comp, LinearMap.range_comp, map_incl_def, coe_linear_map_map,
     TensorProduct.map_range_eq_span_tmul, Submodule.map_span]

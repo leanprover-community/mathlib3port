@@ -290,17 +290,17 @@ private theorem div_nonneg_of_nonneg_of_pos [LinearOrderedField R] {a b : R} (ha
   div_nonneg ha hb.le
 
 private theorem int_div_self_pos {a : ℤ} (ha : 0 < a) : 0 < a / a := by
-  rw [Int.div_self ha.ne']
+  rw [Int.div_selfₓ ha.ne']
   exact zero_lt_one
 
 private theorem int_div_nonneg_of_pos_of_nonneg {a b : ℤ} (ha : 0 < a) (hb : 0 ≤ b) : 0 ≤ a / b :=
-  Int.div_nonneg ha.le hb
+  Int.div_nonnegₓ ha.le hb
 
 private theorem int_div_nonneg_of_nonneg_of_pos {a b : ℤ} (ha : 0 ≤ a) (hb : 0 < b) : 0 ≤ a / b :=
-  Int.div_nonneg ha hb.le
+  Int.div_nonnegₓ ha hb.le
 
 private theorem int_div_nonneg_of_pos_of_pos {a b : ℤ} (ha : 0 < a) (hb : 0 < b) : 0 ≤ a / b :=
-  Int.div_nonneg ha.le hb.le
+  Int.div_nonnegₓ ha.le hb.le
 
 /-- Extension for the `positivity` tactic: division is nonnegative if both numerator and denominator
 are nonnegative, and strictly positive if both numerator and denominator are. -/
@@ -318,7 +318,7 @@ unsafe def positivity_div : expr → tactic strictness
         else nonnegative <$> mk_app `` int_div_nonneg_of_pos_of_pos [pa, pb]
       | positive pa, nonnegative pb => nonnegative <$> mk_app `` int_div_nonneg_of_pos_of_nonneg [pa, pb]
       | nonnegative pa, positive pb => nonnegative <$> mk_app `` int_div_nonneg_of_nonneg_of_pos [pa, pb]
-      | nonnegative pa, nonnegative pb => nonnegative <$> mk_app `` Int.div_nonneg [pa, pb]
+      | nonnegative pa, nonnegative pb => nonnegative <$> mk_app `` Int.div_nonnegₓ [pa, pb]
   | quote.1 ((%%ₓa) / %%ₓb) => do
     let strictness_a ← core a
     let strictness_b ← core b

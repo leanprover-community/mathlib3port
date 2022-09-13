@@ -40,7 +40,7 @@ open Filter Nnreal TopologicalSpace
 
 namespace Nnreal
 
-variable {x y : ℝ≥0 }
+variable {x y : ℝ≥0}
 
 /-- Square root of a nonnegative real number. -/
 @[pp_nodot]
@@ -76,32 +76,32 @@ theorem sqrt_one : sqrt 1 = 1 :=
   sqrt_eq_iff_sq_eq.2 <| one_pow _
 
 @[simp]
-theorem sq_sqrt (x : ℝ≥0 ) : sqrt x ^ 2 = x :=
+theorem sq_sqrt (x : ℝ≥0) : sqrt x ^ 2 = x :=
   sqrt.symm_apply_apply x
 
 @[simp]
-theorem mul_self_sqrt (x : ℝ≥0 ) : sqrt x * sqrt x = x := by
+theorem mul_self_sqrt (x : ℝ≥0) : sqrt x * sqrt x = x := by
   rw [← sq, sq_sqrt]
 
 @[simp]
-theorem sqrt_sq (x : ℝ≥0 ) : sqrt (x ^ 2) = x :=
+theorem sqrt_sq (x : ℝ≥0) : sqrt (x ^ 2) = x :=
   sqrt.apply_symm_apply x
 
 @[simp]
-theorem sqrt_mul_self (x : ℝ≥0 ) : sqrt (x * x) = x := by
+theorem sqrt_mul_self (x : ℝ≥0) : sqrt (x * x) = x := by
   rw [← sq, sqrt_sq x]
 
-theorem sqrt_mul (x y : ℝ≥0 ) : sqrt (x * y) = sqrt x * sqrt y := by
+theorem sqrt_mul (x y : ℝ≥0) : sqrt (x * y) = sqrt x * sqrt y := by
   rw [sqrt_eq_iff_sq_eq, mul_powₓ, sq_sqrt, sq_sqrt]
 
 /-- `nnreal.sqrt` as a `monoid_with_zero_hom`. -/
 noncomputable def sqrtHom : ℝ≥0 →*₀ ℝ≥0 :=
   ⟨sqrt, sqrt_zero, sqrt_one, sqrt_mul⟩
 
-theorem sqrt_inv (x : ℝ≥0 ) : sqrt x⁻¹ = (sqrt x)⁻¹ :=
+theorem sqrt_inv (x : ℝ≥0) : sqrt x⁻¹ = (sqrt x)⁻¹ :=
   map_inv₀ sqrtHom x
 
-theorem sqrt_div (x y : ℝ≥0 ) : sqrt (x / y) = sqrt x / sqrt y :=
+theorem sqrt_div (x y : ℝ≥0) : sqrt (x / y) = sqrt x / sqrt y :=
   map_div₀ sqrtHom x y
 
 theorem continuous_sqrt : Continuous sqrt :=
@@ -114,14 +114,14 @@ namespace Real
 /-- An auxiliary sequence of rational numbers that converges to `real.sqrt (mk f)`.
 Currently this sequence is not used in `mathlib`.  -/
 def sqrtAux (f : CauSeq ℚ abs) : ℕ → ℚ
-  | 0 => Rat.mkNat (f 0).num.toNat.sqrt (f 0).denom.sqrt
+  | 0 => Ratₓ.mkNat (f 0).num.toNat.sqrt (f 0).denom.sqrt
   | n + 1 =>
     let s := sqrt_aux n
     max 0 <| (s + f (n + 1) / s) / 2
 
 theorem sqrt_aux_nonneg (f : CauSeq ℚ abs) : ∀ i : ℕ, 0 ≤ sqrtAux f i
   | 0 => by
-    rw [sqrt_aux, Rat.mk_nat_eq, Rat.mk_eq_div] <;> apply div_nonneg <;> exact Int.cast_nonneg.2 (Int.of_nat_nonneg _)
+    rw [sqrt_aux, Ratₓ.mk_nat_eq, Ratₓ.mk_eq_div] <;> apply div_nonneg <;> exact Int.cast_nonneg.2 (Int.of_nat_nonneg _)
   | n + 1 => le_max_leftₓ _ _
 
 /- TODO(Mario): finish the proof
@@ -153,7 +153,7 @@ noncomputable def sqrt (x : ℝ) : ℝ :=
 variable {x y : ℝ}
 
 @[simp, norm_cast]
-theorem coe_sqrt {x : ℝ≥0 } : (Nnreal.sqrt x : ℝ) = Real.sqrt x := by
+theorem coe_sqrt {x : ℝ≥0} : (Nnreal.sqrt x : ℝ) = Real.sqrt x := by
   rw [Real.sqrt, Real.to_nnreal_coe]
 
 @[continuity]
@@ -251,7 +251,7 @@ theorem sqrt_le_left (hy : 0 ≤ y) : sqrt x ≤ y ↔ x ≤ y ^ 2 := by
     Real.to_nnreal_le_to_nnreal_iff (mul_self_nonneg y), sq]
 
 theorem sqrt_le_iff : sqrt x ≤ y ↔ 0 ≤ y ∧ x ≤ y ^ 2 := by
-  rw [← and_iff_right_of_imp fun h => (sqrt_nonneg x).trans h, And.congr_right_iff]
+  rw [← and_iff_right_of_impₓ fun h => (sqrt_nonneg x).trans h, And.congr_right_iff]
   exact sqrt_le_left
 
 theorem sqrt_lt (hx : 0 ≤ x) (hy : 0 ≤ y) : sqrt x < y ↔ x < y ^ 2 := by

@@ -38,7 +38,7 @@ theorem Monotonicity.exists {α : Sort u} {p q : α → Prop} (h : ∀ a, Implie
 
 @[monotonicity]
 theorem Monotonicity.and {p p' q q' : Prop} (hp : Implies p p') (hq : Implies q q') : Implies (p ∧ q) (p' ∧ q') :=
-  And.imp hp hq
+  And.impₓ hp hq
 
 @[monotonicity]
 theorem Monotonicity.or {p p' q q' : Prop} (hp : Implies p p') (hq : Implies q q') : Implies (p ∨ q) (p' ∨ q') :=
@@ -534,7 +534,7 @@ local postfix:1024 "*" => many
 unsafe def coinduction (corec_name : parse ident) (ns : parse with_ident_list)
     (revert : parse <| (tk "generalizing" *> ident*)?) : tactic Unit := do
   let rule ← mk_const corec_name
-  let locals ← mmapₓ tactic.get_local <| revert.getOrElse []
+  let locals ← mmap tactic.get_local <| revert.getOrElse []
   revert_lst locals
   tactic.coinduction rule ns
   skip

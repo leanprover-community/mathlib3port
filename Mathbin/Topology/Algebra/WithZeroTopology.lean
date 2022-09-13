@@ -84,7 +84,7 @@ theorem pure_le_nhds_fun : pure ≤ nhdsFun Γ₀ := fun x => by
 smaller “neighbourhood” t ⊆ s, such that s is a “neighbourhood“ of all the points in t. -/
 theorem nhds_fun_ok (x : Γ₀) {s} (s_in : s ∈ nhdsFun Γ₀ x) : ∃ t ∈ nhdsFun Γ₀ x, t ⊆ s ∧ ∀ y ∈ t, s ∈ nhdsFun Γ₀ y := by
   by_cases' hx : x = 0
-  · simp only [hx, nhds_fun, exists_prop, if_true, eq_self_iff_true] at s_in⊢
+  · simp only [hx, nhds_fun, exists_propₓ, if_true, eq_self_iff_true] at s_in⊢
     cases' (mem_infi_of_directed (directed_lt Γ₀) _).mp s_in with γ₀ h
     use { γ : Γ₀ | γ < γ₀ }
     rw [mem_principal] at h
@@ -102,7 +102,7 @@ theorem nhds_fun_ok (x : Γ₀) {s} (s_in : s ∈ nhdsFun Γ₀ x) : ∃ t ∈ n
         
       
     
-  · simp only [hx, nhds_fun, exists_prop, if_false, mem_pure] at s_in⊢
+  · simp only [hx, nhds_fun, exists_propₓ, if_false, mem_pure] at s_in⊢
     refine' ⟨{x}, mem_singleton _, singleton_subset_iff.2 s_in, fun y y_in => _⟩
     simpa [mem_singleton_iff.mp y_in, hx]
     
@@ -227,14 +227,14 @@ instance (priority := 100) t3_space : T3Space Γ₀ := by
       
     · erw [inf_eq_bot_iff]
       use sᶜ
-      simp only [exists_prop, mem_principal]
+      simp only [exists_propₓ, mem_principal]
       exact
         ⟨s_closed.compl_mem_nhds x_not_in_s,
           ⟨s, subset.refl s, by
             simp ⟩⟩
       
     
-  · simp only [nhdsWithin, inf_eq_bot_iff, exists_prop, mem_principal]
+  · simp only [nhdsWithin, inf_eq_bot_iff, exists_propₓ, mem_principal]
     exact
       ⟨{x}ᶜ, is_open_compl_iff.mpr is_closed_singleton, by
         rwa [subset_compl_singleton_iff], {x}, singleton_nhds_of_ne_zero x hx, {x}ᶜ, by

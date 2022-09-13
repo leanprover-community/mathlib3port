@@ -184,11 +184,11 @@ instance : HasInf (Subsemigroup M) :=
     { Carrier := S₁ ∩ S₂, mul_mem' := fun _ _ ⟨hx, hx'⟩ ⟨hy, hy'⟩ => ⟨S₁.mul_mem hx hy, S₂.mul_mem hx' hy'⟩ }⟩
 
 @[simp, to_additive]
-theorem coe_inf (p p' : Subsemigroup M) : ((p⊓p' : Subsemigroup M) : Set M) = p ∩ p' :=
+theorem coe_inf (p p' : Subsemigroup M) : ((p ⊓ p' : Subsemigroup M) : Set M) = p ∩ p' :=
   rfl
 
 @[simp, to_additive]
-theorem mem_inf {p p' : Subsemigroup M} {x : M} : x ∈ p⊓p' ↔ x ∈ p ∧ x ∈ p' :=
+theorem mem_inf {p p' : Subsemigroup M} {x : M} : x ∈ p ⊓ p' ↔ x ∈ p ∧ x ∈ p' :=
   Iff.rfl
 
 @[to_additive]
@@ -225,7 +225,7 @@ instance : CompleteLattice (Subsemigroup M) :=
   { (completeLatticeOfInf (Subsemigroup M)) fun s =>
       IsGlb.of_image (fun S T => show (S : Set M) ≤ T ↔ S ≤ T from SetLike.coe_subset_coe) is_glb_binfi with
     le := (· ≤ ·), lt := (· < ·), bot := ⊥, bot_le := fun S x hx => (not_mem_bot hx).elim, top := ⊤,
-    le_top := fun S x hx => mem_top x, inf := (·⊓·), inf := HasInfₓ.inf,
+    le_top := fun S x hx => mem_top x, inf := (· ⊓ ·), inf := HasInfₓ.inf,
     le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩, inf_le_left := fun a b x => And.left,
     inf_le_right := fun a b x => And.right }
 
@@ -342,7 +342,7 @@ theorem closure_univ : closure (Univ : Set M) = ⊤ :=
   @coe_top M _ ▸ closure_eq ⊤
 
 @[to_additive]
-theorem closure_union (s t : Set M) : closure (s ∪ t) = closure s⊔closure t :=
+theorem closure_union (s t : Set M) : closure (s ∪ t) = closure s ⊔ closure t :=
   (Subsemigroup.gi M).gc.l_sup
 
 @[to_additive]

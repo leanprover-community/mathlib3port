@@ -272,7 +272,7 @@ instance (priority := 900) nhds_within_compl_ne_bot [∀ x : X, NeBot (𝓝[≠]
     NeBot (𝓝[≠] x) :=
   Alexandroff.rec _ Alexandroff.nhds_within_compl_infty_ne_bot (fun y => Alexandroff.nhds_within_compl_coe_ne_bot y) x
 
-theorem nhds_infty_eq : 𝓝 (∞ : Alexandroff X) = map coe (coclosedCompact X)⊔pure ∞ := by
+theorem nhds_infty_eq : 𝓝 (∞ : Alexandroff X) = map coe (coclosedCompact X) ⊔ pure ∞ := by
   rw [← nhds_within_compl_infty_eq, nhds_within_compl_singleton_sup_pure]
 
 theorem has_basis_nhds_infty :
@@ -299,8 +299,8 @@ theorem tendsto_nhds_infty' {α : Type _} {f : Alexandroff X → α} {l : Filter
 theorem tendsto_nhds_infty {α : Type _} {f : Alexandroff X → α} {l : Filter α} :
     Tendsto f (𝓝 ∞) l ↔ ∀ s ∈ l, f ∞ ∈ s ∧ ∃ t : Set X, IsClosed t ∧ IsCompact t ∧ MapsTo (f ∘ coe) (tᶜ) s :=
   tendsto_nhds_infty'.trans <| by
-    simp only [tendsto_pure_left, has_basis_coclosed_compact.tendsto_left_iff, forall_and_distrib, and_assoc,
-      exists_prop]
+    simp only [tendsto_pure_left, has_basis_coclosed_compact.tendsto_left_iff, forall_and_distrib, and_assocₓ,
+      exists_propₓ]
 
 theorem continuous_at_infty' {Y : Type _} [TopologicalSpace Y] {f : Alexandroff X → Y} :
     ContinuousAt f ∞ ↔ Tendsto (f ∘ coe) (coclosedCompact X) (𝓝 (f ∞)) :=
@@ -309,7 +309,7 @@ theorem continuous_at_infty' {Y : Type _} [TopologicalSpace Y] {f : Alexandroff 
 theorem continuous_at_infty {Y : Type _} [TopologicalSpace Y] {f : Alexandroff X → Y} :
     ContinuousAt f ∞ ↔ ∀ s ∈ 𝓝 (f ∞), ∃ t : Set X, IsClosed t ∧ IsCompact t ∧ MapsTo (f ∘ coe) (tᶜ) s :=
   continuous_at_infty'.trans <| by
-    simp only [has_basis_coclosed_compact.tendsto_left_iff, exists_prop, and_assoc]
+    simp only [has_basis_coclosed_compact.tendsto_left_iff, exists_propₓ, and_assocₓ]
 
 theorem continuous_at_coe {Y : Type _} [TopologicalSpace Y] {f : Alexandroff X → Y} {x : X} :
     ContinuousAt f x ↔ ContinuousAt (f ∘ coe) x := by
@@ -371,7 +371,7 @@ instance :
 instance [T0Space X] : T0Space (Alexandroff X) := by
   refine' ⟨fun x y hxy => _⟩
   rcases inseparable_iff.1 hxy with (⟨rfl, rfl⟩ | ⟨x, rfl, y, rfl, h⟩)
-  exacts[rfl, congr_argₓ coe h.eq]
+  exacts[rfl, congr_arg coe h.eq]
 
 /-- The one point compactification of a `t1_space` space is a `t1_space`. -/
 instance [T1Space X] :

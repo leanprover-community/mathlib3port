@@ -36,7 +36,7 @@ variable [TopologicalSpace B'] [TopologicalSpace (TotalSpace E)]
 
 /-- Definition of `pullback.total_space.topological_space`, which we make irreducible. -/
 irreducible_def pullbackTopology : TopologicalSpace (TotalSpace (f *ᵖ E)) :=
-  induced TotalSpace.proj ‹TopologicalSpace B'›⊓induced (Pullback.lift f) ‹TopologicalSpace (TotalSpace E)›
+  induced TotalSpace.proj ‹TopologicalSpace B'› ⊓ induced (Pullback.lift f) ‹TopologicalSpace (TotalSpace E)›
 
 /-- The topology on the total space of a pullback bundle is the coarsest topology for which both
 the projections to the base and the map to the original bundle are continuous. -/

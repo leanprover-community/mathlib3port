@@ -38,7 +38,7 @@ theorem nodup_cons {a : α} {l : List α} : Nodupₓ (a :: l) ↔ a ∉ l ∧ No
 protected theorem Pairwiseₓ.nodup {l : List α} {r : α → α → Prop} [IsIrrefl α r] (h : Pairwiseₓ r l) : Nodupₓ l :=
   h.imp fun a b => ne_of_irrefl
 
-theorem rel_nodup {r : α → β → Prop} (hr : Relator.BiUnique r) : (Forall₂ r⇒(· ↔ ·)) Nodupₓ Nodupₓ
+theorem rel_nodup {r : α → β → Prop} (hr : Relator.BiUnique r) : (Forall₂ r ⇒ (· ↔ ·)) Nodupₓ Nodupₓ
   | _, _, forall₂.nil => by
     simp only [nodup_nil]
   | _, _, forall₂.cons hab h => by
@@ -121,17 +121,17 @@ theorem Nodupₓ.ne_singleton_iff {l : List α} (h : Nodupₓ l) (x : α) : l �
 theorem nth_le_eq_of_ne_imp_not_nodup (xs : List α) (n m : ℕ) (hn : n < xs.length) (hm : m < xs.length)
     (h : xs.nthLe n hn = xs.nthLe m hm) (hne : n ≠ m) : ¬Nodupₓ xs := by
   rw [nodup_iff_nth_le_inj]
-  simp only [exists_prop, exists_and_distrib_right, not_forall]
+  simp only [exists_propₓ, exists_and_distrib_rightₓ, not_forall]
   exact ⟨n, m, ⟨hn, hm, h⟩, hne⟩
 
 @[simp]
 theorem nth_le_index_of [DecidableEq α] {l : List α} (H : Nodupₓ l) (n h) : indexOfₓ (nthLe l n h) l = n :=
   nodup_iff_nth_le_inj.1 H _ _ _ h <| index_of_nth_le <| index_of_lt_length.2 <| nth_le_mem _ _ _
 
-theorem nodup_iff_count_le_one [DecidableEq α] {l : List α} : Nodupₓ l ↔ ∀ a, count a l ≤ 1 :=
+theorem nodup_iff_count_le_one [DecidableEq α] {l : List α} : Nodupₓ l ↔ ∀ a, countₓ a l ≤ 1 :=
   nodup_iff_sublist.trans <|
     forall_congrₓ fun a =>
-      have : [a, a] <+ l ↔ 1 < count a l := (@le_count_iff_repeat_sublist _ _ a l 2).symm
+      have : [a, a] <+ l ↔ 1 < countₓ a l := (@le_count_iff_repeat_sublist _ _ a l 2).symm
       (not_congr this).trans not_ltₓ
 
 theorem nodup_repeat (a : α) : ∀ {n : ℕ}, Nodupₓ (repeat a n) ↔ n ≤ 1
@@ -144,10 +144,11 @@ theorem nodup_repeat (a : α) : ∀ {n : ℕ}, Nodupₓ (repeat a n) ↔ n ≤ 1
       (not_le_of_ltₓ <| Nat.le_add_leftₓ 2 n)
 
 @[simp]
-theorem count_eq_one_of_mem [DecidableEq α] {a : α} {l : List α} (d : Nodupₓ l) (h : a ∈ l) : count a l = 1 :=
+theorem count_eq_one_of_mem [DecidableEq α] {a : α} {l : List α} (d : Nodupₓ l) (h : a ∈ l) : countₓ a l = 1 :=
   le_antisymmₓ (nodup_iff_count_le_one.1 d a) (count_pos.2 h)
 
-theorem count_eq_of_nodup [DecidableEq α] {a : α} {l : List α} (d : Nodupₓ l) : count a l = if a ∈ l then 1 else 0 := by
+theorem count_eq_of_nodup [DecidableEq α] {a : α} {l : List α} (d : Nodupₓ l) : countₓ a l = if a ∈ l then 1 else 0 :=
+  by
   split_ifs with h
   · exact count_eq_one_of_mem d h
     
@@ -173,10 +174,10 @@ theorem nodup_append_comm {l₁ l₂ : List α} : Nodupₓ (l₁ ++ l₂) ↔ No
   simp only [nodup_append, And.left_comm, disjoint_comm]
 
 theorem nodup_middle {a : α} {l₁ l₂ : List α} : Nodupₓ (l₁ ++ a :: l₂) ↔ Nodupₓ (a :: (l₁ ++ l₂)) := by
-  simp only [nodup_append, not_or_distrib, And.left_comm, and_assoc, nodup_cons, mem_append, disjoint_cons_right]
+  simp only [nodup_append, not_or_distrib, And.left_comm, and_assocₓ, nodup_cons, mem_append, disjoint_cons_right]
 
 theorem Nodupₓ.of_map (f : α → β) {l : List α} : Nodupₓ (map f l) → Nodupₓ l :=
-  (Pairwiseₓ.of_map f) fun a b => mt <| congr_argₓ f
+  (Pairwiseₓ.of_map f) fun a b => mt <| congr_arg f
 
 theorem Nodupₓ.map_on {f : α → β} (H : ∀ x ∈ l, ∀ y ∈ l, f x = f y → x = y) (d : Nodupₓ l) : (map f l).Nodup :=
   Pairwiseₓ.map _ (fun a b ⟨ma, mb, n⟩ e => n (H a ma b mb e)) (Pairwiseₓ.and_mem.1 d)
@@ -321,36 +322,48 @@ protected theorem Nodupₓ.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : 
                (Tactic.tacticSeq
                 (Tactic.tacticSeq1Indented
                  [(group
-                   (Mathlib.Tactic.rcases
+                   (Std.Tactic.rcases
                     "rcases"
                     [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
                     ["with"
-                     (Tactic.rcasesPatLo
-                      (Tactic.rcasesPatMed
-                       [(Tactic.rcasesPat.tuple
+                     (Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed
+                       [(Std.Tactic.RCases.rcasesPat.tuple
                          "⟨"
-                         [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b₁)]) [])
+                         [(Std.Tactic.RCases.rcasesPatLo
+                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₁)])
+                           [])
                           ","
-                          (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `mb₁)]) [])
+                          (Std.Tactic.RCases.rcasesPatLo
+                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₁)])
+                           [])
                           ","
-                          (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl)]) [])]
+                          (Std.Tactic.RCases.rcasesPatLo
+                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                           [])]
                          "⟩")])
                       [])])
                    [])
                   (group
-                   (Mathlib.Tactic.rcases
+                   (Std.Tactic.rcases
                     "rcases"
                     [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
                     ["with"
-                     (Tactic.rcasesPatLo
-                      (Tactic.rcasesPatMed
-                       [(Tactic.rcasesPat.tuple
+                     (Std.Tactic.RCases.rcasesPatLo
+                      (Std.Tactic.RCases.rcasesPatMed
+                       [(Std.Tactic.RCases.rcasesPat.tuple
                          "⟨"
-                         [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b₂)]) [])
+                         [(Std.Tactic.RCases.rcasesPatLo
+                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₂)])
+                           [])
                           ","
-                          (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `mb₂)]) [])
+                          (Std.Tactic.RCases.rcasesPatLo
+                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₂)])
+                           [])
                           ","
-                          (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.tuple "⟨" [] "⟩")]) [])]
+                          (Std.Tactic.RCases.rcasesPatLo
+                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                           [])]
                          "⟩")])
                       [])])
                    [])
@@ -397,36 +410,48 @@ protected theorem Nodupₓ.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : 
              (Tactic.tacticSeq
               (Tactic.tacticSeq1Indented
                [(group
-                 (Mathlib.Tactic.rcases
+                 (Std.Tactic.rcases
                   "rcases"
                   [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
                   ["with"
-                   (Tactic.rcasesPatLo
-                    (Tactic.rcasesPatMed
-                     [(Tactic.rcasesPat.tuple
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed
+                     [(Std.Tactic.RCases.rcasesPat.tuple
                        "⟨"
-                       [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b₁)]) [])
+                       [(Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₁)])
+                         [])
                         ","
-                        (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `mb₁)]) [])
+                        (Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₁)])
+                         [])
                         ","
-                        (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl)]) [])]
+                        (Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                         [])]
                        "⟩")])
                     [])])
                  [])
                 (group
-                 (Mathlib.Tactic.rcases
+                 (Std.Tactic.rcases
                   "rcases"
                   [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
                   ["with"
-                   (Tactic.rcasesPatLo
-                    (Tactic.rcasesPatMed
-                     [(Tactic.rcasesPat.tuple
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed
+                     [(Std.Tactic.RCases.rcasesPat.tuple
                        "⟨"
-                       [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b₂)]) [])
+                       [(Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₂)])
+                         [])
                         ","
-                        (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `mb₂)]) [])
+                        (Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₂)])
+                         [])
                         ","
-                        (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.tuple "⟨" [] "⟩")]) [])]
+                        (Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                         [])]
                        "⟩")])
                     [])])
                  [])
@@ -446,36 +471,48 @@ protected theorem Nodupₓ.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : 
            (Tactic.tacticSeq
             (Tactic.tacticSeq1Indented
              [(group
-               (Mathlib.Tactic.rcases
+               (Std.Tactic.rcases
                 "rcases"
                 [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
                 ["with"
-                 (Tactic.rcasesPatLo
-                  (Tactic.rcasesPatMed
-                   [(Tactic.rcasesPat.tuple
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed
+                   [(Std.Tactic.RCases.rcasesPat.tuple
                      "⟨"
-                     [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b₁)]) [])
+                     [(Std.Tactic.RCases.rcasesPatLo
+                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₁)])
+                       [])
                       ","
-                      (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `mb₁)]) [])
+                      (Std.Tactic.RCases.rcasesPatLo
+                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₁)])
+                       [])
                       ","
-                      (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl)]) [])]
+                      (Std.Tactic.RCases.rcasesPatLo
+                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                       [])]
                      "⟩")])
                   [])])
                [])
               (group
-               (Mathlib.Tactic.rcases
+               (Std.Tactic.rcases
                 "rcases"
                 [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
                 ["with"
-                 (Tactic.rcasesPatLo
-                  (Tactic.rcasesPatMed
-                   [(Tactic.rcasesPat.tuple
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed
+                   [(Std.Tactic.RCases.rcasesPat.tuple
                      "⟨"
-                     [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b₂)]) [])
+                     [(Std.Tactic.RCases.rcasesPatLo
+                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₂)])
+                       [])
                       ","
-                      (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `mb₂)]) [])
+                      (Std.Tactic.RCases.rcasesPatLo
+                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₂)])
+                       [])
                       ","
-                      (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.tuple "⟨" [] "⟩")]) [])]
+                      (Std.Tactic.RCases.rcasesPatLo
+                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                       [])]
                      "⟩")])
                   [])])
                [])
@@ -492,36 +529,48 @@ protected theorem Nodupₓ.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : 
          (Tactic.tacticSeq
           (Tactic.tacticSeq1Indented
            [(group
-             (Mathlib.Tactic.rcases
+             (Std.Tactic.rcases
               "rcases"
               [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
               ["with"
-               (Tactic.rcasesPatLo
-                (Tactic.rcasesPatMed
-                 [(Tactic.rcasesPat.tuple
+               (Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed
+                 [(Std.Tactic.RCases.rcasesPat.tuple
                    "⟨"
-                   [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b₁)]) [])
+                   [(Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₁)])
+                     [])
                     ","
-                    (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `mb₁)]) [])
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₁)])
+                     [])
                     ","
-                    (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl)]) [])]
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                     [])]
                    "⟩")])
                 [])])
              [])
             (group
-             (Mathlib.Tactic.rcases
+             (Std.Tactic.rcases
               "rcases"
               [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
               ["with"
-               (Tactic.rcasesPatLo
-                (Tactic.rcasesPatMed
-                 [(Tactic.rcasesPat.tuple
+               (Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed
+                 [(Std.Tactic.RCases.rcasesPat.tuple
                    "⟨"
-                   [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b₂)]) [])
+                   [(Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₂)])
+                     [])
                     ","
-                    (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `mb₂)]) [])
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₂)])
+                     [])
                     ","
-                    (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.tuple "⟨" [] "⟩")]) [])]
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                     [])]
                    "⟩")])
                 [])])
              [])
@@ -532,36 +581,48 @@ protected theorem Nodupₓ.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : 
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
          [(group
-           (Mathlib.Tactic.rcases
+           (Std.Tactic.rcases
             "rcases"
             [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
             ["with"
-             (Tactic.rcasesPatLo
-              (Tactic.rcasesPatMed
-               [(Tactic.rcasesPat.tuple
+             (Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed
+               [(Std.Tactic.RCases.rcasesPat.tuple
                  "⟨"
-                 [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b₁)]) [])
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₁)])
+                   [])
                   ","
-                  (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `mb₁)]) [])
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₁)])
+                   [])
                   ","
-                  (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl)]) [])]
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                   [])]
                  "⟩")])
               [])])
            [])
           (group
-           (Mathlib.Tactic.rcases
+           (Std.Tactic.rcases
             "rcases"
             [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
             ["with"
-             (Tactic.rcasesPatLo
-              (Tactic.rcasesPatMed
-               [(Tactic.rcasesPat.tuple
+             (Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed
+               [(Std.Tactic.RCases.rcasesPat.tuple
                  "⟨"
-                 [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b₂)]) [])
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₂)])
+                   [])
                   ","
-                  (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `mb₂)]) [])
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₂)])
+                   [])
                   ","
-                  (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.tuple "⟨" [] "⟩")]) [])]
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                   [])]
                  "⟩")])
               [])])
            [])
@@ -579,19 +640,23 @@ protected theorem Nodupₓ.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : 
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-      (Mathlib.Tactic.rcases
+      (Std.Tactic.rcases
        "rcases"
        [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
        ["with"
-        (Tactic.rcasesPatLo
-         (Tactic.rcasesPatMed
-          [(Tactic.rcasesPat.tuple
+        (Std.Tactic.RCases.rcasesPatLo
+         (Std.Tactic.RCases.rcasesPatMed
+          [(Std.Tactic.RCases.rcasesPat.tuple
             "⟨"
-            [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b₂)]) [])
+            [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₂)]) [])
              ","
-             (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `mb₂)]) [])
+             (Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₂)])
+              [])
              ","
-             (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.tuple "⟨" [] "⟩")]) [])]
+             (Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+              [])]
             "⟩")])
          [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -608,19 +673,23 @@ protected theorem Nodupₓ.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : 
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-      (Mathlib.Tactic.rcases
+      (Std.Tactic.rcases
        "rcases"
        [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
        ["with"
-        (Tactic.rcasesPatLo
-         (Tactic.rcasesPatMed
-          [(Tactic.rcasesPat.tuple
+        (Std.Tactic.RCases.rcasesPatLo
+         (Std.Tactic.RCases.rcasesPatMed
+          [(Std.Tactic.RCases.rcasesPat.tuple
             "⟨"
-            [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `b₁)]) [])
+            [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₁)]) [])
              ","
-             (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `mb₁)]) [])
+             (Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₁)])
+              [])
              ","
-             (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl)]) [])]
+             (Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+              [])]
             "⟩")])
          [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -796,12 +865,12 @@ theorem Nodupₓ.inter [DecidableEq α] (l₂ : List α) : Nodupₓ l₁ → Nod
   Nodupₓ.filter _
 
 @[simp]
-theorem nodup_sublists {l : List α} : Nodupₓ (sublists l) ↔ Nodupₓ l :=
+theorem nodup_sublists {l : List α} : Nodupₓ (sublistsₓ l) ↔ Nodupₓ l :=
   ⟨fun h => (h.Sublist (map_ret_sublist_sublists _)).of_map _, fun h =>
     (pairwise_sublists h).imp fun _ _ h => mt reverse_inj.2 h.to_ne⟩
 
 @[simp]
-theorem nodup_sublists' {l : List α} : Nodupₓ (sublists' l) ↔ Nodupₓ l := by
+theorem nodup_sublists' {l : List α} : Nodupₓ (sublists'ₓ l) ↔ Nodupₓ l := by
   rw [sublists'_eq_sublists, nodup_map_iff reverse_injective, nodup_sublists, nodup_reverse]
 
 alias nodup_sublists ↔ nodup.of_sublists nodup.sublists

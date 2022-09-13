@@ -206,24 +206,24 @@ theorem top_mem_closed : ⊤ ∈ c.Closed :=
 
 end OrderTop
 
-theorem closure_inf_le [SemilatticeInf α] (c : ClosureOperator α) (x y : α) : c (x⊓y) ≤ c x⊓c y :=
+theorem closure_inf_le [SemilatticeInf α] (c : ClosureOperator α) (x y : α) : c (x ⊓ y) ≤ c x ⊓ c y :=
   c.Monotone.map_inf_le _ _
 
 section SemilatticeSup
 
 variable [SemilatticeSup α] (c : ClosureOperator α)
 
-theorem closure_sup_closure_le (x y : α) : c x⊔c y ≤ c (x⊔y) :=
+theorem closure_sup_closure_le (x y : α) : c x ⊔ c y ≤ c (x ⊔ y) :=
   c.Monotone.le_map_sup _ _
 
-theorem closure_sup_closure_left (x y : α) : c (c x⊔y) = c (x⊔y) :=
+theorem closure_sup_closure_left (x y : α) : c (c x ⊔ y) = c (x ⊔ y) :=
   ((c.le_closure_iff _ _).1 (sup_le (c.Monotone le_sup_left) (le_sup_right.trans (c.le_closure _)))).antisymm
     (c.Monotone (sup_le_sup_right (c.le_closure _) _))
 
-theorem closure_sup_closure_right (x y : α) : c (x⊔c y) = c (x⊔y) := by
+theorem closure_sup_closure_right (x y : α) : c (x ⊔ c y) = c (x ⊔ y) := by
   rw [sup_comm, closure_sup_closure_left, sup_comm]
 
-theorem closure_sup_closure (x y : α) : c (c x⊔c y) = c (x⊔y) := by
+theorem closure_sup_closure (x y : α) : c (c x ⊔ c y) = c (x ⊔ y) := by
   rw [closure_sup_closure_left, closure_sup_closure_right]
 
 end SemilatticeSup
@@ -370,23 +370,23 @@ theorem closure_top [PartialOrderₓ α] [OrderTop α] [Preorderₓ β] {u : β 
   l.ClosureOperator.closure_top
 
 theorem closure_inf_le [SemilatticeInf α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint u) (x y : α) :
-    u (l (x⊓y)) ≤ u (l x)⊓u (l y) :=
+    u (l (x ⊓ y)) ≤ u (l x) ⊓ u (l y) :=
   l.ClosureOperator.closure_inf_le x y
 
 section SemilatticeSup
 
 variable [SemilatticeSup α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint u)
 
-theorem closure_sup_closure_le (x y : α) : u (l x)⊔u (l y) ≤ u (l (x⊔y)) :=
+theorem closure_sup_closure_le (x y : α) : u (l x) ⊔ u (l y) ≤ u (l (x ⊔ y)) :=
   l.ClosureOperator.closure_sup_closure_le x y
 
-theorem closure_sup_closure_left (x y : α) : u (l (u (l x)⊔y)) = u (l (x⊔y)) :=
+theorem closure_sup_closure_left (x y : α) : u (l (u (l x) ⊔ y)) = u (l (x ⊔ y)) :=
   l.ClosureOperator.closure_sup_closure_left x y
 
-theorem closure_sup_closure_right (x y : α) : u (l (x⊔u (l y))) = u (l (x⊔y)) :=
+theorem closure_sup_closure_right (x y : α) : u (l (x ⊔ u (l y))) = u (l (x ⊔ y)) :=
   l.ClosureOperator.closure_sup_closure_right x y
 
-theorem closure_sup_closure (x y : α) : u (l (u (l x)⊔u (l y))) = u (l (x⊔y)) :=
+theorem closure_sup_closure (x y : α) : u (l (u (l x) ⊔ u (l y))) = u (l (x ⊔ y)) :=
   l.ClosureOperator.closure_sup_closure x y
 
 end SemilatticeSup

@@ -133,16 +133,16 @@ theorem induction_on₃ (f : Germ l β) (g : Germ l γ) (h : Germ l δ) {p : Ger
 
 /-- Given a map `F : (α → β) → (γ → δ)` that sends functions eventually equal at `l` to functions
 eventually equal at `lc`, returns a map from `germ l β` to `germ lc δ`. -/
-def map' {lc : Filter γ} (F : (α → β) → γ → δ) (hF : (l.EventuallyEq⇒lc.EventuallyEq) F F) : Germ l β → Germ lc δ :=
+def map' {lc : Filter γ} (F : (α → β) → γ → δ) (hF : (l.EventuallyEq ⇒ lc.EventuallyEq) F F) : Germ l β → Germ lc δ :=
   Quotientₓ.map' F hF
 
 /-- Given a germ `f : germ l β` and a function `F : (α → β) → γ` sending eventually equal functions
 to the same value, returns the value `F` takes on functions having germ `f` at `l`. -/
-def liftOn {γ : Sort _} (f : Germ l β) (F : (α → β) → γ) (hF : (l.EventuallyEq⇒(· = ·)) F F) : γ :=
+def liftOn {γ : Sort _} (f : Germ l β) (F : (α → β) → γ) (hF : (l.EventuallyEq ⇒ (· = ·)) F F) : γ :=
   Quotientₓ.liftOn' f F hF
 
 @[simp]
-theorem map'_coe {lc : Filter γ} (F : (α → β) → γ → δ) (hF : (l.EventuallyEq⇒lc.EventuallyEq) F F) (f : α → β) :
+theorem map'_coe {lc : Filter γ} (F : (α → β) → γ → δ) (hF : (l.EventuallyEq ⇒ lc.EventuallyEq) F F) (f : α → β) :
     map' F hF f = F f :=
   rfl
 
@@ -154,7 +154,7 @@ alias coe_eq ↔ _ _root_.filter.eventually_eq.germ_eq
 
 /-- Lift a function `β → γ` to a function `germ l β → germ l γ`. -/
 def map (op : β → γ) : Germ l β → Germ l γ :=
-  (map' ((· ∘ ·) op)) fun f g H => H.mono fun x H => congr_argₓ op H
+  (map' ((· ∘ ·) op)) fun f g H => H.mono fun x H => congr_arg op H
 
 @[simp]
 theorem map_coe (op : β → γ) (f : α → β) : map op (f : Germ l β) = op ∘ f :=
@@ -356,8 +356,8 @@ instance [CommMonoidₓ M] : CommMonoidₓ (Germ l M) :=
   { Germ.commSemigroup, Germ.monoid with mul := (· * ·), one := 1 }
 
 instance [AddMonoidWithOneₓ M] : AddMonoidWithOneₓ (Germ l M) :=
-  { Germ.hasOne, Germ.addMonoid with natCast := fun n => ↑(n : M), nat_cast_zero := congr_argₓ coe Nat.cast_zeroₓ,
-    nat_cast_succ := fun n => congr_argₓ coe (Nat.cast_succₓ _) }
+  { Germ.hasOne, Germ.addMonoid with natCast := fun n => ↑(n : M), nat_cast_zero := congr_arg coe Nat.cast_zeroₓ,
+    nat_cast_succ := fun n => congr_arg coe (Nat.cast_succₓ _) }
 
 @[to_additive]
 instance [Inv G] : Inv (Germ l G) :=
@@ -389,7 +389,7 @@ instance [Groupₓ G] : Groupₓ (Germ l G) :=
   { Germ.divInvMonoid with mul := (· * ·), one := 1,
     mul_left_inv := by
       rintro ⟨f⟩
-      exact congr_argₓ (Quot.mk _) (mul_left_invₓ f) }
+      exact congr_arg (Quot.mk _) (mul_left_invₓ f) }
 
 @[to_additive]
 instance [CommGroupₓ G] : CommGroupₓ (Germ l G) :=
@@ -569,27 +569,27 @@ instance [LE β] [OrderTop β] : OrderTop (Germ l β) where
   le_top := fun f => (induction_on f) fun f => eventually_of_forall fun x => le_top
 
 instance [HasSup β] : HasSup (Germ l β) :=
-  ⟨map₂ (·⊔·)⟩
+  ⟨map₂ (· ⊔ ·)⟩
 
 @[simp, norm_cast]
-theorem const_sup [HasSup β] (a b : β) : ↑(a⊔b) = (↑a⊔↑b : Germ l β) :=
+theorem const_sup [HasSup β] (a b : β) : ↑(a ⊔ b) = (↑a ⊔ ↑b : Germ l β) :=
   rfl
 
 instance [HasInf β] : HasInf (Germ l β) :=
-  ⟨map₂ (·⊓·)⟩
+  ⟨map₂ (· ⊓ ·)⟩
 
 @[simp, norm_cast]
-theorem const_inf [HasInf β] (a b : β) : ↑(a⊓b) = (↑a⊓↑b : Germ l β) :=
+theorem const_inf [HasInf β] (a b : β) : ↑(a ⊓ b) = (↑a ⊓ ↑b : Germ l β) :=
   rfl
 
 instance [SemilatticeSup β] : SemilatticeSup (Germ l β) :=
-  { Germ.partialOrder with sup := (·⊔·),
+  { Germ.partialOrder with sup := (· ⊔ ·),
     le_sup_left := fun f g => (induction_on₂ f g) fun f g => eventually_of_forall fun x => le_sup_left,
     le_sup_right := fun f g => (induction_on₂ f g) fun f g => eventually_of_forall fun x => le_sup_right,
     sup_le := fun f₁ f₂ g => (induction_on₃ f₁ f₂ g) fun f₁ f₂ g h₁ h₂ => h₂.mp <| h₁.mono fun x => sup_le }
 
 instance [SemilatticeInf β] : SemilatticeInf (Germ l β) :=
-  { Germ.partialOrder with inf := (·⊓·),
+  { Germ.partialOrder with inf := (· ⊓ ·),
     inf_le_left := fun f g => (induction_on₂ f g) fun f g => eventually_of_forall fun x => inf_le_left,
     inf_le_right := fun f g => (induction_on₂ f g) fun f g => eventually_of_forall fun x => inf_le_right,
     le_inf := fun f₁ f₂ g => (induction_on₃ f₁ f₂ g) fun f₁ f₂ g h₁ h₂ => h₂.mp <| h₁.mono fun x => le_inf }
@@ -602,7 +602,7 @@ instance [LE β] [BoundedOrder β] : BoundedOrder (Germ l β) :=
 
 @[to_additive]
 instance [OrderedCancelCommMonoid β] : OrderedCancelCommMonoid (Germ l β) :=
-  { Germ.partialOrder, Germ.commMonoid, Germ.leftCancelSemigroup with
+  { Germ.partialOrder, Germ.commMonoid with
     mul_le_mul_left := fun f g =>
       (induction_on₂ f g) fun f g H h => (induction_on h) fun h => H.mono fun x H => mul_le_mul_left' H _,
     le_of_mul_le_mul_left := fun f g h => (induction_on₃ f g h) fun f g h H => H.mono fun x => le_of_mul_le_mul_left' }

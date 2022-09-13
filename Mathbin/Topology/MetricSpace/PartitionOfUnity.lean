@@ -93,9 +93,9 @@ exists a positive continuous function `δ : C(X, ℝ≥0)` such that for any `i`
 we have `emetric.closed_ball x (δ x) ⊆ U i`. -/
 theorem exists_continuous_nnreal_forall_closed_ball_subset (hK : ∀ i, IsClosed (K i)) (hU : ∀ i, IsOpen (U i))
     (hKU : ∀ i, K i ⊆ U i) (hfin : LocallyFinite K) :
-    ∃ δ : C(X, ℝ≥0 ), (∀ x, 0 < δ x) ∧ ∀ (i), ∀ x ∈ K i, ClosedBall x (δ x) ⊆ U i := by
+    ∃ δ : C(X, ℝ≥0), (∀ x, 0 < δ x) ∧ ∀ (i), ∀ x ∈ K i, ClosedBall x (δ x) ⊆ U i := by
   rcases exists_continuous_real_forall_closed_ball_subset hK hU hKU hfin with ⟨δ, hδ₀, hδ⟩
-  lift δ to C(X, ℝ≥0 ) using fun x => (hδ₀ x).le
+  lift δ to C(X, ℝ≥0) using fun x => (hδ₀ x).le
   refine' ⟨δ, hδ₀, fun i x hi => _⟩
   simpa only [← Ennreal.of_real_coe_nnreal] using hδ i x hi
 
@@ -121,7 +121,7 @@ positive continuous function `δ : C(X, ℝ≥0)` such that for any `i` and `x �
 `metric.closed_ball x (δ x) ⊆ U i`. -/
 theorem exists_continuous_nnreal_forall_closed_ball_subset (hK : ∀ i, IsClosed (K i)) (hU : ∀ i, IsOpen (U i))
     (hKU : ∀ i, K i ⊆ U i) (hfin : LocallyFinite K) :
-    ∃ δ : C(X, ℝ≥0 ), (∀ x, 0 < δ x) ∧ ∀ (i), ∀ x ∈ K i, ClosedBall x (δ x) ⊆ U i := by
+    ∃ δ : C(X, ℝ≥0), (∀ x, 0 < δ x) ∧ ∀ (i), ∀ x ∈ K i, ClosedBall x (δ x) ⊆ U i := by
   rcases Emetric.exists_continuous_nnreal_forall_closed_ball_subset hK hU hKU hfin with ⟨δ, hδ0, hδ⟩
   refine' ⟨δ, hδ0, fun i x hx => _⟩
   rw [← emetric_closed_ball_nnreal]

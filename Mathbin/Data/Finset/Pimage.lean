@@ -75,7 +75,7 @@ theorem pimage_congr (h₁ : s = t) (h₂ : ∀ x ∈ t, f x = g x) : s.pimage f
 theorem pimage_eq_image_filter :
     s.pimage f = (filter (fun x => (f x).Dom) s).attach.Image fun x => (f x).get (mem_filter.1 x.coe_prop).2 := by
   ext x
-  simp [Part.mem_eq, And.exists, -exists_prop]
+  simp [Part.mem_eq, And.exists, -exists_propₓ]
 
 theorem pimage_union [DecidableEq α] : (s ∪ t).pimage f = s.pimage f ∪ t.pimage f :=
   coe_inj.1 <| by

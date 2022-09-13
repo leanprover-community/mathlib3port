@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Sébastien Gouëzel, Heather Macbeth
 -/
 import Mathbin.Analysis.InnerProductSpace.Projection
-import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.Analysis.NormedSpace.PiLp
+import Mathbin.LinearAlgebra.FiniteDimensional
+import Mathbin.LinearAlgebra.UnitaryGroup
 
 /-!
 # `L²` inner product space structure on finite products of inner product spaces
@@ -111,7 +112,7 @@ theorem EuclideanSpace.nnnorm_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fin
 
 theorem EuclideanSpace.norm_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n] (x : EuclideanSpace 𝕜 n) :
     ∥x∥ = Real.sqrt (∑ i, ∥x i∥ ^ 2) := by
-  simpa only [Real.coe_sqrt, Nnreal.coe_sum] using congr_argₓ (coe : ℝ≥0 → ℝ) x.nnnorm_eq
+  simpa only [Real.coe_sqrt, Nnreal.coe_sum] using congr_arg (coe : ℝ≥0 → ℝ) x.nnnorm_eq
 
 theorem EuclideanSpace.dist_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n] (x y : EuclideanSpace 𝕜 n) :
     dist x y = (∑ i, dist (x i) (y i) ^ 2).sqrt :=
@@ -326,7 +327,7 @@ protected theorem sum_repr_symm (b : OrthonormalBasis ι 𝕜 E) (v : EuclideanS
   simpa using (b.to_basis.equiv_fun_symm_apply v).symm
 
 protected theorem sum_inner_mul_inner (b : OrthonormalBasis ι 𝕜 E) (x y : E) : (∑ i, ⟪x, b i⟫ * ⟪b i, y⟫) = ⟪x, y⟫ := by
-  have := congr_argₓ (@innerSL 𝕜 _ _ _ x) (b.sum_repr y)
+  have := congr_arg (@innerSL 𝕜 _ _ _ x) (b.sum_repr y)
   rw [map_sum] at this
   convert this
   ext i
@@ -530,6 +531,54 @@ theorem Complex.isometry_of_orthonormal_apply {v : Basis (Finₓ 2) ℝ F} (hv :
 
 open FiniteDimensional
 
+/-! ### Matrix representation of an orthonormal basis with respect to another -/
+
+
+section ToMatrix
+
+variable [DecidableEq ι]
+
+section
+
+variable (a b : OrthonormalBasis ι 𝕜 E)
+
+/-- The change-of-basis matrix between two orthonormal bases `a`, `b` is a unitary matrix. -/
+theorem OrthonormalBasis.to_matrix_orthonormal_basis_mem_unitary : a.toBasis.toMatrix b ∈ Matrix.unitaryGroup ι 𝕜 := by
+  rw [Matrix.mem_unitary_group_iff']
+  ext i j
+  convert a.repr.inner_map_map (b i) (b j)
+  rw [orthonormal_iff_ite.mp b.orthonormal i j]
+  rfl
+
+/-- The determinant of the change-of-basis matrix between two orthonormal bases `a`, `b` has
+unit length. -/
+@[simp]
+theorem OrthonormalBasis.det_to_matrix_orthonormal_basis : ∥a.toBasis.det b∥ = 1 := by
+  have : (norm_sq (a.to_basis.det b) : 𝕜) = 1 := by
+    simpa [IsROrC.mul_conj] using (Matrix.det_of_mem_unitary (a.to_matrix_orthonormal_basis_mem_unitary b)).2
+  norm_cast  at this
+  rwa [← sqrt_norm_sq_eq_norm, sqrt_eq_one]
+
+end
+
+section Real
+
+variable (a b : OrthonormalBasis ι ℝ F)
+
+/-- The change-of-basis matrix between two orthonormal bases `a`, `b` is an orthogonal matrix. -/
+theorem OrthonormalBasis.to_matrix_orthonormal_basis_mem_orthogonal :
+    a.toBasis.toMatrix b ∈ Matrix.orthogonalGroup ι ℝ :=
+  a.to_matrix_orthonormal_basis_mem_unitary b
+
+/-- The determinant of the change-of-basis matrix between two orthonormal bases `a`, `b` is ±1. -/
+theorem OrthonormalBasis.det_to_matrix_orthonormal_basis_real : a.toBasis.det b = 1 ∨ a.toBasis.det b = -1 := by
+  rw [← sq_eq_one_iff]
+  simpa [unitary, sq] using Matrix.det_of_mem_unitary (a.to_matrix_orthonormal_basis_mem_unitary b)
+
+end Real
+
+end ToMatrix
+
 /-! ### Existence of orthonormal basis, etc. -/
 
 
@@ -567,7 +616,7 @@ theorem _root_.orthonormal.exists_orthonormal_basis_extension (hv : Orthonormal 
   rw [maximal_orthonormal_iff_orthogonal_complement_eq_bot hu₀] at hu₀_max
   have hu₀_finite : u₀.finite := hu₀.linear_independent.finite
   let u : Finset E := hu₀_finite.to_finset
-  let fu : ↥u ≃ ↥u₀ := Equivₓ.cast (congr_argₓ coeSort hu₀_finite.coe_to_finset)
+  let fu : ↥u ≃ ↥u₀ := Equivₓ.cast (congr_arg coeSort hu₀_finite.coe_to_finset)
   have hfu : (coe : u → E) = (coe : u₀ → E) ∘ fu := by
     ext
     simp
@@ -655,7 +704,7 @@ attribute [local instance] fact_finite_dimensional_of_finrank_eq_succ
 space, there exists an isometry from the orthogonal complement of a nonzero singleton to
 `euclidean_space 𝕜 (fin n)`. -/
 def OrthonormalBasis.fromOrthogonalSpanSingleton (n : ℕ) [Fact (finrank 𝕜 E = n + 1)] {v : E} (hv : v ≠ 0) :
-    OrthonormalBasis (Finₓ n) 𝕜 (𝕜∙v)ᗮ :=
+    OrthonormalBasis (Finₓ n) 𝕜 (𝕜 ∙ v)ᗮ :=
   finStdOrthonormalBasis (finrank_orthogonal_span_singleton hv)
 
 section LinearIsometry

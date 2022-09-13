@@ -303,7 +303,7 @@ theorem repr_inj {a b} [NF a] [NF b] : repr a = repr b ↔ a = b :=
     | Ordering.lt, (h : reprₓ a < reprₓ b), e => (ne_of_ltₓ h e).elim
     | Ordering.gt, (h : reprₓ a > reprₓ b), e => (ne_of_gtₓ h e).elim
     | Ordering.eq, h, e => h,
-    congr_argₓ _⟩
+    congr_arg _⟩
 
 theorem NF.of_dvd_omega_opow {b e n a} (h : NF (oadd e n a)) (d : ω ^ b ∣ repr (oadd e n a)) :
     b ≤ repr e ∧ ω ^ b ∣ repr a := by

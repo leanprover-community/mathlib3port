@@ -103,7 +103,7 @@ theorem im_ne_zero (z : ℍ) : z.im ≠ 0 :=
   z.im_pos.ne'
 
 theorem ne_zero (z : ℍ) : (z : ℂ) ≠ 0 :=
-  mt (congr_argₓ Complex.im) z.im_ne_zero
+  mt (congr_arg Complex.im) z.im_ne_zero
 
 theorem norm_sq_pos (z : ℍ) : 0 < Complex.normSq (z : ℂ) := by
   rw [Complex.norm_sq_pos]
@@ -140,7 +140,7 @@ theorem denom_ne_zero (g : GL(2, ℝ)⁺) (z : ℍ) : denom g z ≠ 0 := by
   have hz := z.prop
   simp only [general_linear_group.coe_det_apply] at DET
   have H1 : (↑ₘg 1 0 : ℝ) = 0 ∨ z.im = 0 := by
-    simpa using congr_argₓ Complex.im H
+    simpa using congr_arg Complex.im H
   cases H1
   · simp only [H1, Complex.of_real_zero, denom, coe_fn_eq_coe, zero_mul, zero_addₓ, Complex.of_real_eq_zero] at H
     rw [← coe_coe, Matrix.det_fin_two (↑g : Matrix (Finₓ 2) (Finₓ 2) ℝ)] at DET
@@ -209,20 +209,20 @@ section ModularScalarTowers
 
 variable (Γ : Subgroup (SpecialLinearGroup (Finₓ 2) ℤ))
 
-instance sLAction {R : Type _} [CommRingₓ R] [Algebra R ℝ] : MulAction SL(2,R) ℍ :=
+instance sLAction {R : Type _} [CommRingₓ R] [Algebra R ℝ] : MulAction SL(2, R) ℍ :=
   MulAction.compHom ℍ <| SpecialLinearGroup.toGLPos.comp <| map (algebraMap R ℝ)
 
-instance : Coe SL(2,ℤ) GL(2, ℝ)⁺ :=
-  ⟨fun g => ((g : SL(2,ℝ)) : GL(2, ℝ)⁺)⟩
+instance : Coe SL(2, ℤ) GL(2, ℝ)⁺ :=
+  ⟨fun g => ((g : SL(2, ℝ)) : GL(2, ℝ)⁺)⟩
 
-instance sLOnGLPos : HasSmul SL(2,ℤ) GL(2, ℝ)⁺ :=
+instance sLOnGLPos : HasSmul SL(2, ℤ) GL(2, ℝ)⁺ :=
   ⟨fun s g => s * g⟩
 
-theorem SL_on_GL_pos_smul_apply (s : SL(2,ℤ)) (g : GL(2, ℝ)⁺) (z : ℍ) : (s • g) • z = ((s : GL(2, ℝ)⁺) * g) • z :=
+theorem SL_on_GL_pos_smul_apply (s : SL(2, ℤ)) (g : GL(2, ℝ)⁺) (z : ℍ) : (s • g) • z = ((s : GL(2, ℝ)⁺) * g) • z :=
   rfl
 
 instance SL_to_GL_tower :
-    IsScalarTower SL(2,ℤ) GL(2, ℝ)⁺ ℍ where smul_assoc := by
+    IsScalarTower SL(2, ℤ) GL(2, ℝ)⁺ ℍ where smul_assoc := by
     intro s g z
     simp only [SL_on_GL_pos_smul_apply, coe_coe]
     apply mul_smul'
@@ -239,14 +239,14 @@ instance subgroup_on_GL_pos :
     simp only [subgroup_on_GL_pos_smul_apply, coe_coe]
     apply mul_smul'
 
-instance subgroupSL : HasSmul Γ SL(2,ℤ) :=
+instance subgroupSL : HasSmul Γ SL(2, ℤ) :=
   ⟨fun s g => s * g⟩
 
-theorem subgroup_on_SL_apply (s : Γ) (g : SL(2,ℤ)) (z : ℍ) : (s • g) • z = ((s : SL(2,ℤ)) * g) • z :=
+theorem subgroup_on_SL_apply (s : Γ) (g : SL(2, ℤ)) (z : ℍ) : (s • g) • z = ((s : SL(2, ℤ)) * g) • z :=
   rfl
 
 instance subgroup_to_SL_tower :
-    IsScalarTower Γ SL(2,ℤ) ℍ where smul_assoc := fun s g z => by
+    IsScalarTower Γ SL(2, ℤ) ℍ where smul_assoc := fun s g z => by
     rw [subgroup_on_SL_apply]
     apply MulAction.mul_smul
 
@@ -276,24 +276,24 @@ theorem neg_smul (g : GL(2, ℝ)⁺) (z : ℍ) : -g • z = g • z := by
 
 section SLModularAction
 
-variable (g : SL(2,ℤ)) (z : ℍ) (Γ : Subgroup SL(2,ℤ))
+variable (g : SL(2, ℤ)) (z : ℍ) (Γ : Subgroup SL(2, ℤ))
 
 @[simp]
-theorem sl_moeb (A : SL(2,ℤ)) (z : ℍ) : A • z = (A : GL(2, ℝ)⁺) • z :=
+theorem sl_moeb (A : SL(2, ℤ)) (z : ℍ) : A • z = (A : GL(2, ℝ)⁺) • z :=
   rfl
 
 theorem subgroup_moeb (A : Γ) (z : ℍ) : A • z = (A : GL(2, ℝ)⁺) • z :=
   rfl
 
 @[simp]
-theorem subgroup_to_sl_moeb (A : Γ) (z : ℍ) : A • z = (A : SL(2,ℤ)) • z :=
+theorem subgroup_to_sl_moeb (A : Γ) (z : ℍ) : A • z = (A : SL(2, ℤ)) • z :=
   rfl
 
 @[simp]
-theorem SL_neg_smul (g : SL(2,ℤ)) (z : ℍ) : -g • z = g • z := by
+theorem SL_neg_smul (g : SL(2, ℤ)) (z : ℍ) : -g • z = g • z := by
   simp only [coe_GL_pos_neg, sl_moeb, coe_coe, coe_int_neg, neg_smul]
 
-theorem c_mul_im_sq_le_norm_sq_denom (z : ℍ) (g : SL(2,ℝ)) : ((↑ₘg 1 0 : ℝ) * z.im) ^ 2 ≤ Complex.normSq (denom g z) :=
+theorem c_mul_im_sq_le_norm_sq_denom (z : ℍ) (g : SL(2, ℝ)) : ((↑ₘg 1 0 : ℝ) * z.im) ^ 2 ≤ Complex.normSq (denom g z) :=
   by
   let c := (↑ₘg 1 0 : ℝ)
   let d := (↑ₘg 1 1 : ℝ)
@@ -307,9 +307,9 @@ theorem c_mul_im_sq_le_norm_sq_denom (z : ℍ) (g : SL(2,ℝ)) : ((↑ₘg 1 0 :
 theorem SpecialLinearGroup.im_smul_eq_div_norm_sq : (g • z).im = z.im / Complex.normSq (denom g z) := by
   convert im_smul_eq_div_norm_sq g z
   simp only [coe_coe, general_linear_group.coe_det_apply, coe_GL_pos_coe_GL_coe_matrix, Int.coe_cast_ring_hom,
-    (g : SL(2,ℝ)).Prop, one_mulₓ]
+    (g : SL(2, ℝ)).Prop, one_mulₓ]
 
-theorem denom_apply (g : SL(2,ℤ)) (z : ℍ) :
+theorem denom_apply (g : SL(2, ℤ)) (z : ℍ) :
     denom g z = (↑g : Matrix (Finₓ 2) (Finₓ 2) ℤ) 1 0 * z + (↑g : Matrix (Finₓ 2) (Finₓ 2) ℤ) 1 1 := by
   simp
 

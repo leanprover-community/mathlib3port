@@ -80,7 +80,7 @@ theorem IsSquare.map [MulOneClassₓ α] [MulOneClassₓ β] [MonoidHomClass F �
 
 section Monoidₓ
 
-variable [Monoidₓ α]
+variable [Monoidₓ α] {n : ℕ} {a : α}
 
 @[to_additive even_iff_exists_two_nsmul]
 theorem is_square_iff_exists_sq (m : α) : IsSquare m ↔ ∃ c, m = c ^ 2 := by
@@ -94,11 +94,21 @@ attribute [to_additive Even.exists_two_nsmul "Alias of the forwards direction of
 attribute [to_additive even_of_exists_two_nsmul "Alias of the backwards direction of\n`even_iff_exists_two_nsmul`."]
   is_square_of_exists_sq
 
+@[to_additive Even.nsmul]
+theorem IsSquare.pow (n : ℕ) : IsSquare a → IsSquare (a ^ n) := by
+  rintro ⟨a, rfl⟩
+  exact ⟨a ^ n, (Commute.refl _).mul_pow _⟩
+
+@[simp, to_additive Even.nsmul']
+theorem Even.is_square_pow : Even n → ∀ a : α, IsSquare (a ^ n) := by
+  rintro ⟨n, rfl⟩ a
+  exact ⟨a ^ n, pow_addₓ _ _ _⟩
+
 @[simp, to_additive even_two_nsmul]
 theorem is_square_sq (a : α) : IsSquare (a ^ 2) :=
   ⟨a, pow_two _⟩
 
-variable [HasDistribNeg α] {n : ℕ}
+variable [HasDistribNeg α]
 
 theorem Even.neg_pow : Even n → ∀ a : α, -a ^ n = a ^ n := by
   rintro ⟨c, rfl⟩ a
@@ -109,15 +119,42 @@ theorem Even.neg_one_pow (h : Even n) : (-1 : α) ^ n = 1 := by
 
 end Monoidₓ
 
-/-- `0` is always a square (in a monoid with zero). -/
-theorem is_square_zero (M : Type _) [MonoidWithZeroₓ M] : IsSquare (0 : M) := by
-  use 0
-  simp only [mul_zero]
-
 @[to_additive]
 theorem IsSquare.mul [CommSemigroupₓ α] {a b : α} : IsSquare a → IsSquare b → IsSquare (a * b) := by
   rintro ⟨a, rfl⟩ ⟨b, rfl⟩
   exact ⟨a * b, mul_mul_mul_commₓ _ _ _ _⟩
+
+section CommMonoidₓ
+
+variable [CommMonoidₓ α] {a : α}
+
+theorem Irreducible.not_square (ha : Irreducible a) : ¬IsSquare a := by
+  rintro ⟨b, rfl⟩
+  simp only [irreducible_mul_iff, or_selfₓ] at ha
+  exact ha.1.not_unit ha.2
+
+theorem IsSquare.not_irreducible (ha : IsSquare a) : ¬Irreducible a := fun h => h.not_square ha
+
+end CommMonoidₓ
+
+variable (α)
+
+@[simp]
+theorem is_square_zero [MulZeroClassₓ α] : IsSquare (0 : α) :=
+  ⟨0, (mul_zero _).symm⟩
+
+variable {α}
+
+section CancelCommMonoidWithZero
+
+variable [CancelCommMonoidWithZero α] {a : α}
+
+theorem Prime.not_square (ha : Prime a) : ¬IsSquare a :=
+  ha.Irreducible.not_square
+
+theorem IsSquare.not_prime (ha : IsSquare a) : ¬Prime a := fun h => h.not_square ha
+
+end CancelCommMonoidWithZero
 
 section DivisionMonoid
 
@@ -135,6 +172,11 @@ theorem is_square_inv : IsSquare a⁻¹ ↔ IsSquare a := by
 alias is_square_inv ↔ _ IsSquare.inv
 
 attribute [to_additive] IsSquare.inv
+
+@[to_additive Even.zsmul]
+theorem IsSquare.zpow (n : ℤ) : IsSquare a → IsSquare (a ^ n) := by
+  rintro ⟨a, rfl⟩
+  exact ⟨a ^ n, (Commute.refl _).mul_zpow _⟩
 
 variable [HasDistribNeg α] {n : ℤ}
 
@@ -154,6 +196,11 @@ theorem even_abs [SubtractionMonoid α] [LinearOrderₓ α] {a : α} : Even (abs
 theorem IsSquare.div [DivisionCommMonoid α] {a b : α} (ha : IsSquare a) (hb : IsSquare b) : IsSquare (a / b) := by
   rw [div_eq_mul_inv]
   exact ha.mul hb.inv
+
+@[simp, to_additive Even.zsmul']
+theorem Even.is_square_zpow [Groupₓ α] {n : ℤ} : Even n → ∀ a : α, IsSquare (a ^ n) := by
+  rintro ⟨n, rfl⟩ a
+  exact ⟨a ^ n, zpow_add _ _ _⟩
 
 -- `odd.tsub` requires `canonically_linear_ordered_semiring`, which we don't have
 theorem Even.tsub [CanonicallyLinearOrderedAddMonoid α] [Sub α] [HasOrderedSub α]
@@ -252,7 +299,7 @@ theorem Odd.add_odd : Odd m → Odd n → Even (m + n) := by
 
 @[simp]
 theorem odd_one : Odd (1 : α) :=
-  ⟨0, (zero_addₓ _).symm.trans (congr_argₓ (· + (1 : α)) (mul_zero _).symm)⟩
+  ⟨0, (zero_addₓ _).symm.trans (congr_arg (· + (1 : α)) (mul_zero _).symm)⟩
 
 @[simp]
 theorem odd_two_mul_add_one (m : α) : Odd (2 * m + 1) :=

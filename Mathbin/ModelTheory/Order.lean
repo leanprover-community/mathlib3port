@@ -73,7 +73,7 @@ def Term.le (t₁ t₂ : L.term (Sum α (Finₓ n))) : L.BoundedFormula α n :=
 
 /-- Joins two terms `t₁, t₂` in a formula representing `t₁ < t₂`. -/
 def Term.lt (t₁ t₂ : L.term (Sum α (Finₓ n))) : L.BoundedFormula α n :=
-  t₁.le t₂⊓∼(t₂.le t₁)
+  t₁.le t₂ ⊓ ∼(t₂.le t₁)
 
 variable (L)
 
@@ -123,7 +123,7 @@ protected def Sentence.noBotOrder : Language.order.Sentence :=
 /-- A sentence indicating that an order is dense:
 $\forall x, \forall y, x < y \to \exists z, x < z \wedge z < y$. -/
 protected def Sentence.denselyOrdered : Language.order.Sentence :=
-  ∀'∀'((&0).lt &1 ⟹ ∃'((&0).lt &2⊓(&2).lt &1))
+  ∀'∀'((&0).lt &1 ⟹ ∃'((&0).lt &2 ⊓ (&2).lt &1))
 
 /-- The theory of dense linear orders without endpoints. -/
 protected def Theory.DLO : Language.order.Theory :=

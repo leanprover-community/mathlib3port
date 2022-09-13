@@ -497,7 +497,7 @@ theorem Prime.eq_two_or_odd {p : ℕ} (hp : Prime p) : p = 2 ∨ p % 2 = 1 :=
           decide)).symm
 
 theorem Prime.eq_two_or_odd' {p : ℕ} (hp : Prime p) : p = 2 ∨ Odd p :=
-  Or.imp_right (fun h => ⟨p / 2, (div_add_modₓ p 2).symm.trans (congr_argₓ _ h)⟩) hp.eq_two_or_odd
+  Or.imp_right (fun h => ⟨p / 2, (div_add_modₓ p 2).symm.trans (congr_arg _ h)⟩) hp.eq_two_or_odd
 
 theorem Prime.even_iff {p : ℕ} (hp : Prime p) : Even p ↔ p = 2 := by
   rw [even_iff_two_dvd, prime_dvd_prime_iff_eq prime_two hp, eq_comm]
@@ -556,7 +556,7 @@ theorem prime_of_mem_factors : ∀ {n p}, p ∈ factors n → Prime p
     let m := minFac n
     have : n / m < n := factors_lemma
     have h₁ : p = m ∨ p ∈ factors (n / m) :=
-      (List.mem_cons_iffₓ _ _ _).1
+      (List.mem_cons_iff _ _ _).1
         (by
           rwa [factors] at h)
     Or.cases_on h₁

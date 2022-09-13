@@ -226,7 +226,7 @@ protected theorem sq [Pow γ ℕ] [HasMeasurablePow γ ℕ] (h : IdentDistrib f 
     IdentDistrib (fun x => f x ^ 2) (fun x => g x ^ 2) μ ν :=
   h.comp (measurable_id.pow_const 2)
 
-protected theorem coe_nnreal_ennreal {f : α → ℝ≥0 } {g : β → ℝ≥0 } (h : IdentDistrib f g μ ν) :
+protected theorem coe_nnreal_ennreal {f : α → ℝ≥0} {g : β → ℝ≥0} (h : IdentDistrib f g μ ν) :
     IdentDistrib (fun x => (f x : ℝ≥0∞)) (fun x => (g x : ℝ≥0∞)) μ ν :=
   h.comp measurable_coe_nnreal_ennreal
 
@@ -275,12 +275,12 @@ theorem Memℒp.uniform_integrable_of_ident_distrib_aux {ι : Type _} {f : ι �
   · exact ⟨0, fun i => False.elim (hι <| Nonempty.intro i)⟩
     
   obtain ⟨C, hC₁, hC₂⟩ := hℒp.snorm_indicator_norm_ge_pos_le μ (hfmeas _) hε
-  have hmeas : ∀ i, MeasurableSet { x | (⟨C, hC₁.le⟩ : ℝ≥0 ) ≤ ∥f i x∥₊ } := fun i =>
+  have hmeas : ∀ i, MeasurableSet { x | (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ∥f i x∥₊ } := fun i =>
     measurable_set_le measurable_const (hfmeas _).Measurable.nnnorm
   refine' ⟨⟨C, hC₁.le⟩, fun i => le_transₓ (le_of_eqₓ _) hC₂⟩
   have :
-    { x : α | (⟨C, hC₁.le⟩ : ℝ≥0 ) ≤ ∥f i x∥₊ }.indicator (f i) =
-      (fun x : E => if (⟨C, hC₁.le⟩ : ℝ≥0 ) ≤ ∥x∥₊ then x else 0) ∘ f i :=
+    { x : α | (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ∥f i x∥₊ }.indicator (f i) =
+      (fun x : E => if (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ∥x∥₊ then x else 0) ∘ f i :=
     by
     ext x
     simp only [Set.indicatorₓ, Set.mem_set_of_eq]

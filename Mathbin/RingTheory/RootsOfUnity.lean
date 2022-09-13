@@ -386,7 +386,7 @@ theorem pow_of_prime (h : IsPrimitiveRoot ζ k) {p : ℕ} (hprime : Nat.Prime p)
     IsPrimitiveRoot (ζ ^ p) k :=
   h.pow_of_coprime p (hprime.coprime_iff_not_dvd.2 hdiv)
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) }
 theorem pow_iff_coprime (h : IsPrimitiveRoot ζ k) (h0 : 0 < k) (i : ℕ) : IsPrimitiveRoot (ζ ^ i) k ↔ i.Coprime k := by
   refine' ⟨_, h.pow_of_coprime i⟩
   intro hi
@@ -701,16 +701,16 @@ theorem eq_pow_of_mem_roots_of_unity {k : ℕ+} {ζ ξ : Rˣ} (h : IsPrimitiveRo
   have hk0 : (0 : ℤ) < k := by
     exact_mod_cast k.pos
   let i := n % k
-  have hi0 : 0 ≤ i := Int.mod_nonneg _ (ne_of_gtₓ hk0)
+  have hi0 : 0 ≤ i := Int.mod_nonnegₓ _ (ne_of_gtₓ hk0)
   lift i to ℕ using hi0 with i₀ hi₀
   refine' ⟨i₀, _, _⟩
   · zify
     rw [hi₀]
-    exact Int.mod_lt_of_pos _ hk0
+    exact Int.mod_lt_of_posₓ _ hk0
     
   · have aux := h.zpow_eq_one
     rw [← coe_coe] at aux
-    rw [← zpow_coe_nat, hi₀, ← Int.mod_add_div n k, zpow_add, zpow_mul, aux, one_zpow, mul_oneₓ]
+    rw [← zpow_coe_nat, hi₀, ← Int.mod_add_divₓ n k, zpow_add, zpow_mul, aux, one_zpow, mul_oneₓ]
     
 
 theorem eq_pow_of_pow_eq_one {k : ℕ} {ζ ξ : R} (h : IsPrimitiveRoot ζ k) (hξ : ξ ^ k = 1) (h0 : 0 < k) :
@@ -828,7 +828,7 @@ theorem card_primitive_roots {ζ : R} {k : ℕ} (h : IsPrimitiveRoot ζ k) : (pr
     rintro i j hi - hj - H
     exact h.pow_inj hi hj H
     
-  · simp only [exists_prop, true_andₓ, mem_filter, mem_range, mem_univ]
+  · simp only [exists_propₓ, true_andₓ, mem_filter, mem_range, mem_univ]
     intro ξ hξ
     rw [mem_primitive_roots (Nat.pos_of_ne_zeroₓ h0), h.is_primitive_root_iff (Nat.pos_of_ne_zeroₓ h0)] at hξ
     rcases hξ with ⟨i, hin, hi, H⟩
@@ -858,7 +858,7 @@ theorem nth_roots_one_eq_bUnion_primitive_roots' {ζ : R} {n : ℕ+} (h : IsPrim
   symm
   apply Finset.eq_of_subset_of_card_le
   · intro x
-    simp only [nth_roots_finset, ← Multiset.to_finset_eq (nth_roots_nodup h), exists_prop, Finset.mem_bUnion,
+    simp only [nth_roots_finset, ← Multiset.to_finset_eq (nth_roots_nodup h), exists_propₓ, Finset.mem_bUnion,
       Finset.mem_filter, Finset.mem_range, mem_nth_roots, Finset.mem_mk, Nat.mem_divisors, and_trueₓ, Ne.def,
       Pnat.ne_zero, Pnat.pos, not_false_iff]
     rintro ⟨a, ⟨d, hd⟩, ha⟩
@@ -1106,7 +1106,7 @@ section Automorphisms
 
 variable {S} [CommRingₓ S] [IsDomain S] {μ : S} {n : ℕ+} (hμ : IsPrimitiveRoot μ n) (R) [CommRingₓ R] [Algebra R S]
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) }
 /-- The `monoid_hom` that takes an automorphism to the power of μ that μ gets mapped to under it. -/
 noncomputable def autToPow : (S ≃ₐ[R] S) →* (Zmod n)ˣ :=
   let μ' := hμ.toRootsOfUnity

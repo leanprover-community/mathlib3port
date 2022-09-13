@@ -81,7 +81,7 @@ theorem mod_part_lt_p : modPart p r < p := by
     
 
 theorem mod_part_nonneg : 0 ≤ modPart p r :=
-  Int.mod_nonneg _ <| by
+  Int.mod_nonnegₓ _ <| by
     exact_mod_cast hp_prime.1.ne_zero
 
 theorem is_unit_denom (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : IsUnit (r.denom : ℤ_[p]) := by
@@ -90,7 +90,7 @@ theorem is_unit_denom (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : IsUnit (r.deno
   rw [← not_ltₓ, val_eq_coe, coe_nat_cast]
   intro norm_denom_lt
   have hr : ∥(r * r.denom : ℚ_[p])∥ = ∥(r.num : ℚ_[p])∥ := by
-    rw_mod_cast[@Rat.mul_denom_eq_num r]
+    rw_mod_cast[@Ratₓ.mul_denom_eq_num r]
     rfl
   rw [padicNormE.mul] at hr
   have key : ∥(r.num : ℚ_[p])∥ < 1 := by
@@ -109,7 +109,7 @@ theorem is_unit_denom (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : IsUnit (r.deno
 theorem norm_sub_mod_part_aux (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : ↑p ∣ r.num - r.num * r.denom.gcdA p % p * ↑r.denom := by
   rw [← Zmod.int_coe_zmod_eq_zero_iff_dvd]
   simp only [Int.cast_coe_nat, Zmod.nat_cast_mod, Int.cast_mul, Int.cast_sub]
-  have := congr_argₓ (coe : ℤ → Zmod p) (gcd_eq_gcd_ab r.denom p)
+  have := congr_arg (coe : ℤ → Zmod p) (gcd_eq_gcd_ab r.denom p)
   simp only [Int.cast_coe_nat, add_zeroₓ, Int.cast_add, Zmod.nat_cast_self, Int.cast_mul, zero_mul] at this
   push_cast
   rw [mul_right_commₓ, mul_assoc, ← this]
@@ -132,7 +132,7 @@ theorem norm_sub_mod_part (h : ∥(r : ℚ_[p])∥ ≤ 1) : ∥(⟨r, h⟩ - mod
     simp only [sub_mul, Int.cast_coe_nat, eq_int_cast, Int.cast_mul, sub_left_inj, Int.cast_sub]
     apply Subtype.coe_injective
     simp only [coe_mul, Subtype.coe_mk, coe_nat_cast]
-    rw_mod_cast[@Rat.mul_denom_eq_num r]
+    rw_mod_cast[@Ratₓ.mul_denom_eq_num r]
     rfl
   exact norm_sub_mod_part_aux r h
 

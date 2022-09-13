@@ -188,7 +188,7 @@ theorem of_irreducible_pow {α} [Monoidₓ α] {x : α} {n : ℕ} (hn : n ≠ 1)
   intro h
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_lt hn
   rw [pow_succₓ, add_commₓ] at h
-  exact (or_iff_left_of_imp (is_unit_pos_pow_iff (Nat.succ_posₓ _)).mp).mp (of_irreducible_mul h)
+  exact (or_iff_left_of_impₓ (is_unit_pos_pow_iff (Nat.succ_posₓ _)).mp).mp (of_irreducible_mul h)
 
 theorem irreducible_or_factor {α} [Monoidₓ α] (x : α) (h : ¬IsUnit x) :
     Irreducible x ∨ ∃ a b, ¬IsUnit a ∧ ¬IsUnit b ∧ a * b = x := by
@@ -829,7 +829,7 @@ instance [Nontrivial α] : Nontrivial (Associates α) :=
       zero_ne_one this⟩⟩
 
 theorem exists_non_zero_rep {a : Associates α} : a ≠ 0 → ∃ a0 : α, a0 ≠ 0 ∧ Associates.mk a0 = a :=
-  Quotientₓ.induction_on a fun b nz => ⟨b, mt (congr_argₓ Quotientₓ.mk) nz, rfl⟩
+  Quotientₓ.induction_on a fun b nz => ⟨b, mt (congr_arg Quotientₓ.mk) nz, rfl⟩
 
 end MonoidWithZeroₓ
 
@@ -864,16 +864,16 @@ theorem Prime.le_or_le {p : Associates α} (hp : Prime p) {a b : Associates α} 
 theorem prime_mk (p : α) : Prime (Associates.mk p) ↔ Prime p := by
   rw [Prime, _root_.prime, forall_associated]
   trans
-  · apply and_congr
+  · apply and_congrₓ
     rfl
-    apply and_congr
+    apply and_congrₓ
     rfl
     apply forall_congrₓ
     intro a
     exact forall_associated
     
-  apply and_congr mk_ne_zero
-  apply and_congr
+  apply and_congrₓ mk_ne_zero
+  apply and_congrₓ
   · rw [is_unit_mk]
     
   refine' forall₂_congrₓ fun a b => _
@@ -881,7 +881,7 @@ theorem prime_mk (p : α) : Prime (Associates.mk p) ↔ Prime p := by
 
 theorem irreducible_mk (a : α) : Irreducible (Associates.mk a) ↔ Irreducible a := by
   simp only [irreducible_iff, is_unit_mk]
-  apply and_congr Iff.rfl
+  apply and_congrₓ Iff.rfl
   constructor
   · rintro h x y rfl
     simpa [is_unit_mk] using h (Associates.mk x) (Associates.mk y) rfl

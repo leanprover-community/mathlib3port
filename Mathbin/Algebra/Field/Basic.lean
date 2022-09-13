@@ -54,7 +54,7 @@ variable {α β K : Type _}
 is defined as `(a / b : K) = (a : K) * (b : K)⁻¹`.
 Use `coe` instead of `rat.cast_rec` for better definitional behaviour.
 -/
-def Rat.castRec [HasLiftT ℕ K] [HasLiftT ℤ K] [Mul K] [Inv K] : ℚ → K
+def Ratₓ.castRec [HasLiftT ℕ K] [HasLiftT ℤ K] [Mul K] [Inv K] : ℚ → K
   | ⟨a, b, _, _⟩ => ↑a * (↑b)⁻¹
 
 /-- Type class for the canonical homomorphism `ℚ → K`.
@@ -88,7 +88,7 @@ See also Note [forgetful inheritance].
 class DivisionRing (K : Type u) extends Ringₓ K, DivInvMonoidₓ K, Nontrivial K, HasRatCast K where
   mul_inv_cancel : ∀ {a : K}, a ≠ 0 → a * a⁻¹ = 1
   inv_zero : (0 : K)⁻¹ = 0
-  ratCast := Rat.castRec
+  ratCast := Ratₓ.castRec
   rat_cast_mk : ∀ (a : ℤ) (b : ℕ) (h1 h2), rat_cast ⟨a, b, h1, h2⟩ = a * b⁻¹ := by
     run_tac
       try_refl_tac
@@ -217,7 +217,7 @@ section DivisionRing
 
 variable [DivisionRing K] {a b : K}
 
-namespace Rat
+namespace Ratₓ
 
 -- see Note [coercion into rings]
 /-- Construct the canonical injection from `ℚ` into an arbitrary
@@ -239,7 +239,7 @@ instance (priority := 100) smulDivisionRing : HasSmul ℚ K :=
 theorem smul_def (a : ℚ) (x : K) : a • x = ↑a * x :=
   DivisionRing.qsmul_eq_mul' a x
 
-end Rat
+end Ratₓ
 
 @[simp]
 theorem div_neg_self {a : K} (h : a ≠ 0) : a / -a = -1 := by
@@ -451,7 +451,7 @@ protected def Function.Injective.divisionRing [DivisionRing K] {K'} [Zero K'] [O
     qsmul_eq_mul' := fun a x =>
       hf
         (by
-          erw [qsmul, mul, Rat.smul_def, rat_cast]) }
+          erw [qsmul, mul, Ratₓ.smul_def, rat_cast]) }
 
 -- See note [reducible non-instances]
 /-- Pullback a `field` along an injective function. -/
@@ -486,7 +486,7 @@ protected def Function.Injective.field [Field K] {K'} [Zero K'] [Mul K'] [Add K'
     qsmul_eq_mul' := fun a x =>
       hf
         (by
-          erw [qsmul, mul, Rat.smul_def, rat_cast]) }
+          erw [qsmul, mul, Ratₓ.smul_def, rat_cast]) }
 
 /-! ### Order dual -/
 

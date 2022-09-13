@@ -23,7 +23,7 @@ section Fold
 variable (op : α → α → α) [hc : IsCommutative α op] [ha : IsAssociative α op]
 
 -- mathport name: op
-local notation a "*" b => op a b
+local notation a " * " b => op a b
 
 include hc ha
 
@@ -51,30 +51,30 @@ theorem fold_zero (b : α) : (0 : Multiset α).fold op b = b :=
   rfl
 
 @[simp]
-theorem fold_cons_left : ∀ (b a : α) (s : Multiset α), (a ::ₘ s).fold op b = a*s.fold op b :=
+theorem fold_cons_left : ∀ (b a : α) (s : Multiset α), (a ::ₘ s).fold op b = a * s.fold op b :=
   foldr_cons _ _
 
-theorem fold_cons_right (b a : α) (s : Multiset α) : (a ::ₘ s).fold op b = s.fold op b*a := by
+theorem fold_cons_right (b a : α) (s : Multiset α) : (a ::ₘ s).fold op b = s.fold op b * a := by
   simp [hc.comm]
 
-theorem fold_cons'_right (b a : α) (s : Multiset α) : (a ::ₘ s).fold op b = s.fold op (b*a) := by
+theorem fold_cons'_right (b a : α) (s : Multiset α) : (a ::ₘ s).fold op b = s.fold op (b * a) := by
   rw [fold_eq_foldl, foldl_cons, ← fold_eq_foldl]
 
-theorem fold_cons'_left (b a : α) (s : Multiset α) : (a ::ₘ s).fold op b = s.fold op (a*b) := by
+theorem fold_cons'_left (b a : α) (s : Multiset α) : (a ::ₘ s).fold op b = s.fold op (a * b) := by
   rw [fold_cons'_right, hc.comm]
 
-theorem fold_add (b₁ b₂ : α) (s₁ s₂ : Multiset α) : (s₁ + s₂).fold op (b₁*b₂) = s₁.fold op b₁*s₂.fold op b₂ :=
+theorem fold_add (b₁ b₂ : α) (s₁ s₂ : Multiset α) : (s₁ + s₂).fold op (b₁ * b₂) = s₁.fold op b₁ * s₂.fold op b₂ :=
   Multiset.induction_on s₂
     (by
       rw [add_zeroₓ, fold_zero, ← fold_cons'_right, ← fold_cons_right op])
     (by
       simp (config := { contextual := true }) <;> cc)
 
-theorem fold_singleton (b a : α) : ({a} : Multiset α).fold op b = a*b :=
+theorem fold_singleton (b a : α) : ({a} : Multiset α).fold op b = a * b :=
   foldr_singleton _ _ _ _
 
 theorem fold_distrib {f g : β → α} (u₁ u₂ : α) (s : Multiset β) :
-    (s.map fun x => f x*g x).fold op (u₁*u₂) = (s.map f).fold op u₁*(s.map g).fold op u₂ :=
+    (s.map fun x => f x * g x).fold op (u₁ * u₂) = (s.map f).fold op u₁ * (s.map g).fold op u₂ :=
   Multiset.induction_on s
     (by
       simp )
@@ -90,7 +90,7 @@ theorem fold_hom {op' : β → β → β} [IsCommutative β op'] [IsAssociative 
       simp (config := { contextual := true })[hm])
 
 theorem fold_union_inter [DecidableEq α] (s₁ s₂ : Multiset α) (b₁ b₂ : α) :
-    ((s₁ ∪ s₂).fold op b₁*(s₁ ∩ s₂).fold op b₂) = s₁.fold op b₁*s₂.fold op b₂ := by
+    ((s₁ ∪ s₂).fold op b₁ * (s₁ ∩ s₂).fold op b₂) = s₁.fold op b₁ * s₂.fold op b₂ := by
   rw [← fold_add op, union_add_inter, fold_add op]
 
 @[simp]

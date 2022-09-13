@@ -19,16 +19,16 @@ open Cardinal
 
 /-- The cardinality of the complex numbers, as a type. -/
 @[simp]
-theorem mk_complex : # ℂ = 𝔠 := by
+theorem mk_complex : (#ℂ) = 𝔠 := by
   rw [mk_congr Complex.equivRealProd, mk_prod, lift_id, mk_real, continuum_mul_self]
 
 /-- The cardinality of the complex numbers, as a set. -/
 @[simp]
-theorem mk_univ_complex : # (Set.Univ : Set ℂ) = 𝔠 := by
+theorem mk_univ_complex : (#(Set.Univ : Set ℂ)) = 𝔠 := by
   rw [mk_univ, mk_complex]
 
 /-- The complex numbers are not countable. -/
 theorem not_countable_complex : ¬(Set.Univ : Set ℂ).Countable := by
-  rw [← mk_set_le_aleph_0, not_leₓ, mk_univ_complex]
+  rw [← le_aleph_0_iff_set_countable, not_leₓ, mk_univ_complex]
   apply cantor
 

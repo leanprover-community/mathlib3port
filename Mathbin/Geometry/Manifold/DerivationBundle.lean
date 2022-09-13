@@ -39,45 +39,45 @@ def PointedSmoothMap (x : M) :=
   C^n⟮I, M; 𝕜⟯
 
 -- mathport name: pointed_smooth_map
-localized [Derivation] notation "C^" n "⟮" I "," M ";" 𝕜 "⟯⟨" x "⟩" => PointedSmoothMap 𝕜 I M n x
+localized [Derivation] notation "C^" n "⟮" I ", " M "; " 𝕜 "⟯⟨" x "⟩" => PointedSmoothMap 𝕜 I M n x
 
 variable {𝕜 M}
 
 namespace PointedSmoothMap
 
-instance {x : M} : CoeFun C^∞⟮I,M;𝕜⟯⟨x⟩ fun _ => M → 𝕜 :=
+instance {x : M} : CoeFun C^∞⟮I, M; 𝕜⟯⟨x⟩ fun _ => M → 𝕜 :=
   ContMdiffMap.hasCoeToFun
 
-instance {x : M} : CommRingₓ C^∞⟮I,M;𝕜⟯⟨x⟩ :=
+instance {x : M} : CommRingₓ C^∞⟮I, M; 𝕜⟯⟨x⟩ :=
   SmoothMap.commRing
 
-instance {x : M} : Algebra 𝕜 C^∞⟮I,M;𝕜⟯⟨x⟩ :=
+instance {x : M} : Algebra 𝕜 C^∞⟮I, M; 𝕜⟯⟨x⟩ :=
   SmoothMap.algebra
 
-instance {x : M} : Inhabited C^∞⟮I,M;𝕜⟯⟨x⟩ :=
+instance {x : M} : Inhabited C^∞⟮I, M; 𝕜⟯⟨x⟩ :=
   ⟨0⟩
 
-instance {x : M} : Algebra C^∞⟮I,M;𝕜⟯⟨x⟩ C^∞⟮I, M; 𝕜⟯ :=
+instance {x : M} : Algebra C^∞⟮I, M; 𝕜⟯⟨x⟩ C^∞⟮I, M; 𝕜⟯ :=
   Algebra.id C^∞⟮I, M; 𝕜⟯
 
-instance {x : M} : IsScalarTower 𝕜 C^∞⟮I,M;𝕜⟯⟨x⟩ C^∞⟮I, M; 𝕜⟯ :=
+instance {x : M} : IsScalarTower 𝕜 C^∞⟮I, M; 𝕜⟯⟨x⟩ C^∞⟮I, M; 𝕜⟯ :=
   IsScalarTower.right
 
 variable {I}
 
 /-- `smooth_map.eval_ring_hom` gives rise to an algebra structure of `C^∞⟮I, M; 𝕜⟯` on `𝕜`. -/
-instance evalAlgebra {x : M} : Algebra C^∞⟮I,M;𝕜⟯⟨x⟩ 𝕜 :=
-  (SmoothMap.evalRingHom x : C^∞⟮I,M;𝕜⟯⟨x⟩ →+* 𝕜).toAlgebra
+instance evalAlgebra {x : M} : Algebra C^∞⟮I, M; 𝕜⟯⟨x⟩ 𝕜 :=
+  (SmoothMap.evalRingHom x : C^∞⟮I, M; 𝕜⟯⟨x⟩ →+* 𝕜).toAlgebra
 
 /-- With the `eval_algebra` algebra structure evaluation is actually an algebra morphism. -/
-def eval (x : M) : C^∞⟮I, M; 𝕜⟯ →ₐ[C^∞⟮I,M;𝕜⟯⟨x⟩] 𝕜 :=
-  Algebra.ofId C^∞⟮I,M;𝕜⟯⟨x⟩ 𝕜
+def eval (x : M) : C^∞⟮I, M; 𝕜⟯ →ₐ[C^∞⟮I, M; 𝕜⟯⟨x⟩] 𝕜 :=
+  Algebra.ofId C^∞⟮I, M; 𝕜⟯⟨x⟩ 𝕜
 
-theorem smul_def (x : M) (f : C^∞⟮I,M;𝕜⟯⟨x⟩) (k : 𝕜) : f • k = f x * k :=
+theorem smul_def (x : M) (f : C^∞⟮I, M; 𝕜⟯⟨x⟩) (k : 𝕜) : f • k = f x * k :=
   rfl
 
 instance (x : M) :
-    IsScalarTower 𝕜 C^∞⟮I,M;𝕜⟯⟨x⟩ 𝕜 where smul_assoc := fun k f h => by
+    IsScalarTower 𝕜 C^∞⟮I, M; 𝕜⟯⟨x⟩ 𝕜 where smul_assoc := fun k f h => by
     simp only [smul_def, Algebra.id.smul_eq_mul, SmoothMap.coe_smul, Pi.smul_apply, mul_assoc]
 
 end PointedSmoothMap
@@ -88,7 +88,7 @@ open Derivation
 tangent space -/
 @[reducible]
 def PointDerivation (x : M) :=
-  Derivation 𝕜 C^∞⟮I,M;𝕜⟯⟨x⟩ 𝕜
+  Derivation 𝕜 C^∞⟮I, M; 𝕜⟯⟨x⟩ 𝕜
 
 section
 
@@ -96,7 +96,7 @@ variable (I) {M} (X Y : Derivation 𝕜 C^∞⟮I, M; 𝕜⟯ C^∞⟮I, M; 𝕜
 
 /-- Evaluation at a point gives rise to a `C^∞⟮I, M; 𝕜⟯`-linear map between `C^∞⟮I, M; 𝕜⟯` and `𝕜`.
  -/
-def SmoothFunction.evalAt (x : M) : C^∞⟮I, M; 𝕜⟯ →ₗ[C^∞⟮I,M;𝕜⟯⟨x⟩] 𝕜 :=
+def SmoothFunction.evalAt (x : M) : C^∞⟮I, M; 𝕜⟯ →ₗ[C^∞⟮I, M; 𝕜⟯⟨x⟩] 𝕜 :=
   (PointedSmoothMap.eval x).toLinearMap
 
 namespace Derivation

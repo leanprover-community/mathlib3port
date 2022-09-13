@@ -48,7 +48,7 @@ theorem coe_submodule_top : coeSubmodule S (⊤ : Ideal R) = 1 := by
   rw [coe_submodule, Submodule.map_top, Submodule.one_eq_range]
 
 @[simp]
-theorem coe_submodule_sup (I J : Ideal R) : coeSubmodule S (I⊔J) = coeSubmodule S I⊔coeSubmodule S J :=
+theorem coe_submodule_sup (I J : Ideal R) : coeSubmodule S (I ⊔ J) = coeSubmodule S I ⊔ coeSubmodule S J :=
   Submodule.map_sup _ _ _
 
 @[simp]

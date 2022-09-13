@@ -81,7 +81,7 @@ class IsFiltered extends IsFilteredOrEmpty C : Prop where
 
 instance (priority := 100) is_filtered_or_empty_of_semilattice_sup (α : Type u) [SemilatticeSup α] :
     IsFilteredOrEmpty α where
-  cocone_objs := fun X Y => ⟨X⊔Y, homOfLe le_sup_left, homOfLe le_sup_right, trivialₓ⟩
+  cocone_objs := fun X Y => ⟨X ⊔ Y, homOfLe le_sup_left, homOfLe le_sup_right, trivialₓ⟩
   cocone_maps := fun X Y f g =>
     ⟨Y, 𝟙 _, by
       ext⟩
@@ -278,7 +278,7 @@ theorem cocone_nonempty (F : J ⥤ C) : Nonempty (Cocone F) := by
   dsimp'
   simp only [category.comp_id]
   apply w
-  simp only [Finset.mem_univ, Finset.mem_bUnion, exists_and_distrib_left, exists_prop_of_true, Finset.mem_image]
+  simp only [Finset.mem_univ, Finset.mem_bUnion, exists_and_distrib_leftₓ, exists_prop_of_true, Finset.mem_image]
   exact
     ⟨j, rfl, j', g, by
       simp ⟩
@@ -471,7 +471,7 @@ class IsCofiltered extends IsCofilteredOrEmpty C : Prop where
 
 instance (priority := 100) is_cofiltered_or_empty_of_semilattice_inf (α : Type u) [SemilatticeInf α] :
     IsCofilteredOrEmpty α where
-  cocone_objs := fun X Y => ⟨X⊓Y, homOfLe inf_le_left, homOfLe inf_le_right, trivialₓ⟩
+  cocone_objs := fun X Y => ⟨X ⊓ Y, homOfLe inf_le_left, homOfLe inf_le_right, trivialₓ⟩
   cocone_maps := fun X Y f g =>
     ⟨X, 𝟙 _, by
       ext⟩
@@ -669,7 +669,7 @@ theorem cone_nonempty (F : J ⥤ C) : Nonempty (Cone F) := by
   simp only [category.id_comp]
   symm
   apply w
-  simp only [Finset.mem_univ, Finset.mem_bUnion, exists_and_distrib_left, exists_prop_of_true, Finset.mem_image]
+  simp only [Finset.mem_univ, Finset.mem_bUnion, exists_and_distrib_leftₓ, exists_prop_of_true, Finset.mem_image]
   exact
     ⟨j, rfl, j', g, by
       simp ⟩

@@ -85,7 +85,7 @@ theorem quadratic_eq_zero_iff (ha : a ≠ 0) {s : K} (h : discrim a b c = s * s)
   rw [quadratic_eq_zero_iff_discrim_eq_sq h2 ha, h, sq, mul_self_eq_mul_self_iff]
   have ne : 2 * a ≠ 0 := mul_ne_zero h2 ha
   field_simp
-  apply or_congr
+  apply or_congrₓ
   · constructor <;>
       intro h' <;>
         trace

@@ -90,10 +90,10 @@ theorem IsLowerSet.union (hs : IsLowerSet s) (ht : IsLowerSet t) : IsLowerSet (s
   Or.impₓ (hs h) (ht h)
 
 theorem IsUpperSet.inter (hs : IsUpperSet s) (ht : IsUpperSet t) : IsUpperSet (s ∩ t) := fun a b h =>
-  And.imp (hs h) (ht h)
+  And.impₓ (hs h) (ht h)
 
 theorem IsLowerSet.inter (hs : IsLowerSet s) (ht : IsLowerSet t) : IsLowerSet (s ∩ t) := fun a b h =>
-  And.imp (hs h) (ht h)
+  And.impₓ (hs h) (ht h)
 
 theorem is_upper_set_Union {f : ι → Set α} (hf : ∀ i, IsUpperSet (f i)) : IsUpperSet (⋃ i, f i) := fun a b h =>
   Exists₂.imp <| forall_range_iff.2 fun i => hf i h
@@ -219,6 +219,40 @@ theorem IsLowerSet.not_bot_mem (hs : IsLowerSet s) : ⊥ ∉ s ↔ s = ∅ :=
 
 end OrderBot
 
+section NoMaxOrder
+
+variable [NoMaxOrder α] (a)
+
+theorem IsUpperSet.not_bdd_above (hs : IsUpperSet s) : s.Nonempty → ¬BddAbove s := by
+  rintro ⟨a, ha⟩ ⟨b, hb⟩
+  obtain ⟨c, hc⟩ := exists_gt b
+  exact hc.not_le (hb <| hs ((hb ha).trans hc.le) ha)
+
+theorem not_bdd_above_Ici : ¬BddAbove (Ici a) :=
+  (is_upper_set_Ici _).not_bdd_above nonempty_Ici
+
+theorem not_bdd_above_Ioi : ¬BddAbove (Ioi a) :=
+  (is_upper_set_Ioi _).not_bdd_above nonempty_Ioi
+
+end NoMaxOrder
+
+section NoMinOrder
+
+variable [NoMinOrder α] (a)
+
+theorem IsLowerSet.not_bdd_below (hs : IsLowerSet s) : s.Nonempty → ¬BddBelow s := by
+  rintro ⟨a, ha⟩ ⟨b, hb⟩
+  obtain ⟨c, hc⟩ := exists_lt b
+  exact hc.not_le (hb <| hs (hc.le.trans <| hb ha) ha)
+
+theorem not_bdd_below_Iic : ¬BddBelow (Iic a) :=
+  (is_lower_set_Iic _).not_bdd_below nonempty_Iic
+
+theorem not_bdd_below_Iio : ¬BddBelow (Iio a) :=
+  (is_lower_set_Iio _).not_bdd_below nonempty_Iio
+
+end NoMinOrder
+
 end Preorderₓ
 
 /-! ### Bundled upper/lower sets -/
@@ -327,11 +361,11 @@ theorem coe_bot : ((⊥ : UpperSet α) : Set α) = univ :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_sup (s t : UpperSet α) : (↑(s⊔t) : Set α) = s ∩ t :=
+theorem coe_sup (s t : UpperSet α) : (↑(s ⊔ t) : Set α) = s ∩ t :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_inf (s t : UpperSet α) : (↑(s⊓t) : Set α) = s ∪ t :=
+theorem coe_inf (s t : UpperSet α) : (↑(s ⊓ t) : Set α) = s ∪ t :=
   rfl
 
 @[simp, norm_cast]
@@ -371,11 +405,11 @@ theorem mem_bot : a ∈ (⊥ : UpperSet α) :=
   trivialₓ
 
 @[simp]
-theorem mem_sup_iff : a ∈ s⊔t ↔ a ∈ s ∧ a ∈ t :=
+theorem mem_sup_iff : a ∈ s ⊔ t ↔ a ∈ s ∧ a ∈ t :=
   Iff.rfl
 
 @[simp]
-theorem mem_inf_iff : a ∈ s⊓t ↔ a ∈ s ∨ a ∈ t :=
+theorem mem_inf_iff : a ∈ s ⊓ t ↔ a ∈ s ∨ a ∈ t :=
   Iff.rfl
 
 @[simp]
@@ -416,7 +450,7 @@ instance : HasSup (LowerSet α) :=
   ⟨fun s t => ⟨s ∪ t, fun a b h => Or.impₓ (s.lower h) (t.lower h)⟩⟩
 
 instance : HasInf (LowerSet α) :=
-  ⟨fun s t => ⟨s ∩ t, fun a b h => And.imp (s.lower h) (t.lower h)⟩⟩
+  ⟨fun s t => ⟨s ∩ t, fun a b h => And.impₓ (s.lower h) (t.lower h)⟩⟩
 
 instance : HasTop (LowerSet α) :=
   ⟨⟨Univ, fun a b h => id⟩⟩
@@ -449,11 +483,11 @@ theorem coe_bot : ((⊥ : LowerSet α) : Set α) = ∅ :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_sup (s t : LowerSet α) : (↑(s⊔t) : Set α) = s ∪ t :=
+theorem coe_sup (s t : LowerSet α) : (↑(s ⊔ t) : Set α) = s ∪ t :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_inf (s t : LowerSet α) : (↑(s⊓t) : Set α) = s ∩ t :=
+theorem coe_inf (s t : LowerSet α) : (↑(s ⊓ t) : Set α) = s ∩ t :=
   rfl
 
 @[simp, norm_cast]
@@ -493,11 +527,11 @@ theorem not_mem_bot : a ∉ (⊥ : LowerSet α) :=
   id
 
 @[simp]
-theorem mem_sup_iff : a ∈ s⊔t ↔ a ∈ s ∨ a ∈ t :=
+theorem mem_sup_iff : a ∈ s ⊔ t ↔ a ∈ s ∨ a ∈ t :=
   Iff.rfl
 
 @[simp]
-theorem mem_inf_iff : a ∈ s⊓t ↔ a ∈ s ∧ a ∈ t :=
+theorem mem_inf_iff : a ∈ s ⊓ t ↔ a ∈ s ∧ a ∈ t :=
   Iff.rfl
 
 @[simp]
@@ -562,11 +596,11 @@ theorem compl_le_compl : s.compl ≤ t.compl ↔ s ≤ t :=
   compl_subset_compl
 
 @[simp]
-protected theorem compl_sup (s t : UpperSet α) : (s⊔t).compl = s.compl⊔t.compl :=
+protected theorem compl_sup (s t : UpperSet α) : (s ⊔ t).compl = s.compl ⊔ t.compl :=
   LowerSet.ext compl_inf
 
 @[simp]
-protected theorem compl_inf (s t : UpperSet α) : (s⊓t).compl = s.compl⊓t.compl :=
+protected theorem compl_inf (s t : UpperSet α) : (s ⊓ t).compl = s.compl ⊓ t.compl :=
   LowerSet.ext compl_sup
 
 @[simp]
@@ -631,10 +665,10 @@ theorem compl_compl (s : LowerSet α) : s.compl.compl = s :=
 theorem compl_le_compl : s.compl ≤ t.compl ↔ s ≤ t :=
   compl_subset_compl
 
-protected theorem compl_sup (s t : LowerSet α) : (s⊔t).compl = s.compl⊔t.compl :=
+protected theorem compl_sup (s t : LowerSet α) : (s ⊔ t).compl = s.compl ⊔ t.compl :=
   UpperSet.ext compl_sup
 
-protected theorem compl_inf (s t : LowerSet α) : (s⊓t).compl = s.compl⊓t.compl :=
+protected theorem compl_inf (s t : LowerSet α) : (s ⊓ t).compl = s.compl ⊓ t.compl :=
   UpperSet.ext compl_inf
 
 protected theorem compl_top : (⊤ : LowerSet α).compl = ⊤ :=
@@ -735,7 +769,7 @@ section SemilatticeSup
 variable [SemilatticeSup α]
 
 @[simp]
-theorem Ici_sup (a b : α) : ici (a⊔b) = ici a⊔ici b :=
+theorem Ici_sup (a b : α) : ici (a ⊔ b) = ici a ⊔ ici b :=
   ext Ici_inter_Ici.symm
 
 /-- `upper_set.Ici` as a `sup_hom`. -/
@@ -829,7 +863,7 @@ section SemilatticeInf
 variable [SemilatticeInf α]
 
 @[simp]
-theorem Iic_inf (a b : α) : iic (a⊓b) = iic a⊓iic b :=
+theorem Iic_inf (a b : α) : iic (a ⊓ b) = iic a ⊓ iic b :=
   SetLike.coe_injective Iic_inter_Iic.symm
 
 /-- `lower_set.Iic` as an `inf_hom`. -/
@@ -976,35 +1010,35 @@ theorem lower_closure_univ : lowerClosure (Univ : Set α) = ⊤ :=
 
 @[simp]
 theorem upper_closure_eq_top_iff : upperClosure s = ⊤ ↔ s = ∅ :=
-  ⟨fun h => subset_empty_iff.1 <| subset_upper_closure.trans (congr_argₓ coe h).Subset, by
+  ⟨fun h => subset_empty_iff.1 <| subset_upper_closure.trans (congr_arg coe h).Subset, by
     rintro rfl
     exact upper_closure_empty⟩
 
 @[simp]
 theorem lower_closure_eq_bot_iff : lowerClosure s = ⊥ ↔ s = ∅ :=
-  ⟨fun h => subset_empty_iff.1 <| subset_lower_closure.trans (congr_argₓ coe h).Subset, by
+  ⟨fun h => subset_empty_iff.1 <| subset_lower_closure.trans (congr_arg coe h).Subset, by
     rintro rfl
     exact lower_closure_empty⟩
 
 @[simp]
-theorem upper_closure_union (s t : Set α) : upperClosure (s ∪ t) = upperClosure s⊓upperClosure t := by
+theorem upper_closure_union (s t : Set α) : upperClosure (s ∪ t) = upperClosure s ⊓ upperClosure t := by
   ext
   simp [or_and_distrib_right, exists_or_distrib]
 
 @[simp]
-theorem lower_closure_union (s t : Set α) : lowerClosure (s ∪ t) = lowerClosure s⊔lowerClosure t := by
+theorem lower_closure_union (s t : Set α) : lowerClosure (s ∪ t) = lowerClosure s ⊔ lowerClosure t := by
   ext
   simp [or_and_distrib_right, exists_or_distrib]
 
 @[simp]
 theorem upper_closure_Union (f : ι → Set α) : upperClosure (⋃ i, f i) = ⨅ i, upperClosure (f i) := by
   ext
-  simp [← exists_and_distrib_right, @exists_comm α]
+  simp [← exists_and_distrib_rightₓ, @exists_comm α]
 
 @[simp]
 theorem lower_closure_Union (f : ι → Set α) : lowerClosure (⋃ i, f i) = ⨆ i, lowerClosure (f i) := by
   ext
-  simp [← exists_and_distrib_right, @exists_comm α]
+  simp [← exists_and_distrib_rightₓ, @exists_comm α]
 
 @[simp]
 theorem upper_closure_sUnion (S : Set (Set α)) : upperClosure (⋃₀S) = ⨅ s ∈ S, upperClosure s := by

@@ -95,7 +95,7 @@ theorem rel_iff_exists_classes (r : Setoidₓ α) {x y} : r.Rel x y ↔ ∃ c �
 theorem classes_inj {r₁ r₂ : Setoidₓ α} : r₁ = r₂ ↔ r₁.Classes = r₂.Classes :=
   ⟨fun h => h ▸ rfl, fun h =>
     ext' fun a b => by
-      simp only [rel_iff_exists_classes, exists_prop, h]⟩
+      simp only [rel_iff_exists_classes, exists_propₓ, h]⟩
 
 /-- The empty set is not an equivalence class. -/
 theorem empty_not_mem_classes {r : Setoidₓ α} : ∅ ∉ r.Classes := fun ⟨y, hy⟩ =>

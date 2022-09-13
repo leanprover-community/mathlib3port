@@ -576,19 +576,19 @@ theorem eval_prec_succ (cf cg : Code) (a k : ℕ) :
 instance : Membership (ℕ →. ℕ) Code :=
   ⟨fun f c => eval c = f⟩
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem eval_const : ∀ n m, eval (Code.const n) m = Part.some n
   | 0, m => rfl
   | n + 1, m => by
     simp [*]
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem eval_id (n) : eval Code.id n = Part.some n := by
   simp [(· <*> ·)]
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:385:22: warning: unsupported simp config option: iota_eqn
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:387:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem eval_curry (c n x) : eval (curry c n) x = eval c (mkpair n x) := by
   simp [(· <*> ·)]
@@ -716,11 +716,11 @@ theorem evaln_mono : ∀ {k₁ k₂ c n x}, k₁ ≤ k₂ → x ∈ evaln k₁ c
       exact h
     · -- pair cf cg
       simp [(· <*> ·)] at h⊢
-      exact h.imp fun a => And.imp (hf _ _) <| Exists.imp fun b => And.imp_left (hg _ _)
+      exact h.imp fun a => And.impₓ (hf _ _) <| Exists.imp fun b => And.imp_left (hg _ _)
       
     · -- comp cf cg
       simp at h⊢
-      exact h.imp fun a => And.imp (hg _ _) (hf _ _)
+      exact h.imp fun a => And.impₓ (hg _ _) (hf _ _)
       
     · -- prec cf cg
       revert h
@@ -733,7 +733,7 @@ theorem evaln_mono : ∀ {k₁ k₂ c n x}, k₁ ≤ k₂ → x ∈ evaln k₁ c
       
     · -- rfind' cf
       simp at h⊢
-      refine' h.imp fun x => And.imp (hf _ _) _
+      refine' h.imp fun x => And.impₓ (hf _ _) _
       by_cases' x0 : x = 0 <;> simp [x0]
       exact evaln_mono hl'
       

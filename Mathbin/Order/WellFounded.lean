@@ -164,7 +164,7 @@ theorem eq_strict_mono_iff_eq_range {f g : β → γ} (hf : StrictMono f) (hg : 
     exact fun b H =>
       le_antisymmₓ (eq_strict_mono_iff_eq_range_aux hf hg hfg H)
         (eq_strict_mono_iff_eq_range_aux hg hf hfg.symm fun a hab => (H a hab).symm),
-    congr_argₓ _⟩
+    congr_arg _⟩
 
 theorem self_le_of_strict_mono {f : β → β} (hf : StrictMono f) : ∀ n, n ≤ f n := by
   by_contra' h₁

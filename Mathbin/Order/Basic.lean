@@ -364,7 +364,7 @@ theorem lt_or_lt_iff_ne [LinearOrderₓ α] {x y : α} : x < y ∨ y < x ↔ x �
   ne_iff_lt_or_gtₓ.symm
 
 theorem not_lt_iff_eq_or_ltₓ [LinearOrderₓ α] {a b : α} : ¬a < b ↔ a = b ∨ b < a :=
-  not_ltₓ.trans <| Decidable.le_iff_eq_or_ltₓ.trans <| or_congr eq_comm Iff.rfl
+  not_ltₓ.trans <| Decidable.le_iff_eq_or_ltₓ.trans <| or_congrₓ eq_comm Iff.rfl
 
 theorem exists_ge_of_linearₓ [LinearOrderₓ α] (a b : α) : ∃ c, a ≤ c ∧ b ≤ c :=
   match le_totalₓ a b with
@@ -381,7 +381,7 @@ theorem le_imp_le_iff_lt_imp_ltₓ {β} [LinearOrderₓ α] [LinearOrderₓ β] 
 
 theorem lt_iff_lt_of_le_iff_le'ₓ {β} [Preorderₓ α] [Preorderₓ β] {a b : α} {c d : β} (H : a ≤ b ↔ c ≤ d)
     (H' : b ≤ a ↔ d ≤ c) : b < a ↔ d < c :=
-  lt_iff_le_not_leₓ.trans <| (and_congr H' (not_congr H)).trans lt_iff_le_not_leₓ.symm
+  lt_iff_le_not_leₓ.trans <| (and_congrₓ H' (not_congr H)).trans lt_iff_le_not_leₓ.symm
 
 theorem lt_iff_lt_of_le_iff_leₓ {β} [LinearOrderₓ α] [LinearOrderₓ β] {a b : α} {c d : β} (H : a ≤ b ↔ c ≤ d) :
     b < a ↔ d < c :=
@@ -678,10 +678,10 @@ class HasInf (α : Type u) where
   inf : α → α → α
 
 -- mathport name: «expr ⊔ »
-infixl:68 "⊔" => HasSup.sup
+infixl:68 " ⊔ " => HasSup.sup
 
 -- mathport name: «expr ⊓ »
-infixl:69 "⊓" => HasInf.inf
+infixl:69 " ⊓ " => HasInf.inf
 
 /-! ### Lifts of order instances -/
 
@@ -708,11 +708,11 @@ them for `max` and `min` fields. See `linear_order.lift'` for a version that aut
 `max` fields. See note [reducible non-instances]. -/
 @[reducible]
 def LinearOrderₓ.lift {α β} [LinearOrderₓ β] [HasSup α] [HasInf α] (f : α → β) (inj : Injective f)
-    (hsup : ∀ x y, f (x⊔y) = max (f x) (f y)) (hinf : ∀ x y, f (x⊓y) = min (f x) (f y)) : LinearOrderₓ α :=
+    (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y)) (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) : LinearOrderₓ α :=
   { PartialOrderₓ.lift f inj with le_total := fun x y => le_totalₓ (f x) (f y),
     decidableLe := fun x y => (inferInstance : Decidable (f x ≤ f y)),
     decidableLt := fun x y => (inferInstance : Decidable (f x < f y)),
-    DecidableEq := fun x y => decidableOfIff (f x = f y) inj.eq_iff, min := (·⊓·), max := (·⊔·),
+    DecidableEq := fun x y => decidableOfIff (f x = f y) inj.eq_iff, min := (· ⊓ ·), max := (· ⊔ ·),
     min_def := by
       ext x y
       apply inj
@@ -815,10 +815,10 @@ instance (α : Type u) (β : Type v) [Preorderₓ α] [Preorderₓ β] : Preorde
 
 @[simp]
 theorem swap_lt_swapₓ : x.swap < y.swap ↔ x < y :=
-  and_congr swap_le_swap (not_congr swap_le_swap)
+  and_congrₓ swap_le_swap (not_congr swap_le_swap)
 
 theorem mk_le_mk_iff_leftₓ : (a₁, b) ≤ (a₂, b) ↔ a₁ ≤ a₂ :=
-  and_iff_left le_rflₓ
+  and_iff_leftₓ le_rflₓ
 
 theorem mk_le_mk_iff_rightₓ : (a, b₁) ≤ (a, b₂) ↔ b₁ ≤ b₂ :=
   and_iff_right le_rflₓ

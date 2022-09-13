@@ -51,7 +51,7 @@ derived series are also ideals of the enclosing algebra.
 See also `lie_ideal.derived_series_eq_derived_series_of_ideal_comap` and
 `lie_ideal.derived_series_eq_derived_series_of_ideal_map` below. -/
 def derivedSeriesOfIdeal (k : ℕ) : LieIdeal R L → LieIdeal R L :=
-  (fun I => ⁅I,I⁆)^[k]
+  (fun I => ⁅I, I⁆)^[k]
 
 @[simp]
 theorem derived_series_of_ideal_zero : derivedSeriesOfIdeal R L 0 I = I :=
@@ -59,8 +59,8 @@ theorem derived_series_of_ideal_zero : derivedSeriesOfIdeal R L 0 I = I :=
 
 @[simp]
 theorem derived_series_of_ideal_succ (k : ℕ) :
-    derivedSeriesOfIdeal R L (k + 1) I = ⁅derivedSeriesOfIdeal R L k I,derivedSeriesOfIdeal R L k I⁆ :=
-  Function.iterate_succ_apply' (fun I => ⁅I,I⁆) k I
+    derivedSeriesOfIdeal R L (k + 1) I = ⁅derivedSeriesOfIdeal R L k I, derivedSeriesOfIdeal R L k I⁆ :=
+  Function.iterate_succ_apply' (fun I => ⁅I, I⁆) k I
 
 /-- The derived series of Lie ideals of a Lie algebra. -/
 abbrev derivedSeries (k : ℕ) : LieIdeal R L :=
@@ -114,8 +114,8 @@ theorem derived_series_of_ideal_antitone {k l : ℕ} (h : l ≤ k) : D k I ≤ D
 
 theorem derived_series_of_ideal_add_le_add (J : LieIdeal R L) (k l : ℕ) : D (k + l) (I + J) ≤ D k I + D l J := by
   let D₁ : LieIdeal R L →o LieIdeal R L :=
-    { toFun := fun I => ⁅I,I⁆, monotone' := fun I J h => LieSubmodule.mono_lie I J I J h h }
-  have h₁ : ∀ I J : LieIdeal R L, D₁ (I⊔J) ≤ D₁ I⊔J := by
+    { toFun := fun I => ⁅I, I⁆, monotone' := fun I J h => LieSubmodule.mono_lie I J I J h h }
+  have h₁ : ∀ I J : LieIdeal R L, D₁ (I ⊔ J) ≤ D₁ I ⊔ J := by
     simp [LieSubmodule.lie_le_right, LieSubmodule.lie_le_left, le_sup_of_le_right]
   rw [← D₁.iterate_sup_le_sup_iff] at h₁
   exact h₁ k l I J

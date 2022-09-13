@@ -256,14 +256,14 @@ the centroid of an n-dimensional face and is orthogonal to the
 opposite edge (in 2 dimensions, this is the same as an altitude).
 This definition is only intended to be used when `i₁ ≠ i₂`. -/
 def mongePlane {n : ℕ} (s : Simplex ℝ P (n + 2)) (i₁ i₂ : Finₓ (n + 3)) : AffineSubspace ℝ P :=
-  mk' (({i₁, i₂}ᶜ : Finset (Finₓ (n + 3))).centroid ℝ s.points)
-      (ℝ∙s.points i₁ -ᵥ s.points i₂)ᗮ⊓affineSpan ℝ (Set.Range s.points)
+  mk' (({i₁, i₂}ᶜ : Finset (Finₓ (n + 3))).centroid ℝ s.points) (ℝ ∙ s.points i₁ -ᵥ s.points i₂)ᗮ ⊓
+    affineSpan ℝ (Set.Range s.points)
 
 /-- The definition of a Monge plane. -/
 theorem monge_plane_def {n : ℕ} (s : Simplex ℝ P (n + 2)) (i₁ i₂ : Finₓ (n + 3)) :
     s.mongePlane i₁ i₂ =
-      mk' (({i₁, i₂}ᶜ : Finset (Finₓ (n + 3))).centroid ℝ s.points)
-          (ℝ∙s.points i₁ -ᵥ s.points i₂)ᗮ⊓affineSpan ℝ (Set.Range s.points) :=
+      mk' (({i₁, i₂}ᶜ : Finset (Finₓ (n + 3))).centroid ℝ s.points) (ℝ ∙ s.points i₁ -ᵥ s.points i₂)ᗮ ⊓
+        affineSpan ℝ (Set.Range s.points) :=
   rfl
 
 /-- The Monge plane associated with vertices `i₁` and `i₂` equals that
@@ -296,7 +296,7 @@ theorem monge_point_mem_monge_plane {n : ℕ} (s : Simplex ℝ P (n + 2)) {i₁ 
 
 /-- The direction of a Monge plane. -/
 theorem direction_monge_plane {n : ℕ} (s : Simplex ℝ P (n + 2)) {i₁ i₂ : Finₓ (n + 3)} :
-    (s.mongePlane i₁ i₂).direction = (ℝ∙s.points i₁ -ᵥ s.points i₂)ᗮ⊓vectorSpan ℝ (Set.Range s.points) := by
+    (s.mongePlane i₁ i₂).direction = (ℝ ∙ s.points i₁ -ᵥ s.points i₂)ᗮ ⊓ vectorSpan ℝ (Set.Range s.points) := by
   rw [monge_plane_def, direction_inf_of_mem_inf s.monge_point_mem_monge_plane, direction_mk', direction_affine_span]
 
 /-- The Monge point is the only point in all the Monge planes from any
@@ -304,11 +304,12 @@ one vertex. -/
 theorem eq_monge_point_of_forall_mem_monge_plane {n : ℕ} {s : Simplex ℝ P (n + 2)} {i₁ : Finₓ (n + 3)} {p : P}
     (h : ∀ i₂, i₁ ≠ i₂ → p ∈ s.mongePlane i₁ i₂) : p = s.mongePoint := by
   rw [← @vsub_eq_zero_iff_eq V]
-  have h' : ∀ i₂, i₁ ≠ i₂ → p -ᵥ s.monge_point ∈ (ℝ∙s.points i₁ -ᵥ s.points i₂)ᗮ⊓vectorSpan ℝ (Set.Range s.points) := by
+  have h' :
+    ∀ i₂, i₁ ≠ i₂ → p -ᵥ s.monge_point ∈ (ℝ ∙ s.points i₁ -ᵥ s.points i₂)ᗮ ⊓ vectorSpan ℝ (Set.Range s.points) := by
     intro i₂ hne
     rw [← s.direction_monge_plane, vsub_right_mem_direction_iff_mem s.monge_point_mem_monge_plane]
     exact h i₂ hne
-  have hi : p -ᵥ s.monge_point ∈ ⨅ i₂ : { i // i₁ ≠ i }, (ℝ∙s.points i₁ -ᵥ s.points i₂)ᗮ := by
+  have hi : p -ᵥ s.monge_point ∈ ⨅ i₂ : { i // i₁ ≠ i }, (ℝ ∙ s.points i₁ -ᵥ s.points i₂)ᗮ := by
     rw [Submodule.mem_infi]
     exact fun i => (Submodule.mem_inf.1 (h' i i.property)).1
   rw [Submodule.infi_orthogonal, ← Submodule.span_Union] at hi
@@ -340,12 +341,12 @@ theorem eq_monge_point_of_forall_mem_monge_plane {n : ℕ} {s : Simplex ℝ P (n
 /-- An altitude of a simplex is the line that passes through a vertex
 and is orthogonal to the opposite face. -/
 def altitude {n : ℕ} (s : Simplex ℝ P (n + 1)) (i : Finₓ (n + 2)) : AffineSubspace ℝ P :=
-  mk' (s.points i) (affineSpan ℝ (s.points '' ↑(univ.erase i))).directionᗮ⊓affineSpan ℝ (Set.Range s.points)
+  mk' (s.points i) (affineSpan ℝ (s.points '' ↑(univ.erase i))).directionᗮ ⊓ affineSpan ℝ (Set.Range s.points)
 
 /-- The definition of an altitude. -/
 theorem altitude_def {n : ℕ} (s : Simplex ℝ P (n + 1)) (i : Finₓ (n + 2)) :
     s.altitude i =
-      mk' (s.points i) (affineSpan ℝ (s.points '' ↑(univ.erase i))).directionᗮ⊓affineSpan ℝ (Set.Range s.points) :=
+      mk' (s.points i) (affineSpan ℝ (s.points '' ↑(univ.erase i))).directionᗮ ⊓ affineSpan ℝ (Set.Range s.points) :=
   rfl
 
 /-- A vertex lies in the corresponding altitude. -/
@@ -354,7 +355,8 @@ theorem mem_altitude {n : ℕ} (s : Simplex ℝ P (n + 1)) (i : Finₓ (n + 2)) 
 
 /-- The direction of an altitude. -/
 theorem direction_altitude {n : ℕ} (s : Simplex ℝ P (n + 1)) (i : Finₓ (n + 2)) :
-    (s.altitude i).direction = (vectorSpan ℝ (s.points '' ↑(Finset.univ.erase i)))ᗮ⊓vectorSpan ℝ (Set.Range s.points) :=
+    (s.altitude i).direction =
+      (vectorSpan ℝ (s.points '' ↑(Finset.univ.erase i)))ᗮ ⊓ vectorSpan ℝ (Set.Range s.points) :=
   by
   rw [altitude_def, direction_inf_of_mem (self_mem_mk' (s.points i) _) (mem_affine_span ℝ (Set.mem_range_self _)),
     direction_mk', direction_affine_span, direction_affine_span]

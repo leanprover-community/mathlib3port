@@ -183,7 +183,7 @@ theorem bitwise_comm {f : Bool → Bool → Bool} (hf : ∀ b b', f b b' = f b' 
   suffices bitwiseₓ f = swap (bitwiseₓ f) by
     conv_lhs => rw [this]
   calc
-    bitwiseₓ f = bitwiseₓ (swap f) := congr_argₓ _ <| funext fun _ => funext <| hf _
+    bitwiseₓ f = bitwiseₓ (swap f) := congr_arg _ <| funext fun _ => funext <| hf _
     _ = swap (bitwiseₓ f) := bitwise_swap hf'
     
 

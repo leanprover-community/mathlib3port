@@ -62,7 +62,7 @@ theorem coe_split_lower : (splitLower I i x : Set (ι → ℝ)) = I ∩ { y | y 
   rw [split_lower, coe_mk']
   ext y
   simp only [mem_univ_pi, mem_Ioc, mem_inter_eq, mem_coe, mem_set_of_eq, forall_and_distrib, ← Pi.le_def,
-    le_update_iffₓ, le_min_iff, and_assoc, and_forall_ne i, mem_def]
+    le_update_iffₓ, le_min_iff, and_assocₓ, and_forall_ne i, mem_def]
   rw [and_comm (y i ≤ x), Pi.le_def]
 
 theorem split_lower_le : I.splitLower i x ≤ I :=
@@ -98,7 +98,7 @@ theorem coe_split_upper : (splitUpper I i x : Set (ι → ℝ)) = I ∩ { y | x 
   rw [split_upper, coe_mk']
   ext y
   simp only [mem_univ_pi, mem_Ioc, mem_inter_eq, mem_coe, mem_set_of_eq, forall_and_distrib,
-    forall_update_iff I.lower fun j z => z < y j, max_lt_iff, and_assoc (x < y i), and_forall_ne i, mem_def]
+    forall_update_iff I.lower fun j z => z < y j, max_lt_iff, and_assocₓ (x < y i), and_forall_ne i, mem_def]
   exact and_comm _ _
 
 theorem split_upper_le : I.splitUpper i x ≤ I :=
@@ -204,11 +204,11 @@ theorem coe_eq_of_mem_split_of_lt_mem {y : ι → ℝ} (h₁ : J ∈ split I i x
 @[simp]
 theorem restrict_split (h : I ≤ J) (i : ι) (x : ℝ) : (split J i x).restrict I = split I i x := by
   refine' ((is_partition_split J i x).restrict h).eq_of_boxes_subset _
-  simp only [Finset.subset_iff, mem_boxes, mem_restrict', exists_prop, mem_split_iff']
+  simp only [Finset.subset_iff, mem_boxes, mem_restrict', exists_propₓ, mem_split_iff']
   have : ∀ s, (I ∩ s : Set (ι → ℝ)) ⊆ J := fun s => (inter_subset_left _ _).trans h
   rintro J₁ ⟨J₂, H₂ | H₂, H₁⟩ <;> [left, right] <;> simp [H₁, H₂, inter_left_comm ↑I, this]
 
-theorem inf_split (π : Prepartition I) (i : ι) (x : ℝ) : π⊓split I i x = π.bUnion fun J => split J i x :=
+theorem inf_split (π : Prepartition I) (i : ι) (x : ℝ) : π ⊓ split I i x = π.bUnion fun J => split J i x :=
   (bUnion_congr_of_le rfl) fun J hJ => restrict_split hJ i x
 
 /-- Split a box along many hyperplanes `{y | y i = x}`; each hyperplane is given by the pair
@@ -222,7 +222,7 @@ theorem split_many_empty (I : Box ι) : splitMany I ∅ = ⊤ :=
 
 @[simp]
 theorem split_many_insert (I : Box ι) (s : Finset (ι × ℝ)) (p : ι × ℝ) :
-    splitMany I (insert p s) = splitMany I s⊓split I p.1 p.2 := by
+    splitMany I (insert p s) = splitMany I s ⊓ split I p.1 p.2 := by
   rw [split_many, Finset.inf_insert, inf_comm, split_many]
 
 theorem split_many_le_split (I : Box ι) {s : Finset (ι × ℝ)} {p : ι × ℝ} (hp : p ∈ s) :
@@ -241,7 +241,7 @@ theorem Union_split_many (I : Box ι) (s : Finset (ι × ℝ)) : (splitMany I s)
   (is_partition_split_many I s).Union_eq
 
 theorem inf_split_many {I : Box ι} (π : Prepartition I) (s : Finset (ι × ℝ)) :
-    π⊓splitMany I s = π.bUnion fun J => splitMany J s := by
+    π ⊓ splitMany I s = π.bUnion fun J => splitMany J s := by
   induction' s using Finset.induction_on with p s hp ihp
   · simp
     
@@ -290,11 +290,11 @@ theorem eventually_not_disjoint_imp_le_of_mem_split_many (s : Finset (Box ι)) :
   exact fun p hp => ht (Finset.mem_bUnion.2 ⟨J, hJ, Finset.mem_bUnion.2 ⟨i, Finset.mem_univ _, hp⟩⟩)
 
 theorem eventually_split_many_inf_eq_filter (π : Prepartition I) :
-    ∀ᶠ t : Finset (ι × ℝ) in at_top, π⊓splitMany I t = (splitMany I t).filter fun J => ↑J ⊆ π.Union := by
+    ∀ᶠ t : Finset (ι × ℝ) in at_top, π ⊓ splitMany I t = (splitMany I t).filter fun J => ↑J ⊆ π.Union := by
   refine' (eventually_not_disjoint_imp_le_of_mem_split_many π.boxes).mono fun t ht => _
   refine' le_antisymmₓ ((bUnion_le_iff _).2 fun J hJ => _) (le_inf (fun J hJ => _) (filter_le _ _))
   · refine' of_with_bot_mono _
-    simp only [Finset.mem_image, exists_prop, mem_boxes, mem_filter]
+    simp only [Finset.mem_image, exists_propₓ, mem_boxes, mem_filter]
     rintro _ ⟨J₁, h₁, rfl⟩ hne
     refine' ⟨_, ⟨J₁, ⟨h₁, subset.trans _ (π.subset_Union hJ)⟩, rfl⟩, le_rflₓ⟩
     exact ht I J hJ J₁ h₁ (mt disjoint_iff.1 hne)
@@ -306,7 +306,7 @@ theorem eventually_split_many_inf_eq_filter (π : Prepartition I) :
     
 
 theorem exists_split_many_inf_eq_filter_of_finite (s : Set (Prepartition I)) (hs : s.Finite) :
-    ∃ t : Finset (ι × ℝ), ∀ π ∈ s, π⊓splitMany I t = (splitMany I t).filter fun J => ↑J ⊆ π.Union := by
+    ∃ t : Finset (ι × ℝ), ∀ π ∈ s, π ⊓ splitMany I t = (splitMany I t).filter fun J => ↑J ⊆ π.Union := by
   have := fun π (hπ : π ∈ s) => eventually_split_many_inf_eq_filter π
   exact (hs.eventually_all.2 this).exists
 

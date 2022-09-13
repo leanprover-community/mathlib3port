@@ -100,11 +100,11 @@ theorem foldr_with_index_eq_foldr_enum (f : ℕ → α → β → β) (b : β) (
 end FoldrWithIndex
 
 theorem indexes_values_eq_filter_enum (p : α → Prop) [DecidablePred p] (as : List α) :
-    indexesValues p as = filterₓ (p ∘ Prod.snd) (enum as) := by
+    indexesValuesₓ p as = filterₓ (p ∘ Prod.snd) (enum as) := by
   simp [indexes_values, foldr_with_index_eq_foldr_enum, uncurry, filter_eq_foldr]
 
 theorem find_indexes_eq_map_indexes_values (p : α → Prop) [DecidablePred p] (as : List α) :
-    findIndexes p as = map Prod.fst (indexesValues p as) := by
+    findIndexes p as = map Prod.fst (indexesValuesₓ p as) := by
   simp only [indexes_values_eq_filter_enum, map_filter_eq_foldr, find_indexes, foldr_with_index_eq_foldr_enum, uncurry]
 
 section FoldlWithIndex
@@ -151,7 +151,7 @@ variable {m : Type u → Type v} [Applicativeₓ m]
 
 /-- Specification of `mmap_with_index_aux`. -/
 def mmapWithIndexAuxSpec {α β} (f : ℕ → α → m β) (start : ℕ) (as : List α) : m (List β) :=
-  List.traverseₓₓ (uncurry f) <| enumFrom start as
+  List.traverseₓ (uncurry f) <| enumFrom start as
 
 -- Note: `traverse` the class method would require a less universe-polymorphic
 -- `m : Type u → Type u`.
@@ -168,7 +168,7 @@ theorem mmap_with_index_aux_eq_mmap_with_index_aux_spec {α β} (f : ℕ → α 
     
 
 theorem mmap_with_index_eq_mmap_enum {α β} (f : ℕ → α → m β) (as : List α) :
-    mmapWithIndex f as = List.traverseₓₓ (uncurry f) (enum as) := by
+    mmapWithIndex f as = List.traverseₓ (uncurry f) (enum as) := by
   simp only [mmap_with_index, mmap_with_index_aux_spec, mmap_with_index_aux_eq_mmap_with_index_aux_spec, enum]
 
 end MmapWithIndex

@@ -96,7 +96,7 @@ variable {G : ι → Type _} [∀ i, InnerProductSpace 𝕜 (G i)]
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
 -- mathport name: «exprℓ²( , )»
-notation "ℓ²(" ι "," 𝕜 ")" => lp (fun i : ι => 𝕜) 2
+notation "ℓ²(" ι ", " 𝕜 ")" => lp (fun i : ι => 𝕜) 2
 
 /-! ### Inner product space structure on `lp G 2` -/
 
@@ -187,7 +187,7 @@ theorem inner_single_left (i : ι) (a : G i) (f : lp G 2) : ⟪lp.single 2 i a, 
     
 
 theorem inner_single_right (i : ι) (a : G i) (f : lp G 2) : ⟪f, lp.single 2 i a⟫ = ⟪f i, a⟫ := by
-  simpa [inner_conj_sym] using congr_argₓ conj (inner_single_left i a f)
+  simpa [inner_conj_sym] using congr_arg conj (inner_single_left i a f)
 
 end lp
 
@@ -401,13 +401,13 @@ variable (ι) (𝕜) (E)
 /-- A Hilbert basis on `ι` for an inner product space `E` is an identification of `E` with the `lp`
 space `ℓ²(ι, 𝕜)`. -/
 structure HilbertBasis where of_repr ::
-  repr : E ≃ₗᵢ[𝕜] ℓ²(ι,𝕜)
+  repr : E ≃ₗᵢ[𝕜] ℓ²(ι, 𝕜)
 
 end
 
 namespace HilbertBasis
 
-instance {ι : Type _} : Inhabited (HilbertBasis ι 𝕜 ℓ²(ι,𝕜)) :=
+instance {ι : Type _} : Inhabited (HilbertBasis ι 𝕜 ℓ²(ι, 𝕜)) :=
   ⟨of_repr (LinearIsometryEquiv.refl 𝕜 _)⟩
 
 /-- `b i` is the `i`th basis vector. -/
@@ -432,14 +432,14 @@ protected theorem orthonormal (b : HilbertBasis ι 𝕜 E) : Orthonormal 𝕜 b 
   rw [← b.repr.inner_map_map (b i) (b j), b.repr_self, b.repr_self, lp.inner_single_left, lp.single_apply]
   simp
 
-protected theorem has_sum_repr_symm (b : HilbertBasis ι 𝕜 E) (f : ℓ²(ι,𝕜)) :
+protected theorem has_sum_repr_symm (b : HilbertBasis ι 𝕜 E) (f : ℓ²(ι, 𝕜)) :
     HasSum (fun i => f i • b i) (b.repr.symm f) := by
   suffices H :
     (fun i : ι => f i • b i) = fun b_1 : ι =>
       b.repr.symm.to_continuous_linear_equiv ((fun i : ι => lp.single 2 i (f i)) b_1)
   · rw [H]
     have : HasSum (fun i : ι => lp.single 2 i (f i)) f := lp.has_sum_single Ennreal.two_ne_top f
-    exact (↑b.repr.symm.to_continuous_linear_equiv : ℓ²(ι,𝕜) →L[𝕜] E).HasSum this
+    exact (↑b.repr.symm.to_continuous_linear_equiv : ℓ²(ι, 𝕜) →L[𝕜] E).HasSum this
     
   ext i
   apply b.repr.injective

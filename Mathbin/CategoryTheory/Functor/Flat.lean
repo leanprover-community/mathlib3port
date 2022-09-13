@@ -181,7 +181,7 @@ instance RepresentablyFlat.comp (F : C ⥤ D) (G : D ⥤ E) [RepresentablyFlat F
     let W' :=
       @is_cofiltered.eq (structured_arrow W.right F) _ _ (structured_arrow.mk h.right)
         (structured_arrow.mk (h.right ≫ F.map f.right)) (structured_arrow.hom_mk f.right rfl)
-        (structured_arrow.hom_mk g.right (congr_argₓ comma_morphism.right h_cond).symm)
+        (structured_arrow.hom_mk g.right (congr_arg comma_morphism.right h_cond).symm)
     let h' : W' ⟶ _ := is_cofiltered.eq_hom _ _
     let h'_cond : h' ≫ _ = h' ≫ _ := is_cofiltered.eq_condition _ _
     use structured_arrow.mk (W.hom ≫ G.map W'.hom)
@@ -190,7 +190,7 @@ instance RepresentablyFlat.comp (F : C ⥤ D) (G : D ⥤ E) [RepresentablyFlat F
         (by
           simp [← G.map_comp])
     ext
-    exact (congr_argₓ comma_morphism.right h'_cond : _)
+    exact (congr_arg comma_morphism.right h'_cond : _)
     
 
 end RepresentablyFlat
@@ -307,7 +307,7 @@ attribute [local simp] eq_to_hom_map
                     "by"
                     (Tactic.tacticSeq
                      (Tactic.tacticSeq1Indented
-                      [(group (Mathlib.Tactic.Ext.«tacticExt___:_» "ext" [] []) [])
+                      [(group (Std.Tactic.Ext.«tacticExt___:_» "ext" [] []) [])
                        (group (Tactic.simp "simp" [] [] [] [] []) [])]))))))]
                (Term.optEllipsis [])
                []
@@ -365,7 +365,7 @@ attribute [local simp] eq_to_hom_map
                     "by"
                     (Tactic.tacticSeq
                      (Tactic.tacticSeq1Indented
-                      [(group (Mathlib.Tactic.Ext.«tacticExt___:_» "ext" [] []) [])
+                      [(group (Std.Tactic.Ext.«tacticExt___:_» "ext" [] []) [])
                        (group (Tactic.simp "simp" [] [] [] [] []) [])]))))))]
                (Term.optEllipsis [])
                []
@@ -526,7 +526,10 @@ attribute [local simp] eq_to_hom_map
                  [(group (Tactic.unfold' "unfold" [] [(group `cone.extend)] []) [])
                   (group (Tactic.congr' "congr" [(num "1")] []) [])
                   (group
-                   (Mathlib.Tactic.Ext.«tacticExt___:_» "ext" [(Tactic.rintroPat.one (Tactic.rcasesPat.one `x))] [])
+                   (Std.Tactic.Ext.«tacticExt___:_»
+                    "ext"
+                    [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
+                    [])
                    [])
                   (group (Tactic.apply "apply" `this) [])]))))))
            [])
@@ -1008,7 +1011,10 @@ attribute [local simp] eq_to_hom_map
             [(group (Tactic.unfold' "unfold" [] [(group `cone.extend)] []) [])
              (group (Tactic.congr' "congr" [(num "1")] []) [])
              (group
-              (Mathlib.Tactic.Ext.«tacticExt___:_» "ext" [(Tactic.rintroPat.one (Tactic.rcasesPat.one `x))] [])
+              (Std.Tactic.Ext.«tacticExt___:_»
+               "ext"
+               [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
+               [])
               [])
              (group (Tactic.apply "apply" `this) [])]))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1018,7 +1024,12 @@ attribute [local simp] eq_to_hom_map
         (Tactic.tacticSeq1Indented
          [(group (Tactic.unfold' "unfold" [] [(group `cone.extend)] []) [])
           (group (Tactic.congr' "congr" [(num "1")] []) [])
-          (group (Mathlib.Tactic.Ext.«tacticExt___:_» "ext" [(Tactic.rintroPat.one (Tactic.rcasesPat.one `x))] []) [])
+          (group
+           (Std.Tactic.Ext.«tacticExt___:_»
+            "ext"
+            [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
+            [])
+           [])
           (group (Tactic.apply "apply" `this) [])])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.apply "apply" `this)
@@ -1027,7 +1038,10 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-      (Mathlib.Tactic.Ext.«tacticExt___:_» "ext" [(Tactic.rintroPat.one (Tactic.rcasesPat.one `x))] [])
+      (Std.Tactic.Ext.«tacticExt___:_»
+       "ext"
+       [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
+       [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       (Tactic.congr' "congr" [(num "1")] [])

@@ -113,7 +113,7 @@ theorem not_is_uniform_iff :
               ↑s.card * ε ≤ s'.card ∧ ↑t.card * ε ≤ t'.card ∧ ε ≤ abs (G.edgeDensity s' t' - G.edgeDensity s t) :=
   by
   unfold is_uniform
-  simp only [not_forall, not_ltₓ, exists_prop]
+  simp only [not_forall, not_ltₓ, exists_propₓ]
 
 open Classical
 
@@ -201,7 +201,7 @@ noncomputable def nonUniforms (ε : 𝕜) : Finset (Finset α × Finset α) :=
 
 theorem mk_mem_non_uniforms_iff (u v : Finset α) (ε : 𝕜) :
     (u, v) ∈ P.nonUniforms G ε ↔ u ∈ P.parts ∧ v ∈ P.parts ∧ u ≠ v ∧ ¬G.IsUniform ε u v := by
-  rw [non_uniforms, mem_filter, mem_off_diag, and_assoc, and_assoc]
+  rw [non_uniforms, mem_filter, mem_off_diag, and_assocₓ, and_assocₓ]
 
 theorem non_uniforms_mono {ε ε' : 𝕜} (h : ε ≤ ε') : P.nonUniforms G ε' ⊆ P.nonUniforms G ε :=
   (monotone_filter_right _) fun uv => mt <| SimpleGraph.IsUniform.mono h

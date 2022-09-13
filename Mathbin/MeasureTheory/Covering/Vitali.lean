@@ -76,7 +76,7 @@ theorem exists_disjoint_subfamily_covering_enlargment (t : Set (Set α)) (δ : S
   obtain ⟨u, uT, hu⟩ : ∃ u ∈ T, ∀ v ∈ T, u ⊆ v → v = u := by
     refine' zorn_subset _ fun U UT hU => _
     refine' ⟨⋃₀U, _, fun s hs => subset_sUnion_of_mem hs⟩
-    simp only [Set.sUnion_subset_iff, and_imp, exists_prop, forall_exists_index, mem_sUnion, Set.mem_set_of_eq]
+    simp only [Set.sUnion_subset_iff, and_imp, exists_propₓ, forall_exists_index, mem_sUnion, Set.mem_set_of_eq]
     refine'
       ⟨fun u hu => (UT hu).1, (pairwise_disjoint_sUnion hU.directed_on).2 fun u hu => (UT hu).2.1,
         fun a hat b u uU hbu hab => _⟩
@@ -256,7 +256,7 @@ Then one can extract from `t` a disjoint subfamily that covers almost all `s`. -
 theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [OpensMeasurableSpace α]
     [SecondCountableTopology α] (μ : Measureₓ α) [IsLocallyFiniteMeasure μ] (s : Set α) (t : Set (Set α))
     (hf : ∀ x ∈ s, ∀ ε > (0 : ℝ), ∃ a ∈ t, x ∈ a ∧ a ⊆ ClosedBall x ε) (ht : ∀ a ∈ t, (Interior a).Nonempty)
-    (h't : ∀ a ∈ t, IsClosed a) (C : ℝ≥0 ) (h : ∀ a ∈ t, ∃ x ∈ a, μ (ClosedBall x (3 * diam a)) ≤ C * μ a) :
+    (h't : ∀ a ∈ t, IsClosed a) (C : ℝ≥0) (h : ∀ a ∈ t, ∃ x ∈ a, μ (ClosedBall x (3 * diam a)) ≤ C * μ a) :
     ∃ (u : _)(_ : u ⊆ t), u.Countable ∧ u.PairwiseDisjoint id ∧ μ (s \ ⋃ a ∈ u, a) = 0 := by
   /- The idea of the proof is the following. Assume for simplicity that `μ` is finite. Applying the
     abstract Vitali covering theorem with `δ = diam`, one obtains a disjoint subfamily `u`, such
@@ -407,8 +407,8 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     set k := ⋃ (a : v) (ha : a ∈ w), (↑a : Set α) with hk
     have k_closed : IsClosed k := is_closed_bUnion w.finite_to_set fun i hi => h't _ (ut (vu i.2))
     have z_notmem_k : z ∉ k := by
-      simp only [not_exists, exists_prop, mem_Union, mem_sep_eq, forall_exists_index, SetCoe.exists, not_and,
-        exists_and_distrib_right, Subtype.coe_mk]
+      simp only [not_exists, exists_propₓ, mem_Union, mem_sep_eq, forall_exists_index, SetCoe.exists, not_and,
+        exists_and_distrib_rightₓ, Subtype.coe_mk]
       intro b hbv h'b h'z
       have : z ∈ (s \ ⋃ (a : Set α) (H : a ∈ u), a) ∩ ⋃ (a : Set α) (H : a ∈ u), a :=
         mem_inter (mem_of_mem_inter_left hz) (mem_bUnion (vu hbv) h'z)
@@ -474,7 +474,7 @@ doubling. Then the set of closed sets `a` with nonempty interior covering a fixe
 of the ball `closed_ball x (3 * diam a)` forms a Vitali family. This is essentially a restatement
 of the measurable Vitali theorem. -/
 protected def vitaliFamily [MetricSpace α] [MeasurableSpace α] [OpensMeasurableSpace α] [SecondCountableTopology α]
-    (μ : Measureₓ α) [IsLocallyFiniteMeasure μ] (C : ℝ≥0 )
+    (μ : Measureₓ α) [IsLocallyFiniteMeasure μ] (C : ℝ≥0)
     (h : ∀ (x), ∀ ε > 0, ∃ r ∈ Ioc (0 : ℝ) ε, μ (ClosedBall x (6 * r)) ≤ C * μ (ClosedBall x r)) : VitaliFamily μ where
   SetsAt := fun x => { a | x ∈ a ∧ IsClosed a ∧ (Interior a).Nonempty ∧ μ (ClosedBall x (3 * diam a)) ≤ C * μ a }
   MeasurableSet' := fun x a ha => ha.2.1.MeasurableSet

@@ -112,7 +112,7 @@ theorem IsHermitian.from_blocks {A : Matrix m m α} {B : Matrix m n α} {C : Mat
 /-- This is the `iff` version of `matrix.is_hermitian.from_blocks`. -/
 theorem is_hermitian_from_blocks_iff {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n m α} {D : Matrix n n α} :
     (A.fromBlocks B C D).IsHermitian ↔ A.IsHermitian ∧ Bᴴ = C ∧ Cᴴ = B ∧ D.IsHermitian :=
-  ⟨fun h => ⟨congr_argₓ toBlocks₁₁ h, congr_argₓ toBlocks₂₁ h, congr_argₓ toBlocks₁₂ h, congr_argₓ toBlocks₂₂ h⟩,
+  ⟨fun h => ⟨congr_arg toBlocks₁₁ h, congr_arg toBlocks₂₁ h, congr_arg toBlocks₁₂ h, congr_arg toBlocks₂₂ h⟩,
     fun ⟨hA, hBC, hCB, hD⟩ => IsHermitian.from_blocks hA hBC hD⟩
 
 end NonUnitalSemiringₓ
@@ -133,7 +133,7 @@ variable [Ringₓ α] [StarRing α] [Ringₓ β] [StarRing β]
 
 @[simp]
 theorem IsHermitian.neg {A : Matrix n n α} (h : A.IsHermitian) : (-A).IsHermitian :=
-  (conj_transpose_neg _).trans (congr_argₓ _ h)
+  (conj_transpose_neg _).trans (congr_arg _ h)
 
 @[simp]
 theorem IsHermitian.sub {A B : Matrix n n α} (hA : A.IsHermitian) (hB : B.IsHermitian) : (A - B).IsHermitian :=

@@ -22,7 +22,7 @@ rat, rationals, ℚ, floor
 
 open Int
 
-namespace Rat
+namespace Ratₓ
 
 variable {α : Type _} [LinearOrderedField α] [FloorRing α]
 
@@ -30,23 +30,23 @@ variable {α : Type _} [LinearOrderedField α] [FloorRing α]
 protected def floor : ℚ → ℤ
   | ⟨n, d, h, c⟩ => n / d
 
-protected theorem le_floor {z : ℤ} : ∀ {r : ℚ}, z ≤ Rat.floor r ↔ (z : ℚ) ≤ r
+protected theorem le_floor {z : ℤ} : ∀ {r : ℚ}, z ≤ Ratₓ.floor r ↔ (z : ℚ) ≤ r
   | ⟨n, d, h, c⟩ => by
-    simp [Rat.floor]
+    simp [Ratₓ.floor]
     rw [num_denom']
     have h' := Int.coe_nat_ltₓ.2 h
-    conv => rhs rw [coe_int_eq_mk, Rat.le_def zero_lt_one h', mul_oneₓ]
+    conv => rhs rw [coe_int_eq_mk, Ratₓ.le_def zero_lt_one h', mul_oneₓ]
     exact Int.le_div_iff_mul_le h'
 
 instance : FloorRing ℚ :=
-  (FloorRing.ofFloor ℚ Rat.floor) fun a z => Rat.le_floor.symm
+  (FloorRing.ofFloor ℚ Ratₓ.floor) fun a z => Ratₓ.le_floor.symm
 
 protected theorem floor_def {q : ℚ} : ⌊q⌋ = q.num / q.denom := by
   cases q
   rfl
 
 theorem floor_int_div_nat_eq_div {n : ℤ} {d : ℕ} : ⌊(↑n : ℚ) / (↑d : ℚ)⌋ = n / (↑d : ℤ) := by
-  rw [Rat.floor_def]
+  rw [Ratₓ.floor_def]
   obtain rfl | hd := @eq_zero_or_pos _ _ d
   · simp
     
@@ -54,7 +54,7 @@ theorem floor_int_div_nat_eq_div {n : ℤ} {d : ℕ} : ⌊(↑n : ℚ) / (↑d :
   obtain ⟨c, n_eq_c_mul_num, d_eq_c_mul_denom⟩ : ∃ c, n = c * q.num ∧ (d : ℤ) = c * q.denom := by
     rw [q_eq]
     exact_mod_cast
-      @Rat.exists_eq_mul_div_num_and_eq_mul_div_denom n d
+      @Ratₓ.exists_eq_mul_div_num_and_eq_mul_div_denom n d
         (by
           exact_mod_cast hd.ne')
   rw [n_eq_c_mul_num, d_eq_c_mul_denom]
@@ -69,7 +69,7 @@ theorem floor_cast (x : ℚ) : ⌊(x : α)⌋ = ⌊x⌋ :=
 
 @[simp, norm_cast]
 theorem ceil_cast (x : ℚ) : ⌈(x : α)⌉ = ⌈x⌉ := by
-  rw [← neg_inj, ← floor_neg, ← floor_neg, ← Rat.cast_neg, Rat.floor_cast]
+  rw [← neg_inj, ← floor_neg, ← floor_neg, ← Ratₓ.cast_neg, Ratₓ.floor_cast]
 
 @[simp, norm_cast]
 theorem round_cast (x : ℚ) : round (x : α) = round x := by
@@ -81,10 +81,10 @@ theorem round_cast (x : ℚ) : round (x : α) = round x := by
 theorem cast_fract (x : ℚ) : (↑(fract x) : α) = fract x := by
   simp only [fract, cast_sub, cast_coe_int, floor_cast]
 
-end Rat
+end Ratₓ
 
 theorem Int.mod_nat_eq_sub_mul_floor_rat_div {n : ℤ} {d : ℕ} : n % d = n - d * ⌊(n : ℚ) / d⌋ := by
-  rw [eq_sub_of_add_eq <| Int.mod_add_div n d, Rat.floor_int_div_nat_eq_div]
+  rw [eq_sub_of_add_eq <| Int.mod_add_divₓ n d, Ratₓ.floor_int_div_nat_eq_div]
 
 theorem Nat.coprime_sub_mul_floor_rat_div_of_coprime {n d : ℕ} (n_coprime_d : n.Coprime d) :
     ((n : ℤ) - d * ⌊(n : ℚ) / d⌋).natAbs.Coprime d := by
@@ -93,7 +93,7 @@ theorem Nat.coprime_sub_mul_floor_rat_div_of_coprime {n d : ℕ} (n_coprime_d : 
   have : d.coprime n := n_coprime_d.symm
   rwa [Nat.Coprime, Nat.gcd_recₓ] at this
 
-namespace Rat
+namespace Ratₓ
 
 theorem num_lt_succ_floor_mul_denom (q : ℚ) : q.num < (⌊q⌋ + 1) * q.denom := by
   suffices (q.num : ℚ) < (⌊q⌋ + 1) * q.denom by
@@ -131,7 +131,7 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
   -- we will work with the absolute value of the numerator, which is equal to the numerator
   have q_num_abs_eq_q_num : (q.num.nat_abs : ℤ) = q.num := Int.nat_abs_of_nonneg q_num_pos.le
   set q_inv := (q.denom : ℚ) / q.num with q_inv_def
-  have q_inv_eq : q⁻¹ = q_inv := Rat.inv_def'
+  have q_inv_eq : q⁻¹ = q_inv := Ratₓ.inv_def'
   suffices (q_inv - ⌊q_inv⌋).num < q.num by
     rwa [q_inv_eq]
   suffices ((q.denom - q.num * ⌊q_inv⌋ : ℚ) / q.num).num < q.num by
@@ -140,7 +140,7 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
     -- use that `q.num` and `q.denom` are coprime to show that the numerator stays unreduced
     have : ((q.denom - q.num * ⌊q_inv⌋ : ℚ) / q.num).num = q.denom - q.num * ⌊q_inv⌋ := by
       suffices ((q.denom : ℤ) - q.num * ⌊q_inv⌋).natAbs.Coprime q.num.nat_abs by
-        exact_mod_cast Rat.num_div_eq_of_coprime q_num_pos this
+        exact_mod_cast Ratₓ.num_div_eq_of_coprime q_num_pos this
       have : (q.num.nat_abs : ℚ) = (q.num : ℚ) := by
         exact_mod_cast q_num_abs_eq_q_num
       have tmp := Nat.coprime_sub_mul_floor_rat_div_of_coprime q.cop.symm
@@ -148,7 +148,7 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
     rwa [this]
   -- to show the claim, start with the following inequality
   have q_inv_num_denom_ineq : q⁻¹.num - ⌊q⁻¹⌋ * q⁻¹.denom < q⁻¹.denom := by
-    have : q⁻¹.num < (⌊q⁻¹⌋ + 1) * q⁻¹.denom := Rat.num_lt_succ_floor_mul_denom q⁻¹
+    have : q⁻¹.num < (⌊q⁻¹⌋ + 1) * q⁻¹.denom := Ratₓ.num_lt_succ_floor_mul_denom q⁻¹
     have : q⁻¹.num < ⌊q⁻¹⌋ * q⁻¹.denom + q⁻¹.denom := by
       rwa [right_distrib, one_mulₓ] at this
     rwa [← sub_lt_iff_lt_add'] at this
@@ -161,14 +161,14 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
     rw [← this] at coprime_q_denom_q_num
     rw [q_inv_def]
     constructor
-    · exact_mod_cast Rat.num_div_eq_of_coprime q_num_pos coprime_q_denom_q_num
+    · exact_mod_cast Ratₓ.num_div_eq_of_coprime q_num_pos coprime_q_denom_q_num
       
     · suffices (((q.denom : ℚ) / q.num).denom : ℤ) = q.num.nat_abs by
         exact_mod_cast this
       rw [q_num_abs_eq_q_num]
-      exact_mod_cast Rat.denom_div_eq_of_coprime q_num_pos coprime_q_denom_q_num
+      exact_mod_cast Ratₓ.denom_div_eq_of_coprime q_num_pos coprime_q_denom_q_num
       
   rwa [q_inv_eq, this.left, this.right, q_num_abs_eq_q_num, mul_comm] at q_inv_num_denom_ineq
 
-end Rat
+end Ratₓ
 

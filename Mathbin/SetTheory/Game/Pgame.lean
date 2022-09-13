@@ -1051,7 +1051,7 @@ theorem neg_of_lists (L R : List Pgame) : -ofLists L R = ofLists (R.map fun x =>
 theorem is_option_neg {x y : Pgame} : IsOption x (-y) ↔ IsOption (-x) y := by
   rw [is_option_iff, is_option_iff, or_comm]
   cases y
-  apply or_congr <;>
+  apply or_congrₓ <;>
     · apply exists_congr
       intro
       rw [← neg_eq_iff_neg_eq]
@@ -1121,10 +1121,10 @@ private theorem neg_le_lf_neg_iff : ∀ {x y : Pgame.{u}}, (-y ≤ -x ↔ x ≤ 
     simp_rw [neg_def, mk_le_mk, mk_lf_mk, ← neg_def]
     constructor
     · rw [and_comm]
-      apply and_congr <;> exact forall_congrₓ fun _ => neg_le_lf_neg_iff.2
+      apply and_congrₓ <;> exact forall_congrₓ fun _ => neg_le_lf_neg_iff.2
       
     · rw [or_comm]
-      apply or_congr <;> exact exists_congr fun _ => neg_le_lf_neg_iff.1
+      apply or_congrₓ <;> exact exists_congr fun _ => neg_le_lf_neg_iff.1
       
 
 @[simp]

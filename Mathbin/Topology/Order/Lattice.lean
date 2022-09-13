@@ -32,14 +32,14 @@ open TopologicalSpace
 `⊓:L×L → L` is continuous.
 -/
 class HasContinuousInf (L : Type _) [TopologicalSpace L] [HasInf L] : Prop where
-  continuous_inf : Continuous fun p : L × L => p.1⊓p.2
+  continuous_inf : Continuous fun p : L × L => p.1 ⊓ p.2
 
 /-- Let `L` be a topological space and let `L×L` be equipped with the product topology and let
 `⊓:L×L → L` be a supremum. Then `L` is said to have *(jointly) continuous supremum* if the map
 `⊓:L×L → L` is continuous.
 -/
 class HasContinuousSup (L : Type _) [TopologicalSpace L] [HasSup L] : Prop where
-  continuous_sup : Continuous fun p : L × L => p.1⊔p.2
+  continuous_sup : Continuous fun p : L × L => p.1 ⊔ p.2
 
 -- see Note [lower instance priority]
 instance (priority := 100) OrderDual.has_continuous_sup (L : Type _) [TopologicalSpace L] [HasInf L]
@@ -63,38 +63,38 @@ variable {L : Type _} [TopologicalSpace L]
 variable {X : Type _} [TopologicalSpace X]
 
 @[continuity]
-theorem continuous_inf [HasInf L] [HasContinuousInf L] : Continuous fun p : L × L => p.1⊓p.2 :=
+theorem continuous_inf [HasInf L] [HasContinuousInf L] : Continuous fun p : L × L => p.1 ⊓ p.2 :=
   HasContinuousInf.continuous_inf
 
 @[continuity]
 theorem Continuous.inf [HasInf L] [HasContinuousInf L] {f g : X → L} (hf : Continuous f) (hg : Continuous g) :
-    Continuous fun x => f x⊓g x :=
+    Continuous fun x => f x ⊓ g x :=
   continuous_inf.comp (hf.prod_mk hg : _)
 
 @[continuity]
-theorem continuous_sup [HasSup L] [HasContinuousSup L] : Continuous fun p : L × L => p.1⊔p.2 :=
+theorem continuous_sup [HasSup L] [HasContinuousSup L] : Continuous fun p : L × L => p.1 ⊔ p.2 :=
   HasContinuousSup.continuous_sup
 
 @[continuity]
 theorem Continuous.sup [HasSup L] [HasContinuousSup L] {f g : X → L} (hf : Continuous f) (hg : Continuous g) :
-    Continuous fun x => f x⊔g x :=
+    Continuous fun x => f x ⊔ g x :=
   continuous_sup.comp (hf.prod_mk hg : _)
 
 theorem Filter.Tendsto.sup_right_nhds' {ι β} [TopologicalSpace β] [HasSup β] [HasContinuousSup β] {l : Filter ι}
-    {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) : Tendsto (f⊔g) l (𝓝 (x⊔y)) :=
+    {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) : Tendsto (f ⊔ g) l (𝓝 (x ⊔ y)) :=
   (continuous_sup.Tendsto _).comp (Tendsto.prod_mk_nhds hf hg)
 
 theorem Filter.Tendsto.sup_right_nhds {ι β} [TopologicalSpace β] [HasSup β] [HasContinuousSup β] {l : Filter ι}
     {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) :
-    Tendsto (fun i => f i⊔g i) l (𝓝 (x⊔y)) :=
+    Tendsto (fun i => f i ⊔ g i) l (𝓝 (x ⊔ y)) :=
   hf.sup_right_nhds' hg
 
 theorem Filter.Tendsto.inf_right_nhds' {ι β} [TopologicalSpace β] [HasInf β] [HasContinuousInf β] {l : Filter ι}
-    {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) : Tendsto (f⊓g) l (𝓝 (x⊓y)) :=
+    {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) : Tendsto (f ⊓ g) l (𝓝 (x ⊓ y)) :=
   (continuous_inf.Tendsto _).comp (Tendsto.prod_mk_nhds hf hg)
 
 theorem Filter.Tendsto.inf_right_nhds {ι β} [TopologicalSpace β] [HasInf β] [HasContinuousInf β] {l : Filter ι}
     {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) :
-    Tendsto (fun i => f i⊓g i) l (𝓝 (x⊓y)) :=
+    Tendsto (fun i => f i ⊓ g i) l (𝓝 (x ⊓ y)) :=
   hf.inf_right_nhds' hg
 

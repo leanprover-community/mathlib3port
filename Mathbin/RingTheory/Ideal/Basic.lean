@@ -115,7 +115,7 @@ theorem span_empty : span (∅ : Set α) = ⊥ :=
 theorem span_univ : span (Set.Univ : Set α) = ⊤ :=
   Submodule.span_univ
 
-theorem span_union (s t : Set α) : span (s ∪ t) = span s⊔span t :=
+theorem span_union (s t : Set α) : span (s ∪ t) = span s ⊔ span t :=
   Submodule.span_union _ _
 
 theorem span_Union {ι} (s : ι → Set α) : span (⋃ i, s i) = ⨆ i, span (s i) :=
@@ -147,7 +147,7 @@ theorem mem_span_insert {s : Set α} {x y} : x ∈ span (insert y s) ↔ ∃ a, 
 theorem mem_span_singleton' {x y : α} : x ∈ span ({y} : Set α) ↔ ∃ a, a * y = x :=
   Submodule.mem_span_singleton
 
-theorem span_insert (x) (s : Set α) : span (insert x s) = span ({x} : Set α)⊔span s :=
+theorem span_insert (x) (s : Set α) : span (insert x s) = span ({x} : Set α) ⊔ span s :=
   Submodule.span_insert x s
 
 theorem span_eq_bot {s : Set α} : span s = ⊥ ↔ ∀ x ∈ s, (x : α) = 0 :=
@@ -205,7 +205,7 @@ theorem IsPrime.mem_of_pow_mem {I : Ideal α} (hI : I.IsPrime) {r : α} (n : ℕ
 theorem not_is_prime_iff {I : Ideal α} : ¬I.IsPrime ↔ I = ⊤ ∨ ∃ (x : _)(_ : x ∉ I)(y : _)(_ : y ∉ I), x * y ∈ I := by
   simp_rw [Ideal.is_prime_iff, not_and_distrib, Ne.def, not_not, not_forall, not_or_distrib]
   exact
-    or_congr Iff.rfl ⟨fun ⟨x, y, hxy, hx, hy⟩ => ⟨x, hx, y, hy, hxy⟩, fun ⟨x, hx, y, hy, hxy⟩ => ⟨x, y, hxy, hx, hy⟩⟩
+    or_congrₓ Iff.rfl ⟨fun ⟨x, y, hxy, hx, hy⟩ => ⟨x, hx, y, hy, hxy⟩, fun ⟨x, hx, y, hy, hxy⟩ => ⟨x, y, hxy, hx, hy⟩⟩
 
 theorem zero_ne_one_of_proper {I : Ideal α} (h : I ≠ ⊤) : (0 : α) ≠ 1 := fun hz =>
   I.ne_top_iff_one.1 h <| hz ▸ I.zero_mem
@@ -233,7 +233,7 @@ theorem IsMaximal.ne_top {I : Ideal α} (h : I.IsMaximal) : I ≠ ⊤ :=
 theorem is_maximal_iff {I : Ideal α} :
     I.IsMaximal ↔ (1 : α) ∉ I ∧ ∀ (J : Ideal α) (x), I ≤ J → x ∉ I → x ∈ J → (1 : α) ∈ J :=
   is_maximal_def.trans <|
-    and_congr I.ne_top_iff_one <|
+    and_congrₓ I.ne_top_iff_one <|
       forall_congrₓ fun J => by
         rw [lt_iff_le_not_leₓ] <;>
           exact
@@ -292,11 +292,11 @@ section Lattice
 
 variable {R : Type u} [Semiringₓ R]
 
-theorem mem_sup_left {S T : Ideal R} : ∀ {x : R}, x ∈ S → x ∈ S⊔T :=
-  show S ≤ S⊔T from le_sup_left
+theorem mem_sup_left {S T : Ideal R} : ∀ {x : R}, x ∈ S → x ∈ S ⊔ T :=
+  show S ≤ S ⊔ T from le_sup_left
 
-theorem mem_sup_right {S T : Ideal R} : ∀ {x : R}, x ∈ T → x ∈ S⊔T :=
-  show T ≤ S⊔T from le_sup_right
+theorem mem_sup_right {S T : Ideal R} : ∀ {x : R}, x ∈ T → x ∈ S ⊔ T :=
+  show T ≤ S ⊔ T from le_sup_right
 
 theorem mem_supr_of_mem {ι : Sort _} {S : ι → Ideal R} (i : ι) : ∀ {x : R}, x ∈ S i → x ∈ supr S :=
   show S i ≤ supr S from le_supr _ _
@@ -308,7 +308,7 @@ theorem mem_Inf {s : Set (Ideal R)} {x : R} : x ∈ inf s ↔ ∀ ⦃I⦄, I ∈
   ⟨fun hx I his => hx I ⟨I, infi_pos his⟩, fun H I ⟨J, hij⟩ => hij ▸ fun S ⟨hj, hS⟩ => hS ▸ H hj⟩
 
 @[simp]
-theorem mem_inf {I J : Ideal R} {x : R} : x ∈ I⊓J ↔ x ∈ I ∧ x ∈ J :=
+theorem mem_inf {I J : Ideal R} {x : R} : x ∈ I ⊓ J ↔ x ∈ I ∧ x ∈ J :=
   Iff.rfl
 
 @[simp]
@@ -366,7 +366,7 @@ theorem span_singleton_le_span_singleton {x y : α} : span ({x} : Set α) ≤ sp
 theorem span_singleton_eq_span_singleton {α : Type u} [CommRingₓ α] [IsDomain α] {x y : α} :
     span ({x} : Set α) = span ({y} : Set α) ↔ Associated x y := by
   rw [← dvd_dvd_iff_associated, le_antisymm_iffₓ, and_comm]
-  apply and_congr <;> rw [span_singleton_le_span_singleton]
+  apply and_congrₓ <;> rw [span_singleton_le_span_singleton]
 
 theorem span_singleton_mul_right_unit {a : α} (h2 : IsUnit a) (x : α) : span ({x * a} : Set α) = span {x} := by
   apply le_antisymmₓ
@@ -395,7 +395,7 @@ theorem IsMaximal.is_prime {I : Ideal α} (H : I.IsMaximal) : I.IsPrime :=
       cases' is_maximal_iff.1 H with _ oJ
       specialize oJ J x IJ hx xJ
       rcases submodule.mem_span_insert.mp oJ with ⟨a, b, h, oe⟩
-      obtain F : y * 1 = y * (a • x + b) := congr_argₓ (fun g : α => y * g) oe
+      obtain F : y * 1 = y * (a • x + b) := congr_arg (fun g : α => y * g) oe
       rw [← mul_oneₓ y, F, mul_addₓ, mul_comm, smul_eq_mul, mul_assoc]
       refine' Submodule.add_mem I (I.mul_mem_left a hxy) (Submodule.smul_mem I y _)
       rwa [Submodule.span_eq] at h⟩

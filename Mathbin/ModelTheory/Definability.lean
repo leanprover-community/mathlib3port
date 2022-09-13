@@ -82,7 +82,7 @@ theorem definable_univ : A.Definable L (Univ : Set (α → M)) :=
 theorem Definable.inter {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.Definable L g) : A.Definable L (f ∩ g) := by
   rcases hf with ⟨φ, rfl⟩
   rcases hg with ⟨θ, rfl⟩
-  refine' ⟨φ⊓θ, _⟩
+  refine' ⟨φ ⊓ θ, _⟩
   ext
   simp
 
@@ -90,7 +90,7 @@ theorem Definable.inter {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.De
 theorem Definable.union {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.Definable L g) : A.Definable L (f ∪ g) := by
   rcases hf with ⟨φ, hφ⟩
   rcases hg with ⟨θ, hθ⟩
-  refine' ⟨φ⊔θ, _⟩
+  refine' ⟨φ ⊔ θ, _⟩
   ext
   rw [hφ, hθ, mem_set_of_eq, formula.realize_sup, mem_union_eq, mem_set_of_eq, mem_set_of_eq]
 
@@ -280,11 +280,11 @@ theorem not_mem_bot {x : α → M} : ¬x ∈ (⊥ : L.DefinableSet A α) :=
   not_mem_empty x
 
 @[simp]
-theorem mem_sup : x ∈ s⊔t ↔ x ∈ s ∨ x ∈ t :=
+theorem mem_sup : x ∈ s ⊔ t ↔ x ∈ s ∨ x ∈ t :=
   Iff.rfl
 
 @[simp]
-theorem mem_inf : x ∈ s⊓t ↔ x ∈ s ∧ x ∈ t :=
+theorem mem_inf : x ∈ s ⊓ t ↔ x ∈ s ∧ x ∈ t :=
   Iff.rfl
 
 @[simp]
@@ -304,11 +304,11 @@ theorem coe_bot : ((⊥ : L.DefinableSet A α) : Set (α → M)) = ∅ :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_sup (s t : L.DefinableSet A α) : (↑(s⊔t) : Set (α → M)) = s ∪ t :=
+theorem coe_sup (s t : L.DefinableSet A α) : (↑(s ⊔ t) : Set (α → M)) = s ∪ t :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_inf (s t : L.DefinableSet A α) : (↑(s⊓t) : Set (α → M)) = s ∩ t :=
+theorem coe_inf (s t : L.DefinableSet A α) : (↑(s ⊓ t) : Set (α → M)) = s ∩ t :=
   rfl
 
 @[simp, norm_cast]

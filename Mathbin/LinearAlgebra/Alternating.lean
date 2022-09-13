@@ -103,10 +103,10 @@ theorem coe_mk (f : (ι → M) → N) (h₁ h₂ h₃) : ⇑(⟨f, h₁, h₂, h
   rfl
 
 theorem congr_fun {f g : AlternatingMap R M N ι} (h : f = g) (x : ι → M) : f x = g x :=
-  congr_argₓ (fun h : AlternatingMap R M N ι => h x) h
+  congr_arg (fun h : AlternatingMap R M N ι => h x) h
 
 theorem congr_arg (f : AlternatingMap R M N ι) {x y : ι → M} (h : x = y) : f x = f y :=
-  congr_argₓ (fun x : ι → M => f x) h
+  congr_arg (fun x : ι → M => f x) h
 
 theorem coe_injective : Injective (coeFn : AlternatingMap R M N ι → (ι → M) → N) := fun f g h => by
   cases f

@@ -165,13 +165,13 @@ alias reverse_suffix ↔ _ is_prefix.reverse
 alias reverse_infix ↔ _ is_infix.reverse
 
 theorem IsInfix.length_le (h : l₁ <:+: l₂) : l₁.length ≤ l₂.length :=
-  length_le_of_sublistₓ h.Sublist
+  length_le_of_sublist h.Sublist
 
 theorem IsPrefix.length_le (h : l₁ <+: l₂) : l₁.length ≤ l₂.length :=
-  length_le_of_sublistₓ h.Sublist
+  length_le_of_sublist h.Sublist
 
 theorem IsSuffix.length_le (h : l₁ <:+ l₂) : l₁.length ≤ l₂.length :=
-  length_le_of_sublistₓ h.Sublist
+  length_le_of_sublist h.Sublist
 
 theorem eq_nil_of_infix_nil (h : l <:+: []) : l = [] :=
   eq_nil_of_sublist_nil h.Sublist
@@ -220,7 +220,7 @@ theorem eq_of_suffix_of_length_eq (h : l₁ <:+ l₂) : l₁.length = l₂.lengt
          [(group (Tactic.injection "injection" `e ["with" ["_" `e']]) [])
           (group (Tactic.subst "subst" [`b]) [])
           (group
-           (Mathlib.Tactic.rcases
+           (Std.Tactic.rcases
             "rcases"
             [(Tactic.casesTarget
               []
@@ -230,13 +230,17 @@ theorem eq_of_suffix_of_length_eq (h : l₁ <:+ l₂) : l₁.length = l₂.lengt
                 (Term.anonymousCtor "⟨" [(Term.hole "_") "," `e'] "⟩")
                 (Term.app `le_of_succ_le_succ [`ll])]))]
             ["with"
-             (Tactic.rcasesPatLo
-              (Tactic.rcasesPatMed
-               [(Tactic.rcasesPat.tuple
+             (Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed
+               [(Std.Tactic.RCases.rcasesPat.tuple
                  "⟨"
-                 [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `r₃)]) [])
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `r₃)])
+                   [])
                   ","
-                  (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl)]) [])]
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                   [])]
                  "⟩")])
               [])])
            [])
@@ -254,7 +258,7 @@ theorem eq_of_suffix_of_length_eq (h : l₁ <:+ l₂) : l₁.length = l₂.lengt
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-      (Mathlib.Tactic.rcases
+      (Std.Tactic.rcases
        "rcases"
        [(Tactic.casesTarget
          []
@@ -264,13 +268,15 @@ theorem eq_of_suffix_of_length_eq (h : l₁ <:+ l₂) : l₁.length = l₂.lengt
            (Term.anonymousCtor "⟨" [(Term.hole "_") "," `e'] "⟩")
            (Term.app `le_of_succ_le_succ [`ll])]))]
        ["with"
-        (Tactic.rcasesPatLo
-         (Tactic.rcasesPatMed
-          [(Tactic.rcasesPat.tuple
+        (Std.Tactic.RCases.rcasesPatLo
+         (Std.Tactic.RCases.rcasesPatMed
+          [(Std.Tactic.RCases.rcasesPat.tuple
             "⟨"
-            [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `r₃)]) [])
+            [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `r₃)]) [])
              ","
-             (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `rfl)]) [])]
+             (Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+              [])]
             "⟩")])
          [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -493,7 +499,7 @@ instance decidableInfix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l
     decidableOfDecidableOfIff (@Or.decidable _ _ (l₁.decidablePrefix (b :: l₂)) (l₁.decidableInfix l₂))
       infix_cons_iff.symm
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:526:6: unsupported: specialize @hyp
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:528:6: unsupported: specialize @hyp
 theorem prefix_take_le_iff {L : List (List (Option α))} (hm : m < L.length) : L.take m <+: L.take n ↔ m ≤ n := by
   simp only [prefix_iff_eq_take, length_take]
   induction' m with m IH generalizing L n
@@ -782,11 +788,11 @@ theorem eq_or_mem_of_mem_insertₓ (h : a ∈ insert b l) : a = b ∨ a ∈ l :=
 
 @[simp]
 theorem length_insert_of_memₓ (h : a ∈ l) : (insert a l).length = l.length :=
-  congr_argₓ _ <| insert_of_memₓ h
+  congr_arg _ <| insert_of_memₓ h
 
 @[simp]
 theorem length_insert_of_not_memₓ (h : a ∉ l) : (insert a l).length = l.length + 1 :=
-  congr_argₓ _ <| insert_of_not_memₓ h
+  congr_arg _ <| insert_of_not_memₓ h
 
 end Insert
 

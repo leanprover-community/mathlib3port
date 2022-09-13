@@ -171,7 +171,7 @@ can't grow faster than exponentially. This is a simple corollary of Grönwall's 
 people call this Grönwall's inequality too.
 
 This version assumes all inequalities to be true in the whole space. -/
-theorem dist_le_of_approx_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0 } (hv : ∀ t, LipschitzWith K (v t))
+theorem dist_le_of_approx_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0} (hv : ∀ t, LipschitzWith K (v t))
     {f g f' g' : ℝ → E} {a b : ℝ} {εf εg δ : ℝ} (hf : ContinuousOn f (Icc a b))
     (hf' : ∀ t ∈ Ico a b, HasDerivWithinAt f (f' t) (Ici t) t) (f_bound : ∀ t ∈ Ico a b, dist (f' t) (v t (f t)) ≤ εf)
     (hg : ContinuousOn g (Icc a b)) (hg' : ∀ t ∈ Ico a b, HasDerivWithinAt g (g' t) (Ici t) t)
@@ -209,7 +209,7 @@ can't grow faster than exponentially. This is a simple corollary of Grönwall's 
 people call this Grönwall's inequality too.
 
 This version assumes all inequalities to be true in the whole space. -/
-theorem dist_le_of_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0 } (hv : ∀ t, LipschitzWith K (v t)) {f g : ℝ → E} {a b : ℝ}
+theorem dist_le_of_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0} (hv : ∀ t, LipschitzWith K (v t)) {f g : ℝ → E} {a b : ℝ}
     {δ : ℝ} (hf : ContinuousOn f (Icc a b)) (hf' : ∀ t ∈ Ico a b, HasDerivWithinAt f (v t (f t)) (Ici t) t)
     (hg : ContinuousOn g (Icc a b)) (hg' : ∀ t ∈ Ico a b, HasDerivWithinAt g (v t (g t)) (Ici t) t)
     (ha : dist (f a) (g a) ≤ δ) : ∀ t ∈ Icc a b, dist (f t) (g t) ≤ δ * exp (K * (t - a)) :=
@@ -233,7 +233,7 @@ theorem ODE_solution_unique_of_mem_set {v : ℝ → E → E} {s : ℝ → Set E}
 
 /-- There exists only one solution of an ODE \(\dot x=v(t, x)\) with
 a given initial value provided that RHS is Lipschitz continuous in `x`. -/
-theorem ODE_solution_unique {v : ℝ → E → E} {K : ℝ≥0 } (hv : ∀ t, LipschitzWith K (v t)) {f g : ℝ → E} {a b : ℝ}
+theorem ODE_solution_unique {v : ℝ → E → E} {K : ℝ≥0} (hv : ∀ t, LipschitzWith K (v t)) {f g : ℝ → E} {a b : ℝ}
     (hf : ContinuousOn f (Icc a b)) (hf' : ∀ t ∈ Ico a b, HasDerivWithinAt f (v t (f t)) (Ici t) t)
     (hg : ContinuousOn g (Icc a b)) (hg' : ∀ t ∈ Ico a b, HasDerivWithinAt g (v t (g t)) (Ici t) t) (ha : f a = g a) :
     ∀ t ∈ Icc a b, f t = g t :=

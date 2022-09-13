@@ -47,8 +47,8 @@ theorem card_embedding_eq {α β} [Fintype α] [Fintype β] [Fintype (α ↪ β)
 /- The cardinality of embeddings from an infinite type to a finite type is zero.
 This is a re-statement of the pigeonhole principle. -/
 @[simp]
-theorem card_embedding_eq_of_infinite {α β} [Infinite α] [Fintype β] [Fintype (α ↪ β)] : ‖α ↪ β‖ = 0 :=
-  card_eq_zero_iff.mpr Function.Embedding.is_empty
+theorem card_embedding_eq_of_infinite {α β : Type _} [Infinite α] [Fintype β] [Fintype (α ↪ β)] : ‖α ↪ β‖ = 0 :=
+  card_eq_zero
 
 end Fintype
 

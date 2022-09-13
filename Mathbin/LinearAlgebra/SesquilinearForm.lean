@@ -181,7 +181,7 @@ theorem ker_flip_eq_bot (H : B.IsRefl) (h : B.ker = ⊥) : B.flip.ker = ⊥ := b
 
 theorem ker_eq_bot_iff_ker_flip_eq_bot (H : B.IsRefl) : B.ker = ⊥ ↔ B.flip.ker = ⊥ := by
   refine' ⟨ker_flip_eq_bot H, fun h => _⟩
-  exact (congr_argₓ _ B.flip_flip.symm).trans (ker_flip_eq_bot (flip_is_refl_iff.mpr H) h)
+  exact (congr_arg _ B.flip_flip.symm).trans (ker_flip_eq_bot (flip_is_refl_iff.mpr H) h)
 
 end IsRefl
 
@@ -323,7 +323,7 @@ variable [Field K] [AddCommGroupₓ V] [Module K V] [Field K₁] [AddCommGroup�
 
 -- ↓ This lemma only applies in fields as we require `a * b = 0 → a = 0 ∨ b = 0`
 theorem span_singleton_inf_orthogonal_eq_bot (B : V₁ →ₛₗ[J₁] V₁ →ₛₗ[J₁'] K) (x : V₁) (hx : ¬B.IsOrtho x x) :
-    (K₁∙x)⊓Submodule.orthogonalBilin (K₁∙x) B = ⊥ := by
+    (K₁ ∙ x) ⊓ Submodule.orthogonalBilin (K₁ ∙ x) B = ⊥ := by
   rw [← Finset.coe_singleton]
   refine' eq_bot_iff.2 fun y h => _
   rcases mem_span_finset.1 h.1 with ⟨μ, rfl⟩
@@ -346,7 +346,7 @@ theorem span_singleton_inf_orthogonal_eq_bot (B : V₁ →ₛₗ[J₁] V₁ →�
 
 -- ↓ This lemma only applies in fields since we use the `mul_eq_zero`
 theorem orthogonal_span_singleton_eq_to_lin_ker {B : V →ₗ[K] V →ₛₗ[J] K} (x : V) :
-    Submodule.orthogonalBilin (K∙x) B = (B x).ker := by
+    Submodule.orthogonalBilin (K ∙ x) B = (B x).ker := by
   ext y
   simp_rw [Submodule.mem_orthogonal_bilin_iff, LinearMap.mem_ker, Submodule.mem_span_singleton]
   constructor
@@ -359,7 +359,7 @@ theorem orthogonal_span_singleton_eq_to_lin_ker {B : V →ₗ[K] V →ₛₗ[J] 
 
 -- todo: Generalize this to sesquilinear maps
 theorem span_singleton_sup_orthogonal_eq_top {B : V →ₗ[K] V →ₗ[K] K} {x : V} (hx : ¬B.IsOrtho x x) :
-    (K∙x)⊔Submodule.orthogonalBilin (K∙x) B = ⊤ := by
+    (K ∙ x) ⊔ Submodule.orthogonalBilin (K ∙ x) B = ⊤ := by
   rw [orthogonal_span_singleton_eq_to_lin_ker]
   exact (B x).span_singleton_sup_ker_eq_top hx
 
@@ -367,7 +367,7 @@ theorem span_singleton_sup_orthogonal_eq_top {B : V →ₗ[K] V →ₗ[K] K} {x 
 /-- Given a bilinear form `B` and some `x` such that `B x x ≠ 0`, the span of the singleton of `x`
   is complement to its orthogonal complement. -/
 theorem is_compl_span_singleton_orthogonal {B : V →ₗ[K] V →ₗ[K] K} {x : V} (hx : ¬B.IsOrtho x x) :
-    IsCompl (K∙x) (Submodule.orthogonalBilin (K∙x) B) :=
+    IsCompl (K ∙ x) (Submodule.orthogonalBilin (K ∙ x) B) :=
   { Disjoint := eq_bot_iff.1 <| span_singleton_inf_orthogonal_eq_bot B x hx,
     Codisjoint := eq_top_iff.1 <| span_singleton_sup_orthogonal_eq_top hx }
 
@@ -588,7 +588,7 @@ theorem flip_separating_left {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
 
 @[simp]
 theorem flip_nondegenerate {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} : B.flip.Nondegenerate ↔ B.Nondegenerate :=
-  Iff.trans And.comm (and_congr flip_separating_right flip_separating_left)
+  Iff.trans And.comm (and_congrₓ flip_separating_right flip_separating_left)
 
 theorem separating_left_iff_linear_nontrivial {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
     B.SeparatingLeft ↔ ∀ x : M₁, B x = 0 → x = 0 := by

@@ -217,8 +217,8 @@ See note [reducible non-instances]. -/
       "Pullback an `ordered_add_comm_monoid` under an injective map."]
 def Function.Injective.linearOrderedCommMonoid [LinearOrderedCommMonoid α] {β : Type _} [One β] [Mul β] [Pow β ℕ]
     [HasSup β] [HasInf β] (f : β → α) (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
-    (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (hsup : ∀ x y, f (x⊔y) = max (f x) (f y))
-    (hinf : ∀ x y, f (x⊓y) = min (f x) (f y)) : LinearOrderedCommMonoid β :=
+    (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y))
+    (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) : LinearOrderedCommMonoid β :=
   { hf.OrderedCommMonoid f one mul npow, LinearOrderₓ.lift f hf hsup hinf with }
 
 theorem bit0_pos [OrderedAddCommMonoid α] {a : α} (h : 0 < a) : 0 < bit0 a :=
@@ -504,10 +504,10 @@ theorem le_mul_right (h : a ≤ b) : a ≤ b * c :=
 
 @[to_additive]
 theorem lt_iff_exists_mul [CovariantClass α α (· * ·) (· < ·)] : a < b ↔ ∃ c > 1, b = a * c := by
-  simp_rw [lt_iff_le_and_neₓ, and_comm, le_iff_exists_mul, ← exists_and_distrib_left, exists_prop]
+  simp_rw [lt_iff_le_and_neₓ, and_comm, le_iff_exists_mul, ← exists_and_distrib_leftₓ, exists_propₓ]
   apply exists_congr
   intro c
-  rw [And.congr_left_iff, gt_iff_ltₓ]
+  rw [And.congr_left_iffₓ, gt_iff_ltₓ]
   rintro rfl
   constructor
   · rw [one_lt_iff_ne_one]
@@ -612,22 +612,28 @@ end CanonicallyLinearOrderedMonoid
 /-- An ordered cancellative additive commutative monoid
 is an additive commutative monoid with a partial order,
 in which addition is cancellative and monotone. -/
-@[protect_proj, ancestor AddCancelCommMonoid PartialOrderₓ]
-class OrderedCancelAddCommMonoid (α : Type u) extends AddCancelCommMonoid α, PartialOrderₓ α where
+@[protect_proj, ancestor AddCommMonoidₓ PartialOrderₓ]
+class OrderedCancelAddCommMonoid (α : Type u) extends AddCommMonoidₓ α, PartialOrderₓ α where
   add_le_add_left : ∀ a b : α, a ≤ b → ∀ c : α, c + a ≤ c + b
   le_of_add_le_add_left : ∀ a b c : α, a + b ≤ a + c → b ≤ c
 
 /-- An ordered cancellative commutative monoid
 is a commutative monoid with a partial order,
 in which multiplication is cancellative and monotone. -/
-@[protect_proj, ancestor CancelCommMonoid PartialOrderₓ, to_additive]
-class OrderedCancelCommMonoid (α : Type u) extends CancelCommMonoid α, PartialOrderₓ α where
+@[protect_proj, ancestor CommMonoidₓ PartialOrderₓ, to_additive]
+class OrderedCancelCommMonoid (α : Type u) extends CommMonoidₓ α, PartialOrderₓ α where
   mul_le_mul_left : ∀ a b : α, a ≤ b → ∀ c : α, c * a ≤ c * b
   le_of_mul_le_mul_left : ∀ a b c : α, a * b ≤ a * c → b ≤ c
 
 section OrderedCancelCommMonoid
 
 variable [OrderedCancelCommMonoid α] {a b c d : α}
+
+-- see Note [lower instance priority]
+@[to_additive]
+instance (priority := 200) OrderedCancelCommMonoid.to_contravariant_class_le_left :
+    ContravariantClass α α (· * ·) (· ≤ ·) :=
+  ⟨OrderedCancelCommMonoid.le_of_mul_le_mul_left⟩
 
 @[to_additive]
 theorem OrderedCancelCommMonoid.lt_of_mul_lt_mul_left : ∀ a b c : α, a * b < a * c → b < c := fun a b c h =>
@@ -653,6 +659,12 @@ instance OrderedCancelCommMonoid.to_contravariant_class_right (M : Type _) [Orde
 instance (priority := 100) OrderedCancelCommMonoid.toOrderedCommMonoid : OrderedCommMonoid α :=
   { ‹OrderedCancelCommMonoid α› with }
 
+-- see Note [lower instance priority]
+@[to_additive]
+instance (priority := 100) OrderedCancelCommMonoid.toCancelCommMonoid : CancelCommMonoid α :=
+  { ‹OrderedCancelCommMonoid α› with
+    mul_left_cancel := fun a b c h => (le_of_mul_le_mul_left' h.le).antisymm <| le_of_mul_le_mul_left' h.Ge }
+
 /-- Pullback an `ordered_cancel_comm_monoid` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible,
@@ -661,7 +673,7 @@ See note [reducible non-instances]. -/
 def Function.Injective.orderedCancelCommMonoid {β : Type _} [One β] [Mul β] [Pow β ℕ] (f : β → α)
     (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) : OrderedCancelCommMonoid β :=
-  { hf.LeftCancelSemigroup f mul, hf.OrderedCommMonoid f one mul npow with
+  { hf.OrderedCommMonoid f one mul npow with
     le_of_mul_le_mul_left := fun a b c (bc : f (a * b) ≤ f (a * c)) =>
       (mul_le_mul_iff_left (f a)).mp
         (by
@@ -778,8 +790,8 @@ See note [reducible non-instances]. -/
       "Pullback a `linear_ordered_cancel_add_comm_monoid` under an injective map."]
 def Function.Injective.linearOrderedCancelCommMonoid {β : Type _} [One β] [Mul β] [Pow β ℕ] [HasSup β] [HasInf β]
     (f : β → α) (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
-    (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (hsup : ∀ x y, f (x⊔y) = max (f x) (f y))
-    (hinf : ∀ x y, f (x⊓y) = min (f x) (f y)) : LinearOrderedCancelCommMonoid β :=
+    (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y))
+    (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) : LinearOrderedCancelCommMonoid β :=
   { hf.LinearOrderedCommMonoid f one mul npow hsup hinf, hf.OrderedCancelCommMonoid f one mul npow with }
 
 end LinearOrderedCancelCommMonoid
@@ -867,7 +879,7 @@ instance [OrderedCommMonoid α] [OrderedCommMonoid β] : OrderedCommMonoid (α �
 
 @[to_additive]
 instance [OrderedCancelCommMonoid M] [OrderedCancelCommMonoid N] : OrderedCancelCommMonoid (M × N) :=
-  { Prod.cancelCommMonoid, Prod.orderedCommMonoid with
+  { Prod.orderedCommMonoid with
     le_of_mul_le_mul_left := fun a b c h => ⟨le_of_mul_le_mul_left' h.1, le_of_mul_le_mul_left' h.2⟩ }
 
 @[to_additive]
@@ -969,7 +981,7 @@ theorem add_eq_coe : ∀ {a b : WithTop α} {c : α}, a + b = c ↔ ∃ a' b' : 
   | some a, none, c => by
     simp [none_eq_top]
   | some a, some b, c => by
-    simp only [some_eq_coe, ← coe_add, coe_eq_coe, exists_and_distrib_left, exists_eq_left]
+    simp only [some_eq_coe, ← coe_add, coe_eq_coe, exists_and_distrib_leftₓ, exists_eq_left]
 
 @[simp]
 theorem add_coe_eq_top_iff {x : WithTop α} {y : α} : x + y = ⊤ ↔ x = ⊤ := by
@@ -1511,12 +1523,11 @@ instance [OrderedCommMonoid α] : OrderedAddCommMonoid (Additive α) :=
   { Additive.partialOrder, Additive.addCommMonoid with add_le_add_left := @OrderedCommMonoid.mul_le_mul_left α _ }
 
 instance [OrderedCancelAddCommMonoid α] : OrderedCancelCommMonoid (Multiplicative α) :=
-  { Multiplicative.leftCancelSemigroup, Multiplicative.orderedCommMonoid with
+  { Multiplicative.orderedCommMonoid with
     le_of_mul_le_mul_left := @OrderedCancelAddCommMonoid.le_of_add_le_add_left α _ }
 
 instance [OrderedCancelCommMonoid α] : OrderedCancelAddCommMonoid (Additive α) :=
-  { Additive.addLeftCancelSemigroup, Additive.orderedAddCommMonoid with
-    le_of_add_le_add_left := @OrderedCancelCommMonoid.le_of_mul_le_mul_left α _ }
+  { Additive.orderedAddCommMonoid with le_of_add_le_add_left := @OrderedCancelCommMonoid.le_of_mul_le_mul_left α _ }
 
 instance [LinearOrderedAddCommMonoid α] : LinearOrderedCommMonoid (Multiplicative α) :=
   { Multiplicative.linearOrder, Multiplicative.orderedCommMonoid with }

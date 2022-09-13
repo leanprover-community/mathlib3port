@@ -92,7 +92,7 @@ contains the cartesian square of an open neighborhood in the group. -/
       "An open neighborhood of the identity in the\ncartesian square of a nonarchimedean group contains the cartesian square of an open neighborhood in\nthe group."]
 theorem prod_self_subset {U} (hU : U ∈ nhds (1 : G × G)) : ∃ V : OpenSubgroup G, (V : Set G) ×ˢ (V : Set G) ⊆ U :=
   let ⟨V, W, h⟩ := prod_subset hU
-  ⟨V⊓W, by
+  ⟨V ⊓ W, by
     refine' Set.Subset.trans (Set.prod_mono _ _) ‹_› <;> simp ⟩
 
 /-- The cartesian product of two nonarchimedean groups is nonarchimedean. -/

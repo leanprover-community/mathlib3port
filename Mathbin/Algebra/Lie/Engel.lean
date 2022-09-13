@@ -79,7 +79,7 @@ namespace LieSubmodule
 
 open LieModule
 
-variable {I : LieIdeal R L} {x : L} (hxI : (R∙x)⊔I = ⊤)
+variable {I : LieIdeal R L} {x : L} (hxI : (R ∙ x) ⊔ I = ⊤)
 
 include hxI
 
@@ -90,17 +90,17 @@ theorem exists_smul_add_of_span_sup_eq_top (y : L) : ∃ t : R, ∃ z ∈ I, y =
   exact ⟨t, z, hz, rfl⟩
 
 theorem lie_top_eq_of_span_sup_eq_top (N : LieSubmodule R L M) :
-    (↑⁅(⊤ : LieIdeal R L),N⁆ : Submodule R M) =
-      (N : Submodule R M).map (toEndomorphism R L M x)⊔(↑⁅I,N⁆ : Submodule R M) :=
+    (↑⁅(⊤ : LieIdeal R L), N⁆ : Submodule R M) =
+      (N : Submodule R M).map (toEndomorphism R L M x) ⊔ (↑⁅I, N⁆ : Submodule R M) :=
   by
-  simp only [lie_ideal_oper_eq_linear_span', Submodule.sup_span, mem_top, exists_prop, exists_true_left,
+  simp only [lie_ideal_oper_eq_linear_span', Submodule.sup_span, mem_top, exists_propₓ, exists_true_left,
     Submodule.map_coe, to_endomorphism_apply_apply]
   refine' le_antisymmₓ (submodule.span_le.mpr _) (Submodule.span_mono fun z hz => _)
   · rintro z ⟨y, n, hn : n ∈ N, rfl⟩
     obtain ⟨t, z, hz, rfl⟩ := exists_smul_add_of_span_sup_eq_top hxI y
     simp only [SetLike.mem_coe, Submodule.span_union, Submodule.mem_sup]
     exact
-      ⟨t • ⁅x,n⁆, Submodule.subset_span ⟨t • n, N.smul_mem' t hn, lie_smul t x n⟩, ⁅z,n⁆,
+      ⟨t • ⁅x, n⁆, Submodule.subset_span ⟨t • n, N.smul_mem' t hn, lie_smul t x n⟩, ⁅z, n⁆,
         Submodule.subset_span ⟨z, hz, n, hn, rfl⟩, by
         simp ⟩
     
@@ -113,7 +113,7 @@ theorem lcs_le_lcs_of_is_nilpotent_span_sup_eq_top {n i j : ℕ} (hxn : toEndomo
   suffices
     ∀ l,
       ((⊤ : LieIdeal R L).lcs M (i + l) : Submodule R M) ≤
-        (I.lcs M j : Submodule R M).map (to_endomorphism R L M x ^ l)⊔(I.lcs M (j + 1) : Submodule R M)
+        (I.lcs M j : Submodule R M).map (to_endomorphism R L M x ^ l) ⊔ (I.lcs M (j + 1) : Submodule R M)
     by
     simpa only [bot_sup_eq, LieIdeal.incl_coe, Submodule.map_zero, hxn] using this n
   intro l
@@ -195,7 +195,7 @@ theorem LieAlgebra.exists_engelian_lie_subalgebra_of_lt_normalizer {K : LieSubal
     ∃ (K' : LieSubalgebra R L)(hK' : LieAlgebra.IsEngelian.{u₁, u₂, u₄} R K'), K < K' := by
   obtain ⟨x, hx₁, hx₂⟩ := SetLike.exists_of_lt hK₂
   let K' : LieSubalgebra R L :=
-    { (R∙x)⊔(K : Submodule R L) with lie_mem' := fun y z => LieSubalgebra.lie_mem_sup_of_mem_normalizer hx₁ }
+    { (R ∙ x) ⊔ (K : Submodule R L) with lie_mem' := fun y z => LieSubalgebra.lie_mem_sup_of_mem_normalizer hx₁ }
   have hxK' : x ∈ K' := Submodule.mem_sup_left (Submodule.subset_span (Set.mem_singleton _))
   have hKK' : K ≤ K' := (LieSubalgebra.coe_submodule_le_coe_submodule K K').mp le_sup_right
   have hK' : K' ≤ K.normalizer := by
@@ -205,7 +205,7 @@ theorem LieAlgebra.exists_engelian_lie_subalgebra_of_lt_normalizer {K : LieSubal
   intro M _i1 _i2 _i3 _i4 h
   obtain ⟨I, hI₁ : (I : LieSubalgebra R K') = LieSubalgebra.ofLe hKK'⟩ :=
     LieSubalgebra.exists_nested_lie_ideal_of_le_normalizer hKK' hK'
-  have hI₂ : (R∙(⟨x, hxK'⟩ : K'))⊔I = ⊤ := by
+  have hI₂ : (R ∙ (⟨x, hxK'⟩ : K')) ⊔ I = ⊤ := by
     rw [← LieIdeal.coe_to_lie_subalgebra_to_submodule R K' I, hI₁]
     apply Submodule.map_injective_of_injective (K' : Submodule R L).injective_subtype
     simpa

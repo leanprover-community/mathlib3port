@@ -28,8 +28,8 @@ theorem zpow_bit1_neg (x : α) (n : ℤ) : -x ^ bit1 n = -(x ^ bit1 n) := by
   rw [zpow_bit1', zpow_bit1', neg_mul_neg, neg_mul_eq_mul_neg]
 
 @[simp, norm_cast]
-theorem Rat.cast_zpow [CharZero α] (q : ℚ) (n : ℤ) : ((q ^ n : ℚ) : α) = q ^ n :=
-  map_zpow₀ (Rat.castHom α) q n
+theorem Ratₓ.cast_zpow [CharZero α] (q : ℚ) (n : ℤ) : ((q ^ n : ℚ) : α) = q ^ n :=
+  map_zpow₀ (Ratₓ.castHom α) q n
 
 end DivisionRing
 

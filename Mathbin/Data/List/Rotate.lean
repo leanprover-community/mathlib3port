@@ -587,7 +587,7 @@ theorem mem_cyclic_permutations_iff {l l' : List α} : l ∈ cyclicPermutations 
   · intro h
     obtain ⟨k, rfl⟩ := h.symm
     rw [mem_iff_nth_le]
-    simp only [exists_prop, nth_le_cyclic_permutations]
+    simp only [exists_propₓ, nth_le_cyclic_permutations]
     cases' l' with x l
     · simp
       

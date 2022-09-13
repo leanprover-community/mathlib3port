@@ -56,15 +56,14 @@ instance : CommSemiringₓ ℕ where
     rw [Nat.succ_eq_add_one, Nat.add_comm, Nat.right_distrib, Nat.one_mul]
 
 instance : LinearOrderedSemiring Nat :=
-  { Nat.commSemiring, Nat.linearOrder with add_left_cancel := @Nat.add_left_cancel, lt := Nat.Lt,
-    add_le_add_left := @Nat.add_le_add_leftₓ, le_of_add_le_add_left := @Nat.le_of_add_le_add_leftₓ,
-    zero_le_one := Nat.le_of_ltₓ (Nat.zero_lt_succₓ 0), mul_lt_mul_of_pos_left := @Nat.mul_lt_mul_of_pos_leftₓ,
-    mul_lt_mul_of_pos_right := @Nat.mul_lt_mul_of_pos_rightₓ, DecidableEq := Nat.decidableEq,
-    exists_pair_ne := ⟨0, 1, ne_of_ltₓ Nat.zero_lt_oneₓ⟩ }
+  { Nat.commSemiring, Nat.linearOrder with lt := Nat.Lt, add_le_add_left := @Nat.add_le_add_leftₓ,
+    le_of_add_le_add_left := @Nat.le_of_add_le_add_leftₓ, zero_le_one := Nat.le_of_ltₓ (Nat.zero_lt_succₓ 0),
+    mul_lt_mul_of_pos_left := @Nat.mul_lt_mul_of_pos_leftₓ, mul_lt_mul_of_pos_right := @Nat.mul_lt_mul_of_pos_rightₓ,
+    DecidableEq := Nat.decidableEq, exists_pair_ne := ⟨0, 1, ne_of_ltₓ Nat.zero_lt_oneₓ⟩ }
 
 -- all the fields are already included in the linear_ordered_semiring instance
 instance : LinearOrderedCancelAddCommMonoid ℕ :=
-  { Nat.linearOrderedSemiring with add_left_cancel := @Nat.add_left_cancel }
+  { Nat.linearOrderedSemiring with }
 
 instance : LinearOrderedCommMonoidWithZero ℕ :=
   { Nat.linearOrderedSemiring, (inferInstance : CommMonoidWithZero ℕ) with
@@ -318,7 +317,7 @@ theorem succ_pos' {n : ℕ} : 0 < succ n :=
   succ_posₓ n
 
 theorem succ_inj' {n m : ℕ} : succ n = succ m ↔ n = m :=
-  ⟨succ.injₓ, congr_argₓ _⟩
+  ⟨succ.injₓ, congr_arg _⟩
 
 theorem succ_injective : Function.Injective Nat.succ := fun x y => succ.injₓ
 
@@ -501,7 +500,7 @@ theorem le_add_one_iff {i j : ℕ} : i ≤ j + 1 ↔ i ≤ j ∨ i = j + 1 :=
     Or.ndrec (fun h => le_transₓ h <| Nat.le_add_rightₓ _ _) le_of_eqₓ⟩
 
 theorem le_and_le_add_one_iff {x a : ℕ} : a ≤ x ∧ x ≤ a + 1 ↔ x = a ∨ x = a + 1 := by
-  rw [le_add_one_iff, and_or_distrib_left, ← le_antisymm_iffₓ, eq_comm, and_iff_right_of_imp]
+  rw [le_add_one_iff, and_or_distrib_left, ← le_antisymm_iffₓ, eq_comm, and_iff_right_of_impₓ]
   rintro rfl
   exact a.le_succ
 
@@ -630,7 +629,7 @@ theorem le_mul_of_pos_right {m n : ℕ} (h : 0 < n) : m ≤ m * n := by
         decide)
 
 theorem two_mul_ne_two_mul_add_one {n m} : 2 * n ≠ 2 * m + 1 :=
-  mt (congr_argₓ (· % 2))
+  mt (congr_arg (· % 2))
     (by
       rw [add_commₓ, add_mul_mod_self_left, mul_mod_right, mod_eq_of_lt] <;> simp )
 
@@ -683,7 +682,7 @@ theorem lt_succ_iff_lt_or_eq {n i : ℕ} : n < i.succ ↔ n < i ∨ n = i :=
   lt_succ_iffₓ.trans Decidable.le_iff_lt_or_eqₓ
 
 theorem mul_self_inj {n m : ℕ} : n * n = m * m ↔ n = m :=
-  le_antisymm_iffₓ.trans (le_antisymm_iffₓ.trans (and_congr mul_self_le_mul_self_iff mul_self_le_mul_self_iff)).symm
+  le_antisymm_iffₓ.trans (le_antisymm_iffₓ.trans (and_congrₓ mul_self_le_mul_self_iff mul_self_le_mul_self_iff)).symm
 
 theorem le_add_pred_of_pos (n : ℕ) {i : ℕ} (hi : i ≠ 0) : n ≤ i + (n - 1) := by
   refine' le_transₓ _ add_tsub_le_assoc
@@ -1119,7 +1118,7 @@ theorem mul_div_mul_comm_of_dvd_dvd {a b c d : ℕ} (hac : c ∣ a) (hbd : d ∣
 
 @[simp]
 protected theorem div_left_inj {a b d : ℕ} (hda : d ∣ a) (hdb : d ∣ b) : a / d = b / d ↔ a = b := by
-  refine' ⟨fun h => _, congr_argₓ _⟩
+  refine' ⟨fun h => _, congr_arg _⟩
   rw [← Nat.mul_div_cancel'ₓ hda, ← Nat.mul_div_cancel'ₓ hdb, h]
 
 /-! ### `mod`, `dvd` -/
@@ -1448,7 +1447,7 @@ theorem div_eq_self {a b : ℕ} : a / b = a ↔ a = 0 ∨ b = 1 := by
 theorem lt_iff_le_pred : ∀ {m n : ℕ}, 0 < n → (m < n ↔ m ≤ n - 1)
   | m, n + 1, _ => lt_succ_iffₓ
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) }
 theorem div_eq_sub_mod_div {m n : ℕ} : m / n = (m - m % n) / n := by
   by_cases' n0 : n = 0
   · rw [n0, Nat.div_zeroₓ, Nat.div_zeroₓ]
@@ -1502,7 +1501,7 @@ theorem dvd_left_iff_eq {m n : ℕ} : (∀ a : ℕ, a ∣ m ↔ a ∣ n) ↔ m =
 
 /-- `dvd` is injective in the left argument -/
 theorem dvd_left_injective : Function.Injective ((· ∣ ·) : ℕ → ℕ → Prop) := fun m n h =>
-  dvd_right_iff_eq.mp fun a => iff_of_eq (congr_funₓ h a)
+  dvd_right_iff_eq.mp fun a => iff_of_eq (congr_fun h a)
 
 theorem div_lt_div_of_lt_of_dvd {a b d : ℕ} (hdb : d ∣ b) (h : a < b) : a / d < b / d := by
   rw [Nat.lt_div_iff_mul_lt hdb]
@@ -1539,7 +1538,7 @@ theorem find_lt_iff (h : ∃ n : ℕ, p n) (n : ℕ) : Nat.findₓ h < n ↔ ∃
 
 @[simp]
 theorem find_le_iff (h : ∃ n : ℕ, p n) (n : ℕ) : Nat.findₓ h ≤ n ↔ ∃ m ≤ n, p m := by
-  simp only [exists_prop, ← lt_succ_iff, find_lt_iff]
+  simp only [exists_propₓ, ← lt_succ_iff, find_lt_iff]
 
 @[simp]
 theorem le_find_iff (h : ∃ n : ℕ, p n) (n : ℕ) : n ≤ Nat.findₓ h ↔ ∀ m < n, ¬p m := by
@@ -1845,7 +1844,7 @@ theorem pos_of_bit0_pos {n : ℕ} (h : 0 < bit0 n) : 0 < n := by
 theorem bit_cases_on_bit {C : ℕ → Sort u} (H : ∀ b n, C (bit b n)) (b : Bool) (n : ℕ) :
     bitCasesOn (bit b n) H = H b n :=
   eq_of_heq <|
-    (eq_rec_heqₓ _ _).trans <| by
+    (eq_rec_heq _ _).trans <| by
       rw [bodd_bit, div2_bit]
 
 @[simp]
@@ -1860,7 +1859,7 @@ theorem bit_cases_on_injective {C : ℕ → Sort u} :
     Function.Injective fun H : ∀ b n, C (bit b n) => fun n => bitCasesOn n H := by
   intro H₁ H₂ h
   ext b n
-  simpa only [bit_cases_on_bit] using congr_funₓ h (bit b n)
+  simpa only [bit_cases_on_bit] using congr_fun h (bit b n)
 
 @[simp]
 theorem bit_cases_on_inj {C : ℕ → Sort u} (H₁ H₂ : ∀ b n, C (bit b n)) :
@@ -1906,7 +1905,7 @@ instance decidableLoHi (lo hi : ℕ) (P : ℕ → Prop) [H : DecidablePred P] : 
       rwa [add_tsub_cancel_of_le hl] at this, fun al x h => al _ (Nat.le_add_rightₓ _ _) (lt_tsub_iff_left.mp h)⟩
 
 instance decidableLoHiLe (lo hi : ℕ) (P : ℕ → Prop) [H : DecidablePred P] : Decidable (∀ x, lo ≤ x → x ≤ hi → P x) :=
-  decidableOfIff (∀ x, lo ≤ x → x < hi + 1 → P x) <| ball_congr fun x hl => imp_congr lt_succ_iffₓ Iff.rfl
+  decidableOfIff (∀ x, lo ≤ x → x < hi + 1 → P x) <| ball_congr fun x hl => imp_congrₓ lt_succ_iffₓ Iff.rfl
 
 instance decidableExistsLt {P : ℕ → Prop} [h : DecidablePred P] : DecidablePred fun n => ∃ m : ℕ, m < n ∧ P m
   | 0 =>

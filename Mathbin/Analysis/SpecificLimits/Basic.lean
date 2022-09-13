@@ -31,11 +31,11 @@ theorem tendsto_inverse_at_top_nhds_0_nat : Tendsto (fun n : ℕ => (n : ℝ)⁻
 theorem tendsto_const_div_at_top_nhds_0_nat (C : ℝ) : Tendsto (fun n : ℕ => C / n) atTop (𝓝 0) := by
   simpa only [mul_zero] using tendsto_const_nhds.mul tendsto_inverse_at_top_nhds_0_nat
 
-theorem Nnreal.tendsto_inverse_at_top_nhds_0_nat : Tendsto (fun n : ℕ => (n : ℝ≥0 )⁻¹) atTop (𝓝 0) := by
+theorem Nnreal.tendsto_inverse_at_top_nhds_0_nat : Tendsto (fun n : ℕ => (n : ℝ≥0)⁻¹) atTop (𝓝 0) := by
   rw [← Nnreal.tendsto_coe]
   exact tendsto_inverse_at_top_nhds_0_nat
 
-theorem Nnreal.tendsto_const_div_at_top_nhds_0_nat (C : ℝ≥0 ) : Tendsto (fun n : ℕ => C / n) atTop (𝓝 0) := by
+theorem Nnreal.tendsto_const_div_at_top_nhds_0_nat (C : ℝ≥0) : Tendsto (fun n : ℕ => C / n) atTop (𝓝 0) := by
   simpa using tendsto_const_nhds.mul Nnreal.tendsto_inverse_at_top_nhds_0_nat
 
 theorem tendsto_one_div_add_at_top_nhds_0_nat : Tendsto (fun n : ℕ => 1 / ((n : ℝ) + 1)) atTop (𝓝 0) :=
@@ -110,7 +110,7 @@ theorem tendsto_at_top_of_geom_le {v : ℕ → ℝ} {c : ℝ} (h₀ : 0 < v 0) (
   (tendsto_at_top_mono fun n => geom_le (zero_le_one.trans hc.le) n fun k hk => hu k) <|
     (tendsto_pow_at_top_at_top_of_one_lt hc).at_top_mul_const h₀
 
-theorem Nnreal.tendsto_pow_at_top_nhds_0_of_lt_1 {r : ℝ≥0 } (hr : r < 1) : Tendsto (fun n : ℕ => r ^ n) atTop (𝓝 0) :=
+theorem Nnreal.tendsto_pow_at_top_nhds_0_of_lt_1 {r : ℝ≥0} (hr : r < 1) : Tendsto (fun n : ℕ => r ^ n) atTop (𝓝 0) :=
   Nnreal.tendsto_coe.1 <| by
     simp only [Nnreal.coe_pow, Nnreal.coe_zero, tendsto_pow_at_top_nhds_0_of_lt_1 r.coe_nonneg hr]
 
@@ -191,16 +191,16 @@ theorem tsum_geometric_two' (a : ℝ) : (∑' n : ℕ, a / 2 / 2 ^ n) = a :=
   (has_sum_geometric_two' a).tsum_eq
 
 /-- **Sum of a Geometric Series** -/
-theorem Nnreal.has_sum_geometric {r : ℝ≥0 } (hr : r < 1) : HasSum (fun n : ℕ => r ^ n) (1 - r)⁻¹ := by
+theorem Nnreal.has_sum_geometric {r : ℝ≥0} (hr : r < 1) : HasSum (fun n : ℕ => r ^ n) (1 - r)⁻¹ := by
   apply Nnreal.has_sum_coe.1
   push_cast
   rw [Nnreal.coe_sub (le_of_ltₓ hr)]
   exact has_sum_geometric_of_lt_1 r.coe_nonneg hr
 
-theorem Nnreal.summable_geometric {r : ℝ≥0 } (hr : r < 1) : Summable fun n : ℕ => r ^ n :=
+theorem Nnreal.summable_geometric {r : ℝ≥0} (hr : r < 1) : Summable fun n : ℕ => r ^ n :=
   ⟨_, Nnreal.has_sum_geometric hr⟩
 
-theorem tsum_geometric_nnreal {r : ℝ≥0 } (hr : r < 1) : (∑' n : ℕ, r ^ n) = (1 - r)⁻¹ :=
+theorem tsum_geometric_nnreal {r : ℝ≥0} (hr : r < 1) : (∑' n : ℕ, r ^ n) = (1 - r)⁻¹ :=
   (Nnreal.has_sum_geometric hr).tsum_eq
 
 /-- The series `pow r` converges to `(1-r)⁻¹`. For `r < 1` the RHS is a finite number,
@@ -415,8 +415,8 @@ theorem Set.Countable.exists_pos_forall_sum_le {ι : Type _} {s : Set ι} (hs : 
 
 namespace Nnreal
 
-theorem exists_pos_sum_of_countable {ε : ℝ≥0 } (hε : ε ≠ 0) (ι) [Countable ι] :
-    ∃ ε' : ι → ℝ≥0 , (∀ i, 0 < ε' i) ∧ ∃ c, HasSum ε' c ∧ c < ε := by
+theorem exists_pos_sum_of_countable {ε : ℝ≥0} (hε : ε ≠ 0) (ι) [Countable ι] :
+    ∃ ε' : ι → ℝ≥0, (∀ i, 0 < ε' i) ∧ ∃ c, HasSum ε' c ∧ c < ε := by
   cases nonempty_encodable ι
   obtain ⟨a, a0, aε⟩ := exists_between (pos_iff_ne_zero.2 hε)
   obtain ⟨ε', hε', c, hc, hcε⟩ := posSumOfEncodable a0 ι
@@ -430,7 +430,7 @@ end Nnreal
 namespace Ennreal
 
 theorem exists_pos_sum_of_countable {ε : ℝ≥0∞} (hε : ε ≠ 0) (ι) [Countable ι] :
-    ∃ ε' : ι → ℝ≥0 , (∀ i, 0 < ε' i) ∧ (∑' i, (ε' i : ℝ≥0∞)) < ε := by
+    ∃ ε' : ι → ℝ≥0, (∀ i, 0 < ε' i) ∧ (∑' i, (ε' i : ℝ≥0∞)) < ε := by
   rcases exists_between (pos_iff_ne_zero.2 hε) with ⟨r, h0r, hrε⟩
   rcases lt_iff_exists_coe.1 hrε with ⟨x, rfl, hx⟩
   rcases Nnreal.exists_pos_sum_of_countable (coe_pos.1 h0r).ne' ι with ⟨ε', hp, c, hc, hcr⟩
@@ -442,7 +442,7 @@ theorem exists_pos_sum_of_countable' {ε : ℝ≥0∞} (hε : ε ≠ 0) (ι) [Co
   ⟨fun i => δ i, fun i => Ennreal.coe_pos.2 (δpos i), hδ⟩
 
 theorem exists_pos_tsum_mul_lt_of_countable {ε : ℝ≥0∞} (hε : ε ≠ 0) {ι} [Countable ι] (w : ι → ℝ≥0∞)
-    (hw : ∀ i, w i ≠ ∞) : ∃ δ : ι → ℝ≥0 , (∀ i, 0 < δ i) ∧ (∑' i, (w i * δ i : ℝ≥0∞)) < ε := by
+    (hw : ∀ i, w i ≠ ∞) : ∃ δ : ι → ℝ≥0, (∀ i, 0 < δ i) ∧ (∑' i, (w i * δ i : ℝ≥0∞)) < ε := by
   lift w to ι → ℝ≥0 using hw
   rcases exists_pos_sum_of_countable hε ι with ⟨δ', Hpos, Hsum⟩
   have : ∀ i, 0 < max 1 (w i) := fun i => zero_lt_one.trans_le (le_max_leftₓ _ _)

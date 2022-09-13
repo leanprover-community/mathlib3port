@@ -130,7 +130,7 @@ theorem norm_tsum_le_tsum_norm {f : ι → E} (hf : Summable fun i => ∥f i∥)
 summable, and for all `i`, `∥f i∥₊ ≤ g i`, then `∥∑' i, f i∥₊ ≤ ∑' i, g i`. Note that we
 do not assume that `∑' i, f i` is summable, and it might not be the case if `α` is not a complete
 space. -/
-theorem tsum_of_nnnorm_bounded {f : ι → E} {g : ι → ℝ≥0 } {a : ℝ≥0 } (hg : HasSum g a) (h : ∀ i, ∥f i∥₊ ≤ g i) :
+theorem tsum_of_nnnorm_bounded {f : ι → E} {g : ι → ℝ≥0} {a : ℝ≥0} (hg : HasSum g a) (h : ∀ i, ∥f i∥₊ ≤ g i) :
     ∥∑' i : ι, f i∥₊ ≤ a := by
   simp only [← Nnreal.coe_le_coe, ← Nnreal.has_sum_coe, coe_nnnorm] at *
   exact tsum_of_norm_bounded hg h
@@ -149,7 +149,7 @@ theorem summable_of_norm_bounded_eventually {f : ι → E} (g : ι → ℝ) (hg 
     (h : ∀ᶠ i in cofinite, ∥f i∥ ≤ g i) : Summable f :=
   summable_iff_cauchy_seq_finset.2 <| cauchy_seq_finset_of_norm_bounded_eventually hg h
 
-theorem summable_of_nnnorm_bounded {f : ι → E} (g : ι → ℝ≥0 ) (hg : Summable g) (h : ∀ i, ∥f i∥₊ ≤ g i) : Summable f :=
+theorem summable_of_nnnorm_bounded {f : ι → E} (g : ι → ℝ≥0) (hg : Summable g) (h : ∀ i, ∥f i∥₊ ≤ g i) : Summable f :=
   summable_of_norm_bounded (fun i => (g i : ℝ)) (Nnreal.summable_coe.2 hg) fun i => by
     exact_mod_cast h i
 

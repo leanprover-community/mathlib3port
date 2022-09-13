@@ -32,17 +32,17 @@ section Preorderₓ
 variable [Preorderₓ α]
 
 @[simps]
-instance [SemilatticeSup β] : HasSup (α →o β) where sup := fun f g => ⟨fun a => f a⊔g a, f.mono.sup g.mono⟩
+instance [SemilatticeSup β] : HasSup (α →o β) where sup := fun f g => ⟨fun a => f a ⊔ g a, f.mono.sup g.mono⟩
 
 instance [SemilatticeSup β] : SemilatticeSup (α →o β) :=
   { (_ : PartialOrderₓ (α →o β)) with sup := HasSup.sup, le_sup_left := fun a b x => le_sup_left,
     le_sup_right := fun a b x => le_sup_right, sup_le := fun a b c h₀ h₁ x => sup_le (h₀ x) (h₁ x) }
 
 @[simps]
-instance [SemilatticeInf β] : HasInf (α →o β) where inf := fun f g => ⟨fun a => f a⊓g a, f.mono.inf g.mono⟩
+instance [SemilatticeInf β] : HasInf (α →o β) where inf := fun f g => ⟨fun a => f a ⊓ g a, f.mono.inf g.mono⟩
 
 instance [SemilatticeInf β] : SemilatticeInf (α →o β) :=
-  { (_ : PartialOrderₓ (α →o β)), (dualIso α β).symm.toGaloisInsertion.liftSemilatticeInf with inf := (·⊓·) }
+  { (_ : PartialOrderₓ (α →o β)), (dualIso α β).symm.toGaloisInsertion.liftSemilatticeInf with inf := (· ⊓ ·) }
 
 instance [Lattice β] : Lattice (α →o β) :=
   { (_ : SemilatticeSup (α →o β)), (_ : SemilatticeInf (α →o β)) with }
@@ -96,32 +96,32 @@ instance [CompleteLattice β] : CompleteLattice (α →o β) :=
     Inf_le := fun s f hf x => infi_le_of_le f (infi_le _ hf) }
 
 theorem iterate_sup_le_sup_iff {α : Type _} [SemilatticeSup α] (f : α →o α) :
-    (∀ n₁ n₂ a₁ a₂, (f^[n₁ + n₂]) (a₁⊔a₂) ≤ (f^[n₁]) a₁⊔(f^[n₂]) a₂) ↔ ∀ a₁ a₂, f (a₁⊔a₂) ≤ f a₁⊔a₂ := by
+    (∀ n₁ n₂ a₁ a₂, (f^[n₁ + n₂]) (a₁ ⊔ a₂) ≤ (f^[n₁]) a₁ ⊔ (f^[n₂]) a₂) ↔ ∀ a₁ a₂, f (a₁ ⊔ a₂) ≤ f a₁ ⊔ a₂ := by
   constructor <;> intro h
   · exact h 1 0
     
   · intro n₁ n₂ a₁ a₂
-    have h' : ∀ n a₁ a₂, (f^[n]) (a₁⊔a₂) ≤ (f^[n]) a₁⊔a₂ := by
+    have h' : ∀ n a₁ a₂, (f^[n]) (a₁ ⊔ a₂) ≤ (f^[n]) a₁ ⊔ a₂ := by
       intro n
       induction' n with n ih <;> intro a₁ a₂
       · rfl
         
       · calc
-          (f^[n + 1]) (a₁⊔a₂) = (f^[n]) (f (a₁⊔a₂)) := Function.iterate_succ_apply f n _
-          _ ≤ (f^[n]) (f a₁⊔a₂) := f.mono.iterate n (h a₁ a₂)
-          _ ≤ (f^[n]) (f a₁)⊔a₂ := ih _ _
-          _ = (f^[n + 1]) a₁⊔a₂ := by
+          (f^[n + 1]) (a₁ ⊔ a₂) = (f^[n]) (f (a₁ ⊔ a₂)) := Function.iterate_succ_apply f n _
+          _ ≤ (f^[n]) (f a₁ ⊔ a₂) := f.mono.iterate n (h a₁ a₂)
+          _ ≤ (f^[n]) (f a₁) ⊔ a₂ := ih _ _
+          _ = (f^[n + 1]) a₁ ⊔ a₂ := by
             rw [← Function.iterate_succ_apply]
           
         
     calc
-      (f^[n₁ + n₂]) (a₁⊔a₂) = (f^[n₁]) ((f^[n₂]) (a₁⊔a₂)) := Function.iterate_add_apply f n₁ n₂ _
-      _ = (f^[n₁]) ((f^[n₂]) (a₂⊔a₁)) := by
+      (f^[n₁ + n₂]) (a₁ ⊔ a₂) = (f^[n₁]) ((f^[n₂]) (a₁ ⊔ a₂)) := Function.iterate_add_apply f n₁ n₂ _
+      _ = (f^[n₁]) ((f^[n₂]) (a₂ ⊔ a₁)) := by
         rw [sup_comm]
-      _ ≤ (f^[n₁]) ((f^[n₂]) a₂⊔a₁) := f.mono.iterate n₁ (h' n₂ _ _)
-      _ = (f^[n₁]) (a₁⊔(f^[n₂]) a₂) := by
+      _ ≤ (f^[n₁]) ((f^[n₂]) a₂ ⊔ a₁) := f.mono.iterate n₁ (h' n₂ _ _)
+      _ = (f^[n₁]) (a₁ ⊔ (f^[n₂]) a₂) := by
         rw [sup_comm]
-      _ ≤ (f^[n₁]) a₁⊔(f^[n₂]) a₂ := h' n₁ a₁ _
+      _ ≤ (f^[n₁]) a₁ ⊔ (f^[n₂]) a₂ := h' n₁ a₁ _
       
     
 

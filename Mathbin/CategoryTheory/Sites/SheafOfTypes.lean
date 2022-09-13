@@ -576,7 +576,7 @@ theorem is_sheaf_for_iff_generate (R : Presieve X) : IsSheafFor P R ↔ IsSheafF
   rw [← is_separated_for_and_exists_is_amalgamation_iff_sheaf_for]
   rw [← is_separated_for_and_exists_is_amalgamation_iff_sheaf_for]
   rw [← is_separated_for_iff_generate]
-  apply and_congr (Iff.refl _)
+  apply and_congrₓ (Iff.refl _)
   constructor
   · intro q x hx
     apply exists_imp_exists _ (q _ (hx.restrict (le_generate R)))

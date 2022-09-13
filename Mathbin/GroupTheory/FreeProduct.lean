@@ -675,7 +675,7 @@ variable {H : ι → Type _} [∀ i, Groupₓ (H i)]
 variable (f : ∀ i, H i →* G)
 
 -- We need many groups or one group with many elements
-variable (hcard : 3 ≤ # ι ∨ ∃ i, 3 ≤ # (H i))
+variable (hcard : 3 ≤ (#ι) ∨ ∃ i, 3 ≤ (#H i))
 
 -- A group action on α, and the ping-pong sets
 variable {α : Type _} [MulAction G α]
@@ -719,7 +719,7 @@ theorem lift_word_prod_nontrivial_of_head_eq_last {i} (w : Neword H i i) : lift 
   obtain ⟨k, hk⟩ := exists_ne i
   exact lift_word_prod_nontrivial_of_other_i f X hXnonempty hXdisj hpp w hk hk
 
-theorem lift_word_prod_nontrivial_of_head_card {i j} (w : Neword H i j) (hcard : 3 ≤ # (H i)) (hheadtail : i ≠ j) :
+theorem lift_word_prod_nontrivial_of_head_card {i j} (w : Neword H i j) (hcard : 3 ≤ (#H i)) (hheadtail : i ≠ j) :
     lift f w.Prod ≠ 1 := by
   obtain ⟨h, hn1, hnh⟩ := Cardinal.three_le hcard 1 w.head⁻¹
   have hnot1 : h * w.head ≠ 1 := by
@@ -891,7 +891,7 @@ theorem _root_.free_group.injective_lift_of_ping_pong : Function.Injective (Free
   let f : ∀ i, H i →* G := fun i => FreeGroup.lift fun _ => a i
   let X' : ι → Set α := fun i => X i ∪ Y i
   apply lift_injective_of_ping_pong f _ X'
-  show _ ∨ ∃ i, 3 ≤ # (H i)
+  show _ ∨ ∃ i, 3 ≤ (#H i)
   · inhabit ι
     right
     use arbitrary ι

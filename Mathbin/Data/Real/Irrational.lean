@@ -21,14 +21,14 @@ We also provide dot-style constructors like `irrational.add_rat`, `irrational.ra
 -/
 
 
-open Rat Real multiplicity
+open Ratₓ Real multiplicity
 
 /-- A real number is irrational if it is not equal to any rational number. -/
 def Irrational (x : ℝ) :=
   x ∉ Set.Range (coe : ℚ → ℝ)
 
 theorem irrational_iff_ne_rational (x : ℝ) : Irrational x ↔ ∀ a b : ℤ, x ≠ a / b := by
-  simp only [Irrational, Rat.forall, cast_mk, not_exists, Set.mem_range, cast_coe_int, cast_div, eq_comm]
+  simp only [Irrational, Ratₓ.forall, cast_mk, not_exists, Set.mem_range, cast_coe_int, cast_div, eq_comm]
 
 /-- A transcendental real number is irrational. -/
 theorem Transcendental.irrational {r : ℝ} (tr : Transcendental ℚ r) : Irrational r := by
@@ -97,13 +97,13 @@ theorem Nat.Prime.irrational_sqrt {p : ℕ} (hp : Nat.Prime p) : Irrational (sqr
 theorem irrational_sqrt_two : Irrational (sqrt 2) := by
   simpa using nat.prime_two.irrational_sqrt
 
-theorem irrational_sqrt_rat_iff (q : ℚ) : Irrational (sqrt q) ↔ Rat.sqrt q * Rat.sqrt q ≠ q ∧ 0 ≤ q :=
-  if H1 : Rat.sqrt q * Rat.sqrt q = q then
+theorem irrational_sqrt_rat_iff (q : ℚ) : Irrational (sqrt q) ↔ Ratₓ.sqrt q * Ratₓ.sqrt q ≠ q ∧ 0 ≤ q :=
+  if H1 : Ratₓ.sqrt q * Ratₓ.sqrt q = q then
     iff_of_false
       (not_not_intro
-        ⟨Rat.sqrt q, by
-          rw [← H1, cast_mul, sqrt_mul_self (cast_nonneg.2 <| Rat.sqrt_nonneg q), sqrt_eq,
-            abs_of_nonneg (Rat.sqrt_nonneg q)]⟩)
+        ⟨Ratₓ.sqrt q, by
+          rw [← H1, cast_mul, sqrt_mul_self (cast_nonneg.2 <| Ratₓ.sqrt_nonneg q), sqrt_eq,
+            abs_of_nonneg (Ratₓ.sqrt_nonneg q)]⟩)
       fun h => h.1 H1
   else
     if H2 : 0 ≤ q then
@@ -112,14 +112,14 @@ theorem irrational_sqrt_rat_iff (q : ℚ) : Irrational (sqrt q) ↔ Rat.sqrt q *
           H1 <|
             (exists_mul_self _).1
               ⟨r, by
-                rwa [eq_comm, sqrt_eq_iff_mul_self_eq (cast_nonneg.2 H2), ← cast_mul, Rat.cast_inj] at hr <;>
+                rwa [eq_comm, sqrt_eq_iff_mul_self_eq (cast_nonneg.2 H2), ← cast_mul, Ratₓ.cast_inj] at hr <;>
                   rw [← hr] <;> exact Real.sqrt_nonneg _⟩)
         ⟨H1, H2⟩
     else
       iff_of_false
         (not_not_intro
           ⟨0, by
-            rw [cast_zero] <;> exact (sqrt_eq_zero_of_nonpos (Rat.cast_nonpos.2 <| le_of_not_leₓ H2)).symm⟩)
+            rw [cast_zero] <;> exact (sqrt_eq_zero_of_nonpos (Ratₓ.cast_nonpos.2 <| le_of_not_leₓ H2)).symm⟩)
         fun h => H2 h.2
 
 instance (q : ℚ) : Decidable (Irrational (sqrt q)) :=
@@ -144,7 +144,7 @@ variable {x : ℝ}
 theorem ne_rat (h : Irrational x) (q : ℚ) : x ≠ q := fun hq => h ⟨q, hq.symm⟩
 
 theorem ne_int (h : Irrational x) (m : ℤ) : x ≠ m := by
-  rw [← Rat.cast_coe_int]
+  rw [← Ratₓ.cast_coe_int]
   exact h.ne_rat _
 
 theorem ne_nat (h : Irrational x) (m : ℕ) : x ≠ m :=
@@ -159,7 +159,7 @@ theorem ne_one (h : Irrational x) : x ≠ 1 := by
 end Irrational
 
 @[simp]
-theorem Rat.not_irrational (q : ℚ) : ¬Irrational q := fun h => h ⟨q, rfl⟩
+theorem Ratₓ.not_irrational (q : ℚ) : ¬Irrational q := fun h => h ⟨q, rfl⟩
 
 @[simp]
 theorem Int.not_irrational (m : ℤ) : ¬Irrational m := fun h => h.ne_int m rfl
@@ -258,18 +258,18 @@ theorem of_rat_sub (h : Irrational (q - x)) : Irrational x :=
         simpa only [sub_eq_add_neg] using h))
 
 theorem sub_int (h : Irrational x) (m : ℤ) : Irrational (x - m) := by
-  simpa only [Rat.cast_coe_int] using h.sub_rat m
+  simpa only [Ratₓ.cast_coe_int] using h.sub_rat m
 
 theorem int_sub (h : Irrational x) (m : ℤ) : Irrational (m - x) := by
-  simpa only [Rat.cast_coe_int] using h.rat_sub m
+  simpa only [Ratₓ.cast_coe_int] using h.rat_sub m
 
 theorem of_sub_int (m : ℤ) (h : Irrational (x - m)) : Irrational x :=
   of_sub_rat m <| by
-    rwa [Rat.cast_coe_int]
+    rwa [Ratₓ.cast_coe_int]
 
 theorem of_int_sub (m : ℤ) (h : Irrational (m - x)) : Irrational x :=
   of_rat_sub m <| by
-    rwa [Rat.cast_coe_int]
+    rwa [Ratₓ.cast_coe_int]
 
 theorem sub_nat (h : Irrational x) (m : ℕ) : Irrational (x - m) :=
   h.sub_int m
@@ -517,7 +517,7 @@ theorem irrational_inv_iff : Irrational x⁻¹ ↔ Irrational x :=
 
 @[simp]
 theorem irrational_rat_mul_iff : Irrational (q * x) ↔ q ≠ 0 ∧ Irrational x :=
-  ⟨fun h => ⟨Rat.cast_ne_zero.1 <| left_ne_zero_of_mul h.ne_zero, h.of_rat_mul q⟩, fun h => h.2.rat_mul h.1⟩
+  ⟨fun h => ⟨Ratₓ.cast_ne_zero.1 <| left_ne_zero_of_mul h.ne_zero, h.of_rat_mul q⟩, fun h => h.2.rat_mul h.1⟩
 
 @[simp]
 theorem irrational_mul_rat_iff : Irrational (x * q) ↔ q ≠ 0 ∧ Irrational x := by

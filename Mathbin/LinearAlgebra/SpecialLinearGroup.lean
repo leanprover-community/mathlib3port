@@ -67,7 +67,7 @@ def SpecialLinearGroup :=
 end
 
 -- mathport name: special_linear_group.fin
-localized [MatrixGroups] notation "SL(" n "," R ")" => Matrix.SpecialLinearGroup (Finₓ n) R
+localized [MatrixGroups] notation "SL(" n ", " R ")" => Matrix.SpecialLinearGroup (Finₓ n) R
 
 namespace SpecialLinearGroup
 
@@ -241,6 +241,24 @@ theorem coe_int_neg (g : SpecialLinearGroup n ℤ) : ↑(-g) = (-↑g : SpecialL
   Subtype.ext <| (@RingHom.mapMatrix n _ _ _ _ _ _ (Int.castRingHom R)).map_neg ↑g
 
 end Neg
+
+section SpecialCases
+
+theorem SL2_inv_expl_det (A : SL(2, R)) : det ![![A.1 1 1, -A.1 0 1], ![-A.1 1 0, A.1 0 0]] = 1 := by
+  rw [Matrix.det_fin_two, mul_comm]
+  simp only [Subtype.val_eq_coe, cons_val_zero, cons_val_one, head_cons, mul_neg, neg_mul, neg_negₓ]
+  have := A.2
+  rw [Matrix.det_fin_two] at this
+  convert this
+
+theorem SL2_inv_expl (A : SL(2, R)) : A⁻¹ = ⟨![![A.1 1 1, -A.1 0 1], ![-A.1 1 0, A.1 0 0]], SL2_inv_expl_det A⟩ := by
+  ext
+  have := Matrix.adjugate_fin_two A.1
+  simp only [Subtype.val_eq_coe] at this
+  rw [coe_inv, this]
+  rfl
+
+end SpecialCases
 
 -- this section should be last to ensure we do not use it in lemmas
 section CoeFnInstance

@@ -366,7 +366,7 @@ protected theorem sublist : Red L₁ L₂ → L₂ <+ L₁ :=
     (fun a b c hab hbc => List.Sublist.trans hbc hab) fun a b => Red.Step.sublist
 
 theorem length_le (h : Red L₁ L₂) : L₂.length ≤ L₁.length :=
-  List.length_le_of_sublistₓ h.Sublist
+  List.length_le_of_sublist h.Sublist
 
 theorem sizeof_of_step : ∀ {L₁ L₂ : List (α × Bool)}, Step L₁ L₂ → L₂.sizeof < L₁.sizeof
   | _, _, @step.bnot _ L1 L2 x b => by
@@ -448,7 +448,7 @@ theorem quot_lift_on_mk (β : Type v) (f : List (α × Bool) → β) (H : ∀ L�
   rfl
 
 @[simp]
-theorem quot_map_mk (β : Type v) (f : List (α × Bool) → List (β × Bool)) (H : (red.step⇒red.step) f f) :
+theorem quot_map_mk (β : Type v) (f : List (α × Bool) → List (β × Bool)) (H : (red.step ⇒ red.step) f f) :
     Quot.map f H (mk L) = mk (f L) :=
   rfl
 
@@ -978,7 +978,7 @@ theorem reduce.red : Red L (reduce L) := by
              (group
               (Tactic.tacticHave_
                "have"
-               (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `congr_argₓ [`List.length `h]))))
+               (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `congr_arg [`List.length `h]))))
               [])
              (group
               (Tactic.simp
@@ -1043,23 +1043,27 @@ theorem reduce.red : Red L (reduce L) := by
               [])])
            [])
           (group
-           (Mathlib.Tactic.rcases
+           (Std.Tactic.rcases
             "rcases"
             [(Tactic.casesTarget [] `L2)]
             ["with"
-             (Tactic.rcasesPatLo
-              (Tactic.rcasesPatMed
-               [(Tactic.rcasesPat.paren
+             (Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed
+               [(Std.Tactic.RCases.rcasesPat.paren
                  "("
-                 (Tactic.rcasesPatLo
-                  (Tactic.rcasesPatMed
-                   [(Tactic.rcasesPat.ignore "_")
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed
+                   [(Std.Tactic.RCases.rcasesPat.ignore "_")
                     "|"
-                    (Tactic.rcasesPat.tuple
+                    (Std.Tactic.RCases.rcasesPat.tuple
                      "⟨"
-                     [(Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `a)]) [])
+                     [(Std.Tactic.RCases.rcasesPatLo
+                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
+                       [])
                       ","
-                      (Tactic.rcasesPatLo (Tactic.rcasesPatMed [(Tactic.rcasesPat.one `L2)]) [])]
+                      (Std.Tactic.RCases.rcasesPatLo
+                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `L2)])
+                       [])]
                      "⟩")])
                   [])
                  ")")])
@@ -1122,7 +1126,7 @@ theorem
       by
         dsimp'
           cases r : reduce L1
-          · dsimp' intro h have := congr_argₓ List.length h simp [ - add_commₓ ] at this exact absurd this by decide
+          · dsimp' intro h have := congr_arg List.length h simp [ - add_commₓ ] at this exact absurd this by decide
           cases' hd with y c
           by_cases' x = y ∧ b = bnot c <;> simp [ h ] <;> intro H
           · rw [ H ] at r exact @ reduce.not L1 ( y , c ) :: L2 L3 x' b' r
@@ -1265,7 +1269,7 @@ instance Red.decidableRel : DecidableRel (@Red α)
 
 /-- A list containing every word that `w₁` reduces to. -/
 def Red.enum (L₁ : List (α × Bool)) : List (List (α × Bool)) :=
-  List.filterₓ (fun L₂ => Red L₁ L₂) (List.sublists L₁)
+  List.filterₓ (fun L₂ => Red L₁ L₂) (List.sublistsₓ L₁)
 
 theorem Red.enum.sound (H : L₂ ∈ Red.enum L₁) : Red L₁ L₂ :=
   List.of_mem_filter H

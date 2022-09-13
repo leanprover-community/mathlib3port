@@ -84,7 +84,7 @@ theorem union_right {t'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s t
 
 @[simp]
 theorem union_right_iff {t'} : IsMetricSeparated s (t ∪ t') ↔ IsMetricSeparated s t ∧ IsMetricSeparated s t' :=
-  comm.trans <| union_left_iff.trans <| and_congr comm comm
+  comm.trans <| union_left_iff.trans <| and_congrₓ comm comm
 
 theorem finite_Union_left_iff {ι : Type _} {I : Set ι} (hI : I.Finite) {s : ι → Set X} {t : Set X} :
     IsMetricSeparated (⋃ i ∈ I, s i) t ↔ ∀ i ∈ I, IsMetricSeparated (s i) t := by

@@ -17,6 +17,9 @@ This file contains the basic theory for the resolvent and spectrum of a Banach a
 ## Main definitions
 
 * `spectral_radius : ℝ≥0∞`: supremum of `∥k∥₊` for all `k ∈ spectrum 𝕜 a`
+* `normed_ring.alg_equiv_complex_of_complete`: **Gelfand-Mazur theorem** For a complex
+  Banach division algebra, the natural `algebra_map ℂ A` is an algebra isomorphism whose inverse
+  is given by selecting the (unique) element of `spectrum ℂ a`
 
 ## Main statements
 
@@ -30,9 +33,6 @@ This file contains the basic theory for the resolvent and spectrum of a Banach a
 * `spectrum.pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius`: Gelfand's formula for the
   spectral radius in Banach algebras over `ℂ`.
 * `spectrum.nonempty`: the spectrum of any element in a complex Banach algebra is nonempty.
-* `normed_division_ring.alg_equiv_complex_of_complete`: **Gelfand-Mazur theorem** For a complex
-  Banach division algebra, the natural `algebra_map ℂ A` is an algebra isomorphism whose inverse
-  is given by selecting the (unique) element of `spectrum ℂ a`
 
 
 ## TODO
@@ -250,7 +250,7 @@ theorem is_unit_one_sub_smul_of_lt_inv_radius {a : A} {z : 𝕜} (h : ↑∥z∥
 
 /-- In a Banach algebra `A` over `𝕜`, for `a : A` the function `λ z, (1 - z • a)⁻¹` is
 differentiable on any closed ball centered at zero of radius `r < (spectral_radius 𝕜 a)⁻¹`. -/
-theorem differentiable_on_inverse_one_sub_smul [CompleteSpace A] {a : A} {r : ℝ≥0 }
+theorem differentiable_on_inverse_one_sub_smul [CompleteSpace A] {a : A} {r : ℝ≥0}
     (hr : (r : ℝ≥0∞) < (spectralRadius 𝕜 a)⁻¹) :
     DifferentiableOn 𝕜 (fun z : 𝕜 => Ring.inverse (1 - z • a)) (Metric.ClosedBall 0 r) := by
   intro z z_mem
@@ -280,7 +280,7 @@ theorem limsup_pow_nnnorm_pow_one_div_le_spectral_radius (a : A) :
   suffices h : (r : ℝ≥0∞) ≤ p.radius
   · convert h
     simp only [p.radius_eq_liminf, ← norm_to_nnreal, norm_mk_pi_field]
-    refine' congr_argₓ _ (funext fun n => congr_argₓ _ _)
+    refine' congr_arg _ (funext fun n => congr_arg _ _)
     rw [norm_to_nnreal, Ennreal.coe_rpow_def ∥a ^ n∥₊ (1 / n : ℝ), if_neg]
     exact fun ha => by
       linarith [ha.2, (one_div_nonneg.mpr n.cast_nonneg : 0 ≤ (1 / n : ℝ))]
@@ -364,23 +364,32 @@ theorem nonempty {A : Type _} [NormedRing A] [NormedAlgebra ℂ A] [CompleteSpac
 
 section GelfandMazurIsomorphism
 
-variable [NormedDivisionRing A] [NormedAlgebra ℂ A]
+variable [NormedRing A] [NormedAlgebra ℂ A] (hA : ∀ {a : A}, IsUnit a ↔ a ≠ 0)
+
+include hA
 
 -- mathport name: exprσ
 local notation "σ" => Spectrum ℂ
 
 theorem algebra_map_eq_of_mem {a : A} {z : ℂ} (h : z ∈ σ a) : algebraMap ℂ A z = a := by
-  rwa [mem_iff, is_unit_iff_ne_zero, not_not, sub_eq_zero] at h
+  rwa [mem_iff, hA, not_not, sub_eq_zero] at h
 
 /-- **Gelfand-Mazur theorem**: For a complex Banach division algebra, the natural `algebra_map ℂ A`
 is an algebra isomorphism whose inverse is given by selecting the (unique) element of
-`spectrum ℂ a`. In addition, `algebra_map_isometry` guarantees this map is an isometry. -/
+`spectrum ℂ a`. In addition, `algebra_map_isometry` guarantees this map is an isometry.
+
+Note: because `normed_division_ring` requires the field `norm_mul' : ∀ a b, ∥a * b∥ = ∥a∥ * ∥b∥`, we
+don't use this type class and instead opt for a `normed_ring` in which the nonzero elements are
+precisely the units. This allows for the application of this isomorphism in broader contexts, e.g.,
+to the quotient of a complex Banach algebra by a maximal ideal. In the case when `A` is actually a
+`normed_division_ring`, one may fill in the argument `hA` with the lemma `is_unit_iff_ne_zero`. -/
 @[simps]
-noncomputable def _root_.normed_division_ring.alg_equiv_complex_of_complete [CompleteSpace A] : ℂ ≃ₐ[ℂ] A :=
-  { Algebra.ofId ℂ A with toFun := algebraMap ℂ A, invFun := fun a => (Spectrum.nonempty a).some,
+noncomputable def _root_.normed_ring.alg_equiv_complex_of_complete [CompleteSpace A] : ℂ ≃ₐ[ℂ] A :=
+  let nt : Nontrivial A := ⟨⟨1, 0, hA.mp ⟨⟨1, 1, mul_oneₓ _, mul_oneₓ _⟩, rfl⟩⟩⟩
+  { Algebra.ofId ℂ A with toFun := algebraMap ℂ A, invFun := fun a => (@Spectrum.nonempty _ _ _ _ nt a).some,
     left_inv := fun z => by
-      simpa only [scalar_eq] using (Spectrum.nonempty <| algebraMap ℂ A z).some_mem,
-    right_inv := fun a => algebra_map_eq_of_mem (Spectrum.nonempty a).some_mem }
+      simpa only [@scalar_eq _ _ _ _ _ nt _] using (@Spectrum.nonempty _ _ _ _ nt <| algebraMap ℂ A z).some_mem,
+    right_inv := fun a => algebra_map_eq_of_mem (@hA) (@Spectrum.nonempty _ _ _ _ nt a).some_mem }
 
 end GelfandMazurIsomorphism
 

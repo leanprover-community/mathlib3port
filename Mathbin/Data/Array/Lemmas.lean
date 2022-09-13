@@ -94,7 +94,7 @@ theorem rev_list_foldr_aux :
     ∀ {i} (h : i ≤ n),
       (DArray.iterateAux a (fun _ => (· :: ·)) i h []).foldr f b = DArray.iterateAux a (fun _ => f) i h b
   | 0, h => rfl
-  | j + 1, h => congr_argₓ (f (read a ⟨j, h⟩)) (rev_list_foldr_aux _)
+  | j + 1, h => congr_arg (f (read a ⟨j, h⟩)) (rev_list_foldr_aux _)
 
 theorem rev_list_foldr : a.revList.foldr f b = a.foldl b f :=
   rev_list_foldr_aux _
@@ -107,7 +107,7 @@ section Foldl
 variable {n : ℕ} {α : Type u} {β : Type w} {b : β} {f : β → α → β} {a : Arrayₓ n α}
 
 theorem to_list_foldl : a.toList.foldl f b = a.foldl b (Function.swap f) := by
-  rw [← rev_list_reverse, List.foldl_reverse, rev_list_foldr]
+  rw [← rev_list_reverse, List.foldl_reverseₓ, rev_list_foldr]
 
 end Foldl
 
@@ -244,7 +244,7 @@ theorem push_back_rev_list : (a.pushBack v).revList = v :: a.revList := by
   unfold push_back rev_list foldl iterate DArray.iterate
   dsimp' [DArray.iterateAux, read, DArray.read, push_back]
   rw [dif_pos (Eq.refl n)]
-  apply congr_argₓ
+  apply congr_arg
   apply push_back_rev_list_aux
 
 @[simp]

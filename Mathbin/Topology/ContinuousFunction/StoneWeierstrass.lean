@@ -105,7 +105,7 @@ theorem abs_mem_subalgebra_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) : (f :
   apply comp_attach_bound_mem_closure
 
 theorem inf_mem_subalgebra_closure (A : Subalgebra ℝ C(X, ℝ)) (f g : A) :
-    (f : C(X, ℝ))⊓(g : C(X, ℝ)) ∈ A.topologicalClosure := by
+    (f : C(X, ℝ)) ⊓ (g : C(X, ℝ)) ∈ A.topologicalClosure := by
   rw [inf_eq]
   refine'
     A.topological_closure.smul_mem
@@ -117,7 +117,7 @@ theorem inf_mem_subalgebra_closure (A : Subalgebra ℝ C(X, ℝ)) (f g : A) :
   exact_mod_cast abs_mem_subalgebra_closure A _
 
 theorem inf_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (A : Set C(X, ℝ))) (f g : A) :
-    (f : C(X, ℝ))⊓(g : C(X, ℝ)) ∈ A := by
+    (f : C(X, ℝ)) ⊓ (g : C(X, ℝ)) ∈ A := by
   convert inf_mem_subalgebra_closure A f g
   apply SetLike.ext'
   symm
@@ -125,7 +125,7 @@ theorem inf_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (
   exact h
 
 theorem sup_mem_subalgebra_closure (A : Subalgebra ℝ C(X, ℝ)) (f g : A) :
-    (f : C(X, ℝ))⊔(g : C(X, ℝ)) ∈ A.topologicalClosure := by
+    (f : C(X, ℝ)) ⊔ (g : C(X, ℝ)) ∈ A.topologicalClosure := by
   rw [sup_eq]
   refine'
     A.topological_closure.smul_mem
@@ -137,7 +137,7 @@ theorem sup_mem_subalgebra_closure (A : Subalgebra ℝ C(X, ℝ)) (f g : A) :
   exact_mod_cast abs_mem_subalgebra_closure A _
 
 theorem sup_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (A : Set C(X, ℝ))) (f g : A) :
-    (f : C(X, ℝ))⊔(g : C(X, ℝ)) ∈ A := by
+    (f : C(X, ℝ)) ⊔ (g : C(X, ℝ)) ∈ A := by
   convert sup_mem_subalgebra_closure A f g
   apply SetLike.ext'
   symm
@@ -150,13 +150,13 @@ open TopologicalSpace
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (f g «expr ∈ » L)
 -- Here's the fun part of Stone-Weierstrass!
 theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
-    (inf_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f⊓g ∈ L) (sup_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f⊔g ∈ L)
+    (inf_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f ⊓ g ∈ L) (sup_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f ⊔ g ∈ L)
     (sep : L.SeparatesPointsStrongly) : Closure L = ⊤ := by
   -- We start by boiling down to a statement about close approximation.
   apply eq_top_iff.mpr
   rintro f -
   refine' Filter.Frequently.mem_closure ((Filter.HasBasis.frequently_iff Metric.nhds_basis_ball).mpr fun ε pos => _)
-  simp only [exists_prop, Metric.mem_ball]
+  simp only [exists_propₓ, Metric.mem_ball]
   -- It will be helpful to assume `X` is nonempty later,
   -- so we get that out of the way here.
   by_cases' nX : Nonempty X
@@ -381,7 +381,7 @@ theorem ContinuousMap.subalgebra_is_R_or_C_topological_closure_eq_top_of_separat
     -- we may apply the real Stone-Weierstrass result to it.
     have SW : A₀.topological_closure = ⊤ := by
       have := subalgebra_topological_closure_eq_top_of_separates_points _ (hA.is_R_or_C_to_real hA')
-      exact congr_argₓ Subalgebra.toSubmodule this
+      exact congr_arg Subalgebra.toSubmodule this
     rw [← Submodule.map_top, ← SW]
     -- So it suffices to prove that the image under `I` of the closure of `A₀` is contained in the
     -- closure of `A`, which follows by abstract nonsense

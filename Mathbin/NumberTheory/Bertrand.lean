@@ -73,7 +73,7 @@ theorem real_main_inequality {x : ℝ} (n_large : (512 : ℝ) ≤ x) : x * (2 * 
         ((strict_concave_on_log_Ioi.concave_on.subset (Set.Ioi_subset_Ioi _) (convex_Ioi 0.5)).add
               ((strict_concave_on_sqrt_mul_log_Ioi.concave_on.comp_linear_map ((2 : ℝ) • LinearMap.id)).Subset
                 (fun a ha => lt_of_eq_of_ltₓ _ ((mul_lt_mul_left two_pos).mpr ha)) (convex_Ioi 0.5))).sub
-          ((convex_on_id (convex_Ioi 0.5)).smul (div_nonneg (log_nonneg _) _)) <;>
+          ((convex_on_id (convex_Ioi (0.5 : ℝ))).smul (div_nonneg (log_nonneg _) _)) <;>
       norm_num1
   suffices ∃ x1 x2, 0.5 < x1 ∧ x1 < x2 ∧ x2 ≤ x ∧ 0 ≤ f x1 ∧ f x2 ≤ 0 by
     obtain ⟨x1, x2, h1, h2, h0, h3, h4⟩ := this
@@ -173,7 +173,7 @@ theorem central_binom_factorization_small (n : ℕ) (n_large : 2 < n) (no_prime 
   rw [Finset.mem_range, lt_succ_iff] at hx h2x
   rw [not_leₓ, div_lt_iff_lt_mul' three_pos, mul_comm x] at h2x
   replace no_prime := not_exists.mp no_prime x
-  rw [← and_assoc, not_and', not_and_distrib, not_ltₓ] at no_prime
+  rw [← and_assocₓ, not_and', not_and_distrib, not_ltₓ] at no_prime
   cases' no_prime hx with h h
   · rw [factorization_eq_zero_of_non_prime n.central_binom h, pow_zeroₓ]
     

@@ -775,7 +775,7 @@ theorem reaches_eval {σ} {f : σ → Option σ} {a b} (ab : Reaches f a b) : ev
     ⟨fun h =>
       let ⟨ac, c0⟩ := mem_eval.1 h
       mem_eval.2
-        ⟨(or_iff_left_of_imp fun cb => (eval_maximal h).1 cb ▸ refl_trans_gen.refl).1 (reaches_total ab ac), c0⟩,
+        ⟨(or_iff_left_of_impₓ fun cb => (eval_maximal h).1 cb ▸ refl_trans_gen.refl).1 (reaches_total ab ac), c0⟩,
       fun h =>
       let ⟨bc, c0⟩ := mem_eval.1 h
       mem_eval.2 ⟨ab.trans bc, c0⟩⟩
@@ -1061,7 +1061,7 @@ theorem Machine.map_step {S : Set Λ} (f₂₁ : Function.RightInverse f₁ f₂
       
 
 theorem map_init (g₁ : PointedMap Λ Λ') (l : List Γ) : (init l).map f₁ g₁ = init (l.map f₁) :=
-  congr (congr_argₓ Cfg.mk g₁.map_pt) (Tape.map_mk₁ _ _)
+  congr (congr_arg Cfg.mk g₁.map_pt) (Tape.map_mk₁ _ _)
 
 theorem Machine.map_respects (g₁ : PointedMap Λ Λ') (g₂ : Λ' → Λ) {S} (ss : Supports M S)
     (f₂₁ : Function.RightInverse f₁ f₂) (g₂₁ : ∀ q ∈ S, g₂ (g₁ q) = q) :
@@ -1415,10 +1415,10 @@ theorem tr_respects : Respects (TM1.step M) (TM0.step tr) fun c₁ c₂ => tr_cf
             (IH₁ _ _)
         
     iterate 2 
-      exact trans_gen.single (congr_argₓ some (congr (congr_argₓ TM0.cfg.mk rfl) (tape.write_self T)))
+      exact trans_gen.single (congr_arg some (congr (congr_arg TM0.cfg.mk rfl) (tape.write_self T)))
 
 theorem tr_eval (l : List Γ) : TM0.eval tr l = TM1.eval M l :=
-  (congr_argₓ _ (tr_eval' _ _ _ tr_respects ⟨some _, _, _⟩)).trans
+  (congr_arg _ (tr_eval' _ _ _ tr_respects ⟨some _, _, _⟩)).trans
     (by
       rw [Part.map_eq_map, Part.map_map, TM1.eval]
       congr with ⟨⟩
@@ -1527,7 +1527,7 @@ theorem exists_enc_dec [Fintype Γ] :
   let n := Fintype.card Γ
   obtain ⟨F⟩ := Fintype.truncEquivFin Γ
   let G : Finₓ n ↪ Finₓ n → Bool :=
-    ⟨fun a b => a = b, fun a b h => of_to_bool_true <| (congr_funₓ h b).trans <| to_bool_tt rfl⟩
+    ⟨fun a b => a = b, fun a b h => of_to_bool_true <| (congr_fun h b).trans <| to_bool_tt rfl⟩
   let H := (F.to_embedding.trans G).trans (Equivₓ.vectorEquivFin _ _).symm.toEmbedding
   classical
   let enc := H.set_value default (Vector.repeat ff n)
@@ -1825,7 +1825,7 @@ theorem tr_supports {S} (ss : Supports M S) : Supports tr (tr_supp S) :=
       cases d <;> simp only [tr_normal, iterate, supports_stmt_move, IH]
     case TM1.stmt.write f q IH =>
       unfold writes  at hw⊢
-      simp only [Finset.mem_image, Finset.mem_union, Finset.mem_univ, exists_prop, true_andₓ] at hw⊢
+      simp only [Finset.mem_image, Finset.mem_union, Finset.mem_univ, exists_propₓ, true_andₓ] at hw⊢
       replace IH := IH hs fun q hq => hw q (Or.inr hq)
       refine' ⟨(supports_stmt_read _) fun a _ s => hw _ (Or.inl ⟨_, rfl⟩), fun q' hq => _⟩
       rcases hq with (⟨a, q₂, rfl⟩ | hq)

@@ -151,7 +151,7 @@ instance (priority := 100) : TopologicalRing R :=
 theorem cauchy_iff {F : Filter R} :
     Cauchy F ↔ F.ne_bot ∧ ∀ γ : Γ₀ˣ, ∃ M ∈ F, ∀ (x y) (_ : x ∈ M) (_ : y ∈ M), (v (y - x) : Γ₀) < γ := by
   rw [to_uniform_space_eq, AddGroupFilterBasis.cauchy_iff]
-  apply and_congr Iff.rfl
+  apply and_congrₓ Iff.rfl
   simp_rw [valued.v.subgroups_basis.mem_add_group_filter_basis_iff]
   constructor
   · intro h γ

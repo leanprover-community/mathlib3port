@@ -107,7 +107,7 @@ theorem norm_lt {T : Type _} [LinearOrderedRing T] (a : S) {y : T} (hy : ∀ k, 
   have : (y' : T) < y := by
     rw [y'_def, ← Finset.max'_image (show Monotone (coe : ℤ → T) from fun x y h => int.cast_le.mpr h)]
     apply (Finset.max'_lt_iff _ (him.image _)).mpr
-    simp only [Finset.mem_image, exists_prop]
+    simp only [Finset.mem_image, exists_propₓ]
     rintro _ ⟨x, ⟨k, -, rfl⟩, rfl⟩
     exact hy k
   have y'_nonneg : 0 ≤ y' := le_transₓ (abv.nonneg _) (hy' i)

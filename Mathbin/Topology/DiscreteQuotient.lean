@@ -363,13 +363,13 @@ theorem exists_of_compat [CompactSpace X] (Qs : ∀ Q : DiscreteQuotient X, Q)
   · refine' ⟨x, fun Q => _⟩
     exact hx _ ⟨Q, rfl⟩
     
-  · refine' ⟨A⊓B, fun a ha => _, fun a ha => _⟩
+  · refine' ⟨A ⊓ B, fun a ha => _, fun a ha => _⟩
     · dsimp' only
-      erw [← compat (A⊓B) A inf_le_left]
+      erw [← compat (A ⊓ B) A inf_le_left]
       exact fiber_le_of_le _ _ ha
       
     · dsimp' only
-      erw [← compat (A⊓B) B inf_le_right]
+      erw [← compat (A ⊓ B) B inf_le_right]
       exact fiber_le_of_le _ _ ha
       
     

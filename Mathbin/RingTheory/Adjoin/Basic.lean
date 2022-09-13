@@ -117,7 +117,7 @@ theorem adjoin_adjoin_coe_preimage {s : Set A} : adjoin R ((coe : adjoin R s →
   · exact Subalgebra.mul_mem _
     
 
-theorem adjoin_union (s t : Set A) : adjoin R (s ∪ t) = adjoin R s⊔adjoin R t :=
+theorem adjoin_union (s t : Set A) : adjoin R (s ∪ t) = adjoin R s ⊔ adjoin R t :=
   (Algebra.gc : GaloisConnection _ (coe : Subalgebra R A → Set A)).l_sup
 
 variable (R A)

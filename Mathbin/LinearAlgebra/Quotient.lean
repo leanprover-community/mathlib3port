@@ -117,15 +117,15 @@ theorem mk_smul (r : S) (x : M) : (mk (r • x) : M ⧸ p) = r • mk x :=
   rfl
 
 instance smul_comm_class (T : Type _) [HasSmul T R] [HasSmul T M] [IsScalarTower T R M] [SmulCommClass S T M] :
-    SmulCommClass S T (M ⧸ P) where smul_comm := fun x y => Quotientₓ.ind' fun z => congr_argₓ mk (smul_comm _ _ _)
+    SmulCommClass S T (M ⧸ P) where smul_comm := fun x y => Quotientₓ.ind' fun z => congr_arg mk (smul_comm _ _ _)
 
 instance is_scalar_tower (T : Type _) [HasSmul T R] [HasSmul T M] [IsScalarTower T R M] [HasSmul S T]
     [IsScalarTower S T M] :
-    IsScalarTower S T (M ⧸ P) where smul_assoc := fun x y => Quotientₓ.ind' fun z => congr_argₓ mk (smul_assoc _ _ _)
+    IsScalarTower S T (M ⧸ P) where smul_assoc := fun x y => Quotientₓ.ind' fun z => congr_arg mk (smul_assoc _ _ _)
 
 instance is_central_scalar [HasSmul Sᵐᵒᵖ R] [HasSmul Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] :
     IsCentralScalar S
-      (M ⧸ P) where op_smul_eq_smul := fun x => Quotientₓ.ind' fun z => congr_argₓ mk <| op_smul_eq_smul _ _
+      (M ⧸ P) where op_smul_eq_smul := fun x => Quotientₓ.ind' fun z => congr_arg mk <| op_smul_eq_smul _ _
 
 end HasSmul
 
@@ -238,8 +238,8 @@ theorem liftq_mkq (f : M →ₛₗ[τ₁₂] M₂) (h) : (p.liftq f h).comp p.mk
 
 /-- Special case of `liftq` when `p` is the span of `x`. In this case, the condition on `f` simply
 becomes vanishing at `x`.-/
-def liftqSpanSingleton (x : M) (f : M →ₛₗ[τ₁₂] M₂) (h : f x = 0) : (M ⧸ R∙x) →ₛₗ[τ₁₂] M₂ :=
-  (R∙x).liftq f <| by
+def liftqSpanSingleton (x : M) (f : M →ₛₗ[τ₁₂] M₂) (h : f x = 0) : (M ⧸ R ∙ x) →ₛₗ[τ₁₂] M₂ :=
+  (R ∙ x).liftq f <| by
     rw [span_singleton_le_iff_mem, LinearMap.mem_ker, h]
 
 @[simp]
@@ -264,11 +264,11 @@ theorem mkq_map_self : map p.mkq p = ⊥ := by
   rw [eq_bot_iff, map_le_iff_le_comap, comap_bot, ker_mkq] <;> exact le_rflₓ
 
 @[simp]
-theorem comap_map_mkq : comap p.mkq (map p.mkq p') = p⊔p' := by
+theorem comap_map_mkq : comap p.mkq (map p.mkq p') = p ⊔ p' := by
   simp [comap_map_eq, sup_comm]
 
 @[simp]
-theorem map_mkq_eq_top : map p.mkq p' = ⊤ ↔ p⊔p' = ⊤ := by
+theorem map_mkq_eq_top : map p.mkq p' = ⊤ ↔ p ⊔ p' = ⊤ := by
   simp only [map_eq_top_iff p.range_mkq, sup_comm, ker_mkq]
 
 variable (q : Submodule R₂ M₂)

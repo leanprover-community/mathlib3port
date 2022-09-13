@@ -51,7 +51,7 @@ instance (priority := 900) homSmallCategory (X Y : LocallyDiscrete C) : SmallCat
 
 /-- Extract the equation from a 2-morphism in a locally discrete 2-category. -/
 theorem eq_of_hom {X Y : LocallyDiscrete C} {f g : X ⟶ Y} (η : f ⟶ g) : f = g := by
-  have : discrete.mk f.as = discrete.mk g.as := congr_argₓ discrete.mk (eq_of_hom η)
+  have : discrete.mk f.as = discrete.mk g.as := congr_arg discrete.mk (eq_of_hom η)
   simpa using this
 
 end LocallyDiscrete
@@ -105,7 +105,7 @@ be promoted to an oplax functor from `locally_discrete I` to `B`.
 def Functor.toOplaxFunctor (F : I ⥤ B) : OplaxFunctor (LocallyDiscrete I) B where
   obj := F.obj
   map := fun X Y f => F.map f.as
-  map₂ := fun i j f g η => eqToHom (congr_argₓ _ (eq_of_hom η))
+  map₂ := fun i j f g η => eqToHom (congr_arg _ (eq_of_hom η))
   map_id := fun i => eqToHom (F.map_id i)
   map_comp := fun i j k f g => eqToHom (F.map_comp f.as g.as)
 

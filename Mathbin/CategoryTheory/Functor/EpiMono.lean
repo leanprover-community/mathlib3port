@@ -128,7 +128,7 @@ theorem preserves_epimorphsisms_of_adjunction {F : C ⥤ D} {G : D ⥤ C} (adj :
   { preserves := fun X Y f hf =>
       ⟨by
         intro Z g h H
-        replace H := congr_argₓ (adj.hom_equiv X Z) H
+        replace H := congr_arg (adj.hom_equiv X Z) H
         rwa [adj.hom_equiv_naturality_left, adj.hom_equiv_naturality_left, cancel_epi, Equivₓ.apply_eq_iff_eq] at H⟩ }
 
 instance (priority := 100) preserves_epimorphisms_of_is_left_adjoint (F : C ⥤ D) [IsLeftAdjoint F] :
@@ -139,7 +139,7 @@ theorem preserves_monomorphisms_of_adjunction {F : C ⥤ D} {G : D ⥤ C} (adj :
   { preserves := fun X Y f hf =>
       ⟨by
         intro Z g h H
-        replace H := congr_argₓ (adj.hom_equiv Z Y).symm H
+        replace H := congr_arg (adj.hom_equiv Z Y).symm H
         rwa [adj.hom_equiv_naturality_right_symm, adj.hom_equiv_naturality_right_symm, cancel_mono,
           Equivₓ.apply_eq_iff_eq] at H⟩ }
 

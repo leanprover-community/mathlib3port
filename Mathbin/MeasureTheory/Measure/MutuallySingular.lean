@@ -91,7 +91,7 @@ theorem add_left_iff : μ₁ + μ₂ ⊥ₘ ν ↔ μ₁ ⊥ₘ ν ∧ μ₂ ⊥
 
 @[simp]
 theorem add_right_iff : μ ⊥ₘ ν₁ + ν₂ ↔ μ ⊥ₘ ν₁ ∧ μ ⊥ₘ ν₂ :=
-  comm.trans <| add_left_iff.trans <| and_congr comm comm
+  comm.trans <| add_left_iff.trans <| and_congrₓ comm comm
 
 theorem add_left (h₁ : ν₁ ⊥ₘ μ) (h₂ : ν₂ ⊥ₘ μ) : ν₁ + ν₂ ⊥ₘ μ :=
   add_left_iff.2 ⟨h₁, h₂⟩
@@ -102,7 +102,7 @@ theorem add_right (h₁ : μ ⊥ₘ ν₁) (h₂ : μ ⊥ₘ ν₂) : μ ⊥ₘ 
 theorem smul (r : ℝ≥0∞) (h : ν ⊥ₘ μ) : r • ν ⊥ₘ μ :=
   h.mono_ac (AbsolutelyContinuous.rfl.smul r) AbsolutelyContinuous.rfl
 
-theorem smul_nnreal (r : ℝ≥0 ) (h : ν ⊥ₘ μ) : r • ν ⊥ₘ μ :=
+theorem smul_nnreal (r : ℝ≥0) (h : ν ⊥ₘ μ) : r • ν ⊥ₘ μ :=
   h.smul r
 
 end MutuallySingular

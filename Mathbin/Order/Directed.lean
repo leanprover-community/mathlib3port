@@ -73,14 +73,14 @@ theorem Directed.mono_comp {ι} {rb : β → β → Prop} {g : α → β} {f : �
 
 /-- A monotone function on a sup-semilattice is directed. -/
 theorem directed_of_sup [SemilatticeSup α] {f : α → β} {r : β → β → Prop} (H : ∀ ⦃i j⦄, i ≤ j → r (f i) (f j)) :
-    Directed r f := fun a b => ⟨a⊔b, H le_sup_left, H le_sup_right⟩
+    Directed r f := fun a b => ⟨a ⊔ b, H le_sup_left, H le_sup_right⟩
 
 theorem Monotone.directed_le [SemilatticeSup α] [Preorderₓ β] {f : α → β} : Monotone f → Directed (· ≤ ·) f :=
   directed_of_sup
 
 /-- A set stable by supremum is `≤`-directed. -/
-theorem directed_on_of_sup_mem [SemilatticeSup α] {S : Set α} (H : ∀ ⦃i j⦄, i ∈ S → j ∈ S → i⊔j ∈ S) :
-    DirectedOn (· ≤ ·) S := fun a ha b hb => ⟨a⊔b, H ha hb, le_sup_left, le_sup_right⟩
+theorem directed_on_of_sup_mem [SemilatticeSup α] {S : Set α} (H : ∀ ⦃i j⦄, i ∈ S → j ∈ S → i ⊔ j ∈ S) :
+    DirectedOn (· ≤ ·) S := fun a ha b hb => ⟨a ⊔ b, H ha hb, le_sup_left, le_sup_right⟩
 
 theorem Directed.extend_bot [Preorderₓ α] [OrderBot α] {e : ι → β} {f : ι → α} (hf : Directed (· ≤ ·) f)
     (he : Function.Injective e) : Directed (· ≤ ·) (Function.extendₓ e f ⊥) := by
@@ -99,11 +99,11 @@ theorem Directed.extend_bot [Preorderₓ α] [OrderBot α] {e : ι → β} {f : 
 
 /-- An antitone function on an inf-semilattice is directed. -/
 theorem directed_of_inf [SemilatticeInf α] {r : β → β → Prop} {f : α → β} (hf : ∀ a₁ a₂, a₁ ≤ a₂ → r (f a₂) (f a₁)) :
-    Directed r f := fun x y => ⟨x⊓y, hf _ _ inf_le_left, hf _ _ inf_le_right⟩
+    Directed r f := fun x y => ⟨x ⊓ y, hf _ _ inf_le_left, hf _ _ inf_le_right⟩
 
 /-- A set stable by infimum is `≥`-directed. -/
-theorem directed_on_of_inf_mem [SemilatticeInf α] {S : Set α} (H : ∀ ⦃i j⦄, i ∈ S → j ∈ S → i⊓j ∈ S) :
-    DirectedOn (· ≥ ·) S := fun a ha b hb => ⟨a⊓b, H ha hb, inf_le_left, inf_le_right⟩
+theorem directed_on_of_inf_mem [SemilatticeInf α] {S : Set α} (H : ∀ ⦃i j⦄, i ∈ S → j ∈ S → i ⊓ j ∈ S) :
+    DirectedOn (· ≥ ·) S := fun a ha b hb => ⟨a ⊓ b, H ha hb, inf_le_left, inf_le_right⟩
 
 /-- `is_directed α r` states that for any elements `a`, `b` there exists an element `c` such that
 `r a c` and `r b c`. -/
@@ -189,11 +189,11 @@ end Preorderₓ
 
 -- see Note [lower instance priority]
 instance (priority := 100) SemilatticeSup.to_is_directed_le [SemilatticeSup α] : IsDirected α (· ≤ ·) :=
-  ⟨fun a b => ⟨a⊔b, le_sup_left, le_sup_right⟩⟩
+  ⟨fun a b => ⟨a ⊔ b, le_sup_left, le_sup_right⟩⟩
 
 -- see Note [lower instance priority]
 instance (priority := 100) SemilatticeInf.to_is_directed_ge [SemilatticeInf α] : IsDirected α (· ≥ ·) :=
-  ⟨fun a b => ⟨a⊓b, inf_le_left, inf_le_right⟩⟩
+  ⟨fun a b => ⟨a ⊓ b, inf_le_left, inf_le_right⟩⟩
 
 -- see Note [lower instance priority]
 instance (priority := 100) OrderTop.to_is_directed_le [LE α] [OrderTop α] : IsDirected α (· ≤ ·) :=

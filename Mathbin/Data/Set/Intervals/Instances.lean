@@ -252,8 +252,8 @@ instance monoid [Nontrivial α] : Monoidₓ (Ioc (0 : α) 1) :=
 
 instance cancelMonoid {α : Type _} [OrderedCommRing α] [IsDomain α] : CancelMonoid (Ioc (0 : α) 1) :=
   { Set.Ioc.monoid with
-    mul_left_cancel := fun a b c h => Subtype.ext <| mul_left_cancel₀ a.Prop.1.ne' <| (congr_argₓ Subtype.val h : _),
-    mul_right_cancel := fun a b c h => Subtype.ext <| mul_right_cancel₀ b.Prop.1.ne' <| (congr_argₓ Subtype.val h : _) }
+    mul_left_cancel := fun a b c h => Subtype.ext <| mul_left_cancel₀ a.Prop.1.ne' <| (congr_arg Subtype.val h : _),
+    mul_right_cancel := fun a b c h => Subtype.ext <| mul_right_cancel₀ b.Prop.1.ne' <| (congr_arg Subtype.val h : _) }
 
 instance commSemigroup {α : Type _} [OrderedCommSemiring α] : CommSemigroupₓ (Ioc (0 : α) 1) :=
   Subtype.coe_injective.CommSemigroup _ coe_mul

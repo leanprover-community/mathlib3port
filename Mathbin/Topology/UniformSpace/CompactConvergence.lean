@@ -205,7 +205,7 @@ theorem Inter_compact_open_gen_subset_compact_conv_nhd (hK : IsCompact K) (hV : 
   have hU : ∀ x, IsOpen (U x) := fun x => f.continuous.is_open_preimage _ (is_open_ball _ hZ₄)
   have hUK : K ⊆ ⋃ x : K, U (x : K) := by
     intro x hx
-    simp only [exists_prop, mem_Union, Union_coe_set, mem_preimage]
+    simp only [exists_propₓ, mem_Union, Union_coe_set, mem_preimage]
     exact
       ⟨(⟨x, hx⟩ : K), by
         simp [hx, mem_ball_self (f x) hZ₁]⟩
@@ -258,7 +258,7 @@ theorem compact_open_eq_compact_convergence :
       ⟨⋂ i, compact_open.gen (C i) (U i), h₂.trans hXf, is_open_Inter fun i => ContinuousMap.is_open_gen (hC i) (hU i),
         h₁⟩
     
-  · simp only [le_generate_from_iff_subset_is_open, and_imp, exists_prop, forall_exists_index, set_of_subset_set_of]
+  · simp only [le_generate_from_iff_subset_is_open, and_imp, exists_propₓ, forall_exists_index, set_of_subset_set_of]
     rintro - K hK U hU rfl f hf
     obtain ⟨V, hV, hV', hVf⟩ := compact_conv_nhd_subset_compact_open f hK hU hf
     exact Filter.mem_of_superset (FilterBasis.mem_filter_of_mem _ ⟨⟨K, V⟩, ⟨hK, hV⟩, rfl⟩) hVf
@@ -288,7 +288,7 @@ theorem mem_compact_convergence_uniformity (X : Set (C(α, β) × C(α, β))) :
       ∃ (K : Set α)(V : Set (β × β))(hK : IsCompact K)(hV : V ∈ 𝓤 β),
         { fg : C(α, β) × C(α, β) | ∀ x ∈ K, (fg.1 x, fg.2 x) ∈ V } ⊆ X :=
   by
-  simp only [has_basis_compact_convergence_uniformity_aux.mem_iff, exists_prop, Prod.existsₓ, and_assoc]
+  simp only [has_basis_compact_convergence_uniformity_aux.mem_iff, exists_propₓ, Prod.existsₓ, and_assocₓ]
 
 /-- Note that we ensure the induced topology is definitionally the compact-open topology. -/
 instance compactConvergenceUniformSpace : UniformSpace C(α, β) where

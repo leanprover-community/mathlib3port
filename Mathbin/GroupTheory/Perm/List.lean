@@ -111,9 +111,9 @@ theorem mem_of_form_perm_apply_mem (x : α) (l : List α) (h : l.formPerm x ∈ 
       split_ifs  at h <;> simp [IH _ _ hx]
       
     · replace hx := (Function.Injective.eq_iff (Equivₓ.injective _)).mp (List.form_perm_apply_of_not_mem _ _ hx)
-      simp only [List.form_perm_cons_cons, hx, Equivₓ.Perm.coe_mul, Function.comp_app, List.mem_cons_iffₓ,
+      simp only [List.form_perm_cons_cons, hx, Equivₓ.Perm.coe_mul, Function.comp_app, List.mem_cons_iff,
         swap_apply_def, ite_eq_left_iff] at h
-      simp only [List.mem_cons_iffₓ]
+      simp only [List.mem_cons_iff]
       obtain h | h | h := h <;>
         · split_ifs  at h <;> cc
           
@@ -179,7 +179,7 @@ theorem form_perm_eq_head_iff_eq_last (x y : α) : formPerm (y::l) x = y ↔ x =
     (formPerm (y::l)).Injective.eq_iff
 
 theorem zip_with_swap_prod_support' (l l' : List α) :
-    { x | (zipWithₓ swap l l').Prod x ≠ x } ≤ l.toFinset⊔l'.toFinset := by
+    { x | (zipWithₓ swap l l').Prod x ≠ x } ≤ l.toFinset ⊔ l'.toFinset := by
   simp only [Set.sup_eq_union, Set.le_eq_subset]
   induction' l with y l hl generalizing l'
   · simp
@@ -206,7 +206,7 @@ theorem zip_with_swap_prod_support' (l l' : List α) :
     
 
 theorem zip_with_swap_prod_support [Fintype α] (l l' : List α) :
-    (zipWithₓ swap l l').Prod.support ≤ l.toFinset⊔l'.toFinset := by
+    (zipWithₓ swap l l').Prod.support ≤ l.toFinset ⊔ l'.toFinset := by
   intro x hx
   have hx' : x ∈ { x | (zip_with swap l l').Prod x ≠ x } := by
     simpa using hx
@@ -402,7 +402,7 @@ theorem form_perm_ext_iff {x y x' y' : α} {l l' : List α} (hd : Nodupₓ (x::y
   obtain ⟨n, hn, hx'⟩ := nth_le_of_mem hx
   have hl : (x::y::l).length = (x'::y'::l').length := by
     rw [← dedup_eq_self.mpr hd, ← dedup_eq_self.mpr hd', ← card_to_finset, ← card_to_finset]
-    refine' congr_argₓ Finset.card _
+    refine' congr_arg Finset.card _
     rw [← Finset.coe_inj, ←
       support_form_perm_of_nodup' _ hd
         (by

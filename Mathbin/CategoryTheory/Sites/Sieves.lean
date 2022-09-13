@@ -305,11 +305,11 @@ theorem Sup_apply {Ss : Set (Sieve X)} {Y} (f : Y ⟶ X) : sup Ss f ↔ ∃ (S :
   Iff.rfl
 
 @[simp]
-theorem inter_apply {R S : Sieve X} {Y} (f : Y ⟶ X) : (R⊓S) f ↔ R f ∧ S f :=
+theorem inter_apply {R S : Sieve X} {Y} (f : Y ⟶ X) : (R ⊓ S) f ↔ R f ∧ S f :=
   Iff.rfl
 
 @[simp]
-theorem union_apply {R S : Sieve X} {Y} (f : Y ⟶ X) : (R⊔S) f ↔ R f ∨ S f :=
+theorem union_apply {R S : Sieve X} {Y} (f : Y ⟶ X) : (R ⊔ S) f ↔ R f ∨ S f :=
   Iff.rfl
 
 @[simp]
@@ -402,7 +402,7 @@ theorem pullback_comp {f : Y ⟶ X} {g : Z ⟶ Y} (S : Sieve X) : S.pullback (g 
   simp [sieve.ext_iff]
 
 @[simp]
-theorem pullback_inter {f : Y ⟶ X} (S R : Sieve X) : (S⊓R).pullback f = S.pullback f⊓R.pullback f := by
+theorem pullback_inter {f : Y ⟶ X} (S R : Sieve X) : (S ⊓ R).pullback f = S.pullback f ⊓ R.pullback f := by
   simp [sieve.ext_iff]
 
 theorem pullback_eq_top_iff_mem (f : Y ⟶ X) : S f ↔ S.pullback f = ⊤ := by
@@ -450,7 +450,7 @@ theorem le_pushforward_pullback (f : Y ⟶ X) (R : Sieve Y) : R ≤ (R.pushforwa
 theorem pullback_pushforward_le (f : Y ⟶ X) (R : Sieve X) : (R.pullback f).pushforward f ≤ R :=
   (galois_connection f).l_u_le _
 
-theorem pushforward_union {f : Y ⟶ X} (S R : Sieve Y) : (S⊔R).pushforward f = S.pushforward f⊔R.pushforward f :=
+theorem pushforward_union {f : Y ⟶ X} (S R : Sieve Y) : (S ⊔ R).pushforward f = S.pushforward f ⊔ R.pushforward f :=
   (galois_connection f).l_sup
 
 theorem pushforward_le_bind_of_mem (S : Presieve X) (R : ∀ ⦃Y : C⦄ ⦃f : Y ⟶ X⦄, S f → Sieve Y) (f : Y ⟶ X) (h : S f) :
@@ -590,15 +590,15 @@ theorem functor_pullback_pushforward_le (R : Sieve (F.obj X)) : (R.FunctorPullba
   (functor_galois_connection F X).l_u_le _
 
 theorem functor_pushforward_union (S R : Sieve X) :
-    (S⊔R).FunctorPushforward F = S.FunctorPushforward F⊔R.FunctorPushforward F :=
+    (S ⊔ R).FunctorPushforward F = S.FunctorPushforward F ⊔ R.FunctorPushforward F :=
   (functor_galois_connection F X).l_sup
 
 theorem functor_pullback_union (S R : Sieve (F.obj X)) :
-    (S⊔R).FunctorPullback F = S.FunctorPullback F⊔R.FunctorPullback F :=
+    (S ⊔ R).FunctorPullback F = S.FunctorPullback F ⊔ R.FunctorPullback F :=
   rfl
 
 theorem functor_pullback_inter (S R : Sieve (F.obj X)) :
-    (S⊓R).FunctorPullback F = S.FunctorPullback F⊓R.FunctorPullback F :=
+    (S ⊓ R).FunctorPullback F = S.FunctorPullback F ⊓ R.FunctorPullback F :=
   rfl
 
 @[simp]
@@ -667,7 +667,7 @@ theorem nat_trans_of_le_comm {S T : Sieve X} (h : S ≤ T) : natTransOfLe h ≫ 
 instance functor_inclusion_is_mono : Mono S.functorInclusion :=
   ⟨fun Z f g h => by
     ext Y y
-    apply congr_funₓ (nat_trans.congr_app h Y) y⟩
+    apply congr_fun (nat_trans.congr_app h Y) y⟩
 
 -- TODO: Show that when `f` is mono, this is right inverse to `functor_inclusion` up to isomorphism.
 /-- A natural transformation to a representable functor induces a sieve. This is the left inverse of

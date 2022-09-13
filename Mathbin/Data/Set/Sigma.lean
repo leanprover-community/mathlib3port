@@ -120,7 +120,7 @@ theorem sigma_union : (s.Sigma fun i => t₁ i ∪ t₂ i) = s.Sigma t₁ ∪ s.
 
 theorem sigma_inter_sigma : s₁.Sigma t₁ ∩ s₂.Sigma t₂ = (s₁ ∩ s₂).Sigma fun i => t₁ i ∩ t₂ i := by
   ext ⟨x, y⟩
-  simp [and_assoc, And.left_comm]
+  simp [and_assocₓ, And.left_comm]
 
 theorem insert_sigma : (insert i s).Sigma t = Sigma.mk i '' t i ∪ s.Sigma t := by
   rw [insert_eq, union_sigma, singleton_sigma]

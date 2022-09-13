@@ -225,7 +225,7 @@ theorem convex_on_iff_forall_pos {s : Set E} {f : E → β} :
         ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → f (a • x + b • y) ≤ a • f x + b • f y :=
   by
   refine'
-    and_congr_right' ⟨fun h x hx y hy a b ha hb hab => h hx hy ha.le hb.le hab, fun h x hx y hy a b ha hb hab => _⟩
+    and_congr_right'ₓ ⟨fun h x hx y hy a b ha hb hab => h hx hy ha.le hb.le hab, fun h x hx y hy a b ha hb hab => _⟩
   obtain rfl | ha' := ha.eq_or_lt
   · rw [zero_addₓ] at hab
     subst b
@@ -250,7 +250,7 @@ theorem convex_on_iff_pairwise_pos {s : Set E} {f : E → β} :
         s.Pairwise fun x y => ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → f (a • x + b • y) ≤ a • f x + b • f y :=
   by
   rw [convex_on_iff_forall_pos]
-  refine' and_congr_right' ⟨fun h x hx y hy _ a b ha hb hab => h hx hy ha hb hab, fun h x hx y hy a b ha hb hab => _⟩
+  refine' and_congr_right'ₓ ⟨fun h x hx y hy _ a b ha hb hab => h hx hy ha hb hab, fun h x hx y hy a b ha hb hab => _⟩
   obtain rfl | hxy := eq_or_ne x y
   · rw [Convex.combo_self hab, Convex.combo_self hab]
     
@@ -466,42 +466,42 @@ section LinearOrderedAddCommMonoid
 variable [LinearOrderedAddCommMonoid β] [HasSmul 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f g : E → β}
 
 /-- The pointwise maximum of convex functions is convex. -/
-theorem ConvexOn.sup (hf : ConvexOn 𝕜 s f) (hg : ConvexOn 𝕜 s g) : ConvexOn 𝕜 s (f⊔g) := by
+theorem ConvexOn.sup (hf : ConvexOn 𝕜 s f) (hg : ConvexOn 𝕜 s g) : ConvexOn 𝕜 s (f ⊔ g) := by
   refine' ⟨hf.left, fun x hx y hy a b ha hb hab => sup_le _ _⟩
   · calc
       f (a • x + b • y) ≤ a • f x + b • f y := hf.right hx hy ha hb hab
-      _ ≤ a • (f x⊔g x) + b • (f y⊔g y) :=
+      _ ≤ a • (f x ⊔ g x) + b • (f y ⊔ g y) :=
         add_le_add (smul_le_smul_of_nonneg le_sup_left ha) (smul_le_smul_of_nonneg le_sup_left hb)
       
     
   · calc
       g (a • x + b • y) ≤ a • g x + b • g y := hg.right hx hy ha hb hab
-      _ ≤ a • (f x⊔g x) + b • (f y⊔g y) :=
+      _ ≤ a • (f x ⊔ g x) + b • (f y ⊔ g y) :=
         add_le_add (smul_le_smul_of_nonneg le_sup_right ha) (smul_le_smul_of_nonneg le_sup_right hb)
       
     
 
 /-- The pointwise minimum of concave functions is concave. -/
-theorem ConcaveOn.inf (hf : ConcaveOn 𝕜 s f) (hg : ConcaveOn 𝕜 s g) : ConcaveOn 𝕜 s (f⊓g) :=
+theorem ConcaveOn.inf (hf : ConcaveOn 𝕜 s f) (hg : ConcaveOn 𝕜 s g) : ConcaveOn 𝕜 s (f ⊓ g) :=
   hf.dual.sup hg
 
 /-- The pointwise maximum of strictly convex functions is strictly convex. -/
-theorem StrictConvexOn.sup (hf : StrictConvexOn 𝕜 s f) (hg : StrictConvexOn 𝕜 s g) : StrictConvexOn 𝕜 s (f⊔g) :=
+theorem StrictConvexOn.sup (hf : StrictConvexOn 𝕜 s f) (hg : StrictConvexOn 𝕜 s g) : StrictConvexOn 𝕜 s (f ⊔ g) :=
   ⟨hf.left, fun x hx y hy hxy a b ha hb hab =>
     max_ltₓ
       (calc
         f (a • x + b • y) < a • f x + b • f y := hf.2 hx hy hxy ha hb hab
-        _ ≤ a • (f x⊔g x) + b • (f y⊔g y) :=
+        _ ≤ a • (f x ⊔ g x) + b • (f y ⊔ g y) :=
           add_le_add (smul_le_smul_of_nonneg le_sup_left ha.le) (smul_le_smul_of_nonneg le_sup_left hb.le)
         )
       (calc
         g (a • x + b • y) < a • g x + b • g y := hg.2 hx hy hxy ha hb hab
-        _ ≤ a • (f x⊔g x) + b • (f y⊔g y) :=
+        _ ≤ a • (f x ⊔ g x) + b • (f y ⊔ g y) :=
           add_le_add (smul_le_smul_of_nonneg le_sup_right ha.le) (smul_le_smul_of_nonneg le_sup_right hb.le)
         )⟩
 
 /-- The pointwise minimum of strictly concave functions is strictly concave. -/
-theorem StrictConcaveOn.inf (hf : StrictConcaveOn 𝕜 s f) (hg : StrictConcaveOn 𝕜 s g) : StrictConcaveOn 𝕜 s (f⊓g) :=
+theorem StrictConcaveOn.inf (hf : StrictConcaveOn 𝕜 s f) (hg : StrictConcaveOn 𝕜 s g) : StrictConcaveOn 𝕜 s (f ⊓ g) :=
   hf.dual.sup hg
 
 /-- A convex function on a segment is upper-bounded by the max of its endpoints. -/
@@ -877,7 +877,7 @@ theorem convex_on_iff_div {f : E → β} :
                     0 ≤ b →
                       0 < a + b →
                         f ((a / (a + b)) • x + (b / (a + b)) • y) ≤ (a / (a + b)) • f x + (b / (a + b)) • f y :=
-  and_congr Iff.rfl
+  and_congrₓ Iff.rfl
     ⟨by
       intro h x hx y hy a b ha hb hab
       apply h hx hy (div_nonneg ha hab.le) (div_nonneg hb hab.le)
@@ -910,7 +910,7 @@ theorem strict_convex_on_iff_div {f : E → β} :
                   ∀ ⦃a b : 𝕜⦄,
                     0 < a →
                       0 < b → f ((a / (a + b)) • x + (b / (a + b)) • y) < (a / (a + b)) • f x + (b / (a + b)) • f y :=
-  and_congr Iff.rfl
+  and_congrₓ Iff.rfl
     ⟨by
       intro h x hx y hy hxy a b ha hb
       have hab := add_pos ha hb
@@ -945,12 +945,12 @@ variable [LinearOrderedField 𝕜] [LinearOrderedCancelAddCommMonoid β] [Module
 
 theorem ConvexOn.le_right_of_left_le'' (hf : ConvexOn 𝕜 s f) (hx : x ∈ s) (hz : z ∈ s) (hxy : x < y) (hyz : y ≤ z)
     (h : f x ≤ f y) : f y ≤ f z :=
-  hyz.eq_or_lt.elim (fun hyz => (congr_argₓ f hyz).le) fun hyz =>
+  hyz.eq_or_lt.elim (fun hyz => (congr_arg f hyz).le) fun hyz =>
     hf.le_right_of_left_le hx hz (Ioo_subset_open_segment ⟨hxy, hyz⟩) h
 
 theorem ConvexOn.le_left_of_right_le'' (hf : ConvexOn 𝕜 s f) (hx : x ∈ s) (hz : z ∈ s) (hxy : x ≤ y) (hyz : y < z)
     (h : f z ≤ f y) : f y ≤ f x :=
-  hxy.eq_or_lt.elim (fun hxy => (congr_argₓ f hxy).Ge) fun hxy =>
+  hxy.eq_or_lt.elim (fun hxy => (congr_arg f hxy).Ge) fun hxy =>
     hf.le_left_of_right_le hx hz (Ioo_subset_open_segment ⟨hxy, hyz⟩) h
 
 theorem ConcaveOn.right_le_of_le_left'' (hf : ConcaveOn 𝕜 s f) (hx : x ∈ s) (hz : z ∈ s) (hxy : x < y) (hyz : y ≤ z)

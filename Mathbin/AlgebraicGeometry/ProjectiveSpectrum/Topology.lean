@@ -210,18 +210,19 @@ theorem zero_locus_singleton_one : ZeroLocus 𝒜 ({1} : Set A) = ∅ :=
 theorem zero_locus_univ : ZeroLocus 𝒜 (Set.Univ : Set A) = ∅ :=
   zero_locus_empty_of_one_mem _ (Set.mem_univ 1)
 
-theorem zero_locus_sup_ideal (I J : Ideal A) : ZeroLocus 𝒜 ((I⊔J : Ideal A) : Set A) = ZeroLocus _ I ∩ ZeroLocus _ J :=
+theorem zero_locus_sup_ideal (I J : Ideal A) :
+    ZeroLocus 𝒜 ((I ⊔ J : Ideal A) : Set A) = ZeroLocus _ I ∩ ZeroLocus _ J :=
   (gc_ideal 𝒜).l_sup
 
 theorem zero_locus_sup_homogeneous_ideal (I J : HomogeneousIdeal 𝒜) :
-    ZeroLocus 𝒜 ((I⊔J : HomogeneousIdeal 𝒜) : Set A) = ZeroLocus _ I ∩ ZeroLocus _ J :=
+    ZeroLocus 𝒜 ((I ⊔ J : HomogeneousIdeal 𝒜) : Set A) = ZeroLocus _ I ∩ ZeroLocus _ J :=
   (gc_homogeneous_ideal 𝒜).l_sup
 
 theorem zero_locus_union (s s' : Set A) : ZeroLocus 𝒜 (s ∪ s') = ZeroLocus _ s ∩ ZeroLocus _ s' :=
   (gc_set 𝒜).l_sup
 
 theorem vanishing_ideal_union (t t' : Set (ProjectiveSpectrum 𝒜)) :
-    vanishingIdeal (t ∪ t') = vanishingIdeal t⊓vanishingIdeal t' := by
+    vanishingIdeal (t ∪ t') = vanishingIdeal t ⊓ vanishingIdeal t' := by
   ext1 <;> convert (gc_ideal 𝒜).u_inf
 
 theorem zero_locus_supr_ideal {γ : Sort _} (I : γ → Ideal A) :
@@ -243,11 +244,11 @@ theorem vanishing_ideal_Union {γ : Sort _} (t : γ → Set (ProjectiveSpectrum 
   HomogeneousIdeal.to_ideal_injective <| by
     convert (gc_ideal 𝒜).u_infi <;> exact HomogeneousIdeal.to_ideal_infi _
 
-theorem zero_locus_inf (I J : Ideal A) : ZeroLocus 𝒜 ((I⊓J : Ideal A) : Set A) = ZeroLocus 𝒜 I ∪ ZeroLocus 𝒜 J :=
+theorem zero_locus_inf (I J : Ideal A) : ZeroLocus 𝒜 ((I ⊓ J : Ideal A) : Set A) = ZeroLocus 𝒜 I ∪ ZeroLocus 𝒜 J :=
   Set.ext fun x => x.2.1.inf_le
 
 theorem union_zero_locus (s s' : Set A) :
-    ZeroLocus 𝒜 s ∪ ZeroLocus 𝒜 s' = ZeroLocus 𝒜 (Ideal.span s⊓Ideal.span s' : Ideal A) := by
+    ZeroLocus 𝒜 s ∪ ZeroLocus 𝒜 s' = ZeroLocus 𝒜 (Ideal.span s ⊓ Ideal.span s' : Ideal A) := by
   rw [zero_locus_inf]
   simp
 
@@ -269,7 +270,7 @@ theorem zero_locus_singleton_pow (f : A) (n : ℕ) (hn : 0 < n) : ZeroLocus 𝒜
     simpa using x.2.1.pow_mem_iff_mem n hn
 
 theorem sup_vanishing_ideal_le (t t' : Set (ProjectiveSpectrum 𝒜)) :
-    vanishingIdeal t⊔vanishingIdeal t' ≤ vanishingIdeal (t ∩ t') := by
+    vanishingIdeal t ⊔ vanishingIdeal t' ≤ vanishingIdeal (t ∩ t') := by
   intro r
   rw [← HomogeneousIdeal.mem_iff, HomogeneousIdeal.to_ideal_sup, mem_vanishing_ideal, Submodule.mem_sup]
   rintro ⟨f, hf, g, hg, rfl⟩ x ⟨hxt, hxt'⟩
@@ -366,7 +367,7 @@ theorem basic_open_zero : basicOpen 𝒜 (0 : A) = ⊥ :=
   TopologicalSpace.Opens.ext <| by
     simp
 
-theorem basic_open_mul (f g : A) : basicOpen 𝒜 (f * g) = basicOpen 𝒜 f⊓basicOpen 𝒜 g :=
+theorem basic_open_mul (f g : A) : basicOpen 𝒜 (f * g) = basicOpen 𝒜 f ⊓ basicOpen 𝒜 g :=
   TopologicalSpace.Opens.ext <| by
     simp [zero_locus_singleton_mul]
 

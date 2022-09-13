@@ -93,7 +93,7 @@ theorem is_satisfiable_iff_is_finitely_satisfiable {T : L.Theory} : T.IsSatisfia
             ⟨{⟨φ, hφ⟩}, fun s h' =>
               Theory.realize_sentence_of_mem (s.map (Function.Embedding.subtype fun x => x ∈ T)) _⟩)
       simp only [Finset.coe_map, Function.Embedding.coe_subtype, Set.mem_image, Finset.mem_coe, Subtype.exists,
-        Subtype.coe_mk, exists_and_distrib_right, exists_eq_right]
+        Subtype.coe_mk, exists_and_distrib_rightₓ, exists_eq_right]
       exact ⟨hφ, h' (Finset.mem_singleton_self _)⟩
     exact ⟨Model.of T M'⟩⟩
 
@@ -108,7 +108,7 @@ theorem is_satisfiable_directed_union_iff {ι : Type _} [Nonempty ι] {T : ι �
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem is_satisfiable_union_distinct_constants_theory_of_card_le (T : L.Theory) (s : Set α) (M : Type w') [Nonempty M]
-    [L.Structure M] [M ⊨ T] (h : Cardinal.lift.{w'} (# s) ≤ Cardinal.lift.{w} (# M)) :
+    [L.Structure M] [M ⊨ T] (h : Cardinal.lift.{w'} (#s) ≤ Cardinal.lift.{w} (#M)) :
     ((L.lhomWithConstants α).OnTheory T ∪ L.DistinctConstantsTheory s).IsSatisfiable := by
   haveI : Inhabited M := Classical.inhabitedOfNonempty inferInstance
   rw [Cardinal.lift_mk_le'] at h
@@ -143,7 +143,7 @@ theorem is_satisfiable_union_distinct_constants_theory_of_infinite (T : L.Theory
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Any theory with an infinite model has arbitrarily large models. -/
 theorem exists_large_model_of_infinite_model (T : L.Theory) (κ : Cardinal.{w}) (M : Type w') [L.Structure M] [M ⊨ T]
-    [Infinite M] : ∃ N : ModelCat.{_, _, max u v w} T, Cardinal.lift.{max u v w} κ ≤ # N := by
+    [Infinite M] : ∃ N : ModelCat.{_, _, max u v w} T, Cardinal.lift.{max u v w} κ ≤ (#N) := by
   obtain ⟨N⟩ := is_satisfiable_union_distinct_constants_theory_of_infinite T (Set.Univ : Set κ.out) M
   refine' ⟨(N.is_model.mono (Set.subset_union_left _ _)).Bundled.reduct _, _⟩
   haveI : N ⊨ distinct_constants_theory _ _ := N.is_model.mono (Set.subset_union_right _ _)
@@ -162,8 +162,8 @@ into `M`, but is not by type a substructure of `M`, and thus can be chosen to be
 of the cardinal `κ`.
  -/
 theorem exists_elementary_embedding_card_eq_of_le (M : Type w') [L.Structure M] [Nonempty M] (κ : Cardinal.{w})
-    (h1 : ℵ₀ ≤ κ) (h2 : lift.{w} L.card ≤ Cardinal.lift.{max u v} κ) (h3 : lift.{w'} κ ≤ Cardinal.lift.{w} (# M)) :
-    ∃ N : Bundled L.Structure, Nonempty (N ↪ₑ[L] M) ∧ # N = κ := by
+    (h1 : ℵ₀ ≤ κ) (h2 : lift.{w} L.card ≤ Cardinal.lift.{max u v} κ) (h3 : lift.{w'} κ ≤ Cardinal.lift.{w} (#M)) :
+    ∃ N : Bundled L.Structure, Nonempty (N ↪ₑ[L] M) ∧ (#N) = κ := by
   obtain ⟨S, _, hS⟩ :=
     exists_elementary_substructure_card_eq L ∅ κ h1
       (by
@@ -181,8 +181,8 @@ theorem exists_elementary_embedding_card_eq_of_le (M : Type w') [L.Structure M] 
 /-- The Upward Löwenheim–Skolem Theorem: If `κ` is a cardinal greater than the cardinalities of `L`
 and an infinite `L`-structure `M`, then `M` has an elementary extension of cardinality `κ`. -/
 theorem exists_elementary_embedding_card_eq_of_ge (M : Type w') [L.Structure M] [iM : Infinite M] (κ : Cardinal.{w})
-    (h1 : Cardinal.lift.{w} L.card ≤ Cardinal.lift.{max u v} κ) (h2 : Cardinal.lift.{w} (# M) ≤ Cardinal.lift.{w'} κ) :
-    ∃ N : Bundled L.Structure, Nonempty (M ↪ₑ[L] N) ∧ # N = κ := by
+    (h1 : Cardinal.lift.{w} L.card ≤ Cardinal.lift.{max u v} κ) (h2 : Cardinal.lift.{w} (#M) ≤ Cardinal.lift.{w'} κ) :
+    ∃ N : Bundled L.Structure, Nonempty (M ↪ₑ[L] N) ∧ (#N) = κ := by
   obtain ⟨N0, hN0⟩ := (L.elementary_diagram M).exists_large_model_of_infinite_model κ M
   let f0 := elementary_embedding.of_models_elementary_diagram L M N0
   rw [← lift_le.{max w w', max u v}, lift_lift, lift_lift] at h2
@@ -207,8 +207,8 @@ and an infinite `L`-structure `M`, then there is an elementary embedding in the 
 direction between then `M` and a structure of cardinality `κ`. -/
 theorem exists_elementary_embedding_card_eq (M : Type w') [L.Structure M] [iM : Infinite M] (κ : Cardinal.{w})
     (h1 : ℵ₀ ≤ κ) (h2 : lift.{w} L.card ≤ Cardinal.lift.{max u v} κ) :
-    ∃ N : Bundled L.Structure, (Nonempty (N ↪ₑ[L] M) ∨ Nonempty (M ↪ₑ[L] N)) ∧ # N = κ := by
-  cases le_or_gtₓ (lift.{w'} κ) (Cardinal.lift.{w} (# M))
+    ∃ N : Bundled L.Structure, (Nonempty (N ↪ₑ[L] M) ∨ Nonempty (M ↪ₑ[L] N)) ∧ (#N) = κ := by
+  cases le_or_gtₓ (lift.{w'} κ) (Cardinal.lift.{w} (#M))
   · obtain ⟨N, hN1, hN2⟩ := exists_elementary_embedding_card_eq_of_le L M κ h1 h2 h
     exact ⟨N, Or.inl hN1, hN2⟩
     
@@ -221,7 +221,7 @@ cardinalities of `L` and an infinite `L`-structure `M`, then there is a structur
 elementarily equivalent to `M`. -/
 theorem exists_elementarily_equivalent_card_eq (M : Type w') [L.Structure M] [Infinite M] (κ : Cardinal.{w})
     (h1 : ℵ₀ ≤ κ) (h2 : lift.{w} L.card ≤ Cardinal.lift.{max u v} κ) :
-    ∃ N : CategoryTheory.Bundled L.Structure, (M ≅[L] N) ∧ # N = κ := by
+    ∃ N : CategoryTheory.Bundled L.Structure, (M ≅[L] N) ∧ (#N) = κ := by
   obtain ⟨N, NM | MN, hNκ⟩ := exists_elementary_embedding_card_eq L M κ h1 h2
   · exact ⟨N, NM.some.elementarily_equivalent.symm, hNκ⟩
     
@@ -233,7 +233,7 @@ variable {L}
 namespace Theory
 
 theorem exists_model_card_eq (h : ∃ M : ModelCat.{u, v, max u v} T, Infinite M) (κ : Cardinal.{w}) (h1 : ℵ₀ ≤ κ)
-    (h2 : Cardinal.lift.{w} L.card ≤ Cardinal.lift.{max u v} κ) : ∃ N : ModelCat.{u, v, w} T, # N = κ := by
+    (h2 : Cardinal.lift.{w} L.card ≤ Cardinal.lift.{max u v} κ) : ∃ N : ModelCat.{u, v, w} T, (#N) = κ := by
   cases' h with M MI
   obtain ⟨N, hN, rfl⟩ := exists_elementarily_equivalent_card_eq L M κ h1 h2
   haveI : Nonempty N := hN.nonempty
@@ -332,7 +332,7 @@ protected theorem SemanticallyEquivalent.not {φ ψ : L.BoundedFormula α n} (h 
 protected theorem SemanticallyEquivalent.imp {φ ψ φ' ψ' : L.BoundedFormula α n} (h : T.SemanticallyEquivalent φ ψ)
     (h' : T.SemanticallyEquivalent φ' ψ') : T.SemanticallyEquivalent (φ.imp φ') (ψ.imp ψ') := by
   simp_rw [semantically_equivalent, models_bounded_formula, bounded_formula.realize_iff, bounded_formula.realize_imp]
-  exact fun M v xs => imp_congr h.realize_bd_iff h'.realize_bd_iff
+  exact fun M v xs => imp_congrₓ h.realize_bd_iff h'.realize_bd_iff
 
 end Theory
 
@@ -358,13 +358,15 @@ variable (φ ψ : L.BoundedFormula α n)
 theorem semantically_equivalent_not_not : T.SemanticallyEquivalent φ φ.Not.Not := fun M v xs => by
   simp
 
-theorem imp_semantically_equivalent_not_sup : T.SemanticallyEquivalent (φ.imp ψ) (φ.Not⊔ψ) := fun M v xs => by
+theorem imp_semantically_equivalent_not_sup : T.SemanticallyEquivalent (φ.imp ψ) (φ.Not ⊔ ψ) := fun M v xs => by
   simp [imp_iff_not_or]
 
-theorem sup_semantically_equivalent_not_inf_not : T.SemanticallyEquivalent (φ⊔ψ) (φ.Not⊓ψ.Not).Not := fun M v xs => by
+theorem sup_semantically_equivalent_not_inf_not : T.SemanticallyEquivalent (φ ⊔ ψ) (φ.Not ⊓ ψ.Not).Not := fun M v xs =>
+  by
   simp [imp_iff_not_or]
 
-theorem inf_semantically_equivalent_not_sup_not : T.SemanticallyEquivalent (φ⊓ψ) (φ.Not⊔ψ.Not).Not := fun M v xs => by
+theorem inf_semantically_equivalent_not_sup_not : T.SemanticallyEquivalent (φ ⊓ ψ) (φ.Not ⊔ ψ.Not).Not := fun M v xs =>
+  by
   simp [and_iff_not_or_not]
 
 theorem all_semantically_equivalent_not_ex_not (φ : L.BoundedFormula α (n + 1)) :
@@ -388,13 +390,13 @@ variable (φ ψ : L.Formula α)
 theorem semantically_equivalent_not_not : T.SemanticallyEquivalent φ φ.Not.Not :=
   φ.semantically_equivalent_not_not
 
-theorem imp_semantically_equivalent_not_sup : T.SemanticallyEquivalent (φ.imp ψ) (φ.Not⊔ψ) :=
+theorem imp_semantically_equivalent_not_sup : T.SemanticallyEquivalent (φ.imp ψ) (φ.Not ⊔ ψ) :=
   φ.imp_semantically_equivalent_not_sup ψ
 
-theorem sup_semantically_equivalent_not_inf_not : T.SemanticallyEquivalent (φ⊔ψ) (φ.Not⊓ψ.Not).Not :=
+theorem sup_semantically_equivalent_not_inf_not : T.SemanticallyEquivalent (φ ⊔ ψ) (φ.Not ⊓ ψ.Not).Not :=
   φ.sup_semantically_equivalent_not_inf_not ψ
 
-theorem inf_semantically_equivalent_not_sup_not : T.SemanticallyEquivalent (φ⊓ψ) (φ.Not⊔ψ.Not).Not :=
+theorem inf_semantically_equivalent_not_sup_not : T.SemanticallyEquivalent (φ ⊓ ψ) (φ.Not ⊔ ψ.Not).Not :=
   φ.inf_semantically_equivalent_not_sup_not ψ
 
 end Formula
@@ -403,13 +405,13 @@ namespace BoundedFormula
 
 theorem IsQf.induction_on_sup_not {P : L.BoundedFormula α n → Prop} {φ : L.BoundedFormula α n} (h : IsQf φ)
     (hf : P (⊥ : L.BoundedFormula α n)) (ha : ∀ ψ : L.BoundedFormula α n, IsAtomic ψ → P ψ)
-    (hsup : ∀ {φ₁ φ₂} (h₁ : P φ₁) (h₂ : P φ₂), P (φ₁⊔φ₂)) (hnot : ∀ {φ} (h : P φ), P φ.Not)
+    (hsup : ∀ {φ₁ φ₂} (h₁ : P φ₁) (h₂ : P φ₂), P (φ₁ ⊔ φ₂)) (hnot : ∀ {φ} (h : P φ), P φ.Not)
     (hse : ∀ {φ₁ φ₂ : L.BoundedFormula α n} (h : Theory.SemanticallyEquivalent ∅ φ₁ φ₂), P φ₁ ↔ P φ₂) : P φ :=
   IsQf.rec_on h hf ha fun φ₁ φ₂ _ _ h1 h2 => (hse (φ₁.imp_semantically_equivalent_not_sup φ₂)).2 (hsup (hnot h1) h2)
 
 theorem IsQf.induction_on_inf_not {P : L.BoundedFormula α n → Prop} {φ : L.BoundedFormula α n} (h : IsQf φ)
     (hf : P (⊥ : L.BoundedFormula α n)) (ha : ∀ ψ : L.BoundedFormula α n, IsAtomic ψ → P ψ)
-    (hinf : ∀ {φ₁ φ₂} (h₁ : P φ₁) (h₂ : P φ₂), P (φ₁⊓φ₂)) (hnot : ∀ {φ} (h : P φ), P φ.Not)
+    (hinf : ∀ {φ₁ φ₂} (h₁ : P φ₁) (h₂ : P φ₂), P (φ₁ ⊓ φ₂)) (hnot : ∀ {φ} (h : P φ), P φ.Not)
     (hse : ∀ {φ₁ φ₂ : L.BoundedFormula α n} (h : Theory.SemanticallyEquivalent ∅ φ₁ φ₂), P φ₁ ↔ P φ₂) : P φ :=
   h.induction_on_sup_not hf ha
     (fun φ₁ φ₂ h1 h2 => (hse (φ₁.sup_semantically_equivalent_not_inf_not φ₂)).2 (hnot (hinf (hnot h1) (hnot h2))))
@@ -458,7 +460,7 @@ variable {L : Language.{u, v}} (κ : Cardinal.{w}) (T : L.Theory)
 
 /-- A theory is `κ`-categorical if all models of size `κ` are isomorphic. -/
 def Categorical : Prop :=
-  ∀ M N : T.Model, # M = κ → # N = κ → Nonempty (M ≃[L] N)
+  ∀ M N : T.Model, (#M) = κ → (#N) = κ → Nonempty (M ≃[L] N)
 
 /-- The Łoś–Vaught Test : a criterion for categorical theories to be complete. -/
 theorem Categorical.is_complete (h : κ.Categorical T) (h1 : ℵ₀ ≤ κ)

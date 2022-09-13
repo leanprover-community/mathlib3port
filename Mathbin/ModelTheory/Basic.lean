@@ -34,6 +34,10 @@ structures.
   to the `L`-structure `N` that commutes with the interpretations of functions, and which preserves
   the interpretations of relations in both directions.
 
+## TODO
+
+Use `[countable L.symbols]` instead of `[L.countable]`.
+
 ## References
 For the Flypitch project:
 - [J. Han, F. van Doorn, *A formal proof of the independence of the continuum hypothesis*]
@@ -88,13 +92,12 @@ instance {n : ℕ} : IsEmpty (Sequence₂ a₀ a₁ a₂ (n + 3)) :=
   Pempty.is_empty
 
 @[simp]
-theorem lift_mk {i : ℕ} : Cardinal.lift (# (Sequence₂ a₀ a₁ a₂ i)) = # (Sequence₂ (ULift a₀) (ULift a₁) (ULift a₂) i) :=
-  by
+theorem lift_mk {i : ℕ} : Cardinal.lift (#Sequence₂ a₀ a₁ a₂ i) = (#Sequence₂ (ULift a₀) (ULift a₁) (ULift a₂) i) := by
   rcases i with (_ | _ | _ | i) <;>
     simp only [sequence₂, mk_ulift, mk_fintype, Fintype.card_of_is_empty, Nat.cast_zeroₓ, lift_zero]
 
 @[simp]
-theorem sum_card : (Cardinal.sum fun i => # (Sequence₂ a₀ a₁ a₂ i)) = # a₀ + # a₁ + # a₂ := by
+theorem sum_card : (Cardinal.sum fun i => #Sequence₂ a₀ a₁ a₂ i) = (#a₀) + (#a₁) + (#a₂) := by
   rw [sum_nat_eq_add_sum_succ, sum_nat_eq_add_sum_succ, sum_nat_eq_add_sum_succ]
   simp [add_assocₓ]
 
@@ -137,9 +140,10 @@ def Symbols :=
 
 /-- The cardinality of a language is the cardinality of its type of symbols. -/
 def card : Cardinal :=
-  # L.Symbols
+  #L.Symbols
 
 /-- A language is countable when it has countably many symbols. -/
+@[protected]
 class Countable : Prop where
   card_le_aleph_0' : L.card ≤ ℵ₀
 
@@ -156,17 +160,17 @@ class IsAlgebraic : Prop where
 
 /-- A language is countable when it has countably many symbols. -/
 class CountableFunctions : Prop where
-  card_functions_le_aleph_0' : # (Σl, L.Functions l) ≤ ℵ₀
+  card_functions_le_aleph_0' : (#Σl, L.Functions l) ≤ ℵ₀
 
-theorem card_functions_le_aleph_0 [L.CountableFunctions] : # (Σl, L.Functions l) ≤ ℵ₀ :=
+theorem card_functions_le_aleph_0 [L.CountableFunctions] : (#Σl, L.Functions l) ≤ ℵ₀ :=
   countable_functions.card_functions_le_aleph_0'
 
 variable {L} {L' : Language.{u', v'}}
 
 theorem card_eq_card_functions_add_card_relations :
     L.card =
-      (Cardinal.sum fun l => Cardinal.lift.{v} (# (L.Functions l))) +
-        Cardinal.sum fun l => Cardinal.lift.{u} (# (L.Relations l)) :=
+      (Cardinal.sum fun l => Cardinal.lift.{v} (#L.Functions l)) +
+        Cardinal.sum fun l => Cardinal.lift.{u} (#L.Relations l) :=
   by
   simp [card, symbols]
 
@@ -211,8 +215,8 @@ instance subsingleton_mk₂_relations {c f₁ f₂ : Type u} {r₁ r₂ : Type v
   Nat.casesOn n ⟨fun x => Pempty.elimₓ x⟩ fun n =>
     Nat.casesOn n h1 fun n => Nat.casesOn n h2 fun n => ⟨fun x => Pempty.elimₓ x⟩
 
-theorem Encodable.countable [h : Encodable L.Symbols] : L.Countable :=
-  ⟨Cardinal.encodable_iff.1 ⟨h⟩⟩
+theorem Encodable.countable [Countable L.Symbols] : L.Countable :=
+  ⟨Cardinal.mk_le_aleph_0⟩
 
 @[simp]
 theorem empty_card : Language.empty.card = 0 := by
@@ -229,33 +233,33 @@ instance (priority := 100) Countable.countable_functions [L.Countable] : L.Count
     exact le_self_add⟩
 
 theorem Encodable.countable_functions [h : Encodable (Σl, L.Functions l)] : L.CountableFunctions :=
-  ⟨Cardinal.encodable_iff.1 ⟨h⟩⟩
+  ⟨Cardinal.mk_le_aleph_0⟩
 
 instance (priority := 100) IsRelational.countable_functions [L.IsRelational] : L.CountableFunctions :=
   encodable.countable_functions
 
 @[simp]
 theorem card_functions_sum (i : ℕ) :
-    # ((L.Sum L').Functions i) = (# (L.Functions i)).lift + Cardinal.lift.{u} (# (L'.Functions i)) := by
+    (#(L.Sum L').Functions i) = (#L.Functions i).lift + Cardinal.lift.{u} (#L'.Functions i) := by
   simp [language.sum]
 
 @[simp]
 theorem card_relations_sum (i : ℕ) :
-    # ((L.Sum L').Relations i) = (# (L.Relations i)).lift + Cardinal.lift.{v} (# (L'.Relations i)) := by
+    (#(L.Sum L').Relations i) = (#L.Relations i).lift + Cardinal.lift.{v} (#L'.Relations i) := by
   simp [language.sum]
 
 @[simp]
 theorem card_sum : (L.Sum L').card = Cardinal.lift.{max u' v'} L.card + Cardinal.lift.{max u v} L'.card := by
   simp only [card_eq_card_functions_add_card_relations, card_functions_sum, card_relations_sum, sum_add_distrib',
     lift_add, lift_sum, lift_lift]
-  rw [add_assocₓ, ← add_assocₓ (Cardinal.sum fun i => (# (L'.functions i)).lift),
-    add_commₓ (Cardinal.sum fun i => (# (L'.functions i)).lift), add_assocₓ, add_assocₓ]
+  rw [add_assocₓ, ← add_assocₓ (Cardinal.sum fun i => (#L'.functions i).lift),
+    add_commₓ (Cardinal.sum fun i => (#L'.functions i).lift), add_assocₓ, add_assocₓ]
 
 @[simp]
 theorem card_mk₂ (c f₁ f₂ : Type u) (r₁ r₂ : Type v) :
     (Language.mk₂ c f₁ f₂ r₁ r₂).card =
-      Cardinal.lift.{v} (# c) + Cardinal.lift.{v} (# f₁) + Cardinal.lift.{v} (# f₂) + Cardinal.lift.{u} (# r₁) +
-        Cardinal.lift.{u} (# r₂) :=
+      Cardinal.lift.{v} (#c) + Cardinal.lift.{v} (#f₁) + Cardinal.lift.{v} (#f₂) + Cardinal.lift.{u} (#r₁) +
+        Cardinal.lift.{u} (#r₂) :=
   by
   simp [card_eq_card_functions_add_card_relations, add_assocₓ]
 
@@ -778,12 +782,12 @@ variable [Language.empty.Structure M] [Language.empty.Structure N]
 
 @[simp]
 theorem empty.nonempty_embedding_iff :
-    Nonempty (M ↪[language.empty] N) ↔ Cardinal.lift.{w'} (# M) ≤ Cardinal.lift.{w} (# N) :=
+    Nonempty (M ↪[language.empty] N) ↔ Cardinal.lift.{w'} (#M) ≤ Cardinal.lift.{w} (#N) :=
   trans ⟨Nonempty.mapₓ fun f => f.toEmbedding, Nonempty.mapₓ fun f => { toEmbedding := f }⟩ Cardinal.lift_mk_le'.symm
 
 @[simp]
 theorem empty.nonempty_equiv_iff :
-    Nonempty (M ≃[language.empty] N) ↔ Cardinal.lift.{w'} (# M) = Cardinal.lift.{w} (# N) :=
+    Nonempty (M ≃[language.empty] N) ↔ Cardinal.lift.{w'} (#M) = Cardinal.lift.{w} (#N) :=
   trans ⟨Nonempty.mapₓ fun f => f.toEquiv, Nonempty.mapₓ fun f => { toEquiv := f }⟩ Cardinal.lift_mk_eq'.symm
 
 end

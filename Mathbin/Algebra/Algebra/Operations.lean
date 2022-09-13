@@ -92,7 +92,7 @@ theorem mem_one {x : A} : x ∈ (1 : Submodule R A) ↔ ∃ y, algebraMap R A y 
 theorem to_sub_mul_action_one : (1 : Submodule R A).toSubMulAction = 1 :=
   SetLike.ext fun x => mem_one.trans SubMulAction.mem_one'.symm
 
-theorem one_eq_span : (1 : Submodule R A) = R∙1 := by
+theorem one_eq_span : (1 : Submodule R A) = R ∙ 1 := by
   apply Submodule.ext
   intro a
   simp only [mem_one, mem_span_singleton, Algebra.smul_def, mul_oneₓ]
@@ -199,10 +199,10 @@ theorem mul_le_mul_right (h : N ≤ P) : M * N ≤ M * P :=
 
 variable (M N P)
 
-theorem mul_sup : M * (N⊔P) = M * N⊔M * P :=
+theorem mul_sup : M * (N ⊔ P) = M * N ⊔ M * P :=
   map₂_sup_right _ _ _ _
 
-theorem sup_mul : (M⊔N) * P = M * P⊔N * P :=
+theorem sup_mul : (M ⊔ N) * P = M * P ⊔ N * P :=
   map₂_sup_left _ _ _ _
 
 theorem mul_subset_mul : (↑M : Set A) * (↑N : Set A) ⊆ (↑(M * N) : Set A) :=
@@ -213,7 +213,7 @@ protected theorem map_mul {A'} [Semiringₓ A'] [Algebra R A'] (f : A →ₐ[R] 
   calc
     map f.toLinearMap (M * N) = ⨆ i : M, (N.map (LinearMap.mul R A i)).map f.toLinearMap := map_supr _ _
     _ = map f.toLinearMap M * map f.toLinearMap N := by
-      apply congr_argₓ Sup
+      apply congr_arg Sup
       ext S
       constructor <;> rintro ⟨y, hy⟩
       · use f y, mem_map.mpr ⟨y.1, y.2, rfl⟩
@@ -431,7 +431,7 @@ def equivOpposite : Submodule R Aᵐᵒᵖ ≃+* (Submodule R A)ᵐᵒᵖ where
   right_inv := fun p => unop_injective <| SetLike.coe_injective rfl
   map_add' := fun p q => by
     simp [comap_equiv_eq_map_symm, ← op_add]
-  map_mul' := fun p q => congr_argₓ op <| comap_op_mul _ _
+  map_mul' := fun p q => congr_arg op <| comap_op_mul _ _
 
 protected theorem map_pow {A'} [Semiringₓ A'] [Algebra R A'] (f : A →ₐ[R] A') (n : ℕ) :
     map f.toLinearMap (M ^ n) = map f.toLinearMap M ^ n :=
@@ -529,7 +529,7 @@ instance moduleSet : Module (SetSemiring A) (Submodule R A) where
   smul := fun s P => span R s * P
   smul_add := fun _ _ _ => mul_addₓ _ _ _
   add_smul := fun s t P =>
-    show span R (s⊔t) * P = _ by
+    show span R (s ⊔ t) * P = _ by
       erw [span_union, right_distrib]
   mul_smul := fun s t P =>
     show _ = _ * (_ * _) by
@@ -612,7 +612,7 @@ theorem one_le_one_div {I : Submodule R A} : 1 ≤ 1 / I ↔ I ≤ 1 := by
   · rwa [le_div_iff_mul_le, one_mulₓ]
     
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) }
 theorem le_self_mul_one_div {I : Submodule R A} (hI : I ≤ 1) : I ≤ I * (1 / I) := by
   rw [← mul_oneₓ I]
   apply mul_le_mul_right (one_le_one_div.mpr hI)

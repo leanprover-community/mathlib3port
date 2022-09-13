@@ -138,14 +138,14 @@ def pointedToBipointed : Pointed.{u} ⥤ Bipointed where
 /-- The functor from `Pointed` to `Bipointed` which adds a second point. -/
 def pointedToBipointedFst : Pointed.{u} ⥤ Bipointed where
   obj := fun X => ⟨Option X, X.point, none⟩
-  map := fun X Y f => ⟨Option.map f.toFun, congr_argₓ _ f.map_point, rfl⟩
+  map := fun X Y f => ⟨Option.map f.toFun, congr_arg _ f.map_point, rfl⟩
   map_id' := fun X => Bipointed.Hom.ext _ _ Option.map_id
   map_comp' := fun X Y Z f g => Bipointed.Hom.ext _ _ (Option.map_comp_mapₓ _ _).symm
 
 /-- The functor from `Pointed` to `Bipointed` which adds a first point. -/
 def pointedToBipointedSnd : Pointed.{u} ⥤ Bipointed where
   obj := fun X => ⟨Option X, none, X.point⟩
-  map := fun X Y f => ⟨Option.map f.toFun, rfl, congr_argₓ _ f.map_point⟩
+  map := fun X Y f => ⟨Option.map f.toFun, rfl, congr_arg _ f.map_point⟩
   map_id' := fun X => Bipointed.Hom.ext _ _ Option.map_id
   map_comp' := fun X Y Z f g => Bipointed.Hom.ext _ _ (Option.map_comp_mapₓ _ _).symm
 

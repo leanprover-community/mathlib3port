@@ -50,7 +50,7 @@ namespace MeasureTheory
 
 variable {Ω ι : Type _} {m0 : MeasurableSpace Ω} {μ : Measure Ω} {ℱ : Filtration ℕ m0}
 
-variable {a b : ℝ} {f : ℕ → Ω → ℝ} {ω : Ω} {R : ℝ≥0 }
+variable {a b : ℝ} {f : ℕ → Ω → ℝ} {ω : Ω} {R : ℝ≥0}
 
 section AeConvergence
 
@@ -144,14 +144,14 @@ theorem tendsto_of_uncrossing_lt_top (hf₁ : (liminfₓ atTop fun n => (∥f n 
     (hf₂ : ∀ a b : ℚ, a < b → upcrossings a b f ω < ∞) : ∃ c, Tendsto (fun n => f n ω) atTop (𝓝 c) := by
   by_cases' h : is_bounded_under (· ≤ ·) at_top fun n => abs (f n ω)
   · rw [is_bounded_under_le_abs] at h
-    refine' tendsto_of_no_upcrossings Rat.dense_range_cast _ h.1 h.2
+    refine' tendsto_of_no_upcrossings Ratₓ.dense_range_cast _ h.1 h.2
     · intro a ha b hb hab
       obtain ⟨⟨a, rfl⟩, ⟨b, rfl⟩⟩ := ha, hb
-      exact not_frequently_of_upcrossings_lt_top hab (hf₂ a b (Rat.cast_lt.1 hab)).Ne
+      exact not_frequently_of_upcrossings_lt_top hab (hf₂ a b (Ratₓ.cast_lt.1 hab)).Ne
       
     
   · obtain ⟨a, b, hab, h₁, h₂⟩ := Ennreal.exists_upcrossings_of_not_bounded_under hf₁.ne h
-    exact False.elim ((hf₂ a b hab).Ne (upcrossings_eq_top_of_frequently_lt (Rat.cast_lt.2 hab) h₁ h₂))
+    exact False.elim ((hf₂ a b hab).Ne (upcrossings_eq_top_of_frequently_lt (Ratₓ.cast_lt.2 hab) h₁ h₂))
     
 
 /-- An L¹-bounded submartingale has bounded upcrossings almost everywhere. -/
@@ -201,7 +201,7 @@ theorem Submartingale.upcrossings_ae_lt_top [IsFiniteMeasure μ] (hf : Submartin
     (hbdd : ∀ n, snorm (f n) 1 μ ≤ R) : ∀ᵐ ω ∂μ, ∀ a b : ℚ, a < b → upcrossings a b f ω < ∞ := by
   simp only [ae_all_iff, eventually_imp_distrib_left]
   rintro a b hab
-  exact hf.upcrossings_ae_lt_top' hbdd (Rat.cast_lt.2 hab)
+  exact hf.upcrossings_ae_lt_top' hbdd (Ratₓ.cast_lt.2 hab)
 
 /-- An L¹-bounded submartingale converges almost everywhere. -/
 theorem Submartingale.exists_ae_tendsto_of_bdd [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ)

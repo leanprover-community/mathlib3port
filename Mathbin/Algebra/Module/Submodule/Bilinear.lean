@@ -111,7 +111,7 @@ theorem map₂_le_map₂_right {f : M →ₗ[R] N →ₗ[R] P} {p : Submodule R 
   map₂_le_map₂ (le_reflₓ p) h
 
 theorem map₂_sup_right (f : M →ₗ[R] N →ₗ[R] P) (p : Submodule R M) (q₁ q₂ : Submodule R N) :
-    map₂ f p (q₁⊔q₂) = map₂ f p q₁⊔map₂ f p q₂ :=
+    map₂ f p (q₁ ⊔ q₂) = map₂ f p q₁ ⊔ map₂ f p q₂ :=
   le_antisymmₓ
     (map₂_le.2 fun m hm np hnp =>
       let ⟨n, hn, p, hp, hnp⟩ := mem_sup.1 hnp
@@ -119,7 +119,7 @@ theorem map₂_sup_right (f : M →ₗ[R] N →ₗ[R] P) (p : Submodule R M) (q�
     (sup_le (map₂_le_map₂_right le_sup_left) (map₂_le_map₂_right le_sup_right))
 
 theorem map₂_sup_left (f : M →ₗ[R] N →ₗ[R] P) (p₁ p₂ : Submodule R M) (q : Submodule R N) :
-    map₂ f (p₁⊔p₂) q = map₂ f p₁ q⊔map₂ f p₂ q :=
+    map₂ f (p₁ ⊔ p₂) q = map₂ f p₁ q ⊔ map₂ f p₂ q :=
   le_antisymmₓ
     (map₂_le.2 fun mn hmn p hp =>
       let ⟨m, hm, n, hn, hmn⟩ := mem_sup.1 hmn

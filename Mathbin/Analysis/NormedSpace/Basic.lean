@@ -178,7 +178,7 @@ instance {E : Type _} [NormedAddCommGroup E] [NormedSpace ℚ E] (e : E) : Discr
     rw [mem_preimage, mem_ball_zero_iff, AddSubgroup.coe_mk, mem_singleton_iff, Subtype.ext_iff, AddSubgroup.coe_mk,
       AddSubgroup.coe_zero, norm_zsmul ℚ k e, Int.norm_cast_rat, Int.norm_eq_abs, ← Int.cast_abs,
       ZeroLt.mul_lt_iff_lt_one_left (norm_pos_iff.mpr he), ← @Int.cast_oneₓ ℝ _, Int.cast_lt, Int.abs_lt_one_iff,
-      smul_eq_zero, or_iff_left he]
+      smul_eq_zero, or_iff_leftₓ he]
     
 
 -- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `positivity #[]
@@ -335,11 +335,11 @@ theorem exists_norm_eq {c : ℝ} (hc : 0 ≤ c) : ∃ x : E, ∥x∥ = c := by
 theorem range_norm : Range (norm : E → ℝ) = Ici 0 :=
   Subset.antisymm (range_subset_iff.2 norm_nonneg) fun _ => exists_norm_eq E
 
-theorem nnnorm_surjective : Surjective (nnnorm : E → ℝ≥0 ) := fun c =>
+theorem nnnorm_surjective : Surjective (nnnorm : E → ℝ≥0) := fun c =>
   (exists_norm_eq E c.coe_nonneg).imp fun x h => Nnreal.eq h
 
 @[simp]
-theorem range_nnnorm : Range (nnnorm : E → ℝ≥0 ) = univ :=
+theorem range_nnnorm : Range (nnnorm : E → ℝ≥0) = univ :=
   (nnnorm_surjective E).range_eq
 
 end Surj
@@ -489,7 +489,7 @@ Phrased another way, if `𝕜` is a normed algebra over the reals, then `algebra
 norm. -/
 instance normedAlgebraRat {𝕜} [NormedDivisionRing 𝕜] [CharZero 𝕜] [NormedAlgebra ℝ 𝕜] :
     NormedAlgebra ℚ 𝕜 where norm_smul_le := fun q x => by
-    rw [← smul_one_smul ℝ q x, Rat.smul_one_eq_coe, norm_smul, Rat.norm_cast_real]
+    rw [← smul_one_smul ℝ q x, Ratₓ.smul_one_eq_coe, norm_smul, Ratₓ.norm_cast_real]
 
 instance PUnit.normedAlgebra :
     NormedAlgebra 𝕜 PUnit where norm_smul_le := fun q x => by

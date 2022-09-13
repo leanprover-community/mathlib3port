@@ -38,7 +38,7 @@ theorem product_nil : ∀ l : List α, product l (@nil β) = []
 
 @[simp]
 theorem mem_product {l₁ : List α} {l₂ : List β} {a : α} {b : β} : (a, b) ∈ product l₁ l₂ ↔ a ∈ l₁ ∧ b ∈ l₂ := by
-  simp only [product, mem_bind, mem_map, Prod.ext_iffₓ, exists_prop, And.left_comm, exists_and_distrib_left,
+  simp only [product, mem_bind, mem_map, Prod.ext_iffₓ, exists_propₓ, And.left_comm, exists_and_distrib_leftₓ,
     exists_eq_left, exists_eq_right]
 
 theorem length_product (l₁ : List α) (l₂ : List β) : length (product l₁ l₂) = length l₁ * length l₂ := by
@@ -68,7 +68,7 @@ theorem sigma_nil : ∀ l : List α, (l.Sigma fun a => @nil (σ a)) = []
 @[simp]
 theorem mem_sigma {l₁ : List α} {l₂ : ∀ a, List (σ a)} {a : α} {b : σ a} :
     Sigma.mk a b ∈ l₁.Sigma l₂ ↔ a ∈ l₁ ∧ b ∈ l₂ a := by
-  simp only [List.sigma, mem_bind, mem_map, exists_prop, exists_and_distrib_left, And.left_comm, exists_eq_left,
+  simp only [List.sigma, mem_bind, mem_map, exists_propₓ, exists_and_distrib_leftₓ, And.left_comm, exists_eq_left,
     heq_iff_eq, exists_eq_right]
 
 theorem length_sigma (l₁ : List α) (l₂ : ∀ a, List (σ a)) :

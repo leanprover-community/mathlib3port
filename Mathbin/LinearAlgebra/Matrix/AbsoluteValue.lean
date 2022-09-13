@@ -38,7 +38,7 @@ variable {n : Type _} [Fintype n] [DecidableEq n]
 theorem det_le {A : Matrix n n R} {abv : AbsoluteValue R S} {x : S} (hx : ∀ i j, abv (A i j) ≤ x) :
     abv A.det ≤ Nat.factorial (Fintype.card n) • x ^ Fintype.card n :=
   calc
-    abv A.det = abv (∑ σ : Perm n, _) := congr_argₓ abv (det_apply _)
+    abv A.det = abv (∑ σ : Perm n, _) := congr_arg abv (det_apply _)
     _ ≤ ∑ σ : Perm n, abv _ := abv.sum_le _ _
     _ = ∑ σ : Perm n, ∏ i, abv (A (σ i) i) :=
       sum_congr rfl fun σ hσ => by

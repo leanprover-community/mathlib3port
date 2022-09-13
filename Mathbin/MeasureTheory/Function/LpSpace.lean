@@ -1352,7 +1352,7 @@ theorem Memℒp.of_le_mul {f : α → E} {g : α → F} {c : ℝ} (hg : Memℒp 
 
 end Monotonicity
 
-theorem snorm_indicator_ge_of_bdd_below (hp : p ≠ 0) (hp' : p ≠ ∞) {f : α → F} (C : ℝ≥0 ) {s : Set α}
+theorem snorm_indicator_ge_of_bdd_below (hp : p ≠ 0) (hp' : p ≠ ∞) {f : α → F} (C : ℝ≥0) {s : Set α}
     (hs : MeasurableSet s) (hf : ∀ᵐ x ∂μ, x ∈ s → C ≤ ∥s.indicator f x∥₊) :
     C • μ s ^ (1 / p.toReal) ≤ snorm (s.indicator f) p μ := by
   rw [Ennreal.smul_def, smul_eq_mul, snorm_eq_lintegral_rpow_nnnorm hp hp',
@@ -1410,7 +1410,7 @@ end InnerProduct
 
 section Liminf
 
-variable [MeasurableSpace E] [OpensMeasurableSpace E] {R : ℝ≥0 }
+variable [MeasurableSpace E] [OpensMeasurableSpace E] {R : ℝ≥0}
 
 theorem ae_bdd_liminf_at_top_rpow_of_snorm_bdd {p : ℝ≥0∞} {f : ℕ → α → E} (hfmeas : ∀ n, Measurable (f n))
     (hbdd : ∀ n, snorm (f n) p μ ≤ R) : ∀ᵐ x ∂μ, (liminfₓ atTop fun n => (∥f n x∥₊ ^ p.toReal : ℝ≥0∞)) < ∞ := by
@@ -2059,7 +2059,7 @@ part of an `L^p` function.
 
 section Composition
 
-variable {g : E → F} {c : ℝ≥0 }
+variable {g : E → F} {c : ℝ≥0}
 
 theorem LipschitzWith.comp_mem_ℒp {α E F} {K} [MeasurableSpace α] {μ : Measureₓ α} [NormedAddCommGroup E]
     [NormedAddCommGroup F] {f : α → E} {g : E → F} (hg : LipschitzWith K g) (g0 : g 0 = 0) (hL : Memℒp f p μ) :

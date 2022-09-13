@@ -6,6 +6,7 @@ Authors: Zhouhang Zhou, Sébastien Gouëzel, Frédéric Dupuis
 import Mathbin.Algebra.DirectSum.Module
 import Mathbin.Analysis.Complex.Basic
 import Mathbin.Analysis.Convex.Uniform
+import Mathbin.Analysis.NormedSpace.Completion
 import Mathbin.Analysis.NormedSpace.BoundedLinearMaps
 import Mathbin.Analysis.NormedSpace.Banach
 import Mathbin.LinearAlgebra.BilinearForm
@@ -1010,7 +1011,7 @@ section Norm
 
 theorem norm_eq_sqrt_inner (x : E) : ∥x∥ = sqrt (re ⟪x, x⟫) := by
   have h₁ : ∥x∥ ^ 2 = re ⟪x, x⟫ := norm_sq_eq_inner x
-  have h₂ := congr_argₓ sqrt h₁
+  have h₂ := congr_arg sqrt h₁
   simpa using h₂
 
 theorem norm_eq_sqrt_real_inner (x : F) : ∥x∥ = sqrt ⟪x, x⟫_ℝ := by
@@ -1181,7 +1182,7 @@ theorem dist_div_norm_sq_smul {x y : F} (hx : x ≠ 0) (hy : y ≠ 0) (R : ℝ) 
     dist ((R / ∥x∥) ^ 2 • x) ((R / ∥y∥) ^ 2 • y) = sqrt (∥(R / ∥x∥) ^ 2 • x - (R / ∥y∥) ^ 2 • y∥ ^ 2) := by
       rw [dist_eq_norm, sqrt_sq (norm_nonneg _)]
     _ = sqrt ((R ^ 2 / (∥x∥ * ∥y∥)) ^ 2 * ∥x - y∥ ^ 2) :=
-      congr_argₓ sqrt <| by
+      congr_arg sqrt <| by
         field_simp [sq, norm_sub_mul_self_real, norm_smul, real_inner_smul_left, inner_smul_right,
           Real.norm_of_nonneg (mul_self_nonneg _)]
         ring
@@ -1552,7 +1553,7 @@ theorem abs_inner_div_norm_mul_norm_eq_one_iff (x y : E) :
       rw [eq_of_div_eq_one h]
     replace h2 : ⟪r • x, r • x⟫ = ⟪t, t⟫ + ⟪t, r • x⟫ + ⟪r • x, t⟫ + ⟪r • x, r • x⟫
     · rw [sq, sq, ← inner_self_eq_norm_mul_norm, ← inner_self_eq_norm_mul_norm] at h2
-      have h2' := congr_argₓ (fun z : ℝ => (z : 𝕜)) h2
+      have h2' := congr_arg (fun z : ℝ => (z : 𝕜)) h2
       simp_rw [inner_self_re_to_K, inner_add_add_self] at h2'
       exact h2'
       
@@ -1964,8 +1965,7 @@ theorem OrthogonalFamily.inner_right_dfinsupp (l : ⨁ i, G i) (i : ι) (v : G i
     ⟪V i v, l.Sum fun j => V j⟫ = ⟪v, l i⟫ :=
   calc
     ⟪V i v, l.Sum fun j => V j⟫ = l.Sum fun j => fun w => ⟪V i v, V j w⟫ := Dfinsupp.inner_sum (fun j => V j) l (V i v)
-    _ = l.Sum fun j => fun w => ite (i = j) ⟪V i v, V j w⟫ 0 :=
-      congr_argₓ l.Sum <| funext fun j => funext <| hV.eq_ite v
+    _ = l.Sum fun j => fun w => ite (i = j) ⟪V i v, V j w⟫ 0 := congr_arg l.Sum <| funext fun j => funext <| hV.eq_ite v
     _ = ⟪v, l i⟫ := by
       simp only [Dfinsupp.sum, Submodule.coe_inner, Finset.sum_ite_eq, ite_eq_left_iff, Dfinsupp.mem_support_to_fun]
       split_ifs with h h
@@ -1984,7 +1984,7 @@ theorem OrthogonalFamily.inner_right_fintype [Fintype ι] (l : ∀ i, G i) (i : 
       ⟪V i v, ∑ j : ι, V j (l j)⟫ = ∑ j : ι, ⟪V i v, V j (l j)⟫ := by
         rw [inner_sum]
       _ = ∑ j, ite (i = j) ⟪V i v, V j (l j)⟫ 0 :=
-        congr_argₓ (Finset.sum Finset.univ) <| funext fun j => hV.eq_ite v (l j)
+        congr_arg (Finset.sum Finset.univ) <| funext fun j => hV.eq_ite v (l j)
       _ = ⟪v, l i⟫ := by
         simp
       
@@ -2088,11 +2088,11 @@ theorem OrthogonalFamily.summable_iff_norm_sq_summable [CompleteSpace E] (f : �
     use a
     intro s₁ hs₁ s₂ hs₂
     refine' (abs_lt_of_sq_lt_sq' _ (le_of_ltₓ hε)).2
-    have has : a ≤ s₁⊓s₂ := le_inf hs₁ hs₂
+    have has : a ≤ s₁ ⊓ s₂ := le_inf hs₁ hs₂
     rw [hV.norm_sq_diff_sum]
     have Hs₁ : (∑ x : ι in s₁ \ s₂, ∥f x∥ ^ 2) < ε ^ 2 / 2 := by
       convert H _ hs₁ _ has
-      have : s₁⊓s₂ ⊆ s₁ := Finset.inter_subset_left _ _
+      have : s₁ ⊓ s₂ ⊆ s₁ := Finset.inter_subset_left _ _
       rw [← Finset.sum_sdiff this, add_tsub_cancel_right, Finset.abs_sum_of_nonneg']
       · simp
         
@@ -2100,7 +2100,7 @@ theorem OrthogonalFamily.summable_iff_norm_sq_summable [CompleteSpace E] (f : �
         
     have Hs₂ : (∑ x : ι in s₂ \ s₁, ∥f x∥ ^ 2) < ε ^ 2 / 2 := by
       convert H _ hs₂ _ has
-      have : s₁⊓s₂ ⊆ s₂ := Finset.inter_subset_right _ _
+      have : s₁ ⊓ s₂ ⊆ s₂ := Finset.inter_subset_right _ _
       rw [← Finset.sum_sdiff this, add_tsub_cancel_right, Finset.abs_sum_of_nonneg']
       · simp
         
@@ -2279,28 +2279,28 @@ theorem Submodule.inner_left_of_mem_orthogonal {u v : E} (hu : u ∈ K) (hv : v 
   rw [inner_eq_zero_sym] <;> exact Submodule.inner_right_of_mem_orthogonal hu hv
 
 /-- A vector in `(𝕜 ∙ u)ᗮ` is orthogonal to `u`. -/
-theorem inner_right_of_mem_orthogonal_singleton (u : E) {v : E} (hv : v ∈ (𝕜∙u)ᗮ) : ⟪u, v⟫ = 0 :=
+theorem inner_right_of_mem_orthogonal_singleton (u : E) {v : E} (hv : v ∈ (𝕜 ∙ u)ᗮ) : ⟪u, v⟫ = 0 :=
   Submodule.inner_right_of_mem_orthogonal (Submodule.mem_span_singleton_self u) hv
 
 /-- A vector in `(𝕜 ∙ u)ᗮ` is orthogonal to `u`. -/
-theorem inner_left_of_mem_orthogonal_singleton (u : E) {v : E} (hv : v ∈ (𝕜∙u)ᗮ) : ⟪v, u⟫ = 0 :=
+theorem inner_left_of_mem_orthogonal_singleton (u : E) {v : E} (hv : v ∈ (𝕜 ∙ u)ᗮ) : ⟪v, u⟫ = 0 :=
   Submodule.inner_left_of_mem_orthogonal (Submodule.mem_span_singleton_self u) hv
 
 /-- A vector orthogonal to `u` lies in `(𝕜 ∙ u)ᗮ`. -/
-theorem mem_orthogonal_singleton_of_inner_right (u : E) {v : E} (hv : ⟪u, v⟫ = 0) : v ∈ (𝕜∙u)ᗮ := by
+theorem mem_orthogonal_singleton_of_inner_right (u : E) {v : E} (hv : ⟪u, v⟫ = 0) : v ∈ (𝕜 ∙ u)ᗮ := by
   intro w hw
   rw [Submodule.mem_span_singleton] at hw
   obtain ⟨c, rfl⟩ := hw
   simp [inner_smul_left, hv]
 
 /-- A vector orthogonal to `u` lies in `(𝕜 ∙ u)ᗮ`. -/
-theorem mem_orthogonal_singleton_of_inner_left (u : E) {v : E} (hv : ⟪v, u⟫ = 0) : v ∈ (𝕜∙u)ᗮ :=
+theorem mem_orthogonal_singleton_of_inner_left (u : E) {v : E} (hv : ⟪v, u⟫ = 0) : v ∈ (𝕜 ∙ u)ᗮ :=
   mem_orthogonal_singleton_of_inner_right u <| inner_eq_zero_sym.2 hv
 
 variable (K)
 
 /-- `K` and `Kᗮ` have trivial intersection. -/
-theorem Submodule.inf_orthogonal_eq_bot : K⊓Kᗮ = ⊥ := by
+theorem Submodule.inf_orthogonal_eq_bot : K ⊓ Kᗮ = ⊥ := by
   rw [Submodule.eq_bot_iff]
   intro x
   rw [Submodule.mem_inf]
@@ -2360,7 +2360,7 @@ theorem Submodule.le_orthogonal_orthogonal : K ≤ Kᗮᗮ :=
 
 /-- The inf of two orthogonal subspaces equals the subspace orthogonal
 to the sup. -/
-theorem Submodule.inf_orthogonal (K₁ K₂ : Submodule 𝕜 E) : K₁ᗮ⊓K₂ᗮ = (K₁⊔K₂)ᗮ :=
+theorem Submodule.inf_orthogonal (K₁ K₂ : Submodule 𝕜 E) : K₁ᗮ ⊓ K₂ᗮ = (K₁ ⊔ K₂)ᗮ :=
   (Submodule.orthogonal_gc 𝕜 E).l_sup.symm
 
 /-- The inf of an indexed family of orthogonal subspaces equals the
@@ -2393,7 +2393,7 @@ theorem Submodule.orthogonal_eq_top_iff : Kᗮ = ⊤ ↔ K = ⊥ := by
       rintro rfl
       exact Submodule.bot_orthogonal_eq_top⟩
   intro h
-  have : K⊓Kᗮ = ⊥ := K.orthogonal_disjoint.eq_bot
+  have : K ⊓ Kᗮ = ⊥ := K.orthogonal_disjoint.eq_bot
   rwa [h, inf_comm, top_inf_eq] at this
 
 theorem Submodule.orthogonal_family_self :
@@ -2404,4 +2404,64 @@ theorem Submodule.orthogonal_family_self :
   | ff, ff => absurd rfl
 
 end Orthogonal
+
+namespace UniformSpace.Completion
+
+open UniformSpace Function
+
+instance {𝕜' E' : Type _} [TopologicalSpace 𝕜'] [UniformSpace E'] [HasInner 𝕜' E'] :
+    HasInner 𝕜'
+      (Completion E') where inner := curry <| (dense_inducing_coe.Prod dense_inducing_coe).extend (uncurry inner)
+
+@[simp]
+theorem inner_coe (a b : E) : inner (a : Completion E) (b : Completion E) = (inner a b : 𝕜) :=
+  (dense_inducing_coe.Prod dense_inducing_coe).extend_eq (continuous_inner : Continuous (uncurry inner : E × E → 𝕜))
+    (a, b)
+
+protected theorem continuous_inner : Continuous (uncurry inner : Completion E × Completion E → 𝕜) := by
+  let inner' : E →+ E →+ 𝕜 :=
+    { toFun := fun x => (innerₛₗ x).toAddMonoidHom,
+      map_zero' := by
+        ext x <;> exact inner_zero_left,
+      map_add' := fun x y => by
+        ext z <;> exact inner_add_left }
+  have : Continuous fun p : E × E => inner' p.1 p.2 := continuous_inner
+  rw [completion.has_inner, uncurry_curry _]
+  change
+    Continuous (((dense_inducing_to_compl E).Prod (dense_inducing_to_compl E)).extend fun p : E × E => inner' p.1 p.2)
+  exact (dense_inducing_to_compl E).extend_Z_bilin (dense_inducing_to_compl E) this
+
+protected theorem Continuous.inner {α : Type _} [TopologicalSpace α] {f g : α → Completion E} (hf : Continuous f)
+    (hg : Continuous g) : Continuous (fun x : α => inner (f x) (g x) : α → 𝕜) :=
+  UniformSpace.Completion.continuous_inner.comp (hf.prod_mk hg : _)
+
+instance : InnerProductSpace 𝕜 (Completion E) where
+  norm_sq_eq_inner := fun x =>
+    Completion.induction_on x
+      (is_closed_eq (continuous_norm.pow 2) (continuous_re.comp (Continuous.inner continuous_id' continuous_id')))
+      fun a => by
+      simp only [norm_coe, inner_coe, inner_self_eq_norm_sq]
+  conj_sym := fun x y =>
+    Completion.induction_on₂ x y
+      (is_closed_eq (continuous_conj.comp (Continuous.inner continuous_snd continuous_fst))
+        (Continuous.inner continuous_fst continuous_snd))
+      fun a b => by
+      simp only [inner_coe, inner_conj_sym]
+  add_left := fun x y z =>
+    Completion.induction_on₃ x y z
+      (is_closed_eq
+        (Continuous.inner (continuous_fst.add (continuous_fst.comp continuous_snd))
+          (continuous_snd.comp continuous_snd))
+        ((Continuous.inner continuous_fst (continuous_snd.comp continuous_snd)).add
+          (Continuous.inner (continuous_fst.comp continuous_snd) (continuous_snd.comp continuous_snd))))
+      fun a b c => by
+      simp only [← coe_add, inner_coe, inner_add_left]
+  smul_left := fun x y c =>
+    Completion.induction_on₂ x y
+      (is_closed_eq (Continuous.inner (continuous_fst.const_smul c) continuous_snd)
+        ((continuous_mul_left _).comp (Continuous.inner continuous_fst continuous_snd)))
+      fun a b => by
+      simp only [← coe_smul c a, inner_coe, inner_smul_left]
+
+end UniformSpace.Completion
 

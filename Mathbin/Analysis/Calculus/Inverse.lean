@@ -112,11 +112,11 @@ if `∥f x - f y - f' (x - y)∥ ≤ c * ∥x - y∥` whenever `x, y ∈ s`.
 This predicate is defined to facilitate the splitting of the inverse function theorem into small
 lemmas. Some of these lemmas can be useful, e.g., to prove that the inverse function is defined
 on a specific set. -/
-def ApproximatesLinearOn (f : E → F) (f' : E →L[𝕜] F) (s : Set E) (c : ℝ≥0 ) : Prop :=
+def ApproximatesLinearOn (f : E → F) (f' : E →L[𝕜] F) (s : Set E) (c : ℝ≥0) : Prop :=
   ∀ x ∈ s, ∀ y ∈ s, ∥f x - f y - f' (x - y)∥ ≤ c * ∥x - y∥
 
 @[simp]
-theorem approximates_linear_on_empty (f : E → F) (f' : E →L[𝕜] F) (c : ℝ≥0 ) : ApproximatesLinearOn f f' ∅ c := by
+theorem approximates_linear_on_empty (f : E → F) (f' : E →L[𝕜] F) (c : ℝ≥0) : ApproximatesLinearOn f f' ∅ c := by
   simp [ApproximatesLinearOn]
 
 namespace ApproximatesLinearOn
@@ -129,7 +129,7 @@ invertible) continuous linear map. -/
 
 section
 
-variable {f' : E →L[𝕜] F} {s t : Set E} {c c' : ℝ≥0 }
+variable {f' : E →L[𝕜] F} {s t : Set E} {c c' : ℝ≥0}
 
 theorem mono_num (hc : c ≤ c') (hf : ApproximatesLinearOn f f' s c) : ApproximatesLinearOn f f' s c' := fun x hx y hy =>
   le_transₓ (hf x hx y hy) (mul_le_mul_of_nonneg_right hc <| norm_nonneg _)
@@ -137,7 +137,7 @@ theorem mono_num (hc : c ≤ c') (hf : ApproximatesLinearOn f f' s c) : Approxim
 theorem mono_set (hst : s ⊆ t) (hf : ApproximatesLinearOn f f' t c) : ApproximatesLinearOn f f' s c := fun x hx y hy =>
   hf x (hst hx) y (hst hy)
 
-theorem approximates_linear_on_iff_lipschitz_on_with {f : E → F} {f' : E →L[𝕜] F} {s : Set E} {c : ℝ≥0 } :
+theorem approximates_linear_on_iff_lipschitz_on_with {f : E → F} {f' : E →L[𝕜] F} {s : Set E} {c : ℝ≥0} :
     ApproximatesLinearOn f f' s c ↔ LipschitzOnWith c (f - f') s := by
   have : ∀ x y, f x - f y - f' (x - y) = (f - f') x - (f - f') y := by
     intro x y
@@ -176,7 +176,7 @@ by Banach's open mapping theorem. -/
 
 include cs
 
-variable {s : Set E} {c : ℝ≥0 } {f' : E →L[𝕜] F}
+variable {s : Set E} {c : ℝ≥0} {f' : E →L[𝕜] F}
 
 /-- If a function is linearly approximated by a continuous linear map with a (possibly nonlinear)
 right inverse, then it is locally onto: a ball of an explicit radius is included in the image
@@ -381,7 +381,7 @@ We also assume that either `E = {0}`, or `c < ∥f'⁻¹∥⁻¹`. We use `N` as
 -/
 
 
-variable {f' : E ≃L[𝕜] F} {s : Set E} {c : ℝ≥0 }
+variable {f' : E ≃L[𝕜] F} {s : Set E} {c : ℝ≥0}
 
 -- mathport name: exprN
 local notation "N" => ∥(f'.symm : F →L[𝕜] E)∥₊
@@ -455,11 +455,11 @@ theorem to_inv (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Sub
       simp only [ContinuousLinearEquiv.apply_symm_apply, ContinuousLinearEquiv.map_sub]
       abel
     _ ≤ N * (c * ∥y' - x'∥) := mul_le_mul_of_nonneg_left (hf _ y's _ x's) (Nnreal.coe_nonneg _)
-    _ ≤ N * (c * (((N⁻¹ - c)⁻¹ : ℝ≥0 ) * ∥A y' - A x'∥)) := by
+    _ ≤ N * (c * (((N⁻¹ - c)⁻¹ : ℝ≥0) * ∥A y' - A x'∥)) := by
       apply_rules [mul_le_mul_of_nonneg_left, Nnreal.coe_nonneg]
       rw [← dist_eq_norm, ← dist_eq_norm]
       exact (hf.antilipschitz hc).le_mul_dist ⟨y', y's⟩ ⟨x', x's⟩
-    _ = (N * (N⁻¹ - c)⁻¹ * c : ℝ≥0 ) * ∥A x' - A y'∥ := by
+    _ = (N * (N⁻¹ - c)⁻¹ * c : ℝ≥0) * ∥A x' - A y'∥ := by
       simp only [norm_sub_rev, Nonneg.coe_mul]
       ring
     
@@ -495,7 +495,7 @@ omit cs
 /-- In a real vector space, a function `f` that approximates a linear equivalence on a subset `s`
 can be extended to a homeomorphism of the whole space. -/
 theorem exists_homeomorph_extension {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {F : Type _}
-    [NormedAddCommGroup F] [NormedSpace ℝ F] [FiniteDimensional ℝ F] {s : Set E} {f : E → F} {f' : E ≃L[ℝ] F} {c : ℝ≥0 }
+    [NormedAddCommGroup F] [NormedSpace ℝ F] [FiniteDimensional ℝ F] {s : Set E} {f : E → F} {f' : E ≃L[ℝ] F} {c : ℝ≥0}
     (hf : ApproximatesLinearOn f (f' : E →L[ℝ] F) s c)
     (hc : Subsingleton E ∨ lipschitzExtensionConstant F * c < ∥(f'.symm : F →L[ℝ] E)∥₊⁻¹) : ∃ g : E ≃ₜ F, EqOn f g s :=
   by
@@ -554,7 +554,7 @@ namespace HasStrictFderivAt
 
 /-- If `f` has derivative `f'` at `a` in the strict sense and `c > 0`, then `f` approximates `f'`
 with constant `c` on some neighborhood of `a`. -/
-theorem approximates_deriv_on_nhds {f : E → F} {f' : E →L[𝕜] F} {a : E} (hf : HasStrictFderivAt f f' a) {c : ℝ≥0 }
+theorem approximates_deriv_on_nhds {f : E → F} {f' : E →L[𝕜] F} {a : E} (hf : HasStrictFderivAt f f' a) {c : ℝ≥0}
     (hc : Subsingleton E ∨ 0 < c) : ∃ s ∈ 𝓝 a, ApproximatesLinearOn f f' s c := by
   cases' hc with hE hc
   · refine' ⟨univ, IsOpen.mem_nhds is_open_univ trivialₓ, fun x hx y hy => _⟩

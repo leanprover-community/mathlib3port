@@ -22,10 +22,10 @@ section Pointwise
 
 variable {R : Type _} {A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
-theorem mul_to_submodule_le (S T : Subalgebra R A) : S.toSubmodule * T.toSubmodule ≤ (S⊔T).toSubmodule := by
+theorem mul_to_submodule_le (S T : Subalgebra R A) : S.toSubmodule * T.toSubmodule ≤ (S ⊔ T).toSubmodule := by
   rw [Submodule.mul_le]
   intro y hy z hz
-  show y * z ∈ S⊔T
+  show y * z ∈ S ⊔ T
   exact mul_mem (Algebra.mem_sup_left hy) (Algebra.mem_sup_right hz)
 
 /-- As submodules, subalgebras are idempotent. -/
@@ -42,7 +42,7 @@ theorem mul_self (S : Subalgebra R A) : S.toSubmodule * S.toSubmodule = S.toSubm
 
 /-- When `A` is commutative, `subalgebra.mul_to_submodule_le` is strict. -/
 theorem mul_to_submodule {R : Type _} {A : Type _} [CommSemiringₓ R] [CommSemiringₓ A] [Algebra R A]
-    (S T : Subalgebra R A) : S.toSubmodule * T.toSubmodule = (S⊔T).toSubmodule := by
+    (S T : Subalgebra R A) : S.toSubmodule * T.toSubmodule = (S ⊔ T).toSubmodule := by
   refine' le_antisymmₓ (mul_to_submodule_le _ _) _
   rintro x (hx : x ∈ Algebra.adjoin R (S ∪ T : Set A))
   refine' Algebra.adjoin_induction hx (fun x hx => _) (fun r => _) (fun _ _ => Submodule.add_mem _) fun x y hx hy => _
@@ -68,8 +68,8 @@ variable {R' : Type _} [Semiringₓ R'] [MulSemiringAction R' A] [SmulCommClass 
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseMulAction : MulAction R' (Subalgebra R A) where
   smul := fun a S => S.map (MulSemiringAction.toAlgHom _ _ a)
-  one_smul := fun S => (congr_argₓ (fun f => S.map f) (AlgHom.ext <| one_smul R')).trans S.map_id
-  mul_smul := fun a₁ a₂ S => (congr_argₓ (fun f => S.map f) (AlgHom.ext <| mul_smul _ _)).trans (S.map_map _ _).symm
+  one_smul := fun S => (congr_arg (fun f => S.map f) (AlgHom.ext <| one_smul R')).trans S.map_id
+  mul_smul := fun a₁ a₂ S => (congr_arg (fun f => S.map f) (AlgHom.ext <| mul_smul _ _)).trans (S.map_map _ _).symm
 
 localized [Pointwise] attribute [instance] Subalgebra.pointwiseMulAction
 

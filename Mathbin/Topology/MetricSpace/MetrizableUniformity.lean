@@ -59,9 +59,9 @@ namespace PseudoMetricSpace
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The maximal pseudo metric space structure on `X` such that `dist x y ≤ d x y` for all `x y`,
 where `d : X → X → ℝ≥0` is a function such that `d x x = 0` and `d x y = d y x` for all `x`, `y`. -/
-noncomputable def ofPrenndist (d : X → X → ℝ≥0 ) (dist_self : ∀ x, d x x = 0) (dist_comm : ∀ x y, d x y = d y x) :
+noncomputable def ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0) (dist_comm : ∀ x y, d x y = d y x) :
     PseudoMetricSpace X where
-  dist := fun x y => ↑(⨅ l : List X, ((x::l).zipWith d (l ++ [y])).Sum : ℝ≥0 )
+  dist := fun x y => ↑(⨅ l : List X, ((x::l).zipWith d (l ++ [y])).Sum : ℝ≥0)
   dist_self := fun x =>
     (Nnreal.coe_eq_zero _).2 <|
       nonpos_iff_eq_zero.1 <|
@@ -85,12 +85,12 @@ noncomputable def ofPrenndist (d : X → X → ℝ≥0 ) (dist_self : ∀ x, d x
     rw [length_cons, length_append, length_singleton]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
-theorem dist_of_prenndist (d : X → X → ℝ≥0 ) (dist_self : ∀ x, d x x = 0) (dist_comm : ∀ x y, d x y = d y x) (x y : X) :
+theorem dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0) (dist_comm : ∀ x y, d x y = d y x) (x y : X) :
     @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPrenndist d dist_self dist_comm)) x y =
-      ↑(⨅ l : List X, ((x::l).zipWith d (l ++ [y])).Sum : ℝ≥0 ) :=
+      ↑(⨅ l : List X, ((x::l).zipWith d (l ++ [y])).Sum : ℝ≥0) :=
   rfl
 
-theorem dist_of_prenndist_le (d : X → X → ℝ≥0 ) (dist_self : ∀ x, d x x = 0) (dist_comm : ∀ x y, d x y = d y x)
+theorem dist_of_prenndist_le (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0) (dist_comm : ∀ x y, d x y = d y x)
     (x y : X) :
     @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPrenndist d dist_self dist_comm)) x y ≤ d x y :=
   Nnreal.coe_le_coe.2 <|
@@ -107,7 +107,7 @@ theorem dist_of_prenndist_le (d : X → X → ℝ≥0 ) (dist_self : ∀ x, d x 
 `pseudo_metric_space.of_prenndist`. Suppose that `d` satisfies the following triangle-like
 inequality: `d x₁ x₄ ≤ 2 * max (d x₁ x₂, d x₂ x₃, d x₃ x₄)`. Then `d x y ≤ 2 * dist x y` for all
 `x`, `y`. -/
-theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0 ) (dist_self : ∀ x, d x x = 0) (dist_comm : ∀ x y, d x y = d y x)
+theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0) (dist_comm : ∀ x y, d x y = d y x)
     (hd : ∀ x₁ x₂ x₃ x₄, d x₁ x₄ ≤ 2 * max (d x₁ x₂) (max (d x₂ x₃) (d x₃ x₄))) (x y : X) :
     ↑(d x y) ≤ 2 * @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPrenndist d dist_self dist_comm)) x y :=
   by
@@ -230,7 +230,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
     intro x y
     dsimp' only [d]
     simp only [@SymmetricRel.mk_mem_comm _ _ (hU_symm _) x y]
-  have hr : (1 / 2 : ℝ≥0 ) ∈ Ioo (0 : ℝ≥0 ) 1 := ⟨Nnreal.half_pos one_pos, Nnreal.half_lt_self one_ne_zero⟩
+  have hr : (1 / 2 : ℝ≥0) ∈ Ioo (0 : ℝ≥0) 1 := ⟨Nnreal.half_pos one_pos, Nnreal.half_lt_self one_ne_zero⟩
   letI I := PseudoMetricSpace.ofPrenndist d (fun x => hd₀.2 (Setoidₓ.refl _)) hd_symm
   have hdist_le : ∀ x y, dist x y ≤ d x y := PseudoMetricSpace.dist_of_prenndist_le _ _ _
   have hle_d : ∀ {x y : X} {n : ℕ}, (1 / 2) ^ n ≤ d x y ↔ (x, y) ∉ U n := by
@@ -271,7 +271,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
 protected noncomputable def UniformSpace.pseudoMetricSpace (X : Type _) [UniformSpace X] [IsCountablyGenerated (𝓤 X)] :
     PseudoMetricSpace X :=
   (UniformSpace.metrizable_uniformity X).some.replaceUniformity <|
-    congr_argₓ _ (UniformSpace.metrizable_uniformity X).some_spec.symm
+    congr_arg _ (UniformSpace.metrizable_uniformity X).some_spec.symm
 
 /-- A `metric_space` instance compatible with a given `uniform_space` structure. -/
 protected noncomputable def UniformSpace.metricSpace (X : Type _) [UniformSpace X] [IsCountablyGenerated (𝓤 X)]

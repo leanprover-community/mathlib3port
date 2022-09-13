@@ -34,7 +34,7 @@ def IsComplete (s : Set α) :=
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x y «expr ∈ » t)
 theorem Filter.HasBasis.cauchy_iff {ι} {p : ι → Prop} {s : ι → Set (α × α)} (h : (𝓤 α).HasBasis p s) {f : Filter α} :
     Cauchy f ↔ NeBot f ∧ ∀ i, p i → ∃ t ∈ f, ∀ (x y) (_ : x ∈ t) (_ : y ∈ t), (x, y) ∈ s i :=
-  and_congr Iff.rfl <|
+  and_congrₓ Iff.rfl <|
     (f.basis_sets.prod_self.le_basis_iff h).trans <| by
       simp only [subset_def, Prod.forallₓ, mem_prod_eq, and_imp, id, ball_mem_comm]
 
@@ -243,7 +243,7 @@ theorem Filter.HasBasis.cauchy_seq_iff {γ} [Nonempty β] [SemilatticeSup β] {u
     CauchySeq u ↔ ∀ i, p i → ∃ N, ∀ (m n) (_ : m ≥ N) (_ : n ≥ N), (u m, u n) ∈ s i := by
   rw [cauchy_seq_iff_tendsto, ← prod_at_top_at_top_eq]
   refine' (at_top_basis.prod_self.tendsto_iff h).trans _
-  simp only [exists_prop, true_andₓ, maps_to, preimage, subset_def, Prod.forallₓ, mem_prod_eq, mem_set_of_eq, mem_Ici,
+  simp only [exists_propₓ, true_andₓ, maps_to, preimage, subset_def, Prod.forallₓ, mem_prod_eq, mem_set_of_eq, mem_Ici,
     and_imp, Prod.map, ge_iff_leₓ, @forall_swap (_ ≤ _) β]
 
 theorem Filter.HasBasis.cauchy_seq_iff' {γ} [Nonempty β] [SemilatticeSup β] {u : β → α} {p : γ → Prop}
@@ -667,7 +667,7 @@ theorem second_countable_of_separable [SeparableSpace α] : SecondCountableTopol
     exact is_open_ball x (hto k)
     
   · intro x V hxV hVo
-    simp only [mem_Union₂, mem_range, exists_prop]
+    simp only [mem_Union₂, mem_range, exists_propₓ]
     rcases UniformSpace.mem_nhds_iff.1 (IsOpen.mem_nhds hVo hxV) with ⟨U, hU, hUV⟩
     rcases comp_symm_of_uniformity hU with ⟨U', hU', hsymm, hUU'⟩
     rcases h_basis.to_has_basis.mem_iff.1 hU' with ⟨k, -, hk⟩

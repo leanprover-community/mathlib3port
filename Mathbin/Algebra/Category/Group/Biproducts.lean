@@ -112,7 +112,7 @@ def productLimitCone : Limits.LimitCone (Discrete.functor f) where
         ext x j
         dsimp' only [has_limit.lift]
         simp only [AddMonoidHom.coe_mk]
-        exact congr_argₓ (fun g : s.X ⟶ f j => (g : s.X → f j) x) (w ⟨j⟩) }
+        exact congr_arg (fun g : s.X ⟶ f j => (g : s.X → f j) x) (w ⟨j⟩) }
 
 end HasLimit
 

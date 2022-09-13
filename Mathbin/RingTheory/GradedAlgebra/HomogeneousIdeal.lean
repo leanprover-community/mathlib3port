@@ -240,10 +240,10 @@ theorem top : Ideal.IsHomogeneous 𝒜 ⊤ := fun i r hr => by
 
 variable {𝒜}
 
-theorem inf {I J : Ideal A} (HI : I.IsHomogeneous 𝒜) (HJ : J.IsHomogeneous 𝒜) : (I⊓J).IsHomogeneous 𝒜 := fun i r hr =>
+theorem inf {I J : Ideal A} (HI : I.IsHomogeneous 𝒜) (HJ : J.IsHomogeneous 𝒜) : (I ⊓ J).IsHomogeneous 𝒜 := fun i r hr =>
   ⟨HI _ hr.1, HJ _ hr.2⟩
 
-theorem sup {I J : Ideal A} (HI : I.IsHomogeneous 𝒜) (HJ : J.IsHomogeneous 𝒜) : (I⊔J).IsHomogeneous 𝒜 := by
+theorem sup {I J : Ideal A} (HI : I.IsHomogeneous 𝒜) (HJ : J.IsHomogeneous 𝒜) : (I ⊔ J).IsHomogeneous 𝒜 := by
   rw [iff_exists] at HI HJ⊢
   obtain ⟨⟨s₁, rfl⟩, ⟨s₂, rfl⟩⟩ := HI, HJ
   refine' ⟨s₁ ∪ s₂, _⟩
@@ -319,11 +319,11 @@ theorem coe_bot : ((⊥ : HomogeneousIdeal 𝒜) : Set A) = 0 :=
   rfl
 
 @[simp]
-theorem coe_sup (I J : HomogeneousIdeal 𝒜) : ↑(I⊔J) = (I + J : Set A) :=
+theorem coe_sup (I J : HomogeneousIdeal 𝒜) : ↑(I ⊔ J) = (I + J : Set A) :=
   Submodule.coe_sup _ _
 
 @[simp]
-theorem coe_inf (I J : HomogeneousIdeal 𝒜) : (↑(I⊓J) : Set A) = I ∩ J :=
+theorem coe_inf (I J : HomogeneousIdeal 𝒜) : (↑(I ⊓ J) : Set A) = I ∩ J :=
   rfl
 
 @[simp]
@@ -335,11 +335,11 @@ theorem to_ideal_bot : (⊥ : HomogeneousIdeal 𝒜).toIdeal = (⊥ : Ideal A) :
   rfl
 
 @[simp]
-theorem to_ideal_sup (I J : HomogeneousIdeal 𝒜) : (I⊔J).toIdeal = I.toIdeal⊔J.toIdeal :=
+theorem to_ideal_sup (I J : HomogeneousIdeal 𝒜) : (I ⊔ J).toIdeal = I.toIdeal ⊔ J.toIdeal :=
   rfl
 
 @[simp]
-theorem to_ideal_inf (I J : HomogeneousIdeal 𝒜) : (I⊓J).toIdeal = I.toIdeal⊓J.toIdeal :=
+theorem to_ideal_inf (I J : HomogeneousIdeal 𝒜) : (I ⊓ J).toIdeal = I.toIdeal ⊓ J.toIdeal :=
   rfl
 
 @[simp]
@@ -384,7 +384,7 @@ instance : CompleteLattice (HomogeneousIdeal 𝒜) :=
   to_ideal_injective.CompleteLattice _ to_ideal_sup to_ideal_inf to_ideal_Sup to_ideal_Inf to_ideal_top to_ideal_bot
 
 instance : Add (HomogeneousIdeal 𝒜) :=
-  ⟨(·⊔·)⟩
+  ⟨(· ⊔ ·)⟩
 
 @[simp]
 theorem to_ideal_add (I J : HomogeneousIdeal 𝒜) : (I + J).toIdeal = I.toIdeal + J.toIdeal :=
@@ -413,7 +413,7 @@ theorem Ideal.IsHomogeneous.mul {I J : Ideal A} (HI : I.IsHomogeneous 𝒜) (HJ 
   rw [Ideal.IsHomogeneous.iff_exists] at HI HJ⊢
   obtain ⟨⟨s₁, rfl⟩, ⟨s₂, rfl⟩⟩ := HI, HJ
   rw [Ideal.span_mul_span']
-  exact ⟨s₁ * s₂, congr_argₓ _ <| (Set.image_mul (homogeneous_submonoid 𝒜).Subtype).symm⟩
+  exact ⟨s₁ * s₂, congr_arg _ <| (Set.image_mul (homogeneous_submonoid 𝒜).Subtype).symm⟩
 
 variable {𝒜}
 
@@ -530,9 +530,9 @@ variable (I 𝒜)
 theorem Ideal.to_ideal_homogeneous_hull_eq_supr :
     (I.homogeneousHull 𝒜).toIdeal = ⨆ i, Ideal.span (GradedRing.proj 𝒜 i '' I) := by
   rw [← Ideal.span_Union]
-  apply congr_argₓ Ideal.span _
+  apply congr_arg Ideal.span _
   ext1
-  simp only [Set.mem_Union, Set.mem_image, mem_set_of_eq, GradedRing.proj_apply, SetLike.exists, exists_prop,
+  simp only [Set.mem_Union, Set.mem_image, mem_set_of_eq, GradedRing.proj_apply, SetLike.exists, exists_propₓ,
     Subtype.coe_mk, SetLike.mem_coe]
 
 theorem Ideal.homogeneous_hull_eq_supr :

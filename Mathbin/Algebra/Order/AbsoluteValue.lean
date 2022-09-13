@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Anne Baanen
 -/
 import Mathbin.Algebra.Order.Field
+import Mathbin.Algebra.Order.Hom.Basic
 
 /-!
 # Absolute values
@@ -39,16 +40,27 @@ section Semiringₓ
 
 variable {R S : Type _} [Semiringₓ R] [OrderedSemiring S] (abv : AbsoluteValue R S)
 
-instance mulHomClass : MulHomClass (AbsoluteValue R S) R S where
+instance zeroHomClass : ZeroHomClass (AbsoluteValue R S) R S where
   coe := fun f => f.toFun
   coe_injective' := fun f g h => by
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
-  map_mul := fun f => f.map_mul'
+  map_zero := fun f => (f.eq_zero' _).2 rfl
 
+instance mulHomClass : MulHomClass (AbsoluteValue R S) R S :=
+  { AbsoluteValue.zeroHomClass with map_mul := fun f => f.map_mul' }
+
+instance nonnegHomClass : NonnegHomClass (AbsoluteValue R S) R S :=
+  { AbsoluteValue.zeroHomClass with map_nonneg := fun f => f.nonneg' }
+
+instance subadditiveHomClass : SubadditiveHomClass (AbsoluteValue R S) R S :=
+  { AbsoluteValue.zeroHomClass with map_add_le_add := fun f => f.add_le' }
+
+/-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
+directly. -/
 instance : CoeFun (AbsoluteValue R S) fun f => R → S :=
-  ⟨fun f => f.toFun⟩
+  FunLike.hasCoeToFun
 
 @[simp]
 theorem coe_to_mul_hom : ⇑abv.toMulHom = abv :=

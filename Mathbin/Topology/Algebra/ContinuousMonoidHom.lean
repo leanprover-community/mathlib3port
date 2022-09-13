@@ -240,7 +240,7 @@ theorem is_closed_embedding [HasContinuousMul B] [T2Space B] :
       · rintro ⟨f, rfl⟩
         exact
           ⟨fun h => h (map_one f), fun x y U V W hU hV hW h ⟨⟨hfU, hfV⟩, hfW⟩ =>
-            h ⟨Set.mul_mem_mul hfU hfV, (congr_argₓ (· ∈ W) (map_mul f x y)).mp hfW⟩⟩
+            h ⟨Set.mul_mem_mul hfU hfV, (congr_arg (· ∈ W) (map_mul f x y)).mp hfW⟩⟩
         
       · rintro ⟨hf1, hf2⟩
         suffices ∀ x y, f (x * y) = f x * f y by

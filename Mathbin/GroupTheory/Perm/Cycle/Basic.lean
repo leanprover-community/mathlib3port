@@ -158,7 +158,7 @@ noncomputable def IsCycle.zpowersEquivSupport {σ : Perm α} (hσ : IsCycle σ) 
           
         · obtain ⟨i, rfl⟩ := (Classical.choose_spec hσ).2 y hy
           rw [Subtype.coe_mk, Subtype.coe_mk, zpow_apply_comm σ m i, zpow_apply_comm σ n i]
-          exact congr_argₓ _ (subtype.ext_iff.mp h)
+          exact congr_arg _ (subtype.ext_iff.mp h)
           
         
       · rintro ⟨y, hy⟩
@@ -384,11 +384,11 @@ theorem SameCycle.nat' [Finite β] {f : Perm β} {x y : β} (h : SameCycle f x y
   obtain ⟨k, rfl⟩ := h
   use (k % orderOf f).natAbs
   have h₀ := int.coe_nat_pos.mpr (order_of_pos f)
-  have h₁ := Int.mod_nonneg k h₀.ne'
+  have h₁ := Int.mod_nonnegₓ k h₀.ne'
   rw [← zpow_coe_nat, Int.nat_abs_of_nonneg h₁, ← zpow_eq_mod_order_of]
   refine' ⟨_, rfl⟩
   rw [← Int.coe_nat_ltₓ, Int.nat_abs_of_nonneg h₁]
-  exact Int.mod_lt_of_pos _ h₀
+  exact Int.mod_lt_of_posₓ _ h₀
 
 theorem SameCycle.nat'' [Finite β] {f : Perm β} {x y : β} (h : SameCycle f x y) :
     ∃ (i : ℕ)(hpos : 0 < i)(h : i ≤ orderOf f), (f ^ i) x = y := by
@@ -406,14 +406,14 @@ instance [Fintype α] (f : Perm α) : DecidableRel (SameCycle f) := fun x y =>
       ⟨(i % orderOf f).natAbs,
         List.mem_range.2
           (Int.coe_nat_ltₓ.1 <| by
-            rw [Int.nat_abs_of_nonneg (Int.mod_nonneg _ (Int.coe_nat_ne_zero_iff_pos.2 (order_of_pos _)))]
+            rw [Int.nat_abs_of_nonneg (Int.mod_nonnegₓ _ (Int.coe_nat_ne_zero_iff_pos.2 (order_of_pos _)))]
             · refine' (Int.mod_lt _ <| Int.coe_nat_ne_zero_iff_pos.2 <| order_of_pos _).trans_le _
               simp [order_of_le_card_univ]
               
             infer_instance),
         by
-        rw [← zpow_coe_nat, Int.nat_abs_of_nonneg (Int.mod_nonneg _ (Int.coe_nat_ne_zero_iff_pos.2 (order_of_pos _))), ←
-          zpow_eq_mod_order_of, hi]
+        rw [← zpow_coe_nat, Int.nat_abs_of_nonneg (Int.mod_nonnegₓ _ (Int.coe_nat_ne_zero_iff_pos.2 (order_of_pos _))),
+          ← zpow_eq_mod_order_of, hi]
         infer_instance⟩⟩
 
 theorem same_cycle_apply {f : Perm β} {x y : β} : SameCycle f x (f y) ↔ SameCycle f x y :=
@@ -882,7 +882,7 @@ def cycleFactorsAux [Fintype α] :
               split_ifs  at hy <;> cc)
       ⟨cycleOf f x::m, by
         rw [List.prod_cons, hm₁]
-        simp , fun g hg => ((List.mem_cons_iffₓ _ _ _).1 hg).elim (fun hg => hg.symm ▸ is_cycle_cycle_of _ hx) (hm₂ g),
+        simp , fun g hg => ((List.mem_cons_iff _ _ _).1 hg).elim (fun hg => hg.symm ▸ is_cycle_cycle_of _ hx) (hm₂ g),
         List.pairwise_cons.2
           ⟨fun g hg y =>
             or_iff_not_imp_left.2 fun hfy =>
@@ -1004,7 +1004,7 @@ theorem cycle_factors_finset_eq_finset {σ : Perm α} {s : Finset (Perm α)} :
   by
   obtain ⟨l, hl, rfl⟩ := s.exists_list_nodup_eq
   rw [cycle_factors_finset_eq_list_to_finset hl]
-  simp only [noncomm_prod_to_finset, hl, exists_prop, List.mem_to_finset, And.congr_left_iff, And.congr_right_iff,
+  simp only [noncomm_prod_to_finset, hl, exists_propₓ, List.mem_to_finset, And.congr_left_iffₓ, And.congr_right_iff,
     List.map_id, Ne.def]
   intros
   exact ⟨List.Pairwiseₓ.forall disjoint.symmetric, hl.pairwise_of_forall_ne⟩
@@ -1163,7 +1163,7 @@ theorem cycle_induction_on [Finite β] (P : Perm β → Prop) (σ : Perm β) (ba
   suffices ∀ l : List (perm β), (∀ τ : perm β, τ ∈ l → τ.IsCycle) → l.Pairwise Disjoint → P l.Prod by
     classical
     let x := σ.trunc_cycle_factors.out
-    exact (congr_argₓ P x.2.1).mp (this x.1 x.2.2.1 x.2.2.2)
+    exact (congr_arg P x.2.1).mp (this x.1 x.2.2.1 x.2.2.2)
   intro l
   induction' l with σ l ih
   · exact fun _ _ => base_one
@@ -1396,7 +1396,7 @@ theorem closure_cycle_coprime_swap {n : ℕ} {σ : Perm α} (h0 : Nat.Coprime n 
   have h1' : is_cycle ((σ ^ n) ^ (m : ℤ)) := by
     rwa [← hm] at h1
   replace h1' : is_cycle (σ ^ n) :=
-    is_cycle_of_is_cycle_pow h1' (le_transₓ (support_pow_le σ n) (ge_of_eqₓ (congr_argₓ support hm)))
+    is_cycle_of_is_cycle_pow h1' (le_transₓ (support_pow_le σ n) (ge_of_eqₓ (congr_arg support hm)))
   rw [eq_top_iff, ← closure_cycle_adjacent_swap h1' h2' x, closure_le, Set.insert_subset]
   exact
     ⟨Subgroup.pow_mem (closure _) (subset_closure (Set.mem_insert σ _)) n,

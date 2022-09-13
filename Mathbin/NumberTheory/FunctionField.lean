@@ -63,7 +63,7 @@ protected theorem function_field_iff (Fqt : Type _) [Field Fqt] [Algebra Fq[X] F
     intro c x
     rw [Algebra.smul_def, Algebra.smul_def]
     congr
-    refine' congr_funₓ _ c
+    refine' congr_fun _ c
     refine' IsLocalization.ext (nonZeroDivisors Fq[X]) _ _ _ _ _ _ _ <;>
       intros <;>
         simp only [AlgEquiv.map_one, RingHom.map_one, AlgEquiv.map_mul, RingHom.map_mul, AlgEquiv.commutes, ←

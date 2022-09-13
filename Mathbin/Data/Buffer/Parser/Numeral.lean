@@ -113,7 +113,7 @@ Requires that the negation is in the numerator,
 and that both a numerator and denominator are provided (e.g. will not match `43`).
 Large numbers may cause performance issues, so don't run this parser on untrusted input.
 -/
-def rat : Parser Rat :=
+def rat : Parser Ratₓ :=
   (fun x y => ↑x / ↑y) <$> Int <*> (ch '/' >> Nat)
 
 end Parser

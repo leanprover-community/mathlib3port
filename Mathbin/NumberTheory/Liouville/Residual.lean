@@ -23,7 +23,7 @@ open Filter Set Metric
 theorem set_of_liouville_eq_Inter_Union :
     { x | Liouville x } = ⋂ n : ℕ, ⋃ (a : ℤ) (b : ℤ) (hb : 1 < b), Ball (a / b) (1 / b ^ n) \ {a / b} := by
   ext x
-  simp only [mem_Inter, mem_Union, Liouville, mem_set_of_eq, exists_prop, mem_diff, mem_singleton_iff, mem_ball,
+  simp only [mem_Inter, mem_Union, Liouville, mem_set_of_eq, exists_propₓ, mem_diff, mem_singleton_iff, mem_ball,
     Real.dist_eq, and_comm]
 
 theorem is_Gδ_set_of_liouville : IsGδ { x | Liouville x } := by

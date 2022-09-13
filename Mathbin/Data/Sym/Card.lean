@@ -84,7 +84,7 @@ protected def e2 {n k : ℕ} : { s : Sym (Finₓ n.succ.succ) k // ↑0 ∉ s } 
     simp only [Finₓ.zero_succ_above, map_map, comp_app]
     nth_rw_rhs 0[← map_id' s]
     refine' Sym.map_congr fun v hv => _
-    simp [Finₓ.pred_above_zero (ne_of_mem_of_not_mem hv hs)]
+    simp [Finₓ.pred_above_zero (ne_of_mem_of_not_memₓ hv hs)]
   right_inv := fun s => by
     simp only [Finₓ.zero_succ_above, map_map, comp_app]
     nth_rw_rhs 0[← map_id' s]
@@ -151,7 +151,7 @@ theorem two_mul_card_image_off_diag (s : Finset α) : 2 * (s.offDiag.Image Quoti
       (fun x => mem_image_of_mem _ : ∀ x ∈ s.off_diag, Quotientₓ.mk x ∈ s.off_diag.image Quotientₓ.mk),
     sum_const_nat (Quotientₓ.ind _), mul_comm]
   rintro ⟨x, y⟩ hxy
-  simp_rw [mem_image, exists_prop, mem_off_diag, Quotientₓ.eq] at hxy
+  simp_rw [mem_image, exists_propₓ, mem_off_diag, Quotientₓ.eq] at hxy
   obtain ⟨a, ⟨ha₁, ha₂, ha⟩, h⟩ := hxy
   obtain ⟨hx, hy, hxy⟩ : x ∈ s ∧ y ∈ s ∧ x ≠ y := by
     cases h <;> have := ha.symm <;> exact ⟨‹_›, ‹_›, ‹_›⟩

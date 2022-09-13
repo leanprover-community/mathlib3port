@@ -44,7 +44,7 @@ variable [TopologicalSpace (TotalSpace E₁)] [TopologicalSpace (TotalSpace E₂
 
 /-- Equip the total space of the fibrewise product of two topological vector bundles `E₁`, `E₂` with
 the induced topology from the diagonal embedding into `total_space E₁ × total_space E₂`. -/
-instance Prod.topologicalSpace : TopologicalSpace (TotalSpace (E₁×ᵇE₂)) :=
+instance Prod.topologicalSpace : TopologicalSpace (TotalSpace (E₁ ×ᵇ E₂)) :=
   TopologicalSpace.induced (fun p => ((⟨p.1, p.2.1⟩ : TotalSpace E₁), (⟨p.1, p.2.2⟩ : TotalSpace E₂)))
     (by
       infer_instance : TopologicalSpace (TotalSpace E₁ × TotalSpace E₂))
@@ -52,7 +52,7 @@ instance Prod.topologicalSpace : TopologicalSpace (TotalSpace (E₁×ᵇE₂)) :
 /-- The diagonal map from the total space of the fibrewise product of two topological vector bundles
 `E₁`, `E₂` into `total_space E₁ × total_space E₂` is `inducing`. -/
 theorem Prod.inducing_diag :
-    Inducing (fun p => (⟨p.1, p.2.1⟩, ⟨p.1, p.2.2⟩) : TotalSpace (E₁×ᵇE₂) → TotalSpace E₁ × TotalSpace E₂) :=
+    Inducing (fun p => (⟨p.1, p.2.1⟩, ⟨p.1, p.2.2⟩) : TotalSpace (E₁ ×ᵇ E₂) → TotalSpace E₁ × TotalSpace E₂) :=
   ⟨rfl⟩
 
 end Defs
@@ -76,14 +76,14 @@ variable {R F₁ E₁ F₂ E₂}
 /-- Given trivializations `e₁`, `e₂` for vector bundles `E₁`, `E₂` over a base `B`, the forward
 function for the construction `topological_vector_bundle.trivialization.prod`, the induced
 trivialization for the direct sum of `E₁` and `E₂`. -/
-def Prod.toFun' : TotalSpace (E₁×ᵇE₂) → B × F₁ × F₂ := fun p => ⟨p.1, (e₁ ⟨p.1, p.2.1⟩).2, (e₂ ⟨p.1, p.2.2⟩).2⟩
+def Prod.toFun' : TotalSpace (E₁ ×ᵇ E₂) → B × F₁ × F₂ := fun p => ⟨p.1, (e₁ ⟨p.1, p.2.1⟩).2, (e₂ ⟨p.1, p.2.2⟩).2⟩
 
 variable {e₁ e₂}
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem Prod.continuous_to_fun :
-    ContinuousOn (Prod.toFun' e₁ e₂) (@TotalSpace.proj B (E₁×ᵇE₂) ⁻¹' (e₁.BaseSet ∩ e₂.BaseSet)) := by
-  let f₁ : total_space (E₁×ᵇE₂) → total_space E₁ × total_space E₂ := fun p =>
+    ContinuousOn (Prod.toFun' e₁ e₂) (@TotalSpace.proj B (E₁ ×ᵇ E₂) ⁻¹' (e₁.BaseSet ∩ e₂.BaseSet)) := by
+  let f₁ : total_space (E₁ ×ᵇ E₂) → total_space E₁ × total_space E₂ := fun p =>
     ((⟨p.1, p.2.1⟩ : total_space E₁), (⟨p.1, p.2.2⟩ : total_space E₂))
   let f₂ : total_space E₁ × total_space E₂ → (B × F₁) × B × F₂ := fun p => ⟨e₁ p.1, e₂ p.2⟩
   let f₃ : (B × F₁) × B × F₂ → B × F₁ × F₂ := fun p => ⟨p.1.1, p.1.2, p.2.2⟩
@@ -106,12 +106,13 @@ variable (e₁ e₂)
 /-- Given trivializations `e₁`, `e₂` for vector bundles `E₁`, `E₂` over a base `B`, the inverse
 function for the construction `topological_vector_bundle.trivialization.prod`, the induced
 trivialization for the direct sum of `E₁` and `E₂`. -/
-def Prod.invFun' (p : B × F₁ × F₂) : TotalSpace (E₁×ᵇE₂) :=
+def Prod.invFun' (p : B × F₁ × F₂) : TotalSpace (E₁ ×ᵇ E₂) :=
   ⟨p.1, e₁.symm p.1 p.2.1, e₂.symm p.1 p.2.2⟩
 
 variable {e₁ e₂}
 
-theorem Prod.left_inv {x : TotalSpace (E₁×ᵇE₂)} (h : x ∈ @TotalSpace.proj B (E₁×ᵇE₂) ⁻¹' (e₁.BaseSet ∩ e₂.BaseSet)) :
+theorem Prod.left_inv {x : TotalSpace (E₁ ×ᵇ E₂)}
+    (h : x ∈ @TotalSpace.proj B (E₁ ×ᵇ E₂) ⁻¹' (e₁.BaseSet ∩ e₂.BaseSet)) :
     Prod.invFun' e₁ e₂ (Prod.toFun' e₁ e₂ x) = x := by
   obtain ⟨x, v₁, v₂⟩ := x
   obtain ⟨h₁ : x ∈ e₁.base_set, h₂ : x ∈ e₂.base_set⟩ := h
@@ -142,10 +143,10 @@ variable [∀ x : B, TopologicalSpace (E₁ x)] [∀ x : B, TopologicalSpace (E�
 trivialization for the direct sum of `E₁` and `E₂`, whose base set is `e₁.base_set ∩ e₂.base_set`.
 -/
 @[nolint unused_arguments]
-def prod : Trivialization R (F₁ × F₂) (E₁×ᵇE₂) where
+def prod : Trivialization R (F₁ × F₂) (E₁ ×ᵇ E₂) where
   toFun := Prod.toFun' e₁ e₂
   invFun := Prod.invFun' e₁ e₂
-  Source := @TotalSpace.proj B (E₁×ᵇE₂) ⁻¹' (e₁.BaseSet ∩ e₂.BaseSet)
+  Source := @TotalSpace.proj B (E₁ ×ᵇ E₂) ⁻¹' (e₁.BaseSet ∩ e₂.BaseSet)
   Target := (e₁.BaseSet ∩ e₂.BaseSet) ×ˢ Set.Univ
   map_source' := fun x h => ⟨h, Set.mem_univ _⟩
   map_target' := fun x h => h.1
@@ -188,7 +189,7 @@ variable [∀ x : B, TopologicalSpace (E₁ x)] [∀ x : B, TopologicalSpace (E�
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- The product of two vector bundles is a vector bundle. -/
-instance _root_.bundle.prod.topological_vector_bundle : TopologicalVectorBundle R (F₁ × F₂) (E₁×ᵇE₂) where
+instance _root_.bundle.prod.topological_vector_bundle : TopologicalVectorBundle R (F₁ × F₂) (E₁ ×ᵇ E₂) where
   total_space_mk_inducing := fun b => by
     rw [(prod.inducing_diag E₁ E₂).inducing_iff]
     exact (total_space_mk_inducing R F₁ E₁ b).prod_mk (total_space_mk_inducing R F₂ E₂ b)
@@ -233,7 +234,7 @@ theorem Trivialization.continuous_linear_equiv_at_prod {e₁ : Trivialization R 
   funext v
   obtain ⟨v₁, v₂⟩ := v
   rw [(e₁.prod e₂).continuous_linear_equiv_at_apply, trivialization.prod]
-  exact (congr_argₓ Prod.snd (prod_apply hx₁ hx₂ v₁ v₂) : _)
+  exact (congr_arg Prod.snd (prod_apply hx₁ hx₂ v₁ v₂) : _)
 
 end TopologicalVectorBundle
 

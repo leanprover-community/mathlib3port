@@ -176,7 +176,7 @@ theorem lipschitz_extension_constant_pos (E' : Type _) [NormedAddCommGroup E'] [
 vector space `E'` can be extended to a Lipschitz map on the whole space `α`, with a slightly worse
 constant `lipschitz_extension_constant E' * K`. -/
 theorem LipschitzOnWith.extend_finite_dimension {α : Type _} [PseudoMetricSpace α] {E' : Type _} [NormedAddCommGroup E']
-    [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] {s : Set α} {f : α → E'} {K : ℝ≥0 } (hf : LipschitzOnWith K f s) :
+    [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] {s : Set α} {f : α → E'} {K : ℝ≥0} (hf : LipschitzOnWith K f s) :
     ∃ g : α → E', LipschitzWith (lipschitzExtensionConstant E' * K) g ∧ EqOn f g s := by
   /- This result is already known for spaces `ι → ℝ`. We use a continuous linear equiv between
     `E'` and such a space to transfer the result to `E'`. -/
@@ -236,7 +236,7 @@ theorem is_open_set_of_linear_independent {ι : Type _} [Finite ι] : IsOpen { f
   is_open_iff_mem_nhds.2 fun f => LinearIndependent.eventually
 
 theorem is_open_set_of_nat_le_rank (n : ℕ) : IsOpen { f : E →L[𝕜] F | ↑n ≤ rank (f : E →ₗ[𝕜] F) } := by
-  simp only [le_rank_iff_exists_linear_independent_finset, set_of_exists, ← exists_prop]
+  simp only [le_rank_iff_exists_linear_independent_finset, set_of_exists, ← exists_propₓ]
   refine' is_open_bUnion fun t ht => _
   have : Continuous fun f : E →L[𝕜] F => fun x : (t : Set E) => f x :=
     continuous_pi fun x => (ContinuousLinearMap.apply 𝕜 F (x : E)).Continuous
@@ -290,7 +290,7 @@ theorem Basis.constrL_apply (v : Basis ι 𝕜 E) (f : ι → F) (e : E) : (v.co
 theorem Basis.constrL_basis (v : Basis ι 𝕜 E) (f : ι → F) (i : ι) : (v.constrL f) (v i) = f i :=
   v.constr_basis 𝕜 _ _
 
-theorem Basis.op_nnnorm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) {u : E →L[𝕜] F} (M : ℝ≥0 )
+theorem Basis.op_nnnorm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) {u : E →L[𝕜] F} (M : ℝ≥0)
     (hu : ∀ i, ∥u (v i)∥₊ ≤ M) : ∥u∥₊ ≤ Fintype.card ι • ∥v.equivFunL.toContinuousLinearMap∥₊ * M :=
   (u.op_nnnorm_le_bound _) fun e => by
     set φ := v.equiv_funL.to_continuous_linear_map
@@ -320,7 +320,7 @@ theorem Basis.op_norm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) {u : E
 
 /-- A weaker version of `basis.op_nnnorm_le` that abstracts away the value of `C`. -/
 theorem Basis.exists_op_nnnorm_le {ι : Type _} [Finite ι] (v : Basis ι 𝕜 E) :
-    ∃ C > (0 : ℝ≥0 ), ∀ {u : E →L[𝕜] F} (M : ℝ≥0 ), (∀ i, ∥u (v i)∥₊ ≤ M) → ∥u∥₊ ≤ C * M := by
+    ∃ C > (0 : ℝ≥0), ∀ {u : E →L[𝕜] F} (M : ℝ≥0), (∀ i, ∥u (v i)∥₊ ≤ M) → ∥u∥₊ ≤ C * M := by
   cases nonempty_fintype ι <;>
     exact
       ⟨max (Fintype.card ι • ∥v.equiv_funL.to_continuous_linear_map∥₊) 1, zero_lt_one.trans_le (le_max_rightₓ _ _),

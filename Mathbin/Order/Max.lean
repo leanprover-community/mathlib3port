@@ -241,11 +241,11 @@ theorem is_max_iff_forall_not_lt : IsMax a ↔ ∀ b, ¬a < b :=
 
 @[simp]
 theorem not_is_min_iff : ¬IsMin a ↔ ∃ b, b < a := by
-  simp_rw [lt_iff_le_not_leₓ, IsMin, not_forall, exists_prop]
+  simp_rw [lt_iff_le_not_leₓ, IsMin, not_forall, exists_propₓ]
 
 @[simp]
 theorem not_is_max_iff : ¬IsMax a ↔ ∃ b, a < b := by
-  simp_rw [lt_iff_le_not_leₓ, IsMax, not_forall, exists_prop]
+  simp_rw [lt_iff_le_not_leₓ, IsMax, not_forall, exists_propₓ]
 
 @[simp]
 theorem not_is_min [NoMinOrder α] (a : α) : ¬IsMin a :=
@@ -311,12 +311,14 @@ theorem IsTop.fst (hx : IsTop x) : IsTop x.1 := fun c => (hx (c, x.2)).1
 
 theorem IsTop.snd (hx : IsTop x) : IsTop x.2 := fun c => (hx (x.1, c)).2
 
-theorem IsMin.fst (hx : IsMin x) : IsMin x.1 := fun c hc => (hx <| show (c, x.2) ≤ x from (and_iff_left le_rflₓ).2 hc).1
+theorem IsMin.fst (hx : IsMin x) : IsMin x.1 := fun c hc =>
+  (hx <| show (c, x.2) ≤ x from (and_iff_leftₓ le_rflₓ).2 hc).1
 
 theorem IsMin.snd (hx : IsMin x) : IsMin x.2 := fun c hc =>
   (hx <| show (x.1, c) ≤ x from (and_iff_right le_rflₓ).2 hc).2
 
-theorem IsMax.fst (hx : IsMax x) : IsMax x.1 := fun c hc => (hx <| show x ≤ (c, x.2) from (and_iff_left le_rflₓ).2 hc).1
+theorem IsMax.fst (hx : IsMax x) : IsMax x.1 := fun c hc =>
+  (hx <| show x ≤ (c, x.2) from (and_iff_leftₓ le_rflₓ).2 hc).1
 
 theorem IsMax.snd (hx : IsMax x) : IsMax x.2 := fun c hc =>
   (hx <| show x ≤ (x.1, c) from (and_iff_right le_rflₓ).2 hc).2

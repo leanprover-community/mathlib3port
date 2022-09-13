@@ -287,8 +287,8 @@ theorem uniform_embedding_iff [PseudoEmetricSpace β] {f : α → β} :
       Function.Injective f ∧
         UniformContinuous f ∧ ∀ δ > 0, ∃ ε > 0, ∀ {a b : α}, edist (f a) (f b) < ε → edist a b < δ :=
   uniform_embedding_def'.trans <|
-    and_congr Iff.rfl <|
-      and_congr Iff.rfl
+    and_congrₓ Iff.rfl <|
+      and_congrₓ Iff.rfl
         ⟨fun H δ δ0 =>
           let ⟨t, tu, ht⟩ := H _ (edist_mem_uniformity δ0)
           let ⟨ε, ε0, hε⟩ := mem_uniformity_edist.1 tu
@@ -349,8 +349,8 @@ theorem tendsto_uniformly_on_iff {ι : Type _} {F : ι → β → α} {f : β �
 /-- Expressing locally uniform convergence using `edist`. -/
 theorem tendsto_locally_uniformly_iff {ι : Type _} [TopologicalSpace β] {F : ι → β → α} {f : β → α} {p : Filter ι} :
     TendstoLocallyUniformly F f p ↔ ∀ ε > 0, ∀ x : β, ∃ t ∈ 𝓝 x, ∀ᶠ n in p, ∀ y ∈ t, edist (f y) (F n y) < ε := by
-  simp only [← tendsto_locally_uniformly_on_univ, tendsto_locally_uniformly_on_iff, mem_univ, forall_const, exists_prop,
-    nhds_within_univ]
+  simp only [← tendsto_locally_uniformly_on_univ, tendsto_locally_uniformly_on_iff, mem_univ, forall_const,
+    exists_propₓ, nhds_within_univ]
 
 /-- Expressing uniform convergence using `edist`. -/
 theorem tendsto_uniformly_iff {ι : Type _} {F : ι → β → α} {f : β → α} {p : Filter ι} :
@@ -664,7 +664,7 @@ theorem tendsto_nhds {f : Filter β} {u : β → α} {a : α} : Tendsto u f (�
 theorem tendsto_at_top [Nonempty β] [SemilatticeSup β] {u : β → α} {a : α} :
     Tendsto u atTop (𝓝 a) ↔ ∀ ε > 0, ∃ N, ∀ n ≥ N, edist (u n) a < ε :=
   (at_top_basis.tendsto_iff nhds_basis_eball).trans <| by
-    simp only [exists_prop, true_andₓ, mem_Ici, mem_ball]
+    simp only [exists_propₓ, true_andₓ, mem_Ici, mem_ball]
 
 theorem inseparable_iff : Inseparable x y ↔ edist x y = 0 := by
   simp [inseparable_iff_mem_closure, mem_closure_iff, edist_comm, forall_lt_iff_le'ₓ]
@@ -686,7 +686,7 @@ theorem cauchy_seq_iff' [Nonempty β] [SemilatticeSup β] {u : β → α} :
 /-- A variation of the emetric characterization of Cauchy sequences that deals with
 `ℝ≥0` upper bounds. -/
 theorem cauchy_seq_iff_nnreal [Nonempty β] [SemilatticeSup β] {u : β → α} :
-    CauchySeq u ↔ ∀ ε : ℝ≥0 , 0 < ε → ∃ N, ∀ n, N ≤ n → edist (u n) (u N) < ε :=
+    CauchySeq u ↔ ∀ ε : ℝ≥0, 0 < ε → ∃ N, ∀ n, N ≤ n → edist (u n) (u N) < ε :=
   uniformity_basis_edist_nnreal.cauchy_seq_iff'
 
 theorem totally_bounded_iff {s : Set α} : TotallyBounded s ↔ ∀ ε > 0, ∃ t : Set α, t.Finite ∧ s ⊆ ⋃ y ∈ t, Ball y ε :=
@@ -833,7 +833,7 @@ theorem diam_Union_mem_option {ι : Type _} (o : Option ι) (s : ι → Set α) 
 theorem diam_insert : diam (insert x s) = max (⨆ y ∈ s, edist x y) (diam s) :=
   eq_of_forall_ge_iffₓ fun d => by
     simp only [diam_le_iff, ball_insert_iff, edist_self, edist_comm x, max_le_iff, supr_le_iff, zero_le, true_andₓ,
-      forall_and_distrib, and_selfₓ, ← and_assoc]
+      forall_and_distrib, and_selfₓ, ← and_assocₓ]
 
 theorem diam_pair : diam ({x, y} : Set α) = edist x y := by
   simp only [supr_singleton, diam_insert, diam_singleton, Ennreal.max_zero_right]

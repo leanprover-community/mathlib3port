@@ -64,7 +64,7 @@ theorem eq_restrict_iff {s : Set α} {f : ∀ a : s, π a} {g : ∀ a, π a} :
 
 @[simp]
 theorem range_restrict (f : α → β) (s : Set α) : Set.Range (s.restrict f) = f '' s :=
-  (range_comp _ _).trans <| congr_argₓ ((· '' ·) f) Subtype.range_coe
+  (range_comp _ _).trans <| congr_arg ((· '' ·) f) Subtype.range_coe
 
 theorem image_restrict (f : α → β) (s t : Set α) : s.restrict f '' (coe ⁻¹' t) = f '' (t ∩ s) := by
   rw [restrict, image_comp, image_preimage_eq_inter_range, Subtype.range_coe]
@@ -184,7 +184,7 @@ theorem EqOn.inter_preimage_eq (heq : EqOn f₁ f₂ s) (t : Set β) : s ∩ f�
 
 theorem EqOn.mono (hs : s₁ ⊆ s₂) (hf : EqOn f₁ f₂ s₂) : EqOn f₁ f₂ s₁ := fun x hx => hf (hs hx)
 
-theorem EqOn.comp_left (h : s.EqOn f₁ f₂) : s.EqOn (g ∘ f₁) (g ∘ f₂) := fun a ha => congr_argₓ _ <| h ha
+theorem EqOn.comp_left (h : s.EqOn f₁ f₂) : s.EqOn (g ∘ f₁) (g ∘ f₂) := fun a ha => congr_arg _ <| h ha
 
 theorem comp_eq_of_eq_on_range {ι : Sort _} {f : ι → α} {g₁ g₂ : α → β} (h : EqOn g₁ g₂ (Range f)) : g₁ ∘ f = g₂ ∘ f :=
   funext fun x => h <| mem_range_self _
@@ -457,7 +457,7 @@ theorem InjOn.comp (hg : InjOn g t) (hf : InjOn f s) (h : MapsTo f s t) : InjOn 
   hf hx hy <| hg (h hx) (h hy) HEq
 
 theorem inj_on_iff_injective : InjOn f s ↔ Injective (s.restrict f) :=
-  ⟨fun H a b h => Subtype.eq <| H a.2 b.2 h, fun H a as b bs h => congr_argₓ Subtype.val <| @H ⟨a, as⟩ ⟨b, bs⟩ h⟩
+  ⟨fun H a b h => Subtype.eq <| H a.2 b.2 h, fun H a as b bs h => congr_arg Subtype.val <| @H ⟨a, as⟩ ⟨b, bs⟩ h⟩
 
 alias inj_on_iff_injective ↔ inj_on.injective _
 
@@ -664,7 +664,7 @@ theorem LeftInvOn.congr_right (h₁ : LeftInvOn f₁' f₁ s) (heq : EqOn f₁ f
 theorem LeftInvOn.inj_on (h : LeftInvOn f₁' f s) : InjOn f s := fun x₁ h₁ x₂ h₂ heq =>
   calc
     x₁ = f₁' (f x₁) := Eq.symm <| h h₁
-    _ = f₁' (f x₂) := congr_argₓ f₁' HEq
+    _ = f₁' (f x₂) := congr_arg f₁' HEq
     _ = x₂ := h h₂
     
 
@@ -677,7 +677,7 @@ theorem LeftInvOn.maps_to (h : LeftInvOn f' f s) (hf : SurjOn f s t) : MapsTo f'
 theorem LeftInvOn.comp (hf' : LeftInvOn f' f s) (hg' : LeftInvOn g' g t) (hf : MapsTo f s t) :
     LeftInvOn (f' ∘ g') (g ∘ f) s := fun x h =>
   calc
-    (f' ∘ g') ((g ∘ f) x) = f' (f x) := congr_argₓ f' (hg' (hf h))
+    (f' ∘ g') ((g ∘ f) x) = f' (f x) := congr_arg f' (hg' (hf h))
     _ = x := hf' h
     
 
@@ -727,7 +727,7 @@ theorem RightInvOn.eq (h : RightInvOn f' f t) {y} (hy : y ∈ t) : f (f' y) = y 
   h hy
 
 theorem LeftInvOn.right_inv_on_image (h : LeftInvOn f' f s) : RightInvOn f' f (f '' s) := fun y ⟨x, hx, Eq⟩ =>
-  Eq ▸ congr_argₓ f <| h.Eq hx
+  Eq ▸ congr_arg f <| h.Eq hx
 
 theorem RightInvOn.congr_left (h₁ : RightInvOn f₁' f t) (heq : EqOn f₁' f₂' t) : RightInvOn f₂' f t :=
   h₁.congr_right HEq
@@ -755,7 +755,7 @@ theorem InjOn.right_inv_on_of_left_inv_on (hf : InjOn f s) (hf' : LeftInvOn f f'
 theorem eq_on_of_left_inv_on_of_right_inv_on (h₁ : LeftInvOn f₁' f s) (h₂ : RightInvOn f₂' f t) (h : MapsTo f₂' t s) :
     EqOn f₁' f₂' t := fun y hy =>
   calc
-    f₁' y = (f₁' ∘ f ∘ f₂') y := congr_argₓ f₁' (h₂ hy).symm
+    f₁' y = (f₁' ∘ f ∘ f₂') y := congr_arg f₁' (h₂ hy).symm
     _ = f₂' y := h₁ (h hy)
     
 
@@ -1056,7 +1056,7 @@ theorem injective_piecewise_iff {f g : α → β} :
     Injective (s.piecewise f g) ↔ InjOn f s ∧ InjOn g (sᶜ) ∧ ∀ x ∈ s, ∀ (y) (_ : y ∉ s), f x ≠ g y := by
   rw [injective_iff_inj_on_univ, ← union_compl_self s, inj_on_union (@disjoint_compl_right _ _ s),
     (piecewise_eq_on s f g).inj_on_iff, (piecewise_eq_on_compl s f g).inj_on_iff]
-  refine' and_congr Iff.rfl (and_congr Iff.rfl <| forall₄_congrₓ fun x hx y hy => _)
+  refine' and_congrₓ Iff.rfl (and_congrₓ Iff.rfl <| forall₄_congrₓ fun x hx y hy => _)
   rw [piecewise_eq_of_mem s f g hx, piecewise_eq_of_not_mem s f g hy]
 
 theorem piecewise_mem_pi {δ : α → Type _} {t : Set α} {t' : ∀ i, Set (δ i)} {f g} (hf : f ∈ Pi t t')
@@ -1121,7 +1121,7 @@ theorem LeftInverse.left_inv_on {g : β → α} (h : LeftInverse f g) (s : Set �
 theorem RightInverse.right_inv_on {g : β → α} (h : RightInverse f g) (s : Set α) : RightInvOn f g s := fun x hx => h x
 
 theorem LeftInverse.right_inv_on_range {g : β → α} (h : LeftInverse f g) : RightInvOn f g (Range g) :=
-  forall_range_iff.2 fun i => congr_argₓ g (h i)
+  forall_range_iff.2 fun i => congr_arg g (h i)
 
 namespace Semiconj
 
@@ -1143,7 +1143,7 @@ theorem surj_on_range (h : Semiconj f fa fb) (ha : Surjective fa) : SurjOn fb (R
 theorem inj_on_image (h : Semiconj f fa fb) (ha : InjOn fa s) (hf : InjOn f (fa '' s)) : InjOn fb (f '' s) := by
   rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ H
   simp only [← h.eq] at H
-  exact congr_argₓ f (ha hx hy <| hf (mem_image_of_mem fa hx) (mem_image_of_mem fa hy) H)
+  exact congr_arg f (ha hx hy <| hf (mem_image_of_mem fa hx) (mem_image_of_mem fa hy) H)
 
 theorem inj_on_range (h : Semiconj f fa fb) (ha : Injective fa) (hf : InjOn f (Range fa)) : InjOn fb (Range f) := by
   rw [← image_univ] at *
@@ -1163,7 +1163,7 @@ theorem maps_to_preimage (h : Semiconj f fa fb) {s t : Set β} (hb : MapsTo fb s
 theorem inj_on_preimage (h : Semiconj f fa fb) {s : Set β} (hb : InjOn fb s) (hf : InjOn f (f ⁻¹' s)) :
     InjOn fa (f ⁻¹' s) := by
   intro x hx y hy H
-  have := congr_argₓ f H
+  have := congr_arg f H
   rw [h.eq, h.eq] at this
   exact hf hx hy (hb hx hy this)
 

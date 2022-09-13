@@ -53,8 +53,7 @@ instance Units.orderedCommGroup [OrderedCommMonoid α] : OrderedCommGroup αˣ :
 @[to_additive]
 instance (priority := 100) OrderedCommGroup.toOrderedCancelCommMonoid (α : Type u) [s : OrderedCommGroup α] :
     OrderedCancelCommMonoid α :=
-  { s with mul_left_cancel := fun a b c => (mul_right_injₓ a).mp,
-    le_of_mul_le_mul_left := fun a b c => (mul_le_mul_iff_left a).mp }
+  { s with le_of_mul_le_mul_left := fun a b c => (mul_le_mul_iff_left a).mp }
 
 -- See note [lower instance priority]
 @[to_additive]
@@ -930,8 +929,7 @@ variable [LinearOrderedCommGroup α] {a b c : α}
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) LinearOrderedCommGroup.toLinearOrderedCancelCommMonoid : LinearOrderedCancelCommMonoid α :=
-  { ‹LinearOrderedCommGroup α› with le_of_mul_le_mul_left := fun x y z => le_of_mul_le_mul_left',
-    mul_left_cancel := fun x y z => mul_left_cancelₓ }
+  { ‹LinearOrderedCommGroup α› with le_of_mul_le_mul_left := fun x y z => le_of_mul_le_mul_left' }
 
 /-- Pullback a `linear_ordered_comm_group` under an injective map.
 See note [reducible non-instances]. -/
@@ -941,8 +939,8 @@ See note [reducible non-instances]. -/
 def Function.Injective.linearOrderedCommGroup {β : Type _} [One β] [Mul β] [Inv β] [Div β] [Pow β ℕ] [Pow β ℤ]
     [HasSup β] [HasInf β] (f : β → α) (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
     (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
-    (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) (hsup : ∀ x y, f (x⊔y) = max (f x) (f y))
-    (hinf : ∀ x y, f (x⊓y) = min (f x) (f y)) : LinearOrderedCommGroup β :=
+    (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y))
+    (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) : LinearOrderedCommGroup β :=
   { LinearOrderₓ.lift f hf hsup hinf, hf.OrderedCommGroup f one mul inv div npow zpow with }
 
 @[to_additive LinearOrderedAddCommGroup.add_lt_add_left]
@@ -1017,10 +1015,10 @@ section Neg
 /-- `abs a` is the absolute value of `a`. -/
 @[to_additive "`abs a` is the absolute value of `a`"]
 instance (priority := 100) Inv.toHasAbs [Inv α] [HasSup α] : HasAbs α :=
-  ⟨fun a => a⊔a⁻¹⟩
+  ⟨fun a => a ⊔ a⁻¹⟩
 
 @[to_additive]
-theorem abs_eq_sup_inv [Inv α] [HasSup α] (a : α) : abs a = a⊔a⁻¹ :=
+theorem abs_eq_sup_inv [Inv α] [HasSup α] (a : α) : abs a = a ⊔ a⁻¹ :=
   rfl
 
 variable [Neg α] [LinearOrderₓ α] {a b : α}
@@ -1075,7 +1073,7 @@ theorem abs_eq_abs {a b : α} : abs a = abs b ↔ a = b ∨ a = -b := by
 
 theorem abs_sub_comm (a b : α) : abs (a - b) = abs (b - a) :=
   calc
-    abs (a - b) = abs (-(b - a)) := congr_argₓ _ (neg_sub b a).symm
+    abs (a - b) = abs (-(b - a)) := congr_arg _ (neg_sub b a).symm
     _ = abs (b - a) := abs_neg (b - a)
     
 
@@ -1116,13 +1114,13 @@ theorem abs_pos_of_neg (h : a < 0) : 0 < abs a :=
 theorem neg_abs_le_self (a : α) : -abs a ≤ a := by
   cases' le_totalₓ 0 a with h h
   · calc
-      -abs a = -a := congr_argₓ Neg.neg (abs_of_nonneg h)
+      -abs a = -a := congr_arg Neg.neg (abs_of_nonneg h)
       _ ≤ 0 := neg_nonpos.mpr h
       _ ≤ a := h
       
     
   · calc
-      -abs a = - -a := congr_argₓ Neg.neg (abs_of_nonpos h)
+      -abs a = - -a := congr_arg Neg.neg (abs_of_nonpos h)
       _ ≤ a := (neg_negₓ a).le
       
     

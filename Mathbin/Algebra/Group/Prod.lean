@@ -170,7 +170,7 @@ instance [DivInvMonoidₓ G] [DivInvMonoidₓ H] : DivInvMonoidₓ (G × H) :=
 instance [DivisionMonoid G] [DivisionMonoid H] : DivisionMonoid (G × H) :=
   { Prod.divInvMonoid, Prod.hasInvolutiveInv with mul_inv_rev := fun a b => extₓ (mul_inv_rev _ _) (mul_inv_rev _ _),
     inv_eq_of_mul := fun a b h =>
-      extₓ (inv_eq_of_mul_eq_one_right <| congr_argₓ fst h) (inv_eq_of_mul_eq_one_right <| congr_argₓ snd h) }
+      extₓ (inv_eq_of_mul_eq_one_right <| congr_arg fst h) (inv_eq_of_mul_eq_one_right <| congr_arg snd h) }
 
 @[to_additive SubtractionCommMonoid]
 instance [DivisionCommMonoid G] [DivisionCommMonoid H] : DivisionCommMonoid (G × H) :=
@@ -574,7 +574,7 @@ def embedProduct (α : Type _) [Monoidₓ α] : αˣ →* α × αᵐᵒᵖ wher
 
 @[to_additive]
 theorem embed_product_injective (α : Type _) [Monoidₓ α] : Function.Injective (embedProduct α) := fun a₁ a₂ h =>
-  Units.ext <| (congr_argₓ Prod.fst h : _)
+  Units.ext <| (congr_arg Prod.fst h : _)
 
 end Units
 

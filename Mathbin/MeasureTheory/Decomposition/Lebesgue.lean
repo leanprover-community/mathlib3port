@@ -100,7 +100,7 @@ theorem have_lebesgue_decomposition_add (μ ν : Measure α) [HaveLebesgueDecomp
     μ = μ.singularPart ν + ν.withDensity (μ.rnDeriv ν) :=
   (have_lebesgue_decomposition_spec μ ν).2.2
 
-instance have_lebesgue_decomposition_smul (μ ν : Measure α) [HaveLebesgueDecomposition μ ν] (r : ℝ≥0 ) :
+instance have_lebesgue_decomposition_smul (μ ν : Measure α) [HaveLebesgueDecomposition μ ν] (r : ℝ≥0) :
     (r • μ).HaveLebesgueDecomposition ν where lebesgue_decomposition := by
     obtain ⟨hmeas, hsing, hadd⟩ := have_lebesgue_decomposition_spec μ ν
     refine' ⟨⟨r • μ.singular_part ν, r • μ.rn_deriv ν⟩, _, hsing.smul _, _⟩
@@ -248,7 +248,7 @@ theorem singular_part_zero (ν : Measure α) : (0 : Measure α).singularPart ν 
   refine' (eq_singular_part measurable_zero mutually_singular.zero_left _).symm
   rw [zero_addₓ, with_density_zero]
 
-theorem singular_part_smul (μ ν : Measure α) (r : ℝ≥0 ) : (r • μ).singularPart ν = r • μ.singularPart ν := by
+theorem singular_part_smul (μ ν : Measure α) (r : ℝ≥0) : (r • μ).singularPart ν = r • μ.singularPart ν := by
   by_cases' hr : r = 0
   · rw [hr, zero_smul, zero_smul, singular_part_zero]
     
@@ -364,15 +364,14 @@ a measurable set `E`, such that `ν(E) > 0` and `E` is positive with respect to 
 This lemma is useful for the Lebesgue decomposition theorem. -/
 theorem exists_positive_of_not_mutually_singular (μ ν : Measure α) [IsFiniteMeasure μ] [IsFiniteMeasure ν]
     (h : ¬μ ⊥ₘ ν) :
-    ∃ ε : ℝ≥0 , 0 < ε ∧ ∃ E : Set α, MeasurableSet E ∧ 0 < ν E ∧ 0 ≤[E] μ.toSignedMeasure - (ε • ν).toSignedMeasure :=
-  by
+    ∃ ε : ℝ≥0, 0 < ε ∧ ∃ E : Set α, MeasurableSet E ∧ 0 < ν E ∧ 0 ≤[E] μ.toSignedMeasure - (ε • ν).toSignedMeasure := by
   -- for all `n : ℕ`, obtain the Hahn decomposition for `μ - (1 / n) ν`
   have :
     ∀ n : ℕ,
       ∃ i : Set α,
         MeasurableSet i ∧
-          0 ≤[i] μ.to_signed_measure - ((1 / (n + 1) : ℝ≥0 ) • ν).toSignedMeasure ∧
-            μ.to_signed_measure - ((1 / (n + 1) : ℝ≥0 ) • ν).toSignedMeasure ≤[iᶜ] 0 :=
+          0 ≤[i] μ.to_signed_measure - ((1 / (n + 1) : ℝ≥0) • ν).toSignedMeasure ∧
+            μ.to_signed_measure - ((1 / (n + 1) : ℝ≥0) • ν).toSignedMeasure ≤[iᶜ] 0 :=
     by
     intro
     exact exists_compl_positive_negative _
@@ -381,10 +380,10 @@ theorem exists_positive_of_not_mutually_singular (μ ν : Measure α) [IsFiniteM
   -- and we show that `μ A = 0`
   set A := ⋂ n, f nᶜ with hA₁
   have hAmeas : MeasurableSet A := MeasurableSet.Inter fun n => (hf₁ n).compl
-  have hA₂ : ∀ n : ℕ, μ.to_signed_measure - ((1 / (n + 1) : ℝ≥0 ) • ν).toSignedMeasure ≤[A] 0 := by
+  have hA₂ : ∀ n : ℕ, μ.to_signed_measure - ((1 / (n + 1) : ℝ≥0) • ν).toSignedMeasure ≤[A] 0 := by
     intro n
     exact restrict_le_restrict_subset _ _ (hf₁ n).compl (hf₃ n) (Inter_subset _ _)
-  have hA₃ : ∀ n : ℕ, μ A ≤ (1 / (n + 1) : ℝ≥0 ) * ν A := by
+  have hA₃ : ∀ n : ℕ, μ A ≤ (1 / (n + 1) : ℝ≥0) * ν A := by
     intro n
     have := nonpos_of_restrict_le_zero _ (hA₂ n)
     rwa [to_signed_measure_sub_apply hAmeas, sub_nonpos, Ennreal.to_real_le_to_real] at this
@@ -452,7 +451,7 @@ theorem zero_mem_measurable_le : (0 : α → ℝ≥0∞) ∈ MeasurableLe μ ν 
     simp ⟩
 
 theorem sup_mem_measurable_le {f g : α → ℝ≥0∞} (hf : f ∈ MeasurableLe μ ν) (hg : g ∈ MeasurableLe μ ν) :
-    (fun a => f a⊔g a) ∈ MeasurableLe μ ν := by
+    (fun a => f a ⊔ g a) ∈ MeasurableLe μ ν := by
   simp_rw [Ennreal.sup_eq_max]
   refine' ⟨Measurable.max hf.1 hg.1, fun A hA => _⟩
   have h₁ := hA.inter (measurable_set_le hf.1 hg.1)
@@ -464,14 +463,14 @@ theorem sup_mem_measurable_le {f g : α → ℝ≥0∞} (hf : f ∈ MeasurableLe
     
 
 theorem supr_succ_eq_sup {α} (f : ℕ → α → ℝ≥0∞) (m : ℕ) (a : α) :
-    (⨆ (k : ℕ) (hk : k ≤ m + 1), f k a) = f m.succ a⊔⨆ (k : ℕ) (hk : k ≤ m), f k a := by
+    (⨆ (k : ℕ) (hk : k ≤ m + 1), f k a) = f m.succ a ⊔ ⨆ (k : ℕ) (hk : k ≤ m), f k a := by
   ext x
   simp only [Option.mem_def, Ennreal.some_eq_coe]
   constructor <;> intro h <;> rw [← h]
   symm
   all_goals
     set c := ⨆ (k : ℕ) (hk : k ≤ m + 1), f k a with hc
-    set d := f m.succ a⊔⨆ (k : ℕ) (hk : k ≤ m), f k a with hd
+    set d := f m.succ a ⊔ ⨆ (k : ℕ) (hk : k ≤ m), f k a with hd
     rw [@le_antisymm_iffₓ ℝ≥0∞, hc, hd]
     -- Specifying the type is weirdly necessary
     refine' ⟨_, _⟩
@@ -497,7 +496,7 @@ theorem supr_mem_measurable_le (f : ℕ → α → ℝ≥0∞) (hf : ∀ n, f n 
       simp [(hf 0).2 A hA]
       
     
-  · have : (fun a : α => ⨆ (k : ℕ) (hk : k ≤ m + 1), f k a) = fun a => f m.succ a⊔⨆ (k : ℕ) (hk : k ≤ m), f k a :=
+  · have : (fun a : α => ⨆ (k : ℕ) (hk : k ≤ m + 1), f k a) = fun a => f m.succ a ⊔ ⨆ (k : ℕ) (hk : k ≤ m), f k a :=
       funext fun _ => supr_succ_eq_sup _ _ _
     refine' ⟨measurable_supr fun n => Measurable.supr_Prop _ (hf n).1, fun A hA => _⟩
     rw [this]
@@ -839,7 +838,7 @@ instance have_lebesgue_decomposition_neg (s : SignedMeasure α) (μ : Measure α
     infer_instance
 
 instance have_lebesgue_decomposition_smul (s : SignedMeasure α) (μ : Measure α) [s.HaveLebesgueDecomposition μ]
-    (r : ℝ≥0 ) : (r • s).HaveLebesgueDecomposition μ where
+    (r : ℝ≥0) : (r • s).HaveLebesgueDecomposition μ where
   posPart := by
     rw [to_jordan_decomposition_smul, jordan_decomposition.smul_pos_part]
     infer_instance
@@ -1098,7 +1097,7 @@ theorem singular_part_neg (s : SignedMeasure α) (μ : Measure α) : (-s).singul
     rw [to_jordan_decomposition_neg, jordan_decomposition.neg_neg_part]
   rw [singular_part, singular_part, neg_sub, h₁, h₂]
 
-theorem singular_part_smul_nnreal (s : SignedMeasure α) (μ : Measure α) (r : ℝ≥0 ) :
+theorem singular_part_smul_nnreal (s : SignedMeasure α) (μ : Measure α) (r : ℝ≥0) :
     (r • s).singularPart μ = r • s.singularPart μ := by
   rw [singular_part, singular_part, smul_sub, ← to_signed_measure_smul, ← to_signed_measure_smul]
   conv_lhs =>

@@ -49,7 +49,7 @@ which does not have a cluster point at 0 is a Cauchy filter
 a field.
 -/
 class CompletableTopField extends SeparatedSpace K : Prop where
-  nice : ∀ F : Filter K, Cauchy F → 𝓝 0⊓F = ⊥ → Cauchy (map (fun x => x⁻¹) F)
+  nice : ∀ F : Filter K, Cauchy F → 𝓝 0 ⊓ F = ⊥ → Cauchy (map (fun x => x⁻¹) F)
 
 namespace UniformSpace
 
@@ -80,7 +80,7 @@ theorem continuous_hat_inv [CompletableTopField K] {x : hat K} (h : x ≠ 0) : C
       exact le_rflₓ
       
     
-  · have eq_bot : 𝓝 (0 : hat K)⊓𝓝 y = ⊥ := by
+  · have eq_bot : 𝓝 (0 : hat K) ⊓ 𝓝 y = ⊥ := by
       by_contra h
       exact y_ne (eq_of_nhds_ne_bot <| ne_bot_iff.mpr h).symm
     erw [dense_inducing_coe.nhds_eq_comap (0 : K), ← Filter.comap_inf, eq_bot]

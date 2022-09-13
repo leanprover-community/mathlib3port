@@ -51,7 +51,7 @@ theorem is_unit_res_of_is_unit_germ (U : Opens X) (f : X.Presheaf.obj (op U)) (x
     (h : IsUnit (X.Presheaf.germ x f)) : ∃ (V : Opens X)(i : V ⟶ U)(hxV : x.1 ∈ V), IsUnit (X.Presheaf.map i.op f) := by
   obtain ⟨g', heq⟩ := h.exists_right_inv
   obtain ⟨V, hxV, g, rfl⟩ := X.presheaf.germ_exist x.1 g'
-  let W := U⊓V
+  let W := U ⊓ V
   have hxW : x.1 ∈ W := ⟨x.2, hxV⟩
   erw [← X.presheaf.germ_res_apply (opens.inf_le_left U V) ⟨x.1, hxW⟩ f, ←
     X.presheaf.germ_res_apply (opens.inf_le_right U V) ⟨x.1, hxW⟩ g, ← RingHom.map_mul, ←
@@ -76,14 +76,14 @@ theorem is_unit_of_is_unit_germ (U : Opens X) (f : X.Presheaf.obj (op U)) (h : �
   obtain ⟨gl, gl_spec, -⟩ := X.sheaf.exists_unique_gluing' V U iVU hcover g _
   swap
   · intro x y
-    apply section_ext X.sheaf (V x⊓V y)
+    apply section_ext X.sheaf (V x ⊓ V y)
     rintro ⟨z, hzVx, hzVy⟩
     rw [germ_res_apply, germ_res_apply]
     apply (IsUnit.mul_right_inj (h ⟨z, (iVU x).le hzVx⟩)).mp
     erw [← X.presheaf.germ_res_apply (iVU x) ⟨z, hzVx⟩ f, ← RingHom.map_mul,
-      congr_argₓ (X.presheaf.germ (⟨z, hzVx⟩ : V x)) (hg x), germ_res_apply, ←
+      congr_arg (X.presheaf.germ (⟨z, hzVx⟩ : V x)) (hg x), germ_res_apply, ←
       X.presheaf.germ_res_apply (iVU y) ⟨z, hzVy⟩ f, ← RingHom.map_mul,
-      congr_argₓ (X.presheaf.germ (⟨z, hzVy⟩ : V y)) (hg y), RingHom.map_one, RingHom.map_one]
+      congr_arg (X.presheaf.germ (⟨z, hzVy⟩ : V y)) (hg y), RingHom.map_one, RingHom.map_one]
     
   apply is_unit_of_mul_eq_one f gl
   apply X.sheaf.eq_of_locally_eq' V U iVU hcover
@@ -184,7 +184,7 @@ theorem basic_open_res_eq {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) [IsIso i] (f : X
 
 @[simp]
 theorem basic_open_mul {U : Opens X} (f g : X.Presheaf.obj (op U)) :
-    X.basicOpen (f * g) = X.basicOpen f⊓X.basicOpen g := by
+    X.basicOpen (f * g) = X.basicOpen f ⊓ X.basicOpen g := by
   ext1
   dsimp' [RingedSpace.basic_open]
   rw [Set.image_inter Subtype.coe_injective]

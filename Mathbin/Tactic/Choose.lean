@@ -177,7 +177,7 @@ unsafe def choose (nondep : parse (parser.optional (tk "!"))) (first : parse ide
       | none => get_local `this
       | some e => tactic.i_to_expr_strict e
   tactic.choose nondep tgt (first :: names)
-  try (interactive.simp none none tt [simp_arg_type.expr (pquote.1 exists_prop)] [] (loc.ns <| some <$> names))
+  try (interactive.simp none none tt [simp_arg_type.expr (pquote.1 exists_propₓ)] [] (loc.ns <| some <$> names))
   try (tactic.clear tgt)
 
 add_tactic_doc

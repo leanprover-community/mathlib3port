@@ -111,7 +111,7 @@ theorem Iio_eq_finset_subtype : iio b = (iio (b : ℕ)).Fin n :=
 @[simp]
 theorem map_subtype_embedding_Ici : (ici a).map Finₓ.coeEmbedding = icc a (n - 1) := by
   ext x
-  simp only [exists_prop, embedding.coe_subtype, mem_Ici, mem_map, mem_Icc]
+  simp only [exists_propₓ, embedding.coe_subtype, mem_Ici, mem_map, mem_Icc]
   constructor
   · rintro ⟨x, hx, rfl⟩
     exact ⟨hx, le_tsub_of_add_le_right <| x.2⟩
@@ -125,7 +125,7 @@ theorem map_subtype_embedding_Ici : (ici a).map Finₓ.coeEmbedding = icc a (n -
 @[simp]
 theorem map_subtype_embedding_Ioi : (ioi a).map Finₓ.coeEmbedding = ioc a (n - 1) := by
   ext x
-  simp only [exists_prop, embedding.coe_subtype, mem_Ioi, mem_map, mem_Ioc]
+  simp only [exists_propₓ, embedding.coe_subtype, mem_Ioi, mem_map, mem_Ioc]
   constructor
   · rintro ⟨x, hx, rfl⟩
     exact ⟨hx, le_tsub_of_add_le_right <| x.2⟩

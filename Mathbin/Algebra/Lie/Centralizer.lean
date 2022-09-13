@@ -47,7 +47,7 @@ variable (N : LieSubmodule R L M) {N₁ N₂ : LieSubmodule R L M}
 
 /-- The centralizer of a Lie submodule. -/
 def centralizer : LieSubmodule R L M where
-  Carrier := { m | ∀ x : L, ⁅x,m⁆ ∈ N }
+  Carrier := { m | ∀ x : L, ⁅x, m⁆ ∈ N }
   add_mem' := fun m₁ m₂ hm₁ hm₂ x => by
     rw [lie_add]
     exact N.add_mem' (hm₁ x) (hm₂ x)
@@ -58,10 +58,10 @@ def centralizer : LieSubmodule R L M where
     exact N.smul_mem' t (hm x)
   lie_mem := fun x m hm y => by
     rw [leibniz_lie]
-    exact N.add_mem' (hm ⁅y,x⁆) (N.lie_mem (hm y))
+    exact N.add_mem' (hm ⁅y, x⁆) (N.lie_mem (hm y))
 
 @[simp]
-theorem mem_centralizer (m : M) : m ∈ N.Centralizer ↔ ∀ x : L, ⁅x,m⁆ ∈ N :=
+theorem mem_centralizer (m : M) : m ∈ N.Centralizer ↔ ∀ x : L, ⁅x, m⁆ ∈ N :=
   Iff.rfl
 
 theorem le_centralizer : N ≤ N.Centralizer := by
@@ -69,7 +69,7 @@ theorem le_centralizer : N ≤ N.Centralizer := by
   rw [mem_centralizer]
   exact fun x => N.lie_mem hm
 
-theorem centralizer_inf : (N₁⊓N₂).Centralizer = N₁.Centralizer⊓N₂.Centralizer := by
+theorem centralizer_inf : (N₁ ⊓ N₂).Centralizer = N₁.Centralizer ⊓ N₂.Centralizer := by
   ext
   simp [← forall_and_distrib]
 
@@ -84,11 +84,12 @@ theorem comap_centralizer (f : M' →ₗ⁅R,L⁆ M) : N.Centralizer.comap f = (
   ext
   simp
 
-theorem top_lie_le_iff_le_centralizer (N' : LieSubmodule R L M) : ⁅(⊤ : LieIdeal R L),N⁆ ≤ N' ↔ N ≤ N'.Centralizer := by
+theorem top_lie_le_iff_le_centralizer (N' : LieSubmodule R L M) : ⁅(⊤ : LieIdeal R L), N⁆ ≤ N' ↔ N ≤ N'.Centralizer :=
+  by
   rw [lie_le_iff]
   tauto
 
-theorem gc_top_lie_centralizer : GaloisConnection (fun N : LieSubmodule R L M => ⁅(⊤ : LieIdeal R L),N⁆) centralizer :=
+theorem gc_top_lie_centralizer : GaloisConnection (fun N : LieSubmodule R L M => ⁅(⊤ : LieIdeal R L), N⁆) centralizer :=
   top_lie_le_iff_le_centralizer
 
 variable (R L M)
@@ -111,11 +112,11 @@ def normalizer : LieSubalgebra R L :=
       rw [coe_bracket_of_module, mem_to_lie_submodule, leibniz_lie, ← lie_skew y, ← sub_eq_add_neg]
       exact H.sub_mem (hz ⟨_, hy x⟩) (hy ⟨_, hz x⟩) }
 
-theorem mem_normalizer_iff' (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H → ⁅y,x⁆ ∈ H := by
+theorem mem_normalizer_iff' (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H → ⁅y, x⁆ ∈ H := by
   rw [Subtype.forall']
   rfl
 
-theorem mem_normalizer_iff (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H → ⁅x,y⁆ ∈ H := by
+theorem mem_normalizer_iff (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H → ⁅x, y⁆ ∈ H := by
   rw [mem_normalizer_iff']
   refine' forall₂_congrₓ fun y hy => _
   rw [← lie_skew, neg_mem_iff]
@@ -128,8 +129,8 @@ theorem coe_centralizer_eq_normalizer : (H.toLieSubmodule.Centralizer : Submodul
 
 variable {H}
 
-theorem lie_mem_sup_of_mem_normalizer {x y z : L} (hx : x ∈ H.normalizer) (hy : y ∈ (R∙x)⊔↑H) (hz : z ∈ (R∙x)⊔↑H) :
-    ⁅y,z⁆ ∈ (R∙x)⊔↑H := by
+theorem lie_mem_sup_of_mem_normalizer {x y z : L} (hx : x ∈ H.normalizer) (hy : y ∈ (R ∙ x) ⊔ ↑H)
+    (hz : z ∈ (R ∙ x) ⊔ ↑H) : ⁅y, z⁆ ∈ (R ∙ x) ⊔ ↑H := by
   rw [Submodule.mem_sup] at hy hz
   obtain ⟨u₁, hu₁, v, hv : v ∈ H, rfl⟩ := hy
   obtain ⟨u₂, hu₂, w, hw : w ∈ H, rfl⟩ := hz
@@ -141,7 +142,7 @@ theorem lie_mem_sup_of_mem_normalizer {x y z : L} (hx : x ∈ H.normalizer) (hy 
   exacts[(H.mem_normalizer_iff' x).mp hx v hv, (H.mem_normalizer_iff x).mp hx w hw]
 
 /-- A Lie subalgebra is an ideal of its normalizer. -/
-theorem ideal_in_normalizer {x y : L} (hx : x ∈ H.normalizer) (hy : y ∈ H) : ⁅x,y⁆ ∈ H := by
+theorem ideal_in_normalizer {x y : L} (hx : x ∈ H.normalizer) (hy : y ∈ H) : ⁅x, y⁆ ∈ H := by
   rw [← lie_skew, neg_mem_iff]
   exact hx ⟨y, hy⟩
 
@@ -162,7 +163,7 @@ theorem normalizer_eq_self_iff : H.normalizer = H ↔ (LieModule.maxTrivSubmodul
       simpa
     rw [← h, H.mem_normalizer_iff']
     intro y hy
-    replace hx : ⁅_,LieSubmodule.Quotient.mk' _ x⁆ = 0 := hx ⟨y, hy⟩
+    replace hx : ⁅_, LieSubmodule.Quotient.mk' _ x⁆ = 0 := hx ⟨y, hy⟩
     rwa [← LieModuleHom.map_lie, LieSubmodule.Quotient.mk_eq_zero] at hx
     
   · let y := LieSubmodule.Quotient.mk' H.to_lie_submodule x

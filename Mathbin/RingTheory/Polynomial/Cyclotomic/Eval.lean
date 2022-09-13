@@ -187,7 +187,7 @@ theorem eval_one_cyclotomic_not_prime_pow {R : Type _} [Ringₓ R] {n : ℕ} (h 
   any_goals {
   }
   swap
-  · simp only [not_exists, true_andₓ, exists_prop, dvd_rfl, Finset.mem_image, Finset.mem_range, Finset.mem_singleton,
+  · simp only [not_exists, true_andₓ, exists_propₓ, dvd_rfl, Finset.mem_image, Finset.mem_range, Finset.mem_singleton,
       Finset.singleton_subset_iff, Finset.mem_sdiff, Nat.mem_divisors, not_and]
     exact ⟨⟨hn'.ne', hn.ne'⟩, fun t _ => h hp _⟩
     

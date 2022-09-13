@@ -233,19 +233,20 @@ open Finset
 
 -- mathport name: «exprG »
 -- The partial sum of `g`, starting from zero
-local notation "G" n:80 => ∑ i in range n, g i
+local notation "G " n:80 => ∑ i in range n, g i
 
 -- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:51:50: missing argument
 -- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in rw #[["<-", expr sum_range_succ_sub_sum g]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg
 /-- **Summation by parts**, also known as **Abel's lemma** or an **Abel transformation** -/
 theorem sum_Ico_by_parts (hmn : m < n) :
-    (∑ i in ico m n, f i • g i) = f (n - 1) • G n - f m • G m - ∑ i in ico m (n - 1), (f (i + 1) - f i) • G(i + 1) := by
-  have h₁ : (∑ i in Ico (m + 1) n, f i • G i) = ∑ i in Ico m (n - 1), f (i + 1) • G(i + 1) := by
+    (∑ i in ico m n, f i • g i) = f (n - 1) • G n - f m • G m - ∑ i in ico m (n - 1), (f (i + 1) - f i) • G (i + 1) :=
+  by
+  have h₁ : (∑ i in Ico (m + 1) n, f i • G i) = ∑ i in Ico m (n - 1), f (i + 1) • G (i + 1) := by
     conv in n => rw [← Nat.sub_add_cancelₓ (Nat.one_le_of_lt hmn)]
     rw [← sum_Ico_add']
   have h₂ :
-    (∑ i in Ico (m + 1) n, f i • G(i + 1)) =
-      (∑ i in Ico m (n - 1), f i • G(i + 1)) + f (n - 1) • G n - f m • G(m + 1) :=
+    (∑ i in Ico (m + 1) n, f i • G (i + 1)) =
+      (∑ i in Ico m (n - 1), f i • G (i + 1)) + f (n - 1) • G n - f m • G (m + 1) :=
     by
     rw [← sum_Ico_sub_bot _ hmn, ← sum_Ico_succ_sub_top _ (Nat.le_pred_of_ltₓ hmn), Nat.sub_add_cancelₓ (pos_of_gt hmn),
       sub_add_cancel]
@@ -256,7 +257,7 @@ theorem sum_Ico_by_parts (hmn : m < n) :
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:63:38: in rw #[[\"<-\", expr sum_range_succ_sub_sum g]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:54:35: expecting parse arg"
   simp_rw [smul_sub, sum_sub_distrib, h₂, h₁]
   conv_lhs => congr skip rw [← add_sub, add_commₓ, ← add_sub, ← sum_sub_distrib]
-  have : ∀ i, f i • G(i + 1) - f (i + 1) • G(i + 1) = -((f (i + 1) - f i) • G(i + 1)) := by
+  have : ∀ i, f i • G (i + 1) - f (i + 1) • G (i + 1) = -((f (i + 1) - f i) • G (i + 1)) := by
     intro i
     rw [sub_smul]
     abel
@@ -267,7 +268,7 @@ variable (n)
 
 /-- **Summation by parts** for ranges -/
 theorem sum_range_by_parts :
-    (∑ i in range n, f i • g i) = f (n - 1) • G n - ∑ i in range (n - 1), (f (i + 1) - f i) • G(i + 1) := by
+    (∑ i in range n, f i • g i) = f (n - 1) • G n - ∑ i in range (n - 1), (f (i + 1) - f i) • G (i + 1) := by
   by_cases' hn : n = 0
   · simp [hn]
     

@@ -210,20 +210,20 @@ theorem IsLocalExtrOn.comp_antitone (hf : IsLocalExtrOn f s a) {g : β → γ} (
     IsLocalExtrOn (g ∘ f) s a :=
   hf.comp_antitone hg
 
-theorem IsLocalMin.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : ((· ≤ ·)⇒(· ≤ ·)⇒(· ≤ ·)) op op)
+theorem IsLocalMin.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op)
     (hf : IsLocalMin f a) {g : α → γ} (hg : IsLocalMin g a) : IsLocalMin (fun x => op (f x) (g x)) a :=
   hf.bicomp_mono hop hg
 
-theorem IsLocalMax.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : ((· ≤ ·)⇒(· ≤ ·)⇒(· ≤ ·)) op op)
+theorem IsLocalMax.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op)
     (hf : IsLocalMax f a) {g : α → γ} (hg : IsLocalMax g a) : IsLocalMax (fun x => op (f x) (g x)) a :=
   hf.bicomp_mono hop hg
 
 -- No `extr` version because we need `hf` and `hg` to be of the same kind
-theorem IsLocalMinOn.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : ((· ≤ ·)⇒(· ≤ ·)⇒(· ≤ ·)) op op)
+theorem IsLocalMinOn.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op)
     (hf : IsLocalMinOn f s a) {g : α → γ} (hg : IsLocalMinOn g s a) : IsLocalMinOn (fun x => op (f x) (g x)) s a :=
   hf.bicomp_mono hop hg
 
-theorem IsLocalMaxOn.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : ((· ≤ ·)⇒(· ≤ ·)⇒(· ≤ ·)) op op)
+theorem IsLocalMaxOn.bicomp_mono [Preorderₓ δ] {op : β → γ → δ} (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op)
     (hf : IsLocalMaxOn f s a) {g : α → γ} (hg : IsLocalMaxOn g s a) : IsLocalMaxOn (fun x => op (f x) (g x)) s a :=
   hf.bicomp_mono hop hg
 
@@ -339,16 +339,16 @@ section SemilatticeSup
 
 variable [SemilatticeSup β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
-theorem IsLocalMin.sup (hf : IsLocalMin f a) (hg : IsLocalMin g a) : IsLocalMin (fun x => f x⊔g x) a :=
+theorem IsLocalMin.sup (hf : IsLocalMin f a) (hg : IsLocalMin g a) : IsLocalMin (fun x => f x ⊔ g x) a :=
   hf.sup hg
 
-theorem IsLocalMax.sup (hf : IsLocalMax f a) (hg : IsLocalMax g a) : IsLocalMax (fun x => f x⊔g x) a :=
+theorem IsLocalMax.sup (hf : IsLocalMax f a) (hg : IsLocalMax g a) : IsLocalMax (fun x => f x ⊔ g x) a :=
   hf.sup hg
 
-theorem IsLocalMinOn.sup (hf : IsLocalMinOn f s a) (hg : IsLocalMinOn g s a) : IsLocalMinOn (fun x => f x⊔g x) s a :=
+theorem IsLocalMinOn.sup (hf : IsLocalMinOn f s a) (hg : IsLocalMinOn g s a) : IsLocalMinOn (fun x => f x ⊔ g x) s a :=
   hf.sup hg
 
-theorem IsLocalMaxOn.sup (hf : IsLocalMaxOn f s a) (hg : IsLocalMaxOn g s a) : IsLocalMaxOn (fun x => f x⊔g x) s a :=
+theorem IsLocalMaxOn.sup (hf : IsLocalMaxOn f s a) (hg : IsLocalMaxOn g s a) : IsLocalMaxOn (fun x => f x ⊔ g x) s a :=
   hf.sup hg
 
 end SemilatticeSup
@@ -357,16 +357,16 @@ section SemilatticeInf
 
 variable [SemilatticeInf β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
-theorem IsLocalMin.inf (hf : IsLocalMin f a) (hg : IsLocalMin g a) : IsLocalMin (fun x => f x⊓g x) a :=
+theorem IsLocalMin.inf (hf : IsLocalMin f a) (hg : IsLocalMin g a) : IsLocalMin (fun x => f x ⊓ g x) a :=
   hf.inf hg
 
-theorem IsLocalMax.inf (hf : IsLocalMax f a) (hg : IsLocalMax g a) : IsLocalMax (fun x => f x⊓g x) a :=
+theorem IsLocalMax.inf (hf : IsLocalMax f a) (hg : IsLocalMax g a) : IsLocalMax (fun x => f x ⊓ g x) a :=
   hf.inf hg
 
-theorem IsLocalMinOn.inf (hf : IsLocalMinOn f s a) (hg : IsLocalMinOn g s a) : IsLocalMinOn (fun x => f x⊓g x) s a :=
+theorem IsLocalMinOn.inf (hf : IsLocalMinOn f s a) (hg : IsLocalMinOn g s a) : IsLocalMinOn (fun x => f x ⊓ g x) s a :=
   hf.inf hg
 
-theorem IsLocalMaxOn.inf (hf : IsLocalMaxOn f s a) (hg : IsLocalMaxOn g s a) : IsLocalMaxOn (fun x => f x⊓g x) s a :=
+theorem IsLocalMaxOn.inf (hf : IsLocalMaxOn f s a) (hg : IsLocalMaxOn g s a) : IsLocalMaxOn (fun x => f x ⊓ g x) s a :=
   hf.inf hg
 
 end SemilatticeInf

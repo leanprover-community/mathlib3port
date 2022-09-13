@@ -95,7 +95,7 @@ instance decidablePrime : DecidablePred PosNum.Prime
         · exact bit0_le_bit0.2 (to_nat_pos _)
           
         rw [← min_fac_to_nat, to_nat_inj]
-        exact ⟨bit0.inj, congr_argₓ _⟩)
+        exact ⟨bit0.inj, congr_arg _⟩)
   | bit1 n =>
     decidableOfIff' (minFacAux (bit1 n) n 1 = bit1 n)
       (by

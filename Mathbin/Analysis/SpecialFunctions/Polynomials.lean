@@ -87,7 +87,7 @@ theorem abs_is_bounded_under_iff : (IsBoundedUnder (· ≤ ·) atTop fun x => ab
         eventually_map.mpr
           (eventually_of_forall
             (forall_imp (fun _ => le_of_eqₓ) fun x =>
-              congr_argₓ abs <| trans (congr_argₓ (eval x) (eq_C_of_degree_le_zero h)) eval_C))⟩⟩
+              congr_arg abs <| trans (congr_arg (eval x) (eq_C_of_degree_le_zero h)) eval_C))⟩⟩
   contrapose! h
   exact not_is_bounded_under_of_tendsto_at_top (abs_tendsto_at_top P h)
 

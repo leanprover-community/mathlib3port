@@ -82,13 +82,13 @@ theorem ext_inner_left_basis {ι : Type _} {x y : E} (b : Basis ι 𝕜 E) (h : 
   simp only [to_dual_map_apply, ContinuousLinearMap.coe_coe]
   rw [← inner_conj_sym]
   nth_rw_rhs 0[← inner_conj_sym]
-  exact congr_argₓ conj (h i)
+  exact congr_arg conj (h i)
 
 theorem ext_inner_right_basis {ι : Type _} {x y : E} (b : Basis ι 𝕜 E) (h : ∀ i : ι, ⟪x, b i⟫ = ⟪y, b i⟫) : x = y := by
   refine' ext_inner_left_basis b fun i => _
   rw [← inner_conj_sym]
   nth_rw_rhs 0[← inner_conj_sym]
-  exact congr_argₓ conj (h i)
+  exact congr_arg conj (h i)
 
 variable (𝕜) (E) [CompleteSpace E]
 

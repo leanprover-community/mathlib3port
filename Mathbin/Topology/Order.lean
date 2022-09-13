@@ -87,7 +87,7 @@ theorem nhds_generate_from {g : Set (Set α)} {a : α} : @nhds α (generateFrom 
             case generate_open.inter s t hs' ht' hs ht =>
               exact fun ⟨has, hat⟩ =>
                 calc
-                  _ ≤ 𝓟 s⊓𝓟 t := le_inf (hs has) (ht hat)
+                  _ ≤ 𝓟 s ⊓ 𝓟 t := le_inf (hs has) (ht hat)
                   _ = _ := inf_principal
                   
             case generate_open.sUnion k hk' hk =>
@@ -378,7 +378,7 @@ theorem induced_top : (⊤ : TopologicalSpace α).induced g = ⊤ :=
   (gc_coinduced_induced g).u_top
 
 @[simp]
-theorem induced_inf : (t₁⊓t₂).induced g = t₁.induced g⊓t₂.induced g :=
+theorem induced_inf : (t₁ ⊓ t₂).induced g = t₁.induced g ⊓ t₂.induced g :=
   (gc_coinduced_induced g).u_inf
 
 @[simp]
@@ -390,7 +390,7 @@ theorem coinduced_bot : (⊥ : TopologicalSpace α).coinduced f = ⊥ :=
   (gc_coinduced_induced f).l_bot
 
 @[simp]
-theorem coinduced_sup : (t₁⊔t₂).coinduced f = t₁.coinduced f⊔t₂.coinduced f :=
+theorem coinduced_sup : (t₁ ⊔ t₂).coinduced f = t₁.coinduced f ⊔ t₂.coinduced f :=
   (gc_coinduced_induced f).l_sup
 
 @[simp]
@@ -531,7 +531,7 @@ theorem nhds_mono {t₁ t₂ : TopologicalSpace α} {a : α} (h : t₁ ≤ t₂)
 theorem le_iff_nhds {α : Type _} (t t' : TopologicalSpace α) : t ≤ t' ↔ ∀ x, @nhds α t x ≤ @nhds α t' x :=
   ⟨fun h x => nhds_mono h, le_of_nhds_le_nhds⟩
 
-theorem nhds_adjoint_nhds {α : Type _} (a : α) (f : Filter α) : @nhds α (nhdsAdjoint a f) a = pure a⊔f := by
+theorem nhds_adjoint_nhds {α : Type _} (a : α) (f : Filter α) : @nhds α (nhdsAdjoint a f) a = pure a ⊔ f := by
   ext U
   rw [mem_nhds_iff]
   constructor
@@ -561,7 +561,7 @@ theorem is_open_singleton_nhds_adjoint {α : Type _} {a b : α} (f : Filter α) 
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (b «expr ≠ » a)
 theorem le_nhds_adjoint_iff' {α : Type _} (a : α) (f : Filter α) (t : TopologicalSpace α) :
-    t ≤ nhdsAdjoint a f ↔ @nhds α t a ≤ pure a⊔f ∧ ∀ (b) (_ : b ≠ a), @nhds α t b = pure b := by
+    t ≤ nhdsAdjoint a f ↔ @nhds α t a ≤ pure a ⊔ f ∧ ∀ (b) (_ : b ≠ a), @nhds α t b = pure b := by
   rw [le_iff_nhds]
   constructor
   · intro h
@@ -584,7 +584,7 @@ theorem le_nhds_adjoint_iff' {α : Type _} (a : α) (f : Filter α) (t : Topolog
     
 
 theorem le_nhds_adjoint_iff {α : Type _} (a : α) (f : Filter α) (t : TopologicalSpace α) :
-    t ≤ nhdsAdjoint a f ↔ @nhds α t a ≤ pure a⊔f ∧ ∀ b, b ≠ a → t.IsOpen {b} := by
+    t ≤ nhdsAdjoint a f ↔ @nhds α t a ≤ pure a ⊔ f ∧ ∀ b, b ≠ a → t.IsOpen {b} := by
   change _ ↔ _ ∧ ∀ b : α, b ≠ a → IsOpen {b}
   rw [le_nhds_adjoint_iff', And.congr_right_iff]
   apply fun h => forall_congrₓ fun b => _
@@ -596,13 +596,14 @@ theorem nhds_infi {ι : Sort _} {t : ι → TopologicalSpace α} {a : α} : @nhd
 theorem nhds_Inf {s : Set (TopologicalSpace α)} {a : α} : @nhds α (inf s) a = ⨅ t ∈ s, @nhds α t a :=
   (gc_nhds a).u_Inf
 
-theorem nhds_inf {t₁ t₂ : TopologicalSpace α} {a : α} : @nhds α (t₁⊓t₂) a = @nhds α t₁ a⊓@nhds α t₂ a :=
+theorem nhds_inf {t₁ t₂ : TopologicalSpace α} {a : α} : @nhds α (t₁ ⊓ t₂) a = @nhds α t₁ a ⊓ @nhds α t₂ a :=
   (gc_nhds a).u_inf
 
 theorem nhds_top {a : α} : @nhds α ⊤ a = ⊤ :=
   (gc_nhds a).u_top
 
-theorem is_open_sup {t₁ t₂ : TopologicalSpace α} {s : Set α} : @IsOpen α (t₁⊔t₂) s ↔ @IsOpen α t₁ s ∧ @IsOpen α t₂ s :=
+theorem is_open_sup {t₁ t₂ : TopologicalSpace α} {s : Set α} :
+    @IsOpen α (t₁ ⊔ t₂) s ↔ @IsOpen α t₁ s ∧ @IsOpen α t₂ s :=
   Iff.rfl
 
 -- mathport name: exprcont
@@ -654,13 +655,13 @@ theorem continuous_le_rng {t₁ : tspace α} {t₂ t₃ : tspace β} (h₁ : t�
   intro s h
   exact h₂ s (h₁ s h)
 
-theorem continuous_sup_dom {t₁ t₂ : tspace α} {t₃ : tspace β} : cont (t₁⊔t₂) t₃ f ↔ cont t₁ t₃ f ∧ cont t₂ t₃ f := by
+theorem continuous_sup_dom {t₁ t₂ : tspace α} {t₃ : tspace β} : cont (t₁ ⊔ t₂) t₃ f ↔ cont t₁ t₃ f ∧ cont t₂ t₃ f := by
   simp only [continuous_iff_le_induced, sup_le_iff]
 
-theorem continuous_sup_rng_left {t₁ : tspace α} {t₃ t₂ : tspace β} : cont t₁ t₂ f → cont t₁ (t₂⊔t₃) f :=
+theorem continuous_sup_rng_left {t₁ : tspace α} {t₃ t₂ : tspace β} : cont t₁ t₂ f → cont t₁ (t₂ ⊔ t₃) f :=
   continuous_le_rng le_sup_left
 
-theorem continuous_sup_rng_right {t₁ : tspace α} {t₃ t₂ : tspace β} : cont t₁ t₃ f → cont t₁ (t₂⊔t₃) f :=
+theorem continuous_sup_rng_right {t₁ : tspace α} {t₃ t₂ : tspace β} : cont t₁ t₃ f → cont t₁ (t₂ ⊔ t₃) f :=
   continuous_le_rng le_sup_right
 
 theorem continuous_Sup_dom {T : Set (tspace α)} {t₂ : tspace β} : cont (sup T) t₂ f ↔ ∀ t ∈ T, cont t t₂ f := by
@@ -676,13 +677,13 @@ theorem continuous_supr_dom {t₁ : ι → tspace α} {t₂ : tspace β} : cont 
 theorem continuous_supr_rng {t₁ : tspace α} {t₂ : ι → tspace β} {i : ι} (h : cont t₁ (t₂ i) f) : cont t₁ (supr t₂) f :=
   continuous_Sup_rng ⟨i, rfl⟩ h
 
-theorem continuous_inf_rng {t₁ : tspace α} {t₂ t₃ : tspace β} : cont t₁ (t₂⊓t₃) f ↔ cont t₁ t₂ f ∧ cont t₁ t₃ f := by
+theorem continuous_inf_rng {t₁ : tspace α} {t₂ t₃ : tspace β} : cont t₁ (t₂ ⊓ t₃) f ↔ cont t₁ t₂ f ∧ cont t₁ t₃ f := by
   simp only [continuous_iff_coinduced_le, le_inf_iff]
 
-theorem continuous_inf_dom_left {t₁ t₂ : tspace α} {t₃ : tspace β} : cont t₁ t₃ f → cont (t₁⊓t₂) t₃ f :=
+theorem continuous_inf_dom_left {t₁ t₂ : tspace α} {t₃ : tspace β} : cont t₁ t₃ f → cont (t₁ ⊓ t₂) t₃ f :=
   continuous_le_dom inf_le_left
 
-theorem continuous_inf_dom_right {t₁ t₂ : tspace α} {t₃ : tspace β} : cont t₂ t₃ f → cont (t₁⊓t₂) t₃ f :=
+theorem continuous_inf_dom_right {t₁ t₂ : tspace α} {t₃ : tspace β} : cont t₂ t₃ f → cont (t₁ ⊓ t₂) t₃ f :=
   continuous_le_dom inf_le_right
 
 theorem continuous_Inf_dom {t₁ : Set (tspace α)} {t₂ : tspace β} {t : tspace α} (h₁ : t ∈ t₁) :
@@ -715,7 +716,7 @@ theorem continuous_id_of_le {t t' : tspace α} (h : t ≤ t') : cont t t' id :=
 -- 𝓝 in the induced topology
 theorem mem_nhds_induced [T : TopologicalSpace α] (f : β → α) (a : β) (s : Set β) :
     s ∈ @nhds β (TopologicalSpace.induced f T) a ↔ ∃ u ∈ 𝓝 (f a), f ⁻¹' u ⊆ s := by
-  simp only [mem_nhds_iff, is_open_induced_iff, exists_prop, Set.mem_set_of_eq]
+  simp only [mem_nhds_iff, is_open_induced_iff, exists_propₓ, Set.mem_set_of_eq]
   constructor
   · rintro ⟨u, usub, ⟨v, openv, ueq⟩, au⟩
     exact
@@ -809,11 +810,11 @@ section infi
 variable {α : Type u} {ι : Sort v}
 
 theorem generate_from_union (a₁ a₂ : Set (Set α)) :
-    TopologicalSpace.generateFrom (a₁ ∪ a₂) = TopologicalSpace.generateFrom a₁⊓TopologicalSpace.generateFrom a₂ :=
+    TopologicalSpace.generateFrom (a₁ ∪ a₂) = TopologicalSpace.generateFrom a₁ ⊓ TopologicalSpace.generateFrom a₂ :=
   @GaloisConnection.l_sup _ (TopologicalSpace α)ᵒᵈ a₁ a₂ _ _ _ _ fun g t => generate_from_le_iff_subset_is_open
 
 theorem set_of_is_open_sup (t₁ t₂ : TopologicalSpace α) :
-    { s | (t₁⊔t₂).IsOpen s } = { s | t₁.IsOpen s } ∩ { s | t₂.IsOpen s } :=
+    { s | (t₁ ⊔ t₂).IsOpen s } = { s | t₁.IsOpen s } ∩ { s | t₂.IsOpen s } :=
   @GaloisConnection.u_inf _ (TopologicalSpace α)ᵒᵈ t₁ t₂ _ _ _ _ fun g t => generate_from_le_iff_subset_is_open
 
 theorem generate_from_Union {f : ι → Set (Set α)} :
@@ -832,7 +833,7 @@ theorem set_of_is_open_Sup {T : Set (TopologicalSpace α)} :
   @GaloisConnection.u_Inf _ (TopologicalSpace α)ᵒᵈ _ _ _ _ (fun g t => generate_from_le_iff_subset_is_open) T
 
 theorem generate_from_union_is_open (a b : TopologicalSpace α) :
-    TopologicalSpace.generateFrom ({ s | a.IsOpen s } ∪ { s | b.IsOpen s }) = a⊓b :=
+    TopologicalSpace.generateFrom ({ s | a.IsOpen s } ∪ { s | b.IsOpen s }) = a ⊓ b :=
   @GaloisInsertion.l_sup_u _ (TopologicalSpace α)ᵒᵈ _ _ _ _ (giGenerateFrom α) a b
 
 theorem generate_from_Union_is_open (f : ι → TopologicalSpace α) :
@@ -840,7 +841,7 @@ theorem generate_from_Union_is_open (f : ι → TopologicalSpace α) :
   @GaloisInsertion.l_supr_u _ (TopologicalSpace α)ᵒᵈ _ _ _ _ (giGenerateFrom α) _ f
 
 theorem generate_from_inter (a b : TopologicalSpace α) :
-    TopologicalSpace.generateFrom ({ s | a.IsOpen s } ∩ { s | b.IsOpen s }) = a⊔b :=
+    TopologicalSpace.generateFrom ({ s | a.IsOpen s } ∩ { s | b.IsOpen s }) = a ⊔ b :=
   @GaloisInsertion.l_inf_u _ (TopologicalSpace α)ᵒᵈ _ _ _ _ (giGenerateFrom α) a b
 
 theorem generate_from_Inter (f : ι → TopologicalSpace α) :

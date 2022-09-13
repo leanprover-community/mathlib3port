@@ -207,7 +207,7 @@ theorem nndist_eq : nndist f g = inf { C | ∀ x : α, nndist (f x) (g x) ≤ C 
   Subtype.ext <|
     dist_eq.trans <| by
       rw [Nnreal.coe_Inf, Nnreal.coe_image]
-      simp_rw [mem_set_of_eq, ← Nnreal.coe_le_coe, Subtype.coe_mk, exists_prop, coe_nndist]
+      simp_rw [mem_set_of_eq, ← Nnreal.coe_le_coe, Subtype.coe_mk, exists_propₓ, coe_nndist]
 
 theorem nndist_set_exists : ∃ C, ∀ x : α, nndist (f x) (g x) ≤ C :=
   Subtype.exists.mpr <| dist_set_exists.imp fun a ⟨ha, h⟩ => ⟨ha, h⟩
@@ -341,7 +341,7 @@ def restrict (f : α →ᵇ β) (s : Set α) : s →ᵇ β :=
 
 /-- Composition (in the target) of a bounded continuous function with a Lipschitz map again
 gives a bounded continuous function -/
-def comp (G : β → γ) {C : ℝ≥0 } (H : LipschitzWith C G) (f : α →ᵇ β) : α →ᵇ γ :=
+def comp (G : β → γ) {C : ℝ≥0} (H : LipschitzWith C G) (f : α →ᵇ β) : α →ᵇ γ :=
   ⟨⟨fun x => G (f x), H.Continuous.comp f.Continuous⟩,
     let ⟨D, hD⟩ := f.Bounded
     ⟨max C 0 * D, fun x y =>
@@ -352,8 +352,7 @@ def comp (G : β → γ) {C : ℝ≥0 } (H : LipschitzWith C G) (f : α →ᵇ �
         ⟩⟩
 
 /-- The composition operator (in the target) with a Lipschitz map is Lipschitz -/
-theorem lipschitz_comp {G : β → γ} {C : ℝ≥0 } (H : LipschitzWith C G) :
-    LipschitzWith C (comp G H : (α →ᵇ β) → α →ᵇ γ) :=
+theorem lipschitz_comp {G : β → γ} {C : ℝ≥0} (H : LipschitzWith C G) : LipschitzWith C (comp G H : (α →ᵇ β) → α →ᵇ γ) :=
   LipschitzWith.of_dist_le_mul fun f g =>
     (dist_le (mul_nonneg C.2 dist_nonneg)).2 fun x =>
       calc
@@ -362,12 +361,12 @@ theorem lipschitz_comp {G : β → γ} {C : ℝ≥0 } (H : LipschitzWith C G) :
         
 
 /-- The composition operator (in the target) with a Lipschitz map is uniformly continuous -/
-theorem uniform_continuous_comp {G : β → γ} {C : ℝ≥0 } (H : LipschitzWith C G) :
+theorem uniform_continuous_comp {G : β → γ} {C : ℝ≥0} (H : LipschitzWith C G) :
     UniformContinuous (comp G H : (α →ᵇ β) → α →ᵇ γ) :=
   (lipschitz_comp H).UniformContinuous
 
 /-- The composition operator (in the target) with a Lipschitz map is continuous -/
-theorem continuous_comp {G : β → γ} {C : ℝ≥0 } (H : LipschitzWith C G) : Continuous (comp G H : (α →ᵇ β) → α →ᵇ γ) :=
+theorem continuous_comp {G : β → γ} {C : ℝ≥0} (H : LipschitzWith C G) : Continuous (comp G H : (α →ᵇ β) → α →ᵇ γ) :=
   (lipschitz_comp H).Continuous
 
 /-- Restriction (in the target) of a bounded continuous function taking values in a subset -/
@@ -508,7 +507,7 @@ theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : Is
     
   · exact (hU x').2.2 _ hx' _ (hU x').1 hg
     
-  · have F_f_g : F (f x') = F (g x') := (congr_argₓ (fun f : tα → tβ => (f ⟨x', x'tα⟩ : β)) f_eq_g : _)
+  · have F_f_g : F (f x') = F (g x') := (congr_arg (fun f : tα → tβ => (f ⟨x', x'tα⟩ : β)) f_eq_g : _)
     calc
       dist (f x') (g x') ≤ dist (f x') (F (f x')) + dist (g x') (F (f x')) := dist_triangle_right _ _ _
       _ = dist (f x') (F (f x')) + dist (g x') (F (g x')) := by
@@ -966,7 +965,7 @@ theorem nndist_le_two_nnnorm (x y : α) : nndist (f x) (f y) ≤ 2 * ∥f∥₊ 
   dist_le_two_norm _ _ _
 
 /-- The nnnorm of a function is controlled by the supremum of the pointwise nnnorms -/
-theorem nnnorm_le (C : ℝ≥0 ) : ∥f∥₊ ≤ C ↔ ∀ x : α, ∥f x∥₊ ≤ C :=
+theorem nnnorm_le (C : ℝ≥0) : ∥f∥₊ ≤ C ↔ ∀ x : α, ∥f x∥₊ ≤ C :=
   norm_le C.Prop
 
 theorem nnnorm_const_le (b : β) : ∥const α b∥₊ ≤ ∥b∥₊ :=
@@ -1348,8 +1347,8 @@ show that the space of bounded continuous functions from `α` to `β` is natural
 module over the algebra of bounded continuous functions from `α` to `𝕜`. -/
 end NormedAlgebra
 
-theorem Nnreal.upper_bound {α : Type _} [TopologicalSpace α] (f : α →ᵇ ℝ≥0 ) (x : α) : f x ≤ nndist f 0 := by
-  have key : nndist (f x) ((0 : α →ᵇ ℝ≥0 ) x) ≤ nndist f 0 := @dist_coe_le_dist α ℝ≥0 _ _ f 0 x
+theorem Nnreal.upper_bound {α : Type _} [TopologicalSpace α] (f : α →ᵇ ℝ≥0) (x : α) : f x ≤ nndist f 0 := by
+  have key : nndist (f x) ((0 : α →ᵇ ℝ≥0) x) ≤ nndist f 0 := @dist_coe_le_dist α ℝ≥0 _ _ f 0 x
   simp only [coe_zero, Pi.zero_apply] at key
   rwa [Nnreal.nndist_zero_eq_val' (f x)] at key
 
@@ -1448,7 +1447,7 @@ instance : PartialOrderₓ (α →ᵇ β) :=
 instance : SemilatticeInf (α →ᵇ β) :=
   { BoundedContinuousFunction.partialOrder with
     inf := fun f g =>
-      { toFun := fun t => f t⊓g t, continuous_to_fun := f.Continuous.inf g.Continuous,
+      { toFun := fun t => f t ⊓ g t, continuous_to_fun := f.Continuous.inf g.Continuous,
         map_bounded' := by
           obtain ⟨C₁, hf⟩ := f.bounded
           obtain ⟨C₂, hg⟩ := g.bounded
@@ -1463,7 +1462,7 @@ instance : SemilatticeInf (α →ᵇ β) :=
 instance : SemilatticeSup (α →ᵇ β) :=
   { BoundedContinuousFunction.partialOrder with
     sup := fun f g =>
-      { toFun := fun t => f t⊔g t, continuous_to_fun := f.Continuous.sup g.Continuous,
+      { toFun := fun t => f t ⊔ g t, continuous_to_fun := f.Continuous.sup g.Continuous,
         map_bounded' := by
           obtain ⟨C₁, hf⟩ := f.bounded
           obtain ⟨C₂, hg⟩ := g.bounded
@@ -1479,7 +1478,7 @@ instance : Lattice (α →ᵇ β) :=
   { BoundedContinuousFunction.semilatticeSup, BoundedContinuousFunction.semilatticeInf with }
 
 @[simp]
-theorem coe_fn_sup (f g : α →ᵇ β) : ⇑(f⊔g) = f⊔g :=
+theorem coe_fn_sup (f g : α →ᵇ β) : ⇑(f ⊔ g) = f ⊔ g :=
   rfl
 
 @[simp]

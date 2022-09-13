@@ -278,9 +278,9 @@ theorem Spec_map_localization_is_iso (R : CommRingₓₓ) (M : Submonoid R) (x :
       (PresheafedSpace.stalkMap (Spec.toPresheafedSpace.map (CommRingₓₓ.ofHom (algebraMap R (Localization M))).op) x) :=
   by
   erw [← local_ring_hom_comp_stalk_iso]
-  apply is_iso.comp_is_iso with { instances := false }
+  apply (config := { instances := false }) is_iso.comp_is_iso
   infer_instance
-  apply is_iso.comp_is_iso with { instances := false }
+  apply (config := { instances := false }) is_iso.comp_is_iso
   -- I do not know why this is defeq to the goal, but I'm happy to accept that it is.
   exact
     show

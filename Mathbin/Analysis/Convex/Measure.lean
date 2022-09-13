@@ -73,11 +73,11 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (Frontier s) = 0 := by
     `closure s ⊆ homothety x r '' interior s`, hence `μ (closure s) ≤ r ^ d * μ (interior s)`,
     where `d = finrank ℝ E`. -/
   set d : ℕ := FiniteDimensional.finrank ℝ E
-  have : ∀ r : ℝ≥0 , 1 < r → μ (Closure s) ≤ ↑(r ^ d) * μ (Interior s) := by
+  have : ∀ r : ℝ≥0, 1 < r → μ (Closure s) ≤ ↑(r ^ d) * μ (Interior s) := by
     intro r hr
     refine' (measure_mono <| hs.closure_subset_image_homothety_interior_of_one_lt hx r hr).trans_eq _
     rw [add_haar_image_homothety, ← Nnreal.coe_pow, Nnreal.abs_eq, Ennreal.of_real_coe_nnreal]
-  have : ∀ᶠ r in 𝓝[>] (1 : ℝ≥0 ), μ (Closure s) ≤ ↑(r ^ d) * μ (Interior s) := mem_of_superset self_mem_nhds_within this
+  have : ∀ᶠ r in 𝓝[>] (1 : ℝ≥0), μ (Closure s) ≤ ↑(r ^ d) * μ (Interior s) := mem_of_superset self_mem_nhds_within this
   -- Taking the limit as `r → 1`, we get `μ (closure s) ≤ μ (interior s)`.
   refine' ge_of_tendsto _ this
   refine'

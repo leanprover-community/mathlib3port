@@ -374,7 +374,7 @@ instance : HasSup (L.BoundedFormula α n) :=
 
 /-- The biimplication between two bounded formulas. -/
 protected def iff (φ ψ : L.BoundedFormula α n) :=
-  φ.imp ψ⊓ψ.imp φ
+  φ.imp ψ ⊓ ψ.imp φ
 
 open Finset
 
@@ -954,7 +954,7 @@ protected def transitive : L.Sentence :=
 
 /-- The sentence indicating that a basic relation symbol is total. -/
 protected def total : L.Sentence :=
-  ∀'∀'(r.boundedFormula₂ (&0) &1⊔r.boundedFormula₂ (&1) &0)
+  ∀'∀'(r.boundedFormula₂ (&0) &1 ⊔ r.boundedFormula₂ (&1) &0)
 
 end Relations
 
@@ -966,7 +966,7 @@ variable (L)
 protected def Sentence.cardGe (n) : L.Sentence :=
   (((((List.finRange n).product (List.finRange n)).filter fun ij : _ × _ => ij.1 ≠ ij.2).map fun ij : _ × _ =>
           ∼((&ij.1).bdEqual &ij.2)).foldr
-      (·⊓·) ⊤).exs
+      (· ⊓ ·) ⊤).exs
 
 /-- A theory indicating that a structure is infinite. -/
 def InfiniteTheory : L.Theory :=
@@ -1001,7 +1001,7 @@ theorem distinct_constants_theory_eq_Union (s : Set α) :
   refine' congr rfl (congr (congr rfl _) rfl)
   ext ⟨i, j⟩
   simp only [prod_mk_mem_set_prod_eq, Finset.coe_map, Function.Embedding.coe_subtype, mem_Union, mem_image,
-    Finset.mem_coe, Subtype.exists, Subtype.coe_mk, exists_and_distrib_right, exists_eq_right]
+    Finset.mem_coe, Subtype.exists, Subtype.coe_mk, exists_and_distrib_rightₓ, exists_eq_right]
   refine' ⟨fun h => ⟨{⟨i, h.1⟩, ⟨j, h.2⟩}, ⟨h.1, _⟩, ⟨h.2, _⟩⟩, _⟩
   · simp
     

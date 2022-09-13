@@ -36,8 +36,8 @@ unsafe instance : DecidableEq mono_function := by
 unsafe def mono_function.to_tactic_format : mono_function → tactic format
   | mono_function.non_assoc fn xs ys => do
     let fn' ← pp fn
-    let xs' ← mmapₓ pp xs
-    let ys' ← mmapₓ pp ys
+    let xs' ← mmap pp xs
+    let ys' ← mmap pp ys
     return f! "{fn' } {xs' } _ {ys'}"
   | mono_function.assoc fn xs ys => do
     let fn' ← pp fn
@@ -104,7 +104,7 @@ unsafe def unify_with_instance (e : expr) : tactic Unit :=
 
 private unsafe def match_rule_head (p : expr) : List expr → expr → expr → tactic expr
   | vs, e, t =>
-    (unify t p >> mmap'ₓ unify_with_instance vs) >> instantiate_mvars e <|> do
+    (unify t p >> mmap' unify_with_instance vs) >> instantiate_mvars e <|> do
       let expr.pi _ _ d b ← return t | failed
       let v ← mk_meta_var d
       match_rule_head (v :: vs) (expr.app e v) (b v)
@@ -134,9 +134,9 @@ unsafe def match_ac' : List expr → List expr → tactic (List expr × List exp
 
 unsafe def match_ac (l : List expr) (r : List expr) : tactic (List expr × List expr × List expr) := do
   let (s', l', r') ← match_ac' l r
-  let s' ← mmapₓ instantiate_mvars s'
-  let l' ← mmapₓ instantiate_mvars l'
-  let r' ← mmapₓ instantiate_mvars r'
+  let s' ← mmap instantiate_mvars s'
+  let l' ← mmap instantiate_mvars l'
+  let r' ← mmap instantiate_mvars r'
   return (s', l', r')
 
 unsafe def match_prefix : List expr → List expr → tactic (List expr × List expr × List expr)
@@ -370,7 +370,7 @@ unsafe def one_line (e : expr) : tactic format := do
 
 unsafe def side_conditions (e : expr) : tactic format := do
   let vs := e.list_meta_vars
-  let ts ← mmapₓ one_line vs.tail
+  let ts ← mmap one_line vs.tail
   let r := e.get_app_fn.const_name
   return
       f! "{r }:
@@ -401,7 +401,7 @@ private unsafe def hide_meta_vars (tac : List expr → tactic Unit) : tactic Uni
     let ctx ← local_context
     let vs := tgt.list_meta_vars
     let vs' ←
-      mmapₓ
+      mmap
           (fun v => do
             let h ← get_unused_name `h
             let x ← get_unused_name `x
@@ -538,7 +538,7 @@ unsafe def ac_mono_aux (cfg : MonoCfg := {  }) : tactic Unit :=
     let p ← mk_pattern g
     let rules ← find_rule asms ns p <|> fail "no applicable rules found"
     when (rules = []) (fail "no applicable rules found")
-    let err ← format.join <$> mmapₓ side_conditions rules
+    let err ← format.join <$> mmap side_conditions rules
     focus1 <|
         best_match rules fun rule => do
           let t₀ ← mk_meta_var (quote.1 Prop)
@@ -652,7 +652,7 @@ add_tactic_doc
   { Name := "ac_mono", category := DocCategory.tactic, declNames := [`tactic.interactive.ac_mono],
     tags := ["monotonicity"] }
 
-attribute [mono] And.imp Or.impₓ
+attribute [mono] And.impₓ Or.impₓ
 
 end Tactic.Interactive
 

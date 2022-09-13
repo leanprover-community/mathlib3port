@@ -69,7 +69,7 @@ theorem fixed_points_antitone : Antitone fun P : Submonoid M => FixedPoints P α
   (fixing_submonoid_fixed_points_gc M α).monotone_u.dual_left
 
 /-- Fixing submonoid of union is intersection -/
-theorem fixing_submonoid_union {s t : Set α} : fixingSubmonoid M (s ∪ t) = fixingSubmonoid M s⊓fixingSubmonoid M t :=
+theorem fixing_submonoid_union {s t : Set α} : fixingSubmonoid M (s ∪ t) = fixingSubmonoid M s ⊓ fixingSubmonoid M t :=
   (fixing_submonoid_fixed_points_gc M α).l_sup
 
 /-- Fixing submonoid of Union is intersection -/
@@ -78,7 +78,7 @@ theorem fixing_submonoid_Union {ι : Sort _} {s : ι → Set α} :
   (fixing_submonoid_fixed_points_gc M α).l_supr
 
 /-- Fixed points of sup of submonoids is intersection -/
-theorem fixed_points_submonoid_sup {P Q : Submonoid M} : FixedPoints (↥(P⊔Q)) α = FixedPoints P α ∩ FixedPoints Q α :=
+theorem fixed_points_submonoid_sup {P Q : Submonoid M} : FixedPoints (↥(P ⊔ Q)) α = FixedPoints P α ∩ FixedPoints Q α :=
   (fixing_submonoid_fixed_points_gc M α).u_inf
 
 /-- Fixed points of supr of submonoids is intersection -/
@@ -119,7 +119,7 @@ theorem fixed_points_subgroup_antitone : Antitone fun P : Subgroup M => FixedPoi
   (fixing_subgroup_fixed_points_gc M α).monotone_u.dual_left
 
 /-- Fixing subgroup of union is intersection -/
-theorem fixing_subgroup_union {s t : Set α} : fixingSubgroup M (s ∪ t) = fixingSubgroup M s⊓fixingSubgroup M t :=
+theorem fixing_subgroup_union {s t : Set α} : fixingSubgroup M (s ∪ t) = fixingSubgroup M s ⊓ fixingSubgroup M t :=
   (fixing_subgroup_fixed_points_gc M α).l_sup
 
 /-- Fixing subgroup of Union is intersection -/
@@ -128,7 +128,7 @@ theorem fixing_subgroup_Union {ι : Sort _} {s : ι → Set α} :
   (fixing_subgroup_fixed_points_gc M α).l_supr
 
 /-- Fixed points of sup of subgroups is intersection -/
-theorem fixed_points_subgroup_sup {P Q : Subgroup M} : FixedPoints (↥(P⊔Q)) α = FixedPoints P α ∩ FixedPoints Q α :=
+theorem fixed_points_subgroup_sup {P Q : Subgroup M} : FixedPoints (↥(P ⊔ Q)) α = FixedPoints P α ∩ FixedPoints Q α :=
   (fixing_subgroup_fixed_points_gc M α).u_inf
 
 /-- Fixed points of supr of subgroups is intersection -/

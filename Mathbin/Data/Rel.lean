@@ -111,7 +111,7 @@ def Image (s : Set α) : Set β :=
 theorem mem_image (y : β) (s : Set α) : y ∈ Image r s ↔ ∃ x ∈ s, r x y :=
   Iff.rfl
 
-theorem image_subset : ((· ⊆ ·)⇒(· ⊆ ·)) r.Image r.Image := fun s t h y ⟨x, xs, rxy⟩ => ⟨x, h xs, rxy⟩
+theorem image_subset : ((· ⊆ ·) ⇒ (· ⊆ ·)) r.Image r.Image := fun s t h y ⟨x, xs, rxy⟩ => ⟨x, h xs, rxy⟩
 
 theorem image_mono : Monotone r.Image :=
   r.image_subset
@@ -178,7 +178,7 @@ def Core (s : Set β) :=
 theorem mem_core (x : α) (s : Set β) : x ∈ r.Core s ↔ ∀ y, r x y → y ∈ s :=
   Iff.rfl
 
-theorem core_subset : ((· ⊆ ·)⇒(· ⊆ ·)) r.Core r.Core := fun s t h x h' y rxy => h (h' y rxy)
+theorem core_subset : ((· ⊆ ·) ⇒ (· ⊆ ·)) r.Core r.Core := fun s t h x h' y rxy => h (h' y rxy)
 
 theorem core_mono : Monotone r.Core :=
   r.core_subset

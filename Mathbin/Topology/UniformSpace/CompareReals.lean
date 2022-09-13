@@ -55,7 +55,7 @@ open Set Function Filter CauSeq UniformSpace
 
 /-- The metric space uniform structure on ℚ (which presupposes the existence
 of real numbers) agrees with the one coming directly from (abs : ℚ → ℚ). -/
-theorem Rat.uniform_space_eq : IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) = PseudoMetricSpace.toUniformSpace := by
+theorem Ratₓ.uniform_space_eq : IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) = PseudoMetricSpace.toUniformSpace := by
   ext s
   erw [Metric.mem_uniformity_dist, IsAbsoluteValue.mem_uniformity]
   constructor <;> rintro ⟨ε, ε_pos, h⟩
@@ -63,7 +63,7 @@ theorem Rat.uniform_space_eq : IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) 
       exact_mod_cast ε_pos
     intro a b hab
     apply h
-    rw [Rat.dist_eq, abs_sub_comm] at hab
+    rw [Ratₓ.dist_eq, abs_sub_comm] at hab
     exact_mod_cast hab
     
   · obtain ⟨ε', h', h''⟩ : ∃ ε' : ℚ, 0 < ε' ∧ (ε' : ℝ) < ε
@@ -71,7 +71,7 @@ theorem Rat.uniform_space_eq : IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) 
     use ε', h'
     intro a b hab
     apply h
-    rw [Rat.dist_eq, abs_sub_comm]
+    rw [Ratₓ.dist_eq, abs_sub_comm]
     refine' lt_transₓ _ h''
     exact_mod_cast hab
     
@@ -87,9 +87,9 @@ noncomputable def rationalCauSeqPkg : @AbstractCompletion ℚ <| IsAbsoluteValue
   separation := by
     infer_instance
   UniformInducing := by
-    rw [Rat.uniform_space_eq]
+    rw [Ratₓ.uniform_space_eq]
     exact rat.uniform_embedding_coe_real.to_uniform_inducing
-  dense := Rat.dense_embedding_coe_real.dense
+  dense := Ratₓ.dense_embedding_coe_real.dense
 
 namespace CompareReals
 

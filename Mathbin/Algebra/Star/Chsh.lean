@@ -166,7 +166,7 @@ theorem tsirelson_inequality_aux : √2 * √2 ^ 3 = √2 * (2 * √2⁻¹ + 4 *
       (by
         norm_num)]
   convert
-      congr_argₓ (· ^ 2)
+      congr_arg (· ^ 2)
         (@Real.sq_sqrt 2
           (by
             norm_num)) using

@@ -228,12 +228,12 @@ theorem exists_nat_pow_near_of_lt_one (xpos : 0 < x) (hx : x ≤ 1) (ypos : 0 < 
 theorem exists_rat_gt (x : α) : ∃ q : ℚ, x < q :=
   let ⟨n, h⟩ := exists_nat_gt x
   ⟨n, by
-    rwa [Rat.cast_coe_nat]⟩
+    rwa [Ratₓ.cast_coe_nat]⟩
 
 theorem exists_rat_lt (x : α) : ∃ q : ℚ, (q : α) < x :=
   let ⟨n, h⟩ := exists_int_lt x
   ⟨n, by
-    rwa [Rat.cast_coe_int]⟩
+    rwa [Ratₓ.cast_coe_int]⟩
 
 theorem exists_rat_btwn {x y : α} (h : x < y) : ∃ q : ℚ, x < q ∧ (q : α) < y := by
   cases' exists_nat_gt (y - x)⁻¹ with n nh
@@ -241,20 +241,20 @@ theorem exists_rat_btwn {x y : α} (h : x < y) : ∃ q : ℚ, x < q ∧ (q : α)
   refine' ⟨(z + 1 : ℤ) / n, _⟩
   have n0' := (inv_pos.2 (sub_pos.2 h)).trans nh
   have n0 := Nat.cast_pos.1 n0'
-  rw [Rat.cast_div_of_ne_zero, Rat.cast_coe_nat, Rat.cast_coe_int, div_lt_iff n0']
+  rw [Ratₓ.cast_div_of_ne_zero, Ratₓ.cast_coe_nat, Ratₓ.cast_coe_int, div_lt_iff n0']
   refine' ⟨(lt_div_iff n0').2 <| (lt_iff_lt_of_le_iff_leₓ (zh _)).1 (lt_add_one _), _⟩
   rw [Int.cast_add, Int.cast_oneₓ]
   refine' lt_of_le_of_ltₓ (add_le_add_right ((zh _).1 le_rflₓ) _) _
   rwa [← lt_sub_iff_add_lt', ← sub_mul, ← div_lt_iff' (sub_pos.2 h), one_div]
-  · rw [Rat.coe_int_denom, Nat.cast_oneₓ]
+  · rw [Ratₓ.coe_int_denom, Nat.cast_oneₓ]
     exact one_ne_zero
     
   · intro H
-    rw [Rat.coe_nat_num, Int.cast_coe_nat, Nat.cast_eq_zero] at H
+    rw [Ratₓ.coe_nat_num, Int.cast_coe_nat, Nat.cast_eq_zero] at H
     subst H
     cases n0
     
-  · rw [Rat.coe_nat_denom, Nat.cast_oneₓ]
+  · rw [Ratₓ.coe_nat_denom, Nat.cast_oneₓ]
     exact one_ne_zero
     
 
@@ -287,7 +287,7 @@ theorem exists_nat_one_div_lt {ε : α} (hε : 0 < ε) : ∃ n : ℕ, 1 / (n + 1
     
 
 theorem exists_pos_rat_lt {x : α} (x0 : 0 < x) : ∃ q : ℚ, 0 < q ∧ (q : α) < x := by
-  simpa only [Rat.cast_pos] using exists_rat_btwn x0
+  simpa only [Ratₓ.cast_pos] using exists_rat_btwn x0
 
 theorem exists_rat_near (x : α) (ε0 : 0 < ε) : ∃ q : ℚ, abs (x - q) < ε :=
   let ⟨q, h₁, h₂⟩ := exists_rat_btwn <| ((sub_lt_self_iff x).2 ε0).trans ((lt_add_iff_pos_left x).2 ε0)
@@ -332,13 +332,13 @@ theorem archimedean_iff_rat_lt : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x <
       let ⟨q, h⟩ := H x
       ⟨⌈q⌉₊,
         lt_of_lt_of_leₓ h <| by
-          simpa only [Rat.cast_coe_nat] using (@Rat.cast_le α _ _ _).2 (Nat.le_ceil _)⟩⟩
+          simpa only [Ratₓ.cast_coe_nat] using (@Ratₓ.cast_le α _ _ _).2 (Nat.le_ceil _)⟩⟩
 
 theorem archimedean_iff_rat_le : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x ≤ q :=
   archimedean_iff_rat_lt.trans
     ⟨fun H x => (H x).imp fun _ => le_of_ltₓ, fun H x =>
       let ⟨n, h⟩ := H x
-      ⟨n + 1, lt_of_le_of_ltₓ h (Rat.cast_lt.2 (lt_add_one _))⟩⟩
+      ⟨n + 1, lt_of_le_of_ltₓ h (Ratₓ.cast_lt.2 (lt_add_one _))⟩⟩
 
 end LinearOrderedField
 
@@ -352,12 +352,12 @@ instance : Archimedean ℤ :=
     ⟨n.toNat,
       le_transₓ (Int.le_to_nat _) <| by
         simpa only [nsmul_eq_mul, zero_addₓ, mul_oneₓ] using
-          mul_le_mul_of_nonneg_left (Int.add_one_le_iff.2 m0) (Int.coe_zero_le n.to_nat)⟩⟩
+          mul_le_mul_of_nonneg_left (Int.add_one_le_iffₓ.2 m0) (Int.coe_zero_le n.to_nat)⟩⟩
 
 instance : Archimedean ℚ :=
   archimedean_iff_rat_le.2 fun q =>
     ⟨q, by
-      rw [Rat.cast_id]⟩
+      rw [Ratₓ.cast_id]⟩
 
 /-- A linear ordered archimedean ring is a floor ring. This is not an `instance` because in some
 cases we have a computable `floor` function. -/

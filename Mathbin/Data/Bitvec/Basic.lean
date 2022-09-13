@@ -28,7 +28,7 @@ theorem add_lsb_eq_twice_add_one {x b} : addLsb x b = 2 * x + cond b 1 0 := by
   simp [add_lsb, two_mul]
 
 theorem to_nat_eq_foldr_reverse {n : ℕ} (v : Bitvec n) : v.toNat = v.toList.reverse.foldr (flip addLsb) 0 := by
-  rw [List.foldr_reverse, flip] <;> rfl
+  rw [List.foldr_reverseₓ, flip] <;> rfl
 
 theorem to_nat_lt {n : ℕ} (v : Bitvec n) : v.toNat < 2 ^ n := by
   suffices v.to_nat + 1 ≤ 2 ^ n by
@@ -76,7 +76,7 @@ theorem of_nat_to_nat {n : ℕ} (v : Bitvec n) : Bitvec.ofNat _ v.toNat = v := b
   change Vector.toList _ = xs
   dsimp' [Bitvec.toNat, bits_to_nat]
   rw [← List.length_reverse] at h
-  rw [← List.reverse_reverse xs, List.foldl_reverse]
+  rw [← List.reverse_reverse xs, List.foldl_reverseₓ]
   generalize xs.reverse = ys  at h⊢
   clear xs
   induction ys generalizing n

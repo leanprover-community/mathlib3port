@@ -677,7 +677,7 @@ unsafe def use (l : parse pexpr_list_or_texpr) : tactic Unit :=
       (try
         (trivial' <|> do
           let quote.1 (Exists (%%ₓp)) ← target
-          (to_expr (pquote.1 exists_prop.mpr) >>= tactic.apply) >> skip))
+          (to_expr (pquote.1 exists_propₓ.mpr) >>= tactic.apply) >> skip))
 
 add_tactic_doc
   { Name := "use", category := DocCategory.tactic, declNames := [`tactic.interactive.use, `tactic.interactive.existsi],
@@ -933,8 +933,8 @@ unsafe def extract_goal (print_use : parse <| tk "!" *> pure true <|> pure false
         | none, _ => to_fmt "example"
         | some n, tt => f! "lemma {n}"
         | some n, ff => f! "def {n}"
-      let cxt₀ ← compact_decl cxt₀ >>= List.mmapₓ format_binders
-      let cxt₁ ← compact_decl cxt₁ >>= List.mmapₓ format_binders
+      let cxt₀ ← compact_decl cxt₀ >>= List.mmap format_binders
+      let cxt₁ ← compact_decl cxt₁ >>= List.mmap format_binders
       let stmt ← f!"{← tgt} :="
       let fmt :=
         format.group <|

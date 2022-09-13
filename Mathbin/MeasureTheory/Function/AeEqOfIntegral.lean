@@ -167,7 +167,7 @@ open TopologicalSpace
 
 theorem ae_le_of_forall_set_lintegral_le_of_sigma_finite [SigmaFinite μ] {f g : α → ℝ≥0∞} (hf : Measurable f)
     (hg : Measurable g) (h : ∀ s, MeasurableSet s → μ s < ∞ → (∫⁻ x in s, f x ∂μ) ≤ ∫⁻ x in s, g x ∂μ) : f ≤ᵐ[μ] g := by
-  have A : ∀ (ε N : ℝ≥0 ) (p : ℕ), 0 < ε → μ ({ x | g x + ε ≤ f x ∧ g x ≤ N } ∩ spanning_sets μ p) = 0 := by
+  have A : ∀ (ε N : ℝ≥0) (p : ℕ), 0 < ε → μ ({ x | g x + ε ≤ f x ∧ g x ≤ N } ∩ spanning_sets μ p) = 0 := by
     intro ε N p εpos
     let s := { x | g x + ε ≤ f x ∧ g x ≤ N } ∩ spanning_sets μ p
     have s_meas : MeasurableSet s := by
@@ -197,20 +197,20 @@ theorem ae_le_of_forall_set_lintegral_le_of_sigma_finite [SigmaFinite μ] {f g :
         
     have : (ε : ℝ≥0∞) * μ s ≤ 0 := Ennreal.le_of_add_le_add_left B A
     simpa only [Ennreal.coe_eq_zero, nonpos_iff_eq_zero, mul_eq_zero, εpos.ne', false_orₓ]
-  obtain ⟨u, u_mono, u_pos, u_lim⟩ : ∃ u : ℕ → ℝ≥0 , StrictAnti u ∧ (∀ n, 0 < u n) ∧ tendsto u at_top (nhds 0) :=
-    exists_seq_strict_anti_tendsto (0 : ℝ≥0 )
-  let s := fun n : ℕ => { x | g x + u n ≤ f x ∧ g x ≤ (n : ℝ≥0 ) } ∩ spanning_sets μ n
+  obtain ⟨u, u_mono, u_pos, u_lim⟩ : ∃ u : ℕ → ℝ≥0, StrictAnti u ∧ (∀ n, 0 < u n) ∧ tendsto u at_top (nhds 0) :=
+    exists_seq_strict_anti_tendsto (0 : ℝ≥0)
+  let s := fun n : ℕ => { x | g x + u n ≤ f x ∧ g x ≤ (n : ℝ≥0) } ∩ spanning_sets μ n
   have μs : ∀ n, μ (s n) = 0 := fun n => A _ _ _ (u_pos n)
   have B : { x | f x ≤ g x }ᶜ ⊆ ⋃ n, s n := by
     intro x hx
     simp at hx
     have L1 : ∀ᶠ n in at_top, g x + u n ≤ f x := by
-      have : tendsto (fun n => g x + u n) at_top (𝓝 (g x + (0 : ℝ≥0 ))) :=
+      have : tendsto (fun n => g x + u n) at_top (𝓝 (g x + (0 : ℝ≥0))) :=
         tendsto_const_nhds.add (Ennreal.tendsto_coe.2 u_lim)
       simp at this
       exact eventually_le_of_tendsto_lt hx this
-    have L2 : ∀ᶠ n : ℕ in (at_top : Filter ℕ), g x ≤ (n : ℝ≥0 ) := by
-      have : tendsto (fun n : ℕ => ((n : ℝ≥0 ) : ℝ≥0∞)) at_top (𝓝 ∞) := by
+    have L2 : ∀ᶠ n : ℕ in (at_top : Filter ℕ), g x ≤ (n : ℝ≥0) := by
+      have : tendsto (fun n : ℕ => ((n : ℝ≥0) : ℝ≥0∞)) at_top (𝓝 ∞) := by
         simp only [Ennreal.coe_nat]
         exact Ennreal.tendsto_nat_nhds_top
       exact eventually_ge_of_tendsto_gt (hx.trans_le le_top) this

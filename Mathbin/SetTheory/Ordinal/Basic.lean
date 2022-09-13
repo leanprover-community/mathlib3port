@@ -401,11 +401,11 @@ def card : Ordinal → Cardinal :=
   (Quotientₓ.map WellOrder.α) fun ⟨α, r, _⟩ ⟨β, s, _⟩ ⟨e⟩ => ⟨e.toEquiv⟩
 
 @[simp]
-theorem card_type (r : α → α → Prop) [IsWellOrder α r] : card (type r) = # α :=
+theorem card_type (r : α → α → Prop) [IsWellOrder α r] : card (type r) = (#α) :=
   rfl
 
 @[simp]
-theorem card_typein {r : α → α → Prop} [wo : IsWellOrder α r] (x : α) : # { y // r y x } = (typein r x).card :=
+theorem card_typein {r : α → α → Prop} [wo : IsWellOrder α r] (x : α) : (#{ y // r y x }) = (typein r x).card :=
   rfl
 
 theorem card_le_card {o₁ o₂ : Ordinal} : o₁ ≤ o₂ → card o₁ ≤ card o₂ :=
@@ -617,7 +617,7 @@ theorem lift_down' {a : Cardinal.{u}} {b : Ordinal.{max u v}} (h : card b ≤ a.
     (fun α =>
       (induction_on b) fun β s _ e' => by
         skip
-        rw [card_type, ← Cardinal.lift_id'.{max u v, u} (# β), ← Cardinal.lift_umax.{u, v},
+        rw [card_type, ← Cardinal.lift_id'.{max u v, u} (#β), ← Cardinal.lift_umax.{u, v},
           lift_mk_eq.{u, max u v, max u v}] at e'
         cases' e' with f
         have g := RelIso.preimage f s
@@ -744,7 +744,7 @@ instance add_covariant_class_le : CovariantClass Ordinal.{u} Ordinal.{u} (· + �
                 | Sum.inl a, Sum.inr b, H => (Sum.lex_inr_inl H).elim
                 | Sum.inr a, Sum.inr b, H =>
                   let ⟨w, h⟩ := fi _ _ (Sum.lex_inr_inr.1 H)
-                  ⟨Sum.inr w, congr_argₓ Sum.inr h⟩⟩⟩⟩
+                  ⟨Sum.inr w, congr_arg Sum.inr h⟩⟩⟩⟩
 
 instance add_swap_covariant_class_le : CovariantClass Ordinal.{u} Ordinal.{u} (swap (· + ·)) (· ≤ ·) :=
   ⟨fun c a b h => by
@@ -982,7 +982,7 @@ theorem lift_univ : lift.{w} univ.{u, v} = univ.{u, max v w} :=
   lift_lift _
 
 theorem univ_umax : univ.{u, max (u + 1) v} = univ.{u, v} :=
-  congr_funₓ lift_umax _
+  congr_fun lift_umax _
 
 /-- Principal segment version of the lift operation on ordinals, embedding `ordinal.{u}` in
   `ordinal.{v}` as a principal segment when `u < v`. -/
@@ -1042,7 +1042,7 @@ namespace Cardinal
 open Ordinal
 
 @[simp]
-theorem mk_ordinal_out (o : Ordinal) : # o.out.α = o.card :=
+theorem mk_ordinal_out (o : Ordinal) : (#o.out.α) = o.card :=
   (Ordinal.card_type _).symm.trans <| by
     rw [Ordinal.type_lt]
 
@@ -1063,14 +1063,14 @@ def ord (c : Cardinal) : Ordinal :=
                 (@RelEmbedding.is_well_order _ _ _ _ (↑(RelIso.preimage f i.1)) i.2))).trans_eq
           (Quot.sound ⟨RelIso.preimage f i.1⟩))
 
-theorem ord_eq_Inf (α : Type u) : ord (# α) = ⨅ r : { r // IsWellOrder α r }, @type α r.1 r.2 :=
+theorem ord_eq_Inf (α : Type u) : ord (#α) = ⨅ r : { r // IsWellOrder α r }, @type α r.1 r.2 :=
   rfl
 
-theorem ord_eq (α) : ∃ (r : α → α → Prop)(wo : IsWellOrder α r), ord (# α) = @type α r wo :=
+theorem ord_eq (α) : ∃ (r : α → α → Prop)(wo : IsWellOrder α r), ord (#α) = @type α r wo :=
   let ⟨r, wo⟩ := infi_mem fun r : { r // IsWellOrder α r } => @type α r.1 r.2
   ⟨r.1, r.2, wo.symm⟩
 
-theorem ord_le_type (r : α → α → Prop) [h : IsWellOrder α r] : ord (# α) ≤ type r :=
+theorem ord_le_type (r : α → α → Prop) [h : IsWellOrder α r] : ord (#α) ≤ type r :=
   cinfi_le' _ (Subtype.mk r h)
 
 theorem ord_le {c o} : ord c ≤ o ↔ c ≤ o.card :=
@@ -1155,11 +1155,11 @@ theorem lift_ord (c) : (ord c).lift = ord (lift c) := by
   · rw [ord_le, ← lift_card, card_ord]
     
 
-theorem mk_ord_out (c : Cardinal) : # c.ord.out.α = c := by
+theorem mk_ord_out (c : Cardinal) : (#c.ord.out.α) = c := by
   simp
 
-theorem card_typein_lt (r : α → α → Prop) [IsWellOrder α r] (x : α) (h : ord (# α) = type r) :
-    card (typein r x) < # α := by
+theorem card_typein_lt (r : α → α → Prop) [IsWellOrder α r] (x : α) (h : ord (#α) = type r) :
+    card (typein r x) < (#α) := by
   rw [← lt_ord, h]
   apply typein_lt_type
 
@@ -1187,9 +1187,9 @@ theorem ord.order_embedding_coe : (ord.orderEmbedding : Cardinal → Ordinal) = 
   as an element of `cardinal.{v}` (when `u < v`). -/
 @[nolint check_univs]
 def univ :=
-  lift.{v, u + 1} (# Ordinal)
+  lift.{v, u + 1} (#Ordinal)
 
-theorem univ_id : univ.{u, u + 1} = # Ordinal :=
+theorem univ_id : univ.{u, u + 1} = (#Ordinal) :=
   lift_id _
 
 @[simp]
@@ -1197,7 +1197,7 @@ theorem lift_univ : lift.{w} univ.{u, v} = univ.{u, max v w} :=
   lift_lift _
 
 theorem univ_umax : univ.{u, max (u + 1) v} = univ.{u, v} :=
-  congr_funₓ lift_umax _
+  congr_fun lift_umax _
 
 theorem lift_lt_univ (c : Cardinal) : lift.{u + 1, u} c < univ.{u, u + 1} := by
   simpa only [lift.principal_seg_coe, lift_ord, lift_succ, ord_le, succ_le_iff] using
@@ -1243,11 +1243,11 @@ theorem lt_univ' {c} : c < univ.{u, v} ↔ ∃ c', c = lift.{max (u + 1) v, u} c
         simp only [e.symm, lift_lift]⟩,
     fun ⟨c', e⟩ => e.symm ▸ lift_lt_univ' _⟩
 
-theorem small_iff_lift_mk_lt_univ {α : Type u} : Small.{v} α ↔ Cardinal.lift (# α) < univ.{v, max u (v + 1)} := by
+theorem small_iff_lift_mk_lt_univ {α : Type u} : Small.{v} α ↔ Cardinal.lift (#α) < univ.{v, max u (v + 1)} := by
   rw [lt_univ']
   constructor
   · rintro ⟨β, e⟩
-    exact ⟨# β, lift_mk_eq.{u, _, v + 1}.2 e⟩
+    exact ⟨#β, lift_mk_eq.{u, _, v + 1}.2 e⟩
     
   · rintro ⟨c, hc⟩
     exact ⟨⟨c.out, lift_mk_eq.{u, _, v + 1}.1 (hc.trans (congr rfl c.mk_out.symm))⟩⟩

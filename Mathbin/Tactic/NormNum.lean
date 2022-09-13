@@ -397,7 +397,7 @@ unsafe def prove_clear_denom' (prove_ne_zero : instance_cache → expr → ℚ �
   else do
     let [_, _, a, b] ← return a.get_app_args
     let (c, b') ← c.ofNat (nd / na.denom)
-    let (c, p₀) ← prove_ne_zero c b (Rat.ofInt na.denom)
+    let (c, p₀) ← prove_ne_zero c b (Ratₓ.ofInt na.denom)
     let (c, _, p₁) ← prove_mul_nat c b b'
     let (c, r, p₂) ← prove_mul_nat c a b'
     let (c, p) ← c.mk_app `` clear_denom_div [a, b, b', r, d, p₀, p₁, p₂]
@@ -685,10 +685,10 @@ theorem int_cast_bit1 {α} [Ringₓ α] (a : ℤ) (a' : α) (h : ↑a = a') : �
   h ▸ Int.cast_bit1 _
 
 theorem rat_cast_bit0 {α} [DivisionRing α] [CharZero α] (a : ℚ) (a' : α) (h : ↑a = a') : ↑(bit0 a) = bit0 a' :=
-  h ▸ Rat.cast_bit0 _
+  h ▸ Ratₓ.cast_bit0 _
 
 theorem rat_cast_bit1 {α} [DivisionRing α] [CharZero α] (a : ℚ) (a' : α) (h : ↑a = a') : ↑(bit1 a) = bit1 a' :=
-  h ▸ Rat.cast_bit1 _
+  h ▸ Ratₓ.cast_bit1 _
 
 /-- Given `a' : α` a natural numeral, returns `(a : ℕ, ⊢ ↑a = a')`.
 (Note that the returned value is on the left of the equality.) -/
@@ -750,11 +750,11 @@ unsafe def prove_rat_uncast_nat (ic qc : instance_cache) (cz_inst : expr) :
     match match_numeral a' with
     | match_numeral_result.zero => do
       let (qc, e) ← qc.mk_app `` Zero.zero []
-      let (ic, p) ← ic.mk_app `` Rat.cast_zero []
+      let (ic, p) ← ic.mk_app `` Ratₓ.cast_zero []
       return (ic, qc, e, p)
     | match_numeral_result.one => do
       let (qc, e) ← qc.mk_app `` One.one []
-      let (ic, p) ← ic.mk_app `` Rat.cast_one []
+      let (ic, p) ← ic.mk_app `` Ratₓ.cast_one []
       return (ic, qc, e, p)
     | match_numeral_result.bit0 a' => do
       let (ic, qc, a, p) ← prove_rat_uncast_nat a'
@@ -770,7 +770,7 @@ unsafe def prove_rat_uncast_nat (ic qc : instance_cache) (cz_inst : expr) :
 
 theorem rat_cast_div {α} [DivisionRing α] [CharZero α] (a b : ℚ) (a' b' : α) (ha : ↑a = a') (hb : ↑b = b') :
     ↑(a / b) = a' / b' :=
-  ha ▸ hb ▸ Rat.cast_div _ _
+  ha ▸ hb ▸ Ratₓ.cast_div _ _
 
 /-- Given `a' : α` a nonnegative rational numeral, returns `(a : ℚ, ⊢ ↑a = a')`.
 (Note that the returned value is on the left of the equality.) -/
@@ -789,7 +789,7 @@ theorem int_cast_neg {α} [Ringₓ α] (a : ℤ) (a' : α) (h : ↑a = a') : ↑
   h ▸ Int.cast_neg _
 
 theorem rat_cast_neg {α} [DivisionRing α] (a : ℚ) (a' : α) (h : ↑a = a') : ↑(-a) = -a' :=
-  h ▸ Rat.cast_neg _
+  h ▸ Ratₓ.cast_neg _
 
 /-- Given `a' : α` an integer numeral, returns `(a : ℤ, ⊢ ↑a = a')`.
 (Note that the returned value is on the left of the equality.) -/
@@ -825,7 +825,7 @@ theorem int_cast_ne {α} [Ringₓ α] [CharZero α] (a b : ℤ) (a' b' : α) (ha
 
 theorem rat_cast_ne {α} [DivisionRing α] [CharZero α] (a b : ℚ) (a' b' : α) (ha : ↑a = a') (hb : ↑b = b') (h : a ≠ b) :
     a' ≠ b' :=
-  ha ▸ hb ▸ mt Rat.cast_inj.1 h
+  ha ▸ hb ▸ mt Ratₓ.cast_inj.1 h
 
 /-- Given `a`,`b` rational numerals, proves `⊢ a ≠ b`. Currently it tries two methods:
 
@@ -885,7 +885,7 @@ unsafe def prove_add_nonneg_rat (ic : instance_cache) (a b c : expr) (na nb nc :
   else do
     let nd := na.denom.lcm nb.denom
     let (ic, d) ← ic.ofNat nd
-    let (ic, p₀) ← prove_ne_zero ic d (Rat.ofInt nd)
+    let (ic, p₀) ← prove_ne_zero ic d (Ratₓ.ofInt nd)
     let (ic, a', pa) ← prove_clear_denom ic a d na nd
     let (ic, b', pb) ← prove_clear_denom ic b d nb nd
     let (ic, c', pc) ← prove_clear_denom ic c d nc nd
@@ -957,7 +957,7 @@ unsafe def prove_clear_denom_simple (c : instance_cache) (a : expr) (na : ℚ) :
     return (c, d, a, p)
   else do
     let [α, _, a, b] ← return a.get_app_args
-    let (c, p₀) ← prove_ne_zero c b (Rat.ofInt na.denom)
+    let (c, p₀) ← prove_ne_zero c b (Ratₓ.ofInt na.denom)
     let (c, p) ← c.mk_app `` clear_denom_simple_div [a, b, p₀]
     return (c, b, a, p)
 
@@ -1357,19 +1357,19 @@ theorem nat_div (a b q r m : ℕ) (hm : q * b = m) (h : r + m = a) (h₂ : r < b
   rw [← h, ← hm, Nat.add_mul_div_rightₓ _ _ (lt_of_le_of_ltₓ (Nat.zero_leₓ _) h₂), Nat.div_eq_of_ltₓ h₂, zero_addₓ]
 
 theorem int_div (a b q r m : ℤ) (hm : q * b = m) (h : r + m = a) (h₁ : 0 ≤ r) (h₂ : r < b) : a / b = q := by
-  rw [← h, ← hm, Int.add_mul_div_right _ _ (ne_of_gtₓ (lt_of_le_of_ltₓ h₁ h₂)), Int.div_eq_zero_of_lt h₁ h₂, zero_addₓ]
+  rw [← h, ← hm, Int.add_mul_div_right _ _ (ne_of_gtₓ (lt_of_le_of_ltₓ h₁ h₂)), Int.div_eq_zero_of_ltₓ h₁ h₂, zero_addₓ]
 
 theorem nat_mod (a b q r m : ℕ) (hm : q * b = m) (h : r + m = a) (h₂ : r < b) : a % b = r := by
   rw [← h, ← hm, Nat.add_mul_mod_self_rightₓ, Nat.mod_eq_of_ltₓ h₂]
 
 theorem int_mod (a b q r m : ℤ) (hm : q * b = m) (h : r + m = a) (h₁ : 0 ≤ r) (h₂ : r < b) : a % b = r := by
-  rw [← h, ← hm, Int.add_mul_mod_self, Int.mod_eq_of_lt h₁ h₂]
+  rw [← h, ← hm, Int.add_mul_mod_self, Int.mod_eq_of_ltₓ h₁ h₂]
 
 theorem int_div_neg (a b c' c : ℤ) (h : a / b = c') (h₂ : -c' = c) : a / -b = c :=
-  h₂ ▸ h ▸ Int.div_neg _ _
+  h₂ ▸ h ▸ Int.div_negₓ _ _
 
 theorem int_mod_neg (a b c : ℤ) (h : a % b = c) : a % -b = c :=
-  (Int.mod_neg _ _).trans h
+  (Int.mod_negₓ _ _).trans h
 
 /-- Given `a`,`b` numerals in `nat` or `int`,
   * `prove_div_mod ic a b ff` returns `(c, ⊢ a / b = c)`
@@ -1392,8 +1392,8 @@ unsafe def prove_div_mod (ic : instance_cache) : expr → expr → Bool → tact
       let nm := nq * nr
       let (ic, q) ← ic.ofInt nq
       let (ic, r) ← ic.ofInt nr
-      let (ic, m, pm) ← prove_mul_rat ic q b (Rat.ofInt nq) (Rat.ofInt nb)
-      let (ic, p) ← prove_add_rat ic r m a (Rat.ofInt nr) (Rat.ofInt nm) (Rat.ofInt na)
+      let (ic, m, pm) ← prove_mul_rat ic q b (Ratₓ.ofInt nq) (Ratₓ.ofInt nb)
+      let (ic, p) ← prove_add_rat ic r m a (Ratₓ.ofInt nr) (Ratₓ.ofInt nm) (Ratₓ.ofInt na)
       let (ic, p') ← prove_lt_nat ic r b
       if ic = quote.1 Nat then
           if mod then return (ic, r, (quote.1 nat_mod).mk_app [a, b, q, r, m, pm, p, p'])
@@ -1412,7 +1412,7 @@ theorem dvd_eq_nat (a b c : ℕ) (p) (h₁ : b % a = c) (h₂ : (c = 0) = p) : (
 
 theorem dvd_eq_int (a b c : ℤ) (p) (h₁ : b % a = c) (h₂ : (c = 0) = p) : (a ∣ b) = p :=
   (propext <| by
-        rw [← h₁, Int.dvd_iff_mod_eq_zero]).trans
+        rw [← h₁, Int.dvd_iff_mod_eq_zeroₓ]).trans
     h₂
 
 theorem int_to_nat_pos (a : ℤ) (b : ℕ)
@@ -1543,7 +1543,7 @@ unsafe def eval_cast : expr → tactic (expr × expr)
             let (_, _, _, p) ← prove_int_uncast ic zc b
             pure (b, p)
           else
-            if inst `` Rat.castCoe then do
+            if inst `` Ratₓ.castCoe then do
               let n ← a
               let cz_inst ← mk_mapp `` CharZero [α, none] >>= mk_instance
               let ic ← mk_instance_cache α

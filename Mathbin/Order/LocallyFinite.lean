@@ -141,7 +141,7 @@ def LocallyFiniteOrder.ofIcc' (α : Type _) [Preorderₓ α] [DecidableRel ((· 
     finsetIoc := fun a b => (finset_Icc a b).filter fun x => ¬x ≤ a,
     finsetIoo := fun a b => (finset_Icc a b).filter fun x => ¬x ≤ a ∧ ¬b ≤ x, finset_mem_Icc := mem_Icc,
     finset_mem_Ico := fun a b x => by
-      rw [Finset.mem_filter, mem_Icc, and_assoc, lt_iff_le_not_leₓ],
+      rw [Finset.mem_filter, mem_Icc, and_assocₓ, lt_iff_le_not_leₓ],
     finset_mem_Ioc := fun a b x => by
       rw [Finset.mem_filter, mem_Icc, And.right_comm, lt_iff_le_not_leₓ],
     finset_mem_Ioo := fun a b x => by
@@ -156,7 +156,7 @@ def LocallyFiniteOrder.ofIcc (α : Type _) [PartialOrderₓ α] [DecidableEq α]
     finsetIoc := fun a b => (finset_Icc a b).filter fun x => a ≠ x,
     finsetIoo := fun a b => (finset_Icc a b).filter fun x => a ≠ x ∧ x ≠ b, finset_mem_Icc := mem_Icc,
     finset_mem_Ico := fun a b x => by
-      rw [Finset.mem_filter, mem_Icc, and_assoc, lt_iff_le_and_neₓ],
+      rw [Finset.mem_filter, mem_Icc, and_assocₓ, lt_iff_le_and_neₓ],
     finset_mem_Ioc := fun a b x => by
       rw [Finset.mem_filter, mem_Icc, And.right_comm, lt_iff_le_and_neₓ],
     finset_mem_Ioo := fun a b x => by
@@ -371,9 +371,9 @@ instance (priority := 100) _root_.locally_finite_order.to_locally_finite_order_t
   finsetIci := fun b => icc b ⊤
   finsetIoi := fun b => ioc b ⊤
   finset_mem_Ici := fun a x => by
-    rw [mem_Icc, and_iff_left le_top]
+    rw [mem_Icc, and_iff_leftₓ le_top]
   finset_mem_Ioi := fun a x => by
-    rw [mem_Ioc, and_iff_left le_top]
+    rw [mem_Ioc, and_iff_leftₓ le_top]
 
 theorem Ici_eq_Icc (a : α) : ici a = icc a ⊤ :=
   rfl

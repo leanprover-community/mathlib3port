@@ -629,7 +629,7 @@ theorem mem_affine_span_singleton (p1 p2 : P) : p1 ∈ affineSpan k ({p2} : Set 
   simp [← mem_coe]
 
 /-- The span of a union of sets is the sup of their spans. -/
-theorem span_union (s t : Set P) : affineSpan k (s ∪ t) = affineSpan k s⊔affineSpan k t :=
+theorem span_union (s t : Set P) : affineSpan k (s ∪ t) = affineSpan k s ⊔ affineSpan k t :=
   (AffineSubspace.gi k V P).gc.l_sup
 
 /-- The span of a union of an indexed family of sets is the sup of
@@ -780,17 +780,17 @@ theorem direction_eq_top_iff_of_nonempty {s : AffineSubspace k P} (h : (s : Set 
 /-- The inf of two affine subspaces, coerced to a set, is the
 intersection of the two sets of points. -/
 @[simp]
-theorem inf_coe (s1 s2 : AffineSubspace k P) : (s1⊓s2 : Set P) = s1 ∩ s2 :=
+theorem inf_coe (s1 s2 : AffineSubspace k P) : (s1 ⊓ s2 : Set P) = s1 ∩ s2 :=
   rfl
 
 /-- A point is in the inf of two affine subspaces if and only if it is
 in both of them. -/
-theorem mem_inf_iff (p : P) (s1 s2 : AffineSubspace k P) : p ∈ s1⊓s2 ↔ p ∈ s1 ∧ p ∈ s2 :=
+theorem mem_inf_iff (p : P) (s1 s2 : AffineSubspace k P) : p ∈ s1 ⊓ s2 ↔ p ∈ s1 ∧ p ∈ s2 :=
   Iff.rfl
 
 /-- The direction of the inf of two affine subspaces is less than or
 equal to the inf of their directions. -/
-theorem direction_inf (s1 s2 : AffineSubspace k P) : (s1⊓s2).direction ≤ s1.direction⊓s2.direction := by
+theorem direction_inf (s1 s2 : AffineSubspace k P) : (s1 ⊓ s2).direction ≤ s1.direction ⊓ s2.direction := by
   repeat'
     rw [direction_eq_vector_span, vector_span_def]
   exact
@@ -800,15 +800,15 @@ theorem direction_inf (s1 s2 : AffineSubspace k P) : (s1⊓s2).direction ≤ s1.
 /-- If two affine subspaces have a point in common, the direction of
 their inf equals the inf of their directions. -/
 theorem direction_inf_of_mem {s₁ s₂ : AffineSubspace k P} {p : P} (h₁ : p ∈ s₁) (h₂ : p ∈ s₂) :
-    (s₁⊓s₂).direction = s₁.direction⊓s₂.direction := by
+    (s₁ ⊓ s₂).direction = s₁.direction ⊓ s₂.direction := by
   ext v
   rw [Submodule.mem_inf, ← vadd_mem_iff_mem_direction v h₁, ← vadd_mem_iff_mem_direction v h₂, ←
     vadd_mem_iff_mem_direction v ((mem_inf_iff p s₁ s₂).2 ⟨h₁, h₂⟩), mem_inf_iff]
 
 /-- If two affine subspaces have a point in their inf, the direction
 of their inf equals the inf of their directions. -/
-theorem direction_inf_of_mem_inf {s₁ s₂ : AffineSubspace k P} {p : P} (h : p ∈ s₁⊓s₂) :
-    (s₁⊓s₂).direction = s₁.direction⊓s₂.direction :=
+theorem direction_inf_of_mem_inf {s₁ s₂ : AffineSubspace k P} {p : P} (h : p ∈ s₁ ⊓ s₂) :
+    (s₁ ⊓ s₂).direction = s₁.direction ⊓ s₂.direction :=
   direction_inf_of_mem ((mem_inf_iff p s₁ s₂).1 h).1 ((mem_inf_iff p s₁ s₂).1 h).2
 
 /-- If one affine subspace is less than or equal to another, the same
@@ -833,22 +833,22 @@ theorem direction_lt_of_nonempty {s1 s2 : AffineSubspace k P} (h : s1 < s2) (hn 
 
 /-- The sup of the directions of two affine subspaces is less than or
 equal to the direction of their sup. -/
-theorem sup_direction_le (s1 s2 : AffineSubspace k P) : s1.direction⊔s2.direction ≤ (s1⊔s2).direction := by
+theorem sup_direction_le (s1 s2 : AffineSubspace k P) : s1.direction ⊔ s2.direction ≤ (s1 ⊔ s2).direction := by
   repeat'
     rw [direction_eq_vector_span, vector_span_def]
   exact
-    sup_le (Inf_le_Inf fun p hp => Set.Subset.trans (vsub_self_mono (le_sup_left : s1 ≤ s1⊔s2)) hp)
-      (Inf_le_Inf fun p hp => Set.Subset.trans (vsub_self_mono (le_sup_right : s2 ≤ s1⊔s2)) hp)
+    sup_le (Inf_le_Inf fun p hp => Set.Subset.trans (vsub_self_mono (le_sup_left : s1 ≤ s1 ⊔ s2)) hp)
+      (Inf_le_Inf fun p hp => Set.Subset.trans (vsub_self_mono (le_sup_right : s2 ≤ s1 ⊔ s2)) hp)
 
 /-- The sup of the directions of two nonempty affine subspaces with
 empty intersection is less than the direction of their sup. -/
 theorem sup_direction_lt_of_nonempty_of_inter_empty {s1 s2 : AffineSubspace k P} (h1 : (s1 : Set P).Nonempty)
-    (h2 : (s2 : Set P).Nonempty) (he : (s1 ∩ s2 : Set P) = ∅) : s1.direction⊔s2.direction < (s1⊔s2).direction := by
+    (h2 : (s2 : Set P).Nonempty) (he : (s1 ∩ s2 : Set P) = ∅) : s1.direction ⊔ s2.direction < (s1 ⊔ s2).direction := by
   cases' h1 with p1 hp1
   cases' h2 with p2 hp2
   rw [SetLike.lt_iff_le_and_exists]
   use sup_direction_le s1 s2, p2 -ᵥ p1,
-    vsub_mem_direction ((le_sup_right : s2 ≤ s1⊔s2) hp2) ((le_sup_left : s1 ≤ s1⊔s2) hp1)
+    vsub_mem_direction ((le_sup_right : s2 ≤ s1 ⊔ s2) hp2) ((le_sup_left : s1 ≤ s1 ⊔ s2) hp1)
   intro h
   rw [Submodule.mem_sup] at h
   rcases h with ⟨v1, hv1, v2, hv2, hv1v2⟩
@@ -862,7 +862,7 @@ theorem sup_direction_lt_of_nonempty_of_inter_empty {s1 s2 : AffineSubspace k P}
 /-- If the directions of two nonempty affine subspaces span the whole
 module, they have nonempty intersection. -/
 theorem inter_nonempty_of_nonempty_of_sup_direction_eq_top {s1 s2 : AffineSubspace k P} (h1 : (s1 : Set P).Nonempty)
-    (h2 : (s2 : Set P).Nonempty) (hd : s1.direction⊔s2.direction = ⊤) : ((s1 : Set P) ∩ s2).Nonempty := by
+    (h2 : (s2 : Set P).Nonempty) (hd : s1.direction ⊔ s2.direction = ⊤) : ((s1 : Set P) ∩ s2).Nonempty := by
   by_contra h
   rw [Set.not_nonempty_iff_eq_empty] at h
   have hlt := sup_direction_lt_of_nonempty_of_inter_empty h1 h2 h
@@ -879,7 +879,7 @@ theorem inter_eq_singleton_of_nonempty_of_is_compl {s1 s2 : AffineSubspace k P} 
   rw [Set.mem_singleton_iff]
   constructor
   · rintro ⟨hq1, hq2⟩
-    have hqp : q -ᵥ p ∈ s1.direction⊓s2.direction := ⟨vsub_mem_direction hq1 hp.1, vsub_mem_direction hq2 hp.2⟩
+    have hqp : q -ᵥ p ∈ s1.direction ⊓ s2.direction := ⟨vsub_mem_direction hq1 hp.1, vsub_mem_direction hq2 hp.2⟩
     rwa [hd.inf_eq_bot, Submodule.mem_bot, vsub_eq_zero_iff_eq] at hqp
     
   · exact fun h => h.symm ▸ hp
@@ -1082,7 +1082,7 @@ include V
 sup of the two directions and of any one difference between points in
 the two subspaces. -/
 theorem direction_sup {s1 s2 : AffineSubspace k P} {p1 p2 : P} (hp1 : p1 ∈ s1) (hp2 : p2 ∈ s2) :
-    (s1⊔s2).direction = s1.direction⊔s2.direction⊔k∙p2 -ᵥ p1 := by
+    (s1 ⊔ s2).direction = s1.direction ⊔ s2.direction ⊔ k ∙ p2 -ᵥ p1 := by
   refine' le_antisymmₓ _ _
   · change (affineSpan k ((s1 : Set P) ∪ s2)).direction ≤ _
     rw [← mem_coe] at hp1
@@ -1117,9 +1117,9 @@ nonempty affine subspace is the sup of the direction of that subspace
 and of any one difference between that point and a point in the
 subspace. -/
 theorem direction_affine_span_insert {s : AffineSubspace k P} {p1 p2 : P} (hp1 : p1 ∈ s) :
-    (affineSpan k (insert p2 (s : Set P))).direction = Submodule.span k {p2 -ᵥ p1}⊔s.direction := by
+    (affineSpan k (insert p2 (s : Set P))).direction = Submodule.span k {p2 -ᵥ p1} ⊔ s.direction := by
   rw [sup_comm, ← Set.union_singleton, ← coe_affine_span_singleton k V p2]
-  change (s⊔affineSpan k {p2}).direction = _
+  change (s ⊔ affineSpan k {p2}).direction = _
   rw [direction_sup hp1 (mem_affine_span k (Set.mem_singleton _)), direction_affine_span]
   simp
 
@@ -1309,13 +1309,13 @@ theorem map_comap_le (f : P₁ →ᵃ[k] P₂) (s : AffineSubspace k P₂) : (s.
 theorem le_comap_map (f : P₁ →ᵃ[k] P₂) (s : AffineSubspace k P₁) : s ≤ (s.map f).comap f :=
   (gc_map_comap f).le_u_l _
 
-theorem map_sup (s t : AffineSubspace k P₁) (f : P₁ →ᵃ[k] P₂) : (s⊔t).map f = s.map f⊔t.map f :=
+theorem map_sup (s t : AffineSubspace k P₁) (f : P₁ →ᵃ[k] P₂) : (s ⊔ t).map f = s.map f ⊔ t.map f :=
   (gc_map_comap f).l_sup
 
 theorem map_supr {ι : Sort _} (f : P₁ →ᵃ[k] P₂) (s : ι → AffineSubspace k P₁) : (supr s).map f = ⨆ i, (s i).map f :=
   (gc_map_comap f).l_supr
 
-theorem comap_inf (s t : AffineSubspace k P₂) (f : P₁ →ᵃ[k] P₂) : (s⊓t).comap f = s.comap f⊓t.comap f :=
+theorem comap_inf (s t : AffineSubspace k P₂) (f : P₁ →ᵃ[k] P₂) : (s ⊓ t).comap f = s.comap f ⊓ t.comap f :=
   (gc_map_comap f).u_inf
 
 theorem comap_supr {ι : Sort _} (f : P₁ →ᵃ[k] P₂) (s : ι → AffineSubspace k P₂) :

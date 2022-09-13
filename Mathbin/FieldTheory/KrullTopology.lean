@@ -103,7 +103,7 @@ theorem top_fixed_by_finite {K L : Type _} [Field K] [Field L] [Algebra K L] : �
 /-- If `E1` and `E2` are finite-dimensional intermediate fields, then so is their compositum.
 This rephrases a result already in mathlib so that it is compatible with our type classes -/
 theorem finite_dimensional_sup {K L : Type _} [Field K] [Field L] [Algebra K L] (E1 E2 : IntermediateField K L)
-    (h1 : FiniteDimensional K E1) (h2 : FiniteDimensional K E2) : FiniteDimensional K ↥(E1⊔E2) :=
+    (h1 : FiniteDimensional K E1) (h2 : FiniteDimensional K E2) : FiniteDimensional K ↥(E1 ⊔ E2) :=
   IntermediateField.finite_dimensional_sup E1 E2
 
 /-- An element of `L ≃ₐ[K] L` is in `Gal(L/E)` if and only if it fixes every element of `E`-/
@@ -124,7 +124,7 @@ def galBasis (K L : Type _) [Field K] [Field L] [Algebra K L] : FilterBasis (L �
   Nonempty := ⟨⊤, ⊤, top_fixed_by_finite, rfl⟩
   inter_sets := by
     rintro X Y ⟨H1, ⟨E1, h_E1, rfl⟩, rfl⟩ ⟨H2, ⟨E2, h_E2, rfl⟩, rfl⟩
-    use (IntermediateField.fixingSubgroup (E1⊔E2)).Carrier
+    use (IntermediateField.fixingSubgroup (E1 ⊔ E2)).Carrier
     refine' ⟨⟨_, ⟨_, finite_dimensional_sup E1 E2 h_E1 h_E2, rfl⟩, rfl⟩, _⟩
     rw [Set.subset_inter_iff]
     exact
@@ -253,9 +253,7 @@ theorem krull_topology_totally_disconnected {K L : Type _} [Field K] [Field L] [
   haveI := IntermediateField.adjoin.finite_dimensional (h_int x)
   refine'
     ⟨LeftCoset σ E.fixing_subgroup, ⟨E.fixing_subgroup_is_open.left_coset σ, E.fixing_subgroup_is_closed.left_coset σ⟩,
-      ⟨1, E.fixing_subgroup.one_mem', by
-        simp ⟩,
-      _⟩
+      ⟨1, E.fixing_subgroup.one_mem', mul_oneₓ σ⟩, _⟩
   simp only [mem_left_coset_iff, SetLike.mem_coe, IntermediateField.mem_fixing_subgroup_iff, not_forall]
   exact ⟨x, IntermediateField.mem_adjoin_simple_self K x, hx⟩
 

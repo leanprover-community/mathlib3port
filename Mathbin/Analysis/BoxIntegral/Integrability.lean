@@ -81,7 +81,7 @@ theorem has_integral_indicator_const (l : IntegrationParams) (hl : l.bRiemann = 
     refine' le_measure_diff.trans ((measure_mono _).trans hμF.le)
     rintro x ⟨⟨hxs, hxI⟩, hxt⟩
     refine' ⟨⟨hxs, box.coe_subset_Icc hxI⟩, fun hxF => hxt _⟩
-    simp only [t, prepartition.Union_def, prepartition.mem_filter, Set.mem_Union, exists_prop]
+    simp only [t, prepartition.Union_def, prepartition.mem_filter, Set.mem_Union, exists_propₓ]
     rcases hπp x hxI with ⟨J, hJπ, hxJ⟩
     refine' ⟨J, ⟨hJπ, _⟩, hxJ⟩
     contrapose hxF
@@ -140,7 +140,7 @@ theorem has_integral_zero_of_ae_eq_zero {l : IntegrationParams} {I : Box ι} {f 
   have : m < δ n / n := by
     simp only [measure.restrict_apply (hUo _).MeasurableSet] at hμU
     refine' hm ▸ (measure_mono _).trans_lt (hμU _)
-    simp only [Set.subset_def, tagged_prepartition.mem_Union, exists_prop, tagged_prepartition.mem_filter]
+    simp only [Set.subset_def, tagged_prepartition.mem_Union, exists_propₓ, tagged_prepartition.mem_filter]
     rintro x ⟨J, ⟨hJ, rfl⟩, hx⟩
     exact ⟨hrU _ (hπ.1 _ hJ (box.coe_subset_Icc hx)), π.le_of_mem' J hJ hx⟩
   lift m to ℝ≥0 using ne_top_of_lt this

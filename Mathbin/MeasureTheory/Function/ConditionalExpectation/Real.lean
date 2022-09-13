@@ -57,7 +57,7 @@ for the conditional expectation (not in mathlib yet) .-/
 theorem snorm_one_condexp_le_snorm (f : α → ℝ) : snorm (μ[f|m]) 1 μ ≤ snorm f 1 μ := by
   by_cases' hf : integrable f μ
   swap
-  · rw [snorm_congr_ae (condexp_undef hf), snorm_zero]
+  · rw [condexp_undef hf, snorm_zero]
     exact zero_le _
     
   by_cases' hm : m ≤ m0

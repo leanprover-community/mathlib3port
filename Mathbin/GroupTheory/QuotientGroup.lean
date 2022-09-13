@@ -82,7 +82,7 @@ theorem mk'_surjective : Function.Surjective <| mk' N :=
 @[to_additive]
 theorem mk'_eq_mk' {x y : G} : mk' N x = mk' N y ↔ ∃ z ∈ N, x * z = y :=
   QuotientGroup.eq'.trans <| by
-    simp only [← _root_.eq_inv_mul_iff_mul_eq, exists_prop, exists_eq_right]
+    simp only [← _root_.eq_inv_mul_iff_mul_eq, exists_propₓ, exists_eq_right]
 
 /-- Two `monoid_hom`s from a quotient group are equal if their compositions with
 `quotient_group.mk'` are equal.
@@ -114,7 +114,7 @@ omit nN
 @[to_additive QuotientAddGroup.addCommGroup]
 instance {G : Type _} [CommGroupₓ G] (N : Subgroup G) : CommGroupₓ (G ⧸ N) :=
   { @QuotientGroup.Quotient.group _ _ N N.normal_of_comm with
-    mul_comm := fun a b => Quotientₓ.induction_on₂' a b fun a b => congr_argₓ mk (mul_comm a b) }
+    mul_comm := fun a b => Quotientₓ.induction_on₂' a b fun a b => congr_arg mk (mul_comm a b) }
 
 include nN
 
@@ -359,7 +359,7 @@ theorem hom_quotient_zpow_of_hom_comp :
 @[to_additive, simp]
 theorem hom_quotient_zpow_of_hom_comp_of_right_inverse (i : Function.RightInverse g f) :
     (homQuotientZpowOfHom f n).comp (homQuotientZpowOfHom g n) = MonoidHom.id _ :=
-  monoid_hom_ext _ <| MonoidHom.ext fun x => congr_argₓ coe <| i x
+  monoid_hom_ext _ <| MonoidHom.ext fun x => congr_arg coe <| i x
 
 /-- The equivalence of quotients by powers of an integer induced by a group isomorphism. -/
 @[to_additive "The equivalence of quotients by multiples of an integer induced by an additive group\nisomorphism."]
@@ -396,15 +396,15 @@ open _Root_.Subgroup
 @[to_additive
       "The second isomorphism theorem: given two subgroups `H` and `N` of a group `G`,\nwhere `N` is normal, defines an isomorphism between `H/(H ∩ N)` and `(H + N)/N`"]
 noncomputable def quotientInfEquivProdNormalQuotient (H N : Subgroup G) [N.Normal] :
-    H ⧸ (H⊓N).comap H.Subtype ≃* _ ⧸ N.comap (H⊔N).Subtype :=
+    H ⧸ (H ⊓ N).comap H.Subtype ≃* _ ⧸ N.comap (H ⊔ N).Subtype :=
   let
     φ :-- φ is the natural homomorphism H →* (HN)/N.
       H →*
-      _ ⧸ N.comap (H⊔N).Subtype :=
-    (mk' <| N.comap (H⊔N).Subtype).comp (inclusion le_sup_left)
+      _ ⧸ N.comap (H ⊔ N).Subtype :=
+    (mk' <| N.comap (H ⊔ N).Subtype).comp (inclusion le_sup_left)
   have φ_surjective : Function.Surjective φ := fun x =>
     x.induction_on' <| by
-      rintro ⟨y, hy : y ∈ ↑(H⊔N)⟩
+      rintro ⟨y, hy : y ∈ ↑(H ⊔ N)⟩
       rw [mul_normal H N] at hy
       rcases hy with ⟨h, n, hh, hn, rfl⟩
       use h, hh

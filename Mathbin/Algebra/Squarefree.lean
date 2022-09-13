@@ -84,7 +84,7 @@ variable [CommMonoidₓ R] [DecidableRel (Dvd.Dvd : R → R → Prop)]
 
 theorem squarefree_iff_multiplicity_le_one (r : R) : Squarefree r ↔ ∀ x : R, multiplicity x r ≤ 1 ∨ IsUnit x := by
   refine' forall_congrₓ fun a => _
-  rw [← sq, pow_dvd_iff_le_multiplicity, or_iff_not_imp_left, not_leₓ, imp_congr _ Iff.rfl]
+  rw [← sq, pow_dvd_iff_le_multiplicity, or_iff_not_imp_left, not_leₓ, imp_congrₓ _ Iff.rfl]
   simpa using PartEnat.add_one_le_iff_lt (PartEnat.coe_ne_top 1)
 
 end CommMonoidₓ

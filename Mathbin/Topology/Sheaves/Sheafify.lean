@@ -107,12 +107,12 @@ theorem stalk_to_fiber_injective (x : X) : Function.Injective (F.stalkToFiber x)
   clear wVx
   rcases F.germ_eq x mU mV gU gV e with ⟨W, mW, iU', iV', e'⟩
   dsimp'  at e'
-  use ⟨W⊓(U'⊓V'), ⟨mW, mU, mV⟩⟩
+  use ⟨W ⊓ (U' ⊓ V'), ⟨mW, mU, mV⟩⟩
   refine' ⟨_, _, _⟩
-  · change W⊓(U'⊓V') ⟶ U.obj
+  · change W ⊓ (U' ⊓ V') ⟶ U.obj
     exact opens.inf_le_right _ _ ≫ opens.inf_le_left _ _ ≫ iU
     
-  · change W⊓(U'⊓V') ⟶ V.obj
+  · change W ⊓ (U' ⊓ V') ⟶ V.obj
     exact opens.inf_le_right _ _ ≫ opens.inf_le_right _ _ ≫ iV
     
   · intro w

@@ -165,7 +165,7 @@ instance subsingleton_pempty : Subsingleton Pempty :=
   ⟨fun a => a.elim⟩
 
 @[simp]
-theorem not_nonempty_pempty : ¬Nonempty Pempty := fun ⟨h⟩ => h.elim
+theorem not_nonempty_pemptyₓ : ¬Nonempty Pempty := fun ⟨h⟩ => h.elim
 
 theorem congr_heq {α β γ : Sort _} {f : α → γ} {g : β → γ} {x : α} {y : β} (h₁ : HEq f g) (h₂ : HEq x y) : f x = g y :=
   by
@@ -301,7 +301,7 @@ theorem imp_self : a → a ↔ True :=
   iff_true_intro id
 
 theorem Iff.imp (h₁ : a ↔ b) (h₂ : c ↔ d) : a → c ↔ b → d :=
-  imp_congr h₁ h₂
+  imp_congrₓ h₁ h₂
 
 @[simp]
 theorem eq_true_eq_id : Eq True = id := by
@@ -329,15 +329,15 @@ theorem iff_def' : (a ↔ b) ↔ (b → a) ∧ (a → b) :=
 theorem imp_true_iff {α : Sort _} : α → True ↔ True :=
   iff_true_intro fun _ => trivialₓ
 
-theorem imp_iff_right (ha : a) : a → b ↔ b :=
+theorem imp_iff_rightₓ (ha : a) : a → b ↔ b :=
   ⟨fun f => f ha, imp_intro⟩
 
-theorem imp_iff_not (hb : ¬b) : a → b ↔ ¬a :=
-  imp_congr_right fun _ => iff_false_intro hb
+theorem imp_iff_notₓ (hb : ¬b) : a → b ↔ ¬a :=
+  imp_congr_rightₓ fun _ => iff_false_intro hb
 
 theorem Decidable.imp_iff_right_iff [Decidable a] : (a → b ↔ b) ↔ a ∨ b :=
   ⟨fun H => (Decidable.em a).imp_right fun ha' => H.1 fun ha => (ha' ha).elim, fun H =>
-    (H.elim imp_iff_right) fun hb => ⟨fun hab => hb, fun _ _ => hb⟩⟩
+    (H.elim imp_iff_rightₓ) fun hb => ⟨fun hab => hb, fun _ _ => hb⟩⟩
 
 @[simp]
 theorem imp_iff_right_iff : (a → b ↔ b) ↔ a ∨ b :=
@@ -531,15 +531,15 @@ theorem xor_self (a : Prop) : Xorₓ a a = False := by
 
 
 theorem Iff.and (h₁ : a ↔ b) (h₂ : c ↔ d) : a ∧ c ↔ b ∧ d :=
-  and_congr h₁ h₂
+  and_congrₓ h₁ h₂
 
-theorem and_congr_left (h : c → (a ↔ b)) : a ∧ c ↔ b ∧ c :=
+theorem and_congr_leftₓ (h : c → (a ↔ b)) : a ∧ c ↔ b ∧ c :=
   And.comm.trans <| (and_congr_right h).trans And.comm
 
 theorem and_congr_left' (h : a ↔ b) : a ∧ c ↔ b ∧ c :=
   h.And Iff.rfl
 
-theorem and_congr_right' (h : b ↔ c) : a ∧ b ↔ a ∧ c :=
+theorem and_congr_right'ₓ (h : b ↔ c) : a ∧ b ↔ a ∧ c :=
   Iff.rfl.And h
 
 theorem not_and_of_not_left (b : Prop) : ¬a → ¬(a ∧ b) :=
@@ -549,16 +549,16 @@ theorem not_and_of_not_right (a : Prop) {b : Prop} : ¬b → ¬(a ∧ b) :=
   mt And.right
 
 theorem And.imp_left (h : a → b) : a ∧ c → b ∧ c :=
-  And.imp h id
+  And.impₓ h id
 
 theorem And.imp_right (h : a → b) : c ∧ a → c ∧ b :=
-  And.imp id h
+  And.impₓ id h
 
 theorem And.right_comm : (a ∧ b) ∧ c ↔ (a ∧ c) ∧ b := by
   simp only [And.left_comm, And.comm]
 
 theorem and_and_and_comm (a b c d : Prop) : (a ∧ b) ∧ c ∧ d ↔ (a ∧ c) ∧ b ∧ d := by
-  rw [← and_assoc, @And.right_comm a, and_assoc]
+  rw [← and_assocₓ, @And.right_comm a, and_assocₓ]
 
 theorem and_and_distrib_left (a b c : Prop) : a ∧ b ∧ c ↔ (a ∧ b) ∧ a ∧ c := by
   rw [and_and_and_comm, and_selfₓ]
@@ -581,7 +581,7 @@ theorem not_and_self_iff (a : Prop) : ¬a ∧ a ↔ False :=
 theorem and_iff_left_of_imp {a b : Prop} (h : a → b) : a ∧ b ↔ a :=
   Iff.intro And.left fun ha => ⟨ha, h ha⟩
 
-theorem and_iff_right_of_imp {a b : Prop} (h : b → a) : a ∧ b ↔ b :=
+theorem and_iff_right_of_impₓ {a b : Prop} (h : b → a) : a ∧ b ↔ b :=
   Iff.intro And.right fun hb => ⟨h hb, hb⟩
 
 @[simp]
@@ -590,7 +590,7 @@ theorem and_iff_left_iff_imp {a b : Prop} : (a ∧ b ↔ a) ↔ a → b :=
 
 @[simp]
 theorem and_iff_right_iff_imp {a b : Prop} : (a ∧ b ↔ b) ↔ b → a :=
-  ⟨fun h ha => (h.2 ha).1, and_iff_right_of_imp⟩
+  ⟨fun h ha => (h.2 ha).1, and_iff_right_of_impₓ⟩
 
 @[simp]
 theorem iff_self_and {p q : Prop} : (p ↔ p ∧ q) ↔ p → q := by
@@ -606,7 +606,7 @@ theorem And.congr_right_iff : (a ∧ b ↔ a ∧ c) ↔ a → (b ↔ c) :=
     simp [ha] at h <;> exact h, and_congr_right⟩
 
 @[simp]
-theorem And.congr_left_iff : (a ∧ c ↔ b ∧ c) ↔ c → (a ↔ b) := by
+theorem And.congr_left_iffₓ : (a ∧ c ↔ b ∧ c) ↔ c → (a ↔ b) := by
   simp only [And.comm, ← And.congr_right_iff]
 
 @[simp]
@@ -621,19 +621,19 @@ theorem and_self_right : (a ∧ b) ∧ b ↔ a ∧ b :=
 
 
 theorem Iff.or (h₁ : a ↔ b) (h₂ : c ↔ d) : a ∨ c ↔ b ∨ d :=
-  or_congr h₁ h₂
+  or_congrₓ h₁ h₂
 
-theorem or_congr_left' (h : a ↔ b) : a ∨ c ↔ b ∨ c :=
+theorem or_congr_left'ₓ (h : a ↔ b) : a ∨ c ↔ b ∨ c :=
   h.Or Iff.rfl
 
-theorem or_congr_right' (h : b ↔ c) : a ∨ b ↔ a ∨ c :=
+theorem or_congr_right'ₓ (h : b ↔ c) : a ∨ b ↔ a ∨ c :=
   Iff.rfl.Or h
 
 theorem Or.right_comm : (a ∨ b) ∨ c ↔ (a ∨ c) ∨ b := by
-  rw [or_assoc, or_assoc, or_comm b]
+  rw [or_assocₓ, or_assocₓ, or_comm b]
 
 theorem or_or_or_comm (a b c d : Prop) : (a ∨ b) ∨ c ∨ d ↔ (a ∨ c) ∨ b ∨ d := by
-  rw [← or_assoc, @Or.right_comm a, or_assoc]
+  rw [← or_assocₓ, @Or.right_comm a, or_assocₓ]
 
 theorem or_or_distrib_left (a b c : Prop) : a ∨ b ∨ c ↔ (a ∨ b) ∨ a ∨ c := by
   rw [or_or_or_comm, or_selfₓ]
@@ -673,11 +673,11 @@ theorem or_iff_not_imp_left : a ∨ b ↔ ¬a → b :=
   Decidable.or_iff_not_imp_left
 
 -- See Note [decidable namespace]
-protected theorem Decidable.or_iff_not_imp_right [Decidable b] : a ∨ b ↔ ¬b → a :=
+protected theorem Decidable.or_iff_not_imp_rightₓ [Decidable b] : a ∨ b ↔ ¬b → a :=
   Or.comm.trans Decidable.or_iff_not_imp_left
 
 theorem or_iff_not_imp_right : a ∨ b ↔ ¬b → a :=
-  Decidable.or_iff_not_imp_right
+  Decidable.or_iff_not_imp_rightₓ
 
 -- See Note [decidable namespace]
 protected theorem Decidable.not_or_of_imp [Decidable a] (h : a → b) : ¬a ∨ b :=
@@ -701,11 +701,11 @@ theorem imp_iff_not_or : a → b ↔ ¬a ∨ b :=
   Decidable.imp_iff_not_or
 
 -- See Note [decidable namespace]
-protected theorem Decidable.imp_iff_or_not [Decidable b] : b → a ↔ a ∨ ¬b :=
+protected theorem Decidable.imp_iff_or_notₓ [Decidable b] : b → a ↔ a ∨ ¬b :=
   Decidable.imp_iff_not_or.trans Or.comm
 
 theorem imp_iff_or_not : b → a ↔ a ∨ ¬b :=
-  Decidable.imp_iff_or_not
+  Decidable.imp_iff_or_notₓ
 
 -- See Note [decidable namespace]
 protected theorem Decidable.not_imp_not [Decidable a] : ¬a → ¬b ↔ b → a :=
@@ -720,8 +720,8 @@ protected theorem Function.mtr : (¬a → ¬b) → b → a :=
 
 -- See Note [decidable namespace]
 protected theorem Decidable.or_congr_left [Decidable c] (h : ¬c → (a ↔ b)) : a ∨ c ↔ b ∨ c := by
-  rw [Decidable.or_iff_not_imp_right, Decidable.or_iff_not_imp_right]
-  exact imp_congr_right h
+  rw [Decidable.or_iff_not_imp_rightₓ, Decidable.or_iff_not_imp_rightₓ]
+  exact imp_congr_rightₓ h
 
 theorem or_congr_leftₓ (h : ¬c → (a ↔ b)) : a ∨ c ↔ b ∨ c :=
   Decidable.or_congr_left h
@@ -729,20 +729,20 @@ theorem or_congr_leftₓ (h : ¬c → (a ↔ b)) : a ∨ c ↔ b ∨ c :=
 -- See Note [decidable namespace]
 protected theorem Decidable.or_congr_right [Decidable a] (h : ¬a → (b ↔ c)) : a ∨ b ↔ a ∨ c := by
   rw [Decidable.or_iff_not_imp_left, Decidable.or_iff_not_imp_left]
-  exact imp_congr_right h
+  exact imp_congr_rightₓ h
 
 theorem or_congr_rightₓ (h : ¬a → (b ↔ c)) : a ∨ b ↔ a ∨ c :=
   Decidable.or_congr_right h
 
 @[simp]
 theorem or_iff_left_iff_imp : (a ∨ b ↔ a) ↔ b → a :=
-  ⟨fun h hb => h.1 (Or.inr hb), or_iff_left_of_imp⟩
+  ⟨fun h hb => h.1 (Or.inr hb), or_iff_left_of_impₓ⟩
 
 @[simp]
 theorem or_iff_right_iff_imp : (a ∨ b ↔ b) ↔ a → b := by
   rw [or_comm, or_iff_left_iff_imp]
 
-theorem or_iff_left (hb : ¬b) : a ∨ b ↔ a :=
+theorem or_iff_leftₓ (hb : ¬b) : a ∨ b ↔ a :=
   ⟨fun h => h.resolve_right hb, Or.inl⟩
 
 theorem or_iff_right (ha : ¬a) : a ∨ b ↔ b :=
@@ -761,7 +761,7 @@ theorem or_and_distrib_right : (a ∨ b) ∧ c ↔ a ∧ c ∨ b ∧ c :=
 
 /-- `∨` distributes over `∧` (on the left). -/
 theorem or_and_distrib_left : a ∨ b ∧ c ↔ (a ∨ b) ∧ (a ∨ c) :=
-  ⟨Or.ndrec (fun ha => And.intro (Or.inl ha) (Or.inl ha)) (And.imp Or.inr Or.inr),
+  ⟨Or.ndrec (fun ha => And.intro (Or.inl ha) (Or.inl ha)) (And.impₓ Or.inr Or.inr),
     And.ndrec <| Or.ndrec (imp_intro ∘ Or.inl) (Or.imp_right ∘ And.intro)⟩
 
 /-- `∨` distributes over `∧` (on the right). -/
@@ -780,7 +780,7 @@ theorem or_self_right : (a ∨ b) ∨ b ↔ a ∨ b :=
 
 
 theorem Iff.iff (h₁ : a ↔ b) (h₂ : c ↔ d) : (a ↔ c) ↔ (b ↔ d) :=
-  iff_congr h₁ h₂
+  iff_congrₓ h₁ h₂
 
 theorem iff_of_true (ha : a) (hb : b) : a ↔ b :=
   ⟨fun _ => hb, fun _ => ha⟩
@@ -812,11 +812,11 @@ theorem imp_or_distrib : a → b ∨ c ↔ (a → b) ∨ (a → c) :=
   Decidable.imp_or_distrib
 
 -- See Note [decidable namespace]
-protected theorem Decidable.imp_or_distrib' [Decidable b] : a → b ∨ c ↔ (a → b) ∨ (a → c) := by
+protected theorem Decidable.imp_or_distrib'ₓ [Decidable b] : a → b ∨ c ↔ (a → b) ∨ (a → c) := by
   by_cases' b <;> simp [h, or_iff_right_of_imp ((· ∘ ·) False.elim)]
 
 theorem imp_or_distrib' : a → b ∨ c ↔ (a → b) ∨ (a → c) :=
-  Decidable.imp_or_distrib'
+  Decidable.imp_or_distrib'ₓ
 
 theorem not_imp_of_and_not : a ∧ ¬b → ¬(a → b)
   | ⟨ha, hb⟩, h => hb <| h ha
@@ -856,11 +856,11 @@ theorem not_iff_comm : (¬a ↔ b) ↔ (¬b ↔ a) :=
   Decidable.not_iff_comm
 
 -- See Note [decidable namespace]
-protected theorem Decidable.not_iff : ∀ [Decidable b], ¬(a ↔ b) ↔ (¬a ↔ b) := by
+protected theorem Decidable.not_iffₓ : ∀ [Decidable b], ¬(a ↔ b) ↔ (¬a ↔ b) := by
   intro h <;> cases h <;> simp only [h, iff_trueₓ, iff_falseₓ]
 
 theorem not_iff : ¬(a ↔ b) ↔ (¬a ↔ b) :=
-  Decidable.not_iff
+  Decidable.not_iffₓ
 
 -- See Note [decidable namespace]
 protected theorem Decidable.iff_not_comm [Decidable a] [Decidable b] : (a ↔ ¬b) ↔ (b ↔ ¬a) := by
@@ -870,7 +870,7 @@ theorem iff_not_comm : (a ↔ ¬b) ↔ (b ↔ ¬a) :=
   Decidable.iff_not_comm
 
 -- See Note [decidable namespace]
-protected theorem Decidable.iff_iff_and_or_not_and_not [Decidable b] : (a ↔ b) ↔ a ∧ b ∨ ¬a ∧ ¬b := by
+protected theorem Decidable.iff_iff_and_or_not_and_notₓ [Decidable b] : (a ↔ b) ↔ a ∧ b ∨ ¬a ∧ ¬b := by
   constructor <;> intro h
   · rw [h] <;> by_cases' b <;> [left, right] <;> constructor <;> assumption
     
@@ -885,7 +885,7 @@ protected theorem Decidable.iff_iff_and_or_not_and_not [Decidable b] : (a ↔ b)
     
 
 theorem iff_iff_and_or_not_and_not : (a ↔ b) ↔ a ∧ b ∨ ¬a ∧ ¬b :=
-  Decidable.iff_iff_and_or_not_and_not
+  Decidable.iff_iff_and_or_not_and_notₓ
 
 theorem Decidable.iff_iff_not_or_and_or_not [Decidable a] [Decidable b] : (a ↔ b) ↔ (¬a ∨ b) ∧ (a ∨ ¬b) := by
   rw [iff_iff_implies_and_implies a b]
@@ -895,11 +895,11 @@ theorem iff_iff_not_or_and_or_not : (a ↔ b) ↔ (¬a ∨ b) ∧ (a ∨ ¬b) :=
   Decidable.iff_iff_not_or_and_or_not
 
 -- See Note [decidable namespace]
-protected theorem Decidable.not_and_not_right [Decidable b] : ¬(a ∧ ¬b) ↔ a → b :=
+protected theorem Decidable.not_and_not_rightₓ [Decidable b] : ¬(a ∧ ¬b) ↔ a → b :=
   ⟨fun h ha => h.decidable_imp_symm <| And.intro ha, fun h ⟨ha, hb⟩ => hb <| h ha⟩
 
 theorem not_and_not_right : ¬(a ∧ ¬b) ↔ a → b :=
-  Decidable.not_and_not_right
+  Decidable.not_and_not_rightₓ
 
 /-- Transfer decidability of `a` to decidability of `b`, if the propositions are equivalent.
 **Important**: this function should be used instead of `rw` on `decidable b`, because the
@@ -932,7 +932,7 @@ protected theorem Decidable.not_and_distrib [Decidable a] : ¬(a ∧ b) ↔ ¬a 
   ⟨fun h => if ha : a then Or.inr fun hb => h ⟨ha, hb⟩ else Or.inl ha, not_and_of_not_or_not⟩
 
 -- See Note [decidable namespace]
-protected theorem Decidable.not_and_distrib' [Decidable b] : ¬(a ∧ b) ↔ ¬a ∨ ¬b :=
+protected theorem Decidable.not_and_distrib'ₓ [Decidable b] : ¬(a ∧ b) ↔ ¬a ∨ ¬b :=
   ⟨fun h => if hb : b then Or.inl fun ha => h ⟨ha, hb⟩ else Or.inr hb, not_and_of_not_or_not⟩
 
 /-- One of de Morgan's laws: the negation of a conjunction is logically equivalent to the
@@ -982,19 +982,19 @@ section Mem
 
 variable {α β : Type _} [Membership α β] {s t : β} {a b : α}
 
-theorem ne_of_mem_of_not_mem (h : a ∈ s) : b ∉ s → a ≠ b :=
+theorem ne_of_mem_of_not_memₓ (h : a ∈ s) : b ∉ s → a ≠ b :=
   mt fun e => e ▸ h
 
-theorem ne_of_mem_of_not_mem' (h : a ∈ s) : a ∉ t → s ≠ t :=
+theorem ne_of_mem_of_not_mem'ₓ (h : a ∈ s) : a ∉ t → s ≠ t :=
   mt fun e => e ▸ h
 
 /-- **Alias** of `ne_of_mem_of_not_mem`. -/
 theorem Membership.Mem.ne_of_not_mem : a ∈ s → b ∉ s → a ≠ b :=
-  ne_of_mem_of_not_mem
+  ne_of_mem_of_not_memₓ
 
 /-- **Alias** of `ne_of_mem_of_not_mem'`. -/
 theorem Membership.Mem.ne_of_not_mem' : a ∈ s → a ∉ t → s ≠ t :=
-  ne_of_mem_of_not_mem'
+  ne_of_mem_of_not_mem'ₓ
 
 end Mem
 
@@ -1021,7 +1021,7 @@ theorem ball_mem_comm {α β} [Membership α β] {s : β} {p : α → α → Pro
   ball_cond_comm
 
 theorem ne_of_apply_ne {α β : Sort _} (f : α → β) {x y : α} (h : f x ≠ f y) : x ≠ y := fun w : x = y =>
-  h (congr_argₓ f w)
+  h (congr_arg f w)
 
 theorem eq_equivalence : Equivalenceₓ (@Eq α) :=
   ⟨Eq.refl, @Eq.symm _, @Eq.trans _⟩
@@ -1046,24 +1046,24 @@ theorem cast_cast : ∀ {α β γ : Sort _} (ha : α = β) (hb : β = γ) (a : �
   | _, _, _, rfl, rfl, a => rfl
 
 @[simp]
-theorem congr_refl_left {α β : Sort _} (f : α → β) {a b : α} (h : a = b) : congr (Eq.refl f) h = congr_argₓ f h :=
+theorem congr_refl_left {α β : Sort _} (f : α → β) {a b : α} (h : a = b) : congr (Eq.refl f) h = congr_arg f h :=
   rfl
 
 @[simp]
-theorem congr_refl_right {α β : Sort _} {f g : α → β} (h : f = g) (a : α) : congr h (Eq.refl a) = congr_funₓ h a :=
+theorem congr_refl_right {α β : Sort _} {f g : α → β} (h : f = g) (a : α) : congr h (Eq.refl a) = congr_fun h a :=
   rfl
 
 @[simp]
-theorem congr_arg_refl {α β : Sort _} (f : α → β) (a : α) : congr_argₓ f (Eq.refl a) = Eq.refl (f a) :=
+theorem congr_arg_refl {α β : Sort _} (f : α → β) (a : α) : congr_arg f (Eq.refl a) = Eq.refl (f a) :=
   rfl
 
 @[simp]
-theorem congr_fun_rfl {α β : Sort _} (f : α → β) (a : α) : congr_funₓ (Eq.refl f) a = Eq.refl (f a) :=
+theorem congr_fun_rfl {α β : Sort _} (f : α → β) (a : α) : congr_fun (Eq.refl f) a = Eq.refl (f a) :=
   rfl
 
 @[simp]
 theorem congr_fun_congr_arg {α β γ : Sort _} (f : α → β → γ) {a a' : α} (p : a = a') (b : β) :
-    congr_funₓ (congr_argₓ f p) b = congr_argₓ (fun a => f a b) p :=
+    congr_fun (congr_arg f p) b = congr_arg (fun a => f a b) p :=
   rfl
 
 theorem heq_of_cast_eq : ∀ {α β : Sort _} {a : α} {a' : β} (e : α = β) (h₂ : cast e a = a'), HEq a a'
@@ -1095,10 +1095,10 @@ theorem congr_arg2ₓ {α β γ : Sort _} (f : α → β → γ) {x x' : α} {y 
 variable {β : α → Sort _} {γ : ∀ a, β a → Sort _} {δ : ∀ a b, γ a b → Sort _}
 
 theorem congr_fun₂ {f g : ∀ a b, γ a b} (h : f = g) (a : α) (b : β a) : f a b = g a b :=
-  congr_funₓ (congr_funₓ h _) _
+  congr_fun (congr_fun h _) _
 
 theorem congr_fun₃ {f g : ∀ a b c, δ a b c} (h : f = g) (a : α) (b : β a) (c : γ a b) : f a b c = g a b c :=
-  congr_fun₂ (congr_funₓ h _) _ _
+  congr_fun₂ (congr_fun h _) _ _
 
 theorem funext₂ {f g : ∀ a b, γ a b} (h : ∀ a b, f a b = g a b) : f = g :=
   funext fun _ => funext <| h _
@@ -1215,7 +1215,7 @@ theorem Exists.some_spec {p : α → Prop} (P : ∃ a, p a) : p P.some :=
 
 --theorem forall_not_of_not_exists (h : ¬ ∃ x, p x) : ∀ x, ¬ p x :=
 --forall_imp_of_exists_imp h
-theorem not_exists_of_forall_not (h : ∀ x, ¬p x) : ¬∃ x, p x :=
+theorem not_exists_of_forall_notₓ (h : ∀ x, ¬p x) : ¬∃ x, p x :=
   exists_imp_distrib.2 h
 
 @[simp]
@@ -1304,11 +1304,11 @@ theorem exists_or_distrib : (∃ x, p x ∨ q x) ↔ (∃ x, p x) ∨ ∃ x, q x
     hepq.elim (fun ⟨x, hpx⟩ => ⟨x, Or.inl hpx⟩) fun ⟨x, hqx⟩ => ⟨x, Or.inr hqx⟩⟩
 
 @[simp]
-theorem exists_and_distrib_left {q : Prop} {p : α → Prop} : (∃ x, q ∧ p x) ↔ q ∧ ∃ x, p x :=
+theorem exists_and_distrib_leftₓ {q : Prop} {p : α → Prop} : (∃ x, q ∧ p x) ↔ q ∧ ∃ x, p x :=
   ⟨fun ⟨x, hq, hp⟩ => ⟨hq, x, hp⟩, fun ⟨hq, x, hp⟩ => ⟨x, hq, hp⟩⟩
 
 @[simp]
-theorem exists_and_distrib_right {q : Prop} {p : α → Prop} : (∃ x, p x ∧ q) ↔ (∃ x, p x) ∧ q := by
+theorem exists_and_distrib_rightₓ {q : Prop} {p : α → Prop} : (∃ x, p x ∧ q) ↔ (∃ x, p x) ∧ q := by
   simp [and_comm]
 
 @[simp]
@@ -1363,7 +1363,7 @@ theorem exists_eq_right_right'ₓ {a' : α} : (∃ a : α, p a ∧ q a ∧ a' = 
   ⟨fun ⟨_, hp, hq, rfl⟩ => ⟨hp, hq⟩, fun ⟨hp, hq⟩ => ⟨a', hp, hq, rfl⟩⟩
 
 @[simp]
-theorem exists_apply_eq_applyₓ (f : α → β) (a' : α) : ∃ a, f a = f a' :=
+theorem exists_apply_eq_apply (f : α → β) (a' : α) : ∃ a, f a = f a' :=
   ⟨a', rfl⟩
 
 @[simp]
@@ -1456,7 +1456,7 @@ theorem forall_or_distrib_right {q : Prop} {p : α → Prop} : (∀ x, p x ∨ q
   Decidable.forall_or_distrib_right
 
 @[simp]
-theorem exists_prop {p q : Prop} : (∃ h : p, q) ↔ p ∧ q :=
+theorem exists_propₓ {p q : Prop} : (∃ h : p, q) ↔ p ∧ q :=
   ⟨fun ⟨h₁, h₂⟩ => ⟨h₁, h₂⟩, fun ⟨h₁, h₂⟩ => ⟨h₁, h₂⟩⟩
 
 theorem exists_unique_prop {p q : Prop} : (∃! h : p, q) ↔ p ∧ q := by
@@ -1628,7 +1628,7 @@ theorem bex_congr (H : ∀ x h, P x h ↔ Q x h) : (∃ x h, P x h) ↔ ∃ x h,
   exists_congr fun x => exists_congr (H x)
 
 theorem bex_eq_left {a : α} : (∃ (x : _)(_ : x = a), p x) ↔ p a := by
-  simp only [exists_prop, exists_eq_left]
+  simp only [exists_propₓ, exists_eq_left]
 
 theorem Ball.imp_right (H : ∀ x h, P x h → Q x h) (h₁ : ∀ x h, P x h) (x h) : Q x h :=
   H _ _ <| h₁ _ _
@@ -1686,7 +1686,7 @@ theorem ball_or_left_distrib : (∀ x, p x ∨ q x → r x) ↔ (∀ x, p x → 
 
 theorem bex_or_left_distrib : (∃ (x : _)(_ : p x ∨ q x), r x) ↔ (∃ (x : _)(_ : p x), r x) ∨ ∃ (x : _)(_ : q x), r x :=
   by
-  simp only [exists_prop] <;> exact Iff.trans (exists_congr fun x => or_and_distrib_right) exists_or_distrib
+  simp only [exists_propₓ] <;> exact Iff.trans (exists_congr fun x => or_and_distrib_right) exists_or_distrib
 
 end BoundedQuantifiers
 
@@ -1709,7 +1709,7 @@ theorem dite_eq_iff : dite P A B = c ↔ (∃ h, A h = c) ∨ ∃ h, B h = c := 
 
 theorem ite_eq_iff : ite P a b = c ↔ P ∧ a = c ∨ ¬P ∧ b = c :=
   dite_eq_iff.trans <| by
-    rw [exists_prop, exists_prop]
+    rw [exists_propₓ, exists_propₓ]
 
 @[simp]
 theorem dite_eq_left_iff : dite P (fun _ => a) B = a ↔ ∀ h, B h = a := by
@@ -1738,11 +1738,11 @@ theorem dite_ne_right_iff : (dite P A fun _ => b) ≠ b ↔ ∃ h, A h ≠ b := 
 
 theorem ite_ne_left_iff : ite P a b ≠ a ↔ ¬P ∧ a ≠ b :=
   dite_ne_left_iff.trans <| by
-    rw [exists_prop]
+    rw [exists_propₓ]
 
 theorem ite_ne_right_iff : ite P a b ≠ b ↔ P ∧ a ≠ b :=
   dite_ne_right_iff.trans <| by
-    rw [exists_prop]
+    rw [exists_propₓ]
 
 protected theorem Ne.dite_eq_left_iff (h : ∀ h, a ≠ B h) : dite P (fun _ => a) B = a ↔ P :=
   dite_eq_left_iff.trans <| ⟨fun H => of_not_not fun h' => h h' (H h').symm, fun h H => (H h).elim⟩

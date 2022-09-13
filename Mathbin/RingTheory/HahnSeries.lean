@@ -737,7 +737,7 @@ private theorem mul_assoc' [NonUnitalSemiringₓ R] (x y z : HahnSeries Γ R) : 
     simp only [and_trueₓ, Prod.mk.inj_iffₓ, eq_self_iff_true, heq_iff_eq, ← H1.2.2.2, ← H3.2.2.2]
     
   · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩ H1 H2
-    simp only [exists_prop, Set.image2_add, Prod.mk.inj_iffₓ, mem_add_antidiagonal, Sigma.exists, Ne.def,
+    simp only [exists_propₓ, Set.image2_add, Prod.mk.inj_iffₓ, mem_add_antidiagonal, Sigma.exists, Ne.def,
       Set.image_prod, mem_sigma, Set.mem_set_of_eq, heq_iff_eq, Prod.existsₓ] at H1 H2⊢
     obtain ⟨⟨nx, H, rfl⟩, ny, nz, rfl⟩ := H1
     exact
@@ -935,7 +935,7 @@ theorem emb_domain_mul [NonUnitalNonAssocSemiringₓ R] (f : Γ ↪o Γ') (hf : 
       
     apply sum_subset
     · rintro ⟨i, j⟩ hij
-      simp only [exists_prop, mem_map, Prod.mk.inj_iffₓ, mem_add_antidiagonal, Function.Embedding.coe_prod_map,
+      simp only [exists_propₓ, mem_map, Prod.mk.inj_iffₓ, mem_add_antidiagonal, Function.Embedding.coe_prod_map,
         mem_support, Prod.existsₓ] at hij
       obtain ⟨i, j, ⟨hx, hy, rfl⟩, rfl, rfl⟩ := hij
       simp [hx, hy, hf]
@@ -944,7 +944,7 @@ theorem emb_domain_mul [NonUnitalNonAssocSemiringₓ R] (f : Γ ↪o Γ') (hf : 
       contrapose! h2
       obtain ⟨i, hi, rfl⟩ := support_emb_domain_subset (ne_zero_and_ne_zero_of_mul h2).1
       obtain ⟨j, hj, rfl⟩ := support_emb_domain_subset (ne_zero_and_ne_zero_of_mul h2).2
-      simp only [exists_prop, mem_map, Prod.mk.inj_iffₓ, mem_add_antidiagonal, Function.Embedding.coe_prod_map,
+      simp only [exists_propₓ, mem_map, Prod.mk.inj_iffₓ, mem_add_antidiagonal, Function.Embedding.coe_prod_map,
         mem_support, Prod.existsₓ]
       simp only [mem_add_antidiagonal, emb_domain_coeff, mem_support, ← hf, OrderEmbedding.eq_iff_eq] at h1
       exact ⟨i, j, h1, rfl⟩
@@ -1053,7 +1053,7 @@ def toPowerSeries : HahnSeries ℕ R ≃+* PowerSeries R where
     classical
     refine' sum_filter_ne_zero.symm.trans (((sum_congr _) fun _ _ => rfl).trans sum_filter_ne_zero)
     ext m
-    simp only [nat.mem_antidiagonal, mem_add_antidiagonal, And.congr_left_iff, mem_filter, mem_support]
+    simp only [nat.mem_antidiagonal, mem_add_antidiagonal, And.congr_left_iffₓ, mem_filter, mem_support]
     rintro h
     rw [and_iff_right (left_ne_zero_of_mul h), and_iff_right (right_ne_zero_of_mul h)]
 
@@ -1155,7 +1155,7 @@ def toMvPowerSeries {σ : Type _} [Fintype σ] : HahnSeries (σ →₀ ℕ) R �
     simp_rw [mul_coeff]
     refine' sum_filter_ne_zero.symm.trans ((sum_congr _ fun _ _ => rfl).trans sum_filter_ne_zero)
     ext m
-    simp only [And.congr_left_iff, mem_add_antidiagonal, mem_filter, mem_support, Finsupp.mem_antidiagonal]
+    simp only [And.congr_left_iffₓ, mem_add_antidiagonal, mem_filter, mem_support, Finsupp.mem_antidiagonal]
     rintro h
     rw [and_iff_right (left_ne_zero_of_mul h), and_iff_right (right_ne_zero_of_mul h)]
 
@@ -1279,8 +1279,8 @@ theorem is_pwo_Union_support_powers [LinearOrderedAddCommGroup Γ] [Ringₓ R] [
     
   refine' Set.Union_subset fun n => _
   induction' n with n ih <;> intro g hn
-  · simp only [exists_prop, and_trueₓ, Set.mem_singleton_iff, Set.set_of_eq_eq_singleton, mem_support, ite_eq_right_iff,
-      Ne.def, not_false_iff, one_ne_zero, pow_zeroₓ, not_forall, one_coeff] at hn
+  · simp only [exists_propₓ, and_trueₓ, Set.mem_singleton_iff, Set.set_of_eq_eq_singleton, mem_support,
+      ite_eq_right_iff, Ne.def, not_false_iff, one_ne_zero, pow_zeroₓ, not_forall, one_coeff] at hn
     rw [hn, SetLike.mem_coe]
     exact AddSubmonoid.zero_mem _
     
@@ -1467,7 +1467,7 @@ instance :
         · apply s.finite_co_support
           
         · obtain ⟨i, j, hi, hj, rfl⟩ := support_mul_subset_add_support ha
-          simp only [exists_prop, Set.mem_Union, mem_add_antidiagonal, mul_coeff, mem_support, is_pwo_support,
+          simp only [exists_propₓ, Set.mem_Union, mem_add_antidiagonal, mul_coeff, mem_support, is_pwo_support,
             Prod.existsₓ]
           exact ⟨i, j, mem_coe.2 (mem_add_antidiagonal.2 ⟨hi, Set.mem_Union.2 ⟨a, hj⟩, rfl⟩), hj⟩
            }

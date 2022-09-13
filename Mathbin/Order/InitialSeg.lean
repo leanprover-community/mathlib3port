@@ -305,7 +305,7 @@ def ltEquiv {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ →
     intro x
     rw [← g.apply_symm_apply x, g.map_rel_iff, f.down', exists_congr]
     intro y
-    exact ⟨congr_argₓ g, fun h => g.to_equiv.bijective.1 h⟩⟩
+    exact ⟨congr_arg g, fun h => g.to_equiv.bijective.1 h⟩⟩
 
 @[simp]
 theorem equiv_lt_apply (f : r ≃r s) (g : s ≺i t) (a : α) : (equivLt f g) a = g (f a) :=
@@ -352,7 +352,7 @@ theorem of_element_top {α : Type _} (r : α → α → Prop) (a : α) : (ofElem
 /-- Restrict the codomain of a principal segment -/
 def codRestrict (p : Set β) (f : r ≺i s) (H : ∀ a, f a ∈ p) (H₂ : f.top ∈ p) : r ≺i Subrel s p :=
   ⟨RelEmbedding.codRestrict p f H, ⟨f.top, H₂⟩, fun ⟨b, h⟩ =>
-    f.down.trans <| exists_congr fun a => show (⟨f a, H a⟩ : p).1 = _ ↔ _ from ⟨Subtype.eq, congr_argₓ _⟩⟩
+    f.down.trans <| exists_congr fun a => show (⟨f a, H a⟩ : p).1 = _ ↔ _ from ⟨Subtype.eq, congr_arg _⟩⟩
 
 @[simp]
 theorem cod_restrict_apply (p) (f : r ≺i s) (H H₂ a) : codRestrict p f H H₂ a = ⟨f a, H a⟩ :=

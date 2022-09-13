@@ -103,7 +103,7 @@ theorem span_coe (W : Subspace K V) : span ↑W = W :=
 
 /-- The infimum of two subspaces exists. -/
 instance hasInf : HasInf (Subspace K V) :=
-  ⟨fun A B => ⟨A⊓B, fun v w hv hw hvw h1 h2 => ⟨A.mem_add _ _ hv hw _ h1.1 h2.1, B.mem_add _ _ hv hw _ h1.2 h2.2⟩⟩⟩
+  ⟨fun A B => ⟨A ⊓ B, fun v w hv hw hvw h1 h2 => ⟨A.mem_add _ _ hv hw _ h1.1 h2.1, B.mem_add _ _ hv hw _ h1.2 h2.2⟩⟩⟩
 
 /-- Infimums of arbitrary collections of subspaces exist. -/
 instance hasInfₓ : HasInfₓ (Subspace K V) :=
@@ -152,7 +152,7 @@ theorem subset_span_trans {S T U : Set (ℙ K V)} (hST : S ⊆ span T) (hTU : T 
   gi.gc.le_u_l_trans hST hTU
 
 /-- The supremum of two subspaces is equal to the span of their union. -/
-theorem span_union (S T : Set (ℙ K V)) : span (S ∪ T) = span S⊔span T :=
+theorem span_union (S T : Set (ℙ K V)) : span (S ∪ T) = span S ⊔ span T :=
   (@gi K V _ _ _).gc.l_sup
 
 /-- The supremum of a collection of subspaces is equal to the span of the union of the
@@ -162,10 +162,10 @@ theorem span_Union {ι} (s : ι → Set (ℙ K V)) : span (⋃ i, s i) = ⨆ i, 
 
 /-- The supremum of a subspace and the span of a set of points is equal to the span of the union of
 the subspace and the set of points. -/
-theorem sup_span {S : Set (ℙ K V)} {W : Subspace K V} : W⊔span S = span (W ∪ S) := by
+theorem sup_span {S : Set (ℙ K V)} {W : Subspace K V} : W ⊔ span S = span (W ∪ S) := by
   rw [span_union, span_coe]
 
-theorem span_sup {S : Set (ℙ K V)} {W : Subspace K V} : span S⊔W = span (S ∪ W) := by
+theorem span_sup {S : Set (ℙ K V)} {W : Subspace K V} : span S ⊔ W = span (S ∪ W) := by
   rw [span_union, span_coe]
 
 /-- A point in a projective space is contained in the span of a set of points if and only if the

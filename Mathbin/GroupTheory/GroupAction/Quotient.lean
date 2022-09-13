@@ -66,8 +66,8 @@ instance right_quotient_action' [hH : H.Normal] : QuotientAction αᵐᵒᵖ H :
 instance quotient [QuotientAction β H] : MulAction β (α ⧸ H) where
   smul := fun b =>
     Quotientₓ.map' ((· • ·) b) fun a a' h => left_rel_apply.mpr <| QuotientAction.inv_mul_mem b <| left_rel_apply.mp h
-  one_smul := fun q => Quotientₓ.induction_on' q fun a => congr_argₓ Quotientₓ.mk' (one_smul β a)
-  mul_smul := fun b b' q => Quotientₓ.induction_on' q fun a => congr_argₓ Quotientₓ.mk' (mul_smul b b' a)
+  one_smul := fun q => Quotientₓ.induction_on' q fun a => congr_arg Quotientₓ.mk' (one_smul β a)
+  mul_smul := fun b b' q => Quotientₓ.induction_on' q fun a => congr_arg Quotientₓ.mk' (mul_smul b b' a)
 
 variable {β}
 
@@ -116,7 +116,7 @@ variable (α) {β} [MulAction α β] (x : β)
 def ofQuotientStabilizer (g : α ⧸ MulAction.stabilizer α x) : β :=
   (Quotientₓ.liftOn' g (· • x)) fun g1 g2 H =>
     calc
-      g1 • x = g1 • (g1⁻¹ * g2) • x := congr_argₓ _ (left_rel_apply.mp H).symm
+      g1 • x = g1 • (g1⁻¹ * g2) • x := congr_arg _ (left_rel_apply.mp H).symm
       _ = g2 • x := by
         rw [smul_smul, mul_inv_cancel_left]
       
@@ -150,7 +150,7 @@ noncomputable def orbitEquivQuotientStabilizer (b : β) : Orbit α b ≃ α ⧸ 
       ⟨fun x y hxy =>
         injective_of_quotient_stabilizer α b
           (by
-            convert congr_argₓ Subtype.val hxy),
+            convert congr_arg Subtype.val hxy),
         fun ⟨b, ⟨g, hgb⟩⟩ => ⟨g, Subtype.eq hgb⟩⟩
 
 /-- Orbit-stabilizer theorem. -/

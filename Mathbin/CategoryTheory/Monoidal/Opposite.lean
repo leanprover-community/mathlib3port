@@ -86,10 +86,10 @@ def Quiver.Hom.unmop {X Y : Cᴹᵒᵖ} (f : X ⟶ Y) : unmop X ⟶ unmop Y :=
 namespace CategoryTheory
 
 theorem mop_inj {X Y : C} : Function.Injective (Quiver.Hom.mop : (X ⟶ Y) → (mop X ⟶ mop Y)) := fun _ _ H =>
-  congr_argₓ Quiver.Hom.unmop H
+  congr_arg Quiver.Hom.unmop H
 
 theorem unmop_inj {X Y : Cᴹᵒᵖ} : Function.Injective (Quiver.Hom.unmop : (X ⟶ Y) → (unmop X ⟶ unmop Y)) := fun _ _ H =>
-  congr_argₓ Quiver.Hom.mop H
+  congr_arg Quiver.Hom.mop H
 
 @[simp]
 theorem unmop_mop {X Y : C} {f : X ⟶ Y} : f.mop.unmop = f :=

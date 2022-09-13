@@ -44,10 +44,10 @@ a type with *b*ot or *t*op respectively.
 
 variable (degb : A → B) (degt : A → T) (f g : AddMonoidAlgebra R A)
 
-theorem sup_support_add_le : (f + g).Support.sup degb ≤ f.Support.sup degb⊔g.Support.sup degb :=
+theorem sup_support_add_le : (f + g).Support.sup degb ≤ f.Support.sup degb ⊔ g.Support.sup degb :=
   (Finset.sup_mono Finsupp.support_add).trans_eq Finset.sup_union
 
-theorem le_inf_support_add : f.Support.inf degt⊓g.Support.inf degt ≤ (f + g).Support.inf degt :=
+theorem le_inf_support_add : f.Support.inf degt ⊓ g.Support.inf degt ≤ (f + g).Support.inf degt :=
   sup_support_add_le (fun a : A => OrderDual.toDual (degt a)) f g
 
 end ExplicitDegrees
@@ -134,7 +134,7 @@ theorem le_inf_support_multiset_prod (degt0 : 0 ≤ degt 0) (degtm : ∀ a b, de
 
 theorem sup_support_finset_prod_le (degb0 : degb 0 ≤ 0) (degbm : ∀ a b, degb (a + b) ≤ degb a + degb b) (s : Finset ι)
     (f : ι → AddMonoidAlgebra R A) : (∏ i in s, f i).Support.sup degb ≤ ∑ i in s, (f i).Support.sup degb :=
-  (sup_support_multiset_prod_le degb0 degbm _).trans_eq <| congr_argₓ _ <| Multiset.map_map _ _ _
+  (sup_support_multiset_prod_le degb0 degbm _).trans_eq <| congr_arg _ <| Multiset.map_map _ _ _
 
 theorem le_inf_support_finset_prod (degt0 : 0 ≤ degt 0) (degtm : ∀ a b, degt a + degt b ≤ degt (a + b)) (s : Finset ι)
     (f : ι → AddMonoidAlgebra R A) : (∑ i in s, (f i).Support.inf degt) ≤ (∏ i in s, f i).Support.inf degt :=

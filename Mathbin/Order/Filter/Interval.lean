@@ -89,7 +89,7 @@ theorem tendsto_Ixx_class_principal {s t : Set α} {Ixx : α → α → Set α} 
       mem_powerset_iff, mem_principal]
 
 theorem tendsto_Ixx_class_inf {l₁ l₁' l₂ l₂' : Filter α} {Ixx} [h : TendstoIxxClass Ixx l₁ l₂]
-    [h' : TendstoIxxClass Ixx l₁' l₂'] : TendstoIxxClass Ixx (l₁⊓l₁') (l₂⊓l₂') :=
+    [h' : TendstoIxxClass Ixx l₁' l₂'] : TendstoIxxClass Ixx (l₁ ⊓ l₁') (l₂ ⊓ l₂') :=
   ⟨by
     simpa only [prod_inf_prod, small_sets_inf] using h.1.inf h'.1⟩
 

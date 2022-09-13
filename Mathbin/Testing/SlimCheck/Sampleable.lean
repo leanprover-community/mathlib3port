@@ -413,9 +413,9 @@ instance Sum.sampleable : SampleableBifunctor.{u, v} Sum where
   pRepr := @Sum.hasRepr
 
 instance Rat.sampleable : Sampleable ℚ :=
-  (Sampleable.lift (ℤ × ℕ+) (fun x => Prod.casesOn x Rat.mkPnat) fun r => (r.Num, ⟨r.denom, r.Pos⟩)) <| by
+  (Sampleable.lift (ℤ × ℕ+) (fun x => Prod.casesOn x Ratₓ.mkPnat) fun r => (r.Num, ⟨r.denom, r.Pos⟩)) <| by
     intro i
-    rcases i with ⟨x, ⟨y, hy⟩⟩ <;> unfold_wf <;> dsimp' [Rat.mkPnat]
+    rcases i with ⟨x, ⟨y, hy⟩⟩ <;> unfold_wf <;> dsimp' [Ratₓ.mkPnat]
     mono*
     · rw [← Int.coe_nat_leₓ, ← Int.abs_eq_nat_abs, ← Int.abs_eq_nat_abs]
       apply Int.abs_div_le_abs

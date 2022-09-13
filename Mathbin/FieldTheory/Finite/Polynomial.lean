@@ -195,16 +195,16 @@ theorem dim_R [Fintype σ] : Module.rank K (R σ K) = Fintype.card (σ → K) :=
   calc
     Module.rank K (R σ K) = Module.rank K (↥{ s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 } →₀ K) :=
       LinearEquiv.dim_eq (Finsupp.supportedEquivFinsupp { s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 })
-    _ = # { s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 } := by
+    _ = (#{ s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 }) := by
       rw [Finsupp.dim_eq, dim_self, mul_oneₓ]
-    _ = # { s : σ → ℕ | ∀ n : σ, s n < Fintype.card K } := by
+    _ = (#{ s : σ → ℕ | ∀ n : σ, s n < Fintype.card K }) := by
       refine' Quotientₓ.sound ⟨(Equivₓ.subtypeEquiv Finsupp.equivFunOnFintype) fun f => _⟩
       refine' forall_congrₓ fun n => le_tsub_iff_right _
       exact Fintype.card_pos_iff.2 ⟨0⟩
-    _ = # (σ → { n // n < Fintype.card K }) :=
+    _ = (#σ → { n // n < Fintype.card K }) :=
       (@Equivₓ.subtypePiEquivPi σ (fun _ => ℕ) fun s n => n < Fintype.card K).cardinal_eq
-    _ = # (σ → Finₓ (Fintype.card K)) := (Equivₓ.arrowCongr (Equivₓ.refl σ) Finₓ.equivSubtype.symm).cardinal_eq
-    _ = # (σ → K) := (Equivₓ.arrowCongr (Equivₓ.refl σ) (Fintype.equivFin K).symm).cardinal_eq
+    _ = (#σ → Finₓ (Fintype.card K)) := (Equivₓ.arrowCongr (Equivₓ.refl σ) Finₓ.equivSubtype.symm).cardinal_eq
+    _ = (#σ → K) := (Equivₓ.arrowCongr (Equivₓ.refl σ) (Fintype.equivFin K).symm).cardinal_eq
     _ = Fintype.card (σ → K) := Cardinal.mk_fintype _
     
 
@@ -232,7 +232,7 @@ theorem eq_zero_of_eval_eq_zero [Finite σ] (p : MvPolynomial σ K) (h : ∀ v :
   let p' : R σ K := ⟨p, hp⟩
   have : p' ∈ (evalᵢ σ K).ker := funext h
   show p'.1 = (0 : R σ K).1 from
-    congr_argₓ _ <| by
+    congr_arg _ <| by
       rwa [ker_evalₗ, mem_bot] at this
 
 end MvPolynomial

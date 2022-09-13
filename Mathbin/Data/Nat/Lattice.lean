@@ -154,7 +154,7 @@ theorem Inf_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < inf { m | p m }) : inf { 
   obtain ⟨m, hm⟩ := nonempty_of_pos_Inf h
   refine'
     le_cInf ⟨m + n, _⟩ fun b hb =>
-      le_of_not_ltₓ fun hbn => ne_of_mem_of_not_mem _ (not_mem_of_lt_Inf h) (tsub_eq_zero_of_le hbn.le)
+      le_of_not_ltₓ fun hbn => ne_of_mem_of_not_memₓ _ (not_mem_of_lt_Inf h) (tsub_eq_zero_of_le hbn.le)
   · dsimp'
     rwa [add_tsub_cancel_right]
     
@@ -165,17 +165,17 @@ section
 
 variable {α : Type _} [CompleteLattice α]
 
-theorem supr_lt_succ (u : ℕ → α) (n : ℕ) : (⨆ k < n + 1, u k) = (⨆ k < n, u k)⊔u n := by
+theorem supr_lt_succ (u : ℕ → α) (n : ℕ) : (⨆ k < n + 1, u k) = (⨆ k < n, u k) ⊔ u n := by
   simp [Nat.lt_succ_iff_lt_or_eq, supr_or, supr_sup_eq]
 
-theorem supr_lt_succ' (u : ℕ → α) (n : ℕ) : (⨆ k < n + 1, u k) = u 0⊔⨆ k < n, u (k + 1) := by
+theorem supr_lt_succ' (u : ℕ → α) (n : ℕ) : (⨆ k < n + 1, u k) = u 0 ⊔ ⨆ k < n, u (k + 1) := by
   rw [← sup_supr_nat_succ]
   simp
 
-theorem infi_lt_succ (u : ℕ → α) (n : ℕ) : (⨅ k < n + 1, u k) = (⨅ k < n, u k)⊓u n :=
+theorem infi_lt_succ (u : ℕ → α) (n : ℕ) : (⨅ k < n + 1, u k) = (⨅ k < n, u k) ⊓ u n :=
   @supr_lt_succ αᵒᵈ _ _ _
 
-theorem infi_lt_succ' (u : ℕ → α) (n : ℕ) : (⨅ k < n + 1, u k) = u 0⊓⨅ k < n, u (k + 1) :=
+theorem infi_lt_succ' (u : ℕ → α) (n : ℕ) : (⨅ k < n + 1, u k) = u 0 ⊓ ⨅ k < n, u (k + 1) :=
   @supr_lt_succ' αᵒᵈ _ _ _
 
 end

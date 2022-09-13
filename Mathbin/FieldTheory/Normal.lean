@@ -393,7 +393,7 @@ theorem is_solvable_of_is_scalar_tower [Normal F K₁] [h1 : IsSolvable (K₁ �
   refine'
     solvable_of_ker_le_range f (AlgEquiv.restrictNormalHom K₁) fun ϕ hϕ =>
       ⟨{ ϕ with commutes' := fun x => _ }, AlgEquiv.ext fun _ => rfl⟩
-  exact Eq.trans (ϕ.restrict_normal_commutes K₁ x).symm (congr_argₓ _ (alg_equiv.ext_iff.mp hϕ x))
+  exact Eq.trans (ϕ.restrict_normal_commutes K₁ x).symm (congr_arg _ (alg_equiv.ext_iff.mp hϕ x))
 
 end lift
 

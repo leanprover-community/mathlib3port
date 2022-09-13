@@ -209,7 +209,7 @@ theorem algebra_ext {R : Type _} [CommSemiringₓ R] {A : Type _} [Semiringₓ A
   rcases Q with ⟨⟨Q⟩⟩
   congr
   · funext r a
-    replace w := congr_argₓ (fun s => s * a) (w r)
+    replace w := congr_arg (fun s => s * a) (w r)
     simp only [← smul_def''] at w
     apply w
     
@@ -450,7 +450,7 @@ theorem algebra_map_of_subring_apply {R : Type _} [CommRingₓ R] (S : Subring R
 /-- Explicit characterization of the submonoid map in the case of an algebra.
 `S` is made explicit to help with type inference -/
 def algebraMapSubmonoid (S : Type _) [Semiringₓ S] [Algebra R S] (M : Submonoid R) : Submonoid S :=
-  Submonoid.map (algebraMap R S : R →* S) M
+  M.map (algebraMap R S)
 
 theorem mem_algebra_map_submonoid_of_mem {S : Type _} [Semiringₓ S] [Algebra R S] {M : Submonoid R} (x : M) :
     algebraMap R S x ∈ algebraMapSubmonoid S M :=
@@ -657,7 +657,7 @@ theorem coe_fn_inj {φ₁ φ₂ : A →ₐ[R] B} : (φ₁ : A → B) = φ₂ ↔
   FunLike.coe_fn_eq
 
 theorem coe_ring_hom_injective : Function.Injective (coe : (A →ₐ[R] B) → A →+* B) := fun φ₁ φ₂ H =>
-  coe_fn_injective <| show ((φ₁ : A →+* B) : A → B) = ((φ₂ : A →+* B) : A → B) from congr_argₓ _ H
+  coe_fn_injective <| show ((φ₁ : A →+* B) : A → B) = ((φ₂ : A →+* B) : A → B) from congr_arg _ H
 
 theorem coe_monoid_hom_injective : Function.Injective (coe : (A →ₐ[R] B) → A →* B) :=
   RingHom.coe_monoid_hom_injective.comp coe_ring_hom_injective
@@ -936,7 +936,7 @@ end Ringₓ
 end AlgHom
 
 @[simp]
-theorem Rat.smul_one_eq_coe {A : Type _} [DivisionRing A] [Algebra ℚ A] (m : ℚ) :
+theorem Ratₓ.smul_one_eq_coe {A : Type _} [DivisionRing A] [Algebra ℚ A] (m : ℚ) :
     @HasSmul.smul Algebra.toHasSmul m (1 : A) = ↑m := by
   rw [Algebra.smul_def, mul_oneₓ, eq_rat_cast]
 
@@ -1366,7 +1366,7 @@ theorem to_linear_equiv_of_linear_equiv : toLinearEquiv (ofLinearEquiv l map_mul
 
 end OfLinearEquiv
 
-@[simps (config := { attrs := [] }) mul one]
+@[simps (config := { attrs := [] }) mul one inv]
 instance aut : Groupₓ (A₁ ≃ₐ[R] A₁) where
   mul := fun ϕ ψ => ψ.trans ϕ
   mul_assoc := fun ϕ ψ χ => rfl
@@ -1588,13 +1588,13 @@ def RingHom.equivRatAlgHom [Ringₓ R] [Ringₓ S] [Algebra ℚ R] [Algebra ℚ 
 
 end
 
-section Rat
+section Ratₓ
 
 instance algebraRat {α} [DivisionRing α] [CharZero α] : Algebra ℚ α where
   smul := (· • ·)
   smul_def' := DivisionRing.qsmul_eq_mul'
-  toRingHom := Rat.castHom α
-  commutes' := Rat.cast_commute
+  toRingHom := Ratₓ.castHom α
+  commutes' := Ratₓ.cast_commute
 
 /-- The two `algebra ℚ ℚ` instances should coincide. -/
 example : algebraRat = Algebra.id ℚ :=
@@ -1607,7 +1607,7 @@ theorem algebra_map_rat_rat : algebraMap ℚ ℚ = RingHom.id ℚ :=
 instance algebra_rat_subsingleton {α} [Semiringₓ α] : Subsingleton (Algebra ℚ α) :=
   ⟨fun x y => Algebra.algebra_ext x y <| RingHom.congr_fun <| Subsingleton.elim _ _⟩
 
-end Rat
+end Ratₓ
 
 namespace Algebra
 

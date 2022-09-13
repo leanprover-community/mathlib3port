@@ -115,7 +115,7 @@ theorem locally_convex_space_infi {ts' : ι → TopologicalSpace E} (h' : ∀ i,
   rwa [forall_range_iff]
 
 theorem locally_convex_space_inf {t₁ t₂ : TopologicalSpace E} (h₁ : @LocallyConvexSpace 𝕜 E _ _ _ t₁)
-    (h₂ : @LocallyConvexSpace 𝕜 E _ _ _ t₂) : @LocallyConvexSpace 𝕜 E _ _ _ (t₁⊓t₂) := by
+    (h₂ : @LocallyConvexSpace 𝕜 E _ _ _ t₂) : @LocallyConvexSpace 𝕜 E _ _ _ (t₁ ⊓ t₂) := by
   rw [inf_eq_infi]
   refine' locally_convex_space_infi fun b => _
   cases b <;> assumption

@@ -35,7 +35,7 @@ variable {V : Type _} [Category V] [HasZeroMorphisms V]
 is used to aid the simplifier. -/
 abbrev _root_.category_theory.differential_object.X_eq_to_hom (X : DifferentialObject (GradedObjectWithShift b V))
     {i j : β} (h : i = j) : X.x i ⟶ X.x j :=
-  eqToHom (congr_argₓ X.x h)
+  eqToHom (congr_arg X.x h)
 
 @[simp]
 theorem _root_.category_theory.differential_object.X_eq_to_hom_refl (X : DifferentialObject (GradedObjectWithShift b V))
@@ -57,7 +57,7 @@ theorem eq_to_hom_d (X : DifferentialObject (GradedObjectWithShift b V)) {x y : 
 
 @[simp, reassoc]
 theorem d_eq_to_hom (X : HomologicalComplex V (ComplexShape.up' b)) {x y z : β} (h : y = z) :
-    X.d x y ≫ eqToHom (congr_argₓ X.x h) = X.d x z := by
+    X.d x y ≫ eqToHom (congr_arg X.x h) = X.d x z := by
   cases h
   simp
 
@@ -91,7 +91,7 @@ def dgoToHomologicalComplex :
       d_comp_d' := fun i j k hij hjk => by
         dsimp'  at hij hjk
         substs hij hjk
-        have : X.d i ≫ X.d _ = _ := (congr_funₓ X.d_squared i : _)
+        have : X.d i ≫ X.d _ = _ := (congr_fun X.d_squared i : _)
         reassoc! this
         simp [this] }
   map := fun X Y f =>
@@ -99,7 +99,7 @@ def dgoToHomologicalComplex :
       comm' := fun i j h => by
         dsimp'  at h⊢
         subst h
-        have : f.f i ≫ Y.d i = X.d i ≫ f.f (i + 1 • b) := (congr_funₓ f.comm i).symm
+        have : f.f i ≫ Y.d i = X.d i ≫ f.f (i + 1 • b) := (congr_fun f.comm i).symm
         reassoc! this
         simp only [category.comp_id, eq_to_hom_refl, dif_pos rfl, this, category.assoc, eq_to_hom_f'] }
 

@@ -1,23 +1,25 @@
 /-
 Copyright (c) 2020 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Patrick Massot
+Authors: Patrick Massot, Yury Kudryashov
 -/
-import Mathbin.Topology.UniformSpace.Separation
 import Mathbin.Topology.UniformSpace.UniformConvergence
+import Mathbin.Topology.Separation
 
 /-!
 # Compact separated uniform spaces
 
 ## Main statements
 
-* `compact_space_uniformity`: On a separated compact uniform space, the topology determines the
+* `compact_space_uniformity`: On a compact uniform space, the topology determines the
   uniform structure, entourages are exactly the neighborhoods of the diagonal.
+
 * `uniform_space_of_compact_t2`: every compact T2 topological structure is induced by a uniform
   structure. This uniform structure is described in the previous item.
-* Heine-Cantor theorem: continuous functions on compact separated uniform spaces with values in
-  uniform spaces are automatically uniformly continuous. There are several variations, the main one
-  is `compact_space.uniform_continuous_of_continuous`.
+
+* **Heine-Cantor** theorem: continuous functions on compact uniform spaces with values in uniform
+  spaces are automatically uniformly continuous. There are several variations, the main one is
+  `compact_space.uniform_continuous_of_continuous`.
 
 ## Implementation notes
 
@@ -37,45 +39,37 @@ open Filter UniformSpace Set
 variable {α β γ : Type _} [UniformSpace α] [UniformSpace β]
 
 /-!
-### Uniformity on compact separated spaces
+### Uniformity on compact spaces
 -/
 
 
-/-- On a separated compact uniform space, the topology determines the uniform structure, entourages
-are exactly the neighborhoods of the diagonal. -/
-theorem compact_space_uniformity [CompactSpace α] [SeparatedSpace α] : 𝓤 α = ⨆ x : α, 𝓝 (x, x) := by
-  symm
-  refine' le_antisymmₓ supr_nhds_le_uniformity _
-  by_contra H
-  obtain ⟨V, hV, h⟩ : ∃ V : Set (α × α), (∀ x : α, V ∈ 𝓝 (x, x)) ∧ 𝓤 α⊓𝓟 (Vᶜ) ≠ ⊥ := by
-    simpa only [le_iff_forall_inf_principal_compl, mem_supr, not_forall, exists_prop] using H
-  let F := 𝓤 α⊓𝓟 (Vᶜ)
-  haveI : ne_bot F := ⟨h⟩
-  obtain ⟨⟨x, y⟩, hx⟩ : ∃ p : α × α, ClusterPt p F := cluster_point_of_compact F
-  have : ClusterPt (x, y) (𝓤 α) := hx.of_inf_left
-  obtain rfl : x = y := eq_of_uniformity_inf_nhds this
-  have : ClusterPt (x, x) (𝓟 (Vᶜ)) := hx.of_inf_right
-  have : (x, x) ∉ Interior V := by
-    have : (x, x) ∈ Closure (Vᶜ) := by
-      rwa [mem_closure_iff_cluster_pt]
-    rwa [closure_compl] at this
-  have : (x, x) ∈ Interior V := by
-    rw [mem_interior_iff_mem_nhds]
-    exact hV x
-  contradiction
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+/-- On a compact uniform space, the topology determines the uniform structure, entourages are
+exactly the neighborhoods of the diagonal. -/
+theorem nhds_set_diagonal_eq_uniformity [CompactSpace α] : 𝓝ˢ (Diagonal α) = 𝓤 α := by
+  refine' nhds_set_diagonal_le_uniformity.antisymm _
+  have :
+    (𝓤 (α × α)).HasBasis (fun U => U ∈ 𝓤 α) fun U =>
+      (fun p : (α × α) × α × α => ((p.1.1, p.2.1), p.1.2, p.2.2)) ⁻¹' U ×ˢ U :=
+    by
+    rw [uniformity_prod_eq_comap_prod]
+    exact (𝓤 α).basis_sets.prod_self.comap _
+  refine' (is_compact_diagonal.nhds_set_basis_uniformity this).ge_iff.2 fun U hU => _
+  exact mem_of_superset hU fun ⟨x, y⟩ hxy => mem_Union₂.2 ⟨(x, x), rfl, refl_mem_uniformity hU, hxy⟩
 
-theorem unique_uniformity_of_compact_t2 [t : TopologicalSpace γ] [CompactSpace γ] [T2Space γ] {u u' : UniformSpace γ}
+/-- On a compact uniform space, the topology determines the uniform structure, entourages are
+exactly the neighborhoods of the diagonal. -/
+theorem compact_space_uniformity [CompactSpace α] : 𝓤 α = ⨆ x, 𝓝 (x, x) :=
+  nhds_set_diagonal_eq_uniformity.symm.trans (nhds_set_diagonal _)
+
+theorem unique_uniformity_of_compact [t : TopologicalSpace γ] [CompactSpace γ] {u u' : UniformSpace γ}
     (h : u.toTopologicalSpace = t) (h' : u'.toTopologicalSpace = t) : u = u' := by
   apply uniform_space_eq
   change uniformity _ = uniformity _
   have : @CompactSpace γ u.to_topological_space := by
-    rw [h] <;> assumption
+    rwa [h]
   have : @CompactSpace γ u'.to_topological_space := by
-    rw [h'] <;> assumption
-  have : @SeparatedSpace γ u := by
-    rwa [separated_iff_t2, h]
-  have : @SeparatedSpace γ u' := by
-    rwa [separated_iff_t2, h']
+    rwa [h']
   rw [compact_space_uniformity, compact_space_uniformity, h, h']
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
@@ -85,7 +79,7 @@ theorem unique_uniformity_of_compact_t2 [t : TopologicalSpace γ] [CompactSpace 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (y «expr ≠ » x)
-/-- The unique uniform structure inducing a given compact Hausdorff topological structure. -/
+/-- The unique uniform structure inducing a given compact topological structure. -/
 def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ] : UniformSpace γ where
   uniformity := ⨆ x, 𝓝 (x, x)
   refl := by
@@ -110,9 +104,9 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     rw [le_iff_forall_inf_principal_compl]
     intro V V_in
     by_contra H
-    haveI : ne_bot (F⊓𝓟 (Vᶜ)) := ⟨H⟩
+    haveI : ne_bot (F ⊓ 𝓟 (Vᶜ)) := ⟨H⟩
     -- Hence compactness would give us a cluster point (x, y) for F ⊓ 𝓟 Vᶜ
-    obtain ⟨⟨x, y⟩, hxy⟩ : ∃ p : γ × γ, ClusterPt p (F⊓𝓟 (Vᶜ)) := cluster_point_of_compact _
+    obtain ⟨⟨x, y⟩, hxy⟩ : ∃ p : γ × γ, ClusterPt p (F ⊓ 𝓟 (Vᶜ)) := cluster_point_of_compact _
     -- In particular (x, y) is a cluster point of 𝓟 Vᶜ, hence is not in the interior of V,
     -- and a fortiori not in Δ, so x ≠ y
     have clV : ClusterPt (x, y) (𝓟 <| Vᶜ) := hxy.of_inf_right
@@ -189,7 +183,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
         ext <;> rfl,
       comap_id]
     rw [supr_split_single _ x, comap_const_of_mem fun V => mem_of_mem_nhds]
-    suffices ∀ (y) (_ : y ≠ x), comap (fun y : γ => x) (𝓝 y)⊓𝓝 y ≤ 𝓝 x by
+    suffices ∀ (y) (_ : y ≠ x), comap (fun y : γ => x) (𝓝 y) ⊓ 𝓝 y ≤ 𝓝 x by
       simpa
     intro y hxy
     simp
@@ -204,8 +198,8 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
 
 /-- Heine-Cantor: a continuous function on a compact separated uniform space is uniformly
 continuous. -/
-theorem CompactSpace.uniform_continuous_of_continuous [CompactSpace α] [SeparatedSpace α] {f : α → β}
-    (h : Continuous f) : UniformContinuous f :=
+theorem CompactSpace.uniform_continuous_of_continuous [CompactSpace α] {f : α → β} (h : Continuous f) :
+    UniformContinuous f :=
   calc
     map (Prod.map f f) (𝓤 α) = map (Prod.map f f) (⨆ x, 𝓝 (x, x)) := by
       rw [compact_space_uniformity]
@@ -216,40 +210,30 @@ theorem CompactSpace.uniform_continuous_of_continuous [CompactSpace α] [Separat
     _ ≤ 𝓤 β := supr_nhds_le_uniformity
     
 
-/-- Heine-Cantor: a continuous function on a compact separated set of a uniform space is
-uniformly continuous. -/
-theorem IsCompact.uniform_continuous_on_of_continuous' {s : Set α} {f : α → β} (hs : IsCompact s) (hs' : IsSeparated s)
+/-- Heine-Cantor: a continuous function on a compact set of a uniform space is uniformly
+continuous. -/
+theorem IsCompact.uniform_continuous_on_of_continuous {s : Set α} {f : α → β} (hs : IsCompact s)
     (hf : ContinuousOn f s) : UniformContinuousOn f s := by
   rw [uniform_continuous_on_iff_restrict]
-  rw [is_separated_iff_induced] at hs'
   rw [is_compact_iff_compact_space] at hs
   rw [continuous_on_iff_continuous_restrict] at hf
   skip
   exact CompactSpace.uniform_continuous_of_continuous hf
 
-/-- Heine-Cantor: a continuous function on a compact set of a separated uniform space
-is uniformly continuous. -/
-theorem IsCompact.uniform_continuous_on_of_continuous [SeparatedSpace α] {s : Set α} {f : α → β} (hs : IsCompact s)
-    (hf : ContinuousOn f s) : UniformContinuousOn f s :=
-  hs.uniform_continuous_on_of_continuous' (is_separated_of_separated_space s) hf
-
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- A family of functions `α → β → γ` tends uniformly to its value at `x` if `α` is locally compact,
-`β` is compact and separated and `f` is continuous on `U × (univ : set β)` for some separated
-neighborhood `U` of `x`. -/
-theorem ContinuousOn.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β] [SeparatedSpace β] [UniformSpace γ]
-    {f : α → β → γ} {x : α} {U : Set α} (hxU : U ∈ 𝓝 x) (hU : IsSeparated U) (h : ContinuousOn (↿f) (U ×ˢ univ)) :
-    TendstoUniformly f (f x) (𝓝 x) := by
+`β` is compact and `f` is continuous on `U × (univ : set β)` for some neighborhood `U` of `x`. -/
+theorem ContinuousOn.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β] [UniformSpace γ] {f : α → β → γ} {x : α}
+    {U : Set α} (hxU : U ∈ 𝓝 x) (h : ContinuousOn (↿f) (U ×ˢ univ)) : TendstoUniformly f (f x) (𝓝 x) := by
   rcases LocallyCompactSpace.local_compact_nhds _ _ hxU with ⟨K, hxK, hKU, hK⟩
-  have : UniformContinuousOn (↿f) (K ×ˢ univ) := by
-    refine' IsCompact.uniform_continuous_on_of_continuous' (hK.prod compact_univ) _ (h.mono <| prod_mono hKU subset.rfl)
-    exact (hU.mono hKU).Prod (is_separated_of_separated_space _)
+  have : UniformContinuousOn (↿f) (K ×ˢ univ) :=
+    IsCompact.uniform_continuous_on_of_continuous (hK.prod compact_univ) (h.mono <| prod_mono hKU subset.rfl)
   exact this.tendsto_uniformly hxK
 
 /-- A continuous family of functions `α → β → γ` tends uniformly to its value at `x` if `α` is
-locally compact and `β` is compact and separated. -/
-theorem Continuous.tendsto_uniformly [SeparatedSpace α] [LocallyCompactSpace α] [CompactSpace β] [SeparatedSpace β]
-    [UniformSpace γ] (f : α → β → γ) (h : Continuous ↿f) (x : α) : TendstoUniformly f (f x) (𝓝 x) :=
-  h.ContinuousOn.TendstoUniformly univ_mem <| is_separated_of_separated_space _
+locally compact and `β` is compact. -/
+theorem Continuous.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β] [UniformSpace γ] (f : α → β → γ)
+    (h : Continuous ↿f) (x : α) : TendstoUniformly f (f x) (𝓝 x) :=
+  h.ContinuousOn.TendstoUniformly univ_mem
 

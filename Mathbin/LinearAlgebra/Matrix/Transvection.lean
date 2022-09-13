@@ -441,7 +441,7 @@ theorem mul_list_transvec_row_last_col (i : Sum (Finₓ r) Unit) :
     (M ⬝ (listTransvecRow M).Prod) i (inr star) = M i (inr star) := by
   have A : (list_transvec_row M).length = r := by
     simp [list_transvec_row]
-  rw [← List.take_length (list_transvec_row M), A]
+  rw [← List.take_lengthₓ (list_transvec_row M), A]
   simpa using mul_list_transvec_row_last_col_take M i le_rflₓ
 
 /-- Multiplying by all the matrices in `list_transvec_row M` kills all the coefficients in the
@@ -453,7 +453,7 @@ theorem mul_list_transvec_row_last_row (hM : M (inr star) (inr star) ≠ 0) (i :
       k ≤ r → (M ⬝ ((list_transvec_row M).take k).Prod) (inr star) (inl i) = if k ≤ i then M (inr star) (inl i) else 0
   · have A : (list_transvec_row M).length = r := by
       simp [list_transvec_row]
-    rw [← List.take_length (list_transvec_row M), A]
+    rw [← List.take_lengthₓ (list_transvec_row M), A]
     have : ¬r ≤ i := by
       simp
     simpa only [this, ite_eq_right_iff] using H r le_rflₓ

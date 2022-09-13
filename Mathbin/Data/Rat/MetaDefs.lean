@@ -89,7 +89,7 @@ protected unsafe def expr.to_nonneg_rat : expr → Option ℚ
     if c : m n then if h : 1 < n then return ⟨m, n, lt_transₓ zero_lt_one h, c⟩ else none else none
   | e => do
     let n ← e.toNat
-    return (Rat.ofInt n)
+    return (Ratₓ.ofInt n)
 
 /-- Evaluates an expression as a rational number,
 if that expression represents a numeral, the quotient of two numerals,

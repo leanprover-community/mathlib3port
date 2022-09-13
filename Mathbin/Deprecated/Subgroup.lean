@@ -518,7 +518,7 @@ theorem closure_eq_mclosure {s : Set G} : Closure s = Monoidₓ.Closure (s ∪ I
 @[to_additive]
 theorem mem_closure_union_iff {G : Type _} [CommGroupₓ G] {s t : Set G} {x : G} :
     x ∈ Closure (s ∪ t) ↔ ∃ y ∈ Closure s, ∃ z ∈ Closure t, y * z = x := by
-  simp only [closure_eq_mclosure, Monoidₓ.mem_closure_union_iff, exists_prop, preimage_union]
+  simp only [closure_eq_mclosure, Monoidₓ.mem_closure_union_iff, exists_propₓ, preimage_union]
   constructor
   · rintro ⟨_, ⟨ys, hys, yt, hyt, rfl⟩, _, ⟨zs, hzs, zt, hzt, rfl⟩, rfl⟩
     refine' ⟨_, ⟨_, hys, _, hzs, rfl⟩, _, ⟨_, hyt, _, hzt, rfl⟩, _⟩

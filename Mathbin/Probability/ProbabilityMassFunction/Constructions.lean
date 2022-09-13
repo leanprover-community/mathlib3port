@@ -129,11 +129,11 @@ section OfFinset
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (a «expr ∉ » s)
 /-- Given a finset `s` and a function `f : α → ℝ≥0` with sum `1` on `s`,
   such that `f a = 0` for `a ∉ s`, we get a `pmf` -/
-def ofFinset (f : α → ℝ≥0 ) (s : Finset α) (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0) : Pmf α :=
+def ofFinset (f : α → ℝ≥0) (s : Finset α) (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0) : Pmf α :=
   ⟨f, h ▸ has_sum_sum_of_ne_finset_zero h'⟩
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (a «expr ∉ » s)
-variable {f : α → ℝ≥0 } {s : Finset α} (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0)
+variable {f : α → ℝ≥0} {s : Finset α} (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0)
 
 @[simp]
 theorem of_finset_apply (a : α) : ofFinset f s h h' a = f a :=
@@ -170,10 +170,10 @@ end OfFinset
 section OfFintype
 
 /-- Given a finite type `α` and a function `f : α → ℝ≥0` with sum 1, we get a `pmf`. -/
-def ofFintype [Fintype α] (f : α → ℝ≥0 ) (h : (∑ a, f a) = 1) : Pmf α :=
+def ofFintype [Fintype α] (f : α → ℝ≥0) (h : (∑ a, f a) = 1) : Pmf α :=
   ofFinset f Finset.univ h fun a ha => absurd (Finset.mem_univ a) ha
 
-variable [Fintype α] {f : α → ℝ≥0 } (h : (∑ a, f a) = 1)
+variable [Fintype α] {f : α → ℝ≥0} (h : (∑ a, f a) = 1)
 
 @[simp]
 theorem of_fintype_apply (a : α) : ofFintype f h a = f a :=
@@ -206,12 +206,12 @@ end OfFintype
 section normalize
 
 /-- Given a `f` with non-zero sum, we get a `pmf` by normalizing `f` by it's `tsum` -/
-def normalize (f : α → ℝ≥0 ) (hf0 : tsum f ≠ 0) : Pmf α :=
+def normalize (f : α → ℝ≥0) (hf0 : tsum f ≠ 0) : Pmf α :=
   ⟨fun a => f a * (∑' x, f x)⁻¹,
     mul_inv_cancel hf0 ▸
       HasSum.mul_right (∑' x, f x)⁻¹ (not_not.mp (mt tsum_eq_zero_of_not_summable hf0 : ¬¬Summable f)).HasSum⟩
 
-variable {f : α → ℝ≥0 } (hf0 : tsum f ≠ 0)
+variable {f : α → ℝ≥0} (hf0 : tsum f ≠ 0)
 
 @[simp]
 theorem normalize_apply (a : α) : (normalize f hf0) a = f a * (∑' x, f x)⁻¹ :=
@@ -261,12 +261,12 @@ end Filter
 section Bernoulli
 
 /-- A `pmf` which assigns probability `p` to `tt` and `1 - p` to `ff`. -/
-def bernoulli (p : ℝ≥0 ) (h : p ≤ 1) : Pmf Bool :=
+def bernoulli (p : ℝ≥0) (h : p ≤ 1) : Pmf Bool :=
   ofFintype (fun b => cond b p (1 - p))
     (Nnreal.eq <| by
       simp [h])
 
-variable {p : ℝ≥0 } (h : p ≤ 1) (b : Bool)
+variable {p : ℝ≥0} (h : p ≤ 1) (b : Bool)
 
 @[simp]
 theorem bernoulli_apply : bernoulli p h b = cond b p (1 - p) :=

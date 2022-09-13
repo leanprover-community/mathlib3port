@@ -53,10 +53,10 @@ theorem coe_mk (s : Clopens α) (h) : (mk s h : Set α) = s :=
   rfl
 
 instance : HasSup (ClopenUpperSet α) :=
-  ⟨fun s t => ⟨s.toClopens⊔t.toClopens, s.upper.union t.upper⟩⟩
+  ⟨fun s t => ⟨s.toClopens ⊔ t.toClopens, s.upper.union t.upper⟩⟩
 
 instance : HasInf (ClopenUpperSet α) :=
-  ⟨fun s t => ⟨s.toClopens⊓t.toClopens, s.upper.inter t.upper⟩⟩
+  ⟨fun s t => ⟨s.toClopens ⊓ t.toClopens, s.upper.inter t.upper⟩⟩
 
 instance : HasTop (ClopenUpperSet α) :=
   ⟨⟨⊤, is_upper_set_univ⟩⟩
@@ -71,11 +71,11 @@ instance : BoundedOrder (ClopenUpperSet α) :=
   BoundedOrder.lift (coe : _ → Set α) (fun _ _ => id) rfl rfl
 
 @[simp]
-theorem coe_sup (s t : ClopenUpperSet α) : (↑(s⊔t) : Set α) = s ∪ t :=
+theorem coe_sup (s t : ClopenUpperSet α) : (↑(s ⊔ t) : Set α) = s ∪ t :=
   rfl
 
 @[simp]
-theorem coe_inf (s t : ClopenUpperSet α) : (↑(s⊓t) : Set α) = s ∩ t :=
+theorem coe_inf (s t : ClopenUpperSet α) : (↑(s ⊓ t) : Set α) = s ∩ t :=
   rfl
 
 @[simp]

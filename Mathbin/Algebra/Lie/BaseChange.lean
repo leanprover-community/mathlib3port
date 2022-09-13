@@ -45,19 +45,19 @@ private def bracket' : A ⊗[R] L →ₗ[R] A ⊗[R] L →ₗ[R] A ⊗[R] L :=
       ↑(TensorProduct.tensorTensorTensorComm R A L A L)
 
 @[simp]
-private theorem bracket'_tmul (s t : A) (x y : L) : bracket' R A L (s ⊗ₜ[R] x) (t ⊗ₜ[R] y) = (s * t) ⊗ₜ ⁅x,y⁆ := by
+private theorem bracket'_tmul (s t : A) (x y : L) : bracket' R A L (s ⊗ₜ[R] x) (t ⊗ₜ[R] y) = (s * t) ⊗ₜ ⁅x, y⁆ := by
   simp [bracket']
 
 instance : HasBracket (A ⊗[R] L) (A ⊗[R] L) where bracket := fun x y => bracket' R A L x y
 
-private theorem bracket_def (x y : A ⊗[R] L) : ⁅x,y⁆ = bracket' R A L x y :=
+private theorem bracket_def (x y : A ⊗[R] L) : ⁅x, y⁆ = bracket' R A L x y :=
   rfl
 
 @[simp]
-theorem bracket_tmul (s t : A) (x y : L) : ⁅s ⊗ₜ[R] x,t ⊗ₜ[R] y⁆ = (s * t) ⊗ₜ ⁅x,y⁆ := by
+theorem bracket_tmul (s t : A) (x y : L) : ⁅s ⊗ₜ[R] x, t ⊗ₜ[R] y⁆ = (s * t) ⊗ₜ ⁅x, y⁆ := by
   rw [bracket_def, bracket'_tmul]
 
-private theorem bracket_lie_self (x : A ⊗[R] L) : ⁅x,x⁆ = 0 := by
+private theorem bracket_lie_self (x : A ⊗[R] L) : ⁅x, x⁆ = 0 := by
   simp only [bracket_def]
   apply x.induction_on
   · simp only [LinearMap.map_zero, eq_self_iff_true, LinearMap.zero_apply]
@@ -88,7 +88,7 @@ private theorem bracket_lie_self (x : A ⊗[R] L) : ⁅x,x⁆ = 0 := by
       
     
 
-private theorem bracket_leibniz_lie (x y z : A ⊗[R] L) : ⁅x,⁅y,z⁆⁆ = ⁅⁅x,y⁆,z⁆ + ⁅y,⁅x,z⁆⁆ := by
+private theorem bracket_leibniz_lie (x y z : A ⊗[R] L) : ⁅x, ⁅y, z⁆⁆ = ⁅⁅x, y⁆, z⁆ + ⁅y, ⁅x, z⁆⁆ := by
   simp only [bracket_def]
   apply x.induction_on
   · simp only [LinearMap.map_zero, add_zeroₓ, eq_self_iff_true, LinearMap.zero_apply]
@@ -125,7 +125,7 @@ instance : LieRing (A ⊗[R] L) where
   lie_self := bracket_lie_self R A L
   leibniz_lie := bracket_leibniz_lie R A L
 
-private theorem bracket_lie_smul (a : A) (x y : A ⊗[R] L) : ⁅x,a • y⁆ = a • ⁅x,y⁆ := by
+private theorem bracket_lie_smul (a : A) (x y : A ⊗[R] L) : ⁅x, a • y⁆ = a • ⁅x, y⁆ := by
   apply x.induction_on
   · simp only [zero_lie, smul_zero]
     

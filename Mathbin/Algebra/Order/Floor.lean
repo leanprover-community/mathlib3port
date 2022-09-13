@@ -641,12 +641,12 @@ theorem abs_sub_lt_one_of_floor_eq_floor {α : Type _} [LinearOrderedCommRing α
         linarith⟩
 
 theorem floor_eq_iff : ⌊a⌋ = z ↔ ↑z ≤ a ∧ a < z + 1 := by
-  rw [le_antisymm_iffₓ, le_floor, ← Int.lt_add_one_iff, floor_lt, Int.cast_add, Int.cast_oneₓ, And.comm]
+  rw [le_antisymm_iffₓ, le_floor, ← Int.lt_add_one_iffₓ, floor_lt, Int.cast_add, Int.cast_oneₓ, And.comm]
 
 theorem floor_eq_on_Ico (n : ℤ) : ∀ a ∈ Set.Ico (n : α) (n + 1), ⌊a⌋ = n := fun a ⟨h₀, h₁⟩ => floor_eq_iff.mpr ⟨h₀, h₁⟩
 
 theorem floor_eq_on_Ico' (n : ℤ) : ∀ a ∈ Set.Ico (n : α) (n + 1), (⌊a⌋ : α) = n := fun a ha =>
-  congr_argₓ _ <| floor_eq_on_Ico n a ha
+  congr_arg _ <| floor_eq_on_Ico n a ha
 
 @[simp]
 theorem preimage_floor_singleton (m : ℤ) : (floor : α → ℤ) ⁻¹' {m} = Ico m (m + 1) :=
@@ -756,7 +756,7 @@ theorem fract_eq_fract {a b : α} : fract a = fract b ↔ ∃ z : ℤ, a - b = z
 theorem fract_eq_self {a : α} : fract a = a ↔ 0 ≤ a ∧ a < 1 :=
   fract_eq_iff.trans <|
     And.assoc.symm.trans <|
-      and_iff_left
+      and_iff_leftₓ
         ⟨0, by
           simp ⟩
 

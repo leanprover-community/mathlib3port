@@ -157,7 +157,7 @@ def applyFinsupp (tf : TotalFunction α β) : α →₀ β where
   mem_support_to_fun := by
     intro a
     rcases tf with ⟨A, y⟩
-    simp only [apply, zero_default_supp, List.mem_mapₓ, List.mem_filterₓ, exists_and_distrib_right, List.mem_to_finset,
+    simp only [apply, zero_default_supp, List.mem_mapₓ, List.mem_filterₓ, exists_and_distrib_rightₓ, List.mem_to_finset,
       exists_eq_right, Sigma.exists, Ne.def, zero_default]
     constructor
     · rintro ⟨od, hval, hod⟩
@@ -303,7 +303,7 @@ theorem List.apply_id_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nod
         
       
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:526:6: unsupported: specialize @hyp
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:528:6: unsupported: specialize @hyp
 theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodupₓ xs) (h₁ : xs ~ ys) (x : α) :
     List.applyId.{u} (xs.zip ys) x ∈ ys ↔ x ∈ xs := by
   simp only [list.apply_id]
@@ -351,7 +351,7 @@ theorem List.apply_id_eq_self [DecidableEq α] {xs ys : List α} (x : α) : x �
   dsimp' [list.apply_id]
   rw [lookup_eq_none.2]
   rfl
-  simp only [keys, not_exists, to_sigma, exists_and_distrib_right, exists_eq_right, mem_map, comp_app, map_map,
+  simp only [keys, not_exists, to_sigma, exists_and_distrib_rightₓ, exists_eq_right, mem_map, comp_app, map_map,
     Prod.existsₓ]
   intro y hy
   exact h (mem_zip hy).1
@@ -400,7 +400,7 @@ that it is a permutation.
 -/
 def Perm.slice [DecidableEq α] (n m : ℕ) : (Σ'xs ys : List α, xs ~ ys ∧ ys.Nodup) → Σ'xs ys : List α, xs ~ ys ∧ ys.Nodup
   | ⟨xs, ys, h, h'⟩ =>
-    let xs' := List.sliceₓ n m xs
+    let xs' := List.slice n m xs
     have h₀ : xs' ~ ys.inter xs' := Perm.slice_inter _ _ h h'
     ⟨xs', ys.inter xs', h₀, h'.inter _⟩
 

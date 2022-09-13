@@ -86,7 +86,7 @@ instance (priority := 100) SubfieldClass.toSubgroupClass : SubgroupClass S K :=
 variable {S}
 
 theorem coe_rat_mem (s : S) (x : ℚ) : (x : K) ∈ s := by
-  simpa only [Rat.cast_def] using div_mem (coe_int_mem s x.num) (coe_nat_mem s x.denom)
+  simpa only [Ratₓ.cast_def] using div_mem (coe_int_mem s x.num) (coe_nat_mem s x.denom)
 
 instance (s : S) : HasRatCast s :=
   ⟨fun x => ⟨↑x, coe_rat_mem s x⟩⟩
@@ -96,7 +96,7 @@ theorem coe_rat_cast (s : S) (x : ℚ) : ((x : s) : K) = x :=
   rfl
 
 theorem rat_smul_mem (s : S) (a : ℚ) (x : s) : (a • x : K) ∈ s := by
-  simpa only [Rat.smul_def] using mul_mem (coe_rat_mem s a) x.prop
+  simpa only [Ratₓ.smul_def] using mul_mem (coe_rat_mem s a) x.prop
 
 instance (s : S) : HasSmul ℚ s :=
   ⟨fun a x => ⟨a • x, rat_smul_mem s a x⟩⟩
@@ -487,16 +487,16 @@ namespace Subfield
 /-- The inf of two subfields is their intersection. -/
 instance : HasInf (Subfield K) :=
   ⟨fun s t =>
-    { s.toSubring⊓t.toSubring with
+    { s.toSubring ⊓ t.toSubring with
       inv_mem' := fun x hx =>
         Subring.mem_inf.mpr ⟨s.inv_mem (Subring.mem_inf.mp hx).1, t.inv_mem (Subring.mem_inf.mp hx).2⟩ }⟩
 
 @[simp]
-theorem coe_inf (p p' : Subfield K) : ((p⊓p' : Subfield K) : Set K) = p ∩ p' :=
+theorem coe_inf (p p' : Subfield K) : ((p ⊓ p' : Subfield K) : Set K) = p ∩ p' :=
   rfl
 
 @[simp]
-theorem mem_inf {p p' : Subfield K} {x : K} : x ∈ p⊓p' ↔ x ∈ p ∧ x ∈ p' :=
+theorem mem_inf {p p' : Subfield K} {x : K} : x ∈ p ⊓ p' ↔ x ∈ p ∧ x ∈ p' :=
   Iff.rfl
 
 instance : HasInfₓ (Subfield K) :=
@@ -543,7 +543,7 @@ theorem is_glb_Inf (S : Set (Subfield K)) : IsGlb S (inf S) := by
 
 /-- Subfields of a ring form a complete lattice. -/
 instance : CompleteLattice (Subfield K) :=
-  { completeLatticeOfInf (Subfield K) is_glb_Inf with top := ⊤, le_top := fun s x hx => trivialₓ, inf := (·⊓·),
+  { completeLatticeOfInf (Subfield K) is_glb_Inf with top := ⊤, le_top := fun s x hx => trivialₓ, inf := (· ⊓ ·),
     inf_le_left := fun s t x => And.left, inf_le_right := fun s t x => And.right,
     le_inf := fun s t₁ t₂ h₁ h₂ x hx => ⟨h₁ hx, h₂ hx⟩ }
 
@@ -639,7 +639,7 @@ theorem closure_empty : closure (∅ : Set K) = ⊥ :=
 theorem closure_univ : closure (Set.Univ : Set K) = ⊤ :=
   @coe_top K _ ▸ closure_eq ⊤
 
-theorem closure_union (s t : Set K) : closure (s ∪ t) = closure s⊔closure t :=
+theorem closure_union (s t : Set K) : closure (s ∪ t) = closure s ⊔ closure t :=
   (Subfield.gi K).gc.l_sup
 
 theorem closure_Union {ι} (s : ι → Set K) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
@@ -648,13 +648,13 @@ theorem closure_Union {ι} (s : ι → Set K) : closure (⋃ i, s i) = ⨆ i, cl
 theorem closure_sUnion (s : Set (Set K)) : closure (⋃₀s) = ⨆ t ∈ s, closure t :=
   (Subfield.gi K).gc.l_Sup
 
-theorem map_sup (s t : Subfield K) (f : K →+* L) : (s⊔t).map f = s.map f⊔t.map f :=
+theorem map_sup (s t : Subfield K) (f : K →+* L) : (s ⊔ t).map f = s.map f ⊔ t.map f :=
   (gc_map_comap f).l_sup
 
 theorem map_supr {ι : Sort _} (f : K →+* L) (s : ι → Subfield K) : (supr s).map f = ⨆ i, (s i).map f :=
   (gc_map_comap f).l_supr
 
-theorem comap_inf (s t : Subfield L) (f : K →+* L) : (s⊓t).comap f = s.comap f⊓t.comap f :=
+theorem comap_inf (s t : Subfield L) (f : K →+* L) : (s ⊓ t).comap f = s.comap f ⊓ t.comap f :=
   (gc_map_comap f).u_inf
 
 theorem comap_infi {ι : Sort _} (f : K →+* L) (s : ι → Subfield L) : (infi s).comap f = ⨅ i, (s i).comap f :=

@@ -517,7 +517,7 @@ theorem disjoint_cylinder_of_longest_prefix_lt {s : Set (∀ n, E n)} (hs : IsCl
   contrapose! hn
   rcases not_disjoint_iff_nonempty_inter.1 hn with ⟨y, ys, hy⟩
   apply le_transₓ _ (first_diff_le_longest_prefix hs hx ys)
-  apply (mem_cylinder_iff_le_first_diff (ne_of_mem_of_not_mem ys hx).symm _).1
+  apply (mem_cylinder_iff_le_first_diff (ne_of_mem_of_not_memₓ ys hx).symm _).1
   rwa [mem_cylinder_comm]
 
 /-- If two points `x, y` coincide up to length `n`, and the longest common prefix of `x` with `s`
@@ -860,8 +860,8 @@ protected def metricSpace : MetricSpace (∀ i, F i) where
               (min ((1 / 2) ^ encode i) (dist (x i) (y i)) + min ((1 / 2) ^ encode i) (dist (y i) (z i))) :=
           by
           convert
-              congr_argₓ (coe : ℝ≥0 → ℝ)
-                (min_add_distrib ((1 / 2 : ℝ≥0 ) ^ encode i) (nndist (x i) (y i)) (nndist (y i) (z i))) <;>
+              congr_arg (coe : ℝ≥0 → ℝ)
+                (min_add_distrib ((1 / 2 : ℝ≥0) ^ encode i) (nndist (x i) (y i)) (nndist (y i) (z i))) <;>
             simp
         _ ≤ min ((1 / 2) ^ encode i) (dist (x i) (y i)) + min ((1 / 2) ^ encode i) (dist (y i) (z i)) :=
           min_le_rightₓ _ _

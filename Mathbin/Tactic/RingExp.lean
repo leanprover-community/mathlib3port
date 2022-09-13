@@ -533,7 +533,7 @@ unsafe def ex_sum (p : ex Prod) (ps : ex Sum) : ring_exp_m (ex Sum) := do
 There are more efficient constructors for specific numerals:
 if `x = 0`, you should use `ex_zero`; if `x = 1`, use `ex_one`.
 -/
-unsafe def ex_coeff (x : Rat) : ring_exp_m (ex Prod) := do
+unsafe def ex_coeff (x : Ratₓ) : ring_exp_m (ex Prod) := do
   let ctx ← get_context
   let x_p ← lift <| expr.of_rat ctx.info_b.α x
   pure (ex.coeff ⟨x_p, x_p, none⟩ ⟨x⟩)

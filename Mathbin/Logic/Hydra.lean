@@ -97,7 +97,7 @@ theorem cut_expand_singleton_singleton {x' x} (h : r x' x) : CutExpand r {x'} {x
 
 theorem cut_expand_add_left {t u} (s) : CutExpand r (s + t) (s + u) ↔ CutExpand r t u :=
   exists₂_congrₓ fun _ _ =>
-    and_congr Iff.rfl <| by
+    and_congrₓ Iff.rfl <| by
       rw [add_assocₓ, add_assocₓ, add_left_cancel_iffₓ]
 
 theorem cut_expand_iff [DecidableEq α] [IsIrrefl α r] {s' s : Multiset α} :

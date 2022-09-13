@@ -47,11 +47,11 @@ instance : Inhabited H.QuotientDiff :=
 theorem smul_diff_smul' [hH : Normal H] (g : Gᵐᵒᵖ) :
     diff (MonoidHom.id H) (g • α) (g • β) =
       ⟨g.unop⁻¹ * (diff (MonoidHom.id H) α β : H) * g.unop,
-        hH.mem_comm ((congr_argₓ (· ∈ H) (mul_inv_cancel_left _ _)).mpr (SetLike.coe_mem _))⟩ :=
+        hH.mem_comm ((congr_arg (· ∈ H) (mul_inv_cancel_left _ _)).mpr (SetLike.coe_mem _))⟩ :=
   by
   let ϕ : H →* H :=
     { toFun := fun h =>
-        ⟨g.unop⁻¹ * h * g.unop, hH.mem_comm ((congr_argₓ (· ∈ H) (mul_inv_cancel_left _ _)).mpr (SetLike.coe_mem _))⟩,
+        ⟨g.unop⁻¹ * h * g.unop, hH.mem_comm ((congr_arg (· ∈ H) (mul_inv_cancel_left _ _)).mpr (SetLike.coe_mem _))⟩,
       map_one' := by
         rw [Subtype.ext_iff, coe_mk, coe_one, mul_oneₓ, inv_mul_selfₓ],
       map_mul' := fun h₁ h₂ => by
@@ -76,12 +76,12 @@ instance : MulAction G H.QuotientDiff where
             Subtype.ext_iff])
   mul_smul := fun g₁ g₂ q =>
     Quotientₓ.induction_on' q fun T =>
-      congr_argₓ Quotientₓ.mk'
+      congr_arg Quotientₓ.mk'
         (by
           rw [mul_inv_rev] <;> exact mul_smul (op g₁⁻¹) (op g₂⁻¹) T)
   one_smul := fun q =>
     Quotientₓ.induction_on' q fun T =>
-      congr_argₓ Quotientₓ.mk'
+      congr_arg Quotientₓ.mk'
         (by
           rw [inv_one] <;> apply one_smul Gᵐᵒᵖ T)
 
@@ -168,7 +168,7 @@ private theorem step0 : N ≠ ⊥ := by
   exact h3 ⊤ is_complement'_bot_top
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
-private theorem step1 (K : Subgroup G) (hK : K⊔N = ⊤) : K = ⊤ := by
+private theorem step1 (K : Subgroup G) (hK : K ⊔ N = ⊤) : K = ⊤ := by
   contrapose! h3
   have h4 : (N.comap K.subtype).index = N.index := by
     rw [← N.relindex_top_right, ← hK]
@@ -274,7 +274,7 @@ private theorem exists_right_complement'_of_coprime_aux' [Fintype G] (hG : Finty
         apply ih _ hG'
         rfl)
       h3
-  exact not_exists_of_forall_not h3 (exists_right_complement'_of_coprime_aux hN)
+  exact not_exists_of_forall_notₓ h3 (exists_right_complement'_of_coprime_aux hN)
 
 /-- **Schur-Zassenhaus** for normal subgroups:
   If `H : subgroup G` is normal, and has order coprime to its index, then there exists a

@@ -77,7 +77,7 @@ theorem le_iff_to_list_le {s₁ s₂ : Stringₓ} : s₁ ≤ s₂ ↔ s₁.toLis
   (not_congr lt_iff_to_list_lt).trans not_ltₓ
 
 theorem to_list_inj : ∀ {s₁ s₂}, toList s₁ = toList s₂ ↔ s₁ = s₂
-  | ⟨s₁⟩, ⟨s₂⟩ => ⟨congr_argₓ _, congr_argₓ _⟩
+  | ⟨s₁⟩, ⟨s₂⟩ => ⟨congr_arg _, congr_arg _⟩
 
 theorem nil_as_string_eq_empty : [].asString = "" :=
   rfl

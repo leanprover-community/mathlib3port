@@ -338,7 +338,7 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
     simp only [Part.map_eq_map, Part.map_some, Vector.cons_val, Pfun.coe_val,
       show ∀ x, pure x = [x] from fun _ => rfl] at hf⊢
     refine' Part.ext fun x => _
-    simp only [rfind, Part.bind_eq_bind, Part.pure_eq_some, Part.map_eq_map, Part.bind_some, exists_prop, eval,
+    simp only [rfind, Part.bind_eq_bind, Part.pure_eq_some, Part.map_eq_map, Part.bind_some, exists_propₓ, eval,
       List.headₓ, pred_eval, Part.map_some, Bool.ff_eq_to_bool_iff, Part.mem_bind_iff, List.length, Part.mem_map_iff,
       Nat.mem_rfind, List.tail, Bool.tt_eq_to_bool_iff, Part.mem_some_iff, Part.map_bind]
     constructor
@@ -564,7 +564,7 @@ def Cfg.then : Cfg → Cont → Cfg
   | cfg.halt v, k' => stepRet k' v
   | cfg.ret k v, k' => Cfg.ret (k.then k') v
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:325:16: warning: unsupported simp config option: constructor_eq
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:327:16: warning: unsupported simp config option: constructor_eq
 /-- The `step_normal` function respects the `then k'` homomorphism. Note that this is an exact
 equality, not a simulation; the original and embedded machines move in lock-step until the
 embedded machine reaches the halt state. -/
@@ -663,7 +663,7 @@ theorem cont_eval_fix {f k v} (fok : Code.Ok f) :
       refine' ⟨v', h₁, _⟩
       rw [step_ret] at h
       revert h
-      by_cases' he : v'.head = 0 <;> simp only [exists_prop, if_pos, if_false, he] <;> intro h
+      by_cases' he : v'.head = 0 <;> simp only [exists_propₓ, if_pos, if_false, he] <;> intro h
       · refine' ⟨_, Part.mem_some _, _⟩
         rw [reaches_eval]
         exact h

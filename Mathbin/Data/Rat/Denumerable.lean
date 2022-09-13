@@ -12,7 +12,7 @@ This file proves that ℚ is infinite, denumerable, and deduces that it has card
 -/
 
 
-namespace Rat
+namespace Ratₓ
 
 open Denumerable
 
@@ -33,10 +33,10 @@ instance : Denumerable ℚ := by
   letI : Denumerable T := of_encodable_of_infinite T
   exact Denumerable.ofEquiv T denumerable_aux
 
-end Rat
+end Ratₓ
 
 open Cardinal
 
-theorem Cardinal.mk_rat : # ℚ = ℵ₀ := by
+theorem Cardinal.mk_rat : (#ℚ) = ℵ₀ := by
   simp
 

@@ -94,7 +94,7 @@ variable [SemilatticeInf α]
 @[simp]
 def diagramObj : Pairwise ι → α
   | single i => U i
-  | pair i j => U i⊓U j
+  | pair i j => U i ⊓ U j
 
 /-- Auxiliary definition for `diagram`. -/
 @[simp]

@@ -78,7 +78,7 @@ def pi : TwoPointing (α → β) where
   snd := fun _ => q.snd
   fst_ne_snd := fun h =>
     q.fst_ne_snd <| by
-      convert congr_funₓ h (Classical.arbitrary α)
+      convert congr_fun h (Classical.arbitrary α)
 
 @[simp]
 theorem pi_fst : (q.pi α).fst = const α q.fst :=
@@ -94,7 +94,7 @@ end Pi
 def prod : TwoPointing (α × β) where
   fst := (p.fst, q.fst)
   snd := (p.snd, q.snd)
-  fst_ne_snd := fun h => p.fst_ne_snd (congr_argₓ Prod.fst h)
+  fst_ne_snd := fun h => p.fst_ne_snd (congr_arg Prod.fst h)
 
 @[simp]
 theorem prod_fst : (p.Prod q).fst = (p.fst, q.fst) :=

@@ -89,7 +89,7 @@ noncomputable def coproductCofanIsColimit : IsColimit (coproductCofan F) where
   fac' := fun s j => LocallyRingedSpace.Hom.ext _ _ (colimit.ι_desc _ _)
   uniq' := fun s f h =>
     LocallyRingedSpace.Hom.ext _ _
-      (IsColimit.uniq _ (forgetToSheafedSpace.mapCocone s) f.1 fun j => congr_argₓ LocallyRingedSpace.Hom.val (h j))
+      (IsColimit.uniq _ (forgetToSheafedSpace.mapCocone s) f.1 fun j => congr_arg LocallyRingedSpace.Hom.val (h j))
 
 instance : HasCoproducts.{u} LocallyRingedSpace.{u} := fun ι => ⟨fun F => ⟨⟨⟨_, coproductCofanIsColimit F⟩⟩⟩⟩
 

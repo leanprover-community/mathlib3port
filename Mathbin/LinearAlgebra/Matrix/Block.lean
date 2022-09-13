@@ -163,7 +163,7 @@ protected theorem BlockTriangular.det [DecidableEq α] [LinearOrderₓ α] (hM :
         rw [insert_erase]
         apply max'_mem
       rw [this, prod_insert (not_mem_erase _ _)]
-      refine' congr_argₓ _ _
+      refine' congr_arg _ _
       let b' := fun i : { a // b a ≠ k } => b ↑i
       have h' : block_triangular (M.to_square_block_prop fun i : m => b i ≠ k) b' := by
         intro i j
@@ -191,7 +191,7 @@ protected theorem BlockTriangular.det [DecidableEq α] [LinearOrderₓ α] (hM :
         exact Equivₓ.subtypeSubtypeEquivSubtype hc
       simp only [to_square_block_def]
       rw [← Matrix.det_reindex_self he.symm fun i j : { a // b a = l } => M ↑i ↑j]
-      refine' congr_argₓ _ _
+      refine' congr_arg _ _
       ext
       simp [to_square_block_def, to_square_block_prop_def]
       

@@ -521,7 +521,7 @@ theorem degree_add_le (p q : R[X]) : degree (p + q) ≤ max (degree p) (degree q
   calc
     degree (p + q) = (p + q).Support.sup some := rfl
     _ ≤ (p.Support ∪ q.Support).sup some := sup_mono support_add
-    _ = p.Support.sup some⊔q.Support.sup some := sup_union
+    _ = p.Support.sup some ⊔ q.Support.sup some := sup_union
     
 
 theorem degree_add_le_of_degree_le {p q : R[X]} {n : ℕ} (hp : degree p ≤ n) (hq : degree q ≤ n) : degree (p + q) ≤ n :=
@@ -703,7 +703,7 @@ theorem Monic.ne_zero_of_ne (h : (0 : R) ≠ 1) {p : R[X]} (hp : p.Monic) : p �
 
 theorem monic_of_nat_degree_le_of_coeff_eq_one (n : ℕ) (pn : p.natDegree ≤ n) (p1 : p.coeff n = 1) : Monic p := by
   nontriviality
-  refine' (congr_argₓ _ <| nat_degree_eq_of_le_of_coeff_ne_zero pn _).trans p1
+  refine' (congr_arg _ <| nat_degree_eq_of_le_of_coeff_ne_zero pn _).trans p1
   exact ne_of_eq_of_ne p1 one_ne_zero
 
 theorem monic_of_degree_le_of_coeff_eq_one (n : ℕ) (pn : p.degree ≤ n) (p1 : p.coeff n = 1) : Monic p :=
@@ -970,7 +970,7 @@ theorem degree_sum_fin_lt {n : ℕ} (f : Finₓ n → R) : degree (∑ i : Fin�
   haveI : IsCommutative (WithBot ℕ) max := ⟨max_commₓ⟩
   haveI : IsAssociative (WithBot ℕ) max := ⟨max_assocₓ⟩
   calc
-    (∑ i, C (f i) * X ^ (i : ℕ)).degree ≤ finset.univ.fold (·⊔·) ⊥ fun i => (C (f i) * X ^ (i : ℕ)).degree :=
+    (∑ i, C (f i) * X ^ (i : ℕ)).degree ≤ finset.univ.fold (· ⊔ ·) ⊥ fun i => (C (f i) * X ^ (i : ℕ)).degree :=
       degree_sum_le _ _
     _ = finset.univ.fold max ⊥ fun i => (C (f i) * X ^ (i : ℕ)).degree := rfl
     _ < n := (Finset.fold_max_lt (n : WithBot ℕ)).mpr ⟨WithBot.bot_lt_coe _, _⟩

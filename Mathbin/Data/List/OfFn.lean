@@ -33,7 +33,7 @@ open Nat
 
 namespace List
 
-theorem length_of_fn_aux {n} (f : Finₓ n → α) : ∀ m h l, length (ofFnAuxₓ f m h l) = length l + m
+theorem length_of_fn_aux {n} (f : Finₓ n → α) : ∀ m h l, length (ofFnAux f m h l) = length l + m
   | 0, h, l => rfl
   | succ m, h, l => (length_of_fn_aux m _ _).trans (succ_add _ _)
 
@@ -43,7 +43,7 @@ theorem length_of_fn {n} (f : Finₓ n → α) : length (ofFnₓ f) = n :=
   (length_of_fn_aux f _ _ _).trans (zero_addₓ _)
 
 theorem nth_of_fn_aux {n} (f : Finₓ n → α) (i) :
-    ∀ m h l, (∀ i, nth l i = ofFnNthValₓ f (i + m)) → nth (ofFnAuxₓ f m h l) i = ofFnNthValₓ f i
+    ∀ m h l, (∀ i, nth l i = ofFnNthValₓ f (i + m)) → nth (ofFnAux f m h l) i = ofFnNthValₓ f i
   | 0, h, l, H => H i
   | succ m, h, l, H =>
     nth_of_fn_aux m _ _
@@ -80,7 +80,7 @@ theorem map_of_fn {β : Type _} {n : ℕ} (f : Finₓ n → α) (g : α → β) 
 
 /-- Arrays converted to lists are the same as `of_fn` on the indexing function of the array. -/
 theorem array_eq_of_fn {n} (a : Arrayₓ n α) : a.toList = ofFnₓ a.read := by
-  suffices ∀ {m h l}, DArray.revIterateAux a (fun i => cons) m h l = ofFnAuxₓ (DArray.read a) m h l from this
+  suffices ∀ {m h l}, DArray.revIterateAux a (fun i => cons) m h l = ofFnAux (DArray.read a) m h l from this
   intros
   induction' m with m IH generalizing l
   · rfl
@@ -100,7 +100,7 @@ theorem of_fn_zero (f : Finₓ 0 → α) : ofFnₓ f = [] :=
 
 @[simp]
 theorem of_fn_succ {n} (f : Finₓ (succ n) → α) : ofFnₓ f = f 0 :: ofFnₓ fun i => f i.succ := by
-  suffices ∀ {m h l}, ofFnAuxₓ f (succ m) (succ_le_succₓ h) l = f 0 :: ofFnAuxₓ (fun i => f i.succ) m h l from this
+  suffices ∀ {m h l}, ofFnAux f (succ m) (succ_le_succₓ h) l = f 0 :: ofFnAux (fun i => f i.succ) m h l from this
   intros
   induction' m with m IH generalizing l
   · rfl
@@ -220,7 +220,7 @@ def equivSigmaTuple : List α ≃ Σn, Finₓ n → α where
 This can be used with `induction l using list.of_fn_rec`. -/
 @[elabAsElim]
 def ofFnRec {C : List α → Sort _} (h : ∀ (n) (f : Finₓ n → α), C (List.ofFnₓ f)) (l : List α) : C l :=
-  cast (congr_argₓ _ l.of_fn_nth_le) <| h l.length fun i => l.nthLe (↑i) i.2
+  cast (congr_arg _ l.of_fn_nth_le) <| h l.length fun i => l.nthLe (↑i) i.2
 
 @[simp]
 theorem of_fn_rec_of_fn {C : List α → Sort _} (h : ∀ (n) (f : Finₓ n → α), C (List.ofFnₓ f)) {n : ℕ} (f : Finₓ n → α) :

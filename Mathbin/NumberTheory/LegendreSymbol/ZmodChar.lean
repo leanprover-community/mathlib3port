@@ -69,7 +69,7 @@ theorem χ₄_int_eq_if_mod_four (n : ℤ) : χ₄ n = if n % 2 = 0 then 0 else 
     ← Zmod.int_cast_mod n 4]
   exact
     help (n % 4)
-      (Int.mod_nonneg n
+      (Int.mod_nonnegₓ n
         (by
           norm_num))
       (Int.mod_lt n
@@ -170,7 +170,7 @@ theorem χ₈_int_eq_if_mod_eight (n : ℤ) : χ₈ n = if n % 2 = 0 then 0 else
     ← Zmod.int_cast_mod n 8]
   exact
     help (n % 8)
-      (Int.mod_nonneg n
+      (Int.mod_nonnegₓ n
         (by
           norm_num))
       (Int.mod_lt n
@@ -207,7 +207,7 @@ theorem χ₈'_int_eq_if_mod_eight (n : ℤ) : χ₈' n = if n % 2 = 0 then 0 el
     ← Zmod.int_cast_mod n 8]
   exact
     help (n % 8)
-      (Int.mod_nonneg n
+      (Int.mod_nonnegₓ n
         (by
           norm_num))
       (Int.mod_lt n

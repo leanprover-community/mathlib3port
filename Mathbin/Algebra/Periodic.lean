@@ -68,7 +68,7 @@ theorem _root_.list.periodic_prod [Add α] [CommMonoidₓ β] (l : List (α → 
   induction' l with g l ih hl
   · simp
     
-  · simp only [List.mem_cons_iffₓ, forall_eq_or_imp] at hl
+  · simp only [List.mem_cons_iff, forall_eq_or_imp] at hl
     obtain ⟨hg, hl⟩ := hl
     simp only [List.prod_cons]
     exact hg.mul (ih hl)
@@ -271,7 +271,7 @@ def Periodic.lift [AddGroupₓ α] (h : Periodic f c) (x : α ⧸ AddSubgroup.zm
   (Quotientₓ.liftOn' x f) fun a b h' => by
     rw [QuotientAddGroup.left_rel_apply] at h'
     obtain ⟨k, hk⟩ := h'
-    exact (h.zsmul k _).symm.trans (congr_argₓ f (add_eq_of_eq_neg_add hk))
+    exact (h.zsmul k _).symm.trans (congr_arg f (add_eq_of_eq_neg_add hk))
 
 @[simp]
 theorem Periodic.lift_coe [AddGroupₓ α] (h : Periodic f c) (a : α) : h.lift (a : α ⧸ AddSubgroup.zmultiples c) = f a :=

@@ -101,16 +101,16 @@ theorem closure_neg (s : Set M) : span R (-s) = -span R s := by
     
 
 @[simp]
-theorem neg_inf (S T : Submodule R M) : -(S⊓T) = -S⊓-T :=
+theorem neg_inf (S T : Submodule R M) : -(S ⊓ T) = -S ⊓ -T :=
   SetLike.coe_injective Set.inter_neg
 
 @[simp]
-theorem neg_sup (S T : Submodule R M) : -(S⊔T) = -S⊔-T :=
+theorem neg_sup (S T : Submodule R M) : -(S ⊔ T) = -S ⊔ -T :=
   (negOrderIso : Submodule R M ≃o Submodule R M).map_sup S T
 
 @[simp]
 theorem neg_bot : -(⊥ : Submodule R M) = ⊥ :=
-  SetLike.coe_injective <| (Set.neg_singleton 0).trans <| congr_argₓ _ neg_zero
+  SetLike.coe_injective <| (Set.neg_singleton 0).trans <| congr_arg _ neg_zero
 
 @[simp]
 theorem neg_top : -(⊤ : Submodule R M) = ⊤ :=
@@ -137,7 +137,7 @@ end Neg
 variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
 instance pointwiseAddCommMonoid : AddCommMonoidₓ (Submodule R M) where
-  add := (·⊔·)
+  add := (· ⊔ ·)
   add_assoc := fun _ _ _ => sup_assoc
   zero := ⊥
   zero_add := fun _ => bot_sup_eq
@@ -145,7 +145,7 @@ instance pointwiseAddCommMonoid : AddCommMonoidₓ (Submodule R M) where
   add_comm := fun _ _ => sup_comm
 
 @[simp]
-theorem add_eq_sup (p q : Submodule R M) : p + q = p⊔q :=
+theorem add_eq_sup (p q : Submodule R M) : p + q = p ⊔ q :=
   rfl
 
 @[simp]
@@ -166,9 +166,9 @@ variable [Monoidₓ α] [DistribMulAction α M] [SmulCommClass α R M]
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseDistribMulAction : DistribMulAction α (Submodule R M) where
   smul := fun a S => S.map (DistribMulAction.toLinearMap R M a : M →ₗ[R] M)
-  one_smul := fun S => (congr_argₓ (fun f : Module.End R M => S.map f) (LinearMap.ext <| one_smul α)).trans S.map_id
+  one_smul := fun S => (congr_arg (fun f : Module.End R M => S.map f) (LinearMap.ext <| one_smul α)).trans S.map_id
   mul_smul := fun a₁ a₂ S =>
-    (congr_argₓ (fun f : Module.End R M => S.map f) (LinearMap.ext <| mul_smul _ _)).trans (S.map_comp _ _)
+    (congr_arg (fun f : Module.End R M => S.map f) (LinearMap.ext <| mul_smul _ _)).trans (S.map_comp _ _)
   smul_zero := fun a => map_bot _
   smul_add := fun a S₁ S₂ => map_sup _ _ _
 
@@ -194,7 +194,7 @@ theorem smul_mem_pointwise_smul (m : M) (a : α) (S : Submodule R M) : m ∈ S �
 
 instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ M] [SmulCommClass αᵐᵒᵖ R M] [IsCentralScalar α M] :
     IsCentralScalar α (Submodule R M) :=
-  ⟨fun a S => (congr_argₓ fun f : Module.End R M => S.map f) <| LinearMap.ext <| op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_arg fun f : Module.End R M => S.map f) <| LinearMap.ext <| op_smul_eq_smul _⟩
 
 @[simp]
 theorem smul_le_self_of_tower {α : Type _} [Semiringₓ α] [Module α R] [Module α M] [SmulCommClass α R M]
@@ -216,7 +216,7 @@ This is a stronger version of `submodule.pointwise_distrib_mul_action`. Note tha
 not hold so this cannot be stated as a `module`. -/
 protected def pointwiseMulActionWithZero : MulActionWithZero α (Submodule R M) :=
   { Submodule.pointwiseDistribMulAction with
-    zero_smul := fun S => (congr_argₓ (fun f : M →ₗ[R] M => S.map f) (LinearMap.ext <| zero_smul α)).trans S.map_zero }
+    zero_smul := fun S => (congr_arg (fun f : M →ₗ[R] M => S.map f) (LinearMap.ext <| zero_smul α)).trans S.map_zero }
 
 localized [Pointwise] attribute [instance] Submodule.pointwiseMulActionWithZero
 

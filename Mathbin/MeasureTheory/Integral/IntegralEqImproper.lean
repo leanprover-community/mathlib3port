@@ -359,14 +359,14 @@ theorem AeCover.integrable_of_lintegral_nnnorm_tendsto [l.ne_bot] [l.IsCountably
   exact lt_max_of_lt_right (lt_add_one I)
 
 theorem AeCover.integrable_of_lintegral_nnnorm_bounded' [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
-    (hφ : AeCover μ l φ) {f : α → E} (I : ℝ≥0 ) (hfm : AeStronglyMeasurable f μ)
+    (hφ : AeCover μ l φ) {f : α → E} (I : ℝ≥0) (hfm : AeStronglyMeasurable f μ)
     (hbounded : ∀ᶠ i in l, (∫⁻ x in φ i, ∥f x∥₊ ∂μ) ≤ I) : Integrable f μ :=
   hφ.integrable_of_lintegral_nnnorm_bounded I hfm
     (by
       simpa only [Ennreal.of_real_coe_nnreal] using hbounded)
 
 theorem AeCover.integrable_of_lintegral_nnnorm_tendsto' [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
-    (hφ : AeCover μ l φ) {f : α → E} (I : ℝ≥0 ) (hfm : AeStronglyMeasurable f μ)
+    (hφ : AeCover μ l φ) {f : α → E} (I : ℝ≥0) (hfm : AeStronglyMeasurable f μ)
     (htendsto : Tendsto (fun i => ∫⁻ x in φ i, ∥f x∥₊ ∂μ) l (𝓝 I)) : Integrable f μ :=
   hφ.integrable_of_lintegral_nnnorm_tendsto I hfm
     (by

@@ -30,6 +30,7 @@ protected theorem eta (s : Streamₓ α) : (head s::tail s) = s :=
     cases i <;> rfl
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+@[simp]
 theorem nth_zero_cons (a : α) (s : Streamₓ α) : nth (a::s) 0 = a :=
   rfl
 
@@ -60,6 +61,11 @@ theorem drop_drop (n m : Nat) (s : Streamₓ α) : drop n (drop m s) = drop (n +
 theorem nth_succ (n : Nat) (s : Streamₓ α) : nth s (succ n) = nth (tail s) n :=
   rfl
 
+-- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
+@[simp]
+theorem nth_succ_cons (n : Nat) (s : Streamₓ α) (x : α) : nth (x::s) n.succ = nth s n :=
+  rfl
+
 theorem drop_succ (n : Nat) (s : Streamₓ α) : drop (succ n) s = drop n (tail s) :=
   rfl
 
@@ -69,6 +75,18 @@ theorem head_drop {α} (a : Streamₓ α) (n : ℕ) : (a.drop n).head = a.nth n 
 
 @[ext]
 protected theorem ext {s₁ s₂ : Streamₓ α} : (∀ n, nth s₁ n = nth s₂ n) → s₁ = s₂ := fun h => funext h
+
+theorem cons_injective2 : Function.Injective2 (cons : α → Streamₓ α → Streamₓ α) := fun x y s t h =>
+  ⟨by
+    rw [← nth_zero_cons x s, h, nth_zero_cons],
+    Streamₓ.ext fun n => by
+      rw [← nth_succ_cons n _ x, h, nth_succ_cons]⟩
+
+theorem cons_injective_left (s : Streamₓ α) : Function.Injective fun x => cons x s :=
+  cons_injective2.left _
+
+theorem cons_injective_right (x : α) : Function.Injective (cons x) :=
+  cons_injective2.right _
 
 theorem all_def (p : α → Prop) (s : Streamₓ α) : All p s = ∀ n, p (nth s n) :=
   rfl

@@ -749,7 +749,7 @@ def Anisotropic (Q : QuadraticForm R M) : Prop :=
 
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (x «expr ≠ » 0)
 theorem not_anisotropic_iff_exists (Q : QuadraticForm R M) : ¬Anisotropic Q ↔ ∃ (x : _)(_ : x ≠ 0), Q x = 0 := by
-  simp only [anisotropic, not_forall, exists_prop, and_comm]
+  simp only [anisotropic, not_forall, exists_propₓ, and_comm]
 
 theorem Anisotropic.eq_zero_iff {Q : QuadraticForm R M} (h : Anisotropic Q) {x : M} : Q x = 0 ↔ x = 0 :=
   ⟨h x, fun h => h.symm ▸ map_zero Q⟩
@@ -936,7 +936,7 @@ theorem exists_orthogonal_basis [hK : Invertible (2 : K)] {B : BilinForm K V} (h
   obtain ⟨x, hx⟩ := exists_bilin_form_self_ne_zero hB₁ hB₂
   rw [← Submodule.finrank_add_eq_of_is_compl (is_compl_span_singleton_orthogonal hx).symm,
     finrank_span_singleton (ne_zero_of_not_is_ortho_self x hx)] at hd
-  let B' := B.restrict (B.orthogonal <| K∙x)
+  let B' := B.restrict (B.orthogonal <| K ∙ x)
   obtain ⟨v', hv₁⟩ := ih (B.restrict_symm hB₂ _ : B'.is_symm) (Nat.succ.injₓ hd)
   -- concatenate `x` with the basis obtained by induction
   let b :=

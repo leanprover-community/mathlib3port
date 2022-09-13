@@ -46,7 +46,7 @@ def circulant [Sub n] (v : n → α) : Matrix n n α
   | i, j => v (i - j)
 
 theorem circulant_col_zero_eq [AddGroupₓ n] (v : n → α) (i : n) : circulant v i 0 = v i :=
-  congr_argₓ v (sub_zero _)
+  congr_arg v (sub_zero _)
 
 theorem circulant_injective [AddGroupₓ n] : Injective (circulant : (n → α) → Matrix n n α) := by
   intro v w h

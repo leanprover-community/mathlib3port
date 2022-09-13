@@ -256,7 +256,7 @@ theorem btw_rfl_right {a b : α} : Btw a b b :=
 
 theorem sbtw_iff_not_btw {a b c : α} : Sbtw a b c ↔ ¬Btw c b a := by
   rw [sbtw_iff_btw_not_btw]
-  exact and_iff_right_of_imp (btw_total _ _ _).resolve_left
+  exact and_iff_right_of_impₓ (btw_total _ _ _).resolve_left
 
 theorem btw_iff_not_sbtw {a b c : α} : Btw a b c ↔ ¬Sbtw c b a :=
   iff_not_comm.1 sbtw_iff_not_btw

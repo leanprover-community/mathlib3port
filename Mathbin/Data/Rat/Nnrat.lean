@@ -32,19 +32,19 @@ def Nnrat :=
   { q : ℚ // 0 ≤ q }deriving CanonicallyOrderedCommSemiring, CanonicallyLinearOrderedSemifield,
   LinearOrderedCommGroupWithZero, Sub, HasOrderedSub, DenselyOrdered, Archimedean, Inhabited
 
--- mathport name: «exprℚ≥0»
-localized [Nnrat] notation " ℚ≥0 " => Nnrat
+-- mathport name: nnrat
+localized [Nnrat] notation "ℚ≥0" => Nnrat
 
 namespace Nnrat
 
-variable {α : Type _} {p q : ℚ≥0 }
+variable {α : Type _} {p q : ℚ≥0}
 
 instance : Coe ℚ≥0 ℚ :=
   ⟨Subtype.val⟩
 
 -- Simp lemma to put back `n.val` into the normal form given by the coercion.
 @[simp]
-theorem val_eq_coe (q : ℚ≥0 ) : q.val = q :=
+theorem val_eq_coe (q : ℚ≥0) : q.val = q :=
   rfl
 
 instance : CanLift ℚ ℚ≥0 where
@@ -66,11 +66,11 @@ theorem coe_inj : (p : ℚ) = q ↔ p = q :=
 theorem ext_iff : p = q ↔ (p : ℚ) = q :=
   Subtype.ext_iff
 
-theorem ne_iff {x y : ℚ≥0 } : (x : ℚ) ≠ (y : ℚ) ↔ x ≠ y :=
+theorem ne_iff {x y : ℚ≥0} : (x : ℚ) ≠ (y : ℚ) ↔ x ≠ y :=
   Nnrat.coe_inj.Not
 
 @[norm_cast]
-theorem coe_mk (q : ℚ) (hq) : ((⟨q, hq⟩ : ℚ≥0 ) : ℚ) = q :=
+theorem coe_mk (q : ℚ) (hq) : ((⟨q, hq⟩ : ℚ≥0) : ℚ) = q :=
   rfl
 
 /-- Reinterpret a rational number `q` as a non-negative rational number. Returns `0` if `q ≤ 0`. -/
@@ -86,43 +86,43 @@ theorem _root_.rat.le_coe_to_nnrat (q : ℚ) : q ≤ q.toNnrat :=
 open _Root_.Rat (toNnrat)
 
 @[simp]
-theorem coe_nonneg (q : ℚ≥0 ) : (0 : ℚ) ≤ q :=
+theorem coe_nonneg (q : ℚ≥0) : (0 : ℚ) ≤ q :=
   q.2
 
 @[simp, norm_cast]
-theorem coe_zero : ((0 : ℚ≥0 ) : ℚ) = 0 :=
+theorem coe_zero : ((0 : ℚ≥0) : ℚ) = 0 :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_one : ((1 : ℚ≥0 ) : ℚ) = 1 :=
+theorem coe_one : ((1 : ℚ≥0) : ℚ) = 1 :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_add (p q : ℚ≥0 ) : ((p + q : ℚ≥0 ) : ℚ) = p + q :=
+theorem coe_add (p q : ℚ≥0) : ((p + q : ℚ≥0) : ℚ) = p + q :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_mul (p q : ℚ≥0 ) : ((p * q : ℚ≥0 ) : ℚ) = p * q :=
+theorem coe_mul (p q : ℚ≥0) : ((p * q : ℚ≥0) : ℚ) = p * q :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_inv (q : ℚ≥0 ) : ((q⁻¹ : ℚ≥0 ) : ℚ) = q⁻¹ :=
+theorem coe_inv (q : ℚ≥0) : ((q⁻¹ : ℚ≥0) : ℚ) = q⁻¹ :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_div (p q : ℚ≥0 ) : ((p / q : ℚ≥0 ) : ℚ) = p / q :=
+theorem coe_div (p q : ℚ≥0) : ((p / q : ℚ≥0) : ℚ) = p / q :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_bit0 (q : ℚ≥0 ) : ((bit0 q : ℚ≥0 ) : ℚ) = bit0 q :=
+theorem coe_bit0 (q : ℚ≥0) : ((bit0 q : ℚ≥0) : ℚ) = bit0 q :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_bit1 (q : ℚ≥0 ) : ((bit1 q : ℚ≥0 ) : ℚ) = bit1 q :=
+theorem coe_bit1 (q : ℚ≥0) : ((bit1 q : ℚ≥0) : ℚ) = bit1 q :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_sub (h : q ≤ p) : ((p - q : ℚ≥0 ) : ℚ) = p - q :=
+theorem coe_sub (h : q ≤ p) : ((p - q : ℚ≥0) : ℚ) = p - q :=
   max_eq_leftₓ <|
     le_sub.2 <| by
       simp [show (q : ℚ) ≤ p from h]
@@ -151,28 +151,28 @@ theorem coe_mono : Monotone (coe : ℚ≥0 → ℚ) := fun _ _ => coe_le_coe.2
 theorem to_nnrat_mono : Monotone toNnrat := fun x y h => max_le_max h le_rflₓ
 
 @[simp]
-theorem to_nnrat_coe (q : ℚ≥0 ) : toNnrat q = q :=
+theorem to_nnrat_coe (q : ℚ≥0) : toNnrat q = q :=
   ext <| max_eq_leftₓ q.2
 
 @[simp]
 theorem to_nnrat_coe_nat (n : ℕ) : toNnrat n = n :=
   ext <| by
-    simp [Rat.coe_to_nnrat]
+    simp [Ratₓ.coe_to_nnrat]
 
 /-- `to_nnrat` and `coe : ℚ≥0 → ℚ` form a Galois insertion. -/
 protected def gi : GaloisInsertion toNnrat coe :=
-  GaloisInsertion.monotoneIntro coe_mono to_nnrat_mono Rat.le_coe_to_nnrat to_nnrat_coe
+  GaloisInsertion.monotoneIntro coe_mono to_nnrat_mono Ratₓ.le_coe_to_nnrat to_nnrat_coe
 
 /-- Coercion `ℚ≥0 → ℚ` as a `ring_hom`. -/
 def coeHom : ℚ≥0 →+* ℚ :=
   ⟨coe, coe_one, coe_mul, coe_zero, coe_add⟩
 
 @[simp, norm_cast]
-theorem coe_nat_cast (n : ℕ) : (↑(↑n : ℚ≥0 ) : ℚ) = n :=
+theorem coe_nat_cast (n : ℕ) : (↑(↑n : ℚ≥0) : ℚ) = n :=
   map_nat_cast coeHom n
 
 @[simp]
-theorem mk_coe_nat (n : ℕ) : @Eq ℚ≥0 (⟨(n : ℚ), n.cast_nonneg⟩ : ℚ≥0 ) n :=
+theorem mk_coe_nat (n : ℕ) : @Eq ℚ≥0 (⟨(n : ℚ), n.cast_nonneg⟩ : ℚ≥0) n :=
   ext (coe_nat_cast n).symm
 
 /-- The rational numbers are an algebra over the non-negative rationals. -/
@@ -196,84 +196,84 @@ theorem coe_coe_hom : ⇑coe_hom = coe :=
   rfl
 
 @[simp, norm_cast]
-theorem coe_indicator (s : Set α) (f : α → ℚ≥0 ) (a : α) :
-    ((s.indicator f a : ℚ≥0 ) : ℚ) = s.indicator (fun x => f x) a :=
+theorem coe_indicator (s : Set α) (f : α → ℚ≥0) (a : α) :
+    ((s.indicator f a : ℚ≥0) : ℚ) = s.indicator (fun x => f x) a :=
   (coeHom : ℚ≥0 →+ ℚ).map_indicator _ _ _
 
 @[simp, norm_cast]
-theorem coe_pow (q : ℚ≥0 ) (n : ℕ) : (↑(q ^ n) : ℚ) = q ^ n :=
+theorem coe_pow (q : ℚ≥0) (n : ℕ) : (↑(q ^ n) : ℚ) = q ^ n :=
   coeHom.map_pow _ _
 
 @[norm_cast]
-theorem coe_list_sum (l : List ℚ≥0 ) : (l.Sum : ℚ) = (l.map coe).Sum :=
+theorem coe_list_sum (l : List ℚ≥0) : (l.Sum : ℚ) = (l.map coe).Sum :=
   coeHom.map_list_sum _
 
 @[norm_cast]
-theorem coe_list_prod (l : List ℚ≥0 ) : (l.Prod : ℚ) = (l.map coe).Prod :=
+theorem coe_list_prod (l : List ℚ≥0) : (l.Prod : ℚ) = (l.map coe).Prod :=
   coeHom.map_list_prod _
 
 @[norm_cast]
-theorem coe_multiset_sum (s : Multiset ℚ≥0 ) : (s.Sum : ℚ) = (s.map coe).Sum :=
+theorem coe_multiset_sum (s : Multiset ℚ≥0) : (s.Sum : ℚ) = (s.map coe).Sum :=
   coeHom.map_multiset_sum _
 
 @[norm_cast]
-theorem coe_multiset_prod (s : Multiset ℚ≥0 ) : (s.Prod : ℚ) = (s.map coe).Prod :=
+theorem coe_multiset_prod (s : Multiset ℚ≥0) : (s.Prod : ℚ) = (s.map coe).Prod :=
   coeHom.map_multiset_prod _
 
 @[norm_cast]
-theorem coe_sum {s : Finset α} {f : α → ℚ≥0 } : ↑(∑ a in s, f a) = ∑ a in s, (f a : ℚ) :=
+theorem coe_sum {s : Finset α} {f : α → ℚ≥0} : ↑(∑ a in s, f a) = ∑ a in s, (f a : ℚ) :=
   coeHom.map_sum _ _
 
 theorem to_nnrat_sum_of_nonneg {s : Finset α} {f : α → ℚ} (hf : ∀ a, a ∈ s → 0 ≤ f a) :
     (∑ a in s, f a).toNnrat = ∑ a in s, (f a).toNnrat := by
-  rw [← coe_inj, coe_sum, Rat.coe_to_nnrat _ (Finset.sum_nonneg hf)]
+  rw [← coe_inj, coe_sum, Ratₓ.coe_to_nnrat _ (Finset.sum_nonneg hf)]
   exact
     Finset.sum_congr rfl fun x hxs => by
-      rw [Rat.coe_to_nnrat _ (hf x hxs)]
+      rw [Ratₓ.coe_to_nnrat _ (hf x hxs)]
 
 @[norm_cast]
-theorem coe_prod {s : Finset α} {f : α → ℚ≥0 } : ↑(∏ a in s, f a) = ∏ a in s, (f a : ℚ) :=
+theorem coe_prod {s : Finset α} {f : α → ℚ≥0} : ↑(∏ a in s, f a) = ∏ a in s, (f a : ℚ) :=
   coeHom.map_prod _ _
 
 theorem to_nnrat_prod_of_nonneg {s : Finset α} {f : α → ℚ} (hf : ∀ a ∈ s, 0 ≤ f a) :
     (∏ a in s, f a).toNnrat = ∏ a in s, (f a).toNnrat := by
-  rw [← coe_inj, coe_prod, Rat.coe_to_nnrat _ (Finset.prod_nonneg hf)]
+  rw [← coe_inj, coe_prod, Ratₓ.coe_to_nnrat _ (Finset.prod_nonneg hf)]
   exact
     Finset.prod_congr rfl fun x hxs => by
-      rw [Rat.coe_to_nnrat _ (hf x hxs)]
+      rw [Ratₓ.coe_to_nnrat _ (hf x hxs)]
 
 @[norm_cast]
-theorem nsmul_coe (q : ℚ≥0 ) (n : ℕ) : ↑(n • q) = n • (q : ℚ) :=
+theorem nsmul_coe (q : ℚ≥0) (n : ℕ) : ↑(n • q) = n • (q : ℚ) :=
   coeHom.toAddMonoidHom.map_nsmul _ _
 
-theorem bdd_above_coe {s : Set ℚ≥0 } : BddAbove (coe '' s : Set ℚ) ↔ BddAbove s :=
+theorem bdd_above_coe {s : Set ℚ≥0} : BddAbove (coe '' s : Set ℚ) ↔ BddAbove s :=
   ⟨fun ⟨b, hb⟩ =>
     ⟨toNnrat b, fun ⟨y, hy⟩ hys => show y ≤ max b 0 from (hb <| Set.mem_image_of_mem _ hys).trans <| le_max_leftₓ _ _⟩,
     fun ⟨b, hb⟩ => ⟨b, fun y ⟨x, hx, Eq⟩ => Eq ▸ hb hx⟩⟩
 
-theorem bdd_below_coe (s : Set ℚ≥0 ) : BddBelow ((coe : ℚ≥0 → ℚ) '' s) :=
+theorem bdd_below_coe (s : Set ℚ≥0) : BddBelow ((coe : ℚ≥0 → ℚ) '' s) :=
   ⟨0, fun r ⟨q, _, h⟩ => h ▸ q.2⟩
 
 @[simp, norm_cast]
-theorem coe_max (x y : ℚ≥0 ) : ((max x y : ℚ≥0 ) : ℚ) = max (x : ℚ) (y : ℚ) :=
+theorem coe_max (x y : ℚ≥0) : ((max x y : ℚ≥0) : ℚ) = max (x : ℚ) (y : ℚ) :=
   coe_mono.map_max
 
 @[simp, norm_cast]
-theorem coe_min (x y : ℚ≥0 ) : ((min x y : ℚ≥0 ) : ℚ) = min (x : ℚ) (y : ℚ) :=
+theorem coe_min (x y : ℚ≥0) : ((min x y : ℚ≥0) : ℚ) = min (x : ℚ) (y : ℚ) :=
   coe_mono.map_min
 
-theorem sub_def (p q : ℚ≥0 ) : p - q = toNnrat (p - q) :=
+theorem sub_def (p q : ℚ≥0) : p - q = toNnrat (p - q) :=
   rfl
 
 @[simp]
-theorem abs_coe (q : ℚ≥0 ) : abs (q : ℚ) = q :=
+theorem abs_coe (q : ℚ≥0) : abs (q : ℚ) = q :=
   abs_of_nonneg q.2
 
 end Nnrat
 
 open Nnrat
 
-namespace Rat
+namespace Ratₓ
 
 variable {p q : ℚ}
 
@@ -305,7 +305,7 @@ theorem to_nnrat_lt_to_nnrat_iff' : toNnrat q < toNnrat p ↔ q < p ∧ 0 < p :=
   exact lt_trans'ₓ
 
 theorem to_nnrat_lt_to_nnrat_iff (h : 0 < p) : toNnrat q < toNnrat p ↔ q < p :=
-  to_nnrat_lt_to_nnrat_iff'.trans (and_iff_left h)
+  to_nnrat_lt_to_nnrat_iff'.trans (and_iff_leftₓ h)
 
 theorem to_nnrat_lt_to_nnrat_iff_of_nonneg (hq : 0 ≤ q) : toNnrat q < toNnrat p ↔ q < p :=
   to_nnrat_lt_to_nnrat_iff'.trans ⟨And.left, fun h => ⟨h, hq.trans_lt h⟩⟩
@@ -318,20 +318,20 @@ theorem to_nnrat_add (hq : 0 ≤ q) (hp : 0 ≤ p) : toNnrat (q + p) = toNnrat q
 theorem to_nnrat_add_le : toNnrat (q + p) ≤ toNnrat q + toNnrat p :=
   coe_le_coe.1 <| max_leₓ (add_le_add (le_max_leftₓ _ _) (le_max_leftₓ _ _)) <| coe_nonneg _
 
-theorem to_nnrat_le_iff_le_coe {p : ℚ≥0 } : toNnrat q ≤ p ↔ q ≤ ↑p :=
+theorem to_nnrat_le_iff_le_coe {p : ℚ≥0} : toNnrat q ≤ p ↔ q ≤ ↑p :=
   Nnrat.gi.gc q p
 
-theorem le_to_nnrat_iff_coe_le {q : ℚ≥0 } (hp : 0 ≤ p) : q ≤ toNnrat p ↔ ↑q ≤ p := by
-  rw [← coe_le_coe, Rat.coe_to_nnrat p hp]
+theorem le_to_nnrat_iff_coe_le {q : ℚ≥0} (hp : 0 ≤ p) : q ≤ toNnrat p ↔ ↑q ≤ p := by
+  rw [← coe_le_coe, Ratₓ.coe_to_nnrat p hp]
 
-theorem le_to_nnrat_iff_coe_le' {q : ℚ≥0 } (hq : 0 < q) : q ≤ toNnrat p ↔ ↑q ≤ p :=
+theorem le_to_nnrat_iff_coe_le' {q : ℚ≥0} (hq : 0 < q) : q ≤ toNnrat p ↔ ↑q ≤ p :=
   ((le_or_ltₓ 0 p).elim le_to_nnrat_iff_coe_le) fun hp => by
     simp only [(hp.trans_le q.coe_nonneg).not_le, to_nnrat_eq_zero.2 hp.le, hq.not_le]
 
-theorem to_nnrat_lt_iff_lt_coe {p : ℚ≥0 } (hq : 0 ≤ q) : toNnrat q < p ↔ q < ↑p := by
-  rw [← coe_lt_coe, Rat.coe_to_nnrat q hq]
+theorem to_nnrat_lt_iff_lt_coe {p : ℚ≥0} (hq : 0 ≤ q) : toNnrat q < p ↔ q < ↑p := by
+  rw [← coe_lt_coe, Ratₓ.coe_to_nnrat q hq]
 
-theorem lt_to_nnrat_iff_coe_lt {q : ℚ≥0 } : q < toNnrat p ↔ ↑q < p :=
+theorem lt_to_nnrat_iff_coe_lt {q : ℚ≥0} : q < toNnrat p ↔ ↑q < p :=
   Nnrat.gi.gc.lt_iff_lt
 
 @[simp]
@@ -359,7 +359,7 @@ theorem to_nnrat_inv (q : ℚ) : toNnrat q⁻¹ = (toNnrat q)⁻¹ := by
   obtain hq | hq := le_totalₓ q 0
   · rw [to_nnrat_eq_zero.mpr hq, inv_zero, to_nnrat_eq_zero.mpr (inv_nonpos.mpr hq)]
     
-  · nth_rw 0[← Rat.coe_to_nnrat q hq]
+  · nth_rw 0[← Ratₓ.coe_to_nnrat q hq]
     rw [← coe_inv, to_nnrat_coe]
     
 
@@ -369,30 +369,30 @@ theorem to_nnrat_div (hp : 0 ≤ p) : toNnrat (p / q) = toNnrat p / toNnrat q :=
 theorem to_nnrat_div' (hq : 0 ≤ q) : toNnrat (p / q) = toNnrat p / toNnrat q := by
   rw [div_eq_inv_mul, div_eq_inv_mul, to_nnrat_mul (inv_nonneg.2 hq), to_nnrat_inv]
 
-end Rat
+end Ratₓ
 
 /-- The absolute value on `ℚ` as a map to `ℚ≥0`. -/
 @[pp_nodot]
-def Rat.nnabs (x : ℚ) : ℚ≥0 :=
+def Ratₓ.nnabs (x : ℚ) : ℚ≥0 :=
   ⟨abs x, abs_nonneg x⟩
 
 @[norm_cast, simp]
-theorem Rat.coe_nnabs (x : ℚ) : (Rat.nnabs x : ℚ) = abs x := by
-  simp [Rat.nnabs]
+theorem Ratₓ.coe_nnabs (x : ℚ) : (Ratₓ.nnabs x : ℚ) = abs x := by
+  simp [Ratₓ.nnabs]
 
 /-! ### Numerator and denominator -/
 
 
 namespace Nnrat
 
-variable {p q : ℚ≥0 }
+variable {p q : ℚ≥0}
 
 /-- The numerator of a nonnegative rational. -/
-def num (q : ℚ≥0 ) : ℕ :=
+def num (q : ℚ≥0) : ℕ :=
   (q : ℚ).num.natAbs
 
 /-- The denominator of a nonnegative rational. -/
-def denom (q : ℚ≥0 ) : ℕ :=
+def denom (q : ℚ≥0) : ℕ :=
   (q : ℚ).denom
 
 @[simp]
@@ -405,8 +405,8 @@ theorem denom_coe : (q : ℚ).denom = q.denom :=
 
 theorem ext_num_denom (hn : p.num = q.num) (hd : p.denom = q.denom) : p = q :=
   ext <|
-    Rat.ext
-      ((Int.nat_abs_inj_of_nonneg_of_nonneg (Rat.num_nonneg_iff_zero_le.2 p.2) <| Rat.num_nonneg_iff_zero_le.2 q.2).1
+    Ratₓ.ext
+      ((Int.nat_abs_inj_of_nonneg_of_nonneg (Ratₓ.num_nonneg_iff_zero_le.2 p.2) <| Ratₓ.num_nonneg_iff_zero_le.2 q.2).1
         hn)
       hd
 
@@ -416,14 +416,14 @@ theorem ext_num_denom_iff : p = q ↔ p.num = q.num ∧ p.denom = q.denom :=
     exact ⟨rfl, rfl⟩, fun h => ext_num_denom h.1 h.2⟩
 
 @[simp]
-theorem num_div_denom (q : ℚ≥0 ) : (q.num : ℚ≥0 ) / q.denom = q := by
+theorem num_div_denom (q : ℚ≥0) : (q.num : ℚ≥0) / q.denom = q := by
   ext1
   rw [coe_div, coe_nat_cast, coe_nat_cast, Num, ← Int.cast_coe_nat,
-    Int.nat_abs_of_nonneg (Rat.num_nonneg_iff_zero_le.2 q.prop)]
-  exact Rat.num_div_denom q
+    Int.nat_abs_of_nonneg (Ratₓ.num_nonneg_iff_zero_le.2 q.prop)]
+  exact Ratₓ.num_div_denom q
 
 /-- A recursor for nonnegative rationals in terms of numerators and denominators. -/
-protected def rec {α : ℚ≥0 → Sort _} (h : ∀ m n : ℕ, α (m / n)) (q : ℚ≥0 ) : α q :=
+protected def rec {α : ℚ≥0 → Sort _} (h : ∀ m n : ℕ, α (m / n)) (q : ℚ≥0) : α q :=
   (num_div_denom _).rec (h _ _)
 
 end Nnrat

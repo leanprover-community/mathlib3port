@@ -185,7 +185,7 @@ theorem mul_left_cancelₓ : a * b = a * c → b = c :=
 
 @[to_additive]
 theorem mul_left_cancel_iffₓ : a * b = a * c ↔ b = c :=
-  ⟨mul_left_cancelₓ, congr_argₓ _⟩
+  ⟨mul_left_cancelₓ, congr_arg _⟩
 
 @[to_additive]
 theorem mul_right_injective (a : G) : Function.Injective ((· * ·) a) := fun b c => mul_left_cancelₓ
@@ -223,7 +223,7 @@ theorem mul_right_cancelₓ : a * b = c * b → a = c :=
 
 @[to_additive]
 theorem mul_right_cancel_iffₓ : b * a = c * a ↔ b = c :=
-  ⟨mul_right_cancelₓ, congr_argₓ _⟩
+  ⟨mul_right_cancelₓ, congr_arg _⟩
 
 @[to_additive]
 theorem mul_left_injective (a : G) : Function.Injective fun x => x * a := fun b c => mul_right_cancelₓ
@@ -690,7 +690,7 @@ theorem zpow_coe_nat (a : G) : ∀ n : ℕ, a ^ (n : ℤ) = a ^ n
   | n + 1 =>
     calc
       a ^ (↑(n + 1) : ℤ) = a * a ^ (n : ℤ) := DivInvMonoidₓ.zpow_succ' _ _
-      _ = a * a ^ n := congr_argₓ ((· * ·) a) (zpow_coe_nat n)
+      _ = a * a ^ n := congr_arg ((· * ·) a) (zpow_coe_nat n)
       _ = a ^ (n + 1) := (pow_succₓ _ _).symm
       
 

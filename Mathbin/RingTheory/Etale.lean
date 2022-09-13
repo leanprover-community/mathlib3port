@@ -121,7 +121,7 @@ theorem FormallySmooth.exists_lift {B : Type u} [CommRingₓ B] [_RB : Algebra R
         commutes' := fun x => rfl }
     obtain ⟨g', e⟩ := h₂ (this.symm.to_alg_hom.comp g)
     obtain ⟨g', rfl⟩ := h₁ g'
-    replace e := congr_argₓ this.to_alg_hom.comp e
+    replace e := congr_arg this.to_alg_hom.comp e
     conv_rhs at e =>
       rw [← AlgHom.comp_assoc, AlgEquiv.to_alg_hom_eq_coe, AlgEquiv.to_alg_hom_eq_coe, AlgEquiv.comp_symm,
         AlgHom.id_comp]

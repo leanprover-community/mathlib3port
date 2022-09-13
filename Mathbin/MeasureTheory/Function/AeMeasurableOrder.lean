@@ -90,7 +90,7 @@ theorem MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets {α : Typ
       change μ _ = 0
       convert this
       ext y
-      simp only [not_exists, exists_prop, mem_set_of_eq, mem_compl_eq, not_not_mem]
+      simp only [not_exists, exists_propₓ, mem_set_of_eq, mem_compl_eq, not_not_mem]
     filter_upwards [this] with x hx
     apply (infi_eq_of_forall_ge_of_forall_gt_exists_lt _ _).symm
     · intro i
@@ -122,7 +122,7 @@ supersets which are disjoint up to measure zero when `p` and `q` are finite numb
 theorem Ennreal.ae_measurable_of_exist_almost_disjoint_supersets {α : Type _} {m : MeasurableSpace α} (μ : Measureₓ α)
     (f : α → ℝ≥0∞)
     (h :
-      ∀ (p : ℝ≥0 ) (q : ℝ≥0 ),
+      ∀ (p : ℝ≥0) (q : ℝ≥0),
         p < q →
           ∃ u v,
             MeasurableSet u ∧ MeasurableSet v ∧ { x | f x < p } ⊆ u ∧ { x | (q : ℝ≥0∞) < f x } ⊆ v ∧ μ (u ∩ v) = 0) :

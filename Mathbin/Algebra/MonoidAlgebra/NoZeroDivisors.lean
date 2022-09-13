@@ -120,7 +120,7 @@ theorem NoZeroDivisors.of_left_ordered [NoZeroDivisors R] [AddRightCancelSemigro
               [support_mul_single _ _
                 (fun y => by
                   rw [mul_oneₓ] : ∀ y : R, y * 1 = 0 ↔ _)]
-            simpa only [Finset.mem_map, add_right_embedding_apply, add_left_injₓ, exists_prop, exists_eq_right]
+            simpa only [Finset.mem_map, add_right_embedding_apply, add_left_injₓ, exists_propₓ, exists_eq_right]
             
           
         · haveI : CovariantClass A A (· + ·) (· ≤ ·) := Add.to_covariant_class_left A
@@ -133,7 +133,7 @@ theorem NoZeroDivisors.of_left_ordered [NoZeroDivisors R] [AddRightCancelSemigro
             [support_mul_single _ _
               (fun y => by
                 rw [mul_oneₓ] : ∀ y : R, y * 1 = 0 ↔ _)]
-          simp only [bf, Finset.mem_map, add_right_embedding_apply, add_left_injₓ, exists_prop, exists_eq_right]
+          simp only [bf, Finset.mem_map, add_right_embedding_apply, add_left_injₓ, exists_propₓ, exists_eq_right]
           
         · refine' add_lt_add_left _ _
           exact Finset.min'_lt_of_mem_erase_min' _ _ (finset.mem_erase.mpr ⟨hc, cg⟩)
@@ -168,7 +168,7 @@ theorem NoZeroDivisors.of_right_ordered [NoZeroDivisors R] [AddLeftCancelSemigro
             [support_single_mul _ _
               (fun y => by
                 rw [one_mulₓ] : ∀ y : R, 1 * y = 0 ↔ _)]
-          simp only [cg, Finset.mem_map, add_left_embedding_apply, add_right_injₓ, exists_prop, exists_eq_right]
+          simp only [cg, Finset.mem_map, add_left_embedding_apply, add_right_injₓ, exists_propₓ, exists_eq_right]
           
         · refine' add_lt_add_right _ _
           exact Finset.min'_lt_of_mem_erase_min' _ _ (finset.mem_erase.mpr ⟨hb, bf⟩)
@@ -184,7 +184,7 @@ theorem NoZeroDivisors.of_right_ordered [NoZeroDivisors R] [AddLeftCancelSemigro
               [support_single_mul _ _
                 (fun y => by
                   rw [one_mulₓ] : ∀ y : R, 1 * y = 0 ↔ _)]
-            simpa only [Finset.mem_map, add_left_embedding_apply, add_right_injₓ, exists_prop, exists_eq_right]
+            simpa only [Finset.mem_map, add_left_embedding_apply, add_right_injₓ, exists_propₓ, exists_eq_right]
             
           
         · haveI : CovariantClass A A (Function.swap (· + ·)) (· ≤ ·) := Add.to_covariant_class_right A

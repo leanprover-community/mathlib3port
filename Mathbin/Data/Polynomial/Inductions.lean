@@ -93,7 +93,7 @@ theorem degree_div_X_lt (hp0 : p ≠ 0) : (divX p).degree < p.degree := by
                       le_rflₓ
               
           rw [degree_add_eq_left_of_degree_lt this] <;> exact degree_lt_degree_mul_X hXp0
-      _ = p.degree := congr_argₓ _ (div_X_mul_X_add _)
+      _ = p.degree := congr_arg _ (div_X_mul_X_add _)
       
 
 /-- An induction principle for polynomials, valued in Sort* instead of Prop. -/

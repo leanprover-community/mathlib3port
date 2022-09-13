@@ -70,7 +70,7 @@ def mapFun (f : α → β) : 𝕎 α → 𝕎 β := fun x => mk _ (f ∘ x.coeff
 namespace MapFun
 
 theorem injective (f : α → β) (hf : Injective f) : Injective (mapFun f : 𝕎 α → 𝕎 β) := fun x y h =>
-  ext fun n => hf (congr_argₓ (fun x => coeff x n) h : _)
+  ext fun n => hf (congr_arg (fun x => coeff x n) h : _)
 
 theorem surjective (f : α → β) (hf : Surjective f) : Surjective (mapFun f : 𝕎 α → 𝕎 β) := fun x =>
   ⟨mk _ fun n => Classical.choose <| hf <| x.coeff n, by
@@ -151,7 +151,7 @@ unsafe def tactic.interactive.ghost_fun_tac (φ fn : parse parser.pexpr) : tacti
   let quote.1 (Finₓ (%%ₓk) → _ → _) ← infer_type fn
   sorry
   sorry
-  to_expr (ppquote.1 (congr_funₓ (congr_argₓ (@peval R _ (%%ₓk)) (witt_structure_int_prop p (%%ₓφ) n)) (%%ₓfn))) >>=
+  to_expr (ppquote.1 (congr_fun (congr_arg (@peval R _ (%%ₓk)) (witt_structure_int_prop p (%%ₓφ) n)) (%%ₓfn))) >>=
       note `this none
   sorry
 

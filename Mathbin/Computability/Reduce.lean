@@ -221,19 +221,19 @@ theorem OneOneEquiv.le_congr_right {α β γ} [Primcodable α] [Primcodable β] 
 
 theorem ManyOneEquiv.congr_left {α β γ} [Primcodable α] [Primcodable β] [Primcodable γ] {p : α → Prop} {q : β → Prop}
     {r : γ → Prop} (h : ManyOneEquiv p q) : ManyOneEquiv p r ↔ ManyOneEquiv q r :=
-  and_congr h.le_congr_left h.le_congr_right
+  and_congrₓ h.le_congr_left h.le_congr_right
 
 theorem ManyOneEquiv.congr_right {α β γ} [Primcodable α] [Primcodable β] [Primcodable γ] {p : α → Prop} {q : β → Prop}
     {r : γ → Prop} (h : ManyOneEquiv q r) : ManyOneEquiv p q ↔ ManyOneEquiv p r :=
-  and_congr h.le_congr_right h.le_congr_left
+  and_congrₓ h.le_congr_right h.le_congr_left
 
 theorem OneOneEquiv.congr_left {α β γ} [Primcodable α] [Primcodable β] [Primcodable γ] {p : α → Prop} {q : β → Prop}
     {r : γ → Prop} (h : OneOneEquiv p q) : OneOneEquiv p r ↔ OneOneEquiv q r :=
-  and_congr h.le_congr_left h.le_congr_right
+  and_congrₓ h.le_congr_left h.le_congr_right
 
 theorem OneOneEquiv.congr_right {α β γ} [Primcodable α] [Primcodable β] [Primcodable γ] {p : α → Prop} {q : β → Prop}
     {r : γ → Prop} (h : OneOneEquiv q r) : OneOneEquiv p q ↔ OneOneEquiv p r :=
-  and_congr h.le_congr_right h.le_congr_left
+  and_congrₓ h.le_congr_right h.le_congr_left
 
 @[simp]
 theorem Ulower.down_computable {α} [Primcodable α] : (Ulower.equiv α).Computable :=

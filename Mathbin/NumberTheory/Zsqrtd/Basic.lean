@@ -323,7 +323,7 @@ protected theorem coe_int_mul (m n : ℤ) : (↑(m * n) : ℤ√d) = ↑m * ↑n
   (Int.castRingHom _).map_mul _ _
 
 protected theorem coe_int_inj {m n : ℤ} (h : (↑m : ℤ√d) = ↑n) : m = n := by
-  simpa using congr_argₓ re h
+  simpa using congr_arg re h
 
 theorem coe_int_dvd_iff (z : ℤ) (a : ℤ√d) : ↑z ∣ a ↔ z ∣ a.re ∧ z ∣ a.im := by
   constructor
@@ -349,7 +349,7 @@ theorem coe_int_dvd_coe_int (a b : ℤ) : (a : ℤ√d) ∣ b ↔ a ∣ b := by
 
 protected theorem eq_of_smul_eq_smul_left {a : ℤ} {b c : ℤ√d} (ha : a ≠ 0) (h : ↑a * b = a * c) : b = c := by
   rw [ext] at h⊢
-  apply And.imp _ _ h <;>
+  apply And.impₓ _ _ h <;>
     · simp only [smul_re, smul_im]
       exact Int.eq_of_mul_eq_mul_left ha
       
@@ -539,7 +539,7 @@ theorem norm_eq_one_iff {x : ℤ√d} : x.norm.natAbs = 1 ↔ IsUnit x :=
               norm_eq_mul_conj, neg_mul_eq_mul_neg, eq_comm] at h⟩,
     fun h => by
     let ⟨y, hy⟩ := is_unit_iff_dvd_one.1 h
-    have := congr_argₓ (Int.natAbs ∘ norm) hy
+    have := congr_arg (Int.natAbs ∘ norm) hy
     rw [Function.comp_app, Function.comp_app, norm_mul, Int.nat_abs_mul, norm_one, Int.nat_abs_one, eq_comm,
       Nat.mul_eq_one_iff] at this
     exact this.1⟩
@@ -713,7 +713,7 @@ instance : Preorderₓ (ℤ√d) where
   le_trans := fun a b c hab hbc => by
     simpa [sub_add_sub_cancel'] using hab.add hbc
   lt := (· < ·)
-  lt_iff_le_not_le := fun a b => (and_iff_right_of_imp (Zsqrtd.le_total _ _).resolve_left).symm
+  lt_iff_le_not_le := fun a b => (and_iff_right_of_impₓ (Zsqrtd.le_total _ _).resolve_left).symm
 
 theorem le_arch (a : ℤ√d) : ∃ n : ℕ, a ≤ n := by
   let ⟨x, y, (h : a ≤ ⟨x, y⟩)⟩ :=

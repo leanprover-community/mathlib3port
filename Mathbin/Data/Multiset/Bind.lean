@@ -34,7 +34,7 @@ def join : Multiset (Multiset α) → Multiset α :=
 
 theorem coe_join : ∀ L : List (List α), join (L.map (@coe _ (Multiset α) _) : Multiset (Multiset α)) = L.join
   | [] => rfl
-  | l :: L => congr_argₓ (fun s : Multiset α => ↑l + s) (coe_join L)
+  | l :: L => congr_arg (fun s : Multiset α => ↑l + s) (coe_join L)
 
 @[simp]
 theorem join_zero : @join α 0 = 0 :=
@@ -134,7 +134,7 @@ theorem bind_singleton (f : α → β) : (s.bind fun x => ({f x} : Multiset β))
 @[simp]
 theorem mem_bind {b s} {f : α → Multiset β} : b ∈ bind s f ↔ ∃ a ∈ s, b ∈ f a := by
   simp [bind] <;>
-    simp [-exists_and_distrib_right, exists_and_distrib_right.symm] <;> rw [exists_swap] <;> simp [and_assoc]
+    simp [-exists_and_distrib_rightₓ, exists_and_distrib_right.symm] <;> rw [exists_swap] <;> simp [and_assocₓ]
 
 @[simp]
 theorem card_bind : (s.bind f).card = (s.map (card ∘ f)).Sum := by
@@ -197,7 +197,7 @@ theorem prod_bind [CommMonoidₓ β] (s : Multiset α) (t : α → Multiset β) 
     simp [ih, cons_bind]
 
 theorem rel_bind {r : α → β → Prop} {p : γ → δ → Prop} {s t} {f : α → Multiset γ} {g : β → Multiset δ}
-    (h : (r⇒Rel p) f g) (hst : Rel r s t) : Rel p (s.bind f) (t.bind g) := by
+    (h : (r ⇒ Rel p) f g) (hst : Rel r s t) : Rel p (s.bind f) (t.bind g) := by
   apply rel_join
   rw [rel_map]
   exact hst.mono fun a ha b hb hr => h hr
@@ -330,7 +330,7 @@ theorem sigma_add : ∀ t u : ∀ a, Multiset (σ a), (s.Sigma fun a => t a + u 
 @[simp]
 theorem mem_sigma {s t} : ∀ {p : Σa, σ a}, p ∈ @Multiset.sigma α σ s t ↔ p.1 ∈ s ∧ p.2 ∈ t p.1
   | ⟨a, b⟩ => by
-    simp [Multiset.sigma, and_assoc, And.left_comm]
+    simp [Multiset.sigma, and_assocₓ, And.left_comm]
 
 @[simp]
 theorem card_sigma : card (s.Sigma t) = sum (map (fun a => card (t a)) s) := by

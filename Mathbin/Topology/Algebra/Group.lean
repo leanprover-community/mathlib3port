@@ -300,7 +300,7 @@ theorem has_continuous_inv_infi {ts' : ι' → TopologicalSpace G} (h' : ∀ i, 
 
 @[to_additive]
 theorem has_continuous_inv_inf {t₁ t₂ : TopologicalSpace G} (h₁ : @HasContinuousInv G t₁ _)
-    (h₂ : @HasContinuousInv G t₂ _) : @HasContinuousInv G (t₁⊓t₂) _ := by
+    (h₂ : @HasContinuousInv G t₂ _) : @HasContinuousInv G (t₁ ⊓ t₂) _ := by
   rw [inf_eq_infi]
   refine' has_continuous_inv_infi fun b => _
   cases b <;> assumption
@@ -483,7 +483,7 @@ variable (G)
 
 @[to_additive]
 theorem nhds_one_symm : comap Inv.inv (𝓝 (1 : G)) = 𝓝 (1 : G) :=
-  ((Homeomorph.inv G).comap_nhds_eq _).trans (congr_argₓ nhds inv_one)
+  ((Homeomorph.inv G).comap_nhds_eq _).trans (congr_arg nhds inv_one)
 
 /-- The map `(x, y) ↦ (x, xy)` as a homeomorphism. This is a shear mapping. -/
 @[to_additive "The map `(x, y) ↦ (x, x + y)` as a homeomorphism.\nThis is a shear mapping."]
@@ -1252,7 +1252,7 @@ theorem topological_group_infi {ts' : ι → TopologicalSpace G} (h' : ∀ i, @T
 
 @[to_additive]
 theorem topological_group_inf {t₁ t₂ : TopologicalSpace G} (h₁ : @TopologicalGroup G t₁ _)
-    (h₂ : @TopologicalGroup G t₂ _) : @TopologicalGroup G (t₁⊓t₂) _ := by
+    (h₂ : @TopologicalGroup G t₂ _) : @TopologicalGroup G (t₁ ⊓ t₂) _ := by
   rw [inf_eq_infi]
   refine' topological_group_infi fun b => _
   cases b <;> assumption
@@ -1357,11 +1357,11 @@ instance : BoundedOrder (GroupTopology α) where
   bot_le := fun x => show ⊥ ≤ x.toTopologicalSpace from bot_le
 
 @[to_additive]
-instance : HasInf (GroupTopology α) where inf := fun x y => ⟨x.1⊓y.1, topological_group_inf x.2 y.2⟩
+instance : HasInf (GroupTopology α) where inf := fun x y => ⟨x.1 ⊓ y.1, topological_group_inf x.2 y.2⟩
 
 @[simp, to_additive]
 theorem to_topological_space_inf (x y : GroupTopology α) :
-    (x⊓y).toTopologicalSpace = x.toTopologicalSpace⊓y.toTopologicalSpace :=
+    (x ⊓ y).toTopologicalSpace = x.toTopologicalSpace ⊓ y.toTopologicalSpace :=
   rfl
 
 @[to_additive]
@@ -1391,7 +1391,7 @@ theorem to_topological_space_Inf (s : Set (GroupTopology α)) :
 @[simp, to_additive]
 theorem to_topological_space_infi {ι} (s : ι → GroupTopology α) :
     (⨅ i, s i).toTopologicalSpace = ⨅ i, (s i).toTopologicalSpace :=
-  congr_argₓ inf (range_comp _ _).symm
+  congr_arg inf (range_comp _ _).symm
 
 /-- Group topologies on `γ` form a complete lattice, with `⊥` the discrete topology and `⊤` the
 indiscrete topology.
@@ -1415,7 +1415,7 @@ instance : CompleteSemilatticeInf (GroupTopology α) :=
 @[to_additive]
 instance : CompleteLattice (GroupTopology α) :=
   { GroupTopology.boundedOrder, GroupTopology.semilatticeInf, completeLatticeOfCompleteSemilatticeInf _ with
-    inf := (·⊓·), top := ⊤, bot := ⊥ }
+    inf := (· ⊓ ·), top := ⊤, bot := ⊥ }
 
 /-- Given `f : α → β` and a topology on `α`, the coinduced group topology on `β` is the finest
 topology such that `f` is continuous and `β` is a topological group. -/

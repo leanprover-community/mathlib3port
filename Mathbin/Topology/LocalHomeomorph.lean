@@ -305,7 +305,7 @@ theorem image_mem_nhds {x} (hx : x ∈ e.Source) {s : Set α} (hs : s ∈ 𝓝 x
 theorem map_nhds_within_eq (e : LocalHomeomorph α β) {x} (hx : x ∈ e.Source) (s : Set α) :
     map e (𝓝[s] x) = 𝓝[e '' (e.Source ∩ s)] e x :=
   calc
-    map e (𝓝[s] x) = map e (𝓝[e.Source ∩ s] x) := congr_argₓ (map e) (e.nhds_within_source_inter hx _).symm
+    map e (𝓝[s] x) = map e (𝓝[e.Source ∩ s] x) := congr_arg (map e) (e.nhds_within_source_inter hx _).symm
     _ = 𝓝[e '' (e.Source ∩ s)] e x :=
       (e.LeftInvOn.mono <| inter_subset_left _ _).map_nhds_within_eq (e.left_inv hx)
         (e.continuous_at_symm (e.map_source hx)).ContinuousWithinAt (e.ContinuousAt hx).ContinuousWithinAt
@@ -443,10 +443,10 @@ theorem of_symm_image_eq (h : e.symm '' (e.Target ∩ t) = e.Source ∩ s) : e.I
 protected theorem compl (h : e.IsImage s t) : e.IsImage (sᶜ) (tᶜ) := fun x hx => not_congr (h hx)
 
 protected theorem inter {s' t'} (h : e.IsImage s t) (h' : e.IsImage s' t') : e.IsImage (s ∩ s') (t ∩ t') := fun x hx =>
-  and_congr (h hx) (h' hx)
+  and_congrₓ (h hx) (h' hx)
 
 protected theorem union {s' t'} (h : e.IsImage s t) (h' : e.IsImage s' t') : e.IsImage (s ∪ s') (t ∪ t') := fun x hx =>
-  or_congr (h hx) (h' hx)
+  or_congrₓ (h hx) (h' hx)
 
 protected theorem diff {s' t'} (h : e.IsImage s t) (h' : e.IsImage s' t') : e.IsImage (s \ s') (t \ t') :=
   h.inter h'.compl
@@ -837,7 +837,7 @@ theorem prod_eq_prod_of_nonempty {e₁ e₁' : LocalHomeomorph α β} {e₂ e₂
   haveI : Nonempty γ := ⟨y⟩
   haveI : Nonempty δ := ⟨e₂ y⟩
   simp_rw [LocalHomeomorph.ext_iff, prod_apply, prod_symm_apply, prod_source, Prod.ext_iffₓ,
-    Set.prod_eq_prod_iff_of_nonempty h, forall_and_distrib, Prod.forallₓ, forall_const, forall_forall_const, and_assoc,
+    Set.prod_eq_prod_iff_of_nonempty h, forall_and_distrib, Prod.forallₓ, forall_const, forall_forall_const, and_assocₓ,
     And.left_comm]
 
 theorem prod_eq_prod_of_nonempty' {e₁ e₁' : LocalHomeomorph α β} {e₂ e₂' : LocalHomeomorph γ δ}
@@ -983,14 +983,14 @@ end Continuity
 /-- The homeomorphism obtained by restricting a `local_homeomorph` to a subset of the source. -/
 @[simps]
 def homeomorphOfImageSubsetSource {s : Set α} {t : Set β} (hs : s ⊆ e.Source) (ht : e '' s = t) : s ≃ₜ t where
-  toFun := fun a => ⟨e a, (congr_argₓ ((· ∈ ·) (e a)) ht).mp ⟨a, a.2, rfl⟩⟩
+  toFun := fun a => ⟨e a, (congr_arg ((· ∈ ·) (e a)) ht).mp ⟨a, a.2, rfl⟩⟩
   invFun := fun b =>
     ⟨e.symm b,
-      let ⟨a, ha1, ha2⟩ := (congr_argₓ ((· ∈ ·) ↑b) ht).mpr b.2
+      let ⟨a, ha1, ha2⟩ := (congr_arg ((· ∈ ·) ↑b) ht).mpr b.2
       ha2 ▸ (e.left_inv (hs ha1)).symm ▸ ha1⟩
   left_inv := fun a => Subtype.ext (e.left_inv (hs a.2))
   right_inv := fun b =>
-    let ⟨a, ha1, ha2⟩ := (congr_argₓ ((· ∈ ·) ↑b) ht).mpr b.2
+    let ⟨a, ha1, ha2⟩ := (congr_arg ((· ∈ ·) ↑b) ht).mpr b.2
     Subtype.ext (e.right_inv (ha2 ▸ e.map_source (hs ha1)))
   continuous_to_fun := (continuous_on_iff_continuous_restrict.mp (e.ContinuousOn.mono hs)).subtype_mk _
   continuous_inv_fun :=

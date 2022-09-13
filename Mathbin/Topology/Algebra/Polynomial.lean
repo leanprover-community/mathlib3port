@@ -158,7 +158,7 @@ theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 
         ∀ r ∈ Multiset.map (normHom ∘ Prod) (powerset_len (card (map f p).roots - i) (map f p).roots),
           r ≤ B ^ (p.nat_degree - i)
         by
-        convert sum_le_sum_sum _ this
+        convert sum_le_sum_map _ this
         simp only [hi, hcd, Multiset.map_const, card_map, card_powerset_len, Nat.choose_symm, sum_repeat, nsmul_eq_mul,
           mul_comm]
       · intro r hr

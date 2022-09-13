@@ -158,7 +158,7 @@ def lift : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ } 
     Quotientₓ.lift (uncurry ↑f) <| by
       rintro _ _ ⟨⟩
       exacts[rfl, f.prop _ _]
-  invFun := fun F => ⟨curry (F ∘ Quotientₓ.mk), fun a₁ a₂ => congr_argₓ F eq_swap⟩
+  invFun := fun F => ⟨curry (F ∘ Quotientₓ.mk), fun a₁ a₂ => congr_arg F eq_swap⟩
   left_inv := fun f => Subtype.ext rfl
   right_inv := fun F => funext <| Sym2.ind fun x y => rfl
 
@@ -688,7 +688,7 @@ theorem filter_image_quotient_mk_is_diag [DecidableEq α] (s : Finset α) :
   ext z
   induction z using Quotientₓ.induction_on
   rcases z with ⟨x, y⟩
-  simp only [mem_image, mem_diag, exists_prop, mem_filter, Prod.existsₓ, mem_product]
+  simp only [mem_image, mem_diag, exists_propₓ, mem_filter, Prod.existsₓ, mem_product]
   constructor
   · rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
     rw [← h, Sym2.mk_is_diag_iff] at hab
@@ -705,7 +705,7 @@ theorem filter_image_quotient_mk_not_is_diag [DecidableEq α] (s : Finset α) :
   ext z
   induction z using Quotientₓ.induction_on
   rcases z with ⟨x, y⟩
-  simp only [mem_image, mem_off_diag, exists_prop, mem_filter, Prod.existsₓ, mem_product]
+  simp only [mem_image, mem_off_diag, exists_propₓ, mem_filter, Prod.existsₓ, mem_product]
   constructor
   · rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
     rw [← h, Sym2.mk_is_diag_iff] at hab

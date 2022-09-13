@@ -189,7 +189,7 @@ theorem induction {P : Submodule R M → Prop} (hgt : ∀ I, (∀ J < I, P J) �
 with disjoint kernel and range.
 -/
 theorem exists_endomorphism_iterate_ker_sup_range_eq_top (f : M →ₗ[R] M) :
-    ∃ n : ℕ, n ≠ 0 ∧ (f ^ n).ker⊔(f ^ n).range = ⊤ := by
+    ∃ n : ℕ, n ≠ 0 ∧ (f ^ n).ker ⊔ (f ^ n).range = ⊤ := by
   obtain ⟨n, w⟩ :=
     monotone_stabilizes
       (f.iterate_range.comp
@@ -401,14 +401,15 @@ theorem is_nilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R))
   rcases IsArtinian.set_has_minimal { J' : Ideal R | J < J' } ⟨⊤, hJ.lt_top⟩ with
     ⟨J', hJJ' : J < J', hJ' : ∀ I, J < I → I ≤ J' → I = J'⟩
   rcases SetLike.exists_of_lt hJJ' with ⟨x, hxJ', hxJ⟩
-  obtain rfl : J⊔Ideal.span {x} = J' := by
-    refine' hJ' (J⊔Ideal.span {x}) _ _
+  obtain rfl : J ⊔ Ideal.span {x} = J' := by
+    refine' hJ' (J ⊔ Ideal.span {x}) _ _
     · rw [SetLike.lt_iff_le_and_exists]
       exact ⟨le_sup_left, ⟨x, mem_sup_right (mem_span_singleton_self x), hxJ⟩⟩
       
     · exact sup_le hJJ'.le (span_le.2 (singleton_subset_iff.2 hxJ'))
       
-  have : J⊔Jac • Ideal.span {x} ≤ J⊔Ideal.span {x} := sup_le_sup_left (smul_le.2 fun _ _ _ => Submodule.smul_mem _ _) _
+  have : J ⊔ Jac • Ideal.span {x} ≤ J ⊔ Ideal.span {x} :=
+    sup_le_sup_left (smul_le.2 fun _ _ _ => Submodule.smul_mem _ _) _
   have : Jac * Ideal.span {x} ≤ J := by
     --Need version 4 of Nakayamas lemma on Stacks
     classical

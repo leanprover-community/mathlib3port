@@ -75,7 +75,7 @@ theorem balanced_core_empty : BalancedCore 𝕜 (∅ : Set E) = ∅ :=
   eq_empty_of_subset_empty (balanced_core_subset _)
 
 theorem mem_balanced_core_iff : x ∈ BalancedCore 𝕜 s ↔ ∃ t, Balanced 𝕜 t ∧ t ⊆ s ∧ x ∈ t := by
-  simp_rw [BalancedCore, mem_sUnion, mem_set_of_eq, exists_prop, and_assoc]
+  simp_rw [BalancedCore, mem_sUnion, mem_set_of_eq, exists_propₓ, and_assocₓ]
 
 theorem smul_balanced_core_subset (s : Set E) {a : 𝕜} (ha : ∥a∥ ≤ 1) : a • BalancedCore 𝕜 s ⊆ BalancedCore 𝕜 s := by
   rintro x ⟨y, hy, rfl⟩
@@ -215,7 +215,7 @@ theorem balanced_core_mem_nhds_zero (hU : U ∈ 𝓝 (0 : E)) : BalancedCore �
     ∃ (r : ℝ)(V : Set E), 0 < r ∧ V ∈ 𝓝 (0 : E) ∧ ∀ (c : 𝕜) (y : E), ∥c∥ < r → y ∈ V → c • y ∈ U := by
     have h : Filter.Tendsto (fun x : 𝕜 × E => x.fst • x.snd) (𝓝 (0, 0)) (𝓝 0) :=
       continuous_smul.tendsto' (0, 0) _ (smul_zero _)
-    simpa only [← Prod.exists'ₓ, ← Prod.forall'ₓ, ← and_imp, ← And.assoc, exists_prop] using
+    simpa only [← Prod.exists'ₓ, ← Prod.forall'ₓ, ← and_imp, ← And.assoc, exists_propₓ] using
       h.basis_left (normed_add_comm_group.nhds_zero_basis_norm_lt.prod_nhds (𝓝 _).basis_sets) U hU
   rcases NormedField.exists_norm_lt 𝕜 hr with ⟨y, hy₀, hyr⟩
   rw [norm_pos_iff] at hy₀

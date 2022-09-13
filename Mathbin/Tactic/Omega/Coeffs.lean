@@ -281,7 +281,7 @@ theorem dvd_val {as : List Int} {i : Int} : (∀ x ∈ as, i ∣ x) → i ∣ va
 theorem val_between_map_div {as : List Int} {i : Int} {l : Nat} (h1 : ∀ x ∈ as, i ∣ x) :
     ∀ {m}, valBetween v (List.map (fun x => x / i) as) l m = valBetween v as l m / i
   | 0 => by
-    simp only [Int.zero_div, val_between, List.map]
+    simp only [Int.zero_divₓ, val_between, List.map]
   | m + 1 => by
     unfold val_between
     rw [@val_between_map_div m, Int.add_div_of_dvd_right]
@@ -291,11 +291,11 @@ theorem val_between_map_div {as : List Int} {i : Int} {l : Nat} (h1 : ∀ x ∈ 
           get (l + m) (List.map (fun x : ℤ => x / i) as) * v (l + m) = get (l + m) as / i * v (l + m) := by
             apply fun_mono_2 _ rfl
             rw [get_map']
-            apply Int.zero_div
+            apply Int.zero_divₓ
           _ = get (l + m) as * v (l + m) / i := by
             repeat'
               rw [mul_comm _ (v (l + m))]
-            rw [Int.mul_div_assoc]
+            rw [Int.mul_div_assocₓ]
             apply forall_val_dvd_of_forall_mem_dvd h1
           
       

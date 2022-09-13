@@ -125,10 +125,10 @@ instance : HasInf (ConvexCone 𝕜 E) :=
       ⟨S.add_mem hx.1 hy.1, T.add_mem hx.2 hy.2⟩⟩⟩
 
 @[simp]
-theorem coe_inf : ((S⊓T : ConvexCone 𝕜 E) : Set E) = ↑S ∩ ↑T :=
+theorem coe_inf : ((S ⊓ T : ConvexCone 𝕜 E) : Set E) = ↑S ∩ ↑T :=
   rfl
 
-theorem mem_inf {x} : x ∈ S⊓T ↔ x ∈ S ∧ x ∈ T :=
+theorem mem_inf {x} : x ∈ S ⊓ T ↔ x ∈ S ∧ x ∈ T :=
   Iff.rfl
 
 instance : HasInfₓ (ConvexCone 𝕜 E) :=
@@ -175,8 +175,9 @@ theorem coe_top : ↑(⊤ : ConvexCone 𝕜 E) = (Univ : Set E) :=
 
 instance : CompleteLattice (ConvexCone 𝕜 E) :=
   { SetLike.partialOrder with le := (· ≤ ·), lt := (· < ·), bot := ⊥, bot_le := fun S x => False.elim, top := ⊤,
-    le_top := fun S x hx => mem_top 𝕜 x, inf := (·⊓·), inf := HasInfₓ.inf, sup := fun a b => inf { x | a ≤ x ∧ b ≤ x },
-    sup := fun s => inf { T | ∀ S ∈ s, S ≤ T }, le_sup_left := fun a b => fun x hx => mem_Inf.2 fun s hs => hs.1 hx,
+    le_top := fun S x hx => mem_top 𝕜 x, inf := (· ⊓ ·), inf := HasInfₓ.inf,
+    sup := fun a b => inf { x | a ≤ x ∧ b ≤ x }, sup := fun s => inf { T | ∀ S ∈ s, S ≤ T },
+    le_sup_left := fun a b => fun x hx => mem_Inf.2 fun s hs => hs.1 hx,
     le_sup_right := fun a b => fun x hx => mem_Inf.2 fun s hs => hs.2 hx,
     sup_le := fun a b c ha hb x hx => mem_Inf.1 hx c ⟨ha, hb⟩, le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩,
     inf_le_left := fun a b x => And.left, inf_le_right := fun a b x => And.right,
@@ -505,7 +506,7 @@ def toCone (s : Set E) (hs : Convex 𝕜 s) : ConvexCone 𝕜 E := by
 variable {s : Set E} (hs : Convex 𝕜 s) {x : E}
 
 theorem mem_to_cone : x ∈ hs.toCone s ↔ ∃ c : 𝕜, 0 < c ∧ ∃ y ∈ s, c • y = x := by
-  simp only [to_cone, ConvexCone.mem_mk, mem_Union, mem_smul_set, eq_comm, exists_prop]
+  simp only [to_cone, ConvexCone.mem_mk, mem_Union, mem_smul_set, eq_comm, exists_propₓ]
 
 theorem mem_to_cone' : x ∈ hs.toCone s ↔ ∃ c : 𝕜, 0 < c ∧ c • x ∈ s := by
   refine' hs.mem_to_cone.trans ⟨_, _⟩
@@ -777,12 +778,12 @@ linear map `λ y, ⟪x, y⟫`. -/
 theorem inner_dual_cone_singleton (x : H) : ({x} : Set H).innerDualCone = (ConvexCone.positive ℝ ℝ).comap (innerₛₗ x) :=
   ConvexCone.ext fun i => forall_eq
 
-theorem inner_dual_cone_union (s t : Set H) : (s ∪ t).innerDualCone = s.innerDualCone⊓t.innerDualCone :=
+theorem inner_dual_cone_union (s t : Set H) : (s ∪ t).innerDualCone = s.innerDualCone ⊓ t.innerDualCone :=
   le_antisymmₓ (le_inf (fun x hx y hy => hx _ <| Or.inl hy) fun x hx y hy => hx _ <| Or.inr hy) fun x hx y =>
     Or.ndrec (hx.1 _) (hx.2 _)
 
 theorem inner_dual_cone_insert (x : H) (s : Set H) :
-    (insert x s).innerDualCone = Set.innerDualCone {x}⊓s.innerDualCone := by
+    (insert x s).innerDualCone = Set.innerDualCone {x} ⊓ s.innerDualCone := by
   rw [insert_eq, inner_dual_cone_union]
 
 theorem inner_dual_cone_Union {ι : Sort _} (f : ι → Set H) : (⋃ i, f i).innerDualCone = ⨅ i, (f i).innerDualCone := by

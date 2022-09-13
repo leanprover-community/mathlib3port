@@ -131,7 +131,7 @@ theorem ext {a b : Finₓ n} (h : (a : ℕ) = b) : a = b :=
   eq_of_veq h
 
 theorem ext_iff {a b : Finₓ n} : a = b ↔ (a : ℕ) = b :=
-  Iff.intro (congr_argₓ _) Finₓ.eq_of_veq
+  Iff.intro (congr_arg _) Finₓ.eq_of_veq
 
 theorem coe_injective {n : ℕ} : Injective (coe : Finₓ n → ℕ) :=
   Finₓ.val_injective
@@ -411,7 +411,7 @@ instance orderIsoUnique : Unique (Finₓ n ≃o Finₓ n) :=
 are equal. -/
 theorem strict_mono_unique {f g : Finₓ n → α} (hf : StrictMono f) (hg : StrictMono g) (h : Range f = Range g) : f = g :=
   have : (hf.OrderIso f).trans (OrderIso.setCongr _ _ h) = hg.OrderIso g := Subsingleton.elim _ _
-  congr_argₓ (Function.comp (coe : Range g → α)) (funext <| RelIso.ext_iff.1 this)
+  congr_arg (Function.comp (coe : Range g → α)) (funext <| RelIso.ext_iff.1 this)
 
 /-- Two order embeddings of `fin n` are equal provided that their ranges are equal. -/
 theorem order_embedding_eq {f g : Finₓ n ↪o α} (h : Range f = Range g) : f = g :=
@@ -739,7 +739,7 @@ theorem range_cast_le {n k : ℕ} (h : n ≤ k) : Set.Range (castLe h) = { i | (
 theorem coe_of_injective_cast_le_symm {n k : ℕ} (h : n ≤ k) (i : Finₓ k) (hi) :
     ((Equivₓ.ofInjective _ (castLe h).Injective).symm ⟨i, hi⟩ : ℕ) = i := by
   rw [← coe_cast_le]
-  exact congr_argₓ coe (Equivₓ.apply_of_injective_symm _ _)
+  exact congr_arg coe (Equivₓ.apply_of_injective_symm _ _)
 
 @[simp]
 theorem cast_le_succ {m n : ℕ} (h : m + 1 ≤ n + 1) (i : Finₓ m) :
@@ -841,7 +841,7 @@ theorem cast_lt_cast_add (m : ℕ) (i : Finₓ n) : castLt (castAdd m i) (cast_a
 
 /-- For rewriting in the reverse direction, see `fin.cast_cast_add_left`. -/
 theorem cast_add_cast {n n' : ℕ} (m : ℕ) (i : Finₓ n') (h : n' = n) :
-    castAdd m (Finₓ.cast h i) = Finₓ.cast (congr_argₓ _ h) (castAdd m i) :=
+    castAdd m (Finₓ.cast h i) = Finₓ.cast (congr_arg _ h) (castAdd m i) :=
   ext rfl
 
 theorem cast_cast_add_left {n n' m : ℕ} (i : Finₓ n') (h : n' + m = n + m) :
@@ -973,7 +973,7 @@ theorem range_cast_succ {n : ℕ} : Set.Range (castSucc : Finₓ n → Finₓ n.
 theorem coe_of_injective_cast_succ_symm {n : ℕ} (i : Finₓ n.succ) (hi) :
     ((Equivₓ.ofInjective castSucc (cast_succ_injective _)).symm ⟨i, hi⟩ : ℕ) = i := by
   rw [← coe_cast_succ]
-  exact congr_argₓ coe (Equivₓ.apply_of_injective_symm _ _)
+  exact congr_arg coe (Equivₓ.apply_of_injective_symm _ _)
 
 theorem succ_cast_succ {n : ℕ} (i : Finₓ n) : i.cast_succ.succ = i.succ.cast_succ :=
   Finₓ.ext
@@ -1008,7 +1008,7 @@ theorem cast_add_nat_zero {n n' : ℕ} (i : Finₓ n) (h : n + 0 = n') :
 
 /-- For rewriting in the reverse direction, see `fin.cast_add_nat_left`. -/
 theorem add_nat_cast {n n' m : ℕ} (i : Finₓ n') (h : n' = n) :
-    addNat m (cast h i) = cast (congr_argₓ _ h) (addNat m i) :=
+    addNat m (cast h i) = cast (congr_arg _ h) (addNat m i) :=
   ext rfl
 
 theorem cast_add_nat_left {n n' m : ℕ} (i : Finₓ n') (h : n' + m = n + m) :
@@ -1017,7 +1017,7 @@ theorem cast_add_nat_left {n n' m : ℕ} (i : Finₓ n') (h : n' + m = n + m) :
 
 @[simp]
 theorem cast_add_nat_right {n m m' : ℕ} (i : Finₓ n) (h : n + m' = n + m) : cast h (addNat m' i) = addNat m i :=
-  ext <| (congr_argₓ ((· + ·) (i : ℕ)) (add_left_cancelₓ h) : _)
+  ext <| (congr_arg ((· + ·) (i : ℕ)) (add_left_cancelₓ h) : _)
 
 /-- `nat_add n i` adds `n` to `i` "on the left". -/
 def natAdd (n) {m} : Finₓ m ↪o Finₓ (n + m) :=
@@ -1041,7 +1041,7 @@ theorem nat_add_zero {n : ℕ} : Finₓ.natAdd 0 = (Finₓ.cast (zero_addₓ n).
 
 /-- For rewriting in the reverse direction, see `fin.cast_nat_add_right`. -/
 theorem nat_add_cast {n n' : ℕ} (m : ℕ) (i : Finₓ n') (h : n' = n) :
-    natAdd m (cast h i) = cast (congr_argₓ _ h) (natAdd m i) :=
+    natAdd m (cast h i) = cast (congr_arg _ h) (natAdd m i) :=
   ext rfl
 
 theorem cast_nat_add_right {n n' m : ℕ} (i : Finₓ n') (h : m + n' = m + n) :
@@ -1050,7 +1050,7 @@ theorem cast_nat_add_right {n n' m : ℕ} (i : Finₓ n') (h : m + n' = m + n) :
 
 @[simp]
 theorem cast_nat_add_left {n m m' : ℕ} (i : Finₓ n) (h : m' + n = m + n) : cast h (natAdd m' i) = natAdd m i :=
-  ext <| (congr_argₓ (· + (i : ℕ)) (add_right_cancelₓ h) : _)
+  ext <| (congr_arg (· + (i : ℕ)) (add_right_cancelₓ h) : _)
 
 @[simp]
 theorem cast_nat_add_zero {n n' : ℕ} (i : Finₓ n) (h : 0 + n = n') :
@@ -1298,7 +1298,7 @@ theorem forall_fin_two {p : Finₓ 2 → Prop} : (∀ i, p i) ↔ p 0 ∧ p 1 :=
   forall_fin_succ.trans <| and_congr_right fun _ => forall_fin_one
 
 theorem exists_fin_two {p : Finₓ 2 → Prop} : (∃ i, p i) ↔ p 0 ∨ p 1 :=
-  exists_fin_succ.trans <| or_congr_right' exists_fin_one
+  exists_fin_succ.trans <| or_congr_right'ₓ exists_fin_one
 
 theorem fin_two_eq_of_eq_zero_iff {a b : Finₓ 2} (h : a = 0 ↔ b = 0) : a = b := by
   revert a b
@@ -1379,14 +1379,14 @@ theorem add_cases_right {m n : ℕ} {C : Finₓ (m + n) → Sort _} (hleft : ∀
     (hright : ∀ i, C (natAdd m i)) (i : Finₓ n) : addCases hleft hright (natAdd m i) = hright i := by
   have : ¬(nat_add m i : ℕ) < m := (le_coe_nat_add _ _).not_lt
   rw [add_cases, dif_neg this]
-  refine' eq_of_heq ((eq_rec_heqₓ _ _).trans _)
+  refine' eq_of_heq ((eq_rec_heq _ _).trans _)
   congr 1
   simp
 
 end Rec
 
 theorem lift_fun_iff_succ {α : Type _} (r : α → α → Prop) [IsTrans α r] {f : Finₓ (n + 1) → α} :
-    ((· < ·)⇒r) f f ↔ ∀ i : Finₓ n, r (f i.cast_succ) (f i.succ) := by
+    ((· < ·) ⇒ r) f f ↔ ∀ i : Finₓ n, r (f i.cast_succ) (f i.succ) := by
   constructor
   · intro H i
     exact H i.cast_succ_lt_succ
@@ -1680,7 +1680,7 @@ theorem succ_above_right_inj {x : Finₓ (n + 1)} : x.succAbove a = x.succAbove 
 
 /-- `succ_above` is injective at the pivot -/
 theorem succ_above_left_injective : Injective (@succAbove n) := fun _ _ h => by
-  simpa [range_succ_above] using congr_argₓ (fun f : Finₓ n ↪o Finₓ (n + 1) => Set.Range fᶜ) h
+  simpa [range_succ_above] using congr_arg (fun f : Finₓ n ↪o Finₓ (n + 1) => Set.Range fᶜ) h
 
 /-- `succ_above` is injective at the pivot -/
 @[simp]

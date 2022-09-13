@@ -943,15 +943,15 @@ theorem FactorSet.coe_add {a b : Multiset { a : Associates α // Irreducible a }
   by
   norm_cast
 
-theorem FactorSet.sup_add_inf_eq_add [DecidableEq (Associates α)] : ∀ a b : FactorSet α, a⊔b + a⊓b = a + b
+theorem FactorSet.sup_add_inf_eq_add [DecidableEq (Associates α)] : ∀ a b : FactorSet α, a ⊔ b + a ⊓ b = a + b
   | none, b =>
-    show ⊤⊔b + ⊤⊓b = ⊤ + b by
+    show ⊤ ⊔ b + ⊤ ⊓ b = ⊤ + b by
       simp
   | a, none =>
-    show a⊔⊤ + a⊓⊤ = a + ⊤ by
+    show a ⊔ ⊤ + a ⊓ ⊤ = a + ⊤ by
       simp
   | some a, some b =>
-    show (a : FactorSet α)⊔b + a⊓b = a + b by
+    show (a : FactorSet α) ⊔ b + a ⊓ b = a + b by
       rw [← WithTop.coe_sup, ← WithTop.coe_inf, ← WithTop.coe_add, ← WithTop.coe_add, WithTop.coe_eq_coe]
       exact Multiset.union_add_inter _ _
 
@@ -1165,7 +1165,7 @@ noncomputable def factors (a : Associates α) : FactorSet α := by
     simp only [associated_zero_iff_eq_zero] at this
     simp only [quotient_mk_eq_mk, this, mk_eq_zero]
     
-  exact fun ha hb eq => heq_of_eq <| congr_argₓ some <| factors'_cong hab
+  exact fun ha hb eq => heq_of_eq <| congr_arg some <| factors'_cong hab
 
 @[simp]
 theorem factors_0 : (0 : Associates α).factors = ⊤ :=
@@ -1290,13 +1290,13 @@ theorem prod_le [Nontrivial α] {a b : FactorSet α} : a.Prod ≤ b.Prod ↔ a �
 include dec dec'
 
 noncomputable instance : HasSup (Associates α) :=
-  ⟨fun a b => (a.factors⊔b.factors).Prod⟩
+  ⟨fun a b => (a.factors ⊔ b.factors).Prod⟩
 
 noncomputable instance : HasInf (Associates α) :=
-  ⟨fun a b => (a.factors⊓b.factors).Prod⟩
+  ⟨fun a b => (a.factors ⊓ b.factors).Prod⟩
 
 noncomputable instance : Lattice (Associates α) :=
-  { Associates.partialOrder with sup := (·⊔·), inf := (·⊓·),
+  { Associates.partialOrder with sup := (· ⊔ ·), inf := (· ⊓ ·),
     sup_le := fun a b c hac hbc => factors_prod c ▸ prod_mono (sup_le (factors_mono hac) (factors_mono hbc)),
     le_sup_left := fun a b => le_transₓ (le_of_eqₓ (factors_prod a).symm) <| prod_mono <| le_sup_left,
     le_sup_right := fun a b => le_transₓ (le_of_eqₓ (factors_prod b).symm) <| prod_mono <| le_sup_right,
@@ -1304,8 +1304,8 @@ noncomputable instance : Lattice (Associates α) :=
     inf_le_left := fun a b => le_transₓ (prod_mono inf_le_left) (le_of_eqₓ (factors_prod a)),
     inf_le_right := fun a b => le_transₓ (prod_mono inf_le_right) (le_of_eqₓ (factors_prod b)) }
 
-theorem sup_mul_inf (a b : Associates α) : (a⊔b) * (a⊓b) = a * b :=
-  show (a.factors⊔b.factors).Prod * (a.factors⊓b.factors).Prod = a * b by
+theorem sup_mul_inf (a b : Associates α) : (a ⊔ b) * (a ⊓ b) = a * b :=
+  show (a.factors ⊔ b.factors).Prod * (a.factors ⊓ b.factors).Prod = a * b by
     nontriviality α
     refine' eq_of_factors_eq_factors _
     rw [← prod_add, prod_factors, factors_mul, factor_set.sup_add_inf_eq_add]
@@ -1373,11 +1373,11 @@ theorem mem_factors_iff_dvd {a p : α} (ha0 : a ≠ 0) (hp : Irreducible p) :
   · apply mem_factors_of_dvd ha0 hp
     
 
-theorem exists_prime_dvd_of_not_inf_one {a b : α} (ha : a ≠ 0) (hb : b ≠ 0) (h : Associates.mk a⊓Associates.mk b ≠ 1) :
-    ∃ p : α, Prime p ∧ p ∣ a ∧ p ∣ b := by
-  have hz : factors (Associates.mk a)⊓factors (Associates.mk b) ≠ 0 := by
+theorem exists_prime_dvd_of_not_inf_one {a b : α} (ha : a ≠ 0) (hb : b ≠ 0)
+    (h : Associates.mk a ⊓ Associates.mk b ≠ 1) : ∃ p : α, Prime p ∧ p ∣ a ∧ p ∣ b := by
+  have hz : factors (Associates.mk a) ⊓ factors (Associates.mk b) ≠ 0 := by
     contrapose! h with hf
-    change (factors (Associates.mk a)⊓factors (Associates.mk b)).Prod = 1
+    change (factors (Associates.mk a) ⊓ factors (Associates.mk b)).Prod = 1
     rw [hf]
     exact Multiset.prod_zero
   rw [factors_mk a ha, factors_mk b hb, ← WithTop.coe_inf] at hz
@@ -1398,7 +1398,7 @@ theorem exists_prime_dvd_of_not_inf_one {a b : α} (ha : a ≠ 0) (hb : b ≠ 0)
     
 
 theorem coprime_iff_inf_one {a b : α} (ha0 : a ≠ 0) (hb0 : b ≠ 0) :
-    Associates.mk a⊓Associates.mk b = 1 ↔ ∀ {d : α}, d ∣ a → d ∣ b → ¬Prime d := by
+    Associates.mk a ⊓ Associates.mk b = 1 ↔ ∀ {d : α}, d ∣ a → d ∣ b → ¬Prime d := by
   constructor
   · intro hg p ha hb hp
     refine' ((Associates.prime_mk _).mpr hp).not_unit (is_unit_of_dvd_one _ _)
@@ -1650,16 +1650,16 @@ theorem Associates.quot_out {α : Type _} [CommMonoidₓ α] (a : Associates α)
 /-- `to_gcd_monoid` constructs a GCD monoid out of a unique factorization domain. -/
 noncomputable def UniqueFactorizationMonoid.toGcdMonoid (α : Type _) [CancelCommMonoidWithZero α]
     [UniqueFactorizationMonoid α] [DecidableEq (Associates α)] [DecidableEq α] : GcdMonoid α where
-  gcd := fun a b => Quot.out (Associates.mk a⊓Associates.mk b : Associates α)
-  lcm := fun a b => Quot.out (Associates.mk a⊔Associates.mk b : Associates α)
+  gcd := fun a b => Quot.out (Associates.mk a ⊓ Associates.mk b : Associates α)
+  lcm := fun a b => Quot.out (Associates.mk a ⊔ Associates.mk b : Associates α)
   gcd_dvd_left := fun a b => by
-    rw [← mk_dvd_mk, (Associates.mk a⊓Associates.mk b).quot_out, dvd_eq_le]
+    rw [← mk_dvd_mk, (Associates.mk a ⊓ Associates.mk b).quot_out, dvd_eq_le]
     exact inf_le_left
   gcd_dvd_right := fun a b => by
-    rw [← mk_dvd_mk, (Associates.mk a⊓Associates.mk b).quot_out, dvd_eq_le]
+    rw [← mk_dvd_mk, (Associates.mk a ⊓ Associates.mk b).quot_out, dvd_eq_le]
     exact inf_le_right
   dvd_gcd := fun a b c hac hab => by
-    rw [← mk_dvd_mk, (Associates.mk c⊓Associates.mk b).quot_out, dvd_eq_le, le_inf_iff, mk_le_mk_iff_dvd_iff,
+    rw [← mk_dvd_mk, (Associates.mk c ⊓ Associates.mk b).quot_out, dvd_eq_le, le_inf_iff, mk_le_mk_iff_dvd_iff,
       mk_le_mk_iff_dvd_iff]
     exact ⟨hac, hab⟩
   lcm_zero_left := fun a => by
@@ -1679,18 +1679,18 @@ noncomputable def UniqueFactorizationMonoid.toGcdMonoid (α : Type _) [CancelCom
 noncomputable def UniqueFactorizationMonoid.toNormalizedGcdMonoid (α : Type _) [CancelCommMonoidWithZero α]
     [UniqueFactorizationMonoid α] [NormalizationMonoid α] [DecidableEq (Associates α)] [DecidableEq α] :
     NormalizedGcdMonoid α :=
-  { ‹NormalizationMonoid α› with gcd := fun a b => (Associates.mk a⊓Associates.mk b).out,
-    lcm := fun a b => (Associates.mk a⊔Associates.mk b).out,
-    gcd_dvd_left := fun a b => (out_dvd_iff a (Associates.mk a⊓Associates.mk b)).2 <| inf_le_left,
-    gcd_dvd_right := fun a b => (out_dvd_iff b (Associates.mk a⊓Associates.mk b)).2 <| inf_le_right,
+  { ‹NormalizationMonoid α› with gcd := fun a b => (Associates.mk a ⊓ Associates.mk b).out,
+    lcm := fun a b => (Associates.mk a ⊔ Associates.mk b).out,
+    gcd_dvd_left := fun a b => (out_dvd_iff a (Associates.mk a ⊓ Associates.mk b)).2 <| inf_le_left,
+    gcd_dvd_right := fun a b => (out_dvd_iff b (Associates.mk a ⊓ Associates.mk b)).2 <| inf_le_right,
     dvd_gcd := fun a b c hac hab =>
-      show a ∣ (Associates.mk c⊓Associates.mk b).out by
+      show a ∣ (Associates.mk c ⊓ Associates.mk b).out by
         rw [dvd_out_iff, le_inf_iff, mk_le_mk_iff_dvd_iff, mk_le_mk_iff_dvd_iff] <;> exact ⟨hac, hab⟩,
     lcm_zero_left := fun a =>
-      show (⊤⊔Associates.mk a).out = 0 by
+      show (⊤ ⊔ Associates.mk a).out = 0 by
         simp ,
     lcm_zero_right := fun a =>
-      show (Associates.mk a⊔⊤).out = 0 by
+      show (Associates.mk a ⊔ ⊤).out = 0 by
         simp ,
     gcd_mul_lcm := fun a b => by
       rw [← out_mul, mul_comm, sup_mul_inf, mk_mul_mk, out_mk]
@@ -1719,7 +1719,7 @@ noncomputable def fintypeSubtypeDvd {M : Type _} [CancelCommMonoidWithZero M] [U
       (((normalized_factors y).Powerset.toFinset.product (Finset.univ : Finset Mˣ)).Image fun s =>
         (s.snd : M) * s.fst.prod)
       fun x => _
-  simp only [exists_prop, Finset.mem_image, Finset.mem_product, Finset.mem_univ, and_trueₓ, Multiset.mem_to_finset,
+  simp only [exists_propₓ, Finset.mem_image, Finset.mem_product, Finset.mem_univ, and_trueₓ, Multiset.mem_to_finset,
     Multiset.mem_powerset, exists_eq_right, Multiset.mem_map]
   constructor
   · rintro ⟨s, hs, rfl⟩

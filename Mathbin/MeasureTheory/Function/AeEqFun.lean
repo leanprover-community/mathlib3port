@@ -389,24 +389,24 @@ section Sup
 
 variable [SemilatticeSup β] [HasContinuousSup β]
 
-instance : HasSup (α →ₘ[μ] β) where sup := fun f g => AeEqFun.comp₂ (·⊔·) continuous_sup f g
+instance : HasSup (α →ₘ[μ] β) where sup := fun f g => AeEqFun.comp₂ (· ⊔ ·) continuous_sup f g
 
-theorem coe_fn_sup (f g : α →ₘ[μ] β) : ⇑(f⊔g) =ᵐ[μ] fun x => f x⊔g x :=
+theorem coe_fn_sup (f g : α →ₘ[μ] β) : ⇑(f ⊔ g) =ᵐ[μ] fun x => f x ⊔ g x :=
   coe_fn_comp₂ _ _ _ _
 
-protected theorem le_sup_left (f g : α →ₘ[μ] β) : f ≤ f⊔g := by
+protected theorem le_sup_left (f g : α →ₘ[μ] β) : f ≤ f ⊔ g := by
   rw [← coe_fn_le]
   filter_upwards [coe_fn_sup f g] with _ ha
   rw [ha]
   exact le_sup_left
 
-protected theorem le_sup_right (f g : α →ₘ[μ] β) : g ≤ f⊔g := by
+protected theorem le_sup_right (f g : α →ₘ[μ] β) : g ≤ f ⊔ g := by
   rw [← coe_fn_le]
   filter_upwards [coe_fn_sup f g] with _ ha
   rw [ha]
   exact le_sup_right
 
-protected theorem sup_le (f g f' : α →ₘ[μ] β) (hf : f ≤ f') (hg : g ≤ f') : f⊔g ≤ f' := by
+protected theorem sup_le (f g f' : α →ₘ[μ] β) (hf : f ≤ f') (hg : g ≤ f') : f ⊔ g ≤ f' := by
   rw [← coe_fn_le] at hf hg⊢
   filter_upwards [hf, hg, coe_fn_sup f g] with _ haf hag ha_sup
   rw [ha_sup]
@@ -418,24 +418,24 @@ section Inf
 
 variable [SemilatticeInf β] [HasContinuousInf β]
 
-instance : HasInf (α →ₘ[μ] β) where inf := fun f g => AeEqFun.comp₂ (·⊓·) continuous_inf f g
+instance : HasInf (α →ₘ[μ] β) where inf := fun f g => AeEqFun.comp₂ (· ⊓ ·) continuous_inf f g
 
-theorem coe_fn_inf (f g : α →ₘ[μ] β) : ⇑(f⊓g) =ᵐ[μ] fun x => f x⊓g x :=
+theorem coe_fn_inf (f g : α →ₘ[μ] β) : ⇑(f ⊓ g) =ᵐ[μ] fun x => f x ⊓ g x :=
   coe_fn_comp₂ _ _ _ _
 
-protected theorem inf_le_left (f g : α →ₘ[μ] β) : f⊓g ≤ f := by
+protected theorem inf_le_left (f g : α →ₘ[μ] β) : f ⊓ g ≤ f := by
   rw [← coe_fn_le]
   filter_upwards [coe_fn_inf f g] with _ ha
   rw [ha]
   exact inf_le_left
 
-protected theorem inf_le_right (f g : α →ₘ[μ] β) : f⊓g ≤ g := by
+protected theorem inf_le_right (f g : α →ₘ[μ] β) : f ⊓ g ≤ g := by
   rw [← coe_fn_le]
   filter_upwards [coe_fn_inf f g] with _ ha
   rw [ha]
   exact inf_le_right
 
-protected theorem le_inf (f' f g : α →ₘ[μ] β) (hf : f' ≤ f) (hg : f' ≤ g) : f' ≤ f⊓g := by
+protected theorem le_inf (f' f g : α →ₘ[μ] β) (hf : f' ≤ f) (hg : f' ≤ g) : f' ≤ f ⊓ g := by
   rw [← coe_fn_le] at hf hg⊢
   filter_upwards [hf, hg, coe_fn_inf f g] with _ haf hag ha_inf
   rw [ha_inf]

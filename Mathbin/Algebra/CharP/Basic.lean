@@ -514,7 +514,7 @@ theorem Ringₓ.two_ne_zero {R : Type _} [NonAssocSemiringₓ R] [Nontrivial R] 
     (by
       norm_cast : (2 : R) = (2 : ℕ)),
     ringChar.spec, Nat.dvd_prime Nat.prime_two]
-  exact mt (or_iff_left hR).mp CharP.ring_char_ne_one
+  exact mt (or_iff_leftₓ hR).mp CharP.ring_char_ne_one
 
 -- We have `char_p.neg_one_ne_one`, which assumes `[ring R] (p : ℕ) [char_p R p] [fact (2 < p)]`.
 -- This is a version using `ring_char` instead.
@@ -526,7 +526,7 @@ theorem Ringₓ.neg_one_ne_one_of_char_ne_two {R : Type _} [NonAssocRing R] [Non
 theorem Ringₓ.eq_self_iff_eq_zero_of_char_ne_two {R : Type _} [NonAssocRing R] [Nontrivial R] [NoZeroDivisors R]
     (hR : ringChar R ≠ 2) {a : R} : -a = a ↔ a = 0 :=
   ⟨fun h => (mul_eq_zero.mp <| (two_mul a).trans <| neg_eq_iff_add_eq_zero.mp h).resolve_left (Ringₓ.two_ne_zero hR),
-    fun h => ((congr_argₓ (fun x => -x) h).trans neg_zero).trans h.symm⟩
+    fun h => ((congr_arg (fun x => -x) h).trans neg_zero).trans h.symm⟩
 
 end
 

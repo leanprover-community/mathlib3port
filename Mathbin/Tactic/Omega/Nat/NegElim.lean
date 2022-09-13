@@ -156,7 +156,7 @@ theorem implies_neg_elim_core : ∀ {p : Preform}, Preform.Implies p (negElimCor
     · apply Or.symm
       simpa only [preform.holds, le_and_le_iff_eq.symm, not_and_distrib, not_leₓ] using h
       
-    simpa only [preform.holds, not_leₓ, Int.add_one_le_iff] using h
+    simpa only [preform.holds, not_leₓ, Int.add_one_le_iffₓ] using h
     
   · simp only [neg_elim_core]
     cases h <;>
@@ -168,7 +168,7 @@ theorem implies_neg_elim_core : ∀ {p : Preform}, Preform.Implies p (negElimCor
           ] <;>
       assumption
     
-  apply And.imp (ihp _) (ihq _) h
+  apply And.impₓ (ihp _) (ihq _) h
 
 /-- Eliminate all negations in a preform -/
 def negElim : Preform → Preform :=

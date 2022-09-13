@@ -148,7 +148,7 @@ theorem prod_add (f g : α → β) (s : Finset α) :
               (prod_bij (fun (a : α) (ha : a ∈ t) => ⟨a, mem_powerset.1 ht ha⟩) _ _ _ fun b hb =>
                 ⟨b, by
                   cases b <;>
-                    simpa only [true_andₓ, exists_prop, mem_filter, and_trueₓ, mem_attach, eq_self_iff_true,
+                    simpa only [true_andₓ, exists_propₓ, mem_filter, and_trueₓ, mem_attach, eq_self_iff_true,
                       Subtype.coe_mk] using hb⟩)
               (prod_bij
                 (fun (a : α) (ha : a ∈ s \ t) =>
@@ -158,7 +158,7 @@ theorem prod_add (f g : α → β) (s : Finset α) :
                 ⟨b, by
                   cases b <;>
                     · simp only [true_andₓ, mem_filter, mem_attach, Subtype.coe_mk] at hb
-                      simpa only [true_andₓ, exists_prop, and_trueₓ, mem_sdiff, eq_self_iff_true, Subtype.coe_mk,
+                      simpa only [true_andₓ, exists_propₓ, and_trueₓ, mem_sdiff, eq_self_iff_true, Subtype.coe_mk,
                         b_property]
                       ⟩) <;>
           intros <;> simp_all <;> simp_all

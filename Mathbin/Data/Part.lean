@@ -184,7 +184,7 @@ theorem ne_none_iff {o : Part α} : o ≠ none ↔ ∃ x, o = some x := by
 theorem eq_none_or_eq_some (o : Part α) : o = none ∨ ∃ x, o = some x :=
   or_iff_not_imp_left.2 ne_none_iff.1
 
-theorem some_injective : Injective (@Part.some α) := fun a b h => congr_funₓ (eq_of_heq (Part.mk.inj h).2) trivialₓ
+theorem some_injective : Injective (@Part.some α) := fun a b h => congr_fun (eq_of_heq (Part.mk.inj h).2) trivialₓ
 
 @[simp]
 theorem some_inj {a b : α} : Part.some a = some b ↔ a = b :=
@@ -276,7 +276,7 @@ def ofOption : Option α → Part α
 @[simp]
 theorem mem_of_option {a : α} : ∀ {o : Option α}, a ∈ ofOption o ↔ a ∈ o
   | Option.none => ⟨fun h => h.fst.elim, fun h => Option.noConfusion h⟩
-  | Option.some b => ⟨fun h => congr_argₓ Option.some h.snd, fun h => ⟨trivialₓ, Option.some.injₓ h⟩⟩
+  | Option.some b => ⟨fun h => congr_arg Option.some h.snd, fun h => ⟨trivialₓ, Option.some.injₓ h⟩⟩
 
 @[simp]
 theorem of_option_dom {α} : ∀ o : Option α, (ofOption o).Dom ↔ o.isSome
@@ -431,7 +431,7 @@ theorem mem_bind_iff {f : Part α} {g : α → Part β} {b} : b ∈ f.bind g ↔
 
 protected theorem Dom.bind {o : Part α} (h : o.Dom) (f : α → Part β) : o.bind f = f (o.get h) := by
   ext b
-  simp only [Part.mem_bind_iff, exists_prop]
+  simp only [Part.mem_bind_iff, exists_propₓ]
   refine' ⟨_, fun hb => ⟨o.get h, Part.get_mem _, hb⟩⟩
   rintro ⟨a, ha, hb⟩
   rwa [Part.get_eq_of_mem ha]
@@ -521,11 +521,11 @@ theorem bind_le {α} (x : Part α) (f : α → Part β) (y : Part β) : x >>= f 
   constructor <;> intro h
   · intro a h' b
     replace h := h b
-    simp only [and_imp, exists_prop, bind_eq_bind, mem_bind_iff, exists_imp_distrib] at h
+    simp only [and_imp, exists_propₓ, bind_eq_bind, mem_bind_iff, exists_imp_distrib] at h
     apply h _ h'
     
   · intro b h'
-    simp only [exists_prop, bind_eq_bind, mem_bind_iff] at h'
+    simp only [exists_propₓ, bind_eq_bind, mem_bind_iff] at h'
     rcases h' with ⟨a, h₀, h₁⟩
     apply h _ h₀ _ h₁
     

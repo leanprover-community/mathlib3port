@@ -75,7 +75,7 @@ instance [∀ i, PartialOrderₓ (α i)] : PartialOrderₓ (Π₀ i, α i) :=
   { Dfinsupp.preorder α with le_antisymm := fun f g hfg hgf => ext fun i => (hfg i).antisymm (hgf i) }
 
 instance [∀ i, SemilatticeInf (α i)] : SemilatticeInf (Π₀ i, α i) :=
-  { Dfinsupp.partialOrder α with inf := zipWith (fun _ => (·⊓·)) fun _ => inf_idem,
+  { Dfinsupp.partialOrder α with inf := zipWith (fun _ => (· ⊓ ·)) fun _ => inf_idem,
     inf_le_left := fun f g i => by
       rw [zip_with_apply]
       exact inf_le_left,
@@ -87,11 +87,11 @@ instance [∀ i, SemilatticeInf (α i)] : SemilatticeInf (Π₀ i, α i) :=
       exact le_inf (hf i) (hg i) }
 
 @[simp]
-theorem inf_apply [∀ i, SemilatticeInf (α i)] (f g : Π₀ i, α i) (i : ι) : (f⊓g) i = f i⊓g i :=
+theorem inf_apply [∀ i, SemilatticeInf (α i)] (f g : Π₀ i, α i) (i : ι) : (f ⊓ g) i = f i ⊓ g i :=
   zip_with_apply _ _ _ _ _
 
 instance [∀ i, SemilatticeSup (α i)] : SemilatticeSup (Π₀ i, α i) :=
-  { Dfinsupp.partialOrder α with sup := zipWith (fun _ => (·⊔·)) fun _ => sup_idem,
+  { Dfinsupp.partialOrder α with sup := zipWith (fun _ => (· ⊔ ·)) fun _ => sup_idem,
     le_sup_left := fun f g i => by
       rw [zip_with_apply]
       exact le_sup_left,
@@ -103,7 +103,7 @@ instance [∀ i, SemilatticeSup (α i)] : SemilatticeSup (Π₀ i, α i) :=
       exact sup_le (hf i) (hg i) }
 
 @[simp]
-theorem sup_apply [∀ i, SemilatticeSup (α i)] (f g : Π₀ i, α i) (i : ι) : (f⊔g) i = f i⊔g i :=
+theorem sup_apply [∀ i, SemilatticeSup (α i)] (f g : Π₀ i, α i) (i : ι) : (f ⊔ g) i = f i ⊔ g i :=
   zip_with_apply _ _ _ _ _
 
 instance lattice [∀ i, Lattice (α i)] : Lattice (Π₀ i, α i) :=
@@ -125,12 +125,7 @@ instance (α : ι → Type _) [∀ i, OrderedCancelAddCommMonoid (α i)] : Order
     le_of_add_le_add_left := fun f g h H i => by
       specialize H i
       rw [add_apply, add_apply] at H
-      exact le_of_add_le_add_left H,
-    add_left_cancel := fun f g h H =>
-      ext fun i => by
-        refine' add_left_cancelₓ _
-        exact f i
-        rw [← add_apply, ← add_apply, H] }
+      exact le_of_add_le_add_left H }
 
 instance [∀ i, OrderedAddCommMonoid (α i)] [∀ i, ContravariantClass (α i) (α i) (· + ·) (· ≤ ·)] :
     ContravariantClass (Π₀ i, α i) (Π₀ i, α i) (· + ·) (· ≤ ·) :=
@@ -245,13 +240,13 @@ section CanonicallyLinearOrderedAddMonoid
 variable [∀ i, CanonicallyLinearOrderedAddMonoid (α i)] [DecidableEq ι] {f g : Π₀ i, α i}
 
 @[simp]
-theorem support_inf : (f⊓g).support = f.support ∩ g.support := by
+theorem support_inf : (f ⊓ g).support = f.support ∩ g.support := by
   ext
   simp only [inf_apply, mem_support_iff, Ne.def, Finset.mem_union, Finset.mem_filter, Finset.mem_inter]
   simp only [inf_eq_min, ← nonpos_iff_eq_zero, min_le_iff, not_or_distrib]
 
 @[simp]
-theorem support_sup : (f⊔g).support = f.support ∪ g.support := by
+theorem support_sup : (f ⊔ g).support = f.support ∪ g.support := by
   ext
   simp only [Finset.mem_union, mem_support_iff, sup_apply, Ne.def, ← bot_eq_zero]
   rw [_root_.sup_eq_bot_iff, not_and_distrib]

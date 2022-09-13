@@ -201,13 +201,13 @@ theorem map_frobenius_poly (n : ℕ) : MvPolynomial.map (Int.castRingHom ℚ) (f
     RingHom.map_pow, map_C, map_X, mul_powₓ]
   rw [mul_comm (C ↑p ^ i), mul_comm _ ((X i ^ p) ^ _), mul_comm (C ↑p ^ (j + 1)), mul_comm (C ↑p)]
   simp only [mul_assoc]
-  apply congr_argₓ
-  apply congr_argₓ
+  apply congr_arg
+  apply congr_arg
   rw [← C_eq_coe_nat]
   simp only [← RingHom.map_pow, ← C_mul]
   rw [C_inj]
   simp only [inv_of_eq_inv, eq_int_cast, inv_pow, Int.cast_coe_nat, Nat.cast_mulₓ, Int.cast_mul]
-  rw [Rat.coe_nat_div _ _ (map_frobenius_poly.key₁ p (n - i) j hj)]
+  rw [Ratₓ.coe_nat_div _ _ (map_frobenius_poly.key₁ p (n - i) j hj)]
   simp only [Nat.cast_powₓ, pow_addₓ, pow_oneₓ]
   suffices
     ((p ^ (n - i)).choose (j + 1) * p ^ (j - v p ⟨j + 1, j.succ_pos⟩) * p * p ^ n : ℚ) =

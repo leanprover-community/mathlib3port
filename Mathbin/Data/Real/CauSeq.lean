@@ -203,7 +203,7 @@ theorem const_apply (x : β) (i : ℕ) : (const x : ℕ → β) i = x :=
   rfl
 
 theorem const_inj {x y : β} : (const x : CauSeq β abv) = const y ↔ x = y :=
-  ⟨fun h => congr_argₓ (fun f : CauSeq β abv => (f : ℕ → β) 0) h, congr_argₓ _⟩
+  ⟨fun h => congr_arg (fun f : CauSeq β abv => (f : ℕ → β) 0) h, congr_arg _⟩
 
 instance : Zero (CauSeq β abv) :=
   ⟨const 0⟩
@@ -281,10 +281,10 @@ instance : AddGroupₓ (CauSeq β abv) := by
         apply ext <;> simp [add_commₓ, add_left_commₓ, sub_eq_add_neg]
 
 instance : AddGroupWithOneₓ (CauSeq β abv) :=
-  { CauSeq.addGroup with one := 1, natCast := fun n => const n, nat_cast_zero := congr_argₓ const Nat.cast_zeroₓ,
-    nat_cast_succ := fun n => congr_argₓ const (Nat.cast_succₓ n), intCast := fun n => const n,
-    int_cast_of_nat := fun n => congr_argₓ const (Int.cast_of_nat n),
-    int_cast_neg_succ_of_nat := fun n => congr_argₓ const (Int.cast_neg_succ_of_nat n) }
+  { CauSeq.addGroup with one := 1, natCast := fun n => const n, nat_cast_zero := congr_arg const Nat.cast_zeroₓ,
+    nat_cast_succ := fun n => congr_arg const (Nat.cast_succₓ n), intCast := fun n => const n,
+    int_cast_of_nat := fun n => congr_arg const (Int.cast_of_nat n),
+    int_cast_neg_succ_of_nat := fun n => congr_arg const (Int.cast_neg_succ_of_nat n) }
 
 instance : Ringₓ (CauSeq β abv) := by
   refine_struct
@@ -354,18 +354,13 @@ instance equiv : Setoidₓ (CauSeq β abv) :=
       simpa [sub_eq_add_neg, add_assocₓ] using add_lim_zero fg gh⟩⟩
 
 theorem add_equiv_add {f1 f2 g1 g2 : CauSeq β abv} (hf : f1 ≈ f2) (hg : g1 ≈ g2) : f1 + g1 ≈ f2 + g2 := by
-  change lim_zero (f1 + g1 - _)
-  convert add_lim_zero hf hg using 1
-  simp only [sub_eq_add_neg, add_assocₓ]
-  rw [add_commₓ (-f2)]
-  simp only [add_assocₓ]
-  congr 2
-  simp
+  simpa only [← add_sub_add_comm] using add_lim_zero hf hg
 
 theorem neg_equiv_neg {f g : CauSeq β abv} (hf : f ≈ g) : -f ≈ -g := by
-  show lim_zero (-f - -g)
-  rw [← neg_sub']
-  exact neg_lim_zero hf
+  simpa only [neg_sub'] using neg_lim_zero hf
+
+theorem sub_equiv_sub {f1 f2 g1 g2 : CauSeq β abv} (hf : f1 ≈ f2) (hg : g1 ≈ g2) : f1 - g1 ≈ f2 - g2 := by
+  simpa only [sub_eq_add_neg] using add_equiv_add hf (neg_equiv_neg hg)
 
 theorem equiv_def₃ {f g : CauSeq β abv} (h : f ≈ g) {ε : α} (ε0 : 0 < ε) : ∃ i, ∀ j ≥ i, ∀ k ≥ j, abv (f k - g j) < ε :=
   (exists_forall_ge_and (h _ <| half_pos ε0) (f.cauchy₃ <| half_pos ε0)).imp fun i H j ij k jk => by
@@ -451,6 +446,10 @@ variable {β : Type _} [CommRingₓ β] {abv : β → α} [IsAbsoluteValue abv]
 
 theorem mul_equiv_zero' (g : CauSeq _ abv) {f : CauSeq _ abv} (hf : f ≈ 0) : f * g ≈ 0 := by
   rw [mul_comm] <;> apply mul_equiv_zero _ hf
+
+theorem mul_equiv_mul {f1 f2 g1 g2 : CauSeq β abv} (hf : f1 ≈ f2) (hg : g1 ≈ g2) : f1 * g1 ≈ f2 * g2 := by
+  simpa only [mul_sub, mul_comm, sub_add_sub_cancel] using
+    add_lim_zero (mul_lim_zero_right g1 hf) (mul_lim_zero_right f2 hg)
 
 end CommRingₓ
 
@@ -624,7 +623,7 @@ theorem const_lt {x y : α} : const x < const y ↔ x < y :=
     rw [← const_sub, const_pos, sub_pos]
 
 theorem const_le {x y : α} : const x ≤ const y ↔ x ≤ y := by
-  rw [le_iff_lt_or_eqₓ] <;> exact or_congr const_lt const_equiv
+  rw [le_iff_lt_or_eqₓ] <;> exact or_congrₓ const_lt const_equiv
 
 theorem le_of_exists {f g : CauSeq α abs} (h : ∃ i, ∀ j ≥ i, f j ≤ g j) : f ≤ g :=
   let ⟨i, hi⟩ := h

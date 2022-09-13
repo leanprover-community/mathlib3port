@@ -56,7 +56,7 @@ theorem beth_one : beth 1 = 𝔠 := by
 theorem nat_lt_continuum (n : ℕ) : ↑n < 𝔠 :=
   (nat_lt_aleph_0 n).trans aleph_0_lt_continuum
 
-theorem mk_set_nat : # (Set ℕ) = 𝔠 := by
+theorem mk_set_nat : (#Set ℕ) = 𝔠 := by
   simp
 
 theorem continuum_pos : 0 < 𝔠 :=

@@ -34,7 +34,7 @@ def count (n : ℕ) : ℕ :=
 
 @[simp]
 theorem count_zero : count p 0 = 0 := by
-  rw [count, List.range_zero, List.countp]
+  rw [count, List.range_zero, List.countpₓ]
 
 /-- A fintype instance for the set relevant to `nat.count`. Locally an instance in locale `count` -/
 def CountSet.fintype (n : ℕ) : Fintype { i // i < n ∧ p i } := by

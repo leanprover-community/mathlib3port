@@ -107,7 +107,7 @@ theorem add_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a b : ∀ x 
   rcases ha x with ⟨Va, ma, ia, ja, ⟨ra, ra_mem⟩, ⟨sa, sa_mem⟩, wa⟩
   rcases hb x with ⟨Vb, mb, ib, jb, ⟨rb, rb_mem⟩, ⟨sb, sb_mem⟩, wb⟩
   refine'
-    ⟨Va⊓Vb, ⟨ma, mb⟩, opens.inf_le_left _ _ ≫ ia, ja + jb,
+    ⟨Va ⊓ Vb, ⟨ma, mb⟩, opens.inf_le_left _ _ ≫ ia, ja + jb,
       ⟨sb * ra + sa * rb,
         add_mem (add_commₓ jb ja ▸ mul_mem sb_mem ra_mem : sb * ra ∈ 𝒜 (ja + jb)) (mul_mem sa_mem rb_mem)⟩,
       ⟨sa * sb, mul_mem sa_mem sb_mem⟩, fun y => ⟨fun h => _, _⟩⟩
@@ -141,7 +141,7 @@ theorem mul_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a b : ∀ x 
   rcases ha x with ⟨Va, ma, ia, ja, ⟨ra, ra_mem⟩, ⟨sa, sa_mem⟩, wa⟩
   rcases hb x with ⟨Vb, mb, ib, jb, ⟨rb, rb_mem⟩, ⟨sb, sb_mem⟩, wb⟩
   refine'
-    ⟨Va⊓Vb, ⟨ma, mb⟩, opens.inf_le_left _ _ ≫ ia, ja + jb, ⟨ra * rb, SetLike.mul_mem_graded ra_mem rb_mem⟩,
+    ⟨Va ⊓ Vb, ⟨ma, mb⟩, opens.inf_le_left _ _ ≫ ia, ja + jb, ⟨ra * rb, SetLike.mul_mem_graded ra_mem rb_mem⟩,
       ⟨sa * sb, SetLike.mul_mem_graded sa_mem sb_mem⟩, fun y => ⟨fun h => _, _⟩⟩
   · cases' (y : ProjectiveSpectrum.top 𝒜).IsPrime.mem_or_mem h with h h
     · choose nin hy using wa ⟨y, (opens.inf_le_left Va Vb y).2⟩
@@ -319,7 +319,8 @@ def Proj.stalkIso' (x : ProjectiveSpectrum.top 𝒜) : (Proj.structureSheaf 𝒜
       have eq3' :
         ∀ (y : ProjectiveSpectrum.top 𝒜)
           (hy :
-            y ∈ ProjectiveSpectrum.basicOpen 𝒜 b1⊓ProjectiveSpectrum.basicOpen 𝒜 b2⊓ProjectiveSpectrum.basicOpen 𝒜 c),
+            y ∈
+              ProjectiveSpectrum.basicOpen 𝒜 b1 ⊓ ProjectiveSpectrum.basicOpen 𝒜 b2 ⊓ ProjectiveSpectrum.basicOpen 𝒜 c),
           (Localization.mk a1
               ⟨b1,
                 show b1 ∉ y.asHomogeneousIdeal by
@@ -341,7 +342,9 @@ def Proj.stalkIso' (x : ProjectiveSpectrum.top 𝒜) : (Proj.structureSheaf 𝒜
             eq3⟩
       refine'
         presheaf.germ_ext (Proj.structure_sheaf 𝒜).1
-          (ProjectiveSpectrum.basicOpen _ b1⊓ProjectiveSpectrum.basicOpen _ b2⊓ProjectiveSpectrum.basicOpen _ c⊓v1⊓v2)
+          (ProjectiveSpectrum.basicOpen _ b1 ⊓ ProjectiveSpectrum.basicOpen _ b2 ⊓ ProjectiveSpectrum.basicOpen _ c ⊓
+              v1 ⊓
+            v2)
           ⟨⟨⟨⟨b1_nin_x, b2_nin_x⟩, hc⟩, memv1⟩, memv2⟩ (opens.inf_le_left _ _ ≫ opens.inf_le_right _ _ ≫ i1)
           (opens.inf_le_right _ _ ≫ i2) _
       rw [Subtype.ext_iff_val]

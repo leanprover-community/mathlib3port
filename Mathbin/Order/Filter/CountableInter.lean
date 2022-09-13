@@ -143,7 +143,7 @@ instance (l : Filter α) [CountableInterFilter l] (f : α → β) : CountableInt
 /-- Infimum of two `countable_Inter_filter`s is a `countable_Inter_filter`. This is useful, e.g.,
 to automatically get an instance for `residual α ⊓ 𝓟 s`. -/
 instance countable_Inter_filter_inf (l₁ l₂ : Filter α) [CountableInterFilter l₁] [CountableInterFilter l₂] :
-    CountableInterFilter (l₁⊓l₂) := by
+    CountableInterFilter (l₁ ⊓ l₂) := by
   refine' ⟨fun S hSc hS => _⟩
   choose s hs t ht hst using hS
   replace hs : (⋂ i ∈ S, s i ‹_›) ∈ l₁ := (countable_bInter_mem hSc).2 hs
@@ -154,7 +154,7 @@ instance countable_Inter_filter_inf (l₁ l₂ : Filter α) [CountableInterFilte
 
 /-- Supremum of two `countable_Inter_filter`s is a `countable_Inter_filter`. -/
 instance countable_Inter_filter_sup (l₁ l₂ : Filter α) [CountableInterFilter l₁] [CountableInterFilter l₂] :
-    CountableInterFilter (l₁⊔l₂) := by
+    CountableInterFilter (l₁ ⊔ l₂) := by
   refine' ⟨fun S hSc hS => ⟨_, _⟩⟩ <;> refine' (countable_sInter_mem hSc).2 fun s hs => _
   exacts[(hS s hs).1, (hS s hs).2]
 

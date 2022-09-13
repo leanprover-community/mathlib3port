@@ -96,7 +96,7 @@ theorem mem_of_le {F : Pfilter P} : x ≤ y → x ∈ F → y ∈ F := fun h => 
 theorem ext (h : (s : Set P) = t) : s = t := by
   cases s
   cases t
-  exact congr_argₓ _ (ideal.ext h)
+  exact congr_arg _ (ideal.ext h)
 
 /-- The partial ordering by subset inclusion, inherited from `set P`. -/
 instance : PartialOrderₓ (Pfilter P) :=
@@ -157,11 +157,11 @@ section SemilatticeInf
 variable [SemilatticeInf P] {x y : P} {F : Pfilter P}
 
 /-- A specific witness of `pfilter.directed` when `P` has meets. -/
-theorem inf_mem (hx : x ∈ F) (hy : y ∈ F) : x⊓y ∈ F :=
+theorem inf_mem (hx : x ∈ F) (hy : y ∈ F) : x ⊓ y ∈ F :=
   Ideal.sup_mem hx hy
 
 @[simp]
-theorem inf_mem_iff : x⊓y ∈ F ↔ x ∈ F ∧ y ∈ F :=
+theorem inf_mem_iff : x ⊓ y ∈ F ↔ x ∈ F ∧ y ∈ F :=
   ideal.sup_mem_iff
 
 end SemilatticeInf

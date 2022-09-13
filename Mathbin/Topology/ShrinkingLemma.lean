@@ -193,7 +193,7 @@ theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i
   · rintro j (rfl | hj)
     · rwa [update_same, ← v.apply_eq hi]
       
-    · rw [update_noteq (ne_of_mem_of_not_mem hj hi)]
+    · rw [update_noteq (ne_of_mem_of_not_memₓ hj hi)]
       exact v.closure_subset hj
       
     
@@ -202,7 +202,7 @@ theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i
     rw [update_noteq hj.1, v.apply_eq hj.2]
     
   · refine' ⟨subset_insert _ _, fun j hj => _⟩
-    exact (update_noteq (ne_of_mem_of_not_mem hj hi) _ _).symm
+    exact (update_noteq (ne_of_mem_of_not_memₓ hj hi) _ _).symm
     
   · exact fun hle => hi (hle.1 <| mem_insert _ _)
     

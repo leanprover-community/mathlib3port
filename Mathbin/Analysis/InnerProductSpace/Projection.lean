@@ -605,8 +605,8 @@ theorem orthogonal_projection_norm_le : ∥orthogonalProjection K∥ ≤ 1 :=
 variable (𝕜)
 
 theorem smul_orthogonal_projection_singleton {v : E} (w : E) :
-    (∥v∥ ^ 2 : 𝕜) • (orthogonalProjection (𝕜∙v) w : E) = ⟪v, w⟫ • v := by
-  suffices ↑(orthogonalProjection (𝕜∙v) ((∥v∥ ^ 2 : 𝕜) • w)) = ⟪v, w⟫ • v by
+    (∥v∥ ^ 2 : 𝕜) • (orthogonalProjection (𝕜 ∙ v) w : E) = ⟪v, w⟫ • v := by
+  suffices ↑(orthogonalProjection (𝕜 ∙ v) ((∥v∥ ^ 2 : 𝕜) • w)) = ⟪v, w⟫ • v by
     simpa using this
   apply eq_orthogonal_projection_of_mem_of_inner_eq_zero
   · rw [Submodule.mem_span_singleton]
@@ -621,8 +621,8 @@ theorem smul_orthogonal_projection_singleton {v : E} (w : E) :
     
 
 /-- Formula for orthogonal projection onto a single vector. -/
-theorem orthogonal_projection_singleton {v : E} (w : E) : (orthogonalProjection (𝕜∙v) w : E) = (⟪v, w⟫ / ∥v∥ ^ 2) • v :=
-  by
+theorem orthogonal_projection_singleton {v : E} (w : E) :
+    (orthogonalProjection (𝕜 ∙ v) w : E) = (⟪v, w⟫ / ∥v∥ ^ 2) • v := by
   by_cases' hv : v = 0
   · rw [hv, eq_orthogonal_projection_of_eq_submodule (Submodule.span_zero_singleton 𝕜)]
     · simp
@@ -631,13 +631,13 @@ theorem orthogonal_projection_singleton {v : E} (w : E) : (orthogonalProjection 
       
     
   have hv' : ∥v∥ ≠ 0 := ne_of_gtₓ (norm_pos_iff.mpr hv)
-  have key : ((∥v∥ ^ 2 : 𝕜)⁻¹ * ∥v∥ ^ 2) • ↑(orthogonalProjection (𝕜∙v) w) = ((∥v∥ ^ 2 : 𝕜)⁻¹ * ⟪v, w⟫) • v := by
+  have key : ((∥v∥ ^ 2 : 𝕜)⁻¹ * ∥v∥ ^ 2) • ↑(orthogonalProjection (𝕜 ∙ v) w) = ((∥v∥ ^ 2 : 𝕜)⁻¹ * ⟪v, w⟫) • v := by
     simp [mul_smul, smul_orthogonal_projection_singleton 𝕜 w]
   convert key <;> field_simp [hv']
 
 /-- Formula for orthogonal projection onto a single unit vector. -/
 theorem orthogonal_projection_unit_singleton {v : E} (hv : ∥v∥ = 1) (w : E) :
-    (orthogonalProjection (𝕜∙v) w : E) = ⟪v, w⟫ • v := by
+    (orthogonalProjection (𝕜 ∙ v) w : E) = ⟪v, w⟫ • v := by
   rw [← smul_orthogonal_projection_singleton 𝕜 w]
   simp [hv]
 
@@ -745,7 +745,7 @@ section Orthogonal
 
 /-- If `K₁` is complete and contained in `K₂`, `K₁` and `K₁ᗮ ⊓ K₂` span `K₂`. -/
 theorem Submodule.sup_orthogonal_inf_of_complete_space {K₁ K₂ : Submodule 𝕜 E} (h : K₁ ≤ K₂) [CompleteSpace K₁] :
-    K₁⊔K₁ᗮ⊓K₂ = K₂ := by
+    K₁ ⊔ K₁ᗮ ⊓ K₂ = K₂ := by
   ext x
   rw [Submodule.mem_sup]
   let v : K₁ := orthogonalProjection K₁ x
@@ -760,7 +760,7 @@ theorem Submodule.sup_orthogonal_inf_of_complete_space {K₁ K₂ : Submodule �
 variable {K}
 
 /-- If `K` is complete, `K` and `Kᗮ` span the whole space. -/
-theorem Submodule.sup_orthogonal_of_complete_space [CompleteSpace K] : K⊔Kᗮ = ⊤ := by
+theorem Submodule.sup_orthogonal_of_complete_space [CompleteSpace K] : K ⊔ Kᗮ = ⊤ := by
   convert Submodule.sup_orthogonal_inf_of_complete_space (le_top : K ≤ ⊤)
   simp
 
@@ -768,7 +768,7 @@ variable (K)
 
 /-- If `K` is complete, any `v` in `E` can be expressed as a sum of elements of `K` and `Kᗮ`. -/
 theorem Submodule.exists_sum_mem_mem_orthogonal [CompleteSpace K] (v : E) : ∃ y ∈ K, ∃ z ∈ Kᗮ, v = y + z := by
-  have h_mem : v ∈ K⊔Kᗮ := by
+  have h_mem : v ∈ K ⊔ Kᗮ := by
     simp [Submodule.sup_orthogonal_of_complete_space]
   obtain ⟨y, hy, z, hz, hyz⟩ := submodule.mem_sup.mp h_mem
   exact ⟨y, hy, z, hz, hyz.symm⟩
@@ -812,7 +812,7 @@ theorem Submodule.orthogonal_eq_bot_iff [CompleteSpace (K : Set E)] : Kᗮ = ⊥
     ⟨_, fun h => by
       rw [h, Submodule.top_orthogonal_eq_bot]⟩
   intro h
-  have : K⊔Kᗮ = ⊤ := Submodule.sup_orthogonal_of_complete_space
+  have : K ⊔ Kᗮ = ⊤ := Submodule.sup_orthogonal_of_complete_space
   rwa [h, sup_comm, bot_sup_eq] at this
 
 /-- A point in `K` with the orthogonality property (here characterized in terms of `Kᗮ`) must be the
@@ -917,15 +917,15 @@ theorem reflection_mem_subspace_orthogonal_precomplement_eq_neg [CompleteSpace E
 
 /-- The orthogonal projection onto `(𝕜 ∙ v)ᗮ` of `v` is zero. -/
 theorem orthogonal_projection_orthogonal_complement_singleton_eq_zero [CompleteSpace E] (v : E) :
-    orthogonalProjection (𝕜∙v)ᗮ v = 0 :=
+    orthogonalProjection (𝕜 ∙ v)ᗮ v = 0 :=
   orthogonal_projection_mem_subspace_orthogonal_precomplement_eq_zero (Submodule.mem_span_singleton_self v)
 
 /-- The reflection in `(𝕜 ∙ v)ᗮ` of `v` is `-v`. -/
-theorem reflection_orthogonal_complement_singleton_eq_neg [CompleteSpace E] (v : E) : reflection (𝕜∙v)ᗮ v = -v :=
+theorem reflection_orthogonal_complement_singleton_eq_neg [CompleteSpace E] (v : E) : reflection (𝕜 ∙ v)ᗮ v = -v :=
   reflection_mem_subspace_orthogonal_precomplement_eq_neg (Submodule.mem_span_singleton_self v)
 
-theorem reflection_sub [CompleteSpace F] {v w : F} (h : ∥v∥ = ∥w∥) : reflection (ℝ∙v - w)ᗮ v = w := by
-  set R : F ≃ₗᵢ[ℝ] F := reflection (ℝ∙v - w)ᗮ
+theorem reflection_sub [CompleteSpace F] {v w : F} (h : ∥v∥ = ∥w∥) : reflection (ℝ ∙ v - w)ᗮ v = w := by
+  set R : F ≃ₗᵢ[ℝ] F := reflection (ℝ ∙ v - w)ᗮ
   suffices R v + R v = w + w by
     apply
       smul_right_injective F
@@ -1002,10 +1002,10 @@ open FiniteDimensional
 containined in it, the dimensions of `K₁` and the intersection of its
 orthogonal subspace with `K₂` add to that of `K₂`. -/
 theorem Submodule.finrank_add_inf_finrank_orthogonal {K₁ K₂ : Submodule 𝕜 E} [FiniteDimensional 𝕜 K₂] (h : K₁ ≤ K₂) :
-    finrank 𝕜 K₁ + finrank 𝕜 (K₁ᗮ⊓K₂ : Submodule 𝕜 E) = finrank 𝕜 K₂ := by
+    finrank 𝕜 K₁ + finrank 𝕜 (K₁ᗮ ⊓ K₂ : Submodule 𝕜 E) = finrank 𝕜 K₂ := by
   haveI := Submodule.finite_dimensional_of_le h
   haveI := proper_is_R_or_C 𝕜 K₁
-  have hd := Submodule.dim_sup_add_dim_inf_eq K₁ (K₁ᗮ⊓K₂)
+  have hd := Submodule.dim_sup_add_dim_inf_eq K₁ (K₁ᗮ ⊓ K₂)
   rw [← inf_assoc, (Submodule.orthogonal_disjoint K₁).eq_bot, bot_inf_eq, finrank_bot,
     Submodule.sup_orthogonal_inf_of_complete_space h] at hd
   rw [add_zeroₓ] at hd
@@ -1015,7 +1015,7 @@ theorem Submodule.finrank_add_inf_finrank_orthogonal {K₁ K₂ : Submodule 𝕜
 containined in it, the dimensions of `K₁` and the intersection of its
 orthogonal subspace with `K₂` add to that of `K₂`. -/
 theorem Submodule.finrank_add_inf_finrank_orthogonal' {K₁ K₂ : Submodule 𝕜 E} [FiniteDimensional 𝕜 K₂] (h : K₁ ≤ K₂)
-    {n : ℕ} (h_dim : finrank 𝕜 K₁ + n = finrank 𝕜 K₂) : finrank 𝕜 (K₁ᗮ⊓K₂ : Submodule 𝕜 E) = n := by
+    {n : ℕ} (h_dim : finrank 𝕜 K₁ + n = finrank 𝕜 K₂) : finrank 𝕜 (K₁ᗮ ⊓ K₂ : Submodule 𝕜 E) = n := by
   rw [← add_right_injₓ (finrank 𝕜 K₁)]
   simp [Submodule.finrank_add_inf_finrank_orthogonal h, h_dim]
 
@@ -1041,7 +1041,7 @@ attribute [local instance] fact_finite_dimensional_of_finrank_eq_succ
 /-- In a finite-dimensional inner product space, the dimension of the orthogonal complement of the
 span of a nonzero vector is one less than the dimension of the space. -/
 theorem finrank_orthogonal_span_singleton {n : ℕ} [_i : Fact (finrank 𝕜 E = n + 1)] {v : E} (hv : v ≠ 0) :
-    finrank 𝕜 (𝕜∙v)ᗮ = n :=
+    finrank 𝕜 (𝕜 ∙ v)ᗮ = n :=
   Submodule.finrank_add_finrank_orthogonal' <| by
     simp [finrank_span_singleton hv, _i.elim, add_commₓ]
 
@@ -1051,7 +1051,7 @@ specifically at most as many reflections as the dimension of the complement of t
 of `φ`. -/
 theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ F] {n : ℕ} (φ : F ≃ₗᵢ[ℝ] F)
     (hn : finrank ℝ (ContinuousLinearMap.id ℝ F - φ.toContinuousLinearEquiv).kerᗮ ≤ n) :
-    ∃ l : List F, l.length ≤ n ∧ φ = (l.map fun v => reflection (ℝ∙v)ᗮ).Prod := by
+    ∃ l : List F, l.length ≤ n ∧ φ = (l.map fun v => reflection (ℝ ∙ v)ᗮ).Prod := by
   -- We prove this by strong induction on `n`, the dimension of the orthogonal complement of the
   -- fixed subspace of the endomorphism `φ`
   induction' n with n IH generalizing φ
@@ -1087,7 +1087,7 @@ theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ 
       exact hv ((Submodule.mem_left_iff_eq_zero_of_disjoint W.orthogonal_disjoint).mp h)
     -- Let `ρ` be the reflection in `v - φ v`; this is designed to swap `v` and `φ v`
     let x : F := v - φ v
-    let ρ := reflection (ℝ∙x)ᗮ
+    let ρ := reflection (ℝ ∙ x)ᗮ
     -- Notation: Let `V` be the fixed subspace of `φ.trans ρ`
     let V := (ContinuousLinearMap.id ℝ F - (φ.trans ρ).toContinuousLinearEquiv).ker
     have hV : ∀ w, ρ (φ w) = w → w ∈ V := by
@@ -1123,7 +1123,7 @@ theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ 
     -- factorization into reflections for `φ`.
     refine' ⟨x::l, Nat.succ_le_succₓ hl, _⟩
     rw [List.map_consₓ, List.prod_cons]
-    have := congr_argₓ ((· * ·) ρ) hφl
+    have := congr_arg ((· * ·) ρ) hφl
     rwa [← mul_assoc, reflection_mul_reflection, one_mulₓ] at this
     
 
@@ -1132,13 +1132,13 @@ orthogonal group is a product of at most as many reflections as the dimension of
 
 Special case of the **Cartan–Dieudonné theorem**. -/
 theorem LinearIsometryEquiv.reflections_generate_dim [FiniteDimensional ℝ F] (φ : F ≃ₗᵢ[ℝ] F) :
-    ∃ l : List F, l.length ≤ finrank ℝ F ∧ φ = (l.map fun v => reflection (ℝ∙v)ᗮ).Prod :=
+    ∃ l : List F, l.length ≤ finrank ℝ F ∧ φ = (l.map fun v => reflection (ℝ ∙ v)ᗮ).Prod :=
   let ⟨l, hl₁, hl₂⟩ := φ.reflections_generate_dim_aux le_rflₓ
   ⟨l, hl₁.trans (Submodule.finrank_le _), hl₂⟩
 
 /-- The orthogonal group of `F` is generated by reflections. -/
 theorem LinearIsometryEquiv.reflections_generate [FiniteDimensional ℝ F] :
-    Subgroup.closure (Set.Range fun v : F => reflection (ℝ∙v)ᗮ) = ⊤ := by
+    Subgroup.closure (Set.Range fun v : F => reflection (ℝ ∙ v)ᗮ) = ⊤ := by
   rw [Subgroup.eq_top_iff']
   intro φ
   rcases φ.reflections_generate_dim with ⟨l, _, rfl⟩
@@ -1198,7 +1198,7 @@ theorem maximal_orthonormal_iff_orthogonal_complement_eq_bot (hv : Orthonormal �
     have he'' : e ∉ v := by
       intro hev
       have : e = 0 := by
-        have : e ∈ span 𝕜 v⊓(span 𝕜 v)ᗮ := ⟨subset_span hev, he'⟩
+        have : e ∈ span 𝕜 v ⊓ (span 𝕜 v)ᗮ := ⟨subset_span hev, he'⟩
         simpa [(span 𝕜 v).inf_orthogonal_eq_bot] using this
       have : e ≠ 0 := hv.ne_zero ⟨e, hev⟩
       contradiction

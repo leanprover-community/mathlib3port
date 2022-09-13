@@ -174,7 +174,7 @@ theorem grade_ne_grade_iff : grade 𝕆 a ≠ grade 𝕆 b ↔ a ≠ b :=
   grade_injective.ne_iff
 
 theorem grade_covby_grade_iff : grade 𝕆 a ⋖ grade 𝕆 b ↔ a ⋖ b :=
-  (covby_iff_lt_covby_grade.trans <| and_iff_right_of_imp fun h => grade_lt_grade_iff.1 h.1).symm
+  (covby_iff_lt_covby_grade.trans <| and_iff_right_of_impₓ fun h => grade_lt_grade_iff.1 h.1).symm
 
 end LinearOrderₓ
 

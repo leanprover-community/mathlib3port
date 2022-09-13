@@ -114,7 +114,7 @@ section Diagonal
 variable [DecidableEq n] [MulZeroClassₓ α]
 
 theorem diagonal_hadamard_diagonal (v : n → α) (w : n → α) : diagonalₓ v ⊙ diagonalₓ w = diagonalₓ (v * w) :=
-  ext fun _ _ => (apply_ite2 _ _ _ _ _ _).trans (congr_argₓ _ <| zero_mul 0)
+  ext fun _ _ => (apply_ite2 _ _ _ _ _ _).trans (congr_arg _ <| zero_mul 0)
 
 end Diagonal
 

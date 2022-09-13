@@ -299,7 +299,7 @@ namespace Pnat
 
 /-- The gcd and lcm operations on positive integers correspond
  to the inf and sup operations on multisets. -/
-theorem factor_multiset_gcd (m n : ℕ+) : factorMultiset (gcd m n) = factorMultiset m⊓factorMultiset n := by
+theorem factor_multiset_gcd (m n : ℕ+) : factorMultiset (gcd m n) = factorMultiset m ⊓ factorMultiset n := by
   apply le_antisymmₓ
   · apply le_inf_iff.mpr <;> constructor <;> apply factor_multiset_le_iff.mpr
     exact gcd_dvd_left m n
@@ -311,7 +311,7 @@ theorem factor_multiset_gcd (m n : ℕ+) : factorMultiset (gcd m n) = factorMult
     exact inf_le_right
     
 
-theorem factor_multiset_lcm (m n : ℕ+) : factorMultiset (lcm m n) = factorMultiset m⊔factorMultiset n := by
+theorem factor_multiset_lcm (m n : ℕ+) : factorMultiset (lcm m n) = factorMultiset m ⊔ factorMultiset n := by
   apply le_antisymmₓ
   · rw [← PrimeMultiset.prod_dvd_iff, prod_factor_multiset]
     apply lcm_dvd <;> rw [← factor_multiset_le_iff']
@@ -343,20 +343,20 @@ end Pnat
 
 namespace PrimeMultiset
 
-theorem prod_inf (u v : PrimeMultiset) : (u⊓v).Prod = Pnat.gcd u.Prod v.Prod := by
+theorem prod_inf (u v : PrimeMultiset) : (u ⊓ v).Prod = Pnat.gcd u.Prod v.Prod := by
   let n := u.prod
   let m := v.prod
-  change (u⊓v).Prod = Pnat.gcd n m
+  change (u ⊓ v).Prod = Pnat.gcd n m
   have : u = n.factor_multiset := u.factor_multiset_prod.symm
   rw [this]
   have : v = m.factor_multiset := v.factor_multiset_prod.symm
   rw [this]
   rw [← Pnat.factor_multiset_gcd n m, Pnat.prod_factor_multiset]
 
-theorem prod_sup (u v : PrimeMultiset) : (u⊔v).Prod = Pnat.lcm u.Prod v.Prod := by
+theorem prod_sup (u v : PrimeMultiset) : (u ⊔ v).Prod = Pnat.lcm u.Prod v.Prod := by
   let n := u.prod
   let m := v.prod
-  change (u⊔v).Prod = Pnat.lcm n m
+  change (u ⊔ v).Prod = Pnat.lcm n m
   have : u = n.factor_multiset := u.factor_multiset_prod.symm
   rw [this]
   have : v = m.factor_multiset := v.factor_multiset_prod.symm

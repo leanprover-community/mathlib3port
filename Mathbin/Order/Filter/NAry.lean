@@ -40,7 +40,7 @@ def map₂ (m : α → β → γ) (f : Filter α) (g : Filter β) : Filter γ wh
   sets_of_superset := fun s t hs hst =>
     Exists₂.imp (fun u v => And.imp_right <| And.imp_right fun h => Subset.trans h hst) hs
   inter_sets := fun s t => by
-    simp only [exists_prop, mem_set_of_eq, subset_inter_iff]
+    simp only [exists_propₓ, mem_set_of_eq, subset_inter_iff]
     rintro ⟨s₁, s₂, hs₁, hs₂, hs⟩ ⟨t₁, t₂, ht₁, ht₂, ht⟩
     exact
       ⟨s₁ ∩ t₁, s₂ ∩ t₂, inter_sets f hs₁ ht₁, inter_sets g hs₂ ht₂,
@@ -137,7 +137,7 @@ theorem NeBot.of_map₂_left (h : (map₂ m f g).ne_bot) : f.ne_bot :=
 theorem NeBot.of_map₂_right (h : (map₂ m f g).ne_bot) : g.ne_bot :=
   (map₂_ne_bot_iff.1 h).2
 
-theorem map₂_sup_left : map₂ m (f₁⊔f₂) g = map₂ m f₁ g⊔map₂ m f₂ g := by
+theorem map₂_sup_left : map₂ m (f₁ ⊔ f₂) g = map₂ m f₁ g ⊔ map₂ m f₂ g := by
   ext u
   constructor
   · rintro ⟨s, t, ⟨h₁, h₂⟩, ht, hu⟩
@@ -151,7 +151,7 @@ theorem map₂_sup_left : map₂ m (f₁⊔f₂) g = map₂ m f₁ g⊔map₂ m 
         ((image2_subset_left <| inter_subset_right _ _).trans hu₂)
     
 
-theorem map₂_sup_right : map₂ m f (g₁⊔g₂) = map₂ m f g₁⊔map₂ m f g₂ := by
+theorem map₂_sup_right : map₂ m f (g₁ ⊔ g₂) = map₂ m f g₁ ⊔ map₂ m f g₂ := by
   ext u
   constructor
   · rintro ⟨s, t, hs, ⟨h₁, h₂⟩, hu⟩
@@ -165,10 +165,10 @@ theorem map₂_sup_right : map₂ m f (g₁⊔g₂) = map₂ m f g₁⊔map₂ m
         ((image2_subset_right <| inter_subset_right _ _).trans hu₂)
     
 
-theorem map₂_inf_subset_left : map₂ m (f₁⊓f₂) g ≤ map₂ m f₁ g⊓map₂ m f₂ g :=
+theorem map₂_inf_subset_left : map₂ m (f₁ ⊓ f₂) g ≤ map₂ m f₁ g ⊓ map₂ m f₂ g :=
   le_inf (map₂_mono_right inf_le_left) (map₂_mono_right inf_le_right)
 
-theorem map₂_inf_subset_right : map₂ m f (g₁⊓g₂) ≤ map₂ m f g₁⊓map₂ m f g₂ :=
+theorem map₂_inf_subset_right : map₂ m f (g₁ ⊓ g₂) ≤ map₂ m f g₁ ⊓ map₂ m f g₂ :=
   le_inf (map₂_mono_left inf_le_left) (map₂_mono_left inf_le_right)
 
 @[simp]
@@ -219,7 +219,7 @@ def map₃ (m : α → β → γ → δ) (f : Filter α) (g : Filter β) (h : Fi
   sets_of_superset := fun s t hs hst =>
     Exists₃.imp (fun u v w => And.imp_right <| And.imp_right <| And.imp_right fun h => Subset.trans h hst) hs
   inter_sets := fun s t => by
-    simp only [exists_prop, mem_set_of_eq, subset_inter_iff]
+    simp only [exists_propₓ, mem_set_of_eq, subset_inter_iff]
     rintro ⟨s₁, s₂, s₃, hs₁, hs₂, hs₃, hs⟩ ⟨t₁, t₂, t₃, ht₁, ht₂, ht₃, ht⟩
     exact
       ⟨s₁ ∩ t₁, s₂ ∩ t₂, s₃ ∩ t₃, inter_mem hs₁ ht₁, inter_mem hs₂ ht₂, inter_mem hs₃ ht₃,

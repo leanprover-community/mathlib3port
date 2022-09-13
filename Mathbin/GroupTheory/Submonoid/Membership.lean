@@ -191,16 +191,16 @@ theorem coe_Sup_of_directed_on {S : Set (Submonoid M)} (Sne : S.Nonempty) (hS : 
     simp [mem_Sup_of_directed_on Sne hS]
 
 @[to_additive]
-theorem mem_sup_left {S T : Submonoid M} : ∀ {x : M}, x ∈ S → x ∈ S⊔T :=
-  show S ≤ S⊔T from le_sup_left
+theorem mem_sup_left {S T : Submonoid M} : ∀ {x : M}, x ∈ S → x ∈ S ⊔ T :=
+  show S ≤ S ⊔ T from le_sup_left
 
 @[to_additive]
-theorem mem_sup_right {S T : Submonoid M} : ∀ {x : M}, x ∈ T → x ∈ S⊔T :=
-  show T ≤ S⊔T from le_sup_right
+theorem mem_sup_right {S T : Submonoid M} : ∀ {x : M}, x ∈ T → x ∈ S ⊔ T :=
+  show T ≤ S ⊔ T from le_sup_right
 
 @[to_additive]
-theorem mul_mem_sup {S T : Submonoid M} {x y : M} (hx : x ∈ S) (hy : y ∈ T) : x * y ∈ S⊔T :=
-  (S⊔T).mul_mem (mem_sup_left hx) (mem_sup_right hy)
+theorem mul_mem_sup {S T : Submonoid M} {x y : M} (hx : x ∈ S) (hy : y ∈ T) : x * y ∈ S ⊔ T :=
+  (S ⊔ T).mul_mem (mem_sup_left hx) (mem_sup_right hy)
 
 @[to_additive]
 theorem mem_supr_of_mem {ι : Sort _} {S : ι → Submonoid M} (i : ι) : ∀ {x : M}, x ∈ S i → x ∈ supr S :=
@@ -412,12 +412,12 @@ variable {N : Type _} [CommMonoidₓ N]
 open MonoidHom
 
 @[to_additive]
-theorem sup_eq_range (s t : Submonoid N) : s⊔t = (s.Subtype.coprod t.Subtype).mrange := by
+theorem sup_eq_range (s t : Submonoid N) : s ⊔ t = (s.Subtype.coprod t.Subtype).mrange := by
   rw [mrange_eq_map, ← mrange_inl_sup_mrange_inr, map_sup, map_mrange, coprod_comp_inl, map_mrange, coprod_comp_inr,
     range_subtype, range_subtype]
 
 @[to_additive]
-theorem mem_sup {s t : Submonoid N} {x : N} : x ∈ s⊔t ↔ ∃ y ∈ s, ∃ z ∈ t, y * z = x := by
+theorem mem_sup {s t : Submonoid N} {x : N} : x ∈ s ⊔ t ↔ ∃ y ∈ s, ∃ z ∈ t, y * z = x := by
   simp only [sup_eq_range, mem_mrange, coprod_apply, Prod.existsₓ, SetLike.exists, coeSubtype, Subtype.coe_mk]
 
 end Submonoid
@@ -527,7 +527,7 @@ elements. -/
 theorem mem_closure_pair {A : Type _} [CommMonoidₓ A] (a b c : A) :
     c ∈ Submonoid.closure ({a, b} : Set A) ↔ ∃ m n : ℕ, a ^ m * b ^ n = c := by
   rw [← Set.singleton_union, Submonoid.closure_union, mem_sup]
-  simp_rw [exists_prop, mem_closure_singleton, exists_exists_eq_and]
+  simp_rw [exists_propₓ, mem_closure_singleton, exists_exists_eq_and]
 
 end Submonoid
 

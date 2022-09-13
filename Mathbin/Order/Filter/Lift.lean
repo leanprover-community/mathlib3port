@@ -62,7 +62,7 @@ theorem HasBasis.lift {ι} {p : ι → Prop} {s : ι → Set α} {f : Filter α}
     {pg : ∀ i, β i → Prop} {sg : ∀ i, β i → Set γ} {g : Set α → Filter γ} (hg : ∀ i, (g <| s i).HasBasis (pg i) (sg i))
     (gm : Monotone g) : (f.lift g).HasBasis (fun i : Σi, β i => p i.1 ∧ pg i.1 i.2) fun i : Σi, β i => sg i.1 i.2 := by
   refine' ⟨fun t => (hf.mem_lift_iff hg gm).trans _⟩
-  simp [Sigma.exists, and_assoc, exists_and_distrib_left]
+  simp [Sigma.exists, and_assocₓ, exists_and_distrib_leftₓ]
 
 theorem mem_lift_sets (hg : Monotone g) {s : Set β} : s ∈ f.lift g ↔ ∃ t ∈ f, s ∈ g t :=
   (f.basis_sets.mem_lift_iff (fun s => (g s).basis_sets) hg).trans <| by
@@ -90,7 +90,7 @@ theorem tendsto_lift {m : γ → β} {l : Filter γ} : Tendsto m l (f.lift g) �
 theorem map_lift_eq {m : β → γ} (hg : Monotone g) : map m (f.lift g) = f.lift (map m ∘ g) :=
   have : Monotone (map m ∘ g) := map_mono.comp hg
   Filter.ext fun s => by
-    simp only [mem_lift_sets hg, mem_lift_sets this, exists_prop, mem_map, Function.comp_app]
+    simp only [mem_lift_sets hg, mem_lift_sets this, exists_propₓ, mem_map, Function.comp_app]
 
 theorem comap_lift_eq {m : γ → β} : comap m (f.lift g) = f.lift (comap m ∘ g) := by
   simp only [Filter.lift, comap_infi]
@@ -167,7 +167,7 @@ theorem lift_const {f : Filter α} {g : Filter β} : (f.lift fun x => g) = g :=
   le_antisymmₓ (lift_le univ_mem <| le_reflₓ g) (le_lift fun s hs => le_reflₓ g)
 
 @[simp]
-theorem lift_inf {f : Filter α} {g h : Set α → Filter β} : (f.lift fun x => g x⊓h x) = f.lift g⊓f.lift h := by
+theorem lift_inf {f : Filter α} {g h : Set α → Filter β} : (f.lift fun x => g x ⊓ h x) = f.lift g ⊓ f.lift h := by
   simp only [Filter.lift, infi_inf_eq, eq_self_iff_true]
 
 @[simp]
@@ -180,7 +180,7 @@ theorem lift_principal2 {f : Filter α} : f.lift 𝓟 = f :=
 theorem lift_infi_le {f : ι → Filter α} {g : Set α → Filter β} : (infi f).lift g ≤ ⨅ i, (f i).lift g :=
   le_infi fun i => lift_mono (infi_le _ _) le_rflₓ
 
-theorem lift_infi [Nonempty ι] {f : ι → Filter α} {g : Set α → Filter β} (hg : ∀ s t, g (s ∩ t) = g s⊓g t) :
+theorem lift_infi [Nonempty ι] {f : ι → Filter α} {g : Set α → Filter β} (hg : ∀ s t, g (s ∩ t) = g s ⊓ g t) :
     (infi f).lift g = ⨅ i, (f i).lift g := by
   refine' lift_infi_le.antisymm fun s => _
   have H : ∀ t ∈ infi f, (⨅ i, (f i).lift g) ≤ g t := by
@@ -201,7 +201,7 @@ theorem lift_infi_of_directed [Nonempty ι] {f : ι → Filter α} {g : Set α �
     simp only [mem_lift_sets hg, exists_imp_distrib, mem_infi_of_directed hf]
     exact fun t i ht hs => mem_infi_of_mem i <| mem_lift ht hs
 
-theorem lift_infi_of_map_univ {f : ι → Filter α} {g : Set α → Filter β} (hg : ∀ s t, g (s ∩ t) = g s⊓g t)
+theorem lift_infi_of_map_univ {f : ι → Filter α} {g : Set α → Filter β} (hg : ∀ s t, g (s ∩ t) = g s ⊓ g t)
     (hg' : g Univ = ⊤) : (infi f).lift g = ⨅ i, (f i).lift g := by
   cases is_empty_or_nonempty ι
   · simp [infi_of_empty, hg']
@@ -312,7 +312,7 @@ theorem lift_lift'_same_eq_lift' {g : Set α → Set α → Set β} (hg₁ : ∀
     (hg₂ : ∀ t, Monotone fun s => g s t) : (f.lift fun s => f.lift' (g s)) = f.lift' fun s => g s s :=
   lift_lift_same_eq_lift (fun s => monotone_principal.comp (hg₁ s)) fun t => monotone_principal.comp (hg₂ t)
 
-theorem lift'_inf_principal_eq {h : Set α → Set β} {s : Set β} : f.lift' h⊓𝓟 s = f.lift' fun t => h t ∩ s := by
+theorem lift'_inf_principal_eq {h : Set α → Set β} {s : Set β} : f.lift' h ⊓ 𝓟 s = f.lift' fun t => h t ∩ s := by
   simp only [Filter.lift', Filter.lift, (· ∘ ·), ← inf_principal, infi_subtype', ← infi_inf]
 
 theorem lift'_ne_bot_iff (hh : Monotone h) : NeBot (f.lift' h) ↔ ∀ s ∈ f, (h s).Nonempty :=
@@ -345,11 +345,11 @@ theorem lift'_infi_of_map_univ {f : ι → Filter α} {g : Set α → Set β} (h
       rw [Function.comp_app, hg', principal_univ])
 
 theorem lift'_inf (f g : Filter α) {s : Set α → Set β} (hs : ∀ t₁ t₂, s (t₁ ∩ t₂) = s t₁ ∩ s t₂) :
-    (f⊓g).lift' s = f.lift' s⊓g.lift' s := by
+    (f ⊓ g).lift' s = f.lift' s ⊓ g.lift' s := by
   have : (⨅ b : Bool, cond b f g).lift' s = ⨅ b : Bool, (cond b f g).lift' s := lift'_infi @hs
   simpa only [infi_bool_eq]
 
-theorem lift'_inf_le (f g : Filter α) (s : Set α → Set β) : (f⊓g).lift' s ≤ f.lift' s⊓g.lift' s :=
+theorem lift'_inf_le (f g : Filter α) (s : Set α → Set β) : (f ⊓ g).lift' s ≤ f.lift' s ⊓ g.lift' s :=
   le_inf (lift'_mono inf_le_left le_rflₓ) (lift'_mono inf_le_right le_rflₓ)
 
 theorem comap_eq_lift' {f : Filter β} {m : α → β} : comap m f = f.lift' (Preimage m) :=
@@ -364,7 +364,7 @@ variable {f : Filter α}
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem prod_def {f : Filter α} {g : Filter β} : f ×ᶠ g = f.lift fun s => g.lift' fun t => s ×ˢ t := by
-  have : ∀ (s : Set α) (t : Set β), 𝓟 (s ×ˢ t) = (𝓟 s).comap Prod.fst⊓(𝓟 t).comap Prod.snd := by
+  have : ∀ (s : Set α) (t : Set β), 𝓟 (s ×ˢ t) = (𝓟 s).comap Prod.fst ⊓ (𝓟 t).comap Prod.snd := by
     simp only [principal_eq_iff_eq, comap_principal, inf_principal] <;> intros <;> rfl
   simp only [Filter.lift', Function.comp, this, lift_inf, lift_const, lift_inf]
   rw [← comap_lift_eq, ← comap_lift_eq]
@@ -382,7 +382,7 @@ theorem mem_prod_same_iff {s : Set (α × α)} : s ∈ f ×ᶠ f ↔ ∃ t ∈ f
 
 theorem tendsto_prod_self_iff {f : α × α → β} {x : Filter α} {y : Filter β} :
     Filter.Tendsto f (x ×ᶠ x) y ↔ ∀ W ∈ y, ∃ U ∈ x, ∀ x x' : α, x ∈ U → x' ∈ U → f (x, x') ∈ W := by
-  simp only [tendsto_def, mem_prod_same_iff, prod_sub_preimage_iff, exists_prop, iff_selfₓ]
+  simp only [tendsto_def, mem_prod_same_iff, prod_sub_preimage_iff, exists_propₓ, iff_selfₓ]
 
 variable {α₁ : Type _} {α₂ : Type _} {β₁ : Type _} {β₂ : Type _}
 
@@ -390,10 +390,10 @@ theorem prod_lift_lift {f₁ : Filter α₁} {f₂ : Filter α₂} {g₁ : Set �
     (hg₁ : Monotone g₁) (hg₂ : Monotone g₂) :
     f₁.lift g₁ ×ᶠ f₂.lift g₂ = f₁.lift fun s => f₂.lift fun t => g₁ s ×ᶠ g₂ t := by
   simp only [prod_def, lift_assoc hg₁]
-  apply congr_argₓ
+  apply congr_arg
   funext x
   rw [lift_comm]
-  apply congr_argₓ
+  apply congr_arg
   funext y
   apply lift'_lift_assoc hg₂
 

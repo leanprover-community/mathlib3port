@@ -734,7 +734,7 @@ theorem to_set_singleton (x : Setₓ) : ({x} : Setₓ).ToSet = {x} := by
 
 @[simp]
 theorem mem_pair {x y z : Setₓ.{u}} : x ∈ ({y, z} : Setₓ) ↔ x = y ∨ x = z :=
-  Iff.trans mem_insert_iff <| or_congr Iff.rfl mem_singleton
+  Iff.trans mem_insert_iff <| or_congrₓ Iff.rfl mem_singleton
 
 /-- `omega` is the first infinite von Neumann ordinal -/
 def omega : Setₓ :=
@@ -855,10 +855,10 @@ theorem mem_sUnion_of_mem {x y z : Setₓ} (hy : y ∈ z) (hz : z ∈ x) : y ∈
 @[simp]
 theorem sUnion_singleton {x : Setₓ.{u}} : ⋃₀ ({x} : Setₓ) = x :=
   ext fun y => by
-    simp_rw [mem_sUnion, exists_prop, mem_singleton, exists_eq_left]
+    simp_rw [mem_sUnion, exists_propₓ, mem_singleton, exists_eq_left]
 
 theorem singleton_injective : Function.Injective (@singleton Setₓ Setₓ _) := fun x y H => by
-  let this := congr_argₓ sUnion H
+  let this := congr_arg sUnion H
   rwa [sUnion_singleton, sUnion_singleton] at this
 
 @[simp]
@@ -1299,9 +1299,9 @@ def Fval (F A : Class.{u}) : Class.{u} :=
   Iota fun y => ToSet (fun x => F (Setₓ.pair x y)) A
 
 -- mathport name: «expr ′ »
-infixl:100 "′" => Fval
+infixl:100 " ′ " => Fval
 
-theorem fval_ex (F A : Class.{u}) : F′A ∈ univ.{u} :=
+theorem fval_ex (F A : Class.{u}) : F ′ A ∈ univ.{u} :=
   iota_ex _
 
 end Class
@@ -1310,7 +1310,7 @@ namespace Setₓ
 
 @[simp]
 theorem map_fval {f : Setₓ.{u} → Setₓ.{u}} [H : PSet.Definable 1 f] {x y : Setₓ.{u}} (h : y ∈ x) :
-    (Setₓ.map f x′y : Class.{u}) = f y :=
+    (Setₓ.map f x ′ y : Class.{u}) = f y :=
   Class.iota_val _ _ fun z => by
     rw [Class.to_Set_of_Set, Class.mem_hom_right, mem_map]
     exact
@@ -1338,7 +1338,7 @@ theorem choice_mem_aux (y : Setₓ.{u}) (yx : y ∈ x) : (Classical.epsilon fun 
 theorem choice_is_func : IsFunc x (⋃₀ x) (choice x) :=
   (@map_is_func _ (Classical.allDefinable _) _ _).2 fun y yx => mem_sUnion.2 ⟨y, yx, choice_mem_aux x h y yx⟩
 
-theorem choice_mem (y : Setₓ.{u}) (yx : y ∈ x) : (choice x′y : Class.{u}) ∈ (y : Class.{u}) := by
+theorem choice_mem (y : Setₓ.{u}) (yx : y ∈ x) : (choice x ′ y : Class.{u}) ∈ (y : Class.{u}) := by
   delta' choice
   rw [map_fval yx, Class.mem_hom_left, Class.mem_hom_right]
   exact choice_mem_aux x h y yx

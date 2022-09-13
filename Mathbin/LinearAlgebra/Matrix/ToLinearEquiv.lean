@@ -63,7 +63,7 @@ theorem to_linear_equiv'_apply (P : Matrix n n R) (h : Invertible P) :
 @[simp]
 theorem to_linear_equiv'_symm_apply (P : Matrix n n R) (h : Invertible P) :
     (↑(P.toLinearEquiv' h).symm : Module.End R (n → R)) = P⁻¹.toLin' :=
-  show (⅟ P).toLin' = _ from congr_argₓ _ P.inv_of_eq_nonsing_inv
+  show (⅟ P).toLin' = _ from congr_arg _ P.inv_of_eq_nonsing_inv
 
 end ToLinearEquiv'
 
@@ -129,7 +129,7 @@ theorem exists_mul_vec_eq_zero_iff' {A : Type _} (K : Type _) [DecidableEq n] [C
   refine' Iff.trans _ this
   constructor <;> rintro ⟨v, hv, mul_eq⟩
   · refine' ⟨fun i => algebraMap _ _ (v i), mt (fun h => funext fun i => _) hv, _⟩
-    · exact is_fraction_ring.to_map_eq_zero_iff.mp (congr_funₓ h i)
+    · exact is_fraction_ring.to_map_eq_zero_iff.mp (congr_fun h i)
       
     · ext i
       refine' (RingHom.map_mul_vec _ _ _ i).symm.trans _
@@ -141,7 +141,7 @@ theorem exists_mul_vec_eq_zero_iff' {A : Type _} (K : Type _) [DecidableEq n] [C
       IsLocalization.exist_integer_multiples_of_finset (nonZeroDivisors A) (finset.univ.image v)
     choose f hf using ba_eq
     refine' ⟨fun i => f _ (finset.mem_image.mpr ⟨i, Finset.mem_univ i, rfl⟩), mt (fun h => funext fun i => _) hv, _⟩
-    · have := congr_argₓ (algebraMap A K) (congr_funₓ h i)
+    · have := congr_arg (algebraMap A K) (congr_fun h i)
       rw [hf, Subtype.coe_mk, Pi.zero_apply, RingHom.map_zero, Algebra.smul_def, mul_eq_zero,
         IsFractionRing.to_map_eq_zero_iff] at this
       exact this.resolve_left (nonZeroDivisors.ne_zero hb)

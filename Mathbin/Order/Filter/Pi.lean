@@ -100,7 +100,7 @@ theorem has_basis_pi {ι' : ι → Type} {s : ∀ i, ι' i → Set (α i)} {p : 
   simp
 
 @[simp]
-theorem pi_inf_principal_univ_pi_eq_bot : pi f⊓𝓟 (Set.Pi Univ s) = ⊥ ↔ ∃ i, f i⊓𝓟 (s i) = ⊥ := by
+theorem pi_inf_principal_univ_pi_eq_bot : pi f ⊓ 𝓟 (Set.Pi Univ s) = ⊥ ↔ ∃ i, f i ⊓ 𝓟 (s i) = ⊥ := by
   constructor
   · simp only [inf_principal_eq_bot, mem_pi]
     contrapose!
@@ -116,21 +116,21 @@ theorem pi_inf_principal_univ_pi_eq_bot : pi f⊓𝓟 (Set.Pi Univ s) = ⊥ ↔ 
 
 @[simp]
 theorem pi_inf_principal_pi_eq_bot [∀ i, NeBot (f i)] {I : Set ι} :
-    pi f⊓𝓟 (Set.Pi I s) = ⊥ ↔ ∃ i ∈ I, f i⊓𝓟 (s i) = ⊥ := by
+    pi f ⊓ 𝓟 (Set.Pi I s) = ⊥ ↔ ∃ i ∈ I, f i ⊓ 𝓟 (s i) = ⊥ := by
   rw [← univ_pi_piecewise I, pi_inf_principal_univ_pi_eq_bot]
   refine' exists_congr fun i => _
   by_cases' hi : i ∈ I <;> simp [hi, (‹∀ i, ne_bot (f i)› i).Ne]
 
 @[simp]
-theorem pi_inf_principal_univ_pi_ne_bot : NeBot (pi f⊓𝓟 (Set.Pi Univ s)) ↔ ∀ i, NeBot (f i⊓𝓟 (s i)) := by
+theorem pi_inf_principal_univ_pi_ne_bot : NeBot (pi f ⊓ 𝓟 (Set.Pi Univ s)) ↔ ∀ i, NeBot (f i ⊓ 𝓟 (s i)) := by
   simp [ne_bot_iff]
 
 @[simp]
 theorem pi_inf_principal_pi_ne_bot [∀ i, NeBot (f i)] {I : Set ι} :
-    NeBot (pi f⊓𝓟 (I.pi s)) ↔ ∀ i ∈ I, NeBot (f i⊓𝓟 (s i)) := by
+    NeBot (pi f ⊓ 𝓟 (I.pi s)) ↔ ∀ i ∈ I, NeBot (f i ⊓ 𝓟 (s i)) := by
   simp [ne_bot_iff]
 
-instance PiInfPrincipalPi.ne_bot [h : ∀ i, NeBot (f i⊓𝓟 (s i))] {I : Set ι} : NeBot (pi f⊓𝓟 (I.pi s)) :=
+instance PiInfPrincipalPi.ne_bot [h : ∀ i, NeBot (f i ⊓ 𝓟 (s i))] {I : Set ι} : NeBot (pi f ⊓ 𝓟 (I.pi s)) :=
   (pi_inf_principal_univ_pi_ne_bot.2 ‹_›).mono <| inf_le_inf_left _ <| principal_mono.2 fun x hx i hi => hx i trivialₓ
 
 @[simp]
@@ -162,7 +162,7 @@ theorem compl_mem_Coprod {s : Set (∀ i, α i)} : sᶜ ∈ Filter.coprodₓ f �
   simp only [Filter.coprodₓ, mem_supr, compl_mem_comap]
 
 theorem Coprod_ne_bot_iff' : NeBot (Filter.coprodₓ f) ↔ (∀ i, Nonempty (α i)) ∧ ∃ d, NeBot (f d) := by
-  simp only [Filter.coprodₓ, supr_ne_bot, ← exists_and_distrib_left, ← comap_eval_ne_bot_iff']
+  simp only [Filter.coprodₓ, supr_ne_bot, ← exists_and_distrib_leftₓ, ← comap_eval_ne_bot_iff']
 
 @[simp]
 theorem Coprod_ne_bot_iff [∀ i, Nonempty (α i)] : NeBot (Filter.coprodₓ f) ↔ ∃ d, NeBot (f d) := by

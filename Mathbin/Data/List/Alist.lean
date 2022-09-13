@@ -60,7 +60,7 @@ theorem ext : ∀ {s t : Alist β}, s.entries = t.entries → s = t
     congr
 
 theorem ext_iff {s t : Alist β} : s = t ↔ s.entries = t.entries :=
-  ⟨congr_argₓ _, ext⟩
+  ⟨congr_arg _, ext⟩
 
 instance [DecidableEq α] [∀ a, DecidableEq (β a)] : DecidableEq (Alist β) := fun xs ys => by
   rw [ext_iff] <;> infer_instance
@@ -353,7 +353,7 @@ theorem insert_union {a} {b : β a} {s₁ s₂ : Alist β} : insert a b (s₁ �
 theorem union_assoc {s₁ s₂ s₃ : Alist β} : (s₁ ∪ s₂ ∪ s₃).entries ~ (s₁ ∪ (s₂ ∪ s₃)).entries :=
   lookup_ext (Alist.nodupkeys _) (Alist.nodupkeys _)
     (by
-      simp [Decidable.not_or_iff_and_not, or_assoc, and_or_distrib_left, and_assoc])
+      simp [Decidable.not_or_iff_and_not, or_assocₓ, and_or_distrib_left, and_assocₓ])
 
 end
 

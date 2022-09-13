@@ -108,7 +108,7 @@ end Ennreal
 namespace Nnreal
 
 /-- Cauchy condensation test for a series of `nnreal` version. -/
-theorem summable_condensed_iff {f : ℕ → ℝ≥0 } (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m) :
+theorem summable_condensed_iff {f : ℕ → ℝ≥0} (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m) :
     (Summable fun k : ℕ => 2 ^ k * f (2 ^ k)) ↔ Summable f := by
   simp only [← Ennreal.tsum_coe_ne_top_iff_summable, Ne.def, not_iff_not, Ennreal.coe_mul, Ennreal.coe_pow,
     Ennreal.coe_two]
@@ -217,14 +217,14 @@ theorem Real.tendsto_sum_range_one_div_nat_succ_at_top :
     
 
 @[simp]
-theorem Nnreal.summable_rpow_inv {p : ℝ} : Summable (fun n => (n ^ p)⁻¹ : ℕ → ℝ≥0 ) ↔ 1 < p := by
+theorem Nnreal.summable_rpow_inv {p : ℝ} : Summable (fun n => (n ^ p)⁻¹ : ℕ → ℝ≥0) ↔ 1 < p := by
   simp [← Nnreal.summable_coe]
 
 @[simp]
-theorem Nnreal.summable_rpow {p : ℝ} : Summable (fun n => n ^ p : ℕ → ℝ≥0 ) ↔ p < -1 := by
+theorem Nnreal.summable_rpow {p : ℝ} : Summable (fun n => n ^ p : ℕ → ℝ≥0) ↔ p < -1 := by
   simp [← Nnreal.summable_coe]
 
-theorem Nnreal.summable_one_div_rpow {p : ℝ} : Summable (fun n => 1 / n ^ p : ℕ → ℝ≥0 ) ↔ 1 < p := by
+theorem Nnreal.summable_one_div_rpow {p : ℝ} : Summable (fun n => 1 / n ^ p : ℕ → ℝ≥0) ↔ 1 < p := by
   simp
 
 section

@@ -62,55 +62,41 @@ theorem mk_eq_zero {f} : mk f = 0 ↔ LimZero f := by
   have : mk f = 0 ↔ lim_zero (f - 0) := Quotientₓ.eq <;> rwa [sub_zero] at this
 
 instance : Add Cauchy :=
-  ⟨fun x y =>
-    (Quotientₓ.liftOn₂ x y fun f g => mk (f + g)) fun f₁ g₁ f₂ g₂ hf hg =>
-      Quotientₓ.sound <| by
-        simpa [(· ≈ ·), Setoidₓ.R, sub_eq_add_neg, add_commₓ, add_left_commₓ, add_assocₓ] using add_lim_zero hf hg⟩
+  ⟨(Quotientₓ.map₂ (· + ·)) fun f₁ g₁ hf f₂ g₂ hg => add_equiv_add hf hg⟩
 
 @[simp]
 theorem mk_add (f g : CauSeq β abv) : mk f + mk g = mk (f + g) :=
   rfl
 
 instance : Neg Cauchy :=
-  ⟨fun x =>
-    (Quotientₓ.liftOn x fun f => mk (-f)) fun f₁ f₂ hf =>
-      Quotientₓ.sound <| by
-        simpa [neg_sub', (· ≈ ·), Setoidₓ.R] using neg_lim_zero hf⟩
+  ⟨(Quotientₓ.map Neg.neg) fun f₁ f₂ hf => neg_equiv_neg hf⟩
 
 @[simp]
 theorem mk_neg (f : CauSeq β abv) : -mk f = mk (-f) :=
   rfl
 
 instance : Mul Cauchy :=
-  ⟨fun x y =>
-    (Quotientₓ.liftOn₂ x y fun f g => mk (f * g)) fun f₁ g₁ f₂ g₂ hf hg =>
-      Quotientₓ.sound <| by
-        simpa [(· ≈ ·), Setoidₓ.R, mul_addₓ, mul_comm, add_assocₓ, sub_eq_add_neg] using
-          add_lim_zero (mul_lim_zero_right g₁ hf) (mul_lim_zero_right f₂ hg)⟩
+  ⟨(Quotientₓ.map₂ (· * ·)) fun f₁ g₁ hf f₂ g₂ hg => mul_equiv_mul hf hg⟩
 
 @[simp]
 theorem mk_mul (f g : CauSeq β abv) : mk f * mk g = mk (f * g) :=
   rfl
 
 instance : Sub Cauchy :=
-  ⟨fun x y =>
-    (Quotientₓ.liftOn₂ x y fun f g => mk (f - g)) fun f₁ g₁ f₂ g₂ hf hg =>
-      Quotientₓ.sound <|
-        show (f₁ - g₁ - (f₂ - g₂)).LimZero by
-          simpa [sub_eq_add_neg, add_assocₓ, add_commₓ, add_left_commₓ] using sub_lim_zero hf hg⟩
+  ⟨(Quotientₓ.map₂ Sub.sub) fun f₁ g₁ hf f₂ g₂ hg => sub_equiv_sub hf hg⟩
 
 @[simp]
 theorem mk_sub (f g : CauSeq β abv) : mk f - mk g = mk (f - g) :=
   rfl
 
 theorem of_rat_add (x y : β) : of_rat (x + y) = of_rat x + of_rat y :=
-  congr_argₓ mk (const_add _ _)
+  congr_arg mk (const_add _ _)
 
 theorem of_rat_neg (x : β) : of_rat (-x) = -of_rat x :=
-  congr_argₓ mk (const_neg _)
+  congr_arg mk (const_neg _)
 
 theorem of_rat_mul (x y : β) : of_rat (x * y) = of_rat x * of_rat y :=
-  congr_argₓ mk (const_mul _ _)
+  congr_arg mk (const_mul _ _)
 
 private theorem zero_def : 0 = mk 0 :=
   rfl
@@ -130,10 +116,10 @@ instance : AddGroupₓ Cauchy := by
         
 
 instance : AddGroupWithOneₓ Cauchy :=
-  { Cauchy.add_group with natCast := fun n => mk n, nat_cast_zero := congr_argₓ mk Nat.cast_zeroₓ,
-    nat_cast_succ := fun n => congr_argₓ mk (Nat.cast_succₓ n), intCast := fun n => mk n,
-    int_cast_of_nat := fun n => congr_argₓ mk (Int.cast_of_nat n),
-    int_cast_neg_succ_of_nat := fun n => congr_argₓ mk (Int.cast_neg_succ_of_nat n), one := 1 }
+  { Cauchy.add_group with natCast := fun n => mk n, nat_cast_zero := congr_arg mk Nat.cast_zeroₓ,
+    nat_cast_succ := fun n => congr_arg mk (Nat.cast_succₓ n), intCast := fun n => mk n,
+    int_cast_of_nat := fun n => congr_arg mk (Int.cast_of_nat n),
+    int_cast_neg_succ_of_nat := fun n => congr_arg mk (Int.cast_neg_succ_of_nat n), one := 1 }
 
 @[simp]
 theorem of_rat_nat_cast (n : ℕ) : of_rat n = n :=
@@ -168,7 +154,7 @@ def ofRatRingHom : β →+* Cauchy where
   map_mul' := of_rat_mul
 
 theorem of_rat_sub (x y : β) : of_rat (x - y) = of_rat x - of_rat y :=
-  congr_argₓ mk (const_sub _ _)
+  congr_arg mk (const_sub _ _)
 
 end
 
@@ -208,12 +194,12 @@ noncomputable instance : Inv Cauchy :=
 
 @[simp]
 theorem inv_zero : (0 : Cauchy)⁻¹ = 0 :=
-  congr_argₓ mk <| by
+  congr_arg mk <| by
     rw [dif_pos] <;> [rfl, exact zero_lim_zero]
 
 @[simp]
 theorem inv_mk {f} (hf) : (@mk α _ β _ abv _ f)⁻¹ = mk (inv f hf) :=
-  congr_argₓ mk <| by
+  congr_arg mk <| by
     rw [dif_neg]
 
 theorem cau_seq_zero_ne_one : ¬(0 : CauSeq _ abv) ≈ 1 := fun h =>
@@ -231,7 +217,7 @@ protected theorem inv_mul_cancel {x : Cauchy} : x ≠ 0 → x⁻¹ * x = 1 :=
     exact Quotientₓ.sound (CauSeq.inv_mul_cancel hf)
 
 theorem of_rat_inv (x : β) : ofRat x⁻¹ = ((ofRat x)⁻¹ : Cauchy) :=
-  congr_argₓ mk <| by
+  congr_arg mk <| by
     split_ifs with h <;> [simp [const_lim_zero.1 h], rfl]
 
 /-- The Cauchy completion forms a field. -/
@@ -241,7 +227,7 @@ noncomputable instance : Field Cauchy :=
       rw [mul_comm, CauSeq.Completion.inv_mul_cancel x0],
     exists_pair_ne := ⟨0, 1, zero_ne_one⟩, inv_zero, ratCast := fun q => ofRat q,
     rat_cast_mk := fun n d hd hnd => by
-      rw [Rat.cast_mk', of_rat_mul, of_rat_int_cast, of_rat_inv, of_rat_nat_cast] }
+      rw [Ratₓ.cast_mk', of_rat_mul, of_rat_int_cast, of_rat_inv, of_rat_nat_cast] }
 
 theorem of_rat_div (x y : β) : ofRat (x / y) = (ofRat x / ofRat y : Cauchy) := by
   simp only [div_eq_inv_mul, of_rat_inv, of_rat_mul]

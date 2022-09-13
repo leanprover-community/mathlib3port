@@ -33,13 +33,13 @@ open MeasureTheory
 /-- We say that a type `has_measurable_sup` if `((⊔) c)` and `(⊔ c)` are measurable functions.
 For a typeclass assuming measurability of `uncurry (⊔)` see `has_measurable_sup₂`. -/
 class HasMeasurableSup (M : Type _) [MeasurableSpace M] [HasSup M] : Prop where
-  measurable_const_sup : ∀ c : M, Measurable ((·⊔·) c)
-  measurable_sup_const : ∀ c : M, Measurable (·⊔c)
+  measurable_const_sup : ∀ c : M, Measurable ((· ⊔ ·) c)
+  measurable_sup_const : ∀ c : M, Measurable (· ⊔ c)
 
 /-- We say that a type `has_measurable_sup₂` if `uncurry (⊔)` is a measurable functions.
 For a typeclass assuming measurability of `((⊔) c)` and `(⊔ c)` see `has_measurable_sup`. -/
 class HasMeasurableSup₂ (M : Type _) [MeasurableSpace M] [HasSup M] : Prop where
-  measurable_sup : Measurable fun p : M × M => p.1⊔p.2
+  measurable_sup : Measurable fun p : M × M => p.1 ⊔ p.2
 
 export HasMeasurableSup₂ (measurable_sup)
 
@@ -48,13 +48,13 @@ export HasMeasurableSup (measurable_const_sup measurable_sup_const)
 /-- We say that a type `has_measurable_inf` if `((⊓) c)` and `(⊓ c)` are measurable functions.
 For a typeclass assuming measurability of `uncurry (⊓)` see `has_measurable_inf₂`. -/
 class HasMeasurableInf (M : Type _) [MeasurableSpace M] [HasInf M] : Prop where
-  measurable_const_inf : ∀ c : M, Measurable ((·⊓·) c)
-  measurable_inf_const : ∀ c : M, Measurable (·⊓c)
+  measurable_const_inf : ∀ c : M, Measurable ((· ⊓ ·) c)
+  measurable_inf_const : ∀ c : M, Measurable (· ⊓ c)
 
 /-- We say that a type `has_measurable_inf₂` if `uncurry (⊔)` is a measurable functions.
 For a typeclass assuming measurability of `((⊔) c)` and `(⊔ c)` see `has_measurable_inf`. -/
 class HasMeasurableInf₂ (M : Type _) [MeasurableSpace M] [HasInf M] : Prop where
-  measurable_inf : Measurable fun p : M × M => p.1⊓p.2
+  measurable_inf : Measurable fun p : M × M => p.1 ⊓ p.2
 
 export HasMeasurableInf₂ (measurable_inf)
 
@@ -91,19 +91,19 @@ section MeasurableSup
 variable [HasMeasurableSup M]
 
 @[measurability]
-theorem Measurable.const_sup (hf : Measurable f) (c : M) : Measurable fun x => c⊔f x :=
+theorem Measurable.const_sup (hf : Measurable f) (c : M) : Measurable fun x => c ⊔ f x :=
   (measurable_const_sup c).comp hf
 
 @[measurability]
-theorem AeMeasurable.const_sup (hf : AeMeasurable f μ) (c : M) : AeMeasurable (fun x => c⊔f x) μ :=
+theorem AeMeasurable.const_sup (hf : AeMeasurable f μ) (c : M) : AeMeasurable (fun x => c ⊔ f x) μ :=
   (HasMeasurableSup.measurable_const_sup c).comp_ae_measurable hf
 
 @[measurability]
-theorem Measurable.sup_const (hf : Measurable f) (c : M) : Measurable fun x => f x⊔c :=
+theorem Measurable.sup_const (hf : Measurable f) (c : M) : Measurable fun x => f x ⊔ c :=
   (measurable_sup_const c).comp hf
 
 @[measurability]
-theorem AeMeasurable.sup_const (hf : AeMeasurable f μ) (c : M) : AeMeasurable (fun x => f x⊔c) μ :=
+theorem AeMeasurable.sup_const (hf : AeMeasurable f μ) (c : M) : AeMeasurable (fun x => f x ⊔ c) μ :=
   (measurable_sup_const c).comp_ae_measurable hf
 
 end MeasurableSup
@@ -113,19 +113,19 @@ section MeasurableSup₂
 variable [HasMeasurableSup₂ M]
 
 @[measurability]
-theorem Measurable.sup' (hf : Measurable f) (hg : Measurable g) : Measurable (f⊔g) :=
+theorem Measurable.sup' (hf : Measurable f) (hg : Measurable g) : Measurable (f ⊔ g) :=
   measurable_sup.comp (hf.prod_mk hg)
 
 @[measurability]
-theorem Measurable.sup (hf : Measurable f) (hg : Measurable g) : Measurable fun a => f a⊔g a :=
+theorem Measurable.sup (hf : Measurable f) (hg : Measurable g) : Measurable fun a => f a ⊔ g a :=
   measurable_sup.comp (hf.prod_mk hg)
 
 @[measurability]
-theorem AeMeasurable.sup' (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) : AeMeasurable (f⊔g) μ :=
+theorem AeMeasurable.sup' (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) : AeMeasurable (f ⊔ g) μ :=
   measurable_sup.comp_ae_measurable (hf.prod_mk hg)
 
 @[measurability]
-theorem AeMeasurable.sup (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) : AeMeasurable (fun a => f a⊔g a) μ :=
+theorem AeMeasurable.sup (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) : AeMeasurable (fun a => f a ⊔ g a) μ :=
   measurable_sup.comp_ae_measurable (hf.prod_mk hg)
 
 omit m
@@ -148,19 +148,19 @@ section MeasurableInf
 variable [HasMeasurableInf M]
 
 @[measurability]
-theorem Measurable.const_inf (hf : Measurable f) (c : M) : Measurable fun x => c⊓f x :=
+theorem Measurable.const_inf (hf : Measurable f) (c : M) : Measurable fun x => c ⊓ f x :=
   (measurable_const_inf c).comp hf
 
 @[measurability]
-theorem AeMeasurable.const_inf (hf : AeMeasurable f μ) (c : M) : AeMeasurable (fun x => c⊓f x) μ :=
+theorem AeMeasurable.const_inf (hf : AeMeasurable f μ) (c : M) : AeMeasurable (fun x => c ⊓ f x) μ :=
   (HasMeasurableInf.measurable_const_inf c).comp_ae_measurable hf
 
 @[measurability]
-theorem Measurable.inf_const (hf : Measurable f) (c : M) : Measurable fun x => f x⊓c :=
+theorem Measurable.inf_const (hf : Measurable f) (c : M) : Measurable fun x => f x ⊓ c :=
   (measurable_inf_const c).comp hf
 
 @[measurability]
-theorem AeMeasurable.inf_const (hf : AeMeasurable f μ) (c : M) : AeMeasurable (fun x => f x⊓c) μ :=
+theorem AeMeasurable.inf_const (hf : AeMeasurable f μ) (c : M) : AeMeasurable (fun x => f x ⊓ c) μ :=
   (measurable_inf_const c).comp_ae_measurable hf
 
 end MeasurableInf
@@ -170,19 +170,19 @@ section MeasurableInf₂
 variable [HasMeasurableInf₂ M]
 
 @[measurability]
-theorem Measurable.inf' (hf : Measurable f) (hg : Measurable g) : Measurable (f⊓g) :=
+theorem Measurable.inf' (hf : Measurable f) (hg : Measurable g) : Measurable (f ⊓ g) :=
   measurable_inf.comp (hf.prod_mk hg)
 
 @[measurability]
-theorem Measurable.inf (hf : Measurable f) (hg : Measurable g) : Measurable fun a => f a⊓g a :=
+theorem Measurable.inf (hf : Measurable f) (hg : Measurable g) : Measurable fun a => f a ⊓ g a :=
   measurable_inf.comp (hf.prod_mk hg)
 
 @[measurability]
-theorem AeMeasurable.inf' (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) : AeMeasurable (f⊓g) μ :=
+theorem AeMeasurable.inf' (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) : AeMeasurable (f ⊓ g) μ :=
   measurable_inf.comp_ae_measurable (hf.prod_mk hg)
 
 @[measurability]
-theorem AeMeasurable.inf (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) : AeMeasurable (fun a => f a⊓g a) μ :=
+theorem AeMeasurable.inf (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) : AeMeasurable (fun a => f a ⊓ g a) μ :=
   measurable_inf.comp_ae_measurable (hf.prod_mk hg)
 
 omit m

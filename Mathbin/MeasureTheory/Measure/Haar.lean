@@ -256,7 +256,7 @@ theorem index_union_eq (K₁ K₂ : Compacts G) {V : Set G} (hV : (Interior V).N
   rintro g₁ h1g₁ ⟨g₂, h1g₂, h2g₂⟩ ⟨g₃, h1g₃, h2g₃⟩
   simp only [mem_preimage] at h1g₃ h1g₂
   apply @h g₁⁻¹
-  constructor <;> simp only [Set.mem_inv, Set.mem_mul, exists_exists_and_eq_and, exists_and_distrib_left]
+  constructor <;> simp only [Set.mem_inv, Set.mem_mul, exists_exists_and_eq_and, exists_and_distrib_leftₓ]
   · refine' ⟨_, h2g₂, (g₁ * g₂)⁻¹, _, _⟩
     simp only [inv_invₓ, h1g₂]
     simp only [mul_inv_rev, mul_inv_cancel_left]
@@ -278,7 +278,7 @@ theorem mul_left_index_le {K : Set G} (hK : IsCompact K) {V : Set G} (hV : (Inte
     refine' subset.trans (image_subset _ h1s) _
     rintro _ ⟨g₁, ⟨_, ⟨g₂, rfl⟩, ⟨_, ⟨hg₂, rfl⟩, hg₁⟩⟩, rfl⟩
     simp only [mem_preimage] at hg₁
-    simp only [exists_prop, mem_Union, Finset.mem_map, Equivₓ.coe_mul_right, exists_exists_and_eq_and, mem_preimage,
+    simp only [exists_propₓ, mem_Union, Finset.mem_map, Equivₓ.coe_mul_right, exists_exists_and_eq_and, mem_preimage,
       Equivₓ.to_embedding_apply]
     refine' ⟨_, hg₂, _⟩
     simp only [mul_assoc, hg₁, inv_mul_cancel_leftₓ]
@@ -334,7 +334,7 @@ theorem prehaar_self {K₀ : PositiveCompacts G} {U : Set G} (hU : (Interior U).
 
 @[to_additive]
 theorem prehaar_sup_le {K₀ : PositiveCompacts G} {U : Set G} (K₁ K₂ : Compacts G) (hU : (Interior U).Nonempty) :
-    prehaar (K₀ : Set G) U (K₁⊔K₂) ≤ prehaar (K₀ : Set G) U K₁ + prehaar (K₀ : Set G) U K₂ := by
+    prehaar (K₀ : Set G) U (K₁ ⊔ K₂) ≤ prehaar (K₀ : Set G) U K₁ + prehaar (K₀ : Set G) U K₂ := by
   simp only [prehaar]
   rw [div_add_div_same, div_le_div_right]
   exact_mod_cast index_union_le K₁ K₂ hU
@@ -343,7 +343,7 @@ theorem prehaar_sup_le {K₀ : PositiveCompacts G} {U : Set G} (K₁ K₂ : Comp
 @[to_additive]
 theorem prehaar_sup_eq {K₀ : PositiveCompacts G} {U : Set G} {K₁ K₂ : Compacts G} (hU : (Interior U).Nonempty)
     (h : Disjoint (K₁.1 * U⁻¹) (K₂.1 * U⁻¹)) :
-    prehaar (K₀ : Set G) U (K₁⊔K₂) = prehaar (K₀ : Set G) U K₁ + prehaar (K₀ : Set G) U K₂ := by
+    prehaar (K₀ : Set G) U (K₁ ⊔ K₂) = prehaar (K₀ : Set G) U K₁ + prehaar (K₀ : Set G) U K₂ := by
   simp only [prehaar]
   rw [div_add_div_same]
   congr
@@ -483,11 +483,12 @@ theorem chaar_mono {K₀ : PositiveCompacts G} {K₁ K₂ : Compacts G} (h : (K�
     
 
 @[to_additive add_chaar_sup_le]
-theorem chaar_sup_le {K₀ : PositiveCompacts G} (K₁ K₂ : Compacts G) : chaar K₀ (K₁⊔K₂) ≤ chaar K₀ K₁ + chaar K₀ K₂ := by
-  let eval : (compacts G → ℝ) → ℝ := fun f => f K₁ + f K₂ - f (K₁⊔K₂)
+theorem chaar_sup_le {K₀ : PositiveCompacts G} (K₁ K₂ : Compacts G) : chaar K₀ (K₁ ⊔ K₂) ≤ chaar K₀ K₁ + chaar K₀ K₂ :=
+  by
+  let eval : (compacts G → ℝ) → ℝ := fun f => f K₁ + f K₂ - f (K₁ ⊔ K₂)
   have : Continuous eval :=
     ((@continuous_add ℝ _ _ _).comp ((continuous_apply K₁).prod_mk (continuous_apply K₂))).sub
-      (continuous_apply (K₁⊔K₂))
+      (continuous_apply (K₁ ⊔ K₂))
   rw [← sub_nonneg]
   show chaar K₀ ∈ eval ⁻¹' Ici (0 : ℝ)
   apply mem_of_subset_of_mem _ (chaar_mem_cl_prehaar K₀ ⟨Set.Univ, is_open_univ, mem_univ _⟩)
@@ -505,7 +506,7 @@ theorem chaar_sup_le {K₀ : PositiveCompacts G} (K₁ K₂ : Compacts G) : chaa
 
 @[to_additive add_chaar_sup_eq]
 theorem chaar_sup_eq [T2Space G] {K₀ : PositiveCompacts G} {K₁ K₂ : Compacts G} (h : Disjoint K₁.1 K₂.1) :
-    chaar K₀ (K₁⊔K₂) = chaar K₀ K₁ + chaar K₀ K₂ := by
+    chaar K₀ (K₁ ⊔ K₂) = chaar K₀ K₁ + chaar K₀ K₂ := by
   rcases compact_compact_separated K₁.2 K₂.2 h with ⟨U₁, U₂, h1U₁, h1U₂, h2U₁, h2U₂, hU⟩
   rcases compact_open_separated_mul_right K₁.2 h1U₁ h2U₁ with ⟨L₁, h1L₁, h2L₁⟩
   rcases mem_nhds_iff.mp h1L₁ with ⟨V₁, h1V₁, h2V₁, h3V₁⟩
@@ -513,10 +514,10 @@ theorem chaar_sup_eq [T2Space G] {K₀ : PositiveCompacts G} {K₁ K₂ : Compac
   rcases compact_open_separated_mul_right K₂.2 h1U₂ h2U₂ with ⟨L₂, h1L₂, h2L₂⟩
   rcases mem_nhds_iff.mp h1L₂ with ⟨V₂, h1V₂, h2V₂, h3V₂⟩
   replace h2L₂ := subset.trans (mul_subset_mul_left h1V₂) h2L₂
-  let eval : (compacts G → ℝ) → ℝ := fun f => f K₁ + f K₂ - f (K₁⊔K₂)
+  let eval : (compacts G → ℝ) → ℝ := fun f => f K₁ + f K₂ - f (K₁ ⊔ K₂)
   have : Continuous eval :=
     ((@continuous_add ℝ _ _ _).comp ((continuous_apply K₁).prod_mk (continuous_apply K₂))).sub
-      (continuous_apply (K₁⊔K₂))
+      (continuous_apply (K₁ ⊔ K₂))
   rw [eq_comm, ← sub_eq_zero]
   show chaar K₀ ∈ eval ⁻¹' {(0 : ℝ)}
   let V := V₁ ∩ V₂

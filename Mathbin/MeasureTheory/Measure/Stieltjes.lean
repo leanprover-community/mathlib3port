@@ -151,7 +151,7 @@ theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : Icc a b
           simpa using ss) with
       ⟨s, su, hf, hs⟩
     have e : (⋃ i ∈ (↑hf.to_finset : Set ℕ), Ioo (c i) (d i)) = ⋃ i ∈ s, Ioo (c i) (d i) := by
-      simp only [ext_iff, exists_prop, Finset.set_bUnion_coe, mem_Union, forall_const, iff_selfₓ, finite.mem_to_finset]
+      simp only [ext_iff, exists_propₓ, Finset.set_bUnion_coe, mem_Union, forall_const, iff_selfₓ, finite.mem_to_finset]
     rw [Ennreal.tsum_eq_supr_sum]
     refine' le_transₓ _ (le_supr _ hf.to_finset)
     exact
@@ -213,7 +213,7 @@ theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = ofReal (f b - f a) := by
     intro i
     have := Ennreal.lt_add_right ((Ennreal.le_tsum i).trans_lt h).Ne (Ennreal.coe_ne_zero.2 (ε'0 i).ne')
     conv at this => lhs rw [length]
-    simp only [infi_lt_iff, exists_prop] at this
+    simp only [infi_lt_iff, exists_propₓ] at this
     rcases this with ⟨p, q', spq, hq'⟩
     have : ContinuousWithinAt (fun r => of_real (f r - f p)) (Ioi q') q' := by
       apply ennreal.continuous_of_real.continuous_at.comp_continuous_within_at

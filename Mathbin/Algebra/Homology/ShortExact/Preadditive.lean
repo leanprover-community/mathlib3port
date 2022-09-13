@@ -257,7 +257,7 @@ protected theorem mono : Mono f := by
   infer_instance
 
 protected theorem epi : Epi g := by
-  apply epi_of_epi h.section with { instances := false }
+  apply (config := { instances := false }) epi_of_epi h.section
   rw [h.section_π]
   infer_instance
 

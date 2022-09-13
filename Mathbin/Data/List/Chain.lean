@@ -55,7 +55,7 @@ theorem chain_singleton {a b : α} : Chain R a [b] ↔ R a b := by
 
 theorem chain_split {a b : α} {l₁ l₂ : List α} : Chain R a (l₁ ++ b :: l₂) ↔ Chain R a (l₁ ++ [b]) ∧ Chain R b l₂ := by
   induction' l₁ with x l₁ IH generalizing a <;>
-    simp only [*, nil_append, cons_append, chain.nil, chain_cons, and_trueₓ, and_assoc]
+    simp only [*, nil_append, cons_append, chain.nil, chain_cons, and_trueₓ, and_assocₓ]
 
 @[simp]
 theorem chain_append_cons_cons {a b c : α} {l₁ l₂ : List α} :

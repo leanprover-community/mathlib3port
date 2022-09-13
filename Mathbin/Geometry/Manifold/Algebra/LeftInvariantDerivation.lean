@@ -231,7 +231,7 @@ instance :
     HasBracket (LeftInvariantDerivation I G)
       (LeftInvariantDerivation I
         G) where bracket := fun X Y =>
-    ⟨⁅(X : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯),Y⁆, fun g => by
+    ⟨⁅(X : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯), Y⁆, fun g => by
       ext f
       have hX := Derivation.congr_fun (left_invariant' g X) (Y f)
       have hY := Derivation.congr_fun (left_invariant' g Y) (X f)
@@ -244,10 +244,10 @@ instance :
 
 @[simp]
 theorem commutator_coe_derivation :
-    ⇑⁅X,Y⁆ = (⁅(X : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯),Y⁆ : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) :=
+    ⇑⁅X, Y⁆ = (⁅(X : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯), Y⁆ : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) :=
   rfl
 
-theorem commutator_apply : ⁅X,Y⁆ f = X (Y f) - Y (X f) :=
+theorem commutator_apply : ⁅X, Y⁆ f = X (Y f) - Y (X f) :=
   rfl
 
 instance : LieRing (LeftInvariantDerivation I G) where

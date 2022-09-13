@@ -26,16 +26,16 @@ unsafe def distrib_not : tactic Unit := do
             | quote.1 (_ ≠ _) => replace h (pquote.1 (mt Iff.to_eq (%%ₓh)))
             | quote.1 (_ = _) => replace h (pquote.1 (Eq.to_iff (%%ₓh)))
             | quote.1 ¬(_ ∧ _) =>
-              replace h (pquote.1 (Decidable.not_and_distrib'.mp (%%ₓh))) <|>
+              replace h (pquote.1 (Decidable.not_and_distrib'ₓ.mp (%%ₓh))) <|>
                 replace h (pquote.1 (Decidable.not_and_distrib.mp (%%ₓh)))
             | quote.1 ¬(_ ∨ _) => replace h (pquote.1 (not_or_distrib.mp (%%ₓh)))
             | quote.1 ¬_ ≠ _ => replace h (pquote.1 (Decidable.of_not_not (%%ₓh)))
             | quote.1 ¬¬_ => replace h (pquote.1 (Decidable.of_not_not (%%ₓh)))
             | quote.1 ¬(_ → (_ : Prop)) => replace h (pquote.1 (Decidable.not_imp.mp (%%ₓh)))
-            | quote.1 ¬(_ ↔ _) => replace h (pquote.1 (Decidable.not_iff.mp (%%ₓh)))
+            | quote.1 ¬(_ ↔ _) => replace h (pquote.1 (Decidable.not_iffₓ.mp (%%ₓh)))
             | quote.1 (_ ↔ _) =>
-              replace h (pquote.1 (Decidable.iff_iff_and_or_not_and_not.mp (%%ₓh))) <|>
-                replace h (pquote.1 (Decidable.iff_iff_and_or_not_and_not.mp (%%ₓh).symm)) <|> () <$ tactic.cases h
+              replace h (pquote.1 (Decidable.iff_iff_and_or_not_and_notₓ.mp (%%ₓh))) <|>
+                replace h (pquote.1 (Decidable.iff_iff_and_or_not_and_notₓ.mp (%%ₓh).symm)) <|> () <$ tactic.cases h
             | quote.1 (_ → _) => replace h (pquote.1 (Decidable.not_or_of_imp (%%ₓh)))
             | _ => failed
 
@@ -124,26 +124,26 @@ unsafe def symm_eq (r : tauto_state) : expr → expr → tactic expr
             | (quote.1 ((%%ₓa₀) ∧ %%ₓa₁), quote.1 ((%%ₓb₀) ∧ %%ₓb₁)) => do
               let p₀ ← symm_eq a₀ b₀
               let p₁ ← symm_eq a₁ b₁
-              let p' ← to_expr (pquote.1 (congr (congr_argₓ And (%%ₓp₀)) (%%ₓp₁)))
+              let p' ← to_expr (pquote.1 (congr (congr_arg And (%%ₓp₀)) (%%ₓp₁)))
               add_edge r a' b' p'
               return p'
             | (quote.1 ((%%ₓa₀) ∨ %%ₓa₁), quote.1 ((%%ₓb₀) ∨ %%ₓb₁)) => do
               let p₀ ← symm_eq a₀ b₀
               let p₁ ← symm_eq a₁ b₁
-              let p' ← to_expr (pquote.1 (congr (congr_argₓ Or (%%ₓp₀)) (%%ₓp₁)))
+              let p' ← to_expr (pquote.1 (congr (congr_arg Or (%%ₓp₀)) (%%ₓp₁)))
               add_edge r a' b' p'
               return p'
             | (quote.1 ((%%ₓa₀) ↔ %%ₓa₁), quote.1 ((%%ₓb₀) ↔ %%ₓb₁)) =>
               (do
                   let p₀ ← symm_eq a₀ b₀
                   let p₁ ← symm_eq a₁ b₁
-                  let p' ← to_expr (pquote.1 (congr (congr_argₓ Iff (%%ₓp₀)) (%%ₓp₁)))
+                  let p' ← to_expr (pquote.1 (congr (congr_arg Iff (%%ₓp₀)) (%%ₓp₁)))
                   add_edge r a' b' p'
                   return p') <|>
                 do
                 let p₀ ← symm_eq a₀ b₁
                 let p₁ ← symm_eq a₁ b₀
-                let p' ← to_expr (pquote.1 (Eq.trans (congr (congr_argₓ Iff (%%ₓp₀)) (%%ₓp₁)) (Iff.to_eq Iff.comm)))
+                let p' ← to_expr (pquote.1 (Eq.trans (congr (congr_arg Iff (%%ₓp₀)) (%%ₓp₁)) (Iff.to_eq Iff.comm)))
                 add_edge r a' b' p'
                 return p'
             | (quote.1 ((%%ₓa₀) → %%ₓa₁), quote.1 ((%%ₓb₀) → %%ₓb₁)) =>

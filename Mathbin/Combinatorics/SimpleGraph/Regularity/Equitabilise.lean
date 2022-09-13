@@ -45,7 +45,7 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
       ⟨⊥, by
         simp , _, by
         simpa using hs.symm⟩
-    simp only [le_zero_iff, card_eq_zero, mem_bUnion, exists_prop, mem_filter, id.def, and_assoc,
+    simp only [le_zero_iff, card_eq_zero, mem_bUnion, exists_propₓ, mem_filter, id.def, and_assocₓ,
       sdiff_eq_empty_iff_subset, subset_iff]
     exact fun x hx a ha => ⟨{a}, mem_map_of_mem _ (P.le hx ha), singleton_subset_iff.2 ha, mem_singleton_self _⟩
     
@@ -93,7 +93,7 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
       @ih (s \ t) (sdiff_ssubset hts ‹t.nonempty›) (P.avoid t) (if 0 < a then a - 1 else a) (if 0 < a then b else b - 1)
         hcard
     refine' ⟨R.extend ht.ne_empty sdiff_disjoint (sdiff_sup_cancel hts), _, _, _⟩
-    · simp only [extend_parts, mem_insert, forall_eq_or_imp, and_iff_left hR₁, htn, hn]
+    · simp only [extend_parts, mem_insert, forall_eq_or_imp, and_iff_leftₓ hR₁, htn, hn]
       exact ite_eq_or_eq _ _ _
       
     · exact fun x hx => (card_le_of_subset <| sdiff_subset _ _).trans (lt_succ_iff.1 <| h _ hx)
@@ -119,7 +119,7 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
     @ih (s \ t) (sdiff_ssubset (htu.trans <| P.le hu₁) ht) (P.avoid t) (if 0 < a then a - 1 else a)
       (if 0 < a then b else b - 1) hcard
   refine' ⟨R.extend ht.ne_empty sdiff_disjoint (sdiff_sup_cancel <| htu.trans <| P.le hu₁), _, _, _⟩
-  · simp only [mem_insert, forall_eq_or_imp, extend_parts, and_iff_left hR₁, htn, hn]
+  · simp only [mem_insert, forall_eq_or_imp, extend_parts, and_iff_leftₓ hR₁, htn, hn]
     exact ite_eq_or_eq _ _ _
     
   · conv in _ ∈ _ => rw [← insert_erase hu₁]

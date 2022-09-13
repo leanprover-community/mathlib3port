@@ -343,7 +343,7 @@ noncomputable instance (priority := 100) perfectRing (p : ℕ) [Fact p.Prime] [C
 
 /-- Algebraically closed fields are infinite since `Xⁿ⁺¹ - 1` is separable when `#K = n` -/
 instance (priority := 500) {K : Type _} [Field K] [IsAlgClosed K] : Infinite K := by
-  apply Infinite.mk
+  apply Infinite.of_not_fintype
   intro hfin
   set n := Fintype.card K with hn
   set f := (X : K[X]) ^ (n + 1) - 1 with hf

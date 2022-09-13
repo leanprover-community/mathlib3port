@@ -234,7 +234,7 @@ theorem closure_image_mem_nhds_of_uniform_inducing {s : Set (α × α)} {e : α 
     have : e a₂ ∈ { b'' : β | (b', b'') ∈ s' } ∩ e '' { a' | (a, a') ∈ s } :=
       ⟨ha₂s', mem_image_of_mem _ <| ht₁ (a, a₂) this⟩
     ⟨_, this⟩
-  have : ∀ b', (b, b') ∈ t → NeBot (𝓝 b'⊓𝓟 (e '' { a' | (a, a') ∈ s })) := by
+  have : ∀ b', (b, b') ∈ t → NeBot (𝓝 b' ⊓ 𝓟 (e '' { a' | (a, a') ∈ s })) := by
     intro b' hb'
     rw [nhds_eq_uniformity, lift'_inf_principal_eq, lift'_ne_bot_iff]
     exact fun s => this b' s hb'

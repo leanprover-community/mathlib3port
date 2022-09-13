@@ -57,13 +57,13 @@ theorem succ_iterate (a : ℕ) : ∀ n, (succ^[n]) a = a + n
   | 0 => rfl
   | n + 1 => by
     rw [Function.iterate_succ', add_succ]
-    exact congr_argₓ _ n.succ_iterate
+    exact congr_arg _ n.succ_iterate
 
 theorem pred_iterate (a : ℕ) : ∀ n, (pred^[n]) a = a - n
   | 0 => rfl
   | n + 1 => by
     rw [Function.iterate_succ', sub_succ]
-    exact congr_argₓ _ n.pred_iterate
+    exact congr_arg _ n.pred_iterate
 
 instance : IsSuccArchimedean ℕ :=
   ⟨fun a b h =>
@@ -85,7 +85,7 @@ end Nat
 
 @[simp, norm_cast]
 theorem Finₓ.coe_covby_iff {n : ℕ} {a b : Finₓ n} : (a : ℕ) ⋖ b ↔ a ⋖ b :=
-  and_congr_right' ⟨fun h c hc => h hc, fun h c ha hb => @h ⟨c, hb.trans b.Prop⟩ ha hb⟩
+  and_congr_right'ₓ ⟨fun h c hc => h hc, fun h c ha hb => @h ⟨c, hb.trans b.Prop⟩ ha hb⟩
 
 alias Finₓ.coe_covby_iff ↔ _ Covby.coe_fin
 

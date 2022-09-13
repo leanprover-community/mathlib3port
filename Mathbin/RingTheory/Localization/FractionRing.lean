@@ -42,14 +42,14 @@ abbrev IsFractionRing [CommRingₓ K] [Algebra R K] :=
   IsLocalization (nonZeroDivisors R) K
 
 /-- The cast from `int` to `rat` as a `fraction_ring`. -/
-instance Rat.is_fraction_ring : IsFractionRing ℤ ℚ where
+instance Ratₓ.is_fraction_ring : IsFractionRing ℤ ℚ where
   map_units := by
     rintro ⟨x, hx⟩
     rw [mem_non_zero_divisors_iff_ne_zero] at hx
     simpa only [eq_int_cast, is_unit_iff_ne_zero, Int.cast_eq_zero, Ne.def, Subtype.coe_mk] using hx
   surj := by
     rintro ⟨n, d, hd, h⟩
-    refine' ⟨⟨n, ⟨d, _⟩⟩, Rat.mul_denom_eq_num⟩
+    refine' ⟨⟨n, ⟨d, _⟩⟩, Ratₓ.mul_denom_eq_num⟩
     rwa [mem_non_zero_divisors_iff_ne_zero, Int.coe_nat_ne_zero_iff_pos]
   eq_iff_exists := by
     intro x y
@@ -230,7 +230,7 @@ theorem is_fraction_ring_iff_of_base_ring_equiv (h : R ≃+* P) :
   · rintro hx z (hz : z * h.symm x = 0)
     rw [← h.map_eq_zero_iff]
     apply hx
-    simpa only [h.map_zero, h.apply_symm_apply, h.map_mul] using congr_argₓ h hz
+    simpa only [h.map_zero, h.apply_symm_apply, h.map_mul] using congr_arg h hz
     
   · rintro (hx : h.symm x ∈ _) z hz
     rw [← h.symm.map_eq_zero_iff]

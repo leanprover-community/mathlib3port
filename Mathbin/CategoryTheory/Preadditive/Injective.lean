@@ -313,12 +313,12 @@ Q --- f --> R --- g --> S
 -/
 def Exact.desc {J Q R S : C} [Injective J] (h : R ⟶ J) (f : Q ⟶ R) (g : R ⟶ S) (hgf : Exact g.op f.op) (w : f ≫ h = 0) :
     S ⟶ J :=
-  (Exact.lift h.op g.op f.op hgf (congr_argₓ Quiver.Hom.op w)).unop
+  (Exact.lift h.op g.op f.op hgf (congr_arg Quiver.Hom.op w)).unop
 
 @[simp]
 theorem Exact.comp_desc {J Q R S : C} [Injective J] (h : R ⟶ J) (f : Q ⟶ R) (g : R ⟶ S) (hgf : Exact g.op f.op)
     (w : f ≫ h = 0) : g ≫ Exact.desc h f g hgf w = h := by
-  convert congr_argₓ Quiver.Hom.unop (exact.lift_comp h.op g.op f.op hgf (congr_argₓ Quiver.Hom.op w))
+  convert congr_arg Quiver.Hom.unop (exact.lift_comp h.op g.op f.op hgf (congr_arg Quiver.Hom.op w))
 
 end
 

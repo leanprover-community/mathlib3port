@@ -268,7 +268,7 @@ theorem last_step_nonempty : { i | ¬∃ b : β, p.c b ∉ p.UnionUpTo i ∧ p.r
   rcases eq_or_lt_of_leₓ x_le_y with (rfl | H)
   · rfl
     
-  simp only [nonempty_def, not_exists, exists_prop, not_and, not_ltₓ, not_leₓ, mem_set_of_eq, not_forall] at h
+  simp only [nonempty_def, not_exists, exists_propₓ, not_and, not_ltₓ, not_leₓ, mem_set_of_eq, not_forall] at h
   specialize h y
   have A : p.c (p.index y) ∉ p.Union_up_to y := by
     have : p.index y = Classical.epsilon fun b : β => p.c b ∉ p.Union_up_to y ∧ p.R y ≤ p.τ * p.r b := by
@@ -276,7 +276,7 @@ theorem last_step_nonempty : { i | ¬∃ b : β, p.c b ∉ p.UnionUpTo i ∧ p.r
       rfl
     rw [this]
     exact (Classical.epsilon_spec h).1
-  simp only [Union_up_to, not_exists, exists_prop, mem_Union, mem_closed_ball, not_and, not_leₓ, Subtype.exists,
+  simp only [Union_up_to, not_exists, exists_propₓ, mem_Union, mem_closed_ball, not_and, not_leₓ, Subtype.exists,
     Subtype.coe_mk] at A
   specialize A x H
   simp [hxy] at A
@@ -297,7 +297,7 @@ theorem mem_Union_up_to_last_step (x : β) : p.c x ∈ p.UnionUpTo p.lastStep :=
     conv_rhs => rw [← one_mulₓ (p.R p.last_step)]
     exact mul_lt_mul (inv_lt_one p.one_lt_tau) le_rflₓ Rpos zero_le_one
   obtain ⟨y, hy1, hy2⟩ : ∃ y : β, p.c y ∉ p.Union_up_to p.last_step ∧ p.τ⁻¹ * p.R p.last_step < p.r y := by
-    simpa only [exists_prop, mem_range, exists_exists_and_eq_and, Subtype.exists, Subtype.coe_mk] using
+    simpa only [exists_propₓ, mem_range, exists_exists_and_eq_and, Subtype.exists, Subtype.coe_mk] using
       exists_lt_of_lt_cSup _ B
     rw [← image_univ, nonempty_image_iff]
     exact ⟨⟨_, h⟩, mem_univ _⟩
@@ -327,7 +327,7 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ} (hN : IsEmpty
     rw [color]
   rw [color_i]
   have N_mem : N ∈ univ \ A := by
-    simp only [not_exists, true_andₓ, exists_prop, mem_Union, mem_singleton_iff, mem_closed_ball, not_and, mem_univ,
+    simp only [not_exists, true_andₓ, exists_propₓ, mem_Union, mem_singleton_iff, mem_closed_ball, not_and, mem_univ,
       mem_diff, Subtype.exists, Subtype.coe_mk]
     intro j ji hj
     exact (IH j ji (ji.trans hi)).ne'
@@ -352,7 +352,7 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ} (hN : IsEmpty
     have : k ∈ A := by
       simpa only [true_andₓ, mem_univ, not_not, mem_diff] using Nat.not_mem_of_lt_Inf hk
     simp at this
-    simpa only [exists_prop, mem_Union, mem_singleton_iff, mem_closed_ball, Subtype.exists, Subtype.coe_mk]
+    simpa only [exists_propₓ, mem_Union, mem_singleton_iff, mem_closed_ball, Subtype.exists, Subtype.coe_mk]
   choose! g hg using this
   -- Choose for each `k < N` an ordinal `G k < i`  giving a ball of color `k` intersecting
   -- the last ball.
@@ -382,7 +382,7 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ} (hN : IsEmpty
       rfl
     rw [this]
     have : ∃ t, p.c t ∉ p.Union_up_to (G n) ∧ p.R (G n) ≤ p.τ * p.r t := by
-      simpa only [not_exists, exists_prop, not_and, not_ltₓ, not_leₓ, mem_set_of_eq, not_forall] using
+      simpa only [not_exists, exists_propₓ, not_and, not_ltₓ, not_leₓ, mem_set_of_eq, not_forall] using
         not_mem_of_lt_cInf (G_lt_last n hn) (OrderBot.bdd_below _)
     exact Classical.epsilon_spec this
   -- the balls with indices `G k` satisfy the characteristic property of satellite configurations.
@@ -397,7 +397,7 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ} (hN : IsEmpty
     have hb : (b : ℕ) ≤ N := Nat.lt_succ_iffₓ.1 b.2
     constructor
     · have := (fGn b hb).1
-      simp only [Union_up_to, not_exists, exists_prop, mem_Union, mem_closed_ball, not_and, not_leₓ, Subtype.exists,
+      simp only [Union_up_to, not_exists, exists_propₓ, mem_Union, mem_closed_ball, not_and, not_leₓ, Subtype.exists,
         Subtype.coe_mk] at this
       simpa only [dist_comm, mem_ball, not_ltₓ] using this (G a) G_lt
       
@@ -408,7 +408,7 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ} (hN : IsEmpty
       let b' : { t // p.c t ∉ p.Union_up_to (G a) } := ⟨p.index (G b), B⟩
       apply @le_csupr _ _ _ (fun t : { t // p.c t ∉ p.Union_up_to (G a) } => p.r t) _ b'
       refine' ⟨p.r_bound, fun t ht => _⟩
-      simp only [exists_prop, mem_range, Subtype.exists, Subtype.coe_mk] at ht
+      simp only [exists_propₓ, mem_range, Subtype.exists, Subtype.coe_mk] at ht
       rcases ht with ⟨u, hu⟩
       rw [← hu.2]
       exact p.r_le _
@@ -480,9 +480,9 @@ theorem exist_disjoint_covering_families {N : ℕ} {τ : ℝ} (hτ : 1 < τ) (hN
   · -- show that balls of the same color are disjoint
     intro x hx y hy x_ne_y
     obtain ⟨jx, jx_lt, jxi, rfl⟩ : ∃ jx : Ordinal, jx < p.last_step ∧ p.color jx = i ∧ x = p.index jx := by
-      simpa only [exists_prop, mem_Union, mem_singleton_iff] using hx
+      simpa only [exists_propₓ, mem_Union, mem_singleton_iff] using hx
     obtain ⟨jy, jy_lt, jyi, rfl⟩ : ∃ jy : Ordinal, jy < p.last_step ∧ p.color jy = i ∧ y = p.index jy := by
-      simpa only [exists_prop, mem_Union, mem_singleton_iff] using hy
+      simpa only [exists_propₓ, mem_Union, mem_singleton_iff] using hy
     wlog (discharger := tactic.skip) jxy : jx ≤ jy := le_totalₓ jx jy using jx jy, jy jx
     swap
     · intro h1 h2 h3 h4 h5 h6 h7
@@ -506,11 +506,11 @@ theorem exist_disjoint_covering_families {N : ℕ} {τ : ℝ} (hτ : 1 < τ) (hN
       rw [color_j]
       apply Inf_mem
       refine' ⟨N, _⟩
-      simp only [not_exists, true_andₓ, exists_prop, mem_Union, mem_singleton_iff, not_and, mem_univ, mem_diff,
+      simp only [not_exists, true_andₓ, exists_propₓ, mem_Union, mem_singleton_iff, not_and, mem_univ, mem_diff,
         Subtype.exists, Subtype.coe_mk]
       intro k hk H
       exact (p.color_lt (hk.trans jy_lt) hN).ne'
-    simp only [not_exists, true_andₓ, exists_prop, mem_Union, mem_singleton_iff, not_and, mem_univ, mem_diff,
+    simp only [not_exists, true_andₓ, exists_propₓ, mem_Union, mem_singleton_iff, not_and, mem_univ, mem_diff,
       Subtype.exists, Subtype.coe_mk] at this
     specialize this jx jxy
     contrapose! this
@@ -519,10 +519,10 @@ theorem exist_disjoint_covering_families {N : ℕ} {τ : ℝ} (hτ : 1 < τ) (hN
   · -- show that the balls of color at most `N` cover every center.
     refine' range_subset_iff.2 fun b => _
     obtain ⟨a, ha⟩ : ∃ a : Ordinal, a < p.last_step ∧ dist (p.c b) (p.c (p.index a)) < p.r (p.index a) := by
-      simpa only [Union_up_to, exists_prop, mem_Union, mem_ball, Subtype.exists, Subtype.coe_mk] using
+      simpa only [Union_up_to, exists_propₓ, mem_Union, mem_ball, Subtype.exists, Subtype.coe_mk] using
         p.mem_Union_up_to_last_step b
-    simp only [exists_prop, mem_Union, mem_ball, mem_singleton_iff, bUnion_and', exists_eq_left, Union_exists,
-      exists_and_distrib_left]
+    simp only [exists_propₓ, mem_Union, mem_ball, mem_singleton_iff, bUnion_and', exists_eq_left, Union_exists,
+      exists_and_distrib_leftₓ]
     exact ⟨⟨p.color a, p.color_lt ha.1 hN⟩, a, rfl, ha⟩
     
 
@@ -588,7 +588,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measureₓ α) [IsFinite
         simpa only [Subtype.range_coe_subtype, set_of_mem_eq]
       simpa only [mem_Union] using hu' this
     refine' mem_Union.2 ⟨i, ⟨hx, _⟩⟩
-    simp only [v, exists_prop, mem_Union, SetCoe.exists, exists_and_distrib_right, Subtype.coe_mk]
+    simp only [v, exists_propₓ, mem_Union, SetCoe.exists, exists_and_distrib_rightₓ, Subtype.coe_mk]
     exact
       ⟨y,
         ⟨y.2, by
@@ -1033,7 +1033,7 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measureₓ α) [SigmaF
   have r_t0 : ∀ x ∈ t0, r x = r0 x := by
     intro x hx
     have : ¬x ∈ s' := by
-      simp only [not_exists, exists_prop, mem_Union, mem_closed_ball, not_and, not_ltₓ, not_leₓ, mem_diff, not_forall]
+      simp only [not_exists, exists_propₓ, mem_Union, mem_closed_ball, not_and, not_ltₓ, not_leₓ, mem_diff, not_forall]
       intro h'x
       refine' ⟨x, hx, _⟩
       rw [dist_self]
@@ -1065,7 +1065,7 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measureₓ α) [SigmaF
     by_cases' h'x : x ∈ s'
     · obtain ⟨i, y, ySi, xy⟩ : ∃ (i : Finₓ N)(y : ↥s')(ySi : y ∈ S i), x ∈ ball (y : α) (r1 y) := by
         have A : x ∈ range q.c := by
-          simpa only [not_exists, exists_prop, mem_Union, mem_closed_ball, not_and, not_leₓ, mem_set_of_eq,
+          simpa only [not_exists, exists_propₓ, mem_Union, mem_closed_ball, not_and, not_leₓ, mem_set_of_eq,
             Subtype.range_coe_subtype, mem_diff] using h'x
         simpa only [mem_Union, mem_image] using hS A
       refine' mem_Union₂.2 ⟨y, Or.inr _, _⟩

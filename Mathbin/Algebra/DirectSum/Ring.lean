@@ -312,8 +312,8 @@ variable [∀ i, AddCommGroupₓ (A i)] [AddMonoidₓ ι] [Gring A]
 instance ring : Ringₓ (⨁ i, A i) :=
   { DirectSum.semiring _, DirectSum.addCommGroup _ with one := 1, mul := (· * ·), zero := 0, add := (· + ·),
     neg := Neg.neg, intCast := fun z => of _ _ (Gring.intCast z),
-    int_cast_of_nat := fun z => congr_argₓ _ <| Gring.int_cast_of_nat _,
-    int_cast_neg_succ_of_nat := fun z => (congr_argₓ _ <| Gring.int_cast_neg_succ_of_nat _).trans (map_neg _ _) }
+    int_cast_of_nat := fun z => congr_arg _ <| Gring.int_cast_of_nat _,
+    int_cast_neg_succ_of_nat := fun z => (congr_arg _ <| Gring.int_cast_neg_succ_of_nat _).trans (map_neg _ _) }
 
 end Ringₓ
 

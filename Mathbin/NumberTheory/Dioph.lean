@@ -368,7 +368,7 @@ theorem DiophList.all₂ (l : List (Set <| α → ℕ)) (d : l.All₂ Dioph) :
     ⟨Sum β γ, p.map (inl ⊗ inr ∘ inl)::pl.map fun q => q.map (inl ⊗ inr ∘ inr), fun v => by
       simp <;>
         exact
-          Iff.trans (and_congr (pe v) (ple v))
+          Iff.trans (and_congrₓ (pe v) (ple v))
             ⟨fun ⟨⟨m, hm⟩, ⟨n, hn⟩⟩ =>
               ⟨m ⊗ n, by
                 rw
@@ -407,7 +407,7 @@ theorem union : ∀ (d : Dioph S) (d' : Dioph S'), Dioph (S ∪ S')
   | ⟨β, p, pe⟩, ⟨γ, q, qe⟩ =>
     ⟨Sum β γ, p.map (inl ⊗ inr ∘ inl) * q.map (inl ⊗ inr ∘ inr), fun v => by
       refine'
-        Iff.trans (or_congr ((pe v).trans _) ((qe v).trans _))
+        Iff.trans (or_congrₓ ((pe v).trans _) ((qe v).trans _))
           (exists_or_distrib.symm.trans
             (exists_congr fun t =>
               (@mul_eq_zero _ _ _ (p ((v ⊗ t) ∘ (inl ⊗ inr ∘ inl))) (q ((v ⊗ t) ∘ (inl ⊗ inr ∘ inr)))).symm))
@@ -484,10 +484,10 @@ theorem ex1_dioph {S : Set (Option α → ℕ)} : Dioph S → Dioph { v | ∃ x,
                   ht⟩⟩⟩⟩
 
 theorem dom_dioph {f : (α → ℕ) →. ℕ} (d : DiophPfun f) : Dioph f.Dom :=
-  cast (congr_argₓ Dioph <| Set.ext fun v => (Pfun.dom_iff_graph _ _).symm) (ex1_dioph d)
+  cast (congr_arg Dioph <| Set.ext fun v => (Pfun.dom_iff_graph _ _).symm) (ex1_dioph d)
 
 theorem dioph_fn_iff_pfun (f : (α → ℕ) → ℕ) : DiophFn f = @DiophPfun α f := by
-  refine' congr_argₓ Dioph (Set.ext fun v => _) <;> exact pfun.lift_graph.symm
+  refine' congr_arg Dioph (Set.ext fun v => _) <;> exact pfun.lift_graph.symm
 
 theorem abs_poly_dioph (p : Poly α) : DiophFn fun v => (p v).natAbs :=
   (of_no_dummies _ ((p.map some - Poly.proj none) * (p.map some + Poly.proj none))) fun v => by
@@ -748,7 +748,7 @@ theorem div_dioph : DiophFn fun v => f v / g v :=
                   fun ypos =>
                   Iff.trans ⟨fun o => o.resolve_left fun ⟨h1, _⟩ => ne_of_gtₓ ypos h1, Or.inr⟩
                     (le_antisymm_iff.trans <|
-                        and_congr (Nat.le_div_iff_mul_leₓ ypos) <|
+                        and_congrₓ (Nat.le_div_iff_mul_leₓ ypos) <|
                           Iff.trans ⟨lt_succ_of_le, le_of_lt_succ⟩ (div_lt_iff_lt_mul ypos)).symm
 
 -- mathport name: div_dioph
@@ -836,10 +836,10 @@ theorem pow_dioph : DiophFn fun v => f v ^ g v :=
       (Dioph.ext this) fun v =>
         Iff.symm <|
           eq_pow_of_pell.trans <|
-            or_congr Iff.rfl <|
-              and_congr Iff.rfl <|
-                or_congr Iff.rfl <|
-                  and_congr Iff.rfl <|
+            or_congrₓ Iff.rfl <|
+              and_congrₓ Iff.rfl <|
+                or_congrₓ Iff.rfl <|
+                  and_congrₓ Iff.rfl <|
                     ⟨fun ⟨w, a, t, z, a1, h⟩ => ⟨w, a, t, z, _, _, ⟨a1, rfl, rfl⟩, h⟩,
                       fun ⟨w, a, t, z, _, _, ⟨a1, rfl, rfl⟩, h⟩ => ⟨w, a, t, z, a1, h⟩⟩
 

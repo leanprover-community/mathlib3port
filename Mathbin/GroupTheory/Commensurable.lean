@@ -64,7 +64,7 @@ def quotConjEquiv (H K : Subgroup G) (g : ConjAct G) : K ⧸ H.subgroupOf K ≃ 
       Subgroup.equiv_smul_apply_coe, Subgroup.smul_mem_pointwise_smul_iff]
 
 theorem commensurable_conj {H K : Subgroup G} (g : ConjAct G) : Commensurable H K ↔ Commensurable (g • H) (g • K) :=
-  and_congr (not_iff_not.mpr (Eq.congr_left (Cardinal.to_nat_congr (quotConjEquiv H K g))))
+  and_congrₓ (not_iff_not.mpr (Eq.congr_left (Cardinal.to_nat_congr (quotConjEquiv H K g))))
     (not_iff_not.mpr (Eq.congr_left (Cardinal.to_nat_congr (quotConjEquiv K H g))))
 
 theorem commensurable_inv (H : Subgroup G) (g : ConjAct G) : Commensurable (g • H) H ↔ Commensurable H (g⁻¹ • H) := by

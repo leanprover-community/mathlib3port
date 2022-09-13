@@ -45,14 +45,14 @@ instance {X Y : C} : Subsingleton (X ⟶ Y) :=
   ⟨fun r s => by
     classical
     by_contra r_ne_s
-    have z : (2 : Cardinal) ≤ # (X ⟶ Y) := by
+    have z : (2 : Cardinal) ≤ (#X ⟶ Y) := by
       rw [Cardinal.two_le_iff]
       exact ⟨_, _, r_ne_s⟩
     let md := ΣZ W : C, Z ⟶ W
-    let α := # md
+    let α := #md
     apply not_le_of_ltₓ (Cardinal.cantor α)
     let yp : C := ∏ fun f : md => Y
-    trans # (X ⟶ yp)
+    trans #X ⟶ yp
     · apply le_transₓ (Cardinal.power_le_power_right z)
       rw [Cardinal.power_def]
       apply le_of_eqₓ

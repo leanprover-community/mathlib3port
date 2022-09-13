@@ -194,7 +194,7 @@ theorem is_O_iff_eventually : f =O[l] g' ↔ ∀ᶠ c in at_top, ∀ᶠ x in l, 
 theorem IsO.exists_mem_basis {ι} {p : ι → Prop} {s : ι → Set α} (h : f =O[l] g') (hb : l.HasBasis p s) :
     ∃ (c : ℝ)(hc : 0 < c)(i : ι)(hi : p i), ∀ x ∈ s i, ∥f x∥ ≤ c * ∥g' x∥ :=
   (flip Exists₂.imp h.exists_pos) fun c hc h => by
-    simpa only [is_O_with_iff, hb.eventually_iff, exists_prop] using h
+    simpa only [is_O_with_iff, hb.eventually_iff, exists_propₓ] using h
 
 theorem is_O_with_inv (hc : 0 < c) : IsOWith c⁻¹ l f g ↔ ∀ᶠ x in l, c * ∥f x∥ ≤ ∥g x∥ := by
   simp only [is_O_with, ← div_eq_inv_mul, le_div_iff' hc]
@@ -473,26 +473,26 @@ end Bot
 theorem is_O_with_pure {x} : IsOWith c (pure x) f g ↔ ∥f x∥ ≤ c * ∥g x∥ :=
   is_O_with_iff
 
-theorem IsOWith.sup (h : IsOWith c l f g) (h' : IsOWith c l' f g) : IsOWith c (l⊔l') f g :=
+theorem IsOWith.sup (h : IsOWith c l f g) (h' : IsOWith c l' f g) : IsOWith c (l ⊔ l') f g :=
   is_O_with.of_bound <| mem_sup.2 ⟨h.bound, h'.bound⟩
 
-theorem IsOWith.sup' (h : IsOWith c l f g') (h' : IsOWith c' l' f g') : IsOWith (max c c') (l⊔l') f g' :=
+theorem IsOWith.sup' (h : IsOWith c l f g') (h' : IsOWith c' l' f g') : IsOWith (max c c') (l ⊔ l') f g' :=
   is_O_with.of_bound <| mem_sup.2 ⟨(h.weaken <| le_max_leftₓ c c').bound, (h'.weaken <| le_max_rightₓ c c').bound⟩
 
-theorem IsO.sup (h : f =O[l] g') (h' : f =O[l'] g') : f =O[l⊔l'] g' :=
+theorem IsO.sup (h : f =O[l] g') (h' : f =O[l'] g') : f =O[l ⊔ l'] g' :=
   let ⟨c, hc⟩ := h.IsOWith
   let ⟨c', hc'⟩ := h'.IsOWith
   (hc.sup' hc').IsO
 
-theorem IsOₓ.sup (h : f =o[l] g) (h' : f =o[l'] g) : f =o[l⊔l'] g :=
+theorem IsOₓ.sup (h : f =o[l] g) (h' : f =o[l'] g) : f =o[l ⊔ l'] g :=
   is_o.of_is_O_with fun c cpos => (h.forall_is_O_with cpos).sup (h'.forall_is_O_with cpos)
 
 @[simp]
-theorem is_O_sup : f =O[l⊔l'] g' ↔ f =O[l] g' ∧ f =O[l'] g' :=
+theorem is_O_sup : f =O[l ⊔ l'] g' ↔ f =O[l] g' ∧ f =O[l'] g' :=
   ⟨fun h => ⟨h.mono le_sup_left, h.mono le_sup_right⟩, fun h => h.1.sup h.2⟩
 
 @[simp]
-theorem is_o_sup : f =o[l⊔l'] g ↔ f =o[l] g ∧ f =o[l'] g :=
+theorem is_o_sup : f =o[l ⊔ l'] g ↔ f =o[l] g ∧ f =o[l'] g :=
   ⟨fun h => ⟨h.mono le_sup_left, h.mono le_sup_right⟩, fun h => h.1.sup h.2⟩
 
 /-! ### Simplification : norm, abs -/
@@ -894,7 +894,7 @@ variable {g g' l}
 
 @[simp]
 theorem is_O_with_zero_right_iff : (IsOWith c l f'' fun x => (0 : F')) ↔ f'' =ᶠ[l] 0 := by
-  simp only [is_O_with, exists_prop, true_andₓ, norm_zero, mul_zero, norm_le_zero_iff, eventually_eq, Pi.zero_apply]
+  simp only [is_O_with, exists_propₓ, true_andₓ, norm_zero, mul_zero, norm_le_zero_iff, eventually_eq, Pi.zero_apply]
 
 @[simp]
 theorem is_O_zero_right_iff : (f'' =O[l] fun x => (0 : F')) ↔ f'' =ᶠ[l] 0 :=
@@ -1681,8 +1681,8 @@ theorem is_O_with_congr (e : LocalHomeomorph α β) {b : β} (hb : b ∈ e.Targe
       exact (e.right_inv hb).symm,
     fun h =>
     (h.comp_tendsto (e.continuous_at_symm hb)).congr' rfl
-      ((e.eventually_right_inverse hb).mono fun x hx => congr_argₓ f hx)
-      ((e.eventually_right_inverse hb).mono fun x hx => congr_argₓ g hx)⟩
+      ((e.eventually_right_inverse hb).mono fun x hx => congr_arg f hx)
+      ((e.eventually_right_inverse hb).mono fun x hx => congr_arg g hx)⟩
 
 /-- Transfer `is_O` over a `local_homeomorph`. -/
 theorem is_O_congr (e : LocalHomeomorph α β) {b : β} (hb : b ∈ e.Target) {f : β → E} {g : β → F} :

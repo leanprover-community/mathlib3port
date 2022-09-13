@@ -131,7 +131,7 @@ theorem lf_iff_lt {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : x ⧏ y ↔ 
 /-- Definition of `x ≤ y` on numeric pre-games, in terms of `<` -/
 theorem le_iff_forall_lt {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
     x ≤ y ↔ (∀ i, x.moveLeft i < y) ∧ ∀ j, x < y.moveRight j := by
-  refine' le_iff_forall_lf.trans (and_congr _ _) <;>
+  refine' le_iff_forall_lf.trans (and_congrₓ _ _) <;>
     refine' forall_congrₓ fun i => lf_iff_lt _ _ <;> apply_rules [numeric.move_left, numeric.move_right]
 
 /-- Definition of `x < y` on numeric pre-games, in terms of `≤` -/
@@ -151,9 +151,9 @@ theorem lt_def {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
         ∃ j, (∀ i, (x.moveRight j).moveLeft i < y) ∧ ∀ j', x.moveRight j < y.moveRight j' :=
   by
   rw [← lf_iff_lt ox oy, lf_def]
-  refine' or_congr _ _ <;>
+  refine' or_congrₓ _ _ <;>
     refine' exists_congr fun x_1 => _ <;>
-      refine' and_congr _ _ <;>
+      refine' and_congrₓ _ _ <;>
         refine' forall_congrₓ fun i => lf_iff_lt _ _ <;> apply_rules [numeric.move_left, numeric.move_right]
 
 theorem not_fuzzy {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : ¬Fuzzy x y := fun h =>

@@ -119,7 +119,7 @@ instance {S : Type _} [Monoidₓ S] [DistribMulAction S R] [DistribMulAction S�
     [IsCentralScalar S R] :
     IsCentralScalar S
       (FreeLieAlgebra R
-        X) where op_smul_eq_smul := fun t => Quot.ind fun a => congr_argₓ (Quot.mk _) (op_smul_eq_smul t a)
+        X) where op_smul_eq_smul := fun t => Quot.ind fun a => congr_arg (Quot.mk _) (op_smul_eq_smul t a)
 
 instance : Zero (FreeLieAlgebra R X) where zero := Quot.mk _ 0
 
@@ -187,7 +187,7 @@ theorem lift_aux_map_smul (f : X → L) (t : R) (a : lib R X) : liftAux R f (t �
 theorem lift_aux_map_add (f : X → L) (a b : lib R X) : liftAux R f (a + b) = liftAux R f a + liftAux R f b :=
   NonUnitalAlgHom.map_add _ a b
 
-theorem lift_aux_map_mul (f : X → L) (a b : lib R X) : liftAux R f (a * b) = ⁅liftAux R f a,liftAux R f b⁆ :=
+theorem lift_aux_map_mul (f : X → L) (a b : lib R X) : liftAux R f (a * b) = ⁅liftAux R f a, liftAux R f b⁆ :=
   NonUnitalAlgHom.map_mul _ a b
 
 theorem lift_aux_spec (f : X → L) (a b : lib R X) (h : FreeLieAlgebra.Rel R X a b) : liftAux R f a = liftAux R f b := by

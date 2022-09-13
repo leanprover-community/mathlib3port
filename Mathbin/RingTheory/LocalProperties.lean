@@ -180,7 +180,7 @@ theorem _root_.ring_hom.property_is_local.respects_iso (hP : RingHom.PropertyIsL
   introv
   skip
   letI := e.to_ring_hom.to_algebra
-  apply hP.holds_for_localization_away with { instances := false }
+  apply (config := { instances := false }) hP.holds_for_localization_away
   apply IsLocalization.away_of_is_unit_of_bijective _ is_unit_one
   exact e.bijective
 
@@ -260,11 +260,11 @@ theorem localization_is_reduced : LocalizationPreserves fun R hR => IsReduced R 
   skip
   constructor
   rintro x ⟨_ | n, e⟩
-  · simpa using congr_argₓ (· * x) e
+  · simpa using congr_arg (· * x) e
     
   obtain ⟨⟨y, m⟩, hx⟩ := IsLocalization.surj M x
   dsimp' only  at hx
-  let hx' := congr_argₓ (· ^ n.succ) hx
+  let hx' := congr_arg (· ^ n.succ) hx
   simp only [mul_powₓ, e, zero_mul, ← RingHom.map_pow] at hx'
   rw [← (algebraMap R S).map_zero] at hx'
   obtain ⟨m', hm'⟩ := (IsLocalization.eq_iff_exists M S).mp hx'
@@ -369,22 +369,20 @@ then there exists some `m : M` such that `m • x` falls in the
 span of `finset_integer_multiple _ s` over `R`.
 -/
 theorem IsLocalization.smul_mem_finset_integer_multiple_span [Algebra R S] [Algebra R S'] [IsScalarTower R S S']
-    [IsLocalization (M.map (algebraMap R S : R →* S)) S'] (x : S) (s : Finset S')
+    [IsLocalization (M.map (algebraMap R S)) S'] (x : S) (s : Finset S')
     (hx : algebraMap S S' x ∈ Submodule.span R (s : Set S')) :
-    ∃ m : M,
-      m • x ∈ Submodule.span R (IsLocalization.finsetIntegerMultiple (M.map (algebraMap R S : R →* S)) s : Set S) :=
-  by
+    ∃ m : M, m • x ∈ Submodule.span R (IsLocalization.finsetIntegerMultiple (M.map (algebraMap R S)) s : Set S) := by
   let g : S →ₐ[R] S' :=
     AlgHom.mk' (algebraMap S S') fun c x => by
       simp [Algebra.algebra_map_eq_smul_one]
   -- We first obtain the `y' ∈ M` such that `s' = y' • s` is falls in the image of `S` in `S'`.
-  let y := IsLocalization.commonDenomOfFinset (M.map (algebraMap R S : R →* S)) s
+  let y := IsLocalization.commonDenomOfFinset (M.map (algebraMap R S)) s
   have hx₁ : (y : S) • ↑s = g '' _ := (IsLocalization.finset_integer_multiple_image _ s).symm
   obtain ⟨y', hy', e : algebraMap R S y' = y⟩ := y.prop
   have : algebraMap R S y' • (s : Set S') = y' • s := by
     simp_rw [Algebra.algebra_map_eq_smul_one, smul_assoc, one_smul]
   rw [← e, this] at hx₁
-  replace hx₁ := congr_argₓ (Submodule.span R) hx₁
+  replace hx₁ := congr_arg (Submodule.span R) hx₁
   rw [Submodule.span_smul_eq] at hx₁
   replace hx : _ ∈ y' • Submodule.span R (s : Set S') := Set.smul_mem_smul_set hx
   rw [hx₁] at hx
@@ -393,12 +391,11 @@ theorem IsLocalization.smul_mem_finset_integer_multiple_span [Algebra R S] [Alge
   -- That is, there exists some `x' : S` in the span of `s'` in `S` and `x' = y' • x` in `S'`.
   -- Thus `a • (y' • x) = a • x' ∈ span s'` in `S` for some `a ∈ M`.
   obtain ⟨x', hx', hx'' : algebraMap _ _ _ = _⟩ := hx
-  obtain ⟨⟨_, a, ha₁, rfl⟩, ha₂⟩ := (IsLocalization.eq_iff_exists (M.map (algebraMap R S : R →* S)) S').mp hx''
+  obtain ⟨⟨_, a, ha₁, rfl⟩, ha₂⟩ := (IsLocalization.eq_iff_exists (M.map (algebraMap R S)) S').mp hx''
   use (⟨a, ha₁⟩ : M) * (⟨y', hy'⟩ : M)
   convert
-    (Submodule.span R
-          (IsLocalization.finsetIntegerMultiple (Submonoid.map (algebraMap R S : R →* S) M) s : Set S)).smul_mem
-      a hx' using
+    (Submodule.span R (IsLocalization.finsetIntegerMultiple (Submonoid.map (algebraMap R S) M) s : Set S)).smul_mem a
+      hx' using
     1
   convert ha₂.symm
   · rw [mul_comm (y' • x), Subtype.coe_mk, Submonoid.smul_def, Submonoid.coe_mul, ← smul_smul]
@@ -431,7 +428,7 @@ theorem multiple_mem_span_of_mem_localization_span [Algebra R' S] [Algebra R S] 
   simp only [Finset.coe_insert, Finset.image_insert, Finset.coe_image, Subtype.coe_mk, Submodule.mem_span_insert] at hx⊢
   rcases hx with ⟨y, z, hz, rfl⟩
   rcases IsLocalization.surj M y with ⟨⟨y', s'⟩, e⟩
-  replace e : _ * a = _ * a := (congr_argₓ (fun x => algebraMap R' S x * a) e : _)
+  replace e : _ * a = _ * a := (congr_arg (fun x => algebraMap R' S x * a) e : _)
   simp_rw [RingHom.map_mul, ← IsScalarTower.algebra_map_apply, mul_comm (algebraMap R' S y), mul_assoc, ←
     Algebra.smul_def] at e
   rcases hs _ hz with ⟨t, ht⟩
@@ -455,8 +452,7 @@ theorem finite_of_localization_span : RingHom.OfLocalizationSpan @RingHom.Finite
   skip
   letI := f.to_algebra
   letI := fun r : s => (Localization.awayMap f r).toAlgebra
-  have : ∀ r : s, IsLocalization ((Submonoid.powers (r : R)).map (algebraMap R S : R →* S)) (Localization.Away (f r)) :=
-    by
+  have : ∀ r : s, IsLocalization ((Submonoid.powers (r : R)).map (algebraMap R S)) (Localization.Away (f r)) := by
     intro r
     rw [Submonoid.map_powers]
     exact Localization.is_localization
@@ -489,12 +485,9 @@ theorem finite_of_localization_span : RingHom.OfLocalizationSpan @RingHom.Finite
     IsLocalization.smul_mem_finset_integer_multiple_span (Submonoid.powers (r : R)) (Localization.Away (f r)) _ (s₁ r)
       hn₁
   rw [Submonoid.smul_def, ← Algebra.smul_def, smul_smul, Subtype.coe_mk, ← pow_addₓ] at hn₂
+  simp_rw [Submonoid.map_powers] at hn₂
   use n₂ + n₁
-  refine' le_supr (fun x : s => Submodule.span R (sf x : Set S)) r _
-  change _ ∈ Submodule.span R ((IsLocalization.finsetIntegerMultiple _ (s₁ r) : Finset S) : Set S)
-  convert hn₂
-  rw [Submonoid.map_powers]
-  rfl
+  exact le_supr (fun x : s => Submodule.span R (sf x : Set S)) r hn₂
 
 end Finite
 
@@ -569,14 +562,12 @@ then there exists some `m : M` such that `m • x` falls in the
 adjoin of `finset_integer_multiple _ s` over `R`.
 -/
 theorem IsLocalization.lift_mem_adjoin_finset_integer_multiple [Algebra R S] [Algebra R S'] [IsScalarTower R S S']
-    [IsLocalization (M.map (algebraMap R S : R →* S)) S'] (x : S) (s : Finset S')
+    [IsLocalization (M.map (algebraMap R S)) S'] (x : S) (s : Finset S')
     (hx : algebraMap S S' x ∈ Algebra.adjoin R (s : Set S')) :
-    ∃ m : M,
-      m • x ∈ Algebra.adjoin R (IsLocalization.finsetIntegerMultiple (M.map (algebraMap R S : R →* S)) s : Set S) :=
-  by
+    ∃ m : M, m • x ∈ Algebra.adjoin R (IsLocalization.finsetIntegerMultiple (M.map (algebraMap R S)) s : Set S) := by
   obtain ⟨⟨_, a, ha, rfl⟩, e⟩ :=
-    IsLocalization.exists_smul_mem_of_mem_adjoin (M.map (algebraMap R S : R →* S)) x s (Algebra.adjoin R _)
-      Algebra.subset_adjoin _ hx
+    IsLocalization.exists_smul_mem_of_mem_adjoin (M.map (algebraMap R S)) x s (Algebra.adjoin R _) Algebra.subset_adjoin
+      _ hx
   · exact
       ⟨⟨a, ha⟩, by
         simpa [Submonoid.smul_def] using e⟩
@@ -592,8 +583,7 @@ theorem finite_type_of_localization_span : RingHom.OfLocalizationSpan @RingHom.F
   skip
   letI := f.to_algebra
   letI := fun r : s => (Localization.awayMap f r).toAlgebra
-  have : ∀ r : s, IsLocalization ((Submonoid.powers (r : R)).map (algebraMap R S : R →* S)) (Localization.Away (f r)) :=
-    by
+  have : ∀ r : s, IsLocalization ((Submonoid.powers (r : R)).map (algebraMap R S)) (Localization.Away (f r)) := by
     intro r
     rw [Submonoid.map_powers]
     exact Localization.is_localization
@@ -619,12 +609,9 @@ theorem finite_type_of_localization_span : RingHom.OfLocalizationSpan @RingHom.F
   obtain ⟨⟨_, n₂, rfl⟩, hn₂⟩ :=
     IsLocalization.lift_mem_adjoin_finset_integer_multiple (Submonoid.powers (r : R)) _ (s₁ r) hn₁
   rw [Submonoid.smul_def, ← Algebra.smul_def, smul_smul, Subtype.coe_mk, ← pow_addₓ] at hn₂
+  simp_rw [Submonoid.map_powers] at hn₂
   use n₂ + n₁
-  refine' le_supr (fun x : s => Algebra.adjoin R (sf x : Set S)) r _
-  change _ ∈ Algebra.adjoin R ((IsLocalization.finsetIntegerMultiple _ (s₁ r) : Finset S) : Set S)
-  convert hn₂
-  rw [Submonoid.map_powers]
-  rfl
+  exact le_supr (fun x : s => Algebra.adjoin R (sf x : Set S)) r hn₂
 
 end FiniteType
 

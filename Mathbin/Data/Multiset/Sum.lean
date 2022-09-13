@@ -46,7 +46,7 @@ theorem mem_disj_sum : x ∈ s.disjSum t ↔ (∃ a, a ∈ s ∧ inl a = x) ∨ 
 
 @[simp]
 theorem inl_mem_disj_sum : inl a ∈ s.disjSum t ↔ a ∈ s := by
-  rw [mem_disj_sum, or_iff_left]
+  rw [mem_disj_sum, or_iff_leftₓ]
   simp only [exists_eq_right]
   rintro ⟨b, _, hb⟩
   exact inr_ne_inl hb

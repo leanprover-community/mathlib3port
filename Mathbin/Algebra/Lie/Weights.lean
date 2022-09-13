@@ -172,7 +172,7 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
 variable {L M}
 
 theorem lie_mem_pre_weight_space_of_mem_pre_weight_space {χ₁ χ₂ : L → R} {x : L} {m : M} (hx : x ∈ preWeightSpace L χ₁)
-    (hm : m ∈ preWeightSpace M χ₂) : ⁅x,m⁆ ∈ preWeightSpace M (χ₁ + χ₂) := by
+    (hm : m ∈ preWeightSpace M χ₂) : ⁅x, m⁆ ∈ preWeightSpace M (χ₁ + χ₂) := by
   apply LieModule.weight_vector_multiplication L L M M (to_module_hom R L M) χ₁ χ₂
   simp only [LieModuleHom.coe_to_linear_map, Function.comp_app, LinearMap.coe_comp, TensorProduct.mapIncl,
     LinearMap.mem_range]
@@ -307,7 +307,7 @@ theorem root_space_comap_eq_weight_space (χ : H → R) : (rootSpace H χ).comap
 variable {H M}
 
 theorem lie_mem_weight_space_of_mem_weight_space {χ₁ χ₂ : H → R} {x : L} {m : M} (hx : x ∈ rootSpace H χ₁)
-    (hm : m ∈ weightSpace M χ₂) : ⁅x,m⁆ ∈ weightSpace M (χ₁ + χ₂) := by
+    (hm : m ∈ weightSpace M χ₂) : ⁅x, m⁆ ∈ weightSpace M (χ₁ + χ₂) := by
   apply LieModule.weight_vector_multiplication H L M M ((to_module_hom R L M).restrictLie H) χ₁ χ₂
   simp only [LieModuleHom.coe_to_linear_map, Function.comp_app, LinearMap.coe_comp, TensorProduct.mapIncl,
     LinearMap.mem_range]
@@ -323,7 +323,7 @@ which is close to the deterministic timeout limit.
 def rootSpaceWeightSpaceProductAux {χ₁ χ₂ χ₃ : H → R} (hχ : χ₁ + χ₂ = χ₃) :
     rootSpace H χ₁ →ₗ[R] weightSpace M χ₂ →ₗ[R] weightSpace M χ₃ where
   toFun := fun x =>
-    { toFun := fun m => ⟨⁅(x : L),(m : M)⁆, hχ ▸ lie_mem_weight_space_of_mem_weight_space x.property m.property⟩,
+    { toFun := fun m => ⟨⁅(x : L), (m : M)⁆, hχ ▸ lie_mem_weight_space_of_mem_weight_space x.property m.property⟩,
       map_add' := fun m n => by
         simp only [LieSubmodule.coe_add, lie_add]
         rfl,
@@ -355,7 +355,7 @@ def rootSpaceWeightSpaceProduct (χ₁ χ₂ χ₃ : H → R) (hχ : χ₁ + χ�
 
 @[simp]
 theorem coe_root_space_weight_space_product_tmul (χ₁ χ₂ χ₃ : H → R) (hχ : χ₁ + χ₂ = χ₃) (x : rootSpace H χ₁)
-    (m : weightSpace M χ₂) : (rootSpaceWeightSpaceProduct R L H M χ₁ χ₂ χ₃ hχ (x ⊗ₜ m) : M) = ⁅(x : L),(m : M)⁆ := by
+    (m : weightSpace M χ₂) : (rootSpaceWeightSpaceProduct R L H M χ₁ χ₂ χ₃ hχ (x ⊗ₜ m) : M) = ⁅(x : L), (m : M)⁆ := by
   simp only [root_space_weight_space_product, root_space_weight_space_product_aux, lift_apply,
     LieModuleHom.coe_to_linear_map, coe_lift_lie_eq_lift_coe, Submodule.coe_mk, LinearMap.coe_mk, LieModuleHom.coe_mk]
 
@@ -370,7 +370,7 @@ theorem root_space_product_def : rootSpaceProduct R L H = rootSpaceWeightSpacePr
   rfl
 
 theorem root_space_product_tmul (χ₁ χ₂ χ₃ : H → R) (hχ : χ₁ + χ₂ = χ₃) (x : rootSpace H χ₁) (y : rootSpace H χ₂) :
-    (rootSpaceProduct R L H χ₁ χ₂ χ₃ hχ (x ⊗ₜ y) : L) = ⁅(x : L),(y : L)⁆ := by
+    (rootSpaceProduct R L H χ₁ χ₂ χ₃ hχ (x ⊗ₜ y) : L) = ⁅(x : L), (y : L)⁆ := by
   simp only [root_space_product_def, coe_root_space_weight_space_product_tmul]
 
 /-- Given a nilpotent Lie subalgebra `H ⊆ L`, the root space of the zero map `0 : H → R` is a Lie

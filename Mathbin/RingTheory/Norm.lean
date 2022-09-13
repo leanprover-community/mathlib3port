@@ -149,7 +149,7 @@ theorem norm_eq_zero_iff_of_basis [IsDomain R] [IsDomain S] (b : Basis ι R S) {
     rw [← b.equiv_fun.apply_symm_apply v, b.equiv_fun_symm_apply, b.equiv_fun_apply,
       Algebra.left_mul_matrix_mul_vec_repr] at hv
     refine' (mul_eq_zero.mp (b.ext_elem fun i => _)).resolve_right (show (∑ i, v i • b i) ≠ 0 from _)
-    · simpa only [LinearEquiv.map_zero, Pi.zero_apply] using congr_funₓ hv i
+    · simpa only [LinearEquiv.map_zero, Pi.zero_apply] using congr_fun hv i
       
     · contrapose! v_ne with sum_eq
       apply b.equiv_fun.symm.injective

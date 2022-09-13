@@ -81,7 +81,7 @@ instance {U} : Coe (G.toPresheaf.obj U) (F.obj U) :=
 def Subpresheaf.ι : G.toPresheaf ⟶ F where app := fun U x => x
 
 instance : Mono G.ι :=
-  ⟨fun H f₁ f₂ e => NatTrans.ext f₁ f₂ <| funext fun U => funext fun x => Subtype.ext <| congr_funₓ (congr_app e U) x⟩
+  ⟨fun H f₁ f₂ e => NatTrans.ext f₁ f₂ <| funext fun U => funext fun x => Subtype.ext <| congr_fun (congr_app e U) x⟩
 
 /-- The inclusion of a subpresheaf to a larger subpresheaf -/
 @[simps]
@@ -91,7 +91,7 @@ def Subpresheaf.homOfLe {G G' : Subpresheaf F} (h : G ≤ G') :
 instance {G G' : Subpresheaf F} (h : G ≤ G') : Mono (Subpresheaf.homOfLe h) :=
   ⟨fun H f₁ f₂ e =>
     NatTrans.ext f₁ f₂ <|
-      funext fun U => funext fun x => Subtype.ext <| (congr_argₓ Subtype.val <| (congr_funₓ (congr_app e U) x : _) : _)⟩
+      funext fun U => funext fun x => Subtype.ext <| (congr_arg Subtype.val <| (congr_fun (congr_app e U) x : _) : _)⟩
 
 @[simp, reassoc]
 theorem Subpresheaf.hom_of_le_ι {G G' : Subpresheaf F} (h : G ≤ G') : Subpresheaf.homOfLe h ≫ G'.ι = G.ι := by
@@ -136,7 +136,7 @@ theorem Subpresheaf.family_of_elements_compatible {U : Cᵒᵖ} (s : F.obj U) :
 
 theorem Subpresheaf.nat_trans_naturality (f : F' ⟶ G.toPresheaf) {U V : Cᵒᵖ} (i : U ⟶ V) (x : F'.obj U) :
     (f.app V (F'.map i x)).1 = F.map i (f.app U x).1 :=
-  congr_argₓ Subtype.val (FunctorToTypes.naturality _ _ f i x)
+  congr_arg Subtype.val (FunctorToTypes.naturality _ _ f i x)
 
 include J
 
@@ -170,7 +170,7 @@ theorem Subpresheaf.eq_sheafify (h : Presieve.IsSheaf J F) (hG : Presieve.IsShea
     exact ((hG _ hs).amalgamate _ (G.family_of_elements_compatible s)).2
   apply (h _ hs).IsSeparatedFor.ext
   intro V i hi
-  exact (congr_argₓ Subtype.val ((hG _ hs).valid_glue (G.family_of_elements_compatible s) _ hi) : _)
+  exact (congr_arg Subtype.val ((hG _ hs).valid_glue (G.family_of_elements_compatible s) _ hi) : _)
 
 theorem Subpresheaf.sheafify_is_sheaf (hF : Presieve.IsSheaf J F) : Presieve.IsSheaf J (G.sheafify J).toPresheaf := by
   intro U S hS x hx
@@ -195,13 +195,13 @@ theorem Subpresheaf.sheafify_is_sheaf (hF : Presieve.IsSheaf J F) : Presieve.IsS
       have hi'' : S' (i' ≫ i) := ⟨_, _, _, hi, hi', rfl⟩
       have := H _ hi''
       rw [op_comp, F.map_comp] at this
-      refine' this.trans (congr_argₓ Subtype.val (hx _ _ (hi₂ hi'') hi (h₂ hi'')))
+      refine' this.trans (congr_arg Subtype.val (hx _ _ (hi₂ hi'') hi (h₂ hi'')))
       
   have : x''.compatible := by
     intro V₁ V₂ V₃ g₁ g₂ g₃ g₄ S₁ S₂ e
     rw [← functor_to_types.map_comp_apply, ← functor_to_types.map_comp_apply]
     exact
-      congr_argₓ Subtype.val
+      congr_arg Subtype.val
         (hx (g₁ ≫ i₁ S₁) (g₂ ≫ i₁ S₂) (hi₂ S₁) (hi₂ S₂)
           (by
             simp only [category.assoc, h₂, e]))
@@ -264,7 +264,7 @@ theorem Subpresheaf.to_sheafify_lift_unique (h : Presieve.IsSheaf J F') (l₁ l�
   rintro V i hi
   dsimp'  at hi
   erw [← functor_to_types.naturality, ← functor_to_types.naturality]
-  exact (congr_funₓ (congr_app e <| op V) ⟨_, hi⟩ : _)
+  exact (congr_fun (congr_app e <| op V) ⟨_, hi⟩ : _)
 
 theorem Subpresheaf.sheafify_le (h : G ≤ G') (hF : Presieve.IsSheaf J F) (hG' : Presieve.IsSheaf J G'.toPresheaf) :
     G.sheafify J ≤ G' := by
@@ -273,7 +273,7 @@ theorem Subpresheaf.sheafify_le (h : G ≤ G') (hF : Presieve.IsSheaf J F) (hG' 
   apply (hF _ hx).IsSeparatedFor.ext
   intro V i hi
   have :=
-    congr_argₓ (fun f : G.to_presheaf ⟶ G'.to_presheaf => (nat_trans.app f (op V) ⟨_, hi⟩).1)
+    congr_arg (fun f : G.to_presheaf ⟶ G'.to_presheaf => (nat_trans.app f (op V) ⟨_, hi⟩).1)
       (G.to_sheafify_lift (subpresheaf.hom_of_le h) hG')
   convert this.symm
   erw [← subpresheaf.nat_trans_naturality]
@@ -314,14 +314,14 @@ theorem image_presheaf_comp_le (f₁ : F ⟶ F') (f₂ : F' ⟶ F'') : imagePres
   fun U x hx => ⟨f₁.app U hx.some, hx.some_spec⟩
 
 instance {F F' : Cᵒᵖ ⥤ Type max v w} (f : F ⟶ F') [hf : Mono f] : IsIso (toImagePresheaf f) := by
-  apply nat_iso.is_iso_of_is_iso_app with { instances := false }
+  apply (config := { instances := false }) nat_iso.is_iso_of_is_iso_app
   intro X
   rw [is_iso_iff_bijective]
   constructor
   · intro x y e
     have := (nat_trans.mono_iff_mono_app _ _).mp hf X
     rw [mono_iff_injective] at this
-    exact this (congr_argₓ Subtype.val e : _)
+    exact this (congr_arg Subtype.val e : _)
     
   · rintro ⟨_, ⟨x, rfl⟩⟩
     exact ⟨x, rfl⟩
@@ -366,7 +366,7 @@ instance {F F' : Sheaf J (Type w)} (f : F ⟶ F') : Epi (toImageSheaf f) := by
   change (g₁.val.app _ ≫ G'.val.map _) _ = (g₂.val.app _ ≫ G'.val.map _) _
   rw [← nat_trans.naturality, ← nat_trans.naturality]
   have E : (to_image_sheaf f).val.app (op V) y = (image_sheaf f).val.map i.op ⟨s, hx⟩ := Subtype.ext e'
-  have := congr_argₓ (fun f : F ⟶ G' => (Sheaf.hom.val f).app _ y) e
+  have := congr_arg (fun f : F ⟶ G' => (Sheaf.hom.val f).app _ y) e
   dsimp'  at this⊢
   convert this <;> exact E.symm
 

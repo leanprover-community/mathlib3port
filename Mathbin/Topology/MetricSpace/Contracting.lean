@@ -35,12 +35,12 @@ open Filter Function
 variable {α : Type _}
 
 /-- A map is said to be `contracting_with K`, if `K < 1` and `f` is `lipschitz_with K`. -/
-def ContractingWith [EmetricSpace α] (K : ℝ≥0 ) (f : α → α) :=
+def ContractingWith [EmetricSpace α] (K : ℝ≥0) (f : α → α) :=
   K < 1 ∧ LipschitzWith K f
 
 namespace ContractingWith
 
-variable [EmetricSpace α] [cs : CompleteSpace α] {K : ℝ≥0 } {f : α → α}
+variable [EmetricSpace α] [cs : CompleteSpace α] {K : ℝ≥0} {f : α → α}
 
 open Emetric Set
 
@@ -239,7 +239,7 @@ end ContractingWith
 
 namespace ContractingWith
 
-variable [MetricSpace α] {K : ℝ≥0 } {f : α → α} (hf : ContractingWith K f)
+variable [MetricSpace α] {K : ℝ≥0} {f : α → α} (hf : ContractingWith K f)
 
 include hf
 

@@ -51,7 +51,7 @@ Note that we have avoided using the more natural expression:
 | lie_compat (x y : L) : rel (ιₜ ⁅x, y⁆) ⁅ιₜ x, ιₜ y⁆
 so that our construction needs only the semiring structure of the tensor algebra. -/
 inductive Rel : TensorAlgebra R L → TensorAlgebra R L → Prop
-  | lie_compat (x y : L) : rel (ιₜ ⁅x,y⁆ + ιₜ y * ιₜ x) (ιₜ x * ιₜ y)
+  | lie_compat (x y : L) : rel (ιₜ ⁅x, y⁆ + ιₜ y * ιₜ x) (ιₜ x * ιₜ y)
 
 end UniversalEnvelopingAlgebra
 
@@ -74,7 +74,7 @@ variable {L}
 def ι : L →ₗ⁅R⁆ UniversalEnvelopingAlgebra R L :=
   { (mkAlgHom R L).toLinearMap.comp ιₜ with
     map_lie' := fun x y => by
-      suffices mk_alg_hom R L (ιₜ ⁅x,y⁆ + ιₜ y * ιₜ x) = mk_alg_hom R L (ιₜ x * ιₜ y) by
+      suffices mk_alg_hom R L (ιₜ ⁅x, y⁆ + ιₜ y * ιₜ x) = mk_alg_hom R L (ιₜ x * ιₜ y) by
         rw [AlgHom.map_mul] at this
         simp [LieRing.of_associative_ring_bracket, ← this]
       exact RingQuot.mk_alg_hom_rel _ (rel.lie_compat x y) }

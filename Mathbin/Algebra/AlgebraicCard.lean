@@ -26,7 +26,7 @@ open Cardinal
 namespace Algebraic
 
 theorem aleph_0_le_cardinal_mk_of_char_zero (R A : Type _) [CommRingₓ R] [IsDomain R] [Ringₓ A] [Algebra R A]
-    [CharZero A] : ℵ₀ ≤ # { x : A // IsAlgebraic R x } :=
+    [CharZero A] : ℵ₀ ≤ (#{ x : A // IsAlgebraic R x }) :=
   @mk_le_of_injective (ULift ℕ) { x : A | IsAlgebraic R x } (fun n => ⟨_, is_algebraic_nat n.down⟩) fun m n hmn => by
     simpa using hmn
 
@@ -36,7 +36,7 @@ variable (R : Type u) (A : Type v) [CommRingₓ R] [CommRingₓ A] [IsDomain A] 
 
 -- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:14: unsupported tactic `rsufficesI #[[":", expr fintype «expr ⁻¹' »(g, {f})]]
 theorem cardinal_mk_lift_le_mul :
-    Cardinal.lift.{u, v} (# { x : A // IsAlgebraic R x }) ≤ Cardinal.lift.{v, u} (# (Polynomial R)) * ℵ₀ := by
+    Cardinal.lift.{u, v} (#{ x : A // IsAlgebraic R x }) ≤ Cardinal.lift.{v, u} (#Polynomial R) * ℵ₀ := by
   rw [← mk_ulift, ← mk_ulift]
   let g : ULift.{u} { x : A | IsAlgebraic R x } → ULift.{v} (Polynomial R) := fun x => ULift.up (Classical.choose x.1.2)
   apply Cardinal.mk_le_mk_mul_of_mk_preimage_le g fun f => _
@@ -64,13 +64,13 @@ theorem cardinal_mk_lift_le_mul :
   exact Subtype.ext (ULift.down_injective (Subtype.ext H))
 
 theorem cardinal_mk_lift_le_max :
-    Cardinal.lift.{u, v} (# { x : A // IsAlgebraic R x }) ≤ max (Cardinal.lift.{v, u} (# R)) ℵ₀ :=
+    Cardinal.lift.{u, v} (#{ x : A // IsAlgebraic R x }) ≤ max (Cardinal.lift.{v, u} (#R)) ℵ₀ :=
   (cardinal_mk_lift_le_mul R A).trans <|
     (mul_le_mul_right' (lift_le.2 cardinal_mk_le_max) _).trans <| by
       simp [le_totalₓ]
 
 theorem cardinal_mk_lift_le_of_infinite [Infinite R] :
-    Cardinal.lift.{u, v} (# { x : A // IsAlgebraic R x }) ≤ Cardinal.lift.{v, u} (# R) :=
+    Cardinal.lift.{u, v} (#{ x : A // IsAlgebraic R x }) ≤ Cardinal.lift.{v, u} (#R) :=
   (cardinal_mk_lift_le_max R A).trans <| by
     simp
 
@@ -78,12 +78,12 @@ variable [Encodable R]
 
 @[simp]
 theorem countable_of_encodable : Set.Countable { x : A | IsAlgebraic R x } := by
-  rw [← mk_set_le_aleph_0, ← lift_le]
+  rw [← le_aleph_0_iff_set_countable, ← lift_le]
   apply (cardinal_mk_lift_le_max R A).trans
   simp
 
 @[simp]
-theorem cardinal_mk_of_encodable_of_char_zero [CharZero A] [IsDomain R] : # { x : A // IsAlgebraic R x } = ℵ₀ :=
+theorem cardinal_mk_of_encodable_of_char_zero [CharZero A] [IsDomain R] : (#{ x : A // IsAlgebraic R x }) = ℵ₀ :=
   le_antisymmₓ
     (by
       simp )
@@ -95,15 +95,15 @@ section NonLift
 
 variable (R A : Type u) [CommRingₓ R] [CommRingₓ A] [IsDomain A] [Algebra R A] [NoZeroSmulDivisors R A]
 
-theorem cardinal_mk_le_mul : # { x : A // IsAlgebraic R x } ≤ # (Polynomial R) * ℵ₀ := by
-  rw [← lift_id (# _), ← lift_id (# (Polynomial R))]
+theorem cardinal_mk_le_mul : (#{ x : A // IsAlgebraic R x }) ≤ (#Polynomial R) * ℵ₀ := by
+  rw [← lift_id (#_), ← lift_id (#Polynomial R)]
   exact cardinal_mk_lift_le_mul R A
 
-theorem cardinal_mk_le_max : # { x : A // IsAlgebraic R x } ≤ max (# R) ℵ₀ := by
-  rw [← lift_id (# _), ← lift_id (# R)]
+theorem cardinal_mk_le_max : (#{ x : A // IsAlgebraic R x }) ≤ max (#R) ℵ₀ := by
+  rw [← lift_id (#_), ← lift_id (#R)]
   exact cardinal_mk_lift_le_max R A
 
-theorem cardinal_mk_le_of_infinite [Infinite R] : # { x : A // IsAlgebraic R x } ≤ # R :=
+theorem cardinal_mk_le_of_infinite [Infinite R] : (#{ x : A // IsAlgebraic R x }) ≤ (#R) :=
   (cardinal_mk_le_max R A).trans <| by
     simp
 

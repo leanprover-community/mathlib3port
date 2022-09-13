@@ -247,7 +247,7 @@ theorem int_valuation_exists_uniformizer : ∃ π : R, v.intValuationDef π = Mu
     exact nmem (Submodule.zero_mem (v.as_ideal ^ 2))
   use π
   rw [int_valuation_def, if_neg (associates.mk_ne_zero'.mp hπ), WithZero.coe_inj]
-  apply congr_argₓ
+  apply congr_arg
   rw [neg_inj, ← Int.coe_nat_one, Int.coe_nat_inj']
   rw [← Ideal.dvd_span_singleton, ← Associates.mk_le_mk_iff_dvd_iff] at mem nmem
   rw [← pow_oneₓ (Associates.mk v.as_ideal), Associates.prime_pow_dvd_iff_le hπ hv] at mem

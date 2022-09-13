@@ -95,7 +95,7 @@ theorem coe_im_j : (x : ℍ[R,c₁,c₂]).imJ = 0 :=
 theorem coe_im_k : (x : ℍ[R,c₁,c₂]).imK = 0 :=
   rfl
 
-theorem coe_injective : Function.Injective (coe : R → ℍ[R,c₁,c₂]) := fun x y h => congr_argₓ re h
+theorem coe_injective : Function.Injective (coe : R → ℍ[R,c₁,c₂]) := fun x y h => congr_arg re h
 
 @[simp]
 theorem coe_inj {x y : R} : (x : ℍ[R,c₁,c₂]) = y ↔ x = y :=
@@ -193,7 +193,7 @@ instance : AddGroupWithOneₓ ℍ[R,c₁,c₂] :=
       simp ,
     nat_cast_succ := by
       simp ,
-    intCast := fun n => ((n : R) : ℍ[R,c₁,c₂]), int_cast_of_nat := fun _ => congr_argₓ coe (Int.cast_of_nat _),
+    intCast := fun n => ((n : R) : ℍ[R,c₁,c₂]), int_cast_of_nat := fun _ => congr_arg coe (Int.cast_of_nat _),
     int_cast_neg_succ_of_nat := fun n =>
       show ↑↑_ = -↑↑_ by
         rw [Int.cast_neg, Int.cast_coe_nat, coe_neg],
@@ -853,7 +853,7 @@ theorem norm_sq_nonneg : 0 ≤ normSq a := by
 theorem norm_sq_le_zero : normSq a ≤ 0 ↔ a = 0 := by
   simpa only [le_antisymm_iffₓ, norm_sq_nonneg, and_trueₓ] using @norm_sq_eq_zero _ _ a
 
-instance : Nontrivial ℍ[R] where exists_pair_ne := ⟨0, 1, mt (congr_argₓ re) zero_ne_one⟩
+instance : Nontrivial ℍ[R] where exists_pair_ne := ⟨0, 1, mt (congr_arg re) zero_ne_one⟩
 
 instance : IsDomain ℍ[R] :=
   { Quaternion.nontrivial with
@@ -899,26 +899,26 @@ section QuaternionAlgebra
 
 variable {R : Type _} (c₁ c₂ : R)
 
-private theorem pow_four [Infinite R] : # R ^ 4 = # R :=
+private theorem pow_four [Infinite R] : (#R) ^ 4 = (#R) :=
   power_nat_eq (aleph_0_le_mk R) <| by
     simp
 
 /-- The cardinality of a quaternion algebra, as a type. -/
-theorem mk_quaternion_algebra : # ℍ[R,c₁,c₂] = # R ^ 4 := by
+theorem mk_quaternion_algebra : (#ℍ[R,c₁,c₂]) = (#R) ^ 4 := by
   rw [mk_congr (QuaternionAlgebra.equivProd c₁ c₂)]
   simp only [mk_prod, lift_id]
   ring
 
 @[simp]
-theorem mk_quaternion_algebra_of_infinite [Infinite R] : # ℍ[R,c₁,c₂] = # R := by
+theorem mk_quaternion_algebra_of_infinite [Infinite R] : (#ℍ[R,c₁,c₂]) = (#R) := by
   rw [mk_quaternion_algebra, pow_four]
 
 /-- The cardinality of a quaternion algebra, as a set. -/
-theorem mk_univ_quaternion_algebra : # (Set.Univ : Set ℍ[R,c₁,c₂]) = # R ^ 4 := by
+theorem mk_univ_quaternion_algebra : (#(Set.Univ : Set ℍ[R,c₁,c₂])) = (#R) ^ 4 := by
   rw [mk_univ, mk_quaternion_algebra]
 
 @[simp]
-theorem mk_univ_quaternion_algebra_of_infinite [Infinite R] : # (Set.Univ : Set ℍ[R,c₁,c₂]) = # R := by
+theorem mk_univ_quaternion_algebra_of_infinite [Infinite R] : (#(Set.Univ : Set ℍ[R,c₁,c₂])) = (#R) := by
   rw [mk_univ_quaternion_algebra, pow_four]
 
 end QuaternionAlgebra
@@ -929,20 +929,20 @@ variable (R : Type _) [One R] [Neg R]
 
 /-- The cardinality of the quaternions, as a type. -/
 @[simp]
-theorem mk_quaternion : # ℍ[R] = # R ^ 4 :=
+theorem mk_quaternion : (#ℍ[R]) = (#R) ^ 4 :=
   mk_quaternion_algebra _ _
 
 @[simp]
-theorem mk_quaternion_of_infinite [Infinite R] : # ℍ[R] = # R := by
+theorem mk_quaternion_of_infinite [Infinite R] : (#ℍ[R]) = (#R) := by
   rw [mk_quaternion, pow_four]
 
 /-- The cardinality of the quaternions, as a set. -/
 @[simp]
-theorem mk_univ_quaternion : # (Set.Univ : Set ℍ[R]) = # R ^ 4 :=
+theorem mk_univ_quaternion : (#(Set.Univ : Set ℍ[R])) = (#R) ^ 4 :=
   mk_univ_quaternion_algebra _ _
 
 @[simp]
-theorem mk_univ_quaternion_of_infinite [Infinite R] : # (Set.Univ : Set ℍ[R]) = # R := by
+theorem mk_univ_quaternion_of_infinite [Infinite R] : (#(Set.Univ : Set ℍ[R])) = (#R) := by
   rw [mk_univ_quaternion, pow_four]
 
 end Quaternion

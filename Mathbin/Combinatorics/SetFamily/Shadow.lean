@@ -104,7 +104,7 @@ protected theorem _root_.set.sized.shadow (h𝒜 : (𝒜 : Set (Finset α)).Size
 
 theorem sized_shadow_iff (h : ∅ ∉ 𝒜) : ((∂ ) 𝒜 : Set (Finset α)).Sized r ↔ (𝒜 : Set (Finset α)).Sized (r + 1) := by
   refine' ⟨fun h𝒜 s hs => _, Set.Sized.shadow⟩
-  obtain ⟨a, ha⟩ := nonempty_iff_ne_empty.2 (ne_of_mem_of_not_mem hs h)
+  obtain ⟨a, ha⟩ := nonempty_iff_ne_empty.2 (ne_of_mem_of_not_memₓ hs h)
   rw [← h𝒜 (erase_mem_shadow hs ha), card_erase_add_one ha]
 
 /-- `s ∈ ∂ 𝒜` iff `s` is exactly one element less than something from `𝒜` -/
@@ -135,7 +135,7 @@ theorem mem_shadow_iff_exists_mem_card_add : s ∈ (∂ ^[k]) 𝒜 ↔ ∃ t ∈
     rintro ⟨t, ht, hst, hcard⟩
     rwa [eq_of_subset_of_card_le hst hcard.le]
     
-  simp only [exists_prop, Function.comp_app, Function.iterate_succ]
+  simp only [exists_propₓ, Function.comp_app, Function.iterate_succ]
   refine' ih.trans _
   clear ih
   constructor
@@ -188,7 +188,7 @@ theorem up_shadow_monotone : Monotone (upShadow : Finset (Finset α) → Finset 
 /-- `s` is in the upper shadow of `𝒜` iff there is an `t ∈ 𝒜` from which we can remove one element
 to get `s`. -/
 theorem mem_up_shadow_iff : s ∈ (∂⁺ ) 𝒜 ↔ ∃ t ∈ 𝒜, ∃ (a : _)(_ : a ∉ t), insert a t = s := by
-  simp_rw [up_shadow, mem_sup, mem_image, exists_prop, mem_compl]
+  simp_rw [up_shadow, mem_sup, mem_image, exists_propₓ, mem_compl]
 
 theorem insert_mem_up_shadow (hs : s ∈ 𝒜) (ha : a ∉ s) : insert a s ∈ (∂⁺ ) 𝒜 :=
   mem_up_shadow_iff.2 ⟨s, hs, a, ha, rfl⟩
@@ -239,7 +239,7 @@ theorem mem_up_shadow_iff_exists_mem_card_add : s ∈ (∂⁺ ^[k]) 𝒜 ↔ ∃
     rintro ⟨t, ht, hst, hcard⟩
     rwa [← eq_of_subset_of_card_le hst hcard.ge]
     
-  simp only [exists_prop, Function.comp_app, Function.iterate_succ]
+  simp only [exists_propₓ, Function.comp_app, Function.iterate_succ]
   refine' ih.trans _
   clear ih
   constructor
@@ -265,7 +265,7 @@ theorem mem_up_shadow_iff_exists_mem_card_add : s ∈ (∂⁺ ^[k]) 𝒜 ↔ ∃
 @[simp]
 theorem shadow_image_compl : ((∂ ) 𝒜).Image compl = (∂⁺ ) (𝒜.Image compl) := by
   ext s
-  simp only [mem_image, exists_prop, mem_shadow_iff, mem_up_shadow_iff]
+  simp only [mem_image, exists_propₓ, mem_shadow_iff, mem_up_shadow_iff]
   constructor
   · rintro ⟨_, ⟨s, hs, a, ha, rfl⟩, rfl⟩
     exact ⟨sᶜ, ⟨s, hs, rfl⟩, a, not_mem_compl.2 ha, compl_erase.symm⟩
@@ -277,7 +277,7 @@ theorem shadow_image_compl : ((∂ ) 𝒜).Image compl = (∂⁺ ) (𝒜.Image c
 @[simp]
 theorem up_shadow_image_compl : ((∂⁺ ) 𝒜).Image compl = (∂ ) (𝒜.Image compl) := by
   ext s
-  simp only [mem_image, exists_prop, mem_shadow_iff, mem_up_shadow_iff]
+  simp only [mem_image, exists_propₓ, mem_shadow_iff, mem_up_shadow_iff]
   constructor
   · rintro ⟨_, ⟨s, hs, a, ha, rfl⟩, rfl⟩
     exact ⟨sᶜ, ⟨s, hs, rfl⟩, a, mem_compl.2 ha, compl_insert.symm⟩

@@ -46,15 +46,15 @@ ring is commutative. It is identically zero exactly when the ring is commutative
 instance (priority := 100) : HasBracket A A :=
   ⟨fun x y => x * y - y * x⟩
 
-theorem lie_def (x y : A) : ⁅x,y⁆ = x * y - y * x :=
+theorem lie_def (x y : A) : ⁅x, y⁆ = x * y - y * x :=
   rfl
 
 end Ringₓ
 
-theorem commute_iff_lie_eq {x y : A} : Commute x y ↔ ⁅x,y⁆ = 0 :=
+theorem commute_iff_lie_eq {x y : A} : Commute x y ↔ ⁅x, y⁆ = 0 :=
   sub_eq_zero.symm
 
-theorem Commute.lie_eq {x y : A} (h : Commute x y) : ⁅x,y⁆ = 0 :=
+theorem Commute.lie_eq {x y : A} (h : Commute x y) : ⁅x, y⁆ = 0 :=
   sub_eq_zero_of_eq h
 
 namespace LieRing
@@ -74,11 +74,11 @@ instance (priority := 100) ofAssociativeRing : LieRing A where
       rw [Ringₓ.lie_def]
     noncomm_ring
 
-theorem of_associative_ring_bracket (x y : A) : ⁅x,y⁆ = x * y - y * x :=
+theorem of_associative_ring_bracket (x y : A) : ⁅x, y⁆ = x * y - y * x :=
   rfl
 
 @[simp]
-theorem lie_apply {α : Type _} (f g : α → A) (a : α) : ⁅f,g⁆ a = ⁅f a,g a⁆ :=
+theorem lie_apply {α : Type _} (f g : α → A) (a : α) : ⁅f, g⁆ a = ⁅f a, g a⁆ :=
   rfl
 
 end LieRing
@@ -107,7 +107,7 @@ def LieRingModule.ofAssociativeModule : LieRingModule A M where
 
 attribute [local instance] LieRingModule.ofAssociativeModule
 
-theorem lie_eq_smul (a : A) (m : M) : ⁅a,m⁆ = a • m :=
+theorem lie_eq_smul (a : A) (m : M) : ⁅a, m⁆ = a • m :=
   rfl
 
 end AssociativeModule
@@ -157,7 +157,7 @@ functorial. -/
 def toLieHom : A →ₗ⁅R⁆ B :=
   { f.toLinearMap with
     map_lie' := fun x y =>
-      show f ⁅x,y⁆ = ⁅f x,f y⁆ by
+      show f ⁅x, y⁆ = ⁅f x, f y⁆ by
         simp only [LieRing.of_associative_ring_bracket, AlgHom.map_sub, AlgHom.map_mul] }
 
 instance : Coe (A →ₐ[R] B) (A →ₗ⁅R⁆ B) :=
@@ -205,7 +205,7 @@ variable [LieRingModule L M] [LieModule R L M]
 See also `lie_module.to_module_hom`. -/
 @[simps]
 def LieModule.toEndomorphism : L →ₗ⁅R⁆ Module.End R M where
-  toFun := fun x => { toFun := fun m => ⁅x,m⁆, map_add' := lie_add x, map_smul' := fun t => lie_smul t x }
+  toFun := fun x => { toFun := fun m => ⁅x, m⁆, map_add' := lie_add x, map_smul' := fun t => lie_smul t x }
   map_add' := fun x y => by
     ext m
     apply add_lie
@@ -221,7 +221,7 @@ def LieAlgebra.ad : L →ₗ⁅R⁆ Module.End R L :=
   LieModule.toEndomorphism R L L
 
 @[simp]
-theorem LieAlgebra.ad_apply (x y : L) : LieAlgebra.ad R L x y = ⁅x,y⁆ :=
+theorem LieAlgebra.ad_apply (x y : L) : LieAlgebra.ad R L x y = ⁅x, y⁆ :=
   rfl
 
 @[simp]
@@ -284,7 +284,7 @@ def lieSubalgebraOfSubalgebra (R : Type u) [CommRingₓ R] (A : Type v) [Ringₓ
     LieSubalgebra R A :=
   { A'.toSubmodule with
     lie_mem' := fun x y hx hy => by
-      change ⁅x,y⁆ ∈ A'
+      change ⁅x, y⁆ ∈ A'
       change x ∈ A' at hx
       change y ∈ A' at hy
       rw [LieRing.of_associative_ring_bracket]
@@ -304,7 +304,7 @@ variable (e : M₁ ≃ₗ[R] M₂)
 def lieConj : Module.End R M₁ ≃ₗ⁅R⁆ Module.End R M₂ :=
   { e.conj with
     map_lie' := fun f g =>
-      show e.conj ⁅f,g⁆ = ⁅e.conj f,e.conj g⁆ by
+      show e.conj ⁅f, g⁆ = ⁅e.conj f, e.conj g⁆ by
         simp only [LieRing.of_associative_ring_bracket, LinearMap.mul_eq_comp, e.conj_comp, LinearEquiv.map_sub] }
 
 @[simp]

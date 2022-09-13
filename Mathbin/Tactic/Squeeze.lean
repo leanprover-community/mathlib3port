@@ -47,7 +47,7 @@ unsafe def struct_inst : lean.parser pexpr :=
       sep_by (skip_info (tk ","))
           (Sum.inl <$> (tk ".." *> texpr) <|> Sum.inr <$> (Prod.mk <$> ident <* tk ":=" <*> texpr))
     tk "}"
-    let (srcs, fields) := partitionMap id ls
+    let (srcs, fields) := partitionMapₓ id ls
     let (names, values) := unzip fields
     pure <| pexpr.mk_structure_instance { field_names := names, field_values := values, sources := srcs }
 

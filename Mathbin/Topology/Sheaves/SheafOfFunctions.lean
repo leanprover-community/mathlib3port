@@ -71,7 +71,7 @@ theorem to_Types_is_sheaf (T : X → Type u) : (presheafToTypes X T).IsSheaf :=
       -- we may have used the axiom of choice to pick a different `j` with `x ∈ U j`
       -- when defining the function.
       -- Thus we'll need to use the fact that the restrictions are compatible.
-      convert congr_funₓ (hsf (index ⟨x, _⟩) i) ⟨x, ⟨index_spec ⟨x.1, _⟩, x.2⟩⟩
+      convert congr_fun (hsf (index ⟨x, _⟩) i) ⟨x, ⟨index_spec ⟨x.1, _⟩, x.2⟩⟩
       ext
       rfl
       
@@ -81,7 +81,7 @@ theorem to_Types_is_sheaf (T : X → Type u) : (presheafToTypes X T).IsSheaf :=
       -- and observe that we need to check that it agrees with our choice
       -- for each `f : s .X` and each `x ∈ supr U`.
       ext x
-      convert congr_funₓ (ht (index x)) ⟨x.1, index_spec x⟩
+      convert congr_fun (ht (index x)) ⟨x.1, index_spec x⟩
       ext
       rfl
       

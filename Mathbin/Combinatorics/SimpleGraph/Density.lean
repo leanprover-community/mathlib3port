@@ -48,7 +48,7 @@ def edgeDensity (s : Finset α) (t : Finset β) : ℚ :=
 variable {r}
 
 theorem mem_interedges_iff {x : α × β} : x ∈ interedges r s t ↔ x.1 ∈ s ∧ x.2 ∈ t ∧ r x.1 x.2 := by
-  simp only [interedges, and_assoc, mem_filter, Finset.mem_product]
+  simp only [interedges, and_assocₓ, mem_filter, Finset.mem_product]
 
 theorem mk_mem_interedges_iff : (a, b) ∈ interedges r s t ↔ a ∈ s ∧ b ∈ t ∧ r a b :=
   mem_interedges_iff
@@ -88,12 +88,12 @@ theorem interedges_disjoint_right (s : Finset α) {t t' : Finset β} (ht : Disjo
 theorem interedges_bUnion_left (s : Finset ι) (t : Finset β) (f : ι → Finset α) :
     interedges r (s.bUnion f) t = s.bUnion fun a => interedges r (f a) t :=
   ext fun a => by
-    simp only [mem_bUnion, mem_interedges_iff, exists_and_distrib_right]
+    simp only [mem_bUnion, mem_interedges_iff, exists_and_distrib_rightₓ]
 
 theorem interedges_bUnion_right (s : Finset α) (t : Finset ι) (f : ι → Finset β) :
     interedges r s (t.bUnion f) = t.bUnion fun b => interedges r s (f b) :=
   ext fun a => by
-    simp only [mem_interedges_iff, mem_bUnion, ← exists_and_distrib_left, ← exists_and_distrib_right]
+    simp only [mem_interedges_iff, mem_bUnion, ← exists_and_distrib_leftₓ, ← exists_and_distrib_rightₓ]
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem interedges_bUnion (s : Finset ι) (t : Finset κ) (f : ι → Finset α) (g : κ → Finset β) :

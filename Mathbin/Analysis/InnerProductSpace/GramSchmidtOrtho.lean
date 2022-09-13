@@ -53,16 +53,16 @@ local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 /-- The Gram-Schmidt process takes a set of vectors as input
 and outputs a set of orthogonal vectors which have the same span. -/
 noncomputable def gramSchmidt (f : ι → E) : ι → E
-  | n => f n - ∑ i : iio n, orthogonalProjection (𝕜∙gramSchmidt i) (f n)
+  | n => f n - ∑ i : iio n, orthogonalProjection (𝕜 ∙ gramSchmidt i) (f n)
 
 /-- This lemma uses `∑ i in` instead of `∑ i :`.-/
 theorem gram_schmidt_def (f : ι → E) (n : ι) :
-    gramSchmidt 𝕜 f n = f n - ∑ i in iio n, orthogonalProjection (𝕜∙gramSchmidt 𝕜 f i) (f n) := by
+    gramSchmidt 𝕜 f n = f n - ∑ i in iio n, orthogonalProjection (𝕜 ∙ gramSchmidt 𝕜 f i) (f n) := by
   rw [← sum_attach, attach_eq_univ, gramSchmidt]
   rfl
 
 theorem gram_schmidt_def' (f : ι → E) (n : ι) :
-    f n = gramSchmidt 𝕜 f n + ∑ i in iio n, orthogonalProjection (𝕜∙gramSchmidt 𝕜 f i) (f n) := by
+    f n = gramSchmidt 𝕜 f n + ∑ i in iio n, orthogonalProjection (𝕜 ∙ gramSchmidt 𝕜 f i) (f n) := by
   rw [gram_schmidt_def, sub_add_cancel]
 
 @[simp]

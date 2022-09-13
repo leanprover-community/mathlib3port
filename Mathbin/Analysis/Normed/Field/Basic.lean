@@ -434,13 +434,13 @@ theorem norm_pow (a : α) : ∀ n : ℕ, ∥a ^ n∥ = ∥a∥ ^ n :=
 
 @[simp]
 theorem nnnorm_pow (a : α) (n : ℕ) : ∥a ^ n∥₊ = ∥a∥₊ ^ n :=
-  (nnnormHom.toMonoidHom : α →* ℝ≥0 ).map_pow a n
+  (nnnormHom.toMonoidHom : α →* ℝ≥0).map_pow a n
 
 protected theorem List.norm_prod (l : List α) : ∥l.Prod∥ = (l.map norm).Prod :=
   (normHom.toMonoidHom : α →* ℝ).map_list_prod _
 
 protected theorem List.nnnorm_prod (l : List α) : ∥l.Prod∥₊ = (l.map nnnorm).Prod :=
-  (nnnormHom.toMonoidHom : α →* ℝ≥0 ).map_list_prod _
+  (nnnormHom.toMonoidHom : α →* ℝ≥0).map_list_prod _
 
 @[simp]
 theorem norm_div (a b : α) : ∥a / b∥ = ∥a∥ / ∥b∥ :=
@@ -448,7 +448,7 @@ theorem norm_div (a b : α) : ∥a / b∥ = ∥a∥ / ∥b∥ :=
 
 @[simp]
 theorem nnnorm_div (a b : α) : ∥a / b∥₊ = ∥a∥₊ / ∥b∥₊ :=
-  map_div₀ (nnnormHom : α →*₀ ℝ≥0 ) a b
+  map_div₀ (nnnormHom : α →*₀ ℝ≥0) a b
 
 @[simp]
 theorem norm_inv (a : α) : ∥a⁻¹∥ = ∥a∥⁻¹ :=
@@ -465,7 +465,7 @@ theorem norm_zpow : ∀ (a : α) (n : ℤ), ∥a ^ n∥ = ∥a∥ ^ n :=
 
 @[simp]
 theorem nnnorm_zpow : ∀ (a : α) (n : ℤ), ∥a ^ n∥₊ = ∥a∥₊ ^ n :=
-  map_zpow₀ (nnnormHom : α →*₀ ℝ≥0 )
+  map_zpow₀ (nnnormHom : α →*₀ ℝ≥0)
 
 /-- Multiplication on the left by a nonzero element of a normed division ring tends to infinity at
 infinity. TODO: use `bornology.cobounded` instead of `filter.comap has_norm.norm filter.at_top`. -/
@@ -546,7 +546,7 @@ theorem norm_prod (s : Finset β) (f : β → α) : ∥∏ b in s, f b∥ = ∏ 
 
 @[simp]
 theorem nnnorm_prod (s : Finset β) (f : β → α) : ∥∏ b in s, f b∥₊ = ∏ b in s, ∥f b∥₊ :=
-  (nnnormHom.toMonoidHom : α →* ℝ≥0 ).map_prod f s
+  (nnnormHom.toMonoidHom : α →* ℝ≥0).map_prod f s
 
 end NormedField
 
@@ -596,7 +596,7 @@ variable (α) [DenselyNormedField α]
 theorem exists_lt_norm_lt {r₁ r₂ : ℝ} (h₀ : 0 ≤ r₁) (h : r₁ < r₂) : ∃ x : α, r₁ < ∥x∥ ∧ ∥x∥ < r₂ :=
   DenselyNormedField.lt_norm_lt r₁ r₂ h₀ h
 
-theorem exists_lt_nnnorm_lt {r₁ r₂ : ℝ≥0 } (h : r₁ < r₂) : ∃ x : α, r₁ < ∥x∥₊ ∧ ∥x∥₊ < r₂ := by
+theorem exists_lt_nnnorm_lt {r₁ r₂ : ℝ≥0} (h : r₁ < r₂) : ∃ x : α, r₁ < ∥x∥₊ ∧ ∥x∥₊ < r₂ := by
   exact_mod_cast exists_lt_norm_lt α r₁.prop h
 
 instance densely_ordered_range_norm :
@@ -607,13 +607,13 @@ instance densely_ordered_range_norm :
       ⟨⟨∥z∥, z, rfl⟩, h⟩
 
 instance densely_ordered_range_nnnorm :
-    DenselyOrdered (Set.Range (nnnorm : α → ℝ≥0 )) where dense := by
+    DenselyOrdered (Set.Range (nnnorm : α → ℝ≥0)) where dense := by
     rintro ⟨-, x, rfl⟩ ⟨-, y, rfl⟩ hxy
     exact
       let ⟨z, h⟩ := exists_lt_nnnorm_lt α hxy
       ⟨⟨∥z∥₊, z, rfl⟩, h⟩
 
-theorem dense_range_nnnorm : DenseRange (nnnorm : α → ℝ≥0 ) :=
+theorem dense_range_nnnorm : DenseRange (nnnorm : α → ℝ≥0) :=
   dense_of_exists_between fun _ _ hr =>
     let ⟨x, h⟩ := exists_lt_nnnorm_lt α hr
     ⟨∥x∥₊, ⟨x, rfl⟩, h⟩
@@ -685,11 +685,11 @@ namespace Nnreal
 open Nnreal
 
 @[simp]
-theorem norm_eq (x : ℝ≥0 ) : ∥(x : ℝ)∥ = x := by
+theorem norm_eq (x : ℝ≥0) : ∥(x : ℝ)∥ = x := by
   rw [Real.norm_eq_abs, x.abs_eq]
 
 @[simp]
-theorem nnnorm_eq (x : ℝ≥0 ) : ∥(x : ℝ)∥₊ = x :=
+theorem nnnorm_eq (x : ℝ≥0) : ∥(x : ℝ)∥₊ = x :=
   Nnreal.eq <| Real.norm_of_nonneg x.2
 
 end Nnreal
@@ -735,17 +735,17 @@ theorem Int.norm_cast_real (m : ℤ) : ∥(m : ℝ)∥ = ∥m∥ :=
 theorem Int.norm_eq_abs (n : ℤ) : ∥n∥ = abs n :=
   rfl
 
-theorem Nnreal.coe_nat_abs (n : ℤ) : (n.natAbs : ℝ≥0 ) = ∥n∥₊ :=
+theorem Nnreal.coe_nat_abs (n : ℤ) : (n.natAbs : ℝ≥0) = ∥n∥₊ :=
   Nnreal.eq <|
     calc
-      ((n.natAbs : ℝ≥0 ) : ℝ) = (n.natAbs : ℤ) := by
+      ((n.natAbs : ℝ≥0) : ℝ) = (n.natAbs : ℤ) := by
         simp only [Int.cast_coe_nat, Nnreal.coe_nat_cast]
       _ = abs n := by
         simp only [← Int.abs_eq_nat_abs, Int.cast_abs]
       _ = ∥n∥ := rfl
       
 
-theorem Int.abs_le_floor_nnreal_iff (z : ℤ) (c : ℝ≥0 ) : abs z ≤ ⌊c⌋₊ ↔ ∥z∥₊ ≤ c := by
+theorem Int.abs_le_floor_nnreal_iff (z : ℤ) (c : ℝ≥0) : abs z ≤ ⌊c⌋₊ ↔ ∥z∥₊ ≤ c := by
   rw [Int.abs_eq_nat_abs, Int.coe_nat_leₓ, Nat.le_floor_iff (zero_le c)]
   congr
   exact Nnreal.coe_nat_abs z
@@ -757,9 +757,9 @@ instance : NormOneClass ℤ :=
 instance : NormedField ℚ where
   norm := fun r => ∥(r : ℝ)∥
   norm_mul' := fun r₁ r₂ => by
-    simp only [norm, Rat.cast_mul, abs_mul]
+    simp only [norm, Ratₓ.cast_mul, abs_mul]
   dist_eq := fun r₁ r₂ => by
-    simp only [Rat.dist_eq, norm, Rat.cast_sub]
+    simp only [Ratₓ.dist_eq, norm, Ratₓ.cast_sub]
 
 instance :
     DenselyNormedField ℚ where lt_norm_lt := fun r₁ r₂ h₀ hr =>
@@ -769,12 +769,12 @@ instance :
       rwa [abs_of_pos (h₀.trans_lt h.1)]⟩
 
 @[norm_cast, simp]
-theorem Rat.norm_cast_real (r : ℚ) : ∥(r : ℝ)∥ = ∥r∥ :=
+theorem Ratₓ.norm_cast_real (r : ℚ) : ∥(r : ℝ)∥ = ∥r∥ :=
   rfl
 
 @[norm_cast, simp]
 theorem Int.norm_cast_rat (m : ℤ) : ∥(m : ℚ)∥ = ∥m∥ := by
-  rw [← Rat.norm_cast_real, ← Int.norm_cast_real] <;> congr 1 <;> norm_cast
+  rw [← Ratₓ.norm_cast_real, ← Int.norm_cast_real] <;> congr 1 <;> norm_cast
 
 -- Now that we've installed the norm on `ℤ`,
 -- we can state some lemmas about `nsmul` and `zsmul`.

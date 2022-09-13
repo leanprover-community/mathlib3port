@@ -151,7 +151,7 @@ theorem find_aux_iff {a : α} {b : β a} :
       subst h
       suffices b' = b ↔ b' = b ∨ Sigma.mk a' b ∈ t by
         simpa [find_aux, eq_comm]
-      refine' (or_iff_left_of_imp fun m => _).symm
+      refine' (or_iff_left_of_impₓ fun m => _).symm
       have : a' ∉ t.map Sigma.fst := nd.not_mem
       exact this.elim (List.mem_map_of_memₓ Sigma.fst m)
       
@@ -281,7 +281,7 @@ theorem Valid.modify {sz : ℕ} (v : valid bkts sz) :
   rw [← v.len, e₁]
   suffices valid bkts' (u' ++ v2 ++ w').length by
     simpa [Ge, add_commₓ, add_left_commₓ, Nat.le_add_rightₓ, add_tsub_cancel_left]
-  refine' ⟨congr_argₓ _ e₂, fun i a => _, fun i => _⟩
+  refine' ⟨congr_arg _ e₂, fun i a => _, fun i => _⟩
   · by_cases' bidx = i
     · subst i
       rw [bkts', Arrayₓ.read_write, hfl]
@@ -567,7 +567,7 @@ theorem mem_insert :
       · subst a'
         suffices b = b' ∨ Sigma.mk a b' ∈ u ∨ Sigma.mk a b' ∈ w ↔ b = b' by
           simpa [eq_comm, Or.left_comm]
-        refine' or_iff_left_of_imp (Not.elim <| not_or_distrib.2 _)
+        refine' or_iff_left_of_impₓ (Not.elim <| not_or_distrib.2 _)
         rcases veq with (⟨rfl, Hnc⟩ | ⟨b'', rfl⟩)
         · have na := (not_iff_not_of_iff <| v.contains_aux_iff _ _).1 Hnc
           simp [hl, not_or_distrib] at na
@@ -605,7 +605,7 @@ theorem mem_insert :
         let bkts'' : BucketArray α β n' := bkts'.foldl (mkArray _ []) (reinsert_aux hash_fn)
         suffices Sigma.mk a' b' ∈ bkts''.as_list ↔ Sigma.mk a' b' ∈ bkts'.as_list.reverse by
           simpa [show ¬size' ≤ n from h, mi]
-        rw [show bkts'' = bkts'.as_list.foldl _ _ from bkts'.foldl_eq _ _, ← List.foldr_reverse]
+        rw [show bkts'' = bkts'.as_list.foldl _ _ from bkts'.foldl_eq _ _, ← List.foldr_reverseₓ]
         induction' bkts'.as_list.reverse with a l IH
         · simp [mk_as_list]
           
@@ -677,7 +677,7 @@ theorem mem_erase :
           Sigma.mk a' b' ∈ u ∨ Sigma.mk a' b' ∈ w ↔
             (¬a = a' ∧ a' = a) ∧ HEq b' b ∨ ¬a = a' ∧ (Sigma.mk a' b' ∈ u ∨ Sigma.mk a' b' ∈ w) :=
           by
-          simp [eq_comm, not_and_self_iff, and_iff_right_of_imp this]
+          simp [eq_comm, not_and_self_iff, and_iff_right_of_impₓ this]
         simpa [hl, show bkts'.as_list = _ from hfl, and_or_distrib_left, and_comm, And.left_comm, Or.left_comm]
       rintro m rfl
       revert m
@@ -687,7 +687,7 @@ theorem mem_erase :
       simp [nd']
       
     · suffices ∀ _ : Sigma.mk a' b' ∈ BucketArray.asList bkts, a ≠ a' by
-        simp [erase, @dif_neg (contains_aux a bkt) _ Hc, entries, and_iff_right_of_imp this]
+        simp [erase, @dif_neg (contains_aux a bkt) _ Hc, entries, and_iff_right_of_impₓ this]
       rintro m rfl
       exact Hc ((v.contains_aux_iff _ _).2 (List.mem_map_of_memₓ Sigma.fst m))
       

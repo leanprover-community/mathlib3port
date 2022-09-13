@@ -51,10 +51,10 @@ theorem interval_integrable_pow : IntervalIntegrable (fun x => x ^ n) μ a b :=
   (continuous_pow n).IntervalIntegrable a b
 
 theorem interval_integrable_zpow {n : ℤ} (h : 0 ≤ n ∨ (0 : ℝ) ∉ [a, b]) : IntervalIntegrable (fun x => x ^ n) μ a b :=
-  ((continuous_on_id.zpow₀ n) fun x hx => h.symm.imp (ne_of_mem_of_not_mem hx) id).IntervalIntegrable
+  ((continuous_on_id.zpow₀ n) fun x hx => h.symm.imp (ne_of_mem_of_not_memₓ hx) id).IntervalIntegrable
 
 theorem interval_integrable_rpow {r : ℝ} (h : 0 ≤ r ∨ (0 : ℝ) ∉ [a, b]) : IntervalIntegrable (fun x => x ^ r) μ a b :=
-  (continuous_on_id.rpow_const fun x hx => h.symm.imp (ne_of_mem_of_not_mem hx) id).IntervalIntegrable
+  (continuous_on_id.rpow_const fun x hx => h.symm.imp (ne_of_mem_of_not_memₓ hx) id).IntervalIntegrable
 
 /-- Alternative version with a weaker hypothesis on `r`, but assuming the measure is volume. -/
 theorem interval_integrable_rpow' {r : ℝ} (h : -1 < r) : IntervalIntegrable (fun x => x ^ r) volume a b := by
@@ -151,7 +151,7 @@ theorem IntervalIntegrable.log (hf : ContinuousOn f [a, b]) (h : ∀ x : ℝ, x 
 
 @[simp]
 theorem interval_integrable_log (h : (0 : ℝ) ∉ [a, b]) : IntervalIntegrable log μ a b :=
-  (IntervalIntegrable.log continuous_on_id) fun x hx => ne_of_mem_of_not_mem hx h
+  (IntervalIntegrable.log continuous_on_id) fun x hx => ne_of_mem_of_not_memₓ hx h
 
 @[simp]
 theorem interval_integrable_sin : IntervalIntegrable sin μ a b :=
@@ -281,7 +281,7 @@ theorem integral_rpow {r : ℝ} (h : -1 < r ∨ r ≠ -1 ∧ (0 : ℝ) ∉ [a, b
   · have hderiv' : ∀ x : ℝ, x ∈ [a, b] → HasDerivAt (fun x : ℝ => x ^ (r + 1) / (r + 1)) (x ^ r) x := by
       intro x hx
       apply hderiv x
-      exact ne_of_mem_of_not_mem hx h.2
+      exact ne_of_mem_of_not_memₓ hx h.2
     exact integral_eq_sub_of_has_deriv_at hderiv' (interval_integrable_rpow (Or.inr h.2))
     
 
@@ -359,7 +359,7 @@ theorem integral_const_on_unit_interval : (∫ x in a..a + 1, b) = b := by
 
 @[simp]
 theorem integral_inv (h : (0 : ℝ) ∉ [a, b]) : (∫ x in a..b, x⁻¹) = log (b / a) := by
-  have h' := fun x hx => ne_of_mem_of_not_mem hx h
+  have h' := fun x hx => ne_of_mem_of_not_memₓ hx h
   rw
     [integral_deriv_eq_sub' _ deriv_log' (fun x hx => differentiable_at_log (h' x hx))
       (continuous_on_inv₀.mono <| subset_compl_singleton_iff.mpr h),
@@ -403,7 +403,7 @@ theorem integral_exp_mul_complex {c : ℂ} (hc : c ≠ 0) :
 
 @[simp]
 theorem integral_log (h : (0 : ℝ) ∉ [a, b]) : (∫ x in a..b, log x) = b * log b - a * log a - b + a := by
-  obtain ⟨h', heq⟩ := fun x hx => ne_of_mem_of_not_mem hx h, fun x hx => mul_inv_cancel (h' x hx)
+  obtain ⟨h', heq⟩ := fun x hx => ne_of_mem_of_not_memₓ hx h, fun x hx => mul_inv_cancel (h' x hx)
   convert
       integral_mul_deriv_eq_deriv_mul (fun x hx => has_deriv_at_log (h' x hx)) (fun x hx => has_deriv_at_id x)
         (continuous_on_inv₀.mono <| subset_compl_singleton_iff.mpr h).IntervalIntegrable

@@ -182,7 +182,7 @@ theorem coe_top : ((⊤ : Ideal P) : Set P) = univ :=
 theorem is_proper_of_ne_top (ne_top : I ≠ ⊤) : IsProper I :=
   ⟨fun h => ne_top <| ext h⟩
 
-theorem IsProper.ne_top (hI : IsProper I) : I ≠ ⊤ := fun h => is_proper.ne_univ <| congr_argₓ coe h
+theorem IsProper.ne_top (hI : IsProper I) : I ≠ ⊤ := fun h => is_proper.ne_univ <| congr_arg coe h
 
 theorem _root_.is_coatom.is_proper (hI : IsCoatom I) : IsProper I :=
   is_proper_of_ne_top hI.1
@@ -291,12 +291,12 @@ section SemilatticeSup
 variable [SemilatticeSup P] {x y : P} {I s : Ideal P}
 
 /-- A specific witness of `I.directed` when `P` has joins. -/
-theorem sup_mem (hx : x ∈ s) (hy : y ∈ s) : x⊔y ∈ s :=
+theorem sup_mem (hx : x ∈ s) (hy : y ∈ s) : x ⊔ y ∈ s :=
   let ⟨z, hz, hx, hy⟩ := s.Directed x hx y hy
   s.lower (sup_le hx hy) hz
 
 @[simp]
-theorem sup_mem_iff : x⊔y ∈ I ↔ x ∈ I ∧ y ∈ I :=
+theorem sup_mem_iff : x ⊔ y ∈ I ↔ x ∈ I ∧ y ∈ I :=
   ⟨fun h => ⟨I.lower le_sup_left h, I.lower le_sup_right h⟩, fun h => sup_mem h.1 h.2⟩
 
 end SemilatticeSup
@@ -308,30 +308,30 @@ variable [SemilatticeSup P] [IsDirected P (· ≥ ·)] {x : P} {I J K s t : Idea
 /-- The infimum of two ideals of a co-directed order is their intersection. -/
 instance : HasInf (Ideal P) :=
   ⟨fun I J =>
-    { toLowerSet := I.toLowerSet⊓J.toLowerSet, nonempty' := inter_nonempty I J,
+    { toLowerSet := I.toLowerSet ⊓ J.toLowerSet, nonempty' := inter_nonempty I J,
       directed' := fun x hx y hy =>
-        ⟨x⊔y, ⟨sup_mem hx.1 hy.1, sup_mem hx.2 hy.2⟩, by
+        ⟨x ⊔ y, ⟨sup_mem hx.1 hy.1, sup_mem hx.2 hy.2⟩, by
           simp ⟩ }⟩
 
 /-- The supremum of two ideals of a co-directed order is the union of the down sets of the pointwise
 supremum of `I` and `J`. -/
 instance : HasSup (Ideal P) :=
   ⟨fun I J =>
-    { Carrier := { x | ∃ i ∈ I, ∃ j ∈ J, x ≤ i⊔j },
+    { Carrier := { x | ∃ i ∈ I, ∃ j ∈ J, x ≤ i ⊔ j },
       nonempty' := by
         cases inter_nonempty I J
         exact ⟨w, w, h.1, w, h.2, le_sup_left⟩,
       directed' := fun x ⟨xi, _, xj, _, _⟩ y ⟨yi, _, yj, _, _⟩ =>
-        ⟨x⊔y,
-          ⟨xi⊔yi, sup_mem ‹_› ‹_›, xj⊔yj, sup_mem ‹_› ‹_›,
+        ⟨x ⊔ y,
+          ⟨xi ⊔ yi, sup_mem ‹_› ‹_›, xj ⊔ yj, sup_mem ‹_› ‹_›,
             sup_le
               (calc
-                x ≤ xi⊔xj := ‹_›
-                _ ≤ xi⊔yi⊔(xj⊔yj) := sup_le_sup le_sup_left le_sup_left
+                x ≤ xi ⊔ xj := ‹_›
+                _ ≤ xi ⊔ yi ⊔ (xj ⊔ yj) := sup_le_sup le_sup_left le_sup_left
                 )
               (calc
-                y ≤ yi⊔yj := ‹_›
-                _ ≤ xi⊔yi⊔(xj⊔yj) := sup_le_sup le_sup_right le_sup_right
+                y ≤ yi ⊔ yj := ‹_›
+                _ ≤ xi ⊔ yi ⊔ (xj ⊔ yj) := sup_le_sup le_sup_right le_sup_right
                 )⟩,
           le_sup_left, le_sup_right⟩,
       lower' := fun x y h ⟨yi, _, yj, _, _⟩ => ⟨yi, ‹_›, yj, ‹_›, h.trans ‹_›⟩ }⟩
@@ -339,7 +339,7 @@ instance : HasSup (Ideal P) :=
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (i «expr ∈ » I)
 -- ./././Mathport/Syntax/Translate/Basic.lean:556:2: warning: expanding binder collection (j «expr ∈ » J)
 instance : Lattice (Ideal P) :=
-  { Ideal.partialOrder with sup := (·⊔·),
+  { Ideal.partialOrder with sup := (· ⊔ ·),
     le_sup_left := fun I J i (_ : i ∈ I) => by
       cases J.nonempty
       exact ⟨i, ‹_›, w, ‹_›, le_sup_left⟩,
@@ -348,26 +348,26 @@ instance : Lattice (Ideal P) :=
       exact ⟨w, ‹_›, j, ‹_›, le_sup_right⟩,
     sup_le := fun I J K hIK hJK a ⟨i, hi, j, hj, ha⟩ =>
       K.lower ha <| sup_mem (mem_of_mem_of_le hi hIK) (mem_of_mem_of_le hj hJK),
-    inf := (·⊓·), inf_le_left := fun I J => inter_subset_left I J, inf_le_right := fun I J => inter_subset_right I J,
+    inf := (· ⊓ ·), inf_le_left := fun I J => inter_subset_left I J, inf_le_right := fun I J => inter_subset_right I J,
     le_inf := fun I J K => subset_inter }
 
 @[simp]
-theorem coe_sup : ↑(s⊔t) = { x | ∃ a ∈ s, ∃ b ∈ t, x ≤ a⊔b } :=
+theorem coe_sup : ↑(s ⊔ t) = { x | ∃ a ∈ s, ∃ b ∈ t, x ≤ a ⊔ b } :=
   rfl
 
 @[simp]
-theorem coe_inf : (↑(s⊓t) : Set P) = s ∩ t :=
+theorem coe_inf : (↑(s ⊓ t) : Set P) = s ∩ t :=
   rfl
 
 @[simp]
-theorem mem_inf : x ∈ I⊓J ↔ x ∈ I ∧ x ∈ J :=
+theorem mem_inf : x ∈ I ⊓ J ↔ x ∈ I ∧ x ∈ J :=
   Iff.rfl
 
 @[simp]
-theorem mem_sup : x ∈ I⊔J ↔ ∃ i ∈ I, ∃ j ∈ J, x ≤ i⊔j :=
+theorem mem_sup : x ∈ I ⊔ J ↔ ∃ i ∈ I, ∃ j ∈ J, x ≤ i ⊔ j :=
   Iff.rfl
 
-theorem lt_sup_principal_of_not_mem (hx : x ∉ I) : I < I⊔principal x :=
+theorem lt_sup_principal_of_not_mem (hx : x ∉ I) : I < I ⊔ principal x :=
   le_sup_left.lt_of_ne fun h =>
     hx <| by
       simpa only [left_eq_sup, principal_le_iff] using h
@@ -386,7 +386,7 @@ instance : HasInfₓ (Ideal P) :=
           rw [LowerSet.carrier_eq_coe, LowerSet.coe_infi₂, Set.mem_Inter₂]
           exact fun s _ => s.bot_mem⟩,
       directed' := fun a ha b hb =>
-        ⟨a⊔b,
+        ⟨a ⊔ b,
           ⟨by
             rw [LowerSet.carrier_eq_coe, LowerSet.coe_infi₂, Set.mem_Inter₂] at ha hb⊢
             exact fun s hs => sup_mem (ha _ hs) (hb _ hs), le_sup_left, le_sup_right⟩⟩ }⟩
@@ -418,14 +418,14 @@ variable [DistribLattice P]
 
 variable {I J : Ideal P}
 
-theorem eq_sup_of_le_sup {x i j : P} (hi : i ∈ I) (hj : j ∈ J) (hx : x ≤ i⊔j) : ∃ i' ∈ I, ∃ j' ∈ J, x = i'⊔j' := by
-  refine' ⟨x⊓i, I.lower inf_le_right hi, x⊓j, J.lower inf_le_right hj, _⟩
+theorem eq_sup_of_le_sup {x i j : P} (hi : i ∈ I) (hj : j ∈ J) (hx : x ≤ i ⊔ j) : ∃ i' ∈ I, ∃ j' ∈ J, x = i' ⊔ j' := by
+  refine' ⟨x ⊓ i, I.lower inf_le_right hi, x ⊓ j, J.lower inf_le_right hj, _⟩
   calc
-    x = x⊓(i⊔j) := left_eq_inf.mpr hx
-    _ = x⊓i⊔x⊓j := inf_sup_left
+    x = x ⊓ (i ⊔ j) := left_eq_inf.mpr hx
+    _ = x ⊓ i ⊔ x ⊓ j := inf_sup_left
     
 
-theorem coe_sup_eq : ↑(I⊔J) = { x | ∃ i ∈ I, ∃ j ∈ J, x = i⊔j } :=
+theorem coe_sup_eq : ↑(I ⊔ J) = { x | ∃ i ∈ I, ∃ j ∈ J, x = i ⊔ j } :=
   Set.ext fun _ =>
     ⟨fun ⟨_, _, _, _, _⟩ => eq_sup_of_le_sup ‹_› ‹_› ‹_›, fun ⟨i, _, j, _, _⟩ => ⟨i, ‹_›, j, ‹_›, le_of_eqₓ ‹_›⟩⟩
 
@@ -438,7 +438,7 @@ variable [BooleanAlgebra P] {x : P} {I : Ideal P}
 theorem IsProper.not_mem_of_compl_mem (hI : IsProper I) (hxc : xᶜ ∈ I) : x ∉ I := by
   intro hx
   apply hI.top_not_mem
-  have ht : x⊔xᶜ ∈ I := sup_mem ‹_› ‹_›
+  have ht : x ⊔ xᶜ ∈ I := sup_mem ‹_› ‹_›
   rwa [sup_compl_eq_top] at ht
 
 theorem IsProper.not_mem_or_compl_not_mem (hI : IsProper I) : x ∉ I ∨ xᶜ ∉ I := by

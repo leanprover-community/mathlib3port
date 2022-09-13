@@ -129,8 +129,8 @@ variable [CompleteLattice α] [CompleteLattice β] (f : β →o α) (g : α →o
 
 -- Rolling rule
 theorem map_lfp_comp : f (lfp (g.comp f)) = lfp (f.comp g) :=
-  le_antisymmₓ ((f.comp g).map_lfp ▸ f.mono (lfp_le_fixed _ <| congr_argₓ g (f.comp g).map_lfp)) <|
-    lfp_le _ (congr_argₓ f (g.comp f).map_lfp).le
+  le_antisymmₓ ((f.comp g).map_lfp ▸ f.mono (lfp_le_fixed _ <| congr_arg g (f.comp g).map_lfp)) <|
+    lfp_le _ (congr_arg f (g.comp f).map_lfp).le
 
 theorem map_gfp_comp : f (g.comp f).gfp = (f.comp g).gfp :=
   f.dual.map_lfp_comp g.dual
@@ -143,7 +143,7 @@ theorem lfp_lfp (h : α →o α →o α) : lfp (lfp.comp h) = lfp h.onDiag := by
     
   have ha : (lfp ∘ h) a = a := (lfp.comp h).map_lfp
   calc
-    h a a = h a (lfp (h a)) := congr_argₓ (h a) ha.symm
+    h a a = h a (lfp (h a)) := congr_arg (h a) ha.symm
     _ = lfp (h a) := (h a).map_lfp
     _ = a := ha
     
@@ -157,25 +157,25 @@ section PrevNext
 
 variable [CompleteLattice α] (f : α →o α)
 
-theorem gfp_const_inf_le (x : α) : gfp (const α x⊓f) ≤ x :=
+theorem gfp_const_inf_le (x : α) : gfp (const α x ⊓ f) ≤ x :=
   (gfp_le _) fun b hb => hb.trans inf_le_left
 
 /-- Previous fixed point of a monotone map. If `f` is a monotone self-map of a complete lattice and
 `x` is a point such that `f x ≤ x`, then `f.prev_fixed x hx` is the greatest fixed point of `f`
 that is less than or equal to `x`. -/
 def prevFixed (x : α) (hx : f x ≤ x) : FixedPoints f :=
-  ⟨gfp (const α x⊓f),
+  ⟨gfp (const α x ⊓ f),
     calc
-      f (gfp (const α x⊓f)) = x⊓f (gfp (const α x⊓f)) :=
+      f (gfp (const α x ⊓ f)) = x ⊓ f (gfp (const α x ⊓ f)) :=
         Eq.symm <| inf_of_le_right <| (f.mono <| f.gfp_const_inf_le x).trans hx
-      _ = gfp (const α x⊓f) := (const α x⊓f).map_gfp
+      _ = gfp (const α x ⊓ f) := (const α x ⊓ f).map_gfp
       ⟩
 
 /-- Next fixed point of a monotone map. If `f` is a monotone self-map of a complete lattice and
 `x` is a point such that `x ≤ f x`, then `f.next_fixed x hx` is the least fixed point of `f`
 that is greater than or equal to `x`. -/
 def nextFixed (x : α) (hx : x ≤ f x) : FixedPoints f :=
-  { f.dual.prevFixed x hx with val := (const α x⊔f).lfp }
+  { f.dual.prevFixed x hx with val := (const α x ⊔ f).lfp }
 
 theorem prev_fixed_le {x : α} (hx : f x ≤ x) : ↑(f.prevFixed x hx) ≤ x :=
   f.gfp_const_inf_le x
@@ -197,13 +197,13 @@ theorem le_prev_fixed_iff {x : α} (hx : f x ≤ x) {y : FixedPoints f} : y ≤ 
 theorem le_prev_fixed {x : α} (hx : f x ≤ x) {y : FixedPoints f} (h : ↑y ≤ x) : y ≤ f.prevFixed x hx :=
   (f.le_prev_fixed_iff hx).2 h
 
-theorem le_map_sup_fixed_points (x y : FixedPoints f) : (x⊔y : α) ≤ f (x⊔y) :=
+theorem le_map_sup_fixed_points (x y : FixedPoints f) : (x ⊔ y : α) ≤ f (x ⊔ y) :=
   calc
-    (x⊔y : α) = f x⊔f y := congr_arg2ₓ (·⊔·) x.2.symm y.2.symm
-    _ ≤ f (x⊔y) := f.mono.le_map_sup x y
+    (x ⊔ y : α) = f x ⊔ f y := congr_arg2ₓ (· ⊔ ·) x.2.symm y.2.symm
+    _ ≤ f (x ⊔ y) := f.mono.le_map_sup x y
     
 
-theorem map_inf_fixed_points_le (x y : FixedPoints f) : f (x⊓y) ≤ x⊓y :=
+theorem map_inf_fixed_points_le (x y : FixedPoints f) : f (x ⊓ y) ≤ x ⊓ y :=
   f.dual.le_map_sup_fixed_points x y
 
 theorem le_map_Sup_subset_fixed_points (A : Set α) (hA : A ⊆ FixedPoints f) : sup A ≤ f (sup A) :=
@@ -223,14 +223,14 @@ open OrderHom
 variable [CompleteLattice α] (f : α →o α)
 
 instance : SemilatticeSup (FixedPoints f) :=
-  { Subtype.partialOrder _ with sup := fun x y => f.nextFixed (x⊔y) (f.le_map_sup_fixed_points x y),
+  { Subtype.partialOrder _ with sup := fun x y => f.nextFixed (x ⊔ y) (f.le_map_sup_fixed_points x y),
     le_sup_left := fun x y => Subtype.coe_le_coe.1 <| le_sup_left.trans (f.le_next_fixed _),
     le_sup_right := fun x y => Subtype.coe_le_coe.1 <| le_sup_right.trans (f.le_next_fixed _),
     sup_le := fun x y z hxz hyz => f.next_fixed_le _ <| sup_le hxz hyz }
 
 instance : SemilatticeInf (FixedPoints f) :=
   { Subtype.partialOrder _, OrderDual.semilatticeInf (FixedPoints f.dual) with
-    inf := fun x y => f.prevFixed (x⊓y) (f.map_inf_fixed_points_le x y) }
+    inf := fun x y => f.prevFixed (x ⊓ y) (f.map_inf_fixed_points_le x y) }
 
 instance : CompleteSemilatticeSup (FixedPoints f) :=
   { Subtype.partialOrder _ with

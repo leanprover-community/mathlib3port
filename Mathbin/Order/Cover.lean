@@ -64,7 +64,7 @@ theorem wcovby_of_eq_or_eq (hab : a ≤ b) (h : ∀ c, a ≤ c → c ≤ b → c
 
 /-- If `a ≤ b`, then `b` does not cover `a` iff there's an element in between. -/
 theorem not_wcovby_iff (h : a ≤ b) : ¬a ⩿ b ↔ ∃ c, a < c ∧ c < b := by
-  simp_rw [Wcovby, h, true_andₓ, not_forall, exists_prop, not_not]
+  simp_rw [Wcovby, h, true_andₓ, not_forall, exists_propₓ, not_not]
 
 instance Wcovby.is_refl : IsRefl α (· ⩿ ·) :=
   ⟨Wcovby.refl⟩
@@ -90,11 +90,11 @@ theorem apply_wcovby_apply_iff {E : Type _} [OrderIsoClass E α β] (e : E) : e 
 
 @[simp]
 theorem to_dual_wcovby_to_dual_iff : toDual b ⩿ toDual a ↔ a ⩿ b :=
-  and_congr_right' <| forall_congrₓ fun c => forall_swap
+  and_congr_right'ₓ <| forall_congrₓ fun c => forall_swap
 
 @[simp]
 theorem of_dual_wcovby_of_dual_iff {a b : αᵒᵈ} : ofDual a ⩿ ofDual b ↔ b ⩿ a :=
-  and_congr_right' <| forall_congrₓ fun c => forall_swap
+  and_congr_right'ₓ <| forall_congrₓ fun c => forall_swap
 
 alias to_dual_wcovby_to_dual_iff ↔ _ Wcovby.to_dual
 
@@ -150,7 +150,7 @@ theorem Covby.lt (h : a ⋖ b) : a < b :=
 
 /-- If `a < b`, then `b` does not cover `a` iff there's an element in between. -/
 theorem not_covby_iff (h : a < b) : ¬a ⋖ b ↔ ∃ c, a < c ∧ c < b := by
-  simp_rw [Covby, h, true_andₓ, not_forall, exists_prop, not_not]
+  simp_rw [Covby, h, true_andₓ, not_forall, exists_propₓ, not_not]
 
 alias not_covby_iff ↔ exists_lt_lt_of_not_covby _
 
@@ -166,11 +166,11 @@ theorem densely_ordered_iff_forall_not_covby : DenselyOrdered α ↔ ∀ a b : �
 
 @[simp]
 theorem to_dual_covby_to_dual_iff : toDual b ⋖ toDual a ↔ a ⋖ b :=
-  and_congr_right' <| forall_congrₓ fun c => forall_swap
+  and_congr_right'ₓ <| forall_congrₓ fun c => forall_swap
 
 @[simp]
 theorem of_dual_covby_of_dual_iff {a b : αᵒᵈ} : ofDual a ⋖ ofDual b ↔ b ⋖ a :=
-  and_congr_right' <| forall_congrₓ fun c => forall_swap
+  and_congr_right'ₓ <| forall_congrₓ fun c => forall_swap
 
 alias to_dual_covby_to_dual_iff ↔ _ Covby.to_dual
 
@@ -329,7 +329,7 @@ theorem _root_.wcovby.snd (h : x ⩿ y) : x.2 ⩿ y.2 :=
   ⟨h.1.2, fun c h₁ h₂ => h.2 (mk_lt_mk_iff_rightₓ.2 h₁) ⟨⟨h.1.1, h₂.le⟩, fun hc => h₂.not_le hc.2⟩⟩
 
 theorem mk_wcovby_mk_iff_left : (a₁, b) ⩿ (a₂, b) ↔ a₁ ⩿ a₂ := by
-  refine' ⟨Wcovby.fst, (And.imp mk_le_mk_iff_left.2) fun h c h₁ h₂ => _⟩
+  refine' ⟨Wcovby.fst, (And.impₓ mk_le_mk_iff_left.2) fun h c h₁ h₂ => _⟩
   have : c.2 = b := h₂.le.2.antisymm h₁.le.2
   rw [← @Prod.mk.etaₓ _ _ c, this, mk_lt_mk_iff_left] at h₁ h₂
   exact h h₁ h₂

@@ -399,7 +399,7 @@ theorem op_norm_smul_le (c : 𝕜') : ∥c • f∥ ≤ ∥c∥ * ∥f∥ :=
 
 theorem op_norm_neg : ∥-f∥ = ∥f∥ := by
   rw [norm_def]
-  apply congr_argₓ
+  apply congr_arg
   ext
   simp
 
@@ -439,7 +439,7 @@ theorem le_op_nnnorm : ∥f m∥₊ ≤ ∥f∥₊ * ∏ i, ∥m i∥₊ :=
     push_cast
     exact f.le_op_norm m
 
-theorem le_of_op_nnnorm_le {C : ℝ≥0 } (h : ∥f∥₊ ≤ C) : ∥f m∥₊ ≤ C * ∏ i, ∥m i∥₊ :=
+theorem le_of_op_nnnorm_le {C : ℝ≥0} (h : ∥f∥₊ ≤ C) : ∥f m∥₊ ≤ C * ∏ i, ∥m i∥₊ :=
   (f.le_op_nnnorm m).trans <| mul_le_mul' h le_rflₓ
 
 theorem op_norm_prod (f : ContinuousMultilinearMap 𝕜 E G) (g : ContinuousMultilinearMap 𝕜 E G') :
@@ -1460,11 +1460,11 @@ def domDomCongr (σ : ι ≃ ι') :
             rw [← σ.symm.prod_comp],
       left_inv := fun f =>
         ext fun m =>
-          congr_argₓ f <| by
+          congr_arg f <| by
             simp only [σ.symm_apply_apply],
       right_inv := fun f =>
         ext fun m =>
-          congr_argₓ f <| by
+          congr_arg f <| by
             simp only [σ.apply_symm_apply],
       map_add' := fun f g => rfl, map_smul' := fun c f => rfl }
     (fun f => MultilinearMap.mk_continuous_norm_le _ (norm_nonneg f) _) fun f =>
@@ -1526,7 +1526,7 @@ def currySumEquiv :
         rfl,
       left_inv := fun f => by
         ext m
-        exact congr_argₓ f (Sum.elim_comp_inl_inr m),
+        exact congr_arg f (Sum.elim_comp_inl_inr m),
       right_inv := fun f => by
         ext m₁ m₂
         change f _ _ = f _ _

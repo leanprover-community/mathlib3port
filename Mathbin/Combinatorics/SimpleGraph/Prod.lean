@@ -51,11 +51,11 @@ theorem box_prod_adj : (G □ H).Adj x y ↔ G.Adj x.1 y.1 ∧ x.2 = y.2 ∨ H.A
 
 @[simp]
 theorem box_prod_adj_left : (G □ H).Adj (a₁, b) (a₂, b) ↔ G.Adj a₁ a₂ := by
-  rw [box_prod_adj, and_iff_left rfl, or_iff_left fun h : H.adj b b ∧ _ => h.1.Ne rfl]
+  rw [box_prod_adj, and_iff_leftₓ rfl, or_iff_leftₓ fun h : H.adj b b ∧ _ => h.1.Ne rfl]
 
 @[simp]
 theorem box_prod_adj_right : (G □ H).Adj (a, b₁) (a, b₂) ↔ H.Adj b₁ b₂ := by
-  rw [box_prod_adj, and_iff_left rfl, or_iff_right fun h : G.adj a a ∧ _ => h.1.Ne rfl]
+  rw [box_prod_adj, and_iff_leftₓ rfl, or_iff_right fun h : G.adj a a ∧ _ => h.1.Ne rfl]
 
 variable (G H I)
 
@@ -68,21 +68,21 @@ def boxProdComm : G □ H ≃g H □ G :=
 @[simps]
 def boxProdAssoc : G □ H □ I ≃g G □ (H □ I) :=
   ⟨Equivₓ.prodAssoc _ _ _, fun x y => by
-    simp only [box_prod_adj, Equivₓ.prod_assoc_apply, or_and_distrib_right, or_assoc, Prod.ext_iffₓ, and_assoc,
+    simp only [box_prod_adj, Equivₓ.prod_assoc_apply, or_and_distrib_right, or_assocₓ, Prod.ext_iffₓ, and_assocₓ,
       @And.comm (x.1.1 = _)]⟩
 
 /-- The embedding of `G` into `G □ H` given by `b`. -/
 @[simps]
 def boxProdLeft (b : β) : G ↪g G □ H where
   toFun := fun a => (a, b)
-  inj' := fun a₁ a₂ => congr_argₓ Prod.fst
+  inj' := fun a₁ a₂ => congr_arg Prod.fst
   map_rel_iff' := fun a₁ a₂ => box_prod_adj_left
 
 /-- The embedding of `H` into `G □ H` given by `a`. -/
 @[simps]
 def boxProdRight (a : α) : H ↪g G □ H where
   toFun := Prod.mk a
-  inj' := fun b₁ b₂ => congr_argₓ Prod.snd
+  inj' := fun b₁ b₂ => congr_arg Prod.snd
   map_rel_iff' := fun b₁ b₂ => box_prod_adj_right
 
 namespace Walk

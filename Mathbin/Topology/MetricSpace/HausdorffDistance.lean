@@ -60,7 +60,7 @@ theorem le_inf_edist {d} : d ≤ infEdist x s ↔ ∀ y ∈ s, d ≤ edist x y :
 
 /-- The edist to a union is the minimum of the edists -/
 @[simp]
-theorem inf_edist_union : infEdist x (s ∪ t) = infEdist x s⊓infEdist x t :=
+theorem inf_edist_union : infEdist x (s ∪ t) = infEdist x s ⊓ infEdist x t :=
   infi_union
 
 @[simp]
@@ -202,7 +202,7 @@ theorem _root_.is_compact.exists_inf_edist_eq_edist (hs : IsCompact s) (hne : s.
           rwa [le_inf_edist])⟩
 
 theorem exists_pos_forall_lt_edist (hs : IsCompact s) (ht : IsClosed t) (hst : Disjoint s t) :
-    ∃ r : ℝ≥0 , 0 < r ∧ ∀ x ∈ s, ∀ y ∈ t, (r : ℝ≥0∞) < edist x y := by
+    ∃ r : ℝ≥0, 0 < r ∧ ∀ x ∈ s, ∀ y ∈ t, (r : ℝ≥0∞) < edist x y := by
   rcases s.eq_empty_or_nonempty with (rfl | hne)
   · use 1
     simp
@@ -222,10 +222,10 @@ end InfEdist
 /-- The Hausdorff edistance between two sets is the smallest `r` such that each set
 is contained in the `r`-neighborhood of the other one -/
 irreducible_def hausdorffEdist {α : Type u} [PseudoEmetricSpace α] (s t : Set α) : ℝ≥0∞ :=
-  (⨆ x ∈ s, infEdist x t)⊔⨆ y ∈ t, infEdist y s
+  (⨆ x ∈ s, infEdist x t) ⊔ ⨆ y ∈ t, infEdist y s
 
 theorem Hausdorff_edist_def {α : Type u} [PseudoEmetricSpace α] (s t : Set α) :
-    hausdorffEdist s t = (⨆ x ∈ s, infEdist x t)⊔⨆ y ∈ t, infEdist y s := by
+    hausdorffEdist s t = (⨆ x ∈ s, infEdist x t) ⊔ ⨆ y ∈ t, infEdist y s := by
   rw [Hausdorff_edist]
 
 section HausdorffEdist
@@ -994,7 +994,7 @@ an increasing function of the subset `E`. -/
 theorem cthickening_subset_of_subset (δ : ℝ) {E₁ E₂ : Set α} (h : E₁ ⊆ E₂) : Cthickening δ E₁ ⊆ Cthickening δ E₂ :=
   fun _ hx => le_transₓ (inf_edist_anti h) hx
 
-theorem cthickening_subset_thickening {δ₁ : ℝ≥0 } {δ₂ : ℝ} (hlt : (δ₁ : ℝ) < δ₂) (E : Set α) :
+theorem cthickening_subset_thickening {δ₁ : ℝ≥0} {δ₂ : ℝ} (hlt : (δ₁ : ℝ) < δ₂) (E : Set α) :
     Cthickening δ₁ E ⊆ Thickening δ₂ E := fun _ hx =>
   lt_of_le_of_ltₓ hx ((Ennreal.of_real_lt_of_real_iff (lt_of_le_of_ltₓ δ₁.Prop hlt)).mpr hlt)
 

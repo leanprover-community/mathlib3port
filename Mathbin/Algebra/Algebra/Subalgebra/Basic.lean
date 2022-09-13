@@ -300,7 +300,7 @@ end
 
 instance no_zero_smul_divisors_bot [NoZeroSmulDivisors R A] : NoZeroSmulDivisors R S :=
   ⟨fun c x h =>
-    have : c = 0 ∨ (x : A) = 0 := eq_zero_or_eq_zero_of_smul_eq_zero (congr_argₓ coe h)
+    have : c = 0 ∨ (x : A) = 0 := eq_zero_or_eq_zero_of_smul_eq_zero (congr_arg coe h)
     this.imp_right (@Subtype.ext_iff _ _ x 0).mpr⟩
 
 protected theorem coe_add (x y : S) : (↑(x + y) : A) = ↑x + ↑y :=
@@ -520,7 +520,7 @@ theorem coe_cod_restrict (f : A →ₐ[R] B) (S : Subalgebra R B) (hf : ∀ x, f
 
 theorem injective_cod_restrict (f : A →ₐ[R] B) (S : Subalgebra R B) (hf : ∀ x, f x ∈ S) :
     Function.Injective (f.codRestrict S hf) ↔ Function.Injective f :=
-  ⟨fun H x y hxy => H <| Subtype.eq hxy, fun H x y hxy => H (congr_argₓ Subtype.val hxy : _)⟩
+  ⟨fun H x y hxy => H <| Subtype.eq hxy, fun H x y hxy => H (congr_arg Subtype.val hxy : _)⟩
 
 /-- Restrict the codomain of a alg_hom `f` to `f.range`.
 
@@ -663,32 +663,32 @@ theorem to_subring_eq_top {R A : Type _} [CommRingₓ R] [Ringₓ A] [Algebra R 
     S.toSubring = ⊤ ↔ S = ⊤ :=
   Subalgebra.to_subring_injective.eq_iff' top_to_subring
 
-theorem mem_sup_left {S T : Subalgebra R A} : ∀ {x : A}, x ∈ S → x ∈ S⊔T :=
-  show S ≤ S⊔T from le_sup_left
+theorem mem_sup_left {S T : Subalgebra R A} : ∀ {x : A}, x ∈ S → x ∈ S ⊔ T :=
+  show S ≤ S ⊔ T from le_sup_left
 
-theorem mem_sup_right {S T : Subalgebra R A} : ∀ {x : A}, x ∈ T → x ∈ S⊔T :=
-  show T ≤ S⊔T from le_sup_right
+theorem mem_sup_right {S T : Subalgebra R A} : ∀ {x : A}, x ∈ T → x ∈ S ⊔ T :=
+  show T ≤ S ⊔ T from le_sup_right
 
-theorem mul_mem_sup {S T : Subalgebra R A} {x y : A} (hx : x ∈ S) (hy : y ∈ T) : x * y ∈ S⊔T :=
-  (S⊔T).mul_mem (mem_sup_left hx) (mem_sup_right hy)
+theorem mul_mem_sup {S T : Subalgebra R A} {x y : A} (hx : x ∈ S) (hy : y ∈ T) : x * y ∈ S ⊔ T :=
+  (S ⊔ T).mul_mem (mem_sup_left hx) (mem_sup_right hy)
 
-theorem map_sup (f : A →ₐ[R] B) (S T : Subalgebra R A) : (S⊔T).map f = S.map f⊔T.map f :=
+theorem map_sup (f : A →ₐ[R] B) (S T : Subalgebra R A) : (S ⊔ T).map f = S.map f ⊔ T.map f :=
   (Subalgebra.gc_map_comap f).l_sup
 
 @[simp, norm_cast]
-theorem coe_inf (S T : Subalgebra R A) : (↑(S⊓T) : Set A) = S ∩ T :=
+theorem coe_inf (S T : Subalgebra R A) : (↑(S ⊓ T) : Set A) = S ∩ T :=
   rfl
 
 @[simp]
-theorem mem_inf {S T : Subalgebra R A} {x : A} : x ∈ S⊓T ↔ x ∈ S ∧ x ∈ T :=
+theorem mem_inf {S T : Subalgebra R A} {x : A} : x ∈ S ⊓ T ↔ x ∈ S ∧ x ∈ T :=
   Iff.rfl
 
 @[simp]
-theorem inf_to_submodule (S T : Subalgebra R A) : (S⊓T).toSubmodule = S.toSubmodule⊓T.toSubmodule :=
+theorem inf_to_submodule (S T : Subalgebra R A) : (S ⊓ T).toSubmodule = S.toSubmodule ⊓ T.toSubmodule :=
   rfl
 
 @[simp]
-theorem inf_to_subsemiring (S T : Subalgebra R A) : (S⊓T).toSubsemiring = S.toSubsemiring⊓T.toSubsemiring :=
+theorem inf_to_subsemiring (S T : Subalgebra R A) : (S ⊓ T).toSubsemiring = S.toSubsemiring ⊓ T.toSubsemiring :=
   rfl
 
 @[simp, norm_cast]
@@ -729,7 +729,7 @@ theorem mem_bot {x : A} : x ∈ (⊥ : Subalgebra R A) ↔ x ∈ Set.Range (alge
     rfl
   le_bot_iff.mp fun x hx => Subalgebra.range_le _ ((ofId R A).coe_range ▸ hx)
 
-theorem to_submodule_bot : (⊥ : Subalgebra R A).toSubmodule = R∙1 := by
+theorem to_submodule_bot : (⊥ : Subalgebra R A).toSubmodule = R ∙ 1 := by
   ext x
   simp [mem_bot, -Set.singleton_one, Submodule.mem_span_singleton, Algebra.smul_def]
 
@@ -781,7 +781,7 @@ theorem bijective_algebra_map_iff {R A : Type _} [Field R] [Semiringₓ A] [Nont
 noncomputable def botEquivOfInjective (h : Function.Injective (algebraMap R A)) : (⊥ : Subalgebra R A) ≃ₐ[R] R :=
   AlgEquiv.symm <|
     AlgEquiv.ofBijective (Algebra.ofId R _)
-      ⟨fun x y hxy => h (congr_argₓ Subtype.val hxy : _), fun ⟨y, hy⟩ =>
+      ⟨fun x y hxy => h (congr_arg Subtype.val hxy : _), fun ⟨y, hy⟩ =>
         let ⟨x, hx⟩ := Algebra.mem_bot.1 hy
         ⟨x, Subtype.eq hx⟩⟩
 
@@ -837,7 +837,7 @@ instance : Unique (Subalgebra R R) :=
     uniq := by
       intro S
       refine' le_antisymmₓ (fun r hr => _) bot_le
-      simp only [Set.mem_range, mem_bot, id.map_eq_self, exists_apply_eq_applyₓ, default] }
+      simp only [Set.mem_range, mem_bot, id.map_eq_self, exists_apply_eq_apply, default] }
 
 /-- The map `S → T` when `S` is a subalgebra contained in the subalgebra `T`.
 
@@ -878,7 +878,7 @@ theorem coe_inclusion {S T : Subalgebra R A} (h : S ≤ T) (s : S) : (inclusion 
 This is the `subalgebra` version of `linear_equiv.of_eq` and `equiv.set.of_eq`. -/
 @[simps apply]
 def equivOfEq (S T : Subalgebra R A) (h : S = T) : S ≃ₐ[R] T :=
-  { LinearEquiv.ofEq _ _ (congr_argₓ toSubmodule h) with toFun := fun x => ⟨x, h ▸ x.2⟩,
+  { LinearEquiv.ofEq _ _ (congr_arg toSubmodule h) with toFun := fun x => ⟨x, h ▸ x.2⟩,
     invFun := fun x => ⟨x, h.symm ▸ x.2⟩, map_mul' := fun _ _ => rfl, commutes' := fun _ => rfl }
 
 @[simp]
@@ -925,7 +925,8 @@ theorem prod_mono {S T : Subalgebra R A} {S₁ T₁ : Subalgebra R B} : S ≤ T 
   Set.prod_mono
 
 @[simp]
-theorem prod_inf_prod {S T : Subalgebra R A} {S₁ T₁ : Subalgebra R B} : S.Prod S₁⊓T.Prod T₁ = (S⊓T).Prod (S₁⊓T₁) :=
+theorem prod_inf_prod {S T : Subalgebra R A} {S₁ T₁ : Subalgebra R B} :
+    S.Prod S₁ ⊓ T.Prod T₁ = (S ⊓ T).Prod (S₁ ⊓ T₁) :=
   SetLike.coe_injective Set.prod_inter_prod
 
 end Prod

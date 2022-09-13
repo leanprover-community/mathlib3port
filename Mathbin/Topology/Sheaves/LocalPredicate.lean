@@ -126,7 +126,7 @@ def PrelocalPredicate.sheafify {T : X → Type v} (P : PrelocalPredicate T) : Lo
   res := fun V U i f w x => by
     specialize w (i x)
     rcases w with ⟨V', m', i', p⟩
-    refine' ⟨V⊓V', ⟨x.2, m'⟩, opens.inf_le_left _ _, _⟩
+    refine' ⟨V ⊓ V', ⟨x.2, m'⟩, opens.inf_le_left _ _, _⟩
     convert P.res (opens.inf_le_right V V') _ p
   locality := fun U f w x => by
     specialize w x
@@ -169,7 +169,7 @@ theorem is_sheaf (P : LocalPredicate T) : (subpresheafToTypes P.toPrelocalPredic
     -- by forgetting that the prediacte holds
     let sf' : ∀ i : ι, (presheaf_to_Types X T).obj (op (U i)) := fun i => (sf i).val
     -- Since our original family is compatible, this one is as well
-    have sf'_comp : (presheaf_to_Types X T).IsCompatible U sf' := fun i j => congr_argₓ Subtype.val (sf_comp i j)
+    have sf'_comp : (presheaf_to_Types X T).IsCompatible U sf' := fun i j => congr_arg Subtype.val (sf_comp i j)
     -- So, we can obtain a unique gluing
     obtain ⟨gl, gl_spec, gl_uniq⟩ := (sheaf_to_Types X T).exists_unique_gluing U sf' sf'_comp
     refine' ⟨⟨gl, _⟩, _, _⟩
@@ -194,7 +194,7 @@ theorem is_sheaf (P : LocalPredicate T) : (subpresheafToTypes P.toPrelocalPredic
       
     · intro gl' hgl'
       ext1
-      exact gl_uniq gl'.1 fun i => congr_argₓ Subtype.val (hgl' i)
+      exact gl_uniq gl'.1 fun i => congr_arg Subtype.val (hgl' i)
       
 
 end SubpresheafToTypes

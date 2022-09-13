@@ -209,7 +209,7 @@ instance : HasInf (SimplicialComplex 𝕜 E) :=
       inter_subset_convex_hull := fun s t hs ht => K.inter_subset_convex_hull hs.1 ht.1 }⟩
 
 instance : SemilatticeInf (SimplicialComplex 𝕜 E) :=
-  { (PartialOrderₓ.lift Faces) fun x y => ext _ _ with inf := (·⊓·), inf_le_left := fun K L s hs => hs.1,
+  { (PartialOrderₓ.lift Faces) fun x y => ext _ _ with inf := (· ⊓ ·), inf_le_left := fun K L s hs => hs.1,
     inf_le_right := fun K L s hs => hs.2, le_inf := fun K L M hKL hKM s hs => ⟨hKL hs, hKM hs⟩ }
 
 instance : HasBot (SimplicialComplex 𝕜 E) :=

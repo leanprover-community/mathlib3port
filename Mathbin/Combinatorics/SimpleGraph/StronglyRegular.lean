@@ -102,7 +102,7 @@ theorem compl_neighbor_finset_sdiff_inter_eq {v w : V} :
   by
   ext
   rw [← not_iff_not]
-  simp [imp_iff_not_or, or_assoc, or_comm, Or.left_comm]
+  simp [imp_iff_not_or, or_assocₓ, or_comm, Or.left_comm]
 
 theorem sdiff_compl_neighbor_finset_inter_eq {v w : V} (h : G.Adj v w) :
     (G.neighborFinset vᶜ ∩ G.neighborFinset wᶜ) \ ({w} ∪ {v}) = G.neighborFinset vᶜ ∩ G.neighborFinset wᶜ := by

@@ -63,14 +63,14 @@ theorem mem_sum_lift₂ :
     
 
 theorem inl_mem_sum_lift₂ {c₁ : γ₁} : inl c₁ ∈ sumLift₂ f g a b ↔ ∃ a₁ b₁, a = inl a₁ ∧ b = inl b₁ ∧ c₁ ∈ f a₁ b₁ := by
-  rw [mem_sum_lift₂, or_iff_left]
-  simp only [exists_and_distrib_left, exists_eq_left']
+  rw [mem_sum_lift₂, or_iff_leftₓ]
+  simp only [exists_and_distrib_leftₓ, exists_eq_left']
   rintro ⟨_, _, c₂, _, _, h, _⟩
   exact inl_ne_inr h
 
 theorem inr_mem_sum_lift₂ {c₂ : γ₂} : inr c₂ ∈ sumLift₂ f g a b ↔ ∃ a₂ b₂, a = inr a₂ ∧ b = inr b₂ ∧ c₂ ∈ g a₂ b₂ := by
   rw [mem_sum_lift₂, or_iff_right]
-  simp only [exists_and_distrib_left, exists_eq_left']
+  simp only [exists_and_distrib_leftₓ, exists_eq_left']
   rintro ⟨_, _, c₂, _, _, h, _⟩
   exact inr_ne_inl h
 

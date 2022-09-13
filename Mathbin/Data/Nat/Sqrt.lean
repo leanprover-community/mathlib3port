@@ -67,7 +67,7 @@ theorem sqrt_aux_1 {r n b} (h : b ≠ 0) {n'} (h₂ : r + b + n' = n) :
 
 theorem sqrt_aux_2 {r n b} (h : b ≠ 0) (h₂ : n < r + b) : sqrtAux b r n = sqrtAux (shiftr b 2) (div2 r) n := by
   rw [sqrt_aux] <;> simp only [h, h₂, if_false]
-  cases' Int.eq_neg_succ_of_lt_zeroₓ (sub_lt_zero.2 (Int.coe_nat_lt_coe_nat_of_lt h₂)) with k e
+  cases' Int.eq_neg_succ_of_lt_zero (sub_lt_zero.2 (Int.coe_nat_lt_coe_nat_of_lt h₂)) with k e
   rw [e, sqrt_aux._match_1]
 
 private def is_sqrt (n q : ℕ) : Prop :=
@@ -235,7 +235,7 @@ theorem sqrt_add_eq (n : ℕ) {a : ℕ} (h : a ≤ n + n) : sqrt (n * n + a) = n
     (le_sqrt.2 <| Nat.le_add_rightₓ _ _)
 
 theorem sqrt_add_eq' (n : ℕ) {a : ℕ} (h : a ≤ n + n) : sqrt (n ^ 2 + a) = n :=
-  (congr_argₓ (fun i => sqrt (i + a)) (sq n)).trans (sqrt_add_eq n h)
+  (congr_arg (fun i => sqrt (i + a)) (sq n)).trans (sqrt_add_eq n h)
 
 theorem sqrt_eq (n : ℕ) : sqrt (n * n) = n :=
   sqrt_add_eq n (zero_le _)

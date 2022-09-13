@@ -81,7 +81,7 @@ theorem lift'_eq_free_group_lift {A : Type u} : @lift (FreeGroup A) _ _ H _ = Fr
 
 @[simp]
 theorem lift_of (f : Generators G → H) (a : Generators G) : lift f (of a) = f a :=
-  congr_funₓ (lift.symm_apply_apply f) a
+  congr_fun (lift.symm_apply_apply f) a
 
 @[simp]
 theorem lift_symm_apply (f : G →* H) (a : Generators G) : (lift.symm f) a = f (of a) :=
@@ -125,8 +125,7 @@ noncomputable def ofUniqueLift {G : Type u} [Groupₓ G] (X : Type u) (of : X �
     { toFun := fun f => Classical.choose (h f), invFun := fun F => F ∘ of,
       left_inv := fun f => funext (Classical.choose_spec (h f)).left,
       right_inv := fun F => ((Classical.choose_spec (h (F ∘ of))).right F fun _ => rfl).symm }
-  let lift_of {H : Type u} [Groupₓ H] (f : X → H) (a : X) : lift f (of a) = f a :=
-    congr_funₓ (lift.symm_apply_apply f) a
+  let lift_of {H : Type u} [Groupₓ H] (f : X → H) (a : X) : lift f (of a) = f a := congr_fun (lift.symm_apply_apply f) a
   ofLift X of @lift @lift_of
 
 /-- Being a free group transports across group isomorphisms. -/

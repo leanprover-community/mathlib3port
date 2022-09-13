@@ -91,13 +91,13 @@ theorem merge' {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) :
         (by
           simpa only [encodek₂, bind_some, coe_some] using h)
     exists hk
-    simp only [exists_prop, mem_map_iff, mem_coe, mem_bind_iff, Option.mem_def] at H
+    simp only [exists_propₓ, mem_map_iff, mem_coe, mem_bind_iff, Option.mem_def] at H
     obtain ⟨a', ha', y, hy, e⟩ | ⟨a', ha', y, hy, e⟩ := (H _).1 _ ⟨hk, rfl⟩ <;>
       · simp only [e.symm, encodek]
         
     
   intro x h'
-  simp only [k', exists_prop, mem_coe, mem_bind_iff, Option.mem_def] at h'
+  simp only [k', exists_propₓ, mem_coe, mem_bind_iff, Option.mem_def] at h'
   obtain ⟨n, hn, hx⟩ := h'
   have := (H _).1 _ hn
   simp [mem_decode₂, encode_injective.eq_iff] at this
@@ -363,9 +363,9 @@ theorem rfind_opt {n} {f : Vector ℕ (n + 1) → ℕ} (hf : @Partrec' (n + 1) f
         ((prim Nat.Primrec'.pred).comp₁ Nat.pred hf)).of_eq
     fun v =>
     Part.ext fun b => by
-      simp only [Nat.rfindOpt, exists_prop, tsub_eq_zero_iff_le, Pfun.coe_val, Part.mem_bind_iff, Part.mem_some_iff,
+      simp only [Nat.rfindOpt, exists_propₓ, tsub_eq_zero_iff_le, Pfun.coe_val, Part.mem_bind_iff, Part.mem_some_iff,
         Option.mem_def, Part.mem_coe]
-      refine' exists_congr fun a => (and_congr (iff_of_eq _) Iff.rfl).trans (and_congr_right fun h => _)
+      refine' exists_congr fun a => (and_congrₓ (iff_of_eq _) Iff.rfl).trans (and_congr_right fun h => _)
       · congr
         funext n
         simp only [Part.some_inj, Pfun.coe_val]

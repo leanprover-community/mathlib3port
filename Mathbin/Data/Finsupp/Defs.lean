@@ -619,7 +619,7 @@ bundled (defined in `data/finsupp/basic`):
 -/
 def mapRange (f : M → N) (hf : f 0 = 0) (g : α →₀ M) : α →₀ N :=
   (onFinset g.Support (f ∘ g)) fun a => by
-    rw [mem_support_iff, not_imp_not] <;> exact fun H => (congr_argₓ f H).trans hf
+    rw [mem_support_iff, not_imp_not] <;> exact fun H => (congr_arg f H).trans hf
 
 @[simp]
 theorem map_range_apply {f : M → N} {hf : f 0 = 0} {g : α →₀ M} {a : α} : mapRange f hf g a = f (g a) :=
@@ -693,7 +693,7 @@ theorem emb_domain_zero (f : α ↪ β) : (embDomain f 0 : β →₀ M) = 0 :=
 theorem emb_domain_apply (f : α ↪ β) (v : α →₀ M) (a : α) : embDomain f v (f a) = v a := by
   change dite _ _ _ = _
   split_ifs <;> rw [Finset.mem_map' f] at h
-  · refine' congr_argₓ (v : α → M) (f.inj' _)
+  · refine' congr_arg (v : α → M) (f.inj' _)
     exact Finset.choose_property (fun a₁ => f a₁ = f a) _ _
     
   · exact (not_mem_support_iff.1 h).symm
@@ -1056,7 +1056,7 @@ theorem single_add_single_eq_single_add_single [AddCommMonoidₓ M] {k l m n : �
 theorem support_neg [AddGroupₓ G] (f : α →₀ G) : support (-f) = support f :=
   Finset.Subset.antisymm support_map_range
     (calc
-      support f = support (- -f) := congr_argₓ support (neg_negₓ _).symm
+      support f = support (- -f) := congr_arg support (neg_negₓ _).symm
       _ ⊆ support (-f) := support_map_range
       )
 

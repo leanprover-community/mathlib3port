@@ -97,15 +97,15 @@ instance (priority := 100) [SemilatticeInf α] [OrderTop α] : HasBinaryProducts
 infimum.
 -/
 @[simp]
-theorem prod_eq_inf [SemilatticeInf α] [OrderTop α] (x y : α) : Limits.prod x y = x⊓y :=
+theorem prod_eq_inf [SemilatticeInf α] [OrderTop α] (x y : α) : Limits.prod x y = x ⊓ y :=
   calc
     Limits.prod x y = limit (pair x y) := rfl
     _ = Finset.univ.inf (pair x y).obj := by
       rw [finite_limit_eq_finset_univ_inf (pair.{u} x y)]
-    _ = x⊓(y⊓⊤) := rfl
+    _ = x ⊓ (y ⊓ ⊤) := rfl
     -- Note: finset.inf is realized as a fold, hence the definitional equality
         _ =
-        x⊓y :=
+        x ⊓ y :=
       by
       rw [inf_top_eq]
     
@@ -121,15 +121,15 @@ instance (priority := 100) [SemilatticeSup α] [OrderBot α] : HasBinaryCoproduc
 supremum.
 -/
 @[simp]
-theorem coprod_eq_sup [SemilatticeSup α] [OrderBot α] (x y : α) : Limits.coprod x y = x⊔y :=
+theorem coprod_eq_sup [SemilatticeSup α] [OrderBot α] (x y : α) : Limits.coprod x y = x ⊔ y :=
   calc
     Limits.coprod x y = colimit (pair x y) := rfl
     _ = Finset.univ.sup (pair x y).obj := by
       rw [finite_colimit_eq_finset_univ_sup (pair x y)]
-    _ = x⊔(y⊔⊥) := rfl
+    _ = x ⊔ (y ⊔ ⊥) := rfl
     -- Note: finset.sup is realized as a fold, hence the definitional equality
         _ =
-        x⊔y :=
+        x ⊔ y :=
       by
       rw [sup_bot_eq]
     
@@ -138,30 +138,30 @@ theorem coprod_eq_sup [SemilatticeSup α] [OrderBot α] (x y : α) : Limits.copr
 over the objects.
 -/
 @[simp]
-theorem pullback_eq_inf [SemilatticeInf α] [OrderTop α] {x y z : α} (f : x ⟶ z) (g : y ⟶ z) : pullback f g = x⊓y :=
+theorem pullback_eq_inf [SemilatticeInf α] [OrderTop α] {x y z : α} (f : x ⟶ z) (g : y ⟶ z) : pullback f g = x ⊓ y :=
   calc
     pullback f g = limit (cospan f g) := rfl
     _ = Finset.univ.inf (cospan f g).obj := by
       rw [finite_limit_eq_finset_univ_inf]
-    _ = z⊓(x⊓(y⊓⊤)) := rfl
-    _ = z⊓(x⊓y) := by
+    _ = z ⊓ (x ⊓ (y ⊓ ⊤)) := rfl
+    _ = z ⊓ (x ⊓ y) := by
       rw [inf_top_eq]
-    _ = x⊓y := inf_eq_right.mpr (inf_le_of_left_le f.le)
+    _ = x ⊓ y := inf_eq_right.mpr (inf_le_of_left_le f.le)
     
 
 /-- The pushout in the category of a `semilattice_sup` with `order_bot` is the same as the supremum
 over the objects.
 -/
 @[simp]
-theorem pushout_eq_sup [SemilatticeSup α] [OrderBot α] (x y z : α) (f : z ⟶ x) (g : z ⟶ y) : pushout f g = x⊔y :=
+theorem pushout_eq_sup [SemilatticeSup α] [OrderBot α] (x y z : α) (f : z ⟶ x) (g : z ⟶ y) : pushout f g = x ⊔ y :=
   calc
     pushout f g = colimit (span f g) := rfl
     _ = Finset.univ.sup (span f g).obj := by
       rw [finite_colimit_eq_finset_univ_sup]
-    _ = z⊔(x⊔(y⊔⊥)) := rfl
-    _ = z⊔(x⊔y) := by
+    _ = z ⊔ (x ⊔ (y ⊔ ⊥)) := rfl
+    _ = z ⊔ (x ⊔ y) := by
       rw [sup_bot_eq]
-    _ = x⊔y := sup_eq_right.mpr (le_sup_of_le_left f.le)
+    _ = x ⊔ y := sup_eq_right.mpr (le_sup_of_le_left f.le)
     
 
 end Semilattice

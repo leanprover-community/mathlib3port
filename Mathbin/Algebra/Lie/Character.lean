@@ -38,7 +38,7 @@ abbrev LieCharacter :=
 variable {R L}
 
 @[simp]
-theorem lie_character_apply_lie (χ : LieCharacter R L) (x y : L) : χ ⁅x,y⁆ = 0 := by
+theorem lie_character_apply_lie (χ : LieCharacter R L) (x y : L) : χ ⁅x, y⁆ = 0 := by
   rw [LieHom.map_lie, LieRing.of_associative_ring_bracket, mul_comm, sub_self]
 
 theorem lie_character_apply_of_mem_derived (χ : LieCharacter R L) {x : L} (h : x ∈ derivedSeries R L 1) : χ x = 0 := by

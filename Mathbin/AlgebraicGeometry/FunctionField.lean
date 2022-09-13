@@ -88,7 +88,7 @@ theorem generic_point_eq_of_is_open_immersion {X Y : Scheme} (f : X ⟶ Y) [H : 
   rw [eq_top_iff, Set.top_eq_univ, Set.top_eq_univ]
   convert subset_closure_inter_of_is_preirreducible_of_is_open _ H.base_open.open_range _
   rw [Set.univ_inter, Set.image_univ]
-  apply PreirreducibleSpace.is_preirreducible_univ with { instances := false }
+  apply (config := { instances := false }) PreirreducibleSpace.is_preirreducible_univ
   show PreirreducibleSpace Y.carrier
   · infer_instance
     

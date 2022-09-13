@@ -252,7 +252,7 @@ theorem discr_power_basis_eq_norm [IsSeparable K L] :
           simp [hij.1])
     
   · simp only [true_andₓ, Finset.mem_mk, mem_univ, mem_sigma] at hσ⊢
-    simp only [Sigma.exists, exists_prop, mem_compl, mem_singleton, Ne.def]
+    simp only [Sigma.exists, exists_propₓ, mem_compl, mem_singleton, Ne.def]
     refine' ⟨e.symm (PowerBasis.lift pb σ.2 _), e.symm σ.1, ⟨fun h => _, Sigma.eq _ _⟩⟩
     · rw [aeval_def, eval₂_eq_eval_map, ← is_root.def, ← mem_roots]
       · exact Multiset.erase_subset _ _ hσ
@@ -344,10 +344,10 @@ theorem discr_mul_is_integral_mem_adjoin [IsDomain R] [IsSeparable K L] [IsInteg
     refine' Subalgebra.pow_mem _ (subset_adjoin (Set.mem_singleton _)) _
   intro i
   rw [← H, ← mul_vec_smul] at cramer
-  replace cramer := congr_argₓ (mul_vec (trace_matrix K B.basis)⁻¹) cramer
+  replace cramer := congr_arg (mul_vec (trace_matrix K B.basis)⁻¹) cramer
   rw [mul_vec_mul_vec, nonsing_inv_mul _ hinv, mul_vec_mul_vec, nonsing_inv_mul _ hinv, one_mul_vec, one_mul_vec] at
     cramer
-  rw [← congr_funₓ cramer i, cramer_apply, det_apply]
+  rw [← congr_fun cramer i, cramer_apply, det_apply]
   refine' Subalgebra.sum_mem _ fun σ _ => Subalgebra.zsmul_mem _ (Subalgebra.prod_mem _ fun j _ => _) _
   by_cases' hji : j = i
   · simp only [update_column_apply, hji, eq_self_iff_true, PowerBasis.coe_basis]

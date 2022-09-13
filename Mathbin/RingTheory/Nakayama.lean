@@ -71,8 +71,8 @@ theorem eq_bot_of_le_smul_of_le_jacobson_bot (I : Ideal R) (N : Submodule R M) (
 [Stacks 00DV](https://stacks.math.columbia.edu/tag/00DV).
 See also `smul_sup_eq_of_le_smul_of_le_jacobson_bot` for the special case when `J = ⊥`.  -/
 theorem smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson {I J : Ideal R} {N N' : Submodule R M} (hN' : N'.Fg)
-    (hIJ : I ≤ jacobson J) (hNN : N⊔N' ≤ N⊔I • N') : N⊔I • N' = N⊔J • N' := by
-  have hNN' : N⊔N' = N⊔I • N' :=
+    (hIJ : I ≤ jacobson J) (hNN : N ⊔ N' ≤ N ⊔ I • N') : N ⊔ I • N' = N ⊔ J • N' := by
+  have hNN' : N ⊔ N' = N ⊔ I • N' :=
     le_antisymmₓ hNN (sup_le_sup_left (Submodule.smul_le.2 fun _ _ _ => Submodule.smul_mem _ _) _)
   have h_comap := Submodule.comap_injective_of_surjective (LinearMap.range_eq_top.1 N.range_mkq)
   have : (I • N').map N.mkq = N'.map N.mkq := by
@@ -91,7 +91,7 @@ theorem smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson {I J : Ideal R} {N N' : S
 See also `smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson` for a generalisation
 to the `jacobson` of any ideal -/
 theorem smul_sup_le_of_le_smul_of_le_jacobson_bot {I : Ideal R} {N N' : Submodule R M} (hN' : N'.Fg)
-    (hIJ : I ≤ jacobson ⊥) (hNN : N⊔N' ≤ N⊔I • N') : I • N' ≤ N := by
+    (hIJ : I ≤ jacobson ⊥) (hNN : N ⊔ N' ≤ N ⊔ I • N') : I • N' ≤ N := by
   rw [← sup_eq_left, smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson hN' hIJ hNN, bot_smul, sup_bot_eq]
 
 end Submodule

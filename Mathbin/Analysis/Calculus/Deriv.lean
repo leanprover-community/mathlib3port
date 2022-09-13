@@ -261,7 +261,7 @@ theorem HasStrictDerivAt.has_deriv_at (h : HasStrictDerivAt f f' x) : HasDerivAt
 definition with a limit. In this version we have to take the limit along the subset `-{x}`,
 because for `y=x` the slope equals zero due to the convention `0⁻¹=0`. -/
 theorem has_deriv_at_filter_iff_tendsto_slope {x : 𝕜} {L : Filter 𝕜} :
-    HasDerivAtFilter f f' x L ↔ Tendsto (slope f x) (L⊓𝓟 ({x}ᶜ)) (𝓝 f') := by
+    HasDerivAtFilter f f' x L ↔ Tendsto (slope f x) (L ⊓ 𝓟 ({x}ᶜ)) (𝓝 f') := by
   conv_lhs =>
     simp only [has_deriv_at_filter_iff_tendsto, (norm_inv _).symm, (norm_smul _ _).symm,
       tendsto_zero_iff_norm_tendsto_zero.symm]
@@ -1868,7 +1868,7 @@ theorem differentiable_within_at_zpow (m : ℤ) (x : 𝕜) (h : x ≠ 0 ∨ 0 �
   (differentiable_at_zpow.mpr h).DifferentiableWithinAt
 
 theorem differentiable_on_zpow (m : ℤ) (s : Set 𝕜) (h : (0 : 𝕜) ∉ s ∨ 0 ≤ m) : DifferentiableOn 𝕜 (fun x => x ^ m) s :=
-  fun x hxs => differentiable_within_at_zpow m x <| h.imp_left <| ne_of_mem_of_not_mem hxs
+  fun x hxs => differentiable_within_at_zpow m x <| h.imp_left <| ne_of_mem_of_not_memₓ hxs
 
 theorem deriv_zpow (m : ℤ) (x : 𝕜) : deriv (fun x => x ^ m) x = m * x ^ (m - 1) := by
   by_cases' H : x ≠ 0 ∨ 0 ≤ m
@@ -1900,7 +1900,7 @@ theorem iter_deriv_zpow' (m : ℤ) (k : ℕ) :
 
 theorem iter_deriv_zpow (m : ℤ) (x : 𝕜) (k : ℕ) :
     (deriv^[k]) (fun y => y ^ m) x = (∏ i in Finset.range k, m - i) * x ^ (m - k) :=
-  congr_funₓ (iter_deriv_zpow' m k) x
+  congr_fun (iter_deriv_zpow' m k) x
 
 theorem iter_deriv_pow (n : ℕ) (x : 𝕜) (k : ℕ) :
     (deriv^[k]) (fun x : 𝕜 => x ^ n) x = (∏ i in Finset.range k, n - i) * x ^ (n - k) := by

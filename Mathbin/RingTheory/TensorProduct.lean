@@ -93,7 +93,7 @@ a better `ext` lemma than `tensor_product.algebra_tensor_module.ext` below.
 See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem curry_injective : Function.Injective (curry : (M ⊗ N →ₗ[A] P) → M →ₗ[A] N →ₗ[R] P) := fun x y h =>
-  LinearMap.restrict_scalars_injective R <| curry_injective <| (congr_argₓ (LinearMap.restrictScalars R) h : _)
+  LinearMap.restrict_scalars_injective R <| curry_injective <| (congr_arg (LinearMap.restrictScalars R) h : _)
 
 theorem ext {g h : M ⊗[R] N →ₗ[A] P} (H : ∀ x y, g (x ⊗ₜ y) = h (x ⊗ₜ y)) : g = h :=
   curry_injective <| LinearMap.ext₂ H
@@ -835,7 +835,7 @@ theorem map_comp_include_right (f : A →ₐ[R] B) (g : C →ₐ[R] D) : (map f 
     simp
 
 theorem map_range (f : A →ₐ[R] B) (g : C →ₐ[R] D) :
-    (map f g).range = (includeLeft.comp f).range⊔(includeRight.comp g).range := by
+    (map f g).range = (includeLeft.comp f).range ⊔ (includeRight.comp g).range := by
   apply le_antisymmₓ
   · rw [← map_top, ← adjoin_tmul_eq_top, ← adjoin_image, adjoin_le_iff]
     rintro _ ⟨_, ⟨a, b, rfl⟩, rfl⟩
@@ -931,7 +931,7 @@ theorem product_map_right : (productMap f g).comp includeRight = g :=
   AlgHom.ext <| by
     simp
 
-theorem product_map_range : (productMap f g).range = f.range⊔g.range := by
+theorem product_map_range : (productMap f g).range = f.range ⊔ g.range := by
   rw [product_map, AlgHom.range_comp, map_range, map_sup, ← AlgHom.range_comp, ← AlgHom.range_comp, ← AlgHom.comp_assoc,
     ← AlgHom.comp_assoc, lmul'_comp_include_left, lmul'_comp_include_right, AlgHom.id_comp, AlgHom.id_comp]
 
@@ -1037,7 +1037,7 @@ theorem End_tensor_End_alg_hom_apply (f : End R M) (g : End R N) :
 end Module
 
 theorem Subalgebra.finite_dimensional_sup {K L : Type _} [Field K] [CommRingₓ L] [Algebra K L] (E1 E2 : Subalgebra K L)
-    [FiniteDimensional K E1] [FiniteDimensional K E2] : FiniteDimensional K ↥(E1⊔E2) := by
+    [FiniteDimensional K E1] [FiniteDimensional K E2] : FiniteDimensional K ↥(E1 ⊔ E2) := by
   rw [← E1.range_val, ← E2.range_val, ← Algebra.TensorProduct.product_map_range]
   exact (Algebra.TensorProduct.productMap E1.val E2.val).toLinearMap.finite_dimensional_range
 

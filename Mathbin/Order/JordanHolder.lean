@@ -79,30 +79,30 @@ Examples include `subgroup G` if `G` is a group, and `submodule R M` if `M` is a
 class JordanHolderLattice (X : Type u) [Lattice X] where
   IsMaximal : X → X → Prop
   lt_of_is_maximal : ∀ {x y}, is_maximal x y → x < y
-  sup_eq_of_is_maximal : ∀ {x y z}, is_maximal x z → is_maximal y z → x ≠ y → x⊔y = z
-  is_maximal_inf_left_of_is_maximal_sup : ∀ {x y}, is_maximal x (x⊔y) → is_maximal y (x⊔y) → is_maximal (x⊓y) x
+  sup_eq_of_is_maximal : ∀ {x y z}, is_maximal x z → is_maximal y z → x ≠ y → x ⊔ y = z
+  is_maximal_inf_left_of_is_maximal_sup : ∀ {x y}, is_maximal x (x ⊔ y) → is_maximal y (x ⊔ y) → is_maximal (x ⊓ y) x
   Iso : X × X → X × X → Prop
   iso_symm : ∀ {x y}, iso x y → iso y x
   iso_trans : ∀ {x y z}, iso x y → iso y z → iso x z
-  second_iso : ∀ {x y}, is_maximal x (x⊔y) → iso (x, x⊔y) (x⊓y, y)
+  second_iso : ∀ {x y}, is_maximal x (x ⊔ y) → iso (x, x ⊔ y) (x ⊓ y, y)
 
 namespace JordanHolderLattice
 
 variable {X : Type u} [Lattice X] [JordanHolderLattice X]
 
-theorem is_maximal_inf_right_of_is_maximal_sup {x y : X} (hxz : IsMaximal x (x⊔y)) (hyz : IsMaximal y (x⊔y)) :
-    IsMaximal (x⊓y) y := by
+theorem is_maximal_inf_right_of_is_maximal_sup {x y : X} (hxz : IsMaximal x (x ⊔ y)) (hyz : IsMaximal y (x ⊔ y)) :
+    IsMaximal (x ⊓ y) y := by
   rw [inf_comm]
   rw [sup_comm] at hxz hyz
   exact is_maximal_inf_left_of_is_maximal_sup hyz hxz
 
-theorem is_maximal_of_eq_inf (x b : X) {a y : X} (ha : x⊓y = a) (hxy : x ≠ y) (hxb : IsMaximal x b)
+theorem is_maximal_of_eq_inf (x b : X) {a y : X} (ha : x ⊓ y = a) (hxy : x ≠ y) (hxb : IsMaximal x b)
     (hyb : IsMaximal y b) : IsMaximal a y := by
-  have hb : x⊔y = b := sup_eq_of_is_maximal hxb hyb hxy
+  have hb : x ⊔ y = b := sup_eq_of_is_maximal hxb hyb hxy
   substs a b
   exact is_maximal_inf_right_of_is_maximal_sup hxb hyb
 
-theorem second_iso_of_eq {x y a b : X} (hm : IsMaximal x a) (ha : x⊔y = a) (hb : x⊓y = b) : Iso (x, a) (b, y) := by
+theorem second_iso_of_eq {x y a b : X} (hm : IsMaximal x a) (ha : x ⊔ y = a) (hb : x ⊓ y = b) : Iso (x, a) (b, y) := by
   substs a b <;> exact second_iso hm
 
 theorem IsMaximal.iso_refl {x y : X} (h : IsMaximal x y) : Iso (x, y) (x, y) :=
@@ -179,7 +179,7 @@ def toList (s : CompositionSeries X) : List X :=
 /-- Two `composition_series` are equal if they are the same length and
 have the same `i`th element for every `i` -/
 theorem ext_fun {s₁ s₂ : CompositionSeries X} (hl : s₁.length = s₂.length)
-    (h : ∀ i, s₁ i = s₂ (Finₓ.cast (congr_argₓ Nat.succ hl) i)) : s₁ = s₂ := by
+    (h : ∀ i, s₁ i = s₂ (Finₓ.cast (congr_arg Nat.succ hl) i)) : s₁ = s₂ := by
   cases s₁
   cases s₂
   dsimp'  at *
@@ -191,13 +191,13 @@ theorem length_to_list (s : CompositionSeries X) : s.toList.length = s.length + 
   rw [to_list, List.length_of_fn]
 
 theorem to_list_ne_nil (s : CompositionSeries X) : s.toList ≠ [] := by
-  rw [← List.length_pos_iff_ne_nilₓ, length_to_list] <;> exact Nat.succ_posₓ _
+  rw [← List.length_pos_iff_ne_nil, length_to_list] <;> exact Nat.succ_posₓ _
 
 theorem to_list_injective : Function.Injective (@CompositionSeries.toList X _ _) :=
   fun s₁ s₂ (h : List.ofFnₓ s₁ = List.ofFnₓ s₂) => by
   have h₁ : s₁.length = s₂.length :=
-    Nat.succ_injective ((List.length_of_fn s₁).symm.trans <| (congr_argₓ List.length h).trans <| List.length_of_fn s₂)
-  have h₂ : ∀ i : Finₓ s₁.length.succ, s₁ i = s₂ (Finₓ.cast (congr_argₓ Nat.succ h₁) i) := by
+    Nat.succ_injective ((List.length_of_fn s₁).symm.trans <| (congr_arg List.length h).trans <| List.length_of_fn s₂)
+  have h₂ : ∀ i : Finₓ s₁.length.succ, s₁ i = s₂ (Finₓ.cast (congr_arg Nat.succ h₁) i) := by
     intro i
     rw [← List.nth_le_of_fn s₁ i, ← List.nth_le_of_fn s₂]
     simp [h]
@@ -337,7 +337,7 @@ def eraseTop (s : CompositionSeries X) : CompositionSeries X where
 theorem top_erase_top (s : CompositionSeries X) :
     s.eraseTop.top = s ⟨s.length - 1, lt_of_le_of_ltₓ tsub_le_self (Nat.lt_succ_selfₓ _)⟩ :=
   show s _ = s _ from
-    congr_argₓ s
+    congr_arg s
       (by
         ext
         simp only [erase_top_length, Finₓ.coe_last, Finₓ.coe_cast_succ, Finₓ.coe_of_nat_eq_mod, Finₓ.coe_mk, coe_coe])
@@ -404,12 +404,12 @@ theorem append_succ_cast_add_aux {s₁ s₂ : CompositionSeries X} (i : Finₓ s
             ⟨i + 1 - s₁.length, by
               simp [this]⟩ =
           s₂ 0 :=
-        congr_argₓ s₂
+        congr_arg s₂
           (by
             simp [Finₓ.ext_iff, this])
       _ = s₁ (Finₓ.last _) := h.symm
       _ = _ :=
-        congr_argₓ s₁
+        congr_arg s₁
           (by
             simp [Finₓ.ext_iff, this])
       
@@ -636,7 +636,7 @@ end Equivalent
 theorem length_eq_zero_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero {s₁ s₂ : CompositionSeries X}
     (hb : s₁.bot = s₂.bot) (ht : s₁.top = s₂.top) (hs₁ : s₁.length = 0) : s₂.length = 0 := by
   have : s₁.bot = s₁.top :=
-    congr_argₓ s₁
+    congr_arg s₁
       (Finₓ.ext
         (by
           simp [hs₁]))
@@ -680,7 +680,7 @@ theorem exists_top_eq_snoc_equivalant (s : CompositionSeries X) (x : X) (hm : Is
     · use s.erase_top
       simp [← hetx, hn]
       
-    · have imxs : is_maximal (x⊓s.erase_top.top) s.erase_top.top :=
+    · have imxs : is_maximal (x ⊓ s.erase_top.top) s.erase_top.top :=
         is_maximal_of_eq_inf x s.top rfl (Ne.symm hetx) hm (is_maximal_erase_top_top h0s)
       have :=
         ih _ _ imxs

@@ -250,12 +250,12 @@ theorem realize_top : (⊤ : L.BoundedFormula α l).realize v xs ↔ True := by
   simp [HasTop.top]
 
 @[simp]
-theorem realize_inf : (φ⊓ψ).realize v xs ↔ φ.realize v xs ∧ ψ.realize v xs := by
+theorem realize_inf : (φ ⊓ ψ).realize v xs ↔ φ.realize v xs ∧ ψ.realize v xs := by
   simp [HasInf.inf, realize]
 
 @[simp]
 theorem realize_foldr_inf (l : List (L.BoundedFormula α n)) (v : α → M) (xs : Finₓ n → M) :
-    (l.foldr (·⊓·) ⊤).realize v xs ↔ ∀ φ ∈ l, BoundedFormula.Realizeₓ φ v xs := by
+    (l.foldr (· ⊓ ·) ⊤).realize v xs ↔ ∀ φ ∈ l, BoundedFormula.Realizeₓ φ v xs := by
   induction' l with φ l ih
   · simp
     
@@ -289,17 +289,17 @@ theorem realize_rel₂ {R : L.Relations 2} {t₁ t₂ : L.term _} :
     
 
 @[simp]
-theorem realize_sup : (φ⊔ψ).realize v xs ↔ φ.realize v xs ∨ ψ.realize v xs := by
+theorem realize_sup : (φ ⊔ ψ).realize v xs ↔ φ.realize v xs ∨ ψ.realize v xs := by
   simp only [realize, HasSup.sup, realize_not, eq_iff_iff]
   tauto
 
 @[simp]
 theorem realize_foldr_sup (l : List (L.BoundedFormula α n)) (v : α → M) (xs : Finₓ n → M) :
-    (l.foldr (·⊔·) ⊥).realize v xs ↔ ∃ φ ∈ l, BoundedFormula.Realizeₓ φ v xs := by
+    (l.foldr (· ⊔ ·) ⊥).realize v xs ↔ ∃ φ ∈ l, BoundedFormula.Realizeₓ φ v xs := by
   induction' l with φ l ih
   · simp
     
-  · simp_rw [List.foldr_cons, realize_sup, ih, exists_prop, List.mem_cons_iffₓ, or_and_distrib_right, exists_or_distrib,
+  · simp_rw [List.foldr_cons, realize_sup, ih, exists_propₓ, List.mem_cons_iff, or_and_distrib_right, exists_or_distrib,
       exists_eq_left]
     
 
@@ -596,7 +596,7 @@ theorem realize_top : (⊤ : L.Formula α).realize v ↔ True :=
   bounded_formula.realize_top
 
 @[simp]
-theorem realize_inf : (φ⊓ψ).realize v ↔ φ.realize v ∧ ψ.realize v :=
+theorem realize_inf : (φ ⊓ ψ).realize v ↔ φ.realize v ∧ ψ.realize v :=
   bounded_formula.realize_inf
 
 @[simp]
@@ -627,7 +627,7 @@ theorem realize_rel₂ {R : L.Relations 2} {t₁ t₂ : L.term _} :
     
 
 @[simp]
-theorem realize_sup : (φ⊔ψ).realize v ↔ φ.realize v ∨ ψ.realize v :=
+theorem realize_sup : (φ ⊔ ψ).realize v ↔ φ.realize v ∨ ψ.realize v :=
   bounded_formula.realize_sup
 
 @[simp]
@@ -928,23 +928,23 @@ theorem realize_irreflexive : M ⊨ r.Irreflexive ↔ Irreflexive fun x y : M =>
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem realize_symmetric : M ⊨ r.Symmetric ↔ Symmetric fun x y : M => RelMap r ![x, y] :=
-  forall_congrₓ fun _ => forall_congrₓ fun _ => imp_congr realize_rel₂ realize_rel₂
+  forall_congrₓ fun _ => forall_congrₓ fun _ => imp_congrₓ realize_rel₂ realize_rel₂
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem realize_antisymmetric : M ⊨ r.antisymmetric ↔ AntiSymmetric fun x y : M => RelMap r ![x, y] :=
-  forall_congrₓ fun _ => forall_congrₓ fun _ => imp_congr realize_rel₂ (imp_congr realize_rel₂ Iff.rfl)
+  forall_congrₓ fun _ => forall_congrₓ fun _ => imp_congrₓ realize_rel₂ (imp_congrₓ realize_rel₂ Iff.rfl)
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem realize_transitive : M ⊨ r.Transitive ↔ Transitive fun x y : M => RelMap r ![x, y] :=
   forall_congrₓ fun _ =>
-    forall_congrₓ fun _ => forall_congrₓ fun _ => imp_congr realize_rel₂ (imp_congr realize_rel₂ realize_rel₂)
+    forall_congrₓ fun _ => forall_congrₓ fun _ => imp_congrₓ realize_rel₂ (imp_congrₓ realize_rel₂ realize_rel₂)
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
 theorem realize_total : M ⊨ r.Total ↔ Total fun x y : M => RelMap r ![x, y] :=
-  forall_congrₓ fun _ => forall_congrₓ fun _ => realize_sup.trans (or_congr realize_rel₂ realize_rel₂)
+  forall_congrₓ fun _ => forall_congrₓ fun _ => realize_sup.trans (or_congrₓ realize_rel₂ realize_rel₂)
 
 end Relations
 
@@ -954,7 +954,7 @@ variable (L)
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 @[simp]
-theorem Sentence.realize_card_ge (n) : M ⊨ Sentence.cardGe L n ↔ ↑n ≤ # M := by
+theorem Sentence.realize_card_ge (n) : M ⊨ Sentence.cardGe L n ↔ ↑n ≤ (#M) := by
   rw [← lift_mk_fin, ← lift_le, lift_lift, lift_mk_le, sentence.card_ge, sentence.realize, bounded_formula.realize_exs]
   simp_rw [bounded_formula.realize_foldr_inf]
   simp only [Function.comp_app, List.mem_mapₓ, Prod.existsₓ, Ne.def, List.mem_product, List.mem_fin_range,
@@ -1008,7 +1008,7 @@ theorem model_distinct_constants_theory {M : Type w} [L[[α]].Structure M] (s : 
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem card_le_of_model_distinct_constants_theory (s : Set α) (M : Type w) [L[[α]].Structure M]
-    [h : M ⊨ L.DistinctConstantsTheory s] : Cardinal.lift.{w} (# s) ≤ Cardinal.lift.{u'} (# M) :=
+    [h : M ⊨ L.DistinctConstantsTheory s] : Cardinal.lift.{w} (#s) ≤ Cardinal.lift.{u'} (#M) :=
   lift_mk_le'.2 ⟨⟨_, Set.inj_on_iff_injective.1 ((L.model_distinct_constants_theory s).1 h)⟩⟩
 
 end Cardinality

@@ -176,7 +176,7 @@ def infPrepartition (π : TaggedPrepartition I) (π' : Prepartition I) : TaggedP
 
 @[simp]
 theorem inf_prepartition_to_prepartition (π : TaggedPrepartition I) (π' : Prepartition I) :
-    (π.infPrepartition π').toPrepartition = π.toPrepartition⊓π' :=
+    (π.infPrepartition π').toPrepartition = π.toPrepartition ⊓ π' :=
   rfl
 
 theorem mem_inf_prepartition_comm :
@@ -356,7 +356,7 @@ def distortion : ℝ≥0 :=
 theorem distortion_le_of_mem (h : J ∈ π) : J.distortion ≤ π.distortion :=
   le_sup h
 
-theorem distortion_le_iff {c : ℝ≥0 } : π.distortion ≤ c ↔ ∀ J ∈ π, Box.distortion J ≤ c :=
+theorem distortion_le_iff {c : ℝ≥0} : π.distortion ≤ c ↔ ∀ J ∈ π, Box.distortion J ≤ c :=
   Finset.sup_le_iff
 
 @[simp]

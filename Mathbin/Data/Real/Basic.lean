@@ -308,7 +308,7 @@ theorem mk_neg {f : CauSeq ℚ abs} : mk (-f) = -mk f := by
 
 @[simp]
 theorem mk_pos {f : CauSeq ℚ abs} : 0 < mk f ↔ Pos f := by
-  rw [← mk_zero, mk_lt] <;> exact iff_of_eq (congr_argₓ Pos (sub_zero f))
+  rw [← mk_zero, mk_lt] <;> exact iff_of_eq (congr_arg Pos (sub_zero f))
 
 private irreducible_def le (x y : ℝ) : Prop :=
   x < y ∨ x = y
@@ -366,7 +366,7 @@ instance : PartialOrderₓ ℝ where
 instance : Preorderₓ ℝ := by
   infer_instance
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible[tactic.transparency.semireducible] }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible[tactic.transparency.semireducible] }
 theorem rat_cast_lt {x y : ℚ} : (x : ℝ) < (y : ℝ) ↔ x < y := by
   rw [mk_lt]
   exact const_lt
@@ -444,7 +444,7 @@ noncomputable instance : LinearOrderedField ℝ :=
       simp [← of_cauchy_zero, ← of_cauchy_inv],
     ratCast := coe,
     rat_cast_mk := fun n d hd h2 => by
-      rw [← of_cauchy_rat_cast, Rat.cast_mk', of_cauchy_mul, of_cauchy_inv, of_cauchy_nat_cast, of_cauchy_int_cast] }
+      rw [← of_cauchy_rat_cast, Ratₓ.cast_mk', of_cauchy_mul, of_cauchy_inv, of_cauchy_nat_cast, of_cauchy_int_cast] }
 
 -- Extra instances to short-circuit type class resolution
 noncomputable instance : LinearOrderedAddCommGroup ℝ := by
@@ -490,7 +490,7 @@ converging to the same number may be printed differently.
 -/
 unsafe instance : HasRepr ℝ where repr := fun r => "real.of_cauchy " ++ reprₓ r.cauchy
 
--- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:124:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible[tactic.transparency.semireducible] }
+-- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:126:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible[tactic.transparency.semireducible] }
 theorem le_mk_of_forall_le {f : CauSeq ℚ abs} : (∃ i, ∀ j ≥ i, x ≤ f j) → x ≤ mk f := by
   intro h
   induction' x using Real.ind_mk with x
@@ -523,7 +523,7 @@ instance : Archimedean ℝ :=
   archimedean_iff_rat_le.2 fun x =>
     (Real.ind_mk x) fun f =>
       let ⟨M, M0, H⟩ := f.bounded' 0
-      ⟨M, mk_le_of_forall_le ⟨0, fun i _ => Rat.cast_le.2 <| le_of_ltₓ (abs_lt.1 (H i)).2⟩⟩
+      ⟨M, mk_le_of_forall_le ⟨0, fun i _ => Ratₓ.cast_le.2 <| le_of_ltₓ (abs_lt.1 (H i)).2⟩⟩
 
 noncomputable instance : FloorRing ℝ :=
   Archimedean.floorRing _
@@ -534,11 +534,11 @@ theorem is_cau_seq_iff_lift {f : ℕ → ℚ} : IsCauSeq abs f ↔ IsCauSeq abs 
     (H _ δ0).imp fun i hi j ij =>
       lt_transₓ
         (by
-          simpa using (@Rat.cast_lt ℝ _ _ _).2 (hi _ ij))
+          simpa using (@Ratₓ.cast_lt ℝ _ _ _).2 (hi _ ij))
         δε,
     fun H ε ε0 =>
-    (H _ (Rat.cast_pos.2 ε0)).imp fun i hi j ij =>
-      (@Rat.cast_lt ℝ _ _ _).1 <| by
+    (H _ (Ratₓ.cast_pos.2 ε0)).imp fun i hi j ij =>
+      (@Ratₓ.cast_lt ℝ _ _ _).1 <| by
         simpa using hi _ ij⟩
 
 theorem of_near (f : ℕ → ℚ) (x : ℝ) (h : ∀ ε > 0, ∃ i, ∀ j ≥ i, abs ((f j : ℝ) - x) < ε) : ∃ h', Real.mk ⟨f, h'⟩ = x :=
@@ -588,7 +588,7 @@ theorem exists_is_lub (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃
     have j0 := Nat.cast_pos.1 ((inv_pos.2 ε0).trans_le ij)
     have k0 := Nat.cast_pos.1 ((inv_pos.2 ε0).trans_le ik)
     rcases hf₁ _ j0 with ⟨y, yS, hy⟩
-    refine' lt_of_lt_of_leₓ ((@Rat.cast_lt ℝ _ _ _).1 _) ((inv_le ε0 (Nat.cast_pos.2 k0)).1 ik)
+    refine' lt_of_lt_of_leₓ ((@Ratₓ.cast_lt ℝ _ _ _).1 _) ((inv_le ε0 (Nat.cast_pos.2 k0)).1 ik)
     simpa using sub_lt_iff_lt_add'.2 (lt_of_le_of_ltₓ hy <| sub_lt_iff_lt_add.1 <| hf₂ _ k0 _ yS)
   let g : CauSeq ℚ abs := ⟨fun n => f n / n, hg⟩
   refine' ⟨mk g, ⟨fun x xS => _, fun y h => _⟩⟩

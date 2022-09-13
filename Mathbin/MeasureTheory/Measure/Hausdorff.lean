@@ -152,7 +152,8 @@ theorem finset_Union_of_pairwise_separated (hm : IsMetric μ) {I : Finset ι} {s
   simp only [Finset.mem_insert] at hI
   rw [Finset.set_bUnion_insert, hm, ihI, Finset.sum_insert hiI]
   exacts[fun i hi j hj hij => hI i (Or.inr hi) j (Or.inr hj) hij,
-    IsMetricSeparated.finset_Union_right fun j hj => hI i (Or.inl rfl) j (Or.inr hj) (ne_of_mem_of_not_mem hj hiI).symm]
+    IsMetricSeparated.finset_Union_right fun j hj =>
+      hI i (Or.inl rfl) j (Or.inr hj) (ne_of_mem_of_not_memₓ hj hiI).symm]
 
 /-- Caratheodory theorem. If `m` is a metric outer measure, then every Borel measurable set `t` is
 Caratheodory measurable: for any (not necessarily measurable) set `s` we have
@@ -586,7 +587,7 @@ theorem hausdorff_measure_le_liminf_sum {β : Type _} {ι : β → Type _} [hι 
 /-- If `d₁ < d₂`, then for any set `s` we have either `μH[d₂] s = 0`, or `μH[d₁] s = ∞`. -/
 theorem hausdorff_measure_zero_or_top {d₁ d₂ : ℝ} (h : d₁ < d₂) (s : Set X) : μH[d₂] s = 0 ∨ μH[d₁] s = ∞ := by
   by_contra' H
-  suffices ∀ c : ℝ≥0 , c ≠ 0 → μH[d₂] s ≤ c * μH[d₁] s by
+  suffices ∀ c : ℝ≥0, c ≠ 0 → μH[d₂] s ≤ c * μH[d₁] s by
     rcases Ennreal.exists_nnreal_pos_mul_lt H.2 H.1 with ⟨c, hc0, hc⟩
     exact hc.not_le (this c (pos_iff_ne_zero.1 hc0))
   intro c hc
@@ -739,7 +740,7 @@ theorem hausdorff_measure_pi_real {ι : Type _} [Fintype ι] : (μH[Fintype.card
     `1/n`, namely cubes with left-most point of the form `a i + f i / n` with `f i` ranging between
     `0` and `⌈(b i - a i) * n⌉`. Their number is asymptotic to `n^d * Π (b i - a i)`. -/
   have I : ∀ i, 0 ≤ (b i : ℝ) - a i := fun i => by
-    simpa only [sub_nonneg, Rat.cast_le] using (H i).le
+    simpa only [sub_nonneg, Ratₓ.cast_le] using (H i).le
   let γ := fun n : ℕ => ∀ i : ι, Finₓ ⌈((b i : ℝ) - a i) * n⌉₊
   let t : ∀ n : ℕ, γ n → Set (ι → ℝ) := fun n f => Set.Pi univ fun i => Icc (a i + f i / n) (a i + (f i + 1) / n)
   have A : tendsto (fun n : ℕ => 1 / (n : ℝ≥0∞)) at_top (𝓝 0) := by
@@ -763,7 +764,7 @@ theorem hausdorff_measure_pi_real {ι : Type _} [Fintype ι] : (μH[Fintype.card
           simp only [(hx i).right, sub_lt_sub_iff_right]
           
         · refine' mul_pos _ npos
-          simpa only [Rat.cast_lt, sub_pos] using H i
+          simpa only [Ratₓ.cast_lt, sub_pos] using H i
           ⟩
     refine' ⟨f, fun i => ⟨_, _⟩⟩
     · calc
@@ -828,7 +829,7 @@ variable [MeasurableSpace X] [BorelSpace X] [MeasurableSpace Y] [BorelSpace Y]
 
 namespace HolderOnWith
 
-variable {C r : ℝ≥0 } {f : X → Y} {s t : Set X}
+variable {C r : ℝ≥0} {f : X → Y} {s t : Set X}
 
 /-- If `f : X → Y` is Hölder continuous on `s` with a positive exponent `r`, then
 `μH[d] (f '' s) ≤ C ^ d * μH[r * d] s`. -/
@@ -884,7 +885,7 @@ end HolderOnWith
 
 namespace LipschitzOnWith
 
-variable {K : ℝ≥0 } {f : X → Y} {s t : Set X}
+variable {K : ℝ≥0} {f : X → Y} {s t : Set X}
 
 /-- If `f : X → Y` is `K`-Lipschitz on `s`, then `μH[d] (f '' s) ≤ K ^ d * μH[d] s`. -/
 theorem hausdorff_measure_image_le (h : LipschitzOnWith K f s) {d : ℝ} (hd : 0 ≤ d) :
@@ -895,7 +896,7 @@ end LipschitzOnWith
 
 namespace LipschitzWith
 
-variable {K : ℝ≥0 } {f : X → Y}
+variable {K : ℝ≥0} {f : X → Y}
 
 /-- If `f` is a `K`-Lipschitz map, then it increases the Hausdorff `d`-measures of sets at most
 by the factor of `K ^ d`.-/
@@ -912,7 +913,7 @@ end LipschitzWith
 
 namespace AntilipschitzWith
 
-variable {f : X → Y} {K : ℝ≥0 } {d : ℝ}
+variable {f : X → Y} {K : ℝ≥0} {d : ℝ}
 
 theorem hausdorff_measure_preimage_le (hf : AntilipschitzWith K f) (hd : 0 ≤ d) (s : Set Y) :
     μH[d] (f ⁻¹' s) ≤ K ^ d * μH[d] s := by

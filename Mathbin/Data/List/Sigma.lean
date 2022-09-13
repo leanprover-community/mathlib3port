@@ -117,7 +117,7 @@ theorem nodupkeys_join {L : List (List (Sigma β))} :
     Nodupkeys (join L) ↔ (∀ l ∈ L, Nodupkeys l) ∧ Pairwiseₓ Disjoint (L.map keys) := by
   rw [nodupkeys_iff_pairwise, pairwise_join, pairwise_map]
   refine'
-    and_congr
+    and_congrₓ
       (ball_congr fun l h => by
         simp [nodupkeys_iff_pairwise])
       _
@@ -161,7 +161,7 @@ theorem mem_ext {l₀ l₁ : List (Sigma β)} (nd₀ : l₀.Nodup) (nd₁ : l₁
           
         · rw [or_iff_right h'] at h
           rw [h, mem_cons_iff]
-          exact or_congr_right' (mem_erase_of_ne h').symm
+          exact or_congr_right'ₓ (mem_erase_of_ne h').symm
           
         
       
@@ -230,7 +230,7 @@ theorem mem_lookup {a} {b : β a} {l : List (Sigma β)} (nd : l.Nodupkeys) (h : 
   cases nd.eq_of_mk_mem h (of_mem_lookup h')
   exact h'
 
-theorem map_lookup_eq_find (a : α) : ∀ l : List (Sigma β), (lookupₓ a l).map (Sigma.mk a) = find (fun s => a = s.1) l
+theorem map_lookup_eq_find (a : α) : ∀ l : List (Sigma β), (lookupₓ a l).map (Sigma.mk a) = findₓ (fun s => a = s.1) l
   | [] => rfl
   | ⟨a', b'⟩ :: l => by
     by_cases' h : a = a'

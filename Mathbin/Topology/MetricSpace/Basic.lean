@@ -375,11 +375,11 @@ theorem coe_nnreal_ennreal_nndist (x y : α) : ↑(nndist x y) = edist x y :=
   (edist_nndist x y).symm
 
 @[simp, norm_cast]
-theorem edist_lt_coe {x y : α} {c : ℝ≥0 } : edist x y < c ↔ nndist x y < c := by
+theorem edist_lt_coe {x y : α} {c : ℝ≥0} : edist x y < c ↔ nndist x y < c := by
   rw [edist_nndist, Ennreal.coe_lt_coe]
 
 @[simp, norm_cast]
-theorem edist_le_coe {x y : α} {c : ℝ≥0 } : edist x y ≤ c ↔ nndist x y ≤ c := by
+theorem edist_le_coe {x y : α} {c : ℝ≥0} : edist x y ≤ c ↔ nndist x y ≤ c := by
   rw [edist_nndist, Ennreal.coe_le_coe]
 
 /-- In a pseudometric space, the extended distance is always finite-/
@@ -404,11 +404,11 @@ theorem coe_nndist (x y : α) : ↑(nndist x y) = dist x y :=
   (dist_nndist x y).symm
 
 @[simp, norm_cast]
-theorem dist_lt_coe {x y : α} {c : ℝ≥0 } : dist x y < c ↔ nndist x y < c :=
+theorem dist_lt_coe {x y : α} {c : ℝ≥0} : dist x y < c ↔ nndist x y < c :=
   Iff.rfl
 
 @[simp, norm_cast]
-theorem dist_le_coe {x y : α} {c : ℝ≥0 } : dist x y ≤ c ↔ nndist x y ≤ c :=
+theorem dist_le_coe {x y : α} {c : ℝ≥0} : dist x y ≤ c ↔ nndist x y ≤ c :=
   Iff.rfl
 
 @[simp]
@@ -685,8 +685,8 @@ theorem is_bounded_iff_exists_ge {s : Set α} (c : ℝ) :
   ⟨fun h => ((eventually_ge_at_top c).And (is_bounded_iff_eventually.1 h)).exists, fun h =>
     is_bounded_iff.2 <| h.imp fun _ => And.right⟩
 
-theorem is_bounded_iff_nndist {s : Set α} : IsBounded s ↔ ∃ C : ℝ≥0 , ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → nndist x y ≤ C := by
-  simp only [is_bounded_iff_exists_ge 0, Nnreal.exists, ← Nnreal.coe_le_coe, ← dist_nndist, Nnreal.coe_mk, exists_prop]
+theorem is_bounded_iff_nndist {s : Set α} : IsBounded s ↔ ∃ C : ℝ≥0, ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → nndist x y ≤ C := by
+  simp only [is_bounded_iff_exists_ge 0, Nnreal.exists, ← Nnreal.coe_le_coe, ← dist_nndist, Nnreal.coe_mk, exists_propₓ]
 
 theorem uniformity_basis_dist : (𝓤 α).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { p : α × α | dist p.1 p.2 < ε } := by
   rw [← pseudo_metric_space.uniformity_dist.symm]
@@ -791,8 +791,8 @@ theorem uniform_embedding_iff [PseudoMetricSpace β] {f : α → β} :
     UniformEmbedding f ↔
       Function.Injective f ∧ UniformContinuous f ∧ ∀ δ > 0, ∃ ε > 0, ∀ {a b : α}, dist (f a) (f b) < ε → dist a b < δ :=
   uniform_embedding_def'.trans <|
-    and_congr Iff.rfl <|
-      and_congr Iff.rfl
+    and_congrₓ Iff.rfl <|
+      and_congrₓ Iff.rfl
         ⟨fun H δ δ0 =>
           let ⟨t, tu, ht⟩ := H _ (dist_mem_uniformity δ0)
           let ⟨ε, ε0, hε⟩ := mem_uniformity_dist.1 tu
@@ -846,6 +846,13 @@ theorem finite_approx_of_totally_bounded {s : Set α} (hs : TotallyBounded s) :
   rw [totally_bounded_iff_subset] at hs
   exact hs _ (dist_mem_uniformity ε_pos)
 
+/-- Expressing uniform convergence using `dist` -/
+theorem tendsto_uniformly_on_filter_iff {ι : Type _} {F : ι → β → α} {f : β → α} {p : Filter ι} {p' : Filter β} :
+    TendstoUniformlyOnFilter F f p p' ↔ ∀ ε > 0, ∀ᶠ n : ι × β in p ×ᶠ p', dist (f n.snd) (F n.fst n.snd) < ε := by
+  refine' ⟨fun H ε hε => H _ (dist_mem_uniformity hε), fun H u hu => _⟩
+  rcases mem_uniformity_dist.1 hu with ⟨ε, εpos, hε⟩
+  refine' (H ε εpos).mono fun n hn => hε hn
+
 /-- Expressing locally uniform convergence on a set using `dist`. -/
 theorem tendsto_locally_uniformly_on_iff {ι : Type _} [TopologicalSpace β] {F : ι → β → α} {f : β → α} {p : Filter ι}
     {s : Set β} :
@@ -866,7 +873,7 @@ theorem tendsto_uniformly_on_iff {ι : Type _} {F : ι → β → α} {f : β �
 theorem tendsto_locally_uniformly_iff {ι : Type _} [TopologicalSpace β] {F : ι → β → α} {f : β → α} {p : Filter ι} :
     TendstoLocallyUniformly F f p ↔ ∀ ε > 0, ∀ x : β, ∃ t ∈ 𝓝 x, ∀ᶠ n in p, ∀ y ∈ t, dist (f y) (F n y) < ε := by
   simp only [← tendsto_locally_uniformly_on_univ, tendsto_locally_uniformly_on_iff, nhds_within_univ, mem_univ,
-    forall_const, exists_prop]
+    forall_const, exists_propₓ]
 
 /-- Expressing uniform convergence using `dist`. -/
 theorem tendsto_uniformly_iff {ι : Type _} {F : ι → β → α} {f : β → α} {p : Filter ι} :
@@ -984,7 +991,7 @@ theorem continuous_iff' [TopologicalSpace β] {f : β → α} :
 theorem tendsto_at_top [Nonempty β] [SemilatticeSup β] {u : β → α} {a : α} :
     Tendsto u atTop (𝓝 a) ↔ ∀ ε > 0, ∃ N, ∀ n ≥ N, dist (u n) a < ε :=
   (at_top_basis.tendsto_iff nhds_basis_ball).trans <| by
-    simp only [exists_prop, true_andₓ]
+    simp only [exists_propₓ, true_andₓ]
     rfl
 
 /-- A variant of `tendsto_at_top` that
@@ -993,7 +1000,7 @@ uses `∃ N, ∀ n > N, ...` rather than `∃ N, ∀ n ≥ N, ...`
 theorem tendsto_at_top' [Nonempty β] [SemilatticeSup β] [NoMaxOrder β] {u : β → α} {a : α} :
     Tendsto u atTop (𝓝 a) ↔ ∀ ε > 0, ∃ N, ∀ n > N, dist (u n) a < ε :=
   (at_top_basis_Ioi.tendsto_iff nhds_basis_ball).trans <| by
-    simp only [exists_prop, true_andₓ]
+    simp only [exists_propₓ, true_andₓ]
     rfl
 
 theorem is_open_singleton_iff {α : Type _} [PseudoMetricSpace α] {x : α} :
@@ -1079,7 +1086,7 @@ theorem Metric.emetric_ball {x : α} {ε : ℝ} : Emetric.Ball x (Ennreal.ofReal
 
 /-- Balls defined using the distance or the edistance coincide -/
 @[simp]
-theorem Metric.emetric_ball_nnreal {x : α} {ε : ℝ≥0 } : Emetric.Ball x ε = Ball x ε := by
+theorem Metric.emetric_ball_nnreal {x : α} {ε : ℝ≥0} : Emetric.Ball x ε = Ball x ε := by
   convert Metric.emetric_ball
   simp
 
@@ -1090,7 +1097,7 @@ theorem Metric.emetric_closed_ball {x : α} {ε : ℝ} (h : 0 ≤ ε) :
 
 /-- Closed balls defined using the distance or the edistance coincide -/
 @[simp]
-theorem Metric.emetric_closed_ball_nnreal {x : α} {ε : ℝ≥0 } : Emetric.ClosedBall x ε = ClosedBall x ε := by
+theorem Metric.emetric_closed_ball_nnreal {x : α} {ε : ℝ≥0} : Emetric.ClosedBall x ε = ClosedBall x ε := by
   convert Metric.emetric_closed_ball ε.2
   simp
 
@@ -1521,10 +1528,10 @@ section Nnreal
 noncomputable instance : PseudoMetricSpace ℝ≥0 :=
   Subtype.pseudoMetricSpace
 
-theorem Nnreal.dist_eq (a b : ℝ≥0 ) : dist a b = abs ((a : ℝ) - b) :=
+theorem Nnreal.dist_eq (a b : ℝ≥0) : dist a b = abs ((a : ℝ) - b) :=
   rfl
 
-theorem Nnreal.nndist_eq (a b : ℝ≥0 ) : nndist a b = max (a - b) (b - a) := by
+theorem Nnreal.nndist_eq (a b : ℝ≥0) : nndist a b = max (a - b) (b - a) := by
   /- WLOG, `b ≤ a`. `wlog h : b ≤ a` works too but it is much slower because Lean tries to prove one
     case from the other and fails; `tactic.skip` tells Lean not to try. -/
   wlog (discharger := tactic.skip) h : b ≤ a := le_totalₓ b a using a b, b a
@@ -1535,15 +1542,15 @@ theorem Nnreal.nndist_eq (a b : ℝ≥0 ) : nndist a b = max (a - b) (b - a) := 
     
 
 @[simp]
-theorem Nnreal.nndist_zero_eq_val (z : ℝ≥0 ) : nndist 0 z = z := by
+theorem Nnreal.nndist_zero_eq_val (z : ℝ≥0) : nndist 0 z = z := by
   simp only [Nnreal.nndist_eq, max_eq_rightₓ, tsub_zero, zero_tsub, zero_le']
 
 @[simp]
-theorem Nnreal.nndist_zero_eq_val' (z : ℝ≥0 ) : nndist z 0 = z := by
+theorem Nnreal.nndist_zero_eq_val' (z : ℝ≥0) : nndist z 0 = z := by
   rw [nndist_comm]
   exact Nnreal.nndist_zero_eq_val z
 
-theorem Nnreal.le_add_nndist (a b : ℝ≥0 ) : a ≤ b + nndist a b := by
+theorem Nnreal.le_add_nndist (a b : ℝ≥0) : a ≤ b + nndist a b := by
   suffices (a : ℝ) ≤ (b : ℝ) + dist a b by
     exact nnreal.coe_le_coe.mp this
   linarith [le_of_abs_le
@@ -1726,7 +1733,7 @@ theorem closed_ball_zero' (x : α) : ClosedBall x 0 = Closure {x} :=
 
 theorem dense_iff {s : Set α} : Dense s ↔ ∀ x, ∀ r > 0, (Ball x r ∩ s).Nonempty :=
   forall_congrₓ fun x => by
-    simp only [mem_closure_iff, Set.Nonempty, exists_prop, mem_inter_eq, mem_ball', and_comm]
+    simp only [mem_closure_iff, Set.Nonempty, exists_propₓ, mem_inter_eq, mem_ball', and_comm]
 
 theorem dense_range_iff {f : β → α} : DenseRange f ↔ ∀ x, ∀ r > 0, ∃ y, dist x (f y) < r :=
   forall_congrₓ fun x => by
@@ -1810,7 +1817,7 @@ noncomputable instance pseudoMetricSpacePi : PseudoMetricSpace (∀ b, π b) := 
     for the distance -/
   refine'
     (PseudoEmetricSpace.toPseudoMetricSpaceOfDist
-          (fun f g : ∀ b, π b => ((sup univ fun b => nndist (f b) (g b) : ℝ≥0 ) : ℝ)) (fun f g => _) fun f g =>
+          (fun f g : ∀ b, π b => ((sup univ fun b => nndist (f b) (g b) : ℝ≥0) : ℝ)) (fun f g => _) fun f g =>
           _).replaceBornology
       fun s => _
   show edist f g ≠ ⊤
@@ -1832,18 +1839,18 @@ noncomputable instance pseudoMetricSpacePi : PseudoMetricSpace (∀ b, π b) := 
 theorem nndist_pi_def (f g : ∀ b, π b) : nndist f g = sup univ fun b => nndist (f b) (g b) :=
   Nnreal.eq rfl
 
-theorem dist_pi_def (f g : ∀ b, π b) : dist f g = (sup univ fun b => nndist (f b) (g b) : ℝ≥0 ) :=
+theorem dist_pi_def (f g : ∀ b, π b) : dist f g = (sup univ fun b => nndist (f b) (g b) : ℝ≥0) :=
   rfl
 
 @[simp]
 theorem dist_pi_const [Nonempty β] (a b : α) : (dist (fun x : β => a) fun _ => b) = dist a b := by
-  simpa only [dist_edist] using congr_argₓ Ennreal.toReal (edist_pi_const a b)
+  simpa only [dist_edist] using congr_arg Ennreal.toReal (edist_pi_const a b)
 
 @[simp]
 theorem nndist_pi_const [Nonempty β] (a b : α) : (nndist (fun x : β => a) fun _ => b) = nndist a b :=
   Nnreal.eq <| dist_pi_const a b
 
-theorem nndist_pi_le_iff {f g : ∀ b, π b} {r : ℝ≥0 } : nndist f g ≤ r ↔ ∀ b, nndist (f b) (g b) ≤ r := by
+theorem nndist_pi_le_iff {f g : ∀ b, π b} {r : ℝ≥0} : nndist f g ≤ r ↔ ∀ b, nndist (f b) (g b) ≤ r := by
   simp [nndist_pi_def]
 
 theorem dist_pi_lt_iff {f g : ∀ b, π b} {r : ℝ} (hr : 0 < r) : dist f g < r ↔ ∀ b, dist (f b) (g b) < r := by

@@ -34,7 +34,7 @@ open TopologicalSpace Alexandroff
 -- mathport name: «exprℚ∞»
 local notation "ℚ∞" => Alexandroff ℚ
 
-namespace Rat
+namespace Ratₓ
 
 variable {p q : ℚ} {s t : Set ℚ}
 
@@ -44,7 +44,7 @@ theorem interior_compact_eq_empty (hs : IsCompact s) : Interior s = ∅ :=
 theorem dense_compl_compact (hs : IsCompact s) : Dense (sᶜ) :=
   interior_eq_empty_iff_dense_compl.1 (interior_compact_eq_empty hs)
 
-instance cocompact_inf_nhds_ne_bot : NeBot (cocompact ℚ⊓𝓝 p) := by
+instance cocompact_inf_nhds_ne_bot : NeBot (cocompact ℚ ⊓ 𝓝 p) := by
   refine' (has_basis_cocompact.inf (nhds_basis_opens _)).ne_bot_iff.2 _
   rintro ⟨s, o⟩ ⟨hs, hpo, ho⟩
   rw [inter_comm]
@@ -52,7 +52,7 @@ instance cocompact_inf_nhds_ne_bot : NeBot (cocompact ℚ⊓𝓝 p) := by
 
 theorem not_countably_generated_cocompact : ¬IsCountablyGenerated (cocompact ℚ) := by
   intro H
-  rcases exists_seq_tendsto (cocompact ℚ⊓𝓝 0) with ⟨x, hx⟩
+  rcases exists_seq_tendsto (cocompact ℚ ⊓ 𝓝 0) with ⟨x, hx⟩
   rw [tendsto_inf] at hx
   rcases hx with ⟨hxc, hx0⟩
   obtain ⟨n, hn⟩ : ∃ n : ℕ, x n ∉ insert (0 : ℚ) (range x)
@@ -79,11 +79,11 @@ instance : TotallyDisconnectedSpace ℚ := by
   clear hsu
   by_contra' H : x ≠ y
   wlog hlt : x < y := H.lt_or_lt using x y, y x
-  rcases exists_irrational_btwn (Rat.cast_lt.2 hlt) with ⟨z, hz, hxz, hzy⟩
+  rcases exists_irrational_btwn (Ratₓ.cast_lt.2 hlt) with ⟨z, hz, hxz, hzy⟩
   have := hs.image coe continuous_coe_real.continuous_on
   rw [is_preconnected_iff_ord_connected] at this
   have : z ∈ coe '' s := this.out (mem_image_of_mem _ hx) (mem_image_of_mem _ hy) ⟨hxz.le, hzy.le⟩
   exact hz (image_subset_range _ _ this)
 
-end Rat
+end Ratₓ
 

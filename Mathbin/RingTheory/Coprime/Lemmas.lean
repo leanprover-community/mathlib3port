@@ -91,7 +91,7 @@ open Finset
 theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) :
     (∃ μ : I → R, (∑ i in t, μ i * ∏ j in t \ {i}, s j) = 1) ↔ Pairwise (IsCoprime on fun i : t => s i) := by
   refine' h.cons_induction _ _ <;> clear t h
-  · simp only [Pairwise, sum_singleton, Finset.sdiff_self, prod_empty, mul_oneₓ, exists_apply_eq_applyₓ, Ne.def,
+  · simp only [Pairwise, sum_singleton, Finset.sdiff_self, prod_empty, mul_oneₓ, exists_apply_eq_apply, Ne.def,
       true_iffₓ]
     rintro a ⟨i, hi⟩ ⟨j, hj⟩ h
     rw [Finset.mem_singleton] at hi hj
@@ -160,7 +160,7 @@ theorem pairwise_coprime_iff_coprime_prod [DecidableEq I] :
   refine' ⟨fun hp i hi => is_coprime.prod_right_iff.mpr fun j hj => _, fun hp => _⟩
   · rw [Finset.mem_sdiff, Finset.mem_singleton] at hj
     obtain ⟨hj, ji⟩ := hj
-    exact hp ⟨i, hi⟩ ⟨j, hj⟩ fun h => ji (congr_argₓ coe h).symm
+    exact hp ⟨i, hi⟩ ⟨j, hj⟩ fun h => ji (congr_arg coe h).symm
     
   · rintro ⟨i, hi⟩ ⟨j, hj⟩ h
     apply is_coprime.prod_right_iff.mp (hp i hi)

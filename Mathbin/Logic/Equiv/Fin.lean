@@ -185,7 +185,7 @@ theorem fin_succ_equiv_symm_none {n : ℕ} : (finSuccEquiv n).symm none = 0 :=
 
 @[simp]
 theorem fin_succ_equiv_symm_some {n : ℕ} (m : Finₓ n) : (finSuccEquiv n).symm (some m) = m.succ :=
-  congr_funₓ Finₓ.succ_above_zero m
+  congr_fun Finₓ.succ_above_zero m
 
 @[simp]
 theorem fin_succ_equiv_symm_coe {n : ℕ} (m : Finₓ n) : (finSuccEquiv n).symm m = m.succ :=

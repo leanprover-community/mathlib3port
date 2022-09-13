@@ -688,7 +688,7 @@ theorem coe_zpow (s : Finset α) : ∀ n : ℤ, ↑(s ^ n) = (s ^ n : Set α)
   | Int.ofNat n => coe_pow _ _
   | Int.negSucc n => by
     refine' (coe_inv _).trans _
-    convert congr_argₓ Inv.inv (coe_pow _ _)
+    convert congr_arg Inv.inv (coe_pow _ _)
 
 @[to_additive]
 protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = {a} ∧ t = {b} ∧ a * b = 1 := by
@@ -1148,7 +1148,7 @@ theorem image_smul : (s.Image fun x => a • x) = a • s :=
 
 @[to_additive]
 theorem mem_smul_finset {x : β} : x ∈ a • s ↔ ∃ y, y ∈ s ∧ a • y = x := by
-  simp only [Finset.smul_finset_def, And.assoc, mem_image, exists_prop, Prod.existsₓ, mem_product]
+  simp only [Finset.smul_finset_def, And.assoc, mem_image, exists_propₓ, Prod.existsₓ, mem_product]
 
 @[simp, norm_cast, to_additive]
 theorem coe_smul_finset (a : α) (s : Finset β) : (↑(a • s) : Set β) = a • s :=

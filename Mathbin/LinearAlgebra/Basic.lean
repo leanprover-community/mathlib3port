@@ -119,7 +119,7 @@ theorem linear_equiv_fun_on_fintype_symm_single [DecidableEq α] (x : α) (m : M
     (linearEquivFunOnFintype R M α).symm (Pi.single x m) = single x m := by
   ext a
   change (equiv_fun_on_fintype.symm (Pi.single x m)) a = _
-  convert congr_funₓ (equiv_fun_on_fintype_symm_single x m) a
+  convert congr_fun (equiv_fun_on_fintype_symm_single x m) a
 
 @[simp]
 theorem linear_equiv_fun_on_fintype_symm_coe (f : α →₀ M) : (linearEquivFunOnFintype R M α).symm f = f := by
@@ -692,7 +692,7 @@ theorem map_zero : map (0 : M →ₛₗ[σ₁₂] M₂) p = ⊥ :=
   ext <| by
     simp [this, eq_comm]
 
-theorem map_add_le (f g : M →ₛₗ[σ₁₂] M₂) : map (f + g) p ≤ map f p⊔map g p := by
+theorem map_add_le (f g : M →ₛₗ[σ₁₂] M₂) : map (f + g) p ≤ map f p ⊔ map g p := by
   rintro x ⟨m, hm, rfl⟩
   exact add_mem_sup (mem_map_of_mem hm) (mem_map_of_mem hm)
 
@@ -783,7 +783,7 @@ theorem map_bot (f : F) : map f ⊥ = ⊥ :=
   (gc_map_comap f).l_bot
 
 @[simp]
-theorem map_sup (f : F) : map f (p⊔p') = map f p⊔map f p' :=
+theorem map_sup (f : F) : map f (p ⊔ p') = map f p ⊔ map f p' :=
   (gc_map_comap f : GaloisConnection (map f) (comap f)).l_sup
 
 @[simp]
@@ -799,7 +799,7 @@ theorem comap_top (f : F) : comap f ⊤ = ⊤ :=
   rfl
 
 @[simp]
-theorem comap_inf (f : F) : comap f (q⊓q') = comap f q⊓comap f q' :=
+theorem comap_inf (f : F) : comap f (q ⊓ q') = comap f q ⊓ comap f q' :=
   rfl
 
 @[simp]
@@ -846,13 +846,13 @@ theorem map_surjective_of_surjective : Function.Surjective (map f) :=
 theorem comap_injective_of_surjective : Function.Injective (comap f) :=
   (giMapComap hf).u_injective
 
-theorem map_sup_comap_of_surjective (p q : Submodule R₂ M₂) : (p.comap f⊔q.comap f).map f = p⊔q :=
+theorem map_sup_comap_of_surjective (p q : Submodule R₂ M₂) : (p.comap f ⊔ q.comap f).map f = p ⊔ q :=
   (giMapComap hf).l_sup_u _ _
 
 theorem map_supr_comap_of_sujective {ι : Sort _} (S : ι → Submodule R₂ M₂) : (⨆ i, (S i).comap f).map f = supr S :=
   (giMapComap hf).l_supr_u _
 
-theorem map_inf_comap_of_surjective (p q : Submodule R₂ M₂) : (p.comap f⊓q.comap f).map f = p⊓q :=
+theorem map_inf_comap_of_surjective (p q : Submodule R₂ M₂) : (p.comap f ⊓ q.comap f).map f = p ⊓ q :=
   (giMapComap hf).l_inf_u _ _
 
 theorem map_infi_comap_of_surjective {ι : Sort _} (S : ι → Submodule R₂ M₂) : (⨅ i, (S i).comap f).map f = infi S :=
@@ -886,13 +886,13 @@ theorem comap_surjective_of_injective : Function.Surjective (comap f) :=
 theorem map_injective_of_injective : Function.Injective (map f) :=
   (gciMapComap hf).l_injective
 
-theorem comap_inf_map_of_injective (p q : Submodule R M) : (p.map f⊓q.map f).comap f = p⊓q :=
+theorem comap_inf_map_of_injective (p q : Submodule R M) : (p.map f ⊓ q.map f).comap f = p ⊓ q :=
   (gciMapComap hf).u_inf_l _ _
 
 theorem comap_infi_map_of_injective {ι : Sort _} (S : ι → Submodule R M) : (⨅ i, (S i).map f).comap f = infi S :=
   (gciMapComap hf).u_infi_l _
 
-theorem comap_sup_map_of_injective (p q : Submodule R M) : (p.map f⊔q.map f).comap f = p⊔q :=
+theorem comap_sup_map_of_injective (p q : Submodule R M) : (p.map f ⊔ q.map f).comap f = p ⊔ q :=
   (gciMapComap hf).u_sup_l _ _
 
 theorem comap_supr_map_of_injective {ι : Sort _} (S : ι → Submodule R M) : (⨆ i, (S i).map f).comap f = supr S :=
@@ -908,7 +908,7 @@ end GaloisCoinsertion
 
 --TODO(Mario): is there a way to prove this from order properties?
 theorem map_inf_eq_map_inf_comap [RingHomSurjective σ₁₂] {f : F} {p : Submodule R M} {p' : Submodule R₂ M₂} :
-    map f p⊓p' = map f (p⊓comap f p') :=
+    map f p ⊓ p' = map f (p ⊓ comap f p') :=
   le_antisymmₓ
     (by
       rintro _ ⟨⟨x, h₁, rfl⟩, h₂⟩ <;> exact ⟨_, ⟨h₁, h₂⟩, rfl⟩)
@@ -916,7 +916,7 @@ theorem map_inf_eq_map_inf_comap [RingHomSurjective σ₁₂] {f : F} {p : Submo
 
 omit sc
 
-theorem map_comap_subtype : map p.Subtype (comap p.Subtype p') = p⊓p' :=
+theorem map_comap_subtype : map p.Subtype (comap p.Subtype p') = p ⊓ p' :=
   ext fun x =>
     ⟨by
       rintro ⟨⟨_, h₁⟩, h₂, rfl⟩ <;> exact ⟨h₁, h₂⟩, fun ⟨h₁, h₂⟩ => ⟨⟨_, h₁⟩, h₂, rfl⟩⟩
@@ -1249,7 +1249,7 @@ theorem ker_restrict {p : Submodule R M} {f : M →ₗ[R] M} (hf : ∀ x : M, x 
 include sc
 
 theorem _root_.submodule.map_comap_eq [RingHomSurjective τ₁₂] (f : F) (q : Submodule R₂ M₂) :
-    map f (comap f q) = range f⊓q :=
+    map f (comap f q) = range f ⊓ q :=
   le_antisymmₓ (le_inf map_le_range (map_comap_le _ _)) <| by
     rintro _ ⟨⟨x, _, rfl⟩, hx⟩ <;> exact ⟨x, hx, rfl⟩
 
@@ -1833,7 +1833,7 @@ variable (p q : Submodule R M)
 
 /-- Linear equivalence between two equal submodules. -/
 def ofEq (h : p = q) : p ≃ₗ[R] q :=
-  { Equivₓ.Set.ofEq (congr_argₓ _ h) with map_smul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
+  { Equivₓ.Set.ofEq (congr_arg _ h) with map_smul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
 
 variable {p q}
 
@@ -2286,7 +2286,7 @@ theorem comap_le_comap_smul (fₗ : N →ₗ[R] N₂) (c : R) : comap fₗ qₗ 
   change fₗ m ∈ qₗ at h
   apply qₗ.smul_mem _ h
 
-theorem inf_comap_le_comap_add (f₁ f₂ : M →ₛₗ[τ₁₂] M₂) : comap f₁ q⊓comap f₂ q ≤ comap (f₁ + f₂) q := by
+theorem inf_comap_le_comap_add (f₁ f₂ : M →ₛₗ[τ₁₂] M₂) : comap f₁ q ⊓ comap f₂ q ≤ comap (f₁ + f₂) q := by
   rw [SetLike.le_def]
   intro m h
   change f₁ m + f₂ m ∈ q
@@ -2355,7 +2355,7 @@ theorem fun_left_surjective_of_injective (f : m → n) (hf : Injective f) : Surj
     · congr
       exact hf w.some_spec
       
-    · simpa only [not_true, exists_apply_eq_applyₓ] using w
+    · simpa only [not_true, exists_apply_eq_apply] using w
       
     
 

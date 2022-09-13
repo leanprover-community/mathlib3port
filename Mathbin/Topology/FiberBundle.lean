@@ -252,7 +252,7 @@ theorem preimage_symm_proj_inter (s : Set B) :
     e.toLocalEquiv.symm ⁻¹' (proj ⁻¹' s) ∩ e.BaseSet ×ˢ univ = (s ∩ e.BaseSet) ×ˢ univ := by
   ext ⟨x, y⟩
   suffices x ∈ e.base_set → (proj (e.to_local_equiv.symm (x, y)) ∈ s ↔ x ∈ s) by
-    simpa only [prod_mk_mem_set_prod_eq, mem_inter_eq, and_trueₓ, mem_univ, And.congr_left_iff]
+    simpa only [prod_mk_mem_set_prod_eq, mem_inter_eq, and_trueₓ, mem_univ, And.congr_left_iffₓ]
   intro h
   rw [e.proj_symm_apply' h]
 
@@ -777,7 +777,7 @@ noncomputable def piecewiseLeOfEq [LinearOrderₓ B] [OrderTopology B] (e e' : T
     (He : a ∈ e.BaseSet) (He' : a ∈ e'.BaseSet) (Heq : ∀ p, proj p = a → e p = e' p) : Trivialization F proj :=
   e.piecewise e' (Iic a)
     (Set.ext fun x =>
-      And.congr_left_iff.2 fun hx => by
+      And.congr_left_iffₓ.2 fun hx => by
         simp [He, He', mem_singleton_iff.1 (frontier_Iic_subset _ hx)])
     fun p hp => Heq p <| frontier_Iic_subset _ hp.2
 
@@ -925,7 +925,7 @@ attribute [mfld_simps]
 instance [I : TopologicalSpace F] : ∀ x : B, TopologicalSpace (Trivial B F x) := fun x => I
 
 instance [t₁ : TopologicalSpace B] [t₂ : TopologicalSpace F] : TopologicalSpace (TotalSpace (Trivial B F)) :=
-  induced TotalSpace.proj t₁⊓induced (Trivial.projSnd B F) t₂
+  induced TotalSpace.proj t₁ ⊓ induced (Trivial.projSnd B F) t₂
 
 end Bundle
 
@@ -1115,7 +1115,7 @@ variable {ι}
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem open_source' (i : ι) : IsOpen (Z.localTrivAsLocalEquiv i).Source := by
   apply TopologicalSpace.GenerateOpen.basic
-  simp only [exists_prop, mem_Union, mem_singleton_iff]
+  simp only [exists_propₓ, mem_Union, mem_singleton_iff]
   refine' ⟨i, Z.base_set i ×ˢ univ, (Z.is_open_base_set i).Prod is_open_univ, _⟩
   ext p
   simp only [local_triv_as_local_equiv_apply, prod_mk_mem_set_prod_eq, mem_inter_eq, and_selfₓ,
@@ -1139,12 +1139,12 @@ def localTriv (i : ι) : Trivialization F Z.proj where
     rw [continuous_on_open_iff (Z.open_source' i)]
     intro s s_open
     apply TopologicalSpace.GenerateOpen.basic
-    simp only [exists_prop, mem_Union, mem_singleton_iff]
+    simp only [exists_propₓ, mem_Union, mem_singleton_iff]
     exact ⟨i, s, s_open, rfl⟩
   continuous_inv_fun := by
     apply continuous_on_open_of_generate_from ((Z.is_open_base_set i).Prod is_open_univ)
     intro t ht
-    simp only [exists_prop, mem_Union, mem_singleton_iff] at ht
+    simp only [exists_propₓ, mem_Union, mem_singleton_iff] at ht
     obtain ⟨j, s, s_open, ts⟩ :
       ∃ j s, IsOpen s ∧ t = (local_triv_as_local_equiv Z j).Source ∩ local_triv_as_local_equiv Z j ⁻¹' s := ht
     rw [ts]
@@ -1359,7 +1359,7 @@ def trivializationOfMemPretrivializationAtlas (he : e ∈ a.PretrivializationAtl
       refine' is_open_supr_iff.mpr fun he' => _
       rw [is_open_coinduced, is_open_induced_iff]
       obtain ⟨u, hu1, hu2⟩ := continuous_on_iff'.mp (a.continuous_triv_change _ he _ he') s hs
-      have hu3 := congr_argₓ (fun s => (fun x : e'.target => (x : B × F)) ⁻¹' s) hu2
+      have hu3 := congr_arg (fun s => (fun x : e'.target => (x : B × F)) ⁻¹' s) hu2
       simp only [Subtype.coe_preimage_self, preimage_inter, univ_inter] at hu3
       refine'
         ⟨u ∩ e'.to_local_equiv.target ∩ e'.to_local_equiv.symm ⁻¹' e.source, _, by

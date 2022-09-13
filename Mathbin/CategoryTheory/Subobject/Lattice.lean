@@ -373,28 +373,28 @@ instance {B : C} : SemilatticeInf (Subobject B) :=
   { Subobject.partialOrder _ with inf := fun m n => (inf.obj m).obj n, inf_le_left := inf_le_left,
     inf_le_right := inf_le_right, le_inf := le_inf }
 
-theorem factors_left_of_inf_factors {A B : C} {X Y : Subobject B} {f : A ⟶ B} (h : (X⊓Y).Factors f) : X.Factors f :=
+theorem factors_left_of_inf_factors {A B : C} {X Y : Subobject B} {f : A ⟶ B} (h : (X ⊓ Y).Factors f) : X.Factors f :=
   factors_of_le _ (inf_le_left _ _) h
 
-theorem factors_right_of_inf_factors {A B : C} {X Y : Subobject B} {f : A ⟶ B} (h : (X⊓Y).Factors f) : Y.Factors f :=
+theorem factors_right_of_inf_factors {A B : C} {X Y : Subobject B} {f : A ⟶ B} (h : (X ⊓ Y).Factors f) : Y.Factors f :=
   factors_of_le _ (inf_le_right _ _) h
 
 @[simp]
-theorem inf_factors {A B : C} {X Y : Subobject B} (f : A ⟶ B) : (X⊓Y).Factors f ↔ X.Factors f ∧ Y.Factors f :=
+theorem inf_factors {A B : C} {X Y : Subobject B} (f : A ⟶ B) : (X ⊓ Y).Factors f ↔ X.Factors f ∧ Y.Factors f :=
   ⟨fun h => ⟨factors_left_of_inf_factors h, factors_right_of_inf_factors h⟩, by
     revert X Y
     refine' Quotientₓ.ind₂' _
     rintro X Y ⟨⟨g₁, rfl⟩, ⟨g₂, hg₂⟩⟩
     exact ⟨_, pullback.lift_snd_assoc _ _ hg₂ _⟩⟩
 
-theorem inf_arrow_factors_left {B : C} (X Y : Subobject B) : X.Factors (X⊓Y).arrow :=
+theorem inf_arrow_factors_left {B : C} (X Y : Subobject B) : X.Factors (X ⊓ Y).arrow :=
   (factors_iff _ _).mpr
-    ⟨ofLe (X⊓Y) X (inf_le_left X Y), by
+    ⟨ofLe (X ⊓ Y) X (inf_le_left X Y), by
       simp ⟩
 
-theorem inf_arrow_factors_right {B : C} (X Y : Subobject B) : Y.Factors (X⊓Y).arrow :=
+theorem inf_arrow_factors_right {B : C} (X Y : Subobject B) : Y.Factors (X ⊓ Y).arrow :=
   (factors_iff _ _).mpr
-    ⟨ofLe (X⊓Y) Y (inf_le_right X Y), by
+    ⟨ofLe (X ⊓ Y) Y (inf_le_right X Y), by
       simp ⟩
 
 @[simp]
@@ -438,18 +438,18 @@ theorem inf_eq_map_pullback' {A : C} (f₁ : MonoOver A) (f₂ : Subobject A) :
   rfl
 
 theorem inf_eq_map_pullback {A : C} (f₁ : MonoOver A) (f₂ : Subobject A) :
-    (Quotientₓ.mk' f₁⊓f₂ : Subobject A) = (map f₁.arrow).obj ((pullback f₁.arrow).obj f₂) :=
+    (Quotientₓ.mk' f₁ ⊓ f₂ : Subobject A) = (map f₁.arrow).obj ((pullback f₁.arrow).obj f₂) :=
   inf_eq_map_pullback' f₁ f₂
 
-theorem prod_eq_inf {A : C} {f₁ f₂ : Subobject A} [HasBinaryProduct f₁ f₂] : (f₁ ⨯ f₂) = f₁⊓f₂ :=
+theorem prod_eq_inf {A : C} {f₁ f₂ : Subobject A} [HasBinaryProduct f₁ f₂] : (f₁ ⨯ f₂) = f₁ ⊓ f₂ :=
   le_antisymmₓ (le_inf Limits.prod.fst.le Limits.prod.snd.le) (prod.lift inf_le_left.Hom inf_le_right.Hom).le
 
-theorem inf_def {B : C} (m m' : Subobject B) : m⊓m' = (inf.obj m).obj m' :=
+theorem inf_def {B : C} (m m' : Subobject B) : m ⊓ m' = (inf.obj m).obj m' :=
   rfl
 
 /-- `⊓` commutes with pullback. -/
 theorem inf_pullback {X Y : C} (g : X ⟶ Y) (f₁ f₂) :
-    (pullback g).obj (f₁⊓f₂) = (pullback g).obj f₁⊓(pullback g).obj f₂ := by
+    (pullback g).obj (f₁ ⊓ f₂) = (pullback g).obj f₁ ⊓ (pullback g).obj f₂ := by
   revert f₁
   apply Quotientₓ.ind'
   intro f₁
@@ -458,7 +458,7 @@ theorem inf_pullback {X Y : C} (g : X ⟶ Y) (f₁ f₂) :
   rfl
 
 /-- `⊓` commutes with map. -/
-theorem inf_map {X Y : C} (g : Y ⟶ X) [Mono g] (f₁ f₂) : (map g).obj (f₁⊓f₂) = (map g).obj f₁⊓(map g).obj f₂ := by
+theorem inf_map {X Y : C} (g : Y ⟶ X) [Mono g] (f₁ f₂) : (map g).obj (f₁ ⊓ f₂) = (map g).obj f₁ ⊓ (map g).obj f₂ := by
   revert f₁
   apply Quotientₓ.ind'
   intro f₁
@@ -482,10 +482,10 @@ instance {B : C} : SemilatticeSup (Subobject B) :=
     le_sup_right := fun m n => Quotientₓ.induction_on₂' m n fun a b => ⟨MonoOver.leSupRight _ _⟩,
     sup_le := fun m n k => Quotientₓ.induction_on₃' m n k fun a b c ⟨i⟩ ⟨j⟩ => ⟨MonoOver.supLe _ _ _ i j⟩ }
 
-theorem sup_factors_of_factors_left {A B : C} {X Y : Subobject B} {f : A ⟶ B} (P : X.Factors f) : (X⊔Y).Factors f :=
+theorem sup_factors_of_factors_left {A B : C} {X Y : Subobject B} {f : A ⟶ B} (P : X.Factors f) : (X ⊔ Y).Factors f :=
   factors_of_le f le_sup_left P
 
-theorem sup_factors_of_factors_right {A B : C} {X Y : Subobject B} {f : A ⟶ B} (P : Y.Factors f) : (X⊔Y).Factors f :=
+theorem sup_factors_of_factors_right {A B : C} {X Y : Subobject B} {f : A ⟶ B} (P : Y.Factors f) : (X ⊔ Y).Factors f :=
   factors_of_le f le_sup_right P
 
 variable [HasInitial C] [InitialMonoClass C]
@@ -592,7 +592,7 @@ theorem Inf_le {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : infₓ s ≤ 
       (underlying_iso _).Hom ≫
         limits.limit.π (wide_cospan s) (some ⟨equivShrink _ f, Set.mem_image_of_mem (equivShrink (subobject A)) H⟩) ≫ _
     apply eq_to_hom
-    apply congr_argₓ fun X : subobject A => (X : C)
+    apply congr_arg fun X : subobject A => (X : C)
     exact Equivₓ.symm_apply_apply _ _
     
   · dsimp' [Inf]
@@ -641,7 +641,7 @@ theorem le_Sup {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : f ≤ supₓ 
         sigma.ι _
           ⟨equivShrink _ f, by
             simpa [Set.mem_image] using H⟩
-    exact eq_to_hom (congr_argₓ (fun X : subobject A => (X : C)) (Equivₓ.symm_apply_apply _ _).symm)
+    exact eq_to_hom (congr_arg (fun X : subobject A => (X : C)) (Equivₓ.symm_apply_apply _ _).symm)
     
   · dsimp' [Sup, small_coproduct_desc]
     simp

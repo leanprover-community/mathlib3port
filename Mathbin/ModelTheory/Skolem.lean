@@ -43,8 +43,7 @@ def skolem₁ : Language :=
 
 variable {L}
 
-theorem card_functions_sum_skolem₁ : # (Σn, (L.Sum L.skolem₁).Functions n) = # (Σn, L.BoundedFormula Empty (n + 1)) :=
-  by
+theorem card_functions_sum_skolem₁ : (#Σn, (L.Sum L.skolem₁).Functions n) = (#Σn, L.BoundedFormula Empty (n + 1)) := by
   simp only [card_functions_sum, skolem₁_functions, lift_id', mk_sigma, sum_add_distrib']
   rw [add_commₓ, add_eq_max, max_eq_leftₓ]
   · refine' sum_le_sum _ _ fun n => _
@@ -57,9 +56,9 @@ theorem card_functions_sum_skolem₁ : # (Σn, (L.Sum L.skolem₁).Functions n) 
     exact infinite_iff.1 (Infinite.of_injective (fun n => ⟨n, ⊥⟩) fun x y xy => (Sigma.mk.inj xy).1)
     
 
-theorem card_functions_sum_skolem₁_le : # (Σn, (L.Sum L.skolem₁).Functions n) ≤ max ℵ₀ L.card := by
+theorem card_functions_sum_skolem₁_le : (#Σn, (L.Sum L.skolem₁).Functions n) ≤ max ℵ₀ L.card := by
   rw [card_functions_sum_skolem₁]
-  trans # (Σn, L.bounded_formula Empty n)
+  trans #Σn, L.bounded_formula Empty n
   · exact ⟨⟨Sigma.map Nat.succ fun _ => id, nat.succ_injective.sigma_map fun _ => Function.injective_id⟩⟩
     
   · refine' trans bounded_formula.card_le (lift_le.1 _)
@@ -110,9 +109,9 @@ variable {M}
   `max (# s, L.card) ≤ κ` and `κ ≤ # M`, then `M` has an elementary substructure containing `s` of
   cardinality `κ`.  -/
 theorem exists_elementary_substructure_card_eq (s : Set M) (κ : Cardinal.{w'}) (h1 : ℵ₀ ≤ κ)
-    (h2 : Cardinal.lift.{w'} (# s) ≤ Cardinal.lift.{w} κ) (h3 : Cardinal.lift.{w'} L.card ≤ Cardinal.lift.{max u v} κ)
-    (h4 : Cardinal.lift.{w} κ ≤ Cardinal.lift.{w'} (# M)) :
-    ∃ S : L.ElementarySubstructure M, s ⊆ S ∧ Cardinal.lift.{w'} (# S) = Cardinal.lift.{w} κ := by
+    (h2 : Cardinal.lift.{w'} (#s) ≤ Cardinal.lift.{w} κ) (h3 : Cardinal.lift.{w'} L.card ≤ Cardinal.lift.{max u v} κ)
+    (h4 : Cardinal.lift.{w} κ ≤ Cardinal.lift.{w'} (#M)) :
+    ∃ S : L.ElementarySubstructure M, s ⊆ S ∧ Cardinal.lift.{w'} (#S) = Cardinal.lift.{w} κ := by
   obtain ⟨s', hs'⟩ := Cardinal.le_mk_iff_exists_set.1 h4
   rw [← aleph_0_le_lift] at h1
   rw [← hs'] at *

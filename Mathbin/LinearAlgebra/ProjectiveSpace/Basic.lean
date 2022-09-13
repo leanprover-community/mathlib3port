@@ -91,7 +91,7 @@ open FiniteDimensional
 
 /-- Consider an element of the projectivization as a submodule of `V`. -/
 protected def submodule (v : ℙ K V) : Submodule K V :=
-  (Quotientₓ.liftOn' v fun v => K∙(v : V)) <| by
+  (Quotientₓ.liftOn' v fun v => K ∙ (v : V)) <| by
     rintro ⟨a, ha⟩ ⟨b, hb⟩ ⟨x, rfl : x • b = a⟩
     exact Submodule.span_singleton_group_smul_eq _ x _
 
@@ -125,10 +125,10 @@ theorem ind {P : ℙ K V → Prop} (h : ∀ (v : V) (h : v ≠ 0), P (mk K v h))
   Quotientₓ.ind' <| Subtype.rec <| h
 
 @[simp]
-theorem submodule_mk (v : V) (hv : v ≠ 0) : (mk K v hv).Submodule = K∙v :=
+theorem submodule_mk (v : V) (hv : v ≠ 0) : (mk K v hv).Submodule = K ∙ v :=
   rfl
 
-theorem submodule_eq (v : ℙ K V) : v.Submodule = K∙v.rep := by
+theorem submodule_eq (v : ℙ K V) : v.Submodule = K ∙ v.rep := by
   conv_lhs => rw [← v.mk_rep]
   rfl
 
@@ -138,7 +138,7 @@ theorem finrank_submodule (v : ℙ K V) : finrank K v.Submodule = 1 := by
 
 instance (v : ℙ K V) : FiniteDimensional K v.Submodule := by
   rw [← v.mk_rep]
-  change FiniteDimensional K (K∙v.rep)
+  change FiniteDimensional K (K ∙ v.rep)
   infer_instance
 
 theorem submodule_injective : Function.Injective (Projectivization.submodule : ℙ K V → Submodule K V) := by
@@ -181,7 +181,7 @@ noncomputable def equivSubmodule : ℙ K V ≃ { H : Submodule K V // finrank K 
         rw [Submodule.span_singleton_eq_range]
         refine' ⟨fun hh => _, _⟩
         · obtain ⟨c, hc⟩ := h ⟨x, hh⟩
-          exact ⟨c, congr_argₓ coe hc⟩
+          exact ⟨c, congr_arg coe hc⟩
           
         · rintro ⟨c, rfl⟩
           refine' Submodule.smul_mem _ _ v.2
@@ -197,7 +197,7 @@ noncomputable def mk'' (H : Submodule K V) (h : finrank K H = 1) : ℙ K V :=
 @[simp]
 theorem submodule_mk'' (H : Submodule K V) (h : finrank K H = 1) : (mk'' H h).Submodule = H := by
   suffices (equiv_submodule K V) (mk'' H h) = ⟨H, h⟩ by
-    exact congr_argₓ coe this
+    exact congr_arg coe this
   dsimp' [mk'']
   simp
 

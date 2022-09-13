@@ -291,7 +291,7 @@ theorem exists_mem_of_not_is_unit_aeval_prod [IsDomain R] {p : R[X]} {a : A} (hp
     (h : ¬IsUnit (aeval a (Multiset.map (fun x : R => X - c x) p.roots).Prod)) : ∃ k : R, k ∈ σ a ∧ eval k p = 0 := by
   rw [← Multiset.prod_to_list, AlgHom.map_list_prod] at h
   replace h := mt List.prod_is_unit h
-  simp only [not_forall, exists_prop, aeval_C, Multiset.mem_to_list, List.mem_mapₓ, aeval_X, exists_exists_and_eq_and,
+  simp only [not_forall, exists_propₓ, aeval_C, Multiset.mem_to_list, List.mem_mapₓ, aeval_X, exists_exists_and_eq_and,
     Multiset.mem_map, AlgHom.map_sub] at h
   rcases h with ⟨r, r_mem, r_nu⟩
   exact

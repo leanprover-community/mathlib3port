@@ -185,7 +185,7 @@ protected def comap (m : α → β) {f : Filter β} (F : f.Realizer) : (comap m 
                   ⟨s, subset.trans (preimage_mono h) h₂⟩⟩⟩
 
 /-- Construct a realizer for the sup of two filters -/
-protected def sup {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f⊔g).Realizer :=
+protected def sup {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f ⊔ g).Realizer :=
   ⟨F.σ × G.σ,
     { f := fun ⟨s, t⟩ => F.f s ∪ G.f t, pt := (F.f.pt, G.f.pt),
       inf := fun ⟨a, a'⟩ ⟨b, b'⟩ => (F.f.inf a b, G.f.inf a' b'),
@@ -203,7 +203,7 @@ protected def sup {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f⊔g).
                     fun ⟨⟨s, h₁⟩, ⟨t, h₂⟩⟩ => ⟨s, t, union_subset h₁ h₂⟩⟩⟩
 
 /-- Construct a realizer for the inf of two filters -/
-protected def inf {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f⊓g).Realizer :=
+protected def inf {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f ⊓ g).Realizer :=
   ⟨F.σ × G.σ,
     { f := fun ⟨s, t⟩ => F.f s ∩ G.f t, pt := (F.f.pt, G.f.pt),
       inf := fun ⟨a, a'⟩ ⟨b, b'⟩ => (F.f.inf a b, G.f.inf a' b'),

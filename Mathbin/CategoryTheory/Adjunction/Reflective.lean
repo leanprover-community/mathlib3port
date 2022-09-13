@@ -159,7 +159,7 @@ def equivEssImageOfReflective [Reflective i] : D ≌ i.EssImageSubcategory where
       (fun X => by
         refine' iso.symm <| as_iso _
         exact (of_right_adjoint i).Unit.app X.obj
-        apply is_iso_of_reflects_iso _ i.ess_image_inclusion with { instances := false }
+        apply (config := { instances := false }) is_iso_of_reflects_iso _ i.ess_image_inclusion
         exact functor.ess_image.unit_is_iso X.property)
       (by
         intro X Y f

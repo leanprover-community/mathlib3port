@@ -31,12 +31,12 @@ variable [CoheytingAlgebra α] {a b : α}
 /-- The boundary of an element of a co-Heyting algebra is the intersection of its Heyting negation
 with itself. Note that this is always `⊥` for a boolean algebra. -/
 def boundary (a : α) : α :=
-  a⊓￢a
+  a ⊓ ￢a
 
 -- mathport name: «expr∂ »
 localized [Heyting] prefix:120 "∂ " => Coheyting.boundary
 
-theorem inf_hnot_self (a : α) : a⊓￢a = ∂ a :=
+theorem inf_hnot_self (a : α) : a ⊓ ￢a = ∂ a :=
   rfl
 
 theorem boundary_le : ∂ a ≤ a :=
@@ -65,14 +65,14 @@ theorem hnot_boundary (a : α) : ￢∂ a = ⊤ := by
   rw [boundary, hnot_inf_distrib, sup_hnot_self]
 
 /-- **Leibniz rule** for the co-Heyting boundary. -/
-theorem boundary_inf (a b : α) : ∂ (a⊓b) = ∂ a⊓b⊔a⊓∂ b := by
+theorem boundary_inf (a b : α) : ∂ (a ⊓ b) = ∂ a ⊓ b ⊔ a ⊓ ∂ b := by
   unfold boundary
   rw [hnot_inf_distrib, inf_sup_left, inf_right_comm, ← inf_assoc]
 
-theorem boundary_inf_le : ∂ (a⊓b) ≤ ∂ a⊔∂ b :=
+theorem boundary_inf_le : ∂ (a ⊓ b) ≤ ∂ a ⊔ ∂ b :=
   (boundary_inf _ _).trans_le <| sup_le_sup inf_le_left inf_le_right
 
-theorem boundary_sup_le : ∂ (a⊔b) ≤ ∂ a⊔∂ b := by
+theorem boundary_sup_le : ∂ (a ⊔ b) ≤ ∂ a ⊔ ∂ b := by
   rw [boundary, inf_sup_right]
   exact sup_le_sup (inf_le_inf_left _ <| hnot_anti le_sup_left) (inf_le_inf_left _ <| hnot_anti le_sup_right)
 
@@ -89,7 +89,7 @@ example (a b : Prop) : (a ∧ b ∨ ¬(a ∧ b)) ∧ ((a ∨ b) ∨ ¬(a ∨ b))
   · exact Or.inr fun ha => hnab <| Or.inl ha
     
 
-theorem boundary_le_boundary_sup_sup_boundary_inf_left : ∂ a ≤ ∂ (a⊔b)⊔∂ (a⊓b) := by
+theorem boundary_le_boundary_sup_sup_boundary_inf_left : ∂ a ≤ ∂ (a ⊔ b) ⊔ ∂ (a ⊓ b) := by
   simp only [boundary, sup_inf_left, sup_inf_right, sup_right_idem, le_inf_iff, sup_assoc, @sup_comm _ _ _ a]
   refine' ⟨⟨⟨_, _⟩, _⟩, ⟨_, _⟩, _⟩ <;>
     try
@@ -103,11 +103,11 @@ theorem boundary_le_boundary_sup_sup_boundary_inf_left : ∂ a ≤ ∂ (a⊔b)�
     exact codisjoint_hnot_right.mono_right (hnot_anti inf_le_left)
     
 
-theorem boundary_le_boundary_sup_sup_boundary_inf_right : ∂ b ≤ ∂ (a⊔b)⊔∂ (a⊓b) := by
+theorem boundary_le_boundary_sup_sup_boundary_inf_right : ∂ b ≤ ∂ (a ⊔ b) ⊔ ∂ (a ⊓ b) := by
   rw [@sup_comm _ _ a, inf_comm]
   exact boundary_le_boundary_sup_sup_boundary_inf_left
 
-theorem boundary_sup_sup_boundary_inf (a b : α) : ∂ (a⊔b)⊔∂ (a⊓b) = ∂ a⊔∂ b :=
+theorem boundary_sup_sup_boundary_inf (a b : α) : ∂ (a ⊔ b) ⊔ ∂ (a ⊓ b) = ∂ a ⊔ ∂ b :=
   le_antisymmₓ (sup_le boundary_sup_le boundary_inf_le) <|
     sup_le boundary_le_boundary_sup_sup_boundary_inf_left boundary_le_boundary_sup_sup_boundary_inf_right
 
@@ -115,7 +115,7 @@ theorem boundary_sup_sup_boundary_inf (a b : α) : ∂ (a⊔b)⊔∂ (a⊓b) = �
 theorem boundary_idem (a : α) : ∂ ∂ a = ∂ a := by
   rw [boundary, hnot_boundary, inf_top_eq]
 
-theorem hnot_hnot_sup_boundary (a : α) : ￢￢a⊔∂ a = a := by
+theorem hnot_hnot_sup_boundary (a : α) : ￢￢a ⊔ ∂ a = a := by
   rw [boundary, sup_inf_left, hnot_sup_self, inf_top_eq, sup_eq_right]
   exact hnot_hnot_le
 

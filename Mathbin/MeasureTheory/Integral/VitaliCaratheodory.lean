@@ -89,8 +89,8 @@ local infixr:25 " →ₛ " => SimpleFunc
 function `g ≥ f` with integral arbitrarily close to that of `f`. Formulation in terms of
 `lintegral`.
 Auxiliary lemma for Vitali-Carathéodory theorem `exists_lt_lower_semicontinuous_integral_lt`. -/
-theorem SimpleFunc.exists_le_lower_semicontinuous_lintegral_ge (f : α →ₛ ℝ≥0 ) {ε : ℝ≥0∞} (ε0 : ε ≠ 0) :
-    ∃ g : α → ℝ≥0 , (∀ x, f x ≤ g x) ∧ LowerSemicontinuous g ∧ (∫⁻ x, g x ∂μ) ≤ (∫⁻ x, f x ∂μ) + ε := by
+theorem SimpleFunc.exists_le_lower_semicontinuous_lintegral_ge (f : α →ₛ ℝ≥0) {ε : ℝ≥0∞} (ε0 : ε ≠ 0) :
+    ∃ g : α → ℝ≥0, (∀ x, f x ≤ g x) ∧ LowerSemicontinuous g ∧ (∫⁻ x, g x ∂μ) ≤ (∫⁻ x, f x ∂μ) + ε := by
   induction' f using MeasureTheory.SimpleFunc.induction with c s hs f₁ f₂ H h₁ h₂ generalizing ε
   · let f := simple_func.piecewise s hs (simple_func.const α c) (simple_func.const α 0)
     by_cases' h : (∫⁻ x, f x ∂μ) = ⊤
@@ -157,7 +157,7 @@ theorem exists_le_lower_semicontinuous_lintegral_ge (f : α → ℝ≥0∞) (hf 
   rcases Ennreal.exists_pos_sum_of_countable' εpos ℕ with ⟨δ, δpos, hδ⟩
   have :
     ∀ n,
-      ∃ g : α → ℝ≥0 ,
+      ∃ g : α → ℝ≥0,
         (∀ x, simple_func.eapprox_diff f n x ≤ g x) ∧
           LowerSemicontinuous g ∧ (∫⁻ x, g x ∂μ) ≤ (∫⁻ x, simple_func.eapprox_diff f n x ∂μ) + δ n :=
     fun n => simple_func.exists_le_lower_semicontinuous_lintegral_ge μ (simple_func.eapprox_diff f n) (δpos n).ne'
@@ -189,12 +189,12 @@ theorem exists_le_lower_semicontinuous_lintegral_ge (f : α → ℝ≥0∞) (hf 
 lower semicontinuous function `g > f` with integral arbitrarily close to that of `f`.
 Formulation in terms of `lintegral`.
 Auxiliary lemma for Vitali-Carathéodory theorem `exists_lt_lower_semicontinuous_integral_lt`. -/
-theorem exists_lt_lower_semicontinuous_lintegral_ge [SigmaFinite μ] (f : α → ℝ≥0 ) (fmeas : Measurable f) {ε : ℝ≥0∞}
+theorem exists_lt_lower_semicontinuous_lintegral_ge [SigmaFinite μ] (f : α → ℝ≥0) (fmeas : Measurable f) {ε : ℝ≥0∞}
     (ε0 : ε ≠ 0) :
     ∃ g : α → ℝ≥0∞, (∀ x, (f x : ℝ≥0∞) < g x) ∧ LowerSemicontinuous g ∧ (∫⁻ x, g x ∂μ) ≤ (∫⁻ x, f x ∂μ) + ε := by
   have : ε / 2 ≠ 0 := (Ennreal.half_pos ε0).ne'
   rcases exists_pos_lintegral_lt_of_sigma_finite μ this with ⟨w, wpos, wmeas, wint⟩
-  let f' := fun x => ((f x + w x : ℝ≥0 ) : ℝ≥0∞)
+  let f' := fun x => ((f x + w x : ℝ≥0) : ℝ≥0∞)
   rcases exists_le_lower_semicontinuous_lintegral_ge μ f' (fmeas.add wmeas).coe_nnreal_ennreal this with
     ⟨g, le_g, gcont, gint⟩
   refine' ⟨g, fun x => _, gcont, _⟩
@@ -218,7 +218,7 @@ theorem exists_lt_lower_semicontinuous_lintegral_ge [SigmaFinite μ] (f : α →
 there exists a lower semicontinuous function `g > f` with integral arbitrarily close to that of `f`.
 Formulation in terms of `lintegral`.
 Auxiliary lemma for Vitali-Carathéodory theorem `exists_lt_lower_semicontinuous_integral_lt`. -/
-theorem exists_lt_lower_semicontinuous_lintegral_ge_of_ae_measurable [SigmaFinite μ] (f : α → ℝ≥0 )
+theorem exists_lt_lower_semicontinuous_lintegral_ge_of_ae_measurable [SigmaFinite μ] (f : α → ℝ≥0)
     (fmeas : AeMeasurable f μ) {ε : ℝ≥0∞} (ε0 : ε ≠ 0) :
     ∃ g : α → ℝ≥0∞, (∀ x, (f x : ℝ≥0∞) < g x) ∧ LowerSemicontinuous g ∧ (∫⁻ x, g x ∂μ) ≤ (∫⁻ x, f x ∂μ) + ε := by
   have : ε / 2 ≠ 0 := (Ennreal.half_pos ε0).ne'
@@ -263,7 +263,7 @@ variable {μ}
 lower semicontinuous function `g > f` with integral arbitrarily close to that of `f`.
 Formulation in terms of `integral`.
 Auxiliary lemma for Vitali-Carathéodory theorem `exists_lt_lower_semicontinuous_integral_lt`. -/
-theorem exists_lt_lower_semicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : α → ℝ≥0 )
+theorem exists_lt_lower_semicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : α → ℝ≥0)
     (fint : Integrable (fun x => (f x : ℝ)) μ) {ε : ℝ} (εpos : 0 < ε) :
     ∃ g : α → ℝ≥0∞,
       (∀ x, (f x : ℝ≥0∞) < g x) ∧
@@ -275,7 +275,7 @@ theorem exists_lt_lower_semicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : 
     ext1 x
     simp only [Real.to_nnreal_coe]
   lift ε to ℝ≥0 using εpos.le
-  obtain ⟨δ, δpos, hδε⟩ : ∃ δ : ℝ≥0 , 0 < δ ∧ δ < ε
+  obtain ⟨δ, δpos, hδε⟩ : ∃ δ : ℝ≥0, 0 < δ ∧ δ < ε
   exact exists_between εpos
   have int_f_ne_top : (∫⁻ a : α, f a ∂μ) ≠ ∞ := (has_finite_integral_iff_of_nnreal.1 fint.has_finite_integral).Ne
   rcases exists_lt_lower_semicontinuous_lintegral_ge_of_ae_measurable μ f fmeas (Ennreal.coe_ne_zero.2 δpos.ne') with
@@ -329,8 +329,8 @@ theorem exists_lt_lower_semicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : 
 function `g ≤ f` with integral arbitrarily close to that of `f`. Formulation in terms of
 `lintegral`.
 Auxiliary lemma for Vitali-Carathéodory theorem `exists_lt_lower_semicontinuous_integral_lt`. -/
-theorem SimpleFunc.exists_upper_semicontinuous_le_lintegral_le (f : α →ₛ ℝ≥0 ) (int_f : (∫⁻ x, f x ∂μ) ≠ ∞) {ε : ℝ≥0∞}
-    (ε0 : ε ≠ 0) : ∃ g : α → ℝ≥0 , (∀ x, g x ≤ f x) ∧ UpperSemicontinuous g ∧ (∫⁻ x, f x ∂μ) ≤ (∫⁻ x, g x ∂μ) + ε := by
+theorem SimpleFunc.exists_upper_semicontinuous_le_lintegral_le (f : α →ₛ ℝ≥0) (int_f : (∫⁻ x, f x ∂μ) ≠ ∞) {ε : ℝ≥0∞}
+    (ε0 : ε ≠ 0) : ∃ g : α → ℝ≥0, (∀ x, g x ≤ f x) ∧ UpperSemicontinuous g ∧ (∫⁻ x, f x ∂μ) ≤ (∫⁻ x, g x ∂μ) + ε := by
   induction' f using MeasureTheory.SimpleFunc.induction with c s hs f₁ f₂ H h₁ h₂ generalizing ε
   · let f := simple_func.piecewise s hs (simple_func.const α c) (simple_func.const α 0)
     by_cases' hc : c = 0
@@ -387,9 +387,9 @@ theorem SimpleFunc.exists_upper_semicontinuous_le_lintegral_le (f : α →ₛ �
 function `g ≤ f` with integral arbitrarily close to that of `f`. Formulation in terms of
 `lintegral`.
 Auxiliary lemma for Vitali-Carathéodory theorem `exists_lt_lower_semicontinuous_integral_lt`. -/
-theorem exists_upper_semicontinuous_le_lintegral_le (f : α → ℝ≥0 ) (int_f : (∫⁻ x, f x ∂μ) ≠ ∞) {ε : ℝ≥0∞}
-    (ε0 : ε ≠ 0) : ∃ g : α → ℝ≥0 , (∀ x, g x ≤ f x) ∧ UpperSemicontinuous g ∧ (∫⁻ x, f x ∂μ) ≤ (∫⁻ x, g x ∂μ) + ε := by
-  obtain ⟨fs, fs_le_f, int_fs⟩ : ∃ fs : α →ₛ ℝ≥0 , (∀ x, fs x ≤ f x) ∧ (∫⁻ x, f x ∂μ) ≤ (∫⁻ x, fs x ∂μ) + ε / 2 := by
+theorem exists_upper_semicontinuous_le_lintegral_le (f : α → ℝ≥0) (int_f : (∫⁻ x, f x ∂μ) ≠ ∞) {ε : ℝ≥0∞} (ε0 : ε ≠ 0) :
+    ∃ g : α → ℝ≥0, (∀ x, g x ≤ f x) ∧ UpperSemicontinuous g ∧ (∫⁻ x, f x ∂μ) ≤ (∫⁻ x, g x ∂μ) + ε := by
+  obtain ⟨fs, fs_le_f, int_fs⟩ : ∃ fs : α →ₛ ℝ≥0, (∀ x, fs x ≤ f x) ∧ (∫⁻ x, f x ∂μ) ≤ (∫⁻ x, fs x ∂μ) + ε / 2 := by
     have := Ennreal.lt_add_right int_f (Ennreal.half_pos ε0).ne'
     conv_rhs at this => rw [lintegral_eq_nnreal (fun x => (f x : ℝ≥0∞)) μ]
     erw [Ennreal.bsupr_add] at this <;> [skip,
@@ -408,7 +408,7 @@ theorem exists_upper_semicontinuous_le_lintegral_le (f : α → ℝ≥0 ) (int_f
     apply ne_top_of_le_ne_top int_f (lintegral_mono fun x => _)
     simpa only [Ennreal.coe_le_coe] using fs_le_f x
   obtain ⟨g, g_le_fs, gcont, gint⟩ :
-    ∃ g : α → ℝ≥0 , (∀ x, g x ≤ fs x) ∧ UpperSemicontinuous g ∧ (∫⁻ x, fs x ∂μ) ≤ (∫⁻ x, g x ∂μ) + ε / 2 :=
+    ∃ g : α → ℝ≥0, (∀ x, g x ≤ fs x) ∧ UpperSemicontinuous g ∧ (∫⁻ x, fs x ∂μ) ≤ (∫⁻ x, g x ∂μ) + ε / 2 :=
     fs.exists_upper_semicontinuous_le_lintegral_le int_fs_lt_top (Ennreal.half_pos ε0).ne'
   refine' ⟨g, fun x => (g_le_fs x).trans (fs_le_f x), gcont, _⟩
   calc
@@ -422,9 +422,9 @@ theorem exists_upper_semicontinuous_le_lintegral_le (f : α → ℝ≥0 ) (int_f
 function `g ≤ f` with integral arbitrarily close to that of `f`. Formulation in terms of
 `integral`.
 Auxiliary lemma for Vitali-Carathéodory theorem `exists_lt_lower_semicontinuous_integral_lt`. -/
-theorem exists_upper_semicontinuous_le_integral_le (f : α → ℝ≥0 ) (fint : Integrable (fun x => (f x : ℝ)) μ) {ε : ℝ}
+theorem exists_upper_semicontinuous_le_integral_le (f : α → ℝ≥0) (fint : Integrable (fun x => (f x : ℝ)) μ) {ε : ℝ}
     (εpos : 0 < ε) :
-    ∃ g : α → ℝ≥0 ,
+    ∃ g : α → ℝ≥0,
       (∀ x, g x ≤ f x) ∧
         UpperSemicontinuous g ∧ Integrable (fun x => (g x : ℝ)) μ ∧ (∫ x, (f x : ℝ) ∂μ) - ε ≤ ∫ x, g x ∂μ :=
   by

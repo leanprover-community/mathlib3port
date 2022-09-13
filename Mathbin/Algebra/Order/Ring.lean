@@ -766,8 +766,8 @@ def Function.Injective.linearOrderedSemiring {β : Type _} [Zero β] [One β] [A
     [HasNatCast β] [HasSup β] [HasInf β] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
-    (nat_cast : ∀ n : ℕ, f n = n) (hsup : ∀ x y, f (x⊔y) = max (f x) (f y)) (hinf : ∀ x y, f (x⊓y) = min (f x) (f y)) :
-    LinearOrderedSemiring β :=
+    (nat_cast : ∀ n : ℕ, f n = n) (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y))
+    (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) : LinearOrderedSemiring β :=
   { LinearOrderₓ.lift f hf hsup hinf, pullback_nonzero f zero one,
     hf.OrderedSemiring f zero one add mul nsmul npow nat_cast with }
 
@@ -873,8 +873,7 @@ theorem OrderedRing.mul_lt_mul_of_pos_right (h₁ : a < b) (h₂ : 0 < c) : a * 
 
 -- see Note [lower instance priority]
 instance (priority := 100) OrderedRing.toOrderedSemiring : OrderedSemiring α :=
-  { ‹OrderedRing α› with mul_zero := mul_zero, zero_mul := zero_mul, add_left_cancel := @add_left_cancelₓ α _,
-    le_of_add_le_add_left := @le_of_add_le_add_left α _ _ _,
+  { ‹OrderedRing α›, Ringₓ.toSemiring with le_of_add_le_add_left := @le_of_add_le_add_left α _ _ _,
     mul_lt_mul_of_pos_left := @OrderedRing.mul_lt_mul_of_pos_left α _,
     mul_lt_mul_of_pos_right := @OrderedRing.mul_lt_mul_of_pos_right α _ }
 
@@ -1049,9 +1048,7 @@ attribute [local instance] LinearOrderedRing.decidableLe LinearOrderedRing.decid
 
 -- see Note [lower instance priority]
 instance (priority := 100) LinearOrderedRing.toLinearOrderedSemiring : LinearOrderedSemiring α :=
-  { ‹LinearOrderedRing α› with mul_zero := mul_zero, zero_mul := zero_mul, add_left_cancel := @add_left_cancelₓ α _,
-    le_of_add_le_add_left := @le_of_add_le_add_left α _ _ _, mul_lt_mul_of_pos_left := @mul_lt_mul_of_pos_left α _,
-    mul_lt_mul_of_pos_right := @mul_lt_mul_of_pos_right α _, le_total := LinearOrderedRing.le_total }
+  { ‹LinearOrderedRing α›, OrderedRing.toOrderedSemiring with }
 
 -- see Note [lower instance priority]
 instance (priority := 100) LinearOrderedRing.is_domain : IsDomain α :=
@@ -1274,8 +1271,8 @@ def Function.Injective.linearOrderedRing {β : Type _} [Zero β] [One β] [Add �
     (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
     (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
-    (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) (hsup : ∀ x y, f (x⊔y) = max (f x) (f y))
-    (hinf : ∀ x y, f (x⊓y) = min (f x) (f y)) : LinearOrderedRing β :=
+    (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y))
+    (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) : LinearOrderedRing β :=
   { LinearOrderₓ.lift f hf hsup hinf, pullback_nonzero f zero one,
     hf.OrderedRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with }
 
@@ -1353,7 +1350,7 @@ def Function.Injective.linearOrderedCommRing {β : Type _} [Zero β] [One β] [A
     (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x)
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n)
-    (hsup : ∀ x y, f (x⊔y) = max (f x) (f y)) (hinf : ∀ x y, f (x⊓y) = min (f x) (f y)) : LinearOrderedCommRing β :=
+    (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y)) (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) : LinearOrderedCommRing β :=
   { LinearOrderₓ.lift f hf hsup hinf, pullback_nonzero f zero one,
     hf.OrderedCommRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with }
 
@@ -1686,7 +1683,7 @@ private theorem distrib' (a b c : WithTop α) : (a + b) * c = a * c + b * c := b
     repeat'
       first |
         rfl|
-        exact congr_argₓ some (add_mulₓ _ _ _)
+        exact congr_arg some (add_mulₓ _ _ _)
     
 
 /-- This instance requires `canonically_ordered_comm_semiring` as it is the smallest class

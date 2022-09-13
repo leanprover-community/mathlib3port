@@ -133,7 +133,7 @@ theorem norm_nat (n : ℕ) : ∥(n : ℂ)∥ = n :=
 
 @[simp]
 theorem norm_int {n : ℤ} : ∥(n : ℂ)∥ = abs n := by
-  simp (config := { singlePass := true })[← Rat.cast_coe_int]
+  simp (config := { singlePass := true })[← Ratₓ.cast_coe_int]
 
 theorem norm_int_of_nonneg {n : ℤ} (hn : 0 ≤ n) : ∥(n : ℂ)∥ = n := by
   simp [hn]
@@ -165,7 +165,7 @@ theorem nnnorm_eq_one_of_pow_eq_one {ζ : ℂ} {n : ℕ} (h : ζ ^ n = 1) (hn : 
   rw [← nnnorm_pow, h, nnnorm_one, one_pow]
 
 theorem norm_eq_one_of_pow_eq_one {ζ : ℂ} {n : ℕ} (h : ζ ^ n = 1) (hn : n ≠ 0) : ∥ζ∥ = 1 :=
-  congr_argₓ coe (nnnorm_eq_one_of_pow_eq_one h hn)
+  congr_arg coe (nnnorm_eq_one_of_pow_eq_one h hn)
 
 /-- The `abs` function on `ℂ` is proper. -/
 theorem tendsto_abs_cocompact_at_top : Filter.Tendsto abs (Filter.cocompact ℂ) Filter.atTop :=
@@ -305,7 +305,7 @@ theorem continuous_conj : Continuous (conj : ℂ → ℂ) :=
 /-- The only continuous ring homomorphisms from `ℂ` to `ℂ` are the identity and the complex
 conjugation. -/
 theorem ring_hom_eq_id_or_conj_of_continuous {f : ℂ →+* ℂ} (hf : Continuous f) : f = RingHom.id ℂ ∨ f = conj := by
-  refine' (real_alg_hom_eq_id_or_conj <| (AlgHom.mk' f) fun x z => congr_funₓ _ x).imp (fun h => _) fun h => _
+  refine' (real_alg_hom_eq_id_or_conj <| (AlgHom.mk' f) fun x z => congr_fun _ x).imp (fun h => _) fun h => _
   · refine'
       rat.dense_embedding_coe_real.dense.equalizer
         (by
@@ -317,7 +317,7 @@ theorem ring_hom_eq_id_or_conj_of_continuous {f : ℂ →+* ℂ} (hf : Continuou
     simp only [real_smul, Function.comp_app, map_rat_cast, of_real_rat_cast, map_mul]
     
   all_goals
-    convert congr_argₓ AlgHom.toRingHom h
+    convert congr_arg AlgHom.toRingHom h
     ext1
     rfl
 

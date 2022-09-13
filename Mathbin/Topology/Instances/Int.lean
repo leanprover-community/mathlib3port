@@ -33,7 +33,7 @@ theorem pairwise_one_le_dist : Pairwise fun m n : ℤ => 1 ≤ dist m n := by
   intro m n hne
   rw [dist_eq]
   norm_cast
-  rwa [← zero_addₓ (1 : ℤ), Int.add_one_le_iff, abs_pos, sub_ne_zero]
+  rwa [← zero_addₓ (1 : ℤ), Int.add_one_le_iffₓ, abs_pos, sub_ne_zero]
 
 theorem uniform_embedding_coe_real : UniformEmbedding (coe : ℤ → ℝ) :=
   uniform_embedding_bot_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
@@ -63,12 +63,12 @@ instance : ProperSpace ℤ :=
     exact (Set.finite_Icc _ _).IsCompact⟩
 
 @[simp]
-theorem cocompact_eq : cocompact ℤ = at_bot⊔at_top := by
+theorem cocompact_eq : cocompact ℤ = at_bot ⊔ at_top := by
   simp only [← comap_dist_right_at_top_eq_cocompact (0 : ℤ), dist_eq, sub_zero, cast_zero, ← cast_abs, ←
     @comap_comap _ _ _ _ abs, Int.comap_coe_at_top, comap_abs_at_top]
 
 @[simp]
-theorem cofinite_eq : (cofinite : Filter ℤ) = at_bot⊔at_top := by
+theorem cofinite_eq : (cofinite : Filter ℤ) = at_bot ⊔ at_top := by
   rw [← cocompact_eq_cofinite, cocompact_eq]
 
 end Int

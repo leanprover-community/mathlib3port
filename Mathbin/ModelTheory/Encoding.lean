@@ -128,22 +128,19 @@ protected def encoding : Encoding (L.term α) where
 theorem list_encode_injective : Function.Injective (listEncodeₓ : L.term α → List (Sum α (Σi, L.Functions i))) :=
   Term.encoding.encode_injective
 
-theorem card_le : # (L.term α) ≤ max ℵ₀ (# (Sum α (Σi, L.Functions i))) :=
+theorem card_le : (#L.term α) ≤ max ℵ₀ (#Sum α (Σi, L.Functions i)) :=
   lift_le.1 (trans Term.encoding.card_le_card_list (lift_le.2 (mk_list_le_max _)))
 
-theorem card_sigma : # (Σn, L.term (Sum α (Finₓ n))) = max ℵ₀ (# (Sum α (Σi, L.Functions i))) := by
+theorem card_sigma : (#Σn, L.term (Sum α (Finₓ n))) = max ℵ₀ (#Sum α (Σi, L.Functions i)) := by
   refine' le_antisymmₓ _ _
   · rw [mk_sigma]
     refine' (sum_le_supr_lift _).trans _
     rw [mk_nat, lift_aleph_0, mul_eq_max_of_aleph_0_le_left le_rflₓ, max_le_iff, csupr_le_iff' (bdd_above_range _)]
     · refine' ⟨le_max_leftₓ _ _, fun i => card_le.trans _⟩
-      rw [max_le_iff]
-      refine' ⟨le_max_leftₓ _ _, _⟩
-      rw [← add_eq_max le_rflₓ, mk_sum, mk_sum, mk_sum, add_commₓ (Cardinal.lift (# α)), lift_add, add_assocₓ,
-        lift_lift, lift_lift]
-      refine' add_le_add_right _ _
-      rw [lift_le_aleph_0, ← encodable_iff]
-      exact ⟨inferInstance⟩
+      refine' max_leₓ (le_max_leftₓ _ _) _
+      rw [← add_eq_max le_rflₓ, mk_sum, mk_sum, mk_sum, add_commₓ (Cardinal.lift (#α)), lift_add, add_assocₓ, lift_lift,
+        lift_lift, mk_fin, lift_nat_cast]
+      exact add_le_add_right (nat_lt_aleph_0 _).le _
       
     · rw [← one_le_iff_ne_zero]
       refine' trans _ (le_csupr (bdd_above_range _) 1)
@@ -180,11 +177,11 @@ instance [Encodable α] [Encodable (Σi, L.Functions i)] : Encodable (L.term α)
     rw [← bind_singleton list_encode, list_decode_encode_list]
     simp only [Option.join, head', List.map, Option.some_bindₓ, id.def]
 
-theorem card_le_aleph_0 [h1 : Nonempty (Encodable α)] [h2 : L.CountableFunctions] : # (L.term α) ≤ ℵ₀ := by
+theorem card_le_aleph_0 [h1 : Countable α] [h2 : L.CountableFunctions] : (#L.term α) ≤ ℵ₀ := by
   refine' card_le.trans _
   rw [max_le_iff]
   simp only [le_reflₓ, mk_sum, add_le_aleph_0, lift_le_aleph_0, true_andₓ]
-  exact ⟨encodable_iff.1 h1, L.card_functions_le_aleph_0⟩
+  exact ⟨mk_le_aleph_0, L.card_functions_le_aleph_0⟩
 
 instance small [Small.{u} α] : Small.{u} (L.term α) :=
   small_of_injective list_encode_injective
@@ -382,8 +379,7 @@ protected def encoding : Encoding (Σn, L.BoundedFormula α n) where
 theorem list_encode_sigma_injective : Function.Injective fun φ : Σn, L.BoundedFormula α n => φ.2.listEncode :=
   BoundedFormula.encoding.encode_injective
 
-theorem card_le : # (Σn, L.BoundedFormula α n) ≤ max ℵ₀ (Cardinal.lift.{max u v} (# α) + Cardinal.lift.{u'} L.card) :=
-  by
+theorem card_le : (#Σn, L.BoundedFormula α n) ≤ max ℵ₀ (Cardinal.lift.{max u v} (#α) + Cardinal.lift.{u'} L.card) := by
   refine' lift_le.1 (bounded_formula.encoding.card_le_card_list.trans _)
   rw [encoding_Γ, mk_list_eq_max_mk_aleph_0, lift_max, lift_aleph_0, lift_max, lift_aleph_0, max_le_iff]
   refine' ⟨_, le_max_leftₓ _ _⟩

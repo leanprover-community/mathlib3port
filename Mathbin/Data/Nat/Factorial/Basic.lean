@@ -111,7 +111,7 @@ theorem factorial_eq_one : n ! = 1 ↔ n ≤ 1 := by
   apply lt_irreflₓ
 
 theorem factorial_inj (hn : 1 < n !) : n ! = m ! ↔ n = m := by
-  refine' ⟨fun h => _, congr_argₓ _⟩
+  refine' ⟨fun h => _, congr_arg _⟩
   obtain hnm | rfl | hnm := lt_trichotomyₓ n m
   · rw [← factorial_lt <| pos_of_gt <| one_lt_factorial.mp hn, h] at hnm
     cases lt_irreflₓ _ hnm

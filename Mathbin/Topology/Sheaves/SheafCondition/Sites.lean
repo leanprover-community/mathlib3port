@@ -315,7 +315,7 @@ theorem fork_ι_comp_pi_opens_to_first_obj_to_pi_opens_eq (s : Limits.Fork (left
   -- The issue here is that `index_of_hom U (hom_of_index U j)` need not be equal to `j`.
   -- But `U j = U (index_of_hom U (hom_of_index U j))` and hence we obtain the following
   -- `eq_to_hom` arrow:
-  have i_eq : U j ⟶ U j⊓U (index_of_hom U (hom_of_index U j)) := by
+  have i_eq : U j ⟶ U j ⊓ U (index_of_hom U (hom_of_index U j)) := by
     apply eq_to_hom
     rw [← index_of_hom_spec U]
     exact inf_idem.symm
@@ -323,9 +323,9 @@ theorem fork_ι_comp_pi_opens_to_first_obj_to_pi_opens_eq (s : Limits.Fork (left
   -- We compose both sides of this equality with the canonical projection at the index pair
   -- `(j, index_of_hom U (hom_of_index U j)` and the restriction along `i_eq`.
   have :=
-    congr_argₓ
+    congr_arg
       (fun f =>
-        f ≫ pi.π (fun p : ι × ι => F.obj (op (U p.1⊓U p.2))) (j, index_of_hom U (hom_of_index U j)) ≫ F.map i_eq.op)
+        f ≫ pi.π (fun p : ι × ι => F.obj (op (U p.1 ⊓ U p.2))) (j, index_of_hom U (hom_of_index U j)) ≫ F.map i_eq.op)
       s.condition
   dsimp'  at this
   rw [category.assoc, category.assoc] at this

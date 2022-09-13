@@ -229,8 +229,8 @@ theorem inverse_compare : pkg.compare pkg' ∘ pkg'.compare pkg = id := by
 def compareEquiv : pkg.Space ≃ pkg'.Space where
   toFun := pkg.compare pkg'
   invFun := pkg'.compare pkg
-  left_inv := congr_funₓ (pkg'.inverse_compare pkg)
-  right_inv := congr_funₓ (pkg.inverse_compare pkg')
+  left_inv := congr_fun (pkg'.inverse_compare pkg)
+  right_inv := congr_fun (pkg.inverse_compare pkg')
 
 theorem uniform_continuous_compare_equiv : UniformContinuous (pkg.compareEquiv pkg') :=
   pkg.uniform_continuous_compare pkg'
@@ -322,11 +322,11 @@ local notation "hatγ" => pkg''.Space
 local notation "ι''" => pkg''.coe
 
 -- mathport name: «expr ∘₂ »
-local notation f "∘₂" g => bicompr f g
+local notation f " ∘₂ " g => bicompr f g
 
 /-- Lift two variable maps to completions. -/
 protected def map₂ (f : α → β → γ) : hatα → hatβ → hatγ :=
-  pkg.extend₂ pkg' (pkg''.coe∘₂f)
+  pkg.extend₂ pkg' (pkg''.coe ∘₂ f)
 
 theorem uniform_continuous_map₂ (f : α → β → γ) : UniformContinuous₂ (pkg.map₂ pkg' pkg'' f) :=
   pkg.uniform_continuous_extension₂ pkg' _

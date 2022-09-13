@@ -69,7 +69,7 @@ instance :
               rintro _ ⟨b, rfl⟩
               change (f ≫ s.π) b = 0
               simp )
-            fun s m w => Subtype.eq (NormedAddGroupHom.lift_unique f.1.range _ _ _ (congr_argₓ Subtype.val w : _)) }
+            fun s m w => Subtype.eq (NormedAddGroupHom.lift_unique f.1.range _ _ _ (congr_arg Subtype.val w : _)) }
 
 -- Sanity check
 example : HasCokernels SemiNormedGroup₁ := by
@@ -124,7 +124,7 @@ def cokernelCocone {X Y : SemiNormedGroup.{u}} (f : X ⟶ Y) : Cofork f 0 :=
     (by
       ext
       simp only [comp_apply, limits.zero_comp, NormedAddGroupHom.zero_apply, ← NormedAddGroupHom.mem_ker,
-        f.range.ker_normed_mk, f.mem_range, exists_apply_eq_applyₓ])
+        f.range.ker_normed_mk, f.mem_range, exists_apply_eq_apply])
 
 /-- Auxiliary definition for `has_cokernels SemiNormedGroup`. -/
 def cokernelLift {X Y : SemiNormedGroup.{u}} (f : X ⟶ Y) (s : CokernelCofork f) : (cokernelCocone f).x ⟶ s.x :=
@@ -259,7 +259,7 @@ theorem norm_noninc_explicit_cokernel_π {X Y : SemiNormedGroup.{u}} (f : X ⟶ 
 open Nnreal
 
 theorem explicit_cokernel_desc_norm_le_of_norm_le {X Y Z : SemiNormedGroup.{u}} {f : X ⟶ Y} {g : Y ⟶ Z} (w : f ≫ g = 0)
-    (c : ℝ≥0 ) (h : ∥g∥ ≤ c) : ∥explicitCokernelDesc w∥ ≤ c :=
+    (c : ℝ≥0) (h : ∥g∥ ≤ c) : ∥explicitCokernelDesc w∥ ≤ c :=
   NormedAddGroupHom.lift_norm_le _ _ _ h
 
 theorem explicit_cokernel_desc_norm_noninc {X Y Z : SemiNormedGroup.{u}} {f : X ⟶ Y} {g : Y ⟶ Z} {cond : f ≫ g = 0}

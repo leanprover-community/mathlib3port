@@ -46,7 +46,7 @@ universe u
 
 open Nat
 
-open Rat
+open Ratₓ
 
 open multiplicity
 
@@ -182,7 +182,7 @@ theorem of_int_multiplicity (z : ℤ) (hp : p ≠ 1) (hz : z ≠ 0) :
 
 theorem multiplicity_sub_multiplicity {q : ℚ} (hp : p ≠ 1) (hq : q ≠ 0) :
     padicValRat p q =
-      (multiplicity (p : ℤ) q.num).get (finite_int_iff.2 ⟨hp, Rat.num_ne_zero_of_ne_zero hq⟩) -
+      (multiplicity (p : ℤ) q.num).get (finite_int_iff.2 ⟨hp, Ratₓ.num_ne_zero_of_ne_zero hq⟩) -
         (multiplicity p q.denom).get
           (by
             rw [← finite_iff_dom, finite_nat_iff, and_iff_right hp]
@@ -193,7 +193,7 @@ theorem multiplicity_sub_multiplicity {q : ℚ} (hp : p ≠ 1) (hq : q ≠ 0) :
     
   · exact ⟨hp, q.pos⟩
     
-  · exact Rat.num_ne_zero_of_ne_zero hq
+  · exact Ratₓ.num_ne_zero_of_ne_zero hq
     
 
 /-- The p-adic value of an integer `z ≠ 0` is its p-adic_value as a rational -/
@@ -279,8 +279,8 @@ protected theorem defn {q : ℚ} {n d : ℤ} (hqz : q ≠ 0) (qdf : q = n /. d) 
             ⟨Ne.symm <| ne_of_ltₓ p_prime.1.one_lt, fun hd => by
               simp_all ⟩) :=
   by
-  have hd : d ≠ 0 := Rat.mk_denom_ne_zero_of_ne_zero hqz qdf
-  let ⟨c, hc1, hc2⟩ := Rat.num_denom_mk hd qdf
+  have hd : d ≠ 0 := Ratₓ.mk_denom_ne_zero_of_ne_zero hqz qdf
+  let ⟨c, hc1, hc2⟩ := Ratₓ.num_denom_mk hd qdf
   rw [padicValRat.multiplicity_sub_multiplicity] <;>
     simp [hc1, hc2, multiplicity.mul' (Nat.prime_iff_prime_int.1 p_prime.1), Ne.symm (ne_of_ltₓ p_prime.1.one_lt), hqz,
       pos_iff_ne_zero]
@@ -290,14 +290,14 @@ protected theorem defn {q : ℚ} {n d : ℤ} (hqz : q ≠ 0) (qdf : q = n /. d) 
 protected theorem mul {q r : ℚ} (hq : q ≠ 0) (hr : r ≠ 0) : padicValRat p (q * r) = padicValRat p q + padicValRat p r :=
   by
   have : q * r = q.num * r.num /. (↑q.denom * ↑r.denom) := by
-    rw_mod_cast[Rat.mul_num_denom]
+    rw_mod_cast[Ratₓ.mul_num_denom]
   have hq' : q.num /. q.denom ≠ 0 := by
-    rw [Rat.num_denom] <;> exact hq
+    rw [Ratₓ.num_denom] <;> exact hq
   have hr' : r.num /. r.denom ≠ 0 := by
-    rw [Rat.num_denom] <;> exact hr
+    rw [Ratₓ.num_denom] <;> exact hr
   have hp' : Prime (p : ℤ) := Nat.prime_iff_prime_int.1 p_prime.1
   rw [padicValRat.defn p (mul_ne_zero hq hr) this]
-  conv_rhs => rw [← @Rat.num_denom q, padicValRat.defn p hq', ← @Rat.num_denom r, padicValRat.defn p hr']
+  conv_rhs => rw [← @Ratₓ.num_denom q, padicValRat.defn p hq', ← @Ratₓ.num_denom r, padicValRat.defn p hr']
   rw [multiplicity.mul' hp', multiplicity.mul' hp'] <;> simp [add_commₓ, add_left_commₓ, sub_eq_add_neg]
 
 /-- A rewrite lemma for `padic_val_rat p (q^k)` with condition `q ≠ 0`. -/
@@ -327,8 +327,8 @@ theorem padic_val_rat_le_padic_val_rat_iff {n₁ n₂ d₁ d₂ : ℤ} (hn₁ : 
   have hf1 : Finite (p : ℤ) (n₁ * d₂) := finite_int_prime_iff.2 (mul_ne_zero hn₁ hd₂)
   have hf2 : Finite (p : ℤ) (n₂ * d₁) := finite_int_prime_iff.2 (mul_ne_zero hn₂ hd₁)
   conv =>
-    lhs rw [padicValRat.defn p (Rat.mk_ne_zero_of_ne_zero hn₁ hd₁) rfl,
-      padicValRat.defn p (Rat.mk_ne_zero_of_ne_zero hn₂ hd₂) rfl, sub_le_iff_le_add', ← add_sub_assoc,
+    lhs rw [padicValRat.defn p (Ratₓ.mk_ne_zero_of_ne_zero hn₁ hd₁) rfl,
+      padicValRat.defn p (Ratₓ.mk_ne_zero_of_ne_zero hn₂ hd₂) rfl, sub_le_iff_le_add', ← add_sub_assoc,
       le_sub_iff_add_le]norm_cast rw [← multiplicity.mul' (Nat.prime_iff_prime_int.1 p_prime.1) hf1, add_commₓ, ←
       multiplicity.mul' (Nat.prime_iff_prime_int.1 p_prime.1) hf2, PartEnat.get_le_get,
       multiplicity_le_multiplicity_iff]
@@ -344,19 +344,20 @@ theorem le_padic_val_rat_add_of_le {q r : ℚ} (hqr : q + r ≠ 0) (h : padicVal
     if hr : r = 0 then by
       simp [hr]
     else by
-      have hqn : q.num ≠ 0 := Rat.num_ne_zero_of_ne_zero hq
+      have hqn : q.num ≠ 0 := Ratₓ.num_ne_zero_of_ne_zero hq
       have hqd : (q.denom : ℤ) ≠ 0 := by
-        exact_mod_cast Rat.denom_ne_zero _
-      have hrn : r.num ≠ 0 := Rat.num_ne_zero_of_ne_zero hr
+        exact_mod_cast Ratₓ.denom_ne_zero _
+      have hrn : r.num ≠ 0 := Ratₓ.num_ne_zero_of_ne_zero hr
       have hrd : (r.denom : ℤ) ≠ 0 := by
-        exact_mod_cast Rat.denom_ne_zero _
-      have hqreq : q + r = (q.num * r.denom + q.denom * r.num : ℤ) /. (↑q.denom * ↑r.denom : ℤ) := Rat.add_num_denom _ _
-      have hqrd : q.num * ↑r.denom + ↑q.denom * r.num ≠ 0 := Rat.mk_num_ne_zero_of_ne_zero hqr hqreq
-      conv_lhs => rw [← @Rat.num_denom q]
+        exact_mod_cast Ratₓ.denom_ne_zero _
+      have hqreq : q + r = (q.num * r.denom + q.denom * r.num : ℤ) /. (↑q.denom * ↑r.denom : ℤ) :=
+        Ratₓ.add_num_denom _ _
+      have hqrd : q.num * ↑r.denom + ↑q.denom * r.num ≠ 0 := Ratₓ.mk_num_ne_zero_of_ne_zero hqr hqreq
+      conv_lhs => rw [← @Ratₓ.num_denom q]
       rw [hqreq, padic_val_rat_le_padic_val_rat_iff p hqn hqrd hqd (mul_ne_zero hqd hrd), ←
         multiplicity_le_multiplicity_iff, mul_left_commₓ, multiplicity.mul (Nat.prime_iff_prime_int.1 p_prime.1),
         add_mulₓ]
-      rw [← @Rat.num_denom q, ← @Rat.num_denom r, padic_val_rat_le_padic_val_rat_iff p hqn hrn hqd hrd, ←
+      rw [← @Ratₓ.num_denom q, ← @Ratₓ.num_denom r, padic_val_rat_le_padic_val_rat_iff p hqn hrn hqd hrd, ←
         multiplicity_le_multiplicity_iff] at h
       calc
         _ ≤ min (multiplicity (↑p) (q.num * ↑r.denom * ↑q.denom)) (multiplicity (↑p) (↑q.denom * r.num * ↑q.denom)) :=
@@ -529,7 +530,7 @@ open BigOperators
 theorem range_pow_padic_val_nat_subset_divisors {n : ℕ} (p : ℕ) (hn : n ≠ 0) :
     (Finset.range (padicValNat p n + 1)).Image (pow p) ⊆ n.divisors := by
   intro t ht
-  simp only [exists_prop, Finset.mem_image, Finset.mem_range] at ht
+  simp only [exists_propₓ, Finset.mem_image, Finset.mem_range] at ht
   obtain ⟨k, hk, rfl⟩ := ht
   rw [Nat.mem_divisors]
   exact
@@ -544,7 +545,7 @@ theorem range_pow_padic_val_nat_subset_divisors' {n : ℕ} (p : ℕ) [h : Fact p
   · simp
     
   intro t ht
-  simp only [exists_prop, Finset.mem_image, Finset.mem_range] at ht
+  simp only [exists_propₓ, Finset.mem_image, Finset.mem_range] at ht
   obtain ⟨k, hk, rfl⟩ := ht
   rw [Finset.mem_sdiff, Nat.mem_divisors]
   refine'

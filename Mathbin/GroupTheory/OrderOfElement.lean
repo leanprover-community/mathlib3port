@@ -93,7 +93,7 @@ theorem MonoidHom.is_of_fin_order {H : Type v} [Monoidₓ H] (f : G →* H) {x :
 theorem IsOfFinOrder.apply {η : Type _} {Gs : η → Type _} [∀ i, Monoidₓ (Gs i)] {x : ∀ i, Gs i} (h : IsOfFinOrder x) :
     ∀ i, IsOfFinOrder (x i) := by
   rcases(is_of_fin_order_iff_pow_eq_one _).mp h with ⟨n, npos, hn⟩
-  exact fun _ => (is_of_fin_order_iff_pow_eq_one _).mpr ⟨n, npos, (congr_funₓ hn.symm _).symm⟩
+  exact fun _ => (is_of_fin_order_iff_pow_eq_one _).mpr ⟨n, npos, (congr_fun hn.symm _).symm⟩
 
 /-- 1 is of finite order in any monoid. -/
 @[to_additive "0 is of finite order in any additive monoid."]
@@ -385,7 +385,7 @@ theorem order_of_subgroup {H : Subgroup G} (y : H) : orderOf (y : G) = orderOf y
 theorem zpow_eq_mod_order_of : x ^ i = x ^ (i % orderOf x) :=
   calc
     x ^ i = x ^ (i % orderOf x + orderOf x * (i / orderOf x)) := by
-      rw [Int.mod_add_div]
+      rw [Int.mod_add_divₓ]
     _ = x ^ (i % orderOf x) := by
       simp [zpow_add, zpow_mul, pow_order_of_eq_one]
     
@@ -414,7 +414,7 @@ theorem pow_inj_mod {n m : ℕ} : x ^ n = x ^ m ↔ n % orderOf x = m % orderOf 
   · simp [pow_inj_iff_of_order_of_eq_zero, hx.symm]
     
   rw [pow_eq_mod_order_of, @pow_eq_mod_order_of _ _ _ m]
-  exact ⟨pow_injective_of_lt_order_of _ (Nat.mod_ltₓ _ hx) (Nat.mod_ltₓ _ hx), fun h => congr_argₓ _ h⟩
+  exact ⟨pow_injective_of_lt_order_of _ (Nat.mod_ltₓ _ hx) (Nat.mod_ltₓ _ hx), fun h => congr_arg _ h⟩
 
 end Groupₓ
 
@@ -447,7 +447,7 @@ theorem sum_card_order_of_eq_card_pow_eq_one [Fintype G] [DecidableEq G] (hn : 0
             apply Finset.disjoint_filter.2
             cc)).symm
     _ = _ :=
-      congr_argₓ Finset.card
+      congr_arg Finset.card
         (Finset.ext
           (by
             intro x
@@ -472,7 +472,7 @@ variable [LeftCancelMonoid G] [AddLeftCancelMonoid A]
 theorem exists_pow_eq_one [Finite G] (x : G) : IsOfFinOrder x := by
   refine' (is_of_fin_order_iff_pow_eq_one _).mpr _
   obtain ⟨i, j, a_eq, ne⟩ : ∃ i j : ℕ, x ^ i = x ^ j ∧ i ≠ j := by
-    simpa only [not_forall, exists_prop, injective] using not_injective_infinite_finite fun i : ℕ => x ^ i
+    simpa only [not_forall, exists_propₓ, injective] using not_injective_infinite_finite fun i : ℕ => x ^ i
   wlog h'' : j ≤ i
   refine' ⟨i - j, tsub_pos_of_lt (lt_of_le_of_neₓ h'' Ne.symm), mul_right_injective (x ^ j) _⟩
   rw [mul_oneₓ, ← pow_addₓ, ← a_eq, add_tsub_cancel_of_le h'']
@@ -565,7 +565,7 @@ theorem mem_powers_iff_mem_zpowers [Finite G] : y ∈ Submonoid.powers x ↔ y �
       simp_all ⟩,
     fun ⟨i, hi⟩ =>
     ⟨(i % orderOf x).natAbs, by
-      rwa [← zpow_coe_nat, Int.nat_abs_of_nonneg (Int.mod_nonneg _ (Int.coe_nat_ne_zero_iff_pos.2 (order_of_pos x))), ←
+      rwa [← zpow_coe_nat, Int.nat_abs_of_nonneg (Int.mod_nonnegₓ _ (Int.coe_nat_ne_zero_iff_pos.2 (order_of_pos x))), ←
         zpow_eq_mod_order_of]⟩⟩
 
 @[to_additive multiples_eq_zmultiples]
@@ -632,13 +632,13 @@ theorem order_of_dvd_card_univ : orderOf x ∣ Fintype.card G := by
   have eq₁ : Fintype.card G = @Fintype.card _ ft_cosets * @Fintype.card _ ft_s :=
     calc
       Fintype.card G = @Fintype.card _ ft_prod := @Fintype.card_congr _ _ _ ft_prod group_equiv_quotient_times_subgroup
-      _ = @Fintype.card _ (@Prod.fintype _ _ ft_cosets ft_s) := congr_argₓ (@Fintype.card _) <| Subsingleton.elim _ _
+      _ = @Fintype.card _ (@Prod.fintype _ _ ft_cosets ft_s) := congr_arg (@Fintype.card _) <| Subsingleton.elim _ _
       _ = @Fintype.card _ ft_cosets * @Fintype.card _ ft_s := @Fintype.card_prod _ _ ft_cosets ft_s
       
   have eq₂ : orderOf x = @Fintype.card _ ft_s :=
     calc
       orderOf x = _ := order_eq_card_zpowers
-      _ = _ := congr_argₓ (@Fintype.card _) <| Subsingleton.elim _ _
+      _ = _ := congr_arg (@Fintype.card _) <| Subsingleton.elim _ _
       
   exact
     Dvd.intro (@Fintype.card (G ⧸ Subgroup.zpowers x) ft_cosets)
@@ -670,11 +670,11 @@ def powCoprime (h : Nat.Coprime (Fintype.card G) n) : G ≃ G where
   toFun := fun g => g ^ n
   invFun := fun g => g ^ Nat.gcdB (Fintype.card G) n
   left_inv := fun g => by
-    have key : g ^ _ = g ^ _ := congr_argₓ (fun n : ℤ => g ^ n) (Nat.gcd_eq_gcd_ab (Fintype.card G) n)
+    have key : g ^ _ = g ^ _ := congr_arg (fun n : ℤ => g ^ n) (Nat.gcd_eq_gcd_ab (Fintype.card G) n)
     rwa [zpow_add, zpow_mul, zpow_mul, zpow_coe_nat, zpow_coe_nat, zpow_coe_nat, h.gcd_eq_one, pow_oneₓ,
       pow_card_eq_one, one_zpow, one_mulₓ, eq_comm] at key
   right_inv := fun g => by
-    have key : g ^ _ = g ^ _ := congr_argₓ (fun n : ℤ => g ^ n) (Nat.gcd_eq_gcd_ab (Fintype.card G) n)
+    have key : g ^ _ = g ^ _ := congr_arg (fun n : ℤ => g ^ n) (Nat.gcd_eq_gcd_ab (Fintype.card G) n)
     rwa [zpow_add, zpow_mul, zpow_mul', zpow_coe_nat, zpow_coe_nat, zpow_coe_nat, h.gcd_eq_one, pow_oneₓ,
       pow_card_eq_one, one_zpow, one_mulₓ, eq_comm] at key
 
@@ -688,12 +688,12 @@ theorem pow_coprime_inv (h : Nat.Coprime (Fintype.card G) n) {g : G} : powCoprim
 
 @[to_additive add_inf_eq_bot_of_coprime]
 theorem inf_eq_bot_of_coprime {G : Type _} [Groupₓ G] {H K : Subgroup G} [Fintype H] [Fintype K]
-    (h : Nat.Coprime (Fintype.card H) (Fintype.card K)) : H⊓K = ⊥ := by
-  refine' (H⊓K).eq_bot_iff_forall.mpr fun x hx => _
+    (h : Nat.Coprime (Fintype.card H) (Fintype.card K)) : H ⊓ K = ⊥ := by
+  refine' (H ⊓ K).eq_bot_iff_forall.mpr fun x hx => _
   rw [← order_of_eq_one_iff, ← Nat.dvd_one, ← h.gcd_eq_one, Nat.dvd_gcd_iffₓ]
   exact
-    ⟨(congr_argₓ (· ∣ Fintype.card H) (order_of_subgroup ⟨x, hx.1⟩)).mpr order_of_dvd_card_univ,
-      (congr_argₓ (· ∣ Fintype.card K) (order_of_subgroup ⟨x, hx.2⟩)).mpr order_of_dvd_card_univ⟩
+    ⟨(congr_arg (· ∣ Fintype.card H) (order_of_subgroup ⟨x, hx.1⟩)).mpr order_of_dvd_card_univ,
+      (congr_arg (· ∣ Fintype.card K) (order_of_subgroup ⟨x, hx.2⟩)).mpr order_of_dvd_card_univ⟩
 
 variable (a)
 
@@ -768,7 +768,7 @@ theorem order_of_abs_ne_one (h : abs x ≠ 1) : orderOf x = 0 := by
   rw [order_of_eq_zero_iff']
   intro n hn hx
   replace hx : abs x ^ n = 1 := by
-    simpa only [abs_one, abs_pow] using congr_argₓ abs hx
+    simpa only [abs_one, abs_pow] using congr_arg abs hx
   cases' h.lt_or_lt with h h
   · exact ((pow_lt_one (abs_nonneg x) h hn.ne').Ne hx).elim
     

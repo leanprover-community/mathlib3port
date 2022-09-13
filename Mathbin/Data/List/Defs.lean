@@ -44,13 +44,13 @@ def splitOnPAux {α : Type u} (P : α → Prop) [DecidablePred P] : List α → 
   | h :: t, f => if P h then f [] :: split_on_p_aux t id else split_on_p_aux t fun l => f (h :: l)
 
 /-- Split a list at every element satisfying a predicate. -/
-def splitOnP {α : Type u} (P : α → Prop) [DecidablePred P] (l : List α) : List (List α) :=
+def splitOnPₓ {α : Type u} (P : α → Prop) [DecidablePred P] (l : List α) : List (List α) :=
   splitOnPAux P l id
 
 /-- Split a list at every occurrence of an element.
 
     [1,1,2,3,2,4,4].split_on 2 = [[1,1],[3],[4,4]] -/
-def splitOn {α : Type u} [DecidableEq α] (a : α) (as : List α) : List (List α) :=
+def splitOnₓ {α : Type u} [DecidableEq α] (a : α) (as : List α) : List (List α) :=
   as.splitOnP (· = a)
 
 /-- Concatenate an element at the end of a list.
@@ -105,7 +105,7 @@ def modifyNthₓ (f : α → α) : ℕ → List α → List α :=
 
 /-- Apply `f` to the last element of `l`, if it exists. -/
 @[simp]
-def modifyLast (f : α → α) : List α → List α
+def modifyLastₓ (f : α → α) : List α → List α
   | [] => []
   | [x] => [f x]
   | x :: xs => x :: modify_last xs
@@ -188,7 +188,7 @@ def alternatingProd {G : Type _} [One G] [Mul G] [Inv G] : List G → G
   whilst partitioning the result it into a pair of lists, `list β × list γ`,
   partitioning the `sum.inl _` into the left list, and the `sum.inr _` into the right list.
   `partition_map (id : ℕ ⊕ ℕ → ℕ ⊕ ℕ) [inl 0, inr 1, inl 2] = ([0,2], [1])`    -/
-def partitionMap (f : α → Sum β γ) : List α → List β × List γ
+def partitionMapₓ (f : α → Sum β γ) : List α → List β × List γ
   | [] => ([], [])
   | x :: xs =>
     match f x with
@@ -197,7 +197,7 @@ def partitionMap (f : α → Sum β γ) : List α → List β × List γ
 
 /-- `find p l` is the first element of `l` satisfying `p`, or `none` if no such
   element exists. -/
-def find (p : α → Prop) [DecidablePred p] : List α → Option α
+def findₓ (p : α → Prop) [DecidablePred p] : List α → Option α
   | [] => none
   | a :: l => if p a then some a else find l
 
@@ -279,7 +279,7 @@ def findIndexes (p : α → Prop) [DecidablePred p] (l : List α) : List Nat :=
 
 /-- Returns the elements of `l` that satisfy `p` together with their indexes in
 `l`. The returned list is ordered by index. -/
-def indexesValues (p : α → Prop) [DecidablePred p] (l : List α) : List (ℕ × α) :=
+def indexesValuesₓ (p : α → Prop) [DecidablePred p] (l : List α) : List (ℕ × α) :=
   foldrWithIndex (fun i a l => if p a then (i, a) :: l else l) [] l
 
 /-- `indexes_of a l` is the list of all indexes of `a` in `l`. For example:
@@ -287,7 +287,7 @@ def indexesValues (p : α → Prop) [DecidablePred p] (l : List α) : List (ℕ 
 indexes_of a [a, b, a, a] = [0, 2, 3]
 ```
 -/
-def indexesOf [DecidableEq α] (a : α) : List α → List Nat :=
+def indexesOfₓ [DecidableEq α] (a : α) : List α → List Nat :=
   findIndexes (Eq a)
 
 section MfoldWithIndex
@@ -340,7 +340,7 @@ end MmapWithIndex
 /-- `lookmap` is a combination of `lookup` and `filter_map`.
   `lookmap f l` will apply `f : α → option α` to each element of the list,
   replacing `a → b` at the first value `a` in the list such that `f a = some b`. -/
-def lookmap (f : α → Option α) : List α → List α
+def lookmapₓ (f : α → Option α) : List α → List α
   | [] => []
   | a :: l =>
     match f a with
@@ -348,13 +348,13 @@ def lookmap (f : α → Option α) : List α → List α
     | none => a :: lookmap l
 
 /-- `countp p l` is the number of elements of `l` that satisfy `p`. -/
-def countp (p : α → Prop) [DecidablePred p] : List α → Nat
+def countpₓ (p : α → Prop) [DecidablePred p] : List α → Nat
   | [] => 0
   | x :: xs => if p x then succ (countp xs) else countp xs
 
 /-- `count a l` is the number of occurrences of `a` in `l`. -/
-def count [DecidableEq α] (a : α) : List α → Nat :=
-  countp (Eq a)
+def countₓ [DecidableEq α] (a : α) : List α → Nat :=
+  countpₓ (Eq a)
 
 /-- `is_prefix l₁ l₂`, or `l₁ <+: l₂`, means that `l₁` is a prefix of `l₂`,
   that is, `l₂` has the form `l₁ ++ t` for some `t`. -/
@@ -406,7 +406,7 @@ def sublists'Aux : List α → (List α → List β) → List (List β) → List
   `sublists` uses the first element of the list as the LSB.
 
      sublists' [1, 2, 3] = [[], [3], [2], [2, 3], [1], [1, 3], [1, 2], [1, 2, 3]] -/
-def sublists' (l : List α) : List (List α) :=
+def sublists'ₓ (l : List α) : List (List α) :=
   sublists'Aux l id []
 
 def sublistsAux : List α → (List α → List β → List β) → List β
@@ -417,7 +417,7 @@ def sublistsAux : List α → (List α → List β → List β) → List β
   for a different ordering.
 
      sublists [1, 2, 3] = [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]] -/
-def sublists (l : List α) : List (List α) :=
+def sublistsₓ (l : List α) : List (List α) :=
   [] :: sublistsAux l cons
 
 def sublistsAux₁ : List α → (List α → List β) → List β
@@ -452,7 +452,7 @@ def All₂ (p : α → Prop) : List α → Prop
   each element of `L`.
 
   `transpose_aux [a, b, c] [l₁, l₂, l₃] = [a::l₁, b::l₂, c::l₃]` -/
-def transposeAuxₓ : List α → List (List α) → List (List α)
+def transposeAux : List α → List (List α) → List (List α)
   | [], ls => ls
   | a :: i, [] => [a] :: transpose_aux i []
   | a :: i, l :: ls => (a :: l) :: transpose_aux i ls
@@ -462,7 +462,7 @@ def transposeAuxₓ : List α → List (List α) → List (List α)
      transpose [[1, 2], [3, 4], [5, 6]] = [[1, 3, 5], [2, 4, 6]] -/
 def transposeₓ : List (List α) → List (List α)
   | [] => []
-  | l :: ls => transposeAuxₓ l (transpose ls)
+  | l :: ls => transposeAux l (transpose ls)
 
 /-- List of all sections through a list of lists. A section
   of `[L₁, L₂, ..., Lₙ]` is a list whose first element comes from
@@ -552,13 +552,13 @@ def permutations' : List α → List (List α)
 end Permutations
 
 /-- `erasep p l` removes the first element of `l` satisfying the predicate `p`. -/
-def erasep (p : α → Prop) [DecidablePred p] : List α → List α
+def erasepₓ (p : α → Prop) [DecidablePred p] : List α → List α
   | [] => []
   | a :: l => if p a then l else a :: erasep l
 
 /-- `extractp p l` returns a pair of an element `a` of `l` satisfying the predicate
   `p`, and `l`, with `a` removed. If there is no such element `a` it returns `(none, l)`. -/
-def extractp (p : α → Prop) [DecidablePred p] : List α → Option α × List α
+def extractpₓ (p : α → Prop) [DecidablePred p] : List α → Option α × List α
   | [] => (none, [])
   | a :: l =>
     if p a then (some a, l)
@@ -595,14 +595,14 @@ protected def sigma {σ : α → Type _} (l₁ : List α) (l₂ : ∀ a, List (�
 
   `of_fn_aux f m h l` returns the first `m` elements of `of_fn f`
   appended to `l` -/
-def ofFnAuxₓ {n} (f : Finₓ n → α) : ∀ m, m ≤ n → List α → List α
+def ofFnAux {n} (f : Finₓ n → α) : ∀ m, m ≤ n → List α → List α
   | 0, h, l => l
   | succ m, h, l => of_fn_aux m (le_of_ltₓ h) (f ⟨m, h⟩ :: l)
 
 /-- `of_fn f` with `f : fin n → α` returns the list whose ith element is `f i`
   `of_fun f = [f 0, f 1, ... , f(n - 1)]` -/
 def ofFnₓ {n} (f : Finₓ n → α) : List α :=
-  ofFnAuxₓ f n (le_reflₓ _) []
+  ofFnAux f n (le_reflₓ _) []
 
 /-- `of_fn_nth_val f i` returns `some (f i)` if `i < n` and `none` otherwise. -/
 def ofFnNthValₓ {n} (f : Finₓ n → α) (i : ℕ) : Option α :=
@@ -779,7 +779,7 @@ def choose (hp : ∃ a, a ∈ l ∧ p a) : α :=
 end Choose
 
 /-- Filters and maps elements of a list -/
-def mmapFilterₓₓ {m : Type → Type v} [Monadₓ m] {α β} (f : α → m (Option β)) : List α → m (List β)
+def mmapFilterₓ {m : Type → Type v} [Monadₓ m] {α β} (f : α → m (Option β)) : List α → m (List β)
   | [] => return []
   | h :: t => do
     let b ← f h
@@ -796,7 +796,7 @@ for each `e'` that appears after `e` in `l`.
 Example: suppose `l = [1, 2, 3]`. `mmap_upper_triangle f l` will produce the list
 `[f 1 1, f 1 2, f 1 3, f 2 2, f 2 3, f 3 3]`.
 -/
-def mmapUpperTriangleₓₓ {m} [Monadₓ m] {α β : Type u} (f : α → α → m β) : List α → m (List β)
+def mmapUpperTriangleₓ {m} [Monadₓ m] {α β : Type u} (f : α → α → m β) : List α → m (List β)
   | [] => return []
   | h :: t => do
     let v ← f h h
@@ -811,11 +811,11 @@ for each `e'` that appears after `e` in `l`.
 Example: suppose `l = [1, 2, 3]`. `mmap'_diag f l` will evaluate, in this order,
 `f 1 1`, `f 1 2`, `f 1 3`, `f 2 2`, `f 2 3`, `f 3 3`.
 -/
-def mmap'Diagₓₓ {m} [Monadₓ m] {α} (f : α → α → m Unit) : List α → m Unit
+def mmap'Diagₓ {m} [Monadₓ m] {α} (f : α → α → m Unit) : List α → m Unit
   | [] => return ()
   | h :: t => (f h h >> t.mmap' (f h)) >> t.mmap'Diag
 
-protected def traverseₓₓ {F : Type u → Type v} [Applicativeₓ F] {α β : Type _} (f : α → F β) : List α → F (List β)
+protected def traverseₓ {F : Type u → Type v} [Applicativeₓ F] {α β : Type _} (f : α → F β) : List α → F (List β)
   | [] => pure []
   | x :: xs => List.cons <$> f x <*> traverse xs
 
@@ -828,7 +828,7 @@ def getRestₓ [DecidableEq α] : List α → List α → Option (List α)
 
 /-- `list.slice n m xs` removes a slice of length `m` at index `n` in list `xs`.
 -/
-def sliceₓ {α} : ℕ → ℕ → List α → List α
+def slice {α} : ℕ → ℕ → List α → List α
   | 0, n, xs => xs.drop n
   | succ n, m, [] => []
   | succ n, m, x :: xs => x :: slice n m xs
@@ -845,7 +845,7 @@ map₂_left' prod.mk [1] ['a', 'b'] = ([(1, some 'a')], ['b'])
 ```
 -/
 @[simp]
-def map₂Left'ₓ (f : α → Option β → γ) : List α → List β → List γ × List β
+def map₂Left' (f : α → Option β → γ) : List α → List β → List γ × List β
   | [], bs => ([], bs)
   | a :: as, [] => ((a :: as).map fun a => f a none, [])
   | a :: as, b :: bs =>
@@ -863,8 +863,8 @@ map₂_right' prod.mk [1] ['a', 'b'] = ([(some 1, 'a'), (none, 'b')], [])
 map₂_right' prod.mk [1, 2] ['a'] = ([(some 1, 'a')], [2])
 ```
 -/
-def map₂Right'ₓ (f : Option α → β → γ) (as : List α) (bs : List β) : List γ × List α :=
-  map₂Left'ₓ (flip f) bs as
+def map₂Right' (f : Option α → β → γ) (as : List α) (bs : List β) : List γ × List α :=
+  map₂Left' (flip f) bs as
 
 /-- Left-biased version of `list.zip`. `zip_left' as bs` returns the list of
 pairs `(aᵢ, bᵢ)` for `aᵢ ∈ as` and `bᵢ ∈ bs`. If `bs` is shorter than `as`, the
@@ -880,7 +880,7 @@ zip_left' = map₂_left' prod.mk
 ```
 -/
 def zipLeft'ₓ : List α → List β → List (α × Option β) × List β :=
-  map₂Left'ₓ Prod.mk
+  map₂Left' Prod.mk
 
 /-- Right-biased version of `list.zip`. `zip_right' as bs` returns the list of
 pairs `(aᵢ, bᵢ)` for `aᵢ ∈ as` and `bᵢ ∈ bs`. If `as` is shorter than `bs`, the
@@ -895,7 +895,7 @@ zip_right' = map₂_right' prod.mk
 ```
 -/
 def zipRight'ₓ : List α → List β → List (Option α × β) × List α :=
-  map₂Right'ₓ Prod.mk
+  map₂Right' Prod.mk
 
 /-- Left-biased version of `list.map₂`. `map₂_left f as bs` applies `f` to each pair
 `aᵢ ∈ as` and `bᵢ ‌∈ bs`. If `bs` is shorter than `as`, `f` is applied to `none`
@@ -910,7 +910,7 @@ map₂_left f as bs = (map₂_left' f as bs).fst
 ```
 -/
 @[simp]
-def map₂Leftₓ (f : α → Option β → γ) : List α → List β → List γ
+def map₂Left (f : α → Option β → γ) : List α → List β → List γ
   | [], _ => []
   | a :: as, [] => (a :: as).map fun a => f a none
   | a :: as, b :: bs => f a (some b) :: map₂_left as bs
@@ -927,8 +927,8 @@ map₂_right prod.mk [1] ['a', 'b'] = [(some 1, 'a'), (none, 'b')]
 map₂_right f as bs = (map₂_right' f as bs).fst
 ```
 -/
-def map₂Rightₓ (f : Option α → β → γ) (as : List α) (bs : List β) : List γ :=
-  map₂Leftₓ (flip f) bs as
+def map₂Right (f : Option α → β → γ) (as : List α) (bs : List β) : List γ :=
+  map₂Left (flip f) bs as
 
 /-- Left-biased version of `list.zip`. `zip_left as bs` returns the list of pairs
 `(aᵢ, bᵢ)` for `aᵢ ∈ as` and `bᵢ ∈ bs`. If `bs` is shorter than `as`, the
@@ -943,7 +943,7 @@ zip_left = map₂_left prod.mk
 ```
 -/
 def zipLeftₓ : List α → List β → List (α × Option β) :=
-  map₂Leftₓ Prod.mk
+  map₂Left Prod.mk
 
 /-- Right-biased version of `list.zip`. `zip_right as bs` returns the list of pairs
 `(aᵢ, bᵢ)` for `aᵢ ∈ as` and `bᵢ ∈ bs`. If `as` is shorter than `bs`, the
@@ -958,7 +958,7 @@ zip_right = map₂_right prod.mk
 ```
 -/
 def zipRightₓ : List α → List β → List (Option α × β) :=
-  map₂Rightₓ Prod.mk
+  map₂Right Prod.mk
 
 /-- If all elements of `xs` are `some xᵢ`, `all_some xs` returns the `xᵢ`. Otherwise
 it returns `none`.
@@ -968,7 +968,7 @@ all_some [some 1, some 2] = some [1, 2]
 all_some [some 1, none  ] = none
 ```
 -/
-def allSome : List (Option α) → Option (List α)
+def allSomeₓ : List (Option α) → Option (List α)
   | [] => some []
   | some a :: as => cons a <$> all_some as
   | none :: as => none

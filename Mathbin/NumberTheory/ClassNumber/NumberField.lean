@@ -43,7 +43,7 @@ theorem class_number_eq_one_iff : classNumber K = 1 ↔ IsPrincipalIdealRing (ri
 
 end NumberField
 
-namespace Rat
+namespace Ratₓ
 
 open NumberField
 
@@ -53,5 +53,5 @@ theorem class_number_eq : NumberField.classNumber ℚ = 1 :=
       IsPrincipalIdealRing.of_surjective (rat.ring_of_integers_equiv.symm : ℤ →+* ring_of_integers ℚ)
         rat.ring_of_integers_equiv.symm.surjective
 
-end Rat
+end Ratₓ
 

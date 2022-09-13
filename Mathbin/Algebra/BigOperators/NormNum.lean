@@ -58,7 +58,7 @@ unsafe def decide_eq (l r : expr) : tactic (Bool × expr) := do
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 theorem List.not_mem_cons {α : Type _} {x y : α} {ys : List α} (h₁ : x ≠ y) (h₂ : x ∉ ys) : x ∉ y::ys := fun h =>
-  ((List.mem_cons_iffₓ _ _ _).mp h).elim h₁ h₂
+  ((List.mem_cons_iff _ _ _).mp h).elim h₁ h₂
 
 -- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation
 /-- Use a decision procedure for the equality of list elements to decide list membership.
@@ -74,12 +74,12 @@ unsafe def list.decide_mem (decide_eq : expr → expr → tactic (Bool × expr))
   | x, y::ys => do
     let (is_head, head_pf) ← decide_eq x y
     if is_head then do
-        let pf ← i_to_expr (pquote.1 ((List.mem_cons_iffₓ (%%ₓx) (%%ₓy) _).mpr (Or.inl (%%ₓhead_pf))))
+        let pf ← i_to_expr (pquote.1 ((List.mem_cons_iff (%%ₓx) (%%ₓy) _).mpr (Or.inl (%%ₓhead_pf))))
         pure (tt, pf)
       else do
         let (mem_tail, tail_pf) ← list.decide_mem x ys
         if mem_tail then do
-            let pf ← i_to_expr (pquote.1 ((List.mem_cons_iffₓ (%%ₓx) (%%ₓy) _).mpr (Or.inr (%%ₓtail_pf))))
+            let pf ← i_to_expr (pquote.1 ((List.mem_cons_iff (%%ₓx) (%%ₓy) _).mpr (Or.inr (%%ₓtail_pf))))
             pure (tt, pf)
           else do
             let pf ← i_to_expr (pquote.1 (List.not_mem_cons (%%ₓhead_pf) (%%ₓtail_pf)))
@@ -181,7 +181,7 @@ unsafe def eval_multiset : expr → tactic (List expr × expr)
     pure (eis, Eq)
   | quote.1 (@coe (@coeToLift (@coeBaseₓ Multiset.hasCoe)) (%%ₓexs)) => do
     let (xs, xs_eq) ← eval_list exs
-    let eq ← i_to_expr (pquote.1 (congr_argₓ coe (%%ₓxs_eq)))
+    let eq ← i_to_expr (pquote.1 (congr_arg coe (%%ₓxs_eq)))
     pure (xs, Eq)
   | quote.1 (@Multiset.map (%%ₓα) (%%ₓβ) (%%ₓef) (%%ₓexs)) => do
     let (xs, xs_eq) ← eval_multiset exs

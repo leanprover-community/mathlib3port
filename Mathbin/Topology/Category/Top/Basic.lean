@@ -111,7 +111,7 @@ theorem open_embedding_iff_is_iso_comp {X Y Z : Top} (f : X ⟶ Y) (g : Y ⟶ Z)
   constructor
   · intro h
     convert h.comp (Top.homeoOfIso (as_iso f).symm).OpenEmbedding
-    exact congr_argₓ _ (is_iso.inv_hom_id_assoc f g).symm
+    exact congr_arg _ (is_iso.inv_hom_id_assoc f g).symm
     
   · exact fun h => h.comp (Top.homeoOfIso (as_iso f)).OpenEmbedding
     

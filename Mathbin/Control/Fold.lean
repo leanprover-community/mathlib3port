@@ -119,7 +119,7 @@ def Foldl.ofFreeMonoid (f : β → α → β) : FreeMonoid α →* Monoidₓ.Fol
   toFun := fun xs => op <| flip (List.foldlₓ f) xs
   map_one' := rfl
   map_mul' := by
-    intros <;> simp only [FreeMonoid.mul_def, flip, unop_op, List.foldl_append, op_inj] <;> rfl
+    intros <;> simp only [FreeMonoid.mul_def, flip, unop_op, List.foldl_appendₓ, op_inj] <;> rfl
 
 @[reducible]
 def Foldr (α : Type u) : Type u :=
@@ -137,7 +137,7 @@ def Foldr.ofFreeMonoid (f : α → β → β) : FreeMonoid α →* Monoidₓ.Fol
   map_one' := rfl
   map_mul' := by
     intros
-    simp only [FreeMonoid.mul_def, List.foldr_append, flip]
+    simp only [FreeMonoid.mul_def, List.foldr_appendₓ, flip]
     rfl
 
 @[reducible]
@@ -322,7 +322,7 @@ theorem to_list_spec (xs : t α) : toList xs = (foldMap Free.mk xs : FreeMonoid 
       _ = (List.foldr cons [] (foldMap Free.mk xs).reverse).reverse := by
         simp only [List.foldr_eta]
       _ = (unop (Foldl.ofFreeMonoid (flip cons) (foldMap Free.mk xs)) []).reverse := by
-        simp [flip, List.foldr_reverse, foldl.of_free_monoid, unop_op]
+        simp [flip, List.foldr_reverseₓ, foldl.of_free_monoid, unop_op]
       _ = toList xs := by
         rw [fold_map_hom_free (foldl.of_free_monoid (flip <| @cons α))]
         simp only [to_list, foldl, List.reverse_inj, foldl.get, foldl.of_free_monoid_comp_free_mk]
@@ -360,7 +360,7 @@ theorem to_list_eq_self {xs : List α} : toList xs = xs := by
   case list.nil =>
     rfl
   case list.cons _ _ ih =>
-    unfold List.traverseₓₓ List.ret
+    unfold List.traverseₓ List.ret
     rw [ih]
     rfl
 

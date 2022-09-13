@@ -247,16 +247,16 @@ def punit {β : Sort _} (b : β) : PUnit ↪ β :=
 /-- Fixing an element `b : β` gives an embedding `α ↪ α × β`. -/
 @[simps]
 def sectl (α : Sort _) {β : Sort _} (b : β) : α ↪ α × β :=
-  ⟨fun a => (a, b), fun a a' h => congr_argₓ Prod.fst h⟩
+  ⟨fun a => (a, b), fun a a' h => congr_arg Prod.fst h⟩
 
 /-- Fixing an element `a : α` gives an embedding `β ↪ α × β`. -/
 @[simps]
 def sectr {α : Sort _} (a : α) (β : Sort _) : β ↪ α × β :=
-  ⟨fun b => (a, b), fun b b' h => congr_argₓ Prod.snd h⟩
+  ⟨fun b => (a, b), fun b b' h => congr_arg Prod.snd h⟩
 
 /-- Restrict the codomain of an embedding. -/
 def codRestrict {α β} (p : Set β) (f : α ↪ β) (H : ∀ a, f a ∈ p) : α ↪ p :=
-  ⟨fun a => ⟨f a, H a⟩, fun a b h => f.Injective (@congr_argₓ _ _ _ _ Subtype.val h)⟩
+  ⟨fun a => ⟨f a, H a⟩, fun a b h => f.Injective (@congr_arg _ _ _ _ Subtype.val h)⟩
 
 @[simp]
 theorem cod_restrict_apply {α β} (p) (f : α ↪ β) (H a) : codRestrict p f H a = ⟨f a, H a⟩ :=
@@ -282,8 +282,8 @@ open Sum
 def sumMap {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : Sum α γ ↪ Sum β δ :=
   ⟨Sum.map e₁ e₂, fun s₁ s₂ h =>
     match s₁, s₂, h with
-    | inl a₁, inl a₂, h => congr_argₓ inl <| e₁.Injective <| inl.injₓ h
-    | inr b₁, inr b₂, h => congr_argₓ inr <| e₂.Injective <| inr.injₓ h⟩
+    | inl a₁, inl a₂, h => congr_arg inl <| e₁.Injective <| inl.injₓ h
+    | inr b₁, inr b₂, h => congr_arg inr <| e₂.Injective <| inr.injₓ h⟩
 
 @[simp]
 theorem coe_sum_map {α β γ δ} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : ⇑(sumMap e₁ e₂) = Sum.map e₁ e₂ :=
@@ -322,7 +322,7 @@ end Sigma
 `e : Π a, (β a ↪ γ a)`. This embedding sends `f` to `λ a, e a (f a)`. -/
 @[simps]
 def piCongrRight {α : Sort _} {β γ : α → Sort _} (e : ∀ a, β a ↪ γ a) : (∀ a, β a) ↪ ∀ a, γ a :=
-  ⟨fun f a => e a (f a), fun f₁ f₂ h => funext fun a => (e a).Injective (congr_funₓ h a)⟩
+  ⟨fun f a => e a (f a), fun f₁ f₂ h => funext fun a => (e a).Injective (congr_fun h a)⟩
 
 /-- An embedding `e : α ↪ β` defines an embedding `(γ → α) ↪ (γ → β)` that sends each `f`
 to `e ∘ f`. -/
@@ -340,7 +340,7 @@ This embedding sends each `f : α → γ` to a function `g : β → γ` such tha
 noncomputable def arrowCongrLeft {α : Sort u} {β : Sort v} {γ : Sort w} [Inhabited γ] (e : α ↪ β) : (α → γ) ↪ β → γ :=
   ⟨fun f => extendₓ e f default, fun f₁ f₂ h =>
     funext fun x => by
-      simpa only [extend_apply e.injective] using congr_funₓ h (e x)⟩
+      simpa only [extend_apply e.injective] using congr_fun h (e x)⟩
 
 /-- Restrict both domain and codomain of an embedding. -/
 protected def subtypeMap {α β} {p : α → Prop} {q : β → Prop} (f : α ↪ β) (h : ∀ ⦃x⦄, p x → q (f x)) :

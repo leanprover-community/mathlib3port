@@ -111,7 +111,7 @@ theorem ExtensionOf.ext_iff {a b : ExtensionOf i f} :
   ⟨fun r =>
     r ▸
       ⟨rfl, fun x y h =>
-        congr_argₓ a.toFun <| by
+        congr_arg a.toFun <| by
           exact_mod_cast h⟩,
     fun ⟨h1, h2⟩ => ExtensionOf.ext h1 h2⟩
 
@@ -119,7 +119,7 @@ end Ext
 
 instance :
     HasInf (ExtensionOf i f) where inf := fun X1 X2 =>
-    { X1.toLinearPmap⊓X2.toLinearPmap with
+    { X1.toLinearPmap ⊓ X2.toLinearPmap with
       le := fun x hx =>
         (by
           rcases hx with ⟨x, rfl⟩
@@ -182,7 +182,7 @@ instance ExtensionOf.inhabited :
             rw [← map_add, ← (x + y).2.some_spec] at eq1
             rw [← Fact.out (Function.Injective i) eq1, map_add],
           map_smul' := fun r x => by
-            have eq1 : r • _ = (r • x).1 := congr_argₓ ((· • ·) r) x.2.some_spec
+            have eq1 : r • _ = (r • x).1 := congr_arg ((· • ·) r) x.2.some_spec
             rw [← LinearMap.map_smul, ← (r • x).2.some_spec] at eq1
             rw [RingHom.id_apply, ← Fact.out (Function.Injective i) eq1, LinearMap.map_smul] },
       le := le_reflₓ _,
@@ -203,7 +203,7 @@ theorem extension_of_max_is_max : ∀ a : ExtensionOf i f, extensionOfMax i f �
 
 variable {f}
 
-private theorem extension_of_max_adjoin.aux1 {y : N} (x : (extensionOfMax i f).domain⊔Submodule.span R {y}) :
+private theorem extension_of_max_adjoin.aux1 {y : N} (x : (extensionOfMax i f).domain ⊔ Submodule.span R {y}) :
     ∃ (a : (extensionOfMax i f).domain)(b : R), x.1 = a.1 + b • y := by
   have mem1 : x.1 ∈ (_ : Set _) := x.2
   rw [Submodule.coe_sup] at mem1
@@ -215,15 +215,15 @@ private theorem extension_of_max_adjoin.aux1 {y : N} (x : (extensionOfMax i f).d
       rw [← eq1, ← eq2]⟩
 
 /-- If `x ∈ M ⊔ ⟨y⟩`, then `x = m + r • y`, `fst` pick an arbitrary such `m`.-/
-def ExtensionOfMaxAdjoin.fst {y : N} (x : (extensionOfMax i f).domain⊔Submodule.span R {y}) :
+def ExtensionOfMaxAdjoin.fst {y : N} (x : (extensionOfMax i f).domain ⊔ Submodule.span R {y}) :
     (extensionOfMax i f).domain :=
   (ExtensionOfMaxAdjoin.aux1 i x).some
 
 /-- If `x ∈ M ⊔ ⟨y⟩`, then `x = m + r • y`, `snd` pick an arbitrary such `r`.-/
-def ExtensionOfMaxAdjoin.snd {y : N} (x : (extensionOfMax i f).domain⊔Submodule.span R {y}) : R :=
+def ExtensionOfMaxAdjoin.snd {y : N} (x : (extensionOfMax i f).domain ⊔ Submodule.span R {y}) : R :=
   (ExtensionOfMaxAdjoin.aux1 i x).some_spec.some
 
-theorem ExtensionOfMaxAdjoin.eqn {y : N} (x : (extensionOfMax i f).domain⊔Submodule.span R {y}) :
+theorem ExtensionOfMaxAdjoin.eqn {y : N} (x : (extensionOfMax i f).domain ⊔ Submodule.span R {y}) :
     ↑x = ↑(ExtensionOfMaxAdjoin.fst i x) + ExtensionOfMaxAdjoin.snd i x • y :=
   (ExtensionOfMaxAdjoin.aux1 i x).some_spec.some_spec
 
@@ -275,12 +275,12 @@ theorem ExtensionOfMaxAdjoin.extend_ideal_to_eq (h : Module.Baer R Q) {y : N} (r
 /-- We can finally define a linear map `M ⊔ ⟨y⟩ ⟶ Q` by `x + r • y ↦ f x + φ r`
 -/
 def ExtensionOfMaxAdjoin.extensionToFun (h : Module.Baer R Q) {y : N} :
-    (extensionOfMax i f).domain⊔Submodule.span R {y} → Q := fun x =>
+    (extensionOfMax i f).domain ⊔ Submodule.span R {y} → Q := fun x =>
   (extensionOfMax i f).toLinearPmap (ExtensionOfMaxAdjoin.fst i x) +
     ExtensionOfMaxAdjoin.extendIdealTo i f h y (ExtensionOfMaxAdjoin.snd i x)
 
 theorem ExtensionOfMaxAdjoin.extension_to_fun_wd (h : Module.Baer R Q) {y : N}
-    (x : (extensionOfMax i f).domain⊔Submodule.span R {y}) (a : (extensionOfMax i f).domain) (r : R)
+    (x : (extensionOfMax i f).domain ⊔ Submodule.span R {y}) (a : (extensionOfMax i f).domain) (r : R)
     (eq1 : ↑x = ↑a + r • y) :
     ExtensionOfMaxAdjoin.extensionToFun i f h x =
       (extensionOfMax i f).toLinearPmap a + ExtensionOfMaxAdjoin.extendIdealTo i f h y r :=
@@ -303,7 +303,7 @@ theorem ExtensionOfMaxAdjoin.extension_to_fun_wd (h : Module.Baer R Q) {y : N}
 
 /-- The linear map `M ⊔ ⟨y⟩ ⟶ Q` by `x + r • y ↦ f x + φ r` is an extension of `f`-/
 def extensionOfMaxAdjoin (h : Module.Baer R Q) (y : N) : ExtensionOf i f where
-  domain := (extensionOfMax i f).domain⊔Submodule.span R {y}
+  domain := (extensionOfMax i f).domain ⊔ Submodule.span R {y}
   le := le_transₓ (extensionOfMax i f).le le_sup_left
   toFun :=
     { toFun := ExtensionOfMaxAdjoin.extensionToFun i f h,

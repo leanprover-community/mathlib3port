@@ -90,7 +90,7 @@ theorem gal_X_pow_sub_one_is_solvable (n : ℕ) : IsSolvable (X ^ n - 1 : F[X]).
     
   have hn' : 0 < n := pos_iff_ne_zero.mpr hn
   have hn'' : (X ^ n - 1 : F[X]) ≠ 0 := fun h =>
-    one_ne_zero ((leading_coeff_X_pow_sub_one hn').symm.trans (congr_argₓ leading_coeff h))
+    one_ne_zero ((leading_coeff_X_pow_sub_one hn').symm.trans (congr_arg leading_coeff h))
   apply is_solvable_of_comm
   intro σ τ
   ext a ha
@@ -122,9 +122,9 @@ theorem gal_X_pow_sub_C_is_solvable_aux (n : ℕ) (a : F) (h : (X ^ n - 1 : F[X]
     
   have hn' : 0 < n := pos_iff_ne_zero.mpr hn
   have hn'' : X ^ n - C a ≠ 0 := fun h =>
-    one_ne_zero ((leading_coeff_X_pow_sub_C hn').symm.trans (congr_argₓ leading_coeff h))
+    one_ne_zero ((leading_coeff_X_pow_sub_C hn').symm.trans (congr_arg leading_coeff h))
   have hn''' : (X ^ n - 1 : F[X]) ≠ 0 := fun h =>
-    one_ne_zero ((leading_coeff_X_pow_sub_one hn').symm.trans (congr_argₓ leading_coeff h))
+    one_ne_zero ((leading_coeff_X_pow_sub_one hn').symm.trans (congr_arg leading_coeff h))
   have mem_range : ∀ {c}, c ^ n = 1 → ∃ d, algebraMap F (X ^ n - C a).SplittingField d = c := fun c hc =>
     ring_hom.mem_range.mp
       (minpoly.mem_range_of_degree_eq_one F c

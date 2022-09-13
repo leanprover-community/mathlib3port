@@ -141,7 +141,7 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
       mem_Inter.2 fun k =>
         mem_closure_of_tendsto y_lim
           (by
-            simp only [exists_prop, Set.mem_Union, Filter.eventually_at_top, Set.mem_preimage, Set.preimage_Union]
+            simp only [exists_propₓ, Set.mem_Union, Filter.eventually_at_top, Set.mem_preimage, Set.preimage_Union]
             exact ⟨k, fun m hm => ⟨n + m, zero_addₓ k ▸ add_le_add (zero_le n) hm, (z m).2⟩⟩)
     use this
     -- Then, we check that `y` is close to `x = z n`. This follows from the fact that `y`
@@ -160,7 +160,7 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
       apply mem_Inter.1 xt0 n
     rcases mem_closure_iff.1 this (B n) (B_pos n) with ⟨z, hz, Dxz⟩
     -- z : α,  Dxz : edist x z < B n,
-    simp only [exists_prop, Set.mem_Union] at hz
+    simp only [exists_propₓ, Set.mem_Union] at hz
     rcases hz with ⟨m, ⟨m_ge_n, hm⟩⟩
     -- m : ℕ, m_ge_n : m ≥ n, hm : z ∈ s m
     have : Hausdorff_edist (s m : Set α) (s n) < B n := hs n m n m_ge_n (le_reflₓ n)

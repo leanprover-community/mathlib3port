@@ -211,7 +211,7 @@ theorem primaryComponent.disjoint {p' : ℕ} [hp' : Fact p'.Prime] (hne : p ≠ 
     obtain ⟨n, hn⟩ := primary_component.exists_order_of_eq_prime_pow ⟨g, set_like.mem_coe.mp hgp⟩
     obtain ⟨n', hn'⟩ := primary_component.exists_order_of_eq_prime_pow ⟨g, set_like.mem_coe.mp hgp'⟩
     have := mt (eq_of_prime_pow_eq (nat.prime_iff.mp hp.out) (nat.prime_iff.mp hp'.out))
-    simp only [not_forall, exists_prop, not_ltₓ, le_zero_iff, and_imp] at this
+    simp only [not_forall, exists_propₓ, not_ltₓ, le_zero_iff, and_imp] at this
     rw [← order_of_submonoid, SetLike.coe_mk] at hn hn'
     have hnzero := this (hn.symm.trans hn') hne
     rwa [hnzero, pow_zeroₓ, order_of_eq_one_iff] at hn
@@ -293,7 +293,7 @@ def IsTorsionFree :=
 /-- A nontrivial monoid is not torsion-free if any nontrivial element has finite order. -/
 @[simp, to_additive "An additive monoid is not torsion free if any nontrivial element has finite order."]
 theorem not_is_torsion_free_iff : ¬IsTorsionFree G ↔ ∃ g : G, g ≠ 1 ∧ IsOfFinOrder g := by
-  simp_rw [is_torsion_free, Ne.def, not_forall, not_not, exists_prop]
+  simp_rw [is_torsion_free, Ne.def, not_forall, not_not, exists_propₓ]
 
 end Monoidₓ
 

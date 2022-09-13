@@ -170,7 +170,7 @@ noncomputable section
 
 namespace BoxIntegral
 
-variable {ι : Type _} [Fintype ι] {I J : Box ι} {c c₁ c₂ : ℝ≥0 } {r r₁ r₂ : (ι → ℝ) → ioi (0 : ℝ)}
+variable {ι : Type _} [Fintype ι] {I J : Box ι} {c c₁ c₂ : ℝ≥0} {r r₁ r₂ : (ι → ℝ) → ioi (0 : ℝ)}
   {π π₁ π₂ : TaggedPrepartition I}
 
 open TaggedPrepartition
@@ -280,7 +280,7 @@ Sacks-Henstock inequality to compare two prepartitions covering the same part of
 It is also automatically satisfied for any `c > 1`, see TODO section of the module docstring for
 details. -/
 @[protect_proj]
-structure MemBaseSet (l : IntegrationParams) (I : Box ι) (c : ℝ≥0 ) (r : (ι → ℝ) → ioi (0 : ℝ))
+structure MemBaseSet (l : IntegrationParams) (I : Box ι) (c : ℝ≥0) (r : (ι → ℝ) → ioi (0 : ℝ))
   (π : TaggedPrepartition I) : Prop where
   IsSubordinate : π.IsSubordinate r
   IsHenstock : l.bHenstock → π.IsHenstock
@@ -294,33 +294,33 @@ def RCond {ι : Type _} (l : IntegrationParams) (r : (ι → ℝ) → ioi (0 : �
 /-- A set `s : set (tagged_prepartition I)` belongs to `l.to_filter_distortion I c` if there exists
 a function `r : ℝⁿ → (0, ∞)` (or a constant `r` if `l.bRiemann = tt`) such that `s` contains each
 prepartition `π` such that `l.mem_base_set I c r π`. -/
-def toFilterDistortion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0 ) : Filter (TaggedPrepartition I) :=
+def toFilterDistortion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0) : Filter (TaggedPrepartition I) :=
   ⨅ (r : (ι → ℝ) → ioi (0 : ℝ)) (hr : l.RCond r), 𝓟 { π | l.MemBaseSet I c r π }
 
 /-- A set `s : set (tagged_prepartition I)` belongs to `l.to_filter I` if for any `c : ℝ≥0` there
 exists a function `r : ℝⁿ → (0, ∞)` (or a constant `r` if `l.bRiemann = tt`) such that
 `s` contains each prepartition `π` such that `l.mem_base_set I c r π`. -/
 def toFilter (l : IntegrationParams) (I : Box ι) : Filter (TaggedPrepartition I) :=
-  ⨆ c : ℝ≥0 , l.toFilterDistortion I c
+  ⨆ c : ℝ≥0, l.toFilterDistortion I c
 
 /-- A set `s : set (tagged_prepartition I)` belongs to `l.to_filter_distortion_Union I c π₀` if
 there exists a function `r : ℝⁿ → (0, ∞)` (or a constant `r` if `l.bRiemann = tt`) such that `s`
 contains each prepartition `π` such that `l.mem_base_set I c r π` and `π.Union = π₀.Union`. -/
-def toFilterDistortionUnion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0 ) (π₀ : Prepartition I) :=
-  l.toFilterDistortion I c⊓𝓟 { π | π.Union = π₀.Union }
+def toFilterDistortionUnion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0) (π₀ : Prepartition I) :=
+  l.toFilterDistortion I c ⊓ 𝓟 { π | π.Union = π₀.Union }
 
 /-- A set `s : set (tagged_prepartition I)` belongs to `l.to_filter_Union I π₀` if for any `c : ℝ≥0`
 there exists a function `r : ℝⁿ → (0, ∞)` (or a constant `r` if `l.bRiemann = tt`) such that `s`
 contains each prepartition `π` such that `l.mem_base_set I c r π` and `π.Union = π₀.Union`. -/
 def toFilterUnion (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :=
-  ⨆ c : ℝ≥0 , l.toFilterDistortionUnion I c π₀
+  ⨆ c : ℝ≥0, l.toFilterDistortionUnion I c π₀
 
 theorem r_cond_of_bRiemann_eq_ff {ι} (l : IntegrationParams) (hl : l.bRiemann = ff) {r : (ι → ℝ) → ioi (0 : ℝ)} :
     l.RCond r := by
   simp [r_cond, hl]
 
 theorem to_filter_inf_Union_eq (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :
-    l.toFilter I⊓𝓟 { π | π.Union = π₀.Union } = l.toFilterUnion I π₀ :=
+    l.toFilter I ⊓ 𝓟 { π | π.Union = π₀.Union } = l.toFilterUnion I π₀ :=
   (supr_inf_principal _ _).symm
 
 theorem MemBaseSet.mono' (I : Box ι) (h : l₁ ≤ l₂) (hc : c₁ ≤ c₂) {π : TaggedPrepartition I}
@@ -426,7 +426,7 @@ theorem to_filter_Union_congr (I : Box ι) (l : IntegrationParams) {π₁ π₂ 
     l.toFilterUnion I π₁ = l.toFilterUnion I π₂ := by
   simp only [to_filter_Union, to_filter_distortion_Union, h]
 
-theorem has_basis_to_filter_distortion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0 ) :
+theorem has_basis_to_filter_distortion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0) :
     (l.toFilterDistortion I c).HasBasis l.RCond fun r => { π | l.MemBaseSet I c r π } :=
   has_basis_binfi_principal'
     (fun r₁ hr₁ r₂ hr₂ =>
@@ -434,7 +434,7 @@ theorem has_basis_to_filter_distortion (l : IntegrationParams) (I : Box ι) (c :
         MemBaseSet.mono _ le_rflₓ le_rflₓ fun x hx => min_le_rightₓ _ _⟩)
     ⟨fun _ => ⟨1, @zero_lt_one ℝ _ _⟩, fun _ _ => rfl⟩
 
-theorem has_basis_to_filter_distortion_Union (l : IntegrationParams) (I : Box ι) (c : ℝ≥0 ) (π₀ : Prepartition I) :
+theorem has_basis_to_filter_distortion_Union (l : IntegrationParams) (I : Box ι) (c : ℝ≥0) (π₀ : Prepartition I) :
     (l.toFilterDistortionUnion I c π₀).HasBasis l.RCond fun r => { π | l.MemBaseSet I c r π ∧ π.Union = π₀.Union } :=
   (l.has_basis_to_filter_distortion I c).inf_principal _
 

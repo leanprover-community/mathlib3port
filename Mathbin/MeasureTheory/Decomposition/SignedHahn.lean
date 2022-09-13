@@ -265,12 +265,12 @@ private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ 
     by_cases' l < k
     · convert h₁ _ h
       ext x
-      rw [Set.mem_Union, exists_prop, and_iff_right_iff_imp]
+      rw [Set.mem_Union, exists_propₓ, and_iff_right_iff_imp]
       exact fun _ => h
       
     · convert le_of_eqₓ s.empty.symm
       ext
-      simp only [exists_prop, Set.mem_empty_eq, Set.mem_Union, not_and, iff_falseₓ]
+      simp only [exists_propₓ, Set.mem_empty_eq, Set.mem_Union, not_and, iff_falseₓ]
       exact fun h' => False.elim (h h')
       
     
@@ -278,14 +278,14 @@ private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ 
     exact MeasurableSet.Union fun _ => restrict_nonpos_seq_measurable_set _
     
   · intro a b hab x hx
-    simp only [exists_prop, Set.mem_Union, Set.mem_inter_eq, Set.inf_eq_inter] at hx
+    simp only [exists_propₓ, Set.mem_Union, Set.mem_inter_eq, Set.inf_eq_inter] at hx
     exact
       let ⟨⟨_, hx₁⟩, _, hx₂⟩ := hx
       restrict_nonpos_seq_disjoint a b hab ⟨hx₁, hx₂⟩
     
   · apply Set.Union_subset
     intro a x
-    simp only [and_imp, exists_prop, Set.mem_Union]
+    simp only [and_imp, exists_propₓ, Set.mem_Union]
     intro _ hx
     exact restrict_nonpos_seq_subset _ hx
     
@@ -308,7 +308,7 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) : ∃ j : Set α, Measurabl
     intro n
     convert hn (n + 1) <;>
       · ext l
-        simp only [exists_prop, Set.mem_Union, And.congr_left_iff]
+        simp only [exists_propₓ, Set.mem_Union, And.congr_left_iffₓ]
         exact fun _ => nat.lt_succ_iff.symm
         
   have h₁ : s i = s A + ∑' l, s (restrict_nonpos_seq s i l) := by

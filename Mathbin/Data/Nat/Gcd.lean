@@ -619,10 +619,10 @@ theorem Coprime.mul_add_mul_ne_mul {m n a b : ℕ} (cop : Coprime m n) (ha : a �
   intro h
   obtain ⟨x, rfl⟩ : n ∣ a :=
     cop.symm.dvd_of_dvd_mul_right
-      ((Nat.dvd_add_iff_left (dvd_mul_left n b)).mpr ((congr_argₓ _ h).mpr (dvd_mul_left n m)))
+      ((Nat.dvd_add_iff_left (dvd_mul_left n b)).mpr ((congr_arg _ h).mpr (dvd_mul_left n m)))
   obtain ⟨y, rfl⟩ : m ∣ b :=
     cop.dvd_of_dvd_mul_right
-      ((Nat.dvd_add_iff_right (dvd_mul_left m (n * x))).mpr ((congr_argₓ _ h).mpr (dvd_mul_right m n)))
+      ((Nat.dvd_add_iff_right (dvd_mul_left m (n * x))).mpr ((congr_arg _ h).mpr (dvd_mul_right m n)))
   rw [mul_comm, mul_ne_zero_iff, ← one_le_iff_ne_zero] at ha hb
   refine' mul_ne_zero hb.2 ha.2 (eq_zero_of_mul_eq_self_left (ne_of_gtₓ (add_le_add ha.1 hb.1)) _)
   rw [← mul_assoc, ← h, add_mulₓ, add_mulₓ, mul_comm _ n, ← mul_assoc, mul_comm y]

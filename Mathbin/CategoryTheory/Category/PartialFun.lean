@@ -67,8 +67,8 @@ instance largeCategory : LargeCategory.{u} PartialFun where
 def Iso.mk {α β : PartialFun.{u}} (e : α ≃ β) : α ≅ β where
   Hom := e
   inv := e.symm
-  hom_inv_id' := (Pfun.coe_comp _ _).symm.trans <| congr_argₓ coe e.symm_comp_self
-  inv_hom_id' := (Pfun.coe_comp _ _).symm.trans <| congr_argₓ coe e.self_comp_symm
+  hom_inv_id' := (Pfun.coe_comp _ _).symm.trans <| congr_arg coe e.symm_comp_self
+  inv_hom_id' := (Pfun.coe_comp _ _).symm.trans <| congr_arg coe e.self_comp_symm
 
 end PartialFun
 
@@ -94,7 +94,7 @@ def pointedToPartialFun : Pointed.{u} ⥤ PartialFun where
       simp_rw [Pfun.mem_to_subtype_iff, Subtype.exists]
       refine'
         ⟨fun h =>
-          ⟨f.to_fun a, fun ha => c.2 <| h.trans ((congr_argₓ g.to_fun ha : g.to_fun _ = _).trans g.map_point), rfl, h⟩,
+          ⟨f.to_fun a, fun ha => c.2 <| h.trans ((congr_arg g.to_fun ha : g.to_fun _ = _).trans g.map_point), rfl, h⟩,
           _⟩
       rintro ⟨b, _, rfl : b = _, h⟩
       exact h
@@ -134,7 +134,7 @@ noncomputable def partialFunEquivPointed : PartialFun.{u} ≌ Pointed := by
             · exact (hb rfl).elim
               
             dsimp'
-            simp_rw [Part.mem_some_iff, Subtype.mk_eq_mk, exists_prop, some_inj, exists_eq_right']
+            simp_rw [Part.mem_some_iff, Subtype.mk_eq_mk, exists_propₓ, some_inj, exists_eq_right']
             refine' part.mem_to_option.symm.trans _
             exact eq_comm)
         ((nat_iso.of_components fun X =>

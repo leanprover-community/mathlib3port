@@ -51,7 +51,7 @@ def Cone.fromCostructuredArrow (F : J ⥤ C) : CostructuredArrow (const J) F ⥤
   map := fun c d f =>
     { Hom := f.left,
       w' := fun j => by
-        convert congr_funₓ (congr_argₓ nat_trans.app f.w) j
+        convert congr_fun (congr_arg nat_trans.app f.w) j
         dsimp'
         simp }
 
@@ -127,7 +127,7 @@ def Cocone.fromStructuredArrow (F : J ⥤ C) : StructuredArrow F (const J) ⥤ C
   map := fun c d f =>
     { Hom := f.right,
       w' := fun j => by
-        convert (congr_funₓ (congr_argₓ nat_trans.app f.w) j).symm
+        convert (congr_fun (congr_arg nat_trans.app f.w) j).symm
         dsimp'
         simp }
 

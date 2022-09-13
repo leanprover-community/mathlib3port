@@ -253,7 +253,7 @@ protected def addGroupWithOne [AddGroupWithOneₓ β] : AddGroupWithOneₓ α :=
     int_cast_of_nat := fun n => by
       rw [Int.cast_coe_nat] <;> rfl,
     int_cast_neg_succ_of_nat := fun n =>
-      congr_argₓ e.symm <| (Int.cast_neg_succ_of_nat _).trans <| congr_argₓ _ (e.apply_symm_apply _).symm }
+      congr_arg e.symm <| (Int.cast_neg_succ_of_nat _).trans <| congr_arg _ (e.apply_symm_apply _).symm }
 
 /-- Transfer `non_assoc_semiring` across an `equiv` -/
 protected def nonAssocSemiring [NonAssocSemiringₓ β] : NonAssocSemiringₓ α := by

@@ -207,13 +207,13 @@ theorem ptendsto_iff_rtendsto (l₁ : Filter α) (l₂ : Filter β) (f : α →.
     Ptendsto f l₁ l₂ ↔ Rtendsto f.Graph' l₁ l₂ :=
   Iff.rfl
 
-theorem pmap_res (l : Filter α) (s : Set α) (f : α → β) : pmap (Pfun.res f s) l = map f (l⊓𝓟 s) := by
+theorem pmap_res (l : Filter α) (s : Set α) (f : α → β) : pmap (Pfun.res f s) l = map f (l ⊓ 𝓟 s) := by
   ext t
   simp only [Pfun.core_res, mem_pmap, mem_map, mem_inf_principal, imp_iff_not_or]
   rfl
 
 theorem tendsto_iff_ptendsto (l₁ : Filter α) (l₂ : Filter β) (s : Set α) (f : α → β) :
-    Tendsto f (l₁⊓𝓟 s) l₂ ↔ Ptendsto (Pfun.res f s) l₁ l₂ := by
+    Tendsto f (l₁ ⊓ 𝓟 s) l₂ ↔ Ptendsto (Pfun.res f s) l₁ l₂ := by
   simp only [tendsto, ptendsto, pmap_res]
 
 theorem tendsto_iff_ptendsto_univ (l₁ : Filter α) (l₂ : Filter β) (f : α → β) :

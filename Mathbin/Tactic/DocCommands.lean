@@ -111,7 +111,7 @@ unsafe def library_note (mi : interactive.decl_meta_info) (_ : parse (tk "librar
 /-- Collects all notes in the current environment.
 Returns a list of pairs `(note_id, note_content)` -/
 unsafe def tactic.get_library_notes : tactic (List (Stringₓ × Stringₓ)) :=
-  attribute.get_instances `library_note >>= List.mmapₓ fun dcl => Prod.mk dcl.last <$> doc_string dcl
+  attribute.get_instances `library_note >>= List.mmap fun dcl => Prod.mk dcl.last <$> doc_string dcl
 
 /-! ### The `add_tactic_doc_entry` command -/
 
@@ -163,7 +163,7 @@ unsafe def tactic_doc_entry_attr : user_attribute where
 /-- Collects everything in the environment tagged with the attribute `tactic_doc`. -/
 unsafe def tactic.get_tactic_doc_entries : tactic (List (TacticDocEntry × Stringₓ)) :=
   attribute.get_instances `tactic_doc >>=
-    List.mmapₓ fun dcl => Prod.mk <$> (mk_const dcl >>= eval_expr TacticDocEntry) <*> doc_string dcl
+    List.mmap fun dcl => Prod.mk <$> (mk_const dcl >>= eval_expr TacticDocEntry) <*> doc_string dcl
 
 /-- `add_tactic_doc tde` adds a declaration to the environment
 with `tde` as its body and tags it with the `tactic_doc`

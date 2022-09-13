@@ -76,19 +76,19 @@ instance [PartialOrderₓ α] : PartialOrderₓ (ι →₀ α) :=
   { Finsupp.preorder with le_antisymm := fun f g hfg hgf => ext fun i => (hfg i).antisymm (hgf i) }
 
 instance [SemilatticeInf α] : SemilatticeInf (ι →₀ α) :=
-  { Finsupp.partialOrder with inf := zipWith (·⊓·) inf_idem, inf_le_left := fun f g i => inf_le_left,
+  { Finsupp.partialOrder with inf := zipWith (· ⊓ ·) inf_idem, inf_le_left := fun f g i => inf_le_left,
     inf_le_right := fun f g i => inf_le_right, le_inf := fun f g i h1 h2 s => le_inf (h1 s) (h2 s) }
 
 @[simp]
-theorem inf_apply [SemilatticeInf α] {i : ι} {f g : ι →₀ α} : (f⊓g) i = f i⊓g i :=
+theorem inf_apply [SemilatticeInf α] {i : ι} {f g : ι →₀ α} : (f ⊓ g) i = f i ⊓ g i :=
   rfl
 
 instance [SemilatticeSup α] : SemilatticeSup (ι →₀ α) :=
-  { Finsupp.partialOrder with sup := zipWith (·⊔·) sup_idem, le_sup_left := fun f g i => le_sup_left,
+  { Finsupp.partialOrder with sup := zipWith (· ⊔ ·) sup_idem, le_sup_left := fun f g i => le_sup_left,
     le_sup_right := fun f g i => le_sup_right, sup_le := fun f g h hf hg i => sup_le (hf i) (hg i) }
 
 @[simp]
-theorem sup_apply [SemilatticeSup α] {i : ι} {f g : ι →₀ α} : (f⊔g) i = f i⊔g i :=
+theorem sup_apply [SemilatticeSup α] {i : ι} {f g : ι →₀ α} : (f ⊔ g) i = f i ⊔ g i :=
   rfl
 
 instance lattice [Lattice α] : Lattice (ι →₀ α) :=
@@ -103,8 +103,7 @@ instance [OrderedAddCommMonoid α] : OrderedAddCommMonoid (ι →₀ α) :=
   { Finsupp.addCommMonoid, Finsupp.partialOrder with add_le_add_left := fun a b h c s => add_le_add_left (h s) (c s) }
 
 instance [OrderedCancelAddCommMonoid α] : OrderedCancelAddCommMonoid (ι →₀ α) :=
-  { Finsupp.orderedAddCommMonoid with le_of_add_le_add_left := fun f g i h s => le_of_add_le_add_left (h s),
-    add_left_cancel := fun f g i h => ext fun s => add_left_cancelₓ (ext_iff.1 h s) }
+  { Finsupp.orderedAddCommMonoid with le_of_add_le_add_left := fun f g i h s => le_of_add_le_add_left (h s) }
 
 instance [OrderedAddCommMonoid α] [ContravariantClass α α (· + ·) (· ≤ ·)] :
     ContravariantClass (ι →₀ α) (ι →₀ α) (· + ·) (· ≤ ·) :=
@@ -186,13 +185,13 @@ section CanonicallyLinearOrderedAddMonoid
 variable [CanonicallyLinearOrderedAddMonoid α] [DecidableEq ι] {f g : ι →₀ α}
 
 @[simp]
-theorem support_inf : (f⊓g).Support = f.Support ∩ g.Support := by
+theorem support_inf : (f ⊓ g).Support = f.Support ∩ g.Support := by
   ext
   simp only [inf_apply, mem_support_iff, Ne.def, Finset.mem_union, Finset.mem_filter, Finset.mem_inter]
   simp only [inf_eq_min, ← nonpos_iff_eq_zero, min_le_iff, not_or_distrib]
 
 @[simp]
-theorem support_sup : (f⊔g).Support = f.Support ∪ g.Support := by
+theorem support_sup : (f ⊔ g).Support = f.Support ∪ g.Support := by
   ext
   simp only [Finset.mem_union, mem_support_iff, sup_apply, Ne.def, ← bot_eq_zero]
   rw [_root_.sup_eq_bot_iff, not_and_distrib]

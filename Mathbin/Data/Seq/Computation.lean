@@ -226,7 +226,7 @@ theorem corec_eq (f : β → Sum α β) (b : β) : destruct (corec f b) = rmap (
   · rfl
     
   dsimp' [corec.F, destruct]
-  apply congr_argₓ
+  apply congr_arg
   apply Subtype.eq
   dsimp' [corec, tail]
   rw [Streamₓ.corec'_eq, Streamₓ.tail_cons]
@@ -260,7 +260,7 @@ theorem eq_of_bisim (bisim : IsBisimulation R) {s₁ s₂} (r : s₁ ~ s₂) : s
     match t₁, t₂, e with
     | _, _, ⟨s, s', rfl, rfl, r⟩ => by
       suffices head s = head s' ∧ R (tail s) (tail s') from
-        And.imp id
+        And.impₓ id
           (fun r =>
             ⟨tail s, tail s', by
               cases s <;> rfl, by
@@ -608,7 +608,7 @@ theorem map_comp (f : α → β) (g : β → γ) : ∀ s : Computation α, map (
   | ⟨s, al⟩ => by
     apply Subtype.eq <;> dsimp' [map]
     rw [Streamₓ.map_map]
-    apply congr_argₓ fun f : _ → Option γ => Streamₓ.map f s
+    apply congr_arg fun f : _ → Option γ => Streamₓ.map f s
     ext ⟨⟩ <;> rfl
 
 @[simp]
@@ -714,7 +714,7 @@ theorem of_results_bind {s : Computation α} {f : α → Computation β} {b k} :
   · simp [thinkN] at e
     refine' ⟨a, _, _, results_ret _, e, rfl⟩
     
-  · have := congr_argₓ head (eq_thinkN e)
+  · have := congr_arg head (eq_thinkN e)
     contradiction
     
   · simp at e
@@ -858,7 +858,7 @@ theorem terminates_congr {c₁ c₂ : Computation α} (h : c₁ ~ c₂) : Termin
   simp only [terminates_iff, exists_congr h]
 
 theorem promises_congr {c₁ c₂ : Computation α} (h : c₁ ~ c₂) (a) : c₁ ~> a ↔ c₂ ~> a :=
-  forall_congrₓ fun a' => imp_congr (h a') Iff.rfl
+  forall_congrₓ fun a' => imp_congrₓ (h a') Iff.rfl
 
 theorem get_equiv {c₁ c₂ : Computation α} (h : c₁ ~ c₂) [Terminates c₁] [Terminates c₂] : get c₁ = get c₂ :=
   get_eq_of_mem _ <| (h _).2 <| get_mem _
@@ -1015,8 +1015,8 @@ theorem lift_rel_return (R : α → β → Prop) (a : α) (b : β) : LiftRel R (
 @[simp]
 theorem lift_rel_think_left (R : α → β → Prop) (ca : Computation α) (cb : Computation β) :
     LiftRel R (think ca) cb ↔ LiftRel R ca cb :=
-  and_congr (forall_congrₓ fun b => imp_congr ⟨of_think_mem, think_mem⟩ Iff.rfl)
-    (forall_congrₓ fun b => imp_congr Iff.rfl <| exists_congr fun b => and_congr ⟨of_think_mem, think_mem⟩ Iff.rfl)
+  and_congrₓ (forall_congrₓ fun b => imp_congrₓ ⟨of_think_mem, think_mem⟩ Iff.rfl)
+    (forall_congrₓ fun b => imp_congrₓ Iff.rfl <| exists_congr fun b => and_congrₓ ⟨of_think_mem, think_mem⟩ Iff.rfl)
 
 @[simp]
 theorem lift_rel_think_right (R : α → β → Prop) (ca : Computation α) (cb : Computation β) :
@@ -1029,8 +1029,8 @@ theorem lift_rel_mem_cases {R : α → β → Prop} {ca cb} (Ha : ∀ a ∈ ca, 
 
 theorem lift_rel_congr {R : α → β → Prop} {ca ca' : Computation α} {cb cb' : Computation β} (ha : ca ~ ca')
     (hb : cb ~ cb') : LiftRel R ca cb ↔ LiftRel R ca' cb' :=
-  and_congr (forall_congrₓ fun a => imp_congr (ha _) <| exists_congr fun b => and_congr (hb _) Iff.rfl)
-    (forall_congrₓ fun b => imp_congr (hb _) <| exists_congr fun a => and_congr (ha _) Iff.rfl)
+  and_congrₓ (forall_congrₓ fun a => imp_congrₓ (ha _) <| exists_congr fun b => and_congrₓ (hb _) Iff.rfl)
+    (forall_congrₓ fun b => imp_congrₓ (hb _) <| exists_congr fun a => and_congrₓ (ha _) Iff.rfl)
 
 theorem lift_rel_map {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : Computation α} {s2 : Computation β} {f1 : α → γ}
     {f2 : β → δ} (h1 : LiftRel R s1 s2) (h2 : ∀ {a b}, R a b → S (f1 a) (f2 b)) : LiftRel S (map f1 s1) (map f2 s2) :=
@@ -1039,7 +1039,7 @@ theorem lift_rel_map {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 
 
 theorem map_congr (R : α → α → Prop) (S : β → β → Prop) {s1 s2 : Computation α} {f : α → β} (h1 : s1 ~ s2) :
     map f s1 ~ map f s2 := by
-  rw [← lift_eq_iff_equiv] <;> exact lift_rel_map Eq _ ((lift_eq_iff_equiv _ _).2 h1) fun a b => congr_argₓ _
+  rw [← lift_eq_iff_equiv] <;> exact lift_rel_map Eq _ ((lift_eq_iff_equiv _ _).2 h1) fun a b => congr_arg _
 
 def LiftRelAux (R : α → β → Prop) (C : Computation α → Computation β → Prop) :
     Sum α (Computation α) → Sum β (Computation β) → Prop

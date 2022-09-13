@@ -353,7 +353,7 @@ def quotientRightRelEquivQuotientLeftRel : Quotientₓ (QuotientGroup.rightRel s
     Quotientₓ.map' (fun g => g⁻¹) fun a b => by
       rw [left_rel_apply, right_rel_apply]
       exact fun h =>
-        (congr_argₓ (· ∈ s)
+        (congr_arg (· ∈ s)
               (by
                 group)).mp
           (s.inv_mem h)
@@ -361,7 +361,7 @@ def quotientRightRelEquivQuotientLeftRel : Quotientₓ (QuotientGroup.rightRel s
     Quotientₓ.map' (fun g => g⁻¹) fun a b => by
       rw [left_rel_apply, right_rel_apply]
       exact fun h =>
-        (congr_argₓ (· ∈ s)
+        (congr_arg (· ∈ s)
               (by
                 group)).mp
           (s.inv_mem h)
@@ -472,7 +472,7 @@ theorem eq_class_eq_left_coset (s : Subgroup α) (g : α) : { x : α | (x : α �
 theorem preimage_image_coe (N : Subgroup α) (s : Set α) :
     coe ⁻¹' ((coe : α → α ⧸ N) '' s) = ⋃ x : N, (fun y : α => y * x) ⁻¹' s := by
   ext x
-  simp only [QuotientGroup.eq, SetLike.exists, exists_prop, Set.mem_preimage, Set.mem_Union, Set.mem_image,
+  simp only [QuotientGroup.eq, SetLike.exists, exists_propₓ, Set.mem_preimage, Set.mem_Union, Set.mem_image,
     SetLike.coe_mk, ← eq_inv_mul_iff_mul_eq]
   exact
     ⟨fun ⟨y, hs, hN⟩ =>
@@ -540,7 +540,7 @@ def quotientEquivProdOfLe' (h_le : s ≤ t) (f : α ⧸ t → α) (hf : Function
       a.map' (fun g : α => ⟨(f (Quotientₓ.mk' g))⁻¹ * g, left_rel_apply.mp (Quotientₓ.exact' (hf g))⟩) fun b c h => by
         rw [left_rel_apply]
         change ((f b)⁻¹ * b)⁻¹ * ((f c)⁻¹ * c) ∈ s
-        have key : f b = f c := congr_argₓ f (Quotientₓ.sound' (left_rel_apply.mpr (h_le (left_rel_apply.mp h))))
+        have key : f b = f c := congr_arg f (Quotientₓ.sound' (left_rel_apply.mpr (h_le (left_rel_apply.mp h))))
         rwa [key, mul_inv_rev, inv_invₓ, mul_assoc, mul_inv_cancel_left, ← left_rel_apply]⟩
   invFun := fun a =>
     a.2.map' (fun b => f a.1 * b) fun b c h => by

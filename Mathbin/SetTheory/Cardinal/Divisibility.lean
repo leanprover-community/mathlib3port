@@ -113,10 +113,10 @@ theorem nat_coe_dvd_iff : (n : Cardinal) ∣ m ↔ n ∣ m := by
 theorem nat_is_prime_iff : Prime (n : Cardinal) ↔ n.Prime := by
   simp only [Prime, Nat.prime_iff]
   refine'
-    and_congr
+    and_congrₓ
       (by
         simp )
-      (and_congr _ ⟨fun h b c hbc => _, fun h b c hbc => _⟩)
+      (and_congrₓ _ ⟨fun h b c hbc => _, fun h b c hbc => _⟩)
   · simp only [is_unit_iff, Nat.is_unit_iff]
     exact_mod_cast Iff.rfl
     

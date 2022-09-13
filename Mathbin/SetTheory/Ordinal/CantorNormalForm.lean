@@ -109,7 +109,7 @@ theorem CNF_fst_le_log {b o : Ordinal.{u}} {x : Ordinal × Ordinal} : x ∈ cNF 
   · rw [CNF_zero]
     exact False.elim
     
-  · rw [CNF_ne_zero ho, List.mem_cons_iffₓ]
+  · rw [CNF_ne_zero ho, List.mem_cons_iff]
     rintro (rfl | h)
     · exact le_rflₓ
       
